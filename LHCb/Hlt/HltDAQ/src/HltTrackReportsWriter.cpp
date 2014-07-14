@@ -23,20 +23,27 @@
 DECLARE_ALGORITHM_FACTORY( HltTrackReportsWriter )
 
 using namespace LHCb;
+namespace {
+
+constexpr struct select2nd_ {
+        template <typename U, typename V> 
+        const V& operator()(const std::pair<U,V>& p) const { return p.second; }
+} select2nd{};
+
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 HltTrackReportsWriter::HltTrackReportsWriter( const std::string& name,
                                               ISvcLocator* pSvcLocator )
-    : GaudiAlgorithm( name, pSvcLocator ), m_callcount( 0 )
+    : GaudiAlgorithm( name, pSvcLocator ), m_callcount{ 0u }
 {
-
-    declareProperty( "InputHltTrackLocation",
-                     m_inputHltTrackLocation = "Hlt/Track/Velo" );
+    declareProperty( "Input2SourceId", m_map = { { "Hlt/Track/Velo",          kSourceID_Hlt1_Velo }
+                                               , { "Hlt1/Track/PestiForward", kSourceID_Hlt1_Forward } 
+                                               } );
     declareProperty( "OutputRawEventLocation",
                      m_outputRawEventLocation = LHCb::RawEventLocation::Default );
-    declareProperty( "SourceID", m_sourceID = kSourceID_Dummy );
 }
 //=============================================================================
 // Destructor
@@ -55,12 +62,21 @@ StatusCode HltTrackReportsWriter::initialize()
 
     if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
 
-    // We need space for the bitshift to identify split up banks
-    if ( m_sourceID > kSourceID_Max ) {
-        m_sourceID = m_sourceID & kSourceID_Max;
+    // Check validity of source IDs: max is 7, must be unique...
+    if ( std::any_of( std::begin(m_map), std::end(m_map), [](const std::pair<std::string,unsigned>& entry ) {
+            return entry.second > kSourceID_Max;
+    }) ) {
         return Error( "Illegal SourceID specified; maximal allowed value is 7",
-                      StatusCode::FAILURE, 50 );
+                      StatusCode::FAILURE );
     }
+
+    std::vector<unsigned> ids; ids.reserve(m_map.size());
+    std::transform( std::begin(m_map), std::end(m_map), std::back_inserter(ids), select2nd );
+    std::sort(std::begin(ids), std::end(ids));
+    if ( std::unique(std::begin(ids),std::end(ids)) != std::end(ids) ) {
+        return Error( "Duplicate SourceID specified", StatusCode::FAILURE );
+    }
+
     return StatusCode::SUCCESS;
 }
 
@@ -69,17 +85,8 @@ StatusCode HltTrackReportsWriter::initialize()
 //=============================================================================
 StatusCode HltTrackReportsWriter::execute()
 {
-
     if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Execute" << endmsg;
     ++m_callcount;
-
-    // get input
-    const LHCb::Tracks* inputTracks =
-        getIfExists<LHCb::Tracks>( m_inputHltTrackLocation );
-    if ( !inputTracks ) {
-        return Warning( " No tracks at " + m_inputHltTrackLocation.value(),
-                        StatusCode::SUCCESS, 0 );
-    }
 
     // get output
     RawEvent* rawEvent = getIfExists<RawEvent>( m_outputRawEventLocation );
@@ -88,72 +95,60 @@ StatusCode HltTrackReportsWriter::execute()
                       StatusCode::SUCCESS, 20 );
     }
 
-    if ( msgLevel( MSG::VERBOSE ) ) {
-        verbose() << "----------------------------------------\n";
-        verbose() << " Written event " << m_callcount << endmsg;
-        verbose() << " Input tracks: \n";
-        // collect tracks pointers in local vector
-        for ( const auto& Tr : *inputTracks ) {
-            verbose() << *Tr << endmsg;
-            // also dump IDs
-            verbose() << "LHCbIDs: [\n";
-            for ( const auto& id : Tr->lhcbIDs() ) {
-                verbose() << id << ",\n";
-            }
-            verbose() << "]" << endmsg;
-        }
-        verbose() << "\n----------------------------------------";
-        verbose() << endmsg;
-    }
-
-    // compose the bank body
-    std::vector<unsigned int> bankBody;
-
-    // calling core encoder function see src/core/HltTrackingCoder.cxx
-    encodeTracks( inputTracks, bankBody );
-
-    // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it
-    // off at a smaller limit.
-    // Save in chunks if exceed this size.
-    int nBank = ( bankBody.size() - 1 ) / 16300 + 1;
-    if ( nBank > kSourceID_MinorMask ) {
-        return Error( "HltTrackReports too long to save", StatusCode::SUCCESS, 50 );
-    }
-    for ( int iBank = 0; iBank < nBank; ++iBank ) {
-        int ioff = iBank * 16300;
-        auto isize = std::min( bankBody.size() - ioff, 16300ul );
-        rawEvent->addBank( iBank | ( m_sourceID << kSourceID_BitShift ),
-                           RawBank::HltTrackReports, kVersionNumber,
-                           { &bankBody[ioff], &bankBody[ioff + isize] } );
-    }
-    if ( nBank > 1 ) {
-        if ( msgLevel( MSG::DEBUG ) )
-            debug() << "HltTrackReports is huge. Saved in " << nBank
-                    << " separate RawBanks " << endmsg;
-        // std::ostringstream mess;
-        // mess << "HltTrackReports is huge. Saved in " << nBank << " separate RawBanks ";
-        // Warning( mess.str(), StatusCode::SUCCESS, 10 );
-    }
-
-    // if(m_callcount==251) {
-    //  std::cout << "RAWBANK:" << std::endl;
-    //  std::copy(bankBody.begin(), bankBody.end(), std::ostream_iterator<unsigned
-    // int>(std::cout, "\n"));
-    //  std::cout.flush();
-    // }
-
-    if ( msgLevel( MSG::VERBOSE ) ) {
-        verbose() << " Output:  ";
-        verbose() << " VersionNumber= " << kVersionNumber;
-        verbose() << " SourceID= " << m_sourceID;
-        // std::vector<unsigned int>::const_iterator i=bankBody.begin();
-        // verbose() << " configuredTCK = " << *i++ << " " ;
-        // verbose() << " taskID = " << *i++ << " " ;
-        // for( ; i!=bankBody.end();++i) {
-        //   verbose() << HltDecReport(*i).intDecisionID() << "-" <<
-        // HltDecReport(*i).decision() << " ";
-        // }
-        verbose() << endmsg;
-    }
+    for (const auto& entry : m_map) convert( entry.first, entry.second, rawEvent ) ;
     return StatusCode::SUCCESS;
+}
+
+void HltTrackReportsWriter::convert(const std::string& location, unsigned sourceID, RawEvent* rawEvent) const 
+{
+        // get input
+        const LHCb::Tracks* inputTracks = getIfExists<LHCb::Tracks>(location);
+
+        if ( !inputTracks ) {
+            Warning( " No container at " + location, StatusCode::SUCCESS, 0 ).ignore();
+            return;
+        }
+
+
+
+        if ( msgLevel( MSG::VERBOSE ) ) {
+            verbose() << "----------------------------------------\n";
+            verbose() << " Written event " << m_callcount << endmsg;
+            verbose() << " Input tracks at " << location << "  -> source ID " << sourceID <<"\n";
+            for ( const auto& i : *inputTracks ) {
+                verbose() << *i << endmsg;
+                // also dump IDs
+                verbose() << "LHCbIDs: [\n";
+                for ( const auto& id : i->lhcbIDs() ) verbose() << id << ",\n";
+                verbose() << "]" << endmsg;
+            }
+            verbose() << "\n----------------------------------------" << endmsg;
+        }
+
+        // compose the bank body
+        std::vector<unsigned int> bankBody;
+
+        // calling core encoder function see src/core/HltTrackingCoder.cxx
+        encodeTracks( *inputTracks, bankBody );
+
+        // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it
+        // off at a smaller limit.
+        // Save in chunks if exceed this size.
+        // make sure that for an empty bank we write 1 bank...
+        int nBank = 1 + ( bankBody.empty() ? 0 : ( ( bankBody.size() - 1 ) / 16300 ) ) ;
+        if ( nBank > kSourceID_MinorMask ) {
+            Warning( "HltTrackReports too large to save", StatusCode::SUCCESS, 50 ).ignore();
+            return;
+        }
+        for ( int iBank = 0; iBank < nBank; ++iBank ) {
+            int ioff = iBank * 16300;
+            auto isize = std::min( bankBody.size() - ioff, 16300ul );
+            rawEvent->addBank( ( sourceID << kSourceID_BitShift ) | iBank,
+                               RawBank::HltTrackReports, kVersionNumber,
+                               { &bankBody[ioff], &bankBody[ioff + isize] } );
+        }
+        if ( UNLIKELY( msgLevel(MSG::DEBUG) ) &&  nBank > 1 ) {
+                debug() << "HltTrackReports is huge. Saved in " << nBank
+                        << " separate RawBanks " << endmsg;
+        }
 }

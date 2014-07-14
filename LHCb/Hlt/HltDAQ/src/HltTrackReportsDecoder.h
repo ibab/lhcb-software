@@ -29,14 +29,12 @@ public:
 
 private:
 
-  /// location of output
-  StringProperty m_outputLocation;
   
   /// location of HltTrackReports 
   StringProperty m_HltTrackReportsLocation;
 
   /// SourceID to decode. source ids are linked to track stages in TrackNames.trackingSources 
-  IntegerProperty m_sourceID;
+  std::map<std::string,unsigned> m_map;
 
   unsigned int m_callcount;
 

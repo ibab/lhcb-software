@@ -32,11 +32,11 @@ using namespace LHCb;
 // It is stupid to have to instantiate this
 const StandardPacker pac;
 
-void encodeTracks( const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBank )
+void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBank )
 {
     auto out = std::back_inserter(rawBank);
     // std::cout << "Encoding "<<tracks->size()<<" tracks."<<std::endl;
-    for ( const LHCb::Track* Tr : *tracks ) {
+    for ( const LHCb::Track* Tr : tracks ) {
         // write meta information
         // flags
         *out++ =  Tr->flags();
@@ -54,18 +54,14 @@ void encodeTracks( const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBan
         // write states
         // check number of states on track
         const std::vector<LHCb::State*>& states = Tr->states();
-        unsigned int nstates = states.size();
-        assert( nstates < 1000 );
-        *out++ =  nstates ;
+        // TODO: remove the states we're not interested in...
+        *out++ =  states.size();
         // loop over states and encode locations, parameters and covs
-        for ( unsigned int is = 0; is < nstates; ++is ) {
-            LHCb::State* state = states[is];
+        for ( const LHCb::State* state : states ) {
             // store the state location -- a bit of overkill to store this as 32 bit int...
             *out++ = state->location();
-            // store z
             *out++ = pac.position( state->z() );
-            // store the parameters
-            Gaudi::TrackVector& par = state->stateVector();
+            const Gaudi::TrackVector& par = state->stateVector();
             *out++ = pac.position( par[0] );
             *out++ = pac.position( par[1] );
             *out++ = pac.slope( par[2] );
@@ -97,18 +93,16 @@ void encodeTracks( const LHCb::Tracks* tracks, std::vector<unsigned int>& rawBan
             *out++ = pac.slope( err[2] );
             *out++ = pac.slope( err[3] );
             *out++ = pac.energy( 1.e5 * fabs( p ) * err[4] ); //== 1.e5 * dp/p (*1.e2)
-            for ( unsigned i = 1; i < 5; ++i )
-                for ( unsigned j = 0; j < i; ++j ) {
-                    *out++ =
-                        pac.fraction( state->covariance()( i, j ) / err[i] / err[j] );
-                } //  end loop over states
-        }
+            for ( unsigned i = 1; i < 5; ++i ) for ( unsigned j = 0; j < i; ++j ) {
+                *out++ = pac.fraction( state->covariance()( i, j ) / err[i] / err[j] );
+            } 
+        }//  end loop over states
     }
 }
 
 // returns number of decoded tracks
-unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
-                           LHCb::Tracks* tracks )
+unsigned int decodeTracks( const unsigned int* rawit, unsigned int nentries,
+                           LHCb::Tracks& tracks )
 {
     // due to the way the RawBank presents ist data we have
     // to loop over the data in the old fashioned way
@@ -131,7 +125,7 @@ unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
         auto nstates = rawit[k];
         if ( k + nstates * 22 > nentries ) {
             std::cout << "TOO MANY STATES IN TRACK. ABORTING DECODING. " << std::endl;
-            std::cout << "This happens at track " << tracks->size() << " in the event"
+            std::cout << "This happens at track " << tracks.size() << " in the event"
                       << std::endl;
             std::cout << "Track so far:\n " << *track << std::endl;
             unsigned int nhits = track->nLHCbIDs();
@@ -144,7 +138,7 @@ unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
                 if ( i == 30 ) std::cout << "****" << std::endl;
                 std::cout << rawit[i - 30 + k] << std::endl;
             }
-            return tracks->size();
+            return tracks.size();
         }
         ++k;
         for ( unsigned int istate = 0; istate < nstates; ++istate ) {
@@ -179,7 +173,7 @@ unsigned int decodeTracks( unsigned int* rawit, unsigned int nentries,
             }
             track->addToStates( LHCb::State{ par, stateCov, z, loc } );
         } // end loop over states
-        tracks->add( track.release() );
+        tracks.add( track.release() );
     }
-    return tracks->size();
+    return tracks.size();
 }

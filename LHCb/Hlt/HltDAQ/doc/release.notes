@@ -4,6 +4,13 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+
+! 2014-07-14 - Gerhard Raven
+ - HltTrackReportsWriter/Decoder: 
+   o change of strategy: make it possible to use one writer/decoder instance 
+     which deals with all TES location / sourceIDs if so configured
+   o make sure that an emtpy rawbank is properly written
+
 !========================= HltDAQ v4r5 2014-06-18 =========================
 
 ! 2014-06-19 - Gerhard Raven

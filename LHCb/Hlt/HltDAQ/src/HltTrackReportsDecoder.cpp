@@ -26,6 +26,11 @@ int seq( const RawBank& bank )
 {
     return bank.sourceID() & HltTrackReportsWriter::kSourceID_MinorMask;
 }
+constexpr struct select2nd_ {
+        template <typename U, typename V> 
+        const V& operator()(const std::pair<U,V>& p) const { return p.second; }
+} select2nd{};
+
 }
 
 //-----------------------------------------------------------------------------
@@ -53,9 +58,7 @@ HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                            LHCb::RawEventLocation::Default};
     initRawEventSearch();
 
-    declareProperty( "OutputLocation", m_outputLocation = "/Hlt/Track/Velo" );
-
-    declareProperty( "SourceID", m_sourceID = HltTrackReportsWriter::kSourceID_Dummy );
+    declareProperty( "Output2SourceId", m_map = { { "Hlt/Track/Velo", 1 }, { "Hlt1/Track/PestiForward", 3 } } );
 }
 
 //=============================================================================
@@ -66,12 +69,19 @@ StatusCode HltTrackReportsDecoder::initialize()
     StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
 
-    if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
+    // Check validity of source IDs: max is 7, must be unique...
+    if ( std::any_of( std::begin(m_map), std::end(m_map), [](const std::pair<std::string,unsigned>& entry ) {
+            return entry.second > HltTrackReportsWriter::kSourceID_Max;
+    }) ) {
+        return Error( "Illegal SourceID specified; maximal allowed value is 7",
+                      StatusCode::FAILURE );
+    }
 
-    if ( m_sourceID > HltTrackReportsWriter::kSourceID_Max ) {
-        m_sourceID = m_sourceID & HltTrackReportsWriter::kSourceID_Max;
-        return Error( "Illegal SourceID specified (too large);", StatusCode::FAILURE,
-                      50 );
+    std::vector<unsigned> ids; ids.reserve(m_map.size());
+    std::transform( std::begin(m_map), std::end(m_map), std::back_inserter(ids), select2nd );
+    std::sort(std::begin(ids), std::end(ids));
+    if ( std::unique(std::begin(ids),std::end(ids)) != std::end(ids) ) {
+        return Error( "Duplicate SourceID specified", StatusCode::FAILURE );
     }
     return StatusCode::SUCCESS;
 }
@@ -93,97 +103,91 @@ StatusCode HltTrackReportsDecoder::execute()
     // ----------------------------------------------------------
     std::vector<RawBank*> hltTrackReportsRawBanks =
         rawEvent->banks( RawBank::HltTrackReports );
+    // check for bad banks:
     hltTrackReportsRawBanks.erase(
         std::remove_if( std::begin( hltTrackReportsRawBanks ),
                         std::end( hltTrackReportsRawBanks ), [=]( const RawBank* bank ) {
-            if ( m_sourceID != sourceID( *bank ) )
-                return true; // Not our major SourceID i.e. different tracks
             if ( bank->magic() != RawBank::MagicPattern ) {
-                Error( " HltTrackReports RawBank has wrong magic number. Skipped ",
+                Warning( " HltTrackReports RawBank has wrong magic number. Skipped ",
                        StatusCode::SUCCESS, 20 );
                 return true;
             }
             return false;
         } ),
         std::end( hltTrackReportsRawBanks ) );
-    // collect possibly split up banks -- first put them into the right order
-    std::sort( std::begin( hltTrackReportsRawBanks ), std::end( hltTrackReportsRawBanks ),
-               []( const RawBank* lhs,
-                   const RawBank* rhs ) { return seq( *lhs ) < seq( *rhs ); } );
-    // verify all present in expected order...
-    bool ok = true;
-    std::accumulate( std::begin( hltTrackReportsRawBanks ),
-                     std::end( hltTrackReportsRawBanks ), 0,
-                     [&ok]( int i, const RawBank* b ) {
-        ok = ok && i == seq( *b );
-        return ++i;
-    } );
-    if ( !ok )
-        return Error( "Missing Sequential HltTrackReports RawBank part - quiting.",
-                      StatusCode::SUCCESS, 100 );
 
-    // if there is a valid bank, create the output -- even if it is an empty bank...
-    // (which results in an empty output ;-)
+    // sort by sourceID ( which is 'origin << somebits | sequential number' )
+    std::sort( std::begin( hltTrackReportsRawBanks ),
+               std::end( hltTrackReportsRawBanks ), [=]( const RawBank* lhs, const RawBank* rhs ) {
+                    return lhs->sourceID() < rhs->sourceID();
+               } );
 
-    // create output container and put it on TES
-    // FIXME:TODO: if there is already something, that SHOULD be a configuration error,
-    // and hence we should abort!!!
-    LHCb::Tracks* outputTracks = nullptr;
-    try
-    {
-        outputTracks = getOrCreate<LHCb::Tracks, LHCb::Tracks>( m_outputLocation );
-        // put( outputTracks, m_outputLocation );
-    }
-    catch ( GaudiException ex )
-    {
-        warning() << "Failed to create output location " << m_outputLocation << endmsg;
-        warning() << ex.message() << endmsg;
-        return StatusCode::FAILURE;
-    }
+    constexpr struct cmp_sourceID_t {
+        bool operator()(int id, const RawBank* bank) const { return id < sourceID( *bank ); }
+        bool operator()(const RawBank* bank, int id) const { return sourceID( *bank ) < id; }
+    } cmp_sourceID{};
 
-    // if(!outputTracks->empty()) {
-    // if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-    //    debug() << "outputLocation already contains tracks. Skipping decoding." <<
-    // endmsg;
-    //  return StatusCode::SUCCESS;
-    //}
 
-    // figure out the total size -- zero length (i.e. empty) bank is NOT an error
-    unsigned int bankSize = std::accumulate( std::begin( hltTrackReportsRawBanks ),
-                                             std::end( hltTrackReportsRawBanks ), 0u,
-                                             []( unsigned int s, const RawBank* bank ) {
-        return s +
-               std::distance( bank->begin<unsigned int>(), bank->end<unsigned int>() );
-    } );
-    if ( hltTrackReportsRawBanks.size() == 1 ) {
-        // avoid allocating and copying the rawbank if there is only a single one...
-        // do the actual decoding: see HltTrackingCoder.cpp
-        decodeTracks( hltTrackReportsRawBanks.front()->data(), bankSize, outputTracks );
-    } else {
-        // concatenate banks into a local array
-        std::unique_ptr<unsigned int> completeBank{new unsigned int[bankSize]};
-        std::accumulate( std::begin( hltTrackReportsRawBanks ),
-                         std::end( hltTrackReportsRawBanks ), completeBank.get(),
-                         []( unsigned int* p, const RawBank* bank ) {
-            return std::copy( bank->begin<unsigned int>(), bank->end<unsigned int>(), p );
+    // TODO: add some counters to track how many tracks per source ID per event...
+    for ( const auto & entry : m_map ) {
+
+        auto range = std::equal_range( std::begin( hltTrackReportsRawBanks ), std::end( hltTrackReportsRawBanks ), entry.second, cmp_sourceID );
+        // if there is a valid bank, create the output -- even if it is an empty bank...
+        // (which results in an empty output ;-). If there is no bank, then do NOT
+        // create the output...
+        if ( range.first == range.second ) continue;
+
+        // create output container and put it on TES
+        LHCb::Tracks* outputTracks = new Tracks();
+        put( outputTracks, entry.first );
+        // verify all present in expected order...
+        bool ok = true;
+        std::accumulate( range.first, range.second, 0, [&ok]( int i, const RawBank* b ) {
+            ok = ok && i == seq( *b );
+            return ++i;
         } );
-        // do the actual decoding: see HltTrackingCoder.cpp
-        decodeTracks( completeBank.get(), bankSize, outputTracks );
-    }
+        if ( !ok )
+            return Error( "Missing Sequential HltTrackReports RawBank part - quiting.",
+                          StatusCode::SUCCESS, 100 );
 
-    // for debug purposes print the contents of the outputLocation
-    if ( msgLevel( MSG::VERBOSE ) ) {
-        verbose() << "----------------------------------------\n";
-        verbose() << "Decoded event " << m_callcount << endmsg;
-        verbose() << "Decoding source id " << m_sourceID << " into TES " << m_outputLocation <<endmsg;
-        verbose() << outputTracks->size() << " Resurrected tracks: \n";
-        counter( "#Tracks" ) += outputTracks->size();
-        for ( const auto& Tr : *outputTracks ) {
-            verbose() << *Tr << endmsg;
-            // also dump IDs
-            verbose() << "LHCbIDs: [\n";
-            for ( const auto& id : Tr->lhcbIDs() ) verbose() << id << ",\n";
-            verbose() << "]" << endmsg;
+        // figure out the total size -- zero length (i.e. empty) bank is NOT an error
+        unsigned int bankSize = std::accumulate( range.first,
+                                                 range.second, 0u,
+                                                 []( unsigned int s, const RawBank* bank ) {
+            return s +
+                   std::distance( bank->begin<unsigned int>(), bank->end<unsigned int>() );
+        } );
+        if ( std::distance( range.first, range.second)  == 1 ) {
+            // avoid allocating and copying the rawbank if there is only a single one...
+            // do the actual decoding: see HltTrackingCoder.cpp
+            decodeTracks( (*range.first)->data(), bankSize, *outputTracks );
+        } else {
+            // concatenate banks into a local array
+            std::unique_ptr<unsigned int> completeBank{new unsigned int[bankSize]};
+            auto p = std::accumulate( range.first, range.second, completeBank.get(),
+                             []( unsigned int* p, const RawBank* bank ) {
+                return std::copy( bank->begin<unsigned int>(), bank->end<unsigned int>(), p );
+            } );
+            assert( std::distance( completeBank.get(), p ) == bankSize ); 
+            // do the actual decoding: see HltTrackingCoder.cpp
+            decodeTracks( completeBank.get(), bankSize, *outputTracks );
+        }
+
+        // for debug purposes print the contents of the outputLocation
+        if ( msgLevel( MSG::VERBOSE ) ) {
+            verbose() << "----------------------------------------\n";
+            verbose() << "Decoded event " << m_callcount << endmsg;
+            verbose() << "Decoding source id " << entry.second << " into TES " << entry.first <<endmsg;
+            verbose() << outputTracks->size() << " Resurrected tracks: \n";
+            counter( "#Tracks" ) += outputTracks->size();
+            std::for_each( std::begin(*outputTracks), std::end(*outputTracks),
+                [&](const LHCb::Track* track) {
+                verbose() << *track << endmsg;
+                verbose() << "LHCbIDs: [\n";
+                std::for_each( std::begin(track->lhcbIDs()), std::end(track->lhcbIDs()),
+                               [&](const LHCb::LHCbID& id) {  verbose() << id << ",\n";} );
+                verbose() << "]" << endmsg;
+            } );
         }
     }
     return StatusCode::SUCCESS;

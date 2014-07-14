@@ -6,6 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
+namespace LHCb {
+class RawEvent;
+}
 /** @class HltTrackReportsWriter HltTrackReportsWriter.h
  *  
  *
@@ -50,15 +53,13 @@ public:
 
 
 private:
+  void convert(const std::string& location, unsigned sourceID, LHCb::RawEvent* rawEvent) const ;
 
-  /// location of input
-  StringProperty m_inputHltTrackLocation;
+  /// mapping of input TES location to output bank header source ID
+  std::map<std::string,unsigned int> m_map;
 
   /// location of output
   StringProperty m_outputRawEventLocation;
-
-  /// SourceID to insert in the bank header
-  UnsignedIntegerProperty m_sourceID;
 
   unsigned int m_callcount;
 

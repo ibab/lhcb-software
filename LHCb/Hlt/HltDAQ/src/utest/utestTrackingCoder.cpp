@@ -181,7 +181,7 @@ BOOST_AUTO_TEST_CASE(comparetracks)
 BOOST_AUTO_TEST_CASE(encode)
 {
   std::vector<unsigned int> rawBank;
-  encodeTracks(&m_tracks,rawBank);
+  encodeTracks(m_tracks,rawBank);
   BOOST_CHECK(rawBank.size() == m_rawbank.size()  );
   BOOST_CHECK(rawBank == m_rawbank );
 }
@@ -189,7 +189,7 @@ BOOST_AUTO_TEST_CASE(encode)
 BOOST_AUTO_TEST_CASE(decode)
 {
   LHCb::Tracks tracks;
-  BOOST_CHECK(decodeTracks(m_rawbank.data(),m_rawbank.size(),&tracks) == m_tracks.size());
+  BOOST_CHECK(decodeTracks(m_rawbank.data(),m_rawbank.size(),tracks) == m_tracks.size());
   BOOST_CHECK(tracks.size() == m_tracks.size() );
   BOOST_CHECK(equalLHCbIDs(tracks,m_tracks));
   BOOST_CHECK(equalStates(tracks,m_tracks));
@@ -202,9 +202,9 @@ BOOST_AUTO_TEST_CASE(decode)
 BOOST_AUTO_TEST_CASE(en_de_code)
 {
   std::vector<unsigned int> rawBank;
-  encodeTracks(&m_tracks,rawBank);
+  encodeTracks(m_tracks,rawBank);
   LHCb::Tracks tracks;
-  decodeTracks(m_rawbank.data(),m_rawbank.size(),&tracks);
+  decodeTracks(m_rawbank.data(),m_rawbank.size(),tracks);
   BOOST_CHECK(equalLHCbIDs(tracks,m_tracks));
   BOOST_CHECK(equalStates(tracks,m_tracks));
   BOOST_CHECK(equalMeta(tracks,m_tracks));
