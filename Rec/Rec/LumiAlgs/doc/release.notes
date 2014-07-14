@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r4 2014-07-14 =========================
 ! 2014-06-24 - Marco Clemencic
  - Fixed CMake configuration.
 
