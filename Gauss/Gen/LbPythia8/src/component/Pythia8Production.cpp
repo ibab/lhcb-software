@@ -621,9 +621,11 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
     int status = (*p) -> status() ;
 
     if ( status > 3 ) {
-      if ( ( 71 == status ) || ( 72 == status ) ) 
-        (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen ) ;
-      else
+      if ( ( 71 == status ) || ( 72 == status ) ||
+           ( ( 62 == status ) && ( abs((*p)->pdg_id()) >= 22 ) &&
+             ( abs((*p)->pdg_id()) <= 37 ) ) ) {  
+        (*p) -> set_status( LHCb::HepMCEvent::DecayedByProdGen ) ; 
+      } else
         (*p) -> set_status( LHCb::HepMCEvent::DocumentationParticle ) ;
     } else if (status!=LHCb::HepMCEvent::DecayedByProdGen
                && status!=LHCb::HepMCEvent::StableInProdGen

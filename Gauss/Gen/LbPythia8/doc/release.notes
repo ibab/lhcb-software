@@ -4,6 +4,11 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-07-14 - Gloria Corti
+ - Fix to be able to store all non-gluon gauge boson mediators (e.g. Z, W, ...)
+   in MCParticles. See details in https://its.cern.ch/jira/browse/LHCBGAUSS-105
+   . src/Pythia8Production.cpp
+
 ! 2014-05-07 - Philip Ilten
  - Added pT damping for all hard QCD and Onia production. This damping is
    the same that is applied for all MPI. Additional future cross-section
