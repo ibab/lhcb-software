@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2013-07-14 - Gloria Corti
+ - Change version of photos++ to latest 3.56 version. 
+   Note that 3.54 (3.52) stops (may give undefined results) on gcc 4.8. 
+   See details at https://its.cern.ch/jira/browse/LHCBGAUSS-280
+   
 !========================= GENSER v13r0p1 2013-12-03 =========================
 ! 2013-12-03 - Gloria Corti
  - Change the version of LHAPDFSet to v* as it should be fixed in Gauss itself
