@@ -4,6 +4,7 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!========================= EventAssoc v5r5 2014-07-14 =========================
 ! 2014-07-03 - Marco Clemencic
  - Restored the changes required for ROOT 6 (reverted by mistake).
 
