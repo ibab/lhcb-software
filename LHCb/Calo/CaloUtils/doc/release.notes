@@ -3,16 +3,17 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================= CaloUtils v10r4 2014-07-14 =========================
 ! 2014-07-03 - Olivier Deschamps
-    - CaloMomentum.cpp    : protect against negative calo energy
-    - CovarianceEstimator : add global term to Cov_ii - add covariance parametrization per calo area
+  - CaloMomentum.cpp    : protect against negative calo energy
+  - CovarianceEstimator : add global term to Cov_ii - add covariance parametrization per calo area
 
 ! 2014-07-02 - Olivier Deschamps
-	- CovarianceEstimator.cpp  : set default energy to 0 in case of evaluation failure (no more huge negative value !)
+  - CovarianceEstimator.cpp  : set default energy to 0 in case of evaluation failure (no more huge negative value !)
 
 ! 2014-06-27 - Olivier Deschamps
-	- CovarianceEstimator.cpp     : prepare for different cluster masking for energy and position
-	- CaloUtils/ClusterFunctors.h : update tagTheSubCluster() method 
+  - CovarianceEstimator.cpp     : prepare for different cluster masking for energy and position
+  - CaloUtils/ClusterFunctors.h : update tagTheSubCluster() method 
 
 !========================= CaloUtils v10r3 2014-02-17 =========================
 ! 2013-10-30 - Marco Clemencic
