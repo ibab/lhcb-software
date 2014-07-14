@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v6r2 2014-07-14 ========================
 ! 2014-06-12 - Heinrich Schindler
  - VPMeasurement: modify constructor, passing PixelPositionInfo directly 
    instead of cluster position tool.
