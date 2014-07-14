@@ -22,9 +22,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2013-06-11
 #
-#                   $Revision: 157296 $
-# Last modification $Date: 2013-05-26 12:47:48 +0200 (Sun, 26 May 2013) $
-#                by $Author: ibelyaev $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """Few pure technical utilities
 
@@ -52,7 +52,7 @@ By usage of this code one clearly states the disagreement with the smear campaig
 
 """
 # =============================================================================
-__version__ = "$Revision: 157296 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2013-06-11"
 # =============================================================================

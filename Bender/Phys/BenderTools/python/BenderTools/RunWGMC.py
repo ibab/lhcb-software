@@ -22,9 +22,9 @@
 # @author Vanya BELYAEV Ivan.Belyaev@cern.ch
 # @date   2011-06-21
 #
-#                   $Revision: 173905 $
-# Last modification $Date: 2014-06-16 14:56:49 +0200 (Mon, 16 Jun 2014) $
-#                by $Author: ibelyaev $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """Helper module to simplify run of WG-selections on MC samples 
 
@@ -52,7 +52,7 @@ By usage of this code one clearly states the disagreement with the smear campaig
 
 """
 # =============================================================================
-__version__ = "$Revision: 173905 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-07-14"
 __all__     = (

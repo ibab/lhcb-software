@@ -42,9 +42,9 @@
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-05-12
 #
-#                   $Revision: 169835 $
-# Last modification $Date: 2014-03-09 14:25:30 +0100 (Sun, 09 Mar 2014) $
-#                by $Author: ibelyaev $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """ Helper utulity for temporary removal of daughter particle form decay tree
 
@@ -88,7 +88,7 @@ with the smear campain of Dr.O.Callot et al.:
 
 """
 # =============================================================================
-__version__ = "$Revision: 169835 $"
+__version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2014-05-12"
 # =============================================================================

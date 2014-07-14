@@ -23,9 +23,9 @@
 # @author Vanya  BELYAEV Ivan.Belyaev@itep.ru
 # @date   2013-09-25
 #
-#                   $Revision: 162137 $
-# Last modification $Date: 2013-09-05 15:18:57 +0200 (Thu, 05 Sep 2013) $
-#                by $Author: ibelyaev $
+#                   $Revision$
+# Last modification $Date$
+#                by $Author$
 # =============================================================================
 """ Simple script to address ``MCDecayTuple does not contain all events'' problem
 
@@ -61,7 +61,7 @@ Usage:
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@itep.ru "
 __date__    = " 2013-09-25 "
-__version__ = " $Revision: 162137 $ "
+__version__ = " $Revision$ "
 __usage__   = """
    no-mc-decays [options] -d GENERICDECAY
                           -z DECAYINQUESTION file1 [ file2 [ ....
