@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v3r3 2014-07-14 =========================
 ! 2014-07-10 - Marco Clemencic
  - Added a test to ensure that the RunChangeHandler really triggers a reload of
    the XML files if it gets triggered without a change of the run number.
