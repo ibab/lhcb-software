@@ -4,9 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r3 2014-07-14 ========================
 ! 2014-07-11 - Marco Clemencic
- - Added patched merge_files.py to allow work-arounds for ROOT 6 runtime
-   warnings.
+ - Added patched merge_files.py to allow work-arounds for ROOT 6 runtime warnings.
 
 ! 2014-07-11 - Marco Clemencic
  - Removed duplicated dictionary entry.
