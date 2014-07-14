@@ -3,6 +3,8 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+! 2014-07-14 - Gerhard Raven
+ - remove obsolete code
 
 !========================= Hlt1Muons v1r8 2014-06-16 =========================
 

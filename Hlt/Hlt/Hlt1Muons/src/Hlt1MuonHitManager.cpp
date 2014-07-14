@@ -26,41 +26,6 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( Hlt1MuonHitManager )
 
-using std::vector;
-using std::sort;
-using std::pair;
-
-namespace
-{
-template <typename iterator_>
-struct iter_pair_range : pair<iterator_, iterator_>
-{
-    using super = pair<iterator_, iterator_>;
-    using super::super; // delegate c'tor
-    using iterator = iterator_;
-    iterator begin() const
-    {
-        return this->first;
-    }
-    iterator end() const
-    {
-        return this->second;
-    }
-};
-
-template <typename Iter, typename I2> // I2 must be convertable to Iter
-iter_pair_range<typename std::decay<Iter>::type> make_range( Iter&& begin, I2&& end )
-{
-    return {std::forward<Iter>( begin ), std::forward<I2>( end )};
-}
-
-template <typename Iter, typename I2> // I2 must be convertable to Iter
-iter_pair_range<typename std::decay<Iter>::type> make_range( pair<Iter, I2>&& p )
-{
-    return {std::forward<pair<Iter, I2>>( p )};
-}
-}
-
 //=============================================================================
 Hlt1MuonHitManager::Hlt1MuonHitManager( const std::string& type,
                                         const std::string& name,
