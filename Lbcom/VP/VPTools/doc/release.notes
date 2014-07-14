@@ -4,6 +4,7 @@
 ! Purpose     : Tools used in VP reconstruction
 !--------------------------------------------------------------------------
 
+!========================= VPTools v2r4 2014-07-14 =========================
 ! 2014-06-11 - Heinrich Schindler
  - Simplified error parameterisation based on cluster size.
 
