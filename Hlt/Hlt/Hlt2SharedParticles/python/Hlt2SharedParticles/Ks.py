@@ -24,7 +24,7 @@ Hlt2SharedKsLLTF = Hlt2Member( CombineParticles, "KsLLTF"
                            , Inputs = [ BiKalmanFittedPions ]
                            )
 
-KsLLTF = bindMembers( "SharedKsLLTF", [PV3D(),BiKalmanFittedPions , Hlt2SharedKsLLTF ] )
+KsLLTF = bindMembers( "SharedKsLLTF", [PV3D('Hlt2'),BiKalmanFittedPions , Hlt2SharedKsLLTF ] )
 
 # Now the downstream K shorts, requires fitted tracks!
 Hlt2SharedKsDD = Hlt2Member( CombineParticles, "KsDD"
@@ -35,5 +35,5 @@ Hlt2SharedKsDD = Hlt2Member( CombineParticles, "KsDD"
                            , Inputs = [ BiKalmanFittedDownPions ]
                            )
 
-KsDD = bindMembers( "SharedKsDD", [ PV3D(),BiKalmanFittedDownPions , Hlt2SharedKsDD ] )
+KsDD = bindMembers( "SharedKsDD", [ PV3D('Hlt2'),BiKalmanFittedDownPions , Hlt2SharedKsDD ] )
 

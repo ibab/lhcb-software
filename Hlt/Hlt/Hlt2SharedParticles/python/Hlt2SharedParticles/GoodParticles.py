@@ -31,6 +31,6 @@ Pions = Hlt2Member( FilterDesktop, "Pions", Inputs = [ BiKalmanFittedPions ], Co
 
 __all__ = ( 'GoodKaons','GoodPions' )
 
-GoodKaons = bindMembers( 'Good', [ PV3D(), BiKalmanFittedKaons, Kaons ] )
-GoodPions = bindMembers( 'Good', [ PV3D(), BiKalmanFittedPions, Pions ] )
+GoodKaons = bindMembers( 'Good', [ PV3D('Hlt2'), BiKalmanFittedKaons, Kaons ] )
+GoodPions = bindMembers( 'Good', [ PV3D('Hlt2'), BiKalmanFittedPions, Pions ] )
 

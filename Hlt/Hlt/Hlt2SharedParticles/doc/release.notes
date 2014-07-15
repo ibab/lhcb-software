@@ -4,6 +4,8 @@
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+! 2014-07-15 - Gerhard Raven
+ - inform PV3D that we're in HLT2
 
 !========================= Hlt2SharedParticles v7r0p1 2014-02-20 =========================
 ! 2014-01-08 - Marco Clemencic

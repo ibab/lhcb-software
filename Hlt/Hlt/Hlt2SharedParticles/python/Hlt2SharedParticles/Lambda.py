@@ -35,7 +35,7 @@ Hlt2SharedLambdaDDTrackFitted = Hlt2Member( CombineParticles, "LambdaDDTrackFitt
                                             , Inputs = [ BiKalmanFittedDownPions, BiKalmanFittedDownProtons ]
                                             )
 
-LambdaLLTrackFitted = bindMembers( "Shared", [ PV3D(), BiKalmanFittedPions, BiKalmanFittedProtons, Hlt2SharedLambdaLLTrackFitted ] )
-LambdaDDTrackFitted = bindMembers( "Shared", [ PV3D(), BiKalmanFittedDownPions, BiKalmanFittedDownProtons, Hlt2SharedLambdaDDTrackFitted ] )
+LambdaLLTrackFitted = bindMembers( "Shared", [ PV3D('Hlt2'), BiKalmanFittedPions, BiKalmanFittedProtons, Hlt2SharedLambdaLLTrackFitted ] )
+LambdaDDTrackFitted = bindMembers( "Shared", [ PV3D('Hlt2'), BiKalmanFittedDownPions, BiKalmanFittedDownProtons, Hlt2SharedLambdaDDTrackFitted ] )
 
 
