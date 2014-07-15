@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-15 - Roberta Cardinale
+ - New ConfigDict for StrippingXibc.py 
+
 ! 2014-07-15 - Lucio Anderlini
  - Raw event added to Jpsi2MuMuDetached line, Psi2MuMuDetachedLine, Bc2JpsiMu
 
