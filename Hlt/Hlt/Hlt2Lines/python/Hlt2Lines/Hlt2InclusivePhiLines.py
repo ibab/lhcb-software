@@ -113,7 +113,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                             ,Code=_code
                             )
         # Require the PV3D reconstruction before our cut on IPS
-        return bindMembers(name, [PV3D()] + inputContainers + [_filter])
+        return bindMembers(name, [PV3D('Hlt2')] + inputContainers + [_filter])
     
     def __combine(self, name, inputSeq):
         from HltLine.HltLine import Hlt2Member, bindMembers

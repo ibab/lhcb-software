@@ -85,7 +85,7 @@ class Hlt2CharmHadD2KS0KS0LinesConf(HltLinesConfigurableUser) :
                           , MotherCut = mothercuts
                           )
 
-        return bindMembers(name, [PV3D()] + inputSeq + [combineCharmKS0KS0])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineCharmKS0KS0])
 
     def __KS0KS0Filter(self, name, inputSeq, extracode = None) :
 
@@ -136,7 +136,7 @@ class Hlt2CharmHadD2KS0KS0LinesConf(HltLinesConfigurableUser) :
         ##########################################################################
 
         line = Hlt2Line(modeName, prescale = self.prescale
-                        , algos = [ PV3D(), self.__seqGEC(), KsLLTF, Hlt2CharmKS0KS0]
+                        , algos = [ PV3D('Hlt2'), self.__seqGEC(), KsLLTF, Hlt2CharmKS0KS0]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeName + 'Decision'
@@ -144,7 +144,7 @@ class Hlt2CharmHadD2KS0KS0LinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassName , prescale = self.prescale
-                        , algos = [ PV3D(), self.__seqGEC(), KsLLTF, Hlt2CharmKS0KS0WideMass]
+                        , algos = [ PV3D('Hlt2'), self.__seqGEC(), KsLLTF, Hlt2CharmKS0KS0WideMass]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassName + 'Decision'

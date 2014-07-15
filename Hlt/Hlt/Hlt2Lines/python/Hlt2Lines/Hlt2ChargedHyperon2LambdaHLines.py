@@ -151,7 +151,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP 
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
     ##
@@ -184,7 +184,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP 
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -213,7 +213,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##----------------------------------------------------------------------------------------
@@ -241,7 +241,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -268,7 +268,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##----------------------------------------------------------------------------------------
@@ -294,7 +294,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -321,7 +321,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
     
 ##
@@ -346,7 +346,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -380,7 +380,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineOmegaLL])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineOmegaLL])
 
 
 ##
@@ -414,7 +414,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineOmegaDD])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineOmegaDD])
 
 ##
 ##----------------------------------------------------------------------------------------
@@ -451,7 +451,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineXiLL])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineXiLL])
 
 
 ##
@@ -485,7 +485,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineXiDD])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineXiDD])
 
 ##----------------------------------------------------------------------------------------
 ##
@@ -517,7 +517,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineXiLLSemiLep])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineXiLLSemiLep])
 
 
 ##
@@ -551,7 +551,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineXiDDSemiLep])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineXiDDSemiLep])
 
 ##
 ##  --
@@ -731,7 +731,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
         ### Xi -> Lambda0 Pi line
 
         line1 = Hlt2Line(Lambda0LLPiName, prescale = self.prescale
-                        , algos = [ PV3D(), Lambda0LLForChargedHyperon2Lambda0LLh, pionsBachelorForChargedHyperon2Lambda0LLh, Hlt2Xi2Lambda0LLPi]
+                        , algos = [ PV3D('Hlt2'), Lambda0LLForChargedHyperon2Lambda0LLh, pionsBachelorForChargedHyperon2Lambda0LLh, Hlt2Xi2Lambda0LLPi]
                         # All the necessary algorithms
                         , postscale = self.postscale 
                         )
@@ -744,7 +744,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
         ### Xi -> Lambda0 Mu line
 
         line2 = Hlt2Line(Lambda0LLMuName, prescale = self.prescale
-                        , algos = [ PV3D(), Lambda0LLForChargedHyperon2Lambda0LLh, muonsBachelorForChargedHyperon2Lambda0LLh, Hlt2Xi2Lambda0LLMu]
+                        , algos = [ PV3D('Hlt2'), Lambda0LLForChargedHyperon2Lambda0LLh, muonsBachelorForChargedHyperon2Lambda0LLh, Hlt2Xi2Lambda0LLMu]
                         # All the necessary algorithms
                         , postscale = self.postscale 
                         )
@@ -757,7 +757,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
         ### Omega -> Lambda0 K line
 
         line3 = Hlt2Line( Lambda0LLKName, prescale = self.prescale
-                        , algos = [ PV3D(), Lambda0LLForChargedHyperon2Lambda0LLh, kaonsBachelorForChargedHyperon2Lambda0LLh, Hlt2Omega2Lambda0LLK]
+                        , algos = [ PV3D('Hlt2'), Lambda0LLForChargedHyperon2Lambda0LLh, kaonsBachelorForChargedHyperon2Lambda0LLh, Hlt2Omega2Lambda0LLK]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
@@ -772,7 +772,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
         ### Xi -> Lambda0 DD Pi line
 
         line4 = Hlt2Line(Lambda0DDPiName, prescale = self.prescale
-                        , algos = [ PV3D(), Lambda0DDForChargedHyperon2Lambda0DDh, pionsBachelorForChargedHyperon2Lambda0DDh, Hlt2Xi2Lambda0DDPi]
+                        , algos = [ PV3D('Hlt2'), Lambda0DDForChargedHyperon2Lambda0DDh, pionsBachelorForChargedHyperon2Lambda0DDh, Hlt2Xi2Lambda0DDPi]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
@@ -783,7 +783,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
         ### Xi -> Lambda0 DD Mu line
 
         line5 = Hlt2Line(Lambda0DDMuName, prescale = self.prescale
-                        , algos = [ PV3D(), Lambda0DDForChargedHyperon2Lambda0DDh, muonsBachelorForChargedHyperon2Lambda0DDh, Hlt2Xi2Lambda0DDMu]
+                        , algos = [ PV3D('Hlt2'), Lambda0DDForChargedHyperon2Lambda0DDh, muonsBachelorForChargedHyperon2Lambda0DDh, Hlt2Xi2Lambda0DDMu]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
@@ -794,7 +794,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
 ## no TOS possible        ### Xi -> Lambda0 DD PiD line
 ## no TOS possible
 ## no TOS possible        line3A = Hlt2Line(Lambda0DDPiDName, prescale = self.prescale
-## no TOS possible                        , algos = [ PV3D(), Lambda0DDForChargedHyperon2Lambda0DDh, downstreamPionsForChargedHyperon2Lambda0DDh, Hlt2Xi2Lambda0DDPiD]
+## no TOS possible                        , algos = [ PV3D('Hlt2'), Lambda0DDForChargedHyperon2Lambda0DDh, downstreamPionsForChargedHyperon2Lambda0DDh, Hlt2Xi2Lambda0DDPiD]
 ## no TOS possible                        # All the necessary algorithms
 ## no TOS possible                        , postscale = self.postscale
 ## no TOS possible                        )
@@ -807,7 +807,7 @@ class Hlt2ChargedHyperon2LambdaHLinesConf(HltLinesConfigurableUser) :
         ### Lambda_c -> Lambda0 DD K line------------------------------------------------------------------------------------
 
         line6 = Hlt2Line(Lambda0DDKName, prescale = self.prescale
-                        , algos = [ PV3D(), Lambda0DDForChargedHyperon2Lambda0DDh, kaonsBachelorForChargedHyperon2Lambda0DDh, Hlt2Omega2Lambda0DDK]
+                        , algos = [ PV3D('Hlt2'), Lambda0DDForChargedHyperon2Lambda0DDh, kaonsBachelorForChargedHyperon2Lambda0DDh, Hlt2Omega2Lambda0DDK]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )

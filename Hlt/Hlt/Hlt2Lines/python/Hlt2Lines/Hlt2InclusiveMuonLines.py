@@ -154,7 +154,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('SingleMuon'
                         , prescale = self.prescale 
                         , HLT =self.getProp("SingleMuHLT1Filter")
-                        , algos = [ PV3D(), BiKalmanFittedMuons, 
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedMuons, 
                                     Hlt2SelSingleMuonFilter,DecodeHlt1SelRep,TOSInputMuonsFilter, 
                                     Hlt2SelSingleMuonMoni ]
                         , postscale = self.postscale
@@ -235,7 +235,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                               )
         line = Hlt2Line('MuTrack'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), BiKalmanFittedMuons, BiKalmanFittedPions, combine]
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedMuons, BiKalmanFittedPions, combine]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackDecision" : 50198 } )

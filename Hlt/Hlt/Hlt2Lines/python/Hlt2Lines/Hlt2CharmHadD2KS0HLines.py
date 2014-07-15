@@ -116,7 +116,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP 
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
     ##
@@ -151,7 +151,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP 
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -179,7 +179,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -206,7 +206,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -233,7 +233,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
     
 ##
@@ -259,7 +259,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )      
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )      
         return filterSeq
 
 ##
@@ -295,7 +295,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineCharmD2KS0h])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineCharmD2KS0h])
 
 
 ##
@@ -331,7 +331,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineCharmD2KS0h])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineCharmD2KS0h])
 
 ##
 ##----------------------------------------------------------------------------------------
@@ -463,7 +463,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         ### D(s)->KS0Pi line
 
         line = Hlt2Line(kSPiName, prescale = self.prescale
-                        , algos = [ PV3D(), KS0LLForD2KS0h, pionsBachelorForD2KS0h, Hlt2CharmD2KS0Pi]
+                        , algos = [ PV3D('Hlt2'), KS0LLForD2KS0h, pionsBachelorForD2KS0h, Hlt2CharmD2KS0Pi]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
@@ -474,7 +474,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         ### D(s)->KS0K line
 
         line2 = Hlt2Line(kSKName, prescale = self.prescale
-                        , algos = [ PV3D(), KS0LLForD2KS0h, kaonsBachelorForD2KS0h, Hlt2CharmD2KS0K]
+                        , algos = [ PV3D('Hlt2'), KS0LLForD2KS0h, kaonsBachelorForD2KS0h, Hlt2CharmD2KS0K]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
@@ -487,7 +487,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         ### D(s)->KS0Pi line
 
         line3 = Hlt2Line(kSDDPiName, prescale = self.prescale
-                        , algos = [ PV3D(), KS0DDForD2KS0h, pionsBachelorDDForD2KS0h, Hlt2CharmD2KS0DDPi]
+                        , algos = [ PV3D('Hlt2'), KS0DDForD2KS0h, pionsBachelorDDForD2KS0h, Hlt2CharmD2KS0DDPi]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )
@@ -498,7 +498,7 @@ class Hlt2CharmHadD2KS0HLinesConf(HltLinesConfigurableUser) :
         ### D(s)->KS0K line
 
         line4 = Hlt2Line(kSDDKName, prescale = self.prescale
-                        , algos = [ PV3D(), KS0DDForD2KS0h, kaonsBachelorDDForD2KS0h, Hlt2CharmD2KS0DDK]
+                        , algos = [ PV3D('Hlt2'), KS0DDForD2KS0h, kaonsBachelorDDForD2KS0h, Hlt2CharmD2KS0DDK]
                         # All the necessary algorithms
                         , postscale = self.postscale
                         )

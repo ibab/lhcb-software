@@ -146,7 +146,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , HLT = hltfilter
                         , L0DU = l0filter
-                        , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma ] + photonAlgos + [ Hlt2BstoPhiGamma ]
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, Hlt2Phi4PhiGamma ] + photonAlgos + [ Hlt2BstoPhiGamma ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaDecision" : self.getProp('HltANNSvcID')['Bs2PhiGamma']} )
@@ -158,7 +158,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #   use noCuts particles
         # line.clone('Bs2PhiGammaNoCutsK'
         #            , prescale = self.prescale
-        #            , algos = [  PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
+        #            , algos = [  PV3D('Hlt2'), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
         #            #, CombinePhi = {"Inputs" : [BiKalmanFittedKaons] }
         #            , CombineBs = {"Inputs" : [Photons, Hlt2Phi4PhiGamma]}
         #            , postscale = self.postscale
@@ -168,7 +168,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #   Bs mass sideband
         line.clone('Bs2PhiGammaWideBMass'
                    , prescale = self.prescale
-                   # , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma ]
+                   # , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma ]
                    , CombineBs = { "CombinationCut" : "(ADAMASS('B_s0')<1.5*%(BMassWinSB)s*MeV)" % self.getProps(),
                                    "MotherCut"      : "((BPVDIRA > cos(%(BsDirAngle)s)) & (BPVIPCHI2()< %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BMassWinSB)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps()}
                    , postscale = self.postscale
@@ -178,7 +178,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #  Bs dira monitoring
         line.clone('Bs2PhiGammaLooseDira'
                    , prescale = self.prescale
-                   # , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma ]
+                   # , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma ]
                    , CombineBs = {"MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BsMassWin)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps() }
                    , postscale = self.postscale
                    )
@@ -192,7 +192,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , HLT = hltfilter
                         , L0DU = l0filter
-                        , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma ] + photonAlgos + [ Hlt2BdtoKstGamma]
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma ] + photonAlgos + [ Hlt2BdtoKstGamma]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaDecision" :self.getProp('HltANNSvcID')['Bd2KstGamma'] } )
@@ -204,7 +204,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #  Kst mass sideband
         line.clone('Bd2KstGammaWideKMass'
                    , prescale = self.prescale
-                   # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
+                   # , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
                    , CombineKstar = { 'CombinationCut' : "(ADAMASS('K*(892)0')<1.5*%(KstMassWinL)s*MeV)" % self.getProps(),
                                       'MotherCut'      : "(VFASPF(VCHI2)<%(KstVCHI2)s) & (ADMASS('K*(892)0')<%(KstMassWinL)s*MeV)" % self.getProps() }
                    , postscale = self.postscale
@@ -213,7 +213,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         # B0 mass sideband
         line.clone('Bd2KstGammaWideBMass'
                    , prescale = self.prescale
-                   # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
+                   # , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
                    , CombineB0 = { "CombinationCut": "(ADAMASS('B0')<1.5*%(BMassWinSB)s*MeV)" %self.getProps(),
                                    "MotherCut"     : "((BPVDIRA > cos(%(B0DirAngle)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(BMassWinSB)s*MeV) & (PT > %(B_PT)s*MeV))" % self.getProps()}
                    , postscale = self.postscale
@@ -222,7 +222,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         # B0 dira monitoring
         line.clone('Bd2KstGammaLooseDira'
                    , prescale = self.prescale
-                   # , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
+                   # , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, BiKalmanFittedPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma ]
                    , CombineB0 = { "MotherCut": "( (BPVDIRA > cos(%(BDirAngleMoni)s)) & (BPVIPCHI2()<%(B0PVIPchi2)s) & (ADMASS('B0')<%(B0MassWin)s*MeV) & (PT > %(B_PT)s*MeV))" %self.getProps() }
                    , postscale = self.postscale
                    )

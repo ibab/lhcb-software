@@ -139,7 +139,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                              , Code = incuts
                            )
 
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
         
         return filterSeq
 
@@ -171,7 +171,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                                    , CombinationCut = combcuts
                                    , MotherCut = mothercuts
                                    )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineDstar])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineDstar])
 
     def __DstarCombine_V0(self, name, inputSeq, decayDesc, masscut) :
         from HltLine.HltLine import Hlt2Member, bindMembers
@@ -202,7 +202,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
                                    , CombinationCut = combcuts
                                    , MotherCut = mothercuts
                                    )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineDstar])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineDstar])
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
@@ -424,7 +424,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         ############################################################################################################
 
         line = Hlt2Line(modeName, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeName + 'Decision'
@@ -432,7 +432,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassName, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmHHXWideMass]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassName + 'Decision'
@@ -442,7 +442,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         ############################################################################################################
 
         line = Hlt2Line(modeNameBaryon, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameBaryon + 'Decision'
@@ -450,7 +450,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassNameBaryon, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonHHXWideMass]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassNameBaryon + 'Decision'
@@ -458,7 +458,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } ) 
 
         line = Hlt2Line(modeNameBaryonWithKSLL, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSLLHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSLLHHX]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + modeNameBaryonWithKSLL + 'Decision'
@@ -466,7 +466,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } ) 
 
         line = Hlt2Line(wideMassNameBaryonWithKSLL, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSLLHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSLLHHXWideMass]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + wideMassNameBaryonWithKSLL + 'Decision'
@@ -474,7 +474,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )    
 
         line = Hlt2Line(modeNameBaryonWithLambda0LL, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0LLHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0LLHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameBaryonWithLambda0LL + 'Decision'
@@ -482,7 +482,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
                         
         line = Hlt2Line(wideMassNameBaryonWithLambda0LL, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0LLHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0LLHHXWideMass]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + wideMassNameBaryonWithLambda0LL + 'Decision'
@@ -490,7 +490,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(modeNameBaryonWithKSDD, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSDDHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSDDHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameBaryonWithKSDD + 'Decision'
@@ -498,7 +498,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
                         
         line = Hlt2Line(wideMassNameBaryonWithKSDD, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSDDHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithKSDDHHXWideMass]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + wideMassNameBaryonWithKSDD + 'Decision'
@@ -506,7 +506,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(modeNameBaryonWithLambda0DD, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0DDHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0DDHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameBaryonWithLambda0DD + 'Decision'
@@ -514,7 +514,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassNameBaryonWithLambda0DD, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0DDHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmBaryonWithLambda0DDHHXWideMass]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassNameBaryonWithLambda0DD + 'Decision'
@@ -524,7 +524,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         ############################################################################################################
 
         line = Hlt2Line(modeNameLepton, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameLepton + 'Decision'
@@ -532,7 +532,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassNameLepton, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonHHXWideMass]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassNameLepton + 'Decision'
@@ -540,7 +540,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(modeNameLeptonWithKSLL, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSLLHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSLLHHX]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + modeNameLeptonWithKSLL + 'Decision'
@@ -548,7 +548,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } ) 
 
         line = Hlt2Line(wideMassNameLeptonWithKSLL, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSLLHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSLLHHXWideMass]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + wideMassNameLeptonWithKSLL + 'Decision'
@@ -556,7 +556,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )    
 
         line = Hlt2Line(modeNameLeptonWithLambda0LL, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0LLHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0LLHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameLeptonWithLambda0LL + 'Decision'
@@ -564,7 +564,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
                         
         line = Hlt2Line(wideMassNameLeptonWithLambda0LL, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0LLHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0LLHHXWideMass]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + wideMassNameLeptonWithLambda0LL + 'Decision'
@@ -572,7 +572,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(modeNameLeptonWithKSDD, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSDDHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSDDHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameLeptonWithKSDD + 'Decision'
@@ -580,7 +580,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
                         
         line = Hlt2Line(wideMassNameLeptonWithKSDD, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSDDHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithKSDDHHXWideMass]
                         , postscale = self.postscale
                         )   
         decName = 'Hlt2' + wideMassNameLeptonWithKSDD + 'Decision'
@@ -588,7 +588,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(modeNameLeptonWithLambda0DD, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0DDHHX]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0DDHHX]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameLeptonWithLambda0DD + 'Decision'
@@ -596,7 +596,7 @@ class Hlt2CharmHadD02HHXDstLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassNameLeptonWithLambda0DD, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0DDHHXWideMass]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, Hlt2CharmLeptonWithLambda0DDHHXWideMass]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassNameLeptonWithLambda0DD + 'Decision'

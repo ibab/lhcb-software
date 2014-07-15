@@ -117,7 +117,7 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('CharmHadMinBiasLambdaC2KPPi'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')" 
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedPions,  
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedPions,  
                                             BiKalmanFittedKaons,  
                                             BiKalmanFittedProtons,  
                                             Hlt2CharmHadLambdaC2KPPi]
@@ -127,7 +127,7 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         line2 = Hlt2Line('CharmHadMinBiasD02KPi'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')" 
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedPions, 
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, 
                                             BiKalmanFittedKaons, 
                                             Hlt2CharmHadD02KPi]
                         , postscale = self.postscale
@@ -136,7 +136,7 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         line3 = Hlt2Line('CharmHadMinBiasD02KK'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')"
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedKaons,           
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons,           
                                             Hlt2CharmHadD02KK]
                         , postscale = self.postscale
                         )
@@ -144,7 +144,7 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         line4 = Hlt2Line('CharmHadMinBiasDplus2hhh'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')"
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedPions, 
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, 
                                             BiKalmanFittedKaons,
                                             Hlt2CharmHadDplus2hhh]
                         , postscale = self.postscale
@@ -153,7 +153,7 @@ class Hlt2CharmHadMinBiasLinesConf(HltLinesConfigurableUser) :
         line5 = Hlt2Line('CharmHadMinBiasLambdaC2LambdaPi'
                         , HLT = "HLT_PASS_RE('Hlt1CharmCalibrationNoBiasDecision')"
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedPions,
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedPions,
                                             LambdaLLTrackFitted, 
                                             Hlt2CharmHadLambdaC2LambdaPi]
                         , postscale = self.postscale

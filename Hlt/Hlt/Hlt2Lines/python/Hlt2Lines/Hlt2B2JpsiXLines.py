@@ -241,7 +241,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bs2JpsiPhiPrescaled'
                         , prescale = self.prescale
                         , postscale = self.postscale
-                        , algos = [PV3D(), Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
+                        , algos = [PV3D('Hlt2'), Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
                         )
 
         # Now do the detached 
@@ -249,7 +249,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line.clone('Bs2JpsiPhiDetached'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , algos = [PV3D(), Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
+                   , algos = [PV3D('Hlt2'), Jpsi2MuMu, NoCutsKaons, phiCombine, BsCombine]
                    , BsCombine = {"MotherCut": BsCuts + "& (BPVLTIME()>%(BsLifetimeCut)s*ps)"%self.getProps() }
                    )
 
@@ -412,7 +412,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                    , prescale = self.prescale
                    , L0DU = L0Req
                    , HLT  = Hlt1Req
-                   , algos = [ PV3D(), Bs2JpsieePhiUnbiased, FilterBs2JpsieePhi ]
+                   , algos = [ PV3D('Hlt2'), Bs2JpsieePhiUnbiased, FilterBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    
 
@@ -521,7 +521,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                    , prescale = self.prescale
                    , L0DU = L0Req
                    , HLT  = Hlt1Req
-                   , algos = [ PV3D(), TFBs2JpsieePhiUnbiased, FilterTFBs2JpsieePhi ]
+                   , algos = [ PV3D('Hlt2'), TFBs2JpsieePhiUnbiased, FilterTFBs2JpsieePhi ]
                    , postscale = self.postscale
                    )    
 
@@ -655,7 +655,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsLLBiased'
 		        , prescale = self.prescale
                    	, postscale = self.postscale	
-                        , algos = [  PV3D(),  Jpsi2MuMu, filterJpsi
+                        , algos = [  PV3D('Hlt2'),  Jpsi2MuMu, filterJpsi
                                        , KsLLTF,      filterKS
                                        , combineB
                                        ]
@@ -735,7 +735,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDBiased'
                         , prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   PV3D(), Jpsi2MuMu , filterJpsi
+                        ,  algos = [   PV3D('Hlt2'), Jpsi2MuMu , filterJpsi
                                        , KsDD
                                        , combineB
                                        ]
@@ -779,7 +779,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDUnbiased'
                    	, prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   PV3D(), Jpsi2MuMu, filterJpsi
+                        ,  algos = [   PV3D('Hlt2'), Jpsi2MuMu, filterJpsi
                                        , KsDD, filterKS
                                        , combineB
                                        ]
@@ -1044,7 +1044,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         line_Detached = Hlt2Line('Bc2JpsiHDetached'
                                  , prescale = self.prescale
-                                 , algos = [ PV3D()
+                                 , algos = [ PV3D('Hlt2')
                                            , Bc2JpsiHPDLoose
                                            , FilterBc2JpsiHPD ]
                                  , postscale = self.postscale
@@ -1286,7 +1286,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         
         line_Detached = Hlt2Line('TFBc2JpsiHDetached'
                                  , prescale = self.prescale
-                                 , algos = [ PV3D(), TFBc2JpsiHPDLoose , FilterTFBc2JpsiHPD ]
+                                 , algos = [ PV3D('Hlt2'), TFBc2JpsiHPDLoose , FilterTFBc2JpsiHPD ]
                                  , postscale = self.postscale
                                  )        
         

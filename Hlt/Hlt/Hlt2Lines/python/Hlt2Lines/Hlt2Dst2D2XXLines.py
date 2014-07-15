@@ -158,7 +158,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine     = Hlt2Line('Dst2PiD02PiPi'    # Also wide mass box line for Dst-> pi ( D0 -> pipi)
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedPions,  D2PiPiComb  ]
+                               , algos = [ PV3D('Hlt2'), BiKalmanFittedPions,  D2PiPiComb  ]
                                )
 
         ################################################################################
@@ -167,7 +167,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_mm  = Hlt2Line('Dst2PiD02MuMu'    # Also wide mass box line for Dst-> pi ( D0 -> pipi)
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedMuons, D2MuMuComb  ]
+                               , algos = [ PV3D('Hlt2'), BiKalmanFittedMuons, D2MuMuComb  ]
                                )
 
         ################################################################################
@@ -177,13 +177,13 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_pm  = Hlt2Line('Dst2PiD02PiMu'
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedMuons, D2PiMuComb ]
+                               , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, BiKalmanFittedMuons, D2PiMuComb ]
                                )
 
         DstLine_km  = Hlt2Line('Dst2PiD02KMu'
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedKaons, BiKalmanFittedMuons, D2KMuComb ]
+                               , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, BiKalmanFittedMuons, D2KMuComb ]
                                )
 
         ################################################################################
@@ -192,14 +192,14 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_kp  = Hlt2Line('Dst2PiD02KPi'
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [  PV3D(), BiKalmanFittedKaons, BiKalmanFittedPions, D2KPiComb ]
+                               , algos = [  PV3D('Hlt2'), BiKalmanFittedKaons, BiKalmanFittedPions, D2KPiComb ]
                                )
         
         ###########################################################        
         DstLine_emu = Hlt2Line('Dst2PiD02EMu'
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedElectrons, BiKalmanFittedMuons, D2EMuComb ]
+                               , algos = [ PV3D('Hlt2'), BiKalmanFittedElectrons, BiKalmanFittedMuons, D2EMuComb ]
                                , L0DU = "L0_CHANNEL('Electron')"
                                , HLT  = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                )
@@ -208,7 +208,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_epi = Hlt2Line('Dst2PiD02EPi'
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedElectrons, BiKalmanFittedPions, D2EPiComb ]
+                               , algos = [ PV3D('Hlt2'), BiKalmanFittedElectrons, BiKalmanFittedPions, D2EPiComb ]
                                , L0DU = "L0_CHANNEL('Electron')"
                                , HLT  = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                )
@@ -217,7 +217,7 @@ class Hlt2Dst2D2XXLinesConf(HltLinesConfigurableUser) :
         DstLine_eK  = Hlt2Line('Dst2PiD02EK'
                                , prescale = self.prescale
                                , postscale = self.postscale
-                               , algos = [ PV3D(), BiKalmanFittedElectrons, BiKalmanFittedKaons, D2EKComb ]
+                               , algos = [ PV3D('Hlt2'), BiKalmanFittedElectrons, BiKalmanFittedKaons, D2EKComb ]
                                , L0DU = "L0_CHANNEL('Electron')"
                                , HLT  = "HLT_PASS_RE('Hlt1(Track|.*Electron).*Decision')"
                                )

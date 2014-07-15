@@ -80,7 +80,7 @@ class Hlt2CharmSemilepTwoMuonForMuMuHadConf(HltLinesConfigurableUser) : # {
                           , MotherCut = twoMuonMotherCut
                           , Inputs = [BiKalmanFittedMuons])
 
-        twoMuonSeq = bindMembers('CharmCharmSemilepTwoMuonForMuMuHad', [ PV3D(), BiKalmanFittedMuons,  Charm2MuonCombine ])
+        twoMuonSeq = bindMembers('CharmCharmSemilepTwoMuonForMuMuHad', [ PV3D('Hlt2'), BiKalmanFittedMuons,  Charm2MuonCombine ])
  
         self.setProp('__hlt2TwoMuonSeq__', twoMuonSeq)
     # }A

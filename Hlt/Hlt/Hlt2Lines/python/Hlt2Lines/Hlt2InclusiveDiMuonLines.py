@@ -561,7 +561,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('BiasedDiMuonSimple'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), TrackFittedDiMuon, SimpleDiMuon ]
+                        , algos = [ PV3D('Hlt2'), TrackFittedDiMuon, SimpleDiMuon ]
                         , postscale = self.postscale
                         )
 
@@ -571,7 +571,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('BiasedDiMuonRefined'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), TrackFittedDiMuon, SimpleDiMuon, RefinedDiMuon ]
+                        , algos = [ PV3D('Hlt2'), TrackFittedDiMuon, SimpleDiMuon, RefinedDiMuon ]
                         , postscale = self.postscale
                         )
 
@@ -624,7 +624,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('DiMuonDetached'
                         , prescale = self.prescale 
-                        , algos = [ PV3D(), TrackFittedDiMuon, filter ]
+                        , algos = [ PV3D('Hlt2'), TrackFittedDiMuon, filter ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonDetachedDecision" : 50045 } )
@@ -664,7 +664,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         
         DiMuonBiasedJpsi = Hlt2Line ( 'DiMuonDetachedJPsi'
                                       , prescale = self.prescale 
-                                      , algos = [ PV3D(), DetachedTrackFittedJpsi2MuMu, Hlt2SelDetachedJPsi ]
+                                      , algos = [ PV3D('Hlt2'), DetachedTrackFittedJpsi2MuMu, Hlt2SelDetachedJPsi ]
                                       , postscale = self.postscale
                                       )
 
@@ -685,7 +685,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         
         DiMuonDetachedPsi2S = Hlt2Line ( 'DiMuonDetachedPsi2S'
                                          , prescale = self.prescale 
-                                         , algos = [ PV3D(), TrackFittedDiMuon, Hlt2SelDetachedPsi2S ]
+                                         , algos = [ PV3D('Hlt2'), TrackFittedDiMuon, Hlt2SelDetachedPsi2S ]
                                          , postscale = self.postscale
                                          )
 
@@ -1078,7 +1078,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             postscale = self.postscale ,  ## postscale 
             # the main structure 
             algos     = [   
-            PV3D    ()     ,    ## recontruct PV
+            PV3D('Hlt2')         ,    ## recontruct PV
             Muons          ,    ## get muons  
             Check_3mu      ,    ## require at least 3 muons 
             GoodMuons      ,    ## select good muons
@@ -1120,7 +1120,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             postscale = self.postscale ,  ## postscale 
             # the main structure 
             algos     = [
-            PV3D()         ,  ## recontruct PV
+            PV3D('Hlt2')         ,  ## recontruct PV
             Muons          ,  ## get muons 
             Check_3mu      ,  ## require at least 3 muons
             DiMuons        ,  ## get dimuons
@@ -1138,7 +1138,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             postscale = self.postscale ,  ## postscale 
             # the main structure 
             algos     = [  
-            PV3D    ()    ,  ## recontruct PV
+            PV3D('Hlt2')        ,  ## recontruct PV
             Muons         ,  ## get muons  
             Check_3mu     ,  ## require at least 3 muons 
             GoodMuons     ,  ## select good muons 
@@ -1176,7 +1176,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
-            PV3D()         ,
+            PV3D('Hlt2')         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons
@@ -1197,7 +1197,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
-            PV3D()         ,
+            PV3D('Hlt2')         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons
@@ -1219,7 +1219,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
-            PV3D()         ,
+            PV3D('Hlt2')         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons
@@ -1241,7 +1241,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
             # the main structure 
             algos     = [
             #
-            PV3D()         ,
+            PV3D('Hlt2')         ,
             Muons          ,  ## get muons 
             DiMuons        ,  ## get dimuons
             GoodKaons      ,  ## get kaons

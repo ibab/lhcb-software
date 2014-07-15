@@ -66,7 +66,7 @@ class Hlt2CharmHadD02HHPi0LinesConf(HltLinesConfigurableUser) :
         #  note that any duplication gets automatically removed, so we 
         #  keep the original 'as is'
         from HltTracking.HltPVs import PV3D
-        pv = PV3D()
+        pv = PV3D('Hlt2')
         if set(pv.members()).issubset(set([ j for i in algos for j in i.members() ])) : 
             lclAlgos.insert( 0, pv )
 
@@ -135,7 +135,7 @@ class Hlt2CharmHadD02HHPi0LinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Remember to require the PV3D reconstruction before cutting on IP.
-        filterSeq = bindMembers( name, inputContainers + [PV3D(), filter] )
+        filterSeq = bindMembers( name, inputContainers + [PV3D('Hlt2'), filter] )
 
         return filterSeq
 
@@ -177,7 +177,7 @@ class Hlt2CharmHadD02HHPi0LinesConf(HltLinesConfigurableUser) :
 
         
         
-        charmNBody = bindMembers( name, inputSeq + [ PV3D(), combineNBody ] )
+        charmNBody = bindMembers( name, inputSeq + [ PV3D('Hlt2'), combineNBody ] )
         return charmNBody
 
     def __filter(self, name, inputSeq, extracode = None) : 
@@ -265,7 +265,7 @@ class Hlt2CharmHadD02HHPi0LinesConf(HltLinesConfigurableUser) :
 
         from HltTracking.HltPVs import PV3D
         twoBodyName = self.getProp('name_prefix') + '2Body'
-        charmPi0hhTF2Body = bindMembers( twoBodyName,  [PV3D(),lclPi0hhTFInputKaons,  lclPi0hhTFInputPions, combinePi0hhTF2Body ] )
+        charmPi0hhTF2Body = bindMembers( twoBodyName,  [PV3D('Hlt2'),lclPi0hhTFInputKaons,  lclPi0hhTFInputPions, combinePi0hhTF2Body ] )
 
         ## Filter the pi0s
         from Hlt2SharedParticles.Pi0 import MergedPi0s,ResolvedPi0s
@@ -276,7 +276,7 @@ class Hlt2CharmHadD02HHPi0LinesConf(HltLinesConfigurableUser) :
                                        , Code =Pi0R_FilterCuts
                                        , Inputs = [ResolvedPi0s]
                                        )
-        charmPi0hhTFPi0R = bindMembers( "charmPi0hhTFPi0R", [ PV3D(), ResolvedPi0s, Pi0R_forD02HHPi0 ] )
+        charmPi0hhTFPi0R = bindMembers( "charmPi0hhTFPi0R", [ PV3D('Hlt2'), ResolvedPi0s, Pi0R_forD02HHPi0 ] )
         
         ## make the D0->hh pi0 combination
         Pi0R_Name = self.getProp('name_prefix') + '_Resolved'

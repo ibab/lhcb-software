@@ -99,7 +99,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
         #  note that any duplication gets automatically removed, so we
         #  keep the original 'as is'
         from HltTracking.HltPVs import PV3D
-        pv = PV3D()
+        pv = PV3D('Hlt2')
         if set(pv.members()).issubset(set([ j for i in algos for j in i.members() ])) :
             lclAlgos.insert( 0, pv )
 
@@ -245,7 +245,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction 
-        return bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        return bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
 
     # slow pion filter
     def __SlowPionFilter(self, name, inputContainers) : # {
@@ -263,7 +263,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                              , Code = incuts
                            )
 
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
        
         return filterSeq
     # }
@@ -284,7 +284,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
                                    , CombinationCut = combcuts
                                    , MotherCut = mothercuts
                                    )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineDstar])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineDstar])
 
     def __apply_configuration__(self) :
 

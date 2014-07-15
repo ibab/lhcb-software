@@ -288,7 +288,7 @@ class Hlt2CharmHadD02HHLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
 
         return filterSeq
     # }

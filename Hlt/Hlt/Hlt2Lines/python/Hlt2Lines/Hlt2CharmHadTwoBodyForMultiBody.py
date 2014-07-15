@@ -84,7 +84,7 @@ class Hlt2CharmHadTwoBodyForMultiBodyConf(HltLinesConfigurableUser) : # {
                           , MotherCut = twoBodyMotherCut
                           , Inputs = [ BiKalmanFittedPions, BiKalmanFittedKaons ])
 
-        twoBodySeq = bindMembers(self.getProp('name_prefix'), [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), Charm2BodyCombine ])
+        twoBodySeq = bindMembers(self.getProp('name_prefix'), [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D('Hlt2'), Charm2BodyCombine ])
  
         self.setProp('__hlt2TwoBodySeq__', twoBodySeq)
     # }

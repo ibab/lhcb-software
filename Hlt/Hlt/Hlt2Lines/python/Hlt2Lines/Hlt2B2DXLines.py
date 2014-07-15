@@ -73,7 +73,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                              )
         
         ## Require the PV3D reconstruction before our cut on IP.
-        return bindMembers(name, [PV3D()] + inputContainers + [filter])
+        return bindMembers(name, [PV3D('Hlt2')] + inputContainers + [filter])
 
     ############################################################
     # Function to perform a filter on the input particles after the
@@ -96,7 +96,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                    , Code = incuts
                                    )        
 
-        bindPrelim = bindMembers('bindPrelim', [PV3D()] + inputContainers + [filterPrelim])
+        bindPrelim = bindMembers('bindPrelim', [PV3D('Hlt2')] + inputContainers + [filterPrelim])
         
 
         from Configurables import TisTosParticleTagger
@@ -136,7 +136,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                              )
         
         ## Require the PV3D reconstruction before our cut on IP.
-        return bindMembers(name, [PV3D()] + inputContainers + [filter])
+        return bindMembers(name, [PV3D('Hlt2')] + inputContainers + [filter])
 
     ############################################################
     # Function to configure common particle combinations at the
@@ -172,7 +172,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                      )
 
         #explicitly require the primary vertex as we are paranoid
-        return bindMembers(name, inputSeq + [PV3D(), combineDXNBody])
+        return bindMembers(name, inputSeq + [PV3D('Hlt2'), combineDXNBody])
 
     ###################################################################
     # Function to filter the post-OSTF particle combinations

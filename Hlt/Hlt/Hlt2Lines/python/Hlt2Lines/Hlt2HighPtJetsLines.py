@@ -36,14 +36,14 @@ class Hlt2HighPtJetsLinesConf(HltLinesConfigurableUser) :
         #######################################################################
         DVSeq = []
         hlt2Tracking = Hlt2BiKalmanFittedForwardTracking().hlt2PrepareTracks()
-        DVSeq.extend([PV3D(),hlt2Tracking])
+        DVSeq.extend([PV3D('Hlt2'),hlt2Tracking])
         
         ####################################################################### 
         from Configurables import TrackClusterFinder
         Hlt2TrkFinder = TrackClusterFinder("Hlt2TrkFinder")
         DVSeq.append(Hlt2TrkFinder)
         Hlt2TrkFinder.InputTracks = [hlt2Tracking.outputSelection()]
-        Hlt2TrkFinder.InputPVs = "Hlt/Vertex/PV3D"
+        Hlt2TrkFinder.InputPVs =  PV3D('Hlt2').output # "Hlt/Vertex/PV3D"
         Hlt2TrkFinder.MinWeightSeed = self.getProp('MinWeightSeedCut')
         Hlt2TrkFinder.ConeExtFactor = self.getProp('ConeExtFactorCut')
         Hlt2TrkFinder.MaxDeltaPhi = self.getProp('MaxDeltaPhiCut')

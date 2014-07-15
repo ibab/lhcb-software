@@ -179,7 +179,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressJPsi'
                       , prescale = self.prescale 
-                      , algos = [  PV3D(), TrackFittedDiMuon, filter ]
+                      , algos = [  PV3D('Hlt2'), TrackFittedDiMuon, filter ]
                       , postscale = self.postscale
                       )
       #--------------------------------------------
@@ -225,7 +225,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       line = Hlt2Line('ExpressJPsiTagProbe'
                       , prescale = self.prescale
                       , HLT = "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
-                      , algos = [ PV3D(), TagAndProbeMuons, TagAndProbePions, JPsiCombine ]
+                      , algos = [ PV3D('Hlt2'), TagAndProbeMuons, TagAndProbePions, JPsiCombine ]
                       , postscale = self.postscale
                       )
       
@@ -265,7 +265,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressLambda'
                       , prescale = self.prescale
-                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedProtons, LambdaCombine ]
+                      , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, BiKalmanFittedProtons, LambdaCombine ]
                       , postscale = self.postscale
                       )
       #--------------------------------------------
@@ -295,7 +295,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressKS'
                       , prescale = self.prescale
-                      , algos = [ PV3D(), BiKalmanFittedPions, KsCombine]
+                      , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, KsCombine]
                       , postscale = self.postscale
                       )
 
@@ -345,7 +345,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
       
       line = Hlt2Line('ExpressDs2PhiPi'
                       , prescale = self.prescale 
-                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons, PhiCombine, DsCombine]
+                      , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, BiKalmanFittedKaons, PhiCombine, DsCombine]
                       , postscale = self.postscale
                       )
 
@@ -448,7 +448,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 
       line = Hlt2Line('ExpressDStar2D0Pi'
                       , prescale = self.prescale 
-                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons,
+                      , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, BiKalmanFittedKaons,
                                   D02KPiCombine, DStarCombine ]
                       , postscale = self.postscale
                       )
@@ -489,7 +489,7 @@ class Hlt2ExpressLinesConf(HltLinesConfigurableUser):
 
       line = Hlt2Line('ExpressD02KPi'
                       , prescale = self.prescale 
-                      , algos = [ PV3D(), BiKalmanFittedPions, BiKalmanFittedKaons,
+                      , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, BiKalmanFittedKaons,
                                   D02KPiPromptCombine ]
                       , postscale = self.postscale
                       )

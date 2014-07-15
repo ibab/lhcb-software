@@ -275,40 +275,40 @@ class Hlt2CharmHadTwoBodyForD02HHHHConf(HltLinesConfigurableUser) : # {
                           , MotherCut = twoBodyMotherCut
                           , Inputs = [ BiKalmanFittedMuons,Lambda0DDData ])
 
-        twoBodySeq = bindMembers(self.getProp('name_prefix'), [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D(), Charm2BodyCombine ])
+        twoBodySeq = bindMembers(self.getProp('name_prefix'), [ BiKalmanFittedPions, BiKalmanFittedKaons, PV3D('Hlt2'), Charm2BodyCombine ])
         #
         twoBodyHHXSeq = bindMembers(self.getProp('name_prefix')+"HHX", [ BiKalmanFittedPions, BiKalmanFittedKaons, 
-                                                                         PV3D(), CharmHHXCombine ])
+                                                                         PV3D('Hlt2'), CharmHHXCombine ])
         twoBodyHHXWithKSLLSeq = bindMembers(self.getProp('name_prefix')+"HHXWithKSLL", [ BiKalmanFittedPions, BiKalmanFittedKaons,
-                                                                         KsLLTF, PV3D(), CharmHHXCombineWithKSLL ])
+                                                                         KsLLTF, PV3D('Hlt2'), CharmHHXCombineWithKSLL ])
         twoBodyHHXWithKSDDSeq = bindMembers(self.getProp('name_prefix')+"HHXWithKSDD", [ BiKalmanFittedPions, BiKalmanFittedKaons,
-                                                                         KsDD, PV3D(), CharmHHXCombineWithKSDD ])
+                                                                         KsDD, PV3D('Hlt2'), CharmHHXCombineWithKSDD ])
         #
         twoBodyBaryonHHXSeq = bindMembers(self.getProp('name_prefix')+"BaryonHHX", 
                                 [ BiKalmanFittedPions, BiKalmanFittedKaons, BiKalmanFittedProtons, 
-                                  PV3D(), CharmHHXBaryonCombine ])
+                                  PV3D('Hlt2'), CharmHHXBaryonCombine ])
         twoBodyBaryonHHXWithKSLLSeq = bindMembers(self.getProp('name_prefix')+"BaryonHHXWithKSLL",
-                                [ BiKalmanFittedProtons, KsLLTF, PV3D(), CharmHHXBaryonCombineWithKSLL ])
+                                [ BiKalmanFittedProtons, KsLLTF, PV3D('Hlt2'), CharmHHXBaryonCombineWithKSLL ])
         twoBodyBaryonHHXWithLambda0LLSeq = bindMembers(self.getProp('name_prefix')+"BaryonHHXWithLambda0LL",
                                 [ BiKalmanFittedPions, BiKalmanFittedKaons, 
-                                  Lambda0LLData, PV3D(), CharmHHXBaryonCombineWithLambda0LL ])
+                                  Lambda0LLData, PV3D('Hlt2'), CharmHHXBaryonCombineWithLambda0LL ])
         twoBodyBaryonHHXWithKSDDSeq = bindMembers(self.getProp('name_prefix')+"BaryonHHXWithKSDD",
-                                [ BiKalmanFittedProtons, KsDD, PV3D(), CharmHHXBaryonCombineWithKSDD ])
+                                [ BiKalmanFittedProtons, KsDD, PV3D('Hlt2'), CharmHHXBaryonCombineWithKSDD ])
         twoBodyBaryonHHXWithLambda0DDSeq = bindMembers(self.getProp('name_prefix')+"BaryonHHXWithLambda0DD",
                                 [ BiKalmanFittedPions, BiKalmanFittedKaons, 
-                                  Lambda0DDData, PV3D(), CharmHHXBaryonCombineWithLambda0DD ])
+                                  Lambda0DDData, PV3D('Hlt2'), CharmHHXBaryonCombineWithLambda0DD ])
         #
         twoBodyLeptonHHXSeq = bindMembers(self.getProp('name_prefix')+"LeptonHHX", 
                                 [ BiKalmanFittedPions, BiKalmanFittedKaons, BiKalmanFittedProtons, 
-                                  BiKalmanFittedMuons, PV3D(), CharmHHXLeptonCombine ])
+                                  BiKalmanFittedMuons, PV3D('Hlt2'), CharmHHXLeptonCombine ])
         twoBodyLeptonHHXWithKSLLSeq = bindMembers(self.getProp('name_prefix')+"LeptonHHXWithKSLL",
-                                [ BiKalmanFittedMuons, KsLLTF, PV3D(), CharmHHXLeptonCombineWithKSLL ])
+                                [ BiKalmanFittedMuons, KsLLTF, PV3D('Hlt2'), CharmHHXLeptonCombineWithKSLL ])
         twoBodyLeptonHHXWithLambda0LLSeq = bindMembers(self.getProp('name_prefix')+"LeptonHHXWithLambda0LL",
-                                [ BiKalmanFittedMuons, Lambda0LLData, PV3D(), CharmHHXLeptonCombineWithLambda0LL ])
+                                [ BiKalmanFittedMuons, Lambda0LLData, PV3D('Hlt2'), CharmHHXLeptonCombineWithLambda0LL ])
         twoBodyLeptonHHXWithKSDDSeq = bindMembers(self.getProp('name_prefix')+"LeptonHHXWithKSDD",
-                                [ BiKalmanFittedMuons, KsDD, PV3D(), CharmHHXLeptonCombineWithKSDD ])
+                                [ BiKalmanFittedMuons, KsDD, PV3D('Hlt2'), CharmHHXLeptonCombineWithKSDD ])
         twoBodyLeptonHHXWithLambda0DDSeq = bindMembers(self.getProp('name_prefix')+"LeptonHHXWithLambda0DD",
-                                [ BiKalmanFittedMuons, Lambda0DDData, PV3D(), CharmHHXLeptonCombineWithLambda0DD ])  
+                                [ BiKalmanFittedMuons, Lambda0DDData, PV3D('Hlt2'), CharmHHXLeptonCombineWithLambda0DD ])  
 
         self.setProp('__hlt2TwoBodySeq__', twoBodySeq)
         #

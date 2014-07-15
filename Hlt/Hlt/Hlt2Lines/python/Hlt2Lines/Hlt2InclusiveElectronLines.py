@@ -317,7 +317,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                       , prescale = self.prescale
                                       , L0DU = L0Req
                                       , HLT  = Hlt1Req
-                                      , algos = [ PV3D()
+                                      , algos = [ PV3D('Hlt2')
                                                   , Electrons
                                                   , FilterSingleElectron ]
                                       , postscale = self.postscale
@@ -381,7 +381,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                          , prescale = self.prescale
                                          , L0DU = L0Req
                                          , HLT  = Hlt1Req
-                                         , algos = [ PV3D()
+                                         , algos = [ PV3D('Hlt2')
                                                      , Electrons
                                                      , NoCutsKaons
                                                      , CombineElectronTrack ]
@@ -449,7 +449,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                         , prescale = self.prescale
                                         , L0DU = L0Req
                                         , HLT = Hlt1Req
-                                        , algos = [ PV3D()
+                                        , algos = [ PV3D('Hlt2')
                                                     , DecodeL0CALO
                                                     , BiKalmanFittedElectronsFromL0
                                                     , FilterSingleTFElectron ]
@@ -575,7 +575,7 @@ class Hlt2InclusiveElectronLinesConf(HltLinesConfigurableUser) :
                                            , prescale = self.prescale
                                            , L0DU = L0Req
                                            , HLT  = Hlt1Req 
-                                           , algos = [ PV3D()
+                                           , algos = [ PV3D('Hlt2')
                                                        , BiKalmanFittedElectrons
                                                        , BiKalmanFittedKaons
                                                        , CombineTFElectronTrack ]

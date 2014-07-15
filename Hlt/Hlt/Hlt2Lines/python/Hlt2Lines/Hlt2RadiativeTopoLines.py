@@ -263,9 +263,9 @@ class Hlt2RadiativeTopoConf(HltLinesConfigurableUser):
     hardTracksAndSoftPhoton = self.__combineTracksAndPhoton('Track', ditracksHard, photonsSoft)
     # Create the line
     algoListTrack = algoList[:]
-    algoListTrack.extend([PV3D(), BiKalmanFittedKaons, ditracksHard, DecodeL0CALO, photonsSoft, hardTracksAndSoftPhoton])
+    algoListTrack.extend([PV3D('Hlt2'), BiKalmanFittedKaons, ditracksHard, DecodeL0CALO, photonsSoft, hardTracksAndSoftPhoton])
     algoListPhoton  = algoList[:]
-    algoListPhoton.extend([PV3D(), BiKalmanFittedKaons, ditracksSoft, DecodeL0CALO, photonsHard, softTracksAndHardPhoton])
+    algoListPhoton.extend([PV3D('Hlt2'), BiKalmanFittedKaons, ditracksSoft, DecodeL0CALO, photonsHard, softTracksAndHardPhoton])
     lineTOS = Hlt2Line('RadiativeTopoTrack' ,
                        L0DU=l0filtertrack      ,
                        HLT=hltfilter           ,

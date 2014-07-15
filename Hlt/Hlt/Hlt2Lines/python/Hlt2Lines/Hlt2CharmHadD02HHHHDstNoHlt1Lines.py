@@ -124,7 +124,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
 
         return filterSeq
 
@@ -160,7 +160,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineCharm4Body])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineCharm4Body])
 
     def __4BodyFilter(self, name, inputSeq, extracode = None) :
 
@@ -212,7 +212,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
                              , Code = incuts
                            )
 
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
         
         return filterSeq
 
@@ -232,7 +232,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
                                    , CombinationCut = combcuts
                                    , MotherCut = mothercuts
                                    )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineDstar])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineDstar])
 
 
     def __apply_configuration__(self) :
@@ -473,7 +473,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
 
         twoBodyName = self.getProp('name_prefix') + '2Body'
         line = Hlt2Line(twoBodyName, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + twoBodyName + 'Decision'
@@ -488,7 +488,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         
         # D0->pi+pi-pi+pi- ###################################################################################
         line = Hlt2Line(modeName4pi, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body4pi]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body4pi]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeName4pi + 'Decision'
@@ -496,7 +496,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassName4pi, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMass4pi]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMass4pi]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassName4pi + 'Decision'
@@ -508,7 +508,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         
         # D0-> K-pi+pi+pi- / K+pi-pi-pi+  ##########################################################################
         line = Hlt2Line(modeNameKm3pi, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyKm3pi]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyKm3pi]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameKm3pi + 'Decision'
@@ -516,7 +516,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassNameKm3pi, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMassKm3pi]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMassKm3pi]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassNameKm3pi + 'Decision'
@@ -528,7 +528,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         
         # D0->K+K-pi+pi-  ###################################################################################
         line = Hlt2Line(modeNameKKpipi, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyKKpipi]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyKKpipi]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameKKpipi + 'Decision'
@@ -536,7 +536,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassNameKKpipi, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMassKKpipi]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMassKKpipi]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassNameKKpipi + 'Decision'
@@ -548,7 +548,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
 
         # D0->K+K+pi-pi-  / K-K-pi+pi+ #############################################################################
         line = Hlt2Line(modeName2Kp2Pm, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body2Kp2Pm]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body2Kp2Pm]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeName2Kp2Pm + 'Decision'
@@ -556,7 +556,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassName2Kp2Pm, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMass2Kp2Pm]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMass2Kp2Pm]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassName2Kp2Pm + 'Decision'
@@ -568,7 +568,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
 
         # D0->K+K+K-pi- / K-K-K+pi+   ##############################################################################
         line = Hlt2Line(modeName3KPm, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body3KPm]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4Body3KPm]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeName3KPm + 'Decision'
@@ -576,7 +576,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassName3KPm, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMass3KPm]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMass3KPm]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassName3KPm + 'Decision'
@@ -587,7 +587,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
 
         # D -> K+pi+pi+pi- / K-pi-pi-pi+   ##############################################################################
         line = Hlt2Line(modeNameCh2, prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyCh2]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyCh2]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + modeNameCh2 + 'Decision'
@@ -595,7 +595,7 @@ class Hlt2CharmHadD02HHHHDstNoHlt1LinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { decName : annSvcID } )
 
         line = Hlt2Line(wideMassNameCh2, prescale = self.prescale
-                        , algos = [ PV3D(),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMassCh2]
+                        , algos = [ PV3D('Hlt2'),Hlt2CharmKillTooManyInTrk,  Hlt2Charm2BodyFor4Body, kaonsF, pionsF, Hlt2Charm4BodyWideMassCh2]
                         , postscale = self.postscale
                         )
         decName = 'Hlt2' + wideMassNameCh2 + 'Decision'

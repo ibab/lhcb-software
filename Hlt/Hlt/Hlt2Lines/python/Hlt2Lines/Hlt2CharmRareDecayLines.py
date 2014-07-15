@@ -40,7 +40,7 @@ class Hlt2CharmRareDecayLinesConf(HltLinesConfigurableUser) :
         lineCharmRareDecayD02MuMu = \
           Hlt2Line('CharmRareDecayD02MuMu'
                    , prescale = self.prescale
-                   , algos = [ PV3D(), BiKalmanFittedMuons, D02MuMuCombine ]
+                   , algos = [ PV3D('Hlt2'), BiKalmanFittedMuons, D02MuMuCombine ]
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmRareDecayD02MuMuDecision" : self.getProp('HltANNSvcID')['Hlt2CharmRareDecayD02MuMuDecision'] } )
@@ -55,7 +55,7 @@ class Hlt2CharmRareDecayLinesConf(HltLinesConfigurableUser) :
         lineCharmRareDecayD02PiPiForD02MuMu = \
           Hlt2Line('CharmRareDecayD02PiPiForD02MuMu'
                    , prescale = self.prescale
-                   , algos = [ PV3D(), BiKalmanFittedPions, D02PiPiForD02MuMuCombine ]
+                   , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, D02PiPiForD02MuMuCombine ]
                    , postscale = self.postscale
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2CharmRareDecayD02PiPiForD02MuMuDecision" : self.getProp('HltANNSvcID')['Hlt2CharmRareDecayD02PiPiForD02MuMuDecision'] } )

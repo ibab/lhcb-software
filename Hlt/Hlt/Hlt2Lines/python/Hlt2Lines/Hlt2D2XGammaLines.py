@@ -117,7 +117,7 @@ class Hlt2D2XGammaLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , HLT = hltfilter
                         , L0DU = l0filter
-                        , algos = [ PV3D(), BiKalmanFittedKaons, Hlt2Phi4D2PhiGamma ] + photonAlgos + [ Hlt2DtoPhiGamma ]
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedKaons, Hlt2Phi4D2PhiGamma ] + photonAlgos + [ Hlt2DtoPhiGamma ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2D2PhiGammaDecision" : self.getProp('HltANNSvcID')['D2PhiGamma']} )

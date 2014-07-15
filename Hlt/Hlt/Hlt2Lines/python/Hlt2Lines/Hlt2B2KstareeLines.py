@@ -177,7 +177,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                              , Inputs = [FittedDiElectron, FittedKstar]
                              )
         
-        B2KstareeRobustAndFittedAll = bindMembers( "B2KstareeRobustAndFitted", [ PV3D(),
+        B2KstareeRobustAndFittedAll = bindMembers( "B2KstareeRobustAndFitted", [ PV3D('Hlt2'),
                                                                                  Electrons,
                                                                                  LowPtDiElectron,
                                                                                  BiKalmanFittedElectrons,
@@ -196,7 +196,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 	              , prescale = self.prescale
                       , L0DU = L0Req
                       , HLT  = Hlt1Req
-		      , algos = [ PV3D(),
+		      , algos = [ PV3D('Hlt2'),
                                   Electrons,
                                   LowPtDiElectron,
                                   BiKalmanFittedElectrons,
@@ -329,7 +329,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 				  , Inputs = [FittedDiElectron, FittedKstar]
 	)
 
-        B2KstareeFittedAll = bindMembers('B2KstareeFitted', [ PV3D(),
+        B2KstareeFittedAll = bindMembers('B2KstareeFitted', [ PV3D('Hlt2'),
                                                               BiKalmanFittedElectrons,
                                                               FittedDiElectron,
                                                               BiKalmanFittedKaons,
@@ -344,7 +344,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                       , L0DU = L0Req
                       , HLT  = Hlt1Req
 	              , prescale = self.prescale
-		      , algos = [ PV3D(),
+		      , algos = [ PV3D('Hlt2'),
                                   BiKalmanFittedElectrons,
                                   FittedDiElectron,
                                   BiKalmanFittedKaons,

@@ -77,7 +77,7 @@ class Hlt2TwoMuonForKshortToMuMuPiPiConf(HltLinesConfigurableUser) : # {
                           , MotherCut = twoMuonMotherCut
                           , Inputs = [BiKalmanFittedMuons])
 
-        twoMuonSeq = bindMembers('TwoMuonForKshortMuMuPiPi', [ PV3D(), BiKalmanFittedMuons,  KshortTwoMuonCombine ])
+        twoMuonSeq = bindMembers('TwoMuonForKshortMuMuPiPi', [ PV3D('Hlt2'), BiKalmanFittedMuons,  KshortTwoMuonCombine ])
  
         self.setProp('__hltTwoMuonForKshortSeq__', twoMuonSeq)
     # }

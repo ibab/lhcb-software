@@ -50,7 +50,7 @@ class Hlt2SecondLoopExampleLinesConf(HltLinesConfigurableUser) :
         from HltTracking.HltPVs import PV3D
         line = Hlt2Line('SecondLoopExample'
                         , prescale = self.prescale
-                        , algos = [ PV3D(), BiKalmanFittedPions, Hlt2SecondLoopExample_Stage1, BiKalmanFittedSecondLoopPions, Hlt2SecondLoopExample_Stage2 ]
+                        , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, Hlt2SecondLoopExample_Stage1, BiKalmanFittedSecondLoopPions, Hlt2SecondLoopExample_Stage2 ]
                         , postscale = self.postscale
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SecondLoopExampleDecision" : 50082 } )

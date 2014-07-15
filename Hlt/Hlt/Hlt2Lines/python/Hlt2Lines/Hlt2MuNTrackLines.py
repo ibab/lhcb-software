@@ -239,7 +239,7 @@ class Hlt2MuNTrackLinesConf(HltLinesConfigurableUser) :
                             Code=cuts)
         # require PV3D reconstruction before our cut on IP!
         from HltTracking.HltPVs import PV3D
-        return bindMembers(name, [PV3D()]+inputSeq+[_filter])
+        return bindMembers(name, [PV3D('Hlt2')]+inputSeq+[_filter])
 
     def __buildNBodySeqs(self,lineName,_inputMuons,_inputKaons):
         '''Builds a set of mu + 1, 2 and 3 track lines.'''

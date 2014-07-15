@@ -98,7 +98,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
 
         return filterSeq
 
@@ -133,7 +133,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineCharmHmumu])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineCharmHmumu])
 
     def __HMuMuFilter(self, name, inputSeq, extracode = None) :
 
@@ -186,7 +186,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineCharmPMuMu])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineCharmPMuMu])
 
     def __PMuMuFilter(self, name, inputSeq, extracode = None) :
 
@@ -289,7 +289,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
         Hlt2CharmKillTooManyInTrk = self.__seqGEC()
 
         line = Hlt2Line('CharmSemilep2MuonForD2HMuMu', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep2MuonForD2HMuMuDecision"
@@ -303,7 +303,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
 
         ## PiMuMu ##
         line = Hlt2Line('CharmSemilep3bodyD2PiMuMu', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Pions, Hlt2CharmPiMuMu]
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Pions, Hlt2CharmPiMuMu]
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep3bodyD2PiMuMuDecision"
@@ -312,7 +312,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
 
         ## PiMuMuSS #
         line = Hlt2Line('CharmSemilep3bodyD2PiMuMuSS', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Pions, Hlt2CharmPiMuMuSS]  
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Pions, Hlt2CharmPiMuMuSS]  
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep3bodyD2PiMuMuSSDecision"
@@ -321,7 +321,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
 
         ## KMuMu ##
         line = Hlt2Line('CharmSemilep3bodyD2KMuMu', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Kaons, Hlt2CharmKMuMu] 
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Kaons, Hlt2CharmKMuMu] 
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep3bodyD2KMuMuDecision"
@@ -330,7 +330,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
 
         ## KMuMuSS ##
         line = Hlt2Line('CharmSemilep3bodyD2KMuMuSS', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Kaons, Hlt2CharmKMuMuSS] 
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Kaons, Hlt2CharmKMuMuSS] 
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep3bodyD2KMuMuSSDecision"
@@ -340,7 +340,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
         ## Lambda_c ##
             
         line = Hlt2Line('CharmSemilep3bodyLambdac2PMuMu', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Protons, Hlt2CharmPMuMu]  
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Protons, Hlt2CharmPMuMu]  
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep3bodyLambdac2PMuMuDecision"
@@ -350,7 +350,7 @@ class Hlt2CharmSemilepD2HMuMuLinesConf(HltLinesConfigurableUser) :
         ## Lambda_c SS ##
             
         line = Hlt2Line('CharmSemilep3bodyLambdac2PMuMuSS', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Protons, Hlt2CharmPMuMuSS]  
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, Hlt2Charm2MuonForHmumu, Protons, Hlt2CharmPMuMuSS]  
                         , postscale = self.postscale
                         )
         decName = "Hlt2CharmSemilep3bodyLambdac2PMuMuSSDecision"

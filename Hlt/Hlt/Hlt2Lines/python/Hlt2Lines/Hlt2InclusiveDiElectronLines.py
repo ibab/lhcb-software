@@ -1055,7 +1055,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                         , prescale = self.prescale
                                         , L0DU = L0Req
                                         , HLT  = Hlt1Req
-                                        , algos = [ PV3D()
+                                        , algos = [ PV3D('Hlt2')
                                                     , DiElectron
                                                     , FilterBiasedDiElectron ]
                                         , postscale = self.postscale
@@ -1070,7 +1070,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                    , prescale = self.prescale
                                    , L0DU = L0Req
                                    , HLT  = Hlt1Req
-                                   , algos = [ PV3D()
+                                   , algos = [ PV3D('Hlt2')
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
                                    , FilterBiasedDiElectron =
@@ -1095,7 +1095,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                    , prescale = self.prescale
                                    , L0DU = L0Req
                                    , HLT  = Hlt1Req                                   
-                                   , algos = [ PV3D()
+                                   , algos = [ PV3D('Hlt2')
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
                                    , FilterBiasedDiElectron =
@@ -1119,7 +1119,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                    , prescale = self.prescale
                                    , L0DU = L0Req
                                    , HLT  = Hlt1Req                                           
-                                   , algos = [ PV3D()
+                                   , algos = [ PV3D('Hlt2')
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
                                    , FilterBiasedDiElectron =
@@ -1144,7 +1144,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                    , prescale = self.prescale
                                    , L0DU = L0Req
                                    , HLT  = Hlt1Req        
-                                   , algos = [ PV3D()
+                                   , algos = [ PV3D('Hlt2')
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
                                    , FilterBiasedDiElectron =
@@ -1169,7 +1169,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                    , prescale = self.prescale
                                    , L0DU = L0Req
                                    , HLT  = Hlt1Req        
-                                   , algos = [ PV3D()
+                                   , algos = [ PV3D('Hlt2')
                                                , DiElectron
                                                , FilterBiasedDiElectron ]
                                    , FilterBiasedDiElectron =
@@ -1249,7 +1249,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                           , prescale = self.prescale
                                           , L0DU = L0Req
                                           , HLT  = Hlt1Req
-                                          , algos = [ PV3D()
+                                          , algos = [ PV3D('Hlt2')
                                                       , TrackFittedDiElectron
                                                       , FilterBiasedTFDiElectron ]
                                           , postscale = self.postscale
@@ -1264,7 +1264,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , L0DU = L0Req
                                      , HLT  = Hlt1Req
-                                     , algos = [ PV3D()
+                                     , algos = [ PV3D('Hlt2')
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
                                      , FilterBiasedTFDiElectron =
@@ -1289,7 +1289,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , L0DU = L0Req
                                      , HLT  = Hlt1Req
-                                     , algos = [ PV3D()
+                                     , algos = [ PV3D('Hlt2')
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
                                      , FilterBiasedTFDiElectron =
@@ -1314,7 +1314,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , L0DU = L0Req
                                      , HLT  = Hlt1Req
-                                     , algos = [ PV3D()
+                                     , algos = [ PV3D('Hlt2')
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
                                      , FilterBiasedTFDiElectron =
@@ -1339,7 +1339,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , L0DU = L0Req
                                      , HLT  = Hlt1Req
-                                     , algos = [ PV3D()
+                                     , algos = [ PV3D('Hlt2')
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
                                      , FilterBiasedTFDiElectron =
@@ -1364,7 +1364,7 @@ class Hlt2InclusiveDiElectronLinesConf(HltLinesConfigurableUser) :
                                      , prescale = self.prescale
                                      , L0DU = L0Req
                                      , HLT  = Hlt1Req
-                                     , algos = [ PV3D()
+                                     , algos = [ PV3D('Hlt2')
                                                  , TrackFittedDiElectron
                                                  , FilterBiasedTFDiElectron ]
                                      , FilterBiasedTFDiElectron =

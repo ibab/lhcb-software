@@ -88,7 +88,7 @@ class Hlt2KshortToMuMuPiPiConf(HltLinesConfigurableUser) :
                            )
 
         ## Require the PV3D reconstruction before our cut on IP.
-        filterSeq = bindMembers( name, [ PV3D()] + inputContainers + [filter ] )
+        filterSeq = bindMembers( name, [ PV3D('Hlt2')] + inputContainers + [filter ] )
 
         return filterSeq
   
@@ -123,7 +123,7 @@ class Hlt2KshortToMuMuPiPiConf(HltLinesConfigurableUser) :
                           , CombinationCut = combcuts
                           , MotherCut = mothercuts
                           )
-        return bindMembers(name, [PV3D()] + inputSeq + [combineKshortHHmumu])
+        return bindMembers(name, [PV3D('Hlt2')] + inputSeq + [combineKshortHHmumu])
 
     def __HHMuMuFilter(self, name, inputSeq, extracode = None) :
 
@@ -187,7 +187,7 @@ class Hlt2KshortToMuMuPiPiConf(HltLinesConfigurableUser) :
         Hlt2KshortKillTooManyInTrk = self.__seqGEC()
 
         line = Hlt2Line('DimuonForKshortToMuMuPiPi', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2KshortKillTooManyInTrk, Hlt2TwoMuonForKshortToMuMuPiPi]
+                        , algos = [ PV3D('Hlt2'), Hlt2KshortKillTooManyInTrk, Hlt2TwoMuonForKshortToMuMuPiPi]
                         , postscale = self.postscale
                         )
         decName = "Hlt2DimuonForKshortToMuMuPiPiDecision"
@@ -196,7 +196,7 @@ class Hlt2KshortToMuMuPiPiConf(HltLinesConfigurableUser) :
        
         ## PiPiMuMu
         line = Hlt2Line('KshortToMuMuPiPi', prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2KshortKillTooManyInTrk, Hlt2TwoMuonForKshortToMuMuPiPi, Pions, Hlt2KshortPiPiMuMu] 
+                        , algos = [ PV3D('Hlt2'), Hlt2KshortKillTooManyInTrk, Hlt2TwoMuonForKshortToMuMuPiPi, Pions, Hlt2KshortPiPiMuMu] 
                         , postscale = self.postscale
                         )
         decName = "Hlt2KshortToMuMuPiPiDecision"

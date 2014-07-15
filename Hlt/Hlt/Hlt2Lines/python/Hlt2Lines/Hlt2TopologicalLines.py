@@ -135,7 +135,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                                  Code=filtCode)
         from HltLine.HltLine import bindMembers
         from HltTracking.HltPVs import PV3D
-        return bindMembers(None,[PV3D(),tracks, Hlt2TopoKillTooManyInTrkAlg])
+        return bindMembers(None,[PV3D('Hlt2'),tracks, Hlt2TopoKillTooManyInTrkAlg])
     
     def __inPartFilter(self, name, inputSeq,forV0=False):
         '''Filters input particles for topo lines.'''

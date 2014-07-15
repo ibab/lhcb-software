@@ -214,7 +214,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         # Velo tracking
         hlt2VeloTracking = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
 
-        veloRecoAlgs = [ hlt2VeloTracking, PV3D() ]
+        veloRecoAlgs = [ hlt2VeloTracking, PV3D('Hlt2') ]
         veloTracksForVertexing = [ hlt2VeloTracking.outputSelection() ]
 
         # optionally filter out forward Velo tracks with MinIP to primary vertices
@@ -224,7 +224,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
             vWithIP = SelectVeloTracksNotFromPV( "Hlt2DisplVerticesVeloTrackFilter"
                         , Inputs               = list(veloTracksForVertexing)
                         , Output               = "Hlt2/Hlt2DVTrack/VeloNotFromPV"
-                        , PVLocation           = "Hlt/Vertex/PV3D"
+                        , PVLocation           = PV3D('Hlt2').output # "Hlt/Vertex/PV3D"
                         , MinIP                = self.getProp("VeloIP")
                         , MinIPChi2            = self.getProp("VeloIPChi2")
                         , RejectSplashEvents   = self.getProp("VeloRejectSplash")

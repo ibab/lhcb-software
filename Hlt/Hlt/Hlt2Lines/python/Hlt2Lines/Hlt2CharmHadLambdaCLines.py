@@ -181,7 +181,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
         modeNameKPK = self.getProp('name_prefix') + '2KPK'
         modeNamePiPPi = self.getProp('name_prefix') + '2PiPPi'
         modeNamePiPK = self.getProp('name_prefix') + '2PiPK'
-        seqKPPi = bindMembers( modeNameKPPi, [ PV3D()
+        seqKPPi = bindMembers( modeNameKPPi, [ PV3D('Hlt2')
                                                , BiKalmanFittedPions
                                                , BiKalmanFittedKaons
                                                , BiKalmanFittedProtons
@@ -190,7 +190,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , Hlt2CharmHadLambdaC2KPPi_Rich
                                                , DecodeHlt1SelRep
                                                , filterTOS_LC2KPPi ] )
-        seqKPK = bindMembers( modeNameKPK, [ PV3D()
+        seqKPK = bindMembers( modeNameKPK, [ PV3D('Hlt2')
                                                , BiKalmanFittedKaons
                                                , BiKalmanFittedProtons
                                                , Hlt2CharmHadLambdaC2KPK
@@ -198,7 +198,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , Hlt2CharmHadLambdaC2KPK_Rich
                                                , DecodeHlt1SelRep
                                                , filterTOS_LC2KPK ] )
-        seqPiPPi = bindMembers( modeNamePiPPi, [ PV3D()
+        seqPiPPi = bindMembers( modeNamePiPPi, [ PV3D('Hlt2')
                                                , BiKalmanFittedPions
                                                , BiKalmanFittedProtons
                                                , Hlt2CharmHadLambdaC2PiPPi
@@ -206,7 +206,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
                                                , Hlt2CharmHadLambdaC2PiPPi_Rich
                                                , DecodeHlt1SelRep
                                                , filterTOS_LC2PiPPi ] )
-        seqPiPK = bindMembers( modeNamePiPK, [ PV3D()
+        seqPiPK = bindMembers( modeNamePiPK, [ PV3D('Hlt2')
                                                , BiKalmanFittedPions
                                                , BiKalmanFittedKaons
                                                , BiKalmanFittedProtons
@@ -230,7 +230,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
         ## ####################################################################
         line = Hlt2Line( modeNameKPPi
                         , prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, seqKPPi,
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, seqKPPi,
                                             filterLC2KPPi ]
                         , postscale = self.postscale
                         )
@@ -254,7 +254,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
         ## ####################################################################
         lineKPK = Hlt2Line( modeNameKPK
                         , prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, seqKPK,
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, seqKPK,
                                             filterLC2KPK ]
                         , postscale = self.postscale
                         )
@@ -275,7 +275,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
 
         linePiPiP = Hlt2Line( modeNamePiPPi
                         , prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, seqPiPPi,
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, seqPiPPi,
                                             filterLC2PiPPi ]
                         , postscale = self.postscale
                         )
@@ -295,7 +295,7 @@ class Hlt2CharmHadLambdaCLinesConf(HltLinesConfigurableUser) :
 
         linePiKP = Hlt2Line( modeNamePiPK
                         , prescale = self.prescale
-                        , algos = [ PV3D(), Hlt2CharmKillTooManyInTrk, seqPiPK,
+                        , algos = [ PV3D('Hlt2'), Hlt2CharmKillTooManyInTrk, seqPiPK,
                                             filterLC2PiPK ]
                         , postscale = self.postscale
                         )

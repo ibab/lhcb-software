@@ -98,7 +98,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
         #  note that any duplication gets automatically removed, so we 
         #  keep the original 'as is'
         from HltTracking.HltPVs import PV3D
-        pv = PV3D()
+        pv = PV3D('Hlt2')
         if set(pv.members()).issubset(set([ j for i in algos for j in i.members() ])) : 
             lclAlgos.insert( 0, pv )
 
@@ -176,7 +176,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                            )
 
         ## Remember to require the PV3D reconstruction before cutting on IP.
-        filterSeq = bindMembers( name, inputContainers + [PV3D(), filter] )
+        filterSeq = bindMembers( name, inputContainers + [PV3D('Hlt2'), filter] )
 
         return filterSeq
     # }
@@ -231,7 +231,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                    , MotherCut = parentcuts
                                  )
 
-        charmNBody = bindMembers( name, inputSeq + [ PV3D(), combineNBody ] )
+        charmNBody = bindMembers( name, inputSeq + [ PV3D('Hlt2'), combineNBody ] )
         return charmNBody
     # }
 
@@ -311,7 +311,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
 
         from HltTracking.HltPVs import PV3D
         twoBodyName = self.getProp('name_prefix') + '2Body'
-        charmKshhTF2Body = bindMembers( twoBodyName,  [PV3D(),lclKshhTFInputKaons,  lclKshhTFInputPions, combineKshhTF2Body ] )
+        charmKshhTF2Body = bindMembers( twoBodyName,  [PV3D('Hlt2'),lclKshhTFInputKaons,  lclKshhTFInputPions, combineKshhTF2Body ] )
 
         ## Special for down-down: Require that the two-body combination pass more cuts:
         strTighterCuts = """( (CHILDCUT((TRCHI2DOF < %(KshhTFHHTightTrkChi2UL)s ),1)) 
@@ -350,7 +350,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                , Code =KSLL_FilterCuts
                                , Inputs = [KsLLTF]
                       )
-        charmKshhTFKsLL = bindMembers( "charmKshhTFKsLL", [ PV3D(), KsLLTF, KSLLforD02HHKs ] )
+        charmKshhTFKsLL = bindMembers( "charmKshhTFKsLL", [ PV3D('Hlt2'), KsLLTF, KSLLforD02HHKs ] )
 
         ########
         # KsDD  
@@ -366,7 +366,7 @@ class Hlt2CharmHadD02HHKsLinesConf(HltLinesConfigurableUser) :
                                , Code = KSDD_FilterCuts
                                , Inputs = [KsDD]
                       )
-        charmKshhTFKsDD = bindMembers( "D02HHKsKsDD", [ PV3D(), KsDD, KsDDforD02HHKs ] )
+        charmKshhTFKsDD = bindMembers( "D02HHKsKsDD", [ PV3D('Hlt2'), KsDD, KsDDforD02HHKs ] )
 
         combineKshhTFD2HHKsLL = self.__KshhTFDCombine(ksLLName
                                         , [charmKshhTFKsLL, charmKshhTF2Body]
