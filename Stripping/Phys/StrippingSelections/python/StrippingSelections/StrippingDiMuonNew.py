@@ -901,6 +901,7 @@ class DiMuonConf(LineBuilder):
         self.Jpsi2MuMuDetachedLine = StrippingLine( name + 'Jpsi2MuMuDetached' + 'Line',
                                                     prescale  = config['Jpsi2MuMuDetached_Prescale'],
                                                     postscale = config['Jpsi2MuMuDetached_Postscale'],
+                                                    RequiredRawEvents = [ "Trigger", "Muon", "Calo", "Rich", "Other" ],
                                                     checkPV   = True,
                                                     selection = self.SelJpsi2MuMuDetached
                                                     )
@@ -945,6 +946,7 @@ class DiMuonConf(LineBuilder):
                                                    prescale  = config['Psi2MuMuDetached_Prescale'],
                                                    postscale = config['Psi2MuMuDetached_Postscale'],
                                                    checkPV   = True,
+                                                   RequiredRawEvents = [ "Trigger", "Muon", "Calo", "Rich", "Other" ],
                                                    selection = self.SelPsi2MuMuDetached
                                                    ) 
 

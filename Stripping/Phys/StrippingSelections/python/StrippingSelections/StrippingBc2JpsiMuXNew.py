@@ -95,6 +95,7 @@ class Bc2JpsiMuXConf(LineBuilder):
         self.line = StrippingLine( Bc2JpsiMuXName+"Line",
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
+                                   RequiredRawEvents = ['Muon'],
                                    selection = self.SelBc2JpsiMuX 
                                    )
 
