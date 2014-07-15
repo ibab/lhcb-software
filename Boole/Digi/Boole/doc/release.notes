@@ -4,6 +4,11 @@ Package Coordinator: Marco Cattaneo
 
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r0>2014-07-15 Boole v29r0</A></H1><PRE>
+
+- Changes to references to follow changes in underlying packages
+  . Updated ST noise values and sector efficiency for 2011 and 2012 MC
+
 </PRE><H1><A NAME=v28r2p1>2014-07-02 Boole v28r2p1</A></H1><PRE>
 
 - New functionality 
