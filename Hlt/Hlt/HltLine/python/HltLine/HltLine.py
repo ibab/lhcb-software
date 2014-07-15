@@ -522,7 +522,7 @@ class bindMembers (object) :
     """
     Simple class to represent a set of Hlt1Members which are bound to a line
     """
-    __slots__ = ('_members','_outputsel')
+    __slots__ = ('_members','_outputsel','output')
 
     def outputSelection( self ) : 
         return self._outputsel

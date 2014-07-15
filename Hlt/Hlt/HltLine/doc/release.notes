@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-07-15 - Gerhard Raven
+ - allow 'output' attribute in bindMembers
+
 ! 2014-07-14 - Gerhard Raven
  - add support for HltTrackReporsDecoder in the input/output matcher
  - use the single HltTrackReportsDecoder for all TES/SourceID combinations
