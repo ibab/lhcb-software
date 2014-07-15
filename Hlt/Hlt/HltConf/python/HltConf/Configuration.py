@@ -197,6 +197,7 @@ class HltConf(LHCbConfigurableUser):
             Hlt2Conf()
             self.setOtherProps(Hlt2Conf(),[ "DataType" ])
             Hlt2Conf().ThresholdSettings = ThresholdSettings
+            Hlt2Conf().Hlt1TrackOption = "Rerun" if activehlt1lines else "Decode"
             if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
                 Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
 

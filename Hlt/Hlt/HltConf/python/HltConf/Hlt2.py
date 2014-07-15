@@ -146,7 +146,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                 , "Hlt2ForwardMaxVelo"         : 1000
                 , "Hlt1TrackOption" : "Decode" #what to do with tracks from Hlt1?
                 }
-    __known_hlt1trackoptions__ = ["Decode","Encode-Decode","Rerun","Copy"]
+    #__known_hlt1trackoptions__ = ["Decode","Encode-Decode","Rerun","Copy"]
+    __known_hlt1trackoptions__ = ["Decode","Rerun"]
     #############################  ^ take from HLT1Track raw banks
     #############################            ^ Create banks and then decode them
     ############################# Recreate tracks from scratch ^
