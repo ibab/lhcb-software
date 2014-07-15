@@ -477,6 +477,7 @@ namespace Tf
     }
   }
 
+#if 0
   template < class Hit         >
   template < typename SELECTOR >
   void TTStationHitManager<Hit>::prepareHitsInWindow( const SELECTOR & selector )
@@ -507,7 +508,7 @@ namespace Tf
       }// layer
     } // station
   }
-
+#endif
 } // Tf namespace
 
 #endif // TFKERNEL_TTSTATIONHITMANAGER_H
