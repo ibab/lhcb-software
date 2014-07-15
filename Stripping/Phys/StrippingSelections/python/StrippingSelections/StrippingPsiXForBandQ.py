@@ -214,7 +214,6 @@ default_config = {
                                        'StrippingB2PsiPPKForPsiX'      , 
                                        'StrippingB2PsiPPPiPiForPsiX'   ,
                                        'StrippingB2PsiPPKPiPiForPsiX'  ,
-                                       'StrippingB2PsiPPKPiPiForPsiX'  , 
                                        'StrippingB2PsiPPPiPiPiForPsiX' ] } 
     }
 ## ============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-15 - Stefano Perazzini
+ - Hot fix to StrippingXibc.py and StrippingPsiXForBandQ
+
 ! 2014-07-15 - Roberta Cardinale
  - New ConfigDict for StrippingXibc.py 
 

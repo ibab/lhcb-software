@@ -431,7 +431,7 @@ class XibcBuilder(LineBuilder) :
 
 def filterJpsi (localname, 
                 _InputLocation=_my_immutable_config['JpsiForExclusiveLinesLocation'], 
-                config=default_config):
+                config=default_config['CONFIG']):
   _filterAlgorithm = FilterDesktop(localname+"JpsiMuonFilter");
   _myCutOnMuons = ("(PIDmu > %(Muon4Jpsi_PIDmu)s) &"+
                   " (TRPCHI2 > %(Muon4Jpsi_TRPCHI2)s) &"+
@@ -448,7 +448,7 @@ def filterJpsi (localname,
 
 
 
-def makeLambdac (localname, _RequiredSelections, config=default_config):
+def makeLambdac (localname, _RequiredSelections, config=default_config['CONFIG']):
   _lambdacCP = CombineParticles(localname+"lambdacAlgorithm")
   _lambdacCP.DecayDescriptor = "[Lambda_c+ -> p+ pi+ K-]cc"
   _lambdacCP.DaughtersCuts = {
@@ -485,7 +485,7 @@ def makeLambdac (localname, _RequiredSelections, config=default_config):
 
 ###
 
-def makeXibc (localname, _RequiredSelections ,config=default_config):
+def makeXibc (localname, _RequiredSelections ,config=default_config['CONFIG']):
   _xibcLc = CombineParticles(localname + "Xibc2LcJpsiAlgorithm")
   _xibcLc.DecayDescriptor = "[Xi_bc+ -> J/psi(1S) Lambda_c+]cc"
   _xibcLc.CombinationCut = ("(ADAMASS('Xi_bc+') < %(Xibc_MassWindow)s) " 
@@ -499,7 +499,7 @@ def makeXibc (localname, _RequiredSelections ,config=default_config):
   ###############################################################
 
 
-def makeLambda0 (localname, additionalRequiredSelections=[], config=default_config):
+def makeLambda0 (localname, additionalRequiredSelections=[], config=default_config['CONFIG']):
 	#Lambda combine particles
   _protonCommonCut = ('(PROBNNp > %(Protons4Lambda0_ProbNNp)s) & ' + 
                       '(PT > %(Protons4Lambda0_PT)s)'
@@ -580,7 +580,7 @@ def makeLambda0 (localname, additionalRequiredSelections=[], config=default_conf
                                               LooseLambdaULSelection ] );
                   
 
-def makeXi (localname, _RequiredSelections, config=default_config):
+def makeXi (localname, _RequiredSelections, config=default_config['CONFIG']):
 
   _xi = CombineParticles(localname+"xi2lambda")
   _xi.DecayDescriptor = "[Xi- -> Lambda0 pi-]cc"
@@ -645,7 +645,7 @@ def makeXibc0 (localname, _RequiredSelections, config=default_name):
 
 #################################################################################
 
-def makeX (localname, _RequiredSelections, config=default_config):
+def makeX (localname, _RequiredSelections, config=default_config['CONFIG']):
 
   _combinex = CombineParticles(localname + "HighMassState");
   _combinex.DecayDescriptor = "[Xi_bc+ -> J/psi(1S) p+]cc"
@@ -670,7 +670,7 @@ def makeX (localname, _RequiredSelections, config=default_config):
 
 
 ###################################################################################
-def makeXibc2JpsiKp (localname, _RequiredSelections, config=default_config, controlLine=False):
+def makeXibc2JpsiKp (localname, _RequiredSelections, config=default_config['CONFIG'], controlLine=False):
   myXibc = CombineParticles(localname+"Xibc2JpsipK");
   myXibc.DecayDescriptor = "[Xi_bc0 -> J/psi(1S) p+ K-]cc"
   if (controlLine == True):
