@@ -1195,7 +1195,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         veloTracksOutputLocation = _baseTrackLocation(HltSharedTracksPrefix,Hlt2VeloTracksName) 
 
         # select which Velo sequence we want, depending on configuration
-        veloOptions = { 'Decode' : RevivedVelo, 'Encode-Decode' : RevivedVelo, 'Rerun' : MinimalVelo, 'Copy' : MinimalVelo} 
+        #veloOptions = { 'Decode' : RevivedVelo, 'Encode-Decode' : RevivedVelo, 'Rerun' : MinimalVelo, 'Copy' : MinimalVelo} 
+        veloOptions = { 'Decode' : RevivedVelo, 'Rerun' : MinimalVelo }
         
         Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
    

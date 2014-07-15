@@ -45,14 +45,16 @@ from HltVertexNames import _vertexLocation
 
 ProtoPV3DSelection = 'Proto' + PV3DSelection
 
-def PV3D():
+def PV3D(where):
+    """ PV3D(where) -- where must either by Hlt1 or Hlt2 """
     from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
     from HltVertexNames import HltSharedVerticesPrefix
     from HltVertexNames import HltGlobalVertexLocation
-    from HltReco import MinimalVelo, RevivedVelo
 
     from Configurables import PatPV3D
     from Configurables import PVOfflineTool, LSAdaptPV3DFitter
+
+    if where.upper() not in ['HLT1','HLT2'] : raise KeyError('PV3D: where must be either HLT1 or HLT2')
 
     output3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,PV3DSelection)
     proto3DVertices = _vertexLocation(HltSharedVerticesPrefix,HltGlobalVertexLocation,ProtoPV3DSelection)
@@ -68,20 +70,23 @@ def PV3D():
     recoPV3D.OutputVerticesName = proto3DVertices
     
     
-    from Configurables import HltConf
-    reuseTracks = ( HltConf().getProp('Split') == 'Hlt2' )
-    if reuseTracks :
-        pv3dAlgos = ','.join( [ "'%s'"%m.getFullName() for m in RevivedVelo.members() + [ recoPV3D ] ] )
-        recoPV3D.PVOfflineTool.InputTracks = [ RevivedVelo.outputSelection() ]
-    else : 
-        pv3dAlgos =  ','.join( [ "'%s'"%m.getFullName() for m in MinimalVelo.members() + [ recoPV3D ] ] )
-        recoPV3D.PVOfflineTool.InputTracks = [ MinimalVelo.outputSelection() ]
+    from HltReco import MinimalVelo
+    velo = MinimalVelo
+    name = "HltPV3D"
+
+    if where.upper() == "HLT2" :
+        from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
+        velo  = Hlt2BiKalmanFittedForwardTracking().hlt2VeloTracking()
+        if velo.members() != MinimalVelo.members() : name = "Hlt2PV3D"
+
+    pv3dAlgos = ','.join( [ "'%s'"%m.getFullName() for m in velo.members() + [ recoPV3D ] ] )
+    recoPV3D.PVOfflineTool.InputTracks = [ velo.outputSelection() ]
         
     from Configurables import LoKi__HltUnit as HltUnit
     ## Hlt vertex beamspot filter
     ##-- todo: can we integrate this in the main streamers directly, using 'tee' ?
     filterPV3D = HltUnit(
-        'HltPV3D',
+        name,
         Preambulo = [ 'from LoKiPhys.decorators import *',
                       'from LoKiTrigger.decorators import *',
                       'from LoKiHlt.algorithms import *' ],
@@ -100,8 +105,9 @@ def PV3D():
 
         )
     
-    from HltReco import MinimalVelo
-    return bindMembers( "HltPVsPV3D", [ filterPV3D ] ).setOutputSelection( PV3DSelection )
+    pv3d = bindMembers( name+'Sequence', [ filterPV3D ] ).setOutputSelection( PV3DSelection ) 
+    pv3d.output = output3DVertices
+    return pv3d
 
 ## Symbols for streamer framework
 # don't work, as this now contains a HltUnit, and we get into trouble if we go recursive in HltUnit

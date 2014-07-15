@@ -3,6 +3,12 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-07-15 - Gerhard Raven
+ - define single point to define HLT2 velo tracking, namely Hlt2Tracking.py
+ - in PV3D, require usage to specify whether it is to be used in Hlt1 or Hlt2,
+   and set the velo tracking accordingly -- and use Hlt2Tracking to grab the
+   definition of the velo tracking for Hlt2
+
 ! 2014-07-14 - Gerhard Raven
  - use DecodeTRACK to do all the tracking decoding
 
