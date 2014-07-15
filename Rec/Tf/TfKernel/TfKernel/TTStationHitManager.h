@@ -501,7 +501,7 @@ namespace Tf
           auto fun = [](Tf::STHitRange::const_reference hit) { return new Hit(*hit); };
           auto b =  boost::make_transform_iterator(std::begin(tthits), std::cref(fun));
           auto e =  boost::make_transform_iterator(std::end(tthits), std::cref(fun));
-          m_hits.insert( sta,lay,region, b, e);
+          m_hits.insert( sta, lay, reg, b, e);
           this->setAllHitsPrepared(sta,lay,reg,true);
         }
       }// layer
