@@ -189,7 +189,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Code = lineCode
             )       
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackVeloTT_Unit ]
+        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackVeloTT_Unit ]
     #enddef #hlt1TrackVeloTT_Streamer
 
     def hlt1TrackVeloTTForw_Streamer( self, name, props ) :
@@ -243,7 +243,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Code = lineCode
             )       
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackVeloTTForw_Unit ]
+        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackVeloTTForw_Unit ]
 
 
 
@@ -303,7 +303,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Code = lineCode
             )       
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1HighPTLifetimeUnbiased_Unit ]
+        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1HighPTLifetimeUnbiased_Unit ]
 
 
      
@@ -350,7 +350,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Code = lineCode
             )       
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D(), hlt1TrackNonMuon_Unit ]
+        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackNonMuon_Unit ]
 
     def hlt1TrackForwardPassThrough_Streamer( self, name, props ) : 
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
@@ -380,7 +380,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Code = lineCode
             )
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D(), hlt1TrackForwardPassThrough_Unit ]
+        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), hlt1TrackForwardPassThrough_Unit ]
 
     def hlt1TrackMuon_Streamer(self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
@@ -428,7 +428,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
             Code = lineCode
             )    
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D(), hlt1TrackMuon_Unit ]
+        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), hlt1TrackMuon_Unit ]
     
     def __apply_configuration__(self) : 
         from HltLine.HltLine import Hlt1Line   as Line

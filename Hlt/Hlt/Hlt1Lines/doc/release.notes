@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
+! 2014-07-15 - Gerhard Raven
+ - inform PV3D that we're in HLT1
 
 !========================= Hlt1Lines v7r3 2014-04-22 =========================
 ! 2014-03-25 - Gerhard Raven

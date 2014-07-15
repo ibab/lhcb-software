@@ -110,7 +110,7 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
         gec = properties["GEC"]
         algos.append( Hlt1GECUnit( properties["GEC"] ) )
 
-        algos.append( PV3D() )
+        algos.append( PV3D('Hlt1') )
 
         trackUnit = HltUnit(
             "Hlt1%(name)sTrackStreamer" % properties

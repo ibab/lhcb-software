@@ -108,7 +108,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-        from HltTracking.HltPVs  import PV3D
         # define reco scaler
         from Configurables import DeterministicPrescaler as Scaler
         recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  

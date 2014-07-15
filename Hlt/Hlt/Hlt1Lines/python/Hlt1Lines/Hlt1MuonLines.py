@@ -200,7 +200,7 @@ class Hlt1MuonLinesConf( HltLinesConfigurableUser ):
             """ % properties
             )
         gec = properties[ 'GEC' ]
-        return [ Hlt1GECUnit( gec ), PV3D(), unit ]
+        return [ Hlt1GECUnit( gec ), PV3D('Hlt1'), unit ]
 
     def multiMuon_streamer( self, properties ):
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit

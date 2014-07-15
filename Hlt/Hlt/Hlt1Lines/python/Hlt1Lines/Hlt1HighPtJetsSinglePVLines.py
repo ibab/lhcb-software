@@ -26,7 +26,7 @@ class Hlt1HighPtJetsSinglePVLinesConf(HltLinesConfigurableUser):
                  prescale  = self.prescale,
                  postscale = self.postscale,
                  L0DU = "L0_CHANNEL('%s')" % channel,
-                 algos = [PV3D(),algCheckVtcs]
+                 algos = [PV3D('Hlt1'),algCheckVtcs]
                  )
 
 
