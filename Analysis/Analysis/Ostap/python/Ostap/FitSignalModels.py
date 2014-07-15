@@ -910,61 +910,6 @@ class Voigt_pdf(Mass_pdf) :
             self.sigma  ,
             self.gamma  )
 
-
-# =============================================================================
-## @class Convolution
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2014-07-13
-class Convolution(object):
-    """
-    Helper class to make a convolution PDF 
-    """
-    def __init__ ( self           ,
-                   name           ,
-                   pdf            ,
-                   mass           , 
-                   convolution    ,
-                   useFFT  = True ) :
-        
-        ## store "old" pdf 
-        self.orig_pdf = pdf
-        self.mass     = mass
-
-        if   isinstance ( convolution ,   ROOT.RooAbsPdf       ) : self.convolution = convolution
-        elif isinstance ( convolution , ( float , int , long ) ) and not isinstance ( convolution , bool ) :
-            self.cnv_mean  = makeVar (
-                0.0  ,
-                'CnvMean'       + name ,
-                'cnv_mean (%s)' % name , 
-                0.0  , 0 ) 
-            self.cnv_sigma = makeVar (
-                None ,
-                'CnvSigma'      + name ,
-                'cnv_sigma(%s)' % name ,
-                convolution ,
-                convolution ,
-                0.25 * convolution , 2.00 * convolution )
-            self.cnv_gauss = ROOT.RooGaussian (
-                'CnvGauss'     + name , 
-                'CnvGauss(%s)' % name ,
-                self.mass , self.cnv_mean , self.cnv_sigma )
-            self.convolution = self.cnv_gauss
-        else :
-            raise AttributeError ( 'Unknown convolution type %s ' % convolution )
-
-        #
-        if useFFT : self.pdf = ROOT.RooFFTConvPdf ( 'fft'     + name ,
-                                                    'FFT(%s)' % name ,
-                                                    self.mass , self.orig_pdf , self.convolution )
-        else      : self.pdf = ROOT.RooNumConvPdf ( 'cnv'     + name ,
-                                                    'CNV(%s)' % name ,
-                                                    self.mass , self.orig_pdf , self.convolution )
-        
-        if isinstance ( self.pdf , ROOT.RooNumConvPdf ) : 
-            if isinstance ( self.convolution , ROOT.RooGaussian ) :
-                if hasattr ( self , 'cnv_mean' ) and hasattr ( self , 'cnv_sigma' ) :
-                    self.pdf.setConvolutonWindow( self.cnv_mean , self.cnv_sigma , 5 )
-
                     
 # =============================================================================
 ## @class BreitWigner_pdf 
@@ -1023,9 +968,12 @@ class BreitWigner_pdf(Mass_pdf) :
 
         if  None is convolution : self.pdf = self.breit
         else :
-            self.conv = Convolution ( name , self.breit , self.mass , convolution , useFFT ) 
+            from Ostap.FitBasic import Convolution 
+            self.conv = Convolution ( name        ,
+                                      self.breit  , self.mass ,
+                                      convolution , useFFT    ) 
             self.pdf  = self.conv.pdf
-
+            
         
 # =============================================================================
 ## @class Flatte_pdf

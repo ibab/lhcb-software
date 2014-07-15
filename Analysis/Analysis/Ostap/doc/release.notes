@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-15 - Vanya Belyaev
+ - some refinement of ranges and convolution
+
 ! 2014-07-13 - Vanya Belyaev
  - add qmtest for weighted fit and model with convolution 
 

@@ -608,6 +608,22 @@ ROOT.RooRealVar . __gt__   = _rrv_gt_
 ROOT.RooRealVar . __le__   = _rrv_le_
 ROOT.RooRealVar . __ge__   = _rrv_ge_
 
+# =============================================================================
+## get min/max in one go 
+#  @see RooRealVar
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-07-14
+def _rrv_minmax_ ( s ) :
+    """
+    Get min/max in one go
+
+    >>> var = ...
+    >>> mn,mx = var.minmax()
+    """
+    return s.getMin(),s.getMax()
+
+ROOT.RooRealVar   . minmax  = _rrv_minmax_
+
 ## # ==========================================
 ## _is_equal_ = cpp.LHCb.Math.equal_to_double 
 ## ## (compare RooRealVar and "number"

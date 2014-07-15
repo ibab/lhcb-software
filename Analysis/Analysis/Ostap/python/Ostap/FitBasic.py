@@ -19,18 +19,19 @@ __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-07-25"
 __all__     = (
     ##
-    'makeVar'   , ## helper function to create the proper RooRealVar
-    'Mass_pdf'  , ## useful base class to create "signal" PDFs for mass-fits
-    'H1D_dset'  , ## convertor of 1D-histo to RooDataHist 
-    'H2D_dset'  , ## convertor of 2D-histo to RooDataHist 
-    'H1D_pdf'   , ## convertor of 1D-histo to RooHistPdf 
-    'H2D_pdf'   , ## convertor of 1D-histo to RooDataPdf
+    'makeVar'     , ## helper function to create the proper RooRealVar
+    'Mass_pdf'    , ## useful base class to create "signal" PDFs for mass-fits
+    'H1D_dset'    , ## convertor of 1D-histo to RooDataHist 
+    'H2D_dset'    , ## convertor of 2D-histo to RooDataHist 
+    'H1D_pdf'     , ## convertor of 1D-histo to RooHistPdf 
+    'H2D_pdf'     , ## convertor of 1D-histo to RooDataPdf
     ##
-    'Fit1DBase' , ## useful base class fro 1D-models
-    'Fit1D'     , ## the model for 1D-fit: signal + background + optional components  
-    'Fit2D'     , ## the model for 2D-fit: signal + background + optional components
+    'Fit1DBase'   , ## useful base class fro 1D-models
+    'Fit1D'       , ## the model for 1D-fit: signal + background + optional components  
+    'Fit2D'       , ## the model for 2D-fit: signal + background + optional components
     ##
-    'Adjust1D'  , ## addjust PDF to avoid zeroes (sometimes useful)
+    'Adjust1D'    , ## addjust PDF to avoid zeroes (sometimes useful)
+    'Convolution' , ## helper utility to build convolution 
     )
 # =============================================================================
 import ROOT, math
@@ -104,10 +105,34 @@ def makeVar ( var , name , comment , fix  , *args ) :
         
     return var
 
-
-
 # =============================================================================
-## helper base class for implementaiton of various helper pdfs 
+## helper class to temporary change a range for the variable 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2013-12-01
+class RangeVar(object) :
+    """
+    Helper class to temporary change a range for the variable 
+    """
+    def __init__( self , var , vmin , vmax ) :
+        self.var  = var
+        self.vmin = min ( vmin , vmax ) 
+        self.vmax = max ( vmin , vmax )
+        self.omin = self.var.getMin ()
+        self.omax = self.var.getMax ()
+        
+    def __enter__ ( self ) :
+        self.omin = self.var.getMin ()
+        self.omax = self.var.getMax ()
+        self.var.setMin ( self.vmin ) 
+        self.var.setMax ( self.vmax )
+        return self
+    
+    def __exit__  ( self , *_ ) :        
+        self.var.setMin ( self.omin ) 
+        self.var.setMax ( self.omax )
+        
+# =============================================================================
+## helper base class for implementation  of various helper pdfs 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
 class Mass_pdf(object) :
@@ -224,24 +249,25 @@ class Mass_pdf(object) :
     def fitHisto ( self , histo , draw = False , silent = False , *args , **kwargs ) :
         """
         Fit the histogram
-        """
-        
+        """        
         context = NoContext () 
         if silent : context = RooSilent() 
-        
-        ## convert it! 
-        hdset     = H1D_dset ( '',  histo , self.mass )
-        self.hset = hdset.dset
-        
-        ## fit it! 
-        return  self.fitTo ( self.hset     ,
-                             draw          ,
-                             len ( histo ) ,
-                             silent        ,                             
-                             *args         ,
-                             **kwargs      )
-    
 
+        with RangeVar ( self.mass , *( histo.xminmax() ) ) :
+            
+            with context:
+                ## convert it! 
+                hdset     = H1D_dset ( '',  histo , self.mass )
+                self.hset = hdset.dset
+                
+            ## fit it! 
+            return self.fitTo ( self.hset     ,
+                                draw          ,
+                                len ( histo ) ,
+                                silent        ,                             
+                                *args         ,
+                                **kwargs      )
+        
 
 # =============================================================================
 ## simple convertor of 1D-histo to data set
@@ -258,16 +284,9 @@ class H1D_dset(object) :
         #
         ## use mass-variable
         #
-        if mass :
-            mmin = mass.getMin ()
-            mmax = mass.getMax ()
-            
-        self.mass = makeVar ( mass , 'm_%s' % name , 'mass(%s)' % name , None , *(histo.xminmax()) )
-
-        if mass :
-            mass.setMin ( mmin )
-            mass.setMax ( mmax )
-            
+        if mass : self.mass = mass 
+        else    : self.mass = makeVar ( mass , 'm_%s' % name , 'mass(%s)' % name , None , *(histo.xminmax()) )
+        
         self.vlst  = ROOT.RooArgList    ( self.mass )
         self.vimp  = ROOT.RooFit.Import ( histo     )
         self.dset  = ROOT.RooDataHist   (
@@ -499,6 +518,7 @@ class Fit1DBase (object) :
                 frame ,
                 ROOT.RooFit.LineColor  ( ROOT.kRed              ) )
             
+
             frame.SetXTitle('')
             frame.SetYTitle('')
             frame.SetZTitle('')
@@ -515,14 +535,17 @@ class Fit1DBase (object) :
         context = NoContext () 
         if silent : context = RooSilent() 
 
-        ## convert it! 
-        with context : 
-            hdset     = H1D_dset ( '',  histo , self.mass )
-            self.hset = hdset.dset
+        with RangeVar( self.mass , *(histo.xminmax()) ) : 
             
-        ## fit it!!
-        return self.fitTo ( self.hset , draw , len ( histo ) , silent , *args )
+            ## convert it! 
+            with context :
+                hdset     = H1D_dset ( '',  histo , self.mass )
+                self.hset = hdset.dset
+                
+            ## fit it!!
+            return self.fitTo ( self.hset , draw , len ( histo ) , silent , *args )
 
+            
     ## perform sPlot-analysis 
     def sPlot ( self , dataset , *args    ) : 
         """
@@ -1012,6 +1035,69 @@ class Adjust1D(object) :
         
         
 
+# =============================================================================
+## @class Convolution
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-07-13
+class Convolution(object):
+    """
+    Helper class to make a convolution PDF 
+    """
+    def __init__ ( self           ,
+                   name           ,
+                   pdf            ,
+                   mass           , 
+                   convolution    ,
+                   useFFT  = True ) :
+        
+        ## store "old" pdf 
+        self.orig_pdf = pdf
+        self.mass     = mass
+
+        if   isinstance ( convolution ,   ROOT.RooAbsPdf       ) : self.convolution = convolution
+        elif isinstance ( convolution , ( float , int , long ) ) and not isinstance ( convolution , bool ) :
+            self.cnv_mean  = makeVar (
+                0.0  ,
+                'CnvMean'       + name ,
+                'cnv_mean (%s)' % name , 
+                0.0  , 0 ) 
+            self.cnv_sigma = makeVar (
+                None ,
+                'CnvSigma'      + name ,
+                'cnv_sigma(%s)' % name ,
+                convolution ,
+                convolution ,
+                0.05 * convolution , 10 * convolution )
+            self.cnv_gauss = ROOT.RooGaussian (
+                'CnvGauss'     + name , 
+                'CnvGauss(%s)' % name ,
+                self.mass , self.cnv_mean , self.cnv_sigma )
+            self.convolution = self.cnv_gauss
+        else :
+            raise AttributeError ( 'Unknown convolution type %s ' % convolution )
+
+        #
+        if useFFT :
+            
+            nb = 20000
+            if hasattr ( self , 'cnv_sigma' ) :
+                dm  = mass.getMax() - mass.getMin()
+                dm /= self.cnv_sigma
+                nb  = max ( nb , 10 * int (  dm ) )
+                logger.debug('Convolution: choose #bins %d' % nb )
+                
+            self.mass.setBins ( 20000 , 'cache' ) 
+            self.pdf = ROOT.RooFFTConvPdf ( 'FFT'     + name ,
+                                            'FFT(%s)' % name ,
+                                            self.mass , self.orig_pdf , self.convolution )
+        else      :
+            self.pdf = ROOT.RooNumConvPdf ( 'CNV'     + name ,
+                                            'CNV(%s)' % name ,
+                                            self.mass , self.orig_pdf , self.convolution )
+            if isinstance ( self.convolution , ROOT.RooGaussian ) :
+                if hasattr ( self , 'cnv_mean' ) and hasattr ( self , 'cnv_sigma' ) :
+                    self.pdf.setConvolutonWindow( self.cnv_mean , self.cnv_sigma , 5 )
+                    
 # =============================================================================
 if '__main__' == __name__ :
     
