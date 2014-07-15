@@ -3,7 +3,11 @@
 ! Responsible : Marco Cattaneo
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
- ! 2014-07-14 - Gerhard Raven
+
+! 2014-07-15 - Marco Cattaneo
+  - Fix daqsys.decoder-db test following previous change
+
+! 2014-07-14 - Gerhard Raven
   - use one HltTrackReportsDecoder for all sourceID/TES locations.
 
 !========================= DAQSys v8r3 2014-06-10 =========================

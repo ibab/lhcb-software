@@ -170,7 +170,7 @@ if test_db["0"].listRequired()!=['10', '8', '9', '7', '5', '6', '3', '4', '2', '
 from DAQSys.Decoders import caloSetZeroSuppressed
 caloSetZeroSuppressed(DecoderDB,False)
 #next add configuration of the inactive algorithms, because they're not in the default DB
-for dec in ["L0CaloAlg/L0Calo","HltTrackReportsDecoder/VeloDecoder","HltTrackReportsDecoder/ForwardDecoder","CaloDigitsFromRaw/EcalFromRaw","CaloDigitsFromRaw/HcalFromRaw"]:
+for dec in ["L0CaloAlg/L0Calo","HltTrackReportsDecoder","CaloDigitsFromRaw/EcalFromRaw","CaloDigitsFromRaw/HcalFromRaw"]:
     if dec not in DecoderDB:
         raise KeyError("The decoder called "+dec+" isn't in the database any more, update options/test-decoder-db.py")
     DecoderDB[dec].Active=True
