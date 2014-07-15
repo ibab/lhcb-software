@@ -6,6 +6,7 @@
 ! 2014-07-15 - Gerhard Raven
  -  if both active Hlt1 and Hlt2 lines, tell Hlt2 to use the 'Rerun' option for
     Hlt2Tracking. If Hlt2 lines but no Hlt2 lines, default to 'Decode'
+ - make sure that HltTrackReportWriter is enabled if only hlt1 lines
 
 ! 2014-07-14 - Gerhard Raven
  - disable HltTrackReportsDecoder in case Hlt1 lines are present

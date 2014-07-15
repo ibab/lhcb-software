@@ -702,9 +702,9 @@ class HltConf(LHCbConfigurableUser):
         
         activehlt1lines,activehlt2lines=self._runHltLines()
         
-        # only switch on TrackReports in a split scenario in Hlt1
+        # switch on TrackReports in a split scenario in Hlt1
         if activehlt1lines and not activehlt2lines :
-            self.setProp("EnableHltTrkReports", False)
+            self._safeSet( "EnableHltTrkReports", True)
             
 
         # Setup the beetle sync sequence
