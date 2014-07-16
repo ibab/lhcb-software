@@ -44,9 +44,13 @@ def hlt2linesconfs() :
     import os.path, pkgutil, importlib
     __hlt2linesconfs = [ getattr( importlib.import_module('Hlt2Lines.'+name), name+'Conf' ) 
                          for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt2Lines.__file__)]) ]
-
-    print ' imported %d hlt2linesconf classes' % len(__hlt2linesconfs)
     return __hlt2linesconfs
+
+#import all Hlt2 lines configurables in local scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
+def expose( tps, nm ) : 
+    return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
+__hlt2linesconfs = hlt2linesconfs()
+for str in expose(__hlt2linesconfs,'__hlt2linesconfs') : exec(str)
 
 
 #################################################################################################
