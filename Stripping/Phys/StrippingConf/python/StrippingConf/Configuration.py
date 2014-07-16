@@ -111,7 +111,7 @@ class StrippingConf ( object ) :
         streams = self.activeStreams()
         lines = []
         for stream in streams:
-          if selStream != [] and stream in selStream:
+          if selStream != [] and stream.name() in selStream:
             for line in stream.lines:
               lines.append(line)
           elif selStream == []:
