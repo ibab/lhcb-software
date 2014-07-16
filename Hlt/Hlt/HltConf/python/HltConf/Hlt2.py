@@ -13,22 +13,25 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 
-# import all modules in Hlt2Lines, and require each file xyz to contain a class xyzConf
-# i.e. we do the equivalent of 
-#    from Hlt2Lines.Hlt2SomeLines import Hlt2SomeLinesConf 
-
 def hlt2linesconfs() :
     # import all modules in Hlt2Lines, and require each file xyz to contain a class xyzConf
-    # i.e. we do the equivalent of 
+    # i.e. do the equivalent of 
     #    from Hlt2Lines.Hlt2SomeLines import Hlt2SomeLinesConf 
     #
     import Hlt2Lines
     import os.path, pkgutil, importlib
+    #        mod = getattr( __import__('HltSettings.%s' % name ), name )
     __hlt2linesconfs = [ getattr( importlib.import_module('Hlt2Lines.'+name), name+'Conf' ) 
                          for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt2Lines.__file__)]) ]
-
-    print ' imported %d hlt2linesconf classes' % len(__hlt2linesconfs)
     return __hlt2linesconfs
+
+
+
+#import all Hlt2 lines configurables in local scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
+def expose( tps, nm ) : 
+    return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
+__hlt2linesconfs = hlt2linesconfs()
+for str in expose(__hlt2linesconfs,'__hlt2linesconfs') : exec(str)
 
 #
 # The tracking configurations
