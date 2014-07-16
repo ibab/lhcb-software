@@ -19,35 +19,27 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $"
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
-from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
-from Hlt1Lines.Hlt1LumiLines       import Hlt1LumiLinesConf
-from Hlt1Lines.Hlt1BeamGasLines    import Hlt1BeamGasLinesConf
-from Hlt1Lines.Hlt1L0Lines         import Hlt1L0LinesConf
-from Hlt1Lines.Hlt1CosmicLines     import Hlt1CosmicLinesConf
-from Hlt1Lines.Hlt1MBLines         import Hlt1MBLinesConf
-from Hlt1Lines.Hlt1TrackLines      import Hlt1TrackLinesConf
-from Hlt1Lines.Hlt1MuonLines       import Hlt1MuonLinesConf
-from Hlt1Lines.Hlt1ProtonLines     import Hlt1ProtonLinesConf
-from Hlt1Lines.Hlt1ElectronLines   import Hlt1ElectronLinesConf
-from Hlt1Lines.Hlt1HighPtJetsSinglePVLines   import Hlt1HighPtJetsSinglePVLinesConf
-from Hlt1Lines.Hlt1DisplVertexLines import Hlt1DisplVertexLinesConf
-from Hlt1Lines.Hlt1pALines         import Hlt1pALinesConf
+def hlt1linesconfs() :
+    # import all modules in Hlt1Lines, and require each file xyz to contain a class xyzConf
+    # i.e. do the equivalent of 
+    #    from Hlt1Lines.Hlt1SomeLines import Hlt1SomeLinesConf 
+    #
+    import Hlt1Lines
+    import os.path, pkgutil, importlib
+    __hlt1linesconfs = [ getattr( importlib.import_module('Hlt1Lines.'+name), name+'Conf' ) 
+                         for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt1Lines.__file__)]) 
+                         if name.endswith('Lines') ]
+    return __hlt1linesconfs
+
+#import all Hlt1 lines configurables in local scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
+def expose( tps, nm ) : 
+    return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
+__hlt1linesconfs = hlt1linesconfs()
+for str in expose(__hlt1linesconfs,'__hlt1linesconfs') : exec(str)
+
 
 class Hlt1Conf(LHCbConfigurableUser):
-   __used_configurables__ = [ Hlt1CommissioningLinesConf
-                            , Hlt1LumiLinesConf
-                            , Hlt1BeamGasLinesConf
-                            , Hlt1L0LinesConf
-                            , Hlt1MuonLinesConf
-                            , Hlt1TrackLinesConf
-                            , Hlt1CosmicLinesConf
-                            , Hlt1MBLinesConf
-                            , Hlt1ProtonLinesConf  
-                            , Hlt1ElectronLinesConf
-                            , Hlt1HighPtJetsSinglePVLinesConf                
-                            , Hlt1DisplVertexLinesConf
-                            , Hlt1pALinesConf  
-                            ]
+   __used_configurables__ = hlt1linesconfs() 
 
    __slots__ = { "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
                }

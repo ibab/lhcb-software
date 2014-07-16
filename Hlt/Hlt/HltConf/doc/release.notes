@@ -9,6 +9,9 @@
  - automatically import all Hlt2Lines configurables, so no need to explicitly
    include this list here, and thus no need to modify this package when introducing
    new Hlt2Lines configurables
+ - automatically import all Hlt1Lines configurables, so no need to explicitly
+   include this list here, and thus no need to modify this package when introducing
+   new Hlt1Lines configurables
 
 ! 2014-07-15 - Gerhard Raven
  -  if both active Hlt1 and Hlt2 lines, tell Hlt2 to use the 'Rerun' option for

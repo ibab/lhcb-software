@@ -20,7 +20,6 @@ def hlt2linesconfs() :
     #
     import Hlt2Lines
     import os.path, pkgutil, importlib
-    #        mod = getattr( __import__('HltSettings.%s' % name ), name )
     __hlt2linesconfs = [ getattr( importlib.import_module('Hlt2Lines.'+name), name+'Conf' ) 
                          for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt2Lines.__file__)]) ]
     return __hlt2linesconfs
