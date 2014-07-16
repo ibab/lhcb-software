@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-07-16 - Anton poluektov 
+ - Modification for RelatedInfo storage. Pass the list of RelatedInfo locations 
+   as an argument of microDST elements. 
+
 ! 2014-07-02 - Chris Jones
  - Add support for selective saving of RawEvent objects to output (u)DST streams.
   . Works by using information provided by each Stripping line, which 
