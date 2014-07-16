@@ -4,6 +4,11 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-07-16 - Gerhard Raven
+ - adapt to match the fact that Hlt2Lines now enforces the rule that Hlt2SomeLine 
+   must define Htl2SomeLineConf;
+    
+
 !========================= HltSettings v6r4 2014-06-16 =========================
 
 ! 2014-06-12 - Gerhard Raven

@@ -24,8 +24,8 @@ class RadiativeLines:
         # keep pass through thresholds
         d = { }
 
-        from Hlt2Lines.Hlt2RadiativeTopoLines  import Hlt2RadiativeTopoConf
-        d.update( { Hlt2RadiativeTopoConf : {
+        from Hlt2Lines.Hlt2RadiativeTopoLines  import Hlt2RadiativeTopoLinesConf
+        d.update( { Hlt2RadiativeTopoLinesConf : {
                     # Track cuts
                     'Track_PT_MIN'       : 700.0  , # MeV
                     'Track_P_MIN'        : 5000.0 , # MeV
