@@ -27,8 +27,9 @@ use LoKiTrigger         v15r1   Phys  # Vanya Belyaev
 
 #temporary
 
-#suppress warnings in HltDAQ and pick up timing improvements from Gerhard
+#please update to tagged version of current HEAD  prior to release of v23r0!!!
 use HltDAQ              v4r5    Hlt
+use DAQSys              v8r3    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
