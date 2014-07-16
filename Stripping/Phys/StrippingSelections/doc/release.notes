@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-16 - Anton Poluektov 
+ - Use RelatedInfo to store cone variables in StrippinBeauty2Charm and 
+   StrippingDstarPromptWithD02HHMuMu lines
+
 ! 2014-07-15 - Stefano Perazzini
  - Hot fix to StrippingXibc.py and StrippingPsiXForBandQ
 

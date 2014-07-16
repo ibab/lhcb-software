@@ -188,10 +188,22 @@ config = {
     'B2D0PiPiPiD2HHTIGHTBeauty2CharmLine',
     'B2D0PiD2HHHHTIGHTBeauty2CharmLine'
     ],
-    'ExtraInfoTools' : [
-      { "Type" : "ConeVariables", "ConeAngle" : 1.5, "ConeNumber" : 1, "Variables" : ['angle', 'mult', 'ptasy']}, 
-      { "Type" : "ConeVariables", "ConeAngle" : 1.7, "ConeNumber" : 2, "Variables" : ['angle', 'mult', 'ptasy']}, 
-      { "Type" : "ConeVariables", "ConeAngle" : 1.0, "ConeNumber" : 3, "Variables" : ['angle', 'mult', 'ptasy']}
+    'RelatedInfoTools' : [
+      { "Type" : "RelInfoConeVariables", 
+        "ConeAngle" : 1.5, 
+        "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+        "Location"  : 'P2ConeVar1'
+      }, 
+      { "Type" : "RelInfoConeVariables", 
+        "ConeAngle" : 1.7, 
+        "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+        "Location"  : 'P2ConeVar2'
+      }, 
+      { "Type" : "RelInfoConeVariables", 
+        "ConeAngle" : 1.0, 
+        "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+        "Location"  : 'P2ConeVar3'
+      }, 
     ], 
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,
@@ -230,7 +242,7 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','D2X','B2X','Dstar','HH','HHH',
-                              'PID','FlavourTagging','ExtraInfoTools', '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+                              'PID','FlavourTagging','RelatedInfoTools', '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -332,8 +344,6 @@ class Beauty2CharmConf(LineBuilder):
         sline = StrippingLine('D02HHTopoTOSLine',1.0,selection=sel,HLT=hlt)
         self.registerLine(sline)
 
-
-
     def _makeLine(self,protoLine,config):
         tag = 'B2CBBDTBeauty2CharmFilter'
         default = config['Prescales']['RUN_BY_DEFAULT']
@@ -366,7 +376,7 @@ class Beauty2CharmConf(LineBuilder):
                                   selection=tmpSel,checkPV=True,FILTER=filter,
                                   HLT=hlt,
                                   EnableFlavourTagging = (name in config['FlavourTagging']), 
-                                  ExtraInfoTools = config['ExtraInfoTools'] )
+                                  RelatedInfoTools = config['RelatedInfoTools'] )
 
             self.registerLine(sline)
 
