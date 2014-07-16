@@ -3,6 +3,10 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-07-17 - Gerhard Raven
+ - autmoatically import all Hlt2Lines configurables. 
+   No need anymore to explicitly include all Hlt2Lines by hand!
+
 ! 2014-07-15 - Gerhard Raven
  - define single point to define HLT2 velo tracking, namely Hlt2Tracking.py
  - in PV3D, require usage to specify whether it is to be used in Hlt1 or Hlt2,

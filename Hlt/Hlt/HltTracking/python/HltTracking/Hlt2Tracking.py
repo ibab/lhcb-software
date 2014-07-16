@@ -35,60 +35,20 @@ from HltTrackNames import HltRichDefaultTrackCuts, HltDefaultTrackCuts
 
 from Configurables import CaloProcessor, RichRecSysConf, TrackSelector
 
-from Hlt2Lines.Hlt2CharmHadLambdaC2LambdaHLines import Hlt2CharmHadLambdaCLambdaHLinesConf 
-from Hlt2Lines.Hlt2B2DXLines              import Hlt2B2DXLinesConf
-from Hlt2Lines.Hlt2B2JpsiXLines           import Hlt2B2JpsiXLinesConf
-from Hlt2Lines.Hlt2B2PhiXLines            import Hlt2B2PhiXLinesConf
-from Hlt2Lines.Hlt2InclusiveDiMuonLines   import Hlt2InclusiveDiMuonLinesConf
-from Hlt2Lines.Hlt2InclusiveMuonLines     import Hlt2InclusiveMuonLinesConf
-from Hlt2Lines.Hlt2InclusivePhiLines      import Hlt2InclusivePhiLinesConf
-from Hlt2Lines.Hlt2TopologicalLines       import Hlt2TopologicalLinesConf
-from Hlt2Lines.Hlt2B2XGammaLines          import Hlt2B2XGammaLinesConf
-#commented out v13r4p1
-from Hlt2Lines.Hlt2D2XGammaLines          import Hlt2D2XGammaLinesConf
-from Hlt2Lines.Hlt2B2HHLines              import Hlt2B2HHLinesConf
-from Hlt2Lines.Hlt2B2LLXLines             import Hlt2B2LLXLinesConf
-from Hlt2Lines.Hlt2CharmHadD02HHLines     import Hlt2CharmHadD02HHLinesConf
-from Hlt2Lines.Hlt2CharmHadTwoBodyForMultiBody     import Hlt2CharmHadTwoBodyForMultiBodyConf
-#needed for v13r4p1
-#from Hlt2Lines.Hlt2CharmHadD02HHHHLines  import Hlt2CharmHadD02HHHHLinesConf
-from Hlt2Lines.Hlt2CharmHadD2HHHLines     import Hlt2CharmHadD2HHHLinesConf
-from Hlt2Lines.Hlt2CharmHadTwoBodyForD02HHHH  import Hlt2CharmHadTwoBodyForD02HHHHConf
-from Hlt2Lines.Hlt2CharmHadD02HHHHDstLines  import Hlt2CharmHadD02HHHHDstLinesConf
-from Hlt2Lines.Hlt2CharmHadD02HHHHDstNoHlt1Lines import Hlt2CharmHadD02HHHHDstNoHlt1LinesConf
-from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines     import Hlt2CharmSemilepD02HMuNuLinesConf
-from Hlt2Lines.Hlt2CharmSemilepTwoMuonForMuMuHad import Hlt2CharmSemilepTwoMuonForMuMuHadConf
-from Hlt2Lines.Hlt2CharmSemilepD02HHMuMuLines   import Hlt2CharmSemilepD02HHMuMuLinesConf
-from Hlt2Lines.Hlt2CharmSemilepD2HMuMuLines   import Hlt2CharmSemilepD2HMuMuLinesConf
-from Hlt2Lines.Hlt2CharmRareDecayLines    import Hlt2CharmRareDecayLinesConf
-from Hlt2Lines.Hlt2CharmHadD2KS0HLines    import Hlt2CharmHadD2KS0HLinesConf
-from Hlt2Lines.Hlt2CharmHadD02HHKsLines   import Hlt2CharmHadD02HHKsLinesConf  
-from Hlt2Lines.Hlt2DisplVerticesLines     import Hlt2DisplVerticesLinesConf
-from Hlt2Lines.Hlt2HighPtJetsLines        import Hlt2HighPtJetsLinesConf
-from Hlt2Lines.Hlt2CommissioningLines     import Hlt2CommissioningLinesConf
-from Hlt2Lines.Hlt2ExpressLines           import Hlt2ExpressLinesConf
-from Hlt2Lines.Hlt2diphotonDiMuonLines    import Hlt2diphotonDiMuonLinesConf
-from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
-from Hlt2Lines.Hlt2InclusiveDiPhiLines    import Hlt2InclusiveDiPhiLinesConf
-from Hlt2Lines.Hlt2Dst2D2XXLines          import Hlt2Dst2D2XXLinesConf
-from Hlt2Lines.Hlt2InclusiveDiElectronLines import Hlt2InclusiveDiElectronLinesConf
-from Hlt2Lines.Hlt2InclusiveElectronLines   import Hlt2InclusiveElectronLinesConf
-from Hlt2Lines.Hlt2B2KstareeLines           import Hlt2B2KstareeLinesConf
-from Hlt2Lines.Hlt2B2HHLTUnbiasedLines      import Hlt2B2HHLTUnbiasedLinesConf
-from Hlt2Lines.Hlt2B2KsHHLines              import Hlt2B2KsHHLinesConf
-from Hlt2Lines.Hlt2B2HHPi0Lines             import Hlt2B2HHPi0LinesConf
-from Hlt2Lines.Hlt2MuNTrackLines             import Hlt2MuNTrackLinesConf
-from Hlt2Lines.Hlt2CharmSemilepD02HMuNuLines           import Hlt2CharmSemilepD02HMuNuLinesConf
-from Hlt2Lines.Hlt2RadiativeTopoLines        import Hlt2RadiativeTopoConf
-from Hlt2Lines.Hlt2CharmHadLambdaCLines import Hlt2CharmHadLambdaCLinesConf
-from Hlt2Lines.Hlt2CharmHadMinBiasLines import Hlt2CharmHadMinBiasLinesConf
-from Hlt2Lines.Hlt2CharmHadD2KS0KS0Lines import Hlt2CharmHadD2KS0KS0LinesConf
-from Hlt2Lines.Hlt2CharmHadD02HHXDstLines import Hlt2CharmHadD02HHXDstLinesConf
-from Hlt2Lines.Hlt2CEPLines import Hlt2CEPLinesConf
-from Hlt2Lines.Hlt2CharmHadD2HHHKsLines import Hlt2CharmHadD2HHHKsLinesConf
-from Hlt2Lines.Hlt2ChargedHyperon2LambdaHLines import Hlt2ChargedHyperon2LambdaHLinesConf
-from Hlt2Lines.Hlt2TwoMuonForKshortToMuMuPiPi import Hlt2TwoMuonForKshortToMuMuPiPiConf
-from Hlt2Lines.Hlt2KshortToMuMuPiPi import Hlt2KshortToMuMuPiPiConf
+def hlt2linesconfs() :
+    # import all modules in Hlt2Lines, and require each file xyz to contain a class xyzConf
+    # i.e. we do the equivalent of 
+    #    from Hlt2Lines.Hlt2SomeLines import Hlt2SomeLinesConf 
+    #
+    import Hlt2Lines
+    import os.path, pkgutil, importlib
+    __hlt2linesconfs = [ getattr( importlib.import_module('Hlt2Lines.'+name), name+'Conf' ) 
+                         for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt2Lines.__file__)]) ]
+
+    print ' imported %d hlt2linesconf classes' % len(__hlt2linesconfs)
+    return __hlt2linesconfs
+
+
 #################################################################################################
 #
 # Hlt2 Tracking
@@ -101,66 +61,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
     #############################################################################################
     __used_configurables__ = [ (CaloProcessor   ,   None)
                              , (RichRecSysConf  ,   None)
-                             # This next part defines all the Hlt2 Lines since they 
+                             ] + hlt2linesconfs()
+                             # This above hlt2linesconf defines all the Hlt2 Lines since they 
                              # configured after the tracking. This means that each
                              # Hlt2Lines configurable MUST be a singleton AND this
                              # list must be EXACTLY the same as the one in 
                              # $HLTCONFROOT/python/HltConf/Hlt2.py 
-                             , Hlt2TopologicalLinesConf
-                             , Hlt2B2DXLinesConf
-                             , Hlt2CharmHadD02HHLinesConf
-                             , Hlt2CharmHadD2HHHLinesConf
-                             , Hlt2CharmHadD2KS0HLinesConf 
-                             , Hlt2CharmHadD02HHKsLinesConf
-                             , Hlt2CharmHadTwoBodyForMultiBodyConf
-                             , Hlt2CharmHadTwoBodyForD02HHHHConf
-                             #needed for v13r4p1
-                             #, Hlt2CharmHadD02HHHHLinesConf
-                             , Hlt2CharmHadD02HHHHDstLinesConf
-                             , Hlt2CharmHadD02HHHHDstNoHlt1LinesConf  
-                             , Hlt2CharmSemilepD02HMuNuLinesConf
-                             , Hlt2CharmSemilepD02HHMuMuLinesConf
-                             , Hlt2CharmSemilepD2HMuMuLinesConf
-                             , Hlt2CharmSemilepTwoMuonForMuMuHadConf
-                             , Hlt2CharmRareDecayLinesConf
-                             , Hlt2InclusiveDiMuonLinesConf
-                             , Hlt2InclusiveMuonLinesConf
-                             , Hlt2InclusivePhiLinesConf
-                             , Hlt2B2JpsiXLinesConf
-                             , Hlt2B2PhiXLinesConf
-                             , Hlt2B2XGammaLinesConf
-                             #commented out for v13r4p1
-                             , Hlt2D2XGammaLinesConf
-                             , Hlt2B2HHLinesConf
-                             , Hlt2B2HHLTUnbiasedLinesConf
-                             , Hlt2B2LLXLinesConf                         
-                             , Hlt2DisplVerticesLinesConf
-                             , Hlt2HighPtJetsLinesConf
-                             , Hlt2CommissioningLinesConf
-                             , Hlt2ExpressLinesConf
-                             , Hlt2diphotonDiMuonLinesConf
-                             , Hlt2InclusiveDiProtonLinesConf
-                             , Hlt2InclusiveDiPhiLinesConf  
-                             , Hlt2Dst2D2XXLinesConf
-                             , Hlt2InclusiveDiElectronLinesConf
-                             , Hlt2InclusiveElectronLinesConf
-                             , Hlt2B2KstareeLinesConf  
-                             , Hlt2B2HHPi0LinesConf
-                             , Hlt2B2KsHHLinesConf
-                             , Hlt2MuNTrackLinesConf
-                             , Hlt2CharmSemilepD02HMuNuLinesConf
-                             , Hlt2RadiativeTopoConf
-                             , Hlt2CharmHadLambdaCLinesConf
-                             , Hlt2CharmHadLambdaCLambdaHLinesConf
-                             , Hlt2CharmHadMinBiasLinesConf
-                             , Hlt2CharmHadD2KS0KS0LinesConf
-                             , Hlt2CharmHadD02HHXDstLinesConf
-                             , Hlt2CEPLinesConf
-                             , Hlt2CharmHadD2HHHKsLinesConf
-                             , Hlt2ChargedHyperon2LambdaHLinesConf
-                             , Hlt2TwoMuonForKshortToMuMuPiPiConf   
-                             , Hlt2KshortToMuMuPiPiConf
-                             ]
     __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
                 , "Hlt2Tracks"                      : Hlt2ForwardTracksName
