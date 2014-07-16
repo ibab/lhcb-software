@@ -91,22 +91,11 @@ defaultConfig = {
     'Dimu_FlightChi2'     :   9.0,
     'Dimu_Dau_MaxIPCHI2'  :   9.0,
 
-    # Incl (dimu) cuts
-    'InclDimu_FlightChi2'     :   100.0,
-    'InclDimu_Dau_MaxIPCHI2'  :     9.0,
-    'InclDiMu_VertexCHI2'     :     6.0,
-    'InclDiMu_DIRA'           :   -0.90,
-    'InclDiMu_CCbarPrescale'  :    0.07,
-    'InclDimuLOWERMASS'       :  3870.0, # MeV
-    'InclDimuUPPERMASS'       :  5800.0, # MeV
-    'InclDiMuCORRM_MIN'       :     0.0, # MeV
-    'InclDiMuCORRM_MAX'       : 15000.0, # MeV
     # Track cuts
-    'Track_CHI2nDOF'      :    5.0,
-    'Track_GhostProb'     :    0.4,  
+    'Track_GhostProb'     :    0.35,  
       
     # Hadron cuts
-    'Hadron_MinIPCHI2'    :    9.0,
+    'Hadron_MinIPCHI2'    :    6.0,
 
     # Muon cuts
     'Muon_MinIPCHI2'      :    9.0,
@@ -119,11 +108,9 @@ defaultConfig = {
 
     # GEC
     'SpdMult'             :  600,
-
-    'Hadronic_Selection'  : "(INTREE((ABSID == 'K*(892)0')&(M < 1100*MeV)) | INTREE((ABSID == 'phi(1020)')&(M>1000*MeV)&(M<1100*MeV)))", 
-
-    'HADRONICDECAYS'      :  [ "[B0 -> K*(892)0 rho(770)0]cc", "[B0 -> K*(892)0 phi(1020)]cc" ],
     
+    'HLT_FILTER' : "(HLT_PASS('Hlt1TrackAllL0Decision')|HLT_PASS('Hlt1TrackMuonDecision'))&(HLT_PASS_RE('Hlt2DiMuon.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision') | HLT_PASS_RE('Hlt2SingleMuon.*Decision'))",
+
     'DECAYS'              :  ["B0 -> J/psi(1S) phi(1020)",                  
                               "[B0 -> J/psi(1S) K*(892)0]cc",               
                               "B0 -> J/psi(1S) rho(770)0",
@@ -165,10 +152,6 @@ class B2XMuMuConf(LineBuilder) :
           'KpiVXCHI2NDOF'
         , 'MuonPID'
         , 'DimuonUPPERMASS'
-        , 'InclDimuLOWERMASS'
-        , 'InclDimuUPPERMASS'
-        , 'InclDiMuCORRM_MIN'
-        , 'InclDiMuCORRM_MAX'
         , 'Pi0MINPT'
         , 'Pi0ForOmegaMINPT'
         , 'DplusLOWERMASS'
@@ -232,15 +215,7 @@ class B2XMuMuConf(LineBuilder) :
         'Dimu_FlightChi2',
         'Dimu_Dau_MaxIPCHI2',
         
-       # Incl (dimu) cuts
-        'InclDimu_FlightChi2',
-        'InclDimu_Dau_MaxIPCHI2',
-        'InclDiMu_VertexCHI2',
-        'InclDiMu_DIRA',
-        'InclDiMu_CCbarPrescale',
-        
         # Track cuts
-        'Track_CHI2nDOF',
         'Track_GhostProb',
         
         # Hadron cuts
@@ -257,9 +232,8 @@ class B2XMuMuConf(LineBuilder) :
 
         #GEC
         'SpdMult',
+        'HLT_FILTER',
 
-        'Hadronic_Selection' ,
-        'HADRONICDECAYS'     ,  
         'DECAYS' 
         )
     
@@ -300,17 +274,7 @@ class B2XMuMuConf(LineBuilder) :
                          "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(Dimu_Dau_MaxIPCHI2)s )" %config
         
 
-        InclDiMuDaughterCuts = "(VFASPF(VCHI2/VDOF) < %(InclDiMu_VertexCHI2)s) & " \
-                               "(BPVDIRA> %(InclDiMu_DIRA)s)" %config
-        self.InclDiMuHighQ2CombCut = "(AM > %(InclDimuLOWERMASS)s *MeV) & " \
-                                     "(AM < %(InclDimuUPPERMASS)s *MeV)" %config
-        self.InclDiMuCut = InclDiMuDaughterCuts + " & (BPVVDCHI2 > %(InclDimu_FlightChi2)s) & " \
-                           "(BPVCORRM > %(InclDiMuCORRM_MIN)s *MeV) & " \
-                           "(BPVCORRM < %(InclDiMuCORRM_MAX)s *MeV) &" \
-                           "(MAXTREE(ISBASIC,MIPCHI2DV(PRIMARY))> %(InclDimu_Dau_MaxIPCHI2)s )" %config
-
-
-        self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s) & (TRGHP < %(Track_GhostProb)s)" %config
+        self.TrackCuts = "(TRGHP < %(Track_GhostProb)s)" %config
         #self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
         
         self.HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s) & (HASRICH)" %config
@@ -323,10 +287,7 @@ class B2XMuMuConf(LineBuilder) :
         #self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
 
         self.Dimuon = self.__Dimuon__(config)
-        self.InclDimuHighQ2 = self.__InclDimuHighQ2__(config,doWS=True,
-                                                      doCCbar=False)
-        self.InclDimuCCbar = self.__InclDimuHighQ2__(config,doWS=False,
-                                                     doCCbar=True)        
+
         self.Protons = self.__Protons__(config)
         self.Kaons = self.__Kaons__(config)
         self.Pions = self.__Pions__(config)       
@@ -384,23 +345,18 @@ class B2XMuMuConf(LineBuilder) :
             for k in self.AvailableDaughters.keys():
                 if k in d: self.DeclaredDaughters += self.AvailableDaughters.pop(k) 
                 
-        for d in config['HADRONICDECAYS']:
-            for k in self.AvailableDaughters.keys():
-                if k in d: self.DeclaredDaughters += self.AvailableDaughters.pop(k)             
-                
         
         self.Bs = self.__Bs__( self.Dimuon,
                                daughters = self.DeclaredDaughters,  
                                conf = config)
 
-        self.HadronicB = self.__HadronicB__( daughters = self.DeclaredDaughters, 
-                                             conf = config )
 
         if config['DECAYS']:
             # standard lines
             self.line = StrippingLine(
                 self.name+"_Line",
                 prescale = 1,
+                HLT=config['HLT_FILTER'],
                 FILTER = {
                 'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
                 'Preambulo' : [
@@ -412,57 +368,6 @@ class B2XMuMuConf(LineBuilder) :
         
             self.registerLine(self.line)
 
-        if config['HADRONICDECAYS']:
-            # hadronic lines
-            self.hadronic_line =  StrippingLine(
-                self.name+"_HadronicLine",
-                prescale = 1,
-                FILTER = {
-                'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
-                'Preambulo' : [
-                "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
-                ]
-                },
-                algos=[self.HadronicB]
-                )
-            
-            self.registerLine( self.hadronic_line )
-
-        # inclusive dimuon line
-        self.inclusive_DiMuHighQ2_line =  StrippingLine(
-            self.name+"_InclDiMuHighQ2Line",
-            prescale = 1,
-            FILTER = {
-            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
-            'Preambulo' : [
-            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
-            ]
-            },
-            HLT="HLT_PASS_RE('Hlt2DiMuonDetachedDecision')|"\
-            "HLT_PASS_RE('Hlt2DiMuonDetachedHeavyDecision')|"\
-            "HLT_PASS_RE('Hlt2SingleMuonDecision')",
-            algos=[self.InclDimuHighQ2]
-            )
-
-        self.registerLine( self.inclusive_DiMuHighQ2_line )
-
-        # inclusive dimuon line around jpsi and psi2s
-        self.inclusive_DiMuCCbar_line =  StrippingLine(
-            self.name+"_InclDiMuCCbarLine",
-            prescale = config['InclDiMu_CCbarPrescale'],
-            FILTER = {
-            'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
-            'Preambulo' : [
-            "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
-            ]
-            },
-            HLT="HLT_PASS_RE('Hlt2DiMuonDetachedDecision')|"\
-            "HLT_PASS_RE('Hlt2DiMuonDetachedHeavyDecision')|"\
-            "HLT_PASS_RE('Hlt2SingleMuonDecision')",
-            algos=[self.InclDimuCCbar]
-            )
-
-        self.registerLine( self.inclusive_DiMuCCbar_line )
 
         
     def __Dimuon__(self, conf):
@@ -488,38 +393,6 @@ class B2XMuMuConf(LineBuilder) :
         SelDiMuon = Selection("Sel_" + self.name + "_DiMuon", Algorithm = CombineDiMuon, RequiredSelections = [ Muons ] )
         return SelDiMuon
 
-    def __InclDimuHighQ2__(self, conf, doWS=False, doCCbar=False):
-        '''
-        Create a new dimuon for high q2 inclusive B->Xmumu
-        '''
-        from  GaudiConfUtils.ConfigurableGenerators import CombineParticles
-        CombineDiMuon = CombineParticles()
-        CombineDiMuon.DecayDescriptors = ["B0 -> mu- mu+"]
-        sel_name="InclDiMuHighQ2"
-        CombineDiMuon.DaughtersCuts = { "mu+" : self.MuonCut, "mu-" : self.MuonCut }
-        CombineDiMuon.CombinationCut = self.InclDiMuHighQ2CombCut
-        CombineDiMuon.MotherCut     = self.InclDiMuCut
-        # choose
-        if doCCbar == True:
-            # make sure cant run WS combinations if running ccbar
-            doWS=False
-            CombineDiMuon.DecayDescriptors = ["B0 -> mu- mu+"]
-            sel_name += "Jpsi"
-            CombineDiMuon.CombinationCut = "AM > 0 *MeV"
-            CombineDiMuon.MotherCut += " & ( (ADMASS('J/psi(1S)')<75*MeV) |"\
-                                       " (ADMASS('psi(2S)')<75*MeV) )"
-        if doWS == True:
-            CombineDiMuon.DecayDescriptors = ["B0 -> mu- mu+", "B0 -> mu- mu-", "B0 -> mu+ mu+"]
-
-        
-        IsMuonFlag = conf['Muon_IsMuon'] 
-        from StandardParticles import StdAllLooseMuons, StdAllVeryLooseMuons
-        Muons = StdAllLooseMuons if IsMuonFlag else StdAllVeryLooseMuons
-         
-        from PhysSelPython.Wrappers import Selection
-        SelDiMuon = Selection("Sel_" + self.name + "_"+sel_name, Algorithm = CombineDiMuon,
-                              RequiredSelections = [ Muons ] )
-        return SelDiMuon
 
     
     def __Kaons__(self, conf):
@@ -1168,25 +1041,6 @@ class B2XMuMuConf(LineBuilder) :
                          RequiredSelections = [ Dimuon, _sel_Daughters ])
         return sel
 
-    def __HadronicB__( self, daughters, conf ):
-        """
-        Make and return a Bs selection
-        """      
-
-        _b2xmumu = CombineParticles()
-        _b2xmumu.DecayDescriptors = conf['HADRONICDECAYS']
-
-        
-        _b2xmumu.CombinationCut = self.BdCombCut
-        _b2xmumu.MotherCut = self.BdCut + ' & ' + conf['Hadronic_Selection']
-        
-        _sel_Daughters = MergedSelection("Selection_"+self.name+"_Hadronic_daughters",
-                                         RequiredSelections = daughters )
-        
-        sel = Selection( "Selection_"+self.name+"_Hadronic_B2XMuMu",
-                         Algorithm = _b2xmumu,
-                         RequiredSelections = [ _sel_Daughters ])
-        return sel 
 
 ##   _b2xmumu.DecayDescriptors = [       "B0 -> J/psi(1S) phi(1020)",
 ##                                       "[B0 -> J/psi(1S) K*(892)0]cc",
