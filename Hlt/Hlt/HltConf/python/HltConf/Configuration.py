@@ -34,6 +34,7 @@ def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"D
         if type(seq) is not list: seq = [ seq ]
         for i in seq : __forAll__(i,prop_value_dict,types) 
 
+### TODO: move this into HltPVs...
 def __onlinePV__():
     """Use the tracking cofigurables to define the onlinePV location
     """
