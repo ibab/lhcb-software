@@ -4868,7 +4868,7 @@ def _h2_get_slice_ ( h2 , axis , ibins ) :
     #
     if   1 == axis :
         if isinstance ( ibins , ( int , long ) ) :
-            if not ibin in h2.GetXaxis() :
+            if not ibins in h2.GetXaxis() :
                 raise TypeError, 'Illegal bin  index %s' % ibins
             ibins = ibins,
         h_slice = h1_axis ( h2.GetYaxis () ,
@@ -4907,7 +4907,7 @@ ROOT.TH2D . sliceY = lambda s , ibin : _h2_get_slice_ ( s , 2 , ibin )
 
 # =============================================================================
 ## define 2D slice for 3D-histogram
-def _h3_get_slice_ ( h2 , axis , ibins ) :
+def _h3_get_slice_ ( h3 , axis , ibins ) :
     """
     Get 2D-slice for 3D-histogram
     
@@ -4920,30 +4920,30 @@ def _h3_get_slice_ ( h2 , axis , ibins ) :
     #
     if   1 == axis :
         if isinstance ( ibins , (int,long) ) : 
-            if not ibin in h2.GetXaxis() :
-                raise TypeError, 'Illegal bin  index %s' % ibin
+            if not ibins in h3.GetXaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibins
             ibins = ibins ,
-        h_slice = h2_axes ( h2.GetYaxis () ,
-                            h2.GetZaxis () ,
+        h_slice = h2_axes ( h3.GetYaxis () ,
+                            h3.GetZaxis () ,
                             title  = h3.GetTitle()+ ":X-slice %s" % ibins , 
                             double = isinstance ( h3 , ROOT.TH3D )        )
         
     elif 2 == axis : 
         if isinstance ( ibins , (int,long) ) : 
-            if not ibin in h2.GetYaxis() :
-                raise TypeError, 'Illegal bin  index %s' % ibin
+            if not ibins in h3.GetYaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibins
             ibins = ibins ,
-        h_slice = h2_axes ( h2.GetXaxis () ,
-                            h2.GetZaxis () ,
+        h_slice = h2_axes ( h3.GetXaxis () ,
+                            h3.GetZaxis () ,
                             title  = h3.GetTitle()+ ":Y-slice %s" % ibnis , 
                             double = isinstance ( h3 , ROOT.TH2D )        )             
     elif 3 == axis : 
         if isinstance ( ibins , (int,long) ) : 
-            if not ibin in h2.GetZaxis() :
-                raise TypeError, 'Illegal bin  index %s' % ibin 
+            if not ibins in h3.GetZaxis() :
+                raise TypeError, 'Illegal bin  index %s' % ibins 
             ibins = ibins ,
-        h_slice = h2_axes ( h2.GetXaxis () , 
-                            h2.GetYaxis () ,
+        h_slice = h2_axes ( h3.GetXaxis () , 
+                            h3.GetYaxis () ,
                             title  = h3.GetTitle()+ ":Z-slice %s" % ibins , 
                             double = isinstance ( h3 , ROOT.TH2D ) )     
     else :
