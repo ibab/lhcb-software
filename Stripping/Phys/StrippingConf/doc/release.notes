@@ -4,6 +4,12 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-07-15 - Stefano Perazzini
+ - Added MDSTFlag to StrippingLine to allow lines to decide if MDST.DST 
+   is needed or not
+ - Added activeLines to StrippingConf in order to retrive the stripping lines
+   run by a particular StrippingConf
+
 ! 2014-07-02 - Anton Poluektov 
  - Remove support for outdated StrippingMember and StrippingTool
 

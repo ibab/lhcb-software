@@ -222,6 +222,7 @@ class StrippingLine(object):
                    UseRelatedInfo = None,        # Use new persistency of ExtraInfo (now called RelatedInfo)
                                                  # If None, follow the setting in StrippingConf
                    RequiredRawEvents = None,     # Possible list of RawEvent banks required by this line
+                   MDSTFlag          = False,     # Possible list of RawEvent banks required by this line
                    **args           ) : # other configuration parameters
 
         if algos and selection :
@@ -273,6 +274,8 @@ class StrippingLine(object):
                 if bank not in validRawBanks :
                     raise Exception("RawBank "+bank+" is not a known type")
         self.RequiredRawEvents = RequiredRawEvents
+
+        self.MDSTFlag = MDSTFlag
 
         line = self.subname()
 

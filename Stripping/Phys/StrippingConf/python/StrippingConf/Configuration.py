@@ -43,7 +43,7 @@ class StrippingConf ( object ) :
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
-        
+
         for stream in Streams :
     	    for line in stream.lines : 
     		line.updateRelatedInfoFlag(UseRelatedInfo)
@@ -103,6 +103,17 @@ class StrippingConf ( object ) :
         Return the list of all active StrippingStreams. 
         """
         return self._streams
+
+    def activeLines (self) :
+        """
+        Return the list of all stripping lines 
+        """
+        streams = self.activeStreams()
+        lines = []
+        for stream in streams:
+          for line in stream.lines:
+            lines.append(line)
+        return lines
 
     def sequence (self) :
         """
