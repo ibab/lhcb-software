@@ -31,8 +31,6 @@ public:
   /// Get the value of calculated parameters
   virtual LHCb::RelatedInfoMap* getInfo(void) = 0;
   
-  virtual std::string infoPath(void) = 0; 
-
 //protected:
 
 //  virtual ~IRelatedInfoTool();
