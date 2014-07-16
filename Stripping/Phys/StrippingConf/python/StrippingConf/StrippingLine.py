@@ -222,7 +222,7 @@ class StrippingLine(object):
                    UseRelatedInfo = None,        # Use new persistency of ExtraInfo (now called RelatedInfo)
                                                  # If None, follow the setting in StrippingConf
                    RequiredRawEvents = None,     # Possible list of RawEvent banks required by this line
-                   MDSTFlag          = False,     # Possible list of RawEvent banks required by this line
+                   MDSTFlag          = False,     # Flag to ask the line to be written to MDST.DST stream
                    **args           ) : # other configuration parameters
 
         if algos and selection :

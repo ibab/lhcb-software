@@ -104,15 +104,20 @@ class StrippingConf ( object ) :
         """
         return self._streams
 
-    def activeLines (self) :
+    def activeLines (self,selStream = [] ) :
         """
         Return the list of all stripping lines 
         """
         streams = self.activeStreams()
         lines = []
         for stream in streams:
-          for line in stream.lines:
-            lines.append(line)
+          if selStream != [] and stream in selStream:
+            for line in stream.lines:
+              lines.append(line)
+          elif selStream == []:
+            for line in stream.lines:
+              lines.append(line)
+    
         return lines
 
     def sequence (self) :
