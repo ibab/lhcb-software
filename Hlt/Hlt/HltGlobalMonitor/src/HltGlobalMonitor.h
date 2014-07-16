@@ -80,72 +80,72 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     std::string m_hlt2Decision;
     std::string m_rawEventLocation;
 
-    AIDA::IHistogram1D* m_odin;
-    AIDA::IHistogram1D* m_odinHLT1;
-    AIDA::IHistogram1D* m_odinHLT2;
+    AIDA::IHistogram1D* m_odin = nullptr;
+    AIDA::IHistogram1D* m_odinHLT1 = nullptr;
+    AIDA::IHistogram1D* m_odinHLT2 = nullptr;
 
-    AIDA::IHistogram1D* m_hlt1Alley;
-    AIDA::IHistogram1D* m_hlt2Alley;
+    AIDA::IHistogram1D* m_hlt1Alley = nullptr;
+    AIDA::IHistogram1D* m_hlt2Alley = nullptr;
 
-    AIDA::IProfile1D* m_hltVirtTime;
-    AIDA::IHistogram1D* m_hltTime;
-    AIDA::IProfile1D* m_hltEventsTime;
-    AIDA::IHistogram1D* m_tasks;
+    AIDA::IProfile1D* m_hltVirtTime = nullptr;
+    AIDA::IHistogram1D* m_hltTime = nullptr;
+    AIDA::IProfile1D* m_hltEventsTime = nullptr;
+    AIDA::IHistogram1D* m_tasks = nullptr;
 
-    AIDA::IHistogram2D* m_hlt1AlleysCorrelations;
-    AIDA::IHistogram2D* m_hlt2AlleysCorrelations;
+    AIDA::IHistogram2D* m_hlt1AlleysCorrelations = nullptr;
+    AIDA::IHistogram2D* m_hlt2AlleysCorrelations = nullptr;
 
-    AIDA::IProfile1D* m_hltTimeVsEvtSize;
+    AIDA::IProfile1D* m_hltTimeVsEvtSize = nullptr;
 
-    // AIDA::IHistogram1D* m_resolvxr50;
-    // AIDA::IHistogram1D* m_resolvxr5;
-    // AIDA::IHistogram1D* m_resolvxl50;
-    // AIDA::IHistogram1D* m_resolvxl5;
-    AIDA::IProfile1D* m_resolvxle;
-    AIDA::IProfile1D* m_resolvxre;
-    // AIDA::IHistogram1D* m_resolvy50;
-    // AIDA::IHistogram1D* m_resolvy5;
-    AIDA::IProfile1D* m_resolvye;
-    AIDA::IProfile1D* m_magnetcurrent;
-    AIDA::IProfile1D* m_magnetpolarity;
-    AIDA::IProfile1D* m_magnetstate;
-    AIDA::IProfile1D* m_rich1pressure;
-    AIDA::IProfile1D* m_rich1temperature;
-    AIDA::IProfile1D* m_rich2pressure;
-    AIDA::IProfile1D* m_rich2temperature;
-    AIDA::IProfile1D* m_lhcnbofbunches;
-    AIDA::IProfile1D* m_lumipars;
+    // AIDA::IHistogram1D* m_resolvxr50 = nullptr;
+    // AIDA::IHistogram1D* m_resolvxr5 = nullptr;
+    // AIDA::IHistogram1D* m_resolvxl50 = nullptr;
+    // AIDA::IHistogram1D* m_resolvxl5 = nullptr;
+    AIDA::IProfile1D* m_resolvxle = nullptr;
+    AIDA::IProfile1D* m_resolvxre = nullptr;
+    // AIDA::IHistogram1D* m_resolvy50 = nullptr;
+    // AIDA::IHistogram1D* m_resolvy5 = nullptr;
+    AIDA::IProfile1D* m_resolvye = nullptr;
+    AIDA::IProfile1D* m_magnetcurrent = nullptr;
+    AIDA::IProfile1D* m_magnetpolarity = nullptr;
+    AIDA::IProfile1D* m_magnetstate = nullptr;
+    AIDA::IProfile1D* m_rich1pressure = nullptr;
+    AIDA::IProfile1D* m_rich1temperature = nullptr;
+    AIDA::IProfile1D* m_rich2pressure = nullptr;
+    AIDA::IProfile1D* m_rich2temperature = nullptr;
+    AIDA::IProfile1D* m_lhcnbofbunches = nullptr;
+    AIDA::IProfile1D* m_lumipars = nullptr;
 
 
     // Monitor 3D vertex filter
-    Condition* m_veloCondition;
-    Condition* m_magnetCondition;
-    Condition* m_rich1Condition;
-    Condition* m_rich2Condition;
-    Condition* m_lhcfillingschemeCondition;
-    Condition* m_lumiparsCondition;
-    /*Condition* m_runinfoCondition;
-    Condition* m_runparsCondition;*/
+    Condition* m_veloCondition = nullptr;
+    Condition* m_magnetCondition = nullptr;
+    Condition* m_rich1Condition = nullptr;
+    Condition* m_rich2Condition = nullptr;
+    Condition* m_lhcfillingschemeCondition = nullptr;
+    Condition* m_lumiparsCondition = nullptr;
+    /*Condition* m_runinfoCondition = nullptr;
+    Condition* m_runparsCondition = nullptr;*/
 
     typedef std::vector<AIDA::IHistogram2D*> HistoVector;
     typedef std::map<std::string, HistoVector> HistoMap;
     HistoMap m_vertexHistos;
-    double m_beamSpotX;
-    double m_beamSpotY;
-    double m_xRC;
-    double m_xLA;
-    double m_Y;
+    double m_beamSpotX = 0;
+    double m_beamSpotY = 0;
+    double m_xRC = 0;
+    double m_xLA = 0;
+    double m_Y = 0;
 
-    double m_magnetCurrent;
-    double m_magnetPolarity;
-    double m_magnetState;
+    double m_magnetCurrent = 0;
+    double m_magnetPolarity = 0;
+    double m_magnetState = 0;
 
-    double m_rich1Temperature;
-    double m_rich1Presssure;
-    double m_rich2Temperature;
-    double m_rich2Presssure;
+    double m_rich1Temperature = 0;
+    double m_rich1Presssure = 0;
+    double m_rich2Temperature = 0;
+    double m_rich2Presssure = 0;
 
-    int m_lhcNCollidingBunches;
+    int m_lhcNCollidingBunches = 0;
 
     std::vector<double> m_lumiparvalues;
 
@@ -181,12 +181,12 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     std::map<std::string, Gaudi::Histo1DDef> m_correlateCPU;
     std::vector<histopair> m_CPUcorrelations;
 
-    double m_currentTime; // seconds since start of clock
-    double m_timeSize;
-    double m_timeInterval;
-    longlong m_startClock; // in microseconds
-    longlong m_startEvent; // in microseconds
-    long m_virtmem;
-    int m_gpstimesec;
+    double m_currentTime = 0; // seconds since start of clock
+    double m_timeSize = 0;
+    double m_timeInterval = 0;
+    longlong m_startClock = 0; // in microseconds
+    longlong m_startEvent = 0; // in microseconds
+    long m_virtmem = 0;
+    int m_gpstimesec = 0;
 };
 #endif // HLTGLOBALMONITOR_H

@@ -84,13 +84,6 @@ DECLARE_ALGORITHM_FACTORY( HltGlobalMonitor )
 HltGlobalMonitor::HltGlobalMonitor( const std::string& name,
                                     ISvcLocator* pSvcLocator )
     : HltBaseAlg( name, pSvcLocator )
-    , m_currentTime( 0 )
-    , m_timeSize( 0 )
-    , m_timeInterval( 0 )
-    , m_startClock( 0 )
-    , m_startEvent( 0 )
-    , m_virtmem( 0 )
-    , m_gpstimesec( 0 )
 {
     declareProperty( "ODIN", m_ODINLocation = LHCb::ODINLocation::Default );
     declareProperty( "Hlt1DecReports", m_Hlt1DecReportsLocation = LHCb::HltDecReportsLocation::Default );
@@ -173,48 +166,50 @@ StatusCode HltGlobalMonitor::initialize()
     // the order and the names for the bins are
     // configured in HLTConf/Configuration.py
 
-    std::vector<std::string> hlt1AlleyLabels;
-    for ( auto& i : m_DecToGroup1 ) hlt1AlleyLabels.push_back( i.first );
-
-    m_hlt1Alley = book1D( "Hlt1 Alleys", "Hlt1 Alleys", -0.5,
-                          hlt1AlleyLabels.size() - 0.5, hlt1AlleyLabels.size() );
-    if ( !setBinLabels( m_hlt1Alley, hlt1AlleyLabels ) ) {
-        error() << "failed to set binlables on Hlt1 Alley hist" << endmsg;
+    if (!m_DecToGroup1.empty()) {
+        std::vector<std::string> hlt1AlleyLabels;
+        for ( auto& i : m_DecToGroup1 ) hlt1AlleyLabels.push_back( i.first );
+        m_hlt1Alley = book1D( "Hlt1 Alleys", "Hlt1 Alleys", -0.5,
+                              hlt1AlleyLabels.size() - 0.5, hlt1AlleyLabels.size() );
+        if ( !setBinLabels( m_hlt1Alley, hlt1AlleyLabels ) ) {
+            error() << "failed to set binlables on Hlt1 Alley hist" << endmsg;
+        }
+        m_hlt1AlleysCorrelations =
+            book2D( "Hlt1Alleys Correlations", -0.5, hlt1AlleyLabels.size() - 0.5,
+                    hlt1AlleyLabels.size(), -0.5, hlt1AlleyLabels.size() - 0.5,
+                    hlt1AlleyLabels.size() );
+        if ( !setBinLabels( m_hlt1AlleysCorrelations, hlt1AlleyLabels,
+                            hlt1AlleyLabels ) ) {
+            error() << "failed to set binlables on Hlt1Alleys Correlation hist"
+                    << endmsg;
+        }
     }
 
-    std::vector<std::string> hlt2AlleyLabels;
-    for ( auto& i : m_DecToGroup2 ) hlt2AlleyLabels.push_back( i.first );
-    m_hlt2Alley = book1D( "Hlt2 Alleys", "Hlt2 Alleys", -0.5,
-                          hlt2AlleyLabels.size() - 0.5, hlt2AlleyLabels.size() );
-    if ( !setBinLabels( m_hlt2Alley, hlt2AlleyLabels ) ) {
-        error() << "failed to set binlables on Hlt2 Alley hist" << endmsg;
-    }
 
-    m_hlt1AlleysCorrelations =
-        book2D( "Hlt1Alleys Correlations", -0.5, hlt1AlleyLabels.size() - 0.5,
-                hlt1AlleyLabels.size(), -0.5, hlt1AlleyLabels.size() - 0.5,
-                hlt1AlleyLabels.size() );
-    if ( !setBinLabels( m_hlt1AlleysCorrelations, hlt1AlleyLabels,
-                        hlt1AlleyLabels ) ) {
-        error() << "failed to set binlables on Hlt1Alleys Correlation hist"
-                << endmsg;
-    }
+    if (!m_DecToGroup2.empty()) {
+        std::vector<std::string> hlt2AlleyLabels;
+        for ( auto& i : m_DecToGroup2 ) hlt2AlleyLabels.push_back( i.first );
 
-    m_hlt2AlleysCorrelations =
-        book2D( "Hlt2Alleys Correlations", -0.5, hlt2AlleyLabels.size() - 0.5,
-                hlt2AlleyLabels.size(), -0.5, hlt2AlleyLabels.size() - 0.5,
-                hlt2AlleyLabels.size() );
-    if ( !setBinLabels( m_hlt2AlleysCorrelations, hlt2AlleyLabels,
-                        hlt2AlleyLabels ) ) {
-        error() << "failed to set binlables on Hlt2Alleys Correlation hist"
-                << endmsg;
+        m_hlt2Alley = book1D( "Hlt2 Alleys", "Hlt2 Alleys", -0.5,
+                              hlt2AlleyLabels.size() - 0.5, hlt2AlleyLabels.size() );
+        if ( !setBinLabels( m_hlt2Alley, hlt2AlleyLabels ) ) {
+            error() << "failed to set binlables on Hlt2 Alley hist" << endmsg;
+        }
+        m_hlt2AlleysCorrelations =
+            book2D( "Hlt2Alleys Correlations", -0.5, hlt2AlleyLabels.size() - 0.5,
+                    hlt2AlleyLabels.size(), -0.5, hlt2AlleyLabels.size() - 0.5,
+                    hlt2AlleyLabels.size() );
+        if ( !setBinLabels( m_hlt2AlleysCorrelations, hlt2AlleyLabels,
+                            hlt2AlleyLabels ) ) {
+            error() << "failed to set binlables on Hlt2Alleys Correlation hist"
+                    << endmsg;
+        }
     }
 
     /*One Histogram for each alley*/
     for ( auto& i : m_DecToGroup1 ) {
         std::string alleyName = std::string( "Hlt1 " ) + i.first + " Lines";
-        m_hlt1Alleys.push_back(
-            book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
+        m_hlt1Alleys.push_back( book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
         m_hlt1AlleyRates.push_back( &counter( alleyName ) );
         declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hlt1AlleyRates.back(),
                      alleyName );
@@ -472,6 +467,8 @@ StatusCode HltGlobalMonitor::initialize()
 StatusCode HltGlobalMonitor::execute()
 {
 
+    //TODO: what if running Hlt1+Hlt2, and we fail Hlt1 -- then there is no Hlt2 decrep...
+    //      or only running Hlt1?
     LHCb::HltDecReports* hlt1 = fetch<LHCb::HltDecReports>( m_Hlt1DecReportsLocation );
     LHCb::HltDecReports* hlt2 = fetch<LHCb::HltDecReports>( m_Hlt2DecReportsLocation );
     LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default );
@@ -572,7 +569,7 @@ void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
 {
     // filling the histograms for the alleys instead of the lines
 
-    if (hlt1) {
+    if (hlt1)  {
         std::vector<unsigned> nAcc1Alley( m_hlt1Alleys.size(), unsigned( 0 ) );
         for ( auto& i : *hlt1 ) {
             if ( !i.second.decision() ) continue;

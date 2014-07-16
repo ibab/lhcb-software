@@ -4,6 +4,10 @@
 !Package Coordinator : Eric van Herwijnen 
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2014-07-16 - Gerhard Raven
+ - avoid booking histograms with zero bins
+ - improve member initialization
+
 ! 2014-06-27 - Gerhard Raven
  - changes for split HLT
 
