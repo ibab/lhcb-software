@@ -16,7 +16,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from HltLine.HltLine import Hlt2Member, bindMembers
 from Configurables import CombineParticles
 
-class Hlt2RadiativeTopoConf(HltLinesConfigurableUser):
+class Hlt2RadiativeTopoLinesConf(HltLinesConfigurableUser):
   __slots__ = {# Track cuts
                'Track_PT_MIN'       : 500.0  , # MeV
                'Track_P_MIN'        : 5000.0 , # MeV

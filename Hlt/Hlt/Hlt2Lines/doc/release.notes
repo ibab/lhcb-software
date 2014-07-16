@@ -7,6 +7,9 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !----------------------------------------------------------------------------
+! 2014-07-16 - Gerhard Raven
+ - enforce the rule that Hlt2SomeLine must define Htl2SomeLineConf
+
 ! 2014-07-15 - Gerhard Raven
  - inform PV3D that we're in HLT2
 

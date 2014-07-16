@@ -2,7 +2,7 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 
-class Hlt2SecondLoopExampleLinesConf(HltLinesConfigurableUser) :
+class Hlt2SecondLoopExampleLineConf(HltLinesConfigurableUser) :
     __slots__ = {  'BMassWinLow'         : 4800      # MeV
                    ,'BMassWinHigh'       : 5800      # MeV
                    ,'doca'               : 0.1       # MeV

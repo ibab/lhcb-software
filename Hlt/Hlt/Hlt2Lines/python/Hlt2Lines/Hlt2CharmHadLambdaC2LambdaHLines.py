@@ -5,7 +5,7 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 from GaudiKernel.SystemOfUnits import MeV, mm
 
 ## Create a python class that inherits from HltLinesConfigurableUser
-class Hlt2CharmHadLambdaCLambdaHLinesConf(HltLinesConfigurableUser) :
+class Hlt2CharmHadLambdaC2LambdaHLinesConf(HltLinesConfigurableUser) :
 
    # define some values so that they are not hard-coded
     __slots__ = {
