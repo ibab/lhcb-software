@@ -4,6 +4,38 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-07-16 - Anton Poluektov 
+ - Reworked implementation of RelatedInfo storage in StrippingLine. 
+   Single argument in StrippingLine constructor "RelatedinfoTools", which is 
+   a list of RelatedInfo tools configuration dictionaries. 
+   Example: 
+ 
+    StrippingLine( ...
+       RelatedInfoTools = [
+        { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+          'RecursionLevel' : 1,
+          'Locations' : {
+            selPromptDstar : 'P2CVDstar2',
+            selD02hhmumu   : 'P2CVD2',
+            'Phys/StdAllNoPIDsPions'   : 'P2CVpi2',
+          }
+        },
+        {
+          'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+          'TopSelection' : selD02hhmumu,
+          'Location' : 'P2CVD'
+        },  
+      ]
+
+   'TopSelection' can be only the Selection object. All RelatedInfo is stored under top selection output TES location. 
+   If RelatedInfo needs to be stored for only the TopSelection, use 'Location' dictionary key which specifies the 
+   output location of the RelatedInfo structure. 
+   If RelatedInfo has to be calculated for multiple location (or the location which is different from the TopSelection), 
+   use 'Locations' key, which should be the dictionary of ('Particle' : 'Location') pairs, where 'Particle' can be either 
+   selection or TES location for partciles in the tree. In that case, also use 'RecursionLevel' which should be sufficient 
+   to reach the daughters (counting from the top of the tree, e.g. RecursionLevel = 1 for direct daughters, =2 for 
+   granddaughters etc.)
+
 ! 2014-07-15 - Stefano Perazzini
  - Added MDSTFlag to StrippingLine to allow lines to decide if MDST.DST 
    is needed or not

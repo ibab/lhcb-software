@@ -214,13 +214,15 @@ class StrippingLine(object):
                    MaxCombinations = "Override", # Maxumum number of combinations for CombineParticles
                    HDRLocation = None,           # if None, defined by stream name
                    EnableFlavourTagging = False, # If True, run FlavourTaggingTool to store FT info
+
                    ExtraInfoTools = None,        # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
                    ExtraInfoSelections = None,   # Input selections for ExtraInfo tools. If None, use the top-level selection of the line
                    ExtraInfoDaughters = None,    # Daughter selections for which store ExtraInfo. If None, use only the top selection.
                    ExtraInfoRecursionLevel = 1,  # Maximum depth in the decay tree to calculate ExtraInfo
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
-                   UseRelatedInfo = None,        # Use new persistency of ExtraInfo (now called RelatedInfo)
-                                                 # If None, follow the setting in StrippingConf
+
+                   RelatedInfoTools = None,        # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
+
                    RequiredRawEvents = None,     # Possible list of RawEvent banks required by this line
                    MDSTFlag          = False,     # Flag to ask the line to be written to MDST.DST stream
                    **args           ) : # other configuration parameters
@@ -262,11 +264,15 @@ class StrippingLine(object):
         self._args      = args
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
+
         self.ExtraInfoTools = ExtraInfoTools
         self.ExtraInfoSelections = ExtraInfoSelections
         self.ExtraInfoDaughters = ExtraInfoDaughters
         self.ExtraInfoRecursionLevel = ExtraInfoRecursionLevel
-        self.UseRelatedInfo = UseRelatedInfo
+
+        self.RelatedInfoTools = RelatedInfoTools
+        
+        self._initialSelection = selection
 
         validRawBanks = ["Trigger","Muon","Calo","Rich","Other"] # hard coded list, should really come from elsewhere....
         if RequiredRawEvents != None :
@@ -334,10 +340,6 @@ class StrippingLine(object):
         # register into the local storage of all created Lines
         _add_to_stripping_lines_( self ) 
 
-    def updateRelatedInfoFlag(self, useRelatedInfo) : 
-        if self.UseRelatedInfo == None : 
-    	    self.UseRelatedInfo = useRelatedInfo
-
     def selection(self) :
         return self._selection
         
@@ -398,12 +400,8 @@ class StrippingLine(object):
 
 	# Add extra info tools if needed
 	if self.ExtraInfoTools : 
-	    if (self.UseRelatedInfo) : 
-	        from Configurables import AddRelatedInfo
-	        extraInfoAlg = AddRelatedInfo('RelatedInfo_' + self.name())
-	    else : 
-	        from Configurables import AddExtraInfo
-	        extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
+	    from Configurables import AddExtraInfo
+	    extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
 	    if self.ExtraInfoSelections : 
     		extraInfoAlg.Inputs = self.selectionsToLocations( self.ExtraInfoSelections )
     	    else : 
@@ -422,8 +420,6 @@ class StrippingLine(object):
             for itool in self.ExtraInfoTools : 
         	toolNum += 1
         	toolType = itool["Type"]
-        	if self.UseRelatedInfo : 
-        	    toolType = "RelInfo" + toolType
         	toolName = "Tool%d" % toolNum
         	module = __import__("Configurables", globals(), locals(), [ toolType ] )
         	toolClass = getattr( module, toolType )
@@ -435,6 +431,65 @@ class StrippingLine(object):
         	toolNames += [ toolType + '/' + toolName ]
        	    extraInfoAlg.Tools = toolNames
 	    self._members.append(extraInfoAlg)
+
+	# Add related info tools if needed
+	if self.RelatedInfoTools : 
+            
+            toolNum = 0
+            for itool in self.RelatedInfoTools : 
+
+        	toolNum += 1
+
+		from Configurables import AddRelatedInfo
+		relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, self.name() ) )
+		if 'TopSelection' in itool.keys() : 
+    		    relatedInfoAlg.Inputs = self.selectionsToLocations( [ itool['TopSelection'] ] ) 
+    		else : 
+    		    relatedInfoAlg.Inputs = [ self.outputLocation() ]
+
+        	if 'Locations' in itool.keys() : 
+        	    if 'RecursionLevel' in itool.keys() : 
+        		relatedInfoAlg.MaxLevel = itool['RecursionLevel']
+        	    else : 
+        		relatedInfoAlg.MaxLevel = 1
+        	    infoLocations = {}
+        	    for k,v in itool['Locations'].iteritems() : 
+    			if type(k).__name__ in  [ 'Selection', 'MergedSelection', 'AutomaticData', 'DataOnDemand' ] : 
+
+			    # Need to check if the selection is the top selection
+			    # In that case use line's output location because the 
+			    # name of the top algoritm is redefined by the framework
+    			    if k == self._initialSelection : 
+    				fullPath = "/Event/" + self.outputLocation()
+    			    else :
+        			fullPath = "/Event/" + k.outputLocation()
+        		    infoLocations[fullPath] = v
+            	        else : 
+            	    	    if not k.startswith('/Event') : k = '/Event/' + k
+            	    	    if not k.endswith('/Particles') : k += '/Particles'
+            	    	    infoLocations[k] = v
+    		    relatedInfoAlg.InfoLocations = infoLocations
+        	elif 'Location' in itool.keys() :
+        	    if 'Locations' in itool.keys() :
+        		raise Exception('\n Both "Location" and "Locations" are defined in RelatedInfo dictionary, use either of them.')
+        	    relatedInfoAlg.MaxLevel = 0
+        	    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : itool['Location'] }
+        	else : 
+        	    raise Exception('\n "Location" or "Locations" is not defined in RelatedInfo dictionary')
+        	toolType = itool["Type"]
+        	toolName = "Tool%d" % toolNum
+        	module = __import__("Configurables", globals(), locals(), [ toolType ] )
+        	toolClass = getattr( module, toolType )
+        	relatedInfoAlg.addTool( toolClass, toolName )
+        	toolInstance = getattr( relatedInfoAlg, toolName )
+        	for property,value in itool.iteritems() : 
+        	    if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
+        	    setattr( toolInstance, property, value)
+
+#		relatedInfoAlg.OutputLevel = VERBOSE
+       		relatedInfoAlg.Tool = toolType + '/' + toolName
+
+		self._members.append(relatedInfoAlg)
 
         if self._members : 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })

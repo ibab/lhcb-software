@@ -211,3 +211,18 @@ class StrippingStream ( object ) :
             if line.RequiredRawEvents != None :
                 log.warning("Stream='"+self.name()+"' Line='"+line.name()+
                             "' Requests RawEvents "+str(line.RequiredRawEvents))
+
+    def getRelatedInfoLocations(self) : 
+	locations = []
+	for line in self.lines : 
+	    if line.RelatedInfoTools != None : 
+		for tool in line.RelatedInfoTools : 
+		    if 'Locations' in tool.keys() : 
+			locs = tool['Locations']
+			for part,loc in locs.iteritems() : 
+			    if loc not in locations : locations += [ loc ]
+		    if 'Location' in tool.keys() : 
+			loc = tool['Location']
+			if loc not in locations : locations += [ loc ]
+	log.info("RelatedInfoLocations for stream %s: %s" % (self.name(), str(locations)) )
+	return locations
