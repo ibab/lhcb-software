@@ -26,9 +26,9 @@ AddRelatedInfo::AddRelatedInfo(const std::string& name,
                              ISvcLocator* pSvcLocator):
     DaVinciAlgorithm(name, pSvcLocator)
 {
-  declareProperty("Tools", m_toolNames, "Names of RelatedInfoTools" );
+  declareProperty("Tool", m_toolName, "Name of RelatedInfoTool" );
   declareProperty("MaxLevel", m_maxLevel = 0, "Maximum recursion level");
-  declareProperty("DaughterLocations", m_daughterLocations, "Locations of daughters"); 
+  declareProperty("InfoLocations", m_infoLocations, "Locations of RelatedInfo objects"); 
 }
 
 //=======================================================================
@@ -37,20 +37,13 @@ StatusCode AddRelatedInfo::initialize()
   const StatusCode sc = DaVinciAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_tools.clear();
+  m_tool = tool<IRelatedInfoTool>(m_toolName,this);
 
-  std::vector<std::string>::iterator iTool;
-  for (iTool = m_toolNames.begin(); iTool != m_toolNames.end(); iTool++) {
-    IRelatedInfoTool* t = tool<IRelatedInfoTool>(*iTool,this);
-
-    if (t) {
-      m_tools.push_back(t);
-    } else {
-      error() << "Tuple not found, name = " << (*iTool) << endreq;
-      return StatusCode::FAILURE;
-    }
+  if (!m_tool) {
+    error() << "Tuple not found, name = " << m_toolName << endreq;
+    return StatusCode::FAILURE;
   }
-
+  
   return sc;
 }
 
@@ -87,7 +80,7 @@ StatusCode AddRelatedInfo::execute()
 
       Particle* c = const_cast<Particle*>(*icand);
 
-      fill(c, c, 0);
+      fill(c, c, 0, *iLoc);
     }
 
   }
@@ -97,63 +90,58 @@ StatusCode AddRelatedInfo::execute()
 
 //==========================================================================
 
-void AddRelatedInfo::fill(const Particle* top, Particle* c, int level) {
+void AddRelatedInfo::fill(const Particle* top, Particle* c, int level, const std::string &top_location) {
 
   std::string c_location = c && c->parent() && c->parent()->registry() ?
                            c->parent()->registry()->identifier() : "NotInTES"; 
 
-  bool isInDaughters = false; 
+  bool isInLocations = false; 
 
-  // For particles other than top of the decay tree, 
-  // check if they are in the list of daughter locations
-  if (c != top) {
-
-    std::vector<std::string>::const_iterator iDaughterLocation = m_daughterLocations.begin(); 
-    for (; iDaughterLocation != m_daughterLocations.end(); iDaughterLocation++) {
-      if (c_location.compare(*iDaughterLocation) == 0) {
-        isInDaughters = true; 
-        break;
-      }
+  // check if the particle is in the list of info locations
+  std::map<std::string, std::string>::const_iterator iInfoLocation = m_infoLocations.begin(); 
+  for (; iInfoLocation != m_infoLocations.end(); iInfoLocation++) {
+    if (c_location.compare((*iInfoLocation).first) == 0) {
+      isInLocations = true; 
+      break;
     }
   }
 
-  if (c == top || isInDaughters) {
+  if (isInLocations) {
 
-    if (msgLevel(MSG::DEBUG)) debug() << "Filling RelatedInfo for particle at " << c_location << endreq; 
+    if (msgLevel(MSG::DEBUG)) debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
 
-    // Calculate extra information using each tool
-    std::list<IRelatedInfoTool*>::iterator iTool;
-    for (iTool = m_tools.begin(); iTool != m_tools.end(); iTool++) {
+//    std::string key_location = c_location; 
+//    boost::replace_all(key_location, "/Particles", ""); 
+
+//    if (msgLevel(MSG::DEBUG)) debug() << "Key is " << key_location << ", info location is " << m_infoLocations[key_location] << endreq;
+
+    std::string map_location = top_location + "/" + m_infoLocations[c_location];
     
-      std::string relatedInfoPath = (*iTool)->infoPath(); 
-      std::string map_location = c_location; 
-      boost::replace_all(map_location, "/Particles", "/" + relatedInfoPath); 
-    
-      ParticleInfoRelation* relation = getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location); 
-      
-      StatusCode sc = (*iTool)->calculateRelatedInfo(top, c);
+    if (msgLevel(MSG::DEBUG)) debug() << "GetOrCreate RelatedInfo at " << map_location << endreq;
 
-      if (sc.isFailure()) {
-        warning() << "Error calculating related info" << endreq;
-        continue;
-      }
-      
-      RelatedInfoMap* map = (*iTool)->getInfo(); 
-      
-      if (msgLevel(MSG::DEBUG)) {
-        debug() << "Got RelatedInfoMap, contents as follows: " << endreq;
-        RelatedInfoMap::iterator i; 
-        for (i = map->begin(); i != map->end(); i++) {
-          short key = (*i).first;
-          float val = (*i).second; 
-          debug() << "  Key = " << key << ", val = " << val << endreq; 
-        }
-      }
-      
-      relation->i_relate(c, *map); 
+    ParticleInfoRelation* relation = getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location); 
 
+    StatusCode sc = m_tool->calculateRelatedInfo(top, c);
+
+    if (sc.isFailure()) {
+      warning() << "Error calculating related info" << endreq;
+      return;
     }
-    
+
+    RelatedInfoMap* map = m_tool->getInfo(); 
+
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "Got RelatedInfoMap, contents as follows: " << endreq;
+      RelatedInfoMap::iterator i; 
+      for (i = map->begin(); i != map->end(); i++) {
+        short key = (*i).first;
+        float val = (*i).second; 
+        debug() << "  Key = " << key << ", val = " << val << endreq; 
+      }
+    }
+      
+    relation->i_relate(c, *map); 
+
   } else {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Particle at " << c_location << " not in the list, skipping" << endreq; 
   }
@@ -164,15 +152,15 @@ void AddRelatedInfo::fill(const Particle* top, Particle* c, int level) {
   // Otherwise loop over the daughters of the particle
   const SmartRefVector< LHCb::Particle > & daughters = c->daughters();
 
-  for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
-    if( !(*idau)->isBasicParticle() ) {
-      // -- if it is not stable, call the function recursively
+  // -- if the candidate is not a stable particle, call the function recursively
+  if( ! c->isBasicParticle() ) {
+    for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
       
       const Particle* const_dau = (*idau);
       Particle* dau = const_cast<Particle*>(const_dau); 
     
       if ( msgLevel(MSG::DEBUG) ) debug() << " Filling RelatedInfo for daughters of ID " << dau->particleID().pid() << endmsg;
-      fill( top, dau, level+1 );
+      fill( top, dau, level+1, top_location );
     }
   }
 

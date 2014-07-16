@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-07-16 - Anton Poluektov 
+ - Update tools for RelatedInfo storage
 
 ! 2014-07-08 - O. Deschamps
  - BremAdder : replace photonID cut with photonCL cut

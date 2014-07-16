@@ -30,12 +30,12 @@ public:
 
 private:
 
-  std::vector<std::string> m_toolNames;
-  std::list<IRelatedInfoTool*> m_tools;
+  std::string m_toolName;
+  IRelatedInfoTool* m_tool;
   int m_maxLevel;
-  std::vector<std::string> m_daughterLocations;
-  
-  void fill(const LHCb::Particle* top, LHCb::Particle* c, int level);
+  std::map<std::string, std::string> m_infoLocations;
+
+  void fill(const LHCb::Particle* top, LHCb::Particle* c, int level, const std::string &top_location);
 
   typedef std::map<std::string, ParticleInfoRelation> RelationLocationMap;
   mutable RelationLocationMap m_relMap;

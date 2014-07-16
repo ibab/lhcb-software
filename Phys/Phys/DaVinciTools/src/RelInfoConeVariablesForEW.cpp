@@ -35,9 +35,6 @@ RelInfoConeVariablesForEW::RelInfoConeVariablesForEW( const std::string &type,
 {
   declareInterface<IRelatedInfoTool>( this );
 
-  declareProperty( "ConeNumber", m_coneNumber = 1,
-                   "Number of cone variables record (1-4)");
-
   declareProperty( "ConeAngle", m_coneAngle = 0.,
                    "Set the deltaR of the cone around the seed" );
 
@@ -744,10 +741,4 @@ bool RelInfoConeVariablesForEW::isTrackInDecay( const LHCb::Track *track ) {
 
 LHCb::RelatedInfoMap* RelInfoConeVariablesForEW::getInfo(void) {
   return &m_map; 
-}
-
-std::string RelInfoConeVariablesForEW::infoPath(void) {
-  std::stringstream ss;
-  ss << std::string("Particle2EWCV") << m_coneNumber << std::string("Relations");
-  return ss.str(); 
 }

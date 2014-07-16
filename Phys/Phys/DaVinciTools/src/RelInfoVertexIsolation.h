@@ -61,8 +61,6 @@ public:
 
   virtual LHCb::RelatedInfoMap* getInfo(void);
 
-  virtual std::string infoPath(void);
-
   virtual ~RelInfoVertexIsolation( ); ///< Destructor
 
 private:

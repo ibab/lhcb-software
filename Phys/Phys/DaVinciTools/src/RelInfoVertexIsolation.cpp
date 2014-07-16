@@ -316,8 +316,3 @@ LHCb::RelatedInfoMap* RelInfoVertexIsolation::getInfo(void) {
   return &m_map;
 }
 
-std::string RelInfoVertexIsolation::infoPath(void) {
-  std::stringstream ss;
-  ss << std::string("Particle2VIRelations");
-  return ss.str();
-}

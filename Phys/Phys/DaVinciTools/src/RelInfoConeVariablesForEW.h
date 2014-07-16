@@ -35,8 +35,6 @@ public:
 
   virtual LHCb::RelatedInfoMap* getInfo(void);
 
-  virtual std::string infoPath(void);
-
   virtual ~RelInfoConeVariablesForEW( ); ///< Destructor
 
 protected:
@@ -44,7 +42,6 @@ protected:
 private:
 
   double m_coneAngle;
-  int m_coneNumber;
 
   std::vector<std::string> m_variables;
   std::vector<short int> m_keys; 

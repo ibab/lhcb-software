@@ -28,15 +28,12 @@ RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
                                 const IInterface* parent) : GaudiTool ( type, name , parent )
 {
   declareInterface<IRelatedInfoTool>(this);
-  declareProperty( "ConeNumber", m_coneNumber = 1,
-                   "Number of cone variables record (1-4)");
   declareProperty( "ConeAngle", m_coneAngle = 1.0,
                    "Set the deltaR of the cone (default = 1.0), in radians");
   declareProperty( "TrackType", m_trackType = 3,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
   declareProperty( "Variables", m_variables, 
                    "List of variables to store (store all if empty)");
-
 }
 
 //=============================================================================
@@ -301,10 +298,4 @@ bool RelInfoConeVariables::isTrackInDecay(const LHCb::Track* track){
 
 LHCb::RelatedInfoMap* RelInfoConeVariables::getInfo(void) {
   return &m_map; 
-}
-
-std::string RelInfoConeVariables::infoPath(void) {
-  std::stringstream ss;
-  ss << std::string("Particle2CV") << m_coneNumber << std::string("Relations");
-  return ss.str(); 
 }
