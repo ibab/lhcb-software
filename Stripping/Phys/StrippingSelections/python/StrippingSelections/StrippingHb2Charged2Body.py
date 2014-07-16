@@ -47,15 +47,15 @@ default_config = {
                      'MassLow'                 : 4800,
                      'MassHigh'                : 5800
                     },
-    'STREAMS'     : { 'Bhadron' : [],
-                      'BhadronCompleteEvent' : [ 'StrippingHb2Charged2BodyB2Charged2BodyLine',
-                                                 'StrippingHb2Charged2BodyB2KPlusPiMinusLine',
-                                                 'StrippingHb2Charged2BodyB2PiPlusKMinusLine',
-                                                 'StrippingHb2Charged2BodyBs2KPlusKMinusLine',
-                                                 'StrippingHb2Charged2BodyLb2PPlusPiMinusLine',
-                                                 'StrippingHb2Charged2BodyLb2PiPlusPMinusLine',
-                                                 'StrippingHb2Charged2BodyLb2PPlusKMinusLine',
-                                                 'StrippingHb2Charged2BodyLb2KPlusPMinusLine']
+    'STREAMS'     : { 'BhadronCompleteEvent' : [],
+                      'Bhadron' : [ 'StrippingHb2Charged2BodyB2Charged2BodyLine',
+                                    'StrippingHb2Charged2BodyB2KPlusPiMinusLine',
+                                    'StrippingHb2Charged2BodyB2PiPlusKMinusLine',
+                                    'StrippingHb2Charged2BodyBs2KPlusKMinusLine',
+                                    'StrippingHb2Charged2BodyLb2PPlusPiMinusLine',
+                                    'StrippingHb2Charged2BodyLb2PiPlusPMinusLine',
+                                    'StrippingHb2Charged2BodyLb2PPlusKMinusLine',
+                                    'StrippingHb2Charged2BodyLb2KPlusPMinusLine']
                     }
     }
 
@@ -159,42 +159,58 @@ class Hb2Charged2BodyLines( LineBuilder ) :
         self.lineB2Charged2Body = StrippingLine( B2Charged2BodyName+"Line",
                                                  prescale  = config['PrescaleB2Charged2Body'],
                                                  selection = self.B2Charged2Body,
-                                                 EnableFlavourTagging = True )
+                                                 EnableFlavourTagging = True,
+                                                 RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                 MDSTFlag = True )
         
         self.lineB2KPlusPiMinus  = StrippingLine( B2KPlusPiMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.B2KPlusPiMinus,
-                                                  EnableFlavourTagging = True )
+                                                  EnableFlavourTagging = True,
+                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                  MDSTFlag = True )
         
         self.lineB2PiPlusKMinus  = StrippingLine( B2PiPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.B2PiPlusKMinus,
-                                                  EnableFlavourTagging = True )
+                                                  EnableFlavourTagging = True, 
+                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                  MDSTFlag = True  )
         
         self.lineBs2KPlusKMinus  = StrippingLine( Bs2KPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Bs2KPlusKMinus,
-                                                  EnableFlavourTagging = True )
+                                                  EnableFlavourTagging = True, 
+                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                  MDSTFlag = True  )
         
         self.lineLb2PPlusPiMinus = StrippingLine( Lb2PPlusPiMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2PPlusPiMinus,
-                                                  EnableFlavourTagging = True )
+                                                  EnableFlavourTagging = True, 
+                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                  MDSTFlag = True  )
         
         self.lineLb2PiPlusPMinus = StrippingLine( Lb2PiPlusPMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2PiPlusPMinus,
-                                                  EnableFlavourTagging = True )
+                                                  EnableFlavourTagging = True, 
+                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                  MDSTFlag = True  )
         
         self.lineLb2PPlusKMinus  = StrippingLine( Lb2PPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2PPlusKMinus,
-                                                  EnableFlavourTagging = True )
+                                                  EnableFlavourTagging = True, 
+                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                  MDSTFlag = True  )
         
         self.lineLb2KPlusPMinus  = StrippingLine( Lb2KPlusPMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2KPlusPMinus,
-                                                  EnableFlavourTagging = True )
+                                                  EnableFlavourTagging = True, 
+                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"],
+                                                  MDSTFlag = True  )
         
         self.registerLine(self.lineB2Charged2Body)
         self.registerLine(self.lineB2KPlusPiMinus)
