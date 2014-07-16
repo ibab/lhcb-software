@@ -79,11 +79,11 @@ namespace LoKi
       // evaluate the function
       result_type value = m_fun.fun ( p ) ;
       // evaluate the result
-      if ( 0 <  m_val ) { return Gaudi::Math::pow ( value ,  m_val ) ; }
+      if ( 0 <  m_val ) { return Gaudi::Math::pow( value, (unsigned long)m_val ); }
       if ( 0 == value ) 
       { this->Error ( " ZERO in NEGATIVE power! return -1.e+9" ) ; return -1.e+9 ; }
       //
-      return Gaudi::Math::pow ( 1.0/value , -m_val ) ; 
+      return Gaudi::Math::pow( 1.0/value, (unsigned long)(-m_val) ); 
     };
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 
@@ -144,11 +144,11 @@ namespace LoKi
       // evaluate the function
       result_type value = m_fun.fun ( /* a */ ) ;
       // evaluate the result
-      if ( 0 <  m_val ) { return Gaudi::Math::pow ( value ,  m_val ) ; }
+      if ( 0 <  m_val ) { return Gaudi::Math::pow( value, (unsigned long)m_val ); }
       if ( 0 == value ) 
       { this->Error ( " ZERO in NEGATIVE power! return -1.e+9" ) ; return -1.e+9 ; }
       //
-      return Gaudi::Math::pow ( 1.0/value , -m_val ) ; 
+      return Gaudi::Math::pow( 1.0/value, (unsigned long)(-m_val) ); 
     }
     /// the basic printout method 
     virtual std::ostream& fillStream( std::ostream& s ) const 

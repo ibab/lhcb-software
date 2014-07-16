@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-07-16 - Chris Jones
+ - Fix LoKi::Power to pass an unsigned long exponent to Gaudi::Math::pow
+
 !========================= LoKiCore v11r20 2014-06-10 =========================
 ! 2014-05-27 - Marco Clemencic
  - Fixed dictionary generation after the move.
