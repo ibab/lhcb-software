@@ -479,7 +479,8 @@ class HltConf(LHCbConfigurableUser):
           expr = re.compile(pattern)
           groups[ name ] = [ i for i in lines if expr.match(i) and i not in taken ]
           taken += groups[ name ]
-        return groups
+        #prune empty groups
+        return dict( (k,v) for k,v in groups.iteritems() if v )
 
 ##################################################################################
     def configureHltMonitoring(self, lines1, lines2) :
