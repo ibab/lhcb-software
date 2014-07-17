@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-17 - Regis Lefevre
+ - Adapted StrippingD02KPiPi0.py and StrippingB2HHPi0.py
+to have a defaut_config as it was in StrippingSettings v20r1, 
+and to new RequiredRawEvents and MDSTFlag conventions
+
 ! 2014-07-17 - Pablo Ruiz Valls
  - Adapted StrippingB2XGamma to new MDST.DST conventions
 

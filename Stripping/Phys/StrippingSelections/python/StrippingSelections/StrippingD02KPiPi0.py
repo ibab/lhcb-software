@@ -1,7 +1,7 @@
 
 __author__ = 'Regis Lefevre'
-__date__ = '2012.09.05'
-__version__ = '$Revision: 1.5 $'
+__date__ = '16/07/2014'
+__version__ = '$Revision: 1.6 $'
 
 '''
 Stripping selection for D0 -> K pi pi0 
@@ -11,12 +11,43 @@ Stripping selection for D0 -> K pi pi0
 #  2 lines : one for merged, one for resolved pi0
 ####################################################################
 
+__all__ = ('StrippingD02KPiPi0Conf',
+           'makeD02KPiPi0R',
+           'makeD02KPiPi0M',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdTightPions,StdTightKaons,StdLooseMergedPi0,StdLooseResolvedPi0
+
+default_config = {
+    'NAME'        : 'D02KPiPi0',
+    'WGs'         : ['ALL'],
+    'BUILDERTYPE' : 'StrippingD02KPiPi0Conf',
+    'CONFIG'      : {   'TrackMinPT_M'         : 300       # MeV
+                       ,'TrackMinPT_R'         : 600       # MeV
+                       ,'TrackMinTrackProb'    : 0.000001  # unitless
+                       ,'TrackMaxGhostProb'    : 0.3       # unitless
+                       ,'TrackMinIPChi2'       : 16        # unitless
+                       ,'Pi0MinPT_M'           : 2000      # MeV
+                       ,'Pi0MinPT_R'           : 1000      # MeV
+                       ,'ResPi0MinGamCL'       : 0.2       # unitless
+                       ,'D0MinM'               : 1600      # MeV
+                       ,'D0MaxM'               : 2100      # MeV
+                       ,'D0MinVtxProb'         : 0.001     # unitless
+                       ,'D0MaxIPChi2'          : 9         # unitless
+                       ,'D0MinDIRA'            : 0.9999    # unitless
+                       ,'D0MinVVDChi2'         : 64        # unitless
+                       ,'MergedLinePrescale'   : 0.5       # unitless
+                       ,'MergedLinePostscale'  : 1.        # unitless
+                       ,'ResolvedLinePrescale' : 0.5       # unitless
+                       ,'ResolvedLinePostscale': 1.        # unitless
+                      },
+    'STREAMS'     : ['Calibration']
+    }
 
 class StrippingD02KPiPi0Conf(LineBuilder) :
 
@@ -67,11 +98,13 @@ class StrippingD02KPiPi0Conf(LineBuilder) :
         self.D02KPiPi0R_line = StrippingLine(name + "_R" %locals()['config'],
                                              prescale = config['ResolvedLinePrescale'],
                                              postscale = config['ResolvedLinePostscale'],
+                                             RequiredRawEvents = ["Calo"],
                                              selection = self.selresolved
                                              )
         self.D02KPiPi0M_line = StrippingLine(name + "_M" %locals()['config'],
                                              prescale = config['MergedLinePrescale'],
                                              postscale = config['MergedLinePostscale'],
+                                             RequiredRawEvents = ["Calo"],
                                              selection = self.selmerged
                                              )
         # register lines
