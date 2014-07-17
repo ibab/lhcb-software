@@ -53,4 +53,4 @@ class Hlt2SecondLoopExampleLineConf(HltLinesConfigurableUser) :
                         , algos = [ PV3D('Hlt2'), BiKalmanFittedPions, Hlt2SecondLoopExample_Stage1, BiKalmanFittedSecondLoopPions, Hlt2SecondLoopExample_Stage2 ]
                         , postscale = self.postscale
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SecondLoopExampleDecision" : 50082 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SecondLoopExampleDecision" : 55555 } )
