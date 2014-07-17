@@ -3,6 +3,9 @@
 ! package manager : Marco Clemencic
 ! =====================================================================
 
+! 2014-01-22 - Marco Clemencic
+ - Removed obsolete (unused) file ISolidFactory.h.
+
 !========================= DetDesc v18r33 2014-02-17 =========================
 ! 2014-01-22 - Marco Clemencic
  - Minor change in the inheritance tree of Element.
