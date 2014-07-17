@@ -120,6 +120,8 @@ def run( options, args ):
     #reporterConfig[ 'WriteFSR']= True;
     reporterConfig[ 'EnableDataOnDemand']= True;
     reporterConfig[ 'CheckOdin']= False;
+    reporterConfig[ 'Split']= '';
+    reporterConfig[ 'Hlt2Independent']= True;
     reporterConfig[ 'InitialTCK']= '0x00790038';
     reporterConfig[ 'Simulation']= False;
     reporterConfig[ 'ThresholdSettings']="Commissioning_PassThrough"

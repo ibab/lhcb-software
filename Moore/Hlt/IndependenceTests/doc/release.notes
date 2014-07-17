@@ -2,6 +2,9 @@ Package     : Hlt/IndepenceTests
 Package Coordinator : Mika Vesterinen
 Purpose     : HLT application to test indepence of Hlt lines
 
+! 2014-07-17 - Sean Benson
+ - Fix errors in nightlies due to Hlt dec reports location changes in TES
+
 !========================= IndependenceTests v1r8 2014-06-16 =========================
 
 ! 2014-05-26 - Sean Benson

@@ -207,15 +207,25 @@ class DecisionReporter( Task ):
                 self.done()
                 break
             
-            # Grab the HltDecReports and put the decisions in a dict by line name
-            decReports = evt[ 'Hlt/DecReports' ]
-            odin = evt[ 'DAQ/ODIN' ]
+	    odin = evt[ 'DAQ/ODIN' ]
             reports = dict()
             reports[ 'event' ] = odin.eventNumber()
             reports[ 'run' ] = odin.runNumber()
-            names = decReports.decisionNames()
-            for name in names:
-                reports[ name ] = decReports.decReport( name ).decision()
+            # Grab the HltDecReports and put the decisions in a dict by line name
+	    if evt[ 'Hlt1/DecReports' ]:
+	    	decReports1 = evt[ 'Hlt1/DecReports' ]
+	    	names1 = decReports1.decisionNames()
+            	for name in names1:
+            	    reports[ name ] = decReports1.decReport( name ).decision()
+	    #nodes = evt.nodes ( node = '/',forceload = True )
+	    #nodes = set ( nodes )
+	    #for loc in nodes:
+		#    print loc
+	    if evt[ 'Hlt2/DecReports' ]:
+	    	decReports2 = evt[ 'Hlt2/DecReports' ]
+	    	names2 = decReports2.decisionNames()
+            	for name in names2:
+                	reports[ name ] = decReports2.decReport( name ).decision()
 
             # Put our dict on the queue
             self._outQueue.put( reports )
