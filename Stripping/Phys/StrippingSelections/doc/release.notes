@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-17 - Jibo He
+ - Added BDT-based Bc->J/psi Pi line, requriring the head of TMVAWeights
+ - Removed StrippingB2XGamma from __init__.py, as StrippingB2XGamma disappared 
+
 ! 2014-07-17 - Regis Lefevre
  - Adapted StrippingD02KPiPi0.py and StrippingB2HHPi0.py
 to have a defaut_config as it was in StrippingSettings v20r1, 

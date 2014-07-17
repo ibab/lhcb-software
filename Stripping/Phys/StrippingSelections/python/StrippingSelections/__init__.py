@@ -60,7 +60,7 @@ import StrippingB2XMuMu
 import StrippingBd2KstarMuMu
 import StrippingB2XMuMuSS
 import StrippingTriMuons
-import StrippingB2XGamma
+#import StrippingB2XGamma
 import StrippingBs2MuMuLines
 import StrippingB2MuMuMuMuLines
 import StrippingB2MuMuX
@@ -77,6 +77,7 @@ import StrippingDiMuonNew
 import StrippingDiMuonForXsection
 import StrippingDiMuonNew
 import StrippingBc2JpsiHNew
+import StrippingBc2JpsiHBDT
 import StrippingBc2JpsiMuXNew
 import StrippingJpsiMuMuforD0MuMu
 import StrippingBuToKX3872
