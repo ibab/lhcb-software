@@ -704,11 +704,15 @@ class Moore(LHCbConfigurableUser):
             trans = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt2[^']*'" : "" } } 
                     , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
                     , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
+                    , 'HltGlobalMonitor/.*'                : { 'DecToGroupHlt2' : { '^.*$' : '{ }' }, 
+                                                               'Hlt2DecReports' : { '^.*$' : ''    } }
+                    , 'HltL0GlobalMonitor/.*'              : { 'Hlt2DecReports' : { '^.*$' : ''    } }
             }
             Funcs._mergeTransform(trans)
 
         def hlt2_only_tck() :
             ### remove all algorithms starting with Hlt1
+            ### TODO: remove/disable the 'producers'
             ### enable various reports decoders
             ### TODO: if running 'independent' somehow replace track decoder with velo reco ...
             trans = { 'GaudiSequencer/HltDecisionSequence$' : { 'Members' : { "'[^/]*/Hlt1[^']*'[^,]*," : ""  } }

@@ -5,6 +5,7 @@
 !============================================
 ! 2014-07-17 - Gerhard Raven
  - improve accuracy of some Hlt2-only qmtests
+ - fix monitoring config in tck-based hlt1 split
 
 ! 2014-07-14 - Gerhard Raven
  - remove Hlt1SelReportsDecoder hack which is no longer needed
