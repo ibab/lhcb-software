@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v22r2)
+gaudi_subdir(HltSys v22r1p1)
 
 gaudi_depends_on_subdirs(GaudiConf # temporary
                          Kernel/LHCbAlgs # temporary

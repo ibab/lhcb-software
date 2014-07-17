@@ -1,35 +1,38 @@
 package HltSys
-version           v22r2
+version           v22r1p1
 
 branches cmt doc
 
 use Hlt1Lines           v7r3    Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht
-use Hlt1Muons           v1r8    Hlt   # Christoph Langenbruch
-use Hlt2Lines           v9r2    Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
+use Hlt1Muons           v1r7    Hlt   # Christoph Langenbruch
+use Hlt2Lines           v9r1p1  Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v7r0p1  Hlt   # Vava Gligorov, Rob Lambert
-use HltBase             v15r1   Hlt   # Gerhard Raven
+use HltBase             v15r0   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r0    Hlt   # Rosen Matev
-use HltCommon           v10r1   Hlt   # Gerhard Raven
-use HltConf             v11r2   Hlt   # Vanya Belyaev, Gerhard Raven
+use HltCommon           v10r0   Hlt   # Gerhard Raven
+use HltConf             v11r1   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r2    Hlt   # Stephan Nies
 use HltDisplVertices    v4r1    Hlt   # Pieter Norbert Y David, Victor Coco
 use HltGlobalMonitor    v4r2    Hlt   # Eric van Herwijnen
 use HltL0Conf           v4r0    Hlt   # Johannes Albrecht
-use HltLine             v7r2    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLine             v7r1    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v4r0    Hlt   # Jaap Panman
-use HltRawData          v4r1    Hlt   # Tomasz Skwarnicki
+use HltRawData          v4r0p1  Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r0    Hlt   # Jose Angel Hernando-Morata
-use HltSettings         v6r4    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltSettings         v6r3    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltTisTosTobbing    v3r0    Hlt   # Tomasz Skwarnicki
-use HltTracking         v12r1   Hlt   # Johannes Albrecht, Vava Gligorov
+use HltTracking         v12r0p1 Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r12p4 Hlt   # Gerhard Raven
-use LoKiTrigger         v15r1   Phys  # Vanya Belyaev
+use LoKiTrigger         v15r2   Phys  # Vanya Belyaev
 
 #temporary
 
-#please update to tagged version of current HEAD  prior to release of v23r0!!!
-use HltDAQ              v4r5    Hlt
-use DAQSys              v8r3    DAQ
+#pick up new types of tests with timing tables
+use GaudiConf           v19r2
+use LHCbAlgs            v3r2    Kernel
+
+#suppress warnings in HltDAQ and pick up timing improvements from Gerhard
+use HltDAQ              v4r2    Hlt
 
 # Declare this as a container package
 apply_pattern container_package
