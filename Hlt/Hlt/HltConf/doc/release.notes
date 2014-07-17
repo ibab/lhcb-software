@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2014-07-17 - Gerhard Raven
+ - in the EndSequence, when HltL0GlobalMonitor is included, _also_ explicitly
+   include the L0 decoder as it is not guaranteed that the L0DU is already decoded...
+
 ! 2014-07-16 - Gerhard Raven
  - when configuring the monitoring, do not define histogram entries
    for empty sets of lines 

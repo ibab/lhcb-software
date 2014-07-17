@@ -181,6 +181,9 @@ class HltConf(LHCbConfigurableUser):
             Hlt1Conf()
             Hlt1Conf().ThresholdSettings = ThresholdSettings
             # disable the Hlt1 decoders in case Hlt1 is actually running...
+            ## TODO/FIXME: alternative: add the output location of the decoder to the VetoObjects 
+            ##             property? That can be done unconditionally, and will automatically do 
+            ##             the right thing!
             from DAQSys.Decoders import DecoderDB
             for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
                        "HltSelReportsDecoder/Hlt1SelReportsDecoder",
@@ -603,7 +606,7 @@ class HltConf(LHCbConfigurableUser):
             if self.getProp('Split') == 'Hlt1' : activeHlt2Lines = []
             if self.getProp('Split') == 'Hlt2' : activeHlt1Lines = []
             if self.getProp('Split') not in [ 'Hlt1','Hlt2','' ] :
-                raise KeyError('bad value for property split: %s' % self.getProp('Split'))
+                raise KeyError("invalid value for property 'Split': %s -- must be either 'Hlt1', or 'Hlt2', or ''." % self.getProp('Split'))
 
         return activeHlt1Lines, activeHlt2Lines
     
@@ -727,10 +730,16 @@ class HltConf(LHCbConfigurableUser):
         hlt1_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt1SelReportsDecoder"].listOutputs()[0]
         hlt2_selrep_loc = DecoderDB["HltSelReportsDecoder/Hlt2SelReportsDecoder"].listOutputs()[0]
         hlt_vtxrep_loc = DecoderDB["HltVertexReportsDecoder/Hlt1VertexReportsDecoder"].listOutputs()[0]
+
+        from DAQSys.DecoderClass import decodersForBank
+        l0decoder = decodersForBank( DecoderDB, 'L0DU' )
+        assert len(l0decoder)
+        l0decoder = l0decoder[0].setup()
         # note: the following is a list and not a dict, as we depend on the
         # order of iterating through it!!!
         _endlist = ( # ( "RequireL0ForEndSequence",  )
                      ( "EnableHltGlobalMonitor",    HltGlobalMonitor , 'HltGlobalMonitor',  {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
+                     ( "EnableHltL0GlobalMonitor",  type(l0decoder), l0decoder.getName(), {} ),
                      ( "EnableHltL0GlobalMonitor",  HltL0GlobalMonitor , 'HltL0GlobalMonitor', {'Hlt1DecReports': hlt1_decrep_loc,'Hlt2DecReports' : hlt2_decrep_loc,  } ),
                      ( "EnableBeetleSyncMonitor",   BeetleMonitorAccept , 'BeetleMonitorAccept', { } )
                    )
