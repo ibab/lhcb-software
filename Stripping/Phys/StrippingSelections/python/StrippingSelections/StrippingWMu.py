@@ -17,11 +17,11 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
 confdict_WMu = { 'WMu_Prescale'    : 1.0,
-                 'WMuLow_Prescale' : 1.0, ##changed from 0.1
-                 'STNB_Prescale' : 1.0, ##changed from 0.2
+                 'WMuLow_Prescale' : 0.1, 
+                 'STNB_Prescale' : 0.2,
                  'WMu_Postscale'   : 1.0,
-                 'SingMuon10_Prescale' : 1.0, ##changed from 0.01
-                 'SingMuon48_Prescale'  : 1.0, ##changed from 0.4
+                 'SingMuon10_Prescale' : 0.01,
+                 'SingMuon48_Prescale'  : 0.4,
                  'pT'     : 20.,
                  'pTlow'  : 15.,
                  'pTvlow' :  5.,
@@ -140,11 +140,11 @@ class WMuConf( LineBuilder ) :
         self.sel_SingleTrackNoBias = makeFilter( self._myname + 'SingleTrackNoBias',
                                                  StdAllNoPIDsMuons,
                                                  "from LoKiTracks.decorators import *",
-                                                 _pTvlow
+                                                 _pTlow
                                                  )  
 
         self.line_SingleTrackNoBias = StrippingLine( self._myname + 'SingleTrackNoBiasLine',
-                                                     prescale  = config[ 'STNB_Prescale' ],
+                                                     prescale  = config[ 'WMu_Prescale' ],
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
                                                      HLT       = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
@@ -153,6 +153,22 @@ class WMuConf( LineBuilder ) :
 
         self.registerLine( self.line_SingleTrackNoBias )
 
+
+        self.sel_SingleTrackNoBiasPS = makeFilter( self._myname + 'SingleTrackNoBiasPS',
+                                                 StdAllNoPIDsMuons,
+                                                 "from LoKiTracks.decorators import *",
+                                                 _pTvlow
+                                                 )
+
+        self.line_SingleTrackNoBiasPS = StrippingLine( self._myname + 'SingleTrackNoBiasLinePS',
+                                                     prescale  = config[ 'STNB_Prescale' ],
+                                                     postscale = config[ 'WMu_Postscale' ],
+                                                     checkPV   = False,
+                                                     HLT       = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
+                                                     selection = self.sel_SingleTrackNoBiasPS
+                                                     )
+
+        self.registerLine( self.line_SingleTrackNoBiasPS )
 
 def makeFilter( name, _input, _preambulo, _code ) :
 
