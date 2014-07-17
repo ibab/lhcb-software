@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-17 - Pablo Ruiz Valls
+ - Adapted StrippingB2XGamma to new MDST.DST conventions
+
 ! 2014-07-17 - Ronan Wallace
  - Restored pp prescales in StrippingMuMuSS,StrippingSingleTrackTIS,StrippingDY2MuMu,StrippingWMu
  - Removed zero prescale and changed some threshold cuts in StrippingLowMult

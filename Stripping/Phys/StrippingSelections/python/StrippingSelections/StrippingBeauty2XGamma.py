@@ -427,6 +427,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                           selection = tisTosSelection(self.RadiativeB2XG2pi),
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
+                                          MDSTFlag = True,
                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}])
 
         B2XG2piCNVName = self.name + "2pi_wCNV_"
@@ -447,6 +448,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                              selection = tisTosSelection(self.RadiativeB2XG2piCNV),
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
+                                             MDSTFlag = True,
                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XGpiKsName = self.name + "pi_Ks0_"
@@ -467,6 +469,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                            selection = tisTosSelection(self.RadiativeB2XGpiKs),
                                            EnableFlavourTagging = True,
                                            RequiredRawEvents = ["Calo"],
+                                           MDSTFlag = True,
                                            ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG3piName = self.name + "3pi_"
@@ -487,6 +490,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                           selection = tisTosSelection(self.RadiativeB2XG3pi),
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
+                                          MDSTFlag = True,
                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
 #         B2XG3pi_altName = self.name + "3pi_alt_"
@@ -507,6 +511,7 @@ class Beauty2XGammaConf(LineBuilder) :
 #                                               selection = tisTosSelection(self.RadiativeB2XG3pi_alt),
 #                                               EnableFlavourTagging = True,
 #                                               RequiredRawEvents = ["Calo"],
+#                                               MDSTFlag = True,
 #                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
 
@@ -528,6 +533,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                              selection = tisTosSelection(self.RadiativeB2XG3piCNV),
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
+                                             MDSTFlag = True,
                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG2piKsName = self.name + "2pi_Ks0_"
@@ -548,6 +554,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                             selection = tisTosSelection(self.RadiativeB2XG2piKs),
                                             EnableFlavourTagging = True,
                                             RequiredRawEvents = ["Calo"],
+                                            MDSTFlag = True,
                                             ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG2pipi0MName = self.name + "2pi_pi0M_"
@@ -568,6 +575,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               selection = tisTosSelection(self.RadiativeB2XG2pipi0M),
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
+                                              MDSTFlag = True,
                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
 
@@ -588,6 +596,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               prescale = config['B2XG2pipi0RPrescale'],
                                               selection = tisTosSelection(self.RadiativeB2XG2pipi0R),
                                               RequiredRawEvents = ["Calo"],
+                                              MDSTFlag = True,
                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )#,
         #                                              EnableFlavourTagging = True )
 
@@ -609,6 +618,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                           selection = tisTosSelection(self.RadiativeB2XG4pi),
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
+                                          MDSTFlag = True,
                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
 #         B2XG4pi_2rhoName = self.name + "4pi_2rho_"
@@ -630,6 +640,7 @@ class Beauty2XGammaConf(LineBuilder) :
 #                                                selection = tisTosSelection(self.RadiativeB2XG4pi_2rho),
 #                                                EnableFlavourTagging = True,
 #                                                RequiredRawEvents = ["Calo"],
+#                                                MDSTFlag = True,
 #                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG3piKsName = self.name + "3pi_Ks0_"
@@ -650,6 +661,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                             selection = tisTosSelection(self.RadiativeB2XG3piKs),
                                             EnableFlavourTagging = True,
                                             RequiredRawEvents = ["Calo"],
+                                            MDSTFlag = True,
                                             ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG2pi2KsName = self.name + "2pi_2Ks_"
@@ -671,6 +683,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                              selection = tisTosSelection(self.RadiativeB2XG2pi2Ks),
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
+                                             MDSTFlag = True,
                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG3pipi0MName = self.name + "3pi_pi0M_"
@@ -691,6 +704,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               selection = tisTosSelection(self.RadiativeB2XG3pipi0M),
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
+                                              MDSTFlag = True,
                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG3pipi0RName = self.name + "3pi_pi0R_"
@@ -710,6 +724,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               prescale = config['B2XG3pipi0RPrescale'],
                                               selection = tisTosSelection(self.RadiativeB2XG3pipi0R),
                                               RequiredRawEvents = ["Calo"],
+                                              MDSTFlag = True,
                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )#,
         #                                              EnableFlavourTagging = True )
 
@@ -732,6 +747,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                selection = tisTosSelection(self.RadiativeB2XGLambdapi),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
+                                               MDSTFlag = True,
                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XGLambda2piName = self.name + "2pi_Lambda_"
@@ -753,6 +769,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                 selection = tisTosSelection(self.RadiativeB2XGLambda2pi) ,
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
+                                                MDSTFlag = True,
                                                 ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XGLambda3piName = self.name + "3pi_Lambda_"
@@ -774,6 +791,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                 selection = tisTosSelection(self.RadiativeB2XGLambda3pi),
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
+                                                MDSTFlag = True,
                                                 ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XGLbLambdaName = self.name + "LbLambda_"
@@ -794,6 +812,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                selection = tisTosSelection(self.RadiativeB2XGLbLambda),
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
+                                               MDSTFlag = True,
                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
         
 
