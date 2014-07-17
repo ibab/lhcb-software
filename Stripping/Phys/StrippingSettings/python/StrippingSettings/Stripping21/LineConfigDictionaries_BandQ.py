@@ -787,7 +787,7 @@ Bc2JpsiHDetached = {
 
     'LifetimeCut'         : " & (BPVLTIME()>0.2*ps) & (INTREE( (ABSID=='pi+') & (BPVIPCHI2()>9)))"
     },
-    'STREAMS'   : [ 'Dimuon' ],
+    'STREAMS'   : [ 'Leptonic' ],
     'WGs'    : [ 'BandQ' ]
 }
 
@@ -1395,3 +1395,47 @@ CC2DD = {
         'CharmCompleteEvent' 
         ],
 }   
+
+
+
+
+
+#########################################################
+### StrippingBc2JpsiH with BDT
+### -----------------------------------------------------
+### Defined in:                 StrippingBc2JpsiHBDT.py
+### Proponent:                  Jibo.He@fi.infn.it
+### Motivation:                 Reduce retention on Bc FullDST
+### Documentation:              
+### StrippingReport                                                INFO Event 99976, Good event 98600
+###  |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+###  |_StrippingGlobal_                                            |  0.0781|        77|       |  18.117|
+###  |_StrippingSequenceStreamTest_                                |  0.0781|        77|       |  18.109|
+###  |!StrippingBc2JpsiHNewLine                                    |  0.0345|        34|  1.029|  10.788|
+###  |!StrippingBc2JpsiHDetachedNewLine                            |  0.0416|        41|  1.049|   0.860|
+###  |!StrippingBc2JpsiHBDTLine                                    |  0.0030|         3|  1.333|   0.142|
+### 
+#########################################################
+
+Bc2JpsiHBDT = {
+    'WGs'         : ['BandQ'],
+    'BUILDERTYPE' : 'Bc2JpsiHBDTConf',
+    'CONFIG'      : {
+    'LinePrescale'        :    1.   ,
+    'LinePostscale'       :    1.   ,    
+    'MuonCuts'            : "(MINTREE('mu+'==ABSID,PT)>500*MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF)<3) & (MINTREE('mu+'==ABSID,PIDmu)>0.)",
+    'JpsiCuts'            : '((MM>3.0*GeV) & (MM<3.2*GeV) & (VFASPF(VCHI2PDOF)<16))',
+    'PionCuts'            : '((TRCHI2DOF<3) & (TRGHOSTPROB<0.6) & (PT>1.0*GeV))',
+    'BcComCuts'           : '(in_range(5.8*GeV, AM, 7.0*GeV))',
+    'BcMomCuts'           : """(VFASPF(VCHI2/VDOF)<16) 
+                             & (in_range(6.0*GeV, DTF_FUN(M,True,strings( ['J/psi(1S)'])), 6.75*GeV))
+                             & (BPVIPCHI2()<25) 
+                            """,
+    'BDTCutValue'         :  0.6 ,
+    'BDTWeightsFile'      : '$TMVAWEIGHTSROOT/data/Bc2JpsiH_BDTG_v1r0.xml'    
+    },
+    'STREAMS'   : [ 'Dimuon' ]
+}
+
+
+
