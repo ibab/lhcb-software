@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Moore
 ################################################################################
-gaudi_subdir(Moore v22r2)
+gaudi_subdir(Moore v22r1p1)
 
 gaudi_depends_on_subdirs(Det/DDDB
                          GaudiConf

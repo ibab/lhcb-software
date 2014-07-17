@@ -6,7 +6,7 @@
 
 #============================================================================
 package Moore
-version           v22r2
+version           v22r1p1
 
 branches doc cmt options python
 
@@ -31,7 +31,6 @@ use RawEventFormat      v*
 
 
 # Patches
-
 
 # The rest are needed only to set up environment variables for job options
 # and to give a cmt broadcast dependency for user checked out component packages

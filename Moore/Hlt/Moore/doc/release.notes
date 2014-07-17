@@ -3,51 +3,10 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
-! 2014-07-14 - Gerhard Raven
- - remove Hlt1SelReportsDecoder hack which is no longer needed
 
-! 2014-06-27 - Gerhard Raven
- - following changes in HltConf pertaining the split configuration
+!========================= Moore v22r2p1 2014-07-17 =========================
 
-! 2014-06-26 - Gerhard Raven
- - fix split qmtest...
- - fix split qmtest failure...
-
-!========================= Moore v22r2 2014-06-16 =========================
-
-! 2014-06-15 - Gerhard Raven
- - fix inconsistencies in Hlt2-only qmtests
-
-! 2014-06-14 - Gerhard Raven
- - fix typo
- - explicitly set L0TCK to lower 16 bits of target TCK in tckgen tests 
-
-! 2014-06-13 - Gerhard Raven
- - fix shunting of decreports which got broken in previous commit...
- - do not prune HltANNSvc in hlt2trackingonly.qmt test
- - fix configuration of 'magicnumber' test
- - make sure that in Hlt1-only mode, routing bits writer doesn't
-   try to find the Hlt2 decisions
- - in tckgen tests, set ForceSingleL0Configuration to true
-
-! 2014-06-12 - Gerhard Raven
- - revert change as to which file defines the default threshold 
-   used in hlt1only.qmt and hlt2after1.qmt as the relevant python
-   files do not exist
- - streamline insertion of Hlt1 decoders when running Hlt2 only
- - add 'cdb' as TCK persistence technology
-
-! 2014-06-05 - Sebastian Neubert
- - added scripts to create a local HLT1 tck for tests
- - When creating a tck Moore takes the thresholds from HltConf now
- - added ForwardDecoder
- - Modified Moore_Hlt1only options to kill old DecReports raw banks
-
-! 2014-05-21 - Sebastian Neubert
- - updated tracking tests for new split configuration
-
-! 2014-05-08 - Gerhard Raven
- - tweak 'split' configuration: set sourceID, remove lumi stripper in Hlt1, ...
+Patch release to pick up fix in LoKiTrigger
 
 !========================= Moore v22r1 2014-04-29 =========================
 
