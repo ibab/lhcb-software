@@ -3,18 +3,9 @@ Package     : MooreSys
 Package Coordinator : S. Benson
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v22r2>2014-6-16 MooreSys v22r2</A></H1><PRE>
+</PRE><H1><A NAME=v22r1p1>2014-7-17 MooreSys v22r1p1</A></H1><PRE>
 
-Main changes:
--Insertion of Hlt1 decoders streamlined when running Hlt2 only.
-
--CDB is now added as part of TCK persistence.
-
--New scripts of create a local Hlt1 TCK for testing.
-
--Moore now takes thresholds from HltConf when making a TCK.
-
--Moore_Hlt1only options kill old DecReports raw banks.
+Patch release to pick up fix in LoKiTrigger
 
 </PRE><H1><A NAME=v22r1>2014-4-29 MooreSys v22r1</A></H1><PRE>
 
