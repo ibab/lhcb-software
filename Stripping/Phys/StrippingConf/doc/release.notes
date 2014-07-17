@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-07-17 - Stefano Perazzini
+ - Added check for MDSTFlag for initialized stripping lines 
+
 ! 2014-07-16 - Anton Poluektov 
  - Reworked implementation of RelatedInfo storage in StrippingLine. 
    Single argument in StrippingLine constructor "RelatedinfoTools", which is 

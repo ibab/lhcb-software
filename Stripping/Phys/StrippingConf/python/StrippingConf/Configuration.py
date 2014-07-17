@@ -50,12 +50,16 @@ class StrippingConf ( object ) :
 	self.checkUniqueOutputLocations()
 
         self.checkRawEventRequests()
+        self.checkMDSTFlag()
 
 	from Gaudi.Configuration import appendPostConfigAction
 	appendPostConfigAction ( defaultToolConfigCheck )
 
     def checkRawEventRequests(self) :
         for stream in self.activeStreams() : stream.checkRawEventRequests()
+
+    def checkMDSTFlag(self) :
+        for stream in self.activeStreams() : stream.checkMDSTFlag()
 
     def checkAppendedLines (self) : 
         """

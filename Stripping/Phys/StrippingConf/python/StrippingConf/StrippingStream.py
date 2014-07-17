@@ -212,6 +212,12 @@ class StrippingStream ( object ) :
                 log.warning("Stream='"+self.name()+"' Line='"+line.name()+
                             "' Requests RawEvents "+str(line.RequiredRawEvents))
 
+    def checkMDSTFlag(self) :
+        for line in self.lines :
+            if line.MDSTFlag :
+                log.warning("Stream='"+self.name()+"' Line='"+line.name()+
+                            "' Requests to go to MDST.DST")
+
     def getRelatedInfoLocations(self) : 
 	locations = []
 	for line in self.lines : 
