@@ -470,7 +470,8 @@ StatusCode HltGlobalMonitor::execute()
     //TODO: what if running Hlt1+Hlt2, and we fail Hlt1 -- then there is no Hlt2 decrep...
     //      or only running Hlt1?
     LHCb::HltDecReports* hlt1 = fetch<LHCb::HltDecReports>( m_Hlt1DecReportsLocation );
-    LHCb::HltDecReports* hlt2 = fetch<LHCb::HltDecReports>( m_Hlt2DecReportsLocation );
+    auto hlt1Global = hlt1 ? hlt1->decReport("Hlt1Global") : nullptr;
+    LHCb::HltDecReports* hlt2 = fetch<LHCb::HltDecReports>( m_Hlt2DecReportsLocation, hlt1Global!=nullptr && hlt1Global->decision()!=0  );
     LHCb::ODIN* odin = fetch<LHCb::ODIN>( LHCb::ODINLocation::Default );
 
     monitorODIN( odin, hlt1, hlt2 );
@@ -570,20 +571,18 @@ void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
     // filling the histograms for the alleys instead of the lines
 
     if (hlt1)  {
-        std::vector<unsigned> nAcc1Alley( m_hlt1Alleys.size(), unsigned( 0 ) );
+        std::vector<unsigned> nAcc1Alley( m_hlt1Alleys.size(), 0u );
         for ( auto& i : *hlt1 ) {
             if ( !i.second.decision() ) continue;
-
-            if ( i.first.compare( 0, 4, "Hlt1" ) == 0 ) {
-                auto j = m_hlt1Line2AlleyBin.find( i.first );
-                if ( j != m_hlt1Line2AlleyBin.end() ) {
-                    assert( j->second.first < nAcc1Alley.size() );
-                    ++nAcc1Alley[j->second.first];
-                    fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 );
-                }
-            } 
+            if ( i.first.compare( 0, 4, "Hlt1" ) != 0 ) continue;
+            auto j = m_hlt1Line2AlleyBin.find( i.first );
+            if ( j != m_hlt1Line2AlleyBin.end() ) {
+                assert( j->second.first < nAcc1Alley.size() );
+                ++nAcc1Alley[j->second.first];
+                fill( m_hlt1Alleys[j->second.first], j->second.second, 1.0 );
+            }
         }
-        for ( unsigned i = 0; i < m_DecToGroup1.size(); i++ ) {
+        for ( unsigned i = 0; i < m_DecToGroup1.size(); ++i ) {
             *m_hlt1AlleyRates[i] += ( nAcc1Alley[i] > 0 );
             fill( m_hlt1Alley, i, ( nAcc1Alley[i] > 0 ) );
             if ( nAcc1Alley[i] == 0 ) continue;
@@ -594,16 +593,15 @@ void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
     }
         
     if (hlt2) {
-        std::vector<unsigned> nAcc2Alley( m_hlt2Alleys.size(), unsigned( 0 ) );
+        std::vector<unsigned> nAcc2Alley( m_hlt2Alleys.size(), 0u );
         for ( auto& i : *hlt2 ) {
             if ( !i.second.decision() ) continue;
-            if ( i.first.compare( 0, 4, "Hlt2" ) == 0 ) {
-                auto j = m_hlt2Line2AlleyBin.find( i.first );
-                if ( j != m_hlt2Line2AlleyBin.end() ) {
-                    assert( j->second.first < nAcc2Alley.size() );
-                    ++nAcc2Alley[j->second.first];
-                    fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
-                }
+            if ( i.first.compare( 0, 4, "Hlt2" ) != 0 ) continue;
+            auto j = m_hlt2Line2AlleyBin.find( i.first );
+            if ( j != m_hlt2Line2AlleyBin.end() ) {
+                assert( j->second.first < nAcc2Alley.size() );
+                ++nAcc2Alley[j->second.first];
+                fill( m_hlt2Alleys[j->second.first], j->second.second, 1.0 );
             }
         }
         for ( unsigned i = 0; i < m_DecToGroup2.size(); ++i ) {
@@ -622,15 +620,12 @@ void HltGlobalMonitor::monitorVertices()
 {
     typedef LHCb::RecVertex::Container Vertices;
     for ( const LocationMap::value_type& entry : m_vertexLocations ) {
-        const std::string loc = entry.second;
-        Vertices* vertices = getIfExists<Vertices>( loc );
+        Vertices* vertices = getIfExists<Vertices>( entry.second );
         if ( !vertices ) continue;
-        const HistoVector& histos = m_vertexHistos[entry.first];
-        for ( AIDA::IHistogram2D* histo : histos ) {
-            for ( const LHCb::RecVertex* vx : *vertices ) {
-                double dx = vx->position().x() - m_beamSpotX;
-                double dy = vx->position().y() - m_beamSpotY;
-                histo->fill( dx, dy );
+        for ( auto&& histo : m_vertexHistos[entry.first] ) {
+            for ( auto&& vx : *vertices ) {
+                histo->fill( vx->position().x() - m_beamSpotX,
+                             vx->position().y() - m_beamSpotY );
             }
         }
     }

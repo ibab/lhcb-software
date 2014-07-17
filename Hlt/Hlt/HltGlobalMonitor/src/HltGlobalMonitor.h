@@ -51,11 +51,11 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     void monitorResolverpositions();
 
     template <typename T>
-    T* fetch( const std::string& location )
+    T* fetch( const std::string& location, bool warn = true )
     {
         if (location.empty()) return nullptr;
         T* t = this->getIfExists<T>( location );
-        if ( !t && this->msgLevel( MSG::WARNING ) ) {
+        if ( !t && warn && this->msgLevel( MSG::WARNING ) ) {
             Warning( " could not retrieve " + location, StatusCode::SUCCESS, 10 );
         }
         return t;

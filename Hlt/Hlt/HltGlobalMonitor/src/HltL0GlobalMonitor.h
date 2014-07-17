@@ -35,9 +35,10 @@ public:
 
 private:
   void monitorL0DU(const LHCb::L0DUReport*);
-  template <typename T> T* fetch(const std::string& location) {
+  template <typename T> T* fetch(const std::string& location, bool warn = true ) {
+       if (location.empty()) return nullptr;
        T* t =  this->getIfExists<T>( location ) ;
-       if (!t && this->msgLevel(MSG::WARNING) ) Warning( " could not retrieve "  + location,StatusCode::SUCCESS,10) ;
+       if (!t && warn && this->msgLevel(MSG::WARNING) ) Warning( " could not retrieve "  + location,StatusCode::SUCCESS,10) ;
        return t;
   }
   std::string m_ODINLocation;
