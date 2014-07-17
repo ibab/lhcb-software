@@ -50,7 +50,7 @@ def hlt2linesconfs() :
 def expose( tps, nm ) : 
     return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
 __hlt2linesconfs = hlt2linesconfs()
-for str in expose(__hlt2linesconfs,'__hlt2linesconfs') : exec(str)
+for _ in expose(__hlt2linesconfs,'__hlt2linesconfs') : exec(_)
 
 
 #################################################################################################
