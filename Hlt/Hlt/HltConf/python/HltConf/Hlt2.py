@@ -13,24 +13,22 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 
-def hlt2linesconfs() :
+def import_line_configurables(pkg) :
     # import all modules in Hlt2Lines, and require each file xyz to contain a class xyzConf
     # i.e. do the equivalent of 
     #    from Hlt2Lines.Hlt2SomeLines import Hlt2SomeLinesConf 
     #
-    import Hlt2Lines
     import os.path, pkgutil, importlib
-    __hlt2linesconfs = [ getattr( importlib.import_module('Hlt2Lines.'+name), name+'Conf' ) 
-                         for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt2Lines.__file__)]) ]
-    return __hlt2linesconfs
-
+    return  [ getattr( importlib.import_module(pkg.__name__+'.'+name), name+'Conf' ) 
+              for _,name,_ in pkgutil.iter_modules([os.path.dirname(pkg.__file__)]) ]
 
 
 #import all Hlt2 lines configurables in local scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
+import Hlt2Lines
 def expose( tps, nm ) : 
     return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
-__hlt2linesconfs = hlt2linesconfs()
-for str in expose(__hlt2linesconfs,'__hlt2linesconfs') : exec(str)
+__hlt2linesconfs = import_line_configurables(Hlt2Lines)
+for _ in expose(__hlt2linesconfs,'__hlt2linesconfs') : exec(_)
 
 #
 # The tracking configurations
@@ -50,8 +48,7 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking")
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedDownstreamTracking") 
                              , (Hlt2Tracking, "Hlt2BiKalmanFittedForwardTracking")
-                             ] + hlt2linesconfs()
-
+                             ] + import_line_configurables(Hlt2Lines)
 
     __slots__ = { "DataType"                   : '2010'    # datatype is one of 2009, MC09, DC06...
                 , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration

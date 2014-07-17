@@ -35,7 +35,7 @@ def hlt1linesconfs() :
 def expose( tps, nm ) : 
     return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
 __hlt1linesconfs = hlt1linesconfs()
-for str in expose(__hlt1linesconfs,'__hlt1linesconfs') : exec(str)
+for _ in expose(__hlt1linesconfs,'__hlt1linesconfs') : exec(_)
 
 
 class Hlt1Conf(LHCbConfigurableUser):
