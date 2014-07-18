@@ -69,6 +69,7 @@ import StrippingBd2eeKstar
 import StrippingBd2eeKstarBDT
 import StrippingBd2MuMuKstarBDT
 import StrippingBeauty2XGamma
+import StrippingBeauty2XGammaExclusive
 import StrippingBLVLines
 import StrippingLc23MuLines
 import StrippingB23MuLines

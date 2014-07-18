@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-18 - Pablo Ruiz Valls
+ - Added StrippingBeauty2XGammaExclusive to __init__.py
+
 ! 2014-07-18 - Stefano Perazzini
  - Update to StrippingD2HHBDT.py
 
@@ -17,7 +20,7 @@ to have a defaut_config as it was in StrippingSettings v20r1,
 and to new RequiredRawEvents and MDSTFlag conventions
 
 ! 2014-07-17 - Pablo Ruiz Valls
- - Adapted StrippingB2XGamma to new MDST.DST conventions
+ - Adapted StrippingBeauty2XGamma to new MDST.DST conventions (* Correct name)
 
 ! 2014-07-17 - Ronan Wallace
  - Restored pp prescales in StrippingMuMuSS,StrippingSingleTrackTIS,StrippingDY2MuMu,StrippingWMu
