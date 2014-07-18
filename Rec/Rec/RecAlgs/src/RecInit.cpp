@@ -82,8 +82,8 @@ StatusCode RecInit::initialize()
   if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
       == m_rawEventLocations.end()) {
     // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Calo); // present on all DST types
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default); // RAW data
   }
 
   if (!usingDefaultLocation) {
