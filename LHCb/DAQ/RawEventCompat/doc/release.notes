@@ -4,6 +4,11 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+! 2014-07-18 - Marco Cattaneo
+ - If a new bank is requested to be added to a RawEvent in an output location
+   that already existed as input location, print a warning and skip
+   configuration for that bank. Previously, whole configuration was aborted
+
 !========================= RawEventCompat v1r5 2014-02-17 =====================
 ! 2014-01-28 - Rob Lambert
  - Add a simple method to list all known banks in a given format, for use in DAQSys

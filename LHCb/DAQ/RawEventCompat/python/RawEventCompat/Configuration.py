@@ -399,9 +399,10 @@ class RawEventJuggler(ConfigurableUser):
             #if a bank is needed to be added to an existing location, I can't do that.
             for loc in input_locations:
                 if loc in output_locations:
-                    extra=[abank for abank in output_locations[loc] if abank not in input_locations[loc]]
-                    if len(extra):
-                        raise ValueError("I can't add banks to an already existing location right now. Think of another way to do it for "+loc)
+                    for abank in output_locations[loc]:
+                        if abank not in input_locations[loc]:
+                            print "# WARNING, don't know how to add new bank "+abank+" to existing location "+loc+" ...skipping..."
+                            output_locations[loc].remove(abank)
             #if banks need to be juggled, tell me how to do it, sequencer or DoD
             if not (self.getProp("DataOnDemand") or self.isPropertySet("Sequencer")):
                 raise AttributeError("You have asked for some juggling, but not told me where to put the algorithms. Set either DataOnDemand or pass a Sequencer")
