@@ -2,6 +2,11 @@
 
 // local
 #include "OfflineVertexFitter.h"
+#include <Math/CholeskyDecomp.h>
+#include "GaudiAlg/GetAlgs.h"
+#include "GaudiAlg/GaudiAlgorithm.h"
+#include <algorithm>
+using ROOT::Math::CholeskyDecomp;
 
 using namespace LHCb ;
 using namespace Gaudi::Units;
@@ -2088,10 +2093,37 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
   }
   else
   {
-    Error ( "Unable to make z estimate" ).ignore() ;
-    zEstimate = ( z1<z2 ? z1-.001 : z2-0.001 );
+    auto* alg = Gaudi::Utils::getGaudiAlg( contextSvc() );
+    std::string msg{ "Parallel particles: unable to compute z estimate" };
+    if (alg) msg += " [ " + alg->name() + " ] " ;
+    Error ( msg ).ignore() ;
+    zEstimate = std::min(z1,z2)-0.001 ; 
   }
   return zEstimate;
+
+# if 0
+  // alternative z-estimate...
+
+  Gaudi::XYZVector delta{   part1->referencePoint() - part2->referencePoint() };
+  const auto& s1 = part1->slopes();
+  const auto& s2 = part2->slopes();
+
+  std::array<double,5> l{ { s1.Mag2(), -s1.Dot(s2) , s2.Mag2() , -s1.Dot(delta), s2.Dot(delta) } };
+  CholeskyDecomp<double, 2> decomp(l.data());
+  if (!decomp)  { 
+    Warning( "parallel tracks" ).ignore();
+    l[3]=0;l[4]=0;
+  } else {
+    auto bh = l.data()+3;
+    decomp.Solve( bh );
+  }
+  auto zz1 = part1->referencePoint().z() + l[3];
+  auto zz2 = part2->referencePoint().z() + l[4];
+  std::cout << zEstimate << " " <<  0.5*(zz1+zz2) << " " << zz2-zz1 << std::endl;
+  return zEstimate;
+ #endif 
+
+
 }
 
 //=============================================================================
