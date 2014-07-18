@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-18 - Thomas Blake
+ - Updated StrippinBu2LLK
+
 ! 2014-07-18 - Pablo Ruiz Valls
  - Added StrippingBeauty2XGammaExclusive to __init__.py
 
