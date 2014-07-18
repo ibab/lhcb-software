@@ -22,25 +22,32 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
 
 
-default_config = {'PrescaleD2HHBDT' : 1.,
-               'PrescaleDSt'     : 1.,
-               'PostscaleD02HH'  : 0.1,
-               'MinPT'           : 1000,
-               'MinIP'           : 0.12,
-               'TrChi2'          : 3,
-               'TrGhostProb'     : 0.5,
-               'CombMassLow'     : 1000,
-               'CombMassHigh'    : 2800,
-               'DOCA'            : 0.1,
-               'BPT'             : 1200,
-               'BIP'             : 0.12,
-               'BTAU'            : 0.,
-               'MassLow'         : 1800,
-               'MassHigh'        : 2600,
-               'BDTCut'          : -0.3,
-               'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml",
-               'VertexChi2'      : 64
-              }
+default_config = {
+    'WGs'         : ['Charmless'],
+    'NAME'        : 'D2HHBDT',
+    'BUILDERTYPE' : 'D2HHBDTLines',
+    'CONFIG'      : {'PrescaleD2HHBDT' : 1.,
+                     'PrescaleDSt'     : 1.,
+                     'MinPT'           : 1000,
+                     'MinIP'           : 0.12,
+                     'TrChi2'          : 3,
+                     'TrGhostProb'     : 0.5,
+                     'CombMassLow'     : 1000,
+                     'CombMassHigh'    : 2800,
+                     'DOCA'            : 0.1,
+                     'BPT'             : 1200,
+                     'BIP'             : 0.12,
+                     'BTAU'            : 0.,
+                     'MassLow'         : 1800,
+                     'MassHigh'        : 2600,
+                     'BDTCut'          : -0.3,
+                     'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml",
+                     'VertexChi2'      : 64
+                    },
+    'STREAMS'     : { 'Charm' : ['StrippingD2HHBDTLine',
+                                 'StrippingDStD0PiWithD2HHBDTLine']}
+    }
+
 
 ## Change decay descriptor and re-fit decay tree
 

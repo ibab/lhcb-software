@@ -47,8 +47,8 @@ default_config = {
                      'MassLow'                 : 4800,
                      'MassHigh'                : 5800
                     },
-    'STREAMS'     : { 'BhadronCompleteEvent' : [],
-                      'Bhadron' : [ 'StrippingHb2Charged2BodyB2Charged2BodyLine',
+    'STREAMS'     : { 'Bhadron' : [],
+                      'BhadronCompleteEvent' : [ 'StrippingHb2Charged2BodyB2Charged2BodyLine',
                                     'StrippingHb2Charged2BodyB2KPlusPiMinusLine',
                                     'StrippingHb2Charged2BodyB2PiPlusKMinusLine',
                                     'StrippingHb2Charged2BodyBs2KPlusKMinusLine',

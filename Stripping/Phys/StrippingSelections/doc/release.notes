@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-18 - Stefano Perazzini
+ - Update to StrippingD2HHBDT.py
+
 ! 2014-07-17 - Jibo He
  - Added BDT-based Bc->J/psi Pi line, requriring the head of TMVAWeights
  - Removed StrippingB2XGamma from __init__.py, as StrippingB2XGamma disappared 
