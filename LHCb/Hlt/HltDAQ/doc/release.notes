@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-07-18 - Marco Cattaneo
+ - HltTrackReportsDecoder: Suppress unused variable warning by wrapping 
+   execute method with a #pragma
 
 ! 2014-07-14 - Gerhard Raven
  - HltTrackReportsWriter/Decoder: 

@@ -89,6 +89,8 @@ StatusCode HltTrackReportsDecoder::initialize()
 //=============================================================================
 // Main execution
 //=============================================================================
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-variable"
 StatusCode HltTrackReportsDecoder::execute()
 {
     ++m_callcount;
@@ -192,3 +194,4 @@ StatusCode HltTrackReportsDecoder::execute()
     }
     return StatusCode::SUCCESS;
 }
+#pragma GCC diagnostic pop
