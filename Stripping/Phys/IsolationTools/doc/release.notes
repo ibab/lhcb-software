@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-07-18 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2014-07-09 - Alex Shires
  - adding ghost prob, CMakeLists
 

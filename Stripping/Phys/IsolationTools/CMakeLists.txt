@@ -13,7 +13,7 @@ find_package(Boost COMPONENTS regex)
 gaudi_add_module(IsolationTools
                  src/*.cpp
                  INCLUDE_DIRS Boost # AIDA
-                 LINK_LIBRARIES Boost DaVinciKernelLib DaVinciToolsLib MVADictToolsLib LoKiPhysLib)
+                 LINK_LIBRARIES Boost DaVinciKernelLib MVADictToolsLib LoKiPhysLib)
 
 gaudi_install_python_modules()
 
