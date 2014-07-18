@@ -4,6 +4,10 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-07-18 - Marco Cattaneo
+ - Fix indentation bug in Configuation.py, input RawEventLocations were not
+   being updated according to Split RawEvent Input version
+
 ! 2014-07-15 - Marco Cattaneo
   - Fix daqsys.decoder-db test following previous change
 

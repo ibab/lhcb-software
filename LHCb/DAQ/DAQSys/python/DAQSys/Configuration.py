@@ -111,8 +111,8 @@ class DecodeRawEvent(ConfigurableUser):
                             reset_list[b]=[d]
                         elif d not in reset_list[b]:
                             reset_list[b].append(d)
-                if not len(reset_list):
-                    return
+            if not len(reset_list):
+                return
             for k,ds in reset_list.iteritems():
                 for d in ds:
                     self.overrideIfRequired(d, setup=setup)
