@@ -1,7 +1,7 @@
 
 __author__ = 'Regis Lefevre'
-__date__ = '16/07/2014'
-__version__ = '$Revision: 1.7 $'
+__date__ = '18/07/2014'
+__version__ = '$Revision: 1.8 $'
 
 '''
 Stripping selection for B -> h h pi0
@@ -105,16 +105,20 @@ class StrippingB2HHPi0Conf(LineBuilder) :
         self.B2HHPi0R_line = StrippingLine(name + "_R" %locals()['config'],
                                            prescale = config['ResolvedLinePrescale'],
                                            postscale = config['ResolvedLinePostscale'],
+                                           selection = self.selresolved,
+                                           EnableFlavourTagging = True,
                                            RequiredRawEvents = ["Calo"],
                                            MDSTFlag = True,
-                                           selection = self.selresolved
+                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}])
                                            )
         self.B2HHPi0M_line = StrippingLine(name + "_M" %locals()['config'],
                                            prescale = config['MergedLinePrescale'],
                                            postscale = config['MergedLinePostscale'],
+                                           selection = self.selmerged,
+                                           EnableFlavourTagging = True,
                                            RequiredRawEvents = ["Calo"],
                                            MDSTFlag = True,
-                                           selection = self.selmerged
+                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}])
                                            )
         # register lines
         self.registerLine(self.B2HHPi0R_line)

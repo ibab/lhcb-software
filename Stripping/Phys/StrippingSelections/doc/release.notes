@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-18 - Regis Lefevre
+ - Update StrippingB2HHPi0.py (add EnableFlavourTagging and ExtraInfoTools)
+
 ! 2014-07-18 - Thomas Blake
  - Updated StrippinBu2LLK
 
