@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+! 2014-07-18 - Chris Jones
+ - Update list of configurables for QM test.
+
 </PRE><H1><A NAME=v35r1>2014-06-18 DaVinci v35r1</A></H1><PRE>
 
 New development release based on the LHCb v37r3 stack.
