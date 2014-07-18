@@ -69,7 +69,7 @@ StatusCode RelInfoVertexIsolationBDT::initialize()
     if ( !m_pVertexFit ) { return Error("Unable to retrieve the IVertexFit tool"); }
 
     //Get PV refitter? Is this the correct way?
-    m_pPVReFitter = tool<IPVReFitter>("PVReFitter", this );
+    m_pPVReFitter = tool<IPVReFitter>("LoKi::PVReFitter", this );
     if ( !m_pVertexFit ) { return Error("Unable to retrieve the IPVReFitter tool"); }
 
     // If no input particle container is specified, put StdNoPIDsPions by default
