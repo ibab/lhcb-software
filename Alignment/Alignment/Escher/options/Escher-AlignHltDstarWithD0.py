@@ -11,8 +11,8 @@ from Configurables import Escher
 theApp = Escher()
 theApp.DataType   = "2011"
 theApp.InputType  = "MDF"
-theApp.PrintFreq = 1000
-theApp.EvtMax = 20000
+theApp.PrintFreq = 10
+theApp.EvtMax = 200
 theApp.DatasetName = 'AlignHltDstarWithD0'
 
 # COND DB
