@@ -1154,8 +1154,8 @@ def _h3_iteritems_ ( h3 ) :
                 ze  = 0.5 * az.GetBinWidth   ( iz      )
                 #
                 
-                v   =       h2.GetBinContent ( ix , iy , iz )
-                ve  =       h2.GetBinError   ( ix , iy , iz )
+                v   =       h3.GetBinContent ( ix , iy , iz )
+                ve  =       h3.GetBinError   ( ix , iy , iz )
                 #
                 yield ix, iy, iz , VE(x,xe*xe) , VE ( y,ye*ye) , VE( z,ze*ze) , VE( v, ve ) 
                 #
@@ -2803,7 +2803,7 @@ for t in ( ROOT.TH2F , ROOT.TH2D ) :
 #  @date   2011-06-07
 def _h3_oper_ ( h1 , h2 , oper ) :
     """
-    Operation with the histogram 
+    Operation with the 3D-histogram 
     
     >>> h1 = ...
     >>> h2 = ...
@@ -2816,6 +2816,13 @@ def _h3_oper_ ( h1 , h2 , oper ) :
     result = h1.Clone( hID() )
     if not result.GetSumw2() : result.Sumw2()
     #
+    if   isinstance ( h2 , (int,long,float) ) :
+        v1 = float ( h2 )  
+        h2 = lambda x,y,z : VE(v1,0)
+    elif isinstance ( h2 ,  VE              ) :
+        v1 =     VE ( h2 )
+        h2 = lambda x,y,z : v1
+    # 
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
         result.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
@@ -2823,7 +2830,7 @@ def _h3_oper_ ( h1 , h2 , oper ) :
         #
         v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
         #
-        v = VE ( oper ( v1 , v2 ) ) 
+        v  = VE ( oper ( v1 , v2 ) ) 
         #
         if not v.isfinite() : continue 
         #
@@ -2831,6 +2838,42 @@ def _h3_oper_ ( h1 , h2 , oper ) :
         result.SetBinError   ( ix1 , iy1 , iz1 , v.error () )
         
     return result
+
+
+# =============================================================================
+## operation with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h3_ioper_ ( h1 , h2 , oper ) :
+    """
+    Operation with the 3D-histogram 
+    """
+    if                                 not h1.GetSumw2() : h1.Sumw2()
+    if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
+    #
+    if   isinstance ( h2 , ( int , long , float ) ) :
+        v1 = float  ( h2 ) 
+        h2 = lambda x,y,z : VE ( v1 , 0 )
+    elif isinstance ( h2 ,    VE ) :
+        v1 =          h2  
+        h2 = lambda x,y,z : v1  
+    #
+    for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
+        #
+        h1.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
+        h1.SetBinError   ( ix1 , iy1 , iz1 , 0 )
+        #
+        v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
+        #
+        v  = VE ( oper ( v1 , v2 ) ) 
+        #
+        if not v.isfinite() : continue 
+        #
+        h1.SetBinContent ( ix1 , iy1 , iz1 , v.value () ) 
+        h1.SetBinError   ( ix1 , iy1 , iz1 , v.error () )
+
+    return h1
+
 
 
 # =============================================================================
@@ -2960,7 +3003,7 @@ def _h3_pow_ ( h1 , val ) :
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
         result.SetBinContent ( ix1 , iy1 , iz1 , 0 ) 
-        result.SetBinError   ( ix1 , iy1 , iz2 , 0 )
+        result.SetBinError   ( ix1 , iy1 , iz1 , 0 )
         #
         v = VE ( pow ( v1 , val ) ) 
         #
@@ -2972,12 +3015,167 @@ def _h3_pow_ ( h1 , val ) :
     return result 
 
 
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h3_rdiv_ ( h1 , h2 ) :
+    """
+    Divide the histograms
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 / h2
+    
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : y/x ) 
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h3_rmul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 * h2 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : y*x ) 
+# =============================================================================
+## Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h3_radd_ ( h1 , h2 ) :
+    """
+    Add the histograms 
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 + h2 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : y+x ) 
+# =============================================================================
+## Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h3_rsub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram
+    
+    >>> h1     = ...
+    >>> h2     = ...
+    >>> result = h1 - h2 
+    """
+    return _h3_oper_ ( h1 , h2 , lambda x,y : y-x ) 
+
+
+
+# =============================================================================
+## 'abs' the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2011-06-07
+def _h3_abs_ ( h1 ) :
+    """
+    ``abs'' the histogram
+
+    >>> h3     = ...
+    >>> result = abs ( h3 ) 
+    """
+    if not h1.GetSumw2() : h1.Sumw2()
+    #
+    result = h1.Clone( hID() )
+    if not result.GetSumw2() : result.Sumw2()
+    #
+    for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 ,  0 ) 
+        result.SetBinError   ( ix1 , iy1 , iz1 , 0 )
+        #
+        v = abs  ( v1 ) 
+        #
+        result.SetBinContent ( ix1 , iy1 , iz1 , v.value () ) 
+        result.SetBinError   ( ix1 , iy1 , iz1 , v.error () )
+        
+    return result 
+
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h3_idiv_ ( h1 , h2 ) :
+    """
+    Divide the histograms 
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 /=  h2 
+    
+    """
+    return _h3_ioper_ ( h1 , h2 , lambda x,y : x/y ) 
+# =============================================================================
+## Division with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h3_imul_ ( h1 , h2 ) :
+    """
+    Multiply the histograms 
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 *=  h2 
+    
+    """
+    return _h3_ioper_ ( h1 , h2 , lambda x,y : x*y ) 
+# =============================================================================
+## Addition with the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h3_iadd_ ( h1 , h2 ) :
+    """
+    Add the histograms
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 +=  h2 
+    
+    """
+    return _h3_ioper_ ( h1 , h2 , lambda x,y : x+y ) 
+# =============================================================================
+## Subtraction of the histograms 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2012-06-03
+def _h3_isub_ ( h1 , h2 ) :
+    """
+    Subtract the histogram
+    
+    >>> h1  = ...
+    >>> h2  = ...
+    >>> h1 -=  h2 
+    
+    """
+    return _h3_ioper_ ( h1 , h2 , lambda x,y : x-y ) 
+# =============================================================================
+
+
 ROOT.TH3._oper_    = _h3_oper_
     
 ROOT.TH3.__div__   = _h3_div_
 ROOT.TH3.__mul__   = _h3_mul_
 ROOT.TH3.__add__   = _h3_add_
 ROOT.TH3.__sub__   = _h3_sub_
+
+ROOT.TH3.__rdiv__  = _h3_rdiv_
+ROOT.TH3.__rmul__  = _h3_rmul_
+ROOT.TH3.__radd__  = _h3_radd_
+ROOT.TH3.__rsub__  = _h3_rsub_
+
+ROOT.TH3.__idiv__  = _h3_idiv_
+ROOT.TH3.__imul__  = _h3_imul_
+ROOT.TH3.__iadd__  = _h3_iadd_
+ROOT.TH3.__isub__  = _h3_isub_
+
+ROOT.TH3.__abs__   = _h3_abs_
 ROOT.TH3.__pow__   = _h3_pow_
 
 ROOT.TH3.  frac    = _h3_frac_
