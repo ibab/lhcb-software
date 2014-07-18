@@ -209,7 +209,7 @@ StatusCode RelInfoVertexIsolationBDT::calculateRelatedInfo( const LHCb::Particle
     m_bdt2 = -1;
     m_bdt3 = -1;
     //BDT isolation code
-    bool done = getIsolation(part,partsToCheck, vtx, PVs ) ;
+    getIsolation(part,partsToCheck, vtx, PVs ) ;
     if (msgLevel(MSG::DEBUG)) debug() << "BDTvals : " <<  m_bdt1 << '\t' << m_bdt2 << '\t' << m_bdt3 << endmsg ;
     // Save values
     //
