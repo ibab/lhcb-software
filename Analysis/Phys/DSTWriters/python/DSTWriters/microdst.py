@@ -99,9 +99,9 @@ def stripMicroDSTStreamConf( pack=True, isMC=False, selectiveRawEvent=False ) :
                              extraItems    = eItems,
                              selectiveRawEvent = selectiveRawEvent )
 
-def stripCalibMicroDSTStreamConf( pack=True, isMC=False ) :
-    conf = stripMicroDSTStreamConf(pack,isMC)
-    conf.extraItems += [ '/Event/Muon/RawEvent#1' ]
+def stripCalibMicroDSTStreamConf( pack=True, isMC=False,selectiveRawEvent=False ) :
+    conf = stripMicroDSTStreamConf(pack,isMC,selectiveRawEvent)
+    #conf.extraItems += [ '/Event/Muon/RawEvent#1' ] # Removed since now any line can specify the raw banks it needs
     return conf
 
 def microDSTElements( pack=True, saveTrackClusters=True, isMC=False , refit = False ) :

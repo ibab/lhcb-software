@@ -4,6 +4,9 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-07-18 - Stefano Perazzini
+ - Added selectiveRawEvent attribute to stripCalibMicroDSTStreamConf
+
 ! 2014-07-16 - Anton poluektov 
  - Modification for RelatedInfo storage. Pass the list of RelatedInfo locations 
    as an argument of microDST elements. 
