@@ -133,7 +133,8 @@ def plotAlignmentParametersHeat( det
                                , outputDir="."
                                , layers=["all"]
                                , drawNames=False
-                               , AlarmThresholds={"Tx":-1,"Ty":-1,"Tz":-1,"Rx":-1,"Ry":-1,"Rz":-1} # default thresholds of -1 double as 'alarm-mode-off' flags
+                                 # default thresholds of -1 double as 'alarm-mode-off' flags
+                               , AlarmThresholds={"Tx":-1,"Ty":-1,"Tz":-1,"Rx":-1,"Ry":-1,"Rz":-1}
                                , returnFlag=False
                                  ):
     """
@@ -185,6 +186,7 @@ def plotAlignmentParametersHeat( det
     for i, ( first, second ) in enumerate( zip( detectorTuple, alignmentTwo.loopWithTimesAndValues( det, Dets[det]['elmGroup'], timePeriodsTwo )) ):
         for dof in dofs:
             parameters = [ getattr( first[2], dof ), getattr( second[2][0], dof ) ]
+            # print "parameters of %s are %r" % ( first[0], parameters ) ### super-verbose check
             if dof.startswith("R"):
                 from math import pi
                 for j, parameter in enumerate( parameters ):

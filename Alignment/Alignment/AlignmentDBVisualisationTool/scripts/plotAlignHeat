@@ -44,7 +44,10 @@ parser.add_option("-v", "--verbose", action="store_true", dest="verbose", defaul
 
 (options, args) = parser.parse_args()
 
-assert len(args) == 4
+if 4 != len(args):
+    print "Expected 4 args, received %r. Use -h option for help dialogue." % len(args)
+    import sys
+    sys.exit()
 detector = args[0]
 dofs = args[1].split(",")
 #alignments = ( args[2], args[3] )

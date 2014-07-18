@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-07-18 - Jason Andrews
+ - minor update to explain an error rather than simply dumping an assertion error
+
 ! 2014-01-21 - Jason Andrews
  - updated AlignmentComparisonPlots.py for compatibility with Pieter's timezone updates
 
