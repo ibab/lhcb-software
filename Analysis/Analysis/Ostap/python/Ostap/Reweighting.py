@@ -62,7 +62,7 @@ class Weight(object) :
             for k in db :
                 e = db[k]
                 if hasattr ( e , '__len__' ) :  
-                    logger.info( 'DBASE "%.15s" key "%.15s" #%d' % ( dbase ,  k, len( e ) ) ) 
+                    logger.debug( 'DBASE "%.15s" key "%.15s" #%d' % ( dbase ,  k, len( e ) ) ) 
                 
             ## loop over the weighting factors and build the function
             for f in factors :
@@ -73,7 +73,7 @@ class Weight(object) :
                 ## 
                 functions  = db.get ( funname , [] ) ## db[ funname ]
                 if not functions :
-                    logger.warning('No reweighting is availabe for %s, skip it' % funname )
+                    logger.warning('No reweighting is available for %s, skip it' % funname )
 
                 merge = True
                 if 2 < len ( f ) : merge = f[2] 

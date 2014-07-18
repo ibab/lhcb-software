@@ -96,7 +96,7 @@ def _ras_iter_ ( self ) :
     del it
 
 # =============================================================================
-## get the attibute for RooArgtSet 
+## get the attibute for RooArgSet 
 def _ras_getattr_ ( self , aname ) :
     """
     Get the attibute from RooArgSet
@@ -110,13 +110,13 @@ def _ras_getattr_ ( self , aname ) :
     return _v 
 
 # =============================================================================
-## get the attibute for RooArgtSet 
+## get the attibute for RooArgSet 
 def _ras_getitem_ ( self , aname ) :
     """
     Get the attibute from RooArgSet
 
     >>> aset = ...
-    >>> print aset.pt
+    >>> print aset['pt']
     
     """
     _v = self.find ( aname )
@@ -127,6 +127,7 @@ def _ras_getitem_ ( self , aname ) :
 ## check the presence of variable in set 
 def _ras_contains_ ( self , ename ) :
     """
+    Check the presence of variable in set 
     """
     _v = self.find ( aname )
     if not _v : return False 
@@ -690,20 +691,82 @@ def _ds_project_  ( dataset , histo , what , *args ) :
     Helper project method for RooDataSet
     
     >>> h1   = ROOT.TH1D(... )
-    >>> dataset.project ( h1.GetName() , 'm', 'chi2<10' ) ## project varibale into histo
+    >>> dataset.project ( h1.GetName() , 'm', 'chi2<10' ) ## project variable into histo
     
     >>> h1   = ROOT.TH1D(... )
     >>> dataset.project ( h1           , 'm', 'chi2<10' ) ## use histo
+
     """
-    store = dataset.store()
     
-    if store :
+    if isinstance ( what , ROOT.RooArgList ) and isinstance ( histo , ROOT.TH1 ) :
+        return dataset.fillHistogram  ( histo , what , *args ) 
+    
+    store = dataset.store()
+    if store and isinstance ( what , str ) : 
         tree = store.tree()
         if tree : return tree.project ( histo , what , *args ) 
         
-    raise AttributeError( "Can't ``project'' data set , probably wrong StorageType" ) 
-
+    if isinstance ( what , str ) : 
+        vars  = [ v.replace(' ','') for v in what.split(':') ]
+        return _ds_project_ ( dataset , histo , vars , *args ) 
     
+    if isinstance ( what , ( list , tuple ) ) : 
+        vars_ = dataset.get()
+        vars  = ROOT.RooArgList()
+        for w in what : vars.add ( vars_[w] ) 
+        return _ds_project_ ( dataset , histo , vars , *args ) 
+    
+    if isinstance ( what , ROOT.RooRealVar ) :
+        
+        lst = ROOT.RooArgList()
+        lst.add ( what )
+        for a in args :
+            if isinstance ( a , ROOT.RooRealVar ) : lst.add( a )
+            else : break            
+        return _ds_project_ ( dataset , histo , lst , *args[ len( lst ) - 1 : ] ) 
+        
+    if isinstance ( histo , str ) :
+    
+        obj = ROOT.gROOT     .FindObject    ( histo )
+        if instance ( obj  , ROOT.TH1 ) :
+            return _ds_project_ ( dataset , obj , what , *args )
+        obj = ROOT.gROOT     .FindObjectAny ( histo )
+        if instance ( obj  , ROOT.TH1 ) :
+            return _ds_project_ ( dataset , obj , what , *args )
+        obj = ROOT.gDirectory.FindObject    ( histo )
+        if instance ( obj  , ROOT.TH1 ) :
+            return _ds_project_ ( dataset , obj , what , *args )
+        obj = ROOT.gDirectory.FindObjectAny ( histo )
+        if instance ( obj  , ROOT.TH1 ) :
+            return _ds_project_ ( dataset , obj , what , *args )
+        
+    if not histo and isinstance ( what , ROOT.RooArgList ) and 1 <= len ( what ) <= 3 :
+
+        from Ostap.PyRoUts import hID
+        
+        if 1 == len ( what ) :
+            histo = ROOT.TH1F ( hID() ,
+                                what[0].GetName() , 100 ,
+                                what[0].getMin () ,  what[0].getMax () ) ; histo.Sumw2()
+            return _ds_project_ ( dataset , histo , what , *args )
+        
+        if 2 == len ( what ) :
+            histo = ROOT.TH2F ( hID() ,
+                                what[1].GetName() + ' : ' + what[0].GetName() ,
+                                20 , what[0].getMin () ,     what[0].getMax () ,
+                                20 , what[1].getMin () ,     what[1].getMax () ) ; histo.Sumw2()
+            return _ds_project_ ( dataset , histo , what , *args )
+        
+        if 3 == len ( what ) :
+            histo = ROOT.TH2F ( hID() ,
+                                what[2].GetName() + ' : ' + what[1].GetName() + ' : ' + what[0].GetName() ,
+                                20 , what[0].getMin () ,     what[0].getMax () ,
+                                20 , what[1].getMin () ,     what[1].getMax () , 
+                                20 , what[2].getMin () ,     what[2].getMax () ) ; histo.Sumw2()
+            return _ds_project_ ( dataset , histo , what , *args )
+        
+    raise AttributeError ( 'DataSet::project, invalid case' )
+
 # =============================================================================
 ## Helper draw method for RooDataSet
 #
@@ -724,11 +787,31 @@ def _ds_draw_ ( dataset , what , *args ) :
     
     """
     store = dataset.store()
-    if store :
+    if store and isinstance ( what , str ) : 
         tree = store.tree()
         if tree : return tree.Draw( what , *args )
-        
-    raise AttributeError( "Can't ``draw'' data set , probably wrong StorageType" )
+
+    h = _ds_project_ ( dataset , None , what , *args )
+    if isinstance ( h , ROOT.TH1 ) :
+        ##                                    OPTIONS                              CUTS 
+        if  len ( args ) > 1 and isinstance ( args[-1] , str ) and isinstance ( args[-2] , str ) :  h.Draw ( args[-1] )
+        else                 : h.Draw ( ) 
+        return h
+    
+    raise AttributeError ( 'DataSet::draw, invalid case' )
+
+# =============================================================================
+## get the attibute for RooDataSet
+def _ds_getattr_ ( dataset , aname ) :
+    """
+    Get the attibute from RooDataSet 
+
+    >>> dset = ...
+    >>> print dset.pt
+    
+    """
+    _vars = dataset.get()
+    return getattr ( _vars , aname )  
 
 # =============================================================================
 ## get the statistic for certain expression in Tree/Dataset
@@ -778,12 +861,14 @@ def _ds_print_ ( dataset , opts = 'v' ) :
     #
     return dataset.GetName() 
 
-ROOT.RooDataSet.draw     = _ds_draw_
-ROOT.RooDataSet.project  = _ds_project_
-ROOT.RooDataSet.__repr__ = _ds_print_
+ROOT.RooDataSet.draw        = _ds_draw_
+ROOT.RooDataSet.project     = _ds_project_
+ROOT.RooDataSet.__repr__    = _ds_print_
+ROOT.RooDataSet.__getattr__ = _ds_getattr_
 
-ROOT.RooDataHist.__repr__ = _ds_print_
-ROOT.RooDataHist.__len__  = lambda s : s.numEntries() 
+ROOT.RooDataHist.__repr__   = _ds_print_
+ROOT.RooDataHist.__len__    = lambda s : s.numEntries() 
+
 
 # =============================================================================
 ## make weighted data set form unweighted dataset

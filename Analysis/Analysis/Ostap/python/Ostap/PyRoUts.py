@@ -56,8 +56,9 @@ __all__     = (
     'binomEff_h3'     , ## calculate binomial efficiency for 3D-ihstos
     #
     'makeGraph'       , ## make ROOT Graph from input data
-    'h2_axes'         , ## book 2D-histogram from axes
     'h1_axis'         , ## book 1D-histogram from axis 
+    'h2_axes'         , ## book 2D-histogram from axes
+    'h3_axes'         , ## book 3D-histogram from axes
     'axis_bins'       , ## convert list of bin edges to axis
     've_adjust'       , ## adjust the efficiency to be in physical range
     #
@@ -4249,6 +4250,44 @@ def h2_axes ( x_axis            ,
                  title ,
                  len ( x_bins ) - 1 , array ( 'd' , x_bins ) ,
                  len ( y_bins ) - 1 , array ( 'd' , y_bins ) ) 
+
+# =============================================================================
+## make 3D-histogram from axes
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-07-18
+def h3_axes ( x_axis            ,
+              y_axis            ,
+              z_axis            ,
+              title  = '3D'     , 
+              name   = None     ,
+              double = False    ) :
+    """
+    Make 3D-histogram with binning deifned by already created axes
+    
+    >>> x_axis = ...
+    >>> y_axis = ...
+    >>> z_axis = ...
+    >>> h3 = h3_axes ( x_axis , y_axis , z_axis , title = 'MyHisto' ) 
+    
+    """
+    #
+    if not name : name = hID() 
+    #
+    if not issubclass ( type ( x_axis ) , ROOT.TAxis ) : x_axis = axis_bins   ( x_axis )
+    if not issubclass ( type ( y_axis ) , ROOT.TAxis ) : y_axis = axis_bins   ( y_axis )
+    if not issubclass ( type ( z_axis ) , ROOT.TAxis ) : z_axis = axis_bins   ( z_axis )
+    #
+    # 
+    x_bins  = x_axis.edges()
+    y_bins  = y_axis.edges()
+    z_bins  = z_axis.edges()
+    #
+    typ = ROOT.TH3D if double else ROOT.TH3F
+    return typ ( name  ,
+                 title ,
+                 len ( x_bins ) - 1 , array ( 'd' , x_bins ) ,
+                 len ( y_bins ) - 1 , array ( 'd' , y_bins ) , 
+                 len ( z_bins ) - 1 , array ( 'd' , z_bins ) ) 
 
 # =======================================================================
 ## calculate the ``difference'' between two histograms 

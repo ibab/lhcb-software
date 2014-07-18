@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-18 - Vanya Belyaev
+ - RooFitDeco  - many minor improvements 
+
 ! 2014-07-16 - Vanya Belyaev
  - fix minor bug in histogram slicing  
 
