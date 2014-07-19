@@ -69,8 +69,8 @@ import ROOT, os, sys
 from AnalysisPython.Logger import getLogger
 logger = getLogger ( 'Ostap Bender' )
 # =============================================================================
-import ostapline
-logger.info ( "Welcome to Ostap\n" + ostapline.line )
+import Ostap.Line
+logger.info ( "Welcome to Ostap\n" + Ostap.Line.line )
 logger.info ( __doc__ )
 # =============================================================================
 ## 1) load LHCb-style file

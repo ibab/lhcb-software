@@ -1101,8 +1101,8 @@ class Convolution(object):
 # =============================================================================
 if '__main__' == __name__ :
     
-    import ostapline
-    logger.info ( __file__ + '\n' + ostapline.line  )
+    from Ostap.Line import line 
+    logger.info ( __file__ + '\n' + line  )
     logger.info ( 80*'*' )
     logger.info ( __doc__  )
     logger.info ( 80*'*' )

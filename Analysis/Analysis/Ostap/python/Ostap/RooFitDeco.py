@@ -19,7 +19,9 @@
 __version__ = "$Revision$"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
-__all__     = () 
+__all__     = (
+    'setStorage' , 
+    ) 
 # =============================================================================
 import ROOT, cppyy              ## attention here!!
 cpp = cppyy.makeNamespace('')
@@ -890,7 +892,8 @@ def _rds_makeWeighted_ ( dataset , wvarname , varset = None , cuts = '' ) :
     
     """
     if dataset.isWeighted () : 
-        logger.warning ("Dataset '%s/%s' is already weighted!" % ( dataset.GetName  () , dataset.GetTitle () ) ) 
+        logger.warning ("Dataset '%s/%s' is already weighted!" % ( dataset.GetName  () ,
+                                                                   dataset.GetTitle () ) ) 
         
     #
     from Ostap.PyRoUts import dsID
@@ -904,11 +907,33 @@ def _rds_makeWeighted_ ( dataset , wvarname , varset = None , cuts = '' ) :
 
 ROOT.RooDataSet.makeWeighted = _rds_makeWeighted_
 
+
+
+RAD = ROOT.RooAbsData
+## change the default storage for RooDataSet 
+def setStorage ( new_type = RAD.Tree ) :
+    """
+    Redefine the default storage 
+    """
+    if not new_type in ( RAD.Tree , RAD.Vector ) :
+        logger.error ('RooAbsData: Invalid storage type %s, replace with Tree ' % new_type )
+        new_type = RAD.Tree
+        
+    if RAD.getDefaultStorageType() != new_type :
+        logger.info  ( 'RooAbsData: DEFINE default storage type to be %d' % new_type ) 
+        RAD.setDefaultStorageType ( new_type  ) 
+
+    the_type = RAD.setDefaultStorageType()
+    if   RAD.Tree   == the_type : logger.debug ( 'RooAbsData: Default storage type is Tree'   )
+    elif RAD.Vector == the_type : logger.debug ( 'RooAbsData: Default storage type is Vector' )
+    else : logger.debug ( 'RooAbsData: Default storage type is %s' % the_type  )
+
+
 # =============================================================================
 if '__main__' == __name__ :
     
-    import ostapline
-    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    import Ostap.Line
+    logger.info ( __file__  + '\n' + Ostap.Line.line  ) 
     logger.info ( 80*'*'   )
     logger.info ( __doc__  )
     logger.info ( 80*'*' )

@@ -523,8 +523,8 @@ for t in ( PolyPos2D_pdf    ,
 # =============================================================================
 if '__main__' == __name__ :
          
-    import ostapline
-    logger.info ( __file__ + '\n' + ostapline.line  )
+    from Ostap.Line import line 
+    logger.info ( __file__ + '\n' + line  )
     logger.info ( 80*'*' )
     logger.info ( ' Author  : %s' %         __author__    ) 
     logger.info ( ' Version : %s' %         __version__   ) 

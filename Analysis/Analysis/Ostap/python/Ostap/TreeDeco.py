@@ -262,8 +262,8 @@ ROOT.TTree.__str__  = _rt_print_
 # =============================================================================
 if '__main__' == __name__ :
     
-    import ostapline
-    logger.info ( __file__  + '\n' + ostapline.line  ) 
+    import Ostap.Line
+    logger.info ( __file__  + '\n' + Ostap.Line.line  ) 
     logger.info ( 80*'*'   )
     logger.info ( __doc__  )
     logger.info ( 80*'*' )

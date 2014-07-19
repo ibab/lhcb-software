@@ -1,9 +1,9 @@
 #!/usr/bin/env ipython 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id$ 
+# $Id: ostapline.py 174877 2014-07-13 12:11:41Z ibelyaev $ 
 # =============================================================================
-## @file ostapline.py
+## @file Ostap/Line.py
 #  
 #     .oooooo.                .                        
 #    d8P'  `Y8b             .o8                        
@@ -32,13 +32,16 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaevitep.ru
 #
-#                    $Revision$
-#  Last modification $Date$
-#                 by $Author$
+#                    $Revision: 174877 $
+#  Last modification $Date: 2014-07-13 14:11:41 +0200 (Sun, 13 Jul 2014) $
+#                 by $Author: ibelyaev $
+# =============================================================================
+"""Helper module for decoration"""
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2012-09-10"
-__version__ = '$Revision$'
+__version__ = '$Revision: 174877 $'
+__all__     = ( 'line' , 'ostap' ) 
 # =============================================================================
 line = r"""
  
@@ -52,16 +55,23 @@ line = r"""
                                             888
                                            o888o      
 """
+ostap = line 
 # =============================================================================
 if '__main__' == __name__ :
     
-    print 120*'*'
-    print ' Author  : ', __author__ 
-    print ' Version : ', __version__ 
-    print ' Date    : ', __date__ 
-    print line   
-    print 120*'*'
-
+    from AnalysisPython.Logger import getLogger 
+    if '__main__' ==  __name__ : logger = getLogger( 'Ostap.Line' )
+    else                       : logger = getLogger( __name__ )
+    
+    logger.info ( __file__  + '\n' + ostap  ) 
+    logger.info ( 80*'*'   )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
+    logger.info ( 80*'*' ) 
 
 # =============================================================================
 # The END 
