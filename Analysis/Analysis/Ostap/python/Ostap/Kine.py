@@ -116,18 +116,23 @@ class YvsPt(object) :
         pz2 = self.p2 - pt2 
         return _atanh ( _sqrt ( max ( pz2 , 0.0 ) / self.e2  ) )
 
+## helper wrapper 
+class _WF1(object) :
+    def __init__ ( self , obj           ) :        self.obj = obj 
+    def __call__ ( self , x , pars = [] ) : return self.obj ( x[0] ) 
+
 # =============================================================================
 ## convert the objects to the functions 
 def _as_TF1_ ( obj , xmin , xmax ) :
 
-    if not hasattr ( obj , '_func' ) : obj._funcs = []
-
     import ROOT 
     from   Ostap.PyRoUts import funID
-
-    fun      = ROOT.TF1( funID() , obj , xmin , xmax ) 
-    self._funcs.append ( fun )
-    fun._obj = obj
+    
+    fobj     = _WF1( obj ) 
+    fun      = ROOT.TF1( funID() , fobj , xmin , xmax ) 
+    fun._obj = fobj
+    
+    fun.SetNpx(500)
     
     return fun
 
@@ -146,22 +151,28 @@ class PvsPtEta(object) :
     "p   = p  (pt,eta)"
     def __call__ ( self , pt  , eta ) : return pt * _cosh ( eta ) 
 
-## convert the objects to the functions 
+## helper wrapper 
+class _WF2(object) :
+    def __init__ ( self , obj           ) :        self.obj = obj 
+    def __call__ ( self , x , pars = [] ) : return self.obj ( x[0] , x[1] ) 
+    
+## convert the objects to the function 
 def _as_TF2_ ( obj , xmin , xmax , ymin , ymax ) :
-
-    if not hasattr ( obj , '_func' ) : obj._funcs = []
 
     import ROOT 
     from   Ostap.PyRoUts import funID
 
-    fun      = ROOT.TF2( funID() , obj , xmin , xmax , ymin , ymax ) 
-    self._funcs.append ( fun )
-    fun._obj = obj
+    fobj       = _WF2(obj) 
+    fun        = ROOT.TF2( funID() , fobj , xmin , xmax , ymin , ymax ) 
+    fun._obj   = fobj
+
+    fun.SetNpx(250)
+    fun.SetNpy(250)
     
     return fun
 
 EtaVsPPT  . asTF2 = _as_TF2_
-PtVsPTEta . asTF2 = _as_TF2_
+PtVsPEta  . asTF2 = _as_TF2_
 PvsPtEta  . asTF2 = _as_TF2_
 
 # =============================================================================
