@@ -16,19 +16,18 @@ from Configurables import GaudiSequencer as Sequence
 def import_line_configurables(pkg) :
     # import all modules in Hlt2Lines, and require each file xyz to contain a class xyzConf
     # i.e. do the equivalent of 
-    #    from Hlt2Lines.Hlt2SomeLines import Hlt2SomeLinesConf 
+    #    import Hlt2Lines.Hlt2SomeLines, ...
+    #    return [ Hlt2Lines.Hlt2SomeLines.Hlt2SomeLinesConf , ... ]
     #
     import os.path, pkgutil, importlib
     return  [ getattr( importlib.import_module(pkg.__name__+'.'+name), name+'Conf' ) 
               for _,name,_ in pkgutil.iter_modules([os.path.dirname(pkg.__file__)]) ]
 
-
-#import all Hlt2 lines configurables in local scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
+#import all Hlt2 lines configurables
 import Hlt2Lines
-def expose( tps, nm ) : 
-    return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
 __hlt2linesconfs = import_line_configurables(Hlt2Lines)
-for _ in expose(__hlt2linesconfs,'__hlt2linesconfs') : exec(_)
+# explicitly put them in our  scope so that genConfUser can find it... 
+globals().update( ( cfg.__name__, cfg ) for cfg in __hlt2linesconfs )
 
 #
 # The tracking configurations

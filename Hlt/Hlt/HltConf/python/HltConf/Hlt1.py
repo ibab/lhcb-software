@@ -19,27 +19,24 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.44 $"
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
-def hlt1linesconfs() :
-    # import all modules in Hlt1Lines, and require each file xyz to contain a class xyzConf
+def import_line_configurables(pkg) :
+    # import all modules in Hlt1Lines, and require each module xyz to contain a class xyzConf
     # i.e. do the equivalent of 
-    #    from Hlt1Lines.Hlt1SomeLines import Hlt1SomeLinesConf 
+    #    from pkg.xyz import xyzConf 
     #
-    import Hlt1Lines
     import os.path, pkgutil, importlib
-    __hlt1linesconfs = [ getattr( importlib.import_module('Hlt1Lines.'+name), name+'Conf' ) 
-                         for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt1Lines.__file__)]) 
-                         if name.endswith('Lines') ]
-    return __hlt1linesconfs
+    return  [ getattr( importlib.import_module(pkg.__name__+'.'+name), name+'Conf' ) 
+              for _,name,_ in pkgutil.iter_modules([os.path.dirname(Hlt1Lines.__file__)]) 
+              if name.endswith('Lines') ]
 
-#import all Hlt1 lines configurables in local scope so that genConfUser can find it... (i.e. make sure it is in 'dir()')
-def expose( tps, nm ) : 
-    return [ '%s = %s[%d]' % ( i.__name__, nm, j ) for (j,i) in enumerate( tps ) ]
-__hlt1linesconfs = hlt1linesconfs()
-for _ in expose(__hlt1linesconfs,'__hlt1linesconfs') : exec(_)
-
+#import all Hlt1 lines configurables  -- and make sure the are kept alive long enough!
+import Hlt1Lines
+__hlt1linesconfs = import_line_configurables(Hlt1Lines)
+# add them in our scope so that genConfUser can find it... 
+globals().update( ( cfg.__name__, cfg ) for cfg in __hlt1linesconfs )
 
 class Hlt1Conf(LHCbConfigurableUser):
-   __used_configurables__ = hlt1linesconfs() 
+   __used_configurables__ = import_line_configurables(Hlt1Lines)
 
    __slots__ = { "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
                }
