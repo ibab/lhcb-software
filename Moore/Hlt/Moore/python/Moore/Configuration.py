@@ -101,37 +101,41 @@ class Moore(LHCbConfigurableUser):
         # Options nominally for online running
         #######################################
         , "RunOnline"         : False
+        #######################################
+        # Options to make processed data look like actual input...
+        #######################################
+        , "RemoveInputHltRawBanks" : False
         #########################################
         # Deprecated former options
         #########################################
-        , "L0"         :       None # use L0App!
-        , "ReplaceL0BanksWithEmulated" : None # use L0App
-        , "RunL0Emulator" : None # use L0App
-        , "Verbose" :       None # use OutputLevel
-        , 'REQ1' : None # use MooreOnline!
-        , "PartitionName" :  None # use MooreOnline!
-        , "RunMonitoringFarm" :  None # use MooreOnline!
-        , "NbOfSlaves":         None # use MooreOnline!
-        , 'IgnoreDBHeartBeat'  :   None # use CondDB directly or MooreOnline!
-        , "UseDBSnapshot"     : None # use CondDB directly or MooreOnline!
-        , "DBSnapshotDirectory" : None # use CondDB directly or MooreOnline!
-        , 'EnableMonitoring' : None # use HltConf directly or MooreOnline!
-        , 'SkipDisabledL0Channels' : None # use HltConf directly
-        , "prefetchConfigDir" : None # use MooreExpert
-        , "EnableLumiEventWriting"       : None # use HltConf directly
-        , 'EnableAcceptIfSlow' : None # use HltConf directly
-        , 'RequireL0ForEndSequence'     :  None # use HltConf directly
-        , 'SkipHltRawBankOnRejectedEvents' : None # use HltConf directly
-        , 'HistogrammingLevel' : None # use HltConf directly
-        , 'TimeOutThreshold'  : 10000  # Not used anywhere??
-        , 'TimeOutBits'       : 0x200 # Not used anywhere??
-        , 'RequireRoutingBits' : None # use HltConf
-        , 'VetoRoutingBits'    : None # use HltConf
-        , "DQFLAGStag" : None # use MooreExpert
-        , 'WriteFSR'    :  None # use MooreExpert
-        , 'EnableRunChangeHandler' : None # use CondDB directly, only needed there!
-        , "configAlgorithms" : None # use MooreExpert
-        , "configServices" :  None #use MooreExpert
+        #, "L0"         :       None # use L0App!
+        #, "ReplaceL0BanksWithEmulated" : None # use L0App
+        #, "RunL0Emulator" : None # use L0App
+        #, "Verbose" :       None # use OutputLevel
+        #, 'REQ1' : None # use MooreOnline!
+        #, "PartitionName" :  None # use MooreOnline!
+        #, "RunMonitoringFarm" :  None # use MooreOnline!
+        #, "NbOfSlaves":         None # use MooreOnline!
+        #, 'IgnoreDBHeartBeat'  :   None # use CondDB directly or MooreOnline!
+        #, "UseDBSnapshot"     : None # use CondDB directly or MooreOnline!
+        #, "DBSnapshotDirectory" : None # use CondDB directly or MooreOnline!
+        #, 'EnableMonitoring' : None # use HltConf directly or MooreOnline!
+        #, 'SkipDisabledL0Channels' : None # use HltConf directly
+        #, "prefetchConfigDir" : None # use MooreExpert
+        #, "EnableLumiEventWriting"       : None # use HltConf directly
+        #, 'EnableAcceptIfSlow' : None # use HltConf directly
+        #, 'RequireL0ForEndSequence'     :  None # use HltConf directly
+        #, 'SkipHltRawBankOnRejectedEvents' : None # use HltConf directly
+        #, 'HistogrammingLevel' : None # use HltConf directly
+        #, 'TimeOutThreshold'  : 10000  # Not used anywhere??
+        #, 'TimeOutBits'       : 0x200 # Not used anywhere??
+        #, 'RequireRoutingBits' : None # use HltConf
+        #, 'VetoRoutingBits'    : None # use HltConf
+        #, "DQFLAGStag" : None # use MooreExpert
+        #, 'WriteFSR'    :  None # use MooreExpert
+        #, 'EnableRunChangeHandler' : None # use CondDB directly, only needed there!
+        #, "configAlgorithms" : None # use MooreExpert
+        #, "configServices" :  None #use MooreExpert
         }
     
     _propertyDocDct={
@@ -247,11 +251,19 @@ class Moore(LHCbConfigurableUser):
         #    #  veto lumi events..
         #    #ApplicationMgr().EvtSel.REQ1 = "EvType=2;TriggerMask=0x0,0x4,0x0,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0"
         
-        if not files:
-            return
-        
-        from GaudiConf import IOExtension
-        IOExtension().inputFiles(files,clear=True)
+        if files:
+            from GaudiConf import IOExtension
+            IOExtension().inputFiles(files,clear=True)
+        # remove any HLT rawbanks from the input if so requested...
+
+        if self.getProp('RemoveInputHltRawBanks') :
+            from Configurables        import bankKiller, ApplicationMgr
+            app=ApplicationMgr()
+            hlt_banks = [ 'HltDecReports','HltRoutingBits','HltSelReports','HltVertexReports','HltLumiSummary','HltTrackReports' ]
+            bk = bankKiller( 'REmoveInputHltRawBanks',  BankTypes=hlt_banks )
+            app.TopAlg.insert(0, bk)
+
+
         
     def _setRawEventLocations(self):
         """
@@ -418,11 +430,12 @@ class Moore(LHCbConfigurableUser):
         if level>DEBUG:
             from Configurables import LoKi__DistanceCalculator
             LoKi__DistanceCalculator().MaxPrints=0
+        if level>VERBOSE:
             from Configurables import LoKiSvc
             LoKiSvc().Welcome = False
         
         from Configurables import Hlt__Service
-        if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = (level<INFO)
+        if not Hlt__Service().isPropertySet('Pedantic') : Hlt__Service().Pedantic = (level<DEBUG)
         ###############################################################
         #if level is less than INFO, I don't need to edit anything else
         #it's up to the users to do that themselves!

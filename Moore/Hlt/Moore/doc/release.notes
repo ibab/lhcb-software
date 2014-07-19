@@ -3,6 +3,11 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+! 2014-07-19 - Gerhard Raven
+ - reduce verbosity of Hlt::Service
+ - add option to remove all Hlt-related rawbanks in the input
+ - remove deprecated properties
+
 ! 2014-07-17 - Gerhard Raven
  - improve accuracy of some Hlt2-only qmtests
  - fix monitoring config in tck-based hlt1 split
