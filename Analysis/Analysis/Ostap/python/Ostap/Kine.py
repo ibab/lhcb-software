@@ -20,10 +20,13 @@ __version__ = "$Revision: 175050 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
-    'EtaVsP'  , ## eta=eta(p)  for the fixed PT
-    'EtaVsPt' , ## eta=eta(pt) for the fixed P
-    'YvsP'    , ## y=yy(p)     for the fixed PT and mass  
-    'YvsPt'   , ## y=y(pt)     for the fixed P  and mass 
+    'EtaVsP'    , ## eta=eta(p)  for the fixed PT
+    'EtaVsPt'   , ## eta=eta(pt) for the fixed P
+    'YvsP'      , ## y=yy(p)     for the fixed PT and mass  
+    'YvsPt'     , ## y=y(pt)     for the fixed P  and mass
+    'EtaVsPPT'  , ## eta=eta(p,pt) 
+    'PtVsPEta'  , ## pt=pt(p,eta) 
+    'PvsPtEta'  , ## p= p(pt,eta)
     )
 # =============================================================================
 import math
@@ -39,6 +42,7 @@ logger.debug ( 'Few very simple math-functions related to kinematics')
 _acosh = math.acosh
 _atanh = math.atanh
 _sqrt  = math.sqrt
+_cosh  = math.cosh
 if not hasattr ( math , 'coth' ) :
     math.coth  = lambda x : 1.0/math.tanh (     x )
     math.coth. __doc__ = """coth(x)
@@ -114,25 +118,52 @@ class YvsPt(object) :
 
 # =============================================================================
 ## convert the objects to the functions 
-def _as_TF1_ ( self , xmin , xmax ) :
+def _as_TF1_ ( obj , xmin , xmax ) :
 
-    if not hasattr ( self , '_func' ) : self._funcs = []
+    if not hasattr ( obj , '_func' ) : obj._funcs = []
 
     import ROOT 
     from   Ostap.PyRoUts import funID
 
-    fun      = ROOT.TF1( funID() , self , xmin , xmax ) 
+    fun      = ROOT.TF1( funID() , obj , xmin , xmax ) 
     self._funcs.append ( fun )
-    fun._obj = self
+    fun._obj = obj
     
     return fun
-
 
 EtaVsP  . asTF1 = _as_TF1_
 EtaVsPt . asTF1 = _as_TF1_
 YvsP    . asTF1 = _as_TF1_
 YvsPt   . asTF1 = _as_TF1_
+
+class EtaVsPPT(object) :
+    "eta = eta(p ,pt )"
+    def __call__ ( self , p   , pt  ) : return _acosh ( p / pt ) 
+class PtVsPEta(object) :
+    "pt  = pt (p ,eta)"
+    def __call__ ( self , p   , eta ) : return p  / _cosh ( eta )
+class PvsPtEta(object) :
+    "p   = p  (pt,eta)"
+    def __call__ ( self , pt  , eta ) : return pt * _cosh ( eta ) 
+
+## convert the objects to the functions 
+def _as_TF2_ ( obj , xmin , xmax , ymin , ymax ) :
+
+    if not hasattr ( obj , '_func' ) : obj._funcs = []
+
+    import ROOT 
+    from   Ostap.PyRoUts import funID
+
+    fun      = ROOT.TF2( funID() , obj , xmin , xmax , ymin , ymax ) 
+    self._funcs.append ( fun )
+    fun._obj = obj
     
+    return fun
+
+EtaVsPPT  . asTF2 = _as_TF2_
+PtVsPTEta . asTF2 = _as_TF2_
+PvsPtEta  . asTF2 = _as_TF2_
+
 # =============================================================================
 if '__main__' == __name__ :
     
