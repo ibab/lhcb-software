@@ -66,6 +66,9 @@ __all__     = (
 # =============================================================================
 import ROOT, cppyy  ## attention here!!
 #
+iLevel = int( ROOT.gErrorIgnoreLevel ) 
+ROOT.gROOT.ProcessLine("gErrorIgnoreLevel = 2001; " ) 
+    
 cpp = cppyy.makeNamespace('')
 # 
 import LHCbMath.Types
@@ -5263,6 +5266,11 @@ import Ostap.HTextDeco
 import Ostap.HParamDeco
 import Ostap.HCmpDeco
 import Ostap.MiscDeco
+
+
+
+## restore the warnings level 
+ROOT.gROOT.ProcessLine("gErrorIgnoreLevel = %d; " % iLevel ) 
 
 # =============================================================================
 if '__main__' == __name__ :
