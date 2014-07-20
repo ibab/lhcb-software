@@ -7,7 +7,8 @@
 
 /** @class HCDigitCreator HCDigitCreator.h HCDigitisation/HCDigitCreator.h
  *
- *  This algorithm simulates the digitisation for the Herschel counters.
+ *  This algorithm simulates the detector and front-end response 
+ *  of the Herschel forward shower counters and writes out raw banks.
  *
  */
 
@@ -45,6 +46,13 @@ private:
   double m_electronsPerADC;
   /// Max. number of ADC counts
   unsigned int m_maxADC;
+
+  /// Nominal z-positions of the stations
+  std::vector<double> m_z;
+  /// Number of stations
+  unsigned int m_nStations;
+  /// Number of front-end channels.
+  unsigned int m_nChannels;
 
   /// Flag to activate monitoring histograms or not
   bool m_monitoring;

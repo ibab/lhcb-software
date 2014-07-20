@@ -1,7 +1,3 @@
-// STL
-#include <vector>
-#include <map>
-
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
@@ -22,18 +18,22 @@ DECLARE_ALGORITHM_FACTORY(HCDigitCreator)
 //=============================================================================
 HCDigitCreator::HCDigitCreator(const std::string& name, 
                                ISvcLocator* pSvcLocator) : 
-    GaudiTupleAlg(name, pSvcLocator) {
+    GaudiTupleAlg(name, pSvcLocator),
+    m_nStations(0), m_nChannels(0) {
 
   declareProperty("HitLocation", m_hitLocation = LHCb::MCHitLocation::HC);
   declareProperty("RawEventLocation", 
                   m_rawEventLocation = LHCb::RawEventLocation::Default);
 
   declareProperty("PhotonsPerMeV", m_photonsPerMeV = 8000.);
-  declareProperty("CollectionEfficiency", m_collectionEfficiency = 0.04);
-  declareProperty("QuantumEfficiency", m_quantumEfficiency = 0.15);
+  declareProperty("CollectionEfficiency", m_collectionEfficiency = 0.025);
+  declareProperty("QuantumEfficiency", m_quantumEfficiency = 0.25);
   declareProperty("Gain", m_gain = 1.e3);
-  declareProperty("ElectronsPerADC", m_electronsPerADC = 2.5e4); 
+  declareProperty("ElectronsPerADC", m_electronsPerADC = 125000.);
   declareProperty("MaxADC", m_maxADC = 4095);
+
+  declareProperty("ZPositions", 
+                  m_z = {-7500., -19700., -114000., 20000., 114000.});
 
   declareProperty("Monitoring", m_monitoring = false);
 
@@ -64,6 +64,10 @@ StatusCode HCDigitCreator::initialize() {
     return sc;
   }
 
+  // Get the number of stations and channels.
+  m_nStations = m_z.size();
+  m_nChannels = 4 * m_nStations;
+ 
   setHistoTopDir("HC/");
   return StatusCode::SUCCESS;
 
@@ -83,39 +87,33 @@ StatusCode HCDigitCreator::execute() {
 
   // Check if the raw event exists.
   LHCb::RawEvent* rawEvent = getIfExists<LHCb::RawEvent>(m_rawEventLocation);
-  if (NULL == rawEvent) {
+  if (!rawEvent) {
     // Create the raw event.
     rawEvent = new LHCb::RawEvent();
     put(rawEvent, m_rawEventLocation);
   }
 
-  // Loop over the hits and calculate the front-end signal.
-  LHCb::MCHits::const_iterator ith;
-  std::map<unsigned int, double> signals;
-  for (ith = hits->begin(); ith != hits->end(); ++ith) {
-    // TODO: use detector element to get station, quadrant and channel.
+  // Loop over the hits and sum up the signals in each quadrant.
+  std::vector<double> signals(m_nChannels, 0.);
+  for (const LHCb::MCHit* hit : *hits) {
     // Determine the station number.
-    const double z = (*ith)->midPoint().z() / Gaudi::Units::m;
-    unsigned int station = 0;
-    const double tol = 0.2;
-    if (fabs(z + 7.5) < tol) {
-      station = 0;
-    } else if (fabs(z + 19.7) < tol) {
-      station = 1;
-    } else if (fabs(z + 114.) < tol) {
-      station = 2;
-    } else if (fabs(z - 20.) < tol) {
-      station = 3;
-    } else if (fabs(z - 114.) < tol) {
-      station = 4;
-    } else {
-      warning() << "No station at " << z << endmsg;
+    const double z = hit->midPoint().z();
+    unsigned int station = 999;
+    for (unsigned int i = 0; i < m_nStations; ++i) {
+      const double dz = z - m_z[i];
+      if (fabs(dz) < 20.) {
+        station = i;
+        break;
+      }
+    }
+    if (station >= m_nStations) {
+      warning() << "No station at z = " << z << " mm" << endmsg;
       continue;
     } 
     // Determine the quadrant.
     unsigned int quadrant = 0;
-    const double x = (*ith)->midPoint().x();
-    const double y = (*ith)->midPoint().y();
+    const double x = hit->midPoint().x();
+    const double y = hit->midPoint().y();
     if (x < 0.) {
       if (y < 0.) {
         quadrant = 0;
@@ -131,31 +129,31 @@ StatusCode HCDigitCreator::execute() {
     } 
     // Calculate the channel number.
     const unsigned int channel = 4 * station + quadrant;
-    const double edep = (*ith)->energy() / Gaudi::Units::MeV;
-    // Calculate the number of photons and photo-electrons.
-    const double nPhotons = edep * m_photonsPerMeV * m_collectionEfficiency;
-    const double nPhotoElectrons = nPhotons * m_quantumEfficiency;
-    signals[channel] += nPhotoElectrons * m_gain;
-    if (m_monitoring) {
-      plot(edep, "Edep", "Deposited energy [MeV]", 0., 10., 50);
-      plot(nPhotoElectrons, "NPEs", "Photoelectrons / hit", 0., 1000., 100); 
-    }
+    const double edep = hit->energy() / Gaudi::Units::MeV;
+    // Calculate the number of photons.
+    signals[channel] += edep * m_photonsPerMeV * m_collectionEfficiency; 
+    if (!m_monitoring) continue;
+    const LHCb::MCParticle* particle = hit->mcParticle();
+    if (!particle) continue;
+    const double p = particle->p() / Gaudi::Units::MeV; 
+    plot(p, "Momentum", "Momentum [MeV/c]", 0., 200., 100);
+    const std::string st = std::to_string(station);
+    plot(edep, "Edep/S" + st, "Deposited energy [MeV]", 0., 10., 50);
   }
-  std::map<unsigned int, double>::const_iterator itm;
-  std::vector<unsigned int> words;
-  for (itm = signals.begin(); itm != signals.end(); ++itm) {
-    const unsigned int channel = (*itm).first;
+  std::vector<unsigned int> words(m_nChannels, 0);
+  for (auto it = signals.cbegin(), end = signals.cend(); it != end; ++it) {
+    const unsigned int channel = it - signals.cbegin();
+    const double nElectrons = (*it) * m_quantumEfficiency * m_gain;
     // Convert the signal to ADC counts.
-    unsigned int adc = static_cast<unsigned int>(floor((*itm).second / m_electronsPerADC));
+    auto adc = static_cast<unsigned int>(floor(nElectrons / m_electronsPerADC));
     if (adc > m_maxADC) adc = m_maxADC;
-    const unsigned int word  = (channel << 16) + (adc & 0xFFFF); 
-    words.push_back(word);
-    if (msgLevel(MSG::DEBUG)) {
-      debug() << "Channel: " << channel << ", ADC: " << adc << endmsg;
+    words[channel] = (channel << 16) + (adc & 0xFFFF);
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Channel: " << channel << ", ADC: " << adc << endmsg;
     }
   }
   // Get the size of the raw bank.
-  const unsigned int nBytes = sizeof(unsigned int) * words.size();
+  const unsigned int nBytes = sizeof(unsigned int) * m_nStations;
   const unsigned int version = 1;
   // Add a new raw bank and pass memory ownership to the raw event.
   LHCb::RawBank* bank = rawEvent->createBank(0, LHCb::RawBank::HC, version, 

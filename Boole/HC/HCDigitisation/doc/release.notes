@@ -4,6 +4,9 @@
 ! Purpose     : Simulation of digitisation for Herschel counters 
 !--------------------------------------------------------------------------
 
+! 2014-07-20 - Heinrich Schindler
+ - Change default parameters. Make z-positions configurable.
+
 ! 2014-06-15 - Heinrich Schindler
  - Initial import.
 
