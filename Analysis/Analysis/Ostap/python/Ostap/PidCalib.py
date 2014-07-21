@@ -103,11 +103,11 @@ def makeParser ( ) :
                           help    = "Sets the particle type"    )
     
     ## add the optional arguments
-    parser.add_argument ( '-x'   , '--minRun',
+    parser.add_argument ( '-x'   , '--minRun', default = 0 , 
                           dest = "RunMin" , metavar="NUM", type=int, 
                           help = "Sets the minimum run number to process (if applicable)")
     parser.add_argument ( '-y', '--maxRun', 
-                          dest="RunMax"   , metavar="NUM", type=int,
+                          dest="RunMax"   , metavar="NUM", type=int, default = -1 ,
                           help="Sets the maximum run number to process (if applicable)")
     parser.add_argument ( '-f', '--maxFiles',
                           dest="MaxFiles" , metavar="NUM", type=int, default=-1 , 
@@ -166,13 +166,15 @@ def runPidCalib ( the_func , config ) :
     CheckPartType ( config.PartName )
     
     ## 4) check range names 
-    if   0 < config.RunMin and config.RunMin < config.RunMax   : pass
-    elif 0 < config.RunMin and             0 < config.MaxFiles : pass
+    if   config.RunMin and 0 < config.RunMin and config.RunMax and config.RunMin < config.RunMax    : pass
+    elif config.RunMin and 0 < config.RunMin and  ( -1 == config.MaxFiles  or 0 < config.MaxFiles ) : pass
     else : logger.warning('Suspicios setting of Run-Ranges ')
 
     #
     ## finally call the standard PIDCalib machinery with user-specified function
     #
+    
+    runMax = config.RunMax if  0 < config.RunMax else None 
     
     from PIDPerfScripts.DataFuncs import GetPerfPlotList 
     histopair = GetPerfPlotList ( the_func            , ## Use the function! 
@@ -183,7 +185,7 @@ def runPidCalib ( the_func , config ) :
                                   config.cuts         , ## Track-cuts 
                                   None                , ## Binninng schemes   
                                   str(config.RunMin)  ,
-                                  str(config.RunMax)  ,
+                                  runMax              ,
                                   config.verbose      ,
                                   config.allowMissing ,
                                   config.MaxFiles     )
