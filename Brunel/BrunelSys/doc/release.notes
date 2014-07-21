@@ -3,9 +3,71 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+
+</PRE><H1><A NAME=v47r0>2014-07-21 Brunel v47r0</A></H1><PRE>
+This version uses projects:
+ LCG 69root6 (ROOT 6.00/01), Gaudi v25r3, LHCb v38r0, Lbcom v16r0, Rec v17r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+First version to support ROOT6 in production
+
+- Known issues
+  . Memory usage increased by ~500 MB due to ROOT6 dictionaries. Workaround
+    expected in ROOT 6.01.
+
+- New physics tuning
+  . Major improvements in Calo reconstruction and calibration, see details in
+    RecSys release notes
+    (CaloReco v5r20, CaloTools v6r9, CaloInterfaces v8r8, CaloUtils v10r4)
+  . Minor changes to VP pattern recognition (PrPixel v1r8, VPTools v2r4)
+
+- New functionality
+  . Add support for a new MC12TuneV3 network tune. Default for now is still
+    MC12TuneV2 (ChargedProtoANNPID v2r7)
+  . Restore the ability of the RICH reconstruction to run on tracks saved to DSTs
+    (i.e. without redoing the tracking) (RichRecTrackTools v1r37)
+  . RunChangeHandlerSvc now triggers a detector description update on every run
+    change incident (even if run number does not change) (DetDescSvc v3r7)
+  . OdinTimeDecoder now fires a RunChangeIncident not only when the run number
+    changes, but also when the "trigger flagging" bit in the EventType word goes
+    from flagging to filtering. Adapted RunChangeHandlerSvc to trigger a detector
+    description update this incident (LHCbAlgs v3r3, DetDescSvc v3r7)
+
+- Configuration changes
+  . Prepare disabling Aerogel for Run II DataTypes (2015 onwards)
+    (RichRecSys v5r3)
+
+- Persistency changes
+  . NeutralProtoPAlg now always stores a neutral PID's value (default value = -1
+    when not available), added to ProtoParticle.xml
+    (GlobalReco v6r48, RecEvent v2r51)
+
+- Performance improvements
+  . Improve memory layout of PatFwdHit (PatKernel v2r7)
+  . Change hitpointer container layout in T, TT, UT station managers: replace
+    3D,2D and 1D arrays of vectors by single vector + arrays of indices.
+    Improves timing of eg. PatForward by 5-10% (TfKernel v2r25)
+  . Use the VDT math library in a few more places (RichDet v16r24)
+
+- Bug fixes
+  . Fixed GAUDI-971: successful failover to a replica in IODataManager leads
+    to non-zero exit code (GaudiUtils v5r2)
+  . Fixed GAUDI-962: unprotected debugs in FileRecordCnvSvc (RootCnv v1r22p2)
+  . Prevent FPE when refitting a cheated PR track (PatVelo v3r31)
+  . Fix divide by 0 FPE in VeloTrackMonitorNT (VeloRecMonitors v2r29)
+  . CaloMomentum.cpp : protect against negative calo energy (CaloUtils v10r4)
+  . CovarianceEstimator : Set default energy to 0 in case of evaluation failure
+    (no more huge negative value !) (CaloUtils v10r4)
+  . Fix untested StatusCode in LbAppInit.cpp (LHCbKernel v15r3)
+
+- Changes to QMTests
+  . Move all upgrade test files to TestFileDB and CERN-SWTEST-EOS
+  . Added brunel-cheatedpr test: checks ideal PR tracking and 
+    VELO montoring tuples
+
 </PRE><H1><A NAME=v46r1>2014-06-10 Brunel v46r1</A></H1><PRE>
 This version uses projects:
- LCG 68 (ROOT 5.34.18), Gaudi v25r1, LHCb v37r3, Lbcom v15r2p1, Rec v16r3
+ LCG 68 (ROOT 5.34.18), Gaudi v25r2, LHCb v37r3, Lbcom v15r2p1, Rec v16r3
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
 - New functionality
