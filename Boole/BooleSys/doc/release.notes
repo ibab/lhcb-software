@@ -3,6 +3,24 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r0>2014-07-21 Boole v29r0</A></H1><PRE>
+This version uses projects:
+ LCG 69root6 (ROOT 6.00/01), Gaudi v25r3, LHCb v38r0, Lbcom v16r0
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+First version to support ROOT6 in production
+
+- Known issues
+  . Memory usage increased due to ROOT6 dictionaries. Workaround expected in
+    ROOT 6.01.
+
+- New functionality
+  . First implementation of HC (Herschel) digitisation (not yet interfaced to
+    Boole Configurable) (HCDigitisation v1r0)
+
+- Performance improvements
+  . Use the VDT math library in a few more places (RichDet v16r24)
+
 </PRE><H1><A NAME=v28r2p1>2014-07-02 Boole v28r2p1</A></H1><PRE>
 This version uses projects:
  LCGCMT 68 (Root 5.34.18), Gaudi v25r2, LHCb v37r3, Lbcom v15r2p1
