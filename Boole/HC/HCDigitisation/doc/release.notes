@@ -4,6 +4,7 @@
 ! Purpose     : Simulation of digitisation for Herschel counters 
 !--------------------------------------------------------------------------
 
+!========================= HCDigitisation v1r0 2014-07-21 =======================
 ! 2014-07-20 - Heinrich Schindler
  - Change default parameters. Make z-positions configurable.
 
