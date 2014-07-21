@@ -45,6 +45,9 @@ private:
   IHistogram1D*         m_hNumTotHitCF4Rich2;
   IHistogram1D*         m_hNumTotHitCF4NonScintRich2;
   IHistogram1D*         m_hNumTotHitCF4ScintRich2;
+  IHistogram1D*         m_hNumHitCF4SatRandBackgr;
+  IHistogram1D*         m_hNumHitCF4SatNoReflNoScintWithRandBackgr;
+  IHistogram1D*          m_hNumTotHitCF4FullAcceptSatNonScintNoReflWithRandomBackgr ;
   
   IHistogram1D*         m_hNumTotHitNoRadiatorRich1;
   IHistogram1D*         m_hNumTotHitNoRadiatorRich2;

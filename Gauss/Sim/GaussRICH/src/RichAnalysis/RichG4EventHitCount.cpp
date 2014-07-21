@@ -1150,7 +1150,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
             bool trajAlreadyStoredR2=true;;
             bool trajtraversedRich2=false;
-
+             
 
 
             if(TrajIdVectR1.size() > 0 ) {
@@ -1304,9 +1304,11 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     std::vector<int>TrajSatNumHitGasRich2NoHpdReflNoScint( NumTrajR2,0);
     std::vector<int>TrajSatNumHitGasRich1NoHpdReflHighMom( NumTrajR1,0);
     std::vector<int>TrajSatNumHitGasRich2NoHpdReflNoScintHighMom( NumTrajR2,0);
+
+    std::vector<int>  TrajSatNumHitGasRich2RandomBackgr(NumTrajR2,0);  
+    std::vector<int>  TrajSatNumHitGasRich2NoHpdReflNoScintWithRandomBackgr(NumTrajR2,0);
     
 
-    
     for (int ihcolb=0; ihcolb<NumRichCollection; ihcolb++) {
 
       Current_RichG4CollectionID =RichG4CollectionID[ihcolb];
@@ -1457,21 +1459,43 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
                   //                if(  aChTrackTotMom > 10000 ) {
 
                   TrajSatNumHitGasRich2[it2]++;
+                  if( aPhotSource !=4 ) {
+                    
                   if(!areflectedInHpd) TrajSatNumHitGasRich2NoHpdRefl[it2]++;
                   if((!areflectedInHpd) && (aPhotSource != 2 ))TrajSatNumHitGasRich2NoHpdReflNoScint[it2]++;
                   if(aPhotSource == 2 )TrajSatNumHitGasRich2Scint[it2]++;
                    if(aChTrackTotMom > m_MinCF4HighMomCutForYield ) {
                      
                     if(( !areflectedInHpd) && (aPhotSource != 2)) TrajSatNumHitGasRich2NoHpdReflNoScintHighMom[it2]++; 
+                   }
+                       
+
+                  }else {
+                    // count the random backgr hits in rich2.
+                    TrajSatNumHitGasRich2RandomBackgr[it2]++;
+                    
+
                   }
-                 
+                  
+                  
+                  
+                  if((!areflectedInHpd) && (aPhotSource != 2 ))TrajSatNumHitGasRich2NoHpdReflNoScintWithRandomBackgr[it2]++;
+                
+                
+
+                  
                   //  }
 
                 }
+                
+              
+              
 
 
 
               }
+              
+            
 
 
 
@@ -1479,14 +1503,16 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
               it2 =  TrajIdVectR2.size() +1;
 
-            }
+          }
+          
+          
 
 
 
 
             it2++;
 
-          } // end loop over TrajIdVectR2.
+        } // end loop over TrajIdVectR2.
 
 
         }  // end loop over hits in a coll.
@@ -1523,8 +1549,13 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
     aRichCounter-> setNumHitSaturatedPerTrackRich2GasScint(TrajSatNumHitGasRich2Scint);
     aRichCounter->  setNumHitSaturatedPerTrackRich1GasNoHpdReflHighMom( TrajSatNumHitGasRich1NoHpdReflHighMom );
     aRichCounter->  setNumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom(TrajSatNumHitGasRich2NoHpdReflNoScintHighMom);
+ 
+    aRichCounter-> setNumHitSaturatedPerTrackRich2GasRandomBackgr(TrajSatNumHitGasRich2RandomBackgr);
+    aRichCounter-> 
+    setNumHitSaturatedPerTrackRich2GasNoHpdReflNoScintWithRandomBackgr(TrajSatNumHitGasRich2NoHpdReflNoScintWithRandomBackgr);
     
-
+   
+ 
     // now to test the procedure
     //         for(int i=0; i< (int) TrajIdVectR1.size(); i++ ) {
 
@@ -1766,7 +1797,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHitsFullAcc(const G4Event* anEvent
     std::vector<int>TrajSatNumHitFullAccGasRich2( NumTrajR2FullAcc,0);
     std::vector<int>TrajSatNumHitFullAccGasRich2NoScint( NumTrajR2FullAcc,0);
     std::vector<int>TrajSatNumHitFullAccGasRich2NoScintHighMom( NumTrajR2FullAcc,0);
-
+    std::vector<int> TrajSatNumHitFullAccGasRich2NoScintWithRandom( NumTrajR2FullAcc,0);
     
 
 
@@ -1918,13 +1949,18 @@ void RichG4EventHitCount::RichG4CountSaturatedHitsFullAcc(const G4Event* anEvent
 
                   //                if(  aChTrackTotMom > 10000 ) {
 
-                  
+                  if( aPhotSource != 4 ){
+                    
                   if(!areflectedInHpd) TrajSatNumHitFullAccGasRich2[it2]++;
                   if((!areflectedInHpd) && (aPhotSource != 2 ))TrajSatNumHitFullAccGasRich2NoScint[it2]++;
                    if(aChTrackTotMom > m_MinCF4HighMomCutForYield ) {
                     if(( !areflectedInHpd) && (aPhotSource != 2)) TrajSatNumHitFullAccGasRich2NoScintHighMom[it2]++; 
+                   }
+                   
                   }
-                 
+                  
+                  if((!areflectedInHpd) && (aPhotSource != 2 ))TrajSatNumHitFullAccGasRich2NoScintWithRandom[it2]++;
+                  
                   //  }
 
                 }
@@ -1966,7 +2002,11 @@ void RichG4EventHitCount::RichG4CountSaturatedHitsFullAcc(const G4Event* anEvent
     aRichCounter->setNumHitFullAcceptSatPerTrackHighMomR1Gas(TrajSatNumHitFullAccGasRich1NoHpdReflHighMom);
     aRichCounter->setNumHitFullAcceptSatPerTrackNoScintR2Gas(TrajSatNumHitFullAccGasRich2NoScint);
     aRichCounter->setNumHitFullAcceptSatPerTrackNoScintHighMomR2Gas(TrajSatNumHitFullAccGasRich2NoScintHighMom);
+
+    aRichCounter->setNumHitFullAcceptSatPerTrackNoScintR2GasWithRandom(TrajSatNumHitFullAccGasRich2NoScintWithRandom);
     
+
+  
 
   }// end test richcounter existance
   

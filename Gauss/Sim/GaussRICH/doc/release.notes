@@ -3,7 +3,13 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-
+!2014-07-21 - Sajan Easo
+ -Added the option to have random hits in RICH2. By default this option is switched off.
+  The fractionf random hits is a parameter adjustable in the options file. This is done
+  by creating extra photons to each track at the Cherenkov production time, with random angle.
+  This would make these extra hits created as correlated hits. This followed from recent study for
+  MC tuning which found too few hits in RICH2 and near by detectors; so the addition to random
+  hits is a temporary solution to fix this issue.
 !2014-05-08 - Sajan Easo 
 - Increased the fraction of scintillation hits in RICH2 in Rich.opts.
 - A printout of the fraction set for scintillation yield is added 

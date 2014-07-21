@@ -70,6 +70,7 @@
 // To tag the info regarding photon production.
 #include "GaussRICH/RichG4CherenkovPhotProdTag.h"
 #include "GaussRICH/RichG4MatRadIdentifier.h"
+#include "GaussRICH/RichG4GaussPathNames.h"
 // local analysis for RichG4.
 //#include "RichG4CherenkovAnalysis.h"
 #include "GaussRICH/RichG4QwAnalysis.h"
@@ -170,16 +171,19 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
 	G4StepPoint* pPreStepPoint  = aStep.GetPreStepPoint();
 	G4StepPoint* pPostStepPoint = aStep.GetPostStepPoint();
-  // test printout by SE
 
-  // G4String  pPreVolName=  pPreStepPoint->
-  //              GetPhysicalVolume()->GetLogicalVolume()->GetName();
+
+   G4String  pPreVolName=  pPreStepPoint->
+                GetPhysicalVolume()->GetLogicalVolume()->GetName();
+  // test printout by SE
   // G4String  pPostVolName=  pPostStepPoint->
   //             GetPhysicalVolume()->GetLogicalVolume()->GetName();
   //      G4String aMaterialName= aMaterial->GetName();
   // G4cout<<"G4Cerenkov: PreVol PostVol Material Names: "<<pPreVolName<<"    "
   //       << pPostVolName<<"   "<< aMaterialName<< G4endl;
 
+  // G4cout<<"G4Cerenkov: PreVol  Names: "<<pPreVolName<<"    "<<G4endl;
+   
 
   // end of test printout by SE
 
@@ -222,7 +226,28 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	MeanNumberOfPhotons = MeanNumberOfPhotons * step_length;
 
 	G4int NumPhotons = (G4int) G4Poisson(MeanNumberOfPhotons);
+  // Now for adding background in RICH2
+  G4int nAddPhotRich2 = 0;
+  if( m_AddBackGrRich2 ) {
+    //    if( pPreVolName.find("AfterMagnetRegion/Rich2/lvRich2Gas") != std::string::npos){ 
+    if( pPreVolName == LogVolCF4NameAnalysis){ 
+      nAddPhotRich2 = (G4int ) (NumPhotons*m_Rich2BackgrProb);
+      NumPhotons += nAddPhotRich2;
+   
+    }
+    
+  }
 
+  // test print
+  // if( pPreVolName == LogVolCF4NameAnalysis){ 
+  
+      //  G4cout<<"RichG4Cerenkov Adddbackgr prob  nAddBackgr NumPhot "<<  m_AddBackGrRich2 <<
+      //  "  "<<m_Rich2BackgrProb <<"  "<<nAddPhotRich2 <<"  "<<NumPhotons<<G4endl;
+      
+  //  }
+    
+  //end test print  
+  //end adding background in RICH2
 	if (NumPhotons <= 0) {
 
 		// return unchanged particle and no secondaries  
@@ -263,6 +288,13 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
 	G4double maxCos = BetaInverse / nMax; 
 	G4double maxSin2 = (1.0 - maxCos) * (1.0 + maxCos);
+  // Now for adding background in RICH2
+  G4double aR2Rnd_minBetaInverse= 1.0;
+  G4double aR2Rnd_maxCos =  aR2Rnd_minBetaInverse/nMax;
+  G4double aR2Rnd_maxSin2 = (1.0 - aR2Rnd_maxCos) * (1.0 + aR2Rnd_maxCos);
+  G4double aR2Rnd_curBetaInverse =  1.0 + ( G4UniformRand() * (nMax -1.0) ) ;
+
+  // end for adding background in RICH2
 
 	for (G4int i = 0; i < NumPhotons; i++) {
 
@@ -273,18 +305,40 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		G4double cosTheta, sin2Theta;
 		
 		// sample an energy
+    if( i < (NumPhotons - nAddPhotRich2) ){
+      
+		  do {
+			  rand = G4UniformRand();	
+			  sampledEnergy = Pmin + rand * dp; 
+			  sampledRI = Rindex->Value(sampledEnergy);
+			  cosTheta = BetaInverse / sampledRI;  
 
-		do {
-			rand = G4UniformRand();	
-			sampledEnergy = Pmin + rand * dp; 
-			sampledRI = Rindex->Value(sampledEnergy);
-			cosTheta = BetaInverse / sampledRI;  
+			  sin2Theta = (1.0 - cosTheta)*(1.0 + cosTheta);
+			  rand = G4UniformRand();	
 
-			sin2Theta = (1.0 - cosTheta)*(1.0 + cosTheta);
-			rand = G4UniformRand();	
+		  } while (rand*maxSin2 > sin2Theta);
 
-		} while (rand*maxSin2 > sin2Theta);
 
+    }else {
+      // for adding background to RICH2
+		  do {
+
+			  rand = G4UniformRand();	
+			  sampledEnergy = Pmin + rand * dp; 
+			  sampledRI = Rindex->Value(sampledEnergy);
+
+			  //cosTheta = BetaInverse / sampledRI;  
+        cosTheta = aR2Rnd_curBetaInverse / sampledRI;  
+
+			  sin2Theta = (1.0 - cosTheta)*(1.0 + cosTheta);
+			  rand = G4UniformRand();	
+
+		  } while (rand*aR2Rnd_maxSin2 > sin2Theta);
+      // end adding background to RICH2
+    }
+    
+    
+    
 		// Generate random position of photon on cone surface 
 		// defined by Theta 
 
@@ -362,10 +416,16 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
     //Additions made by SE to Tag the info regarding photon
     //production. SE 15-10-2002.
 
+    //aCkvSourceInfo : // 0 mean unknown, 1 mean cherenkov process , 2 mean scintillation process,
+                       // 4 means cherenkov process with random Cherenkov angle as correlated background
+
+    G4int aCkvSourceInfo= 1;
+    if( i >= (NumPhotons - nAddPhotRich2) ) aCkvSourceInfo = 4;
+
     
     G4Track* aTaggedSecondaryTrack
       = RichG4CherenkovPhotProdTag(aTrack,aSecondaryTrack,
-                                   cosTheta,phi,sampledEnergy,fRichVerboseInfoTag,1 );
+                                   cosTheta,phi,sampledEnergy,fRichVerboseInfoTag,aCkvSourceInfo );
     aParticleChange.AddSecondary(aTaggedSecondaryTrack);
     // end of additions by SE to tag the info on photon production.
     // also the next line is commented out as as result.
@@ -373,6 +433,7 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 		//aParticleChange.AddSecondary(aSecondaryTrack);
 
 	}
+  
    // test analysis by SE. Not needed for regular production running.
   // RichG4CherenkovProdFeaturesHisto(aTrack);
   // RichG4QwAnalysis* aRichG4QwAnalysis = RichG4QwAnalysis::getRichG4QwAnalysisInstance();
@@ -653,3 +714,9 @@ G4double RichG4Cerenkov::GetAverageNumberOfPhotons(const G4double charge,
 
 
 
+void RichG4Cerenkov:: printBackgrRich2Param() {
+  
+  G4cout<<" RichG4Cerenkov Rich2 backgrActivateFlag  Rich2 backgrprob  "<<  m_AddBackGrRich2 <<"  "<<m_Rich2BackgrProb<<G4endl;
+
+
+}

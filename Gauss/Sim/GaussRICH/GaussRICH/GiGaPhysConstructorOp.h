@@ -152,6 +152,9 @@ private:
   double m_Rich1GasHitSmearValue;
   double m_Rich2GasHitSmearValue;
   
+  bool m_CherenkovAddBackgrRich2;
+  double m_CherenkovRich2BackgrProbFactor;
+  
   
     
   

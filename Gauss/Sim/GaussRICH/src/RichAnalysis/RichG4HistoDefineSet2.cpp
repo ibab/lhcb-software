@@ -334,7 +334,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich2 Hits in Rich2Gas per saturated track with no hpd refl or backscatter or Scintillation";
+  title="Number of Rich2 Hits in Rich2Gas per saturated track with no hpd refl or backscatter or Scintillation or random backgr";
 
 
   m_hNumHitCF4SatNoReflNoScint= CurHistoSvc->book(m_RichG4HistoPathSet2+"180",
@@ -344,7 +344,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich2 Hits in Rich2Gas per saturated High Mom track with no hpd refl or backscatter or scintillation ";
+  title="Number of Rich2 Hits in Rich2Gas per saturated High Mom track with no hpd refl or backscatter or scintillation or random background ";
 
 
   m_hNumHitCF4SatNoReflNoScintHighMom= CurHistoSvc->book(m_RichG4HistoPathSet2+"178",
@@ -354,7 +354,7 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   }
 
-  title="Number of Rich2 Hits in Rich2Gas per saturated track with no hpd refl or backscatter";
+  title="Number of Rich2 Hits in Rich2Gas per saturated track with no hpd refl or backscatter or random background";
 
 
   m_hNumHitCF4SatNoRefl= CurHistoSvc->book(m_RichG4HistoPathSet2+"181",
@@ -370,6 +370,26 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   m_hNumHitCF4SatScin= CurHistoSvc->book(m_RichG4HistoPathSet2+"182",
                      title,100,0.0,50.0);
   if(!m_hNumHitCF4SatScin ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of Rich2 Hits in Rich2Gas per saturated track from random background ";
+
+
+  m_hNumHitCF4SatRandBackgr= CurHistoSvc->book(m_RichG4HistoPathSet2+"183",
+                     title,100,0.0,50.0);
+  if(!m_hNumHitCF4SatRandBackgr ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+  title="Number of Rich2 Hits in Rich2Gas per saturated track with no hpd refl or backscatter or scintillation, but random background included ";
+
+
+  m_hNumHitCF4SatNoReflNoScintWithRandBackgr  = CurHistoSvc->book(m_RichG4HistoPathSet2+"184",
+                     title,100,0.0,100.0);
+  if(!m_hNumHitCF4SatNoReflNoScintWithRandBackgr ) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }
@@ -403,6 +423,17 @@ void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
   m_hNumTotHitCF4FullAcceptSatNonScint = CurHistoSvc->book(m_RichG4HistoPathSet2+"377",
                      title,100,0.0,100.0);
   if(!m_hNumTotHitCF4FullAcceptSatNonScint ) {
+  RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
+
+  }
+
+
+  title="Number of Rich2 saturated NonScint NonRefl Hits with Random background in Rich2Gas per track for All Tracks in Rich2";
+
+
+  m_hNumTotHitCF4FullAcceptSatNonScintNoReflWithRandomBackgr = CurHistoSvc->book(m_RichG4HistoPathSet2+"376",
+                     title,100,0.0,100.0);
+  if(!m_hNumTotHitCF4FullAcceptSatNonScintNoReflWithRandomBackgr  ) {
   RichG4Histolog << MSG::ERROR<<"Failed to book histo   "<<title<<endreq;
 
   }

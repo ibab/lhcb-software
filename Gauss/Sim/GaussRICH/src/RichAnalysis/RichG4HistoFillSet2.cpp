@@ -495,6 +495,10 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
   SmartDataPtr<IHistogram1D>hNumTotHitCF4SatNoReflNoScintHighMom(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/178");
 
+  SmartDataPtr<IHistogram1D> hNumHitCF4SatRandBackgr(CurrentHistoSvc, "RICHG4HISTOSET2/183");
+
+  SmartDataPtr<IHistogram1D> hNumHitCF4SatNoReflNoScintWithRandBackgr(CurrentHistoSvc, "RICHG4HISTOSET2/184"); 
+
   RichG4Counters* aRichCounter = RichG4Counters::getInstance();
 
   const std::vector<int> & NumRich1GasSatHit =
@@ -530,6 +534,14 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
 
  const std::vector<int> & NumRich2GasSatHitNoReflNoScintHighMom =
     aRichCounter->NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintHighMom();
+
+ const std::vector<int> & NumHitSaturatedPerTrackRich2GasRandomBackgr =
+   aRichCounter->NumHitSaturatedPerTrackRich2GasRandomBackgr();
+ 
+ const std::vector<int> & NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintWithRandomBackgr =
+   aRichCounter->NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintWithRandomBackgr();
+ 
+
 
   int NumSatTrajRich1Gas =  (int) NumRich1GasSatHit.size();
   int  NumSatTrajRich1Agel = (int) NumRich1AgelSatHit.size();
@@ -607,6 +619,23 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2A()
                   fill(nhitc4,1.0);
     }
     
+
+    int nhitc5 =  NumHitSaturatedPerTrackRich2GasRandomBackgr[ihtrc];
+    if( nhitc5  > 0 ) 
+    { 
+     if( hNumHitCF4SatRandBackgr)  hNumHitCF4SatRandBackgr ->fill( nhitc5, 1.0); 
+        
+    }
+
+    int nhitc6 = NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintWithRandomBackgr[ihtrc];
+    if(nhitc6 > 0 ) 
+    {
+      if( hNumHitCF4SatNoReflNoScintWithRandBackgr )
+       hNumHitCF4SatNoReflNoScintWithRandBackgr->fill(nhitc6,1.0);
+    }
+    
+    
+    
   }
 
 
@@ -644,6 +673,8 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
   SmartDataPtr<IHistogram2D>hNumHitVsAngCF4FullAcceptSat(CurrentHistoSvc,
                                              "RICHG4HISTOSET2/372");
 
+  SmartDataPtr<IHistogram1D> hNumTotHitCF4FullAcceptSatNonScintNoReflWithRandomBackgr (CurrentHistoSvc,
+                                  "RICHG4HISTOSET2/376");     
 
   RichG4Counters* aRichCounter = RichG4Counters::getInstance();
 
@@ -662,7 +693,9 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
   const std::vector<int> NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas=
     aRichCounter-> NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas();
   
-
+  const std::vector<int> NumHitFullAcceptSatPerTrackNoScintR2GasWithRandom =
+    aRichCounter-> NumHitFullAcceptSatPerTrackNoScintR2GasWithRandom();
+  
   
   const std::vector<G4ThreeVector> & NumRich1GasFullAcceptTrackMom =
     aRichCounter->TrackMomFullAcceptRich1Gas();
@@ -702,6 +735,7 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
         }
         
       }
+      
       }
       
       
@@ -747,7 +781,8 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
 
     int nhitc = NumRich2GasFullAcceptSatHit[ihtrc];
     int nhitcc= NumHitFullAcceptSatPerTrackNoScintR2Gas[ihtrc];
-    
+    int nhitdd = NumHitFullAcceptSatPerTrackNoScintR2GasWithRandom[ihtrc];
+   
     if( nhitc > 0) {
       if(hNumTotHitCF4FullAcceptSat ) hNumTotHitCF4FullAcceptSat->fill(nhitc,1.0);
       G4ThreeVector r2gasTrkMom=NumRich2GasFullAcceptTrackMom[ihtrc];
@@ -764,6 +799,11 @@ void RichG4HistoFillSet2:: FillRichG4HistoSet2B( )
       
       if(hNumTotHitCF4FullAcceptSatNonScint)hNumTotHitCF4FullAcceptSatNonScint->
         fill( nhitcc );
+
+      if (hNumTotHitCF4FullAcceptSatNonScintNoReflWithRandomBackgr ) 
+        hNumTotHitCF4FullAcceptSatNonScintNoReflWithRandomBackgr ->fill( nhitdd);
+      
+
       if(hNumTotHitCF4FullAcceptSatNonScintHighMom ){ 
         if(NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas[ihtrc] > 0 ) {
           

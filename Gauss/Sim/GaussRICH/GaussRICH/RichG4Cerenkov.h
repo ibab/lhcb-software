@@ -149,6 +149,12 @@ public: // With description
        (const G4bool aMaxNumPerStepRadiatorFlag)
        {fMaxPhotonPerRadiatorFlag=aMaxNumPerStepRadiatorFlag;}
 
+  void setAddBackGrRich2(G4bool addbackgrFlag  ) 
+  {  m_AddBackGrRich2 = addbackgrFlag;}
+  void setRich2BackgrProb(G4double abackgrprob ) 
+  { m_Rich2BackgrProb = abackgrprob; }
+  void printBackgrRich2Param();
+  
 private:
 
         void BuildThePhysicsTable();
@@ -179,6 +185,10 @@ private:
 	G4int  fMaxPhotons;
   G4bool fRichVerboseInfoTag;
   G4bool fMaxPhotonPerRadiatorFlag;
+
+  G4bool m_AddBackGrRich2;
+  G4double  m_Rich2BackgrProb;
+  
 };
 
 ////////////////////

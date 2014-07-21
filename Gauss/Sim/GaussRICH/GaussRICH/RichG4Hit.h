@@ -138,6 +138,7 @@ private:
 
   G4ThreeVector m_HpdQuartzWindowExtSurfPhotIncidentPosition; // Photon incidence point on the external surface of the HPD Quartz Window.
   G4int m_PhotonSourceProcessInfo; // 0 means unknown, 1 means Cherenkov process, 2 means Scintillation process
+                                   //  4 means cherenkov process with random Cherenkov angle as correlated background
                                    // This is the process which created the corresponding optical photon.
                                    // for hits from backscattered pe, this is 0.
   G4bool m_FlagHitAsDuplicate; // if true the hit is a duplicate hit. If false it is a unique hit which is the case for most of the hits.

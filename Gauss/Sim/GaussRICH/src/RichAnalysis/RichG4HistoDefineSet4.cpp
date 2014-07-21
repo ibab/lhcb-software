@@ -151,6 +151,21 @@ void RichG4HistoDefineSet4::bookRichG4HistogramsSet4()
     m_hCkvRich2GasD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1701",
                       title,200,0.02,0.04);
 
+
+    title = "Cherenkov angle D1E4 reconstructed from all hits in Rich2 Gas radiator";
+     
+    m_hCkvAllRich2GasD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1771",
+                      title,200,0.02,0.04);
+
+    title = "Cherenkov angle D1E4 reconstructed from random hits in Rich2 Gas radiator";
+     
+    // m_hCkvRndmRich2GasD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1772",
+    //                  title,200,0.02,0.04);
+
+    m_hCkvRndmRich2GasD1E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1772",
+                      title,200,0.0,0.05);
+
+
      title = "Cherenkov angle D5E4 reconstructed from Rich2 Gas radiator";
      
     m_hCkvRich2GasD5E4 = CurHistoSvc->book(m_RichG4HistoPathSet4+"1715",

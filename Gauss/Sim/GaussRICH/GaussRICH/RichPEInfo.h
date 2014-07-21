@@ -191,7 +191,8 @@ private:
   G4ThreeVector m_PmtLensPhotIncidentPosition;
 
   G4ThreeVector m_HpdPeLocalOriginPosition;
-  G4int m_PhotonSourceInformation; // 0 mean unknown, 1 mean cherenkov process , 2 mean scintillation process.
+  G4int m_PhotonSourceInformation; // 0 mean unknown, 1 mean cherenkov process , 2 mean scintillation process,
+                            // 4 means cherenkov process with random Cherenkov angle as correlated background
   
 
 };

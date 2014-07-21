@@ -115,6 +115,12 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   SmartDataPtr<IHistogram1D>hCkvRich2GasQwPh (CurrentHistoSvc,
                                               "RICHG4HISTOSET4/1714");
 
+  SmartDataPtr<IHistogram1D>hCkvAllRich2GasD1E4 (CurrentHistoSvc,
+                                              "RICHG4HISTOSET4/1771");
+
+  SmartDataPtr<IHistogram1D>hCkvRndmRich2GasD1E4 (CurrentHistoSvc,
+                                              "RICHG4HISTOSET4/1772");
+
 
   SmartDataPtr<IHistogram2D>hCkvRich1GasCkvPhi(CurrentHistoSvc,
                                                "RICHG4HISTOSET4/1520");
@@ -173,7 +179,8 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
   int curRadiator= acHit-> GetRadiatorNumber();
   double genckv =   acHit-> ThetaCkvAtProd();
   double genckvphi = acHit->  PhiCkvAtProd();
-
+  const int curPhotsource =  acHit-> PhotonSourceProcessInfo();
+  
   //  std::cout<<" Histofill set4 rdet radia genckv "
   //         << curRdet<<"  "<< curRadiator<<"  "
   //         << genckv <<std::endl;
@@ -301,6 +308,14 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
 
     // G4cout<<" Rich2 reconstructed Ckv Angle D3E1 D1E4 "<< aCkvRecD3E1<<"   "<<aCkvRecD1E4<<G4endl;
     
+    if(hCkvAllRich2GasD1E4) hCkvAllRich2GasD1E4->fill(aCkvRecD1E4) ;
+
+    if(curPhotsource == 4 ) {
+      // now for the random backgr hits in rich2
+      
+      if(hCkvRndmRich2GasD1E4) hCkvRndmRich2GasD1E4->fill(aCkvRecD1E4) ;
+    }else {    
+
     if(hCkvRich2GasD3E1) hCkvRich2GasD3E1->fill(aCkvRecD3E1) ;
     if(hCkvRich2GasD4E1) hCkvRich2GasD4E1->fill(aCkvRecD4E1) ;
     if(hCkvRich2GasD1E4) hCkvRich2GasD1E4->fill(aCkvRecD1E4) ;
@@ -344,10 +359,14 @@ void RichG4HistoFillSet4::FillRichG4HistoSet4(RichG4Hit* acHit,
 
     //  if(hCkvRich2GasCkvPhi)  hCkvRich2GasCkvPhi->
     //                          fill(aCkvRecD3E1-genckv,genckvphi);
-
+    }
+    
+    
   }
-
+  
+  
 
 }
+
 
 //=============================================================================

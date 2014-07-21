@@ -76,9 +76,13 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
     m_ActivateRICHHitSmearing(false),
     m_RichAerogelHitSmearValue(0.0),
     m_Rich1GasHitSmearValue(0.0),
-    m_Rich2GasHitSmearValue(0.0)
+    m_Rich2GasHitSmearValue(0.0),
+    m_CherenkovAddBackgrRich2(false),
+    m_CherenkovRich2BackgrProbFactor(0.5)
 {
   // in the above 3 is for the three radiators.
+  //   m_CherenkovAddBackgrRich2(true),
+  //  m_CherenkovRich2BackgrProbFactor(0.2)
 
   declareProperty("RichActivateRichPhysicsProcVerboseTag",
                   m_RichActivateVerboseProcessInfoTag);
@@ -119,6 +123,8 @@ GiGaPhysConstructorOp::GiGaPhysConstructorOp
   declareProperty("RichAerogelHitSmearValue",m_RichAerogelHitSmearValue);
   declareProperty("Rich1GasHitSmearValue",m_Rich1GasHitSmearValue);
   declareProperty("Rich2GasHitSmearValue",m_Rich2GasHitSmearValue);
+  declareProperty("Rich2BackgrHitsActivate", m_CherenkovAddBackgrRich2 );
+  declareProperty("Rich2BackgrHitsProbabilityFactor", m_CherenkovRich2BackgrProbFactor);
   
 
 }
@@ -262,6 +268,7 @@ void GiGaPhysConstructorOp::ConstructOp() {
 
   RichG4Cerenkov*   theCerenkovProcess = 
              new RichG4Cerenkov("RichG4Cerenkov", fOptical );
+
   G4OpAbsorption* theAbsorptionProcess = new G4OpAbsorption();
   RichG4OpRayleigh*   theRayleighScatteringProcess = 
     new RichG4OpRayleigh("RichG4OpRayleigh", fOptical);
@@ -288,7 +295,11 @@ void GiGaPhysConstructorOp::ConstructOp() {
     }
     
   }
-  
+
+  // msg<<MSG::INFO<<" Rich hit smear value "<< m_RichAerogelHitSmearValue << "  "
+  //      <<m_Rich1GasHitSmearValue<<"  "<<m_Rich2GasHitSmearValue<<endreq;
+
+ 
   theCerenkovProcess->SetVerboseLevel(0);
   theAbsorptionProcess->SetVerboseLevel(0);
   theRayleighScatteringProcess->SetVerboseLevel(0);
@@ -341,6 +352,17 @@ void GiGaPhysConstructorOp::ConstructOp() {
     SetRichVerboseInfoTag( (G4bool) m_RichActivateVerboseProcessInfoTag);
   theCerenkovProcess->
     SetMaxPhotonPerRadiatorFlag((G4bool) m_ApplyMaxPhotCkvLimitPerRadiator);  
+
+  theCerenkovProcess -> setAddBackGrRich2(m_CherenkovAddBackgrRich2);
+  theCerenkovProcess -> setRich2BackgrProb(m_CherenkovRich2BackgrProbFactor);
+  theCerenkovProcess -> printBackgrRich2Param();
+  
+  //msg<<MSG::INFO <<" GiGaPhys Op : Cherenkov RICH2 background flag and probability  "
+  // <<m_CherenkovAddBackgrRich2<<
+  //  "   "<<m_CherenkovRich2BackgrProbFactor<<endreq;
+  
+
+
 
   if( m_activateRICHCF4Scintillation ) {
     

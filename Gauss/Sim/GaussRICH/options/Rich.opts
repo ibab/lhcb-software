@@ -115,6 +115,7 @@ GiGa.ModularPL.GiGaPhysConstructorOp.RichScintillationYieldScaleFactor=0.6;
 // runs with 'extended output info'.
 
 #include "$GAUSSRICHROOT/options/RichEfficiency.opts"
+#include "$GAUSSRICHROOT/options/RichRandomHits.opts"
 
 //GiGaGeo.HpdSiliconSensDet.RichAviodDuplicateHitsActivate=true;
 //GiGaGeo.HpdSiliconSensDet.RichFlagDuplicateHitsactivate=true

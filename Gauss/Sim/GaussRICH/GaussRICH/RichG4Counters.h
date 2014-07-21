@@ -141,6 +141,11 @@ private:
   std::vector<int>  m_NumHitFullAcceptSatPerTrackNoScintR2Gas;
   std::vector<int>   m_NumHitFullAcceptSatPerTrackNoScintHighMomR2Gas;
   
+
+  std::vector<int> m_NumHitSaturatedPerTrackRich2GasRandomBackgr;
+  std::vector<int> m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintWithRandomBackgr;
+  std::vector<int> m_NumHitFullAcceptSatPerTrackNoScintR2GasWithRandom ;
+  
 public:
 
 #include "GaussRICH/RichG4Counters.icpp"

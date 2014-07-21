@@ -60,6 +60,11 @@ private:
   IHistogram1D* m_hCkvRich2GasD5E4;
   IHistogram1D*  m_hCkvRich2GasQw;
   IHistogram1D*  m_hCkvRich2GasQwPh;
+  
+  IHistogram1D*  m_hCkvAllRich2GasD1E4 ;
+  IHistogram1D*  m_hCkvRndmRich2GasD1E4 ;
+  
+  
 
   IHistogram1D* m_hCkvRich2GasGen;
   IHistogram1D* m_hCkvRich1GasRes;

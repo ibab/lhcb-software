@@ -82,6 +82,12 @@ void RichG4Counters::InitRichEventCounters()
 
   m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScint.clear();
   m_NumHitSaturatedPerTrackRich2GasScint.clear();
+
+  m_NumHitSaturatedPerTrackRich2GasRandomBackgr.clear();
+  m_NumHitSaturatedPerTrackRich2GasNoHpdReflNoScintWithRandomBackgr.clear();
+  m_NumHitFullAcceptSatPerTrackNoScintR2GasWithRandom.clear();
+  
+  
   
   m_NumHitPartGunPrimaryPartRich1Gas=0;
   m_NumHitPartGunPrimaryPartRich1Agel=0;
