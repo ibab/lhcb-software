@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-07-21 - Marco Clemencic
+ - Added declaration of QMTest tests in the CMake configuration.
+
+! 2014-07-21 - Marco Clemencic
  - Fixed problem with warning about duplicated module.
 
 ! 2014-07-11 - Marco Clemencic

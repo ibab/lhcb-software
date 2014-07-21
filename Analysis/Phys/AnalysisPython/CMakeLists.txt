@@ -39,3 +39,5 @@ add_dependencies(AnalysisPythonLib AnalysisPythonGen)
 target_link_libraries(AnalysisPythonDict -Wl,--no-as-needed AnalysisPythonLib -Wl,--as-needed)
 
 gaudi_install_python_modules()
+
+gaudi_add_test(QMTest QMTEST)
