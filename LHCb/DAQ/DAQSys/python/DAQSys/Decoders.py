@@ -257,9 +257,9 @@ Decoder("L0DUFromRawAlg/L0DUFromRaw",
 #this is new, really I should let the banks be determined from the sum of lower banks so that I could in the future split up the calo banks
 Decoder("L0DUFromRawTool",
         active=False,
-        banks=['EcalE','EcalTrig','EcalPacked','EcalPackedError',
-               'HcalE','HcalTrig','HcalPacked','HcalPackedError',
-               "PrsE",'PrsTrig',"PrsPacked"],
+#        banks=['EcalE','EcalTrig','EcalPacked','EcalPackedError',
+#               'HcalE','HcalTrig','HcalPacked','HcalPackedError',
+#               "PrsE",'PrsTrig',"PrsPacked"],
         inputs={"RawEventLocations" : None},
         conf=DecoderDB)
 

@@ -4,6 +4,11 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-07-21 - Marco Cattaneo
+ - Commented out Calo trigger banks from DecodersDB configuration of 
+   L0DUFromRawTool, as this was preventing Moore from decoding L0DU on S20
+   input. See https://savannah.cern.ch/task/?19106
+
 ! 2014-07-18 - Marco Cattaneo
  - Fix indentation bug in Configuation.py, input RawEventLocations were not
    being updated according to Split RawEvent Input version
