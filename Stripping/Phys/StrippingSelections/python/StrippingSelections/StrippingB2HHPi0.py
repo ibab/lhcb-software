@@ -49,9 +49,8 @@ default_config = {
                       'ResolvedLinePrescale' : 1.,
                       'ResolvedLinePostscale': 1.
                       },
-    'STREAMS'     : { 'Bhadron' : [],
-                      'BhadronCompleteEvent' : ['StrippingB2HHPi0_R',
-                                                'StrippingB2HHPi0_M']
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2HHPi0_R',
+                                   'StrippingB2HHPi0_M']
                       }
     }
 
@@ -109,7 +108,7 @@ class StrippingB2HHPi0Conf(LineBuilder) :
                                            EnableFlavourTagging = True,
                                            RequiredRawEvents = ["Calo"],
                                            MDSTFlag = True,
-                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}])
+                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}]
                                            )
         self.B2HHPi0M_line = StrippingLine(name + "_M" %locals()['config'],
                                            prescale = config['MergedLinePrescale'],
@@ -118,7 +117,7 @@ class StrippingB2HHPi0Conf(LineBuilder) :
                                            EnableFlavourTagging = True,
                                            RequiredRawEvents = ["Calo"],
                                            MDSTFlag = True,
-                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}])
+                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}]
                                            )
         # register lines
         self.registerLine(self.B2HHPi0R_line)

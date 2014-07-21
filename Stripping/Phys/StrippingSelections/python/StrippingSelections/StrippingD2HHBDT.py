@@ -28,6 +28,7 @@ default_config = {
     'BUILDERTYPE' : 'D2HHBDTLines',
     'CONFIG'      : {'PrescaleD2HHBDT' : 1.,
                      'PrescaleDSt'     : 1.,
+                     'PostscaleD02HH'  : 0.3,
                      'MinPT'           : 1000,
                      'MinIP'           : 0.12,
                      'TrChi2'          : 3,
