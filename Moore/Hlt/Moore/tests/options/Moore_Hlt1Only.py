@@ -23,4 +23,4 @@ ApplicationMgr().TopAlg+= [GaudiSequencer("JuggleSeq")]
 RawEventJuggler().Input="Pit"
 RawEventJuggler().Output="Moore"
 RawEventJuggler().Sequencer = GaudiSequencer("JuggleSeq")
-RawEventJuggler().KillInputBanksBefore = ('HltDecReports')
+RawEventJuggler().KillInputBanksBefore = ('Hlt')

@@ -3,6 +3,9 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+! 2014-07-21 - Gerhard Raven
+ - in qmtest, kill all Hlt related banks instead of only HltDecReports
+
 ! 2014-07-19 - Gerhard Raven
  - reduce verbosity of Hlt::Service
  - add option to remove all Hlt-related rawbanks in the input
