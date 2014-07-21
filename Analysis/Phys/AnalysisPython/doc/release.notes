@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-07-21 - Marco Clemencic
+ - Fixed problem with warning about duplicated module.
+
 ! 2014-07-11 - Marco Clemencic
  - Fixed CMake configuration to work with ROOT 6.
 
