@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-22 - Giulio Dujany
+	- Optimised tau2PhiMu line, added ExtraInfoTools and set MDST support
+
 ! 2014-07-21 - Stefano Perazzini
  - Hotfix to StrippingB2HHPi0.py
 

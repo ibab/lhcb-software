@@ -18,7 +18,8 @@ __all__ = ('LFVLinesConf',
            'makeB2hemu'
            'makeB2pMu',
            'makeBu',
-           'makeB2hTauMu'
+           'makeB2hTauMu',
+           'default_config',
            )
 
 from Gaudi.Configuration import *
@@ -28,6 +29,25 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 #from StrippingSelections.Utils import checkConfig
 from GaudiKernel.PhysicalConstants import c_light
+
+default_config = {
+    'NAME' : 'LFV',
+    'BUILDERTYPE' : 'LFVLinesConf' ,
+    'STREAMS' : [ 'Dimuon' ],
+    'WGs'     : [ 'RD' ],
+    'CONFIG'  : {
+    'Postscale'           :1,
+    'TauPrescale'         :1,
+    'Tau2MuMuePrescale'         :1,
+    'B2eMuPrescale'       :1,
+    'B2eePrescale'        :1,
+    'B2heMuPrescale'      :1,
+    'B2pMuPrescale'       :1,
+    'Bu2KJPsieePrescale'  :1,
+    'B2TauMuPrescale'       :1,
+    'B2hTauMuPrescale'      :1,
+    }
+    }
 
 class LFVLinesConf(LineBuilder) :
     """
@@ -90,11 +110,32 @@ class LFVLinesConf(LineBuilder) :
         self.selB2hTauMu = makeB2hTauMu(htaumu_name)
                 
         self.tau2PhiMuLine = StrippingLine(tau_name+"Line",
-                                     prescale = config['TauPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selTau2PhiMu ]
-                                     )
-
+                                           prescale = config['TauPrescale'],
+                                           postscale = config['Postscale'],
+                                           MDSTFlag = True,
+                                           algos = [ self.selTau2PhiMu ],
+                                           ExtraInfoTools = [ { "Type" : "ConeVariables",
+                                                                "ConeNumber" : 1,
+                                                                "ConeAngle" : 0.5,
+                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
+                                                              { "Type" : "ConeVariables",
+                                                                "ConeNumber" : 2,
+                                                                "ConeAngle" : 0.8,
+                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
+                                                              { "Type" : "ConeVariables",
+                                                                "ConeNumber" : 3,
+                                                                "ConeAngle" : 1.,
+                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
+                                                              { "Type" : "ConeVariables",
+                                                                "ConeNumber" : 4,
+                                                                "ConeAngle" : 1.5,
+                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
+                                                              {'Type' : 'VertexIsolation'},
+                                                              ],
+                                           ExtraInfoDaughters = [self.tau_selection],
+                                           ExtraInfoRecursionLevel = 2,
+                                           )
+        
         self.tau2eMuMuLine = StrippingLine(mme_name+"Line",
                                            prescale = config['Tau2MuMuePrescale'],
                                            postscale = config['Postscale'],
@@ -155,7 +196,7 @@ class LFVLinesConf(LineBuilder) :
 
 def makeTau2PhiMu(name):
     """
-    Please contact Johannes Albrecht if you think of prescaling this line!
+    Please contact Giulio Dujany if you think of prescaling this line!
     
     Arguments:
     name        : name of the Selection.
@@ -166,33 +207,46 @@ def makeTau2PhiMu(name):
 
     makePhi = CombineParticles(name+"makePhi")
     makePhi.DecayDescriptor =  "phi(1020) -> K+ K-"
-    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & ( BPVIPCHI2 () >  9 ) "\
-                                 "& (PT>300*MeV) & (PIDK > 5)"}
+    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & ( BPVIPCHI2 () >  9 ) & (PT>300*MeV) & (PIDK > 0)",
+                             "K-": "(ISLONG) & (TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & ( BPVIPCHI2 () >  9 ) & (PT>300*MeV) & (PIDK > 0)"} 
     
     _kaons = DataOnDemand(Location='Phys/StdLooseKaons/Particles')
     
-    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<10*MeV)"
-    makePhi.MotherCut = " ( VFASPF(VCHI2) < 10 ) & (MIPCHI2DV(PRIMARY)> 16.)"
+    makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<30*MeV)" 
+    makePhi.MotherCut = " ( VFASPF(VCHI2) < 25 ) & (MIPCHI2DV(PRIMARY)> 9)"
     
     SelPhi = Selection( name+"SelPhi",                       Algorithm= makePhi,
                         RequiredSelections=[_kaons] )
 
 
-    Tau2PhiMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV )  & ( BPVIPCHI2 () >  9 ) "\
-                                "& ( TRCHI2DOF < 3 )& (TRGHOSTPROB<0.3)" }
-    Tau2PhiMu.CombinationCut = "(ADAMASS('tau+')<150*MeV)"
+    Tau2PhiMu.DaughtersCuts = { "mu-" : " ( PT > 300 * MeV )  & ( BPVIPCHI2 () >  9 ) & ( TRCHI2DOF < 3 )& (TRGHOSTPROB<0.3)" }
+    Tau2PhiMu.CombinationCut = "(ADAMASS('tau-')<150*MeV)"
 
-    Tau2PhiMu.MotherCut = """
-            ( VFASPF(VCHI2) < 10 ) &
-            ( (BPVLTIME () * c_light)   > 200 * micrometer ) &
-            ( BPVIPCHI2() < 100 )
-            """ 
+    Tau2PhiMu.MotherCut = "( VFASPF(VCHI2) < 25 ) &  ( (BPVLTIME () * c_light)   > 50 * micrometer ) &  ( BPVIPCHI2() < 100 ) "
                              
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
-    return Selection (name,
-                      Algorithm = Tau2PhiMu,
-                      RequiredSelections = [ _stdLooseMuons ,SelPhi ])
+    SelTau = Selection (name+"makeTau",
+                        Algorithm = Tau2PhiMu,
+                        RequiredSelections = [ SelPhi, _stdLooseMuons ])
+    
+    
+    # Trigger selection
+    from Configurables import TisTosParticleTagger
+    _tisTosFilter = TisTosParticleTagger( name + "Triggered" )
+    _tisTosFilter.TisTosSpecs = { 'L0Global%TIS' : 0,
+                                  'L0MuonDecision%TOS' : 0,
+                                  'Hlt1TrackAllL0Decision%TOS' : 0,
+                                  'Hlt1TrackMuonDecision%TOS' : 0
+                                  }
+
+    return Selection( name,
+                      Algorithm = _tisTosFilter,
+                      RequiredSelections = [ SelTau ],
+                      )
+
+    
+
 
 
 def makeTau2eMuMu(name):
