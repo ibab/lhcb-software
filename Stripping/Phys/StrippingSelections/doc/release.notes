@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-22 - Paul Seyfert
+ - Adapted Tau23Mu lines for new conventions
+
 ! 2014-07-22 - Giulio Dujany
 	- Optimised tau2PhiMu line, added ExtraInfoTools and set MDST support
 

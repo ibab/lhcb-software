@@ -10,7 +10,7 @@ __date__ = '25/08/2011'
 __version__ = '$Revision: 1.0 $'
 
 __all__ = ('Tau23MuLinesConf',
-           'config_default',
+           'default_config',
            'makeTau23Mu',
            'makeDs23PiTIS',
            'makeDs23Pi',
@@ -24,8 +24,26 @@ from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-#from StrippingSelections.Utils import checkConfig
+from StrippingSelections.Utils import checkConfig
 from GaudiKernel.PhysicalConstants import c_light
+
+default_config = {
+    'NAME'        : 'StrippingTau23Mu',
+    'WGs'         : ['RD'],
+    'BUILDERTYPE' : 'Tau23MuLinesConf',
+    'CONFIG'      : {
+       'TauPrescale'         :1.,
+       'TauPostscale'        :1.,
+       'Ds23PiTISPrescale'   :0.0,
+       'Ds23PiPrescale'      :0.0,
+       'Ds2PhiPiPrescale'    :1.,
+       'Tau25Prescale'       :1.,
+       'Tau2PMuMuPrescale' :1.
+       },
+    'STREAMS'     : { 'Dimuon' : ['StrippingTau23Mu']}
+    }
+
+
 
 class Tau23MuLinesConf(LineBuilder) :
     """
@@ -43,17 +61,6 @@ class Tau23MuLinesConf(LineBuilder) :
                                   'Tau2PMuMuPrescale'
                                   )
 
-    
-    #### This is the dictionary of all tunable cuts ########
-    config_default={
-        'TauPrescale'         :1.,
-        'TauPostscale'        :1.,
-        'Ds23PiTISPrescale'   :0.0,
-        'Ds23PiPrescale'      :0.0,
-        'Ds2PhiPiPrescale'    :1.,
-        'Tau25Prescale'       :1.,
-        'Tau2PMuMuPrescale' :1.
-        }                
     
     
     def __init__(self, 
@@ -83,6 +90,8 @@ class Tau23MuLinesConf(LineBuilder) :
         self.tau23MuLine = StrippingLine(tau_name+"Line",
                                      prescale = config['TauPrescale'],
                                      postscale = config['TauPostscale'],
+                                     MDSTFlag = True,
+                                     RequiredRawEvents = [ ],
                                      algos = [ self.selTau23Mu ]
                                      )
         
@@ -95,24 +104,32 @@ class Tau23MuLinesConf(LineBuilder) :
         self.ds23PiLine = StrippingLine(ds23Pi_name+"Line",
                                       prescale = config['Ds23PiPrescale'],
                                       postscale = config['TauPostscale'],
+                                      MDSTFlag = True,
+                                      RequiredRawEvents = [ ],
                                       algos = [ self.selDs23Pi ]
                                       )
         
         self.ds2PhiPiLine = StrippingLine(ds2PhiPi_name+"Line",
                                       prescale = config['Ds2PhiPiPrescale'],
                                       postscale = config['TauPostscale'],
+                                      MDSTFlag = True,
+                                      RequiredRawEvents = [ ],
                                       algos = [ self.selDs2PhiPi ]
                                       )
 
         self.tau25MuLine = StrippingLine(tau25_name+"Line",
                                      prescale = config['Tau25Prescale'],
                                      postscale = config['TauPostscale'],
+                                     MDSTFlag = True,
+                                     RequiredRawEvents = [ ],
                                      algos = [ self.selTau25Mu ]
                                      )
 
         self.tau2PMuMuLine = StrippingLine(tau2pmm_name+"Line",
                                            prescale = config['Tau2PMuMuPrescale'],
                                            postscale = config['TauPostscale'],
+                                           MDSTFlag = True,
+                                           RequiredRawEvents = [ ],
                                            algos = [ self.selTau2PMuMu ]
                                            )
         
