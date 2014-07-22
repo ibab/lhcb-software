@@ -79,6 +79,11 @@ class LbSdbQuery(Script):
         for p in sorted(self.mConfDB.listProjects()):
             print p
 
+    def cmdlistDatapkgs(self, args):
+        ''' List the projects known by the SoftConfDB '''
+        for p in sorted(self.mConfDB.listDatapkgs()):
+            print p
+
     def cmdlistApplications(self, args):
         ''' List the projects known by the SoftConfDB '''
         for p in sorted(self.mConfDB.listApplications()):
@@ -169,6 +174,28 @@ class LbSdbQuery(Script):
             # Now print out the results
             for v in vs:
                 print "%s %s" %  (proj, v)
+
+    def cmdlistDatapkgVersions(self, args):
+        ''' List the number of versions known for a given data package '''
+
+        if (len(args) < 1):
+            self.log.error("Please specify a data package name")
+            sys.exit(1)
+
+        allvs = self.mConfDB.listDatapkgVersions(args[0].upper())
+        if len(allvs) > 0:
+            proj =  allvs[0][0]
+            if allvs[0][1].startswith("v"):
+                # Checking if we have LHCb Ordering
+                vs = sortVersions([ t[1] for t in allvs ], safe=True)
+            else:
+                # Or the normal sorting order
+                vs = sorted([ t[1] for t in allvs ])
+
+            # Now print out the results
+            for v in vs:
+                print "%s %s" %  (proj, v)
+
 
     def cmdShow(self, args):
         ''' Check the various atributes of a specific node '''
@@ -319,7 +346,8 @@ if __name__=='__main__':
   %prog listReleases                                       : List projects flagged to be RELEASED
   %prog listReleaseStacks                                  : List projects flagged to be RELEASED grouping by stack with platforms
   %prog listCMake                                          : List projects built with CMake
-
+  %prog listDatapkgs                                       : List known Data packages
+  %prog listDatapkgVersions <datapkg>                      : List known versions for the specified Data package
       """
     s = LbSdbQuery(usage=sUsage)
     sys.exit(s.run())

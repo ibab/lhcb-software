@@ -1,3 +1,10 @@
+2014-07-22  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-570: Adding suport for data packages in Software Configuration DB
+	* python/LbRelease/SoftConfDB/DatapkgImporter.py
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
 2014-07-10  Ben Couturier <Ben.Couturier@cern.ch>
 	
         * python/LbRelease/LCGRpmExtractor.py: Fix for release of LCG 69

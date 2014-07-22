@@ -64,6 +64,14 @@ class SoftConfDB(object):
         self.runCypher(query, lambda x: projects.append(x[0]))
         return projects
 
+    def listDatapkgs(self):
+        ''' List the datapackages known by the SoftConfDB '''
+
+        query = 'start n=node:Lbadmin(Type="DATAPKG_PARENT") match n-[:TYPE]-m  return distinct m.datapkg'
+        datapkgs = []
+        self.runCypher(query, lambda x: datapkgs.append(x[0]))
+        return datapkgs
+
     def listApplications(self):
         ''' List the applications known by the SoftConfDB '''
 
@@ -170,6 +178,16 @@ class SoftConfDB(object):
         pvs = []
         self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
         return pvs
+
+    def listDatapkgVersions(self, datapkg):
+        ''' List the number of versions known for a given datapkg '''
+
+        query = 'start n=node:Datapkg(Datapkg="%s") match n-[:DATAPKG]-m  return distinct m.datapkg, m.version order by m.version' \
+        % datapkg
+        pvs = []
+        self.runCypher(query, lambda x: pvs.append((x[0], x[1])))
+        return pvs
+
 
     def findVersion(self, project, version):
         ''' Find whether a specific project version exists in the DB '''
@@ -366,12 +384,18 @@ class SoftConfDB(object):
         ''' Create or lookup the main entry point nodes and indices '''
         if not self.setupDone:
             self.projectVersionIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "ProjectVersion")
+            self.datapkgVersionIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "DatapkgVersion")
             self.projectIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "Project")
+            self.projectIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "datapkg")
             self.lbadminIndex = self.mNeoDB.get_or_create_index(neo4j.Node, "Lbadmin")
             self.node_projectparent =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
                                                                "Type",
                                                                "PROJECT_PARENT",
                                                                {"type": "PROJECT_PARENT"})
+            self.node_datapkgparent =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
+                                                               "Type",
+                                                               "DATAPKG_PARENT",
+                                                               {"type": "DATAPKG_PARENT"})
             self.node_platformparent =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
                                                                "Type",
                                                                "PLATFORM",
@@ -396,7 +420,7 @@ class SoftConfDB(object):
                                                                         {"type": "RELEASE",
                                                                          "project": "NONE",
                                                                          "version":"NONE"})
-            self.node_release
+
             self.node_cmake =  self.mNeoDB.get_or_create_indexed_node("Lbadmin",
                                                                       "Type",
                                                                       "CMAKE",
@@ -413,6 +437,9 @@ class SoftConfDB(object):
         self.setupDB()
         return self.node_projectparent
 
+    def getDatapkgParent(self):
+        self.setupDB()
+        return self.node_datapkgparent
 
     def addPVPlatform(self, project, version, platform):
         """ Get the dependencies for a single project """
@@ -693,10 +720,51 @@ class SoftConfDB(object):
         self.mNeoDB.get_or_create_relationships((parentNode,"REQUIRES", childNode))
 
 
+    def getOrCreateDatapkgVersion(self, project, hat, datapkg, version):
+        ''' Return or create a datapkg node '''
+
+        # Check whether the version is a pattern
+        # XXX
+        
+        # Create the project node
+        project = project.upper()
+        datapkgini = datapkg
+        datapkg = datapkg.upper()
+        if hat == None:
+            hat = ""
+            
+        node_project = self.mNeoDB.get_or_create_indexed_node("Project",
+                                                           "Project",
+                                                           project,
+                                                           {"project": project})
+        self.mNeoDB.get_or_create_relationships((self.getProjectParent(), "TYPE", node_project))
+
+        # Create the datapkg node
+        node_datapkg = self.mNeoDB.get_or_create_indexed_node("Datapkg",
+                                                           "Datapkg",
+                                                           datapkg,
+                                                           {"datapkg": datapkg, "hat":hat, "realname":datapkgini})
+        self.mNeoDB.get_or_create_relationships((self.getDatapkgParent(), "TYPE", node_datapkg))
+        self.mNeoDB.get_or_create_relationships((node_datapkg, "PKGPROJECT", node_project))
+
+        # 
+        node_dv =  self.mNeoDB.get_or_create_indexed_node("DatapkgVersion",
+                                                          "DatapkgVersion",
+                                                          datapkg + "_" + version,
+                                                          {"datapkg": datapkg, "version":version})
+        self.mNeoDB.get_or_create_relationships((node_datapkg, "DATAPKG", node_dv))
+        
+        return node_dv
+
 
 if __name__ == '__main__':
     sdb = SoftConfDB()
     sdb.setupDB()
-    sdb.checkUnused()
+    sdb.getOrCreateDatapkgVersion("DBASE", "", "PRConfig", "v1r8")
+    sdb.getOrCreateDatapkgVersion("DBASE", "", "PRConfig", "v1r9")
+    print sdb.listDatapkgs()
+    print sdb.listDatapkgVersions("PRCONFIG")
+    
+    #sdb.checkUnused()
 
 
