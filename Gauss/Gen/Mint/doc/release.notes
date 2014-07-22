@@ -6,8 +6,17 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2014-07-22 - Jeremy
+ - Added two new lineshapes for the non-resonant component
+  . Exponential and power law
+  . At present, their shape parameters cannot be floated
+ - In steering file, indicate with ExpNonResD0 or PowNonResD0 keyword
+ - Lineshapes need to be manually added NamedDecayTreeList.cpp to each isobar
+  . add(AmpInitialiser(*dk, "ExpNonRes"));
+  . add(AmpInitialiser(*dk, "PowNonRes"));
+
 2014-05-16 - Jeremy
- - restore ability to use normalised barrier factors in amplitudes
+ - Restore ability to use normalised barrier factors in amplitudes
   . Control in steering file by setting "NormBF" to 1
   . Default behaviour is to use unnormalised barrier factors
   . Note that normalised barrier factors violate conservation of total angular momentum x-(
