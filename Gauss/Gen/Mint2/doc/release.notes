@@ -6,6 +6,15 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2014-07-22 - Jeremy
+ - Added two new lineshapes for the non-resonant component
+  . Exponential and power law
+  . At present, their shape parameters cannot be floated
+ - In steering file, indicate with ExpNonResD0 or PowNonResD0 keyword
+ - Lineshapes need to be manually added NamedDecayTreeList.cpp to each isobar
+  . add(AmpInitialiser(*dk, "ExpNonRes"));
+  . add(AmpInitialiser(*dk, "PowNonRes"));
+
 2014-05-31 - Philippe d'Argent
 - Fits with weighted events implemented
 - Added new decay tree 

@@ -13,6 +13,7 @@
 #include "Mint/Flatte.h"
 #include "Mint/FocusFlatte.h"
 #include "Mint/CrystalBarrelFOCUS.h"
+#include "Mint/NonRes.h"
 
 #include <iostream>
 
@@ -25,6 +26,8 @@ using namespace MINT;
    RHO_OMEGA
    Flatte
    GS
+   ExpNonRes
+   PowNonRes
 */
 
 ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
@@ -96,6 +99,28 @@ ILineshape* LineshapeMaker(const AssociatedDecayTree* tree
     }else{
       cout << "WARNING: LineshapeMaker:"
 	   << " returning plain Breit-Wigner (BW_BW) for f0(980)"
+	   << endl;
+      return new BW_BW(*tree);
+    }
+  }else if( abs(tree->getVal().pdg()) == 9981 ||
+	    abs(tree->getVal().pdg()) == 9991 ||
+	    abs(tree->getVal().pdg()) == 9983 ||
+	    abs(tree->getVal().pdg()) == 9993 ||
+	    abs(tree->getVal().pdg()) == 9985 ||
+	    abs(tree->getVal().pdg()) == 9975 ){ //Non-resonant
+    if( A_is_in_B("NonRes", lopt) ){
+      cout << "LineshapeMaker: "
+	   << "\n\t> returning Non-resonant lineshape"
+	   << endl;
+      if( A_is_in_B("Exp", lopt) )
+	return new NonRes(*tree, "Exp");
+      else if( A_is_in_B("Pow", lopt) )
+	return new NonRes(*tree, "Pow");
+      else
+	return new NonRes(*tree);
+    }else{
+      cout << "WARNING: LineshapeMaker:"
+	   << " returning plain Breit-Wigner (BW_BW) for non-resonant"
 	   << endl;
       return new BW_BW(*tree);
     }
