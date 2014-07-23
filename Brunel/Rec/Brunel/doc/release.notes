@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- New functionality
+  . Add support for 2015 DataType
+
 - Changes to persistency
   . Change default RawEvent output version to 4.0 (requires RawEventFormat v1r1):
     RawEvent/Other further split into RawEvent/{Velo,Tracker,Unstripped} 
@@ -12,6 +15,8 @@ Purpose: LHCb reconstruction program
     can be recombined back to 2.0 (Reco14 version)
   . brunel-mc11a-xdst.qmt now explicitly tests RawEvent output version 2.0
     (a few other tests adapted to default output version 4.0)
+  . Added 2015magdown to test 2015 DataType configuration. Currently uses 2012
+    raw data, to be updated...
   . BrunelExclusions.py:
     o Temporarily exclude changes related to change in RawEvent output format
     o Clean up obsolete exclusions

@@ -1,0 +1,36 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: M.Cattaneo
+# Purpose: Check that Brunel().DataType = "2015" is working correctly. Currently
+#          using 2012 raw data as input. To be updated with 2015 data, at which
+#          time should increase events to 200 and mimic the 2012 test 
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#          . MAJOR: Every failure should be understood. If brunel2012magdown test
+#                   also fails, check first reasons for those failures
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>3600</integer></argument>
+  <argument name="args"><set>
+    <text>$PRCONFIGOPTS/Brunel/PR-COLLISION12-Beam4000GeV-VeloClosed-MagDown.py</text>
+    <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
+    <text>--option</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=10; Brunel().Monitors=["SC","FPE"]; Brunel().DatasetName="2015magdown"; Brunel().DataType="2015"</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/2015magdown.ref</text></argument>
+  <argument name="validator"><text>
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
+checkIsSplit("2015magdown-10ev.dst",4.0,causes,result,"brunel.2015magdown")
+checkIsGone("2015magdown-10ev.dst",["Event/DAQ"],causes,result,"brunel.2015magdown")
+
+from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+preprocessor = BrunelPreprocessor + \
+  RegexpReplacer(r'mdf:\S*(/lhcb/data\S*\.raw)(\?\S*)?',r'\1')
+</text></argument>
+</extension>
