@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-07-23 - Chris Jones
+ - Add a test to read an MC 2012 DST.
+  ( To monitor https://sft.its.cern.ch/jira/browse/ROOT-6507 )
+
+! 2014-07-23 - Chris Jones
  - Use testFileDB for data-merge-small-files test.
 
 ! 2014-07-18 - Stefania Vecchi
