@@ -6,6 +6,7 @@ branches doc cmt tests
 ####################################################################
 # Framework
 use  CommonParticles             v8r18    Phys   # Patrick Koppenburg, WGs
+use  CommonParticlesArchive      v1r0     Phys   # Stripping coordinators
 use  StandardParticles           v2r2     Phys   # Juan Palacios
 
 ####################################################################
