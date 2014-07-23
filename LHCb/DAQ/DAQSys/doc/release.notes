@@ -4,6 +4,16 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! Define new instances of decoders (disabled by default) for "expert" banks
+  "TTPedestal","TTFull","TTProcFull","TTError", "ITPedestal","ITFull",
+  "ITProcFull","ITError", "UTPedestal","UTFull","UTError", "OTError",
+  "EcalPackedError", "HcalPackedError", so that these banks can reside in a 
+  different RawEvent from the normal bank of these sub-detectors
+
+! 2014-07-23 - Marco Cattaneo
+ - Bug fix in DecodeRawEvent, check on algs writing to same location was using
+   a non-existent function of the Decoder class
+
 ! 2014-07-21 - Marco Cattaneo
  - Commented out Calo trigger banks from DecodersDB configuration of 
    L0DUFromRawTool, as this was preventing Moore from decoding L0DU on S20
