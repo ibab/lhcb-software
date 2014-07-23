@@ -1,24 +1,18 @@
 ###################
 # Define InputData
 ###################
-
-InputData=[]
-
-for i in range(94):
-    InputData.append("root://castorlhcb.cern.ch//castor/cern.ch/user/r/rlambert/smallfiles/R08S14EW/R08S14EW_small_1_#.dst".replace("#",str(i+1)))
-
-RecoDict= {"Reco" : "R08S14EW"}
-
 from Gaudi.Configuration import *
-from GaudiConf import IOHelper
 
-id=InputData
+from PRConfig import TestFileDB
+InputData = TestFileDB.test_file_db["Reco08S14EW_SmallFiles.dst"].filenames
 
 ######################
 #choose number of files
 ######################
 
-IOHelper().inputFiles(id[:5])
+from GaudiConf import IOHelper
+
+IOHelper().inputFiles( InputData[:5] )
 
 IOHelper().outStream("merged.dst","InputCopyStream")
 
@@ -28,7 +22,7 @@ IOHelper().setupServices()
 #fill summary every event
 ##############################
 
-from Configurables import ( XMLSummary )
+from Configurables import XMLSummary
 XMLSummary().XMLSummary="summary.xml"
 from Configurables import XMLSummarySvc
 XMLSummarySvc("CounterSummarySvc").UpdateFreq=1
