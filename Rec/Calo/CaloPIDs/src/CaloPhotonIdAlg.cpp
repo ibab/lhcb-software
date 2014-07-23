@@ -248,14 +248,11 @@ double CaloPhotonIdAlg::likelihood(const LHCb::CaloHypo* hypo) {
   double chi2 = -999.;
 
   // parameter evaluation
-  if (evalParam(hypo,energy,et,eSeed,nSpd,ePrs,area).isFailure())
-    return -999.;
+  if (evalParam(hypo,energy,et,eSeed,nSpd,ePrs,area).isFailure())return -999.;
 
   // get chi2
   chi2=-999.;
-  if (m_tracking) 
-    chi2 = m_estimator->data(hypo,CaloDataType::ClusterMatch, -999.);
-
+  if (m_tracking)chi2 = m_estimator->data(hypo,CaloDataType::ClusterMatch, +999.);
   // evaluate
   return evalLikelihood(energy,et,eSeed,nSpd,ePrs,chi2,area);
 }

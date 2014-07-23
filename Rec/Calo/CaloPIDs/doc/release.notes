@@ -4,6 +4,10 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+
+! 2014-07-23 - Olivier Deschamps for Dima
+  - CaloElectronMatch : extrapolate the track to the CaloHypo Z position instead of ZShowerMax plane
+
 !========================= CaloPIDs v5r18p1 2014-07-14 ========================
 ! 2014-06-27 - Olivier Deschamps
  - Fix minor typo in a printout

@@ -17,6 +17,7 @@
 // ============================================================================
 // local
 // ============================================================================
+// #include "CaloUtils/CaloTrackMatch.h"
 #include "CaloTrackMatch.h"
 // ============================================================================
 
@@ -157,7 +158,9 @@ StatusCode CaloElectronMatch::match
     st = CaloTrackTool::state ( *trObj , LHCb::State::ECalShowerMax ) ;
     if ( 0 == st ) 
     {
-      StatusCode sc = propagate ( *trObj , m_showerMax  , _state() ) ;
+      // StatusCode sc = propagate ( *trObj , m_showerMax  , _state() ) ;
+      _state() = trObj->closestState( m_showerMax ) ; 
+      StatusCode sc = propagate ( _state(), caloObj->z()) ;
       if ( sc.isFailure() ) 
       {
         m_tBad = trObj ;
@@ -168,10 +171,12 @@ StatusCode CaloElectronMatch::match
       st = CaloTrackTool::state ( *trObj , LHCb::State::ECalShowerMax ) ;
     }
     // check the validity of the state 
-    if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) ) ) 
+    /// if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) ) ) 
+    if ( 0.5 < ::fabs( caloObj->z() - st->position().z() ) )  // let's decrease z-tolerance here to 0.5 mm
     {
       _state() = *st ;
-      StatusCode sc = propagate ( _state() , m_plane ) ;
+      /// StatusCode sc = propagate ( _state() , m_plane ) ;
+      StatusCode sc = propagate ( _state() , caloObj->z() ) ;
       if ( sc.isFailure() ) 
       { 
         m_tBad = trObj ;
@@ -190,8 +195,4 @@ StatusCode CaloElectronMatch::match
   
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
-
-// ============================================================================
-/// The END 
 // ============================================================================
