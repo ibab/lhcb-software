@@ -14,6 +14,7 @@ from LbConfiguration.Version import getVersionsFromDir
 
 from LbUtils.Processes import callCommand
 from LbRelease.SoftConfDB.SoftConfDB import SoftConfDB
+from datetime import datetime, timedelta
 
 
 # SVN Repositories definition
@@ -21,7 +22,7 @@ url = str(getRepositories(protocol='anonymous')["lbsvn"])
 lbsvn = rcs.connect(url)
 
 
-class DatapackageImporter:
+class DatapkgImporter:
     """ Main script to look up package """
 
     def __init__(self):
@@ -37,7 +38,7 @@ class DatapackageImporter:
         tmp = datapkg
         if hat != None:
             tmp = "/".join([hat, datapkg])
-        self.log.warning("Checking %s %s %s" % (project, tmp, version))
+        self.log.info("Checking %s %s %s" % (project, tmp, version))
 
         # Loading the package from LbScripts
         pack = getPackage(datapkg)
@@ -54,10 +55,11 @@ class DatapackageImporter:
             raise Exception("Could not find package  %s %s %s in SVN" % (project, tmp, version))
 
         # Now creating the package if it does not exist
+        self.log.warning("Adding to DB %s %s %s" % (project, tmp, version))
         self.mConfDB.getOrCreateDatapkgVersion(project, hat, datapkg, version)
 
 
-    def importProjectDir(self, dirname, hat=None):
+    def importProjectDir(self, dirname, hat=None, nbdays=-1):
         """ Import all projects in a directory """
         import os
 
@@ -86,14 +88,16 @@ class DatapackageImporter:
                 # CAREFUL: only handle one level hats...
                 if hat == None:
                     self.log.warning("Processing  subdirectory %s" % entry)
-                    self.importProjectDir(os.path.join(dirname, entry), entry)
-
+                    # Checking the date
+                    verpath = os.path.join(dirname, entry)
+                    self.importProjectDir(verpath, entry, nbdays)
+                    
             if pack != None:
                 # Now performing the import
-                self.log.warning("Processing package: %s" % entry)
-                self._importPackage(os.path.join(dirname, entry), hat, pack)
+                self.log.info("Processing package: %s" % entry)
+                self._importPackage(os.path.join(dirname, entry), hat, pack, nbdays)
    
-    def _importPackage(self, datapkgdir, hat, pack):
+    def _importPackage(self, datapkgdir, hat, pack, nbdays):
         """ Import all the versions of a package from a specific directory """
         # First some checks...
         project = pack.project()
@@ -106,8 +110,18 @@ class DatapackageImporter:
         # Now adding all the versions from the directory
         # Using LbCOnfigurations tool for that
         for ver in  getVersionsFromDir(datapkgdir):
-            self.log.warning("Adding package %s %s %s %s" % (project, hat, datapkg, ver.name()))
-            self.importpkg(project, datapkg, ver.name(), hat)
+            self.log.info("Adding package %s %s %s %s" % (project, hat, datapkg, ver.name()))
+            verpath = os.path.join(datapkgdir, ver.name())
+            processdir = True
+            if nbdays > 0:
+                now = datetime.now()
+                delta =timedelta (days = nbdays)
+                then = datetime.fromtimestamp(os.path.getctime(verpath))
+                if (now - then) >  delta:
+                    self.log.info("Too old %s" % verpath)
+                    processdir = False
+            if processdir == True:
+                self.importpkg(project, datapkg, ver.name(), hat)
 
 if __name__ == "__main__":
     dimp = DatapackageImporter()
