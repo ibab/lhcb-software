@@ -4,6 +4,9 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+! 2014-07-23 - Olivier Deschamps
+ - adapt to changes in ParticleMaker
+
 ! 2014-04-14 - Rob Lambert
  - Make DaVinci dependency explicit (moved to DaVinci project) see task #50698
 

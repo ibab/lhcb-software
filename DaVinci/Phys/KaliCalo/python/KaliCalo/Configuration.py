@@ -384,10 +384,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         maker.addTool ( PhotonMaker , name = 'PhotonMaker' )
         photon = maker.PhotonMaker
-        photon.UseCaloTrMatch     = False
-        photon.UseCaloDepositID   = False
-        photon.UseShowerShape     = False
-        photon.UsePhotonID        = False
+        photon.ConfidenceLevelBase   = []
+        photon.ConfidenceLevelSwitch = []
         photon.ConvertedPhotons   = True 
         photon.UnconvertedPhotons = True 
         photon.PtCut              = 250
