@@ -28,7 +28,7 @@ from StrippingSelections.Utils import checkConfig
 from GaudiKernel.PhysicalConstants import c_light
 
 default_config = {
-    'NAME'        : 'StrippingTau23Mu',
+    'NAME'        : 'Tau23Mu',
     'WGs'         : ['RD'],
     'BUILDERTYPE' : 'Tau23MuLinesConf',
     'CONFIG'      : {
@@ -40,7 +40,7 @@ default_config = {
        'Tau25Prescale'       :1.,
        'Tau2PMuMuPrescale' :1.
        },
-    'STREAMS'     : { 'Dimuon' : ['StrippingTau23Mu']}
+    'STREAMS'     : { 'Dimuon' : ['StrippingTau23MuTau23MuLine','StrippingTau23MuDs2PhiPiLine','StrippingTau23MuTau2PMuMuLine','StrippingTau23MuDs23PiLine','StrippingTau23MuTau25MuLine']}
     }
 
 

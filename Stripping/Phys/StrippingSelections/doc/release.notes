@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-23 - Paul Seyfert
+ - fixed strippingselections.test_allstreams_instantiation for Tau23Mu and tau2PhiMu lines
+
 ! 2014-07-22 - Paul Seyfert
  - Adapted Tau23Mu lines for new conventions
 

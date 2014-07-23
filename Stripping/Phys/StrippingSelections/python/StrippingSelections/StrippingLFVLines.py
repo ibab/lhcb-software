@@ -132,7 +132,7 @@ class LFVLinesConf(LineBuilder) :
                                                                 "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
                                                               {'Type' : 'VertexIsolation'},
                                                               ],
-                                           ExtraInfoDaughters = [self.tau_selection],
+                                           ExtraInfoDaughters = [self.selTau2PhiMu],
                                            ExtraInfoRecursionLevel = 2,
                                            )
         
