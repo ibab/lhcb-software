@@ -25,7 +25,7 @@ class DDDBConf(ConfigurableUser):
                    }
     _propertyDocDct = {
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2013", "2012", "2011", "2010", "2009","2008","MC09","Upgrade"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2015", "2013", "2012", "2011", "2010", "2009","2008","MC09","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        'AutoTags'  : """ Perform automatic resolution of CondDB tags """,
                        'InitialTime' : """ How to set the initial time. None/'Safe' uses a list of dummy times for each year and sets that time. 'Now' uses the current time. Sepcifying a number assumes that is a time in utc."""
@@ -172,13 +172,25 @@ class DDDBConf(ConfigurableUser):
             log.warning("EventClockSvc().InitialTime already set to %s UTC (requested %s UTC)",
                         t.isoformat(), utcDatetime.isoformat())
 
+    def __2015_conf__(self):
+        """
+        Default configuration for 2015 data
+        """
+        # Set the tags
+        self.__set_tag__(["DDDB"],     "dddb-20130503-1" )
+        self.__set_tag__(["LHCBCOND"], "cond-20140604"   )
+        self.__set_tag__(["DQFLAGS"],  "dq-20130806-1"   )
+        if not self.getProp("Simulation"):
+           # set initialization time to a safe default
+            self.__set_init_time__(datetime(2015, 12, 31, 23, 59))
+
     def __2013_conf__(self):
         """
         Default configuration for 2013 data (pA run) (and MonteCarlo for DDDB)
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20130503-1" )
-        self.__set_tag__(["LHCBCOND"], "cond-20131128"   )
+        self.__set_tag__(["LHCBCOND"], "cond-20140604"   )
         self.__set_tag__(["DQFLAGS"],  "dq-20130806-1"   )
         if not self.getProp("Simulation"):
            # set initialization time to a safe default
@@ -190,7 +202,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"],     "dddb-20130503-1" )
-        self.__set_tag__(["LHCBCOND"], "cond-20140425"   )
+        self.__set_tag__(["LHCBCOND"], "cond-20140604"   )
         self.__set_tag__(["DQFLAGS"],  "dq-20130806-1"   )
         if not self.getProp("Simulation"):
             self.__set_init_time__(datetime.utcfromtimestamp(1355694590)) # End of fill 3453
@@ -201,7 +213,7 @@ class DDDBConf(ConfigurableUser):
         """
         # Set the tags
         self.__set_tag__(["DDDB"], "dddb-20130503")
-        self.__set_tag__(["LHCBCOND"], "cond-20140425")
+        self.__set_tag__(["LHCBCOND"], "cond-20140604")
         self.__set_tag__(["DQFLAGS"], "dq-20140428")
         if not self.getProp("Simulation"):
             self.__set_init_time__(datetime.utcfromtimestamp(1319991087)) # End of fill 2267
@@ -256,7 +268,8 @@ class DDDBConf(ConfigurableUser):
         # Need also to change connection string to DDDB
         CondDB().PartitionConnectionString = {"DDDB":"sqlite_file:$SQLITEDBPATH/DDDB_upgrade.db/DDDB"}
 
-    __data_types_handlers__ =  { "2013": __2013_conf__,
+    __data_types_handlers__ =  { "2015": __2015_conf__,
+                                 "2013": __2013_conf__,
                                  "2012": __2012_conf__,
                                  "2011": __2011_conf__,
                                  "2010": __2010_conf__,
