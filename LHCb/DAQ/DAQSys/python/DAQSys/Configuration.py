@@ -148,7 +148,7 @@ class DecodeRawEvent(ConfigurableUser):
             return
         
         #overwrite them if able
-        print "# DecodeRawEvent: Overriding "+d.FullName+" from "+d.listInputs().__str__()+" to " +str(dest)
+        #print "# DecodeRawEvent: Overriding "+d.FullName+" from "+d.listInputs().__str__()+" to " +str(dest)
         d.overrideInputs(dest)
         if setup:
             d.setup(onlyInputs=True)
