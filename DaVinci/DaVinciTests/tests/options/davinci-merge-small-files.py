@@ -4,7 +4,7 @@
 from Gaudi.Configuration import *
 
 from PRConfig import TestFileDB
-InputData = TestFileDB.test_file_db["Reco08S14EW_SmallFiles.dst"].filenames
+InputData = TestFileDB.test_file_db["R08S14_smallfiles"].filenames
 
 ######################
 #choose number of files
