@@ -13,91 +13,173 @@
 // Standard constructor, initializes variables
 //=============================================================================
 PrPixelTrack::PrPixelTrack()
-    : m_x0(0.),
-      m_tx(0.),
-      m_y0(0.),
-      m_ty(0.),
-      m_s0(0.),
-      m_sx(0.),
-      m_sz(0.),
-      m_sxz(0.),
-      m_sz2(0.),
-      m_u0(0.),
-      m_uy(0.),
-      m_uz(0.),
-      m_uyz(0.),
-      m_uz2(0.) {
+    : m_tx(0.), m_ty(0.),
+      m_x0(0.), m_y0(0.) {
 
   m_hits.reserve(20);
+
+  // vector constants initialization
+  v_compValue = _mm_set1_ps(10e-10);
+  v_1s = _mm_set1_ps(1.0f);
+  v_2s = _mm_set1_ps(2.0f);
+  v_sign_mask = _mm_set1_ps(-0.f); // -0.f = 1 << 31
 }
 
 //=========================================================================
 // Compute the track parameters
 //=========================================================================
 void PrPixelTrack::fit() {
+  // fit in intrinsics (SSE, SSE2)
+  __m128 v0, v1, v2, v3, v4, v5, v6, v7, v_wxwy;
 
-  m_s0 = m_sx = m_sz = m_sxz = m_sz2 = 0.;
-  m_u0 = m_uy = m_uz = m_uyz = m_uz2 = 0.;
+  // First iteration of loop, unrolled (shuffle instead of addition)
+  // Precondition: m_hits.size() > 0
+  auto ith = m_hits.cbegin();
   const auto end = m_hits.cend();
-  for (auto ith = m_hits.cbegin(); ith != end; ++ith) {
-    const double x = (*ith)->x();
-    const double z = (*ith)->z();
-    const double wx = (*ith)->wx();
-    const double wx_t_x = wx * x;
-    const double wx_t_z = wx * z;
-    m_s0 += wx;
-    m_sx += wx_t_x;
-    m_sz += wx_t_z;
-    m_sxz += wx_t_x * z;
-    m_sz2 += wx_t_z * z;
 
-    const double y = (*ith)->y();
-    const double wy = (*ith)->wy();
-    const double wy_t_y = wy * y;
-    const double wy_t_z = wy * z;
-    m_u0 += wy;
-    m_uy += wy_t_y;
-    m_uz += wy_t_z;
-    m_uyz += wy_t_y * z;
-    m_uz2 += wy_t_z * z;
+  v0 = _mm_loadu_ps( (*ith)->p_x() ); // x,y,z,wx
+  const float wy = (*ith)->wy();
+  v1 = _mm_load_ss( &wy );
+  v_wxwy = _mm_shuffle_ps(v0, v1, _MM_SHUFFLE(0,0,3,3)); // wx,wx,wy,wy
+  
+  v1 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,1,2,0)); // x,z,y,z
+  v2 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,2,2,2)); // z,z,z,z
+  v3 = _mm_mul_ps(v1, v_wxwy); // wx*x, wx*z, wy*y, wy*z
+  v4 = _mm_mul_ps(v3, v2); // wx*x*z, wx*z*z, wy*y*z, wy*z*z
+
+  v_s0 = _mm_shuffle_ps(v_wxwy, v_wxwy, _MM_SHUFFLE(2,2,0,0)); // v_s0: s0,s0,u0,u0
+  v_sx = _mm_shuffle_ps(v3, v3, _MM_SHUFFLE(3,2,1,0));     // v_sx: sx,sz,uy,uz
+  v_sxz = _mm_shuffle_ps(v4, v4, _MM_SHUFFLE(3,2,1,0));   // v_sxz: sxz,sz2,uyz,uz2
+
+  ++ith;
+  for (; ith != end; ++ith) {
+    
+    v0 = _mm_loadu_ps( (*ith)->p_x() ); // x,y,z,wx
+
+    const float wy = (*ith)->wy();
+    v1 = _mm_load_ss( &wy );
+    v_wxwy = _mm_shuffle_ps(v0, v1, _MM_SHUFFLE(0,0,3,3)); // wx,wx,wy,wy
+    
+    v1 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,1,2,0)); // x,z,y,z
+    v2 = _mm_shuffle_ps(v0, v0, _MM_SHUFFLE(2,2,2,2)); // z,z,z,z
+    v3 = _mm_mul_ps(v1, v_wxwy); // wx*x, wx*z, wy*y, wy*z
+    v4 = _mm_mul_ps(v3, v2); // wx*x*z, wx*z*z, wy*y*z, wy*z*z
+
+    v_s0 = _mm_add_ps(v_s0, v_wxwy); // v_s0: s0,s0,u0,u0
+    v_sx = _mm_add_ps(v_sx, v3); // v_sx: sx,sz,uy,uz
+    v_sxz = _mm_add_ps(v_sxz, v4); // v_sxz: sxz,sz2,uyz,uz2
   }
 
-  double dens = 1.0 / (m_sz2 * m_s0 - m_sz * m_sz);
-  if (fabs(dens) > 10e+10) dens = 1.0;
-  m_tx = (m_sxz * m_s0 - m_sx * m_sz) * dens;
-  m_x0 = (m_sx * m_sz2 - m_sxz * m_sz) * dens;
+  // float den =  (b->m_sz2 * b->m_s0 - b->m_sz * b->m_sz);
+  // float den2 = (b->m_uz2 * b->m_u0 - b->m_uz * b->m_uz);
+  
+  v1 = _mm_shuffle_ps(v_sxz, v_sx, _MM_SHUFFLE(3,1,3,1));
+  v2 = _mm_shuffle_ps(v_s0, v_sx, _MM_SHUFFLE(3,1,2,0));
+  v3 = _mm_mul_ps(v1, v2);
+  v1 = _mm_shuffle_ps(v3, v3, _MM_SHUFFLE(1,0,1,0));
+  v2 = _mm_shuffle_ps(v3, v3, _MM_SHUFFLE(3,2,3,2));
+  v7 = _mm_sub_ps(v1, v2); // den,den2,den,den2
 
-  double denu = 1.0 / (m_uz2 * m_u0 - m_uz * m_uz);
-  if (fabs(denu) > 10e+10) denu = 1.0;
-  m_ty = (m_uyz * m_u0 - m_uy * m_uz) * denu;
-  m_y0 = (m_uy * m_uz2 - m_uyz * m_uz) * denu;
+  // if (fabs(den) < 10e-10) den = 1.f;
+  // if (fabs(den2) < 10e-10) den2 = 1.f;
+  // abs value of den
+  v6 = _mm_andnot_ps(v_sign_mask, v7);
+  
+  // den = den & mask + 1 & ~mask
+  v1 = _mm_cmplt_ps(v6, v_compValue); // v1 is mask of denX < 10e-10
+  v2 = _mm_andnot_ps(v1, v7);
+  v3 = _mm_and_ps(v1, v_1s);
+  v7 = _mm_add_ps(v2, v3);
+
+  // b->m_tx = (b->m_sxz * b->m_s0  - b->m_sx  * b->m_sz) / den;
+  // b->m_ty = (b->m_uyz * b->m_u0  - b->m_uy  * b->m_uz) / den2;
+  // b->m_x0 = (b->m_sx  * b->m_sz2 - b->m_sxz * b->m_sz) / den;
+  // b->m_y0 = (b->m_uy  * b->m_uz2 - b->m_uyz * b->m_uz) / den2;
+
+  v1 = _mm_shuffle_ps(v_sxz, v_sx, _MM_SHUFFLE(2,0,2,0));
+  v2 = _mm_shuffle_ps(v_s0, v_sxz, _MM_SHUFFLE(3,1,2,0));
+  v3 = _mm_mul_ps(v1, v2);
+  v4 = _mm_shuffle_ps(v_sx, v_sxz, _MM_SHUFFLE(2,0,2,0));
+  v5 = _mm_shuffle_ps(v_sx, v_sx, _MM_SHUFFLE(3,1,3,1));
+  v6 = _mm_mul_ps(v4, v5);
+
+  v1 = _mm_sub_ps(v3, v6);
+  v2 = _mm_div_ps(v1, v7);
+
+  // Store final result
+  _mm_storeu_ps(&(m_tx), v2);
 }
 
 //=========================================================================
 // Return the covariance matrix of the last fit at the specified z
 //=========================================================================
-Gaudi::TrackSymMatrix PrPixelTrack::covariance(const double z) const {
-
+Gaudi::TrackSymMatrix PrPixelTrack::covariance(const float z) const {
+  // covariance in intrinsics (SSE, SSE2)
+  __m128 v1, v2, v3, v4, v5, v6, v7;
+  float vec_cov[8];
   Gaudi::TrackSymMatrix cov;
-  //== Ad hoc matrix inversion, as it is almost diagonal!
-  const double m00 = m_s0;
-  const double m11 = m_u0;
-  const double m20 = m_sz - z * m_s0;
-  const double m31 = m_uz - z * m_u0;
-  const double m22 = m_sz2 - 2 * z * m_sz + z * z * m_s0;
-  const double m33 = m_uz2 - 2 * z * m_uz + z * z * m_u0;
-  const double den20 = 1.0 / (m22 * m00 - m20 * m20);
-  const double den31 = 1.0 / (m33 * m11 - m31 * m31);
 
-  cov(0, 0) = m22 * den20;
-  cov(2, 0) = -m20 * den20;
-  cov(2, 2) = m00 * den20;
+  // const float m00 = m_s0;
+  // const float m11 = m_u0;
+  // const float m20 = m_sz - z * m_s0;
+  // const float m31 = m_uz - z * m_u0;
+  // const float m22 = m_sz2 - 2 * z * m_sz + z * z * m_s0;
+  // const float m33 = m_uz2 - 2 * z * m_uz + z * z * m_u0;
+  // const float den20 = 1.0 / (m22 * m00 - m20 * m20);
+  // const float den31 = 1.0 / (m33 * m11 - m31 * m31);
 
-  cov(1, 1) = m33 * den31;
-  cov(3, 1) = -m31 * den31;
-  cov(3, 3) = m11 * den31;
+  v7 = _mm_set1_ps(z);
+  v1 = _mm_shuffle_ps(v_s0, v_sx, _MM_SHUFFLE(3,1,2,0)); // s0,u0,sz,uz
+  v1 = _mm_mul_ps(v1, v7); // z*s0,z*u0,z*sz,z*uz
 
-  cov(4, 4) = 1.;
+  v2 = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(1,0,1,0)); // z*s0,z*u0,X,X
+  v3 = _mm_shuffle_ps(v7, v_2s, _MM_SHUFFLE(0,0,0,0)); // z,z,2,2
+  v1 = _mm_mul_ps(v3, v1); // z*z*s0, z*z*u0, 2*z*sz, 2*z*uz
+
+  v3 = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(1,0,0,0)); // X, X, z*z*s0, z*z*u0
+  v1 = _mm_sub_ps(v1, v3); // X, X, 2*z*s0 - z*z*sz, 2*z*u0 - z*z*uz
+
+  v1 = _mm_shuffle_ps(v2, v1, _MM_SHUFFLE(3,2,1,0));      // z*s0, z*u0, 2*z*s0 + z*z*sz, 2*z*u0 + z*z*uz
+  v4 = _mm_shuffle_ps(v_sx, v_sxz, _MM_SHUFFLE(3,1,3,1)); // sz, uz, sz2, uz2
+
+  v1 = _mm_sub_ps(v4, v1); // m20, m31, m22, m33
+
+  // float den20 = m22 * m00 - m20 * m20;
+  // float den31 = m33 * m11 - m31 * m31;
+
+  v2 = _mm_shuffle_ps(v_s0, v1, _MM_SHUFFLE(1,0,2,0)); // m00, m11, m20, m31
+  v3 = _mm_shuffle_ps(v1, v2, _MM_SHUFFLE(3,2,3,2)); // m22, m33, m20, m31
+  v2 = _mm_mul_ps(v3, v2); // m22 * m00, m33 * m11, m20 * m20, m31 * m31
+
+  v3 = _mm_shuffle_ps(v2, v2, _MM_SHUFFLE(3,2,3,2)); // m20 * m20, m31 * m31, X, X
+  v2 = _mm_sub_ps(v2, v3); // den20, den31, X, X
+  v3 = _mm_shuffle_ps(v2, v2, _MM_SHUFFLE(1,0,1,0)); // den20, den31, den20, den31
+
+  // Use this technique for sign
+  // v6 = _mm_xor_ps(v_sign_mask, v7);
+
+  v4 = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(1,0,1,0)); // m20, m31, X, X
+  v4 = _mm_xor_ps(v_sign_mask, v4); // -m20, -m31, X, X
+  v6 = _mm_div_ps(v4, v2); // -m20/den20, -m31/den31
+
+  v5 = _mm_shuffle_ps(v_s0, v1, _MM_SHUFFLE(3,2,2,0)); // m00, m11, m22, m33
+  v7 = _mm_div_ps(v5, v3); // m00/den20, m11/den31, m22/den20, m33/den31
+  
+  _mm_storeu_ps(&(vec_cov[0]), v7);
+  cov(2,2) = vec_cov[0];
+  cov(3,3) = vec_cov[1];
+  cov(0,0) = vec_cov[2];
+  cov(1,1) = vec_cov[3];
+
+  _mm_storeu_ps(&(vec_cov[4]), v6);
+  cov(2,0) = vec_cov[4];
+  cov(3,1) = vec_cov[5];
+
+  // v0 = _mm_shuffle_ps(v6, v6, _MM_SHUFFLE(1, 1, 1, 1));
+  // _mm_store_ss(&(cov(2,0)), v6);
+  // _mm_store_ss(&(cov(3,1)), v0);
+
+  cov(4,4) = 1.f;
   return cov;
 }
 
@@ -113,25 +195,25 @@ struct SortDecreasingZ {
 };
 
 /// Helper function to filter one hit
-inline double filter(double z, double &x, double &tx, double &covXX,
-                     double &covXTx, double &covTxTx, double zhit, double xhit,
-                     double whit) {
+inline float filter(float z, float &x, float &tx, float &covXX,
+                     float &covXTx, float &covTxTx, float zhit, float xhit,
+                     float whit) {
   // compute the prediction
-  const double dz = zhit - z;
-  const double predx = x + dz * tx;
+  const float dz = zhit - z;
+  const float predx = x + dz * tx;
 
-  const double dz_t_covTxTx = dz * covTxTx;
-  const double predcovXTx = covXTx + dz_t_covTxTx;
-  const double dx_t_covXTx = dz * covXTx;
+  const float dz_t_covTxTx = dz * covTxTx;
+  const float predcovXTx = covXTx + dz_t_covTxTx;
+  const float dx_t_covXTx = dz * covXTx;
 
-  const double predcovXX = covXX + 2 * dx_t_covXTx + dz * dz_t_covTxTx;
-  const double predcovTxTx = covTxTx;
+  const float predcovXX = covXX + 2 * dx_t_covXTx + dz * dz_t_covTxTx;
+  const float predcovTxTx = covTxTx;
   // compute the gain matrix
-  const double R = 1.0 / (1.0 / whit + predcovXX);
-  const double Kx = predcovXX * R;
-  const double KTx = predcovXTx * R;
+  const float R = 1.0 / (1.0 / whit + predcovXX);
+  const float Kx = predcovXX * R;
+  const float KTx = predcovXTx * R;
   // update the state vector
-  const double r = xhit - predx;
+  const float r = xhit - predx;
   x = predx + Kx * r;
   tx = tx + KTx * r;
   // update the covariance matrix. we can write it in many ways ...
@@ -152,8 +234,8 @@ inline double filter(double z, double &x, double &tx, double &covXX,
 //  noise2PerLayer: scattering contribution (squared) to tx and ty
 // The return value is the chi2 of the fit
 // ===============================================================================
-double PrPixelTrack::fitKalman(LHCb::State &state, int direction,
-                               double noise2PerLayer) const {
+float PrPixelTrack::fitKalman(LHCb::State &state, int direction,
+                               float noise2PerLayer) const {
   // WH: hits are apparently not perfectly sorted. if we really want
   // to use this in the future, we probably want to sort them only
   // once. for now, we sort on every call. since hits seem to be
@@ -177,22 +259,22 @@ double PrPixelTrack::fitKalman(LHCb::State &state, int direction,
   // filter first the first hit.
 
   const PrPixelHit *hit = m_hits[firsthit];
-  double x = hit->x();
-  double tx = m_tx;
-  double y = hit->y();
-  double ty = m_ty;
-  double z = hit->z();
+  float x = hit->x();
+  float tx = m_tx;
+  float y = hit->y();
+  float ty = m_ty;
+  float z = hit->z();
 
   // initialize the covariance matrix
-  double covXX = 1 / hit->wx();
-  double covYY = 1 / hit->wy();
-  double covXTx = 0;  // no initial correlation
-  double covYTy = 0;
-  double covTxTx = 1;  // randomly large error
-  double covTyTy = 1;
+  float covXX = 1 / hit->wx();
+  float covYY = 1 / hit->wy();
+  float covXTx = 0;  // no initial correlation
+  float covYTy = 0;
+  float covTxTx = 1;  // randomly large error
+  float covTyTy = 1;
 
   // add remaining hits
-  double chi2(0);
+  float chi2(0);
   for (int i = firsthit + dhit; i != lasthit + dhit; i += dhit) {
     hit = m_hits[i];
     // add the noise

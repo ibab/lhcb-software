@@ -60,8 +60,8 @@ StatusCode PrPixelHitManager::initialize() {
   memset(m_buffer, 0, SENSOR_PIXELS * sizeof(unsigned char));
   memset(m_sp_patterns, 0, 256 * sizeof(unsigned char));
   memset(m_sp_sizes, 0, 256 * sizeof(unsigned char));
-  memset(m_sp_fx, 0, 512 * sizeof(double));
-  memset(m_sp_fy, 0, 512 * sizeof(double));
+  memset(m_sp_fx, 0, 512 * sizeof(float));
+  memset(m_sp_fy, 0, 512 * sizeof(float));
 
   // create pattern buffer for isolated SPs
   cacheSPPatterns();
@@ -172,8 +172,8 @@ void PrPixelHitManager::cacheSPPatterns() {
 
       const uint32_t cx = x / n;
       const uint32_t cy = y / n;
-      const double fx = x / static_cast<double>(n) - cx;
-      const double fy = y / static_cast<double>(n) - cy;
+      const float fx = x / static_cast<float>(n) - cx;
+      const float fy = y / static_cast<float>(n) - cy;
 
       m_sp_sizes[sp] |= n << (4 * clu_idx);
 
@@ -235,7 +235,7 @@ StatusCode PrPixelHitManager::rebuildGeometry() {
   m_x_pitch = (*its)->xPitch();
   m_pixel_size = (*its)->pixelSize(LHCb::VPChannelID(0, 0, 0, 0)).second;
 
-  double ltg_rot_components[9];
+  float ltg_rot_components[9];
   int idx = 0;
   for (; m_vp->sensorsEnd() != its; ++its) {
     // TODO:
@@ -382,7 +382,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
   // timing performance. And yes, this has been measured. Just don't.
 
   // Assume binary resolution of hit position. This is the weight.
-  const double w = 12.0 / (0.055 * 0.055);
+  const float w = 12.0 / (0.055 * 0.055);
 
   // Loop over VP RawBanks
   std::vector<LHCb::RawBank *>::const_iterator iterBank = tBanks.begin();
@@ -390,7 +390,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
 
     const unsigned int sensor = (*iterBank)->sourceID();
     const unsigned int module = sensor / MODULE_SENSORS;
-    const double *ltg = m_ltg + 16 * sensor;
+    const float *ltg = m_ltg + 16 * sensor;
 
     // reset and then fill the super pixel buffer for a sensor
     // memset(m_sp_buffer,0,256*256*3*sizeof(unsigned char));
@@ -455,14 +455,14 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
 
           LHCb::VPChannelID cid(sensor, chip, cx % CHIP_COLUMNS, cy);
 
-          const double fx = m_sp_fx[sp * 2];
-          const double fy = m_sp_fy[sp * 2];
-          const double local_x = m_local_x[cx] + fx * m_x_pitch[cx];
-          const double local_y = (cy + 0.5 + fy) * m_pixel_size;
+          const float fx = m_sp_fx[sp * 2];
+          const float fy = m_sp_fy[sp * 2];
+          const float local_x = m_local_x[cx] + fx * m_x_pitch[cx];
+          const float local_y = (cy + 0.5 + fy) * m_pixel_size;
 
-          const double gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
-          const double gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
-          const double gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
+          const float gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
+          const float gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
+          const float gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
 
           m_xFractions[m_nHits] = fx;
           m_yFractions[m_nHits] = fy;
@@ -479,14 +479,14 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
 
           LHCb::VPChannelID cid(sensor, chip, cx % CHIP_COLUMNS, cy);
 
-          const double fx = m_sp_fx[sp * 2 + 1];
-          const double fy = m_sp_fy[sp * 2 + 1];
-          const double local_x = m_local_x[cx] + fx * m_x_pitch[cx];
-          const double local_y = (cy + 0.5 + fy) * m_pixel_size;
+          const float fx = m_sp_fx[sp * 2 + 1];
+          const float fy = m_sp_fy[sp * 2 + 1];
+          const float local_x = m_local_x[cx] + fx * m_x_pitch[cx];
+          const float local_y = (cy + 0.5 + fy) * m_pixel_size;
 
-          const double gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
-          const double gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
-          const double gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
+          const float gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
+          const float gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
+          const float gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
 
           m_xFractions[m_nHits] = fx;
           m_yFractions[m_nHits] = fy;
@@ -639,8 +639,8 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
         if (n <= m_maxClusterSize) {
           const unsigned int cx = x / n;
           const unsigned int cy = y / n;
-          const double fx = x / static_cast<double>(n) - cx;
-          const double fy = y / static_cast<double>(n) - cy;
+          const float fx = x / static_cast<float>(n) - cx;
+          const float fy = y / static_cast<float>(n) - cy;
 
           m_xFractions[m_nHits] = fx;
           m_yFractions[m_nHits] = fy;
@@ -649,18 +649,18 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
           const uint32_t chip = cx / CHIP_COLUMNS;
           LHCb::VPChannelID cid(sensor, chip, cx % CHIP_COLUMNS, cy);
 
-          const double local_x = m_local_x[cx] + fx * m_x_pitch[cx];
-          const double local_y = (cy + 0.5 + fy) * m_pixel_size;
-          const double gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
-          const double gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
-          const double gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
+          const float local_x = m_local_x[cx] + fx * m_x_pitch[cx];
+          const float local_y = (cy + 0.5 + fy) * m_pixel_size;
+          const float gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
+          const float gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
+          const float gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
           m_pool[m_nHits++].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
         }
       } else {  // we are running in offline mode, compute all 3D points
         const unsigned int cx = x / n;
         const unsigned int cy = y / n;
-        const double fx = x / static_cast<double>(n) - cx;
-        const double fy = y / static_cast<double>(n) - cy;
+        const float fx = x / static_cast<float>(n) - cx;
+        const float fy = y / static_cast<float>(n) - cy;
 
         m_xFractions[m_nClusters] = fx;
         m_yFractions[m_nClusters] = fy;
@@ -668,11 +668,11 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
         // store target (cluster and 3D point for tracking)
         const uint32_t chip = cx / CHIP_COLUMNS;
         LHCb::VPChannelID cid(sensor, chip, cx % CHIP_COLUMNS, cy);
-        const double local_x = m_local_x[cx] + fx * m_x_pitch[cx];
-        const double local_y = (cy + 0.5 + fy) * m_pixel_size;
-        const double gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
-        const double gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
-        const double gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
+        const float local_x = m_local_x[cx] + fx * m_x_pitch[cx];
+        const float local_y = (cy + 0.5 + fy) * m_pixel_size;
+        const float gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
+        const float gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
+        const float gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
         m_allHits[m_nClusters++]
             .setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
         if (n <=
@@ -701,10 +701,10 @@ void PrPixelHitManager::buildHitsFromLCRawBank(
     const std::vector<LHCb::RawBank *> &tBanks) {
 
   // Assume binary resolution of hit position. This is the weight.
-  const double w = 12.0 / (0.055 * 0.055);
+  const float w = 12.0 / (0.055 * 0.055);
 
   // The unit of the inter pixel fractions.
-  const double fractScale = 1.0 / (1 << (YFRACTSHIFT - XFRACTSHIFT));
+  const float fractScale = 1.0 / (1 << (YFRACTSHIFT - XFRACTSHIFT));
 
   // Loop over raw banks.
   const unsigned int nb = tBanks.size();
@@ -739,21 +739,21 @@ void PrPixelHitManager::buildHitsFromLCRawBank(
       const unsigned int sensor =
           module * MODULE_SENSORS + module_chip / SENSOR_CHIPS;
       const unsigned int sensor_chip = module_chip % SENSOR_CHIPS;
-      const double xfract = fractScale * ((cw & XFRACTMASK) >> XFRACTSHIFT);
-      const double yfract = fractScale * ((cw & YFRACTMASK) >> YFRACTSHIFT);
+      const float xfract = fractScale * ((cw & XFRACTMASK) >> XFRACTSHIFT);
+      const float yfract = fractScale * ((cw & YFRACTMASK) >> YFRACTSHIFT);
 
       LHCb::VPChannelID cid(sensor, sensor_chip, col, row);
 
       const unsigned int cy = cid.row();
       const unsigned int cx = cid.col() + CHIP_COLUMNS * sensor_chip;
-      const double dx = xfract * m_x_pitch[cx];
-      const double dy = yfract * m_pixel_size;
-      double local_x = m_local_x[cx] + dx;
-      double local_y = (cy + 0.5) * m_pixel_size + dy;
-      const double *ltg = m_ltg + sensor * 16;
-      const double gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
-      const double gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
-      const double gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
+      const float dx = xfract * m_x_pitch[cx];
+      const float dy = yfract * m_pixel_size;
+      float local_x = m_local_x[cx] + dx;
+      float local_y = (cy + 0.5) * m_pixel_size + dy;
+      const float *ltg = m_ltg + sensor * 16;
+      const float gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
+      const float gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
+      const float gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
 
       if (!m_trigger) {
         m_channelIDs[m_nHits].push_back(cid);
@@ -811,9 +811,9 @@ void PrPixelHitManager::storeTriggerClusters() {
   for (unsigned int ih = 0; ih < m_nHits; ++ih) {
     const PrPixelHit &hit = m_pool[ih];
     const LHCb::VPChannelID cid = hit.id().vpID();
-    const double x = hit.x();
-    const double y = hit.y();
-    const double z = hit.z();
+    const float x = hit.x();
+    const float y = hit.y();
+    const float z = hit.z();
 
     // It is possible that two clusters have the same centroid
     // channel ID. This is extremely rare but we have to protect
@@ -826,8 +826,8 @@ void PrPixelHitManager::storeTriggerClusters() {
       continue;
     }
 
-    const double fx = m_xFractions[ih];
-    const double fy = m_yFractions[ih];
+    const float fx = m_xFractions[ih];
+    const float fy = m_yFractions[ih];
     pixels[0] = cid;
     clusters->insert(
         new LHCb::VPCluster(std::make_pair(fx, fy), x, y, z, pixels), cid);
@@ -852,9 +852,9 @@ void PrPixelHitManager::storeOfflineClusters() {
   for (unsigned int ic = 0; ic < m_nClusters; ++ic) {
     const PrPixelHit &hit = m_allHits[ic];
     const LHCb::VPChannelID cid = hit.id().vpID();
-    const double x = hit.x();
-    const double y = hit.y();
-    const double z = hit.z();
+    const float x = hit.x();
+    const float y = hit.y();
+    const float z = hit.z();
 
     // It is possible that two clusters have the same centroid
     // channel ID. This is extremely rare but we have to protect
@@ -867,8 +867,8 @@ void PrPixelHitManager::storeOfflineClusters() {
       continue;
     }
 
-    const double fx = m_xFractions[ic];
-    const double fy = m_yFractions[ic];
+    const float fx = m_xFractions[ic];
+    const float fy = m_yFractions[ic];
     clusters->insert(
         new LHCb::VPCluster(std::make_pair(fx, fy), x, y, z, m_channelIDs[ic]),
         cid);
@@ -910,7 +910,7 @@ void PrPixelHitManager::buildHits() {
     m_pool.resize(clusters->size() + 100);
   }
   // Assume binary resolution of hit position. This is the weight.
-  const double w = 12.0 / (0.055 * 0.055);
+  const float w = 12.0 / (0.055 * 0.055);
   // Loop over clusters.
   LHCb::VPClusters::const_iterator itc;
   LHCb::VPClusters::const_iterator itc_end(clusters->end());
@@ -924,14 +924,14 @@ void PrPixelHitManager::buildHits() {
     const unsigned int sensor = cid.sensor();
     const unsigned int cy = cid.row();
     const unsigned int cx = cid.col() + CHIP_COLUMNS * sensor_chip;
-    const double dx = (*itc)->fraction().first * m_x_pitch[cx];
-    const double dy = (*itc)->fraction().second * m_pixel_size;
-    double local_x = m_local_x[cx] + dx;
-    double local_y = (cy + 0.5) * m_pixel_size + dy;
-    const double *ltg = m_ltg + sensor * 16;
-    const double gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
-    const double gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
-    const double gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
+    const float dx = (*itc)->fraction().first * m_x_pitch[cx];
+    const float dy = (*itc)->fraction().second * m_pixel_size;
+    float local_x = m_local_x[cx] + dx;
+    float local_y = (cy + 0.5) * m_pixel_size + dy;
+    const float *ltg = m_ltg + sensor * 16;
+    const float gx = ltg[0] * local_x + ltg[1] * local_y + ltg[9];
+    const float gy = ltg[3] * local_x + ltg[4] * local_y + ltg[10];
+    const float gz = ltg[6] * local_x + ltg[7] * local_y + ltg[11];
 
     m_pool[m_nHits].setHit(LHCb::LHCbID(cid), gx, gy, gz, w, w, module);
     m_modules[module]->addHit(&(m_pool[m_nHits++]));

@@ -45,8 +45,8 @@ class PrPixelTracking : public GaudiAlgorithm {
   /// Extrapolate a seed track and try to add further hits.
   void extendTrack(const PrPixelHit *h1, const PrPixelHit *h2);
   /// Try to add a matching hit on a given module.
-  PrPixelHit *bestHit(PrPixelModule* module, const double xTol, 
-                      const double maxScatter,
+  PrPixelHit *bestHit(PrPixelModule* module, const float xTol, 
+                      const float maxScatter,
                       const PrPixelHit* h1, const PrPixelHit* h2) const;
   /// Produce LHCb::Track list understandable to other LHCb applications.
   void makeLHCbTracks();
@@ -69,17 +69,17 @@ class PrPixelTracking : public GaudiAlgorithm {
   PrPixelHitManager *m_hitManager;
 
   /// Slope limits for seed pairs
-  double m_maxXSlope;
-  double m_maxYSlope;
+  float m_maxXSlope;
+  float m_maxYSlope;
   /// Parameters for track extrapolation
-  double m_extraTol;
+  float m_extraTol;
   unsigned int m_maxMissed;
   /// Criteria for adding hits to an existing track
-  double m_maxScatter;
+  float m_maxScatter;
   /// Max. chi2 for 3-hit tracks
-  double m_maxChi2Short;
+  float m_maxChi2Short;
   /// Min. fraction of unused hits
-  double m_fractionUnused;
+  float m_fractionUnused;
 
   bool m_clearHits;
   bool m_stateClosestToBeamKalmanFit;

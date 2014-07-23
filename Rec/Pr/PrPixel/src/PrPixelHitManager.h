@@ -125,8 +125,8 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   // distinct clusters in an SP.
   unsigned char m_sp_patterns[256];
   unsigned char m_sp_sizes[256];
-  double m_sp_fx[512];
-  double m_sp_fy[512];
+  float m_sp_fx[512];
+  float m_sp_fy[512];
 
   // Clustering buffers
   unsigned char m_buffer[PrPixel::SENSOR_PIXELS];
@@ -143,21 +143,21 @@ class PrPixelHitManager : public GaudiTool, public IIncidentListener {
   std::string m_clusterLocation;
 
   /// Cache of local to global transformations, 16 stride aligned.
-  double m_ltg[16 * PrPixel::TOT_SENSORS];  // 16*208 = 16*number of sensors
+  float m_ltg[16 * PrPixel::TOT_SENSORS];  // 16*208 = 16*number of sensors
 
   /// pointers to local x coordinates and pitches
   const double *m_local_x;
   const double *m_x_pitch;
 
   /// pixel size in y; this is constant for all pixels on a sensor
-  double m_pixel_size;
+  float m_pixel_size;
 
   /// Storage for pixels contributing to clusters. Not used in trigger.
   std::vector<std::vector<LHCb::VPChannelID> > m_channelIDs;
   /// Storage for x fractions of all clusters. Not used in trigger.
-  std::vector<double> m_xFractions;
+  std::vector<float> m_xFractions;
   /// Storage for y fractions of all clusters. Not used in trigger.
-  std::vector<double> m_yFractions;
+  std::vector<float> m_yFractions;
   /// Storage for 3D points of all clusters. Not used in trigger.
   std::vector<PrPixelHit> m_allHits;
 };

@@ -20,16 +20,16 @@ class PrPixelHit {
       : m_x(0.),
         m_y(0.),
         m_z(0.),
-        m_id(0),
         m_wx(0.),
         m_wy(0.),
         m_module(0),
+        m_id(0),
         m_isUsed(false) {}
   /// Destructor
   virtual ~PrPixelHit() {}
 
   void setHit(const LHCb::LHCbID id, const Gaudi::XYZPoint &point,
-              const double wx, const double wy, const unsigned int module) {
+              const float wx, const float wy, const unsigned int module) {
     m_id = id;
     m_x = point.x();
     m_y = point.y();
@@ -40,8 +40,8 @@ class PrPixelHit {
     m_isUsed = false;
   }
 
-  void setHit(const LHCb::LHCbID id, const double x, const double y,
-              const double z, const double wx, const double wy,
+  void setHit(const LHCb::LHCbID id, const float x, const float y,
+              const float z, const float wx, const float wy,
               const unsigned int module) {
     m_id = id;
     m_x = x;
@@ -54,26 +54,29 @@ class PrPixelHit {
   }
 
   LHCb::LHCbID id() const { return m_id; }
-  double x() const { return m_x; }
-  double y() const { return m_y; }
-  double z() const { return m_z; }
-  double wx() const { return m_wx; }
-  double wy() const { return m_wy; }
+  float x() const { return m_x; }
+  float y() const { return m_y; }
+  float z() const { return m_z; }
+  float wx() const { return m_wx; }
+  float wy() const { return m_wy; }
   int module() const { return m_module; }
   bool isUsed() const { return m_isUsed; }
   void setUsed(const bool flag) { m_isUsed = flag; }
+  
+  /// Pointer to x,y,z,wx
+  const float* p_x() const { return &m_x; }
 
   /// Calculate distance in X-Y to given X-Y point
-  double distance(const double x, const double y) const {
-    const double dx = x - m_x;
-    const double dy = y - m_y;
+  float distance(const float x, const float y) const {
+    const float dx = x - m_x;
+    const float dy = y - m_y;
     return sqrt(dx * dx + dy * dy);
   }
 
   /// Calculate distance-square / sigma-square
-  double chi2(const double x, const double y) const {
-    const double dx = x - m_x;
-    const double dy = y - m_y;
+  float chi2(const float x, const float y) const {
+    const float dx = x - m_x;
+    const float dy = y - m_y;
     return dx * dx * m_wx + dy * dy * m_wy;
   }
 
@@ -101,17 +104,17 @@ class PrPixelHit {
 
  private:
   /// Global position
-  double m_x;
-  double m_y;
-  double m_z;
-  /// Channel ID
-  LHCb::LHCbID m_id;
+  float m_x;
+  float m_y;
+  float m_z;
   /// Weight (1 / squared error) in X
-  double m_wx;
+  float m_wx;
   /// Weight (1 / squared error) in Y 
-  double m_wy;
+  float m_wy;
   /// Module number
   unsigned int m_module;
+  /// Channel ID
+  LHCb::LHCbID m_id;
   /// Already used by (associated to) a track?
   bool m_isUsed;
 };

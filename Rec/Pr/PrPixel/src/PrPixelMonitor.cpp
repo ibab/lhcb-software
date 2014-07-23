@@ -44,10 +44,10 @@ StatusCode PrPixelMonitor::execute() {
   const unsigned int lastModule = m_hitManager->lastModule();
   for (unsigned int i = firstModule; i < lastModule; ++i) {
     for (auto hit : m_hitManager->hits(i)) {
-      const double x = hit->x();
-      const double y = hit->y();
-      const double z = hit->z();
-      const double r = sqrt(x * x + y * y);
+      const float x = hit->x();
+      const float y = hit->y();
+      const float z = hit->z();
+      const float r = sqrt(x * x + y * y);
       if (!hit->isUsed()) {
         plot3D(x, y, z, "UnusedHits3D", "Distribution of Unused Hits", 
                -50., 50., -50., 50., -500., 800., 100, 100, 200);
@@ -90,9 +90,9 @@ StatusCode PrPixelMonitor::execute() {
   for (LHCb::Track* track : *tracks) {
     const bool bwd = track->checkFlag(LHCb::Track::Backward);
     const unsigned int nHitsPerTrack = track->lhcbIDs().size();
-    const double chi2 = track->chi2PerDoF();
-    const double eta = track->pseudoRapidity();
-    const double phi = track->phi() / Gaudi::Units::degree;
+    const float chi2 = track->chi2PerDoF();
+    const float eta = track->pseudoRapidity();
+    const float phi = track->phi() / Gaudi::Units::degree;
     if (bwd) {
       ++nBwd;
       plot(nHitsPerTrack, "BwdHitsPerTrack",
@@ -133,14 +133,14 @@ StatusCode PrPixelMonitor::execute() {
     if (!cluster0) continue;
     const LHCb::VPCluster* cluster1 = clusters->object(id1);
     if (!cluster1) continue;
-    const double x0 = cluster0->x();
-    const double y0 = cluster0->y();
-    const double r0 = sqrt(x0 * x0 + y0 * y0);
-    const double x1 = cluster1->x();
-    const double y1 = cluster1->y();
-    const double r1 = sqrt(x1 * x1 + y1 * y1);
-    const double minR = r0 > r1 ? r1 : r0;
-    const double maxR = r0 > r1 ? r0 : r1;
+    const float x0 = cluster0->x();
+    const float y0 = cluster0->y();
+    const float r0 = sqrt(x0 * x0 + y0 * y0);
+    const float x1 = cluster1->x();
+    const float y1 = cluster1->y();
+    const float r1 = sqrt(x1 * x1 + y1 * y1);
+    const float minR = r0 > r1 ? r1 : r0;
+    const float maxR = r0 > r1 ? r0 : r1;
     plot(minR, "MinHitRadius", "Smallest hit radius [mm]", 0., 50., 100);
     plot(maxR, "MaxHitRadius", "Largest hit radius [mm]", 0., 50., 100);
   }

@@ -217,12 +217,12 @@ void PrPixelTracking::searchByPair() {
     const int sens1 = sens0 - 2;
     PrPixelModule *module0 = m_hitManager->module(sens0);
     PrPixelModule *module1 = m_hitManager->module(sens1);
-    const double z0 = module0->z();
-    const double z1 = module1->z();
-    const double dz = z0 - z1;
+    const float z0 = module0->z();
+    const float z1 = module1->z();
+    const float dz = z0 - z1;
     // Calculate the search window from the slope limits.
-    const double dxMax = m_maxXSlope * fabs(dz);
-    const double dyMax = m_maxYSlope * fabs(dz);
+    const float dxMax = m_maxXSlope * fabs(dz);
+    const float dyMax = m_maxYSlope * fabs(dz);
     // Loop over hits in the first module (larger Z) in the pair.
     auto end0 = module0->hits().cend();
     auto end1 = module1->hits().cend();
@@ -230,18 +230,18 @@ void PrPixelTracking::searchByPair() {
     for (auto ith0 = module0->hits().cbegin(); end0 != ith0; ++ith0) {
       // Skip hits already assigned to tracks.
       if ((*ith0)->isUsed()) continue;
-      const double x0 = (*ith0)->x();
-      const double y0 = (*ith0)->y();
+      const float x0 = (*ith0)->x();
+      const float y0 = (*ith0)->y();
       // Calculate x-pos. limits on the other module.
-      const double xMin = x0 - dxMax;
-      const double xMax = x0 + dxMax;
+      const float xMin = x0 - dxMax;
+      const float xMax = x0 + dxMax;
       if (m_debugTool && matchKey(*ith0)) {
         info() << format("s1%3d xMin%9.3f xMax%9.3f ", sens1, xMin, xMax);
         printHit(*ith0, "St0");
       }
       // Loop over hits in the second module (smaller Z) in the pair.
       for (auto ith1 = first1; end1 != ith1; ++ith1) {
-        const double x1 = (*ith1)->x();
+        const float x1 = (*ith1)->x();
         // Skip hits below the X-pos. limit.
         if (x1 < xMin) {
           first1 = ith1 + 1;
@@ -252,7 +252,7 @@ void PrPixelTracking::searchByPair() {
         // Skip hits already assigned to tracks.
         if ((*ith1)->isUsed()) continue;
         // Check y compatibility.
-        const double y1 = (*ith1)->y();
+        const float y1 = (*ith1)->y();
         // Skip hits out of Y-pos. limit.
         if (fabs(y1 - y0) > dyMax) continue;
 
@@ -329,7 +329,7 @@ void PrPixelTracking::makeLHCbTracks() {
   unsigned int key = 0;
   auto endTracks = m_tracks.end(); 
   for (auto itt = m_tracks.begin(); itt != endTracks; ++itt) {
-    // Skip 3-hit tracks with double-used hits.
+    // Skip 3-hit tracks with float-used hits.
     if ((*itt).hits().size() == 3) {
       if ((*itt).nbUnused() != 3) continue;
     } else {
@@ -348,7 +348,7 @@ void PrPixelTracking::makeLHCbTracks() {
 
     // Loop over the hits, add their LHCbIDs to the LHCb track and
     // find the highest Z.
-    double zMax = -1.e9;
+    float zMax = -1.e9;
     auto endHits = (*itt).hits().cend();
     for (auto ith = (*itt).hits().cbegin(); ith != endHits; ++ith) {
       newTrack->addToLhcbIDs((*ith)->id());
@@ -356,7 +356,7 @@ void PrPixelTracking::makeLHCbTracks() {
     }
     // Decide if this is a forward or backward track.
     // Calculate Z where the track passes closest to the beam.
-    const double zBeam = (*itt).zBeam();
+    const float zBeam = (*itt).zBeam();
     // Define backward as z closest to beam downstream of hits.
     const bool backward = zBeam > zMax;
     newTrack->setFlag(LHCb::Track::Backward, backward);
@@ -369,9 +369,9 @@ void PrPixelTracking::makeLHCbTracks() {
 
     // Parameters for kalmanfit scattering. calibrated on MC, shamelessly
     // hardcoded:
-    const double tx = state.tx();
-    const double ty = state.ty();
-    const double scat2 = 1e-8 + 7e-6 * (tx * tx + ty * ty);
+    const float tx = state.tx();
+    const float ty = state.ty();
+    const float scat2 = 1e-8 + 7e-6 * (tx * tx + ty * ty);
 
     // The logic is a bit messy in the following, so I hope we got all cases
     // right
@@ -430,24 +430,24 @@ void PrPixelTracking::makeLHCbTracks() {
 //=========================================================================
 // Add hits from the specified module to the track
 //=========================================================================
-PrPixelHit *PrPixelTracking::bestHit(PrPixelModule *module, const double xTol,
-                                     const double maxScatter, 
+PrPixelHit *PrPixelTracking::bestHit(PrPixelModule *module, const float xTol,
+                                     const float maxScatter, 
                                      const PrPixelHit *h1,
                                      const PrPixelHit *h2) const {
   if (module->empty()) return NULL;
-  const double x1 = h1->x();
-  const double x2 = h2->x();
-  const double y1 = h1->y();
-  const double y2 = h2->y();
-  const double z1 = h1->z();
-  const double z2 = h2->z();
-  const double td = 1.0 / (z2 - z1);
-  const double txn = (x2 - x1);
-  const double tx = txn * td;
-  const double tyn = (y2 - y1);
-  const double ty = tyn * td;
+  const float x1 = h1->x();
+  const float x2 = h2->x();
+  const float y1 = h1->y();
+  const float y2 = h2->y();
+  const float z1 = h1->z();
+  const float z2 = h2->z();
+  const float td = 1.0 / (z2 - z1);
+  const float txn = (x2 - x1);
+  const float tx = txn * td;
+  const float tyn = (y2 - y1);
+  const float ty = tyn * td;
   // Extrapolate to the z-position of the module
-  const double xGuess = x1 + tx * (module->z() - z1);
+  const float xGuess = x1 + tx * (module->z() - z1);
 
   // If the first hit is already below this limit we can stop here.
   if (module->lastHitX() < xGuess - xTol) return NULL;
@@ -465,17 +465,17 @@ PrPixelHit *PrPixelTracking::bestHit(PrPixelModule *module, const double xTol,
 
   // Find the hit that matches best.
   unsigned int nFound = 0;
-  double bestScatter = maxScatter;
+  float bestScatter = maxScatter;
   PrPixelHit *bestHit = NULL;
   PrPixelHit *hit(NULL);
   for (unsigned int i = hit_start; i < module_nhits; ++i) {
     hit = module_hits[i];
-    const double hit_z = hit->z();
-    const double hit_x = hit->x();
-    const double hit_y = hit->y();
-    const double dz = hit_z - z1;
-    const double xPred = x1 + tx * dz;
-    const double yPred = y1 + ty * dz;
+    const float hit_z = hit->z();
+    const float hit_x = hit->x();
+    const float hit_y = hit->y();
+    const float dz = hit_z - z1;
+    const float xPred = x1 + tx * dz;
+    const float yPred = y1 + ty * dz;
 #ifdef DEBUG_HISTO
     plot((hit->x() - xPred) / xTol, "HitExtraErrPerTol",
          "Hit X extrapolation error / tolerance", -4.0, +4.0, 400);
@@ -484,13 +484,13 @@ PrPixelHit *PrPixelTracking::bestHit(PrPixelModule *module, const double xTol,
     if (hit_x + xTol < xPred) continue;
     // If x-position is below prediction - tolerance, stop the search.
     if (hit_x - xTol > xPred) break;
-    const double dy = yPred - hit_y;
+    const float dy = yPred - hit_y;
     // Skip hits outside the y-position tolerance.
     if (fabs(dy) > xTol) continue;
-    const double scatterDenom = 1.0 / (hit_z - z2);
-    const double dx = xPred - hit_x;
-    const double scatterNum = (dx * dx) + (dy * dy);
-    const double scatter = scatterNum * scatterDenom * scatterDenom;
+    const float scatterDenom = 1.0 / (hit_z - z2);
+    const float dx = xPred - hit_x;
+    const float scatterNum = (dx * dx) + (dy * dy);
+    const float scatter = scatterNum * scatterDenom * scatterDenom;
     if (scatter < bestScatter) {
       bestHit = hit;
       bestScatter = scatter;

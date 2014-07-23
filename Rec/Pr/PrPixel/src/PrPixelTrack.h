@@ -52,8 +52,8 @@ class PrPixelTrack {
   }
 
   /// Chi2 / degrees-of-freedom of straight-line fit
-  double chi2() const {
-    double ch = 0.;
+  float chi2() const {
+    float ch = 0.;
     int nDoF = -4;
     for (auto it = m_hits.cbegin(), end = m_hits.cend(); it != end; ++it) {
       ch += chi2(*it);
@@ -62,15 +62,15 @@ class PrPixelTrack {
     return ch / nDoF;
   }
   /// Chi2 constribution from a given hit
-  double chi2(PrPixelHit *hit) const {
+  float chi2(PrPixelHit *hit) const {
     return hit->chi2(m_x0 + m_tx * hit->z(), m_y0 + m_ty * hit->z());
   }
   /// Position at given z from straight-line fit
-  double xAtZ(const double z) const { return m_x0 + m_tx * z; }
-  double yAtZ(const double z) const { return m_y0 + m_ty * z; }
+  float xAtZ(const float z) const { return m_x0 + m_tx * z; }
+  float yAtZ(const float z) const { return m_y0 + m_ty * z; }
 
   /// Create a track state vector: position and the slopes: dx/dz and dy/dz
-  LHCb::StateVector state(const double z) const {
+  LHCb::StateVector state(const float z) const {
     LHCb::StateVector temp;
     temp.setX(m_x0 + z * m_tx);
     temp.setY(m_y0 + z * m_ty);
@@ -82,18 +82,18 @@ class PrPixelTrack {
   }
 
   // Calculate the z-pos. where the track passes closest to the beam
-  double zBeam() const {
+  float zBeam() const {
     return -(m_x0 * m_tx + m_y0 * m_ty) / (m_tx * m_tx + m_ty * m_ty);
   }
 
-  Gaudi::TrackSymMatrix covariance(const double z) const;
+  Gaudi::TrackSymMatrix covariance(const float z) const;
 
   /// Perform a straight-line fit.
   void fit();
  
   /// Fit with a K-filter with scattering. Return the chi2
-  double fitKalman(LHCb::State &state, int direction,
-                   double noisePerLayer) const;
+  float fitKalman(LHCb::State &state, int direction,
+                   float noisePerLayer) const;
 
   // Number of hits assigned to the track
   unsigned int size(void) const { return m_hits.size(); }
@@ -102,23 +102,15 @@ class PrPixelTrack {
   /// List of pointers to hits
   PrPixelHits m_hits;
   /// Straight-line fit parameters
-  double m_x0;
-  double m_tx;
-  double m_y0;
-  double m_ty;
-  /// Sums for the x-slope fit
-  double m_s0;
-  double m_sx;
-  double m_sz;
-  double m_sxz;
-  double m_sz2;
-  /// Sums for the y-slope fit
-  double m_u0;
-  double m_uy;
-  double m_uz;
-  double m_uyz;
-  double m_uz2;
+  float m_tx;
+  float m_ty;
+  float m_x0;
+  float m_y0;
 
+  /// Sums for the x-slope fit
+  __m128 v_sx, v_sxz, v_s0;
+  /// Constants
+  __m128 v_compValue, v_1s, v_2s, v_sign_mask;
 };
 
 typedef std::vector<PrPixelTrack> PrPixelTracks;  // vector of tracks

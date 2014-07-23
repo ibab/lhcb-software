@@ -29,18 +29,18 @@ class PrPixelModule {
   virtual ~PrPixelModule() {}
 
   bool empty() const { return m_empty; }
-  double lastHitX() const { return m_lastHitX; }
-  void setLastHitX(const double x) { m_lastHitX = x; }
-  double firstHitX() const { return m_firstHitX; }
-  void setFirstHitX(const double x) { m_firstHitX = x; }
+  float lastHitX() const { return m_lastHitX; }
+  void setLastHitX(const float x) { m_lastHitX = x; }
+  float firstHitX() const { return m_firstHitX; }
+  void setFirstHitX(const float x) { m_firstHitX = x; }
   unsigned int number() const { return m_number; }
   int previous() const { return m_previous; }
   bool isRight() const { return m_isRight; }
-  double z() const { return m_z; }
+  float z() const { return m_z; }
   PrPixelHits &hits() { return m_hits; }
 
   void setPrevious(const int prev) { m_previous = prev; }
-  void setZ(const double z) { m_z = z; }
+  void setZ(const float z) { m_z = z; }
 
   /// Remove all stored hits.
   void reset() {
@@ -54,14 +54,14 @@ class PrPixelModule {
   }
 
  private:
-  double m_lastHitX;
-  double m_firstHitX;
+  float m_lastHitX;
+  float m_firstHitX;
   /// Module number
   unsigned int m_number;
   // Number of neighbouring same-side module towards smaller z
   int m_previous;
   /// Z-position
-  double m_z;
+  float m_z;
   /// Vector of pointers to hits
   PrPixelHits m_hits;
   bool m_empty;
