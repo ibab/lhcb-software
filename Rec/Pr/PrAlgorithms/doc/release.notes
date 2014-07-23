@@ -4,6 +4,21 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-07-23 - Georg Krocker 
+  - Added several improvements to PrDownstream - can be switched on with the
+    option PrDownstream().Mode = False ; the new approach includes
+    1) Vetoing of Seeds that share FT hits with reasonably good ForwardTracks
+    2) Building several track candidates and fiting them separately instead of
+    putting all uv hits on one candidate and doing outlier removal
+    3) Keeping more than one candidate per seed if we can't decide which one is
+    the best in terms of chi2
+  - By default the old algorithm should run
+  - Add Doxygen comments
+
+    Code and necessary configuration parameters are to be documented in
+    Downstream Upgrade note.
+
+
 !========================= PrAlgorithms v1r13 2014-07-14 =======================
 ! 2014-06-26 - Yasmine Amhis 
   - Add Histograms in PrSeedingXLayers.
