@@ -4,7 +4,6 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
-!========================= PrPixel v1r9 2014-07-23 =========================
 ! 2014-07-23 - Daniel Hugo Campora Perez
  - Type conversion carried over most of the code from double to single
    floating point precision.

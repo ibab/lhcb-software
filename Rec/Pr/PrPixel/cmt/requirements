@@ -28,7 +28,3 @@ library          PrPixel    ../src/*.cpp
 # define component library link options
 #=====================================================================
 apply_pattern    component_library library=PrPixel
-
-private
-macro_append PrPixel_use_linkopts " -g "
-end_private
