@@ -1441,18 +1441,24 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
           << "  daughters, Mass=" << AXBS->momentum().M()/GeV
           << "  pT="<<AXBS->pt()/GeV<< endreq;
 
-  std::vector<float> sigID, sigKEY, sigmothID, sigmothKEY, sigP, sigPt, sigPhi, sigMass;
+  std::vector<int>   sigID, sigKEY, sigmothID, sigmothKEY;
+  std::vector<int>   sigMCID, sigMCKEY, sigMCmothID, sigMCmothKEY, sigMCGmothID, sigMCGmothKEY,sigMCancID, sigMCancKEY;
   std::vector<float> sigVx, sigVy, sigVz;
-  std::vector<float> sigMCID, sigMCKEY, sigMCmothID, sigMCmothKEY, sigMCGmothID, sigMCGmothKEY,
-                     sigMCancID, sigMCancKEY, 
-                     sigMCP, sigMCPt, sigMCPhi;
+  std::vector<float> sigP, sigPt, sigPhi, sigMass;
+  std::vector<float> sigMCP, sigMCPt, sigMCPhi;
   
   Particle::ConstVector::const_iterator ip;
   for ( ip = axdaugh.begin(); ip != axdaugh.end(); ++ip){
     sigID.push_back((*ip)->particleID().pid());
     sigKEY.push_back((*ip)->key());
     const Particle* mater = m_util->motherof(*ip, axdaugh);
-    if(mater) sigmothID.push_back(mater->particleID().pid()); else sigmothID.push_back(0);
+    if(mater) {
+      sigmothKEY.push_back(mater->key()); 
+      sigmothID.push_back(mater->particleID().pid()); 
+    } else {
+      sigmothKEY.push_back(0); 
+      sigmothID.push_back(0);
+    }
     sigP.push_back((*ip)->p() /GeV);
     sigPt.push_back((*ip)->pt()/GeV);
     sigPhi.push_back((*ip)->momentum().Phi());
@@ -1464,9 +1470,9 @@ Particle::ConstVector BTaggingAnalysis::FillSelectedB (Tuple& tuple, const Parti
       sigVy.push_back((*ip)->endVertex()->position().y() /mm);
       sigVz.push_back((*ip)->endVertex()->position().z() /mm);
     } else { 
-      sigVx.push_back(0); 
-      sigVy.push_back(0); 
-      sigVz.push_back(20000); 
+      sigVx.push_back(0.); 
+      sigVy.push_back(0.); 
+      sigVz.push_back(20000.); 
     }
     if (m_EnableMC) {
       //mc truth to use as link 
