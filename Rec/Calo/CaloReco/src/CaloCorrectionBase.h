@@ -21,6 +21,8 @@
 #include "Event/Track.h"
 #include "CaloCorrectionBase.h"
 #include "CaloInterfaces/ICaloRelationsGetter.h"
+
+
 static const InterfaceID IID_CaloCorrectionBase ( "CaloCorrectionBase", 1, 0 );
 
 /** @class CaloCorrectionBase CaloCorrectionBase.h
@@ -168,6 +170,11 @@ public:
  		const std::vector<double> params =    getParams(type,id).second;
     return (i < params.size()) ? params[i] : def;
   }
+  /// return value of analytic derivative for a given function type in cell id at a given point var with default value def
+  double getCorrectionDerivative(CaloCorrection::Type type, const LHCb::CaloCellID id , double var = 0.,double def = 0.) const;
+  //// propagate cov.m. cov0 according to Jacobian jac: cov1 = (jac * cov * jac^T), see comments in CaloECorrection.cpp and CaloSCorrection.cpp
+  // void recalculate_cov(const TMatrixD &jac, const TMatrixDSym &cov0, TMatrixDSym &cov1) const;
+
 
   double getCorrection(CaloCorrection::Type type, const LHCb::CaloCellID id , double var = 0.,double def = 1.) const;
   double incidence(const LHCb::CaloHypo* hypo,bool straight=false) const;
@@ -201,6 +208,7 @@ protected:
   const DeCalorimeter* m_det;
   Gaudi::XYZPoint  m_origin;
   ICaloDigitFilterTool* m_pileup;
+  bool m_correctCovariance;
 
 private:
 

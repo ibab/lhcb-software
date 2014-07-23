@@ -4,6 +4,10 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-23 - Olivier Deschamps for Dima
+  - CaloCorrectionBase/CaloECorrection/CaloSCorrection : implement correction propagation to Covariance
+
+
 !========================= CaloReco v5r20 2014-07-14 =========================
 ! 2014-07-11 - Olivier Deschamps
   - CaloECorrection/CaloCorrectionBase :  add energy offset correction (allowing sin(theta) dependency to have transverse energy correction)

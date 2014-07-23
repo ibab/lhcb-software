@@ -46,9 +46,51 @@ private:
   CaloECorrection () ;
   CaloECorrection           ( const CaloECorrection& ) ;
   CaloECorrection& operator=( const CaloECorrection& ) ;
-  
+
+ 
 private:
   int m_pFilt;
   int m_sFilt;
+
+  /// input variables calculated once in process() and passed to all calcECorrection() calls
+  struct ECorrInputParams {
+    LHCb::CaloCellID cellID;
+    Gaudi::XYZPoint  seedPos;
+    double           eSpd;
+    double           dtheta;
+    unsigned int     area;
+  };
+
+  /// Jacobian elements and intermediate variables sometimes returned from calcECorrection() to process()
+  class ECorrOutputParams {
+  public:
+    ECorrOutputParams() : dEcor_dXcl(0), dEcor_dYcl(0), dEcor_dEcl(0),
+      alpha(0), beta(0), Asx(0), Asy(0), aG(0), aE(0), aB(0), aX(0), aY(0), gC(0), gT(0), betaC_flag(false) {}
+
+    // output Jacobian elements returned from calcECorrection() to process()
+    double dEcor_dXcl;
+    double dEcor_dYcl;
+    double dEcor_dEcl;
+
+    // intermediate variables calculated by calcECorrection() needed for debug printout inside process()
+    double alpha;
+    double beta;
+    double Asx;
+    double Asy;
+    double aG;
+    double aE;
+    double aB;
+    double aX;
+    double aY;
+    double gC;
+    double gT;
+
+    bool   betaC_flag;
+  };
+
+  /// calculate corrected CaloHypo energy depending on CaloCluster position, energy, and Prs energy
+  double calcECorrection( double xBar, double yBar, double eEcal, double ePrs,
+                          const struct CaloECorrection::ECorrInputParams &_params,
+                          CaloECorrection::ECorrOutputParams             *_results ) const;
 };
 #endif // CALORECO_CALOECORRECTION_H

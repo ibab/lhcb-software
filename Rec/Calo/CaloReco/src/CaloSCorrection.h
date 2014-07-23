@@ -46,6 +46,26 @@ private:
   CaloSCorrection () ;
   CaloSCorrection           ( const CaloSCorrection& ) ;
   CaloSCorrection& operator=( const CaloSCorrection& ) ;
+
+
+  /// input variables calculated once in process() and passed to all calcSCorrection() calls
+  struct SCorrInputParams {
+    LHCb::CaloCellID  cellID;
+    Gaudi::XYZPoint  seedPos;
+    double                 z;
+  };
+
+  /// Jacobian elements returned from calcSCorrection() to process()
+  struct SCorrOutputParams {
+    double dXhy_dXcl;
+    double dYhy_dYcl;
+  };
+
+
+  /// calculate corrected CaloHypo position depending on CaloCluster position
+  void calcSCorrection( double  xBar, double  yBar, double &xCor, double &yCor,
+                        const struct SCorrInputParams                  &params,
+                        struct SCorrOutputParams                       *results ) const;
   
 private:
   

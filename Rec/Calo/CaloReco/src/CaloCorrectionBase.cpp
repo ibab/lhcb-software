@@ -33,6 +33,7 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   , m_det(0)
   , m_origin     (Gaudi::XYZPoint())
   , m_pileup(0)
+  , m_correctCovariance( false )
   , m_caloElectron(0)
   , m_useCondDB( true )
   , m_cond    ( NULL )
@@ -47,6 +48,7 @@ CaloCorrectionBase::CaloCorrectionBase( const std::string& type   ,
   declareProperty ( "Corrections"  , m_corrections); // expert usage
   declareProperty ( "Hypotheses"   , m_hypos_   ) ;
   declareProperty ( "ClusterMatchLocation"   , m_cmLoc );
+  declareProperty ( "CorrectCovariance"      , m_correctCovariance = true);
 
   m_cmLoc= LHCb::CaloAlgUtils::CaloIdLocation("ClusterMatch", context());
   m_corrections.push_back("All");
@@ -399,4 +401,161 @@ double CaloCorrectionBase::incidence(const LHCb::CaloHypo* hypo, bool straight)c
     incidence = cMomentum.momentum().Theta();    
   }
   return incidence;
+}      
+
+double CaloCorrectionBase::getCorrectionDerivative(CaloCorrection::Type type,  const LHCb::CaloCellID id , double var, double def) const{
+
+  CaloCorrection::Parameters pars = getParams( type , id );
+
+  std::string name =  CaloCorrection::typeName[ type ];
+  if ( msgLevel( MSG::DEBUG) ) 
+    debug() << "Derivative for Correction type " << name << " to be calculated for cluster (seed = " << id << ") is a '" 
+            << CaloCorrection::funcName[ pars.first ] << "' function with params = " << pars.second << endmsg;
+
+  // compute correction 
+  double cor = def; 
+  if( pars.first == CaloCorrection::Unknown ||  pars.second.empty() ) return cor; 
+
+  // polynomial correction 
+  std::vector<double> temp = pars.second;
+
+
+  // polynomial functions
+  double ds = 0.;
+  if (pars.first == CaloCorrection::Polynomial ){
+    ds  = 0.;
+    double v = 1.;
+    int cnt = 0;
+    std::vector<double>::iterator i = temp.begin();
+    for( ++ i, cnt ++ ; i != temp.end() ; ++ i, cnt ++){
+      ds += (*i) * cnt * v;
+      v  *= var;
+    }
+  }
+
+  if (pars.first == CaloCorrection::InversPolynomial ){
+    double v = 1.;
+    cor = 0.;
+    for( std::vector<double>::iterator i = temp.begin() ; i != temp.end() ; ++ i){
+      cor += (*i) * v;
+      v *= var;
+    }
+    cor = ( cor == 0 ) ? def : 1./cor;
+
+    v       = 1.;
+    ds      = 0.;
+    int cnt = 0;
+    std::vector<double>::iterator i = temp.begin();
+    for( ++ i, cnt ++ ; i != temp.end() ; ++ i, cnt ++){
+      ds  += (*i) * cnt * v;
+      v *= var;
+    }
+ 
+    ds *= -cor*cor;
+  }
+
+
+  if (pars.first == CaloCorrection::ExpPolynomial ){
+    double v = 1.;
+    cor = 0.;
+    for( std::vector<double>::iterator i = temp.begin() ; i != temp.end() ; ++ i){
+      cor += (*i) * v;
+      v *= var;
+    }
+    cor = ( cor == 0 ) ? def : exp(cor);
+ 
+    ds = 0.;
+    v  = 1.;
+    int cnt = 0;
+    std::vector<double>::iterator i = temp.begin();
+    for( ++ i, cnt ++ ; i != temp.end() ; ++ i, cnt ++){
+      ds  += (*i) * cnt * v;
+      v *= var;
+    }
+ 
+    ds *= cor;
+  }
+
+  if (pars.first == CaloCorrection::ReciprocalPolynomial ){
+    ds = 0.;
+    if ( var != 0 ){ 
+      double v = 1./var/var;
+      int cnt = 0;
+      std::vector<double>::iterator i = temp.begin();
+      for( ++ i, cnt ++ ; i != temp.end() ; ++ i, cnt ++){
+        ds  -= (*i) * cnt * v;
+        v /= var;
+      }
+    }
+  }
+
+  // sigmoid function
+  if( pars.first == CaloCorrection::Sigmoid ){
+    ds = 0.;
+    if( temp.size() == 4){
+      // double a = temp[0];
+      double b = temp[1];
+      double c = temp[2];
+      double d = temp[3];
+      ds  = b*c*(1.-pow(tanh(c*(var+d)),2));
+    }
+    else{
+      Warning("The power sigmoid function must have 4 parameters").ignore();
+    }
+  }
+
+
+  // Sshape function
+  if( pars.first == CaloCorrection::Sshape || pars.first == CaloCorrection::SshapeMod ){
+    ds = 0.;
+    if( temp.size() == 1){
+      double b = temp[0];
+      double delta = 0.5;
+      if( b > 0 ) {
+        double csh = 1.;
+        if( pars.first == CaloCorrection::SshapeMod) csh = sinh(delta/b);
+        else if(pars.first==CaloCorrection::Sshape)  csh = cosh(delta/b);        
+        double arg = var/delta * csh;
+        ds = b / delta * csh / sqrt( arg*arg + 1. );
+      }
+    }
+    else{
+      Warning("The Sshape function must have 1 parameter").ignore();
+    }  
+  }
+
+  // Shower profile function
+  if( pars.first == CaloCorrection::ShowerProfile ){
+    ds = 0.;
+    if( temp.size() == 10){
+      if( var > 0.5 ) {
+        ds = -temp[0]*temp[1]*exp( -temp[1]*var);
+        ds+= -temp[2]*temp[3]*exp( -temp[3]*var);
+        ds+= -temp[4]*temp[5]*exp( -temp[5]*var);
+      }else{
+        ds =  temp[6]*temp[7]*exp( -temp[7]*var);
+        ds+=  temp[8]*temp[9]*exp( -temp[9]*var);
+      }
+    }else{
+      Warning("The ShowerProfile function must have 10 parameters").ignore();
+    }  
+  }
+
+  // Sinusoidal function
+  if( pars.first == CaloCorrection::Sinusoidal ){
+    ds = 0.;
+    if( temp.size() == 1){
+      double A = temp[0];
+      double twopi=2.*M_PI;
+      ds = A*twopi*cos(twopi*var);
+    }
+    else{
+      Warning("The Sinusoidal function must have 1 parameter").ignore();
+    }
+  }
+ 
+  
+  //counter(name + " derivative processing (" + id.areaName() + ")") += cor;
+  return ds;
 }
+ 

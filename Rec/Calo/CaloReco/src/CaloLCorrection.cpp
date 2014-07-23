@@ -179,6 +179,20 @@ StatusCode CaloLCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   tth = tth / ( 1. + tgfps * cth / zg ) ;
   cth= cos( atan( tth ) ) ;
   double dzfps = cth * tgfps ;
+  counter("Delta(Z) "+cellID.areaName()) += dzfps;
+
+  /*
+  info() << " ======= Z0  FRONT-PLANE = " << z0 << " " << zg << endmsg;
+  ROOT::Math::Plane3D planeSM = m_det->plane(CaloPlane::ShowerMax); // Ecal Front-Plane
+  info() << " ======= Z0  SHOWERMAX = " << -planeSM.HesseDistance() <<endmsg;
+  ROOT::Math::Plane3D planeM = m_det->plane(CaloPlane::Middle); // Ecal Middle
+  info() << " ======= Z0  MIDDLE = " << -planeM.HesseDistance() <<endmsg;
+  */
+
+  
+
+
+
 
 // Recompute Z position and fill CaloPosition
   double zCor = z0 + dzfps;
