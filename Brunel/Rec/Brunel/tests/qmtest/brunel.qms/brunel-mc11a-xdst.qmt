@@ -17,6 +17,7 @@ Brunel().OutputType="XDST"
 Brunel().WithMC=True
 Brunel().DataType="2011"
 Brunel().SplitRawEventInput=0.0
+Brunel().SplitRawEventOutput=2.0
 Brunel().DatasetName="mc11a-test"
 </text></argument>
   <argument name="reference"><text>../refs/brunel-mc11a-xdst.ref</text></argument>

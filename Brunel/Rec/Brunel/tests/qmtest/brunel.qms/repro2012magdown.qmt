@@ -5,7 +5,7 @@
   <argument name="args"><set>
     <text>$APPCONFIGOPTS/Brunel/MonitorExpress.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().Monitors=["SC","FPE"]; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"])</text>
+    <text>from Brunel.Configuration import *; Brunel().Monitors=["SC","FPE"]; Brunel().DataType="2012"; Brunel().InputType="DST"; Brunel().SplitRawEventInput=4.0; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"])</text>
   </set></argument>
   <argument name="reference"><text>../refs/brunel2012magdown.ref</text></argument>
   <argument name="validator"><text>
@@ -61,8 +61,9 @@ preprocessor = BrunelPreprocessor + \
   LineSkipper(["SpdL0Bit.SpdL0B...SUCCESS Number of counters"]) + \
   LineSkipper(["PrsL0Bit.PrsL0B...SUCCESS Number of counters"]) + \
   LineSkipper(["PrsADCs.PrsADCs...SUCCESS Number of counters"]) + \
+  LineSkipper(["createBothVeloC...   INFO Using '[Velo/RawEvent]' as search path for the RawEvent object"]) + \
   LineSkipper(["INFO Using '[DAQ/RawEvent]' as search path for the RawEvent object"]) + \
-  LineSkipper(["INFO Using '[Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object"]) + \
+  LineSkipper(["INFO Using '[Tracker/RawEvent, Other/RawEvent, DAQ/RawEvent]' as search path for the RawEvent object"]) + \
   LineSkipper(["ToolSvc.RichSma...   INFO Using [Rich/RawEvent, DAQ/RawEvent] as search path for the RawEvent object"]) + \
   LineSkipper(["ToolSvc.RichSma...   INFO Using [DAQ/RawEvent] as search path for the RawEvent object"]) + \
   LineSkipper(["RawEventSplitSeq     INFO Member list:"])

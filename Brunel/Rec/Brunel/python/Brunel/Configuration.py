@@ -81,7 +81,7 @@ class Brunel(LHCbConfigurableUser):
        ,"VetoHltErrorEvents" : True
        ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
        ,"SplitRawEventInput" : None #Where the raw event sits on the input
-       ,"SplitRawEventOutput" : 2.0 #how to split the raw event
+       ,"SplitRawEventOutput" : 4.0 #how to split the raw event
         # only use for Online running
        ,"UseDBSnapshot" : False
        ,"PartitionName" : "LHCb"

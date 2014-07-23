@@ -4,7 +4,7 @@
 # SUMMARY OF THIS TEST
 # ...................
 # Author: rlambert
-# Purpose: Check that Brunel can reprocess and recombine to version 0.0 from its default split RawEventOutput version
+# Purpose: Check that Brunel can reprocess and recombine from the Brunel default split RawEvent to the Reco14 RawEvent 
 # Prerequisites: brunel2012magdown needs to have produced a file called ...200ev.dst
 # Common failure modes, severities and cures: 
 #               . SEVERE: Segfault or raised exception, stderr, nonzero return code
@@ -19,13 +19,13 @@
   </set></argument>
   <argument name="args"><set>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"]); Brunel().DatasetName="brunel2012recombine"; Brunel().SplitRawEventInput=4.0; Brunel().SplitRawEventOutput=0.0; Brunel().EvtMax=10; Brunel().Monitors = ["SC","FPE"]</text>
+    <text>from Brunel.Configuration import *; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"]); Brunel().DatasetName="brunel2012recombinetoreco14"; Brunel().SplitRawEventInput=4.0; Brunel().SplitRawEventOutput=2.0; Brunel().EvtMax=10; Brunel().Monitors = ["SC","FPE"]</text>
   </set></argument>
   <argument name="validator"><text>
 #check if the output exists, and check the split locations are on it
 from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
-checkIsSplit("brunel2012recombine-10ev.dst",0.0,causes,result,"brunel.repro2012recombine")
-checkIsGone("brunel2012recombine-10ev.dst",["Trigger/RawEvent","Rich/RawEvent", "Muon/RawEvent", "Calo/RawEvent", "Velo/RawEvent", "Tracker/RawEvent", "Unstripped/RawEvent"],causes,result,"brunel.repro2012recombine")
+checkIsSplit("brunel2012recombinetoreco14-10ev.dst",2.0,causes,result,"brunel.repro2012recombinetoreco14")
+checkIsGone("brunel2012recombinetoreco14-10ev.dst",["Velo/RawEvent", "Tracker/RawEvent", "Unstripped/RawEvent"],causes,result,"brunel.repro2012recombinetoreco14")
 
 countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
 
