@@ -5,18 +5,8 @@ from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
 
-def RecoTracking(exclude=[]):
-   '''What used to be in the options file, moved here'''
-   ## Start TransportSvc, needed by track fit
-   ApplicationMgr().ExtSvc.append("TransportSvc")
-   
-   ## --------------------------------------------------------------------
-   ## Pattern Recognition and Fitting
-   ## --------------------------------------------------------------------
-   
-   # Which algs to run ?
-   trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
-   
+def DecodeTracking(trackAlgs):
+
    #configure the decoding
    from DAQSys.Decoders import DecoderDB
    from DAQSys.DecoderClass import decodersForBank
@@ -42,6 +32,37 @@ def RecoTracking(exclude=[]):
    decs=decs+decodersForBank(DecoderDB,"IT")
    GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
    
+   ## Special OT decoder for cosmics to merge spills.
+   if TrackSys().cosmics():
+      from Configurables import (Tf__OTHitCreator)
+      Tf__OTHitCreator('OTHitCreator').RawBankDecoder = 'OTMultiBXRawBankDecoder'
+      ## note: this does not change the OTMeasurementProvider used in the fit.
+      # also adapt the MasterExtrapolator in the TrackInterpolator
+      from Configurables import TrackInterpolator
+      TrackInterpolator().Extrapolator.ExtraSelector = 'TrackSimpleExtraSelector'
+      
+   d=DecoderDB["OTRawBankDecoder/ToolSvc.OTRawBankDecoder"]
+   if "disableOTTimeWindow" in TrackSys().getProp("ExpertTracking"):
+      from GaudiKernel.SystemOfUnits import ns
+      d.Properties["TimeWindow"] = ( -999.0*ns, 999.0*ns )
+   #ensure the public tool is configured and marked as used
+   d.setup()
+         
+
+def RecoTracking(exclude=[]):
+   '''What used to be in the options file, moved here'''
+   ## Start TransportSvc, needed by track fit
+   ApplicationMgr().ExtSvc.append("TransportSvc")
+   
+   ## --------------------------------------------------------------------
+   ## Pattern Recognition and Fitting
+   ## --------------------------------------------------------------------
+   
+   # Which algs to run ?
+   trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
+
+   # Decode the RAW banks
+   DecodeTracking(trackAlgs)
    
    from Configurables import STOfflinePosition
    IT = STOfflinePosition('ITClusterPosition')
@@ -90,16 +111,6 @@ def RecoTracking(exclude=[]):
             Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").TimingMeasurement = True;
             
          
-   ## Special OT decoder for cosmics to merge spills.
-   if TrackSys().cosmics():
-      from Configurables import (Tf__OTHitCreator)
-      Tf__OTHitCreator('OTHitCreator').RawBankDecoder = 'OTMultiBXRawBankDecoder'
-      ## note: this does not change the OTMeasurementProvider used in the fit.
-      # also adapt the MasterExtrapolator in the TrackInterpolator
-      from Configurables import TrackInterpolator
-      TrackInterpolator().Extrapolator.ExtraSelector = 'TrackSimpleExtraSelector'
-      
-      
       
    ## Make sure the default extrapolator and interpolator use simplified material
    if TrackSys().simplifiedGeometry() and ('SimpleGeom' not in exclude):
@@ -119,13 +130,6 @@ def RecoTracking(exclude=[]):
       from Configurables import (Tf__OTHitCreator)
       Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
       
-   d=DecoderDB["OTRawBankDecoder/ToolSvc.OTRawBankDecoder"]
-   if "disableOTTimeWindow" in TrackSys().getProp("ExpertTracking"):
-      from GaudiKernel.SystemOfUnits import ns
-      d.Properties["TimeWindow"] = ( -999.0*ns, 999.0*ns )
-   #ensure the public tool is configured and marked as used
-   d.setup()
-   
    # Get the fitters
    from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredMasterFitter
    

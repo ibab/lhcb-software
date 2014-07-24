@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-07-24 - Marco Cattaneo
+ - In RecoTracking.py, factor out the RAW bank decoding into a separate
+   RecoTracking.DecodeTracking(), so it can be called independently, to just
+   decode the Raw banks without running the tracking sequences.
+
 !========================= TrackSys v9r1 2014-05-13 =========================
 ! 2014-04-10 - Heinrich Schindler
  - Run VPClusterLinker only if VP is in the list of subdetectors.
