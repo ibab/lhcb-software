@@ -306,23 +306,28 @@ class Brunel(LHCbConfigurableUser):
         #starting with places which only exist _after_ brunel has run!
 
         # Following needed to build RecSummary, even if tracking is skipped.
-        # Code  lifted from TrackSys/RecoTracking.py, to be repackaged
         if self.getProp("SkipTracking"):
-            from DAQSys.Decoders import DecoderDB
-            from DAQSys.DecoderClass import decodersForBank
-            decs=[]
+            from TrackSys import RecoTracking
+            RecoTracking.DecodeTracking(["FastVelo"])
+
+        
+        # Code  lifted from TrackSys/RecoTracking.py, to be repackaged
+#        if self.getProp("SkipTracking"):
+#            from DAQSys.Decoders import DecoderDB
+#            from DAQSys.DecoderClass import decodersForBank
+#            decs=[]
             #clone an existing algorithm, in order to create both the full
             #and the partial clusters
-            vdec=DecoderDB["DecodeVeloRawBuffer/createBothVeloClusters"]
+#            vdec=DecoderDB["DecodeVeloRawBuffer/createBothVeloClusters"]
             #set as active to make sure nobody tries to use the DoD service along side...
-            vdec.Active=True
-            globalCuts = TrackSys().getProp("GlobalCuts")
-            if( "Velo" in globalCuts ) :
-                vdec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
-                decs=decs+[vdec]
-            decs=decs+decodersForBank(DecoderDB,"TT")
-            decs=decs+decodersForBank(DecoderDB,"IT")
-            GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
+#            vdec.Active=True
+#            globalCuts = TrackSys().getProp("GlobalCuts")
+#            if( "Velo" in globalCuts ) :
+#                vdec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
+#                decs=decs+[vdec]
+#            decs=decs+decodersForBank(DecoderDB,"TT")
+#            decs=decs+decodersForBank(DecoderDB,"IT")
+#            GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
     
     def defineMonitors(self):
 
