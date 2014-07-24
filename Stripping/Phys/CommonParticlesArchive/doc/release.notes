@@ -5,4 +5,19 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-07-23 - Chris Jones
- - First import.
+ - First import. Provides an archive of frozen CommonParticles for each 
+   stripping release. Usage is simple.
+
+     from CommonParticlesArchive import CommonParticlesArchiveConf
+     CommonParticlesArchiveConf().redirect('Stripping20')
+
+   That will redirect any future imports of CommonParticles to the Stripping20
+   archive.
+
+   The redirection must be done prior to *any* import from CommonParticles.
+   The method internally first checks if a CommonParticles module has already
+   been loaded, and if it has throws an exception.
+
+   Archives for all the Stripping20rXpY releases are currently available.
+   Older strippings can be added, if there is a need.
+
