@@ -4,6 +4,11 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2014-07-24 - Marco Cattaneo
+ - Add 'SkipTracking' slot to RecSysConf and RecMoniConf. If enabled, tracking
+   sequences are skipped. Used by Brunel to reprocess from DST without 
+   rerunning the tracking 
+
 !========================= RecConf v2r17 2014-05-13 =========================
 ! 2014-05-08 - Chris Jones
  - Add new OnlineMode property to RecSysConf and RecMoniConf Configurables.

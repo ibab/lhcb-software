@@ -33,11 +33,11 @@ class RecSysConf(LHCbConfigurableUser):
                                ]
 
     ## Default tracking Sub-detector processing sequence
-    DefaultTrackingSubdets = ["Decoding", "VELO","TT","IT","OT","Tr","Vertex"]
+    DefaultTrackingSubdets = ["VELO","TT","IT","OT","Tr","Vertex"]
     ## Default reconstruction sequence for field-on data
-    DefaultSubDetsFieldOn  = DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO","SUMMARY"]
+    DefaultSubDetsFieldOn  = ["Decoding"] + DefaultTrackingSubdets+["RICH","CALO","MUON","PROTO","SUMMARY"]
     ## Default reconstruction sequence for field-off data
-    DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
+    DefaultSubDetsFieldOff = ["Decoding"] + DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
     KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas",
                          "microBiasTrigger","upgrade", "pA" ]
@@ -54,6 +54,7 @@ class RecSysConf(LHCbConfigurableUser):
        ,"OutputLevel"  : INFO          # The printout level to use
        ,"Simulation"   : False         # Simulated data
        ,"OnlineMode"   : False         # Online mode
+       ,"SkipTracking" : False         # Skip the tracking sequence
         }
 
     def expertHistos(self): return self.getProp("Histograms") == "Expert"
@@ -73,6 +74,10 @@ class RecSysConf(LHCbConfigurableUser):
             else:
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOn)
         recoSeq = self.getProp("RecoSequence")
+        if self.getProp("SkipTracking"):
+            for det in self.DefaultTrackingSubdets:
+                if det in recoSeq:
+                    recoSeq.remove(det)
         from Configurables import ProcessPhase
         ProcessPhase("Reco").DetectorList += recoSeq
 
@@ -219,6 +224,7 @@ class RecMoniConf(LHCbConfigurableUser):
        ,"Simulation"   : False         # Simulated data
        ,"Detectors"    : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
        ,"OnlineMode"   : False         # Online mode
+       ,"SkipTracking" : False         # Skip the tracking detectors
         }
 
     _propertyDocDct = { 
@@ -230,6 +236,7 @@ class RecMoniConf(LHCbConfigurableUser):
        ,'DataType'     : """ Data type, propagated from the application """
        ,'Simulation'   : """ Is it simulated data? """
        ,'OnlineMode'   : """ Online Brunel mode """
+       ,'SkipTracking' : """ Skip the tracking detectors """
        }
 
     ## Known monitoring sequences, all run by default
@@ -286,6 +293,11 @@ class RecMoniConf(LHCbConfigurableUser):
                     if seq not in dets:
                         log.warning("Detector unknown '%s'"%seq)    
             moniSeq = self.getProp("MoniSequence")
+
+        if self.getProp("SkipTracking"):
+            for det in ['VELO','IT','TT','ST','OT']:
+                if det in moniSeq:
+                    moniSeq.remove(det)        
         from Configurables import ProcessPhase
         ProcessPhase("Moni").DetectorList += moniSeq
 
