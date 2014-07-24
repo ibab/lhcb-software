@@ -3,6 +3,9 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2014-07-24 - Liang Sun
+ - Added qmtest module "detcond.check_db_reading" to check the db reading functionality in Tools/CondDBUI
+
 
 !========================= DetCond v12r36 2014-05-12 =========================
 ! 2014-05-05 - Gerhard Raven
