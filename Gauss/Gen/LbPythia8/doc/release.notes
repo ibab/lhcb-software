@@ -4,6 +4,7 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+!======================== LbPythia8 v8r0 2014-07-24 ========================
 ! 2014-07-14 - Gloria Corti
  - Fix to be able to store all non-gluon gauge boson mediators (e.g. Z, W, ...)
    in MCParticles. See details in https://its.cern.ch/jira/browse/LHCBGAUSS-105
