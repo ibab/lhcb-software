@@ -160,7 +160,7 @@ Gaudi::TrackSymMatrix PrPixelTrack::covariance(const float z) const {
 
   v4 = _mm_shuffle_ps(v1, v1, _MM_SHUFFLE(1,0,1,0)); // m20, m31, X, X
   v4 = _mm_xor_ps(v_sign_mask, v4); // -m20, -m31, X, X
-  v6 = _mm_div_ps(v4, v2); // -m20/den20, -m31/den31
+  v6 = _mm_div_ps(v4, v3); // -m20/den20, -m31/den31
 
   v5 = _mm_shuffle_ps(v_s0, v1, _MM_SHUFFLE(3,2,2,0)); // m00, m11, m22, m33
   v7 = _mm_div_ps(v5, v3); // m00/den20, m11/den31, m22/den20, m33/den31
