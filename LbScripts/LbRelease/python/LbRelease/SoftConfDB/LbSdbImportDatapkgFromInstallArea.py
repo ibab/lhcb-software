@@ -36,6 +36,11 @@ class LbSdbImportDatapkgFIA(Script):
                           dest = "debug",
                           action = "store_true",
                           help = "Display debug output")
+        parser.add_option("-n",
+                          dest = "nosvn",
+                          action = "store_true",
+                          default = False,
+                          help = "Dissable check that package is checked out in svn")
         parser.add_option("-b",
                           dest = "blank",
                           action = "store_true",
@@ -66,6 +71,7 @@ class LbSdbImportDatapkgFIA(Script):
 
         # Creating the object to import dependencies
         self.mImporter = DatapkgImporter()
+        self.mImporter.setSvnCheck(not opts.nosvn)
 
         if len(args) == 0:
             self.log.error("Please specify the data package projects to scan (DBASE or PARAM)")

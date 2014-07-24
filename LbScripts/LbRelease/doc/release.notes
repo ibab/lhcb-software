@@ -1,6 +1,15 @@
+2014-07-24  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-572: Add option to disable SVN check when loading Packages
+	* python/LbRelease/SoftConfDB/DatapkgImporter.py
+	* python/LbRelease/SoftConfDB/LbSdbImportDatapkgFromInstallArea.py
+
 2014-07-22  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-570: Adding suport for data packages in Software Configuration DB
+	* scripts/lb-sdb-adddatapkg
+	* scripts/lb-sdb-importinstallara-datapkg
+	* python/LbRelease/SoftConfDB/LbSdbImportDatapkgFromInstallArea.py
 	* python/LbRelease/SoftConfDB/DatapkgImporter.py
 	* python/LbRelease/SoftConfDB/LbSdbQuery.py
 	* python/LbRelease/SoftConfDB/SoftConfDB.py

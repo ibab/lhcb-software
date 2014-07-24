@@ -30,6 +30,12 @@ class DatapkgImporter:
         self.mConfDB = SoftConfDB()
         self.log = logging.getLogger()
         self.installArea = None
+        self.doSvnCheck = True
+
+
+    def setSvnCheck(self, svncheck):
+        """ Set the flag indicating whether the SVN check should be done """
+        self.doSvnCheck = svncheck
 
     def importpkg(self, project, datapkg, version, hat=None):
         """ Import a datapackage version """
@@ -50,9 +56,10 @@ class DatapkgImporter:
         
         
         # Check if the package actually exist
-        found = lbsvn.hasVersion(tmp, version)
-        if not found:
-            raise Exception("Could not find package  %s %s %s in SVN" % (project, tmp, version))
+        if self.doSvnCheck:
+            found = lbsvn.hasVersion(tmp, version)
+            if not found:
+                raise Exception("Could not find package  %s %s %s in SVN" % (project, tmp, version))
 
         # Now creating the package if it does not exist
         self.log.warning("Adding to DB %s %s %s" % (project, tmp, version))
