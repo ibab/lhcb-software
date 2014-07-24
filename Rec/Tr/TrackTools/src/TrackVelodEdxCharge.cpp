@@ -79,43 +79,57 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   // get the measurements for the track
   typedef LHCb::Track::MeasurementContainer TkMeas ;
   const TkMeas measurements = track->measurements();
-  if ( measurements.empty() ) return Warning( "Track has no Measurements" );
-
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << " -> Found " << measurements.size() << " Measurements" << endmsg;
-
-  // Fill a temp vector with the velo clusters
-  std::vector<const LHCb::VeloMeasurement*> veloMeas; veloMeas.reserve(32);
-
-  // loop over measurements
-  for ( TkMeas::const_iterator iM = measurements.begin();
-        iM != measurements.end(); ++iM )
-  {
-  
-    // is this a velo phi measurement
-    if       ( const VeloMeasurement* mVelo =
-               dynamic_cast<const VeloMeasurement*>(*iM) )
-    {
-       veloMeas.push_back(mVelo);
-    }
-  } // loop over measurements
-
-  // how many charges where found
-  if ( msgLevel(MSG::DEBUG) ){
-    debug() << "  -> Found " << veloMeas.size() << endmsg;
-  }
-
-  if ( !veloMeas.empty() ){
-    nTks = SiChargeFun::truncatedMean(veloMeas.begin(),veloMeas.end(), m_Ratio )/m_Normalisation;
-  }
-  else
-  {
-    // no velo clusters found
+  if ( measurements.empty() ) {
     if ( msgLevel(MSG::DEBUG) )
-    debug() << "   -> No VELO clusters found -> no dE/dx charge measured" << endmsg; 
-    return StatusCode::FAILURE;
-  }
+      debug() << " -> Found " << track->lhcbIDs().size() 
+	      << " LHCbIDs but no measurements" << endmsg;
+    LHCb::VeloClusters *veloClusters = 
+      get<LHCb::VeloClusters*>(LHCb::VeloClusterLocation::Default);
+    // try to load clusters from lhcbids
+    std::vector<const LHCb::VeloCluster*> clusters;
+    for( auto id : track->lhcbIDs() ){
+      if( id.isVelo() ) clusters.push_back(veloClusters->object(id.veloID()));
+    }
+    if(!clusters.empty()) {
+      nTks = SiChargeFun::truncatedMean(clusters.begin(),clusters.end(),
+					m_Ratio)/m_Normalisation;
+    }else{
+      nTks = 0.;
+      if ( msgLevel(MSG::DEBUG) ) 
+	debug() << "   -> No VELO clusters found -> no dE/dx charge measured" << endmsg; 
+      return StatusCode::FAILURE;
+    }
+  }else{
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << " -> Found " << measurements.size() << " Measurements" << endmsg;
+    
+    // Fill a temp vector with the velo clusters
+    std::vector<const LHCb::VeloMeasurement*> veloMeas; veloMeas.reserve(32);
+    
+    // loop over measurements
+    for ( TkMeas::const_iterator iM = measurements.begin();
+	  iM != measurements.end(); ++iM ){  
+      // is this a velo measurement
+      if ( const VeloMeasurement* mVelo =
+	   dynamic_cast<const VeloMeasurement*>(*iM) ) {
+	  veloMeas.push_back(mVelo);
+      }
+    } // loop over measurements
 
+    // how many charges where found
+    if ( msgLevel(MSG::DEBUG) ){
+      debug() << "  -> Found " << veloMeas.size() << endmsg;
+    }
+
+    if ( !veloMeas.empty() ){
+      nTks = SiChargeFun::truncatedMean(veloMeas.begin(),veloMeas.end(), m_Ratio )/m_Normalisation;
+    }else{
+      // no velo clusters found
+      if ( msgLevel(MSG::DEBUG) )
+	debug() << "   -> No VELO clusters found -> no dE/dx charge measured" << endmsg; 
+      return StatusCode::FAILURE;
+    }
+  }
   // if we get here, all is OK
   return StatusCode::SUCCESS;
 }
