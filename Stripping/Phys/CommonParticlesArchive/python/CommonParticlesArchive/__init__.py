@@ -23,7 +23,14 @@ def isValidArchive(path):
         return isdir(z,entry)
 
 def redirectCommonParticles(stripping):
+
     import os, sys
+
+    # Check to see if COmmonParticles has alrady been loaded.
+    # If it has, throw and exception, as this method must be called
+    # prior to any import of CommonParticles
+    if 'CommonParticles' in sys.modules.keys() :
+        raise Exception( "CommonParticles module already loaded. redirectCommonParticles must be called *BEFORE* any imports from CommonParticles" )
 
     # Construct the archive python path from this modules path
     pth = os.path.sep.join( __file__.split(os.path.sep)[0:-1] + [stripping] )
