@@ -4,6 +4,9 @@
 ! Purpose     : Inclusive Vertex Reconstruction
 !-----------------------------------------------------------------------------
 
+! 2014-07-24 - Paul Seyfert
+ - fix -Wpedantic warning
+
 !========================= IncTopoVert v1r3 2014-03-03 =========================
 
 ! 2014-02-20 - Chris Jones

@@ -19,7 +19,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TopoTauAlg );
+DECLARE_ALGORITHM_FACTORY( TopoTauAlg )
 
 
 //=============================================================================
