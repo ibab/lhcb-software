@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2014-07-24 - Jeremy
+ - Minor bug fixes
+
 2014-07-22 - Jeremy
  - Added two new lineshapes for the non-resonant component
   . Exponential and power law

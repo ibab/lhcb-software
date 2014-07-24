@@ -878,6 +878,8 @@ int NamedDecayTreeList::makeKKpipiList(){
   dk->addDgtr(9981)->addDgtr( 211, -211);
   dk->addDgtr(9993)->addDgtr(321,  -321);
   add(*dk);
+  add(AmpInitialiser(*dk, "ExpNonRes"));
+  add(AmpInitialiser(*dk, "PowNonRes"));
   if(dbThis) cout << "somethingth decay: " << *dk << endl;
   delete dk;
 
@@ -912,6 +914,10 @@ int NamedDecayTreeList::makeKKpipiList(){
   dk->addDgtr(9981)->addDgtr( 321, -211);
   dk->addDgtr(9993)->addDgtr(211,  -321);
   add(*dk);
+  add(AmpInitialiser(*dk, "ExpNonRes"));
+  add(AmpInitialiser(*dk, "PowNonRes"));
+  if(dbThis) cout << "somethingth decay: " << *dk << endl;
+  delete dk;
 
   // non-Res VV in S wave
   dk = new DecayTree(421);

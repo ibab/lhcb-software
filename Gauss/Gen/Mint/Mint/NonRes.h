@@ -53,7 +53,7 @@ class NonRes : public BW_BW, virtual public ILineshape{
   double GetAlpha() const;
 
   const std::string _type;
-  const MINT::NamedParameter<double> _alpha;
+  MINT::NamedParameter<double> _alpha;
 };
 
 std::ostream& operator<<( std::ostream& out, const NonRes& amp );
