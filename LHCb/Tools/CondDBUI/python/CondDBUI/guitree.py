@@ -221,8 +221,10 @@ class guiChannel(guiTreeElement):
             tag = 'HEAD'
         else:
             folder = self.bridge.db.getFolder(self.parent().fullName)
+            import cppyy
+            Helpers = cppyy.gbl.CondDBUI.Helpers
             try:
-                tag = folder.resolveTag(tagName)
+                tag = Helpers.resolveTag(folder, tagName)
             except Exception, details:
                 raise Exception, details
             
@@ -251,8 +253,10 @@ class guiChannel(guiTreeElement):
             tag = 'HEAD'
         else:
             folder = self.bridge.db.getFolder(self.parent().fullName)
+            import cppyy
+            Helpers = cppyy.gbl.CondDBUI.Helpers
             try:
-                tag = folder.resolveTag(tagName)
+                tag = Helpers.resolveTag(folder, tagName)
             except Exception, details:
                 raise Exception, details
         if self.condDBCache.has_key(tag):

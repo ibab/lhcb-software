@@ -23,8 +23,8 @@ except ImportError:
 
 Helpers = cppyy.gbl.CondDBUI.Helpers
 
-import ROOT
-Helpers = ROOT.CondDBUI.Helpers
+#import ROOT
+#Helpers = ROOT.CondDBUI.Helpers
 
 __all__ = ["setModelsIcons",
            "tagsGlobalCache",
@@ -710,7 +710,7 @@ class CondDBIoVModel(BaseIoVModel):
         if self._folder and self._actualUntil < newUntil:
             tag = self.tag()
             if tag != self.HEAD:
-                tag = self._folder.resolveTag(self.tag())
+                tag = self.db.resolveTag(_folder,self.tag())
             objects = self._folder.browseObjects(self._actualUntil, newUntil,
                                                  self.channelSelection(),
                                                  tag)
@@ -733,7 +733,7 @@ class CondDBIoVModel(BaseIoVModel):
             oldSize = len(self._allIoVs)
             tag = self.tag()
             if tag != self.HEAD:
-                tag = self._folder.resolveTag(self.tag())
+                tag = self.db.resolveTag(_folder,self.tag())
             # Note: we use "self._actualSince - 1" and not "self._actualSince"
             # because COOL returns also the object that includes the upper limit,
             # but we already have it.
@@ -1375,7 +1375,7 @@ class ChildTagsModel(QAbstractTableModel):
             path = self._path + "/" + n
             try:
                 f = self._db.getCOOLNode(path)
-                f.resolveTag(tag)
+                self._db.resolveTag(f,tag)
                 newData.append((n, tag))
             except:
                 newData.append((n, "HEAD"))

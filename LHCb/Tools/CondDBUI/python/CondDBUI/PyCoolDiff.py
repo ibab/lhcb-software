@@ -45,6 +45,9 @@ def diff( originalDB, modifiedDB, diffDB,
     original database will reproduce the data of the second database.
     originalDB, modifiedDB and diffDB have to be COOL connection strings.
     """
+    import cppyy
+    Helpers = cppyy.gbl.CondDBUI.Helpers
+
     _log.debug("Get COOL Database Service")
     global _app
     if _app is None:
@@ -87,7 +90,7 @@ def diff( originalDB, modifiedDB, diffDB,
                 if is_single_version or modifiedTAG.upper() in [ "", "HEAD" ]:
                     dest_local_tag = ''
                 else:
-                    dest_local_tag = dest_folder.resolveTag(modifiedTAG)
+                    dest_local_tag = Helpers.resolveTag(dest_folder, modifiedTAG)
 
                 object_iterator = dest_folder.browseObjects( since, until, channels,
                                                              dest_local_tag )
@@ -112,7 +115,7 @@ def diff( originalDB, modifiedDB, diffDB,
                             if is_single_version or originalTAG.upper() in [ "", "HEAD" ]:
                                 orig_local_tag = ''
                             else:
-                                orig_local_tag = orig_folder.resolveTag(originalTAG)
+                                orig_local_tag = Helpers.resolveTag(orig_folder, originalTAG)
 
                             # Get the list of current objects to be covered by new one
                             orig_objects = list(orig_folder.browseObjects( obj.since(),
@@ -143,9 +146,8 @@ def diff( originalDB, modifiedDB, diffDB,
                     _log.debug("Found %d objects to insert",len(new_data))
                     if diff is None:
                         _log.info("Opening differences database '%s'",diffDB)
-                        try:
-                            diff = dbs.openDatabase(diffDB,False)
-                        except:
+                        diff = Helpers.openDatabase(dbs,diffDB,False)
+                        if not diff:
                             _log.info("Differences database has to be created")
                             diff = dbs.createDatabase(diffDB)
                     # check if the destination DB contains the new folder
@@ -165,14 +167,14 @@ def diff( originalDB, modifiedDB, diffDB,
                                                   folderPath)
                     else:
                         # otherwise create it
-                        # diff_folder = diff.createFolder(folderPath,
-                        #                   dest_folder.folderSpecification(),
-                        #                   dest_folder.description(), True)
                         diff_folder = diff.createFolder(folderPath,
-                                          dest_folder.payloadSpecification(),
-                                          dest_folder.description(),
-                                          dest_folder.versioningMode(),
-                                          True)
+                                           dest_folder.folderSpecification(),
+                                           dest_folder.description(), True)
+                        #diff_folder = diff.createFolder(folderPath,
+                        #                  dest_folder.payloadSpecification(),
+                        #                  dest_folder.description(),
+                        #                  dest_folder.versioningMode(),
+                        #                  True)
                     diff_folder.setupStorageBuffer()
                     for obj in new_data:
                         diff_folder.storeObject(max(obj.since(), since),

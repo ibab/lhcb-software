@@ -104,7 +104,8 @@ def MergeAndTag(source, target, tag, check_addition_db = True):
         try:
             newparent = parent
             f = target_db.getCOOLNode(newparent)
-            while f.resolveTag(tag) != tag:
+#            while f.resolveTag(tag) != tag:
+            while target_db.resolveTag(f,tag) != tag:
                 # up one dir
                 p = newparent.rfind('/')
                 if p >= 0:
@@ -314,7 +315,7 @@ class _relativize_url:
 
 ## Dummy class for progress monitoring.
 #  It implements the subset of the interface of QProgressDialog
-#  (http://doc.trolltech.com/4.4/qprogressdialog.html) needed by DumpToFiles.
+#  (http://doc.trolltech.com/4.4/qprogressdialog.html) needed by umpToFiles.
 class _dummyMonitor(object):
     def setMaximum(self, max):
         pass
