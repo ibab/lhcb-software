@@ -5,14 +5,18 @@ Purpose: LHCb reconstruction program
 
 - New functionality
   . Add support for 2015 DataType
+  . Add possibility to reprocess from DST without rerunning the tracking,
+    enabled by Brunel().SkipTracking=True.
+    Currently not implemented for MC (is it needed?) or for upgrade
 
 - Changes to persistency
   . Change default RawEvent output version to 4.0 (requires RawEventFormat v1r1):
     RawEvent/Other further split into RawEvent/{Velo,Tracker,Unstripped} 
 
 - Changes to QMTests
-  . Added repro2012recombinetoreco14 to test that RawEvent output version 4.0
-    can be recombined back to 2.0 (Reco14 version)
+  . Added repro2012reco14skiptracking, tests Brunel().SkipTracking functionality
+    Checks also that RawEvent output version 4.0 can be recombined back to 2.0
+    (Reco14 version)
   . brunel-mc11a-xdst.qmt now explicitly tests RawEvent output version 2.0
     (a few other tests adapted to default output version 4.0)
   . Added 2015magdown to test 2015 DataType configuration. Currently uses 2012

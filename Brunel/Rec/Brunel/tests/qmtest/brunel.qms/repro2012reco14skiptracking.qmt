@@ -1,0 +1,37 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: M.Cattaneo
+# Purpose: Check that Brunel can reprocess a Reco14 DST skipping the tracking
+#          Checks also that Brunel can reprocess and recombine from the Brunel default split RawEvent to the Reco14 RawEvent 
+# Prerequisites: brunel2012magdown needs to have produced a file called ...200ev.dst
+# Common failure modes, severities and cures: 
+#               . NORMAL: stdout changed and changes are matched by similar changes in  brunel2012magdown output. If those are
+#                         understood, reference file of this test can be simply updated
+#               . MAJOR: stdout changed, but brunel2012magdown is OK. Something has changed that prevents reprocessing skipping the tracking
+#               . MAJOR: failure in checking the new output format, perhaps someone has messed up DaqSys/RawEventFormat/RawEventCompat and its integration with Brunel.
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="prerequisites"><set>
+    <tuple><text>brunel.brunel2012magdown</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>
+  <argument name="args"><set>
+    <text>--option</text>
+    <text>from Brunel.Configuration import *; Brunel().DataType="2012"; Brunel().InputType="DST"; from GaudiConf.IOHelper import IOHelper; IOHelper().inputFiles(["brunel2012magdown-200ev.dst"]); Brunel().DatasetName="repro2012reco14skiptracking"; Brunel().SplitRawEventInput=4.0; Brunel().SplitRawEventOutput=2.0; Brunel().EvtMax=200; Brunel().Monitors = ["SC","FPE"]; Brunel().SkipTracking=True</text>
+  </set></argument>
+  <argument name="reference"><text>../refs/repro2012reco14skiptracking.ref</text></argument>
+  <argument name="validator"><text>
+from Brunel.QMTest.BrunelExclusions import preprocessor
+validateWithReference(preproc = preprocessor)
+
+#check if the output exists, and check the split locations are on it
+from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
+checkIsSplit("repro2012reco14skiptracking-200ev.dst",2.0,causes,result,"brunel.repro2012reco14skiptracking")
+checkIsGone("repro2012reco14skiptracking-200ev.dst",["Velo/RawEvent", "Tracker/RawEvent", "Unstripped/RawEvent"],causes,result,"brunel.repro2012reco14skiptracking")
+</text></argument>
+</extension>
+

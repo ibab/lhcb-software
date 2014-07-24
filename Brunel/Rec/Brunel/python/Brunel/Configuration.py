@@ -79,6 +79,7 @@ class Brunel(LHCbConfigurableUser):
        ,"Context"         : "Offline"
        ,"RawBanksToKill"  : None
        ,"VetoHltErrorEvents" : True
+       ,"SkipTracking"    : False
        ,"Detectors"       : ['Velo', 'PuVeto', 'Rich1', 'Rich2', 'TT', 'IT', 'OT', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet', 'Tr']
        ,"SplitRawEventInput" : None #Where the raw event sits on the input
        ,"SplitRawEventOutput" : 4.0 #how to split the raw event
@@ -121,6 +122,7 @@ class Brunel(LHCbConfigurableUser):
        ,'Context'      : """ The context within which to run (default 'Offline') """
        ,'RawBanksToKill':""" Raw banks to remove from RawEvent before processing. Removed also from DST copy of RawEvent """
        ,"VetoHltErrorEvents" : """Do not reconstruct events that have been flagged as error by Hlt"""
+       ,'SkipTracking' : """ Read the tracks from the input, do not redo them """
        ,"Detectors"    : """List of detectors""" 
        , "SplitRawEventInput" : "How is the even split up in the input? Default 'None' doesn't reset any locations. Other values propagate to RawEventJuggler() and DecodeRawEvent()."
        , "SplitRawEventOutput" : "How to split the raw event up, versions are defined in the RawEventFormat DB, and RawEventCompat/RawEventJuggler is used for the splitting, default 2.0 the split type for Reco14/Stripping20-style DSTs"
@@ -227,6 +229,17 @@ class Brunel(LHCbConfigurableUser):
         # Flag to handle or not LumiEvents
         handleLumi = inputType in ["MDF"] and not withMC and not self.getProp('UseDBSnapshot')
 
+        # Top level configuration for skipping tracking
+        if self.getProp("SkipTracking"):
+            if inputType in ["MDF", "DIGI" ]:
+                raise RuntimeError( "Cannot skip tracking if tracks not present on the input file" )
+            if withMC:
+                raise RuntimeError( "SkipTracking not (yet) supported for simulation input" )
+            if( self.getProp("DataType") is "Upgrade"):
+                raise RuntimeError( "SkipTracking not (yet) supported for Upgrade configurations" )
+            ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ] # to decode the tracks from the DST
+            DstConf().setProp("EnableUnpack", ["Tracking"] )
+
         # veto Hlt Error Events
         vetoHltErrorEvents = self.getProp("VetoHltErrorEvents")
 
@@ -292,6 +305,24 @@ class Brunel(LHCbConfigurableUser):
         #remember that the default is a long list of locations,
         #starting with places which only exist _after_ brunel has run!
 
+        # Following needed to build RecSummary, even if tracking is skipped.
+        # Code  lifted from TrackSys/RecoTracking.py, to be repackaged
+        if self.getProp("SkipTracking"):
+            from DAQSys.Decoders import DecoderDB
+            from DAQSys.DecoderClass import decodersForBank
+            decs=[]
+            #clone an existing algorithm, in order to create both the full
+            #and the partial clusters
+            vdec=DecoderDB["DecodeVeloRawBuffer/createBothVeloClusters"]
+            #set as active to make sure nobody tries to use the DoD service along side...
+            vdec.Active=True
+            globalCuts = TrackSys().getProp("GlobalCuts")
+            if( "Velo" in globalCuts ) :
+                vdec.Properties["MaxVeloClusters"] =  globalCuts["Velo"]
+                decs=decs+[vdec]
+            decs=decs+decodersForBank(DecoderDB,"TT")
+            decs=decs+decodersForBank(DecoderDB,"IT")
+            GaudiSequencer("RecoDecodingSeq").Members += [d.setup() for d in decs ]
     
     def defineMonitors(self):
 
@@ -492,7 +523,11 @@ class Brunel(LHCbConfigurableUser):
                 InitReprocSeq.Members.append( "TESCheck" )
                 TESCheck().Inputs = ["Link/Rec/Track/Best"]
             killer = EventNodeKiller()
-            killer.Nodes += [ "pRec", "Rec", "Raw", "Link/Rec" ]
+            killer.Nodes += [ "Raw", "Link/Rec" ]
+            if self.getProp("SkipTracking"):
+                killer.Nodes += [ "pRec/Rich", "pRec/Muon", "pRec/Calo", "pRec/Track/Muon", "pRec/ProtoP" ]
+            else:
+                killer.Nodes += [ "pRec", "Rec" ]
             InitReprocSeq.Members.append( killer )
             ### see configureOutput to see how the remainder of the juggler
             ### is configured
@@ -841,8 +876,8 @@ class Brunel(LHCbConfigurableUser):
         self.defineOptions()
         self.defineMonitors()
         self.setOtherProps(RecSysConf(),["Histograms","SpecialData","Context",
-                                         "OutputType","DataType","Simulation","OnlineMode"])
-        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType","Simulation","OnlineMode"])
+                                         "OutputType","DataType","Simulation","OnlineMode","SkipTracking"])
+        self.setOtherProps(RecMoniConf(),["Histograms","Context","DataType","Simulation","OnlineMode","SkipTracking"])
         self.setOtherProps(TrackSys(),["DataType","Simulation"])
 
         if self.isPropertySet("RecoSequence") :
