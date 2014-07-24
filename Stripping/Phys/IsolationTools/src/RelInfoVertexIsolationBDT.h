@@ -120,8 +120,6 @@ class RelInfoVertexIsolationBDT : public GaudiTool, virtual public IRelatedInfoT
         float m_var_deltafd ;
         float m_var_trackpt ;
 
-        ;
-
     public:
 
         // Structure of isolation vars

@@ -474,7 +474,7 @@ double RelInfoTrackIsolationBDT::calcFC( Gaudi::XYZVector track_mom,
     double fc_denom   = track_plus_mu_p.R() * angle + track_mom.Rho() + mu_mom.Rho() ;
     if(fc_denom != 0 ) fc = fc_num / fc_denom ; 
     return fc;
-};
+}
 
 ///--------------------------------------------
 /// calculates angle between two vectors
@@ -493,5 +493,5 @@ double RelInfoTrackIsolationBDT::calcVertexDist(Gaudi::XYZPoint muTrack, const L
     if (v==NULL) return 0 ;
     Gaudi::XYZPoint vertex = v->position();
     return ( (muTrack.z()-vertex.z())/fabs(muTrack.z()-vertex.z())*(muTrack-vertex).R() );
-};
+}
 
