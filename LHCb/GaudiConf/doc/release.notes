@@ -3,6 +3,11 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-07-24 - Marco Cattaneo
+ - Add "Tracking" to KnownUpackingTypes in DstConf. If present in EnableUnpack
+   list, enable Track and Vertex unpackers and disable corresponding packers.
+   Used by Brunel to  reprocess from DST without rerunning the tracking
+
 !========================= GaudiConf v19r3 2014-06-20 =========================
 ! 2014-06-20 - Michel De Cian
  - Add location for FT Clusters <-> MCHit links to be written out in DigConf.

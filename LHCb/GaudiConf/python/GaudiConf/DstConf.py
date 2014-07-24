@@ -41,7 +41,7 @@ class DstConf(LHCbConfigurableUser):
     _propertyDocDct = {
         'DstType'         : """ Type of dst, can be ['DST','XDST','MDST'] """
        ,'SimType'         : """ Type of simulation output, can be ['None','Minimal','Full'] """
-       ,'EnableUnpack'    : """ Flag to set up on demand unpacking of DST containers """
+       ,'EnableUnpack'    : """ List of DST container types to be set up for on demand unpacking. See KnownUnpackingTypes """
        ,'EnablePackingChecks' : """ Flag to turn on the running of various unpacking checks, to test the quality of the data packing """
        ,'PackType'        : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
        ,'PackSequencer'   : """ Sequencer in which to run the packing algorithms """
@@ -64,7 +64,7 @@ class DstConf(LHCbConfigurableUser):
     KnownSimTypes       = ['None','Minimal','Full']
     KnownDstTypes       = ['NONE','DST','XDST','SDST','MDST']
     KnownPackTypes      = ['NONE','TES','MDF']
-    KnownUnpackingTypes = ["Reconstruction","Stripping"]
+    KnownUnpackingTypes = ["Reconstruction","Stripping","Tracking"]
 
     def _doWrite( self, dType, pType, sType ):
         """
@@ -245,9 +245,11 @@ class DstConf(LHCbConfigurableUser):
         alwaysCreate = self.getProp("AlwaysCreate")
         doChecks     = self.getProp("EnablePackingChecks")
 
-        packDST.Members += [ PackTrack( name               = "PackTracks",
-                                        AlwaysCreateOutput = alwaysCreate,
-                                        EnableCheck        = doChecks ) ]
+        # Pack tracks if they were not read from the input file...
+        if "Tracking" not in self.getProp("EnableUnpack"): 
+            packDST.Members += [ PackTrack( name               = "PackTracks",
+                                            AlwaysCreateOutput = alwaysCreate,
+                                            EnableCheck        = doChecks ) ]
 
         richpidpack = DataPacking__Pack_LHCb__RichPIDPacker_( name               = "PackRichPIDs",
                                                               AlwaysCreateOutput = alwaysCreate,
@@ -292,11 +294,12 @@ class DstConf(LHCbConfigurableUser):
                                            EnableCheck        = doChecks )
         packDST.Members += [packNeutralPs]
 
-        # Pack Vertices
-        packDST.Members += [
-            PackRecVertex(AlwaysCreateOutput = alwaysCreate),
-            PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate)
-            ]
+        # Pack vertices if they were not read from the input file...
+        if "Tracking" not in self.getProp("EnableUnpack"): 
+            packDST.Members += [
+                PackRecVertex(AlwaysCreateOutput = alwaysCreate),
+                PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate)
+                ]
 
         if "Muon" in self.getProp("Detectors"):
             packDST.Members += [ PackTrack( name               = "PackMuonTracks",
@@ -347,6 +350,15 @@ class DstConf(LHCbConfigurableUser):
 
         log.debug("In DstConf._doUnpack")
 
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Best" ]     = UnpackTrack()
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ] = UnpackRecVertex()
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]      = UnpackTwoProngVertex()
+        pvWunpack = DataPacking__Unpack_LHCb__WeightsVectorPacker_("UnpackPVWeights")
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Weights" ] = pvWunpack
+
+        if "Tracking" in self.getProp("EnableUnpack") : return # skip the rest
+
+        # Calo
         if "Calo" in self.getProp("Detectors"):
             caloUnpack = CaloDstUnPackConf ()
             if not caloUnpack.isPropertySet('Enable') :
@@ -354,12 +366,6 @@ class DstConf(LHCbConfigurableUser):
                 caloUnpack.Enable = True
             else :
                 log.debug( "Not setting caloUnpack.Enable. Current value = %s", caloUnpack.Enable )
-
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Best" ]     = UnpackTrack()
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ] = UnpackRecVertex()
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]      = UnpackTwoProngVertex()
-        pvWunpack = DataPacking__Unpack_LHCb__WeightsVectorPacker_("UnpackPVWeights")
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Weights" ] = pvWunpack
 
         # RichPIDs
         if "Rich" in self.getProp("Detectors"):
@@ -554,7 +560,7 @@ class DstConf(LHCbConfigurableUser):
         for unpackT in self.getProp("EnableUnpack") :
             if unpackT not in self.KnownUnpackingTypes :
                 raise TypeError( "Unknown Unpacking type '%s'"%unpackT )
-        if "Reconstruction" in self.getProp("EnableUnpack") : self._doUnpack()
+        if "Reconstruction" in self.getProp("EnableUnpack") or "Tracking" in self.getProp("EnableUnpack") : self._doUnpack()
         if "Stripping"      in self.getProp("EnableUnpack") : self._unpackStripping()
 
         if dType != 'NONE':
