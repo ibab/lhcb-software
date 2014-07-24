@@ -30,14 +30,6 @@ class CommonParticlesArchiveConf ( object ) :
 
         import os, sys
 
-        # Check to see if CommonParticles has already been loaded.
-        # If it has, throw an exception, as this method must be called
-        # prior to any import of CommonParticles
-        if 'CommonParticles' in sys.modules.keys() :
-            raise Exception( "Module " + str(sys.modules['CommonParticles']) +
-                             " alread loaded. " +
-                             "redirectCommonParticles must be called *BEFORE* any imports from CommonParticles" )
-
         # Handle 'alias' strippings
         # Needs to be in sync with the dict in StrippingArchive.
         # To Do - Find a way to have only one version of this dict.
@@ -47,6 +39,14 @@ class CommonParticlesArchiveConf ( object ) :
         stripName = stripping 
         if stripping in duplicate_strippings.keys() :
             stripName = duplicate_strippings[stripping]
+
+        # Check to see if CommonParticles has already been loaded.
+        # If it has, throw an exception, as this method must be called
+        # prior to any import of CommonParticles
+        if 'CommonParticles' in sys.modules.keys() :
+            raise Exception( "Module " + str(sys.modules['CommonParticles']) +
+                             " alread loaded. " +
+                             "redirectCommonParticles must be called *BEFORE* any imports from CommonParticles" )
 
         # Construct the archive python path from this modules path
         pth = os.path.sep.join( __file__.split(os.path.sep)[0:-1] + [stripName] )
