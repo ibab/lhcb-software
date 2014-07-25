@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r16 2014-07-25 =========================
+
 ! 2014-07-18 - Stefano Perazzini
  - Added selectiveRawEvent attribute to stripCalibMicroDSTStreamConf
 
@@ -39,7 +41,8 @@
  - Modifications for RelatedInfo storage
 
 ! 2014-06-23 - Vanya Belyaev
- - minor tuning to (optionally) keep information on number of tracks in PV 
+ - Minor tuning to (optionally) keep information on number of tracks in PV.
+   Default is False.
 
 !========================= DSTWriters v4r15 2014-06-13 =========================
 
