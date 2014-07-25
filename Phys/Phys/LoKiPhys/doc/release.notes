@@ -5,6 +5,8 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhys v10r19 2014-07-25 =========================
+
 ! 2014-07-11 - Marco Clemencic
  - Removed duplicate dictionary entries.
 
@@ -16,7 +18,6 @@
      RELINFO ( AbsoluteRelatedInfoLocation', Index, ErrorValue )
   or (better)
      RELINFO ( AbsoluteRelatedInfoLocation', Variable, ErrorValue )
-
 
    where
      AbsoluteRelatedInfoLocation: 
@@ -45,10 +46,10 @@
      CONEPRASYM = RELINFO('/Event/Charm/Phys/DstarPromptWithD02HHMuMuLine/Particle2CV1Relations','CONEPTASYM',-1000.)
 
 ! 2014-06-24 - Albert Puig
- - add the MTDOCA and MTDOCACHI2 functors
+ - Add the MTDOCA and MTDOCACHI2 functors.
 
 ! 2014-06-23 - Vanya Belyaev
- - adjust NTRACKS to to extract #tracks from empty vertices 
+ - Adjust NTRACKS to extract #tracks for empty vertices.
 
 !========================= LoKiPhys v10r18 2014-06-13 =========================
 
