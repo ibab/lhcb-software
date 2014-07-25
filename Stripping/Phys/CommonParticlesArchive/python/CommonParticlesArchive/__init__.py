@@ -36,7 +36,7 @@ class CommonParticlesArchiveConf ( object ) :
         duplicate_strippings = { "Stripping20r1p1" : "Stripping20r0p1",
                                  "Stripping20r1p2" : "Stripping20r0p2",
                                  "Stripping20r1p3" : "Stripping20r0p3" }
-        stripName = stripping 
+        stripName = stripping
         if stripping in duplicate_strippings.keys() :
             stripName = duplicate_strippings[stripping]
 
@@ -45,7 +45,7 @@ class CommonParticlesArchiveConf ( object ) :
         # prior to any import of CommonParticles
         if 'CommonParticles' in sys.modules.keys() :
             raise Exception( "Module " + str(sys.modules['CommonParticles']) +
-                             " alread loaded. " +
+                             " already loaded. " +
                              "redirectCommonParticles must be called *BEFORE* any imports from CommonParticles" )
 
         # Construct the archive python path from this modules path
