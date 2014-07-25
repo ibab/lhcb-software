@@ -11,6 +11,7 @@ __all__  = ( "AlignmentsWithIOVs"
            , "getGlobalPositionFromGeometryInfo"
            , "parseTimeMin"
            , "parseTimeMax"
+           , "preparePeriodsAndAlignments"
            )
 
 import logging
@@ -24,7 +25,6 @@ from GaudiPython import gbl
 from separatethread import RunInSeparateThread
 
 from SimpleAlignmentRepresentation import Transformation, AlignableTreeNode, loopTrees
-
 
 ############################################################
 #                detSvc -> transformations                 #
@@ -345,3 +345,38 @@ class AlignmentsWithIOVs(object):
                 m = elmRegex.match(name)
                 if m:
                     yield name, m, matrixForAll
+
+def preparePeriodsAndAlignments(alignmentsList, detectorList):
+    """
+    Take a list of ( connection, since, until, tag ) tuples and return appropriate StatusTimePeriod and AlignmentsWithIOVs objects
+    """
+    from ParseStatusTable import prepareTimePeriods
+
+    Tags = dict()
+    # make one date range per CondDB tag
+    for connection, start, end, tag in alignmentsList:
+        if len(connection) == 0:
+            if tag in Tags.keys():
+                Entry = Tags[tag]
+                if parseTimeMin(start) <= parseTimeMin(Entry['since']):
+                    Entry['since'] = start
+                if parseTimeMin(end) >= parseTimeMin(Entry['until']):
+                    Entry['until'] = end
+            else:
+                Tags[tag] = {'since' : start, 'until' : end}
+        else: pass
+
+    # instantiate only one object per CondDB tag
+    for tag in Tags.iterkeys():
+        Entry = Tags[tag]
+        Entry['AWIOVs'] = AlignmentsWithIOVs([], detectorList, Entry['since'], Entry['until'], defaultTag = tag)
+
+    preparedList = list()
+    for connection, start, end, tag in alignmentsList:
+        timePeriods = prepareTimePeriods(connection, start, end, tag)
+        if len(connection) == 0:
+            alignment = Tags[tag]['AWIOVs']
+        else: alignment = AlignmentsWithIOVs(connection, detectorList, start, end, defaultTag = tag)
+        preparedList.append((timePeriods, alignment))
+
+    return preparedList

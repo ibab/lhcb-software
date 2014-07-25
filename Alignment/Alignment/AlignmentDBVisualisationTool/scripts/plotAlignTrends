@@ -10,7 +10,7 @@ import logging
 from optparse import OptionParser
 
 parser = OptionParser()
-parser.usage = "%prog [options] elements dofs dbfile"
+parser.usage = "%prog [options] elements dofs [dbfile]"
 
 parser.add_option("-r", "--reference", dest="refDbFile",   default=None, metavar="REFERENCE",
                   help="SQLite file (without IOVs) containing a reference alignment, e.g. survey")

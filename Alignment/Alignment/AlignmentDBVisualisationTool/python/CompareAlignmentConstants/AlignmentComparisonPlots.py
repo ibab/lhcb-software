@@ -9,6 +9,8 @@ __date__   = "August-November 2012"
 
 __all__  = ( "plotAlignmentParametersComparison"
            , "plotAlignmentParametersTimeSeries"
+           , "plotAlignmentParametersHeat"
+           , "parseRequestedAlignments"
            )
 
 import logging, copy
@@ -20,6 +22,7 @@ import re
 
 from GaudiDetSvcTools              import ( AlignmentsWithIOVs
                                           , parseTimeMin, parseTimeMax
+                                          , preparePeriodsAndAlignments
                                           )
 
 from ParseStatusTable              import ( statusPeriodsFromTable
@@ -89,24 +92,27 @@ def plotAlignmentParametersComparison( elmGroup, dofs
     """
     Plot alignment differences between the slices (with tags), and with respect to the reference
     """
-    pSince = parseTimeMin(since)
-    pUntil = parseTimeMax(until)
-    timePeriods = [ StatusTimePeriod( "MagDown", pSince, pUntil ) ]
 
     detsToLoad = elmGroup.split(".")[0:1]
 
     # get the bin labels correct : *if* one string, use it to extract the name (group "label")
     if isinstance( binLabels, str ):
         binLabelPattern = re.compile(binLabels)
-        binLabels = list( binLabelPattern.match(connStr).group("label") for connStr, tag in sliceConnectStringsAndTags )
+        binLabels = list()
+        for connection, start, end, tag in sliceConnectStringsAndTags:
+            if len( connection ) == 0:
+                binLabels.append( start )
+            else:
+                binLabels.append( binLabelPattern.match(connection[0][0] ).group("label") )
         logging.debug( "Extracted bin labels from connection strings: %s" % binLabels )
     if not isinstance(binLabels, list):
         binLabels = list( None for cS, t in sliceConnectStringsAndTags )
 
-    for ( connStr, tag ), label in zip(sliceConnectStringsAndTags, binLabels):
-        theAlignmentParameters = AlignmentsWithIOVs( [ ( connStr, tag ) ], detsToLoad, since, until, defaultTag=defaultTag )
+    parametersAndPeriods = preparePeriodsAndAlignments( sliceConnectStringsAndTags, detsToLoad )
+    for [ timePeriods, theAlignmentParameters ], label in zip( parametersAndPeriods, binLabels ):
         drawDiffAlignment( timePeriods, elmGroup, theAlignmentParameters, dofs, label )
     if refConnectString:
+        timePeriods = [ StatusTimePeriod( "MagDown", parseTimeMin(since), parseTimeMax(until) ) ]
         refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, defaultTag=defaultTag )
         drawDiffReference( timePeriods, elmGroup, refAlignmentParameters, dofs )
 
@@ -130,6 +136,7 @@ Dets = {
 def plotAlignmentParametersHeat( det
                                , dofs
                                , inputAlignments
+                               , alignmentTitles
                                , outputDir="."
                                , layers=["all"]
                                , drawNames=False
@@ -142,7 +149,7 @@ def plotAlignmentParametersHeat( det
     """
     
     # record the comparison being made, ultimately gets written in the plot titles
-    comparisonDescriptionString = "%s   relative to   %s" % tuple( alignment[0] for alignment in inputAlignments )
+    comparisonDescriptionString = "%s   relative to   %s" % tuple( title for title in alignmentTitles )
     print comparisonDescriptionString
 
     if layers == ['all']:
@@ -155,24 +162,7 @@ def plotAlignmentParametersHeat( det
         print "exiting..."
         exit()
 
-    name, connection, since, until, tag = inputAlignments[0]
-    timePeriodsOne = prepareTimePeriods(connection, since, until, tag)
-    if ( 0 == len(connection) and 0 == len(inputAlignments[1][1]) ):
-        # both alignments are IOVs: only connect to the database once
-        if parseTimeMin(since) <= parseTimeMin(inputAlignments[1][2]):
-            globalSince = since
-            globalUntil = inputAlignments[1][3]
-        else:
-            globalSince = inputAlignments[1][2]
-            globalUntil = until
-        alignmentOne = AlignmentsWithIOVs( connection, [ det ], globalSince, globalUntil, defaultTag=tag )
-        alignmentTwo = alignmentOne
-    else:
-        alignmentOne = AlignmentsWithIOVs( connection, [ det ], since, until, defaultTag=tag )
-        name, connection, since, until, tag = inputAlignments[1]
-        alignmentTwo = AlignmentsWithIOVs( connection, [ det ], since, until, defaultTag=tag )
-    name, connection, since, until, tag = inputAlignments[1]
-    timePeriodsTwo = prepareTimePeriods(connection, since, until, tag)
+    ( timePeriodsOne, alignmentOne ), ( timePeriodsTwo, alignmentTwo ) = preparePeriodsAndAlignments( inputAlignments, [det] )
 
     logging.debug("Initializing detector tuple")
     detectorTuple = tuple( ( node, pageName, matrix[0] ) for node, pageName, matrix in alignmentOne.loopWithTimesAndValues( det, Dets[det]['elmGroup'], timePeriodsOne ) )
@@ -190,31 +180,18 @@ def plotAlignmentParametersHeat( det
             if dof.startswith("R"):
                 from math import pi
                 for j, parameter in enumerate( parameters ):
-                    # scrub off 2pi (though the parameter is usually epsilon +/- pi)
-                    if   (  3*pi / 2 < parameter ):
-                        logging.debug("-> removing 2pi from  %s..." % parameter)
-                        parameter = parameter - 2*pi
-                        logging.debug("         ...it's now  %s" % parameter)
-                    elif ( -3*pi / 2 > parameter ):
-                        logging.debug("-> removing -2pi from %s..." % parameter)
-                        parameter = 2*pi + parameter
-                        logging.debug("          ...it's now %s" % parameter)
-                    # scrub off pi
-                    if   (  pi / 2 < parameter ):
-                        logging.debug("-> removing pi from  %s..." % parameter)
-                        parameter = parameter - pi
-                        logging.debug("        ...it's now  %s" % parameter)
-                    elif ( -pi / 2 > parameter ):
-                        logging.debug("-> removing -pi from %s..." % parameter)
-                        parameter = parameter + pi
-                        logging.debug("         ...it's now %s" % parameter)
+                    # consider parameters in the lower half of the circle as having spurrious rotations by +/- n*pi
+                    # remove n*pi from positive parameters and transform negative parameters to (parameter + pi):
+                    if abs(parameter) > pi/2: parameter = parameter % pi
+                    # correct transformed negative parameters:
+                    if (parameter > pi/2): parameter = parameter - pi
                     # update and convert to mrad
                     parameters[j] = parameter * 1000
             difference = parameters[0] - parameters[1]
             logging.debug("diff is %s" % difference)
             setattr( detectorTuple[i][2], dof, difference )
 
-    # initialize dictionary of max alignment differectes to return
+    # initialize dictionary of max alignment differences to return
     MaxDiffs = {}
     
     # generate layer fill list by matching detectorTuple element name slices to the layer name
@@ -243,14 +220,10 @@ def plotAlignmentParametersHeat( det
             diffMin = min( diffsList )
             diffRange = max(abs(diffMax),abs(diffMin))
             # copy this to return to scanner
-            # if dof not in MaxDiffs:
-            #     MaxDiffs[dof] = {}
             logging.debug("diffMax is %s and diffMin is %s" % ( diffMax, diffMin ))
             if ( abs(diffMax) > abs(diffMin) ):
-                # MaxDiffs[dof][layer] = copy.copy(diffMax)
                 MaxDiffs[layer][dof] = copy.copy(diffMax)
             else:
-                # MaxDiffs[dof][layer] = copy.copy(diffMin)
                 MaxDiffs[layer][dof] = copy.copy(diffMin)
             # set units and precision cutoff
             if dof.startswith("T"):
@@ -288,3 +261,26 @@ def plotAlignmentParametersHeat( det
 
     if returnFlag:
         return MaxDiffs
+
+def parseRequestedAlignments( alignments, titles = None, defaultTag = "cond-20130111" ):
+    """
+    parse strings into IOVs, tags, and db connection strings
+    """
+    for index, alignment in enumerate( alignments ):
+        alignment = alignment.split(",")
+        title = ''
+        if len( alignment ) == 1:
+            filePath = alignment[0]
+            title = filePath.split("/")[-1]
+            alignments[index] = [ [("sqlite_file:%s/LHCBCOND" % filePath, "HEAD")], "2010-01-01", "2050-01-01", "default" ]
+            print "Alignment %s input as the file %r with path %s" % ( index, title, filePath )
+        else:
+            since, until = alignment[:2]
+            title = "IOV: " + since + " to " + until
+            tag = defaultTag
+            if len( alignment ) == 3:
+                tag = alignment[2]
+            alignments[index] = [ [], since, until, tag ]
+            print "Alignment %s input as the %s using CondDBtag %r" % ( index, title, tag )
+        if not titles == None:
+            titles.append( title )

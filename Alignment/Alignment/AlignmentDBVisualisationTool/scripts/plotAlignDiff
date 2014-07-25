@@ -16,34 +16,34 @@ parser.add_option("-r", "--reference", dest="refDbFile",      default=None, meta
                   help="SQLite file (without IOVs) containing a reference alignment, e.g. survey")
 parser.add_option("-o", "--outdir",    dest="outDirName",     default="AlignmentsCompared", metavar="OUTDIR",
                   help="Output directory [default: %default]")
-parser.add_option("--binLabelsRegex",  dest="binLabelsRegex", default=".+/Alignment_(?P<label>[0-9]+)\.db/LHCBCOND$",
+parser.add_option("--binLabelsRegex",  dest="binLabelsRegex", default=".+/Alignment_(?P<label>[0-9a-zA-Z]+)\.db/LHCBCOND$",
                   help="Regular expression for connection strings. The pattern \"label\" is used as bin label [default: %default]")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Turn on verbose messages")
 
 (options, args) = parser.parse_args()
 
 assert len(args) > 2
-elements = args[0]
-dofs = args[1].split(",")
-dbFiles = args[2:]
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
 else:
     logging.basicConfig(level=logging.ERROR)
 
-loggin.basicConfig(level=19)
-
 refConnStr = options.refDbFile
 if refConnStr is not None:
     refConnStr = "sqlite_file:%s/LHCBCOND" % refConnStr
 
-from CompareAlignmentConstants.AlignmentComparisonPlots import plotAlignmentParametersComparison
+from CompareAlignmentConstants.AlignmentComparisonPlots import parseRequestedAlignments, plotAlignmentParametersComparison
+
+elements = args[0]
+dofs = args[1].split(",")
+alignments = args[2:]
+parseRequestedAlignments( alignments )
 
 plotAlignmentParametersComparison(
-        elements, dofs
-      , [ ("sqlite_file:%s/LHCBCOND" % dbFile, "HEAD") for dbFile in dbFiles ]
-      , binLabels=options.binLabelsRegex
-      , refConnectString=refConnStr
-      , outputdir=options.outDirName
-      )
+    elements, dofs
+    , alignments
+    , binLabels=options.binLabelsRegex
+    , refConnectString=refConnStr
+    , outputdir=options.outDirName
+    )

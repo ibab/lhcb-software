@@ -6,6 +6,7 @@ __date__   = "November 2012"
 
 __all__ = ( "StatusTimePeriod"
           , "statusPeriodsFromTable"
+          , "prepareTimePeriods"
           )
 
 import re, os, logging

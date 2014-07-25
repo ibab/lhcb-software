@@ -48,26 +48,6 @@ if 4 != len(args):
     print "Expected 4 args, received %r. Use -h option for help dialogue." % len(args)
     import sys
     sys.exit()
-detector = args[0]
-dofs = args[1].split(",")
-#alignments = ( args[2], args[3] )
-alignments = []
-for i in (2,3):
-    alignment = args[i].split(",")
-    if len(alignment) == 1:
-        name = alignment[0].split("/")[-1]
-        alignments.append( ( name, [("sqlite_file:%s/LHCBCOND" % alignment[0], "HEAD")], "2010-01-01", "2050-01-01", "default" ) )
-        print "Alignment %s input as the file %r with path %s" % (str(i - 1), name, alignment[0])
-    else:
-        name = "IOV: " + alignment[0] + " to " + alignment[1]
-        if len(alignment) == 2:
-            # should use "HEAD" to pick up latest tag instead of sticking to latest as of today?
-            tag = "cond-20130111"
-            alignments.append( ( name, [], alignment[0], alignment[1], tag ) )
-            print "Alignment %s input as the %s using CondDBtag %r" % (str(i - 1), name, tag)
-        elif len(alignment) == 3:
-            alignments.append( ( name, [], alignment[0], alignment[1], alignment[2] ) )
-            print "Alignment %s input as the %s using CondDBtag %r" % (str(i - 1), name, alignment[2])
 
 Alarms = {"Tx":-1,"Ty":-1,"Tz":-1,"Rx":-1,"Ry":-1,"Rz":-1}
 if options.alarmString:
@@ -86,11 +66,18 @@ if options.verbose:
 else:
     logging.basicConfig(level=logging.ERROR)
 
-from CompareAlignmentConstants.AlignmentComparisonPlots import plotAlignmentParametersHeat
+from CompareAlignmentConstants.AlignmentComparisonPlots import parseRequestedAlignments, plotAlignmentParametersHeat
+
+detector = args[0]
+dofs = args[1].split(",")
+alignments = args[2:4]
+titles = []
+parseRequestedAlignments( alignments, titles )
 
 plotAlignmentParametersHeat(
         detector, dofs
       , alignments
+      , titles
       , outputDir=options.outDirName
       , layers=[options.layerName]
       , drawNames=options.names
