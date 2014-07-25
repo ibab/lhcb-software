@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-07-25 - Chris Jones
+ - Remove "Other" from the list of valid RawEvent banks. 
+   Now split into "Velo" and "Tracker".
+
 ! 2014-07-17 - Stefano Perazzini
  - Added check for MDSTFlag for initialized stripping lines 
 
