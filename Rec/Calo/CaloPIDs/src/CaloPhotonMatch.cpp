@@ -151,7 +151,7 @@ StatusCode CaloPhotonMatch::match
     if ( sc.isFailure() ) 
     {
       m_cBad = caloObj ;
-      return Error ( "match(): Error from fill(2D) -- ",StatusCode::FAILURE,0) ; 
+      return Warning ( "match(): Error from fill(2D) -- ",StatusCode::FAILURE,0) ; 
     }
     // find the proper plane in detector
     const LHCb::CaloPosition::Center& par = caloObj->center() ;
@@ -173,7 +173,7 @@ StatusCode CaloPhotonMatch::match
       if ( sc.isFailure() ) 
       {
         m_tBad = trObj ;
-        return Error ( "match(): failure from propagate (1) " , sc ) ; 
+        return Warning ( "match(): failure from propagate (1) " , sc ) ; 
       }
       _state().setLocation( m_showerMaxLocation ) ;
       // ugly, but efficient 
@@ -188,7 +188,7 @@ StatusCode CaloPhotonMatch::match
       if ( sc.isFailure() ) 
       {
         m_tBad = trObj ;
-        return Error ( "match(): failure from propagate (2) " , sc ) ; 
+        return Warning ( "match(): failure from propagate (2) " , sc ) ; 
       }
       st = &_state() ;
     }
@@ -197,7 +197,7 @@ StatusCode CaloPhotonMatch::match
   Assert ( 0 != st , "LHCb::State* points to NULL!" );
 
   StatusCode sc = fill ( *st , m_trackMatch ) ;
-  if ( sc.isFailure() ) { return Error ( "match(): error for fill(2D)") ; }
+  if ( sc.isFailure() ) { return Warning ( "match(): error for fill(2D)") ; }
   
   // make a real evaluation 
   chi2 = CaloTrackMatch::chi2 ( m_caloMatch , m_trackMatch ) ;

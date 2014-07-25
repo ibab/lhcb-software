@@ -141,7 +141,7 @@ StatusCode CaloElectronMatch::match
     if ( sc.isFailure() ) 
     {
       m_cBad = caloObj ;
-      return Error ( "match(): Error from fill(2D) ") ; 
+      return Warning ( "match(): Error from fill(2D) ", sc, 0) ; 
     }
     // find the proper plane in detector
     const LHCb::CaloPosition::Center& par = caloObj->center() ;
@@ -164,7 +164,7 @@ StatusCode CaloElectronMatch::match
       if ( sc.isFailure() ) 
       {
         m_tBad = trObj ;
-        return Error ( "match(): failure from propagate (1) " , sc ) ; 
+        return Warning ( "match(): failure from propagate (1) " , sc ) ; 
       }
       _state().setLocation(  LHCb::State::ECalShowerMax ) ;
       const_cast<LHCb::Track*>(trObj) ->addToStates ( _state() ) ;
@@ -172,7 +172,7 @@ StatusCode CaloElectronMatch::match
     }
     // check the validity of the state 
     /// if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) ) ) 
-    if ( 0.5 < ::fabs( caloObj->z() - st->position().z() ) )  // let's decrease z-tolerance here to 0.5 mm
+    if ( 1 * Gaudi::Units::mm < ::fabs( caloObj->z() - st->position().z() ) )  // let's decrease z-tolerance here to 1 mm
     {
       _state() = *st ;
       /// StatusCode sc = propagate ( _state() , m_plane ) ;
@@ -180,7 +180,7 @@ StatusCode CaloElectronMatch::match
       if ( sc.isFailure() ) 
       { 
         m_tBad = trObj ;
-        return Error ( "match(): failure from propagate (2) " , sc ) ; 
+        return Warning ( "match(): failure from propagate (2) " , sc ) ; 
       }
       st = &_state() ;
     }
@@ -188,7 +188,7 @@ StatusCode CaloElectronMatch::match
   
   Assert ( 0 != st , "LHCb::State* points to NULL!" );
   StatusCode sc = fill ( *st , m_trackMatch ) ;
-  if ( sc.isFailure() ) { return Error ( "match(): error for fill(3D)") ; }
+  if ( sc.isFailure() ) { return Warning ( "match(): error for fill(3D)") ; }
   
   // make a real evaluation 
   chi2 = CaloTrackMatch::chi2 ( m_caloMatch , m_trackMatch ) ;

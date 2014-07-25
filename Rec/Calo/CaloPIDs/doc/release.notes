@@ -4,6 +4,8 @@
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+! 2014-07-25 - Dima Golubkov
+  - CaloElectronMatch, CaloBremMatch.cpp, CaloPhotonMatch.cpp : decrease verbosity of tolerable errors to WARNING
 
 ! 2014-07-23 - Olivier Deschamps for Dima
   - CaloElectronMatch : extrapolate the track to the CaloHypo Z position instead of ZShowerMax plane

@@ -148,7 +148,7 @@ StatusCode CaloBremMatch::match
     if ( sc.isFailure() ) 
     { 
       m_cBad = caloObj ;
-      return Error ( "match(): Error from fill(2D) ") ; 
+      return Warning ( "match(): Error from fill(2D) ", sc, 0) ; 
     }
     // find the proper plane in the detector
     const LHCb::CaloPosition::Center& par = caloObj->center() ;
@@ -179,7 +179,7 @@ StatusCode CaloBremMatch::match
       {
         if(msgLevel(MSG::DEBUG)) print ( debug() , trObj ) ;
         m_tBad = trObj ;
-        return Error ( "No appropriate states are found, see 'debug'") ; 
+        return Warning ( "No appropriate states are found, see 'debug'") ; 
       }
     }
     // use the linear extrapolator 
@@ -188,12 +188,12 @@ StatusCode CaloBremMatch::match
     if ( sc.isFailure() ) 
     { 
       m_tBad = trObj ;
-      return Error ( "match(): failure from propagate (1) " , sc ) ; 
+      return Warning ( "match(): failure from propagate (1) " , sc ) ; 
     }
   }
   
   StatusCode sc = fill ( _state() , m_trackMatch ) ;
-  if ( sc.isFailure() ) { return Error ( "match(): error for fill(2D)") ; }
+  if ( sc.isFailure() ) { return Warning ( "match(): error for fill(2D)") ; }
   
   // make a real evaluation 
   chi2 = CaloTrackMatch::chi2 ( m_caloMatch , m_trackMatch ) ;
