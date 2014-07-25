@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-25 - Fred Blanc
+ - Modified StrippingB2CharmlessQuasi2Body.py for new convention
+
 ! 2014-07-25 - Vanya Belyaev
  - PromtpCharm: restore few lines for Eva and improve documentation
  
