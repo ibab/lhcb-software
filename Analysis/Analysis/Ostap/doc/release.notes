@@ -8,6 +8,8 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+!========================= Ostap v1r1 2014-07-25 =========================
+
 ! 2014-07-25 - Vanya Belyaev
  - fix issue with ROOT6 and TMatrix 
 
@@ -61,8 +63,6 @@
 
        ostap *.root  abc*.py 
 
- 
-
 ! 2014-07-04 - Vanya Belyaev
  - really tiny fix 
 
@@ -78,7 +78,6 @@
 ! 2014-07-02 - Sasha Baranov
  - Added ~/.ostap(or $OSTAP_DIR) working directory support
  - Added selector with caching
-
 
 ! ========================= Ostap v1r0 2014-07-02 =========================
 
