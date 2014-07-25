@@ -4,9 +4,12 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v4r10 2014-07-25 =========================
+
 ! 2014-07-03 - O. Deschamps
-  - TupleToolPi0Info  : add 'daughters' info in case of merged pi0
-  - TupleToolBremInfo : adapt to change in DaVinciTools : brem multiplicity is now reliable even on microDST
+ - TupleToolPi0Info  : Add 'daughters' info in case of merged pi0
+ - TupleToolBremInfo : Adapt to change in DaVinciTools. Brem multiplicity is
+                       now reliable even on microDST.
 
 !========================= DecayTreeTuple v4r9 2014-05-19 =========================
 
