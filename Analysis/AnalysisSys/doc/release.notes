@@ -3,6 +3,53 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v12r3>2014-06-13 Analysis v12r3</A></H1><PRE>
+New development release, built against Phys v19r0.
+First production release using ROOT6 (6.00.02).
+
+- Packages Removed :-
+   MVADictTools ( Exported to Phys )
+
+- Packages Updated :-
+   Ostap, PyPAW, AnalysisPython, DSTWriters, DecayTreeTuple,
+   DecayTreeTupleANNPID, DecayTreeTupleBase, DecayTreeTupleTrigger
+
+In Ostap :
+ . Numerous changes. See package release notes.
+
+In PyPAW :
+ . Stub package. Everything is exported to Ostap.
+
+In AnalysisPython :
+ . Added declaration of QMTest tests in the CMake configuration.
+ . Fixed problem with warning about duplicated module.
+ . Fixed CMake configuration to work with ROOT 6.
+
+In DSTWriters :
+ . Added selectiveRawEvent attribute to stripCalibMicroDSTStreamConf
+ . Modification for RelatedInfo storage. Pass the list of RelatedInfo locations 
+   as an argument of microDST elements. 
+ . Added support for selective saving of RawEvent objects in (u)DST streams.
+   See package release notes for full details.
+ . Modifications for RelatedInfo storage.
+ . Minor tuning to (optionally) keep information on number of tracks in PV.
+   Default is False.
+
+In DecayTreeTuple :
+ . TupleToolPi0Info  : Add 'daughters' info in case of merged pi0
+ . TupleToolBremInfo : Adapt to change in DaVinciTools. Brem multiplicity is
+                       now reliable even on microDST.
+
+In DecayTreeTupleANNPID :
+ . Add a new TupleTool that fills the ANNPID variables for a given list 
+   of MVA tunes.
+
+In DecayTreeTupleBase :
+ . Add "TupleToolANNPID" to the list of default TupleTools.
+
+In DecayTreeTupleTrigger :
+ . TupleToolTISTOS propagate customization of TisTosFrac to Hlt1,Hlt2 tools.
+
 ! 2014-07-08 - Chris Jones
  - Move Phys/MVADictTools to Phys project.
 
