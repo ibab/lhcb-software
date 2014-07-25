@@ -13,6 +13,13 @@ Purpose: LHCb reconstruction program
   . Change default RawEvent output version to 4.0 (requires RawEventFormat v1r1):
     RawEvent/Other further split into RawEvent/{Velo,Tracker,Unstripped} 
 
+- Changes to references to reflect changes since v47r0
+  . Propagate energy/position corrections to the photon/electron covariance
+    (CaloReco, CaloPIDs)
+  . Performance updates to PrDownstream (PrAlgorithms)
+  . Vectorization of PrPixelTrack::fit and PrPixelTrack::covariance, conversion
+    of double to float (PrPixel)
+
 - Changes to QMTests
   . Added repro2012reco14skiptracking, tests Brunel().SkipTracking functionality
     Checks also that RawEvent output version 4.0 can be recombined back to 2.0

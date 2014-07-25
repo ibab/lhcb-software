@@ -21,6 +21,4 @@ preprocessor = LHCbPreprocessor + \
   RegexpReplacer(when = "RichHotPixels     SUCCESS  #WARNINGS   =",
                  orig = r'[01 ]{33}', repl = r'') +\
   RegexpReplacer(when = "Message = 'Fully suppressed     {",
-                 orig = r'[01 ]{33}', repl = r'') +\
-  RegexpReplacer(when = "RawEventSplitSeq     INFO Member list:",
-                 orig = r'RawEventMapCombiner/create_Calo_RawEvent, RawEventMapCombiner/create_Unstripped_RawEvent, RawEventMapCombiner/create_Trigger_RawEvent, RawEventMapCombiner/create_Velo_RawEvent, RawEventMapCombiner/create_Muon_RawEvent, RawEventMapCombiner/create_Rich_RawEvent, RawEventMapCombiner/create_Tracker_RawEvent,', repl = r'RawEventMapCombiner/create_Other_RawEvent, RawEventMapCombiner/create_Muon_RawEvent, RawEventMapCombiner/create_Trigger_RawEvent, RawEventMapCombiner/create_Rich_RawEvent, RawEventMapCombiner/create_Calo_RawEvent,')
+                 orig = r'[01 ]{33}', repl = r'')
