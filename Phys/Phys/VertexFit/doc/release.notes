@@ -3,9 +3,12 @@
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================= VertexFit v6r19p1 2014-07-25 =========================
+
 ! 2014-07-18 - Gerhard Raven
- - improve the error message in OfflineVertexFitter when it is requested to
-   vertex two parallel particles
+ - Improve the error message in OfflineVertexFitter when it is requested to
+   vertex two parallel particles.
 
 !========================= VertexFit v6r19 2014-05-19 =========================
 
