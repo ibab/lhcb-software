@@ -4,6 +4,8 @@
 ! Purpose     : Base classes for the DecayTreeTuples
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleBase v1r4 2014-07-25 =========================
+
 ! 2014-06-29 - Chris Jones
  - Add "TupleToolANNPID" to the list of default TupleTools.
 
