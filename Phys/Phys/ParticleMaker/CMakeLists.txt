@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ParticleMaker
 ################################################################################
-gaudi_subdir(ParticleMaker v6r9)
+gaudi_subdir(ParticleMaker v6r10)
 
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Calo/CaloUtils

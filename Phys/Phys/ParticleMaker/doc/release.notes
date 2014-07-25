@@ -3,8 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+!========================= ParticleMaker v6r10 2014-07-25 =========================
+
 ! 2014-06-29 - O. Deschamps
-  - Photon & MergedPi0Maker : improve CL technique setting
+ - Photon & MergedPi0Maker : improve CL technique setting.
 
 ! 2014-06-25 - O. Deschamps
  - PhotonMaker    : CHANGE DEFAULT CL DEFINITION : isNotH from NN-based neutralID 
