@@ -7,9 +7,12 @@
 ! Purpose     : Jet finding algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiJets v6r11 2014-07-25 =========================
+
 ! 2014-06-18 - Wouter Hulsbergen
- - Change default values of RecombinationScheme and Strategy in LokiFastJetmaker to default values in fastjet.
-   The change in Strategy saves a factor ~50 in execution time.
+ - Change default values of RecombinationScheme and Strategy in LokiFastJetmaker
+   to default values in fastjet. The change in Strategy saves a factor ~50 in
+   execution time.
 
 !========================= LoKiJets v6r10 2014-02-20 =========================
 
