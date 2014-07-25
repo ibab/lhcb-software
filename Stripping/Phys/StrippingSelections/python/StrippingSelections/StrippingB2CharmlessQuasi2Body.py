@@ -2,31 +2,39 @@
 B->charmless quasi 2-body selection
 '''
 
-__author__ = ['Fred Blanc', 'Albert Puig']
-__date__ = '05/08/2013'
-__version__ = '$Revision: 2.7 $'
+__author__ = ['Fred Blanc']
+__date__ = '25/07/2014'
+__version__ = '$Revision: 2.8 $'
 
-__all__ = ( 'B2Quasi2BodyConf',
+__all__ = ( 'B2Quasi2Body',
             'makeDiTrackList',
             'makeB2Q2B4pi',
-            'makeB2Q2B3pi' )
+            'makeB2Q2B3pi',
+            'default_config')
 
-config_params = {'Q2BPrescale'     : 1.,
-                 'Q2BTrkGhostProb' : 0.5,
-                 'Q2BTrkMinIPChi2' : 25.,
-                 'Q2BTrkMinHiPT'   : 1000.,
-                 'Q2BResMinPT'     : 600.,
-                 'Q2BResMinHiPT'   : 1000.,
-                 'Q2BResMaxMass'   : 1100.,
-                 'Q2BResVtxChi2DOF': 9.,
-                 'Q2BBMinPT'       : 2500.,
-                 'Q2BBMinM3pi'     : 4300.,
-                 'Q2BBMinM4pi'     : 3600.,
-                 'Q2BBMaxM3pi'     : 6700.,
-                 'Q2BBMaxM4pi'     : 5700.,
-                 'Q2BBMaxCorrM3pi' : 7000.,
-                 'Q2BBMaxCorrM4pi' : 6000.,
-                 'Q2BBVtxChi2DOF'  : 9.}   
+default_config = {
+    'NAME'        : 'B2CharmlessQ2B',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2Quasi2Body',
+    'CONFIG'      : { 'Q2BPrescale'     : 1.,
+                      'Q2BTrkGhostProb' : 0.5,
+                      'Q2BTrkMinIPChi2' : 16.,
+                      'Q2BTrkMinHiPT'   : 1000.,
+                      'Q2BResMinPT'     : 600.,
+                      'Q2BResMinHiPT'   : 1000.,
+                      'Q2BResMaxMass'   : 1100.,
+                      'Q2BResVtxChi2DOF': 6.,
+                      'Q2BBMinPT'       : 2500.,
+                      'Q2BBMinM3pi'     : 4300.,
+                      'Q2BBMinM4pi'     : 3600.,
+                      'Q2BBMaxM3pi'     : 6700.,
+                      'Q2BBMaxM4pi'     : 5700.,
+                      'Q2BBMaxCorrM3pi' : 7000.,
+                      'Q2BBMaxCorrM4pi' : 6000.,
+                      'Q2BBVtxChi2DOF'  : 6.
+                    },
+    'STREAMS'     : { 'BhadronCompleteEvent' : ['StrippingQ2B3piSelectionLine', 'StrippingQ2B4piSelectionLine'] }
+    }
 
 
 from Gaudi.Configuration import *
@@ -36,9 +44,9 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions
 
-name = "B2Quasi2Body"
+#name = "B2Quasi2Body"
 
-class B2Quasi2BodyConf(LineBuilder) :
+class B2Quasi2Body(LineBuilder) :
     """
     Builder for B2Quasi2Body
     """
@@ -60,20 +68,19 @@ class B2Quasi2BodyConf(LineBuilder) :
                                'Q2BBMaxCorrM4pi',
                                'Q2BBVtxChi2DOF')
 
-    __confdict__={}
-
     def __init__(self, name, config) :
 	self.name = name
-        self.__confdict__ = config_params
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(MIPCHI2DV(PRIMARY) > %(Q2BTrkMinIPChi2)s) & (TRGHOSTPROB < %(Q2BTrkGhostProb)s)" % self.__confdict__ )
+        trackCuts = "(MIPCHI2DV(PRIMARY) > %(Q2BTrkMinIPChi2)s) & (TRGHOSTPROB < %(Q2BTrkGhostProb)s) & (PT > 250*MeV)" % config
+        _trkFilter = FilterDesktop(Code = trackCuts )
 
         self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdNoPIDsPions])
 
-        _trkFilter_HiP = FilterDesktop(Code = "(PT > %(Q2BTrkMinHiPT)s)" % self.__confdict__ )
+        trackHiPCuts = "(PT > %(Q2BTrkMinHiPT)s)" % config
+        _trkFilter_HiP = FilterDesktop(Code = trackHiPCuts )
         self.TrackList_HiP = Selection( 'TrackList_HiP' + self.name,
                                          Algorithm = _trkFilter_HiP,
                                          RequiredSelections = [self.TrackList])
@@ -84,7 +91,8 @@ class B2Quasi2BodyConf(LineBuilder) :
                                             MaxMassCut = config['Q2BResMaxMass'],
                                             VtxChi2DOFCut = config['Q2BResVtxChi2DOF'] )
 
-        _diTrackFilter_HiPt = FilterDesktop(Code = "(PT > %(Q2BResMinHiPT)s)" % self.__confdict__ )
+        diTrackHiPtCuts = "(PT > %(Q2BResMinHiPT)s)" % config
+        _diTrackFilter_HiPt = FilterDesktop(Code = diTrackHiPtCuts )
         self.DiTrackList_HiPt = Selection( 'DiTracksHiPtForCharmlessB' + self.name,
                                            Algorithm = _diTrackFilter_HiPt,
                                            RequiredSelections = [self.DiTrackList])
