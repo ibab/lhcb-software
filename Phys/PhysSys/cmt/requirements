@@ -1,12 +1,12 @@
 package PhysSys
-version v18r3
+version v19r0
 
 branches doc cmt
 
 #===================================================================
 
-use  DaVinciInterfaces          v2r22    Phys    # Current DV Maintainer
-use  DaVinciTypes               v2r6p2   Phys    # Current DV Maintainer
+use  DaVinciInterfaces          v2r23    Phys    # Current DV Maintainer
+use  DaVinciTypes               v2r7     Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v11r7    Phys    # Current DV Maintainer
 use  SelectionLine              v1r1     Kernel  # Gerhard Raven
@@ -17,23 +17,23 @@ use  PhysSelPython              v9r5     PhysSel # Juan Palacios
 
 use  PhysConf                   v1r26    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Current DV Maintainer
-use  DaVinciTools       	v23r14   Phys    # Juan Palacios
+use  DaVinciTools       	v23r15   Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r11    Phys    # Juan Palacios
-use  ParticleMaker      	v6r9     Phys    # Current DV Maintainer
-use  VertexFit			v6r19    Phys    # Yuehong Xie
+use  ParticleMaker      	v6r10    Phys    # Current DV Maintainer
+use  VertexFit			v6r19p1  Phys    # Yuehong Xie
 use  LoKiFitters                v4r11    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r17    Phys    # Wouter Hulsbergen
-use  PhysDict                   v4r2p3   Phys    # Juan Palacios
+use  PhysDict                   v4r2p4   Phys    # Juan Palacios
 use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 
 #===================================================================
 
 use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
-use  LoKiJets                   v6r10    Phys    # Vanya Belyaev, Victor Coco
+use  LoKiJets                   v6r11    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p4   Phys    # Vanya Belyaev
 use  LoKiArrayFunctors          v10r5    Phys    # Vanya Belyaev
-use  LoKiPhys                   v10r18   Phys    # Vanya Belyaev
+use  LoKiPhys                   v10r19   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
 use  LoKiTracks                 v2r10p2  Phys    # Vanya Belyaev
@@ -57,11 +57,11 @@ use FlavourTagging              v13r7    Phys   # Stefania Vecchi
 
 #===================================================================
 
-use JetAccessories              v3r5     Phys   # Victor Coco, Cedric Potterat
+use JetAccessories              v3r6     Phys   # Victor Coco, Cedric Potterat
 
 #===================================================================
 
-use  MVADictTools               v1r4    Phys   # S.Neubert
+use MVADictTools                v1r5    Phys   # S.Neubert
 
 #===================================================================
 

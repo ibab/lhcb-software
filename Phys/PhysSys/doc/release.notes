@@ -3,6 +3,66 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v19r0>2014-07-25 Phys v19r0</A></H1><PRE>
+Development release, based on Rec v17r0, LHCb v38r0 and Gaudi v25r3.
+First production release using ROOT6 (6.00.02).
+
+- Packages Updated :
+   DaVinciInterfaces, DaVinciTools, DaVinciTypes, JetAccessories,
+   LoKiJets, LoKiPhys, ParticleMaker, PhysDict, VertexFit
+
+- New packages :
+   MVADictTools ( Imported from Analysis )
+
+In DaVinciInterfaces :
+ . Remove unnecessary virtual method from IRelatedInfoTool interface.
+
+In DaVinciTools :
+ . Update tools for RelatedInfo storage.
+ . BremAdder : replace photonID cut with photonCL cut.
+ . BremAdder : Store number of added brems in HasBremAdded particle::info()
+               (replace binary information).
+ . Move RelatedInfoNamed to Phys/DaVinciTypes, update RelInfo... tools accordingly.
+ . Ported previous changes to VertexIsolation.
+ . Removed unused variable in RelInfoVertexIsolation.
+ . Add more RelatedInfo tools: 
+    * RelInfoConeVariablesForEW
+    * RelInfoVertexIsolation
+   Both calculate the same information as ConeVariablesForEW and VertexIsolation, 
+   but inherit from IRelatedInfoTool interface. 
+ . RelatedInfoNamed.h is the RelatedInfoMap structure with named fields 
+   (to be used for LoKi functors etc). 
+
+In DaVinciTypes :
+ . Add enums for IsolationTools classes to RelatedInfoNamed.h.
+ . Move RelatedInfoNamed.h in this package from DaVinciTools, 
+   so that it becomes visible to LoKiPhys.
+
+In JetAccessories :
+ . ParticleFlow_Config.py : Adapt to change in CALO reconstruction.
+
+In LoKiJets :
+ . Change default values of RecombinationScheme and Strategy in LokiFastJetmaker
+   to default values in fastjet. The change in Strategy saves a factor ~50 in
+   execution time.
+
+In LoKiPhys :
+ . Updates for RelatedInfo. See package release notes for details.
+ . Add the MTDOCA and MTDOCACHI2 functors.
+ . Adjust NTRACKS to extract #tracks for empty vertices.
+
+In MVADictTools :
+ . Make MVADictTools headers public.
+
+In ParticleMaker :
+ . Photon & MergedPi0Maker : improve CL technique setting.
+ . PhotonMaker    : CHANGE DEFAULT CL DEFINITION : isNotH from NN-based neutralID 
+ . MergedPi0Maker : CHANGE DEFAULT CL DEFINITION : 1-isPhoton
+
+In VertexFit :
+ . Improve the error message in OfflineVertexFitter when it is requested to
+   vertex two parallel particles.
+
 ! 2014-07-08 - Chris Jones
  - Import Phys/MVADictTools from Analysis project.
 
