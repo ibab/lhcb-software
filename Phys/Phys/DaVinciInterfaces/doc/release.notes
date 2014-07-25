@@ -4,8 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciInterfaces v2r23 2014-07-25 =========================
+
 ! 2014-07-16 - Anton Poluektov 
- - Remove unnecessary virtual method from IRelatedInfoTool interface
+ - Remove unnecessary virtual method from IRelatedInfoTool interface.
 
 !========================= DaVinciInterfaces v2r22 2014-06-13 =========================
 
