@@ -4,9 +4,10 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
-! 2014-07-03 - Olivier Deschamps
- - ParticleFlow_Config.py : Adapt to change in calo reconstruction
+!========================= JetAccessories v3r6 2014-07-25 =========================
 
+! 2014-07-03 - Olivier Deschamps
+ - ParticleFlow_Config.py : Adapt to change in CALO reconstruction.
 
 !========================= JetAccessories v3r5 2014-05-19 =========================
 
