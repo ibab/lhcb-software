@@ -13,6 +13,7 @@ First production release using ROOT6 (6.00.02).
 - Packages Updated :-
    Ostap, PyPAW, AnalysisPython, DSTWriters, DecayTreeTuple,
    DecayTreeTupleANNPID, DecayTreeTupleBase, DecayTreeTupleTrigger
+   FlavourTaggingChecker
 
 In Ostap :
  . Numerous changes. See package release notes.
@@ -49,6 +50,10 @@ In DecayTreeTupleBase :
 
 In DecayTreeTupleTrigger :
  . TupleToolTISTOS propagate customization of TisTosFrac to Hlt1,Hlt2 tools.
+
+In FlavourTaggingChecker :
+ . Fix type of integer tuple leafs 
+ . Filled sMotherKEY information 
 
 ! 2014-07-08 - Chris Jones
  - Move Phys/MVADictTools to Phys project.
