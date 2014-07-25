@@ -4,5 +4,4 @@
   <argument name="program"> 
 	<text>../tst_001.py</text>
   </argument>
-  <argument name="stderr"><text>Warning in &lt;TClass::TClass&gt;: no dictionary for class stack&lt;RooAbsArg*,deque&lt;RooAbsArg*&gt; &gt; is available</text></argument> 
 </extension>
