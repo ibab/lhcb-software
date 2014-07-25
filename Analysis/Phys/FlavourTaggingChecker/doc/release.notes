@@ -4,9 +4,13 @@
 ! Purpose     : Checker package for Phys/FlavourTagging
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!========================= FlavourTaggingChecker v7r5 2014-07-25 =========================
+
 ! 2014-07-23 - Stefania Vecchi
- - fix type of integer tuple leafs 
- - filled sMotherKEY information 
+ - Fix type of integer tuple leafs 
+ - Filled sMotherKEY information 
+
 !========================= FlavourTaggingChecker v7r4 2014-06-13 =========================
 
 ! 2014-05-26 - Stefania Vecchi
