@@ -6,13 +6,18 @@
 #
 #  The attempt for coherent stripping of all stable charm hadrons :
 #
-#    - D*+       -> ( D0 -> K pi , K K , pi pi, pi K ) pi+
-#    - D0        -> K pi , K K
-#    - Ds+/D+    -> ( phi -> K K ) pi
+#    - D0        -> K pi ,
 #    - D+        -> K pi pi
-#    - Lambda_c+ -> p K pi
+#    - Ds+/D+    -> ( phi -> K K ) pi
+#    - D*+       -> ( D0 -> K pi ) pi+
+#    
+#    - D0        -> KK, pipi                 ## for Eva 
+#    - D*+       ->  ( D0 -> KK , pipi) pi+  ## for Eva 
+#    
+#    - Lambda_c+/Xi_c -> p K pi              ## for Lesha Dziuba  
+#    - Lambda_c+/Xi_c -> p K K               ## for Lesha Dziuba 
 #
-#  Excited charm baryons for Biagio Saitta:
+#  Excited charm baryons 
 #
 #    - Sigma_c(0,++) -> Lambda_c+ pi        ( 2455 & 2520 )
 #    - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
@@ -24,49 +29,15 @@
 #    - Charm + ( Dimuon + gamma ) ( get for free chi_(c,b) )
 #
 #  Associative production of  charm & W+ :
+#
 #    - Charm     & W+
 #    - dimuons   & W+
 #    - chi_(c,b) & W+
-#
-#  Double charmed baryons:
-#
-#    - Xi_cc+    -> Lambda_c+ K- pi+
-#    - Xi_cc++   -> Lambda_c+ K- pi+ pi+
 #
 #  The cuts more or less correspond to D*+ selection by Alexandr Kozlinzkiy.
 #  In addition the PT-cut for the long-lived charmed particle has been applied.
 #  Thanks to Marco Gersabeck & Harry Cliff for nice idea.
 #
-# +--------------------------------+--------+------+-------+
-# | StrippingReport INFO Event 276300, Good event 276300   |
-# +--------------------------------+--------+------+-------+
-# |    Decision name               | Rate,% | Acc. | ms/evt|
-# +--------------------------------+--------+------+-------+
-# |                 the regular prompt charm               |
-# +--------------------------------+--------+------+-------+
-# | <>D02HHForPromptCharm          | 2.1260 | 5874 | 5.069 |
-# | <>DstarForPromptCharm          | 0.6739 | 1862 | 0.063 |
-# | <>DsForPromptCharm             | 0.1795 |  496 | 0.266 |
-# | <>DForPromptCharm              | 1.1596 | 3204 | 0.128 |
-# | <>LambdaCForPromptCharm        | 0.1364 |  377 | 1.588 |
-# +--------------------------------+--------+------+-------+
-# | excited prompt charm baryons, no contribution to rate  |
-# +--------------------------------+--------+------+-------+
-# | <>SigmaCForPromptCharm         | 0.1227 |  339 | 0.267 |
-# | <>LambdaCstarForPromptCharm    | 0.0879 |  243 | 0.037 |
-# +--------------------------------+--------+------+-------+
-# |                 double charm, the rate is tiny         |
-# +--------------------------------+--------+------+-------+
-# | <>DiCharmForPromptCharm        | 0.0076 |   21 | 1.558 |
-# | <>DiMuonAndCharmForPromptCharm | 0.0257 |   71 | 0.284 |
-# | <>ChiAndCharmForPromptCharm    | 0.0159 |   44 | 0.046 |
-# +--------------------------------+--------+------+-------+
-# |               associative charm & W+ production        |
-# +--------------------------------+--------+------+-------+
-# | <>CharmAndWForPromptCharm      | 0.0007 |    2 | 0.061 |
-# | <>DiMuonAndWForPromptCharm     | 0.0119 |   33 | 0.033 |
-# | <>ChiAndWForPromptCharm        | 0.0054 |   15 | 0.033 |
-# +--------------------------------+--------+------+-------+
 #
 # Usage:
 #
@@ -75,12 +46,14 @@
 #   stream = ...
 #
 #   from StrippingSelections.StirppingPromptCharm import StrippingPromptCharmConf
+#   from StrippingSelections.StirppingPromptCharm import default_config 
 #
-#   conf = {}
+#   conf = default_config['CONFIG']
+#   name = default_config['NAME'  ]
+#   
+#   builder = StrippingPromptCharmConf ( name , config = conf )
 #
-#   promtCharm = StrippingPromptCharmConf ( 'PromptCharm' , config = conf )
-#
-#   stream.appendLines ( promptCharm.lines() )
+#   stream.appendLines ( builder.lines() )
 #
 # @endcode
 #
@@ -92,74 +65,49 @@
 # =============================================================================
 """The attempt for coherent stripping of all stable charm hadrons :
    
-     - D*+       -> ( D0 -> K pi , K K , pi pi, pi K ) pi+
-     - D0        -> K pi , K K
-     - Ds+/D+    -> ( phi -> K K ) pi
-     - D+        -> K pi pi
-     - Lambda_c+ -> p K pi
- 
-   Excited charm baryons for Biagio Saitta:
- 
-     - Sigma_c(0,++) -> Lambda_c+ pi        ( 2455 & 2520 )
-     - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
- 
-   Also one has the combinations for 2xCharm studies
- 
-     - Charm +   Charm            ( both Charm/Charm and Charm/anti-Charm )
-     - Charm +   Dimuon
-     - Charm + ( Dimuon + gamma ) ( get for free chi_(c,b) )
- 
-   Associative production of  charm & W+ :
-     - Charm     & W+
-     - dimuons   & W+
-     - chi_(c,b) & W+
+    - D0        -> K pi ,
+    - D+        -> K pi pi
+    - Ds+/D+    -> ( phi -> K K ) pi
+    - D*+       -> ( D0 -> K pi ) pi+
+    
+    - D0        -> KK, pipi                 ## for Eva 
+    - D*+       ->  ( D0 -> KK , pipi) pi+  ## for Eva 
+    
+    - Lambda_c+/Xi_c -> p K pi              ## for Lesha Dziuba  
+    - Lambda_c+/Xi_c -> p K K               ## for Lesha Dziuba 
+
+    Excited charm baryons 
+
+    - Sigma_c(0,++) -> Lambda_c+ pi        ( 2455 & 2520 )
+    - Lambda_c+*    -> Lambda_c+ pi+ pi-   ( 2595, 2625 & 2880 )
+    
+    Also one has the combinations for 2xCharm studies
+    
+    - Charm +   Charm            ( both Charm/Charm and Charm/anti-Charm )
+    - Charm +   Dimuon
+    - Charm + ( Dimuon + gamma ) ( get for free chi_(c,b) )
+
+    Associative production of  charm & W+ :
+    
+    - Charm     & W+
+    - dimuons   & W+
+    - chi_(c,b) & W+
 
   Usage:
 
-    >>> stream = ...
+  stream = ...
+  
+  from StrippingSelections.StirppingPromptCharm import StrippingPromptCharmConf
+  from StrippingSelections.StirppingPromptCharm import default_config 
+  
+  conf = default_config['CONFIG']
+  name = default_config['NAME'  ]
+  
+  builder = StrippingPromptCharmConf ( name , config = conf )
+  
+  stream.appendLines ( builder.lines() )
 
-    >>> from StrippingSelections.StirppingPromptCharm import StrippingPromptCharmConf
-
-    >>> conf = {}
-
-    >>> promptCharm = StrippingPromptCharmConf ( 'PromptCharm' , config = conf )
-
-    >>> stream.appendLines ( promptCharm.lines() )
-
-  +--------------------------------+--------+------+-------+
-  | StrippingReport INFO Event 276300, Good event 276300   |
-  +--------------------------------+--------+------+-------+
-  |    Decision name               | Rate,% | Acc. | ms/evt|
-  +--------------------------------+--------+------+-------+
-  |                 the regular prompt charm               |
-  +--------------------------------+--------+------+-------+
-  | <>D02HHForPromptCharm          | 2.1260 | 5874 | 5.069 |
-  | <>DstarForPromptCharm          | 0.6739 | 1862 | 0.063 | 
-  | <>DsForPromptCharm             | 0.1795 |  496 | 0.266 |
-  | <>DForPromptCharm              | 1.1596 | 3204 | 0.128 |
-  | <>LambdaCForPromptCharm        | 0.1364 |  377 | 1.588 |
-  +--------------------------------+--------+------+-------+
-  | excited prompt charm baryons, no contribution to rate  |
-  +--------------------------------+--------+------+-------+
-  | <>SigmaCForPromptCharm         | 0.1227 |  339 | 0.267 |
-  | <>LambdaCstarForPromptCharm    | 0.0879 |  243 | 0.037 |
-  +--------------------------------+--------+------+-------+
-  |                 double charm, the rate is tiny         |
-  +--------------------------------+--------+------+-------+
-  | <>DiCharmForPromptCharm        | 0.0076 |   21 | 1.558 |
-  | <>DiMuonAndCharmForPromptCharm | 0.0257 |   71 | 0.284 |
-  | <>ChiAndCharmForPromptCharm    | 0.0159 |   44 | 0.046 |
-  +--------------------------------+--------+------+-------+
-  |               associative charm & W+ production        |
-  +--------------------------------+--------+------+-------+
-  | <>CharmAndWForPromptCharm      | 0.0007 |    2 | 0.061 |
-  | <>DiMuonAndWForPromptCharm     | 0.0119 |   33 | 0.033 |
-  | <>ChiAndWForPromptCharm        | 0.0054 |   15 | 0.033 |
-  +--------------------------------+--------+------+-------+
-  | <>DsPsiForPromptCharm          | 0.0090 |   25 | 0.032 |
-  +--------------------------------+--------+------+-------+
- 
-
+  
                   $Revision$
 Last modification $Date: 2013-03-26 18:58:29 +0100
                by $Author$
@@ -177,9 +125,6 @@ __all__ = (
 # =============================================================================
 from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits             import GeV, MeV, mm
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from PhysSelPython.Wrappers                import   Selection, MergedSelection
 from StrippingUtils.Utils                  import LineBuilder
 # =============================================================================
 ## logging
@@ -199,10 +144,12 @@ _default_configuration_ = {
     #
     ## attention: with 1GeV pt-cut prescale is needed for D0,D+,D*+ and Ds
     #
-    'pT(D0)'   :  1.0 * GeV ,    ## pt-cut for  prompt   D0
-    'pT(D+)'   :  1.0 * GeV ,    ## pt-cut for  prompt   D+
-    'pT(Ds+)'  :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
-    'pT(Lc+)'  :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    'pT(D0)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D0
+    'pT(D+)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D+
+    'pT(Ds+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
+    'pT(Lc+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
+    #
+    'pT(D0->HH)' :  1.0 * GeV ,    ## pt-cut for  prompt   D0->KK,pipi models 
     #
     # Selection of basic particles
     #
@@ -295,6 +242,11 @@ _default_configuration_ = {
     'LambdaCPrescale'        : 1.0 ,
     'LambdaC*Prescale'       : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
+    ##
+    'D02KKPrescale'          : 1.0 ,
+    'D02pipiPrescale'        : 1.0 ,
+    'D*CPPrescale'           : 1.0 ,
+    ##
     'DiCharmPrescale'        : 1.0 ,
     'DiMu&CharmPrescale'     : 1.0 ,
     'DoubleDiMuPrescale'     : 1.0 ,
@@ -308,22 +260,26 @@ _default_configuration_ = {
 ## the mandatory element for stripping framework 
 default_config = {
     #
-    'NAME'        :   'PromptCharm'     ,
-    'WGs'         : [ 'BandQ' ]              ,
+    'NAME'        :   'PromptCharm'       ,
+    'WGs'         : [ 'BandQ' , 'Charm' ] ,
     'CONFIG'      : _default_configuration_  , 
     'BUILDERTYPE' :   'StrippingPromptCharmConf'            ,
     'STREAMS'     : { 'Charm'    : [ 'StrippingD02KpiForPromptCharm'         , 
                                      'StrippingDstarForPromptCharm'          , 
                                      'StrippingDForPromptCharm'              , 
-                                     'StrippingDsForPromptCharm'             , 
+                                     'StrippingDsForPromptCharm'             ,
                                      'StrippingLambdaCForPromptCharm'        ,
                                      'StrippingLambdaC2pKKForPromptCharm'    ,
                                      'StrippingSigmaCForPromptCharm'         ,
                                      'StrippingLambdaCstarForPromptCharm'    ,
-                                     'StrippingDiCharmForPromptCharm'        , ## FullDST ? 
+                                     'StrippingDiCharmForPromptCharm'        , ## ? 
                                      'StrippingChiAndCharmForPromptCharm'    ,
                                      'StrippingCharmAndWForPromptCharm'      ,
-                                     'StrippingDiMuonAndCharmForPromptCharm' ] ,
+                                     'StrippingDiMuonAndCharmForPromptCharm' ,
+                                     ## for Eva
+                                     'StrippingD02KKForPromptCharm'          ,   ## prescale ?
+                                     'StrippingD02pipiForPromptCharm'        ,   ## prescale ?
+                                     'StrippingDstarCPForPromptCharm'        ] , 
                       ## 
                       'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
                                      'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
@@ -470,6 +426,11 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.CharmAndW      () ,
                  self.DiMuonAndW     () ,
                  self.ChiAndW        () ,
+                 ## for Eva
+                 self.D02KK          () ,
+                 self.D02pipi        () ,
+                 self.D02CP          () ,
+                 self.DstarCP        () ,
                  ]
 
         return self._add_selection ( 'Selections' , sel )
@@ -615,6 +576,29 @@ class StrippingPromptCharmConf(LineBuilder) :
             algos      =     [ self.ChiAndW () ]
             ) ,
             ##
+            ## For Eva
+            ## D0 -> K- K+ 
+            StrippingLine (
+            "D02KKFor" + self.name() ,
+            prescale = self['D02KKPrescale'   ]   , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.D02KK ()    ]
+            ) ,
+            ## D0 -> pi- pi+ 
+            StrippingLine (
+            "D02pipiFor" + self.name() ,
+            prescale = self['D02pipiPrescale' ]   , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.D02pipi ()  ]
+            ) ,
+            ##
+            ## D*+ -> ( D0 -> K- K+ , pi- pi+ ) pi+
+            StrippingLine (
+            "DstarCPFor" + self.name() ,
+            prescale = self['D*CPPrescale'    ]   , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.DstarCP ()  ]
+            ) ,
             ]
         #
         return self._add_selection ( 'CharmLines' , sel )
@@ -736,6 +720,99 @@ class StrippingPromptCharmConf(LineBuilder) :
             )           
     
     # =============================================================================
+    # D0 -> KK
+    # =============================================================================
+    def D02KK ( self ) :
+        """
+        Get D0->K-K+
+        """
+        #
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+        #
+        ## D0 -> K- K+ 
+        return self.make_selection (
+            'D02KK'           ,
+            ## the algorithm type
+            CombineParticles  ,
+            ## required selections
+            [ self.kaons() ]  ,
+            #
+            ## algorithm configuration
+            DecayDescriptor = "D0  -> K- K+",
+            ## combination cut : wide mass-cut & PT-cut
+            CombinationCut  = """
+            ( ADAMASS('D0') < 85 * MeV ) &
+            ( APT >  %s  )
+            """ %  ( 0.95 * self['pT(D0->HH)'] ) ,
+            ## mother cut
+            MotherCut      = """
+            ( chi2vx < 9 )              &
+            ( PT     > %s             ) &
+            ( ADMASS('D0') < 75 * MeV ) &
+            ( ctau > 100 * micrometer )
+            """ %  self['pT(D0->HH)'] 
+            )           
+
+    # =============================================================================
+    # D0 -> pipi
+    # =============================================================================
+    def D02pipi ( self ) :
+        """
+        Get D0->pi-pi+
+        """
+        #
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles 
+        #
+        ## D0 -> pi- pi+ 
+        return self.make_selection (
+            'D02pipi'           ,
+            ## the algorithm type
+            CombineParticles  ,
+            ## required selections
+            [ self.pions() ]  ,
+            #
+            ## algorithm configuration
+            DecayDescriptor = "D0  -> pi- pi+",
+            ## combination cut : wide mass-cut & PT-cut
+            CombinationCut  = """
+            ( ADAMASS('D0') < 85 * MeV ) &
+            ( APT >  %s  )
+            """ %  ( 0.95 * self['pT(D0->HH)'] ) ,
+            ## mother cut
+            MotherCut      = """
+            ( chi2vx < 9 )              &
+            ( PT     > %s             ) &
+            ( ADMASS('D0') < 75 * MeV ) &
+            ( ctau > 100 * micrometer )
+            """ %  self['pT(D0->HH)'] 
+            )           
+    
+    # =============================================================================
+    # Merged selection of D0 -> KK and D0 -> pi pi
+    # =============================================================================
+    def D02CP ( self ) :
+        """
+        Merged selection of D0 -> KK and D0 -> pi pi
+        """
+        tag      = "D02CP"
+        ##
+        sel_tag  = '%s_Selection' % tag
+        sel_name = 'Sel%sFor%s'   % ( tag , self.name() )
+        #
+        ## check existing selection
+        #
+        sel      = self._selection ( sel_tag )
+        if sel : return sel
+        #
+        ## make merged selections 
+        from PhysSelPython.Wrappers import MergedSelection
+        sel = MergedSelection (
+            sel_name , RequiredSelections = [ self.D02KK() , self.D02pipi() ] 
+            )
+        # 
+        return self._add_selection( sel_tag , sel ) 
+    
+    # =============================================================================
     # D*+ -> (D0 -> Kpi) pi+ selection
     # =============================================================================
     def Dstar ( self ) :
@@ -753,6 +830,39 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## algorithm properties 
             #
             DecayDescriptor = " [D*(2010)+ -> D0 pi+]cc" ,
+            ##
+            CombinationCut = """
+            ( AM       < 2.5 * GeV ) &
+            ( AM - AM1 < 165 * MeV )
+            """ ,
+            ##
+            MotherCut      = """
+            ( chi2vx < 64        ) &
+            ( M - M1 < 155 * MeV )
+            """ 
+            )
+    
+    # =============================================================================
+    # D*+ -> (D0 -> KK, pipi) pi+ selection
+    # =============================================================================
+    def DstarCP ( self ) :
+        """
+        D*+ -> (D0 -> K- K+ , pi- p+ ) pi+ selection
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from StandardParticles                     import StdAllLoosePions as inpts 
+        ##
+        return self.make_selection (
+            'DstarCP'                ,
+            CombineParticles         ,
+            [ self.D02CP() , inpts ] ,
+            #
+            ## algorithm properties 
+            #
+            DecayDescriptors = [
+            " D*(2010)+ -> D0 pi+ " , 
+            " D*(2010)- -> D0 pi- " , 
+            ] ,
             ##
             CombinationCut = """
             ( AM       < 2.5 * GeV ) &
@@ -1004,6 +1114,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         sel = self._selection ( 'PromptCharm_Selection' )
         if sel : return sel
 
+        from PhysSelPython.Wrappers import MergedSelection
         sel =  MergedSelection (
             ##
             'PromptCharmFor' + self.name ()       ,

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-07-25 - Vanya Belyaev
+ - PromtpCharm: restore few lines for Eva and improve documentation
+ 
 ! 2014-07-23 - Paul Seyfert
  - fixed strippingselections.test_allstreams_instantiation for Tau23Mu and tau2PhiMu lines
 
