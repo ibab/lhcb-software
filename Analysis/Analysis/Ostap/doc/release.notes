@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-25 - Vanya Belyaev
+ - fix issue with ROOT6 and TMatrix 
+
 ! 2014-07-21 - Vanya Belyaev
  - minor fix in PidCalib 
 

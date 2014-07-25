@@ -486,6 +486,7 @@ class ExpoPol2Dsym_pdf(object) :
 # =============================================================================
 # some tiny decoration of underlying classes 
 # =============================================================================
+_rv = ROOT.gROOT.GetVersionInt() // 10000
 def _2d_get_pars_ ( self ) :
     """
     Get parameters of underlying positive Berstein polynomial
@@ -503,7 +504,10 @@ def _2d_get_pars_ ( self ) :
         m = ROOT.TMatrix ( b.nX() + 1 , b.nY() + 1 )
         for i in range ( 0 , b.nX() + 1 ) :
             for j in range ( 0 , b.nY() + 1 ) :
-                m[i][j] = b.par(i,j) 
+                
+                if _rv < 6 : m[i][j] = b.par(i,j)
+                else       : m[i, j] = b.par(i,j)
+                    
         return m 
         
     return ROOT.TMatrix()

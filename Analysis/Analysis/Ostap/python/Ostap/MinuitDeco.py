@@ -407,6 +407,8 @@ _mn_contour_ . __doc__ += '\n' + ROOT.TMinuit.Contour . __doc__
 
 ROOT.TMinuit . contour = _mn_contour_
 
+
+_rv = ROOT.gROOT.GetVersionInt() // 10000
 # =============================================================================
 ## get the covariance matrix from TMinuit
 def _mn_cov_ ( self , size = -1 , root = False ) :
@@ -438,11 +440,12 @@ def _mn_cov_ ( self , size = -1 , root = False ) :
         mtrx = ROOT.TMatrix( size , size )
         for i in range ( 0 , size ) :
             for j in range ( 0 , size ) :
-                mtrx [i][j] = matrix [ i * size + j ]
+                if _rv < 6 :  mtrx [i][j] = matrix [ i * size + j ]
+                else       :  mtrx [i, j] = matrix [ i * size + j ]
         return mtrx  ## RETURN 
         
     for i in range ( 0 , size ) :
-        for j in range ( i , size ) :
+        for j in range ( i , size ) :            
             mtrx [i,j] = matrix [ i * size + j ]
             
     return mtrx
@@ -484,13 +487,13 @@ def _mn_cor_ ( self , size = -1 , root  = False ) :
             
             if 0 != cov ( i , j ) and 0 < d_i and 0 < d_j  :
                 
-                if root  : cor [ i ] [ j ] = cov ( i , j ) / sqrt ( d_i * d_j )
-                else     : cor [ i ,   j ] = cov ( i , j ) / sqrt ( d_i * d_j )
+                if root and _rv < 6  : cor [ i ] [ j ] = cov ( i , j ) / sqrt ( d_i * d_j )
+                else                 : cor [ i ,   j ] = cov ( i , j ) / sqrt ( d_i * d_j )
                 
             else :
                 
-                if _root : cor [ i ] [ j ] = 0 
-                else     : cor [ i ,   j ] = 0
+                if _root and _rv < 6 : cor [ i ] [ j ] = 0 
+                else                 : cor [ i ,   j ] = 0
 
     return cor
             
