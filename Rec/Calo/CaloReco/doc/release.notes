@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-07-26 - Dima Golubkov
+  - CaloECorrection.cpp, CaloSCorrection.cpp : correct defaults for missing correction functions in CondDB and add more protection
+
 ! 2014-07-23 - Olivier Deschamps for Dima
   - CaloCorrectionBase/CaloECorrection/CaloSCorrection : implement correction propagation to Covariance
 

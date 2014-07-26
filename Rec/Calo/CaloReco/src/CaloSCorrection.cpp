@@ -164,6 +164,16 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   const double &dXhy_dXcl = results.dXhy_dXcl;
   const double &dYhy_dYcl = results.dYhy_dYcl;
 
+  // protection against unphysical d(Xhypo)/d(Xcluster) == 0 or d(Yhypo)/d(Ycluster) == 0
+  if ( fabs( dXhy_dXcl ) < 1e-10 ){
+    warning() << "unphysical d(Xhypo)/d(Xcluster) = " << dXhy_dXcl << " reset to 1 as if Xhypo = Xcluster" << endmsg;
+    const_cast<double &>( dXhy_dXcl ) = 1.;
+  }
+  if ( fabs( dYhy_dYcl ) < 1e-10 ){
+    warning() << "unphysical d(Yhypo)/d(Ycluster) = " << dYhy_dYcl << " reset to 1 as if Yhypo = Ycluster" << endmsg;
+    const_cast<double &>( dYhy_dYcl ) = 1.;
+  }
+
 
   // numeric partial derivatives w.r.t. X and Y, necessary to check after any change to the S-corrections
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) && m_correctCovariance ){  
@@ -218,7 +228,7 @@ StatusCode CaloSCorrection::process    ( LHCb::CaloHypo* hypo  ) const{
 
     // cov.m packing in double array[5] following ROOT::Math::SMatrix<double,3,3>::Array()
     // for row/column indices (X:0, Y:1, E:2), see comments in CaloECorrection::process()
-    double c1[5];
+    double c1[6];
 
     c1[0] = covariance(LHCb::CaloPosition::X, LHCb::CaloPosition::X); // arr[0] not relying on LHCb::CaloPosition::X == 0
     c1[2] = covariance(LHCb::CaloPosition::Y, LHCb::CaloPosition::Y); // arr[2] not relying on LHCb::CaloPosition::Y == 1
@@ -386,32 +396,38 @@ void CaloSCorrection::calcSCorrection( double  xBar, double  yBar, double &xCor,
   if ( m_correctCovariance && results ){
     // // ---- calculation of numeric derivatives of individual correction functions, important for debugging in case of code changes ---
     // debug() << "---------- numeric derivatives of individual S-correction functions ---------------" << endmsg;
-    // double dn_shapeX    = ( getCorrection(CaloCorrection::shapeX, cellID, Asx0*1.02, Asx0*1.02) - Asx1 )/Asx0/2.e-2;
-    // double dn_shapeY    = ( getCorrection(CaloCorrection::shapeY, cellID, Asy0*1.02, Asy0*1.02) - Asy1 )/Asy0/2.e-2;
+    // double tmpd = ( fabs(Asx0) > 1.e-5 ) ? Asx0*2.e-2 : 2.e-7;
+    // double dn_shapeX    = ( getCorrection(CaloCorrection::shapeX, cellID, Asx0 + tmpd, Asx0 + tmpd) - Asx1 )/tmpd;
+    // tmpd = ( fabs(Asy0) > 1.e-5 ) ? Asy0*2.e-2 : 2.e-7;
+    // double dn_shapeY    = ( getCorrection(CaloCorrection::shapeY, cellID, Asy0 + tmpd, Asy0 + tmpd) - Asy1 )/tmpd;
     // 
     // double dn_angularX  = ( getCorrection(CaloCorrection::angularX, cellID, thx*1.002, 0.) - daX )/thx/2e-3;
     // double dn_angularY  = ( getCorrection(CaloCorrection::angularY, cellID, thy*1.002, 0.) - daY )/thy/2e-3;
     // 
+    // tmpd = ( fabs(Asx2) > 1.e-5 ) ? Asx2*2.e-3 : 2.e-8;
     // double dn_residualX = ( getCorrection((residualX_flag ? CaloCorrection::residualX : CaloCorrection::residual),
-    //                                                                                          cellID, Asx2*1.002, 0.) - dcX )/Asx2/2e-3;
+    //                                                                                          cellID, Asx2 + tmpd, 0.) - dcX )/tmpd;
+    // tmpd = ( fabs(Asy2) > 1.e-5 ) ? Asy2*2.e-3 : 2.e-8;
     // double dn_residualY = ( getCorrection((residualY_flag ? CaloCorrection::residualY : CaloCorrection::residual),
-    //                                                                                          cellID, Asy2*1.002, 0.) - dcY )/Asy2/2e-3;
-    // 
+    //                                                                                         cellID, Asy2 + tmpd, 0.) - dcY )/tmpd;
+    // tmpd = ( fabs(Asx3) > 1.e-5 ) ? Asx3*2.e-3 : 2.e-8;
     // double dn_asymX     = (xBar < 0 ) ? 
-    //   ( getCorrection(CaloCorrection::asymM , cellID , Asx2*1.02 , 0.) - ddcX )/Asx2/2.e-2 : 
-    //   ( getCorrection(CaloCorrection::asymP , cellID , Asx2*1.02 , 0.) - ddcX )/Asx2/2.e-2  ;
+    //   ( getCorrection(CaloCorrection::asymM , cellID , Asx2 + tmpd , 0.) - ddcX )/tmpd : 
+    //   ( getCorrection(CaloCorrection::asymP , cellID , Asx2 + tmpd , 0.) - ddcX )/tmpd  ;
+    // 
+    // tmpd = ( fabs(Asy3) > 1.e-5 ) ? Asy3*2.e-3 : 2.e-8;
     // double dn_asymY     = (yBar < 0 ) ?
-    //   ( getCorrection(CaloCorrection::asymM , cellID , Asy2*1.02 , 0.) - ddcY )/Asy2/2.e-2 :
-    //   ( getCorrection(CaloCorrection::asymP , cellID , Asy2*1.02 , 0.) - ddcY )/Asy2/2.e-2  ;
-    // ----------------------------------------------------------------------------------------------------------------------------------
+    //   ( getCorrection(CaloCorrection::asymM , cellID , Asy2 + tmpd , 0.) - ddcY )/tmpd :
+    //   ( getCorrection(CaloCorrection::asymP , cellID , Asy2 + tmpd , 0.) - ddcY )/tmpd  ;
+    // // -------------------------------------------------------------------------------------------------------------------------------
 
 
     // calculation of the analytic derivatives:
     // NB: printouts comparing analytic calculations with numeric derivatives which are commented-out below
     // are useful for debugging in case of changes in the correction function code
     debug() << "---------- analytic derivatives of individual S-correction functions ---------------" << endmsg;
-    double DshapeX = getCorrectionDerivative(CaloCorrection::shapeX , cellID , Asx0 , 0. );
-    double DshapeY = getCorrectionDerivative(CaloCorrection::shapeY , cellID , Asy0 , 0. );
+    double DshapeX = getCorrectionDerivative(CaloCorrection::shapeX , cellID , Asx0 , 1. );
+    double DshapeY = getCorrectionDerivative(CaloCorrection::shapeY , cellID , Asy0 , 1. );
 
     // std::cout << "shapeX: Asx0 = " << Asx0 << " DshapeX = " << DshapeX << " dn_shapeX = " << dn_shapeX << std::endl;
     // std::cout << "shapeY: Asy0 = " << Asy0 << " DshapeY = " << DshapeY << " dn_shapeY = " << dn_shapeY << std::endl;

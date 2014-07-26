@@ -194,6 +194,12 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   const double &dEcor_dYcl = _results.dEcor_dYcl;
   const double &dEcor_dEcl = _results.dEcor_dEcl;
 
+  // protection against unphysical d(Ehypo)/d(Ecluster) == 0
+  if ( fabs( dEcor_dEcl ) < 1e-10 ){
+    warning() << "unphysical d(Ehypo)/d(Ecluster) = " << dEcor_dEcl << " reset to 1 as if Ehypo = Ecluster" << endmsg;
+    const_cast<double &>(dEcor_dEcl) = 1.;
+  }
+
   // debugging necessary in case if any new corrections are added or their sequence is changed!
   if ( UNLIKELY(msgLevel( MSG::DEBUG)) && m_correctCovariance ){
     const double dx_rel(1e-5), dy_rel(1e-5), de_rel(1e-3); // dx,dy ~ few*0.1*mm, de ~ few MeV
@@ -213,9 +219,10 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
     double dn_eCor_dy = (eCor_y-eCor)/yBar /dy_rel;
     double dn_eCor_de = (eCor_e-eCor)/eEcal/de_rel;
 
-    if (   fabs( (dEcor_dXcl - dn_eCor_dx) / dEcor_dXcl ) > 0.1
-        || fabs( (dEcor_dYcl - dn_eCor_dy) / dEcor_dYcl ) > 0.1
-        || fabs( (dEcor_dEcl - dn_eCor_de) / dEcor_dEcl ) > 0.1 )
+    // avoid division in comparison for possible dE/dX == 0 or dE/dY == 0
+    if (   fabs(dEcor_dXcl - dn_eCor_dx) > fabs(dEcor_dXcl) * 0.1
+        || fabs(dEcor_dYcl - dn_eCor_dy) > fabs(dEcor_dYcl) * 0.1
+        || fabs(dEcor_dEcl - dn_eCor_de) > fabs(dEcor_dEcl) * 0.1 )
     {
       debug() << " some CaloECorrection analytically-calculated Jacobian elements differ (by > 10%) from numerically-calculated ones! " << endmsg;
     }
@@ -259,7 +266,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
     }
 
     // index numbering just follows ROOT::Math::SMatrix<double,3,3>::Array() for row/column indices (X:0, Y:1, E:2)
-    double c0[5], c1[5];
+    double c0[6], c1[6];
     /* 
      * Indexing following ROOT::Math::SMatrix<double,3,3,ROOT::Math::MatRepSym<double,3> >::Array() :
      *
@@ -291,6 +298,11 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
     double tmp = c0[3]*dEcor_dXcl + c0[4]*dEcor_dYcl + c0[5]*dEcor_dEcl;
     c1[5] = c1[3]*dEcor_dXcl + c1[4]*dEcor_dYcl + tmp*dEcor_dEcl;
                 
+    // additional protection against cov.m.(E,E) <= 0 due to numerical effects
+    if (  c1[5] < 1.e-10 ){
+      warning() << "unphysical variance(Ehypo) = " << c1[5] << " reset cov.m.(Ehypo,*) = cov.m.(Ecluster,*) as if Ehypo = Ecluster" << endmsg;
+      c1[5] = c0[5]; c1[3] = c0[3]; c1[4] = c0[4];
+    }
 
     // --------------------------------------------------------------------------- alternative calculation for a general-form Jacobian
     // /* typedef ROOT::Math::SMatrix<double, 3, 3, ROOT::Math::MatRepSym<double,3> >	Gaudi::SymMatrix3x3;
@@ -389,7 +401,7 @@ double CaloECorrection::calcECorrection( double xBar, double yBar, double eEcal,
 
   // analytic derivatives of the correction functions
   double DaE(0), DaB(0), DaX(0), DaY(0), Dbeta(0), DbetaPR(0), DbetaC(0), DbetaCPR(0);
-  
+
   //
   // apply corrections
   // NB: numeric derivative calculation calls and printouts which are commented-out below
@@ -411,7 +423,8 @@ double CaloECorrection::calcECorrection( double xBar, double yBar, double eEcal,
   double aB  = getCorrection(CaloCorrection::alphaB    , cellID , bDist );  // lateral leakage
   if ( m_correctCovariance ){
     if ( _results ) DaB      = getCorrectionDerivative(CaloCorrection::alphaB    , cellID , bDist );
-    // double dn_aB  = (getCorrection(CaloCorrection::alphaB    , cellID , bDist*1.02 )-aB)/bDist/2.e-2;
+    // double tmpd = ( bDist > 1e-5 ) ? bDist*2.e-2 : 2.e-7;
+    // double dn_aB = (getCorrection(CaloCorrection::alphaB    , cellID , bDist + tmpd )-aB)/tmpd;
     // std::cout << "\t alphaB: bDist = " << bDist << " aB = " << aB << " DaB = " << DaB
     //           << " numeric  d(aB)/d(bDist) = dn_aB = " << dn_aB << std::endl;
   }
@@ -420,7 +433,8 @@ double CaloECorrection::calcECorrection( double xBar, double yBar, double eEcal,
   double aX  = getCorrection(CaloCorrection::alphaX    , cellID , Asx   );  // module frame dead material X-direction
   if ( m_correctCovariance ){
     if ( _results ) DaX  = getCorrectionDerivative(CaloCorrection::alphaX    , cellID , Asx   );
-    // double dn_aX  = (getCorrection(CaloCorrection::alphaX    , cellID , Asx*1.02  ) -aX)/ Asx/2.e-2;
+    // double tmpd = ( fabs(Asx) > 1e-5 ) ? Asx*2.e-2 : 2.e-7;
+    // double dn_aX  = (getCorrection(CaloCorrection::alphaX    , cellID , Asx + tmpd  ) -aX)/ tmpd;
     // std::cout << "\t alphaX Asx = " << Asx << " aX = " << aX << " DaX = " << DaX
     //           << " numeric d(aX)/d(Asx1) = dn_aX = " << dn_aX << std::endl;
   }
@@ -429,7 +443,8 @@ double CaloECorrection::calcECorrection( double xBar, double yBar, double eEcal,
   double aY  = getCorrection(CaloCorrection::alphaY    , cellID , Asy   );  // module frame dead material Y-direction
   if ( m_correctCovariance ){
     if ( _results ) DaY  = getCorrectionDerivative(CaloCorrection::alphaY    , cellID , Asy   ); 
-    // double dn_aY  = (getCorrection(CaloCorrection::alphaY    , cellID , Asy*1.02  ) -aY)/ Asy/2.e-2;
+    // double tmpd = ( fabs(Asy) > 1e-5 ) ? Asy*2.e-2 : 2.e-7;
+    // double dn_aY  = (getCorrection(CaloCorrection::alphaY    , cellID , Asy + tmpd  ) -aY)/ tmpd;
     // std::cout << "\t alphaY: Asy = " << Asy << " aY = " << aY << " DaY = " << DaY
     //           << " numeric d(aY)/d(Asy1) = dn_aY = " << dn_aY  << std::endl;
   }
