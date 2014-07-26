@@ -32,7 +32,7 @@ ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PRO
  | Long/GhostANN             | "Long Ghost ANN PID"                          |  10401  |     0.4338 | 0.42889    |    0.31532 |    -1.7394 |
  | Long/KaonANN              | "Long Kaon ANN PID"                           |  10401  |   0.061367 | 0.15426    |     3.8588 |     15.879 |
  | Long/MuonANN              | "Long Muon ANN PID"                           |  10401  |  0.0071688 | 0.063674   |     11.598 |     144.43 |
- | Long/PionANN              | "Long Pion ANN PID"                           |  10401  |    0.43278 | 0.40146    |    0.18966 |    -1.7126 |
+ | Long/PionANN              | "Long Pion ANN PID"                           |  10401  |    0.43278 | 0.40146    |    0.18967 |    -1.7126 |
  | Long/ProtonANN            | "Long Proton ANN PID"                         |  10401  |   0.035919 | 0.09384    |     5.2145 |     34.966 |
  | Upstream/ElectronANN      | "Upstream Electron ANN PID"                   |   1373  |   0.052313 | 0.11822    |     4.1254 |     20.636 |
  | Upstream/GhostANN         | "Upstream Ghost ANN PID"                      |   1373  |    0.40506 | 0.35676    |    0.30661 |    -1.5121 |
