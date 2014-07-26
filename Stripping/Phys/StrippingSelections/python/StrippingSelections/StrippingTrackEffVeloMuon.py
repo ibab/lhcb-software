@@ -10,6 +10,23 @@
 # 
 #######################################################################
 
+__author__ = ['Paul Seyfert']
+__date__ = '17/03/2011'
+__version__ = '$Revision: 2.0 $'
+
+__all__ = ('StrippingTrackEffVeloMuonConf',
+           'default_config',
+           'chargeFilter',
+           'longtrackFilter',
+           'selMuonPParts',
+           'makeMyMuons',
+           'makeResonanceVeloMuTrackEff',
+           'selHlt1Jpsi',
+           'selHlt2Jpsi',
+           'trackingPreFilter',
+           )
+
+
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -42,7 +59,12 @@ from Configurables import DecodeVeloRawBuffer
 from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
                           SelectionBase )
-confdict={
+
+default_config = {
+    'NAME'        : 'TrackEffVeloMuon',
+    'WGs'         : ['ALL'],
+    'BUILDERTYPE' : 'StrippingTrackEffVeloMuonConf',
+    'CONFIG'      : {
 			"TrChi2VeMu":		5.	# adimensional
 		,	"TrChi2LongMu":		3.	# adimensional
 		,	"JpsiPt":		0.5	# GeV
@@ -59,7 +81,11 @@ confdict={
 		,	'HLT1PassOnAll': True
 		,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
 		,	'HLT2PassOnAll': False
-         }
+         },
+    'STREAMS'     : { 'Calibration' : ['TrackEffVeloMuonLine1','TrackEffVeloMuonLine2']}
+    }
+
+
 
 class StrippingTrackEffVeloMuonConf(LineBuilder):
     """
@@ -136,8 +162,8 @@ class StrippingTrackEffVeloMuonConf(LineBuilder):
 							   MassPostComb = config['MassPostComb'], 
 							   JpsiPt = config['JpsiPt'])    
 	
-	self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff1])
-	self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff2])
+	self.nominal_line1 =  StrippingLine(name + 'Line1',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff1], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
+	self.nominal_line2 =  StrippingLine(name + 'Line2',  prescale = config['Prescale'], postscale = config['Postscale'], algos=[self.JpsiMuMuTrackEff2], RequiredRawEvents = ["Trigger","Muon","Velo","Tracker"], MDSTFlag = True)
 
 	self.registerLine(self.nominal_line1)
 	self.registerLine(self.nominal_line2)
