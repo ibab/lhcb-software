@@ -4,6 +4,9 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2014-07-26 - Chris Jones
+ - Add Velo, Tracker and Unstripped RawEvent locations.
+
 !========================= DAQEvent v9r16 2014-07-14 =========================
 ! 2014-07-10 - Marco Clemencic
  - Added the method isFlagging() to ODIN to check it the trigger flagging bit is set.
