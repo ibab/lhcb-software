@@ -37,7 +37,6 @@ void Decoder::CommonBase<PBASE>::initRawEventSearch()
   this->declareProperty( "RawEventLocations", m_rawEventLocations, "Search path for the raw event" );
   m_tryRootOnTes=true;
   m_tryFirstRawEventLocation="";
-  m_emptyRBVec.empty();
 }
 
 //=============================================================================
@@ -60,8 +59,9 @@ StatusCode Decoder::CommonBase<PBASE>::initialize()
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
     this -> debug() << "Initialize" << endmsg;
-  if(m_rawEventLocations.size()) m_tryFirstRawEventLocation=m_rawEventLocations[0];
-  m_tryRootOnTes = (this->rootInTES().size()>0);
+  if ( !m_rawEventLocations.empty() ) 
+  { m_tryFirstRawEventLocation = m_rawEventLocations[0]; }
+  m_tryRootOnTes = !this->rootInTES().empty();
   return sc;
 }
 //=============================================================================
@@ -86,10 +86,10 @@ StatusCode Decoder::CommonBase<PBASE>::finalize()
 template <class PBASE>
 LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) const
 {
-    if(!loc.size()) return NULL;
+    if ( loc.empty() ) return NULL;
     //I could also initialize this and store in the class, but I think this is fast enough to do now,
     //at least must be much faster than looking in the rooOnTes a second time
-    const bool rootOnTesSensitive = (this->rootInTES().size()>0);
+    const bool rootOnTesSensitive = !this->rootInTES().empty();
 	//try once with rootInTes, if there is a rootIn or rootOn tes defined! Otherwise it is a waste
     LHCb::RawEvent* raw = getIfExistsRaw(loc, rootOnTesSensitive && m_tryRootOnTes);
     if (raw) return raw;
@@ -99,7 +99,7 @@ LHCb::RawEvent* Decoder::CommonBase<PBASE>::tryEventAt(const std::string loc) co
     raw = getIfExistsRaw(loc,!m_tryRootOnTes);
     if (raw)
     {
-    	m_tryRootOnTes=!m_tryRootOnTes;
+    	m_tryRootOnTes = !m_tryRootOnTes;
     	return raw;
     }
     return NULL;
@@ -110,7 +110,7 @@ LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
   //try once with cached location
   LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
   if (raw) return raw;
-  for (auto loc :  m_rawEventLocations)
+  for ( const auto& loc : m_rawEventLocations )
   {
       raw = this->tryEventAt(loc);
       if (raw)
@@ -122,22 +122,23 @@ LHCb::RawEvent* Decoder::CommonBase<PBASE>::findFirstRawEvent() const
   return NULL;
 }
 template <class PBASE>
-const std::vector< LHCb::RawBank * > & Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
+const std::vector< LHCb::RawBank * > & 
+Decoder::CommonBase<PBASE>::findFirstRawBank(const LHCb::RawBank::BankType i) const
 {
   //try once with cached location
   LHCb::RawEvent* raw = this->tryEventAt(m_tryFirstRawEventLocation);
-  if (raw && raw->banks(i).size()) return raw->banks(i);
-  for (auto loc :  m_rawEventLocations)
+  if ( raw && !raw->banks(i).empty() ) return raw->banks(i);
+  for ( const auto& loc : m_rawEventLocations )
   {
       raw = this->tryEventAt(loc);
-      if (raw && raw->banks(i).size())
+      if ( raw && !raw->banks(i).empty() )
       {
           m_tryFirstRawEventLocation=loc;
           return raw->banks(i);
       }
   }
-  //return a bollocks entry? Cannot return by reference because of this... might consider fixing :S
-  m_emptyRBVec.empty();
-  return m_emptyRBVec;
+  // return an empty vector
+  static const std::vector<LHCb::RawBank*> emptyRBVec;
+  return emptyRBVec;
 }
 #endif // DAQKERNEL_DECODERCOMMONBASE_ICPP

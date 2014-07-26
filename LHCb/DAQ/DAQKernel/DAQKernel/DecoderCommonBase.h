@@ -107,7 +107,6 @@ namespace Decoder
     /// whether to use the RootOnTes next time
     mutable bool m_tryRootOnTes;
 
-    std::vector< LHCb::RawBank * > m_emptyRBVec;
   };
 
 }

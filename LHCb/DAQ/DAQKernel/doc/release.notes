@@ -4,6 +4,9 @@
 ! Purpose     : common DAQ/Encoder/decoder base classes
 !------------------------------------------------------------------------------
 
+! 2014-07-26 - Chris Jones
+ - Some minor coding improvements to the base class.
+
 !========================= DAQKernel v1r0 2014-02-17 =========================
 ! 2014-02-11 - Rob Lambert
  - Finally fixed problems with getIfExists using polymorphism
