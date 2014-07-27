@@ -440,7 +440,7 @@ def _h2_get_item_ ( h2 , ibin ) :
     ``Get-item'' for the 2D-histogram :
     
     >>> histo = ...
-    >>> ve    = histo[ (ix,iy) ]
+    >>> ve    = histo[ ix,iy ]
     
     """
     #
@@ -458,10 +458,10 @@ def _h2_get_item_ ( h2 , ibin ) :
 #  @date   2011-06-07
 def _h3_get_item_ ( h3 , ibin ) :
     """
-    ``Get-item'' for the 2D-histogram :
+    ``Get-item'' for the 3D-histogram :
     
     >>> histo = ...
-    >>> ve    = histo[ (ix,iy,iz) ]
+    >>> ve    = histo[ ix,iy,iz ]
     
     """
     #
@@ -648,7 +648,8 @@ ROOT.TH2D  . __getitem__  = _h2_get_item_
 ROOT.TH3F  . __getitem__  = _h3_get_item_
 ROOT.TH3D  . __getitem__  = _h3_get_item_
 
-ROOT.TH1   . __call__     = _h1_call_
+ROOT.TH1F  . __call__     = _h1_call_
+ROOT.TH1D  . __call__     = _h1_call_
 
 ROOT.TH1   . __len__      = lambda s : s.size() 
 ROOT.TH1   .   size       = lambda s : s.GetNbinsX() * s.GetNbinsY() * s.GetNbinsZ() 
@@ -1160,7 +1161,7 @@ def _h3_iteritems_ ( h3 ) :
                 v   =       h3.GetBinContent ( ix , iy , iz )
                 ve  =       h3.GetBinError   ( ix , iy , iz )
                 #
-                yield ix, iy, iz , VE(x,xe*xe) , VE ( y,ye*ye) , VE( z,ze*ze) , VE( v, ve ) 
+                yield ix, iy, iz , VE(x,xe*xe) , VE ( y,ye*ye) , VE( z,ze*ze) , VE( v, ve*ve) 
                 #
 
             
@@ -2415,11 +2416,11 @@ def _h2_oper_ ( h1 , h2 , oper ) :
     if not result.GetSumw2() : result.Sumw2()
     #
     if   isinstance ( h2 , (int,long,float) ) :
-        v1 = float ( h2 )  
-        h2 = lambda x,y : VE(v1,0)
+        vv = float ( h2 )  
+        h2 = lambda x,y : VE(vv,0)
     elif isinstance ( h2 ,  VE              ) :
-        v1 =     VE ( h2 )
-        h2 = lambda x,y : v1
+        vv =     VE ( h2 )
+        h2 = lambda x,y :    vv
     #
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
@@ -2449,11 +2450,11 @@ def _h2_ioper_ ( h1 , h2 , oper ) :
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
     if   isinstance ( h2 , ( int , long , float ) ) :
-        v1 = float  ( h2 ) 
-        h2 = lambda x,y : VE ( v1 , 0 )
+        vv = float  ( h2 ) 
+        h2 = lambda x,y : VE ( vv , 0 )
     elif isinstance ( h2 ,    VE ) :
-        v1 =          h2  
-        h2 = lambda x,y : v1  
+        vv = VE     ( h2 )   
+        h2 = lambda x,y :      vv  
     #
     for ix1,iy1,x1,y1,z1 in h1.iteritems() :
         #
@@ -2820,11 +2821,11 @@ def _h3_oper_ ( h1 , h2 , oper ) :
     if not result.GetSumw2() : result.Sumw2()
     #
     if   isinstance ( h2 , (int,long,float) ) :
-        v1 = float ( h2 )  
-        h2 = lambda x,y,z : VE(v1,0)
+        vv = float ( h2 )  
+        h2 = lambda x,y,z : VE ( vv , 0 )
     elif isinstance ( h2 ,  VE              ) :
-        v1 =     VE ( h2 )
-        h2 = lambda x,y,z : v1
+        vv =     VE ( h2 )
+        h2 = lambda x,y,z :      vv
     # 
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
@@ -2833,15 +2834,14 @@ def _h3_oper_ ( h1 , h2 , oper ) :
         #
         v2 = h2 ( x1.value() , y1.value() , z1.value() ) 
         #
-        v  = VE ( oper ( v1 , v2 ) ) 
+        v  = VE ( oper ( v1 , v2 ) )
         #
         if not v.isfinite() : continue 
         #
         result.SetBinContent ( ix1 , iy1 , iz1 , v.value () ) 
         result.SetBinError   ( ix1 , iy1 , iz1 , v.error () )
-        
-    return result
 
+    return result
 
 # =============================================================================
 ## operation with the histograms 
@@ -2855,11 +2855,11 @@ def _h3_ioper_ ( h1 , h2 , oper ) :
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
     if   isinstance ( h2 , ( int , long , float ) ) :
-        v1 = float  ( h2 ) 
-        h2 = lambda x,y,z : VE ( v1 , 0 )
+        vv = float  ( h2 ) 
+        h2 = lambda x,y,z : VE ( vv , 0 )
     elif isinstance ( h2 ,    VE ) :
-        v1 =          h2  
-        h2 = lambda x,y,z : v1  
+        vv = VE     ( h2 ) 
+        h2 = lambda x,y,z :      vv  
     #
     for ix1,iy1,iz1,x1,y1,z1,v1 in h1.iteritems() :
         #
@@ -2876,8 +2876,6 @@ def _h3_ioper_ ( h1 , h2 , oper ) :
         h1.SetBinError   ( ix1 , iy1 , iz1 , v.error () )
 
     return h1
-
-
 
 # =============================================================================
 ##  Division with the histograms 

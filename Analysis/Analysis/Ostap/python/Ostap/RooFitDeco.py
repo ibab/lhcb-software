@@ -923,7 +923,7 @@ def setStorage ( new_type = RAD.Tree ) :
         logger.info  ( 'RooAbsData: DEFINE default storage type to be %d' % new_type ) 
         RAD.setDefaultStorageType ( new_type  ) 
 
-    the_type = RAD.setDefaultStorageType()
+    the_type = RAD.getDefaultStorageType()
     if   RAD.Tree   == the_type : logger.debug ( 'RooAbsData: Default storage type is Tree'   )
     elif RAD.Vector == the_type : logger.debug ( 'RooAbsData: Default storage type is Vector' )
     else : logger.debug ( 'RooAbsData: Default storage type is %s' % the_type  )
