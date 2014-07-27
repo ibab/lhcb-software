@@ -1084,6 +1084,89 @@ def _h1_iteritems_ ( h1 , low = 1 , high = sys.maxsize ) :
 ROOT.TH1F  . iteritems     = _h1_iteritems_
 ROOT.TH1D  . iteritems     = _h1_iteritems_
 
+
+# =============================================================================
+## return information about the bin center and width
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-07-27
+def _h1_bin_ ( h1 , ibin ) :
+    """
+    Get the information about the bin center and width 
+
+    >>> h1 = ... ## the histo
+    >>> print h1.bin(1)
+    
+    """
+    if not ibin in h1.GetXaxis() : raise IndexError
+
+    ax  = h1.GetXaxis()
+    x   =       ax.GetBinCenter ( ibin )
+    xe  = 0.5 * ax.GetBinWidth  ( ibin )
+
+    return VE(x,xe*xe)
+
+# =============================================================================
+## return information about the bin center and width
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-07-27
+def _h2_bin_ ( h2 , *ibin ) :
+    """
+    Get the information about the bin center and width 
+
+    >>> h2 = ... ## the histo
+    >>> print h2.bin(1,2)
+    
+    """
+    if 2 != len ( ibin ) : raise IndexError 
+    if not ibin in h2    : raise IndexError
+    
+    ax  = h2.GetXaxis()
+    x   =       ax.GetBinCenter ( ibin[0] )
+    xe  = 0.5 * ax.GetBinWidth  ( ibin[0] )
+
+    ay  = h2.GetYaxis()
+    y   =       ay.GetBinCenter ( ibin[1] )
+    ye  = 0.5 * ay.GetBinWidth  ( ibin[1] )
+
+    return VE(x,xe*xe),VE(y,ye*ye)
+
+
+# =============================================================================
+## return information about the bin center and width
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-07-27
+def _h3_bin_ ( h3 , *ibin ) :
+    """
+    Get the information about the bin center and width 
+
+    >>> h3 = ... ## the histo
+    >>> print h3.bin(1,2,15)
+    
+    """
+    if 3 != len ( ibin ) : raise IndexError 
+    if not ibin in h3    : raise IndexError
+    
+    ax  = h3.GetXaxis()
+    x   =       ax.GetBinCenter ( ibin[0] )
+    xe  = 0.5 * ax.GetBinWidth  ( ibin[0] )
+
+    ay  = h3.GetYaxis()
+    y   =       ay.GetBinCenter ( ibin[1] )
+    ye  = 0.5 * ay.GetBinWidth  ( ibin[1] )
+
+    az  = h3.GetZaxis()
+    z   =       az.GetBinCenter ( ibin[2] )
+    ze  = 0.5 * az.GetBinWidth  ( ibin[2] )
+
+    return VE(x,xe*xe),VE(y,ye*ye),VE(z,ze*ze) 
+
+ROOT.TH1F.bin = _h1_bin_
+ROOT.TH1D.bin = _h1_bin_
+ROOT.TH2F.bin = _h2_bin_
+ROOT.TH2D.bin = _h2_bin_
+ROOT.TH3F.bin = _h3_bin_
+ROOT.TH3D.bin = _h3_bin_
+
 # =============================================================================
 ## iterate over entries in 2D-histogram 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
