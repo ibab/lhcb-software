@@ -56,9 +56,10 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("MaxVeloClusters", m_maxVeloClusters = 10000);
   declareProperty("HideWarnings", m_hideWarnings = true);
   //new for decoders, initialize search path, and then call the base method
-  m_defaultRawEventLocations={LHCb::RawEventLocation::Other,    // Stripping default 
-			      LHCb::RawEventLocation::Default,  // RAW default
-			      LHCb::RawEventLocation::Velo};    // When only VELO retained in stripping
+  m_defaultRawEventLocations={LHCb::RawEventLocation::Velo,    // When only VELO retained in stripping
+			      LHCb::RawEventLocation::Other,   // Stripping default 
+			      LHCb::RawEventLocation::Default};// RAW default
+			      
   m_rawEventLocations.resize(m_defaultRawEventLocations.size(),"");
   std::copy(m_defaultRawEventLocations.begin(),
 	    m_defaultRawEventLocations.end(),m_rawEventLocations.begin());
