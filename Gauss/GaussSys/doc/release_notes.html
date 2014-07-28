@@ -4,6 +4,213 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v46r8">2014-07-28 - GaussSys v46r8</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. Fix for missing hits in 
+   RICH upgrade, and for photos++ bug on gcc48.
+</A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v36r4 (and Gaudi v24r2)
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   <b>ParamFiles v8r*</b>, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   <b>photos++ 3.56</b> and tauola++ 1.1.1a 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.08 (via LCG_Interfaces),
+   LHAPDFSets v1r* (private LHCb version)
+   <b>Geant4 v95r2p7g1</b> (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   XmlVis v1r18,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.3 (via LCG_GeneratorsInterfaces),
+   EvtGen v13r12, EvtGenExtras v3r10 and Mint v3r0 
+   (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, <b>GenXicc v2r1 + GenXiccData v3r0</b> and 
+   HidValley v4r0 (private LHCb versions)
+   <b>PGunsData v1r0 - New package for Particle guns data input</b> 
+</A></H3>
+
+! 2014-07-28 - Gloria Corti
+ - Port back Kernel/MCInterfaces package from LHCb v38r0 necessary for changes
+   in LbGenXicc and GenCuts
+ - Use new patch for LCG_GeneratorsInterfaces/powhegbox v66r0p2 to fix issue 
+   with environment variable hence not working on grid (see JIRA task
+   https://its.cern.ch/jira/browse/LHCBGAUSS-144)
+ - Replace use of GaussUMC with that of VPMoniSim after renaming of package
+
+!========================== Gauss v46r8 2014-07-28 ===========================
+! 2014-07-28 - Gloria Corti
+ - Change major version of GenXiccData to be used (to v3r*)
+ - Add use of PGunsData package fixing major version (v1r*)
+ - Replace use of GaussUMC with that of VPMoniSim after renaming of package
+
+!========================== GenCuts v3r9 2014-06-18 ========================== 
+! 2014-06-19 - Gloria Corti
+ - Adapt to move of QQqBaryons header file into MCInterfaces package
+ 
+! 2014-02-08 - Liang Zhong
+ - Change XiccDaughtersInLHCb.cpp and XiccDaughtersInLHCbAndWithMinPT.cpp to
+   generate other doubly heavy baryons
+
+!========================== GENSER v14r0 2014-07-28 ==========================
+! 2013-07-14 - Gloria Corti
+ - Change version of photos++ to latest 3.56 version. 
+   Note that 3.54 (3.52) stops (may give undefined results) on gcc 4.8. 
+   See details at https://its.cern.ch/jira/browse/LHCBGAUSS-280
+   
+!========================== EvtGen v13r13 2014-04-18 ==========================
+! 2014-01-29 - John Back
+ - Removed mass assertion on GS shape in EvtDalitzReso to allow it to 
+   also be used for charged rho resonances (from Daniel Craik).
+
+!========================= GenXicc v2r1 2014-06-23 ===========================
+! 2014-02-11 - Liang Zhong
+ - Modify parameter.F to enable to configure the mass of Xicc baryon
+   in GenXiccProduction.cpp
+
+!========================= LbGenXicc v4r0 2014-06-20 =========================
+! 2014-06-18 - Gloria Corti
+ - Moved QQqBaryons header to Kernel/MCInterfaces package since needed by 
+   a class in GenCuts. Adapted classes that used it to pick it up from there.
+
+! 2014-02-11 - Liang Zhong
+ - Add the interface to set the mass of Xicc baryon in GenXiccProduction.cpp
+   A new variable, ichange, is added. If ichange is set to 0, then the default
+   value of the generator will be used. If ichange is set to 1, then the mass
+   of Xicc baryon can be set. 
+
+! 2014-02-10 - Liang Zhong
+ - Simplify the option file GenXicc.py to control the production of Xi_cc+
+   and Xi_cc++ in a coherent way.
+
+!======================== LbOniaPairs v2r1 2014-06-24 =========================
+! 2014-06-24 - Gloria Corti
+ - Add OniaPairs.py options to switch on this generator in production. In this
+   case it is only foreseen for the Special sampling method, so force to use it.
+   Here only 'generic options' are set
+ 
+! 2014-05-15 - Vanya Belyaev
+ - minor reshulffling of files
+   move the header fikle for production tool form 
+   "public" area to internal area 
+
+! 2014-03-20 - Alexey Novoselov
+ - Added Psi1S1S.py opts file in /options/ subfolder
+
+!======================== LbPythia8 v8r0 2014-07-24 ========================
+! 2014-07-14 - Gloria Corti
+ - Fix to be able to store all non-gluon gauge boson mediators (e.g. Z, W, ...)
+   in MCParticles. See details in https://its.cern.ch/jira/browse/LHCBGAUSS-105
+   . src/Pythia8Production.cpp
+
+! 2014-05-07 - Philip Ilten
+ - Added pT damping for all hard QCD and Onia production. This damping is
+   the same that is applied for all MPI. Additional future cross-section
+   weighting can now be added through the LhcbHooks class.
+
+! 2014-04-28 - Marco Clemencic
+ - Fixes to compile against Pythia8 183 (with CMake).
+
+! 2014-04-25 - Marco Clemencic
+ - Minor improvement to CMake configuration.
+
+!========================== LbPGuns v5r0 2014-07-03 ==========================
+! 2014-07-03 - Gloria Corti
+ - Use new data package with v*. Exact version to be set in Gauss itself.
+
+!========================== LbPGuns v4r3 2014-06-23 ==========================
+! 2014-06-06 - Victor Coco
+ - Modified MomentumSpectrum so that GetRandom from the TH2D and TH3D gets a 
+   seed from the event number and run number (same seed in each jobs otherwise)
+
+! 2014-01-03 - Dan Johnson
+ - Modified MomentumSpectrum class to accept a pre-defined momentum spectrum
+   in terms of pt-pz (TH2D), as well as the original px-py-pz (TH3D).
+
+!=========================== GenTune v2r1 2014-07-28 =========================
+! 2014-06-15 - Alex Grecu
+ - corrected typo in Python files in options, options/example
+ - added exec_prefix variable in environment as work-around Rivet 1.9.0 helper
+   script bug
+! 2014-06-16 - Alex Grecu
+ - released a new version of scripts/lhcbLFT2StdMap.py
+
+!======================== GaussTools v19r1 2014-07-03 ========================
+! 2014-05-09 - Heinrich Schindler
+ - Add GiGaMagFieldSpecial class by Marius Bjornstad.
+
+!========================= GaussRICH v14r2 2014-07-28 ========================
+! 2014-07-21 - Sajan Easo
+ - Added the option to have random hits in RICH2. By default this option is 
+   switched off.
+   The fractionf random hits is a parameter adjustable in the options file. 
+   This is done by creating extra photons to each track at the Cherenkov 
+   production time, with random angle.
+   This would make these extra hits created as correlated hits. This followed
+   from recent study for MC tuning which found too few hits in RICH2 and near 
+   by detectors; so the addition to random hits is a temporary solution to fix
+   this issue.
+
+! 2014-05-08 - Sajan Easo 
+ - Increased the fraction of scintillation hits in RICH2 in Rich.opts.
+ - A printout of the fraction set for scintillation yield is added 
+
+! 2014-02-19 -Sajan Easo
+ - Added options to remove or Aerogel.
+
+!====================== GaussPhysics v11r1 2014-07-03 ========================
+! 2014-02-10 - Liang Zhong
+ - Add classes for Xi_cc++ and anti-Xi_cc--, and include them in
+   GiGaPhysUnknownParticles.cpp
+ - Correct the isospin for Xi_cc+ and anti-Xi_cc-, the spin and baryon
+    number for anti-Xi_cc-
+
+!===================== GaussCherenkov v4r3 2014-07-28 ========================
+! 2014-06-06 - Jibo He
+ - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties 
+   . Added options to scale QE for Rich1 and Rich2 separately
+ - CherenkovG4HistoFillSet5
+   . Added Hists to store true reflection points on Rich2 Mirrors
+
+! 2014-03-20 - Sajan Easo
+  -The commit on 2014-01-21 seems to have commented out creation of hits.
+   This is now fixed in CkvSensDet.cpp
+
+! 2014-02-13 - Sajan Easo
+ - Added options for using more QE tables
+
+!======================= GaussMonitor v8r1 2014-07-03 ========================
+! 2014-06-11 - James Mccarthy
+ - Added options file to run timing monitor code in options/MonitorTiming.py
+
+! 2014-04-01 - James Mccarthy
+ - Added scripts for monitoring timing in subdetectors and processes in Gauss 
+   (MonitorTiming.cpp MonitorTiming.h)
+
+!======================= VP/VPMoniSim v1r0 2014-07-28 ========================
+! 2014-05-06 - Heinrich Schindler
+ - Rename package from Sim/GaussUMC to VP/VPMoniSim
+
+!========================== SimChecks v1r2 2014-07-03 ========================
+! 2014-05-13 - Luca Pescatore
+ - Added folder with code for post production analysis and option file which
+   launches it automatically after producting events
+
+! 2014-02-14 - Luca Pescatore
+ - Added option files to run radiation length scans. RadLengthAna.py for all
+   detector except VELO, RadLengthAna_VELO.py for VELO only and 
+   Run_RadLengthScan.py to run them automatically in sequance and merge outputs
+
+! 2014-02-10 - Luca Pescatore
+ - Updated all python options for Single and Multiple taget. Untested Ganga 
+   functionalities are removed and scripts are reorganizied to make them easier
+   to use.
+
+!=============================================================================
 </PRE><H1><A NAME="v46r7p2">2014-04-01 - GaussSys v46r7p2</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Patch to fix options
    for ad-hoc settings in pythia8
@@ -16,7 +223,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.08 (via LCG_Interfaces),
    LHAPDFSets v1r* (private LHCb version)
@@ -55,7 +262,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.08 (via LCG_Interfaces),
    LHAPDFSets v1r* (private LHCb version)
@@ -89,7 +296,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    LHAPDFSets v1r* (private LHCb version)
@@ -329,7 +536,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    LHAPDFSets v1r* (private LHCb version)
@@ -422,7 +629,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    <b>Geant4 v95r2p5g4</b> (based on geant4.9.5.p02 + patches for LHCb) and 
@@ -832,7 +1039,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    <b>Geant4 v95r2p5g3</b> (based on geant4.9.5.p02 + patches for LHCb) and 
@@ -1045,7 +1252,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    <b>Geant4 v95r2p5g2</b> (based on geant4.9.5.p02 + patches for LHCb) and 
@@ -1217,7 +1424,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    <b>Geant4 v95r2p5g1</b> (based on geant4.9.5.p02 + patches for LHCb) and 
@@ -1255,7 +1462,7 @@ Purpose: LHCb Simulation program
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    <b>Geant4 v95r2p5g1 (based on geant4.9.5.p02 + patches for LHCb)</b> and 
@@ -1346,7 +1553,7 @@ repeated hadronisation since already done at hadronisation level.
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    <b>Geant4 v95r2p4g1 (based on geant4.9.5.p02 + patches for LHCb)</b> and 
@@ -1388,7 +1595,7 @@ repeated hadronisation since already done at hadronisation level.
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    pythia 6.427.2, lhapdf 5.8.5 
-   photos++ 2.6.1a and tauola++ 1.0.7 
+   photos++ 3.52 and tauola++ 1.1.1a 
    pythia8 175 (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    Geant4 v95r2p3 (based on geant4.9.5.p02) and Geant4Files v95r0, 
@@ -1439,7 +1646,7 @@ repeated hadronisation since already done at hadronisation level.
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    <b>pythia 6.427.2, lhapdf 5.8.5,</b> 
-   <b>photos++ 2.6.1a and tauola++ 1.0.7</b> 
+   <b>photos++ 3.52 and tauola++ 1.1.1a</b> 
    <b>pythia8 175</b> (via LCG_GeneratorsInterfaces),
    HepMC 2.06.05 (via LCG_Interfaces),
    <b>Geant4 v95r2p3 (based on geant4.9.5.p02) and Geant4Files v95r0</b>, 
@@ -1594,7 +1801,7 @@ repeated hadronisation since already done at hadronisation level.
    SQLDDDB v7r*, FieldMap v5r*,
    GDMLData v1r*,
    <b>pythia 6.427.2</b>, lhapdf 5.8.5, 
-   <b> NEW: photos++ 2.6.1a and tauola++ 1.0.7</b> 
+   <b> NEW: photos++ 3.52 and tauola++ 1.0.7</b> 
    (via LCG_GeneratorsInterfaces)
    <b>REMOVED: photos (FORTRAN)</b>
    HepMC 2.06.05 (via LCG_Interfaces)
