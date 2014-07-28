@@ -3,6 +3,9 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+! 2014-02-17 - David Hutchcroft
+ - Added LHCb::RawEventLocation::Velo to the default location list for Stripping 21
+
 !========================= VeloDAQ v6r11 2014-02-18 =========================
 ! 2014-02-17 - David Hutchcroft
  - DefaultVeloRawBufferDecoders.py to use RawEventLocations (used by VETRA nightlies)

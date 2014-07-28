@@ -56,11 +56,13 @@ DecodeVeloRawBuffer::DecodeVeloRawBuffer( const std::string& name,
   declareProperty("MaxVeloClusters", m_maxVeloClusters = 10000);
   declareProperty("HideWarnings", m_hideWarnings = true);
   //new for decoders, initialize search path, and then call the base method
-  m_rawEventLocations={LHCb::RawEventLocation::Other, LHCb::RawEventLocation::Default};
-  
+  m_defaultRawEventLocations={LHCb::RawEventLocation::Other,    // Stripping default 
+			      LHCb::RawEventLocation::Default,  // RAW default
+			      LHCb::RawEventLocation::Velo};    // When only VELO retained in stripping
+  m_rawEventLocations.resize(m_defaultRawEventLocations.size(),"");
+  std::copy(m_defaultRawEventLocations.begin(),
+	    m_defaultRawEventLocations.end(),m_rawEventLocations.begin());
   initRawEventSearch();
-  
-  
 }
 
 
@@ -104,8 +106,17 @@ StatusCode DecodeVeloRawBuffer::initialize() {
     return Error("I can't decode if you don't tell me where to decode to! Fill RawEventLocations!",StatusCode::FAILURE);
   }
   
-  if ((m_rawEventLocations[0]!=LHCb::RawEventLocation::Other and m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) or  m_rawEventLocations.size()>2) 
-  {
+  if ( m_rawEventLocations.size() == 1 ){ // if one entry and not in default list print
+    if ( std::find(m_defaultRawEventLocations.begin(),
+		   m_defaultRawEventLocations.end(),
+		   m_rawEventLocations[0]) == m_defaultRawEventLocations.end() ) {
+      info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+    }
+  }else if( ( m_defaultRawEventLocations.size() != m_rawEventLocations.size() ) or
+	    (std::mismatch(m_defaultRawEventLocations.begin(), // if a list but not the same list print
+			   m_defaultRawEventLocations.end(),
+			   m_rawEventLocations.begin()).first != 
+	     m_defaultRawEventLocations.end() ) ){
     info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }
 
