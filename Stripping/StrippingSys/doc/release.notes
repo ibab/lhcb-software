@@ -3,10 +3,56 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
-! 2014-07-23 - Chris Jones
+!========================= StrippingSys v9r0 2014-07-28 =========================
+
+* Phys/StrippingUtils v1r9
+ - Created the function getBuilderConfFromModule in StrippingUtils.Utils for
+   read the configuration of LineBuilders directly from StrippingSelections
+   package.
+
+* Phys/StrippingSelections v4r36
+ - Adapted all the LineBuilders to new configurations
+ - Updated tests/test_stream_output_locations.py
+           tests/TestMyStrippingLineOn2011Data_Reco14.py
+           tests/TestMyStrippingLineOn2012Data_Reco14.py
+ - Removed tests/TestMyStrippingLineOn2012Data.py
+           tests/TestMyStrippingLineOn2012Data_Timing.py
+           tests/TestMyStrippingLineOn2012Data_Reco13e.py
+           tests/TestMyStrippingLineOn2011Data.py
+           tests/TestMyStrippingLineOn2012Data_Reco13c.py
+ - Removed obsolete datasets from tests/data
+ - created buildersConf function in StrippingSelections.__init__.py in order
+   to configure the LineBuilders from the default configuration.
+
+* Phys/StrippingConf v4r11
+ - Added RequiredRawEvent to StrippingLine to ask for selective saving of
+   raw banks.
+ - Added MDSTFlag to StrippingLine to ask for MDST.DST support.
+ - Reworked implementation of RelatedInfo storage in StrippingLine.
+   Single argument in StrippingLine constructor "RelatedinfoTools", which is
+   a list of RelatedInfo tools configuration dictionaries.
+ - Added activeLines to StrippingConf in order to retrive the stripping lines
+   run by a particular StrippingConf
+ - Remove support for outdated StrippingMember and StrippingTool
+ - Add "UseRelatedInfo" option to StrippingConf. If the option is not
+   specified in StrippingLine, the setting in StrippingConf is used.
+
+
+* Phys/StrippingArchive v1r23
+ - Remove imports of StrippingMember
+
+* Phys/StrippingAlgs v1r13
+ - Updated StrippingReport to allow correlation studies between running lines.
+   New features are only run when Correlation property is set to "True"
+   from (python) configurables.
+
+* Phys/IncTopoVert v1r4
+ - fix -Wpedantic warning
+
+* Phys/CommonParticlesArchive v1r0
  - Add new package Phys/CommonParticlesArchive
 
-! 2014-07-08 - Chris Jones
+* Phys/IsolationTools v1r0
  - Add new package Phys/IsolationTools
 
 !========================= StrippingSys v8r3 2014-06-16 =========================

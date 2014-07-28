@@ -1,5 +1,5 @@
 package  StrippingSys
-version  v8r3
+version  v9r0
 
 branches doc cmt tests
 
@@ -13,19 +13,19 @@ use  StandardParticles           v2r2     Phys   # Juan Palacios
 # Internal Packages
 use  DisplVertices 		 v7r18	  Phys	 # Neal Gauvin
 use  MvaPreSelB2DH               v1r6     Phys   # Sajan Easo
-use  IncTopoVert                 v1r3     Phys   # Mathieu Perrin-Terrin
+use  IncTopoVert                 v1r4     Phys   # Mathieu Perrin-Terrin
 use  IsolationTools              v1r0     Phys   # Alex Shires
 
 ####################################################################
 # Stripping packages
-use  StrippingAlgs               v1r12    Phys   # Anton Poluektov
-use  StrippingArchive            v1r22    Phys   # Stripping coordinators
-use  StrippingConf               v4r10    Phys   # Anton Poluektov
+use  StrippingAlgs               v1r13    Phys   # Anton Poluektov
+use  StrippingArchive            v1r23    Phys   # Stripping coordinators
+use  StrippingConf               v4r11    Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r9     Phys   # Ulrich Kerzel
-use  StrippingSelections         v3r35    Phys   # Stripping coordinators
+use  StrippingSelections         v3r36    Phys   # Stripping coordinators
 use  StrippingSettings           v2r31    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
-use  StrippingUtils              v1r8     Phys   # Juan Palacios
+use  StrippingUtils              v1r9     Phys   # Juan Palacios
 
 ####################################################################
 
