@@ -4,18 +4,18 @@
 package           IsolationTools
 version           v1r0
 
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc src options files
 
-# Used packages. 
+# Used packages.
 #============================================================================
 use  Boost                 v* LCG_Interfaces
 use  GaudiConfUtils        v* -no_auto_imports
 use  DaVinciKernel         v* Phys
 use  DaVinciTools          v* Phys
 use  LoKiPhys              v* Phys
-use  MVADictTools          v* Phys 
+use  MVADictTools          v* Phys
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
