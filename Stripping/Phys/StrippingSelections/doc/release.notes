@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r36 2014-07-28 =========================
+
 ! 2014-07-25 - Fred Blanc
  - Modified StrippingB2CharmlessQuasi2Body.py for new convention
 
@@ -40,11 +42,11 @@
 
 ! 2014-07-17 - Jibo He
  - Added BDT-based Bc->J/psi Pi line, requriring the head of TMVAWeights
- - Removed StrippingB2XGamma from __init__.py, as StrippingB2XGamma disappared 
+ - Removed StrippingB2XGamma from __init__.py, as StrippingB2XGamma disappared
 
 ! 2014-07-17 - Regis Lefevre
  - Adapted StrippingD02KPiPi0.py and StrippingB2HHPi0.py
-to have a defaut_config as it was in StrippingSettings v20r1, 
+to have a defaut_config as it was in StrippingSettings v20r1,
 and to new RequiredRawEvents and MDSTFlag conventions
 
 ! 2014-07-17 - Pablo Ruiz Valls
@@ -55,15 +57,15 @@ and to new RequiredRawEvents and MDSTFlag conventions
  - Removed zero prescale and changed some threshold cuts in StrippingLowMult
  - Added SingleTrackNoBias line to StrippingWMu
 
-! 2014-07-16 - Anton Poluektov 
- - Use RelatedInfo to store cone variables in StrippinBeauty2Charm and 
+! 2014-07-16 - Anton Poluektov
+ - Use RelatedInfo to store cone variables in StrippinBeauty2Charm and
    StrippingDstarPromptWithD02HHMuMu lines
 
 ! 2014-07-15 - Stefano Perazzini
  - Hot fix to StrippingXibc.py and StrippingPsiXForBandQ
 
 ! 2014-07-15 - Roberta Cardinale
- - New ConfigDict for StrippingXibc.py 
+ - New ConfigDict for StrippingXibc.py
 
 ! 2014-07-15 - Lucio Anderlini
  - Raw event added to Jpsi2MuMuDetached line, Psi2MuMuDetachedLine, Bc2JpsiMu
@@ -72,19 +74,19 @@ and to new RequiredRawEvents and MDSTFlag conventions
  - hot fix of StrippingPsiXForBandQ and StrippingBc3h
 
 ! 2014-07-12 - Vanya Belyaev
- - Adapt StrippingPsiXForBandQ for new conventions 
+ - Adapt StrippingPsiXForBandQ for new conventions
 
 ! 2014-07-12 - Vanya Belyaev
- - Adapt StrippingPsiX0 to new conventions 
+ - Adapt StrippingPsiX0 to new conventions
 
 ! 2014-07-12 - Vanya Belyaev
- - adapt StrippingPromptCharm to new conventions 
- 
-! 2014-07-12 - Vanya Belyaev
- - adapt StrippingCharmAssociative to new conventions 
+ - adapt StrippingPromptCharm to new conventions
 
 ! 2014-07-12 - Vanya Belyaev
- - Adapt StrippingBc3h to new conventions 
+ - adapt StrippingCharmAssociative to new conventions
+
+! 2014-07-12 - Vanya Belyaev
+ - Adapt StrippingBc3h to new conventions
 
 ! 2014-07-11 - Pablo Ruiz Valls
  - StrippingBeauty2XGamma updated to comply with default_config / Chris' Raw banks tool
@@ -104,7 +106,7 @@ and to new RequiredRawEvents and MDSTFlag conventions
            tests/TestMyStrippingLineOn2012Data_Reco13c.py
 
 ! 2014-07-04 - Stefano Perazzini
- - created buildersConf function in StrippingSelections.__init__.py in order 
+ - created buildersConf function in StrippingSelections.__init__.py in order
    to configure the LineBuilders from the default configuration.
  - As example on how to modify the code look at StrippingB2HHBDT.py:
 
@@ -145,26 +147,26 @@ and to new RequiredRawEvents and MDSTFlag conventions
  - Add TIS Line to StrippingDiMuonNew
  - Updated StrippingDiMuonNew configuration dictionary (with the new convention)
 
-! 2014-07-02 - Anton Poluektov 
- - Remove unnecessary StrippingMember imports 
+! 2014-07-02 - Anton Poluektov
+ - Remove unnecessary StrippingMember imports
 
-! 2014-07-02 - Anton Poluektov 
- - Add new lines to Beauty2Charm, B->Lc pbar hh, Lc pbar h, Lc pbar, Lc Ds pbar, DDK* : 
-     'StrippingB02DDKstBeauty2CharmLine', 
-     'StrippingB2LcDspbarLc2PKPiDs2KKPiBeauty2CharmLine', 
-     'StrippingB2LcDspbarWSLc2PKPiDs2KKPiBeauty2CharmLine', 
-     'StrippingB02LcpbarKKLc2PKPiBeauty2CharmLine', 
-     'StrippingB02LcpbarPiPiLc2PKPiBeauty2CharmLine', 
-     'StrippingB02LcpbarKPiLc2PKPiBeauty2CharmLine', 
-     'StrippingB02LcpbarPiPiWSLc2PKPiBeauty2CharmLine', 
-     'StrippingB02LcpbarKKWSLc2PKPiBeauty2CharmLine', 
-     'StrippingB02LcpbarKPiWSLc2PKPiBeauty2CharmLine', 
-     'StrippingB2LcpbarKSSLc2PKPiBeauty2CharmLine', 
-     'StrippingB2LcpbarPiSSLc2PKPiBeauty2CharmLine', 
-     'StrippingB2LcpbarKWSLc2PKPiBeauty2CharmLine', 
-     'StrippingB2LcpbarPiWSLc2PKPiBeauty2CharmLine', 
-     'StrippingB2LcpbarLc2PKPiBeauty2CharmLine', 
-     'StrippingB2LcpbarWSLc2PKPiBeauty2CharmLine', 
+! 2014-07-02 - Anton Poluektov
+ - Add new lines to Beauty2Charm, B->Lc pbar hh, Lc pbar h, Lc pbar, Lc Ds pbar, DDK* :
+     'StrippingB02DDKstBeauty2CharmLine',
+     'StrippingB2LcDspbarLc2PKPiDs2KKPiBeauty2CharmLine',
+     'StrippingB2LcDspbarWSLc2PKPiDs2KKPiBeauty2CharmLine',
+     'StrippingB02LcpbarKKLc2PKPiBeauty2CharmLine',
+     'StrippingB02LcpbarPiPiLc2PKPiBeauty2CharmLine',
+     'StrippingB02LcpbarKPiLc2PKPiBeauty2CharmLine',
+     'StrippingB02LcpbarPiPiWSLc2PKPiBeauty2CharmLine',
+     'StrippingB02LcpbarKKWSLc2PKPiBeauty2CharmLine',
+     'StrippingB02LcpbarKPiWSLc2PKPiBeauty2CharmLine',
+     'StrippingB2LcpbarKSSLc2PKPiBeauty2CharmLine',
+     'StrippingB2LcpbarPiSSLc2PKPiBeauty2CharmLine',
+     'StrippingB2LcpbarKWSLc2PKPiBeauty2CharmLine',
+     'StrippingB2LcpbarPiWSLc2PKPiBeauty2CharmLine',
+     'StrippingB2LcpbarLc2PKPiBeauty2CharmLine',
+     'StrippingB2LcpbarWSLc2PKPiBeauty2CharmLine',
 
 ! 2014-06-30 - Stefano Perazzini
  - Removed obsolete datasets from tests/data
