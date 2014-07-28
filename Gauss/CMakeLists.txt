@@ -20,10 +20,10 @@ macro(FindG4libs)
 endmacro()
 
 # Declare project name and version
-gaudi_project(Gauss v46r8
+gaudi_project(Gauss v47r0
               FORTRAN
-              USE LHCb v36r4
-                  Geant4 v95r2p7g1
+              USE LHCb v37r3
+                  Geant4 v95r2p7g2
               DATA AppConfig VERSION v3r*
                    BcVegPyData VERSION v2r*
                    Det/GDMLData VERSION v1r*
