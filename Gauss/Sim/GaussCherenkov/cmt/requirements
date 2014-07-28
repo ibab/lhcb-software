@@ -3,7 +3,7 @@
 # Maintainer : Sajan Easo
 #============================================================================
 package GaussCherenkov
-version v4r2
+version v4r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
