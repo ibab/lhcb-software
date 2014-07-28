@@ -4,13 +4,14 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
-! Define new instances of decoders (disabled by default) for "expert" banks
-  "TTPedestal","TTFull","TTProcFull","TTError", "ITPedestal","ITFull",
-  "ITProcFull","ITError", "UTPedestal","UTFull","UTError", "OTError",
-  "EcalPackedError", "HcalPackedError", so that these banks can reside in a 
-  different RawEvent from the normal bank of these sub-detectors
+!========================= DAQSys v8r4 2014-07-28 =========================
 
 ! 2014-07-23 - Marco Cattaneo
+ - Define new instances of decoders (disabled by default) for "expert" banks
+   "TTPedestal","TTFull","TTProcFull","TTError", "ITPedestal","ITFull",
+   "ITProcFull","ITError", "UTPedestal","UTFull","UTError", "OTError",
+   "EcalPackedError", "HcalPackedError", so that these banks can reside in a 
+   different RawEvent from the normal bank of these sub-detectors
  - Bug fix in DecodeRawEvent, check on algs writing to same location was using
    a non-existent function of the Decoder class
 
