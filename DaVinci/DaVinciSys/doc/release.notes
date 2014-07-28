@@ -3,6 +3,55 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r0>2014-07-28 DaVinci v36r0</A></H1><PRE>
+
+New development release based on the LHCb v38r0 stack.
+First release based on a production ROOT6 release (6.00.02).
+
+Executive summary of notable changes :-
+
+DaVinciTools :-
+ . Updated tools for RelatedInfo storage.
+
+Jets :-
+ . Change default values of RecombinationScheme and Strategy in LokiFastJetmaker
+   to default values in fastjet. The change in Strategy saves a factor ~50 in
+   execution time.
+
+ParticleMaker :-
+ . Updated Photon & MergedPi0 maker tunings.
+
+Python :-
+ . Numerous updates to the Ostap interactive analysis package.
+
+DSTWriters :-
+ . Support added for selective RawEvent storage in (u)DSTs.
+
+DecayTreeTuple :-
+ . TupleToolPi0Info  : Add 'daughters' info in case of merged pi0
+ . TupleToolBremInfo : Adapt to change in DaVinciTools. Brem multiplicity is
+                       now reliable even on microDST.
+ . Add a new tool (TupleToolANNPID) that fills the ANNPID variables for a 
+   given list of MVA tunes.
+ . TupleToolTISTOS : Propagate customization of TisTosFrac to Hlt1,Hlt2 tools.
+
+Stripping :-
+ . Added RequiredRawEvent to StrippingLine to ask for selective saving of
+   RawEvent banks.
+ . Added MDSTFlag to StrippingLine to ask for MDST.DST support.
+ . Reworked implementation of RelatedInfo storage in StrippingLine.
+   Single argument in StrippingLine constructor "RelatedinfoTools", which is
+   a list of RelatedInfo tools configuration dictionaries.
+ . Add "UseRelatedInfo" option to StrippingConf. If the option is not
+   specified in StrippingLine, the setting in StrippingConf is used.
+ . Added a new package 'Phys/CommonParticlesArchive' which implies a frozen 
+   archive of the COmmonParticles, as used in each Stripping. Also includes
+   a python module that allows for the redirection of CommonParticle imports
+   to a given archive. e.g.
+     from CommonParticlesArchive import CommonParticlesArchiveConf
+     CommonParticlesArchiveConf().redirect('Stripping20')
+ . New package Phys/IsolationTools for stripping isolation variables.
+
 ! 2014-07-18 - Chris Jones
  - Update list of configurables for QM test.
 

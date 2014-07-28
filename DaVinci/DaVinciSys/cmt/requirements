@@ -1,14 +1,16 @@
 package DaVinciSys
-version v35r1
+version v36r0
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v35r1    Phys
-use  DaVinciTests    v2r25
+use  DaVinci         v36r0    Phys
+use  DaVinciTests    v2r26
+use  KaliCalo        v4r15    Phys   # Olivier Deschamps
 
-# Moved from Analysis, see task #50698
-use  KaliCalo        v4r14p1  Phys   # Vanya Belyaev
+# Temporary pacakges *** REMOVE NEXT RELEASE *****
+use RawEventCompat   v1r6     DAQ
+use DAQSys           v8r4     DAQ
 
 # Declare this as a container package
 apply_pattern container_package
