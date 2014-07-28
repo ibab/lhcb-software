@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v14r0 2014-07-28 ==========================
 ! 2013-07-14 - Gloria Corti
  - Change version of photos++ to latest 3.56 version. 
    Note that 3.54 (3.52) stops (may give undefined results) on gcc 4.8. 
