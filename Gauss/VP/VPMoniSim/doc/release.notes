@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : VP/VPMoniSim
-! Responsible : Victor Coco
+! Responsible : Heinrich Schindler
 ! Purpose     : Monitoring of VP hits in Gauss
 !-----------------------------------------------------------------------------
 
+!======================= VP/VPMoniSim v1r0 2014-07-28 ========================
 ! 2014-05-06 - Heinrich Schindler
  - Rename package from Sim/GaussUMC to VP/VPMoniSim
 
