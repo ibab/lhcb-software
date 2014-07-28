@@ -9,7 +9,19 @@ import logging
 
 from optparse import OptionParser
 
-parser = OptionParser()
+class MyParser(OptionParser):
+    # override default epilog formatter because it strips newlines
+    def format_epilog(self, formatter):
+        return self.epilog
+
+parser = MyParser(epilog =
+                  """
+Enter each alignment as either an sqlite file or a date range for retrieving IOVs from the CondDB.
+Format date ranges as since,until[,CondDBtag] with CondDBtag optional.
+All IOVs in the date range will be plotted.
+
+""")
+
 parser.usage = "%prog [options] elements dofs dbfile1 ..."
 
 parser.add_option("-r", "--reference", dest="refDbFile",      default=None, metavar="REFERENCE",

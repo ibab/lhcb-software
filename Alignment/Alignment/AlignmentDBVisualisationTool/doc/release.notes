@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-07-28 - Jason Andrews
+ - changed plotAlignDiff to plot all alignments in requested date range
+
 ! 2014-07-25 - Jason Andrews
  - added functionality of plotAlignDiff to plot parameters in the released database
  - added helper functions to parse script arguments and to retrieve multiple alignments

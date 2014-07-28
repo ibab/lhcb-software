@@ -349,7 +349,7 @@ def drawTimeTrendReference( periods, elmGroupName, alignmentsWithIOVs, dofs ):
             region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=TrendPlotRegion, periods=periods )
             region.addReference(getattr(matrix[0], dof))
 
-def drawDiffAlignment( periods, elmGroupName, alignment, dofs, label, draw="P" ):
+def drawDiffAlignment( periods, elmGroupName, alignment, dofs, label=None, draw="P" ):
     folder = getOrCreateFolder(elmGroupName)
     elmGroup = ElementGroups[elmGroupName]
     elmDetName = elmGroupName.split(".")[0]
@@ -359,7 +359,10 @@ def drawDiffAlignment( periods, elmGroupName, alignment, dofs, label, draw="P" )
     for geomName, elmPageName, matrix in alignment.loopWithTimesAndValues(elmDetName, elmGroup, periods ):
         for dof in dofs:
             region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=DiffPlotRegion )
-            region.addAlignment(getattr(matrix[0], dof), label=label)
+            for align, period in zip(matrix, periods):
+                region.addAlignment(getattr(align, dof), period.startTime.date().isoformat() if label == None else label)
+                # region.addAlignment(getattr(align, dof), label = period.startTime.date().isoformat())
+            # region.addAlignment(getattr(matrix[0], dof), label=label)
 
 def drawDiffReference( periods, elmGroupName, alignment, dofs, draw="P" ):
     folder = getOrCreateFolder(elmGroupName)

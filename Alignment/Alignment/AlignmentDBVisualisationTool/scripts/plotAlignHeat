@@ -18,9 +18,9 @@ parser = MyParser(epilog =
                   """
 Valid degrees-of-freedom (dofs): Tx,Ty,Tz,Rx,Ry,Rz
 Values plotted are alignment1 relative to alignment2 (alignment1 - alignment2).
-Enter each alignment as either an IOV or the path of an sqlite file.
-Format IOVs as since,until[,condDBtag] with condDBtag optional.
-If more than one IOV is contained in the provided date range, the latest IOV will be used.
+Enter each alignment as either an sqlite file or a date range for retrieving IOVs from the CondDB.
+Format date ranges as since,until[,CondDBtag] with CondDBtag optional.
+If more than one IOV is contained in the date range, the latest IOV will be used.
 
 Layer name conventions:
                   TT: TT(a,b)/TT(a(X,U), b(X,V))Layer, eg 'TTb/TTbXLayer' etc.

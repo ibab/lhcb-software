@@ -101,7 +101,7 @@ def plotAlignmentParametersComparison( elmGroup, dofs
         binLabels = list()
         for connection, start, end, tag in sliceConnectStringsAndTags:
             if len( connection ) == 0:
-                binLabels.append( start )
+                binLabels.append( None )
             else:
                 binLabels.append( binLabelPattern.match(connection[0][0] ).group("label") )
         logging.debug( "Extracted bin labels from connection strings: %s" % binLabels )
