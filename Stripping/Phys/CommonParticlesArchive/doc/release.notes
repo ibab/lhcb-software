@@ -4,8 +4,10 @@
 ! Purpose     : Archive of CommonParticle releases
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticlesArchive v1r0 2014-07-28 =========================
+
 ! 2014-07-23 - Chris Jones
- - First import. Provides an archive of frozen CommonParticles for each 
+ - First import. Provides an archive of frozen CommonParticles for each
    stripping release. Usage is simple.
 
      from CommonParticlesArchive import CommonParticlesArchiveConf
