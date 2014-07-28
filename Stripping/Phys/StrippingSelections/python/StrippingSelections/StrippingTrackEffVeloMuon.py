@@ -82,7 +82,8 @@ default_config = {
 		,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
 		,	'HLT2PassOnAll': False
          },
-    'STREAMS'     : { 'Calibration' : ['TrackEffVeloMuonLine1','TrackEffVeloMuonLine2']}
+    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffVeloMuonLine1',
+                                       'StrippingTrackEffVeloMuonLine2']}
     }
 
 

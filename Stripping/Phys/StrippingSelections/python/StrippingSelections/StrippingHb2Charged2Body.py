@@ -160,49 +160,49 @@ class Hb2Charged2BodyLines( LineBuilder ) :
                                                  prescale  = config['PrescaleB2Charged2Body'],
                                                  selection = self.B2Charged2Body,
                                                  EnableFlavourTagging = True,
-                                                 RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                 RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.lineB2KPlusPiMinus  = StrippingLine( B2KPlusPiMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.B2KPlusPiMinus,
                                                   EnableFlavourTagging = True,
-                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.lineB2PiPlusKMinus  = StrippingLine( B2PiPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.B2PiPlusKMinus,
                                                   EnableFlavourTagging = True, 
-                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.lineBs2KPlusKMinus  = StrippingLine( Bs2KPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Bs2KPlusKMinus,
                                                   EnableFlavourTagging = True, 
-                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.lineLb2PPlusPiMinus = StrippingLine( Lb2PPlusPiMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2PPlusPiMinus,
                                                   EnableFlavourTagging = True, 
-                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.lineLb2PiPlusPMinus = StrippingLine( Lb2PiPlusPMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2PiPlusPMinus,
                                                   EnableFlavourTagging = True, 
-                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.lineLb2PPlusKMinus  = StrippingLine( Lb2PPlusKMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2PPlusKMinus,
                                                   EnableFlavourTagging = True, 
-                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.lineLb2KPlusPMinus  = StrippingLine( Lb2KPlusPMinusName+"Line",
                                                   prescale  = config['PrescaleB2Charged2Body'],
                                                   selection = self.Lb2KPlusPMinus,
                                                   EnableFlavourTagging = True, 
-                                                  RequiredRawEvents = ["Calo","Muon","Rich","Other"])
+                                                  RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
         
         self.registerLine(self.lineB2Charged2Body)
         self.registerLine(self.lineB2KPlusPiMinus)

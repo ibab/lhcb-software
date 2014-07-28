@@ -7,9 +7,13 @@
 ! 2014-07-25 - Fred Blanc
  - Modified StrippingB2CharmlessQuasi2Body.py for new convention
 
+! 2014-07-25 - Stefano Perazzini
+ - Changed list of raw banks for StrippingHb2Charged2Body.py to the new
+   convention (["Trigger","Muon","Calo","Rich","Velo","Tracker"]).
+
 ! 2014-07-25 - Vanya Belyaev
  - PromtpCharm: restore few lines for Eva and improve documentation
- 
+
 ! 2014-07-23 - Paul Seyfert
  - fixed strippingselections.test_allstreams_instantiation for Tau23Mu and tau2PhiMu lines
 

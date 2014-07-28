@@ -144,14 +144,14 @@ class Beauty2XGammaExclusiveConf(LineBuilder):
         self.Bs2PhiGammaLine = StrippingLine(self.default_name + '_Bs2PhiGamma_Line',
                                              prescale=config['Bs2PhiGammaPreScale'],
                                              postscale=config['Bs2PhiGammaPostScale'],
-                                             RequiredRawEvents = [ "Other","Calo", "Muon","Rich" ],
+                                             RequiredRawEvents = [ "Velo","Tracker","Calo", "Muon","Rich" ],
                                              selection=self.selBs2PhiGamma)
         self.registerLine(self.Bs2PhiGammaLine)
 
         self.Bd2KstGammaLine = StrippingLine(self.default_name + '_Bd2KstGamma_Line',
                                              prescale=config['Bd2KstGammaPreScale'],
                                              postscale=config['Bd2KstGammaPostScale'],
-                                             RequiredRawEvents = [ "Other","Calo", "Muon","Rich" ],
+                                             RequiredRawEvents = [ "Velo","Tracker","Calo", "Muon","Rich" ],
                                              selection=self.selBd2KstGamma)
         self.registerLine(self.Bd2KstGammaLine)
         

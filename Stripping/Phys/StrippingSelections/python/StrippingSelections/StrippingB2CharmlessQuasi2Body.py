@@ -33,7 +33,9 @@ default_config = {
                       'Q2BBMaxCorrM4pi' : 6000.,
                       'Q2BBVtxChi2DOF'  : 6.
                     },
-    'STREAMS'     : { 'BhadronCompleteEvent' : ['StrippingQ2B3piSelectionLine', 'StrippingQ2B4piSelectionLine'] }
+    'STREAMS'     : { 'BhadronCompleteEvent' : ['StrippingB2CharmlessQ2B4piSelectionLine', 
+                                                'StrippingB2CharmlessQ2B3piSelectionLine'] 
+                    }
     }
 
 
@@ -108,7 +110,9 @@ class B2Quasi2Body(LineBuilder) :
 
         self.Q2B4piLine = StrippingLine( B2Q2B4piName+"Line",
                                          prescale = config['Q2BPrescale'],
-                                         selection = tisTosSelection(self.B2CharmlessQ2B4pi) )
+                                         selection = tisTosSelection(self.B2CharmlessQ2B4pi),
+                                         MDSTFlag = True,
+                                         RequiredRawEvents = ["Calo"] )
 
         B2Q2B3piName = self.name + "3piSelection"
         self.B2CharmlessQ2B3pi = makeB2Q2B3pi( B2Q2B3piName,
@@ -122,7 +126,9 @@ class B2Quasi2Body(LineBuilder) :
 
         self.Q2B3piLine = StrippingLine( B2Q2B3piName+"Line",
                                          prescale = config['Q2BPrescale'],
-                                         selection = tisTosSelection(self.B2CharmlessQ2B3pi) )
+                                         selection = tisTosSelection(self.B2CharmlessQ2B3pi),
+                                         MDSTFlag = True,
+                                         RequiredRawEvents = ["Calo"] )
 
         self.registerLine(self.Q2B4piLine)
         self.registerLine(self.Q2B3piLine)

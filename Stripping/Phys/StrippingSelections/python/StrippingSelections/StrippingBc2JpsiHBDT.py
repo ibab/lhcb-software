@@ -93,7 +93,7 @@ class Bc2JpsiHBDTConf(LineBuilder):
                                    prescale = config['LinePrescale'],
                                    postscale = config['LinePostscale'],
                                    selection = self.CutBDTBc2JpsiH,
-                                   RequiredRawEvents = [ "Trigger", "Muon", "Calo", "Rich", "Other" ]
+                                   RequiredRawEvents = [ "Trigger", "Muon", "Calo", "Rich", "Velo","Tracker" ]
                                    )
                                              
         self.registerLine(self.line)
