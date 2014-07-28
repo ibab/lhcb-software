@@ -3,10 +3,10 @@
 # Maintainer : Jibo He
 #============================================================================
 package           TMVAWeights
-version           v1r2
+version           v1r3
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
 branches          cmt doc data
 
