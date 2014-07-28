@@ -5,9 +5,11 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingAlgs v1r13 2014-07-28 =========================
+
 ! 2014-07-14 - Lucio Anderlini
- - Updated StrippingReport to allow correlation studies between running lines. 
-   New features are only run when Correlation property is set to "True" 
+ - Updated StrippingReport to allow correlation studies between running lines.
+   New features are only run when Correlation property is set to "True"
    from (python) configurables.
 
 !========================= StrippingAlgs v1r12 2013-04-05 =========================
@@ -18,7 +20,7 @@
 
 !========================= StrippingAlgs v1r11 2012-12-20 =========================
 
-! 2012-12-20 - Anton Poluektov 
+! 2012-12-20 - Anton Poluektov
  - Widen line name field in StrippingReport
 
 !========================= StrippingAlgs v1r10 2012-11-30 =========================
@@ -33,61 +35,61 @@
  - Other minor clean ups.
 
 !========================= StrippingAlgs v1r8 2012-02-10 =========================
-! 2012-02-08 - Anton Poluektov 
- - StrippingReport - fix bug with calculating retention for streams 
+! 2012-02-08 - Anton Poluektov
+ - StrippingReport - fix bug with calculating retention for streams
 
-! 2012-02-06 - Anton Poluektov 
- - StrippingReport - fix bug with handling bad events 
+! 2012-02-06 - Anton Poluektov
+ - StrippingReport - fix bug with handling bad events
 
 ! 2012-02-01 - Anton Poluektov
- - StrippingReport: 
-   * Get rid of using DecReports. 
+ - StrippingReport:
+   * Get rid of using DecReports.
 
 !========================= StrippingAlgs v1r7 2011-06-21 =========================
-! 2011-05-27 - Anton Poluektov 
- - StrippingReport: 
-   * Changed ':execute' to ':Execute' in ChronoAuditor query to fix the timing 
-     problem with new Gaudi. 
-   * Report shown every N 'good events' rather than every N events. 
+! 2011-05-27 - Anton Poluektov
+ - StrippingReport:
+   * Changed ':execute' to ':Execute' in ChronoAuditor query to fix the timing
+     problem with new Gaudi.
+   * Report shown every N 'good events' rather than every N events.
      Otherwise it was not show if Nth event was not 'good' (did not pass prefilter)
 
 !======================== StrippngAlgs v1r6 2011-02-21 ========================
 
-! 2010-11-11 - Anton Poluektov 
- - StrippingReport: option Latex=True/False. 
+! 2010-11-11 - Anton Poluektov
+ - StrippingReport: option Latex=True/False.
    Latex=False (default) - TWiki-style output
    Latex=True - Latex table output
 
 !======================== StrippngAlgs v1r5 2010-10-04 ========================
 
-! 2010-10-01 - Anton Poluektov 
- - StrippingReport: option NormalizeByGoodEvents, if set to True (default) - 
-   use the number of good events (after pre-filter) to calculate rates. 
-   If False, use the total number of events. 
+! 2010-10-01 - Anton Poluektov
+ - StrippingReport: option NormalizeByGoodEvents, if set to True (default) -
+   use the number of good events (after pre-filter) to calculate rates.
+   If False, use the total number of events.
 
 ! 2010-10-01 - Anton Poluektov
- - StrippingReport fixes: 
+ - StrippingReport fixes:
    * Fixed bug with AcceptBadEvents = False in StrippingConf (bad events were
-     counted as accepted). 
-   * Number of events with event pre-filter is counted correctly (before 
-     prefiltering, not after it). 
-   * Table format compatible with twiki. 
+     counted as accepted).
+   * Number of events with event pre-filter is counted correctly (before
+     prefiltering, not after it).
+   * Table format compatible with twiki.
 
-! 2010-09-20 - Anton Poluektov 
- - StrippingTCK algorithm to set the TCK field in stripping DecReports structure. 
-   The integer TCK is given as a property. Example: 
+! 2010-09-20 - Anton Poluektov
+ - StrippingTCK algorithm to set the TCK field in stripping DecReports structure.
+   The integer TCK is given as a property. Example:
      stck = StrippingTCK(HDRLocation = "/Event/Strip/Phys/DecReports", TCK=12345)
      DaVinci().appendToMainSequence( [ stck ] )
 
-! 2010-09-20 - Anton Poluektov 
- - Added information about # of errors, incidents and slow events in StrippingReport. 
+! 2010-09-20 - Anton Poluektov
+ - Added information about # of errors, incidents and slow events in StrippingReport.
    Look at the number of incidents to see how many events exceed combinatorics limit
-   (either by MaxCombinations or by MaxCandidates). 
+   (either by MaxCombinations or by MaxCandidates).
 
 !======================== StrippngAlgs v1r4 2010-09-06 ========================
 
-! 2010-08-12 - Anton Poluektov 
- - StrippingReport can show timing information (time/event taken by stripping 
+! 2010-08-12 - Anton Poluektov
+ - StrippingReport can show timing information (time/event taken by stripping
    lines in ms). To enable this, ChronoAuditor has to be turned on, e.g.
 
       from Configurables import AuditorSvc, ChronoAuditor
@@ -97,37 +99,37 @@
 
 !======================== StrippngAlgs v1r3 2010-07-08 ========================
 
-! 2010-06-27 - Anton Poluektov 
- - ProcStatusCheck looks for ProcStatus->aborted() rather than counting 
-   the number of entries in ProcStatus. 
+! 2010-06-27 - Anton Poluektov
+ - ProcStatusCheck looks for ProcStatus->aborted() rather than counting
+   the number of entries in ProcStatus.
 
 ! 2010-06-24 - Anton Poluektov
- - Added ProcStatusCheck algorithm: A simple algorithm that checks for 
-   the events aborted by reconstruction algorithms. 
-   Accepts for the events where at least one record is present in ProcStatus 
-   structure. 
-   If OutputLevel == DEBUG, prints out the names and status of the failed 
-   algorithms 
+ - Added ProcStatusCheck algorithm: A simple algorithm that checks for
+   the events aborted by reconstruction algorithms.
+   Accepts for the events where at least one record is present in ProcStatus
+   structure.
+   If OutputLevel == DEBUG, prints out the names and status of the failed
+   algorithms
 
-! 2010-06-21 - Anton Poluektov 
- - Corrected (hopefully) a bug that caused a segfault in StrippingReport output. 
-   String length for the formatted output was insufficient. 
+! 2010-06-21 - Anton Poluektov
+ - Corrected (hopefully) a bug that caused a segfault in StrippingReport output.
+   String length for the formatted output was insufficient.
 
 !======================== StrippngAlgs v1r2 2010-05-24 ========================
 
-! 2010-05-24 - Anton Poluektov 
- - Get rid of warning messages about number of candidates and missing 
-   particles. 
+! 2010-05-24 - Anton Poluektov
+ - Get rid of warning messages about number of candidates and missing
+   particles.
 
-! 2010-05-21 - Anton Poluektov 
- - Fixed calculation of the number of candidates in StrippingAlg and StrippingCheck. 
+! 2010-05-21 - Anton Poluektov
+ - Fixed calculation of the number of candidates in StrippingAlg and StrippingCheck.
    Particles in both KeyedContainer and SharedObjectContainer are now counted
    (previously only KeyedContained worked)
 
 !======================== StrippngAlgs v1r1 2010-04-08 ========================
 
 ! 2010-03-19 - Anton Poluektov
- - Released StrippingReport algorithm to show the statistics of stripping selections. 
+ - Released StrippingReport algorithm to show the statistics of stripping selections.
 
 !======================== StrippngAlgs v1r0 2010-02-22 ========================
 

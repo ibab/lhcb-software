@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.14 2010/02/03 17:59:31 jpalac Exp $ 
+# $Id: requirements,v 1.14 2010/02/03 17:59:31 jpalac Exp $
 # =============================================================================
 # Stripping configuration package
 # =============================================================================
 package StrippingAlgs
-version           v1r12
+version           v1r13
 
 # =============================================================================
 # ======= the structure =======================================================
@@ -17,9 +17,9 @@ include_path none
 use GaudiAlg     v*
 use Boost        v*   LCG_Interfaces
 
-use GaudiPolicy  v*                             
-use Python       v* LCG_Interfaces 
-use AIDA         v* LCG_Interfaces 
+use GaudiPolicy  v*
+use Python       v* LCG_Interfaces
+use AIDA         v* LCG_Interfaces
 
 use DaVinciKernel        v*     Phys
 use LoKiCore             v*     Phys
@@ -27,7 +27,7 @@ use LoKiCore             v*     Phys
 use SelectionLine        v*     Kernel
 
 private
-use LHCbAlgs             v*     Kernel  
+use LHCbAlgs             v*     Kernel
 end_private
 
 # =============================================================================
@@ -42,5 +42,5 @@ apply_pattern component_library library=StrippingAlgs
 # =============================================================================
 
 # =============================================================================
-# The END 
+# The END
 # =============================================================================
