@@ -10,7 +10,14 @@
 <text>RivetLHCbMCTestAnalysis.so</text>
 <text>$GENTUNEROOT/tests/options/MC_LHCb_GENERIC.cc</text>
 <text>-g</text>
+<!-- ignore warnings for BOOST 1.53 and gcc 4.8 -->
+<text>-Wno-unused-local-typedefs</text>
 </set></argument>
+<argument name="unsupported_platforms">
+<set>
+<text>.*-gcc4(6|3)-.*</text>
+</set>
+</argument>
 <argument name="use_temp_dir">
 <enumeral>true</enumeral>
 </argument>

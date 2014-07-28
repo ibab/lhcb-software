@@ -6,12 +6,18 @@
 !-----------------------------------------------------------------------------
 
 !=========================== GenTune v2r1 2014-07-28 =========================
+! 2014-07-28 - Alex Grecu
+ - modified qmtest to ignore -Wunused-local-typedefs warnings for BOOST 1.53 
+   when compiling with gcc48. Separate qmtests are needed for gcc46 and gcc48 
+   so one of the tests will remain in UNTESTED state.
+
+! 2014-06-16 - Alex Grecu
+ - released a new version of scripts/lhcbLFT2StdMap.py
+
 ! 2014-06-15 - Alex Grecu
  - corrected typo in Python files in options, options/example
  - added exec_prefix variable in environment as work-around Rivet 1.9.0 helper
    script bug
-! 2014-06-16 - Alex Grecu
- - released a new version of scripts/lhcbLFT2StdMap.py
 
 !========================== GenTune v2r0p2 2013-10-10 ========================
 ! 2013-09-23 - Marco Clemencic
