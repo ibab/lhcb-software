@@ -4,19 +4,21 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r11 2014-07-28 =========================
+
 ! 2014-07-25 - Chris Jones
- - Remove "Other" from the list of valid RawEvent banks. 
+ - Remove "Other" from the list of valid RawEvent banks.
    Now split into "Velo" and "Tracker".
 
 ! 2014-07-17 - Stefano Perazzini
- - Added check for MDSTFlag for initialized stripping lines 
+ - Added check for MDSTFlag for initialized stripping lines
 
-! 2014-07-16 - Anton Poluektov 
- - Reworked implementation of RelatedInfo storage in StrippingLine. 
-   Single argument in StrippingLine constructor "RelatedinfoTools", which is 
-   a list of RelatedInfo tools configuration dictionaries. 
-   Example: 
- 
+! 2014-07-16 - Anton Poluektov
+ - Reworked implementation of RelatedInfo storage in StrippingLine.
+   Single argument in StrippingLine constructor "RelatedinfoTools", which is
+   a list of RelatedInfo tools configuration dictionaries.
+   Example:
+
     StrippingLine( ...
        RelatedInfoTools = [
         { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
@@ -31,25 +33,25 @@
           'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
           'TopSelection' : selD02hhmumu,
           'Location' : 'P2CVD'
-        },  
+        },
       ]
 
-   'TopSelection' can be only the Selection object. All RelatedInfo is stored under top selection output TES location. 
-   If RelatedInfo needs to be stored for only the TopSelection, use 'Location' dictionary key which specifies the 
-   output location of the RelatedInfo structure. 
-   If RelatedInfo has to be calculated for multiple location (or the location which is different from the TopSelection), 
-   use 'Locations' key, which should be the dictionary of ('Particle' : 'Location') pairs, where 'Particle' can be either 
-   selection or TES location for partciles in the tree. In that case, also use 'RecursionLevel' which should be sufficient 
-   to reach the daughters (counting from the top of the tree, e.g. RecursionLevel = 1 for direct daughters, =2 for 
+   'TopSelection' can be only the Selection object. All RelatedInfo is stored under top selection output TES location.
+   If RelatedInfo needs to be stored for only the TopSelection, use 'Location' dictionary key which specifies the
+   output location of the RelatedInfo structure.
+   If RelatedInfo has to be calculated for multiple location (or the location which is different from the TopSelection),
+   use 'Locations' key, which should be the dictionary of ('Particle' : 'Location') pairs, where 'Particle' can be either
+   selection or TES location for partciles in the tree. In that case, also use 'RecursionLevel' which should be sufficient
+   to reach the daughters (counting from the top of the tree, e.g. RecursionLevel = 1 for direct daughters, =2 for
    granddaughters etc.)
 
 ! 2014-07-15 - Stefano Perazzini
- - Added MDSTFlag to StrippingLine to allow lines to decide if MDST.DST 
+ - Added MDSTFlag to StrippingLine to allow lines to decide if MDST.DST
    is needed or not
  - Added activeLines to StrippingConf in order to retrive the stripping lines
    run by a particular StrippingConf
 
-! 2014-07-02 - Anton Poluektov 
+! 2014-07-02 - Anton Poluektov
  - Remove support for outdated StrippingMember and StrippingTool
 
 ! 2014-07-02 - Chris Jones
@@ -58,7 +60,7 @@
    This information can then be used, if enabled in the stream writer
    configuration that the line is included in, to selectively only write out
    the parts of the Raw Event that lines require, and only in the events that
-   those lines fire in. 
+   those lines fire in.
    The new option is 'RequiredRawEvents' which should be set to a list of
    strings which are the names of the RawEvents to include e.g.
 
@@ -72,78 +74,78 @@
    as these are always automatically saved for all events in both DST and uDST
    streams.
 
-! 2014-06-24 - Anton Poluektov 
- - Add "UseRelatedInfo" option to StrippingConf. If the option is not 
-   specified in StrippingLine, the setting in StrippingConf is used. 
+! 2014-06-24 - Anton Poluektov
+ - Add "UseRelatedInfo" option to StrippingConf. If the option is not
+   specified in StrippingLine, the setting in StrippingConf is used.
 
-! 2014-06-23 - Anton Poluektov 
- - Add an option "UseRelatedInfo" to StrippingLine constructor to use the new 
-   RelatedInfo persistency instead of ExtraInfo. For now is set to FALSE. 
+! 2014-06-23 - Anton Poluektov
+ - Add an option "UseRelatedInfo" to StrippingLine constructor to use the new
+   RelatedInfo persistency instead of ExtraInfo. For now is set to FALSE.
 
 !========================= StrippingConf v4r10 2014-01-22 =========================
 
-! 2014-01-16 - Anton Poluektov 
- - Added ExtraInfoSelections argument to StrippingLine to specify the top-level 
-   selection(s) for which to store ExtraInfo. 
-   If None (default), use top-level selection of the line. 
-   Otherwise, the list of (Merged)Selections should be provided as in the 
-   case of ExtraInfoDaughters. 
+! 2014-01-16 - Anton Poluektov
+ - Added ExtraInfoSelections argument to StrippingLine to specify the top-level
+   selection(s) for which to store ExtraInfo.
+   If None (default), use top-level selection of the line.
+   Otherwise, the list of (Merged)Selections should be provided as in the
+   case of ExtraInfoDaughters.
 
-! 2014-01-14 - Anton Poluektov 
- - Added two more arguments for StrippingLine related to ExtraInfo. 
-   These are needed only if one wants to store the ExtraInfo for 
-   particles down the decay tree. By default, only the info for top 
-   of the tree is stored. One can add daughters too by configuring the 
-   following: 
+! 2014-01-14 - Anton Poluektov
+ - Added two more arguments for StrippingLine related to ExtraInfo.
+   These are needed only if one wants to store the ExtraInfo for
+   particles down the decay tree. By default, only the info for top
+   of the tree is stored. One can add daughters too by configuring the
+   following:
 
      * ExtraInfoDaughters = [sel1, sel2]
-       Give the list of Selections (or MergedSelections) for which to 
-       store ExtraInfo. Other selection types are not supported. 
+       Give the list of Selections (or MergedSelections) for which to
+       store ExtraInfo. Other selection types are not supported.
      * ExtraInfoRecursionLevel = 1
-       Maximum depth in the tree the AddExtraInfo will descend. Equal to 1 by default. 
+       Maximum depth in the tree the AddExtraInfo will descend. Equal to 1 by default.
 
-! 2014-01-10 - Anton Poluektov 
- - Added ExtraInfoTools argument to StrippingLine. If not None, it adds 
-   AddExtraInfo algorithm and configures ExtraInfo tools (e.g. calculation 
-   of cone variables or vertex isolation variables to be stored in microDST). 
-   Example: 
+! 2014-01-10 - Anton Poluektov
+ - Added ExtraInfoTools argument to StrippingLine. If not None, it adds
+   AddExtraInfo algorithm and configures ExtraInfo tools (e.g. calculation
+   of cone variables or vertex isolation variables to be stored in microDST).
+   Example:
 
-     ExtraInfoTools = [ 
-                        { "Type" : "ConeVariables", 
-                          "ConeAngle" : 1.0, 
+     ExtraInfoTools = [
+                        { "Type" : "ConeVariables",
+                          "ConeAngle" : 1.0,
                           "Variables" = ["ptasy", "mult"] }
-                      ] 
+                      ]
 
 !========================= StrippingConf v4r9 2012-07-04 =========================
 
-! 2013-07-02 - Anton Poluektov 
- - Added EnableFlavourTagging=True/False flag to StrippingLine to run the 
-   BTagging tool in stripping. 
+! 2013-07-02 - Anton Poluektov
+ - Added EnableFlavourTagging=True/False flag to StrippingLine to run the
+   BTagging tool in stripping.
 
 !========================= StrippingConf v4r8 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
  - Added CMake configuration file.
 
-! 2012-11-24 - Anton Poluektov 
+! 2012-11-24 - Anton Poluektov
  - Fix typos in StrippingLine
 
-! 2012-10-10 - Anton Poluektov 
+! 2012-10-10 - Anton Poluektov
  - Change default TES prefix for DecReports from None (=stream-dependent) to 'Strip'
 
 !========================= StrippingConf v4r7 2012-09-01 =========================
 
-! 2012-08-28 - Anton Poluektov 
- - Prevent instantiating the lines with zero prescale. 
+! 2012-08-28 - Anton Poluektov
+ - Prevent instantiating the lines with zero prescale.
 
 !========================= StrippingConf v4r6 2012-07-27 =========================
 
-! 2012-07-27 - Anton Poluektov 
- - Check that public tools have default configuration. Print warning if not. 
+! 2012-07-27 - Anton Poluektov
+ - Check that public tools have default configuration. Print warning if not.
 
 !========================== StrippingConf v4r5 2012-04-27 ====================
 
-! 2012-04-15 - Anton Poluektov 
+! 2012-04-15 - Anton Poluektov
  - Reduce output from stripping sequencers
 
 !========================== StrippingConf v4r4 2012-03-01 ====================
@@ -162,13 +164,13 @@
 ! 2012-02-07 - Chris Jones
  - Remove import of GaudiConf
 
-! 2012-02-01 - Anton Poluektov 
- - Change log level of most annoying messages from info to debug. 
+! 2012-02-01 - Anton Poluektov
+ - Change log level of most annoying messages from info to debug.
 
-! 2012-01-22 - Anton Poluektov 
+! 2012-01-22 - Anton Poluektov
  - Remove lots of printout (move to debug stream)
- - Store DecReports to /Event/<StreamName>/Phys/DecReports by default. 
-   Can be modified by TESPrefix option in StrippingConf, StrippingStream or 
+ - Store DecReports to /Event/<StreamName>/Phys/DecReports by default.
+   Can be modified by TESPrefix option in StrippingConf, StrippingStream or
    StrippingLine
 
 !========================= StrippingConf v4r2p1 2011-07-20 =========================
@@ -185,8 +187,8 @@
 
 !========================== StrippingConf v4r1 2011-03-10 ====================
 
-! 2011-03-09 - Anton Poluektov 
- - Fix outputLocation passed to StrippingAlg. 
+! 2011-03-09 - Anton Poluektov
+ - Fix outputLocation passed to StrippingAlg.
 
 ! 2011-03-04 - Juan Palacios
  - Add StrippingLine.prescale() method.
@@ -197,8 +199,8 @@
 ! 2011-02-22 - Juan Palacios
  - StrippingConf.StrippingLine
   . Separate handler for plain Configurables.
-  . Default handler now treats Selection types. 
-  . Add default handler for Configurables.   
+  . Default handler now treats Selection types.
+  . Add default handler for Configurables.
   . Add support for PassThroughSelection, VoidEventSelection
   . Disallow use of SelectionSequence
 
@@ -242,13 +244,13 @@
  - tests/test_strippingline.py
   . Remove outputSelection() tests.
 
-! 2010-12-15 - Anton Poluektov 
+! 2010-12-15 - Anton Poluektov
  - python/StrippingConf/StrippingLine.py
   . Remove outputSelection()
 
 ! 2010-11-25 - Juan Palacios
  - tests/test_strippingline.py
-  . Adapt to new locations from selection objects. Remove outputSelection() 
+  . Adapt to new locations from selection objects. Remove outputSelection()
     tests.
 
 ! 2010-11-25 - Juan Palacios
@@ -265,19 +267,19 @@
  - python/StrippingConf/StrippingLine.py
   . Only treat EventSelection specially if non-empty outputLocation.
 
-! 2010-10-16 - Anton Poluektov 
- - python/StrippingConf/StrippingStream.py 
+! 2010-10-16 - Anton Poluektov
+ - python/StrippingConf/StrippingStream.py
 
-   * Removed support for TES=True option in StrippingStream (used previously to produce ETC, 
-     not needed anymore with DecReport and TupleToolStripping). 
-     TES=True raises exception, TES=False issues warning. 
-   
+   * Removed support for TES=True option in StrippingStream (used previously to produce ETC,
+     not needed anymore with DecReport and TupleToolStripping).
+     TES=True raises exception, TES=False issues warning.
+
    * Added "clone()" method for StrippingStream
 
 
 ! 2010-10-14 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
-  . Constructor from PhysSelPython.Wrappers.EvenrSelection takes care that 
+  . Constructor from PhysSelPython.Wrappers.EvenrSelection takes care that
     algorithm's name is bound to stripping line's name, for cases where
     EventSelection produces data.
   . Remove StrippingLine ctor from obsolete SelSequence
@@ -290,13 +292,13 @@
 ! 2010-10-11 - Anton Poluektov
 
  - python/StrippingConf/StrippingLine.py
- 
-   Move determination of outputLocations and filterMembers from createConfigurable to the 
-   constructor of StrippingLine. This allows to get outputLocation and filterMembers for 
-   a line without creating StrippingStream or StrippingConf. 
-   
- - tests/test_strippingline.py 
-  
+
+   Move determination of outputLocations and filterMembers from createConfigurable to the
+   constructor of StrippingLine. This allows to get outputLocation and filterMembers for
+   a line without creating StrippingStream or StrippingConf.
+
+ - tests/test_strippingline.py
+
    Changed expected name of default CheckPV algorithm ( checkPV -> checkPVmin1 )
 
 !========================== StrippingConf v3r8 2010-10-04 =================
@@ -305,12 +307,12 @@
 
  - python/StrippingConf/StrippingLine.py
 
-      add new property FILTER, to run LoKi::VoidFilter instance 
+      add new property FILTER, to run LoKi::VoidFilter instance
       before entering into line
 
-       - corresponding filter is bound to the line 
-       - the filter is not propagated to underlying c++ StrippingAlg 
-      
+       - corresponding filter is bound to the line
+       - the filter is not propagated to underlying c++ StrippingAlg
+
        The usage:
 
        a. simple string:
@@ -319,24 +321,24 @@
           FILTER = " CONTAINS ( 'Rec/Track/Best') < 400  "
           )
 
-       b. tuple: ( code, preambulo) 
+       b. tuple: ( code, preambulo)
 
        line = StrippingLine ( ... ,
-  		    FILTER =  ( " TrSOURCE( 'Rec/Track/Best' , TrLONG & ( TrCHI2 < 5 ) ) < 200  " , 
-                      [ "from LoKiTracks.decorators import *" ] ) 
-	
+  		    FILTER =  ( " TrSOURCE( 'Rec/Track/Best' , TrLONG & ( TrCHI2 < 5 ) ) < 200  " ,
+                      [ "from LoKiTracks.decorators import *" ] )
+
           )
 
        c. dictionary with full configuration of LoKi::VoidFilter algoithm
 
        line = StrippingLine ( ... ,
-  		    FILTER =  { 'Code'        : " TrSOURCE( 'Rec/Track/Best' , TrLONG & ( TrCHI2 < 5 ) ) < 200  " , 
-                      'Preambulo'   : [ "from LoKiTracks.decorators import *" ] , 
-                      'OutputLevel' : 3  } 
+  		    FILTER =  { 'Code'        : " TrSOURCE( 'Rec/Track/Best' , TrLONG & ( TrCHI2 < 5 ) ) < 200  " ,
+                      'Preambulo'   : [ "from LoKiTracks.decorators import *" ] ,
+                      'OutputLevel' : 3  }
           )
 
-  - cmt/requirements 
-     version increment to v3r8 
+  - cmt/requirements
+     version increment to v3r8
 
 !========================== StrippingConf v3r7 2010-08-20 =================
 
@@ -344,11 +346,11 @@
 
  - python/StrippingConf/StrippingLine.py
 
-     make bindMembers aware of EventSelection from PhysSel/Wrappers.py 
- 
-! 2010-08-05 - Anton Poluektov 
+     make bindMembers aware of EventSelection from PhysSel/Wrappers.py
+
+! 2010-08-05 - Anton Poluektov
  - python/StrippingConf/StrippingLine.py
-   checkPV argument of StrippingLine can now be: 
+   checkPV argument of StrippingLine can now be:
      * Boolean: if True, at least 1 PV is required (as before). By default checkPV=True
      * Integer: Minimum number of PVs
      * tuple of 2 elements: Minimum and maximum number of PVs
@@ -369,21 +371,21 @@
   . Raise exception instead of asserting when lines have duplicate output locations.
   . Do not write to stderr in this case, let the exception do the work.
 
-! 2010-07-06 - Anton Poluektov 
-  - New options 'MaxCandidates' and 'MaxCombinations' for 
-    StrippingConf, StrippingStream and StrippingLine. They apply combinatorics 
-    limits to CombineParticles in the stripping lines. Options given at the 
+! 2010-07-06 - Anton Poluektov
+  - New options 'MaxCandidates' and 'MaxCombinations' for
+    StrippingConf, StrippingStream and StrippingLine. They apply combinatorics
+    limits to CombineParticles in the stripping lines. Options given at the
     upper level (e.g. StrippingConf) are overridden by the lower level
-    (e.g. StrippingStream or StrippingLine). 
-    By default, both 'MaxCandidates' and 'MaxCombinations' are 'None', 
-    meaning that no combinatorics limit is applied. 
-    
-  - Check that the output locations of all active lines in StrippingConf 
-    are unique. Otherwise, the error is raised. 
+    (e.g. StrippingStream or StrippingLine).
+    By default, both 'MaxCandidates' and 'MaxCombinations' are 'None',
+    meaning that no combinatorics limit is applied.
 
-! 2010-06-28 - Anton Poluektov 
-  - BadEventSelection and AcceptBadEvents can be given to StrippingConf. 
-    However, those in StrippingStream have priority. 
+  - Check that the output locations of all active lines in StrippingConf
+    are unique. Otherwise, the error is raised.
+
+! 2010-06-28 - Anton Poluektov
+  - BadEventSelection and AcceptBadEvents can be given to StrippingConf.
+    However, those in StrippingStream have priority.
 
 !========================== StrippingConf v3r5 2010-06-24 =================
 
@@ -393,50 +395,50 @@
 
 ! 2010-06-23 - Juan Palacios
  - python/StrippingConf/StrippingLine.py
-  . StrippingLines constructed from Selection, SelectionSequence, MergedSelection 
+  . StrippingLines constructed from Selection, SelectionSequence, MergedSelection
     or AutomaticData write data to 'Phys/'+ line.subname()
 
 
-! 2010-06-23 - Anton Poluektov 
+! 2010-06-23 - Anton Poluektov
  - python/StrippingConf/StrippingLine.py
-   Make bindMembers to be called only in the StrippingLine constructor. 
+   Make bindMembers to be called only in the StrippingLine constructor.
 
 ! 2010-06-22 - Juan Palacios
  - python/StripingConf/StrippingLine.py
   . Make it understand AutomaticData.
 
 ! 2010-06-21 - Anton Poluektov
- - More logical interface for treating bad events in StrippingStream. Options: 
+ - More logical interface for treating bad events in StrippingStream. Options:
      * BadEventSelection - algorithm that should pass for bad events
-     * AcceptBadEvents   - If True, bad events will be accepted 
-                           by StrippingStream sequencer (default). 
-   The options can be changed after the stream constructor, e.g. 
+     * AcceptBadEvents   - If True, bad events will be accepted
+                           by StrippingStream sequencer (default).
+   The options can be changed after the stream constructor, e.g.
      stream = StrippingStream("Stream")
      stream.BadEventSelection = filter
      stream.AcceptBadEvents = False
 
 ! 2010-06-19 - Anton Poluektov
  - Options BadEventSelection and GoodEventSelection in StrippingStream
-   and corresponding member functions SetBadEventSelection and SetGoodEventSelection. 
-   
-   If an algo is passed as BadEventSelection, it will run before all the lines 
-   of the stream. If it passes, the lines will NOT be run, but the event will be 
-   accepted. Use this if bad events have to be stored on stream DST.
-   
-   If GoodEventSelection is given, the lines will run only if it passes. 
-   If it fails (bad event), the event will not be accepted. 
-   Use this if bad events should NOT be stored on stream DST. 
+   and corresponding member functions SetBadEventSelection and SetGoodEventSelection.
 
-   BadEventSelection and GoodEventSelection cannot be given at the same time. 
-   By default, both are None. 
+   If an algo is passed as BadEventSelection, it will run before all the lines
+   of the stream. If it passes, the lines will NOT be run, but the event will be
+   accepted. Use this if bad events have to be stored on stream DST.
+
+   If GoodEventSelection is given, the lines will run only if it passes.
+   If it fails (bad event), the event will not be accepted.
+   Use this if bad events should NOT be stored on stream DST.
+
+   BadEventSelection and GoodEventSelection cannot be given at the same time.
+   By default, both are None.
 
 !========================== StrippingConf v3r4 2010-06-21 =================
 
-! 2010-06-21 - Juan Palacios for Anton Poluektov 
+! 2010-06-21 - Juan Palacios for Anton Poluektov
  - Add BadEventSelection attribute to StrippingStream. Events satisfying selection
    are excluded from the stripping selections but are kept in the DST.
 
-! 2010-06-01 - Anton Poluektov 
+! 2010-06-01 - Anton Poluektov
  - Added stream decisions (OR of all stream lines) to stripping DecReports
 
 !========================== StrippingConf v3r3 2010-05-26 =================
@@ -448,10 +450,10 @@
 ! 2010-05-21 - Juan Palacios
  - Remove some printouts in StrippingLine.filterMembers()
 
-! 2010-05-21 - Anton Poluektov 
- - Fixed bug in filterMembers affecting StrippingLines with GaudiSequencers: 
-   FilterDesktops were not configured correctly for them by DSTwriter, 
-   which caused missing candidates on DST. 
+! 2010-05-21 - Anton Poluektov
+ - Fixed bug in filterMembers affecting StrippingLines with GaudiSequencers:
+   FilterDesktops were not configured correctly for them by DSTwriter,
+   which caused missing candidates on DST.
 
 ! 2010-05-20 - Anton Poluektov
  - Creating StrippingLine with a duplicate name now causes DaVinci to exit
@@ -460,24 +462,24 @@
 !========================== StrippingConf v3r2 2010-05-15 =================
 
 ! 2010-04-26 - Anton Poluektov
- - Introduced limit on number of candidates created by CombineParticles 
-   (2000 at the moment). 
+ - Introduced limit on number of candidates created by CombineParticles
+   (2000 at the moment).
 
 ! 2010-04-16 - Anton Poluektov
  - Warning is printed if the StrippingLine with duplicate name is created
  - Fixed printout of StrippingAlg from python (Filter sequence was not printed)
 
-! 2010-04-15 - Anton Poluektov 
+! 2010-04-15 - Anton Poluektov
  - Fixed typo in line cloning with modification of GaudiSequencer slots ('keq'->'key')
- - Fixed bug that prevented modification of InputLocations of StrippingMember while 
-   cloning lines. 
+ - Fixed bug that prevented modification of InputLocations of StrippingMember while
+   cloning lines.
 
 !========================== StrippingConf v3r1 2010-04-08 =================
-! 2010-03-24 - Anton Poluektov 
+! 2010-03-24 - Anton Poluektov
  - Added StrippingLine.filterMembers() and StrippingStream.filterMembers() functions
    to get the flat list of all filter algorithms (CombineParticles, FilterDesktops etc.)
- - Removed support for HLT-like (dictionary of cuts) settings for configurable selections. 
-   Settings can be applied in plain python in a more transparent way. 
+ - Removed support for HLT-like (dictionary of cuts) settings for configurable selections.
+   Settings can be applied in plain python in a more transparent way.
 
 ! 2010-03-22 - Anton Poluektov
  - python/StrippingConf/StrippingLine.py
@@ -506,44 +508,44 @@
  - cmt/requirements
   . Use PhysSel/PhysSelPyhton.
 
-! 2010-02-22 - Anton Poluektov 
- - TESPrefix property in StrippingConf. Defaults to 'Strip'. 
-   Is used both to specify the HltDecReport output location (is prepended to already 
-   existing HDRLocation property) in case of DST output and to specify the location 
-   of candidates for SETC output. 
-   HDRLocation now defaults to 'Phys/DecReports'. 
+! 2010-02-22 - Anton Poluektov
+ - TESPrefix property in StrippingConf. Defaults to 'Strip'.
+   Is used both to specify the HltDecReport output location (is prepended to already
+   existing HDRLocation property) in case of DST output and to specify the location
+   of candidates for SETC output.
+   HDRLocation now defaults to 'Phys/DecReports'.
 
 ! 2010-02-22 - Anton Poluektov
- - Fixed calculation of the number of candidates for HltDecReport. 
+ - Fixed calculation of the number of candidates for HltDecReport.
 
-! 2010-02-19 - Anton Poluektov 
- - Added HDRLocation argument to StrippingConf. 
-   Location of the stripping HltDecReport. Equals to 'Strip/Phys/DecReports' by default. 
+! 2010-02-19 - Anton Poluektov
+ - Added HDRLocation argument to StrippingConf.
+   Location of the stripping HltDecReport. Equals to 'Strip/Phys/DecReports' by default.
 
 ! 2010-02-18 - Juan Palacios
  - Moved StrippingAlg and StrippingCheck to Phys/StrippingAlgs.
  - This package now only contains python code.
  - Version increased to v3r0
 
-! 2010-02-13 - Anton Poluektov 
+! 2010-02-13 - Anton Poluektov
  - Added configuration support for settings stored in StrippingSettings
  - StrippingConfigurableUser class with getProps() method
 
 !========================== StrippingConf v2r0 2010-02-02 ===================
 
-! 2010-02-03 - Anton Poluektov 
- - Temporary measures to suppress "Invalid decision ID" warnings while StrippingANNSvc 
-   is absent. 
+! 2010-02-03 - Anton Poluektov
+ - Temporary measures to suppress "Invalid decision ID" warnings while StrippingANNSvc
+   is absent.
 
 ! 2010-02-01 - Anton Poluektov
- - Make alorithm name the default outputSelection for bindMembers 
+ - Make alorithm name the default outputSelection for bindMembers
 
-! 2010-01-29 - Anton Poluektov 
- - Small bugfixes, added SelSequence handler for bindMembers. 
+! 2010-01-29 - Anton Poluektov
+ - Small bugfixes, added SelSequence handler for bindMembers.
 
 ! 2010-01-28 - Anton Poluektov
- - First commit of StrippingConf using Selection::Line. Not fully functional with HltDecReport yet, 
-   but should not break the nightlies. 
+ - First commit of StrippingConf using Selection::Line. Not fully functional with HltDecReport yet,
+   but should not break the nightlies.
 
 ! 2010-01-13
  - StrippingLine.py - Modified to use HltLine and HltDecReport
@@ -559,30 +561,30 @@
   . Move some configurables imports to the relevant function bodies.
 
 ! 2009-11-18 - Anton POLUEKTOV
- - Printout for StrippingConf/StrippingStream/StrippingAlg.  
-   One can do "print StrippingConf" from python now. 
- - Check if the line was declared but not appended to any stream. 
-   Warning is produced in this case. 
+ - Printout for StrippingConf/StrippingStream/StrippingAlg.
+   One can do "print StrippingConf" from python now.
+ - Check if the line was declared but not appended to any stream.
+   Warning is produced in this case.
 
 ! 2009-11-12 - Anton POLUEKTOV
  - StrippingLine.py: bug fix with ODIN and L0 filters (missing import)
 
-! 2009-11-06 - Anton POLUEKTOV 
- - StrippingLine.py: Added ODIN and L0 filters to the line options. 
+! 2009-11-06 - Anton POLUEKTOV
+ - StrippingLine.py: Added ODIN and L0 filters to the line options.
 
 !========================== StrippingConf v1r7 2009-10-28 ===================
 
 ! 2009-10-28 - Anton POLUEKTOV
  - Configuration.py
   * Default name for main stripping sequencer is back to "StrippingGlobal"
-    for backwards compatibility. 
-  * Use StrippingConf._name instead of fixed "StrippingGlobal" in the 
-    list of selections names. 
+    for backwards compatibility.
+  * Use StrippingConf._name instead of fixed "StrippingGlobal" in the
+    list of selections names.
 
 ! 2009-10-19 - Juan PALACIOS
  - Configuration.py
   . Make into plain python class. Interface completely backwards compatible.
-  . Extensions to interface: add appendStreams( streams ) method accepting a 
+  . Extensions to interface: add appendStreams( streams ) method accepting a
     list of StrippingStreams. Add Streams argument to constructor, also taking
     a list of StrippingStreams.
  - cmt/requirements
@@ -590,36 +592,36 @@
 
 ! 2009-10-13 - Anton Poluektov
 
- - Major changes in Configuration.py. StrippingConf does not interact with 
-   DaVinci internally, but rather provides an interface with the streams. 
-   This requires corresponding changes in StrippingSelections jobs. 
+ - Major changes in Configuration.py. StrippingConf does not interact with
+   DaVinci internally, but rather provides an interface with the streams.
+   This requires corresponding changes in StrippingSelections jobs.
 
- - Streams are not defined in StrippingLine constructor now. 
-   StrippingLines have to be attached to StrippingStreams in job options. 
+ - Streams are not defined in StrippingLine constructor now.
+   StrippingLines have to be attached to StrippingStreams in job options.
 
  - New algorithm StrippingCheck. Used instead of StrippingAlg for SETC tagger
    (checks if the TES location is not empty). Activated by TES=True option
-   of StrippingConf. 
+   of StrippingConf.
 
 
 !========================== StrippingConf v1r6 2009-10-06 ===================
 ! 2009-10-05 - Anton POLUEKTOV
 
  - Fixed missing "Phys/" in StrippingLine.outputLocation() used for DST writing in case of
-   "old" (i.e. not based on SelectionSequence) selections. 
- - Added "SETC" output type. This does not run selections, but just checks the 
-   existence of the corresponding TES locations using TESCheck. To be used for tagger. 
+   "old" (i.e. not based on SelectionSequence) selections.
+ - Added "SETC" output type. This does not run selections, but just checks the
+   existence of the corresponding TES locations using TESCheck. To be used for tagger.
 
 !========================== StrippingConf v1r5 2009-10-02 ===================
 
 ! 2009-10-01 - Juan PALACIOS
  - python/StrippingConf/StrippingLine.py
-  . Add concept of outputLocation() on top of outputSelection(). 
+  . Add concept of outputLocation() on top of outputSelection().
     outputLocation() gives a useful and explicit TES location for the output
-    of a StrippingLine or bindMembers. outputSelection() is the name of the 
+    of a StrippingLine or bindMembers. outputSelection() is the name of the
     algorithm writing the interesting data.
  - python/StrippingConf/StrippingStream.py
-  . outputLocations() are now constructed by calling the outputLocation() 
+  . outputLocations() are now constructed by calling the outputLocation()
     method of each member, instead of calling outputSelection() and pre-pending
     a "Phys/"
 
@@ -635,15 +637,15 @@
  - cmt/requirements
   . Increase version to v1r4p1
 
-! 2009-08-27 - Anton Poluektov  
-  - The output location for a line with the GaudiSequencer as the last stage 
-    was deterimned incorreclty in bindMembers. Caused crash while writing DST. Fixed. 
+! 2009-08-27 - Anton Poluektov
+  - The output location for a line with the GaudiSequencer as the last stage
+    was deterimned incorreclty in bindMembers. Caused crash while writing DST. Fixed.
 
 !========================== StrippingConf v1r4 2009-08-27 ===================
 
 ! 2009-08-26 - Juan Palacios
  - python/StrippingConf/StrippingStream.py
-  . Class StrippingLine is now an LHCbConfigurableUser. 
+  . Class StrippingLine is now an LHCbConfigurableUser.
   . Simplify code.
   . Fix bug in outputLocations: "/Phys" -> "Phys"
  - python/StrippongConf/Configuration.py
@@ -663,23 +665,23 @@
 
 ! 2009-07-31 - Anton Poluektov
 
-  * Added checkPV attribute to the StrippingLine. checkPV=True by default. 
-    If checkPV is True, it adds an instance of CheckPV algorithm before 
-    all algorithms of the line are run, that requires at least one 
-    primary vertex in event. 
+  * Added checkPV attribute to the StrippingLine. checkPV=True by default.
+    If checkPV is True, it adds an instance of CheckPV algorithm before
+    all algorithms of the line are run, that requires at least one
+    primary vertex in event.
 
 !========================== StrippingConf v1r2 2009-07-16 ===================
 
 ! 2009-07-10 - Anton Poluektov
-   * Fixed the bug due to ModeOR=TRUE in the global sequencer for ETC output. 
-     (after the positive decision for one of the selections, all the rest was 
+   * Fixed the bug due to ModeOR=TRUE in the global sequencer for ETC output.
+     (after the positive decision for one of the selections, all the rest was
       not called at all)
 
 ! 2009-07-07 - Anton Poluektov
    * Introduced a new option for StrippingConf(): StreamFile
      Example: StrippingConf().StreamFile["BExclusive"] = "Common.dst"
-              will write the BExclusive stream to Common.dst. 
-              Writing many streams to one .dst file is possible. 
+              will write the BExclusive stream to Common.dst.
+              Writing many streams to one .dst file is possible.
 
 !========================== StrippingConf v1r1 2009-06-23 ===================
 ! 2009-06-17 - Anton Poluektov
@@ -690,22 +692,22 @@
 
 ! 2009-06-02 - Anton Poluektov
    * Fixed DST output (but not completely, every event is written 2 times!)
-   * ActiveStreams now takes "subname" of the line, not "name" 
+   * ActiveStreams now takes "subname" of the line, not "name"
      (e.g. "B2DPi" rather than "StrippingB2DPi")
 
 ! 2009-05-22 - Anton Poluektov
- - Bug fixes related to ETC writing in Configuration.py : 
+ - Bug fixes related to ETC writing in Configuration.py :
    * appendToMoniSequence seems not to work, use MainSequence instead
    * appended StreamSequencer (was forgotten)
    * IgnoreFilterPassed = TRUE for this sequencer
 
 ! 2009-05-22 - Patrick Koppenburg
- - DaVinciWriteDst now (tag pkoppenb_20090522) populates DaVinci 
+ - DaVinciWriteDst now (tag pkoppenb_20090522) populates DaVinci
    sequencer directly. No need to pass sequnecer anymore.
 
 ! 2009-05-21 - Patrick Koppenburg
  - Allow for output None
- - Use DaVinci.appendToMainSequence and appendToMoniSequence. 
+ - Use DaVinci.appendToMainSequence and appendToMoniSequence.
    Requires Phys/DaVinci with tag pkoppenb_20090521 or later
 
 ! 2009-05-20 - Patrick Koppenburg
@@ -713,10 +715,10 @@
 
 ! 2009-05-15  Anton Poluektov
 
-  Initial release. Content of this package: 
+  Initial release. Content of this package:
     * StrippingLine python objects  (converted from HltConf/HltLines v2r7)
     * StrippingAlg C++ configurable (converted from HltCommon/HltLine v5r5)
 
 ! -----------------------------------------------------------------------------
-! The END 
+! The END
 ! -----------------------------------------------------------------------------

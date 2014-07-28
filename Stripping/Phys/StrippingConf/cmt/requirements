@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.26 2010-08-20 14:58:48 jpalac Exp $ 
+# $Id: requirements,v 1.26 2010-08-20 14:58:48 jpalac Exp $
 # =============================================================================
 # Stripping configuration package
 # =============================================================================
 package StrippingConf
-version           v4r10
+version           v4r11
 
 # =============================================================================
 # ======= the structure =======================================================
@@ -17,9 +17,9 @@ include_path none
 use GaudiAlg     v*
 use Boost        v*   LCG_Interfaces
 
-use GaudiPolicy  v*                             
-use Python       v* LCG_Interfaces 
-use AIDA         v* LCG_Interfaces 
+use GaudiPolicy  v*
+use Python       v* LCG_Interfaces
+use AIDA         v* LCG_Interfaces
 
 use DaVinciKernel        v*     Phys
 use LoKiCore             v*     Phys
@@ -40,5 +40,5 @@ apply_pattern install_python_modules
 # =============================================================================
 apply_pattern QMTest
 # =============================================================================
-# The END 
+# The END
 # =============================================================================
