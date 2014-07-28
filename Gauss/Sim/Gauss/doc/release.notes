@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v46r8 2014-07-28 ===========================
+! 2014-07-28 - Gloria Corti
+ - Change major version of GenXiccData to be used (to v3r*)
+ - Add use of PGunsData package fixing major version (v1r*)
+ - Replace use of GaussUMC with that of VPMoniSim after renaming of package
+
 !========================= Gauss v46r7p2 2014-04-01 ==========================
 ! 2014-01-04 - Gloria Corti
  - Technical release for patch in options of Pythia8 for ad-hoc setting

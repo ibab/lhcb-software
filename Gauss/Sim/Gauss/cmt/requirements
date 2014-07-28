@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti (Patrick Robbe, Paul Szczypka) 
 #============================================================================
 package Gauss
-version v46r7p2
+version v46r8
 
 #============================================================================
 #-- Structure
@@ -22,7 +22,8 @@ use Geant4Files	       v95r*	             -no_auto_imports
 use LHAPDFSets         v1r*                  -no_auto_imports
 use MIBData            v3r*                  -no_auto_imports
 use BcVegPyData        v2r*                  -no_auto_imports
-use GenXiccData        v2r*                  -no_auto_imports
+use GenXiccData        v3r*                  -no_auto_imports
+use PGunsData          v1r*                  -no_auto_imports
 use XmlVis             v*     Vis            -no_auto_imports
 use GDMLData           v1r*   Det            -no_auto_imports
 
@@ -75,7 +76,6 @@ use GaussPhysics         v*    Sim   -no_auto_imports
 use GaussTracker         v*    Sim   -no_auto_imports
 use GaussRICH            v*    Sim   -no_auto_imports
 use GaussCalo            v*    Sim   -no_auto_imports
-use GaussUMC             v*    Sim   -no_auto_imports
 
 #-- Monitoring
 use GaussMonitor         v*    Sim   -no_auto_imports
@@ -84,6 +84,7 @@ use VeloGauss            v*    Velo  -no_auto_imports
 use MuonMoniSim          v*    Muon  -no_auto_imports
 use BcmMoniSim           v*    Bcm   -no_auto_imports
 use BlsMoniSim           v*    Bls   -no_auto_imports
+use VPMoniSim            v*    VP    -no_auto_imports
 
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v* Sim"
