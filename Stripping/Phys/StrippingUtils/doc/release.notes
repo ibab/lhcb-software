@@ -4,6 +4,8 @@
 ! Purpose     : Helpers for safely building stripping components.
 !-----------------------------------------------------------------------------
 
+!========================= StrippingUtils v1r9 2014-07-28 =========================
+
 ! 2014-07-04 - Stefano Perazzini
  - Created the function getBuilderConfFromModule in StrippingUtils.Utils for
    read the configuration of LineBuilders directly from StrippingSelections
@@ -53,7 +55,7 @@
 
 ! 2011-02-14 - Juan Palacios
  - StrippingUtils.LineBuilderTests
-  . Add test_configuration_not_dictlike_raises, to test that passing an object 
+  . Add test_configuration_not_dictlike_raises, to test that passing an object
     that doesn't conform to the dict interface as a configuraiton dictionary
     raises an AttributeError.
 
