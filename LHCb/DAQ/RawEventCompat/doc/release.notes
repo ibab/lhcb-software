@@ -4,6 +4,8 @@
 ! Purpose     : To hold configurables for splitting/joining raw events
 !-----------------------------------------------------------------------------
 
+!========================= RawEventCompat v1r6 2014-07-28 =========================
+
 ! 2014-07-18 - Marco Cattaneo
  - If a new bank is requested to be added to a RawEvent in an output location
    that already existed as input location, print a warning and skip
