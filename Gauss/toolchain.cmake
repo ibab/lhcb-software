@@ -8,7 +8,7 @@ set(generators_versions
     herwig++    2.6.1b
     hijing      1.383bs.2
     lhapdf      5.8.8
-    photos++    3.52
+    photos++    3.56
     powheg-box  r2092
     pythia6     427.2
     pythia8     175
@@ -23,7 +23,7 @@ set(generators_versions
     herwig++    2.7.0
     hijing      1.383bs.2
     lhapdf      5.9.1
-    photos++    3.52
+    photos++    3.56
     powheg-box  r2092
     pythia6     428.2
     pythia8     183
