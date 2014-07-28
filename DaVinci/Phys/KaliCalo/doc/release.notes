@@ -4,6 +4,8 @@
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+!========================= KaliCalo v4r15 2014-07-28 =========================
+
 ! 2014-07-23 - Olivier Deschamps
  - adapt to changes in ParticleMaker
 
