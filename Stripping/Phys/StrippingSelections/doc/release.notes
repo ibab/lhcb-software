@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r36 2014-07-28 =========================
 
+! 2014-07-29 - Mika Vesterinen
+ - Added new module, StrippingTrackEffD0ToK3Pi
+
 ! 2014-07-25 - Fred Blanc
  - Modified StrippingB2CharmlessQuasi2Body.py for new convention
 

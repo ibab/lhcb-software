@@ -199,6 +199,7 @@ import StrippingExclusiveDiMuon
 import StrippingCcbar2Baryons
 
 # Calibration
+import StrippingTrackEffD0ToK3Pi
 import StrippingTrackEffDownMuon
 import StrippingTrackEffVeloMuon
 import StrippingTrackEffMuonTT
