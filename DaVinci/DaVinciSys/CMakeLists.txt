@@ -8,6 +8,7 @@ gaudi_depends_on_subdirs(DaVinciTests
 			 Phys/KaliCalo
                          DAQ/RawEventCompat
                          DAQ/DAQSys
+                         Event/DAQEvent
                          Velo/VeloDAQ)
 
 gaudi_add_test(QMTest QMTEST)
