@@ -1239,7 +1239,8 @@ class Hlt2Member ( object ) :
             if  key not in Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed for type %s"%(key,Type.__name__)
         if Type == TisTosParticleTagger :
-            ### TODO/FIXME How to insert the Hlt1SelRep decoder just prior to the TisTosParticleTagger???
+            ### How to insert the Hlt1SelRep decoder just prior to the TisTosParticleTagger???
+            ### -- that's the responsibility of the lines author... but we may want to verify it for him/her..
             Args['Context'] = "" # make sure context is NOT Hlt...
 
         ## (1) "clone" all agruments
@@ -1475,6 +1476,8 @@ class Hlt2Line(object):
             # TODO: insert Hlt1 decreports decoding... -- but this should ONLY be done in the split scenario!!!!
             #  so we need to make it optional...
             #  Note: do it the 'other way around': always insert, and, if NOT split, globally remove the decoder ;-)
+            # TODO  Note Note: we always insert, and then we can (unconditionally!) set the 'VetoObjects' property
+            #  so that it won't execute when the target TES location already exists...
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             decoder.active = True
