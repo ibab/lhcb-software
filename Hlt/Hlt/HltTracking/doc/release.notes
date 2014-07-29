@@ -3,6 +3,9 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-07-29 - Gerhard Raven
+ - improve exposure of Hlt2Lines configurables
+
 ! 2014-07-17 - Gerhard Raven
  - autmoatically import all Hlt2Lines configurables. 
    No need anymore to explicitly include all Hlt2Lines by hand!
