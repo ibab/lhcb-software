@@ -3,6 +3,8 @@
 ! Responsible : David Hutchcroft, Kurt Rinnert
 !--------------------------------------------------------------------------
 
+!========================= VeloDAQ v6r12 2014-07-29 =========================
+
 ! 2014-02-18 - David Hutchcroft
  - Added LHCb::RawEventLocation::Velo to the default location list for Stripping 21
 
