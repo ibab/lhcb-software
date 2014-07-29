@@ -9,8 +9,6 @@
 #  @author  Eduardo Rodrigues  ( e.rodrigues@physics.gla.ac.uk )             #
 #  @date    06/10/2008                                                       #
 #                                                                            #
-#  $Id: DefaultVeloRawBufferDecoders.py,v 1.1 2008-10-08 13:33:31 erodrigu Exp $                             #
-#  CVS tag $Name: not supported by cvs2svn $,version $Revision: 1.1 $                                       #
 #                                                                            #
 ##############################################################################
 """
@@ -22,7 +20,9 @@ from Configurables import DecodeVeloRawBuffer
 # =============================================================================
 def DefaultDecoderToVeloLiteClusters(
     Name                     = 'DecodeVeloRawBufferToVeloLiteClusters',
-    RawEventLocations        = ['Other/RawEvent','DAQ/RawEvent'],
+    RawEventLocations        = ['Velo/RawEvent', 
+                                'Other/RawEvent',
+                                'DAQ/RawEvent'],
     VeloClusterLocation      ='Raw/Velo/Clusters',
     DecodeToVeloClusters     = False,
     DecodeToVeloLiteClusters = True
@@ -43,7 +43,9 @@ def DefaultDecoderToVeloLiteClusters(
 # =============================================================================
 def DefaultDecoderToVeloClusters(
     Name                     = 'DecodeVeloRawBufferToVeloClusters',
-    RawEventLocations        = ['Other/RawEvent','DAQ/RawEvent'],
+    RawEventLocations        = ['Velo/RawEvent',
+                                'Other/RawEvent',
+                                'DAQ/RawEvent'],
     VeloClusterLocation      ='Raw/Velo/Clusters',
     DecodeToVeloClusters     = True,
     DecodeToVeloLiteClusters = False
