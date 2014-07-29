@@ -84,7 +84,7 @@ use VeloGauss           v3r0      Velo
 use MuonMoniSim         v3r0      Muon
 use BcmMoniSim          v2r0      Bcm
 use BlsMoniSim          v2r0      Bls
-use VP/VPMOniSim        v1r0      Sim
+use VPMoniSim           v1r0      VP
 
 # Packages for MC generator tuning
 use GenTune             v2r1      Gen  
