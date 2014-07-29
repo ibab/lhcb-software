@@ -4,6 +4,9 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-07-29 - Georg Krocker
+  - Removed unused Kalman Fitter tool in PrDownstream.h
+
 ! 2014-07-23 - Georg Krocker 
   - Added several improvements to PrDownstream - can be switched on with the
     option PrDownstream().Mode = False ; the new approach includes

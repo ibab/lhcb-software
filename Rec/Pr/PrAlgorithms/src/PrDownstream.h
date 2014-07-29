@@ -15,8 +15,6 @@
 #include "TfKernel/UTStationHitManager.h"
 #include "PrKernel/PrUTHit.h"
 
-#include "TrackInterfaces/ITrackFitter.h"
-#include "Event/KalmanFitResult.h"
 // forward declarations
 class IPrDebugUTTool;
 class DeSTDetector;
@@ -241,8 +239,6 @@ private:
   bool m_doTiming;
   
 
-  //ToolHandle<ITrackStateInit> m_stateinittool ;
-  ToolHandle<ITrackFitter> m_fitter ;
 
 
 };
