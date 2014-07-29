@@ -2,6 +2,10 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+
+! 2014-07-29 - Marco Clemencic
+ - Ported to CMake the changes in the build (helper library etc.).
+
 ! 2014-07-24 - Liang Sun
  - Fixed the date in doc/release.notes
 

@@ -15,11 +15,16 @@ find_package(XercesC)
 find_package(pygraphics)
 find_package(pytools)
 
+gaudi_add_library(CondDBUIHelperLib src/helper/*.cpp
+                  INCLUDE_DIRS PythonLibs COOL
+                  LINK_LIBRARIES PythonLibs COOL
+                  PUBLIC_HEADERS CondDBUIHelper)
+
 gaudi_add_dictionary(CondDBUI
                      dict/conddbui_dictionary.h
                      dict/dictionary.xml
                      INCLUDE_DIRS ROOT PythonLibs COOL Boost CORAL
-                     LINK_LIBRARIES ROOT PythonLibs COOL Boost CORAL)
+                     LINK_LIBRARIES -Wl,--no-as-needed CondDBUIHelperLib -Wl,--as-needed ROOT PythonLibs COOL Boost CORAL)
 
 # gen_pyqt_* functions are provided by 'pygraphics'
 gen_pyqt_resource(CondDBUI.Browser.Resources CondDBUI/Browser qt_resources/*.qrc)
