@@ -255,22 +255,22 @@ StatusCode LoKi::AlgoMC::clear()
   //
   for ( LoKi::MCTypes::MCSelected::map_iterator imc = 
           m_mcselected.begin() ; m_mcselected.end() != imc ; ++imc ) 
-  { counter ( "#" + imc->first ) = imc->second.size() ; }
+  { counter ( "#" + imc->first )   += imc->second.size() ; }
   m_mcselected   .clear () ;
   //
   for ( LoKi::MCTypes::MCVSelected::map_iterator imcv = 
           m_mcvselected.begin() ; m_mcvselected.end() != imcv ; ++imcv ) 
-  { counter ( "#" + imcv->first ) = imcv->second.size() ; }
+  { counter ( "#" + imcv->first )  += imcv->second.size() ; }
   m_mcvselected  .clear () ;
   //
   for ( LoKi::GenTypes::GenSelected::map_iterator igen = 
           m_genselected.begin() ; m_genselected.end() != igen ; ++igen ) 
-  { counter ( "#" + igen->first ) = igen->second.size() ; }
+  { counter ( "#" + igen->first )  += igen->second.size() ; }
   m_genselected  .clear () ;
   //
   for ( LoKi::GenTypes::GenVSelected::map_iterator igenv = 
           m_genvselected.begin() ; m_genvselected.end() != igenv ; ++igenv ) 
-  { counter ( "#" + igenv->first ) = igenv->second.size() ; }
+  { counter ( "#" + igenv->first ) += igenv->second.size() ; }
   m_genvselected .clear () ;
   //
   // clear the matchers  
