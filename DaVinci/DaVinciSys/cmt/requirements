@@ -11,6 +11,7 @@ use  KaliCalo        v4r15    Phys   # Olivier Deschamps
 # Temporary pacakges *** REMOVE NEXT RELEASE *****
 use RawEventCompat   v1r6     DAQ
 use DAQSys           v8r4     DAQ
+use VeloDAQ          v6r12    Velo
 
 # Declare this as a container package
 apply_pattern container_package

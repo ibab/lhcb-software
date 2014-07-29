@@ -27,6 +27,11 @@ Python :-
 DSTWriters :-
  . Support added for selective RawEvent storage in (u)DSTs.
 
+ANNPID :-
+ . Added a new experimental ANNPID tune "MC12TuneV3". *Not* enabled by
+   default, but available along side "MC12TuneV2" using the new
+   TupleToolANNPID (see below).
+
 DecayTreeTuple :-
  . TupleToolPi0Info  : Add 'daughters' info in case of merged pi0
  . TupleToolBremInfo : Adapt to change in DaVinciTools. Brem multiplicity is
