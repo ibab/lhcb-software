@@ -698,12 +698,12 @@ StatusCode LoKi::Algo::clear()
   //
   for ( LoKi::PhysTypes::Selected::map_iterator i = 
           m_selected.begin() ; m_selected.end() != i ; ++i ) 
-  { counter ( "#" + i ->first ) = i->second.size() ; }
+  { counter ( "#" + i ->first ) += i->second.size() ; }
   m_selected    .clear () ;
   //
   for ( LoKi::PhysTypes::VSelected::map_iterator iv = 
           m_vselected.begin() ; m_vselected.end() != iv ; ++iv ) 
-  { counter ( "#" + iv->first ) = iv->second.size() ; }
+  { counter ( "#" + iv->first ) += iv->second.size() ; }
   m_vselected   .clear () ;
   //
   return StatusCode::SUCCESS ;
