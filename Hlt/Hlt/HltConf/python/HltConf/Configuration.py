@@ -748,6 +748,11 @@ class HltConf(LHCbConfigurableUser):
         sel_rep_opts =  dict( InfoLevelDecision = 3, InfoLevelTrack = 3, InfoLevelRecVertex = 3, InfoLevelCaloCluster = 3, InfoLevelParticle = 3 )
 
 
+        ### FIXME/TODO: having the routing bits writer(s) in the postamble implies they do NOT run for rejected events.
+        ###             Is that really appropriate? Maybe we don't care, as those events (in the pit!) are never seen
+        ###             downstream, but eg. for MC they may be kept...
+        ### So maybe the routingbits should be written in the end sequence instead, but then the code must take into
+        ### account that Hlt2 missing on Hlt1 rejected events is not an error...
         _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,'Hlt2DecReportsLocation' : '',  } )
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1, 'InputHltDecReportsLocation' : hlt1_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,     'Hlt1SelReportsMaker',   dict( InputHltDecReportsLocation = hlt1_decrep_loc
@@ -760,7 +765,8 @@ class HltConf(LHCbConfigurableUser):
                                                                                                         ,'SourceID' : 1 } )
                          )
         _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc, 
-                                                                                                        'Hlt2DecReportsLocation' : hlt2_decrep_loc } ) 
+                                                                                                        'Hlt2DecReportsLocation' : hlt2_decrep_loc,
+                                                                                                        'UpdateExistingRawBank'  : True} ) 
                          , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'InputHltDecReportsLocation' : hlt2_decrep_loc } ) 
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
                                                                                                            OutputHltSelReportsLocation = hlt2_selrep_loc,
