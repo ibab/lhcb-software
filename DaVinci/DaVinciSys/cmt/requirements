@@ -12,6 +12,7 @@ use  KaliCalo        v4r15    Phys   # Olivier Deschamps
 # Do not forget the CMake file as well ...
 use RawEventCompat   v1r6     DAQ
 use DAQSys           v8r4     DAQ
+use DAQEvent         v9r17    Event
 use VeloDAQ          v6r12    Velo
 
 # Declare this as a container package
