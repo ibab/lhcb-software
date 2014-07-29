@@ -23,7 +23,7 @@ use LHAPDFSets         v1r*                  -no_auto_imports
 use MIBData            v3r*                  -no_auto_imports
 use BcVegPyData        v2r*                  -no_auto_imports
 use GenXiccData        v3r*                  -no_auto_imports
-use PGunsData          v1r*                  -no_auto_imports
+use PGunsData          v1r*   Gen            -no_auto_imports
 use XmlVis             v*     Vis            -no_auto_imports
 use GDMLData           v1r*   Det            -no_auto_imports
 
