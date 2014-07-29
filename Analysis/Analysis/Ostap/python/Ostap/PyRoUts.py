@@ -512,7 +512,7 @@ def _h2_iter_ ( h2 ) :
     #
     for ix in range ( 1 , sx + 1 ) : 
         for iy in range ( 1 , sy + 1 ) : 
-            yield (ix,iy)
+            yield ix , iy
 
 
 ROOT.TH2  . __iter__ = _h2_iter_ 
@@ -541,7 +541,7 @@ def _h3_iter_ ( h3 ) :
     for ix in range ( 1 , sx + 1 ) : 
         for iy in range ( 1 , sy + 1 ) : 
             for iz in range ( 1 , sz + 1 ) : 
-                yield (ix,iy,iz)
+                yield  ix , iy , iz
 
                     
 ROOT.TH3  . __iter__ = _h3_iter_ 
@@ -1216,14 +1216,14 @@ def _h3_iteritems_ ( h3 ) :
     >>> for ix,iy,iz,x,y,z,V in h3 : ...
     
     """
-    ax = h3.GetXaxis()
-    sx = ax.GetNbins()
+    ax = h3.GetXaxis ()
+    sx = ax.GetNbins ()
 
-    ay = h3.GetYaxis()
-    sy = ay.GetNbins()
+    ay = h3.GetYaxis ()
+    sy = ay.GetNbins ()
 
-    az = h3.GetZaxis()
-    sz = ay.GetNbins()
+    az = h3.GetZaxis ()
+    sz = az.GetNbins ()
     
     for ix in range( 1 , sx + 1 ) :
         #

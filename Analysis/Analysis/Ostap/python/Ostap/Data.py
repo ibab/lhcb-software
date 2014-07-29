@@ -90,10 +90,11 @@ class Files(object):
     >>> data  = Files( '*.root' )
     >>> files = data.files 
     """    
-    def __init__( self , files ) :  
+    def __init__( self , files , description = "" ) :  
         #
-        self.files    = []
-        self.patterns = files  
+        self.files        = []
+        self.patterns     = files
+        self.description  = comment 
         # 
         if isinstance ( files , str ) : files = [ files ]
         # 
@@ -112,7 +113,7 @@ class Files(object):
         """
         The specific printout
         """
-        return "<#files: {}>".format( len ( self.files ) )
+        return "<#files: %4d>" % len ( self.files ) 
     
     def __repr__( self )  : return self.__str__()
     
@@ -131,13 +132,14 @@ class Data(Files):
     >>> flist = data.files 
     """
     
-    def __init__( self           ,
-                  chain          ,
-                  files  = []    ) :
+    def __init__( self             ,
+                  chain            ,
+                  files       = [] ,
+                  description = '' ) :
 
         
         self.chain = ROOT.TChain ( chain )
-        Files.__init__( self , files )
+        Files.__init__( self , files , description )
             
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
@@ -149,8 +151,8 @@ class Data(Files):
         
     ## printout 
     def __str__(self):
-        return  "<#files: {}; Entries: {}>".format( len( self.files ) ,
-                                                    len( self.chain ) )
+        return  "<#files: {}; Entries: {}>".format ( len ( self.files ) ,
+                                                     len ( self.chain ) )
     
 # =============================================================================
 ## @class Data2
@@ -167,13 +169,14 @@ class Data2(Data):
     >>> flist = data.files 
     """
     
-    def __init__( self           ,
-                  chain1         ,
-                  chain2         , 
-                  files  = []    ) :
+    def __init__( self             ,
+                  chain1           ,
+                  chain2           , 
+                  files       = [] ,
+                  description = '' ) :
         
         self.chain2 = ROOT.TChain ( chain2 )
-        Data.__init__( self , chain1 , files )
+        Data.__init__( self , chain1 , files , description )
         self.chain1 = self.chain 
             
     ## the specific action for each file 
@@ -210,9 +213,10 @@ class DataAndLumi(Data2):
     def __init__( self               ,
                   chain              ,
                   files       = []   ,
-                  lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' ) :
+                  description = ''   , 
+                  lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' ) : 
 
-        Data2.__init__ ( self , chain , lumi_chain , files ) 
+        Data2.__init__ ( self , chain , lumi_chain , files , description ) 
         self.lumi = self.chain2 
         
     ## get the luminosity 

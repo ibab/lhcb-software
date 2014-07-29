@@ -8,6 +8,12 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-07-29 - Vanya Belyaev
+ - bug fix in H3-iterators 
+
+! 2014-07-28 - Vanya Belyaev
+ - Data.py :  add "description" attribute 
+
 ! 2014-07-27 - Vanya Belyaev
  - few more minor fixes 
 
