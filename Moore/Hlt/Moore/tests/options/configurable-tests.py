@@ -18,17 +18,18 @@ if len(emptydocs):
 #check the deprecation warnings
 depd=[p for p in Moore._propertyDocDct if "DEPRECATED" in Moore._propertyDocDct[p]]
 
-for prop in depd:
-    try:
-        Moore().setProp(prop,"deprecated")
-    except:
-        Moore().setProp(prop,314159)
+if depd :
+    for prop in depd:
+        try:
+            Moore().setProp(prop,"deprecated")
+        except:
+            Moore().setProp(prop,314159)
 
-try:
-    Moore().__apply_configuration__()
-    raise RunTimeError("No deprecation warnings were printed!")
-except DeprecationWarning as dw:
-    pass
+    try:
+        Moore().__apply_configuration__()
+        raise RuntimeError("No deprecation warnings were printed!")
+    except DeprecationWarning as dw:
+        pass
 
 #search for tests and options setting deprecated properties!
 import commands

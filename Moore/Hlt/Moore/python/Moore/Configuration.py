@@ -182,39 +182,43 @@ class Moore(LHCbConfigurableUser):
         # Options nominally for online running
         #######################################
         , "RunOnline" : "Set now by MooreOnline(), implies we're running with the full online environment"
+        #######################################
+        # Options to make processed data look like actual input...
+        #######################################
+        , "RemoveInputHltRawBanks" : "Remove any Hlt rawbank from the input file at the start of the event loop"
         #########################################
         # Deprecated former options
         #########################################
         # deprecated options require the word DEPRECATED in the documentation description
         # this will be used to print a deprecation warning
-        , "L0"         :       "None # DEPRECATED. use L0App"
-        , "ReplaceL0BanksWithEmulated" : "None # DEPRECATED.  use L0App"
-        , "RunL0Emulator" : "None # DEPRECATED.  use L0App"
-        , "Verbose" :       "None # DEPRECATED.  use Moore().OutputLevel"
-        , 'REQ1' : "None # DEPRECATED.  use MooreOnline"
-        , "PartitionName" :  "None # DEPRECATED.  use MooreOnline"
-        , "RunMonitoringFarm" :  "None # DEPRECATED.  use MooreOnline"
-        , "NbOfSlaves":         "None # DEPRECATED.  use MooreOnline"
-        , 'IgnoreDBHeartBeat'  :   "None #  DEPRECATED. use CondDB() directly or MooreOnline"
-        , "UseDBSnapshot"     : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
-        , "DBSnapshotDirectory" : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
-        , 'EnableMonitoring' : "None # DEPRECATED.  use HltConf() directly or MooreOnline"
-        , 'SkipDisabledL0Channels' : "None # DEPRECATED.  use HltConf() directly"
-        , "prefetchConfigDir" : "None # DEPRECATED. use MooreExpert"
-        , "EnableLumiEventWriting"       : "None # DEPRECATED.  use HltConf() directly"
-        , 'EnableAcceptIfSlow' : "None # DEPRECATED.  use HltConf directly"
-        , 'RequireL0ForEndSequence'     :  "None # DEPRECATED.  use HltConf() directly"
-        , 'SkipHltRawBankOnRejectedEvents' : "None #  DEPRECATED. use HltConf() directly"
-        , 'HistogrammingLevel' : "None #  DEPRECATED. use HltConf() directly"
-        , 'TimeOutThreshold'  : "10000  #  DEPRECATED. use (no replacement not used anywhere??)"
-        , 'TimeOutBits'       : "0x200 #  DEPRECATED. use (no replacement not used anywhere??)"
-        , 'RequireRoutingBits' : "None #  DEPRECATED. use HltConf()"
-        , 'VetoRoutingBits'    : "None #  DEPRECATED. use HltConf()"
-        , "DQFLAGStag" : "None #  DEPRECATED. use MooreExpert()"
-        , 'WriteFSR'    :  "None #  DEPRECATED. use MooreExpert()"
-        , 'EnableRunChangeHandler' : "None #  DEPRECATED. use CondDB() directly, only needed there!"
-        , "configAlgorithms" : "None #  DEPRECATED. use MooreExpert()"
-        , "configServices" :  "None # DEPRECATED. use MooreExpert()"
+        #, "L0"         :       "None # DEPRECATED. use L0App"
+        #, "ReplaceL0BanksWithEmulated" : "None # DEPRECATED.  use L0App"
+        #, "RunL0Emulator" : "None # DEPRECATED.  use L0App"
+        #, "Verbose" :       "None # DEPRECATED.  use Moore().OutputLevel"
+        #, 'REQ1' : "None # DEPRECATED.  use MooreOnline"
+        #, "PartitionName" :  "None # DEPRECATED.  use MooreOnline"
+        #, "RunMonitoringFarm" :  "None # DEPRECATED.  use MooreOnline"
+        #, "NbOfSlaves":         "None # DEPRECATED.  use MooreOnline"
+        #, 'IgnoreDBHeartBeat'  :   "None #  DEPRECATED. use CondDB() directly or MooreOnline"
+        #, "UseDBSnapshot"     : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
+        #, "DBSnapshotDirectory" : "None # DEPRECATED.  use CondDB() directly or MooreOnline"
+        #, 'EnableMonitoring' : "None # DEPRECATED.  use HltConf() directly or MooreOnline"
+        #, 'SkipDisabledL0Channels' : "None # DEPRECATED.  use HltConf() directly"
+        #, "prefetchConfigDir" : "None # DEPRECATED. use MooreExpert"
+        #, "EnableLumiEventWriting"       : "None # DEPRECATED.  use HltConf() directly"
+        #, 'EnableAcceptIfSlow' : "None # DEPRECATED.  use HltConf directly"
+        #, 'RequireL0ForEndSequence'     :  "None # DEPRECATED.  use HltConf() directly"
+        #, 'SkipHltRawBankOnRejectedEvents' : "None #  DEPRECATED. use HltConf() directly"
+        #, 'HistogrammingLevel' : "None #  DEPRECATED. use HltConf() directly"
+        #, 'TimeOutThreshold'  : "10000  #  DEPRECATED. use (no replacement not used anywhere??)"
+        #, 'TimeOutBits'       : "0x200 #  DEPRECATED. use (no replacement not used anywhere??)"
+        #, 'RequireRoutingBits' : "None #  DEPRECATED. use HltConf()"
+        #, 'VetoRoutingBits'    : "None #  DEPRECATED. use HltConf()"
+        #, "DQFLAGStag" : "None #  DEPRECATED. use MooreExpert()"
+        #, 'WriteFSR'    :  "None #  DEPRECATED. use MooreExpert()"
+        #, 'EnableRunChangeHandler' : "None #  DEPRECATED. use CondDB() directly, only needed there!"
+        #, "configAlgorithms" : "None #  DEPRECATED. use MooreExpert()"
+        #, "configServices" :  "None # DEPRECATED. use MooreExpert()"
         }
     
     
@@ -260,7 +264,7 @@ class Moore(LHCbConfigurableUser):
             from Configurables        import bankKiller, ApplicationMgr
             app=ApplicationMgr()
             hlt_banks = [ 'HltDecReports','HltRoutingBits','HltSelReports','HltVertexReports','HltLumiSummary','HltTrackReports' ]
-            bk = bankKiller( 'REmoveInputHltRawBanks',  BankTypes=hlt_banks )
+            bk = bankKiller( 'RemoveInputHltRawBanks',  BankTypes=hlt_banks )
             app.TopAlg.insert(0, bk)
 
 

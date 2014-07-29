@@ -24,7 +24,7 @@
     <text>../options/default-threshold.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1only.csv";</text>
+    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1only.csv"; Moore().RemoveInputHltRawBanks = True; Moore().OutputLevel = 3</text>
   </set></argument>
   <argument name="validator"><text>
 myname='moore.physics.deferral.hlt1only'

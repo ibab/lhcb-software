@@ -3,6 +3,11 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+! 2014-07-29 - Gerhard Raven
+ - remove deprecated options
+ - add option to remove all Hlt raw banks on input
+ - remove input Hlt raw banks in various qmtests
+
 ! 2014-07-21 - Gerhard Raven
  - in qmtest, kill all Hlt related banks instead of only HltDecReports
 

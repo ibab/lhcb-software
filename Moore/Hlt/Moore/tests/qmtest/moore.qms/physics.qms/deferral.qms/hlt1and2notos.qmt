@@ -23,7 +23,7 @@
     <text>../options/Moore_NoTosDeferral.py</text>
     <text>../options/default-threshold.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1and2notos.csv";</text>
+    <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True ; Moore().EnableTimer="deferral.hlt1and2notos.csv";</text>
   </set></argument>
   <argument name="validator"><text>
 #reftable

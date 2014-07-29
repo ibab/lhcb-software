@@ -34,7 +34,30 @@ from Moore.QMTest.MooreTests import compareTimingTableFiles
 compareTimingTableFiles(myname,result,causes,"deferral.hlt2only.csv","../refs/deferral.hlt2only.csv","Hlt2")
 
 #count error lines, shouldn't be any warnings or errors, ideally
-countErrorLines({"FATAL":0,"ERROR":0,"WARNING":0})
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":21})
+findReferenceBlock("""
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter::  RoutingBits RawBanks: requested to update bank, but non-zero third entry
+Hlt2RoutingBitsWriter                   WARNING HltRoutingBitsWriter:: The WARNING message is suppressed : ' RoutingBits RawBanks: requested to update bank, but non-zero third entry'
+""", id = "OverwriteRoutingBits" )
 
 </text></argument>
 </extension>

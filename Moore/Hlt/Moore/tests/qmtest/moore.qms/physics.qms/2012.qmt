@@ -23,7 +23,7 @@
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/default-threshold.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().EnableTimer='physics.2012.csv'; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
+    <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().EnableTimer='physics.2012.csv'; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
   </set></argument>
   <argument name="validator"><text>
 myname='moore.physics.2012'
