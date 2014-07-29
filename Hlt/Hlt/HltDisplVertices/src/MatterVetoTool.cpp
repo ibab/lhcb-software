@@ -1,5 +1,6 @@
 // $Id: HepMCJets2HepMCJets.cpp,v 1.1 2009-12-14 12:34:33 cocov Exp $
 // Include files
+#include "boost/range/iterator_range.hpp"
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
@@ -27,36 +28,9 @@ using namespace Gaudi::Units;
 using namespace LHCb;
 using namespace std;
 
-namespace
-{
-template <typename iterator_>
-struct iter_pair_range : pair<iterator_, iterator_>
-{
-    using super = pair<iterator_, iterator_>;
-    using super::super; // delegate c'tor
-    using iterator = iterator_;
-    iterator begin() const
-    {
-        return this->first;
-    }
-    iterator end() const
-    {
-        return this->second;
-    }
-};
 
-template <typename Iter, typename I2> // I2 must be convertable to Iter
-iter_pair_range<typename std::decay<Iter>::type> make_range( Iter&& begin, I2&& end )
-{
-    return {std::forward<Iter>( begin ), std::forward<I2>( end )};
-}
 
-template <typename Iter, typename I2> // I2 must be convertable to Iter
-iter_pair_range<typename std::decay<Iter>::type> make_range( pair<Iter, I2>&& p )
-{
-    return {std::forward<pair<Iter, I2>>( p )};
-}
-
+namespace {
 // (could use std::find_adjacent, but then would have to
 //  handle the case where it returns 'end'...)
 template <typename Iter>
@@ -200,7 +174,7 @@ StatusCode MatterVetoTool::i_cacheGeo()
 
     m_LeftSensorsCenter.clear();
     for ( const DeVeloRType* i :
-          make_range( velo->leftRSensorsBegin(), velo->leftRSensorsEnd() ) ) {
+          boost::make_iterator_range( velo->leftRSensorsBegin(), velo->leftRSensorsEnd() ) ) {
         if ( i->isPileUp() ) continue;
         const DeVeloPhiType* sens = i->associatedPhiSensor();
 
@@ -211,8 +185,8 @@ StatusCode MatterVetoTool::i_cacheGeo()
     }
 
     m_RightSensorsCenter.clear();
-    for ( const DeVeloRType* i :
-          make_range( velo->rightRSensorsBegin(), velo->rightRSensorsEnd() ) ) {
+    for ( const DeVeloRType* i : 
+          boost::make_iterator_range( velo->rightRSensorsBegin(), velo->rightRSensorsEnd() ) ) {
         if ( i->isPileUp() ) continue;
         const DeVeloPhiType* sens = i->associatedPhiSensor();
 
