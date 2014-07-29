@@ -400,7 +400,7 @@ StatusCode HltSelReportsWriter::execute() {
 
   // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at a smaller limit.
   // Save in chunks if exceed this size.
-  int nBank = (hltSelReportsBank.size()-1)/16300 + 1;
+  int nBank = 1 + ( hltSelReportsBank.size()==0 ? 0 : (hltSelReportsBank.size()-1)/16300 );
   if( nBank > kSourceID_MinorMask ){
     // delete the main bank
     hltSelReportsBank.deleteBank();
