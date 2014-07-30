@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BenderTutor
 ################################################################################
-gaudi_subdir(BenderTutor v24r1)
+gaudi_subdir(BenderTutor v25r0)
 
 gaudi_depends_on_subdirs(Ex/BenderExample
                          Phys/Bender)

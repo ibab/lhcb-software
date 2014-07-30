@@ -4,7 +4,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ============================================================================
 package           BenderTutor
-version           v24r1
+version           v25r0
 
 # =============== structure ==================================================
 branches          cmt doc python solution 
