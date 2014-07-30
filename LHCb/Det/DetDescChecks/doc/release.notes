@@ -4,6 +4,8 @@
 ! Purpose     : Collection of useful components for checking of
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
+! 2014-07-30 - Liang Sun
+ - New tests added for DataType 2015: loaddddb-2015 & loaddddb-sim-2015
 
 !========================= DetDescChecks v5r10 2013-04-29 =========================
 ! 2013-04-29 - Marco Cattaneo
