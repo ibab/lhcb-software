@@ -110,11 +110,15 @@ class ProgressBar:
  
         percent_str = str(percent_done) + "%"
         self.bar = '[ ' + self.bar + ' ] ' + percent_str
- 
+        
  
     def __str__(self):
         return str(self.bar)
- 
+
+    def show ( self ) :
+        print self,'\r',
+        sys.stdout.flush()
+        
  
 def main():
     print

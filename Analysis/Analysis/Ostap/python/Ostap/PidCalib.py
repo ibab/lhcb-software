@@ -54,6 +54,7 @@ __all__     = (
     'ex_func'     , ## an example of end-user function 
     )
 # =============================================================================
+import os 
 from   AnalysisPython.Logger import getLogger
 if '__main__' == __name__ : logger = getLogger ( 'Ostap.PidCalib' )
 else                      : logger = getLogger ( __name__         )
@@ -89,20 +90,21 @@ def makeParser ( ) :
         )
     
     ## add the positional arguments
-    parser.add_argument ( 'StripVersion'          ,
-                          metavar = '<stripVersion>', type=str   , 
-                          help    = "Sets the stripping version" )
-    parser.add_argument ( 'MagPol'                ,
-                          metavar = '<magPol>'      , type=str   ,
-                          choices = ( 'MagUp', 'MagDown' )       , 
-                          help    = "Sets the magnet polarity"   )
+    parser.add_argument ( 'particle'    ,
+                          metavar = '<PARTICLE>'    , type=str   ,
+                          choices = ("K", "Pi", "P", "e", "Mu")  , 
+                          help    = "Sets the particle type"     )
     
-    parser.add_argument ( 'PartName'    ,
-                          metavar = '<partName>', type=str      ,
-                          choices = ("K", "Pi", "P", "e", "Mu") , 
-                          help    = "Sets the particle type"    )
+    parser.add_argument ( '-s' , '--stripping'       , nargs = '+' , 
+                          metavar = '<STRIPPING>'   , ## type=str ,                           
+                          help    = "Sets the stripping version"  )
     
     ## add the optional arguments
+    parser.add_argument ( '-p' , '--polarity'            , default = 'Both' , 
+                          metavar = '<MAGNET>'           , type=str ,
+                          choices = ( 'MagUp', 'MagDown' , 'Both' ) , 
+                          help    = "Sets the magnet polarity"    )
+    
     parser.add_argument ( '-x'   , '--minRun', default = 0 , 
                           dest = "RunMin" , metavar="NUM", type=int, 
                           help = "Sets the minimum run number to process (if applicable)")
@@ -130,21 +132,228 @@ def makeParser ( ) :
                            default=True,
                            help="Suppresses the printing of verbose information")
     
-    addGroup.add_argument ("-M", "--allow-missing", dest="allowMissing",
-                           action="store_true", default=False,
-                           help="Allow missing calibration subsamples. "
-                           "N.B. You should only use this option if requested to "
-                           "do so by the PIDCalib authors")
-    
-    
     return parser 
+
+## a bit modified version of DataFuncs.GetDataSet from Urania/PIDCalib/PIDPerfScripts
+def getDataSet ( particle          ,
+                 stripping         ,
+                 polarity          ,
+                 trackcuts         ,
+                 index             ,
+                 verbose    =False ,
+                 minEntries =1000  ) :
+    
+    from PIDPerfScripts.DataFuncs import CheckStripVer, CheckMagPol, CheckPartType  
+    CheckStripVer ( stripping )
+    CheckMagPol   ( polarity  )
+    CheckPartType ( particle  )
+
+    #======================================================================
+    # Create dictionary holding:
+    # - Reconstruction version    ['RecoVer']
+    # - np.array of:
+    #        - MagUp run limits   ['UpRuns']
+    #        - MagDown run limits ['DownRuns']
+    #======================================================================
+    from PIDPerfScripts.DataFuncs import GetRunDictionary
+    DataDict = GetRunDictionary ( stripping , particle )
+
+    #======================================================================
+    # Determine Mother and Workspace names
+    #======================================================================
+    from PIDPerfScripts.DataFuncs import GetDataSetNameDictionary
+    DataSetNameDict = GetDataSetNameDictionary( particle )
+
+    from PIDPerfScripts.DataFuncs import GetRealPartType
+    particle_type = GetRealPartType( particle )
+
+
+    fname_protocol = ""
+    fname_query    = ""
+
+    CalibDataProtocol = os.getenv ( "CALIBDATAURLPROTOCOL" )
+    CalibDataQuery    = os.getenv ( "CALIBDATAURLQUERY"    )
+
+    # set the URL protocol (if applicable)
+    if CalibDataProtocol : fname_protocol = "{0}://".format(CalibDataProtocol)
+    
+    # set the URL query (if applicable)
+    if CalibDataQuery    : fname_query    = "?{0}".format(CalibDataQuery)
+    
+    from PIDPerfScripts.DataFuncs import IsMuonUnBiased 
+    vname_head = "CALIBDATASTORE" if not IsMuonUnBiased( particle ) else "MUONCALIBDATASTORE"
+    
+    fname_head = os.getenv(vname_head)
+    if not fname_head :
+        raise AttributeError ("Environmental variable %s has not been set!" %vname_head )
+    
+    fname = ("{prtcol}{topdir}/Reco{reco}_DATA/{pol}/"
+             "{mother}_{part}_{pol}_Strip{strp}_{idx}.root{qry}").format(
+        prtcol=fname_protocol, topdir=fname_head, reco=DataDict['RecoVer'],
+        pol  = polarity     , mother=DataSetNameDict['MotherName'],
+        part = particle_type, strp  =stripping, idx=index, qry=fname_query)
+    
+    if verbose:
+        logger.info( "Attempting to open file {0} for reading".format(fname) )
+        
+    import ROOT
+    import Ostap.PyRoUts
+    with  ROOT.TFile.Open(fname) as f :
+        
+        if not f: raise IOError("Failed to open file %s for reading" %fname)
+        
+        wsname = DataSetNameDict['WorkspaceName']
+        ws     = f.Get(wsname)
+        if not ws:
+            raise AttributeError ( "Uanble to retriever RooFit workspace %s" % wsname )
+        
+        data = ws.data('data')
+        if not data:
+            raise AttributeError ( "RooDataSet not found in workspace %s"    % wsname )
+        
+        dataset = ROOT.RooDataSet(
+            'Calib_Data'
+            , data.GetTitle() 
+            , data
+            , data.get()
+            , trackcuts        
+            , 'nsig_sw'
+            )
+        
+        ws.Delete()
+        if ws   : del ws
+            
+    if verbose:
+        logger.info ( "DataSet: %s" % dataset ) 
+
+    #======================================================================
+    # Sanity test: do we have a dataset, and is it empty?
+    #======================================================================
+    if not dataset              : raise AttributeError ( "Failed to create datatset" )
+    if not len(dataset)         : raise AttributeError ( "DataSet is empty(1)"       )
+    if not dataset.sumEntries() : raise AttributeError ( "DataSet is empty(2)"       ) 
+    
+    #======================================================================
+    # Veto ranges with insufficient statistics
+    #======================================================================
+    if dataset.sumEntries() < minEntries:
+        logger.warning ( "Insufficinent number of entries" )
+        dataset.reset()
+        del dataset 
+        return None
+    
+    return dataset 
+
+
+# =============================================================================
+## a bit modified verison of DataFuncs.GetPerfPlotList from Urania/PIDCalib/PIDPerfScripts
+def makePlots ( the_func        ,
+                particle        ,  
+                stripping       ,
+                polarity        ,
+                trackcuts       ,
+                runMin=0        ,
+                runMax   =   -1 ,
+                verbose  = True ,
+                maxFiles =   -1 ):
+
+    #**********************************************************************
+    from PIDPerfScripts.DataFuncs import CheckStripVer, CheckMagPol, CheckPartType  
+    CheckStripVer ( stripping )
+    CheckMagPol   ( polarity  )
+    CheckPartType ( particle  )
+    
+
+    #======================================================================
+    # Create dictionary holding:
+    # - Reconstruction version    ['RecoVer']
+    # - np.array of:
+    #        - MagUp run limits   ['UpRuns']
+    #        - MagDown run limits ['DownRuns']
+    #======================================================================
+    from PIDPerfScripts.DataFuncs import GetRunDictionary
+    DataDict = GetRunDictionary ( stripping , particle )
+
+    if trackcuts and  0 < runMin : trackcuts +=' && runNumber>=%d ' % runMin
+    if trackcuts and  0 < runMax : trackcuts +=' && runNumber<=%d ' % runMax
+    
+    #======================================================================
+    # Determine min and max file indicies
+    #======================================================================
+    if runMax < runMin : runMax = None 
+    from PIDPerfScripts.DataFuncs import GetMinMaxFileDictionary
+    IndexDict = GetMinMaxFileDictionary( DataDict , polarity ,
+                                         runMin   , runMax   , maxFiles )
+    
+    #======================================================================
+    # Append runNumber limits to TrackCuts
+    #======================================================================
+    
+    logger.debug ( 'Track Cuts: %s ' % trackcuts ) 
+
+    #======================================================================
+    # Declare default list of PID plots
+    #======================================================================
+    plots      =   []
+    minEntries = 1000
+
+    #======================================================================
+    # Loop over all calibration subsamples
+    #======================================================================
+
+    mn = IndexDict['minIndex']
+    mx = IndexDict['maxIndex']
+
+    from Ostap.Utils        import memory,NoContext
+    
+    logger.info('Start the loop over %d datafiles %s %s %s ' % ( mx - mn   ,
+                                                                 particle  ,
+                                                                 stripping ,
+                                                                 polarity  ) )
+    from Ostap.progress_bar import ProgressBar
+    bar = ProgressBar( mn , mx , 100 , mode='fixed' )  
+    for index in xrange ( mn , mx + 1 ) :
+
+        bar.update_amount ( index )
+        if not verbose : bar.show() 
+
+        manager = memory() if verbose else NoContext() 
+        with manager :
+            
+            dataset = getDataSet ( particle  ,
+                                   stripping ,
+                                   polarity  ,
+                                   trackcuts , 
+                                   index     ,
+                                   verbose = verbose )
+            
+            if not dataset : continue 
+            
+            plots = the_func ( particle ,
+                               dataset  ,
+                               plots    ,
+                               verbose  )
+
+            dataset.reset  ()
+            dataset.store  ().reset () 
+            dataset.store  ().Reset () 
+            dataset.Delete ()
+            if dataset : del dataset
+            
+    if not verbose : print ' ' 
+    return plots 
 
 # ====================================================================
 ## the basic function:
 #  oversimplified version of MakePerfHistsRunRange.py script from Urania/PIDCalib
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-07-19
-def runPidCalib ( the_func , config ) :
+def runPidCalib ( the_func    ,
+                  particle    ,  
+                  stripping   ,
+                  polarity    ,
+                  trackcuts   , 
+                  **config    ) :
     """
     The basic function:
     - oversimplified version of MakePerfHistsRunRange.py script from Urania/PIDCalib 
@@ -152,44 +361,73 @@ def runPidCalib ( the_func , config ) :
     #
     ## perform some arguments check
     #
-    
+        
     ## 1) check the stripping version
     from PIDPerfScripts.DataFuncs import CheckStripVer 
-    CheckStripVer ( config.StripVersion)
+    CheckStripVer ( stripping )
     
     ## 2) set the magnet polarity  [not-needed, since embedded into parser]
     from PIDPerfScripts.DataFuncs import CheckMagPol
-    CheckMagPol   ( config.MagPol )
+    CheckMagPol   ( polarity  )
     
     ## 3) set the particle name [not-needed, since embedded into parser]
     from PIDPerfScripts.DataFuncs import CheckPartType
-    CheckPartType ( config.PartName )
+    CheckPartType ( particle  )
     
-    ## 4) check range names 
-    if   config.RunMin and 0 < config.RunMin and config.RunMax and config.RunMin < config.RunMax    : pass
-    elif config.RunMin and 0 < config.RunMin and  ( -1 == config.MaxFiles  or 0 < config.MaxFiles ) : pass
-    else : logger.warning('Suspicios setting of Run-Ranges ')
+    runMin       = config.get ( 'RunMin'       ,     0 )
+    runMax       = config.get ( 'RunMax'       ,    -1 )
+    verbose      = config.get ( 'Verbose'      ,  True )
+    maxFiles     = config.get ( 'MaxFiles'     ,    -1 )
 
+    ## a bit strange treatment of runMax in PIDCalib :-(
+    
     #
     ## finally call the standard PIDCalib machinery with user-specified function
     #
+    histopair =  makePlots ( the_func        ,
+                             particle        ,  
+                             stripping       ,
+                             polarity        ,
+                             trackcuts       ,
+                             runMin          ,
+                             runMax          ,
+                             verbose         ,
+                             maxFiles        )
+        
+        
+    ## runMax   = runMax if runMin <= runMax else None
+    ## runMin   = "%d" % runMin
+    ## from PIDPerfScripts.DataFuncs import GetPerfPlotList 
+    ## histopair = GetPerfPlotList ( the_func            , ## Use the function! 
+    ##                               stripping           ,
+    ##                               polarity            ,
+    ##                               particle            ,
+    ##                               None                , ## PID-cuts...
+    ##                               trackcuts           , ## Track-cuts 
+    ##                               None                , ## Binninng schemes   
+    ##                               runMin              ,
+    ##                               runMax              ,
+    ##                               verbose             ,
+    ##                               False               , ## allow missing 
+    ##                               maxFiles            )
     
-    runMax = config.RunMax if  0 < config.RunMax else None 
-    
-    from PIDPerfScripts.DataFuncs import GetPerfPlotList 
-    histopair = GetPerfPlotList ( the_func            , ## Use the function! 
-                                  config.StripVersion ,
-                                  config.MagPol       ,
-                                  config.PartName     ,
-                                  None                , ## PID-cuts...
-                                  config.cuts         , ## Track-cuts 
-                                  None                , ## Binninng schemes   
-                                  str(config.RunMin)  ,
-                                  runMax              ,
-                                  config.verbose      ,
-                                  config.allowMissing ,
-                                  config.MaxFiles     )
-    
+    if config.get('dbname',None) :
+
+        try :
+            import Ostap.ZipShelve as DBASE 
+            with DBASE.open ( config['dbname'] ) as db :
+                logger.info('Try to save data into %s' % config['dbname'] )
+                ##
+                key = 'PIDCalib(%s)@Stripping%s/%s' % ( particle  ,
+                                                        stripping ,
+                                                        polarity  )
+                db [ key         ] = histopair
+                db [ key + 'Cuts'] = trackcuts 
+                if verbose : db.ls()
+                
+        except :
+            logger.error('Unable to save data in DB')
+            
     return histopair 
 
 # =============================================================================
@@ -197,24 +435,22 @@ def runPidCalib ( the_func , config ) :
 #  @code
 # 
 #  histos = runPidCalib ( .... )
-#  saveHistos ( histos , '' , config  )
+#  saveHistos ( histos , '' , **config )
 # 
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-07-19
-def saveHistos  (  histos , fname = '' , config = None ) :
+def saveHistos  (  histos     ,
+                   fname = '' , **config ) :
     """Save histograms into the output file """
     ##
     if   not fname and not config : fname = "PIDHistos.root"
     elif not fname and     config :
         fname = "PIDHistos_{part}_Strip{strp}_{pol}.root".format(
-            part = config.PartName     ,
-            strp = config.StripVersion ,
-            pol  = config.MagPol       )
-        
-    if config and config.outputDir :
-        fname = "%s/%s" % ( config.outputDir , fname )
-        
+            part = config [ 'particle'  ] ,
+            strp = config [ 'stripping' ] ,
+            pol  = config [ 'polarity'  ] )
+
     logger.info ( "Saving performance histograms to %s" %fname )
 
     import ROOT 
@@ -226,7 +462,7 @@ def saveHistos  (  histos , fname = '' , config = None ) :
         for h in histos : h.Write() 
         outfile.ls() 
         
-    return histos
+    return fname 
 
 # =============================================================================
 ## the example of the actual function that builds the histos
