@@ -416,7 +416,7 @@ def runPidCalib ( the_func    ,
         try :
             import Ostap.ZipShelve as DBASE 
             with DBASE.open ( config['dbname'] ) as db :
-                logger.info('Try to save data into %s' % config['dbname'] )
+                logger.info('Save data into %s' % config['dbname'] )
                 ##
                 key = 'PIDCalib(%s)@Stripping%s/%s' % ( particle  ,
                                                         stripping ,
