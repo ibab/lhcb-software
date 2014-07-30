@@ -292,13 +292,21 @@ class ElementGroup(object):
 
 ElementGroups = { "TT.Layers"       : ElementGroup("(?P<page>TT)/TT[ab]/(?P<elm>TT(?:aX|aU|bV|bX)Layer)$", 2, 2)
                 , "TT.Modules"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3])Module(?P<elm>[1-6][BT])$", 4, 3)
-                , "TT.Sensors"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3]Module[1-6][BT])/(?P<elm>Ladder[0-9]/Sensor[0-9]*)$", 3, 3)
+                , "TT.Sensors"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3]Module[1-6][BT]/Ladder[0-9])/(?P<elm>Sensor[0-9]*)$", 2, 2)
+
                 , "IT.Boxes"        : ElementGroup("IT/(?P<page>Station[1-3])/(?P<elm>(?:ASide|CSide|Top|Bottom)Box)$", 2, 2)
-#                , "IT.Layers"       : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/(?P<elm>(?:X1|U|V|X2)Layer)$", 2, 2)
-                , "IT.Layers"       : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/(?P<elm>Layer(?:X1|U|V|X2))$", 2, 2) # fixed
+                , "IT.Layers"       : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box)/(?P<elm>Layer(?:X1|U|V|X2))$", 2, 2)
+                , "IT.Ladders"      : ElementGroup("IT/(?P<page>Station[1-3]/(?:ASide|CSide|Top|Bottom)Box/Layer(?:X1|U|V|X2))/(?P<elm>Ladder[1-7])$", 3, 3)
+                # , "IT.Sensors.BottomTop" : ElementGroup("IT/(?P<page>Station[1-3]/(?:Top|Bottom)Box/Layer(?:X1|U|V|X2))/(?P<elm>Ladder[1-7]/Sector/Sensor[1-2])$", 2, 4)### redundant
+                , "IT.Sensors" : ElementGroup("IT/(?P<page>Station[1-3]/(?:A|C)SideBox/Layer(?:X1|U|V|X2)/Ladder[1-7])/Sector/(?P<elm>Sensor[1-2])$", 1, 2)# sides only
+
+                  # 'CFrameLayers' are just layers joined in X1+U and V+X2 pairs
+                , "OT.CFrameLayers" : ElementGroup("OT/(?P<page>T[1-3])/(?P<elm>(?:X1|U|V|X2))$", 2, 2)
+                  # 'CFrames' are just quarters joined in layer X1+U and V+X2 pairs
                 , "OT.CFrames"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2))/(?P<elm>Q[0-3])$", 2, 2)
-                , "OT.CFrameLayers" : ElementGroup("OT/(?P<page>T[1-3])/(?P<elm>(?:X1|U|V|X2)/Q[0-1])$", 4, 2) # not 0-3?
                 , "OT.Modules"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2)/Q[0-3])/(?P<elm>M[1-9])$", 3, 3)
+                # , "OT.CFrameLayers" : ElementGroup("OT/(?P<page>T[1-3])/(?P<elm>(?:X1|U|V|X2)/Q[0-1])$", 4, 2) # what was this supposed to be?
+
                 , "Velo.Modules"    : ElementGroup("null", 1, 1) #### only for reference
                 }
 # TODO implement an "ElementGroupFolder" that has ElementGroup, the regular expressions all methods below in its members

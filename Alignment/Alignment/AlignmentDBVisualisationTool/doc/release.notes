@@ -3,6 +3,11 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-07-30 - Jason Andrews
+ - added functionality to plot the constants in their local frames, ie, exactly as they
+   are stored in the db
+ - added support for IT ladders and sensors
+
 ! 2014-07-28 - Jason Andrews
  - changed plotAlignDiff to plot all alignments in requested date range
 

@@ -22,8 +22,9 @@ All IOVs in the date range will be plotted.
 
 """)
 
-parser.usage = "%prog [options] elements dofs dbfile1 ..."
+parser.usage = "%prog [options] elements dofs alignment1 ..."
 
+parser.add_option("-c", "--coordinateFrame", dest="coords", default="global", help="Make plots using local or global coordinates [default: %default]")
 parser.add_option("-r", "--reference", dest="refDbFile",      default=None, metavar="REFERENCE",
                   help="SQLite file (without IOVs) containing a reference alignment, e.g. survey")
 parser.add_option("-o", "--outdir",    dest="outDirName",     default="AlignmentsCompared", metavar="OUTDIR",
@@ -31,6 +32,7 @@ parser.add_option("-o", "--outdir",    dest="outDirName",     default="Alignment
 parser.add_option("--binLabelsRegex",  dest="binLabelsRegex", default=".+/Alignment_(?P<label>[0-9a-zA-Z]+)\.db/LHCBCOND$",
                   help="Regular expression for connection strings. The pattern \"label\" is used as bin label [default: %default]")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Turn on verbose messages")
+parser.add_option("-i", "--info", action="store_true", dest="info", default=False, help="Turn on info messages")
 
 (options, args) = parser.parse_args()
 
@@ -38,6 +40,8 @@ assert len(args) > 2
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
+elif options.info:
+    logging.basicConfig(level=logging.INFO)
 else:
     logging.basicConfig(level=logging.ERROR)
 
@@ -58,4 +62,5 @@ plotAlignmentParametersComparison(
     , binLabels=options.binLabelsRegex
     , refConnectString=refConnStr
     , outputdir=options.outDirName
+    , coordinateFrame=options.coords
     )

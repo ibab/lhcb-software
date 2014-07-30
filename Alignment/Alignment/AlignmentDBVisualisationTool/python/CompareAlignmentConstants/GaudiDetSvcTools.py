@@ -38,7 +38,21 @@ def getGlobalPositionFromGeometryInfo( geo ):
     trans = gbl.vector('double')(3)
     rot = gbl.vector('double')(3)
     gbl.DetDesc.getZYXTransformParameters( geo.toGlobalMatrix(), trans, rot )
+    # gbl.DetDesc.getZYXTransformParameters( geo.alignmentCondition().offNominalMatrix(), trans, rot )
     return Transformation( ( trans[0], trans[1], trans[2] ), ( rot[0], rot[1], rot[2] ) )
+
+def getLocalPositionFromGeometryInfo( geo ):
+    """
+    Extract the local position from geometry info
+    Gives the parameters exactly as they are stored in the db
+    """
+    trans = gbl.vector('double')(3)
+    rot = gbl.vector('double')(3)
+    gbl.DetDesc.getZYXTransformParameters( geo.alignmentCondition().offNominalMatrix(), trans, rot )
+    return Transformation( ( trans[0], trans[1], trans[2] ), ( rot[0], rot[1], rot[2] ) )
+
+ValueExtractors = { "global" : lambda detElm : getGlobalPositionFromGeometryInfo(detElm.geometry()) if detElm.geometry().alignmentCondition() else None,
+                    "local"  : lambda detElm : getLocalPositionFromGeometryInfo(detElm.geometry()) if detElm.geometry().alignmentCondition() else None }
 
 def getAlignableTreeFromDetectorElement( detElm, nodeValue=lambda det : None, parentName=None ):
     """
@@ -346,7 +360,7 @@ class AlignmentsWithIOVs(object):
                 if m:
                     yield name, m, matrixForAll
 
-def preparePeriodsAndAlignments(alignmentsList, detectorList):
+def preparePeriodsAndAlignments(alignmentsList, detectorList, extractor="global"):
     """
     Take a list of ( connection, since, until, tag ) tuples and return appropriate StatusTimePeriod and AlignmentsWithIOVs objects
     """
@@ -369,14 +383,14 @@ def preparePeriodsAndAlignments(alignmentsList, detectorList):
     # instantiate only one object per CondDB tag
     for tag in Tags.iterkeys():
         Entry = Tags[tag]
-        Entry['AWIOVs'] = AlignmentsWithIOVs([], detectorList, Entry['since'], Entry['until'], defaultTag = tag)
+        Entry['AWIOVs'] = AlignmentsWithIOVs([], detectorList, Entry['since'], Entry['until'], defaultTag = tag, valueExtractor=ValueExtractors[extractor])
 
     preparedList = list()
     for connection, start, end, tag in alignmentsList:
         timePeriods = prepareTimePeriods(connection, start, end, tag)
         if len(connection) == 0:
             alignment = Tags[tag]['AWIOVs']
-        else: alignment = AlignmentsWithIOVs(connection, detectorList, start, end, defaultTag = tag)
+        else: alignment = AlignmentsWithIOVs(connection, detectorList, start, end, defaultTag = tag, valueExtractor=ValueExtractors[extractor])
         preparedList.append((timePeriods, alignment))
 
     return preparedList

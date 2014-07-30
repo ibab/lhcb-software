@@ -20,7 +20,8 @@ import logging, copy
 
 import re
 
-from GaudiDetSvcTools              import ( AlignmentsWithIOVs
+from GaudiDetSvcTools              import ( ValueExtractors
+                                          , AlignmentsWithIOVs
                                           , parseTimeMin, parseTimeMax
                                           , preparePeriodsAndAlignments
                                           )
@@ -88,7 +89,8 @@ def plotAlignmentParametersComparison( elmGroup, dofs
                                      , outputdir="."
                                      , since="2010-01-01"
                                      , until="2013-01-01"
-                                     , defaultTag="default" ):
+                                     , defaultTag="default"
+                                     , coordinateFrame="global"):
     """
     Plot alignment differences between the slices (with tags), and with respect to the reference
     """
@@ -101,6 +103,7 @@ def plotAlignmentParametersComparison( elmGroup, dofs
         binLabels = list()
         for connection, start, end, tag in sliceConnectStringsAndTags:
             if len( connection ) == 0:
+                # no label for IOVs from CondDB; let the drawing method figure the label out
                 binLabels.append( None )
             else:
                 binLabels.append( binLabelPattern.match(connection[0][0] ).group("label") )
@@ -108,12 +111,12 @@ def plotAlignmentParametersComparison( elmGroup, dofs
     if not isinstance(binLabels, list):
         binLabels = list( None for cS, t in sliceConnectStringsAndTags )
 
-    parametersAndPeriods = preparePeriodsAndAlignments( sliceConnectStringsAndTags, detsToLoad )
+    parametersAndPeriods = preparePeriodsAndAlignments( sliceConnectStringsAndTags, detsToLoad, coordinateFrame )
     for [ timePeriods, theAlignmentParameters ], label in zip( parametersAndPeriods, binLabels ):
         drawDiffAlignment( timePeriods, elmGroup, theAlignmentParameters, dofs, label )
     if refConnectString:
         timePeriods = [ StatusTimePeriod( "MagDown", parseTimeMin(since), parseTimeMax(until) ) ]
-        refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, defaultTag=defaultTag )
+        refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, defaultTag=defaultTag, valueExtractor=ValueExtractors[coordinateFrame] )
         drawDiffReference( timePeriods, elmGroup, refAlignmentParameters, dofs )
 
     for folder in folders.itervalues():
@@ -140,6 +143,7 @@ def plotAlignmentParametersHeat( det
                                , outputDir="."
                                , layers=["all"]
                                , drawNames=False
+                               , coordinateFrame="global"
                                  # default thresholds of -1 double as 'alarm-mode-off' flags
                                , AlarmThresholds={"Tx":-1,"Ty":-1,"Tz":-1,"Rx":-1,"Ry":-1,"Rz":-1}
                                , returnFlag=False
@@ -150,6 +154,7 @@ def plotAlignmentParametersHeat( det
     
     # record the comparison being made, ultimately gets written in the plot titles
     comparisonDescriptionString = "%s   relative to   %s" % tuple( title for title in alignmentTitles )
+    # comparisonDescriptionString = "Local frame module constants of %s" % alignmentTitles[0]
     print comparisonDescriptionString
 
     if layers == ['all']:
@@ -162,7 +167,7 @@ def plotAlignmentParametersHeat( det
         print "exiting..."
         exit()
 
-    ( timePeriodsOne, alignmentOne ), ( timePeriodsTwo, alignmentTwo ) = preparePeriodsAndAlignments( inputAlignments, [det] )
+    ( timePeriodsOne, alignmentOne ), ( timePeriodsTwo, alignmentTwo ) = preparePeriodsAndAlignments( inputAlignments, [det], coordinateFrame )
 
     logging.debug("Initializing detector tuple")
     detectorTuple = tuple( ( node, pageName, matrix[0] ) for node, pageName, matrix in alignmentOne.loopWithTimesAndValues( det, Dets[det]['elmGroup'], timePeriodsOne ) )

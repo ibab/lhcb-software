@@ -36,6 +36,7 @@ parser.add_option("-a", "--alarms", dest="alarmString", default=False, metavar="
                   help="Set alarm thresholds for the requested dofs. Plots will be produced only for layers which have an alignment difference that exceeds its threshold."
                   + " Enter thresholds as positive values separated by commas without spaces, with the order mathcing the order in which the dofs are entered."
                   + " A threshold value of -1 corresponds to alarm-mode=off for that dof. [default: -1 for all dofs]")
+parser.add_option("-c", "--coordinateFrame", dest="coords", default="global", help="Make plots using local or global coordinates [default: %default]")
 parser.add_option("-l", "--layer", dest="layerName", default="all", metavar="LAYERNAME", help="Only make plots for the given layer [default: make plots for all layers]")
 parser.add_option("-n", "--names", action="store_true", dest="names", default=False, help="Draw element names [default: %default]")
 parser.add_option("-o", "--outdir",    dest="outDirName",     default="AlignmentsCompared", metavar="OUTDIR",
@@ -81,5 +82,6 @@ plotAlignmentParametersHeat(
       , outputDir=options.outDirName
       , layers=[options.layerName]
       , drawNames=options.names
+      , coordinateFrame=options.coords
       , AlarmThresholds=Alarms
       )
