@@ -20,6 +20,7 @@ namespace CondDBUI {
     static const std::string findTagRelation(const cool::IFolderSetPtr &ptr, const std::string& parentTagName);
     static bool deleteTagRelation(const cool::IFolderPtr &ptr, const std::string& parentTagName);
     static bool createTagRelation(const cool::IFolderPtr &ptr, const std::string& parentTagName, const std::string& tagName);
+    static bool createTagRelation(const cool::IFolderSetPtr &ptr, const std::string& parentTagName, const std::string& tagName);
     static cool::IDatabasePtr openDatabase(const cool::IDatabaseSvc* &ptr, const cool::DatabaseId &dbId, bool readOnly=true);
   };
 }

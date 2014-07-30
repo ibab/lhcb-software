@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2014-07-30 - Liang Sun
+ - More fixes on COOL API compatibility issues with ROOT 6, and additional exception handlings for COOL are added in the Helper.
 
 ! 2014-07-29 - Marco Clemencic
  - Ported to CMake the changes in the build (helper library etc.).

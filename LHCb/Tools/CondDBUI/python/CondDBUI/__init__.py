@@ -1336,7 +1336,7 @@ class CondDB(object):
             return ""
         return localtag
 
-    def resolveTag(self,path,tag):
+    def resolveTag(self,path,tag,doraise = True):
         """
         Return the local tag associated with the parent tag given.
         """
@@ -1344,13 +1344,14 @@ class CondDB(object):
         Helpers = cppyy.gbl.CondDBUI.Helpers
 
         if type(path) is str:
+            doraise = False
             n = self.getCOOLNode(path)
         else:
             n = path
         localtag = Helpers.resolveTag(n, tag)
         if localtag == "": 
-            raise RuntimeError('No child tag can be found in node')
-            return None
+            if doraise: raise RuntimeError('No child tag can be found in node')
+            else: return None
         return localtag
         #Exception handeling for COOL not useful anymore here
 #        try:

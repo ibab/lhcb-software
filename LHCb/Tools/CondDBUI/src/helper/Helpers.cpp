@@ -7,6 +7,7 @@
 #include "CoolKernel/IFolder.h"
 #include "CoolKernel/IFolderSet.h"
 #include "CoolKernel/Exception.h"
+#include "CoralBase/Attribute.h"
 #include "RelationalAccess/ConnectionServiceException.h"
 #include <iostream>
 #include <stdexcept>
@@ -35,7 +36,17 @@ namespace CondDBUI {
       try {
           return ptr->resolveTag(ancestorTagName);
       }
+      catch(coral::AttributeException&){
+          // Will not do anything in c++
+//          std::cout<<"Exception found"<<std::endl;
+          return "";
+      }
       catch(cool::TagRelationNotFound&){
+          // Will not do anything in c++
+//          std::cout<<"Exception found"<<std::endl;
+          return "";
+      }
+      catch(cool::TagNotFound&){
           // Will not do anything in c++
 //          std::cout<<"Exception found"<<std::endl;
           return "";
@@ -50,7 +61,17 @@ namespace CondDBUI {
       try {
           return ptr->resolveTag(ancestorTagName);
       }
+      catch(coral::AttributeException&){
+          // Will not do anything in c++
+//          std::cout<<"Exception found"<<std::endl;
+          return "";
+      }
       catch(cool::TagRelationNotFound&){
+          // Will not do anything in c++
+//          std::cout<<"Exception found"<<std::endl;
+          return "";
+      }
+      catch(cool::TagNotFound&){
           // Will not do anything in c++
 //          std::cout<<"Exception found"<<std::endl;
           return "";
@@ -95,11 +116,11 @@ namespace CondDBUI {
       try {
           ptr->deleteTagRelation(parentTagName);
       }
-/*      catch(cool::TagRelationNotFound&){
+      catch(cool::TagRelationNotFound&){
           // Will not do anything in c++
 //          std::cout<<"Exception found"<<std::endl;
           return false;
-      }*/
+      }
       catch(cool::TagNotFound&){
           // Will not do anything in c++
 //          std::cout<<"Exception found"<<std::endl;
@@ -108,6 +129,17 @@ namespace CondDBUI {
       return true;
     }
     bool Helpers::createTagRelation(const cool::IFolderPtr &ptr, const std::string& parentTagName, const std::string& tagName) {
+      try {
+          ptr->createTagRelation(parentTagName, tagName);
+      }
+      catch(cool::ReservedHeadTag&){
+          // Will not do anything in c++
+//          std::cout<<"Exception found"<<std::endl;
+          return false;
+      }
+      return true;
+    }
+    bool Helpers::createTagRelation(const cool::IFolderSetPtr &ptr, const std::string& parentTagName, const std::string& tagName) {
       try {
           ptr->createTagRelation(parentTagName, tagName);
       }
