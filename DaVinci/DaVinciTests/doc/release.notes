@@ -1,8 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : DaVinciTests
-! Responsible : Chris Jones
+! Responsible : DaVinci Coordinator
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2014-07-30 - Christopher Rob Jones
+ - Disbale the fixedfile tests. Been failing for a while and unlikely to get
+   fixed any time soon now Rob has left LHCb...
+ - Add an exclusion for messages like
+   DataOnDemandSvc                  INFO Handled "DataFault" incidents: 76037/71974/5075490(Alg/Node/Total).
+ - Update Stripping references.
 
 !========================= DaVinciTests v2r26 2014-07-28 =========================
 

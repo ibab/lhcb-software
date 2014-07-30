@@ -19,4 +19,5 @@ preprocessor = LHCbPreprocessor + \
   LineSkipper(["MD5 sum:"]) + \
   LineSkipper(["LHCBCOND_"]) + \
   LineSkipper(["SIMCOND_"]) + \
-  LineSkipper(["DDDB_"])
+  LineSkipper(["DDDB_"]) + \
+  LineSkipper(["DataOnDemandSvc                  INFO Handled "])
