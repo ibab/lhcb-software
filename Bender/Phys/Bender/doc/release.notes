@@ -24,6 +24,8 @@
 !
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/Bender v25r0   2014-07-30 =========================
+
 ! 2014-07-30 - Pieter David
  - DataUtils.py: when accessing a file by LFN, the --grid option now takes
    a site name (e.g. LCG.CERN.ch) instead of a storage element name
