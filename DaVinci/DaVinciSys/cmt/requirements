@@ -14,6 +14,7 @@ use RawEventCompat   v1r6     DAQ
 use DAQSys           v8r4     DAQ
 use DAQEvent         v9r17    Event
 use VeloDAQ          v6r12    Velo
+use LoKiCore         v11r20p1 Phys
 
 # Declare this as a container package
 apply_pattern container_package

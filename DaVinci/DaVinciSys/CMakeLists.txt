@@ -9,6 +9,7 @@ gaudi_depends_on_subdirs(DaVinciTests
                          DAQ/RawEventCompat
                          DAQ/DAQSys
                          Event/DAQEvent
-                         Velo/VeloDAQ)
+                         Velo/VeloDAQ
+                         Phys/LoKiCore)
 
 gaudi_add_test(QMTest QMTEST)
