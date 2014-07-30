@@ -52,6 +52,7 @@ __all__     = (
     'runPidCalib' , ## run pid-calib machinery 
     'saveHistos'  , ## save the histogram historgams
     'ex_func'     , ## an example of end-user function 
+    'ex_func2'    , ## another example of end-user function 
     )
 # =============================================================================
 import os 
@@ -393,23 +394,6 @@ def runPidCalib ( the_func    ,
                              runMax          ,
                              verbose         ,
                              maxFiles        )
-        
-        
-    ## runMax   = runMax if runMin <= runMax else None
-    ## runMin   = "%d" % runMin
-    ## from PIDPerfScripts.DataFuncs import GetPerfPlotList 
-    ## histopair = GetPerfPlotList ( the_func            , ## Use the function! 
-    ##                               stripping           ,
-    ##                               polarity            ,
-    ##                               particle            ,
-    ##                               None                , ## PID-cuts...
-    ##                               trackcuts           , ## Track-cuts 
-    ##                               None                , ## Binninng schemes   
-    ##                               runMin              ,
-    ##                               runMax              ,
-    ##                               verbose             ,
-    ##                               False               , ## allow missing 
-    ##                               maxFiles            )
     
     if config.get('dbname',None) :
 
@@ -480,12 +464,10 @@ def saveHistos  (  histos     ,
 #  @see https://twiki.cern.ch/twiki/bin/view/LHCb/PIDCalibPackage
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-07-19
-def  ex_func ( PartName             ,
-               DataSet              ,
-               DLLCutList    = None , ## not used 
-               BinningScheme = None , ## not needed 
-               Plots         = None , 
-               verbose       = True ) :
+def  ex_func ( particle          ,
+               dataset           ,
+               plots     = None  , 
+               verbose   = False ) :
     """The example of the actual function that build histos
     
     In this example it builds two histograms:
@@ -502,8 +484,7 @@ def  ex_func ( PartName             ,
     >>> eff = 1/(1 + h_rej/h_acc)
     """
     
-    ## we need ROOT and Ostap machinery!
-    
+    ## we need ROOT and Ostap machinery!    
     import ROOT
     from Ostap.PyRoUts import hID 
     
@@ -514,36 +495,100 @@ def  ex_func ( PartName             ,
     rejected = 'Pi_ProbNNpi<0.5' ## note variable names 
     
     # 2) prepare the histogtrams 
-    h1 = ROOT.TH2D ( hID () , 'Accepted(%s)'% accepted , 15 , 0 , 150000 , 10 , 2 , 5 ) ; h1.Sumw2()
-    h2 = ROOT.TH2D ( hID () , 'Rejected(%s)'% rejected , 15 , 0 , 150000 , 10 , 2 , 5 ) ; h2.Sumw2()
-
+    hA = ROOT.TH2D ( hID () , 'Accepted(%s)'% accepted , 15 , 0 , 150000 , 10 , 2 , 5 ) ; h1.Sumw2()
+    hR = ROOT.TH2D ( hID () , 'Rejected(%s)'% rejected , 15 , 0 , 150000 , 10 , 2 , 5 ) ; h2.Sumw2()
+    
     # 3) fill the historgams with 'accepted' and 'rejected' events
     #    For dataset structure and variable names see:
     #    https://twiki.cern.ch/twiki/bin/view/LHCb/PIDCalibPackage
     
     vlst = ROOT.RooArgList ()
-    vlst.add ( DataSet.Pi_P   ) ## note variable names 
-    vlst.add ( DataSet.Pi_Eta ) ## note variable name 
+    vlst.add ( dataset.Pi_P   ) ## note variable names 
+    vlst.add ( dataset.Pi_Eta ) ## note variable name 
     
-    h1 = DataSet.fillHistogram ( h1 , vlst , accepted ) ## fill histo 
-    h2 = DataSet.fillHistogram ( h2 , vlst , rejected ) ## fill histo
-
+    hA = DataSet.fillHistogram ( hA , vlst , accepted ) ## fill histo 
+    hR = DataSet.fillHistogram ( hR , vlst , rejected ) ## fill histo
+    
     #
     ## and now update the output 
     #
     
-    if not Plots :
-        Plots     = [ h1 , h2 ] ## "Accepted" & "Rejected" historgams 
+    if not plots : plots     = [ hA , hR ] ## "Accepted" & "Rejected" historgams 
     else         :
-        Plots[0] += h1          ## "Accepted" histogram 
-        Plots[1] += h2          ## "Rejected" histogram 
+        plots[0] += hA          ## "Accepted" histogram 
+        plots[1] += hR          ## "Rejected" histogram
+        
+        hA.Delete ()
+        hR.Delete ()
+        if hA : del hA
+        if hR : del hR
         
     if verbose :
-        logger.info ( 'Accepted histo: %s' % Plots[0].stat() )
-        logger.info ( 'Rejected histo: %s' % Plots[1].stat() )
+        
+        logger.info ( 'Accepted histo: %s' % plots[0].stat() )
+        logger.info ( 'Rejected histo: %s' % plots[1].stat() )
             
-    return Plots
+    return plots
 
+
+# =============================================================================
+## the example of the actual function that builds the histos
+#
+#  In this example it builds two histograms:
+#  - accepted events
+#  - rejected events
+#  the efficiency historgam can be later build in Ostap as :
+#  @code
+#
+#  eff = 1/(1 + h_rej/h_acc)
+# 
+#  @endcode
+#  For dataset structure and variable names see
+#  @see https://twiki.cern.ch/twiki/bin/view/LHCb/PIDCalibPackage
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-07-19
+def  ex_func2 ( particle         ,
+                dataset          ,
+                plots    = None  ,
+                verbose  = False ) :
+
+    ## we need ROOT and Ostap machinery!    
+    import ROOT
+    from Ostap.PyRoUts import hID, h3_axes  
+
+    vlst = ROOT.RooArgList ()
+    vlst.add ( dataset.K_P   )
+    
+    accepted = 'K_ProbNNK>0.1'
+    rejected = 'K_ProbNNK<0.1'
+    
+    pbins    = [ 3.2  , 6  , 9  ,  15 , 20  , 30  , 40 , 50 , 60 , 80 , 100 , 120 , 150 ]
+    pbins    = [ p*1000 for p in pbins ]
+    
+    vlst.add ( dataset.K_Eta )
+    hbins    = [ 2.0 , 2.5 , 3.0 , 3.5 , 4.0 , 4.5 , 4.9 ]
+    #ha = h2_axes ( pbins , hbins , title = 'Accepted(%s)' % accepted )
+    #hr = h2_axes ( pbins , hbins , title = 'Rejected(%s)' % rejected )
+    
+    vlst.add ( dataset.nTracks )
+    tbins    = [0, 150 , 250 , 400 , 1000]
+    ha       = h3_axes ( pbins , hbins , tbins , title = 'Accepted(%s)' % accepted ) 
+    hr       = h3_axes ( pbins , hbins , tbins , title = 'Rejected(%s)' % rejected )
+    
+    ha = dataset.fillHistogram ( ha , vlst , accepted )
+    hr = dataset.fillHistogram ( hr , vlst , rejected )
+    
+    if not plots : plots = [ ha , hr ] 
+    else         :
+
+        plots [0] += ha
+        plots [1] += hr 
+        ha.Delete ()
+        hr.Delete ()
+        if ha : del ha
+        if hr : del hr
+        
+    return plots
 
 # =============================================================================
 if '__main__' == __name__ :
