@@ -6,7 +6,7 @@ Purpose     : LHCb analysis packages
 ! 2014-07-28 - Chris Jones
  - Update Configurables list for QM tests.
 
-</PRE><H1><A NAME=v12r3>2014-06-13 Analysis v12r3</A></H1><PRE>
+</PRE><H1><A NAME=v13r0>2014-07-26 Analysis v13r0</A></H1><PRE>
 New development release, built against Phys v19r0.
 First production release using ROOT6 (6.00.02).
 
