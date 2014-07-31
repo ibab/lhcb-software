@@ -1,13 +1,31 @@
 '''
 Module for construction of baryon-lepton number violating stripping selections and lines
 
+Performance (prescaling included):
+
+Full.dst
+########
+
+StrippingReport                                                INFO Event 500000, Good event 500000
+|                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+|!StrippingBLVLinesLa2KmuLine                                 |  0.0270|       135|  1.007|   0.319|
+|!StrippingBLVLinesLb2KmuLine                                 |  0.0086|        43|  1.000|   0.300|
+|!StrippingBLVLinesLb2DmuLine                                 |  0.0116|        58|  1.293|  14.142|
+|!StrippingBLVLinesLb2DsmuLine                                |  0.0118|        59|  1.458|  20.595|
+|!StrippingBLVLinesB2LcmuLine                                 |  0.0228|       114|  1.386|  10.733|
+|!StrippingBLVLinesLb2LcpiLine                                |  0.0108|        54|  1.407|   0.083|
+|!StrippingBLVLinesB2DpiLine                                  |  0.0048|        24|  1.167|   0.079|
+|!StrippingBLVLinesBs2DspiLine                                |  0.0062|        31|  1.516|   0.078|
+|!StrippingBLVLinesB2LcpLine                                  |  0.0282|       141|  1.730|   0.088|
+                           
+
 Exported symbols (use python help!):
    - 
 '''
 
 __author__ = ['Oliver Gruenberg']
-__date__ = '14.03.2013'
-__version__ = '$Revision: 1.0 $'
+__date__ = '31.07.2014'
+__version__ = '$Revision: 2.0 $'
 
 ###################################################################################################
 
@@ -69,13 +87,14 @@ class BLVLinesConf(LineBuilder) :
         'Lb2LcpiPrescale'     :0.1,
         'B2DpiPrescale'       :0.1,
         'Bs2DspiPrescale'     :0.1,
-        'B2LcpPrescale'      : 0.2,
+        'B2LcpPrescale'       :0.2,
         }                
     
     
     def __init__(self, name = 'BLV', config = None) :
 
         LineBuilder.__init__(self, name, config)
+
         ### Signal Ch.
         La2Kmu_name=name+'La2Kmu'
         Lb2Kmu_name=name+'Lb2Kmu'
@@ -103,78 +122,62 @@ class BLVLinesConf(LineBuilder) :
 #######################################################################################################
 
         self.La2KmuLine = StrippingLine(La2Kmu_name+"Line",
-                                     prescale = config['La2KmuPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selLa2Kmu ]
-                                     )
-
-#######################################################################################################
+                                        prescale = config['La2KmuPrescale'],
+                                        postscale = config['Postscale'],
+                                        MDSTFlag = True,
+                                        algos = [ self.selLa2Kmu ] )
 
         self.Lb2KmuLine = StrippingLine(Lb2Kmu_name+"Line",
-                                     prescale = config['Lb2KmuPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selLb2Kmu ]
-                                     )
-        
-#######################################################################################################
-
+                                        prescale = config['Lb2KmuPrescale'],
+                                        postscale = config['Postscale'],
+                                        MDSTFlag = True,
+                                        algos = [ self.selLb2Kmu ] )
+ 
         self.Lb2DmuLine = StrippingLine(Lb2Dmu_name+"Line",
-                                     prescale = config['Lb2DmuPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selLb2Dmu ]
-                                     )
-
-#######################################################################################################
+                                        prescale = config['Lb2DmuPrescale'],
+                                        postscale = config['Postscale'],
+                                        MDSTFlag = True,
+                                        algos = [ self.selLb2Dmu ] )
 
         self.Lb2DsmuLine = StrippingLine(Lb2Dsmu_name+"Line",
-                                     prescale = config['Lb2DsmuPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selLb2Dsmu ]
-                                     )
-
-#######################################################################################################
+                                         prescale = config['Lb2DsmuPrescale'],
+                                         postscale = config['Postscale'],
+                                         MDSTFlag = True,
+                                         algos = [ self.selLb2Dsmu ] )
 
         self.b2LcmuLine = StrippingLine(B2Lcmu_name+"Line",
-                                     prescale = config['B2LcmuPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selB2Lcmu ]
-                                     )
+                                        prescale = config['B2LcmuPrescale'],
+                                        postscale = config['Postscale'],
+                                        MDSTFlag = True,
+                                        algos = [ self.selB2Lcmu ] )
 
-#######################################################################################################
 #######################################################################################################
 
         self.Lb2LcpiLine = StrippingLine(Lb2Lcpi_name+"Line",
-                                     prescale = config['Lb2LcpiPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selLb2Lcpi ]
-                                     )
-
-#######################################################################################################
+                                         prescale = config['Lb2LcpiPrescale'],
+                                         postscale = config['Postscale'],
+                                         MDSTFlag = True,
+                                         algos = [ self.selLb2Lcpi ] )
 
         self.B2DpiLine = StrippingLine(B2Dpi_name+"Line",
-                                     prescale = config['B2DpiPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selB2Dpi ]
-                                     )
-
-#######################################################################################################
+                                       prescale = config['B2DpiPrescale'],
+                                       postscale = config['Postscale'],
+                                       MDSTFlag = True,
+                                       algos = [ self.selB2Dpi ] )
 
         self.Bs2DspiLine = StrippingLine(Bs2Dspi_name+"Line",
-                                     prescale = config['Bs2DspiPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selBs2Dspi ]
-                                     )
-
-#######################################################################################################        
-#######################################################################################################                                                                                                    
+                                         prescale = config['Bs2DspiPrescale'],
+                                         postscale = config['Postscale'],
+                                         MDSTFlag = True,
+                                         algos = [ self.selBs2Dspi ] )
                                                                                                       
         self.b2LcpLine = StrippingLine(B2Lcp_name+"Line",                                           
-                                     prescale = config['B2LcpPrescale'],                             
-                                     postscale = config['Postscale'],                                 
-                                     algos = [ self.selB2Lcp ]                                       
-                                     )                                                                
+                                       prescale = config['B2LcpPrescale'], 
+                                       postscale = config['Postscale'],
+                                       MDSTFlag = True,
+                                       algos = [ self.selB2Lcp ] )
                                                                                                       
-#######################################################################################################                                                                       
+####################################################################################################### 
 
         ### Signal Ch.
         self.registerLine(self.La2KmuLine)
