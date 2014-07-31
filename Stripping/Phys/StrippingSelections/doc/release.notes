@@ -6,6 +6,10 @@
 
 !========================= StrippingSelections v3r36 2014-07-28 =========================
 
+! 2014-07-31 - Oliver Gruenberg
+ - Added D23MuLines, B24pLines
+ - Modified B23MuLines, BLVLines, Lc23MuLines
+
 ! 2014-07-31 - Wenbin Qian
  - Add Omega_b->OmegacH, add noIP line for Xib0->XicH, Xib->Xic0H
   Modify Beauty2Charm_Lb2XHBuilder  
