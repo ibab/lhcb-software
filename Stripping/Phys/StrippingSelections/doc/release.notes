@@ -6,6 +6,10 @@
 
 !========================= StrippingSelections v3r36 2014-07-28 =========================
 
+! 2014-07-31 - Wenbin Qian
+ - Add Omega_b->OmegacH, add noIP line for Xib0->XicH, Xib->Xic0H
+  Modify Beauty2Charm_Lb2XHBuilder  
+
 ! 2014-07-31 - Pablo Ruiz Valls
  - Fixed StrippingBeauty2XGamma.py
 
