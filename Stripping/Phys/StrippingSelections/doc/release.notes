@@ -6,6 +6,10 @@
 
 !========================= StrippingSelections v3r36 2014-07-28 =========================
 
+! 2014-07-31 - Andrea Contu
+ - Modified StrippingDstarD02xx module
+ - Added Isolation variables storage due to moving to muDST
+
 ! 2014-07-31 - Oliver Gruenberg
  - Added D23MuLines, B24pLines
  - Modified B23MuLines, BLVLines, Lc23MuLines
