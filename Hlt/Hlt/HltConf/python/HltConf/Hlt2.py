@@ -74,7 +74,6 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         from HltLine.HltLine     import Hlt2Line
         Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, VoidFilter = '' )
-        ThresholdSettings = self.getProp("ThresholdSettings")
 
         #
         # check if this threshold setting has some global event cut...
@@ -87,14 +86,10 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         # Loop over thresholds
         #
+        from ThresholdUtils import setThresholds
+        from functools import partial
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-        for i in self.__used_configurables__ :
-            # Time for some python magic
-            if type(i) is tuple : # if we are dealing with a named instance in the used configurables
-                i, i_name = i # copy what is done in GaudiKernel/Configurable.py 
-            if not issubclass(i,HltLinesConfigurableUser) : continue
-            from ThresholdUtils import setThresholds
-            setThresholds(ThresholdSettings,i)
+        map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , import_line_configurables(Hlt2Lines) )
        
 ###################################################################################
 #

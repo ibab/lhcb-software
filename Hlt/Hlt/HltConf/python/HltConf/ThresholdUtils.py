@@ -1,17 +1,18 @@
 #########################################################################################
 # Utility function for setting thresholds both in Hlt1 and 2
 #
-def setThresholds(ThresholdSettings,confs):
+def setThresholds(ThresholdSettings,conf_):
     """
-    Look in ThresholdSettings for configurable confs
+    Look in ThresholdSettings for configurable conf_
     and set the appropriate settings
     
     @author G. Raven, P. Koppenburg
     @date 23/7/2009 (moved)
     """
-    conf = confs()  # The configurable _must_ be called even if not configured. Or it will be ignored
-    if confs not in ThresholdSettings : return
-    for (k,v) in ThresholdSettings[confs].iteritems() :
+    from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+    assert issubclass(conf_,HltLinesConfigurableUser) , '%s is not an HltLinesConfigurableUser'%i.__name__
+    conf = conf_()  # The configurable _must_ be instantiated even if not explicitly configured. Or it will be ignored
+    for (k,v) in ThresholdSettings.get(conf_, dict()).iteritems() :
         if hasattr(conf,k) and v==getattr(conf,k) : continue # nothing to do, move on to next item...
 
         # configurables have an exception for list and dict: 

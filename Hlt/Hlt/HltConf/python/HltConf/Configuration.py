@@ -800,7 +800,7 @@ class HltConf(LHCbConfigurableUser):
                                        [ decoder.setup()
                                        , HltFilter('LumiStripperFilter' , Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
                                        , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
-                                       , bankKiller( BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
+                                       , bankKiller('LumiBankKiller', BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                        ] )
                            ]
 
