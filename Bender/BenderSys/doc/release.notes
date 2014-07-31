@@ -23,6 +23,15 @@
 ! -----------------------------------------------------------------------------
 </PRE>
 
+<A NAME=v24r2p1>   2014-07-31 Bender v24r21 based on the DaVinci v35r1</A>
+<ul>
+<li>Similar to v24r2
+<li>Based on the DaVinci v35r1</li>
+<li>Keep updated version of <code>Analysis/Ostap</code> </li>
+<li>Keep updated version of <code>Bender</code> and <code>BenderTools</code> from v25r0 </li>
+</ul>
+
+
 <A NAME=v25r0>   2014-07-30 Bender v25r0 based on the DaVinci v36r0</A>
 <ul>
 <li>Similar to v24r2
