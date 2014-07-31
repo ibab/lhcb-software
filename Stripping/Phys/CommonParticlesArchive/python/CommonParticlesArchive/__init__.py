@@ -36,9 +36,9 @@ class CommonParticlesArchiveConf ( object ) :
         duplicate_strippings = { "Stripping20r1p1" : "Stripping20r0p1",
                                  "Stripping20r1p2" : "Stripping20r0p2",
                                  "Stripping20r1p3" : "Stripping20r0p3" }
-        stripName = stripping
-        if stripping in duplicate_strippings.keys() :
-            stripName = duplicate_strippings[stripping]
+        stripName = stripping.capitalize()
+        if stripName in duplicate_strippings.keys() :
+            stripName = duplicate_strippings[stripName]
 
         # Check to see if CommonParticles has already been loaded.
         # If it has, throw an exception, as this method must be called
