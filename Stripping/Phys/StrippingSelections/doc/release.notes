@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r36 2014-07-28 =========================
 
+! 2014-07-31 - Pablo Ruiz Valls
+ - Fixed StrippingBeauty2XGamma.py
+
 ! 2014-07-29 - Mika Vesterinen
  - Added new module, StrippingTrackEffD0ToK3Pi
 

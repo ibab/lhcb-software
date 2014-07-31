@@ -11,13 +11,15 @@ __all__ = ( 'B2Quasi2BodyConf',
             'makeDiTrackLambda',
             'makeDiTrackList_wKS0',
             'makeTriTrackList',
-#            'makeTriTrackList_alt',
+            'makeTriTrackListVanya',
+            'makeTriTrackList_alt',
             'makeTriTrackList_wKS0',
             'makeTriTrackList_wpi0M',
             'makeTriTrackList_wpi0R',
             'makeFourTrackList',
+            'makeFourTrackListVanya',
             'makeFourTrackList_wKS0',
-#            'makeFourTrackListPions',
+            'makeFourTrackListPions',
             'makeFourTrackList_wpi0M',
             'makeFourTrackList_wpi0R',
             'makeB2B2XG4piGamma',
@@ -105,6 +107,8 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions, StdLooseAllPhotons, StdLooseMergedPi0, StdLooseResolvedPi0, StdAllLooseGammaDD,StdAllLooseGammaLL, StdAllNoPIDsProtons
+from Configurables import DaVinci__N3BodyDecays as Combine3Particles
+from Configurables import DaVinci__N4BodyDecays as Combine4Particles
 
 name = "Beauty2XGamma"
 
@@ -253,21 +257,36 @@ class Beauty2XGammaConf(LineBuilder) :
                                               MaxDocaCut = config['B2XGResDocaMax']
                                               )
 
-#         # hhh built as hh + h
-#         self.TriTrackList_alt = makeTriTrackList_alt( name="Alt_TriTracksForRadiativeB" + self.name,
-#                                                       trkList=self.TrackList,
-#                                                       ditrkList=self.DiTrackList,
-#                                                       MinPTCut = config['B2XGResMinPT'],
-#                                                       MinSumPTCut = config['B2XGResSumPtMin'],
-#                                                       MaxMassCut = config['B2XGResMaxMass'],
-#                                                       MinMassCut = config['B2XGResMinMass'],
-#                                                       VtxChi2DOFCut = config['B2XGResVtxChi2DOF'],
-#                                                       BPVVDCHI2MinCut = config['B2XGResBPVVDCHI2Min'],
-#                                                       IPChi2MinCut = config['B2XGResIPCHI2Min'],
-#                                                       MaxDocaCut = config['B2XGResDocaMax']
-#                                                       )
 
+        # hhh built as hh + h
+        self.TriTrackListVanya = makeTriTrackListVanya( name="TriTracks_NBodyDecay_ForRadiativeB" + self.name,
+                                                        trkList=self.TrackList,
+                                                        #                                              ditrkList=self.DiTrackList,
+                                                        MinPTCut = config['B2XGResMinPT'],
+                                                        MinSumPTCut = config['B2XGResSumPtMin'],
+                                                        MaxMassCut = config['B2XGResMaxMass'],
+                                                        MinMassCut = config['B2XGResMinMass'],
+                                                        VtxChi2DOFCut = config['B2XGResVtxChi2DOF'],
+                                                        BPVVDCHI2MinCut = config['B2XGResBPVVDCHI2Min'],
+                                                        IPChi2MinCut = config['B2XGResIPCHI2Min'],
+                                                        MaxDocaCut = config['B2XGResDocaMax']
+                                                        )
 
+        # hhh built as hh + h
+        self.TriTrackList_alt = makeTriTrackList_alt( name="Alt_TriTracksForRadiativeB" + self.name,
+                                                      trkList=self.TrackList,
+                                                      ditrkList=self.DiTrackList,
+                                                      MinPTCut = config['B2XGResMinPT'],
+                                                      MinSumPTCut = config['B2XGResSumPtMin'],
+                                                      MaxMassCut = config['B2XGResMaxMass'],
+                                                      MinMassCut = config['B2XGResMinMass'],
+                                                      VtxChi2DOFCut = config['B2XGResVtxChi2DOF'],
+                                                      BPVVDCHI2MinCut = config['B2XGResBPVVDCHI2Min'],
+                                                      IPChi2MinCut = config['B2XGResIPCHI2Min'],
+                                                      MaxDocaCut = config['B2XGResDocaMax']
+                                                      )
+        
+        
         # hh + Ks0 [built as hh + Ks0]
         self.TriTrackList_wKS0 = makeTriTrackList_wKS0( name="DiTracks_wKS0ForRadiativeB" + self.name,
                                                         ksList=self.Kshort,
@@ -323,18 +342,33 @@ class Beauty2XGammaConf(LineBuilder) :
                                                 MaxDocaCut = config['B2XGResDocaMax']
                                                 )
 
-#         # hhhh (built as hh+hh)
-#         self.FourTrackListPions = makeFourTrackListPions( name="FourTracksPionsForRadiativeB" + self.name,
-#                                                           diTrkList = self.DiTrackList,
-#                                                           MinPTCut = config['B2XGResMinPT'],
-#                                                           MinSumPTCut = config['B2XGResSumPtMin'],
-#                                                           MaxMassCut = config['B2XGResMaxMass'],
-#                                                           MinMassCut = config['B2XGResMinMass'],
-#                                                           VtxChi2DOFCut = config['B2XGResVtxChi2DOF'],
-#                                                           BPVVDCHI2MinCut = config['B2XGResBPVVDCHI2Min'],
-#                                                           IPChi2MinCut = config['B2XGResIPCHI2Min'],
-#                                                           MaxDocaCut = config['B2XGResDocaMax']
-#                                                           )
+        # hhhh (built as hh+hh)
+        self.FourTrackListVanya = makeFourTrackListVanya( name="FourTracks_NBodyDecay_ForRadiativeB" + self.name,
+                                                          trkList=self.TrackList,
+                                                          MinPTCut = config['B2XGResMinPT'],
+                                                          MinSumPTCut = config['B2XGResSumPtMin'],
+                                                          MaxMassCut = config['B2XGResMaxMass'],
+                                                          MinMassCut = config['B2XGResMinMass'],
+                                                          VtxChi2DOFCut = config['B2XGResVtxChi2DOF'],
+                                                          BPVVDCHI2MinCut = config['B2XGResBPVVDCHI2Min'],
+                                                          IPChi2MinCut = config['B2XGResIPCHI2Min'],
+                                                          MaxDocaCut = config['B2XGResDocaMax']
+                                                          )
+                
+        
+
+        # hhhh (built as hh+hh)
+        self.FourTrackListPions = makeFourTrackListPions( name="FourTracksPionsForRadiativeB" + self.name,
+                                                          diTrkList = self.DiTrackList,
+                                                          MinPTCut = config['B2XGResMinPT'],
+                                                          MinSumPTCut = config['B2XGResSumPtMin'],
+                                                          MaxMassCut = config['B2XGResMaxMass'],
+                                                          MinMassCut = config['B2XGResMinMass'],
+                                                          VtxChi2DOFCut = config['B2XGResVtxChi2DOF'],
+                                                          BPVVDCHI2MinCut = config['B2XGResBPVVDCHI2Min'],
+                                                          IPChi2MinCut = config['B2XGResIPCHI2Min'],
+                                                          MaxDocaCut = config['B2XGResDocaMax']
+                                                          )
 
         # hhh + Ks0 [built as hhh + Ks0]
         self.FourTrackList_wKS0 = makeFourTrackList_wKS0( name="TriTracks_wKS0ForRadiativeB" + self.name,
@@ -493,27 +527,48 @@ class Beauty2XGammaConf(LineBuilder) :
                                           MDSTFlag = True,
                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
-#         B2XG3pi_altName = self.name + "3pi_alt_"
-#         self.RadiativeB2XG3pi_alt = makeB2B2XG3piGamma ( B2XG3pi_altName,
-#                                                          triTrkList=self.TriTrackList_alt,
-#                                                          photons=self.Photon,
-#                                                          MinPTCut = config['B2XGBMinPT'],
-#                                                          MinMassCut = config['B2XGBMinM3pi'],
-#                                                          MaxMassCut = config['B2XGBMaxM'],
-#                                                          MaxCorrMCut = config['B2XGBMaxCorrM'],
-#                                                          VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
-#                                                          MinSumPtCut = config['B2XGBSumPtMin'],
-#                                                          MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
-#                                                          VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
+        B2XG3pi_VanyaName = self.name + "3pi_Vanya_"
+        self.RadiativeB2XG3pi_Vanya = makeB2B2XG3piGamma ( B2XG3pi_VanyaName,
+                                                           triTrkList=self.TriTrackListVanya,
+                                                           photons=self.Photon,
+                                                           MinPTCut = config['B2XGBMinPT'],
+                                                           MinMassCut = config['B2XGBMinM3pi'],
+                                                           MaxMassCut = config['B2XGBMaxM'],
+                                                           MaxCorrMCut = config['B2XGBMaxCorrM'],
+                                                           VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
+                                                           MinSumPtCut = config['B2XGBSumPtMin'],
+                                                           MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
+                                                           VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
+        
+        self.B2XG3pi_VanyaLine = StrippingLine( B2XG3pi_VanyaName+"Line",
+                                                prescale = config['B2XG3piPrescale'],
+                                                selection = tisTosSelection(self.RadiativeB2XG3pi_Vanya),
+                                                EnableFlavourTagging = True,
+                                                RequiredRawEvents = ["Calo"],
+                                                MDSTFlag = True,
+                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
-#         self.B2XG3pi_altLine = StrippingLine( B2XG3pi_altName+"Line",
-#                                               prescale = config['B2XG3piPrescale'],
-#                                               selection = tisTosSelection(self.RadiativeB2XG3pi_alt),
-#                                               EnableFlavourTagging = True,
-#                                               RequiredRawEvents = ["Calo"],
-#                                               MDSTFlag = True,
-#                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
-
+        B2XG3pi_altName = self.name + "3pi_alt_"
+        self.RadiativeB2XG3pi_alt = makeB2B2XG3piGamma ( B2XG3pi_altName,
+                                                         triTrkList=self.TriTrackList_alt,
+                                                         photons=self.Photon,
+                                                         MinPTCut = config['B2XGBMinPT'],
+                                                         MinMassCut = config['B2XGBMinM3pi'],
+                                                         MaxMassCut = config['B2XGBMaxM'],
+                                                         MaxCorrMCut = config['B2XGBMaxCorrM'],
+                                                         VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
+                                                         MinSumPtCut = config['B2XGBSumPtMin'],
+                                                         MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
+                                                         VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
+        
+        self.B2XG3pi_altLine = StrippingLine( B2XG3pi_altName+"Line",
+                                              prescale = config['B2XG3piPrescale'],
+                                              selection = tisTosSelection(self.RadiativeB2XG3pi_alt),
+                                              EnableFlavourTagging = True,
+                                              RequiredRawEvents = ["Calo"],
+                                              MDSTFlag = True,
+                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+        
 
         B2XG3piCNVName = self.name + "3pi_wCNV_"
         self.RadiativeB2XG3piCNV = makeB2B2XG3piGamma ( B2XG3piCNVName,
@@ -621,27 +676,48 @@ class Beauty2XGammaConf(LineBuilder) :
                                           MDSTFlag = True,
                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
-#         B2XG4pi_2rhoName = self.name + "4pi_2rho_"
-#         self.RadiativeB2XG4pi_2rho = makeB2B2XG4piGamma ( B2XG4pi_2rhoName,
-# #                                                               fourTrkListPions=self.FourTrackListPions,
-#                                                           fourTrkList=self.FourTrackListPions,
-#                                                           photons=self.Photon,
-#                                                           MinPTCut = config['B2XGBMinPT'],
-#                                                           MinMassCut = config['B2XGBMinM4pi'],
-#                                                           MaxMassCut = config['B2XGBMaxM'],
-#                                                           MaxCorrMCut = config['B2XGBMaxCorrM'],
-#                                                           VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
-#                                                           MinSumPtCut = config['B2XGBSumPtMin'],
-#                                                           MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
-#                                                           VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
+        B2XG4piVanyaName = self.name + "4piVanya_"
+        self.RadiativeB2XG4piVanya = makeB2B2XG4piGamma ( B2XG4piVanyaName,
+                                                          fourTrkList=self.FourTrackListVanya,
+                                                          photons=self.Photon,
+                                                          MinPTCut = config['B2XGBMinPT'],
+                                                          MinMassCut = config['B2XGBMinM4pi'],
+                                                          MaxMassCut = config['B2XGBMaxM'],
+                                                          MaxCorrMCut = config['B2XGBMaxCorrM'],
+                                                          VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
+                                                          MinSumPtCut = config['B2XGBSumPtMin'],
+                                                          MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
+                                                          VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
+        
+        self.B2XG4piVanyaLine = StrippingLine( B2XG4piVanyaName+"Line",
+                                               prescale = config['B2XG4piPrescale'],
+                                               selection = tisTosSelection(self.RadiativeB2XG4piVanya),
+                                               EnableFlavourTagging = True,
+                                               RequiredRawEvents = ["Calo"],
+                                               MDSTFlag = True,
+                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+        
 
-#         self.B2XG4pi_2rhoLine = StrippingLine( B2XG4pi_2rhoName+"Line",
-#                                                prescale = config['B2XG4piPrescale'],
-#                                                selection = tisTosSelection(self.RadiativeB2XG4pi_2rho),
-#                                                EnableFlavourTagging = True,
-#                                                RequiredRawEvents = ["Calo"],
-#                                                MDSTFlag = True,
-#                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+        B2XG4pi_2rhoName = self.name + "4pi_2rho_"
+        self.RadiativeB2XG4pi_2rho = makeB2B2XG4piGamma ( B2XG4pi_2rhoName,
+                                                          fourTrkList=self.FourTrackListPions,
+                                                          photons=self.Photon,
+                                                          MinPTCut = config['B2XGBMinPT'],
+                                                          MinMassCut = config['B2XGBMinM4pi'],
+                                                          MaxMassCut = config['B2XGBMaxM'],
+                                                          MaxCorrMCut = config['B2XGBMaxCorrM'],
+                                                          VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
+                                                          MinSumPtCut = config['B2XGBSumPtMin'],
+                                                          MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
+                                                          VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
+        
+        self.B2XG4pi_2rhoLine = StrippingLine( B2XG4pi_2rhoName+"Line",
+                                               prescale = config['B2XG4piPrescale'],
+                                                selection = tisTosSelection(self.RadiativeB2XG4pi_2rho),
+                                                EnableFlavourTagging = True,
+                                                RequiredRawEvents = ["Calo"],
+                                                MDSTFlag = True,
+                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
 
         B2XG3piKsName = self.name + "3pi_Ks0_"
         self.RadiativeB2XG3piKs = makeB2B2XG3piKsGamma ( B2XG3piKsName,
@@ -816,27 +892,29 @@ class Beauty2XGammaConf(LineBuilder) :
                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
         
 
-#         self.registerLine(self.B2XG2piLine)
-#         self.registerLine(self.B2XG2piCNVLine)
-#         self.registerLine(self.B2XGpiKsLine)
+        self.registerLine(self.B2XG2piLine)
+        self.registerLine(self.B2XG2piCNVLine)
+        self.registerLine(self.B2XGpiKsLine)
 
-#         self.registerLine(self.B2XG3piLine)
-# #        self.registerLine(self.B2XG3pi_altLine)
-#         self.registerLine(self.B2XG3piCNVLine)
-#         self.registerLine(self.B2XG2pipi0RLine)
-#         self.registerLine(self.B2XG2pipi0MLine)
-#         self.registerLine(self.B2XG2piKsLine)
+        self.registerLine(self.B2XG3piLine)
+        self.registerLine(self.B2XG3pi_VanyaLine)
+        self.registerLine(self.B2XG3pi_altLine)
+        self.registerLine(self.B2XG3piCNVLine)
+        self.registerLine(self.B2XG2pipi0RLine)
+        self.registerLine(self.B2XG2pipi0MLine)
+        self.registerLine(self.B2XG2piKsLine)
 
-#         self.registerLine(self.B2XG4piLine)
-# #        self.registerLine(self.B2XG4pi_2rhoLine)
-#         self.registerLine(self.B2XG3piKsLine)
-#         self.registerLine(self.B2XG3pipi0RLine)
-#         self.registerLine(self.B2XG3pipi0MLine)
-#         self.registerLine(self.B2XG2pi2KsLine)
+        self.registerLine(self.B2XG4piLine)
+        self.registerLine(self.B2XG4piVanyaLine)
+        self.registerLine(self.B2XG4pi_2rhoLine)
+        self.registerLine(self.B2XG3piKsLine)
+        self.registerLine(self.B2XG3pipi0RLine)
+        self.registerLine(self.B2XG3pipi0MLine)
+        self.registerLine(self.B2XG2pi2KsLine)
 
-#         self.registerLine(self.B2XGLambdapiLine)
-#         self.registerLine(self.B2XGLambda2piLine)
-#         self.registerLine(self.B2XGLambda3piLine)
+        self.registerLine(self.B2XGLambdapiLine)
+        self.registerLine(self.B2XGLambda2piLine)
+        self.registerLine(self.B2XGLambda3piLine)
 
         self.registerLine(self.B2XGLbLambdaLine)
 
@@ -915,6 +993,43 @@ def makeTriTrackList( name,
                                          CombinationCut = _TriTrackPreVertexCuts,
                                          MotherCut = _TriTrackPostVertexCuts )
 
+    # _combineTriTrack = Combine3Particles( DecayDescriptor="[K_1(1270)+ -> pi+ pi- pi+]cc",
+    #                                       Combination12Cut = _TriTrackPreVertexCuts,
+    #                                       Combination123Cut = _TriTrackPreVertexCuts,
+    #                                       MotherCut = _TriTrackPostVertexCuts )
+
+    return Selection(name,
+                     Algorithm = _combineTriTrack,
+                     RequiredSelections = [ trkList ] )
+
+def makeTriTrackListVanya( name,
+                           trkList,
+                           MinPTCut,
+                           MinSumPTCut,
+                           MaxMassCut,
+                           MinMassCut,
+                           VtxChi2DOFCut,
+                           BPVVDCHI2MinCut,
+                           IPChi2MinCut,
+                           MaxDocaCut) :
+    """
+    Tri-track selection
+    """
+    _TriTrackPreVertexCuts = hasTopoChild()
+    _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
+    
+    _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    
+    # _combineTriTrack = CombineParticles( DecayDescriptor="[K_1(1270)+ -> pi+ pi- pi+]cc",
+    #                                      CombinationCut = _TriTrackPreVertexCuts,
+    #                                      MotherCut = _TriTrackPostVertexCuts )
+    
+    _combineTriTrack = Combine3Particles( DecayDescriptor="[K_1(1270)+ -> pi+ pi- pi+]cc",
+                                          Combination12Cut = _TriTrackPreVertexCuts,
+                                          CombinationCut = _TriTrackPreVertexCuts,
+                                          MotherCut = _TriTrackPostVertexCuts )
+    
     return Selection(name,
                      Algorithm = _combineTriTrack,
                      RequiredSelections = [ trkList ] )
@@ -1053,6 +1168,40 @@ def makeFourTrackList( name,
                                           CombinationCut = _FourTrackPreVertexCuts,
                                           MotherCut = _FourTrackPostVertexCuts )
 
+    return Selection(name,
+                     Algorithm = _combineFourTrack,
+                     RequiredSelections = [ trkList  ] )
+
+def makeFourTrackListVanya( name,
+                            trkList,
+                            MinPTCut,
+                            MinSumPTCut,
+                            MaxMassCut,
+                            MinMassCut,
+                            VtxChi2DOFCut,
+                            BPVVDCHI2MinCut,
+                            IPChi2MinCut,
+                            MaxDocaCut) :
+    """
+    Four-track selection
+    """
+    _FourTrackPreVertexCuts = hasTopoChild()
+    _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
+    _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
+    
+    _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
+    
+    _combineFourTrack = CombineParticles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
+                                          CombinationCut = _FourTrackPreVertexCuts,
+                                          MotherCut = _FourTrackPostVertexCuts )
+
+    _combineFourTrack = Combine4Particles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
+                                           Combination12Cut = _FourTrackPreVertexCuts,
+                                           Combination123Cut = _FourTrackPreVertexCuts,
+                                           CombinationCut = _FourTrackPreVertexCuts,
+                                           MotherCut = _FourTrackPostVertexCuts )
+    
+    
     return Selection(name,
                      Algorithm = _combineFourTrack,
                      RequiredSelections = [ trkList  ] )
