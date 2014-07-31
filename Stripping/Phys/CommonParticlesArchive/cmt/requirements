@@ -3,20 +3,18 @@
 # Maintainer : Chris Jones
 #============================================================================
 package           CommonParticlesArchive
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc python
+
 #============================================================================
-# Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
+# Used packages.
 #============================================================================ 
 use   GaudiPolicy   v*
 
 # standard patterns
 #============================================================================
 apply_pattern install_python_modules
-#============================================================================
-#apply_pattern QMTest
