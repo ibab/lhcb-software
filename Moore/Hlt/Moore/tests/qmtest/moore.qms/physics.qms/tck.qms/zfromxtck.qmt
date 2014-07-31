@@ -24,7 +24,7 @@
     <text>../options/default-threshold.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().EnableTimer="tck.hlt1and2.csv"; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
+    <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().UseTCK=True; Moore().InitialTCK='0x00ef0046';  Moore().CheckOdin=False; Moore().EnableTimer="tck.hlt1and2.csv"; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
   </set></argument>
   <argument name="validator"><text>
 myname='moore.physics.tck.zfromxtck'

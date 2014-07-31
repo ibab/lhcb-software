@@ -3,6 +3,9 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+! 2014-07-31 - Gerhard Raven
+ - fix a qmtest
+
 ! 2014-07-29 - Gerhard Raven
  - remove deprecated options
  - add option to remove all Hlt raw banks on input
