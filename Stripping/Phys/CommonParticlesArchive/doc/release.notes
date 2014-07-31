@@ -6,6 +6,7 @@
 
 ! 2014-07-31 - Chris Jones
  - Handle stripping version strings in all lower case.
+ - Close the zip file after the test.
 
 !========================= CommonParticlesArchive v1r0 2014-07-28 =========================
 
