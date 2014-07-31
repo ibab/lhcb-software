@@ -170,6 +170,11 @@ class HltConf(LHCbConfigurableUser):
         
         # obtain list of lines,
         activehlt1lines,activehlt2lines=self._runHltLines()
+        # and push into the Hlt1Lines and Hlt2Lines code... 
+        #  (for backwards compatible behaviour, just skip the next three lines... )
+        from  HltLine.HltLine import setRequestedHlt1Lines, setRequestedHlt2Lines
+        setRequestedHlt1Lines( activehlt1lines )
+        setRequestedHlt2Lines( activehlt2lines )
 
         Dec=Sequence('HltDecisionSequence',Members=[])
         #
@@ -798,9 +803,9 @@ class HltConf(LHCbConfigurableUser):
             End.Members += [ HltLumiWriter()
                            , Sequence( 'LumiStripper' , Members = 
                                        [ decoder.setup()
-                                       , HltFilter('LumiStripperFilter' , Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
-                                       , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
-                                       , bankKiller('LumiBankKiller', BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
+                                       , HltFilter('LumiStripperFilter', Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
+                                       , Prescale('LumiStripperPrescaler', AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
+                                       , bankKiller('LumiStripperBankKiller', BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                        ] )
                            ]
 

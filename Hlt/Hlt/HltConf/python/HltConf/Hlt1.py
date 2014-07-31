@@ -66,7 +66,10 @@ class Hlt1Conf(LHCbConfigurableUser):
       ## Existing stuff
       from ThresholdUtils import setThresholds
       from functools import partial
-      map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , self.__used_configurables__ )
+      map( partial( setThresholds, self.getProp("ThresholdSettings") ) , import_line_configurables(Hlt1Lines) )
+
+      from HltLine.HltLine     import Hlt1Line
+      Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 
          
       # add a few thing to our printout
       from HltLine.HltLine     import addHlt1Prop
@@ -80,5 +83,3 @@ class Hlt1Conf(LHCbConfigurableUser):
       from Configurables import GaudiSequencer as Sequence
       Sequence('Hlt1',  ModeOR = True, ShortCircuit = False )
 
-      from HltLine.HltLine     import Hlt1Line
-      Hlt1Line( 'Global', HLT= "HLT_PASS_SUBSTR('Hlt1') ", priority = 255 ) 

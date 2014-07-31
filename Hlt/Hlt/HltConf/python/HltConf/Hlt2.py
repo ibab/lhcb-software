@@ -73,14 +73,11 @@ class Hlt2Conf(LHCbConfigurableUser):
         The actual lines
         """
         from HltLine.HltLine     import Hlt2Line
-        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, VoidFilter = '' )
-
         #
         # check if this threshold setting has some global event cut...
         #  if so, set it, and add a line which does (prescaled) the opposite
         #
         if self.getProp('DefaultVoidFilter') :
-            from HltLine.HltLine import Hlt2Line
             Hlt2Line.setDefaultVoidFilter( self.getProp('DefaultVoidFilter') )
             Hlt2Line( 'PileUp', VoidFilter = '  ~ ( %s ) ' % self.getProp('DefaultVoidFilter') , postscale = 0.01 )
         #
@@ -90,6 +87,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         from functools import partial
         from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
         map( partial(  setThresholds, self.getProp("ThresholdSettings") ) , import_line_configurables(Hlt2Lines) )
+        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, VoidFilter = '' )
        
 ###################################################################################
 #
