@@ -24,7 +24,9 @@ class CommonParticlesArchiveConf ( object ) :
             zfile = splits[0] + zipname
             entry = splits[1]
             z = zipfile.ZipFile( zfile, 'r' )
-            return self.isdir(z,entry)
+            status = self.isdir(z,entry)
+            z.close()
+            return status
 
     def redirect(self,stripping):
 
