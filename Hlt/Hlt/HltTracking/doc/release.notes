@@ -3,6 +3,12 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-07-31 - Gerhard Raven
+ - make sure that some forward tool options intended for use with momentum 
+   estimate are only set when using the momentum estimate...
+ - add units to P and PT 
+ - move common options to the common properties
+
 ! 2014-07-29 - Gerhard Raven
  - improve exposure of Hlt2Lines configurables
 

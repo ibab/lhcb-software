@@ -25,26 +25,27 @@ def ConfiguredPatSeeding( minPSeed = 3000):
     # Only relevant for the forward upgrade
     return Hlt1Tool( PatSeedingTool, MinMomentum = minPSeed )
 
+from GaudiKernel.SystemOfUnits import MeV
 # NOTE THAT THESE DEFAULTS MIGHT BE OVERWRITTEN BELOW
-_minPt =  800  #### MOVE TO 800 (used to be 500 )
-_minP  = 8000 #### MOVE TO 8000 (used to be 5000 )
+_minPt =  800 * MeV  #### MOVE TO 800 (used to be 500 )
+_minP  = 8000 * MeV #### MOVE TO 8000 (used to be 5000 )
 def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMomEst = False ) :
     if name == None: name = PatForwardTool.__name__
     from HltTracking.HltReco import CommonForwardTrackingOptions 
+
+    opts = CommonForwardTrackingOptions.copy()
+    if useMomEst :
+        opts.update( UseMomentumEstimate = True
+                   , UseWrongSignWindow = True
+                   , WrongSignPT = 2000 * MeV
+                   , Preselection = useMomEst
+                   , FlagUsedSeeds = True )
     return Hlt1Tool( PatForwardTool
-                     , name
-                     , SecondLoop = True
-                     , UseMomentumEstimate = useMomEst
-                     , UseWrongSignWindow = True
-                     , WrongSignPT = 2000
-                     , Preselection = useMomEst
-                     , FlagUsedSeeds = True
-                     , MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
-                     , MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
-                     , MinHits = CommonForwardTrackingOptions["MinHits"]
-                     , MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
-                     , MinPt = minPt
-                     , MinMomentum = minP ).createConfigurable( parent )
+                   , name
+                   , MinPt = minPt
+                   , MinMomentum = minP
+                   , **opts 
+                   ).createConfigurable( parent )
 
 def ConfiguredpET(parent, name = None, minP = _minP, minPT = _minPt) :
     if name == None: name = PatVeloTTHybridTool.__name__
@@ -76,11 +77,10 @@ def ConfiguredMatchVeloMuon( parent, name = None, minP = _minP ) :
     from HltTracking.HltReco import CommonMatchVeloMuonOptions
     return Hlt1Tool( MatchVeloMuon
                      , name
-                     , MaxChi2DoFX = CommonMatchVeloMuonOptions["MaxChi2DoFX"]
-                     , XWindow = CommonMatchVeloMuonOptions["XWindow"]
-                     , YWindow = CommonMatchVeloMuonOptions["YWindow"]
                      ## Set this according to PatForward
-                     , MinMomentum = minP ).createConfigurable( parent )
+                     , MinMomentum = minP 
+                     , **CommonMatchVeloMuonOptions
+                     ).createConfigurable( parent )
 
 def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :
     if name == None: name = HltTrackFit.__name__ + "VeloOnly"
@@ -131,15 +131,15 @@ from Gaudi.Configuration import ToolSvc
 # =============================================================================
 import Hlt1StreamerConf as Conf
 
-ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000, 1250 )
-ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000,  500 )
-ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000, 300 , useMomEst=True)
-ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 2000, 200 )
+ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000 * MeV , 1250 * MeV )
+ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000 * MeV ,  500 * MeV)
+ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000 * MeV ,  300 * MeV, useMomEst=True)
+ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 2000 * MeV , 200  * MeV )
 ## Strings for users
 TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
 LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseForward  ) )"
 PEstiForward  = "PEstiForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.PEstiForward  ) )"
-pET           = "pET = (execute(decodeTT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.pET  ) )"
+pET           = "pET           = ( execute(decodeTT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.pET           ) )"
 # =============================================================================
 ## Hlt trackfit upgrade configuration
 # =============================================================================
@@ -164,7 +164,7 @@ VeloOnlyFitTrack = "VeloOnlyFitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1Strea
 # =============================================================================
 ## Match Velo to Muon hits
 # =============================================================================
-ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), minP = 6000 )
+ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), minP = 6000 * MeV)
 ## Strings for users
 MatchVeloMuon = "MatchVeloMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.MatchVeloMuon ) )"
 

@@ -56,7 +56,8 @@ CommonpETOptions = {"minMomentum" : 2000.0 ,
 CommonForwardTrackingOptions = { "MaxChi2" : 40,
                                  "MaxChi2Track" : 40,
                                  "MinHits" : 12,  
-                                 "MinOTHits" : 14 } 
+                                 "MinOTHits" : 14,
+                                 "SecondLoop" : True} 
 CommonForwardTrackingOptions_EarlyData = { "MaxChi2" : 40, 
                                  "MaxChi2Track" : 40, 
                                  "MinHits" : 12,  
