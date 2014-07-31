@@ -94,7 +94,7 @@ class Files(object):
         #
         self.files        = []
         self.patterns     = files
-        self.description  = comment 
+        self.description  = description 
         # 
         if isinstance ( files , str ) : files = [ files ]
         # 
