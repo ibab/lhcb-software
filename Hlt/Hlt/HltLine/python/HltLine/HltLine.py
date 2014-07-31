@@ -152,6 +152,10 @@ def _createScalar( name, arg ) :
 _hlt_1_lines__ = []
 _hlt_2_lines__ = []
 
+## the list of all requested lines
+_req_hlt_1_lines__ = []
+_req_hlt_2_lines__ = []
+
 def _ordered_lines( lines ) :
     d = {}
     for i in lines : 
@@ -179,6 +183,23 @@ def hlt1Lines () :
     """
     return _ordered_lines(_hlt_1_lines__)
 
+def setRequestedHlt1Lines ( lines ) :
+
+    """
+    Simple function which defines the (list) of requested Hlt1Lines
+    
+    """
+    global _req_hlt_1_lines__
+    _req_hlt_1_lines__ = lines
+
+def isRequestedHlt1Line ( line ) :
+
+    """
+    Simple function which defines the (list) of names of requested Hlt1Lines
+    
+    """
+    return line in _req_hlt_1_lines__ or not _req_hlt_1_lines__
+
 # =============================================================================
 ## Simple function which returns the (tuple) of all currently created Hlt2Lines
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
@@ -194,6 +215,22 @@ def hlt2Lines () :
     """
     return _ordered_lines(_hlt_2_lines__)
 
+def setRequestedHlt2Lines ( lines ) :
+
+    """
+    Simple function which defines the (list) of requested Hlt1Lines
+    
+    """
+    global _req_hlt_2_lines__
+    _req_hlt_2_lines__ = lines
+
+def isRequestedHlt2Line ( line ) :
+
+    """
+    Simple function which defines the (list) of names of requested Hlt1Lines
+    
+    """
+    return line in _req_hlt_2_lines__ or not _req_hlt_2_lines__
 
 # =============================================================================
 ## Simple function whcih returns the decisions for all created Hlt1 lines
@@ -319,7 +356,6 @@ def _add_to_hlt2_lines_( line ) :
     """
     Add the line into the local storage of created Hlt2Lines 
     """
-    # actually, want the equivalent of upper_bound on priority...
     _hlt_2_lines__.append ( line ) 
         
 # =============================================================================
@@ -1017,16 +1053,22 @@ class Hlt1Line(object):
                 mdict.update( Filter1 = GaudiSequencer( filterName ( line ) , Members = _members ) )
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
-        self._configurable = Line ( self.name() , **__mdict )
 
-        # fix numbering scheme of line members
-        self._index = computeIndices( self._configurable )
-
-        ## finally assign the decision name!
+        ## assign the decision name!
         self._decision = decisionName ( line )
 
-        # register into the local storage of all created Lines
-        _add_to_hlt1_lines_( self ) 
+        # only instantiate the line if so requested
+        if isRequestedHlt1Line( self.name() ) :
+
+            self._configurable = Line ( self.name() , **__mdict )
+
+            # fix numbering scheme of line members
+            #self._index = computeIndices( self._configurable )
+
+            # register into the local storage of all created Lines
+            _add_to_hlt1_lines_( self ) 
+        else :
+            log.debug( 'skipping instantiation of ', self.name() )
 
     ## 'sub-name' of Hlt Line 
     def subname   ( self ) :
@@ -1045,23 +1087,6 @@ class Hlt1Line(object):
     #
     #  @code 
     #  >>> line = Hlt1Line ( .... )
-    #  >>> conf = line.sequencer()
-    #  @endcode
-    def sequencer ( self ) :
-        """
-        Get the underlying 'Configurable' instance 
-        probably it is the most important method except the constructor
-        
-        >>> line = Hlt1Line ( .... )
-        >>> conf = line.sequencer()
-        
-        """
-        return self._configurable
-    ## Get the underlying 'Configurable'
-    #  probably it is the most important method except the constructor
-    #
-    #  @code 
-    #  >>> line = Hlt1Line ( .... )
     #  >>> conf = line.configurable() 
     #  @endcode    
     def configurable ( self ) :
@@ -1072,7 +1097,7 @@ class Hlt1Line(object):
         >>> line = Hlt1Line ( .... )
         >>> conf = line.configurable()
         """
-        return self.sequencer()
+        return self._configurable
     ## get the lits of all 'IDs' for all members 
     def ids ( self ) :
         """ Get the list of all IDs for all members """
@@ -1110,11 +1135,11 @@ class Hlt1Line(object):
 
 
     # determine the index for the given algorithm name
-    def index( self, name = None ) :
-        if name :
-            return self._index.index(name) if name in self._index else None
-        else :
-            return self._index
+    #def index( self, name = None ) :
+    #    if name :
+    #        return self._index.index(name) if name in self._index else None
+    #    else :
+    #        return self._index
 
     # ordering hint
     def priority( self ) :
@@ -1503,21 +1528,30 @@ class Hlt2Line(object):
                                                      , InputSelection = 'TES:/Event/Hlt2/%s/Particles'%last.getName()
                                                      , OutputSelection = decisionName(line, 'Hlt2')) ]
             mdict.update( Filter1 = GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) )
+
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
-        self._configurable = Line ( self.name() , **__mdict )
 
-        # fix numbering scheme of line members
-        self._index = computeIndices( self._configurable )
-
-        # put upper limit on combinatorics
-        limitCombinatorics( self._configurable, maxCandidates = 2000  ) 
-
-        ## finally assign the decision name!
+        ## assign the decision name!
         self._decision = decisionName ( line, 'Hlt2' )
 
-        # register into the local storage of all created Lines
-        _add_to_hlt2_lines_( self ) 
+        # TODO: can we avoid instantiating a line until we know it will actually be run???
+        # only instantiate the line if so requested
+        if isRequestedHlt2Line( self.name() ) : 
+            self._configurable = Line ( self.name() , **__mdict )
+
+            # fix numbering scheme of line members
+            # self._index = computeIndices( self._configurable )
+
+            # put upper limit on combinatorics
+            limitCombinatorics( self._configurable, maxCandidates = 2000  ) 
+
+            # register into the local storage of all created Lines
+            _add_to_hlt2_lines_( self ) 
+        else :
+            log.debug( 'skipping instantiation of ', self.name() )
+
+
 
     ## 'sub-name' of Hlt Line 
     def subname   ( self ) :
@@ -1561,8 +1595,8 @@ class Hlt2Line(object):
         return self._decision
 
     # determine the index for the given algorithm name
-    def index( self, name ) :
-        return self._index.index(name) if name in self._index else None
+    #def index( self, name ) :
+    #    return self._index.index(name) if name in self._index else None
 
     # ordering hint -- WARNING: think twice before using this. Lines _must_ be selfcontained
     # (with only a few exceptions). So do not assume any ordering when you write a line
