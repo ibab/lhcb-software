@@ -1,0 +1,44 @@
+#-- GAUDI jobOptions generated on Fri Aug  1 14:22:09 2014
+#-- Contains event types : 
+#--   90000000 - 32 files - 1132580 events - 118.44 GBytes
+
+
+#--  Extra information about the data processing phases:
+
+from Gaudi.Configuration import * 
+from GaudiConf import IOHelper
+IOHelper('ROOT').inputFiles(['LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003173_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003174_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003176_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003177_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003178_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003179_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003180_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003181_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003182_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003183_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003184_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003185_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003186_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003187_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003188_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003189_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003190_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003191_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003192_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003193_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003194_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003195_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003196_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003197_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003198_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003199_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003200_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003201_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003202_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00003203_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0001/00020736_00017001_1.full.dst',
+'LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0004/00020736_00041882_1.full.dst'
+], clear=True)
+
+FileCatalog().Catalogs = [ 'xmlcatalog_file:Reco14_Run130391.xml' ]

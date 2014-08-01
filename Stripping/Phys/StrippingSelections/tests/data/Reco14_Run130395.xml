@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By PoolXMLCatalog.py -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+
+
+  <File ID="429CE292-FA2C-E211-96D2-003048C5745E">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00004271_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00004271_1.full.dst"/>
+     </logical>
+   </File>
+
+  <File ID="F63999E8-FB2C-E211-8565-848F693A07EF">
+     <physical>
+       <pfn filetype="ROOT" name="root://eoslhcb.cern.ch//eos/lhcb/grid/prod/lhcb/freezer/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00004272_1.full.dst"/>
+     </physical>
+     <logical>
+       <lfn name="/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/00020736_00004272_1.full.dst"/>
+     </logical>
+   </File>
+
+</POOLFILECATALOG>
