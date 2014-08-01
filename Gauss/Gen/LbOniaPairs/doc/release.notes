@@ -1,4 +1,4 @@
-! $Id:$ 
+nk! $Id:$ 
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbOniaPairs
 ! Author      : Alexey Novoselov Alexey.Novoselov@cern.ch
@@ -6,7 +6,11 @@
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
-!======================== LbOniaPairs v2r1 2014-06-24 =========================
+!======================== LbOniaPairs v2r1 2014-08-01 =========================
+! 2014-06-24 - Gloria Corti
+ - Fix OniaPairs.py options that were missing import of OniaPairsProduction 
+   configurable
+
 ! 2014-06-24 - Gloria Corti
  - Add OniaPairs.py options to switch on this generator in production. In this
    case it is only foreseen for the Special sampling method, so force to use it.
