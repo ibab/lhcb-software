@@ -21,7 +21,7 @@ using ROOT::Math::CholeskyDecomp;
     PatFwdFitParabola( double z = 0., double x = 0., double w = 0. ) {
       //== First point, used to constraint the tangent at z=0 to go to this point.
       const double dz = 1.e-3 * z;  // use small numbers
-      m_data = { w , w*dz, w*dz*dz, 0., 0., 0., w*x, w*x*dz, 0., 0. , 0. , 0. };
+      m_data = {{ w , w*dz, w*dz*dz, 0., 0., 0., w*x, w*x*dz, 0., 0. , 0. , 0. }};
     }
 
     void addPoint( double z, double x, double w ) {

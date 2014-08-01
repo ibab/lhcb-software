@@ -21,7 +21,7 @@ using ROOT::Math::CholeskyDecomp;
     PatFwdFitLine( double z = 0., double x = 0., double w = 0. ) {
       //== First point
       const double dz = 1.e-3*z;
-      m_data = { w, w*dz, w*dz*dz, w*x, w*x*dz, 0. , 0. };
+      m_data = {{ w, w*dz, w*dz*dz, w*x, w*x*dz, 0. , 0. }};
     }
 
     void addPoint( double z, double x, double w ) {

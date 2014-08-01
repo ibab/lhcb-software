@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-01 - Gerhard Raven
+ - fix clang brace warnings
 
 !========================= PatAlgorithms v4r33 2014-06-10 ======================
 ! 2014-05-28 - Gerhard Raven

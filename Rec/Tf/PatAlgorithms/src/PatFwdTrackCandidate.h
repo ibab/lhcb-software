@@ -24,9 +24,9 @@ public:
       : m_track{ tr }, m_coords{ std::forward<C>(coords) } {
     const LHCb::State *state = m_track->stateAt(LHCb::State::EndVelo);
     assert(state != nullptr);
-    m_state = { state->x(),  state->y(), state->z(), 
-                state->tx(), state->ty(), 
-                state->qOverP() };
+    m_state = { { state->x(),  state->y(), state->z(), 
+                  state->tx(), state->ty(), 
+                  state->qOverP() } };
   }
 
   PatFwdTrackCandidate(const LHCb::Track *tr)
@@ -99,7 +99,7 @@ public:
 
   PatFwdTrackCandidate& setParameters(double ax, double bx, double cx, double dx, 
                                       double ay, double by) {
-    m_params = { ax, bx, cx, dx, ay, by };
+    m_params = {{ ax, bx, cx, dx, ay, by }};
     m_fitted = true;
     return *this;
   }
