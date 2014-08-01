@@ -19,11 +19,11 @@ class LcBuilder(object):
         self.config = config
         self.pkpi = [self._makeLc2pKpi()]
         self.pkpi_pid = [filterPID('Lc2pKPiPID',self.pkpi,config_pid)]
-        self.xic_pkpi = self._makeXic2pKpi()
+        self.xic_pkpi = [self._makeXic2pKpi()]
         self.xic_pkpi_pid = [filterPID('Xic2pKPiPID',self.xic_pkpi,config_pid)]
-        self.xic0_pkkpi = self._makeXic02pKKpi()
+        self.xic0_pkkpi = [self._makeXic02pKKpi()]
         self.xic0_pkkpi_pid = [filterPID('Xic02pKKPiPID',self.xic0_pkkpi,config_pid)]
-        self.omegac0_pkkpi = self._makeOmegac02pKKpi()
+        self.omegac0_pkkpi = [self._makeOmegac02pKKpi()]
         self.omegac0_pkkpi_pid = [filterPID('Omegac02pKKPiPID',self.omegac0_pkkpi,config_pid)]
         
     def _makeLc2pKpi(self):
@@ -126,7 +126,7 @@ class XiccBuilder(object):
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=["[Xi_cc++ -> Xi_c+ pi+]cc"])
         return Selection('Xiccpp2XicPiXic2PKPiPBeauty2Charm',Algorithm=cp,
-                         RequiredSelections=[self.xic,self.pions])
+                         RequiredSelections=self.xic+[self.pions])
 
     def _makeXiccp2Xic0pi(self):
         '''Makes Lc -> p K pi + cc'''
@@ -142,7 +142,7 @@ class XiccBuilder(object):
         cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
                               DecayDescriptors=["[Xi_cc+ -> Xi_c0 pi+]cc"])
         return Selection('Xiccp2Xic0PiXic02PKKPiPBeauty2Charm',Algorithm=cp,
-                         RequiredSelections=[self.xic0,self.pions])
+                         RequiredSelections=self.xic0+[self.pions])
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
@@ -152,9 +152,9 @@ class Lb2XBuilder(object):
     def __init__(self,lc,xicc,d,hh,topoPions,topoKaons,protons,pions,kaons,hhh,dst,lambda0,config):
         self.lc = lc.pkpi
         self.lc_pid = lc.pkpi_pid
-        self.xic = [lc.xic_pkpi]
+        self.xic = lc.xic_pkpi
         self.xic_pid = lc.xic_pkpi_pid
-        self.xic0 = [lc.xic0_pkkpi]
+        self.xic0 = lc.xic0_pkkpi
         self.xic0_pid = lc.xic0_pkkpi_pid
         self.omegac0 = lc.omegac0_pkkpi
         self.omegac0_pid = lc.omegac0_pkkpi_pid
@@ -323,7 +323,7 @@ class Lb2XBuilder(object):
         noip = makeB2XSels(decays,'Xic02PKKPi',inputs,self.config,False)                
         decays = {'Xib2Xic0PiNoIPWS': ["[Xi_b- -> Xi_c0 pi+]cc"]}
         inputs = {'Xib2Xic0PiNoIPWS':self.xic0_pid+pions}  
-        ws = makeB2XSels(decays,'Xic02PKKPi',inputs,self.config,False)
+        noip_ws = makeB2XSels(decays,'Xic02PKKPi',inputs,self.config,False)
         self.lines.append(ProtoLine(rs,1.0))
         self.lines.append(ProtoLine(ws,0.1))
         self.lines.append(ProtoLine(noip,1.0))
@@ -346,7 +346,7 @@ class Lb2XBuilder(object):
         noip = makeB2XSels(decays,'Omegac02PKKPi',inputs,self.config,False)
         decays = {'Omegab2Omegac0PiNoIPWS': ["[Omega_b- -> Omega_c0 pi+]cc"]}
         inputs = {'Omegab2Omegac0PiNoIPWS':self.omegac0_pid+pions}  
-        ws = makeB2XSels(decays,'Omegac02PKKPi',inputs,self.config,False)
+        noip_ws = makeB2XSels(decays,'Omegac02PKKPi',inputs,self.config,False)
         self.lines.append(ProtoLine(rs,1.0))
         self.lines.append(ProtoLine(ws,0.1))
         self.lines.append(ProtoLine(noip,1.0))
