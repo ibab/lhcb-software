@@ -4133,6 +4133,85 @@ namespace Gaudi
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class SinhAsinh 
+     *  
+     *  Jones, M. C.; Pewsey, A. (2009). 
+     *  "Sinh-arcsinh distributions". Biometrika 96 (4): 761. 
+     *  doi:10.1093/biomet/asp053
+     *  http://oro.open.ac.uk/22510
+     *
+     *  Location & scale  parameters are the 
+     *  usual representation of the family of 
+     *  distributions 
+     *  - \f$\epsilon\f$ parameter control the skewness 
+     *  - \f$\delta\f$   parameter control the kurtosis 
+     *  Normal distribtion reappears as \f$\epsilon=0\f$ 
+     *  and \f$\delta=1\f$ 
+     *  The heavy tails correspond to \f$\delta<1\f$, 
+     *  light tails correpond to \f$\delta>1\f$
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2014-08-02
+     */
+    class GAUDI_API SinhAsinh 
+      : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor with all parameters
+       *  @param location \f$\mu\f$-parameter       \f$-\inf<\mu<+\inf\f$
+       *  @param scale    \f$\sigma\f$-parameter    \f$0<\sigma\f$
+       *  @param epsilon  \f$\epsilon\f$-parameter  \f$-\inf<\epsilon<+\inf\f$
+       *  @param delta    \f$\delta\f$-parameter    \f$0<\epsilon<+\inf\f$
+       */
+      SinhAsinh  ( const double location  = 1   ,
+                   const double scale     = 1   , 
+                   const double epsilon   = 0   , 
+                   const double delta     = 1   ) ;
+      /// destructor
+      ~SinhAsinh() ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate sinhasinh-distributions
+      double pdf        ( const double x ) const ;
+      /// evaluate sinhasinh-distributions
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // direct getters
+      // ======================================================================      
+      double location () const { return mu    () ; }
+      double scale    () const { return sigma () ; }
+      // ======================================================================      
+      double mu       () const { return m_mu      ; }
+      double sigma    () const { return m_sigma   ; }
+      double epsilon  () const { return m_epsilon ; }
+      double delta    () const { return m_delta   ; }
+      // ======================================================================      
+    public: // setters 
+      // ======================================================================      
+      bool setLocation ( const double value ) { return setMu    ( value ) ; }
+      bool setScale    ( const double value ) { return setSigma ( value ) ; }
+      bool setMu       ( const double value ) ;
+      bool setSigma    ( const double value ) ;
+      bool setEpsilon  ( const double value ) ;
+      bool setDelta    ( const double value ) ;
+      // ======================================================================
+    public: // integrals
+      // ======================================================================
+      double cdf      ( const double x    ) const ;
+      double integral ( const double low  ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      double m_mu      ;
+      double m_sigma   ;
+      double m_epsilon ;
+      double m_delta   ;
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Argus 
      *  http://en.wikipedia.org/wiki/ARGUS_distribution
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

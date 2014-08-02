@@ -8016,7 +8016,107 @@ double Gaudi::Math::Landau::integral ( const double low  ,
 // ============================================================================
 
 
-
+// ============================================================================
+namespace 
+{
+  //
+  inline double shash ( const double x   , 
+                        const double eps , 
+                        const double dlt ) 
+  {
+    const double y = eps + dlt * std::asinh ( x ) ;
+    return 
+      (     GSL_LOG_DBL_MAX < y ) ?    s_INFINITY :
+      ( -1* GSL_LOG_DBL_MAX > y ) ? -1*s_INFINITY : std::sinh ( y ) ;
+  }
+  //
+}
+// ============================================================================
+/*  constructor with all parameters
+ *  @param location \f$\mu\f$-parameter       \f$-\inf<\mu<+\inf\f$
+ *  @param scale    \f$\sigma\f$-parameter    \f$0<\sigma\f$
+ *  @param epsilon  \f$\epsilon\f$-parameter  \f$-\inf<\epsilon<+\inf\f$
+ *  @param delta    \f$\delta\f$-parameter    \f$0<\epsilon<+\inf\f$
+ */
+// ============================================================================
+Gaudi::Math::SinhAsinh::SinhAsinh 
+( const double location  ,
+  const double scale     , 
+  const double epsilon   , 
+  const double delta     )
+  : std::unary_function<double,double> () 
+  , m_mu       (            location   ) 
+  , m_sigma    ( std::abs ( scale    ) ) 
+  , m_epsilon  (            epsilon    ) 
+  , m_delta    ( std::abs ( delta    ) ) 
+{}
+// ============================================================================
+Gaudi::Math::SinhAsinh::~SinhAsinh(){}
+// ============================================================================
+bool Gaudi::Math::SinhAsinh::setMu      ( const double value ) 
+{
+  if ( s_equal ( value , m_mu  ) ) { return false ; }
+  m_mu  = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::SinhAsinh::setSigma      ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_sigma  ) ) { return false ; }
+  m_sigma  = value_ ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::SinhAsinh::setEpsilon ( const double value ) 
+{
+  if ( s_equal ( value , m_epsilon  ) ) { return false ; }
+  m_epsilon  = value ;
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::SinhAsinh::setDelta ( const double value ) 
+{
+  const double value_ = std::abs ( value ) ;
+  if ( s_equal ( value_ , m_delta  ) ) { return false ; }
+  m_delta  = value_ ;
+  return true ;
+}
+// ============================================================================
+// evaluate sinhasinh-distributions
+// ============================================================================
+double Gaudi::Math::SinhAsinh::pdf ( const double x ) const 
+{
+  //
+  const double y = ( x - mu () ) / sigma()  ;
+  const double z = shash ( y , epsilon() , delta() )  ;
+  //
+  const double r = s_SQRT2PIi * delta() 
+    * std::sqrt ( ( 1.0 + z * z ) / ( 1.0 + y * y )  ) 
+    * my_exp ( -0.5 * z * z ) ;
+  //
+  return  r / sigma() ;
+}
+// ============================================================================
+// evaluate sinhasinh cimulative distribution
+// ============================================================================
+double Gaudi::Math::SinhAsinh::cdf ( const double x ) const 
+{
+  //
+  const double y = ( x - mu() ) / sigma()  ;
+  const double z = shash ( y , epsilon () , delta () )  ;
+  //
+  return gsl_cdf_ugaussian_P ( z ) ;
+}
+// ============================================================================
+// get the integral
+// ============================================================================
+double Gaudi::Math::SinhAsinh::integral ( const double low  ,
+                                          const double high ) const 
+{
+  if ( s_equal ( low , high ) ) { return 0 ; }
+  return cdf ( high ) - cdf ( low ) ;
+}
 
 // ============================================================================
 // Argus

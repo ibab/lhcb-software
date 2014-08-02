@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-08-02 - Vanya Belyaev
+ - add SinhAsinh function
+
 !========================= LHCbMath v3r49 2014-07-14 =========================
 ! 2014-06-26 - Vanya Belyaev
  - remove some local functions (non needed anymore)  
