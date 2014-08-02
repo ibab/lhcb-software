@@ -42,7 +42,10 @@ public:
 
   virtual StatusCode initialize();
 
-  double xAtReferencePlane( PatFwdTrackCandidate& track, PatFwdHit* hit, bool store=false );
+private:
+  double storeXAtReferencePlane( PatFwdTrackCandidate& track, const PatFwdHit* hit );
+public:
+  double xAtReferencePlane( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const;
 
   double zReference() const { return m_zReference; }
 
@@ -54,20 +57,20 @@ public:
   bool fitStereoCandidate( PatFwdTrackCandidate& track,
   double maxChi2, int minPlanes ) const;
 private:
-  template <typename Curve>
+  template <bool withoutBField>
   bool fitXProjection_ ( PatFwdTrackCandidate& track,
                         PatFwdHits::const_iterator itBeg,
                         PatFwdHits::const_iterator itEnd,
                         bool onlyXPlanes  ) const;
-public:
   bool fitXProjection ( PatFwdTrackCandidate& track,
                         PatFwdHits::const_iterator itBeg,
                         PatFwdHits::const_iterator itEnd,
                         bool onlyXPlanes  ) const {
-  return m_withoutBField ? fitXProjection_<PatFwdFitLine>( track, itBeg, itEnd, onlyXPlanes )
-                         : fitXProjection_<PatFwdFitParabola>( track, itBeg, itEnd, onlyXPlanes );
+  return LIKELY(!m_withoutBField) ? fitXProjection_<false>( track, itBeg, itEnd, onlyXPlanes )
+                                  : fitXProjection_<true> ( track, itBeg, itEnd, onlyXPlanes );
   }
 
+public:
   void setRlDefault ( PatFwdTrackCandidate& track,
                       PatFwdHits::const_iterator itBeg,
                       PatFwdHits::const_iterator itEnd ) const;
@@ -149,7 +152,7 @@ public:
 
   double changeInY(const  PatFwdTrackCandidate& track ) const {
     double yOriginal = track.yStraight( m_zReference );
-    if (!m_withoutBField)
+    if (LIKELY(!m_withoutBField))
       yOriginal += track.dSlope() * track.dSlope() * track.slY() * m_yParams[0];
     return yOriginal - track.y( 0. );
   }

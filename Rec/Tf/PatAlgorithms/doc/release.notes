@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-02 - Gerhard Raven
+ - specialize PatFwdTool::xAtReference 
+
 ! 2014-08-01 - Gerhard Raven
  - fix clang brace warnings
 

@@ -235,9 +235,37 @@ StatusCode PatFwdTool::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
+double PatFwdTool::xAtReferencePlane ( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
 
-double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* hit,
-    bool store ) {
+  double zHit       = hit->z();
+  double xHit       = hit->x();
+   
+  if ( hit->hit()->othit() ) {
+    if ( hit->hasNext()     ) xHit += hit->driftDistance();
+    if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
+  }
+
+  double zMagnet = 0;
+  if (LIKELY(!m_withoutBField)){
+    zMagnet    += m_zMagnetParams[0] +
+			      m_zMagnetParams[2] * track.slX2() +
+			      m_zMagnetParams[4] * track.slY2() +
+			      m_zMagnetParams[3] * hit->x() * hit->x();
+    
+    double dSlope     = ( xHit - track.xStraight( zMagnet) ) / ( zHit - zMagnet ) - track.slX();
+    double dSl2       = dSlope * dSlope;
+    zMagnet          += m_zMagnetParams[1] * dSl2;
+    double dz         = 1.e-3 * ( zHit - m_zReference );
+    double dyCoef     = dSl2 * track.slY();
+    xHit             +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * hit->hit()->dxDy() 
+                         - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
+
+  }
+  double  xMagnet = track.xStraight( zMagnet );
+  return  xMagnet + ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
+}
+
+double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const PatFwdHit* hit ) {
 
   double x;
 
@@ -273,15 +301,13 @@ double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* h
     slopeAfter        = ( xHit - xMagnet ) / ( zHit - zMagnet );
     x                 = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
     
-    if ( store ) {
-      track.setParameters( x,
-			   ( x - xMagnet ) / ( m_zReference - zMagnet ),
-			   1.e-6 * m_xParams[0] * dSlope,
-			   1.e-9 * m_xParams[1] * dSlope,
-			   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
-			   track.slY() + dyCoef * m_yParams[1] );
-      m_zMagnet = zMagnet;
-    }
+    track.setParameters( x,
+	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
+	  	   1.e-6 * m_xParams[0] * dSlope,
+	  	   1.e-9 * m_xParams[1] * dSlope,
+	  	   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
+	  	   track.slY() + dyCoef * m_yParams[1] );
+    m_zMagnet = zMagnet;
   } else {
     
     double zMagnet    = 0.0;
@@ -291,15 +317,13 @@ double PatFwdTool::xAtReferencePlane ( PatFwdTrackCandidate& track, PatFwdHit* h
     double dyCoef     = 0.0;
     
     x                 = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
-    if ( store ) {
-      track.setParameters( x, 
-			   ( x - xMagnet ) / ( m_zReference - zMagnet ),
-			   1.e-6 * m_xParams[0] * dSlope,
-			   1.e-9 * m_xParams[1] * dSlope,
-			   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
-			   track.slY() + dyCoef * m_yParams[1] );
-      m_zMagnet = zMagnet;
-    }
+    track.setParameters( x, 
+	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
+	  	   1.e-6 * m_xParams[0] * dSlope,
+	  	   1.e-9 * m_xParams[1] * dSlope,
+	  	   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
+	  	   track.slY() + dyCoef * m_yParams[1] );
+    m_zMagnet = zMagnet;
   }
     
   return x;
@@ -427,7 +451,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   // initial value;
   int minHit = std::distance(itBeg,itEnd) / 2;
-  xAtReferencePlane( track, track.coords()[minHit], true );
+  storeXAtReferencePlane( track, track.coords()[minHit] );
 
   updateHitsForTrack( track, itBeg, itEnd );
   setRlDefault( track, itBeg, itEnd );
@@ -570,25 +594,27 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 //=========================================================================
 //  fit to projection.
 //=========================================================================
-template <typename Curve>
+template <bool withoutBField>
 bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                                   PatFwdHits::const_iterator itBeg,
                                   PatFwdHits::const_iterator itEnd,
                                   bool onlyXPlanes  ) const {
 
   //= Fit the straight line, forcing the magnet centre. Use only position and slope.
-
   bool isDebug = msgLevel( MSG::DEBUG );
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
   double weightCenter = 1./errCenter;
   auto dz = m_zMagnet - m_zReference;
+
+  using Curve = typename std::conditional<withoutBField, PatFwdFitLine, PatFwdFitParabola>::type;
   auto make_curve = [=](const PatFwdTrackCandidate& trk) -> Curve { 
       return { dz, distAtMagnetCenter( trk ), weightCenter }; 
   };
+
   auto accept = [=](const PatFwdHit* hit) {
-      if ( !hit->isSelected() ) return false;
-      if ( onlyXPlanes && !(hit->hit()->layer()==0 || hit->hit()->layer()==3) ) return false;
-      return true;
+      return hit->isSelected() && 
+             ( !onlyXPlanes || hit->hit()->layer() == 0 
+                            || hit->hit()->layer() == 3 );
   };
 
   for ( unsigned int kk = 0 ; kk < 10  ; ++kk ) {
@@ -619,15 +645,8 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
 }
 
 // explicitly instantiate the two valid versions...
-template bool PatFwdTool::fitXProjection_<PatFwdFitLine> ( PatFwdTrackCandidate& track,
-                          PatFwdHits::const_iterator itBeg,
-                          PatFwdHits::const_iterator itEnd,
-                          bool onlyXPlanes  ) const;
-
-template bool PatFwdTool::fitXProjection_<PatFwdFitParabola> ( PatFwdTrackCandidate& track,
-                          PatFwdHits::const_iterator itBeg,
-                          PatFwdHits::const_iterator itEnd,
-                          bool onlyXPlanes  ) const;
+template bool PatFwdTool::fitXProjection_<true>  ( PatFwdTrackCandidate& , PatFwdHits::const_iterator , PatFwdHits::const_iterator , bool onlyXPlanes ) const;
+template bool PatFwdTool::fitXProjection_<false> ( PatFwdTrackCandidate& , PatFwdHits::const_iterator , PatFwdHits::const_iterator , bool onlyXPlanes ) const;
 
 
 
