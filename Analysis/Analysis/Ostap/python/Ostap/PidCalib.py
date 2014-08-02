@@ -318,7 +318,8 @@ def makePlots ( the_func        ,
         bar.update_amount ( index )
         if not verbose : bar.show() 
 
-        manager = memory() if verbose else NoContext() 
+        manager = memory() if verbose else NoContext()
+        
         with manager :
             
             dataset = getDataSet ( particle  ,
@@ -513,8 +514,15 @@ def  ex_func ( particle          ,
     ## and now update the output 
     #
     
-    if not plots : plots     = [ hA , hR ] ## "Accepted" & "Rejected" historgams 
+    if not plots :
+
+        hA.SetName ( hA.GetTitle() )
+        hR.SetName ( hR.GetTitle() )
+        
+        plots     = [ hA , hR ] ## "Accepted" & "Rejected" historgams 
+
     else         :
+        
         plots[0] += hA          ## "Accepted" histogram 
         plots[1] += hR          ## "Rejected" histogram
         
@@ -578,11 +586,18 @@ def  ex_func2 ( particle         ,
     ha = dataset.fillHistogram ( ha , vlst , accepted )
     hr = dataset.fillHistogram ( hr , vlst , rejected )
     
-    if not plots : plots = [ ha , hr ] 
+    if not plots :
+        
+        ha.SetName ( ha.GetTitle() )
+        hr.SetName ( hr.GetTitle() )
+        
+        plots = [ ha , hr ]
+        
     else         :
 
         plots [0] += ha
-        plots [1] += hr 
+        plots [1] += hr
+        
         ha.Delete ()
         hr.Delete ()
         if ha : del ha
