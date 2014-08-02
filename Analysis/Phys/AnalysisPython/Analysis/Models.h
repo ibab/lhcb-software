@@ -3093,6 +3093,94 @@ namespace Analysis
       // ======================================================================
     } ;
     // ========================================================================
+    /** @class SinhAsinh
+     *  
+     *  Jones, M. C.; Pewsey, A. (2009). 
+     *  "Sinh-arcsinh distributions". Biometrika 96 (4): 761. 
+     *  doi:10.1093/biomet/asp053
+     *  http://oro.open.ac.uk/22510
+     *
+     *  Location & scale  parameters are the 
+     *  usual representation of the family of 
+     *  distributions 
+     *  - \f$\epsilon\f$ parameter control the skewness 
+     *  - \f$\delta\f$   parameter control the kurtosis 
+     *  Normal distribtion reappears as \f$\epsilon=0\f$ 
+     *  and \f$\delta=1\f$ 
+     *  The heavy tails correspond to \f$\delta<1\f$, 
+     *  light tails correpond to \f$\delta>1\f$
+  
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date   2014-08-02
+     *  @see Gaudi::Math::SinhAsinh
+     */
+    class GAUDI_API SinhAsinh : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::SinhAsinh, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters
+      SinhAsinh
+        ( const char*           name      , 
+          const char*           title     ,
+          RooAbsReal&           x         , 
+          RooAbsReal&           mu        ,
+          RooAbsReal&           sigma     ,
+          RooAbsReal&           epsilon   ,
+          RooAbsReal&           delta     ) ;
+      /// "copy constructor"
+      SinhAsinh
+        ( const SinhAsinh&      right     , 
+          const char*           name  = 0 )  ;
+      /// destructor 
+      virtual ~SinhAsinh  () ;
+      /// clone 
+      virtual  SinhAsinh* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::SinhAsinh& function() const { return m_sinhasinh ; }
+      // ======================================================================
+    protected: 
+      // ======================================================================
+      RooRealProxy m_x        ;
+      RooRealProxy m_mu       ;
+      RooRealProxy m_sigma    ;
+      RooRealProxy m_epsilon  ;
+      RooRealProxy m_delta    ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      mutable Gaudi::Math::SinhAsinh m_sinhasinh ; // the actual function
+      // ======================================================================
+    } ;
+    // ========================================================================
     /** @class Argus
      *  http://en.wikipedia.org/wiki/ARGUS_distribution
      *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

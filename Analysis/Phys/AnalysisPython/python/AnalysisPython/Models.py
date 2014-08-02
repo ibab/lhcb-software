@@ -26,13 +26,13 @@ import ROOT
 import warnings
 warnings.warn (
     """AnalysisPython:
-    Use 'PyPAW.LHCbStyle' module instead of 'AnalysisPython.LHCbStyle'""",
+    Use 'Ostap.Models' module instead of 'AnalysisPython.Models'""",
     DeprecationWarning ,
     stacklevel   = 3
     )
 # =============================================================================
 ## the actual import 
-from PyPAW.Models import *
+from Ostap.Models import *
 
 # =============================================================================
 if '__main__' == __name__ :

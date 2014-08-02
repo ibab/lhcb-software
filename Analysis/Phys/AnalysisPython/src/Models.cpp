@@ -4125,6 +4125,100 @@ Double_t Analysis::Models::BetaPrime::analyticalIntegral
 // ============================================================================
 
 
+// ============================================================================
+// constructor from all parameters 
+// ============================================================================
+Analysis::Models::SinhAsinh::SinhAsinh
+( const char*          name    , 
+  const char*          title   ,
+  RooAbsReal&          x       ,
+  RooAbsReal&          mu      ,
+  RooAbsReal&          sigma   ,
+  RooAbsReal&          epsilon ,
+  RooAbsReal&          delta   )
+  : RooAbsPdf ( name , title ) 
+    //
+  , m_x       ( "x"       , "Observable"    , this , x       ) 
+  , m_mu      ( "mu"      , "mu/location"   , this , mu      ) 
+  , m_sigma   ( "sigma"   , "sigma/scale"   , this , sigma   ) 
+  , m_epsilon ( "epsilon" , "epsilon/skew"  , this , epsilon ) 
+  , m_delta   ( "delta"   , "delta/tail"    , this , delta   ) 
+    //
+  , m_sinhasinh  ( 1 , 1 , 0 , 1 )  
+{
+  setPars() ;
+}
+// ============================================================================
+// "copy" constructor 
+// ============================================================================
+Analysis::Models::SinhAsinh::SinhAsinh
+( const Analysis::Models::SinhAsinh& right , 
+  const char*                         name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"       , this , right.m_x       ) 
+  , m_mu      ( "mu"      , this , right.m_mu      )
+  , m_sigma   ( "sigma"   , this , right.m_sigma   )
+  , m_epsilon ( "epsilon" , this , right.m_epsilon )
+  , m_delta   ( "delta"   , this , right.m_delta   )
+    //
+  , m_sinhasinh ( right.m_sinhasinh ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Analysis::Models::SinhAsinh::~SinhAsinh(){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::SinhAsinh*
+Analysis::Models::SinhAsinh::clone( const char* name ) const 
+{ return new Analysis::Models::SinhAsinh ( *this , name) ; }
+// ============================================================================
+void Analysis::Models::SinhAsinh::setPars () const 
+{
+  //
+  m_sinhasinh.setMu       ( m_mu      ) ;
+  m_sinhasinh.setSigma    ( m_sigma   ) ;
+  m_sinhasinh.setEpsilon  ( m_epsilon ) ;
+  m_sinhasinh.setDelta    ( m_delta   ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::SinhAsinh::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_sinhasinh ( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::SinhAsinh::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::SinhAsinh::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_sinhasinh.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
 
 // ============================================================================
 // constructor from all parameters 
