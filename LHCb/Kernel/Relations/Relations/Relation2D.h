@@ -305,6 +305,11 @@ namespace LHCb
     /// assignment operator is disabled 
     Relation2D& operator=( const Relation2D& ) ;
     // ========================================================================
+  public:
+    // ========================================================================
+    /// Access the size of the relations
+    inline std::size_t size() const { return m_base.size(); }
+    // ========================================================================
   private:
     // ========================================================================
     /// the actual relation table 

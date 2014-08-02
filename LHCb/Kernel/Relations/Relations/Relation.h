@@ -327,6 +327,11 @@ namespace Relations
     /// assignement operator is private!
     Relation& operator= ( const OwnType& copy  );
     // ========================================================================
+  public:
+    // ========================================================================
+    /// Access the size of the relations
+    inline std::size_t size() const { return m_direct.size(); }
+    // ========================================================================
   private:
     // ========================================================================
     /// the holder of all direct relations

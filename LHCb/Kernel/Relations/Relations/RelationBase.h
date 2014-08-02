@@ -166,6 +166,8 @@ namespace Relations
      */ 
     inline void i_sort() 
     { std::stable_sort( m_entries.begin() , m_entries.end() , Less() ) ; }
+    /// Access the number of relations
+    inline std::size_t size() const { return m_entries.size(); }
     // ========================================================================
   public:
     // ========================================================================

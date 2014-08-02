@@ -4,6 +4,10 @@
 ! Purpose     : General purposes templated relations between classes
 !------------------------------------------------------------------------------
 
+! 2014-08-02 - Chris Jones
+ - Add a size() method to Relation1D and Relation2D.
+   Needed to statisfy templated algorithm requirements in the data packing.
+
 !========================= Relations v6r2 2014-02-17 =========================
 ! 2014-01-06 - Marco Clemencic
  - Replaced import of GaudiPython with import of cppyy (to allow usage of the

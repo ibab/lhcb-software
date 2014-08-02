@@ -286,7 +286,12 @@ namespace LHCb
   private:
     // ========================================================================
     /// assignement is disabled 
-    Relation1D& operator= (const Relation1D& ) ;     // assignement is disabled 
+    Relation1D& operator= ( const Relation1D& ) ;    // assignement is disabled 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// Access the size of the relations
+    inline std::size_t size() const { return m_base.size(); }
     // ========================================================================
   private:
     // ========================================================================
