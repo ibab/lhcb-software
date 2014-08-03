@@ -246,9 +246,6 @@ class RichTools(RichConfigurableUser):
         if type == "Detailed":
             from Configurables import Rich__Rec__DetailedTrSegMakerFromRecoTracks
             tool = self.__makeRichTool( Rich__Rec__DetailedTrSegMakerFromRecoTracks, nickname, private )
-        elif type == "Detailed_StateProvider":
-            from Configurables import Rich__Rec__DetailedTrSegMakerFromRecoTracksStateProvider
-            tool = self.__makeRichTool( Rich__Rec__DetailedTrSegMakerFromRecoTracksStateProvider, nickname, private )
         elif type == "Fast":
             from Configurables import Rich__Rec__FastTrSegMakerFromRecoTracks
             tool = self.__makeRichTool( Rich__Rec__FastTrSegMakerFromRecoTracks, nickname, private )
