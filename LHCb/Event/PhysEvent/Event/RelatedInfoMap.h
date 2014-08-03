@@ -1,33 +1,72 @@
 #ifndef EVENT_RELATEDINFOMAP_H 
 #define EVENT_RELATEDINFOMAP_H 1
 
-// from Gaudi
+// STL
+#include <ostream>
+
+// Gaudi
 #include "GaudiKernel/VectorMap.h"
 
-namespace LHCb { 
+namespace LHCb 
+{
 
-  class RelatedInfoMap : public GaudiUtils::VectorMap<short, float> {
-    public:
-      typedef GaudiUtils::VectorMap<short,float>             MAP  ;
-      typedef GaudiUtils::VectorMap<short,float>::_vector    VECT ;
-      typedef GaudiUtils::VectorMap<short,float>::value_type VAL  ;
-     /// has information for specified key
-    bool hasInfo( short  key) const 
-    { return this->end() != this->find ( key ) ; }
+  /** @class RelatedInfoMap Event/RelatedInfoMap.h
+   *
+   *  Related information map.
+   *
+   *  @author Anton Poluektov
+   *  @date   2014-08-01
+   */
+  class RelatedInfoMap : public GaudiUtils::VectorMap<short, float> 
+  {
+  
+  public:
+  
+    typedef GaudiUtils::VectorMap<short,float>             MAP  ;
+    typedef GaudiUtils::VectorMap<short,float>::_vector    VECT ;
+    typedef GaudiUtils::VectorMap<short,float>::value_type VAL  ;
 
-    ///  add/replace new information, associated with the key
-    bool addInfo( short key , float info ) { return this->insert ( key , info ).second  ; }
-    
-    /// extract the information associated with the given key. If there is no such infomration the default value will be returned.
-    double info( short  key, float def ) const
+  public:
+
+    /// Has information for specified key.
+    inline bool hasInfo( const short key ) const
+    { 
+      return this->end() != this->find ( key ) ;
+    }
+
+    /// Add or replace new information, associated with the key.
+    inline bool addInfo( const short key, const float info ) 
+    {
+      return this->insert ( key , info ).second ; 
+    }
+
+    /** Extract the information associated with the given key. 
+     *  If there is no such infomration the default value will be returned.
+     */
+    inline double info( const short key, const float def ) const
     {
       const_iterator i = this->find( key ) ;
-      return this->end() == i ? def : i->second ;
+      return ( this->end() == i ? def : i->second );
     }
-    /// erase the information associated with the given key
-    unsigned long eraseInfo( short  key) { return this->erase ( key ) ; }
+
+    /// Erase the information associated with the given key.
+    inline unsigned long eraseInfo( const short key )
+    { 
+      return this->erase ( key ) ; 
+    }
+
+  public:
     
-  }; 
+    /// Overload output to ostream
+    friend inline std::ostream& operator << ( std::ostream& os, 
+                                              const RelatedInfoMap & map )
+    {
+      os << "[ ";
+      for ( const auto& i : map ) { os << i.first << "=" << i.second << " "; }
+      return os << "]";
+    }
+    
+  };
 
 }
 #endif // KERNEL_IRELATEDINFOTOOL_H

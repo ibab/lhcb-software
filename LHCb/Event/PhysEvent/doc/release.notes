@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+! 2014-08-03 - Chris Jones
+ - Some minor improvements to RelatedInfoMap, including an operator 
+   ostream << implementation.
+
 !========================= PhysEvent v11r26 2014-07-14 ========================
 ! 2014-07-11 - Marco Clemencic
  - Strip spurious entry from the rootmap (ROOT 6 problem).
