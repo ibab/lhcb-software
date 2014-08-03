@@ -82,14 +82,13 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      LHCb::Particles* parts = get<LHCb::Particles>( *itS );
+      LHCb::Particles* parts = get<LHCb::Particles>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( parts );
       if ( parts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
-        debug() << format( "%4d particles in ", parts->size() ) << *itS << endmsg;
+        debug() << format( "%4d particles in ", parts->size() ) << name << endmsg;
       packAParticleContainer( parts, *pparts );
     }
     if ( msgLevel( MSG::DEBUG ) )
@@ -108,14 +107,13 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Vertex containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      LHCb::Vertices* verts = get<LHCb::Vertices>( *itS );
+      LHCb::Vertices* verts = get<LHCb::Vertices>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( verts );
       if ( verts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
-        debug () << format( "%4d vertices in ", verts->size() ) << *itS << endmsg;
+        debug () << format( "%4d vertices in ", verts->size() ) << name << endmsg;
       packAVertexContainer( verts, *pverts );
     }
     if ( msgLevel( MSG::DEBUG ) )
@@ -134,14 +132,13 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process FlavourTag containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      LHCb::FlavourTags * fts = get<LHCb::FlavourTags>( *itS );
+      LHCb::FlavourTags * fts = get<LHCb::FlavourTags>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( fts );
       if ( fts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
-        debug() << format( "%4d FlavourTags in ", fts->size() ) << *itS << endmsg;
+        debug() << format( "%4d FlavourTags in ", fts->size() ) << name << endmsg;
       packAFTContainer( fts, *pfts );
     }
     if ( msgLevel( MSG::DEBUG ) )
@@ -162,14 +159,13 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process RecVertices containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      LHCb::RecVertices* rverts = get<LHCb::RecVertices>( *itS );
+      LHCb::RecVertices* rverts = get<LHCb::RecVertices>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( rverts );
       if ( rverts->empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
-        debug () << format( "%4d RecVertices in ", rverts->size() ) << *itS << endmsg;
+        debug () << format( "%4d RecVertices in ", rverts->size() ) << name << endmsg;
       packARecVertexContainer( rverts, *prverts );
     }
     if ( msgLevel( MSG::DEBUG ) )
@@ -188,14 +184,13 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2Vertex Relation containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      P2VRELATION* rels = get<P2VRELATION>( *itS );
+      P2VRELATION* rels = get<P2VRELATION>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( rels );
       if ( rels->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
-        debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
+        debug () << format( "%4d relations in ", rels->relations().size() ) << name << endmsg;
       packAP2PRelationContainer( rels, *prels );
     }
     if ( msgLevel( MSG::DEBUG ) )
@@ -217,15 +212,14 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2Int Relation containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      Part2IntRelations * partIds = get<Part2IntRelations>( *itS );
+      Part2IntRelations * partIds = get<Part2IntRelations>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( partIds );
       if ( partIds->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d Particle2Ints in ", partIds->relations().size() ) 
-                << *itS << endmsg;
+                << name << endmsg;
       packAP2IntRelationContainer( partIds, *pPartIds );
     }
     if ( msgLevel( MSG::DEBUG ) )
@@ -246,16 +240,15 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2RelatedInfo Relation containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      Part2InfoRelations * partIds = get<Part2InfoRelations>( *itS );
+      Part2InfoRelations * partIds = get<Part2InfoRelations>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( partIds );
       if ( partIds->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
         debug() << format( "%4d Particle2RelatedInfo in ", partIds->relations().size() ) 
-                << *itS << endmsg;
-      packAP2RelatedInfoRelationContainer( partIds, *pPartIds, *itS  );
+                << name << endmsg;
+      packAP2RelatedInfoRelationContainer( partIds, *pPartIds, name  );
     }
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << pPartIds->relations().size() 
@@ -278,14 +271,13 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2MCParticle Relation containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( std::vector<std::string>::const_iterator itS = names.begin();
-          names.end() != itS; ++itS )
+    for ( const auto& name : names )
     {
-      P2MCPRELATION * rels = get<P2MCPRELATION>( *itS );
+      P2MCPRELATION * rels = get<P2MCPRELATION>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( rels );
       if ( rels->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
-        debug () << format( "%4d relations in ", rels->relations().size() ) << *itS << endmsg;
+        debug () << format( "%4d relations in ", rels->relations().size() ) << name << endmsg;
       packAP2PRelationContainer( rels, *prels );
     }
     if ( msgLevel( MSG::DEBUG ) )
