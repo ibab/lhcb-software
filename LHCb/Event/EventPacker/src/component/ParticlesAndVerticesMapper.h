@@ -17,6 +17,7 @@
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
 #include "Event/PackedFlavourTag.h"
+#include "Event/PackedPartToRelatedInfoRelation.h"
 
 #include "Event/StandardPacker.h"
 

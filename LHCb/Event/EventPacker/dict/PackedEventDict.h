@@ -28,5 +28,6 @@
 #include "Event/PackedCluster.h"
 #include "Event/PackedCaloCluster.h"
 #include "Event/PackedFlavourTag.h"
+#include "Event/PackedPartToRelatedInfoRelation.h"
 
 #endif // DICT_PACKEDEVENTDICT_H

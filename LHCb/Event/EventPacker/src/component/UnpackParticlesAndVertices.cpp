@@ -243,6 +243,68 @@ StatusCode UnpackParticlesAndVertices::execute()
   //=================================================================
   unpackP2IntRelations<LHCb::Particle,int,LHCb::Particles>(m_inputStream+LHCb::PackedRelationsLocation::P2Int);
 
+  //=================================================================
+  //== Process the Related info relations
+  //=================================================================
+  {
+    typedef LHCb::Particle                FROM;
+    typedef LHCb::RelatedInfoMap            TO;
+    typedef LHCb::Relation1D<FROM,TO> RELATION;
+
+    // Count data objects recreated
+    unsigned int nbRelContainer(0), nbRel(0);
+
+    // Location of the packed data
+    const std::string location = m_inputStream + LHCb::PackedPackedRelatedInfoLocation::InStream;
+
+    // do we have any packed data
+    LHCb::PackedRelatedInfoRelations * prels = getIfExists<LHCb::PackedRelatedInfoRelations>(location);
+    if ( NULL != prels )
+    {
+
+      // Packer helper
+      const LHCb::RelatedInfoRelationsPacker rPacker(*dynamic_cast<GaudiAlgorithm*>(this));
+
+      // Loop over the different TES containers that where saved
+      for ( const auto& cont : prels->containers() )
+      {
+        // Reconstruct container name for this entry
+        const int indx = cont.reference >> 32;
+        const std::string & containerName = prels->linkMgr()->link(indx)->path() + m_postFix;
+
+        // Create a new unpacked object at the TES location and save
+        RELATION * rels = new RELATION();
+        put( rels, containerName );
+
+        // Loop over the relations saved at this container location
+        for ( unsigned int kk = cont.first; cont.last > kk; ++kk )
+        {
+          // The relation information
+          const auto& rel = prels->relations()[kk];
+
+          // unpack this one entry
+          rPacker.unpack( rel, *prels, *rels );
+
+          // Count
+          ++nbRel;
+        }
+
+        // Count containers
+        ++nbRelContainer;
+
+      }
+
+    }
+
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Retrieved " << nbRel << " RelatedInfo relations in " << nbRelContainer << " containers"
+              << " from " << location
+              << endmsg;
+    }
+
+  }
+
   return StatusCode::SUCCESS;
 }
 

@@ -24,12 +24,10 @@ ProtoParticlePacker::pack( const DataVector & protos,
 {
   pprotos.protos().reserve(protos.size());
 
-  for ( LHCb::ProtoParticles::const_iterator itP = protos.begin();
-        protos.end() != itP; ++itP )
+  for ( const LHCb::ProtoParticle * part : protos )
   {
     pprotos.protos().push_back( LHCb::PackedProtoParticle() );
     LHCb::PackedProtoParticle & newPart = pprotos.protos().back();
-    const LHCb::ProtoParticle * part = *itP;
     if ( !part ) continue;
 
     if ( parent().msgLevel(MSG::VERBOSE) )
@@ -122,11 +120,8 @@ ProtoParticlePacker::unpack( const PackedDataVector & pprotos,
 {
   protos.reserve(pprotos.protos().size());
 
-  for ( std::vector<LHCb::PackedProtoParticle>::const_iterator itS = pprotos.protos().begin();
-        pprotos.protos().end() != itS; ++itS )
+  for ( const LHCb::PackedProtoParticle& src : pprotos.protos() )
   {
-    const LHCb::PackedProtoParticle& src = (*itS);
-
     LHCb::ProtoParticle* part = new LHCb::ProtoParticle( );
     protos.insert( part, src.key );
 

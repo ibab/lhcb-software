@@ -111,4 +111,7 @@
   <class name="std::vector<LHCb::PackedCaloClusterEntry>" />
   <class name="LHCb::PackedCaloClusters" id="00000605-0000-0000-0000-000000000000" />
 
+  <class name="LHCb:PackedRelatedInfoMap" />
+  <class name="LHCb::PackedRelatedInfoRelations" id="00000630-0000-0000-0000-000000000000" />
+
 </lcgdict>

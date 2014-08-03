@@ -2,22 +2,27 @@
 #ifndef UNPACKPARTICLESANDVERTICES_H
 #define UNPACKPARTICLESANDVERTICES_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+
+#include "Kernel/Particle2LHCbIDs.h"
+
 #include "Event/StandardPacker.h"
 #include "Relations/Relation1D.h"
-#include "Event/Particle.h"
+
 #include "Event/PackedParticle.h"
-#include "Event/Vertex.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
-#include "Event/RecVertex.h"
 #include "Event/PackedRecVertex.h"
-#include "Event/MCParticle.h"
-#include "Kernel/Particle2LHCbIDs.h"
-#include "Event/FlavourTag.h"
 #include "Event/PackedFlavourTag.h"
+#include "Event/PackedPartToRelatedInfoRelation.h"
+
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
+#include "Event/FlavourTag.h"
+#include "Event/RecVertex.h"
+#include "Event/MCParticle.h"
+#include "Event/RelatedInfoMap.h"
 
 /** @class UnpackParticlesAndVertices UnpackParticlesAndVertices.h
  *
@@ -77,7 +82,7 @@ UnpackParticlesAndVertices::unpackP2PRelations( const std::string & location )
       rels = new RELATION();
       put( rels, containerName );
       ++nbRelContainer;
-      FROMCONT* srcContainer = NULL;
+      FROMCONT * srcContainer = NULL;
       int prevSrcLink = -1;
       DataObject* dstContainer = NULL;
       int prevDstLink = -1;
@@ -128,7 +133,6 @@ UnpackParticlesAndVertices::unpackP2IntRelations( const std::string & location )
 
   unsigned int nbRelContainer(0), nbRel(0);
 
-  RELATION * rels = NULL;
   LHCb::PackedRelations* prels = getIfExists<LHCb::PackedRelations>( location );
   if ( NULL != prels )
   {
@@ -136,14 +140,14 @@ UnpackParticlesAndVertices::unpackP2IntRelations( const std::string & location )
           prels->relations().end() != itR; ++itR )
     {
       const LHCb::PackedRelation& prel = *itR;
-      int indx = prel.container >> 32;
-      const std::string & containerName = prels->linkMgr()->link( indx )->path() + m_postFix;
-      rels = new RELATION();
+      const int indx = prel.container >> 32;
+      const std::string & containerName = prels->linkMgr()->link(indx)->path() + m_postFix;
+      RELATION * rels = new RELATION();
       put( rels, containerName );
       ++nbRelContainer;
-      FROMCONT* srcContainer = NULL;
+      FROMCONT * srcContainer = NULL;
       int prevSrcLink = -1;
-      for ( int kk = prel.start;  prel.end > kk; ++kk )
+      for ( int kk = prel.start; prel.end > kk; ++kk )
       {
         int srcLink(0), srcKey(0);
         m_pack.indexAndKey64( prels->sources()[kk], srcLink, srcKey );
@@ -153,8 +157,8 @@ UnpackParticlesAndVertices::unpackP2IntRelations( const std::string & location )
           const std::string & srcName = prels->linkMgr()->link( srcLink )->path();
           srcContainer = get<FROMCONT>( srcName );
         }
-        FROM* from = srcContainer->object( srcKey );
-        TO to      = (TO) prels->dests()[kk];
+        FROM * from = srcContainer->object( srcKey );
+        TO to       = (TO) prels->dests()[kk];
         rels->relate( from, to );
         ++nbRel;
       }

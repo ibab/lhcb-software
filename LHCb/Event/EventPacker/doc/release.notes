@@ -4,9 +4,13 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-08-03 - Chris Jones
+ - Add support for packed RelatedInfo relations.
+
 !========================= EventPacker v4r2 2014-07-14 =========================
 ! 2014-06-29 - Chris Jones
- - Add a check in the ProtoParticle packer to test for over or under flow errors when packing ExtraInfo. 
+ - Add a check in the ProtoParticle packer to test for over or under flow errors
+   when packing ExtraInfo. 
 
 ! 2014-06-27 - Chris Jones
  - Adapt to changes in the job options of the ChargedProtoANNPID algorithm.

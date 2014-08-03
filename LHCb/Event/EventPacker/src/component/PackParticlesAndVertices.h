@@ -13,16 +13,20 @@
 #include "Relations/Relation1D.h"
 
 #include "Kernel/LHCbID.h"
-#include "Event/Particle.h"
+
 #include "Event/PackedParticle.h"
-#include "Event/Vertex.h"
-#include "Event/FlavourTag.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
-#include "Event/RecVertex.h"
 #include "Event/PackedRecVertex.h"
 #include "Event/PackedFlavourTag.h"
+#include "Event/PackedPartToRelatedInfoRelation.h"
+
+#include "Event/Particle.h"
+#include "Event/Vertex.h"
+#include "Event/FlavourTag.h"
+#include "Event/RecVertex.h"
 #include "Event/MCParticle.h"
+#include "Event/RelatedInfoMap.h"
 
 /** @class PackParticlesAndVertices PackParticlesAndVertices.h
  *
@@ -45,9 +49,10 @@ public:
 
 private:
 
-  typedef LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase> P2VRELATION;
-  typedef LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle> P2MCPRELATION;
-  typedef LHCb::Relation1D<LHCb::Particle,int>              Part2IntRelations;
+  typedef LHCb::Relation1D<LHCb::Particle,LHCb::VertexBase>     P2VRELATION;
+  typedef LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>     P2MCPRELATION;
+  typedef LHCb::Relation1D<LHCb::Particle,int>                  Part2IntRelations;
+  typedef LHCb::Relation1D<LHCb::Particle,LHCb::RelatedInfoMap> Part2InfoRelations; 
 
 private:
 
@@ -82,6 +87,11 @@ private:
   template < typename RELATION >
   void packAP2IntRelationContainer ( const RELATION* rels,
                                      LHCb::PackedRelations& prels );
+
+  /// Pack a 'SmartRef to RelatedInfoMap' relations container
+  void packAP2RelatedInfoRelationContainer( const Part2InfoRelations * rels,
+                                            LHCb::PackedRelatedInfoRelations& prels,
+                                            const std::string & location );
 
 private:
 
@@ -135,9 +145,14 @@ PackParticlesAndVertices::packAP2IntRelationContainer ( const RELATION* rels,
   // Make a new packed data object and save
   prels.relations().push_back( LHCb::PackedRelation() );
   LHCb::PackedRelation& prel = prels.relations().back();
+
   // reference to original container and key
   prel.container = m_pack.reference64( &prels, rels, 0 );
-  prel.start     = prels.sources().size();
+
+  // First object
+  prel.start = prels.sources().size();
+
+  // Loop over relations
   typename RELATION::Range all = rels->relations();
   for ( typename RELATION::Range::iterator itR = all.begin(); all.end() != itR; ++itR )
   {
@@ -146,7 +161,11 @@ PackParticlesAndVertices::packAP2IntRelationContainer ( const RELATION* rels,
                                                    (*itR).from()->key() ) );
     prels.dests().push_back  ( (*itR).to() );
   }
+
+  // last object
   prel.end = prels.sources().size();
+
+  // Clear the registry address of the unpacked container, to prevent reloading
   if ( !m_deleteInput ) rels->registry()->setAddress( 0 );
 }
 

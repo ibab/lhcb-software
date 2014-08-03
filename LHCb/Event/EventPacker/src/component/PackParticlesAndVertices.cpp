@@ -43,13 +43,14 @@ StatusCode PackParticlesAndVertices::execute()
   if ( NULL == root ) return StatusCode::SUCCESS;
 
   // Class IDs for handled data
-  const unsigned int clIdParticles   = 0x60000 + LHCb::CLID_Particle;
-  const unsigned int clIdVertices    = 0x60000 + LHCb::CLID_Vertex;
-  const unsigned int clIdRecVertices = 0x60000 + LHCb::CLID_RecVertex;
-  const unsigned int clIdFlavourTags = 0x60000 + LHCb::CLID_FlavourTag;
-  const unsigned int clIdPart2Vert   = 0xEA9168DC; // Particle to Vertex relation
-  const unsigned int clIdPart2MCPart = 0x7B880798; // Particle to MCParticle relations
-  const unsigned int clIdPart2Int    = 0xF94852E4; // Particle to int relations
+  const unsigned int clIdParticles    = 0x60000 + LHCb::CLID_Particle;
+  const unsigned int clIdVertices     = 0x60000 + LHCb::CLID_Vertex;
+  const unsigned int clIdRecVertices  = 0x60000 + LHCb::CLID_RecVertex;
+  const unsigned int clIdFlavourTags  = 0x60000 + LHCb::CLID_FlavourTag;
+  const unsigned int clIdPart2Vert    = 0xEA9168DC; // Particle to Vertex relation
+  const unsigned int clIdPart2MCPart  = 0x7B880798; // Particle to MCParticle relations
+  const unsigned int clIdPart2Int     = 0xF94852E4; // Particle to int relations
+  const unsigned int clIdPart2RelInfo = 0x90F0684D; // particle to related info map
 
   // List of data objects TES locations
   std::vector<std::string> names;
@@ -231,11 +232,43 @@ StatusCode PackParticlesAndVertices::execute()
       debug() << "Stored " << pPartIds->relations().size() << " packed Particle2Ints" << endmsg;
   }
 
+  //==============================================================================
+  // Find Particle to Related Info
+  //==============================================================================
+  if ( msgLevel( MSG::DEBUG ) )
+    debug() << "Looking for Particle2RelatedInfo relations " << clIdPart2RelInfo << endmsg;
+  names.clear();
+  selectContainers( root, names, clIdPart2RelInfo );
+  if ( !names.empty() )
+  {
+    LHCb::PackedRelatedInfoRelations * pPartIds = new LHCb::PackedRelatedInfoRelations();
+    put( pPartIds, m_inputStream + LHCb::PackedPackedRelatedInfoLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "=== Process Particle2RelatedInfo Relation containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+    for ( std::vector<std::string>::const_iterator itS = names.begin();
+          names.end() != itS; ++itS )
+    {
+      Part2InfoRelations * partIds = get<Part2InfoRelations>( *itS );
+      if ( m_deleteInput ) toBeDeleted.push_back( partIds );
+      if ( partIds->relations().empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << format( "%4d Particle2RelatedInfo in ", partIds->relations().size() ) 
+                << *itS << endmsg;
+      packAP2RelatedInfoRelationContainer( partIds, *pPartIds, *itS  );
+    }
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "Stored " << pPartIds->relations().size() 
+              << " packed Particle2RelatedInfo" << endmsg;
+  }
+
   // MC Information next
 
   //==============================================================================
   // Find MC relations
   //==============================================================================
+  if ( msgLevel( MSG::DEBUG ) )
+    debug() << "Looking for Particle 2 MCParticle relations " << clIdPart2MCPart << endmsg;
   names.clear();
   selectContainers( root, names, clIdPart2MCPart );
   if ( !names.empty() )
@@ -273,7 +306,7 @@ StatusCode PackParticlesAndVertices::execute()
       }
       else
       {
-        Error("Failed to delete input data as requested", sc ).ignore();
+        Error( "Failed to delete input data as requested", sc ).ignore();
       }
     }
   }
@@ -324,7 +357,9 @@ void PackParticlesAndVertices::selectContainers ( DataObject* obj,
           }
         }
         if ( msgLevel(MSG::DEBUG) ) 
-          debug() << "Found container '" << id << "' ClassID=" << tmp->clID() << endmsg;
+          debug() << "Found container '" << id << "' ClassID=" << tmp->clID() 
+                  << " Type='" << System::typeinfoName( typeid(*tmp) )
+                  << endmsg;
         if ( tmp->clID() == classID )
         {
           if ( msgLevel(MSG::DEBUG) ) 
@@ -477,7 +512,7 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
   const LHCb::VertexPacker vPacker(*this);
 
   // checks
-  LHCb::Vertices* unpacked = ( m_enableCheck ? new LHCb::Vertices() : NULL );
+  LHCb::Vertices * unpacked = ( m_enableCheck ? new LHCb::Vertices() : NULL );
   if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsVertexTest" ); }
 
   for ( LHCb::Vertices::const_iterator iD = verts->begin();
@@ -510,8 +545,8 @@ void PackParticlesAndVertices::packAVertexContainer ( const LHCb::Vertices* vert
   // clean up test data
   if ( unpacked )
   {
-    StatusCode sc = evtSvc()->unregisterObject( unpacked );
-    if( sc.isSuccess() )
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() )
     {
       delete unpacked;
     }
@@ -550,7 +585,66 @@ void PackParticlesAndVertices::packARecVertexContainer( const LHCb::RecVertices*
   }
 
   // Clear the registry address of the unpacked container, to prevent reloading
-  if ( !m_deleteInput ) rVerts->registry()->setAddress( 0 );
+  if ( !m_deleteInput ) { rVerts->registry()->setAddress( 0 ); }
+}
+
+//=========================================================================
+//  Pack a container of Related info
+//=========================================================================
+
+void 
+PackParticlesAndVertices::
+packAP2RelatedInfoRelationContainer( const PackParticlesAndVertices::Part2InfoRelations * rels,
+                                     LHCb::PackedRelatedInfoRelations& prels,
+                                     const std::string & location )
+{
+  // Make a entry in the containers vector, for this TES location
+  prels.containers().push_back( LHCb::PackedRelatedInfoMap() );
+  LHCb::PackedRelatedInfoMap & pcont = prels.containers().back();
+
+  // reference to original container and key
+  pcont.reference = m_pack.reference64( &prels, rels, 0 );
+
+  // First entry in the relations vector
+  pcont.first = prels.relations().size();
+
+  // Loop over the relations and fill
+  prels.relations().reserve( prels.relations().size() + rels->relations().size() );
+
+  // Use the packer to pack this location ...
+  const LHCb::RelatedInfoRelationsPacker rPacker(*dynamic_cast<GaudiAlgorithm*>(this));
+  rPacker.pack( *rels, prels );
+
+  // last entry in the relations vector
+  pcont.last = prels.relations().size();
+
+  // checks
+  if ( m_enableCheck )
+  {
+    // Make a temporary object
+    Part2InfoRelations * unpacked = new Part2InfoRelations();
+    put( unpacked, "/Event/Transient/Part2RelatedInfoRelations" );
+
+    // unpack
+    rPacker.unpack( prels, *unpacked, location );
+
+    // check
+    rPacker.check( *rels, *unpacked );
+
+    // remove temporary data
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() )
+    {
+      delete unpacked;
+    }
+    else
+    {
+      Error("Failed to delete test data after unpacking check", sc ).ignore();
+    }
+  }
+
+  // Clear the registry address of the unpacked container, to prevent reloading
+  if ( !m_deleteInput ) { rels->registry()->setAddress( 0 ); }
 }
 
 //=============================================================================
