@@ -139,6 +139,7 @@ namespace MicroDST
           }
           if ( !cloneTable->relations().empty() )
           {
+            this->counter(outputLocation) += cloneTable->relations().size();
             put( cloneTable, outputLocation );
           }
           else
