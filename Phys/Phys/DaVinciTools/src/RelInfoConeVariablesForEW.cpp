@@ -55,22 +55,25 @@ RelInfoConeVariablesForEW::RelInfoConeVariablesForEW( const std::string &type,
 RelInfoConeVariablesForEW::~RelInfoConeVariablesForEW() {}
 
 
-StatusCode RelInfoConeVariablesForEW::initialize(void) {
+StatusCode RelInfoConeVariablesForEW::initialize() 
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
   m_keys.clear(); 
 
-  std::vector<std::string>::const_iterator ivar; 
-  for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-    short int key = RelatedInfoNamed::indexByName( *ivar ); 
+  for ( const auto& var : m_variables )
+  {
+    short int key = RelatedInfoNamed::indexByName( var ); 
     if (key != RelatedInfoNamed::UNKNOWN) {
       m_keys.push_back( key );
-      debug() << "Adding variable " << *ivar << ", key = " << key << endmsg; 
+      debug() << "Adding variable " << var << ", key = " << key << endmsg; 
     } else {
-      warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
+      warning() << "Unknown variable " << var << ", skipping" << endmsg; 
     }
   }
 
-  return StatusCode::SUCCESS; 
+  return sc; 
 }
 
 
@@ -78,7 +81,8 @@ StatusCode RelInfoConeVariablesForEW::initialize(void) {
 // Calculate cone variables
 //=============================================================================
 StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle *top,
-                                                            const LHCb::Particle *seed) {
+                                                            const LHCb::Particle *seed)
+{
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "==> Fill" << endmsg;
@@ -219,11 +223,11 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
 
     m_map.clear();
     
-    std::vector<short int>::const_iterator ikey; 
-    for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-      
+    for ( const auto key : m_keys )
+    {
+
       float value = 0;
-      switch (*ikey) {
+      switch (key) {
         case RelatedInfoNamed::EWCONEANGLE : value = m_coneAngle; break;
         case RelatedInfoNamed::EWCONEMULT  : value = m_mult; break;
         case RelatedInfoNamed::EWCONEPX    : value = m_px; break;
@@ -250,9 +254,9 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
         default: value = 0.; break;
       }
       
-      debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq; 
+      debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq; 
     
-      m_map.insert( std::make_pair( *ikey, value) );
+      m_map.insert( std::make_pair( key, value) );
     }
 
 
@@ -271,26 +275,25 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
 //=============================================================================
 // Save the particles in the decay chain (recursive function)
 //=============================================================================
-void RelInfoConeVariablesForEW::saveDecayParticles( const LHCb::Particle *top ) {
-
-  // -- Get the daughters of the top particle
-  const SmartRefVector< LHCb::Particle > daughters = top->daughters();
+void RelInfoConeVariablesForEW::saveDecayParticles( const LHCb::Particle *top ) 
+{
 
   // -- Fill all the daugthers in m_decayParticles
-  for ( SmartRefVector< LHCb::Particle >::const_iterator ip = daughters.begin(); ip != daughters.end(); ++ip ) {
+  for ( const auto& dau : top->daughters() )
+  {
 
     // -- If the particle is stable, save it in the vector, or...
-    if ( (*ip)->isBasicParticle() ) {
+    if ( dau->isBasicParticle() ) {
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Filling particle with ID " << (*ip)->particleID().pid() << endmsg;
-      m_decayParticles.push_back( (*ip) );
+        debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
+      m_decayParticles.push_back( dau );
     }
     else {
       // -- if it is not stable, call the function recursively
-      m_decayParticles.push_back( (*ip) );
+      m_decayParticles.push_back( dau );
       if ( msgLevel(MSG::DEBUG) )
-        debug() << "Filling particle with ID " << (*ip)->particleID().pid() << endmsg;
-      saveDecayParticles( (*ip) );
+        debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
+      saveDecayParticles( dau );
     }
 
   }
@@ -308,7 +311,8 @@ StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
                                             std::vector < double > &vP,
                                             double &sP, double &sPt,
                                             double &minPtE, double &maxPtE,
-                                            double &minPtMu, double &maxPtMu ) {
+                                            double &minPtMu, double &maxPtMu )
+{
 
   // -- Initialize values
   mult = 0;
@@ -327,10 +331,10 @@ StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
   int maxQMu = 0;
 
   // -- Get the 4-momentum of the seed particle
-  Gaudi::LorentzVector seedMomentum = seed->momentum();
+  const Gaudi::LorentzVector& seedMomentum = seed->momentum();
 
-  for ( LHCb::Particles::const_iterator ip = parts->begin(); ip != parts->end(); ++ip ) {
-    const LHCb::Particle *particle = (*ip);
+  for ( const LHCb::Particle *particle : *parts )
+  {
 
     const LHCb::ProtoParticle *proto = particle->proto();
     if ( proto ) {
@@ -344,7 +348,7 @@ StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
           continue;
 
         // -- Get the 3-momentum of the track
-        Gaudi::XYZVector trackMomentum = track->momentum();
+        const Gaudi::XYZVector& trackMomentum = track->momentum();
 
         // -- Calculate the difference in Eta and Phi between the seed particle and a track
         double deltaPhi = fabs( seedMomentum.Phi() - trackMomentum.Phi() );
@@ -662,9 +666,14 @@ StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
 
   }
 */
-StatusCode RelInfoConeVariablesForEW::NeutralCone( const LHCb::Particle *seed, const LHCb::Particles *photons, const double rcut,
-                                            int &mult, std::vector < double > &vP,
-                                            double &sP, double &sPt ) {
+StatusCode RelInfoConeVariablesForEW::NeutralCone( const LHCb::Particle *seed, 
+                                                   const LHCb::Particles *photons, 
+                                                   const double rcut,
+                                                   int &mult, 
+                                                   std::vector<double> &vP,
+                                                   double &sP, 
+                                                   double &sPt )
+{
 
   // -- Initialize values
   mult = 0;
@@ -675,13 +684,13 @@ StatusCode RelInfoConeVariablesForEW::NeutralCone( const LHCb::Particle *seed, c
   sPt = 0.;
 
   // -- Get the 4-momentum of the seed particle
-  Gaudi::LorentzVector seedMomentum = seed->momentum();
+  const Gaudi::LorentzVector& seedMomentum = seed->momentum();
 
-  for ( LHCb::Particles::const_iterator ip = photons->begin(); ip != photons->end(); ++ip ) {
-    const LHCb::Particle *photon = (*ip);
+  for ( const LHCb::Particle *photon : *photons )
+  {
 
     // -- Get the 3-momentum of the photon
-    Gaudi::XYZVector photonMomentum = photon->momentum().Vect();
+    const Gaudi::XYZVector& photonMomentum = photon->momentum().Vect();
 
     // -- Calculate the difference in Eta and Phi between the seed particle and a photons
     double deltaPhi = fabs( seedMomentum.Phi() - photonMomentum.Phi() );
@@ -718,8 +727,9 @@ bool RelInfoConeVariablesForEW::isTrackInDecay( const LHCb::Track *track ) {
 
   bool isInDecay = false;
 
-  for ( std::vector<const LHCb::Particle*>::iterator ip = m_decayParticles.begin(); ip != m_decayParticles.end(); ++ip ) {
-    const LHCb::ProtoParticle *proto = (*ip)->proto();
+  for ( const LHCb::Particle * part : m_decayParticles )
+  {
+    const LHCb::ProtoParticle *proto = part->proto();
     if ( proto ) {
 
       const LHCb::Track *myTrack = proto->track();

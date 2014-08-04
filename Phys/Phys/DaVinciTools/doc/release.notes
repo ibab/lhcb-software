@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-08-04 - Chris Jones
+ - Clean up the related info tools + Fix a bug where initialize() was not being
+   properly called on the base classes.
+
 !========================= DaVinciTools v23r15 2014-07-25 =========================
 
 ! 2014-07-16 - Anton Poluektov 
@@ -12,7 +16,8 @@
  - BremAdder : replace photonID cut with photonCL cut
 
 ! 2014-07-03 - O. Deschamps
- - BremAdder : store number of added brems in HasBremAdded particle::info()   (replace binary information)
+ - BremAdder : store number of added brems in HasBremAdded particle::info() 
+               (replace binary information)
 
 ! 2014-07-02 - Anton Poluektov 
  - Move RelatedInfoNamed to Phys/DaVinciTypes, update RelInfo... tools accordingly

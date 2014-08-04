@@ -48,24 +48,40 @@
  *
  */
 
-class RelInfoConeVariables : public GaudiTool, virtual public IRelatedInfoTool {
+class RelInfoConeVariables : public GaudiTool, virtual public IRelatedInfoTool 
+{
+
 public:
+
   /// Standard constructor
   RelInfoConeVariables( const std::string& type,
                         const std::string& name,
                         const IInterface* parent );
 
+  virtual ~RelInfoConeVariables( ); ///< Destructor
+
   virtual StatusCode initialize(void); 
+
+public:
 
   /// Loop over differnt conesizes and fill the variables into the tuple
   virtual StatusCode calculateRelatedInfo( const LHCb::Particle*
                                          , const LHCb::Particle*);
 
   virtual LHCb::RelatedInfoMap* getInfo(void);
-  
-  virtual ~RelInfoConeVariables( ); ///< Destructor
 
-protected:
+private:
+
+  /// Save all particles in your decay descriptor in a vector
+  void saveDecayParticles( const LHCb::Particle *top);
+
+  /// Calculate properties of your remaining tracks inside the cone
+  std::pair< std::vector<double>, int> ConeP(const LHCb::Particle *part,
+                                             const LHCb::Tracks* tracks,
+                                             const double rcut);
+
+  /// Check if your track belongs to your decay or not
+  bool isTrackInDecay(const LHCb::Track* track);
 
 private:
 
@@ -89,17 +105,9 @@ private:
   double m_deltaPhi;
 
   std::vector<const LHCb::Particle*> m_decayParticles;
-
-  /// Save all particles in your decay descriptor in a vector
-  void saveDecayParticles( const LHCb::Particle *top);
-
-  /// Calculate properties of your remaining tracks inside the cone
-  std::pair< std::vector<double>, int> ConeP(const LHCb::Particle *part, const LHCb::Tracks* tracks, const double rcut);
-
-  /// Check if your track belongs to your decay or not
-  bool isTrackInDecay(const LHCb::Track* track);
   
   LHCb::RelatedInfoMap m_map;
+
 };
 
 #endif // CONEVARIABLES_H

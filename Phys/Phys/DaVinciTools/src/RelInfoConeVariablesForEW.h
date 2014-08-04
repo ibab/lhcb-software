@@ -1,50 +1,95 @@
 #ifndef RELINFOCONEVARIABLESFOREW_H 
 #define RELINFOCONEVARIABLESFOREW_H 1
 
-#include "Kernel/IRelatedInfoTool.h" 
+#include "Kernel/IRelatedInfoTool.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/RelatedInfoMap.h"
 
 /** @class ConeVariablesForEW ConeVariablesForEW.h
- *  
- * \brief Fill track isolation for DecayTreeTuple. 
- *    Open up a cone around head, exclude all tracks 
- *    that are in the decay descriptor 
- *    (i.e. that belong to the decay you are looking for), 
+ *
+ * \brief Fill track isolation for DecayTreeTuple.
+ *    Open up a cone around head, exclude all tracks
+ *    that are in the decay descriptor
+ *    (i.e. that belong to the decay you are looking for),
  *    build the variables with the remaining tracks.
  * \sa DecayTreeTuple
- * 
+ *
  *  @author Michel De Cian
  *  @date   2009-08-04
  */
 
 
-class RelInfoConeVariablesForEW : public GaudiTool, virtual public IRelatedInfoTool {
+class RelInfoConeVariablesForEW : public GaudiTool, virtual public IRelatedInfoTool
+{
 
-public: 
+public:
+
   /// Standard constructor
-  RelInfoConeVariablesForEW( const std::string &type, 
-                      const std::string &name,
-                      const IInterface *parent );
+  RelInfoConeVariablesForEW( const std::string &type,
+                             const std::string &name,
+                             const IInterface *parent );
 
-  virtual StatusCode initialize(void); 
-
-  /// Loop over differnt conesizes and fill the variables into the tuple
-  virtual StatusCode calculateRelatedInfo( const LHCb::Particle*
-                                         , const LHCb::Particle*);
-
-  virtual LHCb::RelatedInfoMap* getInfo(void);
+  virtual StatusCode initialize();
 
   virtual ~RelInfoConeVariablesForEW( ); ///< Destructor
 
-protected:
+public:
+
+  /// Loop over differnt conesizes and fill the variables into the tuple
+  virtual StatusCode calculateRelatedInfo( const LHCb::Particle*
+                                           , const LHCb::Particle*);
+
+  virtual LHCb::RelatedInfoMap* getInfo(void);
+
+private:
+
+  /// Save all particles in your decay descriptor in a vector
+  void saveDecayParticles( const LHCb::Particle *top );
+
+  /// Calculate properties of your remaining tracks inside the cone
+  StatusCode ChargedCone( const LHCb::Particle *seed,
+                          const LHCb::Particles *parts,
+                          const double rcut,
+                          int &mult,
+                          std::vector<double> &vP,
+                          double &sP,
+                          double &sPt,
+                          double &minPtE,
+                          double &maxPtE,
+                          double &minPtMu,
+                          double &maxPtMu );
+
+  StatusCode NeutralCone( const LHCb::Particle *seed,
+                          const LHCb::Particles *parts,
+                          const double rcut,
+                          int &mult,
+                          std::vector<double> &vP,
+                          double &sP,
+                          double &sPt );
+
+  /*
+    StatusCode PVCone( const LHCb::Particle *seed,
+    const LHCb::Particles *parts,
+    const double rcut,
+    int &mult,
+    std::vector<double> &vP,
+    double &sP,
+    double &sPt,
+    double &minM,
+    double &totM,
+    double &minPt,
+    double &maxPt );
+  */
+
+  /// Check if your track belongs to your decay or not
+  bool isTrackInDecay( const LHCb::Track *track );
 
 private:
 
   double m_coneAngle;
 
   std::vector<std::string> m_variables;
-  std::vector<short int> m_keys; 
+  std::vector<short int> m_keys;
 
   int m_mult;
   double m_px;
@@ -75,48 +120,7 @@ private:
 
   std::vector<const LHCb::Particle*> m_decayParticles;
 
-  /// Save all particles in your decay descriptor in a vector
-  void saveDecayParticles( const LHCb::Particle *top );
-
-  /// Calculate properties of your remaining tracks inside the cone
-  StatusCode ChargedCone( const LHCb::Particle *seed,
-			  const LHCb::Particles *parts,
-			  const double rcut,
-			  int &mult,
-			  std::vector<double> &vP,
-			  double &sP,
-			  double &sPt,
-			  double &minPtE,
-			  double &maxPtE,
-			  double &minPtMu,
-			  double &maxPtMu );
-
-  StatusCode NeutralCone( const LHCb::Particle *seed,
-                          const LHCb::Particles *parts,
-                          const double rcut,
-                          int &mult,
-                          std::vector<double> &vP,
-                          double &sP,
-                          double &sPt );
-
-  /*
-  StatusCode PVCone( const LHCb::Particle *seed,
-                     const LHCb::Particles *parts,
-                     const double rcut,
-                     int &mult,
-                     std::vector<double> &vP,
-                     double &sP,
-                     double &sPt,
-                     double &minM,
-		     double &totM,
-		     double &minPt,
-		     double &maxPt );
-  */
-
-  /// Check if your track belongs to your decay or not
-  bool isTrackInDecay( const LHCb::Track *track );
-  
-  LHCb::RelatedInfoMap m_map; 
+  LHCb::RelatedInfoMap m_map;
 
 };
 

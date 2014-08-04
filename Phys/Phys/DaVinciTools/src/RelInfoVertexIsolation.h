@@ -56,12 +56,14 @@ public:
 
   virtual StatusCode initialize () ;
 
+  virtual ~RelInfoVertexIsolation( ); ///< Destructor
+
+public:
+
   virtual StatusCode calculateRelatedInfo( const LHCb::Particle*,
                                            const LHCb::Particle*);
 
   virtual LHCb::RelatedInfoMap* getInfo(void);
-
-  virtual ~RelInfoVertexIsolation( ); ///< Destructor
 
 private:
 
@@ -114,7 +116,8 @@ public:
   };
 
   // Isolation calculation
-  RelInfoVertexIsolation::IsolationResult getIsolation( const double, LHCb::Particle::ConstVector& ) ;
+  RelInfoVertexIsolation::IsolationResult getIsolation( const double, 
+                                                        LHCb::Particle::ConstVector& ) ;
 
 };
 

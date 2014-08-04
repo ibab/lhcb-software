@@ -24,15 +24,16 @@ DECLARE_TOOL_FACTORY( RelInfoConeVariables )
 // Standard constructor, initializes variables
 //=============================================================================
 RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
-                                const std::string& name,
-                                const IInterface* parent) : GaudiTool ( type, name , parent )
+                                            const std::string& name,
+                                            const IInterface* parent)
+: GaudiTool ( type, name , parent )
 {
   declareInterface<IRelatedInfoTool>(this);
   declareProperty( "ConeAngle", m_coneAngle = 1.0,
                    "Set the deltaR of the cone (default = 1.0), in radians");
   declareProperty( "TrackType", m_trackType = 3,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
-  declareProperty( "Variables", m_variables, 
+  declareProperty( "Variables", m_variables,
                    "List of variables to store (store all if empty)");
 }
 
@@ -41,29 +42,32 @@ RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
 //=============================================================================
 RelInfoConeVariables::~RelInfoConeVariables() {}
 
-StatusCode RelInfoConeVariables::initialize(void) {
+StatusCode RelInfoConeVariables::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
+  if ( sc.isFailure() ) return sc;
 
-  m_keys.clear(); 
+  m_keys.clear();
 
-  std::vector<std::string>::const_iterator ivar; 
-  for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-    short int key = RelatedInfoNamed::indexByName( *ivar ); 
+  for ( const auto& var : m_variables )
+  {
+    short int key = RelatedInfoNamed::indexByName( var );
     if (key != RelatedInfoNamed::UNKNOWN) {
       m_keys.push_back( key );
-      debug() << "Adding variable " << *ivar << ", key = " << key << endmsg; 
+      debug() << "Adding variable " << var << ", key = " << key << endmsg;
     } else {
-      warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
+      warning() << "Unknown variable " << var << ", skipping" << endmsg;
     }
   }
 
-  return StatusCode::SUCCESS; 
+  return sc;
 }
 
 //=============================================================================
 // Fill Cone Info structure
 //=============================================================================
 StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top,
-                                                const LHCb::Particle *part )
+                                                       const LHCb::Particle *part )
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
@@ -82,8 +86,8 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
   saveDecayParticles( top );
 
   // -- Get all tracks in the event
-  LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
-  if ( tracks->empty() )
+  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(LHCb::TrackLocation::Default);
+  if ( !tracks || tracks->empty() )
   {
     if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
     return StatusCode::FAILURE;
@@ -143,32 +147,32 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
     m_ptasy = (part->pt() - conePt)/(part->pt() + conePt);
 
     m_map.clear();
-    
-    std::vector<short int>::const_iterator ikey; 
-    for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-      
+
+    for ( const auto key : m_keys )
+    {
+
       float value = 0;
-      switch (*ikey) {
-        case RelatedInfoNamed::CONEANGLE : value = m_coneAngle; break;
-        case RelatedInfoNamed::CONEMULT  : value = m_mult; break;
-        case RelatedInfoNamed::CONEPX    : value = m_px; break;
-        case RelatedInfoNamed::CONEPY    : value = m_py; break;
-        case RelatedInfoNamed::CONEPZ    : value = m_pz; break;
-        case RelatedInfoNamed::CONEP     : value = m_p; break;
-        case RelatedInfoNamed::CONEPT    : value = m_pt; break;
-        case RelatedInfoNamed::CONEPXASYM   : value = m_pxasy; break;
-        case RelatedInfoNamed::CONEPYASYM   : value = m_pyasy; break;
-        case RelatedInfoNamed::CONEPZASYM   : value = m_pzasy; break;
-        case RelatedInfoNamed::CONEPASYM    : value = m_pasy; break;
-        case RelatedInfoNamed::CONEPTASYM   : value = m_ptasy; break;
-        case RelatedInfoNamed::CONEDELTAETA : value = m_deltaEta; break;
-        case RelatedInfoNamed::CONEDELTAPHI : value = m_deltaPhi; break;
-        default: value = 0.; break;
+      switch (key) {
+      case RelatedInfoNamed::CONEANGLE : value = m_coneAngle; break;
+      case RelatedInfoNamed::CONEMULT  : value = m_mult; break;
+      case RelatedInfoNamed::CONEPX    : value = m_px; break;
+      case RelatedInfoNamed::CONEPY    : value = m_py; break;
+      case RelatedInfoNamed::CONEPZ    : value = m_pz; break;
+      case RelatedInfoNamed::CONEP     : value = m_p; break;
+      case RelatedInfoNamed::CONEPT    : value = m_pt; break;
+      case RelatedInfoNamed::CONEPXASYM   : value = m_pxasy; break;
+      case RelatedInfoNamed::CONEPYASYM   : value = m_pyasy; break;
+      case RelatedInfoNamed::CONEPZASYM   : value = m_pzasy; break;
+      case RelatedInfoNamed::CONEPASYM    : value = m_pasy; break;
+      case RelatedInfoNamed::CONEPTASYM   : value = m_ptasy; break;
+      case RelatedInfoNamed::CONEDELTAETA : value = m_deltaEta; break;
+      case RelatedInfoNamed::CONEDELTAPHI : value = m_deltaPhi; break;
+      default: value = 0.; break;
       }
-      
-      debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq; 
-    
-      m_map.insert( std::make_pair( *ikey, value) );
+
+      debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
+
+      m_map.insert( std::make_pair(key,value) );
     }
 
   }
@@ -186,21 +190,19 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
 void RelInfoConeVariables::saveDecayParticles( const LHCb::Particle *top)
 {
 
-  // -- Get the daughters of the top particle
-  const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
-
   // -- Fill all the daugthers in m_decayParticles
-  for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
-
+  for ( const auto& dau : top->daughters() )
+  {
+    
     // -- If the particle is stable, save it in the vector, or...
-    if( (*idau)->isBasicParticle() ){
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
-      m_decayParticles.push_back( (*idau) );
+    if( dau->isBasicParticle() ){
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
+      m_decayParticles.push_back( dau );
     }else{
       // -- if it is not stable, call the function recursively
-      m_decayParticles.push_back( (*idau) );
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
-      saveDecayParticles( (*idau) );
+      m_decayParticles.push_back( dau );
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
+      saveDecayParticles( dau );
     }
 
   }
@@ -211,26 +213,26 @@ void RelInfoConeVariables::saveDecayParticles( const LHCb::Particle *top)
 //=============================================================================
 std::pair< std::vector<double>, int>
 RelInfoConeVariables::ConeP(const LHCb::Particle *part,
-                     const LHCb::Tracks* tracks,
-                     const double rcut)
+                            const LHCb::Tracks* tracks,
+                            const double rcut)
 {
 
   // -- Get the (4-) momentum of the particle in question
-  Gaudi::LorentzVector partMomentum = part->momentum();
+  const Gaudi::LorentzVector& partMomentum = part->momentum();
   double sumPx = 0.0;
   double sumPy = 0.0;
   double sumPz = 0.0;
   int counter = 0;
 
-  for( LHCb::Tracks::const_iterator it = tracks->begin(); it != tracks->end(); ++it){
-    LHCb::Track* track = (*it);
+  for ( const LHCb::Track * track : *tracks )
+  {
 
     // -- Check if the track belongs to the decay itself
     bool isInDecay = isTrackInDecay(track);
     if(isInDecay) continue;
 
     // -- Get the (3-) momentum of the track
-    Gaudi::XYZVector trackMomentum = track->momentum();
+    const Gaudi::XYZVector& trackMomentum = track->momentum();
     //double tracketa = track->pseudoRapidity();
     double trackpx = trackMomentum.X();
     double trackpy = trackMomentum.Y();
@@ -251,7 +253,6 @@ RelInfoConeVariables::ConeP(const LHCb::Particle *part,
       sumPz += trackpz;
       counter++;
     }
-
 
   }
 
@@ -275,9 +276,10 @@ bool RelInfoConeVariables::isTrackInDecay(const LHCb::Track* track){
 
   bool isInDecay = false;
 
-  for(  std::vector<const LHCb::Particle*>::iterator it = m_decayParticles.begin() ; it != m_decayParticles.end() ; ++it ){
+  for ( const LHCb::Particle * part : m_decayParticles )
+  {
 
-    const LHCb::ProtoParticle* proto = (*it)->proto();
+    const LHCb::ProtoParticle* proto = part->proto();
     if(proto){
       const LHCb::Track* myTrack = proto->track();
 
@@ -296,6 +298,7 @@ bool RelInfoConeVariables::isTrackInDecay(const LHCb::Track* track){
   return isInDecay;
 }
 
-LHCb::RelatedInfoMap* RelInfoConeVariables::getInfo(void) {
-  return &m_map; 
+LHCb::RelatedInfoMap* RelInfoConeVariables::getInfo(void)
+{
+  return &m_map;
 }

@@ -19,8 +19,8 @@ DECLARE_TOOL_FACTORY( RelInfoVertexIsolation )
 // Standard constructor, initializes variables
 //=============================================================================
 RelInfoVertexIsolation::RelInfoVertexIsolation( const std::string& type,
-                                  const std::string& name,
-                                  const IInterface* parent)
+                                                const std::string& name,
+                                                const IInterface* parent)
 : GaudiTool ( type, name , parent )
   , m_dva(0)
   , m_dist(0)
@@ -68,14 +68,14 @@ StatusCode RelInfoVertexIsolation::initialize()
 
   m_keys.clear();
 
-  std::vector<std::string>::const_iterator ivar;
-  for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-    short int key = RelatedInfoNamed::indexByName( *ivar );
+  for ( const auto& var : m_variables )
+  {
+    short int key = RelatedInfoNamed::indexByName( var );
     if (key != RelatedInfoNamed::UNKNOWN) {
       m_keys.push_back( key );
-      debug() << "Adding variable " << *ivar << ", key = " << key << endmsg;
+      debug() << "Adding variable " << var << ", key = " << key << endmsg;
     } else {
-      warning() << "Unknown variable " << *ivar << ", skipping" << endmsg;
+      warning() << "Unknown variable " << var << ", skipping" << endmsg;
     }
   }
 
@@ -109,51 +109,46 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   // -- Clear the vector with the particles in the specific decay
   m_particlesToVertex.clear();
   // -- Add the mother (prefix of the decay chain) to the vector
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) 
+    debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
   //  m_particlesToVertex.push_back( top );
   // -- Save all basic particles that belong to the mother vertex in the vector m_particlesToVertex
   findDaughters2Vertex( top );
 
   // -- Get vector of particles excluding the signal
   LHCb::Particle::ConstVector partsToCheck ;
-  for ( auto iLocation = m_inputParticles.begin(), iLocationEnd = m_inputParticles.end();
-        iLocation != iLocationEnd;
-        ++iLocation )
+  for ( const auto& location : m_inputParticles )
   {
     // Get the particles
-    LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(*iLocation+"/Particles") ;
+    LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(location+"/Particles") ;
     if (msgLevel(MSG::DEBUG))
-      debug() << "Got " << particles.size() << " particles from " << *iLocation << endreq ;
+      debug() << "Got " << particles.size() << " particles from " << location << endreq ;
     if ( particles.empty() ) { continue; }
 
     // Loop over the particles and take the ones we can use for vertexing
-    for ( auto iParticle = particles.begin(), iParticleEnd = particles.end() ;
-          iParticle != iParticleEnd;
-          ++iParticle )
+    for ( const auto* particle : particles )
     {
       // Ignore if no proto
-      if ( !(*iParticle)->proto() )        continue ;
+      if ( !particle->proto() )        continue ;
       // Also ignore if neutral
-      if ( isPureNeutralCalo(*iParticle) ) continue ;
+      if ( isPureNeutralCalo(particle) ) continue ;
       // Check that the proto of the particle does not match the signal
       bool isSignal = false ;
       for ( auto iSignal = m_particlesToVertex.begin(), iSignalEnd = m_particlesToVertex.end();
             iSignal != iSignalEnd;
             ++iSignal )
       {
-        if ( (*iSignal)->proto() == (*iParticle)->proto() ) { isSignal = true ; break ; }
+        if ( (*iSignal)->proto() == particle->proto() ) { isSignal = true ; break ; }
       }
       if ( isSignal ) continue ;
       // Check for duplicated particles
       bool isAlreadyIn = false ;
-      for ( auto iSavedParticle = partsToCheck.begin(), iSavedParticleEnd = partsToCheck.end();
-            iSavedParticle != iSavedParticleEnd;
-            ++iSavedParticle )
+      for ( const auto* savedParticle : partsToCheck )
       {
-        if ( (*iSavedParticle)->proto() == (*iParticle)->proto() ) { isAlreadyIn = true ; break ; }
+        if ( savedParticle->proto() == particle->proto() ) { isAlreadyIn = true ; break ; }
       }
       if ( isAlreadyIn ) continue ;
-      partsToCheck.push_back( *iParticle ) ;
+      partsToCheck.push_back( particle ) ;
     }
   }
   if ( msgLevel(MSG::DEBUG) )
@@ -179,12 +174,10 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
     m_particlesToVertex.push_back( isolationOneTrack.bestParticle ) ;
     // Build list with particles to check removing bestParticle
     LHCb::Particle::ConstVector partsToCheckForTwoTracks ;
-    for ( auto iSavedParticle = partsToCheck.begin(), iSavedParticleEnd = partsToCheck.end();
-          iSavedParticle != iSavedParticleEnd;
-          ++iSavedParticle )
+    for ( const auto* savedParticle : partsToCheck )
     {
-      if ( (*iSavedParticle)->proto() != (isolationOneTrack.bestParticle)->proto() )
-        partsToCheckForTwoTracks.push_back(*iSavedParticle) ;
+      if ( savedParticle->proto() != (isolationOneTrack.bestParticle)->proto() )
+        partsToCheckForTwoTracks.push_back(savedParticle) ;
     }
     // Compute isolation adding one further track
     isolationTwoTracks = getIsolation(originalVtxChi2, partsToCheckForTwoTracks) ;
@@ -209,20 +202,20 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
 
   m_map.clear();
 
-  std::vector<short int>::const_iterator ikey;
-  for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
+  for ( const auto key : m_keys )
+  {
 
-      float value = 0;
-      switch (*ikey) {
-        case RelatedInfoNamed::VTXISONUMVTX            : value = (float) m_nPartChi2Win; break;
-        case RelatedInfoNamed::VTXISODCHI2ONETRACK     : value = m_smallestDeltaChi2OneTrack; break;
-        case RelatedInfoNamed::VTXISODCHI2MASSONETRACK : value = m_smallestDeltaChi2MassOneTrack; break;
-        case RelatedInfoNamed::VTXISODCHI2TWOTRACK     : value = m_smallestDeltaChi2TwoTracks; break;
-        case RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK : value = m_smallestDeltaChi2MassTwoTracks; break;
-        default: value = 0.; break;
-      }
-      debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
-      m_map.insert( std::make_pair( *ikey, value) );
+    float value = 0;
+    switch (key) {
+    case RelatedInfoNamed::VTXISONUMVTX            : value = (float) m_nPartChi2Win; break;
+    case RelatedInfoNamed::VTXISODCHI2ONETRACK     : value = m_smallestDeltaChi2OneTrack; break;
+    case RelatedInfoNamed::VTXISODCHI2MASSONETRACK : value = m_smallestDeltaChi2MassOneTrack; break;
+    case RelatedInfoNamed::VTXISODCHI2TWOTRACK     : value = m_smallestDeltaChi2TwoTracks; break;
+    case RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK : value = m_smallestDeltaChi2MassTwoTracks; break;
+    default: value = 0.; break;
+    }
+    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
+    m_map.insert( std::make_pair( key, value) );
 
   }
 
@@ -235,21 +228,20 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
 //=============================================================================
 //bool  RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
 //                                     LHCb::Particle::ConstVector &extraParticles )
-RelInfoVertexIsolation::IsolationResult RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
-                                                                LHCb::Particle::ConstVector &extraParticles )
+RelInfoVertexIsolation::IsolationResult 
+RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
+                                      LHCb::Particle::ConstVector &extraParticles )
 {
   int             nCompatibleChi2      = 0 ;
   double          smallestChi2         = -1 ;
   double          smallestDeltaChi2    = -1 ;
   LHCb::Particle *bestParticle         = NULL ;
 
-  for ( auto iExtraPart = extraParticles.begin(), iExtraPartEnd = extraParticles.end() ;
-        iExtraPart != iExtraPartEnd ;
-        ++iExtraPart )
+  for ( const auto* extraPart : extraParticles )
   {
     LHCb::Vertex vtxWithExtraTrack ;
     // Temporarily add the extra track to the partcles to vertex vector
-    m_particlesToVertex.push_back(*iExtraPart) ;
+    m_particlesToVertex.push_back(extraPart) ;
     // Fit
     const StatusCode sc = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
     // Remove the extra track
@@ -273,7 +265,7 @@ RelInfoVertexIsolation::IsolationResult RelInfoVertexIsolation::getIsolation( co
       if ( (smallestDeltaChi2 < 0) || (smallestDeltaChi2 > deltaChi2) )
       {
         smallestDeltaChi2 = deltaChi2 ;
-        bestParticle = (LHCb::Particle*) (*iExtraPart) ;
+        bestParticle = (LHCb::Particle*) (extraPart) ;
       }
     }
   }
@@ -290,24 +282,20 @@ RelInfoVertexIsolation::IsolationResult RelInfoVertexIsolation::getIsolation( co
 //=============================================================================
 void RelInfoVertexIsolation::findDaughters2Vertex( const LHCb::Particle *top )
 {
-  // -- Get the daughters of the top particle
-  const LHCb::Particle::ConstVector & daughters = top->daughtersVector();
   // -- Fill all the daugthers in m_particlesToVertex
-  for( auto idau = daughters.begin(), idauEnd = daughters.end() ;
-       idau != idauEnd ;
-       ++idau )
+  for ( const auto* dau : top->daughtersVector() )
   {
     // -- If the particle is stable, save it in the vector, or...
-    if( (*idau)->isBasicParticle() )
+    if( dau->isBasicParticle() )
     {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
-      if ( (*idau)->proto() && !isPureNeutralCalo(*idau) ) m_particlesToVertex.push_back( (*idau) );
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
+      if ( dau->proto() && !isPureNeutralCalo(dau) ) m_particlesToVertex.push_back( dau );
     }
     else
     { // -- if it is not stable, call the function recursively
       //   m_particlesToVertex.push_back( (*idau) );
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
-      findDaughters2Vertex( (*idau) );
+      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
+      findDaughters2Vertex( dau );
     }
   }
 }
