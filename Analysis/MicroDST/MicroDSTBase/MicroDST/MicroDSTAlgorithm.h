@@ -47,7 +47,6 @@ protected:
     return m_inputTESLocations;
   }
 
-
   inline void setInputTESLocation(const std::string& newLocation) 
   {
     m_inputTESLocations.clear();

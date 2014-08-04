@@ -6,6 +6,15 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2014-08-04 - Chris Jones
+ - Add a new option to the RelationsFromParticleLocationsFromClonerAlg base class
+   'UseRelationsCLID'. If True (default False) will seach the TES for objects,
+   at the same level as the Particles, that have the correct CLID for the 
+   relations type being cloned (based on the template instance). Anything that
+   matches is added to the list to be cloned.
+   Updated the 'RelationsBaseName' option to allow for "", which signifies no
+    location.
+
 !========================= MicroDSTBase v3r4 2014-06-13 =========================
 
 ! 2014-06-08 - Anton Poluektov 

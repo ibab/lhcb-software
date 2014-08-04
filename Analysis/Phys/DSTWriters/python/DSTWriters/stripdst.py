@@ -20,7 +20,7 @@ from microdstelements import ( CloneParticleTrees,
                                PrintTESContents,
                                FindDuplicates )
 
-def stripDSTElements(pack=True, stripPrefix = 'Strip', relatedInfo = [] ) :
+def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
     elements = [ FindDuplicates(),
                  CloneParticleTrees( TESVetoList = ["/Event/Rec/ProtoP/Charged",
                                                     "/Event/Rec/ProtoP/Neutrals",
@@ -33,7 +33,7 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip', relatedInfo = [] ) :
                                                     "/Event/Rec/Calo/MergedPi0s",
                                                     "/Event/Rec/Calo/SplitPhotons"] ),
                  CloneBTaggingInfo( CloneTaggerParticles = True ),
-                 CloneRelatedInfo( extensions = relatedInfo ), 
+                 CloneRelatedInfo( ), 
                  ClonePVRelations( location = "Particle2VertexRelations",
                                    clonePVs = True,
                                    RecVertexCloner = "VertexBaseFromRecVertexCloner" )

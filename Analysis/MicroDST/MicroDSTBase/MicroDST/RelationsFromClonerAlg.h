@@ -2,17 +2,26 @@
 #ifndef MICRODST_RELATIONSFROMCLONERALG_H
 #define MICRODST_RELATIONSFROMCLONERALG_H 1
 
+// STL
+#include <set>
+
 // Include files
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/SmartIF.h"
+
 // From MicroDST
 #include "MicroDST/MicroDSTAlgorithm.h"
 #include "MicroDST/Defaults.h"
 #include "MicroDST/RelTableFunctors.h"
+
 // From DaVinci
 #include "DaVinciUtils/Guards.h"
+
 // from Boost
 #include <boost/type_traits/remove_pointer.hpp>
 
@@ -43,7 +52,7 @@ namespace MicroDST
     //===========================================================================
     /// Standard constructor
     RelationsFromClonerAlg( const std::string& name, ISvcLocator* pSvcLocator )
-      : MicroDSTAlgorithm ( name , pSvcLocator ),
+      : MicroDSTAlgorithm ( name, pSvcLocator ),
         m_tableCloner(boost::bind(&RelationsFromClonerAlg<TABLE>::cloneFrom, &(*this), _1),
                       boost::bind(&RelationsFromClonerAlg<TABLE>::cloneTo,   &(*this), _1) )
     {
@@ -156,6 +165,57 @@ namespace MicroDST
         }
       }
 
+    }
+
+    //===========================================================================
+
+    void selectContainers ( DataObject* obj,
+                            std::set<std::string>& names,
+                            const unsigned int classID,
+                            const bool forceRead = false )
+    {
+      SmartIF<IDataManagerSvc> mgr( eventSvc() );
+      typedef std::vector<IRegistry*> Leaves;
+      Leaves leaves;
+      StatusCode sc = mgr->objectLeaves( obj, leaves );
+      if ( sc )
+      {
+        for ( const auto& leaf : leaves )
+        {
+          const std::string& id = leaf->identifier();
+          DataObject* tmp(NULL);
+          if ( forceRead )
+          {
+            sc = this->eventSvc()->retrieveObject( id, tmp );
+          }
+          else
+          {
+            sc = this->eventSvc()->findObject( id, tmp );
+          }
+          if ( sc && NULL != tmp )
+          {
+            if ( 0xFFFFFFFF == classID )
+            {
+              if ( tmp->clID() != CLID_DataObject )
+              {
+                this->info() << format( "Class %8.8x (%5d) name ", tmp->clID(), tmp->clID()&0xFFFF )
+                             << id << endmsg;
+              }
+            }
+            if ( this->msgLevel(MSG::DEBUG) )
+              this->debug() << "Found container '" << id << "' ClassID=" << tmp->clID()
+                      << " Type='" << System::typeinfoName( typeid(*tmp) )
+                      << endmsg;
+            if ( tmp->clID() == classID )
+            {
+              if ( this->msgLevel(MSG::DEBUG) )
+                this->debug() << " -> Matches target class ID " << classID << endmsg; 
+              names.insert( id );
+            }
+            selectContainers( tmp, names, classID, forceRead );
+          }
+        }
+      }
     }
 
     //===========================================================================

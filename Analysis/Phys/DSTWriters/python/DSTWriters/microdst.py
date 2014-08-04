@@ -36,8 +36,7 @@ def stripMicroDSTElements( pack=True              ,
                            saveTrackClusters=True ,
                            isMC        = False    ,
                            refit       = False    ,
-                           notracks    = True     , 
-                           relatedInfo = []       ) :
+                           notracks    = True     ) :
     '''
     Add the elements required on the Stripping MicroDST
     NOTE: This requires Brunel v41r0 SDSTs or higher
@@ -56,7 +55,7 @@ def stripMicroDSTElements( pack=True              ,
         FindDuplicates(),
         CloneParticleTrees(),
         CloneBTaggingInfo( CloneTaggerParticles = False ),
-        CloneRelatedInfo( extensions = relatedInfo ),
+        CloneRelatedInfo( ),
         ClonePVRelations( location = "Particle2VertexRelations",
                           clonePVs = True,
                           RecVertexCloner = _vpv_cloner_ )

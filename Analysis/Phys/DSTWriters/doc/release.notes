@@ -4,6 +4,12 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-08-04 - Chris Jones
+ - Remove the need to explicitly set the RelatedInfo names in the
+   microdstelements. Instead use the new ability of the relations cloner to
+   dynamically search the TES for objects of the correct type (based on CLID)
+   and clone them.
+
 !========================= DSTWriters v4r16 2014-07-25 =========================
 
 ! 2014-07-18 - Stefano Perazzini
