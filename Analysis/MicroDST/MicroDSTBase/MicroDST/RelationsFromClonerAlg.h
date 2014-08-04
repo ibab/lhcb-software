@@ -55,8 +55,7 @@ namespace MicroDST
       : MicroDSTAlgorithm ( name, pSvcLocator ),
         m_tableCloner(boost::bind(&RelationsFromClonerAlg<TABLE>::cloneFrom, &(*this), _1),
                       boost::bind(&RelationsFromClonerAlg<TABLE>::cloneTo,   &(*this), _1) )
-    {
-    }
+    { }
 
     //===========================================================================
 
@@ -88,11 +87,8 @@ namespace MicroDST
 
       setFilterPassed(true);
 
-      for ( std::vector<std::string>::const_iterator inputLoc = this->inputTESLocations().begin();
-            inputLoc != this->inputTESLocations().end(); ++inputLoc)
-      {
-        copyTableFromLocation(*inputLoc);
-      }
+      for ( const auto& loc : this->inputTESLocations() ) { copyTableFromLocation(loc); }
+
       return StatusCode::SUCCESS;
     }
 
@@ -116,22 +112,22 @@ namespace MicroDST
         return;
       }
 
-      if (exist<TABLE>(inputLocation) )
+      const TABLE* table = getIfExists<TABLE>(inputLocation);
+      if ( table )
       {
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "Retrieving relations table from "
+          verbose() << "Retrieved relations table from "
                     << inputLocation << endmsg;
         }
-        const TABLE* table = get<TABLE>(inputLocation);
-        if ( table && !table->relations().empty() )
+        if ( !table->relations().empty() )
         {
           if ( msgLevel(MSG::VERBOSE) )
           {
             verbose() << "found table with "<< table->relations().size()
                       << " entries!" << endmsg;
           }
-          TABLE* cloneTable = m_tableCloner(table);
+          TABLE * cloneTable = m_tableCloner(table); // Note makes a new object !!
           DaVinci::Utils::DataObjectGuard guard(cloneTable);
           if ( msgLevel(MSG::VERBOSE) )
           {
@@ -144,6 +140,10 @@ namespace MicroDST
           if ( !cloneTable->relations().empty() )
           {
             put( cloneTable, outputLocation );
+          }
+          else
+          {
+            delete cloneTable;
           }
         }
         else

@@ -14,6 +14,7 @@
    matches is added to the list to be cloned.
    Updated the 'RelationsBaseName' option to allow for "", which signifies no
     location.
+ - Fix a potential memory leak in RelationsFromClonerAlg.
 
 !========================= MicroDSTBase v3r4 2014-06-13 =========================
 

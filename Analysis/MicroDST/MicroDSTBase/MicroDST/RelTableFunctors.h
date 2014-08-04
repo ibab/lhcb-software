@@ -45,8 +45,8 @@ namespace MicroDST
     { }
     typename TABLE::Entry operator() (const typename TABLE::Entry& entry) const
     {
-      const typename TABLE::From clonedFrom = this->m_fromCloner( entry.from() );
-      const typename TABLE::To clonedTo     = this->m_toCloner  ( entry.to()   );
+      const  typename TABLE::From clonedFrom = this->m_fromCloner( entry.from() );
+      const  typename TABLE::To clonedTo     = this->m_toCloner  ( entry.to()   );
       return typename TABLE::Entry( clonedFrom, clonedTo, entry.weight() );
     }
   };
@@ -60,8 +60,8 @@ namespace MicroDST
     { }
     typename TABLE::Entry operator() ( const typename TABLE::Entry& entry ) const
     {
-      const typename TABLE::From clonedFrom = this->m_fromCloner ( entry.from() );
-      const typename TABLE::To   clonedTo   = this->m_toCloner   ( entry.to()   );
+      const  typename TABLE::From clonedFrom = this->m_fromCloner ( entry.from() );
+      const  typename TABLE::To   clonedTo   = this->m_toCloner   ( entry.to()   );
       return typename TABLE::Entry( clonedFrom, clonedTo );
     }
   };
@@ -76,18 +76,14 @@ namespace MicroDST
     TABLE* operator() ( const TABLE* table )
     {
       TABLE* cloneTable = new TABLE();
-
-      typename TABLE::Range relations = table->relations();
-      for ( typename TABLE::Range::const_iterator iRel = relations.begin();
-            iRel != relations.end(); ++iRel )
+      for ( const auto& rel : table->relations() )
       {
-        typename TABLE::Entry entryClone = m_cloner(*iRel);
+        typename TABLE::Entry entryClone = m_cloner(rel);
         if ( isValid(entryClone.from()) && isValid(entryClone.to()) )
         {
           cloneTable->add(entryClone);
         }
       } // loop on all relations
-
       return cloneTable;
     }
   protected:
