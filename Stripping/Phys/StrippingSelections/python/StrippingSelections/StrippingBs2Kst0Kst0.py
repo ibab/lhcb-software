@@ -14,32 +14,61 @@ Exported symbols (use python help!):
 
 
 __author__ = ['Paula Alvarez Cartelle']
-__date__ = '22/07/2011'
-__version__= '4.0'
+__date__ = '04/08/2014'
+__version__= '5.0'
 
 __all__=('StrippingBs2KstKstConf',
          'makeBs2KstKst',
          'makeBs2KstKstSameCharge',
          'makeKst2Kpi',
-         'makeJPsi2mumu')
+         'makeJPsi2mumu',
+         'default_config')
 
-__config_default__ = { 
-     "KaonPT"		: 500.0 # MeV
-     ,	"KaonIPCHI2"		: 9. 	# adimensional
-     ,  "PionPT"                : 500.0 # MeV
-     ,  "PionIPCHI2"            : 9.	# adimensional
-     ,  "PionPIDK"              :10. #adimensional
-     ,	"KstarVCHI2"		: 9.0   # adimensional
-     ,	"KstarPT"		: 900.0 # MeV
-     ,	"KaonPIDK"              : -5.0  # adimensional
-     ,	"KstarMassWin"		: 150.0 # MeV
-     ,	"BMassWin"		: 500.0 # MeV
-     ,	"BVCHI2"		: 15.0	# adimensional
-     ,	"BDOCA"                 : 0.3   # mm
-     ,  "BIPCHI2"               : 25    # adimensional
-     ,  "MaxGHOSTPROB"             : 0.8   # adimensional
-     ,  "BDIRA"                    : 0.99      # adimensional
+# __config_default__ = { 
+#      "KaonPT"		: 500.0 # MeV
+#      ,	"KaonIPCHI2"		: 9. 	# adimensional
+#      ,  "PionPT"                : 500.0 # MeV
+#      ,  "PionIPCHI2"            : 9.	# adimensional
+#      ,  "PionPIDK"              :10. #adimensional
+#      ,	"KstarVCHI2"		: 9.0   # adimensional
+#      ,	"KstarPT"		: 900.0 # MeV
+#      ,	"KaonPIDK"              : -5.0  # adimensional
+#      ,	"KstarMassWin"		: 150.0 # MeV
+#      ,	"BMassWin"		: 500.0 # MeV
+#      ,	"BVCHI2"		: 15.0	# adimensional
+#      ,	"BDOCA"                 : 0.3   # mm
+#      ,  "BIPCHI2"               : 25    # adimensional
+#      ,  "MaxGHOSTPROB"             : 0.8   # adimensional
+#      ,  "BDIRA"                    : 0.99      # adimensional
+#      }
+
+default_config = {
+     "NAME"       :    "Bs2KstKst",
+     'WGs'         : ['Charmless'],
+     'BUILDERTYPE' : 'StrippingBs2KstKstConf',
+     'CONFIG'      : {"KaonPT"       : 500.0,
+                      "KaonIPCHI2"   : 9.,
+                      "PionPT"       : 500.0,
+                      "PionIPCHI2"   : 9.,
+                      "PionPIDK"     : 10.,
+                      "KstarVCHI2"   : 9.0,
+                      "KstarPT"      : 900.0,
+                      "KaonPIDK"     : -5.0,
+                      "KstarMassWin" : 150.0,
+                      "BMassWin"     : 500.0,
+                      "BVCHI2"       : 15.0,
+                      "BDOCA"        : 0.3,
+                      "BIPCHI2"      : 25,
+                      "MaxGHOSTPROB" : 0.8,
+                      "BDIRA"        : 0.99
+                                          },
+     'STREAMS'     : { 'Bhadron' : ['StrippingBetaSBs2KstKstSameChargeLine'],
+                       'BhadronCompleteEvent' : ['StrippingBetaSBs2KstKstNominalLine',
+                                                 'StrippingBd2JPsiKstForBetaSBs2KstKstLine']
+                       }
      }
+
+
 
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *

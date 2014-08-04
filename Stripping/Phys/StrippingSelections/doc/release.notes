@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-04 - Paula Alvarez
+ - Added Bs2KstKst config dict
+
 ! 2014-08-01 - Stefano Perazzini
  - Added more test samples in tests/data/Reco14_*.py
 
