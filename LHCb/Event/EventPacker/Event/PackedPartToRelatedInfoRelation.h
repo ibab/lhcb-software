@@ -81,7 +81,7 @@ namespace LHCb
   public:
     
     /// Default Packing Version
-    static char defaultPackingVersion() { return 1; }
+    static char defaultPackingVersion() { return 0; }
 
   public:
 

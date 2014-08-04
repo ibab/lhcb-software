@@ -60,7 +60,7 @@ private:
   void selectContainers ( DataObject* obj,
                           std::vector<std::string>& names,
                           const unsigned int classID,
-                          const bool forceRead=false );
+                          const bool forceRead = false );
 
   /// Pack a Particle container
   void packAParticleContainer ( const LHCb::Particles* parts,

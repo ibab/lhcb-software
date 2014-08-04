@@ -326,9 +326,9 @@ void PackParticlesAndVertices::selectContainers ( DataObject* obj,
   StatusCode sc = mgr->objectLeaves( obj, leaves );
   if ( sc )
   {
-    for ( Leaves::const_iterator iL = leaves.begin(); leaves.end() != iL; ++iL )
+    for ( const auto& leaf : leaves )
     {
-      const std::string& id = (*iL)->identifier();
+      const std::string& id = leaf->identifier();
       DataObject* tmp(NULL);
       if ( forceRead )
       {
