@@ -3,6 +3,12 @@
 ! Package Coordinator : R. Lambert, G. Raven
 ! Purpose     : LHCb HLT application
 !============================================
+
+! 2014-08-04 - Alex Shires
+ - Add two options files into Moore/options
+ - RunRawEventJug.py combines the Raw Event
+ - RunL0OnSim runs the L0App configurable
+
 ! 2014-08-01 - Gerhard Raven
  - improve another qmtest
 
