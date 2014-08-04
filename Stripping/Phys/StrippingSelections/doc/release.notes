@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-04 - Sean Benson
+ - Added StrippingBs2gammagamma.py
+
 ! 2014-08-04 - Paula Alvarez
  - Added Bs2KstKst config dict
 
