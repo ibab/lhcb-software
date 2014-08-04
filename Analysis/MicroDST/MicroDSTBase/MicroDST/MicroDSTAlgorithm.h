@@ -37,9 +37,8 @@ protected:
 
   inline const std::string& inputTESLocation() const 
   {
-    return m_inputTESLocations.empty() 
-      ? m_inputTESLocation 
-      : m_inputTESLocations[0];
+    return ( m_inputTESLocations.empty() ?
+             m_inputTESLocation : m_inputTESLocations[0] );
   }
 
   inline const std::vector<std::string>& inputTESLocations()

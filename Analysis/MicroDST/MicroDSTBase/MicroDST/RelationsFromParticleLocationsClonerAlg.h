@@ -41,6 +41,8 @@ namespace MicroDST
       this->declareProperty( "RemoveOriginals", m_removeOriginals = false );
       this->declareProperty( "RelationsBaseName",
                              m_relationsBaseName = DEFAULTS::relationsName );
+      this->declareProperty( "UseRelationsCLID", m_useClassID = false,
+                             "Flag to turn on the automatic searching for relations to clone based on CLID" );
       //this->setProperty( "OutputLevel", 2 );
     }
 
@@ -65,11 +67,10 @@ namespace MicroDST
 
       // Load the Particles and iterate over them, and their daughters,
       // to find all the relations to save
-      for ( std::vector<std::string>::const_iterator inputLoc = this->inputTESLocations().begin();
-            inputLoc != this->inputTESLocations().end(); ++inputLoc )
+      for ( const auto& loc : this->inputTESLocations() )
       {
-        const LHCb::Particle::Range particles =
-          this -> template getIfExists<LHCb::Particle::Range>(*inputLoc);
+        const LHCb::Particle::Range particles = 
+          this -> template getIfExists<LHCb::Particle::Range>(loc);
         if ( !particles.empty() )
         {
           particleLoop( particles.begin(), particles.end() );
@@ -77,15 +78,14 @@ namespace MicroDST
       }
 
       // Now, loop over the gathered relation locations and clone them
-      for ( std::set<std::string>::const_iterator iRLoc = m_relationLocations.begin();
-            iRLoc != m_relationLocations.end(); ++iRLoc )
+      for ( const auto& rloc : m_relationLocations )
       {
         // Clone the relations and associated MCParticles
-        this->copyTableFromLocation( *iRLoc );
+        this->copyTableFromLocation( rloc );
         // if requested, remove the originals
         if ( m_removeOriginals )
         {
-          TABLE * table = this -> template getIfExists<TABLE>(*iRLoc);
+          TABLE * table = this -> template getIfExists<TABLE>(rloc);
           if ( table )
           {
             const StatusCode sc = this -> evtSvc()->unregisterObject(table);
@@ -95,7 +95,7 @@ namespace MicroDST
             }
             else
             {
-              this->Error( "Failed to delete '" + *iRLoc + "'" ).ignore();
+              this->Error( "Failed to delete '" + rloc + "'" ).ignore();
             }
           }
         }
@@ -113,8 +113,28 @@ namespace MicroDST
     {
       for ( Iter it = begin; it != end; ++it )
       {
-        // Save the relations location for this Particle
-        m_relationLocations.insert( relationsLocation((*it)->parent()) );
+        // If m_relationsBaseName is not empty, use it to deduce possible 
+        // TES locations for relations to clone
+        if ( !m_relationsBaseName.empty() ) 
+        {
+          m_relationLocations.insert( relationsLocation((*it)->parent()) );
+        }
+        // If the CLID is defined, use this to search for objects of the correct
+        // type in the TES at the same level as the particles
+        if ( m_useClassID )
+        {
+          // Get particle location
+          std::string pLoc = objectLocation( (*it)->parent() );
+          // Strip the trailing "/Particles"
+          boost::erase_all( pLoc, "/Particles" );
+          // Load the resulting data node
+          DataObject * node = this -> template getIfExists<DataObject>(pLoc);
+          if ( node )
+          {
+            // Search for objects with the requested CLID below this location
+            this->selectContainers( node, m_relationLocations, TABLE::classID() );
+          }            
+        }
         // Recursively find the relations for the daughters
         const SmartRefVector<LHCb::Particle> & daughters = (*it)->daughters();
         if ( !daughters.empty() )
@@ -122,17 +142,6 @@ namespace MicroDST
           particleLoop( daughters.begin(), daughters.end() );
         }
       }
-    }
-
-    /** Returns the full location of the given object in the Data Store
-     *
-     *  @param pObj Data object
-     *
-     *  @return Location of given data object
-     */
-    inline std::string objectLocation( const DataObject * pObj ) const
-    {
-      return ( !pObj ? "" : (pObj->registry() ? pObj->registry()->identifier() : "") );
     }
 
     std::string relationsLocation( const DataObject * pObj ) const
@@ -153,7 +162,9 @@ namespace MicroDST
   private:
 
     bool m_removeOriginals;
+
     std::string m_relationsBaseName;
+    bool m_useClassID;
 
     std::set<std::string> m_relationLocations;
 

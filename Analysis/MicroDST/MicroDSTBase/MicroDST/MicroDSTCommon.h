@@ -2,8 +2,8 @@
 #ifndef MICRODST_MICRODSTCOMMON_H
 #define MICRODST_MICRODSTCOMMON_H 1
 
-// Include files
 #include <MicroDST/Functors.hpp>
+
 #include <GaudiKernel/KeyedObject.h>
 
 class ISvcLocator;
@@ -33,7 +33,7 @@ public:
   {
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }
-  
+
   /// Standard tool-like constructor
   MicroDSTCommon( const std::string& type,
                   const std::string& name,
@@ -44,7 +44,7 @@ public:
   {
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }
-  
+
   virtual ~MicroDSTCommon( ); ///< Destructor
 
   virtual StatusCode initialize();
@@ -169,16 +169,23 @@ protected:
    * @author Juan Palacios juancho@nikhef.nl
    *
    */
-  inline const std::string niceLocationName(const std::string& location) const
+  std::string niceLocationName(const std::string& location) const;
+
+  /// Select TES location below a given root based on CLID
+  void selectContainers ( DataObject* obj,
+                          std::set<std::string>& names,
+                          const unsigned int classID,
+                          const bool forceRead = false );
+
+  /** Returns the full location of the given object in the Data Store
+   *
+   *  @param pObj Data object
+   *
+   *  @return Location of given data object
+   */
+  inline std::string objectLocation( const DataObject * pObj ) const
   {
-    std::string tmp(location);
-    const std::string& tmpString = m_rootInTES;
-    const std::string::size_type loc = tmp.find(tmpString);
-    if ( loc != std::string::npos )
-    {
-      tmp.replace( loc, tmpString.length(), "" );
-    }
-    return tmp;
+    return ( !pObj ? "" : (pObj->registry() ? pObj->registry()->identifier() : "") );
   }
 
 private:

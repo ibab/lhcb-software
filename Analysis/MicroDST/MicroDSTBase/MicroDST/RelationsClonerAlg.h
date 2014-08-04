@@ -106,11 +106,8 @@ namespace MicroDST
 
       setFilterPassed(true);
 
-      for ( std::vector<std::string>::const_iterator inputLoc = this->inputTESLocations().begin();
-            inputLoc != this->inputTESLocations().end(); ++inputLoc )
-      {
-        copyTableFromLocation(*inputLoc);
-      }
+      for ( const auto& loc : inputTESLocations() ) { copyTableFromLocation(loc); }
+
       return StatusCode::SUCCESS;
     }
 
@@ -159,6 +156,10 @@ namespace MicroDST
         if ( !cloneTable->relations().empty() )
         {
           this->put( cloneTable, outputLocation );
+        }
+        else
+        {
+          delete cloneTable;
         }
       }
       else

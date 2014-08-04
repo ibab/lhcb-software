@@ -7,6 +7,8 @@
 
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/StatusCode.h"
+#include "GaudiKernel/IDataManagerSvc.h"
+#include "GaudiKernel/SmartIF.h"
 
 //=============================================================================
 
@@ -14,7 +16,7 @@ template <class PBASE>
 StatusCode MicroDSTCommon<PBASE>::initialize()
 {
   const StatusCode sc = PBASE::initialize();
-  if ( sc.isFailure() ) return sc; 
+  if ( sc.isFailure() ) return sc;
 
   if ( !PBASE::rootInTES().empty() ) m_rootInTES = PBASE::rootInTES();
   this->debug() << "Set rootInTES to " << m_rootInTES << endmsg;
@@ -180,7 +182,7 @@ MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const typename itemCloner::Type*
     if ( clonedItem )
     {
       clones->insert( clonedItem, item->key() );
-      if ( this->msgLevel(MSG::VERBOSE) ) 
+      if ( this->msgLevel(MSG::VERBOSE) )
         this->verbose() << "Cloned item " << *clonedItem << endmsg;
     }
     else
@@ -197,7 +199,7 @@ MicroDSTCommon<PBASE>::cloneKeyedContainerItem( const typename itemCloner::Type*
 
 template <class PBASE>
 template <class T>
-const T* 
+const T*
 MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original ) const
 {
   return getStoredClone<T>(original);
@@ -241,6 +243,73 @@ template <class T>
 const T* MicroDSTCommon<PBASE>::getInputContainer( const std::string& location )
 {
   return getIfExists<T>( location );
+}
+
+//=============================================================================
+
+template <class PBASE>
+std::string MicroDSTCommon<PBASE>::niceLocationName(const std::string& location) const
+{
+  std::string tmp(location);
+  const std::string& tmpString = m_rootInTES;
+  const std::string::size_type loc = tmp.find(tmpString);
+  if ( loc != std::string::npos )
+  {
+    tmp.replace( loc, tmpString.length(), "" );
+  }
+  return tmp;
+}
+
+//=============================================================================
+
+template <class PBASE>
+void MicroDSTCommon<PBASE>::selectContainers ( DataObject* obj,
+                                               std::set<std::string>& names,
+                                               const unsigned int classID,
+                                               const bool forceRead )
+{
+  SmartIF<IDataManagerSvc> mgr( this->eventSvc() );
+  typedef std::vector<IRegistry*> Leaves;
+  Leaves leaves;
+  StatusCode sc = mgr->objectLeaves( obj, leaves );
+  if ( sc )
+  {
+    for ( const auto& leaf : leaves )
+    {
+      const std::string& id = leaf->identifier();
+      DataObject* tmp(NULL);
+      if ( forceRead )
+      {
+        sc = this->eventSvc()->retrieveObject( id, tmp );
+      }
+      else
+      {
+        sc = this->eventSvc()->findObject( id, tmp );
+      }
+      if ( sc && NULL != tmp )
+      {
+        if ( 0xFFFFFFFF == classID )
+        {
+          if ( tmp->clID() != CLID_DataObject )
+          {
+            this->info() << format( "Class %8.8x (%5d) name ", tmp->clID(), tmp->clID()&0xFFFF )
+                         << id << endmsg;
+          }
+        }
+        if ( this->msgLevel(MSG::DEBUG) )
+          this->debug() << "Found container '" << id << "' ClassID=" << tmp->clID()
+                        << " Type='" << System::typeinfoName( typeid(*tmp) )
+                        << endmsg;
+        if ( tmp->clID() == classID )
+        {
+          if ( this->msgLevel(MSG::DEBUG) )
+            this->debug() << " -> Matches target class ID " << classID << endmsg;
+          names.insert( id );
+        }
+        selectContainers( tmp, names, classID, forceRead );
+      }
+    }
+  }
 }
 
 //=============================================================================

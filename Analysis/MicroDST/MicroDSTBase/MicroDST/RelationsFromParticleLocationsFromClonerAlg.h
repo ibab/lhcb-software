@@ -153,17 +153,6 @@ namespace MicroDST
       }
     }
 
-    /** Returns the full location of the given object in the Data Store
-     *
-     *  @param pObj Data object
-     *
-     *  @return Location of given data object
-     */
-    inline std::string objectLocation( const DataObject * pObj ) const
-    {
-      return ( !pObj ? "" : (pObj->registry() ? pObj->registry()->identifier() : "") );
-    }
-
     inline std::string relationsLocation( const DataObject * pObj ) const
     {
       // Get the parent container TES location

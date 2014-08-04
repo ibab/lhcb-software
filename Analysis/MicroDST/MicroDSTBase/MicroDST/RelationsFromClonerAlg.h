@@ -11,8 +11,6 @@
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
-#include "GaudiKernel/IDataManagerSvc.h"
-#include "GaudiKernel/SmartIF.h"
 
 // From MicroDST
 #include "MicroDST/MicroDSTAlgorithm.h"
@@ -87,7 +85,7 @@ namespace MicroDST
 
       setFilterPassed(true);
 
-      for ( const auto& loc : this->inputTESLocations() ) { copyTableFromLocation(loc); }
+      for ( const auto& loc : inputTESLocations() ) { copyTableFromLocation(loc); }
 
       return StatusCode::SUCCESS;
     }
@@ -166,57 +164,6 @@ namespace MicroDST
         }
       }
 
-    }
-
-    //===========================================================================
-
-    void selectContainers ( DataObject* obj,
-                            std::set<std::string>& names,
-                            const unsigned int classID,
-                            const bool forceRead = false )
-    {
-      SmartIF<IDataManagerSvc> mgr( eventSvc() );
-      typedef std::vector<IRegistry*> Leaves;
-      Leaves leaves;
-      StatusCode sc = mgr->objectLeaves( obj, leaves );
-      if ( sc )
-      {
-        for ( const auto& leaf : leaves )
-        {
-          const std::string& id = leaf->identifier();
-          DataObject* tmp(NULL);
-          if ( forceRead )
-          {
-            sc = this->eventSvc()->retrieveObject( id, tmp );
-          }
-          else
-          {
-            sc = this->eventSvc()->findObject( id, tmp );
-          }
-          if ( sc && NULL != tmp )
-          {
-            if ( 0xFFFFFFFF == classID )
-            {
-              if ( tmp->clID() != CLID_DataObject )
-              {
-                this->info() << format( "Class %8.8x (%5d) name ", tmp->clID(), tmp->clID()&0xFFFF )
-                             << id << endmsg;
-              }
-            }
-            if ( this->msgLevel(MSG::DEBUG) )
-              this->debug() << "Found container '" << id << "' ClassID=" << tmp->clID()
-                      << " Type='" << System::typeinfoName( typeid(*tmp) )
-                      << endmsg;
-            if ( tmp->clID() == classID )
-            {
-              if ( this->msgLevel(MSG::DEBUG) )
-                this->debug() << " -> Matches target class ID " << classID << endmsg; 
-              names.insert( id );
-            }
-            selectContainers( tmp, names, classID, forceRead );
-          }
-        }
-      }
     }
 
     //===========================================================================
