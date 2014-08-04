@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-08-04 - Stefano Perazzini
+ - updated reference for commonparticles test
+   test_standardintermediate_reco14_run.qmt
+
 ! 2014-07-30 - Christopher Rob Jones
  - Disbale the fixedfile tests. Been failing for a while and unlikely to get
    fixed any time soon now Rob has left LHCb...
