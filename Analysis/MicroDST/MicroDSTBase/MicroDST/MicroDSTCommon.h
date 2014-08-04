@@ -20,33 +20,31 @@ class MicroDSTCommon : public PBASE
 {
 
 public:
-  /// Standard constructor
 
+  /// Standard constructor
   MicroDSTCommon();
 
   /// Standard algorithm-like constructor
   MicroDSTCommon( const std::string& name,
                   ISvcLocator* pSvcLocator )
-    :
-    PBASE(name, pSvcLocator),
-    m_outputPrefix("MicroDST"),
-    m_rootInTES("/Event/")
+    : PBASE(name, pSvcLocator),
+      m_outputPrefix("MicroDST"),
+      m_rootInTES("/Event/")
   {
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }
-
+  
   /// Standard tool-like constructor
   MicroDSTCommon( const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
-    :
-    PBASE(type, name, parent),
-    m_outputPrefix("MicroDST"),
-    m_rootInTES("/Event/")
+    : PBASE(type, name, parent),
+      m_outputPrefix("MicroDST"),
+      m_rootInTES("/Event/")
   {
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }
-
+  
   virtual ~MicroDSTCommon( ); ///< Destructor
 
   virtual StatusCode initialize();
@@ -147,6 +145,12 @@ public:
     return PBASE:: template get<T>(location);
   }
 
+  template <class T>
+  inline typename Gaudi::Utils::GetData<T>::return_type getIfExists(const std::string& location) const
+  {
+    return PBASE:: template getIfExists<T>(location);
+  }
+
 protected:
 
   inline const std::string& outputPrefix() const
@@ -170,7 +174,7 @@ protected:
     std::string tmp(location);
     const std::string& tmpString = m_rootInTES;
     const std::string::size_type loc = tmp.find(tmpString);
-    if ( loc != std::string::npos ) 
+    if ( loc != std::string::npos )
     {
       tmp.replace( loc, tmpString.length(), "" );
     }

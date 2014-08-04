@@ -13,17 +13,13 @@
 template <class PBASE>
 StatusCode MicroDSTCommon<PBASE>::initialize()
 {
-  StatusCode sc = PBASE::initialize();
-
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  this->debug() << "==> Initialize" << endmsg;
+  const StatusCode sc = PBASE::initialize();
+  if ( sc.isFailure() ) return sc; 
 
   if ( !PBASE::rootInTES().empty() ) m_rootInTES = PBASE::rootInTES();
-
   this->debug() << "Set rootInTES to " << m_rootInTES << endmsg;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
@@ -31,8 +27,7 @@ StatusCode MicroDSTCommon<PBASE>::initialize()
 template <class PBASE>
 StatusCode MicroDSTCommon<PBASE>::finalize()
 {
-  this->debug() << "==> Finalize" << endmsg;
-  return PBASE::finalize();  // must be called after all other actions
+  return PBASE::finalize();
 }
 
 //=============================================================================
@@ -108,6 +103,7 @@ MicroDSTCommon<PBASE>::copyKeyedContainer( const typename Cloner::Type::Containe
 {
   typedef typename Cloner::Type _type;
   typedef typename _type::Container _container;
+
   const std::string location = MicroDST::objectLocation(from);
   if ( this->msgLevel(MSG::VERBOSE) )
     this->verbose() << "now copy container for location " << location
@@ -120,10 +116,7 @@ MicroDSTCommon<PBASE>::copyKeyedContainer( const typename Cloner::Type::Containe
     return NULL;
   }
 
-  for ( typename _container::const_iterator i = from->begin(); i != from->end(); ++i )
-  {
-    cloner->operator()(*i);
-  }
+  for ( const auto& i : *from ) { cloner->operator()(i); }
 
   _container* clones = getOutputContainer<_container>( outputTESLocation(location) );
 
@@ -216,23 +209,14 @@ template <class PBASE>
 template <class T>
 T* MicroDSTCommon<PBASE>::getStoredClone( const KeyedObject<int>* original )
 {
-
   if ( !original ) return NULL;
 
   const std::string cloneLocation =
     outputTESLocation(MicroDST::objectLocation(original->parent()));
 
-  if ( !exist<typename T::Container>(cloneLocation) ) return NULL;
+  typename T::Container* clones = getIfExists<typename T::Container>(cloneLocation);
 
-  typename T::Container* clones = get<typename T::Container>(cloneLocation);
-  if ( !clones )
-  {
-    this->Error("Did not find cloned container at "+ cloneLocation,
-                StatusCode::FAILURE,1).ignore();
-    return NULL;
-  }
-
-  return clones->object( original->key() );
+  return ( clones ? clones->object(original->key()) : NULL );
 }
 
 //=============================================================================
@@ -241,13 +225,13 @@ template <class PBASE>
 template <class T>
 T* MicroDSTCommon<PBASE>::getOutputContainer( const std::string& location )
 {
-  if ( !exist<T>(location) )
+  T * t = getIfExists<T>( location );
+  if ( !t )
   {
-    T* container = new T();
-    this->put( container, location );
-    return container;
+    t = new T();
+    this->put( t, location );
   }
-  return this->get<T>( location );
+  return t;
 }
 
 //=============================================================================
@@ -256,17 +240,7 @@ template <class PBASE>
 template <class T>
 const T* MicroDSTCommon<PBASE>::getInputContainer( const std::string& location )
 {
-  if ( !exist<T>(location) )
-  {
-//     this->Warning("Container location "+location+" does not exist",
-//                   StatusCode::FAILURE, 0).ignore();
-    return NULL;
-  }
-  else
-  {
-    return this->get<T>( location );
-  }
-
+  return getIfExists<T>( location );
 }
 
 //=============================================================================
