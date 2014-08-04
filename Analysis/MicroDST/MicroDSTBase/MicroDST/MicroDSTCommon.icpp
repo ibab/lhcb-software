@@ -263,7 +263,7 @@ std::string MicroDSTCommon<PBASE>::niceLocationName(const std::string& location)
 //=============================================================================
 
 template <class PBASE>
-void MicroDSTCommon<PBASE>::selectContainers ( DataObject* obj,
+void MicroDSTCommon<PBASE>::selectContainers ( const DataObject * obj,
                                                std::set<std::string>& names,
                                                const unsigned int classID,
                                                const bool forceRead )

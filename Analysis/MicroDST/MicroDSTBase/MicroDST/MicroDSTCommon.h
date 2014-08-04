@@ -172,7 +172,7 @@ protected:
   std::string niceLocationName(const std::string& location) const;
 
   /// Select TES location below a given root based on CLID
-  void selectContainers ( DataObject* obj,
+  void selectContainers ( const DataObject * obj,
                           std::set<std::string>& names,
                           const unsigned int classID,
                           const bool forceRead = false );
