@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-05 - Ronan Wallace
+ - Updated Stripping{Z02MuMu,Z02ee,WMu,We,DYMuMu,DYee,SingleTrackTIS,MuMuSS,A1MuMu,InclbJets}.py
+ - These updates to conform to new config dict format.
+
 ! 2014-08-05- Wenbin Qian
  - Add 7 lines with B0->DDKst, B0->DD*Kst, B0->D*D*Kst, 
                     B+->DD0Kst, B+->DstD0Kst, 
