@@ -17,7 +17,6 @@ use  PhysSelPython              v9r5     PhysSel # Juan Palacios
 
 use  PhysConf                   v1r26    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Current DV Maintainer
-use  DaVinciTools       	v23r15   Phys    # Juan Palacios
 use  DaVinciTransporter 	v3r11    Phys    # Juan Palacios
 use  ParticleMaker      	v6r10    Phys    # Current DV Maintainer
 use  VertexFit			v6r19p1  Phys    # Yuehong Xie
@@ -26,6 +25,19 @@ use  DecayTreeFitter            v1r17    Phys    # Wouter Hulsbergen
 use  PhysDict                   v4r2p4   Phys    # Juan Palacios
 use  HighPtJets                 v1r8p1   Phys    # Marcin Kucharczyk
 use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
+
+#===================================================================
+
+use  DaVinciTools       	v23r15   Phys    # ?
+use  RelatedInfoTools           v1r0     Phys    # Anton Poluektov
+use  ExtraInfoTools             v1r0     Phys    # Anton Poluektov
+use  DaVinciCoreTools           v1r0     Phys    # Current DV Maintainer
+use  DaVinciPVTools             v1r0     Phys    # ?
+use  DaVinciFilters             v1r0     Phys    # ?
+use  DaVinciDecayFinder         v1r0     Phys    # ?
+use  TopologicalTools           v1r0     Phys    # Mike Williams et. al.
+use  DaVinciOverlapsAndClones   v1r0     Phys    # ?
+use  DaVinciNeutralTools        v1r0     Phys    # CALO Group
 
 #===================================================================
 

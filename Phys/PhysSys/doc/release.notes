@@ -3,6 +3,18 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+! 2014-08-05 - Chris Jones
+ - Add new packages from the break up for DaVinciTools
+  . DaVinciCoreTools - 'Core' components.
+  . RelatedInfoTools - Components related to the RelatedInfo framework.
+  . ExtraInfoTools   - Components related to the (depreciated) ExtraInfo framework.
+  . DaVinciPVTools   - Components related to PVs.
+	. DaVinciFilters   - Compoents related to general filtering
+  . DaVinciDecayFinder - The (depreciated) decay finder.
+  . TopologicalTools   - Topological tools.
+  . DaVinciOverlapsAndClones - Tools for dealing with clones, duplicates and overlaps.
+  . DaVinciNeutralTools - Components dealing specifically with neutral objects.
+
 ! 2014-07-28 - Chris Jones
  - Update Configurables list for QM tests.
 

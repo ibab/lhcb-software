@@ -9,6 +9,15 @@ gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/DaVinciKernel
                          Phys/DaVinciMCKernel
                          Phys/DaVinciTools
+                         Phys/RelatedInfoTools
+                         Phys/DaVinciCoreTools
+                         Phys/RelatedInfoTools
+                         Phys/DaVinciPVTools
+                         Phys/DaVinciFilters
+                         Phys/DaVinciDecayFinder
+                         Phys/TopologicalTools
+                         Phys/DaVinciOverlapsAndClones
+                         Phys/DaVinciNeutralTools
                          Phys/DaVinciTransporter
                          Phys/DaVinciTypes
                          Phys/DaVinciUtils
