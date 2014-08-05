@@ -8,6 +8,10 @@
 # MuMuSS3 (10-20GeV): StdAllLooseMuons & P>10GeV & pT>3GeV
 # MuMuSS4 (>20GeV):   StdAllLooseMuons & P>10GeV & pT>3GeV
 
+__all__ = ('MuMuSSConf',
+           'makeSSCombination',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
@@ -15,24 +19,48 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons
 
-confdict_MuMuSS = { 'MuMuSSLine1Prescale' : 0.1, 
-                    'MuMuSSLine2Prescale' : 1.0,
-                    'MuMuSSLine3Prescale' : 1.0,
-                    'MuMuSSLine4Prescale' : 1.0,
-                    'MuMuSSLinePostscale' : 1.0,
-                    'MuMuSSLine1MinMass' :  3.2,
-                    'MuMuSSLine1MaxMass' :  5.,
-                    'MuMuSSLine2MinMass' :  5.,
-                    'MuMuSSLine2MaxMass' : 10.,
-                    'MuMuSSLine3MinMass' : 10.,
-                    'MuMuSSLine3MaxMass' : 20.,
-                    'MuMuSSLine4MinMass' : 20.,
-                    'p'   : 10.,
-                    'pT1' :  1.5,
-                    'pT2' :  3.
-                    }
+#confdict_MuMuSS = { 'MuMuSSLine1Prescale' : 0.1, 
+#                    'MuMuSSLine2Prescale' : 1.0,
+#                    'MuMuSSLine3Prescale' : 1.0,
+#                    'MuMuSSLine4Prescale' : 1.0,
+#                    'MuMuSSLinePostscale' : 1.0,
+#                    'MuMuSSLine1MinMass' :  3.2,
+#                    'MuMuSSLine1MaxMass' :  5.,
+#                    'MuMuSSLine2MinMass' :  5.,
+#                    'MuMuSSLine2MaxMass' : 10.,
+#                    'MuMuSSLine3MinMass' : 10.,
+#                    'MuMuSSLine3MaxMass' : 20.,
+#                   'MuMuSSLine4MinMass' : 20.,
+#                   'p'   : 10.,
+#                    'pT1' :  1.5,
+#                    'pT2' :  3.
+#                    }
 
-name = 'MuMuSS'
+#name = 'MuMuSS'
+
+default_config = {
+    'NAME'        : 'MuMuSS',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'MuMuSSConf',
+    'CONFIG'      : { 'MuMuSSLine1Prescale' : 0.1,
+                      'MuMuSSLine2Prescale' : 1.0,
+                      'MuMuSSLine3Prescale' : 1.0,
+                      'MuMuSSLine4Prescale' : 1.0,
+                      'MuMuSSLinePostscale' : 1.0,  
+                      'MuMuSSLine1MinMass' :  3.2,
+                      'MuMuSSLine1MaxMass' :  5.,
+                      'MuMuSSLine2MinMass' :  5.,
+                      'MuMuSSLine2MaxMass' : 10.,
+                      'MuMuSSLine3MinMass' : 10.,
+                      'MuMuSSLine3MaxMass' : 20.,
+                      'MuMuSSLine4MinMass' : 20.,
+                      'p'   : 10.,
+                      'pT1' :  1.5,
+                      'pT2' :  3.
+                    },
+    'STREAMS'     : { 'EW' }
+    }
+
 
 class MuMuSSConf( LineBuilder ) :
 
