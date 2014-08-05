@@ -17,35 +17,54 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsPions
 from StandardParticles import StdLoosePions,StdTightPions
 
-
-
 __author__=['Christian Elsasser']
 __date__='16/01/2012'
 __version__='$Revision: 1.0 $'
 
-config_params = {'A1MuMu_LinePrescale'  : 1.0,
-    'A1MuMu_LinePostscale'              : 1.0,
-    'A1MuMu_checkPV'                    : False,
-    ###
-    'DIMUON_LOW_MASS'                   : '5000.0',    # MeV/c2
-    #'DIMUON_HIGH_MASS'                 : not set,     # MeV/c2
-    ###
-    'PT_MUON_MIN'                       : '2500.0',    # MeV/c
-    'P_MUON_MIN'                        : '2500.0',    # MeV/c (de facto no cut)
-    'TRACKCHI2_MUON_MAX'                : '10',        # dl
-    ###
-    'PT_DIMUON_MIN'                     : '7500.0',    # MeV/c
-    'VCHI2_DIMUON_MAX'                  : '12'         # dl
-}
+#config_params = {'A1MuMu_LinePrescale'  : 1.0,
+#    'A1MuMu_LinePostscale'              : 1.0,
+#    'A1MuMu_checkPV'                    : False,
+#    ###
+#    'DIMUON_LOW_MASS'                   : '5000.0',    # MeV/c2
+#    #'DIMUON_HIGH_MASS'                 : not set,     # MeV/c2
+#    ###
+#    'PT_MUON_MIN'                       : '2500.0',    # MeV/c
+#    'P_MUON_MIN'                        : '2500.0',    # MeV/c (de facto no cut)
+#    'TRACKCHI2_MUON_MAX'                : '10',        # dl
+#    ###
+#    'PT_DIMUON_MIN'                     : '7500.0',    # MeV/c
+#    'VCHI2_DIMUON_MAX'                  : '12'         # dl
+#}
 
 
-default_name = "A1MuMu"
+#default_name = "A1MuMu"
+
+default_config = {
+    'NAME'        : 'A1MuMu',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'A1MuMuConf',
+    'CONFIG'      : { 'A1MuMu_LinePrescale'  : 1.0,
+                      'A1MuMu_LinePostscale'              : 1.0,
+                      'A1MuMu_checkPV'                    : False,
+                      'DIMUON_LOW_MASS'                   : '5000.0',    # MeV/c2
+                      #'DIMUON_HIGH_MASS'                 : not set,     # MeV/c2
+                      'PT_MUON_MIN'                       : '2500.0',    # MeV/c
+                      'P_MUON_MIN'                        : '2500.0',    # MeV/c (de facto no cut)
+                      'TRACKCHI2_MUON_MAX'                : '10',        # dl
+                      'PT_DIMUON_MIN'                     : '7500.0',    # MeV/c
+                      'VCHI2_DIMUON_MAX'                  : '12'         # dl
+                    },
+    'STREAMS'     : { 'Dimuon' }
+    }
 
 """
     A_1 -> mu+ mu-, based on functionality from StrippingDiMuonNew by Jibo He
 """
 
-__all__ = ('A1MuMuConf')
+__all__ = ('A1MuMuConf',
+           'filterDiMuon',
+           'filterDiMuonSameSign',
+           'default_config')
 
 class A1MuMuConf(LineBuilder) :
 
