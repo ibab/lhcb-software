@@ -13,10 +13,11 @@ from Configurables import SubstitutePID
 class B2DXBuilder(object):
     '''Makes all B->DX decays for the Beauty2Charm module.'''
 
-    def __init__(self,d,dst,topoPions,topoKaons,ks,pi0,hh,hhh,config):
+    def __init__(self,d,dst,topoPions,topoKaons,muons,ks,pi0,hh,hhh,config):
         self.config = config
         self.topoPions = [topoPions]
         self.topoKaons = [topoKaons]
+        self.muons = muons
         self.d = d
         self.dst = dst
         self.hh = hh
@@ -60,6 +61,9 @@ class B2DXBuilder(object):
         self._makeB02DH('D2KSHDD',self.d.ksh_dd) # B0  -> D+-(KSDDH) H-+ (+WS)
         self._makeB2D0H('D2KSHHLL',self.d.kshh_ll)# B+- -> D0(KSLLHH) H+-
         self._makeB2D0H('D2KSHHDD',self.d.kshh_dd)# B+- -> D0(KSDDHH) H+-
+        self._makeB2D0MuNu('D2KSHHLL',self.d.kshh_ll)# B+- -> D0(KSLLHH) Mu+- Nu
+        self._makeB2D0MuNu('D2KSHHDD',self.d.kshh_dd)# B+- -> D0(KSDDHH) Mu+- Nu
+
         #self._makeB02DH('D2KSHLLUP',self.d.ksh_ll_up) # B0  -> D+-(KSLLH) H-+ (+WS)
         #self._makeB02DH('D2KSHDDUP',self.d.ksh_dd_up) # B0  -> D+-(KSDDH) H-+ (+WS)
         #self._makeB2D0H('D2KSHHLLUP',self.d.kshh_ll_up)# B+- -> D0(KSLLHH) H+-
@@ -75,6 +79,9 @@ class B2DXBuilder(object):
         self.lines[-1].pre = 0.1 # last line is WS D line
         self._makeB02DstH('Dst2D0Pi_D2KSHHLL',self.dst.d0pi_kshh_ll)
         self._makeB02DstH('Dst2D0Pi_D2KSHHDD',self.dst.d0pi_kshh_dd)
+        self._makeB02DstMuNu('Dst2D0Pi_D2KSHHLL',self.dst.d0pi_kshh_ll)
+        self._makeB02DstMuNu('Dst2D0Pi_D2KSHHDD',self.dst.d0pi_kshh_dd)
+
 	self._makeB02DstKsH('Dst2D0Pi', self.dst.d0pi)
         # B -> D0(HHHH) X
         self._makeB2D0H('D2HHHH',self.d.hhhh) # B+- -> D0(HHHH) H+-
@@ -332,6 +339,20 @@ class B2DXBuilder(object):
         b2d0h = makeB2XSels(decays,dname,inputs,self.config,useIP)
         self.lines.append(ProtoLine(b2d0h,1.0))
 
+    def _makeB2D0MuNu(self,dname,d2x):
+        '''Makes RS B+ -> D0 mu nu + c.c.'''
+        decays = {'B2D0MuNu': ["B+ -> D0 mu+","B- -> D0 mu-"]}
+        inputs = {'B2D0MuNu': d2x+ [ self.muons ] }
+        config = deepcopy(self.config)
+        config['AM_MIN'] = '2500*MeV'
+        config['AM_MAX'] = '5200*MeV'
+        config['VCHI2DOF_MAX'] = '6'
+        config['BPVDIRA_MIN'] = '0.999'
+        config['MCORR_MIN'] = '4000*MeV'
+        config['MCORR_MAX'] = '6000*MeV'
+        b2d0munu = makeB2XSels(decays,dname,inputs,config,False)
+        self.lines.append(ProtoLine(b2d0munu,1.0))
+
     def _makeB2D0Pi(self,dname,d2x,useIP=True):
         '''Makes RS B+ -> D0 h+ (h=pi,K) + c.c.'''
         tag = 'B2D0%s'
@@ -372,6 +393,20 @@ class B2DXBuilder(object):
                   'B02DstarK': d2x+self.topoKaons}
         b2dsth = makeB2XSels(decays,dname,inputs,self.config,True,False)
         self.lines.append(ProtoLine(b2dsth,1.0))
+                                    
+    def _makeB02DstMuNu(self,dname,d2x):
+        '''Makes B0 -> D*+- H-+'''
+        decays = {'B02DstarMuNu' : ["B0 -> D*(2010)- mu+","B0 -> D*(2010)+ mu-"]}
+        inputs = {'B02DstarMuNu': d2x + [ self.muons ] }
+        config = deepcopy(self.config)
+        config['AM_MIN'] = '2500*MeV'
+        config['AM_MAX'] = '5200*MeV'
+        config['VCHI2DOF_MAX'] = '6'
+        config['BPVDIRA_MIN'] = '0.999'
+        config['MCORR_MIN'] = '4000*MeV'
+        config['MCORR_MAX'] = '6000*MeV'
+        b2dstmunu = makeB2XSels(decays,dname,inputs,config,False,False)
+        self.lines.append(ProtoLine(b2dstmunu,1.0))
                                     
     def _makeB02DstKsH(self,dname,d2x):
         '''Makes B0 -> D*+- H-+ Ks0'''
