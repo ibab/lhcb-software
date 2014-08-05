@@ -22,6 +22,7 @@ use DaVinciDecayFinder         v*     Phys
 use TopologicalTools           v*     Phys
 use DaVinciOverlapsAndClones   v*     Phys
 use DaVinciNeutralTools        v*     Phys
+use DaVinciAngleCalculators    v*     Phys
 
 # Component library building rule
 #============================================================================

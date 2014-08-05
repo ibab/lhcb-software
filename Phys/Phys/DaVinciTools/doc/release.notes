@@ -15,7 +15,8 @@
   . DaVinciDecayFinder - The (depreciated) decay finder.
   . TopologicalTools   - Topological tools.
   . DaVinciOverlapsAndClones - Tools for dealing with clones, duplicates and overlaps.
-  . DaVinciNeutralTools - Components dealing specifically with neutral objects.
+  . DaVinciNeutralTools      - Components dealing specifically with neutral objects.
+  . DaVinciAngleCalculators  - Various 'angle' calculator tools.
 
 ! 2014-08-04 - Chris Jones
  - Clean up the related info tools + Fix a bug where initialize() was not being
