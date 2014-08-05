@@ -242,7 +242,9 @@ StatusCode GaudiTask::pause()  {
     m_incidentSvc->fireIncident(incident);
     m_ignoreIncident = false;
   }
-  return DimTaskFSM::pauseProcessing();
+  //return DimTaskFSM::pauseProcessing();
+  m_continue = false;
+  return declareState(ST_PAUSED);
 }
 
 /// Pause the application  ( PAUSED -> RUNNING )
@@ -253,7 +255,9 @@ StatusCode GaudiTask::continuing()  {
     m_incidentSvc->fireIncident(incident);
     m_ignoreIncident = false;
   }
-  return DimTaskFSM::continueProcessing();
+  m_continue = true;
+  return declareState(ST_RUNNING);
+  // return DimTaskFSM::continueProcessing();
 }
 
 StatusCode GaudiTask::cancel()  {
