@@ -38,6 +38,7 @@ use  DaVinciDecayFinder         v1r0     Phys    # ?
 use  TopologicalTools           v1r0     Phys    # Mike Williams et. al.
 use  DaVinciOverlapsAndClones   v1r0     Phys    # ?
 use  DaVinciNeutralTools        v1r0     Phys    # CALO Group
+use  DaVinciAngleCalculators    v1r0     Phys    # ?
 
 #===================================================================
 

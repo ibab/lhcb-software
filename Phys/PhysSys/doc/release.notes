@@ -13,7 +13,8 @@ Purpose             : LHCb physics packages
   . DaVinciDecayFinder - The (depreciated) decay finder.
   . TopologicalTools   - Topological tools.
   . DaVinciOverlapsAndClones - Tools for dealing with clones, duplicates and overlaps.
-  . DaVinciNeutralTools - Components dealing specifically with neutral objects.
+  . DaVinciNeutralTools      - Components dealing specifically with neutral objects.
+  . DaVinciAngleCalculators  - Various 'angle' calculator tools.
 
 ! 2014-07-28 - Chris Jones
  - Update Configurables list for QM tests.
