@@ -26,23 +26,32 @@ from CommonParticles import StdLooseAllPhotons
 from Configurables import ( DiElectronMaker, ProtoParticleCALOFilter,
                                                     OfflineVertexFitter, ParticleTransporter, BremAdder )
 
-config_params = {
-		  'gammaPT'             : 1250    # MeV/c
-		, 'gammaP'              : 11000   # MeV/c
-		, 'gammaCL'             : 0.3     # adimensional
-		, 'gammaConvPT'         : 1400    # MeV/c
-		, 'gammaConvIPCHI'      : 1.5     # adimensional
-		, 'gammaNonePT'         : 1700    # MeV/c
-		, 'gammaNoneP'          : 16500   # MeV/c
-		, 'gammaNoneCL'         : 0.5    # adimensional
-		, 'BsVertexCHI2pDOF'    : 20      # adimensional
-		, 'BsLowMass'           : 4600    # MeV/cc
-		, 'BsLowMassDouble'     : 4300    # MeV/cc
-		, 'BsLowMassNone'       : 5000    # MeV/cc
-		, 'BsHighMass'          : 5800    # MeV/cc
-		, 'BsHighMassNone'      : 5700    # MeV/cc
-		, 'BsHighMassDouble'    : 5800    # MeV/cc
-}
+default_config = {
+    'NAME'        : 'Bs2GammaGamma',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'StrippingBs2gammagammaConf',
+    'CONFIG'      : { 'gammaPT'             : 1250    # MeV/c
+                     ,'gammaP'              : 11000   # MeV/c
+                     ,'gammaCL'             : 0.3     # adimensional
+                     ,'gammaConvPT'         : 1400    # MeV/c
+                     ,'gammaConvIPCHI'      : 1.5     # adimensional
+                     ,'gammaNonePT'         : 1700    # MeV/c
+                     ,'gammaNoneP'          : 16500   # MeV/c
+                     ,'gammaNoneCL'         : 0.5    # adimensional
+                     ,'BsVertexCHI2pDOF'    : 20      # adimensional
+                     ,'BsLowMass'           : 4600    # MeV/cc
+                     ,'BsLowMassDouble'     : 4300    # MeV/cc
+                     ,'BsLowMassNone'       : 5000    # MeV/cc
+                     ,'BsHighMass'          : 5800    # MeV/cc
+                     ,'BsHighMassNone'      : 5700    # MeV/cc
+                     ,'BsHighMassDouble'    : 5800    # MeV/cc
+                    },
+    'STREAMS'     : { 'Bhadron' : ['StrippingBs2GammaGamma_LLLine',
+                                   'StrippingBs2GammaGamma_DDLine',
+                                   'StrippingBs2GammaGamma_doubleLine',
+                                   'StrippingBs2GammaGamma_NoConvLine'] }
+    }
+
 
 class StrippingBs2gammagammaConf(LineBuilder):
 

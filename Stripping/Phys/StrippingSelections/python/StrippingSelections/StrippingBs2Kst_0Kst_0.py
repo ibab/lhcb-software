@@ -62,7 +62,7 @@ default_config = {
                       "BDIRA"          : 0.99
                                           },
      'STREAMS'     : { 'Bhadron' : [],
-                       'BhadronCompleteEvent' : ['StrippingBetaSBs2K0stK0stNominalLine']
+                       'BhadronCompleteEvent' : ['StrippingBs2K0stK0stNominalLine']
                                            }
          }
 

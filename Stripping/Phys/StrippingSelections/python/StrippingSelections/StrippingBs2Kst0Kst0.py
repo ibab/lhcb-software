@@ -62,9 +62,9 @@ default_config = {
                       "MaxGHOSTPROB" : 0.8,
                       "BDIRA"        : 0.99
                                           },
-     'STREAMS'     : { 'Bhadron' : ['StrippingBetaSBs2KstKstSameChargeLine'],
-                       'BhadronCompleteEvent' : ['StrippingBetaSBs2KstKstNominalLine',
-                                                 'StrippingBd2JPsiKstForBetaSBs2KstKstLine']
+     'STREAMS'     : { 'Bhadron' : ['StrippingBs2KstKstSameChargeLine'],
+                       'BhadronCompleteEvent' : ['StrippingBs2KstKstNominalLine',
+                                                 'StrippingBd2JPsiKstForBs2KstKstLine']
                        }
      }
 

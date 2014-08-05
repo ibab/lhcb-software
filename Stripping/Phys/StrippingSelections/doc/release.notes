@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-05 - Stefano Perazzini
+ - Fix line names for some Charmless WG LineBuilder
+
 ! 2014-08-05 - Anton Poluektov 
  - Add 4 lines to Beauty2Charm module, B->D(Kshh)h control channels: 
      StrippingB2D0MuNuD2KSHHLLBeauty2CharmLine
