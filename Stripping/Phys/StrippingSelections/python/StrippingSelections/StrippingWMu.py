@@ -9,6 +9,10 @@
 # SingleMuon control:   StdAllLooseMuons,  pT>10GeV &  Hlt2SingleMuonHighPT Dec     (1% PRESCALE)
 # SingleMuon control:   StdAllLooseMuons,  pT>4.8GeV & Hlt2SingleMuonLowPT Dec      (20% PRESCALE)
 
+__all__ = ('WMuConf',
+           'makeFilter',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection
@@ -16,20 +20,39 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
-confdict_WMu = { 'WMu_Prescale'    : 1.0,
-                 'WMuLow_Prescale' : 0.1, 
-                 'STNB_Prescale' : 0.2,
-                 'WMu_Postscale'   : 1.0,
-                 'SingMuon10_Prescale' : 0.01,
-                 'SingMuon48_Prescale'  : 0.4,
-                 'pT'     : 20.,
-                 'pTlow'  : 15.,
-                 'pTvlow' :  5.,
-                 'SingMuon10_pT': 10.,
-                 'SingMuon48_pT': 4.8
-                 }
+#confdict_WMu = { 'WMu_Prescale'    : 1.0,
+#                 'WMuLow_Prescale' : 0.1, 
+#                 'STNB_Prescale' : 0.2,
+#                 'WMu_Postscale'   : 1.0,
+#                 'SingMuon10_Prescale' : 0.01,
+#                 'SingMuon48_Prescale'  : 0.4,
+#                 'pT'     : 20.,
+#                 'pTlow'  : 15.,
+#                 'pTvlow' :  5.,
+#                 'SingMuon10_pT': 10.,
+#                 'SingMuon48_pT': 4.8
+#                 }
 
-default_name = 'WMu'
+#default_name = 'WMu'
+
+default_config = {
+    'NAME'        : 'WMu',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'WMuConf',
+    'CONFIG'      : { 'WMu_Prescale'    : 1.0,
+                      'WMuLow_Prescale' : 0.1,
+                      'STNB_Prescale' : 0.2,
+                      'WMu_Postscale'   : 1.0,
+                      'SingMuon10_Prescale' : 0.01,
+                      'SingMuon48_Prescale'  : 0.4,
+                      'pT'     : 20.,
+                      'pTlow'  : 15.,
+                      'pTvlow' :  5.,
+                      'SingMuon10_pT': 10.,
+                      'SingMuon48_pT': 4.8
+                    },
+    'STREAMS'     : { 'EW' }
+    }
 
 class WMuConf( LineBuilder ) :
 
@@ -75,6 +98,7 @@ class WMuConf( LineBuilder ) :
                                        prescale  = config[ 'SingMuon10_Prescale' ],
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
+                                       RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                        HLT = "HLT_PASS('Hlt2SingleMuonHighPTDecision')",
                                        selection = self.sel_Mu10
                                        )
@@ -92,6 +116,7 @@ class WMuConf( LineBuilder ) :
                                        prescale  = config[ 'SingMuon48_Prescale' ],
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
+                                       RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                        HLT = "HLT_PASS('Hlt2SingleMuonLowPTDecision')",
                                        selection = self.sel_Mu48
                                        )
@@ -111,6 +136,7 @@ class WMuConf( LineBuilder ) :
                                        prescale  = config[ 'WMu_Prescale' ],
                                        postscale = config[ 'WMu_Postscale' ],
                                        checkPV   = False,
+                                       RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                        selection = self.sel_WMu
                                        )
 
@@ -129,6 +155,7 @@ class WMuConf( LineBuilder ) :
                                           prescale  = config[ 'WMuLow_Prescale' ],
                                           postscale = config[ 'WMu_Postscale' ],
                                           checkPV   = False,
+                                          RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                           selection = self.sel_WMuLow
                                           )
 
@@ -147,6 +174,7 @@ class WMuConf( LineBuilder ) :
                                                      prescale  = config[ 'WMu_Prescale' ],
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
+                                                     RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                                      HLT       = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
                                                      selection = self.sel_SingleTrackNoBias
                                                      )
@@ -164,6 +192,7 @@ class WMuConf( LineBuilder ) :
                                                      prescale  = config[ 'STNB_Prescale' ],
                                                      postscale = config[ 'WMu_Postscale' ],
                                                      checkPV   = False,
+                                                     RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                                      HLT       = "HLT_PASS( 'Hlt1MBNoBiasDecision' )",
                                                      selection = self.sel_SingleTrackNoBiasPS
                                                      )
