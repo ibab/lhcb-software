@@ -264,6 +264,16 @@ namespace  {
 	m_fsm->declareState  (ITaskFSM::ST_STOPPED);
 	m_check->restartChildren(false);
       }
+      else if ( cmd == "pause"      ) {
+	m_fsm->setTargetState(ITaskFSM::ST_PAUSED);
+	m_fsm->declareState  (ITaskFSM::ST_PAUSED);
+	m_check->restartChildren(false);
+      }
+      else if ( cmd == "continue"   ) {
+	m_fsm->setTargetState(ITaskFSM::ST_RUNNING);
+	m_fsm->declareState(ITaskFSM::ST_RUNNING);
+	m_check->restartChildren(false);
+      }
       else if ( cmd == "reset"      ) {
 	m_fsm->setTargetState(ITaskFSM::ST_NOT_READY);
 	m_fsm->declareState(ITaskFSM::ST_NOT_READY);
