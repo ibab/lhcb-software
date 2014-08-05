@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/RelatedInfoTools
+! Responsible : Anton Poluektov
+! Purpose     : Related Info Tools
+!-----------------------------------------------------------------------------
+
+! 2014-08-05 - Chris Jones
+ - First version. Split off from DaVinciTools those components related to the
+   'RelatedInfo' framework.

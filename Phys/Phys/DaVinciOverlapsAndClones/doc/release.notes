@@ -1,0 +1,9 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinciOverlapsAndClones
+! Responsible : DV Maintainer
+! Purpose     : Tools for dealing with overlaps and clones
+!-----------------------------------------------------------------------------
+
+! 2014-08-05 - Chris Jones
+ - First Version. Export tools for dealing with overlaps and clones to the
+   dedicated package.

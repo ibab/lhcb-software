@@ -1,0 +1,43 @@
+#============================================================================
+# Created    : 2014-08-05
+# Maintainer : Chris Jones
+#============================================================================
+package           DaVinciDecayFinder
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+#============================================================================
+# Used packages. 
+#============================================================================
+use  DaVinciKernel         v* Phys
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          DaVinciDecayFinder    ../src/*.cpp 
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=DaVinciDecayFinder
+
+# Extra language for translating yacc to c++
+# This is used to generate once the necessary files on Linux that are
+# then committed (tool not available on win)
+#============================================================================
+# macro yaccppflags       " -l -d "
+# macro yaccpp            "yacc $(yaccppflags)
+# make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
+# document yacc_to_icpp RecParser recparser.ypp
+# macro recparser_ypp_yaccpp_prefix "DecayFinder::"
+
+# macro lexppflags        " -L "
+# macro lexpp             "lex ${lexppflags}
+# make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
+# document lex_to_icpp RecLexer reclexer.lpp
+# macro reclexer_lpp_lexpp_prefix "DecayFinder::"
+

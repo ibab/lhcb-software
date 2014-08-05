@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/DaVinciDecayFinder
+! Responsible : DV Maintainer
+! Purpose     : Depreciated Decay Finder
+!-----------------------------------------------------------------------------
+
+! 2014-08-05 - Chris Jones
+ - First version. Move DecayFinder to its own package (effectively depreciated).

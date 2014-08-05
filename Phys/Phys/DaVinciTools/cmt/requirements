@@ -10,40 +10,23 @@ branches          cmt doc src python
 
 # Used packages. 
 #============================================================================
-use  Boost                 v* LCG_Interfaces
-use  GaudiConfUtils        v* -no_auto_imports
-use  DaVinciKernel         v* Phys
-use  MicroDst              v* Event
-use  LHCbMath              v* Kernel
-use  CaloUtils             v* Calo
-use  LoKiPhys              v* Phys
-use  LoKiArrayFunctors     v* Phys
-use  DecayTreeFitter       v* Phys 
-use  HltEvent              v* Event
-
-# Extra language for translating yacc to c++
-# This is used to generate once the necessary files on Linux that are
-# then committed (tool not available on win)
-#============================================================================
-# macro yaccppflags       " -l -d "
-# macro yaccpp            "yacc $(yaccppflags)
-# make_fragment yacc_to_icpp -suffix=icpp -header=yacc_to_icpp_header
-# document yacc_to_icpp RecParser recparser.ypp
-# macro recparser_ypp_yaccpp_prefix "DecayFinder::"
-
-# macro lexppflags        " -L "
-# macro lexpp             "lex ${lexppflags}
-# make_fragment lex_to_icpp -suffix=icpp -header=lex_to_icpp_header
-# document lex_to_icpp RecLexer reclexer.lpp
-# macro reclexer_lpp_lexpp_prefix "DecayFinder::"
+use DaVinciKernel              v*     Phys
+# Sub packages containing tools
+# Might be appropriate to move some of these to Analysis eventually ...
+use DaVinciCoreTools           v*     Phys 
+use RelatedInfoTools           v*     Phys
+use ExtraInfoTools             v*     Phys
+use DaVinciPVTools             v*     Phys
+use DaVinciFilters             v*     Phys
+use DaVinciDecayFinder         v*     Phys
+use TopologicalTools           v*     Phys
+use DaVinciOverlapsAndClones   v*     Phys
+use DaVinciNeutralTools        v*     Phys
 
 # Component library building rule
 #============================================================================
-library          DaVinciTools    ../src/*.cpp -import=AIDA
-# define link options
+library          DaVinciTools    ../src/*.cpp
 #============================================================================
-#
-macro_append Boost_linkopts " $(Boost_linkopts_regex)"
 
 # standard patterns (order is essential!)
 #============================================================================
