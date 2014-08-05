@@ -19,20 +19,38 @@ from StandardParticles import StdAllNoPIDsPions
 from StandardParticles import StdLooseAllPhotons
 
 __all__ = ('InclbJetsLinesConf',
-           'confdict')
+           'default_config')
 
-confdict = {
-       'NrPVsCut'         : 1
-    ,  'NrSeedsCut'       : 2
-    ,  'TrkChi2Cut'       : 3.0
-    ,  'PrtMomCut'        : 2.0
-    ,  'PrtPtCut'         : 0.6
-    ,  'PrtIPSCut'        : 2.5
-    ,  'DZSVPVCut'        : 1.0
-    ,  'SumMomSVCut'      : 3.0
-    ,  'VtxChi2Cut'       : 20.0
-    ,  'scale'            : 0.05
- }
+#confdict = {
+#       'NrPVsCut'         : 1
+#    ,  'NrSeedsCut'       : 2
+#    ,  'TrkChi2Cut'       : 3.0
+#    ,  'PrtMomCut'        : 2.0
+#    ,  'PrtPtCut'         : 0.6
+#    ,  'PrtIPSCut'        : 2.5
+#    ,  'DZSVPVCut'        : 1.0
+#    ,  'SumMomSVCut'      : 3.0
+#    ,  'VtxChi2Cut'       : 20.0
+#    ,  'scale'            : 0.05
+# }
+
+default_config = {
+    'NAME'        : 'InclbJets',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'InclbJetsLinesConf',
+    'CONFIG'      : { 'NrPVsCut'         : 1,
+                      'NrSeedsCut'       : 2,
+                      'TrkChi2Cut'       : 3.0,
+                      'PrtMomCut'        : 2.0,
+                      'PrtPtCut'         : 0.6,
+                      'PrtIPSCut'        : 2.5,
+                      'DZSVPVCut'        : 1.0,
+                      'SumMomSVCut'      : 3.0,
+                      'VtxChi2Cut'       : 20.0,
+                      'scale'            : 0.05
+                    },
+    'STREAMS'     : { 'EW' }
+    }
 
 class InclbJetsLinesConf(LineBuilder) :
     __configuration_keys__ = ('NrPVsCut',
@@ -73,4 +91,5 @@ class InclbJetsLinesConf(LineBuilder) :
         return StrippingLine(name ,
                              HLT = "HLT_PASS_RE('Hlt2*.Topo.*Decision')",
                              prescale = self.__confdict__['scale'],
+                             RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                              selection = self._makeInclbJetSel(name))
