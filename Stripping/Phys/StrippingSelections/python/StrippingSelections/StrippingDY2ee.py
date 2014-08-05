@@ -6,6 +6,10 @@
 # DY2ee3 (10-20GeV): StdAllNoPIDsElectrons & pT>3GeV & p>10GeV & PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05
 # DY2ee4 (20-40GeV): StdAllNoPIDsElectrons & pT>5GeV & p>10GeV & PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05
 
+__all__ = ('DY2eeConf',
+           'makeCombination',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
@@ -13,24 +17,47 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import  StdAllNoPIDsElectrons
 
-confdict_DY2ee = { 'DY2eeLine3Prescale' : 1.0,
-                   'DY2eeLine4Prescale' : 1.0,
-                   'DY2eeLinePostscale' : 1.0,
-                   'DY3MinMass' : 10.,
-                   'DY3MaxMass' : 20.,
-                   'DY4MinMass' : 20.,
-                   'DY4MaxMass' : 40.,
-                   'ePID'      :  1.,
-                   'PrsCalMin' : 50.,
-                   'ECalMin'   :  0.1,
-                   'HCalMax'   :  0.05,
-                   'pT3'        : 3.,
-                   'pT4'        : 5.,
-                   'p3'        : 10.,
-                   'p4'        : 10.
-                   }
+#confdict_DY2ee = { 'DY2eeLine3Prescale' : 1.0,
+#                   'DY2eeLine4Prescale' : 1.0,
+#                   'DY2eeLinePostscale' : 1.0,
+#                   'DY3MinMass' : 10.,
+#                   'DY3MaxMass' : 20.,
+#                   'DY4MinMass' : 20.,
+#                   'DY4MaxMass' : 40.,
+#                   'ePID'      :  1.,
+#                   'PrsCalMin' : 50.,
+#                   'ECalMin'   :  0.1,
+#                   'HCalMax'   :  0.05,
+#                   'pT3'        : 3.,
+#                   'pT4'        : 5.,
+#                   'p3'        : 10.,
+#                   'p4'        : 10.
+#                   }
 
-default_name = 'DY2ee'
+#default_name = 'DY2ee'
+
+default_config = {
+    'NAME'        : 'DY2ee',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'DY2eeConf',
+    'CONFIG'      : { 'DY2eeLine3Prescale' : 1.0,
+                      'DY2eeLine4Prescale' : 1.0, 
+                      'DY2eeLinePostscale' : 1.0,  
+                      'DY3MinMass' : 10.,
+                      'DY3MaxMass' : 20.,
+                      'DY4MinMass' : 20.,
+                      'DY4MaxMass' : 40.,
+                      'ePID'      :  1.,
+                      'PrsCalMin' : 50.,
+                      'ECalMin'   :  0.1,
+                      'HCalMax'   :  0.05,
+                      'pT3'        : 3.,
+                      'pT4'        : 5.,
+                      'p3'        : 10.,
+                      'p4'        : 10.
+                    },
+    'STREAMS'     : { 'EW' }
+    }
 
 class DY2eeConf(LineBuilder) :
 
@@ -78,6 +105,7 @@ class DY2eeConf(LineBuilder) :
         self.line_DY2ee3 = StrippingLine( self._myname + 'Line3',
                                           prescale  = config[ 'DY2eeLine3Prescale' ],
                                           postscale = config[ 'DY2eeLinePostscale' ],
+                                          RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                           selection = self.sel_DY2ee3
                                           )
 
@@ -95,6 +123,7 @@ class DY2eeConf(LineBuilder) :
         self.line_DY2ee4 = StrippingLine( self._myname + 'Line4',
                                           prescale  = config[ 'DY2eeLine4Prescale' ],
                                           postscale = config[ 'DY2eeLinePostscale' ],
+                                          RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                           selection = self.sel_DY2ee4
                                           )
 
