@@ -131,7 +131,7 @@ static Type* defineDAQType()    {
   load->addPredicate( AllChildrenOfType(daq).inState(offline, not_ready, ready, paused, running));
   load->adoptRule(    AllChildrenOfType(daq).move(offline,   not_ready));
   load->adoptRule(    AllChildrenOfType(daq).move(paused,    ready));
-  load->adoptRule(    AllChildrenOfType(daq).move(offline,   ready)); // --> CHeckpointing
+  load->adoptRule(    AllChildrenOfType(daq).move(offline,   ready)); // --> Checkpointing
 
   /// Not Ready -> Ready
   Tr*  configure = daq->addTransition("configure", not_ready,   ready);
@@ -142,16 +142,27 @@ static Type* defineDAQType()    {
   /// Ready -> Running
   Tr*  start0    = daq->addTransition("start",     ready,       running);
   start0->addPredicate(AllChildrenOfType(daq).inState(ready,    paused,  running));
+#if 0  
   /// Paused -> Running
   Tr*  start1    = daq->addTransition("start",     paused,      running);
-  start1->addPredicate(AllChildrenOfType(daq).inState(ready,    paused,  running));
+  start1->addPredicate(AllChildrenOfType(daq).inState(ready,    running));
+  //start1->addPredicate(AllChildrenOfType(daq).inState(ready,    paused,  running));
 
   start0->adoptRule(start0).adoptRule(start1);
   start1->adoptRule(start0).adoptRule(start1);
+#endif
+  start0->adoptRule(start0);
 
   /// Running -> Paused
   Tr*  pause     = daq->addTransition("pause",     running,     paused);
   pause->adoptRule(ParentOfType(daq).move(running, paused));
+  pause->adoptRule(pause);
+
+  /// Paused  -> Running for children in state paused
+  Tr*  cont      = daq->addTransition("continue",  paused,      running);
+  cont->addPredicate(AllChildrenOfType(daq).inState(paused, ready, running));
+  cont->adoptRule(   AllChildrenOfType(daq).move(ready,  running));
+  cont->adoptRule(   AllChildrenOfType(daq).move(paused, running));
 
   /// Running -> Ready
   Tr*  stop0     = daq->addTransition("stop",      running,     ready);
