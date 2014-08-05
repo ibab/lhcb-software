@@ -6,6 +6,10 @@
 # We signal:  StdAllNoPIDsElectrons, PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05 & pT>20GeV & TTHits
 # We control: StdAllNoPIDsElectrons, PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05 & pT>15GeV          (10% PRESCALE)
 
+__all__ = ('WeConf',
+           'makeFilter',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection
@@ -13,17 +17,33 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsElectrons
 
-confdict_We = { 'We_Prescale'    : 1.0,
-                'WeLow_Prescale' : 0.1,
-                'We_Postscale'   : 1.0,
-                'PrsCalMin' : 50.,
-                'ECalMin'   :  0.10,
-                'HCalMax'   :  0.05,
-                'pT'        : 20.,
-                'pTlow'     : 15.
-                }
+#confdict_We = { 'We_Prescale'    : 1.0,
+#                'WeLow_Prescale' : 0.1,
+#                'We_Postscale'   : 1.0,
+#                'PrsCalMin' : 50.,
+#                'ECalMin'   :  0.10,
+#                'HCalMax'   :  0.05,
+#                'pT'        : 20.,
+#                'pTlow'     : 15.
+#                }
 
-default_name = 'We'
+#default_name = 'We'
+
+default_config = {
+    'NAME'        : 'We',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'WeConf',
+    'CONFIG'      : { 'We_Prescale'    : 1.0,
+                      'WeLow_Prescale' : 0.1,
+                      'We_Postscale'   : 1.0,
+                      'PrsCalMin' : 50.,
+                      'ECalMin'   :  0.10,
+                      'HCalMax'   :  0.05,
+                      'pT'        : 20.,
+                      'pTlow'     : 15.
+                    },
+    'STREAMS'     : { 'EW' }
+    }
 
 class WeConf( LineBuilder ) :
 
@@ -46,7 +66,8 @@ class WeConf( LineBuilder ) :
 
         # Define the cuts
 
-        _cut    = "(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s) & (PT>%(pT)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
+#        _cut    = "(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s) & (PT>%(pT)s*GeV) & (HASTRACK & TRCUT(0<TrIDC('isTT')))"%config
+        _cut    = "(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s) & (PT>%(pT)s*GeV)"%config
         _cutLow = '(PPINFO(LHCb.ProtoParticle.CaloPrsE,0)>%(PrsCalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,0)>P*%(ECalMin)s) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)<P*%(HCalMax)s) & (PT>%(pTlow)s*GeV)'%config
 
 
@@ -61,6 +82,7 @@ class WeConf( LineBuilder ) :
         self.line_We = StrippingLine( self._myname + 'Line',
                                       prescale  = config[ 'We_Prescale' ],
                                       postscale = config[ 'We_Postscale' ],
+                                      RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                       selection = self.sel_We
                                       )
 
@@ -78,6 +100,7 @@ class WeConf( LineBuilder ) :
         self.line_WeLow = StrippingLine( self._myname + 'LowLine',
                                          prescale  = config[ 'WeLow_Prescale' ],
                                          postscale = config[ 'We_Postscale' ],
+                                         RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                          selection = self.sel_WeLow
                                          )
         
