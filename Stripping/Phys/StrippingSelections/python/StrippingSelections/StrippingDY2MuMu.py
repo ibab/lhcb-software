@@ -10,6 +10,10 @@
 # DY2MuMu3    (10-20GeV): StdAllLooseMuons & TrkPChi2>0.1% & P>10GeV & pT>3GeV
 # DY2MuMu4    (20-40GeV): StdAllLooseMuons & TrkPChi2>0.1% & P>10GeV & pT>3GeV
 
+__all__ = ('DY2MuMuConf',
+           'makeCombination',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
@@ -17,29 +21,57 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons
 
-confdict_DY2MuMu = { 'DY2MuMu1LinePrescale'    : 0.05, 
-                     'DY2MuMu1LineHltPrescale' : 0.5, 
-                     'DY2MuMu2LinePrescale'    : 0.25, 
-                     'DY2MuMu2LineHltPrescale' : 1.0,
-                     'DY2MuMu3LinePrescale'    : 1.0,
-                     'DY2MuMu4LinePrescale'    : 1.0,
-                     'DY2MuMuLinePostscale'    : 1.0,
-                     'DY1MinMass' :  3.2,
-                     'DY1MaxMass' :  5.,
-                     'DY2MinMass' :  5.,
-                     'DY2MaxMass' : 10.,
-                     'DY3MinMass' : 10.,
-                     'DY3MaxMass' : 20.,
-                     'DY4MinMass' : 20.,
-                     'DY4MaxMass' : 40.,
-                     'p'             : 10.,
-                     'pT1'           :  1.5,
-                     'pT2'           :  3.,
-                     'trkpchi2'      :  0.001,
-                     'pid'           : -3.
-                     }
+#confdict_DY2MuMu = { 'DY2MuMu1LinePrescale'    : 0.05, 
+#                     'DY2MuMu1LineHltPrescale' : 0.5, 
+#                     'DY2MuMu2LinePrescale'    : 0.25, 
+#                     'DY2MuMu2LineHltPrescale' : 1.0,
+#                     'DY2MuMu3LinePrescale'    : 1.0,
+#                     'DY2MuMu4LinePrescale'    : 1.0,
+#                     'DY2MuMuLinePostscale'    : 1.0,
+#                     'DY1MinMass' :  3.2,
+#                     'DY1MaxMass' :  5.,
+#                     'DY2MinMass' :  5.,
+#                     'DY2MaxMass' : 10.,
+#                     'DY3MinMass' : 10.,
+#                     'DY3MaxMass' : 20.,
+#                     'DY4MinMass' : 20.,
+#                     'DY4MaxMass' : 40.,
+#                     'p'             : 10.,
+#                     'pT1'           :  1.5,
+#                     'pT2'           :  3.,
+#                     'trkpchi2'      :  0.001,
+#                     'pid'           : -3.
+#                     }
 
-default_name = 'DY2MuMu'
+#default_name = 'DY2MuMu'
+
+default_config = {
+    'NAME'        : 'DY2MuMu',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'DY2MuMuConf',
+    'CONFIG'      : { 'DY2MuMu1LinePrescale'    : 0.05,
+                      'DY2MuMu1LineHltPrescale' : 0.5,
+                      'DY2MuMu2LinePrescale'    : 0.25,
+                      'DY2MuMu2LineHltPrescale' : 1.0,
+                      'DY2MuMu3LinePrescale'    : 1.0,  
+                      'DY2MuMu4LinePrescale'    : 1.0,
+                      'DY2MuMuLinePostscale'    : 1.0,
+                      'DY1MinMass' :  3.2,
+                      'DY1MaxMass' :  5.,
+                      'DY2MinMass' :  5.,
+                      'DY2MaxMass' : 10.,
+                      'DY3MinMass' : 10.,
+                      'DY3MaxMass' : 20.,
+                      'DY4MinMass' : 20.,
+                      'DY4MaxMass' : 40.,
+                      'p'             : 10.,
+                      'pT1'           :  1.5,
+                      'pT2'           :  3.,
+                      'trkpchi2'      :  0.001,
+                      'pid'           : -3.
+                    },
+    'STREAMS'     : { 'EW' }
+    }
 
 class DY2MuMuConf( LineBuilder ) :
 
@@ -96,6 +128,7 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu1 = StrippingLine( self._myname + 'Line1',
                                             prescale  = config['DY2MuMu1LinePrescale'],
                                             postscale = config['DY2MuMuLinePostscale'],
+                                            RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                             selection = self.sel_DY2MuMu1
                                             )
 
@@ -113,6 +146,7 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu1Hlt = StrippingLine( self._myname + 'Line1Hlt',
                                                prescale  = config[ 'DY2MuMu1LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
+                                               RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                                HLT       = "HLT_PASS_RE( 'Hlt2DiMuonDY.*Decision' )",
                                                selection = self.sel_DY2MuMu1Hlt
                                                )
@@ -131,6 +165,7 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu2 = StrippingLine( self._myname + 'Line2',
                                             prescale  = config['DY2MuMu2LinePrescale'],
                                             postscale = config['DY2MuMuLinePostscale'],
+                                            RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                             selection = self.sel_DY2MuMu2
                                             )
 
@@ -149,6 +184,7 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu2Hlt = StrippingLine( self._myname + 'Line2Hlt',
                                                prescale  = config[ 'DY2MuMu2LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
+                                               RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                                HLT       = "HLT_PASS_RE( 'Hlt2DiMuonDY.*Decision' )",
                                                selection = self.sel_DY2MuMu2Hlt
                                                )
@@ -167,6 +203,7 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu3 = StrippingLine( self._myname + 'Line3',
                                             prescale  = config[ 'DY2MuMu3LinePrescale' ],
                                             postscale = config[ 'DY2MuMuLinePostscale' ],
+                                            RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                             selection = self.sel_DY2MuMu3
                                             )
 
@@ -184,6 +221,7 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu4 = StrippingLine( self._myname + 'Line4',
                                             prescale  = config[ 'DY2MuMu4LinePrescale' ],
                                             postscale = config[ 'DY2MuMuLinePostscale' ],
+                                            RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                             selection = self.sel_DY2MuMu4
                                             )
 
