@@ -157,7 +157,11 @@ namespace LHCb  {
     virtual StatusCode stop();
 
     /// Pause the application  ( RUNNING -> PAUSED )
+    virtual StatusCode pause();    
+    /// Wok call on Pause  ( RUNNING -> PAUSED )
     virtual StatusCode pauseProcessing();    
+    /// Continue the application  ( PAUSED -> RUNNING )
+    virtual StatusCode continuing();
     /// Continue the application  ( PAUSED -> RUNNING )
     virtual StatusCode continueProcessing();
 

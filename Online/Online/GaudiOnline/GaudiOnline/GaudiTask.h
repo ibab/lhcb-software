@@ -61,7 +61,8 @@ namespace LHCb  {
     int               m_nerr;
     /// Flag to indicate if runable has stopped executing
     bool              m_eventThread;
-
+    /// Flag to ignore incidents on PAUSE/CONTINUE
+    bool              m_ignoreIncident;
     // Static thread routine to execute a Gaudi runable
     static int execRunable(void* arg);
 
@@ -119,6 +120,12 @@ namespace LHCb  {
 
     /// Enable the event loop and event processing      (Ready      -> Running)
     virtual StatusCode enable();
+
+    /// Pause the application  ( RUNNING -> PAUSED )
+    virtual StatusCode pause();    
+
+    /// Continue the application  ( PAUSED -> RUNNING )
+    virtual StatusCode continuing();
 
     /// Callback to process event
     virtual StatusCode nextEvent(int num_event);

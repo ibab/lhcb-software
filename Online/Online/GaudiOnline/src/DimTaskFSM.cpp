@@ -348,8 +348,8 @@ void DimTaskFSM::handle(const Event& ev)  {
         _CASE(STOP)         sc=stop();                                break;
         _CASE(FINALIZE)     sc=finalize();                            break;
         _CASE(TERMINATE)    sc=terminate();                           break;
-        _CASE(PAUSE)        sc=pauseProcessing();                     break;
-        _CASE(CONTINUE)     sc=continueProcessing();                  break;
+        _CASE(PAUSE)        sc=pause();                               break;
+        _CASE(CONTINUE)     sc=continuing();                          break;
         _CASE(ERROR)        sc=declareState(ST_ERROR);                break;
         _CASE(STARTUP_DONE) sc = startupDone();                       break;
         _CASE(CONNECT_DIM)  sc = connectDIM();                        break;
@@ -441,7 +441,7 @@ StatusCode DimTaskFSM::nextEvent(int /* num_event */)  {
   }
   return StatusCode::SUCCESS;
 }
-  
+
 StatusCode DimTaskFSM::disable()  {
   m_continue = false;
   cancel();
@@ -468,6 +468,11 @@ StatusCode DimTaskFSM::unload()  {
 }
 
 /// Pause the application  ( RUNNING -> PAUSED )
+StatusCode DimTaskFSM::pause()  {
+  return pauseProcessing();
+}
+
+/// Pause the application  ( RUNNING -> PAUSED )
 StatusCode DimTaskFSM::pauseProcessing()  {
   m_continue = false;
   cancel();
@@ -475,7 +480,12 @@ StatusCode DimTaskFSM::pauseProcessing()  {
 }
 
 /// Continue the application  ( PAUSED -> RUNNING )
-StatusCode DimTaskFSM::continueProcessing()  {
+StatusCode DimTaskFSM::continuing()  {
+  return continueProcessing();
+}
+
+/// Continue the application  ( PAUSED -> RUNNING )
+StatusCode DimTaskFSM::continueProcessing() {
   m_continue = true;
   rearm();
   return declareState(ST_RUNNING);

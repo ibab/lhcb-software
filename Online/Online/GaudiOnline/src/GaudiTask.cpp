@@ -105,8 +105,9 @@ int GaudiTask::execRunable(void* arg)  {
   return 0;
 }
 
-GaudiTask::GaudiTask(IInterface*) 
-: DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), m_nerr(0)
+GaudiTask::GaudiTask(IInterface*)
+: DimTaskFSM(0), m_handle(0), m_appMgr(0), m_subMgr(0), m_incidentSvc(0), m_msgSvc(0), 
+  m_nerr(0), m_ignoreIncident(false)
 {
   propertyMgr().declareProperty("Runable",        m_runable     = "LHCb::OnlineRunable/Runable");
   propertyMgr().declareProperty("EventLoop",      m_evtloop     = "LHCb::OnlineRunable/EmptyEventLoop");
@@ -226,11 +227,33 @@ void GaudiTask::handle(const Incident& inc)    {
     error();
   }
   else if ( inc.type() == "DAQ_PAUSE" )  {
-    pauseProcessing();
+    if ( !m_ignoreIncident ) pauseProcessing();
   }
   else if ( inc.type() == "DAQ_CONTINUE" )  {
-    continueProcessing();
+    if ( !m_ignoreIncident ) continueProcessing();
   }
+}
+
+/// Pause the application  ( RUNNING -> PAUSED )
+StatusCode GaudiTask::pause()  {
+  if ( m_incidentSvc )  {
+    Incident incident(name(),"DAQ_PAUSE");
+    m_ignoreIncident = true;
+    m_incidentSvc->fireIncident(incident);
+    m_ignoreIncident = false;
+  }
+  return DimTaskFSM::pauseProcessing();
+}
+
+/// Pause the application  ( PAUSED -> RUNNING )
+StatusCode GaudiTask::continuing()  {
+  if ( m_incidentSvc )  {
+    Incident incident(name(),"DAQ_CONTINUE");
+    m_ignoreIncident = true;
+    m_incidentSvc->fireIncident(incident);
+    m_ignoreIncident = false;
+  }
+  return DimTaskFSM::continueProcessing();
 }
 
 StatusCode GaudiTask::cancel()  {
@@ -275,8 +298,11 @@ StatusCode GaudiTask::startRunable(IRunable* runable)   {
 void GaudiTask::stopRunable() {
   char txt[256];
   for(int i=0; i<999999; ++i) {
-    if ( eventThread() ) ::lib_rtl_sleep(4000);
-    cancel();
+    if ( eventThread() )
+    {
+      ::lib_rtl_sleep(4000);
+      cancel();
+    }
     if ( eventThread() )  {
       if ( m_handle && i>2 ) {
 	::snprintf(txt,sizeof(txt),"Kill runable thread to get out of event loop.");
@@ -499,7 +525,7 @@ int GaudiTask::finalizeApplication()  {
 	  }
 	}
       }
-      // If e.g.Class1 processes are reset() before start(), then the incident service 
+      // If e.g.Class1 processes are reset() before start(), then the incident service
       // is still connected, and a later cancel() would access violate.
       // Hence check again if the incident service is still present.
       if ( m_incidentSvc ) {
@@ -615,7 +641,7 @@ StatusCode GaudiTask::configPythonSubManager() {
   Gaudi::setInstance((IAppMgrUI*)0);
   Gaudi::setInstance((ISvcLocator*)0);
   log << MSG::DEBUG << "Python setup:" << m_optOptions << endmsg;
-  string cmd = (strncasecmp(m_optOptions.c_str(),"command=",8)==0) 
+  string cmd = (strncasecmp(m_optOptions.c_str(),"command=",8)==0)
     ? m_optOptions.substr(8) : loadScript(m_optOptions);
   if( !cmd.empty() ) {
     string vsn = Py_GetVersion();
@@ -630,7 +656,7 @@ StatusCode GaudiTask::configPythonSubManager() {
     ::PyErr_Clear();
     ::PyRun_SimpleString((char*)cmd.c_str());
     if ( ::PyErr_Occurred() )   {
-      ::PyErr_Print(); 
+      ::PyErr_Print();
       ::PyErr_Clear();
       ::fflush(stdout);
       ::fflush(stderr);
