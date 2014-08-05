@@ -5,6 +5,10 @@
 #
 # Z02MuMu/High Mass DY signal:     StdAllLooseMuons,  pT>3GeV & MM>40GeV
 
+__all__ = ('Z02MuMuConf',
+           'makeCombination',
+           'default_config')
+
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
@@ -13,13 +17,26 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllLooseMuons, StdAllNoPIDsMuons
 
-confdict_Z02MuMu = { 'Z02MuMu_Prescale'  : 1.0,
-                     'Z02MuMu_Postscale' : 1.0,
-                     'pT'    : 3.,
-                     'MMmin' : 40.
-                     }
+#confdict_Z02MuMu = { 'Z02MuMu_Prescale'  : 1.0,
+#                     'Z02MuMu_Postscale' : 1.0,
+#                     'pT'    : 3.,
+#                     'MMmin' : 40.
+#                     }
 
-default_name = 'Z02MuMu'
+#default_name = 'Z02MuMu'
+
+default_config = {
+    'NAME'        : 'Z02MuMu',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'Z02MuMuConf',
+    'CONFIG'      : { 'Z02MuMu_Prescale'  : 1.0,
+                      'Z02MuMu_Postscale' : 1.0,
+                      'pT'    : 3.,
+                      'MMmin' : 40.
+                    },
+    'STREAMS'     : { 'EW' }
+    }
+
 
 class Z02MuMuConf( LineBuilder ) :
 
