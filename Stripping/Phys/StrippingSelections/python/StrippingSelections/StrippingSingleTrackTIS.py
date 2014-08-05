@@ -6,6 +6,11 @@
 # SingleTrackTIS:    StdAllNoPIDsMuons, pT>20GeV & TTHits & Hlt1xHlt2 TIS (10% PRESCALE)
 # SingleTrackTISLow: StdAllNoPIDsMuons, pT>15GeV & TTHits & Hlt1xHlt2 TIS ( 1% PRESCALE)
 
+__all__ = ('SingleTrackTISConf',
+           'makeFilter',
+           'makeTISTOS',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from PhysSelPython.Wrappers import Selection
@@ -13,14 +18,27 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsMuons
 
-confdict_SingleTrackTIS = { 'SingleTrackTIS_Prescale'    : 0.1, 
-                            'SingleTrackTISLow_Prescale' : 0.01, 
-                            'SingleTrackTIS_Postscale'   : 1.00,
-                            'pT'    : 20.,
-                            'pTlow' : 15.
-                            }
+#confdict_SingleTrackTIS = { 'SingleTrackTIS_Prescale'    : 0.1, 
+#                            'SingleTrackTISLow_Prescale' : 0.01, 
+#                            'SingleTrackTIS_Postscale'   : 1.00,
+#                            'pT'    : 20.,
+#                            'pTlow' : 15.
+#                            }
 
-name = 'SingleTrackTIS'
+#name = 'SingleTrackTIS'
+
+default_config = {
+    'NAME'        : 'SingleTrackTIS',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'SingleTrackTISConf',
+    'CONFIG'      : { 'SingleTrackTIS_Prescale'    : 0.1,
+                      'SingleTrackTISLow_Prescale' : 0.01,
+                      'SingleTrackTIS_Postscale'   : 1.00,
+                      'pT'    : 20.,
+                      'pTlow' : 15.
+                    },
+    'STREAMS'     : { 'EW' }
+    }
 
 class SingleTrackTISConf( LineBuilder ) :
 
@@ -65,6 +83,7 @@ class SingleTrackTISConf( LineBuilder ) :
         self.line_SingleTrackTIS = StrippingLine( self._myname + 'Line',
                                                   prescale  = config[ 'SingleTrackTIS_Prescale' ],
                                                   postscale = config[ 'SingleTrackTIS_Postscale' ],
+                                                  RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                                   checkPV   = False,
                                                   selection = self.sel_Hlt2TIS
                                                   )
@@ -93,6 +112,7 @@ class SingleTrackTISConf( LineBuilder ) :
         self.line_SingleTrackTISLow = StrippingLine( self._myname + 'LowLine',
                                                      prescale  = config[ 'SingleTrackTISLow_Prescale' ],
                                                      postscale = config[ 'SingleTrackTIS_Postscale' ],
+                                                     RequiredRawEvents = ["Muon","Calo","Other","Rich"],
                                                      checkPV   = False,
                                                      selection = self.sel_Hlt2TISLow
                                                      )
