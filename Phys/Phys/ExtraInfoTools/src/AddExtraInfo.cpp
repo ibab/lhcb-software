@@ -42,7 +42,7 @@ StatusCode AddExtraInfo::initialize()
     }
     else
     {
-      return Error( "Tuple not found, name = " + (*iTool) );
+      return Error( "Tool not found, name = " + (*iTool) );
     }
   }
 
