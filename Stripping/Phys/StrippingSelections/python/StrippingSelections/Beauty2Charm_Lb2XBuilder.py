@@ -210,6 +210,10 @@ class Lb2XBuilder(object):
         # Lb -> Lc D (+WS)
         self._makeLb2LcD()
 
+        # Lb  -> Lc D K*
+        self._makeLb2LcDKst()
+        self._makeLb2LcDstKst()        
+
         ### bc baryon -> Lc D0
         self._makeX2LcD0()
         ### bc baryon -> Lc D0 H (+WS)
@@ -532,6 +536,20 @@ class Lb2XBuilder(object):
         inputs = {'Lb2LcDWS': self.d.hhh_pid+self.lc_pid}
         ws = makeB2XSels(decays,'D2HHHPID',inputs,self.config)
         self.lines.append(ProtoLine(ws,0.1))
+
+    def _makeLb2LcDKst(self):
+        '''Makes RS Lb -> Lc D+ Kst c.c.'''
+        decays = {'Lb2LcDKst': ["[Lambda_b0 -> Lambda_c+ D- K*(892)]cc"]}
+        inputs = {'Lb2LcDKst': self.d.hhh_pid+self.lc_pid + self.hh.kpi}
+        rs = makeB2XSels(decays,'',inputs,self.config)   
+        self.lines.append(ProtoLine(rs,1.0))
+
+    def _makeLb2LcDstKst(self):
+        '''Makes RS Lb -> Lc D*(2010)+ Kst c.c.'''
+        decays = {'Lb2LcDstKst': ["[Lambda_b0 -> Lambda_c+ D*(2010)- K*(892)]cc"]}
+        inputs = {'Lb2LcDstKst': self.dst.d0pi_pid+self.lc_pid + self.hh.kpi}
+        rs = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(rs,1.0)) 
 
     def _makeX2LcD0(self):
         '''Makes RS X -> Lc D0 + c.c.'''

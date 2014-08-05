@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-05- Wenbin Qian
+ - Add 7 lines with B0->DDKst, B0->DD*Kst, B0->D*D*Kst, 
+                    B+->DD0Kst, B+->DstD0Kst, 
+                    Lb->LcDKst, Lb->LcDstKst
+
 ! 2014-08-05 - Stefano Perazzini
  - Fix line names for some Charmless WG LineBuilder
 
