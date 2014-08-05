@@ -3,6 +3,15 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-05 - Gerhard Raven
+ - provide, and use vector, interface version of PatFwdTool::xAtReference, PatFwdTool::setXAtReference
+ - update PatForwardTool to use above vector interface (changes results at the permille
+    level as x boundaries are now treated left-right symmetrically)
+ - implement an explicitly vectorized (using gcc vector extension, see
+    https://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html; note that clang
+    supports these as well: http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors), 
+    branch-free version of PatFwdTool::xAtReference, and use it in PatFwdTool::setXAtReference
+
 ! 2014-08-02 - Gerhard Raven
  - specialize PatFwdTool::xAtReference 
 

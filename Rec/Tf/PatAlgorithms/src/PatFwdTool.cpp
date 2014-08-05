@@ -80,7 +80,6 @@ template <typename Iterator, typename Predicate>
 bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator last, Predicate pred ) 
 {
       bool extended = false;
-#if 1
       // unrolled version...
       assert( first <= start );
       assert( start <= stop );
@@ -109,19 +108,6 @@ bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator las
               extended = true;
           }
       }
-#else
-      // original version...
-      for (; first!=last; ++first ) { 
-          auto& value = *first;
-          bool pass{  pred(value)  };
-          if ( pass && ( first < start || stop < first+1 || !value->isSelected() ) ) {
-              start = std::min( start, first   );
-              stop  = std::max( stop,  first+1 );
-              extended = true;
-          }
-          value->setSelected( pass );
-      }
-#endif
       return extended;
 }
 
@@ -235,35 +221,71 @@ StatusCode PatFwdTool::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
-double PatFwdTool::xAtReferencePlane ( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
+#ifdef PATFWDTOOL_VEC
+template <>
+std::array<double ,2> 
+PatFwdTool::xAtReferencePlane<false>( const PatFwdTrackCandidate& track, double z_magnet, PatFwdHit** hit ) const 
+{
+  typedef double vec_d __attribute__ ((vector_size ( 2 * sizeof(double) ))); // vector of two doubles...
 
+  vec_d zHit = { hit[0]->z(), hit[1]->z() };
+  vec_d xHit = { hit[0]->x(), hit[1]->x() };
+   
+  vec_d zMagnet = m_zMagnetParams[3] * xHit * xHit + z_magnet; // why not wait until the driftdistance is included??
+
+  vec_d txz     = { track.xStraight(zMagnet[0]), track.xStraight(zMagnet[1]) };
+  vec_d dxdY    = { hit[0]->hit()->dxDy(), hit[1]->hit()->dxDy() };
+
+  // only OT hits have a non-zero driftDistance. So this is a NOP for everything else...
+  vec_d dd      = { hit[0]->driftDistance(), hit[1]->driftDistance() };
+  xHit += vec_d{ double(int(hit[0]->hasNext())),     double(int(hit[1]->hasNext())) }     * dd;
+  xHit -= vec_d{ double(int(hit[0]->hasPrevious())), double(int(hit[1]->hasPrevious())) } * dd;
+    
+  vec_d dSlope   = ( xHit - txz ) / ( zHit - zMagnet ) - track.slX();
+  vec_d dSl2     = dSlope * dSlope;
+  zMagnet       += m_zMagnetParams[1] * dSl2;
+  vec_d dz       = 1.e-3 * ( zHit - m_zReference );
+  vec_d dyCoef   = dSl2 * track.slY();
+  xHit          +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
+                    - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
+
+  vec_d  xMagnet = { track.xStraight( zMagnet[0] ), track.xStraight( zMagnet[1] ) };
+  xMagnet += ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
+  return  { xMagnet[0], xMagnet[1] };
+}
+#endif
+
+template <bool withoutBField>
+double 
+PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, const PatFwdHit* hit ) const 
+{
   double zHit       = hit->z();
   double xHit       = hit->x();
    
-  if ( hit->hit()->othit() ) {
-    if ( hit->hasNext()     ) xHit += hit->driftDistance();
-    if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
-  }
+  // only othits have a non-zero driftDistance -- zo for the rest this is a NOP
+  auto dd = hit->driftDistance();
+  // bool to int: false -> 0, true -> 1
+  xHit += int( hit->hasNext() )     * dd;
+  xHit -= int( hit->hasPrevious() ) * dd;
 
-  double zMagnet = 0;
-  if (LIKELY(!m_withoutBField)){
-    zMagnet    += m_zMagnetParams[0] +
-			      m_zMagnetParams[2] * track.slX2() +
-			      m_zMagnetParams[4] * track.slY2() +
-			      m_zMagnetParams[3] * hit->x() * hit->x();
-    
-    double dSlope     = ( xHit - track.xStraight( zMagnet) ) / ( zHit - zMagnet ) - track.slX();
-    double dSl2       = dSlope * dSlope;
-    zMagnet          += m_zMagnetParams[1] * dSl2;
-    double dz         = 1.e-3 * ( zHit - m_zReference );
-    double dyCoef     = dSl2 * track.slY();
-    xHit             +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * hit->hit()->dxDy() 
-                         - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
-
+  if (!withoutBField) { // assume sparse conditional constant propagation will eliminate the 'if'...
+      zMagnet += m_zMagnetParams[3] * hit->x() * hit->x();
+        
+      double dSlope     = ( xHit - track.xStraight( zMagnet) ) / ( zHit - zMagnet ) - track.slX();
+      double dSl2       = dSlope * dSlope;
+      zMagnet          += m_zMagnetParams[1] * dSl2;
+      double dz         = 1.e-3 * ( zHit - m_zReference );
+      double dyCoef     = dSl2 * track.slY();
+      xHit             +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * hit->hit()->dxDy() 
+                           - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
   }
   double  xMagnet = track.xStraight( zMagnet );
   return  xMagnet + ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
 }
+
+// explicitly instantiate the two valid versions...
+template double PatFwdTool::xAtReferencePlane<true>  ( const PatFwdTrackCandidate& , double , const PatFwdHit* ) const;
+template double PatFwdTool::xAtReferencePlane<false> ( const PatFwdTrackCandidate& , double , const PatFwdHit* ) const;
 
 double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const PatFwdHit* hit ) {
 
@@ -272,12 +294,8 @@ double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const P
   double zHit       = hit->z();
   double xHit       = hit->x();
    
-  const Tf::OTHit* othit = hit->hit()->othit();
-  
-  if ( othit ) {
-    if ( hit->hasNext()     ) xHit += hit->driftDistance();
-    if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
-  }
+  if ( hit->hasNext()     ) xHit += hit->driftDistance();
+  if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
 
   if (!m_withoutBField){
 

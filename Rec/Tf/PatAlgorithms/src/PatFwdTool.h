@@ -44,8 +44,12 @@ public:
 
 private:
   double storeXAtReferencePlane( PatFwdTrackCandidate& track, const PatFwdHit* hit );
+  template <bool withoutBField>
+  double xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, const PatFwdHit* hit) const;
+  // vectorized -- vector lenght hardwired to 2 for now...
+  template <bool withoutBField>
+  std::array<double,2> xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, PatFwdHit** hits ) const ;
 public:
-  double xAtReferencePlane( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const;
 
   double zReference() const { return m_zReference; }
 
@@ -75,13 +79,44 @@ public:
                       PatFwdHits::const_iterator itBeg,
                       PatFwdHits::const_iterator itEnd ) const;
 
-  template <typename Iter>
-  void updateHitsForTrack ( const PatFwdTrackCandidate& track, Iter&& begin, Iter&& end ) const {
+  template <typename Iterator1, typename Iterator2>
+  void updateHitsForTrack ( const PatFwdTrackCandidate& track, Iterator1&& begin, Iterator2&& end ) const {
       auto z0=m_zReference; 
       auto y0=track.y(-z0);
-      std::for_each( std::forward<Iter>(begin), std::forward<Iter>(end) , [y0,z0,&track](PatForwardHit *hit) {
-        updateHitForTrack( hit, y0, track.ySlope( hit->z()-z0 ) );
+      std::for_each( std::forward<Iterator1>(begin), std::forward<Iterator2>(end) , 
+                     [y0,z0,&track](PatForwardHit *hit) {
+            updateHitForTrack( hit, y0, track.ySlope( hit->z()-z0 ) );
       } );
+  }
+
+#define PATFWDTOOL_VEC 1
+
+  template <typename Iterator1,typename Iterator2>
+  void setXAtReferencePlane( const PatFwdTrackCandidate& track, Iterator1&& begin, Iterator2&& end) const {
+      if (LIKELY(!m_withoutBField)) {
+          auto z_Magnet = zMagnet( track );
+#ifndef  PATFWDTOOL_VEC
+          std::for_each( std::forward<Iterator1>(begin), 
+                         std::forward<Iterator2>(end), 
+                         [&,zMagnet](PatFwdHit* hit) { hit->setProjection( this->xAtReferencePlane<false>(track,z_Magnet,hit) ) ; } );
+#else
+          using iter_t = typename std::decay<Iterator1>::type;
+          iter_t i = std::forward<Iterator1>(begin);
+          for ( ;std::distance( i, end ) % 2 !=0 ;++i ) {
+                i[0]->setProjection( xAtReferencePlane<false>(track,z_Magnet,i[0]) );
+          }
+          for ( ; i!=end; i+=2 ) {
+                auto xRef = xAtReferencePlane<false>(track, z_Magnet, &i[0] );
+                static_assert( xRef.size() == 2, "Incompatible vector size!" );
+                i[0]->setProjection( std::get<0>(xRef) );
+                i[1]->setProjection( std::get<1>(xRef) );
+          }
+#endif
+      } else {
+          std::for_each( std::forward<Iterator1>(begin), 
+                         std::forward<Iterator2>(end), 
+                         [&](PatFwdHit* hit) { hit->setProjection( this->xAtReferencePlane<true>(track,0.0,hit ) ); } );
+      }
   }
 
   double distanceForFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {

@@ -18,6 +18,17 @@
 #include "PatFwdPlaneCounter.h"
 #include "PatFwdRegionCounter.h"
 
+constexpr struct compByX_t {
+  template <typename T> bool operator() (const T* hit, double testVal) const
+  {
+    return hit->hit()->xAtYEq0() < testVal;
+  }
+  template <typename T> bool operator() (double testVal, const T* hit)  const
+  {
+    return testVal < hit->hit()->xAtYEq0();
+  }
+} compByX{};
+
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatForwardTool
 //
@@ -125,7 +136,8 @@ public:
     }
 };
 
-template <typename Iterator> RangeFinder<Iterator> 
+template <typename Iterator> 
+RangeFinder<typename std::decay<Iterator>::type>
 make_RangeFinder( int nPlanes, Iterator&& last) 
 {
     return { nPlanes, std::forward<Iterator>(last) };
@@ -506,7 +518,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     }
   }
   // mark the input tracks and all ancestors as used
-  if(m_FlagUsedSeeds && output.size()>0){
+  if(m_FlagUsedSeeds && !output.empty()){
     const_cast<LHCb::Track&>(seed).setFlag(LHCb::Track::Used,true);
     std::for_each( std::begin(seed.ancestors()), std::end(seed.ancestors()),
                    [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
@@ -519,8 +531,10 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
 
-void PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
+std::pair<PatFwdHits::const_iterator,PatFwdHits::const_iterator>
+PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
 {
+  m_xHitsAtReference.clear();
   auto interval = make_XInterval(track);
   if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
     debug() << "Search X coordinates, xMin " << interval.xMin()
@@ -551,24 +565,29 @@ void PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
         double yRegion = track.yStraight( z );
         if (!regionB->isYCompatible( yRegion, yCompat )) continue;
 
-        double xHitMin = track.xStraight( z ) - interval.xKick( z );
-        xHitMin       -= fabs( yRegion * regionB->sinT() ) + 20.;
+        auto xRange = symmetricRange( track.xStraight(z), 
+                                      interval.xKick( z ) + fabs( yRegion * regionB->sinT() ) + 20. ); 
 
-        for ( PatFwdHit *hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region)) {
-          if (!update(hit,yRegion)) continue;
-
-          double xRef = m_fwdTool->xAtReferencePlane( track, hit );
-          hit->setProjection( xRef );
-
-          if ( xRef >  interval.xMax() ) break;
-          if ( xRef >= interval.xMin() ) m_xHitsAtReference.push_back( hit );
-        }
+        auto hitRange =  m_tHitManager->hitsWithMinX(xRange.min(), sta, lay, region);
+        auto last = std::upper_bound( std::begin(hitRange), std::end(hitRange), xRange.max(), compByX );
+        m_xHitsAtReference.reserve( m_xHitsAtReference.size() + std::distance( std::begin(hitRange), last));
+        auto now = m_xHitsAtReference.size();
+        std::for_each( std::begin(hitRange), last, [&](PatFwdHit* hit) {
+            if (update(hit,yRegion)) m_xHitsAtReference.push_back(hit);
+        } );
+        auto current = std::next( std::begin(m_xHitsAtReference), now );
+        m_fwdTool->setXAtReferencePlane(track, current, std::end(m_xHitsAtReference) );
+        m_xHitsAtReference.erase( std::remove_if( current, std::end(m_xHitsAtReference), [&](const PatForwardHit* hit) {
+                                       return interval.outside(hit->projection());
+                                  } ), 
+                                  std::end(m_xHitsAtReference) );
       }
     }
   }
   std::sort( std::begin(m_xHitsAtReference),
              std::end(m_xHitsAtReference),
              Tf::increasingByProjection<PatForwardHit>() );
+  return { std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) };
 }
 
 //=========================================================================
@@ -581,9 +600,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   PatFwdHits temp; // no need actually for PatFwdHits -- a container with objects which have 'projection', 'planeCode','selected' (and pointer to hit) suffices
 
   //== get position and slope at z=0 from track at zReference (0 for y/ySlope functions)
-  double ty = track.ySlope( 0. );
-  double y0 = track.y( 0. - m_fwdTool->zReference() );  // Extrapolate from back...
-
+  auto ty = track.ySlope( 0. );
+  auto y0 = track.y( 0. - m_fwdTool->zReference() );  // Extrapolate from back...
   auto update = [=](PatFwdHit* hit, double yRegion) {
     if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) return false;;
     updateHitForTrack( hit, y0, ty );
@@ -644,7 +662,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   }
 
   //== Select a coherent group
-  auto bestList = std::make_pair(temp.end(),temp.end());;
+  auto bestList = std::make_pair(temp.end(),temp.end());
   int inbDifferent = 0;
   double size = 1000.;
   int minYPlanes = 4;
@@ -729,13 +747,12 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
 
   m_candidates.clear();
 
-  m_xHitsAtReference.clear();
-  fillXList( track ) ;
+  auto range = fillXList( track ) ;
 
   double xExtrap = track.xStraight( m_fwdTool->zReference() );
   
-  auto itP = std::begin(m_xHitsAtReference);
-  auto sentinel = make_RangeFinder( m_minXPlanes, std::end(m_xHitsAtReference) );
+  auto itP = range.first;
+  auto sentinel = make_RangeFinder( m_minXPlanes, range.second );
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
   while ( sentinel( itP+1 ) ) { //TODO: why the +1 here??? (other than historical reasons)
     auto  predicate = make_predicate(*itP) ;

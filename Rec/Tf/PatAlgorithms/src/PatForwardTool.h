@@ -65,29 +65,29 @@ private:
       double xKick(double z) const { return m_xscale*z-m_offset; }
       double xMin() const { return m_xmin; }
       double xMax() const { return m_xmax; }
+      bool inside(double x) const { return m_xmin <= x && x < m_xmax; }
+      bool outside(double x) const { return x < m_xmin || m_xmax <= x ; }
   };
 
-  double dSlope_kick( double sinTrack ) const {
-      return sinTrack * m_magnetKickParams.first / 
-           ( m_WrongSignPT - sinTrack*m_magnetKickParams.second );
+  double dSlope_kick( double pt, double sinTrack ) const {
+      return sinTrack * m_magnetKickParams.first / ( pt - sinTrack * m_magnetKickParams.second );
   }
 
   XInterval make_XInterval(const PatFwdTrackCandidate& track) const {
       double xExtrap = track.xStraight( m_fwdTool->zReference() );
-      //== calculate if minPt or minMomentum sets the window size
-      double minMom = m_minPt / track.sinTrack();
       //== calculate center of magnet from Velo track
       const double zMagnet =  m_fwdTool->zMagnet( track );
-      const double dSlope =  m_magnetKickParams.first / ( minMom - m_magnetKickParams.second ) ;
-      double maxRange = dSlope*( m_fwdTool->zReference() - zMagnet);
+      //== calculate if minPt or minMomentum sets the window size
+      const double dSlope =  dSlope_kick( m_minPt, track.sinTrack() );
+      const double dz     = m_fwdTool->zReference() - zMagnet;
+      const double maxRange = dSlope*dz;
       double xMin = xExtrap - maxRange;
       double xMax = xExtrap + maxRange;
       
       //== based on momentum a wrong-charge sign window size is defined
       if (m_useMomentumEstimate && !m_withoutBField && track.qOverP() != 0 ) {
         bool useKick { m_UseWrongSignWindow && track.track()->pt()>m_WrongSignPT };
-        double kickRange = useKick ? dSlope_kick(track.sinTrack())*( m_fwdTool->zReference() - zMagnet)
-                         : 0;
+        double kickRange = useKick ? dSlope_kick(m_WrongSignPT, track.sinTrack())*dz : 0;
         if ( UNLIKELY( msgLevel( MSG::DEBUG ) ) ) {
           debug() << "   xExtrap = " << xExtrap
                   << " q/p " << track.qOverP()
@@ -99,15 +99,13 @@ private:
           xMax = xExtrap + kickRange;
         }
       }
-      
       // compute parameters of deltaX as a function of z
-      double deltaXScale  = maxRange  / ( m_fwdTool->zReference() - zMagnet );
-      double deltaXOffset = deltaXScale*zMagnet;
-      return { deltaXScale, deltaXOffset, xMin, xMax };
+      return { dSlope, dSlope*zMagnet, xMin, xMax };
   };
 
 
-  void fillXList( PatFwdTrackCandidate& track );
+  std::pair<PatFwdHits::const_iterator,PatFwdHits::const_iterator> 
+  fillXList( PatFwdTrackCandidate& track );
 
   bool fillStereoList( PatFwdTrackCandidate& track, double tol );
 
