@@ -6,6 +6,11 @@
 # Z02ee signal:    StdAllNoPIDsElectrons, PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05 & pT>10GeV & MM>40GeV
 # Z02ee same sign: StdAllNoPIDsElectrons, PRS>50Mev & E_ECal/P>0.1 & E_HCal/P<0.05 & pT>10GeV & MM>40GeV
 
+__all__ = ('Z02eeConf',
+           'makeCombination',
+           'makeSSCombination',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import Selection
@@ -13,16 +18,31 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsElectrons
 
-confdict_Z02ee = { 'Z02ee_Prescale'  : 1.0,
-                   'Z02ee_Postscale' : 1.0,
-                   'PrsCalMin'      : 50.,
-                   'ECalMin'        :  0.1,
-                   'HCalMax'        :  0.05,
-                   'pT'             : 10.,
-                   'MMmin'          : 40.
-                   }
+#confdict_Z02ee = { 'Z02ee_Prescale'  : 1.0,
+#                   'Z02ee_Postscale' : 1.0,
+#                   'PrsCalMin'      : 50.,
+#                   'ECalMin'        :  0.1,
+#                   'HCalMax'        :  0.05,
+#                   'pT'             : 10.,
+#                   'MMmin'          : 40.
+#                   }
 
-name = 'Z02ee'
+#name = 'Z02ee'
+
+default_config = {
+    'NAME'        : 'Z02ee',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'Z02eeConf',
+    'CONFIG'      : { 'Z02ee_Prescale'  : 1.0,
+                      'Z02ee_Postscale' : 1.0,
+                      'PrsCalMin'      : 50.,
+                      'ECalMin'        :  0.1,
+                      'HCalMax'        :  0.05,
+                      'pT'             : 10.,
+                      'MMmin'          : 40.
+                    },
+    'STREAMS'     : { 'EW' }
+    }
 
 class Z02eeConf( LineBuilder ) :
 
