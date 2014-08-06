@@ -3,10 +3,11 @@
 ################################################################################
 gaudi_subdir(DaVinciTools v23r15)
 
-gaudi_depends_on_subdirs(Phys/DaVinciKernel)
+gaudi_depends_on_subdirs(Phys/DaVinciKernel
+                         Phys/LoKiCore)
 
 gaudi_add_module(DaVinciTools
                  src/*.cpp
-                 LINK_LIBRARIES DaVinciKernelLib)
+                 LINK_LIBRARIES DaVinciKernelLib LoKiCoreLib)
 
 gaudi_install_python_modules()

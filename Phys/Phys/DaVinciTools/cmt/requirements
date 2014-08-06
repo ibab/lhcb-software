@@ -11,6 +11,7 @@ branches          cmt doc src python
 # Used packages. 
 #============================================================================
 use DaVinciKernel    v*   Phys
+use LoKiCore         v*   Phys
 
 # Component library building rule
 #============================================================================
