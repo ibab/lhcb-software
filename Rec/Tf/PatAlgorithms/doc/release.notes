@@ -3,6 +3,13 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2014-09-06 - Sebastian Neubert
+ - make the skipping of used seed tracks optional in PatForwardTool
+   default: do not skip (false)
+	 can be switched on through property skipUsedSeeds
+	 note that a similar mechanism is also present in PatForward (the algorithm)
+
 ! 2014-08-05 - Gerhard Raven
  - provide, and use vector, interface version of PatFwdTool::xAtReference, PatFwdTool::setXAtReference
  - update PatForwardTool to use above vector interface (changes results at the permille

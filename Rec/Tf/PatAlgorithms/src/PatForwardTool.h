@@ -233,6 +233,7 @@ private:
   bool  m_UseWrongSignWindow;
   float m_WrongSignPT;
   bool  m_FlagUsedSeeds;              // flag velo seeds as used if a track is upgraded
+  bool  m_SkipUsedSeeds;              // skip seeds which are flagged as "used" 
   bool  m_nnSwitch;                   // switch on or off NN var. writing
 };
 

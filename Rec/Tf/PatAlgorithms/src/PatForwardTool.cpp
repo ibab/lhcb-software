@@ -199,6 +199,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("UseWrongSignWindow",m_UseWrongSignWindow = false);
   declareProperty("WrongSignPT",m_WrongSignPT = 2000.*Gaudi::Units::MeV);
   declareProperty("FlagUsedSeeds",m_FlagUsedSeeds = false);
+  declareProperty("SkipUsedSeeds",m_SkipUsedSeeds = false);
 
 }
 
@@ -254,8 +255,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   if ( seed.checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
   if ( seed.checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
-  if ( seed.checkFlag( LHCb::Track::Used ) ) return StatusCode::SUCCESS; // indicates this has already successfully been upgraded
-
+  if ( m_SkipUsedSeeds && seed.checkFlag( LHCb::Track::Used ) ) return StatusCode::SUCCESS; // check if seed has already successfully been upgraded
 
   PatFwdTrackCandidate track( &seed );
   if(m_Preselection && seed.pt() < m_PreselectionPT && 0 != track.qOverP()) return StatusCode::SUCCESS;
