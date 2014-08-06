@@ -39,11 +39,12 @@ def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMom
                    , UseWrongSignWindow = True
                    , WrongSignPT = 2000 * MeV
                    , Preselection = useMomEst
-                   , FlagUsedSeeds = True )
+                   )
     return Hlt1Tool( PatForwardTool
                    , name
                    , MinPt = minPt
                    , MinMomentum = minP
+                   , FlagUsedSeeds = True 
                    , **opts 
                    ).createConfigurable( parent )
 

@@ -3,6 +3,14 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2014-08-06 - Sebastian Neubert
+ - move the seed-tagging option for the Forward tools out of the block
+   that is configuring whether or not the momentum estimate is used
+   (the two things are not related)
+   This change goes together with the fix to PatForwardTool
+   in Tf/PatAlgorithms	r176079
+
 ! 2014-07-31 - Gerhard Raven
  - make sure that some forward tool options intended for use with momentum 
    estimate are only set when using the momentum estimate...
