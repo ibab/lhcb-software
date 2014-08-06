@@ -3,8 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-06 - Gerhard Raven
+ - enable vectorization only when using gcc...  icc and clang don't (yet) support all of the
+    extensions used for this.
 
-! 2014-09-06 - Sebastian Neubert
+! 2014-08-06 - Sebastian Neubert
  - make the skipping of used seed tracks optional in PatForwardTool
    default: do not skip (false)
 	 can be switched on through property skipUsedSeeds

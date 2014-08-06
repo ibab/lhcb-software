@@ -13,10 +13,11 @@
 #include "PatKernel/PatForwardHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 
+#ifdef __GNUC__
+#define PATFWDTOOL_VEC 1
+#endif
 
 static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
-class PatFwdFitLine;
-class PatFwdFitParabola;
 
   /** @class PatFwdTool PatFwdTool.h
    *  This tool holds the parameters to extrapolate tracks
@@ -46,9 +47,11 @@ private:
   double storeXAtReferencePlane( PatFwdTrackCandidate& track, const PatFwdHit* hit );
   template <bool withoutBField>
   double xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, const PatFwdHit* hit) const;
-  // vectorized -- vector lenght hardwired to 2 for now...
+#ifdef PATFWDTOOL_VEC
+  // vectorized version -- vector lenght hardwired to 2 for now...
   template <bool withoutBField>
   std::array<double,2> xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, PatFwdHit** hits ) const ;
+#endif
 public:
 
   double zReference() const { return m_zReference; }
@@ -89,7 +92,6 @@ public:
       } );
   }
 
-#define PATFWDTOOL_VEC 1
 
   template <typename Iterator1,typename Iterator2>
   void setXAtReferencePlane( const PatFwdTrackCandidate& track, Iterator1&& begin, Iterator2&& end) const {
@@ -98,7 +100,7 @@ public:
 #ifndef  PATFWDTOOL_VEC
           std::for_each( std::forward<Iterator1>(begin), 
                          std::forward<Iterator2>(end), 
-                         [&,zMagnet](PatFwdHit* hit) { hit->setProjection( this->xAtReferencePlane<false>(track,z_Magnet,hit) ) ; } );
+                         [&,z_Magnet](PatFwdHit* hit) { hit->setProjection( this->xAtReferencePlane<false>(track,z_Magnet,hit) ) ; } );
 #else
           using iter_t = typename std::decay<Iterator1>::type;
           iter_t i = std::forward<Iterator1>(begin);
