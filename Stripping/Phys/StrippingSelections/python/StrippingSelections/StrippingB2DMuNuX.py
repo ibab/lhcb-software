@@ -55,7 +55,7 @@ confdict = {
     ,"BVCHI2DOF"      : 6.0    # adimensiional
     ,"B_D_DZ"         : -0.05  #mm
     ,"BMassMin"       : 2.2 #GeV
-    ,"BMassMax"       : 6.0 #GeV
+    ,"BMassMax"       : 8.0 #GeV
     ,"B_DocaChi2Max"  : 10 #adimensiional
     ###### For D* decays
     ,"Dstar_Chi2"       :  8.0 ## unitless
