@@ -143,8 +143,10 @@ namespace MicroDST
           verbose() << "found table with "<< table->relations().size()
                     << " entries!" << endmsg;
         }
+        // Note makes a new object !!
         TABLE * cloneTable = m_tableCloner(table);
-        DaVinci::Utils::DataObjectGuard guard(cloneTable);
+        // deletes if not saved when leaving scope !
+        DaVinci::Utils::DataObjectGuard guard(cloneTable);  
         if ( msgLevel(MSG::VERBOSE) )
         {
           verbose() << "Going to store relations table from "
@@ -156,10 +158,6 @@ namespace MicroDST
         if ( !cloneTable->relations().empty() )
         {
           this->put( cloneTable, outputLocation );
-        }
-        else
-        {
-          delete cloneTable;
         }
       }
       else
