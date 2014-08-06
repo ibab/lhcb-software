@@ -2,7 +2,7 @@
 # Created    : 2014-08-05
 # Maintainer : DV Maintainer
 #============================================================================
-package           DaVinciCoreTools
+package           ParticleCombiners
 version           v1r0
 
 #============================================================================
@@ -21,8 +21,9 @@ include_path      none
 #============================================================================
 # Component library building rule
 #============================================================================
-library          DaVinciCoreTools    ../src/*.cpp 
+library          ParticleCombiners    ../src/*.cpp 
+
 #============================================================================
 # define component library link options
 #============================================================================
-apply_pattern    component_library library=DaVinciCoreTools
+apply_pattern    component_library library=ParticleCombiners

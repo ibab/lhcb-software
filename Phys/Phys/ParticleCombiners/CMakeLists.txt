@@ -1,12 +1,12 @@
 ################################################################################
-# Package: DaVinciCoreTools
+# Package: ParticleCombiners
 ################################################################################
-gaudi_subdir(DaVinciCoreTools v1r0)
+gaudi_subdir(ParticleCombiners v1r0)
 
 gaudi_depends_on_subdirs(Phys/DaVinciKernel
                          Phys/LoKiArrayFunctors
                          Phys/LoKiPhys)
 
-gaudi_add_module(DaVinciCoreTools
+gaudi_add_module(ParticleCombiners
                  src/*.cpp
                  LINK_LIBRARIES DaVinciKernelLib LoKiArrayFunctorsLib LoKiPhysLib)
