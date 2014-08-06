@@ -10,6 +10,7 @@
    (the two things are not related)
    This change goes together with the fix to PatForwardTool
    in Tf/PatAlgorithms	r176079
+ - enabled counter printing on h≈ß≈çlt2ForwardTracking  
 
 ! 2014-07-31 - Gerhard Raven
  - make sure that some forward tool options intended for use with momentum 

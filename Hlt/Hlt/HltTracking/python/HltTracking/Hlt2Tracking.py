@@ -1108,6 +1108,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         veloOptions = { 'Decode' : RevivedVelo, 'Rerun' : MinimalVelo }
         
         Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
+        Velo.StatPrint = True
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
@@ -1151,12 +1152,15 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
         recoForward.PatForwardTool.SecondLoop = False
+        recoForward.PatForwardTool.SkipUsedSeeds = True
         recoForward.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
         recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
         recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
         recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
         recoForward.PatForwardTool.MinMomentum = 3000
         recoForward.PatForwardTool.MinPt = 300
+        recoForward.StatPrint = True
+        recoForward.PatForwardTool.StatPrint = True
         #recoForward.PatForwardTool.OutputLevel = VERBOSE
      
         if self.getProp("EarlyDataTracking") :
@@ -1172,7 +1176,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions_EarlyData["MinHits"]
             recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions_EarlyData["MinOTHits"]
 
-
+            
         # Add dumper for debugging if needed    
         #forwardDumper = DumpTracks('ForwardDumper',TracksLocation = forwardTrackOutputLocation )
 
