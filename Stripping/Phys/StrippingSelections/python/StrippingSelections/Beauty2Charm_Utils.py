@@ -254,7 +254,7 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     comboCuts = LoKiCuts(['SUMPT','AM'],config).code()
     flightCuts = ['BPVLTIME','DZ1','DZ2']
     if useIP: flightCuts += ['BPVIPCHI2','BPVDIRA']
-    momCuts = [LoKiCuts(['VCHI2DOF'],config).code(),has1TrackChild(),
+    momCuts = [LoKiCuts(['VCHI2DOF', 'BPVCORRM'],config).code(),has1TrackChild(),
                hasTopoChildren(),LoKiCuts(flightCuts,config).code()]
     momCuts = LoKiCuts.combine(momCuts)
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,

@@ -347,14 +347,16 @@ class B2DXBuilder(object):
         '''Makes RS B+ -> D0 mu nu + c.c.'''
         decays = {'B2D0MuNu': ["B+ -> D0 mu+","B- -> D0 mu-"]}
         inputs = {'B2D0MuNu': d2x+ [ self.muons ] }
-        config = deepcopy(self.config)
+#        config = deepcopy(self.config)
+	config = {}
+        config['B2CBBDT_MIN'] = self.config['B2CBBDT_MIN']
         config['AM_MIN'] = '2500*MeV'
         config['AM_MAX'] = '5200*MeV'
         config['VCHI2DOF_MAX'] = '6'
         config['BPVDIRA_MIN'] = '0.999'
-        config['MCORR_MIN'] = '4000*MeV'
-        config['MCORR_MAX'] = '6000*MeV'
-        b2d0munu = makeB2XSels(decays,dname,inputs,config,False)
+        config['BPVCORRM_MIN'] = '4000*MeV'
+        config['BPVCORRM_MAX'] = '6000*MeV'
+        b2d0munu = makeB2XSels(decays,dname,inputs,config,True)
         self.lines.append(ProtoLine(b2d0munu,1.0))
 
     def _makeB2D0Pi(self,dname,d2x,useIP=True):
@@ -397,21 +399,28 @@ class B2DXBuilder(object):
                   'B02DstarK': d2x+self.topoKaons}
         b2dsth = makeB2XSels(decays,dname,inputs,self.config,True,False)
         self.lines.append(ProtoLine(b2dsth,1.0))
-                                    
+
     def _makeB02DstMuNu(self,dname,d2x):
         '''Makes B0 -> D*+- H-+'''
-        decays = {'B02DstarMuNu' : ["B0 -> D*(2010)- mu+","B0 -> D*(2010)+ mu-"]}
-        inputs = {'B02DstarMuNu': d2x + [ self.muons ] }
-        config = deepcopy(self.config)
+        decays = {'B02DstarMuNu'   : ["B0 -> D*(2010)- mu+","B0 -> D*(2010)+ mu-"]}
+        inputs = {'B02DstarMuNu'   : d2x + [ self.muons ]}
+#        config = deepcopy(self.config)
+        config = {}
+        config['B2CBBDT_MIN'] = self.config['B2CBBDT_MIN']
         config['AM_MIN'] = '2500*MeV'
         config['AM_MAX'] = '5200*MeV'
         config['VCHI2DOF_MAX'] = '6'
         config['BPVDIRA_MIN'] = '0.999'
-        config['MCORR_MIN'] = '4000*MeV'
-        config['MCORR_MAX'] = '6000*MeV'
-        b2dstmunu = makeB2XSels(decays,dname,inputs,config,False,False)
+        config['BPVCORRM_MIN'] = '4000*MeV'
+        config['BPVCORRM_MAX'] = '6000*MeV'
+        b2dstmunu = makeB2XSels(decays,dname,inputs,config,True,False)
         self.lines.append(ProtoLine(b2dstmunu,1.0))
-                                    
+
+        decays = {'B02DstarMuNuWS' : ["B0 -> D*(2010)- mu-","B0 -> D*(2010)+ mu+"]}
+        inputs = {'B02DstarMuNuWS' : d2x + [ self.muons ] }
+        b2dstmunu = makeB2XSels(decays,dname,inputs,config,True,False)
+        self.lines.append(ProtoLine(b2dstmunu,0.1))
+
     def _makeB02DstKsH(self,dname,d2x):
         '''Makes B0 -> D*+- H-+ Ks0'''
         decays = {
