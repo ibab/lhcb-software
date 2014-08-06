@@ -80,6 +80,7 @@ public:
   void Clear(char *name);
   void Clear();
   void EORUpdate(int runo);
+  void Update();
   int Lock(void);
   int unLock(void);
   void List();

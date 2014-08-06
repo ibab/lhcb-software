@@ -23,6 +23,7 @@ public:
   void start();
   void Clear();
   void EORUpdate(int runo);
+  void Update();
   void List();
   void stop();
   void setRunNo(int runo);

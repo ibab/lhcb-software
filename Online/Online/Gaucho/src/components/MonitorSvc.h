@@ -119,6 +119,7 @@ public:
 
 
   void updateSvc( const std::string& name, int runno , const IInterface* owner) ;
+  void updatePerSvc();
 //  void updateSvc( const std::string& name, bool runno , const IInterface* owner) {};
 
   /** Update all monitoring information

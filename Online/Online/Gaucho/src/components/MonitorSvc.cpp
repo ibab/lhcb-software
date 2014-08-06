@@ -773,7 +773,10 @@ void MonitorSvc::updateSvc( const string& , int runno, const IInterface*  )
 {
   m_MonSys->EORUpdate(runno);
 }
-
+void MonitorSvc::updatePerSvc()
+{
+  m_MonSys->Update();
+}
 void MonitorSvc::resetHistos( const IInterface*  )
 {
   m_MonSys->Clear();

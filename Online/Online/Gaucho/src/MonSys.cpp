@@ -125,6 +125,17 @@ void MonSys::Clear()
     ss->Clear();
   }
 }
+void MonSys::Update()
+{
+  std::vector <MonSubSys *>::iterator Iter;
+  for ( Iter = Subsyslist->begin( ) ; Iter != Subsyslist->end( ) ; Iter++ )
+  {
+    MonSubSys *ss;
+    ss = *Iter;
+    ss->Update();
+  }
+
+}
 void MonSys::EORUpdate(int runo)
 {
   std::vector <MonSubSys *>::iterator Iter;

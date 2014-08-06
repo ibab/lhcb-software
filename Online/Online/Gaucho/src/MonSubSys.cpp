@@ -243,6 +243,15 @@ void MonSubSys::EORUpdate(int runo)
   m_EORsvc->Update();
 //  dim_unlock();
 }
+void MonSubSys::Update()
+{
+  Lock();
+  m_genSrv->Serialize();
+  unLock();
+//  dim_lock();
+  m_genSrv->Update();
+//  dim_unlock();
+}
 int MonSubSys::Lock(void)
 {
   int status = 1;

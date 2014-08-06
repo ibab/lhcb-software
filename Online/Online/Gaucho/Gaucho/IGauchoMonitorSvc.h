@@ -28,6 +28,7 @@ public:
 
   virtual void updateSvc( const std::string& name, int runno, const IInterface* owner = 0 ) = 0;
   virtual void updateAll( bool endOfRun=false , const IInterface* owner = 0) = 0;
+  virtual void updatePerSvc()=0;
 
   virtual void declareMonRateComplement( int& runNumber, unsigned int& triggerConfigurationKey, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle) = 0;
 
