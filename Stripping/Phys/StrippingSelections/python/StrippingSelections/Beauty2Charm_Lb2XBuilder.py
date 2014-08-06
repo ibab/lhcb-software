@@ -539,14 +539,14 @@ class Lb2XBuilder(object):
 
     def _makeLb2LcDKst(self):
         '''Makes RS Lb -> Lc D+ Kst c.c.'''
-        decays = {'Lb2LcDKst': ["[Lambda_b0 -> Lambda_c+ D- K*(892)]cc"]}
+        decays = {'Lb2LcDKst': ["[Lambda_b0 -> Lambda_c+ D- K*(892)0]cc"]}
         inputs = {'Lb2LcDKst': self.d.hhh_pid+self.lc_pid + self.hh.kpi}
         rs = makeB2XSels(decays,'',inputs,self.config)   
         self.lines.append(ProtoLine(rs,1.0))
 
     def _makeLb2LcDstKst(self):
         '''Makes RS Lb -> Lc D*(2010)+ Kst c.c.'''
-        decays = {'Lb2LcDstKst': ["[Lambda_b0 -> Lambda_c+ D*(2010)- K*(892)]cc"]}
+        decays = {'Lb2LcDstKst': ["[Lambda_b0 -> Lambda_c+ D*(2010)- K*(892)0]cc"]}
         inputs = {'Lb2LcDstKst': self.dst.d0pi_pid+self.lc_pid + self.hh.kpi}
         rs = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(rs,1.0)) 
