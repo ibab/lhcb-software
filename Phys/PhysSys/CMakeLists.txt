@@ -10,7 +10,7 @@ gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/DaVinciMCKernel
                          Phys/DaVinciTools
                          Phys/RelatedInfoTools
-                         Phys/DaVinciCoreTools
+                         Phys/ParticleCombiners
                          Phys/RelatedInfoTools
                          Phys/DaVinciPVTools
                          Phys/DaVinciFilters

@@ -31,7 +31,7 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 use  DaVinciTools       	v23r15   Phys    # ?
 use  RelatedInfoTools           v1r0     Phys    # Anton Poluektov
 use  ExtraInfoTools             v1r0     Phys    # Anton Poluektov
-use  DaVinciCoreTools           v1r0     Phys    # Current DV Maintainer
+use  ParticleCombiners          v1r0     Phys    # ?
 use  DaVinciPVTools             v1r0     Phys    # ?
 use  DaVinciFilters             v1r0     Phys    # ?
 use  DaVinciDecayFinder         v1r0     Phys    # ?
