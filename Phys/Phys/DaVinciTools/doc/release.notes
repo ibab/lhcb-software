@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones
 !============================================================================
 
+! 2014-08-06 - Chris Jones
+ - Disable QM tests. Did not really do much of use, and no longer works
+   with the package broken up. Remove the direct uses of the sub-packages.
+
 ! 2014-08-05 - Chris Jones
  - Break up this monolithic package into a set of more dedicated packages.
     The components remaining in this package are a miscellaneous collection
@@ -11,7 +15,7 @@
   . RelatedInfoTools - Components related to the RelatedInfo framework.
   . ExtraInfoTools   - Components related to the (depreciated) ExtraInfo framework.
   . DaVinciPVTools   - Components related to PVs.
-	. DaVinciFilters   - Compoents related to general filtering
+	. DaVinciFilters   - Components related to general filtering
   . DaVinciDecayFinder - The (depreciated) decay finder.
   . TopologicalTools   - Topological tools.
   . DaVinciOverlapsAndClones - Tools for dealing with clones, duplicates and overlaps.

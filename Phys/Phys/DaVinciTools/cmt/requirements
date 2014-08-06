@@ -10,19 +10,7 @@ branches          cmt doc src python
 
 # Used packages. 
 #============================================================================
-use DaVinciKernel              v*     Phys
-# Sub packages containing tools
-# Might be appropriate to move some of these to Analysis eventually ...
-use DaVinciCoreTools           v*     Phys 
-use RelatedInfoTools           v*     Phys
-use ExtraInfoTools             v*     Phys
-use DaVinciPVTools             v*     Phys
-use DaVinciFilters             v*     Phys
-use DaVinciDecayFinder         v*     Phys
-use TopologicalTools           v*     Phys
-use DaVinciOverlapsAndClones   v*     Phys
-use DaVinciNeutralTools        v*     Phys
-use DaVinciAngleCalculators    v*     Phys
+use DaVinciKernel    v*   Phys
 
 # Component library building rule
 #============================================================================
@@ -34,12 +22,4 @@ library          DaVinciTools    ../src/*.cpp
 apply_pattern component_library library=DaVinciTools
 #============================================================================
 apply_pattern install_python_modules
-#============================================================================
-#QM tests
-private
-# Uses only needed to set up run time environment of tests
-  macro DDDB_use "" QMTest "DDDB  v*  Det"
-  use $(DDDB_use)
-  apply_pattern QMTest
-end_private
 #============================================================================
