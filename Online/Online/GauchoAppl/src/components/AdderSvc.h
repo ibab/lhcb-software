@@ -26,6 +26,7 @@ public:
   StatusCode start();
   StatusCode stop();
   StatusCode finalize();
+  void gotoPause();
   virtual void handle(const Incident&);
 
 private:
@@ -56,6 +57,7 @@ private:
   bool m_isSaver;
   bool m_isEOR;
   bool m_started;
+  bool m_doPause;
   int  m_SaveInterval; //in seconds
   std::string m_MyServiceName;
 };

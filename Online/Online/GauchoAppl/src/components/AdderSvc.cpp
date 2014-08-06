@@ -21,6 +21,14 @@ namespace    {
     tim->timerHandler();
   }
 }
+namespace ADDERSVC
+{
+  void doPause(void *arg)
+  {
+    AdderSvc *tis = (AdderSvc*)arg;
+    tis->gotoPause();
+  }
+}
 
 class MyErrh : public DimErrorHandler
 {
@@ -65,6 +73,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* sl) : Service(name,sl),
   declareProperty("TaskPattern",     m_TaskPattern);
   declareProperty("ServicePattern",  m_ServicePattern);
   declareProperty("ReceiveTimeout",  m_recvtmo=0);
+  declareProperty("GotoPause",  m_doPause=false);
 
   m_started     = false;
   m_SaveTimer   = 0;
@@ -203,6 +212,7 @@ StatusCode AdderSvc::start()
   StringReplace(myservicename, "<node>", nodename);
   const char *dnsnode = getenv("DIM_DNS_NODE");
   std::string ddns(dnsnode ? dnsnode : "");
+  toLowerCase(ddns);
   StringReplace(m_InputDNS,"<node>",nodename);
   StringReplace(m_InputDNS,"<dns>",ddns);
   if (m_OutputDNS.length() != 0)
@@ -214,9 +224,12 @@ StatusCode AdderSvc::start()
   {
     m_OutputDNS = ddns;
   }
-  if (MonAdder::m_ServiceDns == 0)
+  if (m_OutputDNS != ddns)
   {
-    MonAdder::m_ServiceDns = new DimServerDns(m_OutputDNS.c_str());
+    if (MonAdder::m_ServiceDns == 0)
+    {
+      MonAdder::m_ServiceDns = new DimServerDns(m_OutputDNS.c_str());
+    }
   }
   m_errh->start();
   if (m_started) return StatusCode::SUCCESS;
@@ -233,6 +246,12 @@ StatusCode AdderSvc::start()
   else if (m_AdderClass == "counter")
   {
     m_adder = new CounterAdder((char*)myservicename.c_str(), (char*)"Data");
+  }
+  m_adder->setParent(this);
+  m_adder->setPause(m_doPause);
+  if (m_doPause)
+  {
+    m_adder->SetPauseFn(ADDERSVC::doPause,this);
   }
   m_adder->m_IsEOR = false;
   m_adder->m_expandRate = m_expandRate;
@@ -268,6 +287,8 @@ StatusCode AdderSvc::start()
   {
     m_EoRadder = new CounterAdder((char*)myservicename.c_str(), (char*)"EOR");
   }
+  m_EoRadder->setParent(this);
+  m_EoRadder->setPause(false);
   m_EoRadder->m_IsEOR = true;
   m_EoRadder->m_expandRate = false;
   m_EoRadder->m_taskPattern = m_TaskPattern;
@@ -361,7 +382,10 @@ StatusCode AdderSvc::finalize()
   }
   return Service::finalize();
 }
-
+void AdderSvc::gotoPause()
+{
+  m_incidentSvc->fireIncident(Incident(name(),"DAQ_PAUSE"));
+}
 void AdderSvc::handle(const Incident& inc)
 {
   if (inc.type() == "APP_RUNNING")

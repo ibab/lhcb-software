@@ -173,6 +173,7 @@ StatusCode PubSvc::start()
   StringReplace(m_myservicename, "<node>", nodename);
   const char *dnsnode = getenv("DIM_DNS_NODE");
   std::string ddns(dnsnode ? dnsnode : "");
+  toLowerCase(ddns);
   StringReplace(m_InputDNS,"<node>",nodename);
   StringReplace(m_InputDNS,"<dns>",ddns);
   if (m_OutputDNS.length() != 0)
@@ -199,9 +200,12 @@ StatusCode PubSvc::start()
   {
     m_adder = new HistAdder((char*)m_myservicename.c_str(), (char*)"Data");
   }
-  if (m_adder->m_ServiceDns == 0)
+  if (m_OutputDNS != ddns)
   {
-    m_adder->m_ServiceDns = new DimServerDns(m_OutputDNS.c_str());
+    if (m_adder->m_ServiceDns == 0)
+    {
+      m_adder->m_ServiceDns = new DimServerDns(m_OutputDNS.c_str());
+    }
   }
   m_adder->m_IsEOR = false;
   m_adder->m_expandRate = false;
@@ -216,7 +220,10 @@ StatusCode PubSvc::start()
   m_adder->m_monsvc = dynamic_cast<IGauchoMonitorSvc*>(m_pMonitorSvc);
   m_adder->Configure();
   m_AdderSys->Add(m_adder);
-  m_adder->m_ServiceDns->autoStartOn();
+  if (m_adder->m_ServiceDns != 0)
+  {
+    m_adder->m_ServiceDns->autoStartOn();
+  }
   DimServer::start(m_adder->m_ServiceDns);
   m_started = true;
   return StatusCode::SUCCESS;

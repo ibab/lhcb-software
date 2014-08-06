@@ -1,0 +1,36 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFO_OPTIONS"
+//#include "$STATIC_OPTS/SvcMapping.opts"
+
+//ApplicationMgr.SvcOptMapping        += {"DumAligWork"};
+ApplicationMgr.ExtSvc               += {
+					"MonitorSvc",
+          "IncidentSvc"
+//          ,"LHCb::DumAligWork/aaa"
+                                       };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+//ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EventLoopMgr";
+//ApplicationMgr.EventLoop             = "NONE";
+ApplicationMgr.Runable               = "LHCb::DumAligWork/aaa";
+//ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 1;  // 1 of running as daemon
+MessageSvc.OutputLevel               = 5; //@OnlineEnv.OutputLevel;
+
+//MessageSvc.fifoPath                = "$LOGFIFO";
+MessageSvc.LoggerOnly              = false;  // Set to false for stdout
+HistogramPersistencySvc.Warnings   = false;
+
+MonitorSvc.CounterUpdateInterval   = -1;
+
+//Runable.PartitionName     = "LHCb";
+//Runable.DataFileName      = "/home/beat/aligdata.dat";
+//Runabe.ParamFileName      = "/home/beat/aligparams.dat";
+//DumAligWork.PartitionName     = "LHCb";
+//DumAligWork.DataFileName      = "/home/beat/aligdata.dat";
+//DumAligWork.ParamFileName      = "/home/beat/aligparams.dat";
+aaa.PartitionName     = "LHCb";
+aaa.DataFileName      = "/home/beat/aligdata.dat";
+aaa.ParamFileName      = "/home/beat/aligparams.dat";

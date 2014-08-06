@@ -24,6 +24,7 @@ MonAdder::MonAdder()
 {
   m_received    = 0;
   CycleFn       = 0;
+  PauseFn       = 0;
   m_buffersize  = 0;
   m_buffer      = 0;
   m_usedSize    = 0;
@@ -45,6 +46,8 @@ MonAdder::MonAdder()
   m_histo = 0;
 //  m_DimDns = 0;
   m_Dimcmd = 0;
+  m_parentAdderSvc = 0;
+  m_doPause = false;
 }
 
 MonAdder::~MonAdder()
@@ -101,8 +104,11 @@ void MonAdder::Configure()
 //      DimServer::start(m_DimDns, (char*)((RTL::processName()+"/").c_str()));
 //    }
 //  }
-  m_ServiceDns->autoStartOn();
-  DimServer::start(m_ServiceDns,(char*)(("MON_"+RTL::processName()).c_str()));
+  if (m_ServiceDns != 0)
+  {
+    m_ServiceDns->autoStartOn();
+    DimServer::start(m_ServiceDns,(char*) (("MON_" + RTL::processName()).c_str()));
+  }
   m_timer = new AddTimer(this,m_rectmo);
   m_serviceexp = boost::regex(m_servicePattern.c_str(),boost::regex_constants::icase);
   m_taskexp = boost::regex(m_taskPattern.c_str(),boost::regex_constants::icase);
@@ -336,7 +342,10 @@ void MonAdder::NewService(DimInfo *, std::string &TaskName, std::string &Service
     {
       m_Dimcmd = new TimeoutCmd(m_ServiceDns,(char*)m_cmdname.c_str(),this);
     }
-    DimServer::start(m_ServiceDns);
+    if (m_ServiceDns != 0)
+    {
+      DimServer::start(m_ServiceDns);
+    }
   }
   else
   {
@@ -443,6 +452,21 @@ void MonAdder::TimeoutHandler()
   Update();
 //  printf("called Update...\n");
 }
+void MonAdder::i_update()
+{
+  Update();
+  if (CycleFn != 0)
+  {
+    (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
+  }
+  if (m_doPause)
+  {
+    if (PauseFn != 0)
+    {
+      (*PauseFn)(PauseArg);
+    }
+  }
+}
 void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
 {
   unsigned long long tim = gettime();
@@ -452,14 +476,14 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
   {
     printf("[ERROR] No Link from %s. Update counts....\n",h->m_TargetService.c_str());
     m_received++;
-    Update();
+    i_update();
     return;
   }
   if (header->m_magic != SERIAL_MAGIC)
   {
     printf("========> [ERROR] Serial Magic Word Missing  from connection %s\n",h->m_TargetService.c_str());
     m_received++;
-    Update();
+    i_update();
     return;
   }
   INServiceDescr *isvcd;
@@ -562,5 +586,5 @@ void MonAdder::basicAdd(void *buff, int siz, MonInfo *h)
     add(buff,siz,h);
 //    m_received++;
   }
-  Update();
+  i_update();
 }

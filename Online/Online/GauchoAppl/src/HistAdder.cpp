@@ -209,9 +209,9 @@ void HistAdder::Update()
       m_outservice->Update();
       m_updated = true;
     }
-    if (CycleFn!= 0)
-    {
-      (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
-    }
+//    if (CycleFn!= 0)
+//    {
+//      (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
+//    }
   }
 }

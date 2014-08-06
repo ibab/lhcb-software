@@ -15,6 +15,8 @@ use MDF          v* DAQ
 use OnlineKernel v* Online
 use Trending     v* Online
 use Gaucho       v* Online
+use GaudiOnline  v* Online
+use OnlineBase   v* Online
 
 macro_append cppflags ' -fpic '
 macro_append ROOT_linkopts ' -lHist' WIN32 " libHist.lib "
@@ -26,11 +28,13 @@ library GauchoApplLib *.cpp
 apply_pattern linker_library library=GauchoApplLib
 macro_append GauchoApplLib_shlibflags " $(Boost_linkopts_regex) "
 
+macro_append ROOT_linkopts " -lMinuit"
+
 # component library
 library GauchoAppl components/*.cpp
 apply_pattern component_library library=GauchoAppl
 macro_append GauchoAppl_dependencies  " GauchoApplLib "
-macro_append GauchoAppl_shlibflags " $(Boost_linkopts_regex) "
+macro_append GauchoAppl_shlibflags " $(Boost_linkopts_regex) $(ROOT_linkopts ) "
 
 private
 application Addertst group=tests ../src/Test/Addertst.cpp

@@ -144,7 +144,7 @@ namespace AIDA
 class IGauchoMonitorSvc;
 
 class TimeoutCmd;
-
+class AdderSvc;
 class MonAdder
 {
 public:
@@ -154,9 +154,12 @@ public:
   int m_type;
   bool m_updated;
   bool m_disableOutput;
+  bool m_doPause;
   size_t m_expected;
   void *CycleCBarg;
+  void *PauseArg;
   void (*CycleFn)(void*,void*,int, MonMap *, MonAdder *);
+  void (*PauseFn)(void*);
   void *m_buffer;
   int m_buffersize;
   int m_usedSize;
@@ -194,6 +197,7 @@ public:
 //  std::string m_MyName;
 //  std::string m_NamePrefix;
   DimBuffBase *m_oldProf;
+  AdderSvc *m_parentAdderSvc;
 public:
   static DimServerDns *m_ServiceDns;
   TimeoutCmd *m_Dimcmd;
@@ -213,6 +217,9 @@ public:
   void *Allocate(int siz);
   void *ReAllocate(int);
   void SetCycleFn(void CycleCB(void*,void*,int, MonMap *, MonAdder *), void *tis){CycleFn = CycleCB; CycleCBarg = tis;return;}
+  void SetPauseFn(void Pause(void*),void *tis){PauseFn = Pause;PauseArg=tis;return;}
+  void setPause(bool dopause) {m_doPause=dopause;return;}
+  void setParent(AdderSvc *parent){m_parentAdderSvc = parent;return;}
   INServiceDescr *findINService(std::string);
 //  OUTServiceDescr *findOUTService(std::string servc);
   virtual void Configure();
@@ -267,6 +274,7 @@ public:
   void start();
   void stop();
   virtual void Update()=0;
+  virtual void i_update();
 };
 
 
