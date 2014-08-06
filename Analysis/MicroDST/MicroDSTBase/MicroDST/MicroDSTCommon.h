@@ -175,7 +175,8 @@ protected:
   void selectContainers ( const DataObject * obj,
                           std::set<std::string>& names,
                           const unsigned int classID,
-                          const bool forceRead = false );
+                          const bool forceRead = false,
+                          const unsigned int depth = 0 );
 
   /** Returns the full location of the given object in the Data Store
    *

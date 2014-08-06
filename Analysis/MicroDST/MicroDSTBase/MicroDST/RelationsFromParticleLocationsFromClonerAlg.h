@@ -124,33 +124,29 @@ namespace MicroDST
         // If m_relationsBaseName is not empty, use it to deduce possible 
         // TES locations for relations to clone
         if ( !m_relationsBaseName.empty() ) 
-        { 
-          m_relationLocations.insert( relationsLocation((*it)->parent()) );
-        }
+        { m_relationLocations.insert( relationsLocation((*it)->parent()) ); }
         // If the CLID is defined, use this to search for objects of the correct
         // type in the TES at the same level as the particles
-        if ( m_useClassID )
-        {
-          // Get particle location
-          std::string pLoc = objectLocation( (*it)->parent() );
-          // Strip the trailing "/Particles"
-          boost::erase_all( pLoc, "/Particles" );
-          // Load the resulting data node
-          DataObject * node = this -> template getIfExists<DataObject>(pLoc);
-          if ( node )
-          {
-            // Search for objects with the requested CLID below this location
-            this->selectContainers( node, m_relationLocations, TABLE::classID() );
-          }            
-        }
+        if ( m_useClassID ) { this->findByCLID(*it); }
         // type in the TES for each Particle location
         // Recursively find the relations for the daughters
-        const SmartRefVector<LHCb::Particle> & daughters = (*it)->daughters();
-        if ( !daughters.empty() )
-        {
-          this->particleLoop( daughters.begin(), daughters.end() );
-        }
+        this->particleLoop( (*it)->daughters().begin(), (*it)->daughters().end() );
       }
+    }
+
+    void findByCLID( const LHCb::Particle * particle )
+    {
+      // Get particle location
+      std::string pLoc = objectLocation( particle->parent() );
+      // Strip the trailing "/Particles"
+      boost::erase_all( pLoc, "/Particles" );
+      // Load the resulting data node
+      const DataObject * node = this -> template getIfExists<DataObject>(pLoc);
+      if ( node )
+      {
+        // Search for objects with the requested CLID below this location
+        this->selectContainers( node, m_relationLocations, TABLE::classID() );
+      }         
     }
 
     inline std::string relationsLocation( const DataObject * pObj ) const

@@ -42,7 +42,7 @@ namespace MicroDST
 
     StatusCode initialize()
     {
-      StatusCode sc = MicroDSTAlgorithm::initialize();
+      const StatusCode sc = MicroDSTAlgorithm::initialize();
       if ( sc.isFailure() ) return sc;
 
       if ( inputTESLocation().empty() )

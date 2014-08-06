@@ -73,10 +73,9 @@ namespace MicroDST
 
     StatusCode execute()
     {
-      for ( std::vector<std::string>::const_iterator iLoc = this->inputTESLocations().begin();
-            iLoc != this->inputTESLocations().end(); ++iLoc )
+      for ( const auto& loc : this->inputTESLocations() )
       {
-        copyKeyedContainer<CLONER>( niceLocationName(*iLoc), m_cloner );
+        copyKeyedContainer<CLONER>( niceLocationName(loc), m_cloner );
       }
       
       setFilterPassed(true);

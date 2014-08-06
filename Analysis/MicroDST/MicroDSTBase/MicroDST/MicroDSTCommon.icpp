@@ -266,8 +266,11 @@ template <class PBASE>
 void MicroDSTCommon<PBASE>::selectContainers ( const DataObject * obj,
                                                std::set<std::string>& names,
                                                const unsigned int classID,
-                                               const bool forceRead )
+                                               const bool forceRead,
+                                               const unsigned int depth )
 {
+  // protect against infinite recursion (should never happen)
+  if ( depth > 999999 ) { return; } 
   SmartIF<IDataManagerSvc> mgr( this->eventSvc() );
   typedef std::vector<IRegistry*> Leaves;
   Leaves leaves;
@@ -277,7 +280,7 @@ void MicroDSTCommon<PBASE>::selectContainers ( const DataObject * obj,
     for ( const auto& leaf : leaves )
     {
       const std::string& id = leaf->identifier();
-      DataObject* tmp(NULL);
+      DataObject * tmp = NULL;
       if ( forceRead )
       {
         sc = this->eventSvc()->retrieveObject( id, tmp );
@@ -306,7 +309,7 @@ void MicroDSTCommon<PBASE>::selectContainers ( const DataObject * obj,
             this->debug() << " -> Matches target class ID " << classID << endmsg;
           names.insert( id );
         }
-        selectContainers( tmp, names, classID, forceRead );
+        selectContainers( tmp, names, classID, forceRead, depth+1 );
       }
     }
   }
