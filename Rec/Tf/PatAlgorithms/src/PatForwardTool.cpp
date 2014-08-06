@@ -255,7 +255,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   if ( seed.checkFlag( LHCb::Track::Invalid  ) ) return StatusCode::SUCCESS;
   if ( seed.checkFlag( LHCb::Track::Backward ) ) return StatusCode::SUCCESS;
-  if ( m_SkipUsedSeeds && seed.checkFlag( LHCb::Track::Used ) ) return StatusCode::SUCCESS; // check if seed has already successfully been upgraded
+  if ( m_SkipUsedSeeds && seed.checkFlag( LHCb::Track::Used ) ) {  // check if seed has already successfully been upgraded
+    counter("#SkippedUsedSeeds") += 1;
+    return StatusCode::SUCCESS;
+  }
+
+  counter("#Seeds") += 1;
 
   PatFwdTrackCandidate track( &seed );
   if(m_Preselection && seed.pt() < m_PreselectionPT && 0 != track.qOverP()) return StatusCode::SUCCESS;
@@ -524,6 +529,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                    [](const LHCb::Track* anc) { const_cast<LHCb::Track*>(anc)->setFlag(LHCb::Track::Used,true); } );
   }
 
+  counter("#FinishedTracks") += output.size();
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "Finished track" << endmsg;
   return StatusCode::SUCCESS;
 }
