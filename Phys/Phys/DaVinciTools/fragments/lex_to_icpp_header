@@ -1,5 +1,0 @@
-
-${CONSTITUENT}_output = $(src)
-
-${CONSTITUENT} :: ${OBJS}
-
