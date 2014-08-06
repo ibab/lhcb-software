@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-06 - Stefano Perazzini
+ - Updated tests/data/Reco14_*.py
+
 ! 2014-08-05 - Anton Poluektov 
   - Fixed semileptonic B2C control lines
   - Add wrong-sign lines: 

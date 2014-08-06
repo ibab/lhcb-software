@@ -400,5 +400,5 @@ IOHelper('ROOT').inputFiles(['LFN:/lhcb/LHCb/Collision12/FULL.DST/00020736/0000/
 'LFN:/lhcb/LHCb/Collision12/FULL.DST/00024847/0000/00024847_00000078_1.full.dst'
 ], clear=True)
 
-FileCatalog().Catalogs = [ 'xmlcatalog_file:Reco14_Run130390.xml' ]
+FileCatalog().Catalogs = [ 'xmlcatalog_file:$STRIPPINGSELECTIONSROOT/tests/data/Reco14_Run130390.xml' ]
 
