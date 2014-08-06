@@ -16,6 +16,10 @@ gaudi_add_library(DaVinciKernelLib
                   INCLUDE_DIRS Phys/DaVinciUtils
                   LINK_LIBRARIES PhysEvent GaudiAlgLib PartPropLib RelationsLib DaVinciInterfacesLib)
 
+gaudi_add_module(DaVinciKernel
+                 src/component/*.cpp
+                 LINK_LIBRARIES PhysEvent GaudiAlgLib PartPropLib RelationsLib DaVinciInterfacesLib)
+
 gaudi_add_dictionary(DaVinciKernel
                      dict/DaVinciKernelDict.h
                      dict/DaVinciKernelDict.xml
