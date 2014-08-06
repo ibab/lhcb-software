@@ -62,7 +62,9 @@ namespace LHCb
                                               const RelatedInfoMap & map )
     {
       os << "[ ";
-      for ( const auto& i : map ) { os << i.first << "=" << i.second << " "; }
+      for ( LHCb::RelatedInfoMap::const_iterator i = map.begin();
+            i != map.end(); ++i ) 
+      { os << i->first << "=" << i->second << " "; }
       return os << "]";
     }
     

@@ -3,6 +3,10 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+! 2014-08-06 - Chris Jones
+ - Modify the ostream implementation for LHCb::RelatedInfoMap to fix clang33
+   compilation.
+
 ! 2014-08-03 - Chris Jones
  - Some minor improvements to RelatedInfoMap, including an operator 
    ostream << implementation.
