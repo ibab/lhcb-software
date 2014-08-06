@@ -167,7 +167,7 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
         local_tag = partitions[partitions.keys()[0]][0]
 
         homogenEntry = self._findHomogeneous(contributor, date, local_tag, datatypes, patch, description)
-        if forceNewLT or homogenEntry is not None:
+        if forceNewLT or homogenEntry is None:
             note = self._makeEntry("note", contributor, date)
             # Adding new local tag entry element to the root element of release_notes.xml tree
             self._prependEntry(note)

@@ -2,6 +2,9 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2014-08-06 - Liang Sun
+ - Fixed a typo in ReleaseNotes.py
+
 ! 2014-07-30 - Liang Sun
  - More fixes on COOL API compatibility issues with ROOT 6, and additional exception handlings for COOL are added in the Helper.
 
