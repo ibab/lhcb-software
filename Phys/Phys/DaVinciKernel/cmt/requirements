@@ -12,7 +12,6 @@ branches          cmt doc dict src Kernel
 
 # Used packages. 
 #============================================================================
-use Boost             v* LCG_Interfaces 
 use PhysEvent         v* Event
 use PartProp          v* Kernel
 use GaudiAlg          v* 
