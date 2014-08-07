@@ -11,9 +11,9 @@ Exported symbols (use python help!):
    - makePromptJPsi
 '''
 
-__author__ = ['Johannes Albrecht']
-__date__ = '19/07/2010'
-__version__ = '$Revision: 1.2 $'
+__author__ = ['Marc-Olivier Bettler']
+__date__ = '07/08/2014'
+__version__ = '$Revision: 1.3 $'
 
 __all__ = ('Bs2MuMuLinesConf',
            'config_default',
@@ -23,7 +23,9 @@ __all__ = ('Bs2MuMuLinesConf',
            'makeBu',
            'makeBs',
            'makeBd',
-           'makeSS'
+           'makeSS',
+           'makeBs2mmLTUB',
+           'makeBs2KKLTUB'
 #           'makeDetachedJPsi',
 #           'makeDetachedJPsiLoose',
 #           'makePromptJPsi'
@@ -39,7 +41,7 @@ from StrippingUtils.Utils import LineBuilder
 class Bs2MuMuLinesConf(LineBuilder) :
     """
     Builder of:
-     - Bs-> mumu stripping lines: default and loose,
+     - Bs-> mumu stripping lines: default, loose and lifetime unbiased
      - detached JPsi lines: default, loose and prescaled prompt
     
 
@@ -77,7 +79,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
                               'JPsiLinePrescale',
                               'JPsiLooseLinePrescale',
                               'JPsiPromptLinePrescale',
-                              'SSPrescale'             
+                              'SSPrescale',
+                              'Bs2mmLTUBLinePrescale',
+                              'Bs2KKLTUBLinePrescale'             
                               
                               )
     
@@ -94,7 +98,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
         'JPsiLooseLinePrescale'  : 0.1,
         'JPsiPromptLinePrescale' : 0.005,
         'SSPrescale'             : 1 ,
-        
+        'Bs2mmLTUBLinePrescale'  : 1 ,
+        'Bs2KKLTUBLinePrescale' : 1 ,
+
         'MuIPChi2_loose'        :  9,
         'MuTrChi2_loose'        : 10,
         'BIPChi2_loose'         : 64,
@@ -118,6 +124,8 @@ class Bs2MuMuLinesConf(LineBuilder) :
         bs_name=name+'Bs2JPsiPhi'
         bd_name=name+'Bd2JPsiKst'
         ss_name = name+'SS'
+        ltub_name = name+'LTUB'
+        Bs2KKltub_name = name+'Bs2KKLTUB'
 
         self.selDefault = makeDefault(default_name)
 
@@ -138,21 +146,31 @@ class Bs2MuMuLinesConf(LineBuilder) :
 
         self.selSS = makeSS(ss_name)
 
+        self.selLTUB = makeBs2mmLTUB(ltub_name)
+
+        self.selBs2KKLTUB = makeBs2KKLTUB(Bs2KKltub_name)
+
         self.defaultLine = StrippingLine(default_name+"Line",
                                             prescale = config['DefaultLinePrescale'],
                                             postscale = config['DefaultPostscale'],
+                                            MDSTFlag = True,
+                                            RequiredRawEvents = ["Muon"],
                                             algos = [ self.selDefault ]
                                             )
         
         self.wideLine = StrippingLine(wide_name+"Line",
                                       prescale = config['Bs2mmWideLinePrescale'],
                                       postscale = config['DefaultPostscale'],
+                                      MDSTFlag = True,
+                                      RequiredRawEvents = ["Muon"],
                                       algos = [ self.selWide ]
                                       )
         
         self.looseLine = StrippingLine(loose_name+"Line",
                                             prescale = config['LooseLinePrescale'],
                                             postscale = config['DefaultPostscale'],
+                                            MDSTFlag = True,
+                                            RequiredRawEvents = ["Muon"],
                                             algos = [ self.selLoose ]
                                             )
 
@@ -179,7 +197,22 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     postscale = config['DefaultPostscale'],
                                     algos = [ self.selBd ]
                                     )
+        
+        self.ltubLine = StrippingLine(ltub_name+"Line",
+                                    prescale = config['Bs2mmLTUBLinePrescale'],
+                                    postscale = config['DefaultPostscale'],
+                                    MDSTFlag = True,
+                                    RequiredRawEvents = ["Muon"],
+                                    algos = [ self.selLTUB ]
+                                    )
 
+        self.Bs2KKltubLine = StrippingLine(Bs2KKltub_name+"Line",
+                                    prescale = config['Bs2KKLTUBLinePrescale'],
+                                    postscale = config['DefaultPostscale'],
+                                    MDSTFlag = True,
+                                    RequiredRawEvents = ["Muon"],
+                                    algos = [ self.selBs2KKLTUB ]
+                                    )
 
         self.registerLine(self.defaultLine)
         self.registerLine(self.wideLine)
@@ -188,6 +221,8 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.registerLine(self.bsLine)
         self.registerLine(self.bdLine)
         self.registerLine(self.ssLine)
+        self.registerLine(self.ltubLine)
+        self.registerLine(self.Bs2KKltubLine)
 
 def makeDefault(name) :
     """
@@ -513,6 +548,85 @@ def makeDetachedJPsi(name) :
     return Selection (name,
                       Algorithm = DetachedJPsi,
                       RequiredSelections = [ _stdLooseMuons ])
+
+def makeBs2mmLTUB(name) :
+    """
+    Lifetime unbiased Bs2mumu selection object
+    starts from Phys/StdAllLooseMuons
+
+    Please contact Harry Cliff if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    from Configurables import OfflineVertexFitter
+    Bs2MuMuLTUB = CombineParticles("Comine"+name)
+    Bs2MuMuLTUB.DecayDescriptor = "B_s0 -> mu+ mu-"
+    Bs2MuMuLTUB.addTool( OfflineVertexFitter )
+    Bs2MuMuLTUB.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    Bs2MuMuLTUB.OfflineVertexFitter.useResonanceVertex = False
+    Bs2MuMuLTUB.ReFitPVs = True
+    Bs2MuMuLTUB.DaughtersCuts = { "mu+" : "(PT > 500*MeV) & (TRCHI2DOF < 3 )"\
+                                    " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
+                                    " & (PT < 40*GeV)"\
+                                    " & (P < 500*GeV)"\
+                                    " & ( TRGHOSTPROB < 0.3 )" }
+    
+    Bs2MuMuLTUB.CombinationCut = "(ADAMASS('B_s0')<500*MeV)"\
+                                   "& (AMAXDOCA('')<0.3*mm)"
+
+    Bs2MuMuLTUB.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                              "& (ADMASS('B_s0') < 500*MeV )"\
+                              "& (BPVIPCHI2()< 25) "\
+                              "& (BPVLTIME()>0.6*ps)"\
+                              "& (BPVLTIME()<13.248*ps)"\
+                              "& (PT > 500*MeV)"
+                             
+    _stdAllLooseMuons = DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")
+
+    return Selection (name,
+                      Algorithm = Bs2MuMuLTUB,
+                      RequiredSelections = [ _stdAllLooseMuons])
+
+def makeBs2KKLTUB(name) :
+    """
+    Lifetime unbiased Bs2KK selection object
+    starts from Phys/StdAllLooseKaons
+
+    Please contact Harry Cliff if you think of prescaling this line!
+    
+    Arguments:
+    name        : name of the Selection.
+    """
+    from Configurables import OfflineVertexFitter
+    Bs2KKLTUB = CombineParticles("Comine"+name)
+    Bs2KKLTUB.DecayDescriptor = "B_s0 -> K+ K-"
+    Bs2KKLTUB.addTool( OfflineVertexFitter )
+    Bs2KKLTUB.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    Bs2KKLTUB.OfflineVertexFitter.useResonanceVertex = False
+    Bs2KKLTUB.ReFitPVs = True
+    Bs2KKLTUB.DaughtersCuts = { "K+" : "(PT > 500*MeV) & (TRCHI2DOF < 3 )"\
+                                    " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
+                                    " & (PT < 40*GeV)"\
+                                    " & (P < 500*GeV)"\
+                                    " & (TRGHOSTPROB < 0.3 )"\
+                                    " & (PIDK > 5) "}
+    
+    Bs2KKLTUB.CombinationCut = "(ADAMASS('B_s0')<500*MeV)"\
+                                   "& (AMAXDOCA('')<0.3*mm)"
+
+    Bs2KKLTUB.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
+                              "& (ADMASS('B_s0') < 500*MeV )"\
+                              "& (BPVIPCHI2()< 25) "\
+                              "& (BPVLTIME()>0.6*ps)"\
+                              "& (BPVLTIME()<13.248*ps)"\
+                              "& (PT > 500*MeV)"
+                             
+    _stdAllLooseKaons = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles")
+
+    return Selection (name,
+                      Algorithm = Bs2KKLTUB,
+                      RequiredSelections = [ _stdAllLooseKaons])
 
 '''
 def makeDetachedJPsiLoose(name) :

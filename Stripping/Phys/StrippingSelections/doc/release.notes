@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-07 - Harry Cliff
+ - Add two new lifetime unbiased lines to StrippingBs2MuMuLines.py:
+       Bs2MuMuLTUB
+       Bs2KKLTUB
+ - Add MDST support and Muon raw banks to Bs2MuMu Lines
+
 ! 2014-08-06 - Stefano Perazzini
  - Updated tests/data/Reco14_*.py
 
