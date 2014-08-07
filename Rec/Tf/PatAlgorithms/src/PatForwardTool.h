@@ -22,7 +22,7 @@
 
 #include "PatKernel/PatTStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
-
+#include "Kernel/IUsedLHCbID.h"
 
 /** @class PatForwardTool PatForwardTool.h
  *  Tool to extend one Velo (VeloTT) track through the magnet
@@ -187,6 +187,8 @@ private:
   IAddTTClusterTool*                          m_addTTClusterTool;
   std::string                                 m_addTtToolName;
   std::string                                 m_addUtToolName;
+  std::string                                 m_LHCbIDToolName;
+  IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
 
   //== Parameters of the algorithm
   bool   m_secondLoop;

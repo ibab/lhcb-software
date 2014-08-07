@@ -191,6 +191,7 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("StateErrorP",   m_stateErrorP   =  0.15);
 
   declareProperty("AddTTClusterName", m_addTtToolName = "" );
+  declareProperty("UsedLHCbIDToolName",m_LHCbIDToolName = "");
 
   declareProperty( "WithoutBField"         , m_withoutBField         = false);
 
@@ -220,6 +221,12 @@ StatusCode PatForwardTool::initialize ( ) {
   } else {
     m_addTTClusterTool = nullptr;
   }
+
+  if ( "" != m_LHCbIDToolName  ) {
+    m_usedLHCbIDTool = tool<IUsedLHCbID>(m_LHCbIDToolName, this);
+  } else {
+    m_usedLHCbIDTool = nullptr;
+  } 
 
   return StatusCode::SUCCESS;
 }
@@ -551,8 +558,19 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
   double ty = track.slY();
   double y0 = track.yStraight( 0. );
 
+  
+
   auto update = [=](PatForwardHit* hit, double yRegion) { 
     if (hit->hit()->ignore()) return false;;
+    if( m_usedLHCbIDTool != nullptr){
+      //warning() << "Trying to look for used LHCbID" << endmsg;
+      if( m_usedLHCbIDTool->used(hit->hit()->lhcbID())) {
+	// warning() << "Skipping hit because already used" << endmsg;
+	return false; 
+      }
+      // else warning() << "hit not used yet" << endmsg;
+    }
+
     updateHitForTrack( hit, y0, ty);
     if ( !hit->hit()->isYCompatible( yRegion, yCompat ) ) return false;
     hit->setIgnored( false );

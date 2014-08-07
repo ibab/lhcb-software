@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 ! 2014-08-06 - Sebastian Neubert
  - added a few useful counters to PatForwardTool 
+ - added TrackUsedLHCbID tool to PatForwardTool: allows to exclude hits that have already been used elsewhere
 
 ! 2014-08-06 - Gerhard Raven
  - enable vectorization only when using gcc...  icc and clang don't (yet) support all of the
