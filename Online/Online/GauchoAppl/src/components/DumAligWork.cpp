@@ -35,6 +35,7 @@ extern "C"
       run_count++;
       WorkInstance->ReadParams();
       if (run_count == 1) sleep(10);
+      else sleep(1);
       WorkInstance->i_run();
 //      WorkInstance->incidentSvc()->fireIncident(Incident(WorkInstance->name(),"DAQ_PAUSE"));
     }
