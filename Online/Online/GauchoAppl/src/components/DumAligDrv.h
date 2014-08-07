@@ -39,7 +39,6 @@ namespace LHCb
       std::string m_ParamFileName;
       std::vector<std::string> m_CounterNames;
       std::string m_CntDNS;
-      BRTLLock *m_Lock;
   };
   class DumAligDrv: public OnlineService, virtual public IRunable
   {
@@ -54,6 +53,8 @@ namespace LHCb
       virtual StatusCode run();
       virtual StatusCode stop();
       virtual StatusCode pause();
+      virtual void setRunOnce();
+      virtual void waitRunOnce();
 //      double analyze();
       virtual void handle(const Incident& inc);
 //  unsigned long long m_prevupdate;
@@ -68,7 +69,7 @@ namespace LHCb
       std::vector<double> m_dat_x;
       std::vector<double> m_dat_y;
       std::vector<double> m_dat_dy;
-
+      bool m_runonce;
       std::vector<double> m_params;
       TMinuit *m_Minuit;
       IGauchoMonitorSvc *m_MonSvc;

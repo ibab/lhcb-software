@@ -34,12 +34,31 @@ extern "C"
   {
     DrvInstance->m_fitter->write_params(npar,params);
     DrvInstance->incidentSvc()->fireIncident(Incident(DrvInstance->name(),"DAQ_CONTINUE"));
-    DrvInstance->m_fitter->m_Lock->lockMutex();
+    DrvInstance->waitRunOnce();
+//    DrvInstance->m_fitter->m_Lock->lockMutex();
     fval = DrvInstance->m_fitter->getIterationResult();
-    DrvInstance->m_fitter->m_Lock->unlockMutex();
+//    DrvInstance->m_fitter->m_Lock->unlockMutex();
     return;
   };
 };
+
+void DumAligDrv::waitRunOnce()
+{
+  while (1)
+  {
+    if (m_runonce)
+    {
+      m_runonce= false;
+      break;
+    }
+    usleep(500000);
+  }
+}
+void DumAligDrv::setRunOnce()
+{
+  m_runonce=true;
+}
+
 
 StatusCode DumAligDrv::stop()
 {
@@ -47,8 +66,9 @@ StatusCode DumAligDrv::stop()
 }
 StatusCode DumAligDrv::pause()
 {
-  m_fitter->m_Lock->unlockMutex();
-  m_fitter->m_Lock->lockMutex();
+  setRunOnce();
+//  m_fitter->m_Lock->unlockMutex();
+//  m_fitter->m_Lock->lockMutex();
   return StatusCode::SUCCESS;
 }
 
@@ -142,7 +162,7 @@ DumAligDrv::DumAligDrv(const std::string& name, ISvcLocator* sl) : OnlineService
   declareProperty("CounterNames",m_CounterNames={"aaa/Chi2"});
   declareProperty("CounterDNS",m_CntDNS="mona08");
   declareProperty("CounterTask",m_CntTask="LHCbA_AligWrk_00");
-
+  m_runonce = false;
   DrvInstance = this;
 }
 
@@ -169,15 +189,11 @@ Fitter::Fitter(DumAligDrv *t,std::string Pfname)
   m_CntTaskName = t->m_CntTask;
   m_CounterNames = t->m_CounterNames;
   m_CntDNS = t->m_CntDNS;
-  m_Lock = 0;
 }
 
 StatusCode Fitter::init()
 {
 //  m_Minuit = new TMinuit(100);
-  m_Lock=new BRTLLock();
-  m_Lock->m_name = "Pause-Continue Lock";
-  m_Lock->lockMutex();
   m_cntTask = new CounterTask(m_CntTaskName,m_CntDNS);
   int npar;
   std::vector<double> ps;
