@@ -8,6 +8,12 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-07 - Chris Jones
+ - Rename QM tests starting with 'ostap_' so its clear in the nightlies which
+   package they refer to.
+ - Extend time limit for ostap_other test to see if that fixes nightlies
+   failure.
+
 ! ========================= Ostap v1r2p1 2014-07-30 =======================
 
 ! 2014-07-31 - Vanya Belyaev
