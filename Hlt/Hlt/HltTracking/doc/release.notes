@@ -6,6 +6,7 @@
 
 ! 2014-08-7 - Sebastian Neubert
  - fixed wrong call to StatPrint in Hlt2Tracking
+ - Forward track resurrection: Added check for already used TStation hits
 
 ! 2014-08-06 - Sebastian Neubert
  - move the seed-tagging option for the Forward tools out of the block

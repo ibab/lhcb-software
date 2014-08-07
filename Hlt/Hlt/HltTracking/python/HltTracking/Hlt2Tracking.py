@@ -1108,13 +1108,17 @@ class Hlt2Tracking(LHCbConfigurableUser):
         veloOptions = { 'Decode' : RevivedVelo, 'Rerun' : MinimalVelo }
         
         Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
-        
+
+        from Configurables import DumpTracks
+        #veloDumper = DumpTracks('VeloDumper',TracksLocation = veloTracksOutputLocation )
+        #veloDumper.StatPrint = True
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
-        bm_members      = Velo.members()
+        bm_members      =  Velo.members() #+ [ veloDumper ] 
         bm_output       = veloTracksOutputLocation
-    
+        
+        
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
     #########################################################################################
     #
@@ -1152,16 +1156,25 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
         recoForward.PatForwardTool.SecondLoop = False
-        recoForward.PatForwardTool.SkipUsedSeeds = True
         recoForward.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions["MaxChi2"]
         recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
         recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
         recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
         recoForward.PatForwardTool.MinMomentum = 3000
         recoForward.PatForwardTool.MinPt = 300
+        # look for already used TStation hits if we are in resurrection mode
+        Hlt1TrackOption = Hlt2Conf().getProp("Hlt1TrackOption")
+        if Hlt1TrackOption in ['Decode','Encode-Decode'] :
+            recoForward.PatForwardTool.SkipUsedSeeds = True
+            from Configurables import TrackUsedLHCbID
+            recoForward.PatForwardTool.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+            recoForward.PatForwardTool.UsedLHCbIDToolName="TrackUsedLHCbID"
+            recoForward.PatForwardTool.TrackUsedLHCbID.inputContainers=["Hlt2/Track/Forward"]
+            recoForward.PatForwardTool.TrackUsedLHCbID.selectorNames=['ForwardSelector']
+        # make them a bit more verbose
         recoForward.StatPrint = True
         recoForward.PatForwardTool.StatPrint = True
-        #recoForward.PatForwardTool.OutputLevel = VERBOSE
+        #recoForward.PatForwardTool.OutputLevel = DEBUG
      
         if self.getProp("EarlyDataTracking") :
             from HltTracking.HltReco import CommonForwardTrackingOptions_EarlyData 
@@ -1175,19 +1188,21 @@ class Hlt2Tracking(LHCbConfigurableUser):
             recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions_EarlyData["MaxChi2Track"]
             recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions_EarlyData["MinHits"]
             recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions_EarlyData["MinOTHits"]
-
             
         # Add dumper for debugging if needed    
         #forwardDumper = DumpTracks('ForwardDumper',TracksLocation = forwardTrackOutputLocation )
+        #forwardDecoDumper = DumpTracks('ForwardDecoDumper',TracksLocation = "Hlt2/Track/Forward" )
 
         # Build the sequences according to whether or not we reuse tracks from HLT1
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
-        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2TrackerDecoding().members() 
-        Hlt1TrackOption = Hlt2Conf().getProp("Hlt1TrackOption")
+        bm_members      = self.__hlt2VeloTracking().members() + self.__hlt2TrackerDecoding().members()
+        
         if Hlt1TrackOption in ['Decode','Encode-Decode'] :
-            bm_members += RevivedForward.members() 
-        bm_members += [recoForward]
+            bm_members += RevivedForward.members()  
+            #bm_members += [forwardDecoDumper]
+        bm_members +=  [recoForward]
+        #bm_members +=  [forwardDumper]
         bm_output       = forwardTrackOutputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
