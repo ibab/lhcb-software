@@ -34,7 +34,7 @@ extern "C"
 //      lib_rtl_unlock(WorkInstance->m_Lock);
       run_count++;
       WorkInstance->ReadParams();
-      sleep(10);
+      if (run_count == 1) sleep(10);
       WorkInstance->i_run();
 //      WorkInstance->incidentSvc()->fireIncident(Incident(WorkInstance->name(),"DAQ_PAUSE"));
     }

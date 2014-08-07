@@ -209,10 +209,11 @@ StatusCode Fitter::init()
   read_params(npar,ps);
   for (size_t i=0;i<ps.size();i++)
   {
-    char nam[1];
+    char nam[2];
     char ii;
     ii = char(i);
     nam[0] = 'a'+ii;
+    nam[1] = 0;
     m_Minuit->DefineParameter(i,nam,ps[i],20.0,-100.0,100.0);
   };
   return StatusCode::SUCCESS;
