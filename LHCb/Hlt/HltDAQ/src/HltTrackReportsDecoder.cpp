@@ -175,13 +175,13 @@ StatusCode HltTrackReportsDecoder::execute()
             decodeTracks( completeBank.get(), bankSize, *outputTracks );
         }
 
+	counter( entry.first ) += outputTracks->size();
         // for debug purposes print the contents of the outputLocation
         if ( msgLevel( MSG::VERBOSE ) ) {
             verbose() << "----------------------------------------\n";
             verbose() << "Decoded event " << m_callcount << endmsg;
             verbose() << "Decoding source id " << entry.second << " into TES " << entry.first <<endmsg;
             verbose() << outputTracks->size() << " Resurrected tracks: \n";
-            counter( "#Tracks" ) += outputTracks->size();
             std::for_each( std::begin(*outputTracks), std::end(*outputTracks),
                 [&](const LHCb::Track* track) {
                 verbose() << *track << endmsg;
