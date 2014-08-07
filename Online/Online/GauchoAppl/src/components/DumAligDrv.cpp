@@ -204,7 +204,6 @@ StatusCode Fitter::init()
   {
     printf("%s\n",m_CounterNames[i].c_str());
   }
-  m_cntTask = new CounterTask(m_CntTaskName,m_CntDNS);
   int npar;
   std::vector<double> ps;
   read_params(npar,ps);
@@ -254,8 +253,19 @@ StatusCode Fitter::de_init()
 double Fitter::getIterationResult()
 {
   std::vector<CntrDescr*> cdesc;
+  if(m_cntTask == 0)
+  {
+    m_cntTask = new CounterTask(m_CntTaskName,m_CntDNS);
+  }
   m_cntTask->Counters(m_CounterNames,cdesc);
-  return cdesc[0]->d_data;
+  if (cdesc.size() > 0)
+  {
+    return cdesc[0]->d_data;
+  }
+  else
+  {
+    printf("No Counters Found...\n");
+  }
 }
 void Fitter::write_params(int npar, std::vector<double> &params)
 {
