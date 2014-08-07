@@ -206,15 +206,15 @@ StatusCode Fitter::init()
   }
   int npar;
   std::vector<double> ps;
-  read_params(npar,ps);
-  for (size_t i=0;i<ps.size();i++)
+  read_params(npar,DrvInstance->m_params);
+  for (size_t i=0;i<DrvInstance->m_params.size();i++)
   {
     char nam[2];
     char ii;
     ii = char(i);
     nam[0] = 'a'+ii;
     nam[1] = 0;
-    m_Minuit->DefineParameter(i,nam,ps[i],0.1,-10.0,10.0);
+    m_Minuit->DefineParameter(i,nam,DrvInstance->m_params[i],0.1,-10.0,10.0);
   };
   return StatusCode::SUCCESS;
 }
@@ -224,7 +224,7 @@ StatusCode Fitter::run()
   int res=m_Minuit->Migrad();
   int npar;
   double par[100],dpar[100];
-  for (int i=0;i<npar;i++)
+  for (int i=0;i<DrvInstance->m_params.size();i++)
   {
     m_Minuit->GetParameter(i,par[i],dpar[i]);
   }
