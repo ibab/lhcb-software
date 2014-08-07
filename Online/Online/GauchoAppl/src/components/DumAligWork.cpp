@@ -205,11 +205,12 @@ double DumAligWork::analyze()
     y = 0.0;
     for (j=0;j<m_params.size();j++)
     {
-      y = x*m_result+m_params[j];
+      y = x*y+m_params[j];
     }
     double chi = (y-m_dat_y[i])/m_dat_dy[i];
     result += chi*chi;
   }
+  m_result = result;
   return result;
 }
 
