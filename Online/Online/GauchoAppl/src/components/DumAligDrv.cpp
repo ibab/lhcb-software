@@ -199,6 +199,11 @@ Fitter::Fitter(DumAligDrv *t,std::string Pfname)
 StatusCode Fitter::init()
 {
 //  m_Minuit = new TMinuit(100);
+  printf("Counter DNS: %s, Counter Task: %s\n Counter Names:\n",m_CntDNS.c_str(),this->m_CntTaskName.c_str());
+  for (int i=0;i<this->m_CounterNames.size();i++)
+  {
+    printf("%s\n",m_CounterNames[i].c_str());
+  }
   m_cntTask = new CounterTask(m_CntTaskName,m_CntDNS);
   int npar;
   std::vector<double> ps;
