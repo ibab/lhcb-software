@@ -44,6 +44,8 @@ StatusCode DumpTracks::execute() {
   info() << "There are " << tracksCont->size() << " tracks in "
          << m_tracksLocation << endmsg;
   
+  counter("#Tracks") += tracksCont->size();
+
   if( msgLevel( MSG::DEBUG ) ) {
     unsigned int numPrinted = 0;
 
