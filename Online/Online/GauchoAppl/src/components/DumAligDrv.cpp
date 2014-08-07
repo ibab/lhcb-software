@@ -139,6 +139,9 @@ DumAligDrv::DumAligDrv(const std::string& name, ISvcLocator* sl) : OnlineService
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCbA");
   declareProperty("ParamFileName",   m_ParamFileName= "/home/beat/aligparams.dat");
+  declareProperty("CounterNames",m_CounterNames={"aaa/Chi2"});
+  declareProperty("CounterDNS",m_CntDNS="mona08");
+  declareProperty("CounterTask",m_CntTask="LHCbA_AligWrk_00");
 
   DrvInstance = this;
 }
@@ -163,6 +166,10 @@ Fitter::Fitter(DumAligDrv *t,std::string Pfname)
   m_parent = t;
   m_ParamFileName = Pfname;
   m_cntTask=0;
+  m_CntTaskName = t->m_CntTask;
+  m_CounterNames = t->m_CounterNames;
+  m_CntDNS = t->m_CntDNS;
+  m_Lock = 0;
 }
 
 StatusCode Fitter::init()
@@ -171,7 +178,7 @@ StatusCode Fitter::init()
   m_Lock=new BRTLLock();
   m_Lock->m_name = "Pause-Continue Lock";
   m_Lock->lockMutex();
-  m_cntTask = new CounterTask("DumAligAdder","ecs03");
+  m_cntTask = new CounterTask(m_CntTaskName,m_CntDNS);
   int npar;
   std::vector<double> ps;
   read_params(npar,ps);
@@ -220,10 +227,8 @@ StatusCode Fitter::de_init()
 
 double Fitter::getIterationResult()
 {
-  std::vector<std::string> cnams;
-  cnams.insert(cnams.end(),"Chi2");
   std::vector<CntrDescr*> cdesc;
-  m_cntTask->Counters(cnams,cdesc);
+  m_cntTask->Counters(m_CounterNames,cdesc);
   return cdesc[0]->d_data;
 }
 void Fitter::write_params(int npar, std::vector<double> &params)

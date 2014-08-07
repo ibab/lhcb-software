@@ -35,7 +35,10 @@ namespace LHCb
       double getIterationResult();
       lib_rtl_thread_t m_thread;
       CounterTask *m_cntTask;
+      std::string m_CntTaskName;
       std::string m_ParamFileName;
+      std::vector<std::string> m_CounterNames;
+      std::string m_CntDNS;
       BRTLLock *m_Lock;
   };
   class DumAligDrv: public OnlineService, virtual public IRunable
@@ -59,6 +62,9 @@ namespace LHCb
       std::string m_DataFileName;
       std::string m_ParamFileName;
       std::string m_SvcName;
+      std::vector<std::string> m_CounterNames;
+      std::string m_CntDNS;
+      std::string m_CntTask;
       std::vector<double> m_dat_x;
       std::vector<double> m_dat_y;
       std::vector<double> m_dat_dy;
