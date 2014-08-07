@@ -105,7 +105,7 @@ StatusCode DumAligDrv::initialize()
   printf("Counter DNS: %s, Counter Task: %s\n Counter Names:\n",m_CntDNS.c_str(),m_CntTask.c_str());
   for (int i=0;i<this->m_CounterNames.size();i++)
   {
-    printf("%\ns",m_CounterNames[i].c_str());
+    printf("%s\n",m_CounterNames[i].c_str());
   }
   m_Minuit = new TMinuit();
   m_fitter = new Fitter(this,this->m_ParamFileName);
