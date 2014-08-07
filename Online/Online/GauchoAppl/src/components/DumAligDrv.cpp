@@ -266,6 +266,7 @@ double Fitter::getIterationResult()
   {
     printf("No Counters Found...\n");
   }
+  return nan("");
 }
 void Fitter::write_params(int npar, std::vector<double> &params)
 {
