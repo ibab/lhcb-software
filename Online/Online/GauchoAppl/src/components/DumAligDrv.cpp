@@ -37,6 +37,12 @@ extern "C"
     DrvInstance->waitRunOnce();
 //    DrvInstance->m_fitter->m_Lock->lockMutex();
     fval = DrvInstance->m_fitter->getIterationResult();
+    printf ("Chi2: Function value: %lf\nParameters:\n");
+    for (int i= 0;i<npar;i++)
+    {
+      printf("Paramter %d %lf\n",i,params[i]);
+    }
+    printf("\n");
 //    DrvInstance->m_fitter->m_Lock->unlockMutex();
     return;
   };
