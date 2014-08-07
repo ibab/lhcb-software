@@ -3,6 +3,10 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2014-08-07 - Gerhard Raven
+ - replace size_t by int to specify layer/station/region -- int more than
+   large enough to enumerate them, and int division is faster than size_t division.
+
 ! 2014-08-01 - Gerhard Raven
  - fix typo
 
