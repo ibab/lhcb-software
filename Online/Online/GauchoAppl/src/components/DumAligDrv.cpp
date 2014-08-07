@@ -241,6 +241,7 @@ StatusCode Fitter::run()
     printf("Param #%d %lf +- %lf\n",par[i],dpar[i]);
     m_Minuit->GetParameter(i,par[i],dpar[i]);
   }
+  fflush(stdout);
   DrvInstance->incidentSvc()->fireIncident(Incident(DrvInstance->name(),"DAQ_STOP"));
   return StatusCode::SUCCESS;
 }
