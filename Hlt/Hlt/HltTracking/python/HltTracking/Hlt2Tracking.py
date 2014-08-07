@@ -1108,7 +1108,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         veloOptions = { 'Decode' : RevivedVelo, 'Rerun' : MinimalVelo }
         
         Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
-        Velo.StatPrint = True
+        
    
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"

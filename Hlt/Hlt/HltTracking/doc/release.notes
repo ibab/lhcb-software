@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-08-7 - Sebastian Neubert
+ - fixed wrong call to StatPrint in Hlt2Tracking
+
 ! 2014-08-06 - Sebastian Neubert
  - move the seed-tagging option for the Forward tools out of the block
    that is configuring whether or not the momentum estimate is used
