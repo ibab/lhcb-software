@@ -105,6 +105,10 @@ namespace  {
         m_target->_declareState(old_state);
         return;
       }
+      else if ( ::strncmp(cmd.c_str(),"incident__",10) == 0 )  {
+        IOCSENSOR.send(m_target, DimTaskFSM::FIRE_INCIDENT, new std::string(cmd.c_str()+10));
+        return;
+      }
       else   {
         m_target->declareState(Target::ST_ERROR);
         m_target->declareSubState(Target::UNKNOWN_ACTION);
@@ -353,6 +357,8 @@ void DimTaskFSM::handle(const Event& ev)  {
         _CASE(ERROR)        sc=declareState(ST_ERROR);                break;
         _CASE(STARTUP_DONE) sc = startupDone();                       break;
         _CASE(CONNECT_DIM)  sc = connectDIM();                        break;
+	_CASE(FIRE_INCIDENT)sc = fireIncident(*(std::string*)ev.data);
+	delete (std::string*)ev.data;                                 break;
         default:  printErr(0,"Got Unkown action request:%d",ev.type); break;
       }
       sc.isSuccess() ? declareSubState(SUCCESS_ACTION) : declareSubState(FAILED_ACTION);
@@ -496,5 +502,10 @@ StatusCode DimTaskFSM::error()  {
   m_continue = false;
   cancel();
   IOCSENSOR.send(this, ERROR);
+  return StatusCode::SUCCESS;
+}
+
+/// Fire an incident from network interrupt
+StatusCode DimTaskFSM::fireIncident(const std::string& )   {
   return StatusCode::SUCCESS;
 }

@@ -182,6 +182,9 @@ namespace LHCb  {
     virtual StatusCode unload();
     /// Invoke transition to error state                ( ****      -> Error   )
     virtual StatusCode error();
+
+    /// Fire an incident from network interrupt
+    virtual StatusCode fireIncident(const std::string& type);
   };
 }
 #endif // ONLINEKERNEL_DIMTASKFSM_H

@@ -220,7 +220,25 @@ void GaudiTask::handle(const Incident& inc)    {
   if ( inc.type() == "DAQ_ERROR" )  {
     IOCSENSOR.send(this,ERROR);
   }
-  if ( inc.type() == "DAQ_ERROR_CLEAR" )  {
+  else if ( inc.type() == "DAQ_CONFIGURE" )  {
+    IOCSENSOR.send(this,CONFIGURE);
+  }
+  else if ( inc.type() == "DAQ_INITIALIZE" )  {
+    IOCSENSOR.send(this,INITIALIZE);
+  }
+  else if ( inc.type() == "DAQ_START" )  {
+    IOCSENSOR.send(this,START);
+  }
+  else if ( inc.type() == "DAQ_STOP" )  {
+    IOCSENSOR.send(this,STOP);
+  }
+  else if ( inc.type() == "DAQ_FINALIZE" )  {
+    IOCSENSOR.send(this,FINALIZE);
+  }
+  else if ( inc.type() == "DAQ_TERMINATE" )  {
+    IOCSENSOR.send(this,TERMINATE);
+  }
+  else if ( inc.type() == "DAQ_ERROR_CLEAR" )  {
     declareState(ST_RUNNING);
   }
   else if ( inc.type() == "DAQ_FATAL" )  {
@@ -232,6 +250,17 @@ void GaudiTask::handle(const Incident& inc)    {
   else if ( inc.type() == "DAQ_CONTINUE" )  {
     if ( !m_ignoreIncident ) continueProcessing();
   }
+}
+
+/// Fire an incident from network interrupt
+StatusCode GaudiTask::fireIncident(const std::string& type)   {
+  if ( m_incidentSvc )  {
+    MsgStream log(msgSvc(), name());
+    Incident incident(name(),type);
+    m_incidentSvc->fireIncident(incident);
+    log << MSG::ALWAYS << "GaudiTask::fireIncident> Fire incident of type:" << type << endmsg;
+  }
+  return StatusCode::SUCCESS;
 }
 
 /// Pause the application  ( RUNNING -> PAUSED )
@@ -364,6 +393,11 @@ int GaudiTask::initApplication()  {
         if ( loc )  {
 	  if ( loc->service("IncidentSvc",m_incidentSvc, true).isSuccess() )  {
 	    Incident incident(name(),"APP_INITIALIZED");
+	    m_incidentSvc->addListener(this,"DAQ_CONFIGURE");
+	    m_incidentSvc->addListener(this,"DAQ_INITIALIZE");
+	    m_incidentSvc->addListener(this,"DAQ_START");
+	    m_incidentSvc->addListener(this,"DAQ_STOP");
+	    m_incidentSvc->addListener(this,"DAQ_FINALIZE");
 	    m_incidentSvc->addListener(this,"DAQ_ERROR");
 	    m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
 	    m_incidentSvc->addListener(this,"DAQ_FATAL");
@@ -411,6 +445,11 @@ int GaudiTask::startApplication()  {
 	  log << MSG::ERROR << "Failed to access incident service." << endmsg;
 	  goto Error;
 	}
+	m_incidentSvc->addListener(this,"DAQ_CONFIGURE");
+	m_incidentSvc->addListener(this,"DAQ_INITIALIZE");
+	m_incidentSvc->addListener(this,"DAQ_START");
+	m_incidentSvc->addListener(this,"DAQ_STOP");
+	m_incidentSvc->addListener(this,"DAQ_FINALIZE");
 	m_incidentSvc->addListener(this,"DAQ_ERROR");
 	m_incidentSvc->addListener(this,"DAQ_ERROR_CLEAR");
 	m_incidentSvc->addListener(this,"DAQ_FATAL");

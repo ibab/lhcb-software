@@ -140,6 +140,10 @@ namespace LHCb  {
     static void lock();
     /// Unlock task object
     static void unlock();
+
+    /// Fire an incident from network interrupt
+    virtual StatusCode fireIncident(const std::string& type);
+
   };
 }
 #endif // ONLINEKERNEL_GAUDITASK_H

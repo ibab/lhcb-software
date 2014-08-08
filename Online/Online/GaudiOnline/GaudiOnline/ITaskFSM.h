@@ -65,7 +65,8 @@ namespace LHCb  {
       CONTINUE,
       ERROR,
       STARTUP_DONE,
-      CONNECT_DIM=1000
+      CONNECT_DIM=1000,
+      FIRE_INCIDENT=1100
     };
     enum State  {
       ST_UNKNOWN   = 'U',
