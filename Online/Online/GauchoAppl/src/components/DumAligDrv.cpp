@@ -231,7 +231,7 @@ StatusCode Fitter::run()
   int res=m_Minuit->Migrad();
   int npar;
   double par[100],dpar[100];
-  printf("%MIGRAD has finished with return code: %d\nParamters:\n",res);
+  printf("MIGRAD has finished with return code: %d\nParamters:\n",res);
   for (int i=0;i<DrvInstance->m_params.size();i++)
   {
     m_Minuit->GetParameter(i,par[i],dpar[i]);
