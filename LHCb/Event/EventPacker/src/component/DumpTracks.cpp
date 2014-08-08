@@ -1,8 +1,8 @@
 // $Id: DumpTracks.cpp,v 1.1 2009-07-10 06:15:55 cattanem Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 // Event Model
 #include "Event/Track.h"
@@ -24,11 +24,12 @@ DECLARE_ALGORITHM_FACTORY(DumpTracks)
 //=============================================================================
 DumpTracks::DumpTracks( const std::string& name,
                         ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+: GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "NumberOfObjectsToPrint", m_numObjects = 5 );
   declareProperty( "TracksLocation", m_tracksLocation = LHCb::TrackLocation::Default );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -37,25 +38,26 @@ DumpTracks::~DumpTracks() {}
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode DumpTracks::execute() {
-
+StatusCode DumpTracks::execute() 
+{
   LHCb::Tracks* tracksCont = get<LHCb::Tracks>( m_tracksLocation );
 
   info() << "There are " << tracksCont->size() << " tracks in "
          << m_tracksLocation << endmsg;
-  
+
   counter("#Tracks") += tracksCont->size();
 
-  if( msgLevel( MSG::DEBUG ) ) {
+  if ( msgLevel( MSG::DEBUG ) ) 
+  {
     unsigned int numPrinted = 0;
 
-    LHCb::Tracks::const_iterator iTrack = tracksCont -> begin();
-    for ( ; iTrack != tracksCont->end(); ++iTrack ) {
-      if( !msgLevel( MSG::VERBOSE ) && ++numPrinted > m_numObjects ) break;
-      debug() << *(*iTrack) << endmsg;
+    for ( const LHCb::Track * track : *tracksCont )
+    {
+      if ( !msgLevel(MSG::VERBOSE) && ++numPrinted > m_numObjects ) break;
+      debug() << *track << endmsg;
     }
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
