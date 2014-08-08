@@ -4,6 +4,9 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2014-08-08 - Chris Jones
+ - Import DecodeSimpleDecayString from DaVinciTools
+
 ! 2014-08-06 - Chris Jones
  - Create a new component library within this package, that contains 'core'
    components. Import DaVinciInit from DaVinciTools.

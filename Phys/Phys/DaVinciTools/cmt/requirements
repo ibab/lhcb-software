@@ -6,7 +6,7 @@ version           v23r15
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src python
+branches          cmt doc src
 
 # Used packages. 
 #============================================================================
@@ -18,9 +18,7 @@ use LoKiCore         v*   Phys
 library          DaVinciTools    ../src/*.cpp
 #============================================================================
 
-# standard patterns (order is essential!)
+# standard patterns
 #============================================================================
 apply_pattern component_library library=DaVinciTools
-#============================================================================
-apply_pattern install_python_modules
 #============================================================================
