@@ -37,10 +37,10 @@ extern "C"
     DrvInstance->waitRunOnce();
 //    DrvInstance->m_fitter->m_Lock->lockMutex();
     fval = DrvInstance->m_fitter->getIterationResult();
-    printf ("Chi2: Function value: %lf\nParameters:\n",fval);
+    printf ("Chi2: Function value: %15g\nParameters:\n",fval);
     for (int i= 0;i<npar;i++)
     {
-      printf("Paramter %d %lf\n",i,params[i]);
+      printf("Paramter %d %15g\n",i,params[i]);
     }
     printf("\n");
     fflush(stdout);
@@ -88,7 +88,7 @@ StatusCode DumAligDrv::start()
 //  while (!feof(f))
 //  {
 //    double p;
-//    fscanf(f,"%lf",&p);
+//    fscanf(f,"%15g",&p);
 //    if (feof(f)) break;
 //    m_params.insert(m_params.end(),p);
 //  }
@@ -235,7 +235,7 @@ StatusCode Fitter::run()
   for (int i=0;i<DrvInstance->m_params.size();i++)
   {
     m_Minuit->GetParameter(i,par[i],dpar[i]);
-    printf("Param #%d %lf +- %lf\n",i,par[i],dpar[i]);
+    printf("Param #%d %15g +- %15g\n",i,par[i],dpar[i]);
   }
   fflush(stdout);
   DrvInstance->incidentSvc()->fireIncident(Incident(DrvInstance->name(),"DAQ_STOP"));
@@ -286,7 +286,7 @@ void Fitter::write_params(int npar, std::vector<double> &params)
   f = fopen(m_ParamFileName.c_str(),"w");
   for (int i=0;i<npar;i++)
   {
-    fprintf(f,"%lf ",params[i]);
+    fprintf(f,"%15g ",params[i]);
   }
   fprintf(f,"\n");
   fclose(f);
@@ -298,7 +298,7 @@ void Fitter::write_params(int npar, double *params)
   f = fopen(m_ParamFileName.c_str(),"w");
   for (int i=0;i<npar;i++)
   {
-    fprintf(f,"%lf ",params[i]);
+    fprintf(f,"%15g ",params[i]);
   }
   fprintf(f,"\n");
   fclose(f);
@@ -313,7 +313,7 @@ void Fitter::read_params(int &npar, std::vector<double> &params)
   while (!feof(f))
   {
     double p;
-    fscanf(f,"%lf",&p);
+    fscanf(f,"%15g",&p);
     if (feof(f)) break;
     i++;
     params.insert(params.end(),p);
