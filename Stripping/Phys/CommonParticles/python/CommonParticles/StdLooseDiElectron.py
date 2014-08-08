@@ -29,7 +29,7 @@ locations = updateDoD(StdLooseDiElectron)
 Using Olivier's Di-Electron Particle Maker
 """
 ###--- From Olivier's ParticleMaker
-from Configurables import DiElectronMaker,ProtoParticleCALOFilter
+from Configurables import DiElectronMaker, ProtoParticleCALOFilter
 from GaudiKernel.SystemOfUnits import *
 dieLL = DiElectronMaker('StdDiElectronFromTracks')
 dieLL.Particle = "J/psi(1S)"

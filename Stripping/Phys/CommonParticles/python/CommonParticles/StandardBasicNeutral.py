@@ -25,6 +25,9 @@ _locations.update ( locations )
 from CommonParticles.StandardEta import *
 _locations.update ( locations )
 
+from CommonParticles.StdLooseDiElectron import *
+_locations.update ( locations )
+
 # redefine the locations 
 locations = _locations
 
