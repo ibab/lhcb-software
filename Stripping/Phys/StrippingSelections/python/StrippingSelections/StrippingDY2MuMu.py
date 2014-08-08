@@ -70,7 +70,7 @@ default_config = {
                       'trkpchi2'      :  0.001,
                       'pid'           : -3.
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : [ 'EW' ]
     }
 
 class DY2MuMuConf( LineBuilder ) :

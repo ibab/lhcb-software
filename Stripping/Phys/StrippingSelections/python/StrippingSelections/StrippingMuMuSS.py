@@ -58,7 +58,7 @@ default_config = {
                       'pT1' :  1.5,
                       'pT2' :  3.
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : ['EW']
     }
 
 

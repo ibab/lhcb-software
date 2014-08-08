@@ -49,7 +49,7 @@ default_config = {
                       'VtxChi2Cut'       : 20.0,
                       'scale'            : 0.05
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : [ 'EW' ]
     }
 
 class InclbJetsLinesConf(LineBuilder) :

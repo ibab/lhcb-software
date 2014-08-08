@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-08 - Stefano Perazzini
+ - fixed test_allstreams_instantiation and test_stream_output_locations
+
 ! 2014-08-07 - Harry Cliff
  - Add two new lifetime unbiased lines to StrippingBs2MuMuLines.py:
        Bs2MuMuLTUB

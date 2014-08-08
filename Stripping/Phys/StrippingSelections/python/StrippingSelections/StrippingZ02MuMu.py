@@ -34,7 +34,7 @@ default_config = {
                       'pT'    : 3.,
                       'MMmin' : 40.
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : [ 'EW' ]
     }
 
 

@@ -37,7 +37,7 @@ default_config = {
                       'pT'    : 20.,
                       'pTlow' : 15.
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : [ 'EW' ]
     }
 
 class SingleTrackTISConf( LineBuilder ) :

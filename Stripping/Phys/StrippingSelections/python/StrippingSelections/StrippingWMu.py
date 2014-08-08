@@ -51,7 +51,7 @@ default_config = {
                       'SingMuon10_pT': 10.,
                       'SingMuon48_pT': 4.8
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : [ 'EW' ]
     }
 
 class WMuConf( LineBuilder ) :

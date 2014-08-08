@@ -54,7 +54,7 @@ default_config = {
                       'PT_DIMUON_MIN'                     : '7500.0',    # MeV/c
                       'VCHI2_DIMUON_MAX'                  : '12'         # dl
                     },
-    'STREAMS'     : { 'Dimuon' }
+    'STREAMS'     : [ 'Dimuon' ]
     }
 
 """

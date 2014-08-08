@@ -41,7 +41,7 @@ default_config = {
                       'pT'             : 10.,
                       'MMmin'          : 40.
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : [ 'EW' ]
     }
 
 class Z02eeConf( LineBuilder ) :

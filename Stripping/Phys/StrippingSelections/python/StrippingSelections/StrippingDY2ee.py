@@ -56,7 +56,7 @@ default_config = {
                       'p3'        : 10.,
                       'p4'        : 10.
                     },
-    'STREAMS'     : { 'EW' }
+    'STREAMS'     : [ 'EW' ]
     }
 
 class DY2eeConf(LineBuilder) :
