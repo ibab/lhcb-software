@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-08 - Vanya Belyaev
+ -  minor improvements in 1D-fits 
+
 ! 2014-08-08 - Chris Jones
  - Add explicit usage of FFTW from the LCG area to try and fix nightlies
    failure.

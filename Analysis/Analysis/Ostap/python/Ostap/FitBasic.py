@@ -390,16 +390,19 @@ class Fit1DBase (object) :
     """
     def __init__ ( self              ,
                    signalset         ,
-                   backgroundset     ) : 
+                   backgroundset     ,
+                   others  = ROOT.RooArgSet() ) : 
         
         #
         self._signal_set     = signalset
         self._background_set = backgroundset
+        self._other_set       = others 
         #
         self._splots = []
 
     def signal_set     ( self ) : return self._signal_set
     def background_set ( self ) : return self._background_set
+    def other_set      ( self ) : return self._other_set
 
     ## adjust PDF with some small positive portion to avoid bad regions...
     def adjust         ( self , value = 1.e-5 ) :
@@ -513,7 +516,20 @@ class Fit1DBase (object) :
                 ROOT.RooFit.LineWidth  ( 2                      ) ,
                 ROOT.RooFit.LineStyle  ( ROOT.kDotted           ) ,
                 ROOT.RooFit.LineColor  ( ROOT.kMagenta          ) )
-            
+
+            i0 = 0 
+            for i in self.other_set() :
+                
+                cmp = ROOT.RooArgSet( i ) 
+                self.pdf .plotOn (
+                    frame ,
+                    ROOT.RooFit.Components ( cmp                    ) , 
+                    ROOT.RooFit.LineWidth  ( 2                      ) ,
+                    ROOT.RooFit.LineStyle  ( ROOT.kDotted           ) ,
+                    ROOT.RooFit.LineColor  ( ROOT.kOrange + i0      ) )
+                i0 += 1
+                
+                
             self.pdf .plotOn (
                 frame ,
                 ROOT.RooFit.LineColor  ( ROOT.kRed              ) )
@@ -614,11 +630,17 @@ class Fit1D (Fit1DBase) :
         i = 1
 
         self.more_components = components
+        self.other_ = ROOT.RooArgSet()
         
+        #
         for c in components :
             
-            if   isinstance ( c ,  ROOT.RooAbsPdf ) : self.alist1.add ( c     ) 
-            elif hasattr    ( c ,'pdf' )            : self.alist1.add ( c.pdf )
+            if   isinstance ( c ,  ROOT.RooAbsPdf ) :
+                self.alist1.add ( c     )
+                self.other_.add ( c     ) 
+            elif hasattr    ( c ,'pdf' )            :
+                self.alist1.add ( c.pdf )
+                self.other_.add ( c.pdf ) 
             else :
                 logger.warning('Unknown component type %s, skip it!' % type(c) )
                 continue 
@@ -633,6 +655,7 @@ class Fit1D (Fit1DBase) :
             self.nums.append ( si ) 
             i += 1
             
+            
         #
         ## final PDF
         # 
@@ -646,7 +669,7 @@ class Fit1D (Fit1DBase) :
         self.ss_ = ROOT.RooArgSet ( self.signal    .pdf )
         self.bs_ = ROOT.RooArgSet ( self.background.pdf ) 
         # 
-        Fit1DBase.__init__ ( self , self.ss_ , self.bs_ ) 
+        Fit1DBase.__init__ ( self , self.ss_ , self.bs_ , self.other_ ) 
         
 
 # =============================================================================
