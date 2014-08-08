@@ -313,7 +313,7 @@ void Fitter::read_params(int &npar, std::vector<double> &params)
   while (!feof(f))
   {
     double p;
-    fscanf(f,"%15g",&p);
+    fscanf(f,"%g",&p);
     if (feof(f)) break;
     i++;
     params.insert(params.end(),p);

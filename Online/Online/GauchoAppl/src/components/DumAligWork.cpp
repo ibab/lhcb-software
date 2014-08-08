@@ -83,7 +83,7 @@ void DumAligWork::ReadParams()
   while (!feof(f))
   {
     double p;
-    fscanf(f,"%15g",&p);
+    fscanf(f,"%g",&p);
     if (feof(f)) break;
     m_params.insert(m_params.end(),p);
   }
@@ -128,7 +128,7 @@ StatusCode DumAligWork::initialize()
   for (i=0;i<ndat;i++)
   {
     double x,y,dy;
-    fscanf(f,"%15g %15g %15g",&x,&y,&dy);
+    fscanf(f,"%g %g %g",&x,&y,&dy);
     m_dat_x.insert(m_dat_x.end(), x);
     m_dat_y.insert(m_dat_y.end(), y);
     m_dat_dy.insert(m_dat_dy.end(), dy);
