@@ -40,7 +40,7 @@ extern "C"
     printf ("Chi2: Function value: %lf\nParameters:\n",fval);
     for (int i= 0;i<npar;i++)
     {
-      printf("Paramter %d %20.10lf\n",i,params[i]);
+      printf("Paramter %d %lf\n",i,params[i]);
     }
     printf("\n");
     fflush(stdout);
@@ -286,7 +286,7 @@ void Fitter::write_params(int npar, std::vector<double> &params)
   f = fopen(m_ParamFileName.c_str(),"w");
   for (int i=0;i<npar;i++)
   {
-    fprintf(f,"%lf20.10 ",params[i]);
+    fprintf(f,"%lf ",params[i]);
   }
   fprintf(f,"\n");
   fclose(f);
@@ -298,7 +298,7 @@ void Fitter::write_params(int npar, double *params)
   f = fopen(m_ParamFileName.c_str(),"w");
   for (int i=0;i<npar;i++)
   {
-    fprintf(f,"%20.10lf ",params[i]);
+    fprintf(f,"%lf ",params[i]);
   }
   fprintf(f,"\n");
   fclose(f);
@@ -313,7 +313,7 @@ void Fitter::read_params(int &npar, std::vector<double> &params)
   while (!feof(f))
   {
     double p;
-    fscanf(f,"%20.10lf",&p);
+    fscanf(f,"%lf",&p);
     if (feof(f)) break;
     i++;
     params.insert(params.end(),p);
