@@ -114,7 +114,7 @@ StatusCode DumAligDrv::initialize()
   {
     printf("%s\n",m_CounterNames[i].c_str());
   }
-  m_Minuit = new TMinuit();
+  m_Minuit = new TMinuit(3);
   m_fitter = new Fitter(this,this->m_ParamFileName);
   m_fitter->m_Minuit = m_Minuit;
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
