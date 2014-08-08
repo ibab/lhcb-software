@@ -22,6 +22,44 @@ DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DumAligDrv)
 
 using namespace LHCb;
 static DumAligDrv *DrvInstance;
+static double gx[101];
+static double gy[101];
+static double gdy[101];
+static int gndat;
+static int analrun = 0;
+
+double analyze(int npar,double *params)
+{
+  if (analrun == 0)
+  {
+    FILE *f=fopen("aligdata.dat","r");
+    fscanf(f,"%d",&gndat);
+    for (int i=0;i<gndat;i++)
+    {
+       fscanf(f,"%lf %lf %lf",&gx[i],&gy[i],&gdy[i]);
+    }
+    fclose(f);
+  }
+  analrun++;
+  double result = 0.0;
+  size_t i;
+  for (i=0;i<gndat;i++)
+  {
+    double x=gx[i];
+    double y;
+    size_t j;
+    y = 0.0;
+    for (j=0;j<npar;j++)
+    {
+      y = x*y+params[j];
+    }
+    double chi = (y-gy[i])/gdy[i];
+    result += chi*chi;
+  }
+  return result;
+}
+
+
 extern "C"
 {
   int FitterThreadFunction(void *t)
@@ -39,10 +77,11 @@ extern "C"
       printf("Paramter %d %15g\n",i,params[i]);
     }
     DrvInstance->incidentSvc()->fireIncident(Incident(DrvInstance->name(),"DAQ_CONTINUE"));
+    double lres = analyze(npar,params);
     DrvInstance->waitRunOnce();
 //    DrvInstance->m_fitter->m_Lock->lockMutex();
     fval = DrvInstance->m_fitter->getIterationResult();
-    printf ("Chi2: Function value: %15g\n",fval);
+    printf ("Chi2: Function value: %15g  Value from local analysis %15g\n",fval,lres);
     printf("\n");
     fflush(stdout);
 //    DrvInstance->m_fitter->m_Lock->unlockMutex();
