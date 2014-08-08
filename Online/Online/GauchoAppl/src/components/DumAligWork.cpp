@@ -89,6 +89,11 @@ void DumAligWork::ReadParams()
   }
   fclose(f);
   printf("Number of Parameters %d\n",m_params.size());
+  for (size_t i=0;i<m_params.size();i++)
+  {
+    printf ("Parameter %d %lf\n",i,m_params[i]);
+  }
+  printf("\n");
 }
 StatusCode DumAligWork::i_continue()
 {
