@@ -1,10 +1,3 @@
-// Include files 
-#include "GaudiKernel/DeclareFactoryEntries.h"
-#include "GaudiKernel/Property.h"
-#include "Kernel/IRelatedInfoTool.h"
-
-#include "boost/algorithm/string.hpp"
-#include "Event/RelatedInfoMap.h"
 
 // local
 #include "AddRelatedInfo.h"
@@ -22,13 +15,14 @@ using namespace Gaudi::Units;
 DECLARE_ALGORITHM_FACTORY( AddRelatedInfo )
 
 //=======================================================================
-AddRelatedInfo::AddRelatedInfo(const std::string& name,
-                             ISvcLocator* pSvcLocator):
-    DaVinciAlgorithm(name, pSvcLocator)
+AddRelatedInfo::AddRelatedInfo( const std::string& name,
+                                ISvcLocator* pSvcLocator )
+: DaVinciAlgorithm ( name, pSvcLocator )
 {
   declareProperty("Tool", m_toolName, "Name of RelatedInfoTool" );
   declareProperty("MaxLevel", m_maxLevel = 0, "Maximum recursion level");
   declareProperty("InfoLocations", m_infoLocations, "Locations of RelatedInfo objects"); 
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=======================================================================
@@ -39,10 +33,18 @@ StatusCode AddRelatedInfo::initialize()
 
   m_tool = tool<IRelatedInfoTool>(m_toolName,this);
 
-  if (!m_tool) {
-    error() << "Tuple not found, name = " << m_toolName << endreq;
-    return StatusCode::FAILURE;
+  // Make sure infoLocations start with /Event/
+  InfoMap tmpMap;
+  for ( const auto & loc : m_infoLocations )
+  {
+    std::string tmpLoc = loc.first;
+    boost::erase_all( tmpLoc, "/Event/" );
+    tmpLoc = "/Event/" + tmpLoc;
+    tmpMap[tmpLoc] = loc.second;
   }
+  m_infoLocations = tmpMap;
+
+  info() << "Info Locations : " << m_infoLocations << endmsg;
   
   return sc;
 }
@@ -59,14 +61,12 @@ StatusCode AddRelatedInfo::execute()
   m_relMap.clear(); 
 
   // Loop over input locations
-  std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
-  std::vector<std::string>::const_iterator endLoc = inputLocations().end();
-  for ( ; iLoc != endLoc; ++iLoc) 
+  for ( const auto& loc : inputLocations() )
   {
-    const std::string location = (*iLoc) + "/Particles";
-
+    const std::string location = loc + "/Particles";
+  
     const Particle::Range parts = getIfExists<Particle::Range>( location );
-    if( parts.empty() ) 
+    if ( parts.empty() ) 
     {
       if (msgLevel(MSG::VERBOSE)) verbose() << "No particles found at " << location << endreq;
       continue;
@@ -75,12 +75,10 @@ StatusCode AddRelatedInfo::execute()
     if (msgLevel(MSG::VERBOSE)) verbose() << " Found "<< parts.size() << " particles" <<endreq;
 
     // Loop over particles in the locations
-    Particle::Range::const_iterator icand;
-    for ( icand = parts.begin(); icand != parts.end(); icand++) {
-
-      Particle* c = const_cast<Particle*>(*icand);
-
-      fill(c, c, 0, *iLoc);
+    for ( const Particle * p : parts )
+    {
+      Particle * c = const_cast<Particle*>(p);
+      fill( c, c, 0, loc );
     }
 
   }
@@ -90,23 +88,28 @@ StatusCode AddRelatedInfo::execute()
 
 //==========================================================================
 
-void AddRelatedInfo::fill(const Particle* top, Particle* c, int level, const std::string &top_location) {
-
-  std::string c_location = c && c->parent() && c->parent()->registry() ?
-                           c->parent()->registry()->identifier() : "NotInTES"; 
-
+void AddRelatedInfo::fill( const Particle* top,
+                           Particle* c, 
+                           const int level, 
+                           const std::string &top_location ) 
+{
+  const std::string c_location = ( c && c->parent() && c->parent()->registry() ?
+                                   c->parent()->registry()->identifier() : "NotInTES" ); 
+ 
   bool isInLocations = false; 
 
   // check if the particle is in the list of info locations
-  std::map<std::string, std::string>::const_iterator iInfoLocation = m_infoLocations.begin(); 
-  for (; iInfoLocation != m_infoLocations.end(); iInfoLocation++) {
-    if (c_location.compare((*iInfoLocation).first) == 0) {
+  for ( const auto& infoLoc : m_infoLocations )
+  {
+    if ( c_location.compare(infoLoc.first) == 0 )
+    {
       isInLocations = true; 
       break;
     }
   }
 
-  if (isInLocations) {
+  if ( isInLocations )
+  {
 
     if (msgLevel(MSG::DEBUG)) debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
 
@@ -115,29 +118,24 @@ void AddRelatedInfo::fill(const Particle* top, Particle* c, int level, const std
 
 //    if (msgLevel(MSG::DEBUG)) debug() << "Key is " << key_location << ", info location is " << m_infoLocations[key_location] << endreq;
 
-    std::string map_location = top_location + "/" + m_infoLocations[c_location];
+    const std::string map_location = top_location + "/" + m_infoLocations[c_location];
     
     if (msgLevel(MSG::DEBUG)) debug() << "GetOrCreate RelatedInfo at " << map_location << endreq;
 
     ParticleInfoRelation* relation = getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location); 
 
-    StatusCode sc = m_tool->calculateRelatedInfo(top, c);
-
-    if (sc.isFailure()) {
-      warning() << "Error calculating related info" << endreq;
+    const StatusCode sc = m_tool->calculateRelatedInfo( top, c );
+    if ( sc.isFailure() ) 
+    {
+      Warning( "Problem calculating related info" ).ignore();
       return;
     }
 
     RelatedInfoMap* map = m_tool->getInfo(); 
 
-    if (msgLevel(MSG::DEBUG)) {
-      debug() << "Got RelatedInfoMap, contents as follows: " << endreq;
-      RelatedInfoMap::iterator i; 
-      for (i = map->begin(); i != map->end(); i++) {
-        short key = (*i).first;
-        float val = (*i).second; 
-        debug() << "  Key = " << key << ", val = " << val << endreq; 
-      }
+    if (msgLevel(MSG::DEBUG))
+    {
+      debug() << "Got RelatedInfoMap : " << *map << endreq;
     }
       
     relation->i_relate(c, *map); 
@@ -147,20 +145,17 @@ void AddRelatedInfo::fill(const Particle* top, Particle* c, int level, const std
   }
 
   // If we reached the maximum recursion level, we're done
-  if (level >= m_maxLevel) return;
+  if ( level >= m_maxLevel ) return;
   
-  // Otherwise loop over the daughters of the particle
-  const SmartRefVector< LHCb::Particle > & daughters = c->daughters();
-
   // -- if the candidate is not a stable particle, call the function recursively
-  if( ! c->isBasicParticle() ) {
-    for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
-      
-      const Particle* const_dau = (*idau);
-      Particle* dau = const_cast<Particle*>(const_dau); 
-    
-      if ( msgLevel(MSG::DEBUG) ) debug() << " Filling RelatedInfo for daughters of ID " << dau->particleID().pid() << endmsg;
-      fill( top, dau, level+1, top_location );
+  if( ! c->isBasicParticle() )
+  {
+    // loop over daughters
+    for ( const auto& const_dau : c->daughters() )
+    {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << " Filling RelatedInfo for daughters of ID " << const_dau->particleID().pid() << endmsg;
+      fill( top, const_cast<Particle*>(&*const_dau), level+1, top_location );
     }
   }
 

@@ -749,6 +749,7 @@ bool RelInfoConeVariablesForEW::isTrackInDecay( const LHCb::Track *track ) {
 
 }
 
-LHCb::RelatedInfoMap* RelInfoConeVariablesForEW::getInfo(void) {
+LHCb::RelatedInfoMap* RelInfoConeVariablesForEW::getInfo(void) 
+{
   return &m_map; 
 }

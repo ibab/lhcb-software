@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-08-08 - Chris Jones
+ - Make sure all info locations in AddRelatedInfo start with "/Event/"
+
 ! 2014-08-05 - Chris Jones
  - First version. Split off from DaVinciTools those components related to the
    'RelatedInfo' framework.

@@ -300,7 +300,8 @@ void RelInfoVertexIsolation::findDaughters2Vertex( const LHCb::Particle *top )
   }
 }
 
-LHCb::RelatedInfoMap* RelInfoVertexIsolation::getInfo(void) {
+LHCb::RelatedInfoMap* RelInfoVertexIsolation::getInfo(void) 
+{
   return &m_map;
 }
 
