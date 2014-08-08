@@ -16,6 +16,7 @@ branches      cmt doc python scripts tests
 # =========== dependencies ====================================================
 use           AnalysisPython v* Phys 
 use           ROOT           v* LCG_Interfaces 
+use           fftw           v* LCG_Interfaces 
 use           PyAna          v* Analysis
 
 # =========== patterns ========================================================

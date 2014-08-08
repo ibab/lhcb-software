@@ -8,6 +8,12 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-08 - Chris Jones
+ - Add explicit usage of FFTW from the LCG area to try and fix nightlies
+   failure.
+ - Remove from cmt directory files that should not have been added to SVN
+   (anything other than the requirements file).
+
 ! 2014-08-08 - Vanya Belyaev
  - few minor fixes 
 
