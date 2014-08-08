@@ -40,7 +40,9 @@ __all__     = (
     'silence'        , ## ditto 
     'rooSilent'      , ## control RooFit verbosity
     'NoContext'      , ## empty context manager
-    'RooSilent'      , ## control RooFit verbosity 
+    'RooSilent'      , ## control RooFit verbosity
+    #
+    'takeIt'         , ## take and later delete ...
     )
 # =============================================================================
 import ROOT, cppyy, time, os,sys ## attention here!!
@@ -661,7 +663,39 @@ class NoContext(object) :
     def __enter__ ( self         ) : return self 
     ## context manager 
     def __exit__  ( self , *args ) : pass  
+
+
+# =============================================================================
+## @class TakeIt#
+#  Take some object, keep it and delete at the exit
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2014-08-03    
+class TakeIt(object):
+    """
+    Take some object, keep it and delete at the exit
+
+    >>> ds = dataset.reduce('pt>1')
+    >>> with takeIt ( ds ) :
+    ...
+    
+    """
+    def __init__  ( self , other ) :
+        self.other = other
         
+    def __enter__ ( self ) : return self.other
+    def __exit__  ( self , *args ) :
+        
+        o = self.other
+        
+        self.other = None 
+        del self.other
+        
+        if o and hasattr ( o , 'reset'  ) : o.reset  ()
+        if o and hasattr ( o , 'Reset'  ) : o.Reset  ()
+        if o and hasattr ( o , 'Delete' ) : o.Delete ()
+        
+        if o : del o
+                        
 # =============================================================================
 ## very simple context manager to duplicate Python-printout into file ("tee")
 #  into separate file
@@ -788,6 +822,23 @@ def rooSilent ( level = ROOT.RooFit.ERROR , silent = True ) :
     """
     return RooSilent ( level , silent ) 
 
+
+
+# =============================================================================
+## Take some object, keep it and delete at the exit
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  date 2014-08-03    
+def takeIt (  other ):
+    """
+    Take some object, keep it and delete at the exit
+    
+    >>> ds = dataset.reduce('pt>1')
+    >>> with takeIt ( ds ) :
+    ...
+    
+    """
+    return TakeIt ( other ) 
+
 # =============================================================================
 ## get all open file descriptors
 #  The actual code is copied from http://stackoverflow.com/a/13624412
@@ -824,6 +875,7 @@ def get_file_names_from_file_number(fds):
     for fd in fds:
         names.append(os.readlink('/proc/self/fd/%d' % fd))
     return names
+
 
 
 # =============================================================================

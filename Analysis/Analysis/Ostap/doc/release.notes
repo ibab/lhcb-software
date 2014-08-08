@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-08 - Vanya Belyaev
+ - few minor fixes 
+
 ! 2014-08-07 - Chris Jones
  - Rename QM tests starting with 'ostap_' so its clear in the nightlies which
    package they refer to.

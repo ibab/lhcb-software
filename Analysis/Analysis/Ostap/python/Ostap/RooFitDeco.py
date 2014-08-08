@@ -79,7 +79,7 @@ ROOT.RooArgList . __repr__      = lambda s : str ( _rs_list_ ( s ) )
 
 # =============================================================================
 ## iterator for RooArgSet
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _ras_iter_ ( self ) :
     """
@@ -148,7 +148,7 @@ ROOT.RooArgSet . __repr__  = lambda s : str ( tuple ( _rs_list_ ( s ) ) )
 
 # =============================================================================
 ## iterator for RooDataSet
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rds_iter_ ( self ) :
     """
@@ -159,7 +159,7 @@ def _rds_iter_ ( self ) :
 
 # =============================================================================
 ## access to the entries in  RooDataSet
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-03-31
 def _rds_getitem_ ( self , i ) :
     """
@@ -177,7 +177,7 @@ ROOT.RooDataSet . __nonzero__   = lambda s   : 0 != len ( s )
         
 # =============================================================================
 ## ``easy'' print of RooFitResult
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_print_ ( self , opts = 'v' ) :
     """
@@ -192,7 +192,7 @@ def _rfr_print_ ( self , opts = 'v' ) :
 
 # =============================================================================
 ## get parameters from RooFitResult
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_params_ ( self , float_only = True ) :
     """
@@ -219,7 +219,7 @@ def _rfr_params_ ( self , float_only = True ) :
 
 # =============================================================================
 ## get parameter by name  from RooFitResult
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_param_  ( self , pname , float_only = False ) :
     """
@@ -234,7 +234,7 @@ def _rfr_param_  ( self , pname , float_only = False ) :
 
 # =============================================================================
 ## get the correlation coefficient
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_corr_  ( self , name1 , name2 ) :
     """
@@ -251,7 +251,7 @@ def _rfr_corr_  ( self , name1 , name2 ) :
 
 # =============================================================================
 ## get the covariance (sub) matrix 
-#  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2011-06-07
 def _rfr_cov_  ( self , name1 , name2 ) :
     """
@@ -264,23 +264,45 @@ def _rfr_cov_  ( self , name1 , name2 ) :
     p1   = self.parameters()[ name1 ]
     p2   = self.parameters()[ name2 ]
     args = ROOT.RooArgList ( p1[1] , p2[1] ) 
-    return self.reducedCovarianceMatrix (  args ) 
+    return self.reducedCovarianceMatrix (  args )
 
+
+# ===============================================================================
+## get fit-parameter as attribute
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-08-03
+def _rfr_getattr_ ( self , att ) :
+    """
+    Get fit-parameter as attribute
+
+    >>> r = ....
+    >>> print r.sigma 
+    """
+    ##
+    pars = self.floatParsFinal()
+    for p in pars :
+        if att == p.GetName() : return p      
+    #
+    pars = self.constPars()
+    for p in pars :
+        if att == p.GetName() : return p
+        
+    raise AttributeError ( 'RooFitResult: invalid attribuite %s ' % att )
 
 # =============================================================================
 
 ## some decoration over RooFitResult
-ROOT.RooFitResult . __repr__   = _rfr_print_
-ROOT.RooFitResult . __str__    = _rfr_print_
-ROOT.RooFitResult . __call__   = _rfr_param_
-ROOT.RooFitResult . parameters = _rfr_params_
-ROOT.RooFitResult . params     = _rfr_params_
-ROOT.RooFitResult . param      = _rfr_param_
-ROOT.RooFitResult . parameter  = _rfr_param_
-ROOT.RooFitResult . corr       = _rfr_corr_
-ROOT.RooFitResult . cor        = _rfr_corr_
-ROOT.RooFitResult . cov        = _rfr_cov_
-ROOT.RooFitResult . parValue   = lambda s,n : s.parameter(n)[0]
+ROOT.RooFitResult . __repr__    = _rfr_print_
+ROOT.RooFitResult . __str__     = _rfr_print_
+ROOT.RooFitResult . __call__    = _rfr_param_
+ROOT.RooFitResult . __getattr__ = _rfr_getattr_ 
+ROOT.RooFitResult . parameters  = _rfr_params_
+ROOT.RooFitResult . params      = _rfr_params_
+ROOT.RooFitResult . param       = _rfr_param_
+ROOT.RooFitResult . parameter   = _rfr_param_
+ROOT.RooFitResult . corr        = _rfr_corr_
+ROOT.RooFitResult . cor         = _rfr_corr_
+ROOT.RooFitResult . parValue    = lambda s,n : s.parameter(n)[0]
 
 # =============================================================================
 ## fix parameter at some value
@@ -350,6 +372,34 @@ ROOT.RooRealVar   . Release   = _rel_par_
 ROOT.RooRealVar   . __float__ = lambda s : s.getVal()
 ## print it in more suitable form 
 ROOT.RooRealVar   . __repr__  = lambda s : "'%s' : %s " % ( s.GetName() , s.ve() )
+
+
+# =============================================================================
+## Prepare ``soft'' constraint for the given variable
+#  @code 
+#    >>> var = ...
+#    >>> excntr = var.constaint( VE(1,0.1**2 ) )
+#  @endcode 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-06-23
+def _rar_make_constraint_ ( v , value ) :
+    """
+    
+    >>> var = ...
+    >>> excntr = var.constaint( VE(1,0.1**2 ) )
+    >>>
+    """
+    vn          = 'Constr(%s)' % v.GetName()
+    vt          = 'Gauissian constraint(%s) at %s' % ( v.GetName() , value )
+    self._cvv   = ROOT.RooFit.RooConst ( val.value () )
+    self._cve   = ROOT.RooFit.RooConst ( val.error () )
+    self._cntr  = ROOT.RooGaussian     ( vn , vt , self , self._cvv , self._cve )
+    #
+    self._cntrs = ROOT.RooArgSet ( self._cntr )
+    #
+    return ROOT.RooFit.ExternalConstraints ( self._cntrs ) 
+
+ROOT.RooAbsReal. constraint = _rar_make_constraint_
 
 # ============================================================================
 ## make a histogram for RooRealVar
@@ -702,12 +752,12 @@ def _ds_project_  ( dataset , histo , what , *args ) :
     
     if isinstance ( what , ROOT.RooArgList ) and isinstance ( histo , ROOT.TH1 ) :
         return dataset.fillHistogram  ( histo , what , *args ) 
-    
+
     store = dataset.store()
-    if store and isinstance ( what , str ) : 
+    if store and isinstance ( what , str ) :
         tree = store.tree()
         if tree : return tree.project ( histo , what , *args ) 
-        
+
     if isinstance ( what , str ) : 
         vars  = [ v.replace(' ','') for v in what.split(':') ]
         return _ds_project_ ( dataset , histo , vars , *args ) 
