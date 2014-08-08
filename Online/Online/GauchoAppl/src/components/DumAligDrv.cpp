@@ -286,7 +286,7 @@ void Fitter::write_params(int npar, std::vector<double> &params)
   f = fopen(m_ParamFileName.c_str(),"w");
   for (int i=0;i<npar;i++)
   {
-    fprintf(f,"%15g ",params[i]);
+    fprintf(f,"%15lf ",params[i]);
   }
   fprintf(f,"\n");
   fclose(f);
@@ -298,7 +298,7 @@ void Fitter::write_params(int npar, double *params)
   f = fopen(m_ParamFileName.c_str(),"w");
   for (int i=0;i<npar;i++)
   {
-    fprintf(f,"%15g ",params[i]);
+    fprintf(f,"%15lf ",params[i]);
   }
   fprintf(f,"\n");
   fclose(f);
@@ -313,7 +313,7 @@ void Fitter::read_params(int &npar, std::vector<double> &params)
   while (!feof(f))
   {
     double p;
-    fscanf(f,"%f",&p);
+    fscanf(f,"%lf",&p);
     if (feof(f)) break;
     i++;
     params.insert(params.end(),p);
