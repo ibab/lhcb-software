@@ -33,9 +33,9 @@ extern "C"
 //      sleep(1);
 //      lib_rtl_unlock(WorkInstance->m_Lock);
       run_count++;
-      WorkInstance->ReadParams();
       if (run_count == 1) sleep(10);
       else sleep(1);
+      WorkInstance->ReadParams();
       WorkInstance->i_run();
 //      WorkInstance->incidentSvc()->fireIncident(Incident(WorkInstance->name(),"DAQ_PAUSE"));
     }
@@ -141,6 +141,7 @@ StatusCode DumAligWork::initialize()
     printf("%15f %15f %15f\n",m_dat_x[i],m_dat_y[i],m_dat_y[i]);
   }
   fclose(f);
+  fflush(stdout);
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
 //  m_Lock = new BRTLLock();
@@ -219,6 +220,8 @@ double DumAligWork::analyze()
   }
   m_result = result;
   return result;
+  printf("Function Result: %15lf",result);
+  fflush (stdout);
 }
 
 DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_result(0),m_MonSvc(0)
