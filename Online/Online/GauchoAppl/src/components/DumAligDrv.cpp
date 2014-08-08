@@ -32,7 +32,7 @@ double analyze(int npar,double *params)
 {
   if (analrun == 0)
   {
-    FILE *f=fopen("aligdata.dat","r");
+    FILE *f=fopen("/home/beat/aligdata.dat","r");
     fscanf(f,"%d",&gndat);
     for (int i=0;i<gndat;i++)
     {
