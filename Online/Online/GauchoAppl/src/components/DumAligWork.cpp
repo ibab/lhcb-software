@@ -83,7 +83,7 @@ void DumAligWork::ReadParams()
   while (!feof(f))
   {
     double p;
-    fscanf(f,"%lf",&p);
+    fscanf(f,"%f20.10",&p);
     if (feof(f)) break;
     m_params.insert(m_params.end(),p);
   }
