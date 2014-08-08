@@ -44,7 +44,7 @@ StatusCode AddRelatedInfo::initialize()
   }
   m_infoLocations = tmpMap;
 
-  info() << "Info Locations : " << m_infoLocations << endmsg;
+  debug() << "Info Locations : " << m_infoLocations << endmsg;
   
   return sc;
 }
