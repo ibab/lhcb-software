@@ -164,7 +164,13 @@ void Machine::handleIoc(const Event& event)   {
     }
 #endif
     if ( isIdle() ) {
-      evaluateWhens();
+      if ( !evaluateWhens() )   {
+	// If no When clause fired, we have to propagate the change of 
+	// the slave state to the master for publishing reasons.
+	// If a when clause fired, the publishing is done during the transition execution 
+	// of the machine.
+	m_meta.execute(this);
+      }
     }
     break;
   case Slave::SLAVE_FAILED:
@@ -218,8 +224,8 @@ bool Machine::evaluateWhens()  {
       if ( res.first && res.first != state() )  {
 	display(INFO,c_name(),"WHEN clause: %s fired. Invoke tramsition to:%s",
 		w->c_name(),res.first->c_name());
-	invokeTransition(res.first,res.second);
-	return true;
+	ErrCond cond = invokeTransition(res.first,res.second);
+	if ( cond == FSM::SUCCESS ) return true;
       }
       else  {
 	display(DEBUG,c_name(),"WHEN clause: %s rejected.",w->c_name());
