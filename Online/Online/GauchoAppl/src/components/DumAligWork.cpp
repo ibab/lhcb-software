@@ -94,6 +94,7 @@ void DumAligWork::ReadParams()
     printf ("Parameter %d %lf\n",i,m_params[i]);
   }
   printf("\n");
+  fflush(stdout);
 }
 StatusCode DumAligWork::i_continue()
 {
