@@ -219,9 +219,9 @@ double DumAligWork::analyze()
     result += chi*chi;
   }
   m_result = result;
-  return result;
   printf("Function Result: %15lf",result);
   fflush (stdout);
+  return result;
 }
 
 DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_result(0),m_MonSvc(0)
