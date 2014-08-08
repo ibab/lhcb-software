@@ -10,9 +10,25 @@
 # 
 #######################################################################
 
+__author__ = [ 'P. Seyfert', 'A. Jaeger', 'G. Krocker',  'S. Wandernoth']
+__date__ = '17/08/2010'
+__version__ = '$Revision: 2.0 $'
+
+__all__ = ('StrippingTrackEffDownMuonConf',
+           'default_config',
+           'TrackEffDownMuon',
+	   'selMuonPParts',
+           'makeMyMuons',
+           'DownJPsi',
+           'selHlt1Jpsi',
+           'selHlt2Jpsi',
+           'trackingDownPreFilter'
+           )
+
 #FIXME Write includes in a cleaner way
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
+from DAQSys.DecoderClass import Decoder
 from Configurables import GaudiSequencer 
 from Configurables import UnpackTrack, ChargedProtoParticleMaker, DelegatingTrackSelector, TrackSelector, BestPIDParticleMaker
 from TrackFitter.ConfiguredFitters import ConfiguredFit
@@ -33,7 +49,6 @@ from GaudiKernel.SystemOfUnits import mm
 
 from GaudiConfUtils.ConfigurableGenerators import TisTosParticleTagger
 from StandardParticles import StdAllLooseMuons
-#from StandardParticles import StdLooseMuons
 from Configurables import GaudiSequencer
 from Configurables import TrackToDST
 from Configurables import TrackSys
@@ -47,27 +62,32 @@ from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
                           SelectionBase )
 
-#name = "TrackEffDownMuonLine"
 
-confdict={
-			'MuMom':		2000.	# MeV
-		,	'MuTMom':		200.	# MeV
-		,	'TrChi2':		10.	# MeV
-		,	'MassPreComb':		2000.	# MeV
-		,	'MassPostComb':		200.	# MeV
-		,	'Doca':			5.	# mm
-		,	'VertChi2':		25.	# adimensional
-                ,       'DataType':             '2011'        
-		,	'NominalLinePrescale':  0.2 # proposal: 0.2 to stay below 0.15% retention rate 
-		,	'NominalLinePostscale': 1.
-		,	'ValidationLinePrescale':0.003 #0.5 in stripping15: 0.1 gives 1.42% retention rate
-		,	'ValidationLinePostscale': 1.
-		,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
-		,	'HLT1PassOnAll': True
-		,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
-		,	'HLT2PassOnAll': False
-
+default_config = {
+    'NAME'        : 'TrackEffDownMuon',
+    'WGs'         : ['ALL'],
+    'BUILDERTYPE' : 'StrippingTrackEffDownMuonConf',
+    'CONFIG'      : { 
+				'MuMom':		2000.	# MeV
+			,	'MuTMom':		200.	# MeV
+			,	'TrChi2':		10.	# MeV
+			,	'MassPreComb':		2000.	# MeV
+			,	'MassPostComb':		200.	# MeV
+			,	'Doca':			5.	# mm
+			,	'VertChi2':		25.	# adimensional
+                	,       'DataType':             '2011'  # for ConfiguredMuonIDs configuration
+			,	'NominalLinePrescale':  0.2 # proposal: 0.2 to stay below 0.15% retention rate 
+			,	'NominalLinePostscale': 1.
+			,	'ValidationLinePrescale':0.0015 #0.5 in stripping15: 0.1 gives 1.42% retention rate , ValidationLine further prescaled
+			,	'ValidationLinePostscale': 1.
+			,	'HLT1TisTosSpecs': { "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0} #no reg. expression allowed(see selHlt1Jpsi )
+			,	'HLT1PassOnAll': True
+			,	'HLT2TisTosSpecs': { "Hlt2SingleMuon.*Decision%TOS" : 0} #reg. expression allowed
+			,	'HLT2PassOnAll': False
+                    },
+    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffDownMuonNominalLine','StrippingTrackEffDownMuonValidationLine']}
     }
+
 
 class StrippingTrackEffDownMuonConf(LineBuilder):
     """
@@ -226,18 +246,15 @@ def DownJPsi( name,
 Define TisTos Prefilters
 
 """
-#getMuonParticles = DataOnDemand(Location = 'Phys/StdLooseMuons')
 
 
-#def selHlt1Jpsi(name, longPartsFilter):
 def selHlt1Jpsi(name, HLT1TisTosSpecs, HLT1PassOnAll):
    """
    Filter the long track muon to be TOS on a HLT1 single muon trigger,
    for J/psi selection
    """
-   #Hlt1Jpsi = TisTosParticleTagger(name+"Hlt1Jpsi")
    Hlt1Jpsi = TisTosParticleTagger(
-   TisTosSpecs = HLT1TisTosSpecs #{ "Hlt1TrackMuonDecision%TOS" : 0, "Hlt1SingleMuonNoIPL0Decision%TOS" : 0}
+   TisTosSpecs = HLT1TisTosSpecs 
    ,ProjectTracksToCalo = False
    ,CaloClustForCharged = False
    ,CaloClustForNeutral = False
@@ -245,10 +262,8 @@ def selHlt1Jpsi(name, HLT1TisTosSpecs, HLT1PassOnAll):
    ,NoRegex = True
    )
    Hlt1Jpsi.PassOnAll = HLT1PassOnAll
-   #Hlt1Jpsi.PassOnAll = True # TESTING!
-   #
+
    return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ StdAllLooseMuons ])
-   #return Selection(name+"_SelHlt1Jpsi", Algorithm = Hlt1Jpsi, RequiredSelections = [ StdLooseMuons ])
 
 #########################################################
 def selHlt2Jpsi(name, hlt1Filter, HLT2TisTosSpecs, HLT2PassOnAll):
@@ -256,9 +271,8 @@ def selHlt2Jpsi(name, hlt1Filter, HLT2TisTosSpecs, HLT2PassOnAll):
    Filter the long track muon to be TOS on a HLT2 single muon trigger,
    for J/psi selection
    """
-   #Hlt2Jpsi = TisTosParticleTagger("Hlt2Jpsi")
    Hlt2Jpsi = TisTosParticleTagger(
-   TisTosSpecs =HLT2TisTosSpecs #{ "Hlt2SingleMuon.*Decision%TOS" : 0}
+   TisTosSpecs =HLT2TisTosSpecs 
    ,ProjectTracksToCalo = False
    ,CaloClustForCharged = False
    ,CaloClustForNeutral = False
@@ -266,14 +280,13 @@ def selHlt2Jpsi(name, hlt1Filter, HLT2TisTosSpecs, HLT2PassOnAll):
    ,NoRegex = False
    )
    Hlt2Jpsi.PassOnAll = HLT2PassOnAll
-   #Hlt2Jpsi.PassOnAll = True # TESTING!
-   #
+   
    return Selection(name+"_SelHlt2Jpsi", Algorithm = Hlt2Jpsi, RequiredSelections = [ hlt1Filter ])
 ##########################################################
         
 
 def trackingDownPreFilter(name, prefilter):
-
+    #Test code for debugging
     #Jpsi_already_there = LoKi__VoidFilter("Jpsi_already_there")
     #Jpsi_already_there.Code = "1 <= CONTAINS('Rec/Track/Downstream')"
 
@@ -281,8 +294,6 @@ def trackingDownPreFilter(name, prefilter):
     #Jpsi_not_yet_there.Code = "1 > CONTAINS('Rec/Track/Downstream')"
 
     TrackToDST("DownTrackToDST").TracksInContainer = "Rec/Downstream/FittedTracks"
-
-    #TrackSys().setProp('SpecialData', ['earlyData'])
 
     jpsidotracking=GaudiSequencer("DownTrackingFor" + name)
     
@@ -304,12 +315,6 @@ def trackingDownPreFilter(name, prefilter):
     jpsidotracking.Members += [downstreamFit]
     jpsidotracking.Members += [TrackToDST("DownTrackToDST")]
 
-
-    #alg = GaudiSequencer("JpsitracksFor" + name,
-    #                     Members = [Jpsi_already_there,
-    #                                jpsidotracking],
-    #                     ModeOR = True,
-    #                     ShortCircuit = True)
 
     return GSWrapper(name="WrappedDownstreamTracking",
                      sequencer=jpsidotracking,
