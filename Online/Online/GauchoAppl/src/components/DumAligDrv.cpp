@@ -221,7 +221,7 @@ StatusCode Fitter::init()
     ii = char(i);
     nam[0] = 'a'+ii;
     nam[1] = 0;
-    m_Minuit->DefineParameter(i+1,nam,DrvInstance->m_params[i],100.0,-10.0,10.0);
+    m_Minuit->DefineParameter(i,nam,DrvInstance->m_params[i],100.0,-10.0,10.0);
   };
   return StatusCode::SUCCESS;
 }
