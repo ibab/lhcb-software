@@ -33,15 +33,16 @@ extern "C"
   void Chi2(int &npar, double *grad, double &fval, double *params, int flag)
   {
     DrvInstance->m_fitter->write_params(npar,params);
-    DrvInstance->incidentSvc()->fireIncident(Incident(DrvInstance->name(),"DAQ_CONTINUE"));
-    DrvInstance->waitRunOnce();
-//    DrvInstance->m_fitter->m_Lock->lockMutex();
-    fval = DrvInstance->m_fitter->getIterationResult();
-    printf ("Chi2: Function value: %15g\nParameters:\n",fval);
+    printf("Parameters:\n");
     for (int i= 0;i<npar;i++)
     {
       printf("Paramter %d %15g\n",i,params[i]);
     }
+    DrvInstance->incidentSvc()->fireIncident(Incident(DrvInstance->name(),"DAQ_CONTINUE"));
+    DrvInstance->waitRunOnce();
+//    DrvInstance->m_fitter->m_Lock->lockMutex();
+    fval = DrvInstance->m_fitter->getIterationResult();
+    printf ("Chi2: Function value: %15g\n",fval);
     printf("\n");
     fflush(stdout);
 //    DrvInstance->m_fitter->m_Lock->unlockMutex();
