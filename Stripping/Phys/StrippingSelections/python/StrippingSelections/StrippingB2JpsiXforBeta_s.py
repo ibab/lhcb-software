@@ -9,12 +9,14 @@ Exported symbols (use python help!):
    B2JpsiXLines
 '''
 
+
 __author__ = ['Greig Cowan','Juan Palacios','Francesca Dordei']
 __date__ = '26/03/2013'
 __version__ = '$Revision: 1.3 $'
 
 
-__all__ = ('B2JpsiXforBeta_sConf')
+__all__ = ('B2JpsiXforBeta_sConf','default_config')
+#__all__ = ('B2JpsiXforBeta_sConf')
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -33,6 +35,45 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiKernel.SystemOfUnits import MeV
+
+default_config = {
+    'NAME'              : 'BetaS',
+    'WGs'               : ['B2CC'],
+    'BUILDERTYPE'       : 'B2JpsiXforBeta_sConf',
+    'CONFIG'    : {
+                         'TRCHI2DOF'                 :       5
+                 ,       'BPVLTIME'                  :       0.2
+                 ,       'JpsiMassWindow'            :       80
+                 ,       'DaughterPT'                :       1000
+                 ,       'VCHI2PDOF'                 :       10
+                 ,       'Jpsi2MuMuPrescale'         :       0.028
+                 ,       'Jpsi2MuMuDetachedPrescale' :       1.0
+                 ,       'Bu2JpsiKPrescale'          :       0.12
+                 ,       'Bd2JpsiKstarPrescale'      :       0.09
+                 ,       'Bd2JpsiKsPrescale'         :       1.0
+                 ,       'Bs2JpsiPhiPrescale'        :       0.27
+                 ,       'Bs2Jpsif0Prescale'         :       0.15
+                 ,       'Bs2JpsiEtaPrescale'        :       0.35
+                 ,       'Bs2JpsiEtapPrescale'       :       0.11
+                 ,       'Bs2JpsiPi0Prescale'        :       0.4
+                 ,       'Bs2JpsiRho0Prescale'       :       0.15
+                         },
+    'STREAMS' : {}}
+#        'Leptonic' : [
+#         'StrippingBetaSBs2JpsiPhiMicroLine'
+#        ],
+#        'Dimuon' : [
+#         'StrippingBetaSJpsi2MuMuLine',
+#         'StrippingBetaSBs2JpsiPhiDetachedLine',
+#         'StrippingBetaSBu2JpsiKPrescaledLine',
+#         'StrippingBetaSBs2JpsiPhiPrescaledLine',
+#         'StrippingBetaSBd2JpsiKstarPrescaledLine',
+#         'StrippingBetaSBd2JpsiKsPrescaledLine',
+#         'StrippingBetaSBs2JpsiEtaPrescaledLine',
+#         'StrippingBetaSBs2JpsiEtapPrescaledLine'
+#        ]
+#    }
+#    }
 
 class B2JpsiXforBeta_sConf(LineBuilder) :
     __configuration_keys__ = (
@@ -277,15 +318,18 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                           myTisTosSpecs = { "Hlt2DiMuonDetachedJPsiDecision%TOS" : 0 }
                                                           )
         
-        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetachedTOS ], prescale =self.config["Jpsi2MuMuDetachedPrescale"] )
+        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetachedTOS ], prescale =self.config["Jpsi2MuMuDetachedPrescale"], RequiredRawEvents = [ "Trigger", "Rich", "Calo", "Muon", "Velo", "Tracker" ] )#, "Other" ] )
 
+        Jpsi2MuMuForBetasDetachedLineNoBanks = StrippingLine( self.name + "Jpsi2MuMuDetachedLineNoBanks", algos = [ Jpsi2MuMuForBetasDetachedTOS ], prescale =self.config["Jpsi2MuMuDetachedPrescale"] )#, RequiredRawEvents = [ "Rich", "Calo", "Muon" ] )#, "Other" ] )
         
+
         #Jpsi2MuMuForBetasDetached = self.createSubSel(  OutputList = self.JpsiList.name() + "Detached" + self.name,
         #                                                InputList  = self.JpsiList,
         #                                                Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
         #Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetached ], prescale = 0.1 )
 
         self.registerLine(Jpsi2MuMuForBetasLine)
+        #self.registerLine(Jpsi2MuMuForBetasDetachedLineNoBanks)
         self.registerLine(Jpsi2MuMuForBetasDetachedLine)
 
     def makeRho0( self ):
