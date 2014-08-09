@@ -14,7 +14,7 @@ from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
                           SelectionBase )
 
-from Configurables import DecodeVeloRawBuffer, FastVeloTracking, TrackPrepareVelo, NoPIDsParticleMaker, DataOnDemandSvc, ChargedProtoParticleMaker,  ChargedProtoParticleAddRichInfo,  ChargedPP2MC, ChargedProtoCombineDLLsAlg, PrTrackAssociator, PrLHCbID2MCParticle, UnpackMCParticle, UnpackMCVertex, P2MCPFromProtoP, DelegatingTrackSelector, TrackContainerCopy, TrackAssociator
+from Configurables import DecodeVeloRawBuffer, FastVeloTracking, TrackPrepareVelo, NoPIDsParticleMaker, DataOnDemandSvc, ChargedProtoParticleMaker, PrTrackAssociator, DelegatingTrackSelector, TrackContainerCopy, TrackAssociator
 from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed, ConfiguredMasterFitter
 
 __all__ = ('TrackEffD0ToK3PiAllLinesConf',

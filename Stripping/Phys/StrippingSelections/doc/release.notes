@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-09 - Chris Jones
+ - Fix Mika's (undocumented ;)) changes which was importing configurables not 
+   available to the stripping, and not actually needed.
+
 ! 2014-08-08 - Stefano Perazzini
  - fixed test_allstreams_instantiation and test_stream_output_locations
 
