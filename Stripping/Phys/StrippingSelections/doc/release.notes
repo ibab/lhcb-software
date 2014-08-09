@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-09 - Carlos Vazquez Sierra
+  - Updated StrippingB2JpsiXforBeta_s.py and StrippingBs2JpsiKstNoPID.py
+
 ! 2014-08-09 - Chris Jones
  - Fix Mika's (undocumented ;)) changes which was importing configurables not 
    available to the stripping, and not actually needed.
