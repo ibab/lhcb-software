@@ -3,6 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-09 - Gerhard Raven
+ - ICC and clang both define __GNUC__ so that's not the right way to differentiate
+   between compilers, so use __INTEL_COMPILER and __clang__ instead to recognize
+   them.
+
 ! 2014-08-06 - Sebastian Neubert
  - added a few useful counters to PatForwardTool 
  - added TrackUsedLHCbID tool to PatForwardTool: allows to exclude hits that have already been used elsewhere

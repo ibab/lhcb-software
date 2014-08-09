@@ -13,7 +13,7 @@
 #include "PatKernel/PatForwardHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 
-#ifdef __GNUC__
+#ifndef __INTEL_COMPILER
 #define PATFWDTOOL_VEC 1
 #endif
 

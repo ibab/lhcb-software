@@ -226,7 +226,11 @@ template <>
 std::array<double ,2> 
 PatFwdTool::xAtReferencePlane<false>( const PatFwdTrackCandidate& track, double z_magnet, PatFwdHit** hit ) const 
 {
-  typedef double vec_d __attribute__ ((vector_size ( 2 * sizeof(double) ))); // vector of two doubles...
+#ifdef __clang__
+  typedef double vec_d __attribute__ ((ext_vector_type( 2  ))); // vector of two doubles...
+#else
+  typedef double vec_d __attribute__ ((vector_size( 2 * sizeof(double) ))); // vector of two doubles...
+#endif
 
   vec_d zHit = { hit[0]->z(), hit[1]->z() };
   vec_d xHit = { hit[0]->x(), hit[1]->x() };
