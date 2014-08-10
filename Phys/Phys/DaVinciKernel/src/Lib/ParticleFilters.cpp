@@ -31,8 +31,7 @@ std::size_t DaVinci::filter
   const IParticleFilter*       criterion , 
   LHCb::Particle::ConstVector& output    )
 {
-  if ( 0 == criterion ) { return 0 ; }
-  return filter ( input , *criterion , output ) ;
+  return ( !criterion ? 0 : filter ( input , *criterion , output ) );
 }
 // ============================================================================
 /** filter the particles according to some criteria
@@ -50,8 +49,7 @@ std::size_t DaVinci::filter
   const IParticleFilter*             criterion , 
   LHCb::Particle::ConstVector&       output    )
 {
-  if ( 0 == criterion ) { return 0 ; }
-  return filter ( input , *criterion , output ) ;
+  return ( !criterion ? 0 : filter ( input , *criterion , output ) );
 }
 // ============================================================================
 /*  split the particles according to some criteria
@@ -71,8 +69,7 @@ std::size_t DaVinci::filter
   LHCb::Particle::ConstVector& output    ,
   LHCb::Particle::ConstVector& output2   ) 
 {
-  if ( 0 == criterion ) { return 0 ; }
-  return filter ( input , *criterion , output , output2 ) ;  
+  return ( !criterion ? 0 : filter ( input , *criterion , output , output2 ) );
 }
 // ==========================================================================
 /*  split the particles according to some criteria

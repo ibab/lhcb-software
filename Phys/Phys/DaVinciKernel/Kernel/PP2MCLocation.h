@@ -4,17 +4,16 @@
 
 // Include files
 
-/** @namespace ProtoParticle2MCLocation PP2MCLocation.h Kernel/PP2MCLocation.h
- *  
- *
- *  @author Juan PALACIOS
- *  @date   2006-08-18
- */
 namespace LHCb 
 {
-  
-  namespace ProtoParticle2MCLocation {
-
+  /** @namespace ProtoParticle2MCLocation PP2MCLocation.h Kernel/PP2MCLocation.h
+   *  
+   *
+   *  @author Juan PALACIOS
+   *  @date   2006-08-18
+   */
+  namespace ProtoParticle2MCLocation 
+  {
     const std::string Charged  = "Relations/" + LHCb::ProtoParticleLocation::Charged ;
     const std::string Neutrals = "Relations/" + LHCb::ProtoParticleLocation::Neutrals ;
   }

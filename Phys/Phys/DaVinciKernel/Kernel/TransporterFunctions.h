@@ -13,10 +13,17 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
+/** @namespace DaVinci
+ *
+ *  Namespace for DaVinci components
+ *
+ *  @author Juan PALACIOS
+ *  @date   2006-09-22
+ */
 namespace DaVinci 
 {
   // ==========================================================================
-  /** @namespace DaVinci::Transporter Kernel/TransporterFunctions.h
+  /** @namespace Transporter Kernel/TransporterFunctions.h
    *
    *  @author Juan PALACIOS
    *  @date   2006-09-22

@@ -29,7 +29,6 @@ namespace DaVinci
       virtual ~IParticlePredicate() { }
     public:
       virtual bool operator() ( const LHCb::Particle* obj ) const = 0;
-
     };
 
     ///  Functor to check if a Particle is in the TES.

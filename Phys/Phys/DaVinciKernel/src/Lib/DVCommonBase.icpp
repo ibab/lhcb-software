@@ -403,7 +403,7 @@ void DVCommonBase<PBASE>::initializeInputLocations()
     // Strip any ending "/Particles"
     DaVinci::StringUtils::removeEnding(loc,"/Particles");
     // Strip any starting "/Event/"
-    boost::replace_all( loc,"/Event/","");
+    boost::erase_all( loc, "/Event/" );
   }
 
   // Check for duplication of locations
