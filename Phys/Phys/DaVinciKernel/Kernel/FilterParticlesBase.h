@@ -2,11 +2,9 @@
 #ifndef KERNEL_FILTERPARTICLESBASE_H 
 #define KERNEL_FILTERPARTICLESBASE_H 1
 
-// Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Kernel/IFilterParticles.h"            // Interface
-
+#include "Kernel/IFilterParticles.h" // Interface
 
 /** @class FilterParticlesBase FilterParticlesBase.h Kernel/FilterParticlesBase.h
  *  
@@ -15,8 +13,11 @@
  *  @date   2007-07-20
  */
 class FilterParticlesBase : public GaudiTool, 
-                            virtual public IFilterParticles {
+                            virtual public IFilterParticles
+{
+
 public: 
+
   /// Standard constructor
   FilterParticlesBase( const std::string& type, 
                        const std::string& name,
@@ -26,11 +27,10 @@ public:
 
   /// Test if filter is satisfied on ensemble of particles
   virtual bool isSatisfied( const LHCb::Particle::ConstVector& ) const;
+
   /// Test if filter is satisfied on ensemble of particles
   virtual bool operator()( const LHCb::Particle::ConstVector& ) const;
-protected:
-
-private:
 
 };
+
 #endif // KERNEL_FILTERPARTICLESBASE_H
