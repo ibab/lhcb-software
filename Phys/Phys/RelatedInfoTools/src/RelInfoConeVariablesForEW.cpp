@@ -1,20 +1,6 @@
-#include "GaudiKernel/ToolFactory.h" 
-#include "Event/Particle.h"
-
-// kernel
-#include "GaudiKernel/PhysicalConstants.h"
-#include "Kernel/RelatedInfoNamed.h"
 
 // local
 #include "RelInfoConeVariablesForEW.h"
-//#include "Event/RecVertex.h"
-//#include <Kernel/GetIDVAlgorithm.h>
-//#include <Kernel/IDVAlgorithm.h>
-//#include <Kernel/IDistanceCalculator.h>
-//#include "TrackInterfaces/IPVOfflineTool.h"
-
-// chi2
-//#include "gsl/gsl_cdf.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RelInfoConeVariablesForEW
@@ -29,9 +15,9 @@ DECLARE_TOOL_FACTORY( RelInfoConeVariablesForEW )
 // Standard constructor, initializes variables
 //=============================================================================
 RelInfoConeVariablesForEW::RelInfoConeVariablesForEW( const std::string &type,
-                                          const std::string &name,
-                                          const IInterface *parent)
-    : GaudiTool ( type, name, parent )
+                                                      const std::string &name,
+                                                      const IInterface *parent)
+: GaudiTool ( type, name, parent )
 {
   declareInterface<IRelatedInfoTool>( this );
 
@@ -45,7 +31,7 @@ RelInfoConeVariablesForEW::RelInfoConeVariablesForEW( const std::string &type,
                    "Set the type of particles which are considered in the charged cone" );
   declareProperty( "ExtrePhotonsLocation", m_extraPhotonsLocation = "StdLooseAllPhotons",
                    "Set the type of photons which are considered in the neutral cone" );
-  declareProperty( "Variables", m_variables, 
+  declareProperty( "Variables", m_variables,
                    "List of variables to store (store all if empty)");
 }
 
@@ -55,25 +41,25 @@ RelInfoConeVariablesForEW::RelInfoConeVariablesForEW( const std::string &type,
 RelInfoConeVariablesForEW::~RelInfoConeVariablesForEW() {}
 
 
-StatusCode RelInfoConeVariablesForEW::initialize() 
+StatusCode RelInfoConeVariablesForEW::initialize()
 {
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
-  m_keys.clear(); 
+  m_keys.clear();
 
   for ( const auto& var : m_variables )
   {
-    short int key = RelatedInfoNamed::indexByName( var ); 
+    short int key = RelatedInfoNamed::indexByName( var );
     if (key != RelatedInfoNamed::UNKNOWN) {
       m_keys.push_back( key );
-      debug() << "Adding variable " << var << ", key = " << key << endmsg; 
+      debug() << "Adding variable " << var << ", key = " << key << endmsg;
     } else {
-      warning() << "Unknown variable " << var << ", skipping" << endmsg; 
+      warning() << "Unknown variable " << var << ", skipping" << endmsg;
     }
   }
 
-  return sc; 
+  return sc;
 }
 
 
@@ -103,13 +89,15 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
 
   // -- Get all particles in the event
   LHCb::Particles *parts = get<LHCb::Particles>( "Phys/" + m_extraParticlesLocation + "/Particles" );
-  if ( parts->size() == 0 ) {
+  if ( parts->empty() )
+  {
     if ( msgLevel(MSG::WARNING) )
       warning() << "Could not retrieve extra-particles. Skipping" << endmsg;
     return StatusCode::FAILURE;
   }
 
-  if ( seed ) {
+  if ( seed ) 
+  {
 
     // -- Retrieve information in the charged cone
     int multiplicity = 0;
@@ -125,45 +113,30 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
                                  vectorP, scalarP, scalarPt,
                                  minimumPtE, maximumPtE,
                                  minimumPtMu, maximumPtMu );
-    if ( sc.isFailure() )
-      multiplicity = -1;
+
+    if ( sc.isFailure() ) { multiplicity = -1; }
 
     // -- Create a vector with the summed momentum of all tracks in the cone
-    Gaudi::XYZVector coneMomentum;
-    coneMomentum.SetX( vectorP[0] );
-    coneMomentum.SetY( vectorP[1] );
-    coneMomentum.SetZ( vectorP[2] );
+    const Gaudi::XYZVector coneMomentum( vectorP[0], vectorP[1], vectorP[2] );
 
     // -- Create a vector with the summed momentum of all tracks in the cone + seed
-    Gaudi::XYZVector totalMomentum;
-    totalMomentum.SetX(seed->momentum().X() + coneMomentum.X());
-    totalMomentum.SetY(seed->momentum().Y() + coneMomentum.Y());
-    totalMomentum.SetZ(seed->momentum().Z() + coneMomentum.Z());
-
-    /*
-    // -- Calculate the Eta-Phi difference between the summed momentum of all tracks in the cone and the seed
-    double deltaEta = 0.;
-    double deltaPhi = 0.;
-    if ( multiplicity != 0 ) {
-    deltaEta = seed->momentum().Eta() - coneMomentum.Eta();
-    deltaPhi = fabs( seed->momentum().Phi() - coneMomentum.Phi() );
-    if ( deltaPhi > M_PI )
-    deltaPhi = 2 * M_PI - deltaPhi;
-    }
-    */
+    const Gaudi::XYZVector totalMomentum( seed->momentum().X() + coneMomentum.X(),
+                                          seed->momentum().Y() + coneMomentum.Y(),
+                                          seed->momentum().Z() + coneMomentum.Z() );
 
     // -- Fill the tuple with the variables
     m_mult = multiplicity;
     m_px = coneMomentum.X();
     m_py = coneMomentum.Y();
     m_pz = coneMomentum.Z();
-    m_vp = sqrt( coneMomentum.Mag2() );
-    m_vpt = sqrt( coneMomentum.Perp2() );
+    m_vp = std::sqrt( coneMomentum.Mag2() );
+    m_vpt = std::sqrt( coneMomentum.Perp2() );
     m_sp = scalarP;
     m_spt = scalarPt;
-    m_tp = sqrt( totalMomentum.Mag2() );
-    m_tpt = sqrt( totalMomentum.Perp2() );
-    if ( m_coneAngle == 0. ) {
+    m_tp = std::sqrt( totalMomentum.Mag2() );
+    m_tpt = std::sqrt( totalMomentum.Perp2() );
+    if ( m_coneAngle == 0. )
+    {
       m_minpte = minimumPtE;
       m_maxpte = maximumPtE;
       m_minptmu = minimumPtMu;
@@ -178,13 +151,15 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
 
     // -- Get all photons in the event
     LHCb::Particles *photons = get<LHCb::Particles>( "Phys/" + m_extraPhotonsLocation + "/Particles" );
-    if ( photons->size() != 0 ) {
+    if ( !photons->empty() )
+    {
       StatusCode nsc = NeutralCone( seed, photons, m_coneAngle,
                                     nmultiplicity, nvectorP, nscalarP, nscalarPt );
       if ( nsc.isFailure() )
         nmultiplicity = -1;
     }
-    else {
+    else
+    {
       if ( msgLevel(MSG::WARNING) )
         Warning("Could not retrieve photons");
       nmultiplicity = -1;
@@ -194,68 +169,53 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
     }
 
     // -- Create a vector with the summed momentum of all tracks in the cone
-    Gaudi::XYZVector neutralConeMomentum;
-    neutralConeMomentum.SetX( nvectorP[0] );
-    neutralConeMomentum.SetY( nvectorP[1] );
-    neutralConeMomentum.SetZ( nvectorP[2] );
-
-    /*
-    // -- Calculate the Eta-Phi difference between the summed momentum of all tracks in the cone and the seed
-    double ndeltaEta = 0.;
-    double ndeltaPhi = 0.;
-    if ( nmultiplicity != 0 ) {
-    ndeltaEta = seed->momentum().Eta() - neutralConeMomentum.Eta();
-    ndeltaPhi = fabs( seed->momentum().Phi() - neutralConeMomentum.Phi() );
-    if ( ndeltaPhi > M_PI )
-    ndeltaPhi = 2 * M_PI - ndeltaPhi;
-    }
-    */
+    const Gaudi::XYZVector neutralConeMomentum( nvectorP[0], nvectorP[1], nvectorP[2] );
 
     // -- Fill the tuple with the variables
     m_nmult = nmultiplicity;
     m_npx =   neutralConeMomentum.X();
     m_npy =   neutralConeMomentum.Y();
     m_npz =   neutralConeMomentum.Z();
-    m_nvp =   sqrt( neutralConeMomentum.Mag2() );
-    m_nvpt =  sqrt( neutralConeMomentum.Perp2() );
+    m_nvp =   std::sqrt( neutralConeMomentum.Mag2() );
+    m_nvpt =  std::sqrt( neutralConeMomentum.Perp2() );
     m_nsp =   nscalarP;
     m_nspt =  nscalarPt;
 
     m_map.clear();
-    
+
     for ( const auto key : m_keys )
     {
 
       float value = 0;
       switch (key) {
-        case RelatedInfoNamed::EWCONEANGLE : value = m_coneAngle; break;
-        case RelatedInfoNamed::EWCONEMULT  : value = m_mult; break;
-        case RelatedInfoNamed::EWCONEPX    : value = m_px; break;
-        case RelatedInfoNamed::EWCONEPY    : value = m_py; break;
-        case RelatedInfoNamed::EWCONEPZ    : value = m_pz; break;
-        case RelatedInfoNamed::EWCONEVP    : value = m_vp; break;
-        case RelatedInfoNamed::EWCONEVPT   : value = m_vpt; break;
-        case RelatedInfoNamed::EWCONESP    : value = m_sp; break;
-        case RelatedInfoNamed::EWCONESPT   : value = m_spt; break;
-        case RelatedInfoNamed::EWCONETP    : value = m_tp; break;
-        case RelatedInfoNamed::EWCONETPT   : value = m_tpt; break;
-        case RelatedInfoNamed::EWCONEMINPTE   : value = m_minpte; break;
-        case RelatedInfoNamed::EWCONEMAXPTE   : value = m_maxpte; break;
-        case RelatedInfoNamed::EWCONEMINPTMU  : value = m_minptmu; break;
-        case RelatedInfoNamed::EWCONEMAXPTMU  : value = m_maxptmu; break;
-        case RelatedInfoNamed::EWCONENMULT    : value = m_nmult; break;
-        case RelatedInfoNamed::EWCONENPX      : value = m_npx; break;
-        case RelatedInfoNamed::EWCONENPY      : value = m_npy; break;
-        case RelatedInfoNamed::EWCONENPZ      : value = m_npz; break;
-        case RelatedInfoNamed::EWCONENVP      : value = m_nvp; break;
-        case RelatedInfoNamed::EWCONENVPT     : value = m_nvpt; break;
-        case RelatedInfoNamed::EWCONENSP      : value = m_nsp; break;
-        case RelatedInfoNamed::EWCONENSPT     : value = m_nspt; break;
-        default: value = 0.; break;
+      case RelatedInfoNamed::EWCONEANGLE : value = m_coneAngle; break;
+      case RelatedInfoNamed::EWCONEMULT  : value = m_mult; break;
+      case RelatedInfoNamed::EWCONEPX    : value = m_px; break;
+      case RelatedInfoNamed::EWCONEPY    : value = m_py; break;
+      case RelatedInfoNamed::EWCONEPZ    : value = m_pz; break;
+      case RelatedInfoNamed::EWCONEVP    : value = m_vp; break;
+      case RelatedInfoNamed::EWCONEVPT   : value = m_vpt; break;
+      case RelatedInfoNamed::EWCONESP    : value = m_sp; break;
+      case RelatedInfoNamed::EWCONESPT   : value = m_spt; break;
+      case RelatedInfoNamed::EWCONETP    : value = m_tp; break;
+      case RelatedInfoNamed::EWCONETPT   : value = m_tpt; break;
+      case RelatedInfoNamed::EWCONEMINPTE   : value = m_minpte; break;
+      case RelatedInfoNamed::EWCONEMAXPTE   : value = m_maxpte; break;
+      case RelatedInfoNamed::EWCONEMINPTMU  : value = m_minptmu; break;
+      case RelatedInfoNamed::EWCONEMAXPTMU  : value = m_maxptmu; break;
+      case RelatedInfoNamed::EWCONENMULT    : value = m_nmult; break;
+      case RelatedInfoNamed::EWCONENPX      : value = m_npx; break;
+      case RelatedInfoNamed::EWCONENPY      : value = m_npy; break;
+      case RelatedInfoNamed::EWCONENPZ      : value = m_npz; break;
+      case RelatedInfoNamed::EWCONENVP      : value = m_nvp; break;
+      case RelatedInfoNamed::EWCONENVPT     : value = m_nvpt; break;
+      case RelatedInfoNamed::EWCONENSP      : value = m_nsp; break;
+      case RelatedInfoNamed::EWCONENSPT     : value = m_nspt; break;
+      default: value = 0.; break;
       }
-      
-      debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq; 
-    
+
+      debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
+
       m_map.insert( std::make_pair( key, value) );
     }
 
@@ -275,7 +235,7 @@ StatusCode RelInfoConeVariablesForEW::calculateRelatedInfo( const LHCb::Particle
 //=============================================================================
 // Save the particles in the decay chain (recursive function)
 //=============================================================================
-void RelInfoConeVariablesForEW::saveDecayParticles( const LHCb::Particle *top ) 
+void RelInfoConeVariablesForEW::saveDecayParticles( const LHCb::Particle *top )
 {
 
   // -- Fill all the daugthers in m_decayParticles
@@ -305,13 +265,13 @@ void RelInfoConeVariablesForEW::saveDecayParticles( const LHCb::Particle *top )
 // Loop over all the tracks in the cone which do not belong to the desired decay
 //=============================================================================
 StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
-                                            const LHCb::Particles *parts,
-                                            const double rcut,
-                                            int &mult,
-                                            std::vector < double > &vP,
-                                            double &sP, double &sPt,
-                                            double &minPtE, double &maxPtE,
-                                            double &minPtMu, double &maxPtMu )
+                                                   const LHCb::Particles *parts,
+                                                   const double rcut,
+                                                   int &mult,
+                                                   std::vector < double > &vP,
+                                                   double &sP, double &sPt,
+                                                   double &minPtE, double &maxPtE,
+                                                   double &minPtMu, double &maxPtMu )
 {
 
   // -- Initialize values
@@ -355,7 +315,7 @@ StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
         if ( deltaPhi > M_PI )
           deltaPhi = 2 * M_PI - deltaPhi;
         double deltaEta = seedMomentum.Eta() - trackMomentum.Eta();
-        double deltaR   = sqrt( deltaPhi * deltaPhi + deltaEta * deltaEta );
+        double deltaR   = std::sqrt( deltaPhi * deltaPhi + deltaEta * deltaEta );
 
         if ( track->type() == m_trackType ) {
           if ( ( rcut == 0. ) || ( deltaR < rcut ) ) {
@@ -365,8 +325,8 @@ StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
             sPz += trackMomentum.Z();
 
             // -- Calculate scalar information
-            sP  += sqrt( trackMomentum.Mag2() );
-            sPt += sqrt( trackMomentum.Perp2() );
+            sP  += std::sqrt( trackMomentum.Mag2() );
+            sPt += std::sqrt( trackMomentum.Perp2() );
 
             mult++;
           }
@@ -437,241 +397,13 @@ StatusCode RelInfoConeVariablesForEW::ChargedCone( const LHCb::Particle *seed,
   return StatusCode::SUCCESS;
 
 }
-/*
-  StatusCode RelInfoConeVariablesForEW::PVCone( const LHCb::Particle *seed, const LHCb::Particles *parts, const double rcut,
-  int &mult, std::vector < double > &vP,
-  double &sP, double &sPt,
-  double &minM, double &totM,
-  double &minPt, double &maxPt ) {
 
-  // -- Initialize values
-  mult = 0;
-  double sPx = 0.;
-  double sPy = 0.;
-  double sPz = 0.;
-  sP  = 0.;
-  sPt = 0.;
-  minM = 1.e10;
-  totM = 0.;
-  minPt = 1.e10;
-  int minQ = 0;
-  maxPt = 0.;
-  int maxQ = 0;
-  Gaudi::LorentzVector sM(0., 0., 0., 0.);
-
-  // -- Get the 4-momentum of the seed particle
-  Gaudi::LorentzVector seedMomentum = seed->momentum();
-
-  LHCb::RecVertex::Container *pvs = get<LHCb::RecVertex::Container>( "Rec/Vertex/Primary" );
-  if ( pvs->size() == 0 )
-  if ( msgLevel(MSG::WARNING) )
-  Warning( "Could not retrieve vertices" );
-
-  IDVAlgorithm *dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
-  if ( !dva )
-  if ( msgLevel(MSG::WARNING) )
-  Warning( "Could not retrieve DV utilities" );
-
-  const IDistanceCalculator *dist = dva->distanceCalculator();
-  if ( !dist )
-  if ( msgLevel(MSG::WARNING) )
-  Warning( "Could not retrieve distance calculator tool" );
-
-  IPVOfflineTool* pvTool = tool<IPVOfflineTool>( "PVOfflineTool", this );
-  if ( !pvTool )
-  if ( msgLevel(MSG::WARNING) )
-  Warning( "Could not retrieve IPVOfflineTool" );
-
-  if (( pvs->size() == 0 ) || ( !dva || !dist || !pvTool )) {
-  vP.push_back( 0 );
-  vP.push_back( 0 );
-  vP.push_back( 0 );
-  minM = 0.;
-  totM = 0.;
-  minPt = 0.;
-  maxPt = 0.;
-  return StatusCode::FAILURE;
-  }
-
-  double ip, chi2;
-  double ipMin = m_ipMin;
-  LHCb::RecVertex *pv = NULL;
-
-  std::vector<const LHCb::Track*> tracks2exclude;
-  tracks2exclude.clear();
-  for ( std::vector<const LHCb::Particle*>::const_iterator ip = m_decayParticles.begin(); ip != m_decayParticles.end(); ++ip ) {
-  if ( (*ip)->proto() )
-  if ( (*ip)->proto()->track() )
-  tracks2exclude.push_back( (*ip)->proto()->track() );
-  }
-
-  for ( LHCb::RecVertex::Container::const_iterator iv = pvs->begin(); iv != pvs->end(); ++iv ) {
-
-  LHCb::RecVertex newPV(**iv);
-
-  const Gaudi::XYZPoint seedPosition = newPV.position();
-
-  StatusCode scfit = pvTool->reDoSinglePV( seedPosition, tracks2exclude, newPV );
-  if ( !scfit ) {
-  Warning( "ReDoPV fails!", StatusCode::SUCCESS, 10 ).ignore();
-  continue;
-  }
-
-  LHCb::VertexBase* newPVPtr = ( LHCb::VertexBase* ) &newPV;
-  dist->distance( seed, newPVPtr, ip, chi2 );
-  if ( msgLevel(MSG::DEBUG) )
-  debug() << "IP = " << ip << "  CHI2 = " << sqrt( chi2 ) << "  IP_Min = " << ipMin << endmsg;
-  if ( ip < ipMin ) {
-  ipMin = ip;
-  pv = (*iv);
-  }
-  }
-
-  if ( !pv ) {
-  if ( msgLevel(MSG::WARNING) )
-  Warning( "Could not retrieve associated PV" );
-  vP.push_back( 0 );
-  vP.push_back( 0 );
-  vP.push_back( 0 );
-  minM = 0.;
-  totM = 0.;
-  minPt = 0.;
-  maxPt = 0.;
-  return StatusCode::FAILURE;
-  }
-
-  if ( pv->isPrimary() ) {
-
-  const SmartRefVector<LHCb::Track> &tracks = pv->tracks();
-
-  for ( LHCb::Particles::const_iterator ip = parts->begin(); ip != parts->end(); ++ip ) {
-  const LHCb::Particle *particle = (*ip);
-
-  const LHCb::ProtoParticle *proto = particle->proto();
-  if ( proto ) {
-
-  const LHCb::Track *track = proto->track();
-  if ( track ) {
-
-  // -- Check if the track belongs to the decay itself
-  bool isInDecay = isTrackInDecay( track );
-  if ( isInDecay )
-  continue;
-
-  // -- Check if the track belong to the same PV
-  for ( SmartRefVector<LHCb::Track>::const_iterator it = tracks.begin(); it != tracks.end(); ++it ) {
-  if ( track == (*it) ) {
-
-  // -- Check the quality of the track
-
-  // -- Track fit chi2
-  if ( track->nDoF() > 0 )
-  if ( gsl_cdf_chisq_Q( track->chi2() * m_pchi2Correction, track->nDoF() ) < m_pchi2Cut )
-  continue;
-
-  // -- Momentum resolution
-  double SPoP_X1 =  50.e3;
-  double SPoP_Y1 =    .04;
-  double SPoP_X2 = 100.e3;
-  double SPoP_Y2 =    .10;
-  double Const   = SPoP_Y1 - (SPoP_Y2 - SPoP_Y1) / (SPoP_X2 - SPoP_X1) * SPoP_X1;
-  double Slope   = (SPoP_Y2 - SPoP_Y1) / (SPoP_X2 - SPoP_X1);
-  double SPoP_Cut;
-  if ( sqrt( track->momentum().Mag2() ) < SPoP_X2 )
-  SPoP_Cut = SPoP_Y1 > Const+Slope*sqrt(track->momentum().Mag2()) ?
-  SPoP_Y1 : Const+Slope*sqrt(track->momentum().Mag2());
-  else
-  SPoP_Cut = SPoP_Y2;
-  if ( sqrt( track->firstState().errP2() / track->momentum().Mag2() ) > SPoP_Cut )
-  continue;
-
-  // -- Get the 3-momentum of the track
-  Gaudi::XYZVector trackMomentum = track->momentum();
-
-  // -- Calculate the difference in Eta and Phi between the seed particle and a track
-  double deltaPhi = fabs( seedMomentum.Phi() - trackMomentum.Phi() );
-  if ( deltaPhi > M_PI )
-  deltaPhi = 2 * M_PI - deltaPhi;
-  double deltaEta = seedMomentum.Eta() - trackMomentum.Eta();
-  double deltaR   = sqrt( deltaPhi * deltaPhi + deltaEta * deltaEta );
-
-  if ( track->type() == m_trackType ) {
-  if ( ( rcut == 0. ) || ( deltaR < rcut ) ) {
-  // -- Calculate vector information
-  sPx += trackMomentum.X();
-  sPy += trackMomentum.Y();
-  sPz += trackMomentum.Z();
-
-  // -- Calculate scalar information
-  sP  += sqrt( trackMomentum.Mag2() );
-  sPt += sqrt( trackMomentum.Perp2() );
-
-  // -- Calculate invariant masses
-  Gaudi::LorentzVector particleMomentum = particle->momentum();
-  if ( particle->pt() > m_ptMin ) {
-  Gaudi::LorentzVector ppM = seedMomentum + particleMomentum;
-  if ( ( minM == -1. ) || ( ppM.M() < minM ) )
-  minM = ppM.M();
-  sM += particleMomentum;
-  }
-
-  mult++;
-  }
-
-  if ( rcut == 0. ) {
-  double minP = 10.e3;
-  if ( track->p() > minP ) {
-  const LHCb::MuonPID *muonPID = proto->muonPID();
-  if ( muonPID ) {
-  if ( muonPID->IsMuon() ) {
-  if ( track->pt() < minPt ) {
-  minPt = track->pt();
-  minQ  = track->charge();
-  }
-  if ( track->pt() > maxPt ) {
-  maxPt = track->pt();
-  maxQ  = track->charge();
-  }
-  }
-  }
-  }
-  }
-  }
-  }
-  }
-  }
-  }
-  }
-  }
-
-  vP.push_back( sPx );
-  vP.push_back( sPy );
-  vP.push_back( sPz );
-
-  totM = sM.M();
-
-  if ( ( mult < 1 ) || ( minM == 1.e10 ) )
-  minM = 0.;
-  if ( mult < 2 )
-  totM = 0.;
-
-  if ( minPt == 1.e10 )
-  minPt = 0.;
-  if ( maxPt == 0. )
-  maxPt = 0.;
-  minPt *= minQ;
-  maxPt *= maxQ;
-
-  return StatusCode::SUCCESS;
-
-  }
-*/
-StatusCode RelInfoConeVariablesForEW::NeutralCone( const LHCb::Particle *seed, 
-                                                   const LHCb::Particles *photons, 
+StatusCode RelInfoConeVariablesForEW::NeutralCone( const LHCb::Particle *seed,
+                                                   const LHCb::Particles *photons,
                                                    const double rcut,
-                                                   int &mult, 
+                                                   int &mult,
                                                    std::vector<double> &vP,
-                                                   double &sP, 
+                                                   double &sP,
                                                    double &sPt )
 {
 
@@ -697,7 +429,7 @@ StatusCode RelInfoConeVariablesForEW::NeutralCone( const LHCb::Particle *seed,
     if ( deltaPhi > M_PI )
       deltaPhi = 2 * M_PI - deltaPhi;
     double deltaEta = seedMomentum.Eta() - photonMomentum.Eta();
-    double deltaR   = sqrt( deltaPhi * deltaPhi + deltaEta * deltaEta );
+    double deltaR   = std::sqrt( deltaPhi * deltaPhi + deltaEta * deltaEta );
 
     if ( ( rcut == 0. ) || ( deltaR < rcut ) ) {
       // -- Calculate vector information
@@ -706,8 +438,8 @@ StatusCode RelInfoConeVariablesForEW::NeutralCone( const LHCb::Particle *seed,
       sPz += photonMomentum.Z();
 
       // -- Calculate scalar information
-      sP  += sqrt( photonMomentum.Mag2() );
-      sPt += sqrt( photonMomentum.Perp2() );
+      sP  += std::sqrt( photonMomentum.Mag2() );
+      sPt += std::sqrt( photonMomentum.Perp2() );
 
       mult++;
     }
@@ -746,10 +478,9 @@ bool RelInfoConeVariablesForEW::isTrackInDecay( const LHCb::Track *track ) {
   }
 
   return isInDecay;
-
 }
 
-LHCb::RelatedInfoMap* RelInfoConeVariablesForEW::getInfo(void) 
+LHCb::RelatedInfoMap* RelInfoConeVariablesForEW::getInfo(void)
 {
-  return &m_map; 
+  return &m_map;
 }

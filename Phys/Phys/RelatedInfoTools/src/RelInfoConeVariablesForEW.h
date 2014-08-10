@@ -1,9 +1,18 @@
 #ifndef RELINFOCONEVARIABLESFOREW_H 
 #define RELINFOCONEVARIABLESFOREW_H 1
 
+// Interface
 #include "Kernel/IRelatedInfoTool.h"
+#include "Kernel/RelatedInfoNamed.h"
+
+// Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/PhysicalConstants.h"
+
+// Event
 #include "Event/RelatedInfoMap.h"
+#include "Event/Particle.h"
 
 /** @class ConeVariablesForEW ConeVariablesForEW.h
  *

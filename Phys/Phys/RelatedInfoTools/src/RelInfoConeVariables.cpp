@@ -52,10 +52,14 @@ StatusCode RelInfoConeVariables::initialize()
   for ( const auto& var : m_variables )
   {
     short int key = RelatedInfoNamed::indexByName( var );
-    if (key != RelatedInfoNamed::UNKNOWN) {
+    if (key != RelatedInfoNamed::UNKNOWN)
+    {
       m_keys.push_back( key );
-      debug() << "Adding variable " << var << ", key = " << key << endmsg;
-    } else {
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Adding variable " << var << ", key = " << key << endmsg;
+    }
+    else
+    {
       warning() << "Unknown variable " << var << ", skipping" << endmsg;
     }
   }
@@ -101,24 +105,21 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with conesize " << m_coneAngle << endmsg;
 
     // -- Retrieve momentum information of tracks in the cone
-    std::pair<std::vector<double>, int> myPair = ConeP(part, tracks, m_coneAngle);
+    std::pair<std::vector<double>,int> myPair = ConeP(part, tracks, m_coneAngle);
     const std::vector<double> & myVector = myPair.first;
 
-    double conePx = myVector[0];
-    double conePy = myVector[1];
-    double conePz = myVector[2];
+    const double conePx = myVector[0];
+    const double conePy = myVector[1];
+    const double conePz = myVector[2];
 
-    double conePx2 = conePx*conePx;
-    double conePy2 = conePy*conePy;
+    const double conePx2 = conePx*conePx;
+    const double conePy2 = conePy*conePy;
 
-    double coneP = std::sqrt( conePx2 + conePy2 + conePz*conePz );
-    double conePt = std::sqrt( conePx2 + conePy2 );
+    const double coneP  = std::sqrt( conePx2 + conePy2 + conePz*conePz );
+    const double conePt = std::sqrt( conePx2 + conePy2 );
 
     // -- Create a vector with the summed momentum of all tracks in the cone
-    Gaudi::XYZVector momentumInCone;
-    momentumInCone.SetX(conePx);
-    momentumInCone.SetY(conePy);
-    momentumInCone.SetZ(conePz);
+    const Gaudi::XYZVector momentumInCone( conePx, conePy, conePz );
 
     // -- Calculate the difference in Eta and Phi between the summed momentum of all tracks in the cone and the
     // -- track of the particle in question
@@ -193,12 +194,15 @@ void RelInfoConeVariables::saveDecayParticles( const LHCb::Particle *top)
   // -- Fill all the daugthers in m_decayParticles
   for ( const auto& dau : top->daughters() )
   {
-    
+
     // -- If the particle is stable, save it in the vector, or...
-    if( dau->isBasicParticle() ){
+    if ( dau->isBasicParticle() )
+    {
       if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
       m_decayParticles.push_back( dau );
-    }else{
+    }
+    else
+    {
       // -- if it is not stable, call the function recursively
       m_decayParticles.push_back( dau );
       if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
@@ -234,20 +238,21 @@ RelInfoConeVariables::ConeP(const LHCb::Particle *part,
     // -- Get the (3-) momentum of the track
     const Gaudi::XYZVector& trackMomentum = track->momentum();
     //double tracketa = track->pseudoRapidity();
-    double trackpx = trackMomentum.X();
-    double trackpy = trackMomentum.Y();
-    double trackpz = trackMomentum.Z();
+    const double trackpx = trackMomentum.X();
+    const double trackpy = trackMomentum.Y();
+    const double trackpz = trackMomentum.Z();
 
     // -- Calculate the difference in Eta and Phi between the particle in question and a track
     double deltaPhi = fabs( partMomentum.Phi() - trackMomentum.Phi() );
     if(deltaPhi > M_PI) deltaPhi  = 2*M_PI-deltaPhi;
 
-    double deltaEta = partMomentum.Eta() - trackMomentum.Eta();
+    const double deltaEta = partMomentum.Eta() - trackMomentum.Eta();
 
-    double deltaR = std::sqrt(deltaPhi * deltaPhi + deltaEta * deltaEta);
+    const double deltaR = std::sqrt(deltaPhi * deltaPhi + deltaEta * deltaEta);
 
     // -- Add the tracks to the summation if deltaR is smaller than the cut value of deltaR
-    if(deltaR < rcut && track->type()== m_trackType ){
+    if(deltaR < rcut && track->type()== m_trackType )
+    {
       sumPx += trackpx;
       sumPy += trackpy;
       sumPz += trackpz;
@@ -272,20 +277,21 @@ RelInfoConeVariables::ConeP(const LHCb::Particle *part,
 //=============================================================================
 // Check if the track is already in the decay
 //=============================================================================
-bool RelInfoConeVariables::isTrackInDecay(const LHCb::Track* track){
+bool RelInfoConeVariables::isTrackInDecay(const LHCb::Track* track)
+{
 
   bool isInDecay = false;
 
   for ( const LHCb::Particle * part : m_decayParticles )
   {
-
     const LHCb::ProtoParticle* proto = part->proto();
-    if(proto){
+    if(proto)
+    {
       const LHCb::Track* myTrack = proto->track();
-
-      if(myTrack){
-
-        if(myTrack == track){
+      if(myTrack)
+      {
+        if(myTrack == track)
+        {
           if ( msgLevel(MSG::DEBUG) ) debug() << "Track is in decay, skipping it" << endmsg;
           isInDecay = true;
         }

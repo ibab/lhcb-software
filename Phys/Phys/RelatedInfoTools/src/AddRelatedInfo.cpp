@@ -66,13 +66,8 @@ StatusCode AddRelatedInfo::execute()
     const std::string location = loc + "/Particles";
   
     const Particle::Range parts = getIfExists<Particle::Range>( location );
-    if ( parts.empty() ) 
-    {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "No particles found at " << location << endreq;
-      continue;
-    }
-
-    if (msgLevel(MSG::VERBOSE)) verbose() << " Found "<< parts.size() << " particles" <<endreq;
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << " Found "<< parts.size() << " particles" <<endreq;
 
     // Loop over particles in the locations
     for ( const Particle * p : parts )
@@ -111,18 +106,16 @@ void AddRelatedInfo::fill( const Particle* top,
   if ( isInLocations )
   {
 
-    if (msgLevel(MSG::DEBUG)) debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
-
-//    std::string key_location = c_location; 
-//    boost::replace_all(key_location, "/Particles", ""); 
-
-//    if (msgLevel(MSG::DEBUG)) debug() << "Key is " << key_location << ", info location is " << m_infoLocations[key_location] << endreq;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
 
     const std::string map_location = top_location + "/" + m_infoLocations[c_location];
     
-    if (msgLevel(MSG::DEBUG)) debug() << "GetOrCreate RelatedInfo at " << map_location << endreq;
+    if (msgLevel(MSG::DEBUG)) 
+      debug() << "GetOrCreate RelatedInfo at " << map_location << endreq;
 
-    ParticleInfoRelation* relation = getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location); 
+    ParticleInfoRelation * relation = 
+      getOrCreate<ParticleInfoRelation, ParticleInfoRelation>(map_location); 
 
     const StatusCode sc = m_tool->calculateRelatedInfo( top, c );
     if ( sc.isFailure() ) 
@@ -140,10 +133,13 @@ void AddRelatedInfo::fill( const Particle* top,
       
     relation->i_relate(c, *map); 
 
-  } else {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Particle at " << c_location << " not in the list, skipping" << endreq; 
+  } 
+  else 
+  {
+    if (msgLevel(MSG::VERBOSE)) 
+      verbose() << "Particle at " << c_location << " not in the list, skipping" << endreq; 
   }
-
+  
   // If we reached the maximum recursion level, we're done
   if ( level >= m_maxLevel ) return;
   
@@ -154,7 +150,8 @@ void AddRelatedInfo::fill( const Particle* top,
     for ( const auto& const_dau : c->daughters() )
     {
       if ( msgLevel(MSG::DEBUG) ) 
-        debug() << " Filling RelatedInfo for daughters of ID " << const_dau->particleID().pid() << endmsg;
+        debug() << " Filling RelatedInfo for daughters of ID "
+                << const_dau->particleID().pid() << endmsg;
       fill( top, const_cast<Particle*>(&*const_dau), level+1, top_location );
     }
   }
