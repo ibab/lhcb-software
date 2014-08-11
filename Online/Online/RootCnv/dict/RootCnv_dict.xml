@@ -9,10 +9,10 @@
 
   <!-- POOL interface dictionary classes      -->
   <class name="UCharDbArray"/>
+  <class name="pool::Guid"/>
   <class name="pool::Token"/>
   <class name="std::vector<pool::Token*>"/>
   <class name="PoolDbLinkManager"/>
   <class name="PoolDbTokenWrap"/>
   <class name="PoolDbNTupleDescriptor"/>
-
 </lcgdict>

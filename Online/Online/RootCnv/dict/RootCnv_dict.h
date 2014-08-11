@@ -2,9 +2,10 @@
 
 #ifdef __POOL_COMPATIBILITY
 #include "RootCnv/PoolClasses.h"
-
+#if 0
 //typedef Gaudi::RootNTupleDescriptor PoolDbNTupleDescriptor;
-struct PoolDbNTupleDescriptor {
+class PoolDbNTupleDescriptor {
+ public:
   /// Description string
   std::string   description;
   /// Optional description
@@ -18,6 +19,7 @@ struct PoolDbNTupleDescriptor {
   /// Standard destructor
   virtual ~PoolDbNTupleDescriptor() {}
 };
+#endif
 #endif
 
 // Add here addition include files for the dictionary generation

@@ -5,7 +5,13 @@
  *   POOL namespace declaration
  */
 namespace pool  {
-
+  class Guid {          // size is 16
+  public:
+    unsigned int  Data1;
+    unsigned short Data2;
+    unsigned short Data3;
+    unsigned char  Data4[8];
+  };
   /** @class Token
    *
    *  Shadow class to mimik POOL tokens.
@@ -13,8 +19,16 @@ namespace pool  {
    */
   class Token {
   public:
-    /// POOL OID data member
-    std::pair<int, int> m_oid; //! transient (a streamer is used to read it)
+    int                   m_refCount;    //! transient (a streamer is used to read it)
+    int                   m_technology;  //! transient (a streamer is used to read it)
+    std::string           m_dbID;        //! transient (a streamer is used to read it)
+    std::string           m_cntID;       //! transient (a streamer is used to read it)
+    Guid                  m_classID;     //! Object global identifier
+    std::pair<int, int> m_oid;           //! POOL OID data member: transient (a streamer is used to read it)
+    int m_type;                          //! transient (a streamer is used to read it)
+  public:
+    Token() {}
+    virtual ~Token() {}
     bool operator==(const Token& t) const { return m_oid.first==t.m_oid.first && m_oid.second==t.m_oid.second;}
   };
 }
@@ -46,7 +60,8 @@ struct UCharDbArray {
   * @author  M.Frank
   * @version 1.0
   */
-struct PoolDbTokenWrap {
+class PoolDbTokenWrap {
+ public:
   /// Aggregated token object
   pool::Token token;
   /// Standard constructor
