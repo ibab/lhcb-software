@@ -81,6 +81,7 @@ public:
   void Clear();
   void EORUpdate(int runo);
   void Update();
+  void Update(unsigned long ref);
   int Lock(void);
   int unLock(void);
   void List();

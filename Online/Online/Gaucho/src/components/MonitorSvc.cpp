@@ -773,9 +773,9 @@ void MonitorSvc::updateSvc( const string& , int runno, const IInterface*  )
 {
   m_MonSys->EORUpdate(runno);
 }
-void MonitorSvc::updatePerSvc()
+void MonitorSvc::updatePerSvc(unsigned long ref)
 {
-  m_MonSys->Update();
+  m_MonSys->Update(ref);
 }
 void MonitorSvc::resetHistos( const IInterface*  )
 {

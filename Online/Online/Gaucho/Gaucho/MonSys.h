@@ -24,6 +24,7 @@ public:
   void Clear();
   void EORUpdate(int runo);
   void Update();
+  void Update(unsigned long ref);
   void List();
   void stop();
   void setRunNo(int runo);

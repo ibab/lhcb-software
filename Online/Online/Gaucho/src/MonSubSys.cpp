@@ -252,6 +252,18 @@ void MonSubSys::Update()
   m_genSrv->Update();
 //  dim_unlock();
 }
+void MonSubSys::Update(unsigned long ref)
+{
+  Lock();
+  long long r;
+  r = ref;
+  m_genSrv->setTime(r);
+  m_genSrv->Serialize();
+  unLock();
+//  dim_lock();
+  m_genSrv->Update();
+//  dim_unlock();
+}
 int MonSubSys::Lock(void)
 {
   int status = 1;
