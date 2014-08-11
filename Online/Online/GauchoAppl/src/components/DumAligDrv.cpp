@@ -82,7 +82,10 @@ extern "C"
     DrvInstance->waitRunOnce();
 //    DrvInstance->m_fitter->m_Lock->lockMutex();
     fval = DrvInstance->m_fitter->getIterationResult();
-    printf ("Chi2: Function value: %15g  Value from local analysis %15g\n",fval,lres);
+    if (abs((fval-lres)/lres)>1.0e-04)
+    {
+      printf ("Chi2: DISCREPANCY: Function value: %15g  Value from local analysis %15g\n",fval,lres);
+    }
     printf("\n");
     fflush(stdout);
 //    DrvInstance->m_fitter->m_Lock->unlockMutex();
