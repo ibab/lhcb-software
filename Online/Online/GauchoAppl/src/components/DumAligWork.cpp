@@ -34,7 +34,7 @@ extern "C"
 //      lib_rtl_unlock(WorkInstance->m_Lock);
       run_count++;
       if (run_count == 1) sleep(10);
-      else usleep(100000);
+      else usleep(7500000);
       WorkInstance->ReadParams();
       WorkInstance->readReference();
       WorkInstance->i_run();
