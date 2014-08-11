@@ -25,8 +25,13 @@
 #include "TLeaf.h"
 #include "TClass.h"
 #include "TBranch.h"
-#include "Compression.h"
 #include "TTreePerfStats.h"
+#if ROOT_VERSION_CODE >= ROOT_VERSION(5,33,0)
+#include "Compression.h"
+static int s_compressionLevel = ROOT::CompressionSettings(ROOT::kLZMA,6);
+#else
+static int s_compressionLevel = 1;
+#endif
 
 // C/C++ include files
 #include <stdexcept>
@@ -42,8 +47,6 @@ static string s_local = "<localDB>";
 #include "PoolTool.h"
 #endif
 #include "RootTool.h"
-
-static int s_compressionLevel = ROOT::CompressionSettings(ROOT::kLZMA,6);
 
 static bool match_wild(const char *str, const char *pat)    {
   //
@@ -98,6 +101,7 @@ RootConnectionSetup::~RootConnectionSetup() {
 
 /// Set the global compression level
 long RootConnectionSetup::setCompression(const std::string& compression) {
+#if ROOT_VERSION_CODE >= ROOT_VERSION(5,33,0)
   int res = 0, level = ROOT::CompressionSettings(ROOT::kLZMA,6);
   size_t idx = compression.find(':');
   if ( idx != string::npos ) {
@@ -121,6 +125,10 @@ long RootConnectionSetup::setCompression(const std::string& compression) {
     return StatusCode::SUCCESS;
   }
   throw runtime_error("ERROR: request to set unknown ROOT compression mechanism:"+compression);
+#else
+  if ( !compression.empty() ) {}
+  return StatusCode::SUCCESS;
+#endif
 }
 
 /// Global compression level
@@ -249,12 +257,14 @@ StatusCode RootDataConnection::connectRead()  {
     if ( makeTool() )   {
       sc = m_tool->readRefs();
       sc.ignore();
+#if ROOT_VERSION_CODE >= ROOT_VERSION(5,33,0)
       if ( sc.getCode() == ROOT_READ_ERROR ) {
 	IIncidentSvc* inc = m_setup->incidentSvc();
 	if ( inc ) {
 	  inc->fireIncident(Incident(pfn(),IncidentType::CorruptedInputFile));
 	}
       }
+#endif
     }
     if ( sc.isSuccess() ) {
       bool need_fid = m_fid == m_pfn;
@@ -323,10 +333,12 @@ StatusCode RootDataConnection::connectWrite(IoType typ)  {
 	StatusCode sc = m_tool->readRefs();
 	sc.ignore();
 	if ( sc.getCode() == ROOT_READ_ERROR ) {
+#if ROOT_VERSION_CODE >= ROOT_VERSION(5,33,0)
 	  IIncidentSvc* inc = m_setup->incidentSvc();
 	  if ( inc ) {
 	    inc->fireIncident(Incident(pfn(),IncidentType::CorruptedInputFile));
 	  }
+#endif
 	}
 	return sc;
       }
@@ -550,10 +562,12 @@ int RootDataConnection::loadObj(CSTR section, CSTR cnt, unsigned long entry, Dat
 		   << endmsg;
 	}
 	if ( nb < 0 )   {	// This is definitely an error...ROOT says if reads fail, -1 is issued.
+#if ROOT_VERSION_CODE >= ROOT_VERSION(5,33,0)
 	  IIncidentSvc* inc = m_setup->incidentSvc();
 	  if ( inc ) {
 	    inc->fireIncident(Incident(pfn(),IncidentType::CorruptedInputFile));
 	  }
+#endif
 	}
 	else if ( nb == 0 && pObj->clID() == CLID_DataObject) {
 	  TFile* f = b->GetFile();
@@ -585,6 +599,7 @@ int RootDataConnection::loadRefs(const std::string& section, const std::string& 
 				 unsigned long entry, RootObjectRefs& refs)
 {
   int nbytes = m_tool->loadRefs(section,cnt,entry,refs); 
+#if ROOT_VERSION_CODE >= ROOT_VERSION(5,33,0)
   if ( nbytes < 0 )   {
     // This is definitely an error:
     // -- Either branch not preesent at all or 
@@ -594,6 +609,7 @@ int RootDataConnection::loadRefs(const std::string& section, const std::string& 
       inc->fireIncident(Incident(pfn(),IncidentType::CorruptedInputFile));
     }
   }
+#endif
   return nbytes;
 }
 
