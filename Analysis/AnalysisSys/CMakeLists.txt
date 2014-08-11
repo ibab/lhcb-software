@@ -22,6 +22,7 @@ gaudi_depends_on_subdirs(Analysis/PyAna
                          Phys/DaVinciMonitors
                          Phys/DaVinciTrackRefitting
                          Phys/DaVinciTrackScaling
+                         Phys/DaVinciAngleCalculators
                          Phys/DecayTreeTuple
                          Phys/DecayTreeTupleBase
                          Phys/DecayTreeTupleDalitz
