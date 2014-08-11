@@ -4,6 +4,9 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2014-08-11 - Chris Jones
+ - Move DaVinciP2VVAngles.{h,cpp} to Phys/DaVinciAngleCalculators.
+
 ! 2014-08-08 - Chris Jones
  - Import DecodeSimpleDecayString from DaVinciTools
 
