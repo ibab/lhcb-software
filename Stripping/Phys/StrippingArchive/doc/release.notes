@@ -4,6 +4,9 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-11 - Stefano Perazzini
+ - Extended timeout for instantiate-all-strip.qmt
+
 !========================= StrippingArchive v1r23 2014-07-28 =========================
 
 ! 2014-07-04 - Anton Poluektov
