@@ -372,7 +372,7 @@ void Fitter::writeReference()
   if (f ==0)
   {
     ref = 0;
-    f=fopen(m_RefFileName.c_str(),"w");)
+    f=fopen(m_RefFileName.c_str(),"w");
   }
   else
   {
