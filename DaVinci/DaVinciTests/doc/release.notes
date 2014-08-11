@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-08-11 - Stefano Perazzini
+ - Corrected DataType in 
+   tests/options/CommonParticles/DVTestStandardIntermediate.py
+
 ! 2014-08-07 - Christopher Rob Jones
  - Update stripping references for DSTWriter changes due to RelatedInfo.
 

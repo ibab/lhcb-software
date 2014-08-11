@@ -38,7 +38,7 @@ DaVinci().HistogramFile = "DVStandardIntermediate.root"
 # DaVinci().UserAlgorithms = List   # explicitly run them
 DaVinci().UserAlgorithms = [ CP ]   # count them all
 DaVinci().EvtMax = 500
-DaVinci().DataType = "2010"
+DaVinci().DataType = "2012"
 DaVinci().Simulation = False
 DaVinci().InputType = "DST"
 
