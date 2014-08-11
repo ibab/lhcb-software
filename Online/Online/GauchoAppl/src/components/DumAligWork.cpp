@@ -36,6 +36,7 @@ extern "C"
       if (run_count == 1) sleep(10);
       else sleep(1);
       WorkInstance->ReadParams();
+      WorkInstance->readReference();
       WorkInstance->i_run();
 //      WorkInstance->incidentSvc()->fireIncident(Incident(WorkInstance->name(),"DAQ_PAUSE"));
     }
@@ -142,6 +143,7 @@ StatusCode DumAligWork::initialize()
   }
   fclose(f);
   fflush(stdout);
+  m_RefFileName   = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
 //  m_Lock = new BRTLLock();
@@ -187,7 +189,7 @@ StatusCode DumAligWork::finalize()
 StatusCode DumAligWork::i_run()
 {
   m_result = analyze();
-  m_MonSvc->updatePerSvc();
+  m_MonSvc->updatePerSvc(m_Reference);
   m_incidentSvc->fireIncident(Incident(name(),"DAQ_PAUSE"));
   return StatusCode::SUCCESS;
 }
@@ -237,7 +239,13 @@ DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : OnlineServi
 DumAligWork::~DumAligWork()
 {
 }
-
+void DumAligWork::readReference()
+{
+  FILE *f;
+  f = fopen(m_RefFileName.c_str(),"r");
+  fscanf(f,"ld",&m_Reference);
+  fclose(f);
+}
 StatusCode DumAligWork::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
   if (IRunable::interfaceID().versionMatch(riid))  {

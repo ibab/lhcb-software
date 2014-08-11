@@ -156,6 +156,7 @@ StatusCode DumAligDrv::initialize()
   }
   m_Minuit = new TMinuit(3);
   m_fitter = new Fitter(this,this->m_ParamFileName);
+  m_fitter->m_PartitionName = m_PartitionName;
   m_fitter->m_Minuit = m_Minuit;
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
   m_fitter->init();
@@ -263,6 +264,7 @@ StatusCode Fitter::init()
     nam[1] = 0;
     m_Minuit->DefineParameter(i,nam,DrvInstance->m_params[i],10.0,0.0,0.0);
   };
+  m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   return StatusCode::SUCCESS;
 }
 
@@ -360,5 +362,17 @@ void Fitter::read_params(int &npar, std::vector<double> &params)
   }
   fclose(f);
   npar = i;
+}
+void Fitter::writeReference()
+{
+  FILE *f;
+  f = fopen(m_RefFileName.c_str(),"r+");
+  unsigned long ref;
+  fscanf(f,"ld",&ref);
+  ref++;
+  rewind(f);
+  fprintf(f,"ld",ref);
+  fflush(f);
+  fclose(f);
 }
 

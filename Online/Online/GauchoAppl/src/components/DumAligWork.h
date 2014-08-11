@@ -34,6 +34,7 @@ namespace LHCb
       virtual StatusCode i_continue();
       void ReadParams();
       double analyze();
+      void readReference();
       virtual void handle(const Incident& inc);
 //  unsigned long long m_prevupdate;
 
@@ -46,6 +47,8 @@ namespace LHCb
       std::vector<double> m_dat_dy;
 
       std::vector<double> m_params;
+      std::string m_RefFileName;
+      unsigned long m_Reference;
       double m_result;
       IGauchoMonitorSvc *m_MonSvc;
       MyTimer *m_Timer;

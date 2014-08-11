@@ -32,6 +32,7 @@ namespace LHCb
       void write_params(int,std::vector<double> &params);
       void write_params(int npar, double *params);
       void read_params(int&,std::vector<double> &params);
+      void writeReference();
       double getIterationResult();
       lib_rtl_thread_t m_thread;
       CounterTask *m_cntTask;
@@ -39,6 +40,8 @@ namespace LHCb
       std::string m_ParamFileName;
       std::vector<std::string> m_CounterNames;
       std::string m_CntDNS;
+      std::string m_RefFileName;
+      std::string m_PartitionName;
   };
   class DumAligDrv: public OnlineService, virtual public IRunable
   {
