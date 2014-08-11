@@ -8,8 +8,8 @@
 #include "Event/Particle.h"
 #include "Event/MCParticle.h"
 #include "Math/Boost.h"
-// DaVinci
-#include "Kernel/DaVinciP2VVAngles.h"
+// local
+#include "DaVinciP2VVAngles.h"
 // local
 #include "Kernel/IP2VVAngleCalculator.h"
 #include "MCBs2JpsiPhiAngleCalculator.h"

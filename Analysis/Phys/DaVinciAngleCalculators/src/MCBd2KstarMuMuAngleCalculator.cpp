@@ -10,7 +10,7 @@
 #include "Event/MCParticle.h"
 // local
 #include "MCBd2KstarMuMuAngleCalculator.h"
-#include "Kernel/DaVinciP2VVAngles.h"
+#include "DaVinciP2VVAngles.h"
 
 #include <boost/assign/list_of.hpp>
 

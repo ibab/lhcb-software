@@ -15,8 +15,11 @@
  *  @author Greig Cowan
  *  @date   2008-05-12
  */
-class MCBs2JpsiPhiAngleCalculator : public GaudiTool, virtual public IP2VVMCPartAngleCalculator {
+class MCBs2JpsiPhiAngleCalculator : public GaudiTool, virtual public IP2VVMCPartAngleCalculator
+{
+
 public:
+
   /// Standard constructor
   MCBs2JpsiPhiAngleCalculator( const std::string& type,
                                const std::string& name,
@@ -48,12 +51,17 @@ protected:
   IP2VVAngleCalculator* m_angle;
 
 private:
+
   int m_depth;
+
+private:
+
   StatusCode getParticles(const LHCb::MCParticle*&,
                           LHCb::MCParticle::ConstVector&,
                           const LHCb::MCParticle*&,
                           const LHCb::MCParticle*&,
                           const LHCb::MCParticle*&,
                           const LHCb::MCParticle*&);
+
 };
 #endif // MCANGLECALCULATOR_H

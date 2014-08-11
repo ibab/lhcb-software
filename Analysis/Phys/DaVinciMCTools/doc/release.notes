@@ -4,6 +4,9 @@
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2014-08-11 - Chris Jones
+ - Move AngleCalculator tools to new Phys/DaVinciAngleCalculators package.
+
 !========================= DaVinciMCTools v10r10 2014-02-20 =========================
 
 ! 2014-01-27 - V. Gligorov

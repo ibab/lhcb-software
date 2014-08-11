@@ -7,10 +7,9 @@
 #include "Event/Particle.h" 
 #include "Kernel/IParticleDescendants.h"
 
-
 // local
 #include "Bd2KstarMuMuAngleCalculator.h"
-#include "Kernel/DaVinciP2VVAngles.h"
+#include "DaVinciP2VVAngles.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Bd2KstarMuMuAngleCalculator
