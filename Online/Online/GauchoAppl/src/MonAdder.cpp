@@ -454,17 +454,27 @@ void MonAdder::TimeoutHandler()
 }
 void MonAdder::i_update()
 {
-  Update();
-  if (CycleFn != 0)
+  if (m_received >= m_expected)
   {
-    (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
-  }
-  m_reference = 0;
-  if (m_doPause)
-  {
-    if (PauseFn != 0)
+    if (!m_timeout)
     {
-      (*PauseFn)(PauseArg);
+      this->m_timer->Stop();
+    }
+    //    //printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
+    Update();
+    m_added = 0;
+    m_received = 0;
+    m_reference = 0;
+    if (CycleFn != 0)
+    {
+      (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
+    }
+    if (m_doPause)
+    {
+      if (PauseFn != 0)
+      {
+        (*PauseFn)(PauseArg);
+      }
     }
   }
 }

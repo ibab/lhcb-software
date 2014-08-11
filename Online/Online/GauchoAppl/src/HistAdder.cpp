@@ -182,36 +182,21 @@ void HistAdder::addBuffer(void *buff, int siz,MonInfo *)
 
 void HistAdder::Update()
 {
-  if (m_received >= m_expected)
+  if (m_isSaver)
   {
-    if (!m_timeout)
+    if (m_locked)
     {
-//      printf("No Timeout... Normal Update. Stopping Timer\n");
-      this->m_timer->Stop();
+      //printf("HistAdder UNLocking\n");
+      m_locked = false;
+      UnLock();
     }
-//    printf("%s Finished one cycle. Updating our service... \n", this->m_MyName.c_str());
-//    fflush(stdout);
-    if (m_isSaver)
-    {
-      if (m_locked)
-      {
-        //printf("HistAdder UNLocking\n");
-        m_locked = false;
-        UnLock();
-      }
-    }
-    m_added = 0;
-    m_received = 0;
-    ////printf(" %d %d\n", m_received,m_m_expected);
-    if (m_outservice != 0)
-    {
-      m_outservice->Serialize();
-      m_outservice->Update();
-      m_updated = true;
-    }
-//    if (CycleFn!= 0)
-//    {
-//      (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
-//    }
   }
+  ////printf(" %d %d\n", m_received,m_m_expected);
+  if (m_outservice != 0)
+  {
+    m_outservice->Serialize();
+    m_outservice->Update();
+    m_updated = true;
+  }
+  fflush(stdout);
 }

@@ -167,29 +167,25 @@ void CounterAdder::addBuffer(void *buff, int siz, MonInfo *)
 }
 void CounterAdder::Update()
 {
-  if (m_received >= m_expected)
+  if (m_isSaver)
   {
-    if (!m_timeout)
+    //printf("Counter Adder: UNLocking\n");
+    if (m_locked)
     {
-      this->m_timer->Stop();
-    }
-    //    //printf("Finished one cycle. Updating our service... %d %d\n", m_received,expected);
-    if (m_isSaver)
-    {
-      //printf("Counter Adder: UNLocking\n");
+      //printf("HistAdder UNLocking\n");
+      m_locked = false;
       UnLock();
     }
-    m_received = 0;
-    ////printf(" %d %d\n", m_received,expected);
-    if (m_outservice != 0)
-    {
-      m_outservice->Serialize();
-      m_outservice->Update();
-    }
-    fflush(stdout);
+  }
+  ////printf(" %d %d\n", m_received,expected);
+  if (m_outservice != 0)
+  {
+    m_outservice->Serialize();
+    m_outservice->Update();
+  }
+  fflush(stdout);
 //    if (CycleFn!= 0)
 //    {
 //      (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
 //    }
-  }
 }
