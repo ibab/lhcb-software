@@ -376,12 +376,12 @@ void Fitter::writeReference()
   }
   else
   {
-    int stat = fscanf(f,"ld",&ref);
+    int stat = fscanf(f,"%ld",&ref);
     if (stat == 0) ref =0;
     rewind(f);
   }
   ref++;
-  fprintf(f,"ld",ref);
+  fprintf(f,"%ld",ref);
   fflush(f);
   fclose(f);
 }

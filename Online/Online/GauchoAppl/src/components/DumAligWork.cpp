@@ -243,7 +243,7 @@ void DumAligWork::readReference()
 {
   FILE *f;
   f = fopen(m_RefFileName.c_str(),"r");
-  fscanf(f,"ld",&m_Reference);
+  fscanf(f,"%ld",&m_Reference);
   fclose(f);
 }
 StatusCode DumAligWork::queryInterface(const InterfaceID& riid, void** ppvIF)
