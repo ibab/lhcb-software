@@ -89,10 +89,10 @@ void DumAligWork::ReadParams()
     m_params.insert(m_params.end(),p);
   }
   fclose(f);
-  printf("Number of Parameters %d\n",m_params.size());
+  printf("Number of Parameters %ld\n",m_params.size());
   for (size_t i=0;i<m_params.size();i++)
   {
-    printf ("Parameter %d %lf\n",i,m_params[i]);
+    printf ("Parameter %ld %lf\n",i,m_params[i]);
   }
   printf("\n");
   fflush(stdout);
@@ -221,7 +221,7 @@ double DumAligWork::analyze()
     result += chi*chi;
   }
   m_result = result;
-  printf("Function Result: %15lf",result);
+  printf("Function Result: %15lg",result);
   fflush (stdout);
   return result;
 }
