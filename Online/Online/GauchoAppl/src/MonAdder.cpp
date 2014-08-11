@@ -459,6 +459,7 @@ void MonAdder::i_update()
   {
     (*CycleFn)(CycleCBarg, m_buffer, m_buffersize, &m_hmap, this);
   }
+  m_reference = 0;
   if (m_doPause)
   {
     if (PauseFn != 0)
