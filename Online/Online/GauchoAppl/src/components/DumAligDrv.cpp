@@ -70,6 +70,7 @@ extern "C"
   }
   void Chi2(int &npar, double *grad, double &fval, double *params, int flag)
   {
+    DrvInstance->m_fitter->writeReference();
     DrvInstance->m_fitter->write_params(npar,params);
     printf("Parameters:\n");
     for (int i= 0;i<npar;i++)
