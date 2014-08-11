@@ -369,7 +369,8 @@ void Fitter::writeReference()
   FILE *f;
   f = fopen(m_RefFileName.c_str(),"r+");
   unsigned long ref;
-  fscanf(f,"ld",&ref);
+  int stat = fscanf(f,"ld",&ref);
+  if (stat == 0) ref =0;
   ref++;
   rewind(f);
   fprintf(f,"ld",ref);
