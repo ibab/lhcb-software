@@ -12,7 +12,7 @@
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>python</text></argument>
-  <argument name="timeout"><integer>6400</integer></argument>
+  <argument name="timeout"><integer>1200</integer></argument>
   <argument name="args"><set><text>../test_all_stripping_instantiation.py</text></set></argument>
   <argument name="reference"><text>../refs/instantiate-all-strip.ref</text></argument>
   <argument name="validator"><text>
