@@ -189,7 +189,7 @@ StatusCode DumAligWork::finalize()
 StatusCode DumAligWork::i_run()
 {
   m_result = analyze();
-  printf("Function Result: %15lg",m_result);
+  printf("Function Result: %15g",m_result);
   fflush (stdout);
   m_MonSvc->updatePerSvc(m_Reference);
   m_incidentSvc->fireIncident(Incident(name(),"DAQ_PAUSE"));
