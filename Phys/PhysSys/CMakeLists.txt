@@ -18,7 +18,6 @@ gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/TopologicalTools
                          Phys/DaVinciOverlapsAndClones
                          Phys/DaVinciNeutralTools
-                         Phys/DaVinciAngleCalculators
                          Phys/DaVinciTransporter
                          Phys/DaVinciTypes
                          Phys/DaVinciUtils
