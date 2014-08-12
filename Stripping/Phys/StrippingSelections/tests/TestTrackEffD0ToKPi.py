@@ -5,8 +5,20 @@ from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 SL_stream = StrippingStream("SL_DST")
-from StrippingSelections import StrippingTrackEffD0ToK3Pi 
-SL_stream.appendLines( StrippingTrackEffD0ToK3Pi.TrackEffD0ToK3PiAllLinesConf("TrackEffD0ToK3Pi", StrippingTrackEffD0ToK3Pi.default_config).lines() )
+from StrippingSelections import StrippingTrackEffD0ToKPi 
+#config = StrippingTrackEffD0ToKPi.default_config
+config = {
+    "debug":False,
+    "Tag_MIN_PT":1400.,
+    "Tag_MIN_IP":0.1,
+    "Tag_MAX_GHPROB":0.35,
+    "Probe_MIN_IP":0.1,
+    "Probe_MIN_ETA":1.9,
+    "Probe_MAX_ETA":4.9,
+    "Kaon_MIN_PIDK":8,
+    "Pion_MAX_PIDK":0
+    }
+SL_stream.appendLines( StrippingTrackEffD0ToKPi.TrackEffD0ToKPiAllLinesConf("TrackEffD0ToKPi", config).lines() )
 
 ##### CONFIGURE THE STRIPPING
 from Configurables import  ProcStatusCheck
@@ -24,22 +36,6 @@ sr = StrippingReport(Selections = sc.selections())
 sr.OnlyPositive = False
 sr.ReportFrequency = 100
     
-########### main sequence
-#from Configurables import FilterDesktop
-#StdParticles = ["StdAllLoosePions","StdNoPIDsPions","StdLoosePions","StdLooseKaons"]
-#MakePionsEtc = FilterDesktop('MakePionsEtc')
-#MakePionsEtc.Inputs=StdParticles
-#MakePionsEtc.Code="ALL"
-
-#from Configurables import MicroDSTWriter
-#writer = MicroDSTWriter("MicroDST0")
-#writer.OutputFileSuffix = "Test"
-#writer.SelectionSequences = sc.activeStreams()
-
-from Configurables import SelDSTWriter
-writer = SelDSTWriter("SelDST0")
-writer.OutputFileSuffix = "Test"
-writer.SelectionSequences = sc.activeStreams()
 
 from Configurables import  EventNodeKiller, StoreExplorerAlg, DataObjectVersionFilter, GaudiSequencer
 
@@ -66,15 +62,25 @@ killer = EventNodeKiller( name = "KillDAQBanks",
 KillSeq = GaudiSequencer("MySeq")
 KillSeq.Members += [ loadCalo,loadMuon,loadRich,loadOther,killer,sc.sequence() ]
 
+########## write to file
+write = "DST"
+if write == "muDST":
+    from Configurables import MicroDSTWriter
+    writer = MicroDSTWriter("MicroDST0")
+    writer.OutputFileSuffix = "Test"
+    writer.SelectionSequences = sc.activeStreams()
+elif write == "DST":
+    from Configurables import SelDSTWriter
+    writer = SelDSTWriter("SelDST0")
+    writer.OutputFileSuffix = "Test"
+    writer.SelectionSequences = sc.activeStreams()
+
+
 DaVinci().PrintFreq = 1000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
 DaVinci().EvtMax = 10000
-#DaVinci().TupleFile = 'DVTuples.root'
-#DaVinci().appendToMainSequence( [MakePionsEtc] )
-
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
-#DaVinci().appendToMainSequence( [ KillSeq ] )
 DaVinci().appendToMainSequence( [ KillSeq , writer.sequence() ] )
 MODE="DATA"
 if MODE == "MC":

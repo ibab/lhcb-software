@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-12 - Mika Vesterinen
+  - Added StrippingTrackEffD0ToKPi.py plus related test, and updated the D0ToK3Pi version
+
 ! 2014-08-09 - Carlos Vazquez Sierra
   - Updated StrippingB2JpsiXforBeta_s.py and StrippingBs2JpsiKstNoPID.py
 
