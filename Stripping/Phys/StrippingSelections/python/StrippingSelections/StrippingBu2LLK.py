@@ -33,7 +33,7 @@ default_config = {
     ,  'Bu2eeKLinePrescale'  : 1
     ,  'Bu2mmKLinePrescale'  : 1
     ,  'Bu2meKLinePrescale'  : 1
-    ,  'ExtraInfoTools'      : [
+    ,  'RelatedInfoTools'      : [
     { "Type" : "ConeVariables"
       , "ConeAngle" : 1.5
       , "ConeNumber" : 1
@@ -48,10 +48,9 @@ default_config = {
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
+from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection, AutomaticData
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLooseKaons
 
 class Bu2LLKConf(LineBuilder) :
     """
@@ -76,7 +75,7 @@ class Bu2LLKConf(LineBuilder) :
         ,  'Bu2eeKLinePrescale'
         ,  'Bu2mmKLinePrescale'
         ,  'Bu2meKLinePrescale'
-        ,  'ExtraInfoTools'
+        ,  'RelatedInfoTools'
       )
     
     def __init__(self, name, config):
@@ -87,24 +86,28 @@ class Bu2LLKConf(LineBuilder) :
         mmXLine_name = name+"_mm"
         eeXLine_name = name+"_ee"
         meXLine_name = name+"_me"
-         
+
+        from StandardParticles import StdLooseKaons as Kaons
+        from StandardParticles import StdLooseKstar2Kpi as Kstars
+        from StandardParticles import StdLoosePhi2KK  as Phis
+        
         # 1 : Make high IP, Pt kaons, K*'s and Phi's
         SelKaons  = self._filterHadron( name   = "KaonsFor" + self._name,
-                                        loc    = "Phys/StdLooseKaons/Particles",
-                                        params = config )
+                                        loc    = Kaons # "Phys/StdLooseKaons/Particles",
+                                        ,params = config )
 
         SelKstars = self._filterHadron( name   = "KstarsFor"+ self._name,
-                                        loc    = "Phys/StdLooseKstar2Kpi/Particles",
-                                        params = config )
+                                        loc    =  Kstars # "Phys/StdLooseKstar2Kpi/Particles",
+                                        ,params = config )
 
         SelPhis   = self._filterHadron( name = "PhisFor" + self._name,
-                                        loc  = "Phys/StdLoosePhi2KK/Particles",
-                                        params = config )
+                                        loc  =  Phis # "Phys/StdLoosePhi3KK/Particles",
+                                        ,params = config )
         
         # 2 : Dileptons
-        DiElectrons           = DataOnDemand(Location = "Phys/StdLooseDiElectron/Particles")
-        DiElectronsFromTracks = DataOnDemand(Location = "Phys/StdDiElectronFromTracks/Particles")
-        DiMuons               = DataOnDemand(Location = "Phys/StdLooseDiMuon/Particles")
+        from StandardParticles import StdDiElectronFromTracks as DiElectronsFromTracks
+        from StandardParticles import StdLooseDiElectron as DiElectrons
+        from StandardParticles import StdLooseDiMuon as DiMuons 
 
         ElecID = "(PIDe> %(PIDe)s)" % config
         MuonID = "(HASMUON)&(ISMUON)"
@@ -134,7 +137,7 @@ class Bu2LLKConf(LineBuilder) :
                                       params   = config,
                                       idcut    = None )
 
-        PhotonConversion  = DataOnDemand(Location = "Phys/StdAllLooseGammaLL/Particles")
+        from StandardParticles import StdAllLooseGammaLL as PhotonConversion
         SelPhoton         = self._filterPhotons("SelPhotonFor" + self._name, photons = PhotonConversion ) 
         
         # 3 : Combine
@@ -181,7 +184,7 @@ class Bu2LLKConf(LineBuilder) :
                                        prescale = config['Bu2eeKLinePrescale'],
                                        postscale = 1,
                                        selection = SelB2eeX,
-                                       ExtraInfoTools = config['ExtraInfoTools'],
+                                       RelatedInfoTools = config['RelatedInfoTools'],
                                        FILTER = SPDFilter, 
                                        RequiredRawEvents = [],
                                        MDSTFlag = False)
@@ -190,7 +193,7 @@ class Bu2LLKConf(LineBuilder) :
                                                  prescale = config['Bu2eeKLinePrescale'],
                                                  postscale = 1,
                                                  selection = SelB2eeXFromTracks,
-                                                 ExtraInfoTools = config['ExtraInfoTools'],
+                                                 RelatedInfoTools = config['RelatedInfoTools'],
                                                  FILTER = SPDFilter, 
                                                  RequiredRawEvents = [],
                                                  MDSTFlag = False )
@@ -199,7 +202,7 @@ class Bu2LLKConf(LineBuilder) :
                                        prescale = config['Bu2mmKLinePrescale'],
                                        postscale = 1,
                                        selection = SelB2mmX,
-                                       ExtraInfoTools = config['ExtraInfoTools'],
+                                       RelatedInfoTools = config['RelatedInfoTools'],
                                        FILTER = SPDFilter, 
                                        RequiredRawEvents = [],
                                        MDSTFlag = False)
@@ -208,7 +211,7 @@ class Bu2LLKConf(LineBuilder) :
                                         prescale       = config['Bu2meKLinePrescale'],
                                         postscale      = 1,
                                         selection      = SelB2meX,
-                                        ExtraInfoTools = config['ExtraInfoTools'],
+                                        RelatedInfoTools = config['RelatedInfoTools'],
                                         FILTER = SPDFilter, 
                                         RequiredRawEvents = [],
                                         MDSTFlag = False)
@@ -217,7 +220,7 @@ class Bu2LLKConf(LineBuilder) :
                                           prescale = config['Bu2eeKLinePrescale'],
                                           postscale = 1,
                                           selection = SelB2eeXFromTracks,
-                                          ExtraInfoTools = config['ExtraInfoTools'],
+                                          RelatedInfoTools = config['RelatedInfoTools'],
                                           FILTER = SPDFilter, 
                                           RequiredRawEvents = [],
                                           MDSTFlag = False )
@@ -230,7 +233,7 @@ class Bu2LLKConf(LineBuilder) :
         self.registerLine( self.B2gammaXLine )
         
 #####################################################
-    def _filterHadron( self, name, loc, params ):
+    def _filterHadron( self, name, sel, params ):
         """
         Filter for all hadronic final states
         """
@@ -244,9 +247,7 @@ class Bu2LLKConf(LineBuilder) :
 
         _Filter = FilterDesktop(Code = _Code)
         
-        _DoDParticles = DataOnDemand( loc ) 
-
-        return Selection( name, Algorithm = _Filter, RequiredSelections = [ _DoDParticles ] )
+        return Selection( name, Algorithm = _Filter, RequiredSelections = [  sel ] )
         
 #####################################################
     def _filterDiLepton(self, name, dilepton, params, idcut = None ) :

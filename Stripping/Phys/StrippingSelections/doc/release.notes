@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-13 - Alex Shires
+  - Updated StrippingBu2LLK.py with RelatedInfo config and no hardcoded paths.
+
 ! 2014-08-12 - Mika Vesterinen
   - Added StrippingTrackEffD0ToKPi.py plus related test, and updated the D0ToK3Pi version
 
