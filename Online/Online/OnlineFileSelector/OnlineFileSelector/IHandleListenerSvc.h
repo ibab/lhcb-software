@@ -24,8 +24,8 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IHandleListenerSvc; }
   
-  virtual StatusCode addListener(IAlertSvc* ) = 0;
-  virtual StatusCode remListener(IAlertSvc*) = 0;
+  virtual StatusCode addListener() = 0;
+  virtual StatusCode remListener() = 0;
   virtual const StatusCode showListeners() = 0;
   virtual StatusCode statusReport(StatusCode , const std::string) = 0;
   

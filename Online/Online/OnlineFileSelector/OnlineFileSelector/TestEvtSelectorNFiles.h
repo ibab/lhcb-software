@@ -1,7 +1,7 @@
 // $Id: RawDataSelector.h,v 1.19 2008-12-04 13:38:25 frankb Exp $
 //====================================================================
-#ifndef MDF_TESTEVTSELECTOR_H
-#define MDF_TESTEVTSELECTOR_H 1
+#ifndef MDF_TestEvtSelectorNFiles_H
+#define MDF_TestEvtSelectorNFiles_H 1
 
 // Include files
 #include "GaudiKernel/Service.h"
@@ -11,7 +11,7 @@
 #include "GaudiOnline/ISuspendable.h"
 #include "OnlineFileSelector/IHandleListenerSvc.h"
 #include "OnlineFileSelector/IAlertSvc.h"
-#include "OnlineFileSelector/IOnlineBookkeep.h"
+#include "OnlineFileSelector/IOnlineBookkeepNFiles.h"
 #include "GaudiKernel/IConversionSvc.h"
 #include "GaudiKernel/DataObject.h"
 #include "GaudiKernel/IDataManagerSvc.h"
@@ -36,7 +36,7 @@ namespace LHCb  {
     * @author M.Frank
     * @date   12/12/2005
     */
-  class TestEvtSelector : public Service, 
+  class TestEvtSelectorNFiles : public Service, 
                           virtual public IEvtSelector,
                           virtual public ISuspendable,
                           virtual public IAlertSvc
@@ -52,7 +52,7 @@ namespace LHCb  {
     class LoopContext : public IEvtSelector::Context {
     protected:
       /// Owning event selector
-      const TestEvtSelector*           m_sel;
+      const TestEvtSelectorNFiles*           m_sel;
       /// Connection specs of current file
       std::string                      m_conSpec;
       /// Data holder
@@ -71,7 +71,7 @@ namespace LHCb  {
 
     public:
       /// Standard constructor
-      LoopContext(const TestEvtSelector* pSelector);
+      LoopContext(const TestEvtSelectorNFiles* pSelector);
       /// Standard destructor 
       virtual ~LoopContext()                    { close();              }
       /// IEvtSelector::Context overload; context identifier
@@ -109,7 +109,7 @@ namespace LHCb  {
     mutable std::string m_HistFileName;
 
     /// Minimum number of events required for a histogram.
-    int m_EvtHisto;
+    //int m_EvtHisto;
     
     
 
@@ -223,10 +223,10 @@ namespace LHCb  {
     virtual std::string getSvcName();
 
     /// Service Constructor
-    TestEvtSelector( const std::string& name, ISvcLocator* svcloc );
+    TestEvtSelectorNFiles( const std::string& name, ISvcLocator* svcloc );
 
     /// Standard destructor
-    virtual ~TestEvtSelector()  {}
+    virtual ~TestEvtSelectorNFiles()  {}
     
     virtual void setCurContext(Context*& ctxt) const { m_curContext = ctxt; } 
     virtual Context* getCurContext() { return m_curContext;}
@@ -278,7 +278,7 @@ protected:
     /// Event counter to be stored in DB.
     mutable int m_evtCntRecord;
     /// Total event counter
-    //mutable int m_totalEvt;
+    mutable int m_totalEvt;
     /// Current run number.
     mutable std::string m_run;
     /// Current run number.
@@ -291,4 +291,4 @@ protected:
     
   };
 }
-#endif  // MDF_TESTEVTSELECTOR_H
+#endif  // MDF_TestEvtSelectorNFiles_H

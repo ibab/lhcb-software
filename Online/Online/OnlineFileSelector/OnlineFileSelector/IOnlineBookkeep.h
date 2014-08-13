@@ -29,6 +29,7 @@ public:
   virtual StatusCode connectToDb() = 0;
   virtual StatusCode printDB() = 0;
   virtual StatusCode isProcessed(const std::string ) = 0;
+  virtual StatusCode isDefect(const std::string ) = 0;
   
 
 

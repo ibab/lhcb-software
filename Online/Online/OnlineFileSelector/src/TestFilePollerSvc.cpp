@@ -57,7 +57,7 @@ StatusCode TestFilePollerSvc::initialize()  {
      error("Cannot access poller service.");
      return sc;
   }
-  m_filePoller->addListener(this);
+  m_filePoller->addListener();
   
   return m_filePoller == 0 ? StatusCode::FAILURE : StatusCode::SUCCESS;
 }
@@ -67,7 +67,7 @@ StatusCode TestFilePollerSvc::finalize()  {
 
   if ( m_filePoller )  {
 
-    m_filePoller->remListener(this);
+    m_filePoller->remListener();
     releaseInterface(m_filePoller);
 
     }

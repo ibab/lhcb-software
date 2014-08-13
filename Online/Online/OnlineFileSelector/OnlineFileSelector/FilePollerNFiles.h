@@ -1,13 +1,14 @@
-#ifndef ICHALKIA_FILEPOLLER_H 
-#define ICHALKIA_FILEPOLLER_H 1
+#ifndef ICHALKIA_FILEPOLLERNFILES_H 
+#define ICHALKIA_FILEPOLLERNFILES_H 1
 
 // Include files
 #include "GaudiOnline/OnlineService.h"
 #include "IHandleListenerSvc.h"
 #include "IAlarmHandler.h"
-#include "IOnlineBookkeep.h"
+#include "IOnlineBookkeepNFiles.h"
 #include "RTL/rtl.h"
 #include <deque>
+#include <map>
 #include "dim.hxx"
 #include <regex.h>
 #include <sqlite3.h>    
@@ -15,27 +16,27 @@
 
 namespace LHCb  {
   
-  /** @class FilePoller FilePoller.h ichalkia/FilePoller.h
+  /** @class FilePoller FilePollerNFiles.h ichalkia/FilePollerNFiles.h
    *  
    *
    *  @author Ioannis Chalkiadakis
    *  @date   2014-01-23
    */
-  class FilePoller :  virtual public DimTimer,
+  class FilePollerNFiles :  virtual public DimTimer,
                       public OnlineService,
                       virtual public IHandleListenerSvc,
                       virtual public IAlarmHandler,
-                      virtual public IOnlineBookkeep
+                      virtual public IOnlineBookkeepNFiles
 
   {
 
   public:
 
     /// Standard constructor.
-    FilePoller(const std::string& nam, ISvcLocator* svc);
+    FilePollerNFiles(const std::string& nam, ISvcLocator* svc);
   
     /// Standard destructor.
-    ~FilePoller();
+    ~FilePollerNFiles();
 
     // IInterface, queryInterface implementation.
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
@@ -62,10 +63,17 @@ namespace LHCb  {
     /// Poll method.
     StatusCode poller(const std::string scan_path);
 
+    /// Helper function for the distribution of a file to the listeners.
+    StatusCode distributeFile(const std::string run, const std::string path_name);
+
+    /// Helper function for making the EventSelector available again.
+    StatusCode clearRun(const std::string );
+	
+
     /// IHandleListenerSvc add a listener.
     virtual StatusCode addListener();
 
-    /// IHandleListenerSvc remove a listener.
+    /// IHandleListenerSvc remove a listener from the queue.
     virtual StatusCode remListener();
 
     /// IHandleListenerSvc show the listeners waiting.
@@ -80,13 +88,13 @@ namespace LHCb  {
     /// IOnlineBookkeep get the run number from file path implementation
     virtual std::string getRunFileNumber(const std::string file_path, const char* pattern);
 
-    /// IOnlineBookkeep book-keep a processed file.
+    /// IOnlineBookkeep book-keep an incoming file.
     virtual StatusCode markBookKept(const std::string file, const int eventCnt);
 
-    /// IOnlineBookkeep check if a file has been processed.
+    /// IOnlineBookkeep check if a file is being processed.
     virtual StatusCode isBookKept(const std::string file);
 
-    /// IOnlineBookkeep update the status flag of a file.
+    /// IOnlineBookkeep update the status flag of and the events read from a file.
     virtual StatusCode updateStatus(const std::string, int );
 
     /// IOnlineBookkeep connect to the database.
@@ -102,7 +110,41 @@ namespace LHCb  {
     virtual StatusCode isProcessed(const std::string );
     
     /// IOnlineBookkeep check if a file is considered erroneous.
-    virtual StatusCode isDefect(const std::string );    
+    virtual StatusCode isDefect(const std::string );  
+
+    /// IOnlineBookkeep increase the file counter of a run.
+    virtual StatusCode increaseCounter(const std::string );  
+
+    /// IOnlineBookkeep decrease the file counter of a run.
+    virtual StatusCode decreaseCounter(const std::string );  
+
+    /// IOnlineBookkeep get the file counter of a run.
+    virtual int getCounter(const std::string ); 
+  
+    /// IOnlineBookkeep insert the run in the database and initialize file counter to 0.
+    virtual StatusCode insertRun(const std::string );
+    
+    /// IOnlineBookkeep check if the run exists in the database.
+    virtual StatusCode existsRun(const std::string );
+  
+    /// IOnlineBookkeep set a file as being processed.
+    virtual StatusCode SetInProcess(const std::string , const int);
+   
+    /// IOnlineBookkeep check if a file is being processed.  
+    virtual StatusCode inProcess(const std::string );
+   
+    /// IOnlineBookkeep check if we have the necessary number of files to process the run.
+    virtual StatusCode isReady(const std::string );
+
+    /// Implementation of IOnlineBookkeep::setReady.
+    virtual StatusCode setReady(const std::string );
+
+    /// Implementation of IOnlineBookkeepNFiles::setFinishedRun.
+    virtual StatusCode setFinishedRun(const std::string ); 
+
+
+    /// The listener waiting for the files.
+    mutable IAlertSvc* m_EvtSelector;    
 
 
  private:
@@ -117,18 +159,20 @@ namespace LHCb  {
     /// The names of the files found in the scanned directory.
     std::deque<std::string>  m_fileNames;
 
-    /// The EventSelector waiting for the files.
-    mutable IAlertSvc* m_EvtSelector;
+    /// The current run that the EventSelector is processing.
+    std::string m_CurRun;
 
     /// SQLite database handler.
     sqlite3* m_FileInfo;
 
     /// Name of the SQLite database.
     std::string m_nameOfDb;
-    
+
+    /// The minimum number of files needed to start processing the run.
+    int m_minFileNum;    
 
   };
 }
 
 
-#endif // ICHALKIA_FILEPOLLER_H
+#endif // ICHALKIA_FILEPOLLERNFILES_H

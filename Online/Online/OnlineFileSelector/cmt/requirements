@@ -11,13 +11,17 @@ use GaudiOnline   v* Online
 use DAQEvent	  v* Event 
 use MDF		  v* DAQ
 use sqlite        v* LCG_Interfaces 	  
-use AIDA	  v* LCG_Interfaces
+use AIDA          v* LCG_Interfaces
+
 
 apply_pattern install_more_includes more=OnlineFileSelector
 apply_pattern install_python_modules
 
 # ==================== component libraries ==================================
 library  OnlineFileSelector  *.cpp
+
+#FilePoller.cpp TestEvtSelector.cpp MDFEvtSelector.cpp FilePoller.h #TestEvtSelector.h 
+
 apply_pattern component_library   library=OnlineFileSelector
 #apply_pattern linker_library   library=OnlineFileSelector
 
@@ -27,7 +31,3 @@ apply_pattern component_library   library=OnlineFileSelector
 
 private
 # ==================== private test application =============================
-application main ../main/main.cpp
-application client ../main/client.cpp
-application test_rpc_client ../main/test_rpc_client.cpp
-application test_rpc ../main/test_rpc.cpp

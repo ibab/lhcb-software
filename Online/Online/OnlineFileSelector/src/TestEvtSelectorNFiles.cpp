@@ -1,10 +1,10 @@
 //====================================================================
-//  TestEvtSelector.cpp
+//  TestEvtSelectorNFiles.cpp
 //--------------------------------------------------------------------
 //
 //  Package    : MDF
 //
-//  Description: The LHCb::TestEvtSelector component is able
+//  Description: The LHCb::TestEvtSelectorNFiles component is able
 //               to produce a list of event references given 
 //               a set of "selection criteria".
 //
@@ -15,7 +15,7 @@
 // Include files
 #include "MDF/RawDataAddress.h"
 #include "MDF/RawEventHelpers.h"
-#include "OnlineFileSelector/TestEvtSelector.h"
+#include "OnlineFileSelector/TestEvtSelectorNFiles.h"
 #include "MDF/RawDataConnection.h"
 #include "GaudiKernel/Tokenizer.h"
 #include "GaudiKernel/MsgStream.h"
@@ -35,14 +35,14 @@ using namespace LHCb;
 
 
 /// Standard constructor
-TestEvtSelector::LoopContext::LoopContext(const TestEvtSelector* pSelector)
+TestEvtSelectorNFiles::LoopContext::LoopContext(const TestEvtSelectorNFiles* pSelector)
   : m_sel(pSelector), m_fileOffset(0), m_ioMgr(m_sel->fileMgr()), m_connection(0),
     m_trgMask(0), m_vetoMask(0)
 {
 }
 
 /// Set connection
-StatusCode TestEvtSelector::LoopContext::connect(const std::string& specs)  {
+StatusCode TestEvtSelectorNFiles::LoopContext::connect(const std::string& specs)  {
   close();
   m_connection = new RawDataConnection(m_sel,specs);
   StatusCode sc = m_ioMgr->connectRead(true,m_connection);
@@ -57,7 +57,7 @@ StatusCode TestEvtSelector::LoopContext::connect(const std::string& specs)  {
 }
 
 /// close connection
-void TestEvtSelector::LoopContext::close()    {
+void TestEvtSelectorNFiles::LoopContext::close()    {
   if ( m_connection )  {
     m_ioMgr->disconnect(m_connection).ignore();
     delete m_connection;
@@ -65,8 +65,8 @@ void TestEvtSelector::LoopContext::close()    {
   }
 }
 
-TestEvtSelector::TestEvtSelector(const std::string& nam, ISvcLocator* svcloc)
-  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0), /*m_totalEvt(0),*/ m_runNum(0), m_prevRun(0) 
+TestEvtSelectorNFiles::TestEvtSelectorNFiles(const std::string& nam, ISvcLocator* svcloc)
+  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0), m_totalEvt(0), m_runNum(0), m_prevRun(0) 
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("TriggerMask", m_trgMask);
@@ -82,7 +82,7 @@ TestEvtSelector::TestEvtSelector(const std::string& nam, ISvcLocator* svcloc)
 }
 
 // IInterface::queryInterface
-StatusCode TestEvtSelector::queryInterface(const InterfaceID& riid, void** ppvIf) {
+StatusCode TestEvtSelectorNFiles::queryInterface(const InterfaceID& riid, void** ppvIf) {
   if (IEvtSelector::interfaceID().versionMatch(riid) )  {
     *ppvIf = (IEvtSelector*)this;
     addRef();
@@ -103,13 +103,13 @@ StatusCode TestEvtSelector::queryInterface(const InterfaceID& riid, void** ppvIf
 }
 
 /// IService implementation: Db event selector override
-StatusCode TestEvtSelector::initialize()  {
+StatusCode TestEvtSelectorNFiles::initialize()  {
   // Initialize base class
   StatusCode status = Service::initialize();
   MsgStream log(msgSvc(), name());
   setSvcName(Service::name());
   if ( !status.isSuccess() )    {
-    log << MSG::ERROR << "<TestEvtSelector> Error initializing base class Service!" << endmsg;
+    log << MSG::ERROR << "<TestEvtSelectorNFiles> Error initializing base class Service!" << endmsg;
     return status;
   }
 
@@ -188,19 +188,20 @@ StatusCode TestEvtSelector::initialize()  {
     log << endmsg;
   }
   m_evtCount = 0;
-  //m_totalEvt = 0;
+  m_totalEvt = 0;
+  
 
   return status;
 }
 
 /// IService implementation: finalize the service
-StatusCode TestEvtSelector::finalize()  {
+StatusCode TestEvtSelectorNFiles::finalize()  {
   if ( m_ioMgr )  {
     m_ioMgr->release();
     m_ioMgr = 0;
   }
   m_evtCount = 0;
-  //m_totalEvt = 0;
+  m_totalEvt = 0;
 
   if ( m_filePoller )  { 
     m_filePoller->remListener(); 
@@ -217,38 +218,44 @@ StatusCode TestEvtSelector::finalize()  {
 
 /// Next method with locking mechanism.
 
-StatusCode TestEvtSelector::next(Context& ctxt) const  {
+StatusCode TestEvtSelectorNFiles::next(Context& ctxt) const  {
   MsgStream log(messageService(), name());
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(&ctxt);
   
-  SmartIF<IOnlineBookkeep> bkkeep(m_filePoller);  
+  SmartIF<IOnlineBookkeepNFiles> bkkeep(m_filePoller);  
   
   StatusCode sc = StatusCode::FAILURE;
 
-  
   if (m_maxNoEvt == m_evtCount) { 
-    bkkeep->updateStatus(m_input,m_evtCount); 
-    m_evtCount = 0;
+    bkkeep->updateStatus(m_input,m_evtCount - m_evtCntRecord); 
+    m_evtCntRecord = m_evtCount;
+    //m_evtCount = 0; 
+    //m_totalEvt = 0;
     StatusCode sts = saveHistos();
+    if (-1 != bkkeep->getCounter(m_run)){
+	StatusCode st = bkkeep->setFinishedRun(m_run);
+	bkkeep->m_remainingFiles = 0;
+    }
     return goIdle();
   } 
 	
 
-  /*if (m_EvtHisto <= m_totalEvt) { 
+  /*if (m_EvtHisto <= m_totalEvt) {
     m_totalEvt = 0;
     StatusCode sts = saveHistos();
     return goIdle();
   }
   */
-  if (m_runNum != m_prevRun) { 
+
+  if (m_runNum!=m_prevRun) { 
      //m_totalEvt = 0;
      m_evtCount = 0;
+     m_evtCntRecord = 0;
      StatusCode sts = setNewHistosName(); 
   }
 
-
   if ( pCtxt != 0 )   {
-    if  (0 != TestEvtSelector::m_firstConnection) {
+    if  (0 != TestEvtSelectorNFiles::m_firstConnection) {
       sc = pCtxt->receiveData(msgSvc());  
     } 
            
@@ -265,21 +272,27 @@ StatusCode TestEvtSelector::next(Context& ctxt) const  {
 	return sc;
       }
     else {
-      if (0 != TestEvtSelector::m_firstConnection) {
-	bkkeep->updateStatus(m_input,m_evtCount); 
-	StatusCode sts = saveHistos();
+      if (0 != TestEvtSelectorNFiles::m_firstConnection) {
+	
+	bkkeep->updateStatus(m_input,m_evtCount - m_evtCntRecord); 
+	m_evtCntRecord = m_evtCount;
+	bkkeep->m_remainingFiles--;
+	if (0 == bkkeep->m_remainingFiles)
+	   StatusCode sts = bkkeep->setFinishedRun(m_run);
+	if (-1 == bkkeep->getCounter(m_run))
+	   StatusCode sts = saveHistos(); 	
 	return goIdle();
       }
-      else 
+      else
 	return goIdle();
-   }
+    }
            
   }
   return S_ERROR;
 }
 
 
-StatusCode TestEvtSelector::setNewHistosName() const {
+StatusCode TestEvtSelectorNFiles::setNewHistosName() const {
 
 	
 
@@ -312,7 +325,7 @@ StatusCode TestEvtSelector::setNewHistosName() const {
 
 
 
-StatusCode TestEvtSelector::goIdle() const {
+StatusCode TestEvtSelectorNFiles::goIdle() const {
 
   
   MsgStream log(msgSvc(), name());
@@ -333,7 +346,7 @@ StatusCode TestEvtSelector::goIdle() const {
 }
 
 
-string TestEvtSelector::genRootName(const string& m_run) const{
+string TestEvtSelectorNFiles::genRootName(const string& m_run) const{
 
 
         time_t rawtime;
@@ -358,7 +371,7 @@ string TestEvtSelector::genRootName(const string& m_run) const{
 
 } 
 
-StatusCode TestEvtSelector::saveHistos() const {
+StatusCode TestEvtSelectorNFiles::saveHistos() const {
 
   // Save Histograms Now
   if ( m_HistPersSvc != 0 )    {
@@ -418,7 +431,7 @@ StatusCode TestEvtSelector::saveHistos() const {
 
 
 
-StatusCode TestEvtSelector::next(Context& ctxt, int jump) const {
+StatusCode TestEvtSelectorNFiles::next(Context& ctxt, int jump) const {
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
       StatusCode status = next(ctxt);
@@ -431,13 +444,13 @@ StatusCode TestEvtSelector::next(Context& ctxt, int jump) const {
   return S_ERROR;
 }
 
-StatusCode TestEvtSelector::previous(Context& /* ctxt */) const  {
+StatusCode TestEvtSelectorNFiles::previous(Context& /* ctxt */) const  {
   MsgStream log(msgSvc(), name());
   log << MSG::FATAL << " EventSelector Iterator, operator -- not supported " << endmsg;
   return S_ERROR;
 }
 
-StatusCode TestEvtSelector::previous(Context& ctxt, int jump) const  {
+StatusCode TestEvtSelectorNFiles::previous(Context& ctxt, int jump) const  {
   if ( jump > 0 ) {
     for ( int i = 0; i < jump; ++i ) {
       StatusCode status = previous(ctxt);
@@ -450,7 +463,7 @@ StatusCode TestEvtSelector::previous(Context& ctxt, int jump) const  {
   return S_ERROR;
 }
 
-StatusCode TestEvtSelector::releaseContext(Context*& ctxt) const  {
+StatusCode TestEvtSelectorNFiles::releaseContext(Context*& ctxt) const  {
   LoopContext* pCtxt = dynamic_cast<LoopContext*>(ctxt);
   if ( pCtxt ) {
     pCtxt->close();
@@ -462,7 +475,7 @@ StatusCode TestEvtSelector::releaseContext(Context*& ctxt) const  {
 }
 
 StatusCode 
-TestEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const   {
+TestEvtSelectorNFiles::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) const   {
   const LoopContext* pctxt = dynamic_cast<const LoopContext*>(&ctxt);
   if ( pctxt ) {
     if ( pctxt->data().second>0 )  {
@@ -480,7 +493,7 @@ TestEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr) cons
 
 
 StatusCode 
-TestEvtSelector::resetCriteria(const std::string& criteria,Context& context) const    {
+TestEvtSelectorNFiles::resetCriteria(const std::string& criteria,Context& context) const    {
   MsgStream log(messageService(), name());
   LoopContext* ctxt = dynamic_cast<LoopContext*>(&context);
   if ( ctxt )  {
@@ -501,7 +514,7 @@ TestEvtSelector::resetCriteria(const std::string& criteria,Context& context) con
 
 
 // ISuspendable implementation: suspend operation
-StatusCode TestEvtSelector::suspend() const  {
+StatusCode TestEvtSelectorNFiles::suspend() const  {
   MsgStream log(messageService(), name());
   if ( !lib_rtl_is_success(lib_rtl_clear_event(m_suspendLock)) )  {
     log << MSG::ERROR << "Cannot lock to suspend operations." << endmsg;
@@ -512,7 +525,7 @@ StatusCode TestEvtSelector::suspend() const  {
 }
 
 // ISuspendable implementation: resume operation
-StatusCode TestEvtSelector::resume() const  {
+StatusCode TestEvtSelectorNFiles::resume() const  {
   MsgStream log(messageService(), name());
   if ( !lib_rtl_is_success(lib_rtl_set_event(m_suspendLock)) )  {
     log << MSG::ERROR << "Cannot unlock to resume operations." << endmsg;
@@ -526,11 +539,11 @@ StatusCode TestEvtSelector::resume() const  {
 
 
 
-StatusCode TestEvtSelector::alertSvc(const string& file_name) 
+StatusCode TestEvtSelectorNFiles::alertSvc(const string& file_name) 
 {
   
   MsgStream log(messageService(), name());
-  SmartIF<IOnlineBookkeep> bkkeep(m_filePoller);  
+  SmartIF<IOnlineBookkeepNFiles> bkkeep(m_filePoller);  
   StatusCode sc = StatusCode::FAILURE;
 
   const char* patternR = "/[0-9]*_";
@@ -561,18 +574,18 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
 	  m_run = bkkeep->getRunFileNumber("/"+m_input,patternR);
 	  m_runNum = strtol(m_run.c_str(),NULL,10);
 	  m_HistFileName = genRootName(m_run.erase(m_run.length()-1));
-	  if (0 == m_firstConnection) { //change the name for the first processed run - not testPol.root!
+	  if (0 == m_firstConnection) {
 		sc = saveHistos();
           	sc = setNewHistosName();
 	  }
 	  
-  	  TestEvtSelector::m_firstConnection = 1;
-	  TestEvtSelector::resume();
+  	  TestEvtSelectorNFiles::m_firstConnection = 1;
+	  TestEvtSelectorNFiles::resume();
 	  
 	  return StatusCode::SUCCESS;
   }
   else {
-	  TestEvtSelector::m_firstConnection = 1;
+	  TestEvtSelectorNFiles::m_firstConnection = 1;
 	  return StatusCode::FAILURE;
 
   }
@@ -581,13 +594,13 @@ StatusCode TestEvtSelector::alertSvc(const string& file_name)
 
 
 
-void  TestEvtSelector::setSvcName(const string& name)
+void  TestEvtSelectorNFiles::setSvcName(const string& name)
 {
   m_listener_name = name;
 }
 
 
-string  TestEvtSelector::getSvcName()
+string  TestEvtSelectorNFiles::getSvcName()
 {
   return m_listener_name;
   
