@@ -4,6 +4,21 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-13 - Anton Poluektov 
+  - Add lines with Lambda0 to Beauty2Charm module: 
+    StrippingLb2DLambda0DDpiD2HHHBeauty2CharmLine, 
+    StrippingLb2DLambda0LLpiD2HHHBeauty2CharmLine, 
+    StrippingLb2DLambda0DDpiWSD2HHHBeauty2CharmLine, 
+    StrippingLb2DLambda0LLpiWSD2HHHBeauty2CharmLine, 
+    StrippingXib2D0Lambda0DDpiD02HHBeauty2CharmLine, 
+    StrippingXib2D0Lambda0LLpiD02HHBeauty2CharmLine, 
+    StrippingXib2D0Lambda0DDpiWSD02HHBeauty2CharmLine, 
+    StrippingXib2D0Lambda0LLpiWSD02HHBeauty2CharmLine, 
+    StrippingB02LcLambda0KLc2PKPiBeauty2CharmLine, 
+    StrippingB02LcLambda0PiLc2PKPiBeauty2CharmLine, 
+    StrippingB02LcLambda0PiWSLc2PKPiBeauty2CharmLine, 
+    StrippingB02LcLambda0KWSLc2PKPiBeauty2CharmLine, 
+
 ! 2014-08-13 - Alex Shires
   - Updated StrippingBu2LLK.py with RelatedInfo config and no hardcoded paths.
 
