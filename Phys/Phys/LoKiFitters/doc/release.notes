@@ -5,6 +5,9 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-08-13 - Chris Jones
+ - Add current algorithm name to Warnings and Errors from PVReFitter.
+
 !========================= LoKiFitters v4r11 2014-06-13 =========================
 
 ! 2014-05-22 - Vanya Belyaev

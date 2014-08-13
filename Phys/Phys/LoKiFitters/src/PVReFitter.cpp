@@ -13,6 +13,7 @@
 // ============================================================================
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/BoostArrayAsProperty.h"
+#include "GaudiKernel/IAlgorithm.h"
 // ============================================================================
 // GaudiAlg
 // ============================================================================
@@ -154,9 +155,9 @@ namespace LoKi
     virtual StatusCode reFit ( LHCb::VertexBase* v ) const 
     {
       //
-      if ( 0 ==  v ) { return Error ( "Invalid     vertex " , InvalidVertex1 ) ; }
+      if ( 0 ==  v ) { return _Error ( "Invalid     vertex " , InvalidVertex1 ) ; }
       LHCb::RecVertex* pv = dynamic_cast<LHCb::RecVertex*> ( v ) ;
-      if ( 0 == pv ) { return Error ( "Invalid Rec-vertex " , InvalidVertex2 ) ; }
+      if ( 0 == pv ) { return _Error ( "Invalid Rec-vertex " , InvalidVertex2 ) ; }
       //
       return _reFit_ ( *pv ) ;
     }
@@ -171,10 +172,10 @@ namespace LoKi
     ( const LHCb::Particle* p ,  
       LHCb::VertexBase*     v ) const 
     {
-      if ( 0 ==  p ) { return Error ( "Invalid particle "   , InvalidParticle ) ; }
-      if ( 0 ==  v ) { return Error ( "Invalid     vertex " , InvalidVertex1  ) ; }
+      if ( 0 ==  p ) { return _Error ( "Invalid particle "   , InvalidParticle ) ; }
+      if ( 0 ==  v ) { return _Error ( "Invalid     vertex " , InvalidVertex1  ) ; }
       LHCb::RecVertex* pv = dynamic_cast<LHCb::RecVertex*> ( v ) ;
-      if ( 0 == pv ) { return Error ( "Invalid Rec-vertex " , InvalidVertex2  ) ; }
+      if ( 0 == pv ) { return _Error ( "Invalid Rec-vertex " , InvalidVertex2  ) ; }
       //
       // collect all tracks from the given particle 
       LHCb::Track::ConstVector tracks ;
@@ -192,15 +193,15 @@ namespace LoKi
     ///   finalize the tool
     virtual StatusCode   finalize () ;                   //   finalize the tool
     // ========================================================================
-  protected:
+  private:
     // ========================================================================
     /// standard constructor 
     PVReFitter 
     ( const std::string& type   , 
       const std::string& name   , 
       const IInterface*  parent ) ;
-    /// virtual & protected destrcutor
-    virtual ~PVReFitter () ;                //   virtual & protected destructor
+    /// virtual destrcutor
+    virtual ~PVReFitter () ;
     // ========================================================================
   private:
     // ========================================================================
@@ -211,7 +212,7 @@ namespace LoKi
     /// assignement operator is disabled 
     PVReFitter& operator= ( const PVReFitter& ) ; // disabled 
     // ========================================================================
-  protected:
+  private:
     // ========================================================================
     /// get the appropriate state from the track 
     // ========================================================================
@@ -291,6 +292,38 @@ namespace LoKi
       return weight * weight ;
     }
     // ========================================================================
+  private:
+    // ============================================================================
+    // get the correct algorithm context 
+    // ============================================================================
+    std::string getMyAlg() const 
+    {
+      std::string myAlg = "" ;
+      if ( m_printMyAlg )
+      {
+        const IAlgContextSvc * asvc =  contextSvc();
+        const IAlgorithm *  current = ( asvc ? asvc->currentAlg() : NULL );
+        if ( current ) { myAlg = " [" + current->name() + "]" ; }
+      }
+      return myAlg ;
+    }
+    // ========================================================================
+    inline StatusCode _Warning
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode::FAILURE,
+      const size_t mx = 10 ) const 
+    {
+      return Warning ( msg + getMyAlg(), code, mx );
+    }
+    // ========================================================================
+    inline StatusCode _Error 
+    ( const std::string& msg                                             , 
+      const StatusCode&  code = StatusCode::FAILURE,
+      const size_t mx = 10 ) const 
+    {
+      return Error ( msg + getMyAlg(), code, mx );
+    }
+    // ========================================================================
   private: // properties 
     // ========================================================================
     /// the name of        track state provider tool 
@@ -333,6 +366,11 @@ namespace LoKi
     mutable TrEntries   m_entries ;
     mutable TrEntry     m_entry   ;
     mutable LHCb::State m_state   ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// Option to include alg name in printout
+    bool                m_printMyAlg  ; 
     // ========================================================================
   }; //                                           end of class LoKi::PVReFitter 
   // ==========================================================================
@@ -427,9 +465,15 @@ LoKi::PVReFitter::PVReFitter
       m_delta_chi2            , 
       "Delta-chi2     as convergency criterion"    ) ;
   //
+  declareProperty 
+    ( "PrintMyAlg"        , 
+      m_printMyAlg = true , 
+      "Print the name of ``associated'' algorithm" ) ;
+  //
+// ==========================================================================
 }
 // ============================================================================
-// virtual & protected destrcutor
+// virtual destrcutor
 // ============================================================================
 LoKi::PVReFitter::~PVReFitter () {}
 // ============================================================================
@@ -558,7 +602,7 @@ StatusCode LoKi::PVReFitter::_remove_
   //
   // - too many tracks to remove 
   if ( removed.size () +  5  > pv.tracks().size() ) 
-  { return Error("Less then five tracks in vertex remains!") ; }
+  { return _Error("Less then five tracks in vertex remains!") ; }
   // 
   // - too many tracks to remove
   if ( removed.size () + 10  > pv.tracks().size() ) 
@@ -593,7 +637,7 @@ StatusCode LoKi::PVReFitter::_remove_
     StatusCode sc  = LoKi::KalmanFilter::load ( s , m_entries.back() , -1*weight ) ;
     if ( sc.isFailure() ) 
     {
-      Error ( "Error from KalmanFilter::load, skip" , sc ) ;
+      _Error ( "Error from KalmanFilter::load, skip" , sc ) ;
       m_entries.pop_back() ; 
     }
   }
@@ -603,7 +647,7 @@ StatusCode LoKi::PVReFitter::_remove_
   // 1) prepare the gain-matrix for PV 
   int ifail = 0 ;
   Gaudi::SymMatrix3x3 ci = pv.covMatrix().Inverse( ifail );
-  if ( 0 != ifail ) { return Error ( "Non-invertible covarinace matrix!") ; }
+  if ( 0 != ifail ) { return _Error ( "Non-invertible covarinace matrix!") ; }
   //
   // 2) make (multi-step) of Kalman filter 
   StatusCode sc = LoKi::KalmanFilter::step ( m_entries     , 
@@ -611,7 +655,7 @@ StatusCode LoKi::PVReFitter::_remove_
                                              ci            ,
                                              0             ) ;
   if ( sc.isFailure() ) 
-  { return Error("Error from KalmanFilter::step" , sc ) ; }   // RETURN 
+  { return _Error("Error from KalmanFilter::step" , sc ) ; }   // RETURN 
   //
   // 3) finally update the vertex
   for ( LHCb::Track::ConstVector::const_iterator it = removed.begin() ; 
@@ -671,7 +715,7 @@ unsigned int LoKi::PVReFitter::_load_
     StatusCode sc = LoKi::KalmanFilter::load ( s , m_entries.back()  ) ;
     if ( sc.isFailure() ) 
     {
-      Warning ( "Unable to load data, skip the track" , sc ) ;
+      _Warning ( "Unable to load data, skip the track" , sc ) ;
       m_entries.pop_back() ;                   
       continue ;                                                // CONTINUE 
     }
@@ -707,9 +751,9 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
   const TRACKS& tracks = pv.tracks() ;
   //
   if      ( 2 > tracks.size () ) 
-  { return Error ( "Not enough     tracks in vertex!" ) ; }
+  { return _Error ( "Not enough     tracks in vertex!" ) ; }
   else if ( 5 > tracks.size () ) 
-  { Warning      ( "Less than five tracks in vertex!" ) ; }
+  { _Warning      ( "Less than five tracks in vertex!" ).ignore() ; }
   //
   // 
   Gaudi::XYZPoint     x  = pv.position  () ;
@@ -723,9 +767,9 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
     // load the data around the seed point 
     const unsigned int nTracks = _load_ ( pv , x , iIter , &ci ) ;
     if      ( 2 > nTracks ) 
-    { return Error ( "Not enough of  good tracks in vertex!" ) ; }  // RETURN
+    { return _Error ( "Not enough of  good tracks in vertex!" ) ; }  // RETURN
     else if ( 5 > nTracks ) 
-    { Warning      ( "Less than five good tracks in vertex!" ) ; }
+    { _Warning      ( "Less than five good tracks in vertex!" ).ignore() ; }
     //
     // make Kalman-Filter step 
     //
@@ -756,7 +800,7 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
     //
   } // iterations 
   //
-  if ( iIter >= m_maxIter ) { Warning ( "No convergency has been reached" ) ; }
+  if ( iIter >= m_maxIter ) { _Warning ( "No convergency has been reached" ) ; }
   //
   TrEntry&     last     = m_entries.back() ;
   //
