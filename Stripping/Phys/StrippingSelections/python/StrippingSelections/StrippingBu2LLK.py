@@ -34,11 +34,12 @@ default_config = {
     ,  'Bu2mmKLinePrescale'  : 1
     ,  'Bu2meKLinePrescale'  : 1
     ,  'RelatedInfoTools'      : [
-    { "Type" : "ConeVariables"
-      , "ConeAngle" : 1.5
-      , "ConeNumber" : 1
-      , "Variables" : ['angle', 'mult', 'ptasy']} 
-    , {'Type' : 'VertexIsolation'} 
+    { "Type" : "RelInfoConeVariables"
+      , 'Location': "ConeIsoInfo" } 
+    , {'Type' : 'RelInfoVertexIsolation'
+      , 'Location': "VertexIsoInfo"  } 
+    , {'Type' : 'RelInfoVertexIsolationBDT'
+      , 'Location': "VertexIsoBDTInfo"  } 
     ]
     },
     'WGs'     : [ 'RD' ],
