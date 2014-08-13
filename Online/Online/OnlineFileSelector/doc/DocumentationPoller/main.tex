@@ -1,0 +1,95 @@
+%\pdfoutput=1
+% Uncomment line above if submitting to arXiv and using pdflatex
+
+% $Id: main.tex 33016 2013-03-25 11:27:03Z mamartin $
+% ============================================================================
+% Purpose: Template for LHCb documents
+% Authors: Tomasz Skwarnicki, Roger Forty, Ulrik Egede
+% Created on: 2010-09-24
+% ============================================================================
+\documentclass[12pt,a4paper]{article}
+% For two column text, add "twocolumn" as an option to the document
+% class. Also uncomment the two "onecolumn" and "twocolumn" lines
+% around the title page below.
+
+% Variables that controls behaviour
+\usepackage{ifthen} % for conditional statements
+\newboolean{pdflatex}
+\setboolean{pdflatex}{true} % False for eps figures 
+\usepackage{booktabs} % useful for tabs
+\usepackage{multirow} % useful for tabs
+\usepackage{rotating}	
+\newboolean{articletitles}
+\setboolean{articletitles}{true} % False removes titles in references
+
+\newboolean{uprightparticles}
+\setboolean{uprightparticles}{false} %True for upright particle symbols
+
+\input{preamble}
+\usepackage{longtable} % only for template; not usually to be used in PAPERs
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Title     %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\setcounter{footnote}{1}
+
+% %%%%%%% CHOOSE TITLE PAGE--------
+%\onecolumn
+ \input{title-LHCb-ANA}
+%\input{title-LHCb-CONF}
+%\input{title-LHCb-PAPER}
+%\twocolumn
+% %%%%%%%%%%%%% ---------
+
+\renewcommand{\thefootnote}{\arabic{footnote}}
+\newcommand{\tu}{\textup} 
+
+\setcounter{footnote}{0}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%  Table of Content   %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%% Uncomment next 2 lines if desired
+\tableofcontents
+\cleardoublepage
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%% Main text %%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\pagestyle{plain} % restore page numbers for the main text
+\setcounter{page}{1}
+\pagenumbering{arabic}
+
+%% Uncomment during review phase. 
+%% Comment before a final submission.
+%\linenumbers
+
+% You can include short sections directly in the main tex file.
+% However, for larger papers it is desirable to split the text into
+% several semiautonomous files, which can be revised independently.
+% This is especially useful when developing a document in
+% collaboration with several people, since then different parts can be
+% edited independently.  This type of file organization is shown here.
+% 
+
+\input{introduction}
+\newpage
+\input{conceptual}
+%\newpage
+\input{architecture}
+\input{implementation}
+\input{implementationNFiles}
+\input{HltOneMon}
+
+\newpage
+\addcontentsline{toc}{section}{References}
+\bibliographystyle{LHCb}
+\bibliography{main,LHCb-PAPER,LHCb-CONF}
+
+
+\end{document}

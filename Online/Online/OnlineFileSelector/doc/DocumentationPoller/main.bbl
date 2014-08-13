@@ -1,0 +1,133 @@
+\ifx\mcitethebibliography\mciteundefinedmacro
+\PackageError{LHCb.bst}{mciteplus.sty has not been loaded}
+{This bibstyle requires the use of the mciteplus package.}\fi
+\providecommand{\href}[2]{#2}
+\begin{mcitethebibliography}{10}
+\mciteSetBstSublistMode{n}
+\mciteSetBstMaxWidthForm{subitem}{\alph{mcitesubitemcount})}
+\mciteSetBstSublistLabelBeginEnd{\mcitemaxwidthsubitemform\space}
+{\relax}{\relax}
+
+\bibitem{Callot:1177133}
+O.~Callot {\em et~al.}, \ifthenelse{\boolean{articletitles}}{{\it {Online data
+  monitoring in the LHCb experiment}}, }{}J.\ Phys.\ : Conf.\ Ser.\  {\bf 119}
+  (2008) 022015\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{Gaspar2001102}
+C.~Gaspar, M.~Dönszelmann, and P.~Charpentier,
+  \ifthenelse{\boolean{articletitles}}{{\it Dim, a portable, light weight
+  package for information publishing, data transfer and inter-process
+  communication},
+  }{}\href{http://dx.doi.org/http://dx.doi.org/10.1016/S0010-4655(01)00260-0}{Computer
+  Physics Communications {\bf 140} (2001), no.~1–2 102 }, \{CHEP2000\}\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{mato1998gaudi}
+P.~Mato, \ifthenelse{\boolean{articletitles}}{{\it Gaudi-architecture design
+  document}, }{} tech. rep., CERN-LHCb-98-064, 1998\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{rawEv}
+\ifthenelse{\boolean{articletitles}}{{\it Raw \toupper{E}vent wiki}, }{},
+  https://twiki.cern.ch/twiki/bin/view/LHCb/RawEvent\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{odin}
+\ifthenelse{\boolean{articletitles}}{{\it Odin raw bank}, }{},
+  http://lhcb-online.web.cern.ch/lhcb-online/tfc/documents/ODIN\_rawdata\_edms704084\_1.pdf\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{hlteff}
+\ifthenelse{\boolean{articletitles}}{{\it Routing bits}, }{},
+  https://twiki.cern.ch/twiki/bin/view/LHCb/HltRoutingBits,
+  https://twiki.cern.ch/twiki/bin/view/LHCb/HltEfficiency\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{hltdec}
+\ifthenelse{\boolean{articletitles}}{{\it Hlt decision reports}, }{},
+  http://lhcb-release-area.web.cern.ch/LHCb-release-area/DOC/davinci
+  /releases/latest/doxygen/d7/db8/class\_l\_h\_cb\_1\_1\_hlt\_dec
+  \_reports.html\#details\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{aida1D}
+\ifthenelse{\boolean{articletitles}}{{\it
+  Aida::\toupper{IH}istogram1\toupper{D}}, }{},
+  http://aida.freehep.org/doc/v3.2.0/api/hep/aida/IHistogram1D.html\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{trend}
+\ifthenelse{\boolean{articletitles}}{{\it \toupper{T}rending tool}, }{},
+  https://lbtwiki.cern.ch/bin/view/Operation/UseTrending\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{odin_bank}
+\ifthenelse{\boolean{articletitles}}{{\it Odin fields}, }{},
+  http://svn.cern.ch/guest/lhcb/LHCb/trunk/Kernel/LHCbAlgs
+  /src/ODINCodecBaseTool.cpp\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{lumiCnt}
+\ifthenelse{\boolean{articletitles}}{{\it Lumi \toupper{C}ounters}, }{},
+  https://twiki.cern.ch/twiki/bin/view/LHCb/FileSummary
+  Record\#LumiCounters\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{lumiXML}
+\ifthenelse{\boolean{articletitles}}{{\it Lumi \toupper{C}ounters
+  \toupper{XML}}, }{},
+  https://svnweb.cern.ch/trac/lhcb/browser/LHCb/trunk/Event
+  /LumiEvent/xml/LumiCounters.xml?rev=168574\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{lumiSum}
+\ifthenelse{\boolean{articletitles}}{{\it Lumi \toupper{S}ummary
+  \toupper{XML}}, }{},
+  https://svnweb.cern.ch/trac/lhcb/browser/LHCb/trunk/Event
+  /HltEvent/xml/HltLumiSummary.xml?rev=36838\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{hltobjectsum}
+\ifthenelse{\boolean{articletitles}}{{\it
+  Hlt\toupper{O}bject\toupper{S}ummary}, }{},
+  https://svnweb.cern.ch/trac/lhcb/browser/LHCb/trunk/Event/HltEvent
+  /xml/HltObjectSummary.xml?rev=36787\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\bibitem{ttree}
+\ifthenelse{\boolean{articletitles}}{{\it \toupper{TT}ree}, }{},
+  http://root.cern.ch/root/html/TBranchElement.html\relax
+\mciteBstWouldAddEndPuncttrue
+\mciteSetBstMidEndSepPunct{\mcitedefaultmidpunct}
+{\mcitedefaultendpunct}{\mcitedefaultseppunct}\relax
+\EndOfBibitem
+\end{mcitethebibliography}

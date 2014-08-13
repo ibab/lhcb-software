@@ -1,0 +1,11 @@
+\section{Introduction}\label{sec:Introduction}
+
+This is an internal document about the High Level Trigger monitoring software (\textit{VanDerMeer/Monitor/HltMonitor} package).It starts by documenting a polling service developed inside the Gaudi framework to support the monitoring of the High Level Trigger of the LHCb detector. Its use is mandated by the change in the HLT architecture for the 2015 Run II. Its function is focused mainly on the last part of the trigger (post-HLT2). The note concludes with the documentation of the HLT I and II monitoring software.\par
+
+This document is structured as follows: 
+section~\textit{\nameref{sec:concept}} describes the main agents involved in the project and the project requirements. It also gives a brief overview of what we want to achive with this project;
+section~\textit{\nameref{sec:Architecture}} details the architecure and design of the two components that form the project : the polling service and the event selection service using it;
+section~\textit{\nameref{sec:Implementation}} describes the steps of the execution of the polling service and the service using it (\textit{EventSelector});
+in section~\textit{ \nameref{sec:HowTo} }, a short description is given on the required pieces of code that should be put in a script in order to run the poller,and
+section~\textit{\nameref{sec:Hlt}} documents the HLT monitoring software.\par
+

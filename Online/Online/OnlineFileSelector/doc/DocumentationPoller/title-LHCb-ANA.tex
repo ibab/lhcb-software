@@ -1,0 +1,73 @@
+% $Id: title-LHCb-ANA.tex 33788 2013-04-12 12:55:53Z gligorov $
+% ===============================================================================
+% Purpose: LHCb-ANA Note title page template
+% Author:
+% Created on: 2010-10-05
+% ===============================================================================
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%  TITLE PAGE  %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+
+% Header ---------------------------------------------------
+\vspace*{-1.5cm}
+
+\hspace*{-0.5cm}
+\begin{tabular*}{\linewidth}{lc@{\extracolsep{\fill}}r}
+\ifthenelse{\boolean{pdflatex}}% Logo format choice
+{\vspace*{-2.7cm}\mbox{\!\!\!\includegraphics[width=.14\textwidth]{figs/lhcb-logo.pdf}} & &}%
+{\vspace*{-1.2cm}\mbox{\!\!\!\includegraphics[width=.12\textwidth]{figs/lhcb-logo.eps}} & &}
+ \\
+% & & LHCb-PUB-2014-026 \\  % ID
+  & & LHCb-INT-2014-XXX \\  % ID
+ & & \today \\ % Date - Can also hardwire e.g.: 23 March 2010
+ %& & March 10, 2014 \\ 
+ & & \\
+\hline
+\end{tabular*}
+
+\vspace*{2.0cm}
+
+% Title --------------------------------------------------
+{\bf\boldmath\huge
+\begin{center}
+HLT monitoring in Run II
+ \end{center}
+}
+
+\vspace*{1.0cm}
+
+% Authors -------------------------------------------------
+\begin{center}
+I.~Chalkiadakis,
+~D.~Tonelli and 
+~E.~Van Herwijnen%,
+\bigskip\\
+{\it\footnotesize
+CERN, Geneva, Switzerland\\
+
+
+}
+\end{center}
+
+\vspace{\fill}
+
+% Abstract -----------------------------------------------
+\begin{abstract}
+  \noindent
+This is the documentation of the High Level Trigger monitoring and of a polling service developed to support it during LHCb Run II.
+% {\bf Blank document -- under review} 
+\end{abstract}
+
+\vspace*{2.0cm}
+\vspace{\fill}
+
+\end{titlepage}
+
+
+\pagestyle{empty}  % no page number for the title
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%  EOD OF TITLE PAGE  %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

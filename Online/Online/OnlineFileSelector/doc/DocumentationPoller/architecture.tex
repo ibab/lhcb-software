@@ -1,0 +1,37 @@
+\section{Architecture}\label{sec:Architecture}
+
+\subsection{\textbf{Poller}}
+
+\subsubsection{\textbf{Purpose and functionality}}
+The poller is responsible for scanning a specified directory periodically, feeding the EventSelector with files of events and keeping a record of the files - and consequently the runs - it has given out for processing.
+
+\subsubsection{\textbf{Interfaces}}
+The poller implements the following interfaces:\par
+\bigskip\noindent
+Online Service (IOnlineService) : The poller is implemented as a service inside the Online environment for Gaudi. This implies that it is invoked and finalized by the main process in Gaudi, the ApplicationManager, and its function is based on the initialize()/start() and stop()/finalize() methods. It also provides the user with the ability to acquire the service's name and access its other interfaces through the queryInterface() method.\par
+\bigskip\noindent
+The TimerUtility class (DimTimer) : This is the element that adds the polling functionality. With it the user can set a timer and call the start() method to start it. Once the time interval is up, the timerHandler() method is called. It performs the main operations of the service, namely the polling and the file distribution, and restarts the timer~\cite{Gaspar2001102}. \par
+\bigskip\noindent
+The error handling interface (IAlarmHandler) : The issueAlarm() method that the poller implements allows it to handle errors arising from unsuccessful delivery and/or processing of the files by the EventSelector. The need for more than a printed message in such cases, called for the implementation of this interface instead of using the Gaudi MessageSvc.\par 
+\bigskip\noindent
+The interface to handle a process connected to the poller (from now on called “listener”) (IHandleListener) : Through this interface a listener (an EventSelector) can notify the poller that it needs a new file to read from and the poller can control the listener that has asked for work, e.g remove it from the waiting list once it has been served. Furthermore it provides a method for printing out a list of the waiting listeners and a method for the listener to notify the poller that it has successfully opened (only opened not processed!) the file that it was given. This possibility of feedback is the reason why this interface was developed instead of using the Gaudi IncidentSvc, which has no feedback functionality.\par
+\bigskip\noindent
+The interface to handle a database for the record keeping (IOnlineBookkeep) : This interface allows the poller to create and connect to a database, update it and and check whether a file (and consequently a run) has been processed or is defect It also provides auxiliary methods to print the contents of the database and acquire the run rumber out of the complete path of the file.\par
+Currently the database used is an SQLite database.Since there are no final plans yet for the monitoring during Run II, we should be able to handle every request of information about a run or events that belong to a certain run or file. Therefore we save in the database not only the run number but also the name of the file processed, the events we read from it and a status flag indicating the status of the process of reading the file.
+\par
+
+\subsection{\textbf{EventSelector}}
+
+\subsubsection{\textbf{Purpose and functionality}}
+For the purpose and functionality of the EventSelector see the Architecture Design Document of Gaudi~\cite{mato1998gaudi}. 
+
+\subsubsection{\textbf{Interfaces}}
+In addition to the interfaces described in the Architecture Design Document mentioned above, an EventSelector has to be modified and implement two more interfaces that will allow it to communicate with the polling service.\par
+\bigskip\noindent
+The modification consists of adding a locking mechanism in the next() method of the EventSelector, so that it can “pause” execution when it has finished reading a file and resume from the same point when the poller has provided it with a new file.\par
+\bigskip\noindent
+The extra interfaces that the EventSelector will have to implement are:\par
+\bigskip\noindent
+the \textit{IAlertSvc} : Through it the poller gives the new file path to the EventSelector and makes it resume its operation, after having reset the input context/criteria.\par
+\bigskip\noindent
+the \textit{ISuspendable} : It allows the \textit{EventSelector} to suspend and resume its operation.

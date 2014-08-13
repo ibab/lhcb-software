@@ -1,0 +1,22 @@
+\section{Conceptual design}
+\label{sec:concept}
+
+\subsection{\textbf{Main agents and concept}}
+The main components referred to in the following documentation are the polling service and the EventSelector.\par
+EventSelector : the Gaudi component that given a set of selection (physics) criteria can choose what events will be processed by an application.\par
+Poller : the polling service developed.\par
+\bigskip\noindent
+In Run II the HLT will be split in two parts : HLT 1 and HLT 2. The output of  the HLT 2 is the directory that keeps the files containing events which were accepted by the trigger. So far, the EventSelector was reading the files from that directory, taking for granted that the files were there. In Run II the poller will be scanning this directory periodically and when a new file arrives it will be given out to the EventSelector for reading. In that way, we can have control over the run that is processed at a given time : if the piquet decides that the histograms produced using a certain run are enough to classify it, then the poller can be used to stop giving out files from that run or, in contrast,  give out more files from the same run for further processing.
+
+\subsection{\textbf{Requirements}}
+
+\begin{itemize}
+\item The polling service should run constantly in the background.\par 
+\item It should send out for reading N files from each run; N should be determined by the user.\par
+\item It should make sure that when it sends out a file, the recipient (an EventSelector) has received it and opened it successfully. If not, the user should be notified of the failure.\par
+\item The number of events that are read in total should be determined by the user. When the specified number is reached, the EventSelector should stop reading, connect to the poller and wait for another file to read from.\par
+\item The poller should keep track of the files that have been sent out and processed successfully.\par
+\item It is necessary to save the histogram sets for each run during the execution of the EventSelector and not at its finalization.\par
+\end{itemize}
+
+
