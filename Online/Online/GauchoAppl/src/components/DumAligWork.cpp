@@ -81,7 +81,6 @@ StatusCode LHCb::DumAligWork::start()
 StatusCode LHCb::DumAligWork::initialize()
 {
   OnlineService::initialize();
-  this->
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
   ::lib_rtl_start_thread(WorkerThreadFunction,this,&m_thread);
@@ -129,6 +128,7 @@ StatusCode LHCb::DumAligWork::run()
 
 LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_result(0),m_MonSvc(0),m_Reference(0)
 {
+  m_incidentSvc = this->incidentSvc();
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
   m_fitterFcn = new FitterFcn(this);
