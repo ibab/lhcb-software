@@ -4,21 +4,20 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IToolSvc.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
-#include "GaudiKernel/IRunable.h"
 #include "GaudiOnline/OnlineService.h"
 #include "GaudiKernel/IIncidentSvc.h"
-#include "dim/dim.hxx"
 #include "RTL/rtl.h"
+#include "IFitterFcn.h"
+#include "IDumAligWork.h"
 
-#include "Gaucho/BRTL_Lock.h"
+//#include "Gaucho/BRTL_Lock.h"
 
 // Forward declarations
 //class DimService;
 //class ISimpleTrendWriter;
 namespace LHCb
 {
-  class MyTimer;
-  class DumAligWork: public OnlineService, virtual public IRunable
+  class DumAligWork: public OnlineService, virtual public IDumAligWork
   {
     public:
       DumAligWork(const std::string& name, ISvcLocator* sl);
@@ -32,39 +31,24 @@ namespace LHCb
       virtual StatusCode i_run();
       virtual StatusCode stop();
       virtual StatusCode i_continue();
-      void ReadParams();
-      double analyze();
+      IGauchoMonitorSvc *m_MonSvc;
+      IGauchoMonitorSvc *getMonSvc(){return m_MonSvc;};
+      std::string getPartitionName(){return m_PartitionName;};
+      IFitterFcn * m_fitterFcn;
       void readReference();
       virtual void handle(const Incident& inc);
 //  unsigned long long m_prevupdate;
 
       std::string m_PartitionName;
-      std::string m_DataFileName;
-      std::string m_ParamFileName;
-      std::string m_SvcName;
-      std::vector<double> m_dat_x;
-      std::vector<double> m_dat_y;
-      std::vector<double> m_dat_dy;
-
-      std::vector<double> m_params;
       std::string m_RefFileName;
       unsigned long m_Reference;
       double m_result;
-      IGauchoMonitorSvc *m_MonSvc;
-      MyTimer *m_Timer;
       lib_rtl_lock_t m_Lock;
       lib_rtl_thread_t m_thread;
       bool m_runonce;
       void waitRunOnce();
       void setRunOnce();
-
-  };
-  class MyTimer : public DimTimer
-  {
-    public:
-      DumAligWork *m_Worker;
-      MyTimer(DumAligWork *);
-      void timerHandler();
+      void *getThis(){return this;};
   };
 }
 #endif // ONLINE_GAUCHO_DUMALIGWORK_H
