@@ -8,7 +8,7 @@ __all__ = ['addParticleModule',
 
 from sys import modules
 _this = modules[__name__]
-from CommonParticles import StandardBasic
+from CommonParticles import StandardBasic, StandardIntermediate
 from PhysSelPython.Wrappers import AutomaticData
 
 selections = []
@@ -27,6 +27,7 @@ def addParticleModule(particleModule) :
         setattr(_this,  name, sel)
 
 addParticleModule(StandardBasic)
+addParticleModule(StandardIntermediate)
 
 if __name__ == '__main__' :
     print '\nStandardParticles: available Selections:\n'

@@ -11,6 +11,8 @@ from Configurables import CombineParticles
 from CommonParticles.Utils import *
 import GaudiKernel.SystemOfUnits as Units
 
+locations = { }
+
 ###########################
 # StdLooseDiElectron #
 ###########################
@@ -23,7 +25,7 @@ StdLooseDiElectron.Inputs = ["Phys/StdAllLooseElectrons/Particles"]
 StdLooseDiElectron.DaughtersCuts = { "e+" : "(PT>500*MeV)" }
 StdLooseDiElectron.CombinationCut = "(AM>30*MeV) & (ADOCACHI2CUT(30,''))"
 StdLooseDiElectron.MotherCut = "(VFASPF(VCHI2)<25)"
-locations = updateDoD(StdLooseDiElectron)
+locations.update( updateDoD(StdLooseDiElectron) )
 
 """
 Using Olivier's Di-Electron Particle Maker
@@ -33,13 +35,13 @@ from Configurables import DiElectronMaker, ProtoParticleCALOFilter
 from GaudiKernel.SystemOfUnits import *
 dieLL = DiElectronMaker('StdDiElectronFromTracks')
 dieLL.Particle = "J/psi(1S)"
-selector = trackSelector ( dieLL , trackTypes = [ "Long"]) 
+selector = trackSelector ( dieLL , trackTypes = ["Long"] ) 
 dieLL.addTool( ProtoParticleCALOFilter, name='Electron' )
 dieLL.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
 dieLL.DiElectronMassMax = 5000.*MeV
 dieLL.DiElectronMassMin = 0.*MeV
 dieLL.DiElectronPtMin = 200.*MeV
-locations = updateDoD ( dieLL )
+locations.update( updateDoD(dieLL) )
 StdDiElectronFromTracks = dieLL
 
 ## ============================================================================

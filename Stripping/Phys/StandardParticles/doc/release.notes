@@ -4,6 +4,9 @@
 ! Purpose     : Selection-type instances corresponding to CommonParticles.
 !-----------------------------------------------------------------------------
 
+! 2014-08-13 - Chris Jones
+ - Add StandardIntermediate to list of standard particles.
+
 !========================= StandardParticles v2r2 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic

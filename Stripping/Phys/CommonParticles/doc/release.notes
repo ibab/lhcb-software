@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-08-13 - Chris Jones
+ - Fix a bug that prevented StdLooseDiElectron being used as a 
+   Standard Particle.
+
 ! 2014-08-08 - Chris Jones
  - Add StdLooseDiElectron to StandardBasicNeutral module.
 
