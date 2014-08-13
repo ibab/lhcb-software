@@ -634,7 +634,8 @@ StatusCode LoKi::PVReFitter::_remove_
     const LHCb::State* s = state ( *track , pv.position () ) ;
     m_entries.push_back ( TrEntry () ) ;
     // load the entry with THE OPPOSITE WEIGHT 
-    StatusCode sc  = LoKi::KalmanFilter::load ( s , m_entries.back() , -1*weight ) ;
+    const StatusCode sc  = 
+      LoKi::KalmanFilter::load ( s , m_entries.back() , -1*weight ) ;
     if ( sc.isFailure() ) 
     {
       _Error ( "Error from KalmanFilter::load, skip" , sc ) ;
@@ -646,14 +647,14 @@ StatusCode LoKi::PVReFitter::_remove_
   //
   // 1) prepare the gain-matrix for PV 
   int ifail = 0 ;
-  Gaudi::SymMatrix3x3 ci = pv.covMatrix().Inverse( ifail );
+  const Gaudi::SymMatrix3x3 ci = pv.covMatrix().Inverse( ifail );
   if ( 0 != ifail ) { return _Error ( "Non-invertible covarinace matrix!") ; }
   //
   // 2) make (multi-step) of Kalman filter 
-  StatusCode sc = LoKi::KalmanFilter::step ( m_entries     , 
-                                             pv.position() , 
-                                             ci            ,
-                                             0             ) ;
+  const StatusCode sc = LoKi::KalmanFilter::step ( m_entries     , 
+                                                   pv.position() , 
+                                                   ci            ,
+                                                   0             ) ;
   if ( sc.isFailure() ) 
   { return _Error("Error from KalmanFilter::step" , sc ) ; }   // RETURN 
   //
@@ -773,9 +774,9 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
     //
     // make Kalman-Filter step 
     //
-    StatusCode sc = LoKi::KalmanFilter::step ( m_entries ) ;
+    const StatusCode sc = LoKi::KalmanFilter::step ( m_entries ) ;
     //
-    TrEntry&     last     = m_entries.back() ;
+    TrEntry&        last  = m_entries.back() ;
     //
     const double chi2new  = last.m_chi2 ;
     //
@@ -802,9 +803,9 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
   //
   if ( iIter >= m_maxIter ) { _Warning ( "No convergency has been reached" ) ; }
   //
-  TrEntry&     last     = m_entries.back() ;
+  const TrEntry& last = m_entries.back() ;
   //
-  // fill PV 
+  // fill PV
   // 
   // set the Chi^2 and the DoF of the vertex (fit)
   pv.setChi2AndDoF ( last.m_chi2 , 2 * m_entries.size() - 3 ) ;
