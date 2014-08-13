@@ -7,6 +7,14 @@
 !           ALWAYS also edit Hlt/HltSettings
 !
 !----------------------------------------------------------------------------
+! 2014-08-13 - Patrick Spradlin
+ - Modified input particle lists for lines defined in
+   Hlt2CharmHadLambdaCLines.py and Hlt2CharmSemilepD02HMuNuLines.py so that
+   OfflineVertexFitter does not attempt to vertex two copies of the same track.
+   This is related to Savannah Task #51533,
+   https://savannah.cern.ch/task/?51533.
+   Depends on Hlt2SharedParticles r176296.
+
 ! 2014-07-16 - Gerhard Raven
  - enforce the rule that Hlt2SomeLine must define Htl2SomeLineConf
 

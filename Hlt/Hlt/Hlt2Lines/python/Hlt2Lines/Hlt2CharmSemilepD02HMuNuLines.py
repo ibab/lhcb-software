@@ -290,15 +290,15 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
 
         ## Input particles
         ### ###############################################################
-        from Hlt2SharedParticles.TrackFittedBasicParticles import (BiKalmanFittedKaons,
-                                                                   BiKalmanFittedPions,
+        from Hlt2SharedParticles.TrackFittedBasicParticles import (BiKalmanFittedKaonsWithMuonID,
+                                                                   BiKalmanFittedPionsWithMuonID,
                                                                    BiKalmanFittedMuons)
         muonName = self.getProp('name_prefix') + 'Muons'
         kaonName = self.getProp('name_prefix') + 'Kaons'
         pionName = self.getProp('name_prefix') + 'Pions'
-        lclInputKaons      = self.__inPartFilter(kaonName, [ BiKalmanFittedKaons], False )
+        lclInputKaons      = self.__inPartFilter(kaonName, [ BiKalmanFittedKaonsWithMuonID], False )
         lclInputMuons      = self.__inPartFilter(muonName, [ BiKalmanFittedMuons], True )
-        lclInputPions      = self.__inPartFilter(pionName, [ BiKalmanFittedPions], False )
+        lclInputPions      = self.__inPartFilter(pionName, [ BiKalmanFittedPionsWithMuonID], False )
 
         ## D0 -> mu+ K-/pi- lines and wrong-sign line
         ### ###############################################################
@@ -335,7 +335,7 @@ class Hlt2CharmSemilepD02HMuNuLinesConf(HltLinesConfigurableUser) :
 
         # added for the slow pion filter
         pionsForDstar = self.__SlowPionFilter( name = self.getProp('name_prefix')+'SlowPion'
-                                               , inputContainers = [ BiKalmanFittedPions ]
+                                               , inputContainers = [ BiKalmanFittedPionsWithMuonID ]
                                              )
 
         DeltaMSigMassCut = "(M-MAXTREE('D0'==ABSID,M)<%s )" \
