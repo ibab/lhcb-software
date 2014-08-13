@@ -119,7 +119,6 @@ StatusCode LHCb::DumAligWork::run()
 
 LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_result(0),m_MonSvc(0),m_Reference(0)
 {
-  m_incidentSvc = this->incidentSvc();
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
   m_fitterFcn = new FitterFcn(this);
