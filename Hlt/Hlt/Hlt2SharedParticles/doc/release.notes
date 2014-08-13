@@ -4,6 +4,13 @@
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2014-08-13 - Patrick Spradlin
+ - Added three new particle types to TrackFittedBasicParticles.py so that
+   Particles from a consistent set of ProtoParticles can be used in certain
+   exclusive reconstructions:  Hlt2BiKalmanFittedPionsWithMuonID,
+   Hlt2BiKalmanFittedRichPions, and Hlt2BiKalmanFittedRichLowPTPions.
+
 ! 2014-07-16 - Gerhard Raven
  - fix instantiation test
 

@@ -132,6 +132,18 @@ Hlt2BiKalmanFittedKaons = NoPIDsParticleMaker("Hlt2BiKalmanFittedKaons"
                                             )
 ##########################################################################
 #
+# Make the pions w/ muon ID available
+#
+Hlt2BiKalmanFittedPionsWithMuonID = NoPIDsParticleMaker("Hlt2BiKalmanFittedPionsWithMuonID"
+                                            , Particle 		= "pion"
+                                            , Input 		= BiKalmanFittedMuonProtoMaker.outputSelection()
+                                            , Output        = 'Hlt2/Hlt2BiKalmanFittedPionsWithMuonID/Particles'
+                                            , WriteP2PVRelations	= False
+                                            )
+Hlt2BiKalmanFittedPionsWithMuonID.addTool(ProtoParticleMUONFilter('Muon'))
+Hlt2BiKalmanFittedPionsWithMuonID.Muon.Selection        = [""]
+##########################################################################
+#
 # Make the kaons w/ muon ID available
 #
 Hlt2BiKalmanFittedKaonsWithMuonID = NoPIDsParticleMaker("Hlt2BiKalmanFittedKaonsWithMuonID"
@@ -176,6 +188,19 @@ Hlt2BiKalmanFittedDownProtons = NoPIDsParticleMaker("Hlt2BiKalmanFittedDownProto
                                             )
 ##########################################################################
 #
+# Make the Rich pions 
+# Note: we set the DLL cut manually to -99999 to avoid the default of 2 specified in the ProtoP filter base class 
+#
+Hlt2BiKalmanFittedRichPions = CombinedParticleMaker("Hlt2BiKalmanFittedRichPions"
+                                            , Particle 			=  "pion"
+                                            , Input 			=  BiKalmanFittedChargedRichHadronProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedRichPions/Particles'
+                                            , WriteP2PVRelations  	=  False
+                                            )
+Hlt2BiKalmanFittedRichPions.addTool(ProtoParticleCALOFilter('Pion'))
+Hlt2BiKalmanFittedRichPions.Pion.Selection		=  ["RequiresDet='RICH'"]
+##########################################################################
+#
 # Make the Rich kaons 
 # Note: we set the DLL cut manually to -99999 to avoid the default of 2 specified in the ProtoP filter base class 
 #
@@ -200,6 +225,19 @@ Hlt2BiKalmanFittedRichProtons = CombinedParticleMaker("Hlt2BiKalmanFittedRichPro
                                             )
 Hlt2BiKalmanFittedRichProtons.addTool(ProtoParticleCALOFilter('Proton'))
 Hlt2BiKalmanFittedRichProtons.Proton.Selection		= ["RequiresDet='RICH'"]
+##########################################################################
+#
+# Make the Rich LowPT pions 
+# Note: we set the DLL cut manually to -99999 to avoid the default of 2 specified in the ProtoP filter base class
+#
+Hlt2BiKalmanFittedRichLowPTPions = CombinedParticleMaker("Hlt2BiKalmanFittedRichLowPTPions"
+                                            , Particle              =  "pion"
+                                            , Input                 = BiKalmanFittedChargedRichForLowPTParticlesHadronProtoMaker.outputSelection()
+                                            , Output                = 'Hlt2/Hlt2BiKalmanFittedRichLowPTPions/Particles'
+                                            , WriteP2PVRelations    =  False
+                                            )   
+Hlt2BiKalmanFittedRichLowPTPions.addTool(ProtoParticleCALOFilter('Pion'))
+Hlt2BiKalmanFittedRichLowPTPions.Pion.Selection     = ["RequiresDet='RICH'"]
 ##########################################################################
 #
 # Make the Rich LowPT kaons 
@@ -347,10 +385,15 @@ __all__ = ( 	'BiKalmanFittedMuons',
               'BiKalmanFittedDownPions',
               'BiKalmanFittedProtons',
               'BiKalmanFittedDownProtons',
+              'BiKalmanFittedRichPions',
+              'BiKalmanFittedRichLowPTPions',
               'BiKalmanFittedRichKaons',
+              'BiKalmanFittedRichLowPTKaons',
               'BiKalmanFittedRichProtons',
               'BiKalmanFittedRichLowPTProtons',
               'BiKalmanFittedPhotons',
+              'BiKalmanFittedPionsWithMuonID',
+              'BiKalmanFittedKaonsWithMuonID',
               'BiKalmanFittedPhotonsFromL0',
               'BiKalmanFittedPhotonsFromL0Low' )
 
@@ -369,6 +412,8 @@ BiKalmanFittedDownProtons   = bindMembers( None, [ BiKalmanFittedChargedDownProt
 BiKalmanFittedMuons         = bindMembers( None, [ BiKalmanFittedMuonProtoMaker				, Hlt2BiKalmanFittedMuons 	] )
 BiKalmanFittedElectrons           = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker		, Hlt2BiKalmanFittedElectrons 	] ) 
 BiKalmanFittedElectronsFromL0     = bindMembers( None, [ BiKalmanFittedElectronFromL0Maker	   	, Hlt2BiKalmanFittedElectronsFromL0 	] ) 
+BiKalmanFittedRichPions     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedRichPions 	] )
+BiKalmanFittedRichLowPTPions = bindMembers( None, [ BiKalmanFittedChargedRichForLowPTParticlesHadronProtoMaker, Hlt2BiKalmanFittedRichLowPTPions])
 BiKalmanFittedRichKaons     = bindMembers( None, [ BiKalmanFittedChargedRichHadronProtoMaker, Hlt2BiKalmanFittedRichKaons 	] )
 BiKalmanFittedRichLowPTKaons = bindMembers( None, [ BiKalmanFittedChargedRichForLowPTParticlesHadronProtoMaker, Hlt2BiKalmanFittedRichLowPTKaons])
 BiKalmanFittedRichProtons   = bindMembers( None, [ BiKalmanFittedChargedRichForProtonsHadronProtoMaker , Hlt2BiKalmanFittedRichProtons ] )
@@ -377,4 +422,5 @@ BiKalmanFittedPhotons          = bindMembers( None, [ BiKalmanFittedNeutralProto
 BiKalmanFittedPhotonsFromL0    = bindMembers( None, [ BiKalmanFittedPhotonFromL0Maker  ,   Hlt2BiKalmanFittedPhotonsFromL0   ] ) 
 BiKalmanFittedPhotonsFromL0Low = bindMembers( None, [ BiKalmanFittedPhotonFromL0LowMaker  ,   Hlt2BiKalmanFittedPhotonsFromL0Low   ] ) 
 BiKalmanFittedKaonsWithMuonID = bindMembers( None, [ BiKalmanFittedMuonProtoMaker, Hlt2BiKalmanFittedKaonsWithMuonID] )
+BiKalmanFittedPionsWithMuonID = bindMembers( None, [ BiKalmanFittedMuonProtoMaker, Hlt2BiKalmanFittedPionsWithMuonID] )
 BiKalmanFittedKaonsWithEID = bindMembers( None, [ BiKalmanFittedChargedCaloProtoMaker, Hlt2BiKalmanFittedKaonsWithEID] )
