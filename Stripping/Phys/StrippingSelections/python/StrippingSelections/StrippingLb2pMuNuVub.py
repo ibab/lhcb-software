@@ -74,7 +74,7 @@ confdict= {
     "ProtonMINIPCHI2"     : 16.    ,#adminensional
     #B Mother Cuts
     "BVCHI2DOF"           : 4.     ,#adminensional
-    "BDIRA"               : 0.9994  ,#adminensional
+    "BDIRA"               : 0.994  ,#adminensional
     "BFDCHI2HIGH"         : 150.   ,#adimensional
     "pMuMassLower"        : 1000.  ,#MeV
     "pMuPT"               : 1500.  ,#MeV
@@ -148,18 +148,30 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         self._protonFilter()
 
         self._fakeprotonSel=None
+        self._fakeprotonFilter()
 
         self._fakemuonSel=None
+        self._fakemuonFilter()
 
         self._Definitions()
 
         self.registerLine(self._high_Lb_line())
         self.registerLine(self._low_Lb_line())
         self.registerLine(self._SS_Lb_line())
+        self.registerLine(self._fakep_Lb_line())
+        self.registerLine(self._fakep_SS_Lb_line())
+        self.registerLine(self._fakemu_Lb_line())
+        self.registerLine(self._fakemu_SS_Lb_line())
         
     def _NominalMuSelection( self ):
         return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
                "& (TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
+               "& (MIPCHI2DV(PRIMARY)> %(MuonMINIPCHI2)s )"
+
+    def _FakeMuSelection( self ):
+        return "(TRCHI2DOF < %(MuonTRCHI2)s ) &  (P> %(MuonP)s *MeV) &  (PT> %(MuonPT)s* MeV)"\
+               "& (TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
+	       "& (~ISMUON) & (INMUON)"\
                "& (MIPCHI2DV(PRIMARY)> %(MuonMINIPCHI2)s )"
     
     def _NominalPSelection( self ):
@@ -167,6 +179,13 @@ class Lb2pMuNuVubBuilder(LineBuilder):
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                "& (PIDp-PIDpi> %(ProtonPIDp)s )& (PIDp-PIDK> %(ProtonPIDK)s ) "\
                "& (MIPCHI2DV(PRIMARY)> %(ProtonMINIPCHI2)s )"\
+               "& (switch(ISMUON,1,0) < 1)"
+
+    def _FakePSelection( self ):
+        return "(TRCHI2DOF < %(ProtonTRCHI2)s )&  (P> %(ProtonP)s *MeV) &  (PT> %(ProtonPT)s *MeV)"\
+               "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
+               "& (MIPCHI2DV(PRIMARY)> %(ProtonMINIPCHI2)s )"\
+               "& ( (PIDp-PIDpi< %(ProtonPIDp)s ) |  (PIDp-PIDK< %(ProtonPIDK)s ) ) "\
                "& (switch(ISMUON,1,0) < 1)"
 
     def _low_Lb_line( self ):
@@ -199,6 +218,35 @@ class Lb2pMuNuVubBuilder(LineBuilder):
                              FILTER=self.GECs, 
                              algos = [ self._Lb2pMuNuVubSS_Lb()], HLT = hlt, L0DU = ldu)
 
+    def _fakep_Lb_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
+              "| HLT_PASS_RE('Hlt2TopoMu2Body.*Decision')"
+        ldu = "L0_CHANNEL_RE('Muon')" 
+        return StrippingLine(self._name+ 'FakepLine', prescale = 0.02,
+                             FILTER=self.GECs,
+                             algos = [ self._Lb2pMuNuVub_fakep_Lb()], HLT = hlt, L0DU = ldu)
+    def _fakep_SS_Lb_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        hlt = "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision')"\
+              "| HLT_PASS_RE('Hlt2TopoMu2Body.*Decision')"
+        ldu = "L0_CHANNEL_RE('Muon')" 
+        return StrippingLine(self._name+ 'FakeSSpLine', prescale = 0.02,
+                             FILTER=self.GECs,
+                             algos = [ self._Lb2pMuNuVubSS_fakep_Lb()], HLT = hlt, L0DU = ldu)
+
+    def _fakemu_Lb_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        hlt = "HLT_PASS_RE('Hlt2Topo2Body.*Decision')"
+        return StrippingLine(self._name+ 'FakemuLine', prescale = 0.05,
+                             FILTER=self.GECs,
+                             algos = [ self._Lb2pMuNuVub_fakemu_Lb()], HLT = hlt)
+    def _fakemu_SS_Lb_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        hlt = "HLT_PASS_RE('Hlt2Topo2Body.*Decision')"
+        return StrippingLine(self._name+ 'FakeSSmuLine', prescale = 0.05,
+                             FILTER=self.GECs,
+                             algos = [ self._Lb2pMuNuVubSS_fakemu_Lb()], HLT = hlt)
     ##### Muon Filter ######
     def _muonFilter( self ):
         if self._muonSel is not None:
@@ -218,6 +266,23 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         
         return _muSel
 
+    ##### Fake Muon Filter ######
+    def _fakemuonFilter( self ):
+        if self._fakemuonSel is not None:
+            return self._fakemuonSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdAllNoPIDsMuons
+        _mu = FilterDesktop( Code = self._FakeMuSelection() % self._config )
+
+	_muSel=Selection("fakeMu_for"+self._name,
+                         Algorithm=_mu,
+                         RequiredSelections = [StdAllNoPIDsMuons])
+        
+        self._fakemuonSel=_muSel
+        
+        return _muSel
 
     ###### Proton Filter ######
     def _protonFilter( self ):
@@ -237,6 +302,23 @@ class Lb2pMuNuVubBuilder(LineBuilder):
         
         return _prSel
 
+    ##### Fake Proton Filter ######
+    def _fakeprotonFilter( self ):
+        if self._fakeprotonSel is not None:
+            return self._fakeprotonSel
+	
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseProtons
+        
+        _pr = FilterDesktop( Code = self._FakePSelection() % self._config )
+        _prSel=Selection("fakep_for"+self._name,
+                         Algorithm=_pr,
+                         RequiredSelections = [StdLooseProtons])
+        
+        self._fakeprotonSel=_prSel
+        
+        return _prSel
 
     def _Definitions(self):
         return [ 
@@ -314,3 +396,88 @@ class Lb2pMuNuVubBuilder(LineBuilder):
 	    
 
     
+    ###### Lb->pMuNu Fake Proton ######
+    def _Lb2pMuNuVub_fakep_Lb( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+	_pMu = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu-]cc"], ReFitPVs = True
+)
+        _pMu.Preambulo = self._Definitions()
+	_pMu.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
+	_pMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
+                    "& (Lb_PT > %(pMuPT)s)"\
+                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+	_pMu.ReFitPVs = True
+            
+        _pMuSel=Selection("pMu_fakep_Lb_for"+self._name,
+                         Algorithm=_pMu,
+                         RequiredSelections = [self._muonFilter(), self._fakeprotonFilter()])
+         
+        _LbSel = tosSelection(_pMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
+        return _LbSel
+
+    ###### Lb->pMuNuSS Fake Proton ######
+    def _Lb2pMuNuVubSS_fakep_Lb( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+	_pMuSS = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu+]cc"], ReFitPVs = True
+)
+        _pMuSS.Preambulo = self._Definitions()
+	_pMuSS.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
+	_pMuSS.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
+                    "& (Lb_PT > %(pMuPT)s)"\
+                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+	_pMuSS.ReFitPVs = True
+            
+        _pMuSSSel=Selection("pMuSS_fakep_Lb_for"+self._name,
+                         Algorithm=_pMuSS,
+                         RequiredSelections = [self._muonFilter(), self._fakeprotonFilter()])
+         
+        _LbSSSel = tosSelection(_pMuSSSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
+        return _LbSSSel
+
+
+
+    ###### Lb->pMuNu Fake Muon ######
+    def _Lb2pMuNuVub_fakemu_Lb( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+	_pMu = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu-]cc"], ReFitPVs = True
+)
+        _pMu.Preambulo = self._Definitions()
+	_pMu.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
+	_pMu.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
+                    "& (Lb_PT > %(pMuPT)s)"\
+                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+	_pMu.ReFitPVs = True
+            
+        _pMuSel=Selection("pMu_fakemu_Lb_for"+self._name,
+                         Algorithm=_pMu,
+                         RequiredSelections = [self._fakemuonFilter(), self._protonFilter()])
+         
+        _LbSel = tosSelection(_pMuSel,{'Hlt2.*Topo2Body.*Decision%TOS':0})
+        return _LbSel
+
+    ###### Lb->pMuNuSS Fake Muon ######
+    def _Lb2pMuNuVubSS_fakemu_Lb( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+	_pMuSS = CombineParticles(DecayDescriptors = ["[Lambda_b0 -> p+ mu+]cc"], ReFitPVs = True
+)
+        _pMuSS.Preambulo = self._Definitions()
+	_pMuSS.CombinationCut = "(AM>%(pMuMassLower)s*MeV)" % self._config
+	_pMuSS.MotherCut = "(VFASPF(VCHI2/VDOF)< %(BVCHI2DOF)s) & (BPVDIRA> %(BDIRA)s)"\
+                    "& (Lb_PT > %(pMuPT)s)"\
+                    "& (BPVVDCHI2 >%(BFDCHI2HIGH)s)" % self._config
+	_pMuSS.ReFitPVs = True
+            
+        _pMuSSSel=Selection("pMuSS_fakemu_Lb_for"+self._name,
+                         Algorithm=_pMuSS,
+                         RequiredSelections = [self._fakemuonFilter(), self._protonFilter()])
+         
+        _LbSSSel = tosSelection(_pMuSSSel,{'Hlt2.*Topo2Body.*Decision%TOS':0})
+        return _LbSSSel
