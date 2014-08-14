@@ -3,6 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-14 - Gerhard Raven
+ - make PatFwdCandidate 'vector friendly' i.e. don't enforce types on a few
+   member functions that perform arithmetic.
+ - update PatFwdTool to use the above, and make it more 'type neutral' as well.
+
 ! 2014-08-09 - Gerhard Raven
  - ICC and clang both define __GNUC__ so that's not the right way to differentiate
    between compilers, so use __INTEL_COMPILER and __clang__ instead to recognize

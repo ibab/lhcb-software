@@ -115,7 +115,7 @@ bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator las
 class RLAmbiguityResolver {
     MsgStream* const m_msg;
     const PatFwdTrackCandidate* const m_track;
-    double m_zRef;
+    const double m_zRef;
     double m_distM = 10.;
     double m_distP = 10.;
 public:
@@ -232,29 +232,29 @@ PatFwdTool::xAtReferencePlane<false>( const PatFwdTrackCandidate& track, double 
   typedef double vec_d __attribute__ ((vector_size( 2 * sizeof(double) ))); // vector of two doubles...
 #endif
 
-  vec_d zHit = { hit[0]->z(), hit[1]->z() };
-  vec_d xHit = { hit[0]->x(), hit[1]->x() };
+  auto zHit    = vec_d{ hit[0]->z(), hit[1]->z() };
+  auto xHit    = vec_d{ hit[0]->x(), hit[1]->x() };
    
-  vec_d zMagnet = m_zMagnetParams[3] * xHit * xHit + z_magnet; // why not wait until the driftdistance is included??
+  auto zMagnet = m_zMagnetParams[3] * xHit * xHit + z_magnet; // why not wait until the driftdistance is included??
 
-  vec_d txz     = { track.xStraight(zMagnet[0]), track.xStraight(zMagnet[1]) };
-  vec_d dxdY    = { hit[0]->hit()->dxDy(), hit[1]->hit()->dxDy() };
+  auto dxdY    = vec_d{ hit[0]->hit()->dxDy(), hit[1]->hit()->dxDy() };
 
   // only OT hits have a non-zero driftDistance. So this is a NOP for everything else...
-  vec_d dd      = { hit[0]->driftDistance(), hit[1]->driftDistance() };
-  xHit += vec_d{ double(int(hit[0]->hasNext())),     double(int(hit[1]->hasNext())) }     * dd;
-  xHit -= vec_d{ double(int(hit[0]->hasPrevious())), double(int(hit[1]->hasPrevious())) } * dd;
+  xHit        +=  vec_d{ double(int(hit[0]->hasNext())-int(hit[0]->hasPrevious())), 
+                         double(int(hit[1]->hasNext())-int(hit[1]->hasPrevious())) } 
+                * vec_d{ hit[0]->driftDistance(), 
+                         hit[1]->driftDistance() };
     
-  vec_d dSlope   = ( xHit - txz ) / ( zHit - zMagnet ) - track.slX();
-  vec_d dSl2     = dSlope * dSlope;
-  zMagnet       += m_zMagnetParams[1] * dSl2;
-  vec_d dz       = 1.e-3 * ( zHit - m_zReference );
-  vec_d dyCoef   = dSl2 * track.slY();
-  xHit          +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
-                    - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
+  auto dSlope  = ( xHit - track.xStraight(zMagnet) ) / ( zHit - zMagnet ) - track.slX();
+  auto dSl2    = dSlope * dSlope;
+  zMagnet     += m_zMagnetParams[1] * dSl2;
+  auto dz      = 1.e-3 * ( zHit - m_zReference );
+  auto dyCoef  = dSl2 * track.slY();
+  xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
+                  - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
 
-  vec_d  xMagnet = { track.xStraight( zMagnet[0] ), track.xStraight( zMagnet[1] ) };
-  xMagnet += ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
+  auto xMagnet = track.xStraight( zMagnet );
+  xMagnet     += ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
   return  { xMagnet[0], xMagnet[1] };
 }
 #endif
@@ -263,27 +263,25 @@ template <bool withoutBField>
 double 
 PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, const PatFwdHit* hit ) const 
 {
-  double zHit       = hit->z();
-  double xHit       = hit->x();
+  auto zHit       = hit->z();
+  auto xHit       = hit->x();
    
-  // only othits have a non-zero driftDistance -- zo for the rest this is a NOP
-  auto dd = hit->driftDistance();
+  // only othits have a non-zero driftDistance -- so for the others, this is a NOP
   // bool to int: false -> 0, true -> 1
-  xHit += int( hit->hasNext() )     * dd;
-  xHit -= int( hit->hasPrevious() ) * dd;
+  xHit += ( int( hit->hasNext() )  - int( hit->hasPrevious() ) ) * hit->driftDistance();
 
   if (!withoutBField) { // assume sparse conditional constant propagation will eliminate the 'if'...
       zMagnet += m_zMagnetParams[3] * hit->x() * hit->x();
         
-      double dSlope     = ( xHit - track.xStraight( zMagnet) ) / ( zHit - zMagnet ) - track.slX();
-      double dSl2       = dSlope * dSlope;
-      zMagnet          += m_zMagnetParams[1] * dSl2;
-      double dz         = 1.e-3 * ( zHit - m_zReference );
-      double dyCoef     = dSl2 * track.slY();
-      xHit             +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * hit->hit()->dxDy() 
-                           - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
+      auto dSlope  = ( xHit - track.xStraight( zMagnet) ) / ( zHit - zMagnet ) - track.slX();
+      auto dSl2    = dSlope * dSlope;
+      zMagnet       += m_zMagnetParams[1] * dSl2;
+      auto dz      = 1.e-3 * ( zHit - m_zReference );
+      auto dyCoef  = dSl2 * track.slY();
+      xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * hit->hit()->dxDy() 
+                      - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
   }
-  double  xMagnet = track.xStraight( zMagnet );
+  auto    xMagnet = track.xStraight( zMagnet );
   return  xMagnet + ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
 }
 

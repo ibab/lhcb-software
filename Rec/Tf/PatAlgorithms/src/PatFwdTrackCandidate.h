@@ -58,8 +58,8 @@ public:
   }
 
   const LHCb::Track *track() const { return m_track; }
-  double xStraight(double z) const { return m_state[0] + m_state[3] * (z - m_state[2]); }
-  double yStraight(double z) const { return m_state[1] + m_state[4] * (z - m_state[2]); }
+  template <typename T> T xStraight(T z) const { return m_state[0] + m_state[3] * (z - m_state[2]); }
+  template <typename T> T yStraight(T z) const { return m_state[1] + m_state[4] * (z - m_state[2]); }
   double qOverP() const { return m_state[5]; }
 
   double slX() const { return m_state[3]; }
@@ -116,18 +116,18 @@ public:
     m_params[5] += dby;
   }
 
-  double x(double dz) const {
+  template <typename T> T x(T dz) const {
     return m_params[0] + dz * (m_params[1] + dz * (m_params[2] + dz * m_params[3]));
   }
-  double y(double dz) const { return m_params[4] + dz * m_params[5]; }
+  template <typename T> T y(T dz) const { return m_params[4] + dz * m_params[5]; }
 
-  double xSlope(double dz) const {
+  template <typename T> T xSlope(T dz) const {
     return m_params[1] + dz * (2 * m_params[2] + 3 * dz * m_params[3]);
   }
 
   double ySlope(double) const { return m_params[5]; }
 
-  double xMagnet(double dz) const { return m_params[0] + dz * m_params[1]; }
+  template <typename T> T xMagnet(T dz) const { return m_params[0] + dz * m_params[1]; }
 
   double cosAfter() const { return 1. / sqrt(1. + m_params[1] * m_params[1]); }
 
