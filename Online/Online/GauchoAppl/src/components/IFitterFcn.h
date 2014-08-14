@@ -12,7 +12,7 @@ namespace LHCb
   class IFitterFcn : virtual public IAlgTool
   {
     public:
-      DeclareInterfaceID(IFitterFcn,1,0);
+      DeclareInterfaceID(LHCb::IFitterFcn,1,0);
       virtual void init()=0;
       virtual double analyze()=0;
       virtual void ReadParams()=0;
