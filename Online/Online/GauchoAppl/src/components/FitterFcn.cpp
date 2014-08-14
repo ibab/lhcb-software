@@ -9,7 +9,7 @@
 #include "GaudiKernel/StatusCode.h"
 #include "IDumAligWork.h"
 using namespace LHCb;
-DECLARE_COMPONENT(FitterFcn)
+DECLARE_COMPONENT(LHCb::FitterFcn)
 
 //DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,FitterFcn)
 
