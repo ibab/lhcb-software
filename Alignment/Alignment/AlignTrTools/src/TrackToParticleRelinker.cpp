@@ -44,7 +44,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackToParticleRelinker );
+DECLARE_ALGORITHM_FACTORY( TrackToParticleRelinker )
 
 TrackToParticleRelinker::TrackToParticleRelinker(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -109,4 +109,4 @@ StatusCode TrackToParticleRelinker::execute()
   }
   
   return StatusCode::SUCCESS;
-};
+}

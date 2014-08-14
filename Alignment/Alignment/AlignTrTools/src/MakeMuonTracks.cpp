@@ -33,7 +33,7 @@
 using namespace LHCb;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MakeMuonTracks );
+DECLARE_ALGORITHM_FACTORY( MakeMuonTracks )
 
 MakeMuonTracks::MakeMuonTracks( const std::string& name,
                                         ISvcLocator* pSvcLocator)

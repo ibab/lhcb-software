@@ -34,7 +34,7 @@
 // Declare
 //===========================================================================
 // Declaration of the algorithm factory
-DECLARE_ALGORITHM_FACTORY ( AlignSaveTuple );
+DECLARE_ALGORITHM_FACTORY ( AlignSaveTuple )
 //===========================================================================
 
 //===========================================================================
@@ -261,7 +261,7 @@ StatusCode AlignSaveTuple::finalize ( ) {
     debug() << "==> Finalize" << endmsg;
 
   return GaudiTupleAlg::finalize ( );   // Must be called after all other actions  
-};
+}
 //===========================================================================
 
 

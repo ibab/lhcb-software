@@ -43,10 +43,10 @@ namespace MatchingHelpers {
      return ( chi2One < chi2Two && chi2One > 0.0 );
    };
  };
-};
+}
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTMuonCosmicsMatching );
+DECLARE_ALGORITHM_FACTORY( OTMuonCosmicsMatching )
 
 OTMuonCosmicsMatching::OTMuonCosmicsMatching( const std::string& name,
                                               ISvcLocator* pSvcLocator)

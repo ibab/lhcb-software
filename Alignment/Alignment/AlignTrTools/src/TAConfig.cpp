@@ -65,7 +65,7 @@ using namespace Gaudi;
 #include "Event/MCParticle.h"
 #include "Event/MCHit.h"
 
-DECLARE_TOOL_FACTORY( TAConfig );
+DECLARE_TOOL_FACTORY( TAConfig )
 
 // function object to check the value of a map element
 template <class K, class V> class value_equals {
@@ -164,7 +164,7 @@ TAConfig::TAConfig( const std::string& type,
 
 TAConfig::~TAConfig() {
   //MD  delete[] m_DOF;
-};
+}
 
 StatusCode TAConfig::Initialize( std::vector<std::string> &m_dets ) {
   m_detectors = m_dets;
@@ -2787,6 +2787,7 @@ StatusCode TAConfig::ConstrainMovements(){
         for(unsigned int i=c+1; i < str_fix.size(); i++){
           vec.push_back(str_fix[i]);
         }
+	/*
         char value[vec.size()];  
         //put the char from the vector into a char[]
         for(unsigned a=0; a<vec.size(); a++){
@@ -2794,6 +2795,8 @@ StatusCode TAConfig::ConstrainMovements(){
           debug() << " value " << a << " " << value[a] << " size of vc " << vec.size() << endreq;
         }
         std::string val = value;
+	*/
+	std::string val(vec.data(), vec.size());
         for(int k=0;k<6;k++){
           if(vdof[k] == -1) vdof[k] = atof(val.c_str()); 
           debug() << k << " vdof  = "<< vdof[k]  << endreq;

@@ -20,7 +20,7 @@
 
 #include "Kernel/STXMLUtils.h"
 
-DECLARE_ALGORITHM_FACTORY( WriteAlignmentConditions );
+DECLARE_ALGORITHM_FACTORY( WriteAlignmentConditions )
 
 //--------------------------------------------------------------------
 //

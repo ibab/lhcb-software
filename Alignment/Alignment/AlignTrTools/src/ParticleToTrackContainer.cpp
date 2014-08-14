@@ -46,7 +46,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( ParticleToTrackContainer );
+DECLARE_ALGORITHM_FACTORY( ParticleToTrackContainer )
 
 ParticleToTrackContainer::ParticleToTrackContainer(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -127,6 +127,6 @@ StatusCode ParticleToTrackContainer::execute()
   debug() << "candidates, tracks, selected tracks: " << particles.size() << " " << alltracks.size() << " " << tracks->size() << endreq ;
   
   return StatusCode::SUCCESS;
-};
+}
 
 

@@ -24,7 +24,7 @@
 
 using namespace LHCb;
 
-DECLARE_TOOL_FACTORY( ATrackSelector );
+DECLARE_TOOL_FACTORY( ATrackSelector )
 
 //-----------------------------------------------------------------------------
 
@@ -57,7 +57,7 @@ ATrackSelector::ATrackSelector( const std::string& type,
 
 }
 
-ATrackSelector::~ATrackSelector() {};
+ATrackSelector::~ATrackSelector() {}
 
 StatusCode ATrackSelector::initialize() {
   debug() << "Initialize track selector tool" << endreq;

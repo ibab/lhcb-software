@@ -37,7 +37,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackDoubleHitPruner );
+DECLARE_ALGORITHM_FACTORY( TrackDoubleHitPruner )
 
 TrackDoubleHitPruner::TrackDoubleHitPruner(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -141,5 +141,4 @@ StatusCode TrackDoubleHitPruner::execute()
     }
   }
   return StatusCode::SUCCESS;
-};
-
+}

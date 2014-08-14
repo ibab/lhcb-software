@@ -35,7 +35,7 @@ using namespace LHCb;
 using namespace boost::lambda;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackMuonMatching );
+DECLARE_ALGORITHM_FACTORY( TrackMuonMatching )
 
 TrackMuonMatching::TrackMuonMatching( const std::string& name,
                                               ISvcLocator* pSvcLocator)

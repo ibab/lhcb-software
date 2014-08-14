@@ -28,7 +28,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackMuonUpgradeAlg );
+DECLARE_ALGORITHM_FACTORY( TrackMuonUpgradeAlg )
 
 TrackMuonUpgradeAlg::TrackMuonUpgradeAlg(const std::string& name,
                        ISvcLocator* pSvcLocator):

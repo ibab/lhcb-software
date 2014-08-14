@@ -48,7 +48,7 @@ private:
 };
 
 
-DECLARE_ALGORITHM_FACTORY( TrackParticleRefitter );
+DECLARE_ALGORITHM_FACTORY( TrackParticleRefitter )
 
 TrackParticleRefitter::TrackParticleRefitter(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -154,4 +154,4 @@ StatusCode TrackParticleRefitter::execute()
   }
   
   return StatusCode::SUCCESS;
-};
+}

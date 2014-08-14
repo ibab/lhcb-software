@@ -30,7 +30,7 @@ private:
   size_t m_maxNumITHits ;
 };
 
-DECLARE_ALGORITHM_FACTORY( TrackMultiplicityFilter );
+DECLARE_ALGORITHM_FACTORY( TrackMultiplicityFilter )
 
 
 TrackMultiplicityFilter::TrackMultiplicityFilter(const std::string& name,

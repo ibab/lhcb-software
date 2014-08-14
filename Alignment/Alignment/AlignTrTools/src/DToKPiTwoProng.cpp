@@ -20,7 +20,7 @@
 
 //#include "LoKi/ParticleProperties.h"
 
-DECLARE_ALGORITHM_FACTORY( DToKPiTwoProng );
+DECLARE_ALGORITHM_FACTORY( DToKPiTwoProng )
 
 
 DToKPiTwoProng::DToKPiTwoProng(const std::string& name, ISvcLocator* pSvc):

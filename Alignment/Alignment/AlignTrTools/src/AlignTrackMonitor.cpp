@@ -37,7 +37,7 @@ using namespace boost::lambda;
 // Declare
 //===========================================================================
 // Declaration of the algorithm factory
-DECLARE_ALGORITHM_FACTORY ( AlignTrackMonitor );
+DECLARE_ALGORITHM_FACTORY ( AlignTrackMonitor )
 //===========================================================================
 
 //===========================================================================
@@ -206,7 +206,7 @@ StatusCode AlignTrackMonitor::finalize ( ) {
     debug() << "==> Finalize" << endmsg;
 
   return GaudiHistoAlg::finalize ( );   // Must be called after all other actions  
-};
+}
 //===========================================================================
 
 

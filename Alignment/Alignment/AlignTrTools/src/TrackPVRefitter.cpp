@@ -42,7 +42,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackPVRefitter );
+DECLARE_ALGORITHM_FACTORY( TrackPVRefitter )
 
 //=============================================================================
 // Standard constructor, initializes variables

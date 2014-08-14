@@ -15,7 +15,7 @@ using namespace Gaudi;
 
 /// Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( Derivatives );
+DECLARE_TOOL_FACTORY( Derivatives )
 
 
 
@@ -35,7 +35,7 @@ Derivatives::Derivatives( const std::string &type,
 }
 
 /// Destructor:
-Derivatives::~Derivatives(){};
+Derivatives::~Derivatives(){}
 
 StatusCode Derivatives::initialize( const int &n_tr_pars,
                                     const int &n_elements,
