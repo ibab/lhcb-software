@@ -28,7 +28,7 @@
  */
 
 
-DECLARE_TOOL_FACTORY( Centipede );
+DECLARE_TOOL_FACTORY( Centipede )
 
 Centipede::Centipede( const std::string& type,
                       const std::string& name,
@@ -39,11 +39,10 @@ Centipede::Centipede( const std::string& type,
 {
   declareInterface<ICentipede>(this);
   info() << "Initializing Centipede!" << endreq;
-};
+}
 
 Centipede::~Centipede() { 
- 
-};
+}
 
 // StatusCode Centipede::initialize()
 // {
@@ -283,7 +282,8 @@ StatusCode Centipede::MakeGlobalFit( std::vector<double> &para, std::vector<doub
   delete [] error;
 
   return StatusCode::SUCCESS;
-};
+}
+
 StatusCode Centipede::InitMille( int nglo,
                                  int nloc, 
                                  double startfact, 
