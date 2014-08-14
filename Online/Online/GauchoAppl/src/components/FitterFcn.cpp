@@ -36,7 +36,11 @@ StatusCode FitterFcn::finalize()
 }
 StatusCode FitterFcn::initialize()
 {
-  return AlgTool::initialize();
+  StatusCode sc= AlgTool::initialize();
+  printf ("Parameter File Name: %s\n",m_ParamFileName.c_str());
+  printf ("Data File Name: %s\n",m_DataFileName.c_str());
+  fflush(stdout);
+  return sc;
 }
 void FitterFcn::init()
 {
