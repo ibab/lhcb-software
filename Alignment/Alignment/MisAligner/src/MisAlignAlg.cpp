@@ -24,7 +24,7 @@
 using namespace LHCb;
 using namespace Gaudi;
 
-DECLARE_ALGORITHM_FACTORY( MisAlignAlg );
+DECLARE_ALGORITHM_FACTORY( MisAlignAlg )
 
 
 MisAlignAlg::MisAlignAlg( const std::string &name,
