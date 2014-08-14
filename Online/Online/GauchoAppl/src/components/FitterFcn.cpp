@@ -21,10 +21,6 @@ FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const
   const void *p = parent;
   m_Parent = (IDumAligWork*)p;
 }
-//void FitterFcn::setWorkerSvc(IDumAligWork *p)
-//{
-//  m_Parent = (DumAligWork*)m_parent;;
-//}
 FitterFcn::~FitterFcn()
 {
 

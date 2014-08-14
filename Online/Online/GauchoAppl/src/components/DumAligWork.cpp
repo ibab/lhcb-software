@@ -72,7 +72,7 @@ StatusCode LHCb::DumAligWork::start()
 StatusCode LHCb::DumAligWork::initialize()
 {
   OnlineService::initialize();
-  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","LHCb::FitterFcn/bbb",m_fitterFcn,0,true);
+  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,0,true);
   m_incidentSvc = incidentSvc();
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
