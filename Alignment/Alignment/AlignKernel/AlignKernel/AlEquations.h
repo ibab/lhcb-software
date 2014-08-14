@@ -175,5 +175,5 @@ namespace Al
     size_t           m_lastRun ;
   };
   
-} ;
+}
 #endif // ALIGNSOLVTOOLS_ALEQUATIONS_H

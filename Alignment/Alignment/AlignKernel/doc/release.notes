@@ -3,6 +3,9 @@
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
 
+! 2014-08-14 - Maurizio Martinelli
+ - Solved a CMake compilation warning.
+
 ! 2014-01-10 - Marco Clemencic
  - Added CMake configuration.
 
