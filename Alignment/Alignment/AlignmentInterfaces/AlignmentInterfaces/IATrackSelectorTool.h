@@ -12,7 +12,7 @@
 
 static const InterfaceID IID_IATrackSelectorTool("IATrackSelector",1,0);
 
-namespace LHCb {class Track;};
+namespace LHCb {class Track;}
 
 class IATrackSelectorTool : virtual public IAlgTool {
 public:

@@ -40,8 +40,7 @@ namespace LHCb {
 	class LHCbID;
   	class MCHit;
   	class State;
-  
-};
+}
 
 
 class ITAConfigTool : virtual public IAlgTool {
