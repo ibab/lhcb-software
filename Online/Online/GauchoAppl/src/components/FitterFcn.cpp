@@ -40,6 +40,7 @@ StatusCode FitterFcn::initialize()
   printf ("Parameter File Name: %s\n",m_ParamFileName.c_str());
   printf ("Data File Name: %s\n",m_DataFileName.c_str());
   fflush(stdout);
+  init();
   return sc;
 }
 void FitterFcn::init()
