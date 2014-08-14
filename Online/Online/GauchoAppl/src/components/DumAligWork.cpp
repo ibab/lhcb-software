@@ -72,6 +72,7 @@ StatusCode LHCb::DumAligWork::start()
 StatusCode LHCb::DumAligWork::initialize()
 {
   OnlineService::initialize();
+  m_incidentSvc = this->incidentSvc();
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
   ::lib_rtl_start_thread(WorkerThreadFunction,this,&m_thread);
