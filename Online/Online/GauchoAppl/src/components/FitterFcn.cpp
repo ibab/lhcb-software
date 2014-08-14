@@ -11,7 +11,7 @@
 using namespace LHCb;
 DECLARE_COMPONENT(LHCb::FitterFcn)
 
-//DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,FitterFcn)
+DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,FitterFcn)
 
 FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const IInterface *  parent  ) :
       AlgTool(type,name,parent),m_result(0.0)
