@@ -49,6 +49,7 @@ namespace LHCb
       void waitRunOnce();
       void setRunOnce();
       void *getThis(){return this;};
+      IToolSvc *m_ToolSvc;
   };
 }
 #endif // ONLINE_GAUCHO_DUMALIGWORK_H

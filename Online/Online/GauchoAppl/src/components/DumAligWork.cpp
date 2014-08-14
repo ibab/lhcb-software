@@ -1,4 +1,4 @@
-#include "GaudiKernel/SmartIF.h"
+//#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "Gaucho/Utilities.h"
@@ -99,7 +99,7 @@ StatusCode LHCb::DumAligWork::finalize()
 
 StatusCode LHCb::DumAligWork::i_run()
 {
-  m_fitterFcn->run();
+  m_fitterFcn->i_run();
   m_fitterFcn->ReadParams();
   readReference();
   m_result = m_fitterFcn->analyze();
@@ -121,7 +121,9 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : Onlin
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
-  m_fitterFcn = new FitterFcn(this);
+  service("ToolSvc",m_ToolSvc,true);
+  m_ToolSvc->retrieveTool("IFitterFcn","FitterFcn",m_fitterFcn,0,true);
+//  m_fitterFcn = new FitterFcn(this);
   m_Lock=0;
   m_runonce = false;
 }

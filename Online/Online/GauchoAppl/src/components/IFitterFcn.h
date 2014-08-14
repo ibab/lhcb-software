@@ -1,23 +1,24 @@
 /*
- * FitterFcn.h
+ * IFitterFcn.h
  *
  *  Created on: Aug 12, 2014
  *      Author: beat
  */
-
+#include "GaudiKernel/IAlgTool.h"
 #ifndef IFITTERFCN_H_
 #define IFITTERFCN_H_
 namespace LHCb
 {
-  class IFitterFcn
+  class IFitterFcn : virtual public IAlgTool
   {
     public:
-//      virtual ~IFitterFcn()=0;
+      DeclareInterfaceID(IFitterFcn,1,0);
       virtual void init()=0;
       virtual double analyze()=0;
       virtual void ReadParams()=0;
       virtual void PubResult(long reference)=0;
-      virtual void run()=0;
+      virtual void i_run()=0;
+//      virtual void setWorkerSvc(IDumAligWork *p)=0;
   };
 }
 #endif /* IFITTERFCN_H_ */

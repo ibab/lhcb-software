@@ -7,18 +7,37 @@
 #include "FitterFcn.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/StatusCode.h"
-#include "DumAligWork.h"
+#include "IDumAligWork.h"
 using namespace LHCb;
-FitterFcn::FitterFcn(IDumAligWork *p) : m_MonSvc(0),m_result(0.0)
+DECLARE_COMPONENT(FitterFcn)
+
+//DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,FitterFcn)
+
+FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const IInterface *  parent  ) :
+      AlgTool(type,name,parent),m_result(0.0)
 {
-  m_Parent = p;
-  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
-  m_SvcName = "Chi2";
-  DumAligWork *pp = (DumAligWork*)m_Parent->getThis();
-  pp->declareProperty("ParameterFileName",m_ParamFileName);
-  pp->declareProperty("DataFileName",m_DataFileName);
+  declareProperty("ParameterFileName",m_ParamFileName);
+  declareProperty("DataFileName",m_DataFileName);
+  const void *p = parent;
+  m_Parent = (IDumAligWork*)p;
+}
+//void FitterFcn::setWorkerSvc(IDumAligWork *p)
+//{
+//  m_Parent = (DumAligWork*)m_parent;;
+//}
+FitterFcn::~FitterFcn()
+{
+
 }
 
+StatusCode FitterFcn::finalize()
+{
+  return AlgTool::finalize();
+}
+StatusCode FitterFcn::initialize()
+{
+  return AlgTool::initialize();
+}
 void FitterFcn::init()
 {
   StatusCode sc;
@@ -26,7 +45,9 @@ void FitterFcn::init()
 //    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
   }
   FILE *f;
-  m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",m_Parent);
+  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
+  m_SvcName = "Chi2";
+  m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
   size_t ndat=0;
   f = fopen(m_DataFileName.c_str(),"r");
   std::fscanf(f,"%d",(int*)(&ndat));
@@ -95,7 +116,20 @@ void FitterFcn::PubResult(long reference)
 {
   m_MonSvc->updatePerSvc(reference);
 }
-void FitterFcn::run()
+//void FitterFcn::run()
+//{
+//
+//}
+void FitterFcn::i_run()
 {
 
+}
+StatusCode FitterFcn::queryInterface(const InterfaceID& riid, void** ppvIF)
+{
+  if (LHCb::IFitterFcn::interfaceID().versionMatch(riid))  {
+    *ppvIF = (IFitterFcn*) this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return AlgTool::queryInterface(riid, ppvIF);
 }
