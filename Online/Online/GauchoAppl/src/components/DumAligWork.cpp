@@ -123,7 +123,7 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : Onlin
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
   service("ToolSvc",m_ToolSvc,true);
-  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,0,true);
+  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","LHCb::FitterFcn/bbb",m_fitterFcn,0,true);
   m_Lock=0;
   m_runonce = false;
 }
