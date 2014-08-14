@@ -20,7 +20,7 @@
 
 using namespace LHCb;
 
-DECLARE_ALGORITHM_FACTORY( TStation );
+DECLARE_ALGORITHM_FACTORY( TStation )
 
 //-----------------------------------------------------------------------------
 

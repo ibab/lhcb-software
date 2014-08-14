@@ -40,7 +40,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GetElementsToBeAligned );
+DECLARE_TOOL_FACTORY( GetElementsToBeAligned )
 
 GetElementsToBeAligned::GetElementsToBeAligned( const std::string& type,
                                                 const std::string& name,

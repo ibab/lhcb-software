@@ -96,7 +96,7 @@ namespace Al
 namespace Al
 {
   
-  DECLARE_TOOL_FACTORY( VertexResidualTool );
+  DECLARE_TOOL_FACTORY( VertexResidualTool )
 
   VertexResidualTool::VertexResidualTool(const std::string& type,
 				       const std::string& name,

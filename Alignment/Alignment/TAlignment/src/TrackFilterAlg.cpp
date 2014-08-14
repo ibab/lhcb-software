@@ -27,7 +27,7 @@ using namespace boost::assign;
 using namespace Gaudi::Units;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackFilterAlg );
+DECLARE_ALGORITHM_FACTORY( TrackFilterAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

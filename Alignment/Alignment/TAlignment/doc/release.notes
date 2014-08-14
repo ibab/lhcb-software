@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2014-08-14 - Maurizio Martinelli
+ - Solved a few CMake compilation warnings.
+
 ! 2014-06-20 - Maurizio Martinelli
  - ParticleSelection.py: added a new sequence for minbias events.
  - modified survey constraints to load different constraints than the latest

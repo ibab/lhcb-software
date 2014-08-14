@@ -27,7 +27,7 @@ private:
   size_t m_counter ;
 };
 
-DECLARE_ALGORITHM_FACTORY( CountingPrescaler );
+DECLARE_ALGORITHM_FACTORY( CountingPrescaler )
 
 CountingPrescaler::CountingPrescaler(const std::string& name,
                        ISvcLocator* pSvcLocator):
@@ -37,7 +37,7 @@ CountingPrescaler::CountingPrescaler(const std::string& name,
   declareProperty("Interval",m_interval = 1 ) ;
   declareProperty("Offset",m_offset = 0 ) ;
   declareProperty("PrintFreq",m_printfreq = 0 ) ;
-} ;
+}
 
 StatusCode CountingPrescaler::initialize()
 {

@@ -67,7 +67,7 @@ namespace Al
     AIDA::IProfile1D*          m_nordAlignChi2vsIterHisto;
   } ;
   
-  DECLARE_TOOL_FACTORY( AlignUpdateTool );
+  DECLARE_TOOL_FACTORY( AlignUpdateTool )
   
   AlignUpdateTool::AlignUpdateTool(const std::string& type,
 					   const std::string& name,

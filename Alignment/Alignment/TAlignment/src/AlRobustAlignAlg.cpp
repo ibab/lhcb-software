@@ -90,7 +90,7 @@ private:
 } ;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( AlRobustAlignAlg );
+DECLARE_ALGORITHM_FACTORY( AlRobustAlignAlg )
 
 AlRobustAlignAlg::AlRobustAlignAlg( const std::string& name,
 				ISvcLocator* pSvcLocator)

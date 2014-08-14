@@ -56,7 +56,7 @@ namespace Al
 namespace Al
 {
   
-  DECLARE_TOOL_FACTORY( TrackResidualTool );
+  DECLARE_TOOL_FACTORY( TrackResidualTool )
   
   
   TrackResidualTool::TrackResidualTool(const std::string& type,

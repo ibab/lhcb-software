@@ -137,7 +137,7 @@ namespace Al
     const IGetElementsToBeAligned* m_elementtool ;
   } ;
   
-  DECLARE_TOOL_FACTORY( AlignConstraintTool );
+  DECLARE_TOOL_FACTORY( AlignConstraintTool )
   
   AlignConstraintTool::AlignConstraintTool(const std::string& type,
 					   const std::string& name,

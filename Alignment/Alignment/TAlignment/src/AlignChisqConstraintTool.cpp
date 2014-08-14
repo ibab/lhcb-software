@@ -73,7 +73,7 @@ namespace Al
     mutable SurveyParameters m_cachedSurvey ;
   } ;
   
-  DECLARE_TOOL_FACTORY( AlignChisqConstraintTool );
+  DECLARE_TOOL_FACTORY( AlignChisqConstraintTool )
   
   AlignChisqConstraintTool::~AlignChisqConstraintTool() {}
 

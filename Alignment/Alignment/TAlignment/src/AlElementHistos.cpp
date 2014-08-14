@@ -54,7 +54,7 @@ AlElementHistos::AlElementHistos(GaudiHistoAlg& parent, const AlignmentElement& 
   m_residualPullHistos[3] = parent.book1D(dirname + "ResPullRx","Residual pull Rx",-xmax,xmax,nbins) ;
   m_residualPullHistos[4] = parent.book1D(dirname + "ResPullRy","Residual pull Ry",-xmax,xmax,nbins) ;
   m_residualPullHistos[5] = parent.book1D(dirname + "ResPullRz","Residual pull Rz",-xmax,xmax,nbins) ;
-} ;
+}
 
 void AlElementHistos::reset()
 {

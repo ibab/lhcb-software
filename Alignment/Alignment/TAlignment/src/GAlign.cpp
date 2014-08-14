@@ -52,6 +52,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 // gsl stuff
 #include "gsl/gsl_cdf.h"
 //MC info
@@ -65,7 +66,7 @@ using namespace Gaudi;
 
 
 
-DECLARE_ALGORITHM_FACTORY( GAlign );
+DECLARE_ALGORITHM_FACTORY( GAlign )
 
 //-----------------------------------------------------------------------------
 
@@ -330,7 +331,7 @@ StatusCode GAlign::execute() {
       plot(atrack->p(),"accepted track momentum","rejected track momentum",0.,10000.,1000);
       StatusCode sc =  m_taConfig->ResetGlVars();        // Reset MilleTool variables etc.
       //count multiple clusters per rank
-      int    cluster[m_taConfig->NumAlignPars()];
+      std::vector<int> cluster;
       for(int cl=0; cl < m_taConfig->NumAlignPars(); cl++){
         cluster[cl] = 0;
       }

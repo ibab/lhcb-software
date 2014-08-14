@@ -53,13 +53,13 @@ namespace {
    return v;
  }
 
-};
+}
 
 using namespace LHCb;
 using namespace boost;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( AlignAlgorithm );
+DECLARE_ALGORITHM_FACTORY( AlignAlgorithm )
 
 AlignAlgorithm::AlignAlgorithm( const std::string& name,
 				ISvcLocator* pSvcLocator)
