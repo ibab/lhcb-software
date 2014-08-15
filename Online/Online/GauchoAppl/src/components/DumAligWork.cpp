@@ -77,6 +77,10 @@ StatusCode LHCb::DumAligWork::initialize()
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
   ::lib_rtl_start_thread(WorkerThreadFunction,this,&m_thread);
+  if (m_RefFileName.empty())
+  {
+    m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -121,10 +125,6 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : Onlin
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
-  if (m_RefFileName.empty())
-  {
-    m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
-  }
   service("ToolSvc",m_ToolSvc,true);
   m_Lock=0;
   m_runonce = false;
