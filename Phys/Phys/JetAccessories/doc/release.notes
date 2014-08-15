@@ -4,6 +4,10 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-08-15 - Victor Coco
+ - Add particle composite and/or banning at the jet level rather than at the 
+   PF level (less CPU intensive when several config) 
+
 !========================= JetAccessories v3r6 2014-07-25 =========================
 
 ! 2014-07-03 - Olivier Deschamps

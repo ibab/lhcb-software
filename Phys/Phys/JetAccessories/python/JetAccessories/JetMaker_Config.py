@@ -18,7 +18,8 @@ class JetMakerConf:
                  jetidnumber=98 ,
                  onlySaveB = False,
                  pvassociationMinIPChi2 = True,
-                 algtype="anti-kt"):
+                 algtype="anti-kt",
+                 listOfParticlesToBan=[]):
         
         jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
         dictOfPFType = {'ChargedHadron':2,'Muon':3,'Electron':4,
@@ -41,6 +42,7 @@ class JetMakerConf:
         if 'Pi0' in PFTypes:
             self.PFParticleTypes.append(dictOfPFType['MergedPi0'])
             self.PFParticleTypes.append(dictOfPFType['ResolvedPi0'])
+        self.BanCandidates = listOfParticlesToBan
         self.algorithms = []
         ##self.JetSeq = GaudiSequencer( _name + 'Seq',IgnoreFilterPassed = True)
         self.setupJetMaker()
@@ -67,6 +69,7 @@ class JetMakerConf:
         algo.PVassociationMinIPChi2 = self.PVassociationMinIPChi2
         algo.addTool ( LoKi__FastJetMaker )
         algo.Inputs = self.Inputs
+        algo.BanCandidates = self.BanCandidates
         algo.PFParticleTypes = self.PFParticleTypes
         tool = getattr ( algo , 'LoKi__FastJetMaker' )
         tool.Type = self.jetMakerType 

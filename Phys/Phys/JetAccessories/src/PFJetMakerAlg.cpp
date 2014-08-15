@@ -122,6 +122,9 @@ namespace LoKi
       declareProperty("PVassociationMinIPChi2"  ,
 		      m_minIPChi2PVassoc  ,
 		      "True: will use the minIPchi2 to associate particles with pointing info to the PV, False is more refined");
+      declareProperty("BanCandidates",
+		      m_banCandidatesLocations  ,
+		      "Ban the particle flow particles corresponding to this candidate");
 
       declareProperty("HistoPath"  , m_histo_path = "JEC14" , "The path of the JEC histograms" );
       //
@@ -235,6 +238,9 @@ namespace LoKi
     double m_JetID_CPF;
     double m_JetID_MPF ;
 
+    std::vector<std::string> m_banCandidatesLocations;
+    
+
 
     // ========================================================================
   };
@@ -310,15 +316,73 @@ StatusCode LoKi::PFJetMaker::analyse   ()
   using namespace LoKi::Types ;
   using namespace LoKi::Cuts ;
 
+  
+  std::vector<const LHCb::Particle*> compositeParticles;
+  std::vector<const LHCb::Track*> tracksToBan;
+  
+  LoKi::Types::Cut isToBan = NONE;
+  // Get the particles to be banned from jet inputs
+  for (std::vector< std::string >::const_iterator i_location = m_banCandidatesLocations.begin() ;
+       m_banCandidatesLocations.end() != i_location ; ++i_location ){
+    if( !exist<LHCb::Particles*>(*i_location) )continue;
+    const  LHCb::Particles* mypartsToBan = get<LHCb::Particles*>(*i_location);
+    for (LHCb::Particles::const_iterator i_p = mypartsToBan->begin();mypartsToBan->end()!=i_p;i_p++)
+    {
+      LHCb::Particle::ConstVector particleToBan_daug = (*i_p)->daughtersVector();
+      if( particleToBan_daug.size() == 0 ){
+        if ((*i_p)->proto()== 0)continue;
+        if ((*i_p)->proto()->track()== 0)continue;
+        tracksToBan.push_back((*i_p)->proto()->track());
+        
+      }
+      else{
+        for(LHCb::Particle::ConstVector::const_iterator i_pd = particleToBan_daug.begin() ;
+            particleToBan_daug.end() != i_pd ; ++i_pd ){
+          if ((*i_pd)->proto()==0)continue;
+          if ((*i_pd)->proto()->track()==0)continue;
+          tracksToBan.push_back((*i_pd)->proto()->track());
+        }
+        
+      }
+    }
+    
+  }
+  
+  LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(LHCb::PFParticle::Type,-10.);
+  Range partComp = select("partComp", PALL && fabs(PFType- -10.)<1e-6 );
+
+  
+  // Get the particles to be banned from jet inputs
+  for (Range::const_iterator i_p = partComp.begin() ; partComp.end() != i_p ; i_p++ ){
+    // Store the composite one
+    
+    compositeParticles.push_back(*i_p);
+    // and add its daughters to the list of particles to ban
+    LHCb::Particle::ConstVector particleToBan_daug = (*i_p)->daughtersVector();
+    if( particleToBan_daug.size() == 0 ){
+      if ((*i_p)->proto()== 0)continue;
+      if ((*i_p)->proto()->track()== 0)continue;
+      tracksToBan.push_back((*i_p)->proto()->track());
+    }
+    else{
+      for(LHCb::Particle::ConstVector::const_iterator i_pd = particleToBan_daug.begin() ;
+            particleToBan_daug.end() != i_pd ; ++i_pd ){
+        if ((*i_pd)->proto()==0)continue;
+        if ((*i_pd)->proto()->track()==0)continue;
+        tracksToBan.push_back((*i_pd)->proto()->track());
+      }
+    }
+  }
+
+
+  // Cut to ban pfparticles from the inputs which contains tracks to ban (but are PFparticles in order not to ban the composite themselves...)
+  LoKi::Types::Cut hastracksintree = LoKi::Cuts::HASTRACKSINTREE( tracksToBan.begin(),tracksToBan.end());
+  LoKi::Types::Cut hastracks = LoKi::Cuts::HASTRACKS( tracksToBan.begin(),tracksToBan.end());
+  
+  LoKi::Types::Cut containsTrackToBan =( hastracksintree || hastracks ) ;
+  
   if ( m_associate2Vertex ){
-
-
-    // A cut to check that a jet contains information able to link it to a PV
-    LoKi::Types::Cut withPVPointingInfo = NINTREE(( ABSID == 310 || ABSID == 3122 )
-                                                  || ( HASTRACK && LHCb::Track::Downstream != TRTYPE ))>0 ;
-
-    Range part = select("part",PALL);
-
+    
 
     // Some definitions for jet ID
     LoKi::Types::Fun mtf = LoKi::Cuts::INFO(9003,-10.);
@@ -332,15 +396,20 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     LoKi::Types::Fun bestVertexVY = BPV(VY);
     LoKi::Types::Fun bestVertexVZ = BPV(VZ);
 
+    // Get All particles that do not contains banned tracks.
+    Range part = select("part", PALL &&  !(containsTrackToBan && fabs(PFType +10.)>1e-6) );
+
+    VRange rangePV = vselect("rangePV", PRIMARY );
+
     // Some cuts to select the inputs
-    LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(LHCb::PFParticle::Type,-10.);
-    LoKi::Types::Cut GoodInput = fabs( PFType - m_inputTypes[0] ) < 1e-6 ;
-    for ( int i = 1 ; i < (int) m_inputTypes.size() ; i++ ){
+    LoKi::Types::Cut GoodInput = fabs( PFType - (-10.)) < 1e-6 ; // Keep any particles which are not from ParticleFlow as composite used to replace the pfpart tracks
+    for ( int i = 0 ; i < (int) m_inputTypes.size() ; i++ ){
       GoodInput = GoodInput || fabs(  PFType - m_inputTypes[i] ) < 1e-6 ;
     }
     LoKi::Types::Cut PerPVinputs = ( PFType > LHCb::PFParticle::Charged && PFType < LHCb::PFParticle::Neutral && LHCb::Track::Downstream != TRTYPE )
       || ( PFType > LHCb::PFParticle::Composite  && PFType < LHCb::PFParticle::BadParticle )
-      || ( PFType == LHCb::PFParticle::ChargedInfMomentum && LHCb::Track::Downstream != TRTYPE ) || ( PFType == LHCb::PFParticle::Charged0Momentum && LHCb::Track::Downstream != TRTYPE );
+      || ( PFType == LHCb::PFParticle::ChargedInfMomentum && LHCb::Track::Downstream != TRTYPE ) || ( PFType == LHCb::PFParticle::Charged0Momentum && LHCb::Track::Downstream != TRTYPE )
+      || ( fabs(PFType+10)<1e-6 );
     LoKi::Types::Cut AllPVinputs = ( PFType > LHCb::PFParticle::Neutral && PFType < LHCb::PFParticle::Composite )
       || ( PFType == LHCb::PFParticle::BadPhotonMatchingT ) || ( PFType == LHCb::PFParticle::BadPhoton )  || ( PFType == LHCb::PFParticle::IsolatedPhoton )
       || ( PFType > LHCb::PFParticle::Charged && PFType < LHCb::PFParticle::Neutral &&  LHCb::Track::Downstream == TRTYPE )
@@ -361,14 +430,34 @@ StatusCode LoKi::PFJetMaker::analyse   ()
       for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){
         // General cut, if it is not a good input
        	if (!GoodInput(*i_p))continue;
+        
         // If we decideded to only do the best ipchi2 association and the input is to be associated to a pv but does not point to this pv, discard
-        if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-6
-                                    || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-6
-                                    || std::abs( bestVertexVX(*i_p) - VX(pv) ) > 1e-6 ) ){continue;}
-        // Otherwise (if it does point to this pv) take it
-        else if ( m_minIPChi2PVassoc && PerPVinputs(*i_p) )	inputs.push_back(*i_p);
+        if ( m_minIPChi2PVassoc && PerPVinputs(*i_p))
+        {
+          float pftype = PFType(*i_p);
+          
+          if (std::fabs(pftype+10.)>0.5 && ( std::abs( bestVertexVZ(*i_p) - VZ(pv) ) > 1e-5
+                                             || std::abs( bestVertexVY(*i_p) - VY(pv) ) > 1e-5
+                                             || std::abs( bestVertexVX(*i_p) - VX(pv) ) > 1e-5 ) ){ continue;  }
+          else if( std::fabs(pftype+10.)<0.5 )
+          {
+            LoKi::Types::Fun chi2thisPV = CHI2IP ( pv , geo() ) ;
+            LoKi::Types::Fun minchi2 = MIPCHI2 ( rangePV , geo() ) ;
+            if(std::fabs( minchi2( *i_p )-chi2thisPV( *i_p ))<1e-6){inputs.push_back(*i_p);}
+            else continue;
+          }
+          else 
+          {
+            inputs.push_back(*i_p);
+          }
+          
+        }
+        
         // Then if it is of the type to ba added to all pv, just add it to all pv
-        else if ( m_minIPChi2PVassoc && AllPVinputs(*i_p) )	inputs.push_back(*i_p);
+        else if ( m_minIPChi2PVassoc && AllPVinputs(*i_p) ){	
+          inputs.push_back(*i_p);
+        }
+        
         else if (!m_minIPChi2PVassoc && PerPVinputs(*i_p) ){
           // First compute the ip and ipchi2 wrt this pv
           double ip(1e8), chi2(1e8);
@@ -451,14 +540,11 @@ StatusCode LoKi::PFJetMaker::analyse   ()
             inputs.push_back(*i_p);
           }
         }
-        else if (m_minIPChi2PVassoc && AllPVinputs(*i_p)){
-            inputs.push_back(*i_p);
-        }
         else{
           continue;
         }
       }
-
+      
       // ouput container
       IJetMaker::Jets jets ;
       // make the jets
@@ -487,17 +573,15 @@ StatusCode LoKi::PFJetMaker::analyse   ()
 
         }
 
-	//    if (m_applyJetID && ( mtf(jet)>0.75 || nPVInfo(jet)<2 || mpt(jet)<1800 )){
-
         if ( !( m_applyJetID && ( mpt(jet)< m_JetID_MPT  || nPVInfo(jet)<   m_JetID_NTRK ||  cpf(jet) <  m_JetID_CPF || std::max(mtf(jet),mnf(jet))  >  m_JetID_MPF  ) ) )
-	  {
+        {
 
-	    if (!( m_onlysavewithB && jet->info(B,-100.)<1.e-6)){
-	      verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
-	      sc = save ( "jets" , jet ) ;
-	      if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
-	    }
-	  }
+          if (!( m_onlysavewithB && jet->info(B,-100.)<1.e-6)){
+            verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
+            sc = save ( "jets" , jet ) ;
+            if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
+          }
+        }
         jets.pop_back() ;
         unRelatePV(jet);
         delete jet->endVertex();
@@ -515,12 +599,12 @@ StatusCode LoKi::PFJetMaker::analyse   ()
     LoKi::Types::Fun cpf = LoKi::Cuts::INFO(9006,-10.);
     LoKi::Types::Fun nPVInfo = LoKi::Cuts::INFO(9005,-10.);
     LoKi::Types::Fun PFType =  LoKi::Cuts::INFO(900,-10.);
-    LoKi::Types::Cut GoodInput = fabs( PFType - m_inputTypes[0] ) < 1e-6 ;
-    for ( int i = 1 ; i < (int) m_inputTypes.size() ; i++ ){
+    LoKi::Types::Cut GoodInput = fabs( PFType + 10. ) < 1e-6 ;
+    for ( int i = 0 ; i < (int) m_inputTypes.size() ; i++ ){
       GoodInput = GoodInput || fabs(  PFType - m_inputTypes[i] ) < 1e-6 ;
     }
     // The inputs range
-    Range part = select("input4jets",PALL && GoodInput );
+    Range part = select("input4jets",PALL && GoodInput&& !containsTrackToBan  ); 
     IJetMaker::Input inputs;
     for (Range::const_iterator i_p = part.begin() ; part.end() != i_p ; i_p++ ){ inputs.push_back(*i_p); }
     // ouput container
@@ -539,7 +623,6 @@ StatusCode LoKi::PFJetMaker::analyse   ()
 	  {
 
 	    if (!( m_onlysavewithB && jet->info(B,-100.)<1.e-6)){
-	      verbose()<<PT(jet)<<" "<<jet->info(B,-100.)<<" "<<ID(jet)<<endreq;
 	      sc = save ( "jets" , jet ) ;
 	      if ( sc.isFailure() ) { return Error ( "Error from save function in jet maker" , sc ) ; }
 	    }
