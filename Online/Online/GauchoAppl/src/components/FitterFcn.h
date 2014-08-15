@@ -22,11 +22,10 @@ namespace LHCb
       std::vector<double> m_dat_x;
       std::vector<double> m_dat_y;
       std::vector<double> m_dat_dy;
-      std::string m_RefFileName;
       std::vector<double> m_params;
       std::string m_PartitionName;
       IGauchoMonitorSvc *m_MonSvc;
-      IDumAligWork *m_Parent;
+      LHCb::IDumAligWork *m_Parent;
       double m_result;
       void init();
       FitterFcn(const std::string &  type, const std::string &  name, const IInterface *  parent  );

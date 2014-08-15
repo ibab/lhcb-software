@@ -4,9 +4,9 @@
  *  Created on: Aug 12, 2014
  *      Author: beat
  */
-#include "GaudiKernel/IAlgTool.h"
 #ifndef IFITTERFCN_H_
 #define IFITTERFCN_H_
+#include "GaudiKernel/IAlgTool.h"
 namespace LHCb
 {
   class IFitterFcn : virtual public IAlgTool

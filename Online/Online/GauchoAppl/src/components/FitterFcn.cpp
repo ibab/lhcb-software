@@ -18,6 +18,7 @@ FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const
 {
   declareProperty("ParameterFileName",m_ParamFileName);
   declareProperty("DataFileName",m_DataFileName);
+  declareProperty("PartitionName",m_PartitionName);
   const void *p = parent;
   m_Parent = (IDumAligWork*)p;
 }
@@ -35,6 +36,15 @@ StatusCode FitterFcn::initialize()
   StatusCode sc= AlgTool::initialize();
   printf ("Parameter File Name: %s\n",m_ParamFileName.c_str());
   printf ("Data File Name: %s\n",m_DataFileName.c_str());
+  std::list<IService*> svclist;
+  svclist = serviceLocator()->getServices();//"LHCb::IDumAligWork",&m_Parent,false);
+  std::list<IService*>::iterator it;
+  printf("Known Service list:\n");
+  for (it = svclist.begin();it!=svclist.end();it++)
+  {
+    printf("Service Name %s\n",(*it)->name().c_str());
+  }
+  fflush(stdout);
   fflush(stdout);
 //  init();
   return sc;
@@ -66,9 +76,6 @@ void FitterFcn::init()
   }
   fclose(f);
   fflush(stdout);
-  m_PartitionName = m_Parent->getPartitionName();
-  m_RefFileName   = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
-
 }
 
 double FitterFcn::analyze()
