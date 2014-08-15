@@ -50,7 +50,8 @@ StatusCode FitterFcn::initialize()
     }
   }
   fflush(stdout);
-  fflush(stdout);
+  m_SvcName = "Chi2";
+  m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
 //  init();
   return sc;
 }
@@ -62,8 +63,6 @@ void FitterFcn::init()
 //  }
 ////  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
   FILE *f;
-  m_SvcName = "Chi2";
-  m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
   size_t ndat=0;
   f = fopen(m_DataFileName.c_str(),"r");
   std::fscanf(f,"%d",(int*)(&ndat));
