@@ -48,7 +48,7 @@ StatusCode FitterFcn::initialize()
     }
   }
   IGauchoMonitorSvc* l_MonSvc;
-  l_MonSvc = m_Parent->getMonSvc();
+  l_MonSvc = monitorSvc();m_Parent->getMonSvc();
   if (m_MonSvc != l_MonSvc)
   {
     printf("Somehow Weird... Monitor Service Pointers differ... %0X != %0X\n",m_MonSvc, l_MonSvc);
