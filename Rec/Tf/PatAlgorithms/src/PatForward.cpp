@@ -270,7 +270,6 @@ StatusCode PatForward::execute() {
           if (overlap) {
               auto i = ( overlap < 0 ? itT : itT1 );
               if( UNLIKELY( dbg  ) ) debug() << "    erase " << (*i)->key() << " and restart " << endmsg;
-              //TODO: verify that this is not a memory leak... 
               outputTracks->erase( i );
               // break innermost loop, and restart the outermost loop
               itT  = outputTracks->begin();
