@@ -126,7 +126,11 @@ void FitterFcn::ReadParams()
 }
 void FitterFcn::PubResult(long reference)
 {
-  m_MonSvc->updatePerSvc(reference);
+  IGauchoMonitorSvc *l_MonSvc=m_MonSvc;
+  if (m_MonSvc != 0)
+  {
+    m_MonSvc->updatePerSvc(reference);
+  }
 }
 //void FitterFcn::run()
 //{
