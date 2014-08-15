@@ -46,7 +46,7 @@ StatusCode FitterFcn::initialize()
     printf("Service Name %s\n",(*it)->name().c_str());
     if (sname == "MonitorSvc")
     {
-      m_MonSvc = (*it);
+      m_MonSvc = (IGauchoMonitorSvc*)(*it);
     }
   }
   fflush(stdout);
