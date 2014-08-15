@@ -42,7 +42,12 @@ StatusCode FitterFcn::initialize()
   printf("Known Service list:\n");
   for (it = svclist.begin();it!=svclist.end();it++)
   {
+    std::string sname = (*it)->name();
     printf("Service Name %s\n",(*it)->name().c_str());
+    if (sname == "MonitorSvc")
+    {
+      m_MonSvc = (*it);
+    }
   }
   fflush(stdout);
   fflush(stdout);
@@ -56,7 +61,7 @@ void FitterFcn::init()
 //    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
   }
   FILE *f;
-  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
+//  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
   m_SvcName = "Chi2";
   m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
   size_t ndat=0;
