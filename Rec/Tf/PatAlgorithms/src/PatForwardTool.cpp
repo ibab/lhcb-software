@@ -279,6 +279,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
                        track.yStraight( m_zAfterVelo ),
                        track.slX(), track.slY(), 1000. * track.qOverP() ) << endmsg;
   }
+  // Insure hits are properly prepared. Without this call (which can be made
+  // multiple times without penalty) the 'next' and 'previous' information,
+  // used in the x @ zRefenence computation of OT hits, will be missing.
+  // Also, the order of IT hits in the overlap regions is not guaranteed to be
+  // correct.
+  m_tHitManager->prepareHits();
 
   //== Build the initial list of X candidates
   buildXCandidatesList( track );

@@ -3,6 +3,18 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-15 - Gerhard Raven
+ - insure that when using PatForwardTool directly, i.e. not from PatForward,
+   that PatTStationHitManager::prepareHits() is invoked. 
+   Without this call, the 'hasNext' and 'hasPrevious' information on PatForwardHits
+   is missing -- which has an effect on OT hits when computing xAtReferencePlane, 
+   and not all IT hits are sorted (those in the overlap regions are affected).
+   With this call, the the decoding on demand is disabled, but then again, two
+   tracks (one with y<0 and one with y>0) in the OT acceptance would eg. force the
+   decoding of all OT modules anyway... and if one ends up decoding most modules
+   anyway, might as well do it upfront, as that is actually faster...
+   
+
 ! 2014-08-14 - Gerhard Raven
  - make PatFwdCandidate 'vector friendly' i.e. don't enforce types on a few
    member functions that perform arithmetic.
