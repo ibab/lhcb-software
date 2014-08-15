@@ -19,6 +19,8 @@ FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const
   declareProperty("ParameterFileName",m_ParamFileName);
   declareProperty("DataFileName",m_DataFileName);
   declareProperty("PartitionName",m_PartitionName);
+  IInterface *p=(IInterface*)parent;
+  StatusCode sc = p->queryInterface(IRunable::interfaceID(),(void**)(&m_Parent));
 }
 FitterFcn::~FitterFcn()
 {
