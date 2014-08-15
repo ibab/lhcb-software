@@ -101,10 +101,8 @@ StatusCode LHCb::DumAligWork::finalize()
 
 StatusCode LHCb::DumAligWork::i_run()
 {
-  m_fitterFcn->i_run();
-  m_fitterFcn->ReadParams();
   readReference();
-  m_result = m_fitterFcn->analyze();
+  m_fitterFcn->i_run();
   m_fitterFcn->PubResult(m_Reference);
 //  printf("Function Result: %15g\n",m_result);
 //  fflush (stdout);
@@ -123,6 +121,10 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : Onlin
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
+  if (m_RefFileName.empty())
+  {
+    m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
+  }
   service("ToolSvc",m_ToolSvc,true);
   m_Lock=0;
   m_runonce = false;

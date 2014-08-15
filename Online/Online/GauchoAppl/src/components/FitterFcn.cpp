@@ -56,12 +56,12 @@ StatusCode FitterFcn::initialize()
 }
 void FitterFcn::init()
 {
-  StatusCode sc;
-  if ( !sc.isSuccess() )  {
-//    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
-  }
+//  StatusCode sc;
+//  if ( !sc.isSuccess() )  {
+////    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
+//  }
+////  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
   FILE *f;
-//  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
   m_SvcName = "Chi2";
   m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
   size_t ndat=0;
@@ -135,7 +135,8 @@ void FitterFcn::PubResult(long reference)
 //}
 void FitterFcn::i_run()
 {
-
+  ReadParams();
+  m_result = analyze();
 }
 StatusCode FitterFcn::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
