@@ -30,10 +30,6 @@ extern "C"
 
 StatusCode LHCb::DumAligWork::stop()
 {
-  if (m_thread != 0)
-  {
-    ::lib_rtl_cancel_thread(m_thread);
-  }
   return StatusCode::SUCCESS;
 }
 void LHCb::DumAligWork::waitRunOnce()
@@ -100,6 +96,10 @@ void LHCb::DumAligWork::handle(const Incident& inc)
 StatusCode LHCb::DumAligWork::finalize()
 {
   StatusCode sc;
+  if (m_thread != 0)
+  {
+    ::lib_rtl_cancel_thread(m_thread);
+  }
   OnlineService::finalize();
   return StatusCode::SUCCESS;
 }
