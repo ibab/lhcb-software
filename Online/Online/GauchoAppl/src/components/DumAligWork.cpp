@@ -72,8 +72,6 @@ StatusCode LHCb::DumAligWork::start()
 StatusCode LHCb::DumAligWork::initialize()
 {
   OnlineService::initialize();
-  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,0,true);
-  m_fitterFcn->setParent((void*)this);
   m_incidentSvc = incidentSvc();
   m_incidentSvc->addListener(this,"DAQ_CONTINUE");
   m_incidentSvc->addListener(this,"APP_RUNNING");
@@ -130,6 +128,8 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : Onlin
   m_Lock=0;
   m_runonce = false;
   service("MonitorSvc",m_MonSvc,true);
+  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,0,true);
+  m_fitterFcn->setParent((void*)this);
 }
 LHCb::DumAligWork::~DumAligWork()
 {
