@@ -81,7 +81,7 @@ StatusCode LHCb::DumAligWork::initialize()
     m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   }
   StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,0,true);
-  m_fitterFcn->setParent((void*)this);
+  m_fitterFcn->setParent((void*)((IDumAligWork*)this));
   return StatusCode::SUCCESS;
 }
 
