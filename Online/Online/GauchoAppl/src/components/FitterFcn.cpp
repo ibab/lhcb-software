@@ -32,6 +32,16 @@ StatusCode FitterFcn::finalize()
 StatusCode FitterFcn::initialize()
 {
   StatusCode sc= AlgTool::initialize();
+//  init();
+  return sc;
+}
+void FitterFcn::init()
+{
+//  StatusCode sc;
+//  if ( !sc.isSuccess() )  {
+////    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
+//  }
+////  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
   printf ("Parameter File Name: %s\n",m_ParamFileName.c_str());
   printf ("Data File Name: %s\n",m_DataFileName.c_str());
   std::list<IService*> svclist;
@@ -47,6 +57,7 @@ StatusCode FitterFcn::initialize()
       m_MonSvc = (IGauchoMonitorSvc*)(*it);
     }
   }
+  m_MonSvc = m_Parent->getMonSvc();
 //  IGauchoMonitorSvc* l_MonSvc;
 //  l_MonSvc = monitorSvc();m_Parent->getMonSvc();
 //  if (m_MonSvc != l_MonSvc)
@@ -57,16 +68,6 @@ StatusCode FitterFcn::initialize()
   fflush(stdout);
   m_SvcName = "Chi2";
   m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
-//  init();
-  return sc;
-}
-void FitterFcn::init()
-{
-//  StatusCode sc;
-//  if ( !sc.isSuccess() )  {
-////    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
-//  }
-////  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
   FILE *f;
   size_t ndat=0;
   f = fopen(m_DataFileName.c_str(),"r");
@@ -138,6 +139,12 @@ void FitterFcn::PubResult(long reference)
 //{
 //
 //}
+void FitterFcn::setParent(void *p)
+{
+  m_Parent = (LHCb::IDumAligWork*)p;
+  init();
+  return;
+}
 void FitterFcn::i_run()
 {
   ReadParams();

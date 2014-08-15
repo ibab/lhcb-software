@@ -80,6 +80,8 @@ StatusCode LHCb::DumAligWork::initialize()
   {
     m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   }
+  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,0,true);
+  m_fitterFcn->setParent((void*)this);
   return StatusCode::SUCCESS;
 }
 
@@ -128,8 +130,6 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : Onlin
   m_Lock=0;
   m_runonce = false;
   service("MonitorSvc",m_MonSvc,true);
-  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,0,true);
-  m_fitterFcn->setParent((void*)this);
 }
 LHCb::DumAligWork::~DumAligWork()
 {
