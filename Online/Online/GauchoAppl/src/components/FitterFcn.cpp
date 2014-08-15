@@ -47,12 +47,13 @@ StatusCode FitterFcn::initialize()
       m_MonSvc = (IGauchoMonitorSvc*)(*it);
     }
   }
-  IGauchoMonitorSvc* l_MonSvc;
-  l_MonSvc = monitorSvc();m_Parent->getMonSvc();
-  if (m_MonSvc != l_MonSvc)
-  {
-    printf("Somehow Weird... Monitor Service Pointers differ... %0X != %0X\n",m_MonSvc, l_MonSvc);
-  }
+//  IGauchoMonitorSvc* l_MonSvc;
+//  l_MonSvc = monitorSvc();m_Parent->getMonSvc();
+//  if (m_MonSvc != l_MonSvc)
+//  {
+//    printf("Somehow Weird... Monitor Service Pointers differ... %p != %p\n",m_MonSvc, l_MonSvc);
+//    m_MonSvc = l_MonSvc;
+//  }
   fflush(stdout);
   m_SvcName = "Chi2";
   m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
