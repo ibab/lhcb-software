@@ -128,6 +128,7 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : Onlin
   service("ToolSvc",m_ToolSvc,true);
   m_Lock=0;
   m_runonce = false;
+  service("MonitorSvc",m_MonSvc,true);
 }
 LHCb::DumAligWork::~DumAligWork()
 {
