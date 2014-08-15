@@ -37,7 +37,7 @@ namespace LHCb
       void ReadParams();
       void PubResult(long reference);
       void i_run();
-//      void setWorkerSvc(IDumAligWork *p);
+      void setParent(void *p){m_Parent = (LHCb::IDumAligWork*)p;return;};
   };
 }
 #endif /* FITTERFCN_H_ */

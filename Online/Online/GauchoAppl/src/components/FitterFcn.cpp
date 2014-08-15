@@ -14,13 +14,11 @@ using namespace LHCb;
 DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,FitterFcn)
 
 FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const IInterface *  parent  ) :
-      AlgTool(type,name,parent),m_result(0.0)
+      AlgTool(type,name,parent),m_result(0.0),m_Parent(0)
 {
   declareProperty("ParameterFileName",m_ParamFileName);
   declareProperty("DataFileName",m_DataFileName);
   declareProperty("PartitionName",m_PartitionName);
-  const void *p = parent;
-  m_Parent = (IDumAligWork*)p;
 }
 FitterFcn::~FitterFcn()
 {
@@ -48,6 +46,12 @@ StatusCode FitterFcn::initialize()
     {
       m_MonSvc = (IGauchoMonitorSvc*)(*it);
     }
+  }
+  IGauchoMonitorSvc* l_MonSvc;
+  l_MonSvc = m_Parent->getMonSvc();
+  if (m_MonSvc != l_MonSvc)
+  {
+    printf("Somehow Weird... Monitor Service Pointers differ... %0X != %0X\n",m_MonSvc, l_MonSvc);
   }
   fflush(stdout);
   m_SvcName = "Chi2";
