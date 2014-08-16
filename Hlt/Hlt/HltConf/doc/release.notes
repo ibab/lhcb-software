@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================= HltConf v12r0 2014-08-16 =========================
+
 ! 2014-07-31 - Gerhard Raven
  - streamline propagation of ThresholdSettings
  - skip instantiation of lines that will not be used
