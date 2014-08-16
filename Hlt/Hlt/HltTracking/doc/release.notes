@@ -4,6 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r0 2014-08-16 =========================
+
 ! 2014-08-7 - Sebastian Neubert
  - fixed wrong call to StatPrint in Hlt2Tracking
  - Forward track resurrection: Added check for already used TStation hits
