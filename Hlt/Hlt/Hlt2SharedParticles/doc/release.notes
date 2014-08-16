@@ -5,6 +5,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r1 2014-08-16 =========================
+
 ! 2014-08-13 - Patrick Spradlin
  - Added three new particle types to TrackFittedBasicParticles.py so that
    Particles from a consistent set of ProtoParticles can be used in certain
