@@ -5,8 +5,22 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v23r0>2014-08-17 HltSys v23r0</A></H1><PRE>
 
-</PRE><H1><A NAME=v22r2>2014-04-22 HltSys v22r2</A></H1><PRE>
+For HLT commissioning week of the end of August. This is the first version to use ROOT 6 and should be considered as a development version.
+
+Major changes include:
+    - Fix inputs of OfflineVertexFitter such that parallel particles are never used in the vertex fit.
+    - Substantial updates and fixes to the flagging of used tracks and the resurrection of Hlt1 tracks, including the addition of the "Hlt1TrackOption" to Hlt2Conf.
+    - Bug-fix for the use of PatForwardTool in Hlt1 that has existed since before the dawn of LHC running, with non-negligible increase in Hlt1 rate (r176r58).
+    - Default to split Hlt running, running together a special case.
+    - Automatic import of Hlt configurables to avoid duplication.
+
+A complete list can be seen here:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r0
+  
+
+</PRE><H1><A NAME=v22r2>2014-06-21 HltSys v22r2</A></H1><PRE>
 
 For HLT commissioning week June 2014, to catch up with stack v37r3. Depends on Rec v16r3 via Phys v18r3. Based on Gaudi v25r2
 

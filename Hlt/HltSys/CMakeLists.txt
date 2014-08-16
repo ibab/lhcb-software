@@ -1,11 +1,16 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v22r2)
+gaudi_subdir(HltSys v23r0)
 
 gaudi_depends_on_subdirs(GaudiConf # temporary
                          Kernel/LHCbAlgs # temporary
                          Hlt/HltDAQ   # temporary
+                         DAQ/DAQSys   # temporary
+                         DAQ/RawEventCompat   # temporary
+                         Velo/VeloDAQ   # temporary
+                         Det/DDDB   # temporary
+                         Event/EventPacker   # temporary
                          Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
                          Hlt/Hlt2Lines
