@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+!========================= HltDAQ v4r6 2014-08-16 =========================
 
 ! 2014-08-07 - Sebastian Neubert
  - HltTrackReportsDecoder: make sure counters are always filled
