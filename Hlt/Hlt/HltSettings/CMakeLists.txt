@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSettings
 ################################################################################
-gaudi_subdir(HltSettings v6r4)
+gaudi_subdir(HltSettings v6r5)
 
 gaudi_install_python_modules()
 
