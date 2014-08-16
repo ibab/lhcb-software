@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+!========================= HltLine v7r3 2014-08-16 =========================
+
 ! 2014-07-31 - Gerhard Raven
  - make it possible to skip instantiation of lines which will not be used
 
