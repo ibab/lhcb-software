@@ -4,6 +4,8 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v4r3 2014-08-16 =========================
+
 ! 2014-08-07 - Sebastian Neubert
  - added counter to DumpTracks
 
