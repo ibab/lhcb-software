@@ -5,6 +5,10 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================= HltRawData v4r2 2014-08-16 =========================
+
+ - The commit below exists in the tag collector with date of 25th June for some reason. So tagging now.
+
 !========================= HltRawData v4r1 2014-06-16 =========================
 
 ! 2014-06-14 - Gerhard Raven
