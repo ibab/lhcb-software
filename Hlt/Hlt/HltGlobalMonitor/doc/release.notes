@@ -4,6 +4,9 @@
 !Package Coordinator : Eric van Herwijnen 
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+
+!========================= HltGlobalMonitor v4r3 2014-08-16 =========================
+
 ! 2014-07-17 - Gerhard Raven
  - do not complain about missing Hlt2 decisions if Hlt1 did not pass
 
