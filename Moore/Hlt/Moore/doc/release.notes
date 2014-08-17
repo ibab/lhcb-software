@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v22r3 2014-08-17 =========================
+
 ! 2014-08-04 - Alex Shires
  - Add two options files into Moore/options
  - RunRawEventJug.py combines the Raw Event
