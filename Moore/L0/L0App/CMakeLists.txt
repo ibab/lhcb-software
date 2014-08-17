@@ -1,7 +1,7 @@
 ################################################################################
 # Package: L0App
 ################################################################################
-gaudi_subdir(L0App v2r2)
+gaudi_subdir(L0App v2r3)
 
 gaudi_depends_on_subdirs(DAQ/DAQSys
                          Det/CaloDet

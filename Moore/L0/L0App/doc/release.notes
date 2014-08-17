@@ -4,6 +4,8 @@
 ! Purpose     : An LHCb application to run L0 Emulation
 !-----------------------------------------------------------------------------
 
+!========================= L0App v2r3 2014-08-17 =========================
+
 ! 2014-07-17 - Sean Benson
  - Give test longer before timeout (works locally but not in the nightlies)
 
