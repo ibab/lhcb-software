@@ -1,16 +1,16 @@
 package MooreSys
-version           v22r2
+version           v22r3
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v22r2      Hlt
-use  IndependenceTests   v1r8       Hlt
+use  Moore               v22r3      Hlt
+use  IndependenceTests   v1r9       Hlt
 use  HltMonitor          v1r4	    Hlt   # Diego Martinez
 use  Swimming            v3r0p2     Phys  # Nick Torr
-use  L0App               v2r2       L0    # Rob Lambert
+use  L0App               v2r3       L0    # Rob Lambert
 
 # Declare this as a container package
 apply_pattern container_package

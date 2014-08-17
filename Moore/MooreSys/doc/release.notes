@@ -3,6 +3,23 @@ Package     : MooreSys
 Package Coordinator : S. Benson
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v22r3>2014-8-17 MooreSys v22r3</A></H1><PRE>
+
+For HLT commissioning week of the end of August. This is the first version to use ROOT 6 and should be considered as a development version. 
+	
+Major changes include:
+    - Fix inputs of OfflineVertexFitter such that parallel particles are never used in the vertex fit.
+    - Substantial updates and fixes to the flagging of used tracks and the resurrection of Hlt1 tracks, including the addition of the "Hlt1TrackOption" to Hlt2Conf.
+    - Bug-fix for the use of PatForwardTool in Hlt1 that has existed since before the dawn of LHC running, with non-negligible increase in Hlt1 rate (r176r58).
+    - Default to split Hlt running, running together a special case.
+    - Automatic import of Hlt configurables to avoid duplication.
+
+Also options have been added to run the juggler and L0 on 2015 MC.
+
+A complete list can be seen here:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r0
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v23r0
+
 </PRE><H1><A NAME=v22r2>2014-6-16 MooreSys v22r2</A></H1><PRE>
 
 Main changes:
