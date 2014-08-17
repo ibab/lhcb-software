@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-17 - Stefano Perazzini
+ - Added StrippingBs2gammagamma to __init__.py
+
 ! 2014-08-13 - Anton Poluektov 
   - Add lines with Lambda0 to Beauty2Charm module: 
     StrippingLb2DLambda0DDpiD2HHHBeauty2CharmLine, 
