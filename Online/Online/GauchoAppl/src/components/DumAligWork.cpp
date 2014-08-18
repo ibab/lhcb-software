@@ -21,7 +21,7 @@ extern "C"
       WorkInstance->waitRunOnce();
       run_count++;
       if (run_count == 1) sleep(10);
-      else usleep(7500000);
+      else usleep(100000);
       WorkInstance->i_run();
     }
     return 1;
