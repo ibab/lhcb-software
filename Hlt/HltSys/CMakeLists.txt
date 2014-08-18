@@ -13,6 +13,7 @@ gaudi_depends_on_subdirs(GaudiConf # temporary
                          Det/DDDB   # temporary
                          Kernel/Relations   # temporary
                          Event/EventPacker   # temporary
+                         Tf/PatAlgorithms   # temporary
                          Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
                          Hlt/Hlt2Lines

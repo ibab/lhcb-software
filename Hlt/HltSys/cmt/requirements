@@ -36,6 +36,7 @@ use VeloDAQ             v6r12   Velo
 use DDDB                v1r71   Det
 use Relations           v6r3    Kernel
 use EventPacker         v4r3    Event
+use PatAlgorithms       v4r34   Tf
 
 # Declare this as a container package
 apply_pattern container_package
