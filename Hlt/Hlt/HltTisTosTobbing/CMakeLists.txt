@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltTisTosTobbing
 ################################################################################
-gaudi_subdir(HltTisTosTobbing v3r0)
+gaudi_subdir(HltTisTosTobbing v3r1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/HltEvent
