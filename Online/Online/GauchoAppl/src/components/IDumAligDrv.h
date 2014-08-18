@@ -15,6 +15,7 @@ namespace LHCb
   class IDumAligDrv: virtual public IRunable, virtual public IService
   {
     public:
+      DeclareInterfaceID(IDumAligDrv,1,0);
       virtual IGauchoMonitorSvc *getMonSvc()=0;
       virtual void writeReference()=0;
       virtual void waitRunOnce()=0;

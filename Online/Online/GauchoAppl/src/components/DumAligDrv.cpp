@@ -129,7 +129,7 @@ void DumAligDrv::writeReference()
 }
 
 
-DumAligDrv::DumAligDrv(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_MonSvc(0),m_fitter(0)
+DumAligDrv::DumAligDrv(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCbA");
   m_runonce = false;
@@ -145,6 +145,12 @@ StatusCode DumAligDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
   if (IRunable::interfaceID().versionMatch(riid))
   {
     *ppvIF = (IRunable*) this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  else if (IDumAligDrv::interfaceID().versionMatch(riid))
+  {
+    *ppvIF = (IDumAligDrv*)this;
     addRef();
     return StatusCode::SUCCESS;
   }
