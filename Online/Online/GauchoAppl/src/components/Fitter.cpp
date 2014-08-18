@@ -88,7 +88,6 @@ StatusCode Fitter::initialize()
     nam[1] = 0;
     m_Minuit->DefineParameter(i,nam,m_params[i],10.0,0.0,0.0);
   };
-  m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   return StatusCode::SUCCESS;
 }
 

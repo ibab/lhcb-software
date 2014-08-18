@@ -44,7 +44,6 @@ namespace LHCb
       std::string m_ParamFileName;
       std::vector<std::string> m_CounterNames;
       std::string m_CntDNS;
-      std::string m_RefFileName;
       std::string m_PartitionName;
       std::string m_CntTask;
       std::vector<double> m_params;
