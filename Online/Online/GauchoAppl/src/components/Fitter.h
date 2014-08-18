@@ -47,6 +47,6 @@ namespace LHCb
       std::string m_PartitionName;
       std::string m_CntTask;
       std::vector<double> m_params;
-  };
+      StatusCode queryInterface(const InterfaceID& riid, void** ppvIF)  };
 }
 #endif // ONLINE_GAUCHO_FITTER_H

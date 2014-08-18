@@ -185,6 +185,15 @@ void Fitter::read_params(int &npar, std::vector<double> &params)
   fclose(f);
   npar = params.size();
 }
+StatusCode Fitter::queryInterface(const InterfaceID& riid, void** ppvIF)
+{
+  if (LHCb::IFitter::interfaceID().versionMatch(riid))  {
+    *ppvIF = (IFitter*) this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return AlgTool::queryInterface(riid, ppvIF);
+}
 //void Fitter::writeReference()
 //{
 //  FILE *f;
