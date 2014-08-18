@@ -30,7 +30,7 @@ namespace LHCb
       IDumAligDrv *m_parent;
       StatusCode init(std::string, std::string);
       StatusCode start();
-      StatusCode run();
+      StatusCode i_run();
       StatusCode initialize();
       StatusCode stop();
       StatusCode de_init();

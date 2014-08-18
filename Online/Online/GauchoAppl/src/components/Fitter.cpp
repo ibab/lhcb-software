@@ -30,7 +30,7 @@ extern "C"
   {
     Fitter *f = (Fitter*)t;
     FitterInstance = f;
-    f->run();
+    f->i_run();
     return 1;
   }
   void Chi2(int &npar, double */*grad*/, double &fval, double *params, int /*flag*/)
@@ -91,7 +91,7 @@ StatusCode Fitter::initialize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode Fitter::run()
+StatusCode Fitter::i_run()
 {
   int res=m_Minuit->Migrad();
   double par[100],dpar[100];
