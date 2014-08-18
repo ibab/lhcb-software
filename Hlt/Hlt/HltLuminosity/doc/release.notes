@@ -4,6 +4,8 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================= HltLuminosity v4r1 2014-08-18 =========================
+
 ! 2014-04-26 - Gerhard Raven
  - LumiCountVeloWithZRCuts: rewrite code that does trivial fid. vol. cuts
  - remove trivial d'tors implementation  and augment definition by '=default'
