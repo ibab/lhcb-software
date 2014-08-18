@@ -4,6 +4,10 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= HltL0Conf v4r1 2014-08-18 =========================
+
+ - Pick up Rob's test comments.
+
 !========================= HltL0Conf v4r0 2014-02-20 =========================
 ! 2014-02-08 - Gerhard Raven
  - fix -Wpedantic warning
