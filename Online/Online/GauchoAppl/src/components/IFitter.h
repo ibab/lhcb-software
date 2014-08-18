@@ -8,6 +8,7 @@ namespace LHCb
   class IFitter : virtual public IAlgTool
   {
     public:
+      DeclareInterfaceID(LHCb::IFitter,1,0);
       virtual void write_params(int,std::vector<double> &)=0;
       virtual void write_params(int npar, double *)=0;
       virtual void read_params(int&,std::vector<double> &)=0;

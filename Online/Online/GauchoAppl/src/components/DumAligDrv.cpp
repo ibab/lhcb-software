@@ -71,7 +71,7 @@ StatusCode DumAligDrv::initialize()
 //    printf("%s\n",m_CounterNames[i].c_str());
 //  }
   service("ToolSvc",m_ToolSvc,true);
-  m_ToolSvc->retrieveTool("LHCb::Fitter","bbb",m_fitter,this,true);
+  sc = m_ToolSvc->retrieveTool("LHCb::Fitter","bbb",m_fitter,this,true);
 
 //  m_fitter = new Fitter(this);
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
