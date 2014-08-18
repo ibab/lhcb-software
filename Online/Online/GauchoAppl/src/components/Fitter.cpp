@@ -66,7 +66,7 @@ Fitter::Fitter(const std::string &  type, const std::string &  name, const IInte
   m_cntTask=0;
 }
 
-StatusCode Fitter::init(std::string pname,std::string parfile)
+StatusCode Fitter::initialize()
 {
 //  m_Minuit = new TMinuit(100);
 //  printf("Counter DNS: %s, Counter Task: %s\n Counter Names:\n",m_CntDNS.c_str(),this->m_CntTaskName.c_str());
@@ -194,25 +194,4 @@ StatusCode Fitter::queryInterface(const InterfaceID& riid, void** ppvIF)
   }
   return AlgTool::queryInterface(riid, ppvIF);
 }
-//void Fitter::writeReference()
-//{
-//  FILE *f;
-//  f = fopen(m_RefFileName.c_str(),"r+");
-//  unsigned long ref;
-//  if (f ==0)
-//  {
-//    ref = 0;
-//    f=fopen(m_RefFileName.c_str(),"w");
-//  }
-//  else
-//  {
-//    int stat = fscanf(f,"%ld",&ref);
-//    if (stat == 0) ref =0;
-//    rewind(f);
-//  }
-//  ref++;
-//  fprintf(f,"%ld",ref);
-//  fflush(f);
-//  fclose(f);
-//}
 

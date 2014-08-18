@@ -31,6 +31,7 @@ namespace LHCb
       StatusCode init(std::string, std::string);
       StatusCode start();
       StatusCode run();
+      StatusCode initialize();
       StatusCode stop();
       StatusCode de_init();
       void write_params(int,std::vector<double> &params);
