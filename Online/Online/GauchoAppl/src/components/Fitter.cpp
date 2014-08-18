@@ -105,7 +105,7 @@ StatusCode Fitter::i_run()
   m_parent->incidentSvc()->fireIncident(Incident(m_parent->name(),"DAQ_STOP"));
   return StatusCode::SUCCESS;
 }
-StatusCode Fitter::start()
+StatusCode Fitter::i_start()
 {
   /*int status = */::lib_rtl_start_thread(FitterThreadFunction,this,&m_thread);
   return StatusCode::SUCCESS;

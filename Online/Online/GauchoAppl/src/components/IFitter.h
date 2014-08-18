@@ -13,6 +13,7 @@ namespace LHCb
       virtual void write_params(int npar, double *)=0;
       virtual void read_params(int&,std::vector<double> &)=0;
       virtual double getIterationResult()=0;
+      virtual StatusCode i_start()=0;
   };
 }
 #endif // ONLINE_GAUCHO_IFITTER_H

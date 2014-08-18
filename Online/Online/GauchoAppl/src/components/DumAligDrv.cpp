@@ -49,7 +49,7 @@ StatusCode DumAligDrv::pause()
 StatusCode DumAligDrv::start()
 {
   Service::start();
-  m_fitter->start();
+  m_fitter->i_start();
   return StatusCode::SUCCESS;
 }
 StatusCode DumAligDrv::stop()

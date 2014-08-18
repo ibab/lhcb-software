@@ -29,7 +29,7 @@ namespace LHCb
       TMinuit *m_Minuit;
       IDumAligDrv *m_parent;
       StatusCode init(std::string, std::string);
-      StatusCode start();
+      StatusCode i_start();
       StatusCode i_run();
       StatusCode initialize();
       StatusCode stop();
