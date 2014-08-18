@@ -10,40 +10,15 @@
 #include "RTL/rtl.h"
 #include "Gaucho/CounterTask.h"
 #include "Gaucho/BRTL_Lock.h"
-
+#include "IFitter.h"
+#include "IDumAligDrv.h"
 // Forward declarations
 //class DimService;
 //class ISimpleTrendWriter;
-class TMinuit;
 namespace LHCb
 {
-  class DumAligDrv;
-  class Fitter
-  {
-    public:
-      Fitter(DumAligDrv *parent,std::string pFilename);
-      TMinuit *m_Minuit;
-      DumAligDrv *m_parent;
-      StatusCode init();
-      StatusCode start();
-      StatusCode run();
-      StatusCode stop();
-      StatusCode de_init();
-      void write_params(int,std::vector<double> &params);
-      void write_params(int npar, double *params);
-      void read_params(int&,std::vector<double> &params);
-      void writeReference();
-      double getIterationResult();
-      lib_rtl_thread_t m_thread;
-      CounterTask *m_cntTask;
-      std::string m_CntTaskName;
-      std::string m_ParamFileName;
-      std::vector<std::string> m_CounterNames;
-      std::string m_CntDNS;
-      std::string m_RefFileName;
-      std::string m_PartitionName;
-  };
-  class DumAligDrv: public OnlineService, virtual public IRunable
+  class Fitter;
+  class DumAligDrv: public OnlineService, virtual public IDumAligDrv
   {
     public:
       DumAligDrv(const std::string& name, ISvcLocator* sl);
@@ -63,21 +38,17 @@ namespace LHCb
 //  unsigned long long m_prevupdate;
 
       std::string m_PartitionName;
-      std::string m_DataFileName;
-      std::string m_ParamFileName;
-      std::string m_SvcName;
-      std::vector<std::string> m_CounterNames;
-      std::string m_CntDNS;
-      std::string m_CntTask;
-      std::vector<double> m_dat_x;
-      std::vector<double> m_dat_y;
-      std::vector<double> m_dat_dy;
+      std::string m_RefFileName;
+//      std::vector<std::string> m_CounterNames;
+//      std::string m_CntDNS;
+//      std::string m_CntTask;
       bool m_runonce;
-      std::vector<double> m_params;
-      TMinuit *m_Minuit;
       IGauchoMonitorSvc *m_MonSvc;
-      Fitter *m_fitter;
+      IFitter *m_fitter;
+      void writeReference();
       IIncidentSvc *incidentSvc () {return OnlineService::incidentSvc();};
+      IToolSvc *m_ToolSvc;
+      IGauchoMonitorSvc *getMonSvc();
   };
 }
 #endif // ONLINE_GAUCHO_DUMALIGDRV_H

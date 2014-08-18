@@ -11,9 +11,10 @@
 //class ISimpleTrendWriter;
 namespace LHCb
 {
-  class IDumAligWork: virtual public IRunable
+  class IDumAligWork: virtual public IRunable, virtual public IService
   {
     public:
+//      DeclareInterfaceID(LHCb::IDumAligWork,1,0);
 //      virtual ~IDumAligWork()=0;
       //IInterface pure virtual member functions
       virtual IGauchoMonitorSvc *getMonSvc()=0;
