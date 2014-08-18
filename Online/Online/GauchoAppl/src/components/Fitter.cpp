@@ -132,7 +132,7 @@ double Fitter::getIterationResult()
   std::vector<CntrDescr*> cdesc;
   if(m_cntTask == 0)
   {
-    m_cntTask = new CounterTask(m_CntTaskName,m_CntDNS);
+    m_cntTask = new CounterTask(m_CntTask,m_CntDNS);
   }
   m_cntTask->Counters(m_CounterNames,cdesc);
   if (cdesc.size() > 0)

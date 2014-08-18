@@ -40,7 +40,7 @@ namespace LHCb
       double getIterationResult();
       lib_rtl_thread_t m_thread;
       CounterTask *m_cntTask;
-      std::string m_CntTaskName;
+//      std::string m_CntTaskName;
       std::string m_ParamFileName;
       std::vector<std::string> m_CounterNames;
       std::string m_CntDNS;
