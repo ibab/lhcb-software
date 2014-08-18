@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltBeamGasAlley
 ################################################################################
-gaudi_subdir(HltBeamGasAlley v4r0)
+gaudi_subdir(HltBeamGasAlley v4r1)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          GaudiAlg
