@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+!========================= PatAlgorithms v4r34 2014-08-18 =========================
+
 ! 2014-08-15 - Gerhard Raven
  - insure that when using PatForwardTool directly, i.e. not from PatForward,
    that PatTStationHitManager::prepareHits() is invoked. 
