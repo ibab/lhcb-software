@@ -3,7 +3,7 @@ Package     : MooreSys
 Package Coordinator : S. Benson
 Purpose     : LHCb HLT application
 
-</PRE><H1><A NAME=v22r3>2014-8-17 MooreSys v22r3</A></H1><PRE>
+</PRE><H1><A NAME=v23r0>2014-8-17 MooreSys v23r0</A></H1><PRE>
 
 For HLT commissioning week of the end of August. This is the first version to use ROOT 6 and should be considered as a development version. 
 	
