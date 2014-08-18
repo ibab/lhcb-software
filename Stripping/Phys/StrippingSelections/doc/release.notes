@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-18 - Alexander Baranov
+  - Added B2DetachedDimuonAndJpsi to StrippingB2MuMuMuMuLines module 
+
 ! 2014-08-18 - Konrad Klimaszewski
   - Updated StrippingBs2JpsieePhi.py
   - Added new line BetaSBs2JpsieePhiFromTracks
