@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-18 - Konrad Klimaszewski
+  - Updated StrippingBs2JpsieePhi.py
+  - Added new line BetaSBs2JpsieePhiFromTracks
+
 ! 2014-08-17 - Stefano Perazzini
  - Added StrippingBs2gammagamma to __init__.py
 

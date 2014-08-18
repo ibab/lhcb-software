@@ -1,4 +1,4 @@
-__author__ = 'Artur Ukleja, Jibo He'
+__author__ = 'Artur Ukleja, Jibo He, Konrad Klimaszewski'
 __date__ = '2011/03/01'
 
 '''
@@ -10,8 +10,52 @@ Exports the following stripping lines
 '''
 
 __all__ = (
-    'Bs2JpsieePhiConfConf',
+    'Bs2JpsieePhiConf',
+    'default_config'
     )
+
+default_config = {
+    'NAME'              : 'BetaSBs2JpsieePhi',
+    'BUILDERTYPE'       : 'Bs2JpsieePhiConf',
+    'CONFIG'    : {
+          'ElectronPTLoose'            :   500.    # MeV
+        , 'ElectronPIDLoose'           :     0.    # adimensional
+        , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
+        , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
+        , 'JpsiMassMinLoose'           :  2500.    # MeV
+        , 'JpsiMassMaxLoose'           :  3300.    # MeV
+        , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
+        , 'PhiPTLoose'                 :  1000.    # MeV
+        , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
+        , 'PhiMassMinLoose'            :   990.    # MeV
+        , 'PhiMassMaxLoose'            :  1050.    # MeV
+        , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
+        , 'BsMassMinLoose'             :  4600.    # MeV
+        , 'BsMassMaxLoose'             :  6000.    # MeV
+        , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
+        , 'PrescaleLoose'              :     1.    # adamenssional
+
+        , 'ElectronPT'            :   500.    # MeV
+        , 'ElectronPID'           :     0.    # adimensional
+        , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
+        , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
+        , 'JpsiMassMin'           :  2500.    # MeV
+        , 'JpsiMassMax'           :  3300.    # MeV
+        , 'KaonTrackCHI2pDOF'     :     5.    # adimensional
+        , 'KaonPID'               :    -2.    # adimensional
+        , 'PhiPT'                 :  1000.    # MeV
+        , 'PhiVertexCHI2pDOF'     :    15.    # adimensional
+        , 'PhiMassMin'            :   990.    # MeV
+        , 'PhiMassMax'            :  1050.    # MeV
+        , 'BsVertexCHI2pDOF'      :    10.    # adimensional
+        , 'BsMassMin'             :  4600.    # MeV
+        , 'BsMassMax'             :  6000.    # MeV
+        , 'BsDIRA'                :     0.99  # adimensional
+        , 'Prescale'              :     0.1   # adamenssional
+        },
+    'STREAMS' : [ 'Radiative' ],
+    'WGs'    : [ 'B2CC' ]
+    }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -38,6 +82,7 @@ class Bs2JpsieePhiConf(LineBuilder):
                 , 'BsMassMinLoose'                 # MeV
                 , 'BsMassMaxLoose'                 # MeV
                 , 'LifetimeCut'                    # cut
+                , 'PrescaleLoose'                  # adimensional
                   
                 , 'ElectronPT'                # MeV
                 , 'ElectronPID'               # adimensional
@@ -55,74 +100,45 @@ class Bs2JpsieePhiConf(LineBuilder):
                 , 'BsMassMin'                 # MeV
                 , 'BsMassMax'                 # MeV
                 , 'BsDIRA'                    # adimensional
+                , 'Prescale'                  # adimensional
                 )
 
-    config_default = {
-                  'ElectronPTLoose'            :   500.    # MeV
-                , 'ElectronPIDLoose'           :     0.    # adimensional
-                , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
-                , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
-                , 'JpsiMassMinLoose'           :  2500.    # MeV
-                , 'JpsiMassMaxLoose'           :  3300.    # MeV
-                , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
-                , 'PhiPTLoose'                 :  1000.    # MeV
-                , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
-                , 'PhiMassMinLoose'            :   990.    # MeV
-                , 'PhiMassMaxLoose'            :  1050.    # MeV
-                , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
-                , 'BsMassMinLoose'             :  4500.    # MeV
-                , 'BsMassMaxLoose'             :  6000.    # MeV
-                , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
-                  
-                , 'ElectronPT'            :   800.    # MeV
-                , 'ElectronPID'           :     2.    # adimensional
-                , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
-                , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
-                , 'JpsiMassMin'           :  2700.    # MeV
-                , 'JpsiMassMax'           :  3300.    # MeV
-                , 'KaonTrackCHI2pDOF'     :     5.    # adimensional
-                , 'KaonPID'               :     0.    # adimensional
-                , 'PhiPT'                 :  1000.    # MeV
-                , 'PhiVertexCHI2pDOF'     :    15.    # adimensional
-                , 'PhiMassMin'            :  1005.    # MeV
-                , 'PhiMassMax'            :  1035.    # MeV
-                , 'BsVertexCHI2pDOF'      :     6.    # adimensional
-                , 'BsMassMin'             :  4500.    # MeV
-                , 'BsMassMax'             :  6000.    # MeV
-                , 'BsDIRA'                :     0.99  # adimensional
-                }
-
-
-
     def __init__(self, name, config) :
-      LineBuilder.__init__(self, name, config)
+        LineBuilder.__init__(self, name, config)
 
-      self.name = name
-      self.Bs2JpsieePhiLine      = self._Bs2JpsieePhiLine( name, config )
-      self.Bs2JpsieePhiDetachedLine = self._Bs2JpsieePhiDetachedLine( name+"Detached", config )
-      self.registerLine( self.Bs2JpsieePhiLine )
-      self.registerLine( self.Bs2JpsieePhiDetachedLine )
+        # if name not set outside, set it to empty 
+        if name == None:
+            name = ""        
+        self.name = name
+        DiElectrons           = DataOnDemand(Location = "Phys/StdLooseDiElectron/Particles")
+        DiElectronsFromTracks = DataOnDemand(Location = "Phys/StdDiElectronFromTracks/Particles")
+        self.Bs2JpsieePhiLine      = self._Bs2JpsieePhiLine( DiElectrons, name, config )
+        self.Bs2JpsieePhiDetachedLine = self._Bs2JpsieePhiDetachedLine( DiElectrons, name+"Detached", config )
+        self.Bs2JpsieePhiFromTracksLine = self._Bs2JpsieePhiDetachedLine( DiElectronsFromTracks, name+"FromTracks", config )
+
+        self.registerLine( self.Bs2JpsieePhiDetachedLine )
+        self.registerLine( self.Bs2JpsieePhiFromTracksLine )
+        self.registerLine( self.Bs2JpsieePhiLine )
 
 
-    def _Bs2JpsieePhiLine( self, name, config ) :
+    def _Bs2JpsieePhiLine( self, dielectron, name, config ) :
 
-        _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
-        _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)" \
+        _jpsi = FilterDesktop(Code = "   (MM > %(JpsiMassMin)s *MeV)" \
+                                     " & (MM < %(JpsiMassMax)s *MeV)" \
                                      " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPID)s )" \
+                                     " & (MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)" \
                                      " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOF)s)" \
-                                     " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOF)s)" \
-                                     " & (MM > %(JpsiMassMin)s *MeV)" \
-                                     " & (MM < %(JpsiMassMax)s *MeV)" % config
+                                     " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOF)s)" % config
                              )
         Jpsi = Selection("SelJpsi2eeFor"+name,
                          Algorithm = _jpsi,
-                         RequiredSelections = [_stdJpsi])
+                         RequiredSelections = [dielectron])
 
         _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
-        _phi = FilterDesktop(Code = "   (MINTREE('K+'==ABSID,PIDK-PIDpi) > %(KaonPID)s )" \
+        _phi = FilterDesktop(Code = "   (PT > %(PhiPT)s *MeV)" \
+                                    " & (MINTREE('K+'==ABSID,PIDK-PIDpi) > %(KaonPID)s )" \
                                     " & (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOF)s)" \
                                     " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOF)s)" \
-                                    " & (PT > %(PhiPT)s *MeV)"\
                                     " & (MM > %(PhiMassMin)s *MeV)" \
                                     " & (MM < %(PhiMassMax)s *MeV)" % config
                             )
@@ -141,30 +157,29 @@ class Bs2JpsieePhiConf(LineBuilder):
                        RequiredSelections = [Jpsi, Phi])
 
         return StrippingLine(name+"Line"
-              , prescale = 1
+              , prescale = config['Prescale']
               , postscale = 1
               , selection = Bs
               )
 
 
-    def _Bs2JpsieePhiDetachedLine( self, name, config ) :
+    def _Bs2JpsieePhiDetachedLine( self, dielectron, name, config ) :
         
-        _stdJpsi = DataOnDemand( Location="Phys/StdLooseJpsi2ee/Particles" )
-        _jpsi = FilterDesktop(Code = "   (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
+        _jpsi = FilterDesktop(Code = "   (MM > %(JpsiMassMinLoose)s *MeV)" \
+                                     " & (MM < %(JpsiMassMaxLoose)s *MeV)" \
                                      " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPIDLoose)s )" \
+                                     " & (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
                                      " & (MAXTREE('e+'==ABSID,TRCHI2DOF) < %(ElectronTrackCHI2pDOFLoose)s)" \
-                                     " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOFLoose)s)" \
-                                     " & (MM > %(JpsiMassMinLoose)s *MeV)" \
-                                     " & (MM < %(JpsiMassMaxLoose)s *MeV)" % config
+                                     " & (VFASPF(VCHI2/VDOF) < %(JpsiVertexCHI2pDOFLoose)s)" % config
                              )
         Jpsi = Selection("SelJpsi2eeFor"+name,
                          Algorithm = _jpsi,
-                         RequiredSelections = [_stdJpsi])
+                         RequiredSelections = [dielectron])
     
         _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
-        _phi = FilterDesktop(Code = "   (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOFLoose)s)" \
+        _phi = FilterDesktop(Code = "   (PT > %(PhiPTLoose)s *MeV)" \
+                                    " & (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOFLoose)s)" \
                                     " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOFLoose)s)" \
-                                    " & (PT > %(PhiPTLoose)s *MeV)"\
                                     " & (MM > %(PhiMassMinLoose)s *MeV)" \
                                     " & (MM < %(PhiMassMaxLoose)s *MeV)" % config
                             )
@@ -183,18 +198,8 @@ class Bs2JpsieePhiConf(LineBuilder):
                        RequiredSelections = [Jpsi, Phi])
 
         return StrippingLine(name+"Line"
-              , prescale = 1
+              , prescale = config['PrescaleLoose']
               , postscale = 1
               , selection = Bs
               )
-
-    
-
-
-
-
-
-
-
-
 
