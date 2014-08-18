@@ -151,6 +151,7 @@ void FitterFcn::i_run()
 {
   ReadParams();
   m_result = analyze();
+  printf("Function Result: %lf\n",m_result);
 }
 StatusCode FitterFcn::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
