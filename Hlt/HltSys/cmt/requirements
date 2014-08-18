@@ -6,7 +6,7 @@ branches cmt doc
 use Hlt1Lines           v7r4    Hlt   # Gerhard Raven, Vava Gligorov, Johannes Albrecht
 use Hlt1Muons           v1r9    Hlt   # Christoph Langenbruch
 use Hlt2Lines           v9r3    Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
-use Hlt2SharedParticles v7r1  Hlt   # Vava Gligorov, Rob Lambert
+use Hlt2SharedParticles v7r1    Hlt   # Vava Gligorov, Rob Lambert
 use HltBase             v15r2   Hlt   # Gerhard Raven
 use HltBeamGasAlley     v4r0    Hlt   # Rosen Matev
 use HltCommon           v10r2   Hlt   # Gerhard Raven
@@ -27,12 +27,14 @@ use LoKiTrigger         v15r2   Phys  # Vanya Belyaev
 
 #temporary
 
-#please update to tagged version of current HEAD  prior to release of v23r0!!!
+#please update to tagged version of current HEAD  prior to release of v23r1!!!
 use HltDAQ              v4r6    Hlt
 use DAQSys              v8r4    DAQ
 use RawEventCompat      v1r6    DAQ
+use DAQEvent            v9r17   Event
 use VeloDAQ             v6r12   Velo
 use DDDB                v1r71   Det
+use Relations           v6r3    Kernel
 use EventPacker         v4r3    Event
 
 # Declare this as a container package

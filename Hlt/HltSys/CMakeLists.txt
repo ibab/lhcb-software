@@ -8,8 +8,10 @@ gaudi_depends_on_subdirs(GaudiConf # temporary
                          Hlt/HltDAQ   # temporary
                          DAQ/DAQSys   # temporary
                          DAQ/RawEventCompat   # temporary
+                         Event/DAQEvent   # temporary
                          Velo/VeloDAQ   # temporary
                          Det/DDDB   # temporary
+                         Kernel/Relations   # temporary
                          Event/EventPacker   # temporary
                          Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
