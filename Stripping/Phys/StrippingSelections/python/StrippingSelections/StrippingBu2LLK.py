@@ -94,15 +94,15 @@ class Bu2LLKConf(LineBuilder) :
         
         # 1 : Make high IP, Pt kaons, K*'s and Phi's
         SelKaons  = self._filterHadron( name   = "KaonsFor" + self._name,
-                                        loc    = Kaons # "Phys/StdLooseKaons/Particles",
+                                        sel    = Kaons # "Phys/StdLooseKaons/Particles",
                                         ,params = config )
 
         SelKstars = self._filterHadron( name   = "KstarsFor"+ self._name,
-                                        loc    =  Kstars # "Phys/StdLooseKstar2Kpi/Particles",
+                                        sel    =  Kstars # "Phys/StdLooseKstar2Kpi/Particles",
                                         ,params = config )
 
         SelPhis   = self._filterHadron( name = "PhisFor" + self._name,
-                                        loc  =  Phis # "Phys/StdLoosePhi3KK/Particles",
+                                        sel  =  Phis # "Phys/StdLoosePhi3KK/Particles",
                                         ,params = config )
         
         # 2 : Dileptons
