@@ -17,8 +17,7 @@
 //class ISimpleTrendWriter;
 namespace LHCb
 {
-  class Fitter;
-  class DumAligDrv: public OnlineService, virtual public IDumAligDrv
+  class DumAligDrv: public extends2< OnlineService, IDumAligDrv, IRunable>
   {
     public:
       DumAligDrv(const std::string& name, ISvcLocator* sl);
@@ -46,6 +45,8 @@ namespace LHCb
       IGauchoMonitorSvc *m_MonSvc;
       IFitter *m_fitter;
       void writeReference();
+      void doContinue();
+      void doStop();
       IIncidentSvc *incidentSvc () {return OnlineService::incidentSvc();};
       IToolSvc *m_ToolSvc;
       IGauchoMonitorSvc *getMonSvc();

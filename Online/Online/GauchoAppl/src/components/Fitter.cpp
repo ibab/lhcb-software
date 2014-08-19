@@ -42,7 +42,7 @@ extern "C"
     {
       printf("Paramter %d %15g\n",i,params[i]);
     }
-    FitterInstance->m_parent->incidentSvc()->fireIncident(Incident(FitterInstance->name(),"DAQ_CONTINUE"));
+    FitterInstance->m_parent->doContinue();
     FitterInstance->m_parent->waitRunOnce();
     fval = FitterInstance->getIterationResult();
     printf ("Chi2: Function value: %15g  \n",fval);
@@ -102,7 +102,8 @@ StatusCode Fitter::i_run()
     printf("Param #%d %15g +- %15g\n",i,par[i],dpar[i]);
   }
   fflush(stdout);
-  m_parent->incidentSvc()->fireIncident(Incident(m_parent->name(),"DAQ_STOP"));
+  m_parent->doStop();
+//  m_parent->incidentSvc()->fireIncident(Incident(m_parent->name(),"DAQ_STOP"));
   return StatusCode::SUCCESS;
 }
 StatusCode Fitter::i_start()

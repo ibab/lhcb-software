@@ -129,7 +129,7 @@ void DumAligDrv::writeReference()
 }
 
 
-DumAligDrv::DumAligDrv(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
+DumAligDrv::DumAligDrv(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCbA");
   m_runonce = false;
@@ -140,6 +140,14 @@ DumAligDrv::~DumAligDrv()
 {
 }
 
+void DumAligDrv::doContinue()
+{
+  incidentSvc()->fireIncident(Incident(name(),"DAQ_CONTINUE"));
+}
+void DumAligDrv::doStop()
+{
+  incidentSvc()->fireIncident(Incident(name(),"DAQ_STOP"));
+}
 StatusCode DumAligDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
   if (IRunable::interfaceID().versionMatch(riid))
