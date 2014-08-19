@@ -37,7 +37,7 @@ namespace LHCb
       void ReadParams();
       void PubResult(long reference);
       void i_run();
-      void setParent(void *p);
+//      void setParent(void *p);
   };
 }
 #endif /* FITTERFCN_H_ */

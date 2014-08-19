@@ -119,12 +119,12 @@ void FitterFcn::PubResult(long reference)
 //{
 //
 //}
-void FitterFcn::setParent(void *p)
-{
-  m_Parent = (LHCb::IDumAligWork*)p;
-  init();
-  return;
-}
+//void FitterFcn::setParent(void *p)
+//{
+//  m_Parent = (LHCb::IDumAligWork*)p;
+//  init();
+//  return;
+//}
 void FitterFcn::i_run()
 {
   ReadParams();

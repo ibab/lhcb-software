@@ -50,18 +50,12 @@ void LHCb::DumAligWork::setRunOnce()
 }
 StatusCode LHCb::DumAligWork::i_continue()
 {
-//  m_Lock->unlockMutex();
-//  m_Lock->lockMutex();
-//  lib_rtl_unlock(m_Lock);
-//  lib_rtl_lock(m_Lock);
   setRunOnce();
   return StatusCode::SUCCESS;
 }
 StatusCode LHCb::DumAligWork::start()
 {
   OnlineService::start();
-//  m_Lock->unlockMutex();
-//  m_Lock->lockMutex();
   return StatusCode::SUCCESS;
 }
 
@@ -127,7 +121,6 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : base_
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
   service("ToolSvc",m_ToolSvc,true);
-  m_Lock=0;
   m_runonce = false;
   service("MonitorSvc",m_MonSvc,true);
 }
@@ -141,13 +134,3 @@ void LHCb::DumAligWork::readReference()
   fscanf(f,"%ld",&m_Reference);
   fclose(f);
 }
-//StatusCode LHCb::DumAligWork::queryInterface(const InterfaceID& riid, void** ppvIF)
-//{
-//  if (IRunable::interfaceID().versionMatch(riid))  {
-//    *ppvIF = (IRunable*) this;
-//    addRef();
-//    return StatusCode::SUCCESS;
-//  }
-//  return OnlineService::queryInterface(riid, ppvIF);
-//}
-//

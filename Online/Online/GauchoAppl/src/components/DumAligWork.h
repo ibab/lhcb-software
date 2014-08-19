@@ -10,11 +10,6 @@
 #include "IFitterFcn.h"
 #include "IDumAligWork.h"
 
-//#include "Gaucho/BRTL_Lock.h"
-
-// Forward declarations
-//class DimService;
-//class ISimpleTrendWriter;
 namespace LHCb
 {
   class DumAligWork: public extends2<OnlineService, IDumAligWork,IRunable>
@@ -22,8 +17,6 @@ namespace LHCb
     public:
       DumAligWork(const std::string& name, ISvcLocator* sl);
       virtual ~DumAligWork();
-      //IInterface pure virtual member functions
-//      virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
       virtual StatusCode start();
       virtual StatusCode initialize();
       virtual StatusCode finalize();
@@ -42,7 +35,6 @@ namespace LHCb
       std::string m_PartitionName;
       std::string m_RefFileName;
       unsigned long m_Reference;
-      lib_rtl_lock_t m_Lock;
       lib_rtl_thread_t m_thread;
       bool m_runonce;
       void waitRunOnce();
