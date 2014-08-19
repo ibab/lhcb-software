@@ -17,7 +17,7 @@
 //class ISimpleTrendWriter;
 namespace LHCb
 {
-  class DumAligDrv: public extends2< OnlineService, IDumAligDrv, IRunable>
+  class DumAligDrv: public extends2< OnlineService, IRunable, IDumAligDrv>
   {
     public:
       DumAligDrv(const std::string& name, ISvcLocator* sl);
