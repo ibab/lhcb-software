@@ -1,29 +1,29 @@
-'''
-Module for construction of Jpsi -> mu mu /  Upsilon -> mu mu /  Z -> mu mu / B -> J/psi K to be used to measure tracking efficiency.  
-Provides functions to build a Jpsi / Upsilon / Z / B selection , with a long track and a muonTT track.
-Provides class StrippingTrackEffMuonTTConf, which constructs the Selections and 
-StrippingLines given a configuration dictionary.
-Exported symbols (use python help!):
-           - StrippingTrackEffMuonTTConf
-           - selFilterLongPartsMu
-           - selFilterLongPartsK
-           - selMakeMuonTT
-           - selMuonTTPParts
-           - selMuonTTParts
-           - selHlt1Jpsi
-           - selHlt1Upsilon
-           - selHlt1Z
-           - selHlt2Jpsi
-           - selHlt2Upsilon
-           - selHlt2Z
-           - selHlt2BJpsiKMu
-           - selHlt2BJpsiKK
-           - chargeFilter
-           - makeResonanceMuMuTrackEff
-           - makeBJpsiKTrackEff
-           - filterHLT2ForBJpsiK
-      
-'''
+###'''
+###Module for construction of Jpsi -> mu mu /  Upsilon -> mu mu /  Z -> mu mu / B -> J/psi K to be used to measure tracking efficiency.  
+###Provides functions to build a Jpsi / Upsilon / Z / B selection , with a long track and a muonTT track.
+###Provides class StrippingTrackEffMuonTTConf, which constructs the Selections and 
+###StrippingLines given a configuration dictionary.
+###Exported symbols (use python help!):
+###           - StrippingTrackEffMuonTTConf
+###           - selFilterLongPartsMu
+###           - selFilterLongPartsK
+###           - selMakeMuonTT
+###           - selMuonTTPParts
+###           - selMuonTTParts
+###           - selHlt1Jpsi
+###           - selHlt1Upsilon
+###           - selHlt1Z
+###           - selHlt2Jpsi
+###           - selHlt2Upsilon
+###           - selHlt2Z
+###           - selHlt2BJpsiKMu
+###           - selHlt2BJpsiKK
+###           - chargeFilter
+###           - makeResonanceMuMuTrackEff
+###           - makeBJpsiKTrackEff
+###           - filterHLT2ForBJpsiK
+###      
+###'''
 
 __author__ = ['Michel De Cian']
 __date__ = '20/07/2011'
@@ -31,7 +31,9 @@ __version__ = '$Revision: 1.1 $'
 
 
 __all__ = ('StrippingTrackEffMuonTTConf', 
+           'default_config',
            'selFilterLongPartsMu',
+           'selFilterLongPartsMuUpsilonZ',
            'selFilterLongPartsK',
            'selMakeMuonTT',
            'selMuonTTPParts',
@@ -68,52 +70,54 @@ from Configurables import (MuonCombRec,
                            )
 
 
-default_name = 'TrackEffMuonTT'
+#default_name = 'TrackEffMuonTT'
 
 default_config = {
-    'JpsiMassWin'                 : 500,
-    'UpsilonMassWin'              : 1500,
-    'ZMassWin'                    : 40000,
-    'BMassWin'                    : 500,
-    'JpsiMuonTTPT'                : 0,
-    'UpsilonMuonTTPT'             : 500,
-    'ZMuonTTPT'                   : 500,
-    'JpsiLongPT'                  : 1300,
-    'UpsilonLongPT'               : 1000,
-    'ZLongPT'                     : 10000,
-    'JpsiPT'                      : 1000,
-    'UpsilonPT'                   : 0,
-    'ZPT'                         : 0,
-    'JpsiLongMuonMinIP'           : 0.5,
-    'UpsilonLongMuonMinIP'        : 0,
-    'ZLongMuonMinIP'              : 0,
-    'JpsiMINIP'                   : 3,
-    'UpsilonMINIP'                : 10000, #this is a dummy
-    'ZMINIP'                      : 10000, #this is a dummy
-    'BJpsiKMINIP'                 : 10000, #this is a dummy
-    'JpsiLongMuonTrackCHI2'       : 5,
-    'UpsilonLongMuonTrackCHI2'    : 5,
-    'ZLongMuonTrackCHI2'          : 5,
-    'VertexChi2'                  : 5,
-    'LongMuonPID'                 : 2,
-    'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
-    'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
-    'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
-    'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0},
-    'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0},
-    'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
-    'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
-    'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TOS" : 0},
-    'JpsiPrescale'                : 1,
-    'UpsilonPrescale'             : 1,
-    'ZPrescale'                   : 1,
-    'BJpsiKPrescale'              : 1,
-    'Postscale'                   : 1
+    'NAME'        : 'TrackEffMuonTT',
+    'WGs'         : ['ALL'],
+    'BUILDERTYPE' : 'StrippingTrackEffMuonTTConf',
+    'CONFIG'      : { 
+			'JpsiMassWin'                 : 500,
+			'UpsilonMassWin'              : 1500,
+			'ZMassWin'                    : 40000,
+			'BMassWin'                    : 500,
+			'JpsiMuonTTPT'                : 0,
+			'UpsilonMuonTTPT'             : 500,
+			'ZMuonTTPT'                   : 500,
+			'JpsiLongPT'                  : 1300,
+			'UpsilonLongPT'               : 1000,
+			'ZLongPT'                     : 10000,
+			'JpsiPT'                      : 1000,
+			'UpsilonPT'                   : 0,
+			'ZPT'                         : 0,
+			'JpsiLongMuonMinIP'           : 0.5,
+			'UpsilonLongMuonMinIP'        : 0,
+			'ZLongMuonMinIP'              : 0,
+			'JpsiMINIP'                   : 3,
+			'UpsilonMINIP'                : 10000, #this is a dummy
+			'ZMINIP'                      : 10000, #this is a dummy
+			'BJpsiKMINIP'                 : 10000, #this is a dummy
+			'JpsiLongMuonTrackCHI2'       : 5,
+			'UpsilonLongMuonTrackCHI2'    : 5,
+			'ZLongMuonTrackCHI2'          : 5,
+			'VertexChi2'                  : 5,
+			'LongMuonPID'                 : 2,
+			'JpsiHlt1Triggers'            :  { "Hlt1TrackMuonDecision%TOS" : 0},
+			'UpsilonHlt1Triggers'         :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+			'ZHlt1Triggers'               :  { "Hlt1SingleMuonHighPTDecision%TOS" : 0},
+			'JpsiHlt2Triggers'            :  { "Hlt2SingleMuon.*Decision%TOS" : 0},
+			'UpsilonHlt2Triggers'         :  { "Hlt2SingleMuonLowPTDecision%TOS" : 0},
+			'ZHlt2Triggers'               :  { "Hlt2SingleMuonHighPTDecision%TOS" : 0},
+			'BJpsiKHlt2TriggersTUS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TUS" : 0},
+			'BJpsiKHlt2TriggersTOS'       :  { "Hlt2TopoMu2BodyBBDTDecision%TOS" : 0},
+			'JpsiPrescale'                : 1,
+			'UpsilonPrescale'             : 1,
+			'ZPrescale'                   : 1,
+			'BJpsiKPrescale'              : 1,
+			'Postscale'                   : 1
+                    },
+    'STREAMS'     : { 'Calibration' : ['StrippingTrackEffMuonTT_JpsiLine1','StrippingTrackEffMuonTT_JpsiLine2','StrippingTrackEffMuonTT_UpsilonLine1','StrippingTrackEffMuonTT_UpsilonLine2','StrippingTrackEffMuonTT_ZLine1','StrippingTrackEffMuonTT_ZLine2','StrippingTrackEffMuonTT_BJpsiKLine1','StrippingTrackEffMuonTT_BJpsiKLine2']}
     }
-
-
-
-
 
 
 class StrippingTrackEffMuonTTConf(LineBuilder) :
@@ -514,7 +518,7 @@ def selFilterLongPartsMu(name):
     """
     Filter = FilterDesktop()
     FilterLongPartsMu = Filter.configurable(name+"FilterLongPartsMu")
-    FilterLongPartsMu.Code = "(ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 1300*MeV) & (MIPDV(PRIMARY) > 0.5) & (TRCHI2DOF < 2.0) & (MIPCHI2DV(PRIMARY) > 200)" 
+    FilterLongPartsMu.Code = "(HASMUON) & (ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 1300*MeV) & (MIPDV(PRIMARY) > 0.5) & (TRCHI2DOF < 2.0) & (MIPCHI2DV(PRIMARY) > 200)" 
     # These cuts are now tighter than the trigger that follows
 
     return Selection(name+"_SelFilterLongPartsMu", Algorithm = FilterLongPartsMu, RequiredSelections = [StdLooseMuons])
@@ -525,7 +529,7 @@ def selFilterLongPartsMuUpsilonZ(name):
     """
     Filter = FilterDesktop()
     FilterLongPartsMuUpsilonZ = Filter.configurable(name+"FilterLongPartsMuUpsilonZ")
-    FilterLongPartsMuUpsilonZ.Code = "(ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 3000*MeV) & (TRCHI2DOF < 2.0)"
+    FilterLongPartsMuUpsilonZ.Code = "(HASMUON) & (ISMUON) & (PIDmu > 2.0) & (P > 10000) & (PT > 3000*MeV) & (TRCHI2DOF < 2.0)"
 
     return Selection(name+"_SelFilterLongPartsMuUpsilonZ", Algorithm = FilterLongPartsMuUpsilonZ, RequiredSelections = [StdAllLooseMuons])
 # ########################################################################################
@@ -535,7 +539,7 @@ def selFilterLongPartsK(name):
     """
     Filter = FilterDesktop()
     FilterLongPartsK = Filter.configurable(name+"FilterLongPartsK")
-    FilterLongPartsK.Code = "(~ISMUON) & (P > 10000) & (PT > 800) & (PIDK > 10) & (TRCHI2DOF < 5.0) & (MIPDV(PRIMARY) > 0.1*mm)"
+    FilterLongPartsK.Code = "((~HASMUON) | (~ISMUON)) & (P > 10000) & (PT > 800) & (PIDK > 0) & (TRCHI2DOF < 5.0) & (MIPDV(PRIMARY) > 0.1*mm)"
 #
     return Selection(name+"_SelFilterLongPartsK", Algorithm = FilterLongPartsK, RequiredSelections = [StdLooseKaons])
 # ########################################################################################
