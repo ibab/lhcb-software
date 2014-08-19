@@ -221,7 +221,9 @@ class StrippingLine(object):
                    ExtraInfoRecursionLevel = 1,  # Maximum depth in the decay tree to calculate ExtraInfo
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
 
-                   RelatedInfoTools = None,        # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
+                   RelatedInfoTools = None,      # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
+                   RelatedInfoFilter = None,     # Optional filter which can use RelatedInfo, added to the line sequence 
+                                                 # after RelatedInfoTools
 
                    RequiredRawEvents = None,     # Possible list of RawEvent banks required by this line
                    MDSTFlag          = False,     # Flag to ask the line to be written to MDST.DST stream
@@ -271,6 +273,7 @@ class StrippingLine(object):
         self.ExtraInfoRecursionLevel = ExtraInfoRecursionLevel
 
         self.RelatedInfoTools = RelatedInfoTools
+        self.RelatedInfoFilter = RelatedInfoFilter
         
         self._initialSelection = selection
 
@@ -490,6 +493,9 @@ class StrippingLine(object):
        		relatedInfoAlg.Tool = toolType + '/' + toolName
 
 		self._members.append(relatedInfoAlg)
+		
+		if self.RelatedInfoFilter : 
+		    self._members.append( self.RelatedInfoFilter )
 
         if self._members : 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })

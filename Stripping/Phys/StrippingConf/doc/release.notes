@@ -4,6 +4,12 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-08-19 - Anton Poluektov 
+ - Add an option 'RelatedInfoFilter' to the StrippingLine constructor. 
+   RelatedInfoFilter is added to the end of StrippingLine sequencer, after RelatedInfo 
+   is calculated. It can be a FilterDesktop or other configurable which uses
+   RelatedInfo variables to further filter the candidates. 
+
 !========================= StrippingConf v4r11 2014-07-28 =========================
 
 ! 2014-07-25 - Chris Jones
