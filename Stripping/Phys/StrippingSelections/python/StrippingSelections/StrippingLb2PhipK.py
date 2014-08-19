@@ -84,7 +84,7 @@ class StrippingLb2PhipKConf(LineBuilder):
                        
             # Lambda(1520)0 used as nominal intermediary particle for the pK pair
             _Lb2PhipKLooseDetachedpK = CombineParticles(
-                            DecayDescriptor = "Lambda(1520)0 -> p+ K-"
+                            DecayDescriptor = "[Lambda(1520)0 -> p+ K-]cc"
                           , DaughtersCuts = {"K-": pK_DC, "p+": pK_DC}
                           , CombinationCut = pK_CC
                           , MotherCut = pK_MC
@@ -92,7 +92,7 @@ class StrippingLb2PhipKConf(LineBuilder):
 
 
     	    _Lb2PhipK = CombineParticles(
-             DecayDescriptor =  "Lambda_b0 -> Lambda(1520)0 phi(1020)"
+             DecayDescriptor =  "[Lambda_b0 -> Lambda(1520)0 phi(1020)]cc"
     	    , DaughtersCuts   = {"phi(1020)" : Lb2PhipK_DC, "Lambda(1520)0" : Lb2PhipK_DC}
             , CombinationCut  = Lb2PhipK_CC
             , MotherCut       = Lb2PhipK_MC
