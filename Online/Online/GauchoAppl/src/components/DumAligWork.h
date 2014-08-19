@@ -17,13 +17,13 @@
 //class ISimpleTrendWriter;
 namespace LHCb
 {
-  class DumAligWork: public OnlineService, virtual public IDumAligWork
+  class DumAligWork: public extends2<OnlineService, IDumAligWork,IRunable>
   {
     public:
       DumAligWork(const std::string& name, ISvcLocator* sl);
       virtual ~DumAligWork();
       //IInterface pure virtual member functions
-      virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
+//      virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
       virtual StatusCode start();
       virtual StatusCode initialize();
       virtual StatusCode finalize();

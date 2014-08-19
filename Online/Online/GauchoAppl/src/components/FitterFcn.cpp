@@ -14,13 +14,13 @@ using namespace LHCb;
 DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,FitterFcn)
 
 FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const IInterface *  parent  ) :
-      AlgTool(type,name,parent),m_result(0.0),m_Parent(0)
+      AlgTool(type,name,parent),m_MonSvc(0),m_Parent(0),m_result(0.0)
 {
   declareProperty("ParameterFileName",m_ParamFileName);
   declareProperty("DataFileName",m_DataFileName);
   declareProperty("PartitionName",m_PartitionName);
   IInterface *p=(IInterface*)parent;
-  StatusCode sc = p->queryInterface(IRunable::interfaceID(),(void**)(&m_Parent));
+  StatusCode sc = p->queryInterface(IDumAligWork::interfaceID(),(void**)(&m_Parent));
 }
 FitterFcn::~FitterFcn()
 {
@@ -34,7 +34,7 @@ StatusCode FitterFcn::finalize()
 StatusCode FitterFcn::initialize()
 {
   StatusCode sc= AlgTool::initialize();
-//  init();
+  init();
   return sc;
 }
 void FitterFcn::init()
@@ -43,30 +43,9 @@ void FitterFcn::init()
 //  if ( !sc.isSuccess() )  {
 ////    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
 //  }
-////  m_MonSvc = m_Parent->getMonSvc();//service(m_monitorSvcType,m_MonSvc,true);
   printf ("Parameter File Name: %s\n",m_ParamFileName.c_str());
   printf ("Data File Name: %s\n",m_DataFileName.c_str());
-  std::list<IService*> svclist;
-  svclist = serviceLocator()->getServices();//"LHCb::IDumAligWork",&m_Parent,false);
-  std::list<IService*>::iterator it;
-  printf("Known Service list:\n");
-  for (it = svclist.begin();it!=svclist.end();it++)
-  {
-    std::string sname = (*it)->name();
-    printf("Service Name %s\n",(*it)->name().c_str());
-    if (sname == "MonitorSvc")
-    {
-      m_MonSvc = (IGauchoMonitorSvc*)(*it);
-    }
-  }
   m_MonSvc = m_Parent->getMonSvc();
-//  IGauchoMonitorSvc* l_MonSvc;
-//  l_MonSvc = monitorSvc();m_Parent->getMonSvc();
-//  if (m_MonSvc != l_MonSvc)
-//  {
-//    printf("Somehow Weird... Monitor Service Pointers differ... %p != %p\n",m_MonSvc, l_MonSvc);
-//    m_MonSvc = l_MonSvc;
-//  }
   fflush(stdout);
   m_SvcName = "Chi2";
   m_MonSvc->declareInfo(m_SvcName,m_result,"Chi Square",0);
@@ -134,8 +113,7 @@ void FitterFcn::ReadParams()
 }
 void FitterFcn::PubResult(long reference)
 {
-  IGauchoMonitorSvc *l_MonSvc=m_MonSvc;
-  m_Parent->getMonSvc()->updatePerSvc(reference);
+  m_MonSvc->updatePerSvc(reference);
 }
 //void FitterFcn::run()
 //{

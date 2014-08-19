@@ -77,7 +77,7 @@ StatusCode LHCb::DumAligWork::initialize()
     m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   }
   StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,this,true);
-  m_fitterFcn->setParent((void*)((IDumAligWork*)this));
+//  m_fitterFcn->setParent((void*)((IDumAligWork*)this));
   return StatusCode::SUCCESS;
 }
 
@@ -122,7 +122,7 @@ StatusCode LHCb::DumAligWork::run()
 }
 
 
-LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : OnlineService(name,sl),m_result(0),m_MonSvc(0),m_Reference(0)
+LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_result(0),m_MonSvc(0),m_Reference(0),m_fitterFcn(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
@@ -141,13 +141,13 @@ void LHCb::DumAligWork::readReference()
   fscanf(f,"%ld",&m_Reference);
   fclose(f);
 }
-StatusCode LHCb::DumAligWork::queryInterface(const InterfaceID& riid, void** ppvIF)
-{
-  if (IRunable::interfaceID().versionMatch(riid))  {
-    *ppvIF = (IRunable*) this;
-    addRef();
-    return StatusCode::SUCCESS;
-  }
-  return OnlineService::queryInterface(riid, ppvIF);
-}
-
+//StatusCode LHCb::DumAligWork::queryInterface(const InterfaceID& riid, void** ppvIF)
+//{
+//  if (IRunable::interfaceID().versionMatch(riid))  {
+//    *ppvIF = (IRunable*) this;
+//    addRef();
+//    return StatusCode::SUCCESS;
+//  }
+//  return OnlineService::queryInterface(riid, ppvIF);
+//}
+//

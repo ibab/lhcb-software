@@ -3,24 +3,18 @@
 
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/IRunable.h"
+#include "GaudiKernel/IInterface.h"
 
-//#include "Gaucho/BRTL_Lock.h"
 
 // Forward declarations
-//class DimService;
-//class ISimpleTrendWriter;
 namespace LHCb
 {
-  class IDumAligWork: virtual public IRunable, virtual public IService
+  class IDumAligWork: virtual public IInterface
   {
     public:
-//      DeclareInterfaceID(LHCb::IDumAligWork,1,0);
-//      virtual ~IDumAligWork()=0;
-      //IInterface pure virtual member functions
+      DeclareInterfaceID(IDumAligWork,1,0);
       virtual IGauchoMonitorSvc *getMonSvc()=0;
-      virtual std::string getPartitionName()=0;
       virtual void readReference()=0;
-      virtual void *getThis()=0;
   };
 }
 #endif // ONLINE_GAUCHO_IDUMALIGWORK_H
