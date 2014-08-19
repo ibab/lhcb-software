@@ -4,9 +4,11 @@ Bs -> gamma gamma stripping selection.
 Provides class StrippingBs2gammagammaConf with methods to return stripping line objects.
 
 Exports the following stripping lines as instance data members:
-- Bs2gammagammaLLLine      : main line with one conversion (LL)
-- Bs2gammagammaDDLine      : main line with one conversion (DD)
-- Bs2gammagammaDoubleLine  : line with 2 conversions (DD or LL)
+- Bs2gammagamma_LLLine      : main line with one conversion (LL)
+- Bs2gammagamma_DDLine      : main line with one conversion (DD)
+- Bs2gammagamma_DoubleLine  : line with 2 conversions (DD or LL)
+- Bs2gammagamma_NoConvLine  : line with 0 conversions 
+- Bs2gammagamma_NoConvWideLine  : wide line with 0 conversions
 '''
 
 __author__  = [ 'Sean Benson' ]
@@ -49,7 +51,8 @@ default_config = {
     'STREAMS'     : { 'Bhadron' : ['StrippingBs2GammaGamma_LLLine',
                                    'StrippingBs2GammaGamma_DDLine',
                                    'StrippingBs2GammaGamma_doubleLine',
-                                   'StrippingBs2GammaGamma_NoConvLine'] }
+                                   'StrippingBs2GammaGamma_NoConvLine'
+                                   'StrippingBs2GammaGamma_NoConvWideLine'] }
     }
 
 
@@ -114,8 +117,10 @@ class StrippingBs2gammagammaConf(LineBuilder):
 		self.registerLine( self.Bs2gammagammaDDLine )
 		self.Bs2gammagammaDoubleLine     = self._Bs2gammagammaDouble_X_Line( name, config)
 		self.registerLine( self.Bs2gammagammaDoubleLine )
-		self.Bs2gammagammaNoneLine     = self._Bs2gammagammaNone_X_Line( name, config)
+		self.Bs2gammagammaNoneLine     = self._Bs2gammagammaNone_X_Line( name, config, False)
+		self.Bs2gammagammaNoneWideLine     = self._Bs2gammagammaNone_X_Line( name+"Wide", config, True)
 		self.registerLine( self.Bs2gammagammaNoneLine )
+		self.registerLine( self.Bs2gammagammaNoneWideLine )
 
 
 	def _Bs2gammagammaLL_X_Line( self, name, config) :
@@ -190,12 +195,20 @@ class StrippingBs2gammagammaConf(LineBuilder):
 				, selection = self.mergedTOS(name+"_doubleTOSLine",Bs2gammagamma_double,"L0PhotonDecision","L0ElectronDecision")
                                 , RequiredRawEvents = ["Calo"],MDSTFlag = True
 				, EnableFlavourTagging = False)
-	def _Bs2gammagammaNone_X_Line( self, name, config) :
+	def _Bs2gammagammaNone_X_Line( self, name, config, wide) :
 
 		BsGG_DC_none = "(PT>%(gammaNonePT)s*MeV) & (P>%(gammaNoneP)s*MeV) & (CL>%(gammaNoneCL)s)" % config
-		BsGG_CC_none = "(in_range(%(BsLowMassNone)s*MeV, AM, %(BsHighMassNone)s*MeV))" % config
-		BsGG_MC_none = "(in_range(%(BsLowMassNone)s*MeV, M, %(BsHighMassNone)s*MeV))" % config
+                if wide == True:
+                    BsGG_CC_none = "(in_range( ( %(BsLowMassNone)s - 500.0 )*MeV, AM, ( %(BsHighMassNone)s + 500.0 )*MeV) )" % config
+                    BsGG_MC_none = "(in_range( ( %(BsLowMassNone)s - 500.0 )*MeV, M, ( %(BsHighMassNone)s + 500.0 )*MeV) )" % config
+                else:
+                    BsGG_CC_none = "(in_range(%(BsLowMassNone)s*MeV, AM, %(BsHighMassNone)s*MeV))" % config
+                    BsGG_MC_none = "(in_range(%(BsLowMassNone)s*MeV, M, %(BsHighMassNone)s*MeV))" % config
 
+                if wide == True:
+                    scaleWide = 0.1
+                else:
+                    scaleWide = 1.0
 
 		_Bs2gammagamma_none = CombineParticles(name = "CombineParticles_BsGG_none",
 				DecayDescriptor = "B_s0 -> gamma gamma"
@@ -210,7 +223,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
 				RequiredSelections = [self.stdPhotons_clean])
 
 		return StrippingLine(name+"_NoConvLine"
-				, prescale = 1
+				, prescale = scaleWide
 				, postscale = 1
 				, selection = self.mergedTOS(name+"_NoConvTOSLine",Bs2gammagamma_none,"L0PhotonDecision","L0ElectronDecision")
                                 , RequiredRawEvents = ["Calo"],MDSTFlag = True
