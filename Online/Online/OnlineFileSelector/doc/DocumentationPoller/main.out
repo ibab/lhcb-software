@@ -1,57 +1,29 @@
-\BOOKMARK [1][-]{section.1}{Introduction}{}% 1
-\BOOKMARK [1][-]{section.2}{Conceptual design}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{Main agents and concept}{section.2}% 3
-\BOOKMARK [2][-]{subsection.2.2}{Requirements}{section.2}% 4
-\BOOKMARK [1][-]{section.3}{Architecture}{}% 5
-\BOOKMARK [2][-]{subsection.3.1}{Poller}{section.3}% 6
-\BOOKMARK [3][-]{subsubsection.3.1.1}{Purpose and functionality}{subsection.3.1}% 7
-\BOOKMARK [3][-]{subsubsection.3.1.2}{Interfaces}{subsection.3.1}% 8
-\BOOKMARK [2][-]{subsection.3.2}{EventSelector}{section.3}% 9
-\BOOKMARK [3][-]{subsubsection.3.2.1}{Purpose and functionality}{subsection.3.2}% 10
-\BOOKMARK [3][-]{subsubsection.3.2.2}{Interfaces}{subsection.3.2}% 11
-\BOOKMARK [1][-]{section.4}{Implementation and workflow}{}% 12
-\BOOKMARK [2][-]{subsection.4.1}{Dependencies}{section.4}% 13
-\BOOKMARK [2][-]{subsection.4.2}{Workflow}{section.4}% 14
-\BOOKMARK [3][-]{subsubsection.4.2.1}{Poller}{subsection.4.2}% 15
-\BOOKMARK [3][-]{subsubsection.4.2.2}{EventSelector}{subsection.4.2}% 16
-\BOOKMARK [3][-]{subsubsection.4.2.3}{Details about Poller methods and member variables}{subsection.4.2}% 17
-\BOOKMARK [3][-]{subsubsection.4.2.4}{Details about EventSelector methods and member variables}{subsection.4.2}% 18
-\BOOKMARK [1][-]{section.5}{Implementation and workflow of the FilePollerNFiles}{}% 19
-\BOOKMARK [2][-]{subsection.5.1}{Introduction}{section.5}% 20
-\BOOKMARK [2][-]{subsection.5.2}{Dependencies}{section.5}% 21
-\BOOKMARK [2][-]{subsection.5.3}{Workflow}{section.5}% 22
-\BOOKMARK [3][-]{subsubsection.5.3.1}{Poller}{subsection.5.3}% 23
-\BOOKMARK [3][-]{subsubsection.5.3.2}{EventSelector}{subsection.5.3}% 24
-\BOOKMARK [3][-]{subsubsection.5.3.3}{Details about Poller methods and member variables}{subsection.5.3}% 25
-\BOOKMARK [3][-]{subsubsection.5.3.4}{Details about EventSelector methods and member variables}{subsection.5.3}% 26
-\BOOKMARK [1][-]{section.6}{How to run and test Poller}{}% 27
-\BOOKMARK [2][-]{subsection.6.1}{Prerequisites}{section.6}% 28
-\BOOKMARK [2][-]{subsection.6.2}{Running}{section.6}% 29
-\BOOKMARK [1][-]{section.7}{HLT monitoring}{}% 30
-\BOOKMARK [2][-]{subsection.7.1}{Online data monitoringmainCallot:1177133}{section.7}% 31
-\BOOKMARK [2][-]{subsection.7.2}{HLT1 monitoring}{section.7}% 32
-\BOOKMARK [3][-]{subsubsection.7.2.1}{HltMonitor.cpp}{subsection.7.2}% 33
-\BOOKMARK [3][-]{subsubsection.7.2.2}{Introduction}{subsection.7.2}% 34
-\BOOKMARK [3][-]{subsubsection.7.2.3}{RawEvent,routing bits and other key objects in monitoring}{subsection.7.2}% 35
-\BOOKMARK [3][-]{subsubsection.7.2.4}{Helper methods and member variables}{subsection.7.2}% 36
-\BOOKMARK [3][-]{subsubsection.7.2.5}{Initialization,Execution and Finalization}{subsection.7.2}% 37
-\BOOKMARK [3][-]{subsubsection.7.2.6}{Monitoring functions}{subsection.7.2}% 38
-\BOOKMARK [2][-]{subsection.7.3}{HistoWrapper.cpp}{section.7}% 39
-\BOOKMARK [3][-]{subsubsection.7.3.1}{Introduction}{subsection.7.3}% 40
-\BOOKMARK [3][-]{subsubsection.7.3.2}{Methods}{subsection.7.3}% 41
-\BOOKMARK [2][-]{subsection.7.4}{ErrorHistoWrapper.cpp}{section.7}% 42
-\BOOKMARK [3][-]{subsubsection.7.4.1}{Introduction}{subsection.7.4}% 43
-\BOOKMARK [3][-]{subsubsection.7.4.2}{Methods}{subsection.7.4}% 44
-\BOOKMARK [2][-]{subsection.7.5}{HltTupleMaker.cpp}{section.7}% 45
-\BOOKMARK [3][-]{subsubsection.7.5.1}{Introduction}{subsection.7.5}% 46
-\BOOKMARK [3][-]{subsubsection.7.5.2}{Methods}{subsection.7.5}% 47
-\BOOKMARK [2][-]{subsection.7.6}{HltMuonAsymMonitor.cpp}{section.7}% 48
-\BOOKMARK [3][-]{subsubsection.7.6.1}{Introduction}{subsection.7.6}% 49
-\BOOKMARK [3][-]{subsubsection.7.6.2}{Methods}{subsection.7.6}% 50
-\BOOKMARK [3][-]{subsubsection.7.6.3}{Helper methods}{subsection.7.6}% 51
-\BOOKMARK [2][-]{subsection.7.7}{HLT2 monitoring}{section.7}% 52
-\BOOKMARK [3][-]{subsubsection.7.7.1}{HltMassMonitor.cpp}{subsection.7.7}% 53
-\BOOKMARK [3][-]{subsubsection.7.7.2}{Introduction}{subsection.7.7}% 54
-\BOOKMARK [3][-]{subsubsection.7.7.3}{Methods}{subsection.7.7}% 55
-\BOOKMARK [3][-]{subsubsection.7.7.4}{Monitoring methods}{subsection.7.7}% 56
-\BOOKMARK [1][-]{subsubsection.7.7.4}{References}{}% 57
+\BOOKMARK [1][-]{section.1}{Introduction}{}
+\BOOKMARK [1][-]{section.2}{Conceptual design}{}
+\BOOKMARK [2][-]{subsection.2.1}{Main agents and concept}{section.2}
+\BOOKMARK [2][-]{subsection.2.2}{Requirements}{section.2}
+\BOOKMARK [1][-]{section.3}{Architecture}{}
+\BOOKMARK [2][-]{subsection.3.1}{Poller}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.1.1}{Purpose and functionality}{subsection.3.1}
+\BOOKMARK [3][-]{subsubsection.3.1.2}{Interfaces}{subsection.3.1}
+\BOOKMARK [2][-]{subsection.3.2}{EventSelector}{section.3}
+\BOOKMARK [3][-]{subsubsection.3.2.1}{Purpose and functionality}{subsection.3.2}
+\BOOKMARK [3][-]{subsubsection.3.2.2}{Interfaces}{subsection.3.2}
+\BOOKMARK [1][-]{section.4}{Implementation and workflow}{}
+\BOOKMARK [2][-]{subsection.4.1}{Dependencies}{section.4}
+\BOOKMARK [2][-]{subsection.4.2}{Workflow}{section.4}
+\BOOKMARK [3][-]{subsubsection.4.2.1}{Poller}{subsection.4.2}
+\BOOKMARK [3][-]{subsubsection.4.2.2}{EventSelector}{subsection.4.2}
+\BOOKMARK [3][-]{subsubsection.4.2.3}{Details about Poller methods and member variables}{subsection.4.2}
+\BOOKMARK [3][-]{subsubsection.4.2.4}{Details about EventSelector methods and member variables}{subsection.4.2}
+\BOOKMARK [1][-]{section.5}{Implementation and workflow of the FilePollerNFiles}{}
+\BOOKMARK [2][-]{subsection.5.1}{Introduction}{section.5}
+\BOOKMARK [2][-]{subsection.5.2}{Dependencies}{section.5}
+\BOOKMARK [2][-]{subsection.5.3}{Workflow}{section.5}
+\BOOKMARK [3][-]{subsubsection.5.3.1}{Poller}{subsection.5.3}
+\BOOKMARK [3][-]{subsubsection.5.3.2}{EventSelector}{subsection.5.3}
+\BOOKMARK [3][-]{subsubsection.5.3.3}{Details about Poller methods and member variables}{subsection.5.3}
+\BOOKMARK [3][-]{subsubsection.5.3.4}{Details about EventSelector methods and member variables}{subsection.5.3}
+\BOOKMARK [1][-]{section.6}{How to run and test Poller}{}
+\BOOKMARK [2][-]{subsection.6.1}{Prerequisites}{section.6}
+\BOOKMARK [2][-]{subsection.6.2}{Running}{section.6}

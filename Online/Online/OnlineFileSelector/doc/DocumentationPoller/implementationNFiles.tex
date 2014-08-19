@@ -52,7 +52,7 @@ At the end of the execution cycle, the inherited \textit{stop()} method is calle
 
 \begin{itemize}
 
-\item std::string m\_minFileNum : this is the minimum number of files of a run that should be available in order to start processing the corresponding run.\par 
+\item std::string m\_minFileNum : this is the minimum number of files of a run that should be available in order to start processing the corresponding run.There may be more files of the run available but we will try to process \textit{m\_minFileNum} number of files.\par 
 \item std::string m\_scanDirectory : this is the directory that the poller will check periodically for files, which will then distribute to the listeners\par
 \item int m\_alrmTime : the time interval between two successive pollings\par
 \item std::deque$<$std:string$>$ m\_fileNames : the list of the file paths that were found in the scanned directory during the last polling.\par 
