@@ -23,7 +23,7 @@ namespace LHCb
       DumAligDrv(const std::string& name, ISvcLocator* sl);
       virtual ~DumAligDrv();
       //IInterface pure virtual member functions
-//      virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
+      virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
       virtual StatusCode start();
       virtual StatusCode initialize();
       virtual StatusCode finalize();

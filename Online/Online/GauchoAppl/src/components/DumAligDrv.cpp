@@ -148,20 +148,20 @@ void DumAligDrv::doStop()
 {
   incidentSvc()->fireIncident(Incident(name(),"DAQ_STOP"));
 }
-//StatusCode DumAligDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
-//{
-//  if (IRunable::interfaceID().versionMatch(riid))
-//  {
-//    *ppvIF = (IRunable*) this;
-//    addRef();
-//    return StatusCode::SUCCESS;
-//  }
-//  else if (IDumAligDrv::interfaceID().versionMatch(riid))
-//  {
-//    *ppvIF = (IDumAligDrv*)this;
-//    addRef();
-//    return StatusCode::SUCCESS;
-//  }
-//  return OnlineService::queryInterface(riid, ppvIF);
-//}
+StatusCode DumAligDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
+{
+  if (IRunable::interfaceID().versionMatch(riid))
+  {
+    *ppvIF = (IRunable*) this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  else if (IDumAligDrv::interfaceID().versionMatch(riid))
+  {
+    *ppvIF = (IDumAligDrv*)this;
+    addRef();
+    return StatusCode::SUCCESS;
+  }
+  return OnlineService::queryInterface(riid, ppvIF);
+}
 
