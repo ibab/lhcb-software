@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-19
+ 	- Updated StrippingBu2Kpi0.py and StrippingBu2rho0rhoPlus.py, lines reoptimized,
+    Bu2rho0rhoPlus lines have no PID cuts, rho mass windows include K* and phi
+
 ! 2014-08-19 - Stefano Perazzini
  - Some hot-fix for BnoC WG lines
 
