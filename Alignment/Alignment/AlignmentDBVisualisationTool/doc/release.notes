@@ -3,6 +3,10 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-08-19 - Jason Andrews
+ - added Velo functionality, modified plot pages to fit many sensors on a page in a
+   readable format
+
 ! 2014-07-30 - Jason Andrews
  - added functionality to plot the constants in their local frames, ie, exactly as they
    are stored in the db

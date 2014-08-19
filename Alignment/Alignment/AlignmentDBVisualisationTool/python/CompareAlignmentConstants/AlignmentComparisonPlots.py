@@ -48,6 +48,7 @@ def plotAlignmentParametersTimeSeries( elmGroup, dofs
                                      , refConnectString=None, refTag="HEAD"
                                      , outputdir="."
                                      , defaultTag="cond-20130114"
+                                     , coordinateFrame="global"
                                      , addStats=False ):
     """
     Plot time trends of alignment sliceConnectString with tag sliceTag (+default layer with given tag)
@@ -66,18 +67,25 @@ def plotAlignmentParametersTimeSeries( elmGroup, dofs
             p.endTime = pUntil
 
     detsToLoad = elmGroup.split(".")[0:1]
+    elmSubGroups = ElementGroups[elmGroup]
+    if not type( elmSubGroups ) == list:
+        elmSubGroups = [ elmGroup ]
 
     # get the alignments
     alignConnectStringsAndTags = list()
     if sliceConnectString is not None:
         alignConnectStringsAndTags.append((sliceConnectString, sliceTag))
-    theAlignmentParameters = AlignmentsWithIOVs( alignConnectStringsAndTags, detsToLoad, since, until, timezone=timezone, defaultTag=defaultTag )
+    theAlignmentParameters = AlignmentsWithIOVs( alignConnectStringsAndTags, detsToLoad, since, until, timezone=timezone,
+                                                 defaultTag=defaultTag, valueExtractor=ValueExtractors[coordinateFrame] )
 
-    drawTimeTrends( timePeriods, elmGroup, theAlignmentParameters, dofs, timezone=timezone, addStats=addStats )
+    for elmSubGroup in elmSubGroups:
+        drawTimeTrends( timePeriods, elmSubGroup, theAlignmentParameters, dofs, timezone=timezone, addStats=addStats )
 
     if refConnectString:
-        refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, timezone=timezone, defaultTag=defaultTag )
-        drawTimeTrendReference( timePeriods, elmGroup, refAlignmentParameters, dofs )
+        refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, timezone=timezone,
+                                                     defaultTag=defaultTag, valueExtractor=ValueExtractors[coordinateFrame] )
+        for elmSubGroup in elmSubGroups:
+            drawTimeTrendReference( timePeriods, elmSubGroup, refAlignmentParameters, dofs )
 
     for folder in folders.itervalues():
         folder.save(outputdir)
@@ -96,7 +104,10 @@ def plotAlignmentParametersComparison( elmGroup, dofs
     """
 
     detsToLoad = elmGroup.split(".")[0:1]
-
+    elmSubGroups = ElementGroups[elmGroup]
+    if not type( elmSubGroups ) == list:
+        elmSubGroups = [ elmGroup ]
+        
     # get the bin labels correct : *if* one string, use it to extract the name (group "label")
     if isinstance( binLabels, str ):
         binLabelPattern = re.compile(binLabels)
@@ -113,11 +124,14 @@ def plotAlignmentParametersComparison( elmGroup, dofs
 
     parametersAndPeriods = preparePeriodsAndAlignments( sliceConnectStringsAndTags, detsToLoad, coordinateFrame )
     for [ timePeriods, theAlignmentParameters ], label in zip( parametersAndPeriods, binLabels ):
-        drawDiffAlignment( timePeriods, elmGroup, theAlignmentParameters, dofs, label )
+        for elmSubGroup in elmSubGroups:
+            logging.debug("calling draw method, elmSubGroup %s in %r" % (elmSubGroup, elmSubGroups))
+            drawDiffAlignment( timePeriods, elmSubGroup, theAlignmentParameters, dofs, label )
     if refConnectString:
         timePeriods = [ StatusTimePeriod( "MagDown", parseTimeMin(since), parseTimeMax(until) ) ]
         refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, defaultTag=defaultTag, valueExtractor=ValueExtractors[coordinateFrame] )
-        drawDiffReference( timePeriods, elmGroup, refAlignmentParameters, dofs )
+        for elmSubGroup in elmSubGroups:
+            drawDiffReference( timePeriods, elmGroup, refAlignmentParameters, dofs )
 
     for folder in folders.itervalues():
         folder.save(outputdir)

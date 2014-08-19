@@ -19,6 +19,7 @@ import math
 
 import matplotlib as mpl
 mpl.rcParams["backend"] = "PDF"
+mpl.rcParams["font.size"] = 8
 import matplotlib.pyplot as plt
 import matplotlib.dates
 import matplotlib.ticker
@@ -46,6 +47,14 @@ class PlotRegion(object):
 
     def draw(self):
         pass
+    
+    def makeYLabel(self):    
+        if self.var.startswith("T"):
+            self.axes.set_ylabel("%s (mm)" % self.var)
+        elif self.var.startswith("R"):
+            self.axes.set_ylabel("%s (mrad)" % self.var)
+        else:
+            self.axes.set_ylabel(self.var)
 
     def addAlignment(self, parValues, **drawOptions):
         pass
@@ -92,20 +101,13 @@ class TrendPlotRegion(PlotRegion):
         elif dmnmx < 100.*res:
             self.axes.yaxis.set_minor_locator(matplotlib.ticker.MultipleLocator(res))
 
-        if self.var.startswith("T"):
-            self.axes.set_ylabel("%s (mm)" % self.var)
-        elif self.var.startswith("R"):
-            self.axes.set_ylabel("%s (mrad)" % self.var)
-        else:
-            self.axes.set_ylabel(self.var)
-
         self.axes.xaxis.set_minor_locator( matplotlib.dates.MonthLocator() )
 
         tz = pytz.timezone(self.timezone)
         for period in self.periods:
             if not period.status.needAlignment:
                 self.axes.axvspan( period.startTime.astimezone(tz), period.endTime.astimezone(tz), **(TrendPlotRegion.DefaultFormats[period.status.name]))
-        self.axes.set_title(self.name)
+        self.axes.set_title(self.name.replace("_","\n"))
 
     def addAlignment(self, parValues, addStats=False, **drawOptions):
         # rad -> mrad
@@ -167,18 +169,11 @@ class DiffPlotRegion(PlotRegion):
     def draw(self):
         super(DiffPlotRegion, self).draw()
 
-        if self.var.startswith("T"):
-            self.axes.set_ylabel("%s (mm)" % self.var)
-        elif self.var.startswith("R"):
-            self.axes.set_ylabel("%s (mrad)" % self.var)
-        else:
-            self.axes.set_ylabel(self.var)
-
         self.axes.set_xlim(self._xr-.5, self._x+.5)
         self.axes.set_xticks(range(-len(self.refLabels), len(self.labels)))
         self.axes.set_xticklabels(list(l for l in reversed(self.refLabels)) + self.labels)
 
-        self.axes.set_title(self.name)
+        self.axes.set_title(self.name.replace("_","\n"))
 
     def addAlignment(self, parValue, label=None, draw="P", **drawOptions):
         # rad -> mrad
@@ -233,6 +228,10 @@ class Page(object):
         self.regions[name] = kwargs.pop("RegionType", PlotRegion)(name, var, self, self.fig.add_subplot(self.nRows, self.nCols, self._l), **kwargs)
         topInCol = self.fig.add_subplot(self.nRows, self.nCols, ((self._l-1) % self.nCols)+1 )
         self.regions[name].axes.sharex = topInCol
+        # from pylab import setp
+        # setp( self.regions[name].axes.get_xticklabels(), visible=True )
+        if (self._l % self.nCols) == 1:
+            self.regions[name].makeYLabel()
 
     def __getitem__(self, name):
         return self.regions.__getitem__(name)
@@ -242,6 +241,7 @@ class Page(object):
         for reg in self.regions.itervalues():
             reg.draw()
         self.fig.autofmt_xdate()
+        self.fig.tight_layout(pad=3,h_pad=1.08,w_pad=1.08)
         self.fig.savefig(outputFileName)
 
 class Folder(object):
@@ -267,7 +267,7 @@ class Folder(object):
         return self.pages.__getitem__(name)
 
     def save(self, outputDir=".", extension="pdf"):
-        outputDirFull = os.path.join(*([ outputDir ] + self.name.split(".")))
+        outputDirFull = os.path.join(*([ outputDir ] + self.name.split(".")[:2]))
         if not os.path.isdir(outputDirFull):
             os.makedirs(outputDirFull)
         for n, p in self.pages.iteritems():
@@ -279,16 +279,17 @@ class ElementGroup(object):
     Helper class to figure out from the element name if we want to draw it
     and to which page it should go (match method returns the right page or None).
     """
-    def __init__(self, expr, nRows, nCols):
-        self.regex = re.compile(expr)
-        self.nRows = nRows
-        self.nCols = nCols
+    def __init__(self, expr, nRows, nCols, suffix=""):
+        self.regex  = re.compile(expr)
+        self.nRows  = nRows
+        self.nCols  = nCols
+        self.suffix = suffix
     def match(self, elementName):
         m = self.regex.match(elementName)
         if m is None:
             return None
         else:
-            return ( m.group("page").replace("/", "_"), m.group("elm").replace("/", "_") )
+            return ( m.group("page").replace("/", "_")+self.suffix, m.group("elm").replace("/", "_") )
 
 ElementGroups = { "TT.Layers"       : ElementGroup("(?P<page>TT)/TT[ab]/(?P<elm>TT(?:aX|aU|bV|bX)Layer)$", 2, 2)
                 , "TT.Modules"      : ElementGroup("TT/TT[ab]/(?P<page>TT(?:aX|aU|bV|bX)Layer/R[1-3])Module(?P<elm>[1-6][BT])$", 4, 3)
@@ -305,9 +306,29 @@ ElementGroups = { "TT.Layers"       : ElementGroup("(?P<page>TT)/TT[ab]/(?P<elm>
                   # 'CFrames' are just quarters joined in layer X1+U and V+X2 pairs
                 , "OT.CFrames"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2))/(?P<elm>Q[0-3])$", 2, 2)
                 , "OT.Modules"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2)/Q[0-3])/(?P<elm>M[1-9])$", 3, 3)
-                # , "OT.CFrameLayers" : ElementGroup("OT/(?P<page>T[1-3])/(?P<elm>(?:X1|U|V|X2)/Q[0-1])$", 4, 2) # what was this supposed to be?
 
-                , "Velo.Modules"    : ElementGroup("null", 1, 1) #### only for reference
+                , "Velo.Halves"     : ElementGroup("(?P<page>Velo)/(?P<elm>Velo(?:Left|Right))$", 1, 2)
+
+                , "Velo.Modules"    : [ "Velo.Modules.a", "Velo.Modules.b" ]
+                , "Velo.Modules.a"  : ElementGroup("Velo/(?P<page>Velo(?:Left|Right))/(?P<elm>Module(?:[0-1][0-9]|2[0-1]))$", 3, 4, "_a")
+                , "Velo.Modules.b"  : ElementGroup("Velo/(?P<page>Velo(?:Left|Right))/(?P<elm>Module(?:2[2-9]|[3-4][0-9]))$", 3, 4, "_b")
+                  
+                , "Velo.Sensors"     : [ "Velo.Sensors.LRa", "Velo.Sensors.LRb", "Velo.Sensors.LPa", "Velo.Sensors.LPb",
+                                         "Velo.Sensors.RRa", "Velo.Sensors.RRb", "Velo.Sensors.RPa", "Velo.Sensors.RPb" ]
+                  ### Left
+                  ### R Sensors
+                , "Velo.Sensors.LRa" : ElementGroup("Velo/(?P<page>VeloLeft)/(?P<elm>Module(?:00|04|08|12|16|20|24|28|32|36|40)/RPhiPair.{2})/Detector-00$", 3, 4, "_R_a")
+                , "Velo.Sensors.LRb" : ElementGroup("Velo/(?P<page>VeloLeft)/(?P<elm>Module(?:02|06|10|14|18|22|26|30|34|38)/RPhiPair.{2})/Detector-01$", 3, 4, "_R_b")
+                  ### Phi Sensors
+                , "Velo.Sensors.LPa" : ElementGroup("Velo/(?P<page>VeloLeft)/(?P<elm>Module(?:00|04|08|12|16|20|24|28|32|36|40)/RPhiPair.{2})/Detector-01$", 3, 4, "_Phi_a")
+                , "Velo.Sensors.LPb" : ElementGroup("Velo/(?P<page>VeloLeft)/(?P<elm>Module(?:02|06|10|14|18|22|26|30|34|38)/RPhiPair.{2})/Detector-00$", 3, 4, "_Phi_b")
+                  ### Right
+                  ### R Sensors
+                , "Velo.Sensors.RRa" : ElementGroup("Velo/(?P<page>VeloRight)/(?P<elm>Module(?:01|05|09|13|17|21|25|29|33|37|41)/RPhiPair.{2})/Detector-00$", 3, 4, "_R_a")
+                , "Velo.Sensors.RRb" : ElementGroup("Velo/(?P<page>VeloRight)/(?P<elm>Module(?:03|07|11|15|19|23|27|31|35|39)/RPhiPair.{1,2})/Detector-01$", 3, 4, "_R_b")
+                  ### Phi Sensors
+                , "Velo.Sensors.RPa" : ElementGroup("Velo/(?P<page>VeloRight)/(?P<elm>Module(?:01|05|09|13|17|21|25|29|33|37|41)/RPhiPair.{2})/Detector-01$", 3, 4, "_Phi_a")
+                , "Velo.Sensors.RPb" : ElementGroup("Velo/(?P<page>VeloRight)/(?P<elm>Module(?:03|07|11|15|19|23|27|31|35|39)/RPhiPair.{1,2})/Detector-00$", 3, 4, "_Phi_b")
                 }
 # TODO implement an "ElementGroupFolder" that has ElementGroup, the regular expressions all methods below in its members
 

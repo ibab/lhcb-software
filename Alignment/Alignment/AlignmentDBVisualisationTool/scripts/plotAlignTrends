@@ -12,6 +12,7 @@ from optparse import OptionParser
 parser = OptionParser()
 parser.usage = "%prog [options] elements dofs [dbfile]"
 
+parser.add_option("-c", "--coordinateFrame", dest="coords", default="global", help="Make plots using local or global coordinates [default: %default]")
 parser.add_option("-r", "--reference", dest="refDbFile",   default=None, metavar="REFERENCE",
                   help="SQLite file (without IOVs) containing a reference alignment, e.g. survey")
 parser.add_option("-o", "--outdir",    dest="outDirName",  default="AlignmentsCompared", metavar="OUTDIR",
@@ -27,6 +28,7 @@ parser.add_option("--until",           dest="until",       default="2013-01-01",
 parser.add_option("--timezone",        dest="timezone",    default="CET",
                   help="timezone used to parse since and until, and for the x axis [default: %default]")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Turn on verbose messages")
+parser.add_option("-i", "--info", action="store_true", dest="info", default=False, help="Turn on info messages")
 
 (options, args) = parser.parse_args()
 
@@ -41,6 +43,8 @@ if len(args) > 2:
 
 if options.verbose:
     logging.basicConfig(level=logging.DEBUG)
+elif options.info:
+    logging.basicConfig(level=logging.INFO)
 else:
     logging.basicConfig(level=logging.ERROR)
 
@@ -51,12 +55,13 @@ if refConnStr is not None:
 from CompareAlignmentConstants.AlignmentComparisonPlots import plotAlignmentParametersTimeSeries
 
 plotAlignmentParametersTimeSeries(
-        elements, dofs
-      , sliceConnectString=sliceConnectString
-      , since=options.since
-      , until=options.until
-      , refConnectString=refConnStr
-      , outputdir=options.outDirName
-      , timezone=options.timezone
-      , addStats=True
-      )
+    elements, dofs
+    , sliceConnectString=sliceConnectString
+    , since=options.since
+    , until=options.until
+    , refConnectString=refConnStr
+    , outputdir=options.outDirName
+    , timezone=options.timezone
+    , coordinateFrame=options.coords
+    , addStats=True
+    )
