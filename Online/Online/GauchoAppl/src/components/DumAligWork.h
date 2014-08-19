@@ -42,7 +42,6 @@ namespace LHCb
       std::string m_PartitionName;
       std::string m_RefFileName;
       unsigned long m_Reference;
-      double m_result;
       lib_rtl_lock_t m_Lock;
       lib_rtl_thread_t m_thread;
       bool m_runonce;

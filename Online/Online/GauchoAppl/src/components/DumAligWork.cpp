@@ -122,7 +122,7 @@ StatusCode LHCb::DumAligWork::run()
 }
 
 
-LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_result(0),m_MonSvc(0),m_Reference(0),m_fitterFcn(0)
+LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitterFcn(0),m_Reference(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
