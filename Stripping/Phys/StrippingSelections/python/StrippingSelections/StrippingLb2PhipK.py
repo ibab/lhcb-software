@@ -21,18 +21,23 @@ import StandardParticles
 from StandardParticles import StdLooseKaons as MyLooseKaons
 from StandardParticles import StdLooseProtons as MyLooseProtons
 
-config_params = {
-                  'KaonPT'              : 400      # MeV/c
-                , 'KaonIPCHI2'          : 4.0      # adimensional
-                , 'PhiPT'               : 0        # MeV/c
-                , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
-                , 'PhiVertexCHI2pDOF'   : 15       # adimensional
-                , 'PhiMassWindow'       : 25       # MeV/cc
-                , 'PhiMassMax'          : 1090     # MeV/cc
-                , 'BsVertexCHI2pDOF'    : 15       # adimensional
-                , 'BsMassWindow'        : 300      # MeV/cc
-}
-
+default_config = {
+    'NAME' : 'Lb2PhipK',
+    'WGs' : ['Charmless'],
+    'BUILDERTYPE' : 'StrippingLb2PhipKConf',
+    'CONFIG'      : {  'KaonPT'              : 400      # MeV/c
+                     , 'KaonIPCHI2'          : 4.0      # adimensional
+                     , 'PhiPT'               : 0        # MeV/c
+                     , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
+                     , 'PhiVertexCHI2pDOF'   : 15       # adimensional
+                     , 'PhiMassWindow'       : 25       # MeV/cc
+                     , 'PhiMassMax'          : 1090     # MeV/cc
+                     , 'BsVertexCHI2pDOF'    : 15       # adimensional
+                     , 'BsMassWindow'        : 300      # MeV/cc
+                     },
+    'STREAMS'     : ['Bhadron']
+    }
+    
 class StrippingLb2PhipKConf(LineBuilder):
 
     __configuration_keys__ = (

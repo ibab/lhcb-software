@@ -45,8 +45,7 @@ default_config = {
                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml",
                      'VertexChi2'      : 64
                     },
-    'STREAMS'     : { 'Charm' : ['StrippingD2HHBDTLine',
-                                 'StrippingDStD0PiWithD2HHBDTLine']}
+    'STREAMS'     : ['Charm']
     }
 
 

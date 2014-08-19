@@ -61,9 +61,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                               'B2JpsiPhimumuLinePrescale',
                               'B2JpsiPhimumuLinePostscale',
                               'DetachedDiMuons',
-                              'B2DetachedDiMuons',
-                              'B2DetachedDimuonAndJpsiLinePrescale',
-                              'B2DetachedDimuonAndJpsiLinePostscale',
+                              'B2DetachedDiMuons'
                               )
     
     #### This is the dictionary of all tunable cuts ########
@@ -78,8 +76,6 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         'B2JpsiKmumuLinePostscale' : 1,
         'B2JpsiPhimumuLinePrescale'  : 1,
         'B2JpsiPhimumuLinePostscale' : 1,
-        'B2DetachedDimuonAndJpsiLinePrescale' : 1,
-        'B2DetachedDimuonAndJpsiLinePostscale': 1,
         'DetachedDiMuons': {
             'AMAXDOCA_MAX'  : '0.5*mm',
             'ASUMPT_MIN'    : '1000*MeV',
@@ -109,14 +105,13 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
 
         default_name=name+"B24Mu"
         D_name=name+'D24Mu'
-        Dst_name = name+'Dstar2D2MuMuMuMu'
-        Jpsi_name = name+'Jpsi'
-        Phi_name = name+'Phi'
+	Dst_name = name+'Dstar2D2MuMuMuMu'
+	Jpsi_name = name+'Jpsi'
+	Phi_name = name+'Phi'
         B2JpsiKmumu_name = name + 'B2JpsiKmumu'
         B2JpsiPhimumu_name = name + 'B2JpsiPhimumu'
         DetachedDimuons_name = name+'DetachedDimuons'
         B2DetachedDimuons_name = name+'B2DetachedDimuons'
-        B2DetachedDimuonAndJpsi_name = name + 'B2DetachedDimuonAndJpsi'
 
         self.inMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
         self.inKaons = DataOnDemand(Location = "Phys/StdAllNoPIDsKaons/Particles")
@@ -146,10 +141,6 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                 Jpsi_name,
                                 inputSel = [self.inMuons])
 
-        self.selJpsiWide = makeJpsiWide(self,
-                                Jpsi_name+"Wide",
-                                inputSel = [self.inMuons])
-
         self.selPhi = makePhi(self,
                               Phi_name,
                               inputSel = [self.inKaons])
@@ -165,12 +156,6 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                                   inputSel = [self.selJpsi,
                                                               self.selPhi,
                                                               self.inMuons])
-
-        self.selB2DetachedDimuonAndJpsi = makeB2DetachedDimuonAndJpsi(B2DetachedDimuonAndJpsi_name,
-                                                  config['B2DetachedDiMuons'],
-                                                  inputSel = [self.selJpsiWide,
-                                                              self.inDetachedDimuons])
-
 
 
         self.defaultLine = StrippingLine(default_name+"Line",
@@ -201,12 +186,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                                postscale = config['B2JpsiPhimumuLinePostscale'],
                                                algos = [ self.selB2JpsiPhimumu]
                                                )
-
-        self.B2DetachedDimuonAndJpsiLine = StrippingLine(B2DetachedDimuonAndJpsi_name+"Line",
-                                               prescale = config['B2DetachedDimuonAndJpsiLinePrescale'],
-                                               postscale = config['B2DetachedDimuonAndJpsiLinePostscale'],
-                                               algos = [ self.selB2DetachedDimuonAndJpsi]
-                                               )
+                                                 
 
         self.registerLine( self.defaultLine )
 
@@ -217,9 +197,6 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.registerLine( self.B2JpsiKmumuLine )
 
         self.registerLine( self.B2JpsiPhimumuLine )
-
-        self.registerLine( self.B2DetachedDimuonAndJpsiLine )
-
 
 def makeDefault(self,name,inputSel) :
     """
@@ -328,24 +305,6 @@ def makeJpsi(self,name,inputSel):
                       Algorithm=JpsiMuMu,
                       RequiredSelections = inputSel)
 
-
-def makeJpsiWide(self,name,inputSel):
-    """
-    Jpsi->mu+ mu- selection not in Jpsi mass interval
-    """
-    JpsiMuMu = CombineParticles("Combine"+name)
-    JpsiMuMu.DecayDescriptor='[J/psi(1S) -> mu+ mu-]cc'
-    # JpsiMuMu.CombinationCut ="(ADAMASS('J/psi(1S)') > 200*MeV)"\
-    #     "& (AMAXDOCA('')<0.3*mm)"
-    JpsiMuMu.CombinationCut = "(AMAXDOCA('')<0.3*mm)"
-    JpsiMuMu.MotherCut = "(ADMASS('J/psi(1S)') > 200*MeV)"\
-        " & (BPVDIRA > 0) "
-    JpsiMuMu.DaughtersCuts = { "mu+" : self.BDaughtersCuts}
-    
-    return  Selection(name,
-                      Algorithm=JpsiMuMu,
-                      RequiredSelections = inputSel)
-
 def makePhi(self,name,inputSel):
     """
     phi->K+ K- selection
@@ -393,26 +352,4 @@ def makeB2JpsiPhimumu(self,name,inputSel):
     
     return Selection(name,
                      Algorithm = B2JpsiPhimumu,
-                     RequiredSelections = inputSel)
-
-
-def makeB2DetachedDimuonAndJpsi(name,config,inputSel) :
-    """
-    B --> J/psi KS0 --> 4mu selection
-    """
-    # define cuts on B object
-    wm = ['in_range(%s,AM,%s)' % (config['MASS_MIN']['B'],
-                                  config['MASS_MAX']['B'])]
-    wm = '('+('|'.join(wm))+')'
-    comboCuts = [LoKiCuts(['SUMPT'],config).code(),wm]
-    comboCuts = LoKiCuts.combine(comboCuts)
-    momCuts = LoKiCuts(['VCHI2DOF','BPVVDCHI2','BPVIPCHI2','BPVDIRA'], config).code()
-
-    B2JpsiKS = CombineParticles("Combine"+name)
-    B2JpsiKS.DecayDescriptor = 'B0 -> J/psi(1S) KS0'
-    B2JpsiKS.CombinationCut = comboCuts
-    B2JpsiKS.MotherCut = momCuts
-        
-    return Selection(name,
-                     Algorithm = B2JpsiKS,
                      RequiredSelections = inputSel)

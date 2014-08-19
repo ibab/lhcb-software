@@ -16,17 +16,24 @@ __all__ = ( 'BsPhiRhoConf',
             'mkKKTrackList',
             'mkBs2PRKKhh' )
 
-config_params = {'PRPrescale'     : 1.,
-                 'PRResMinPT'     : 900.,
-                 'PRResMinP'      : 1.,
-                 'PRResMinMass'   : 0.,
-                 'PRResMaxMass'   : 4000.,
-                 'PRResVtxChiDOF' : 9.,
-                 'PRBMinM'        : 4800.,
-                 'PRBMaxM'        : 5600.,
-                 'PRPhiWindow'    : 25.,
-                 'PRBVtxChi2DOF'  : 9.,
-		 'PRIPCHI2' : 20}
+default_config = {
+    'NAME'        : 'BsPhiRho',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'BsPhiRhoConf',
+    'CONFIG'      : {'PRPrescale'     : 1.,
+                     'PRResMinPT'     : 900.,
+                     'PRResMinP'      : 1.,
+                     'PRResMinMass'   : 0.,
+                     'PRResMaxMass'   : 4000.,
+                     'PRResVtxChiDOF' : 9.,
+                     'PRBMinM'        : 4800.,
+                     'PRBMaxM'        : 5600.,
+                     'PRPhiWindow'    : 25.,
+                     'PRBVtxChi2DOF'  : 9.,
+                     'PRIPCHI2' : 20
+                     },
+    'STREAMS'     : ['Bhadron']
+    }
 
 
 from Gaudi.Configuration import *

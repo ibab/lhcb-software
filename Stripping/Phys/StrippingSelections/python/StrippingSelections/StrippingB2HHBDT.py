@@ -44,7 +44,7 @@ default_config = {
                       'BDTCut'          : -0.3,
                       'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2HHBDTLine']}
+    'STREAMS'     : ['Bhadron']
     }
 
 ## Change decay descriptor and re-fit decay tree

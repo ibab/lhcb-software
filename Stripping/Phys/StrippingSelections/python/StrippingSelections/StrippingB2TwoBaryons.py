@@ -23,36 +23,43 @@ from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder, checkConfig
 
-default_config = { 'PrescaleB2PPbar'   : 1,
-                   'MinPTB2PPbar'      : 900,
-                   'MinIPChi2B2PPbar'  : 10,
-                   #'TrChi2'            : 4,
-                   'PIDppi'            : -1,
-                   'PIDpk'             : -2,
-                   'MaxPTB2PPbar'      : 2100,
-                   'MaxIPChi2B2PPbar'  : 25,
-                   'CombMassWindow'    : 200,
-                   'VertexChi2B2PPbar' : 9,
-                   'BPTB2PPbar'        : 1100,
-                   'BIPChi2B2PPbar'    : 16,
-                   'BDIRA'             : 0.9997,
-                   'MaxGhostProb'      : 0.4,
-                   'ExtraInfoTools'    : [ { "Type" : "ConeVariables"
-                                             , "ConeAngle" : 0.6
-                                             , "ConeNumber" : 1
-                                             , "Variables" : ['angle', 'mult', 'ptasy']},
-                                           { "Type" : "ConeVariables"
-                                             , "ConeAngle" : 0.8
-                                             , "ConeNumber" : 2
-                                             , "Variables" : ['angle', 'mult', 'ptasy']},
-                                           { "Type" : "ConeVariables"
-                                             , "ConeAngle" : 1.0
-                                             , "ConeNumber" : 3
-                                             , "Variables" : ['angle', 'mult', 'ptasy']},
-                                           {'Type' : 'VertexIsolation'}
-                                           ]                   
-                   }
+default_config = {
+    'NAME'        : 'B2TwoBaryons',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2TwoBaryonLines',
+    'CONFIG'      : {'PrescaleB2PPbar'   : 1,
+                     'MinPTB2PPbar'      : 900,
+                     'MinIPChi2B2PPbar'  : 10,
+                     #'TrChi2'            : 4,
+                     'PIDppi'            : -1,
+                     'PIDpk'             : -2,
+                     'MaxPTB2PPbar'      : 2100,
+                     'MaxIPChi2B2PPbar'  : 25,
+                     'CombMassWindow'    : 200,
+                     'VertexChi2B2PPbar' : 9,
+                     'BPTB2PPbar'        : 1100,
+                     'BIPChi2B2PPbar'    : 16,
+                     'BDIRA'             : 0.9997,
+                     'MaxGhostProb'      : 0.4,
+                     'ExtraInfoTools'    : [ { "Type" : "ConeVariables"
+                                               , "ConeAngle" : 0.6
+                                               , "ConeNumber" : 1
+                                               , "Variables" : ['angle', 'mult', 'ptasy']},
+                                             { "Type" : "ConeVariables"
+                                               , "ConeAngle" : 0.8
+                                               , "ConeNumber" : 2
+                                               , "Variables" : ['angle', 'mult', 'ptasy']},
+                                             { "Type" : "ConeVariables"
+                                               , "ConeAngle" : 1.0
+                                               , "ConeNumber" : 3
+                                               , "Variables" : ['angle', 'mult', 'ptasy']},
+                                             {'Type' : 'VertexIsolation'}
+                                             ]                   
+                     },
+    'STREAMS'     : ['Bhadron']
+    }
 
+    
 class B2TwoBaryonLines( LineBuilder ) :
     """Class defining the Bd,s -> baryon antibaryon stripping line"""
     

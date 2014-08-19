@@ -23,44 +23,50 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder
 
 default_config = {
-    ### isMC = True: do not apply hlt filter and do not use TisTosParticleTagger
-    "isMC"                : False,
-    "trMinIPChi2PV"       : 16,
-    "trMinProbNNpi"       : 0.5,
-    "trMaxProbNNK"        : 0.5,
-    "trMaxChi2Dof"        : 3.0,
-    "trMaxGhostProb"      : 0.5,
-    "rhoCombMassMax"      : 1200,
-    "rhoCombMassMin"      : 200,
-    "rhoMothMassMax"      : 1100,
-    "rhoMothMassMin"      : 300,
-    "rho0DauMaxDocaChi2"  : 15,
-    "rho0MinDeltaZ"       : 0.0,
-    "rho0MinVChi2Dof"     : 9,
-    "rho0MinDira"         : 0.0,
-    "rho0MinVDisplChi2"   : 25,
-    
-    "pi0ResMinP"          : 4000,
-    "pi0ResMinPT"         : 600,
-    "pi0ResDauMinCL"      : 0.2,
-    "pi0ResDauMinPT"      : 250,
-    "rhoPResMinPT"        : 1200,
-    "BuResCombMassWindow" : 750,
-    "BuResMinVChi2Dof"    : 9,
-    "BuResMothMassWindow" : 600,
-    "BuResMinDira"        : 0.99995,
-    "BuResMinPT"          : 3000,
-    
-    "pi0MgdMinPT"         : 2200,
-    "BuMgdCombMassMin"    : 3900,
-    "BuMgdCombMassMax"    : 7150,
-    "BuMgdMinVChi2Dof"    : 9,
-    "BuMgdMothMassMin"    : 4000,
-    "BuMgdMothMassMax"    : 7000,
-    "BuMgdMinDira"        : 0.99994,
-    "PrescaleBu2rho0rhoPlusResolved" : 1.0,
-    "PrescaleBu2rho0rhoPlusMerged"   : 1.0
+    'NAME'        : 'Bu2rho0rhoPlus',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'StrippingBu2rho0rhoPlusConf',
+    'CONFIG'      : { ### isMC = True: do not apply hlt filter and do not use TisTosParticleTagger
+                      "isMC"                : False,
+                      "trMinIPChi2PV"       : 16,
+                      "trMinProbNNpi"       : 0.5,
+                      "trMaxProbNNK"        : 0.5,
+                      "trMaxChi2Dof"        : 3.0,
+                      "trMaxGhostProb"      : 0.5,
+                      "rhoCombMassMax"      : 1200,
+                      "rhoCombMassMin"      : 200,
+                      "rhoMothMassMax"      : 1100,
+                      "rhoMothMassMin"      : 300,
+                      "rho0DauMaxDocaChi2"  : 15,
+                      "rho0MinDeltaZ"       : 0.0,
+                      "rho0MinVChi2Dof"     : 9,
+                      "rho0MinDira"         : 0.0,
+                      "rho0MinVDisplChi2"   : 25,
+                      
+                      "pi0ResMinP"          : 4000,
+                      "pi0ResMinPT"         : 600,
+                      "pi0ResDauMinCL"      : 0.2,
+                      "pi0ResDauMinPT"      : 250,
+                      "rhoPResMinPT"        : 1200,
+                      "BuResCombMassWindow" : 750,
+                      "BuResMinVChi2Dof"    : 9,
+                      "BuResMothMassWindow" : 600,
+                      "BuResMinDira"        : 0.99995,
+                      "BuResMinPT"          : 3000,
+                      
+                      "pi0MgdMinPT"         : 2200,
+                      "BuMgdCombMassMin"    : 3900,
+                      "BuMgdCombMassMax"    : 7150,
+                      "BuMgdMinVChi2Dof"    : 9,
+                      "BuMgdMothMassMin"    : 4000,
+                      "BuMgdMothMassMax"    : 7000,
+                      "BuMgdMinDira"        : 0.99994,
+                      "PrescaleBu2rho0rhoPlusResolved" : 1.0,
+                      "PrescaleBu2rho0rhoPlusMerged"   : 1.0
+                      },
+    'STREAMS'     : ['Bhadron']
     }
+
 
 class StrippingBu2rho0rhoPlusConf(LineBuilder) :
 

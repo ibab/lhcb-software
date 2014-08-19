@@ -48,11 +48,7 @@ default_config = {
                      ,'BsHighMassNone'      : 5700    # MeV/cc
                      ,'BsHighMassDouble'    : 5800    # MeV/cc
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingBs2GammaGamma_LLLine',
-                                   'StrippingBs2GammaGamma_DDLine',
-                                   'StrippingBs2GammaGamma_doubleLine',
-                                   'StrippingBs2GammaGamma_NoConvLine'
-                                   'StrippingBs2GammaGamma_NoConvWideLine'] }
+    'STREAMS'     : ['Radiative']
     }
 
 

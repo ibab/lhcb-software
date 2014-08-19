@@ -49,9 +49,7 @@ default_config = {
                       'ResolvedLinePrescale' : 1.,
                       'ResolvedLinePostscale': 1.
                       },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2HHPi0_R',
-                                   'StrippingB2HHPi0_M']
-                      }
+    'STREAMS'     : ['Bhadron']
     }
 
 class StrippingB2HHPi0Conf(LineBuilder) :

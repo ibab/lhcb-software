@@ -16,17 +16,23 @@ __all__ = ( 'Bs2Q2Body4piConf',
             'mkDiTrackList',
             'mkBs2Q2B4pi' )
 
-config_params = {'Q2BPrescale'     : 1.,
-                 'Q2BResMinPT'     : 900.,
-                 'Q2BResMinP'      : 1.,
-                 'Q2BResMinMass'   : 0.,
-                 'Q2BResMaxMass'   : 1100.,
-                 'Q2BResVtxChiDOF' : 12.,
-                 'Q2BBMinM'        : 4500.,
-                 'Q2BBMaxM'        : 5700.,
-                 'Q2BBVtxChi2DOF'  : 12.,
-                 'Q2BIPCHI2' : 20}
-
+default_config = {
+    'NAME' : 'BetaSBs2Q2Body4pi',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'Bs2Q2Body4piConf',
+    'CONFIG'      : {'Q2BPrescale'     : 1.,
+                     'Q2BResMinPT'     : 900.,
+                     'Q2BResMinP'      : 1.,
+                     'Q2BResMinMass'   : 0.,
+                     'Q2BResMaxMass'   : 1100.,
+                     'Q2BResVtxChiDOF' : 12.,
+                     'Q2BBMinM'        : 4500.,
+                     'Q2BBMaxM'        : 5700.,
+                     'Q2BBVtxChi2DOF'  : 12.,
+                     'Q2BIPCHI2' : 20
+                     },
+    'STREAMS'     : ['Bhadron']
+    }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles#, OfflineVertexFitter

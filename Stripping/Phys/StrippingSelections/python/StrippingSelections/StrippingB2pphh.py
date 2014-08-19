@@ -24,40 +24,46 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter as VoidFilter
 
-config_default = {
-    'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-    'CombMass12Max_kk'         : 4700.0,
-    'CombMass12Max_kpi'         : 5000.0,
-    'CombMass12Max_pipi'         : 5350.0,
-    'd_achi2doca12'             : 20.0,
-    'd_achi2doca13'             : 20.0,
-    'd_achi2doca14'             : 20.0,
-    'd_achi2doca23'             : 20.0,
-    'd_achi2doca24'             : 20.0,
-    'd_achi2doca34'             : 20.0,
-    'p_PTSUM'               : 750.0,
-    'p_PSUM'               : 7000.0,
-    'p_PTMIN'              : 400.0,
-    'p_PMIN'              : 4.0,
-    'p_PROBNNpPROD'        : 0.05,
-    'CombMass123Max'         : 5600.0,
-    'CombMassMax'         : 5.60,
-    'CombMassMin'         : 5.00,
-    'MassMax'             : 5.55,
-    'MassMin'             : 5.05,
-    '4h_PTSUM'            : 3000.0,
-    'B_DIRA'              : .9999 ,   
-    '4h_AMAXDOCA'                : 0.3 ,     
-    'B_CHI2'              : 30.0 ,    
-    'B_PT'                 : 1000.,
-    'B_MIPDV'              : 0.2,
-    'PionCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 6.0) & (TRGHOSTPROB < 0.35) & (PROBNNpi > 0.05)",
-    'KaonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.35) & (PROBNNk > 0.05)",
-    'ProtonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.35) & (PROBNNp > 0.05)",
-    'Prescaleppkk'  : 1.0,
-    'Prescalepppipi'  : 1.0,
-    'Prescaleppkpi'  : 1.0
+default_config = {
+    'NAME'        : 'B2pphh',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'B2pphhConf',
+    'CONFIG'      : {'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
+                     'CombMass12Max_kk'         : 4700.0,
+                     'CombMass12Max_kpi'         : 5000.0,
+                     'CombMass12Max_pipi'         : 5350.0,
+                     'd_achi2doca12'             : 20.0,
+                     'd_achi2doca13'             : 20.0,
+                     'd_achi2doca14'             : 20.0,
+                     'd_achi2doca23'             : 20.0,
+                     'd_achi2doca24'             : 20.0,
+                     'd_achi2doca34'             : 20.0,
+                     'p_PTSUM'               : 750.0,
+                     'p_PSUM'               : 7000.0,
+                     'p_PTMIN'              : 400.0,
+                     'p_PMIN'              : 4.0,
+                     'p_PROBNNpPROD'        : 0.05,
+                     'CombMass123Max'         : 5600.0,
+                     'CombMassMax'         : 5.60,
+                     'CombMassMin'         : 5.00,
+                     'MassMax'             : 5.55,
+                     'MassMin'             : 5.05,
+                     '4h_PTSUM'            : 3000.0,
+                     'B_DIRA'              : .9999 ,   
+                     '4h_AMAXDOCA'                : 0.3 ,     
+                     'B_CHI2'              : 30.0 ,    
+                     'B_PT'                 : 1000.,
+                     'B_MIPDV'              : 0.2,
+                     'PionCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 6.0) & (TRGHOSTPROB < 0.35) & (PROBNNpi > 0.05)",
+                     'KaonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.35) & (PROBNNk > 0.05)",
+                     'ProtonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.35) & (PROBNNp > 0.05)",
+                     'Prescaleppkk'  : 1.0,
+                     'Prescalepppipi'  : 1.0,
+                     'Prescaleppkpi'  : 1.0
+                     },
+    'STREAMS'     : ['Bhadron']
     }
+
 
 
 default_name = "B2pphh"

@@ -26,24 +26,31 @@ from StandardParticles import StdNoPIDsDownPions as DownPions
 #from StandardParticles import StdLooseKaons as Kaons
 
 
-default_config = {'MVA_LL_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLL combination cut, the MVA is optimized for 0.5 !
-                  'MVA_LL_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLL mother cut, the MVA is optimized for 0.5 !
-                  'MVA_LD_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLD combination cut, the MVA is optimized for 0.5 !
-                  'MVA_LD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLD mother cut, the MVA is optimized for 0.5 !
-                  'MVA_DD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsDD mother cut, the MVA is optimized for 0.5 !
-                  'KS_LL_MASS'                  :50.0,           # KSLL mass window cut in MeV
-                  'KS_DD_MASS'                  :100.0,           # KSDD mass window cut in MeV
-                  'KS_LL_DOCA'                  :1.0,           # DoCA cut in mm
-                  'KS_DD_DOCA'                  :4.0,           # DoCA cut in mm
-		  'KS_LL_TRGHOSTPROB'		:1.0,		# Track ghost probability KSLL
-  		  'KS_DD_TRGHOSTPROB'		:1.0,		# Track ghost probability KSDD
-##################################################
-                  'B_MassWindow'                  : 600.0, # B mass window cut in MeV _this_is_where_we_can_reduce_the_retention_rate_ if needed 
-                  'B_DOCA_LL'                      : 1.0, # DOCA cut in mm for Bs->KSLL KSLL
-                  'B_DOCA_DD'                      : 4.0, # DOCA cut in mm for Bs->KSLL KSDD and Bs->KSDD KSDD
-                  'Prescale'                : 1.0,
-                  'Postscale'               : 1.0
-                  }
+default_config = {
+    'NAME' : 'Bs2KSKS',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'Bs2KSKSConf',
+    'CONFIG'      : {'MVA_LL_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLL combination cut, the MVA is optimized for 0.5 !
+                     'MVA_LL_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLL mother cut, the MVA is optimized for 0.5 !
+                     'MVA_LD_PROBABILITY_CUT_BCC'         : 0.5, # MVA probability cut, BsLD combination cut, the MVA is optimized for 0.5 !
+                     'MVA_LD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsLD mother cut, the MVA is optimized for 0.5 !
+                     'MVA_DD_PROBABILITY_CUT_BCu'         : 0.5, # MVA probability cut, BsDD mother cut, the MVA is optimized for 0.5 !
+                     'KS_LL_MASS'                  :50.0,           # KSLL mass window cut in MeV
+                     'KS_DD_MASS'                  :100.0,           # KSDD mass window cut in MeV
+                     'KS_LL_DOCA'                  :1.0,           # DoCA cut in mm
+                     'KS_DD_DOCA'                  :4.0,           # DoCA cut in mm
+                     'KS_LL_TRGHOSTPROB'		:1.0,		# Track ghost probability KSLL
+                     'KS_DD_TRGHOSTPROB'		:1.0,		# Track ghost probability KSDD
+                     ##################################################
+                     'B_MassWindow'                  : 600.0, # B mass window cut in MeV _this_is_where_we_can_reduce_the_retention_rate_ if needed 
+                     'B_DOCA_LL'                      : 1.0, # DOCA cut in mm for Bs->KSLL KSLL
+                     'B_DOCA_DD'                      : 4.0, # DOCA cut in mm for Bs->KSLL KSDD and Bs->KSDD KSDD
+                     'Prescale'                : 1.0,
+                     'Postscale'               : 1.0
+                     },
+    'STREAMS'     : ['Bhadron'],
+    }
+
 
 class Bs2KSKSConf(LineBuilder) :
     """

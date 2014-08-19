@@ -61,10 +61,8 @@ default_config = {
                       "MaxGHOSTPROB"   : 0.8,
                       "BDIRA"          : 0.99
                                           },
-     'STREAMS'     : { 'Bhadron' : [],
-                       'BhadronCompleteEvent' : ['StrippingBs2K0stK0stNominalLine']
-                                           }
-         }
+     'STREAMS'     : ['BhadronCompleteEvent']
+     }
 
 
 from Gaudi.Configuration import *

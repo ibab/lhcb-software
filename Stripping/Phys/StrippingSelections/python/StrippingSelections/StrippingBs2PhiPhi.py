@@ -35,18 +35,23 @@ from StandardParticles import StdLooseKaons as MyLooseKaons
 #else:
 #  from StandardParticles import StdLooseKaons as MyLooseKaons
 
-config_params = {
-                  'KaonPT'              : 400      # MeV/c
-                , 'KaonIPCHI2'          : 2.5      # adimensional
-                , 'PhiPT'               : 0        # MeV/c
-                , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
-                , 'PhiVertexCHI2pDOF'   : 15       # adimensional
-                , 'PhiMassWindow'       : 25       # MeV/cc
-                , 'PhiMassMax'          : 1090     # MeV/cc
-                , 'BsVertexCHI2pDOF'    : 15       # adimensional
-                , 'BsMassWindow'        : 300      # MeV/cc
-                , 'WidePrescale'        : 0.15     # adimensional
-}
+default_config = {
+    'NAME'        : 'BetaSBs2PhiPhi',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'StrippingBs2PhiPhiConf',
+    'CONFIG'      : {'KaonPT'              : 400      # MeV/c
+                     , 'KaonIPCHI2'          : 2.5      # adimensional
+                     , 'PhiPT'               : 0        # MeV/c
+                     , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
+                     , 'PhiVertexCHI2pDOF'   : 15       # adimensional
+                     , 'PhiMassWindow'       : 25       # MeV/cc
+                     , 'PhiMassMax'          : 1090     # MeV/cc
+                     , 'BsVertexCHI2pDOF'    : 15       # adimensional
+                     , 'BsMassWindow'        : 300      # MeV/cc
+                     , 'WidePrescale'        : 0.15     # adimensional
+                     },
+    'STREAMS'     : ['BhadronCompleteEvent']
+    }
 
 class StrippingBs2PhiPhiConf(LineBuilder):
 
