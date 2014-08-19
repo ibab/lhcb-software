@@ -28,12 +28,13 @@ namespace LHCb
       Fitter(const std::string &  type, const std::string &  name, const IInterface *  parent  );
       TMinuit *m_Minuit;
       IDumAligDrv *m_parent;
-      StatusCode init(std::string, std::string);
+//      StatusCode init(std::string, std::string);
       StatusCode i_start();
       StatusCode i_run();
       StatusCode initialize();
+      StatusCode finalize();
       StatusCode stop();
-      StatusCode de_init();
+//      StatusCode de_init();
       void write_params(int,std::vector<double> &params);
       void write_params(int npar, double *params);
       void read_params(int&,std::vector<double> &params);

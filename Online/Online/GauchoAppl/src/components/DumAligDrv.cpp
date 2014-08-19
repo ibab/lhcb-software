@@ -75,7 +75,6 @@ StatusCode DumAligDrv::initialize()
 
 //  m_fitter = new Fitter(this);
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
-//  m_fitter->init(m_PartitionName,m_ParamFileName);
   m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   return StatusCode::SUCCESS;
 }

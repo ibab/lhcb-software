@@ -118,7 +118,7 @@ StatusCode Fitter::stop()
   return StatusCode::SUCCESS;
 }
 
-StatusCode Fitter::de_init()
+StatusCode Fitter::finalize()
 {
   if (m_Minuit)
   {
