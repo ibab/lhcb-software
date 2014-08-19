@@ -3,7 +3,6 @@
 #include "Fitter.h"
 #include "Gaucho/CounterTask.h"
 #include "Gaucho/MonCounter.h"
-//#include "/cvmfs/lhcb.cern.ch/lib/lcg/external/ROOT/5.32.02/x86_64-slc5-gcc46-opt/root/include/TMinuit.h"
 #include "TMinuit.h"
 DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,Fitter)
 
@@ -54,14 +53,7 @@ Fitter::Fitter(const std::string &  type, const std::string &  name, const IInte
 
 StatusCode Fitter::initialize()
 {
-//  m_Minuit = new TMinuit(100);
-//  printf("Counter DNS: %s, Counter Task: %s\n Counter Names:\n",m_CntDNS.c_str(),this->m_CntTaskName.c_str());
-//  for (int i=0;i<this->m_CounterNames.size();i++)
-//  {
-//    printf("%s\n",m_CounterNames[i].c_str());
-//  }
   int npar;
-  std::vector<double> ps;
   m_Minuit = new TMinuit(3);
   m_Minuit->SetFCN(&Chi2);
   read_params(npar,m_params);
