@@ -66,7 +66,7 @@ void TestEvtSelectorNFiles::LoopContext::close()    {
 }
 
 TestEvtSelectorNFiles::TestEvtSelectorNFiles(const std::string& nam, ISvcLocator* svcloc)
-  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0), m_totalEvt(0), m_runNum(0), m_prevRun(0) 
+  : Service( nam, svcloc), m_rootCLID(CLID_NULL), m_ioMgr(0), m_evtCount(0), /* m_totalEvt(0),*/ m_runNum(0), m_prevRun(0) 
 {
   declareProperty("DataManager", m_ioMgrName="Gaudi::IODataManager/IODataManager");
   declareProperty("TriggerMask", m_trgMask);
@@ -201,7 +201,7 @@ StatusCode TestEvtSelectorNFiles::finalize()  {
     m_ioMgr = 0;
   }
   m_evtCount = 0;
-  m_totalEvt = 0;
+  //m_totalEvt = 0;
 
   if ( m_filePoller )  { 
     m_filePoller->remListener(); 

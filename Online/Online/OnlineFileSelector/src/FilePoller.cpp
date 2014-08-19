@@ -373,7 +373,7 @@ void FilePoller::timerHandler()
       if (sc || sc1 || sc2)	
 	 continue;
 
-	////CHANGE
+	
 
       sc = ((IAlertSvc*)m_EvtSelector)->alertSvc(path_name);
       sc = remListener();

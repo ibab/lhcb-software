@@ -1050,7 +1050,6 @@ StatusCode FilePollerNFiles::updateStatus(const string file, int eventCnt) { //f
 StatusCode FilePollerNFiles::SetInProcess(const string file, const int flag) { //file arg is just file name, not whole path
 
   MsgStream log(msgSvc(), name());
-  const char* pattern = "/[0-9]*_[0-9]*.raw";  
   int status;
   sqlite3_stmt *pstatement;
   string query = "UPDATE FileRecords SET StatusFlag = ? WHERE FileName = ? ;";
@@ -1419,7 +1418,7 @@ StatusCode FilePollerNFiles::insertRun(const std::string run) {
 }
 
 
-///POSSIBILITY TO REPLACE WITH getCounter???
+
 
 /// Implementation of IOnlineBookkeepNFiles::existsRun.
 StatusCode FilePollerNFiles::existsRun(const std::string run) { //arg is the run number
