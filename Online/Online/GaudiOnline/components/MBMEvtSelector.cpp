@@ -36,24 +36,11 @@ namespace LHCb  {
     */
   class MBMContext : public OnlineContext  {
   private:
-    typedef std::vector<LHCb::MEPFragment*> Frags;
-    typedef std::map<unsigned int, Frags >  SubEvents;
-    SubEvents             m_events;
-    std::vector<int>      m_memory;
     MBMEvtSelector*       m_onlineSel;
     MBM::Consumer*        m_consumer;
-    void*                 m_mepStart;
-    int                   m_evID;
-
-    /// Convert standard descriptor event structure to banks
-    StatusCode convertDescriptor(const MBM::EventDesc& e);
-    /// Convert MEP into a sequence of events being worked down.
-    StatusCode convertMEP(const MBM::EventDesc& e);
-    
+    int                   m_partID;
     /// Connect to regular MBM buffer
     StatusCode connectMBM(const std::string& input);
-    /// Test routine for run-time exceptions
-    void testExceptions();
   public:
     /// Standard constructor
     MBMContext(MBMEvtSelector* pSelector);
@@ -134,7 +121,7 @@ namespace LHCb  {
     /// Property: Name of the MEP manager (Defule=MEPManager)
     std::string         m_mepManagerName;
     /// Current context
-    mutable MBMContext* m_currContext;
+    mutable OnlineContext* m_currContext;
   };
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
@@ -214,20 +201,8 @@ using namespace std;
 using namespace LHCb;
 
 MBMContext::MBMContext(MBMEvtSelector* s)
-: OnlineContext(s), m_onlineSel(s), m_consumer(0), m_mepStart(0)
+  : OnlineContext(s), m_onlineSel(s), m_consumer(0), m_partID(0)
 {
-}
-
-void MBMContext::testExceptions() {
-  static int test = 888;
-  --test;
-  if ( test >300 && test<330 ) {
-    throw runtime_error("Bad magic pattern --- test");
-  }
-  if ( test >30 && test<50 ) {
-    throw runtime_error("Unknown Bank --- test");
-  }
-  if ( test == 0 ) test = 888;
 }
 
 StatusCode MBMContext::releaseEvent()  {
@@ -274,77 +249,6 @@ StatusCode MBMContext::rearmEvent()  {
   return StatusCode::SUCCESS;
 }
 
-StatusCode MBMContext::convertDescriptor(const MBM::EventDesc& e)  {
-  m_evdesc.setPartitionID(m_consumer->partitionID());
-  m_evdesc.setTriggerMask(e.mask);
-  m_evdesc.setEventType(e.type);
-  m_evdesc.setHeader(e.data);
-  m_evdesc.setSize(e.len);
-  m_needFree = true;
-  //testExceptions();
-  m_evdesc.setMepBuffer(m_mepStart);
-  m_sel->increaseEvtCount();
-  for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)
-    decodeFragment(m_evdesc.fragment(i), m_banks);
-  return StatusCode::SUCCESS;
-}
-
-StatusCode MBMContext::convertMEP(const MBM::EventDesc& e)  {
-  RawEventHeader*   h = 0;
-  MEPEVENT*        ev = (MEPEVENT*)e.data;
-  unsigned int    pid = m_consumer->partitionID();
-  unsigned int mask[] = {pid,0,0,0};
-  if ( m_events.empty() )   {
-    MEPEvent* event = (MEPEvent*)ev->data;
-    if ( ev->magic != mep_magic_pattern() )  {
-      throw runtime_error("Bad MEP magic pattern!!!!");
-    }
-    decodeMEP2EventFragments(event, pid, m_events);
-    if ( m_events.empty() )  {
-      throw runtime_error("Bad MEP received. No sub-events !!!!");
-    }
-    for(size_t evID=1; evID<=m_events.size(); ++evID)  {
-      ev->events[evID].begin  = long(ev)-long(m_mepStart);
-      ev->events[evID].status = EVENT_TYPE_OK;
-      ev->events[evID].signal = 0;
-      ev->events[evID].evID   = evID;
-    }
-    //cout << "Decoded " << m_events.size() << " sub events" << endl;
-    m_evID = 0;
-  }
-  const Frags& frags = (*m_events.begin()).second;
-  size_t evt_len = ((RawEventHeader::size(frags.size())+1)*sizeof(int))/sizeof(int);
-  if ( m_memory.size() < evt_len ) {
-    m_memory.resize(evt_len+256); // Increase memmory size with some safety margin
-  }
-  h = (RawEventHeader*)&m_memory[0];
-  m_evdesc.setPartitionID(pid);
-  m_evdesc.setTriggerMask(mask);
-  m_evdesc.setEventType(EVENT_TYPE_EVENT);
-  m_evdesc.setHeader(h);
-  m_evdesc.setSize(evt_len);
-  m_evdesc.setMepBuffer(m_mepStart);
-  m_sel->increaseEvtCount();
-	
-  h->setEventID(++m_evID);
-  h->setMEPID(ev->evID);
-  h->setDataStart(ev->begin);
-  h->setNumberOfFragments(frags.size());
-  h->setErrorMask(0);
-  h->setNumberOfMissing(0);
-  h->setOffsetOfMissing(0);
-  for(size_t j=0; j<frags.size(); ++j)  {
-    MEPFragment* f = frags[j];
-    long off =  long(long(f)-long(m_mepStart));
-    h->setOffset(j, off);
-  }
-  for(int k=0, n=m_evdesc.numberOfFragments(); k<n; ++k)
-    decodeFragment(m_evdesc.fragment(k), m_banks);
-  m_events.erase(m_events.begin());
-  if ( m_events.empty() ) m_needFree = true;
-  return StatusCode::SUCCESS;
-}
-
 StatusCode MBMContext::receiveEvent()  {
   m_banks.clear();
   if ( m_consumer )  {
@@ -357,7 +261,7 @@ StatusCode MBMContext::receiveEvent()  {
       if ( m_events.empty() ) {
 	m_sel->increaseReqCount();
 	m_needFree = false;
-	if ( m_onlineSel->isCancelled() ) {
+	if ( m_sel->isCancelled() ) {
 	  // In case we got cancelled, just return error and 
 	  // let upper layers handle the problem
 	  return StatusCode::FAILURE;
@@ -369,20 +273,14 @@ StatusCode MBMContext::receiveEvent()  {
       const MBM::EventDesc& e = m_consumer->event();
       // The event is a descriptor event, which must be decoded using the MEP data:
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
-	return convertDescriptor(e);
+	return convertDescriptor(m_partID,e);
       }
       // The event is a MEP with multiple events, which must be decoded:
       else if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
-        return convertMEP(e);
+        return convertMEP(m_partID,e);
       }
       else { // Or: simple case data are data - as it should be
-        m_evdesc.setPartitionID(m_consumer->partitionID());
-        m_evdesc.setTriggerMask(e.mask);
-        m_evdesc.setEventType(e.type);
-        m_evdesc.setHeader(e.data);
-        m_evdesc.setSize(e.len);
-        m_needFree = true;
-        return StatusCode::SUCCESS;
+        return convertMDF(m_partID,e);
       }
     }
     catch(const exception& e)  {
@@ -391,7 +289,7 @@ StatusCode MBMContext::receiveEvent()  {
       // We only allow for a max of max_retry consecutive bad entries from MBM
       // Otherwise things are bad!
       if ( max_retry-- > 0 )  {
-	if ( m_onlineSel->isCancelled() ) {
+	if ( m_sel->isCancelled() ) {
 	  // In case we got cancelled, just return error and 
 	  // let upper layers handle the problem
 	  releaseEvent();
@@ -415,7 +313,7 @@ StatusCode MBMContext::receiveEvent()  {
       ::exit(EILSEQ);
     }
     catch(...)  {
-      if ( m_onlineSel->isCancelled() ) {
+      if ( m_sel->isCancelled() ) {
 	releaseEvent();
 	return StatusCode::FAILURE;
       }
@@ -449,7 +347,8 @@ StatusCode MBMContext::connectMBM(const string& input)  {
       if ( m_consumer->id() == MBM_INV_DESC ) {
         return StatusCode::FAILURE;
       }
-      m_mepStart = (void*)m_consumer->bufferAddress();
+      m_partID   = m_consumer->partitionID();
+      m_baseAddr = (void*)m_consumer->bufferAddress();
       return StatusCode::SUCCESS;
     }
     m_sel->error("Data buffer \""+input+"\" is not mapped. "
@@ -468,7 +367,7 @@ void MBMContext::close()  {
     delete m_consumer;
     m_consumer = 0;
   }
-  m_mepStart = 0;
+  m_baseAddr = 0;
 }
 
 MBMEvtSelector::MBMEvtSelector(const string& nam, ISvcLocator* svc)

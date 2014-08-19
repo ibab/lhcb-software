@@ -1,0 +1,20 @@
+#include "$GAUDIONLINEROOT/options/EVENTConsumer.opts"
+ApplicationMgr.SvcOptMapping         = { "LHCb::FILEEvtSelector/EventSelector" };
+Runable.MEPManager                   = "";
+ApplicationMgr.TopAlg               += { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
+ApplicationMgr.EvtMax                = 5;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 1;
+Dump.FullDump                        = 1;
+Dump.OutputLevel                     = 4;
+Dump.Debug                           = 0;
+
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 1.0;
+
+EventSelector.Input                  = "mepData_0.dat";
+EventSelector.Input                  = "$HOME/data/data.mdf";
+EventSelector.Input                  = "data/mdfData_1.dat";
+EventSelector.Input                  = "data";
+EventSelector.Decode = false;
+EventSelector.OutputLevel = 1;

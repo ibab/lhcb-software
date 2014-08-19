@@ -70,8 +70,12 @@ namespace LHCb
     bool                     m_disabled;
 
     // Helper routines
+
+    /// Scan directory for matching files
     size_t scanFiles();
+    /// Open a new data file
     int openFile();
+    /// Save remainder of currently read file
     void safeRestOfFile(int file_handle);
 
     /// IRunable implementation : Run the class implementation
@@ -292,6 +296,7 @@ void HltBufferedIOReader::handle(const Incident& inc)
   }
 }
 
+/// Scan directory for matching files
 size_t HltBufferedIOReader::scanFiles()   {
   m_files.clear();
   if ( !m_disabled )   {
@@ -326,6 +331,7 @@ size_t HltBufferedIOReader::scanFiles()   {
   return 0;
 }
 
+/// Open a new data file
 int HltBufferedIOReader::openFile()   {
   while (m_files.size() > 0)  {
     set<string>::iterator i = m_files.begin();
@@ -354,6 +360,7 @@ int HltBufferedIOReader::openFile()   {
   return 0;
 }
 
+/// Save remainder of currently read file
 void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
   if (file_handle)  {
     char buffer[10 * 1024];

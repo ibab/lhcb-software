@@ -24,6 +24,7 @@
 #include "GaudiOnline/ISuspendable.h"
 #include "MDF/RawEventDescriptor.h"
 #include "MBM/Requirement.h"
+#include "MBM/Client.h"
 #include "RTL/rtl.h"
 
 /*
@@ -43,17 +44,35 @@ namespace LHCb  {
   class OnlineContext : public IEvtSelector::Context   {
   public:
     /// Bank container definition
-    typedef std::vector<LHCb::RawBank*> Banks;
+    typedef std::vector<LHCb::RawBank*>     Banks;
+    typedef std::vector<LHCb::MEPFragment*> Frags;
+    typedef std::map<unsigned int, Frags >  SubEvents;
+
     /// Container to bank referentes
-    Banks              m_banks;
+    Banks                        m_banks;
     /// Event descriptor
-    RawEventDescriptor m_evdesc;
+    RawEventDescriptor           m_evdesc;
 
   protected:
     /// Reference to event selector
     const OnlineBaseEvtSelector* m_sel;
     /// Flag to indicate that current event needs to be freed.
     bool                         m_needFree;
+
+    /** Local stuff to interprete MEPs  */
+    int                          m_evID;
+    /// Event base address (if MEPs)
+    void*                        m_baseAddr;
+    std::vector<int>             m_memory;
+    SubEvents                    m_events;
+
+    /// Convert standard descriptor event structure to banks
+    StatusCode convertDescriptor(int partID, const MBM::EventDesc& e);
+    /// Convert standard MDF event structure to banks
+    StatusCode convertMDF(int partID, const MBM::EventDesc& e);
+    /// Convert MEP into a sequence of events being worked down.
+    StatusCode convertMEP(int partID, const MBM::EventDesc& e);
+
   public:
     /// Standard constructor
     OnlineContext(const OnlineBaseEvtSelector* s);
@@ -227,6 +246,8 @@ namespace LHCb  {
     bool                          m_decode;
     /// Property to manipulate handling of event timeouts
     bool                          m_handleTMO;
+    /// Property to indicate to pause on error
+    bool                          m_gotoPause;
     /// Dummy property for backwards compatibility
     int                           m_printFreq;
     /// Local GUID to be added: needed to chain GUID information for reprocessing
@@ -246,7 +267,7 @@ namespace LHCb  {
     /// Flag to indicate if DAQ_CANCEL incident arrived
     mutable bool                  m_isCancelled;
     /// Local context of current event held
-    mutable const OnlineContext*  m_context;
+    mutable OnlineContext*        m_context;
   };
 }
 #endif  // GAUDIONLINE_ONLINEBASEEVTSELECTOR_H

@@ -25,10 +25,110 @@
 using namespace std;
 using namespace LHCb;
 
+namespace OnlineBaseEvtSelector__test   {
+  /// Test routine for run-time exceptions
+  void testExceptions() {
+    static int test = 888;
+    --test;
+    if ( test >300 && test<330 ) {
+      throw runtime_error("Bad magic pattern --- test");
+    }
+    if ( test >30 && test<50 ) {
+      throw runtime_error("Unknown Bank --- test");
+    }
+    if ( test == 0 ) test = 888;
+  }
+}
+
 /// Standard constructor
-OnlineContext::OnlineContext(const OnlineBaseEvtSelector* s) : m_sel(s), m_needFree(false) {
+OnlineContext::OnlineContext(const OnlineBaseEvtSelector* s)
+  : m_sel(s), m_needFree(false), m_baseAddr(0)
+{
   m_evdesc.setHeader(0);
   m_evdesc.setSize(0);
+}
+
+/// Convert standard MDF event structure to banks
+StatusCode OnlineContext::convertMDF(int partID, const MBM::EventDesc& e)   {
+  m_evdesc.setPartitionID(partID);
+  m_evdesc.setTriggerMask(e.mask);
+  m_evdesc.setEventType(e.type);
+  m_evdesc.setHeader(e.data);
+  m_evdesc.setSize(e.len);
+  m_needFree = true;
+  return StatusCode::SUCCESS;
+}
+
+StatusCode OnlineContext::convertMEP(int partID, const MBM::EventDesc& e)  {
+  RawEventHeader*   h = 0;
+  MEPEVENT*        ev = (MEPEVENT*)e.data;
+  unsigned int    pid = partID;
+  unsigned int mask[] = {pid,0,0,0};
+  if ( m_events.empty() )   {
+    MEPEvent* event = (MEPEvent*)ev->data;
+    if ( ev->magic != mep_magic_pattern() )  {
+      throw runtime_error("Bad MEP magic pattern!!!!");
+    }
+    decodeMEP2EventFragments(event, pid, m_events);
+    if ( m_events.empty() )  {
+      throw runtime_error("Bad MEP received. No sub-events !!!!");
+    }
+    for(size_t evID=1; evID<=m_events.size(); ++evID)  {
+      ev->events[evID].begin  = long(ev)-long(m_baseAddr);
+      ev->events[evID].status = EVENT_TYPE_OK;
+      ev->events[evID].signal = 0;
+      ev->events[evID].evID   = evID;
+    }
+    //cout << "Decoded " << m_events.size() << " sub events" << endl;
+    m_evID = 0;
+  }
+  const Frags& frags = (*m_events.begin()).second;
+  size_t evt_len = ((RawEventHeader::size(frags.size())+1)*sizeof(int))/sizeof(int);
+  if ( m_memory.size() < evt_len ) {
+    m_memory.resize(evt_len+256); // Increase memmory size with some safety margin
+  }
+  h = (RawEventHeader*)&m_memory[0];
+  m_evdesc.setPartitionID(pid);
+  m_evdesc.setTriggerMask(mask);
+  m_evdesc.setEventType(EVENT_TYPE_EVENT);
+  m_evdesc.setHeader(h);
+  m_evdesc.setSize(evt_len);
+  m_evdesc.setMepBuffer(m_baseAddr);
+  m_sel->increaseEvtCount();
+	
+  h->setEventID(++m_evID);
+  h->setMEPID(ev->evID);
+  h->setDataStart(ev->begin);
+  h->setNumberOfFragments(frags.size());
+  h->setErrorMask(0);
+  h->setNumberOfMissing(0);
+  h->setOffsetOfMissing(0);
+  for(size_t j=0; j<frags.size(); ++j)  {
+    MEPFragment* f = frags[j];
+    long off =  long(long(f)-long(m_baseAddr));
+    h->setOffset(j, off);
+  }
+  for(int k=0, n=m_evdesc.numberOfFragments(); k<n; ++k)
+    decodeFragment(m_evdesc.fragment(k), m_banks);
+  m_events.erase(m_events.begin());
+  if ( m_events.empty() ) m_needFree = true;
+  return StatusCode::SUCCESS;
+}
+
+/// Convert standard descriptor event structure to banks
+StatusCode OnlineContext::convertDescriptor(int partID, const MBM::EventDesc& e)  {
+  m_evdesc.setPartitionID(partID);
+  m_evdesc.setTriggerMask(e.mask);
+  m_evdesc.setEventType(e.type);
+  m_evdesc.setHeader(e.data);
+  m_evdesc.setSize(e.len);
+  m_needFree = true;
+  //OnlineBaseEvtSelector__test::testExceptions();
+  m_evdesc.setMepBuffer(m_baseAddr);
+  m_sel->increaseEvtCount();
+  for(int i=0, n=m_evdesc.numberOfFragments(); i<n; ++i)
+    decodeFragment(m_evdesc.fragment(i), m_banks);
+  return StatusCode::SUCCESS;
 }
 
 OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc)
@@ -54,6 +154,7 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
   // Note: This is purely dummy! 
   // Only present for backwards compatibility with offline
   declareProperty("PrintFreq",m_printFreq = 100000);
+  declareProperty("Pause",m_gotoPause = false);
   m_isCancelled = false;
 }
 
@@ -117,6 +218,7 @@ StatusCode OnlineBaseEvtSelector::start()    {
 
 // IService implementation: event selector override: stop service
 StatusCode OnlineBaseEvtSelector::stop()    {
+  incidentSvc()->removeListener(this);
   return OnlineService::stop();
 }
 
@@ -207,6 +309,9 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
         m_isWaiting = false;
       }
       sc = pCtxt->receiveEvent();
+      if ( !sc.isSuccess() && m_gotoPause )   {
+	incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+      }
       return sc;
     }
   }
@@ -267,7 +372,7 @@ OnlineBaseEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
     }
     pA->setFileOffset(0);
     pAddr = pA;
-    m_context = pctxt;
+    m_context = const_cast<OnlineContext*>(pctxt);
     //return pA->data().first ? StatusCode::SUCCESS : StatusCode::FAILURE;
     return StatusCode::SUCCESS;
   }
