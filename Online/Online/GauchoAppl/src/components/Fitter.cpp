@@ -62,7 +62,7 @@ Fitter::Fitter(const std::string &  type, const std::string &  name, const IInte
   declareProperty("CounterTask",m_CntTask="LHCbA_AligWrk_00");
   m_Minuit = 0;
   IInterface *p=(IInterface*)parent;
-  StatusCode sc = p->queryInterface(IRunable::interfaceID(),(void**)(&m_parent));
+  StatusCode sc = p->queryInterface(IDumAligDrv::interfaceID(),(void**)(&m_parent));
   m_cntTask=0;
 }
 
