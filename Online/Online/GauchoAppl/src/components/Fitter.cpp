@@ -1,24 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Fitter.h"
-//#include "IDumAligDrv.h"
-//#include "GaudiKernel/SmartIF.h"
-//#include "GaudiKernel/SvcFactory.h"
-//#include "GaudiKernel/IIncidentSvc.h"
-//#include "GaudiKernel/IHistogramSvc.h"
-//
-//#include "GauchoAppl/HistAdder.h"
-//#include "GauchoAppl/CounterAdder.h"
-//#include "GauchoAppl/SaveTimer.h"
-//#include "GauchoAppl/AdderSys.h"
-//#include "Gaucho/Utilities.h"
-//#include "Gaucho/IGauchoMonitorSvc.h"
-//#include "Trending/ITrendingTool.h"
-//#include "Trending/ISimpleTrendWriter.h"
-//#include "OnlineBase/WT/wtdef.h"
 #include "Gaucho/CounterTask.h"
 #include "Gaucho/MonCounter.h"
-#include "/cvmfs/lhcb.cern.ch/lib/lcg/external/ROOT/5.32.02/x86_64-slc5-gcc46-opt/root/include/TMinuit.h"
+//#include "/cvmfs/lhcb.cern.ch/lib/lcg/external/ROOT/5.32.02/x86_64-slc5-gcc46-opt/root/include/TMinuit.h"
+#include "TMinuit.h"
 DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,Fitter)
 
 using namespace LHCb;
