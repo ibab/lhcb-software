@@ -3,14 +3,14 @@
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IToolSvc.h"
-#include "Gaucho/IGauchoMonitorSvc.h"
-#include "GaudiKernel/IRunable.h"
-#include "GaudiOnline/OnlineService.h"
-#include "GaudiKernel/IIncidentSvc.h"
+//#include "Gaucho/IGauchoMonitorSvc.h"
+//#include "GaudiKernel/IRunable.h"
+//#include "GaudiOnline/OnlineService.h"
+//#include "GaudiKernel/IIncidentSvc.h"
 #include "RTL/rtl.h"
-#include "Gaucho/CounterTask.h"
-#include "Gaucho/BRTL_Lock.h"
-#include "GaudiKernel/PropertyMgr.h"
+//#include "Gaucho/CounterTask.h"
+//#include "Gaucho/BRTL_Lock.h"
+//#include "GaudiKernel/PropertyMgr.h"
 #include "GaudiKernel/AlgTool.h"
 #include "IFitter.h"
 #include "IDumAligDrv.h"
@@ -19,6 +19,7 @@
 //class DimService;
 //class ISimpleTrendWriter;
 class TMinuit;
+class CounterTask;
 namespace LHCb
 {
   class DumAligDrv;
