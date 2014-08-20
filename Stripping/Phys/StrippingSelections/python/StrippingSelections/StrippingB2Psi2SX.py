@@ -30,7 +30,8 @@ __all__ = ('B2Psi2SXConf',
            'makeBs2Psi2SPhiJpsiPiPi',
            'makeBu2Psi2SKJpsiPiPi',
            'makeBd2Psi2SKstarJpsiPiPi',
-           'makeBd2Psi2SKsJpsiPiPi'
+           'makeBd2Psi2SKsJpsiPiPi',
+           'default_config'
            )
 
 
@@ -82,7 +83,12 @@ config_params = {'PionsTRCHI2DOF': 5,
                  'Ks_LinePostscale':1
                  }                                                   
 
-
+default_config = {
+    'NAME'              : 'BetaSPsi2S',
+    'WGs'               : ['B2CC'],
+    'BUILDERTYPE'       : 'Bs2Psi2SXConf',
+    'CONFIG'    : config_params,
+    'STREAMS' : {}}
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles

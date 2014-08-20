@@ -28,7 +28,8 @@ __all__ = ('Bs2Psi2SPhiMuMuConf',
            'makeBu2Psi2SKMuMu',
            'makeBd2Psi2SKstarMuMu',
            'makeBd2Psi2SKsMuMu',
-           'makeInclPsi2SToMuMu'
+           'makeInclPsi2SToMuMu',
+           'default_config'
            )
 
 config_params = {'muPID':0.,
@@ -101,7 +102,12 @@ config_params = {'muPID':0.,
 #                 'Ks_UnbiasedLinePostscale':1
                  }
 
-
+default_config = {
+    'NAME'              : 'BetaSPsi2SMuMu',
+    'WGs'               : ['B2CC'],
+    'BUILDERTYPE'       : 'Bs2Psi2SPhiMuMuConf',
+    'CONFIG'    : config_params,
+    'STREAMS' : {}}
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
