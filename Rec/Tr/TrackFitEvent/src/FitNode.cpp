@@ -499,7 +499,7 @@ namespace LHCb {
       const TrackVector&    X2  = s2->stateVector();
       const TrackSymMatrix& C2  = s2->covariance();
       
-      state = filteredState(Forward) ;
+      state.setZ( z() ) ; // the disadvantage of having this information more than once
       TrackVector&    X = state.stateVector() ; 
       TrackSymMatrix& C = state.covariance() ;
       
