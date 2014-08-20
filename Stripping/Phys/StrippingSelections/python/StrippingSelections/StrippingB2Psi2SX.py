@@ -86,7 +86,7 @@ config_params = {'PionsTRCHI2DOF': 5,
 default_config = {
     'NAME'              : 'BetaSPsi2S',
     'WGs'               : ['B2CC'],
-    'BUILDERTYPE'       : 'Bs2Psi2SXConf',
+    'BUILDERTYPE'       : 'B2Psi2SXConf',
     'CONFIG'    : config_params,
     'STREAMS' : {}}
 
