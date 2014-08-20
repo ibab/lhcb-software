@@ -1,5 +1,5 @@
-#ifndef ONLINE_GAUCHO_DUMALIGDRV_H
-#define ONLINE_GAUCHO_DUMALIGDRV_H
+#ifndef ONLINE_GAUCHO_DUMAlignDrv_H
+#define ONLINE_GAUCHO_DUMAlignDrv_H
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -17,11 +17,11 @@
 //class ISimpleTrendWriter;
 namespace LHCb
 {
-  class AligDrv: public extends2< OnlineService, IRunable, IAlignDrv>
+  class AlignDrv: public extends2< OnlineService, IRunable, IAlignDrv>
   {
     public:
-      AligDrv(const std::string& name, ISvcLocator* sl);
-      virtual ~AligDrv();
+      AlignDrv(const std::string& name, ISvcLocator* sl);
+      virtual ~AlignDrv();
       //IInterface pure virtual member functions
 //      virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
       virtual StatusCode start();
@@ -52,4 +52,4 @@ namespace LHCb
       IGauchoMonitorSvc *getMonSvc();
   };
 }
-#endif // ONLINE_GAUCHO_DUMALIGDRV_H
+#endif // ONLINE_GAUCHO_DUMAlignDrv_H

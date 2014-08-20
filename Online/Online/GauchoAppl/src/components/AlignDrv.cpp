@@ -18,12 +18,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "/cvmfs/lhcb.cern.ch/lib/lcg/external/ROOT/5.32.02/x86_64-slc5-gcc46-opt/root/include/TMinuit.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AligDrv)
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AlignDrv)
 
 using namespace LHCb;
-static AligDrv *DrvInstance;
+static AlignDrv *DrvInstance;
 
-void AligDrv::waitRunOnce()
+void AlignDrv::waitRunOnce()
 {
   while (1)
   {
@@ -35,29 +35,29 @@ void AligDrv::waitRunOnce()
     usleep(500000);
   }
 }
-void AligDrv::setRunOnce()
+void AlignDrv::setRunOnce()
 {
   m_runonce=true;
 }
 
 
-StatusCode AligDrv::pause()
+StatusCode AlignDrv::pause()
 {
   setRunOnce();
   return StatusCode::SUCCESS;
 }
-StatusCode AligDrv::start()
+StatusCode AlignDrv::start()
 {
   Service::start();
   m_fitter->i_start();
   return StatusCode::SUCCESS;
 }
-StatusCode AligDrv::stop()
+StatusCode AlignDrv::stop()
 {
   return StatusCode::SUCCESS;
 }
 
-StatusCode AligDrv::initialize()
+StatusCode AlignDrv::initialize()
 {
   StatusCode sc;
   sc = service(m_monitorSvcType,m_MonSvc,true);
@@ -79,7 +79,7 @@ StatusCode AligDrv::initialize()
   return StatusCode::SUCCESS;
 }
 
-void AligDrv::handle(const Incident& inc)
+void AlignDrv::handle(const Incident& inc)
 {
   if (inc.type() == "DAQ_PAUSE")
   {
@@ -88,23 +88,23 @@ void AligDrv::handle(const Incident& inc)
 
 }
 
-StatusCode AligDrv::finalize()
+StatusCode AlignDrv::finalize()
 {
   StatusCode sc;
   OnlineService::finalize();
   return StatusCode::SUCCESS;
 }
 
-StatusCode AligDrv::run()
+StatusCode AlignDrv::run()
 {
   return StatusCode::SUCCESS;
 }
 
-IGauchoMonitorSvc *AligDrv::getMonSvc()
+IGauchoMonitorSvc *AlignDrv::getMonSvc()
 {
   return this->m_MonSvc;
 }
-void AligDrv::writeReference()
+void AlignDrv::writeReference()
 {
   FILE *f;
   f = fopen(m_RefFileName.c_str(), "r+");
@@ -128,26 +128,26 @@ void AligDrv::writeReference()
 }
 
 
-AligDrv::AligDrv(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
+AlignDrv::AlignDrv(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCbA");
   m_runonce = false;
   DrvInstance = this;
 }
 
-AligDrv::~AligDrv()
+AlignDrv::~AlignDrv()
 {
 }
 
-void AligDrv::doContinue()
+void AlignDrv::doContinue()
 {
   incidentSvc()->fireIncident(Incident(name(),"DAQ_CONTINUE"));
 }
-void AligDrv::doStop()
+void AlignDrv::doStop()
 {
   incidentSvc()->fireIncident(Incident(name(),"DAQ_STOP"));
 }
-//StatusCode AligDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
+//StatusCode AlignDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
 //{
 //  if (IRunable::interfaceID().versionMatch(riid))
 //  {
@@ -155,9 +155,9 @@ void AligDrv::doStop()
 //    addRef();
 //    return StatusCode::SUCCESS;
 //  }
-//  else if (IAligDrv::interfaceID().versionMatch(riid))
+//  else if (IAlignDrv::interfaceID().versionMatch(riid))
 //  {
-//    *ppvIF = (IDumAligDrv*)this;
+//    *ppvIF = (IDumAlignDrv*)this;
 //    addRef();
 //    return StatusCode::SUCCESS;
 //  }
