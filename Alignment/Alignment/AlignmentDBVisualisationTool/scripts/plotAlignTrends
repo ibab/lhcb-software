@@ -9,7 +9,24 @@ import logging
 
 from optparse import OptionParser
 
-parser = OptionParser()
+class MyParser(OptionParser):
+    # override default epilog formatter because it strips newlines
+    def format_epilog(self, formatter):
+        return self.epilog
+
+parser = MyParser(epilog =
+                  """
+Enter a dbfile to plot the trends of the contained alignments, or enter a date range to
+plot the trends of the alignments in the CondDB using the --since and --until options.
+Specify a particular CondDB tag using the --dbTag option.
+
+Valid detector elements are
+Velo.[Halves, Modules, Sensors]
+  TT.[Layers, Modules, Sensors]
+  IT.[Boxes,  Layers,  Ladders, Sensors]
+  OT.[CFrameLayers, CFrames, Modules]
+""")
+
 parser.usage = "%prog [options] elements dofs [dbfile]"
 
 parser.add_option("-c", "--coordinateFrame", dest="coords", default="global", help="Make plots using local or global coordinates [default: %default]")
@@ -25,8 +42,9 @@ parser.add_option("--until",           dest="until",       default="2013-01-01",
                   help=("Endpoint of time trend [default: %default]. "
                         "Format: \"YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]\" "
                         "(if UTC is absent, timezone is used)")                )
+parser.add_option("--dbTag",            dest="dbTag",       default="cond-20130114", help="Tag used to connect to the CondDB [default: %default]")
 parser.add_option("--timezone",        dest="timezone",    default="CET",
-                  help="timezone used to parse since and until, and for the x axis [default: %default]")
+                  help="Timezone used to parse since and until, and for the x axis [default: %default]")
 parser.add_option("-v", "--verbose", action="store_true", dest="verbose", default=False, help="Turn on verbose messages")
 parser.add_option("-i", "--info", action="store_true", dest="info", default=False, help="Turn on info messages")
 
@@ -59,9 +77,10 @@ plotAlignmentParametersTimeSeries(
     , sliceConnectString=sliceConnectString
     , since=options.since
     , until=options.until
+    , timezone=options.timezone
     , refConnectString=refConnStr
     , outputdir=options.outDirName
-    , timezone=options.timezone
+    , defaultTag=options.dbTag
     , coordinateFrame=options.coords
     , addStats=True
     )

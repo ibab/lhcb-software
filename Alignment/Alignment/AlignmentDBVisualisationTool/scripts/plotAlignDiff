@@ -20,6 +20,11 @@ Enter each alignment as either an sqlite file or a date range for retrieving IOV
 Format date ranges as since,until[,CondDBtag] with CondDBtag optional.
 All IOVs in the date range will be plotted.
 
+Valid detector elements are
+Velo.[Halves, Modules, Sensors]
+  TT.[Layers, Modules, Sensors]
+  IT.[Boxes,  Layers,  Ladders, Sensors]
+  OT.[CFrameLayers, CFrames, Modules]
 """)
 
 parser.usage = "%prog [options] elements dofs alignment1 ..."
