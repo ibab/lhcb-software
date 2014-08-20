@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-20 - Ronan Wallace
+  - Updated StrippingDY2MuMu lines for "related info" testing.
+
 ! 2014-08-20 - Albert Puig
   - Added StrippingLb2L0Gamma lines with converted and unconverted photons.
 
