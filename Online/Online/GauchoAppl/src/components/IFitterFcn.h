@@ -18,7 +18,6 @@ namespace LHCb
       virtual void ReadParams()=0;
       virtual void PubResult(long reference)=0;
       virtual void i_run()=0;
-//      virtual void setParent(void*)=0;
   };
 }
 #endif /* IFITTERFCN_H_ */

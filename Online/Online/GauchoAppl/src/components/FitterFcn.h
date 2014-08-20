@@ -8,12 +8,12 @@
 #ifndef FITTERFCN_H_
 #define FITTERFCN_H_
 #include "GaudiKernel/AlgTool.h"
-#include "IFitterFcn.h"
+#include "IAlignUser.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
-#include "IDumAligWork.h"
+#include "IAlignSys.h"
 namespace LHCb
 {
-  class FitterFcn : public AlgTool, virtual public LHCb::IFitterFcn
+  class FitterFcn : public AlgTool, virtual public LHCb::IAlignFcn
   {
     public:
       std::string m_DataFileName;
@@ -25,7 +25,7 @@ namespace LHCb
       std::vector<double> m_params;
       std::string m_PartitionName;
       IGauchoMonitorSvc *m_MonSvc;
-      LHCb::IDumAligWork *m_Parent;
+      LHCb::IAlignWork *m_Parent;
       double m_result;
       void init();
       FitterFcn(const std::string &  type, const std::string &  name, const IInterface *  parent  );

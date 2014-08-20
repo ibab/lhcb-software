@@ -1,5 +1,5 @@
-#ifndef ONLINE_GAUCHO_DUMALIGWORK_H
-#define ONLINE_GAUCHO_DUMALIGWORK_H
+#ifndef ONLINE_GAUCHO_ALIGNWORK_H
+#define ONLINE_GAUCHO_ALIGNWORK_H
 
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IToolSvc.h"
@@ -7,16 +7,16 @@
 #include "GaudiOnline/OnlineService.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "RTL/rtl.h"
-#include "IFitterFcn.h"
-#include "IDumAligWork.h"
+#include "IAlignUser.h"
+#include "IAlignSys.h"
 
 namespace LHCb
 {
-  class DumAligWork: public extends2<OnlineService, IDumAligWork,IRunable>
+  class AlignWork: public extends2<OnlineService, IAlignWork,IRunable>
   {
     public:
-      DumAligWork(const std::string& name, ISvcLocator* sl);
-      virtual ~DumAligWork();
+      AlignWork(const std::string& name, ISvcLocator* sl);
+      virtual ~AlignWork();
       virtual StatusCode start();
       virtual StatusCode initialize();
       virtual StatusCode finalize();
@@ -27,7 +27,7 @@ namespace LHCb
       IGauchoMonitorSvc *m_MonSvc;
       IGauchoMonitorSvc *getMonSvc(){return m_MonSvc;};
       std::string getPartitionName(){return m_PartitionName;};
-      IFitterFcn * m_fitterFcn;
+      IAlignFcn * m_fitterFcn;
       void readReference();
       virtual void handle(const Incident& inc);
 //  unsigned long long m_prevupdate;
@@ -43,4 +43,4 @@ namespace LHCb
       IToolSvc *m_ToolSvc;
   };
 }
-#endif // ONLINE_GAUCHO_DUMALIGWORK_H
+#endif // ONLINE_GAUCHO_ALIGNWORK_H

@@ -5,8 +5,8 @@
 #include "GaudiKernel/IToolSvc.h"
 #include "RTL/rtl.h"
 #include "GaudiKernel/AlgTool.h"
-#include "IFitter.h"
-#include "IDumAligDrv.h"
+#include "IAlignUser.h"
+#include "IAlignSys.h"
 
 // Forward declarations
 //class DimService;
@@ -15,13 +15,13 @@ class TMinuit;
 class CounterTask;
 namespace LHCb
 {
-  class DumAligDrv;
-  class Fitter : public AlgTool, virtual public LHCb::IFitter
+//  class AlignDrv;
+  class Fitter : public AlgTool, virtual public LHCb::IAlignIterator
   {
     public:
       Fitter(const std::string &  type, const std::string &  name, const IInterface *  parent  );
       TMinuit *m_Minuit;
-      IDumAligDrv *m_parent;
+      IAlignDrv *m_parent;
 //      StatusCode init(std::string, std::string);
       StatusCode i_start();
       StatusCode i_run();

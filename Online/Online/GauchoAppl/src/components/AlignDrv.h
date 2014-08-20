@@ -10,18 +10,18 @@
 #include "RTL/rtl.h"
 #include "Gaucho/CounterTask.h"
 #include "Gaucho/BRTL_Lock.h"
-#include "IFitter.h"
-#include "IDumAligDrv.h"
+#include "IAlignUser.h"
+#include "IAlignSys.h"
 // Forward declarations
 //class DimService;
 //class ISimpleTrendWriter;
 namespace LHCb
 {
-  class DumAligDrv: public extends2< OnlineService, IRunable, IDumAligDrv>
+  class AligDrv: public extends2< OnlineService, IRunable, IAlignDrv>
   {
     public:
-      DumAligDrv(const std::string& name, ISvcLocator* sl);
-      virtual ~DumAligDrv();
+      AligDrv(const std::string& name, ISvcLocator* sl);
+      virtual ~AligDrv();
       //IInterface pure virtual member functions
 //      virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
       virtual StatusCode start();
@@ -43,7 +43,7 @@ namespace LHCb
 //      std::string m_CntTask;
       bool m_runonce;
       IGauchoMonitorSvc *m_MonSvc;
-      IFitter *m_fitter;
+      IAlignIterator *m_fitter;
       void writeReference();
       void doContinue();
       void doStop();

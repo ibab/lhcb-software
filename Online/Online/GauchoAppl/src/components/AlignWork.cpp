@@ -3,10 +3,10 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "Gaucho/Utilities.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
-#include "DumAligWork.h"
-#include "FitterFcn.h"
+#include "AlignWork.h"
+//#include "IAlignUser.h"
 
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DumAligWork)
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AlignWork)
 using namespace LHCb;
 
 //static DumAligWork *WorkInstance;
@@ -14,7 +14,7 @@ extern "C"
 {
   int WorkerThreadFunction(void *t)
   {
-    LHCb::DumAligWork* WorkInstance = (LHCb::DumAligWork*)t;
+    LHCb::AlignWork* WorkInstance = (LHCb::AlignWork*)t;
     int run_count = 0;
     while (1)
     {
@@ -28,11 +28,11 @@ extern "C"
   }
 };
 
-StatusCode LHCb::DumAligWork::stop()
+StatusCode LHCb::AlignWork::stop()
 {
   return StatusCode::SUCCESS;
 }
-void LHCb::DumAligWork::waitRunOnce()
+void LHCb::AlignWork::waitRunOnce()
 {
   while (1)
   {
@@ -44,22 +44,22 @@ void LHCb::DumAligWork::waitRunOnce()
     usleep(500000);
   }
 }
-void LHCb::DumAligWork::setRunOnce()
+void LHCb::AlignWork::setRunOnce()
 {
   m_runonce=true;
 }
-StatusCode LHCb::DumAligWork::i_continue()
+StatusCode LHCb::AlignWork::i_continue()
 {
   setRunOnce();
   return StatusCode::SUCCESS;
 }
-StatusCode LHCb::DumAligWork::start()
+StatusCode LHCb::AlignWork::start()
 {
   OnlineService::start();
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DumAligWork::initialize()
+StatusCode LHCb::AlignWork::initialize()
 {
   OnlineService::initialize();
   m_incidentSvc = incidentSvc();
@@ -75,7 +75,7 @@ StatusCode LHCb::DumAligWork::initialize()
   return StatusCode::SUCCESS;
 }
 
-void LHCb::DumAligWork::handle(const Incident& inc)
+void LHCb::AlignWork::handle(const Incident& inc)
 {
   if (inc.type() == "APP_RUNNING")
   {
@@ -87,7 +87,7 @@ void LHCb::DumAligWork::handle(const Incident& inc)
 
 }
 
-StatusCode LHCb::DumAligWork::finalize()
+StatusCode LHCb::AlignWork::finalize()
 {
   StatusCode sc;
   if (m_thread != 0)
@@ -98,7 +98,7 @@ StatusCode LHCb::DumAligWork::finalize()
   return StatusCode::SUCCESS;
 }
 
-StatusCode LHCb::DumAligWork::i_run()
+StatusCode LHCb::AlignWork::i_run()
 {
   readReference();
   m_fitterFcn->i_run();
@@ -109,14 +109,14 @@ StatusCode LHCb::DumAligWork::i_run()
   m_incidentSvc->fireIncident(Incident(name(),"DAQ_PAUSE"));
   return StatusCode::SUCCESS;
 }
-StatusCode LHCb::DumAligWork::run()
+StatusCode LHCb::AlignWork::run()
 {
   setRunOnce();
   return StatusCode::SUCCESS;
 }
 
 
-LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitterFcn(0),m_Reference(0)
+LHCb::AlignWork::AlignWork(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitterFcn(0),m_Reference(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
@@ -124,10 +124,10 @@ LHCb::DumAligWork::DumAligWork(const std::string& name, ISvcLocator* sl) : base_
   m_runonce = false;
   service("MonitorSvc",m_MonSvc,true);
 }
-LHCb::DumAligWork::~DumAligWork()
+LHCb::AlignWork::~AlignWork()
 {
 }
-void LHCb::DumAligWork::readReference()
+void LHCb::AlignWork::readReference()
 {
   FILE *f;
   f = fopen(m_RefFileName.c_str(),"r");

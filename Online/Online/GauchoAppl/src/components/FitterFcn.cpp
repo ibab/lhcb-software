@@ -7,7 +7,7 @@
 #include "FitterFcn.h"
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/StatusCode.h"
-#include "IDumAligWork.h"
+#include "IAlignSys.h"
 using namespace LHCb;
 //DECLARE_COMPONENT(LHCb::FitterFcn)
 
@@ -20,7 +20,7 @@ FitterFcn::FitterFcn(const std::string &  type, const std::string &  name, const
   declareProperty("DataFileName",m_DataFileName);
   declareProperty("PartitionName",m_PartitionName);
   IInterface *p=(IInterface*)parent;
-  StatusCode sc = p->queryInterface(IDumAligWork::interfaceID(),(void**)(&m_Parent));
+  StatusCode sc = p->queryInterface(IAlignWork::interfaceID(),(void**)(&m_Parent));
 }
 FitterFcn::~FitterFcn()
 {
@@ -134,8 +134,8 @@ void FitterFcn::i_run()
 }
 StatusCode FitterFcn::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
-  if (LHCb::IFitterFcn::interfaceID().versionMatch(riid))  {
-    *ppvIF = (IFitterFcn*) this;
+  if (LHCb::IAlignFcn::interfaceID().versionMatch(riid))  {
+    *ppvIF = (IAlignFcn*) this;
     addRef();
     return StatusCode::SUCCESS;
   }

@@ -47,7 +47,7 @@ Fitter::Fitter(const std::string &  type, const std::string &  name, const IInte
   declareProperty("CounterTask",m_CntTask="LHCbA_AligWrk_00");
   m_Minuit = 0;
   IInterface *p=(IInterface*)parent;
-  StatusCode sc = p->queryInterface(IDumAligDrv::interfaceID(),(void**)(&m_parent));
+  StatusCode sc = p->queryInterface(IAlignDrv::interfaceID(),(void**)(&m_parent));
   m_cntTask=0;
 }
 
@@ -165,8 +165,8 @@ void Fitter::read_params(int &npar, std::vector<double> &params)
 }
 StatusCode Fitter::queryInterface(const InterfaceID& riid, void** ppvIF)
 {
-  if (LHCb::IFitter::interfaceID().versionMatch(riid))  {
-    *ppvIF = (IFitter*) this;
+  if (LHCb::IAlignIterator::interfaceID().versionMatch(riid))  {
+    *ppvIF = (IAlignIterator*) this;
     addRef();
     return StatusCode::SUCCESS;
   }

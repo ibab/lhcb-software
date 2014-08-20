@@ -1,29 +1,29 @@
-#include "DumAligDrv.h"
-#include "GaudiKernel/SmartIF.h"
-#include "GaudiKernel/SvcFactory.h"
-#include "GaudiKernel/IIncidentSvc.h"
-#include "GaudiKernel/IHistogramSvc.h"
-
-#include "GauchoAppl/HistAdder.h"
-#include "GauchoAppl/CounterAdder.h"
-#include "GauchoAppl/SaveTimer.h"
-#include "GauchoAppl/AdderSys.h"
-#include "Gaucho/Utilities.h"
-#include "Gaucho/IGauchoMonitorSvc.h"
-#include "Gaucho/MonCounter.h"
-#include "Trending/ITrendingTool.h"
-#include "Trending/ISimpleTrendWriter.h"
-#include "OnlineBase/WT/wtdef.h"
+#include "AlignDrv.h"
+//#include "GaudiKernel/SmartIF.h"
+//#include "GaudiKernel/SvcFactory.h"
+//#include "GaudiKernel/IIncidentSvc.h"
+//#include "GaudiKernel/IHistogramSvc.h"
+//
+//#include "GauchoAppl/HistAdder.h"
+//#include "GauchoAppl/CounterAdder.h"
+//#include "GauchoAppl/SaveTimer.h"
+//#include "GauchoAppl/AdderSys.h"
+//#include "Gaucho/Utilities.h"
+//#include "Gaucho/IGauchoMonitorSvc.h"
+//#include "Gaucho/MonCounter.h"
+//#include "Trending/ITrendingTool.h"
+//#include "Trending/ISimpleTrendWriter.h"
+//#include "OnlineBase/WT/wtdef.h"
 //#include "OnlineBase/WT/wt_facilities.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "/cvmfs/lhcb.cern.ch/lib/lcg/external/ROOT/5.32.02/x86_64-slc5-gcc46-opt/root/include/TMinuit.h"
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,DumAligDrv)
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AligDrv)
 
 using namespace LHCb;
-static DumAligDrv *DrvInstance;
+static AligDrv *DrvInstance;
 
-void DumAligDrv::waitRunOnce()
+void AligDrv::waitRunOnce()
 {
   while (1)
   {
@@ -35,29 +35,29 @@ void DumAligDrv::waitRunOnce()
     usleep(500000);
   }
 }
-void DumAligDrv::setRunOnce()
+void AligDrv::setRunOnce()
 {
   m_runonce=true;
 }
 
 
-StatusCode DumAligDrv::pause()
+StatusCode AligDrv::pause()
 {
   setRunOnce();
   return StatusCode::SUCCESS;
 }
-StatusCode DumAligDrv::start()
+StatusCode AligDrv::start()
 {
   Service::start();
   m_fitter->i_start();
   return StatusCode::SUCCESS;
 }
-StatusCode DumAligDrv::stop()
+StatusCode AligDrv::stop()
 {
   return StatusCode::SUCCESS;
 }
 
-StatusCode DumAligDrv::initialize()
+StatusCode AligDrv::initialize()
 {
   StatusCode sc;
   sc = service(m_monitorSvcType,m_MonSvc,true);
@@ -79,7 +79,7 @@ StatusCode DumAligDrv::initialize()
   return StatusCode::SUCCESS;
 }
 
-void DumAligDrv::handle(const Incident& inc)
+void AligDrv::handle(const Incident& inc)
 {
   if (inc.type() == "DAQ_PAUSE")
   {
@@ -88,23 +88,23 @@ void DumAligDrv::handle(const Incident& inc)
 
 }
 
-StatusCode DumAligDrv::finalize()
+StatusCode AligDrv::finalize()
 {
   StatusCode sc;
   OnlineService::finalize();
   return StatusCode::SUCCESS;
 }
 
-StatusCode DumAligDrv::run()
+StatusCode AligDrv::run()
 {
   return StatusCode::SUCCESS;
 }
 
-IGauchoMonitorSvc *DumAligDrv::getMonSvc()
+IGauchoMonitorSvc *AligDrv::getMonSvc()
 {
   return this->m_MonSvc;
 }
-void DumAligDrv::writeReference()
+void AligDrv::writeReference()
 {
   FILE *f;
   f = fopen(m_RefFileName.c_str(), "r+");
@@ -128,26 +128,26 @@ void DumAligDrv::writeReference()
 }
 
 
-DumAligDrv::DumAligDrv(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
+AligDrv::AligDrv(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCbA");
   m_runonce = false;
   DrvInstance = this;
 }
 
-DumAligDrv::~DumAligDrv()
+AligDrv::~AligDrv()
 {
 }
 
-void DumAligDrv::doContinue()
+void AligDrv::doContinue()
 {
   incidentSvc()->fireIncident(Incident(name(),"DAQ_CONTINUE"));
 }
-void DumAligDrv::doStop()
+void AligDrv::doStop()
 {
   incidentSvc()->fireIncident(Incident(name(),"DAQ_STOP"));
 }
-//StatusCode DumAligDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
+//StatusCode AligDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
 //{
 //  if (IRunable::interfaceID().versionMatch(riid))
 //  {
@@ -155,7 +155,7 @@ void DumAligDrv::doStop()
 //    addRef();
 //    return StatusCode::SUCCESS;
 //  }
-//  else if (IDumAligDrv::interfaceID().versionMatch(riid))
+//  else if (IAligDrv::interfaceID().versionMatch(riid))
 //  {
 //    *ppvIF = (IDumAligDrv*)this;
 //    addRef();
