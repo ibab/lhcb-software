@@ -35,7 +35,7 @@ from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 
 # Configure the stripping using the same options as in Reco06-Stripping10
-sc = StrippingConf( Streams = [ Charm_stream],
+sc = StrippingConf( Streams = [Charm_stream],
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents )
@@ -56,6 +56,7 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 
 from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
+sr.OnlyPositive = False
 
 from Configurables import AlgorithmCorrelationsAlg
 ac = AlgorithmCorrelationsAlg(Algorithms = sc.selections())
@@ -66,6 +67,7 @@ CondDB().IgnoreHeartBeat = True
 from Configurables import FilterDesktop
 
 StdParticles = []
+StdParticles.append("Phys/StdNoPIDsUpPions")
 StdParticles.append("Phys/StdNoPIDsProtons")
 StdParticles.append("Phys/StdNoPIDsPions")
 StdParticles.append("Phys/StdNoPIDsKaons")

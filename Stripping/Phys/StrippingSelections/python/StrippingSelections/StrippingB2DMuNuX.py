@@ -4,11 +4,10 @@ __version__ = '$Revision: 4.0 $'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdAllNoPIDsPions, StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdNoPIDsUpPions
-from Configurables import ConjugateNeutralPID, FitDecayTrees
+from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions
 
 __all__ = ('B2DMuNuXAllLinesConf',
            'makeb2DMuX',
@@ -20,36 +19,32 @@ __all__ = ('B2DMuNuXAllLinesConf',
 
 confdict = {
     ##### global settings
-    "prescales" : {"b2DsPi_PhiPi_fakes":0.5}
+    "prescales"     : {"b2DsPi_PhiPi_fakes":0.1}
     ,"GEC_nLongTrk" : 250 # adimensional
     ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0} 
-    ,"HLT_FILTER" : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision')"
+    ,"HLT_FILTER"   : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision')"
     ##### daughter particles
-    ,"TRGHOSTPROB"   : 0.5  # adimensional
-    ,"TRCHI2"        : 4    # adimensional
-    ,"MuonGHOSTPROB" : 0.5  # adimensional
-    ,"MINIPCHI2"     : 4.0  # adimensiional
-    ,"ProtonPIDp"    : 0.0  # adimensiional 
-    ,"KaonPIDK"      : -5.0 # adimensiional ## loose
-    ,"PionPIDK"      : 20.0 # adimensiional
-    ,"MuonPIDmu"     : 0.0  # adimensiional
-    ,"MuonIPCHI2"    : 4.00 # adimensiional
-    ,"MuonPT"        : 800.0  # MeV
-    ,"HadronPT"      : 250.0  # MeV
-    ,"FakeMuonPT"    : 1500.0  # MeV
-    ,"FakeMuonIPCHI2": 25 # adimensiional
-    ,"MuonP"         : 6.0  # GeV
-    ,"HadronP"       : 2.0  # GeV
-    ,"ProtonP"       : 9.0  # GeV
-    ,"FakeMuonP"     : 6.0    # GeV
+    ,"TRGHOSTPROB"   : 0.5   # adimensional
+    ,"TRCHI2"        : 4     # adimensional
+    ,"MuonGHOSTPROB" : 0.5   # adimensional
+    ,"MINIPCHI2"     : 4.0   # adimensiional
+    ,"ProtonPIDp"    : 0.0   # adimensiional 
+    ,"KaonPIDK"      : -5.0  # adimensiional
+    ,"PionPIDK"      : 20.0  # adimensiional
+    ,"MuonPIDmu"     : 0.0   # adimensiional
+    ,"MuonIPCHI2"    : 4.00  # adimensiional
+    ,"MuonPT"        : 800.0 # MeV
+    ,"HadronPT"      : 250.0 # MeV
+    ,"MuonP"         : 6.0   # GeV
+    ,"HadronP"       : 2.0   # GeV
+    ,"ProtonP"       : 9.0   # GeV
     ###### charm combination
-    ,"D_DIRA"        : 0.99   # adimensiional
+    ,"D_BPVDIRA"     : 0.99  # adimensiional
     ,"D_FDCHI2"      : 25.0  # adimensiional
-    ,"D_MassWin"     : 80.0   # MeV
+    ,"D_MassWin"     : 80.0  # MeV
     ,"D_AMassWin"    : 90.0  # MeV
-    ,"D_MINIP"       : 7.4    #mm
-    ,"D_VCHI2DOF"    : 6.0    # adimensiional
-    ,"D_DocaChi2Max"  : 20     #adimensiional
+    ,"D_VCHI2DOF"    : 6.0   # adimensiional
+    ,"D_DocaChi2Max" : 20   # adimensiional
     ###### D-mu combination
     ,"B_DIRA"         : 0.999  #adimensiional
     ,"BVCHI2DOF"      : 6.0    # adimensiional
@@ -81,13 +76,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"MuonIPCHI2"    
         ,"MuonPT"        
         ,"HadronPT"
-        ,"FakeMuonPT" 
-        ,"FakeMuonIPCHI2"
-        ,"D_DIRA"        
+        ,"D_BPVDIRA"        
         ,"D_FDCHI2"      
         ,"D_MassWin"     
         ,"D_AMassWin"    
-        ,"D_MINIP"          
         ,"D_VCHI2DOF"    
         ,"MuonPIDmu"         
         ,"B_DIRA"         
@@ -99,7 +91,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"Dstar_SoftPion_PT" 
         ,"Dstar_wideDMCutLower" 
         ,"Dstar_wideDMCutUpper" 
-        ,"FakeMuonP"
         ,"MuonP"
         ,"HadronP"
         ,"ProtonP"
@@ -118,46 +109,37 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
 
         ####################### BASIC FINAL STATE PARTICLE SELECTIONS ##########################
         
+        self.HadronCuts = "(P>%(HadronP)s*GeV) & (PT > %(HadronPT)s *MeV)"\
+            "& (TRCHI2DOF < %(TRCHI2)s)"\
+            "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
+            "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)" % config
+      
+        self.MuonTrackCuts = "(PT > %(MuonPT)s *MeV) & (P> %(MuonP)s*GeV)"\
+            "& (TRCHI2DOF < %(TRCHI2)s)"\
+            "& (TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
+            "& (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s)" %config
+        
         self.selmuon = Selection("Mufor"+name,
-                                 Algorithm=FilterDesktop(Code="(PT > %(MuonPT)s *MeV) & (P> %(MuonP)s*GeV)"\
-                                                             "& (TRCHI2DOF < %(TRCHI2)s)"\
-                                                             "&(TRGHOSTPROB < %(MuonGHOSTPROB)s)"\
-                                                             "& (MIPCHI2DV(PRIMARY)> %(MuonIPCHI2)s) & (PIDmu > %(MuonPIDmu)s)" % config),
+                                 Algorithm=FilterDesktop(Code=self.MuonTrackCuts + " & (PIDmu > %(MuonPIDmu)s)" % config), 
                                  RequiredSelections = [StdLooseMuons])
         
-        self.selmuonHlt1TOS = TOSFilter( "BSelFor"+name+"TOS",
-                                         self.selmuon,
-                                         {'Hlt1.*TrackMuon.*Decision%TOS':0})
+        self.selPionFakes = Selection( "FakeMufor" + name,
+                                       Algorithm = FilterDesktop(Code = self.MuonTrackCuts + " & (INMUON) & (PIDmu < %(MuonPIDmu)s)" % config),  
+                                       RequiredSelections = [StdLoosePions])
         
         self.selKaon = Selection( "Kfor" + name,
-        Algorithm = FilterDesktop(Code="(P>%(HadronP)s*GeV) & (PT > %(HadronPT)s *MeV)"\
-                                      "& (TRCHI2DOF < %(TRCHI2)s)"\
-                                      "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
-                                      "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK> %(KaonPIDK)s)" % config),
-        RequiredSelections = [StdLooseKaons])
+                                  Algorithm = FilterDesktop(Code=self.HadronCuts + " & (PIDK> %(KaonPIDK)s)" % config), 
+                                  RequiredSelections = [StdLooseKaons])
         
         self.selPion = Selection( "Pifor" + name,
-                                  Algorithm = FilterDesktop(Code="(P>%(HadronP)s*GeV) & (PT > %(HadronPT)s *MeV)"\
-                                                                "& (TRCHI2DOF < %(TRCHI2)s)"\
-                                                                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
-                                                                "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s) &  (PIDK< %(PionPIDK)s)" % config),                            
+                                  Algorithm = FilterDesktop(Code=self.HadronCuts + " & (PIDK< %(PionPIDK)s)" % config),
                                   RequiredSelections = [StdLoosePions])
-
+        
         self.selProton = Selection( "ProtonsFor" + name,
-                                    Algorithm = FilterDesktop(Code="(P>%(ProtonP)s*GeV) & (PT > %(HadronPT)s *MeV)"\
-                                                                  "& (TRCHI2DOF < %(TRCHI2)s)"\
-                                                                  "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
-                                                                  "& (MIPCHI2DV(PRIMARY)> %(MINIPCHI2)s)"\
-                                                                  "& (PIDp> %(ProtonPIDp)s) & (PIDp-PIDK>1.0e-10)" % config),
+                                    Algorithm = FilterDesktop(Code=self.HadronCuts + " & (P>%(ProtonP)s*GeV) & (PIDp > %(ProtonPIDp)s)" % config),
                                     RequiredSelections = [StdLooseProtons])
         
-        self.selPionFakes = Selection( "Pion_fakes_for" + name,
-                                       Algorithm = FilterDesktop(Code = "(P>%(FakeMuonP)s*GeV) & (PT > %(FakeMuonPT)s*MeV)"\
-                                                                     "& (TRCHI2DOF < %(TRCHI2)s)"\
-                                                                     "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
-                                                                     "& (INMUON) & (MIPCHI2DV(PRIMARY)> %(FakeMuonIPCHI2)s) & (PIDmu < %(MuonPIDmu)s)" % config),
-                                       RequiredSelections = [StdLoosePions])
-
+        
         ####################### D0 -> HH LINES (inc D*->D0pi) ###############################
         
         # comments
@@ -165,13 +147,12 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         D02HH_CONFIG = config.copy()
         D02HH_CONFIG["B_D_DZ"] = -9999
         D02HH_CONFIG["CharmDaugCuts"] = {"K+":"(PIDK > 4) & (PT > 300*MeV)",
-                                         "pi+":"(PIDK < 4) & (PT > 300*MeV)"}
+                                         "pi+":"(PIDK < 10) & (PT > 300*MeV)"}
         D02HH_CONFIG["ExtraMuonCuts"] = "(PT>1.2*GeV) & (MIPCHI2DV(PRIMARY)> 9.0)" % config 
         D02HH_CONFIG["CharmComboCuts"] = "(ADAMASS('D0') < %(D_AMassWin)s *MeV)"\
             "& (ACHILD(PT,1)+ACHILD(PT,2) > 1400.*MeV) & (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % config
-        D02HH_CONFIG["CharmMotherCuts"] = "(SUMTREE( PT,  ISBASIC )>1400.*MeV)"\
-            "& (ADMASS('D0') < %(D_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
-            "& (BPVVDCHI2 > %(D_FDCHI2)s) &  (BPVDIRA> %(D_DIRA)s)"  % config
+        D02HH_CONFIG["CharmMotherCuts"] = "(ADMASS('D0') < %(D_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
+            "& (BPVVDCHI2 > %(D_FDCHI2)s) &  (BPVDIRA> %(D_BPVDIRA)s)"  % config
         
         self.b2D0MuXLine = makeb2DMuXNEW(name,
                                          'b2D0MuX',
@@ -179,20 +160,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          ['[D0 -> K- pi+]cc'],
                                          D02HH_CONFIG,
                                          [self.selKaon, self.selPion],self.selmuon)
-        
-        self.b2DstarMuXLine = makeb2DMuXNEW(name,
-                                            'b2DstarMuX',
-                                            ['[B~0 -> D*(2010)+ mu-]cc','[B~0 -> D*(2010)- mu+]cc'],
-                                            ['[D0 -> K- pi+]cc'],
-                                            D02HH_CONFIG,
-                                            [self.selKaon, self.selPion],self.selmuon)
-        
-        self.b2D0MuXDCSLine = makeb2DMuXNEW(name,
-                                            'b2D0MuXDCS',
-                                            ['[B+ -> D0 mu+]cc'],
-                                            ['[D0 -> K- pi+]cc'],
-                                            D02HH_CONFIG,
-                                            [self.selKaon, self.selPion],self.selmuon)
         
         self.b2D0MuXKKLine = makeb2DMuXNEW(name,
                                            'b2D0MuXKK',
@@ -209,50 +176,9 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                              [self.selPion],self.selmuon)
         
         self.registerLine(self.b2D0MuXLine)        
-        self.registerLine(self.b2D0MuXDCSLine)        
         self.registerLine(self.b2D0MuXKKLine)        
         self.registerLine(self.b2D0MuXpipiLine)        
-        
-        ####################### D0 -> HHHH LINES (inc D*->D0pi) ###############################
-        
-        # comments: try to improve the efficiency of this line a lot
-        D02HHHH_CONFIG = config.copy()
-        D02HHHH_CONFIG["B_D_DZ"] = -0.2
-        #D02HHHH_CONFIG["D_MassWin"] = 65.
-        #D02HHHH_CONFIG["D_AMassWin"] = 70.
-        D02HHHH_CONFIG["ExtraMuonCuts"] = "(PT>1.5*GeV) & (MIPCHI2DV(PRIMARY)> 25.0)" % D02HHHH_CONFIG 
-        D02HHHH_CONFIG["CharmComboCuts"] =  "(ADAMASS('D0') < %(D_AMassWin)s *MeV)"\
-            "& (APT > 2500 *MeV)"\
-            "& (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % D02HHHH_CONFIG
-        D02HHHH_CONFIG["CharmMotherCuts"] = "(ADMASS('D0') < %(D_MassWin)s *MeV)"\
-            " & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
-            " & (PT > 2500 *MeV)"\
-            " & (BPVVDCHI2 > %(D_FDCHI2)s) &  (BPVDIRA> %(D_DIRA)s)"  % D02HHHH_CONFIG
-        self.b2D0MuXK3PiLine = makeb2DMuXNEW(name,
-                                             'b2D0MuXK3Pi',
-                                             ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
-                                             [ '[D0 -> K- pi+ pi- pi+]cc' ],
-                                             D02HHHH_CONFIG,
-                                             [self.selKaon, self.selPion],self.selmuonHlt1TOS)
-
-        self.b2D0MuX2K2PiLine = makeb2DMuXNEW(name,
-                                              'b2D0MuX2K2Pi',
-                                              ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
-                                              [ '[D0 -> K- K+ pi- pi+]cc' ],
-                                              D02HHHH_CONFIG,
-                                              [self.selKaon, self.selPion],self.selmuonHlt1TOS)
-        
-        self.b2D0MuX3KPiLine = makeb2DMuXNEW(name,
-                                              'b2D0MuX3KPi',
-                                              ['[B- -> D0 mu-]cc','[B+ -> D0 mu+]cc'],
-                                              [ '[D0 -> K- K+ K- pi+]cc' ],
-                                              D02HHHH_CONFIG,
-                                             [self.selKaon, self.selPion],self.selmuonHlt1TOS)
-        
-        self.registerLine(self.b2D0MuXK3PiLine)        
-        self.registerLine(self.b2D0MuX2K2PiLine)        
-        self.registerLine(self.b2D0MuX3KPiLine)        
-        
+                
         ####################### D+ -> HHH LINES ###############################
         D2HHH_CONFIG = config.copy()
         D2HHH_CONFIG["B_D_DZ"] = -0.1
@@ -265,14 +191,13 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         D2HHH_CONFIG["ExtraMuonCuts"] = "(MIPCHI2DV(PRIMARY)> 9) & (PT > 1000*MeV)"
         D2HHH_CONFIG["CharmComboCuts"] = "(DAMASS('D_s+') < %(D_AMassWin)s *MeV) & (DAMASS('D+')> -%(D_AMassWin)s *MeV)"\
             "& (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > 1800.*MeV) & (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % config
-        D2HHH_CONFIG["CharmMotherCuts"] = "(SUMTREE( PT,  ISBASIC )>1800.*MeV)"\
-            "& (DMASS('D_s+') < %(D_MassWin)s *MeV) & (DMASS('D+')> -%(D_AMassWin)s *MeV)"\
+        D2HHH_CONFIG["CharmMotherCuts"] = "(DMASS('D_s+') < %(D_MassWin)s *MeV) & (DMASS('D+')> -%(D_AMassWin)s *MeV)"\
             "& (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) & (BPVVDCHI2 > %(D_FDCHI2)s)" % config
         
+        ### D+ -> K- pi+ pi+
         D2HHH_CONFIG_K2Pi = D2HHH_CONFIG.copy()
-        ### only interested in the D+
-        D2HHH_CONFIG_K2Pi["CharmComboCuts"] += "& (ADAMASS('D+') < %(D_AMassWin)s *MeV)" %D2HHH_CONFIG_K2Pi
-        D2HHH_CONFIG_K2Pi["CharmMotherCuts"] += "& (ADMASS('D+') < %(D_MassWin)s *MeV)" %D2HHH_CONFIG_K2Pi
+        D2HHH_CONFIG_K2Pi["CharmComboCuts"] += "& (ADAMASS('D+') < %(D_AMassWin)s *MeV)" % config
+        D2HHH_CONFIG_K2Pi["CharmMotherCuts"] += "& (ADMASS('D+') < %(D_MassWin)s *MeV)" % config
         self.b2DpMuXLine = makeb2DMuXNEW(name,
                                          'b2DpMuX',
                                          [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
@@ -280,6 +205,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          D2HHH_CONFIG_K2Pi,
                                          [self.selKaon, self.selPion],self.selmuon)
         
+        ### D(s)+ -> K+ K- pi+
         D2HHH_CONFIG_KKPi = D2HHH_CONFIG.copy()
         self.b2DsMuXLine = makeb2DMuXNEW(name,
                                          'b2DsMuX',
@@ -288,8 +214,14 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          D2HHH_CONFIG,
                                          [self.selKaon, self.selPion],self.selmuon)
         
+        ### Ds+ -> pi+ pi- pi+
         D2HHH_CONFIG_3Pi = D2HHH_CONFIG.copy()
         D2HHH_CONFIG_3Pi["CharmDaugCuts"] = {"pi+":"(PIDK < 4) & (PT > 380*MeV) & (MIPCHI2DV(PRIMARY)> 9)"}
+        D2HHH_CONFIG_3Pi["BMassMin"] = 2.7 # GeV
+        D2HHH_CONFIG_3Pi["BMassMax"] = 5.3 # GeV
+        D2HHH_CONFIG_3Pi["B_D_DZ"]   = 0.05 #mm
+        D2HHH_CONFIG_3Pi["CharmComboCuts"] += "& (ADAMASS('D+') < %(D_AMassWin)s *MeV)" % config
+        D2HHH_CONFIG_3Pi["CharmMotherCuts"] += "& (ADMASS('D+') < %(D_MassWin)s *MeV)" % config
         self.b2Ds3PiMuXLine = makeb2DMuXNEW(name,
                                             'b2Ds3PiMuX',
                                             [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
@@ -297,6 +229,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                             D2HHH_CONFIG,
                                             [self.selPion],self.selmuon)
         
+        ### D(s)+ -> phi(KK)pi
         D2HHH_CONFIG_PhiPi = D2HHH_CONFIG.copy()
         D2HHH_CONFIG_PhiPi["CharmExtraComboCuts"]  = "& (AM12 > (%(PhiMassMin)s - 10) *MeV) & (AM12 < (%(PhiMassMax)s + 10) *MeV)" % D2HHH_CONFIG
         D2HHH_CONFIG_PhiPi["CharmExtraMotherCuts"] = "& (M12 > %(PhiMassMin)s *MeV) & (M12 < %(PhiMassMax)s *MeV)" % D2HHH_CONFIG
@@ -308,7 +241,8 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                               [ '[D+ -> K+ K- pi+]cc' ],
                                               D2HHH_CONFIG_PhiPi,
                                               [self.selKaon, self.selPion],self.selmuon)
-        
+
+        ### D(s)+ -> K*(K-pi+)K+
         D2HHH_CONFIG_KStarK = D2HHH_CONFIG.copy()
         D2HHH_CONFIG_KStarK["CharmExtraComboCuts"]  = "& (AM23 > (%(KStarMassMin)s - 10) *MeV) & (AM23 < (%(KStarMassMax)s + 10) *MeV)" % D2HHH_CONFIG
         D2HHH_CONFIG_KStarK["CharmExtraMotherCuts"] = "& (M23 > %(KStarMassMin)s *MeV) & (M23 < %(KStarMassMax)s *MeV)" % D2HHH_CONFIG
@@ -319,17 +253,8 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                                D2HHH_CONFIG_KStarK,
                                                [self.selKaon, self.selPion],self.selmuon)
         
-        D2HHH_CONFIG_KKK = D2HHH_CONFIG.copy()
-        D2HHH_CONFIG_KKK["B_D_DZ"] = -9999 # since for mass measurements
-        self.b2DsMuXKKKLine = makeb2DMuXNEW(name,
-                                            'b2DsMuXKKK',
-                                            [ '[B0 -> D- mu+]cc', '[B0 -> D- mu-]cc' ],
-                                            [ '[D+ -> K+ K- K+]cc' ],
-                                            D2HHH_CONFIG,
-                                            [self.selKaon],self.selmuon)
-        
+        ### D(s)+ -> phi(KK)pi with fake muon
         D2HHH_CONFIG_PhiPiFakes = D2HHH_CONFIG_PhiPi.copy()
-        ## only consider the D_s+ mass region.
         D2HHH_CONFIG_PhiPiFakes["CharmExtraComboCuts"]  = "& (ADAMASS('D_s+') < %(D_AMassWin)s*MeV)" %D2HHH_CONFIG_PhiPiFakes
         D2HHH_CONFIG_PhiPiFakes["CharmExtraMotherCuts"] = "& (ADMASS('D_s+') < %(D_MassWin)s*MeV)" %D2HHH_CONFIG_PhiPiFakes
         self.b2DsPhiPiMuXFakesLine = makeb2DMuXNEW(name,
@@ -345,74 +270,6 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         self.registerLine(self.b2DsPhiPiMuXLine)   
         self.registerLine(self.b2DsPhiPiMuXFakesLine)   
         self.registerLine(self.b2Ds3PiMuXLine)        
-        self.registerLine(self.b2DsMuXKKKLine)        
-        
-        ####################### D+ -> KS0H LINES ###############################
-        
-        #@@@@@@@@@@@@@@@@@@@ KS selections @@@@@@@@@@@@@@@@@@@@@@@@
-        self.combKsLL = CombineParticles ( 
-            DecayDescriptor = "KS0 -> pi+ pi-",
-            #CombinationCut = "(ADAMASS('KS0') < 22.*MeV) & (AMAXCHILD(MIPCHI2DV(PRIMARY) ,ISBASIC) > 9) & (ADOCACHI2CUT(25, '')) ",
-            CombinationCut = "(ADAMASS('KS0') < 27.*MeV) & (ADOCACHI2CUT(25, '')) ",
-            MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
-        self.selKsLL = Selection("SelKsLLFor"+name,
-                                 Algorithm = self.combKsLL,
-                                 RequiredSelections = [ StdAllNoPIDsPions ])
-        
-        self.combKsLU_PosLong = CombineParticles(
-            DecayDescriptor = "KS0 -> pi+ pi-",
-            DaughtersCuts = { "pi+" : "(ISLONG)",
-                              "pi-" : "(ISUP)" } ,
-            CombinationCut = "(ADAMASS('KS0') < 27.*MeV) & (ADOCACHI2CUT(25, '')) ",
-            MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
-        
-        self.combKsLU_NegLong = CombineParticles(
-            DecayDescriptor = "KS0 -> pi+ pi-",
-            DaughtersCuts = { "pi+" : "(ISUP)",
-                              "pi-" : "(ISLONG)" } ,
-            CombinationCut = "(ADAMASS('KS0') < 27.*MeV) & (ADOCACHI2CUT(25, '')) ",
-            MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
-        
-        self.selKsLU_PosLong = Selection("SelKsLU_PosLongFor"+name,
-                                         Algorithm = self.combKsLU_PosLong,
-                                         RequiredSelections = [ StdAllNoPIDsPions,StdNoPIDsUpPions])
-
-        self.selKsLU_NegLong = Selection("SelKsLU_NegLongFor"+name,
-                                         Algorithm = self.combKsLU_NegLong,
-                                         RequiredSelections = [ StdAllNoPIDsPions,StdNoPIDsUpPions])
-
-        self.selKsLL = MergedSelection("SelMergedKsLLFor"+name, RequiredSelections = [ self.selKsLU_PosLong,self.selKsLU_NegLong,self.selKsLL])
-        
-        self.selKsDD = Selection("SelKsDDfor"+name,
-                                 Algorithm = FilterDesktop(Code = "(ADMASS('KS0') < 25*MeV)"), 
-                                 RequiredSelections = [DataOnDemand("Phys/StdLooseKsDD/Particles")])
-        #@@@@@@@@@@@@@@@@@@@ KS selections @@@@@@@@@@@@@@@@@@@@@@@@
-        
-        D2KSH_CONFIG = config.copy()
-        ### only want the D+ for asld
-        D2KSH_CONFIG["CharmComboCuts"] =  "(ADAMASS('D+') < %(D_AMassWin)s *MeV)"\
-            "& (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % config
-        D2KSH_CONFIG["CharmMotherCuts"] = "(ADMASS('D+') < %(D_AMassWin)s *MeV)"\
-            " & (MINTREE(((ABSID=='KS0')) , VFASPF(VZ))-VFASPF(VZ) > 0.0 *mm )"\
-            " & (CHILD(BPVLTIME('PropertimeFitter/properTime:PUBLIC'),1) > 3.0*ps)"\
-            " & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 0.1*ps)"\
-            " & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) & (BPVDIRA> %(D_DIRA)s)"  % config
-        D2KSH_CONFIG["DECTREE"] = "DECTREE('[B0 -> (D- -> KS0 pi-) mu+]CC')" 
-        self.b2DpMuXKsLLPiLine = makeb2DMuXNEW(name,
-                                               'b2DpMuXKsLLPi',
-                                               ['[B0 -> D- mu+]cc'],
-                                               [ '[D+ -> KS0 pi+]cc' ],
-                                               D2KSH_CONFIG,
-                                               [self.selKsLL, self.selPion],self.selmuon)
-        self.registerLine(self.b2DpMuXKsLLPiLine)        
-        
-        self.b2DpMuXKsDDPiLine = makeb2DMuXNEW(name,
-                                               'b2DpMuXKsDDPi',
-                                               ['[B0 -> D- mu+]cc'],
-                                               [ '[D+ -> KS0 pi+]cc' ],
-                                               D2KSH_CONFIG,
-                                               [self.selKsDD, self.selPion],self.selmuon)
-        self.registerLine(self.b2DpMuXKsDDPiLine)        
         
         ####################### Lc+ -> pHH LINES ###############################
         LC2PHH_CONFIG = config.copy()
@@ -420,7 +277,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         LC2PHH_CONFIG["CharmComboCuts"] = "(ADAMASS('Lambda_c+') < %(D_AMassWin)s *MeV)"\
             "& (APT > 2000*MeV) & (ADOCACHI2CUT( %(D_DocaChi2Max)s, ''))" % LC2PHH_CONFIG
         LC2PHH_CONFIG["CharmMotherCuts"] = "(ADMASS('Lambda_c+') < %(D_MassWin)s *MeV) & (VFASPF(VCHI2/VDOF) < %(D_VCHI2DOF)s) " \
-            "& (BPVVDCHI2 > %(D_FDCHI2)s) & (PT>2100.*MeV) & (BPVDIRA> %(D_DIRA)s)"  % LC2PHH_CONFIG
+            "& (BPVVDCHI2 > %(D_FDCHI2)s) & (PT>2100.*MeV) & (BPVDIRA> %(D_BPVDIRA)s)"  % LC2PHH_CONFIG
         self.lb2LcMuXLine = makeb2DMuXNEW(name,
                                           "b2LcMuX",
                                           [ '[Lambda_b0 -> Lambda_c+ mu-]cc', '[Lambda_b0 -> Lambda_c+ mu+]cc'],
@@ -431,18 +288,24 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
             
 
 ###################### FUNCTION TO MAKE AN ENTIRE B->D MU X DECAY CANDIDATE  ########################
-def makeb2DMuXNEW(module_name,name,BDecays,DDecays,CONFIG,CHARM_DAUGHTERS,MUON):
+def makeb2DMuXNEW(module_name,
+                  name,
+                  BDecays,
+                  DDecays,
+                  CONFIG,
+                  CHARM_DAUGHTERS,
+                  MUON):
     
     DEFAULT_GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" %CONFIG,
                      "Preambulo": ["from LoKiTracks.decorators import *"]}
     DEFAULT_HLT = CONFIG["HLT_FILTER"]
     
-    if "CharmDaugCuts" in CONFIG.keys():
-        CHARM_DaugCuts = CONFIG["CharmDaugCuts"]
-    else:
-        CHARM_DaugCuts = {}
+    CHARM_DaugCuts = {}
     CHARM_ComboCuts = CONFIG["CharmComboCuts"]
     CHARM_MotherCuts = CONFIG["CharmMotherCuts"]
+    
+    if "CharmDaugCuts" in CONFIG.keys():
+        CHARM_DaugCuts = CONFIG["CharmDaugCuts"]
     if "CharmExtraComboCuts" in CONFIG.keys():
         CHARM_ComboCuts += CONFIG["CharmExtraComboCuts"]
     if "CharmExtraMotherCuts" in CONFIG.keys():
@@ -457,7 +320,7 @@ def makeb2DMuXNEW(module_name,name,BDecays,DDecays,CONFIG,CHARM_DAUGHTERS,MUON):
 
     USED_CHARM = CHARM
     if "D*" in BDecays:
-        DST = makeDstar("CharmSelDstFor"+name+module_name, CHARM,CONFIG)
+        DST = makeDstar("CharmSelDstFor"+name+module_name,CHARM,CONFIG)
         USED_CHARM = DST
 
     B_combinationCut = "(AM > %(BMassMin)s*GeV) & (AM < %(BMassMax)s*GeV) & (ADOCACHI2CUT( %(B_DocaChi2Max)s, ''))" %CONFIG
@@ -489,41 +352,18 @@ def makeb2DMuXNEW(module_name,name,BDecays,DDecays,CONFIG,CHARM_DAUGHTERS,MUON):
                          ,BSel
                          ,CONFIG["TTSpecs"])
     
-    Used_BSel = BSelTOS
-    if "DECTREE" in CONFIG.keys():
-        _MassConstraints = []
-        if 'KS0' in CONFIG["DECTREE"]:
-            _MassConstraints = ['KS0']
-        FITTER = FitDecayTrees (
-            name = "FITTER_"+name+module_name,
-            Code = CONFIG["DECTREE"],
-            MaxChi2PerDoF = 10,
-            MassConstraints = _MassConstraints,
-            UsePVConstraint = True)
-        FITTER_SEL = Selection("FITTER_SEL_"+name+module_name,
-                               Algorithm = FITTER,
-                               RequiredSelections = [BSelTOS])
-        Used_BSel = FITTER_SEL
-        
+    debug = False
+    if debug:
+        print [name,DEFAULT_HLT,CHARM_DaugCuts,Charm_ComboCuts,CHARM_MotherCuts,B_DaugCuts,B_combinationCut,B_motherCut]
     _prescale = 1.0
     if name in CONFIG["prescales"].keys():
         _prescale = CONFIG["prescales"][name]
-    
-    print ''
-    print name
-    print DEFAULT_HLT
-    print CHARM_DaugCuts
-    print CHARM_ComboCuts
-    print CHARM_MotherCuts
-    print B_DaugCuts
-    print B_combinationCut
-    print B_motherCut
-    
+
     return StrippingLine(name + module_name + 'Line', 
                          HLT = DEFAULT_HLT,
                          FILTER=DEFAULT_GECs,
                          prescale = _prescale,
-                         selection = Used_BSel)
+                         selection = BSelTOS)
 
 ########### HELP WITH MAKING A DSTAR ########################
 def makeDstar(_name, inputD0,CONFIG) : 

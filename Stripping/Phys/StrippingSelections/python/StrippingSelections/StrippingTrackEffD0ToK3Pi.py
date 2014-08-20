@@ -22,6 +22,13 @@ __all__ = ('TrackEffD0ToK3PiAllLinesConf',
            'default_config')
 
 default_config = {
+    "HLT" : "HLT_PASS_RE('Hlt2.*CharmHadD02HHXDst.*Decision')",
+    "TTSpecs" : {'Hlt2.*CharmHadD02HHXDst.*Decision%TOS':0},
+    "Track_MIN_PT":250,
+    "Track_MIN_IPCHI2":250,
+    "Track_MAX_GPROB":0.35,
+    "Slowpi_MIN_PT":300.,
+    "Slowpi_MAX_IPCHI2":9.,
     "Kaon_MIN_PIDK":7,
     "Pion_MAX_PIDK":4
     }
@@ -31,6 +38,13 @@ VeloProtoOutputLocation = 'Rec/ProtoP/VeloProtos'
 class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
     
     __configuration_keys__ = (
+        "HLT",
+        "TTSpecs",
+        "Track_MIN_PT",
+        "Track_MIN_IPCHI2",
+        "Track_MAX_GPROB",
+        "Slowpi_MIN_PT",
+        "Slowpi_MAX_IPCHI2",
         "Kaon_MIN_PIDK",
         "Pion_MAX_PIDK"
         )
@@ -67,7 +81,9 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
         ##################### MAKE THE LINES #############
         
         self.MissingPion4BodyLine = MakeLine("MissingPion4Body",
-                                             '[K*(892)+ -> K- pi+ pi+]cc',
+                                             self.__confdict__,
+                                             ['[K*(892)+ -> K- pi+ pi+]cc','[K*(892)+ -> K- pi+ pi-]cc','[K*(892)+ -> K- pi- pi-]cc',
+                                              '[K*(892)+ -> K+ pi+ pi+]cc','[K*(892)+ -> K- pi+ pi-]cc','[K*(892)+ -> K- pi- pi-]cc'],
                                              [SelLongKaons,SelLongPions],
                                              ['D0 -> K*(892)+ pi+','D~0 -> K*(892)- pi+'],## both pion charges
                                              ["[D*(2010)+ -> D0 pi+]cc"],
@@ -75,15 +91,17 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
                                              self.VeloPions)
 
         self.MissingKaon4BodyLine = MakeLine("MissingKaon4Body",
-                                             '[K*(892)+ -> pi- pi+ pi+]cc',
+                                             self.__confdict__,
+                                             ['[K*(892)+ -> pi- pi+ pi+]cc','[K*(892)+ -> pi- pi- pi+]cc','[K*(892)+ -> pi- pi- pi-]cc','[K*(892)+ -> pi+ pi+ pi+]cc'],
                                              [SelLongPions],
                                              ['D0 -> K*(892)+ K+','D~0 -> K*(892)- K+'],
-                                             ["[D*(2010)+ -> D0 pi+]cc"],
+                                              ["[D*(2010)+ -> D0 pi+]cc"],
                                              ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'],
                                              self.VeloKaons)
         
         self.MissingProtonLine = MakeLine("MissingProton",
-                                          '[K*(892)+ -> K- pi+]cc',
+                                          self.__confdict__,
+                                          ['[K*(892)+ -> K- pi+]cc'],
                                           [SelLongKaons, SelLongPions],
                                           ['Lambda_c+ -> K*(892)+ p+','Lambda_c~- -> K*(892)- p+'],
                                           ['[Sigma_c0 -> Lambda_c+ pi+]cc','[Sigma_c0 -> Lambda_c+ pi-]cc'],
@@ -111,7 +129,8 @@ def TOSFilter( name = None, sel = None, trigger = None ):
 
 ####################### MAKE THE INTERMEDIATE THREE TRACK VERTEX ##########################
 def MakeLine(name,
-             KstDecayDescriptor,
+             config,
+             KstDecayDescriptors,
              KstRequirements,
              D0DecayDescriptor,
              DstDecayDescriptors,
@@ -119,31 +138,32 @@ def MakeLine(name,
              Probes):
         
     if '4Body' in name:
+        D0Preambulo = ["mfit = DTF_FUN(M,True,'D0')"]
         KstCombinationCut = '(APT > 1700*MeV) & (AM > 0 *MeV) & (AM < 1800*MeV)'\
             '& (ANUM(MIPCHI2DV(PRIMARY)>25)>=2)'\
             '& (ANUM(PT > 500*MeV)>=2)'\
             "& (ADOCACHI2CUT(10,''))"
         if "MissingKaon" in name:
-            KstCombinationCut += '& (AM < 1400*MeV)'
+            KstCombinationCut += '& (AM > 400*MeV) & (AM < 1400*MeV)'
         KstMotherCut = '(VFASPF(VZ) > 5*mm) & (VFASPF(VCHI2/VDOF)< 3.0)'
         D0CombinationCut = "(AMAXDOCA('') < 0.10 * mm )"
-        #D0CombinationCut += " & (AHASCHILD((!ISLONG) & (MIPCHI2DV(PRIMARY) > 25))"
         D0MotherCut ='(abs(DTF_FUN(M,True) - 1865) < 250*MeV)'
-        DstMotherCut = "(DTF_FUN( M ,True, 'D0') < 2040*MeV) & (DTF_CHI2NDOF(True,'D0') < 10)"
+        DstMotherCut = "(in_range ( 2 * GeV , mfit , 2.035 * GeV )) & (DTF_CHI2NDOF(True,'D0') < 5)"
     elif 'Proton' in name:
-        KstCombinationCut = '(APT > 1500*MeV) & (AM > 600 *MeV) & (AM < 1300*MeV)'\
+        D0Preambulo = ["mfit = DTF_FUN(M,True,'Lambda_c+')"]
+        KstCombinationCut = '(APT > 1500*MeV) & (AM > 600 *MeV) & (AM < 1500*MeV)'\
             '& (ANUM(MIPCHI2DV(PRIMARY)>25)>=2)'\
             '& (ANUM(PT > 500*MeV)>=2)'\
             "& (ADOCACHI2CUT(15,''))"
-        KstMotherCut = '(VFASPF(VZ) > 3*mm) & (VFASPF(VCHI2/VDOF)< 4.0)'
+        KstMotherCut = '(VFASPF(VZ) > 5*mm) & (VFASPF(VCHI2/VDOF)< 4.0)'
         D0CombinationCut = "(AMAXDOCA('') < 0.10 * mm )"
-        D0MotherCut ='(DTF_FUN(M,True) > 1886*MeV) & (DTF_FUN(M,True) < 2686*MeV)'
-        DstMotherCut = "(DTF_FUN( M ,True, 'Lambda_c+') < 2550*MeV) & (DTF_CHI2NDOF(True,'Lambda_c+') < 10)"
+        D0MotherCut ='(abs(DTF_FUN(M,True) - 2286) < 250*MeV)'
+        DstMotherCut = "(in_range ( 2.4 * GeV , mfit , 2.5 * GeV )) & (DTF_CHI2NDOF(True,'Lambda_c+') < 5)"
     else:
         print name + ' = Bad line name'
         
     CombKst = CombineParticles(name="CombKstfor"+name,
-                               DecayDescriptor = KstDecayDescriptor,
+                               DecayDescriptors = KstDecayDescriptors,
                                CombinationCut = KstCombinationCut,
                                MotherCut = KstMotherCut)
         
@@ -152,6 +172,7 @@ def MakeLine(name,
                        RequiredSelections = KstRequirements)
     
     CombD0 = CombineParticles(name="CombD0For"+name,
+                              Preambulo = D0Preambulo,
                               DecayDescriptors = D0DecayDescriptor,
                               CombinationCut = D0CombinationCut,
                               MotherCut = D0MotherCut)
@@ -174,21 +195,18 @@ def MakeLine(name,
                          RequiredSelections = [SelD0,StdAllLoosePions])
 
     ################## MAKE THE STRIPPING LINE ########################
-    HLT = "HLT_PASS_RE('Hlt2.*CharmHadD02HHXDst_hhX.*Decision')"
-    TTSpecs = {'Hlt2.*CharmHadD02HHXDst_hhX.*Decision%TOS':0}
-
     SelDstarTOS = TOSFilter( "SelDstarTOSfor"+name
                              ,SelDstar
-                             ,TTSpecs)
+                             ,config["TTSpecs"])
     LineDstar = StrippingLine(name+'DstarLine', 
                               FILTER = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 180 )",
                                          "Preambulo": ["from LoKiTracks.decorators import *"]},
-                              HLT = HLT,
+                              HLT = config["HLT"],
                               selection = SelDstarTOS)
 
     ######### match to the long line
     CombD0MatchLong = CombineParticles(name="CombD0MatchLongFor"+name,
-                                       DaughtersCuts = {"pi+":"(ISLONG) & (TRGHOSTPROB < 0.35) & (PT > 150*MeV)"},
+                                       DaughtersCuts = {"pi+":"(ISLONG) & (TRGHOSTPROB < 0.35)"},
                                        DecayDescriptors = MatchDecayDescriptor,
                                        CombinationCut = "(AMAXDOCA('') < 0.10 * mm )",
                                        MotherCut = "ALL")
@@ -200,7 +218,7 @@ def MakeLine(name,
     LineMatchLong = StrippingLine(name+'MatchLongLine', 
                               FILTER = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 180 )",
                                          "Preambulo": ["from LoKiTracks.decorators import *"]},
-                              HLT = HLT,
+                              HLT = config["HLT"],
                               selection = SelD0MatchLong)
     return [LineDstar,LineMatchLong]
 
