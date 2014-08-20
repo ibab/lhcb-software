@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-20 - Carlos Vazquez Sierra
+  - Updated StrippingB2Psi2sX.py and StrippingB2Psi2sXMuMu.py for testing purposes.
+
 ! 2014-08-19
  	- Updated StrippingBu2Kpi0.py and StrippingBu2rho0rhoPlus.py, lines reoptimized,
     Bu2rho0rhoPlus lines have no PID cuts, rho mass windows include K* and phi
