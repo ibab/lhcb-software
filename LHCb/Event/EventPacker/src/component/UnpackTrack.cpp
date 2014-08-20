@@ -29,6 +29,7 @@ DECLARE_ALGORITHM_FACTORY( UnpackTrack )
   declareProperty( "AlwaysCreateOutput",      m_alwaysOutput = false     );
   declareProperty( "AncestorFor",             m_ancestorFor    = LHCb::PackedTrackLocation::Muon );
   declareProperty( "AncestorSource",          m_ancestorSource = LHCb::TrackLocation::Default );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================

@@ -53,7 +53,7 @@ StatusCode PackTrack::execute()
   // Output
   LHCb::PackedTracks* out = new LHCb::PackedTracks();
   put( out, m_outputName );
-  out->setVersion( 3 );
+  out->setVersion( 4 );
 
   // Track Packer
   const LHCb::TrackPacker packer(*this);

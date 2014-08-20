@@ -43,14 +43,16 @@ StatusCode PackParticlesAndVertices::execute()
   if ( NULL == root ) return StatusCode::SUCCESS;
 
   // Class IDs for handled data
-  const unsigned int clIdParticles    = 0x60000 + LHCb::CLID_Particle;
-  const unsigned int clIdVertices     = 0x60000 + LHCb::CLID_Vertex;
-  const unsigned int clIdRecVertices  = 0x60000 + LHCb::CLID_RecVertex;
-  const unsigned int clIdFlavourTags  = 0x60000 + LHCb::CLID_FlavourTag;
-  const unsigned int clIdPart2Vert    = 0xEA9168DC; // Particle to Vertex relation
-  const unsigned int clIdPart2MCPart  = 0x7B880798; // Particle to MCParticle relations
-  const unsigned int clIdPart2Int     = 0xF94852E4; // Particle to int relations
-  const unsigned int clIdPart2RelInfo = 0x90F0684D; // particle to related info map
+  const unsigned int clIdParticles      = 0x60000 + LHCb::CLID_Particle;
+  const unsigned int clIdVertices       = 0x60000 + LHCb::CLID_Vertex;
+  const unsigned int clIdRecVertices    = 0x60000 + LHCb::CLID_RecVertex;
+  const unsigned int clIdFlavourTags    = 0x60000 + LHCb::CLID_FlavourTag;
+  const unsigned int clIdTracks         = 0x60000 + LHCb::CLID_Track;
+  const unsigned int clIdProtoParticles = 0x60000 + LHCb::CLID_ProtoParticle;
+  const unsigned int clIdPart2Vert      = 0xEA9168DC; // Particle to Vertex relation
+  const unsigned int clIdPart2MCPart    = 0x7B880798; // Particle to MCParticle relations
+  const unsigned int clIdPart2Int       = 0xF94852E4; // Particle to int relations
+  const unsigned int clIdPart2RelInfo   = 0x90F0684D; // particle to related info map
 
   // List of data objects TES locations
   std::vector<std::string> names;
@@ -253,6 +255,58 @@ StatusCode PackParticlesAndVertices::execute()
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << pPartIds->relations().size() 
               << " packed Particle2RelatedInfo" << endmsg;
+  }
+
+  //==============================================================================
+  // Find ProtoParticles
+  //==============================================================================
+  names.clear();
+  selectContainers( root, names, clIdProtoParticles );
+  if ( !names.empty() )
+  {
+    LHCb::PackedProtoParticles * pprotos = new LHCb::PackedProtoParticles();
+    pprotos->setVersion( 2 );
+    put( pprotos, m_inputStream + LHCb::PackedProtoParticleLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "=== Process ProtoParticle containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+    for ( const auto& name : names )
+    {
+      LHCb::ProtoParticles* protos = get<LHCb::ProtoParticles>( name );
+      if ( m_deleteInput ) toBeDeleted.push_back( protos );
+      if ( protos->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << format( "%4d protoparticles in ", protos->size() ) << name << endmsg;
+      packAProtoParticleContainer( protos, *pprotos );
+    }
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "Stored " << pprotos->protos().size() << " packed protoparticles" << endmsg;
+  }
+
+ //==============================================================================
+  // Find Tracks
+  //==============================================================================
+  names.clear();
+  selectContainers( root, names, clIdTracks );
+  if ( !names.empty() )
+  {
+    LHCb::PackedTracks * ptracks = new LHCb::PackedTracks();
+    ptracks->setVersion( 4 );
+    put( ptracks, m_inputStream + LHCb::PackedTrackLocation::InStream );
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "=== Process Track containers :" << endmsg;
+    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+    for ( const auto& name : names )
+    {
+      LHCb::Tracks * tracks = get<LHCb::Tracks>( name );
+      if ( m_deleteInput ) toBeDeleted.push_back( tracks );
+      if ( tracks->empty() ) continue;
+      if ( msgLevel( MSG::DEBUG ) )
+        debug() << format( "%4d tracks in ", tracks->size() ) << name << endmsg;
+      packATrackContainer( tracks, *ptracks );
+    }
+    if ( msgLevel( MSG::DEBUG ) )
+      debug() << "Stored " << ptracks->tracks().size() << " packed tracks" << endmsg;
   }
 
   // MC Information next
@@ -493,6 +547,122 @@ PackParticlesAndVertices::packAParticleContainer ( const LHCb::Particles* parts,
   }
 
   if ( !m_deleteInput ) parts->registry()->setAddress( 0 );
+}
+
+//=========================================================================
+// Pack a container of protoparticles
+//=========================================================================
+void
+PackParticlesAndVertices::packAProtoParticleContainer( const LHCb::ProtoParticles* protos,
+                                                       LHCb::PackedProtoParticles& pprotos )
+{
+  const LHCb::ProtoParticlePacker pPacker(*this);
+
+  // checks
+  LHCb::ProtoParticles* unpacked = ( m_enableCheck ? new LHCb::ProtoParticles() : NULL );
+  if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsProtoParticleTest" ); }
+
+  for ( LHCb::ProtoParticles::const_iterator iD = protos->begin();
+        iD != protos->end(); ++iD )
+  {
+    const LHCb::ProtoParticle& proto = **iD;
+
+    // Make a new packed data object and save
+    pprotos.protos().push_back( LHCb::PackedProtoParticle() );
+    LHCb::PackedProtoParticle& pproto = pprotos.protos().back();
+
+    // reference to original container and key
+    pproto.key = m_pack.reference64( &pprotos, proto.parent(), proto.key() );
+
+    // pack the physics info
+    pPacker.pack( proto, pproto, pprotos );
+
+    // checks ?
+    if ( unpacked )
+    {
+      int key(0),linkID(0);
+      m_pack.indexAndKey( pproto.key, linkID, key );
+      LHCb::ProtoParticle* testObj = new LHCb::ProtoParticle();
+      unpacked->insert( testObj, key );
+      pPacker.unpack( pproto, *testObj, pprotos, *unpacked );
+      pPacker.check( proto, *testObj ).ignore();
+    }
+
+  }
+
+  // clean up test data
+  if ( unpacked )
+  {
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() )
+    {
+      delete unpacked;
+    }
+    else
+    {
+      Exception( "Failed to delete test data after unpacking check" );
+    }
+  }
+
+  if ( !m_deleteInput ) protos->registry()->setAddress( 0 );
+}
+
+//=========================================================================
+// Pack a container of tracks
+//=========================================================================
+void
+PackParticlesAndVertices::packATrackContainer( const LHCb::Tracks* tracks,
+                                               LHCb::PackedTracks& ptracks )
+{
+  const LHCb::TrackPacker tPacker(*this);
+
+  // checks
+  LHCb::Tracks* unpacked = ( m_enableCheck ? new LHCb::Tracks() : NULL );
+  if ( unpacked ) { put( unpacked, "/Event/Transient/PsAndVsTrackTest" ); }
+
+  for ( LHCb::Tracks::const_iterator iD = tracks->begin();
+        iD != tracks->end(); ++iD )
+  {
+    const LHCb::Track& track = **iD;
+
+    // Make a new packed data object and save
+    ptracks.tracks().push_back( LHCb::PackedTrack() );
+    LHCb::PackedTrack& ptrack = ptracks.tracks().back();
+
+    // reference to original container and key
+    ptrack.key = m_pack.reference64( &ptracks, track.parent(), track.key() );
+
+    // pack the physics info
+    tPacker.pack( track, ptrack, ptracks );
+
+    // checks ?
+    if ( unpacked )
+    {
+      int key(0),linkID(0);
+      m_pack.indexAndKey( ptrack.key, linkID, key );
+      LHCb::Track* testObj = new LHCb::Track();
+      unpacked->insert( testObj, key );
+      tPacker.unpack( ptrack, *testObj, ptracks, *unpacked );
+      tPacker.check( track, *testObj ).ignore();
+    }
+
+  }
+
+  // clean up test data
+  if ( unpacked )
+  {
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() )
+    {
+      delete unpacked;
+    }
+    else
+    {
+      Exception( "Failed to delete test data after unpacking check" );
+    }
+  }
+
+  if ( !m_deleteInput ) tracks->registry()->setAddress( 0 );
 }
 
 //=========================================================================

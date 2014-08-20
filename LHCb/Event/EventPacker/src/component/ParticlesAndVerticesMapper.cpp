@@ -118,6 +118,34 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
 
     int key(0), linkID(0);
 
+    // Load the packed Tracks
+    {
+      LHCb::PackedTracks * ptracks =
+        getIfExists<LHCb::PackedTracks>(evtSvc(),streamR+LHCb::PackedTrackLocation::InStream);
+      if ( NULL != ptracks )
+      {
+        for ( const auto& P : ptracks->tracks() )
+        {
+          m_pack.indexAndKey64( P.key, linkID, key );
+          addPath( ptracks->linkMgr()->link(linkID)->path() );
+        }
+      }
+    }
+
+    // Load the packed ProtoParticles
+    {
+      LHCb::PackedProtoParticles * pprotos =
+        getIfExists<LHCb::PackedProtoParticles>(evtSvc(),streamR+LHCb::PackedProtoParticleLocation::InStream);
+      if ( NULL != pprotos )
+      {
+        for ( const auto& P : pprotos->protos() )
+        {
+          m_pack.indexAndKey64( P.key, linkID, key );
+          addPath( pprotos->linkMgr()->link(linkID)->path() );
+        }
+      }
+    }
+
     // Load the packed Particles
     {
       LHCb::PackedParticles* pparts =

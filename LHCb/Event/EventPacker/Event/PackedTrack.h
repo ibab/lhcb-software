@@ -50,7 +50,7 @@ namespace LHCb
       likelihood( c.likelihood ), ghostProba( c.ghostProba )
     { }
 
-    int key;
+    long long key;
     int chi2PerDoF;
     int nDoF;
     unsigned int flags;
@@ -132,8 +132,9 @@ namespace LHCb
   // Namespace for locations in TDS
   namespace PackedTrackLocation
   {
-    static const std::string& Default = "pRec/Track/Best";
-    static const std::string& Muon    = "pRec/Track/Muon";
+    static const std::string& Default  =  "pRec/Track/Best";
+    static const std::string& Muon     =  "pRec/Track/Muon";
+    static const std::string& InStream = "/pRec/Track/Custom";
   }
 
   class PackedTracks : public DataObject
@@ -196,26 +197,42 @@ namespace LHCb
   private:
 
     /// Default Constructor hidden
-    TrackPacker() : m_parent(NULL) {}
+    TrackPacker() : m_parent(NULL) { resetWrappingCounts(); }
 
   public:
 
     /// Default Constructor
-    TrackPacker( GaudiAlgorithm & parent ) : m_parent(&parent) {}
+    TrackPacker( GaudiAlgorithm & parent ) : m_parent(&parent)
+    { resetWrappingCounts(); }
 
   public:
+
+    /// Pack a Track
+    void pack( const Data & track,
+               PackedData & ptrack,
+               PackedDataVector & ptracks ) const;
 
     /// Pack Tracks
     void pack( const DataVector & tracks,
                PackedDataVector & ptracks ) const;
 
+    /// Unpack a single Track
+    void unpack( const PackedData       & ptrack,
+                 Data                   & track,
+                 const PackedDataVector & ptracks,
+                 DataVector             & tracks ) const;
+
     /// Unpack Tracks
     void unpack( const PackedDataVector & ptracks,
                  DataVector             & tracks ) const;
 
-    /// Compare two Tracks to check the packing -> unpacking performance
+    /// Compare two Track containers to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB ) const;
+
+    /// Compare two Tracks to check the packing -> unpacking performance
+    StatusCode check( const Data & dataA,
+                      const Data & dataB ) const;
 
   private:
 
@@ -239,6 +256,17 @@ namespace LHCb
     inline double safe_sqrt( const double x ) const
     { return ( x > 0 ? std::sqrt(x) : 0.0 ); }
 
+    /// Reset wraping bug counts
+    inline void resetWrappingCounts() const
+    {
+      m_firstIdHigh    = 0;
+      m_lastIdHigh     = 0;
+      m_firstStateHigh = 0;
+      m_lastStateHigh  = 0;
+      m_firstExtraHigh = 0;
+      m_lastExtraHigh  = 0;
+    }
+
   private:
 
     /// Standard packing of quantities into integers ...
@@ -246,6 +274,16 @@ namespace LHCb
 
     /// Pointer to parent algorithm
     GaudiAlgorithm * m_parent;
+
+  private:
+
+    // cached data to handle wrapped ID numbers ...
+    mutable int m_firstIdHigh;
+    mutable int m_lastIdHigh;
+    mutable int m_firstStateHigh;
+    mutable int m_lastStateHigh;
+    mutable int m_firstExtraHigh;
+    mutable int m_lastExtraHigh;
 
   };
 

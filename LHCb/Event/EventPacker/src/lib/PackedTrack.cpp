@@ -12,61 +12,64 @@ using namespace LHCb;
 
 //-----------------------------------------------------------------------------
 
+void TrackPacker::pack( const Data & track,
+                        PackedData & ptrack,
+                        PackedDataVector & ptracks ) const
+{
+
+  ptrack.chi2PerDoF = m_pack.fltPacked( track.chi2PerDoF() );
+  ptrack.nDoF       = track.nDoF();
+  ptrack.flags      = track.flags();
+  ptrack.likelihood = m_pack.fltPacked( track.likelihood() );
+  ptrack.ghostProba = m_pack.fltPacked( track.ghostProbability() );
+
+  //== Store the LHCbID as int
+  ptrack.firstId    = ptracks.ids().size();
+  for ( std::vector<LHCb::LHCbID>::const_iterator itI = track.lhcbIDs().begin();
+        track.lhcbIDs().end() != itI; ++itI )
+  {
+    ptracks.ids().push_back( (*itI).lhcbID() );
+  }
+  ptrack.lastId    = ptracks.ids().size();
+  if( UNLIKELY( parent().msgLevel(MSG::DEBUG) ) )
+    parent().debug() << "Stored LHCbIDs from "
+                     << ptrack.firstId << " to " << ptrack.lastId << endmsg;
+
+  //== Handle the states in the track
+  ptrack.firstState = ptracks.states().size();
+  for ( std::vector<LHCb::State*>::const_iterator itS = track.states().begin();
+        track.states().end() != itS; ++itS )
+  {
+    convertState( **itS, ptracks );
+  }
+  ptrack.lastState = ptracks.states().size();
+  if( UNLIKELY( parent().msgLevel(MSG::DEBUG) ) )
+    parent().debug() << "Stored states from " << ptrack.firstState
+                     << " to " << ptrack.lastState << endmsg;
+
+  //== Handles the ExtraInfo
+  ptrack.firstExtra = ptracks.extras().size();
+  for ( GaudiUtils::VectorMap<int,double>::iterator itE = track.extraInfo().begin();
+        track.extraInfo().end() != itE; ++itE )
+  {
+    ptracks.extras().push_back( std::pair<int,int>( (*itE).first,
+                                                    m_pack.fltPacked((*itE).second) ) );
+  }
+  ptrack.lastExtra = ptracks.extras().size();
+
+}
+
 void TrackPacker::pack( const DataVector & tracks,
                         PackedDataVector & ptracks ) const
 {
   ptracks.tracks().reserve(tracks.size());
-
-  for ( DataVector::const_iterator itT = tracks.begin();
-        tracks.end() != itT; ++itT )
+  for ( const LHCb::Track* track : tracks )
   {
-    const LHCb::Track* track = *itT;
     if ( !track ) continue;
-
     ptracks.tracks().push_back( LHCb::PackedTrack() );
-    LHCb::PackedTrack & newTrk = ptracks.tracks().back();
-
-    newTrk.key        = track->key();
-    newTrk.chi2PerDoF = m_pack.fltPacked( track->chi2PerDoF() );
-    newTrk.nDoF       = track->nDoF();
-    newTrk.flags      = track->flags();
-    newTrk.likelihood = m_pack.fltPacked( track->likelihood() );
-    newTrk.ghostProba = m_pack.fltPacked( track->ghostProbability() );
-
-    //== Store the LHCbID as int
-    newTrk.firstId    = ptracks.ids().size();
-    for ( std::vector<LHCb::LHCbID>::const_iterator itI = track->lhcbIDs().begin();
-          track->lhcbIDs().end() != itI; ++itI )
-    {
-      ptracks.ids().push_back( (*itI).lhcbID() );
-    }
-    newTrk.lastId    = ptracks.ids().size();
-    if( UNLIKELY( parent().msgLevel(MSG::DEBUG) ) )
-      parent().debug() << "Stored LHCbIDs from "
-                       << newTrk.firstId << " to " << newTrk.lastId << endmsg;
-
-    //== Handle the states in the track
-    newTrk.firstState = ptracks.states().size();
-    for ( std::vector<LHCb::State*>::const_iterator itS = track->states().begin();
-          track->states().end() != itS; ++itS )
-    {
-      convertState( **itS, ptracks );
-    }
-    newTrk.lastState = ptracks.states().size();
-    if( UNLIKELY( parent().msgLevel(MSG::DEBUG) ) )
-      parent().debug() << "Stored states from " << newTrk.firstState
-                       << " to " << newTrk.lastState << endmsg;
-
-    //== Handles the ExtraInfo
-    newTrk.firstExtra = ptracks.extras().size();
-    for ( GaudiUtils::VectorMap<int,double>::iterator itE = track->extraInfo().begin();
-          track->extraInfo().end() != itE; ++itE )
-    {
-      ptracks.extras().push_back( std::pair<int,int>( (*itE).first,
-                                                      m_pack.fltPacked((*itE).second) ) );
-    }
-    newTrk.lastExtra = ptracks.extras().size();
-
+    LHCb::PackedTrack & ptrack = ptracks.tracks().back();
+    ptrack.key = track->key();
+    pack( *track, ptrack, ptracks );
   }
 }
 
@@ -115,133 +118,136 @@ void TrackPacker::convertState( const LHCb::State& state,
   newState.cov_43 = m_pack.fraction( state.covariance()(4,3), err[4]*err[3] );
 }
 
+void TrackPacker::unpack( const PackedData       & ptrack,
+                          Data                   & track,
+                          const PackedDataVector & ptracks,
+                          DataVector             & /* tracks */ ) const
+{
+
+  track.setChi2PerDoF( m_pack.fltPacked( ptrack.chi2PerDoF ) );
+  track.setNDoF(       ptrack.nDoF );
+  track.setFlags(      ptrack.flags );
+  if ( ptracks.version() > 2 )
+  {
+    track.setLikelihood(       m_pack.fltPacked( ptrack.likelihood ) );
+    track.setGhostProbability( m_pack.fltPacked( ptrack.ghostProba ) );
+  }
+
+  int firstId = ptrack.firstId;
+  int lastId  = ptrack.lastId;
+  if ( ptracks.ids().size() > 65535 )
+  {
+    //== Protections for wraping of the index, a short unsigned int.
+    firstId = m_firstIdHigh + ptrack.firstId;
+    lastId  = m_lastIdHigh  + ptrack.lastId;
+    if ( lastId < firstId )
+    { // we wrapped in the track
+      parent().info() << "** ID index wrapped, first/last Id = "
+                      << firstId << " " << lastId << endmsg;
+      m_lastIdHigh  += 0x10000;
+      m_firstIdHigh += 0x10000;
+      lastId = m_lastIdHigh  + ptrack.lastId;
+    }
+  }
+
+  std::vector<LHCb::LHCbID> lhcbids( lastId - firstId ) ;
+  std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;
+  for ( int kId = firstId; lastId > kId; ++kId, ++lhcbit )
+  {
+    const unsigned int& id = *(ptracks.ids().begin()+kId);
+    *lhcbit = LHCb::LHCbID( id ) ;
+  }
+  // schema change: sorting no longer needed when we write DSTs with sorted lhcbids
+  if ( ptracks.version() <= 1 )
+  {
+    std::sort( lhcbids.begin(), lhcbids.end() ) ;
+  }
+  track.addSortedToLhcbIDs( lhcbids ) ;
+
+  int firstState = ptrack.firstState;
+  int lastState  = ptrack.lastState;
+  if ( ptracks.states().size() > 65535 )
+  {
+    //== Protections for wraping of the index, a short unsigned int.
+    firstState = m_firstStateHigh + ptrack.firstState;
+    lastState  = m_lastStateHigh  + ptrack.lastState;
+    if ( lastState < firstState )
+    {  // we wrapped in the track
+      parent().info() << "** State index wrapped, first/last = "
+                      << firstState << " " << lastState << endmsg;
+      m_lastStateHigh  += 0x10000;
+      m_firstStateHigh += 0x10000;
+      lastState = m_lastStateHigh  + ptrack.lastState;
+    }
+  }
+
+  for ( int kSt = firstState; lastState > kSt; ++kSt )
+  {
+    const LHCb::PackedState& pSta = *(ptracks.states().begin()+kSt);
+    convertState( pSta, track );
+  }
+
+  int firstExtra = ptrack.firstExtra;
+  int lastExtra  = ptrack.lastExtra;
+  if ( ptracks.extras().size() > 65535 )
+  {
+    //== Protections for wraping of the index, a short unsigned int.
+    firstExtra = m_firstExtraHigh + ptrack.firstExtra;
+    lastExtra  = m_lastExtraHigh  + ptrack.lastExtra;
+    if ( lastExtra < firstExtra )
+    { // we wrapped in the track
+      parent().info() << "** Extra index wrapped, first/last = "
+                      << firstExtra << " " << lastExtra << endmsg;
+      m_lastExtraHigh  += 0x10000;
+      m_firstExtraHigh += 0x10000;
+      lastExtra = m_lastExtraHigh  + ptrack.lastExtra;
+    }
+  }
+
+  for ( int kEx = firstExtra; lastExtra > kEx; ++kEx )
+  {
+    const std::pair<int,int>& info = *(ptracks.extras().begin()+kEx);
+    track.addInfo( info.first, m_pack.fltPacked( info.second ) );
+  }
+
+  //== Cleanup extraInfo and set likelihood/ghostProbability for old data
+  if ( ptracks.version() <= 2 )
+  {
+    track.eraseInfo(LHCb::Track::PatQuality);
+    track.eraseInfo(LHCb::Track::Cand1stQPat);
+    track.eraseInfo(LHCb::Track::Cand2ndQPat);
+    track.eraseInfo(LHCb::Track::NCandCommonHits);
+    track.eraseInfo(LHCb::Track::Cand1stChi2Mat);
+    track.eraseInfo(LHCb::Track::Cand2ndChi2Mat);
+    track.eraseInfo(LHCb::Track::MatchChi2);
+    track.eraseInfo(LHCb::Track::TsaLikelihood);
+    track.eraseInfo(LHCb::Track::nPRVeloRZExpect);
+    track.eraseInfo(LHCb::Track::nPRVelo3DExpect);
+    track.setLikelihood(       track.info(   1, 999) ); // was the key of likelihood...
+    track.setGhostProbability( track.info( 102, 999) ); // was the key of ghost probability
+    track.eraseInfo(   1 );
+    track.eraseInfo( 102 );
+  }
+
+}
+
 void TrackPacker::unpack( const PackedDataVector & ptracks,
                           DataVector             & tracks ) const
 {
   tracks.reserve( ptracks.tracks().size() );
 
-  int firstIdHigh    = 0;
-  int lastIdHigh     = 0;
-  int firstStateHigh = 0;
-  int lastStateHigh  = 0;
-  int firstExtraHigh = 0;
-  int lastExtraHigh  = 0;
+  // reset the cached variables to handle the wrapping bug ...
+  resetWrappingCounts();
 
   for ( std::vector<PackedTrack>::const_iterator itS = ptracks.tracks().begin();
         ptracks.tracks().end() != itS; ++itS )
   {
-    const LHCb::PackedTrack& src = (*itS);
-
+    const LHCb::PackedTrack& ptrack = (*itS);
     LHCb::Track* track = new LHCb::Track( );
-    tracks.insert( track, src.key );
-
-    track->setChi2PerDoF( m_pack.fltPacked( src.chi2PerDoF ) );
-    track->setNDoF(       src.nDoF );
-    track->setFlags(      src.flags );
-    if ( ptracks.version() > 2 )
-    {
-      track->setLikelihood(       m_pack.fltPacked( src.likelihood ) );
-      track->setGhostProbability( m_pack.fltPacked( src.ghostProba ) );
-    }
-
-    int firstId = src.firstId;
-    int lastId  = src.lastId;
-    if ( ptracks.ids().size() > 65535 )
-    {
-      //== Protections for wraping of the index, a short unsigned int.
-      firstId = firstIdHigh + src.firstId;
-      lastId  = lastIdHigh  + src.lastId;
-      if ( lastId < firstId )
-      { // we wrapped in the track
-        parent().info() << "** ID index wrapped, first/last Id = "
-                        << firstId << " " << lastId << endmsg;
-        lastIdHigh  += 0x10000;
-        firstIdHigh += 0x10000;
-        lastId = lastIdHigh  + src.lastId;
-      }
-    }
-
-    std::vector<LHCb::LHCbID> lhcbids( lastId - firstId ) ;
-    std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;
-    for ( int kId = firstId; lastId > kId; ++kId, ++lhcbit )
-    {
-      const unsigned int& id = *(ptracks.ids().begin()+kId);
-      *lhcbit = LHCb::LHCbID( id ) ;
-    }
-    // schema change: sorting no longer needed when we write DSTs with sorted lhcbids
-    if ( ptracks.version() <= 1 )
-    {
-      std::sort( lhcbids.begin(), lhcbids.end() ) ;
-    }
-    track->addSortedToLhcbIDs( lhcbids ) ;
-
-    int firstState = src.firstState;
-    int lastState  = src.lastState;
-    if ( ptracks.states().size() > 65535 )
-    {
-      //== Protections for wraping of the index, a short unsigned int.
-      firstState = firstStateHigh + src.firstState;
-      lastState  = lastStateHigh  + src.lastState;
-      if ( lastState < firstState )
-      {  // we wrapped in the track
-        parent().info() << "** State index wrapped, first/last = "
-                        << firstState << " " << lastState << endmsg;
-        lastStateHigh  += 0x10000;
-        firstStateHigh += 0x10000;
-        lastState = lastStateHigh  + src.lastState;
-      }
-    }
-
-    for ( int kSt = firstState; lastState > kSt; ++kSt )
-    {
-      const LHCb::PackedState& pSta = *(ptracks.states().begin()+kSt);
-      convertState( pSta, *track );
-    }
-
-    int firstExtra = src.firstExtra;
-    int lastExtra  = src.lastExtra;
-    if ( ptracks.extras().size() > 65535 )
-    {
-      //== Protections for wraping of the index, a short unsigned int.
-      firstExtra = firstExtraHigh + src.firstExtra;
-      lastExtra  = lastExtraHigh  + src.lastExtra;
-      if ( lastExtra < firstExtra )
-      { // we wrapped in the track
-        parent().info() << "** Extra index wrapped, first/last = "
-                        << firstExtra << " " << lastExtra << endmsg;
-        lastExtraHigh  += 0x10000;
-        firstExtraHigh += 0x10000;
-        lastExtra = lastExtraHigh  + src.lastExtra;
-      }
-    }
-
-    for ( int kEx = firstExtra; lastExtra > kEx; ++kEx )
-    {
-      const std::pair<int,int>& info = *(ptracks.extras().begin()+kEx);
-      track->addInfo( info.first, m_pack.fltPacked( info.second ) );
-    }
-
-    //== Cleanup extraInfo and set likelihood/ghostProbability for old data
-    if ( ptracks.version() <= 2 )
-    {
-      track->eraseInfo(LHCb::Track::PatQuality);
-      track->eraseInfo(LHCb::Track::Cand1stQPat);
-      track->eraseInfo(LHCb::Track::Cand2ndQPat);
-      track->eraseInfo(LHCb::Track::NCandCommonHits);
-      track->eraseInfo(LHCb::Track::Cand1stChi2Mat);
-      track->eraseInfo(LHCb::Track::Cand2ndChi2Mat);
-      track->eraseInfo(LHCb::Track::MatchChi2);
-      track->eraseInfo(LHCb::Track::TsaLikelihood);
-      track->eraseInfo(LHCb::Track::nPRVeloRZExpect);
-      track->eraseInfo(LHCb::Track::nPRVelo3DExpect);
-      track->setLikelihood(       track->info(   1, 999) ); // was the key of likelihood...
-      track->setGhostProbability( track->info( 102, 999) ); // was the key of ghost probability
-      track->eraseInfo(   1 );
-      track->eraseInfo( 102 );
-    }
-
+    //parent().debug() << "Unpacked Track key=" << ptrack.key << endmsg;
+    tracks.insert( track, ptrack.key );
+    unpack( ptrack, *track, ptracks, tracks );
   }
-
 }
 
 void TrackPacker::convertState ( const LHCb::PackedState& pSta,
@@ -286,6 +292,79 @@ void TrackPacker::convertState ( const LHCb::PackedState& pSta,
   tra.addToStates( state );
 }
 
+StatusCode TrackPacker::check( const Data & dataA,
+                               const Data & dataB ) const
+{
+
+  if ( dataA.key() != dataB.key() )
+  {
+    parent().warning() << "Wrong key : old " <<  dataA.key() << " test " << dataB.key() << endmsg;
+  }
+  bool isOK = true;
+  if ( 1.e-7 < fabs( (dataA.chi2PerDoF()-dataB.chi2PerDoF())/dataB.chi2PerDoF() ) ) isOK = false;
+  if ( 0   < abs( dataA.nDoF() - dataB.nDoF() ) ) isOK = false;
+  if ( dataA.flags() != dataB.flags() )              isOK = false;
+  if ( dataA.lhcbIDs().size() != dataB.lhcbIDs().size() ) isOK = false;
+  if ( 1.e-7 < fabs( (dataA.likelihood() - dataB.likelihood() )/ dataB.likelihood() ) ) isOK = false;
+  if ( 1.e-7 < fabs( (dataA.ghostProbability()-dataB.ghostProbability())/
+                     dataB.ghostProbability()) ) isOK = false;
+  unsigned int kk;
+  for ( kk = 0 ; dataA.lhcbIDs().size() != kk ; ++kk )
+  {
+    if ( dataA.lhcbIDs()[kk].lhcbID() != dataB.lhcbIDs()[kk].lhcbID() )     isOK = false;
+  }
+  const LHCb::Track::ExtraInfo& oExtra = dataA.extraInfo();
+  const LHCb::Track::ExtraInfo& tExtra = dataB.extraInfo();
+  if ( oExtra.size() != tExtra.size() ) isOK = false;
+  LHCb::Track::ExtraInfo::const_iterator oIt = oExtra.begin();
+  LHCb::Track::ExtraInfo::const_iterator tIt = tExtra.begin();
+  for ( kk = 0; tExtra.size() > kk; ++kk, ++oIt, ++tIt )
+  {
+    if ( (*oIt).first != (*tIt).first ) isOK = false;
+    if ( 1.e-7 < fabs( ((*oIt).second - (*oIt).second ) / (*oIt).second ) ) isOK = false;
+  }
+
+  if ( dataA.nStates() != dataB.nStates() ) isOK = false;
+
+  if ( !isOK || MSG::DEBUG >= parent().msgLevel() )
+  {
+    parent().info() << "===== Track key " << dataA.key() << endmsg;
+    parent().info() << format( "Old   chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
+                               dataA.chi2PerDoF(), dataA.nDoF(), dataA.flags(),
+                               dataA.lhcbIDs().size(), oExtra.size(), dataA.nStates() );
+    parent().info() << format( " Likelihood %10.6f ghostProba %10.8f",
+                               dataA.likelihood(), dataA.ghostProbability() )
+                    << endmsg;
+    parent().info() << format( "Test  chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
+                               dataB.chi2PerDoF(), dataB.nDoF(), dataB.flags(),
+                               dataB.lhcbIDs().size(), tExtra.size(), dataB.nStates() );
+    parent().info() << format( " Likelihood %10.6f ghostProba %10.8f",
+                               dataB.likelihood(), dataB.ghostProbability() )
+                    << endmsg;
+    for ( kk = 0 ; dataA.lhcbIDs().size() != kk ; ++kk ) {
+      parent().info() << format( "   old ID %8x   new %8x",
+                                 dataA.lhcbIDs()[kk].lhcbID(),
+                                 dataB.lhcbIDs()[kk].lhcbID() ) << endmsg;
+    }
+    oIt = oExtra.begin();
+    tIt = tExtra.begin();
+    for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) {
+      parent().info() << format( "   old Extra %5d %12.4f     new %5d %12.4f",
+                                 (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second )
+                      << endmsg;
+    }
+  }
+
+  //== Compare the states. The track number won't be reported...
+
+  for ( kk = 0; (dataA.nStates() > kk) && (dataB.nStates() > kk); ++kk )
+  {
+    compareStates( *dataA.states()[kk], *dataB.states()[kk] );
+  }
+
+  return ( isOK ? StatusCode::SUCCESS : StatusCode::FAILURE );
+}
+
 StatusCode TrackPacker::check( const DataVector & dataA,
                                const DataVector & dataB ) const
 {
@@ -310,71 +389,7 @@ StatusCode TrackPacker::check( const DataVector & dataA,
   {
     LHCb::Track* oTrack = (*itOld++);
     LHCb::Track* tTrack = (*itTest++);
-    if ( oTrack->key() != tTrack->key() )
-    {
-      parent().warning() << "Wrong key : old " <<  oTrack->key() << " test " << tTrack->key() << endmsg;
-    }
-    bool isOK = true;
-    if ( 1.e-7 < fabs( (oTrack->chi2PerDoF()-tTrack->chi2PerDoF())/tTrack->chi2PerDoF() ) ) isOK = false;
-    if ( 0   < abs( oTrack->nDoF() - tTrack->nDoF() ) ) isOK = false;
-    if ( oTrack->flags() != tTrack->flags() )              isOK = false;
-    if ( oTrack->lhcbIDs().size() != tTrack->lhcbIDs().size() ) isOK = false;
-    if ( 1.e-7 < fabs( (oTrack->likelihood() - tTrack->likelihood() )/ tTrack->likelihood() ) ) isOK = false;
-    if ( 1.e-7 < fabs( (oTrack->ghostProbability()-tTrack->ghostProbability())/
-                       tTrack->ghostProbability()) ) isOK = false;
-    unsigned int kk;
-    for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk )
-    {
-      if ( oTrack->lhcbIDs()[kk].lhcbID() != tTrack->lhcbIDs()[kk].lhcbID() )     isOK = false;
-    }
-    const LHCb::Track::ExtraInfo& oExtra = oTrack->extraInfo();
-    const LHCb::Track::ExtraInfo& tExtra = tTrack->extraInfo();
-    if ( oExtra.size() != tExtra.size() ) isOK = false;
-    LHCb::Track::ExtraInfo::const_iterator oIt = oExtra.begin();
-    LHCb::Track::ExtraInfo::const_iterator tIt = tExtra.begin();
-    for ( kk = 0; tExtra.size() > kk; ++kk, ++oIt, ++tIt )
-    {
-      if ( (*oIt).first != (*tIt).first ) isOK = false;
-      if ( 1.e-7 < fabs( ((*oIt).second - (*oIt).second ) / (*oIt).second ) ) isOK = false;
-    }
-
-    if ( oTrack->nStates() != tTrack->nStates() ) isOK = false;
-
-    if ( !isOK || MSG::DEBUG >= parent().msgLevel() )
-    {
-      parent().info() << "===== Track key " << oTrack->key() << endmsg;
-      parent().info() << format( "Old   chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
-                                 oTrack->chi2PerDoF(), oTrack->nDoF(), oTrack->flags(),
-                                 oTrack->lhcbIDs().size(), oExtra.size(), oTrack->nStates() );
-      parent().info() << format( " Likelihood %10.6f ghostProba %10.8f",
-                                 oTrack->likelihood(), oTrack->ghostProbability() )
-                      << endmsg;
-      parent().info() << format( "Test  chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
-                                 tTrack->chi2PerDoF(), tTrack->nDoF(), tTrack->flags(),
-                                 tTrack->lhcbIDs().size(), tExtra.size(), tTrack->nStates() );
-      parent().info() << format( " Likelihood %10.6f ghostProba %10.8f",
-                                 tTrack->likelihood(), tTrack->ghostProbability() )
-                      << endmsg;
-      for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk ) {
-        parent().info() << format( "   old ID %8x   new %8x",
-                                   oTrack->lhcbIDs()[kk].lhcbID(),
-                                   tTrack->lhcbIDs()[kk].lhcbID() ) << endmsg;
-      }
-      oIt = oExtra.begin();
-      tIt = tExtra.begin();
-      for ( kk = 0 ; oExtra.size() != kk ; ++kk, ++oIt, ++tIt ) {
-        parent().info() << format( "   old Extra %5d %12.4f     new %5d %12.4f",
-                                   (*oIt).first, (*oIt).second, (*tIt).first, (*tIt).second )
-                        << endmsg;
-      }
-    }
-
-    //== Compare the states. The track number won't be reported...
-
-    for ( kk = 0; (oTrack->nStates() > kk) && (tTrack->nStates() > kk); ++kk )
-    {
-      compareStates( *oTrack->states()[kk], *tTrack->states()[kk] );
-    }
+    sc = sc && check( *oTrack, *tTrack );
   }
 
   return sc;
@@ -441,13 +456,13 @@ void TrackPacker::compareStates ( const LHCb::State& oSta,
   tFrac.push_back( tSta.covariance()(4,3) / tDiag[4] / tDiag[3] );
 
   unsigned int kk;
-  for ( kk = 0 ; oFrac.size() > kk ; ++kk ) 
+  for ( kk = 0 ; oFrac.size() > kk ; ++kk )
   {
     if ( 2.e-5 < fabs( oFrac[kk] - tFrac[kk] ) ) isOK = false;
   }
 
   if ( MSG::VERBOSE >= parent().msgLevel() ) isOK = false; //== force printing
-  if ( !isOK ) 
+  if ( !isOK )
   {
     parent().info() << "=== State differ: " << endmsg;
     parent().info() << "     old "

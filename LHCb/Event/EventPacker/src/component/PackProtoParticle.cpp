@@ -51,7 +51,7 @@ StatusCode PackProtoParticle::execute()
 
   LHCb::PackedProtoParticles* out = new LHCb::PackedProtoParticles();
   put( out, m_outputName );
-  out->setVersion( 1 );
+  out->setVersion( 2 );
 
   // pack
   const LHCb::ProtoParticlePacker packer(*this);

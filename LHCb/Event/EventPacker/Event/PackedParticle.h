@@ -100,7 +100,7 @@ namespace LHCb
   /// Namespace for locations in TDS
   namespace PackedParticleLocation
   {
-    static const std::string& User = "pPhys/User/Particles";
+    static const std::string& User     =  "pPhys/User/Particles";
     static const std::string& InStream = "/pPhys/Particles";
   }
 

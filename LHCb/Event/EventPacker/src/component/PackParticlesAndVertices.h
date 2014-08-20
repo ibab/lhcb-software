@@ -14,6 +14,8 @@
 
 #include "Kernel/LHCbID.h"
 
+#include "Event/PackedTrack.h"
+#include "Event/PackedProtoParticle.h"
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
@@ -21,6 +23,8 @@
 #include "Event/PackedFlavourTag.h"
 #include "Event/PackedPartToRelatedInfoRelation.h"
 
+#include "Event/Track.h"
+#include "Event/ProtoParticle.h"
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 #include "Event/FlavourTag.h"
@@ -65,6 +69,14 @@ private:
   /// Pack a Particle container
   void packAParticleContainer ( const LHCb::Particles* parts,
                                 LHCb::PackedParticles& pparts );
+
+  /// Pack a ProtoParticle container
+  void packAProtoParticleContainer ( const LHCb::ProtoParticles* protos,
+                                     LHCb::PackedProtoParticles& pprotos );
+
+  /// Pack a Track container
+  void packATrackContainer ( const LHCb::Tracks* tracks,
+                             LHCb::PackedTracks& ptracks );
 
   /// pack a vertex container
   void packAVertexContainer ( const LHCb::Vertices* verts,

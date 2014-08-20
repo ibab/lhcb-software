@@ -38,6 +38,110 @@ StatusCode UnpackParticlesAndVertices::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute"  << endmsg;
 
   //=================================================================
+  //== Process the Tracks
+  //=================================================================
+  {
+    int prevLink = -1;
+    unsigned int nbPartContainer(0), nbPart(0);
+    LHCb::PackedTracks * ptracks =
+      getIfExists<LHCb::PackedTracks>( m_inputStream + LHCb::PackedTrackLocation::InStream );
+    if ( ptracks )
+    {
+      const LHCb::TrackPacker tPacker(*dynamic_cast<GaudiAlgorithm*>(this));
+      LHCb::Tracks * tracks = NULL;
+      for ( std::vector<LHCb::PackedTrack>::iterator itP = ptracks->tracks().begin();
+            ptracks->tracks().end() != itP; ++itP )
+      {
+        const LHCb::PackedTrack& ptrack = *itP;
+        int key(0),linkID(0);
+        m_pack.indexAndKey64( ptrack.key, linkID, key );
+        if ( linkID != prevLink )
+        {
+          prevLink = linkID;
+          const std::string & containerName = ptracks->linkMgr()->link( linkID )->path() + m_postFix;
+          // Check to see if container already exists. If it does, unpacking has already been run this
+          // event so quit
+          if ( exist<LHCb::Tracks>(containerName) )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " -> " << containerName << " exists" << endmsg;
+            return StatusCode::SUCCESS;
+          }
+          tracks = new LHCb::Tracks();
+          put( tracks, containerName );
+          ++nbPartContainer;
+        }
+
+        // Make new object and insert into the output container
+        LHCb::Track * track = new LHCb::Track();
+        tracks->insert( track, key );
+        ++nbPart;
+
+        // Unpack the physics info
+        tPacker.unpack( ptrack, *track, *ptracks, *tracks );
+
+      }
+    }
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Retrieved " << nbPart << " Tracks in " << nbPartContainer << " containers" << endmsg;
+    }
+    counter("# Unpacked Tracks") += nbPart;
+  }
+
+  //=================================================================
+  //== Process the ProtoParticles
+  //=================================================================
+  {
+    int prevLink = -1;
+    unsigned int nbPartContainer(0), nbPart(0);
+    LHCb::PackedProtoParticles * pprotos =
+      getIfExists<LHCb::PackedProtoParticles>( m_inputStream + LHCb::PackedProtoParticleLocation::InStream );
+    if ( pprotos )
+    {
+      const LHCb::ProtoParticlePacker pPacker(*dynamic_cast<GaudiAlgorithm*>(this));
+      LHCb::ProtoParticles * protos = NULL;
+      for ( std::vector<LHCb::PackedProtoParticle>::iterator itP = pprotos->protos().begin();
+            pprotos->protos().end() != itP; ++itP )
+      {
+        const LHCb::PackedProtoParticle& pproto = *itP;
+        int key(0),linkID(0);
+        m_pack.indexAndKey64( pproto.key, linkID, key );
+        if ( linkID != prevLink )
+        {
+          prevLink = linkID;
+          const std::string & containerName = pprotos->linkMgr()->link( linkID )->path() + m_postFix;
+          // Check to see if container already exists. If it does, unpacking has already been run this
+          // event so quit
+          if ( exist<LHCb::ProtoParticles>(containerName) )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " -> " << containerName << " exists" << endmsg;
+            return StatusCode::SUCCESS;
+          }
+          protos = new LHCb::ProtoParticles();
+          put( protos, containerName );
+          ++nbPartContainer;
+        }
+
+        // Make new object and insert into the output container
+        LHCb::ProtoParticle * proto = new LHCb::ProtoParticle();
+        protos->insert( proto, key );
+        ++nbPart;
+
+        // Unpack the physics info
+        pPacker.unpack( pproto, *proto, *pprotos, *protos );
+
+      }
+    }
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Retrieved " << nbPart << " ProtoParticles in " << nbPartContainer << " containers" << endmsg;
+    }
+    counter("# Unpacked ProtoParticles") += nbPart;
+  }
+
+  //=================================================================
   //== Process the Particles
   //=================================================================
   {

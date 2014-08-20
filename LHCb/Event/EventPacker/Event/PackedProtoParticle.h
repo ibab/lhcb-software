@@ -44,7 +44,7 @@ namespace LHCb
       firstExtra( c.firstExtra ), lastExtra( c.lastExtra )
     {}
 
-    int key;
+    long long key;
     int track;
     int richPID;
     int muonPID;
@@ -60,8 +60,9 @@ namespace LHCb
   // Namespace for locations in TDS
   namespace PackedProtoParticleLocation
   {
-    static const std::string& Charged = "pRec/ProtoP/Charged";
-    static const std::string& Neutral = "pRec/Protop/Neutral";
+    static const std::string& Charged  =  "pRec/ProtoP/Charged";
+    static const std::string& Neutral  =  "pRec/Protop/Neutral";
+    static const std::string& InStream = "/pRec/ProtoP/Custom";
   }
 
   class PackedProtoParticles : public DataObject 
@@ -123,17 +124,32 @@ namespace LHCb
 
   public:
 
+    /// Pack a ProtoParticle
+    void pack( const Data & proto,
+               PackedData & pproto,
+               PackedDataVector & pprotos ) const;
+
     /// Pack ProtoParticles
     void pack( const DataVector & protos,
                PackedDataVector & pprotos ) const;
+
+    /// Unpack a single ProtoParticle
+    void unpack( const PackedData       & pproto,
+                 Data                   & proto,
+                 const PackedDataVector & pprotos,
+                 DataVector             & protos ) const;
 
     /// Unpack ProtoParticles
     void unpack( const PackedDataVector & pprotos,
                  DataVector             & protos ) const;
 
-    /// Compare two ProtoParticles to check the packing -> unpacking performance
+    /// Compare two ProtoParticle containers to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB ) const;
+
+    /// Compare two ProtoParticles to check the packing -> unpacking performance
+    StatusCode check( const Data & dataA,
+                      const Data & dataB ) const;
 
   private:
 

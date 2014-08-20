@@ -4,6 +4,13 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-08-20 - Chris Jones
+ - Add support for packing custom Track and ProtoParticles produced by 
+   Stripping Lines.
+ - Change the key in the PackedTrack and PackedProtoParticle classes from a
+   32 to 64 bit int. Needed to allow the packing of the container information.
+   ROOT schema evolution allows for backwards support for old data.
+
 !========================= EventPacker v4r3 2014-08-16 =========================
 
 ! 2014-08-07 - Sebastian Neubert
