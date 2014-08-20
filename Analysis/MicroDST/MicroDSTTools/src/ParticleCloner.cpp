@@ -24,7 +24,7 @@ ParticleCloner::ParticleCloner( const std::string& type,
 {
   declareProperty("ICloneVertex",        m_vertexClonerName="VertexCloner"   );
   declareProperty("ICloneProtoParticle", m_ppClonerName="ProtoParticleCloner");
-  //setProperty( "OutputLevel", 2 );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================

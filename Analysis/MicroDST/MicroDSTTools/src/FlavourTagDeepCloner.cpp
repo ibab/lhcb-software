@@ -25,11 +25,12 @@ FlavourTagDeepCloner::FlavourTagDeepCloner( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
   :
-  base_class       ( type, name , parent ),
+  base_class       ( type, name, parent ),
   m_particleCloner ( NULL )
 {
   declareProperty( "ICloneParticle", m_particleClonerName = "ParticleCloner" );
   declareProperty( "CloneTaggerParticles", m_cloneTaggerParticles = true );
+  //setProperty( "OutputLevel", 2 );
 }
 
 //=============================================================================
