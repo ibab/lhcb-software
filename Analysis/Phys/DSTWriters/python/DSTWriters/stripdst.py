@@ -17,22 +17,25 @@ from microdstelements import ( CloneParticleTrees,
                                PackParticlesAndVertices,
                                PackRecObjects,
                                CleanEmptyEventNodes,
+                               KillTESAddresses,
                                PrintTESContents,
                                FindDuplicates )
 
 def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
+    vetoTESList = ["/Event/Rec/ProtoP/Charged",
+                   "/Event/Rec/ProtoP/Neutrals",
+                   "/Event/Rec/Track/Best",
+                   "/Event/Rec/Rich/PIDs",
+                   "/Event/Rec/Track/Muon",
+                   "/Event/Rec/Muon/MuonPID",
+                   "/Event/Rec/Calo/Electrons",
+                   "/Event/Rec/Calo/Photons",
+                   "/Event/Rec/Calo/MergedPi0s",
+                   "/Event/Rec/Calo/SplitPhotons"]
     elements = [ FindDuplicates(),
-                 CloneParticleTrees( TESVetoList = ["/Event/Rec/ProtoP/Charged",
-                                                    "/Event/Rec/ProtoP/Neutrals",
-                                                    "/Event/Rec/Track/Best",
-                                                    "/Event/Rec/Rich/PIDs",
-                                                    "/Event/Rec/Track/Muon",
-                                                    "/Event/Rec/Muon/MuonPID",
-                                                    "/Event/Rec/Calo/Electrons",
-                                                    "/Event/Rec/Calo/Photons",
-                                                    "/Event/Rec/Calo/MergedPi0s",
-                                                    "/Event/Rec/Calo/SplitPhotons"] ),
-                 CloneBTaggingInfo( CloneTaggerParticles = True ),
+                 CloneParticleTrees( TESVetoList = vetoTESList ),
+                 CloneBTaggingInfo( CloneTaggerParticles = True,
+                                    TESVetoList = vetoTESList ),
                  CloneRelatedInfo( ), 
                  ClonePVRelations( location = "Particle2VertexRelations",
                                    clonePVs = True,
@@ -47,18 +50,24 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
         elements += [ PackParticlesAndVertices(),
                       PackRecObjects(),
                       CleanEmptyEventNodes() ]
-        #elements += [ PrintTESContents() ] # For debugging
+
+    # Kill history to ancestors
+    #elements += [ KillTESAddresses() ]
+    
+    #elements += [ PrintTESContents() ] # For debugging
+        
     return elements
 
 def stripDSTStreamConf( pack = True,
                         vetoItems = [ ], 
                         stripPrefix = 'Strip',
-                        selectiveRawEvent = False ) :
-    eItems = [ '/Event/DAQ/RawEvent#1' ] # For backwards compatibility with sDSTs
-    phys = 'Phys'
-    if pack :
-      phys = 'pPhys'
+                        selectiveRawEvent = True,
+                        killTESAddressHistory = True ) :
     
+    phys = 'Phys'
+    if pack : phys = 'pPhys'
+
+    eItems = [ ]
     if isinstance(stripPrefix, list) : 
       for p in stripPrefix : 
         eItems += [ '/Event/%s/%s/DecReports#1' % (p, phys) ]
@@ -74,9 +83,11 @@ def stripDSTStreamConf( pack = True,
                                        "/Event/Rich/RawEvent",
                                        "/Event/Calo/RawEvent",
                                        "/Event/Muon/RawEvent",
-                                       "/Event/Other/RawEvent" ]
+                                       "/Event/Other/RawEvent",
+                                       "/Event/Tracker/RawEvent" ]
 
     return OutputStreamConf( streamType = InputCopyStream,
                              extraItems = eItems,
                              vetoItems  = localVetoItems,
-                             selectiveRawEvent = selectiveRawEvent )
+                             selectiveRawEvent = selectiveRawEvent,
+                             killTESAddressHistory = killTESAddressHistory )

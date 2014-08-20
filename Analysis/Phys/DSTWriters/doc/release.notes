@@ -4,6 +4,12 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-08-20 - Chris Jones
+ - Add instance of AddressKillerAlg to DST Writer sequences to remove knowledge
+   of ancestor TES locations from Stripping (u)DSTs.
+ - Update Flavour Tag cloning to prevent unneccesary cloning of some Reco
+   information.
+
 ! 2014-08-04 - Chris Jones
  - Remove the need to explicitly set the RelatedInfo names in the
    microdstelements. Instead use the new ability of the relations cloner to

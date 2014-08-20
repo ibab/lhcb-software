@@ -86,7 +86,6 @@ class CloneParticleTrees(MicroDSTElement) :
 
     def __init__( self,
                   branch='',
-                  #ProtoParticleCloner = "ProtoParticleCloner",
                   TESVetoList = [ ] ) :
         MicroDSTElement.__init__(self, branch)
         #self.ppCloner    = "ProtoParticleCloner"
@@ -198,16 +197,41 @@ class CloneBTaggingInfo(MicroDSTElement) :
 
     def __init__( self,
                   branch               = '',
-                  CloneTaggerParticles = False ) :
+                  CloneTaggerParticles = False,
+                  TESVetoList = [ ] ) :
         MicroDSTElement.__init__(self, branch)
         self.clonerTaggerPs = CloneTaggerParticles
+        self.tesVetoList    = TESVetoList
     
     def __call__(self, sel) :
-        from Configurables import BTagging, CopyFlavourTag, FlavourTagDeepCloner
+        
+        from Configurables import ( CopyFlavourTag, FlavourTagDeepCloner,
+                                    ParticleCloner, ProtoParticleCloner, TrackCloner,
+                                    CaloHypoCloner, CaloClusterCloner )
+        
         cloner = CopyFlavourTag( name = self.personaliseName(sel,"CopyFlavourTags") )
         cloner.InputLocations = self.dataLocations(sel,"FlavourTags")
+        
         cloner.addTool( FlavourTagDeepCloner, name = "FlavourTagDeepCloner" )
         cloner.FlavourTagDeepCloner.CloneTaggerParticles = self.clonerTaggerPs
+        cloner.FlavourTagDeepCloner.TESVetoList = self.tesVetoList
+
+        cloner.addTool(ParticleCloner, name="ParticleCloner")
+        cloner.ParticleCloner.TESVetoList = self.tesVetoList
+        cloner.ParticleCloner.ICloneProtoParticle = "ProtoParticleCloner"
+                
+        cloner.addTool(ProtoParticleCloner,name="ProtoParticleCloner")
+        cloner.ProtoParticleCloner.TESVetoList = self.tesVetoList
+
+        cloner.addTool(TrackCloner,name="TrackCloner")
+        cloner.TrackCloner.TESVetoList = self.tesVetoList
+
+        cloner.addTool(CaloHypoCloner,name="CaloHypoCloner")
+        cloner.CaloHypoCloner.TESVetoList = self.tesVetoList
+
+        cloner.addTool(CaloClusterCloner,name="CaloClusterCloner")
+        cloner.CaloClusterCloner.TESVetoList = self.tesVetoList
+        
         self.setOutputPrefix(cloner)
         return [cloner]
 
@@ -450,7 +474,12 @@ class PackParticlesAndVertices(MicroDSTElement) :
                            DeleteInput        = True,
                            EnableCheck        = False,
                            AlwaysCreateOutput = False,
-                           VetoedContainers = ["/Event/"+self.branch+"/Rec/Vertex/Primary"] )
+                           # Following are handled by the PackRecObjects packers
+                           VetoedContainers = [ "/Event/"+self.branch+"/Rec/Vertex/Primary",
+                                                "/Event/"+self.branch+"/Rec/ProtoP/Charged",
+                                                "/Event/"+self.branch+"/Rec/ProtoP/Neutrals",
+                                                "/Event/"+self.branch+"/Rec/Track/Best",
+                                                "/Event/"+self.branch+"/Rec/Track/Muon" ] )
         return [packer]
 
 class PackTrackingClusters(MicroDSTElement):
@@ -572,9 +601,7 @@ class PackMCInfo(MicroDSTElement) :
     """
     def __call__(self, sel):
 
-        from Configurables import ( PackMCParticle, PackMCVertex,
-                                    Gaudi__DataRemove )
-
+        from Configurables import PackMCParticle, PackMCVertex, Gaudi__DataRemove
         return [ PackMCParticle( name = self.personaliseName(sel,"PackMCParticles"),
                                  AlwaysCreateOutput = False,
                                  DeleteInput        = False,
@@ -591,6 +618,14 @@ class PackMCInfo(MicroDSTElement) :
                                     DataLocation = self.branch + "/MC/Vertices" )
                  ]
 
+class KillTESAddresses(MicroDSTElement) :
+    """
+    Configurable to pack Rec objects
+    """   
+    def __call__(self, sel):
+        from Configurables import AddressKillerAlg
+        return [ AddressKillerAlg() ]
+    
 class CleanEmptyEventNodes(MicroDSTElement) :
     """
     Configurable to pack Rec objects

@@ -13,13 +13,15 @@ class OutputStreamConf(object) :
                  fileExtension = '.dst',
                  extraItems = [],
                  vetoItems  = [],
-                 selectiveRawEvent = False ) :
+                 selectiveRawEvent = False,
+                 killTESAddressHistory = True ) :
         self.streamType = streamType
         self.filePrefix = filePrefix
         self.extension  = fileExtension
         self.extraItems = copy(extraItems)
         self.vetoItems  = vetoItems
         self.selectiveRawEvent = selectiveRawEvent
+        self.killTESAddressHistory = killTESAddressHistory
         self.name = ''
 
     def __str__(self) :
@@ -29,4 +31,6 @@ class OutputStreamConf(object) :
         output += 'filePrefix : '+ str(self.filePrefix) + '\n'
         output += 'extension  : '+ str(self.extension) + '\n'
         output += 'extraItems : '+ str(self.extraItems) + '\n'
+        output += 'selectiveRawEvent : '+ str(self.selectiveRawEvent) + '\n'
+        output += 'killTESAddressHistory : '+ str(self.killTESAddressHistory) + '\n'
         return output

@@ -28,6 +28,7 @@ from microdstelements import ( CloneRecHeader,
                                PackRecObjects,
                                PackMCInfo,
                                CleanEmptyEventNodes,
+                               KillTESAddresses,
                                PackTrackingClusters,
                                PrintTESContents,
                                FindDuplicates )
@@ -76,11 +77,19 @@ def stripMicroDSTElements( pack=True              ,
                       PackRecObjects() ]
         if isMC :
             elements += [ PackMCInfo() ]
-        elements += [ CleanEmptyEventNodes() ] # Must be last
-        #elements += [ PrintTESContents() ] # For debugging
+        elements += [ CleanEmptyEventNodes() ] # Must be last in the packing
+
+    # Kill history to ancestors
+    #elements += [ KillTESAddresses() ]
+
+    #elements += [ PrintTESContents() ] # For debugging
+        
     return elements
 
-def stripMicroDSTStreamConf( pack=True, isMC=False, selectiveRawEvent=False ) :
+def stripMicroDSTStreamConf( pack = True,
+                             isMC = False,
+                             selectiveRawEvent = True,
+                             killTESAddressHistory = True ) :
     eItems = [ '/Event/Rec/Header#1',
                '/Event/Rec/Status#1',
                '/Event/Rec/Summary#1',
@@ -96,14 +105,13 @@ def stripMicroDSTStreamConf( pack=True, isMC=False, selectiveRawEvent=False ) :
     return OutputStreamConf( streamType    = OutputStream,
                              fileExtension = '.mdst',
                              extraItems    = eItems,
-                             selectiveRawEvent = selectiveRawEvent )
+                             selectiveRawEvent = selectiveRawEvent,
+                             killTESAddressHistory = killTESAddressHistory )
 
-def stripCalibMicroDSTStreamConf( pack=True, isMC=False,selectiveRawEvent=False ) :
-    conf = stripMicroDSTStreamConf(pack,isMC,selectiveRawEvent)
-    #conf.extraItems += [ '/Event/Muon/RawEvent#1' ] # Removed since now any line can specify the raw banks it needs
-    return conf
+def stripCalibMicroDSTStreamConf( pack=True, isMC=False, selectiveRawEvent=False ) :
+    return stripMicroDSTStreamConf(pack,isMC,selectiveRawEvent)
 
-def microDSTElements( pack=True, saveTrackClusters=True, isMC=False , refit = False ) :
+def microDSTElements( pack=True, saveTrackClusters=True, isMC=False, refit=False ) :
     return stripMicroDSTElements(pack,saveTrackClusters,isMC,refit)
 
 def microDSTStreamConf( pack=True, isMC=False ) :

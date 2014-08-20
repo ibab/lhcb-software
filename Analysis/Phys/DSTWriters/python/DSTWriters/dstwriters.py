@@ -31,18 +31,18 @@ class DSTWriterSelectionSequence(object) :
         #self.stream = outputStream(outputStreamConfiguration)
         #self.fsrStream = fsrStream(outputStreamConfiguration)
         
-        conf=outputStreamConfiguration
+        conf = outputStreamConfiguration
         dstName = conf.filePrefix + conf.name + conf.extension
         
         ioh=IOHelper(persistency,persistency)
         
-        writer=conf.streamType(conf.name+'_OStream')
+        writer = conf.streamType(conf.name+'_OStream')
         writer.OptItemList += conf.extraItems
         if len(conf.vetoItems) > 0 : writer.TESVetoList += conf.vetoItems
 
         #writer.OutputLevel = 1
         
-        algs = ioh.outputAlgs(filename=dstName, writer=writer, writeFSR=writeFSR)
+        algs = ioh.outputAlgs( filename=dstName, writer=writer, writeFSR=writeFSR )
         
         self.name = "DSTWriter"+selSequence.name()
         
@@ -65,6 +65,10 @@ class DSTWriterSelectionSequence(object) :
 
         from Configurables import FixInputCopyStream
         self.algos.append( FixInputCopyStream() )
+
+        if outputStreamConfiguration.killTESAddressHistory :
+            from Configurables import AddressKillerAlg
+            self.algos.append( AddressKillerAlg( name = "KillTESAddresses" ) )
         
         for alg in algs:
             if ioh.detectStreamType(alg) in ["FSR"]:
