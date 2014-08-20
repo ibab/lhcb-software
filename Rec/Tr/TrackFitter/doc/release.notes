@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2014-08-20 - Wouter Hulsbergen
+ - added functionality to TrackMasterFitter to _not_ set scattering momentum for velo-only tracks
+ - hide counters in TrackEventFitter behind msgLevel(INFO) to save time
+
 !========================= TrackFitter v5r1 2014-05-13 =========================
 ! 2014-04-01 - Heinrich Schindler
  - Replace VPLite measurement type by VP measurement type (r170821).
