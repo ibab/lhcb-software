@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-20 - Albert Puig
+  - Added StrippingLb2L0Gamma lines with converted and unconverted photons.
+
 ! 2014-08-20 - Carlos Vazquez Sierra
   - Updated StrippingB2Psi2sX.py and StrippingB2Psi2sXMuMu.py for testing purposes.
 
