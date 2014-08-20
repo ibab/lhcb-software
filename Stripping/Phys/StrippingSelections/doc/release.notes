@@ -9,6 +9,7 @@
 
 ! 2014-08-20 - Carlos Vazquez Sierra
   - Updated StrippingB2Psi2sX.py and StrippingB2Psi2sXMuMu.py for testing purposes.
+  - Updated StrippingB2CharmoniumX_6H.py and StrippingB2JpsiXforBeta_s.py for testing purposes.
 
 ! 2014-08-19
  	- Updated StrippingBu2Kpi0.py and StrippingBu2rho0rhoPlus.py, lines reoptimized,
