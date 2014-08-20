@@ -4,6 +4,8 @@
 #include <functional>
 #include <string>
 #include <map>
+#include <array>
+#include <algorithm>
 
 // from gsl
 #include "gsl/gsl_cdf.h"
@@ -17,10 +19,7 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-// ============================================================================
-// Boost
-// ============================================================================
-#include "boost/static_assert.hpp"
+
 // ============================================================================
 
 //-----------------------------------------------------------------------------
@@ -84,7 +83,7 @@ Track::ConstNodeRange Track::nodes() const
     const Iterator1* input  ;
     const Iterator2* output ;
     //
-    BOOST_STATIC_ASSERT( sizeof(Iterator1) == sizeof(Iterator2) ) ;
+    static_assert( sizeof(Iterator1) == sizeof(Iterator2), "iterator sizes must be equal" ) ;
   } ;
   // somehow, volatile didn't work here in gcc46
   static _IteratorCast _begin ;
@@ -109,6 +108,24 @@ Track::MeasurementContainer Track::measurements() const
   return meas ;
 }
 
+namespace {
+    
+  template <size_t N>
+  std::array<double,N+1>  generate_chi2max(double limit) {
+    std::array<double,N+1> c = { 0 };
+    size_t i = 1;
+    std::generate( std::next(std::begin(c)), std::end(c), 
+                   [=]() mutable { return gsl_cdf_chisq_Qinv(limit, i++ ); } );
+    return c;
+  };
+
+  // could put this into probChi2, but then the table is generated at
+  // first use of probChi2, i.e. during the event loop. 
+  // This way, it tends to be generated when libTrackEvent.so is 
+  // dynamically linked into the executable, i.e. very early.
+  static const auto chi2max = generate_chi2max<256>(1e-15);
+}
+
 //=============================================================================
 // Retrieve the probability of chi^2
 //=============================================================================
@@ -117,9 +134,12 @@ double Track::probChi2() const
   double val(0) ;
   if ( nDoF() > 0 )
   {
-    const double limit = 1e-15;
-    const double chi2max = gsl_cdf_chisq_Qinv( limit, nDoF() );
-    val = ( chi2() < chi2max ? gsl_cdf_chisq_Q(chi2(),nDoF()) : 0 );
+    // what to do if nDoF is bigger than the lookup table? 
+    // let's just do a range-checked acess, and have it throw 
+    // an exception... maybe not the most elegant solution...
+    // alternative: chi2max[  std::min( nDoF(), int(chi2max.size() ) ]
+    // in which case for unreasonable nDoF we don't go until 1e-15...
+    val = ( chi2() < chi2max.at( nDoF() ) ? gsl_cdf_chisq_Q(chi2(),nDoF()) : 0 );
   }
   return val ;
 }
