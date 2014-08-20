@@ -136,20 +136,23 @@ StatusCode TrackEventFitter::execute() {
 	// Add the track to the new Tracks container
 	// -----------------------------------------
 	if ( m_makeNewContainer ) tracksNewCont -> add( &track );
-	if ( msgLevel( MSG::DEBUG ) ) {
-	  debug() << "Fitted successfully track # " << track.key() << endmsg;
+
+	if( msgLevel( MSG::INFO ) ) {
+	  if ( msgLevel( MSG::DEBUG ) ) {
+	    debug() << "Fitted successfully track # " << track.key() << endmsg;
+	  }
+	  // Update counters
+	  std::string prefix = Gaudi::Utils::toString(track.type()) ;
+	  if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward" ;
+	  prefix += '.' ;
+	  if( track.nDoF()>0) {
+	    double chisqprob = track.probChi2() ;
+	    counter(prefix + "chisqprobSum") += chisqprob ;
+	    counter(prefix + "badChisq") += bool(chisqprob<0.01) ;
+	  }
+	  counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0) ;
+	  counter(prefix + "numOutliers") += track.nMeasurementsRemoved() ;
 	}
-	// Update counters
-	std::string prefix = Gaudi::Utils::toString(track.type()) ;
-	if( track.checkFlag( LHCb::Track::Backward ) ) prefix += "Backward" ;
-	prefix += '.' ;
-	if( track.nDoF()>0) {
-	  double chisqprob = track.probChi2() ;
-	  counter(prefix + "chisqprobSum") += chisqprob ;
-	  counter(prefix + "badChisq") += bool(chisqprob<0.01) ;
-	}
-	counter(prefix + "flipCharge") += bool( qopBefore * track.firstState().qOverP() <0) ;
-	counter(prefix + "numOutliers") += track.nMeasurementsRemoved() ;
       }
       else {
 	track.setFlag( Track::Invalid, true );
@@ -163,17 +166,19 @@ StatusCode TrackEventFitter::execute() {
 
   // Update counters
   // ---------------
-  unsigned int nTracks = tracksCont -> size();
-  counter("nTracks") += nTracks;
-  counter("nFitted") += ( nTracks - nFitFail - nBadInput);
-  counter("nBadInput") += nBadInput ;
-
-  if ( msgLevel( MSG::DEBUG ) ) {
-    if ( nFitFail == 0 )
-      debug() << "All " << nTracks << " tracks fitted succesfully." << endmsg;
-    else
-      debug() << "Fitted successfully " << (nTracks-nFitFail-nBadInput)
-              << " out of " << nTracks-nBadInput << endmsg;
+  if( msgLevel( MSG::INFO ) ) {
+    unsigned int nTracks = tracksCont -> size();
+    counter("nTracks") += nTracks;
+    counter("nFitted") += ( nTracks - nFitFail - nBadInput);
+    counter("nBadInput") += nBadInput ;
+  
+    if ( msgLevel( MSG::DEBUG ) ) {
+      if ( nFitFail == 0 )
+	debug() << "All " << nTracks << " tracks fitted succesfully." << endmsg;
+      else
+	debug() << "Fitted successfully " << (nTracks-nFitFail-nBadInput)
+		<< " out of " << nTracks-nBadInput << endmsg;
+    }
   }
 
   // Store the Tracks in the TES
@@ -191,13 +196,15 @@ StatusCode TrackEventFitter::finalize() {
 
   if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Finalize" << endmsg;
 
-  float perf = 0.;
-  double nTracks = counter("nTracks").flag();
-  if ( nTracks > 1e-3 )
-    perf = float(100.0*counter("nFitted").flag() / nTracks);
-
-  info() << "  Fitting performance   : "
-         << format( " %7.2f %%", perf ) << endmsg;
+  if ( msgLevel( MSG::INFO ) ) {
+    float perf = 0.;
+    double nTracks = counter("nTracks").flag();
+    if ( nTracks > 1e-3 )
+      perf = float(100.0*counter("nFitted").flag() / nTracks);
+    
+    info() << "  Fitting performance   : "
+	   << format( " %7.2f %%", perf ) << endmsg;
+  }
 
   m_tracksFitter.release().ignore() ;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
