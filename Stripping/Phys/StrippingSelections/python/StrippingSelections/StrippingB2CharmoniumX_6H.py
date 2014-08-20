@@ -32,10 +32,10 @@ __all__ = (
     'makeBs2ChicPhi_Chic2KKPiPi',
     'makeB2EtacKst_Etac2KKPiPi',
     'makeB2ChicKst_Chic2KKPiPi',
-    'confdict'
+    'default_config'
     )
 
-confdict = {
+config_params = {
     'Prescale'               : 1.0 ,
     'Postscale'              : 1.0 ,
     'TRCHI2'                 : 3,
@@ -82,7 +82,13 @@ confdict = {
     'Bs_VCHI2'               : 25.
     }
 
-
+default_config = {
+    'NAME'              : 'B2CharmoniumX_6H',
+    'BUILDERTYPE'       : 'B2CharmoniumX_6HAllLinesConf',
+    'CONFIG'    : config_params,
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs'    : [ 'B2CC' ]
+    }
 
 class B2CharmoniumX_6HAllLinesConf(LineBuilder):
 
@@ -135,15 +141,11 @@ class B2CharmoniumX_6HAllLinesConf(LineBuilder):
         )
 
 
-
-        __confdict__={}
-
-        
         
         def __init__(self, name, config) :
-            
+            #self.name = name
+            #self.config = config
             LineBuilder.__init__(self, name, config)
-            self.__confdict__=config
 
 		
             self.selKaon = Selection( "KaonFor" + name,
