@@ -247,6 +247,15 @@ namespace LHCb
     return FitNodeRange(*begin,*end) ;
   }
 
+  size_t KalmanFitResult::nActiveMeasurements( LHCb::Measurement::Type type ) const
+  {
+    size_t rc(0) ;
+    for( auto inode : nodes() ) 
+      if( inode->type() == LHCb::Node::HitOnTrack &&
+	  inode->measurement().type() == type ) ++rc ;
+    return rc ;
+  }
+
   unsigned int KalmanFitResult::nActiveOTTimes() const 
   {
     unsigned int rc(0) ;

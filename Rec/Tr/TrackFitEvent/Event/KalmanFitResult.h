@@ -149,6 +149,9 @@ namespace LHCb
     FitNodeRange fitNodes() ;
 
     // the number of active hits (non-outlier) of a certain type
+    size_t nActiveMeasurements( LHCb::Measurement::Type type) const ;
+
+    // the number of hits for which OT drifttime is used
     unsigned int nActiveOTTimes() const ;
 
   private:
