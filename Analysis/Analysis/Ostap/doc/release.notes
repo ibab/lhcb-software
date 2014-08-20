@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-20 - Vanya Belyaev
+ - fix missing import in MinuitDeco 
+   (thanks to Alexander Artamonov for pointint to the problem)
+
 ! 2014-08-08 - Vanya Belyaev
  -  minor improvements in 1D-fits 
 

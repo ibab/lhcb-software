@@ -92,7 +92,8 @@ def _mn_exec_ ( self , command , *args ) :
     if not args :
         args = [0]
         logger.warning ( 'TMinuit::execute: empty vector replaced with  %s ' % args ) 
-        
+
+    from array import array
     arglist = array ( 'd' , [ i for i in args ]  )
     ierr    = ROOT.Long   ( 0 )
     #        
@@ -234,6 +235,7 @@ def _mn_add_par_ ( self    , name      ,
     ## 
     if step < 0 : step = abs ( 0.01 * start ) 
     ##
+    from array import array
     starts  = array ( 'd' , 1 * [ start ] )
     steps   = array ( 'd' , 1 * [ step  ] )
     #
@@ -423,6 +425,7 @@ def _mn_cov_ ( self , size = -1 , root = False ) :
     if size <= 0 : size = len ( self )
     size = min ( size , len ( self ) ) 
     #
+    from array import array
     matrix = array ( 'd' , [ 0 for i in range(0, size * size) ]  )
     self.mnemat ( matrix , size )
     #
