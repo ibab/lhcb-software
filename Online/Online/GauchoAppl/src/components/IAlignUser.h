@@ -13,9 +13,6 @@ namespace LHCb
   {
     public:
       DeclareInterfaceID(LHCb::IAlignFcn,1,0);
-      virtual void init()=0;
-      virtual double analyze()=0;
-      virtual void ReadParams()=0;
       virtual void PubResult(long reference)=0;
       virtual void i_run()=0;
   };

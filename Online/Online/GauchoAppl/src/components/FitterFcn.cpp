@@ -9,7 +9,6 @@
 #include "GaudiKernel/StatusCode.h"
 #include "IAlignSys.h"
 using namespace LHCb;
-//DECLARE_COMPONENT(LHCb::FitterFcn)
 
 DECLARE_NAMESPACE_TOOL_FACTORY(LHCb,FitterFcn)
 
@@ -39,10 +38,6 @@ StatusCode FitterFcn::initialize()
 }
 void FitterFcn::init()
 {
-//  StatusCode sc;
-//  if ( !sc.isSuccess() )  {
-////    return error("Cannot access monitoring service of type "+m_monitorSvcType+".");
-//  }
   printf ("Parameter File Name: %s\n",m_ParamFileName.c_str());
   printf ("Data File Name: %s\n",m_DataFileName.c_str());
   m_MonSvc = m_Parent->getMonSvc();
@@ -69,7 +64,7 @@ void FitterFcn::init()
   fflush(stdout);
 }
 
-double FitterFcn::analyze()
+void FitterFcn::analyze()
 {
   double result = 0.0;
   size_t i;
@@ -87,7 +82,7 @@ double FitterFcn::analyze()
     result += chi*chi;
   }
   m_result = result;
-  return result;
+  return ;
 }
 
 void FitterFcn::ReadParams()
@@ -115,20 +110,10 @@ void FitterFcn::PubResult(long reference)
 {
   m_MonSvc->updatePerSvc(reference);
 }
-//void FitterFcn::run()
-//{
-//
-//}
-//void FitterFcn::setParent(void *p)
-//{
-//  m_Parent = (LHCb::IDumAligWork*)p;
-//  init();
-//  return;
-//}
 void FitterFcn::i_run()
 {
   ReadParams();
-  m_result = analyze();
+  analyze();
   printf("Function Result: %lf\n",m_result);
   fflush(stdout);
 }

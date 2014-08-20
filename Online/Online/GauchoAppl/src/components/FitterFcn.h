@@ -33,7 +33,7 @@ namespace LHCb
       StatusCode initialize();
       StatusCode finalize();
       virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvIF);
-      double analyze();
+      void analyze();
       void ReadParams();
       void PubResult(long reference);
       void i_run();
