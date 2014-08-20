@@ -144,7 +144,7 @@ class B2CharmoniumX_6HAllLinesConf(LineBuilder):
         
         def __init__(self, name, config) :
             #self.name = name
-            #self.config = config
+            self.config = config
             LineBuilder.__init__(self, name, config)
 
 		
@@ -287,28 +287,28 @@ class B2CharmoniumX_6HAllLinesConf(LineBuilder):
             
         def _PionFilter( self ):
 		_code = "(TRCHI2DOF < %(TRCHI2)s) & (PT > %(pi_PT)s *MeV)"\
-			"& (MIPCHI2DV(PRIMARY) > %(pi_IPCHI2)s) &  (PIDK < %(pi_PIDK)s)" % self.__confdict__
+			"& (MIPCHI2DV(PRIMARY) > %(pi_IPCHI2)s) &  (PIDK < %(pi_PIDK)s)" % self.config
 		_pi = FilterDesktop( Code = _code )
 		return _pi
 
         
         def _KaonFilter( self ):
 		_code = "  (TRCHI2DOF < %(TRCHI2)s) & (PT > %(K_PT)s *MeV)"\
-			"& (MIPCHI2DV(PRIMARY) > %(K_IPCHI2)s) &  (PIDK > %(K_PIDK)s)" % self.__confdict__
+			"& (MIPCHI2DV(PRIMARY) > %(K_IPCHI2)s) &  (PIDK > %(K_PIDK)s)" % self.config
 		_k = FilterDesktop( Code = _code )
 		return _k
 
 
 	def _Phi2KKFilter( self ):
-                _code = "(MINTREE(ABSID=='K+',PIDK) > -3) & (ADMASS('phi(1020)') < 30.*MeV) & (PT> %(phi_PT)s) & (MIPCHI2DV(PRIMARY) > %(phi_IPCHI2)s) & (VFASPF(VCHI2) < %(phi_VCHI2)s) & (BPVDIRA > %(phi_DIRA)s)" % self.__confdict__
+                _code = "(MINTREE(ABSID=='K+',PIDK) > -3) & (ADMASS('phi(1020)') < 30.*MeV) & (PT> %(phi_PT)s) & (MIPCHI2DV(PRIMARY) > %(phi_IPCHI2)s) & (VFASPF(VCHI2) < %(phi_VCHI2)s) & (BPVDIRA > %(phi_DIRA)s)" % self.config
 		_phi2kk = FilterDesktop(Code = _code)
 		return _phi2kk
 
 
 	def _Kst2KPiFilter( self ):
 		_decayDescriptor = '[K*(892)0 -> K+ pi-]cc'
-		_combinationCut = "(ADAMASS('K*(892)0') < 100 *MeV) & (APT > %(Kst_PT)s)" % self.__confdict__
-		_motherCut = "(VFASPF(VZ) > %(Kst_VDZ)s *mm) & (BPVDIRA > %(Kst_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(Kst_IPCHI2)s) & (VFASPF(VCHI2) < %(Kst_VCHI2)s)" % self.__confdict__
+		_combinationCut = "(ADAMASS('K*(892)0') < 100 *MeV) & (APT > %(Kst_PT)s)" % self.config
+		_motherCut = "(VFASPF(VZ) > %(Kst_VDZ)s *mm) & (BPVDIRA > %(Kst_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(Kst_IPCHI2)s) & (VFASPF(VCHI2) < %(Kst_VCHI2)s)" % self.config
 		_kst2kpi = CombineParticles( DecayDescriptor = _decayDescriptor,
 					    CombinationCut = _combinationCut,
 					    MotherCut = _motherCut)                            
@@ -317,8 +317,8 @@ class B2CharmoniumX_6HAllLinesConf(LineBuilder):
 
         def _Chic2KKPiPiFilter( self ):
 		_decayDescriptors = [ 'chi_c0(1P) -> K+ K- pi+ pi-' ]
-		_combinationCut = "(ADAMASS('chi_c0(1P)') < 60 *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(chic_sumPT)s *MeV) & (AMAXDOCA('') < %(DOCA)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),PT)) > %(PT_maxchicdaughter)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),MIPCHI2DV(PRIMARY))) > %(IPCHI2_maxdaughter)s)" % self.__confdict__
-		_motherCut = "(BPVDIRA> %(chic_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(chic_IPCHI2)s) & (VFASPF(VCHI2/VDOF) < %(chic_VCHI2)s)"  % self.__confdict__
+		_combinationCut = "(ADAMASS('chi_c0(1P)') < 60 *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(chic_sumPT)s *MeV) & (AMAXDOCA('') < %(DOCA)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),PT)) > %(PT_maxchicdaughter)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),MIPCHI2DV(PRIMARY))) > %(IPCHI2_maxdaughter)s)" % self.config
+		_motherCut = "(BPVDIRA> %(chic_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(chic_IPCHI2)s) & (VFASPF(VCHI2/VDOF) < %(chic_VCHI2)s)"  % self.config
 		_chic2kkpipi = CombineParticles( DecayDescriptors = _decayDescriptors,
 						 CombinationCut = _combinationCut,
 						 MotherCut = _motherCut)                             
@@ -327,8 +327,8 @@ class B2CharmoniumX_6HAllLinesConf(LineBuilder):
 
 	def _Etac2KKPiPiFilter( self ):
 		_decayDescriptors = [ 'eta_c(1S) -> K+ K- pi+ pi-'  ]
-		_combinationCut = "(ADAMASS('eta_c(1S)') < 90 *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(etac_sumPT)s *MeV) & (AMAXDOCA('') < %(DOCA)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),PT)) > %(PT_maxetacdaughter)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),MIPCHI2DV(PRIMARY))) > %(IPCHI2_maxdaughter)s)" % self.__confdict__
-		_motherCut = "(BPVDIRA> %(etac_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(etac_IPCHI2)s) & (VFASPF(VCHI2/VDOF) < %(etac_VCHI2)s)"  % self.__confdict__
+		_combinationCut = "(ADAMASS('eta_c(1S)') < 90 *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(etac_sumPT)s *MeV) & (AMAXDOCA('') < %(DOCA)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),PT)) > %(PT_maxetacdaughter)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),MIPCHI2DV(PRIMARY))) > %(IPCHI2_maxdaughter)s)" % self.config
+		_motherCut = "(BPVDIRA> %(etac_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(etac_IPCHI2)s) & (VFASPF(VCHI2/VDOF) < %(etac_VCHI2)s)"  % self.config
 		_etac2kkpipi = CombineParticles( DecayDescriptors = _decayDescriptors,
 						 CombinationCut = _combinationCut,
 						 MotherCut = _motherCut)                             
@@ -337,8 +337,8 @@ class B2CharmoniumX_6HAllLinesConf(LineBuilder):
 
         def _Chic2PiPiPiPiFilter( self ):
 		_decayDescriptors = [ 'chi_c0(1P) -> pi+ pi- pi+ pi-' ]
-		_combinationCut = "(ADAMASS('chi_c0(1P)') < 60 *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(chic_sumPT)s *MeV) & (AMAXDOCA('') < %(DOCA)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),PT)) > %(PT_maxchicdaughter)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),MIPCHI2DV(PRIMARY))) > %(IPCHI2_maxdaughter)s)" % self.__confdict__
-		_motherCut = "(BPVDIRA> %(chic_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(chic_IPCHI2)s) & (VFASPF(VCHI2/VDOF) < %(chic_VCHI2)s)"  % self.__confdict__
+		_combinationCut = "(ADAMASS('chi_c0(1P)') < 60 *MeV) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) > %(chic_sumPT)s *MeV) & (AMAXDOCA('') < %(DOCA)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),PT)) > %(PT_maxchicdaughter)s) & (AMAXCHILD(MAXTREE(((ABSID=='pi+') | (ABSID=='K+')),MIPCHI2DV(PRIMARY))) > %(IPCHI2_maxdaughter)s)" % self.config
+		_motherCut = "(BPVDIRA> %(chic_DIRA)s) & (MIPCHI2DV(PRIMARY) > %(chic_IPCHI2)s) & (VFASPF(VCHI2/VDOF) < %(chic_VCHI2)s)"  % self.config
 		_chic2pipipipi = CombineParticles( DecayDescriptors = _decayDescriptors,
 						   CombinationCut = _combinationCut,
 						   MotherCut = _motherCut)                             
