@@ -3,6 +3,10 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2014-08-20 - Gerhard Raven
+ - remove special configuration of TisTosParticleTagger when context() = 'Hlt'
+   as this is no longer needed 
+
 !========================= TisTosTobbing v8r0 2014-01-13 =========================
 ! 2013-12-01 - Tomasz Skwarnicki
  - Check RootInTES and absolute locations of reports in TisTosParticleTagger 

@@ -93,12 +93,6 @@ StatusCode TisTosParticleTagger::initialize()
         m_checkSelReport=false;
       }
     }
-  } else if ( context() == "HLT" || context() == "Hlt" ) {
-    verbose() << " Allocating TriggerTisTosInHlt tool " << endmsg;
-    m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTosInHlt" , "TriggerTisTosInHltTool" ,this);
-    m_checkDecReport=true;
-    m_decReportLoc=HltDecReportsLocation::Default;
-    m_checkSelReport=false;
   } else {
     verbose() << " Allocating TriggerTisTos tool " << endmsg;
     m_tistostool = tool<ITriggerTisTos>(  "TriggerTisTos" , "TriggerTisTosTool" ,this);
