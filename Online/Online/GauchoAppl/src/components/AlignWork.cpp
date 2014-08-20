@@ -120,8 +120,8 @@ LHCb::AlignWork::AlignWork(const std::string& name, ISvcLocator* sl) : base_clas
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
-  declareProperty("FitterFunktioClass",  m_FitFcnClass);
-  declareProperty("FitterFunktioName",  m_FitFcnName);
+  declareProperty("FitterFunktionClass",  m_FitFcnClass);
+  declareProperty("FitterFunktionName",  m_FitFcnName);
   service("ToolSvc",m_ToolSvc,true);
   m_runonce = false;
   service("MonitorSvc",m_MonSvc,true);
