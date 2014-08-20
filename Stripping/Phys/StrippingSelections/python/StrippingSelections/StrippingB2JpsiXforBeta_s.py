@@ -10,13 +10,14 @@ Exported symbols (use python help!):
 '''
 
 
-__author__ = ['Greig Cowan','Juan Palacios','Francesca Dordei']
-__date__ = '26/03/2013'
-__version__ = '$Revision: 1.3 $'
+__author__ = ['Greig Cowan','Juan Palacios','Francesca Dordei', 'Carlos Vazquez Sierra']
+__date__ = '20/08/2014'
+__version__ = '$Revision: 1.4 $'
 
 
 __all__ = ('B2JpsiXforBeta_sConf','default_config')
-#__all__ = ('B2JpsiXforBeta_sConf')
+
+# File under revision by B2CC liaisons! Ignore debug comments.
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -58,7 +59,7 @@ default_config = {
                  ,       'Bs2JpsiPi0Prescale'        :       0.4
                  ,       'Bs2JpsiRho0Prescale'       :       0.15
                          },
-    'STREAMS' : {}}
+    'STREAMS' : {}} #Check dictionaries!
 #        'Leptonic' : [
 #         'StrippingBetaSBs2JpsiPhiMicroLine'
 #        ],
@@ -76,7 +77,7 @@ default_config = {
 #    }
 
 class B2JpsiXforBeta_sConf(LineBuilder) :
-    __configuration_keys__ = (
+    __configuration_keys__ = ( #Check prescales?
 					'TRCHI2DOF'
 				,	'BPVLTIME'
                 ,   'JpsiMassWindow'
@@ -234,26 +235,26 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                           Cuts = "(PT > 1500.*MeV)"\
                                           "& (MINTREE('gamma'==ABSID, PT) > 500.*MeV)")
         
-        self.makeInclJpsi    ()
-        self.makeRho0        ()
-        self.makeEtap        ()
-        self.makeBu2JpsiK    ()
-        self.makeBu2JpsiH    () 
-        self.makeBs2JpsiPhi  () 
-        self.makeBd2JpsiKstar()  
-        self.makeBd2JpsiKs   ()
-        self.makeBd2JpsiKsLD ()
-        ##self.makeBd2JpsiKsFromV0 ()
-        self.makeBs2Jpsif0   ()
-        self.makeBs2Jpsif0NoIP()
-        self.makeBs2Jpsi4Pi  ()
-        self.makeBs2JpsiKstar()
-        self.makeBs2JpsiKstarWide()
-        self.makeLambdab2JpsiLambda() 
-        self.makeBs2JpsiEta  ()
-        self.makeBs2JpsiEtap ()  
-        self.makeBd2JpsiPi0  ()
-        self.makeBd2JpsiRho0 ()  
+        self.makeInclJpsi() #OK
+        self.makeRho0() #Aux
+        self.makeEtap() #Aux
+        self.makeBu2JpsiK() #TO FULLDST
+        #self.makeBu2JpsiH() #Dropped
+        self.makeBs2JpsiPhi() #OK
+        self.makeBd2JpsiKstar() #OK, Detached to FULLDST
+        self.makeBd2JpsiKs() #OK
+        self.makeBd2JpsiKsLD() #OK
+        ##self.makeBd2JpsiKsFromV0()
+        #self.makeBs2Jpsif0() #Dropped
+        #self.makeBs2Jpsif0NoIP() #Dropped
+        #self.makeBs2Jpsi4Pi() #Dropped
+        #self.makeBs2JpsiKstar() #Dropped
+        self.makeBs2JpsiKstarWide() #OK
+        self.makeLambdab2JpsiLambda() #OK
+        #self.makeBs2JpsiEta() #Dropped
+        #self.makeBs2JpsiEtap()  #Dropped
+        self.makeBd2JpsiPi0()
+        #self.makeBd2JpsiRho0()  #Dropped
         self.makeLambdab2Jpsippi() 
 
 
@@ -318,11 +319,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                           myTisTosSpecs = { "Hlt2DiMuonDetachedJPsiDecision%TOS" : 0 }
                                                           )
         
-        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetachedTOS ], prescale =self.config["Jpsi2MuMuDetachedPrescale"], RequiredRawEvents = [ "Trigger", "Rich", "Calo", "Muon", "Velo", "Tracker" ] )#, "Other" ] )
-
-        Jpsi2MuMuForBetasDetachedLineNoBanks = StrippingLine( self.name + "Jpsi2MuMuDetachedLineNoBanks", algos = [ Jpsi2MuMuForBetasDetachedTOS ], prescale =self.config["Jpsi2MuMuDetachedPrescale"] )#, RequiredRawEvents = [ "Rich", "Calo", "Muon" ] )#, "Other" ] )
-        
-
+        Jpsi2MuMuForBetasDetachedLine = StrippingLine( self.name + "Jpsi2MuMuDetachedLine", algos = [ Jpsi2MuMuForBetasDetachedTOS ], prescale =self.config["Jpsi2MuMuDetachedPrescale"], RequiredRawEvents = [ "Trigger", "Rich", "Calo", "Muon", "Velo", "Tracker" ] )
+ 
         #Jpsi2MuMuForBetasDetached = self.createSubSel(  OutputList = self.JpsiList.name() + "Detached" + self.name,
         #                                                InputList  = self.JpsiList,
         #                                                Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
@@ -330,7 +328,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         self.registerLine(Jpsi2MuMuForBetasLine)
         #self.registerLine(Jpsi2MuMuForBetasDetachedLineNoBanks)
-        self.registerLine(Jpsi2MuMuForBetasDetachedLine)
+        #self.registerLine(Jpsi2MuMuForBetasDetachedLine)
 
     def makeRho0( self ):
         self.Rho0List = self.createCombinationSel( OutputList = "Rho0forBetaS" + self.name,
@@ -381,9 +379,9 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bu2JpsiKUnbiasedLine = StrippingLine( self.name + "Bu2JpsiKUnbiasedLine",
                                         algos = [ Bu2JpsiKUnbiased ] )
     
-        self.registerLine(Bu2JpsiKPrescaledLine)
+        #self.registerLine(Bu2JpsiKPrescaledLine)
         self.registerLine(Bu2JpsiKDetachedLine)
-        ##self.registerLine(Bu2JpsiKUnbiasedLine)
+        #self.registerLine(Bu2JpsiKUnbiasedLine)
 
 
     def makeBu2JpsiH( self ):
@@ -430,7 +428,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bs2JpsiPhiUnbiasedLine =  StrippingLine( self.name + "Bs2JpsiPhiUnbiasedLine", algos = [ Bs2JpsiPhiUnbiased ] )
 
         self.registerLine(Bs2JpsiPhiPrescaledLine)
-        self.registerLine(Bs2JpsiPhiMicroLine)
+        #self.registerLine(Bs2JpsiPhiMicroLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)
         ##self.registerLine(Bs2JpsiPhiUnbiasedLine)
 
