@@ -762,7 +762,7 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
 
     // if only velo, or magnet off, use a fixed momentum based on pt.
     double scatteringMomentum = track.firstState().p() ;
-    if( !track.hasT() && !track.hasTT()) {
+    if( m_scatteringPt>0 && !track.hasT() && !track.hasTT() ) {
       double tx     = track.firstState().tx() ;
       double ty     = track.firstState().ty() ;
       double slope2 = tx*tx+ty*ty ;
