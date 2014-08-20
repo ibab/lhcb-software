@@ -71,7 +71,7 @@ StatusCode AlignDrv::initialize()
 //    printf("%s\n",m_CounterNames[i].c_str());
 //  }
   service("ToolSvc",m_ToolSvc,true);
-  sc = m_ToolSvc->retrieveTool("LHCb::Fitter","bbb",m_fitter,this,true);
+  sc = m_ToolSvc->retrieveTool(m_FitterClass,m_FitterName,m_fitter,this,true);
 
 //  m_fitter = new Fitter(this);
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
@@ -131,6 +131,8 @@ void AlignDrv::writeReference()
 AlignDrv::AlignDrv(const std::string& name, ISvcLocator* sl) : base_class(name,sl),m_MonSvc(0),m_fitter(0),m_ToolSvc(0)
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCbA");
+  declareProperty("FitterClass",   m_FitterClass);
+  declareProperty("FitterName",   m_FitterName);
   m_runonce = false;
   DrvInstance = this;
 }
@@ -147,20 +149,3 @@ void AlignDrv::doStop()
 {
   incidentSvc()->fireIncident(Incident(name(),"DAQ_STOP"));
 }
-//StatusCode AlignDrv::queryInterface(const InterfaceID& riid, void** ppvIF)
-//{
-//  if (IRunable::interfaceID().versionMatch(riid))
-//  {
-//    *ppvIF = (IRunable*) this;
-//    addRef();
-//    return StatusCode::SUCCESS;
-//  }
-//  else if (IAlignDrv::interfaceID().versionMatch(riid))
-//  {
-//    *ppvIF = (IDumAlignDrv*)this;
-//    addRef();
-//    return StatusCode::SUCCESS;
-//  }
-//  return OnlineService::queryInterface(riid, ppvIF);
-//}
-

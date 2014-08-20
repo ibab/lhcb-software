@@ -70,7 +70,7 @@ StatusCode LHCb::AlignWork::initialize()
   {
     m_RefFileName = "/group/online/dataflow/options/"+m_PartitionName+"/Alignement_Reference_File.txt";
   }
-  StatusCode sc=m_ToolSvc->retrieveTool("LHCb::FitterFcn","bbb",m_fitterFcn,this,true);
+  StatusCode sc=m_ToolSvc->retrieveTool(m_FitFcnClass,m_FitFcnName,m_fitterFcn,this,true);
 //  m_fitterFcn->setParent((void*)((IDumAligWork*)this));
   return StatusCode::SUCCESS;
 }
@@ -120,6 +120,8 @@ LHCb::AlignWork::AlignWork(const std::string& name, ISvcLocator* sl) : base_clas
 {
   declareProperty("PartitionName",   m_PartitionName= "LHCb");
   declareProperty("ReferenceFileName",  m_RefFileName);
+  declareProperty("FitterFunktioClass",  m_FitFcnClass);
+  declareProperty("FitterFunktioName",  m_FitFcnName);
   service("ToolSvc",m_ToolSvc,true);
   m_runonce = false;
   service("MonitorSvc",m_MonSvc,true);

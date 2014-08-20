@@ -34,6 +34,8 @@ namespace LHCb
 
       std::string m_PartitionName;
       std::string m_RefFileName;
+      std::string m_FitFcnName;
+      std::string m_FitFcnClass;
       unsigned long m_Reference;
       lib_rtl_thread_t m_thread;
       bool m_runonce;

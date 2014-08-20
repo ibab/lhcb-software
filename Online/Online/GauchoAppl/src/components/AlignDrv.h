@@ -38,6 +38,8 @@ namespace LHCb
 
       std::string m_PartitionName;
       std::string m_RefFileName;
+      std::string m_FitterClass;
+      std::string m_FitterName;
 //      std::vector<std::string> m_CounterNames;
 //      std::string m_CntDNS;
 //      std::string m_CntTask;
