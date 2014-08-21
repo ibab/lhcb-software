@@ -17,10 +17,10 @@ __all__ = ("default_config", "StrippingLb2L0GammaConf")
 
 from Gaudi.Configuration import *
 
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from Configurables import FilterDesktop
+from Configurables import CombineParticles
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 
-from PhysSelPython.Wrappers      import Selection, MergedSelection
+from PhysSelPython.Wrappers      import Selection, MergedSelection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils        import LineBuilder
 
@@ -70,6 +70,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
                               'Track_Chi2ndf_Max'          ,
                               'Track_GhostProb_Max'        ,
                               'Track_IPChi2_Min'           ,
+                              'Track_MinChi2ndf_Max'       ,
                               'Track_Pt_Min'               ,
                               'Track_P_Min'                ,
                               'Lambda0_VtxChi2_Max'        ,
@@ -85,6 +86,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
                               'Lambdab_IPChi2_Max'         ,
                               'Lambdab_MTDOCAChi2_Max'     ,
                               'Lambdab_MassWindow'         ,
+                              #'RelatedInfoTools'           ,
                              )
 
     def __init__(self, name, config):
@@ -158,7 +160,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda_b_combine.DecayDescriptor = "[Lambda_b0 -> Lambda0 gamma]cc"
         lambda_b_combine.DaughtersCuts = {'Lambda0': 'ALL', 'gamma': 'ALL'}
         lambda_b_combine.ParticleCombiners = {'' : 'ParticleAdder'}
-        lambda_b_combine.CombinationCuts = "(ADAMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)"
+        lambda_b_combine.CombinationCut = "(ADAMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)"
         lambda_b_combine.MotherCut = """(PT > %(Lambdab_Pt_Min)s*MeV) &
                                         (MTDOCACHI2(1) < %(Lambdab_MTDOCAChi2_Max)s)"""
         lambda_b = Selection("Lambdab_NonConv_Sel",
@@ -168,13 +170,13 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda_b_cnv_combine = CombineParticles("Lambdab_Conv_Combine")
         lambda_b_cnv_combine.DecayDescriptor = "[Lambda_b0 -> Lambda0 gamma]cc"
         lambda_b_cnv_combine.DaughtersCuts = {'Lambda0': 'ALL', 'gamma': 'ALL'}
-        lambda_b_cnv_combine.CombinationCuts = "(ADAMASS('Lambda_b0') < 1.5*%(Lambdab_MassWindow)s*MeV)"
+        lambda_b_cnv_combine.CombinationCut = "(ADAMASS('Lambda_b0') < 1.5*%(Lambdab_MassWindow)s*MeV)"
         lambda_b_cnv_combine.MotherCut = """(HASVERTEX) & (VFASPF(VCHI2/VDOF)<%(Lambdab_VtxChi2_Max)s) &
                                             (PT > %(Lambdab_Pt_Min)s*MeV) &
                                             (BPVIPCHI2() < %(Lambdab_IPChi2_Max)s) &
                                             (MTDOCACHI2(1) < %(Lambdab_MTDOCAChi2_Max)s) &
                                             (ADMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)"""
-        lambda_b_cnv = Selection("Lambdab_NonConv_Sel",
+        lambda_b_cnv = Selection("Lambdab_Conv_Sel",
                                  Algorithm=lambda_b_cnv_combine,
                                  RequiredSelections=[photons_cnv, lambda0])
         #################################################################################
