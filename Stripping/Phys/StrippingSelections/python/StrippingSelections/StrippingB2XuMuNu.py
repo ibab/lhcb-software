@@ -90,7 +90,18 @@ confdict= {
     "KaonPIDK"            : 5.    ,#adimensional 
     "KaonPIDmu"           : 0.    ,#adimensional
     "KaonPIDp"            : 0.    ,#adimensional
+    "KaonPIDK_phi"        : 0.    ,#adimensional 
+    "KaonPIDmu_phi"       : -2.    ,#adimensional
+    "KaonPIDp_phi"        : -2.    ,#adimensional
     "KaonMINIPCHI2"       : 16     ,#adminensional
+
+
+    "PhiMassWindow"       : 20.  ,#MeV
+    "PhiVCHI2DOF"         : 6     ,#adimensional
+    "PhiPT"               : 500.  ,#MeV
+    "PhiMINIPCHI2"        : 4     ,#adimensional
+    "PhiDIRA"             : 0.9   ,#adimensional
+
     #Rho channel
     "RhoMassWindow"       : 150.  ,#MeV
     "RhoMassWindowMin1SB" : 300.  ,#MeV
@@ -137,8 +148,10 @@ confdict= {
     "BDIRATight"          : 0.999  ,#adminensional
     "BFDCHI2HIGH"         : 100.  ,#adimensional
     "BFDCHI2Tight"        : 120.  ,#adimensional
+    "BFDCHI2ForPhi"       : 50.  ,#adimensional
     #B Mass Minima
     "KMuMassLowTight"     : 1500. ,#MeV
+    "PhiMu_MCORR"         : 2500. ,#MeV
     "RhoMuMassLowTight"   : 2000. ,#MeV
     "KshMuMassLowTight"   : 3000. ,#MeV
     "KstarMuMassLowTight" : 2500. ,#MeV
@@ -149,7 +162,6 @@ confdict= {
     "EnuK"                : 2000. ,#MeV
     'KshZ'                : 0.    #mm
     }
-
 from Gaudi.Configuration import *
 from StrippingUtils.Utils import LineBuilder
 
@@ -198,7 +210,15 @@ class B2XuMuNuBuilder(LineBuilder):
         ,"KaonPIDK"             
         ,"KaonPIDmu"           
         ,"KaonPIDp"            
+        ,"KaonPIDK_phi"
+        ,"KaonPIDmu_phi"
+        ,"KaonPIDp_phi"
         ,"KaonMINIPCHI2"
+        ,"PhiMassWindow"       
+        ,"PhiVCHI2DOF"         
+        ,"PhiPT"               
+        ,"PhiMINIPCHI2"               
+        ,"PhiDIRA"               
         ,"RhoMassWindow"       
         ,"RhoMassWindowMin1SB" 
         ,"RhoMassWindowMax1SB" 
@@ -240,7 +260,9 @@ class B2XuMuNuBuilder(LineBuilder):
         ,"BDIRATight"               
         ,"BFDCHI2HIGH"
         ,"BFDCHI2Tight"         
+        ,"BFDCHI2ForPhi"         
         ,"KMuMassLowTight"     
+        ,"PhiMu_MCORR"     
         ,"RhoMuMassLowTight"   
         ,"KshMuMassLowTight"   
         ,"KstarMuMassLowTight" 
@@ -273,11 +295,15 @@ class B2XuMuNuBuilder(LineBuilder):
         self._MajoranaLineMuFilter()
 
         self._kaonSel=None
+        self._kaonForPhiSel=None
         self._kaonFilter()
+        self._kaonForPhiFilter()
         
         self._rho770Sel=None
         self._rho770WSSel=None
         self._rho770SBSel=None
+
+        self._phi1020Sel=None
         
         self._Rho02PiPiFilter()
         self._Rho02PiPiWSFilter()
@@ -293,6 +319,7 @@ class B2XuMuNuBuilder(LineBuilder):
         #self._KsLLFilter()
 
         self.registerLine(self._K_line())
+        self.registerLine(self._Phi_line())
         self.registerLine(self._KSS_line())
         self.registerLine(self._Rho_line())
         self.registerLine(self._RhoWS_line())
@@ -330,6 +357,14 @@ class B2XuMuNuBuilder(LineBuilder):
                "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
                "& (PIDK-PIDpi> %(KaonPIDK)s )& (PIDK-PIDp> %(KaonPIDp)s )& (PIDK-PIDmu> %(KaonPIDmu)s ) "\
                "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
+
+
+    def _KforPhiSelection( self ):
+        return "(TRCHI2DOF < %(KaonTRCHI2)s )&  (P> %(KaonP)s *MeV) &  (PT> %(KaonPT)s *MeV)"\
+               "& (TRGHOSTPROB < %(TRGHOSTPROB)s)"\
+               "& (PIDK-PIDpi> %(KaonPIDK_phi)s )& (PIDK-PIDp> %(KaonPIDp_phi)s )& (PIDK-PIDmu> %(KaonPIDmu_phi)s ) "\
+               "& (MIPCHI2DV(PRIMARY)> %(KaonMINIPCHI2)s )"
+    
     
                #def _NominalKsLLSelection( self ):
                #return " (BPVVDZ < %(KsLLMaxDz)s * mm) &(BPVVD >%(KsLLCutFD)s*mm)& (MM>%(KSLLMassLow)s*MeV)&(MM<%(KSLLMassHigh)s*MeV)  & (BPVVDCHI2> %(KSLLCutFDChi2)s ) & (PT > %(KS0PT)s*MeV) & (VFASPF(VCHI2PDOF) < %(KS0VertexChi2)s) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),1) & CHILDCUT((TRCHI2DOF < %(KS0DaugTrackChi2)s),2) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),1) & CHILDCUT((MIPCHI2DV(PRIMARY) > %(KS0DaugMIPChi2)s),2) & (MIPCHI2DV(PRIMARY) > %(KS0MIPChi2)s)"
@@ -341,6 +376,12 @@ class B2XuMuNuBuilder(LineBuilder):
         return StrippingLine(self._name+'Bs2KLine', prescale = 1.0,
                              FILTER=self.GECs,
                              algos = [ self._Bs2KMuNu()])
+
+    def _Phi_line( self ):
+        from StrippingConf.StrippingLine import StrippingLine
+        return StrippingLine(self._name+'B2PhiLine', prescale = 1.0,
+                             FILTER=self.GECs,
+                             algos = [ self._B2PhiMuNu()])
     
     def _KSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
@@ -457,10 +498,27 @@ class B2XuMuNuBuilder(LineBuilder):
         _kaSel=Selection("K_for"+self._name,
                          Algorithm=_ka,
                          RequiredSelections = [StdLooseKaons])
-        
         self._kaonSel=_kaSel
-        
         return _kaSel
+
+
+    def _kaonForPhiFilter( self ):
+        if self._kaonForPhiSel is not None:
+            return self._kaonForPhiSel
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection
+        from StandardParticles import StdLooseKaons
+        
+        _ka = FilterDesktop( Code = self._KforPhiSelection() % self._config )
+        print self._KforPhiSelection()
+        _kaSel=Selection("K_Phi"+self._name,
+                         Algorithm=_ka,
+                         RequiredSelections = [StdLooseKaons])
+        self._kaonForPhiSel=_kaSel
+        return _kaSel
+
+    ######Majorana Muon Filter######
 
     ######Majorana Muon Filter######
     def _MajoranaLineMuFilter( self ):
@@ -499,6 +557,27 @@ class B2XuMuNuBuilder(LineBuilder):
     #  return _KsLLSel
     #
     #####Make the Rho######
+    def _Phi2KKFilter( self ):
+        if self._phi1020Sel is not None:
+            return self._phi1020Sel
+        
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _phi1020 = CombineParticles(
+            DecayDescriptors = ["phi(1020) -> K- K+"] ,
+            CombinationCut = "(ADAMASS('phi(1020)')< %(PhiMassWindow)s)" % self._config,
+            MotherCut       = "(VFASPF(VCHI2/VDOF) < %(PhiVCHI2DOF)s ) & (PT > %(PhiPT)s *MeV) "\
+            "& (MIPCHI2DV(PRIMARY)> %(PhiMINIPCHI2)s ) & (BPVDIRA> %(PhiDIRA)s)" %self._config
+            )
+        _phi1020Sel=Selection("PhiKK_for"+self._name,
+                             Algorithm=_phi1020,
+                             RequiredSelections = [self._kaonForPhiFilter()])
+        
+        self._phi1020Sel=_phi1020Sel
+        
+        return _phi1020Sel
+
     def _Rho02PiPiFilter( self ):
         if self._rho770Sel is not None:
             return self._rho770Sel
@@ -715,6 +794,24 @@ class B2XuMuNuBuilder(LineBuilder):
                           Algorithm=_KMuSS,
                           RequiredSelections = [self._muonFilterTOS(), self._kaonFilter()])
         return _KMuSelSS
+
+    def _B2PhiMuNu( self ):
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection
+        
+        _PhiMu = CombineParticles(
+            DecayDescriptors = ["[B+ -> phi(1020) mu+]cc"],
+            CombinationCut = "(AM<%(XMuMassUpper)s*MeV)" % self._config,
+            MotherCut = "(BPVCORRM>%(PhiMu_MCORR)s*MeV) & (VFASPF(VCHI2/VDOF)< %(BVCHI2DOFTight)s) & (BPVDIRA> %(BDIRATight)s)"\
+            "& (BPVVDCHI2 >%(BFDCHI2ForPhi)s)"
+            % self._config,
+            ReFitPVs = True
+            )
+        _PhiMuSel=Selection("PhiMu_for"+self._name,
+                         Algorithm=_PhiMu,
+                         RequiredSelections = [self._muonFilterTOS(), self._Phi2KKFilter()])
+            # _KMuSel = tosSelection(_KMuSel,{'Hlt2.*TopoMu2Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0})
+        return _PhiMuSel
     
     ######Bu->RhoMuNu ######
     def _Bu2RhoMuNu( self ):
