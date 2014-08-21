@@ -6,7 +6,7 @@
 ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to ApplicationMgr (GaudiCoreSvc v3r1)
-                                          running on lxplus0131.cern.ch on Tue Aug 19 14:37:33 2014
+                                          running on lxplus0025.cern.ch on Thu Aug 21 17:52:49 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 
@@ -125,7 +125,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.34 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -2500,7 +2500,7 @@ EscherInit           INFO Evt 537787,  Run 89415,  Nr. in job = 96
 EscherInit           INFO Evt 777564,  Run 89415,  Nr. in job = 97
 EscherInit           INFO Evt 327857,  Run 89415,  Nr. in job = 98
 EscherInit           INFO Evt 658309,  Run 89415,  Nr. in job = 99
-EscherInit           INFO Memory has changed from 1255780 to 1468944 KB (213164KB, 16.9746%) in last 100 events
+EscherInit           INFO Memory has changed from 1987056 to 2200072 KB (213016KB, 10.7202%) in last 100 events
 EscherInit           INFO Evt 746232,  Run 89415,  Nr. in job = 100
 Alignment            INFO Total number of tracks: 4099
 Alignment            INFO Number of covariance calculation failures: 0
@@ -4469,8 +4469,8 @@ TrackAlignMonitor    INFO Number of elements in jacobian map: 1092
 TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9 
 TrackITOverlapM...SUCCESS Booked 398 Histogram(s) : 1D=266 2D=132 
 TrackVeloOverla...SUCCESS Booked 344 Histogram(s) : 1D=344 
-TTTrackMonitor    SUCCESS Booked 39 Histogram(s) : 1D=33 1DProf=6 
-ITTrackMonitor    SUCCESS Booked 84 Histogram(s) : 1D=76 2D=2 1DProf=6 
+TTTrackMonitor    SUCCESS Booked 40 Histogram(s) : 1D=34 1DProf=6 
+ITTrackMonitor    SUCCESS Booked 252 Histogram(s) : 1D=244 2D=2 1DProf=6 
 TrackPV2HalfAli...SUCCESS Booked 16 Histogram(s) : 1D=14 1DProf=2 
 OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1 
 OTTrackMonitor    SUCCESS Booked 67 Histogram(s) : 1D=47 2D=7 1DProf=13 
@@ -4594,6 +4594,7 @@ Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye
 
 
 
+LHCBCOND.TimeOu...   INFO Disconnect from database after being idle for 120s (will reconnect if needed)
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Skip'     map has the size 0
 
 TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Recover'  map has the size 0
@@ -4618,8 +4619,8 @@ ToolSvc.TrackSt...SUCCESS Number of counters : 2
 EscherInit.Brun...SUCCESS Booked 4 Histogram(s) : 1D=4 
 EscherInit.Brun...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Delta Memory/MB"                               |        90 |     179.86 |     1.9984 |     10.784 |      0.0000 |      83.104 |
- | "Total Memory/MB"                               |       100 |     141110 |     1411.1 |     68.461 |      1255.8 |      1468.9 |
+ | "Delta Memory/MB"                               |        90 |    179.228 |     1.9914 |     10.757 |      0.0000 |      83.104 |
+ | "Total Memory/MB"                               |       100 |   214233.1 |     2142.3 |     68.300 |      1987.1 |      2200.1 |
 EscherInit.Brun...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 EscherInit.Brun...SUCCESS  #WARNINGS   = 1        Message = 'Delta Memory for the event exceeds 3*sigma'
 AlignPVRefitter...SUCCESS Number of counters : 2
@@ -4638,122 +4639,122 @@ ToolSvc.TrajPoca  SUCCESS  #WARNINGS   = 18       Message = 'Minimization did no
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.34 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.31 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO EVENT LOOP                    |  1040.592 |  1041.447 |   13.123    9097.5 |     100 |   104.145 |
-TimingAuditor.T...   INFO  EscherSequencer              |   978.611 |   979.203 |   11.565    9095.6 |     100 |    97.920 |
-TimingAuditor.T...   INFO   Init                        |     0.810 |     0.449 |    0.000       7.9 |     100 |     0.045 |
-TimingAuditor.T...   INFO    InitEscherSeq              |     0.810 |     0.446 |    0.000       7.9 |     100 |     0.045 |
-TimingAuditor.T...   INFO     EscherInit                |     0.800 |     0.442 |    0.000       7.9 |     100 |     0.044 |
-TimingAuditor.T...   INFO   HltFilterSeq                |    10.888 |    11.151 |    0.000    1065.9 |     100 |     1.115 |
-TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |    10.668 |    10.781 |    0.000    1063.3 |     100 |     1.078 |
-TimingAuditor.T...   INFO    HltDecReportsDecoder       |     0.080 |     0.167 |    0.000       1.4 |     100 |     0.017 |
-TimingAuditor.T...   INFO    Hlt1DecReportsDecoder      |     0.010 |     0.052 |    0.000       0.7 |     100 |     0.005 |
-TimingAuditor.T...   INFO    HltCompositionMonitor      |     0.090 |     0.089 |    0.000       1.2 |     100 |     0.009 |
-TimingAuditor.T...   INFO    HltErrorFilter             |     0.030 |     0.048 |    0.000       1.0 |     100 |     0.005 |
-TimingAuditor.T...   INFO   Reco                        |   790.280 |   790.882 |    7.643    8088.8 |     100 |    79.088 |
-TimingAuditor.T...   INFO    RecoDecodingSeq            |     5.419 |     5.504 |    0.652      14.5 |     100 |     0.550 |
-TimingAuditor.T...   INFO     createBothVeloClusters    |     1.890 |     2.003 |    0.000       5.5 |     100 |     0.200 |
-TimingAuditor.T...   INFO     createTTClusters          |     1.600 |     1.608 |    0.027       4.4 |     100 |     0.161 |
-TimingAuditor.T...   INFO     createTTLiteClusters      |     0.290 |     0.310 |    0.000       1.0 |     100 |     0.031 |
-TimingAuditor.T...   INFO     createITLiteClusters      |     0.330 |     0.297 |    0.000       1.6 |     100 |     0.030 |
-TimingAuditor.T...   INFO     createITClusters          |     1.300 |     1.273 |    0.103       4.1 |     100 |     0.127 |
-TimingAuditor.T...   INFO    RecoVELOSeq                |     5.269 |     5.327 |    0.000      39.5 |     100 |     0.533 |
-TimingAuditor.T...   INFO     FastVeloTracking          |     5.269 |     5.323 |    0.000      39.5 |     100 |     0.532 |
-TimingAuditor.T...   INFO    RecoTrSeq                  |   759.715 |   760.195 |    6.884    7871.6 |     100 |    76.019 |
-TimingAuditor.T...   INFO     Track                     |   759.705 |   760.190 |    6.884    7871.6 |     100 |    76.019 |
-TimingAuditor.T...   INFO      TrackForwardPatSeq       |   146.948 |   147.125 |    1.385    1429.7 |     100 |    14.712 |
-TimingAuditor.T...   INFO       PatForward              |   146.938 |   147.117 |    1.380    1429.7 |     100 |    14.712 |
-TimingAuditor.T...   INFO      TrackSeedPatSeq          |   185.202 |   185.286 |    0.746    2414.3 |     100 |    18.529 |
-TimingAuditor.T...   INFO       PatSeeding              |   185.202 |   185.279 |    0.746    2414.3 |     100 |    18.528 |
-TimingAuditor.T...   INFO      TrackMatchPatSeq         |     2.860 |     2.839 |    0.000      33.3 |     100 |     0.284 |
-TimingAuditor.T...   INFO       PatMatch                |     2.840 |     2.834 |    0.000      33.3 |     100 |     0.283 |
-TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |    23.636 |    23.590 |    0.000     482.8 |     100 |     2.359 |
-TimingAuditor.T...   INFO       PatDownstream           |    23.626 |    23.585 |    0.000     482.8 |     100 |     2.359 |
-TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |    14.048 |    14.107 |    0.000     152.9 |     100 |     1.411 |
-TimingAuditor.T...   INFO       PatVeloTT               |    14.038 |    14.102 |    0.000     152.9 |     100 |     1.410 |
-TimingAuditor.T...   INFO      TrackFitSeq              |   203.139 |   203.206 |    0.046    2199.8 |     100 |    20.321 |
-TimingAuditor.T...   INFO       TrackBestTrackCreator   |   203.119 |   203.191 |    0.041    2199.8 |     100 |    20.319 |
-TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |   183.692 |   183.904 |    0.108    1158.3 |     100 |    18.390 |
-TimingAuditor.T...   INFO       TrackClonesSeq          |    15.428 |    15.379 |    0.084     246.2 |     100 |     1.538 |
-TimingAuditor.T...   INFO        FindTrackClones        |    15.338 |    15.296 |    0.058     246.2 |     100 |     1.530 |
-TimingAuditor.T...   INFO        FlagTrackClones        |     0.070 |     0.077 |    0.000       1.4 |     100 |     0.008 |
-TimingAuditor.T...   INFO       TrackAddLikelihood      |    45.443 |    45.588 |    0.010     256.0 |     100 |     4.559 |
-TimingAuditor.T...   INFO       TrackAddNNGhostId       |   122.811 |   122.901 |    0.007     656.1 |     100 |    12.290 |
-TimingAuditor.T...   INFO      TrackEraseExtraInformatio|     0.080 |     0.088 |    0.000       1.0 |     100 |     0.009 |
-TimingAuditor.T...   INFO       TrackEraseExtraInfo     |     0.080 |     0.079 |    0.000       1.0 |     100 |     0.008 |
-TimingAuditor.T...   INFO    RecoVertexSeq              |    19.867 |    19.844 |    0.000     406.6 |     100 |     1.984 |
-TimingAuditor.T...   INFO     PatPVOffline              |     3.649 |     3.670 |    0.000     102.1 |     100 |     0.367 |
-TimingAuditor.T...   INFO     TrackV0Finder             |    16.198 |    16.150 |    0.000     401.7 |     100 |     1.615 |
-TimingAuditor.T...   INFO   Moni                        |   115.512 |   115.569 |    2.007     591.7 |     100 |    11.557 |
-TimingAuditor.T...   INFO    MoniVELOSeq                |    23.516 |    23.521 |    0.161     431.7 |     100 |     2.352 |
-TimingAuditor.T...   INFO     VeloClusterMonitor        |     3.220 |     3.239 |    0.084       9.2 |     100 |     0.324 |
-TimingAuditor.T...   INFO     VeloTrackMonitor          |    15.868 |    15.861 |    0.016      81.2 |     100 |     1.586 |
-TimingAuditor.T...   INFO     VeloIPResolutionMonitor   |     4.399 |     4.404 |    0.000     417.0 |     100 |     0.440 |
-TimingAuditor.T...   INFO    MoniTrSeq                  |    71.039 |    71.109 |    0.212     399.2 |     100 |     7.111 |
-TimingAuditor.T...   INFO     TrackMonitor              |    41.754 |    41.756 |    0.044     222.5 |     100 |     4.176 |
-TimingAuditor.T...   INFO     TrackDiMuonMonitor        |     0.050 |     0.040 |    0.000       0.3 |     100 |     0.004 |
-TimingAuditor.T...   INFO     TrackVertexMonitor        |     1.260 |     1.339 |    0.000       4.7 |     100 |     0.134 |
-TimingAuditor.T...   INFO     AlignmentOnlineMonitor    |     1.050 |     1.042 |    0.000       7.7 |     100 |     0.104 |
-TimingAuditor.T...   INFO     TrackV0Monitor            |     0.100 |     0.075 |    0.000       1.2 |     100 |     0.007 |
-TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     2.780 |     2.789 |    0.000      14.8 |     100 |     0.279 |
-TimingAuditor.T...   INFO     TrackAlignMonitor         |     2.810 |     2.860 |    0.000      15.9 |     100 |     0.286 |
-TimingAuditor.T...   INFO     TrackITOverlapMonitor     |     7.079 |     7.049 |    0.000      39.6 |     100 |     0.705 |
-TimingAuditor.T...   INFO     TrackVeloOverlapMonitor   |     0.750 |     0.805 |    0.000       5.0 |     100 |     0.081 |
-TimingAuditor.T...   INFO     TTTrackMonitor            |     3.549 |     3.521 |    0.000      18.3 |     100 |     0.352 |
-TimingAuditor.T...   INFO     ITTrackMonitor            |     7.039 |     7.059 |    0.000      35.8 |     100 |     0.706 |
-TimingAuditor.T...   INFO     TrackPV2HalfAlignMonitor  |     2.720 |     2.722 |    0.000      36.7 |     100 |     0.272 |
-TimingAuditor.T...   INFO    MoniOTSeq                  |    17.437 |    17.520 |    0.818      92.9 |     100 |     1.752 |
-TimingAuditor.T...   INFO     OTTimeMonitor             |     1.290 |     1.280 |    0.000       2.9 |     100 |     0.128 |
-TimingAuditor.T...   INFO     OTTrackMonitor            |    12.968 |    13.019 |    0.396      78.6 |     100 |     1.302 |
-TimingAuditor.T...   INFO     OTHitEfficiencyMonitor    |     3.149 |     3.206 |    0.000      11.3 |     100 |     0.321 |
-TimingAuditor.T...   INFO    MoniSTSeq                  |     3.499 |     3.407 |    0.000       9.2 |     100 |     0.341 |
-TimingAuditor.T...   INFO     TTClusterMonitor          |     2.010 |     2.027 |    0.000       5.6 |     100 |     0.203 |
-TimingAuditor.T...   INFO     ITClusterMonitor          |     1.460 |     1.363 |    0.000       4.2 |     100 |     0.136 |
-TimingAuditor.T...   INFO   AlignSequence               |    61.101 |    61.131 |    0.425     414.3 |     100 |     6.113 |
-TimingAuditor.T...   INFO    AlignInputSeq              |     1.090 |     1.190 |    0.000       3.7 |     100 |     0.119 |
-TimingAuditor.T...   INFO     AlignTrackSelSeq          |     0.350 |     0.422 |    0.000       1.4 |     100 |     0.042 |
-TimingAuditor.T...   INFO      GoodLongTracksSelectorAlg|     0.110 |     0.202 |    0.000       1.0 |     100 |     0.020 |
-TimingAuditor.T...   INFO      VeloOverlapTracksSelector|     0.060 |     0.044 |    0.000       0.5 |     100 |     0.004 |
-TimingAuditor.T...   INFO      VeloBackwardTracksSelecto|     0.060 |     0.061 |    0.000       0.8 |     100 |     0.006 |
-TimingAuditor.T...   INFO      ITBoxOverlapTracksSelecto|     0.030 |     0.067 |    0.000       1.0 |     100 |     0.007 |
-TimingAuditor.T...   INFO      AlignTracks              |     0.040 |     0.031 |    0.000       0.5 |     100 |     0.003 |
-TimingAuditor.T...   INFO     AlignPVSelSeq             |     0.730 |     0.754 |    0.000       2.3 |     100 |     0.075 |
-TimingAuditor.T...   INFO      AlignPVRefitter          |     0.690 |     0.709 |    0.000       2.2 |     100 |     0.071 |
-TimingAuditor.T...   INFO      AlignPVSelector          |     0.030 |     0.038 |    0.000       0.9 |     100 |     0.004 |
-TimingAuditor.T...   INFO    AlignMonitorSeq            |    17.247 |    17.166 |    0.000      99.5 |     100 |     1.717 |
-TimingAuditor.T...   INFO     GoodLongTracksTrackMonitor|     8.009 |     8.015 |    0.000      61.3 |     100 |     0.802 |
-TimingAuditor.T...   INFO     GoodLongTracksVeloOverlapM|     0.370 |     0.359 |    0.000       3.0 |     100 |     0.036 |
-TimingAuditor.T...   INFO     GoodLongTracksITOverlapMon|     1.910 |     1.891 |    0.000      13.8 |     100 |     0.189 |
-TimingAuditor.T...   INFO     VeloOverlapTracksTrackMoni|     0.140 |     0.108 |    0.000       2.9 |     100 |     0.011 |
-TimingAuditor.T...   INFO     VeloOverlapTracksVeloOverl|     0.080 |     0.095 |    0.000       3.0 |     100 |     0.010 |
-TimingAuditor.T...   INFO     VeloOverlapTracksITOverlap|     0.010 |     0.009 |    0.000       0.1 |     100 |     0.001 |
-TimingAuditor.T...   INFO     VeloBackwardTracksTrackMon|     3.160 |     3.177 |    0.000      11.3 |     100 |     0.318 |
-TimingAuditor.T...   INFO     VeloBackwardTracksVeloOver|     0.070 |     0.108 |    0.000       1.0 |     100 |     0.011 |
-TimingAuditor.T...   INFO     VeloBackwardTracksITOverla|     0.020 |     0.014 |    0.000       0.3 |     100 |     0.001 |
-TimingAuditor.T...   INFO     ITBoxOverlapTracksTrackMon|     1.780 |     1.726 |    0.000       9.7 |     100 |     0.173 |
-TimingAuditor.T...   INFO     ITBoxOverlapTracksVeloOver|     0.080 |     0.072 |    0.000       1.1 |     100 |     0.007 |
-TimingAuditor.T...   INFO     ITBoxOverlapTracksITOverla|     0.690 |     0.655 |    0.000       4.8 |     100 |     0.066 |
-TimingAuditor.T...   INFO     AlignVertexMonitor        |     0.890 |     0.909 |    0.000       3.1 |     100 |     0.091 |
-TimingAuditor.T...   INFO    AlignmentAlgSeq            |    42.714 |    42.724 |    0.036     311.0 |     100 |     4.272 |
-TimingAuditor.T...   INFO     Alignment                 |    42.684 |    42.712 |    0.026     311.0 |     100 |     4.271 |
-TimingAuditor.T...   INFO    WriteCondSeq               |     0.030 |     0.029 |    0.000       0.1 |     100 |     0.003 |
-TimingAuditor.T...   INFO     WriteVeloGlobalToXML      |     0.000 |     0.002 |    0.000       0.0 |     100 |     0.000 |
-TimingAuditor.T...   INFO     WriteVeloModulesToXML     |     0.000 |     0.002 |    0.000       0.0 |     100 |     0.000 |
-TimingAuditor.T...   INFO     WriteVeloDetectorsToXML   |     0.000 |     0.002 |    0.000       0.0 |     100 |     0.000 |
-TimingAuditor.T...   INFO     WriteTTDetectorsToXML     |     0.000 |     0.003 |    0.000       0.1 |     100 |     0.000 |
-TimingAuditor.T...   INFO     WriteTTModulesToXML       |     0.000 |     0.002 |    0.000       0.0 |     100 |     0.000 |
-TimingAuditor.T...   INFO     WriteTTSensorsToXML       |     0.000 |     0.002 |    0.000       0.0 |     100 |     0.000 |
-TimingAuditor.T...   INFO     WriteITDetectorsToXML     |     0.000 |     0.002 |    0.000       0.0 |     100 |     0.000 |
-TimingAuditor.T...   INFO     WriteOTElementsToXML      |     0.010 |     0.002 |    0.000       0.0 |     100 |     0.000 |
+TimingAuditor.T...   INFO EVENT LOOP                    |  1164.913 |  1171.425 |   14.996   10168.4 |     100 |   117.142 |
+TimingAuditor.T...   INFO  EscherSequencer              |  1087.865 |  1092.046 |   12.241    8989.7 |     100 |   109.205 |
+TimingAuditor.T...   INFO   Init                        |     0.680 |     0.510 |    0.000       3.6 |     100 |     0.051 |
+TimingAuditor.T...   INFO    InitEscherSeq              |     0.680 |     0.509 |    0.000       3.6 |     100 |     0.051 |
+TimingAuditor.T...   INFO     EscherInit                |     0.680 |     0.507 |    0.000       3.5 |     100 |     0.051 |
+TimingAuditor.T...   INFO   HltFilterSeq                |    11.308 |    12.354 |    0.000    1191.3 |     100 |     1.235 |
+TimingAuditor.T...   INFO    Hlt2DecReportsDecoder      |    11.038 |    12.030 |    0.000    1188.4 |     100 |     1.203 |
+TimingAuditor.T...   INFO    HltDecReportsDecoder       |     0.120 |     0.149 |    0.000       1.0 |     100 |     0.015 |
+TimingAuditor.T...   INFO    Hlt1DecReportsDecoder      |     0.020 |     0.031 |    0.000       0.7 |     100 |     0.003 |
+TimingAuditor.T...   INFO    HltCompositionMonitor      |     0.080 |     0.079 |    0.000       1.2 |     100 |     0.008 |
+TimingAuditor.T...   INFO    HltErrorFilter             |     0.030 |     0.042 |    0.000       1.0 |     100 |     0.004 |
+TimingAuditor.T...   INFO   Reco                        |   881.346 |   883.004 |    8.567    7765.1 |     100 |    88.300 |
+TimingAuditor.T...   INFO    RecoDecodingSeq            |     5.919 |     6.191 |    0.765      25.0 |     100 |     0.619 |
+TimingAuditor.T...   INFO     createBothVeloClusters    |     2.040 |     2.232 |    0.000       5.7 |     100 |     0.223 |
+TimingAuditor.T...   INFO     createTTClusters          |     1.730 |     1.761 |    0.000       4.6 |     100 |     0.176 |
+TimingAuditor.T...   INFO     createTTLiteClusters      |     0.400 |     0.348 |    0.000       1.1 |     100 |     0.035 |
+TimingAuditor.T...   INFO     createITLiteClusters      |     0.250 |     0.444 |    0.000      16.6 |     100 |     0.044 |
+TimingAuditor.T...   INFO     createITClusters          |     1.430 |     1.399 |    0.000       4.3 |     100 |     0.140 |
+TimingAuditor.T...   INFO    RecoVELOSeq                |     5.569 |     5.621 |    0.000      39.9 |     100 |     0.562 |
+TimingAuditor.T...   INFO     FastVeloTracking          |     5.569 |     5.619 |    0.000      39.9 |     100 |     0.562 |
+TimingAuditor.T...   INFO    RecoTrSeq                  |   838.543 |   839.553 |    7.599    7540.4 |     100 |    83.955 |
+TimingAuditor.T...   INFO     Track                     |   838.543 |   839.551 |    7.599    7540.4 |     100 |    83.955 |
+TimingAuditor.T...   INFO      TrackForwardPatSeq       |   157.236 |   157.479 |    1.472    1470.3 |     100 |    15.748 |
+TimingAuditor.T...   INFO       PatForward              |   157.236 |   157.468 |    1.472    1470.3 |     100 |    15.747 |
+TimingAuditor.T...   INFO      TrackSeedPatSeq          |   195.180 |   195.226 |    0.771    2457.8 |     100 |    19.523 |
+TimingAuditor.T...   INFO       PatSeeding              |   195.160 |   195.209 |    0.771    2457.8 |     100 |    19.521 |
+TimingAuditor.T...   INFO      TrackMatchPatSeq         |     3.139 |     3.138 |    0.000      34.2 |     100 |     0.314 |
+TimingAuditor.T...   INFO       PatMatch                |     3.129 |     3.135 |    0.000      34.2 |     100 |     0.314 |
+TimingAuditor.T...   INFO      TrackDownstreamPatSeq    |    24.706 |    24.797 |    0.000     488.1 |     100 |     2.480 |
+TimingAuditor.T...   INFO       PatDownstream           |    24.696 |    24.795 |    0.000     488.0 |     100 |     2.479 |
+TimingAuditor.T...   INFO      TrackVeloTTPatSeq        |    18.537 |    18.539 |    0.000     482.1 |     100 |     1.854 |
+TimingAuditor.T...   INFO       PatVeloTT               |    18.527 |    18.532 |    0.000     482.1 |     100 |     1.853 |
+TimingAuditor.T...   INFO      TrackFitSeq              |   217.757 |   217.915 |    0.061    1635.5 |     100 |    21.792 |
+TimingAuditor.T...   INFO       TrackBestTrackCreator   |   217.717 |   217.893 |    0.054    1635.5 |     100 |    21.789 |
+TimingAuditor.T...   INFO      TrackAddExtraInfoSeq     |   221.706 |   222.236 |    0.125    1300.1 |     100 |    22.224 |
+TimingAuditor.T...   INFO       TrackClonesSeq          |    16.997 |    17.175 |    0.000     255.6 |     100 |     1.717 |
+TimingAuditor.T...   INFO        FindTrackClones        |    16.887 |    17.097 |    0.000     255.2 |     100 |     1.710 |
+TimingAuditor.T...   INFO        FlagTrackClones        |     0.110 |     0.073 |    0.000       1.9 |     100 |     0.007 |
+TimingAuditor.T...   INFO       TrackAddLikelihood      |    53.962 |    54.155 |    0.000     287.4 |     100 |     5.415 |
+TimingAuditor.T...   INFO       TrackAddNNGhostId       |   150.667 |   150.867 |    0.008     757.1 |     100 |    15.087 |
+TimingAuditor.T...   INFO      TrackEraseExtraInformatio|     0.160 |     0.160 |    0.000       1.0 |     100 |     0.016 |
+TimingAuditor.T...   INFO       TrackEraseExtraInfo     |     0.160 |     0.158 |    0.000       1.0 |     100 |     0.016 |
+TimingAuditor.T...   INFO    RecoVertexSeq              |    31.285 |    31.623 |    0.000    1415.6 |     100 |     3.162 |
+TimingAuditor.T...   INFO     PatPVOffline              |     3.969 |     3.944 |    0.000     103.8 |     100 |     0.394 |
+TimingAuditor.T...   INFO     TrackV0Finder             |    27.296 |    27.675 |    0.000    1403.5 |     100 |     2.767 |
+TimingAuditor.T...   INFO   Moni                        |   129.910 |   131.526 |    2.399     797.0 |     100 |    13.153 |
+TimingAuditor.T...   INFO    MoniVELOSeq                |    26.606 |    27.909 |    0.000     620.1 |     100 |     2.791 |
+TimingAuditor.T...   INFO     VeloClusterMonitor        |     3.749 |     3.827 |    0.000      10.0 |     100 |     0.383 |
+TimingAuditor.T...   INFO     VeloTrackMonitor          |    17.587 |    17.779 |    0.000     108.0 |     100 |     1.778 |
+TimingAuditor.T...   INFO     VeloIPResolutionMonitor   |     5.229 |     6.277 |    0.000     602.9 |     100 |     0.628 |
+TimingAuditor.T...   INFO    MoniTrSeq                  |    80.318 |    80.358 |    0.000     573.0 |     100 |     8.036 |
+TimingAuditor.T...   INFO     TrackMonitor              |    44.883 |    44.822 |    0.000     334.0 |     100 |     4.482 |
+TimingAuditor.T...   INFO     TrackDiMuonMonitor        |     0.040 |     0.067 |    0.000       1.0 |     100 |     0.007 |
+TimingAuditor.T...   INFO     TrackVertexMonitor        |     1.520 |     1.582 |    0.000      11.8 |     100 |     0.158 |
+TimingAuditor.T...   INFO     AlignmentOnlineMonitor    |     1.300 |     1.352 |    0.000      12.0 |     100 |     0.135 |
+TimingAuditor.T...   INFO     TrackV0Monitor            |     0.110 |     0.084 |    0.000       1.2 |     100 |     0.008 |
+TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     3.100 |     3.090 |    0.000      26.0 |     100 |     0.309 |
+TimingAuditor.T...   INFO     TrackAlignMonitor         |     3.299 |     3.303 |    0.000      26.9 |     100 |     0.330 |
+TimingAuditor.T...   INFO     TrackITOverlapMonitor     |     7.589 |     7.633 |    0.000      57.4 |     100 |     0.763 |
+TimingAuditor.T...   INFO     TrackVeloOverlapMonitor   |     0.930 |     0.915 |    0.000       4.8 |     100 |     0.092 |
+TimingAuditor.T...   INFO     TTTrackMonitor            |     3.919 |     3.974 |    0.000      20.0 |     100 |     0.397 |
+TimingAuditor.T...   INFO     ITTrackMonitor            |    10.588 |    10.531 |    0.000      46.0 |     100 |     1.053 |
+TimingAuditor.T...   INFO     TrackPV2HalfAlignMonitor  |     2.940 |     2.934 |    0.000      39.0 |     100 |     0.293 |
+TimingAuditor.T...   INFO    MoniOTSeq                  |    19.307 |    19.327 |    0.971      97.0 |     100 |     1.933 |
+TimingAuditor.T...   INFO     OTTimeMonitor             |     1.450 |     1.462 |    0.000       3.8 |     100 |     0.146 |
+TimingAuditor.T...   INFO     OTTrackMonitor            |    13.988 |    14.032 |    0.000      81.6 |     100 |     1.403 |
+TimingAuditor.T...   INFO     OTHitEfficiencyMonitor    |     3.829 |     3.820 |    0.000      13.3 |     100 |     0.382 |
+TimingAuditor.T...   INFO    MoniSTSeq                  |     3.679 |     3.914 |    0.000      26.8 |     100 |     0.391 |
+TimingAuditor.T...   INFO     TTClusterMonitor          |     2.270 |     2.408 |    0.000      25.3 |     100 |     0.241 |
+TimingAuditor.T...   INFO     ITClusterMonitor          |     1.370 |     1.486 |    0.000       4.5 |     100 |     0.149 |
+TimingAuditor.T...   INFO   AlignSequence               |    64.610 |    64.635 |    0.000     426.7 |     100 |     6.463 |
+TimingAuditor.T...   INFO    AlignInputSeq              |     1.380 |     1.367 |    0.000       5.0 |     100 |     0.137 |
+TimingAuditor.T...   INFO     AlignTrackSelSeq          |     0.460 |     0.462 |    0.000       2.0 |     100 |     0.046 |
+TimingAuditor.T...   INFO      GoodLongTracksSelectorAlg|     0.240 |     0.237 |    0.000       1.2 |     100 |     0.024 |
+TimingAuditor.T...   INFO      VeloOverlapTracksSelector|     0.040 |     0.078 |    0.000       1.0 |     100 |     0.008 |
+TimingAuditor.T...   INFO      VeloBackwardTracksSelecto|     0.080 |     0.045 |    0.000       1.0 |     100 |     0.005 |
+TimingAuditor.T...   INFO      ITBoxOverlapTracksSelecto|     0.050 |     0.047 |    0.000       1.0 |     100 |     0.005 |
+TimingAuditor.T...   INFO      AlignTracks              |     0.040 |     0.046 |    0.000       1.0 |     100 |     0.005 |
+TimingAuditor.T...   INFO     AlignPVSelSeq             |     0.910 |     0.879 |    0.000       3.0 |     100 |     0.088 |
+TimingAuditor.T...   INFO      AlignPVRefitter          |     0.900 |     0.836 |    0.000       3.0 |     100 |     0.084 |
+TimingAuditor.T...   INFO      AlignPVSelector          |     0.010 |     0.030 |    0.000       1.0 |     100 |     0.003 |
+TimingAuditor.T...   INFO    AlignMonitorSeq            |    18.177 |    18.213 |    0.000     103.0 |     100 |     1.821 |
+TimingAuditor.T...   INFO     GoodLongTracksTrackMonitor|     8.489 |     8.488 |    0.000      63.0 |     100 |     0.849 |
+TimingAuditor.T...   INFO     GoodLongTracksVeloOverlapM|     0.370 |     0.380 |    0.000       3.2 |     100 |     0.038 |
+TimingAuditor.T...   INFO     GoodLongTracksITOverlapMon|     2.020 |     1.952 |    0.000      13.0 |     100 |     0.195 |
+TimingAuditor.T...   INFO     VeloOverlapTracksTrackMoni|     0.130 |     0.128 |    0.000       3.0 |     100 |     0.013 |
+TimingAuditor.T...   INFO     VeloOverlapTracksVeloOverl|     0.110 |     0.097 |    0.000       3.0 |     100 |     0.010 |
+TimingAuditor.T...   INFO     VeloOverlapTracksITOverlap|     0.000 |     0.024 |    0.000       1.0 |     100 |     0.002 |
+TimingAuditor.T...   INFO     VeloBackwardTracksTrackMon|     3.299 |     3.324 |    0.000      11.9 |     100 |     0.332 |
+TimingAuditor.T...   INFO     VeloBackwardTracksVeloOver|     0.070 |     0.087 |    0.000       1.0 |     100 |     0.009 |
+TimingAuditor.T...   INFO     VeloBackwardTracksITOverla|     0.010 |     0.004 |    0.000       0.0 |     100 |     0.000 |
+TimingAuditor.T...   INFO     ITBoxOverlapTracksTrackMon|     1.870 |     1.903 |    0.000      10.0 |     100 |     0.190 |
+TimingAuditor.T...   INFO     ITBoxOverlapTracksVeloOver|     0.080 |     0.080 |    0.000       1.5 |     100 |     0.008 |
+TimingAuditor.T...   INFO     ITBoxOverlapTracksITOverla|     0.730 |     0.730 |    0.000       6.0 |     100 |     0.073 |
+TimingAuditor.T...   INFO     AlignVertexMonitor        |     0.940 |     0.960 |    0.000       3.2 |     100 |     0.096 |
+TimingAuditor.T...   INFO    AlignmentAlgSeq            |    44.993 |    44.987 |    0.000     318.7 |     100 |     4.499 |
+TimingAuditor.T...   INFO     Alignment                 |    44.953 |    44.973 |    0.000     318.7 |     100 |     4.497 |
+TimingAuditor.T...   INFO    WriteCondSeq               |     0.030 |     0.028 |    0.000       1.0 |     100 |     0.003 |
+TimingAuditor.T...   INFO     WriteVeloGlobalToXML      |     0.000 |     0.001 |    0.000       0.0 |     100 |     0.000 |
+TimingAuditor.T...   INFO     WriteVeloModulesToXML     |     0.000 |     0.001 |    0.000       0.0 |     100 |     0.000 |
+TimingAuditor.T...   INFO     WriteVeloDetectorsToXML   |     0.000 |     0.001 |    0.000       0.1 |     100 |     0.000 |
+TimingAuditor.T...   INFO     WriteTTDetectorsToXML     |     0.000 |     0.001 |    0.000       0.0 |     100 |     0.000 |
+TimingAuditor.T...   INFO     WriteTTModulesToXML       |     0.000 |     0.001 |    0.000       0.0 |     100 |     0.000 |
+TimingAuditor.T...   INFO     WriteTTSensorsToXML       |     0.010 |     0.001 |    0.000       0.0 |     100 |     0.000 |
+TimingAuditor.T...   INFO     WriteITDetectorsToXML     |     0.000 |     0.002 |    0.000       0.1 |     100 |     0.000 |
+TimingAuditor.T...   INFO     WriteOTElementsToXML      |     0.000 |     0.006 |    0.000       0.5 |     100 |     0.001 |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/1117(Alg/Node/Total).
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-DetailedMateria...   INFO Time User   : Tot= 1.55  [s] Ave/Min/Max=0.627(+- 10.7)/    0/  410 [ms] #=2478
-ChronoStatSvc        INFO Time User   : Tot=   99  [s]                                             #=  1
+DetailedMateria...   INFO Time User   : Tot= 1.73  [s] Ave/Min/Max=0.697(+- 11.9)/    0/  466 [ms] #=2478
+ChronoStatSvc        INFO Time User   : Tot=  110  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully 
 ApplicationMgr       INFO Application Manager Finalized successfully

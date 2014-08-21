@@ -1,3 +1,4 @@
+# setting LC_ALL to "C"
 # --> Including file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
 # <-- End of file '/afs/cern.ch/user/m/mamartin/cmtuser/Alignment_HEAD/Alignment/Escher/tests/options/testEscher-defaults.py'
 # skipping configuration of RawEventFormatConf
@@ -5,9 +6,9 @@
 # Initializing sequences!
 # Defining options!
 # Setting up alignment sequence
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v37r3/GaudiConf/options/RootHist.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r0/GaudiConf/options/RootHist.opts'
 # ApplicationMgr.HistogramPersistency = "ROOT";
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v37r3/GaudiConf/options/RootHist.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v38r0/GaudiConf/options/RootHist.opts'
 # /***** User Escher/Escher **************************************************************************
 # |-Persistency    = None
 # |-SkipEvents     = 0
@@ -16,7 +17,7 @@
 # |-Kalman         = True
 # |-DDDBtag        = ''
 # |-WithMC         = False
-# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x2212e10>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x23a4300>]
+# |-MainSequence   = ['ProcessPhase/Init', <GaudiSequencer/HltFilterSeq at 0x1964f00>, 'ProcessPhase/Reco', 'ProcessPhase/Moni', <GaudiSequencer/AlignSequence at 0x197f240>]
 # |                (default: [])
 # |-OutputType     = 'NONE'
 # |-Incident       = ''
@@ -108,8 +109,8 @@
 # |-PVSelection                  = None
 # |-LogFile                      = 'alignlog.txt'
 # |-ParticleSelections           = []  (default: [])
-# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x22df908>]
-# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x22df908>])
+# |-TrackSelections              = [<TAlignment.TrackSelections.GoodLongTracks instance at 0x1aa6fc8>]
+# |                              (default: [<TAlignment.TrackSelections.GoodLongTracks instance at 0x1aa6fc8>])
 # |-SolvTool                     = 'DiagSolvTool'
 # |-MinNumberOfHits              = 10
 # |-Precision                    = 16
@@ -134,8 +135,8 @@
 # |-TrackLocation                = ''
 # |-ElementsToAlign              = []  (default: [])
 # |-UseCorrelations              = True
-# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x23a4300>
-# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x220b5c0>)
+# |-Sequencer                    = <GaudiSequencer/AlignSequence at 0x197f240>
+# |                              (default: <GaudiSequencer/TAlignmentSequencer at 0x197ef10>)
 # |-UsePreconditioning           = True
 # \----- (End of User TAlignment/TAlignment) ---------------------------------------------------------
 # /***** User DstConf/DstConf ************************************************************************
@@ -163,10 +164,10 @@
 # WARNING: Using default tag dddb-20130503 for partition DDDB
 # WARNING: Using default tag cond-20140425 for partition LHCBCOND
 # WARNING: Using default tag dq-20140428 for partition DQFLAGS
-ApplicationMgr    SUCCESS
+ApplicationMgr    SUCCESS 
 ====================================================================================================================================
                                                    Welcome to Escher version v5r0
-                                          running on lxplus0212.cern.ch on Tue Jul  1 15:51:56 2014
+                                          running on lxplus0037.cern.ch on Thu Aug 21 20:51:15 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO Added successfully Conversion service:XmlCnvSvc
@@ -174,7 +175,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.25 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 EscherSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/HltFilterSeq, ProcessPhase/Reco, ProcessPhase/Moni, GaudiSequencer/AlignSequence
@@ -186,24 +187,24 @@ EscherInit        SUCCESS ======================================================
 RootHistSvc          INFO Writing ROOT histograms to: -10ev-histos.root
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
 HltFilterSeq         INFO Member list: HltDecReportsDecoder/Hlt2DecReportsDecoder, HltDecReportsDecoder, HltDecReportsDecoder/Hlt1DecReportsDecoder, HltCompositionMonitor, LoKi::HDRFilter/HltErrorFilter
-LoKiSvc           SUCCESS
+LoKiSvc           SUCCESS 
 
 
 Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                        Welcome to LoKi!                                       LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi
-LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Have fun and enjoy!                                     LoKi
-LoKi                                                                                               LoKi
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                        Welcome to LoKi!                                       LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                      (LOops & KInematics)                                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                         Author:  Vanya BELYAEV Ivan.Belyaev@nikhef.nl                         LoKi 
+LoKi                     With the kind help of Galina Pakhlova & Sergey Barsuk                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                       Have fun and enjoy!                                     LoKi 
+LoKi                                                                                               LoKi 
 Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
 Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome Welcome
 
@@ -246,18 +247,18 @@ PatDownstream        INFO  RemoveUsed         = 0
 PatDownstream        INFO  RemoveAll          = 0
 PatDownstream        INFO  LongChisq          = 1.5
 PatDownstream        INFO ========================================
-PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
-PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
+PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9 
+PatDownstream        INFO momentumParams 1148.65 961.786 5326.81 
 TrackVeloTTPatSeq    INFO Member list: PatVeloTT
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
-ToolSvc.VeloClu...   INFO  --> Tool configured using the Cond DB
+ToolSvc.VeloClu...   INFO  --> Tool configured using the Cond DB 
 ToolSvc.STOffli...   INFO APE set to 0.197
-ToolSvc.STOffli...   INFO Error Vec 0.257 0.245 0.277 0.208
+ToolSvc.STOffli...   INFO Error Vec 0.257 0.245 0.277 0.208 
 ToolSvc.ITClust...   INFO APE set to 0.0758
-ToolSvc.ITClust...   INFO Error Vec 0.253 0.236 0.273 0.185
+ToolSvc.ITClust...   INFO Error Vec 0.253 0.236 0.273 0.185 
 PatVeloTT            INFO  InputTracksName    = Rec/Track/Velo
 PatVeloTT            INFO  OutputTracksName   = Rec/Track/VeloTT
 TrackFitSeq          INFO Member list: TrackBestTrackCreator
@@ -298,7 +299,7 @@ Alignment            INFO Use correlations = 1
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
 EventSelector        INFO End of event input reached.
-EventLoopMgr         INFO No more events in event selection
+EventLoopMgr         INFO No more events in event selection 
 ApplicationMgr       INFO Application Manager Stopped successfully
 EscherInit        SUCCESS ==================================================================
 EscherInit        SUCCESS 0 events processed
@@ -329,42 +330,42 @@ TrackBestTrackC...   INFO   Fitting performance   :   100.00 %
 TrackBestTrackC...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "FitFailed"                                     |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3
-VeloTrackMonitor  SUCCESS Booked 38 Histogram(s) : 1D=27 1DProf=11
-VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21
-TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14
-AlignmentOnline...SUCCESS Booked 34 Histogram(s) : 1D=34
-TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5
+VeloClusterMonitorSUCCESS Booked 15 Histogram(s) : 1D=12 2D=3 
+VeloTrackMonitor  SUCCESS Booked 38 Histogram(s) : 1D=27 1DProf=11 
+VeloIPResolutio...SUCCESS Booked 21 Histogram(s) : 1D=21 
+TrackVertexMonitorSUCCESS Booked 29 Histogram(s) : 1D=15 1DProf=14 
+AlignmentOnline...SUCCESS Booked 34 Histogram(s) : 1D=34 
+TrackFitMatchMo...SUCCESS Booked 10 Histogram(s) : 1D=5 1DProf=5 
 TrackAlignMonitor    INFO Number of elements in jacobian map: 0
-TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
-TrackITOverlapM...SUCCESS Booked 2 Histogram(s) : 1D=2
-OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1
-OTTrackMonitor    SUCCESS Booked 67 Histogram(s) : 1D=47 2D=7 1DProf=13
-OTHitEfficiency...SUCCESS Booked 101 Histogram(s) : 1D=9 2D=21 1DProf=47 2DProf=24
-TTClusterMonitor  SUCCESS Booked 17 Histogram(s) : 1D=12 2D=4 1DProf=1
-ITClusterMonitor  SUCCESS Booked 13 Histogram(s) : 1D=8 2D=4 1DProf=1
-GoodLongTracksI...SUCCESS Booked 2 Histogram(s) : 1D=2
+TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9 
+TrackITOverlapM...SUCCESS Booked 2 Histogram(s) : 1D=2 
+OTTimeMonitor     SUCCESS Booked 9 Histogram(s) : 1D=8 1DProf=1 
+OTTrackMonitor    SUCCESS Booked 67 Histogram(s) : 1D=47 2D=7 1DProf=13 
+OTHitEfficiency...SUCCESS Booked 101 Histogram(s) : 1D=9 2D=21 1DProf=47 2DProf=24 
+TTClusterMonitor  SUCCESS Booked 17 Histogram(s) : 1D=12 2D=4 1DProf=1 
+ITClusterMonitor  SUCCESS Booked 13 Histogram(s) : 1D=8 2D=4 1DProf=1 
+GoodLongTracksI...SUCCESS Booked 2 Histogram(s) : 1D=2 
 Alignment            INFO Total number of tracks: 0
 Alignment            INFO Number of covariance calculation failures: 0
 ToolSvc.Al::Ali...WARNING ==> No elements to align.
 EventLoopMgr         INFO Histograms converted successfully according to request.
-LoKiSvc           SUCCESS
+LoKiSvc           SUCCESS 
 
 
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                                       Good Bye from LoKi!                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                                      (LOops & KInematics)                                     LoKi
-LoKi                                                                                               LoKi
-LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi
-LoKi                                                                                               LoKi
-LoKi                                                                                               LoKi
-LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi
-LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi
-LoKi                                                                                               LoKi
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                       Good Bye from LoKi!                                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                      (LOops & KInematics)                                     LoKi 
+LoKi                                                                                               LoKi 
+LoKi                         Smart & Friendly C++ Physics Analysis Tool Kit                        LoKi 
+LoKi                                                                                               LoKi 
+LoKi                                                                                               LoKi 
+LoKi                      LoKi mailing list ('LoKi-club') : lhcb-loki@cern.ch                      LoKi 
+LoKi      Comments, suggestions, criticism, ideas, questions and requests are *ALWAYS* welcome     LoKi 
+LoKi                                                                                               LoKi 
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
 Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good Bye Good
 
@@ -382,7 +383,7 @@ ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.25 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
