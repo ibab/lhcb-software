@@ -1,0 +1,36 @@
+//
+//   Velo event selection process running on the CALIBRATION farm
+//
+#include "$INFO_OPTIONS"
+#include "$ONLINETASKS/options/SvcMapping.opts"
+#include "$ONLINETASKS/options/Monitoring.opts"
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.ExtSvc               += {"IncidentSvc"};
+ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector"};
+ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MEPManager"};
+ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
+Runable.MEPManager                   = "LHCb::MEPManager/MEPManager";
+MEPManager.Buffers                   = {"EVENT","SEND"};
+MEPManager.PartitionID               = @OnlineEnv.PartitionID;
+MEPManager.PartitionName             = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers          = true;
+//
+EventSelector.AllowSuspend           = false;
+MEPManager.Buffers                   = {"Events", "Output"};
+EventSelector.Input                  =  "Events";
+EventSelector.REQ1                   = "EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0";
+//
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc/RawDataCnvSvc" };
+ApplicationMgr.TopAlg                = {"Sequencer/Sequencer"};
+Sequencer.Members                    = {"LHCb::TriggerTypeFilter/Filter", "LHCb::RawEvent2MBMMergerAlg/Merger"};
+Filter.TriggerTypeToPass             = 4;
+Merger.Buffer                        = "Output";
+Merger.Compress                      = 0;
+//Merger.DataType                    = 3;  // MDF_NONE    = 1  MDF_RECORDS = 2    MDF_BANKS   = 3
+Merger.InputDataType                 = 1;
+Merger.BankLocation                  = "/Event/DAQ/RawEvent";
+Merger.RoutingBits                   = 2048; // = 0x800
+#include "$ONLINETASKS/options/EventLoopMgr.opts"
+#include "$ONLINETASKS/options/MessageSvc.opts"

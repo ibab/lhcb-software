@@ -1,0 +1,2 @@
+#include "$FARMCONFIG_OPTIONS/MEPInit.opts"
+MEPManager.InitFlags = "-s=200000 -e=500 -u=20 -b=17 -f -i=Events -c -s=40000 -e=150 -u=8 -b=17 -f -i=Overflow -c -s=30000 -e=150 -u=36 -f -i=Output -c";

@@ -1,0 +1,28 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFO_OPTIONS"
+
+ApplicationMgr.ExtSvc               += {
+					"MonitorSvc",
+          "IncidentSvc"
+                                       };
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::AlignDrv/aaa";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 1;  // 1 of running as daemon
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.OutputLevel               = 5; //@OnlineEnv.OutputLevel;
+
+MessageSvc.LoggerOnly              = false;  // Set to false for stdout
+HistogramPersistencySvc.Warnings   = false;
+
+MonitorSvc.CounterUpdateInterval   = -1;
+
+aaa.PartitionName     = @OnlineEnv.PartitionName;
+aaa.FitterClass       = "LHCb::Fitter";
+aaa.FitterName        = "bbb";
+aaa.bbb.ParamFileName     = "/home/beat/aligparams.dat";
+aaa.bbb.CounterNames      = {"/Chi2"};
+aaa.bbb.CounterDNS        = "mona08";
+aaa.bbb.CounterTask       = "LHCbA_AligWrk_00";

@@ -1,0 +1,18 @@
+//
+//   Velo event writer running on the CALIBRATION farm
+//
+#include "$INFO_OPTIONS"
+
+MessageSvc.OutputLevel       = 1;
+#include "$ONLINETASKS/options/WRT.opts"
+MessageSvc.OutputLevel       = 1;
+Writer.RunFileTimeoutSeconds = 60;
+Writer.StreamID              = "CALIB";
+EventSelector.REQ1           = "EvType=2;TriggerMask=0x0,0x0,0x0,0x800;VetoMask=0,0,0,0;MaskType=ANY;UserType=USER;Frequency=PERC;Perc=100.0";
+Writer.MaxFileSizeMB         = 500;
+Writer.UpdatePeriod          = 0;
+MEPManager.PartitionID       = @OnlineEnv.PartitionID;
+MEPManager.PartitionName     = @OnlineEnv.PartitionName;
+MEPManager.PartitionBuffers  = true;
+MEPManager.Buffers           = {"Output"};
+EventSelector.Input          = "Output";

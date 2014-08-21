@@ -1,0 +1,30 @@
+#include "$INFO_OPTIONS"
+
+ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyAdder"};
+
+ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+
+Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
+
+MessageSvc.fifoPath                  = "$LOGFIFO";
+MessageSvc.LoggerOnly                = true;  // Set to false for stdout
+MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+HistogramPersistencySvc.Warnings     = false;
+BusySvc.BogusMips                    = 0.0;
+MonitorSvc.CounterUpdateInterval     = 5;
+
+ApplicationMgr.ExtSvc               += {"AdderSvc/MEPInitCountAdder"};
+
+MEPInitCountAdder.PartitionName  = @OnlineEnv.PartitionName;
+MEPInitCountAdder.MyName  = "<part>_<node>_"+tsk;
+MEPInitCountAdder.TaskPattern = "<part>_mona08[0-9][2-9]_"+tsk+"_00";
+MEPInitCountAdder.ServicePattern  = "MON_<part>_mona08[0-9][2-9]_"+tsk"+"_00"/Counter/";
+MEPInitCountAdder.ReceiveTimeout = 6;
+MEPInitCountAdder.AdderClass = "Counter";
+MEPInitCountAdder.InDNS = "mona08";
+MEPInitCountAdder.OutDNS = "mona08";
+
