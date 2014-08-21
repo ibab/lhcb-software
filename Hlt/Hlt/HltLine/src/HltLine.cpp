@@ -38,7 +38,7 @@ class Line : public ::Selection::Line
     const Hlt::Selection* m_selection;
 
     std::pair<std::string, unsigned> m_id;
-    GaudiUtils::VectorMap<Gaudi::StringKey, const Hlt::Selection*> m_selections;
+    GaudiUtils::VectorMap<const Algorithm*, const Hlt::Selection*> m_selections;
 };
 
 }
@@ -100,7 +100,7 @@ unsigned int Hlt::Line::numberOfCandidates() const
 
 unsigned int Hlt::Line::numberOfCandidates( const Algorithm* algorithm ) const
 {
-    auto i = m_selections.find( algorithm->name() );
+    auto i = m_selections.find( algorithm );
     return i != m_selections.end() ? i->second->size() : 0;
 }
 
@@ -116,7 +116,7 @@ void Hlt::Line::SetupSelections()
         Hlt::IInspector::SelList selections;
         if ( !inspectionSvc().outputs( i, selections ) ) continue;
         // just pick up the last one (don't know what to do if more than one anyway!)
-        m_selections.insert( {Gaudi::StringKey( i->name() ), selections.back()} );
+        m_selections.insert(  { i , selections.back() } );
     }
 }
 

@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-08-21 - Gerhard Raven
+ - avoid making lots and lots of StringKeys
 
 !========================= HltLine v7r3 2014-08-16 =========================
 
