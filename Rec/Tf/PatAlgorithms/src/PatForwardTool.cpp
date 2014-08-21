@@ -559,37 +559,24 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
     debug() << "Search X coordinates, xMin " << interval.xMin()
             << " xMax " << interval.xMax() << endmsg;
   }
-  //TODO: use C++14 generalized capture...
   double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
+
+  //TODO: use C++14 generalized capture...
   double ty = track.slY();
   double y0 = track.yStraight( 0. );
-
-
-
-  auto update = [=](PatForwardHit* hit, double yRegion) {
-    if (hit->hit()->ignore()) return false;;
-    if( m_usedLHCbIDTool != nullptr){
-      //warning() << "Trying to look for used LHCbID" << endmsg;
-      if( m_usedLHCbIDTool->used(hit->hit()->lhcbID())) {
-	// warning() << "Skipping hit because already used" << endmsg;
-	return false;
-      }
-      // else warning() << "hit not used yet" << endmsg;
-    }
-
-    updateHitForTrack( hit, y0, ty);
-    if ( !hit->hit()->isYCompatible( yRegion, yCompat ) ) return false;
-    hit->setIgnored( false );
-    hit->setRlAmb( 0 );
-    auto ok = this->driftOK(*hit);
-    hit->setSelected(ok);
-    return ok;
+  auto updateHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
+    std::for_each( first, last, [=](PatForwardHit* hit) { 
+                       updateHitForTrack( hit, y0, ty);
+                       hit->setIgnored( false );
+                       hit->setRlAmb( 0 );
+                       hit->setSelected( this->driftOK(*hit) );
+                   } );
   };
 
-  for (unsigned int sta = 0; sta < nSta; sta ++){
-    for (unsigned int lay = 0; lay< nLay; lay++){
+  for (unsigned int sta = 0; sta < nSta; sta ++) {
+    for (unsigned int lay = 0; lay< nLay; lay++) {
       if (lay == 1 || lay == 2) continue;  // X layers
-      for (unsigned int region = 0; region <nReg; region ++){
+      for (unsigned int region = 0; region <nReg; region ++) {
         const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
         auto z = regionB->z();
         double yRegion = track.yStraight( z );
@@ -600,23 +587,38 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
 
         auto hitRange =  m_tHitManager->hitsWithMinX(xRange.min(), sta, lay, region);
         auto last = std::upper_bound( std::begin(hitRange), std::end(hitRange), xRange.max(), compByX );
-        m_xHitsAtReference.reserve( m_xHitsAtReference.size() + std::distance( std::begin(hitRange), last));
-        auto now = m_xHitsAtReference.size();
-        std::for_each( std::begin(hitRange), last, [&](PatFwdHit* hit) {
-            if (update(hit,yRegion)) m_xHitsAtReference.push_back(hit);
-        } );
-        auto current = std::next( std::begin(m_xHitsAtReference), now );
-        m_fwdTool->setXAtReferencePlane(track, current, std::end(m_xHitsAtReference) );
-        m_xHitsAtReference.erase( std::remove_if( current, std::end(m_xHitsAtReference), [&](const PatForwardHit* hit) {
-                                       return interval.outside(hit->projection());
-                                  } ),
+
+        // grow capacity so that things don't move around afterwards...
+        m_xHitsAtReference.reserve( m_xHitsAtReference.size() + std::distance( std::begin(hitRange), last) );
+        auto current = std::end(m_xHitsAtReference);
+
+        std::copy_if( std::begin(hitRange), last, 
+                      std::back_inserter(m_xHitsAtReference), 
+                      [=](PatForwardHit* hit){
+                              return !hit->hit()->ignore() &&  
+                                     hit->hit()->isYCompatible( yRegion, yCompat );
+                      } );
+        updateHitsForTrack( current, std::end(m_xHitsAtReference) );
+        m_xHitsAtReference.erase( std::remove_if( current, std::end(m_xHitsAtReference), 
+                                      [](const PatForwardHit* hit) {
+                                           return !hit->isSelected();
+                                      } ),
                                   std::end(m_xHitsAtReference) );
+        m_fwdTool->setXAtReferencePlane(track, current, std::end(m_xHitsAtReference) );
+        m_xHitsAtReference.erase( std::remove_if( current, std::end(m_xHitsAtReference), 
+                                      [&](const PatForwardHit* hit) {
+                                           return interval.outside(hit->projection());
+                                      } ),
+                                  std::end(m_xHitsAtReference) );
+        // make sure we are ordered by the right criterium (upto now, things
+        // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
+        // so this sort does makes a difference (not always though...), for both IT and OT...
+        std::sort( current, std::end(m_xHitsAtReference), Tf::increasingByProjection<PatForwardHit>() );
+        std::inplace_merge(std::begin(m_xHitsAtReference),current,std::end(m_xHitsAtReference), 
+                           Tf::increasingByProjection<PatForwardHit>() );
       }
     }
   }
-  std::sort( std::begin(m_xHitsAtReference),
-             std::end(m_xHitsAtReference),
-             Tf::increasingByProjection<PatForwardHit>() );
   return { std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) };
 }
 

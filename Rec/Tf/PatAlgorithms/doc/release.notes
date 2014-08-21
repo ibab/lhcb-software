@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-21 - Gerhard Raven
+ - further optimize PatForwardTool:fillXList
 
 !========================= PatAlgorithms v4r34 2014-08-18 =========================
 
