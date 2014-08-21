@@ -17,7 +17,7 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Millepede );
+DECLARE_TOOL_FACTORY( Millepede )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -35,7 +35,7 @@ Millepede::Millepede( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-Millepede::~Millepede() {}; 
+Millepede::~Millepede() {}
 
 //=============================================================================
 
