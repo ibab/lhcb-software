@@ -1,5 +1,5 @@
 package GaussSys
-version v46r8
+version v47r0
 
 branches cmt doc
 
@@ -14,22 +14,22 @@ use MCInterfaces        v1r18  Kernel
 use Gauss               v46r8   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
-use LCG_Settings        v66r0p1 
-use lhapdf              v66r0p1 LCG_GeneratorsInterfaces
-use photospp            v66r0p1 LCG_GeneratorsInterfaces
-use tauolapp            v66r0p1 LCG_GeneratorsInterfaces
-use pythia6             v66r0p1 LCG_GeneratorsInterfaces
-use pythia8             v66r0p1 LCG_GeneratorsInterfaces
-use thepeg              v66r0p1 LCG_GeneratorsInterfaces
-use herwigpp            v66r0p1 LCG_GeneratorsInterfaces
-use rivet               v66r0p1 LCG_GeneratorsInterfaces
-use alpgen              v66r0p1 LCG_GeneratorsInterfaces
-use hijing              v66r0p1 LCG_GeneratorsInterfaces
-use powhegbox           v66r0p2 LCG_GeneratorsInterfaces
+use LCG_Settings        v68r0p1 
+use lhapdf              v68r0p1 LCG_GeneratorsInterfaces
+use photospp            v68r0p1 LCG_GeneratorsInterfaces
+use tauolapp            v68r0p1 LCG_GeneratorsInterfaces
+use pythia6             v68r0p1 LCG_GeneratorsInterfaces
+use pythia8             v68r0p1 LCG_GeneratorsInterfaces
+use thepeg              v68r0p1 LCG_GeneratorsInterfaces
+use herwigpp            v68r0p1 LCG_GeneratorsInterfaces
+use rivet               v68r0p1 LCG_GeneratorsInterfaces
+use alpgen              v68r0p1 LCG_GeneratorsInterfaces
+use hijing              v68r0p1 LCG_GeneratorsInterfaces
+use powhegbox           v68r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r9    Gen
-use GENSER              v14r0   Gen
+use GENSER              v14r0p1 Gen
 use EvtGen              v13r13  Gen
 use Mint                v3r0    Gen
 use EvtGenExtras        v3r10   Gen
@@ -37,7 +37,7 @@ use Generators          v14r6   Gen
 use LbPythia            v14r2   Gen
 
 # Generators packages: extensions to Pythia6
-use LbAlpGen            v3r1p1  Gen 
+use LbAlpGen            v4r0    Gen 
 use BcVegPy             v3r2    Gen
 use GenXicc             v2r1    Gen
 use LbBcVegPy           v5r1    Gen
@@ -63,7 +63,7 @@ use LbPGuns             v5r0    Gen
 use GiGa        	v21r0     Sim     
 use GiGaCnv     	v21r0     Sim
 use SimSvc              v6r0      Sim
-use GiGaVisUI           v6r0      Sim
+use GiGaVisUI           v6r0p1    Sim
 use VisSvc              v5r7p1    Vis 
 use ClhepTools          v2r1p2    Tools
 
@@ -87,13 +87,13 @@ use BlsMoniSim          v2r0      Bls
 use VPMoniSim           v1r0      VP
 
 # Packages for MC generator tuning
-use GenTune             v2r1      Gen  
+use GenTune             v2r2      Gen  
 
 # GMDL
 use LbGDML              v1r0p1    Sim
 
 # Visualization configuration
-use XmlVis              v1r18     Vis
+use XmlVis              v1r19     Vis
 
 # Test packages for new releases or installations on new platforms
 use GenTests            v1r6p1    Gen
