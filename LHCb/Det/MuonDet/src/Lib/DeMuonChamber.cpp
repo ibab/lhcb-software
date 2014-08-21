@@ -8,6 +8,8 @@
 //Detector descriptions
 #include "DetDesc/Condition.h"
 
+#include "boost/algorithm/string/predicate.hpp"
+
 /** @file DeMuonChamber.cpp
  * 
  * Implementation of class : DeMuonChamber
@@ -18,7 +20,7 @@
 
 /// Standard Constructors
 DeMuonChamber::DeMuonChamber()
-  : m_msgStream(NULL),
+  : m_msgStream(nullptr),
     m_StationNumber(0), 
     m_RegionNumber(0),
     m_ChamberNumber(0),
@@ -30,7 +32,7 @@ DeMuonChamber::DeMuonChamber()
 DeMuonChamber::DeMuonChamber( int nStation,
                               int nRegion,
                               int nChamber)
-  : m_msgStream(NULL),
+  : m_msgStream(nullptr),
     m_StationNumber(nStation), 
     m_RegionNumber(nRegion),
     m_ChamberNumber(nChamber) 
@@ -40,7 +42,7 @@ DeMuonChamber::DeMuonChamber( int nStation,
 /// Standard Destructor
 DeMuonChamber::~DeMuonChamber()
 {
-  delete m_msgStream; m_msgStream = NULL;
+  delete m_msgStream; m_msgStream = nullptr;
 }
 
 StatusCode DeMuonChamber::initialize()  
@@ -51,7 +53,7 @@ StatusCode DeMuonChamber::initialize()
     return sc ; 
   }
   int sta(0),reg(0),chm(0); 
-  std::string name=(this->name()).c_str();  
+  const std::string& name=this->name();
   int len=name.size();
   int start=(DeMuonLocation::Default).size();  
   std::string substring;
@@ -83,55 +85,41 @@ StatusCode DeMuonChamber::initialize()
 }
 
 IPVolume* DeMuonChamber::getFirstGasGap(){
-  IPVolume* nullPV=NULL;
-  ILVolume::PVolumes::const_iterator pvIterator;
 //   std::cout<<" debug the ga "<<std::endl;
 //   std::cout<<" debug the ga "<<geometry()<<std::endl;
 //   std::cout<<" debug the gap "<<geometry()->lvolume()<<std::endl;
 //   std::cout<<" debug the gap "<<geometry()->lvolume()->pvBegin()<<std::endl;
 //   std::cout<<" debug the gap "<<geometry()->lvolume()->pvEnd()<<std::endl;
 
-  for (pvIterator=((geometry()->lvolume())->pvBegin());
+
+  for (auto pvIterator=((geometry()->lvolume())->pvBegin());
        pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
     
     const ILVolume*  geoCh=(*pvIterator)->lvolume();
-    std::string lvolname=geoCh->name();
-    size_t pos;
-    pos=lvolname.find_last_of("/");
-    std::string mystring=lvolname.substr(pos+1);
  
-    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
-    if(mystring=="lvGasGap"){
+    if( boost::ends_with( geoCh->name(), "/lvGasGap" )){
       //loop un variys gap layer to get the real gas gap volume
-      ILVolume::PVolumes::const_iterator pvGapIterator;
-      for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+      for (auto pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
 	if(!((*pvGapIterator)->lvolume()->sdName().empty())){
 	  return (*pvGapIterator);
 	}
       }
     }
   }
-  return nullPV;
+  return nullptr;
 }
 	
 IPVolume* DeMuonChamber::getGasGap(int number){
   int loopnumber=0;
-  IPVolume* nullPV=NULL;
-  ILVolume::PVolumes::const_iterator pvIterator;
-  for (pvIterator=((geometry()->lvolume())->pvBegin());
+  for (auto pvIterator=((geometry()->lvolume())->pvBegin());
        pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
     
     const ILVolume*  geoCh=(*pvIterator)->lvolume();
-    std::string lvolname=geoCh->name();
-    size_t pos;
-    pos=lvolname.find_last_of("/");
-    std::string mystring=lvolname.substr(pos+1);
     
     //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
-    if(mystring=="lvGasGap"){
+    if( boost::ends_with( geoCh->name(),"/lvGasGap") ){
       //loop un variys gap layer to get the real gas gap volume
-      ILVolume::PVolumes::const_iterator pvGapIterator;
-      for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+      for (auto pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
 	if(!((*pvGapIterator)->lvolume()->sdName().empty())){
 	  if(loopnumber==number) return (*pvGapIterator);
 	  loopnumber++;
@@ -140,33 +128,27 @@ IPVolume* DeMuonChamber::getGasGap(int number){
       }
     }
   }
-  return nullPV;
+  return nullptr;
 }
 
 
 
 IPVolume* DeMuonChamber::getGasGapLayer(int number){
   int loopnumber=0;
-  IPVolume* nullPV=NULL;
-  ILVolume::PVolumes::const_iterator pvIterator;
-  for (pvIterator=((geometry()->lvolume())->pvBegin());
+  for (auto pvIterator=((geometry()->lvolume())->pvBegin());
        pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
     
     const ILVolume*  geoCh=(*pvIterator)->lvolume();
-    std::string lvolname=geoCh->name();
-    size_t pos;
-    pos=lvolname.find_last_of("/");
-    std::string mystring=lvolname.substr(pos+1);
     
     //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
-    if(mystring=="lvGasGap"){
+    if(boost::ends_with( geoCh->name(), "/lvGasGap")){
       if(loopnumber==number) return (*pvIterator);
       loopnumber++;
 	 
     }
     
   }
-  return nullPV;
+  return nullptr;
 }
 	
 
@@ -177,19 +159,13 @@ StatusCode  DeMuonChamber::isPointInGasGap( Gaudi::XYZPoint pointInChamber,
 
  // StatusCode sc;
   int loopnumber=0;
-//  IPVolume* nullPV=NULL;
-  ILVolume::PVolumes::const_iterator pvIterator;
-  for (pvIterator=((geometry()->lvolume())->pvBegin());
+  for (auto pvIterator=((geometry()->lvolume())->pvBegin());
        pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
     
     const ILVolume*  geoCh=(*pvIterator)->lvolume();
-    std::string lvolname=geoCh->name();
-    size_t pos;
-    pos=lvolname.find_last_of("/");
-    std::string mystring=lvolname.substr(pos+1);
     
     //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
-    if(mystring=="lvGasGap"){
+    if(boost::ends_with(geoCh->name(),"/lvGasGap")){
       //loop un variys gap layer to get the real gas gap volume
       ILVolume::PVolumes::const_iterator pvGapIterator;
 
@@ -231,22 +207,14 @@ return isPointInGasGap(pointInChamber,pointInGap,number,gasVolume);
 
 int DeMuonChamber::getGasGapNumber(){
   int loopnumber=0;
-  //  IPVolume* nullPV=NULL;
-  ILVolume::PVolumes::const_iterator pvIterator;
-  for (pvIterator=((geometry()->lvolume())->pvBegin());
+  for (auto pvIterator=((geometry()->lvolume())->pvBegin());
        pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
     
     const ILVolume*  geoCh=(*pvIterator)->lvolume();
-    std::string lvolname=geoCh->name();
-    size_t pos;
-    pos=lvolname.find_last_of("/");
-    std::string mystring=lvolname.substr(pos+1);
-    
     //msg<<MSG::ERROR<<"test del nome "<<mystring<<endmsg;
-    if(mystring=="lvGasGap"){
+    if(boost::ends_with( geoCh->name(), "/lvGasGap")){
       //loop un variys gap layer to get the real gas gap volume
-      ILVolume::PVolumes::const_iterator pvGapIterator;
-      for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+      for (auto pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
 	if(!((*pvGapIterator)->lvolume()->sdName().empty())){
 	 
 	  loopnumber++;

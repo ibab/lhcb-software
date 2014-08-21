@@ -2,6 +2,8 @@
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+! 2014-08-21 - Giovanni Passaleva
+ - various CPU performance improvements
 
 !========================= MuonDet v9r15 2013-10-23 =========================
 ! 2013-10-21 - Giovanni Passaleva

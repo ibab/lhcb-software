@@ -13,6 +13,22 @@
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/MuonNamespace.h"
 
+namespace {
+std::string  findName(const std::string& allname,
+                      const std::string& /*rootName*/){
+  std::string::size_type allsize=allname.size();
+  //  std::cout<<"allsize "<< allsize <<endl;
+  
+  std::string::size_type findLastSeparator=allname.rfind("/");
+  //  std::cout<<"allsize kl "<< findLastSeparator <<endl;
+
+  std::string name=allname.substr(findLastSeparator+1,allsize);
+  //  std::cout<<"allsize name "<<name<<endl;
+  
+  return name;
+  
+}
+}
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonBasicGeometry
 //
@@ -31,7 +47,6 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
   m_regionNumber=4;   
   m_isM1defined=false;
   std::string stationName;  
-  IDetectorElement::IDEContainer::iterator itStation; 
 
  // for(itStation=muonSystem->childBegin(); itStation<muonSystem->childEnd(); itStation++){
  //   // Test if M1 is defined in the DB
@@ -40,10 +55,10 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
  // bool isM1defined=m_isM1defined;
  // log<<MSG::INFO<< "Retrieved M1 definition status: " << isM1defined <<endmsg;
 
-  for( itStation = muonSystem->childBegin();
+  for(auto  itStation = muonSystem->childBegin();
      itStation != muonSystem->childEnd();
     itStation++){
-    std::string name=((*itStation)->name()).c_str();
+    const std::string& name=(*itStation)->name();
     m_isM1defined |= (name.find("/M1") != name.npos);
     if(name.find("/MF") != name.npos) continue;
     SmartDataPtr<DetectorElement> muStation(detSvc,(*itStation)->name());
@@ -57,10 +72,7 @@ MuonBasicGeometry::MuonBasicGeometry(IDataProviderSvc* detSvc ,
     //log << MSG::INFO << "+++ " << stationName << endmsg;
    
     //    m_stationNumber=m_stationNumber+1;
-    std::pair<std::string, int> tmpStat;
-    tmpStat.first = stationName;
-    tmpStat.second = m_stationNumber;
-    m_stations.push_back(tmpStat);
+    m_stations.emplace_back(stationName,m_stationNumber);
     //    log << MSG::INFO << "+++ " << (m_stations.at(m_stationNumber)).first 
     //	<< " is station: "<<(m_stations.at(m_stationNumber)).second <<endmsg; //GP
 
@@ -97,29 +109,12 @@ int MuonBasicGeometry::getStationNumber(std::string stationName){
   std::vector< std::pair<std::string, int> >::iterator sIt = m_stations.begin();
 
   for(int i=0; sIt != m_stations.end(); sIt++, i++){
-    if( (*sIt).first == stationName) {
-      return i;
-    }
+    if( (*sIt).first == stationName) return i;
   }
   return -1;
 }
 
 
-std::string  MuonBasicGeometry::findName(std::string allname,
-                                         std::string /*rootName*/){
-  std::string::size_type allsize=allname.size();
-  //  std::cout<<"allsize "<< allsize <<endl;
-  
-  std::string::size_type findLastSeparator=allname.rfind("/");
-  //  std::cout<<"allsize kl "<< findLastSeparator <<endl;
-
-  std::string name=allname.substr(findLastSeparator+1,allsize);
-  //  std::cout<<"allsize name "<<name<<endl;
-  
-  return name;
-  
-  
-}
 
 int MuonBasicGeometry::retrieveM1status() {
   return m_isM1defined;

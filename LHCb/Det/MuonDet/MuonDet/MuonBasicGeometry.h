@@ -24,7 +24,6 @@ public:
   int getStations();
   int getRegions();
   int getPartitions();
-  std::string  findName(std::string allname,std::string rootName);
   std::string getStationName(int station);
   int getStationNumber(std::string stationName);
   int retrieveM1status();
