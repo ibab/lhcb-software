@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================= GENSER v14r0p1 2014-08-21 =========================
+! 2013-08-21 - Gloria Corti
+ - Require dummy release for building distribution with LCG 68
+
 !========================== GENSER v14r0 2014-07-28 ==========================
 ! 2013-07-14 - Gloria Corti
  - Change version of photos++ to latest 3.56 version. 
