@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2014-08-21 - Marco Cattaneo
+ - Follow improvements to DumpTracks algorithm
+
 !========================= IOExample v4r13 2014-05-12 =========================
 ! 2014-04-11 - Marco Cattaneo
  - Pick up EOS test files from TestFileDB (changed some input files to use ones
