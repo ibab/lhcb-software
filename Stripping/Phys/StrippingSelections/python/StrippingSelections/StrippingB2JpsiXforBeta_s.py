@@ -73,39 +73,38 @@ default_config = {
 
 ### Lines stored in this file:
 # StrippingBetaSJpsi2MuMuLine
-# StrippingBetaSBu2JpsiKDetachedLine .
-# StrippingBetaSBs2JpsiPhiPrescaledLine .
-# StrippingBetaSBs2JpsiPhiDetachedLine .
+# StrippingBetaSBu2JpsiKDetachedLine
+# StrippingBetaSBs2JpsiPhiPrescaledLine
+# StrippingBetaSBs2JpsiPhiDetachedLine
 # StrippingBetaSBd2JpsiKstarPrescaledLine
-# StrippingBetaSBd2JpsiKstarDetachedLine .
-# StrippingBetaSBd2JpsiKsPrescaledLine .
+# StrippingBetaSBd2JpsiKstarDetachedLine
+# StrippingBetaSBd2JpsiKsPrescaledLine
 # StrippingBetaSBd2JpsiKsDetachedLine
 # StrippingBetaSBd2JpsiKsLDDetachedLine
 # StrippingBetaSBs2JpsiKstarWideLine
-# StrippingBetaSLambdab2JpsiLambdaUnbiasedLine .
+# StrippingBetaSLambdab2JpsiLambdaUnbiasedLine
 # StrippingBetaSBd2JpsiPi0PrescaledLine 
-# StrippingBetaSBd2JpsiPi0DetachedLine .
+# StrippingBetaSBd2JpsiPi0DetachedLine
 # StrippingBetaSLambdab2JpsippiDetachedLine
 
 class B2JpsiXforBeta_sConf(LineBuilder) :
-    __configuration_keys__ = (
-					'TRCHI2DOF',
-				  'BPVLTIME',
-          'JpsiMassWindow',
-        	'DaughterPT',
-          'VCHI2PDOF',
-          'Jpsi2MuMuPrescale',
-          'Bd2JpsiKstarPrescale',
-          'Bd2JpsiKsPrescale',
-          'Bs2JpsiPhiPrescale',
-				  'Bs2JpsiPi0Prescale')
+    __configuration_keys__ = ('TRCHI2DOF',
+                              'BPVLTIME',
+                              'JpsiMassWindow',
+                              'DaughterPT',
+                              'VCHI2PDOF',
+                              'Jpsi2MuMuPrescale',
+                              'Bd2JpsiKstarPrescale',
+                              'Bd2JpsiKsPrescale',
+                              'Bs2JpsiPhiPrescale',
+                              'Bs2JpsiPi0Prescale')
 
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
         self.name = name
-	      self.config = config
+        self.config = config
 	
-        # Define input daughter lists for various B -> J/psi X selections:
+        # Define input daughter lists for various B -> J/psi X selections (there are lists NOT included in any line!):
 
         self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
 
