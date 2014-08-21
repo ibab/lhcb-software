@@ -1,5 +1,5 @@
 package RawBankSizes
-version v2r18
+version v2r19
 
 branches cmt doc src
 use GaudiKernel v*
