@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-21 - Mika Vesterinen
+ - Fix a couple of broken decay descriptors in StrippingCharmFromBSemiForHadronAsy and StrippingCharmFromBSemi
+
 ! 2014-08-21 - James Mccarthy
  - Updated StrippingB2XEta.py for s21.
 

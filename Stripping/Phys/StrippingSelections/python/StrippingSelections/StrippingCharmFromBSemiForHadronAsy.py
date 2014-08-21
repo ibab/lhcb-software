@@ -225,6 +225,7 @@ class CharmFromBSemiForHadronAsyAllLinesConf(LineBuilder) :
                                  ,config
                                  ,[self.Muons,self.Slowpions]
                                  ,['[K*(892)+ -> mu+ pi-]cc',
+                                   '[K*(892)+ -> mu- pi+]cc',
                                    '[K*(892)+ -> mu+ pi+]cc',
                                    '[K*(892)+ -> mu- pi-]cc'])
 

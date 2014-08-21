@@ -584,7 +584,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                      RequiredSelections = [self.selPion, self.selAllLambda])
         
         self.selLc2L0K = Selection( 'SelLc2LambdaKfor' + name,
-                                    Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 pi+]cc' ],'Lc2LambdaKfor' + name),
+                                    Algorithm = self._Lc2L0HFilter([ '[Lambda_c+ -> Lambda0 K+]cc' ],'Lc2LambdaKfor' + name),
                                     RequiredSelections = [self.selKaon, self.selAllLambda])
 
         self.selLc2pKK = Selection( 'SelLc2pKKfor' + name,
