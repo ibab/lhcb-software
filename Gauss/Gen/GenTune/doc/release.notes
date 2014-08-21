@@ -5,12 +5,13 @@
 !               using Professor/Rivet system. 
 !-----------------------------------------------------------------------------
 
-!=========================== GenTune v2r1 2014-07-28 =========================
+!=========================== GenTune v2r2 2014-08-21 =========================
 ! 2014-07-28 - Alex Grecu
  - modified qmtest to ignore -Wunused-local-typedefs warnings for BOOST 1.53 
    when compiling with gcc48. Separate qmtests are needed for gcc46 and gcc48 
    so one of the tests will remain in UNTESTED state.
 
+!=========================== GenTune v2r1 2014-07-28 =========================
 ! 2014-06-16 - Alex Grecu
  - released a new version of scripts/lhcbLFT2StdMap.py
 
