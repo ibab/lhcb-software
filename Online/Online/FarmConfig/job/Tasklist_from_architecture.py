@@ -8,7 +8,7 @@ def TaskListfromArch(arch, tasklist):
 #    tasklist = []
     for s in itemlist:
         tasklist.append(s.attributes['name'].value)
-def OptionsfromTasks(tasklist,level,ofile):
+def OptionsfromTasks(tasklist,level,ofile,pname):
     f = open(ofile,'w')
     f.write("//  Adder Level "+level+"\n")
     if level == "1":
@@ -36,6 +36,8 @@ MonitorSvc.CounterUpdateInterval     = 5;
         for s in tasklist:
             if 'NodeAdder' in s:
                 continue
+            if 'AligAdder' in s:
+                continue
             hsvc = s#+"HistAdder"
             f.write("ApplicationMgr.ExtSvc               += {\"AdderSvc/"+hsvc+"HistAdder\"};\n")
             csvc = s#+"CountAdder"
@@ -62,6 +64,9 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ServicePattern  = \"MON_<part>_<node>_"+s+"_(.*)/Counter/\";\n")
             f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 2;\n")
+            if pname == "LHCbA":
+              f.write(svc+".GotoPause = true;\n")
+              f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
     elif level == "2":
         f.write("""#include "$INFO_OPTIONS"
@@ -128,6 +133,9 @@ BusyAdder.ReceiveTimeout          = 3;
             f.write(svc+".AdderClass = \"Counter\";\n")
             f.write(svc+".InDNS = \"<node>\";\n")
             f.write(svc+".OutDNS = \"hlt01\";\n")
+            if pname == "LHCbA":
+              f.write(svc+".GotoPause = true;\n")
+              f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
     elif level == "3":
         f.write("""#include "$INFO_OPTIONS"
@@ -165,6 +173,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in histsvc:
             svc = s+"HistAdder"
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
             f.write(svc+".MyName  = \"<part>_<node>_"+s+"_00\";\n")
             f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Histos/\";\n")
@@ -179,6 +188,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in cntsvc:
             svc = s+"CountAdder"
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
             f.write(svc+".MyName  = \"<part>_"+s+"_00\";\n")
             f.write(svc+".TaskPattern = \"<part>_HLT[a-z][0-9][0-9]_SubFarmAdder_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Counter/\";\n")
@@ -186,6 +196,9 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"hlt01\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
+            if pname == "LHCbA":
+              f.write(svc+".ReceiveTimeout = 0;\n")
+#              f.write(svc+".GotoPause = true;\n")
             f.write("\n")
     elif level == "4":
         f.write("""#include "$INFO_OPTIONS"
@@ -223,6 +236,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in histsvc:
             svc = s+"HistAdder"
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
             f.write(svc+".MyName  = \"<part>_X_"+s+"\";\n")
             f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Histos/\";\n")
@@ -234,6 +248,7 @@ MonitorSvc.CounterUpdateInterval     = 5;
 
         for s in cntsvc:
             svc = s+"CountAdder"
+            f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
             f.write(svc+".MyName  = \"<part>_X_"+s+"\";\n")
             f.write(svc+".TaskPattern = \"<part>_HLT01_PartAdder_(.*)\";\n")
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Counter/\";\n")
@@ -241,10 +256,13 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ReceiveTimeout = 12;\n")
             f.write(svc+".InDNS = \"mona08\";\n")
             f.write(svc+".OutDNS = \"mona08\";\n")
+            if pname == "LHCbA":
+              f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
 
 tasklist = []
 arch = OnlineEnvBase.HltArchitecture
+part = OnlineEnvBase.PartitionName
 arch = "/group/online/dataflow/architectures/lbDataflowArch_"+arch+".xml"
 level = sys.argv[1]
 TaskListfromArch(arch, tasklist)
@@ -252,4 +270,4 @@ if len(sys.argv) >= 3:
     ofile = sys.argv[2]
 else:
     ofile = "/tmp/AdderOptions.opts"
-OptionsfromTasks(tasklist,level,ofile)
+OptionsfromTasks(tasklist,level,ofile,part)
