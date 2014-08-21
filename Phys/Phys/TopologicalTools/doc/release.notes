@@ -4,5 +4,8 @@
 ! Purpose     : Topological tools
 !-----------------------------------------------------------------------------
 
+! 2014-14-22 - Cédric Potterat
+ - Adding TopologicalTagging (Filter based on FilterDesktop)
+
 ! 2014-08-05 - Chris Jones
  - First version. Export topological tools to a dedicated package.
