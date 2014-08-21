@@ -5,6 +5,7 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+!========================== LbAlpGen v4r0 2014-08-21 ==========================
 ! 2014-01-13 - Gloria Corti
  - Redefine macro alpgen_author_dir to be compatible with new structure of 
    alpgen library and sources in LCGCMT68
