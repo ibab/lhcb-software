@@ -42,7 +42,7 @@ private:
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CLHEPSolver );
+DECLARE_TOOL_FACTORY( CLHEPSolver )
 
 #include "CLHEP/Matrix/SymMatrix.h"
 #include "CLHEP/Matrix/Vector.h"

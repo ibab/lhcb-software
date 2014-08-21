@@ -2,6 +2,9 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+! 2014-08-21 - Maurizio Martinelli
+ - Solved some CMake compilation warnings.
+
 ! 2014-01-10 - Marco Clemencic
  - Added CMake configuration.
 

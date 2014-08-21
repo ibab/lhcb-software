@@ -16,7 +16,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( gslSVDsolver );
+DECLARE_TOOL_FACTORY( gslSVDsolver )
 
 
 //=============================================================================
