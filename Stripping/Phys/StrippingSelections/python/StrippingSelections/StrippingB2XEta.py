@@ -7,18 +7,21 @@ given a configuration dictionary.
 """
 
 __author__ = ['Jimmy McCarthy']
-__date__ = '02/08/2013'
-__version__ = 'Stripping20'
+__date__ = '31/08/2013'
+__version__ = 'Stripping20r1'
 __all__ = 'B2XEtaConf'
 
 from Gaudi.Configuration import *
 from GaudiKernel import SystemOfUnits as Units
 from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence, MergedSelection
 from Configurables import FilterDesktop, CombineParticles
+from Configurables import DaVinci__N3BodyDecays
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 from StandardParticles import StdLoosePions as Pions
+from StandardParticles import StdLooseKaons as Kaons
+from StandardParticles import StdLooseProtons as Protons
 from StandardParticles import StdLooseAllPhotons as Photons
 from StandardParticles import StdLooseResolvedEta as Eta
 from StandardParticles import StdLooseResolvedPi0 as PiZero
@@ -27,61 +30,88 @@ _KsLL=DataOnDemand("Phys/StdLooseKsLL/Particles")
 _KsDD=DataOnDemand("Phys/StdLooseKsDD/Particles")
 _lambdaLL=DataOnDemand(Location='Phys/StdLooseLambdaLL/Particles')
 _lambdaDD=DataOnDemand("Phys/StdLooseLambdaDD/Particles")
+_kstar=DataOnDemand("Phys/StdLooseKstar2Kpi/Particles")
 
 default_config = {
-    'NAME' : 'B2XEta',
-    'WGs'         : ['Charmless'],
-    'BUILDERTYPE' : 'B2XEtaConf',
-    'CONFIG'      : {'Trk_Chi2'                : 3.0,
-                     'Trk_PT'                  : 300.0,
-                     'Trk_GP'                  : 0.5,
-                     'KS_DD_MassWindow'        : 23.0,
-                     'KS_DD_VtxChi2'           : 15.0, 
-                     'KS_DD_FDChi2'            : 20.0,
-                     'KS_DD_PTmin'             : 1200.0,
-                     'KS_LL_MassWindow'        : 14.0,
-                     'KS_LL_VtxChi2'           : 15.0,  
-                     'KS_LL_FDChi2'            : 50.0,
-                     'KS_LL_PTmin'             : 1200.0,
-                     'L_DD_MassWindow'         : 20.0,
-                     'L_DD_VtxChi2'            : 15.0,
-                     'L_DD_PTmin'              : 1000.0,
-                     'L_LL_MassWindow'         : 15.0,
-                     'L_LL_VtxChi2'            : 15.0,
-                     'L_LL_PTmin'              : 1000.0,  
-                     'eta_PT'                  : 2000,
-                     'eta_MassWindow'          : 150,
-                     'eta_vtxChi2'             : 15,
-                     'eta_DOCA'                : 20,
-                     'gamma_PT'                : 500, #photons from eta
-                     'eta_prime_MassWindow'    : 150.0,
-                     'eta_prime_PT'            : 2000.0,
-                     'eta_prime_vtxChi2'       : 15.0,
-                     'eta_prime_DOCA'          : 20.0,
-                     'B_MassWindow'            : 750.0,
-                     'B_PTmin'                 : 1500.0,
-                     'BDaug_DD_maxDocaChi2'    : 20.0, 
-                     'BDaug_LL_maxDocaChi2'    : 20.0, 
-                     'B_VtxChi2'               : 15.0,
-                     'B_Dira'                  : 0.9995,
-                     'B_IPCHI2'                : 20.0,
-                     'B_eta_IPCHI2'            : 6.0, 
-                     'Lb_MassWindow'           : 750.0,
-                     'Lb_PTmin'                : 1000.0,
-                     'LbDaug_DD_maxDocaChi2'   : 20.0,
-                     'LbDaug_LL_maxDocaChi2'   : 20.0,
-                     'Lb_VtxChi2'              : 20.0,
-                     'Lb_Dira'                 : 0.9995,
-                     'Lb_IPCHI2'               : 20.0,
-                     'Lb_eta_IPCHI2'           : 6.0,
-                     'GEC_MaxTracks'           : 250,
-                     'Prescale'                : 1.0,
-                     'Postscale'               : 1.0,
-                     'etaGG_Prescale'          : 0.0
-                     },
-    'STREAMS' : ['Bhadron']
+    'NAME'         : 'B2XEta',
+    'WGs'          : ['Charmless'],
+    'BUILDERTYPE'  : 'B2XEtaConf',
+    'CONFIG'       : {
+                  'Trk_Chi2'                : 3.0,
+                  'Trk_PT'                  : 300.0,
+                  'Trk_GP'                  : 0.5,
+                  'pK_PT'                   : 1000,
+                  'kstar_daug_PT'           : 500,
+                  'ProbNNCut'               : 0.1,
+                  'KS_DD_MassWindow'        : 23.0,
+                  'KS_DD_VtxChi2'           : 15.0, 
+                  'KS_DD_FDChi2'            : 20.0,
+                  'KS_DD_PTmin'             : 1200.0,
+                  'KS_LL_MassWindow'        : 14.0,
+                  'KS_LL_VtxChi2'           : 15.0,  
+                  'KS_LL_FDChi2'            : 50.0,
+                  'KS_LL_PTmin'             : 1200.0,
+                  'L_DD_MassWindow'         : 20.0,
+                  'L_DD_VtxChi2'            : 15.0,
+                  'L_DD_PTmin'              : 1000.0,
+                  'L_LL_MassWindow'         : 15.0,
+                  'L_LL_VtxChi2'            : 15.0,
+                  'L_LL_PTmin'              : 1000.0,
+                  'Kstar_PTmin'             : 1200.0,
+                  'Kstar_massWdw'           : 100.0,
+                  'Kstar_vtxChi2'           : 9.0,
+                  'Kstar_ipChi2'            : 5.0,
+                  'eta_PT'                  : 2000,
+                  'eta_MassWindow'          : 150,
+                  'eta_vtxChi2'             : 15,
+                  'eta_DOCA'                : 20,
+                  'gamma_PT'                : 500, #photons from eta
+                  'eta_prime_MassWindow'    : 100.0,
+                  'eta_prime_PT'            : 2000.0,
+                  'eta_prime_vtxChi2'       : 15.0,
+                  'eta_prime_DOCA'          : 15.0,
+                  'B_MassWindow'            : 750.0,
+                  'B_PTmin'                 : 1500.0,
+                  'BDaug_DD_maxDocaChi2'    : 20.0, 
+                  'BDaug_LL_maxDocaChi2'    : 20.0, 
+                  'B_VtxChi2'               : 15.0,
+                  'B_Dira'                  : 0.9995,
+                  'B_IPCHI2'                : 20.0,
+                  'B_eta_IPCHI2'            : 6.0, 
+                  'Lb_MassWindow'           : 750.0,
+                  'Lb_PTmin'                : 1000.0,
+                  'LbDaug_DD_maxDocaChi2'   : 20.0,
+                  'LbDaug_LL_maxDocaChi2'   : 20.0,
+                  'Lb_VtxChi2'              : 20.0,
+                  'Lb_Dira'                 : 0.9995,
+                  'Lb_IPCHI2'               : 20.0,
+                  'Lb_eta_IPCHI2'           : 6.0,
+                  'GEC_MaxTracks'           : 250,
+                  'Prescale'                : 1.0,
+                  'Postscale'               : 1.0,
+                  'etaGG_Prescale'          : 0.0
+                  },
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2XEtaB2etapKSLLLine',
+                                   'StrippingB2XEtaB2etapKSDDLine',
+                                   'StrippingB2XEtaB2eta3piKSLLine',
+                                   'StrippingB2XEtaB2eta3piKSDDLine',
+                                   'StrippingB2XEtaB2etaGGKSLLLine',
+                                   'StrippingB2XEtaB2etaGGKSDDLine',
+                                   'StrippingB2XEtaLb2etapLLLLine',
+                                   'StrippingB2XEtaLb2etapLDDLine',
+                                   'StrippingB2XEtaLb2eta3piLLLine',
+                                   'StrippingB2XEtaLb2eta3piLDDLine',
+                                   'StrippingB2XEtaLb2etaGGLLLLine',
+                                   'StrippingB2XEtaLb2etaGGLDDLine',
+                                   'StrippingB2XEtaB2etapKstarLine',
+                                   'StrippingB2XEtaB2eta3piKstarLine',
+                                   'StrippingB2XEtaB2etaGGKstarLine',
+                                   'StrippingB2XEtaLb2pKetapLine',
+                                   'StrippingB2XEtaLb2pKeta3piLine',
+                                   'StrippingB2XEtaLb2pKetaGGLine'
+                                   ]
+                      }
     }
-
 
 class B2XEtaConf(LineBuilder) :
     """
@@ -112,6 +142,9 @@ class B2XEtaConf(LineBuilder) :
     __configuration_keys__ = ('Trk_Chi2',
                               'Trk_PT',
                               'Trk_GP',
+                              'pK_PT',
+                              'kstar_daug_PT',
+                              'ProbNNCut',
                               'KS_DD_MassWindow',
                               'KS_DD_VtxChi2',   
                               'KS_DD_FDChi2',    
@@ -126,6 +159,10 @@ class B2XEtaConf(LineBuilder) :
                               'L_LL_MassWindow', 
                               'L_LL_VtxChi2',    
                               'L_LL_PTmin',
+                              'Kstar_PTmin',
+                              'Kstar_massWdw',
+                              'Kstar_vtxChi2',
+                              'Kstar_ipChi2',
                               'eta_PT',
                               'eta_MassWindow',
                               'eta_vtxChi2',
@@ -172,12 +209,21 @@ class B2XEtaConf(LineBuilder) :
         Lb2etaGG_LL_name = name+'Lb2etaGGLLL'
         Lb2etaGG_DD_name = name+'Lb2etaGGLDD'
         Lb2eta3Pi_LL_name = name+'Lb2eta3piLLL'
-        Lb2eta3Pi_DD_name = name+'Lb2eta3piLDD'       
+        Lb2eta3Pi_DD_name = name+'Lb2eta3piLDD'
 
+        B2etap_Kst_name = name+'B2etapKstar'
+        B2etaGG_Kst_name = name+'B2etaGGKstar'
+        B2eta3Pi_Kst_name = name+'B2eta3piKstar'
+        Lb2etap_pK_name = name+'Lb2pKetap'
+        Lb2etaGG_pK_name = name+'Lb2pKetaGG'
+        Lb2eta3Pi_pK_name = name+'Lb2pKeta3pi'
+ 
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
         self.pions = Pions
+        self.kaons = Kaons
+        self.protons = Protons
         self.photons = Photons
         self.eta = Eta
         self.pizero = PiZero
@@ -188,6 +234,11 @@ class B2XEtaConf(LineBuilder) :
         self.makeKS2DD( 'KSfor'+B2etap_DD_name, config )        
         self.makeL2LL( 'Lambdafor'+Lb2etap_LL_name,config)
         self.makeL2DD('Lambdafor'+Lb2etap_DD_name,config)
+
+        self.makeFilterKaons( 'KaonsFor'+Lb2etap_pK_name, config )
+        self.makeFilterProtons( 'ProtonsFor'+Lb2etap_pK_name, config )
+        self.makeFilterKstar( 'KstarFor'+B2etap_Kst_name, config )
+
         self.makeEtaGG('EtaGGfor'+name,config)
         self.makeEta3Pi('Eta3Pifor'+name,config)
         self.makeEtap('Etapfor'+name,config)
@@ -204,6 +255,13 @@ class B2XEtaConf(LineBuilder) :
         self.makeLb2LDDetaGG(Lb2etaGG_DD_name, config)    
         self.makeLb2LLLeta3Pi(Lb2eta3Pi_LL_name, config)
         self.makeLb2LDDeta3Pi(Lb2eta3Pi_DD_name, config)
+
+        self.makeB2Kstetap(B2etap_Kst_name, config)
+        self.makeB2KstetaGG(B2etaGG_Kst_name, config)
+        self.makeB2Ksteta3Pi(B2eta3Pi_Kst_name, config)
+        self.makeLb2pKetap(Lb2etap_pK_name, config)
+        self.makeLb2pKetaGG(Lb2etaGG_pK_name, config)
+        self.makeLb2pKeta3Pi(Lb2eta3Pi_pK_name, config)
 
         self.B2etap_LL_line = StrippingLine(B2etap_LL_name+'Line',
                                             prescale = config['Prescale'],
@@ -289,6 +347,49 @@ class B2XEtaConf(LineBuilder) :
                                                FILTER = GECCode,
                                                EnableFlavourTagging=True
                                                )
+
+        self.B2etap_Kst_line = StrippingLine(B2etap_Kst_name+'Line',
+                                             prescale = config['Prescale'],
+                                             postscale = config['Postscale'],
+                                             selection = self.selB2etapKst,
+                                             FILTER = GECCode,
+                                             EnableFlavourTagging=True
+                                             )
+        self.B2etaGG_Kst_line = StrippingLine(B2etaGG_Kst_name+'Line',
+                                             prescale = config['etaGG_Prescale'],
+                                             postscale = config['Postscale'],
+                                             selection = self.selB2etaGGKst,
+                                             FILTER = GECCode,
+                                             EnableFlavourTagging=True
+                                             )
+        self.B2eta3Pi_Kst_line = StrippingLine(B2eta3Pi_Kst_name+'Line',
+                                               prescale = config['Prescale'],
+                                               postscale = config['Postscale'],
+                                               selection = self.selB2eta3PiKst,
+                                               FILTER = GECCode,
+                                               EnableFlavourTagging=True
+                                               )
+        self.Lb2etap_pK_line = StrippingLine(Lb2etap_pK_name+'Line',
+                                             prescale = config['Prescale'],
+                                             postscale = config['Postscale'],
+                                             selection = self.selLb2pKetap,
+                                             FILTER = GECCode,
+                                             EnableFlavourTagging=True
+                                             )
+        self.Lb2etaGG_pK_line = StrippingLine(Lb2etaGG_pK_name+'Line',
+                                              prescale = config['etaGG_Prescale'],
+                                              postscale = config['Postscale'],
+                                              selection = self.selLb2pKetaGG,
+                                              FILTER = GECCode,
+                                              EnableFlavourTagging=True
+                                              )
+        self.Lb2eta3Pi_pK_line = StrippingLine(Lb2eta3Pi_pK_name+'Line',
+                                               prescale = config['Prescale'],
+                                               postscale = config['Postscale'],
+                                               selection = self.selLb2pKeta3Pi,
+                                               FILTER = GECCode,
+                                               EnableFlavourTagging=True
+                                               )
         
         self.registerLine(self.B2etap_LL_line)
         self.registerLine(self.B2etap_DD_line)
@@ -301,7 +402,14 @@ class B2XEtaConf(LineBuilder) :
         self.registerLine(self.Lb2etaGG_LL_line)
         self.registerLine(self.Lb2etaGG_DD_line)
         self.registerLine(self.Lb2eta3Pi_LL_line)
-        self.registerLine(self.Lb2eta3Pi_DD_line)       
+        self.registerLine(self.Lb2eta3Pi_DD_line)
+
+        self.registerLine(self.B2etap_Kst_line)
+        self.registerLine(self.B2etaGG_Kst_line)
+        self.registerLine(self.B2eta3Pi_Kst_line)
+        self.registerLine(self.Lb2etap_pK_line)
+        self.registerLine(self.Lb2etaGG_pK_line)
+        self.registerLine(self.Lb2eta3Pi_pK_line)
 
     def makeKS2LL( self, name, config):
 
@@ -314,9 +422,11 @@ class B2XEtaConf(LineBuilder) :
         _track_PT_1 = "(CHILDCUT((PT>%s*MeV),1))"      % config['Trk_PT']
         _track_PT_2 = "(CHILDCUT((PT>%s*MeV),2))"      % config['Trk_PT']
         _track_GP_1 = "(CHILDCUT((TRGHOSTPROB<%s),1))"    % config['Trk_GP']
-        _track_GP_2 = "(CHILDCUT((TRGHOSTPROB<%s),2))"    % config['Trk_GP'] 
+        _track_GP_2 = "(CHILDCUT((TRGHOSTPROB<%s),2))"    % config['Trk_GP']
+        _track_PID_1 = "(CHILDCUT((PROBNNpi>%s),1))"      % config['ProbNNCut']
+        _track_PID_2 = "(CHILDCUT((PROBNNpi>%s),2))"      % config['ProbNNCut']
         
-        _allCuts =_momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trackChi2_1+'&'+_trackChi2_2+'&'+_track_PT_1+'&'+_track_PT_2+'&'+_track_GP_1+'&'+_track_GP_2
+        _allCuts =_momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trackChi2_1+'&'+_trackChi2_2+'&'+_track_PT_1+'&'+_track_PT_2+'&'+_track_GP_1+'&'+_track_GP_2+'&'+_track_PID_1+'&'+_track_PID_2
 
         _KSLLFilter=FilterDesktop("_KSLLFilter", Code=_allCuts)
         self.selKS2LL=Selection( name, Algorithm=_KSLLFilter, RequiredSelections=[_KsLL])
@@ -333,8 +443,10 @@ class B2XEtaConf(LineBuilder) :
         _track_PT_2 = "(CHILDCUT((PT>%s*MeV),2))"      % config['Trk_PT']
         _track_GP_1 = "(CHILDCUT((TRGHOSTPROB<%s),1))"    % config['Trk_GP']
         _track_GP_2 = "(CHILDCUT((TRGHOSTPROB<%s),2))"    % config['Trk_GP']
+        _track_PID_1 = "(CHILDCUT((PROBNNpi>%s),1))"      % config['ProbNNCut']
+        _track_PID_2 = "(CHILDCUT((PROBNNpi>%s),2))"      % config['ProbNNCut']
         
-        _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trackChi2_1+'&'+_trackChi2_2+'&'+_track_PT_1+'&'+_track_PT_2+'&'+_track_GP_1+'&'+_track_GP_2
+        _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trackChi2_1+'&'+_trackChi2_2+'&'+_track_PT_1+'&'+_track_PT_2+'&'+_track_GP_1+'&'+_track_GP_2+'&'+_track_PID_1+'&'+_track_PID_2
 
         _KSDDFilter=FilterDesktop("_KSDDFilter", Code=_allCuts)
         self.selKS2DD=Selection( name, Algorithm=_KSDDFilter, RequiredSelections=[_KsDD])
@@ -350,6 +462,8 @@ class B2XEtaConf(LineBuilder) :
         _track_PT_2 = "(CHILDCUT((PT>%s*MeV),2))"      % config['Trk_PT']
         _track_GP_1 = "(CHILDCUT((TRGHOSTPROB<%s),1))"    % config['Trk_GP']
         _track_GP_2 = "(CHILDCUT((TRGHOSTPROB<%s),2))"    % config['Trk_GP']
+        #_track_PID_1 = "(CHILDCUT((PROBNNp>%s),1))"      % config['ProbNNCut']
+        #_track_PID_2 = "(CHILDCUT((PROBNNpi>%s),2))"      % config['ProbNNCut']
         
         _allCuts =_momCut+'&'+_massCut+'&'+_vtxCut+'&'+_trackChi2_1+'&'+_trackChi2_2+'&'+_track_PT_1+'&'+_track_PT_2+'&'+_track_GP_1+'&'+_track_GP_2
         
@@ -367,11 +481,55 @@ class B2XEtaConf(LineBuilder) :
         _track_PT_2 = "(CHILDCUT((PT>%s*MeV),2))"      % config['Trk_PT']
         _track_GP_1 = "(CHILDCUT((TRGHOSTPROB<%s),1))"    % config['Trk_GP']
         _track_GP_2 = "(CHILDCUT((TRGHOSTPROB<%s),2))"    % config['Trk_GP']
+        #_track_PID_1 = "(CHILDCUT((PROBNNp>%s),1))"      % config['ProbNNCut']
+        #_track_PID_2 = "(CHILDCUT((PROBNNpi>%s),2))"      % config['ProbNNCut']
         
         _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_trackChi2_1+'&'+_trackChi2_2+'&'+_track_PT_1+'&'+_track_PT_2+'&'+_track_GP_1+'&'+_track_GP_2
         
         _LDDFilter=FilterDesktop("_LDDFilter", Code=_allCuts)
         self.selL2DD=Selection( name, Algorithm=_LDDFilter, RequiredSelections=[_lambdaDD])
+
+    def makeFilterKaons( self, name, config):
+
+        _momCut = "(PT>%s*MeV)"           % config['pK_PT']
+        _GPCut = "(TRGHOSTPROB<%s)"       % config['Trk_GP']
+        _PIDCut = "(PROBNNk>%s)"          % config['ProbNNCut']
+
+        _allCuts = _momCut+'&'+_GPCut+'&'+_PIDCut
+
+        _kaonFilter=FilterDesktop("_kaonFilter", Code=_allCuts)
+        self.selKaons = Selection( name, Algorithm=_kaonFilter, RequiredSelections=[self.kaons] )
+
+    def makeFilterProtons( self, name, config):
+
+        _momCut = "(PT>%s*MeV)"           % config['pK_PT']
+        _GPCut = "(TRGHOSTPROB<%s)"       % config['Trk_GP']
+        _PIDCut = "(PROBNNp>%s)"          % config['ProbNNCut']
+
+        _allCuts = _momCut+'&'+_GPCut+'&'+_PIDCut
+
+        _protonFilter=FilterDesktop("_protonFilter", Code=_allCuts)
+        self.selProtons = Selection( name, Algorithm=_protonFilter, RequiredSelections=[self.protons] )
+
+    def makeFilterKstar( self, name, config):
+        _massCut = "(ADMASS('K*(892)0')<%s*MeV)"                      % config['Kstar_massWdw']
+        _momCut = "(PT>%s*MeV)"                                       % config['Kstar_PTmin']
+        _vtxCut  = "(VFASPF(VCHI2/VDOF)<%s)"                          % config['Kstar_vtxChi2']
+        _IPChi2Cut = "(BPVIPCHI2()>%s)"                               % config['Kstar_ipChi2']
+        
+        _trackChi2_1 = "(CHILDCUT((TRCHI2DOF<%s),1))"                 % config['Trk_Chi2']
+        _trackChi2_2 = "(CHILDCUT((TRCHI2DOF<%s),2))"                 % config['Trk_Chi2']        
+        _track_PT_1 = "(CHILDCUT((PT>%s*MeV),1))"                     % config['kstar_daug_PT']
+        _track_PT_2 = "(CHILDCUT((PT>%s*MeV),2))"                     % config['kstar_daug_PT']
+        _track_GP_1 = "(CHILDCUT((TRGHOSTPROB<%s),1))"                % config['Trk_GP']
+        _track_GP_2 = "(CHILDCUT((TRGHOSTPROB<%s),2))"                % config['Trk_GP']
+        _track_PID_1 = "(INTREE((ABSID=='pi-') & (PROBNNpi>%s)))"     % config['ProbNNCut']
+        _track_PID_2 = "(INTREE((ABSID=='K+') & (PROBNNk>%s)))"       % config['ProbNNCut']
+        
+        _allCuts = _massCut+'&'+_vtxCut+'&'+_momCut+'&'+_IPChi2Cut+'&'+_trackChi2_1+'&'+_trackChi2_2+'&'+_track_PT_1+'&'+_track_PT_2+'&'+_track_GP_1+'&'+_track_GP_2+'&'+_track_PID_1+'&'+_track_PID_2
+
+        _kstarFilter=FilterDesktop("_kstarFilter", Code=_allCuts)
+        self.selKstar = Selection( name, Algorithm=_kstarFilter, RequiredSelections=[_kstar] )
 
     def makeEtaGG( self, name, config):
         
@@ -393,17 +551,23 @@ class B2XEtaConf(LineBuilder) :
         _track_PT="(PT>%s*MeV)"                        % config['Trk_PT']
         _track_Chi2="(TRCHI2DOF<%s)"                   % config['Trk_Chi2']
         _track_GPCut ="(TRGHOSTPROB<%s)"               % config['Trk_GP']
+        _track_PIDCut = "(PROBNNpi>%s)"                % config['ProbNNCut']
         
         _allCuts = _PTCut+'&'+_vtxCut
-        _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut
+        _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
+        _combCut12Doca="ADOCA(2,3)<%s"                     % config['eta_DOCA']
+        _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_vtxChi2']
+        _combCut12=_combCut12Doca
         
-        _eta3Pi=CombineParticles("eta3Pi",
-                                 DecayDescriptor = "eta -> pi0 pi+ pi-",
-                                 CombinationCut=_combCuts,
-                                 MotherCut=_allCuts,
-                                 DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts},
-                                 ParticleCombiners = {'' : "LoKi::VertexFitter" })
+        #_eta3Pi=CombineParticles("eta3Pi",
+        _eta3Pi=DaVinci__N3BodyDecays("eta3Pi",
+                                      DecayDescriptor = "eta -> pi0 pi+ pi-",
+                                      Combination12Cut = _combCut12,
+                                      CombinationCut=_combCuts,
+                                      MotherCut=_allCuts,
+                                      DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts},
+                                      ParticleCombiners = {'' : "LoKi::VertexFitter" })
         
         self.selEta3Pi = Selection(name, Algorithm=_eta3Pi, RequiredSelections=[self.daughters])
         
@@ -416,18 +580,24 @@ class B2XEtaConf(LineBuilder) :
         _track_PT="(PT>%s*MeV)"                        % config['Trk_PT']
         _track_Chi2="(TRCHI2DOF<%s)"                   % config['Trk_Chi2']
         _track_GPCut ="(TRGHOSTPROB<%s)"               % config['Trk_GP']
+        _track_PIDCut = "(PROBNNpi>%s)"                % config['ProbNNCut']
 
         _allCuts = _PTCut+'&'+_vtxCut
-        _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut
+        _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
-
-        _etap=CombineParticles("etap",
-                               DecayDescriptors = ["eta_prime -> gamma pi+ pi-", "eta_prime -> eta pi+ pi-"],
-                               CombinationCut=_combCuts,
-                               MotherCut=_allCuts,
-                               DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts},
-                               ParticleCombiners = {'' : "LoKi::VertexFitter" })
-
+        _combCut12Doca="ADOCA(2,3)<%s"                     % config['eta_prime_DOCA']
+        _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_prime_vtxChi2']
+        _combCut12=_combCut12Doca
+        
+        #_etap=CombineParticles("etap",
+        _etap=DaVinci__N3BodyDecays("etap",
+                              DecayDescriptors = ["eta_prime -> gamma pi+ pi-", "eta_prime -> eta pi+ pi-"],
+                              Combination12Cut = _combCut12,
+                              CombinationCut=_combCuts,
+                              MotherCut=_allCuts,
+                              DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts},
+                              ParticleCombiners = {'' : "LoKi::VertexFitter" })
+        
         self.selEtap = Selection(name, Algorithm=_etap, RequiredSelections=[self.daughters])
         
     def makeB2KSLLetap( self, name, config):
@@ -507,10 +677,11 @@ class B2XEtaConf(LineBuilder) :
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
         _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
                 
         _combCuts = _massCut+'&'+_docaCut
-        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
         
         _b2etaksLL = CombineParticles("B2etaKSLL",
                                       DecayDescriptor = "B0 -> KS0 eta",
@@ -525,10 +696,11 @@ class B2XEtaConf(LineBuilder) :
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
         _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_DD_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
                 
         _combCuts = _massCut+'&'+_docaCut
-        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
         
         _b2eta3PiksDD = CombineParticles("B2eta3PiKSDD",
                                          DecayDescriptor = "B0 -> KS0 eta",
@@ -614,10 +786,11 @@ class B2XEtaConf(LineBuilder) :
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
         _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
         
         _combCuts = _massCut+'&'+_docaCut
-        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
         
         _Lb2eta3PiLLL = CombineParticles("Lb2eta3PiLLL",
                                          DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
@@ -632,10 +805,11 @@ class B2XEtaConf(LineBuilder) :
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
         _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
         
         _combCuts = _massCut+'&'+_docaCut
-        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
         
         _Lb2eta3PiLDD = CombineParticles("Lb2eta3PiLDD",
                                          DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
@@ -643,3 +817,116 @@ class B2XEtaConf(LineBuilder) :
                                          MotherCut = _allCuts,
                                          ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selLb2LDDeta3Pi = Selection( name, Algorithm=_Lb2eta3PiLDD, RequiredSelections=[self.selL2DD, self.selEta3Pi])
+
+
+    def makeB2Kstetap(self, name, config):
+        _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
+        _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
+        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
+        _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
+        _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
+        
+        _combCuts = _massCut+'&'+_docaCut
+        _allCuts = _PTCut+'&'+_vtxCut+'&'+_diraCut+'&'+_IPChi2Cut
+                
+        _b2etapKst = CombineParticles("B2etapKst",
+                                      DecayDescriptor = "[B0 ->  K*(892)0 eta_prime]cc",
+                                      CombinationCut = _combCuts,
+                                      MotherCut = _allCuts,
+                                      ParticleCombiners = {'' : "LoKi::VertexFitter" }     )
+        self.selB2etapKst = Selection( name, Algorithm=_b2etapKst, RequiredSelections=[self.selKstar, self.selEtap])
+        
+    def makeB2KstetaGG(self, name, config):
+        _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
+        _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
+        _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_eta_IPCHI2']
+        
+        _combCuts = _massCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut
+        
+        _b2etaGGKst = CombineParticles("B2etaGGKst",
+                                       DecayDescriptor = "[B0 -> K*(892)0 eta]cc",
+                                       CombinationCut = _combCuts,
+                                       MotherCut = _allCuts,
+                                       ParticleCombiners = {'' : "LoKi::VertexFitter" })
+        self.selB2etaGGKst = Selection( name, Algorithm=_b2etaGGKst, RequiredSelections=[self.selKstar, self.selEtaGG])
+        
+    def makeB2Ksteta3Pi(self, name, config):
+        _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
+        _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
+        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
+        _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
+        _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
+        
+        _combCuts = _massCut+'&'+_docaCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
+                
+        _b2eta3PiKst = CombineParticles("B2eta3PiKst",
+                                        DecayDescriptor = "[B0 -> K*(892)0 eta]cc",
+                                        CombinationCut = _combCuts,
+                                        MotherCut = _allCuts,
+                                        ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+        self.selB2eta3PiKst = Selection( name, Algorithm=_b2eta3PiKst, RequiredSelections=[self.selKstar, self.selEta3Pi])
+        
+    def makeLb2pKetap(self, name, config):
+        _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
+        _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
+        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
+        _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
+        _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
+        
+        _combCuts = _massCut+'&'+_docaCut
+        _allCuts = _PTCut+'&'+_vtxCut+'&'+_diraCut+'&'+_IPChi2Cut
+        _combCut12Doca="ADOCA(2,3)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
+        _combCut12=_combCut12Doca
+        
+        _Lb2pKetap = DaVinci__N3BodyDecays("Lb2pKetap",
+                                           DecayDescriptor = "[Lambda_b0 -> p+ K- eta_prime]cc",
+                                           Combination12Cut = _combCut12,
+                                           CombinationCut = _combCuts,
+                                           MotherCut = _allCuts,
+                                           ParticleCombiners = {'' : "LoKi::VertexFitter" })
+        self.selLb2pKetap = Selection( name, Algorithm=_Lb2pKetap, RequiredSelections=[self.selProtons, self.selKaons, self.selEtap])
+        
+    def makeLb2pKetaGG(self, name, config):
+        _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
+        _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
+        _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_eta_IPCHI2']
+        
+        _combCuts = _massCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut
+        _combCut12="ADOCA(2,3)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+               
+        _Lb2pKetaGG = DaVinci__N3BodyDecays("Lb2pKetaGG",
+                                            DecayDescriptor = "[Lambda_b0 -> p+ K- eta]cc",
+                                            Combination12Cut = _combCut12,
+                                            CombinationCut = _combCuts,
+                                            MotherCut = _allCuts,
+                                            ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+        self.selLb2pKetaGG = Selection( name, Algorithm=_Lb2pKetaGG, RequiredSelections=[self.selProtons, self.selKaons, self.selEtaGG])
+        
+    def makeLb2pKeta3Pi(self, name, config):
+        _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
+        _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
+        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
+        _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
+        _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
+        _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
+        
+        _combCuts = _massCut+'&'+_docaCut
+        _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
+        _combCut12Doca="ADOCA(2,3)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
+        _combCut12=_combCut12Doca
+        
+        _Lb2pKeta3Pi = DaVinci__N3BodyDecays("Lb2pKeta3Pi",
+                                             DecayDescriptor = "[Lambda_b0 -> p+ K- eta]cc",
+                                             Combination12Cut = _combCut12,
+                                             CombinationCut = _combCuts,
+                                             MotherCut = _allCuts,
+                                             ParticleCombiners = {'' : "LoKi::VertexFitter" })
+        self.selLb2pKeta3Pi = Selection( name, Algorithm=_Lb2pKeta3Pi, RequiredSelections=[self.selProtons, self.selKaons, self.selEta3Pi])

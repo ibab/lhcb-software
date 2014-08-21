@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-21 - James Mccarthy
+ - Updated StrippingB2XEta.py for s21.
+
 ! 2014-08-20 - Mika Vesterinen
  - Updates to StrippingCharmFromBSemi.py, StrippingTrackEffD0ToK3Pi.py and StrippingB2DMuNuX.py
  - also to TestCharmFromBSemi.py
