@@ -21,7 +21,7 @@ private:
 } ;
 
 #include "GaudiKernel/AlgFactory.h"
-DECLARE_ALGORITHM_FACTORY( OTCalibrationIO );
+DECLARE_ALGORITHM_FACTORY( OTCalibrationIO )
 
 //=============================================================================
 // Standard constructor, initializes variables

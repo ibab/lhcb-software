@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTWriteConditionsToXml );
+DECLARE_ALGORITHM_FACTORY( OTWriteConditionsToXml )
 
 OTWriteConditionsToXml::OTWriteConditionsToXml( const std::string& name,
                                                 ISvcLocator* pSvcLocator)

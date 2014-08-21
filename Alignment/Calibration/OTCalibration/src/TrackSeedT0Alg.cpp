@@ -44,7 +44,7 @@ private:
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackSeedT0Alg );
+DECLARE_ALGORITHM_FACTORY( TrackSeedT0Alg )
 
 using std::stringstream;
 

@@ -12,4 +12,4 @@
  */
 // ============================================================================
 
-LOAD_FACTORY_ENTRIES( OTCalibration );
+LOAD_FACTORY_ENTRIES( OTCalibration )

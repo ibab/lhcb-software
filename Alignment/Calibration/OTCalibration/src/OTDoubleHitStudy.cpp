@@ -26,7 +26,7 @@ private:
 };
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( OTDoubleHitStudy );
+DECLARE_ALGORITHM_FACTORY( OTDoubleHitStudy )
 
 //=============================================================================
 OTDoubleHitStudy::OTDoubleHitStudy(const std::string& name,

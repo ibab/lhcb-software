@@ -25,7 +25,7 @@ using namespace boost::assign;
 #include <boost/spirit/home/classic.hpp>
 #include <boost/spirit/home/phoenix.hpp>
 
-DECLARE_ALGORITHM_FACTORY(OTModuleClbrAlg);
+DECLARE_ALGORITHM_FACTORY(OTModuleClbrAlg)
 
 OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg(name, pSvcLocator)
 {

@@ -18,7 +18,7 @@ private:
 } ;
 
 #include "GaudiKernel/ToolFactory.h"
-DECLARE_TOOL_FACTORY( OTCalibrationIOTool );
+DECLARE_TOOL_FACTORY( OTCalibrationIOTool )
 
 
 //=============================================================================
@@ -37,7 +37,7 @@ OTCalibrationIOTool::OTCalibrationIOTool( const std::string& type,
 //=============================================================================
 OTCalibrationIOTool::~OTCalibrationIOTool() 
 {
-};
+}
 
 //=============================================================================
 // Initialization

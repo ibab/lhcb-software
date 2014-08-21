@@ -22,7 +22,7 @@ using namespace LHCb;
 #include <boost/assign.hpp>
 using namespace boost::assign;
 
-DECLARE_ALGORITHM_FACTORY(TrackMon);
+DECLARE_ALGORITHM_FACTORY(TrackMon)
 
 #define VARS (x)(y)(z)(errx2)(erry2)(errz2)(outlier)(timeUsed) \
              (station)(layer)(quarter)(module)(modulen)(straw)(strawt0)(strawlen) \

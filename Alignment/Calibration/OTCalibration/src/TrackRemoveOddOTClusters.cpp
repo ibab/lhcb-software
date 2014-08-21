@@ -24,7 +24,7 @@ private:
 };
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( TrackRemoveOddOTClusters );
+DECLARE_ALGORITHM_FACTORY( TrackRemoveOddOTClusters )
 
 //=============================================================================
 TrackRemoveOddOTClusters::TrackRemoveOddOTClusters(const std::string& name,

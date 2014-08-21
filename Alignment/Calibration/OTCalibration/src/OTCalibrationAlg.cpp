@@ -39,7 +39,7 @@
 #include <algorithm>
 #include <boost/foreach.hpp>
 
-DECLARE_ALGORITHM_FACTORY( OTCalibrationAlg );
+DECLARE_ALGORITHM_FACTORY( OTCalibrationAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables

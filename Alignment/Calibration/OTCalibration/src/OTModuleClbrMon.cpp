@@ -28,7 +28,7 @@ using namespace boost::assign;
 #include <boost/spirit/home/classic.hpp>
 #include <boost/spirit/home/phoenix.hpp>
 
-DECLARE_ALGORITHM_FACTORY(OTModuleClbrMon);
+DECLARE_ALGORITHM_FACTORY(OTModuleClbrMon)
 
 OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocator): GaudiTupleAlg(name, pSvcLocator),
   projector("TrajOTProjector"),
