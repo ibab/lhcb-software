@@ -43,7 +43,7 @@ using namespace Gaudi;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( AlignSensors );
+DECLARE_ALGORITHM_FACTORY( AlignSensors )
 
 
 // Standard constructor, initializes variables

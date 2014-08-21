@@ -16,7 +16,7 @@ using namespace std;
 // Standard constructor, initializes variables
 //=============================================================================
 PVHisto::PVHisto()
-{};
+{}
 
 PVHisto::PVHisto( double min, double max, double width )
   : m_Min(min)
@@ -27,7 +27,7 @@ PVHisto::PVHisto( double min, double max, double width )
   , m_MaxVal(0)
   { 
     m_MaxBin = m_Histo.begin();
-  }; 
+  }
 PVHisto::PVHisto( double min, double max, int bins )
   : m_Min(min)
   , m_Max(max)
@@ -37,7 +37,7 @@ PVHisto::PVHisto( double min, double max, int bins )
   , m_MaxVal(0)
   { 
     m_MaxBin = m_Histo.begin();
-  }; 
+  }
 //=============================================================================
 PVHisto::iterator PVHisto::fill( double val )
 {

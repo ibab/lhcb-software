@@ -18,7 +18,7 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrackStore );
+DECLARE_TOOL_FACTORY( TrackStore )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -41,7 +41,7 @@ TrackStore::TrackStore( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-TrackStore::~TrackStore() {}; 
+TrackStore::~TrackStore() {}
 
 //=============================================================================
 

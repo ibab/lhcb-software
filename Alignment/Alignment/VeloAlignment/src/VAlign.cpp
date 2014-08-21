@@ -36,7 +36,7 @@ using namespace Gaudi;
 //-----------------------------------------------------------------------------
 
 
-DECLARE_ALGORITHM_FACTORY( VAlign );
+DECLARE_ALGORITHM_FACTORY( VAlign )
 
 IPVOfflineTool* m_pvtool;
 
@@ -106,7 +106,7 @@ VAlign::VAlign( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VAlign::~VAlign() {}; 
+VAlign::~VAlign() {}
 
 //=============================================================================
 // Initialization
@@ -189,7 +189,7 @@ StatusCode VAlign::initialize() {
   return sc;
   
   
-};
+}
 
 //=============================================================================
 // Main execution
@@ -660,7 +660,7 @@ StatusCode VAlign::execute() {
   debug() <<"End execute"<<endmsg;
   //return sc;
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

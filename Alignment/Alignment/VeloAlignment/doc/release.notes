@@ -2,6 +2,9 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+! 2014-08-21 - Maurizio Martinelli
+ - Solved some CMake compilation warnings.
+
 ! 2014-07-01 - Maurizio Martinelli
  - Corrected a warning in AlignSensors.cpp
 
