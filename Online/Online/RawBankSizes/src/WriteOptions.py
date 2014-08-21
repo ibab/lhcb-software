@@ -29,7 +29,10 @@ for i in range(len(banks)):
   found = False
   for j in range(len(opts)):
     if opts[j].find("//")<0:
-      optbank = iii=opts[j].split("=")[0].split(".")[1]
+      #print opts[j], '=====', opts[j].split("=")[0]
+      items = opts[j].split("=")[0].split(".")
+      if len(items)<2: continue
+      optbank = iii=items[1]
       ii=opts[j].find(bank[0])
       if bank[0]==optbank:
         #print ("options for bank "+banks[i] +" "+optbank+" found. Adding to outopts")
