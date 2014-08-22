@@ -191,7 +191,6 @@ PatForwardTool::PatForwardTool( const std::string& type,
   declareProperty("StateErrorP",   m_stateErrorP   =  0.15);
 
   declareProperty("AddTTClusterName", m_addTtToolName = "" );
-  declareProperty("UsedLHCbIDToolName",m_LHCbIDToolName = "");
 
   declareProperty( "WithoutBField"         , m_withoutBField         = false);
 
@@ -222,11 +221,6 @@ StatusCode PatForwardTool::initialize ( ) {
     m_addTTClusterTool = nullptr;
   }
 
-  if ( "" != m_LHCbIDToolName  ) {
-    m_usedLHCbIDTool = tool<IUsedLHCbID>(m_LHCbIDToolName, this);
-  } else {
-    m_usedLHCbIDTool = nullptr;
-  }
 
   return StatusCode::SUCCESS;
 }
@@ -610,9 +604,9 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
                                            return interval.outside(hit->projection());
                                       } ),
                                   std::end(m_xHitsAtReference) );
-        // make sure we are ordered by the right criterium (upto now, things
+        // make sure we are ordered by the right criterium -- until now, things
         // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
-        // so this sort does makes a difference (not always though...), for both IT and OT...
+        // so this sort is actually needed (not always though...), for both IT and OT...
         std::sort( current, std::end(m_xHitsAtReference), Tf::increasingByProjection<PatForwardHit>() );
         std::inplace_merge(std::begin(m_xHitsAtReference),current,std::end(m_xHitsAtReference), 
                            Tf::increasingByProjection<PatForwardHit>() );

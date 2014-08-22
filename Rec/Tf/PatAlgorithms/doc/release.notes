@@ -3,6 +3,12 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-22 - Gerhard Raven
+ - Move the skipping of used hits from PatForwardTool to PatForward.
+   This avoids having to look up all hits for all seeds, and instead
+   does it once per event.
+ - tweak some inline methods a bit...
+
 ! 2014-08-21 - Gerhard Raven
  - further optimize PatForwardTool:fillXList
 

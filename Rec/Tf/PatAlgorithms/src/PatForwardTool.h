@@ -22,7 +22,6 @@
 
 #include "PatKernel/PatTStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
-#include "Kernel/IUsedLHCbID.h"
 
 /** @class PatForwardTool PatForwardTool.h
  *  Tool to extend one Velo (VeloTT) track through the magnet
@@ -34,7 +33,6 @@
 
 class PatForwardTool : public extends2<GaudiTool,IPatForwardTool,ITracksFromTrack> {
 public:
-
 
   /// Standard constructor
   PatForwardTool( const std::string& type,
@@ -51,7 +49,7 @@ public:
   StatusCode initialize() override;
 
   // added for NNTools
-  void setNNSwitch( bool nnSwitch)  { m_nnSwitch = nnSwitch;}
+  void setNNSwitch( bool nnSwitch) override { m_nnSwitch = nnSwitch;}
   bool nnSwitch()       const       { return m_nnSwitch;}
 
 private:
@@ -69,7 +67,7 @@ private:
       bool outside(double x) const { return x < m_xmin || m_xmax <= x ; }
   };
 
-  double dSlope_kick( double pt, double sinTrack ) const {
+  template <typename T> T dSlope_kick( T pt, T sinTrack ) const {
       return sinTrack * m_magnetKickParams.first / ( pt - sinTrack * m_magnetKickParams.second );
   }
 
@@ -115,25 +113,24 @@ private:
 
 
   bool driftInRange( const PatFwdHit& hit )  const {  
-      auto drift = hit.driftDistance(); 
+     auto drift = hit.driftDistance(); 
      return m_minOTDrift < drift && drift < m_maxOTDrift ; 
   }
 
   bool driftOK(const PatFwdHit& hit) const {
-    return (hit.hit()->type() != Tf::RegionID::OT) || driftInRange(hit);
+     return (hit.hit()->type() != Tf::RegionID::OT) || driftInRange(hit);
   }
 
   double allowedXSpread(const PatFwdHit *hit, double xExtrap ) const { 
-    double spreadSl = ( hit->projection() - xExtrap ) * m_maxSpreadSlopeX;
-    double spread = m_maxSpreadX + fabs( spreadSl );
-    if (hit->hit()->type() == Tf::RegionID::OT)  spread += 1.5;  // OT drift ambiguities...
-    return spread;
+    auto spreadSl = ( hit->projection() - xExtrap ) * m_maxSpreadSlopeX;
+    return m_maxSpreadX + 
+           fabs( spreadSl ) + 
+           int(hit->hit()->type() == Tf::RegionID::OT) * 1.5;  // OT drift ambiguities...
   }
 
   double allowedStereoSpread(const PatFwdHit *hit) const { 
-    double maxSpread = 3.;
     // in case of OT, add 1.5 to account for OT drift ambiguities...
-    return  (hit->hit()->type() != Tf::RegionID::OT) ? maxSpread : ( maxSpread +1.5 ) ; 
+    return  3. + int(hit->hit()->type() == Tf::RegionID::OT)*1.5;
   }
 
   bool inCenter(const PatFwdTrackCandidate& cand) const {
@@ -150,27 +147,20 @@ private:
   }
 
   double computeQuality(const PatFwdTrackCandidate& c, double qOverP) const {
-    double quality = 0.;
-    quality  = 5. * fabs(  m_fwdTool->changeInY( c ) ) / ( m_maxDeltaY + qOverP * qOverP * m_maxDeltaYSlope );
+    double quality  = 5. * fabs(  m_fwdTool->changeInY( c ) ) / ( m_maxDeltaY + qOverP * qOverP * m_maxDeltaYSlope );
     quality += c.chi2PerDoF() / 10.;
     quality += 10 * fabs(qOverP);  // low momentum are worse
     return quality;
   }
 
-  double computeStereoTol( double qOverP) const {
+  template <typename T> T computeStereoTol( T qOverP) const {
      return m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
   }
 
   bool hasEnoughStereo( const PatFwdTrackCandidate& c) {
     // Enough stereo planes
     PatFwdPlaneCounter fullCount( std::begin(c), std::end(c) );
-    int nbY = fullCount.nbStereo();
-    if ( nbY < 4 ) {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
-        debug() << "Not enough Y planes : " << nbY << endmsg;
-      return false;
-    }
-    return true;
+    return fullCount.nbStereo() > 3 ;
   }
 
   bool passMomentum(const PatFwdTrackCandidate& c, double sinTrack) const {
@@ -187,8 +177,6 @@ private:
   IAddTTClusterTool*                          m_addTTClusterTool;
   std::string                                 m_addTtToolName;
   std::string                                 m_addUtToolName;
-  std::string                                 m_LHCbIDToolName;
-  IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
 
   //== Parameters of the algorithm
   bool   m_secondLoop;
@@ -231,9 +219,9 @@ private:
 
   bool  m_withoutBField;
   bool  m_Preselection;
-  float m_PreselectionPT;
+  double m_PreselectionPT;
   bool  m_UseWrongSignWindow;
-  float m_WrongSignPT;
+  double m_WrongSignPT;
   bool  m_FlagUsedSeeds;              // flag velo seeds as used if a track is upgraded
   bool  m_SkipUsedSeeds;              // skip seeds which are flagged as "used" 
   bool  m_nnSwitch;                   // switch on or off NN var. writing

@@ -10,6 +10,7 @@
 #include "TrackInterfaces/IPatForwardTool.h"
 #include "TfKernel/TStationHitManager.h"
 #include "PatKernel/PatForwardHit.h"
+#include "Kernel/IUsedLHCbID.h"
 
 class IOTRawBankDecoder;
 
@@ -62,6 +63,8 @@ class IOTRawBankDecoder;
     ITrackSelector*      m_trackSelector;
     IPatForwardTool*     m_forwardTool;
     ISequencerTimerTool* m_timerTool;
+    std::string                                 m_LHCbIDToolName;
+    IUsedLHCbID*                                m_usedLHCbIDTool; ///< Tool to check if hits are already being used
     bool             m_writeNNVariables; // switch on or off NN var. writing
   };
 #endif // PATFORWARD_H

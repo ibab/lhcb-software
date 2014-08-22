@@ -80,11 +80,6 @@ PatForward::PatForward( const std::string& name,
   declareProperty( "VeloVetoTracksName", m_veloVetoTracksName = LHCb::TrackLocation::Forward);
   declareProperty( "TrackSelectorName",  m_trackSelectorName   = "None");
   declareProperty( "ForwardToolName",    m_forwardToolName    = "PatForwardTool" );
-
-  if ( "Hlt" == context() ) {
-    m_inputTracksName  =  "";
-    m_outputTracksName =  "";
-  }
   declareProperty( "MaxNVelo",   m_maxNVelo = 1000 );  
   declareProperty( "maxITHits" ,  m_maxNumberITHits = 3000);  
   declareProperty( "maxOTHits" , m_maxNumberOTHits = 10000 );
@@ -93,6 +88,7 @@ PatForward::PatForward( const std::string& name,
   declareProperty( "DoCleanUp", m_doClean = true); 
   declareProperty( "UnusedVeloSeeds", m_unusedVeloSeeds = false); 
   declareProperty( "TimingMeasurement", m_doTiming = false);
+  declareProperty( "UsedLHCbIDToolName",m_LHCbIDToolName = "");
   // switch on or off NN var. writing
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }
@@ -110,10 +106,8 @@ StatusCode PatForward::initialize() {
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Initialize" << endmsg;
 
-  m_trackSelector = nullptr;
-  if (m_trackSelectorName != "None") {
-    m_trackSelector = tool<ITrackSelector>(m_trackSelectorName, this);
-  }
+  m_trackSelector = (m_trackSelectorName != "None") ? tool<ITrackSelector>(m_trackSelectorName, this)
+                                                    : nullptr;
 
   m_forwardTool = tool<IPatForwardTool>( m_forwardToolName, this );
   m_forwardTool->setNNSwitch( m_writeNNVariables); // pass the NN switch to PatForwardTool
@@ -129,6 +123,9 @@ StatusCode PatForward::initialize() {
   m_rawBankDecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
   m_tHitManager    = tool<Tf::TStationHitManager <PatForwardHit> >("PatTStationHitManager");
+
+  m_usedLHCbIDTool = !m_LHCbIDToolName.empty() ? tool<IUsedLHCbID>(m_LHCbIDToolName, this) 
+                                               : nullptr ;
 
   return StatusCode::SUCCESS;
 }
@@ -178,8 +175,6 @@ PatForward::overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const
 //=============================================================================
 StatusCode PatForward::execute() {
 
-  m_tHitManager->prepareHits(); 
-        
   //== Prepare tracks
  
   LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
@@ -226,6 +221,16 @@ StatusCode PatForward::execute() {
   bool dbg = msgLevel(MSG::DEBUG);
   if ( dbg ) debug() << "==> Execute" << endmsg;
   if ( dbg  || m_doTiming ) m_timerTool->start( m_fwdTime );
+
+  m_tHitManager->prepareHits(); 
+
+  //== if any hits to be flagged as used, do so now...
+  if ( m_usedLHCbIDTool ) {
+    auto hits =   m_tHitManager->hits();
+    std::for_each( std::begin(hits), std::end(hits), [&](PatFwdHit* hit) {
+            if (m_usedLHCbIDTool->used(hit->hit()->lhcbID())) hit->hit()->setIgnore(true);
+    } );
+  }
 
   int oriSize = outputTracks->size();
 
