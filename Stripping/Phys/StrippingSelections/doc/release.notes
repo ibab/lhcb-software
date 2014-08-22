@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-22 - Lucio Anderlini (BandQ)
+ - Added two test/ scripts for BandQ lines
+ - Minor modifications to StrippingXibc.py
+
 ! 2014-08-22 - Alex Pearce
   - Added ProtonAsym lines for proton detection asymmetry measurement modes.
 

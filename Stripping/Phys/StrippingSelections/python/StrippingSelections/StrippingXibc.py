@@ -307,7 +307,7 @@ class XibcBuilder(LineBuilder) :
 
 
         self._muon4Jpsi = AutomaticData(_my_immutable_config['MuonsForJpsiLocation'])
-        self._Jpsi = filterJpsi(name)
+        self._Jpsi = filterJpsi(name, config=config)
 
 
         ######################################## Xibc+ Exclusive Line ##################################
