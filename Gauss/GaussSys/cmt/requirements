@@ -11,7 +11,7 @@ branches cmt doc
 use MCInterfaces        v1r18  Kernel
 
 # Gauss application: the application is not built on Win32
-use Gauss               v46r8   Sim
+use Gauss               v47r0   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v68r0p1 

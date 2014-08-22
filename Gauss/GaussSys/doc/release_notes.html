@@ -4,6 +4,68 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v47r0">2014-08-22 - GaussSys v47r0</A></H1><PRE>
+<H2><A NAME="Note"For development and Upgrade studies. Based on LCG_68.
+</A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v37r3 (and Gaudi v25r2)</b>
+   AppConfig v3r*,
+   <b>DecFiles v27r*</b>, 
+   ParamFiles v8r*, 
+   SQLDDDB v7r*, FieldMap v5r*,
+   GDMLData v1r*,
+   pythia 6.427.2, lhapdf 5.8.5 
+   photos++ 3.56 and tauola++ 1.1.1a 
+   pythia8 175 (via LCG_GeneratorsInterfaces),
+   HepMC 2.06.08 (via LCG_Interfaces),
+   LHAPDFSets v1r* (private LHCb version)
+   <b>Geant4 v95r2p7g2</b> (based on geant4.9.5.p02 + patches for LHCb) and 
+   Geant4Files v95r0, 
+   <b>XmlVis v1r19</b>,
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
+   herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
+   rivet 1.8.3 (via LCG_GeneratorsInterfaces),
+   EvtGen v13r12, EvtGenExtras v3r10 and Mint v3r0 
+   (private LHCb version),
+   BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r1 + GenXiccData v3r0 and 
+   HidValley v4r0 (private LHCb versions)
+   PGunsData v1r0
+</A></H3>
+
+! 2014-08-22 - Gloria Corti
+ - Use new version of LCG_Settings and all LCG_GeneratorsIinterfaces to adapt
+   to differences and change of paths in LCG 68
+
+!========================== Gauss v47r0 2014-08-22 ===========================
+! 2014-08-22 - Gloria Corti
+ - Increase major version for dependency to LCG68
+
+!========================= GENSER v14r0p1 2014-08-21 =========================
+! 2013-08-21 - Gloria Corti
+ - Require dummy release for building distribution with LCG 68
+
+!========================== LbAlpGen v4r0 2014-08-21 ==========================
+! 2014-01-13 - Gloria Corti
+ - Redefine macro alpgen_author_dir to be compatible with new structure of 
+   alpgen library and sources in LCGCMT68
+
+!======================== GiGaVisUI v6r0p1 2014-08-21 ========================
+! 2014-07-14 - Gloria Corti
+ - Put dependency from G4UIbasic since it was removed from G4UIGAG that was
+   picked up via GiGaVisUI
+
+!=========================== GenTune v2r2 2014-08-21 =========================
+! 2014-07-28 - Alex Grecu
+ - modified qmtest to ignore -Wunused-local-typedefs warnings for BOOST 1.53 
+   when compiling with gcc48. Separate qmtests are needed for gcc46 and gcc48 
+   so one of the tests will remain in UNTESTED state.
+
+!========================== XmlVis v1r19 2014-08-21 ==========================
+! 2014-05-09 - Heinrich Schindler
+ - Update VP visualisation attributes.
+
+!=============================================================================
 </PRE><H1><A NAME="v46r8">2014-07-28 - GaussSys v46r8</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Fix for missing hits in 
    RICH upgrade, and for photos++ bug on gcc48.
