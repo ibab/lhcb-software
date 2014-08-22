@@ -389,7 +389,16 @@ class StrippingLine(object):
                       , 'Postscale'    : Scaler(    postscalerName ( line,'Stripping' ) , AcceptFraction = self._postscale ) 
                       } )
 
-        if self._ODIN   : mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN   )  } )
+        if self._ODIN :
+            if isinstance   ( self._ODIN , str   ) :
+        	mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN   )  } )
+            elif isinstance ( FILTER , ( tuple , list ) ) and 2 == len ( FILTER ) :
+        	mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , Code = self._ODIN[0],  Preambulo = self._ODIN[1] )  } )
+            elif isinstance ( FILTER , dict     ) :
+        	mdict.update( { 'ODIN'    : ODINFilter ( odinentryName ( line ) , **self._ODIN  )  } )
+            else :
+    		raise TypeError, "Wrong ODIN attribute: %s " % FILTER
+
         if self._L0DU   : mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
         if self._HLT    : mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
 
