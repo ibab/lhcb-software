@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-22 - Alex Pearce
+  - Added ProtonAsym lines for proton detection asymmetry measurement modes.
+
 ! 2014-08-22
   - Updated StrippingBc2XK.py for s21.
 
