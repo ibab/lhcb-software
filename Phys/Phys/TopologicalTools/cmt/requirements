@@ -15,7 +15,6 @@ branches          cmt doc src
 #============================================================================
 use  DaVinciKernel         v* Phys
 use  HltEvent              v* Event
-use  LoKi                  v* Phys
 
 include_path      none
 #============================================================================

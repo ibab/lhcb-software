@@ -29,9 +29,6 @@
 // ============================================================================
 #include "Event/RecHeader.h"
 
-#include "LoKi/ILoKiSvc.h"
-#include "LoKi/LoKi.h"
-
 
 #include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IAccept.h"
@@ -119,12 +116,14 @@ class TopologicalTagging :  public DaVinciAlgorithm
 
 
     private:
-    IDistanceCalculator *m_distCalc; // distance calculator
     Gaudi::XYZVector getHltObjVtxPos (const LHCb::HltObjectSummary *obj) const;
     //StatusCode printObject(const LHCb::HltObjectSummary* sum, std::string increment) const;
     StatusCode getJetLHCbIDs(const LHCb::Particle* part, std::vector< LHCb::LHCbID > &AllIDs) const;
     StatusCode getHltObjLHCbIDs(const LHCb::HltObjectSummary* sum, std::vector< LHCb::LHCbID > &AllIDs) const;
     StatusCode printObject(const LHCb::HltObjectSummary* sum, std::string increment) const;
+    void getTracks(const LHCb::Particle* p, LHCb::Track::ConstVector& tracks) const;
+
+
 };
 
 

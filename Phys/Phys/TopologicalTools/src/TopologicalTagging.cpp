@@ -15,7 +15,6 @@ TopologicalTagging::TopologicalTagging(const std::string& name,
     : DaVinciAlgorithm(name,pSvcLocator)
       , m_TriggerTisTosTool(0)
     , m_tinputs              ("cedric")
-      ,m_distCalc(0)
 
 {
     // Algorithm related properties
@@ -33,11 +32,6 @@ StatusCode  TopologicalTagging::initialize ()
     if ( sc.isFailure() ) return sc;
 
 
-    svc<LoKi::ILoKiSvc>("LoKiSvc", true);
-
-
-
-    m_distCalc = tool<IDistanceCalculator>("LoKi::DistanceCalculator",this);
     m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos","TriggerTisTos",this );
     if(m_TriggerTisTosTool == 0)
         return Error("Couldn't get requested jet tag tool", StatusCode::SUCCESS);
@@ -93,8 +87,8 @@ StatusCode TopologicalTagging::execute()
 
 
         //get jet tracks.
-        std::vector<LHCb::Track*> jetTracks ;
-        LoKi::Extract::getTracks( jet , std::back_inserter( jetTracks ) ) ;
+        LHCb::Track::ConstVector jetTracks ;
+        getTracks( jet , jetTracks ) ;
 
 
         LHCb::Particle::Range::iterator itopo;
@@ -122,12 +116,12 @@ StatusCode TopologicalTagging::execute()
 
                 Gaudi::XYZVector B = evtx->position() - oriVtx->position();
 
-                std::vector<LHCb::Track*> topoTracks ;
-                LoKi::Extract::getTracks( myTopo , std::back_inserter( topoTracks ) ) ;
+                LHCb::Track::ConstVector topoTracks ;
+                getTracks( myTopo , topoTracks  ) ;
 
 
-                std::vector<LHCb::Track*>::iterator iTopoTracks ;
-                std::vector<LHCb::Track*>::iterator iJetTracks ;
+                LHCb::Track::ConstVector::iterator iTopoTracks ;
+                LHCb::Track::ConstVector::iterator iJetTracks ;
 
                 int NTracksInJet = 0;
                 for(iTopoTracks=topoTracks.begin();iTopoTracks != topoTracks.end(); iTopoTracks++){
@@ -358,3 +352,24 @@ StatusCode TopologicalTagging::getJetLHCbIDs(const LHCb::Particle* part, std::ve
 
 
 }
+
+
+void TopologicalTagging::getTracks( const LHCb::Particle* p,
+                               LHCb::Track::ConstVector& tracks ) const
+{
+  const LHCb::ProtoParticle * proto = p->proto() ;
+  if ( proto )
+  {
+    if ( proto->track() ) { tracks.push_back( proto->track() ); }
+  }
+  else
+  {
+    for ( SmartRefVector<LHCb::Particle>::const_iterator iP = p->daughters().begin();
+          iP != p->daughters().end(); ++iP )
+    {
+      getTracks( *iP, tracks );
+    }
+  }
+}
+
+

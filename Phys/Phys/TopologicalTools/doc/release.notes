@@ -4,6 +4,10 @@
 ! Purpose     : Topological tools
 !-----------------------------------------------------------------------------
 
+! 2014-14-23 - Cédric Potterat
+ - removing LoKi calls, fixing the nighties comp.
+
+
 ! 2014-14-22 - Cédric Potterat
  - Adding TopologicalTagging (Filter based on FilterDesktop)
 
