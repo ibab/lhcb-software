@@ -36,8 +36,6 @@ defaultConfig = {
     'VertexCHI2'      :     4.0,
     'LOWERMASS'       :     0.0, # MeV
     'UPPERMASS'       :  7500.0, # MeV
-    'JPSILOWER'       :  2900.0, # MeV
-    'JPSIUPPER'       :  3200.0, # MeV
     'CORRM_MIN'       :  2500.0, # MeV
     'CORRM_MAX'       : 10000.0, # MeV
     # Track cuts
@@ -68,8 +66,6 @@ class B23MuNuConf(LineBuilder) :
         'BPT',
         'LOWERMASS',
         'UPPERMASS',
-        'JPSILOWER',
-        'JPSIUPPER',
         'CORRM_MIN',
         'CORRM_MAX',
 
@@ -105,8 +101,7 @@ class B23MuNuConf(LineBuilder) :
                                 "(BPVVDCHI2 > %(FlightChi2)s) & " \
                                 "(VFASPF(VCHI2/VDOF) < %(VertexCHI2)s) & " \
                                 "(M > %(LOWERMASS)s) & " \
-                                "(M < %(UPPERMASS)s) & " \
-                                "((M < %(JPSILOWER)s) | (M > %(JPSIUPPER)s))" %config
+                                "(M < %(UPPERMASS)s) " %config
 
         self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s) & (TRGHP < %(Track_GhostProb)s)" %config
         
