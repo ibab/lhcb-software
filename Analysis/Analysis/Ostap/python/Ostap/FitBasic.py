@@ -20,13 +20,13 @@ __date__    = "2011-07-25"
 __all__     = (
     ##
     'makeVar'     , ## helper function to create the proper RooRealVar
-    'Mass_pdf'    , ## useful base class to create "signal" PDFs for mass-fits
     'H1D_dset'    , ## convertor of 1D-histo to RooDataHist 
     'H2D_dset'    , ## convertor of 2D-histo to RooDataHist 
     'H1D_pdf'     , ## convertor of 1D-histo to RooHistPdf 
     'H2D_pdf'     , ## convertor of 1D-histo to RooDataPdf
     ##
-    'Fit1DBase'   , ## useful base class fro 1D-models
+    'PDF'         , ## useful base class for 1D-models
+    'MASS'        , ## useful base class to create "signal" PDFs for mass-fits
     'Fit1D'       , ## the model for 1D-fit: signal + background + optional components  
     'Fit2D'       , ## the model for 2D-fit: signal + background + optional components
     ##
@@ -92,17 +92,29 @@ def makeVar ( var , name , comment , fix  , *args ) :
     
     """
     ## create the fixed variable 
-    if isinstance   ( var , ( float , int , long ) ) :
-        var = ROOT.RooRealVar ( name , comment , var   )
-    ## create the variable from parameters 
-    if not var                                       :
-        var = ROOT.RooRealVar ( name , comment , *args )
-    ## fix it if needed 
-    if isinstance ( fix , ( float , int , long ) )  and not var.isConstant () :
-        if var.getMin() <= fix <= var.getMax() :  var.fix ( fix )
-        else : logger.error ( 'Unable to fix %s at %s ' % ( var.GetName() , fix ) ) 
-        #
+    if   isinstance   ( var , ( float , int , long ) ) :
+        if   not    args  : var = ROOT.RooRealVar ( name , comment , var             )
+        elif 2==len(args) : var = ROOT.RooRealVar ( name , comment , var , *args     )
+        elif 3==len(args) : var = ROOT.RooRealVar ( name , comment , var , *args[1:] )
         
+    ## create the variable from parameters 
+    if not isinstance ( var , ROOT.RooAbsReal ) : 
+        var = ROOT.RooRealVar ( name , comment , *args )
+        
+    ## fix it, if needed 
+    if isinstance ( fix , ( float , int , long ) ) :
+        
+        if fix < var.getMin() :
+            logger.warning("Min-value for %s is redefined to be %s " % ( var.GetName() , fix ) )
+            var.setMin ( fix )
+            
+        if fix > var.getMax() :
+            logger.warning("Max-value for %s is redefined to be %s " % ( var.GetName() , fix ) )
+            var.setMax ( fix )
+            
+        if not var.isConstant () : var.fix    ( fix )
+        else                     : var.setVal ( fix )
+
     return var
 
 # =============================================================================
@@ -130,29 +142,258 @@ class RangeVar(object) :
     def __exit__  ( self , *_ ) :        
         self.var.setMin ( self.omin ) 
         self.var.setMax ( self.omax )
+
+
+# =============================================================================
+## @class PDF
+#  The helper base class for implementation of 1D-pdfs 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-08-21
+class PDF (object) :
+    """
+    Useful helper base class for implementation of generic PDFs for 1D-fit
+    """
+    def __init__ ( self , name ) :
+        self.name         = name
+        self._signals     = ROOT.RooArgSet ()
+        self._backgrounds = ROOT.RooArgSet ()
+        self._components  = ROOT.RooArgSet ()
+        
+    ## get all declared components 
+    def components  ( self ) : return self._components
+    ## get all declared signals 
+    def signals     ( self ) : return self._signals
+    ## get all declared backgrounds 
+    def backgrounds ( self ) : return self._backgrounds 
+
+    ## adjust PDF with some small positive portion to avoid bad regions...
+    def adjust         ( self , value = 1.e-5 ) :
+        """
+        Adjust PDF with some small positive portion to avodi bad regions
+        """
+        if not hasattr ( self , 'orig_pdf' ) :
+
+            self.orig_pdf        = self.pdf
+            self.p0_pdf   = ROOT.RooPolynomial ( 'p0' , 'poly0' , self.mass            )
+
+            ## add as component: 
+            if hasattr ( self , 'alist1' ) and hasattr ( self , 'alist2' ) :
+                
+                self.orig_pdf        = self.pdf
+                self.adj_alist1 = ROOT.RooArgList () 
+                self.adj_alist2 = ROOT.RooArgList ()
+                for i in self.alist1 : self.adj_alist1.add  ( i )
+                for i in self.alist2 : self.adj_alist2.add  ( i )
+                
+                self.p0_value = makeVar ( None , 'p0val', 'p0value' , value , 0 , 0 , 1000 )
+            
+                self.adj_alist1.add ( self.p0_pdf   )
+                self.adj_alist2.add ( self.p0_value )
+                
+            else :
+
+                self.adj_alist1 = ROOT.RooArgList ( self.p0_pdf , self.orig_pdf ) 
+                self.p0_value   = makeVar ( None , 'p0_value', 'value(p0)' , value , 0 , 0 , 1 )
+                self.adj_alist2 = ROOT.RooArgList ( self.p0_value )
+                
+            self.pdf       = ROOT.RooAddPdf  ( "adjust_"    + self.orig_pdf.GetName () ,  
+                                               "Adjust(%s)" % self.orig_pdf.GetName () ,
+                                               self.adj_alist1 ,
+                                               self.adj_alist2 )
+            
+    ## make the actual fit (and optionally draw it!)
+    def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , *args , **kwargs ) :
+        """
+        Perform the actual fit (and draw it)
+        """
+
+        #
+        ## treat the arguments properly
+        # 
+        _args = []
+        for a in args :
+            if not isinstance ( a , ROOT.RooCmdArg ) :
+                logger.warning ( 'PDF(%s).fitTo, unknown argument type %s, skip it ' % ( self.name , type ( a ) ) ) 
+                continue
+            _args.append ( a )
+            
+        for k,a in kwargs :
+            
+            if isinstance ( a , ROOT.RooCmdArg ) :
+                logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s' % ( self.name , k ) )  
+                _args.append ( a )
+                continue
+            elif k.upper() in ( 'WEIGHTED' , 'SUMW2' , 'SUMW2ERROR' )  and isinstance ( a , bool ) and dataset.isWeighted() :
+                _args.append   (  ROOT.RooFit.SumW2Error( a ) )
+                logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s/%s' % ( self.name , k , a ) )                 
+            else : 
+                logger.warning ( 'PDF(%s).fitTo, unknown/illegal keyword argument type %s/%s, skip it ' % ( self.name , k , type ( a ) ) )
+                continue            
+
+        _args = tuple( _args ) 
+
+        
+        if silent : from Ostap.Utils import RooSilent as Context
+        else      : from Ostap.Utils import NoContext as Context
+        
+        #
+        ## define silent context
+        #
+        context = Context ()         
+        with context :
+            
+            result =  self.pdf.fitTo ( dataset   ,
+                                       ROOT.RooFit.Save (   ) ,
+                                       ncpu ( len ( dataset ) ) ,
+                                       *_args     )
+            
+            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
+
+        st = result.status()
+        if 0 != st and silent :
+            logger.warning ( 'PDF(%s).fitTo: status is %s. Refit in non-silent regime ' % ( self.name , st  ) )    
+            return self.fitTo ( dataset , draw , nbins , False , *args , **kwargs )
+        
+        if 0 != st   : logger.warning ( 'PDF(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )    
+        qual = result.covQual()
+        if 3 != qual : logger.warning ( 'PDF(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
+
+        #
+        ## check the integrals (is possible)
+        if hasattr ( self , 'alist2' ) :
+            
+            nsum = VE()            
+            for i in self.alist2 :
+                nsum += i.as_VE() 
+                if i.getVal() > 0.95 * i.getMax() :
+                    logger.warning ( 'PDF(%s).fitTo Variable %s == %s [close to maximum %s]'
+                                     % ( self.name , i.GetName() , i.getVal () , i.getMax () ) )
+                    
+            if not dataset.isWeighted() : 
+                nl = nsum.value() - 0.10 * nsum.error()
+                nr = nsum.value() + 0.10 * nsum.error()
+                if not nl <= len ( dataset ) <= nr :
+                    logger.error ( 'PDF(%s).fitTo is problematic:  sum %s != %s '
+                                   % ( self.name , nsum , len( dataset ) ) )  
+                    
+        if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars()
+            
+        for s in self.components () : 
+            if hasattr ( s , 'setPars' ) : s.setPars()
+        for s in self.backgrounds() :  
+            if hasattr ( s , 'setPars' ) : s.setPars() 
+        for s in self.signals    () : 
+            if hasattr ( s , 'setPars' ) : s.setPars() 
+                
+        if not draw :
+            return result, None 
+        
+        #
+        ## again the context
+        # 
+        context = Context () 
+        with context :
+
+            frame = self.mass.frame( nbins )
+            #
+            dataset  .plotOn ( frame )
+            #
+            iB = 0 
+            for i in self.backgrounds() :
+                cmp = ROOT.RooArgSet( i ) 
+                self.pdf .plotOn (
+                    frame ,
+                    ROOT.RooFit.Components ( cmp                    ) ,
+                    ROOT.RooFit.LineWidth  ( 2                      ) ,
+                    ROOT.RooFit.LineStyle  ( ROOT.kDashed           ) ,
+                    ROOT.RooFit.LineColor  ( ROOT.kBlue     + iB    ) )
+                iB += 1
+
+            iS = 0 
+            for i in self.signals  () :
+                cmp = ROOT.RooArgSet( i )         
+                self.pdf .plotOn (
+                    frame ,
+                    ROOT.RooFit.Components ( cmp                    ) , 
+                    ROOT.RooFit.LineWidth  ( 2                      ) ,
+                    ROOT.RooFit.LineStyle  ( ROOT.kDotted           ) ,
+                    ROOT.RooFit.LineColor  ( ROOT.kMagenta   + iS   ) )
+                iS += 1
+
+            iC = 0 
+            for i in self.components  () :
+                cmp = ROOT.RooArgSet( i )         
+                self.pdf .plotOn (
+                    frame ,
+                    ROOT.RooFit.Components ( cmp                    ) , 
+                    ROOT.RooFit.LineWidth  ( 2                      ) ,
+                    ROOT.RooFit.LineStyle  ( ROOT.kDashDotted       ) ,
+                    ROOT.RooFit.LineColor  ( ROOT.kOrange     + iC  ) )
+                iC+= 1
+                
+            #
+            ## the total fit curve
+            # 
+            self.pdf .plotOn ( frame , ROOT.RooFit.LineColor  ( ROOT.kRed ) )
+            
+            
+            frame.SetXTitle('')
+            frame.SetYTitle('')
+            frame.SetZTitle('')
+            
+            frame.Draw()
+            
+            return result, frame 
+
+    ## fit the histogram (and draw it)
+    def fitHisto ( self , histo , draw = False , silent = False , *args , **kwargs ) :
+        """
+        Fit the histogram (and draw it)
+        """
+        
+        if silent : from Ostap.Utils import RooSilent as Context
+        else      : from Ostap.Utils import NoContext as Context
+
+        with RangeVar( self.mass , *(histo.xminmax()) ) : 
+            
+            ## convert it! 
+            context = Context () 
+            with context :
+                hdset     = H1D_dset ( '',  histo , self.mass )
+                self.hset = hdset.dset
+                
+            ## fit it!!
+            return self.fitTo ( self.hset , draw , len ( histo ) , silent , *args , **kwargs )
+
         
 # =============================================================================
 ## helper base class for implementation  of various helper pdfs 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
-class Mass_pdf(object) :
+class MASS(PDF) :
     """
     helper base class for implementation of various pdfs 
     """
     def __init__ ( self            ,
                    name            ,
-                   mn              ,
-                   mx              , 
+                   mn       = None ,
+                   mx       = None , 
                    mass     = None ,
                    mean     = None ,
-                   sigma    = None ,
-                   fixMass  = None ,
-                   fixSigma = None ) :
+                   sigma    = None ) : 
+
+        ## intialize the base 
+        PDF.__init__ ( self , name )
+        
+        if mass is None :
+            if not isinstance ( mn , ( float , int , long ) ) :
+                raise AttributeError( "MASS(%s): invalid 'min'-parameter %s" % ( name , mn ) ) 
+            if not isinstance ( mx , ( float , int , long ) ) :
+                raise AttributeError( "MASS(%s): invalid 'max'-parameter %s" % ( name , mx ) ) 
         
         #
         ## adjust the mass and edges, create if needed
         #
-        self.name = name 
         self.mass = makeVar ( mass              ,
                               "m_%s"     % name ,
                               "mass(%s)" % name , None ,  min ( mn , mx ) , max( mn , mx ) )
@@ -167,106 +408,23 @@ class Mass_pdf(object) :
         # 
         self.mean = makeVar ( mean              ,
                               "mean_%s"  % name ,
-                              "mean(%s)" % name , fixMass ,  self._mn  , self._mx )
+                              "mean(%s)" % name , mean ,  self._mn  , self._mx )
         #
         if self.mean.isConstant() :
             if not self._mn <= self.mean.getVal() <= self._mx :
-                raise AttributeError ( 'Fixed mass is not in mass-range (%s,%s)' % ( self._mn , self._mx ) )
+                raise AttributeError ( 'MASS(%s): Fixed mass is not in mass-range (%s,%s)' % ( name , self._mn , self._mx ) )
         elif hasattr ( self.mean , 'setMin' ) and hasattr( self.mean , 'setMax' ) : 
             self.mean.setMin ( max ( self.mean.getMin () , self.mass.getMin() - 0.1 * _dm ) )
             self.mean.setMax ( min ( self.mean.getMax () , self.mass.getMax() + 0.1 * _dm ) )
-            logger.debug ( 'Mean range is redefined to be (%s,%s)' % ( self.mean.getMin() , self.mean.getMax() ) ) 
-            
-        #
-        ## check the fixed mass
-        # 
-        if  isinstance ( fixMass , float ) and not self.mean.isConstant() : 
-            
-            if not self.mass.getMin() <= fixMass <= self.mass.getMax() :
-                raise AttributeError ( 'Fixed mass is not in mass-range (%s,%s)' % ( self.mass.getMin() , self.mass.getMax() ) )
-            if not self.mean.getMin() <= fixMass <= self.mean.getMax() :
-                raise AttributeError ( 'Fixed mass is not in mean-range (%s,%s)' % ( self.mean.getMin() , self.mean.getMax() ) )
-            
-            self.mean.fix ( fixMass )
+            logger.debug ( 'MASS(%s) Mean range is redefined to be (%s,%s)' % ( name , self.mean.getMin() , self.mean.getMax() ) ) 
             
         #
         ## sigma
         #
-        sigma_max  = 1.2 * _dm / math.sqrt ( 12 )
+        sigma_max  = 2.0 * _dm / math.sqrt ( 12 )
         self.sigma = makeVar ( sigma               ,
                                "sigma_%s"   % name ,
-                               "#sigma(%s)" % name , fixSigma , 0 , sigma_max ) 
-        #
-        
-    ## fit 
-    def fitTo ( self             ,
-                dataset          ,
-                draw   = False   ,
-                nbins  = 100     ,
-                silent = False   ,
-                *args , **kwargs ) :
-        """
-        Perform the fit
-        """
-        
-        context = NoContext () 
-        if silent : context = RooSilent() 
-        
-        with context :
-            
-            result = self.pdf.fitTo ( dataset , ROOT.RooFit.Save() , *args, **kwargs )
-
-            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
-
-            st   = result.status () 
-            if 0 != st   : logger.warning('Model(%s).fitTo: fit status %s' % ( self.name , st   ) )
-            qual = result.covQual()
-            if 3 != qual : logger.warning('Model(%s).fitTo: covQual    %s' % ( self.name , qual ) )
-            
-            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
-            
-            if not draw :
-                return result, None
-            
-            frame = self.mass.frame ( nbins )
-            #
-            
-            dataset  .plotOn ( frame )
-            
-            self.pdf .plotOn ( frame  , ROOT.RooFit.LineColor  ( ROOT.kRed ) )
-
-            
-            frame.SetXTitle('')
-            frame.SetYTitle('')
-            frame.SetZTitle('')
-            
-            frame.Draw()
-        
-        return result, frame 
-    
-    
-    ## fit the histogram 
-    def fitHisto ( self , histo , draw = False , silent = False , *args , **kwargs ) :
-        """
-        Fit the histogram
-        """        
-        context = NoContext () 
-        if silent : context = RooSilent() 
-
-        with RangeVar ( self.mass , *( histo.xminmax() ) ) :
-            
-            with context:
-                ## convert it! 
-                hdset     = H1D_dset ( '',  histo , self.mass )
-                self.hset = hdset.dset
-                
-            ## fit it! 
-            return self.fitTo ( self.hset     ,
-                                draw          ,
-                                len ( histo ) ,
-                                silent        ,                             
-                                *args         ,
-                                **kwargs      )
+                               "#sigma(%s)" % name , sigma , 0.01 * sigma_max , 0 , sigma_max )
         
 
 # =============================================================================
@@ -377,223 +535,30 @@ class H2D_pdf(H2D_dset) :
             self.vset  , 
             self.dset  )
 
-
-        
-# =============================================================================
-## @class Fit1DBase
-#  The base class for implementation of 1D-PDFs
-#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-#  @date 2011-08-02
-class Fit1DBase (object) :
-    """
-    Useful base class for implementation of generic PDFs for 1D-fit
-    """
-    def __init__ ( self              ,
-                   signalset         ,
-                   backgroundset     ,
-                   others  = ROOT.RooArgSet() ) : 
-        
-        #
-        self._signal_set     = signalset
-        self._background_set = backgroundset
-        self._other_set       = others 
-        #
-        self._splots = []
-
-    def signal_set     ( self ) : return self._signal_set
-    def background_set ( self ) : return self._background_set
-    def other_set      ( self ) : return self._other_set
-
-    ## adjust PDF with some small positive portion to avoid bad regions...
-    def adjust         ( self , value = 1.e-5 ) :
-        """
-        Adjust PDF with some small positive portion to avodi bad regions
-        """
-        if not hasattr ( self , 'orig_pdf' ) :
-
-            self.orig_pdf        = self.pdf
-            self.p0_pdf   = ROOT.RooPolynomial ( 'p0' , 'poly0' , self.mass            )
-
-
-            ## add as component: 
-            if hasattr ( self , 'alist1' ) and hasattr ( self , 'alist2' ) :
-                
-                self.orig_pdf        = self.pdf
-                self.adj_alist1 = ROOT.RooArgList () 
-                self.adj_alist2 = ROOT.RooArgList ()
-                for i in self.alist1 : self.adj_alist1.add  ( i )
-                for i in self.alist2 : self.adj_alist2.add  ( i )
-                
-                self.p0_value = makeVar ( None , 'p0val', 'p0value' , value , 0 , 0 , 1000 )
-            
-                self.adj_alist1.add ( self.p0_pdf   )
-                self.adj_alist2.add ( self.p0_value )
-                
-            else :
-
-                self.adj_alist1 = ROOT.RooArgList ( self.p0_pdf , self.orig_pdf ) 
-                self.p0_value = makeVar ( None , 'p0_value', 'value(p0)' , value , 0 , 0 , 1 )
-                self.adj_alist2 = ROOT.RooArgList ( self.p0_value )
-                
-            self.pdf       = ROOT.RooAddPdf  ( "adjust_"    + self.orig_pdf.GetName () ,  
-                                               "Adjust(%s)" % self.orig_pdf.GetName () ,
-                                               self.adj_alist1 ,
-                                               self.adj_alist2 )
-            
-                
-    ## make the actual fit (and optionally draw it!)
-    def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , *args ) :
-        """
-        Perform the actual fit (and draw it)
-        """
-        context = NoContext () 
-        if silent : context = RooSilent() 
-
-        #
-        ## define silent context
-        #
-        with context :
-            
-            result =  self.pdf.fitTo ( dataset   ,
-                                       ROOT.RooFit.Save (   ) ,
-                                       ncpu ( len ( dataset ) ) ,
-                                       *args     )
-            
-            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
-
-        if 0 != result.status() and silent :
-            logger.warning ( 'Fit status is %s. Refit in non-silent regime '
-                             % result.status() )
-            
-            return self.fitTo ( dataset , draw , nbins , False , *args )
-        
-        if hasattr ( self , 'alist2' ) :
-            
-            nsum = VE()            
-            for i in self.alist2 :
-                nsum += i.as_VE() 
-                if i.getVal() > 0.9 * i.getMax() :
-                    logger.warning ( 'Variable %s == %s [close to maximum %s]'
-                                     % ( i.GetName() , i.getVal () , i.getMax () ) )
-                    
-            if not dataset.isWeighted() : 
-                nl = nsum.value() - 0.10 * nsum.error()
-                nr = nsum.value() + 0.10 * nsum.error()
-                if not nl <= len ( dataset ) <= nr :
-                    logger.error ( 'Fit is problematic:  sum %s != %s '
-                                   % ( nsum , len( dataset ) ) )  
-                    
-            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
-            for s in self._signal_set      :
-                if hasattr ( s , 'setPars' ) : s.setPars() 
-            for s in self._background_set :
-                if hasattr ( s , 'setPars' ) : s.setPars() 
-
-        if not draw :
-            return result, None 
-        
-        #
-        ## again the context
-        # 
-        context = NoContext () 
-        if silent : context = RooSilent() 
-        
-        with context :
-
-            frame = self.mass.frame( nbins )
-            #
-            dataset  .plotOn ( frame )
-            #
-            self.pdf .plotOn (
-                frame ,
-                ROOT.RooFit.Components ( self.background_set () ) ,
-                ROOT.RooFit.LineStyle  ( ROOT.kDashed           ) ,
-                ROOT.RooFit.LineColor  ( ROOT.kBlue             ) )
-            #
-            self.pdf .plotOn (
-                frame ,
-                ROOT.RooFit.Components ( self.signal_set     () ) , 
-                ROOT.RooFit.LineWidth  ( 2                      ) ,
-                ROOT.RooFit.LineStyle  ( ROOT.kDotted           ) ,
-                ROOT.RooFit.LineColor  ( ROOT.kMagenta          ) )
-
-            i0 = 0 
-            for i in self.other_set() :
-                
-                cmp = ROOT.RooArgSet( i ) 
-                self.pdf .plotOn (
-                    frame ,
-                    ROOT.RooFit.Components ( cmp                    ) , 
-                    ROOT.RooFit.LineWidth  ( 2                      ) ,
-                    ROOT.RooFit.LineStyle  ( ROOT.kDotted           ) ,
-                    ROOT.RooFit.LineColor  ( ROOT.kOrange + i0      ) )
-                i0 += 1
-                
-                
-            self.pdf .plotOn (
-                frame ,
-                ROOT.RooFit.LineColor  ( ROOT.kRed              ) )
-            
-
-            frame.SetXTitle('')
-            frame.SetYTitle('')
-            frame.SetZTitle('')
-            
-            frame.Draw()
-            
-            return result, frame 
-
-    ## fit the histogram (and draw it)
-    def fitHisto ( self , histo , draw = False , silent = False , *args ) :
-        """
-        Fit the histogram (and draw it)
-        """
-        context = NoContext () 
-        if silent : context = RooSilent() 
-
-        with RangeVar( self.mass , *(histo.xminmax()) ) : 
-            
-            ## convert it! 
-            with context :
-                hdset     = H1D_dset ( '',  histo , self.mass )
-                self.hset = hdset.dset
-                
-            ## fit it!!
-            return self.fitTo ( self.hset , draw , len ( histo ) , silent , *args )
-
-            
-    ## perform sPlot-analysis 
-    def sPlot ( self , dataset , *args    ) : 
-        """
-        Make sPlot analysis 
-        """
-        splot = ROOT.RooStats.SPlot ( rootID( "sPlot_" ) ,
-                                      "sPlot"            ,
-                                      dataset            ,
-                                      self.pdf           ,
-                                      self.alist2        )
-        
-        self._splots += [ splot ]
-        
-        return splot 
-
-
 # =============================================================================
 ## @class Fit1D
 #  The actual model for 1D-mass fits 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-08-02
-class Fit1D (Fit1DBase) :
+class Fit1D (PDF) :
     """
     The actual model for generic 1D-fits 
     """
-    def __init__ ( self              , 
-                   signal            ,
-                   background = None ,
-                   components = []   , ## components
-                   suffix     = ''   ,
-                   bpower     = 0    ) :  
-        
+    def __init__ ( self                       , 
+                   signal                     , ## the main signal 
+                   background       = None    , ## the main background 
+                   othersignals     = []      , ## additional signal         components
+                   otherbackgrounds = []      , ## additional background     components
+                   others           = []      , ## additional non-classified components 
+                   suffix           = ''      ,
+                   name             = ''      ,
+                   bpower           = 0       ) :  
+
+        #
+        if not name and signal.name : name = signal.name
+        #
+        PDF.__init__ ( self , name + suffix )
+        #
         self.suffix     = suffix 
         self.signal     =      signal 
         self.mass       = self.signal.mass
@@ -626,34 +591,93 @@ class Fit1D (Fit1DBase) :
             )
         
         self.nums = [ self.s , self.b ]
-        
-        i = 1
 
-        self.more_components = components
-        self.other_ = ROOT.RooArgSet()
-        
         #
-        for c in components :
+        ## update the lists of PDFs (for drawing)
+        #
+        self.signals     ().add ( self.signal     .pdf )
+        self.backgrounds ().add ( self.background .pdf )
+
+        self.more_signals       = othersignals
+        self.more_backgrounds   = otherbackgrounds
+        self.more_components    = others
+
+
+        #
+        ## treat additional signals
+        #
+        for c in self.more_signals : 
+            
+            i = len ( self.signals() )
             
             if   isinstance ( c ,  ROOT.RooAbsPdf ) :
-                self.alist1.add ( c     )
-                self.other_.add ( c     ) 
+                self.alist1    .add ( c     )
+                self.signals() .add ( c     ) 
             elif hasattr    ( c ,'pdf' )            :
-                self.alist1.add ( c.pdf )
-                self.other_.add ( c.pdf ) 
+                self.alist1    .add ( c.pdf )
+                self.signals() .add ( c.pdf ) 
             else :
-                logger.warning('Unknown component type %s, skip it!' % type(c) )
+                logger.warning('Fit1D(%s) Unknown signal component type %s, skip it!' % ( self.name , type(c) ) ) 
                 continue 
             
             si = makeVar ( None                            ,
-                           "S%s_%d"       % ( suffix , i ) ,
-                           "Signal(%d)%s" % ( i , suffix ) , None  ,  0  ,  1.e+6 )            
+                           "S%s_%d"  % ( suffix , i ) ,
+                           "S(%d)%s" % ( i , suffix ) , None  ,  10 , 0  ,  1.e+6 )            
             self.alist2.add  ( si )
             
-            setattr ( self , si.GetName() , si ) 
-            
+            setattr ( self , si.GetName() , si )             
             self.nums.append ( si ) 
-            i += 1
+
+        #
+        ## treat additional backgounds 
+        #
+        for c in self.more_backgrounds : 
+            
+            i = len ( self.backgrounds() )
+            
+            if   isinstance ( c ,  ROOT.RooAbsPdf ) :
+                self.alist1         .add ( c     )
+                self.backgrounds () .add ( c     ) 
+            elif hasattr    ( c ,'pdf' )            :
+                self.alist1         .add ( c.pdf )
+                self.backgrounds () .add ( c.pdf ) 
+            else :
+                logger.warning('Fit1D(%s) Unknown background component type %s, skip it!' % ( self.name , type(c) ) ) 
+                continue 
+            
+            si = makeVar ( None                       ,
+                           "B%s_%d"  % ( suffix , i ) ,
+                           "B(%d)%s" % ( i , suffix ) , None  ,  10 , 0  ,  1.e+6 )            
+            self.alist2.add  ( si )
+            
+            setattr ( self , si.GetName() , si )             
+            self.nums.append ( si ) 
+
+
+        #
+        ## treat additional components
+        #
+        for c in self.more_components : 
+            
+            i = len ( self.components() )
+            
+            if   isinstance ( c ,  ROOT.RooAbsPdf ) :
+                self.alist1         .add ( c     )
+                self.components () .add ( c     ) 
+            elif hasattr    ( c ,'pdf' )            :
+                self.alist1         .add ( c.pdf )
+                self.components () .add ( c.pdf ) 
+            else :
+                logger.warning('Fit1D(%s) Unknown additional component type %s, skip it!' % ( self.name , type(c) ) ) 
+                continue 
+            
+            si = makeVar ( None                       ,
+                           "O%s_%d"  % ( suffix , i ) ,
+                           "O(%d)%s" % ( i , suffix ) , None  ,  10 , 0  ,  1.e+6 )            
+            self.alist2.add  ( si )
+            
+            setattr ( self , si.GetName() , si )             
+            self.nums.append ( si ) 
             
             
         #
@@ -663,14 +687,27 @@ class Fit1D (Fit1DBase) :
                                       "model(%s)" % suffix ,
                                       self.alist1 ,
                                       self.alist2 )
-        #
-        ## finally initialize the base
-        #
-        self.ss_ = ROOT.RooArgSet ( self.signal    .pdf )
-        self.bs_ = ROOT.RooArgSet ( self.background.pdf ) 
-        # 
-        Fit1DBase.__init__ ( self , self.ss_ , self.bs_ , self.other_ ) 
+
+        ## take care about sPlots 
+        self._splots = []
         
+    ## perform sPlot-analysis 
+    def sPlot ( self , dataset , *args    ) : 
+        """
+        Make sPlot analysis 
+        """
+        splot = ROOT.RooStats.SPlot ( rootID( "sPlot_" ) ,
+                                      "sPlot"            ,
+                                      dataset            ,
+                                      self.pdf           ,
+                                      self.alist2        ,
+                                      *args              )
+        
+        self._splots += [ splot ]
+        
+        return splot 
+
+
 
 # =============================================================================
 ## @class Fit2D

@@ -42,19 +42,17 @@ sigB   = Models.Gauss_pdf ( 'Bh'             ,
                             m_b.getMin ()    ,
                             m_b.getMax ()    , 
                             mass     = m_b   ,
-                            fixMass  = 5.278 , 
-                            fixSigma = 0.015 )
+                            mean     = 5.278 , 
+                            sigma    = 0.015 )
 
 bw     = cpp.Gaudi.Math.Phi0 ( 1.0195 ,
                                0.0043 ,
                                0.4937 )
 
 sigPhi0 = Models.BreitWigner_pdf ( 'Phi0'               ,
-                                   m_phi.getMin ()      ,
-                                   m_phi.getMax ()      ,
                                    bw                   , 
-                                   fixMass     = 1.0195 ,
-                                   fixGamma    = 0.0043 ,
+                                   mean        = 1.0195 ,
+                                   gamma       = 0.0043 ,
                                    mass        = m_phi  ,
                                    convolution = 0.0005 )
 

@@ -32,6 +32,7 @@ Empricial PDFs to describe narrow peaks
   - double-side Crystal Ball
   - Needham function for J/psi, psi' and Y peaks
   - Apolonios
+  - Apolonios2 (bifurcated Apolonious)
   - bifurcated Gauissian
   - generalized normal v1 
   - generalized normal v2
@@ -64,6 +65,7 @@ __all__ = (
     'CB2_pdf'                , ## double-sided Crystal Ball function    
     'Needham_pdf'            , ## Needham function for J/psi or Y fits 
     'Apolonios_pdf'          , ## Apolonios function         
+    'Apolonios2_pdf'         , ## Apolonios function         
     'BifurcatedGauss_pdf'    , ## bifurcated Gauss
     'GenGaussV1_pdf'         , ## generalized normal v1  
     'GenGaussV2_pdf'         , ## generalized normal v2 
@@ -85,7 +87,7 @@ __all__ = (
 import ROOT, math
 from   Ostap.PyRoUts             import cpp
 from   GaudiKernel.SystemOfUnits import GeV 
-from   Ostap.FitBasic            import makeVar,Mass_pdf
+from   Ostap.FitBasic            import makeVar, MASS 
 # =============================================================================
 from   AnalysisPython.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitSignalModels' )
@@ -96,76 +98,71 @@ else                       : logger = getLogger ( __name__                )
 #  @see RooGaussian
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
-class Gauss_pdf(Mass_pdf) :
+class Gauss_pdf(MASS) :
     """
     Simple Gaussian function 
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
+                   mn        = None ,
+                   mx        = None ,
                    mass      = None ,
                    mean      = None ,
                    sigma     = None ) :
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma ) 
+        MASS.__init__  ( self    , name   ,
+                         mn      , mx     , mass ,
+                         mean    , sigma  )
         
         #
         ## build pdf
         # 
-        self.pdf = ROOT.RooGaussian ( "gau_"      + name ,
-                                      "Gauss(%s)" % name ,
-                                      self.mass  ,
-                                      self.mean  ,
-                                      self.sigma )
-
+        self.pdf = ROOT.RooGaussian (
+            'gauss_%s'  % name ,
+            "Gauss(%s)" % name ,
+            self.mass  ,
+            self.mean  ,
+            self.sigma )
+        
 # =============================================================================
 ## @class CrystalBall_pdf
 #  @see Analysis::Models::CrystalBall
 #  @see Gaudi::Math::CrystalBall
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class CrystalBall_pdf(Mass_pdf) :
+class CrystalBall_pdf(MASS) :
     """
     Simple Crystal Ball
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               , 
-                   fixMass  = None  ,
-                   fixSigma = None  ,
-                   fixAlpha = None  ,
-                   fixN     = None  ,
+                   mn       = None  ,
+                   mx       = None  , 
                    mass     = None  ,
                    mean     = None  , 
                    sigma    = None  ,
                    alpha    = None  ,
                    n        = None  ) : 
                    
-        
-        Mass_pdf.__init__ ( self    , name     ,
-                            mn      , mx       ,
-                            mass    , mean     , sigma ,
-                            fixMass , fixSigma ) 
+        #
+        ## initialize the base
+        #
+        MASS.__init__ ( self    , name     ,
+                        mn      , mx       , mass    ,
+                        mean    , sigma    )
         
         self.alpha = makeVar ( alpha ,
-                               'alphaCB_%s'      % name ,
-                               '#alpha_{CB}(%s)' % name ,
-                               fixAlpha   , 0 , 10      )
-        self.n     = makeVar ( alpha ,
-                               'nCB_%s'      % name ,
-                               'n_{CB}(%s)'  % name ,
-                               fixN       , 0 , 20      )
-
+                               'alpha_%s'        % name ,
+                               '#alpha_{CB}(%s)' % name ,  alpha  ,
+                               2.0 , 0  , 10 )
+        
+        self.n     = makeVar ( n   ,
+                               'n_%s'            % name ,
+                               'n_{CB}(%s)'      % name , n       ,
+                               1.0 , 0  , 20 )
+        
         #
         ## finally build PDF 
         #
@@ -177,46 +174,42 @@ class CrystalBall_pdf(Mass_pdf) :
             self.sigma ,
             self.alpha ,
             self.n     )
-
+        
 # =============================================================================
 ## @class CrystalBallRS_pdf
 #  @see Analysis::Models::CrystalBallRS
 #  @see Gaudi::Math::CrystalBallRS
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class CrystalBallRS_pdf(Mass_pdf) :
+class CrystalBallRS_pdf(MASS) :
     """
     Simple right-side CrystalBall
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               , 
-                   fixMass  = None  ,
-                   fixSigma = None  ,
-                   fixAlpha = None  ,
-                   fixN     = None  ,
-                   mass     = None  ,
-                   mean     = None  , 
-                   sigma    = None  ,
-                   alpha    = None  ,
-                   n        = None  ) : 
+    def __init__ ( self              ,
+                   name              ,
+                   mn       = None   ,
+                   mx       = None   , 
+                   mass     = None   ,
+                   mean     = None   , 
+                   sigma    = None   ,
+                   alpha    = None   ,
+                   n        = None   ) : 
                    
         
-        Mass_pdf.__init__ ( self    , name     ,
-                            mn      , mx       ,
-                            mass    , mean     , sigma ,
-                            fixMass , fixSigma ) 
+        MASS.__init__ ( self    , name     ,
+                        mn      , mx       , mass    ,
+                        mean    , sigma    ) 
         
         self.alpha = makeVar ( alpha ,
-                               'alphaCBRS_%s'      % name ,
-                               '#alpha_{CBRS}(%s)' % name ,
-                               fixAlpha   , 0 , 10      )
-        self.n     = makeVar ( alpha ,
-                               'nCBRS_%s'      % name ,
-                               'n_{CBRS}(%s)'  % name ,
-                               fixN       , 0 , 20      )
-
+                               'alpha_%s'          % name ,
+                               '#alpha_{CBRS}(%s)' % name , alpha , 
+                               2.0 , 0  , 10      )
+        
+        self.n     = makeVar ( n     ,
+                               'n_%s'              % name ,
+                               'n_{CBRS}(%s)'      % name ,  n , 
+                               1   ,  0 , 20      )
+        
         #
         ## finally build PDF 
         #
@@ -235,50 +228,43 @@ class CrystalBallRS_pdf(Mass_pdf) :
 #  @see Analysis::Models::CrystalBallDS
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class CB2_pdf(Mass_pdf) :
+class CB2_pdf(MASS) :
     """
     Define double sided Crystal Ball
     """
-    def __init__ ( self            ,
-                   name            ,
-                   mn              ,
-                   mx              ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixAlphaL = None ,
-                   fixAlphaR = None ,
-                   fixNL     = None ,
-                   fixNR     = None ,
-                   mass      = None , 
-                   mean      = None ,
-                   sigma     = None ,
-                   alphaL    = None ,
-                   alphaR    = None ,
-                   nL        = None ,
-                   nR        = None ) : 
+    def __init__ ( self              ,
+                   name              ,
+                   mn        = None  ,
+                   mx        = None  ,
+                   mass      = None  , 
+                   mean      = None  ,
+                   sigma     = None  ,
+                   alphaL    = None  ,
+                   alphaR    = None  ,
+                   nL        = None  ,
+                   nR        = None  ) : 
         
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name     ,
-                             mn      , mx       ,
-                             mass    , mean     , sigma   ,
-                             fixMass , fixSigma )
+        MASS.__init__  ( self    , name     ,
+                         mn      , mx       , mass    ,
+                         mean    , sigma    )
         #
         ## treat the specific parameters
         #
         self.aL    = makeVar ( alphaL                  ,
                                "aL_%s"          % name ,
-                               "#alpha_{L}(%s)" % name , fixAlphaL , 1.5 , 0 , 10 )
+                               "#alpha_{L}(%s)" % name , alphaL    , 2.0 , 0 , 10 )
         self.nL    = makeVar ( nL                      ,                     
                                "nL_%s"          % name ,
-                               "n_{L}(%s)"      % name , fixNL     , 1   , 0 , 10 )
+                               "n_{L}(%s)"      % name , nL        , 1   , 0 , 20 )
         self.aR    = makeVar ( alphaR ,
                                "aR_%s"          % name ,
-                               "#alpha_{R}(%s)" % name , fixAlphaR , 1.5 , 0 , 10 )
+                               "#alpha_{R}(%s)" % name , alphaR    , 2.0 , 0 , 10 )
         self.nR    = makeVar ( nR                      ,
                                "nR_%s"          % name ,
-                               "n_{R}(%s)"      % name , fixNR     , 2   , 0 , 10 )
+                               "n_{R}(%s)"      % name , nR        , 1   , 0 , 20 )
         
         self.pdf = cpp.Analysis.Models.CrystalBallDS(
             "cb2_"       + name ,
@@ -300,28 +286,26 @@ class CB2_pdf(Mass_pdf) :
 #  @see Gaudi::Math::Needham 
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
-class Needham_pdf(Mass_pdf) :
+class Needham_pdf(MASS) :
     """
     Define PDF for J/psi, psi' or Y-signals 
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn       = 3.0   ,
-                   mx       = 3.2   , 
-                   fixMass  = 3.096 ,
-                   fixSigma = 0.013 ,
-                   mass     = None  ,
-                   mean     = None  , 
-                   sigma    = None  ,
-                   a0       = None  ,
-                   a1       = None  ,
-                   a2       = None  ) : 
+    def __init__ ( self                 ,
+                   name                 ,
+                   mn       = None      ,
+                   mx       = None      , 
+                   mass     = None      ,
+                   mean     = 3.096     ,   ## GeV  
+                   sigma    = 0.013     ,   ## GeV 
+                   a0       = 1.975     ,
+                   a1       = -0.0011   ,   ## GeV^-1
+                   a2       = -0.00018  ) : ## GeV^-2  
         
-        Mass_pdf.__init__ ( self    ,
-                            name    ,
-                            mn      , mx       ,
-                            mass    , mean     , sigma ,
-                            fixMass , fixSigma ) 
+        MASS.__init__ ( self    ,
+                        name    ,
+                        mn      , mx    ,
+                        mass    ,
+                        mean    , sigma )
         
         #
         unit = 1000
@@ -331,17 +315,17 @@ class Needham_pdf(Mass_pdf) :
         elif self.mass.getMin() <= 9.460 <= self.mass.getMax() : unit = 1000 
         elif self.mass.getMin() <=  9460 <= self.mass.getMax() : unit = 1
         #
-        self.a0 = makeVar ( a0                 ,
-                            "a0n_%s"    % name ,
-                            "a_{0}(%s)" % name ,
-                            1.975              ,   0           , 10           )
-        self.a1 = makeVar ( a1                 ,
-                            "a1n_%s"    % name ,
-                            "a_{1}(%s)" % name ,
+        self.a0 = makeVar ( a0                  ,
+                            "a0_%s"     % name  ,
+                            "a_{0}(%s)" % name  , a0 , 
+                            1.975               ,   0           , 10           )
+        self.a1 = makeVar ( a1                  ,
+                            "a1_%s"     % name  ,
+                            "a_{1}(%s)" % name  , a1 , 
                             -0.0011   * unit    , -10 * unit    , 10 * unit    )
-        self.a2 = makeVar ( a2                 ,
-                            "a2n_%s"    % name ,
-                            "a_{2}(%s)" % name ,
+        self.a2 = makeVar ( a2                  ,
+                            "a2_%s"     % name  ,
+                            "a_{2}(%s)" % name  , a2 , 
                             -0.00018  * unit**2 , -10 * unit**2 , 10 * unit**2 )
         #
         self.pdf = cpp.Analysis.Models.Needham (
@@ -360,12 +344,12 @@ class Needham_pdf(Mass_pdf) :
 #  simple wrapper over Apolonios PDF 
 #  @see Analysis::Models::Apolonios 
 #  The function is proposed by Diego Martinez Santos 
-#  https://indico.itep.ru/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+#  @see http://arxiv.org/abs/1312.5000
 #  Here a bit modified version is used with redefined parameter <code>n</code>
 #  to be coherent with local definitions of Crystal Ball
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class Apolonios_pdf(Mass_pdf) :
+class Apolonios_pdf(MASS) :
     """
     Simple wrapper over Apolonios PDF 
     The function is proposed by Diego Martinez Santos 
@@ -373,47 +357,39 @@ class Apolonios_pdf(Mass_pdf) :
     Here a bit modified version is used with redefined parameter <code>n</code>
     to be coherent with local definitions of Crystal Ball
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixAlpha  = None ,
-                   fixN      = None ,
-                   fixB      = None ,
-                   mass      = None ,
-                   mean      = None ,
-                   sigma     = None ,
-                   alpha     = None ,
-                   n         = None ,
-                   b         = None ) : 
+    def __init__ ( self                    ,
+                   name                    ,
+                   mn        = None        ,
+                   mx        = None        ,
+                   mass      = None        ,
+                   mean      = None        ,
+                   sigma     = None        ,
+                   alpha     = None        ,
+                   n         = None        ,
+                   b         = None        ) : 
                    
         
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma ) 
+        MASS.__init__  ( self    , name  ,
+                         mn      , mx    , mass    ,
+                         mean    , sigma ) 
         
-        self.alpha = makeVar ( alpha                    ,
-                               'alphaAp_%s'      % name ,
-                               '#alpha_{Ap}(%s)' % name ,
-                               fixAlpha , 0 , 10 )
+        self.alpha = makeVar ( alpha                     ,
+                               'alpha_%s'         % name ,
+                               '#alpha_{Apo}(%s)' % name , alpha , 
+                               2.0   , 0 , 10 )
         
-        self.n     = makeVar ( n                   ,
-                               'nAp_%s'     % name ,
-                               'n_{Ap}(%s)' % name ,
-                               fixN     , 0 , 20 )
+        self.n     = makeVar ( n                    ,
+                               'n_%s'        % name ,
+                               'n_{Apo}(%s)' % name , n ,
+                               2.0   , 0 , 20 )
         
-        self.b     = makeVar ( b                     ,
-                               'bAp_%s'     % name   ,
-                               'b_{Ap}(%s)' % name   ,
-                               fixB     , 0.01 , 100 ) 
-        
+        self.b     = makeVar ( b                    ,
+                               'b_%s'        % name ,
+                               'b_{Apo}(%s)' % name ,  b  ,
+                               1         , 0.01 , 10000 ) 
         
         #
         ## finally build PDF
@@ -431,39 +407,100 @@ class Apolonios_pdf(Mass_pdf) :
 
 
 # =============================================================================
+## @class Apolonios2_pdf
+#  "Bifurcated Apolonious"
+#  Asymmetrical) Gaussian with exponential (asymmetrical) tails 
+#  @see Analysis::Models::Apolonios2 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-08-20
+class Apolonios2_pdf(MASS) :
+    """
+    Bifurcated Apolonious:
+    (Asymmetrical) Gaussian with exponential (asymmetrical) tails 
+    """
+    def __init__ ( self               ,
+                   name               ,
+                   mn        = None   ,
+                   mx        = None   ,
+                   mass      = None   ,
+                   mean      = None   ,
+                   sigma     = None   ,
+                   asymmetry = None   ,
+                   beta      = None   ) : 
+        
+        #
+        ## initialize the base
+        # 
+        MASS.__init__  ( self    , name   ,
+                         mn      , mx     , mass    ,
+                         mean    , sigma  )
+        
+        self.asym = makeVar ( asymmetry                  ,
+                              'asym_%s'           % name ,
+                              '#kappa_{Apo2}(%s)' % name ,
+                              asymmetry , -1 , 1  ) 
+        
+        self._lst_R = ROOT.RooArgList ( self.sigma , self.asym ) 
+        self.sigmaR = ROOT.RooFormulaVar (
+            "sigmaR_%s"     % name   ,
+            "sigma_{R}(%s)" % name   ,
+            "%s*(1-%s)"     % ( self.sigma.GetName() , self.asym.GetName() ) ,
+            self._lst_R   )
+        
+        self._lst_L = ROOT.RooArgList ( self.sigma , self.asym ) 
+        self.sigmaL = ROOT.RooFormulaVar (
+            "sigmaL_%s"     % name   ,
+            "sigma_{L}(%s)" % name   ,
+            "%s*(1+%s)"     % ( self.sigma.GetName() , self.asym.GetName() ) ,
+            self._lst_L   )
+        
+        self.beta    = makeVar ( beta ,
+                                 'beta_%s'          % name  ,
+                                 '#beta_{Apo2}(%s)' % name  ,
+                                 beta , 0.01  , 10000 ) 
+        #
+        ## finally build PDF
+        #
+        self.pdf  = cpp.Analysis.Models.Apolonios2 (
+            "apolo2_"        + name ,
+            "Apolonios2(%s)" % name ,
+            self.mass   ,
+            self.mean   ,
+            self.sigmaL ,
+            self.sigmaR ,
+            self.beta   ) 
+
+
+
+# =============================================================================
 ## @class BifurcatedGauss_pdf
 #  simple wrapper over bifurcated-gaussian
 #  @see RooGaussian
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class BifurcatedGauss_pdf(Mass_pdf) :
+class BifurcatedGauss_pdf(MASS) :
     """
     bifurcated Gauss 
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixAsym   = None ,
-                   mass      = None ,
-                   mean      = None ,
-                   sigma     = None ,
-                   asymmetry = None ) : 
+    def __init__ ( self                  ,
+                   name                  ,
+                   mn        = None      ,
+                   mx        = None      ,
+                   mass      = None      ,
+                   mean      = None      ,
+                   sigma     = None      ,
+                   asymmetry = None      ) : 
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma ) 
+        MASS.__init__  ( self , name  ,
+                         mn   , mx    , mass ,
+                         mean , sigma ) 
         
-        self.asym = makeVar ( asymmetry                 ,
-                              'asym_g_%s'         % name ,
-                              '#sigma_{asym}(%s)' % name ,
-                              fixAsym , -1 , 1  ) 
+        self.asym = makeVar ( asymmetry               ,
+                              'asym_%s'        % name ,
+                              '#xi_{asym}(%s)' % name ,
+                              asymmetry , -1 , 1  ) 
         
         self._lst_R = ROOT.RooArgList ( self.sigma , self.asym ) 
         self.sigmaR = ROOT.RooFormulaVar (
@@ -498,32 +535,27 @@ class BifurcatedGauss_pdf(Mass_pdf) :
 #  @see Gaudi::Math::GenGaussV1 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
-class GenGaussV1_pdf(Mass_pdf) :
+class GenGaussV1_pdf(MASS) :
     """
     Simple class that implements the generalized normal distribution v1
     see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixAlpha  = None ,
-                   fixBeta   = 2    , ## beta=2 is gaussian distribution 
+                   mn        = None ,
+                   mx        = None ,
                    mass      = None ,
                    mean      = None ,
                    alpha     = None ,
-                   beta      = None ) : 
+                   beta      = 2    ) :  ## beta=2 is gaussian distribution 
         
         
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             alpha   ,
-                             fixMass , fixAlpha ) 
+        MASS.__init__  ( self  , name  ,
+                         mn    , mx    , mass  ,
+                         mean  , alpha ) 
         
         #
         ## rename it!
@@ -535,12 +567,12 @@ class GenGaussV1_pdf(Mass_pdf) :
         gtitle = stitle.replace ( 'sigma' , 'alpha' )
         self.alpha.SetName  ( gname  ) 
         self.alpha.SetTitle ( gtitle )
-
+        
         self.beta  = makeVar ( beta ,
-                               'betaV1_%s'      % name  ,
-                               '#beta_{v1}(%s)' % name  ,
-                               fixBeta , 1.e-4  , 1.e+6 ) 
-
+                               'beta_%s'        % name  ,
+                               '#beta_{v1}(%s)' % name  , beta , 
+                               2 , 1.e-4  , 1.e+6 ) 
+        
         #
         ## finally build PDF
         #
@@ -560,31 +592,26 @@ class GenGaussV1_pdf(Mass_pdf) :
 #  @see Gaudi::Math::GenGaussV2 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
-class GenGaussV2_pdf(Mass_pdf) :
+class GenGaussV2_pdf(MASS) :
     """
     Simple class that implements the generalized normal distribution v1
     see http://en.wikipedia.org/wiki/Generalized_normal_distribution#Version_1
     """
     def __init__ ( self               ,
                    name               ,
-                   mn                 ,
-                   mx                 ,
-                   fixLocation = None ,
-                   fixScale    = None ,
-                   fixShape    = 0    , ## 0 corresponds to gaussian distribution 
+                   mn          = None ,
+                   mx          = None ,
                    mass        = None ,
                    mean        = None ,
                    alpha       = None ,
-                   kappa       = None ) : 
+                   kappa       = 0    ) : ## 0 corresponds to gaussian distribution 
         
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             alpha   ,
-                             fixLocation , fixScale ) 
+        MASS.__init__  ( self    , name  ,
+                         mn      , mx    , mass    ,
+                         mean    , alpha ) 
         
         #
         ## rename it!
@@ -606,9 +633,9 @@ class GenGaussV2_pdf(Mass_pdf) :
         # self.xi.SetTitle    ( gtitle )
         
         self.kappa = makeVar ( kappa ,
-                               'kappaV2_%s'      % name  ,
-                               '#kappa_{v2}(%s)' % name  ,
-                               fixShape , -4  , 4 ) 
+                               'kappa_%s'        % name  ,
+                               '#kappa_{v2}(%s)' % name  , kappa , 
+                               0 , -4  , 4 ) 
         
         #
         ## finally build PDF
@@ -629,38 +656,38 @@ class GenGaussV2_pdf(Mass_pdf) :
 #  @see Gaudi::Math::SkewGauss 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class SkewGauss_pdf(Mass_pdf) :
+class SkewGauss_pdf(MASS) :
     """
     Simple class that implements the skew normal distribution
     see http://en.wikipedia.org/wiki/Skew_normal_distribution
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixOmega  = None ,
-                   fixAlpha  = None , ## alpha=0 correspond to gaussian 
+                   mn        = None ,
+                   mx        = None ,
                    mass      = None ,
                    mean      = None ,
                    omega     = None ,
-                   alpha     = None ) :
+                   alpha     = 0    ) : ## alpha=0 correspond to gaussian 
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             omega   ,
-                             fixMass , fixOmega ) 
-
-        self.omega = self.sigma
-
+        MASS.__init__  ( self    , name  ,
+                         mn      , mx    , mass    ,
+                         mean    , omega ) 
         
-        self.alpha = makeVar ( alpha                    ,
-                               'alphaSG_%s'      % name ,
-                               '#alpha_{SG}(%s)' % name ,
-                               fixAlpha , -100 , 100  ) 
+        self.omega = self.sigma
+        sname  = self.omega.GetName  ()
+        stitle = self.omega.GetTitle ()
+        gname  = sname .replace ( 'sigma' , 'omega' )
+        gtitle = stitle.replace ( 'sigma' , 'omega' )
+        self.omega.SetName  ( gname  ) 
+        self.omega.SetTitle ( gtitle )
+        
+        self.alpha = makeVar ( alpha                      ,
+                               'alpha_%s'          % name ,
+                               '#alpha_{Skew}(%s)' % name , alpha , 
+                               0 , -100 , 100  ) 
         #
         ## finally build pdf
         # 
@@ -676,22 +703,19 @@ class SkewGauss_pdf(Mass_pdf) :
 # =============================================================================
 ## @class Bukin_pdf
 #  simple wrapper over Bukin-pdf
+#  @see http://arxiv.org/abs/1107.5751
+#  @see http://dx.doi.org/10.1007/JHEP06(2012)141     
 #  @see RooBukinPdf
 #  @author Vanya BELYAEV Ivan.Belyaeve@itep.ru
 #  @date 2011-07-25
-class Bukin_pdf(Mass_pdf) :
+class Bukin_pdf(MASS) :
     """
     Define PDFs for D0,D+,Ds+
     """
     def __init__ ( self            ,
                    name            ,
-                   mn              , ## low-edge   (not used if 'mass' is specified)
-                   mx              , ## high-edge  (not used if 'mass' is specified) 
-                   fixMass  = None ,
-                   fixSigma = None ,
-                   fixXi    = None ,
-                   fixRhoL  = None ,
-                   fixRhoR  = None ,
+                   mn       = None , ## low-edge   (not used if 'mass' is specified)
+                   mx       = None , ## high-edge  (not used if 'mass' is specified) 
                    mass     = None , 
                    mean     = None ,
                    sigma    = None ,
@@ -702,28 +726,37 @@ class Bukin_pdf(Mass_pdf) :
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma )
+        MASS.__init__  ( self    , name  ,
+                         mn      , mx    , mass    ,
+                         mean    , sigma )
         #
         ## treat the specific parameters
         #
         ## asymmetry 
         self.xi    = makeVar ( xi                    ,
                                "xi_%s"        % name ,
-                               "#xi(%s)"      % name , fixXi   , 0  , -1 , 1 )
+                               "#xi(%s)"      % name , xi      , 0   , -1 , 1  )
+        
         self.rhol  = makeVar ( rhol                  ,
                                "rhol_%s"      % name ,
-                               "#rho_{L}(%s)" % name , fixRhoL , -1 , -2 , 0 )
+                               "#rho_{L}(%s)" % name , rhol    , 0.5 ,  0 , 10 )
+        
         self.rhor  = makeVar ( rhor                  ,
                                "rhor_%s"      % name ,
-                               "#rho_{R}(%s)" % name , fixRhoR , -1 , -2 , 0 )
+                               "#rho_{R}(%s)" % name , rhor    , 0.5 ,  0 , 10 )
         # 
         ## create PDF
         # 
-        self.pdf = ROOT.RooBukinPdf (
+        ## self.pdf = ROOT.RooBukinPdf (
+        ##     "bkn_"      + name ,
+        ##     "Bukin(%s)" % name ,
+        ##     self.mass  ,
+        ##     self.mean  ,
+        ##     self.sigma ,
+        ##     self.xi    ,
+        ##     self.rhol  ,
+        ##     self.rhor  )
+        self.pdf = cpp.Analysis.Models.Bukin (
             "bkn_"      + name ,
             "Bukin(%s)" % name ,
             self.mass  ,
@@ -745,17 +778,14 @@ class Bukin_pdf(Mass_pdf) :
 #  @see Gaudi::Math::StudentT
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class StudentT_pdf(Mass_pdf) :
+class StudentT_pdf(MASS) :
     """
     Student-T distribution
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixN      = None , 
+                   mn        = None ,
+                   mx        = None ,
                    mass      = None ,
                    mean      = None ,
                    sigma     = None ,
@@ -763,17 +793,15 @@ class StudentT_pdf(Mass_pdf) :
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma ) 
+        MASS.__init__  ( self    , name  ,
+                         mn      , mx    , mass    ,
+                         mean    , sigma ) 
         
         # 
         self.n  = makeVar ( n                    ,
-                            'nST_%s'      % name ,
-                            '#n_{ST}(%s)' % name ,
-                            fixN , 0 , 50  ) 
+                            'n_%s'        % name ,
+                            '#n_{ST}(%s)' % name , n , 
+                            2 , 0 , 100  ) 
         #
         ## finally build pdf
         # 
@@ -794,19 +822,14 @@ class StudentT_pdf(Mass_pdf) :
 #  @see Gaudi::Math::BifurcatedStudentT
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class BifurcatedStudentT_pdf(Mass_pdf) :
+class BifurcatedStudentT_pdf(MASS) :
     """
     Bifurcated Student-T distribution
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixAsym   = None ,
-                   fixNL     = None , 
-                   fixNR     = None , 
+                   mn        = None , 
+                   mx        = None , 
                    mass      = None ,
                    mean      = None ,
                    sigma     = None ,
@@ -816,16 +839,14 @@ class BifurcatedStudentT_pdf(Mass_pdf) :
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma )
+        MASS.__init__  ( self    , name  ,
+                         mn      , mx    , mass    ,
+                         mean    , sigma )
         
-        self.asym = makeVar ( asymmetry                 ,
-                              'asym_stt_%s'       % name ,
-                              '#sigma_{asym}(%s)' % name ,
-                              fixAsym , -1 , 1  ) 
+        self.asym = makeVar ( asymmetry                  ,
+                              'asym_%s'        % name ,
+                              '#xi_{asym}(%s)' % name , asymmetry , 
+                              0 , -1 , 1  ) 
         
         self._lst_R = ROOT.RooArgList ( self.sigma , self.asym ) 
         self.sigmaR = ROOT.RooFormulaVar (
@@ -842,14 +863,15 @@ class BifurcatedStudentT_pdf(Mass_pdf) :
             self._lst_L   )
         
         # 
-        self.nL =  makeVar ( nL                    ,
-                             'nLBST_%s'      % name ,
-                             '#nL_{BST}(%s)' % name ,
-                             fixNL , 0 , 50  ) 
+        self.nL =  makeVar ( nL                     ,
+                             'nL_%s'         % name ,
+                             '#nL_{BST}(%s)' % name , nL , 
+                             2  , 0 , 100  )
+        
         self.nR =  makeVar ( nR                    ,
-                             'nRBST_%s'      % name ,
-                             '#nR_{BST}(%s)' % name ,
-                             fixNR , 0 , 50  ) 
+                             'nR_%s'         % name ,
+                             '#nR_{BST}(%s)' % name , nR , 
+                             2  , 0 , 100  ) 
         #
         ## finally build pdf
         # 
@@ -870,7 +892,7 @@ class BifurcatedStudentT_pdf(Mass_pdf) :
 #  @see Gaudi::Math::Voigt
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class Voigt_pdf(Mass_pdf) :
+class Voigt_pdf(MASS) :
     """
     Voigt function
     """
@@ -878,9 +900,6 @@ class Voigt_pdf(Mass_pdf) :
                    name             ,
                    mn               ,
                    mx               ,
-                   fixMass   = None ,
-                   fixSigma  = None ,
-                   fixGamma  = None , 
                    mass      = None ,
                    mean      = None ,
                    sigma     = None ,
@@ -888,17 +907,17 @@ class Voigt_pdf(Mass_pdf) :
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name , mn , mx ,
-                             mass    ,
-                             mean    ,
-                             sigma   ,
-                             fixMass , fixSigma ) 
+        MASS.__init__  ( self    , name , mn , mx ,
+                         mass    ,
+                         mean    , gamma ) 
         
         # 
-        self.gamma  = makeVar ( gamma                    ,
+        self.gamma  = makeVar ( gamma               ,
                                 'gamma_%s'   % name ,
-                                '#gamma(%s)' % name ,
-                                fixGamma , 0 , 0.2 * ( mass.getMax()  - mass.getMin() ) ) 
+                                '#gamma(%s)' % name , gamma , 
+                                0.01 * ( mass.getMax()  - mass.getMin() ) , 
+                                0    ,
+                                0.20 * ( mass.getMax()  - mass.getMin() ) )
         #
         ## finally build pdf
         # 
@@ -917,17 +936,15 @@ class Voigt_pdf(Mass_pdf) :
 #  @see Gaudi::Math::BreitWigner
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class BreitWigner_pdf(Mass_pdf) :
+class BreitWigner_pdf(MASS) :
     """
     Simple wrapper over relativistic Breit-Wigner function
     """
     def __init__ ( self               ,
                    name               ,
-                   mn                 ,
-                   mx                 ,
-                   bw                 , ## Gaudi::Math::BreitWeigner object
-                   fixMass     = None ,
-                   fixGamma    = None ,
+                   breitwigner        , ## Gaudi::Math::BreitWeigner object
+                   mn          = None ,
+                   mx          = None ,
                    mass        = None ,
                    mean        = None , 
                    gamma       = None ,
@@ -937,10 +954,10 @@ class BreitWigner_pdf(Mass_pdf) :
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name     ,
-                             mn      , mx       ,
-                             mass    , mean     , gamma   ,
-                             fixMass , fixGamma )
+        MASS.__init__  ( self    , name     ,
+                         mn      , mx       ,
+                         mass    ,
+                         mean    , gamma    )
         
         self.gamma = self.sigma
         sname  = self.gamma.GetName  ()
@@ -954,17 +971,17 @@ class BreitWigner_pdf(Mass_pdf) :
         ## define the actual BW-shape using
         #      Gaudi::Math::BreitWeigner object
         #
-        self.bw = bw                   ## Gaudi::Math::BreitWeigner object
-        
+        self.breitwigner = breitwigner  ## Gaudi::Math::BreitWeigner object
+        self.bw          = breitwigner  
         
         ## create PDF 
         self.breit = cpp.Analysis.Models.BreitWigner ( 
             "rbw_"    + name ,
             "RBW(%s)" % name ,
-            self.mass    ,
-            self.mean    ,
-            self.gamma   ,
-            self.bw      )
+            self.mass        ,
+            self.mean        ,
+            self.gamma       ,
+            self.breitwigner )
 
         if  None is convolution : self.pdf = self.breit
         else :
@@ -987,31 +1004,27 @@ class BreitWigner_pdf(Mass_pdf) :
 #  @see Gaudi::Math::Flatte
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-01-18
-class Flatte_pdf(Mass_pdf) :
+class Flatte_pdf(MASS) :
     """
     Flatte function to describe dipion system near dikaon threshold
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass  = None  ,
-                   fixM0G1  = 165   ,
-                   fixG2oG1 = 4.21  ,
+                   mn       = None  ,
+                   mx       = None  ,
                    mass     = None  ,
                    m0_980   = None  ,    ## mass  of f0(980) resonance
-                   m0g1     = None  ,    ## m0(f0(980))*gamma_1
-                   g2og1    = None  ,    ## gamma2/gamma1 
+                   m0g1     = 165   ,    ## m0(f0(980))*gamma_1
+                   g2og1    = 4.21  ,    ## gamma2/gamma1 
                    mKaon    = 493.7 ,    ## kaon mass 
                    mPion    = 139.6 ) :  ## pion mass 
         
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name     ,
-                             mn      , mx       ,
-                             mass    , m0_980   , None ,
-                             fixMass , None     )
+        MASS.__init__  ( self    , name     ,
+                         mn      , mx       , mass    ,
+                         m0_980  , None     )
         
         del self.sigma 
 
@@ -1023,17 +1036,17 @@ class Flatte_pdf(Mass_pdf) :
         self.m0_980.SetName  ( gname  ) 
         self.m0_980.SetTitle ( gtitle ) 
         
-        self.m0g1 = makeVar  ( m0g1                        ,
-                               'm0g1_flatte_%s'      % name ,
-                               'm0*gamma1_Flatte_%s' % name ,
-                               fixM0G1                      ,
-                               1.e-5                        ,
-                               1.e+5                        )
+        self.m0g1 = makeVar  ( m0g1                          ,
+                               'm0g1_%s'              % name ,
+                               'm_{0}*\gamma_{1}(%s)' % name , m0g1 ,
+                               165                           ,
+                               1.e-5                         ,
+                               1.e+5                         )
         
         self.g2og1 = makeVar ( g2og1    ,
-                               'g2og1_flatte_%s'         % name ,
-                               'gamma2/gamma1_Flatte_%s' % name ,
-                               fixG2oG1 , 
+                               'g2og1_%s'                  % name ,
+                               '#gamma_{2}/#gamma_{1}(%s)' % name , g2og1 , 
+                               4.21     , 
                                0.01     , 100 ) 
 
         self.mKaon = mKaon
@@ -1072,15 +1085,12 @@ class Flatte2_pdf(Flatte_pdf) :
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass  = None  ,
-                   fixM0G1  = 165   ,
-                   fixG2oG1 = 4.21  ,
+                   mn       = None  ,
+                   mx       = None  ,
                    mass     = None  ,
                    m0_980   = None  ,    ## mass  of f0(980) resonance
-                   m0g1     = None  ,    ## m0(f0(980))*gamma_1
-                   g2og1    = None  ,    ## gamma2/gamma1 
+                   m0g1     = 165   ,    ## m0(f0(980))*gamma_1
+                   g2og1    = 4.21  ,    ## gamma2/gamma1 
                    mKaon    = 493.7 ,    ## kaon mass 
                    mPion    = 139.6 ) :  ## pion mass 
 
@@ -1118,32 +1128,30 @@ class Flatte2_pdf(Flatte_pdf) :
 #  @see Gaudi::Math::LASS
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class LASS_pdf(Mass_pdf) :
+class LASS_pdf(MASS) :
     """
     Kappa pole 
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn               ,
-                   mx               ,
-                   fixMass  = None  ,
-                   fixGamma = None  ,
-                   mass     = None  ,
-                   m0_1430  = None  ,     ## mass  of K*(1430)
-                   g0_1430  = None  ,     ## width of K*(1430)
-                   a_lass   = None  , 
-                   r_lass   = None  ,
-                   e_lass   = None  ,    ## elasticity                    
-                   mKaon    = 493.7 ,    ## kaon mass 
-                   mPion    = 139.6 ) :  ## pion mass 
+    def __init__ ( self               ,
+                   name               ,
+                   mn       = None    ,
+                   mx       = None    ,
+                   mass     = None    ,
+                   m0_1430  = None    ,     ## mass  of K*(1430)
+                   g0_1430  = None    ,     ## width of K*(1430)
+                   a_lass   = 1.94e-3 , 
+                   r_lass   = 1.76e-3 ,
+                   e_lass   = 1.0     ,    ## elasticity                    
+                   mKaon    = 493.7   ,    ## kaon mass 
+                   mPion    = 139.6   ) :  ## pion mass 
         
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name     ,
-                             mn      , mx       ,
-                             mass    , m0_1430  , g0_1430 ,
-                             fixMass , fixGamma )
+        MASS.__init__  ( self    , name     ,
+                         mn      , mx       ,
+                         mass    ,
+                         m0_1430 , g0_1430 )
         
         self.gamma = self.sigma
         sname  = self.gamma.GetName  ()
@@ -1152,7 +1160,7 @@ class LASS_pdf(Mass_pdf) :
         gtitle = stitle.replace ( 'sigma' , 'Gamma_1440' )
         self.gamma.SetName  ( gname  ) 
         self.gamma.SetTitle ( gtitle )
-        
+
         self.g0_1430 = self.gamma 
         
         self.m0_1430 = self.mean 
@@ -1165,17 +1173,20 @@ class LASS_pdf(Mass_pdf) :
         
         self.a_lass = makeVar ( a_lass             ,
                                 'aLASS_%s'  % name ,
-                                "aLASS(%s)" % name ,
+                                "aLASS(%s)" % name , a_lass , 
+                                1.94e-3            ,
                                 1.94e-3            ,
                                 1.94e-3            ) 
         self.r_lass = makeVar ( r_lass             ,
                                 'rLASS_%s'  % name ,
-                                "rLASS(%s)" % name ,
+                                "rLASS(%s)" % name , r_lass , 
+                                1.76e-3            ,
                                 1.76e-3            ,
                                 1.76e-3            ) 
         self.e_lass = makeVar ( e_lass             ,
                                 'eLASS_%s'  % name ,
-                                "eLASS(%s)" % name ,
+                                "eLASS(%s)" % name , e_lass ,
+                                1.0                , 
                                 1.0                ,
                                 1.0                )
 
@@ -1203,37 +1214,30 @@ class LASS_pdf(Mass_pdf) :
 #  @see Gaudi::Math::Bugg
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
-class Bugg_pdf(Mass_pdf) :
+class Bugg_pdf(MASS) :
     """
     Bugg pole 
     """
     def __init__ ( self              ,
                    name              ,
-                   mn                ,
-                   mx                ,
-                   fixMass  = 0.9264 , ## 
-                   fixG2    = 0.0024 , ## g2-parameter
-                   fixB1    = 0.5848 , ## b1-parameter [GeV]
-                   fixB2    = 1.6663 , ## b2-parameter [GeV^-1]
-                   fixA     = 1.082  , ##  a-parameter [GeV^2]
-                   fixS1    = 2.8    , ## s1-parameter [GeV^2]
-                   fixS2    = 3.5    , ## s2-parameter
+                   mn       = None   ,
+                   mx       = None   ,
                    mass     = None   ,
-                   bugg_m   = None   ,
-                   bugg_g2  = None   ,
-                   bugg_b1  = None   ,
-                   bugg_b2  = None   ,
-                   bugg_a   = None   ,
-                   bugg_s1  = None  ,
-                   bugg_s2  = None   ,
+                   bugg_m   = 0.9264 , 
+                   bugg_g2  = 0.0024 , ## g2-parameter
+                   bugg_b1  = 0.5848 , ## b1-parameter [GeV]
+                   bugg_b2  = 1.6663 , ## b2-parameter [GeV^-1]
+                   bugg_a   = 1.082  , ##  a-parameter [GeV^2]
+                   bugg_s1  = 2.8    , ## s1-parameter [GeV^2]
+                   bugg_s2  = 3.5    , ## s2-parameter
                    mPion    = 0.1396 ) :  ## pion mass 
         #
         ## initialize the base
         # 
-        Mass_pdf.__init__  ( self    , name     ,
-                             mn      , mx       ,
-                             mass    , bugg_m   , bugg_g2 ,
-                             fixMass , fixG2 )
+        MASS.__init__  ( self    , name     ,
+                         mn      , mx       ,
+                         mass    ,
+                         bugg_m  , bugg_g2  ) 
         
         self.bugg_g2 = self.sigma
         sname  = self.gamma.GetName  ()
@@ -1254,32 +1258,32 @@ class Bugg_pdf(Mass_pdf) :
         
         self.bugg_b1 = makeVar ( bugg_b1             ,
                                  'b1Bugg_%s'  % name ,
-                                 "b1Bugg(%s)" % name ,
-                                 fixB1               ,
-                                 0 , 2               )
+                                 "b1Bugg(%s)" % name , bugg_b1 ,
+                                 0.5848 , 
+                                 0 , 2  )
         
         self.bugg_b2 = makeVar ( bugg_b2             ,
                                  'b2Bugg_%s'  % name ,
-                                 "b2Bugg(%s)" % name ,
-                                 fixB2               ,
-                                 1 , 2               ) 
+                                 "b2Bugg(%s)" % name , bugg_b2 , 
+                                 1.6663 ,
+                                 1 , 2  ) 
         
         self.bugg_a  = makeVar ( bugg_a             ,
                                  'aBugg_%s'  % name ,
-                                 "aBugg(%s)" % name ,
-                                 fixA               ,
-                                 0.5 , 5            ) 
+                                 "aBugg(%s)" % name , bugg_a , 
+                                 1.082    ,
+                                 0.5 , 5  ) 
 
         self.bugg_s1  = makeVar ( bugg_s1           ,
                                   's1Bugg_%s'  % name ,
-                                  "s1Bugg(%s)" % name ,
-                                  fixS1               ,
+                                  "s1Bugg(%s)" % name , bugg_s1 , 
+                                  2.8              ,
                                   1 , 5            ) 
         
         self.bugg_s2  = makeVar ( bugg_s2           ,
                                   's2Bugg_%s'  % name ,
-                                  "s2Bugg(%s)" % name ,
-                                  fixS2               ,
+                                  "s2Bugg(%s)" % name , bugg_s2 , 
+                                  3.5              ,
                                   1 , 5            ) 
 
         self.mPion = mPion

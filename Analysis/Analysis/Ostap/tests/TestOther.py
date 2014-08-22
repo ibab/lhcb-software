@@ -29,8 +29,9 @@ from   Ostap.Utils   import rooSilent
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-if '__main__' == __name__ : logger = getLogger( 'Ostap.TestOther' )
-else                      : logger = getLogger( __name__             )
+if '__main__' == __name__  or '__builtin__' == __name__ :
+    logger = getLogger ( 'Ostap.TestOther' )
+else                      : logger = getLogger ( __name__ )
 # =============================================================================
 logger.info ( 'Test for signal it models from Analysis/Ostap')
 # =============================================================================
@@ -44,18 +45,20 @@ varset2  = ROOT.RooArgSet  ( mass2 )
 
 import Ostap.FitModels as     Models 
 
+events = 5000
 
-logger.debug('Make a test data using Gamma-Disttribution')
-m_gamma0 = Models.GammaDist_pdf('GD0'  , x )
+logger.debug('Make a test data using Gamma-Distribution')
+m_gamma0 = Models.GammaDist_pdf( 'GD0' , x )
 m_gamma0.k    .setVal( 2 )
 m_gamma0.theta.setVal( 1 )
-dataset2 = m_gamma0.pdf.generate ( varset2 , 20000 ) 
+
+dataset2 = m_gamma0.pdf.generate ( varset2 , events ) 
  
 
 # =============================================================================
 logger.info('Test  Gamma-Distribution')
 # =============================================================================
-m_gamma = Models.GammaDist_pdf('GD0'  , x )
+m_gamma = Models.GammaDist_pdf( 'GD1' , x )
 
 with rooSilent() : 
     result,f  = m_gamma.fitTo ( dataset2 )  
@@ -73,7 +76,7 @@ else :
 # =============================================================================
 logger.info('Test  GenGamma-Distribution')
 # =============================================================================
-m_gengamma = Models.GenGammaDist_pdf('GD0'  , x )
+m_gengamma = Models.GenGammaDist_pdf( 'GGD' , x )
 m_gengamma.p    .fix(1) 
 m_gengamma.low  .fix(0) 
 m_gengamma.theta.fix(1) 
@@ -99,9 +102,8 @@ else :
 # =============================================================================
 logger.info('Test  Amoroso-Distribution')
 # =============================================================================
-m_amoroso = Models.Amoroso_pdf('Am'  , x )
-m_amoroso.a.fix(0)
-m_amoroso.theta.setVal(1)
+m_amoroso = Models.Amoroso_pdf( 'Amo' , x  , a = 0 )
+m_amoroso.theta.setVal (1)
 m_amoroso.alpha.setVal (2)
 m_amoroso.beta .setVal (1)
 
@@ -124,12 +126,17 @@ else :
 # =============================================================================
 logger.info('Test  LogGamma-Distribution')
 # =============================================================================
-m_loggamma = Models.LogGamma_pdf('LogG'  , x )
+m_loggamma = Models.LogGamma_pdf( 'LogG' , x  , alpha = 5 , nu = -2 , lam = 5 )
+
+dataset3 = m_loggamma.pdf.generate ( varset2 , events ) 
+
+m_loggamma.alpha.release() 
+m_loggamma.lam  .release()
+m_loggamma.nu   .release() 
 
 with rooSilent() : 
-    result,f  = m_loggamma.fitTo ( dataset2 )  
-    result,f  = m_loggamma.fitTo ( dataset2 )  
-    
+    result,f  = m_loggamma.fitTo ( dataset3 )  
+    result,f  = m_loggamma.fitTo ( dataset3 )   
 
 if 0 != result.status() or 3 != result.covQual() :
     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
@@ -143,11 +150,13 @@ else :
 # =============================================================================
 logger.info('Test  log(Gamma)-Distribution')
 # =============================================================================
-m_lngamma = Models.LogGammaDist_pdf('LnG'  , x )
+m_lngamma = Models.LogGammaDist_pdf( 'logG' , x  )
+
+dataset5 = m_lngamma.pdf.generate( varset2 , events )
 
 with rooSilent() : 
-    result,f  = m_lngamma.fitTo ( dataset2 )  
-    result,f  = m_lngamma.fitTo ( dataset2 )  
+    result,f  = m_lngamma.fitTo ( dataset5 )  
+    result,f  = m_lngamma.fitTo ( dataset5 )  
     
 
 if 0 != result.status() or 3 != result.covQual() :
@@ -157,14 +166,17 @@ else :
     print  "\tLn(Gamma):   k=     %s " % result( m_lngamma. k     .GetName()  )[0]   
     print  "\tLn(Gamma):   theta= %s " % result( m_lngamma. theta .GetName()  )[0]   
 
+
 # =============================================================================
 logger.info('Test  log10(Gamma)-Distribution')
 # =============================================================================
-m_log10gamma = Models.Log10GammaDist_pdf('L10G'  , x )
+m_log10gamma = Models.Log10GammaDist_pdf( 'log10G' , x   )
+
+dataset6 = m_log10gamma.pdf.generate( varset2 , events )
 
 with rooSilent() : 
-    result,f  = m_log10gamma.fitTo ( dataset2 )  
-    result,f  = m_log10gamma.fitTo ( dataset2 )  
+    result,f  = m_log10gamma.fitTo ( dataset6 )  
+    result,f  = m_log10gamma.fitTo ( dataset6 )  
     
 
 if 0 != result.status() or 3 != result.covQual() :
@@ -176,15 +188,37 @@ else :
 
 
 # =============================================================================
+logger.info("Test  Landau-Distribution")
+# =============================================================================
+m_landau = Models.Landau_pdf( 'Landau'  , x , delta = 1.08 )
+#
+m_landau.scale.release () 
+m_landau.scale.setVal  (0.466)
+dataset4 = m_landau.pdf.generate( varset2 , 1000 )
+
+#
+with rooSilent() : 
+    result,f  = m_landau.fitTo ( dataset4 )  
+    m_landau.delta.release () 
+    result,f  = m_landau.fitTo ( dataset4 )  
+
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    print  "\tLandau:      scale= %s " % result( m_landau. scale     .GetName()  )[0]   
+    print  "\tLandau:      delta= %s " % result( m_landau. delta     .GetName()  )[0]   
+
+
+# =============================================================================
 logger.info("Test  Beta'-Distribution")
 # =============================================================================
-m_betaprime = Models.BetaPrime_pdf('BP'  , x )
+m_betaprime = Models.BetaPrime_pdf( 'BetaP', x  , delta = 0 , alpha = 2 )
+
+m_betaprime.beta  .setVal ( 300 )
+m_betaprime.scale .setVal ( 300 )
 
 with rooSilent() : 
-    result,f  = m_betaprime.fitTo ( dataset2 )  
-    result,f  = m_betaprime.fitTo ( dataset2 )  
-    m_betaprime.scale.release()
-    m_betaprime.shift.release()
     result,f  = m_betaprime.fitTo ( dataset2 )  
     result,f  = m_betaprime.fitTo ( dataset2 )  
     
@@ -196,34 +230,41 @@ else :
     print  "\tBeta':       alpha= %s " % result( m_betaprime. alpha     .GetName()  )[0]   
     print  "\tBeta':       beta=  %s " % result( m_betaprime. beta      .GetName()  )[0]   
     print  "\tBeta':       scale= %s " % result( m_betaprime. scale     .GetName()  )[0]   
-    print  "\tBeta':       shift= %s " % result( m_betaprime. shift     .GetName()  )[0]   
+    print  "\tBeta':       delta= %s " % result( m_betaprime. delta     .GetName()  )[0]   
+
 
 
 # =============================================================================
-logger.info("Test  Landau-Distribution")
+logger.info("Test  SinhAsinh-Distribution")
 # =============================================================================
-m_landau = Models.Landau_pdf('Land'  , x )
-m_landau.scale.release()
-m_landau.shift.release()
-m_landau.scale.setVal (0.5)
-m_landau.shift.setVal (1.1)
+m_shash = Models.SinhAsinh_pdf( 'SASH' , x  )
+
+m_shash.mu      .setVal (  0.79 )
+m_shash.sigma   .setVal (  0.88 ) 
+m_shash.epsilon .setVal ( -0.76 ) 
+m_shash.delta   .setVal (  0.92 ) 
 
 with rooSilent() : 
-    result,f  = m_landau.fitTo ( dataset2 )  
-    result,f  = m_landau.fitTo ( dataset2 )  
-
+    result,f  = m_shash.fitTo ( dataset2 )  
+    result,f  = m_shash.fitTo ( dataset2 )  
+    m_shash.delta.release()
+    result,f  = m_shash.fitTo ( dataset2 )  
+    m_shash.epsilon.release()
+    result,f  = m_shash.fitTo ( dataset2 )  
+        
 if 0 != result.status() or 3 != result.covQual() :
     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
     print result
 else :
-    print  "\tLandau:      scale= %s " % result( m_landau. scale     .GetName()  )[0]   
-    print  "\tLandau:      shift= %s " % result( m_landau. shift     .GetName()  )[0]   
-
+    print  "\tSinhAsinh:   mu   = %s " % result( m_shash. mu        .GetName()  )[0]   
+    print  "\tSinhAsinh:   sigma= %s " % result( m_shash. sigma     .GetName()  )[0]   
+    print  "\tSinhAsinh:   eps  = %s " % result( m_shash. epsilon   .GetName()  )[0]   
+    print  "\tSinhAsinh:   delta= %s " % result( m_shash. delta     .GetName()  )[0]   
 
 # =============================================================================
 logger.info("Test  Argus-Distribution")
 # =============================================================================
-m_argus = Models.Argus_pdf( 'Arg'  , x )
+m_argus = Models.Argus_pdf( 'ARGUS' , x )
 m_argus . shape.release()
 m_argus . high .release()
 m_argus . low  .release()
@@ -246,7 +287,7 @@ else :
 # =============================================================================
 logger.info("Test  Adjusted Argus-Distribution")
 # =============================================================================
-m_argusa = Models.Argus_pdf( 'AA'  , x )
+m_argusa = Models.Argus_pdf( 'AA' , x )
 m_argusa . shape.release()
 m_argusa . high .release()
 m_argusa . low  .release()

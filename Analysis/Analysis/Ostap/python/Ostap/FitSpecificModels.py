@@ -47,7 +47,7 @@ else                       : logger = getLogger ( __name__     )
 # =============================================================================
 # Specializations of double-sided Crystal Ball function 
 # =============================================================================
-from   Ostap.FitBasic            import Fit1DBase
+from   Ostap.FitBasic            import PDF
 from   Ostap.FitSignalModels     import CB2_pdf
 # =============================================================================
 ## @class Bd_pdf
@@ -65,31 +65,19 @@ class Bd_pdf(CB2_pdf) :
     
     """
     def __init__ ( self                   ,
-                   mass                   , ## mass is mandatory here! 
+                   mass                   ,   ## mass is mandatory here! 
                    name      = 'Bd'       ,
-                   fixMass   = 5.2791e+00 , ## to be released later 
-                   fixSigma  = 7.2938e-03 , ## to be released later 
-                   fixAlphaL = 1.4499e+00 , ## to be released later 
-                   fixAlphaR = 1.9326e+00 , ## to be released later
-                   fixNL     = 8.7234e+00 , ## to be released later 
-                   fixNR     = 2.0377e+00 , ## to be released later 
-                   mean      = None       ,
-                   sigma     = None       ,
-                   alphaL    = None       ,
-                   alphaR    = None       ,
-                   nL        = None       ,
-                   nR        = None       ) :
+                   mean      = 5.2791e+00 ,   ## to be released later 
+                   sigma     = 7.2938e-03 ,   ## to be released later 
+                   alphaL    = 1.4499e+00 ,   ## to be released later 
+                   alphaR    = 1.9326e+00 ,   ## to be released later
+                   nL        = 8.7234e+00 ,   ## to be released later 
+                   nR        = 2.0377e+00 ) : ## to be released later 
         ## 
         CB2_pdf.__init__ ( self             ,
                            name             ,
                            mass.getMin()    ,
                            mass.getMax()    ,
-                           fixMass          ,
-                           fixSigma         ,
-                           fixAlphaL        ,
-                           fixAlphaR        ,
-                           fixNL            ,
-                           fixNR            ,
                            mass             , 
                            mean             ,
                            sigma            ,
@@ -111,31 +99,19 @@ class Bu_pdf(CB2_pdf) :
     Define PDF for B+: Double sided Crystall Ball 
     """
     def __init__ ( self                   ,
-                   mass                   , ## mass is mandatory here! 
+                   mass                   ,   ## mass is mandatory here! 
                    name      = 'Bu'       ,
-                   fixMass   = 5.2791e+00 , ## to be released later 
-                   fixSigma  = 7.2938e-03 , ## to be released later 
-                   fixAlphaL = 1.4499e+00 , ## to be released later 
-                   fixAlphaR = 1.9326e+00 , ## to be released later
-                   fixNL     = 8.7234e+00 , ## to be released later 
-                   fixNR     = 2.0377e+00 , ## to be released later 
-                   mean      = None       ,
-                   sigma     = None       ,
-                   alphaL    = None       ,
-                   alphaR    = None       ,
-                   nL        = None       ,
-                   nR        = None       ) :
+                   mean      = 5.2791e+00 ,   ## to be released later 
+                   sigma     = 7.2938e-03 ,   ## to be released later 
+                   alphaL    = 1.4499e+00 ,   ## to be released later 
+                   alphaR    = 1.9326e+00 ,   ## to be released later
+                   nL        = 8.7234e+00 ,   ## to be released later 
+                   nR        = 2.0377e+00 ) : ## to be released later 
         ## 
         CB2_pdf.__init__ ( self             ,
                            name             ,
                            mass.getMin()    ,
                            mass.getMax()    ,
-                           fixMass          ,
-                           fixSigma         ,
-                           fixAlphaL        ,
-                           fixAlphaR        ,
-                           fixNL            ,
-                           fixNR            ,
                            mass             , 
                            mean             ,
                            sigma            ,
@@ -156,31 +132,19 @@ class Bs_pdf(CB2_pdf) :
     Define PDF for Bs: Double sided Crystall Ball 
     """
     def __init__ ( self                   ,
-                   mass                   , ## mass is mandatory here! 
+                   mass                   ,    ## mass is mandatory here! 
                    name      = 'Bs'       ,
-                   fixMass   = 5.3661e+00 , ## to be released later 
-                   fixSigma  = 7.2938e-03 , ## to be released later 
-                   fixAlphaL = 1.4499e+00 , ## to be released later 
-                   fixAlphaR = 1.9326e+00 , ## to be released later
-                   fixNL     = 8.7234e+00 , ## to be released later 
-                   fixNR     = 2.0377e+00 , ## to be released later 
-                   mean      = None       ,
-                   sigma     = None       ,
-                   alphaL    = None       ,
-                   alphaR    = None       ,
-                   nL        = None       ,
-                   nR        = None       ) :
+                   mean      = 5.3661e+00 ,    ## to be released later 
+                   sigma     = 7.2938e-03 ,    ## to be released later 
+                   alphaL    = 1.4499e+00 ,    ## to be released later 
+                   alphaR    = 1.9326e+00 ,    ## to be released later
+                   nL        = 8.7234e+00 ,    ## to be released later 
+                   nR        = 2.0377e+00 ) :  ## to be released later 
         ## 
         CB2_pdf.__init__ ( self             ,
                            name             ,
                            mass.getMin()    ,
                            mass.getMax()    ,
-                           fixMass          ,
-                           fixSigma         ,
-                           fixAlphaL        ,
-                           fixAlphaR        ,
-                           fixNL            ,
-                           fixNR            ,
                            mass             , 
                            mean             ,
                            sigma            ,
@@ -201,31 +165,19 @@ class Bc_pdf(CB2_pdf) :
     Define PDF for Bc+ : Double sided Crystall Ball 
     """
     def __init__ ( self                   ,
-                   mass                   , ## mass is mandatory here! 
+                   mass                   ,   ## mass is mandatory here! 
                    name      = 'Bc'       ,
-                   fixMass   = 6.267e+00  , ## to be released later 
-                   fixSigma  = 7.2938e-03 , ## to be released later 
-                   fixAlphaL = 1.4499e+00 , ## to be released later 
-                   fixAlphaR = 1.9326e+00 , ## to be released later
-                   fixNL     = 8.7234e+00 , ## to be released later 
-                   fixNR     = 2.0377e+00 , ## to be released later 
-                   mean      = None       ,
-                   sigma     = None       ,
-                   alphaL    = None       ,
-                   alphaR    = None       ,
-                   nL        = None       ,
-                   nR        = None       ) :
+                   mean      = 6.267e+00  ,   ## to be released later 
+                   sigma     = 7.2938e-03 ,   ## to be released later 
+                   alphaL    = 1.4499e+00 ,   ## to be released later 
+                   alphaR    = 1.9326e+00 ,   ## to be released later
+                   nL        = 8.7234e+00 ,   ## to be released later 
+                   nR        = 2.0377e+00 ) : ## to be released later 
         ## 
         CB2_pdf.__init__ ( self             ,
                            name             ,
                            mass.getMin()    ,
                            mass.getMax()    ,
-                           fixMass          ,
-                           fixSigma         ,
-                           fixAlphaL        ,
-                           fixAlphaR        ,
-                           fixNL            ,
-                           fixNR            ,
                            mass             , 
                            mean             ,
                            sigma            ,
@@ -250,34 +202,24 @@ class D0_pdf(Bukin_pdf) :
     Define PDF for D0
     """
     def __init__ ( self                 ,
-                   name                 ,
-                   fixMass  = None      ,
-                   fixSigma = None      ,
-                   fixXi    = -0.00044  ,
-                   fixRhoL  = -0.170619 ,
-                   fixRhoR  = -0.289993 ,
-                   mass     = None      , 
-                   mean     = None      ,
-                   sigma    = None      ,
-                   xi       = None      ,
-                   rhol     = None      ,
-                   rhor     = None      ) :
+                   mass                 , ## mass is mandatory here! 
+                   name     = 'D0'      ,
+                   mean     =  1.864    ,
+                   sigma    =  None     ,
+                   xi       = -0.00044  ,
+                   rhoL     =  0.170619 ,
+                   rhoR     =  0.289993 ) :
         
-        Bukin_pdf.__init__ ( self     ,
-                             name     ,
-                             1.82     ,
-                             1.92     ,
-                             fixMass  ,
-                             fixSigma ,
-                             fixXi    ,
-                             fixRhoL  , 
-                             fixRhoR  , 
-                             mass     , 
-                             mean     ,
-                             sigma    ,
-                             xi       , 
-                             rhol     ,
-                             rhor     ) 
+        Bukin_pdf.__init__ ( self          ,
+                             name          ,
+                             mass.getMin() ,
+                             mass.getMax() ,
+                             mass          , 
+                             mean          ,
+                             sigma         ,
+                             xi            , 
+                             rhoL          ,
+                             rhoR          ) 
                              
 # =============================================================================
 ## @class Dp_pdf
@@ -290,34 +232,23 @@ class Dp_pdf(Bukin_pdf) :
     Define PDF for D+
     """
     def __init__ ( self                    ,
-                   name                    ,
-                   fixMass  = None         ,
-                   fixSigma = None         ,
-                   fixXi    = -2.44474e-04 ,
-                   fixRhoL  = -1.07796e-01 , 
-                   fixRhoR  = -2.84132e-01 ,
-                   mass     = None         , 
-                   mean     = None         ,
-                   sigma    = None         ,
-                   xi       = None         ,
-                   rhol     = None         ,
-                   rhor     = None         ) :
+                   mass                    , ## mass is mandatory here 
+                   name     = 'Dp'         ,
+                   mean     =  1.869       , 
+                   sigma    =  None        ,
+                   xi       = -2.44474e-04 ,
+                   rhoL     =  1.07796e-01 , 
+                   rhoR     =  2.84132e-01 ) :
         
-        Bukin_pdf.__init__ ( self     ,
-                             name     ,
-                             1.82     ,
-                             1.91     ,
-                             fixMass  ,
-                             fixSigma ,
-                             fixXi    ,
-                             fixRhoL  , 
-                             fixRhoR  , 
-                             mass     , 
-                             mean     ,
-                             sigma    ,
-                             xi       ,                            
-                             rhol     ,
-                             rhor     ) 
+        Bukin_pdf.__init__ ( self          ,
+                             name          ,
+                             mass.getMin() , 
+                             mass.getMax() , 
+                             mean          ,
+                             sigma         ,
+                             xi            ,                            
+                             rhoL          ,
+                             rhoR          ) 
         
 # =============================================================================
 ## @class Ds_pdf
@@ -329,36 +260,26 @@ class Ds_pdf(Bukin_pdf) :
     """
     Define PDF for Ds+
     """
-    def __init__ ( self                    ,
-                   name                    ,
-                   fixMass  = 1.9672       ,
-                   fixSigma = 0.0068       ,
-                   fixXi    = -6.45755e-04 ,
-                   fixRhoL  = -9.25349e-02 ,
-                   fixRhoR  = -1.86051e-01 ,
-                   mass     = None         , 
-                   mean     = None         ,
-                   sigma    = None         ,
-                   xi       = None         ,
-                   rhol     = None         ,
-                   rhor     = None         ) :
+    def __init__ ( self                    , 
+                   mass     = None         , ## mass is mandatory 
+                   name     = 'Ds'         ,
+                   mean     =  1.9672      ,
+                   sigma    =  0.0068      ,
+                   xi       = -6.45755e-04 ,
+                   rhoL     =  9.25349e-02 ,
+                   rhoR     =  1.86051e-01 ) : 
         
-        Bukin_pdf.__init__ ( self     ,
-                             name     ,
-                             1.90     ,
-                             2.04     ,
-                             fixMass  ,
-                             fixSigma ,
-                             fixXi    ,
-                             fixRhoL  , 
-                             fixRhoR  , 
-                             mass     , 
-                             mean     ,
-                             sigma    ,
-                             xi       ,
-                             rhol     ,
-                             rhor     ) 
-       
+        Bukin_pdf.__init__ ( self          ,
+                             name          ,
+                             mass.getMin() , 
+                             mass.getMax() , 
+                             mass          , 
+                             mean          ,
+                             sigma         ,
+                             xi            ,
+                             rhoL          ,
+                             rhoR          ) 
+        
 # =============================================================================
 ## @class Lc_pdf
 #  simple wrapper over Bukin-pdf
@@ -370,34 +291,24 @@ class Lc_pdf(Bukin_pdf) :
     Define PDF for Lc+
     """
     def __init__ ( self                     ,
-                   name                     ,
-                   fixMass  = 2.28590e+00   ,
-                   fixSigma = 5.11874e-03   ,
-                   fixXi    =  1.82493e-03  ,
-                   fixRhoL  = -1.83140e-01  ,
-                   fixRhoR  = -2.40318e-01  , 
-                   mass     = None          , 
-                   mean     = None          ,
-                   sigma    = None          ,
-                   xi       = None          ,
-                   rhol     = None          ,
-                   rhor     = None          ) :
+                   mass                     , 
+                   name     = 'Lc'          ,                   
+                   mean     =  2.28590e+00  ,
+                   sigma    =  5.11874e-03  ,
+                   xi       =  1.82493e-03  ,
+                   rhoL     =  1.83140e-01  ,
+                   rhoR     =  2.40318e-01  ) :  
         
         Bukin_pdf.__init__ ( self     ,
                              name     ,
-                             2.24     , 
-                             2.33     ,
-                             fixMass  ,
-                             fixSigma ,
-                             fixXi    ,
-                             fixRhoL  , 
-                             fixRhoR  , 
+                             mass.getMin() , 
+                             mass.getMax() , 
                              mass     , 
                              mean     ,
                              sigma    ,
                              xi       ,
-                             rhol     ,
-                             rhor     ) 
+                             rhoL     ,
+                             rhoR     ) 
         
 # =============================================================================
 ## @class Manca_pdf 
@@ -406,7 +317,7 @@ class Lc_pdf(Bukin_pdf) :
 #  bins in pt and rapidity  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-08-02
-class Manca_pdf (Fit1DBase) :
+class Manca_pdf (PDF) :
     """
     The final full PDF for Y->mu+mu- fit 
     """
@@ -414,7 +325,10 @@ class Manca_pdf (Fit1DBase) :
                    mass          ,
                    name   = 'Y'  ,
                    power  = 0    ) :
-        
+
+        #
+        PDF.__init__ ( self , name )
+        #
         if     mass.getMin() <  9.460 and   9.60  <= mass.getMax()  : gev_ =    1
         elif   mass.getMin() < 10.    and  10.500 <= mass.getMax()  : gev_ =    1
         elif   mass.getMin() < 10.0   and  10.200 <= mass.getMax()  : gev_ =    1
@@ -433,7 +347,7 @@ class Manca_pdf (Fit1DBase) :
         self.mass = mass
 
         # =====================================================================
-        from   Ostap.FitBasic            import makeVar, Fit1DBase  
+        from   Ostap.FitBasic            import makeVar
         from   Ostap.FitBkgModels        import Bkg_pdf
         from   Ostap.FitSignalModels     import Needham_pdf
         # =====================================================================
@@ -604,12 +518,13 @@ class Manca_pdf (Fit1DBase) :
         self.s2_name = self.n2s.GetName ()
         self.s3_name = self.n3s.GetName ()
 
-        #
-        ## finally initialize the base
         # 
-        Fit1DBase.__init__ ( self ,
-                             ROOT.RooArgSet ( self.y1s , self.y2s , self.y3s) ,
-                             ROOT.RooArgSet ( self.background.pdf           ) )
+        ## finally declare components 
+        #
+        self.signals    () . add ( self.y1s )
+        self.signals    () . add ( self.y2s )
+        self.signals    () . add ( self.y3s )
+        self.backgrounds() . add ( self.background.pdf ) 
         
     def alpha_1S ( self ) : return self.Y1S.pdf.alpha ()
     def alpha_2S ( self ) : return self.Y2S.pdf.alpha ()
@@ -622,7 +537,7 @@ class Manca_pdf (Fit1DBase) :
 #  This is an effective function for fit in global bin, without pt/y-binning 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-06-24
-class Manca2_pdf (Fit1DBase) :
+class Manca2_pdf (PDF) :
     """
     The final full PDF for Y->mu+mu- fit
     
@@ -633,7 +548,10 @@ class Manca2_pdf (Fit1DBase) :
                    mass          ,
                    name   = 'Y'  ,
                    power  = 0    ) :
-        
+
+        #
+        PDF.__init__ ( self , name )
+        # 
         if     mass.getMin() <  9.460 and   9.60  <= mass.getMax()  : gev_ =    1
         elif   mass.getMin() < 10.    and  10.500 <= mass.getMax()  : gev_ =    1
         elif   mass.getMin() < 10.0   and  10.200 <= mass.getMax()  : gev_ =    1
@@ -652,7 +570,7 @@ class Manca2_pdf (Fit1DBase) :
         self.mass = mass
 
         # =====================================================================
-        from   Ostap.FitBasic            import makeVar, Fit1DBase  
+        from   Ostap.FitBasic            import makeVar
         from   Ostap.FitBkgModels        import Bkg_pdf
         from   Ostap.FitSignalModels     import CB2_pdf
                 
@@ -827,13 +745,13 @@ class Manca2_pdf (Fit1DBase) :
         self.s2_name = self.n2s.GetName ()
         self.s3_name = self.n3s.GetName ()
 
-        #
-        ## finally initialize the base
         # 
-        Fit1DBase.__init__ ( self ,
-                             ROOT.RooArgSet ( self.y1s , self.y2s , self.y3s) ,
-                             ROOT.RooArgSet ( self.background.pdf           ) )
-        
+        ## finally declare components 
+        #
+        self.signals    () . add ( self.y1s )
+        self.signals    () . add ( self.y2s )
+        self.signals    () . add ( self.y3s )
+        self.backgrounds() . add ( self.background.pdf ) 
 
 
 

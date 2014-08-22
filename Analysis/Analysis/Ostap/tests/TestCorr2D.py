@@ -77,10 +77,10 @@ o3 = Corr2D ( dataset , o2.nvar1 , o2.nvar2 )
 logger.info( 'Check the remaining correlations once more ')
 o4 = Corr2D ( dataset , o3.nvar1 , o3.nvar2 ) 
 
-if not ROOT.gROOT.IsBatch() :
+## if not ROOT.gROOT.IsBatch() :
     
-    dataset.draw ( o2.qvar1 )
-    dataset.draw ( o2.qvar1 + ' : ' + o2.qvar2 , '' , 'box' )
+##     dataset.draw ( o2.qvar1 )
+##     dataset.draw ( o2.qvar1 + ' : ' + o2.qvar2 , '' , 'box' )
 
 
 tree  = dataset.store().tree()

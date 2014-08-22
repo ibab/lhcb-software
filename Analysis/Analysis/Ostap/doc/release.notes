@@ -8,9 +8,19 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-22 - Vanya Belyaev
+ - rename useful base classes 
+    Mass_pdf -> MASS 
+    Fit1DBse -> PDF  
+
+ - modify the fit models
+    - eliminate the mandatory mn/mx attributes if the variable is specified 
+ - add few new models
+ - switch from RooBukinPdf to cpp.Analysis.Models.Bukin
+
 ! 2014-08-20 - Vanya Belyaev
  - fix missing import in MinuitDeco 
-   (thanks to Alexander Artamonov for pointint to the problem)
+   (thanks to Alexander Artamonov for pointing  to the problem)
 
 ! 2014-08-08 - Vanya Belyaev
  -  minor improvements in 1D-fits 

@@ -32,6 +32,7 @@ Empricial PDFs to describe narrow peaks :
   - double-side Crystal Ball
   - Needham function for J/psi, psi' and Y peaks
   - Apolonios
+  - Apolonios2 (bifurcated Apolonios)
   - bifurcated Gauissian
   - generalized normal v1 
   - generalized normal v2
@@ -73,6 +74,7 @@ __all__ = (
     'CB2_pdf'                , ## double-sided Crystal Ball function    
     'Needham_pdf'            , ## Needham function for J/psi or Y (CB function with alpha=alpha(sigma))
     'Apolonios_pdf'          , ## Apolonios function         
+    'Apolonios2_pdf'         , ## Apolonios function         
     'BifurcatedGauss_pdf'    , ## bifurcated Gauss
     'GenGaussV1_pdf'         , ## generalized normal v1  
     'GenGaussV2_pdf'         , ## generalized normal v2 
@@ -105,19 +107,37 @@ __all__ = (
     'LASS_pdf'             , ## kappa-pole
     'Bugg_pdf'             , ## sigma-pole
     #
+    ## "Other" distributions 
+    #
+    'GammaDist_pdf'      , ## Gamma-distributuon in shape/scale parameterization
+    'GenGammaDist_pdf'   , ## Generalized Gamma-distribution
+    'Amoroso_pdf'        , ## another view of generalized Gamma distribution
+    'LogGammaDist_pdf'   , ## Gamma-distributuon in shape/scale parameterization
+    'Log10GammaDist_pdf' , ## Gamma-distributuon in shape/scale parameterization
+    'LogGamma_pdf'       , ## 
+    'BetaPrime_pdf'      , ## Beta-prime distribution 
+    'Landau_pdf'         , ## Landau distribution 
+    'Argus_pdf'          , ## Landau distribution 
+    'SinhAsinh_pdf'      , ## "Sinh-asinh" distribution
+    #
     ## 1D-background models
     # 
     'Bkg_pdf'              , ## Background: exponential modified by positive polynom
     'PSPol_pdf'            , ## phase space modulated by positive polynomial
+    'PS2_pdf'              , ## 2-body phase space (no parameters)
+    'PSLeft_pdf'           , ## Low  edge of N-body phase space 
+    'PSRight_pdf'          , ## High edge of L-body phase space from N-body decays  
+    'PSNL_pdf'             , ## L-body phase space from N-body decays  
+    'PS23L_pdf'            , ## 2-body phase space from 3-body decays with orbital momenta
     #
-    ## 2D non-factorazeable models
+    ## 2D non-factorazable models
     #
     'PolyPos2D_pdf'   , ## A positive polynomial in 2D  
     'PSPol2D_pdf'     , ## Product of phase spaces, modulated with 2D polynomial
     'ExpoPSPol2D_pdf' , ## Exponential times  phase space times positive 2D-polynomial
     'ExpoPol2D_pdf'   , ## Product of exponents times positive 2D-polynomial
     #
-    ## 2D non-factorazeable symmetric models
+    ## 2D non-factorazable symmetric models
     #
     'PolyPos2Dsym_pdf', ## A positive symmetric polynomial in 2D
     'PSPol2Dsym_pdf'  , ## Symmetric product of phase spaces, modulated with 2D polynomial
