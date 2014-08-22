@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-08-22 - Gloria Corti
+ - Increase major version for dependency to LCG68
+
 !========================== Gauss v46r8 2014-07-28 ===========================
 ! 2014-07-28 - Gloria Corti
  - Change major version of GenXiccData to be used (to v3r*)
