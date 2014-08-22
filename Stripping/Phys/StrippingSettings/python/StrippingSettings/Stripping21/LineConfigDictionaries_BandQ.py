@@ -381,7 +381,7 @@ MicroDSTDiMuon = {
         'Psi2MuMuDetached_PT'                              : -1000.   ,   # MeV, no cut now
         'Psi2MuMuDetached_LTCuts'                          :   " & ((BPVDLS>3) | (BPVDLS<-3))"    
         }, 
-    'STREAMS' : [ 'Leptonic' ] ,
+    'STREAMS' : { 'Leptonic' : 'StrippingMicroDSTDiMuonDiMuonIncLine' }  ,
     'WGs'    : [ 'BandQ' ]
     }
 

@@ -4,6 +4,14 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-22 - Lucio Anderlini (BandQ)
+ - Switch off all MicroDST DiMuonLine but DiMuonInc including now all of others
+
+! 2014-06-06 - Lucio Anderlini (BandQ)
+ - Moved Jibo's detached Bc line to MicroDST  (-> Leptonic)
+ - Added a BDT line for Bc detached events (-> DiMuon)
+ - NOTE: dbase NOT updated
+
 !========================= StrippingSettings v2r31 2014-06-16 =========================
 
 ! 2014-06-06 - Lucio Anderlini (BandQ)
