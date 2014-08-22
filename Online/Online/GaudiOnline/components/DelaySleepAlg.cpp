@@ -1,7 +1,6 @@
 // $Id: DelaySleepAlg.cpp,v 1.2 2006-11-22 16:33:26 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/Algorithm.h" 
-#include "GaudiKernel/IDataProviderSvc.h" 
 #include "RTL/rtl.h"
 
 /*
