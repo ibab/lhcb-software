@@ -689,7 +689,7 @@ namespace
       return ( my_exp  ( beta * b ) - my_exp ( beta * a ) ) / beta ;
     }
     // it just the standard  error function ? 
-    else if  ( s_equal ( alpha , 1 ) &&  b22 < 0.10 * GSL_LOG_DBL_MAX )
+    else if  ( s_equal ( alpha , 1 ) &&  ( b22 < 0.10 * GSL_LOG_DBL_MAX ) ) 
     {
       //
       const double factor1 = my_exp ( b22 ) ;
