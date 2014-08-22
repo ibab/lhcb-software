@@ -22,8 +22,11 @@ class ParticleFlowConf:
              "VerticesLocation": "Rec/Vertex/Primary" ,
              ### Tracks selection
              # For track selector
+             "LongProbNNghostCut": 0.5 ,
+             "DownProbNNghostCut": 0.5 ,
+             "UpProbNNghostCut": 0.5 ,
              'TrackSelector':{'Downstream':      {'Chi2Max': 1.5 , 'PtMin': 0. , 'MaxGhostProb': 10.},
-                              'Long':{'Chi2Max': 5.  , 'PtMin': 0. , 'MaxGhostProb': 0.5},
+                              'Long':{'Chi2Max': 5.  , 'PtMin': 0. , 'MaxGhostProb': 10.},
                               'Upstream':  {'Chi2Max': 1.5 , 'PtMin': 100.}},
              'TrackVelo':{'Chi2Max': 10.},
              #"UseTTHits" : False ,

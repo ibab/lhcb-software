@@ -217,6 +217,10 @@ private:
   bool m_doNotUseInfMominNR ;
   bool m_onlyBest  ;
 
+
+  double m_LongProbNNghostCut;
+  double m_DownProbNNghostCut;
+  double m_UpProbNNghostCut;
   //-----------------------------------------
 
 private:
