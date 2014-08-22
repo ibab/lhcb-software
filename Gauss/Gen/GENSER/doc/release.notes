@@ -4,12 +4,24 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2014-08-22 - Gloria Corti
+ - Set latest versions of all generators as available in both LCG68 and LCG69.
+   Those that change with respect to GENSER v14r0 are:
+    . lhapdf    "5.8.8"  --> "5.9.1"
+    . herwigpp  "2.6.1b" --> "2.7.0a"
+    . thepeg    "1.8.1"  --> "1.9.0a"
+    . tauolapp  "1.1.1a" --> "1.1.4"
+    . pythia8   "175"    --> "186"
+    . pythia6   "427.2"  --> "428.2"
+    . rivet     "1.8.3"  --> "1.9.0"
+   Note that photos++ chnaged in v14r0, so it is also different from Sim08
+
 !========================= GENSER v14r0p1 2014-08-21 =========================
-! 2013-08-21 - Gloria Corti
+! 2014-08-21 - Gloria Corti
  - Require dummy release for building distribution with LCG 68
 
 !========================== GENSER v14r0 2014-07-28 ==========================
-! 2013-07-14 - Gloria Corti
+! 2014-07-14 - Gloria Corti
  - Change version of photos++ to latest 3.56 version. 
    Note that 3.54 (3.52) stops (may give undefined results) on gcc 4.8. 
    See details at https://its.cern.ch/jira/browse/LHCBGAUSS-280
