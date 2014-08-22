@@ -392,6 +392,11 @@ def makeDplus2VMuNu(name,
     """
     Create and return a D+ -> VMuNu selection object.
     """
+    
+    hadrons = MergedSelection("MergedVectorHadrons"+name,
+                                RequiredSelections = [KstarSel,RhoSel])
+
+
     _combinationCuts = "(AM < %(D_MassMax)s *MeV) "\
     "& ((APT1+APT2) > %(PAIR_SumPTMin)s *MeV) "\
     "& (AMAXDOCA('') < %(D_DOCA)s *mm )" % locals()
@@ -408,7 +413,7 @@ def makeDplus2VMuNu(name,
 
     return Selection (name,
                       Algorithm = _Dplus2VMuNu,
-                      RequiredSelections = [muonFromBSel, KstarSel, RhoSel])
+                      RequiredSelections = [muonFromBSel,hadrons])
 
 def makeBtoDplusVMuNu(name,
                    Dplus2VMuNuSel,
@@ -447,6 +452,10 @@ def makeD02HMuNu(name,
 		   D_MCORR_MAX,
 		   D_BPVVDZ,
 		   D_VtxChi2) :
+
+    hadrons = MergedSelection("MergedScalarHadrons"+name,
+                                RequiredSelections = [pionSel,kaonSel])
+
     """
     Create and return a D0 -> HMuNu selection object.
     """
@@ -468,7 +477,7 @@ def makeD02HMuNu(name,
 
     return Selection (name,
                       Algorithm = _D02HMuNu,
-                      RequiredSelections = [muonSel, pionSel, kaonSel])
+                      RequiredSelections = [muonSel,hadrons])
 
 def makeDstarD02HMuNu(name,
                    D02HMuNuSel,
