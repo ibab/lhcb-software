@@ -519,8 +519,9 @@ namespace Gaudi
       double m0      () const { return peak()    ; }
       double sigmaL  () const { return m_sigmaL  ; }
       double sigmaR  () const { return m_sigmaR  ; }
-      double sigma   () const ;
-      double asym    () const ;
+      // ======================================================================
+      double sigma   () const { return 0.5  * ( m_sigmaL + m_sigmaR )            ; }         
+      double asym    () const { return 0.5  * ( m_sigmaL - m_sigmaR ) / sigma () ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -823,8 +824,11 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class Bukin
-     *  ``Bukin-function''
+     *  ``Bukin-function'', aka "Modified Novosibirsk function"
      *  for description of asymmetric peaks with the exponential tails
+     *  
+     *  @see http://arxiv.org/abs/1107.5751
+     *  @see http://dx.doi.org/10.1007/JHEP06(2012)141
      *  @date 2011-04-19
      */
     class GAUDI_API Bukin : public std::unary_function<double,double>
@@ -905,14 +909,14 @@ namespace Gaudi
     private: // internals
       // ======================================================================
       /// A/2 -region : left edge
-      double m_x1        ; // A/2 -region : left edge
+      double m_x1        ;   // A/2 -region : left edge
       /// A/2 -region : right  edge
-      double m_x2        ; // A/2 -region : right  edge
+      double m_x2        ;   // A/2 -region : right  edge
       //
-      /// the first magic constant for central region
-      double m_A         ; // the first  magic constant for central region
-      /// the second magic constant for central region
-      double m_B2        ; // the second magic constant for central region
+      /// the first magic constant for the central region
+      double m_A         ;   // the first  magic constant for the central region
+      /// the second magic constant for the central region
+      double m_B2        ;   // the second magic constant for the central region
       //
       /// tails parameters (times  Bukin's  constants)
       double m_L         ;   // left  tail
@@ -1338,13 +1342,14 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class Apolonios 
-     *  A modified gaussian with power-law tail on rigth ride and exponential
-     *  tail on low-side 
+     *  A modified gaussian with power-law tail on right side 
+     *  and an exponential tail on low-side 
+     * 
      *  The function is proposed by Diego Martinez Santos 
-     *  https://indico.cern.ch/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+     *  @see https://indico.cern.ch/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+     *  @see http://arxiv.org/abs/1312.5000
      *  Here a bit modified version is used with redefined parameter <code>n</code>
-     *  to be coherent with local definitions of Crystal Ball
-     *  
+     *  to be coherent with local definitions of Crystal Ball  
      * 
      *  \f[ f(x;\alpha,n,x_0,\sigma) = \left\{
      *  \begin{array}{ll}
@@ -1371,7 +1376,7 @@ namespace Gaudi
        *  @param sigma  sigma    parameter
        *  @param alpha  alpha    parameter
        *  @param n      n        parameter (equal for N-1 for "standard" definition)
-       *  @param b      n        parameter
+       *  @param b      b        parameter
        */
       Apolonios 
       ( const double m0    = 0 ,
@@ -1432,6 +1437,100 @@ namespace Gaudi
       double m_b        ;  // parameter n
       /// helper constants 
       double m_A        ;  // exp(-0.5*alpha^2) 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// workspace
+      Gaudi::Math::WorkSpace m_workspace ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Apolonios2 
+     *  "Bifurcated Apolonios"
+     *  A modified gaussian with asymmetric exponential tails on both sides 
+     * 
+     *  A convinient reparameterization is applied to keep reduce 
+     *  the correlations between "sigma"s and "beta"
+     * 
+     *  \f[ f(x;\mu,\sigma_l,\sigma_r,\beta) \propto 
+     *  \mathrm{e}^{\left|\beta\right|( \left|\beta\right| - \sqrt{ \beta^2+\left(\delta x\right)^2}} 
+     *  \f] 
+     *     
+     * where 
+     *
+     * \f[ \delta x  = \left\{ \begin{array}{ccc}
+     *     \frac{x-\mu}{\sigma_l} & \text{for} & x \le \mu \\
+     *     \frac{x-\mu}{\sigma_r} & \text{for} & x \gt \mu \\
+     *     \end{array}
+     *     \right.\f]
+     * 
+     *  Large betas corresponds to gaussian 
+     * 
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date  2013-12-01
+     */
+    class GAUDI_API Apolonios2 : public std::unary_function<double,double>
+    {
+    public:
+      // ======================================================================
+      /** constructor from all parameters
+       *  @param m0      m0        parameter
+       *  @param sigmaL  sigmaL    parameter
+       *  @param sigmaR  sigmaR    parameter
+       *  @param beta    beta      parameter
+       */
+      Apolonios2
+        ( const double m0      = 0   ,
+          const double sigmaL  = 1   ,
+          const double alphaR  = 1   ,
+          const double beta    = 100 ) ;  // large beta correponds to gaussian 
+      /// destructor
+      ~Apolonios2 () ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// evaluate Apolonios2's function
+      double pdf        ( const double x ) const ;
+      /// evaluate Apolonios2's function
+      double operator() ( const double x ) const { return pdf ( x ) ; }
+      // ======================================================================
+    public: // trivial accessors
+      // ======================================================================
+      double m0     () const { return m_m0     ; }
+      double peak   () const { return   m0 ()  ; }
+      double sigmaL () const { return m_sigmaL ; }
+      double sigmaR () const { return m_sigmaR ; }
+      double beta   () const { return m_beta   ; }
+      // ======================================================================      
+      double sigma  () const { return 0.5 * ( m_sigmaL + m_sigmaR )           ; }
+      double asym   () const { return 0.5 * ( m_sigmaL - m_sigmaR ) / sigma() ; }
+      double b2     () const { return m_beta * m_beta ; }
+      // ======================================================================
+    public: // trivial accessors
+      // ======================================================================
+      bool setM0     ( const double value ) ;
+      bool setPeak   ( const double value ) { return setM0 ( value ) ; }
+      bool setMass   ( const double value ) { return setPeak ( value ) ; }
+      bool setSigmaL ( const double value ) ;
+      bool setSigmaR ( const double value ) ;
+      bool setBeta   ( const double value ) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the integral between low and high
+      double integral ( const double low ,
+                        const double high ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the peak position
+      double m_m0       ;  // the peak position
+      /// the peak resolution
+      double m_sigmaL  ;  // the peak resolution
+      /// the peak resolution
+      double m_sigmaR  ;  // the peak resolution
+      /// parameter beta 
+      double m_beta    ;  // parameter beta 
       // ======================================================================
     private:
       // ======================================================================

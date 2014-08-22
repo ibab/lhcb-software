@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-08-22 - Vanya Belyaev
+ - few minor fixed in Bukin function
+
 ! 2014-08-02 - Vanya Belyaev
  - add SinhAsinh function
 

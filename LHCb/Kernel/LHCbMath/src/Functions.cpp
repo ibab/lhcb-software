@@ -385,6 +385,13 @@ namespace
    */
   const double s_HALFSQRTPI = 0.5 * std::sqrt(     M_PI ) ;
   // ==========================================================================
+  /** @var s_HALFSQRTPI_log
+   *  helper constant \f$ \log \frac{\sqrt{\pi}}{2}\f$
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-04-19
+   */
+  const double s_HALFSQRTPI_log  = std::log ( 0.5 * std::sqrt(     M_PI )  ) ;
+  // ==========================================================================
   // Bukin & Co
   // ==========================================================================
   /** @var s_Bukin
@@ -524,8 +531,8 @@ namespace
   double error_func ( const double x )
   {
     //
-    if      ( -30 > x ) { return -1 ; }
-    else if ( +30 < x ) { return  1 ; }
+    // if      ( -30 > x ) { return -1 ; }
+    // else if ( +30 < x ) { return  1 ; }
     //
     Sentry sentry ;
     //
@@ -549,6 +556,8 @@ namespace
       //
       if      ( -15 > x ) { return -1 ; }
       else if (  15 < x ) { return  1 ; }
+      //
+      return error_func ( x ) ;
     }
     //
     return result.val ;                    // RETURN
@@ -664,6 +673,12 @@ namespace
                                                                b     ,
                                                                a     ) ; }
     //
+    const double b22     = 0.25 * beta * beta ;
+    const double root    = 0.5 * beta ;
+    const double a_prime = ( a - root ) ;
+    const double b_prime = ( b - root ) ;
+    //
+    //
     // alpha ?
     //
     if       ( s_equal ( alpha , 0 ) )      // the most trivial trivial case
@@ -673,24 +688,28 @@ namespace
       /// get the simple exponential integral
       return ( my_exp  ( beta * b ) - my_exp ( beta * a ) ) / beta ;
     }
-    // it just the standard  error function
-    else if ( alpha > 0 )        // it just the standard  error function
+    // it just the standard  error function ? 
+    else if  ( s_equal ( alpha , 1 ) &&  b22 < 0.10 * GSL_LOG_DBL_MAX )
     {
       //
-      const double alpha_sqrt = std::sqrt ( alpha ) ;
-      //
-      const double factor1 = my_exp ( 0.25 * beta * beta / alpha ) / alpha_sqrt ;
+      const double factor1 = my_exp ( b22 ) ;
       const double factor  = factor1 * s_HALFSQRTPI ;
-      //
-      const double root    = 0.5 * beta / alpha ;
-      const double a_prime = alpha_sqrt * ( a - root ) ;
-      const double b_prime = alpha_sqrt * ( b - root ) ;
       //
       return factor * ( error_func ( b_prime ) -
                         error_func ( a_prime ) ) ;
     }
+    // it just the standard  error function
+    else if ( alpha > 0 && !s_equal ( alpha , 1 ) ) 
+    {
+      const double alpha_sqrt = std::sqrt ( alpha ) ;
+      return gaussian_int ( 1                 , 
+                            beta / alpha_sqrt , 
+                            alpha_sqrt * a    ,
+                            alpha_sqrt * b    ) / alpha_sqrt ;
+    }
     //
-    // use GSL to evaluate the integral
+    // use GSL to evaluate the integral numerically 
+    //
     Sentry sentry ;
     //
     gsl_function F            ;
@@ -1075,6 +1094,18 @@ namespace
     return (*f)(x) ;
   }
   // ==========================================================================
+  /** helper function for integration of Apolonios2 shape 
+   *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+   *  @date 2013-12-1
+   */
+  double apolonios2_GSL ( double x , void* params )
+  {
+    //
+    const Gaudi::Math::Apolonios2* f = (Gaudi::Math::Apolonios2*) params ;
+    //
+    return (*f)(x) ;
+  }
+  // ==========================================================================
 } //                                                 end of anonymous namespace
 // ============================================================================
 namespace
@@ -1245,13 +1276,7 @@ bool Gaudi::Math::BifurcatedGauss::setPeak( const double value )
   //
   return true ;
 }
-// ============================================================================
-double Gaudi::Math::BifurcatedGauss::sigma   () const
-{ return 0.5  * ( sigmaL () + sigmaR () )            ; }
-// ============================================================================
-double Gaudi::Math::BifurcatedGauss::asym    () const
-{ return 0.5  * ( sigmaL () - sigmaR () ) / sigma () ; }
- // ============================================================================
+
 
 
 // ============================================================================
@@ -1855,16 +1880,16 @@ double Gaudi::Math::Bukin::pdf ( const double x ) const
   //
   //  left tail :
   //
-  if       ( m_x1 >= x )
+  if       ( m_x1 > x )
   {
     const double dx  = x - m_x1               ;
     const double dx2 = dx / ( m_peak - m_x1 ) ;
-    return 0.5 * my_exp (   m_L * dx / m_sigma  - m_rho_L * dx2 * dx2 ) ;
+    return  0.5 * my_exp (   m_L * dx / m_sigma  - m_rho_L * dx2 * dx2 ) ;
   }
   //
   // right tail :
   //
-  else if ( m_x2 <=  x )
+  else if ( m_x2 <  x )
   {
     const double dx  = x - m_x2               ;
     const double dx2 = dx / ( m_peak - m_x2 ) ;
@@ -1898,7 +1923,8 @@ double Gaudi::Math::Bukin::integral
       integral (  low , m_x1 ) +
       integral ( m_x1 , high ) ;
   }
-  else if ( low < m_x2 && m_x2 < high )
+  //
+  if ( low < m_x2 && m_x2 < high )
   {
     return
       integral (  low , m_x2 ) +
@@ -1907,34 +1933,34 @@ double Gaudi::Math::Bukin::integral
   //
   // split, if the interval is too large
   //
-  const double width = std::max ( std::abs  ( m_sigma )  , 0.0 ) ;
-  if ( 0 < width &&  6 * width < high - low  )
+  const double width = std::abs ( m_x2 - m_x1 ) ;
+  if ( 0 < width &&  10 * width < high - low  )
   {
     return
       integral ( low                   , 0.5 *  ( high + low ) ) +
       integral ( 0.5 *  ( high + low ) ,          high         ) ;
   }
   //
-  // left tail:
-  if      ( high <= m_x1 )  // left tail
-  {
-    const double d =  m_peak - m_x1 ;
-    //
-    return 0.5 * gaussian_int ( m_rho_L / d / d ,
-                                m_L  / m_sigma  ,
-                                low  - m_x1     ,
-                                high - m_x1     ) ;
-  }
-  // right tail:
-  else if ( low >= m_x2 )  // right tail
-  {
-    const double d = m_peak - m_x2 ;
-    //
-    return 0.5 * gaussian_int ( m_rho_R / d / d   ,
-                                - m_R  / m_sigma  ,
-                                low  - m_x2       ,
-                                high - m_x2       ) ;
-  }
+  // // left tail:
+  // if      ( high <= m_x1 )  // left tail
+  // {
+  //   const double d =  m_peak - m_x1 ;
+  //   //
+  //   return 0.5 * gaussian_int ( m_rho_L / d / d    ,
+  //                               m_L     / m_sigma  ,
+  //                               low  - m_x1        ,
+  //                               high - m_x1        ) ;
+  // }
+  // // right tail:
+  // else if ( low >= m_x2 )  // right tail
+  // {
+  //   const double d = m_peak - m_x2 ;
+  //   //
+  //   return 0.5 * gaussian_int ( m_rho_R   / d / d   ,
+  //                               -1 * m_R  / m_sigma ,
+  //                               low  - m_x2         ,
+  //                               high - m_x2         ) ;
+  // }
   //
   // use GSL to evaluate the integral
   //
@@ -1947,11 +1973,15 @@ double Gaudi::Math::Bukin::integral
   double result   = 1.0 ;
   double error    = 1.0 ;
   //
+  const bool in_tail = 
+    high < m_x1 - 6 * std::abs ( m_x2 - m_x1 ) || 
+    low  > m_x2 + 6 * std::abs ( m_x2 - m_x1 ) ;
+  //
   const int ierror = gsl_integration_qag
     ( &F                ,            // the function
       low   , high      ,            // low & high edges
-      s_PRECISION       ,            // absolute precision
-      s_PRECISION       ,            // relative precision
+      in_tail ? s_PRECISION_TAIL : s_PRECISION , // absolute precision
+      in_tail ? s_PRECISION_TAIL : s_PRECISION , // relative precision
       s_SIZE            ,            // size of workspace
       GSL_INTEG_GAUSS31 ,            // integration rule
       workspace ( m_workspace ) ,    // workspace
@@ -1966,6 +1996,7 @@ double Gaudi::Math::Bukin::integral
   }
   //
   return result ;
+  //
 }
 // =========================================================================
 // get the integral
@@ -2774,22 +2805,9 @@ double Gaudi::Math::CrystalBallDoubleSided::integral () const
   const double right = ( 0 < alpha_R() ) ?  ( alpha_R () + s_TRUNC ) : + s_TRUNC ;
   //
   return integral ( m0 () - left  * sigma () , m0 () + right * sigma () ) ;
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// ============================================================================
 
 // ============================================================================
 // apolonios 
@@ -2973,7 +2991,7 @@ double Gaudi::Math::Apolonios::integral
   //
   // tail
   //
-  const double A = np1 ()  ;
+  const double A = np1 () ;
   const double B = np1 () ;
   const double C = - std::abs ( alpha () * b () ) / a1 ()  ;
   //
@@ -2982,6 +3000,155 @@ double Gaudi::Math::Apolonios::integral
   //
   return result ;
 }
+
+
+// ============================================================================
+// apolonios2 
+// ============================================================================
+/*  constructor from all parameters
+ *  @param m0 m0 parameter
+ *  @param alpha alpha parameter
+ *  @param n     n-parameter
+ *  @param b     b-parameter 
+ */
+// ============================================================================
+Gaudi::Math::Apolonios2::Apolonios2
+( const double m0     ,
+  const double sigmaL ,
+  const double sigmaR ,
+  const double beta   )
+  : std::unary_function<double,double> ()
+  , m_m0         (  0 )
+  , m_sigmaL     (  1 )
+  , m_sigmaR     (  1 )
+  , m_beta       (  1 )
+  , m_workspace () 
+{
+  //
+  setM0     ( m0     ) ;
+  setSigmaL ( sigmaL ) ;
+  setSigmaR ( sigmaR ) ;
+  setBeta   ( beta   ) ;
+  //
+}
+// ============================================================================
+// destructor
+// ============================================================================
+Gaudi::Math::Apolonios2::~Apolonios2(){}
+// ============================================================================
+bool  Gaudi::Math::Apolonios2::setM0 ( const double value )
+{
+  //
+  if ( s_equal ( value , m_m0 ) ) { return false ; }
+  //
+  m_m0       = value ;
+  //
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Apolonios2::setSigmaL ( const double value )
+{
+  const double value_ = std::abs ( value );
+  if ( s_equal ( value_ , m_sigmaL ) ) { return false ; }
+  //
+  m_sigmaL    = value_ ;
+  //
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Apolonios2::setSigmaR ( const double value )
+{
+  const double value_ = std::abs ( value );
+  if ( s_equal ( value_ , m_sigmaR ) ) { return false ; }
+  //
+  m_sigmaR    = value_ ;
+  //
+  return true ;
+}
+// ============================================================================
+bool Gaudi::Math::Apolonios2::setBeta ( const double value )
+{
+  //
+  const double value_ = std::abs ( value );
+  if ( s_equal ( value_ , m_beta ) ) { return false ; }
+  //
+  m_beta    = value_  ;
+  //
+  if ( s_equal ( m_beta , 0 ) ) { m_beta = 0 ; }
+  if ( s_equal ( m_beta , 1 ) ) { m_beta = 1 ; }
+  //
+  return true ;
+}
+// ============================================================================
+//  evaluate Apolonios' function
+// ============================================================================
+double Gaudi::Math::Apolonios2::pdf ( const double x ) const
+{
+  //
+  const double dx = 
+    ( x < m_m0 ) ?
+    ( x - m_m0 ) / m_sigmaL :
+    ( x - m_m0 ) / m_sigmaR ;
+  //
+  // the peak
+  //
+  return my_exp ( beta() * ( beta()  - std::sqrt ( b2 () + dx * dx ) ) ) * s_SQRT2PIi / sigma()  ;  
+}
+// ============================================================================
+// get the integral between low and high
+// ============================================================================
+double Gaudi::Math::Apolonios2::integral
+( const double low ,
+  const double high ) const
+{
+  //
+  if      ( s_equal ( low , high ) ) { return                 0.0 ; } // RETURN
+  else if (           low > high   ) { return - integral ( high ,
+                                                           low  ) ; } // RETURN
+  //
+  const double xR = m_m0 + 4.0 * m_sigmaR ;
+  if ( low < xR && xR < high ) 
+  { return integral ( low , xR ) + integral ( xR , high ) ; }
+  //
+  const double xL = m_m0 - 4.0 * m_sigmaL ;
+  if ( low < xL && xL < high ) 
+  { return integral ( low , xL ) + integral ( xL , high ) ; }
+  //
+  // use GSL to evaluate the integral
+  //
+  Sentry sentry ;
+  //
+  gsl_function F               ;
+  F.function = &apolonios2_GSL ;
+  F.params   = const_cast<Apolonios2*> ( this ) ;
+  //
+  const double tail = ( low >= xR || high <= xL ) ;
+  //
+  double result   = 1.0 ;
+  double error    = 1.0 ;
+  //  
+  const int ierror = gsl_integration_qag
+    ( &F                ,                     // the function
+      low   , high      ,                     // low & high edges
+      tail ? s_PRECISION_TAIL : s_PRECISION , // absolute precision
+      tail ? s_PRECISION_TAIL : s_PRECISION , // relative precision
+      s_SIZE            ,                     // size of workspace
+      GSL_INTEG_GAUSS31 ,                     // integration rule
+      workspace ( m_workspace ) ,             // workspace
+      &result           ,                     // the result
+      &error            ) ;                   // the error in result
+  //
+  if ( ierror )
+  {
+    gsl_error ( "Gaudi::Math::Apolonios2::QAG" ,
+                __FILE__ , __LINE__ , ierror ) ;
+  }
+  //
+  return result ;
+}
+// ============================================================================
+
+
 
 
 // ============================================================================
