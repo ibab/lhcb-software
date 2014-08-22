@@ -76,17 +76,16 @@ StatusCode CaloCorrectionBase::initialize() {
 
   // transform vector of accepted hypos
   m_hypos.clear () ;
-  for( Hypotheses_::const_iterator ci = m_hypos_.begin() ; m_hypos_.end() != ci ; ++ci ){
-    const int hypo = *ci ;
+  for( const auto& hypo : m_hypos_ ) {
     if( hypo <= (int) LHCb::CaloHypo::Undefined || 
         hypo >= (int) LHCb::CaloHypo::Other      ) 
     { return Error("Invalid/Unknown  Calorimeter hypothesis object!" ) ; }
-    m_hypos.push_back( (LHCb::CaloHypo::Hypothesis) hypo );
+    m_hypos.push_back( LHCb::CaloHypo::Hypothesis( hypo ));
   }
   
   // locate and set and configure the Detector 
   m_det = getDet<DeCalorimeter>( m_detData ) ;
-  if( 0 == m_det ) { return StatusCode::FAILURE ; }
+  if( !m_det ) { return StatusCode::FAILURE ; }
   m_calo.setCalo( m_detData);
   //
   if( m_hypos.empty() )return Error("Empty vector of allowed Calorimeter Hypotheses!" ) ; 
@@ -94,11 +93,11 @@ StatusCode CaloCorrectionBase::initialize() {
   // debug printout of all allowed hypos 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) {
     debug() << " List of allowed hypotheses : " << endmsg;
-    for( Hypotheses::const_iterator it = m_hypos.begin() ; m_hypos.end() != it ; ++it ){ 
-      debug ()  <<  " -->" << *it  << endmsg ; 
+    for( const auto& h : m_hypos ) {
+      debug ()  <<  " -->" << h  << endmsg ; 
     }
-    for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
-      debug() << "Accepted corrections :  '" << *it <<"'" << endmsg;
+    for( const auto& c : m_corrections ) {
+      debug() << "Accepted corrections :  '" << c <<"'" << endmsg;
     }
   }
 
@@ -118,25 +117,25 @@ StatusCode CaloCorrectionBase::finalize() {
   if ( UNLIKELY(msgLevel(MSG::DEBUG)) ) debug() << "==> Finalize" << endmsg;
 
   if( m_corrections.size() > 1 || *(m_corrections.begin()) != "All" ){
-    for( std::vector<std::string>::iterator it = m_corrections.begin() ; m_corrections.end() != it ; ++it){
-      info() << "Accepted corrections :  '" << *it <<"'" << endmsg;
+    for( const auto& c :  m_corrections ) {
+      info() << "Accepted corrections :  '" << c <<"'" << endmsg;
     }
   }
-  if( m_corrections.size() == 0)warning() << "All corrections have been disabled for " <<  name() << endmsg;
+  if( m_corrections.empty())warning() << "All corrections have been disabled for " <<  name() << endmsg;
   
-    if( m_cond == NULL )
+    if( m_cond == nullptr )
       warning() << " Applied corrections configured via options for  " << name() <<endmsg;
     else if( UNLIKELY( msgLevel(MSG::DEBUG) ) )debug() << " Applied corrections configured via condDB  ('" << m_conditionName << "') for " 
                                                        << name() << endmsg;
     
 
 
-  for(  std::map<std::string, std::vector<double> >::iterator it = m_params.begin() ; m_params.end() != it ; ++it ){    
-    std::string type = (*it).first;
-    std::vector<double> vec = (*it).second;
+  for(  const auto& param : m_params ) {
+    const std::string& type = param.first;
+    const std::vector<double>& vec = param.second;
     if( !vec.empty() ){
-      int func = (int) vec[0];
-      int dim  = (int) vec[1];
+      int func = vec[0];
+      int dim  = vec[1];
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
         debug() << " o  '" << type <<"'  correction as a '" << CaloCorrection::funcName[ func ] 
                 << "' function of " << dim << " parameters" << endmsg;
@@ -164,10 +163,9 @@ StatusCode CaloCorrectionBase::setOptParams(){
     return StatusCode::SUCCESS;
   }
   m_params.clear();
-  for(std::map<std::string, std::vector<double> >::iterator p = m_optParams.begin() ; m_optParams.end() != p ; ++p){
-    std::string name = (*p).first;
-    std::vector<double> vec = (*p).second;
-    if( accept( name ) )m_params[name] = vec;
+  for(const auto&  p : m_optParams ) {
+    const std::string& name = p.first;
+    if ( accept( name ) ) m_params[name] = p.second;
   }  
   checkParams();
   return StatusCode::SUCCESS;
@@ -181,13 +179,10 @@ StatusCode CaloCorrectionBase::updParams(){
   // toDo
 
 
-  std::vector<std::string> paramNames = m_cond->paramNames();
-  
-  for(std::vector<std::string>::iterator n = paramNames.begin(); paramNames.end() != n ; ++n){
-    std::string paramName = *n;
+  for( const auto& paramName : m_cond->paramNames() ) {
     if( m_cond -> exists( paramName ) ){
-      std::vector<double> params = m_cond->paramAsDoubleVect( paramName ); 
-      if( accept( paramName ) )m_params[ paramName ] = params;
+      const std::vector<double>&  params = m_cond->paramAsDoubleVect( paramName ); 
+      if( accept( paramName ) ) m_params[ paramName ] = params;
     }
   }
   
@@ -199,29 +194,28 @@ StatusCode CaloCorrectionBase::updParams(){
 CaloCorrection::Parameters CaloCorrectionBase::getParams(CaloCorrection::Type type, const LHCb::CaloCellID id) const{
 
   // define empty Parameters
-  std::vector<double> vdef;
-  CaloCorrection::Parameters pdef = make_pair( CaloCorrection::Unknown, vdef );
-  std::string name = CaloCorrection::typeName[ type ];
-  std::map<std::string, std::vector<double> >::const_iterator it = m_params.find( name );
+  CaloCorrection::Parameters pdef{  CaloCorrection::Unknown, std::vector<double>{} };
+  const std::string& name = CaloCorrection::typeName[ type ];
+  auto it = m_params.find( name );
   if( m_params.end() == it )return pdef;
 
   // get parameters
-  std::vector<double> pars = (*it).second;
+  const std::vector<double>& pars = it->second;
   if( pars.size() < 2 )return pdef;
   
   // consistency of pars checked elsewhere - straight parsing here
-  int func = (int) pars[0];
-  int dim  = (int) pars[1];
-  std::vector<double> v;
+  int func = pars[0];
+  int dim  = pars[1];
   int narea = ( func != CaloCorrection::GlobalParamList ) ? 3         : 1;
   int shift = ( func != CaloCorrection::GlobalParamList ) ? id.area() : 0;
   int pos = 2 + shift;  
 
-  for( int i = 0 ; i< dim ; ++ i){
+  std::vector<double> v; v.reserve(dim);
+  for( int i = 0 ; i< dim ; ++i ){
     v.push_back( pars[ pos ] );
     pos += narea;
   }
-  return std::make_pair( (CaloCorrection::Function) func , v); 
+  return { (CaloCorrection::Function) func , v }; 
 }
 
 
@@ -229,7 +223,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
 
   CaloCorrection::Parameters pars = getParams( type , id );
 
-  std::string name =  CaloCorrection::typeName[ type ];
+  const std::string& name =  CaloCorrection::typeName[ type ];
   if ( UNLIKELY(msgLevel( MSG::DEBUG) ) )
     debug() << "Correction type " << name << " to be applied on cluster (seed = " << id << ") is a '" 
             << CaloCorrection::funcName[ pars.first ] << "' function with params = " << pars.second << endmsg;
@@ -246,7 +240,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
   }
 
   // polynomial correction 
-  std::vector<double> temp = pars.second;
+  const std::vector<double>& temp = pars.second;
 
   // polynomial functions
   if (pars.first == CaloCorrection::Polynomial || 
@@ -255,7 +249,7 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
       pars.first == CaloCorrection::ReciprocalPolynomial ){
     double v = 1.;
     cor = 0.;
-    for( std::vector<double>::iterator i = temp.begin() ; i != temp.end() ; ++ i){
+    for( auto  i = temp.begin() ; i != temp.end() ; ++ i){
       cor += (*i) * v;
       if( pars.first == CaloCorrection::ReciprocalPolynomial )
         v = (var == 0) ? 0. : v/var ;
@@ -334,8 +328,8 @@ double CaloCorrectionBase::getCorrection(CaloCorrection::Type type,  const LHCb:
 
 void CaloCorrectionBase::checkParams(){
 
-  for(  std::map<std::string, std::vector<double> >::iterator it = m_params.begin() ; m_params.end() != it ; ++it ){
-    std::string type = (*it).first;
+  for(  const auto& param :  m_params ) {
+    const std::string& type = param.first;
     // is the type registered
     bool ok = false;
     for( unsigned int i = 0 ; i != CaloCorrection::lastType ; ++i ){
@@ -350,13 +344,13 @@ void CaloCorrectionBase::checkParams(){
       continue;
     }
     
-    std::vector<double> vec = (*it).second;
+    const std::vector<double>& vec = param.second;
     int func = CaloCorrection::Unknown;
     int dim  = 0;
     if( vec.size() < 3 ) ok = false;
     else{
-      func = (int) vec[0];
-      dim  = (int) vec[1];
+      func = vec[0];
+      dim  = vec[1];
       if( func >= CaloCorrection::Unknown )ok = false;
       int narea = ( func != CaloCorrection::GlobalParamList ) ? 3         : 1;
       if( narea*dim+2 != (int) vec.size())ok=false;    
