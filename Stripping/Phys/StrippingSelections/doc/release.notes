@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-22
+  - Updated StrippingBc2XK.py for s21.
+
 ! 2014-08-21 - Carlos Vazquez Sierra
   - Updated StrippingB2JpsiXforBeta_s.py for testing purposes.
 

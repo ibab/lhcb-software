@@ -90,8 +90,6 @@ _default_configuration_ = {
     ( PT          > 750 * MeV               ) & 
     in_range ( 2          , ETA , 4.9       ) &
     in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
-    HASRICH                  &
-    ( PROBNNk      > 0.20  ) &
     ( MIPCHI2DV()  > 9.    ) 
     """ ,
     #
@@ -120,14 +118,6 @@ _default_configuration_ = {
     'Bc2KstKPrescale'  : 1.0 ,
     'Bc2phiKPrescale'  : 1.0 ,
     # =========================================================================
-    }
-
-default_config = {
-    'NAME' : 'Bc2XK',
-    'WGs' : ['Charmless'],
-    'BUILDERTYPE' : 'Bc2XKConf',
-    'CONFIG'      : _default_configuration_,
-    'STREAMS'     : ['Bhadron']
     }
 
 # =============================================================================
@@ -258,11 +248,6 @@ class Bc2XKConf(LineBuilder) :
         ## 
         return self._add_selection ( 'Bc2KstK_Lines' , sel ) 
 
-    ############################################################################
-    # As the following functions are not called, there is no need to comment
-    # them out. They could be useful to build my own functions
-    ############################################################################
-    
     ## kaons :
     def kaons     ( self ) :
         """
@@ -280,10 +265,11 @@ class Bc2XKConf(LineBuilder) :
             )
         
         from StandardParticles       import StdAllNoPIDsKaons as input_kaons 
+	from StandardParticles import StdAllNoPIDsPions
         sel  = Selection (
             "SelKFor"      + self.name()       ,
             Algorithm          =   alg         ,
-            RequiredSelections = [ input_kaons ]  
+            RequiredSelections = [ input_kaons, StdAllNoPIDsPions ]  
             )
         
         return self._add_selection( 'Kaon_Selection' , sel ) 
