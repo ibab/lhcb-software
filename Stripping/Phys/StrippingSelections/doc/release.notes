@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-22 - Cedric Potterat
+ - Added StrippingJets.py for QEE/Jets
+
 ! 2014-08-22 - Lucio Anderlini (BandQ)
  - Added two test/ scripts for BandQ lines
  - Minor modifications to StrippingXibc.py
