@@ -119,7 +119,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda0_ll_code = """(PT>%(Lambda0_Pt_Min)s*MeV) &
                              (VFASPF(VCHI2/VDOF)<%(Lambda0_VtxChi2_Max)s) &
                              (ADMASS('Lambda0') < %(Lambda0LL_MassWindow)s*MeV)"""
-        lambda0_ll_code = lambda0_ll_code + " & " + tracks_code
+        lambda0_ll_code = (lambda0_ll_code + " & " + tracks_code) % config
         lambda0_ll_filter = FilterDesktop(Code=lambda0_ll_code)
         lambda0_ll = Selection("LooseLambda0LL",
                                Algorithm=lambda0_ll_filter,
@@ -128,7 +128,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda0_dd_code = """(PT>%(Lambda0_Pt_Min)s*MeV) &
                              (VFASPF(VCHI2/VDOF)<%(Lambda0_VtxChi2_Max)s) &
                              (ADMASS('Lambda0') < %(Lambda0DD_MassWindow)s*MeV)"""
-        lambda0_dd_code = lambda0_dd_code + " & " + tracks_code
+        lambda0_dd_code = (lambda0_dd_code + " & " + tracks_code) % config
         lambda0_dd_filter = FilterDesktop(Code=lambda0_dd_code)
         lambda0_dd = Selection("LooseLambda0DD",
                                Algorithm=lambda0_dd_filter,
@@ -147,7 +147,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         photons_cnv_code = """(HASVERTEX) &
                               (MM < %(PhotonCnv_MM_Max)s*MeV) &
                               (PT > %(PhotonCnv_PT_Min)s*MeV) &
-                              (VFASPF(VCHI2/VDOF)<%(PhotonCnv_VtxChi2_Max)s)"""
+                              (VFASPF(VCHI2/VDOF)<%(PhotonCnv_VtxChi2_Max)s)""" % config
         photons_cnv_filter = FilterDesktop(Code=photons_cnv_code % config)
         photons_cnv = Selection("Photons_Cnv",
                                 Algorithm=photons_cnv_filter,
@@ -160,9 +160,9 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda_b_combine.DecayDescriptor = "[Lambda_b0 -> Lambda0 gamma]cc"
         lambda_b_combine.DaughtersCuts = {'Lambda0': 'ALL', 'gamma': 'ALL'}
         lambda_b_combine.ParticleCombiners = {'' : 'ParticleAdder'}
-        lambda_b_combine.CombinationCut = "(ADAMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)"
+        lambda_b_combine.CombinationCut = "(ADAMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)" % config
         lambda_b_combine.MotherCut = """(PT > %(Lambdab_Pt_Min)s*MeV) &
-                                        (MTDOCACHI2(1) < %(Lambdab_MTDOCAChi2_Max)s)"""
+                                        (MTDOCACHI2(1) < %(Lambdab_MTDOCAChi2_Max)s)""" % config
         lambda_b = Selection("Lambdab_NonConv_Sel",
                              Algorithm=lambda_b_combine,
                              RequiredSelections=[photons_noncnv, lambda0])
@@ -170,12 +170,12 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda_b_cnv_combine = CombineParticles("Lambdab_Conv_Combine")
         lambda_b_cnv_combine.DecayDescriptor = "[Lambda_b0 -> Lambda0 gamma]cc"
         lambda_b_cnv_combine.DaughtersCuts = {'Lambda0': 'ALL', 'gamma': 'ALL'}
-        lambda_b_cnv_combine.CombinationCut = "(ADAMASS('Lambda_b0') < 1.5*%(Lambdab_MassWindow)s*MeV)"
+        lambda_b_cnv_combine.CombinationCut = "(ADAMASS('Lambda_b0') < 1.5*%(Lambdab_MassWindow)s*MeV)" % config
         lambda_b_cnv_combine.MotherCut = """(HASVERTEX) & (VFASPF(VCHI2/VDOF)<%(Lambdab_VtxChi2_Max)s) &
                                             (PT > %(Lambdab_Pt_Min)s*MeV) &
                                             (BPVIPCHI2() < %(Lambdab_IPChi2_Max)s) &
-                                            (MTDOCACHI2(1) < %(Lambdab_MTDOCAChi2_Max)s) &
-                                            (ADMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)"""
+                                            (ADMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)""" % config
+                                            #(MTDOCACHI2(1) < %(Lambdab_MTDOCAChi2_Max)s) &
         lambda_b_cnv = Selection("Lambdab_Conv_Sel",
                                  Algorithm=lambda_b_cnv_combine,
                                  RequiredSelections=[photons_cnv, lambda0])
