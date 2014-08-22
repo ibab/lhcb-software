@@ -28,12 +28,12 @@ config_default = {'LongTrackGEC'          :    150
                 , 'DIRA_D0_MIN'           :    0.999
                 , 'FDCHI2_D0_MIN'         :   80.0
                 , 'VCHI2_D0_MAX'          :    4.0
-                , 'M_MIN'                 : 990.0
-                , 'M_MAX'                 : 1050.0
+                , 'M_MIN'                 : 1000.0
+                , 'M_MAX'                 : 1040.0
                 , 'DeltaM_MIN'            :    0.0
                 , 'DeltaM_MAX'            :  250.0
-                , 'HLTFILTER'             : "(HLT_PASS_RE('Hlt2CharmHadD02HHXDst.*Decision'))"
-                , 'Hlt2TisTosSpec'        : { 'Hlt2CharmHadD02HHXDst.*Decision%TOS' : 0 }
+                , 'HLTFILTER'             : "(HLT_PASS_RE('Hlt2CharmHadD02HHXDst.*Decision')|HLT_PASS('Hlt2IncPhiDecision'))"
+                , 'Hlt2TisTosSpec'        : { 'Hlt2CharmHadD02HHXDst.*Decision%TOS' : 0, 'Hlt2IncPhiDecision%TOS' : 0}
                 , 'KKprescale'            :    1.0
                 , 'PiPiprescale'          :    0.1
                 , 'KPlusPiMinusprescale'  :    0.1
@@ -157,6 +157,7 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['KKprescale'],
                                                postscale = config['postscale'],
+                                               RequiredRawEvents = ["Tracker","Velo"],
                                                HLT = config['HLTFILTER'],
                                                selection = self.selDstarKK_TisTos)
         self.lineKPlusPiMinus  = StrippingLine(name+'KPlusPiMinusLine',
