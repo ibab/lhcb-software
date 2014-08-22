@@ -1696,6 +1696,107 @@ Double_t Analysis::Models::Apolonios::analyticalIntegral
 }
 // ============================================================================
 
+
+
+// ============================================================================
+// Apolonios2
+// ============================================================================
+Analysis::Models::Apolonios2::Apolonios2
+( const char*          name      , 
+  const char*          title     ,
+  RooAbsReal&          x         ,
+  RooAbsReal&          m0        ,
+  RooAbsReal&          sigmaL    ,    
+  RooAbsReal&          sigmaR    ,    
+  RooAbsReal&          beta      ) 
+  : RooAbsPdf ( name , title )
+//
+  , m_x       ( "x"       , "Observable"                 , this , x      ) 
+  , m_m0      ( "m0"      , "mass"                       , this , m0     ) 
+  , m_sigmaL  ( "sigmaL"  , "sigmaL"                     , this , sigmaL )
+  , m_sigmaR  ( "sigmaR"  , "sigmaR"                     , this , sigmaR )
+  , m_beta    ( "beta"    , "beta-parameter"             , this , beta   )
+//
+  , m_apo2    ( 1 , 1 , 1 , 1 ) 
+{
+  //
+  setPars () ;
+  //
+}
+// ============================================================================
+// copy constructor 
+// ============================================================================
+Analysis::Models::Apolonios2::Apolonios2
+( const Analysis::Models::Apolonios2& right , 
+  const char*                        name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x       ( "x"       , this , right.m_x      ) 
+  , m_m0      ( "m0"      , this , right.m_m0     ) 
+  , m_sigmaL  ( "sigmaL"  , this , right.m_sigmaL )
+  , m_sigmaR  ( "sigmaR"  , this , right.m_sigmaR )
+  , m_beta    ( "beta"    , this , right.m_beta   )
+//
+  , m_apo2     ( right.m_apo2 ) 
+{
+  setPars () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Apolonios2::~Apolonios2 (){}
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Apolonios2*
+Analysis::Models::Apolonios2::clone ( const char* name ) const 
+{ return new Analysis::Models::Apolonios2 ( *this , name ) ; }
+// ============================================================================
+void Analysis::Models::Apolonios2::setPars () const 
+{
+  //
+  m_apo2.setM0      ( m_m0     ) ;
+  m_apo2.setSigmaL  ( m_sigmaL ) ;
+  m_apo2.setSigmaR  ( m_sigmaR ) ;
+  m_apo2.setBeta    ( m_beta   ) ;
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Apolonios2::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_apo2 ( m_x ) ;
+}
+// ============================================================================
+Int_t Analysis::Models::Apolonios2::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::Apolonios2::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_apo2.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+
+
 // ============================================================================
 // Bifurcated Gauss 
 // ============================================================================
@@ -4049,7 +4150,7 @@ Analysis::Models::BetaPrime::BetaPrime
   , m_scale   ( "scale"  , "scale"      , this , scale  ) 
   , m_shift   ( "shift"  , "shift"      , this , shift  ) 
     //
-  , m_betap   ( 3 , 3 ) 
+  , m_betap   ( 3 , 3 , 1 , 0 ) 
 {
   setPars() ;
 }

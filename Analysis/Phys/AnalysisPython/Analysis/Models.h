@@ -42,6 +42,7 @@ namespace Analysis
    *  - double-sided Crystal Ball 
    *  - Needham: Crystal Ball with \f$\alpha(\sigma)\f$
    *  - Apolonios 
+   *  - Apolonios2 (bifurcated apolonious)  
    *  - Bifurcated Gauissian 
    *  - Generalized Gaussian v1 
    *  - Generalized Gaussian v2 
@@ -1248,7 +1249,7 @@ namespace Analysis
      *  A modified gaussian with power-law tail on rigth ride and exponential
      *  tail on low-side 
      *  The function is proposed by Diego Martinez Santos 
-     *  https://indico.cern.ch/getFile.py/access?contribId=2&resId=1&materialId=slides&confId=262633
+     *  @see http://arxiv.org/abs/1312.5000
      *  Here a bit modified version is used with redefined parameter <code>n</code>
      *  to be coherent with local definitions of Crystal Ball
      *  
@@ -1321,6 +1322,80 @@ namespace Analysis
       // ======================================================================
       /// the actual function 
       mutable Gaudi::Math::Apolonios m_apo ;                // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Apolonios2
+     *  A modified gaussian with exponential
+     *  tails on low-side 
+     *  
+     *  @see Gaudi::Math::Apolonios2
+     *  @author Vanya BELYAEV Ivane.BElyaev@itep.ru
+     *  @date 2013-12-01
+     */
+    // ========================================================================
+    class GAUDI_API Apolonios2 : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Apolonios2, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from all parameters 
+      Apolonios2
+      ( const char*          name      , 
+        const char*          title     ,
+        RooAbsReal&          x         , 
+        RooAbsReal&          mean      , 
+        RooAbsReal&          sigmaL    , 
+        RooAbsReal&          sigmaR    , 
+        RooAbsReal&          beta      ) ;
+      /// "copy" constructor 
+      Apolonios2  ( const Apolonios2& right , const char* name = 0  ) ;
+      /// virtual destructor  
+      virtual ~Apolonios2 () ;
+      /// clone 
+      virtual  Apolonios2* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public: // integrals  
+      // ======================================================================      
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         ,  
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Apolonios2& function() const { return m_apo2 ; }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      RooRealProxy m_x      ;
+      RooRealProxy m_m0     ;
+      RooRealProxy m_sigmaL ;
+      RooRealProxy m_sigmaR ;
+      RooRealProxy m_beta   ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Apolonios2 m_apo2 ;                // the function 
       // ======================================================================
     } ;
     // ========================================================================
@@ -1607,7 +1682,9 @@ namespace Analysis
     } ;
     // ========================================================================
     /** @class Bukin
-     *  "Bukin"-function
+     *  "Bukin"-function, aka "Modified Novosibirsk function"
+     *  @see http://arxiv.org/abs/1107.5751
+     *  @see http://dx.doi.org/10.1007/JHEP06(2012)141     
      *  @see Gaudi::Math::Bukin
      *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
      *  @date 2011-12-05
@@ -1626,11 +1703,11 @@ namespace Analysis
       ( const char*          name      , 
         const char*          title     ,
         RooAbsReal&          x         , 
-        RooAbsReal&          peak      , 
-        RooAbsReal&          sigma     , 
-        RooAbsReal&          xi        ,
-        RooAbsReal&          rhoL      ,
-        RooAbsReal&          rhoR      ) ;
+        RooAbsReal&          peak      ,   // peak position 
+        RooAbsReal&          sigma     ,   // "width"
+        RooAbsReal&          xi        ,   // asymmetry pareamneter 
+        RooAbsReal&          rhoL      ,   // left tail 
+        RooAbsReal&          rhoR      ) ; // right tail 
       /// "copy" constructor 
       Bukin ( const Bukin& right , const char* name = 0  ) ;
       /// virtual destructor  

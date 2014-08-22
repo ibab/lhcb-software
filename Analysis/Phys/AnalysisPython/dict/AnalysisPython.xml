@@ -40,6 +40,7 @@
   <class name = "Analysis::Models::CrystalBallRS"     />
   <class name = "Analysis::Models::CrystalBallDS"     />
   <class name = "Analysis::Models::Apolonios"         />
+  <class name = "Analysis::Models::Apolonios2"        />
   <class name = "Analysis::Models::GramCharlierA"     />
   <class name = "Analysis::Models::Voigt"             />
   <class name = "Analysis::Models::LASS"              />
