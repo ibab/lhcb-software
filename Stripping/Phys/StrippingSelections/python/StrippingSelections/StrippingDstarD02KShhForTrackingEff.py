@@ -28,12 +28,13 @@ config_default = {'LongTrackGEC'          :    150
                 , 'DIRA_D0_MIN'           :    0.999
                 , 'FDCHI2_D0_MIN'         :   80.0
                 , 'VCHI2_D0_MAX'          :    4.0
-                , 'M_MAX'                 : 1800.0
+                , 'M_MIN'                 : 990.0
+                , 'M_MAX'                 : 1050.0
                 , 'DeltaM_MIN'            :    0.0
                 , 'DeltaM_MAX'            :  250.0
                 , 'HLTFILTER'             : "(HLT_PASS_RE('Hlt2CharmHadD02HHXDst.*Decision'))"
                 , 'Hlt2TisTosSpec'        : { 'Hlt2CharmHadD02HHXDst.*Decision%TOS' : 0 }
-                , 'KKprescale'            :    0.5
+                , 'KKprescale'            :    1.0
                 , 'PiPiprescale'          :    0.1
                 , 'KPlusPiMinusprescale'  :    0.1
                 , 'KMinusPiPlusprescale'  :    0.1
@@ -71,6 +72,7 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
                               'DIRA_D0_MIN',
                               'FDCHI2_D0_MIN',
                               'VCHI2_D0_MAX',
+                              'M_MIN',
                               'M_MAX',
                               'DeltaM_MIN',
                               'DeltaM_MAX',
@@ -116,10 +118,10 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
         strDecaysKMinusPiPlus = ["D0 -> K- pi+"]
         strDecaysKK           = ["D0 -> K+ K-"]
         
-        self.selD0PiPi         = makeD0('D02PiPi'        + name, strDecaysPiPi,         self.selDauPP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
-        self.selD0KK           = makeD0('D02KK'          + name, strDecaysKK  ,         self.selDauKK, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
-        self.selD0KMinusPiPlus         = makeD0('D02KMinusPiPlus'        + name, strDecaysKMinusPiPlus,self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
-        self.selD0KPlusPiMinus         = makeD0('D02KPlusPiMinus'        + name, strDecaysKPlusPiMinus,self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0PiPi         = makeD0('D02PiPi'        + name, strDecaysPiPi,         self.selDauPP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'],config['M_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0KK           = makeD0('D02KK'          + name, strDecaysKK  ,         self.selDauKK, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'],config['M_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0KMinusPiPlus         = makeD0('D02KMinusPiPlus'        + name, strDecaysKMinusPiPlus,self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'],config['M_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
+        self.selD0KPlusPiMinus         = makeD0('D02KPlusPiMinus'        + name, strDecaysKPlusPiMinus,self.selDauKP, config['Pair_SumAPT_MIN'], config['Pair_AMINDOCA_MAX'], config['Pair_BPVVD_MIN'], config['Pair_BPVCORRM_MAX'], config['FDCHI2_D0_MIN'], config['DIRA_D0_MIN'],config['M_MIN'], config['M_MAX'], config['VCHI2_D0_MAX'])
 
 
 
@@ -170,10 +172,10 @@ class DstarD02KShh_ForTrackingEffBuilder(LineBuilder):
                                                HLT = config['HLTFILTER'],
                                                selection = self.selDstarKMinusPiPlus_TisTos)
 
-        self.registerLine(self.linePiPi)
+        #self.registerLine(self.linePiPi)
         self.registerLine(self.lineKK)
-        self.registerLine(self.lineKPlusPiMinus)
-        self.registerLine(self.lineKMinusPiPlus)
+        #self.registerLine(self.lineKPlusPiMinus)
+        #self.registerLine(self.lineKMinusPiPlus)
 
         
 def filterPions(name, inputName, TrkChi2_MAX_Child_MAX, Trk_PT_MIN, Trk_P_MIN,Trk_GHOST_MAX,PION_PIDK_MAX,IPCHI2_MAX_Child_MIN):
@@ -216,13 +218,13 @@ def filterKaons(name, inputName, TrkChi2_MAX_Child_MAX, Trk_PT_MIN, Trk_P_MIN,Tr
                      Algorithm          = _trackFilter,
                      RequiredSelections = [inputTracks])                     
 
-def makeD0(name, inputDecayDescriptors, inputDaughters, Pair_SumAPT_MIN, Pair_AMINDOCA_MAX, Pair_BPVVD_MIN, Pair_BPVCORRM_MAX, FDCHI2_D0_MIN, DIRA_D0_MIN, M_MAX, VCHI2_D0_MAX):
+def makeD0(name, inputDecayDescriptors, inputDaughters, Pair_SumAPT_MIN, Pair_AMINDOCA_MAX, Pair_BPVVD_MIN, Pair_BPVCORRM_MAX, FDCHI2_D0_MIN, DIRA_D0_MIN,M_MIN, M_MAX, VCHI2_D0_MAX):
     """
     Given lists of D0 daughter tracks  reconstruct D0 -> h+ h-.
     The same routine works for all final states.
     """
 
-    _combCutsMass = "(AM<1900*MeV)" 
+    _combCutsMass = "(AM<1200*MeV)" 
     _combCutsPT   = "((APT1+APT2)> %(Pair_SumAPT_MIN)s)"                                % locals()
     _combCutsDOCA = "(AMINDOCA('LoKi::TrgDistanceCalculator') < %(Pair_AMINDOCA_MAX)s)" % locals()
     _combCutsPV   = "(AALLSAMEBPV)"
@@ -234,15 +236,17 @@ def makeD0(name, inputDecayDescriptors, inputDaughters, Pair_SumAPT_MIN, Pair_AM
     _motherCutsCorrMass = '(BPVCORRM < %(Pair_BPVCORRM_MAX)s)'     % locals()
     _motherCutsFDChi2   = '(BPVVDCHI2> %(FDCHI2_D0_MIN)s)'         % locals()
     _motherCutsDira     = '(BPVDIRA > %(DIRA_D0_MIN)s)'            % locals()
-    _motherCutsMass     = '(M < %(M_MAX)s)'                        % locals()
+    _motherCutsMass_MIN     = '(M > %(M_MIN)s)'                        % locals()
+    _motherCutsMass_MAX     = '(M < %(M_MAX)s)'                        % locals()
     _motherCutsVtx      = '(VFASPF(VCHI2PDOF) < %(VCHI2_D0_MAX)s)' % locals()
     
-    _motherCuts = '(' + _motherCutsFD       + '&' + \
-                        _motherCutsCorrMass + '&' + \
-                        _motherCutsFDChi2   + '&' + \
-                        _motherCutsDira     + '&' + \
-                        _motherCutsMass     + '&' + \
-                        _motherCutsVtx      + ')'
+    _motherCuts = '(' + _motherCutsFD           + '&' + \
+                        _motherCutsCorrMass     + '&' + \
+                        _motherCutsFDChi2       + '&' + \
+                        _motherCutsDira         + '&' + \
+                        _motherCutsMass_MIN     + '&' + \
+                        _motherCutsMass_MAX     + '&' + \
+                        _motherCutsVtx          + ')'
     
     _D0 = CombineParticles(DecayDescriptors = inputDecayDescriptors,
                             CombinationCut   = _combCuts,
