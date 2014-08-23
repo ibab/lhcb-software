@@ -868,6 +868,9 @@ namespace Gaudi
       double rho_L () const { return m_rho_L   ; }
       double rho_R () const { return m_rho_R   ; }
       // ======================================================================
+      double x1    () const { return m_x1      ; }
+      double x2    () const { return m_x2      ; }      
+      // ======================================================================
     public:
       // ======================================================================
       bool setPeak  ( const double value ) ;

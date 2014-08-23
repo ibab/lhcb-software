@@ -41,6 +41,7 @@
 // Local
 // ============================================================================
 #include "GSL_sentry.h"
+#include "Faddeeva.hh"
 // ============================================================================
 /** @file
  *  Implementation file for functions from the file LHCbMath/Functions.h
@@ -455,32 +456,13 @@ namespace
    *  @date 2010-05-23
    */
   inline double x_log
-  ( const double x , double precision = s_PRECISION )
+  ( const double x  ) // , double precision = s_PRECISION )
   {
     //
     if      ( s_equal   ( x , 0 )       ) { return 1 ; } // RETURN
     else if ( x <= -1                   ) { return 0 ; } // RETURN ?
     else if ( s_equal   ( x , -1 )      ) { return 0 ; } // RETURN ?
-    else if ( std::fabs ( x     ) < 0.1 )
-    {
-      double result = 1.0 ;
-      double delta  = x   ;
-      //
-      precision = std::fabs ( precision ) ;
-      precision = std::min  ( precision , std::fabs ( s_PRECISION_TAIL ) ) ;
-      if ( 0 > x ) { precision *= 0.1 ; }
-      //
-      unsigned int n = 2 ;
-      do
-      {
-        result += delta / n ;
-        delta  *=       - x ; // note minus here
-        ++n                 ;
-      }
-      while ( std::fabs ( delta ) > precision && n < 1000 ) ;
-      //
-      return result ;                                         // RETURN
-    }
+    else if ( x < 0.9                   ) { return std::log1p ( x ) / x ; }
     //
     // the generic evaluation
     //
@@ -531,33 +513,32 @@ namespace
   double error_func ( const double x )
   {
     //
-    // if      ( -30 > x ) { return -1 ; }
-    // else if ( +30 < x ) { return  1 ; }
-    //
     Sentry sentry ;
     //
     gsl_sf_result result ;
     const int ierror = gsl_sf_erf_e ( x , &result ) ;
     if ( ierror )
     {
-      if ( ierror == GSL_EDOM     ||    /* input domain error, e.g sqrt(-1)    */
-           ierror == GSL_ERANGE   ||    /* output range error, e.g. exp(1e100) */
-           ierror == GSL_EINVAL   ||    /* invalid argument supplied by user   */
-           ierror == GSL_EUNDRFLW ||    /* underflow                           */
-           ierror == GSL_EOVRFLW  ||    /* overflow                            */
-           ierror == GSL_ELOSS    ||    /* loss of accuracy                    */
-           ierror == GSL_EROUND    )    /* failed because of roundoff error    */
-      {}
+      if ( ierror == GSL_EDOM     ||    // input domain error, e.g sqrt(-1)
+           ierror == GSL_ERANGE   ||    // output range error, e.g. exp(1e100)
+           ierror == GSL_EINVAL   ||    // invalid argument supplied by user
+           ierror == GSL_EUNDRFLW ||    // underflow
+           ierror == GSL_EOVRFLW  ||    // overflow
+           ierror == GSL_ELOSS    ||    // loss of accuracy
+           ierror == GSL_EROUND    )    // failed because of roundoff error
+        {}
       else
       {
         gsl_error ( "Error from erf_e function" ,
                     __FILE__ , __LINE__ , ierror ) ;
       }
       //
-      if      ( -15 > x ) { return -1 ; }
-      else if (  15 < x ) { return  1 ; }
+      if      ( -30 > x ) { return -1 ; }
+      else if (  30 < x ) { return  1 ; }
       //
-      return error_func ( x ) ;
+      // return error_func ( x ) ;
+      return std::erf ( x ) ;
+      //
     }
     //
     return result.val ;                    // RETURN
@@ -651,7 +632,7 @@ namespace
     return my_exp ( arg ) ;
   }
   // ==========================================================================
-  /** get the gaussian integral:
+  /** get the gaussian integral numerically
    *  \f[ f = \int_a^b \exp { -\alpha x^2 + \beta x } \mathrm{d}x \f]
    *  @param alpha the alpha parameter
    *  @param beta  the beta  parameter
@@ -660,53 +641,14 @@ namespace
    *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
    *  @date 2010-05-23
    */
-  double gaussian_int
+  double gaussian_int_num
   ( const double alpha ,
     const double beta  ,
     const double a     ,
     const double b     )
   {
     //
-    if      ( s_equal ( a , b ) ) { return  0.0                        ; }
-    else if (           a > b   ) { return -1 * gaussian_int ( alpha ,
-                                                               beta  ,
-                                                               b     ,
-                                                               a     ) ; }
-    //
-    const double b22     = 0.25 * beta * beta ;
-    const double root    = 0.5 * beta ;
-    const double a_prime = ( a - root ) ;
-    const double b_prime = ( b - root ) ;
-    //
-    //
-    // alpha ?
-    //
-    if       ( s_equal ( alpha , 0 ) )      // the most trivial trivial case
-    {
-      /// the most trivial trivial case
-      if     ( s_equal ( beta , 0 ) ) { return b - a ; }  // RETURN
-      /// get the simple exponential integral
-      return ( my_exp  ( beta * b ) - my_exp ( beta * a ) ) / beta ;
-    }
-    // it just the standard  error function ? 
-    else if  ( s_equal ( alpha , 1 ) &&  ( b22 < 0.10 * GSL_LOG_DBL_MAX ) ) 
-    {
-      //
-      const double factor1 = my_exp ( b22 ) ;
-      const double factor  = factor1 * s_HALFSQRTPI ;
-      //
-      return factor * ( error_func ( b_prime ) -
-                        error_func ( a_prime ) ) ;
-    }
-    // it just the standard  error function
-    else if ( alpha > 0 && !s_equal ( alpha , 1 ) ) 
-    {
-      const double alpha_sqrt = std::sqrt ( alpha ) ;
-      return gaussian_int ( 1                 , 
-                            beta / alpha_sqrt , 
-                            alpha_sqrt * a    ,
-                            alpha_sqrt * b    ) / alpha_sqrt ;
-    }
+    if      ( s_equal ( a , b ) ) { return  0.0 ; }
     //
     // use GSL to evaluate the integral numerically 
     //
@@ -737,11 +679,127 @@ namespace
     //
     if ( ierror )
     {
-      gsl_error ( "Gaudi::Math::gaussian_int " ,
+      gsl_error ( "Gaudi::Math::gaussian_int" ,
                   __FILE__ , __LINE__ , ierror ) ;
     }
     //
     return result ;
+    //
+  }
+  // ==========================================================================
+  /** get the gaussian integral:
+   *  \f[ f = \int_a^b \exp { -x^2 + \beta x } \mathrm{d}x \f]
+   *  @param beta  the beta  parameter
+   *  @param a     the low  integration limit
+   *  @param b     the high integration limit
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double gaussian_int
+  ( const double beta  ,
+    const double a     ,
+    const double b     )
+  {
+    //
+    if      ( s_equal ( a , b ) ) { return  0.0                        ; }
+    else if (           a > b   ) { return -1 * gaussian_int ( beta  ,
+                                                               b     ,
+                                                               a     ) ; }
+    // regular error function 
+    if ( s_equal ( beta , 0 ) ) 
+    { return s_HALFSQRTPI * ( error_func ( b ) - error_func ( a ) ) ; }
+    //
+    const double xa = a - 0.5 * beta ;
+    const double xb = b - 0.5 * beta ;
+    const double ya = a * beta - a * a ;
+    const double yb = b * beta - b * b ;
+    //
+    /// use Faddeeva function 
+    if ( -6 < xa && -6 < xb && 
+         ya < GSL_LOG_DBL_MAX && yb < GSL_LOG_DBL_MAX && 
+         ya > GSL_LOG_DBL_MIN && yb > GSL_LOG_DBL_MIN  )  
+    {
+      const double fa = Faddeeva::erfcx ( xa ) ;
+      const double fb = Faddeeva::erfcx ( xb ) ;
+      const double ea = std::exp        ( ya ) ;
+      const double eb = std::exp        ( yb ) ;
+      if ( !std::isnan ( fa ) && !isinf ( fa ) && 
+           !std::isnan ( fb ) && !isinf ( fb ) && 
+           !std::isnan ( ea ) && !isinf ( ea ) && 
+           !std::isnan ( eb ) && !isinf ( eb ) ) 
+      {   
+        const double result = s_HALFSQRTPI * ( ea * fa - eb * fb ) ;
+        if  ( !std::isnan ( result ) && 
+              !std::isinf ( result ) && 0 < result ) { return result ; }
+      }
+    }
+    //
+    const double b22 = 0.25 * beta * beta ;
+    if ( b22 < 0.1 * GSL_LOG_DBL_MAX ) 
+    {
+      const double result = s_HALFSQRTPI * std::exp ( b22 ) * 
+        ( std::erf ( xb ) - std::erf ( xa ) )  ;  
+      //
+      if ( !std::isnan ( result ) && !std::isinf ( result ) ) 
+      {
+        if      ( 0 < result             ) { return result  ; }
+        else if ( s_equal ( 0 , result ) ) { return s_SMALL ; }
+      }
+    }
+    //
+    // use GSL to evaluate the integral numerically 
+    return gaussian_int_num ( 1 , beta , a , b ) ;
+  }
+  // ==========================================================================
+  /** get the gaussian integral:
+   *  \f[ f = \int_a^b \exp { -\alpha x^2 + \beta x } \mathrm{d}x \f]
+   *  @param alpha the alpha parameter
+   *  @param beta  the beta  parameter
+   *  @param a     the low  integration limit
+   *  @param b     the high integration limit
+   *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+   *  @date 2010-05-23
+   */
+  double gaussian_int
+  ( const double alpha ,
+    const double beta  ,
+    const double a     ,
+    const double b     )
+  {
+    //
+    if      ( s_equal ( a , b ) ) { return  0.0                        ; }
+    else if (           a > b   ) { return -1 * gaussian_int ( alpha ,
+                                                               beta  ,
+                                                               b     ,
+                                                               a     ) ; }
+    //
+    // alpha ?
+    //
+    if       ( s_equal ( alpha , 0 ) )      // the most trivial trivial case
+    {
+      /// even more trivial case
+      if     ( s_equal ( beta , 0 ) ) { return b - a ; }  // RETURN
+      /// get the simple exponential integral
+      // if     (  beta * b > 0.7 * GSL_LOG_DBL_MAX  && 
+      //          beta * a > 0.7 * GSL_LOG_DBL_MAx  && 
+      //          std::abs ( a - b )
+      return ( my_exp  ( beta * b ) - my_exp ( beta * a ) ) / beta ;
+    }
+    // it just the standard  error function ? 
+    else if  ( s_equal ( alpha , 1 ) ) 
+    { return gaussian_int ( beta , a , b ) ; }
+    // it just the standard  error function
+    else if  ( 1.e-4 < alpha ) 
+    {
+      const double alpha_sqrt = std::sqrt ( alpha ) ;
+      return gaussian_int ( 1                 , 
+                            beta / alpha_sqrt , 
+                            alpha_sqrt * a    ,
+                            alpha_sqrt * b    ) / alpha_sqrt ;
+    }
+    //
+    // use GSL to evaluate the integral numerically 
+    return gaussian_int_num ( alpha , beta , a , b ) ;
     //
   }
   // ==========================================================================
@@ -1823,8 +1881,7 @@ bool Gaudi::Math::Bukin::setXi    ( const double value )
   //
   const double delta = xi + xi2sqrt - 1 ;
   const double tail  =
-    0.5 * s_Bukin * xi2sqrt * ( 1 + xi + xi2sqrt )
-    / ( xi + xi2sqrt ) / x_log ( delta ) ;
+    0.5 * s_Bukin * xi2sqrt * ( 1 + xi + xi2sqrt ) / ( xi + xi2sqrt ) / x_log ( delta ) ;
   //
   // left  tail parameter
   //
@@ -1840,7 +1897,7 @@ bool Gaudi::Math::Bukin::setXi    ( const double value )
   //
   // central region
   //
-  const double xi_ = m_xi / std::sqrt ( 1 + m_xi * m_xi ) ;
+  const double xi_ = m_xi / xi2sqrt ;
   m_x1 = m_peak + m_sigma * s_Bukin * ( xi_ - 1 ) ;
   m_x2 = m_peak + m_sigma * s_Bukin * ( xi_ + 1 ) ;
   //
@@ -1880,7 +1937,7 @@ double Gaudi::Math::Bukin::pdf ( const double x ) const
   //
   //  left tail :
   //
-  if       ( m_x1 > x )
+  if       ( m_x1 >= x )
   {
     const double dx  = x - m_x1               ;
     const double dx2 = dx / ( m_peak - m_x1 ) ;
@@ -1889,7 +1946,7 @@ double Gaudi::Math::Bukin::pdf ( const double x ) const
   //
   // right tail :
   //
-  else if ( m_x2 <  x )
+  else if ( m_x2 <=  x )
   {
     const double dx  = x - m_x2               ;
     const double dx2 = dx / ( m_peak - m_x2 ) ;
@@ -1941,26 +1998,27 @@ double Gaudi::Math::Bukin::integral
       integral ( 0.5 *  ( high + low ) ,          high         ) ;
   }
   //
-  // // left tail:
-  // if      ( high <= m_x1 )  // left tail
-  // {
-  //   const double d =  m_peak - m_x1 ;
-  //   //
-  //   return 0.5 * gaussian_int ( m_rho_L / d / d    ,
-  //                               m_L     / m_sigma  ,
-  //                               low  - m_x1        ,
-  //                               high - m_x1        ) ;
-  // }
-  // // right tail:
-  // else if ( low >= m_x2 )  // right tail
-  // {
-  //   const double d = m_peak - m_x2 ;
-  //   //
-  //   return 0.5 * gaussian_int ( m_rho_R   / d / d   ,
-  //                               -1 * m_R  / m_sigma ,
-  //                               low  - m_x2         ,
-  //                               high - m_x2         ) ;
-  // }
+  // left tail:
+  //
+  if      ( high <= std::min ( m_x1 , m_x2 ) )  // left tail
+  {
+    const double d =  m_peak - m_x1 ;
+    //
+    return 0.5 * gaussian_int ( m_rho_L / d / d    ,
+                                m_L     / m_sigma  ,
+                                low  - m_x1        ,
+                                high - m_x1        ) ;
+  }
+  // right tail:
+  if ( low >= std::max ( m_x1 , m_x2  ) )  // right tail
+  {
+    const double d = m_peak - m_x2 ;
+    //
+    return 0.5 * gaussian_int ( m_rho_R   / d / d   ,
+                                -1 * m_R  / m_sigma ,
+                                low  - m_x2         ,
+                                high - m_x2         ) ;
+  }
   //
   // use GSL to evaluate the integral
   //
@@ -1974,8 +2032,8 @@ double Gaudi::Math::Bukin::integral
   double error    = 1.0 ;
   //
   const bool in_tail = 
-    high < m_x1 - 6 * std::abs ( m_x2 - m_x1 ) || 
-    low  > m_x2 + 6 * std::abs ( m_x2 - m_x1 ) ;
+    ( high < m_x1 - 5 * std::abs ( m_x2 - m_x1 ) )  || 
+      ( low  > m_x2 + 5 * std::abs ( m_x2 - m_x1 ) ) ; 
   //
   const int ierror = gsl_integration_qag
     ( &F                ,            // the function
