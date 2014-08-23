@@ -4,6 +4,9 @@
 ! Purpose     : Package for the alignment event model classes
 !-----------------------------------------------------------------------------
 
+!======================= AlignEvent v1r2 2014-08-23 =========================
+- tagged by M. Martinelli for Alignment release v10r0
+
 ! 2014-01-10 - Marco Clemencic
  - Added CMake configuration.
 

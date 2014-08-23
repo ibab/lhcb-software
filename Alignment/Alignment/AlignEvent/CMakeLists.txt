@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignEvent
 ################################################################################
-gaudi_subdir(AlignEvent v1r1)
+gaudi_subdir(AlignEvent v1r2)
 
 gaudi_depends_on_subdirs(Alignment/AlignKernel
                          GaudiObjDesc
