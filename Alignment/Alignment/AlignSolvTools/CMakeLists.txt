@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignSolvTools
 ################################################################################
-gaudi_subdir(AlignSolvTools v3r3)
+gaudi_subdir(AlignSolvTools v3r4)
 
 gaudi_depends_on_subdirs(Alignment/AlignKernel
                          Alignment/AlignmentInterfaces

@@ -2,6 +2,8 @@
 ! Responsible : Adlene Hicheur (Adlene.Hicheur@cern.ch)
 !-----------------------------------------------------------------------------
 
+!========================= AlignSolvTools v3r4 2014-08-23 =========================
+
 ! 2014-08-21 - Maurizio Martinelli
  - Solved some CMake compilation warnings.
 
