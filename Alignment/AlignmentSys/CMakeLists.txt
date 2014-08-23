@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignmentSys
 ################################################################################
-gaudi_subdir(AlignmentSys v9r2)
+gaudi_subdir(AlignmentSys v10r0)
 
 gaudi_depends_on_subdirs(Alignment/AlignEvent
                          Alignment/AlignKernel
