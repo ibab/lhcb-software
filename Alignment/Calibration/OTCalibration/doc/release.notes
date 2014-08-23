@@ -3,6 +3,8 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!========================= OTCalibration v1r7 2014-08-23 =========================
+
 ! 2014-08-21 - Maurizio Martinelli
  - Solved some CMake compilation warnings.
 

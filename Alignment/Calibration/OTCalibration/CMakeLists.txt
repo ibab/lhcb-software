@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OTCalibration
 ################################################################################
-gaudi_subdir(OTCalibration v1r6)
+gaudi_subdir(OTCalibration v1r7)
 
 gaudi_depends_on_subdirs(Event/TrackEvent
                          Event/DAQEvent
