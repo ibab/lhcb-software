@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v6r1 2014-08-23 =========================
+
 ! 2014-08-14 - Maurizio Martinelli
  - Solved a few CMake compilation warnings.
 
