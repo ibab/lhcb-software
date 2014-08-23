@@ -63,17 +63,21 @@ StatusCode AddRelatedInfo::execute()
   // Loop over input locations
   for ( const auto& loc : inputLocations() )
   {
-    const std::string location = loc + "/Particles";
+    std::string tmpLoc = loc;
+    boost::erase_all( tmpLoc, "/Event/" );
+    tmpLoc = "/Event/" + tmpLoc;
+
+    const std::string location = tmpLoc + "/Particles";
   
     const Particle::Range parts = getIfExists<Particle::Range>( location );
     if (msgLevel(MSG::VERBOSE)) 
-      verbose() << " Found "<< parts.size() << " particles" <<endreq;
+      verbose() << " Found "<< parts.size() << " particles at " << location << endreq;
 
     // Loop over particles in the locations
     for ( const Particle * p : parts )
     {
       Particle * c = const_cast<Particle*>(p);
-      fill( c, c, 0, loc );
+      fill( c, c, 0, tmpLoc );
     }
 
   }
@@ -93,23 +97,37 @@ void AddRelatedInfo::fill( const Particle* top,
  
   bool isInLocations = false; 
 
-  // check if the particle is in the list of info locations
-  for ( const auto& infoLoc : m_infoLocations )
-  {
-    if ( c_location.compare(infoLoc.first) == 0 )
+  if (level > 0) { 
+    // check if the particle is in the list of info locations
+    for ( const auto& infoLoc : m_infoLocations )
     {
-      isInLocations = true; 
-      break;
+      if ( c_location.compare(infoLoc.first) == 0 )
+      {
+        isInLocations = true; 
+        break;
+      }
     }
+  } else {
+    // No need to check locations for the top-level particle
+    isInLocations = true; 
   }
 
   if ( isInLocations )
   {
 
-    if (msgLevel(MSG::DEBUG)) 
-      debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
+    std::string map_location; 
 
-    const std::string map_location = top_location + "/" + m_infoLocations[c_location];
+    if (level > 0) {
+      if (msgLevel(MSG::DEBUG)) 
+        debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
+      map_location = top_location + "/" + m_infoLocations[c_location];
+    } else {
+      // In case the line just filters the common particles and does not produce
+      // its own candidates
+      if (msgLevel(MSG::DEBUG)) 
+        debug() << "Filling RelatedInfo for particle at top location " << top_location << endreq;
+      map_location = top_location + "/" + m_infoLocations[top_location + "/Particles"];
+    } 
     
     if (msgLevel(MSG::DEBUG)) 
       debug() << "GetOrCreate RelatedInfo at " << map_location << endreq;

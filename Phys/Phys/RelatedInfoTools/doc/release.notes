@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-08-23 - Anton Poluektov 
+ - Fixed problem with selections which filter common particles. 
+
 ! 2014-08-08 - Chris Jones
  - Make sure all info locations in AddRelatedInfo start with "/Event/"
  - Some minor cleanups and optimisations.
