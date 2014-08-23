@@ -98,10 +98,6 @@ while n<evtmax:
         print "End of file"
         break
     
-    decReps = tes['/Event/Hlt/DecReports']
-    selReps = tes['/Event/Hlt/SelReports']
-    l0dec_reports = tes['/Event/HltLikeL0/DecReports']
-    
     cands = tes[offlineLoc]
     if not cands:
         continue
