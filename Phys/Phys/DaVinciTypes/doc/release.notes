@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2014-08-22 - Anton Poluektov 
+ - Add names for Bs2Mumu isolation tool by Fatima Soomro to RelatedInfoNamed.h
+
 !========================= DaVinciTypes v2r7 2014-07-25 =========================
 
 ! 2014-07-08 - Alex Shires
