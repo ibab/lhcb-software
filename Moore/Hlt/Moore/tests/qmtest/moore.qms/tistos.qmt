@@ -1,0 +1,34 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!--
+#######################################################
+# SUMMARY OF THIS TEST
+# ...................
+# Author: sbenson
+# Purpose: Check the TOS and decision efficiency on MC
+# Prerequisites: None
+# Common failure modes, severities and cures: 
+#               . SEVERE: Segfault or raised exception, stderr, nonzero return code
+#               . MAJOR: additional FATAL/ERROR messages always a major problem. no ERROR messages should ever be printed when running this test.
+#               . MINOR: additional WARNING messages, it is unclear how severe these may be, you will need to hunt down the cause and either fix the problem or suppress the warning.
+#               . EXPECTED: At the moment this test has a habit of timing out or being killed by some abort signal in finalize, but the output always looks fine.
+#######################################################
+-->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>python</text></argument>
+  <argument name="timeout"><integer>3600</integer></argument>
+  <argument name="args"><set>
+    <text>../options/tistostest.py</text>
+  </set></argument>
+  <argument name="validator"><text>
+block = """
+Hlt1 efficiencies
+Trigger   Eff. (Decision)   Eff. (TOS)
+Hlt1TrackAllL0Decision   0.33   0.31
+Hlt2 efficiencies
+Trigger   Eff. (Decision)   Eff. (TOS)
+Hlt2IncPhiDecision   0.28   0.28
+"""
+findReferenceBlock(block, signature_offset = 3)
+  </text></argument>
+</extension>
+

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-08-23 - Sean Benson
+ - Add test for tistos
+
 !========================= Moore v23r0 2014-08-17 =========================
 
 ! 2014-08-04 - Alex Shires
