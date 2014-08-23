@@ -15,6 +15,7 @@
 -->
 <extension class="GaudiTest.GaudiExeTest" kind="test">
   <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>1200</integer></argument>
   <argument name="args"><set>
     <text>../options/readStrip20Data.py</text>
     <text>../options/default-threshold.py</text>
