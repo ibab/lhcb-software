@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-23 - Sean Benson
+ - Updates to:
+     - StrippingBs2PhiPhi.py (new tuning & upstream line)
+     - StrippingBs2Q2B.py (new tuning)
+     - StrippingBs2KKhh.py (new tuning)
+     - StrippingB2FourKHigh.py (new tuning)
+     - StrippingBs2gammagamma.py (new tuning)
+
 ! 2014-08-22 - Cedric Potterat
  - Added StrippingJets.py for QEE/Jets
 

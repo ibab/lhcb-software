@@ -8,8 +8,8 @@ phi mass
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '28/08/2012'
-__version__ = '2.1'
+__date__ = '17/08/2014'
+__version__ = '3.0'
 
 __all__ = ( 'BsPhiRhoConf',
             'mkDiTrackList',
@@ -21,20 +21,19 @@ default_config = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'BsPhiRhoConf',
     'CONFIG'      : {'PRPrescale'     : 1.,
-                     'PRResMinPT'     : 900.,
-                     'PRResMinP'      : 1.,
+                     'PRResMinPT'     : 1200.,
+                     'PRResMinP'      : 3.,
                      'PRResMinMass'   : 0.,
                      'PRResMaxMass'   : 4000.,
                      'PRResVtxChiDOF' : 9.,
                      'PRBMinM'        : 4800.,
                      'PRBMaxM'        : 5600.,
-                     'PRPhiWindow'    : 25.,
+                     'PRPhiWindow'    : 20.,
                      'PRBVtxChi2DOF'  : 9.,
                      'PRIPCHI2' : 20
                      },
     'STREAMS'     : ['Bhadron']
     }
-
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles, FilterDesktop#, OfflineVertexFitter
@@ -66,7 +65,8 @@ class BsPhiRhoConf(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(TRGHOSTPROB < 0.5) & (PT>500.*MeV) & (TRCHI2DOF < 3.5) & (MIPCHI2DV(PRIMARY) > 16)")
+        self.hltFilter = "( HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]BodyBBDTDecision') )"
+        _trkFilter = FilterDesktop(Code = "(TRGHOSTPROB < 0.45) & (PT>600.*MeV) & (TRCHI2DOF < 3.5) & (MIPCHI2DV(PRIMARY) > 4.5)")
         
 	self.TrackListhh = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
@@ -96,6 +96,7 @@ class BsPhiRhoConf(LineBuilder) :
 
         self.PRKKhhLine = StrippingLine( Bs2PRName+"Line",
                                          prescale = config['PRPrescale'],
+                                         HLT = self.hltFilter,
                                          selection = self.B2CharmlessPRKKhh )
 
         self.registerLine(self.PRKKhhLine)
@@ -111,7 +112,7 @@ def mkDiTrackList( name,
     Di-track selection
     """
     _diTrackPreVertexCuts = "(APT> %(MinPTCut)s *MeV) & (AP> %(MinPCut)s *GeV) & in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
-    _diTrackPostVertexCuts = "(MIPCHI2DV(PRIMARY) > 16)"
+    _diTrackPostVertexCuts = "(VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )"% locals()
     
     _combineDiTrack = CombineParticles( DecayDescriptor="rho(770)0 -> pi+ pi-",
 					CombinationCut = _diTrackPreVertexCuts,
@@ -129,7 +130,7 @@ def mkKKTrackList( name,
     KK selection
     """
 
-    _code = "(MIPCHI2DV(PRIMARY) > 10) & (ADMASS('phi(1020)')< %(PhiWindowMassCut)s *MeV) & (PT> %(MinPTCut)s *MeV) & (P> %(MinPCut)s *GeV)" % locals()
+    _code = "(ADMASS('phi(1020)')< %(PhiWindowMassCut)s *MeV) & (PT> %(MinPTCut)s *MeV) & (P> %(MinPCut)s *GeV)" % locals()
     _stdPhi = DataOnDemand(Location="Phys/StdTightPhi2KK/Particles")
     _phiFilter = FilterDesktop(Code = _code)
 
@@ -148,7 +149,7 @@ def mkBs2PRKKhh( name,
     Bs to KKhh selection
     """
     _B2PRPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
-    _B2PRPostVertexCuts = "(MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
+    _B2PRPostVertexCuts = "(BPVDIRA > 0.99995) & (MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
 
     _combineB2PR = CombineParticles( DecayDescriptor="B0 -> phi(1020) rho(770)0",
                                       MotherCut = _B2PRPostVertexCuts,

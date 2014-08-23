@@ -34,18 +34,20 @@ default_config = {
     'BUILDERTYPE' : 'StrippingBs2gammagammaConf',
     'CONFIG'      : { 'gammaPT'             : 1250    # MeV/c
                      ,'gammaP'              : 11000   # MeV/c
-                     ,'gammaCL'             : 0.3     # adimensional
+                     ,'gammaCL'             : 0.0     # adimensional
                      ,'gammaConvPT'         : 1400    # MeV/c
                      ,'gammaConvIPCHI'      : 1.5     # adimensional
                      ,'gammaNonePT'         : 1700    # MeV/c
-                     ,'gammaNoneP'          : 16500   # MeV/c
-                     ,'gammaNoneCL'         : 0.5    # adimensional
+                     ,'gammaNoneP'          : 16000   # MeV/c
+                     ,'gammaNoneCL'         : 0.42    # adimensional
+                     ,'BsPT'                : 1000    # MeV/c
                      ,'BsVertexCHI2pDOF'    : 20      # adimensional
                      ,'BsLowMass'           : 4600    # MeV/cc
+                     ,'BsNonePT'            : 2000    # MeV/c
                      ,'BsLowMassDouble'     : 4300    # MeV/cc
-                     ,'BsLowMassNone'       : 5000    # MeV/cc
+                     ,'BsLowMassNone'       : 4900    # MeV/cc
                      ,'BsHighMass'          : 5800    # MeV/cc
-                     ,'BsHighMassNone'      : 5700    # MeV/cc
+                     ,'BsHighMassNone'      : 6000    # MeV/cc
                      ,'BsHighMassDouble'    : 5800    # MeV/cc
                     },
     'STREAMS'     : ['Radiative']
@@ -64,8 +66,10 @@ class StrippingBs2gammagammaConf(LineBuilder):
 		, 'gammaNonePT'                    # MeV/c
 		, 'gammaNoneP'                     # MeV/c
 		, 'gammaNoneCL'                    # adimensional
+		, 'BsPT'                           # MeV/c
 		, 'BsVertexCHI2pDOF'               # adimensional
 		, 'BsLowMass'                      # MeV/cc
+		, 'BsNonePT'                       # MeV/c
 		, 'BsLowMassDouble'                # MeV/cc
 		, 'BsLowMassNone'                  # MeV/cc
 		, 'BsHighMass'                     # MeV/cc
@@ -76,7 +80,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
 	def __init__(self, name, config) :
 		LineBuilder.__init__(self, name, config)
 
-		fltrCode_LL = "(PT>%(gammaConvPT)s*MeV) & (MIPCHI2DV(PRIMARY)>%(gammaConvIPCHI)s)" % config
+		fltrCode_LL = "(PT>(%(gammaConvPT)s-200.0)*MeV) & (MIPCHI2DV(PRIMARY)>%(gammaConvIPCHI)s)" % config
 		self._trkFilter_LL = FilterDesktop( Code = fltrCode_LL )
 		fltrCode_DD = "(PT>%(gammaConvPT)s*MeV) & (MIPCHI2DV(PRIMARY)>(2.0/3.0)*%(gammaConvIPCHI)s)" % config
 		self._trkFilter_DD = FilterDesktop( Code = fltrCode_DD )
@@ -120,9 +124,9 @@ class StrippingBs2gammagammaConf(LineBuilder):
 
 
 	def _Bs2gammagammaLL_X_Line( self, name, config) :
-		BsGG_DC_LL = "(P>%(gammaP)s*MeV)" % config
+		BsGG_DC_LL = "(P>(%(gammaP)s-2000.0)*MeV)" % config
 		BsGG_CC_LL = "(in_range(%(BsLowMass)s*MeV, AM, %(BsHighMass)s*MeV))" % config
-		BsGG_MC_LL = "(INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISLONG ))" % config
+		BsGG_MC_LL = "(PT>%(BsPT)s*MeV) & (INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISLONG ))" % config
 
 
 		_Bs2gammagamma_LL = CombineParticles(name = "CombineParticles_BsGG_LL",
@@ -147,7 +151,7 @@ class StrippingBs2gammagammaConf(LineBuilder):
 	def _Bs2gammagammaDD_X_Line( self, name, config) :
 		BsGG_DC_DD = "(P>%(gammaP)s*MeV)" % config
 		BsGG_CC_DD = "(in_range(%(BsLowMass)s*MeV, AM, %(BsHighMass)s*MeV))" % config
-		BsGG_MC_DD = "(INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISDOWN ))" % config
+		BsGG_MC_DD = "(PT>%(BsPT)s*MeV) & (INTREE( (ID=='gamma') & (ISBASIC) )) & (INTREE( HASTRACK & ISDOWN ))" % config
 
 
 		_Bs2gammagamma_DD = CombineParticles(name = "CombineParticles_BsGG_DD",
@@ -196,10 +200,10 @@ class StrippingBs2gammagammaConf(LineBuilder):
 		BsGG_DC_none = "(PT>%(gammaNonePT)s*MeV) & (P>%(gammaNoneP)s*MeV) & (CL>%(gammaNoneCL)s)" % config
                 if wide == True:
                     BsGG_CC_none = "(in_range( ( %(BsLowMassNone)s - 500.0 )*MeV, AM, ( %(BsHighMassNone)s + 500.0 )*MeV) )" % config
-                    BsGG_MC_none = "(in_range( ( %(BsLowMassNone)s - 500.0 )*MeV, M, ( %(BsHighMassNone)s + 500.0 )*MeV) )" % config
+                    BsGG_MC_none = "(PT>%(BsNonePT)s*MeV) & (in_range( ( %(BsLowMassNone)s - 500.0 )*MeV, M, ( %(BsHighMassNone)s + 500.0 )*MeV) )" % config
                 else:
                     BsGG_CC_none = "(in_range(%(BsLowMassNone)s*MeV, AM, %(BsHighMassNone)s*MeV))" % config
-                    BsGG_MC_none = "(in_range(%(BsLowMassNone)s*MeV, M, %(BsHighMassNone)s*MeV))" % config
+                    BsGG_MC_none = "(PT>%(BsNonePT)s*MeV) & (in_range(%(BsLowMassNone)s*MeV, M, %(BsHighMassNone)s*MeV))" % config
 
                 if wide == True:
                     scaleWide = 0.1

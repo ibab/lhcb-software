@@ -7,8 +7,8 @@ Designed to look for 4 Kaon final states with a high resonance mass
 '''
 
 __author__ = ['Sean Benson']
-__date__ = '21/08/2012'
-__version__ = '2.0'
+__date__ = '17/08/2014'
+__version__ = '3.0'
 
 __all__ = ( 'Bs2Q2Body4KConf',
             'mkDiTrackList',
@@ -62,7 +62,8 @@ class Bs2Q2Body4KConf(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        _trkFilter = FilterDesktop(Code = "(PT>500.*MeV) & (TRCHI2DOF < 4) & (MIPCHI2DV(PRIMARY) > 16)")
+        _trkFilter = FilterDesktop(Code = "(TRGHOSTPROB < 0.4) & (PT>500.*MeV) & (TRCHI2DOF < 4.0) & (MIPCHI2DV(PRIMARY) > 4.0)")
+        self.hltFilter = "( HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]BodyBBDTDecision') )"
         self.TrackList = Selection( 'TrackList' + self.name,
                                     Algorithm = _trkFilter,
                                     RequiredSelections = [StdLooseKaons])
@@ -85,6 +86,7 @@ class Bs2Q2Body4KConf(LineBuilder) :
 
         self.Q2B4KLine = StrippingLine( Bs2Q2BName+"Line",
                                          prescale = config['Q2BPrescale'],
+                                         HLT = self.hltFilter,
                                          selection = self.B2CharmlessQ2B4K )
 
         self.registerLine(self.Q2B4KLine)
@@ -120,7 +122,7 @@ def mkBs2Q2B4K( name,
     Charmless Q2B selection
     """
     _B2Q2BPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
-    _B2Q2BPostVertexCuts = "(MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
+    _B2Q2BPostVertexCuts = "(BPVDIRA > 0.9995) & (MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
 
     _combineB2Q2B = CombineParticles( DecayDescriptor="B_s0 -> phi(1020) phi(1020)",
                                       MotherCut = _B2Q2BPostVertexCuts,

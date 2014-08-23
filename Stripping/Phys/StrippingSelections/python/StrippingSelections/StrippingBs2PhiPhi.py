@@ -8,14 +8,13 @@ Provides class StrippingBs2PhiPhiConf with methods to return stripping line obje
 Exports the following stripping lines as instance data members:
 - Bs2PhiPhiLine      : main line with phi mass window of +/- 25 MeV/cc
 - Bs2PhiPhiWideLine  : prescaled phi sideband line with MM(phi) < 1100 MeV/cc
-- lines              : list with both lines
-
-Both lines are build by the function _Bs2PhiPhi_X_Line, which accepts the name and the mass range flag (wide=True/False) as parameter.
+- Bs2PhiPhiUpLine  : same as nominal line but enforces at least one upstream kaon
+- lines              : list with lines
 '''
 
 __author__  = [ 'Sean Benson' ]
-__date__    = '2013/07/11'
-__version__    = '2.4'
+__date__    = '2013/08/15'
+__version__    = '3.0'
 
 
 '''
@@ -29,20 +28,22 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
 import StandardParticles
-from StandardParticles import StdLooseKaons as MyLooseKaons
+#from StandardParticles import StdLooseANNKaons as MyLooseKaons
+from StandardParticles import StdLooseANNUpKaons as MyLooseUpKaons
 #if hasattr(StandardParticles, "StdAllLooseKaons"):
 #  from StandardParticles import StdAllLooseKaons as MyLooseKaons
 #else:
 #  from StandardParticles import StdLooseKaons as MyLooseKaons
+from StandardParticles import StdAllLooseANNKaons as MyLooseKaons
 
 default_config = {
     'NAME'        : 'BetaSBs2PhiPhi',
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'StrippingBs2PhiPhiConf',
     'CONFIG'      : {'KaonPT'              : 400      # MeV/c
-                     , 'KaonIPCHI2'          : 2.5      # adimensional
+                     , 'KaonIPCHI2'          : 0.0      # adimensional
                      , 'PhiPT'               : 0        # MeV/c
-                     , 'PhiPTsq'             : 2.0      # GeV*GeV/cc
+                     , 'PhiPTsq'             : 1.2      # GeV*GeV/cc
                      , 'PhiVertexCHI2pDOF'   : 15       # adimensional
                      , 'PhiMassWindow'       : 25       # MeV/cc
                      , 'PhiMassMax'          : 1090     # MeV/cc
@@ -73,14 +74,17 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 
       self.Bs2PhiPhiLine     = self._Bs2PhiPhi_X_Line( name,        config, False )
       self.Bs2PhiPhiWideLine = self._Bs2PhiPhi_X_Line( name+"Wide", config, True )
+      self.Bs2PhiPhiUpLine   = self._Bs2PhiPhiUp_X_Line( name+"Up", config )
       self.registerLine( self.Bs2PhiPhiLine )
       self.registerLine( self.Bs2PhiPhiWideLine )
+      self.registerLine( self.Bs2PhiPhiUpLine )
 
 
     def _Bs2PhiPhi_X_Line( self, name, config, wide ) :
 
-            Phi2KK_DC = "(TRGHOSTPROB < 0.8) & (PT>%(KaonPT)s*MeV)&(MIPCHI2DV(PRIMARY)>%(KaonIPCHI2)s)" % config
-            Phi2KK_CC = "(AM<(%(PhiMassMax)s+30)*MeV)&(ADOCACHI2CUT(40, ''))" % config
+            Phi2KK_DC = "(TRGHOSTPROB < 0.5) & (PT>%(KaonPT)s*MeV)&(MIPCHI2DV(PRIMARY)>%(KaonIPCHI2)s)" % config
+            Phi2KK_CC = "(AM<(%(PhiMassMax)s+30)*MeV)" % config
+            #Phi2KK_CC = "(AM<(%(PhiMassMax)s+30)*MeV)&(ADOCACHI2CUT(40, ''))" % config
 
             Phi2KK_MassCut = ""
             if wide == False :
@@ -92,7 +96,7 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 
     	    Bs2PhiPhi_DC = "(PT>%(PhiPT)s*MeV)" % config
     	    Bs2PhiPhi_CC = "(ADAMASS('B_s0')<((%(BsMassWindow)s+30)*MeV))&(ACHILD(PT,1)*ACHILD(PT,2)>%(PhiPTsq)s*GeV*GeV)" % config
-    	    Bs2PhiPhi_MC = "(BPVDIRA > 0.99) & (VFASPF(VCHI2/VDOF)<%(BsVertexCHI2pDOF)s)&(ADMASS('B_s0')<%(BsMassWindow)s*MeV)" % config
+    	    Bs2PhiPhi_MC = "(BPVDIRA > 0.999) & (VFASPF(VCHI2/VDOF)<%(BsVertexCHI2pDOF)s)&(ADMASS('B_s0')<%(BsMassWindow)s*MeV)" % config
             ps = 1.0
             if wide == True :
               ps = config['WidePrescale']
@@ -140,3 +144,48 @@ class StrippingBs2PhiPhiConf(LineBuilder):
               , selection = Bs2PhiPhi
               , EnableFlavourTagging = True)
 
+    def _Bs2PhiPhiUp_X_Line( self, name, config ) :
+
+            Phi2KK_DC = "(TRGHOSTPROB < 0.5) & (PT>%(KaonPT)s*MeV)&(MIPCHI2DV(PRIMARY)>%(KaonIPCHI2)s)" % config
+            Phi2KK_CC = "(AM<(%(PhiMassMax)s+30)*MeV)" % config
+            #Phi2KK_CC = "(AM<(%(PhiMassMax)s+30)*MeV)&(ADOCACHI2CUT(40, ''))" % config
+
+            UpAddition = "(INTREE( HASTRACK & ISUP ) & INTREE( HASTRACK & ISLONG )) & "
+
+            Phi2KK_MassCut = "&(ADMASS('phi(1020)')<%(PhiMassWindow)s*MeV)" % config
+
+            Phi2KK_MC = "(VFASPF(VCHI2/VDOF)<%(PhiVertexCHI2pDOF)s)" % config + Phi2KK_MassCut
+
+    	    Bs2PhiPhi_DC = "(PT>%(PhiPT)s*MeV)" % config
+    	    Bs2PhiPhi_CC = "(ADAMASS('B_s0')<((%(BsMassWindow)s+30)*MeV))&(ACHILD(PT,1)*ACHILD(PT,2)>%(PhiPTsq)s*GeV*GeV)" % config
+    	    Bs2PhiPhi_MC = UpAddition+"(BPVDIRA > 0.999) & (VFASPF(VCHI2/VDOF)<%(BsVertexCHI2pDOF)s)&(ADMASS('B_s0')<%(BsMassWindow)s*MeV)" % config
+
+            _Bs2PhiPhiLooseAllDetachedPhi2KK = CombineParticles(
+                            DecayDescriptor = "phi(1020) -> K+ K-"
+                          , DaughtersCuts = {"K+": Phi2KK_DC}
+                          , CombinationCut = Phi2KK_CC
+                          , MotherCut = Phi2KK_MC
+                       )
+
+    	    _Bs2PhiPhiAll = CombineParticles(
+             DecayDescriptor =  "B_s0 -> phi(1020) phi(1020)"
+    	    , DaughtersCuts   = {"phi(1020)" : Bs2PhiPhi_DC}
+            , CombinationCut  = Bs2PhiPhi_CC
+            , MotherCut       = Bs2PhiPhi_MC
+            )
+
+
+	    Bs2PhiPhiLooseAllDetachedPhi2KK = Selection(
+		name+ "_LooseAllPhi2KK",
+		Algorithm = _Bs2PhiPhiLooseAllDetachedPhi2KK,
+		RequiredSelections = [MyLooseKaons,MyLooseUpKaons])
+	    Bs2PhiPhiAll = Selection(
+		 name,
+		 Algorithm = _Bs2PhiPhiAll,
+		 RequiredSelections = [Bs2PhiPhiLooseAllDetachedPhi2KK])
+
+    	    return StrippingLine(name+"Line"
+              , prescale = 1
+              , postscale = 1
+              , selection = Bs2PhiPhiAll
+              , EnableFlavourTagging = True)
