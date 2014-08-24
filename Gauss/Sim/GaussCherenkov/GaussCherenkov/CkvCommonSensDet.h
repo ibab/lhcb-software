@@ -1,70 +1,49 @@
-// $Id: CkvSensDet.h,v 1.6 2009-07-17 13:46:13 jonrob Exp $
-#ifndef       CkvSensDet_H
-#define       CkvSensDet_H 1
+#ifndef GAUSSCHERENKOV_CKVCOMMONSENSDET_H 
+#define GAUSSCHERENKOV_CKVCOMMONSENSDET_H 1
 
 // Include files
-// from GiGa
-#include "GiGa/GiGaSensDetBase.h"
-
 // local
 #include "GaussCherenkov/CkvG4Hit.h"
 #include "GaussRICH/RichG4HitCollName.h"
 #include "CkvG4GeomProp.h"
 #include <map>
 
-// forward declarations
-class G4HCofThisEvent;
+#include "G4Step.hh"
+#include "G4TouchableHistory.hh"
+#include "GaudiKernel/StatusCode.h"
 
-/** @class CkvSensDet CkvSensDet.h src/SensDet/CkvSensDet.h
+/** @class CkvCommonSensDet CkvCommonSensDet.h GaussCherenkov/CkvCommonSensDet.h
  *  
  *
  *  @author Sajan Easo
- *  @date   2002-05-24, last modified 2007-01-11
+ *  @date   2014-08-19
  */
+class CkvCommonSensDet {
+public: 
 
-class CkvSensDet: virtual public GiGaSensDetBase
-{
+  virtual ~CkvCommonSensDet( ); ///< Destructor
+  static CkvCommonSensDet* getCkvCommonSensDetInstance();
 
-public:
+  bool Rich2UseGrandPmt() 
+  {    return m_Rich2UseGrandPmt;}
 
-  /** standard constructor
-   *  @see GiGaSensDetBase
-   *  @see GiGaBase
-   *  @see AlgTool
-   *  @param type type of the object (?)
-   *  @param name name of the object
-   *  @param parent  pointer to parent object
-   */
-  CkvSensDet
-  ( const std::string& type   ,
-    const std::string& name   ,
-    const IInterface*  parent ) ;
+  void InitGeomProp();
+  void ResetPmtMapInCurrentEvent();
 
-  /// destructor (virtual and protected)
-  virtual ~CkvSensDet();
-  /// initialize
-  StatusCode initialize();
+  StatusCode  ProcessRichPmtHits( G4Step* aStep , G4TouchableHistory* aTh);
 
-  /// finalize
-  StatusCode finalize();
-
-  /** process the hit
-   *  @param step     pointer to current Geant4 step
-   *  @param history  pointert to touchable history
-   */
-  virtual void Initialize(G4HCofThisEvent* HCE);
-  //  virtual void EndOfEvent(G4HCofThisEvent* HCE);
-  virtual bool ProcessHits( G4Step* step,    G4TouchableHistory* history ) ;
-  virtual void clear();
-  virtual void DrawAll();
-  virtual void PrintAll();
+  void RichPmtAviodDuplicateHitsActivate(bool adupavoidfl ) 
+  {m_RichPmtAviodDuplicateHitsActivate =  adupavoidfl;}
+  void RichPmtFlagDuplicateHitsActivate (bool adupfl ) 
+  {m_RichPmtFlagDuplicateHitsActivate = adupfl;}
+  CkvG4Hit*  newHit()  {  return m_newHit;}
   
-  void InitPmtHC();
 
 
-   
+
+
   CkvG4GeomProp*  RichGeomProperty() {return  m_RichGeomProperty; }
-  RichG4HitCollName* RichG4HCName() {return m_RichG4HCName; }
+
   G4int NumberofRichDet() {return  m_RichGeomProperty->NumberOfRichDet(); }
 
   G4int NumberOfDetSectionsInRich1Det() const
@@ -103,40 +82,31 @@ public:
   G4int GrandPixelYNum ( const G4double localYCoord ) const
   {return m_RichGeomProperty->GrandPixelYNumFromCoord(localYCoord) ;}
 
-  void ResetPmtMapInCurrentEvent();
+protected:
 
 private:
-  ///
- 
-  CkvSensDet(); ///< no default constructor
-  CkvSensDet( const CkvSensDet& ); ///< no copy constructor
-  CkvSensDet& operator=( const CkvSensDet& ) ; ///< no =
+  /// Standard constructor
+  CkvCommonSensDet( ); 
 
+private:
+  static CkvCommonSensDet* CkvCommonSensDetInstance;
   
-  ///
-private:
-  ///
   CkvG4GeomProp* m_RichGeomProperty;
-  std::vector<G4int> m_Rich1PhdSDID;
-  std::vector<G4int> m_Rich2PhdSDID;
 
-  RichG4HitCollName* m_RichG4HCName;
-  G4int m_NumberOfHCInRICH;
-  std::vector<CkvG4HitsCollection*>  m_RichHC;
-  std::vector<G4int> m_PhdHCID;
-  bool  m_SuperRichFlag;
-  bool  m_OptHorizRichFlag;
+  //  RichG4HitCollName* m_RichG4HCName;
+  // G4int m_NumberOfHCInRICH;
+
+  // std::vector<CkvG4HitsCollection*>  m_RichHC;
+  // std::vector<G4int> m_PhdHCID;
   bool  m_Rich2UseGrandPmt;
-  
   bool m_RichPmtAviodDuplicateHitsActivate;
   bool m_RichPmtFlagDuplicateHitsActivate;
   G4int m_TotNumPmtsInRich;
   std::vector<bool> m_RichPmtAlreadyHit; // flag for pmt to have hits in current event
   std::multimap<G4int,G4int> m_RichPmtToPixelNumMap; // map between pmt and Pixelnum for each hit in current event
-  //  bool m_CkvSensInitFlag;
-  // bool m_CkvSensInitEventFlag;
+  bool m_GeomPropInitFlag;
+
+  CkvG4Hit * m_newHit;
   
-
 };
-
-#endif
+#endif // GAUSSCHERENKOV_CKVCOMMONSENSDET_H

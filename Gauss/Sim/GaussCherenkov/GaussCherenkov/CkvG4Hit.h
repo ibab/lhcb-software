@@ -163,7 +163,9 @@ private:
   G4bool m_FlagHitAsDuplicate; // if true the hit is a duplicate hit. If false it is a unique hit which is the case for most of the hits.
                               // this helps to study the effect of binary readout
 
-  
+  G4bool m_FlagHitAsStore; // if true the hit is to be stored. If false it is a duplicate hit which does not need to be stored depending of the storage flag.
+                              // this helps to study the effect of binary readout
+ 
 public:
   inline void SetCurModuleNum(const G4int cm) 
   {m_CurModuleNum=cm;}
@@ -493,6 +495,16 @@ public:
   inline bool FlagHitAsDuplicate() const
   {
     return ( (bool) m_FlagHitAsDuplicate);
+  }
+
+  void setFlagHitAsStore(G4bool aStoreFlag )
+  {
+    m_FlagHitAsStore = aStoreFlag;
+  }
+
+  inline bool FlagHitAsStore() const
+  {
+    return ( (bool) m_FlagHitAsStore);
   }
 
 

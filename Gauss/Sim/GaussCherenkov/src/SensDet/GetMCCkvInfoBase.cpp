@@ -24,7 +24,6 @@ GetMCCkvInfoBase::GetMCCkvInfoBase( const std::string& name,
   , m_colRange                ( 2 )
   , m_RICHes                  ( Rich::NRiches, true )
   , m_relationTable           ( NULL )
-  , m_SuperRichFlag           (false)
 {
   declareProperty( "GiGaService",    m_gigaSvcName = "GiGa" );
   declareProperty( "KineCnvService", m_kineSvcName = IGiGaCnvSvcLocation::Kine );
@@ -39,7 +38,8 @@ StatusCode GetMCCkvInfoBase::initialize()
   const StatusCode sc = Rich::AlgBase::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialise", sc );
    CkvGeometrySetupUtil * aCkvGeometrySetup= CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance();
-   m_SuperRichFlag = aCkvGeometrySetup ->isSuperRich();
+   // m_SuperRichFlag = aCkvGeometrySetup ->isSuperRich();
+   m_Rich2UseGrandPmt= aCkvGeometrySetup ->Rich2_UseGrandPmt();
 
   // initialise
   getRichG4CollectionRange();
@@ -51,19 +51,19 @@ StatusCode GetMCCkvInfoBase::initialize()
   }
   info() << endreq;
 
-  if(!m_SuperRichFlag) {
+  // if(!m_SuperRichFlag) {
     
      info() << "Using";
      if ( richIsActive(Rich::Rich1) ) info() << " Rich1";
      if ( richIsActive(Rich::Rich2) ) info() << " Rich2";
      info() << " Detectors" << endmsg;
   
-  }else {
-     info() << "Using";
+     //  }else {
+     //  info() << "Using";
       
-     info() << " SuperRich Detector" << endmsg;
+     // info() << " SuperRich Detector" << endmsg;
     
-  }
+     // }
   
   
   return sc;

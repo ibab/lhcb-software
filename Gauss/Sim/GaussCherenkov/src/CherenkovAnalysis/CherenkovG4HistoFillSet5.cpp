@@ -278,11 +278,13 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit,
     m_TotNumHitR2InCurEv++;
       
     if( curRichSect ==0 ) {
-      xC += 600.0;
+      xC += 450.0;
+      // xC += 600.0;
       Rich2Mirror2XC -= 800.0 ;
 
     }else if (curRichSect ==1 ) {
-      xC -= 600.0; 
+      xC -= 450.0; 
+      //  xC -= 600.0; 
       Rich2Mirror2XC += 800.0 ;
 
     }      

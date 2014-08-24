@@ -43,7 +43,7 @@
 
 
 // local
-#include "GaussRICH/RichG4HitCollName.h"
+#include "GaussCherenkov/CkvG4HitCollName.h"
 #include "GaussCherenkov/CkvG4Hit.h"
 
 /** @class GetMCCkvInfoBase GetMCCkvInfoBase.h
@@ -98,12 +98,14 @@ protected:
   inline const std::vector<int> & colRange() const { return m_colRange; }
 
   /// Access collection name data on demand
-  inline RichG4HitCollName * RichG4HitCollectionName() const
+  inline CkvG4HitCollName * RichG4HitCollectionName() const
   {
     if ( !m_RichG4HitCollectionName )
     { 
-      m_RichG4HitCollectionName = new RichG4HitCollName();
-      if(m_SuperRichFlag) m_RichG4HitCollectionName->setCollConfigWithSuperRich();
+      m_RichG4HitCollectionName = new  CkvG4HitCollName();
+      // if(m_SuperRichFlag) m_RichG4HitCollectionName->setCollConfigWithSuperRich();
+      // the following already in the constructor above.
+      //if(m_Rich2UseGrandPmt) m_RichG4HitCollectionName->setCollConfigWithMixedPmtSet();
 
     }
     return m_RichG4HitCollectionName;
@@ -116,7 +118,8 @@ protected:
   inline bool richIsActive( const Rich::DetectorType rich ) const
   {
     // return m_RICHes[rich];
-    return (SuperRichFlag() || ( m_RICHes[rich]) );
+    //return (SuperRichFlag() || ( m_RICHes[rich]) );
+    return  ( m_RICHes[rich] ) ;
   }
 
   /// Location of CkvG4Hit to MCRichHit relations
@@ -125,8 +128,8 @@ protected:
     return "/Event/MC/Rich/RichG4HitToMCRichHitRelation";
   }
 
-  inline bool SuperRichFlag() const
-  {  return m_SuperRichFlag;}
+  //  inline bool SuperRichFlag() const
+  // {  return m_SuperRichFlag;}
   
 private:
 
@@ -147,11 +150,13 @@ private:
   std::string        m_kineSvcName;                      ///< Name of GiGaKine Service
   mutable IGiGaSvc*          m_gigaSvc;                  ///< Pointer to GiGa Service
   mutable IGiGaKineCnvSvc*   m_gigaKineCnvSvc;           ///< Pointer to GiGaKine Service
-  mutable RichG4HitCollName* m_RichG4HitCollectionName;  ///< G4 hit collections for RICH
+  mutable CkvG4HitCollName* m_RichG4HitCollectionName;  ///< G4 hit collections for RICH
   std::vector<int> m_colRange;                           ///< Collection data
   std::vector<bool> m_RICHes;                            ///< The RICH detectors to create data objects for
   G4HitTable * m_relationTable;                          ///< G4 hit to MCRichHit relation table
-  bool m_SuperRichFlag;                                 // true for SuperRich, false for two-RICH option
+  // bool m_SuperRichFlag;                                 // true for SuperRich, false for two-RICH option
+  bool m_Rich2UseGrandPmt;                                 // true when Rich2 uses Grand PMTs. 
+
 protected:
 
   std::string      m_dataToFill;                         ///< Data location in TES to fill

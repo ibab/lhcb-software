@@ -4,7 +4,7 @@
 
 // Include files
 // from Gaudi
-#include "GaussRICH/RichG4HitCollName.h"
+#include "GaussCherenkov/CkvG4HitCollName.h"
 
 // GiGa
 #include <vector>
@@ -56,7 +56,7 @@ public:
   int RichG4CollectionID(int CollNum ) 
    {return   m_RichG4CollectionID[CollNum]; }
   /// 
-  RichG4HitCollName* RichHitCName() {return  m_RichHitCName; }
+  CkvG4HitCollName* RichHitCName() {return  m_RichHitCName; }
   int NumRichColl(){
     return  m_NumRichColl;
   }
@@ -163,7 +163,7 @@ private:
   std::vector<int> m_RichG4CollectionID;
   int m_NumRichColl;
   int m_NumRichClassicColl;
-  RichG4HitCollName* m_RichHitCName;
+  CkvG4HitCollName* m_RichHitCName;
   CkvG4HistoFillSet1* m_RichG4HistoFillSet1;
   CherenkovG4HistoFillSet2* m_RichG4HistoFillSet2;
   RichG4HistoFillSet3* m_RichG4HistoFillSet3;

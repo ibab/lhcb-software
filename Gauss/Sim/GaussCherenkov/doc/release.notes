@@ -4,7 +4,12 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-
+!2014-08-24  - Sajan Easo
+- For using the mixed set of PMTS, the sensitive detector and collection name
+  configurations are modified. The hits from large PMTS are in a separate 
+  sensitive detector and are stored in two
+  extra collection sets. All this is made transparent to the rest of the program.
+  Modified several files in the SensDet subdirectory and corresponding .h files.
 !===================== GaussCherenkov v4r3 2014-07-28 ========================
 ! 2014-06-06 - Jibo He
  - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties 

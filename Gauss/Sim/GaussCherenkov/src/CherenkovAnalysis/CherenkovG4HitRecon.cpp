@@ -111,7 +111,8 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
 
   G4HCofThisEvent * HCE;
   G4int NumRichCollection= NumRichColl;
-  int Current_RichG4CollectionID=0;
+  int Current_RichG4CollectionID=0;  
+  
   for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
     //if(ihcol ==0 || ihcol == 1 ){
     //  irichdet=0;
@@ -122,6 +123,8 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
     //  <<"CherenkovG4HitRecon Current Rich for the hit "<<irichdet<<endmsg;
     
     Current_RichG4CollectionID =RichG4CollectionID[ihcol];
+    // CherenkovG4HitReconlog<<MSG::INFO<<" hitcol hitcolID "<<ihcol<<"   "<<Current_RichG4CollectionID<<endreq;
+    
     if(Current_RichG4CollectionID >=0 ) {
       HCE = anEvent->GetHCofThisEvent();
       CkvG4HitsCollection* RHC=NULL;
@@ -181,12 +184,15 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
 	         if(  aRichDetNum == 1 ) { aPmtNum -= aNumPmtInRich[0] ;  }
            //       G4int aRadiatornum= aHit->GetRadiatorNumber();
           
+           int irichsector =ihcol;
+           if(ihcol > 3 ) irichsector = ihcol -2;
+           
            //  const G4ThreeVector & LocalPhcathCoord = aHit -> GetLocalPEOriginPos();
          if( OccpSelectThisHit) {
 
             m_RichG4CkvRec->SetCurrentRichDetNum(aRichDetNum );
             m_RichG4CkvRec->SetCurrentPmtNum(aPmtNum);
-            m_RichG4CkvRec->SetCurrentRichSector(ihcol);
+            m_RichG4CkvRec->SetCurrentRichSector(irichsector);
 
             
 
@@ -246,17 +252,19 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
   //  int irichdet=-1;
 
 
-
+  
   G4HCofThisEvent * HCE;
   G4int NumRichCollection= NumRichColl;
   int Current_RichG4CollectionID=0;
+    //    }
+    //G4cout<<" Cherenkov hit recon NumHitColl "<<NumRichColl <<G4endl;
+
   for (int ihcol=0; ihcol<NumRichCollection; ihcol++) {
     // if(ihcol ==0 || ihcol == 1 ){
     //  irichdet=0;
     //  }else if ( ihcol ==2 || ihcol == 3 ){
     //  irichdet =1;
     //    }
-
     Current_RichG4CollectionID =RichG4CollectionID[ihcol];
     if(Current_RichG4CollectionID >=0 ) {
       HCE = anEvent->GetHCofThisEvent();
@@ -267,6 +275,9 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
       }
       if(RHC ){
         G4int nHitInCurColl = RHC->entries();
+        //  G4cout<<" Cherenkov hit recon NumHitcoll  col numhit " 
+        //      <<NumRichColl<<"  "<<ihcol<<"  "<<nHitInCurColl<<G4endl;
+        
         for (G4int iha=0; iha<nHitInCurColl ; iha++ ) {
           CkvG4Hit* aHit = (*RHC)[iha];
           // in case saturated hits are needed, first
@@ -290,9 +301,9 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
           
           
           //           G4cout<<" RichG4Recon Pmt LocalCoord Pixel Num GapFlag"<< LocalHitCoord <<"  "
-          //      <<aPixelXNum<<"  "<< aPixelYNum<<"   "<<aHitInPixelGap <<G4endl;
-          //  G4cout<<" RichG4Recon DetNum Pmt num Module num "<<aRichDetNum<< "   "
-          //     <<aPmtNum <<"  "<<aPmtModuleNum<<G4endl;
+          //       <<aPixelXNum<<"  "<< aPixelYNum<<"   "<<aHitInPixelGap <<G4endl;
+          //  G4cout<<" RichG4Recon DetNum Pmt num Module num collectionNum "<<aRichDetNum<< "   "
+          //        <<aPmtNum <<"  "<<aPmtModuleNum<<"    "<<ihcol <<G4endl;
             
 	  // now to accomodate the new pmt numbering scheme.
 	         if(  aRichDetNum == 1 ) { aPmtNum -= aNumPmtInRich[0] ;  }
@@ -616,7 +627,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
              //  aHit->Print();
 
 
-             // CherenkovG4HitReconlog<<MSG::DEBUG<<
+            //  CherenkovG4HitReconlog<<MSG::INFO<<
             //  "RichG4Hit selected hitnum  RichDetNum collectionNum pmtModule pmt "<<iha<<"   "<<aRichDetNum<<"   "
             //                                  << ihcol<<"   "<<aPmtModuleNum<<"   "
             //                                  <<aPmtNum<<endmsg;
@@ -634,10 +645,10 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             // now convert to clhep like param and store then in
             // RichG4CkvRec.
 
-       //      CherenkovG4HitReconlog<<MSG::DEBUG<<" EmisPt is "
-      //                        <<EmissPt.x()<<"   "
-      //                        <<EmissPt.y()<<"   "
-      //                        <<EmissPt.z()<<endreq;
+            // CherenkovG4HitReconlog<<MSG::INFO<<" EmisPt is "
+            //                  <<EmissPt.x()<<"   "
+            //                  <<EmissPt.y()<<"   "
+            //                  <<EmissPt.z()<<endreq;
      //
             //  CherenkovG4HitReconlog<<MSG::DEBUG<<" Rich1 Mid radiator for 0 1 2 rad is "
             //                  << m_MidRich1AgelZ<<"  "
@@ -656,7 +667,10 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
                                                TkMom.z());
             m_RichG4CkvRec->SetCurrentRichDetNum(aRichDetNum );
             m_RichG4CkvRec->SetCurrentPmtNum(aPmtNum);
-            m_RichG4CkvRec->SetCurrentRichSector(ihcol);
+            int irichsector = ihcol;
+            if(ihcol > 3 ) irichsector= ihcol-2;
+            
+            m_RichG4CkvRec->SetCurrentRichSector(irichsector);
             m_RichG4CkvRec->
               SetChTrackPreStepPosition( aChTrackPreStepPos.x(),
                                          aChTrackPreStepPos.y(),
@@ -670,6 +684,8 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
 
             // Now store the flat mirror plane type.
             int aFlatMirrtype= ihcol;
+            if(ihcol >3  )  aFlatMirrtype = ihcol-2;
+            
             m_RichG4CkvRec->SetCurrentFlatMirrorType(aFlatMirrtype);
 
             // end of storage in RichG4CkvRec.
@@ -951,7 +967,7 @@ void CherenkovG4HitRecon::RichG4ReconstructCherenkovAngle( const G4Event* anEven
             m_RichG4HitCoordResult->setDetPtInPhDetFromGlobalPhCathode(aDetPointFromGlobalPhCathode);
 
             const Gaudi::Transform3D aPhDetGlobalToLocal = m_RichG4CkvRec->
-                                                            getCurPhDetTrans(ihcol)->
+                                                            getCurPhDetTrans(irichsector)->
                                                             PhDetGlobalToLocal();
             
             Gaudi::XYZPoint aDetPointFromPixelNumInPhDet = aPhDetGlobalToLocal*aDetPointFromPixelNum;

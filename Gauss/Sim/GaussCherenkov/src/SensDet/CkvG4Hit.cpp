@@ -72,7 +72,8 @@ CkvG4Hit::CkvG4Hit(const CkvG4Hit & right  )
     m_PhotonSourceProcessInfo(right.m_PhotonSourceProcessInfo),   
     m_SuperRichHit(right.m_SuperRichHit),
     m_OptHorizontalRich1Hit(right.m_OptHorizontalRich1Hit),
-    m_FlagHitAsDuplicate(right.m_FlagHitAsDuplicate)
+    m_FlagHitAsDuplicate(right.m_FlagHitAsDuplicate),
+    m_FlagHitAsStore(right.m_FlagHitAsStore)
 { }
 
 const CkvG4Hit& CkvG4Hit::operator=(const CkvG4Hit &right)
@@ -125,6 +126,7 @@ const CkvG4Hit& CkvG4Hit::operator=(const CkvG4Hit &right)
   m_SuperRichHit=right.m_SuperRichHit;
   m_OptHorizontalRich1Hit = right.m_OptHorizontalRich1Hit;
   m_FlagHitAsDuplicate = right.m_FlagHitAsDuplicate;
+  m_FlagHitAsStore  = right.m_FlagHitAsStore ;
   
   return *this;
   
@@ -271,6 +273,7 @@ void CkvG4Hit::Print()
     G4cout<<" SuperRich Hit "<<  m_SuperRichHit <<G4endl;
     G4cout<<" Horizontal optimized Rich1  Hit "<< m_OptHorizontalRich1Hit <<G4endl;
     G4cout<<" Hit flagged  as duplicate " <<m_FlagHitAsDuplicate <<G4endl;
+    G4cout<<" Hit flagged  as  to store  " << m_FlagHitAsStore <<G4endl;
   } 
 }
 std::vector<bool>  CkvG4Hit::DecodeRichHpdReflectionFlag() const

@@ -67,31 +67,16 @@ CkvSensDet::CkvSensDet( const std::string& type   ,
 // Destructor
 //=============================================================================
 CkvSensDet::~CkvSensDet(){  
+  if( m_RichGeomProperty) delete m_RichGeomProperty;
+  if(m_RichG4HCName ) delete m_RichG4HCName;
   
 
 }
 //=============================================================================
 // initialize
 //=============================================================================
-StatusCode CkvSensDet::initialize() 
-{
-  StatusCode sc = GiGaSensDetBase::initialize();
-  if (sc.isFailure()) return sc;
-
-  IDataProviderSvc* detSvc;
-  if ( svcLoc()->service( "DetectorDataSvc" , detSvc , true ) ) {
-
-    m_RichGeomProperty= new
-      CkvG4GeomProp(detSvc,msgSvc()) ;
-
-    CkvGeometrySetupUtil * aCkvGeometrySetup= CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance();
-   m_SuperRichFlag = aCkvGeometrySetup ->isSuperRich();
-   m_OptHorizRichFlag =  aCkvGeometrySetup ->hasOptimizedHorizontalRich1();
-   m_Rich2UseGrandPmt= aCkvGeometrySetup ->Rich2_UseGrandPmt();
-   //G4cout<<"CkvSensDet :  m_Rich2Use Grand pmt "<<m_Rich2UseGrandPmt<<G4endl;
-   
-   
-    
+void CkvSensDet::InitPmtHC() {
+  
     m_RichG4HCName= new RichG4HitCollName();
     if(m_SuperRichFlag) m_RichG4HCName->setCollConfigWithSuperRich();
     m_NumberOfHCInRICH=m_RichG4HCName->NumberOfHCollectionInRICH();
@@ -110,7 +95,35 @@ StatusCode CkvSensDet::initialize()
       m_PhdHCID.push_back(-1);
 
     }
-    G4int m_TotNumPmtsInRich =(!m_SuperRichFlag ) ?  (( m_RichGeomProperty-> NumberOfPMTsInRich1() ) +
+  
+  
+  
+
+}
+
+
+StatusCode CkvSensDet::initialize() 
+{
+  StatusCode sc = GiGaSensDetBase::initialize();
+  if (sc.isFailure()) return sc;
+
+  
+    IDataProviderSvc* detSvc;
+    if ( svcLoc()->service( "DetectorDataSvc" , detSvc , true ) ) {
+     G4cout<<"Now initialize CkvG4GeomProp "<<G4endl;
+      
+    m_RichGeomProperty= new  CkvG4GeomProp(detSvc,msgSvc()) ;
+
+    CkvGeometrySetupUtil * aCkvGeometrySetup= CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance();
+    m_SuperRichFlag = aCkvGeometrySetup ->isSuperRich();
+    m_OptHorizRichFlag =  aCkvGeometrySetup ->hasOptimizedHorizontalRich1();
+    m_Rich2UseGrandPmt= aCkvGeometrySetup ->Rich2_UseGrandPmt();
+    //G4cout<<"CkvSensDet :  m_Rich2Use Grand pmt "<<m_Rich2UseGrandPmt<<G4endl;   
+    
+    InitPmtHC();
+    
+    
+    m_TotNumPmtsInRich =(!m_SuperRichFlag ) ?  (( m_RichGeomProperty-> NumberOfPMTsInRich1() ) +
                                                       ( m_RichGeomProperty-> NumberOfPMTsInRich2())) 
                                                       : m_RichGeomProperty->NumberOfPmtsInSuperRich() ;
 
@@ -118,12 +131,16 @@ StatusCode CkvSensDet::initialize()
     ResetPmtMapInCurrentEvent();
 
     
-  }
+    }
+    
+    
   
-
+  
   
   return sc;
 }
+
+
 //=============================================================================
 // finalize
 //=============================================================================
@@ -700,60 +717,40 @@ void CkvSensDet::PrintAll() {  }
 //=============================================================================
 //  (G4VSensitiveDetector method)
 //=============================================================================
-void CkvSensDet::Initialize(G4HCofThisEvent*  HCE) {
 
-  MsgStream log( msgSvc() , name() );
+//=============================================================================
 
-  //  log << MSG::DEBUG << "Cherenkovsensdet: Initialize. SensDetName, colName: "
-  //    <<SensitiveDetectorName<<"  "<<collectionName[0]
-  //    <<"  "<<collectionName[1]<<"  "
-  //    <<collectionName[2]<<"  "<<collectionName[3]<<endreq;
+void CkvSensDet::Initialize(G4HCofThisEvent*  HCE ) {
 
-  // G4String CurCollName;
-  CkvG4HitsCollection* CurColl;
-  m_RichHC.clear();
+  //  MsgStream log( msgSvc() , name() );
 
-  for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ++ihhc ) {
+   CkvG4HitsCollection* CurColl;
+    m_RichHC.clear();
 
-    CurColl =
-      new  CkvG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
+    for(int ihhc=0; ihhc<m_RichG4HCName->RichHCSize(); ++ihhc ) {
 
-    m_RichHC.push_back(CurColl);
+     CurColl =
+        new  CkvG4HitsCollection(SensitiveDetectorName,collectionName[ihhc]);
 
-    if(m_PhdHCID[ihhc] < 0  ){
-      m_PhdHCID[ihhc] = G4SDManager::GetSDMpointer()->
-        GetCollectionID(collectionName[ihhc]);
+      m_RichHC.push_back(CurColl);
+
+      if(m_PhdHCID[ihhc] < 0  ){
+        m_PhdHCID[ihhc] = G4SDManager::GetSDMpointer()->
+                  GetCollectionID(collectionName[ihhc]);
+      }
+
+      HCE->AddHitsCollection( m_PhdHCID[ihhc] , m_RichHC[ihhc]  );
     }
+    
 
-    HCE->AddHitsCollection( m_PhdHCID[ihhc] , m_RichHC[ihhc]  );
-  }
-
-    ResetPmtMapInCurrentEvent();
+    ResetPmtMapInCurrentEvent(); 
 
 }
 
-
-//=============================================================================
-// EndOfEvent (G4VSensitiveDetector method) commented out and moved all the contents to initialize
-//=============================================================================
-//void CkvSensDet::EndOfEvent(G4HCofThisEvent* HCE) {
-
-//  for(int ihid=0; ihid<m_RichG4HCName->RichHCSize(); ++ihid ) {
-//  G4cout<<" richsensdet collectionname endevent "<<ihid<<"  "<<collectionName[ihid]<<"  "<< ihid
-//   <<"  "<< m_HpdHCID[ihid] << G4endl;
+//void CkvSensDet::EndOfEvent(G4HCofThisEvent* ) {
 //
+//   m_CkvSensInitEventFlag=true; 
 //
-//  if(m_HpdHCID[ihid] < 0  )
-//  {
-//    m_HpdHCID[ihid] = G4SDManager::GetSDMpointer()->
-//      GetCollectionID(collectionName[ihid]);
-//  }
-//  G4cout<<" richsensdet collectionname "<<ihid<<"  "<<collectionName[ihid]<<"   "<< m_HpdHCID[ihid]<< G4endl;
-//
-//
-//    HCE->AddHitsCollection( m_HpdHCID[ihid] , m_RichHC[ihid]  );
-// }
-
 //}
 
 //=============================================================================

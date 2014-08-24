@@ -116,13 +116,13 @@ CherenkovG4EventAction::CherenkovG4EventAction( const std::string& type   ,
   declareProperty("RichG4HitReconUseHighMomTk",
                   m_CkvG4HitReconUseOnlyHighMom);
 
-  m_RichHitCName= new RichG4HitCollName();
-  m_NumRichColl=m_RichHitCName->RichHCSize();
+  // m_RichHitCName= new CkvG4HitCollName();
+  // m_NumRichColl=m_RichHitCName->RichHCSize();
 
-  m_RichG4CollectionID.reserve(m_NumRichColl);
-  for (int ic=0; ic<m_NumRichColl; ++ic) {
-    m_RichG4CollectionID.push_back(-1);
-  }
+  //  m_RichG4CollectionID.reserve(m_NumRichColl);
+  // for (int ic=0; ic<m_NumRichColl; ++ic) {
+  //  m_RichG4CollectionID.push_back(-1);
+  //  }
 
 }
 
@@ -197,10 +197,21 @@ StatusCode CherenkovG4EventAction::finalize()
 //=============================================================================
 void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 {
+  MsgStream msg(msgSvc(), name());
 
   if(m_RichEventActionHistoFillActivateTimer) {
     m_RichG4HistoFillTimer->RichG4BeginEventTimer();
   }
+  if(!m_RichHitCName)  m_RichHitCName= new CkvG4HitCollName();
+  m_NumRichColl=m_RichHitCName->RichHCSize();
+  m_RichG4CollectionID.assign(m_NumRichColl,-1);
+
+  
+
+  //  m_RichG4CollectionID.reserve(m_NumRichColl);
+  //for (int ic=0; ic<m_NumRichColl; ++ic) {
+  //  m_RichG4CollectionID.push_back(-1);
+  //  }
 
   G4SDManager * SDman = G4SDManager::GetSDMpointer();
   G4String colNam;
@@ -208,6 +219,7 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     if(m_RichG4CollectionID[icol]<0){
       colNam=  m_RichHitCName->RichHCName(icol);
       m_RichG4CollectionID[icol] = SDman->GetCollectionID(colNam);
+      
     }
   }
 
@@ -401,32 +413,33 @@ void CherenkovG4EventAction::EndOfEventAction( const G4Event* anEvent  /* event 
       <<CurEventNum << endreq;
   }
 
-
+   G4HCofThisEvent * HCE;
+ 
 
   //get the hits by
   // looping through the the hit collections
 
-  G4HCofThisEvent * HCE;
-  G4int nHitTotRich1=0;
-  for (int ihcol=0; ihcol<m_NumRichColl; ++ihcol ) {
-    if(m_RichG4CollectionID[ihcol] >=0 ) {
-      HCE = anEvent->GetHCofThisEvent();
-      CkvG4HitsCollection* RHC=NULL;
-      if(HCE){
-        RHC = (CkvG4HitsCollection*)(HCE->GetHC(m_RichG4CollectionID[ihcol]));
-      }
-      if(RHC){
-        G4int nHitInCurColl = RHC->entries();
-        msg << MSG::DEBUG << "EndEvAction      "<< nHitInCurColl
-            <<"   are stored in RichHitCollection set   "<<ihcol<< endreq;
-        if(ihcol == 0 || ihcol == 1 ) {
-          nHitTotRich1 += nHitInCurColl;
-
-        }
-
-      }
-    }
-  }
+  //  G4HCofThisEvent * HCE;
+  //  G4int nHitTotRich1=0;
+  // for (int ihcol=0; ihcol<m_NumRichColl; ++ihcol ) {
+  //  if(m_RichG4CollectionID[ihcol] >=0 ) {
+  //    HCE = anEvent->GetHCofThisEvent();
+  //    CkvG4HitsCollection* RHC=NULL;
+  //    if(HCE){
+  //      RHC = (CkvG4HitsCollection*)(HCE->GetHC(m_RichG4CollectionID[ihcol]));
+  //    }
+  //    if(RHC){
+  //      G4int nHitInCurColl = RHC->entries();
+  //      msg << MSG::DEBUG << "EndEvAction      "<< nHitInCurColl
+  //          <<"   are stored in RichHitCollection set   "<<ihcol<< endreq;
+  //      if(ihcol == 0 || ihcol == 1 ) {
+  //        nHitTotRich1 += nHitInCurColl;
+  //
+  //      }
+  //
+  //   }
+  // }
+  // }
 
 
   // The drawing of hits should be on a switch.
