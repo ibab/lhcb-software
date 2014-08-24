@@ -81,6 +81,8 @@ __all__ = (
     'Flatte2_pdf'          , ## Flatte-function  (KK) 
     'LASS_pdf'             , ## kappa-pole
     'Bugg_pdf'             , ## sigma-pole
+    ##
+    'Voigt_pdf'            , ## Voigt-profile 
     #
     )
 # =============================================================================
@@ -898,8 +900,8 @@ class Voigt_pdf(MASS) :
     """
     def __init__ ( self             ,
                    name             ,
-                   mn               ,
-                   mx               ,
+                   mn        = None ,
+                   mx        = None ,
                    mass      = None ,
                    mean      = None ,
                    sigma     = None ,
@@ -926,8 +928,8 @@ class Voigt_pdf(MASS) :
             "Voigt(%s)" % name ,
             self.mass   ,
             self.mean   ,
-            self.sigma  ,
-            self.gamma  )
+            self.gamma  ,
+            self.sigma  )
 
                     
 # =============================================================================

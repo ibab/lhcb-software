@@ -229,8 +229,45 @@ def _rfr_param_  ( self , pname , float_only = False ) :
     >>> signal = results.param('Signal')
     >>> print signal
     """
+    if not isinstance ( pname , str ) :
+        if   hasattr ( pname , 'GetName' ) : pname = pname.GetName ()
+        elif hasattr ( pname , 'getName' ) : pname = pname.getName ()
+        elif hasattr ( pname , 'name'    ) : pname = pname.   name () 
     p = self.parameters ( float_only )[ pname ] 
     return p 
+
+# =============================================================================
+## iterator over fit results 
+def _rfr_iter_ ( self ) :
+    """
+    Iterator over fit results :
+
+    >>> fit_result = ...
+    >>> for i in fit_results : print i 
+    """
+    pars  = self.floatParsFinal()
+    for p in pars  : yield p
+    fixed = self.constPars     ()
+    for f in fixed : yield f
+
+# =============================================================================
+## iterator over fit items  
+def _rfr_iteritems_ ( self , float_only = False ) :
+    """
+    Iterator over fit items:
+
+    >>> fit_result = ...
+    >>> for name,var in fit_results.iteritems() :
+    ...                   print name,var.as_VE()  
+    """
+    pars  = self.floatParsFinal()
+    for p in pars  :
+        yield p.GetName() , p
+        
+    if not float_only :  
+        fixed = self.constPars ()
+        for f in fixed :
+            yield f.GetName() , f
 
 # =============================================================================
 ## get the correlation coefficient
@@ -287,7 +324,7 @@ def _rfr_getattr_ ( self , att ) :
     for p in pars :
         if att == p.GetName() : return p
         
-    raise AttributeError ( 'RooFitResult: invalid attribuite %s ' % att )
+    raise AttributeError ( 'RooFitResult: invalid attribute %s ' % att )
 
 # =============================================================================
 
@@ -296,6 +333,8 @@ ROOT.RooFitResult . __repr__    = _rfr_print_
 ROOT.RooFitResult . __str__     = _rfr_print_
 ROOT.RooFitResult . __call__    = _rfr_param_
 ROOT.RooFitResult . __getattr__ = _rfr_getattr_ 
+ROOT.RooFitResult . __iter__    = _rfr_iter_
+ROOT.RooFitResult . iteritems   = _rfr_iteritems_
 ROOT.RooFitResult . parameters  = _rfr_params_
 ROOT.RooFitResult . params      = _rfr_params_
 ROOT.RooFitResult . param       = _rfr_param_
@@ -363,6 +402,7 @@ def _rrv_ve_ ( var ) :
 # =============================================================================
 ## decorate RooRealVar:
 ROOT.RooRealVar   . as_VE     = _rrv_ve_ 
+ROOT.RooRealVar   . asVE      = _rrv_ve_ 
 ROOT.RooRealVar   . ve        = _rrv_ve_
 ROOT.RooRealVar   . fix       = _fix_par_
 ROOT.RooRealVar   . Fix       = _fix_par_

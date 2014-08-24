@@ -494,30 +494,33 @@ else :
     print 'Mean   & Gamma      are: ', result ( 'mean_Gauss')[0] , result( 'gamma_BW' )[0]
 
 
-## # =============================================================================
-## ## Voigt
-## # =============================================================================
-## logger.info ('Test Voigt_pdf' )
-## model_vgt = Models.Fit1D (
-##     signal = Models.Voigt_pdf ( 'V' , mass.getMin() , mass.getMax()  ,
-##                                 mass  = mass                ,
-##                                 mean  = signal_gauss.mean   , 
-##                                 sigma = signal_gauss.sigma  ) , 
-##     background = model_gauss.background  )
+# =============================================================================
+## Voigt
+# =============================================================================
+logger.info ('Test Voigt_pdf' )
+model_vgt = Models.Fit1D (
+    signal = Models.Voigt_pdf ( 'V' , mass.getMin() , mass.getMax()  ,
+                                mass  = mass                ,
+                                mean  = signal_gauss.mean   , 
+                                sigma = signal_gauss.sigma  ) , 
+    background = model_gauss.background  )
 
-## model_vgt.signal.sigma.fix ( m.error() )
-## model_vgt.signal.gamma.fix ( 0.010     )
-## with rooSilent() : 
-##     result, frame = model_vgt. fitTo ( dataset0 )
-##     result, frame = model_vgt. fitTo ( dataset0 )
-##     result, frame = model_vgt. fitTo ( dataset0 )
+model_vgt.signal.sigma.fix ( m.error() )
+model_vgt.signal.gamma.fix ( 0.010     )
+with rooSilent() : 
+    result, frame = model_vgt. fitTo ( dataset0 )
+    model_vgt.signal.gamma.release() 
+    result, frame = model_vgt. fitTo ( dataset0 )
+    model_vgt.signal.sigma.release() 
+    result, frame = model_vgt. fitTo ( dataset0 )
     
-## if 0 != result.status() or 3 != result.covQual() :
-##     logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
-##     print result 
-## else :
-##     print 'Signal & Background are: ', result ( 'S'         )[0] , result ( 'B'               )[0]
-##     print 'Mean   & Gamma      are: ', result ( 'mean_Gauss' , False )[0] , result ( 'gamma_V' , False )[0]
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual () ) )
+    print result 
+else :
+    print 'Signal & Background are: ', result ( 'S'           )[0] , result ( 'B'       )[0]
+    print 'Mean   & Gamma      are: ', result ( 'mean_Gauss'  )[0] , result ( 'gamma_V' )[0]
+    print 'Sigma               is : ', result ( model_vgt.signal.sigma.GetName() )[0] 
     
 
 # =============================================================================

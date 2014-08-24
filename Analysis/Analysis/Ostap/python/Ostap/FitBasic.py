@@ -91,7 +91,10 @@ def makeVar ( var , name , comment , fix  , *args ) :
     v = makeVar ( v    , 'myvar' , 'mycomment' , 10 )
     
     """
-    ## create the fixed variable 
+    #
+    if   isinstance   ( var , tuple ) :
+        var = ROOT.RooRealVar ( name , comment , var[0] , var[1] ) 
+        
     if   isinstance   ( var , ( float , int , long ) ) :
         if   not    args  : var = ROOT.RooRealVar ( name , comment , var             )
         elif 2==len(args) : var = ROOT.RooRealVar ( name , comment , var , *args     )
@@ -217,7 +220,7 @@ class PDF (object) :
                 continue
             _args.append ( a )
             
-        for k,a in kwargs :
+        for k,a in kwargs.iteritems() :
             
             if isinstance ( a , ROOT.RooCmdArg ) :
                 logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s' % ( self.name , k ) )  
@@ -385,18 +388,36 @@ class MASS(PDF) :
         ## intialize the base 
         PDF.__init__ ( self , name )
         
+        m_name  = "m_%s"     % name
+        m_title = "mass(%s)" % name
+
+        if isinstance ( mass , tuple ) :
+            mn      = mass [0]
+            mx      = mass [1]
+            mass    = None
+            
+        if isinstance ( mass , ROOT.TH1   ) :
+            mn,mx   = mass.xminmax()
+            m_title = mass.GetTitle ()
+            mass    = None
+            
+        if isinstance ( mass , ROOT.TAxis ) :
+            mn      = mass.GetXmin()
+            mx      = mass.GetXmax()
+            mass    = None
+            
         if mass is None :
             if not isinstance ( mn , ( float , int , long ) ) :
                 raise AttributeError( "MASS(%s): invalid 'min'-parameter %s" % ( name , mn ) ) 
             if not isinstance ( mx , ( float , int , long ) ) :
-                raise AttributeError( "MASS(%s): invalid 'max'-parameter %s" % ( name , mx ) ) 
-        
+                raise AttributeError( "MASS(%s): invalid 'max'-parameter %s" % ( name , mx ) )
+            
         #
         ## adjust the mass and edges, create if needed
         #
-        self.mass = makeVar ( mass              ,
-                              "m_%s"     % name ,
-                              "mass(%s)" % name , None ,  min ( mn , mx ) , max( mn , mx ) )
+        self.mass = makeVar ( mass   ,
+                              m_name , m_title ,
+                              None   ,  min ( mn , mx ) , max( mn , mx ) )
         #
         self._mn = self.mass.getMin ()
         self._mx = self.mass.getMax ()

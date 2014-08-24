@@ -106,6 +106,8 @@ __all__ = (
     'Flatte2_pdf'          , ## Flatte-function  (KK) 
     'LASS_pdf'             , ## kappa-pole
     'Bugg_pdf'             , ## sigma-pole
+    ##
+    'Voigt_pdf'            , ## Voigt-profile 
     #
     ## "Other" distributions 
     #

@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-24 - Vanya Belyaev
+ - fixes with Voigt model 
+
 ! 2014-08-22 - Vanya Belyaev
  - rename useful base classes 
     Mass_pdf -> MASS 
