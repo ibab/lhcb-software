@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-08-24 - Vanya Belyaev
+ - minor improvements 
+
 ! 2014-08-23 - Vanya Belyaev
  - few minor fixes in Bukin function
 

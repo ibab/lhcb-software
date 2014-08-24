@@ -23,7 +23,7 @@
  *
  *  set of useful math-functions
  *
- *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
  *  @date 2010-04-19
  *
  *                    $Revision$
@@ -43,7 +43,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Chebychev_
      *  Efficient evaluator of Chebyshev polynomial
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     template <unsigned int N>
@@ -87,7 +87,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Chebyshev
      *  evaluate the chebyshev polynomials
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     class GAUDI_API Chebyshev : public std::unary_function<double,double>
@@ -118,7 +118,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Legendre_
      *  Efficienct evaluator of Legendre polynomial
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     template <unsigned int N>
@@ -171,7 +171,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Legendre
      *  evaluate the Legendre polynomials
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     class GAUDI_API Legendre : public std::unary_function<double,double>
@@ -202,7 +202,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Hermite_
      *  Efficienct evaluator of Hermite polynomial
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     template <unsigned int N>
@@ -246,7 +246,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Hermite
      *  evaluate the Hermite polynomials
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     class GAUDI_API Hermite : public std::unary_function<double,double>
@@ -792,7 +792,7 @@ namespace Gaudi
     // ========================================================================
     /** @class WorkSpace
      *  helper utility to keep the integration workspace fro GSL integration
-     *  @author Vanya Belyaev Ivan.Belyaev@cern.ch
+     *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
      *  @date 2011-12-03
      */
     class WorkSpace
@@ -933,7 +933,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Novosibirsk
      *  ``Novosibirsk-function'' for description of gaussian with tails
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-04-19
      */
     class GAUDI_API Novosibirsk : public std::unary_function<double,double>
@@ -1122,7 +1122,7 @@ namespace Gaudi
      *    -  \f$a_2 = -5.22\times10^{-6} \f$ 
      *
      *  @see Gaudi::Math::CrystalBall
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2012-05-13
      */
     class GAUDI_API Needham : public std::unary_function<double,double>
@@ -1545,7 +1545,7 @@ namespace Gaudi
     /** @class GramCharlierA4
      *  Gram-Charlier type A approximation
      *  http://en.wikipedia.org/wiki/Edgeworth_series
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-06-13
      */
     class GAUDI_API GramCharlierA
@@ -1621,7 +1621,7 @@ namespace Gaudi
     // ========================================================================
     /** @class PhaseSpace2
      *  simple function to represent two-body phase space
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API PhaseSpace2
@@ -1725,7 +1725,7 @@ namespace Gaudi
     // ========================================================================
     /** @class PhaseSpace3
      *  simple function to represent three-body phase space
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API PhaseSpace3
@@ -1795,7 +1795,7 @@ namespace Gaudi
     // ========================================================================
     /** @class PhaseSpaceLeft
      *  simple function to represent N-body phase space near left-threshold
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API PhaseSpaceLeft
@@ -1836,7 +1836,7 @@ namespace Gaudi
     // ========================================================================
     /** @class PhaseSpaceRight
      *  simple function to represent N/L-body phase space near right-threshold
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API PhaseSpaceRight
@@ -1880,7 +1880,7 @@ namespace Gaudi
      *  simple function to represent the approximation for
      *  the mass distribution of L-particles from N-body
      *  phase space decay
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API PhaseSpaceNL
@@ -1952,7 +1952,7 @@ namespace Gaudi
      *  simple function to represent the product of N-body phase space 
      *  and positive polynomial 
      *  @see Gaudi::Math::PhaseSpaceNL
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API PhaseSpacePol
@@ -2144,7 +2144,7 @@ namespace Gaudi
      *
      *  http://www.springerlink.com/content/q773737260425652/
      *
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API BreitWigner
@@ -2181,11 +2181,11 @@ namespace Gaudi
     public:
       // ======================================================================
       // constructor from all parameters
-      BreitWigner ( const double         m0       ,
-                    const double         gam0     ,
-                    const double         m1       ,
-                    const double         m2       ,
-                    const unsigned short L    = 0 ) ;
+      BreitWigner ( const double         m0     = 0.770 ,
+                    const double         gam0   = 0.150 ,
+                    const double         m1     = 0.139 ,
+                    const double         m2     = 0.139 ,
+                    const unsigned short L      = 0     ) ;
       // constructor from all parameters
       BreitWigner ( const double         m0       ,
                     const double         gam0     ,
@@ -2195,10 +2195,6 @@ namespace Gaudi
                     const JacksonRho     r        ) ;
       /// destructor
       virtual ~BreitWigner () ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      BreitWigner() ;
       // ======================================================================
     public:
       // ======================================================================
@@ -2289,7 +2285,7 @@ namespace Gaudi
      *  "Remarks on the Phenomenological Analysis of Resonances",
      *  In Nuovo Cimento, Vol. XXXIV, N.6
      *  @see Gaudi::Math::BreitWigner::Jackson_A7
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Rho0 : public Gaudi::Math::BreitWigner
@@ -2311,7 +2307,7 @@ namespace Gaudi
      *  "Remarks on the Phenomenological Analysis of Resonances",
      *  In Nuovo Cimento, Vol. XXXIV, N.6
      *  @see Gaudi::Math::BreitWigner::Jackson_A2
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2014-04-27
      */
     class GAUDI_API Kstar0 : public Gaudi::Math::BreitWigner
@@ -2334,7 +2330,7 @@ namespace Gaudi
      *  "Remarks on the Phenomenological Analysis of Resonances",
      *  In Nuovo Cimento, Vol. XXXIV, N.6
      *  @see Gaudi::Math::BreitWigner::Jackson_A2
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2014-04-27
      */
     class GAUDI_API Phi0 : public Gaudi::Math::BreitWigner
@@ -2351,7 +2347,7 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class Rho0FromEtaPrime
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Rho0FromEtaPrime : public Gaudi::Math::Rho0
@@ -2390,7 +2386,7 @@ namespace Gaudi
      *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
      *  \f$\pi\pi\f$-channel
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Flatte
@@ -2489,7 +2485,7 @@ namespace Gaudi
      *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
      *  KK-channel
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Flatte2 : public Gaudi::Math::Flatte
@@ -2519,18 +2515,25 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class Voight
-     *  simple Voightian function
+     *  simple Voightian function: 
+     *  convolution of Lorenzian (non-relativistic Breit-Wigner function)
+     *  with Gaussian resoltuion 
+     *  @see http://en.wikipedia.org/wiki/Voigt_profile
+     *  The implementation relied on Faddeeva function 
+     *  @see http://en.wikipedia.org/wiki/Faddeeva_function
+     *  @see http://ab-initio.mit.edu/wiki/index.php/Faddeeva_Package
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
+     *  @date 2011-11-30
      */
     class GAUDI_API Voigt
       : public std::unary_function<double,double>
     {
     public:
       // ======================================================================
-      /// constructor  from three parameters
-      Voigt  ( const double m0         ,
-               const double gamma      ,
-               const double sigma      ,
-               const int    r     = 5  ) ;
+      ///  constructor  from the three parameters
+      Voigt  ( const double m0     = 1      ,
+               const double gamma  = 0.004  ,
+               const double sigma  = 0.001  ) ;
       /// destructor
       virtual ~Voigt () ;
       // ======================================================================
@@ -2547,6 +2550,11 @@ namespace Gaudi
       double peak   () const { return   m0   () ; }
       double gamma  () const { return m_gamma   ; }
       double sigma  () const { return m_sigma   ; }
+      // ======================================================================
+      /** full width at half maximum 
+       *  @see http://en.wikipedia.org/wiki/Voigt_profile
+       */
+      double fwhm   () const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -2566,15 +2574,9 @@ namespace Gaudi
       // ======================================================================
     private:
       // ======================================================================
-      /// the default constructor is disabled
-      Voigt() ;                          // the default constructor is disabled
-      // ======================================================================
-    private:
-      // ======================================================================
       double m_m0     ;
       double m_gamma  ;
       double m_sigma  ;
-      int    m_r      ;
       // ======================================================================
     private:
       // ======================================================================
@@ -2589,7 +2591,7 @@ namespace Gaudi
       /** the simplest function: constant
        *  @see Gaudi::Math::BreitWigner
        *  @see Gaudi::Math::BreitWigner::rho_fun
-       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
        *  @date 2011-11-30
        */
       GAUDI_API
@@ -2604,7 +2606,7 @@ namespace Gaudi
        *  @see Gaudi::Math::BreitWigner::rho_fun
        *  @param m the invariant mass
        *  @return the value of rho-function
-       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
        *  @date 2011-11-30
        */
       GAUDI_API
@@ -2619,7 +2621,7 @@ namespace Gaudi
        *  @see Gaudi::Math::BreitWigner::rho_fun
        *  @param m the invariant mass
        *  @return the value of rho-function
-       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
        *  @date 2011-11-30
        */
       GAUDI_API
@@ -2637,7 +2639,7 @@ namespace Gaudi
        *  @param m1 the invariant mass of the first  (spinor) particle
        *  @param m2 the invariant mass of the secodn (scalar) particle
        *  @return the value of rho-function
-       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
        *  @date 2011-11-30
        */
       GAUDI_API
@@ -2655,7 +2657,7 @@ namespace Gaudi
        *  @param m1 the invariant mass of the first  (spinor) particle
        *  @param m2 the invariant mass of the secodn (scalar) particle
        *  @return the value of rho-function
-       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
        *  @date 2011-11-30
        */
       GAUDI_API
@@ -2672,7 +2674,7 @@ namespace Gaudi
        *  @param m the invariant mass
        *  @param m the nominam   mass
        *  @return the value of rho-function
-       *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+       *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
        *  @date 2011-11-30
        */
       GAUDI_API
@@ -3173,9 +3175,9 @@ namespace Gaudi
     } ;
     // ========================================================================
     /** @class BW23L
-     *  @see Gaudi::Math::BreittWigner
+     *  @see Gaudi::Math::BreitWigner
      *  @see Gaudi::Math::PhaseSpace23L
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2012-05-23
      */
     class GAUDI_API BW23L
@@ -3184,14 +3186,14 @@ namespace Gaudi
     public:
       // ======================================================================
       // constructor from all parameters
-      BW23L ( const double         m0       ,
-              const double         gam0     ,
-              const double         m1       ,
-              const double         m2       ,
-              const double         m3       ,
-              const double         m        ,
-              const unsigned short L1  = 0  ,
-              const unsigned short L2  = 0  ) ;
+      BW23L ( const double         m0       = 0.770 ,
+              const double         gam0     = 0.150 ,
+              const double         m1       = 0.139 ,
+              const double         m2       = 0.139 ,
+              const double         m3       = 3.096 ,
+              const double         m        = 5.278 ,
+              const unsigned short L1       = 0     ,
+              const unsigned short L2       = 0     ) ;
       // constructor from all parameters
       BW23L ( const double         m0       ,
               const double         gam0     ,
@@ -3209,11 +3211,6 @@ namespace Gaudi
               const unsigned short            L2 ) ;
       /// destructor
       virtual ~BW23L () ;
-      // ======================================================================
-    private:
-      // ======================================================================
-      /// the default constructor is disabled
-      BW23L () ;                         // the default constructor is disabled
       // ======================================================================
     public:
       // ======================================================================
@@ -3273,7 +3270,7 @@ namespace Gaudi
     // ========================================================================
     /** @class Flatte23L
      *  \f$\pi\pi\f$-channel
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Flatte23L

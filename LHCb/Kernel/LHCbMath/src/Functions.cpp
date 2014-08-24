@@ -4789,14 +4789,12 @@ std::complex<double> Gaudi::Math::Flatte2::amplitude
 Gaudi::Math::Voigt::Voigt
 ( const double m0    ,
   const double gamma ,
-  const double sigma ,
-  const int    r     )
+  const double sigma )
   : std::unary_function<double,double>()
 //
   , m_m0        ( m0 )
   , m_gamma     ( std::abs ( gamma ) )
   , m_sigma     ( std::abs ( sigma ) )
-  , m_r         ( std::min ( std::max ( r , 2 ) , 5 ) )
 //
   , m_workspace ()
 {}
@@ -4808,7 +4806,12 @@ Gaudi::Math::Voigt::~Voigt(){}
 // get the value of Voigt function
 // ============================================================================
 double Gaudi::Math::Voigt::operator() ( const double x ) const
-{ return TMath::Voigt ( x - m_m0 , m_sigma , m_gamma , m_r ) ; }
+{
+  //
+  const double s2 = 1 / ( m_sigma * s_SQRT2 ) ;
+  //
+  return Faddeeva::w ( std::complex<double> ( x - m_m0 , m_gamma ) * s2 ).real() * s2 ;
+}
 // ============================================================================
 // get the integral between low and high limits
 // ============================================================================
@@ -4825,8 +4828,8 @@ double  Gaudi::Math::Voigt::integral
   //
   // split into reasonable sub intervals
   //
-  const double x_low   = m_m0 - 3 * width ;
-  const double x_high  = m_m0 + 3 * width ;
+  const double x_low   = m_m0 - 4 * width ;
+  const double x_high  = m_m0 + 4 * width ;
   //
   if      ( low <  x_low  && x_low  < high )
   {
@@ -4843,7 +4846,7 @@ double  Gaudi::Math::Voigt::integral
   //
   // split, if interval too large
   //
-  if ( 0 < width && 3 * width < high - low  )
+  if ( 0 < width && 10 * width < high - low  )
   {
     return
       integral ( low                   , 0.5 *  ( high + low ) ) +
@@ -4863,13 +4866,14 @@ double  Gaudi::Math::Voigt::integral
   double result   =  1.0 ;
   double error    = -1.0 ;
   //
+  const double in_tail = 
+    ( low  > m_m0 + 10 * width ) || ( high < m_m0 + 10 * width ) ;
+  //
   const int ierror = gsl_integration_qag
     ( &F                ,            // the function
       low   , high      ,            // low & high edges
-      s_PRECISION       ,            // absolute precision
-      // ( high   <= x_low  ) ? s_PRECISION_TAIL :
-      // ( x_high <=   low  ) ? s_PRECISION_TAIL :
-      s_PRECISION       ,            // relative precision
+      in_tail ? s_PRECISION_TAIL : s_PRECISION , // absolute precision
+      in_tail ? s_PRECISION_TAIL : s_PRECISION , // relative precision
       s_SIZE            ,            // size of workspace
       GSL_INTEG_GAUSS31 ,            // integration rule
       workspace ( m_workspace ) ,    // workspace
@@ -4926,7 +4930,18 @@ bool Gaudi::Math::Voigt::setSigma ( const double x )
   //
   return true ;
 }
-
+// ============================================================================
+/*  full width at half maximum 
+ *  @see http://en.wikipedia.org/wiki/Voigt_profile
+ */
+// ============================================================================
+double Gaudi::Math::Voigt::fwhm   () const 
+{
+  const double fg = 2 * m_sigma * s_Bukin ;
+  return 0.5346 * m_gamma + std::sqrt ( 0.2166 * m_gamma * m_gamma + fg * fg ) ;
+}
+// ============================================================================
+ 
 
 
 // ============================================================================
