@@ -5,6 +5,10 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-08-24 - Vanya Belyaev
+ - minor improvements 
+   remove wrapper empty modules 
+
 ! 2014-08-22 - Vanya Belyaev
  - few minor improvements 
 

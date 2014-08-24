@@ -84,7 +84,7 @@ namespace Analysis
    *  - \f$ f(x,y)       = exp   (x)\times exp  (y)\timesP^+(x,y)       \f$
    *  - \f$ f_{sym}(x,y) = exp   (x)\times exp  (y)\timesP^+_{sym}(x,y) \f$
    *
-   *  @author Vanya BELYAEV  Ivan.Belyaev@cern.ch
+   *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
    *  @date   2011-11-30
    */
   namespace Models 
@@ -103,7 +103,7 @@ namespace Analysis
      *  http://www.springerlink.com/content/q773737260425652/
      *
      *  @see Gaudi::Math::BreitWigner
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API BreitWigner : public RooAbsPdf 
@@ -198,7 +198,7 @@ namespace Analysis
      *  @see Analysis::Models::BreitWigner
      *  @see Gaudi::Math::BreitWigner
      *  @see Gaudi::Math::Rho0
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Rho0 : public Analysis::Models::BreitWigner
@@ -236,7 +236,7 @@ namespace Analysis
      *  @see Analysis::Models::BreitWigner
      *  @see Gaudi::Math::BreitWigner
      *  @see Gaudi::Math::Kstar
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Kstar : public Analysis::Models::BreitWigner
@@ -275,7 +275,7 @@ namespace Analysis
      *  @see Analysis::Models::BreitWigner
      *  @see Gaudi::Math::BreitWigner
      *  @see Gaudi::Math::Rho0
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Phi : public Analysis::Models::BreitWigner
@@ -311,7 +311,7 @@ namespace Analysis
      *  http://www.springerlink.com/content/q773737260425652/
      *
      *  @see Gaudi::Math::BreitWigner
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API BW23L : public RooAbsPdf 
@@ -413,7 +413,7 @@ namespace Analysis
      *  http://www.sciencedirect.com/science/article/pii/0370269376906547
      *
      *  \f$\pi\pi\f$-channel
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Flatte : public RooAbsPdf
@@ -496,7 +496,7 @@ namespace Analysis
      *  @todo    checks needed 
      *
      *  KK-channel
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-11-30
      */
     class GAUDI_API Flatte2 : public Analysis::Models::Flatte
@@ -880,7 +880,7 @@ namespace Analysis
     /** @class Voigt
      *  "Voigt"-function
      *  @see Gaudi::Math::Voigt
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-12-05
      */
     class GAUDI_API Voigt : public RooAbsPdf 
@@ -1096,7 +1096,7 @@ namespace Analysis
     /** @class CrystalBallDS 
      *  double-sided ``Crystal Ball-function'' 
      *  for description of gaussian with the tail
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @see Gaudi::Math::CrystalBallDoubleSided
      *  @date 2011-05-25
      */
@@ -1174,7 +1174,7 @@ namespace Analysis
      *  ``Crystal Ball-function'' nicely suitable for \f$J/\psi\f$-peak
      *  @thank Matthew Needham 
      *  @see Gaudi::Math::Needham
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2012-05-13
      */
     class GAUDI_API Needham : public RooAbsPdf 
@@ -1686,7 +1686,7 @@ namespace Analysis
      *  @see http://arxiv.org/abs/1107.5751
      *  @see http://dx.doi.org/10.1007/JHEP06(2012)141     
      *  @see Gaudi::Math::Bukin
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-12-05
      */
     class GAUDI_API Bukin : public RooAbsPdf 
@@ -1906,7 +1906,7 @@ namespace Analysis
      *  The peak with Gram-Charlier type A parameterization
      *  @see Gaudi::Math::GramCharlierA 
      *  http://en.wikipedia.org/wiki/Edgeworth_series
-     *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
      *  @date 2011-12-05
      */
     class GAUDI_API GramCharlierA : public RooAbsPdf 
@@ -1982,7 +1982,7 @@ namespace Analysis
     // ========================================================================
     /** @class PhaseSpace2
      *  simple model for 2-body phase space 
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class PhaseSpace2 : public RooAbsPdf 
@@ -2040,7 +2040,7 @@ namespace Analysis
     // ========================================================================
     /** @class PhaseSpaceLeft
      *  simple model for left-edge of N-body phase-space 
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class PhaseSpaceLeft : public RooAbsPdf 
@@ -2104,7 +2104,7 @@ namespace Analysis
     // ========================================================================
     /** @class PhaseSpaceRight
      *  simple model for right-edge of L-body phase-space in N-body decays 
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class PhaseSpaceRight : public RooAbsPdf 
@@ -2172,7 +2172,7 @@ namespace Analysis
      *  The phase space function for L-body systema from N-body decay
      *
      *  @see Gaudi::Math::PhaseSpaceNL
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-11-30
      */
     class PhaseSpaceNL : public RooAbsPdf
@@ -2744,7 +2744,7 @@ namespace Analysis
      *  Another view on generalized gamma distribtion
      *  http://arxiv.org/pdf/1005.3274
      *  @see Gaudi::Math::Amoroso
-     *  @author Vanya BELYAEV Ivan.BElyaev@cern.ch
+     *  @author Vanya BELYAEV Ivan.BElyaev@itep.ru
      *  @date 2011-12-05
      */
     class GAUDI_API Amoroso : public RooAbsPdf 

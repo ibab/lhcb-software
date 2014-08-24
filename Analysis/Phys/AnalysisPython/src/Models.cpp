@@ -1152,14 +1152,11 @@ Double_t Analysis::Models::Voigt::evaluate() const
 }
 // ============================================================================
 Int_t Analysis::Models::Voigt::getAnalyticalIntegral
-( RooArgSet&  /* allVars   */ , 
-  RooArgSet&  /* analVars  */ ,
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  //
-  // DISABLE INTEGRATION// to be fixed later 
-  // if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
-  // 
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
   return 0 ;
 }
 // ============================================================================
