@@ -201,14 +201,14 @@ class D0_pdf(Bukin_pdf) :
     """
     Define PDF for D0
     """
-    def __init__ ( self                 ,
-                   mass                 , ## mass is mandatory here! 
-                   name     = 'D0'      ,
-                   mean     =  1.864    ,
-                   sigma    =  None     ,
-                   xi       = -0.00044  ,
-                   rhoL     =  0.170619 ,
-                   rhoR     =  0.289993 ) :
+    def __init__ ( self                   ,
+                   mass                   , ## mass is mandatory here! 
+                   name     = 'D0'        ,
+                   mean     =  1.864      ,
+                   sigma    =  7.2037e-03 ,
+                   xi       =  2.4656e-03 ,
+                   rhoL     =  2.8583e-01 ,
+                   rhoR     =  2.7163e-01 ) :
         
         Bukin_pdf.__init__ ( self          ,
                              name          ,
@@ -236,9 +236,9 @@ class Dp_pdf(Bukin_pdf) :
                    name     = 'Dp'         ,
                    mean     =  1.869       , 
                    sigma    =  None        ,
-                   xi       = -2.44474e-04 ,
-                   rhoL     =  1.07796e-01 , 
-                   rhoR     =  2.84132e-01 ) :
+                   xi       = -7.7344e-03  ,
+                   rhoL     =  3.0241e-01  , 
+                   rhoR     =  3.7452e-01  ) :
         
         Bukin_pdf.__init__ ( self          ,
                              name          ,
@@ -263,11 +263,11 @@ class Ds_pdf(Bukin_pdf) :
     def __init__ ( self                    , 
                    mass     = None         , ## mass is mandatory 
                    name     = 'Ds'         ,
-                   mean     =  1.9672      ,
+                   mean     =  1.969       ,
                    sigma    =  0.0068      ,
                    xi       = -6.45755e-04 ,
-                   rhoL     =  9.25349e-02 ,
-                   rhoR     =  1.86051e-01 ) : 
+                   rhoL     =  3.0241e-01  , 
+                   rhoR     =  3.7452e-01  ) :
         
         Bukin_pdf.__init__ ( self          ,
                              name          ,
@@ -296,8 +296,8 @@ class Lc_pdf(Bukin_pdf) :
                    mean     =  2.28590e+00  ,
                    sigma    =  5.11874e-03  ,
                    xi       =  1.82493e-03  ,
-                   rhoL     =  1.83140e-01  ,
-                   rhoR     =  2.40318e-01  ) :  
+                   rhoL     =  3.0241e-01   , 
+                   rhoR     =  3.7452e-01   ) :
         
         Bukin_pdf.__init__ ( self     ,
                              name     ,

@@ -737,15 +737,15 @@ class Bukin_pdf(MASS) :
         ## asymmetry 
         self.xi    = makeVar ( xi                    ,
                                "xi_%s"        % name ,
-                               "#xi(%s)"      % name , xi      , 0   , -1 , 1  )
+                               "#xi(%s)"      % name , xi      , 0  , -1 , 1    )
         
         self.rhol  = makeVar ( rhol                  ,
                                "rhol_%s"      % name ,
-                               "#rho_{L}(%s)" % name , rhol    , 0.5 ,  0 , 10 )
+                               "#rho_{L}(%s)" % name , rhol    , 0  ,  -10 , 10 )
         
         self.rhor  = makeVar ( rhor                  ,
                                "rhor_%s"      % name ,
-                               "#rho_{R}(%s)" % name , rhor    , 0.5 ,  0 , 10 )
+                               "#rho_{R}(%s)" % name , rhor    , 0  ,  -10 , 10 )
         # 
         ## create PDF
         # 
