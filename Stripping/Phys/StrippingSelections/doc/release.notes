@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-23 - Jason Andrews
+ - Updated StrippingBu2rho0rhoPlus.py
+    - added upstream lines
+    - restructured to accommodate new lines
+
 ! 2014-08-23 - Sean Benson
  - Updates to:
      - StrippingBs2PhiPhi.py (new tuning & upstream line)
