@@ -1941,7 +1941,7 @@ double Gaudi::Math::Bukin::pdf ( const double x ) const
   {
     const double dx  = x - m_x1               ;
     const double dx2 = dx / ( m_peak - m_x1 ) ;
-    return  0.5 * my_exp (   m_L * dx / m_sigma  - m_rho_L * dx2 * dx2 ) ;
+    return  0.5 * my_exp (   m_L * dx / m_sigma  - m_rho_L * m_rho_L * dx2 * dx2 ) ;
   }
   //
   // right tail :
@@ -1950,7 +1950,7 @@ double Gaudi::Math::Bukin::pdf ( const double x ) const
   {
     const double dx  = x - m_x2               ;
     const double dx2 = dx / ( m_peak - m_x2 ) ;
-    return 0.5 * my_exp ( - m_R * dx / m_sigma  - m_rho_R * dx2 * dx2 ) ;
+    return 0.5 * my_exp ( - m_R * dx / m_sigma  - m_rho_R * m_rho_R * dx2 * dx2 ) ;
   }
   //
   // central region
@@ -2004,7 +2004,7 @@ double Gaudi::Math::Bukin::integral
   {
     const double d =  m_peak - m_x1 ;
     //
-    return 0.5 * gaussian_int ( m_rho_L / d / d    ,
+    return 0.5 * gaussian_int ( m_rho_L * m_rho_L / d / d    ,
                                 m_L     / m_sigma  ,
                                 low  - m_x1        ,
                                 high - m_x1        ) ;
@@ -2014,7 +2014,7 @@ double Gaudi::Math::Bukin::integral
   {
     const double d = m_peak - m_x2 ;
     //
-    return 0.5 * gaussian_int ( m_rho_R   / d / d   ,
+    return 0.5 * gaussian_int ( m_rho_R * m_rho_R / d / d   ,
                                 -1 * m_R  / m_sigma ,
                                 low  - m_x2         ,
                                 high - m_x2         ) ;
