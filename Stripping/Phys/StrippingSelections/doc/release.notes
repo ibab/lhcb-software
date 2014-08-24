@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-24 - Roberta Cardinale
+ - Added PVrefit=True to StrippingB2pphh.py
+
 ! 2014-08-23 - Jason Andrews
  - Updated StrippingBu2rho0rhoPlus.py
     - added upstream lines

@@ -10,7 +10,8 @@ __author__ = ['Roberta Cardinale']
 __date__ = '18/12/2013'
 __version__ = '$Revision: 1.0 $'
 
-__all__ = ('B2pphhConf'
+__all__ = ('B2pphhConf',
+           'default_config'
            )
 
 
@@ -25,45 +26,46 @@ from StrippingUtils.Utils import LineBuilder
 from Configurables import LoKi__VoidFilter as VoidFilter
 
 default_config = {
-    'NAME'        : 'B2pphh',
-    'WGs'         : ['Charmless'],
+    'NAME' : 'B2pphh',
+    'WGs'  : ['Charmless'],
     'BUILDERTYPE' : 'B2pphhConf',
-    'CONFIG'      : {'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-                     'CombMass12Max_kk'         : 4700.0,
-                     'CombMass12Max_kpi'         : 5000.0,
-                     'CombMass12Max_pipi'         : 5350.0,
-                     'd_achi2doca12'             : 20.0,
-                     'd_achi2doca13'             : 20.0,
-                     'd_achi2doca14'             : 20.0,
-                     'd_achi2doca23'             : 20.0,
-                     'd_achi2doca24'             : 20.0,
-                     'd_achi2doca34'             : 20.0,
-                     'p_PTSUM'               : 750.0,
-                     'p_PSUM'               : 7000.0,
-                     'p_PTMIN'              : 400.0,
-                     'p_PMIN'              : 4.0,
-                     'p_PROBNNpPROD'        : 0.05,
-                     'CombMass123Max'         : 5600.0,
-                     'CombMassMax'         : 5.60,
-                     'CombMassMin'         : 5.00,
-                     'MassMax'             : 5.55,
-                     'MassMin'             : 5.05,
-                     '4h_PTSUM'            : 3000.0,
-                     'B_DIRA'              : .9999 ,   
-                     '4h_AMAXDOCA'                : 0.3 ,     
-                     'B_CHI2'              : 30.0 ,    
-                     'B_PT'                 : 1000.,
-                     'B_MIPDV'              : 0.2,
-                     'PionCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 6.0) & (TRGHOSTPROB < 0.35) & (PROBNNpi > 0.05)",
-                     'KaonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.35) & (PROBNNk > 0.05)",
-                     'ProtonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.35) & (PROBNNp > 0.05)",
-                     'Prescaleppkk'  : 1.0,
-                     'Prescalepppipi'  : 1.0,
-                     'Prescaleppkpi'  : 1.0
-                     },
-    'STREAMS'     : ['Bhadron']
+    'CONFIG' : { 'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
+    'CombMass12Max_kk'         : 4700.0,
+    'CombMass12Max_kpi'         : 5000.0,
+    'CombMass12Max_pipi'         : 5350.0,
+    'd_achi2doca12'             : 20.0,
+    'd_achi2doca13'             : 20.0,
+    'd_achi2doca14'             : 20.0,
+    'd_achi2doca23'             : 20.0,
+    'd_achi2doca24'             : 20.0,
+    'd_achi2doca34'             : 20.0,
+    'p_PTSUM'               : 750.0,
+    'p_PSUM'               : 7000.0,
+    'p_PTMIN'              : 400.0,
+    'p_PMIN'              : 4.0,
+    'p_PROBNNpPROD'        : 0.05,
+    'CombMass123Max'         : 5600.0,
+    'CombMassMax'         : 5.60,
+    'CombMassMin'         : 5.00,
+    'MassMax'             : 5.55,
+    'MassMin'             : 5.05,
+    '4h_PTSUM'            : 3000.0,
+    'B_DIRA'              : .9999 ,   
+    '4h_AMAXDOCA'                : 0.3 ,     
+    'B_CHI2'              : 30.0 ,    
+    'B_PT'                 : 1000.,
+    'B_MIPDV'              : 0.2,
+    'PionCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 6.0) & (TRGHOSTPROB < 0.35) & (PROBNNpi > 0.05)",
+    'KaonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRGHOSTPROB < 0.35) & (PROBNNk > 0.05)",
+    'ProtonCuts' : "(TRCHI2DOF < 3.0) & HASRICH & (P > 1500*MeV) & (PT > 300*MeV) & (MIPCHI2DV(PRIMARY) > 2.0) & (TRGHOSTPROB < 0.35) & (PROBNNp > 0.05)",
+    'Prescaleppkk'  : 1.0,
+    'Prescalepppipi'  : 1.0,
+    'Prescaleppkpi'  : 1.0
+    },
+    'STREAMS' : {'Bhadron' : ['StrippingB2pphh_kkLine',
+                              'StrippingB2pphh_kpiLine',
+                              'StrippingB2pphh_pipiLine']}
     }
-
 
 
 default_name = "B2pphh"
@@ -149,15 +151,16 @@ class B2pphhConf(LineBuilder) :
                               Combination12Cut = {},
                               Combination123Cut = {},
                               PreVertexCuts = "AALL",
-                              PostVertexCuts = "ALL") :
+                              PostVertexCuts = "ALL",
+                              ReFitPVs = True) :
         
         combiner = DaVinci__N4BodyDecays( DecayDescriptor = DecayDescriptor,
                                           DaughtersCuts = DaughterCuts,
                                           MotherCut = PostVertexCuts,
                                           CombinationCut = PreVertexCuts,
                                           Combination12Cut = Combination12Cut,
-                                          Combination123Cut = Combination123Cut
-                                          )
+                                          Combination123Cut = Combination123Cut,
+                                          ReFitPVs = ReFitPVs)
         return Selection ( OutputList,
                            Algorithm = combiner,
                            RequiredSelections = DaughterLists)
@@ -172,10 +175,12 @@ class B2pphhConf(LineBuilder) :
                                            Combination12Cut = "((AM < %(CombMass12Max_kk)s*MeV) & (ASUM(PT)> %(p_PTSUM)s * MeV) & (ASUM(P)> %(p_PSUM)s*MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s ) & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))"%self.config,
                                            Combination123Cut = "((AM < %(CombMass123Max)s * MeV)  & (ACHI2DOCA(1,3) < %(d_achi2doca13)s )  & (ACHI2DOCA(2,3) < %(d_achi2doca23)s ))"%self.config,
                                            PreVertexCuts = " ((AMAXDOCA('LoKi::TrgDistanceCalculator') < %(4h_AMAXDOCA)s) & (in_range ( %(CombMassMin)s * GeV , AM , %(CombMassMax)s * GeV)) & (ACHI2DOCA(1,4) < %(d_achi2doca14)s )  & (ACHI2DOCA(2,4) < %(d_achi2doca24)s )  & (ACHI2DOCA(3,4) < %(d_achi2doca34)s ))" %self.config,
-                                           PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s * MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range (%(MassMin)s * GeV , M , %(MassMax)s * GeV )))" %self.config)
+                                           PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s * MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range (%(MassMin)s * GeV , M , %(MassMax)s * GeV )))" %self.config,
+                                           ReFitPVs = True)
         
         BppkkLine = StrippingLine( self.name + '_kkLine',
                                    prescale   = 1,
+                                   #HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
                                    FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
                                              "Preambulo":["from LoKiTracks.decorators import *"]},
                                    algos     = [ Bppkk ],
@@ -192,11 +197,13 @@ class B2pphhConf(LineBuilder) :
                                             Combination12Cut = "((AM < %(CombMass12Max_kpi)s*MeV) & (ASUM(PT)> %(p_PTSUM)s*MeV) & (ASUM(P)> %(p_PSUM)s* MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s )  & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))" %self.config,
                                             Combination123Cut = "((AM < %(CombMass123Max)s * MeV)  & (ACHI2DOCA(1,3) < %(d_achi2doca13)s )  & (ACHI2DOCA(2,3) < %(d_achi2doca23)s ))" %self.config,
                                             PreVertexCuts = "((AMAXDOCA('LoKi::TrgDistanceCalculator') < %(4h_AMAXDOCA)s) & (in_range (%(CombMassMin)s * GeV , AM , %(CombMassMax)s * GeV))  & (ACHI2DOCA(1,4) < %(d_achi2doca14)s )  & (ACHI2DOCA(2,4) < %(d_achi2doca24)s )  & (ACHI2DOCA(3, 4) < %(d_achi2doca34)s ))" %self.config,
-                                            PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-') | (ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s*MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range (%(MassMin)s * GeV , M , %(MassMax)s * GeV)))" %self.config)         
+                                            PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-') | (ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s*MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range (%(MassMin)s * GeV , M , %(MassMax)s * GeV)))" %self.config,
+                                            ReFitPVs = True)         
         BppkpiLine = StrippingLine( self.name + '_kpiLine',
-                                       prescale   = 1,
-                                       FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
-                                                 "Preambulo":["from LoKiTracks.decorators import *"]},
+                                    prescale   = 1,
+                                    #HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
+                                    FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
+                                              "Preambulo":["from LoKiTracks.decorators import *"]},
                                     algos     = [ Bppkpi ],
                                     EnableFlavourTagging = True)
         
@@ -209,13 +216,15 @@ class B2pphhConf(LineBuilder) :
                                              Combination12Cut = "((AM < %(CombMass12Max_pipi)s*MeV) & (ASUM(PT)> %(p_PTSUM)s*MeV) & (ASUM(P)> %(p_PSUM)s* MeV) & ( (  AFUNCHILD(1,P) > %(p_PMIN)s * GeV) | ( AFUNCHILD(2,P) > %(p_PMIN)s * GeV ) ) & ( (  AFUNCHILD(1,PT) > %(p_PTMIN)s * MeV) | ( AFUNCHILD(2,PT) > %(p_PTMIN)s * MeV ) ) & (AFUNCHILD(1,PROBNNp) * AFUNCHILD(2,PROBNNp) > %(p_PROBNNpPROD)s )  & (ACHI2DOCA(1,2) < %(d_achi2doca12)s ))" %self.config,
                                              Combination123Cut = "((AM < %(CombMass123Max)s * MeV) & (ACHI2DOCA(1,3) < %(d_achi2doca13)s )  & (ACHI2DOCA(2,3) < %(d_achi2doca23)s ))" %self.config,
                                              PreVertexCuts = "((AMAXDOCA('LoKi::TrgDistanceCalculator') < %(4h_AMAXDOCA)s) & (in_range( %(CombMassMin)s *GeV, AM , %(CombMassMax)s *GeV))  & (ACHI2DOCA(1,4) < %(d_achi2doca14)s )  & (ACHI2DOCA(2,4) < %(d_achi2doca24)s )  & (ACHI2DOCA(3, 4) < %(d_achi2doca34)s ))" %self.config,
-                                             PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s* MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range ( %(MassMin)s * GeV , M , %(MassMax)s * GeV)))" %self.config)
+                                             PostVertexCuts ="((BPVDIRA > %(B_DIRA)s) & (VFASPF(VCHI2) < %(B_CHI2)s) & (SUMTREE(PT,((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),0.0) > %(4h_PTSUM)s*MeV) & (PT > %(B_PT)s* MeV) & (MIPDV(PRIMARY) < %(B_MIPDV)s*mm) & (in_range ( %(MassMin)s * GeV , M , %(MassMax)s * GeV)))" %self.config,
+                                             ReFitPVs = True)
         
         BpppipiLine = StrippingLine( self.name + '_pipiLine',
-                                       prescale   = 1,
-                                       FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
-                                                 "Preambulo":["from LoKiTracks.decorators import *"]},
-                                       algos      = [ Bpppipi ],
+                                     prescale   = 1,
+                                     #HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
+                                     FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
+                                               "Preambulo":["from LoKiTracks.decorators import *"]},
+                                     algos      = [ Bpppipi ],
                                      EnableFlavourTagging = True)
         
         self.registerLine(BpppipiLine) 
