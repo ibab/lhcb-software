@@ -16,11 +16,12 @@ __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2
 __all__ = (
     'StdLooseLambdaLL' ,
     'StdLooseLambdaDD' ,
+    'StdLooseLambdaLD' ,
     'locations'
     )
 # =============================================================================
 from Gaudi.Configuration import *
-from Configurables       import CombineParticles
+from Configurables       import CombineParticles, FilterDesktop
 from CommonParticles.Utils import *
 
 ## ============================================================================
@@ -61,7 +62,45 @@ StdLooseLambdaDD.CombinationCut = "(ADAMASS('Lambda0')<80*MeV) & (ADOCACHI2CUT(2
 StdLooseLambdaDD.MotherCut = "(ADMASS('Lambda0')<64*MeV) & (VFASPF(VCHI2)<25)"
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseLambdaDD )
+locations.update( updateDoD ( StdLooseLambdaDD ) )
+
+## ============================================================================
+#  configuration file for 'Standard Loose Long-Downstream ' 
+#  @author Daniel O'Hanlon
+#  @date 2014-08-18
+# ============================================================================= 
+
+# p +/- long
+
+StdLooseLambdaLDpLong = StdLooseLambdaDD.clone( 'StdLooseLambdaLDpLong' )
+
+StdLooseLambdaLDpLong.Inputs = [ "Phys/StdLooseProtons/Particles",
+                                 "Phys/StdNoPIDsDownPions/Particles"]
+
+StdLooseLambdaLDpLong.DaughtersCuts = { "p+"  : "(ISLONG) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>9)",
+                                        "pi-" : "(ISDOWN) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)"}
+
+# p +/- down
+
+StdLooseLambdaLDpDown = StdLooseLambdaDD.clone( 'StdLooseLambdaLDpDown' )
+
+StdLooseLambdaLDpDown.Inputs = [ "Phys/StdNoPIDsDownProtons/Particles",
+                                 "Phys/StdLoosePions/Particles" ]
+
+StdLooseLambdaLDpDown.DaughtersCuts = { "p+"  : "(ISDOWN) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>4)",
+                                        "pi-" : "(ISLONG) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>9)"}
+
+# Combination
+
+StdLooseLambdaLD = FilterDesktop("StdLooseLambdaLD", Code = "ALL")
+
+StdLooseLambdaLD.Inputs = [ "Phys/StdLooseLambdaLDpLong/Particles",
+                            "Phys/StdLooseLambdaLDpDown/Particles" ]
+
+locations.update( updateDoD (StdLooseLambdaLDpLong) )
+locations.update( updateDoD (StdLooseLambdaLDpDown) )
+
+locations.update( updateDoD (StdLooseLambdaLD) )
 
 ## ============================================================================
 if '__main__' == __name__ :

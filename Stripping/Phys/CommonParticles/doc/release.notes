@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-08-25 - Daniel O'Hanlon
+ - Add LambdaLD to StdLooseLambda
+
 ! 2014-08-13 - Chris Jones
  - Fix a bug that prevented StdLooseDiElectron being used as a 
    Standard Particle.
