@@ -242,8 +242,8 @@ class B2KShhConf(LineBuilder) :
                 _mylines[ks_type][year] = {}
 
                 # BDT weight file
-                _weightfile1[ks_type][year] = '/afs/cern.ch/user/r/rsilvaco/public/Stripping21/BDT1_%s_%s.xml' % (ks_type, year)
-                _weightfile2[ks_type][year] = '/afs/cern.ch/user/r/rsilvaco/public/Stripping21/BDT2_%s_%s.xml' % (ks_type, year)
+                _weightfile1[ks_type][year] = '$TMVAWEIGHTS/data/B2KShh_BDT1_%s_%s.xml' % (ks_type, year)
+                _weightfile2[ks_type][year] = '$TMVAWEIGHTS/data/B2KShh_BDT2_%s_%s.xml' % (ks_type, year)
 
                 for sign in _signs :
 
