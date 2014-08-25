@@ -13,7 +13,7 @@ class JetMakerConf:
                  R = 0.5 ,
                  PtMin = 5000.,
                  AssociateWithPV = True ,
-                 JetEnergyCorrection = True ,
+                 JetEnergyCorrection = False ,
                  JetIDCut = True,
                  jetidnumber=98 ,
                  onlySaveB = False,

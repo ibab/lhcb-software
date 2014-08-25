@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-08-25 - Cedric Potterat
+ - Setting JEC to False
+
 ! 2014-08-22 - Cedric Potterat
  - Adding the new ghost kill ore Long/Down/Up trk via ProbNNghost
 
