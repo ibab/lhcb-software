@@ -378,13 +378,6 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /** get the intergal between low and high for a product of Bernstein
-       *  polynom and the exponential function with the exponent tau
-       */
-      double integral_exp   ( const double low  , 
-                              const double high , 
-                              const double tau  ) const ;
-      // ======================================================================
     private:
       // ======================================================================
       /// the list of parameters
@@ -393,6 +386,22 @@ namespace Gaudi
       double m_xmin  ;                             // the left edge of interval
       /// the right edge of interval
       double m_xmax  ;                             // the right edge of interval
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** get the integral between low and high for a product of Bernstein
+       *  polynom and the exponential function with the exponent tau
+       *  \f[  \int_{a}^{b} \mathcal{B} e^{\tau x } \mathrm{d}x \f] 
+       *  @param poly  bernstein polynomial
+       *  @param tau   slope parameter for exponential 
+       *  @param a     low  integration range 
+       *  @param b     high integration range 
+       */
+      static double integrate 
+        ( const Bernstein& poly ,
+          const double     tau  ,
+          const double     a    , 
+          const double     b    ) ;
       // ======================================================================
     } ;
     // ========================================================================
@@ -4535,9 +4544,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
-      double integral ( const double xlow , const double xhigh , 
-                        const double ylow , const double yhigh ) const ;
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integral   ( const double xlow , const double xhigh , 
+                          const double ylow , const double yhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
     public: // few helper functions to expose internals 
       // ======================================================================
@@ -4640,11 +4671,35 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
-      double integral ( const double xlow , const double xhigh , 
-                        const double ylow , const double yhigh ) const 
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integral   ( const double xlow , const double xhigh , 
+                          const double ylow , const double yhigh ) const 
       { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
-      // =====================================================================
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const 
+      { return m_bernstein.integrateX ( y , xlow , xhigh ) ; }
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const 
+      { return m_bernstein.integrateY ( x , ylow , yhigh ) ; }
+      // ======================================================================
     public: // ingeredients 
       // =====================================================================
       // get the bernstein polinomial in 2D 
@@ -4750,9 +4805,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
-      double integral ( const double xlow , const double xhigh , 
-                        const double ylow , const double yhigh ) const ;
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integral   ( const double xlow , const double xhigh , 
+                          const double ylow , const double yhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
     public: // few helper functions to expose internals 
       // ======================================================================
@@ -4836,10 +4913,37 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
-      double integral ( const double xlow , const double xhigh , 
-                        const double ylow , const double yhigh ) const 
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integral   ( const double xlow , const double xhigh , 
+                          const double ylow , const double yhigh ) const 
       { return m_bernstein.integral ( xlow , xhigh , ylow , yhigh ) ; }
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const 
+      { return m_bernstein.integrateX ( y , xlow , xhigh ) ; }
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const 
+      { return m_bernstein.integrateY ( x , ylow , yhigh ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // get the bernstein 2D polynom
       const Gaudi::Math::Bernstein2DSym& bernstein() const 
       { return m_bernstein ; }
@@ -4914,9 +5018,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -4986,9 +5112,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -5073,9 +5221,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -5154,9 +5324,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
     public:
       // ======================================================================
@@ -5223,9 +5415,31 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// get the integral over 2D-region 
+      /** get the integral over 2D-region 
+       *  \f[ \int_{x_low}^{x_high}\int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}x\mathrm{d}y\f] 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
       double integral ( const double xlow , const double xhigh , 
                         const double ylow , const double yhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{y_low}^{y_high} \mathcal{B}(x,y) \mathrm{d}y\f] 
+       *  @param x     variable 
+       *  @param ylow  low  edge in y 
+       *  @param yhigh high edge in y 
+       */
+      double integrateX ( const double y    , 
+                          const double xlow , const double xhigh ) const ;
+      /** integral over x-dimension 
+       *  \f[ \int_{x_low}^{x_high} \mathcal{B}(x,y) \mathrm{d}x\f] 
+       *  @param y     variable 
+       *  @param xlow  low  edge in x 
+       *  @param xhigh high edge in x 
+       */
+      double integrateY ( const double x    , 
+                          const double ylow , const double yhigh ) const ;
       // ======================================================================
     public:  // expose some internmals 
       // ======================================================================
