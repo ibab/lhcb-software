@@ -4608,7 +4608,10 @@ Int_t Analysis::Models::Poly2DPositive::getAnalyticalIntegral
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
   return 0 ;
 }
 //_____________________________________________________________________________
@@ -4616,13 +4619,15 @@ Double_t Analysis::Models::Poly2DPositive::analyticalIntegral
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
+  assert ( 1 == code || 2 ==code || 3 == code ) ;
   //
   setPars () ;
   //
-  return m_positive.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
-                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  return 
+    1 == code ? m_positive.integral   (        m_x.min(rangeName) , m_x.max(rangeName) ,
+                                               m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_positive.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_positive.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
 // ============================================================================
 // generic polinomial
@@ -4740,7 +4745,10 @@ Int_t Analysis::Models::Poly2DSymPositive::getAnalyticalIntegral
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
   return 0 ;
 }
 // ============================================================================
@@ -4748,13 +4756,15 @@ Double_t Analysis::Models::Poly2DSymPositive::analyticalIntegral
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
+  assert ( 1 == code || 2 == code || 3 == code ) ;
   //
   setPars () ;
   //
-  return m_positive.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
-                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  return 
+    1 == code ? m_positive.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                               m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_positive.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_positive.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
 
 // ============================================================================
@@ -4913,7 +4923,10 @@ Int_t Analysis::Models::PS2DPol::getAnalyticalIntegral
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
   return 0 ;
 }
 // ============================================================================
@@ -4921,13 +4934,15 @@ Double_t Analysis::Models::PS2DPol::analyticalIntegral
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
+  assert ( 1 == code || 2 == code || 3 == code ) ;
   //
   setPars () ;
   //
-  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
-                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  return 
+    1 == code ? m_function.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                               m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_function.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_function.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
 // ============================================================================
 //  PS(x)*PS(y)*SymPolynom 
@@ -5079,7 +5094,10 @@ Int_t Analysis::Models::PS2DPolSym::getAnalyticalIntegral
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
   return 0 ;
 }
 // ============================================================================
@@ -5087,13 +5105,15 @@ Double_t Analysis::Models::PS2DPolSym::analyticalIntegral
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
+  assert ( 1 == code || 2 == code || 3 == code ) ;
   //
   setPars () ;
   //
-  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
-                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  return 
+    1 == code ? m_function.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                               m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_function.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_function.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
 
 
@@ -5259,7 +5279,10 @@ Int_t Analysis::Models::ExpoPS2DPol::getAnalyticalIntegral
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
   return 0 ;
 }
 // ============================================================================
@@ -5267,13 +5290,15 @@ Double_t Analysis::Models::ExpoPS2DPol::analyticalIntegral
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
+  assert ( 1 == code || 2 == code || 3 == code ) ;
   //
   setPars () ;
   //
-  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
-                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  return 
+    1 == code ? m_function.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                               m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_function.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_function.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
 
 
@@ -5403,7 +5428,10 @@ Int_t Analysis::Models::Expo2DPol::getAnalyticalIntegral
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
   return 0 ;
 }
 // ============================================================================
@@ -5411,13 +5439,15 @@ Double_t Analysis::Models::Expo2DPol::analyticalIntegral
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
+  assert ( 1 == code || 2 == code || 3 == code ) ;
   //
   setPars () ;
   //
-  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
-                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  return 
+    1 == code ? m_function.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                               m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_function.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_function.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
 
 
@@ -5539,7 +5569,10 @@ Int_t Analysis::Models::Expo2DPolSym::getAnalyticalIntegral
   RooArgSet&     analVars     ,
   const char* /* rangename */ ) const 
 {
-  if ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
   return 0 ;
 }
 // ============================================================================
@@ -5547,16 +5580,16 @@ Double_t Analysis::Models::Expo2DPolSym::analyticalIntegral
 ( Int_t       code      , 
   const char* rangeName ) const 
 {
-  assert ( code == 1 ) ;
-  if ( 1 != code ) {}
+  assert ( 1 == code || 2 == code || 3 == code ) ;
   //
   setPars () ;
   //
-  return m_function.integral ( m_x.min(rangeName) , m_x.max(rangeName) , 
-                               m_y.min(rangeName) , m_y.max(rangeName) ) ;
+  return 
+    1 == code ? m_function.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                               m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_function.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_function.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
-
-
 // ============================================================================
 // The END 
 // ============================================================================

@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-08-25 - Vanya Belyaev
+ - more efficient treatment of normalization integrals 
+
 ! 2014-08-24 - Vanya Belyaev
  - minor improvements 
    remove wrapper empty modules 
