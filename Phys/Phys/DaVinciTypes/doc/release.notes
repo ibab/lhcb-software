@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2014-08-25 - Xabier Cid Vidal
+ - Add names for new Jets Variables, Cylinder Variables and ParticleFlow Variables
+
 ! 2014-08-22 - Anton Poluektov 
  - Add names for Bs2Mumu isolation tool by Fatima Soomro to RelatedInfoNamed.h
 

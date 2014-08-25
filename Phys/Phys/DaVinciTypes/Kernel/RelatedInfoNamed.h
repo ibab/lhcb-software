@@ -77,7 +77,87 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       BSMUMUOTHERBBOOSTANGLE = BSMUMUCDFISO + 4,
       BSMUMUTRACKPLUSISO        = BSMUMUCDFISO + 5,
       BSMUMUTRACKMINUSISO        = BSMUMUCDFISO + 6,
-      BSMUMUOTHERBTRACKS     = BSMUMUCDFISO + 7
+      BSMUMUOTHERBTRACKS     = BSMUMUCDFISO + 7,
+
+
+      // Jet isolation variables
+      JETNOMU1PX     	 =  BSMUMUOTHERBTRACKS + 1,
+      JETNOMU1PY     	 =  JETNOMU1PX + 1 ,
+      JETNOMU1PZ     	 =  JETNOMU1PX + 2 ,
+      JETNOMU1PT     	 =  JETNOMU1PX + 3 ,
+      JETNOMU1JETWIDTH =  JETNOMU1PX + 4 ,
+      JETNOMU1NNTAG    =  JETNOMU1PX + 5 ,
+      JETNOMU1MNF      =  JETNOMU1PX + 6 ,
+      JETNOMU2PX     	 =  JETNOMU1PX + 7 ,
+      JETNOMU2PY     	 =  JETNOMU1PX + 8 ,
+      JETNOMU2PZ     	 =  JETNOMU1PX + 9 ,
+      JETNOMU2PT     	 =  JETNOMU1PX + 10 ,
+      JETNOMU2JETWIDTH =  JETNOMU1PX + 11 ,
+      JETNOMU2NNTAG    =  JETNOMU1PX + 12 ,
+      JETNOMU2MNF      =  JETNOMU1PX + 13 ,
+      JETNOMU3PX     	 =  JETNOMU1PX + 14 ,
+      JETNOMU3PY     	 =  JETNOMU1PX + 15 ,
+      JETNOMU3PZ     	 =  JETNOMU1PX + 16 ,
+      JETNOMU3PT     	 =  JETNOMU1PX + 17 ,
+      JETNOMU3JETWIDTH =  JETNOMU1PX + 18 ,
+      JETNOMU3NNTAG    =  JETNOMU1PX + 19 ,
+      JETNOMU3MNF      =  JETNOMU1PX + 20 ,
+      JETMU1PX     	   =  JETNOMU1PX + 21 ,
+      JETMU1PY     	   =  JETNOMU1PX + 22 ,
+      JETMU1PZ     	   =  JETNOMU1PX + 23 ,
+      JETMU1PT     	   =  JETNOMU1PX + 24 ,
+      JETMU1JETWIDTH   =  JETNOMU1PX + 25 ,
+      JETMU1NNTAG      =  JETNOMU1PX + 26 ,
+      JETMU1MNF     	 =  JETNOMU1PX + 27 ,
+      JETMU2PX     	   =  JETNOMU1PX + 28 ,
+      JETMU2PY     	   =  JETNOMU1PX + 29 ,
+      JETMU2PZ     	   =  JETNOMU1PX + 30 ,
+      JETMU2PT     	   =  JETNOMU1PX + 31 ,
+      JETMU2JETWIDTH   =  JETNOMU1PX + 32 ,
+      JETMU2NNTAG      =  JETNOMU1PX + 33 ,
+      JETMU2MNF     	 =  JETNOMU1PX + 34 ,
+      JETBPX     	     =  JETNOMU1PX + 35 ,
+      JETBPY     	     =  JETNOMU1PX + 36 ,
+      JETBPZ     	     =  JETNOMU1PX + 37 ,
+      JETBPT     	     =  JETNOMU1PX + 38 ,
+      JETBJETWIDTH     =  JETNOMU1PX + 39 ,
+      JETBNNTAG     	 =  JETNOMU1PX + 40 ,
+      JETBMNF     	   =  JETNOMU1PX + 41 ,
+
+      // cylinder isolation variables
+      CYLBESTD0               =  JETBMNF + 1 ,
+      CYLBESTKS     	        =  CYLBESTD0 + 1 ,
+      CYLTRACKSNCYL           =  CYLBESTD0 + 2 ,
+      CYLMINPT     	          =  CYLBESTD0 + 3 ,
+      CYLMAXPT     	          =  CYLBESTD0 + 4 ,
+      CYLAVPT     	          =  CYLBESTD0 + 5 ,
+      CYLMAXPTTRIPCHI2        =  CYLBESTD0 + 6 ,
+      CYLMAXPTTRDOCACHI2      =  CYLBESTD0 + 7 ,
+      CYLMAXPTTRBMASS     	  =  CYLBESTD0 + 8 ,
+      CYLMINIPCHI2     	      =  CYLBESTD0 + 9 ,
+      CYLMAXIPCHI2     	      =  CYLBESTD0 + 10 ,
+      CYLAVIPCHI2     	      =  CYLBESTD0 + 11 ,
+      CYLMAXIPCHI2TRPT     	  =  CYLBESTD0 + 12 ,
+      CYLMAXIPCHI2TRDOCACHI2  =  CYLBESTD0 + 13 ,
+      CYLMAXIPCHI2TRBMASS     =  CYLBESTD0 + 14 ,
+      CYLMINDOCACHI2     	    =  CYLBESTD0 + 15 ,
+      CYLMAXDOCACHI2     	    =  CYLBESTD0 + 16 ,
+      CYLAVDOCACHI2     	    =  CYLBESTD0 + 17 ,
+      CYLMINDOCATRPT     	    =  CYLBESTD0 + 18 ,
+      CYLMINDOCATRIPCHI2     	=  CYLBESTD0 + 19 ,
+      CYLMINDOCATRBMASS     	=  CYLBESTD0 + 20 ,
+      CYLBESTBMASS     	      =  CYLBESTD0 + 21 ,
+      CYLBESTBMASSTRPT     	  =  CYLBESTD0 + 22 ,
+      CYLBESTBMASSTRIPCHI2    =  CYLBESTD0 + 23 ,
+      CYLBESTBMASSTRDOCACHI2  =  CYLBESTD0 + 24 ,
+
+      // Particle Flow related variables
+      PFCHARGEDMASS    =  CYLBESTBMASSTRDOCACHI2 + 1 ,
+      PFALLMASS     	 =  PFCHARGEDMASS + 1 ,
+      PFCHARGEDTOTPT   =  PFCHARGEDMASS + 2 ,
+      PFALLTOTPT     	 =  PFCHARGEDMASS + 3 ,
+      PFCHARGEDMISSPT  =  PFCHARGEDMASS + 4 ,
+      PFALLMISSPT      =  PFCHARGEDMASS + 5
       
     };
 
@@ -146,14 +226,90 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       case RelatedInfoNamed::BSMUMUTRACKPLUSISO : return "BSMUMUTRACKPLUSISO"; 
       case RelatedInfoNamed::BSMUMUTRACKMINUSISO : return "BSMUMUTRACKMINUSISO";
       case RelatedInfoNamed::BSMUMUOTHERBTRACKS : return "BSMUMUOTHERBTRACKS";
-	
+
+      case RelatedInfoNamed::JETNOMU1PX : return "JETNOMU1PX" ;
+      case RelatedInfoNamed::JETNOMU1PY : return "JETNOMU1PY" ;
+      case RelatedInfoNamed::JETNOMU1PZ : return "JETNOMU1PZ" ;
+      case RelatedInfoNamed::JETNOMU1PT : return "JETNOMU1PT" ;
+      case RelatedInfoNamed::JETNOMU1JETWIDTH : return "JETNOMU1JETWIDTH" ;
+      case RelatedInfoNamed::JETNOMU1NNTAG : return "JETNOMU1NNTAG" ;
+      case RelatedInfoNamed::JETNOMU1MNF : return "JETNOMU1MNF" ;
+      case RelatedInfoNamed::JETNOMU2PX : return "JETNOMU2PX" ;
+      case RelatedInfoNamed::JETNOMU2PY : return "JETNOMU2PY" ;
+      case RelatedInfoNamed::JETNOMU2PZ : return "JETNOMU2PZ" ;
+      case RelatedInfoNamed::JETNOMU2PT : return "JETNOMU2PT" ;
+      case RelatedInfoNamed::JETNOMU2JETWIDTH : return "JETNOMU2JETWIDTH" ;
+      case RelatedInfoNamed::JETNOMU2NNTAG : return "JETNOMU2NNTAG" ;
+      case RelatedInfoNamed::JETNOMU2MNF : return "JETNOMU2MNF" ;
+      case RelatedInfoNamed::JETNOMU3PX : return "JETNOMU3PX" ;
+      case RelatedInfoNamed::JETNOMU3PY : return "JETNOMU3PY" ;
+      case RelatedInfoNamed::JETNOMU3PZ : return "JETNOMU3PZ" ;
+      case RelatedInfoNamed::JETNOMU3PT : return "JETNOMU3PT" ;
+      case RelatedInfoNamed::JETNOMU3JETWIDTH : return "JETNOMU3JETWIDTH" ;
+      case RelatedInfoNamed::JETNOMU3NNTAG : return "JETNOMU3NNTAG" ;
+      case RelatedInfoNamed::JETNOMU3MNF : return "JETNOMU3MNF" ;
+      case RelatedInfoNamed::JETMU1PX : return "JETMU1PX" ;
+      case RelatedInfoNamed::JETMU1PY : return "JETMU1PY" ;
+      case RelatedInfoNamed::JETMU1PZ : return "JETMU1PZ" ;
+      case RelatedInfoNamed::JETMU1PT : return "JETMU1PT" ;
+      case RelatedInfoNamed::JETMU1JETWIDTH : return "JETMU1JETWIDTH" ;
+      case RelatedInfoNamed::JETMU1NNTAG : return "JETMU1NNTAG" ;
+      case RelatedInfoNamed::JETMU1MNF : return "JETMU1MNF" ;
+      case RelatedInfoNamed::JETMU2PX : return "JETMU2PX" ;
+      case RelatedInfoNamed::JETMU2PY : return "JETMU2PY" ;
+      case RelatedInfoNamed::JETMU2PZ : return "JETMU2PZ" ;
+      case RelatedInfoNamed::JETMU2PT : return "JETMU2PT" ;
+      case RelatedInfoNamed::JETMU2JETWIDTH : return "JETMU2JETWIDTH" ;
+      case RelatedInfoNamed::JETMU2NNTAG : return "JETMU2NNTAG" ;
+      case RelatedInfoNamed::JETMU2MNF : return "JETMU2MNF" ;
+      case RelatedInfoNamed::JETBPX : return "JETBPX" ;
+      case RelatedInfoNamed::JETBPY : return "JETBPY" ;
+      case RelatedInfoNamed::JETBPZ : return "JETBPZ" ;
+      case RelatedInfoNamed::JETBPT : return "JETBPT" ;
+      case RelatedInfoNamed::JETBJETWIDTH : return "JETBJETWIDTH" ;
+      case RelatedInfoNamed::JETBNNTAG : return "JETBNNTAG" ;
+      case RelatedInfoNamed::JETBMNF : return "JETBMNF" ;
+
+      case RelatedInfoNamed::CYLBESTD0 : return "CYLBESTD0" ;
+      case RelatedInfoNamed::CYLBESTKS : return "CYLBESTKS" ;
+      case RelatedInfoNamed::CYLTRACKSNCYL : return "CYLTRACKSNCYL" ;
+      case RelatedInfoNamed::CYLMINPT : return "CYLMINPT" ;
+      case RelatedInfoNamed::CYLMAXPT : return "CYLMAXPT" ;
+      case RelatedInfoNamed::CYLAVPT : return "CYLAVPT" ;
+      case RelatedInfoNamed::CYLMAXPTTRIPCHI2 : return "CYLMAXPTTRIPCHI2" ;
+      case RelatedInfoNamed::CYLMAXPTTRDOCACHI2 : return "CYLMAXPTTRDOCACHI2" ;
+      case RelatedInfoNamed::CYLMAXPTTRBMASS : return "CYLMAXPTTRBMASS" ;
+      case RelatedInfoNamed::CYLMINIPCHI2 : return "CYLMINIPCHI2" ;
+      case RelatedInfoNamed::CYLMAXIPCHI2 : return "CYLMAXIPCHI2" ;
+      case RelatedInfoNamed::CYLAVIPCHI2 : return "CYLAVIPCHI2" ;
+      case RelatedInfoNamed::CYLMAXIPCHI2TRPT : return "CYLMAXIPCHI2TRPT" ;
+      case RelatedInfoNamed::CYLMAXIPCHI2TRDOCACHI2 : return "CYLMAXIPCHI2TRDOCACHI2" ;
+      case RelatedInfoNamed::CYLMAXIPCHI2TRBMASS : return "CYLMAXIPCHI2TRBMASS" ;
+      case RelatedInfoNamed::CYLMINDOCACHI2 : return "CYLMINDOCACHI2" ;
+      case RelatedInfoNamed::CYLMAXDOCACHI2 : return "CYLMAXDOCACHI2" ;
+      case RelatedInfoNamed::CYLAVDOCACHI2 : return "CYLAVDOCACHI2" ;
+      case RelatedInfoNamed::CYLMINDOCATRPT : return "CYLMINDOCATRPT" ;
+      case RelatedInfoNamed::CYLMINDOCATRIPCHI2 : return "CYLMINDOCATRIPCHI2" ;
+      case RelatedInfoNamed::CYLMINDOCATRBMASS : return "CYLMINDOCATRBMASS" ;
+      case RelatedInfoNamed::CYLBESTBMASS : return "CYLBESTBMASS" ;
+      case RelatedInfoNamed::CYLBESTBMASSTRPT : return "CYLBESTBMASSTRPT" ;
+      case RelatedInfoNamed::CYLBESTBMASSTRIPCHI2 : return "CYLBESTBMASSTRIPCHI2" ;
+      case RelatedInfoNamed::CYLBESTBMASSTRDOCACHI2 : return "CYLBESTBMASSTRDOCACHI2" ;
+      case RelatedInfoNamed::PFCHARGEDMASS : return "PFCHARGEDMASS" ;
+      case RelatedInfoNamed::PFALLMASS : return "PFALLMASS" ;
+      case RelatedInfoNamed::PFCHARGEDTOTPT : return "PFCHARGEDTOTPT" ;
+      case RelatedInfoNamed::PFALLTOTPT : return "PFALLTOTPT" ;
+      case RelatedInfoNamed::PFCHARGEDMISSPT : return "PFCHARGEDMISSPT" ;
+      case RelatedInfoNamed::PFALLMISSPT : return "PFALLMISSPT" ;
+
+
         default : return "UNKNOWN"; 
       }
     }
     
     static short int indexByName(std::string name) {
       short i;
-      for (i=0; i<=RelatedInfoNamed::BSMUMUOTHERBTRACKS; i++) {
+      for (i=0; i<=RelatedInfoNamed::PFALLMISSPT; i++) {
         if ( name.compare(nameByIndex(i) ) == 0 ) return i; 
       }
       return RelatedInfoNamed::UNKNOWN; 
