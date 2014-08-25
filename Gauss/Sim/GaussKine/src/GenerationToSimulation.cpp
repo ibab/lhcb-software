@@ -43,7 +43,8 @@ DECLARE_ALGORITHM_FACTORY(GenerationToSimulation);
 GenerationToSimulation::GenerationToSimulation(const std::string& name,
 					       ISvcLocator* pSvcLocator) : 
   GaudiAlgorithm(name, pSvcLocator), m_gigaSvc(0), m_particleContainer(0), 
-  m_vertexContainer(0) {
+  m_vertexContainer(0), m_keepCuts(LoKi::Constant<const HepMC::GenParticle*, 
+				   bool>(true)) {
   declareProperty("GiGaService", m_gigaSvcName = "GiGa",
 		  "Name of the GiGa service.");
   declareProperty("HepMCEventLocation",
@@ -67,6 +68,8 @@ GenerationToSimulation::GenerationToSimulation(const std::string& name,
 		  "Update the Geant4 particle properties.");
   declareProperty("MCHeader", m_mcHeader = LHCb::MCHeaderLocation::Default,
 		  "Location to retrieve the MCHeader.");
+  declareProperty("KeepCode", m_keepCode = "", 
+		  "The code to flag additional particles for storage.");
 }
 
 //=============================================================================
@@ -115,6 +118,16 @@ StatusCode GenerationToSimulation::initialize() {
     }
   }
   
+  // Cuts to keep additional particles.
+  if (m_keepCode != "") {
+    svc<IService>("LoKiSvc");
+    LoKi::IGenHybridFactory* factory = tool<LoKi::IGenHybridFactory>
+      ("LoKi::Hybrid::GenTool/GenFactory:PUBLIC", this);
+    sc = factory->get(m_keepCode, m_keepCuts);
+    if (sc.isFailure()) 
+      always() << "Error from KeepCode = '" + m_keepCode + "'" << endmsg;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -404,7 +417,7 @@ void GenerationToSimulation::convert(HepMC::GenParticle*& particle,
 //=============================================================================
 unsigned char GenerationToSimulation::transferToGeant4
 (const HepMC::GenParticle* p) const {
-  if (!keep(p)) return 3;
+  if (!(keep(p) || (m_keepCode != "" && m_keepCuts(p)))) return 3;
   if (m_skipGeant4) return 2;
 
   // Return for Geant4 tracking if stable.

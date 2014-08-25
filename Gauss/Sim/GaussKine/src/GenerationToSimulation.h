@@ -12,6 +12,9 @@
 // HepMC.
 #include "HepMC/SimpleVector.h"
 
+// LoKi.
+# include "LoKi/IGenHybridFactory.h"
+
 // Forward declarations.
 class IGiGaSvc;
 class G4PrimaryVertex ;
@@ -102,5 +105,8 @@ private:
   std::map<int, bool> m_mcParticleMap; 
   ///< Vector of particles to remove from G4PrimaryVertex.
   std::vector<G4PrimaryParticle*> m_particlesToDelete;
+
+  std::string          m_keepCode; ///< Code to keep additional particles.
+  LoKi::GenTypes::GCut m_keepCuts; ///< Cuts to keep additional particles.
 };
 #endif // GENERATIONTOSIMULATION_H

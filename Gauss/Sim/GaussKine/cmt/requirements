@@ -21,6 +21,7 @@ include_path      none
 use   GenEvent      v*  Event
 use   MCEvent       v*  Event
 use   GaussTools    v*  Sim
+use   LoKiGen       v*  Phys
 
 #============================================================================
 # Component library building rule
