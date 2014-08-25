@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-08-25 - Yanxi Zhang
+ - Added StrippingBaronicBsDecaysBs{LcPPiPi, LcPKPi,LcPKS,LcPL0Pi} lines
 
 ! 2014-08-24 - Roberta Cardinale
  - Added PVrefit=True to StrippingB2pphh.py
