@@ -145,7 +145,7 @@ class PolyPos2Dsym_pdf(object) :
 
 # =============================================================================
 ## @class PSPol2D_pdf
-#  Product of phase space factors, modulated by positiev polynomial in 2D 
+#  Product of phase space factors, modulated by positive polynomial in 2D 
 #  \f$  f(x,y) = \Phi_1(x) \times \Phi_2(y) \times P^+(x,y) \f$,
 #  where \f$ P^+(x,y)\f$ denotes the positive polynomial,
 #  @see Analysis::Models::PS2DPol

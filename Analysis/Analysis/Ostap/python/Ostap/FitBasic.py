@@ -37,6 +37,7 @@ __all__     = (
 import ROOT, math
 from   AnalysisPython.Logger     import getLogger
 from   Ostap.PyRoUts             import VE, hID, allInts, cpp, rootID
+from   Ostap.PyRoUts             import h1_axis , h2_axes 
 from   Ostap.Utils               import RooSilent, NoContext 
 # =============================================================================
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.FitBasic' )
@@ -960,6 +961,7 @@ class Fit2D (object) :
                nbins   = 100  ,
                ybins   =  20  ,
                silent  = True ,
+               projvar = None ,  
                *args )  : 
         """
         Make 1D-plot:
@@ -995,28 +997,44 @@ class Fit2D (object) :
             frame = drawvar.frame( nbins )
             
             if dataset : dataset  .plotOn ( frame , *args )
-            
+
+            ## if projvar :
+                
+            ##     projvar.setBins( 10 )
+            ##     s = ROOT.RooArgSet ( projvar ) 
+            ##     self.projdata = ROOT.RooDataHist ( 'proj'  , 'project' , s , dataset )
+            ##     print 'PROJECTION DATA', self.projdata
+            ##     _args = list  ( args )
+            ##     _args.append  ( ROOT.RooFit.ProjWData( self.projdata ) )
+            ##     args  = tuple ( _args ) 
+            ##     print 'ARGS: ', args
+
             self.pdf .plotOn ( frame ,
+                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.Components ( self.sb_pdf.GetName() ) ,
                                ROOT.RooFit.LineStyle  ( ROOT.kDashed   ) ,
                                ROOT.RooFit.LineColor  ( ROOT.kGreen    ) , *args )
             
             self.pdf .plotOn ( frame ,
+                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.Components ( self.bs_pdf.GetName() ) ,
                                ROOT.RooFit.LineStyle  ( ROOT.kDotted   ) ,
                                ROOT.RooFit.LineColor  ( ROOT.kMagenta  ) , *args )
             
             self.pdf .plotOn ( frame ,
-                               ROOT.RooFit.Components ( self.bb_pdf.GetName() ) ,                           
+                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
+                               ROOT.RooFit.Components ( self.bb_pdf.GetName() ) ,          
                                ROOT.RooFit.LineWidth  ( 1              ) ,
                                ROOT.RooFit.LineColor  ( ROOT.kBlack    ) , *args )
             
             self.pdf .plotOn ( frame ,
+                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.Components ( self.ss_pdf.GetName() ) ,
                                ROOT.RooFit.LineWidth  ( 1              ) ,
                                ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *args )
             
             self.pdf .plotOn ( frame ,
+                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *args )
             
             frame.SetXTitle ( '' )
