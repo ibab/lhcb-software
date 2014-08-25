@@ -9,7 +9,7 @@ and a cut in the probnn of each track. The stripping now has two more lines,
 reconstructing pp3pi and ppKpipi final states.
 - StrippingBu2hhh.py has been updated to include same sign lines for background 
 studies.
-- StrippingBc2hhh.py has been included. There 6 exclusive lines to reconstruct
+- StrippingBc2hhh_BnoC.py has been included. There 6 exclusive lines to reconstruct
 final states from pipipi to ppK. The line is defined with two mass windows to 
 also select Bu events to be used for BR and possible CP violation studies.
 
