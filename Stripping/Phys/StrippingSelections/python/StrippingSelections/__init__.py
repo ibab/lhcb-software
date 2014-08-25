@@ -218,6 +218,7 @@ import StrippingProtonAsym # new to Stripping21
 
 import StrippingD2HHLTUnbiased
 import StrippingBu2hhh
+import StrippingBc2hhh_BnoC
 import StrippingZ02TauTau
 import StrippingX2D0D0
 import StrippingCC2DD
