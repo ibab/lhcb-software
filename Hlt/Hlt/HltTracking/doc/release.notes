@@ -3,6 +3,9 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+! 2014-08-25 - Gerhard Raven
+ - follow change in Patforward{,Tool}: used hits are now (optionally)
+   flagged in PatForward instead of skipped in PatForwardTool
 
 !========================= HltTracking v13r0 2014-08-16 =========================
 

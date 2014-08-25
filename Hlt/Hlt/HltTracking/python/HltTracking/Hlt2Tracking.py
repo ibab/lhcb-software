@@ -1167,10 +1167,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if Hlt1TrackOption in ['Decode','Encode-Decode'] :
             recoForward.PatForwardTool.SkipUsedSeeds = True
             from Configurables import TrackUsedLHCbID
-            recoForward.PatForwardTool.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
-            recoForward.PatForwardTool.UsedLHCbIDToolName="TrackUsedLHCbID"
-            recoForward.PatForwardTool.TrackUsedLHCbID.inputContainers=["Hlt2/Track/Forward"]
-            recoForward.PatForwardTool.TrackUsedLHCbID.selectorNames=['ForwardSelector']
+            recoForward.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+            recoForward.UsedLHCbIDToolName="TrackUsedLHCbID"
+            recoForward.TrackUsedLHCbID.inputContainers=["Hlt2/Track/Forward"] # FIXME: do not hardwire explicit TES locations. Grab the output location of decoder instead...
+            recoForward.TrackUsedLHCbID.selectorNames=['ForwardSelector']
         # make them a bit more verbose
         recoForward.StatPrint = True
         recoForward.PatForwardTool.StatPrint = True
