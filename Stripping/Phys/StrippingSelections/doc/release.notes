@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-25 - Stefano Perazzini
+ - Hotfix python/__init__.py
+
 ! 2014-08-25 - Giulio Dujany
  - Converted LFVLinesConf from ExtraInfo to RelatedInfo
 

@@ -13,7 +13,6 @@ import StrippingBeauty2Charm
 import StrippingDstarD02Kpipi0
 import StrippingB2D3H
 import StrippingB2KShh
-import StrippingHb2V0V0h
 
 import StrippingDstarVeryLooseWithD02Kpi
 import StrippingBs2PhiMuMu
@@ -61,7 +60,7 @@ import StrippingB2XMuMu
 import StrippingBd2KstarMuMu
 import StrippingB2XMuMuSS
 import StrippingTriMuons
-import StrippingB2XGamma
+#import StrippingB2XGamma
 import StrippingBs2MuMuLines
 import StrippingB2MuMuMuMuLines
 import StrippingB2MuMuX
@@ -70,14 +69,19 @@ import StrippingBd2eeKstar
 import StrippingBd2eeKstarBDT
 import StrippingBd2MuMuKstarBDT
 import StrippingBeauty2XGamma
+import StrippingBeauty2XGammaExclusive
+import StrippingLb2L0Gamma
 import StrippingBLVLines
 import StrippingLc23MuLines
 import StrippingB23MuLines
+import StrippingD23MuLines
+import StrippingB24pLines
 
 import StrippingDiMuonNew
 import StrippingDiMuonForXsection
 import StrippingDiMuonNew
 import StrippingBc2JpsiHNew
+import StrippingBc2JpsiHBDT
 import StrippingBc2JpsiMuXNew
 import StrippingJpsiMuMuforD0MuMu
 import StrippingBuToKX3872
@@ -113,6 +117,7 @@ import StrippingHighPtTopo
 import StrippingStrangeBaryons
 import StrippingStrangeBaryonsNoPID
 import StrippingDisplVertices
+#import StrippingJets
 import StrippingHighPtJets
 import StrippingInclbJets
 import StrippingLLP2MuX
@@ -198,6 +203,8 @@ import StrippingExclusiveDiMuon
 import StrippingCcbar2Baryons
 
 # Calibration
+import StrippingTrackEffD0ToK3Pi
+import StrippingTrackEffD0ToKPi
 import StrippingTrackEffDownMuon
 import StrippingTrackEffVeloMuon
 import StrippingTrackEffMuonTT
@@ -207,6 +214,7 @@ import StrippingBeamGas
 import StrippingForTriggerValidation
 import StrippingDstarD02KShhForTrackingEff
 import StrippingB2LcpXLc2Kpi # new to Stripping20rXp2
+import StrippingProtonAsym # new to Stripping21
 
 import StrippingD2HHLTUnbiased
 import StrippingBu2hhh
@@ -244,6 +252,7 @@ import StrippingBu2rho0rhoPlus
 import StrippingB2pphh
 import StrippingBc2XK
 import StrippingLb2PhipK
+import StrippingBs2gammagamma
 
 import StrippingBs2D0KS0
 import StrippingB2LambdaMuLines
@@ -260,7 +269,6 @@ import StrippingK0s2Pi0MuMuLines
 import StrippingB2DHForTauMu
 import StrippingBs2Baryons
 
-
 from sys import modules as _modules
 _this = _modules[__name__]
 
@@ -270,14 +278,23 @@ _strippingKeys = filter ( lambda x : x[:9]=='Stripping',
 _strippingModules = [getattr(_this, _k) for _k in _strippingKeys]
 
 from StrippingUtils.Utils import getLineBuildersFromModule as _getter
+from StrippingUtils.Utils import getBuilderConfFromModule as _getcon
 
 _lineBuilders = {}
+_buildersConf = {}
 
 for _sm in _strippingModules :
     _lineBuilders.update(_getter(_sm))
+    _buildersConf.update(_getcon(_sm))
 
 def lineBuilders() :
     """
     Return all the line builders in the module.
     """
     return dict(_lineBuilders)
+def buildersConf() :
+    """
+    Return all the line builders in the module.
+    """
+    return dict(_buildersConf)
+
