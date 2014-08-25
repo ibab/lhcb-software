@@ -6,6 +6,10 @@
 
 !========================= TMVAWeights v1r3 2014-07-28 =========================
 
+! 2014-08-25 - Rafael Coutinho
+ - Added new BDT weight files for the B2KShh analysis, splitted by the KS
+   type, year and training.
+
 ! 2013-12-19 - Jibo He
  - Added weights file for Bc->JpsiH
 
