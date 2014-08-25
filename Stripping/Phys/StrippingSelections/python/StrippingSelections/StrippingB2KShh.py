@@ -9,80 +9,96 @@ Exported symbols (use python help!):
 """
 
 __author__ = ['Thomas Latham','Rafael Coutinho']
-__date__ = '18/01/2014'
-__version__ = 'Stripping20r0p3'
+__date__ = '28/07/2014'
+__version__ = 'Stripping21'
 __all__ = 'B2KShhConf'
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from Configurables import CombineParticles 
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from Configurables import FilterDesktop as FilterDesktopConf
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+from MVADictHelpers import *
+from Configurables import LoKi__ODINFilter as ODINFilter
+from Configurables import LoKi__Hybrid__DictValue as DictValue
+from Configurables import LoKi__Hybrid__DictTransform_TMVATransform_ as TMVAClassifier
+from Configurables import LoKi__Hybrid__DictOfFunctors
 
 from StandardParticles import StdAllNoPIDsPions as Pions
 
 default_config = {
-    'NAME' : 'B2KShh',
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'B2KShhConf',
-    'CONFIG'      : {'Trk_Chi2'                : 3.0,
-                     'Trk_GhostProb'           : 0.3,
-                     'KS_DD_MassWindow'        : 30.0,
-                     'KS_DD_VtxChi2'           : 12.0,
-                     'KS_DD_FDChi2'            : 50.0,
-                     'KS_DD_Pmin'              : 6000.0,
-                     'KS_LL_MassWindow'        : 20.0,
-                     'KS_LL_VtxChi2'           : 12.0,
-                     'KS_LL_FDChi2'            : 80.0,
-                     'KS_LD_MassWindow'        : 25.0,
-                     'KS_LD_VtxChi2'           : 12.0,
-                     'KS_LD_FDChi2'            : 50.0,
-                     'KS_LD_Pmin'              : 6000.0,
-                     'B_Mlow'                  : 1279.0,
-                     'B_Mhigh'                 : 921.0,
-                     'B_APTmin'                : 1000.0,
-                     'BDaug_MedPT_PT'          : 800.0,
-                     'BDaug_MaxPT_IP'          : 0.05,
-                     'BDaug_DD_maxDocaChi2'    : 5.0,
-                     'BDaug_LL_maxDocaChi2'    : 5.0,
-                     'BDaug_LD_maxDocaChi2'    : 5.0,
-                     'BDaug_DD_PTsum'          : 4200.0,
-                     'BDaug_LL_PTsum'          : 3000.0,
-                     'BDaug_LD_PTsum'          : 4200.0,
-                     'B_DD_Dira'               : 0.,
-                     'B_LL_Dira'               : 0.,
-                     'B_LD_Dira'               : 0.,
-                     'KS_FD_Z'                 : 0.,
-                     'DD_BDTCutValue'          : -0.05,
-                     'LD_BDTCutValue'          : -0.05,
-                     'LL_BDTCutValue'          : -0.10,
-                     'DD_BDTWeightsFile'       : '$TMVAWEIGHTSROOT/data/B2KShhBDT_DD.xml',
-                     'LD_BDTWeightsFile'       : '$TMVAWEIGHTSROOT/data/B2KShhBDT_DD.xml', #same DD weight
-                     'LL_BDTWeightsFile'       : '$TMVAWEIGHTSROOT/data/B2KShhBDT_LL.xml',
-                     'GEC_MaxTracks'           : 250,
-                     'Prescale'                : 1.0,
-                     'Prescale_SameSign'       : 1.0,
-                     'Postscale'               : 1.0,
-                     'ExtraInfoTools'          : [ { "Type" : "ConeVariables"
-                                                     , "ConeAngle" : 0.8
-                                                     , "ConeNumber" : 1
-                                                     , "Variables" : ['angle', 'mult', 'ptasy']},
-                                                   { "Type" : "ConeVariables"
-                                                     , "ConeAngle" : 1.0
-                                                     , "ConeNumber" : 2
-                                                     , "Variables" : ['angle', 'mult', 'ptasy']},
-                                                   { "Type" : "ConeVariables"
-                                                     , "ConeAngle" : 1.5
-                                                     , "ConeNumber" : 3
-                                                     , "Variables" : ['angle', 'mult', 'ptasy']},
-                                                   { "Type" : "ConeVariables"
-                                                , "ConeAngle" : 1.7
-                                                     , "ConeNumber" : 4
-                                                     , "Variables" : ['angle', 'mult', 'ptasy']},
-                                                   {'Type' : 'VertexIsolation'}
-                                                   ]                   
-                     },
-    'STREAMS' : ['Bhadron']
+    'CONFIG'      : {
+                  'Trk_Chi2'                : 3.0,
+                  'Trk_GhostProb'           : 0.3,
+                  'KS_DD_MassWindow'        : 30.0,
+                  'KS_DD_VtxChi2'           : 12.0,
+                  'KS_DD_FDChi2'            : 50.0,
+                  'KS_DD_Pmin'              : 6000.0,
+                  'KS_LL_MassWindow'        : 20.0,
+                  'KS_LL_VtxChi2'           : 12.0,
+                  'KS_LL_FDChi2'            : 80.0,
+                  'KS_LL_Pmin'              : 0.0,
+                  'KS_LD_MassWindow'        : 25.0,
+                  'KS_LD_VtxChi2'           : 12.0,
+                  'KS_LD_FDChi2'            : 50.0,
+                  'KS_LD_Pmin'              : 6000.0,
+                  'B_Mlow'                  : 1279.0,
+                  'B_Mhigh'                 : 921.0,
+                  'B_APTmin'                : 1000.0,
+                  'BDaug_MedPT_PT'          : 800.0,
+                  'BDaug_MaxPT_IP'          : 0.05,
+                  'BDaug_DD_maxDocaChi2'    : 5.0,
+                  'BDaug_LL_maxDocaChi2'    : 5.0,
+                  'BDaug_LD_maxDocaChi2'    : 5.0,
+                  'BDaug_DD_PTsum'          : 4200.0,
+                  'BDaug_LL_PTsum'          : 3000.0,
+                  'BDaug_LD_PTsum'          : 4200.0,
+                  'B_DD_Dira'               : 0.999,
+                  'B_LL_Dira'               : 0.999,
+                  'B_LD_Dira'               : 0.999,
+                  'KS_FD_Z'                 : 15.,
+                  'B_DD_MVA_2011'           : -0.20,
+                  'B_LL_MVA_2011'           : -0.20,   
+                  'B_LD_MVA_2011'           : -0.20,
+                  'B_DD_MVA_2012a'          : -0.20,
+                  'B_LL_MVA_2012a'          : -0.20,   
+                  'B_LD_MVA_2012a'          : -0.20,
+                  'B_DD_MVA_2012b'          : -0.20,
+                  'B_LL_MVA_2012b'          : -0.20,   
+                  'B_LD_MVA_2012b'          : -0.20,
+                  'GEC_MaxTracks'           : 250,
+                  'ConeAngle'               : 1.5, 
+                  'Prescale'                : 1.0,
+                  'Prescale_SameSign'       : 1.0,
+                  'Postscale'               : 1.0,
+                  'TCK_2011'                : ('0x00470032','0x00790038','0x40470032','0x40790038'),
+                  'TCK_2012a'               : ('0x007E003A','0x0097003D','0x407E003A','0x4097003D'),
+                  'TCK_2012b'               : ('0x00990042','0x00AC0046','0x40990042','0x40AC0046')
+                  },
+    'STREAMS'     : { 'Bhadron' : ['StrippingB2KShh_DD_2011_OS_Line',
+                                   'StrippingB2KShh_LL_2011_OS_Line',
+                                   'StrippingB2KShh_LD_2011_OS_Line',
+                                   'StrippingB2KShh_DD_2011_SS_Line',
+                                   'StrippingB2KShh_LL_2011_SS_Line',
+                                   'StrippingB2KShh_LD_2011_SS_Line',
+                                   'StrippingB2KShh_DD_2012a_OS_Line',
+                                   'StrippingB2KShh_LL_2012a_OS_Line',
+                                   'StrippingB2KShh_LD_2012a_OS_Line',
+                                   'StrippingB2KShh_DD_2012a_SS_Line',
+                                   'StrippingB2KShh_LL_2012a_SS_Line',
+                                   'StrippingB2KShh_LD_2012a_SS_Line',
+                                   'StrippingB2KShh_DD_2012b_OS_Line',
+                                   'StrippingB2KShh_LL_2012b_OS_Line',
+                                   'StrippingB2KShh_LD_2012b_OS_Line',
+                                   'StrippingB2KShh_DD_2012b_SS_Line',
+                                   'StrippingB2KShh_LL_2012b_SS_Line',
+                                   'StrippingB2KShh_LD_2012b_SS_Line',
+                                   ] 
+                    }
     }
 
 class B2KShhConf(LineBuilder) :
@@ -128,6 +144,7 @@ class B2KShhConf(LineBuilder) :
                               'KS_LL_MassWindow',
                               'KS_LL_VtxChi2',
                               'KS_LL_FDChi2',
+                              'KS_LL_Pmin',
                               'KS_LD_MassWindow',
                               'KS_LD_VtxChi2',
                               'KS_LD_FDChi2',
@@ -146,190 +163,183 @@ class B2KShhConf(LineBuilder) :
                               'B_DD_Dira',
                               'B_LL_Dira',
                               'B_LD_Dira',
-                              'KS_FD_Z',  
-                              'DD_BDTCutValue',
-                              'LD_BDTCutValue',
-                              'LL_BDTCutValue',
-                              'DD_BDTWeightsFile',
-                              'LD_BDTWeightsFile',
-                              'LL_BDTWeightsFile',
+                              'KS_FD_Z',
+                              'B_DD_MVA_2011',  
+                              'B_LL_MVA_2011',
+                              'B_LD_MVA_2011', 
+                              'B_DD_MVA_2012a',
+                              'B_LL_MVA_2012a',
+                              'B_LD_MVA_2012a',
+                              'B_DD_MVA_2012b',
+                              'B_LL_MVA_2012b',
+                              'B_LD_MVA_2012b',
                               'GEC_MaxTracks',
+                              'ConeAngle', 
                               'Prescale',
                               'Prescale_SameSign',
                               'Postscale',
-                              'ExtraInfoTools'
+                              'TCK_2011', 
+                              'TCK_2012a',
+                              'TCK_2012b'
                               )
 
     def __init__(self, name, config) :
 
         LineBuilder.__init__(self, name, config)
 
-        dd_name = name+'DD'
-        ll_name = name+'LL'
-        ld_name = name+'LD'
-
-        dd_name_same = name+'DD'+'SameSign'
-        ll_name_same = name+'LL'+'SameSign'
-        ld_name_same = name+'LD'+'SameSign'
+        _ks_types = [ 'DD', 'LL', 'LD' ]
+        _years = [ '2011', '2012a', '2012b' ]
+        _signs = [ 'OS', 'SS' ]
 
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
+        TCKFilters = {}
+        for year in _years :
+            TCKFilters[year]  = {'Code' : "(in_range( %s, ODIN_TCK, %s )) | (in_range( %s, ODIN_TCK, %s ))" % config['TCK_%s'%year],
+                                 'Preambulo' : ["from LoKiCore.functions import *"]}
+
+        HltFilter = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))"
+
+        relinfo = [ { "Type" : "RelInfoConeVariables" 
+                    , "ConeAngle" : config['ConeAngle'] 
+                    , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'] 
+                    , "Location"  : 'P2ConeVar' },
+                    { "Type"      : "RelInfoVertexIsolation"
+                    , "Location"  : 'VtxIsolationVar'}
+                  ]
+
+        # the input charged particles
         self.pions = Pions
 
-        self.makeKS2DD( 'KSfor'+dd_name, config )
-        self.makeKS2LL( 'KSfor'+ll_name, config )
-        self.makeKS2LD( 'KSfor'+ld_name, config )
+        # build the various KS input lists
+        self.selKS = {}
+        for ks_type in _ks_types :
+            self.selKS[ks_type] = self.makeKS( 'KSfor'+name+ks_type, ks_type, config )
 
-        self.makeB2KSDDhh( dd_name+"_Presel", config )
-        self.makeB2KSLLhh( ll_name+"_Presel", config )
-        self.makeB2KSLDhh( ld_name+"_Presel", config )
+        # build the various B's
+        _selB = {}
+        _mvaCut = {}
+        _mvaFilter = {}
+        _weightfile1 = {}
+        _weightfile2 = {}
+        _mvaVars = {}
+        _mylines = {}
+        for ks_type in _ks_types :
+            _selB[ks_type] = {}
+            _mvaCut[ks_type] = {}
+            _mvaFilter[ks_type] = {}
+            _weightfile1[ks_type] = {}
+            _weightfile2[ks_type] = {}
+            _mvaVars[ks_type] = {}
+            _mylines[ks_type] = {}
 
-        self.makeB2KSDDhh( dd_name_same+"_Presel", config )
-        self.makeB2KSLLhh( ll_name_same+"_Presel", config )
-        self.makeB2KSLDhh( ld_name_same+"_Presel", config )
+            for year in _years :
+                _selB[ks_type][year] = {}
+                _mvaCut[ks_type][year] = {}
+                _mvaFilter[ks_type][year] = {}
+                _mvaVars[ks_type][year] = {}
+                _mylines[ks_type][year] = {}
 
-        # MVA algorithm on the top of the Presel
-        self.applyBDT( dd_name, config )
-        self.applyBDT( ll_name, config )
-        self.applyBDT( ld_name, config )
+                # BDT weight file
+                _weightfile1[ks_type][year] = '/afs/cern.ch/user/r/rsilvaco/public/Stripping21/BDT1_%s_%s.xml' % (ks_type, year)
+                _weightfile2[ks_type][year] = '/afs/cern.ch/user/r/rsilvaco/public/Stripping21/BDT2_%s_%s.xml' % (ks_type, year)
 
-        self.applyBDT( dd_name_same, config )
-        self.applyBDT( ll_name_same, config )
-        self.applyBDT( ld_name_same, config )
+                for sign in _signs :
 
-        self.dd_line = StrippingLine(dd_name+"Line",
-                                     prescale = config['Prescale'],
-                                     postscale = config['Postscale'],
-                                     selection = self.selB2KSDDhhBDTCut,
-                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode,
-                                     EnableFlavourTagging = True,
-                                     ExtraInfoTools = config['ExtraInfoTools']
-                                     )
-        self.ll_line = StrippingLine(ll_name+"Line",
-                                     prescale = config['Prescale'],
-                                     postscale = config['Postscale'],
-                                     selection =  self.selB2KSLLhhBDTCut,
-                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode,
-                                     EnableFlavourTagging = True,
-                                     ExtraInfoTools = config['ExtraInfoTools']
-                                     )
+                    _linename = name+'_'+ks_type+'_'+year+'_'+sign+'_Line'
 
-        self.ld_line = StrippingLine(ld_name+"Line",
-                                     prescale = config['Prescale'],
-                                     postscale = config['Postscale'],
-                                     selection =  self.selB2KSLDhhBDTCut,
-                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode,
-                                     EnableFlavourTagging = True,
-                                     ExtraInfoTools = config['ExtraInfoTools']
-                                     )
+                    _selB[ks_type][year][sign] = self.makeB2KShh( name, ks_type, year, sign, config )
+
+                    _mvaCut[ks_type][year][sign] = "(VALUE('LoKi__Hybrid__DictValue/MVA1Response_%s_%s_%s')>%s) | (VALUE('LoKi__Hybrid__DictValue/MVA2Response_%s_%s_%s')>%s)" % ( ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)], ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)] )
+
+                    _mvaFilter[ks_type][year][sign] = FilterDesktopConf( name+'_MVAFilter_%s_%s_%s'%(ks_type,year,sign),  Code = _mvaCut[ks_type][year][sign],  Inputs = [ 'Phys/' + name + '_' + ks_type + '_' + year + '_' + sign + '_Line/Particles' ] )
+
+                    # Input variables for BDT
+                    _mvaVars[ks_type][year][sign] = {
+                         "B_PT"                                                        : "PT"
+                        ,"B_ETA"                                                       : "ETA"
+                        ,"log10(B_IPCHI2_OWNPV)"                                       : "log10(MIPCHI2DV(PRIMARY))"
+                        ,"log10(B_VDCHI2_OWNPV)"                                       : "log10(BPVVDCHI2)"
+                        ,"B_DIRA_OWNPV!=1.0?log10(1.0-TMath::Abs(B_DIRA_OWNPV)):-10.0" : "log10(1-BPVDIRA)"
+                        ,"log10(B_ENDVERTEX_CHI2)"                                     : "log10(VFASPF(VCHI2))"
+                        ,"log10(B_SMALLDELTACHI2)"                                     : "log10(RELINFO('/Event/Phys/"+_linename+"/VtxIsolationVar', 'VTXISODCHI2ONETRACK', -1.1))"
+                        ,"B_PTASYM_1_5"                                                : "RELINFO('/Event/Phys/"+_linename+"/P2ConeVar', 'CONEPTASYM', -1.1)"
+                        ,"log10(h1_IPCHI2_OWNPV+h2_IPCHI2_OWNPV)"                      : "log10(SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='pi+') | (ABSID=='pi-')),0.0))"
+                    }
+                    if ks_type == 'LL' :
+                        _mvaVars[ks_type][year][sign]['KS_VDCHI2'] = 'log10(CHILD(BPVVDCHI2,3))'
+
+                    # Configuration of the MVA tool
+                    addTMVAclassifierValue(Component = _mvaFilter[ks_type][year][sign], XMLFile = _weightfile1[ks_type][year], Variables = _mvaVars[ks_type][year][sign], ToolName = 'MVA1Response_%s_%s_%s' % (ks_type,year,sign) )
+                    addTMVAclassifierValue(Component = _mvaFilter[ks_type][year][sign], XMLFile = _weightfile2[ks_type][year], Variables = _mvaVars[ks_type][year][sign], ToolName = 'MVA2Response_%s_%s_%s' % (ks_type,year,sign) )
+
+                    # Main Algorithm initialisation
+                    _flavourFlag = True
+                    if sign == 'SS' : 
+                        _flavourFlag = False
+
+                    _mylines[ks_type][year][sign] = StrippingLine(_linename,
+                                           prescale = config['Prescale'],
+                                           postscale = config['Postscale'],
+                                           selection = _selB[ks_type][year][sign],
+                                           HLT = HltFilter,
+                                           FILTER = GECCode,
+                                           ODIN = TCKFilters[year],
+                                           RelatedInfoTools = relinfo, 
+                                           RelatedInfoFilter = _mvaFilter[ks_type][year][sign],
+                                           EnableFlavourTagging = _flavourFlag,
+                                           MDSTFlag = _flavourFlag
+                                           )
         
-        self.dd_line_same = StrippingLine(dd_name_same+"Line",
-                                     prescale = config['Prescale_SameSign'],
-                                     postscale = config['Postscale'],
-                                     selection = self.selB2KSDDhhBDTCut_SameSign,
-                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode,
-                                     ExtraInfoTools = config['ExtraInfoTools']
-                                     )   
-        self.ll_line_same = StrippingLine(ll_name_same+"Line",
-                                     prescale = config['Prescale_SameSign'],
-                                     postscale = config['Postscale'],
-                                     selection =  self.selB2KSLLhhBDTCut_SameSign,
-                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode,
-                                     ExtraInfoTools = config['ExtraInfoTools']
-                                     )
-        
-        self.ld_line_same = StrippingLine(ld_name_same+"Line",
-                                     prescale = config['Prescale_SameSign'],
-                                     postscale = config['Postscale'],
-                                     selection =  self.selB2KSLDhhBDTCut_SameSign,
-                                     HLT = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))",
-                                     FILTER = GECCode,
-                                     ExtraInfoTools = config['ExtraInfoTools']
-                                     )
-        
-        self.registerLine(self.dd_line)
-        self.registerLine(self.ll_line)
-        self.registerLine(self.ld_line)
-        
-        self.registerLine(self.dd_line_same)
-        self.registerLine(self.ll_line_same)
-        self.registerLine(self.ld_line_same)
+
+                    self.registerLine(_mylines[ks_type][year][sign])
 
 
-    def makeKS2DD( self, name, config ) :
+    def makeKS( self, name, ks_type, config ) :
         # define all the cuts
-        _massCut = "(ADMASS('KS0')<%s*MeV)" % config['KS_DD_MassWindow']
-        _vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_DD_VtxChi2']
-        _fdCut   = "(BPVVDCHI2>%s)"         % config['KS_DD_FDChi2']
-        _momCut  = "(P>%s*MeV)"             % config['KS_DD_Pmin']
-        _trkChi2Cut1      = "(CHILDCUT((TRCHI2DOF<%s),1))"   % config['Trk_Chi2']
-        _trkChi2Cut2      = "(CHILDCUT((TRCHI2DOF<%s),2))"   % config['Trk_Chi2']
-
-        _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2
-
-        # get the KS's to filter
-        _stdKSDD = DataOnDemand( Location = "Phys/StdLooseKsDD/Particles" )
-
-        # make the filter
-        _filterKSDD = FilterDesktop( Code = _allCuts )
-
-        # make and store the Selection object
-        self.selKS2DD = Selection( name, Algorithm = _filterKSDD, RequiredSelections = [_stdKSDD] )
-
-
-    def makeKS2LL( self, name, config ) :
-        # define all the cuts
-        _massCut          = "(ADMASS('KS0')<%s*MeV)"         % config['KS_LL_MassWindow']
-        _vtxCut           = "(VFASPF(VCHI2)<%s)"             % config['KS_LL_VtxChi2']
-        _fdCut            = "(BPVVDCHI2>%s)"                 % config['KS_LL_FDChi2']
+        _massCut          = "(ADMASS('KS0')<%s*MeV)"         % config['KS_%s_MassWindow'%ks_type]
+        _vtxCut           = "(VFASPF(VCHI2)<%s)"             % config['KS_%s_VtxChi2'%ks_type]
+        _fdCut            = "(BPVVDCHI2>%s)"                 % config['KS_%s_FDChi2'%ks_type]
+        _momCut           = "(P>%s*MeV)"                     % config['KS_%s_Pmin'%ks_type]
         _trkChi2Cut1      = "(CHILDCUT((TRCHI2DOF<%s),1))"   % config['Trk_Chi2']
         _trkChi2Cut2      = "(CHILDCUT((TRCHI2DOF<%s),2))"   % config['Trk_Chi2']
         _trkGhostProbCut1 = "(CHILDCUT((TRGHOSTPROB<%s),1))" % config['Trk_GhostProb']
         _trkGhostProbCut2 = "(CHILDCUT((TRGHOSTPROB<%s),2))" % config['Trk_GhostProb']
 
-        _allCuts = _massCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2+'&'+_trkGhostProbCut1+'&'+_trkGhostProbCut2+'&'+_vtxCut+'&'+_fdCut
+        _allCuts = _massCut
+
+        if ks_type != 'LL' :
+            _allCuts += '&'+_momCut
+
+        _allCuts += '&'+_trkChi2Cut1
+        _allCuts += '&'+_trkChi2Cut2
+
+        if ks_type == 'LL' :
+            _allCuts += '&'+_trkGhostProbCut1
+            _allCuts += '&'+_trkGhostProbCut2
+
+        _allCuts += '&'+_vtxCut
+        _allCuts += '&'+_fdCut
 
         # get the KS's to filter
-        _stdKSLL = DataOnDemand( Location = "Phys/StdLooseKsLL/Particles" )
+        _stdKS = DataOnDemand( Location = 'Phys/StdLooseKs%s/Particles' % ks_type )
 
         # make the filter
-        _filterKSLL = FilterDesktop( Code = _allCuts )
+        _filterKS = FilterDesktop( Code = _allCuts )
 
-        # make and store the Selection object
-        self.selKS2LL = Selection( name, Algorithm = _filterKSLL, RequiredSelections = [_stdKSLL] )
-
-    def makeKS2LD( self, name, config ) :
-        # define all the cuts
-        _massCut = "(ADMASS('KS0')<%s*MeV)" % config['KS_LD_MassWindow']
-        _vtxCut  = "(VFASPF(VCHI2)<%s)"     % config['KS_LD_VtxChi2']
-        _fdCut   = "(BPVVDCHI2>%s)"         % config['KS_LD_FDChi2']
-        _momCut  = "(P>%s*MeV)"             % config['KS_LD_Pmin']
-        _trkChi2Cut1      = "(CHILDCUT((TRCHI2DOF<%s),1))"   % config['Trk_Chi2']
-        _trkChi2Cut2      = "(CHILDCUT((TRCHI2DOF<%s),2))"   % config['Trk_Chi2']
-
-        _allCuts = _momCut+'&'+_massCut+'&'+_vtxCut+'&'+_fdCut+'&'+_trkChi2Cut1+'&'+_trkChi2Cut2
-
-        # get the KS's to filter
-        _stdKSLD = DataOnDemand( Location = "Phys/StdLooseKsLD/Particles" )
-
-        # make the filter
-        _filterKSLD = FilterDesktop( Code = _allCuts )
-
-        # make and store the Selection object
-        self.selKS2LD = Selection( name, Algorithm = _filterKSLD, RequiredSelections = [_stdKSLD] )
+        # make and return the Selection object
+        return Selection( name, Algorithm = _filterKS, RequiredSelections = [_stdKS] )
 
 
-    def makeB2KSDDhh( self, name, config ) :
+    def makeB2KShh( self, name, ks_type, year, sign, config ) :
         """
-        Create and store either a B -> KS(DD) h+ h- Selection object, or a B -> KS(DD) h+(-) h+(-) Same Sign Selection Object
+        Create and return either a B -> KS h+ h- Selection object, or a B -> KS h+(-) h+(-) Same Sign Selection Object
         Arguments:
         name             : name of the Selection.
+        ks_type          : type of the KS, e.g. DD
+        year             : the year for which we are making the selection
+        sign             : whether we use opposite-sign or same-sign h's
         config           : config dictionary
         """
 
@@ -338,199 +348,35 @@ class B2KShhConf(LineBuilder) :
 
         _daughtersCuts = _trkChi2Cut+'&'+_trkGhostProbCut
 
-        _massCutLow       = "(AM>(5279-%s)*MeV)"                                                        % config['B_Mlow']
-        _massCutHigh      = "(AM<(5279+%s)*MeV)"                                                        % config['B_Mhigh']
-        _aptCut           = "(APT>%s*MeV)"                                                              % config['B_APTmin']
-        _daugMedPtCut     = "(ANUM(PT>%s*MeV)>=2)"                                                      % config['BDaug_MedPT_PT']
-        _daugMaxPtIPCut   = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)"                                          % config['BDaug_MaxPT_IP']
-        _maxDocaChi2Cut   = "(ACUTDOCACHI2(%s,''))"                                                     % config['BDaug_DD_maxDocaChi2']
-        _daugPtSumCut     = "((APT1+APT2+APT3)>%s*MeV)"                                                 % config['BDaug_DD_PTsum']
+        _massCutLow     = "(AM>(5279-%s)*MeV)"                                                        % config['B_Mlow']
+        _massCutHigh    = "(AM<(5279+%s)*MeV)"                                                        % config['B_Mhigh']
+        _aptCut         = "(APT>%s*MeV)"                                                              % config['B_APTmin']
+        _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"                                                      % config['BDaug_MedPT_PT']
+        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)"                                          % config['BDaug_MaxPT_IP']
+        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"                                                     % config['BDaug_%s_maxDocaChi2' % ks_type]
+        _daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"                                                 % config['BDaug_%s_PTsum' % ks_type]
 
         _combCuts = _daugPtSumCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_maxDocaChi2Cut+'&'+_aptCut+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut
 
-        _diraCut          = "(BPVDIRA>%s)"                                                              % config['B_DD_Dira']
-        _KSdiffZ          = "((CHILD(VFASPF(VZ),3) - VFASPF(VZ)) > %s*mm)"                              % config['KS_FD_Z']
+        _diraCut        = "(BPVDIRA>%s)"                                 % config['B_%s_Dira' % ks_type]
+        _KSdiffZ        = "((CHILD(VFASPF(VZ),3) - VFASPF(VZ)) > %s*mm)" % config['KS_FD_Z']
 
         _motherCuts = _diraCut+'&'+_KSdiffZ
 
-        _B = CombineParticles()
-        _B.DaughtersCuts = { "pi+" : _daughtersCuts }
+        _combName = name + '_' + ks_type + '_' + year + '_' + sign + '_Comb3Body'
+        #_B = CombineParticles3Body( _combName )
+        _B = CombineParticles( _combName )
+        _B.DaughtersCuts  = { "pi+" : _daughtersCuts }
         _B.CombinationCut = _combCuts
-        _B.MotherCut = _motherCuts
+        _B.MotherCut      = _motherCuts
+        _B.ReFitPVs       = True 
 
-        if "SameSign" in name:
+        if sign == 'OS' :
+            _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0" ]
+        else:
             _B.DecayDescriptors = [ "B0 -> pi+ pi+ KS0", "B0 -> pi- pi- KS0" ]
 
-            self.selB2KSDDhh_SameSign = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.pions ])
+        _selname = name + '_' + ks_type + '_' + year + '_' + sign + '_Presel'
 
-        else:
-            _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0" ]
-            
-            self.selB2KSDDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2DD, self.pions ])
-
-
-    def makeB2KSLLhh( self, name, config ) :
-        """
-        Create and store either a B -> KS(LL) h+ h- Selection object, or a B -> KS(LL) h+(-) h+(-) Same Sign Selection Object
-        Arguments:
-        name             : name of the Selection.
-        config           : config dictionary
-        """
-
-        _trkChi2Cut      = "(TRCHI2DOF<%s)"   % config['Trk_Chi2']
-        _trkGhostProbCut = "(TRGHOSTPROB<%s)" % config['Trk_GhostProb']
-
-        _daughtersCuts = _trkChi2Cut+'&'+_trkGhostProbCut
-
-        _massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-        _massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
-        _aptCut         = "(APT>%s*MeV)"                     % config['B_APTmin']
-        _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
-        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
-        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_LL_maxDocaChi2']
-        _daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_LL_PTsum']
-
-        _combCuts = _daugPtSumCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_maxDocaChi2Cut+'&'+_aptCut+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut
-
-        _diraCut          = "(BPVDIRA>%s)"                                                              % config['B_LL_Dira']
-        _KSdiffZ          = "((CHILD(VFASPF(VZ),3) - VFASPF(VZ)) > %s*mm)"                              % config['KS_FD_Z']
-
-        _motherCuts = _diraCut+'&'+_KSdiffZ
-
-        _B = CombineParticles()
-        _B.DaughtersCuts = { "pi+" : _daughtersCuts }
-        _B.CombinationCut = _combCuts
-        _B.MotherCut = _motherCuts
-
-        if "SameSign" in name:
-            _B.DecayDescriptors = [ "B0 -> pi+ pi+ KS0", "B0 -> pi- pi- KS0" ]
-
-            self.selB2KSLLhh_SameSign = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.pions ])
-
-        else:
-            _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0" ]
-
-            self.selB2KSLLhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LL, self.pions ])
-
-    def makeB2KSLDhh( self, name, config ) :
-        """
-        Create and store either a B -> KS(LD) h+ h- Selection object, or a B -> KS(LD) h+(-) h+(-) Same Sign Selection Object
-        Arguments:
-        name             : name of the Selection.
-        config           : config dictionary
-        """
-
-        _trkChi2Cut      = "(TRCHI2DOF<%s)"   % config['Trk_Chi2']
-        _trkGhostProbCut = "(TRGHOSTPROB<%s)" % config['Trk_GhostProb']
-
-        _daughtersCuts = _trkChi2Cut+'&'+_trkGhostProbCut
-
-        _massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-        _massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
-        _aptCut         = "(APT>%s*MeV)"                     % config['B_APTmin']
-        _daugMedPtCut   = "(ANUM(PT>%s*MeV)>=2)"             % config['BDaug_MedPT_PT']
-        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
-        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_LD_maxDocaChi2']
-        _daugPtSumCut   = "((APT1+APT2+APT3)>%s*MeV)"        % config['BDaug_LD_PTsum']
-
-        _combCuts = _daugPtSumCut+'&'+_massCutLow+'&'+_massCutHigh+'&'+_maxDocaChi2Cut+'&'+_aptCut+'&'+_daugMedPtCut+'&'+_daugMaxPtIPCut
-
-        _diraCut          = "(BPVDIRA>%s)"                                                             % config['B_LD_Dira']
-        _KSdiffZ          = "((CHILD(VFASPF(VZ),3) - VFASPF(VZ)) > %s*mm)"                             % config['KS_FD_Z']
-
-        _motherCuts = _diraCut+'&'+_KSdiffZ
-
-        _B = CombineParticles()
-        _B.DaughtersCuts = { "pi+" : _daughtersCuts }
-        _B.CombinationCut = _combCuts
-        _B.MotherCut = _motherCuts
-
-        if "SameSign" in name:
-            _B.DecayDescriptors = [ "B0 -> pi+ pi+ KS0", "B0 -> pi- pi- KS0" ]
-
-            self.selB2KSLDhh_SameSign = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LD, self.pions ])
-
-        else:
-            _B.DecayDescriptors = [ "B0 -> pi+ pi- KS0" ]
-
-            self.selB2KSLDhh = Selection (name, Algorithm = _B, RequiredSelections = [ self.selKS2LD, self.pions ])
-    
-    def applyBDT( self, name, config):
-        
-        if "DD" in name:
-            _FilterB2KShh = FilterDesktop( Code = "FILTER('B2KShhBDTSelection/B2KShhBDTDD')" )
-        
-            if "SameSign" in name:
-                self.selB2KSDDhhBDTCut_SameSign = Selection( name,
-                                    Algorithm = _FilterB2KShh,
-                                    RequiredSelections = [ self.selB2KSLDhh_SameSign ]
-                                    )
-            else:    
-                self.selB2KSDDhhBDTCut = Selection( name,
-                                    Algorithm = _FilterB2KShh,
-                                    RequiredSelections = [ self.selB2KSDDhh ]
-                                    )
-    
-            """
-            Name is special here, since this is the last algorithm,
-            whose name seems to be the one of the stripping line....
-            """
-            from Configurables import B2KShhBDTSelection
-    
-            MyBDT = B2KShhBDTSelection( name + "Line.B2KShhBDTDD" )
-            MyBDT.BDTCut = config["DD_BDTCutValue"]
-            MyBDT.WeightsFile = config["DD_BDTWeightsFile"]
-            MyBDT.typeKS = "DD"
-
-        elif "LL" in name:
-            _FilterB2KShh = FilterDesktop( Code = "FILTER('B2KShhBDTSelection/B2KShhBDTLL')" )
-        
-            if "SameSign" in name:
-                self.selB2KSLLhhBDTCut_SameSign = Selection( name,
-                                    Algorithm = _FilterB2KShh,
-                                    RequiredSelections = [ self.selB2KSLLhh_SameSign ]
-                                    )
-            else:    
-                self.selB2KSLLhhBDTCut = Selection( name,
-                                    Algorithm = _FilterB2KShh,
-                                    RequiredSelections = [ self.selB2KSLLhh ]
-                                    )
-    
-            """
-            Name is special here, since this is the last algorithm,
-            whose name seems to be the one of the stripping line....
-            """
-            from Configurables import B2KShhBDTSelection
-    
-            MyBDT = B2KShhBDTSelection( name + "Line.B2KShhBDTLL" )
-            MyBDT.BDTCut = config["LL_BDTCutValue"]
-            MyBDT.WeightsFile = config["LL_BDTWeightsFile"]
-            MyBDT.typeKS = "LL"
-
-        elif "LD" in name:
-            _FilterB2KShh = FilterDesktop( Code = "FILTER('B2KShhBDTSelection/B2KShhBDTLD')" )
-        
-            if "SameSign" in name:
-                self.selB2KSLDhhBDTCut_SameSign = Selection( name,
-                                    Algorithm = _FilterB2KShh,
-                                    RequiredSelections = [ self.selB2KSLDhh_SameSign ]
-                                    )
-            else:
-                self.selB2KSLDhhBDTCut = Selection( name,
-                                    Algorithm = _FilterB2KShh,
-                                    RequiredSelections = [ self.selB2KSLDhh ]
-                                    )
-    
-            """
-            Name is special here, since this is the last algorithm,
-            whose name seems to be the one of the stripping line....
-            """
-            from Configurables import B2KShhBDTSelection
-    
-            MyBDT = B2KShhBDTSelection( name + "Line.B2KShhBDTLD" )
-            MyBDT.BDTCut = config["LD_BDTCutValue"]
-            MyBDT.WeightsFile = config["LD_BDTWeightsFile"]
-            MyBDT.typeKS = "LD"
-        
-        else: print "\nHelp!! 'name' variable didn't have 'LL', 'LD' or 'DD' in it!\n"
+        return Selection (_selname, Algorithm = _B, RequiredSelections = [ self.selKS[ks_type], self.pions ])
 

@@ -13,6 +13,7 @@ import StrippingBeauty2Charm
 import StrippingDstarD02Kpipi0
 import StrippingB2D3H
 import StrippingB2KShh
+import StrippingHb2V0V0h
 
 import StrippingDstarVeryLooseWithD02Kpi
 import StrippingBs2PhiMuMu

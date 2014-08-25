@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-25 - R. Coutinho
+ - StrippingB2KShh.py has been completely redesigned to include three different
+   scenario of the KS Trigger (2011/2012a/2012b) and BDT uses information from 
+   RelatedInfo Tool
+ - Added new StrippingHb2V0V0h.py with lines for V0V0h and V0V0V0 decays, where
+   V0 stands for KS or Lambda.
+
 ! 2014-08-25 - Daniel O'Hanlon
  - Add updates to StrippingLb2V0hh
 
