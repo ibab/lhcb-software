@@ -1,16 +1,13 @@
 package MooreOnlineSys
-version           v22r2
+version           v23r0
 branches doc cmt tests
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  MooreScripts  v1r3
-use  MooreOnlineConf  v1r2
-
-# Bug fixes on top of LHCb v36r1 release stack
-
+use  MooreScripts  v1r4
+use  MooreOnlineConf  v1r3
 
 # Declare this as a container package
 apply_pattern container_package

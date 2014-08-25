@@ -3,6 +3,15 @@ Package     : MooreOnlineSys
 Package Coordinator : S. Benson
 Purpose     : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v23r0>2014-08-25 MooreOnlineSys v23r0</A></H1><PRE>
+
+Depends on Moore v23r0 and Online v5r10
+
+Main changes:
+ - New HltLevel slot (avoids dependency on architecture name)
+ - Bug fixes in runOnline.py
+ - Un-corrupt CreateRunEFF.py
+
 </PRE><H1><A NAME=v22r2>2014-06-16 MooreOnlineSys v22r2</A></H1><PRE>
 
 Moore Online depends on Moore v22r2 and Online v5r9.
