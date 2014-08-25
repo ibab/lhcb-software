@@ -19,9 +19,9 @@ stream = StrippingStream("Test")
 
 # Append your line
 from StrippingSelections.StrippingBs2Baryons import  Bs0Builder
-from StrippingSelections.StrippingBs2Baryons import  config_default
+from StrippingSelections.StrippingBs2Baryons import  default_config
 
-Bs0Builder = Bs0Builder( name="BaryonicBsDecays", config=config_default )
+Bs0Builder = Bs0Builder( name="BaryonicBsDecays", config=default_config['CONFIG'])
 stream.appendLines( Bs0Builder.lines() )
 
 

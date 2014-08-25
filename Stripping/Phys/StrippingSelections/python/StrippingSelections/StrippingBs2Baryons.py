@@ -22,8 +22,7 @@ __version__ = '$Revision: 1.0 $'
 
 __all__ = ( 'Bs0Builder'               ## LineBuilder class specialization
 	, 'default_name'            ## Default name for Bs0Builder object
-	, "config_default"
-	, "config_test"
+	, "default_config"
 	, 'makeLc'                  ## Lambda_c+ selection
 	, 'makeBs'                  ## Bs0 selection
 	, 'filterKaons'
@@ -52,111 +51,117 @@ from Configurables import TisTosParticleTagger
 default_name = "Bs0"
 
 
-config_default = {
-	  'Pi_InputList'               : 'Phys/StdLoosePions/Particles'
-	, 'K_InputList'              : 'Phys/StdLooseKaons/Particles'
-	, 'P_InputList'              : 'Phys/StdLooseProtons/Particles'
-	, 'Lc_Daug_TRCHI2DOF_Max'       :   5.0
-	, 'Lc_Daug_PT_Min'              : 200.0*MeV
-	, 'Lc_Daug_P_Min'               :   2.0*GeV
-	, 'Lc_Daug_1of3_MIPCHI2DV_Min'  :   4.0
-	, 'Lc_K_ProbNNk_Min'            :   0.05
-	, 'Lc_Pi_ProbNNpi_Min'          :   0.01
-	, 'Lc_P_ProbNNp_Min'            :   0.1
-	, 'Lc_ADMASS_HalfWin'           :  30.0*MeV
-	, 'Lc_APT_Min'                  :   1.0*GeV
-	, 'Lc_ADOCAMAX_Max'             :   0.5*mm
-	, 'Lc_VCHI2_Max'                :  15.0
-	, 'Lc_BPVVDCHI2_Min'            :  16.0
-	, 'Lc_BPVDIRA_Min'              :   0.99
-	, 'Lc_BPVIPCHI2_Min'          :   4 
-	  , 'Bs0_Daug_TRCHI2DOF_Max'      :   5.0
-	  , 'Bs0_Daug_P_Min'              :   2.0*GeV
-	  , 'Bs0_Daug_PT_Min'             : 250.0*MeV
-	  , 'Bs0_Daug_MIPCHI2DV_Min'      :   4.0
-	  , 'Bs0_Pi_ProbNNpi_Min'         :   0.01
-	  , 'Bs0_K_ProbNNk_Min'           :   0.05
-	  , 'Bs0_P_ProbNNp_Min'           :   0.1
-	  , 'Bs0_APT_Min'                :   2.0*GeV 
-	  , 'Bs0_ADOCAMAX_Max'           :   0.5*mm
-	  , 'Bs0_AM_Max'                 :   700*MeV
-	  , 'Bs0_BPVDIRA_Min'            :   0.99
-	  , 'Bs0_BPVVDCHI2_Min'          :   16
-	  , 'Bs0_VtxChi2_NDF_Max'        :   6
-	  , 'Bs0_BPVIPCHI2_Max'          :   16 
-	  , 'Bs0_ADOCAMAX_Long_Max'        : 5*mm 
-	  , 'Bs0_BPVDIRA_Long_Min'         : 0.9
-	  , 'Bs0_BPVIPCHI2_Long_Max'       : 25
-	  , 'Bs0_VtxChi2_NDF_Long_Max'     : 16
-	  , 'Bs0_BPVVDCHI2_Long_Min'       : 4
-	,'Lambda_DD_MassWindow'     : 30.0
-	,'Lambda_DD_VtxChi2'        : 25.0
-	,'Lambda_DD_FDChi2'         : 100.0
-	,'Lambda_LL_MassWindow'     : 25.0
-	,'Lambda_LL_VtxChi2'        : 25.0
-	,'Lambda_LL_FDChi2'         : 100.0
-	,'KS_DD_MassWindow'     : 30.0
-	,'KS_DD_VtxChi2'        : 25.0
-	,'KS_DD_FDChi2'         : 100.0
-	,'KS_LL_MassWindow'     : 25.0
-	,'KS_LL_VtxChi2'        : 25.0
-	,'KS_LL_FDChi2'         : 100.0
-	  }
+default_config = {
+	'NAME' : 'BaryonicBsDecays'
+	,'WGs'  : ['BandQ']
+	,'BUILDERTYPE':'BaryonicBsDecaysLines'
+	,'CONFIG'  : {
+	   'Pi_InputList'               : 'Phys/StdLoosePions/Particles'
+	   , 'K_InputList'              : 'Phys/StdLooseKaons/Particles'
+	   , 'P_InputList'              : 'Phys/StdLooseProtons/Particles'
+	   , 'Lc_Daug_TRCHI2DOF_Max'       :   5.0
+	   , 'Lc_Daug_PT_Min'              : 200.0*MeV
+	   , 'Lc_Daug_P_Min'               :   2.0*GeV
+	   , 'Lc_Daug_1of3_MIPCHI2DV_Min'  :   4.0
+	   , 'Lc_K_ProbNNk_Min'            :   0.05
+	   , 'Lc_Pi_ProbNNpi_Min'          :   0.01
+	   , 'Lc_P_ProbNNp_Min'            :   0.1
+	   , 'Lc_ADMASS_HalfWin'           :  30.0*MeV
+	   , 'Lc_APT_Min'                  :   1.0*GeV
+	   , 'Lc_ADOCAMAX_Max'             :   0.5*mm
+	   , 'Lc_VCHI2_Max'                :  15.0
+	   , 'Lc_BPVVDCHI2_Min'            :  16.0
+	   , 'Lc_BPVDIRA_Min'              :   0.99
+	   , 'Lc_BPVIPCHI2_Min'          :   4 
+	   , 'Bs0_Daug_TRCHI2DOF_Max'      :   5.0
+	   , 'Bs0_Daug_P_Min'              :   2.0*GeV
+	   , 'Bs0_Daug_PT_Min'             : 250.0*MeV
+	   , 'Bs0_Daug_MIPCHI2DV_Min'      :   4.0
+	   , 'Bs0_Pi_ProbNNpi_Min'         :   0.01
+	   , 'Bs0_K_ProbNNk_Min'           :   0.05
+	   , 'Bs0_P_ProbNNp_Min'           :   0.1
+	   , 'Bs0_APT_Min'                :   2.0*GeV 
+	   , 'Bs0_ADOCAMAX_Max'           :   0.5*mm
+	   , 'Bs0_AM_Max'                 :   700*MeV
+	   , 'Bs0_BPVDIRA_Min'            :   0.99
+	   , 'Bs0_BPVVDCHI2_Min'          :   16
+	   , 'Bs0_VtxChi2_NDF_Max'        :   6
+	   , 'Bs0_BPVIPCHI2_Max'          :   16 
+	   , 'Bs0_ADOCAMAX_Long_Max'        : 5*mm 
+	   , 'Bs0_BPVDIRA_Long_Min'         : 0.9
+	   , 'Bs0_BPVIPCHI2_Long_Max'       : 25
+	   , 'Bs0_VtxChi2_NDF_Long_Max'     : 16
+	   , 'Bs0_BPVVDCHI2_Long_Min'       : 4
+	   ,'Lambda_DD_MassWindow'     : 30.0
+	   ,'Lambda_DD_VtxChi2'        : 25.0
+	   ,'Lambda_DD_FDChi2'         : 100.0
+	   ,'Lambda_LL_MassWindow'     : 25.0
+	   ,'Lambda_LL_VtxChi2'        : 25.0
+	   ,'Lambda_LL_FDChi2'         : 100.0
+	   ,'KS_DD_MassWindow'     : 30.0
+	   ,'KS_DD_VtxChi2'        : 25.0
+	   ,'KS_DD_FDChi2'         : 100.0
+	   ,'KS_LL_MassWindow'     : 25.0
+	   ,'KS_LL_VtxChi2'        : 25.0
+	   ,'KS_LL_FDChi2'         : 100.0
+	   }
+	,'STREAMS':['Bhadron']
+	}
 
 
 
 
 class Bs0Builder(LineBuilder) :
    __configuration_keys__ = (
-	  'Pi_InputList'               
-	, 'K_InputList'              
-	, 'P_InputList'              
-	, 'Lc_Daug_TRCHI2DOF_Max'       
-	, 'Lc_Daug_PT_Min'              
-	, 'Lc_Daug_P_Min'               
-	, 'Lc_Daug_1of3_MIPCHI2DV_Min'  
-	, 'Lc_K_ProbNNk_Min'            
-	, 'Lc_Pi_ProbNNpi_Min'          
-	, 'Lc_P_ProbNNp_Min'            
-	, 'Lc_ADMASS_HalfWin'           
-	, 'Lc_APT_Min'                  
-	, 'Lc_ADOCAMAX_Max'             
-	, 'Lc_VCHI2_Max'                
-	, 'Lc_BPVVDCHI2_Min'            
-	, 'Lc_BPVDIRA_Min'              
-	, 'Lc_BPVIPCHI2_Min'
-	, 'Bs0_Daug_TRCHI2DOF_Max'    
-	, 'Bs0_Daug_P_Min'            
-	, 'Bs0_Daug_PT_Min'           
-	, 'Bs0_Daug_MIPCHI2DV_Min'    
-	, 'Bs0_Pi_ProbNNpi_Min'       
-	, 'Bs0_K_ProbNNk_Min'         
-	, 'Bs0_P_ProbNNp_Min'         
-	, 'Bs0_APT_Min'               
-	, 'Bs0_ADOCAMAX_Max'          
-	, 'Bs0_AM_Max'                
-	, 'Bs0_BPVDIRA_Min'           
-	, 'Bs0_ADOCAMAX_Long_Max'          
-	, 'Bs0_BPVDIRA_Long_Min'           
-	, 'Bs0_BPVIPCHI2_Long_Max'         
-	, 'Bs0_VtxChi2_NDF_Long_Max'       
-	, 'Bs0_BPVVDCHI2_Long_Min'         
-	, 'Bs0_BPVVDCHI2_Min'         
-	, 'Bs0_VtxChi2_NDF_Max'       
-	, 'Bs0_BPVIPCHI2_Max'         
-	,'Lambda_DD_MassWindow'
-	,'Lambda_DD_VtxChi2'   
-	,'Lambda_DD_FDChi2'    
-	,'Lambda_LL_MassWindow'
-	,'Lambda_LL_VtxChi2'   
-	,'Lambda_LL_FDChi2'    
-	,'KS_DD_MassWindow'    
-	,'KS_DD_VtxChi2'       
-	,'KS_DD_FDChi2'        
-	,'KS_LL_MassWindow'    
-	,'KS_LL_VtxChi2'       
-	,'KS_LL_FDChi2'        
-	    )
+	   'Pi_InputList'               
+	   , 'K_InputList'              
+	   , 'P_InputList'              
+	   , 'Lc_Daug_TRCHI2DOF_Max'       
+	   , 'Lc_Daug_PT_Min'              
+	   , 'Lc_Daug_P_Min'               
+	   , 'Lc_Daug_1of3_MIPCHI2DV_Min'  
+	   , 'Lc_K_ProbNNk_Min'            
+	   , 'Lc_Pi_ProbNNpi_Min'          
+	   , 'Lc_P_ProbNNp_Min'            
+	   , 'Lc_ADMASS_HalfWin'           
+	   , 'Lc_APT_Min'                  
+	   , 'Lc_ADOCAMAX_Max'             
+	   , 'Lc_VCHI2_Max'                
+	   , 'Lc_BPVVDCHI2_Min'            
+	   , 'Lc_BPVDIRA_Min'              
+	   , 'Lc_BPVIPCHI2_Min'
+	   , 'Bs0_Daug_TRCHI2DOF_Max'    
+	   , 'Bs0_Daug_P_Min'            
+	   , 'Bs0_Daug_PT_Min'           
+	   , 'Bs0_Daug_MIPCHI2DV_Min'    
+	   , 'Bs0_Pi_ProbNNpi_Min'       
+	   , 'Bs0_K_ProbNNk_Min'         
+	   , 'Bs0_P_ProbNNp_Min'         
+	   , 'Bs0_APT_Min'               
+	   , 'Bs0_ADOCAMAX_Max'          
+	   , 'Bs0_AM_Max'                
+	   , 'Bs0_BPVDIRA_Min'           
+	   , 'Bs0_ADOCAMAX_Long_Max'          
+	   , 'Bs0_BPVDIRA_Long_Min'           
+	   , 'Bs0_BPVIPCHI2_Long_Max'         
+	   , 'Bs0_VtxChi2_NDF_Long_Max'       
+	   , 'Bs0_BPVVDCHI2_Long_Min'         
+	   , 'Bs0_BPVVDCHI2_Min'         
+	   , 'Bs0_VtxChi2_NDF_Max'       
+	   , 'Bs0_BPVIPCHI2_Max'         
+	   ,'Lambda_DD_MassWindow'
+	   ,'Lambda_DD_VtxChi2'   
+	   ,'Lambda_DD_FDChi2'    
+	   ,'Lambda_LL_MassWindow'
+	   ,'Lambda_LL_VtxChi2'   
+	   ,'Lambda_LL_FDChi2'    
+	   ,'KS_DD_MassWindow'    
+	   ,'KS_DD_VtxChi2'       
+	   ,'KS_DD_FDChi2'        
+	   ,'KS_LL_MassWindow'    
+	   ,'KS_LL_VtxChi2'       
+	   ,'KS_LL_FDChi2'        
+	   )
    ## Possible parameters and default values copied from the definition
    ##   of StrippingLine
    def _strippingLine ( self,
@@ -166,9 +171,9 @@ class Bs0Builder(LineBuilder) :
 	   selection = None) : # other configuration parameters
 	if (prescale > 0) and (postscale > 0) : # {
 	   line = StrippingLine( name,
-		     prescale        = prescale,
-		     postscale       = postscale,
-		     selection       = selection )
+		   prescale        = prescale,
+		   postscale       = postscale,
+		   selection       = selection )
 	   self.registerLine(line)
 	   return line
 	else : 
@@ -251,19 +256,19 @@ class Bs0Builder(LineBuilder) :
 	## Vertex chi2 cut depends on number of daughters:
 	##      (2 dau => 1 NDF; 3 dau => 3 NDF; 4 dau => 5 NDF)
 	_strCutComb = "(ADAMASS(5.1*GeV)<1.1*%(Bs0_AM_Max)s)" \
-	      "& (APT>%(Bs0_APT_Min)s)" \
-	      "& (ADOCAMAX('')<%(Bs0_ADOCAMAX_Max)s)" % config
+		"& (APT>%(Bs0_APT_Min)s)" \
+		"& (ADOCAMAX('')<%(Bs0_ADOCAMAX_Max)s)" % config
 	_strCutMoth  = "(ADMASS(5.1*GeV)<%(Bs0_AM_Max)s)" \
-	      "& (BPVVDCHI2 > %(Bs0_BPVVDCHI2_Min)s)" \
-	      "& (BPVIPCHI2()< %(Bs0_BPVIPCHI2_Max)s)" \
-	      "& (BPVDIRA > %(Bs0_BPVDIRA_Min)s)" % config
+		"& (BPVVDCHI2 > %(Bs0_BPVVDCHI2_Min)s)" \
+		"& (BPVIPCHI2()< %(Bs0_BPVIPCHI2_Max)s)" \
+		"& (BPVDIRA > %(Bs0_BPVDIRA_Min)s)" % config
 	_strCutComb_Long = "(ADAMASS(5.1*GeV)<1.1*%(Bs0_AM_Max)s)" \
-	      "& (APT>%(Bs0_APT_Min)s)" \
-	      "& (ADOCAMAX('')<%(Bs0_ADOCAMAX_Long_Max)s)" % config
+		"& (APT>%(Bs0_APT_Min)s)" \
+		"& (ADOCAMAX('')<%(Bs0_ADOCAMAX_Long_Max)s)" % config
 	_strCutMoth_Long  = "(ADMASS(5.1*GeV)<%(Bs0_AM_Max)s)" \
-	      "& (BPVVDCHI2 > %(Bs0_BPVVDCHI2_Long_Min)s)" \
-	      "& (BPVIPCHI2()< %(Bs0_BPVIPCHI2_Long_Max)s)" \
-	      "& (BPVDIRA > %(Bs0_BPVDIRA_Long_Min)s)" % config
+		"& (BPVVDCHI2 > %(Bs0_BPVVDCHI2_Long_Min)s)" \
+		"& (BPVIPCHI2()< %(Bs0_BPVIPCHI2_Long_Max)s)" \
+		"& (BPVDIRA > %(Bs0_BPVDIRA_Long_Min)s)" % config
 
 	_strChi2Moth = "(VFASPF(VCHI2/VDOF)<%(Bs0_VtxChi2_NDF_Max)s)" % config
 	_strChi2Moth_Long = "(VFASPF(VCHI2/VDOF)<%(Bs0_VtxChi2_NDF_Long_Max)s)" % config
@@ -274,28 +279,28 @@ class Bs0Builder(LineBuilder) :
 
 	#make Bs0 
 	"""
-      Bs0 -> Lambda_c+ p~- K+ pi-
-      Bs0 -> Lambda_c+ p~- KS0
-      Bs0 -> Lambda_c+ Lambda~0  pi-
-      Bs0 -> Lambda0 Lambda~0
-      B0/Bs0 -> Lambda_c+ p~- pi+ pi-
-      """
+	Bs0 -> Lambda_c+ p~- K+ pi-
+	Bs0 -> Lambda_c+ p~- KS0
+	Bs0 -> Lambda_c+ Lambda~0  pi-
+	Bs0 -> Lambda0 Lambda~0
+	B0/Bs0 -> Lambda_c+ p~- pi+ pi-
+	"""
 	self.combineBs00 = makeBs0(name+'CombineBs00', [ self.filterLc, self.dauPi,self.dauP ]
-	      , '[B_s0 -> Lambda_c+ p~- pi+ pi-]cc', _strCutComb, _strCutMoth)
+		, '[B_s0 -> Lambda_c+ p~- pi+ pi-]cc', _strCutComb, _strCutMoth)
 	self.combineBs01 = makeBs0(name+'CombineBs01', [ self.filterLc, self.dauPi,self.dauP, self.dauK ]
-	      , '[B_s0 -> Lambda_c+ p~- K+ pi-]cc', _strCutComb, _strCutMoth)
+		, '[B_s0 -> Lambda_c+ p~- K+ pi-]cc', _strCutComb, _strCutMoth)
 	self.combineBs02LL = makeBs0(name+'CombineBs02LL', [ self.filterLc, self.dauP, self.KSLL]
-	      , '[B_s0 -> Lambda_c+ p~- KS0]cc', _strCutComb_Long, _strCutMoth_Long)
+		, '[B_s0 -> Lambda_c+ p~- KS0]cc', _strCutComb_Long, _strCutMoth_Long)
 	self.combineBs02DD = makeBs0(name+'CombineBs02DD', [ self.filterLc, self.dauP, self.KSDD]
-	      , '[B_s0 -> Lambda_c+ p~- KS0]cc', _strCutComb_Long, _strCutMoth_Long)
+		, '[B_s0 -> Lambda_c+ p~- KS0]cc', _strCutComb_Long, _strCutMoth_Long)
 	self.combineBs03LL = makeBs0(name+'CombineBs03LL', [ self.filterLc, self.dauPi, self.LambdaLL]
-	      , '[B_s0 -> Lambda_c+ Lambda~0 pi-]cc', _strCutComb_Long, _strCutMoth_Long)
+		, '[B_s0 -> Lambda_c+ Lambda~0 pi-]cc', _strCutComb_Long, _strCutMoth_Long)
 	self.combineBs03DD = makeBs0(name+'CombineBs03DD', [ self.filterLc, self.dauPi, self.LambdaDD]
-	      , '[B_s0 -> Lambda_c+ Lambda~0 pi-]cc', _strCutComb_Long, _strCutMoth_Long)
+		, '[B_s0 -> Lambda_c+ Lambda~0 pi-]cc', _strCutComb_Long, _strCutMoth_Long)
 	self.combineBs04LLDD = makeBs0(name+'CombineBs04LLDD', [ self.LambdaLL,self.LambdaDD] , '[B_s0 -> Lambda0 Lambda~0]cc', _strCutComb_Long, _strCutMoth_Long)
 
 
-      #dau particles, only for tests
+	#dau particles, only for tests
 	"""
 	self.linePions = self._strippingLine(name = name+'PionsForBs0', prescale = 1.0, postscale = 1.0, selection = self.dauPi)
 	self.lineKaons = self._strippingLine(name = name+'KaonsForBs0', prescale = 1.0, postscale = 1.0, selection = self.dauK)
@@ -349,22 +354,22 @@ def makeLc(localName,
 
    ## Combination cuts
    _strCutComb = "(ADAMASS('Lambda_c+')<1.1*%(Lc_ADMASS_HalfWin)s)" \
-         "& (AMAXCHILD(MIPCHI2DV(PRIMARY))>%(Lc_Daug_1of3_MIPCHI2DV_Min)s)" \
-         "& (ADOCAMAX('')<%(Lc_ADOCAMAX_Max)s)" \
-         "& (APT>%(Lc_APT_Min)s)" % locals()
+	   "& (AMAXCHILD(MIPCHI2DV(PRIMARY))>%(Lc_Daug_1of3_MIPCHI2DV_Min)s)" \
+	   "& (ADOCAMAX('')<%(Lc_ADOCAMAX_Max)s)" \
+	   "& (APT>%(Lc_APT_Min)s)" % locals()
 
    _strCutMoth = "(VFASPF(VCHI2) < %(Lc_VCHI2_Max)s)" \
-         "& (ADMASS('Lambda_c+')<%(Lc_ADMASS_HalfWin)s)" \
-         "& (BPVVDCHI2>%(Lc_BPVVDCHI2_Min)s)" \
+	   "& (ADMASS('Lambda_c+')<%(Lc_ADMASS_HalfWin)s)" \
+	   "& (BPVVDCHI2>%(Lc_BPVVDCHI2_Min)s)" \
 	   "& (BPVIPCHI2()> %(Lc_BPVIPCHI2_Min)s)" \
-         "& (BPVDIRA>%(Lc_BPVDIRA_Min)s)" % locals()
+	   "& (BPVDIRA>%(Lc_BPVDIRA_Min)s)" % locals()
 
    _combineLambdac2PKPi = CombineParticles(
-         DecayDescriptor = "[Lambda_c+ -> K- p+ pi+]cc",
-         DaughtersCuts = _daughterCuts,
-         CombinationCut = _strCutComb,
-         MotherCut = _strCutMoth
-         )
+	   DecayDescriptor = "[Lambda_c+ -> K- p+ pi+]cc",
+	   DaughtersCuts = _daughterCuts,
+	   CombinationCut = _strCutComb,
+	   MotherCut = _strCutMoth
+	   )
 
    return Selection ( localName,
 	    Algorithm = _combineLambdac2PKPi,
@@ -384,11 +389,11 @@ def filterKaons(localName,
    _stdK = DataOnDemand(Location = Bs0_K_Input)
    # Filter:
    _strCutDauK = "(TRCHI2DOF<%(Bs0_Daug_TRCHI2DOF_Max)s)" \
-         "& (P>%(Bs0_Daug_P_Min)s)" \
-         "& (HASRICH)&(PROBNNk>%(Bs0_K_ProbNNk_Min)s)" \
-         "& (PT>%(Bs0_Daug_PT_Min)s)" \
+	   "& (P>%(Bs0_Daug_P_Min)s)" \
+	   "& (HASRICH)&(PROBNNk>%(Bs0_K_ProbNNk_Min)s)" \
+	   "& (PT>%(Bs0_Daug_PT_Min)s)" \
 	   "& (PROBNNghost<0.5)"\
-         "& (MIPCHI2DV(PRIMARY)>%(Bs0_Daug_MIPCHI2DV_Min)s)" %locals() 
+	   "& (MIPCHI2DV(PRIMARY)>%(Bs0_Daug_MIPCHI2DV_Min)s)" %locals() 
 
    _filterK = FilterDesktop(Code = _strCutDauK)
    return Selection ( localName,
@@ -408,11 +413,11 @@ def filterPions(localName,
    _stdPi = DataOnDemand(Location = Bs0_Pi_Input)
    # Filter:
    _strCutDauPi = "(TRCHI2DOF<%(Bs0_Daug_TRCHI2DOF_Max)s)" \
-         "& (P>%(Bs0_Daug_P_Min)s)" \
-         "& (HASRICH)&(PROBNNpi>%(Bs0_Pi_ProbNNpi_Min)s)" \
-         "& (PT>%(Bs0_Daug_PT_Min)s)" \
+	   "& (P>%(Bs0_Daug_P_Min)s)" \
+	   "& (HASRICH)&(PROBNNpi>%(Bs0_Pi_ProbNNpi_Min)s)" \
+	   "& (PT>%(Bs0_Daug_PT_Min)s)" \
 	   "& (PROBNNghost<0.5)"\
-         "& (MIPCHI2DV(PRIMARY)>%(Bs0_Daug_MIPCHI2DV_Min)s)" %locals()
+	   "& (MIPCHI2DV(PRIMARY)>%(Bs0_Daug_MIPCHI2DV_Min)s)" %locals()
 
    _filterPi = FilterDesktop(Code = _strCutDauPi)
    return Selection ( localName,
@@ -432,11 +437,11 @@ def filterProtons(localName,
    _stdP = DataOnDemand(Location = Bs0_P_Input)
    # Filter:
    _strCutDauP  = "(TRCHI2DOF<%(Bs0_Daug_TRCHI2DOF_Max)s)" \
-         "& (P>%(Bs0_Daug_P_Min)s)" \
-         "& (HASRICH)&(PROBNNp>%(Bs0_P_ProbNNp_Min)s)" \
-         "& (PT>%(Bs0_Daug_PT_Min)s)" \
+	   "& (P>%(Bs0_Daug_P_Min)s)" \
+	   "& (HASRICH)&(PROBNNp>%(Bs0_P_ProbNNp_Min)s)" \
+	   "& (PT>%(Bs0_Daug_PT_Min)s)" \
 	   "& (PROBNNghost<0.5)"\
-         "& (MIPCHI2DV(PRIMARY)>%(Bs0_Daug_MIPCHI2DV_Min)s)" %locals() 
+	   "& (MIPCHI2DV(PRIMARY)>%(Bs0_Daug_MIPCHI2DV_Min)s)" %locals() 
 
    _filterP  = FilterDesktop(Code = _strCutDauP)
    return Selection ( localName,
@@ -457,7 +462,7 @@ def makeLambdaLL(localName, Lambda_LL_MassWindow, Lambda_LL_VtxChi2,Lambda_LL_FD
    _stdLambdaLL = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
    _filterLambdaLL = FilterDesktop( Code = _allCuts )
    return Selection( localName, Algorithm = _filterLambdaLL, RequiredSelections = [_stdLambdaLL] )
-	
+
 def makeLambdaDD(localName, Lambda_DD_MassWindow, Lambda_DD_VtxChi2,Lambda_DD_FDChi2):
    # define all the cuts
    _massCut    = "(ADMASS('Lambda0')<%s*MeV)" % Lambda_DD_MassWindow
@@ -478,7 +483,7 @@ def makeKSLL(localName, KS_LL_MassWindow, KS_LL_VtxChi2,KS_LL_FDChi2):
    _stdKSLL = DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")
    _filterKSLL = FilterDesktop( Code = _allCuts )
    return Selection( localName, Algorithm = _filterKSLL, RequiredSelections = [_stdKSLL] )
-	
+
 def makeKSDD(localName, KS_DD_MassWindow, KS_DD_VtxChi2,KS_DD_FDChi2):
    # define all the cuts
    _massCut    = "(ADMASS('KS0')<%s*MeV)" % KS_DD_MassWindow
