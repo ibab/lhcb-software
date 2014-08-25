@@ -22,6 +22,9 @@ _locations.update ( locations )
 from CommonParticles.StdJets import *
 _locations.update ( locations )
 
+from CommonParticles.StdJetsR07 import *
+_locations.update ( locations )
+
 # redefine the locations 
 locations = _locations
 

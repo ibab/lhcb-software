@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-08-25 - Cedric Potterat
+ - Add StdJetsR07 to StandardJets
+
 ! 2014-08-25 - Daniel O'Hanlon
  - Add LambdaLD to StdLooseLambda
 
