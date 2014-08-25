@@ -49,6 +49,11 @@ PDF to describe ``wide'' peaks
   - Flatte
   - ...
 
+Special stuff:
+
+  - Voigt
+  - BW23L
+
 """
 # =============================================================================
 __version__ = "$Revision:"
@@ -82,7 +87,8 @@ __all__ = (
     'LASS_pdf'             , ## kappa-pole
     'Bugg_pdf'             , ## sigma-pole
     ##
-    'Voigt_pdf'            , ## Voigt-profile 
+    'Voigt_pdf'            , ## Voigt-profile
+    'BW23L_pdf'            , ## BW23L
     #
     )
 # =============================================================================
@@ -992,8 +998,59 @@ class BreitWigner_pdf(MASS) :
                                       self.breit  , self.mass ,
                                       convolution , useFFT    ) 
             self.pdf  = self.conv.pdf
-            
+
+
+# =============================================================================
+## @class BW23L_pdf 
+#  @see Analysis::Models::BW23L 
+#  @see Gaudi::Math::BW23L
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-08-25
+class BW23L_pdf(MASS) :
+    """
+    Simple wrapper over relativistic Breit-Wigner function
+    """
+    def __init__ ( self               ,
+                   name               ,
+                   breitwigner        , ## Gaudi::Math::BW23L object
+                   mn          = None ,
+                   mx          = None ,
+                   mass        = None ,
+                   mean        = None , 
+                   gamma       = None ) : 
         
+        #
+        ## initialize the base
+        # 
+        MASS.__init__  ( self    , name     ,
+                         mn      , mx       ,
+                         mass    ,
+                         mean    , gamma    )
+        
+        self.gamma = self.sigma
+        sname  = self.gamma.GetName  ()
+        stitle = self.gamma.GetTitle ()
+        gname  = sname .replace ( 'sigma' , 'gamma' )
+        gtitle = stitle.replace ( 'sigma' , 'Gamma' )
+        self.gamma.SetName  ( gname  ) 
+        self.gamma.SetTitle ( gtitle )
+        
+        #
+        ## define the actual BW-shape using
+        #      Gaudi::Math::BW23L object
+        #
+        self.breitwigner = breitwigner  ## Gaudi::Math::BW23L object
+        self.bw          = breitwigner  
+        
+        ## create PDF 
+        self.pdf = cpp.Analysis.Models.BW23L ( 
+            "rbw23_"    + name ,
+            "RBW23(%s)" % name ,
+            self.mass          ,
+            self.mean          ,
+            self.gamma         ,
+            self.breitwigner   )
+
 # =============================================================================
 ## @class Flatte_pdf
 #  Flatte function to describe dipion system near dikaon threshold

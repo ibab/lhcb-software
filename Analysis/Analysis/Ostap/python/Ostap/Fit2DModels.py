@@ -32,7 +32,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.PyRoUts             import cpp 
+from   Ostap.PyRoUts             import cpp, iszero  
 from   Ostap.FitBasic            import makeVar
 # =============================================================================
 from   AnalysisPython.Logger     import getLogger
@@ -281,25 +281,28 @@ class ExpoPSPol2D_pdf(object) :
                    y                ,   ##  the second dimension
                    psy = None       ,   ##  phase space in Y, Gaudi::Math::PhaseSpaceNL 
                    nx  = 2          ,   ##  polynomial degree in X 
-                   ny  = 2          ) : ##  polynomial degree in Y 
+                   ny  = 2          ,   ##  polynomial degree in Y 
+                   tau = None       ) : ##  the exponent 
         
         self.x   = x
         self.y   = y
 
         #
         ## get tau
-        # 
-        change = 1.e+16        
-        taumin = math.log ( change ) / ( x.getMax() - x.getMin() ) 
-        taumin = -1 * abs ( taumin ) 
-        taumax =      abs ( taumin ) 
+        taumax  = 100
+        mn,mx   = x.minmax()
+        mc      = 0.5 * ( mn + mx )
+        #
+        if not iszero ( mn ) : taumax =                100.0 / abs ( mn ) 
+        if not iszero ( mc ) : taumax = min ( taumax , 100.0 / abs ( mc ) )
+        if not iszero ( mx ) : taumax = min ( taumax , 100.0 / abs ( mx ) )
         
         #
         ## the exponential slope
         #
-        self.tau  = makeVar ( None ,
+        self.tau  = makeVar ( tau              ,
                               "tau_%s"  % name ,
-                              "tau(%s)" % name , None , 0 , taumin , taumax )
+                              "tau(%s)" % name , tau , 0 , -taumax , taumax )
         #
         
         self.m1  = x ## ditto 
@@ -335,7 +338,7 @@ class ExpoPSPol2D_pdf(object) :
 
 # =============================================================================
 ## @class ExpoPol2D_pdf
-#  Product of phase space factors, modulated by positiev polynomial in 2D 
+#  Product of phase space factors, modulated by positive polynomial in 2D 
 #  \f$  f(x,y) = exp(\tau_x x) \times exp ( \tau_y y) \times P^+(x,y) \f$,
 #  where \f$ P^+(x,y)\f$ denotes the positive polynomial,
 #  @see Analysis::Models::Expo2DPol
@@ -351,32 +354,42 @@ class ExpoPol2D_pdf(object) :
                    x                ,   ##  the first  dimension  
                    y                ,   ##  the second dimension
                    nx  = 2          ,   ##  polynomial degree in X 
-                   ny  = 2          ) : ##  polynomial degree in Y 
+                   ny  = 2          ,   ##  polynomial degree in Y
+                   taux = None      ,   ##  the exponent in X 
+                   tauy = None      ) : ##  the exponent in Y
         
         self.x   = x
         self.y   = y
 
         #
         ## get tau_x
-        # 
-        change = 1.e+16        
-        tauxmin = math.log ( change ) / ( x.getMax() - x.getMin() ) 
-        tauxmin = -1 * abs ( tauxmin ) 
-        tauxmax =      abs ( tauxmin ) 
-        tauymin = math.log ( change ) / ( y.getMax() - y.getMin() ) 
-        tauymin = -1 * abs ( tauxmin ) 
-        tauymax =      abs ( tauxmin ) 
+        #
+        xtaumax = 100
+        mn,mx   = x.minmax()
+        mc      = 0.5 * ( mn + mx )
+        #
+        if not iszero ( mn ) : xtaumax =                 100.0 / abs ( mn ) 
+        if not iszero ( mc ) : xtaumax = min ( xtaumax , 100.0 / abs ( mc ) )
+        if not iszero ( mx ) : xtaumax = min ( xtaumax , 100.0 / abs ( mx ) )
         
+        ytaumax = 100
+        mn,mx   = y.minmax()
+        mc      = 0.5 * ( mn + mx )
+        #
+        if not iszero ( mn ) : ytaumax =                 100.0 / abs ( mn ) 
+        if not iszero ( mc ) : ytaumax = min ( ytaumax , 100.0 / abs ( mc ) )
+        if not iszero ( mx ) : ytaumax = min ( ytaumax , 100.0 / abs ( mx ) )
+
         #
         ## the exponential slopes
         #
-        self.taux  = makeVar ( None ,
+        self.taux  = makeVar ( taux              ,
                                "taux_%s"  % name ,
-                               "taux(%s)" % name , None , 0 , tauxmin , tauxmax )
+                               "taux(%s)" % name , taux , 0 , -xtaumax , xtauxmax )
         #
-        self.tauy  = makeVar ( None ,
+        self.tauy  = makeVar ( tauy              ,
                                "tauy_%s"  % name ,
-                               "tauy(%s)" % name , None , 0 , tauymin , tauymax )
+                               "tauy(%s)" % name , tauy , 0 , -ytaumax , ytaumax )
         #
         
         self.m1  = x ## ditto 
@@ -423,9 +436,10 @@ class ExpoPol2Dsym_pdf(object) :
     """
     def __init__ ( self             ,
                    name             ,
-                   x                ,   ##  the first  dimension  
-                   y                ,   ##  the second dimension
-                   n   = 2          ) : ##  polynomial degree in X and Y 
+                   x                ,   ## the first  dimension  
+                   y                ,   ## the second dimension
+                   n    = 2         ,   ## polynomial degree in X and Y
+                   tau  = None      ) : ## the exponent 
         
         if x.getMin() != y.getMin() :
             logger.warning( 'PSPos2Dsym: x&y have different low  edges %s vs %s'
@@ -442,18 +456,22 @@ class ExpoPol2Dsym_pdf(object) :
         self.m2  = y ## ditto 
 
         #
-        ## get tau_x
+        ## get tau
         # 
-        change = 1.e+16        
-        tauxmin = math.log ( change ) / ( x.getMax() - x.getMin() ) 
-        tauxmin = -1 * abs ( tauxmin ) 
-        tauxmax =      abs ( tauxmin ) 
+        taumax  = 100
+        mn,mx   = mass.minmax()
+        mc      = 0.5 * ( mn + mx )
+        #
+        if not iszero ( mn ) : taumax =                100.0 / abs ( mn ) 
+        if not iszero ( mc ) : taumax = min ( taumax , 100.0 / abs ( mc ) )
+        if not iszero ( mx ) : taumax = min ( taumax , 100.0 / abs ( mx ) )
+
         #
         ## the exponential slopes
         #
-        self.tau  = makeVar ( None ,
+        self.tau  = makeVar ( tau              ,
                               "tau_%s"  % name ,
-                              "tau(%s)" % name , None , 0 , tauxmin , tauxmax )
+                              "tau(%s)" % name , tau , 0 , -taumax , taumax )
         #
         self.m1  = x ## ditto 
         self.m2  = y ## ditto

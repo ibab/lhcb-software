@@ -714,7 +714,7 @@ class Fit1D (PDF) :
         self._splots = []
         
     ## perform sPlot-analysis 
-    def sPlot ( self , dataset , *args    ) : 
+    def sPlot ( self , dataset ) : 
         """
         Make sPlot analysis 
         """
@@ -722,8 +722,7 @@ class Fit1D (PDF) :
                                       "sPlot"            ,
                                       dataset            ,
                                       self.pdf           ,
-                                      self.alist2        ,
-                                      *args              )
+                                      self.alist2        )
         
         self._splots += [ splot ]
         

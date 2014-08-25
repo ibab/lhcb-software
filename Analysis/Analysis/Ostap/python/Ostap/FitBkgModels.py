@@ -32,7 +32,7 @@ __all__     = (
     )
 # =============================================================================
 import ROOT, math
-from   Ostap.PyRoUts             import cpp 
+from   Ostap.PyRoUts             import cpp,iszero  
 from   Ostap.FitBasic            import makeVar, PDF 
 # =============================================================================
 from   AnalysisPython.Logger     import getLogger
@@ -54,23 +54,27 @@ class Bkg_pdf(PDF) :
     def __init__ ( self             ,
                    name             ,   ## the name 
                    mass             ,   ## the variable
-                   power = 0        ) : ## degree of polynomial 
+                   power = 0        ,
+                   tau   = None     ) : ## degree of polynomial 
         #
         PDF.__init__  ( self , name )
         #                
         self.mass  = mass
         self.power = power
-        # 
-        change = 1.e+16        
-        taumin = math.log ( change ) / ( mass.getMax() - mass.getMin() ) 
-        taumin = -1 * abs ( taumin ) 
-        taumax =      abs ( taumin ) 
         #
+        mn,mx   = mass.minmax()
+        mc      = 0.5 * ( mn + mx )
+        taumax  = 100
+        #
+        if not iszero ( mn ) : taumax =                100.0 / abs ( mn ) 
+        if not iszero ( mc ) : taumax = min ( taumax , 100.0 / abs ( mc ) )
+        if not iszero ( mx ) : taumax = min ( taumax , 100.0 / abs ( mx ) )
+        # 
         ## the exponential slope
         #
-        self.tau  = makeVar ( None ,
+        self.tau  = makeVar ( tau              ,
                               "tau_%s"  % name ,
-                              "tau(%s)" % name , None , 0 , taumin , taumax )
+                              "tau(%s)" % name , tau , 0 , -taumax, taumax )
         #
         self.phis     = []
         self.phi_list = ROOT.RooArgList ()

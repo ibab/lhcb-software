@@ -453,7 +453,7 @@ class SelectorWithVars(SelectorWithCuts) :
 
         
         if not     name :
-            from   AnalysisPython.PyRoUts      import dsID 
+            from   Ostap.PyRoUts import dsID 
             name = dsID()
             
         if not fullname : fullname = "%s/%s " % ( __name__ , name )

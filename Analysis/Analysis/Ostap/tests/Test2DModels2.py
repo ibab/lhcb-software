@@ -85,7 +85,7 @@ print dataset
 
 
 import Ostap.FitModels as     Models 
-
+models = [] 
 
 # =============================================================================
 ## gauss as signal, const as background 
@@ -127,7 +127,7 @@ print '\nSxS=%s \nSxB=%s \nBxS=%s \nBxB=%s ' % ( result ( model.SS_name ) [0] ,
                                                  result ( model.BS_name ) [0] ,
                                                  result ( model.BB_name ) [0] ) 
 
-
+models.append ( model ) 
 # =============================================================================
 ## gauss as signal, const as background 
 # =============================================================================
@@ -174,6 +174,7 @@ print '\nSxS=%s \nSxB=%s \nBxS=%s \nBxB=%s ' % ( result ( model.SS_name ) [0] ,
                                                  result ( model.BB_name ) [0] ) 
 
 
+models.append ( model ) 
 # =============================================================================
 ## gauss as signal, const as background 
 # =============================================================================
@@ -217,6 +218,7 @@ print '\nSxS=%s \nSxB=%s \nBxS=%s \nBxB=%s ' % ( result ( model.SS_name ) [0] ,
                                                  result ( model.BB_name ) [0] ) 
 
 
+models.append ( model ) 
 # =============================================================================
 ## gauss as signal, const as background 
 # =============================================================================
@@ -260,6 +262,7 @@ print '\nSxS=%s \nSxB=%s \nBxS=%s \nBxB=%s ' % ( result ( model.SS_name ) [0] ,
                                                  result ( model.BB_name ) [0] ) 
 
 
+models.append ( model ) 
 # =============================================================================
 ## gauss as signal, const as background 
 # =============================================================================
@@ -307,6 +310,7 @@ print '\nSxS=%s \nSxB=%s \nBxS=%s \nBxB=%s ' % ( result ( model.SS_name ) [0] ,
 print result 
 
 
+models.append ( model ) 
 
 
 # =============================================================================

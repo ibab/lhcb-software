@@ -108,20 +108,21 @@ __all__ = (
     'Bugg_pdf'             , ## sigma-pole
     ##
     'Voigt_pdf'            , ## Voigt-profile 
+    'BW23L_pdf'            , ## BW23L
     #
     ## "Other" distributions 
     #
-    'GammaDist_pdf'      , ## Gamma-distributuon in shape/scale parameterization
-    'GenGammaDist_pdf'   , ## Generalized Gamma-distribution
-    'Amoroso_pdf'        , ## another view of generalized Gamma distribution
-    'LogGammaDist_pdf'   , ## Gamma-distributuon in shape/scale parameterization
-    'Log10GammaDist_pdf' , ## Gamma-distributuon in shape/scale parameterization
-    'LogGamma_pdf'       , ## 
-    'BetaPrime_pdf'      , ## Beta-prime distribution 
-    'Landau_pdf'         , ## Landau distribution 
-    'Argus_pdf'          , ## Landau distribution 
-    'SinhAsinh_pdf'      , ## "Sinh-asinh" distribution
-    #
+    'GammaDist_pdf'       , ## Gamma-distributuon in shape/scale parameterization
+    'GenGammaDist_pdf'    , ## Generalized Gamma-distribution
+    'Amoroso_pdf'         , ## another view of generalized Gamma distribution
+    'LogGammaDist_pdf'    , ## Gamma-distributuon in shape/scale parameterization
+    'Log10GammaDist_pdf'  , ## Gamma-distributuon in shape/scale parameterization
+    'LogGamma_pdf'        ,  ## 
+    'BetaPrime_pdf'       ,  ## Beta-prime distribution 
+    'Landau_pdf'          , ## Landau distribution 
+    'Argus_pdf'           , ## Landau distribution 
+    'SinhAsinh_pdf'       , ## "Sinh-asinh" distribution
+     #
     ## 1D-background models
     # 
     'Bkg_pdf'              , ## Background: exponential modified by positive polynom

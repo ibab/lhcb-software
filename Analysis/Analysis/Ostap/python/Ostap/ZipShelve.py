@@ -478,7 +478,7 @@ def open ( filename                                   ,
 logger.debug ( "Simple generic (c)Pickle-based ``zipped''-database")
 # =============================================================================
 ## a bit more decorations for shelve  (optional)
-import AnalysisPython.shelve_ext
+import Ostap.shelve_ext
 
 # =============================================================================
 if '__main__' == __name__ :
