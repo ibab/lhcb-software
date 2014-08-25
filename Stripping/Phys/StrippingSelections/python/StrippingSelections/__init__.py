@@ -139,6 +139,7 @@ import StrippingNoPIDDstarWithD02RSKPi
 
 import StrippingB2DMuForTauMu
 import StrippingB2XTauNu
+import StrippingB2KstTauTau
 import StrippingJPsiForSL
 import StrippingCharmForVub
 import StrippingDstarD02KMuNu

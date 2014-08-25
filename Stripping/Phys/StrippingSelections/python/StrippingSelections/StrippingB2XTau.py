@@ -4,13 +4,22 @@ __version__ = '$Revision: 1.2 $'
 # Stripping line by V. Gligorov for B->mu tau, B->tau tau, B->D mu and B->D D
 # Strongly modified for Stripping20 by Ch. Elsasser
 # added Dpi mode by G. Mancinelli
-# Strongly modified for S20r2 by G. Mancinelli and J. Serrano
+# Strongly modified for S20rxp1 by G. Mancinelli and J. Serrano
 
 """
   B->TauTau, B->TauMu
   """
+__all__ = (
+  'B2XTauConf'
+  ,  'default_config'
+  )
 
-config_params =  {
+default_config =  {
+  'NAME'              : 'B2XTau',
+  'BUILDERTYPE'       :       'B2XTauConf',
+  'WGs'    : [ 'RD' ],
+  'CONFIG'    : {
+  
   'PT_HAD_ALL_FINAL_STATE'        : '250',  # MeV
   'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
   'IPCHI2_HAD_ALL_FINAL_STATE'    : '16',    # dimensionless
@@ -88,10 +97,12 @@ config_params =  {
   'B2DMu_SameSign_LinePrescale'            : 1.,
   'B2DMu_SameSign_LinePostscale'           : 1,
   'B2DPi_SameSign_LinePrescale'            : 0.5,
-  'B2DPi_SameSign_LinePostscale'           : 1,
-                    }
+  'B2DPi_SameSign_LinePostscale'           : 1
+  },
+  'STREAMS'     : { 'Bhadron' : ['StrippingB2XTauConf']}
+  }
+  
 
-__all__ = ('B2XTauConf')
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -221,7 +232,7 @@ class B2XTauConf(LineBuilder) :
                                       tauInput   = rawTau,
                                       config     = config)
     selTauSS        = self._makeTauSS(      name    = "TauSSFor"+name,
-                                            pionSel = selPions,
+                                            pionSel = selPionsForD,
                                             config  = config)
     
     selD            = self._makeD(name       = "DFor"+name,

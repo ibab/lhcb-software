@@ -3,6 +3,11 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2014-08-25 - Justine Serrano
+ - Add StrippingB2KstTauTau.py, which contains 4 new lines
+ - update StrippingB2XTau.py
+
 ! 2014-08-25 - Alvaro Gomes
 - StrippingButo5h.py has been included with an relaxed cut in the GEC long tracks 
 and a cut in the probnn of each track. The stripping now has two more lines, 
