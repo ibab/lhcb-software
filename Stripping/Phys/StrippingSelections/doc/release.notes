@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-08-25 - Pablo Ruiz Valls
+ - Updated StrippingBeauty2XGamma.py
+
 ! 2014-08-25 - Alvaro Gomes
  - Line StrippingBc2hhh_BnoC.py properly added.
 

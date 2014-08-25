@@ -20,7 +20,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdLooseAllPhotons
 
-default_name = 'B2XGamma'
+name = 'B2XGamma'
 default_config = {
     'NAME'        : 'Beauty2XGammaExclusive',
     'WGs'         : ['RD'],
@@ -114,41 +114,42 @@ class Beauty2XGammaExclusiveConf(LineBuilder):
     def __init__(self, name, config):
         LineBuilder.__init__(self, name, config)
         # Selection of B daughters: photon, phi and kstar
-        self.selPhoton = makePhoton('PhotonSel' + self.default_name,
+        self.name = name
+        self.selPhoton = makePhoton('PhotonSel' + self.name,
                                     config['photonPT'])
-        self.selPhi2KK = makePhi2KK('PhiSel' + self.default_name,
+        self.selPhi2KK = makePhi2KK('PhiSel' + self.name,
                                     config['TrIPchi2'],
                                     config['TrChi2'],
                                     config['PhiMassWin'],
                                     config['PhiVCHI2'])
-        self.selKst = makeKstar('KStarSel' + self.default_name,
+        self.selKst = makeKstar('KStarSel' + self.name,
                                 config['TrIPchi2'],
                                 config['TrChi2'],
                                 config['KstMassWin'],
                                 config['KstVCHI2'])
         # Bs->Phi Gamma selections
-        self.selBs2PhiGamma = makeBs2PhiGamma(self.default_name + '_Bs2PhiGamma',
+        self.selBs2PhiGamma = makeBs2PhiGamma(self.name + '_Bs2PhiGamma',
                                               self.selPhi2KK,
                                               self.selPhoton,
                                               config['BsDirAngle'],
                                               config['BsPVIPchi2'],
                                               config['BsMassWin'])
         # Bd->Kst Gamma selections
-        self.selBd2KstGamma = makeBd2KstGamma(self.default_name + '_Bd2KstGamma',
+        self.selBd2KstGamma = makeBd2KstGamma(self.name + '_Bd2KstGamma',
                                               self.selKst,
                                               self.selPhoton,
                                               config['B0DirAngle'],
                                               config['B0PVIPchi2'],
                                               config['B0MassWin'])
         # Stripping lines
-        self.Bs2PhiGammaLine = StrippingLine(self.default_name + '_Bs2PhiGamma_Line',
+        self.Bs2PhiGammaLine = StrippingLine(self.name + '_Bs2PhiGamma_Line',
                                              prescale=config['Bs2PhiGammaPreScale'],
                                              postscale=config['Bs2PhiGammaPostScale'],
                                              RequiredRawEvents = [ "Velo","Tracker","Calo", "Muon","Rich" ],
                                              selection=self.selBs2PhiGamma)
         self.registerLine(self.Bs2PhiGammaLine)
 
-        self.Bd2KstGammaLine = StrippingLine(self.default_name + '_Bd2KstGamma_Line',
+        self.Bd2KstGammaLine = StrippingLine(self.name + '_Bd2KstGamma_Line',
                                              prescale=config['Bd2KstGammaPreScale'],
                                              postscale=config['Bd2KstGammaPostScale'],
                                              RequiredRawEvents = [ "Velo","Tracker","Calo", "Muon","Rich" ],

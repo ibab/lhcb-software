@@ -83,7 +83,7 @@ default_config = {
           'B2XGResVtxChi2DOF': 10., # was 25
           'B2XGResSumPtMin'  : 1500.,
           'B2XGResDocaMax'   : 100.5, # NOT USED
-          'B2XGResBPVVDCHI2Min'  : -1., # FD avoid if possible. was 64
+          'B2XGResBPVVDCHI2Min'  : 0., # FD avoid if possible. was 64
           'B2XGResIPCHI2Min' : 0.0,
           
           # B HADRON CUTS
@@ -94,7 +94,7 @@ default_config = {
           'B2XGBMinMLambda'  : 2560., # was 2900
           'B2XGBMaxM'        : 9000., # was 8540
           'B2XGBSumPtMin' : 5000,  #SUMPT
-          'B2XGBMinBPVDIRA'  : -1.1,  #BPVDIRA avoid if possible
+          'B2XGBMinBPVDIRA'  : 0.0,  #BPVDIRA avoid if possible
           'B2XGBMaxCorrM'    : 73000., # NOT USED
           'B2XGBVtxChi2DOF'  : 9.,
           'B2XGBVtxMaxIPChi2': 9. # was 25
@@ -462,8 +462,9 @@ class Beauty2XGammaConf(LineBuilder) :
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True,
-                                          ExtraInfoTools = [{'Type' : 'VertexIsolation'}])
-
+                                          ExtraInfoTools = [{'Type' : 'VertexIsolation'}],
+                                          RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
+    
         B2XG2piCNVName = self.name + "2pi_wCNV_"
         self.RadiativeB2XG2piCNV = makeB2B2XG2piGammaCNV( B2XG2piCNVName,
                                                           diTrkList=self.DiTrackList,
@@ -483,7 +484,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
                                              MDSTFlag = True,
-                                             ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XGpiKsName = self.name + "pi_Ks0_"
         self.RadiativeB2XGpiKs = makeB2B2XGpiKsGamma( B2XGpiKsName,
@@ -504,7 +505,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                            EnableFlavourTagging = True,
                                            RequiredRawEvents = ["Calo"],
                                            MDSTFlag = True,
-                                           ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                           RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG3piName = self.name + "3pi_"
         self.RadiativeB2XG3pi = makeB2B2XG3piGamma ( B2XG3piName,
@@ -525,7 +526,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True,
-                                          ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                          RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG3pi_VanyaName = self.name + "3pi_Vanya_"
         self.RadiativeB2XG3pi_Vanya = makeB2B2XG3piGamma ( B2XG3pi_VanyaName,
@@ -546,7 +547,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
-                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                                RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG3pi_altName = self.name + "3pi_alt_"
         self.RadiativeB2XG3pi_alt = makeB2B2XG3piGamma ( B2XG3pi_altName,
@@ -567,7 +568,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
-                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
         
 
         B2XG3piCNVName = self.name + "3pi_wCNV_"
@@ -589,7 +590,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
                                              MDSTFlag = True,
-                                             ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG2piKsName = self.name + "2pi_Ks0_"
         self.RadiativeB2XG2piKs = makeB2B2XG2piKsGamma ( B2XG2piKsName,
@@ -610,7 +611,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                             EnableFlavourTagging = True,
                                             RequiredRawEvents = ["Calo"],
                                             MDSTFlag = True,
-                                            ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                            RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG2pipi0MName = self.name + "2pi_pi0M_"
         self.RadiativeB2XG2pipi0M = makeB2B2XG2pipi0Gamma ( B2XG2pipi0MName,
@@ -631,7 +632,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
-                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
 
         B2XG2pipi0RName = self.name + "2pi_pi0R_"
@@ -652,7 +653,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               selection = tisTosSelection(self.RadiativeB2XG2pipi0R),
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
-                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )#,
+                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])#,
         #                                              EnableFlavourTagging = True )
 
         B2XG4piName = self.name + "4pi_"
@@ -674,7 +675,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True,
-                                          ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                          RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG4piVanyaName = self.name + "4piVanya_"
         self.RadiativeB2XG4piVanya = makeB2B2XG4piGamma ( B2XG4piVanyaName,
@@ -695,7 +696,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
-                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
         
 
         B2XG4pi_2rhoName = self.name + "4pi_2rho_"
@@ -717,7 +718,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
-                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                                RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG3piKsName = self.name + "3pi_Ks0_"
         self.RadiativeB2XG3piKs = makeB2B2XG3piKsGamma ( B2XG3piKsName,
@@ -738,7 +739,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                             EnableFlavourTagging = True,
                                             RequiredRawEvents = ["Calo"],
                                             MDSTFlag = True,
-                                            ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                            RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG2pi2KsName = self.name + "2pi_2Ks_"
         self.RadiativeB2XG2pi2Ks = makeB2B2XG4piGamma ( B2XG2pi2KsName,
@@ -760,7 +761,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                              EnableFlavourTagging = True,
                                              RequiredRawEvents = ["Calo"],
                                              MDSTFlag = True,
-                                             ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                             RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG3pipi0MName = self.name + "3pi_pi0M_"
         self.RadiativeB2XG3pipi0M = makeB2B2XG3pipi0Gamma ( B2XG3pipi0MName,
@@ -781,7 +782,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               EnableFlavourTagging = True,
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
-                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XG3pipi0RName = self.name + "3pi_pi0R_"
         self.RadiativeB2XG3pipi0R = makeB2B2XG3pipi0Gamma ( B2XG3pipi0RName,
@@ -801,7 +802,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               selection = tisTosSelection(self.RadiativeB2XG3pipi0R),
                                               RequiredRawEvents = ["Calo"],
                                               MDSTFlag = True,
-                                              ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )#,
+                                              RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])#,
         #                                              EnableFlavourTagging = True )
 
         B2XGLambdapiName = self.name + "pi_Lambda_"
@@ -824,7 +825,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
-                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XGLambda2piName = self.name + "2pi_Lambda_"
         self.RadiativeB2XGLambda2pi = makeB2B2XGLambda2piGamma ( B2XGLambda2piName,
@@ -846,7 +847,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
-                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                                RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XGLambda3piName = self.name + "3pi_Lambda_"
         self.RadiativeB2XGLambda3pi = makeB2B2XGLambda3piGamma ( B2XGLambda3piName,
@@ -868,7 +869,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                 EnableFlavourTagging = True,
                                                 RequiredRawEvents = ["Calo"],
                                                 MDSTFlag = True,
-                                                ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                                RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
         B2XGLbLambdaName = self.name + "LbLambda_"
         self.RadiativeB2XGLbLambda = makeB2B2XGLbLambdaGamma ( B2XGLbLambdaName,
@@ -889,7 +890,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                                EnableFlavourTagging = True,
                                                RequiredRawEvents = ["Calo"],
                                                MDSTFlag = True,
-                                               ExtraInfoTools = [{'Type' : 'VertexIsolation'}] )
+                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
         
 
         self.registerLine(self.B2XG2piLine)
@@ -916,7 +917,7 @@ class Beauty2XGammaConf(LineBuilder) :
         self.registerLine(self.B2XGLambda2piLine)
         self.registerLine(self.B2XGLambda3piLine)
 
-        self.registerLine(self.B2XGLbLambdaLine)
+#        self.registerLine(self.B2XGLbLambdaLine)
 
 def makeDiTrackList( name,
                      trkList,
@@ -930,7 +931,8 @@ def makeDiTrackList( name,
     """
     Di-track selection
     """
-    _diTrackPreVertexCuts = "(ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
+#     _diTrackPreVertexCuts = "(ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
+    _diTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _diTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _diTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
@@ -956,7 +958,8 @@ def makeDiTrackList_wKS0( name,
     """
     Di-track selection
     """
-    _diTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _diTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
+    _diTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _diTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _diTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s)" %locals()
@@ -984,7 +987,8 @@ def makeTriTrackList( name,
     Tri-track selection
     """
     _TriTrackPreVertexCuts = hasTopoChild()
-    _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts += " & (ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1016,7 +1020,8 @@ def makeTriTrackListVanya( name,
     Tri-track selection
     """
     _TriTrackPreVertexCuts = hasTopoChild()
-    _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts += " & (ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
     
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1048,7 +1053,8 @@ def makeTriTrackList_alt( name,
     """
     Tri-track selection
     """
-    _TriTrackPreVertexCuts = " (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _TriTrackPreVertexCuts = " (ASUM(SUMTREE(PT,(ISBASIC | (ID=='rho(770)0') | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts = " (ASUM(PT)> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1076,7 +1082,8 @@ def makeTriTrackList_wKS0( name,
     """
     Tri-track selection
     """
-    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID =='rho(770)0') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID =='rho(770)0') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1104,7 +1111,8 @@ def makeTriTrackList_wpi0M( name,
     Tri-track selection
     """
     _TriTrackPreVertexCuts = hasTopoChild()
-    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1132,7 +1140,8 @@ def makeTriTrackList_wpi0R( name,
     Tri-track selection
     """
 #    _TriTrackPreVertexCuts = hasTopoChild()
-    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='rho(770)0') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1159,7 +1168,8 @@ def makeFourTrackList( name,
     Four-track selection
     """
     _FourTrackPreVertexCuts = hasTopoChild()
-    _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
+#    _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
+    _FourTrackPreVertexCuts += "& (ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1186,7 +1196,8 @@ def makeFourTrackListVanya( name,
     Four-track selection
     """
     _FourTrackPreVertexCuts = hasTopoChild()
-    _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
+#    _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
+    _FourTrackPreVertexCuts += "& (ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
     
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1219,7 +1230,8 @@ def makeFourTrackListPions( name,
     """
     Four-track selection
     """
-    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ID=='rho(770)0'),0.0))> %(MinSumPTCut)s)"%locals()
+#    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,(ID=='rho(770)0'),0.0))> %(MinSumPTCut)s)"%locals()
+    _FourTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1244,7 +1256,8 @@ def makeFourTrackList_w2KS0( name,
     """
     Four-track selection
     """
-    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,((ID=='rho(770)+') | (ID=='rho(770)-')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,((ID=='rho(770)+') | (ID=='rho(770)-')),0.0))> %(MinSumPTCut)s)"%locals()
+    _FourTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1271,7 +1284,8 @@ def makeFourTrackList_wKS0( name,
     """
     Tri-track selection
     """
-    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID =='K_1(1270)+') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _TriTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID =='K_1(1270)+') | (ID=='gamma') | (ID=='KS0')),0.0))> %(MinSumPTCut)s)"%locals()
+    _TriTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1300,7 +1314,8 @@ def makeFourTrackList_wpi0M( name,
     Four-track selection
     """
 #    _FourTrackPreVertexCuts = hasTopoChild()
-    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+    _FourTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1327,7 +1342,8 @@ def makeFourTrackList_wpi0R( name,
     """
     Four-track selection
     """
-    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+#    _FourTrackPreVertexCuts = "(ASUM(SUMTREE(PT,( (ID=='K_1(1270)+') | (ID=='gamma') | (ID=='pi0')),0.0))> %(MinSumPTCut)s)"%locals()
+    _FourTrackPreVertexCuts = "(ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
 
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
@@ -1359,9 +1375,9 @@ def makeB2B2XG2piGamma( name,
     Charmless B2XG to 2pi selection with missing mass
     """
     _B2B2XG2piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG2piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='rho(770)0') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
-
-
+#    _B2B2XG2piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='rho(770)0') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG2piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals()
+    
     _B2B2XG2piPostVertexCuts = hasHighTopoChild()
     _B2B2XG2piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG2piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
@@ -1391,7 +1407,8 @@ def makeB2B2XG2piGammaCNV( name,
     Charmless B2XG to 2pi and cobnverted photon selection with missing mass
     """
     _B2B2XG2piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG2piPreVertexCuts += "& (ASUM(SUMTREE(PT,( (ID=='rho(770)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG2piPreVertexCuts += "& (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='rho(770)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
 
     _B2B2XG2piPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1423,7 +1440,8 @@ def makeB2B2XGpiKsGamma( name,
     """
 
     _B2B2XG2piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG2piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='rho(770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG2piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='rho(770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG2piPostVertexCuts = hasHighTopoChild()
     _B2B2XG2piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1455,7 +1473,8 @@ def makeB2B2XG3piGamma( name,
     """
 
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG3piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
     _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
@@ -1486,7 +1505,8 @@ def makeB2B2XG2piKsGamma( name,
     """
 
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='K*_2(1430)0') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG3piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='K*_2(1430)0') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1517,7 +1537,8 @@ def makeB2B2XG2pipi0Gamma( name,
     """
 
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='eta')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG3piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='eta')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1548,7 +1569,8 @@ def makeB2B2XG4piGamma( name,
     """
 
     _B2B2XG4piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG4piPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC| (ID=='f_2(1270)') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG4piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,(ISBASIC| (ID=='f_2(1270)') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG4piPostVertexCuts = hasHighTopoChild()
     _B2B2XG4piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1579,7 +1601,8 @@ def makeB2B2XG3piKsGamma( name,
     """
 
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='K_2(1770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG3piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='K_2(1770)+') | (ID=='gamma') | (ID == 'KS0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1610,7 +1633,8 @@ def makeB2B2XG3pipi0Gamma( name,
     """
 
     _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XG3piPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='K_2(1770)+')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XG3piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='K_2(1770)+')| (ID=='gamma') | (ID == 'pi0')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XG3piPostVertexCuts = hasHighTopoChild()
     _B2B2XG3piPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1642,7 +1666,8 @@ def makeB2B2XGLambdapiGamma( name,
     """
 
     _B2B2XGLambdaPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='Lambda0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XGLambdaPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,(ISBASIC | (ID=='Lambda0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
     _B2B2XGLambdaPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1675,7 +1700,8 @@ def makeB2B2XGLambda2piGamma( name,
     """
 
     _B2B2XGLambdaPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='Lambda0')| (ID=='rho(770)0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XGLambdaPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='Lambda0')| (ID=='rho(770)0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
     _B2B2XGLambdaPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1707,7 +1733,8 @@ def makeB2B2XGLambda3piGamma( name,
     """
 
     _B2B2XGLambdaPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2B2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,( (ID=='Lambda0')| (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2B2XGLambdaPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,( (ID=='Lambda0')| (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
 
     _B2B2XGLambdaPostVertexCuts = hasHighTopoChild()
     _B2B2XGLambdaPostVertexCuts += " & (HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
@@ -1738,7 +1765,8 @@ def makeB2B2XGLbLambdaGamma( name,
     """
 
     _B2Lb2XGLambdaPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
-    _B2Lb2XGLambdaPreVertexCuts += " & (ASUM(SUMTREE(PT,((ID=='Lambda0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    _B2Lb2XGLambdaPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals() 
+# ,((ID=='Lambda0')| (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
     
     _B2Lb2XGLambdaPostVertexCuts = hasHighTopoChild()
     _B2Lb2XGLambdaPostVertexCuts += " & (HASVERTEX)"
