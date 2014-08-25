@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-25 - Daniel O'Hanlon
+ - Add updates to StrippingLb2V0hh
+
 ! 2014-08-25 - V. Gligorov
  - Add StrippingCharmLTUnbiased.py containing new lines for charm absolute
    lifetime measurements. 
