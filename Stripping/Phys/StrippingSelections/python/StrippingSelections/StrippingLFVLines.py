@@ -99,7 +99,7 @@ class LFVLinesConf(LineBuilder) :
         taumu_name=name+'B2TauMu'
         htaumu_name=name+'B2hTauMu'
 
-        self.selTau2PhiMu = makeTau2PhiMu(tau_name)
+        self.selTau2PhiMu, self.selPhi2KK = makeTau2PhiMu(tau_name)
         self.selTau2eMuMu = makeTau2eMuMu(mme_name)
         self.selB2eMu = makeB2eMu(emu_name)
         self.selB2ee = makeB2ee(ee_name)
@@ -108,32 +108,53 @@ class LFVLinesConf(LineBuilder) :
         self.selBu = makeBu(bu_name)
         #self.selB2TauMu = makeB2TauMu(taumu_name)
         self.selB2hTauMu = makeB2hTauMu(htaumu_name)
+
+        
                 
         self.tau2PhiMuLine = StrippingLine(tau_name+"Line",
                                            prescale = config['TauPrescale'],
                                            postscale = config['Postscale'],
                                            MDSTFlag = True,
                                            algos = [ self.selTau2PhiMu ],
-                                           ExtraInfoTools = [ { "Type" : "ConeVariables",
-                                                                "ConeNumber" : 1,
-                                                                "ConeAngle" : 0.5,
-                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
-                                                              { "Type" : "ConeVariables",
-                                                                "ConeNumber" : 2,
-                                                                "ConeAngle" : 0.8,
-                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
-                                                              { "Type" : "ConeVariables",
-                                                                "ConeNumber" : 3,
-                                                                "ConeAngle" : 1.,
-                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
-                                                              { "Type" : "ConeVariables",
-                                                                "ConeNumber" : 4,
-                                                                "ConeAngle" : 1.5,
-                                                                "Variables" : ['angle', 'mult', 'pt', 'ptasy']},
-                                                              {'Type' : 'VertexIsolation'},
-                                                              ],
-                                           ExtraInfoDaughters = [self.selTau2PhiMu],
-                                           ExtraInfoRecursionLevel = 2,
+                                           RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5,
+                                                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                                                                 'RecursionLevel' : 2, 
+                                                                 'Locations' : { self.selTau2PhiMu : 'coneInfoTau05', 
+                                                                                 self.selPhi2KK : 'coneInfoPhi05',
+                                                                                 'Phys/StdAllLooseMuons' : 'coneInfoMu05',
+                                                                                 'Phys/StdAllLooseKaons' : 'coneInfoKaons05',
+                                                                                 } },
+                                                               { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.8,
+                                                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                                                                 'RecursionLevel' : 2, 
+                                                                 'Locations' : { self.selTau2PhiMu : 'coneInfoTau08', 
+                                                                                 self.selPhi2KK : 'coneInfoPhi08',
+                                                                                 'Phys/StdAllLooseMuons' : 'coneInfoMu08',
+                                                                                 'Phys/StdAllLooseKaons' : 'coneInfoKaons08',
+                                                                                 } },
+                                                               { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
+                                                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                                                                 'RecursionLevel' : 2, 
+                                                                 'Locations' : { self.selTau2PhiMu : 'coneInfoTau10', 
+                                                                                 self.selPhi2KK : 'coneInfoPhi10',
+                                                                                 'Phys/StdAllLooseMuons' : 'coneInfoMu10',
+                                                                                 'Phys/StdAllLooseKaons' : 'coneInfoKaons10',
+                                                                                 } },
+                                                               { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.4,
+                                                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                                                                 'RecursionLevel' : 2, 
+                                                                 'Locations' : { self.selTau2PhiMu : 'coneInfoTau14', 
+                                                                                 self.selPhi2KK : 'coneInfoPhi14',
+                                                                                 'Phys/StdAllLooseMuons' : 'coneInfoMu14',
+                                                                                 'Phys/StdAllLooseKaons' : 'coneInfoKaons14',
+                                                                                 } },
+                                                               {'Type': 'RelInfoVertexIsolation',
+                                                                'Location':'VtxIsoInfo' },
+                                                               { 'Type': 'RelInfoTrackIsolationBDT',
+                                                                 'Locations': { 'Phys/StdAllLooseMuons' : "MuonTrackIsoBDTInfo",
+                                                                                #'Phys/StdAllLooseKaons' : "KaonsTrackIsoBDTInfo",
+                                                                                }}
+                                                               ]
                                            )
         
         self.tau2eMuMuLine = StrippingLine(mme_name+"Line",
@@ -240,10 +261,12 @@ def makeTau2PhiMu(name):
                                   'Hlt1TrackMuonDecision%TOS' : 0
                                   }
 
-    return Selection( name,
-                      Algorithm = _tisTosFilter,
-                      RequiredSelections = [ SelTau ],
-                      )
+    SelTau_triggered =  Selection( name,
+                                   Algorithm = _tisTosFilter,
+                                   RequiredSelections = [ SelTau ],
+                                   )
+
+    return SelTau_triggered, SelPhi
 
     
 

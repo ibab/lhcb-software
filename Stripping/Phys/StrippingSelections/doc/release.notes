@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-25 - Giulio Dujany
+ - Converted LFVLinesConf from ExtraInfo to RelatedInfo
+
 ! 2014-08-25 - R. Coutinho
  - StrippingB2KShh.py has been completely redesigned to include three different
    scenario of the KS Trigger (2011/2012a/2012b) and BDT uses information from 
