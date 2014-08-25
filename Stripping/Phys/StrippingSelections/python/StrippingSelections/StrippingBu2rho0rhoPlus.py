@@ -27,8 +27,8 @@ default_config = {
     "BUILDERTYPE" : "StrippingBu2rho0rhoPlusConf",
     "STREAMS"     : { "Bhadron" : [ "StrippingBu2rho0rhoPlusMergedLine",
                                     "StrippingBu2rho0rhoPlusResolvedLine",
-                                    "StrippingBu2rho0rhoPlusUPMergedLine",
-                                    "StrippingBu2rho0rhoPlusUPResolvedLine", ] },
+                                    "StrippingBu2rho0rhoPlusUpMergedLine",
+                                    "StrippingBu2rho0rhoPlusUpResolvedLine", ] },
     "CONFIG"      : { "isMC"           : False,  # True = no Hlt filter
                       "refitPVs"       : True,
                       

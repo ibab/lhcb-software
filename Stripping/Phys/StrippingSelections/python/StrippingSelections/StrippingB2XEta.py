@@ -91,26 +91,7 @@ default_config = {
                   'Postscale'               : 1.0,
                   'etaGG_Prescale'          : 0.0
                   },
-    'STREAMS'     : { 'Bhadron' : ['StrippingB2XEtaB2etapKSLLLine',
-                                   'StrippingB2XEtaB2etapKSDDLine',
-                                   'StrippingB2XEtaB2eta3piKSLLine',
-                                   'StrippingB2XEtaB2eta3piKSDDLine',
-                                   'StrippingB2XEtaB2etaGGKSLLLine',
-                                   'StrippingB2XEtaB2etaGGKSDDLine',
-                                   'StrippingB2XEtaLb2etapLLLLine',
-                                   'StrippingB2XEtaLb2etapLDDLine',
-                                   'StrippingB2XEtaLb2eta3piLLLine',
-                                   'StrippingB2XEtaLb2eta3piLDDLine',
-                                   'StrippingB2XEtaLb2etaGGLLLLine',
-                                   'StrippingB2XEtaLb2etaGGLDDLine',
-                                   'StrippingB2XEtaB2etapKstarLine',
-                                   'StrippingB2XEtaB2eta3piKstarLine',
-                                   'StrippingB2XEtaB2etaGGKstarLine',
-                                   'StrippingB2XEtaLb2pKetapLine',
-                                   'StrippingB2XEtaLb2pKeta3piLine',
-                                   'StrippingB2XEtaLb2pKetaGGLine'
-                                   ]
-                      }
+    'STREAMS'     : ['Bhadron']
     }
 
 class B2XEtaConf(LineBuilder) :

@@ -44,7 +44,7 @@ default_config = {
                      'MassLow'                 : 4800,
                      'MassHigh'                : 5800
                     },
-    'STREAMS'     : ['Bhadron']
+    'STREAMS'     : ['BhadronCompleteEvent']
     }
 
 class Hb2Charged2BodyLines( LineBuilder ) :
