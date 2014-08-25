@@ -37,15 +37,16 @@ def _mcMatch  ( func , obj , *args ) :
     from LoKiCore.functions import strings
     
     if not args : return func ( obj )
-    
-    if 1 == len(args) :
-        lst = args[0]
-        if type ( lst ) in ( list , tuple ) :
-            return func ( obj , strings ( lst ) )
-        return func ( obj , lst )
-    
-    return func ( obj , srings ( args ) ) 
 
+    _args = []
+    for a in args :
+        if isinstance ( a , (tuple,list) ) : _args.append ( strings( a ) )
+        else                               : _args.append ( a ) 
+
+    _args = tuple(_args)
+    
+    return func ( obj ,  *_args  ) 
+        
 # =============================================================================
 def mcMatch ( obj , *args ) :
     """

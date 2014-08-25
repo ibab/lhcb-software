@@ -53,18 +53,20 @@ namespace LoKi
     public:
       // ======================================================================
       /// constructor from the list of TES-locations
-      MCMatcherBase ( const Locations&   locations  ) ;
+      MCMatcherBase ( const Locations&   locations     , 
+                      const std::string& thehead = ""  ) ;
       /// constructor from the list of TES-location
-      MCMatcherBase ( const std::string& location   ) ;
+      MCMatcherBase ( const std::string& location      ) ;
       /// constructor from the list of TES-locations
-      MCMatcherBase ( const std::string& location1  , 
-                      const std::string& location2  ) ;
+      MCMatcherBase ( const std::string& location1     , 
+                      const std::string& location2     ) ;
       /// constructor from the list of TES-locations
-      MCMatcherBase ( const std::string& location1  , 
-                      const std::string& location2  , 
-                      const std::string& location3  ) ;
+      MCMatcherBase ( const std::string& location1     , 
+                      const std::string& location2     , 
+                      const std::string& location3     ) ;
       /// constructor from protopartcile  matching flag
-      MCMatcherBase ( const ProtoPMatch& protoMatch ) ;                
+      MCMatcherBase ( const ProtoPMatch& protoMatch    ,               
+                      const std::string& thehead = ""  ) ;
       // ======================================================================      
       /// virtual destructor
       virtual ~MCMatcherBase() ;
@@ -98,6 +100,8 @@ namespace LoKi
       // ======================================================================
       /// TES locations of relation tables 
       Locations m_locations ;               // TES locations of relation tables 
+      /// the location of MC-particles in TES 
+      std::string m_head    ;           // the location of MC-particles in TES 
       /// the algorithm
       mutable const GaudiAlgorithm* m_alg ;                    // the algorithm
       // ======================================================================      
@@ -119,8 +123,9 @@ namespace LoKi
        *  @param locations TES-locations of relation tables 
        */
       MCSelMatch
-      ( const MCCuts&      cuts      , 
-        const Locations&   locations ) ;
+      ( const MCCuts&      cuts          , 
+        const Locations&   locations     , 
+        const std::string& thehead = ""  ) ;
       /** constructor from decay descriptor and TES-locations of tables 
        *  @param decay the decay desriptor 
        *  @param location TES-location of relation tables 
@@ -154,7 +159,8 @@ namespace LoKi
        */
       MCSelMatch
       ( const MCCuts&      cuts             , 
-        const ProtoPMatch& protoMatch = All ) ;
+        const ProtoPMatch& protoMatch = All , 
+        const std::string& thehead    = ""  ) ;
       // ======================================================================
       /// MANDATORY: virtual destrcutor
       virtual ~MCSelMatch () ;
@@ -203,8 +209,9 @@ namespace LoKi
        *  @param locations TES-locations of relation tables 
        */
       MCTreeMatch
-      ( const iTree&       decay     , 
-        const Locations&   locations ) ;
+      ( const iTree&       decay            , 
+        const Locations&   locations        , 
+        const std::string& thehead    = ""  ) ;
       /** constructor from decay descriptor and TES-locations of tables 
        *  @param decay the decay desriptor 
        *  @param location TES-location of relation tables 
@@ -238,15 +245,17 @@ namespace LoKi
        */
       MCTreeMatch
       ( const iTree&       decay            , 
-        const ProtoPMatch& protoMatch = All ) ;
+        const ProtoPMatch& protoMatch = All , 
+        const std::string& thehead    = ""  ) ;
       // ======================================================================
       /** constructor from decay descriptor and TES-locations of tables 
        *  @param decay the decay desriptor 
        *  @param locations TES-locations of relation tables 
        */
       MCTreeMatch
-      ( const std::string& decay     , 
-        const Locations&   locations ) ;
+      ( const std::string& decay            , 
+        const Locations&   locations        , 
+        const std::string& thehead    = ""  ) ;
       /** constructor from decay descriptor and TES-locations of tables 
        *  @param decay the decay desriptor 
        *  @param location TES-location of relation tables 
@@ -280,7 +289,8 @@ namespace LoKi
        */
       MCTreeMatch
       ( const std::string& decay            , 
-        const ProtoPMatch& protoMatch = All ) ;
+        const ProtoPMatch& protoMatch = All ,
+        const std::string& thehead    = ""  ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~MCTreeMatch() ;
@@ -332,8 +342,9 @@ namespace LoKi
       // ======================================================================
       /// constructor from node descriptor and TES-locations of tables 
       MCNodeMatch
-      ( const iNode&       decay     , 
-        const Locations&   locations ) ;
+      ( const iNode&       decay            , 
+        const Locations&   locations        ,
+        const std::string& thehead    = ""  ) ;
       /// constructor from node descriptor and TES-locations of tables 
       MCNodeMatch
       ( const iNode&       node      , 
@@ -352,7 +363,8 @@ namespace LoKi
       /// constructor from decay descriptor and TES-locations of tables 
       MCNodeMatch
       ( const iNode&       node             , 
-        const ProtoPMatch& protoMatch = All ) ;
+        const ProtoPMatch& protoMatch = All ,
+        const std::string& thehead    = ""  ) ;    
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~MCNodeMatch() ;
