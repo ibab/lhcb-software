@@ -1,7 +1,7 @@
 project MOOREONLINE
 
-use MOORE     MOORE_v22r2
-use ONLINE    ONLINE_v5r9
+use MOORE     MOORE_v23r0
+use ONLINE    ONLINE_v5r10
 
 container       MooreOnlineSys
 build_strategy	with_installarea
