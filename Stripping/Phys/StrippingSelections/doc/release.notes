@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-08-25 - Alvaro Gomes
+ - Line StrippingBc2hhh_BnoC.py properly added.
 
 ! 2014-08-25 - Justine Serrano
  - Add StrippingB2KstTauTau.py, which contains 4 new lines
