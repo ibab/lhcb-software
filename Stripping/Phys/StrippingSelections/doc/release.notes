@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-08-26 - Vanya Belyaev
+ - StrippingBc3h.py
+   make help-printout more informative and much friendly 
+
+! 2014-08-26 - Vanya Belyaev
  - StrippingPrompCharm.py
    add MDST.DST flags for "dicharm"-lines 
 

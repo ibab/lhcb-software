@@ -68,7 +68,6 @@ _default_configuration_ = {
     # 
     'PionCut'   : """
     ( CLONEDIST   > 5000   ) & 
-    ( TRCHI2DOF   < 4      ) &
     ( TRGHOSTPROB < 0.4    ) &
     ( PT          > 750 * MeV               ) & 
     in_range ( 2          , ETA , 4.9       ) &
@@ -80,7 +79,6 @@ _default_configuration_ = {
     #
     'KaonCut'   : """
     ( CLONEDIST   > 5000   ) & 
-    ( TRCHI2DOF   < 4      ) & 
     ( TRGHOSTPROB < 0.4    ) & 
     ( PT          > 750 * MeV               ) & 
     in_range ( 2          , ETA , 4.9       ) &
@@ -92,7 +90,6 @@ _default_configuration_ = {
     #
     'ProtonCut'   : """
     ( CLONEDIST   > 5000    ) & 
-    ( TRCHI2DOF   < 4       ) & 
     ( TRGHOSTPROB < 0.4     ) & 
     ( PT          > 500 * MeV              ) & 
     in_range (  2        , ETA , 4.9       ) &
@@ -522,7 +519,6 @@ if '__main__' == __name__ :
     logger.info ( ' Date   :  %s' % __date__   )
     ##
     clines = set() 
-    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
     for stream in default_config['STREAMS'] :
         lines = default_config['STREAMS'][stream] 
         for l in lines :
@@ -531,14 +527,18 @@ if '__main__' == __name__ :
     ##
     logger.info ( ' The output locations for the default configuration: ' ) 
     _conf = Bc3hConf ( 'Bc3h' , config = default_config['CONFIG'] )
-    _ln   = ' ' + 41*'-' + '+' + 30*'-'
+    ## 
+    _ln   = ' ' + 61*'-' + '+' + 55*'-'
     logger.info ( _ln ) 
-    logger.info ( '  %-40s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( '  %-60s| %-40s | %s ' % ( 'Output location'     ,
+                                             'Stripping line name' ,
+                                             'MDST.DST'            ) ) 
     logger.info ( _ln )
     for l in _conf.lines() :
         lout  = l.outputLocation()
-        lname = l.name() 
-        logger.info ( '  %-40s| %-30s  ' % ( lout, lname ) )
+        lname = l.name()
+        flag  = l.MDSTFlag
+        logger.info ( '  %-60s| %-40s | %s ' % ( lout, lname , flag ) )
         if not lname in clines :
             raise AttributeError ('Unknown Line %s' % lname )
         clines.remove ( lname )
@@ -546,6 +546,14 @@ if '__main__' == __name__ :
     logger.info ( 80*'*'  ) 
     if clines :
         raise AttributeError('Undeclared lines: %s' % clines )
+
+    keys = default_config['CONFIG'].keys()
+    keys.sort()
+    prescale = [ i for i in keys if 0 <= i.find('Prescale') ]
+    other    = [ i for i in keys if not i in prescale       ] 
+    logger.info ( 'Configuration keys are: %s' % other    ) 
+    logger.info ( 'Prescale      keys are: %s' % prescale ) 
+    logger.info ( 80*'*' ) 
     
 # =============================================================================
 # The END 

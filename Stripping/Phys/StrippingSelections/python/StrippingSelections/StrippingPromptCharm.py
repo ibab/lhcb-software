@@ -1470,7 +1470,6 @@ if '__main__' == __name__ :
     logger.info ( ' Date   :  %s' % __date__   )
     ##
     clines = set() 
-    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
     for stream in default_config['STREAMS'] :
         lines = default_config['STREAMS'][stream] 
         for l in lines :
@@ -1505,8 +1504,8 @@ if '__main__' == __name__ :
     keys.sort()
     prescale = [ i for i in keys if 0 <= i.find('Prescale') ]
     other    = [ i for i in keys if not i in prescale       ] 
-    logger.info ( 'Configuration keys are %s' % other    ) 
-    logger.info ( 'Prescale      keys are %s' % prescale ) 
+    logger.info ( 'Configuration keys are: %s' % other    ) 
+    logger.info ( 'Prescale      keys are: %s' % prescale ) 
     logger.info ( 80*'*' ) 
     
 # =============================================================================
