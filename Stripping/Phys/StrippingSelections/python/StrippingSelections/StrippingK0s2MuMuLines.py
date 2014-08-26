@@ -8,11 +8,14 @@ Exported symbols (use python help!):
 
 __author__ = ['Diego Martinez Santos','Xabier Cid Vidal']
 __date__ = '13/07/2011'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 __all__ = ('K0s2MuMuLinesConf',
            'makeNoMuID',
-           'makeK0s2mm'
+           'makeK0s2mm',       
+           'default_name',
+           'default_config',
+           'MSB'
            )
 
 from Gaudi.Configuration import *
@@ -20,6 +23,24 @@ from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+
+default_name = 'K0s2MuMu'
+#### This is the dictionary of all tunable cuts ########
+default_config={
+    'NAME' : default_name,
+    'BUILDERTYPE' : 'K0s2MuMuLinesConf',
+    'WGs'     : [ 'RD' ],
+    'STREAMS' : [ 'Dimuon' ],
+    'CONFIG' : {'NoMuIDLinePrescale'    : 1e-03,
+                'NoMuIDLinePostscale'   : 1,
+                'K0s2mmLinePrescale'  : 1,
+                'K0s2mmLinePostscale'  : 1,
+                'K0s2mmSBLinePrescale'  : 0.1,
+                'K0s2mmSBLinePostscale'  : 1,
+                'minMuPT' : 0,  #MeV
+                'minKsPT' : 0,  #MeV
+                }                
+    }
 
 ## limit of sideband
 MSB = "465"
@@ -63,25 +84,10 @@ class K0s2MuMuLinesConf(LineBuilder) :
     # ('Physics_June2012', 'MOORE_v14r6')
     # dump(0x40990042,lines="Hlt2DiMuonDetached")
     # (MM>0*MeV)& (MINTREE('mu-'==ABSID,MIPCHI2DV(PRIMARY)) > 25 )& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < 4 ) & (PT>600*MeV) & (MINTREE('mu-'==ABSID,PT)>300*MeV) & (VFASPF(VCHI2PDOF)<8 )& (BPVDLS>7 )
-
-    
-    #### This is the dictionary of all tunable cuts ########
-    config_default={
-        'NoMuIDLinePrescale'    : 1e-03,
-        'NoMuIDLinePostscale'   : 1,
-        'K0s2mmLinePrescale'  : 1,
-        'K0s2mmLinePostscale'  : 1,
-        'K0s2mmSBLinePrescale'  : 0.1,
-        'K0s2mmSBLinePostscale'  : 1,
-        #'minMuPT' : 300,  #MeV
-        #'minKsPT' : 600,  #MeV
-        'minMuPT' : 0,  #MeV
-        'minKsPT' : 0,  #MeV
-        }                
-    
+  
 
     def __init__(self, 
-                 name = 'K0s2MuMu',
+                 name = default_name,
                  config = None) :
 
         LineBuilder.__init__(self, name, config)
@@ -95,23 +101,29 @@ class K0s2MuMuLinesConf(LineBuilder) :
 
        
         self.NoMuIDLine = StrippingLine(norm_name+"Line",
-                                            prescale = config['NoMuIDLinePrescale'],
-                                            postscale = config['NoMuIDLinePostscale'],
-                                            algos = [ self.NoMuID ]
-                                            )
-
+                                        prescale = config['NoMuIDLinePrescale'],
+                                        postscale = config['NoMuIDLinePostscale'],
+                                        algos = [ self.NoMuID ],
+                                        RequiredRawEvents = ["Muon"],
+                                        MDSTFlag = True
+                                        )
+        
 
         self.MuIDSBLine = StrippingLine(name+"SBLine",
                                         prescale = config['K0s2mmSBLinePrescale'],
                                         postscale = config['K0s2mmSBLinePostscale'],
-                                        algos = [ self.MuIDSB ]
+                                        algos = [ self.MuIDSB ],
+                                        RequiredRawEvents = ["Muon"],
+                                        MDSTFlag = True
                                         )
         
         
         self.MuIDLine = StrippingLine(name+"Line",
                                       prescale = config['K0s2mmLinePrescale'],
                                       postscale = config['K0s2mmLinePostscale'],
-                                      algos = [ self.MuID ]
+                                      algos = [ self.MuID ],
+                                      RequiredRawEvents = ["Muon"],
+                                      MDSTFlag = True
                                       )
         
         

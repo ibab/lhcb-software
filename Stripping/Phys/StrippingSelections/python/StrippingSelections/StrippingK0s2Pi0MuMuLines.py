@@ -9,7 +9,7 @@ __author__ = ['Xabier Cid Vidal','Diego Martinez Santos']
 __date__ = '13/12/2013'
 __version__ = '$Revision: 1.0 $'
 
-__all__ = ('config_default','K0s2Pi0MuMuLinesConf')
+__all__ = ('default_config','default_name','K0s2Pi0MuMuLinesConf')
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
@@ -17,23 +17,28 @@ from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 
-
+default_name = 'K0s2Pi0MuMu'
 #### This is the dictionary of all tunable cuts ########
-config_default={
-    'SignalLinePrescale'    : 1,
-    'SignalLinePostscale'   : 1,
-    'SidebandLinePrescale'  : 0.2,
-    'SidebandLinePostscale' : 1,
-    "muIpChi2"              : 36,#25,
-    "muTrChi2Dof"           : 5,
-    "KSsignalminMass"       : 300,
-    "KSsignalmaxMass"       : 600,
-    "KSsidebminMass"        : 600,
-    "KSsidebmaxMass"        : 1000,
-    "KSdoca"                : 0.3,
-    "KSdira"                : 0,
-    "KSlife"                : 0.06*89.53,#0.05*89.53,
-    "KSip"                  : 0.9#1
+default_config = {
+    'NAME'        : default_name,
+    'BUILDERTYPE' : 'K0s2Pi0MuMuLinesConf',
+    'WGs'         : [ 'RD' ],
+    'STREAMS'     : [ 'Dimuon' ],
+    'CONFIG':{'SignalLinePrescale'    : 1,
+              'SignalLinePostscale'   : 1,
+              'SidebandLinePrescale'  : 0.2,
+              'SidebandLinePostscale' : 1,
+              "muIpChi2"              : 36,
+              "muTrChi2Dof"           : 5,
+              "KSsignalminMass"       : 300,
+              "KSsignalmaxMass"       : 600,
+              "KSsidebminMass"        : 600,
+              "KSsidebmaxMass"        : 1000,
+              "KSdoca"                : 0.3,
+              "KSdira"                : 0,
+              "KSlife"                : 0.06*89.53,
+              "KSip"                  : 0.9
+              },
     }                
   
 
@@ -71,7 +76,7 @@ class K0s2Pi0MuMuLinesConf(LineBuilder) :
   
     
     def __init__(self, 
-                 name = 'K0s2Pi0MuMu',
+                 name = default_name,
                  config = None) :
 
         LineBuilder.__init__(self, name, config)
@@ -90,13 +95,17 @@ class K0s2Pi0MuMuLinesConf(LineBuilder) :
         self.signalLine = StrippingLine(norm_name+"Line",
                                         prescale = config[ 'SignalLinePrescale'],
                                         postscale = config['SignalLinePostscale'],
-                                        algos = [ self.signal]
+                                        algos = [ self.signal ],
+                                        RequiredRawEvents = ["Muon","Calo"],
+                                        MDSTFlag = True
                                         )
-
+        
         self.sidebandLine = StrippingLine(side_name+"Line",
                                           prescale = config[ 'SidebandLinePrescale'],
                                           postscale = config['SidebandLinePostscale'],
-                                          algos = [ self.sideband]
+                                          algos = [ self.sideband ],
+                                          RequiredRawEvents = ["Muon","Calo"],
+                                          MDSTFlag = True
                                           )
         
         self.registerLine(self.signalLine)

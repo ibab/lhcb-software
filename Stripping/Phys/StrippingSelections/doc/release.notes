@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Xabier Cid Vidal
+ - Minor changes in KsMuMu and KsPi0MuMu lines (adapt to new format, declare MDST, add few raw banks)
+ - Changes in BMuNu line: add multiplicity cut, declare MDST.DST, adapt to new format, add several RelatedInfoTools
+
+
+
 ! 2014-08-26 - Vanya Belyaev
  -  StrippingCharmAssociative 
     Declare dimuon + high-pt gamma for MDST.DST 
