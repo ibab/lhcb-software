@@ -960,8 +960,8 @@ Kshort2MuMuMuMu = {
                 'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
                 'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
 
-                'Kshort2MuMuMuMuLinePrescale'    : 1
-                'Kshort2MuMuMuMuLinePostscale'   : 1
+                'Kshort2MuMuMuMuLinePrescale'    : 1,
+                'Kshort2MuMuMuMuLinePostscale'   : 1,
                 },
     'STREAMS' : ['Leptonic']
     }
