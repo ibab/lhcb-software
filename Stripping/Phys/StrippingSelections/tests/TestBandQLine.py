@@ -199,7 +199,7 @@ def configureStrippingTest(id, WGs):
     sr.Correlation = True
   except:
     pass
-  DaVinci().appendToMainSequence ( [ sr.sequence() ] )
+  DaVinci().appendToMainSequence ( [ sr ] )
   
 
   pc = PersistencyConfigurator( conf_stripping.getAlgorithm(), 
