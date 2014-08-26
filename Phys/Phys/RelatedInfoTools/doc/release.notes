@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-08-26 - Xabier Cid Vidal
+ - Added tools to calculate variables related to Jets Isolation, Cylinder-type Isolation and ParticleFlow. The last two are for BMuNu analysis. Package requirements also modified to access LoKi tools.
+
 ! 2014-08-23 - Anton Poluektov 
  - Fixed problem with selections which filter common particles. 
 
