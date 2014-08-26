@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Julien Cogan
+ - StrippingZVTOP : add a new line to select pairs of same sign taus decaying into 3 pions, set the MDST flag to True 
+   and add a default_config dictionnary
+
 ! 2014-08-26 - Rafael Coutinho
  - Fixed path to the MVA weights in the B2KShh Stripping
 

@@ -10,6 +10,8 @@ __version__ = '$Revision: 1.2 $'
 config_params =  {
   'B2TauTau_LinePrescale'      : 1,
   'B2TauTau_LinePostscale'     : 1,
+  'B2TauTauSS_LinePrescale'      : 1,
+  'B2TauTauSS_LinePostscale'     : 1,
   'High_LinePrescale'          : 1,
   'High_LinePostscale'         : 1,
   'PT_HAD_ALL_FINAL_STATE'        : '1200',  # MeV
@@ -57,7 +59,8 @@ config_params =  {
   'HltFilter'               : "HLT_PASS_RE('Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision')"
 }
 
-__all__ = ('ZVTOP_Conf')
+__all__ = ('ZVTOP_Conf',
+           'default_config')
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -74,6 +77,13 @@ HLT_DECISIONS_HAD   = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision
 HLT1_DECISIONS_TIS  = "Hlt1TrackAllL0Decision"
 HLT2_DECISIONS_TIS  = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
 
+default_config = {'NAME'       : 'ZVTOP',
+                  'BUILDERTYPE': 'ZVTOP_Conf',
+                  'CONFIG'     : config_params,
+                  'WGs'    : [ 'RD' ],
+                  'STREAMS'     : ['Bhadron']
+                  }
+
 class ZVTOP_Conf(LineBuilder) :
   
   """
@@ -85,6 +95,8 @@ class ZVTOP_Conf(LineBuilder) :
   
   __configuration_keys__ = ('B2TauTau_LinePrescale',
                             'B2TauTau_LinePostscale',
+                            'B2TauTauSS_LinePrescale',
+                            'B2TauTauSS_LinePostscale',
                             'High_LinePrescale',
                             'High_LinePostscale',
                             'PT_HAD_ALL_FINAL_STATE',
@@ -157,9 +169,9 @@ class ZVTOP_Conf(LineBuilder) :
                                         config     = config)
     
     #
-    selB2TauTau     = self._makeB2TauTau(   name    = name,
-                                            tauSel  = selTau,
-                                            config  = config)
+    selB2TauTau,selB2TauTauSS     = self._makeB2TauTau(   name    = name,
+                                                          tauSel  = selTau,
+                                                          config  = config)
     #
     self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
                                         #    HLT = config['HltFilter'],
@@ -167,19 +179,32 @@ class ZVTOP_Conf(LineBuilder) :
                                         prescale    = config['B2TauTau_LinePrescale'],
                                         postscale   = config['B2TauTau_LinePostscale'],
                                         #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
+                                        MDSTFlag = True,
                                         selection   = selB2TauTau
                                         )
+
+    self.TauTauSS_Line  = StrippingLine(name+"_TauTauSS_Line",
+                                        #    HLT = config['HltFilter'],
+                                        #    self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
+                                        prescale    = config['B2TauTauSS_LinePrescale'],
+                                        postscale   = config['B2TauTauSS_LinePostscale'],
+                                        #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
+                                        MDSTFlag = True,
+                                        selection   = selB2TauTauSS
+                                        ) 
     
     self.High_Line    = StrippingLine(name+"_High_Line",
                                       #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                       prescale    = config['High_LinePrescale'],
                                       postscale   = config['High_LinePostscale'],
                                       #                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
+                                      MDSTFlag = True,
                                       selection   = selHigh
                                       )
     
     #
     self.registerLine( self.TauTau_Line )
+    self.registerLine( self.TauTauSS_Line )
     self.registerLine( self.High_Line )
     
   #####################################################
@@ -316,14 +341,24 @@ class ZVTOP_Conf(LineBuilder) :
     "(min(CHILD(MIPCHI2DV(PRIMARY),1),CHILD(MIPCHI2DV(PRIMARY),2)) > "   + config['IPCHI2_B_TAU_CHILD_WORSE']+") & "\
     "(in_range("+config['MCOR_LOW_B']+"*MeV,MCOR,"+config['MCOR_HIGH_B']+"*MeV))"    
     """    
-    _CombineTau = CombineParticles( DecayDescriptors = ["B0 -> tau+ tau-"],
-                                    CombinationCut   = _combcut,
-                                    MotherCut        = _bcut,
-                                    Preambulo        = preambulo)
+    _CombineTauOS = CombineParticles( DecayDescriptors = ["B0 -> tau+ tau-"],
+                                      CombinationCut   = _combcut,
+                                      MotherCut        = _bcut,
+                                      Preambulo        = preambulo)
+    _CombineTauSS = CombineParticles( DecayDescriptors = ["[B0 -> tau+ tau+]cc"],
+                                      CombinationCut   = _combcut,
+                                      MotherCut        = _bcut,
+                                      Preambulo        = preambulo)
     
-    return Selection(name+"_TauTau",
-                     Algorithm          = _CombineTau,
-                     RequiredSelections = [ tauSel ] )
+    selTauTauOS = Selection(name+"_TauTau",
+                            Algorithm          = _CombineTauOS,
+                            RequiredSelections = [ tauSel ] )
+    
+    selTauTauSS = Selection(name+"_TauTauSS",
+                            Algorithm          = _CombineTauSS,
+                            RequiredSelections = [ tauSel ] )
+
+    return selTauTauOS,selTauTauSS
   
   #####################################################
   # TISTOSING
