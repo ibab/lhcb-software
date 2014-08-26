@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Vanya Belyaev
+ -  StrippingCharmAssociative 
+    Declare dimuon + high-pt gamma for MDST.DST 
+
+
 ! 2014-08-26 - Stefano Perazzini
  - Hotfix to some lines
 

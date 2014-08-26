@@ -497,6 +497,7 @@ class StrippingCharmAssociativeConf(LineBuilder) :
             prescale = self [ 'DiMuonAndGammaPrescale' ] , ## ATTENTION! Prescale here !!
             checkPV  = self [ 'CheckPV']                 ,
             algos    = [ self . DiMuonAndGamma () ]      ,
+            MDSTFlag = True                              , ## try to save it on MDST.DST 
             ) ,
             ##
             StrippingLine (
