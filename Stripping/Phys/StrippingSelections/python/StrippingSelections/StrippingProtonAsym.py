@@ -28,7 +28,8 @@ from Configurables import CombineParticles, FilterDesktop
 from StandardParticles import (
     StdLooseANNKaons,
     StdLooseANNPions,
-    StdLooseANNProtons
+    StdLooseANNProtons,
+    StdAllNoPIDsProtons
 )
 from PhysSelPython.Wrappers import Selection
 from StrippingUtils.Utils import LineBuilder
@@ -48,10 +49,32 @@ default_config = {
         # Are the candidates to be stored on microDST, as opposed to full?
         "MicroDST":  True,
 
-        # Fraction of candidates to randomly throw away before stripping
-        "Prescale": 1.0,
-        # Fraction of candidates to randomly throw away after stripping
-        "Postscale": 1.0,
+        # Prescales and postscales set the fraction of candidates to randomly
+        # throw away before and after stripping, respectively
+        "PrescaleBd2LcppipiLc2Kpi": 1.0,
+        "PostscaleBd2LcppipiLc2Kpi": 1.0,
+        "PrescaleBu2LcppipipiLc2Kpi": 1.0,
+        "PostscaleBu2LcppipipiLc2Kpi": 1.0,
+        "PrescaleLb2LcpiLc2Kpi": 1.0,
+        "PostscaleLb2LcpiLc2Kpi": 1.0,
+        "PrescaleLb2LcpipipiLc2Kpi": 1.0,
+        "PostscaleLb2LcpipipiLc2Kpi": 1.0,
+        "PrescaleSc2LcpipLc2Kpi": 1.0,
+        "PostscaleSc2LcpipLc2Kpi": 1.0,
+        "PrescaleSc2LcpimLc2Kpi": 1.0,
+        "PostscaleSc2LcpimLc2Kpi": 1.0,
+        "PrescaleLcst2LcpipiLc2Kpi": 1.0,
+        "PostscaleLcst2LcpipiLc2Kpi": 1.0,
+
+        # HLT filters require the events passing the line to have a positive
+        # decision on the trigger line(s) matching the regex
+        "HLTBd2LcppipiLc2Kpi": None,
+        "HLTBu2LcppipipiLc2Kpi": None,
+        "HLTLb2LcpiLc2Kpi": None,
+        "HLTLb2LcpipipiLc2Kpi": None,
+        "HLTSc2LcpipLc2Kpi": "HLT_PASS_RE('Hlt2.*CharmHadD02HHXDst.*Decision')",
+        "HLTSc2LcpimLc2Kpi": "HLT_PASS_RE('Hlt2.*CharmHadD02HHXDst.*Decision')",
+        "HLTLcst2LcpipiLc2Kpi": None,
 
         # Partial Lambda_c mass window, taken from TGenPhaseSpace studies
         "LcPartialMassMin": 620*MeV,
@@ -130,7 +153,8 @@ default_config = {
             "StrippingLb2LcpiLc2KpiProtonAsymLine",
             "StrippingLb2LcpipipiLc2KpiProtonAsymLine",
             "StrippingSc2LcpipLc2KpiProtonAsymLine",
-            "StrippingSc2LcpimLc2KpiProtonAsymLine"
+            "StrippingSc2LcpimLc2KpiProtonAsymLine",
+            "StrippingLcst2LcpipiLc2KpiLine"
         ]
     }
 }
@@ -146,6 +170,7 @@ class ProtonAsymBuilder(LineBuilder):
     sc_pim_decay = "[Sigma_c0 -> Lambda_c+ pi-]cc"
     lcst_decay = "[Lambda_c(2595)+ -> Lambda_c+ pi- pi+]cc"
     lc_partial_decay = "[Lambda_c+ -> K- pi+]cc"
+    lc_full_decay = "[Lambda_c+ -> p+ K- pi+]cc"
 
     # Allowed configuration keys
     __configuration_keys__ = default_config["CONFIG"].keys()
@@ -221,14 +246,14 @@ class ProtonAsymBuilder(LineBuilder):
             "VFASPF(VCHI2/VDOF) < {0[BVCHI2DOF]}",
             "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[BMinZ]}"
         ], self.config)
-        bd = self.make_partial_mother(
+        bd = self.make_partial_and_full_mothers(
             "BdSelectionFor{0}".format(self.name),
             self.bd_decay,
             [lc, self.pions, self.protons],
             b_combination_cuts,
             b_mother_cuts
         )
-        bu = self.make_partial_mother(
+        bu = self.make_partial_and_full_mothers(
             "BuSelectionFor{0}".format(self.name),
             self.bu_decay,
             [lc, self.pions, self.protons],
@@ -264,14 +289,14 @@ class ProtonAsymBuilder(LineBuilder):
             "M > {0[LbToLc3piPartialMassMin]}",
             lb_mother_cuts
         ], self.config)
-        lb_1pi = self.make_partial_mother(
+        lb_1pi = self.make_partial_and_full_mothers(
             "Lb1PiSelectionFor{0}".format(self.name),
             self.lb_1pi_decay,
             [lc, self.pions],
             lb_1pi_combination_cuts,
             lb_1pi_mother_cuts
         )
-        lb_3pi = self.make_partial_mother(
+        lb_3pi = self.make_partial_and_full_mothers(
             "Lb3PiSelectionFor{0}".format(self.name),
             self.lb_3pi_decay,
             [lc, self.pions],
@@ -291,14 +316,14 @@ class ProtonAsymBuilder(LineBuilder):
             "VFASPF(VCHI2/VDOF) < {0[ScVCHI2DOF]}",
             "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[ScMinZ]}"
         ], self.config)
-        sc_pip = self.make_partial_mother(
+        sc_pip = self.make_partial_and_full_mothers(
             "ScPipSelectionFor{0}".format(self.name),
             self.sc_pip_decay,
             [lc, self.pions],
             sc_combination_cuts,
             sc_mother_cuts
         )
-        sc_pim = self.make_partial_mother(
+        sc_pim = self.make_partial_and_full_mothers(
             "ScPimSelectionFor{0}".format(self.name),
             self.sc_pim_decay,
             [lc, self.pions],
@@ -318,7 +343,7 @@ class ProtonAsymBuilder(LineBuilder):
             "VFASPF(VCHI2/VDOF) < {0[LcstVCHI2DOF]}",
             "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[LcstMinZ]}"
         ], self.config)
-        lcst = self.make_partial_mother(
+        lcst = self.make_partial_and_full_mothers(
             "LcstSelectionFor{0}".format(self.name),
             self.lcst_decay,
             [lc, self.pions],
@@ -326,48 +351,42 @@ class ProtonAsymBuilder(LineBuilder):
             lcst_mother_cuts
         )
 
-        # Create the stripping lines
-        bd_line = self.make_line(
-            "Bd2LcppipiLc2Kpi{0}Line".format(name),
-            bd
-        )
-        bu_line = self.make_line(
-            "Bu2LcppipipiLc2Kpi{0}Line".format(name),
-            bu
-        )
-        lb_1pi_line = self.make_line(
-            "Lb2LcpiLc2Kpi{0}Line".format(name),
-            lb_1pi
-        )
-        lb_3pi_line = self.make_line(
-            "Lb2LcpipipiLc2Kpi{0}Line".format(name),
-            lb_3pi
-        )
-        sc_pip_line = self.make_line(
-            "Sc2LcpipLc2Kpi{0}Line".format(name),
-            sc_pip
-        )
-        sc_pim_line = self.make_line(
-            "Sc2LcpimLc2Kpi{0}Line".format(name),
-            sc_pim
-        )
-        lcst_line = self.make_line(
-            "Lcst2LcpipiLc2Kpi{0}Line".format(name),
-            lcst
-        )
+        # Create the stripping lines, first partial..
+        bd_partial_line = self.make_line("Bd2LcppipiLc2Kpi", bd[0])
+        bu_partial_line = self.make_line("Bu2LcppipipiLc2Kpi", bu[0])
+        lb_partial_1pi_line = self.make_line("Lb2LcpiLc2Kpi", lb_1pi[0])
+        lb_partial_3pi_line = self.make_line("Lb2LcpipipiLc2Kpi", lb_3pi[0])
+        sc_partial_pip_line = self.make_line("Sc2LcpipLc2Kpi", sc_pip[0])
+        sc_partial_pim_line = self.make_line("Sc2LcpimLc2Kpi", sc_pim[0])
+        lcst_partial_line = self.make_line("Lcst2LcpipiLc2Kpi", lcst[0])
+        # .. then full
+        bd_full_line = self.make_line("Bd2LcppipiLc2pKpi", bd[1])
+        bu_full_line = self.make_line("Bu2LcppipipiLc2pKpi", bu[1])
+        lb_full_1pi_line = self.make_line("Lb2LcpiLc2pKpi", lb_1pi[1])
+        lb_full_3pi_line = self.make_line("Lb2LcpipipiLc2pKpi", lb_3pi[1])
+        sc_full_pip_line = self.make_line("Sc2LcpipLc2pKpi", sc_pip[1])
+        sc_full_pim_line = self.make_line("Sc2LcpimLc2pKpi", sc_pim[1])
+        lcst_full_line = self.make_line("Lcst2LcpipiLc2pKpi", lcst[1])
 
         # Make the lines visible to the LineBuilder
-        self.registerLine(bu_line)
-        self.registerLine(bd_line)
-        self.registerLine(lb_1pi_line)
-        self.registerLine(lb_3pi_line)
-        self.registerLine(sc_pip_line)
-        self.registerLine(sc_pim_line)
-        self.registerLine(lcst_line)
+        self.registerLine(bu_partial_line)
+        self.registerLine(bd_partial_line)
+        self.registerLine(lb_partial_1pi_line)
+        self.registerLine(lb_partial_3pi_line)
+        self.registerLine(sc_partial_pip_line)
+        self.registerLine(sc_partial_pim_line)
+        self.registerLine(lcst_partial_line)
 
-        # TODO if we're on MicroDST, need to save the protons
+        # Don't need to save the full reconstruction on DST, all tracks are
+        # stored anyway
         if self.config["MicroDST"]:
-            pass
+            self.registerLine(bu_full_line)
+            self.registerLine(bd_full_line)
+            self.registerLine(lb_full_1pi_line)
+            self.registerLine(lb_full_3pi_line)
+            self.registerLine(sc_full_pip_line)
+            self.registerLine(sc_full_pim_line)
+            self.registerLine(lcst_full_line)
 
     def make_line(self, name, selection):
         """Return StrippingLine object for the line.
@@ -378,12 +397,56 @@ class ProtonAsymBuilder(LineBuilder):
         name -- String to call the StrippingLine instance
         selection -- Selection instance
         """
+        # The fully reconstructed lines have no pre/postscales
+        if "Lc2pKpi" in name:
+            prescale = 1.0
+            postscale = 1.0
+        else:
+            prescale = self.config["Prescale{0}".format(name)]
+            postscale = self.config["Postscale{0}".format(name)]
+        # The full lines share the triggers of the partial
+        hlt = self.config["HLT{0}".format(name.replace("Lc2pKpi", "Lc2Kpi"))]
         return StrippingLine(
-            name,
-            prescale=self.config["Prescale"],
-            postscale=self.config["Postscale"],
-            selection=selection
+            "{0}{1}Line".format(name, self.name),
+            prescale=prescale,
+            postscale=postscale,
+            selection=selection,
+            HLT=hlt
         )
+
+    def make_partial_and_full_mothers(self, name, decay, required_selections,
+                                      combination_cuts, mother_cuts):
+        """Return two Selections object, one for each mother.
+
+        Keyword arguments:
+        See make_partial_mother.
+        """
+        partial = self.make_partial_mother(name, decay, required_selections,
+                                      combination_cuts, mother_cuts)
+        full_required_sels = [partial, StdAllNoPIDsProtons]
+        full = self.make_full_mother(name, decay, full_required_sels)
+        return (partial, full)
+
+    def make_full_mother(self, name, decay, required_selections):
+        """Make a B decay using a fully reconstructed Lambda_c+ decay.
+
+        Keyword arguments:
+        name -- String to call the mother Selection instance
+        decay -- Decay descriptor for the decay
+        required_selections -- Required Selection instances for daughters
+        """
+        mother = CombineParticles(
+            name="CombineFull{0}".format(name),
+            DecayDescriptors=[decay, self.lc_full_decay],
+            CombinationCut="AALL",
+            MotherCut="ALL"
+        )
+        selection = Selection(
+            name="Full{0}".format(name),
+            Algorithm=mother,
+            RequiredSelections=required_selections
+        )
+        return selection
 
     def make_partial_mother(self, name, decay, required_selections,
                             combination_cuts, mother_cuts):
