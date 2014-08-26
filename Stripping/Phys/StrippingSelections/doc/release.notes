@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Stefano Perazzini
+ - Added StrippingHb2V0V0h to __init__.py
+
 ! 2014-08-26 - Hannah Mary Evans
  - StrippingBs2MuMuLines: added isolation variables and jet variables, implemented looser cuts, asked for MDST support, added default_config dictionary
 

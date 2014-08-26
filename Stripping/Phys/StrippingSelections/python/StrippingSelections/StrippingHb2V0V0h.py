@@ -10,7 +10,8 @@ Exported symbols (use python help!):
 __author__ = ['Rafael Coutinho']
 __date__ = '18/08/2014'
 __version__ = 'Stripping21'
-__all__ = 'Hb2V0V0hConf'
+__all__ = {'Hb2V0V0hConf',
+           'default_config'}
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -24,49 +25,48 @@ default_config = {
     'NAME'        : 'Hb2V0V0h',
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Hb2V0V0hConf',
-    'CONFIG'      : {
-                  'Trk_Chi2'                : 3.0,
-                  'Trk_GhostProb'           : 0.3,
-                  'V0_DD_MassWindow'        : 30.0,
-                  'V0_DD_VtxChi2'           : 12.0,
-                  'V0_DD_FDChi2'            : 50.0,
-                  'V0_DD_Pmin'              : 6000.0,
-                  'V0_LL_MassWindow'        : 20.0,
-                  'V0_LL_VtxChi2'           : 12.0,
-                  'V0_LL_FDChi2'            : 80.0,
-                  'B_Mlow'                  : 1279.0,
-                  'B_Mhigh'                 : 921.0,
-                  'B_APTmin'                : 1000.0,
-                  'BDaug_MedPT_PT'          : 800.0,
-                  'BDaug_MaxPT_IP'          : 0.05,
-                  'BDaug_DD_maxDocaChi2'    : 5.0,
-                  'BDaug_LL_maxDocaChi2'    : 5.0,
-                  'BDaug_DD_PTsum'          : 3000.0,
-                  'BDaug_LL_PTsum'          : 3000.0,
-                  'B_Dira'                  : 0.999,
-                  'B_VtxChi2'               : 12.0,
-                  'B_FDChi2'                : 50.0,
-                  'B_IPCHI2wrtPV'           : 8.0,
-                  'GEC_MaxTracks'           : 250,
-                  'Prescale'                : 1.0,
-                  'Prescale_SameSign'       : 1.0,
-                  'Postscale'               : 1.0,
-                  'RelatedInfoTools'        : [ { "Type" : "RelInfoConeVariables"
-                                                , "ConeAngle" : 1.0
-                                                , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                                                , "Location"  : 'P2ConeVar1'},
-                                                { "Type" : "RelInfoConeVariables"
-                                                , "ConeAngle" : 1.5
-                                                , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                                                , "Location"  : 'P2ConeVar2'},
-                                                { "Type" : "RelInfoConeVariables"
-                                                , "ConeAngle" : 1.7
-                                                , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                                                , "Location"  : 'P2ConeVar2'},
-                                                {'Type' : 'RelInfoVertexIsolation'
-                                                , 'Location': "VtxIsolationInfo"  }
-                                                ]
-                  },
+    'CONFIG'      : {'Trk_Chi2'                : 3.0,
+                     'Trk_GhostProb'           : 0.3,
+                     'V0_DD_MassWindow'        : 30.0,
+                     'V0_DD_VtxChi2'           : 12.0,
+                     'V0_DD_FDChi2'            : 50.0,
+                     'V0_DD_Pmin'              : 6000.0,
+                     'V0_LL_MassWindow'        : 20.0,
+                     'V0_LL_VtxChi2'           : 12.0,
+                     'V0_LL_FDChi2'            : 80.0,
+                     'B_Mlow'                  : 1279.0,
+                     'B_Mhigh'                 : 921.0,
+                     'B_APTmin'                : 1000.0,
+                     'BDaug_MedPT_PT'          : 800.0,
+                     'BDaug_MaxPT_IP'          : 0.05,
+                     'BDaug_DD_maxDocaChi2'    : 5.0,
+                     'BDaug_LL_maxDocaChi2'    : 5.0,
+                     'BDaug_DD_PTsum'          : 3000.0,
+                     'BDaug_LL_PTsum'          : 3000.0,
+                     'B_Dira'                  : 0.999,
+                     'B_VtxChi2'               : 12.0,
+                     'B_FDChi2'                : 50.0,
+                     'B_IPCHI2wrtPV'           : 8.0,
+                     'GEC_MaxTracks'           : 250,
+                     'Prescale'                : 1.0,
+                     'Prescale_SameSign'       : 1.0,
+                     'Postscale'               : 1.0,
+                     'RelatedInfoTools'        : [ { "Type" : "RelInfoConeVariables"
+                                                     , "ConeAngle" : 1.0
+                                                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                                                     , "Location"  : 'P2ConeVar1'},
+                                                   { "Type" : "RelInfoConeVariables"
+                                                     , "ConeAngle" : 1.5
+                                                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                                                     , "Location"  : 'P2ConeVar2'},
+                                                   { "Type" : "RelInfoConeVariables"
+                                                     , "ConeAngle" : 1.7
+                                                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                                                     , "Location"  : 'P2ConeVar2'},
+                                                   {'Type' : 'RelInfoVertexIsolation'
+                                                    , 'Location': "VtxIsolationInfo"  }
+                                                   ]
+                     },
     'STREAMS'     : { 'Bhadron' : ['StrippingHb2V0V0h_KSKShLL_Line',
                                    'StrippingHb2V0V0h_KSLzhLL_Line',
                                    'StrippingHb2V0V0h_LzLzhLL_Line',
