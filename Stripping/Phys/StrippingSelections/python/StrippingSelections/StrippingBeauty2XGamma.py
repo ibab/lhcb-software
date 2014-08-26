@@ -528,7 +528,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                           MDSTFlag = True,
                                           RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
-        B2XG3pi_VanyaName = self.name + "3pi_Vanya_"
+        B2XG3pi_VanyaName = self.name + "3pi_"
         self.RadiativeB2XG3pi_Vanya = makeB2B2XG3piGamma ( B2XG3pi_VanyaName,
                                                            triTrkList=self.TriTrackListVanya,
                                                            photons=self.Photon,
@@ -677,7 +677,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                           MDSTFlag = True,
                                           RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
-        B2XG4piVanyaName = self.name + "4piVanya_"
+        B2XG4piVanyaName = self.name + "4pi_"
         self.RadiativeB2XG4piVanya = makeB2B2XG4piGamma ( B2XG4piVanyaName,
                                                           fourTrkList=self.FourTrackListVanya,
                                                           photons=self.Photon,
@@ -897,17 +897,17 @@ class Beauty2XGammaConf(LineBuilder) :
         self.registerLine(self.B2XG2piCNVLine)
         self.registerLine(self.B2XGpiKsLine)
 
-        self.registerLine(self.B2XG3piLine)
+#        self.registerLine(self.B2XG3piLine)
         self.registerLine(self.B2XG3pi_VanyaLine)
-        self.registerLine(self.B2XG3pi_altLine)
+#        self.registerLine(self.B2XG3pi_altLine)
         self.registerLine(self.B2XG3piCNVLine)
         self.registerLine(self.B2XG2pipi0RLine)
         self.registerLine(self.B2XG2pipi0MLine)
         self.registerLine(self.B2XG2piKsLine)
 
-        self.registerLine(self.B2XG4piLine)
+#        self.registerLine(self.B2XG4piLine)
         self.registerLine(self.B2XG4piVanyaLine)
-        self.registerLine(self.B2XG4pi_2rhoLine)
+#        self.registerLine(self.B2XG4pi_2rhoLine)
         self.registerLine(self.B2XG3piKsLine)
         self.registerLine(self.B2XG3pipi0RLine)
         self.registerLine(self.B2XG3pipi0MLine)

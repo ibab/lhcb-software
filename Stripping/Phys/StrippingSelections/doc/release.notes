@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Pablo Ruiz Valls
+ - Cleanup in StrippingBeauty2XGamma
 
 ! 2014-08-26 - Xabier Cid Vidal
  - Updated WeAKTJets and WmuAKTJets to the standard style
