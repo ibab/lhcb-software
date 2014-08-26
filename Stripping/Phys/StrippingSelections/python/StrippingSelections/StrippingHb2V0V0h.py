@@ -21,6 +21,7 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsPions as Pions
 
 default_config = {
+    'NAME'        : 'Hb2V0V0h',
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Hb2V0V0hConf',
     'CONFIG'      : {
