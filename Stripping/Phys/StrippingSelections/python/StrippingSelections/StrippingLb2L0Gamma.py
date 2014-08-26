@@ -40,9 +40,11 @@ default_config = {'NAME'        : 'StrippingLb2L0Gamma',
                                    'Track_Chi2ndf_Max'           : 3.0,
                                    'Track_MinChi2ndf_Max'        : 2.0,
                                    'Track_GhostProb_Max'         : 0.4,
-                                   'Track_IPChi2_Min'            : 16.0,
-                                   'Track_Pt_Min'                : 300.0,
-                                   'Track_P_Min'                 : 1000.0,
+                                   'TrackLL_IPChi2_Min'          : 16.0,
+                                   'Pion_P_Min'                  : 2000.0,
+                                   'Proton_P_Min'                : 7000.0, # Can increase
+                                   'Pion_Pt_Min'                 : 300.0,
+                                   'Proton_Pt_Min'               : 800.0, # Can increase
                                    # Lambda0 cuts
                                    'Lambda0_VtxChi2_Max'         : 9.0,
                                    'Lambda0LL_MassWindow'        : 20.0,
@@ -56,8 +58,9 @@ default_config = {'NAME'        : 'StrippingLb2L0Gamma',
                                    # Lambda_b cuts
                                    'Lambdab_VtxChi2_Max'         : 9.0,
                                    'Lambdab_Pt_Min'              : 1000.0,
+                                   'Lambdab_SumPt_Min'           : 5000.0,
                                    'Lambdab_IPChi2_Max'          : 9.0,
-                                   'Lambdab_MTDOCAChi2_Max'      : 10.0, # Can be lowered to 7
+                                   'Lambdab_MTDOCAChi2_Max'      : 7.0,
                                    'Lambdab_MassWindow'          : 1100.0,
                                   }
                  }
@@ -69,10 +72,12 @@ class StrippingLb2L0GammaConf(LineBuilder):
                               'HLT'                        ,
                               'Track_Chi2ndf_Max'          ,
                               'Track_GhostProb_Max'        ,
-                              'Track_IPChi2_Min'           ,
                               'Track_MinChi2ndf_Max'       ,
-                              'Track_Pt_Min'               ,
-                              'Track_P_Min'                ,
+                              'TrackLL_IPChi2_Min'         ,
+                              'Pion_P_Min'                 ,
+                              'Proton_P_Min'               ,
+                              'Pion_Pt_Min'                ,
+                              'Proton_Pt_Min'              ,
                               'Lambda0_VtxChi2_Max'        ,
                               'Lambda0LL_MassWindow'       ,
                               'Lambda0DD_MassWindow'       ,
@@ -83,6 +88,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
                               'PhotonCnv_VtxChi2_Max'      ,
                               'Lambdab_VtxChi2_Max'        ,
                               'Lambdab_Pt_Min'             ,
+                              'Lambdab_SumPt_Min'          ,
                               'Lambdab_IPChi2_Max'         ,
                               'Lambdab_MTDOCAChi2_Max'     ,
                               'Lambdab_MassWindow'         ,
@@ -104,20 +110,17 @@ class StrippingLb2L0GammaConf(LineBuilder):
         #################################################################################
         # Build Lambda_0
         #################################################################################
-        tracks_code = """(CHILD(TRCHI2DOF,1) < %(Track_Chi2ndf_Max)s) &
-                         (CHILD(TRCHI2DOF,2) < %(Track_Chi2ndf_Max)s) &
-                         (MAXTREE(HASTRACK,TRCHI2DOF) < %(Track_MinChi2ndf_Max)s) &
-                         (CHILD(TRGHOSTPROB,1) < %(Track_GhostProb_Max)s) &
-                         (CHILD(TRGHOSTPROB,2) < %(Track_GhostProb_Max)s) &
-                         (CHILD(MIPCHI2DV(PRIMARY),1) > %(Track_IPChi2_Min)s) &
-                         (CHILD(MIPCHI2DV(PRIMARY),2) > %(Track_IPChi2_Min)s) &
-                         (CHILD(PT,1) > %(Track_IPChi2_Min)s) &
-                         (CHILD(PT,2) > %(Track_IPChi2_Min)s) &
-                         (CHILD(P,1) > %(Track_P_Min)s) &
-                         (CHILD(P,2) > %(Track_P_Min)s)"""
+        tracks_code = """(MAXTREE(TRCHI2DOF, HASTRACK) < %(Track_Chi2ndf_Max)s) &
+                         (MINTREE(TRCHI2DOF, HASTRACK) < %(Track_MinChi2ndf_Max)s) &
+                         (MAXTREE(TRGHOSTPROB, HASTRACK) < %(Track_GhostProb_Max)s) &
+                         (INTREE(('p+'==ABSID) & (PT > %(Proton_Pt_Min)s))) &
+                         (INTREE(('pi+'==ABSID) & (PT > %(Pion_Pt_Min)s))) &
+                         (INTREE(('p+'==ABSID) & (P > %(Proton_P_Min)s))) &
+                         (INTREE(('pi+'==ABSID) & (P > %(Pion_P_Min)s)))"""
         lambda0_ll_dod = DataOnDemand(Location='Phys/StdLooseLambdaLL/Particles')
         lambda0_ll_code = """(PT>%(Lambda0_Pt_Min)s*MeV) &
                              (VFASPF(VCHI2/VDOF)<%(Lambda0_VtxChi2_Max)s) &
+                             (MINTREE(MIPCHI2DV(PRIMARY), ISLONG) > %(TrackLL_IPChi2_Min)s) &
                              (ADMASS('Lambda0') < %(Lambda0LL_MassWindow)s*MeV)"""
         lambda0_ll_code = (lambda0_ll_code + " & " + tracks_code) % config
         lambda0_ll_filter = FilterDesktop(Code=lambda0_ll_code)
@@ -160,7 +163,8 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda_b_combine.DecayDescriptor = "[Lambda_b0 -> Lambda0 gamma]cc"
         lambda_b_combine.DaughtersCuts = {'Lambda0': 'ALL', 'gamma': 'ALL'}
         lambda_b_combine.ParticleCombiners = {'' : 'ParticleAdder'}
-        lambda_b_combine.CombinationCut = "(ADAMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV)" % config
+        lambda_b_combine.CombinationCut = """(ADAMASS('Lambda_b0') < %(Lambdab_MassWindow)s*MeV) &
+                                             (ASUM(PT) > %(Lambdab_SumPt_Min)s )""" % config
         lambda_b_combine.MotherCut = """(PT > %(Lambdab_Pt_Min)s*MeV) &
                                         (MTDOCACHI2(1) < %(Lambdab_MTDOCAChi2_Max)s)""" % config
         lambda_b = Selection("Lambdab_NonConv_Sel",
