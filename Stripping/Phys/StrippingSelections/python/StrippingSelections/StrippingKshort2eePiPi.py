@@ -1,194 +1,281 @@
 
 __author__ = ['Carla Marin']
-__date__ = '17/01/2014'
+__date__ = '21/08/2014'
 __version__ = '$1.0 $'
 
 '''
-stripping code for Kshort --> eePiPi
-derived from StrippingKshort2MuMuPiPi.py by Mike Sokoloff.
+    stripping code for Kshort --> eePiPi
+    derived from StrippingKshort2eePiPi.py from S20r0p3
 '''
 
-config_params =  {'ePT'        : 100.  ,    #MeV
-                  'eMINIPCHI2' : 50    ,    #adimensional
-                  'eTRCHI2'    : 3     ,    #adimensional
-                  'ePIDe'      : -4    ,    #adimensional
-                  'eGhostProb' : 0.3   ,    #adimensional
-                  
-                  'PionPT'        : 100.  ,    #MeV
-                  'PionMINIPCHI2' : 50    ,    #adimensional
-                  'PionTRCHI2'    : 3     ,    #adimensional
-                  'PionPIDK'      : 5     ,    #adimensional
-                  'PionGhostProb' : 0.3   ,    #adimensional
-                  
-                  #4body         
-                  'KsMAXDOCA'        : 0.3       , #mm
-                  'KsLifetime'       : 0.01*89.53, #adimensional
-                  'KsIP'             : 1         , #mm
-                  'MaxKsMass'        : 800.  ,    #MeV, comb mass high limit
-                  
-                  'Kshort2PiPieeLinePrescale'    : 1 ,
-                  'Kshort2PiPieeLinePostscale'   : 1
-                  }
+default_config =  {
+    'NAME'        : 'Kshort2eePiPi',
+    'WGs'         : ['RD'],
+    'BUILDERTYPE' : 'Kshort2eePiPiConf',
+    'CONFIG'      : {   'Kshort2eePiPiLinePrescale'    : 1 ,
+                        'Kshort2eePiPiLinePostscale'   : 1 ,
+                        
+                        'ePT'           : 100.          , #MeV
+                        'eMINIPCHI2'    : 16            , #adimensional
+                        'ePIDe'         : -4            , #adimensional
+                        'eGhostProb'    : 0.5           , #adimensional
+    
+                        'PionMINIPCHI2' : 16            , #adimensional
+                        'PionPIDK'      : 5             , #adimensional
+                        'PionGhostProb' : 0.5           , #adimensional
+    
+                        #4body
+                        'KsMAXDOCA'     : 1.            , #mm
+                        'KsLifetime'    : 0.01*89.53    , #0.01*10^-12s
+                        'KsIP'          : 1             , #mm
+                        'MaxKsMass'     : 800.          , #MeV, comb mass high limit
+                    },
+    'STREAMS'     : { 'Dimuon' : ['StrippingKshort2eePiPiLine']}
+    }
 
-__all__ = ('Kshort2PiPieeConf',
-           'config_params')
+
+__all__ = ('Kshort2eePiPiConf',
+           'default_config'
+           )
 
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
-from PhysSelPython.Wrappers import Selection
+from PhysSelPython.Wrappers import Selection, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import  StdNoPIDsPions, StdNoPIDsElectrons
+from StandardParticles import StdNoPIDsPions, StdNoPIDsElectrons
+from StandardParticles import StdDiElectronFromTracks
 #from StandardParticles import StdAllLoosePions, StdAllLooseElectrons
 
-default_name = "Ks2PiPiee"
+default_name = "Ks2eePiPi"
 
-class Kshort2PiPieeConf(LineBuilder) :
+class Kshort2eePiPiConf(LineBuilder) :
     """
-    Builder for Kshort --> pi,pi,e,e 
+    Builder for Kshort --> pi,pi,e,e
     """
     
     PiPiLine = None
-
-        
-    __configuration_keys__ = (  'ePT'
-                                , 'eMINIPCHI2'
-                                , 'eTRCHI2'
-                                , 'ePIDe'
-                                , 'eGhostProb'
-                                , 'PionPT'
-                                , 'PionMINIPCHI2'
-                                , 'PionTRCHI2'
-                                , 'PionGhostProb'
-                                , 'PionPIDK'
-
-                                #4body        
-                                , 'KsMAXDOCA'  
-                                , 'KsLifetime'     
-                                , 'KsIP'   
-                                , 'MaxKsMass'
-                                
-                                , 'Kshort2PiPieeLinePrescale'
-                                , 'Kshort2PiPieeLinePostscale'
-                                )
     
+    
+    __configuration_keys__ = ('ePT',
+                              'eMINIPCHI2',
+                              'ePIDe',
+                              'eGhostProb',
+                              'PionMINIPCHI2',
+                              'PionGhostProb',
+                              'PionPIDK',
+                              
+                              #4body
+                              'KsMAXDOCA',
+                              'KsLifetime',
+                              'KsIP',
+                              'MaxKsMass',
+                              
+                              'Kshort2eePiPiLinePrescale',
+                              'Kshort2eePiPiLinePostscale',
+                              )
+                              
     def __init__(self, name, config):
-        LineBuilder.__init__(self, name, config)
         
-
+        LineBuilder.__init__(self, name, config)
+                                  
+                                  
         PiPiLine_name = name+"_PiPi"
         
-        
-        
-        # 5 : Make e's for Kshort2PiPiee 
-        selElecsForPiPiee = makeElecsForPiPiee(name="ElecsFor"+name
-                                               , ePT = config['ePT']
-                                               , eMINIPCHI2 = config['eMINIPCHI2']
-                                               , eTRCHI2 = config['eTRCHI2']
-                                               , ePIDe = config['ePIDe']
-                                               , eGhostProb = config['eGhostProb']
+        # 1 : Make e's for Kshort2eePiPi
+        selElecsForeePiPi = makeElecsForeePiPi(name   = "ElecsFor"+name,
+                                               elecs  = StdNoPIDsElectrons,
+                                               params = config,
                                                )
+    
+        selElecsFromTracksForeePiPi = makeElecsFromTracksForeePiPi(name   = "ElecsFromTracksFor"+name,
+                                                                   elecs  = StdDiElectronFromTracks,
+                                                                   params = config,
+                                                                   )
 
-        # 7 : Make Pions for Kshort2PiPiee 
-        selPionsForPiPiee = makePionsForPiPiee(name="PionsFor"+name
-                             , PionMINIPCHI2 = config['PionMINIPCHI2']
-                             , PionTRCHI2 = config['PionTRCHI2']
-                             , PionPIDK = config['PionPIDK']
-                             , PionGhostProb = config['PionGhostProb']
-                             , PionPT = config['PionPT']
-                             )
-
-
-                                        
-        # 7 : Combine
+        # 2 : Make Pions for Kshort2eePiPi
+        selPionsForeePiPi = makePionsForeePiPi(name   = "PionsFor"+name,
+                                               pions  = StdNoPIDsPions,
+                                               params = config,
+                                               )
+            
+        # 3 : Combine
+        selKshort2eePiPi = self._makeKshort2eePiPi(name    = PiPiLine_name,
+                                                   pionSel = selPionsForeePiPi,
+                                                   elecSel = selElecsForeePiPi,
+                                                   params  = config
+                                                   )
+                                                  
+        selKshort2eePiPiFromTracks = self._makeKshort2eePiPiFromTracks(name    = PiPiLine_name+"_FromTracks",
+                                                                       pionSel = selPionsForeePiPi,
+                                                                       elecSel = selElecsFromTracksForeePiPi,
+                                                                       params  = config
+                                                                       )
+                                                                                  
+        # 4 : Declare Lines
+        self.eePiPiLine = StrippingLine(PiPiLine_name+"Line",
+                                        prescale  = config['Kshort2eePiPiLinePrescale'],
+                                        postscale = config['Kshort2eePiPiLinePostscale'],
+                                        selection = selKshort2eePiPi,
+                                        MDSTFlag  = True
+                                        )
         
-        selKshort2PiPiee = self._makeKshort2PiPiee(name=PiPiLine_name,
-                                           pionSel = selPionsForPiPiee,
-                                           elecSel = selElecsForPiPiee,
-                                           config = config)
+        self.eePiPiLine2 = StrippingLine(PiPiLine_name+"Line2",
+                                        prescale  = config['Kshort2eePiPiLinePrescale'],
+                                        postscale = config['Kshort2eePiPiLinePostscale'],
+                                        selection = selKshort2eePiPi,
+                                        MDSTFlag  = True
+                                        )
         
-        # 8 : Declare Lines
+        self.eePiPiFromTracksLine = StrippingLine(PiPiLine_name+"FromTracks"+"Line",
+                                                  prescale  = config['Kshort2eePiPiLinePrescale'],
+                                                  postscale = config['Kshort2eePiPiLinePostscale'],
+                                                  selection = selKshort2eePiPiFromTracks,
+                                                  MDSTFlag  = True
+                                                  )
         
-        self.PiPiLine = StrippingLine(PiPiLine_name+"Line",
-                                    prescale = config['Kshort2PiPieeLinePrescale'],
-                                    postscale = config['Kshort2PiPieeLinePostscale'],
-                                    selection = selKshort2PiPiee
-                                    )
-                
-        # 9 : register Line
-
-        self.registerLine( self.PiPiLine )
-
+        self.eePiPiFromTracksLine2 = StrippingLine(PiPiLine_name+"FromTracks"+"Line2",
+                                                  prescale  = config['Kshort2eePiPiLinePrescale'],
+                                                  postscale = config['Kshort2eePiPiLinePostscale'],
+                                                  selection = selKshort2eePiPiFromTracks,
+                                                  MDSTFlag  = True
+                                                  )
+                                                                                                                
+        # 5 : register Line
+        self.registerLine( self.eePiPiLine )
+        self.registerLine( self.eePiPiLine2 )
+        self.registerLine( self.eePiPiFromTracksLine )
+        self.registerLine( self.eePiPiFromTracksLine2 )
+    
+#####################################################
+    def _makeKshort2eePiPi(self, name, pionSel, elecSel, params):
+        """
+        Handy interface for Kshort2eePiPi
+        """
+        return makeKshort2eePiPi(name,
+                                 pionSel,
+                                 elecSel,
+                                 params
+                                 )
 
 #####################################################
-    def _makeKshort2PiPiee(self, name, pionSel, elecSel, config):
+    def _makeKshort2eePiPiFromTracks(self, name, pionSel, elecSel, params):
         """
-        Handy interface for Kshort2PiPiee
+        Handy interface for Kshort2eePiPi
         """
-        return makeKshort2PiPiee(name
-                               , pionSel
-                               , elecSel
-                               , KsMAXDOCA = config['KsMAXDOCA']
-                               , KsLifetime= config['KsLifetime']
-                               , KsIP = config['KsIP']
-                               , MaxKsMass = config['MaxKsMass'])
-
+        return makeKshort2eePiPiFromTracks(name,
+                                           pionSel,
+                                           elecSel,
+                                           params
+                                           )
 
 #####################################################
-def makeKshort2PiPiee(name, pionSel, elecSel, MaxKsMass, KsMAXDOCA, KsIP, KsLifetime):
-
+def makeKshort2eePiPi(name, pionSel, elecSel, params):
+    
     """
     Makes the KS0 -> pi+ pi- e+ e-
     """
-
-    _combcut = "(AM < %(MaxKsMass)s *MeV) & "\
-               "(AMAXDOCA('') < %(KsMAXDOCA)s *mm)" %locals()
-
-
-    _mothercut = "(M < %(MaxKsMass)s *MeV) &"\
-                 "(MIPDV(PRIMARY) < %(KsIP)s *mm) & "\
-                 "((BPVVDSIGN*M/P) > %(KsLifetime)s*2.9979e-01)" %locals()
-
+    
+    _combcut =      "(AM < %(MaxKsMass)s *MeV) & "\
+                    "(AMAXDOCA('') < %(KsMAXDOCA)s *mm)" % params
+    
+    
+    _mothercut =    "(M < %(MaxKsMass)s *MeV) &"\
+                    "(MIPDV(PRIMARY) < %(KsIP)s *mm) & "\
+                    "((BPVVDSIGN*M/P) > %(KsLifetime)s*2.9979e-01)" % params
 
     _Combine = CombineParticles(DecayDescriptor = "KS0 -> pi+ pi- e+ e-",
                                 CombinationCut = _combcut,
                                 MotherCut = _mothercut
                                 )
-    _Combine.ReFitPVs = True
+
     return Selection(name,
                      Algorithm = _Combine,
-                     RequiredSelections = [ elecSel, pionSel] )                    
-                    
-#####################################################
-def makeElecsForPiPiee(name, eTRCHI2, ePT, eMINIPCHI2, ePIDe, eGhostProb):
-    """
-    Electron selection
-    """
-    _code ="(MIPCHI2DV(PRIMARY) > %(eMINIPCHI2)s) &"\
-           "(PT > %(ePT)s *MeV) &"\
-           "(TRCHI2DOF < %(eTRCHI2)s) &"\
-           "(TRGHOSTPROB < %(eGhostProb)s) &"\
-           "(PIDe > %(ePIDe)s)" % locals()
+                     RequiredSelections = [ elecSel, pionSel]
+                     )
 
+#####################################################
+def makeKshort2eePiPiFromTracks(name, pionSel, elecSel, params):
+    
+    """
+    Makes the KS0 -> pi+ pi- (J/psi(1S) -> e+ e-)
+    """
+    
+    _combcut =      "(AM < %(MaxKsMass)s *MeV) & "\
+                    "(AMAXDOCA('') < %(KsMAXDOCA)s *mm)" % params
+    
+    
+    _mothercut =    "(M < %(MaxKsMass)s *MeV) &"\
+                    "(MIPDV(PRIMARY) < %(KsIP)s *mm) & "\
+                    "((BPVVDSIGN*M/P) > %(KsLifetime)s*2.9979e-01)" % params
+
+    _Combine = CombineParticles(DecayDescriptor = "KS0 -> pi+ pi- J/psi(1S)",
+                                CombinationCut = _combcut,
+                                MotherCut = _mothercut
+                                )
+
+    return Selection(name,
+                     Algorithm = _Combine,
+                     RequiredSelections = [ elecSel, pionSel]
+                     )
+
+#####################################################
+def makeElecsForeePiPi(name, elecs, params):
+    """
+    Electron selection from StdNoPIDsElectrons
+    """
+    
+    _code = "(MIPCHI2DV(PRIMARY) > %(eMINIPCHI2)s) &"\
+            "(TRGHOSTPROB < %(eGhostProb)s) &"\
+            "(PIDe > %(ePIDe)s)" % params
+    
     _Filter = FilterDesktop(Code = _code)
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdNoPIDsElectrons ] )
+                     RequiredSelections = [ elecs ]
+                     )
 
 #####################################################
-def makePionsForPiPiee(name, PionTRCHI2, PionMINIPCHI2, PionGhostProb, PionPIDK, PionPT):
+def makeElecsFromTracksForeePiPi(name, elecs, params):
     """
-    Pion selection
+    Electron selection from StdDiElectronFromTracks
     """
-    _code = "(TRCHI2DOF < %(PionTRCHI2)s) &"\
+
+    _code = "(MINTREE(ABSID<14,PT) > %(ePT)s) &"\
+            "(MINTREE(ABSID<14,MIPCHI2DV(PRIMARY)) > %(eMINIPCHI2)s) &"\
+            "(MAXTREE(ABSID<14,TRGHOSTPROB) < %(eGhostProb)s) &"\
+            "(MINTREE(ABSID<14,PIDe) > %(ePIDe)s)"  % params
+
+    _Filter = FilterDesktop(Code = _code)
+
+    return Selection(name,
+                     Algorithm = _Filter,
+                     RequiredSelections = [ elecs ]
+                     )
+
+#####################################################
+def makePionsForeePiPi(name, pions, params):
+    """
+    Pion selection from StdNoPIDsPions
+    """
+    _code = "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s) &"\
             "(TRGHOSTPROB < %(PionGhostProb)s) &"\
-            "(MIPCHI2DV(PRIMARY) > %(PionMINIPCHI2)s) &"\
-            "(PIDK < %(PionPIDK)s)" % locals()
-
+            "(PIDK < %(PionPIDK)s)" % params
+    
     _Filter = FilterDesktop(Code = _code)
     
     return Selection(name,
                      Algorithm = _Filter,
-                     RequiredSelections = [ StdNoPIDsPions ] )
+                     RequiredSelections = [ pions ]
+                     )
+
+
+
+
+
+
+
+
+
