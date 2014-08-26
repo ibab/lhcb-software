@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2014-08-26 - Carlos Vazquez Sierra
+ - Updated StrippingB2JpsiXforBeta_s.py
+
 ! 2014-08-25 - Pablo Ruiz Valls
  - Updated StrippingBeauty2XGamma.py
 
