@@ -92,7 +92,17 @@ class Tau23MuLinesConf(LineBuilder) :
                                      postscale = config['TauPostscale'],
                                      MDSTFlag = True,
                                      RequiredRawEvents = [ ],
-                                     algos = [ self.selTau23Mu ]
+                                     algos = [ self.selTau23Mu ],
+                                     RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
+                                                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                                                                 'RecursionLevel' : 1,
+                                                                 'Location':'ConeIsoInfo' },
+                                                               {'Type': 'RelInfoVertexIsolation',
+                                                                'Location':'VtxIsoInfo' },
+                                                               { 'Type': 'RelInfoTrackIsolationBDT',
+                                                                 'RecursionLevel' : 2,
+                                                                 'Location':'TrackBDTIsoInfo'}
+                                                               ]
                                      )
         
         #self.ds23PiTISLine = StrippingLine(ds23PiTIS_name+"Line",
@@ -114,7 +124,17 @@ class Tau23MuLinesConf(LineBuilder) :
                                       postscale = config['TauPostscale'],
                                       MDSTFlag = True,
                                       RequiredRawEvents = [ ],
-                                      algos = [ self.selDs2PhiPi ]
+                                      algos = [ self.selDs2PhiPi ],
+                                      RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
+                                                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                                                                 'RecursionLevel' : 1,
+                                                                 'Location':'ConeIsoInfo' },
+                                                               {'Type': 'RelInfoVertexIsolation',
+                                                                'Location':'VtxIsoInfo' },
+                                                               { 'Type': 'RelInfoTrackIsolationBDT',
+                                                                 'RecursionLevel' : 2,
+                                                                 'Location':'TrackBDTIsoInfo'}
+                                                               ]
                                       )
 
         self.tau25MuLine = StrippingLine(tau25_name+"Line",

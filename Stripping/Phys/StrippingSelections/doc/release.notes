@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Paul Seyfert
+ - Added related infos to Tau23MuLines
+
 ! 2014-08-26 - Stefano Perazzini
  - Added StrippingHb2V0V0h to __init__.py
 
