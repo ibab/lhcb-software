@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Anton Poluektov 
+ - Allow L0DU option to be configured with Preambulo
+   L0DU=('Code', 'Preambulo')
+
 ! 2014-08-26  Stefano Perazzini
  - Added a check for FlavourTagging for initialized stripping lines
 

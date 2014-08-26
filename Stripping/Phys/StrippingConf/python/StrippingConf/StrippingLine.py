@@ -399,7 +399,14 @@ class StrippingLine(object):
             else :
     		raise TypeError, "Wrong ODIN attribute: %s " % self._ODIN
 
-        if self._L0DU   : mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
+        if self._L0DU   : 
+            if isinstance   ( self._L0DU , str   ) :
+    		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
+            if isinstance   ( self._L0DU , ( tuple, list) ) and 2 == len ( self._L0DU ) :
+    		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU[0],  Preambulo = self._L0DU[1]  )  } )
+            if isinstance   ( self._L0DU , dict )  :
+    		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , **self._L0DU)  } )
+
         if self._HLT    : mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
 
 	# Add flavour tagging tool to the end of line sequence if needed
