@@ -517,13 +517,18 @@ if '__main__' == __name__ :
     logger.info (  __doc__ ) 
     logger.info ( ' Author :  %s' % __author__ ) 
     logger.info ( ' Date   :  %s' % __date__   )
+    logger.info ( 80 * '*' ) 
     ##
     clines = set() 
+    logger.info ( 70 * '-' ) 
+    logger.info ( ' %-15s | %-40s ' % ( 'STREAM' , 'LINE' ) )
+    logger.info ( 70 * '-' ) 
     for stream in default_config['STREAMS'] :
-        lines = default_config['STREAMS'][stream] 
+        lines = default_config['STREAMS'][stream]
         for l in lines :
-            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            logger.info ( ' %-15s | %-40s ' % ( stream , l ) )
             clines.add ( l )
+    logger.info ( 80 * '*' ) 
     ##
     logger.info ( ' The output locations for the default configuration: ' ) 
     _conf = Bc3hConf ( 'Bc3h' , config = default_config['CONFIG'] )
