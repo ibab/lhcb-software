@@ -10,17 +10,26 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import  StdAllLooseMuons, StdJets
 from CommonParticles.Utils import *
 
-## if you want to prescale this line, please contact X. Cid Vidal before!
-confdict_WmuAKTJets = { 'WmuAKTJets_Prescale'    : 0.1,
-                        'WmuAKTJets_Postscale'   : 1.0,
-                        'min_mu_pT'              : 10.,
-                        'max_mu_pT'              : 200000.,
-                        #'max_mu_pT'              : 20.,
-                        'dr_lepton_jet'          : 0.5,
-                        'min_jet_pT'             : 15.
-                        }
+__author__=["Xabier Cid Vidal"]
+__all__ = ["default_name","default_config","WmuAKTJetsConf"]
 
+## if you want to prescale this line, please contact X. Cid Vidal before!
 default_name = 'WmuAKTJets'
+
+default_config = {
+    'NAME': default_name,
+    'BUILDERTYPE'  : 'WmuAKTJetsConf',
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'BhadronCompleteEvent' ],
+    'CONFIG':{'WmuAKTJets_Prescale'    : 1.0,
+              'WmuAKTJets_Postscale'   : 1.0,
+              'min_mu_pT'              : 10., # GeV/c
+              'max_mu_pT'              : 200000., # GeV/c
+              'dr_lepton_jet'          : 0.5,
+              'min_jet_pT'             : 15. # GeV/c
+              }
+    }
+
 
 class WmuAKTJetsConf( LineBuilder ) :
 

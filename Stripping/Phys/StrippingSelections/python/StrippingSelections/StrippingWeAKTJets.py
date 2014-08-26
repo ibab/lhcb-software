@@ -11,19 +11,29 @@ from StandardParticles import StdJets, StdAllNoPIDsElectrons
 from CommonParticles.Utils import *
 
 ## if you want to prescale this line, please contact X. Cid Vidal before!
-confdict_WeAKTJets = { 'WeAKTJets_Prescale'    : 0.1,
-                       'WeAKTJets_Postscale'   : 1.0,
-                       'min_e_pT'              : 10.,
-                       'max_e_pT'              : 200000.,
-                       #'max_e_pT'              : 20.,
-                       'dr_lepton_jet'         : 0.5,
-                       'PrsCalMin'             : 50.,
-                       'ECalMin'               : 0.10,
-                       'HCalMax'               : 0.05,
-                       'min_jet_pT'            : 15.
-                       }
+__author__=["Xabier Cid Vidal"]
+__all__ = ["default_name","default_config","WeAKTJetsConf"]
+
 
 default_name = 'WeAKTJets'
+default_config = {
+    'NAME':default_name,
+    'BUILDERTYPE'  : 'WeAKTJetsConf',
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'BhadronCompleteEvent' ],
+    'CONFIG':{'WeAKTJets_Prescale'    : 1.0,
+              'WeAKTJets_Postscale'   : 1.0,
+              'min_e_pT'              : 10., #GeV/c
+              'max_e_pT'              : 200000., #GeV/c
+              'dr_lepton_jet'         : 0.5,
+              'PrsCalMin'             : 50.,
+              'ECalMin'               : 0.10,
+              'HCalMax'               : 0.05,
+              'min_jet_pT'            : 15. #GeV/c
+              }
+    }
+
+
 
 class WeAKTJetsConf( LineBuilder ) :
     

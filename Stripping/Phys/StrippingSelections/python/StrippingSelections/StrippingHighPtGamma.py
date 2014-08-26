@@ -1,100 +1,137 @@
-# Stripping Line for High pT gammas, aiming for H-> gammaZ
-# QEE Group
+# Stripping Lines for highPT photon+ pair of AntiKT Jets
+# X. Cid Vidal
 #
-# Xabier Cid Vidal
-#
-# Signal:  StdLoosePhotons, pT > 20GeV/c
-
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+from Configurables       import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePhotons
+from StandardParticles import  StdLoosePhotons, StdJets
+from CommonParticles.Utils import *
 
-config_default = { 'Prescale'  : 1.0,
-                   'Postscale' : 1.0,
-                   'pT'        : 18.,
-                   'photonIso' : 30,
+__author__ = ["Xabier Cid Vidal"]
+__all__ = ["default_name","default_config","HighPtGammaJetsConf"]
 
-                   'PrescaleLoose'  : 0.5, ##changed from 0.05
-                   'PostscaleLoose' : 1.0,
-                   'pTLoose'        : 7.5,
-                   'photonIsoLoose' : 5
-                   }
+default_name = 'HighPtGammaJets'
+## if you want to prescale this line, please contact X. Cid Vidal before!
+default_config = {
+    'NAME' : default_name,
+    'BUILDERTYPE'  : 'HighPtGammaJetsConf',
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'EW' ],
+    'CONFIG':{'Prescale'  : 1.0,
+              'Postscale' : 1.0,
+              'photonpT'  : 12.5 ,# GeV/c
+              'photonIso' : 25,
+              'minJetpT' : 12.5, # GeV/c              
+              'PrescaleLoose'  : 0.1,
+              'PostscaleLoose' : 1.0,
+              'photonpTLoose'  : 7.5,
+              'photonIsoLoose' : 20,
+              'minJetpTLoose' : 7.5 # GeV/c
+              }
+    }
 
 
 
-default_name = 'HighPtGamma'
-
-class HighPtGammaConf( LineBuilder ) :
+class HighPtGammaJetsConf( LineBuilder ) :
 
     __configuration_keys__ = ( 'Prescale',
-                               'Prescale',
-                               'pT',
+                               'Postscale',
+                               'photonpT',
                                'photonIso',
+                               'minJetpT',
                                'PrescaleLoose',
-                               'PostscaleLoose',
-                               'pTLoose',
-                               'photonIsoLoose'
+                               'PostscaleLoose',                                                         
+                               'photonpTLoose',
+                               'photonIsoLoose',
+                               'minJetpTLoose'
                                )
+
+    
     
     def __init__( self, name, config ) :
 
         LineBuilder.__init__( self, name, config )
 
         self._myname = name
+        self._config = config
+        
+        self.sel_Photon = self.makePhoton( self._myname + 'Photon')
+        self.sel_DiJet  = self.makeDiJet (self._myname + 'DiJet')
+        self.sel_DiJetGamma  = self.makeDiJetGamma (self._myname + 'DiJetGamma')
 
+        self.line_PhotonJets = StrippingLine( self._myname + 'Line',
+                                              prescale  = config[ 'Prescale' ],
+                                              postscale = config[ 'Postscale' ],
+                                              checkPV   = False,
+                                              selection = self.sel_DiJetGamma
+                                              )
+        
+        self.registerLine( self.line_PhotonJets )
+        
+        self.sel_PhotonLoose = self.makePhoton( self._myname + 'PhotonLoose',loose=1)
+        self.sel_DiJetLoose  = self.makeDiJet (self._myname + 'DiJetLoose',loose=1)
+        self.sel_DiJetGammaLoose  = self.makeDiJetGamma (self._myname + 'DiJetGammaLoose',loose=1)
+        
+        self.line_PhotonJetsLoose = StrippingLine( self._myname + 'LooseLine',
+                                                   prescale  = config[ 'PrescaleLoose' ],
+                                                   postscale = config[ 'PostscaleLoose' ],
+                                                   checkPV   = False,
+                                                   selection = self.sel_DiJetGammaLoose
+                                                   )
+        
+        self.registerLine( self.line_PhotonJetsLoose )
+        
+        
+        
+    def makePhoton( self, _name,loose=0):
+        # Define the photon cuts
+        if loose: _cut    = "(PT>%(photonpTLoose)s*GeV) & (PPINFO(LHCb.ProtoParticle.CaloTrMatch,-1)>%(photonIsoLoose)s)" %self._config
+        else: _cut    = "(PT>%(photonpT)s*GeV) & (PPINFO(LHCb.ProtoParticle.CaloTrMatch,-1)>%(photonIso)s)" %self._config
+        
+        
+        _filter = FilterDesktop( _name,
+                                 Code      = _cut
+                                 )
+        
+        return Selection ( "sel"+_name,
+                           Algorithm          = _filter,
+                           RequiredSelections = [StdLoosePhotons]
+                           )
+    
+    
+    def makeDiJet(self,_name,loose=0):
+        
+        DiJet = CombineParticles("Combine"+_name)
+        DiJet.DecayDescriptor = "H_10 -> CELLjet CELLjet"
+        DiJet.ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' }
+        
+        if loose: DiJet.DaughtersCuts = { "CELLjet" :" (PT > %(minJetpTLoose)s * GeV ) " %self._config }
+        else: DiJet.DaughtersCuts = { "CELLjet" :" (PT > %(minJetpT)s * GeV ) " %self._config }
 
-        # Define the cuts
-        _cut    = "(PT>%(pT)s*GeV) & (PPINFO(LHCb.ProtoParticle.CaloTrMatch,-1)>%(photonIso)s)" %config
-
-        _cutLoose    = "(PT>%(pTLoose)s*GeV) & (PPINFO(LHCb.ProtoParticle.CaloTrMatch,-1)>%(photonIsoLoose)s)" %config
-
-
-        # Signal
-        self.sel = makeFilter( self._myname + 'HighPtGamma',
-                                  StdLoosePhotons,
-                                  "from LoKiTracks.decorators import *",
-                                  _cut
-                                  )
-
-        # Loose line to control effects
-        self.selLoose = makeFilter( self._myname + 'HighPtGammaLoose',
-                                    StdLoosePhotons,
-                                    "from LoKiTracks.decorators import *",
-                                    _cutLoose
-                                    )
-
-
-
-        self.line = StrippingLine( self._myname + 'Line',
-                                      prescale  = config[ 'Prescale' ],
-                                      postscale = config[ 'Postscale' ],
-                                      selection = self.sel
-                                      )
-
-        self.lineLoose = StrippingLine( self._myname + 'LooseLine',
-                                        prescale  = config[ 'PrescaleLoose' ],
-                                        postscale = config[ 'PostscaleLoose' ],
-                                        selection = self.selLoose
-                                        )
-
-        self.registerLine( self.line)
-        self.registerLine( self.lineLoose)
-
-
-
-
-
-def makeFilter( name, _input, _preambulo, _code ) :
-
-    _filter = FilterDesktop( Preambulo = [ _preambulo ],
-                             Code      = _code
-                             )
-
-    return Selection ( name,
-                       Algorithm          = _filter,
-                       RequiredSelections = [ _input ]
-                       )
+        DiJet.CombinationCut = "AALLSAMEBPV"
+        DiJet.MotherCut = "ALL"
+        
+        return Selection ("Sel"+_name,
+                          Algorithm = DiJet,
+                          RequiredSelections = [StdJets])
+    
+    
+    def makeDiJetGamma(self,_name,loose=0):
+        
+        DiJetGamma = CombineParticles("Combine"+_name)
+        DiJetGamma.DecayDescriptor = "H_20 -> H_10 gamma"
+        DiJetGamma.ParticleCombiners = { '' : 'LoKi::VertexFitter:PUBLIC' }
+                
+        DiJetGamma.MotherCut = "ALL"
+        
+        if loose: requiredSelections = [self.sel_PhotonLoose,self.sel_DiJetLoose]
+        else: requiredSelections = [self.sel_Photon,self.sel_DiJet]
+        
+        return Selection ("Sel"+_name,
+                          Algorithm = DiJetGamma,
+                          RequiredSelections = requiredSelections)
+    
+    

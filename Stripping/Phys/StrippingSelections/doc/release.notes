@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2014-08-26 - Xabier Cid Vidal
+ - Updated WeAKTJets and WmuAKTJets to the standard style
+ - Updated H24Mu lines to the standard style. Added MDST and raw banks for muons
+ - Changed HighPTGamma line, so that it also relies on having two jets in (apart
+  from the high pT gamma)
+
 ! 2014-08-26 - Carla Marin Benito
  - StrippingKshort2eePiPi: adapt to the new format, set the MDST flag to True and add a line using StdDiElectronFromTracks
 

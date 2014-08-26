@@ -11,7 +11,8 @@ __author__ = ['Xabier Cid Vidal']
 __date__ = '11/22/2013'
 
 __all__ = ('H24MuLineConf',
-           'config_default'
+           'default_name',
+           'default_config'
            )
 
 from Gaudi.Configuration import *
@@ -21,50 +22,56 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Configurables import OfflineVertexFitter
 
-    
+default_name = 'H24mu'
+
 #### This is the dictionary of all tunable cuts ########
-config_default={
-    'DefaultPostscale'       : 1,
-    'PromptLinePrescale'     : 1,
-    'SimpleLinePrescale'     : 1,
-    'DetachedLinePrescale'   : 1,
-    'LooseLinePrescale'      : 0.01,
-    
-    'MuTrackChi2DoF'         : 3,
-    'MupTprompt'             : 350,  #MeV
-    'MupTdetached'           : 150,  #MeV
-    'MuGhostProb'            : 0.4,
-    'MuMaxIPchi2'            : 4,
-    'MuMinIPchi2'            : 1,
-    'MuPIDdll'               : -3, # muon combDLL
-    'MuNShared'              : 3, # muon NShared
-    
-    'A1maxMass'              : 2000, #MeV
-    'A1Doca'                 : 0.3,   #mm
-    'A1DocaTight'            : 0.1,   #mm
-    'A1Vchi2'                : 10,
-    'A1Vchi2Tight'           : 1,
-    'A1Dira'                 : 0,
-    'A1maxIPchi2'            : 36,
-    'A1FDChi2'               : 4,
-
-    'HmaxDOCA'               : 1, #mm
-    'HmaxDOCATight'          : 0.25, #mm
-    'HVchi2'                 : 15,
-    'HVchi2Tight'            : 2,
-    'HpT'                    : 1000, #MeV
-
-    'MuTrackChi2DoF_loose'   : 10,
-    'MupT_loose'             : 0,
-    'MuMaxIPchi2_loose'      : 1000000,
-    'A1maxMass_loose'        : 5000, #MeV
-    'A1Doca_loose'           : 10, #mm
-    'A1Vchi2_loose'          : 20,
-    'HmaxDOCA_loose'         : 1000000, #mm
-    'HpT_loose'              : 300, #MeV
-    'HVchi2_loose'           : 50
-    
-}                
+default_config={
+    'NAME': default_name,
+    'BUILDERTYPE'  : 'H24MuLineConf',
+    'WGs' : [ 'QEE' ],
+    'STREAMS' : [ 'Leptonic' ],
+    'CONFIG':{'DefaultPostscale'       : 1,
+              'PromptLinePrescale'     : 1,
+              'SimpleLinePrescale'     : 1,
+              'DetachedLinePrescale'   : 1,
+              'LooseLinePrescale'      : 0.01,
+              
+              'MuTrackChi2DoF'         : 3,
+              'MupTprompt'             : 350,  #MeV
+              'MupTdetached'           : 150,  #MeV
+              'MuGhostProb'            : 0.4,
+              'MuMaxIPchi2'            : 4,
+              'MuMinIPchi2'            : 1,
+              'MuPIDdll'               : -3, # muon combDLL
+              'MuNShared'              : 3, # muon NShared
+              
+              'A1maxMass'              : 2000, #MeV
+              'A1Doca'                 : 0.3,   #mm
+              'A1DocaTight'            : 0.1,   #mm
+              'A1Vchi2'                : 10,
+              'A1Vchi2Tight'           : 1,
+              'A1Dira'                 : 0,
+              'A1maxIPchi2'            : 36,
+              'A1FDChi2'               : 4,
+              
+              'HmaxDOCA'               : 1, #mm
+              'HmaxDOCATight'          : 0.25, #mm
+              'HVchi2'                 : 15,
+              'HVchi2Tight'            : 2,
+              'HpT'                    : 1000, #MeV
+              
+              'MuTrackChi2DoF_loose'   : 10,
+              'MupT_loose'             : 0,
+              'MuMaxIPchi2_loose'      : 1000000,
+              'A1maxMass_loose'        : 5000, #MeV
+              'A1Doca_loose'           : 10, #mm
+              'A1Vchi2_loose'          : 20,
+              'HmaxDOCA_loose'         : 1000000, #mm
+              'HpT_loose'              : 300, #MeV
+              'HVchi2_loose'           : 50
+              
+              }
+    }   
 
 
 class H24MuLineConf(LineBuilder) :
@@ -135,7 +142,7 @@ class H24MuLineConf(LineBuilder) :
 
 
     def __init__(self, 
-                 name = 'H24mu',
+                 name = default_name,
                  config = None,
                  debug_cuts = 0):
                  
@@ -184,6 +191,8 @@ class H24MuLineConf(LineBuilder) :
                                         selection = self.selPrompt,
                                         ExtraInfoTools = ExtraInfoTools,
                                         ExtraInfoSelections = ExtraInfoDaughters["prompt"],
+                                        MDSTFlag = True,
+                                        RequiredRawEvents = ["Muon"]
                                         )
 
         self.simpleLine = StrippingLine(simple_name+"Line",
@@ -193,6 +202,8 @@ class H24MuLineConf(LineBuilder) :
                                         selection = self.selSimple,
                                         ExtraInfoTools = ExtraInfoTools,
                                         ExtraInfoSelections = ExtraInfoDaughters["simple"],
+                                        MDSTFlag = True,
+                                        RequiredRawEvents = ["Muon"]
                                         )
 
 
@@ -203,8 +214,11 @@ class H24MuLineConf(LineBuilder) :
                                           selection = self.selDetached,
                                           ExtraInfoTools = ExtraInfoTools,
                                           ExtraInfoSelections = ExtraInfoDaughters["detached"],
+                                          MDSTFlag = True,
+                                          RequiredRawEvents = ["Muon"]
                                           )
         
+        ## no need for mdst or raw data in the loose line...
         self.looseLine = StrippingLine(loose_name+"Line",
                                        prescale = config['LooseLinePrescale'],
                                        postscale = config['DefaultPostscale'],
