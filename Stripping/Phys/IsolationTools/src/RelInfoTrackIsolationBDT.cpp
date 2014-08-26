@@ -22,7 +22,7 @@ RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
     declareInterface<IRelatedInfoTool>(this);
 
     declareProperty( "Variables", m_variables, 
-            "List of variables to store (store all if empty)");
+            "Set of variables to store (0,1,2,3,4)");
     declareProperty
         ( "MVATransform" , m_transformName ,
           "path/name of the DictTransform tool"); 
@@ -33,6 +33,9 @@ RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
             , m_PVInputLocation = LHCb::RecVertexLocation::Primary 
             , " PV input location"
             );
+
+
+
 
     //sort these keys out by adding all
     m_keys.clear(); 
@@ -211,11 +214,6 @@ LHCb::RelatedInfoMap* RelInfoTrackIsolationBDT::getInfo(void) {
     return &m_map; 
 }
 
-std::string RelInfoTrackIsolationBDT::infoPath(void) {
-    std::stringstream ss;
-    ss << std::string("Particle2TrackIsolationRelations");
-    return ss.str(); 
-}
 
 //=============================================================================
 // Save the particles in the decay chain (recursive function)
@@ -289,6 +287,19 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
     double pvDistGeometric(0) ;
     double svDistGeometric(0) ;  
 
+    //MR: additional variables for new isoBDTs
+    double log_trk_ips = 0;//log(IP significance of the track)
+    double trk_gho = 0;//track ghost probability
+    double trk_chi = 0;//track chi2
+    double trk_dphi = 0;//abs(trk_phi - muon_phi)
+    double trk_deta = 0;//abs(trk pseudorapidity - muon pseudorapidity)
+    double trk_pt = 0;//track pT
+    double trk_ch = 0;//charge(track)*charge(muon)
+    double trk_nnmu = 0;//track ProbNN(mu)
+    double trk_nnpi = 0;//track ProbNN(pi)
+    double trk_nnk = 0;//track ProbNN(K)
+    //end MR
+
     LHCb::Tracks::const_iterator tr_it, tr_it_end( tracks->end() ) ;
     for ( tr_it = tracks->begin() ; tr_it != tr_it_end ; ++tr_it )
     {
@@ -302,9 +313,25 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         Gaudi::XYZVector partMomentum = part->proto()->track()->momentum();
         Gaudi::XYZPoint partPosition = part->proto()->track()->position();
 
+	//MR: compute the additional variables
+	log_trk_ips = log(calcIPToAnyPV(track) );//Note:I've commented out var_ipchisqany below
+	trk_gho = track->ghostProbability();
+	trk_chi = track->chi2PerDoF();
+	trk_dphi = fabs(track->momentum().Phi() - part->proto()->track()->momentum().Phi());
+	trk_deta = fabs(track->momentum().Eta() - part->proto()->track()->momentum().Eta());
+	trk_pt = track->pt();
+	trk_ch = (track->charge())*(part->proto()->track()->charge());
+	trk_nnmu = track->info(LHCb::ProtoParticle::ProbNNmu,-9999);
+	trk_nnpi = track->info(LHCb::ProtoParticle::ProbNNpi,-9999);
+	trk_nnk = track->info(LHCb::ProtoParticle::ProbNNk,-9999);
+	//trk_nnmu = (*ipp)->proto()->info(LHCb::ProtoParticle::ProbNNmu,-9999);
+	//trk_nnpi = (*ipp)->proto()->info(LHCb::ProtoParticle::ProbNNpi,-9999);
+	//trk_nnk = (*ipp)->proto()->info(LHCb::ProtoParticle::ProbNNk,-9999);
+	//end MR
+
         // -- BDT takes five variables 
         //
-        var_angle         = enclosedAngle(trackMomentum, partMomentum);
+        angle         = enclosedAngle(trackMomentum, partMomentum);
         Gaudi::XYZPoint perpFoot_track, perpFoot_daughter;
         Gaudi::XYZPoint vertex_mu_track;
         bool failed = false; 
@@ -326,7 +353,7 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         StatusCode sc_sv    = m_dist->distance(SV, vertex_mu_track, svDist, svDistChi2);
         svDistGeometric     = calcVertexDist(vertex_mu_track, SV);
         //   if(!sc_sv)  return StatusCode(sc_sv);
-        var_ipchisqany = log(calcIPToAnyPV(track) );
+        //var_ipchisqany = log(calcIPToAnyPV(track) );
         var_fc = fc ;
         var_angle = angle ;
         var_log_doca = log(doca) ;
@@ -334,17 +361,41 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         var_SVdist = svDistGeometric ;
         //
         m_varmap.clear()    ;
-        //make this more generic??
-        m_varmap.insert( "PVdist", var_PVdist ) ;
-        m_varmap.insert( "SVdist", var_SVdist ) ;
-        m_varmap.insert( "angle", var_angle ) ;
-        m_varmap.insert( "doca", var_log_doca ) ;
-        m_varmap.insert( "fc", var_fc ) ;
+        if (m_variables>=0) //Laura's variables
+        {
+            m_varmap.insert( "PVdist", var_PVdist ) ;
+            m_varmap.insert( "SVdist", var_SVdist ) ;
+            m_varmap.insert( "angle", var_angle ) ;
+            m_varmap.insert( "doca", var_log_doca ) ;
+            m_varmap.insert( "fc", var_fc ) ;
+        }
+        if (m_variables>=0)
+        {
+            m_varmap.insert( "logtrackips", log_trk_ips ) ;
+        }
+        if (m_variables>=1) 
+        {
+            m_varmap.insert( "trk_gho", trk_gho ) ;
+            m_varmap.insert( "trk_chi", trk_chi ) ;
+        }
+        if (m_variables>=2) 
+        {
+            m_varmap.insert( "trk_dphi", trk_dphi ) ;
+            m_varmap.insert( "trk_deta", trk_deta ) ;
+            m_varmap.insert( "trk_pt", trk_pt ) ;
+        }
+        if (m_variables>=3) 
+        {
+            m_varmap.insert( "trk_nnmu", trk_nnmu ) ;
+            m_varmap.insert( "trk_nnpi", trk_nnpi ) ;
+            m_varmap.insert( "trk_nnk", trk_nnk ) ;
+        }
+
 
         if (msgLevel(MSG::VERBOSE)) {
             verbose() << "PVdist"<<'\t' << var_PVdist <<  endmsg;
             verbose() << "SVdist"<<'\t' << var_SVdist <<  endmsg;
-            verbose() << "anglet"<<'\t' << var_angle <<  endmsg;
+            verbose() << "angle"<<'\t' << var_angle <<  endmsg;
             verbose() << "doca"<<'\t' << var_log_doca <<  endmsg;
             verbose() << "fc value"<<'\t' << var_fc <<  endmsg;
         }
