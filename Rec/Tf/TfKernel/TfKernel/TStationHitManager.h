@@ -259,6 +259,32 @@ namespace Tf
                        range.end()); 
     }
 
+    /** Load the hits for a given region of interest
+     *  In addition, specify an x range
+     *
+     *  @param[in] xMin   Minimum x value of hit (at y=0)
+     *  @param[in] xMax   Maximum x value of hit (at y=0)
+     *  @param[in] sta    Station ID
+     *  @param[in] lay    Station layer ID
+     *  @param[in] region Region within the layer
+     *
+     *  @return Range object for the hits in the selected region of interest
+     */
+    inline HitRange hitsInXRange( const double xMin, const double xMax,
+                                  const TStationID sta,
+                                  const TLayerID   lay,
+                                  const TRegionID  region ) const
+    {
+      if ( !allHitsPrepared(sta,lay,region) ) { prepareHits(sta,lay,region); }
+      auto range = m_hits.range(sta,lay,region);
+      auto first = std::lower_bound( std::begin(range), std::end(range),
+                                     xMin,
+                                     Tf::compByX< Hit >() ) ;
+      return { first, std::upper_bound( first, std::end(range), 
+                                     xMax, 
+                                     Tf::compByX< Hit >() ) } ;
+    }
+
     /** Retrieve the Region for a certain IT or OT region ID. The region
      *   knows its 'size' and gives access to its hits.
      *

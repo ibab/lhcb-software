@@ -3,6 +3,18 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2014-07-26 - Gerhard Raven
+ - add a 'hitsInXRange' method to TStationHitManager (i.e. both lower and upper
+   bound)
+ - extend OTHit such that is possible to get the driftTime _without_ the 
+   (expensive) walk correction. And in the OTHit constructor, which ask for 
+   driftTime at the middle of the station (which gives a walk correction of 
+   0.17 ns, i.e. negligible at this point, given the lack of Y knowledge), 
+   insure it skips the walk correction --  the users of these hits will replace 
+   this initial value with a value given a specific Y anyway.
+ - add a method in RecoFuncs which allows one to update the hits without
+   doing the walk correction. 
+
 ! 2014-08-07 - Gerhard Raven
  - replace size_t by int to specify layer/station/region -- int more than
    large enough to enumerate them, and int division is faster than size_t division.

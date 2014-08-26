@@ -24,17 +24,15 @@
 
 namespace Tf
 {
-
-  /** @class compByX_LB TfKernel/RecoFuncs.h
+  /** @class compByX TfKernel/RecoFuncs.h
    *  Binary function to compare a hit to a given x value and return true if hit is upstream of that point.
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
    *  @date   2007-05-30
    */
   template <class Hit>
-  class compByX_LB : public std::binary_function<const Hit*, const double, bool>
+  class compByX 
   {
   public:
-    compByX_LB() {}
     /** Comparison operator
      *  @param[in] obj     The Hit object to test
      *  @param[in] testVal The test value of x
@@ -46,7 +44,20 @@ namespace Tf
     {
       return obj->hit()->xAtYEq0() < testVal ;
     }
+    inline bool operator() (const double testVal, const Hit * obj) const
+    {
+      return testVal < obj->hit()->xAtYEq0();
+    }
   };
+
+  /** @class compByX_LB TfKernel/RecoFuncs.h
+   *  Binary function to compare a hit to a given x value and return true if hit is upstream of that point.
+   *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
+   *  @date   2007-05-30
+   */
+
+  template <class Hit>
+  using compByX_LB = compByX<Hit>; 
 
   /** @class increasingByProjection TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by projection
@@ -433,6 +444,21 @@ namespace Tf
     if(otHit) 
     {
       hit->setDriftDistance(otHit->untruncatedDriftDistance(y));
+    }
+  }
+
+  template<class Hit>
+  inline void approxUpdateHitForTrack ( Hit* hit, 
+                                       const double y0, 
+                                       const double dyDz ) 
+  {
+    const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
+    hit->setZ( hit->hit()->z(y) ) ;
+    hit->setX( hit->hit()->x(y) ); 
+    const Tf::OTHit* otHit = hit->hit()->othit();
+    if(otHit) 
+    {
+      hit->setDriftDistance(otHit->approxUntruncatedDriftDistance(y));
     }
   }
 

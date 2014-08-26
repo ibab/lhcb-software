@@ -79,11 +79,25 @@ namespace Tf
 
     /** Access the propagation time relative to the default, which is halfway along the
         wire. The velocity has been corrected for sign and direction */
+    inline double approxPropagationTime( const double globaly ) const 
+    {
+      // we ASSUME here that the average of the walk correction is zero... (it should, by construction)
+      return (yReadout() - globaly) / module().propagationVelocityY();
+    }
+
+    /** Access the propagation time relative to the default, which is halfway along the
+        wire. The velocity has been corrected for sign and direction */
     inline double propagationTime( const double globaly ) const 
     {
       double propTime = (yReadout() - globaly) / module().propagationVelocityY();
       double dist2strawend = module().wireLength(m_rawhit.channel()) - propTime * module().propagationVelocity();
       return propTime + module().walkRelation().walk(dist2strawend);
+    }
+
+    /** The drift time after correction for propagation time */
+    inline double approxDriftTime( const double globaly ) const 
+    { 
+      return calibratedTime() - approxPropagationTime( globaly ) ;
     }
 
     /** The drift time after correction for propagation time */
@@ -100,6 +114,12 @@ namespace Tf
 
     /** Test if this hit is out-of-time */
     bool outOfTime( const double globaly, const double numsigma ) const ;
+
+    /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime. */
+    inline double approxUntruncatedDriftDistance( const double globaly ) const 
+    { 
+      return m_rtrel->extrapolatedradius( approxDriftTime( globaly) ) ; 
+    }
 
     /** obsolete. please, don't use. To select valid drifttimes, cut directly on the drifttime. */
     inline double untruncatedDriftDistance( const double globaly ) const 
@@ -151,7 +171,7 @@ namespace Tf
   {
     // setting things from the OTHit. the cached drift distance is the
     // one in the middle of the wire, for now.
-    const double time = driftTime(yMid()) ;
+    const double time = approxDriftTime(yMid()) ;
     OTDet::RadiusWithError r = m_rtrel->radiusWithError( time ) ;
     m_driftDistance  = r.val ;
     setVariance(r.err*r.err) ;
