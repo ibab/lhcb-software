@@ -74,7 +74,7 @@ B2XMuMu_Incl = {
 ## StrippingB2KstTauMu_Line                                                   ##
 ## StrippingB2KstTauMu_Line                                                   ##
 ## Authors: G. Mancinelli, J. Serrano                                         ##
-################################################################################  
+################################################################################
 B2KstTauTau =  {
     'BUILDERTYPE'       :       'B2KstTauXConf',
     'WGs'    : [ 'RD' ],
@@ -260,16 +260,16 @@ B2XGammaExcl = {
          ,'KstMassWin'          : 100.      # MeV
          ,'PhiVCHI2'            : 15.       # dimensionless
          ,'KstVCHI2'            : 15.       # dimensionless
-         
+
          ,'photonPT'            : 2600.     # MeV
-         
+
          ,'BsMassWin'           : 1000.     # MeV
          ,'B0MassWin'           : 1000.     # MeV
          ,'BsDirAngle'          : 0.02      # radians
          ,'B0DirAngle'          : 0.02      # radians
          ,'BsPVIPchi2'          : 15.       # Dimensionless
          ,'B0PVIPchi2'          : 15.       # Dimensionless
-         
+
          # Pre- and postscales
          ,'Bs2PhiGammaPreScale'               : 1.0
          ,'Bs2PhiGammaPostScale'              : 1.0
@@ -281,7 +281,7 @@ B2XGammaExcl = {
          'Calibration' : ['StrippingB2XGammaExclBd2KstGammaLine'],
          }
     }
-    
+
 
 ################################################################################
 ## StrippingLb2L0Gamma.py                                                     ##
@@ -724,7 +724,7 @@ B2XTauZVTOP = {
          },
     'STREAMS' : ['Leptonic']
     }
-    
+
 ################################################################################
 ## StrippingBs2MuMuLines.py                                                   ##
 ## Bs->MuMu Lines                                                             ##
@@ -744,28 +744,29 @@ Bs2MuMus = {
     'WGs' : ['RD'],
     'BUILDERTYPE' : 'Bs2MuMuLinesConf',
     'CONFIG' : {
-         'DefaultLinePrescale'    : 1,
-         'DefaultPostscale'   : 1,
-         'Bs2mmWideLinePrescale'  : 1,
-         'LooseLinePrescale'      : 0.,
-         'BuPrescale'    : 1,
-         'BsPrescale'    : 1,
-         'BdPrescale'    : 1,
-         'JPsiLinePrescale'       : 1,
-         'JPsiLooseLinePrescale'  : 0.1,
-         'JPsiPromptLinePrescale' : 0.005,
-         'SSPrescale'             : 1 ,
-         'Bs2mmLTUBLinePrescale'  : 1 ,
-         'Bs2KKLTUBLinePrescale' : 1 ,
-         
-         'MuIPChi2_loose'        :  9,
-         'MuTrChi2_loose'        : 10,
-         'BIPChi2_loose'         : 64,
-         'BFDChi2_loose'         : 100
-         },
+           'DefaultLinePrescale'    : 1,
+           'DefaultPostscale'   : 1,
+           'Bs2mmWideLinePrescale'  : 1,
+           'LooseLinePrescale'      : 0.,
+           'BuPrescale'    : 1,
+           'BsPrescale'    : 1,
+           'BdPrescale'    : 1,
+           'JPsiLinePrescale'       : 1,
+           'JPsiLooseLinePrescale'  : 0.1,
+           'JPsiPromptLinePrescale' : 0.005,
+           'SSPrescale'             : 1 ,
+           'Bs2mmLTUBLinePrescale'  : 1 ,
+           'Bs2KKLTUBLinePrescale' : 1 ,
+           'MuIPChi2_loose'        :  9,
+           'MuTrChi2_loose'        : 10,
+           'BIPChi2_loose'         : 64,
+           'BFDChi2_loose'         : 100,
+           'BPVVDChi2'            : 121,
+           'daugt_IPChi2'            : 9 
+           },
     'STREAMS' : ['Dimuon']
     }
-    
+
 ################################################################################
 ## StrippingBu2MuNu.py                                                        ##
 ## Stripping Line for BMuNu (tight muons with high pT and IP)                 ##
@@ -777,13 +778,19 @@ Bu2MuNu = {
     'WGs' : ['RD'],
     'BUILDERTYPE' : 'Bu2MuNuConf',
     'CONFIG': {
-          'Prescale'  : 0.06,
-          'Postscale' : 1.0,
-          'pTmin'     : 5.,
-          'pTmax'     : 40.,
-          'pmax'      : 500.,
-          'IPchi2'    : 400.,
-          'TrChi2'    : 3
+          'PrescaleSignal'  : 1.0,
+          'PostscaleSignal' : 1.0,
+          'PrescaleControl'  : 0.03,
+          'PostscaleControl' : 1.0,
+          'pTminMu'     : 5.,
+          'pTmaxMu'     : 40.,
+          'pmaxMu'      : 500.,
+          'IPchi2Mu'    : 400.,
+          'TrChi2Mu'    : 3,
+          'useNN'        : True,
+          'maxNTracks'  : 150,
+          'pTminMuControl': 2.5,
+          'IPchi2MuControl': 100.
           },
     'STREAMS' : ['Semileptonic'],
     }
@@ -808,7 +815,7 @@ D23MuLines = {
          },
     'STREAMS' : ['Leptonic'],
     }
-    
+
 ################################################################################
 ## StrippingB23MuLines.py                                                     ##
 ## B+ -> mu l+ l- lines                                                       ##
@@ -817,7 +824,7 @@ D23MuLines = {
 ## StrippingB23MuLinesB2DMuLine                                               ##
 ## StrippingB23MuLinesB23PiLine                                               ##
 ## Author: Oliver Gruenberg                                                   ##
-################################################################################ 
+################################################################################
 
 B23MuLines = {
     'WGs' : ['RD'],
@@ -877,21 +884,21 @@ K0s2Pi0MuMu = {
     'WGs' : ['RD'],
     'BUILDERTYPE' : 'K0s2Pi0MuMuLinesConf',
     'CONFIG' : {
-          'SignalLinePrescale'    : 1,
-          'SignalLinePostscale'   : 1,
-          'SidebandLinePrescale'  : 0.2,
-          'SidebandLinePostscale' : 1,
-          "muIpChi2"              : 36,#25,
-          "muTrChi2Dof"           : 5,
-          "KSsignalminMass"       : 300,
-          "KSsignalmaxMass"       : 600,
-          "KSsidebminMass"        : 600,
-          "KSsidebmaxMass"        : 1000,
-          "KSdoca"                : 0.3,
-          "KSdira"                : 0,
-          "KSlife"                : 0.06*89.53,#0.05*89.53,
-          "KSip"                  : 0.9#1
-          },
+               'SignalLinePrescale'    : 1,
+               'SignalLinePostscale'   : 1,
+               'SidebandLinePrescale'  : 0.2,
+               'SidebandLinePostscale' : 1,
+               "muIpChi2"              : 36,
+               "muTrChi2Dof"           : 5,
+               "KSsignalminMass"       : 300,
+               "KSsignalmaxMass"       : 600,
+               "KSsidebminMass"        : 600,
+               "KSsidebmaxMass"        : 1000,
+               "KSdoca"                : 0.3,
+               "KSdira"                : 0,
+               "KSlife"                : 0.06*89.53,
+               "KSip"                  : 0.9
+               },
     'STREAMS' : ['Leptonic'],
     }
 
@@ -907,21 +914,97 @@ K0s2Pi0MuMu = {
 K0s2MuMu = {
     'WGs' : ['RD'],
     'BUILDERTYPE' : 'K0s2MuMuLinesConf',
-    'CONFIG' : {
-          'NoMuIDLinePrescale'    : 1e-03,
-          'NoMuIDLinePostscale'   : 1,
-          'K0s2mmLinePrescale'  : 1,
-          'K0s2mmLinePostscale'  : 1,
-          'K0s2mmSBLinePrescale'  : 0.1,
-          'K0s2mmSBLinePostscale'  : 1,
-          #'minMuPT' : 300,  #MeV
-          #'minKsPT' : 600,  #MeV
-          'minMuPT' : 0,  #MeV
-          'minKsPT' : 0,  #MeV
-          },
+    'CONFIG' : {'NoMuIDLinePrescale'    : 1e-03,
+                'NoMuIDLinePostscale'   : 1,
+                'K0s2mmLinePrescale'  : 1,
+                'K0s2mmLinePostscale'  : 1,
+                'K0s2mmSBLinePrescale'  : 0.1,
+                'K0s2mmSBLinePostscale'  : 1,
+                'minMuPT' : 0,  #MeV
+                'minKsPT' : 0,  #MeV
+                },
     'STREAMS' : ['Leptonic'],
     }
-    
+
+################################################################################
+## StrippingKshort2MuMuMuMu.py                                                ##
+## Kshort-->MuMuMuMu lines                                                    ##
+## -----------------------------                                              ##
+## StrippingKshort2MuMuMuMu_LongLine                                          ##
+## StrippingKshort2MuMuMuMu_DownLine                                          ##
+## Authors; Mike Sokoloff, Marc Olivier Bettler                               ##
+################################################################################
+Kshort2MuMuMuMu = {
+    'WGs' : ['RD'],
+    'BUILDERTYPE' : 'Kshort2MuMuMuMuConf',
+    'CONFIG' : {'MuonP'         : 3000. ,    #MeV
+                'MuonPT'        : 500.  ,    #MeV
+                'MuonMINIPCHI2' : 2     ,    #adminensional
+                'MuonTRCHI2'    : 5     ,    #adminensional
+
+
+                                  #4body
+                'MINIPCHI2_mumumumu' : 4. ,  #adminensional --  for the individual pions
+                'PT_mumumumu'        : 300 , #MeV
+                'MuonPIDmu_mumumumu' : -1,   #adimensional
+                'DPT_mumumumu'           : 2500.,     #MeV
+                'DVCHI2DOF_mumumumu'     : 8     ,    #adminensional
+                'DMAXDOCA_mumumumu'      : 0.2  ,    #mm
+                'KsDauMAXIPCHI2_mumumumu' : 15    ,    #adimensinal
+                'DFDCHI2_mumumumu'       : 9     ,   #adimensional
+                'DIPCHI2_mumumumu'       : 20    ,    #adimensional
+
+
+                'DDIRA'         : 0.9999,    #adimensional
+                'MaxDimuonMass'    : 260.  ,    #MeV
+                'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
+                'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
+
+                'Kshort2MuMuMuMuLinePrescale'    : 1
+                'Kshort2MuMuMuMuLinePostscale'   : 1
+                },
+    'STREAMS' : ['Leptonic']
+    }
+################################################################################
+## StrippingKshort2PiPiMuMu.py                                                ##
+## Kshort-->PiPiMuMu lines                                                    ##
+## -----------------------------                                              ##
+## StrippingKshort2PiPiMuMu_LongLine                                          ##
+## StrippingKshort2PiPiMuMu_DownLine                                          ##
+## Authors; Mike Sokoloff, Marc Olivier Bettler                               ##
+################################################################################
+Kshort2PiPiMuMu = {
+    'WGs' : ['RD'],
+    'BUILDERTYPE' : 'Kshort2PiPiMuMuConf',
+    'CONFIG' : {'MuonP'         : 3000. ,    #MeV
+                'MuonPT'        : 500.  ,    #MeV
+                'MuonMINIPCHI2' : 2     ,    #adminensional
+                'MuonTRCHI2'    : 5     ,    #adminensional
+
+
+                                  #4body
+                'MINIPCHI2_mumumumu' : 4. ,  #adminensional --  for the individual pions
+                'PT_mumumumu'        : 300 , #MeV
+                'MuonPIDmu_mumumumu' : -1,   #adimensional
+                'DPT_mumumumu'           : 2500.,     #MeV
+                'DVCHI2DOF_mumumumu'     : 8     ,    #adminensional
+                'DMAXDOCA_mumumumu'      : 0.2  ,    #mm
+                'KsDauMAXIPCHI2_mumumumu' : 15    ,    #adimensinal
+                'DFDCHI2_mumumumu'       : 9     ,   #adimensional
+                'DIPCHI2_mumumumu'       : 20    ,    #adimensional
+
+
+                'DDIRA'         : 0.9999,    #adimensional
+                'MaxDimuonMass'    : 260.  ,    #MeV
+                'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
+                'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
+                
+                'Kshort2MuMuMuMuLinePrescale'    : 1 ,
+                'Kshort2MuMuMuMuLinePostscale'   : 1
+                },
+    'STREAMS' : ['Leptonic']
+        }
+
 ################################################################################
 ## StrippingKshort2eePiPi.py                                                  ##
 ##  Kshort --> eePiPi Line                                                    ##
@@ -933,26 +1016,26 @@ Ks2PiPiee = {
     'WGs' : ['RD'],
     'BUILDERTYPE' : 'Kshort2PiPieeConf',
     'CONFIG' : {
-         'ePT'        : 100.  ,    #MeV
-         'eMINIPCHI2' : 50    ,    #adimensional
-         'eTRCHI2'    : 3     ,    #adimensional
-         'ePIDe'      : -4    ,    #adimensional
-         'eGhostProb' : 0.3   ,    #adimensional
+         'Kshort2eePiPiLinePrescale'    : 1 ,
+         'Kshort2eePiPiLinePostscale'   : 1 ,
          
-         'PionPT'        : 100.  ,    #MeV
-         'PionMINIPCHI2' : 50    ,    #adimensional
-         'PionTRCHI2'    : 3     ,    #adimensional
-         'PionPIDK'      : 5     ,    #adimensional
-         'PionGhostProb' : 0.3   ,    #adimensional
+         
+         'ePT'           : 100.          , #MeV
+         'eMINIPCHI2'    : 16            , #adimensional
+         'ePIDe'         : -4            , #adimensional
+         'eGhostProb'    : 0.5           , #adimensional
+
+         
+         'PionMINIPCHI2' : 16            , #adimensional
+         'PionPIDK'      : 5             , #adimensional
+         'PionGhostProb' : 0.5           , #adimensional
+         
          
          #4body
-         'KsMAXDOCA'        : 0.3       , #mm
-         'KsLifetime'       : 0.01*89.53, #adimensional
-         'KsIP'             : 1         , #mm
-         'MaxKsMass'        : 800.  ,    #MeV, comb mass high limit
-         
-         'Kshort2PiPieeLinePrescale'    : 1 ,
-         'Kshort2PiPieeLinePostscale'   : 1
+         'KsMAXDOCA'     : 1.            , #mm
+         'KsLifetime'    : 0.01*89.53    , #0.01*10^-12s
+         'KsIP'          : 1             , #mm
+         'MaxKsMass'     : 800.          , #MeV, comb mass high limit
          },
     'STREAMS' : ['Leptonic'],
     }
@@ -1030,7 +1113,7 @@ LFV = {
 ## StrippingRareStrangeSigmaPMuMuLFVLine                                      ##
 ## StrippingRareStrangeSigmaPMuMuLFVDownLine                                  ##
 ## Authors: J. Albrecht, Archilli, F. Soomro, Dujany, Harrison                ##
-################################################################################ 
+################################################################################
 
 RareStrange = {
     'WGs'     : [ 'RD' ],
@@ -1143,7 +1226,7 @@ Tau2LambdaMu = {
 ## StrippingTau23MuTau2PMuMuLine                                              ##
 ## StrippingTau23MuDs2PhiPiLine                                               ##
 ## Author: Johannes Albrecht, Jon Harrison, Paul Seyfert                      ##
-################################################################################ 
+################################################################################
 Tau23Mu = {
     'WGs'         : ['RD'],
     'BUILDERTYPE' : 'Tau23MuLinesConf',
