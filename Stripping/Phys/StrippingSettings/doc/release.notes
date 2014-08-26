@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Carlos Vazquez Sierra (B2CC)
+ - Updated Stripping21/LineConfigDictionaries_B2CC.py
+
 ! 2014-08-22 - Lucio Anderlini (BandQ)
  - Switch off all MicroDST DiMuonLine but DiMuonInc including now all of others
 
