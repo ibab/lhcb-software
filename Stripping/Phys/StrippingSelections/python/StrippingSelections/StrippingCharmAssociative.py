@@ -493,10 +493,10 @@ class StrippingCharmAssociativeConf(LineBuilder) :
         sel = [
             ##
             StrippingLine (
-            "DiMuonAndGammaFor" + self._name            ,
+            "DiMuonAndGammaFor" + self._name             ,
             prescale = self [ 'DiMuonAndGammaPrescale' ] , ## ATTENTION! Prescale here !!
             checkPV  = self [ 'CheckPV']                 ,
-            algos    = [ self . DiMuonAndGamma () ]            
+            algos    = [ self . DiMuonAndGamma () ]      ,
             ) ,
             ##
             StrippingLine (
