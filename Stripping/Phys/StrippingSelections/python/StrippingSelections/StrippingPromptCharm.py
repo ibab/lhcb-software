@@ -157,7 +157,6 @@ _default_configuration_ = {
     ( PT          > 250 * MeV ) & 
     ( CLONEDIST   > 5000      ) & 
     ( TRGHOSTPROB < 0.5       ) &
-    ( TRCHI2DOF   < 4         ) & 
     in_range ( 2          , ETA , 4.9       ) &
     in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
     HASRICH                     &
@@ -169,7 +168,6 @@ _default_configuration_ = {
     ( PT          > 250 * MeV ) & 
     ( CLONEDIST   > 5000      ) & 
     ( TRGHOSTPROB < 0.5       ) &
-    ( TRCHI2DOF   < 4         ) & 
     in_range ( 2          , ETA , 4.9       ) &
     in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
     HASRICH                     &
@@ -180,7 +178,6 @@ _default_configuration_ = {
     'ProtonCut'   : """
     ( PT           > 250 * MeV ) & 
     ( CLONEDIST    > 5000      ) & 
-    ( TRCHI2DOF    < 4         ) & 
     ( TRGHOSTPROB  < 0.5       ) & 
     in_range ( 2         , ETA , 4.9       ) &
     in_range ( 10 * GeV  , P   , 150 * GeV ) &
@@ -199,7 +196,7 @@ _default_configuration_ = {
     #
     ## photons from chi_(c,b)
     #
-    'GammaChi'        : ' ( PT > 450 * MeV ) & ( CL > 0.05 ) '  ,
+    'GammaChi'        : " ( PT > 400 * MeV ) & ( CL > 0.05 ) " ,
     #
     ## W+- selection
     #
@@ -240,6 +237,7 @@ _default_configuration_ = {
     'DsPrescale'             : 1.0 ,
     'D+Prescale'             : 1.0 ,
     'LambdaCPrescale'        : 1.0 ,
+    'LambdaCpKKPrescale'     : 1.0 ,
     'LambdaC*Prescale'       : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
     ##
@@ -476,7 +474,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             "D02KpiFor" + self.name()         ,
             prescale = self['D0Prescale'   ]  , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'      ]  ,
-            algos    =     [ self.D02Kpi() ]
+            algos    =     [ self.D02Kpi() ]  ,
             ) ,
             ##
             StrippingLine (
@@ -488,8 +486,8 @@ class StrippingPromptCharmConf(LineBuilder) :
             ##
             StrippingLine (
             "DFor" + self.name() ,
-            prescale = self['D+Prescale' ] , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'    ] ,
+            prescale = self['D+Prescale'   ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'      ] ,
             algos    =     [ self.Dplus () ]
             ) ,
             ##
@@ -504,13 +502,13 @@ class StrippingPromptCharmConf(LineBuilder) :
             "LambdaCFor" + self.name() ,
             prescale = self['LambdaCPrescale'] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'        ] ,
-            algos    =     [ self.LamC () ]
+            algos    =     [ self.LamC ()    ]
             ) ,
             StrippingLine (
             "LambdaC2pKKFor" + self.name() ,
-            prescale = self['LambdaCPrescale' ] , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'         ] ,
-            algos    =     [ self.LamC2pKK () ]
+            prescale = self['LambdaCpKKPrescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'            ] ,
+            algos    =     [ self.LamC2pKK ()    ]
             ) ,
             ## Sigma_c
             StrippingLine (
@@ -531,63 +529,71 @@ class StrippingPromptCharmConf(LineBuilder) :
             "DiCharmFor" + self.name() ,
             prescale = self['DiCharmPrescale'] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'        ] ,
-            algos    = [ self.DiCharm () ]
+            algos    =     [ self.DiCharm () ] , 
+            MDSTFlag = True                          ## keep event in MDST.DST 
             ) ,
             ##
             StrippingLine (
-            "DiMuonAndCharmFor" + self.name()     ,
-            prescale = self['DiMu&CharmPrescale'] , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'           ] ,
-            algos    =     [ self.DiMuonAndCharm () ]
+            "DiMuonAndCharmFor" + self.name()         ,
+            prescale = self['DiMu&CharmPrescale'    ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'               ] ,
+            algos    =     [ self.DiMuonAndCharm () ] ,
+            MDSTFlag = True                             ## keep event in MDST.DST 
             ) ,
             ##
             StrippingLine (
-            "DoubleDiMuonFor" + self.name()       ,
-            prescale = self['DoubleDiMuPrescale'] , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'           ] ,
-            algos    =     [ self.DoubleDiMuon () ]
+            "DoubleDiMuonFor" + self.name()         ,
+            prescale = self['DoubleDiMuPrescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'             ] ,
+            algos    =     [ self.DoubleDiMuon () ] , 
+            MDSTFlag = True                          ## keep event in MDST.DST 
             ) ,
             ##
             StrippingLine (
             "ChiAndCharmFor" + self.name() ,
-            prescale = self['Chi&CharmPrescale']  , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'          ] ,
-            algos    =     [ self.ChiAndCharm () ]
+            prescale = self['Chi&CharmPrescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'            ] ,
+            algos    =     [ self.ChiAndCharm () ] , 
+            MDSTFlag = True                          ## keep event in MDST.DST 
             ) ,
             ##
             StrippingLine (
             "CharmAndWFor" + self.name() ,
-            prescale   = self['Charm&WPrescale' ] , ## ATTENTION! Prescale here !!
-            checkPV    = self['CheckPV'         ] ,
-            algos      =     [ self.CharmAndW () ]
+            prescale   = self['Charm&WPrescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV    = self['CheckPV'          ] ,
+            algos      =     [ self.CharmAndW () ] , 
+            MDSTFlag   = True                        ## keep event in MDST.DST 
             ) ,
             ##
             StrippingLine (
             "DiMuonAndWFor" + self.name() ,
-            prescale   = self['DiMuon&WPrescale' ] , ## ATTENTION! Prescale here !!
-            checkPV    = self['CheckPV'          ] ,
-            algos      =     [ self.DiMuonAndW ()  ]
+            prescale   = self['DiMuon&WPrescale'  ] , ## ATTENTION! Prescale here !!
+            checkPV    = self['CheckPV'           ] ,
+            algos      =     [ self.DiMuonAndW () ] ,
+            MDSTFlag   = True                         ## keep event in MDST.DST 
             ) ,
             ##
             StrippingLine (
             "ChiAndWFor" + self.name() ,
             prescale   = self['Chi&WPrescale'  ] , ## ATTENTION! Prescale here !!
             checkPV    = self['CheckPV'        ] ,
-            algos      =     [ self.ChiAndW () ]
+            algos      =     [ self.ChiAndW () ] , 
+            MDSTFlag   = True                       ## keep event in MDST.DST 
             ) ,
-            ##
+            #
             ## For Eva
+            #
             ## D0 -> K- K+ 
             StrippingLine (
             "D02KKFor" + self.name() ,
-            prescale = self['D02KKPrescale'   ]   , ## ATTENTION! Prescale here !!
+            prescale = self['D02KKPrescale'   ] ,  ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.D02KK ()    ]
             ) ,
             ## D0 -> pi- pi+ 
             StrippingLine (
             "D02pipiFor" + self.name() ,
-            prescale = self['D02pipiPrescale' ]   , ## ATTENTION! Prescale here !!
+            prescale = self['D02pipiPrescale' ] ,  ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.D02pipi ()  ]
             ) ,
@@ -595,7 +601,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## D*+ -> ( D0 -> K- K+ , pi- pi+ ) pi+
             StrippingLine (
             "DstarCPFor" + self.name() ,
-            prescale = self['D*CPPrescale'    ]   , ## ATTENTION! Prescale here !!
+            prescale = self['D*CPPrescale'    ] ,  ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.DstarCP ()  ]
             ) ,
@@ -1476,14 +1482,17 @@ if '__main__' == __name__ :
     _conf = StrippingPromptCharmConf ( 'PromptCharm' , 
                                        config = default_config['CONFIG']  )
     ##
-    _ln   = ' ' + 61*'-' + '+' + 30*'-'
+    _ln   = ' ' + 61*'-' + '+' + 55*'-'
     logger.info ( _ln ) 
-    logger.info ( '  %-60s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( '  %-60s| %-40s | %s ' % ( 'Output location'     ,
+                                             'Stripping line name' ,
+                                             'MDST.DST'            ) ) 
     logger.info ( _ln )
     for l in _conf.lines() :
         lout  = l.outputLocation()
-        lname = l.name() 
-        logger.info ( '  %-60s| %-30s  ' % ( lout, lname ) )
+        lname = l.name()
+        flag  = l.MDSTFlag
+        logger.info ( '  %-60s| %-40s | %s ' % ( lout, lname , flag ) )
         if not lname in clines :
             raise AttributeError ('Unknown Line %s' % lname )
         clines.remove ( lname )
@@ -1492,6 +1501,14 @@ if '__main__' == __name__ :
     if clines :
         raise AttributeError('Undeclared lines: %s' % clines )
 
+    keys = default_config['CONFIG'].keys()
+    keys.sort()
+    prescale = [ i for i in keys if 0 <= i.find('Prescale') ]
+    other    = [ i for i in keys if not i in prescale       ] 
+    logger.info ( 'Configuration keys are %s' % other    ) 
+    logger.info ( 'Prescale      keys are %s' % prescale ) 
+    logger.info ( 80*'*' ) 
+    
 # =============================================================================
 # The END
 # =============================================================================

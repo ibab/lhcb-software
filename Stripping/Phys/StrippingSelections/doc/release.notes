@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Vanya Belyaev
+ - StrippingPrompCharm.py
+   add MDST.DST flags for "dicharm"-lines 
+
 ! 2014-08-26 - Carlos Vazquez Sierra
  - Updated StrippingB2JpsiXforBeta_s.py
 
