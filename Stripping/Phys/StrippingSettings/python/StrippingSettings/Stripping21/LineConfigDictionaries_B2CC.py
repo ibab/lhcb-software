@@ -16,31 +16,31 @@ from GaudiKernel.SystemOfUnits import *
 ## Authors: Artur Ukleja, Jibo He, Konrad Klimaszewski
 ## Last changes made by Konrad Klimaszewski
 ## -------------------------------------------------------------------
-## Stripping reports (Revision 176850):
+## Stripping reports (Revision 176907):
 ##
 ## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0530|        53|       |  29.763|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0530|        53|       |  29.756|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0430|        43|  1.721|  16.229| (if Phi reco done before: 8.597)
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.897|   4.393|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0180|        18|  2.000|   0.060|
+## |_StrippingGlobal_                                            |  0.0530|        53|       |  37.926|
+## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0530|        53|       |  37.919|
+## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0430|        43|  1.721|  23.977|
+## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.897|   4.405|
+## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0180|        18|  2.000|   0.481|
 ##
 ## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0450|        45|       |  27.034|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0450|        45|       |  27.027|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0360|        36|  1.528|  14.584|
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0310|        31|  1.452|   3.609|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0090|         9|  1.778|   0.061|
+## |_StrippingGlobal_                                            |  0.0430|        43|       |  30.893|
+## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0430|        43|       |  30.886|
+## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0340|        34|  1.588|  17.630| (x 0.1 if DiElectron is open before)
+## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.483|   3.653|
+## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0090|         9|  1.778|   0.711|
 ##
 ## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0480|        48|       |  24.490|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0480|        48|       |  24.483|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0350|        35|  1.286|  13.392|
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0320|        32|  1.469|   2.951|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0140|        14|  1.214|   0.062|
+## |_StrippingGlobal_                                            |  0.0460|        46|       |  26.687|
+## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0460|        46|       |  26.680|
+## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0340|        34|  1.294|  15.391|
+## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0310|        31|  1.484|   3.041|
+## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0140|        14|  1.214|   0.206|
 ##
 ######################################################################
 
