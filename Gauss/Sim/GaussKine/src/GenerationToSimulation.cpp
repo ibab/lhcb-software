@@ -193,7 +193,7 @@ StatusCode GenerationToSimulation::execute() {
     std::vector<HepMC::GenParticle*> mctruthList;
     for (HepMC::GenEvent::particle_const_iterator itP = ev->particles_begin();
 	 itP != ev->particles_end(); ++itP) {
-      if (keep(*itP) || (m_keepCode != "" && m_keepCuts(p))) { 
+      if (keep(*itP) || (m_keepCode != "" && m_keepCuts(*itP))) { 
         mctruthList.push_back(*itP);
 	
 	/*
