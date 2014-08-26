@@ -385,7 +385,7 @@ class ExpoPol2D_pdf(object) :
         #
         self.taux  = makeVar ( taux              ,
                                "taux_%s"  % name ,
-                               "taux(%s)" % name , taux , 0 , -xtaumax , xtauxmax )
+                               "taux(%s)" % name , taux , 0 , -xtaumax , xtaumax )
         #
         self.tauy  = makeVar ( tauy              ,
                                "tauy_%s"  % name ,
