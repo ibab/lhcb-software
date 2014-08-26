@@ -20,14 +20,10 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from CommonParticles.Utils import updateDoD
 from StandardParticles import StdLoosePions
 from StandardParticles import StdLooseKaons
-from StandardParticles import StdAllLoosePions
-from StandardParticles import StdAllNoPIDsKaons
 from StandardParticles import StdAllLooseKaons
-from StandardParticles import StdLooseResolvedEta
 from StandardParticles import StdLooseResolvedPi0
 from StandardParticles import StdNoPIDsPions
 from StandardParticles import StdLooseProtons
-from StandardParticles import StdLooseAllPhotons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -43,11 +39,11 @@ default_config = {
                  ,       'JpsiMassWindow'            :       80
                  ,       'DaughterPT'                :       1000
                  ,       'VCHI2PDOF'                 :       10
-                 ,       'Jpsi2MuMuPrescale'         :       0.082 #0.028
-                 ,       'Bd2JpsiKstarPrescale'      :       0.45 #0.09
-                 ,       'Bd2JpsiKsPrescale'         :       1.0 #1.0
-                 ,       'Bs2JpsiPhiPrescale'        :       0.67 #0.27
-                 ,       'Bs2JpsiPi0Prescale'        :       1.0 #0.4
+                 ,       'Jpsi2MuMuPrescale'         :       0.075 # 0.028, 2011: 0.011, 2012: 0.075
+                 ,       'Bd2JpsiKstarPrescale'      :       0.29 # 0.09, 2011: 0.038, 2012: 0.29
+                 ,       'Bd2JpsiKsPrescale'         :       1.0 # 1.0, 2011: 1.0, 2012: 1.0
+                 ,       'Bs2JpsiPhiPrescale'        :       0.62 # 0.27, 2011: 0.104, 2012: 0.62
+                 ,       'Bs2JpsiPi0Prescale'        :       0.9 # 0.4, 2011: 0.164, 2012: 0.9
                          },
     'STREAMS' : {
         'Leptonic' : [
@@ -104,7 +100,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.name = name
         self.config = config
 	
-        # Define input daughter lists for various B -> J/psi X selections (there are lists NOT included in any line!):
+        # Define input daughter lists for various B -> J/psi X selections:
 
         self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
 
@@ -115,26 +111,14 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.KaonList = self.createSubSel( OutputList = "KaonsForBetaS" + self.name,
                                            InputList = DataOnDemand(Location = "Phys/StdLooseKaons/Particles"),
                                            Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK >-2)" % self.config )  
-        
-        self.NoPIDKaonList = self.createSubSel( OutputList = "NoPIDKaonsForBetaS" + self.name,
-                                                InputList = DataOnDemand(Location = "Phys/StdAllNoPIDsKaons/Particles"),
-                                                Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s)" % self.config )
 
         self.NoIPKaonList = self.createSubSel( OutputList = "NoIPKaonsForBetaS" + self.name,
                                                InputList = DataOnDemand(Location = "Phys/StdAllLooseKaons/Particles"),
                                                Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s ) & (PIDK > 0)" % self.config )    
         
-        self.PionList = self.createSubSel( OutputList = "PionsForBetaS" + self.name,
-                                           InputList = DataOnDemand(Location = "Phys/StdLoosePions/Particles"),
-                                           Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s)" % self.config )
-        
         self.NoPIDPionList = self.createSubSel( OutputList = "NoPIDPionsForBetaS" + self.name,
                                                 InputList = DataOnDemand(Location = "Phys/StdNoPIDsPions/Particles"),
                                                 Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s )" % self.config )
-        
-        self.NoIPPionList = self.createSubSel( OutputList = "NoIPPionsForBetaS" + self.name,
-                                               InputList = DataOnDemand(Location = "Phys/StdAllLoosePions/Particles"),
-                                               Cuts = "(TRCHI2DOF < %(TRCHI2DOF)s) & (TRGHOSTPROB < 0.5) & (PIDpi - PIDK > -10)" % self.config )
         
         self.ProtonList = self.createSubSel( OutputList = "ProtonsForBetaS" + self.name,
                                         InputList = DataOnDemand(Location = "Phys/StdLooseProtons/Particles"),
@@ -160,36 +144,15 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.KsListLoose = MergedSelection("StdLooseKsMergedForBetaS" + self.name,
                                            RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
                                                                  DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")] )
-        
-        self.KsFromV0ListLoose = MergedSelection("StdKsFromV0MergedForBetaS" + self.name,
-                                                 RequiredSelections = [DataOnDemand(Location = "Phys/StdKs2PiPiLL/Particles"),
-                                                                       DataOnDemand(Location = "Phys/StdKs2PiPiDD/Particles")] )
-        
-        
+
         self.KsList = self.createSubSel(OutputList = "KsForBetaS" + self.name,
                                         InputList = self.KsListLoose,
                                         Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
-        
-        
-        
+
         self.KsLDList = self.createSubSel( OutputList =  "KsLDForBetaS" + self.name,
                                            InputList = DataOnDemand(Location = "Phys/StdLooseKsLD/Particles"),
                                            Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)")
-        
-        
-        self.KsFromV0List = self.createSubSel( OutputList =  "KsFromV0ForBetaS" + self.name,
-                                               InputList =  self.KsFromV0ListLoose ,
-                                               Cuts = "(VFASPF(VCHI2)<20) & (BPVDLS>5)" )        
-        
-        
-        self.DetachedKstarList = self.createSubSel(OutputList = "DetachedKstarListForBetaS" + self.name,
-                                                   InputList = DataOnDemand(Location = "Phys/StdVeryLooseDetachedKst2Kpi/Particles"),
-                                                   Cuts = "(INTREE( ('K+'==ABSID) &  (TRCHI2DOF < %(TRCHI2DOF)s) & (MIPCHI2DV(PRIMARY)>6) &(PIDK > -2)))" \
-                                                   "& (INTREE( ('pi+'==ABSID) & (TRCHI2DOF < %(TRCHI2DOF)s) & (MIPCHI2DV(PRIMARY)>6) ))" \
-                                                   "& (ADMASS('K*(892)0') < 300 *MeV)" \
-                                                   "& (VFASPF(VCHI2/VDOF) < 16)" \
-                                                   "& (SUMTREE(PT, ((ABSID=='pi+') | (ABSID=='K+'))) > 900. * MeV)" % self.config)
-        
+
         self.DetachedKstarWideList = self.createCombinationsSel( OutputList = "DetachedKstarWideListForBetaS" + self.name,
                                                                  DaughterLists = [ StdLooseKaons, StdLoosePions ],
                                                                  DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc", "[K*_0(1430)0 -> K+ pi-]cc"  ],
@@ -198,32 +161,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                                  PreVertexCuts = "(in_range(750,AM,1900))  & (ADOCACHI2CUT(30, ''))",
                                                                  PostVertexCuts = "(VFASPF(VCHI2) < 25)",
                                                                  ReFitPVs = False )
-        
-        self.f0List = self.createCombinationsSel( OutputList = "f02PiPiForBetaS" + self.name,
-                                                  DaughterLists = [ self.KaonList, self.PionList ],
-                                                  DecayDescriptors = ["f_0(980) -> pi+ pi-", "f_0(980) -> pi- pi-", "f_0(980) -> pi+ pi+", "f_0(980) -> K+ K-"],
-                                                  DaughterCuts = { "pi+" : " (MIPCHI2DV(PRIMARY)>9) " % self.config,
-                                                                   "K+"  : " (MIPCHI2DV(PRIMARY)>9) " % self.config },
-                                                  PreVertexCuts = "(ACHILD(PT,1)+ACHILD(PT,2) > 900.*MeV) & (AM < 2700 *MeV) & (ADOCACHI2CUT(20., ''))",
-                                                  PostVertexCuts = "(VFASPF(VCHI2) < 16)",
-                                                  ReFitPVs = False ) # Note that this is false to save CPU time, for the future check with Liming if the kaon list is fine
 
-        self.f0NoIPList = self.createCombinationsSel( OutputList = "f02PiPiNoIPForBetaS" + self.name,
-                                                      DaughterLists = [ self.NoIPPionList ],
-                                                      DecayDescriptors = ["f_0(980) -> pi+ pi-"],
-                                                      DaughterCuts = { "pi+" : "(PT > 250.*MeV)" },
-                                                      PreVertexCuts = "in_range(600.,AM,1700.) & (APT > 1300.*MeV) & (ADOCACHI2CUT(20., ''))",
-                                                      PostVertexCuts = "(PT > 1500.*MeV) & in_range(700.,M,1600.) & (VFASPF(VCHI2) < 16)",
-                                                      ReFitPVs = False ) # Note that this is false to save CPU time
-
-        self.f04PiList = self.createCombinationSel( OutputList = "f04PiForBetaS" + self.name,
-                               DaughterLists = [ self.PionList ],
-                               DecayDescriptor = "f_0(980) -> pi+ pi- pi+ pi-",
-                               DaughterCuts = { "pi+" : "(MIPCHI2DV(PRIMARY)>6) & (PIDK<10) &  (TRGHOSTPROB < 0.8)" % self.config },
-                               PreVertexCuts = "(AM < 2700 *MeV) & (APT > 1.0*GeV) & (ADOCACHI2CUT(20., ''))",
-                               PostVertexCuts = "(VFASPF(VCHI2/VDOF) < 10)",
-                               ReFitPVs = False ) # Note that this is false to save CPU time
-        
         self.LambdaListLoose = MergedSelection("StdLooseLambdaMergedForBetaS" + self.name,
                                                RequiredSelections =  [DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles"),
                                                                       DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")])
@@ -231,19 +169,12 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                              InputList = self.LambdaListLoose ,
                                              Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) & (MAXTREE('pi-'==ABSID, PT) > 100.*MeV) & (ADMASS('Lambda0') < 15.*MeV) & (VFASPF(VCHI2) < 20)")
         
-        self.EtaList = self.createSubSel( OutputList = "EtaForBetaS" + self.name,
-                                          InputList = DataOnDemand(Location = "Phys/StdLooseResolvedEta/Particles"),
-                                          Cuts = "(PT > 1800.*MeV)"\
-                                          "& (MINTREE('gamma'==ABSID, PT) > 300.*MeV)")
-        
         self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
                                           InputList = DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
                                           Cuts = "(PT > 1500.*MeV)"\
                                           "& (MINTREE('gamma'==ABSID, PT) > 500.*MeV)")
         
         self.makeInclJpsi()
-        self.makeRho0()
-        self.makeEtap()
         self.makeBd2JpsiKsLD()
         self.makeBu2JpsiK()
         self.makeBs2JpsiPhi()
@@ -300,28 +231,6 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Jpsi2MuMuForBetasLine = StrippingLine( self.name + "Jpsi2MuMuLine", algos = [ self.WideJpsiList ], HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config["Jpsi2MuMuPrescale"] )
         self.registerLine(Jpsi2MuMuForBetasLine)
 
-    def makeRho0( self ):
-        self.Rho0List = self.createCombinationSel( OutputList = "Rho0forBetaS" + self.name,
-                                                   DecayDescriptor = "rho(770)0 -> pi+ pi-",
-                                                   DaughterLists = [ self.NoIPPionList ],
-                                                   DaughterCuts = { "pi+" : "(PT > 250.*MeV)" },
-                                                   PreVertexCuts = "(APT > 1100.) & (in_range(400,AM,1050)) & (ADOCACHI2CUT(20, ''))",
-                                                   PostVertexCuts = "(PT > 1300.) & (in_range(500,M,950)) & (VFASPF(VCHI2) < 16.)",
-                                                   ReFitPVs = False
-                                                   )
-        
-    def makeEtap( self ):
-        self.EtapList = self.createCombinationSel( OutputList = "EtapforBetaS" + self.name,
-                                                   DecayDescriptor = "eta_prime -> pi+ pi- gamma",
-                                                   DaughterLists = [ self.NoIPPionList,
-                                                                     DataOnDemand(Location = "Phys/StdLooseAllPhotons/Particles") ],
-                                                   DaughterCuts = { "pi+" : "(PT > 250.*MeV)",
-                                                                    "gamma" : "(PT > 300.*MeV) & (CL > 0.01)" },
-                                                   PreVertexCuts = "(APT > 1600.*MeV) & (in_range(400,AM12,1050)) & (in_range(800,AM,1120))",
-                                                   PostVertexCuts = "(PT > 1800.*MeV) & (in_range(500,M12,950)) & (in_range(900,M,1020)) & (VFASPF(VCHI2) < 16.)",
-                                                   ReFitPVs = False
-                                                   )
-        
     def makeBu2JpsiK( self ):
         Bu2JpsiK = self.createCombinationSel( OutputList = "Bu2JpsiK" + self.name,
                                  DecayDescriptor = "[B+ -> J/psi(1S) K+]cc",
@@ -356,8 +265,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
 
         Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = True )
         
-        self.registerLine(Bs2JpsiPhiDetachedLine)
         self.registerLine(Bs2JpsiPhiPrescaledLine)
+        self.registerLine(Bs2JpsiPhiDetachedLine)
 
     def makeBd2JpsiKstar( self ):
         Bd2JpsiKstar = self.createCombinationSel( OutputList = "Bd2JpsiKstar" + self.name,
@@ -378,8 +287,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bd2JpsiKstarDetachedLine  = StrippingLine( self.name + "Bd2JpsiKstarDetachedLine",
                                           algos = [ Bd2JpsiKstarDetached ], EnableFlavourTagging = True  )
 
-        self.registerLine(Bd2JpsiKstarDetachedLine)
         self.registerLine(Bd2JpsiKstarPrescaledLine)
+        self.registerLine(Bd2JpsiKstarDetachedLine)
 
     def makeBd2JpsiKs( self ):
         Bd2JpsiKs = self.createCombinationSel( OutputList = "Bd2JpsiKS" + self.name,
@@ -399,8 +308,8 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Bd2JpsiKsDetachedLine = StrippingLine( self.name + "Bd2JpsiKsDetachedLine",
                                         algos = [ Bd2JpsiKsDetached ], EnableFlavourTagging = True  )
 
-        self.registerLine(Bd2JpsiKsDetachedLine)
         self.registerLine(Bd2JpsiKsPrescaledLine)
+        self.registerLine(Bd2JpsiKsDetachedLine)
 
     def makeBd2JpsiKsLD( self ):
         Bd2JpsiKsLD = self.createCombinationSel( OutputList = "Bd2JpsiKSLD" + self.name,
