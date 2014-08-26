@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-08-26 - Anton Poluektov 
+ - Add more variables for Bs2MuMu
+
+! 2014-08-26 - Anton Poluektov 
  - Add names for BS2TauTau isolation variables by Giampiero Mancinelli to RelatedInfoNamed.h
 
 ! 2014-08-25 - Xabier Cid Vidal
