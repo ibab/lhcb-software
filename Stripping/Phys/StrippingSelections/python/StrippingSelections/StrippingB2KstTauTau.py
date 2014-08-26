@@ -41,7 +41,7 @@ default_config =  {
   'B2KstTauMu_SameSign_LinePrescale'       : 0.5,
   'B2KstTauMu_SameSign_LinePostscale'      : 1,
   },
-  'STREAMS'     : { 'Bhadron' : ['StrippingB2KstTauXConf']}
+  'STREAMS'     : ['Bhadron']
   }
   
 
@@ -126,30 +126,34 @@ class B2KstTauXConf(LineBuilder) :
 
     self.TauTau_Line    = StrippingLine(name+"_TauTau_Line",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2KstTauTau_LinePrescale'],
-                                           postscale   = config['B2KstTauTau_LinePostscale'],
-                                           selection = selB2KstTauTau
-                                           )
+                                        prescale    = config['B2KstTauTau_LinePrescale'],
+                                        postscale   = config['B2KstTauTau_LinePostscale'],
+                                        MDSTFlag = True,
+                                        selection = selB2KstTauTau
+                                        )
 
     self.TauTau_SS_Line = StrippingLine(name+"_TauTau_SameSign_Line",
-                                           #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2KstTauTau_SameSign_LinePrescale'],
-                                           postscale   = config['B2KstTauTau_SameSign_LinePostscale'],
-                                           selection   = selB2KstTauTauSS
-                                           )
+                                        #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
+                                        prescale    = config['B2KstTauTau_SameSign_LinePrescale'],
+                                        postscale   = config['B2KstTauTau_SameSign_LinePostscale'],
+                                        MDSTFlag = True,
+                                        selection   = selB2KstTauTauSS
+                                        )
     self.TauMu_Line     = StrippingLine(name+"_TauMu_Line",
-                                           #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2KstTauMu_LinePrescale'],
-                                           postscale   = config['B2KstTauMu_LinePostscale'],
-                                           selection   = selB2KstTauMu
-                                           )
+                                        #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
+                                        prescale    = config['B2KstTauMu_LinePrescale'],
+                                        postscale   = config['B2KstTauMu_LinePostscale'],
+                                        MDSTFlag = True,
+                                        selection   = selB2KstTauMu                                      
+                                        )
    
     self.TauMu_SS_Line  = StrippingLine(name+"_TauMu_SameSign_Line",
-                                           #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
-                                           prescale    = config['B2KstTauMu_SameSign_LinePrescale'],
-                                           postscale   = config['B2KstTauMu_SameSign_LinePostscale'],
-                                           selection   = selB2KstTauMuSS
-                                           )
+                                        #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
+                                        prescale    = config['B2KstTauMu_SameSign_LinePrescale'],
+                                        postscale   = config['B2KstTauMu_SameSign_LinePostscale'],
+                                        MDSTFlag = True,
+                                        selection   = selB2KstTauMuSS
+                                        )
     #
 
     self.registerLine( self.TauTau_Line )
