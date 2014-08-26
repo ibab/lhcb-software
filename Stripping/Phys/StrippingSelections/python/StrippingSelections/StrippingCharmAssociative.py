@@ -113,12 +113,12 @@ _default_configuration_ = {
     #
     ## Selection of basic particles 
     #
-    'PhotonCuts'      : ' PT > 4.0 * GeV  '                                 , 
+    'PhotonCuts'      : ' PT > 3.0 * GeV  '                                 , 
     'MuonCuts'        : ' ISMUON & ( PT > 650 * MeV ) & ( TRCHI2DOF < 5 ) ' ,
     #
     ## photons from chi_(c,b)
     #
-    'GammaChi'        : ' ( PT > 450 * MeV ) & ( CL > 0.05 ) ' , 
+    'GammaChi'        : ' ( PT > 400 * MeV ) & ( CL > 0.05 ) ' , 
     #
     ## W+- selection
     #
@@ -571,28 +571,36 @@ if '__main__' == __name__ :
     logger.info (  __doc__ ) 
     logger.info ( ' Author :  %s' % __author__ ) 
     logger.info ( ' Date   :  %s' % __date__   ) 
+    logger.info ( 80 * '*' ) 
     ##
     clines = set() 
-    logger.info ( ' Lines declared in default_config["STREAMS"] are' )
+    logger.info ( 70 * '-' ) 
+    logger.info ( ' %-15s | %-40s ' % ( 'STREAM' , 'LINE' ) )
+    logger.info ( 70 * '-' ) 
     for stream in default_config['STREAMS'] :
-        lines = default_config['STREAMS'][stream] 
+        lines = default_config['STREAMS'][stream]
         for l in lines :
-            logger.info ( ' %-15s : %-50s ' % ( stream , l ) )
+            logger.info ( ' %-15s | %-40s ' % ( stream , l ) )
             clines.add ( l )
+    logger.info ( 80 * '*' ) 
     ##
     logger.info ( ' The output locations for the default configuration: ' )
     ##
     _conf = StrippingCharmAssociativeConf ( 'CharmAssociative' ,
                                             config = default_config['CONFIG']  )
     ##
-    _ln   = ' ' + 61*'-' + '+' + 30*'-'
+    ## 
+    _ln   = ' ' + 61*'-' + '+' + 60*'-'
     logger.info ( _ln ) 
-    logger.info ( '  %-60s| %-30s  ' % ( 'Output location', 'Stripping line name' ) ) 
+    logger.info ( '  %-60s| %-45s | %s ' % ( 'Output location'     ,
+                                             'Stripping line name' ,
+                                             'MDST.DST'            ) ) 
     logger.info ( _ln )
     for l in _conf.lines() :
         lout  = l.outputLocation()
-        lname = l.name() 
-        logger.info ( '  %-60s| %-30s  ' % ( lout, lname ) )
+        lname = l.name()
+        flag  = l.MDSTFlag
+        logger.info ( '  %-60s| %-45s | %s ' % ( lout, lname , flag ) )
         if not lname in clines :
             raise AttributeError ('Unknown Line %s' % lname )
         clines.remove ( lname )
@@ -600,6 +608,14 @@ if '__main__' == __name__ :
     logger.info ( 80*'*'  ) 
     if clines :
         raise AttributeError('Undeclared lines: %s' % clines )
+
+    keys = default_config['CONFIG'].keys()
+    keys.sort()
+    prescale = [ i for i in keys if 0 <= i.find('Prescale') ]
+    other    = [ i for i in keys if not i in prescale       ] 
+    logger.info ( 'Configuration keys are: %s' % other    ) 
+    logger.info ( 'Prescale      keys are: %s' % prescale ) 
+    logger.info ( 80*'*' ) 
         
 # =============================================================================
 # The END 
