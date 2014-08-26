@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - V. Gligorov
+ - add new StrippingCharmLTUnbiased.py to init.py 
+
 ! 2014-08-26 - Pablo Ruiz Valls
  - Hotfix of TestBandQLine(s)
 
