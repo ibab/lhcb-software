@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Konrad Klimaszewski
+ - StrippingBs2JpsieePhi.py
+   Switched on Flavour Tagging and PV refit.
+
 ! 2014-08-26 - Mika Vesterinen
  - Updates to TrackEffD0ToK3Pi and TrackEffD0ToKPi and their assocated tests
 

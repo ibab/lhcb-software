@@ -5,8 +5,9 @@ __date__ = '2011/03/01'
 Bs->JpsieePhi stripping selection
 
 Exports the following stripping lines
-- Bs2JpsieePhiLine
-- Bs2JpsieePhiDetachedLine
+- BetaSBs2JpsieePhiLine
+- BetaSBs2JpsieePhiDetachedLine
+- BetaSBs2JpsieePhiFromTracksLine
 '''
 
 __all__ = (
@@ -116,6 +117,10 @@ class Bs2JpsieePhiConf(LineBuilder):
         self.Bs2JpsieePhiDetachedLine = self._Bs2JpsieePhiDetachedLine( DiElectrons, name+"Detached", config )
         self.Bs2JpsieePhiFromTracksLine = self._Bs2JpsieePhiDetachedLine( DiElectronsFromTracks, name+"FromTracks", config )
 
+        # Tests CPU time required for construction of StdLooseDiElectron
+        # self.DielectronTestLine      = self._DielectronTestLine( DiElectrons, "DielectronTest", config )
+        # self.registerLine( self.DielectronTestLine )
+
         self.registerLine( self.Bs2JpsieePhiDetachedLine )
         self.registerLine( self.Bs2JpsieePhiFromTracksLine )
         self.registerLine( self.Bs2JpsieePhiLine )
@@ -150,7 +155,8 @@ class Bs2JpsieePhiConf(LineBuilder):
         MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOF)s) & (BPVDIRA > %(BsDIRA)s)" % config
         _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC ,
-                               MotherCut = MC  
+                               MotherCut = MC,
+                               ReFitPVs = False
                                )
         Bs = Selection(name,
                        Algorithm = _Bs,
@@ -160,6 +166,7 @@ class Bs2JpsieePhiConf(LineBuilder):
               , prescale = config['Prescale']
               , postscale = 1
               , selection = Bs
+              , EnableFlavourTagging = True
               )
 
 
@@ -191,7 +198,8 @@ class Bs2JpsieePhiConf(LineBuilder):
         MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOFLoose)s)" % config
         _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC , 
-                               MotherCut = MC + config['LifetimeCut'] 
+                               MotherCut = MC + config['LifetimeCut'],
+                               ReFitPVs = True
                                )
         Bs = Selection(name,
                        Algorithm = _Bs,
@@ -201,5 +209,12 @@ class Bs2JpsieePhiConf(LineBuilder):
               , prescale = config['PrescaleLoose']
               , postscale = 1
               , selection = Bs
+              , EnableFlavourTagging = True
               )
 
+    def _DielectronTestLine( self, dielectron, name, config ) :
+        return StrippingLine(name+"Line"
+              , prescale = 1
+              , postscale = 1
+              , selection = dielectron
+              )
