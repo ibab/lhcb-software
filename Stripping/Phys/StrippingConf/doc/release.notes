@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26  Stefano Perazzini
+ - Added a check for FlavourTagging for initialized stripping lines
+
 ! 2014-08-21 - Anton Poluektov
  - Allow ODIN option to be configured with Preambulo
    ODIN=('Code', 'Preambulo')

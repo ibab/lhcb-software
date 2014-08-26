@@ -218,6 +218,13 @@ class StrippingStream ( object ) :
                 log.warning("Stream='"+self.name()+"' Line='"+line.name()+
                             "' Requests to go to MDST.DST")
 
+    def checkFlavourTagging(self) :
+        for line in self.lines :
+            if line._EnableFlavourTagging :
+                log.warning("Stream='"+self.name()+"' Line='"+line.name()+
+                            "' Requests to run FlavourTagging")
+
+
     def getRelatedInfoLocations(self) : 
 	locations = []
 	for line in self.lines : 

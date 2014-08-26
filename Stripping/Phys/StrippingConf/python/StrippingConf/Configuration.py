@@ -51,6 +51,7 @@ class StrippingConf ( object ) :
 
         self.checkRawEventRequests()
         self.checkMDSTFlag()
+        self.checkFlavourTagging()
 
 	from Gaudi.Configuration import appendPostConfigAction
 	appendPostConfigAction ( defaultToolConfigCheck )
@@ -60,6 +61,9 @@ class StrippingConf ( object ) :
 
     def checkMDSTFlag(self) :
         for stream in self.activeStreams() : stream.checkMDSTFlag()
+
+    def checkFlavourTagging(self) :
+        for stream in self.activeStreams() : stream.checkFlavourTagging()
 
     def checkAppendedLines (self) : 
         """
