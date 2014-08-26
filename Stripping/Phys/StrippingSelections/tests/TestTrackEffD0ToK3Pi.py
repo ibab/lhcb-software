@@ -6,7 +6,18 @@ from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 SL_stream = StrippingStream("SL_DST")
 from StrippingSelections import StrippingTrackEffD0ToK3Pi 
-SL_stream.appendLines( StrippingTrackEffD0ToK3Pi.TrackEffD0ToK3PiAllLinesConf("TrackEffD0ToK3Pi", StrippingTrackEffD0ToK3Pi.default_config).lines() )
+
+from GaudiKernel.SystemOfUnits import mm, GeV
+config = StrippingTrackEffD0ToK3Pi.default_config.copy()
+#config["Kaon_MIN_PIDK"] = 2
+#config["Pion_MAX_PIDK"] = 20
+#config["D0_MIN_FD"] = 2*mm
+#config["Dst_MAX_M"] = 2.1*GeV
+#config["Dst_MAX_DTFCHI2"] = 10.
+#config["VeloMINIP"] = 0.00*mm
+#config["VeloLineForTiming"] = True
+SL_stream.appendLines( StrippingTrackEffD0ToK3Pi.TrackEffD0ToK3PiAllLinesConf("TrackEffD0ToK3Pi", config).lines() )
+SL_stream.appendLines( StrippingTrackEffD0ToK3Pi.TrackEffD0ToK3PiAllLinesConf("MYTEST", config).lines() )
 
 ##### CONFIGURE THE STRIPPING
 from Configurables import  ProcStatusCheck
@@ -68,7 +79,7 @@ KillSeq.Members += [ loadCalo,loadMuon,loadRich,loadOther,killer,sc.sequence() ]
 
 DaVinci().PrintFreq = 1000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = -1
 #DaVinci().TupleFile = 'DVTuples.root'
 #DaVinci().appendToMainSequence( [MakePionsEtc] )
 

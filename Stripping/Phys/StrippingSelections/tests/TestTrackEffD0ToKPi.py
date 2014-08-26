@@ -6,19 +6,16 @@ from StrippingConf.Configuration import StrippingConf
 from StrippingConf.StrippingStream import StrippingStream
 SL_stream = StrippingStream("SL_DST")
 from StrippingSelections import StrippingTrackEffD0ToKPi 
-#config = StrippingTrackEffD0ToKPi.default_config
-config = {
-    "debug":False,
-    "Tag_MIN_PT":1400.,
-    "Tag_MIN_IP":0.1,
-    "Tag_MAX_GHPROB":0.35,
-    "Probe_MIN_IP":0.1,
-    "Probe_MIN_ETA":1.9,
-    "Probe_MAX_ETA":4.9,
-    "Kaon_MIN_PIDK":8,
-    "Pion_MAX_PIDK":0
-    }
+config = StrippingTrackEffD0ToKPi.default_config
+#config["Tag_MIN_PT"] = 1500
+#config["Tag_MIN_IP"] = 0.2
+#config["Probe_MIN_IP"] = 0.2
+#config["VeloLineForTiming"] = True
 SL_stream.appendLines( StrippingTrackEffD0ToKPi.TrackEffD0ToKPiAllLinesConf("TrackEffD0ToKPi", config).lines() )
+
+from StrippingSelections import StrippingTrackEffD0ToK3Pi 
+SL_stream.appendLines( StrippingTrackEffD0ToK3Pi.TrackEffD0ToK3PiAllLinesConf("TrackEffD0ToK3Pi", StrippingTrackEffD0ToK3Pi.default_config).lines() )
+
 
 ##### CONFIGURE THE STRIPPING
 from Configurables import  ProcStatusCheck
@@ -34,7 +31,7 @@ AuditorSvc().Auditors.append( ChronoAuditor("Chrono") )
 from Configurables import StrippingReport
 sr = StrippingReport(Selections = sc.selections())
 sr.OnlyPositive = False
-sr.ReportFrequency = 100
+sr.ReportFrequency = 1000
     
 
 from Configurables import  EventNodeKiller, StoreExplorerAlg, DataObjectVersionFilter, GaudiSequencer
@@ -78,7 +75,7 @@ elif write == "DST":
 
 DaVinci().PrintFreq = 1000
 DaVinci().HistogramFile = 'DV_stripping_histos.root'
-DaVinci().EvtMax = 10000
+DaVinci().EvtMax = 100000
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().appendToMainSequence( [ sr ] )
 DaVinci().appendToMainSequence( [ KillSeq , writer.sequence() ] )

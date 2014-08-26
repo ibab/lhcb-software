@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Mika Vesterinen
+ - Updates to TrackEffD0ToK3Pi and TrackEffD0ToKPi and their assocated tests
+
 ! 2014-08-26 - Vanya Belyaev
  - StrippingCharmAssociative 
    make help-printout more informative and much friendly 
