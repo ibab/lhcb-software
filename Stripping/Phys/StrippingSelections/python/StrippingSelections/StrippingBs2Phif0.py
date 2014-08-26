@@ -15,7 +15,8 @@ __version__ = '2.3'
 __all__ = ( 'Bs2Phif0Conf',
             'mkDiTrackList',
             'mkDiTrackList1',
-            'mkBs2Phif0' )
+            'mkBs2Phif0',
+            'default_config' )
 
 config_params = {'Q2BPrescale'       : 1.,
                  'Q2BResMinPT'       : 900.,
@@ -30,6 +31,13 @@ config_params = {'Q2BPrescale'       : 1.,
                  'Q2BBVtxChi2DOF'    : 12.,
                  'Q2BIPCHI2' : 20}
 
+default_config = {
+  'NAME'        : 'Bs2Phif0',
+  'WGs'         : ['Charmless'],
+  'BUILDERTYPE' : 'Bs2Phif0Conf',
+  'CONFIG'      : config_params,
+  'STREAMS'     : ['Bhadron'],
+}
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles#, OfflineVertexFitter

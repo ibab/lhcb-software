@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Stefano Perazzini
+ - Hotfix to some lines
+
 ! 2014-08-26 - Konrad Klimaszewski
  - StrippingBs2JpsieePhi.py
    Switched on Flavour Tagging and PV refit.

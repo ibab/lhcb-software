@@ -120,6 +120,14 @@ _default_configuration_ = {
     # =========================================================================
     }
 
+default_config = {
+  'NAME' : 'Bc2XK',
+  'WGs'  : ['Charmless'],
+  'BUILDERTYPE' : 'Bc2XKConf',
+  'CONFIG' : _default_configuration_,
+  'STREAMS' : ['Bhadron']
+}
+
 # =============================================================================
 ## @class  Bc2KstKConf
 #  @author Nathanael FARLEY nathanael.a.s.farley@cern.ch

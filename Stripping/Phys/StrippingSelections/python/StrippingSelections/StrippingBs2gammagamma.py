@@ -30,7 +30,7 @@ from Configurables import ( DiElectronMaker, ProtoParticleCALOFilter,
 
 default_config = {
     'NAME'        : 'Bs2GammaGamma',
-    'WGs'         : ['Charmless'],
+    'WGs'         : ['RD'],
     'BUILDERTYPE' : 'StrippingBs2gammagammaConf',
     'CONFIG'      : { 'gammaPT'             : 1250    # MeV/c
                      ,'gammaP'              : 11000   # MeV/c

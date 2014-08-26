@@ -22,6 +22,7 @@ __all__ = ('Buto5hBuilder',
            'makeK4pi_excl', 
            'makepp3pi_excl', 
            'makeppKpipi_excl', 
+           'default_config'
 	   )
 
 # Selecting Cuts 
@@ -53,6 +54,13 @@ config_params = {
     'ppKpipi_exclLinePostscale': 1.0
     }
 
+default_config = {
+  'NAME'        : 'Buto5h',
+  'WGs'         : ['Charmless'],
+  'BUILDERTYPE' : 'Buto5hBuilder',
+  'CONFIG'      : config_params,
+  'STREAMS'     : ['Bhadron']
+}
 
 """
 B+ -> h+ h+ h+ h- h- channels

@@ -9,7 +9,8 @@ Exported symbols (use python help!):
 __author__  = ['Jan Mickelle V. Maratas', 'Stephane Monteil']
 __date__    = '24/08/2014'
 __version__ = 'v1r0'
-__all__     = 'Xb2p2hOrXb2p3hConf'
+__all__     = {'Xb2p2hOrXb2p3hConf',
+               'default_config'}
 
 from Gaudi.Configuration                   import *
 from PhysSelPython.Wrappers                import Selection
@@ -20,28 +21,35 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, DaVinci__N3Body
 from StandardParticles                     import StdNoPIDsPions     as Pions
 from StandardParticles                     import StdLooseANNProtons as Protons
 
-default_config = { 'Trk_MaxChi2Ndof'   : 3.0,
-                   'Trk_MaxGhostProb'  : 0.4,
-                   'Trk_MinIPChi2'     : 16.0,
-                   'Trk_MinP'          : 1500.0,
-                   'Trk_MinProbNNp'    : 0.05,
-                   'Xb_MinSumPTppi'    : 1500.0,
-                   'Xb_MinSumPTppipi'  : 2500.0,
-                   'Xb_MinM_3body'     : 5195.0,
-                   'Xb_MaxM_3body'     : 6405.0,
-                   'Xb_MinSumPT_3body' : 3500.0,
-                   'Xb_MinPT_3body'    : 1500.0,
-                   'Xb_MinM_4body'     : 5195.0,
-                   'Xb_MaxM_4body'     : 6405.0,
-                   'Xb_MinSumPT_4body' : 3500.0,
-                   'Xb_MinPT_4body'    : 1500.0,
-                   'Xb_MaxDOCAChi2'    : 20.0,
-                   'Xb_MaxVtxChi2'     : 20.0,
-                   'Xb_MinFDChi2'      : 50.0,
-                   'Xb_MaxIPChi2'      : 16.0,
-                   'Xb_MinDira'        : 0.9999,
-                   'Prescale'          : 1.0,
-                   'Postscale'         : 1.0 }
+default_config = {
+    'NAME'        : 'Xb2p2hOrXb2p3h',
+    'WGs'         : ['Charmless'],
+    'BUILDERTYPE' : 'Xb2p2hOrXb2p3hConf',
+    'CONFIG'      : {'Trk_MaxChi2Ndof'   : 3.0,
+                     'Trk_MaxGhostProb'  : 0.4,
+                     'Trk_MinIPChi2'     : 16.0,
+                     'Trk_MinP'          : 1500.0,
+                     'Trk_MinProbNNp'    : 0.05,
+                     'Xb_MinSumPTppi'    : 1500.0,
+                     'Xb_MinSumPTppipi'  : 2500.0,
+                     'Xb_MinM_3body'     : 5195.0,
+                     'Xb_MaxM_3body'     : 6405.0,
+                     'Xb_MinSumPT_3body' : 3500.0,
+                     'Xb_MinPT_3body'    : 1500.0,
+                     'Xb_MinM_4body'     : 5195.0,
+                     'Xb_MaxM_4body'     : 6405.0,
+                     'Xb_MinSumPT_4body' : 3500.0,
+                     'Xb_MinPT_4body'    : 1500.0,
+                     'Xb_MaxDOCAChi2'    : 20.0,
+                     'Xb_MaxVtxChi2'     : 20.0,
+                     'Xb_MinFDChi2'      : 50.0,
+                     'Xb_MaxIPChi2'      : 16.0,
+                     'Xb_MinDira'        : 0.9999,
+                     'Prescale'          : 1.0,
+                     'Postscale'         : 1.0
+                     },
+    'STREAMS'     : ['Bhadron']
+    }
 
 class Xb2p2hOrXb2p3hConf(LineBuilder) :
     """

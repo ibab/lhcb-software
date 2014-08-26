@@ -131,7 +131,7 @@ default_config =  {
     , "Location"  : "BSTAUTAUVARIABLES"  
     }
   ]
-  }
+  },
   'STREAMS'     : ['Bhadron']
   }
 

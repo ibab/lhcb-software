@@ -255,6 +255,7 @@ import StrippingB2pphh
 import StrippingBc2XK
 import StrippingLb2PhipK
 import StrippingBs2gammagamma
+import StrippingXb2p2hOrXb2p3h
 
 import StrippingBs2D0KS0
 import StrippingB2LambdaMuLines
