@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Jibo He for Morgan Martin
+ - Added first version of Bs->Etac Phi line 
+
 ! 2014-08-26 - Paul Seyfert
  - Added related infos to Tau23MuLines
 

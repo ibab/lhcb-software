@@ -54,6 +54,7 @@ import StrippingBs2PhiKst0
 import StrippingB2CharmoniumX_6H
 import StrippingBs2Q2B
 import StrippingB2JpsiKShh
+import StrippingBs2EtacPhiBDT
 
 import StrippingBs2MuMuPhi
 import StrippingB2XMuMu
