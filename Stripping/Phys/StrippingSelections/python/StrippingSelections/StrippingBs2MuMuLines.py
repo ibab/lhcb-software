@@ -1,3 +1,4 @@
+
 '''
 Module for construction of Bs-->MuMu stripping selections and lines
 
@@ -16,7 +17,7 @@ __date__ = '07/08/2014'
 __version__ = '$Revision: 1.3 $'
 
 __all__ = ('Bs2MuMuLinesConf',
-           'config_default',
+           'default_config',
            'makeDefault',
            'makeBs2mmWide',
            'makeLoose',
@@ -31,12 +32,93 @@ __all__ = ('Bs2MuMuLinesConf',
 #           'makePromptJPsi'
            )
 
+default_config = {
+    'Name' : 'Bs2MuMuLines',
+    'WGs'  : ['RD'],
+    'BUILDERTYPE' : 'Bs2MuMuLinesConf',
+    'CONFIG'   : {
+        'DefaultLinePrescale'    : 1,
+        'DefaultPostscale'   : 1,
+        'Bs2mmWideLinePrescale'  : 1,
+        'LooseLinePrescale'      : 0.,
+        'BuPrescale'    : 1,
+        'BsPrescale'    : 1,
+        'BdPrescale'    : 1,
+        'JPsiLinePrescale'       : 1,
+        'JPsiLooseLinePrescale'  : 0.1,
+        'JPsiPromptLinePrescale' : 0.005,
+        'SSPrescale'             : 1 ,
+        'Bs2mmLTUBLinePrescale'  : 1 ,
+        'Bs2KKLTUBLinePrescale' : 1 ,
+        'MuIPChi2_loose'        :  9,
+        'MuTrChi2_loose'        : 10,
+        'BIPChi2_loose'         : 64,
+        'BFDChi2_loose'         : 100,
+        'BPVVDChi2'            : 121,
+        'daugt_IPChi2'            : 9
+        },
+    'STREAMS' : ['DiMuon']
+        }                
+    
+
+
+##########################################
+## define local stdjets
+from Gaudi.Configuration   import *
+from CommonParticles.Utils import *
+
+##########################################
+## standard jetID
+from JetAccessories.JetMaker_Config import JetMakerConf
+stdjets_name_noban = "StdJetsNoJetIDNoBan"
+StdJetsNoJetIDNoBan = JetMakerConf(stdjets_name_noban,
+                                   R = 0.7 ,
+                                   PtMin = 500.,
+                                   JetIDCut = False).algorithms[0]
+
+## configure Data-On-Demand service                                                        
+locations = updateDoD ( StdJetsNoJetIDNoBan )
+
+
+# the muons banning and B adding is line dependent (need to provide the location of the muons/B!)
+def create_stdjets(strob,line_location,stdjets_name_ban, stdjets_name_addb):
+    
+    myconf1 = JetMakerConf(stdjets_name_ban,
+                           R = 0.7 ,
+                           PtMin = 500.,
+                           listOfParticlesToBan = [line_location],
+                           JetIDCut = False).algorithms[0]
+    
+    if "StdJetsNoJetIDBan" in dir(strob): strob.StdJetsNoJetIDBan.append(myconf1)
+    else: strob.StdJetsNoJetIDBan= [myconf1]
+                                      
+    ## configure Data-On-Demand service                                            
+    locations = updateDoD ( myconf1 )
+
+    myconf2 = JetMakerConf(stdjets_name_addb,
+                           Inputs = ['Phys/PFParticles/Particles',line_location],
+                           R = 0.7,
+                           PtMin = 500.,
+                           JetIDCut = False).algorithms[0]
+
+    if "StdJetsNoJetIDAddB" in dir(strob):  strob.StdJetsNoJetIDAddB.append(myconf2)
+    else:  strob.StdJetsNoJetIDAddB=[myconf2]
+        
+    ## configure Data-On-Demand service                                            
+    locations = updateDoD ( myconf2 )
+
+
+
+##########################################
+
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 #from StrippingSelections.Utils import checkConfig
+
+
 
 class Bs2MuMuLinesConf(LineBuilder) :
     """
@@ -81,38 +163,16 @@ class Bs2MuMuLinesConf(LineBuilder) :
                               'JPsiPromptLinePrescale',
                               'SSPrescale',
                               'Bs2mmLTUBLinePrescale',
-                              'Bs2KKLTUBLinePrescale'             
-                              
+                              'Bs2KKLTUBLinePrescale',
+                              'BPVVDChi2',
+                              'daugt_IPChi2',                             
                               )
-    
-    #### This is the dictionary of all tunable cuts ########
-    config_default={
-        'DefaultLinePrescale'    : 1,
-        'DefaultPostscale'   : 1,
-        'Bs2mmWideLinePrescale'  : 1,
-        'LooseLinePrescale'      : 0.,
-        'BuPrescale'    : 1,
-        'BsPrescale'    : 1,
-        'BdPrescale'    : 1,
-        'JPsiLinePrescale'       : 1,
-        'JPsiLooseLinePrescale'  : 0.1,
-        'JPsiPromptLinePrescale' : 0.005,
-        'SSPrescale'             : 1 ,
-        'Bs2mmLTUBLinePrescale'  : 1 ,
-        'Bs2KKLTUBLinePrescale' : 1 ,
 
-        'MuIPChi2_loose'        :  9,
-        'MuTrChi2_loose'        : 10,
-        'BIPChi2_loose'         : 64,
-        'BFDChi2_loose'         : 100
-        }                
-    
-    
 
 
     def __init__(self, 
                  name = 'Bs2MuMu',
-                 config = None) :
+                 config=default_config):#None ) :
 
         LineBuilder.__init__(self, name, config)
         #checkConfig(Bs2MuMuLinesConf.__configuration_keys__,config)
@@ -127,9 +187,16 @@ class Bs2MuMuLinesConf(LineBuilder) :
         ltub_name = name+'LTUB'
         Bs2KKltub_name = name+'Bs2KKLTUB'
 
-        self.selDefault = makeDefault(default_name)
+        self.selDefault = makeDefault(default_name,
+                                      BPVVDChi2 = config['BPVVDChi2'],
+                                      Muon_MIPChi2DV = config['daugt_IPChi2']
+                                      )
+ 
 
-        self.selWide = makeBs2mmWide(wide_name)
+        self.selWide = makeBs2mmWide(wide_name,
+                                     BPVVDChi2 = config['BPVVDChi2'],
+                                     Muon_MIPChi2DV = config['daugt_IPChi2']
+                                     )
 
         self.selLoose = makeLoose(loose_name,
                                   MuIPChi2=config['MuIPChi2_loose'],
@@ -138,72 +205,185 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                   BFDChi2=config['BFDChi2_loose']
                                   )
         
-        self.selBu = makeBu(bu_name)
+        self.selBu = makeBu(bu_name,
+                            K_MIPChi2DV = config['daugt_IPChi2'],
+                            Jpsi_BPVVDChi2 = config['BPVVDChi2']
+                            )
 
-        self.selBs = makeBs(bs_name)
+        self.selBs = makeBs(bs_name,
+                            Phi_MIPChi2DV = config['daugt_IPChi2'],
+                            Jpsi_BPVVDChi2 = config['BPVVDChi2']
+                            )
 
-        self.selBd = makeBd(bd_name)
+        self.selBd = makeBd(bd_name,
+                            Kst_MIPChi2DV = config['daugt_IPChi2'],
+                            Jpsi_BPVVDChi2 = config['BPVVDChi2']
+                            )
 
-        self.selSS = makeSS(ss_name)
+        self.selSS = makeSS(ss_name,                            
+                            BPVVDChi2 = config['BPVVDChi2'],
+                            Muon_MIPChi2DV = config['daugt_IPChi2']
+                            )
 
         self.selLTUB = makeBs2mmLTUB(ltub_name)
 
         self.selBs2KKLTUB = makeBs2KKLTUB(Bs2KKltub_name)
 
-        self.defaultLine = StrippingLine(default_name+"Line",
-                                            prescale = config['DefaultLinePrescale'],
-                                            postscale = config['DefaultPostscale'],
-                                            MDSTFlag = True,
-                                            RequiredRawEvents = ["Muon"],
-                                            algos = [ self.selDefault ]
-                                            )
+        #Jet Information
+        stdjets_name_ban_default = "StdJetsNoJetIDBanMuonsDef"
+        stdjets_name_addb_default = "StdJetsNoJetIDAddBDef"
+ 
+        stdjets_name_ban_wide = "StdJetsNoJetIDBanMuonsWide"
+        stdjets_name_addb_wide = "StdJetsNoJetIDAddBWide"
+
+        stdjets_name_ban_SS = "StdJetsNoJetIDBanMuonsSS"
+        stdjets_name_addb_SS = "StdJetsNoJetIDAddBSS"
+ 
+        stdjets_name_ban_LTUB = "StdJetsNoJetIDBanMuonsLTUB"
+        stdjets_name_addb_LTUB = "StdJetsNoJetIDAddBLTUB"
+
+        stdjets_name_ban_KKLTUB = "StdJetsNoJetIDBanMuonsKKLTUB"
+        stdjets_name_addb_KKLTUB = "StdJetsNoJetIDAddBKKLTUB"
+
+
+
+
+
         
+        self.defaultLine = StrippingLine(default_name+"Line",
+                                         prescale = config['DefaultLinePrescale'],
+                                         postscale = config['DefaultPostscale'],
+                                         MDSTFlag = True,
+                                         RequiredRawEvents = ["Muon"],
+                                         algos = [ self.selDefault ],
+                                         RelatedInfoTools = [
+            {'Type' : 'RelInfoJetsVariables',
+             'Location': 'RelatedInfoJets',
+             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_default+"/Particles",
+             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_default+"/Particles"},
+                        
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
+            ]
+                                          
+                                         )
+
+         
+         
         self.wideLine = StrippingLine(wide_name+"Line",
                                       prescale = config['Bs2mmWideLinePrescale'],
                                       postscale = config['DefaultPostscale'],
                                       MDSTFlag = True,
                                       RequiredRawEvents = ["Muon"],
-                                      algos = [ self.selWide ]
+                                      algos = [ self.selWide ],
+                                      RelatedInfoTools = [
+            {'Type' : 'RelInfoJetsVariables',
+             'Location': 'RelatedInfoJets',
+             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_wide+"/Particles",
+             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_wide+"/Particles"},
+            
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
+            ]
                                       )
         
+
         self.looseLine = StrippingLine(loose_name+"Line",
-                                            prescale = config['LooseLinePrescale'],
-                                            postscale = config['DefaultPostscale'],
-                                            MDSTFlag = True,
-                                            RequiredRawEvents = ["Muon"],
-                                            algos = [ self.selLoose ]
-                                            )
+                                       prescale = config['LooseLinePrescale'],
+                                       postscale = config['DefaultPostscale'],
+                                       MDSTFlag = True,
+                                       RequiredRawEvents = ["Muon"],
+                                       algos = [ self.selLoose ],
+                                       )
+
+
 
         self.buLine = StrippingLine(bu_name+"Line",
                                     prescale = config['BuPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    algos = [ self.selBu ]
+                                    MDSTFlag = True,
+                                    RequiredRawEvents = ["Muon"],
+                                    algos = [ self.selBu ],
                                     )
 
+
+
+
+     
         self.bsLine = StrippingLine(bs_name+"Line",
                                     prescale = config['BsPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    algos = [ self.selBs ]
+                                    MDSTFlag = True,
+                                    RequiredRawEvents = ["Muon"],
+                                    algos = [ self.selBs ],
                                     )
+
+
+
+
 
         self.bdLine = StrippingLine(bd_name+"Line",
                                     prescale = config['BdPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    algos = [ self.selBd ]
+                                    MDSTFlag = True,
+                                    RequiredRawEvents = ["Muon"],
+                                    algos = [ self.selBd ],                                  
                                     )
+
+
+
+
 
         self.ssLine = StrippingLine(ss_name+"Line",
                                     prescale = config['SSPrescale'],
                                     postscale = config['DefaultPostscale'],
-                                    algos = [ self.selBd ]
+                                    MDSTFlag = True,
+                                    RequiredRawEvents = ["Muon"],
+                                    algos = [ self.selSS ],
+                                    RelatedInfoTools = [
+            {'Type' : 'RelInfoJetsVariables',
+             'Location': 'RelatedInfoJets',
+             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_SS+"/Particles",
+             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_SS+"/Particles"},
+            
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
+            ]
                                     )
-        
+
+
+
+       
         self.ltubLine = StrippingLine(ltub_name+"Line",
                                     prescale = config['Bs2mmLTUBLinePrescale'],
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
                                     RequiredRawEvents = ["Muon"],
-                                    algos = [ self.selLTUB ]
+                                    algos = [ self.selLTUB ],
+                                   RelatedInfoTools = [
+            {'Type' : 'RelInfoJetsVariables',
+             'Location': 'RelatedInfoJets',
+             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_LTUB+"/Particles",
+             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_LTUB+"/Particles"},
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
+            ]
                                     )
 
         self.Bs2KKltubLine = StrippingLine(Bs2KKltub_name+"Line",
@@ -211,9 +391,32 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
                                     RequiredRawEvents = ["Muon"],
-                                    algos = [ self.selBs2KKLTUB ]
-                                    )
+                                    algos = [ self.selBs2KKLTUB ],
+                                    RelatedInfoTools = [
+            {'Type' : 'RelInfoJetsVariables',
+             'Location': 'RelatedInfoJets',
+             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_KKLTUB+"/Particles",
+             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_KKLTUB+"/Particles"},
+            
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
+            ]
+                                 )
 
+
+
+        create_stdjets(self,self.defaultLine.outputLocation(),stdjets_name_ban_default, stdjets_name_addb_default)
+        create_stdjets(self,self.wideLine.outputLocation(),stdjets_name_ban_wide, stdjets_name_addb_wide)
+        create_stdjets(self,self.ssLine.outputLocation(),stdjets_name_ban_SS, stdjets_name_addb_SS)
+        create_stdjets(self,self.ltubLine.outputLocation(),stdjets_name_ban_LTUB, stdjets_name_addb_LTUB)
+        create_stdjets(self,self.Bs2KKltubLine.outputLocation(),stdjets_name_ban_KKLTUB, stdjets_name_addb_KKLTUB)
+
+
+        
         self.registerLine(self.defaultLine)
         self.registerLine(self.wideLine)
         self.registerLine(self.looseLine)
@@ -224,7 +427,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
         self.registerLine(self.ltubLine)
         self.registerLine(self.Bs2KKltubLine)
 
-def makeDefault(name) :
+def makeDefault(name, BPVVDChi2, Muon_MIPChi2DV) :
     """
     default Bs2mumu selection object (tighter selection a la roadmap)
     starts from Phys/StdNoPIDsMuons
@@ -242,11 +445,11 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuNoMuID.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuNoMuID.ReFitPVs = True
-    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )"\
+    Bs2MuMuNoMuID.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> %(Muon_MIPChi2DV)s )&(TRCHI2DOF < 3 )"\
                                     " & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))"\
                                     " & (PT < 40*GeV)"\
                                     " & (P < 500*GeV)"\
-                                    " & ( TRGHOSTPROB < 0.3 )" }
+                                    " & ( TRGHOSTPROB < 0.3 )"% locals() }
     
     Bs2MuMuNoMuID.CombinationCut = "(ADAMASS('B_s0')<500*MeV)"\
                                    "& (AMAXDOCA('')<0.3*mm)"
@@ -254,10 +457,10 @@ def makeDefault(name) :
     Bs2MuMuNoMuID.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
                               "& (ADMASS('B_s0') < 500*MeV )"\
                               "& (BPVDIRA > 0) "\
-                              "& (BPVVDCHI2> 225)"\
+                              "& (BPVVDCHI2> %(BPVVDChi2)s)"\
                               "& (BPVIPCHI2()< 25) "\
                               "& (BPVLTIME()<13.248*ps)"\
-                              "& (PT > 350*MeV)"
+                              "& (PT > 350*MeV)"% locals()
                              
     _stdNoPIDsMuons = DataOnDemand(Location = "Phys/StdNoPIDsMuons/Particles")
 
@@ -266,7 +469,7 @@ def makeDefault(name) :
                       RequiredSelections = [ _stdNoPIDsMuons])
 
 
-def makeBs2mmWide(name) :
+def makeBs2mmWide(name, BPVVDChi2, Muon_MIPChi2DV) :
     """
     Bs2mumu selection object (tighter selection a la roadmap)
     with muon Id and wide mass window (1.2GeV)
@@ -284,15 +487,15 @@ def makeBs2mmWide(name) :
     Bs2MuMuWideMass.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuWideMass.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuWideMass.ReFitPVs = True
-    Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )" }
+    Bs2MuMuWideMass.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> %(Muon_MIPChi2DV)s)&(TRCHI2DOF < 3 )" % locals()}
     Bs2MuMuWideMass.CombinationCut = "(ADAMASS('B_s0')<1200*MeV)"\
                                      "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2MuMuWideMass.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
                                 "& (ADMASS('B_s0') < 1200*MeV )"\
                                 "& (BPVDIRA > 0) "\
-                                "& (BPVVDCHI2> 225)"\
-                                "& (BPVIPCHI2()< 25) "
+                                "& (BPVVDCHI2> %(BPVVDChi2)s)"\
+                                "& (BPVIPCHI2()< 25) "% locals()
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
@@ -301,7 +504,7 @@ def makeBs2mmWide(name) :
                       RequiredSelections = [ _stdLooseMuons])
 
 
-def makeSS(name) :
+def makeSS(name, BPVVDChi2, Muon_MIPChi2DV) :
     """
     Bs2mumu selection object (tighter selection a la roadmap)
     with muon Id and same sign muons 
@@ -319,15 +522,15 @@ def makeSS(name) :
     Bs2MuMuSS.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     Bs2MuMuSS.OfflineVertexFitter.useResonanceVertex = False
     Bs2MuMuSS.ReFitPVs = True
-    Bs2MuMuSS.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> 25.)&(TRCHI2DOF < 3 )" }
+    Bs2MuMuSS.DaughtersCuts = { "mu+" : "(MIPCHI2DV(PRIMARY)> %(Muon_MIPChi2DV)s )&(TRCHI2DOF < 3 )" % locals()}
     Bs2MuMuSS.CombinationCut = "(ADAMASS('B_s0')<200*MeV)"\
                                      "& (AMAXDOCA('')<0.3*mm)"
 
     Bs2MuMuSS.MotherCut = "(VFASPF(VCHI2/VDOF)<9) "\
                                 "& (ADMASS('B_s0') < 200*MeV )"\
                                 "& (BPVDIRA > 0) "\
-                                "& (BPVVDCHI2> 225)"\
-                                "& (BPVIPCHI2()< 25) "
+                                "& (BPVVDCHI2>  %(BPVVDChi2)s)"\
+                                "& (BPVIPCHI2()< 25) "% locals()
     
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 
@@ -380,7 +583,7 @@ def makeLoose(name, MuIPChi2, MuTrChi2, BIPChi2, BFDChi2 ) :
     
 
 
-def makeBu(name) :
+def makeBu(name, K_MIPChi2DV,  Jpsi_BPVVDChi2) :
     """
     detached Bu-->JPsiK selection. Selection is aligned to the Bs2MuMu
     selection.
@@ -394,7 +597,7 @@ def makeBu(name) :
     
     from Configurables import OfflineVertexFitter
    
-    SelDJPsi = makeDetachedJPsi(name)
+    SelDJPsi = makeDetachedJPsi(name+"SelJpsi",  Jpsi_BPVVDChi2)
 
     PreselBu2JPsiKCommon = CombineParticles("PreselBu2JPsiKCommon")
     PreselBu2JPsiKCommon.DecayDescriptor =  " [B+ -> J/psi(1S) K+]cc ";
@@ -402,18 +605,18 @@ def makeBu(name) :
     PreselBu2JPsiKCommon.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
     PreselBu2JPsiKCommon.OfflineVertexFitter.useResonanceVertex = False
     PreselBu2JPsiKCommon.ReFitPVs = True
-    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 3 ) &(MIPCHI2DV(PRIMARY)>25)& (PT>250*MeV) "}
+    PreselBu2JPsiKCommon.DaughtersCuts = { "K+" : "(ISLONG) & (TRCHI2DOF < 3 ) &(MIPCHI2DV(PRIMARY)>%(K_MIPChi2DV)s)& (PT>250*MeV) "% locals()}
     PreselBu2JPsiKCommon.CombinationCut = "(ADAMASS('B+') < 500*MeV)"
     PreselBu2JPsiKCommon.MotherCut = "(BPVIPCHI2()< 25)& (VFASPF(VCHI2)<45) "
 
     _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
 
-    return Selection( "SelBu2JPsiK",
+    return Selection( name,
                          Algorithm = PreselBu2JPsiKCommon,
                          RequiredSelections=[SelDJPsi,_kaons] )
 
 
-def makeBs(name) :
+def makeBs(name, Phi_MIPChi2DV,  Jpsi_BPVVDChi2) :
     """
     detached Bs-->JPsiPhi selection. Selection is aligned to the Bs2MuMu
     selection.
@@ -427,7 +630,7 @@ def makeBs(name) :
     
     from Configurables import OfflineVertexFitter
    
-    SelDJPsi = makeDetachedJPsi(name)
+    SelDJPsi = makeDetachedJPsi(name+"SelJpsi",  Jpsi_BPVVDChi2)
 
     makePhi = CombineParticles("makePhi")
     makePhi.DecayDescriptor =  "phi(1020) -> K+ K-"
@@ -436,8 +639,8 @@ def makeBs(name) :
     _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
 
     makePhi.CombinationCut =  "(ADAMASS('phi(1020)')<20*MeV)"
-    makePhi.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
-    SelPhi = Selection( "SelPhi",                       Algorithm= makePhi,
+    makePhi.MotherCut = " (MIPCHI2DV(PRIMARY)> %(Phi_MIPChi2DV)s)"% locals()
+    SelPhi = Selection( name+"SelPhi",                       Algorithm= makePhi,
                         RequiredSelections=[_kaons] )
 
     PreselBs2JPsiPhiCommon = CombineParticles("PreselBs2JPsiPhiCommon")
@@ -450,13 +653,13 @@ def makeBs(name) :
     PreselBs2JPsiPhiCommon.CombinationCut = "(ADAMASS('B_s0') < 500*MeV)"
     PreselBs2JPsiPhiCommon.MotherCut = "(BPVIPCHI2()< 25)& (VFASPF(VCHI2)<75)"
     
-    return  Selection( "SelBs2JPsiPhi",
+    return  Selection( name,
                        Algorithm = PreselBs2JPsiPhiCommon,
                        RequiredSelections=[SelDJPsi,SelPhi] )
 
 
 
-def makeBd(name) :
+def makeBd(name, Kst_MIPChi2DV,  Jpsi_BPVVDChi2) :
     """
     detached Bd-->JPsiK* selection. Selection is aligned to the Bs2MuMu
     selection.
@@ -470,7 +673,7 @@ def makeBd(name) :
     
     from Configurables import OfflineVertexFitter
    
-    SelDJPsi = makeDetachedJPsi(name)
+    SelDJPsi = makeDetachedJPsi(name+"SelJpsi",  Jpsi_BPVVDChi2)
 
 
     ## make Kstar
@@ -485,12 +688,12 @@ def makeBd(name) :
                                " & ( TRGHOSTPROB < 0.3 )"\
                                "& (MIPCHI2DV(PRIMARY)> 4.)& (PT>250*MeV)"}
     makeKstar.CombinationCut =  "(ADAMASS('K*(892)0')<2000*MeV)"#huge, to allow to study JPsi K1 etc
-    makeKstar.MotherCut = " (MIPCHI2DV(PRIMARY)> 25.)"
+    makeKstar.MotherCut = " (MIPCHI2DV(PRIMARY)> %(Kst_MIPChi2DV)s)"% locals()
 
     _pions = DataOnDemand(Location='Phys/StdNoPIDsPions/Particles')
     _kaons = DataOnDemand(Location='Phys/StdNoPIDsKaons/Particles')
 
-    SelKst = Selection( "SelKst",
+    SelKst = Selection( name+"SelKst",
                         Algorithm= makeKstar,
                         RequiredSelections=[_pions,_kaons] )
     
@@ -506,14 +709,14 @@ def makeBd(name) :
     PreselBd2JPsiKstCommon.CombinationCut = "(ADAMASS('B0') < 500*MeV)"
     PreselBd2JPsiKstCommon.MotherCut = "(BPVIPCHI2()< 25) & (VFASPF(VCHI2)<75)"
 
-    return Selection( "SelBd2JPsiKstar",
+    return Selection( name,
                       Algorithm = PreselBd2JPsiKstCommon,
                       RequiredSelections=[SelDJPsi,SelKst] )
 
 
 
 
-def makeDetachedJPsi(name) :
+def makeDetachedJPsi(name, Jpsi_BPVVDChi2) :
     """
     detached JPsi selection for B--> JPsi X calibration and
     normalization channels. Selection is aligned to the Bs2MuMu
@@ -541,7 +744,7 @@ def makeDetachedJPsi(name) :
     DetachedJPsi.MotherCut = "(VFASPF(VCHI2)<9) "\
                              "& (ADMASS('J/psi(1S)') < 100*MeV )"\
                              "& (BPVDIRA > 0) "\
-                             "& (BPVVDCHI2>169)"
+                             "& (BPVVDCHI2> %(Jpsi_BPVVDChi2)s)"% locals()
 
     _stdLooseMuons = DataOnDemand(Location = "Phys/StdLooseMuons/Particles")
 

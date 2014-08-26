@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-26 - Hannah Mary Evans
+ - StrippingBs2MuMuLines: added isolation variables and jet variables, implemented looser cuts, asked for MDST support, added default_config dictionary
+
 ! 2014-08-26 - Julien Cogan
  - StrippingZVTOP : add a new line to select pairs of same sign taus decaying into 3 pions, set the MDST flag to True 
    and add a default_config dictionnary
