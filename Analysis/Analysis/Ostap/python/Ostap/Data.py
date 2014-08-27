@@ -90,20 +90,26 @@ class Files(object):
     >>> data  = Files( '*.root' )
     >>> files = data.files 
     """    
-    def __init__( self , files , description = "" ) :  
+    def __init__( self                  ,
+                  files                 ,
+                  description = ""      ,
+                  maxfiles    = 1000000 ) :  
         #
         self.files        = []
         self.patterns     = files
-        self.description  = description 
+        self.description  = description
+        self.maxfiles     = maxfiles 
         # 
         if isinstance ( files , str ) : files = [ files ]
-        # 
-        for pattern in files :
-            
+        #
+        for pattern in files :            
             for f in glob.iglob ( pattern ) :
+                if len ( files ) < self.maxfiles : self.treatFile  ( f )
+                else :
+                    logger.warning ('Maxfiles limit is reached %s ' % self.maxlimit )
+                    break
                 
-                self.treatFile  ( f )
-                
+                    
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
         self.files.append ( the_file )
@@ -132,14 +138,15 @@ class Data(Files):
     >>> flist = data.files 
     """
     
-    def __init__( self             ,
-                  chain            ,
-                  files       = [] ,
-                  description = '' ) :
+    def __init__( self                  ,
+                  chain                 ,
+                  files       = []      ,
+                  description = ''      , 
+                  maxfiles    = 1000000 ) :  
 
         
         self.chain = ROOT.TChain ( chain )
-        Files.__init__( self , files , description )
+        Files.__init__( self , files , description  , maxfiles )
             
     ## the specific action for each file 
     def treatFile ( self, the_file ) :
@@ -169,14 +176,15 @@ class Data2(Data):
     >>> flist = data.files 
     """
     
-    def __init__( self             ,
-                  chain1           ,
-                  chain2           , 
-                  files       = [] ,
-                  description = '' ) :
+    def __init__( self                  ,
+                  chain1                ,
+                  chain2                , 
+                  files       = []      ,
+                  description = ''      ,
+                  maxfiles    = 1000000 ) :  
         
         self.chain2 = ROOT.TChain ( chain2 )
-        Data.__init__( self , chain1 , files , description )
+        Data.__init__( self , chain1 , files , description , maxfiles )
         self.chain1 = self.chain 
             
     ## the specific action for each file 
@@ -214,9 +222,10 @@ class DataAndLumi(Data2):
                   chain              ,
                   files       = []   ,
                   description = ''   , 
-                  lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' ) : 
+                  lumi_chain  = 'GetIntegratedLuminosity/LumiTuple' , 
+                  maxfiles    = 1000000                             ) :  
 
-        Data2.__init__ ( self , chain , lumi_chain , files , description ) 
+        Data2.__init__ ( self , chain , lumi_chain , files , description , maxfiles  ) 
         self.lumi = self.chain2 
         
     ## get the luminosity 

@@ -85,6 +85,7 @@ wilsonEff       = Gaudi.Math.wilsonEff
 agrestiCoullEff = Gaudi.Math.agrestiCoullEff
 iszero          = cpp.LHCb.Math.Zero('double')() 
 #
+##
 import math, sys
 from array import array
 # =============================================================================
@@ -132,6 +133,14 @@ def hID     () : return histoID ( )
 ## global ROOT identified for dataset objects 
 def dsID    () : return rootID  ( 'ds_' )
 
+
+# =============================================================================
+## FIX
+#  a = VE(1,1)
+#  b = VE(a)
+#  print a, b
+logger.warnig( 'Disable converison of VE to float. To be checked later')
+del VE.__float__
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
 #  - it automaticlaly assign unique ID
@@ -184,7 +193,6 @@ def _int ( ve , precision = 1.e-5 ) :
     if abs ( ve.value () -        ve.cov2  ()   ) > diff : return False
     #
     return True 
-
 
 # =============================================================================
 ## get the (gaussian) random number according to parameters
@@ -1827,6 +1835,8 @@ def _h1_oper_ ( h1 , h2 , oper ) :
     >>> h2     = ...
     >>> result = h1 (oper) h2 
     """
+            
+
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
@@ -1850,7 +1860,7 @@ def _h1_oper_ ( h1 , h2 , oper ) :
         #
         y2 = h2 ( x1.value() ) 
         #
-        v = VE ( oper ( y1 , y2 ) ) 
+        v = VE  ( oper ( y1 , y2 ) ) 
         #
         if not v.isfinite() : continue 
         #
@@ -1867,6 +1877,7 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
     """
     Operation with the histogram 
     """
+    
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
@@ -1879,7 +1890,7 @@ def _h1_ioper_ ( h1 , h2 , oper ) :
     elif isinstance ( h2 ,   ROOT.TF1 ) :
         v1 =          h2  
         h2 = lambda s : VE ( v1 ( float ( s ) , 0 ) )    
-    #
+    #    
     for i1,x1,y1 in h1.iteritems() :
         #
         y2 = h2 ( x1.value() ) 
@@ -1905,6 +1916,7 @@ def _h1_div_ ( h1 , h2 ) :
     >>> h2     = ...
     >>> result = h1 / h2  
     """
+    #
     return _h1_oper_ ( h1 , h2 , lambda x,y : x/y ) 
 # =============================================================================
 ##  Division with the histograms 
