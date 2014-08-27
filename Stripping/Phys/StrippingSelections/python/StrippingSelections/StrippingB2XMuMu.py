@@ -28,7 +28,16 @@ from Configurables import SubPIDMMFilter
 
 
 defaultConfig = {
-      'KpiVXCHI2NDOF'      : 9.0           # dimensionless
+    'RelatedInfoTools'      : [
+    {   "Type" : "RelInfoConeVariables"
+      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+      , 'Location':'ConeIsoInfo'} 
+      , {'Type' : 'RelInfoVertexIsolation'
+      , 'Location':'VtxIsoInfo'} 
+      , {'Type': 'RelInfoVertexIsolationBDT'
+      , 'Location':'VtxIsoBDTInfo' }
+    ]
+    , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
     , 'MuonPID'            : -3.0          # dimensionless
     , 'DimuonUPPERMASS'    : 7100.0        # MeV
     , 'Pi0MINPT'           : 800.0         # MeV
@@ -149,7 +158,8 @@ defaultName = "B2XMuMu"
 class B2XMuMuConf(LineBuilder) :
 
     __configuration_keys__ = (
-          'KpiVXCHI2NDOF'
+          'RelatedInfoTools'
+        , 'KpiVXCHI2NDOF'
         , 'MuonPID'
         , 'DimuonUPPERMASS'
         , 'Pi0MINPT'
@@ -356,6 +366,7 @@ class B2XMuMuConf(LineBuilder) :
             self.line = StrippingLine(
                 self.name+"_Line",
                 prescale = 1,
+                RelatedInfoTools = config['RelatedInfoTools'],
                 HLT=config['HLT_FILTER'],
                 FILTER = {
                 'Code' : " ( recSummary(LHCb.RecSummary.nSPDhits,'Raw/Spd/Digits') < %(SpdMult)s )" %config ,
