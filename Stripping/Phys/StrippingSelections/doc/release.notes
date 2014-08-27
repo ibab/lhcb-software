@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-27 - Giulio Dujany
+ - Changed order of some cuts in LFVLines to reduce cpu usage
+
 ! 2014-08-27 - Jibo He
  - Added BDT part for Bs->Etac(4h) phi, and etac->4K, etac->4Pi, and with FT enabled 
 

@@ -140,13 +140,13 @@ class LFVLinesConf(LineBuilder) :
                                                                                  'Phys/StdAllLooseMuons' : 'coneInfoMu10',
                                                                                  'Phys/StdAllLooseKaons' : 'coneInfoKaons10',
                                                                                  } },
-                                                               { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.4,
+                                                               { 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.2,
                                                                  'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
                                                                  'RecursionLevel' : 2, 
-                                                                 'Locations' : { self.selTau2PhiMu : 'coneInfoTau14', 
-                                                                                 self.selPhi2KK : 'coneInfoPhi14',
-                                                                                 'Phys/StdAllLooseMuons' : 'coneInfoMu14',
-                                                                                 'Phys/StdAllLooseKaons' : 'coneInfoKaons14',
+                                                                 'Locations' : { self.selTau2PhiMu : 'coneInfoTau12', 
+                                                                                 self.selPhi2KK : 'coneInfoPhi12',
+                                                                                 'Phys/StdAllLooseMuons' : 'coneInfoMu12',
+                                                                                 'Phys/StdAllLooseKaons' : 'coneInfoKaons12',
                                                                                  } },
                                                                {'Type': 'RelInfoVertexIsolation',
                                                                 'Location':'VtxIsoInfo' },
@@ -228,8 +228,8 @@ def makeTau2PhiMu(name):
 
     makePhi = CombineParticles(name+"makePhi")
     makePhi.DecayDescriptor =  "phi(1020) -> K+ K-"
-    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & ( BPVIPCHI2 () >  9 ) & (PT>300*MeV) & (PIDK > 0)",
-                             "K-": "(ISLONG) & (TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & ( BPVIPCHI2 () >  9 ) & (PT>300*MeV) & (PIDK > 0)"} 
+    makePhi.DaughtersCuts = {"K+": "(ISLONG) & (TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & (PT>300*MeV) & (PIDK > 0) & ( BPVIPCHI2 () >  9 )",
+                             "K-": "(ISLONG) & (TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & (PT>300*MeV) & (PIDK > 0) & ( BPVIPCHI2 () >  9 )"} 
     
     _kaons = DataOnDemand(Location='Phys/StdLooseKaons/Particles')
     
@@ -240,7 +240,7 @@ def makeTau2PhiMu(name):
                         RequiredSelections=[_kaons] )
 
 
-    Tau2PhiMu.DaughtersCuts = { "mu-" : " ( PT > 300 * MeV )  & ( BPVIPCHI2 () >  9 ) & ( TRCHI2DOF < 3 )& (TRGHOSTPROB<0.3)" }
+    Tau2PhiMu.DaughtersCuts = { "mu-" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3 ) & (TRGHOSTPROB<0.3) & ( BPVIPCHI2 () >  9 )" }
     Tau2PhiMu.CombinationCut = "(ADAMASS('tau-')<150*MeV)"
 
     Tau2PhiMu.MotherCut = "( VFASPF(VCHI2) < 25 ) &  ( (BPVLTIME () * c_light)   > 50 * micrometer ) &  ( BPVIPCHI2() < 100 ) "
