@@ -60,9 +60,8 @@ default_config = {
 	   , 'K_InputList'              : 'Phys/StdLooseKaons/Particles'
 	   , 'P_InputList'              : 'Phys/StdLooseProtons/Particles'
 	   , 'Lc_Daug_TRCHI2DOF_Max'       :   5.0
-	   , 'Lc_Daug_PT_Min'              : 200.0*MeV
+	   , 'Lc_Daug_PT_Min'              : 250.0*MeV
 	   , 'Lc_Daug_P_Min'               :   2.0*GeV
-	   , 'Lc_Daug_1of3_MIPCHI2DV_Min'  :   4.0
 	   , 'Lc_K_ProbNNk_Min'            :   0.05
 	   , 'Lc_Pi_ProbNNpi_Min'          :   0.01
 	   , 'Lc_P_ProbNNp_Min'            :   0.1
@@ -119,7 +118,6 @@ class Bs0Builder(LineBuilder) :
 	   , 'Lc_Daug_TRCHI2DOF_Max'       
 	   , 'Lc_Daug_PT_Min'              
 	   , 'Lc_Daug_P_Min'               
-	   , 'Lc_Daug_1of3_MIPCHI2DV_Min'  
 	   , 'Lc_K_ProbNNk_Min'            
 	   , 'Lc_Pi_ProbNNpi_Min'          
 	   , 'Lc_P_ProbNNp_Min'            
@@ -219,7 +217,6 @@ class Bs0Builder(LineBuilder) :
 		Lc_K_ProbNNk_Min			=config['Lc_K_ProbNNk_Min'],
 		Lc_Pi_ProbNNpi_Min		=config['Lc_Pi_ProbNNpi_Min'],
 		Lc_P_ProbNNp_Min  		=config['Lc_P_ProbNNp_Min'],
-		Lc_Daug_1of3_MIPCHI2DV_Min	=config['Lc_Daug_1of3_MIPCHI2DV_Min'],
 		Lc_ADOCAMAX_Max			=config['Lc_ADOCAMAX_Max'],
 		Lc_APT_Min				=config['Lc_APT_Min'],
 		Lc_VCHI2_Max			=config['Lc_VCHI2_Max'],
@@ -331,7 +328,6 @@ def makeLc(localName,
 		Lc_Pi_ProbNNpi_Min,
 		Lc_P_ProbNNp_Min,
 		Lc_ADMASS_HalfWin,
-		Lc_Daug_1of3_MIPCHI2DV_Min,
 		Lc_ADOCAMAX_Max,
 		Lc_APT_Min,
 		Lc_VCHI2_Max,
@@ -354,7 +350,6 @@ def makeLc(localName,
 
    ## Combination cuts
    _strCutComb = "(ADAMASS('Lambda_c+')<1.1*%(Lc_ADMASS_HalfWin)s)" \
-	   "& (AMAXCHILD(MIPCHI2DV(PRIMARY))>%(Lc_Daug_1of3_MIPCHI2DV_Min)s)" \
 	   "& (ADOCAMAX('')<%(Lc_ADOCAMAX_Max)s)" \
 	   "& (APT>%(Lc_APT_Min)s)" % locals()
 
