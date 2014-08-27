@@ -104,7 +104,15 @@ private:
   std::vector<float> m_hitInFOIdy;
   std::vector<float> m_hitInFOIz;
   std::vector<float> m_hitInFOIdz;
+  std::vector<float> m_hitInFOIuncrossed;
   std::vector<float> m_hitInFOIID;
+  std::vector<float> m_allMuonHitsX;
+  std::vector<float> m_allMuonHitsDX;
+  std::vector<float> m_allMuonHitsY;
+  std::vector<float> m_allMuonHitsDY;
+  std::vector<float> m_allMuonHitsZ;
+  std::vector<float> m_allMuonHitsDZ;
+  std::vector<float> m_allMuonHitsUncrossed;
   bool m_doVerbose;
 
   // local array of region sizes
@@ -116,15 +124,16 @@ private:
   // Store x,dx,y,dy of each coord
   class coordExtent_{
   public:
-    coordExtent_(double x, double dx, double y, double dy,  double z, double dz,
+    coordExtent_(double x, double dx, double y, double dy,  double z, double dz, bool uncrossed,
                  LHCb::MuonCoord *pCoord) :
-      m_x(x), m_dx(dx), m_y(y), m_dy(dy), m_z(z), m_dz(dz), m_pCoord(pCoord)  {};
+      m_x(x), m_dx(dx), m_y(y), m_dy(dy), m_z(z), m_dz(dz), m_uncrossed(uncrossed), m_pCoord(pCoord)  {};
     double m_x;
     double m_dx;
     double m_y;
     double m_dy;
     double m_z;
     double m_dz;
+    bool m_uncrossed;
     LHCb::MuonCoord *m_pCoord;
   };
   // vector of positions of coords (innner vector coords,

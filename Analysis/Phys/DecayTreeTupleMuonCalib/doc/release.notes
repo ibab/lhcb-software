@@ -6,6 +6,9 @@
 
 !========================= DecayTreeTupleMuonCalib v1r2p1 2013-06-13 =========================
 
+! 2014-08-27 - Ricardo Vazquez Gomez
+ - Add the possibility to store all the hits of the muon system. 
+
 ! 2013-05-17 - Chris Jones
  - Fix clang warning for variable self-assignment
 

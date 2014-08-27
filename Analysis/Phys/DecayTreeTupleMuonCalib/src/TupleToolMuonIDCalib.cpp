@@ -135,10 +135,18 @@ StatusCode TupleToolMuonIDCalib::fillCoordVectors(){
   m_hitInFOIdy.clear();
   m_hitInFOIz.clear();
   m_hitInFOIdz.clear();
+  m_hitInFOIuncrossed.clear();
   m_hitInFOIID.clear();
+  m_allMuonHitsX.clear();
+  m_allMuonHitsDX.clear();
+  m_allMuonHitsY.clear();
+  m_allMuonHitsDY.clear();
+  m_allMuonHitsZ.clear();
+  m_allMuonHitsDZ.clear();
+  m_allMuonHitsUncrossed.clear();
 
   // get the MuonCoords for each station in turn
-  LHCb::MuonCoords* coords =NULL;
+  LHCb::MuonCoords* coords = NULL;
   if(exist<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords))
     coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
   if ( !coords )
@@ -152,6 +160,7 @@ StatusCode TupleToolMuonIDCalib::fillCoordVectors(){
   for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
     int region = (*iCoord)->key().region();
     int station = (*iCoord)->key().station();
+    bool uncrossed = (*iCoord)->uncrossed();
     double x,dx,y,dy,z,dz;
     LHCb::MuonTileID tile=(*iCoord)->key();
     StatusCode sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
@@ -160,7 +169,7 @@ StatusCode TupleToolMuonIDCalib::fillCoordVectors(){
       continue;
     }
     m_coordPos[station*m_NRegion+region].
-      push_back(coordExtent_(x,dx,y,dy,z,dz,*iCoord));
+      push_back(coordExtent_(x,dx,y,dy,z,dz,uncrossed,*iCoord));
     //      m_HitInTrk.push_back(false);
   }
 
@@ -368,6 +377,17 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
 
         for(itPos = m_coordPos[station*m_NRegion + region].begin(); itPos != m_coordPos[station*m_NRegion + region].end(); itPos++){
 
+	  // all muon hits
+          if(m_doVerbose) {
+            m_allMuonHitsX.push_back(itPos->m_x);
+            m_allMuonHitsDX.push_back(itPos->m_dx);
+            m_allMuonHitsY.push_back(itPos->m_y);
+            m_allMuonHitsDY.push_back(itPos->m_dy);
+            m_allMuonHitsZ.push_back(itPos->m_z);
+            m_allMuonHitsDZ.push_back(itPos->m_dz);
+            m_allMuonHitsUncrossed.push_back(itPos->m_uncrossed);
+	  }
+
           // hits in foi
           double x = itPos->m_x;
           double dx = itPos->m_dx;
@@ -416,6 +436,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
               m_hitInFOIdy.push_back(dy);
               m_hitInFOIz.push_back(itPos->m_z);
               m_hitInFOIdz.push_back(itPos->m_dz);
+              m_hitInFOIuncrossed.push_back(itPos->m_uncrossed);
               m_hitInFOIID.push_back(station*m_NRegion + region);
             }
 
@@ -438,6 +459,14 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
     tuple->farray(prefix+"_hitInFOI_Z",  m_hitInFOIz.begin(),  m_hitInFOIz.end(),  prefix+"_n_InFOI", 100);
     tuple->farray(prefix+"_hitInFOI_dZ", m_hitInFOIdz.begin(), m_hitInFOIdz.end(), prefix+"_n_InFOI", 100);
     tuple->farray(prefix+"_hitInFOI_ID", m_hitInFOIID.begin(), m_hitInFOIID.end(), prefix+"_n_InFOI", 100);
+    tuple->farray(prefix+"_hitInFOI_uncrossed", m_hitInFOIuncrossed.begin(), m_hitInFOIuncrossed.end(), prefix+"_n_InFOI", 100);
+    tuple->farray(prefix+"_allMuonHits_X",  m_allMuonHitsX.begin(), m_allMuonHitsX.end(),  prefix+"_n_AllHits", 10000);
+    tuple->farray(prefix+"_allMuonHits_dX", m_allMuonHitsDX.begin(), m_allMuonHitsDX.end(), prefix+"_n_AllHits", 10000);
+    tuple->farray(prefix+"_allMuonHits_Y",  m_allMuonHitsY.begin(), m_allMuonHitsY.end(),  prefix+"_n_AllHits", 10000);
+    tuple->farray(prefix+"_allMuonHits_dY", m_allMuonHitsDY.begin(), m_allMuonHitsDY.end(), prefix+"_n_AllHits", 10000);
+    tuple->farray(prefix+"_allMuonHits_Z",  m_allMuonHitsZ.begin(), m_allMuonHitsZ.end(),  prefix+"_n_AllHits", 10000);
+    tuple->farray(prefix+"_allMuonHits_dZ", m_allMuonHitsDZ.begin(), m_allMuonHitsDZ.end(), prefix+"_n_AllHits", 10000);
+    tuple->farray(prefix+"_allMuonHits_uncrossed", m_allMuonHitsUncrossed.begin(), m_allMuonHitsUncrossed.end(), prefix+"_n_AllHits", 10000);
 
     for(int station = 0; station < m_NStation ; ++station )
     {
