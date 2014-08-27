@@ -70,11 +70,7 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       TRKISOBDTSECONDVALUE     = VTXISOBDTHARDFIRSTVALUE + 7 ,
       TRKISOBDTTHIRDVALUE      = VTXISOBDTHARDFIRSTVALUE + 8 ,
       
-
-      //ZVtop isolation 
-      ZVISO = TRKISOBDTTHIRDVALUE +1
-
-      BSMUMUCDFISO           = ZVISO + 1,
+      BSMUMUCDFISO           = TRKISOBDTTHIRDVALUE + 1, 
       BSMUMUOTHERBMAG        = BSMUMUCDFISO + 1,
       BSMUMUOTHERBANGLE      = BSMUMUCDFISO + 2,
       BSMUMUOTHERBBOOSTMAG   = BSMUMUCDFISO + 3,
@@ -187,7 +183,10 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       ISOTWOBODYISO5PLUS     = BSMUMUTRACKMINUSISOTWO + 6, 
       ISOTWOBODYISO5MINUS    = BSMUMUTRACKMINUSISOTWO + 7, 
       ISOTWOBODYQMINUS       = BSMUMUTRACKMINUSISOTWO + 8, 
-      ISOTWOBODYQPLUS        = BSMUMUTRACKMINUSISOTWO + 9
+      ISOTWOBODYQPLUS        = BSMUMUTRACKMINUSISOTWO + 9, 
+
+      //ZVtop isolation 
+      ZVISO = ISOTWOBODYQPLUS + 1
 
     };
 
@@ -359,13 +358,15 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       case RelatedInfoNamed::ISOTWOBODYQMINUS : return "ISOTWOBODYQMINUS";
       case RelatedInfoNamed::ISOTWOBODYQPLUS : return "ISOTWOBODYQPLUS";
 
+      case RelatedInfoNamed::ZVISO : return "ZVISO"; 
+
         default : return "UNKNOWN"; 
       }
     }
     
     static short int indexByName(std::string name) {
       short i;
-      for (i=0; i<=RelatedInfoNamed::ISOTWOBODYQPLUS; i++) {
+      for (i=0; i<=RelatedInfoNamed::ZVISO; i++) {
         if ( name.compare(nameByIndex(i) ) == 0 ) return i; 
       }
       return RelatedInfoNamed::UNKNOWN; 
