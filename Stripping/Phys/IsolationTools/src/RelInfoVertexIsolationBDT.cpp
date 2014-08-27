@@ -90,6 +90,10 @@ StatusCode RelInfoVertexIsolationBDT::initialize()
         m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTFIRSTVALUE );
         m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTSECONDVALUE );
         m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTTHIRDVALUE );
+        //if using default BDT name and want soft BDT:
+        if ( m_weightsName.compare("VertexIsolationHard.xml") == 0 ) {
+            m_weightsName = "VertexIsolationSoft.xml"; 
+        }
     }
 
 
@@ -244,11 +248,6 @@ LHCb::RelatedInfoMap* RelInfoVertexIsolationBDT::getInfo(void) {
     return &m_map; 
 }
 
-std::string RelInfoVertexIsolationBDT::infoPath(void) {
-    std::stringstream ss;
-    ss << std::string("Particle2VertexIsolationRelations");
-    return ss.str(); 
-}
 
 //=============================================================================
 // Get (recursively) the particles to vertex in the decay chain

@@ -63,8 +63,6 @@ class RelInfoVertexIsolationBDT : public GaudiTool, virtual public IRelatedInfoT
 
         virtual LHCb::RelatedInfoMap* getInfo(void);
 
-        virtual std::string infoPath(void);
-
         virtual ~RelInfoVertexIsolationBDT( ); ///< Destructor
 
     private:
