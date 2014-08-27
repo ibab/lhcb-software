@@ -1,4 +1,4 @@
-B1;2c'''
+'''
 Module for construction of lepton flavor violation stripping selections and lines
 
 Exported symbols (use python help!):
