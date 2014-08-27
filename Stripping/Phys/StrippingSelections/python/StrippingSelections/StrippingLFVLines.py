@@ -1,4 +1,4 @@
-'''
+B1;2c'''
 Module for construction of lepton flavor violation stripping selections and lines
 
 Exported symbols (use python help!):
@@ -46,7 +46,25 @@ default_config = {
     'Bu2KJPsieePrescale'  :1,
     'B2TauMuPrescale'       :1,
     'B2hTauMuPrescale'      :1,
-    }
+    'RelatedInfoTools'      : [
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              ,"RecursionLevel" : 0
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              , "tracktype" : 3
+              , "angle"      : 0.27
+              , "fc"         : 0.60
+              , "doca_iso"   : 0.13 
+              , "ips"        : 3.0
+              , "svdis"      : -0.15
+              , "svdis_h"    : 30.
+              , "pvdis"      : 0.5
+              , "pvdis_h"    : 40.
+              , "makeTrackCuts" : False
+              , "IsoTwoBody" : False
+              }
+            ] ## matches 'RelatedInfoTools'
+    } # matches 'CONFIG' 
     }
 
 class LFVLinesConf(LineBuilder) :
@@ -66,6 +84,7 @@ class LFVLinesConf(LineBuilder) :
                                   'Bu2KJPsieePrescale',
                                   'B2TauMuPrescale',
                                   'B2hTauMuPrescale',
+                                  'RelatedInfoTools'
                                   )
     
     #### This is the dictionary of all tunable cuts ########
@@ -162,11 +181,12 @@ class LFVLinesConf(LineBuilder) :
                                            postscale = config['Postscale'],
                                            algos = [ self.selTau2eMuMu ]
                                            )
-
+        
         self.b2eMuLine = StrippingLine(emu_name+"Line",
-                                     prescale = config['B2eMuPrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selB2eMu ]
+                                       prescale = config['B2eMuPrescale'],
+                                       postscale = config['Postscale'],
+                                       RelatedInfoTools = config['RelatedInfoTools'],
+                                       algos = [ self.selB2eMu ]
                                      )
         #self.b2TauMuLine = StrippingLine(taumu_name+"Line",
         #                             prescale = config['B2TauMuPrescale'],
@@ -175,9 +195,10 @@ class LFVLinesConf(LineBuilder) :
         #                             )
 
         self.b2eeLine = StrippingLine(ee_name+"Line",
-                                     prescale = config['B2eePrescale'],
-                                     postscale = config['Postscale'],
-                                     algos = [ self.selB2ee ]
+                                      prescale = config['B2eePrescale'],
+                                      postscale = config['Postscale'],
+                                      RelatedInfoTools = config['RelatedInfoTools'],
+                                      algos = [ self.selB2ee ]
                                        )
 
         self.b2hTauMuLine = StrippingLine(htaumu_name+"Line",
