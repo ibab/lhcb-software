@@ -87,52 +87,94 @@ class MuIDCalibConf( LineBuilder ):
 
         #Prompt line
         self.sel_Prompt  = makePromptSelection( name + "_Combine", self.selStdAllNoPIDMuons )
-        self.line_Prompt = StrippingLine( name + '_JpsiNoPID', prescale = config[ 'PromptPrescale' ], selection = self.sel_Prompt ) 
+        self.line_Prompt = StrippingLine( name + '_JpsiNoPID', 
+                                          prescale = config[ 'PromptPrescale' ], 
+                                          selection = self.sel_Prompt, 
+                                          RequiredRawEvents = ["Muon"] 
+                                          ) 
 
         #Detached
-        self.sel_Detached       = makeDetachedSelection( name + "_FromBCombine", self.selStdNoPIDMuons)
-        self.line_Detached = StrippingLine( name + '_JpsiFromBNoPID', prescale = config[ 'DetachedPrescale' ], selection = self.sel_Detached ) 
+        self.sel_Detached  = makeDetachedSelection( name + "_FromBCombine", self.selStdNoPIDMuons)
+        self.line_Detached = StrippingLine( name + '_JpsiFromBNoPID', 
+                                            prescale = config[ 'DetachedPrescale' ], 
+                                            selection = self.sel_Detached, 
+                                            RequiredRawEvents = ["Muon"] 
+                                            ) 
 
         self.sel_DetachedNoMIP  = makeDetachedNoMIPSelection( name + "_FromBNoMipCombine", self.selStdNoPIDMuons )
-        self.line_DetachedNoMIP = StrippingLine( name + '_JpsiFromBNoPIDNoMip', prescale = config[ 'DetachedNoMIPPrescale' ], selection = self.sel_DetachedNoMIP ) 
+        self.line_DetachedNoMIP = StrippingLine( name + '_JpsiFromBNoPIDNoMip', 
+                                                 prescale = config[ 'DetachedNoMIPPrescale' ], 
+                                                 selection = self.sel_DetachedNoMIP, 
+                                                 RequiredRawEvents = ["Muon"] 
+                                                 ) 
                  
         self.sel_DetachedNoMIPHiP  = makeDetachedNoMIPHiPSelection( name + "_FromBNoMipHiPCombine", self.selStdNoPIDMuons )
         self.line_DetachedNoMIPHiP = StrippingLine( name + '_JpsiFromBNoPIDNoMipHiP', 
-                                                    prescale = config[ 'DetachedNoMIPHiPPrescale' ], selection = self.sel_DetachedNoMIPHiP ) 
+                                                    prescale = config[ 'DetachedNoMIPHiPPrescale' ], 
+                                                    selection = self.sel_DetachedNoMIPHiP, 
+                                                    RequiredRawEvents = ["Muon"] 
+                                                    ) 
 
         self.sel_DetachedNoMIPNoPCut  = makeDetachedNoMIPNoPCutSelection( name + "_FromBNoMipCombineNoPCut", self.selStdNoPIDMuons )
         self.sel_DetachedNoMIPK  = makeDetachedNoMIPKSelection( name + "_FromBNoMipWithKCombine", self.sel_DetachedNoMIPNoPCut, self.selStdNoPIDKaons )
         self.line_DetachedNoMIPK = StrippingLine( name + '_JpsiKFromBNoPIDNoMip', 
-                                                  prescale = config[ 'DetachedNoMIPKPrescale' ], selection = self.sel_DetachedNoMIPK ) 
+                                                  prescale = config[ 'DetachedNoMIPKPrescale' ], 
+                                                  selection = self.sel_DetachedNoMIPK, 
+                                                  RequiredRawEvents = ["Muon"] 
+                                                  ) 
 
         #lambda_c
         self.sel_Lambdac = makeLambdacSelection( name + '_FromLambdac', "", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
-        self.line_Lambdac = StrippingLine( name + '_FromLambdacDecay', prescale = config[ 'FromLambdacPrescale' ], selection = self.sel_Lambdac ) 
+        self.line_Lambdac = StrippingLine( name + '_FromLambdacDecay', 
+                                           prescale = config[ 'FromLambdacPrescale' ], 
+                                           selection = self.sel_Lambdac, 
+                                           RequiredRawEvents = ["Muon"] 
+                                           ) 
 
         self.sel_PiLambdac = makeLambdacSelection( name + '_PiFromLambdac', "pion", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
-        self.line_PiLambdac = StrippingLine( name + '_PiFromLambdacDecay', prescale = config[ 'PiFromLambdacPrescale' ], selection = self.sel_PiLambdac ) 
+        self.line_PiLambdac = StrippingLine( name + '_PiFromLambdacDecay', 
+                                             prescale = config[ 'PiFromLambdacPrescale' ], 
+                                             selection = self.sel_PiLambdac, 
+                                             RequiredRawEvents = ["Muon"] 
+                                             ) 
 
         self.sel_KLambdac = makeLambdacSelection( name + '_KFromLambdac', "kaon", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
-        self.line_KLambdac = StrippingLine( name + '_KFromLambdacDecay', prescale = config[ 'KFromLambdacPrescale' ], selection = self.sel_KLambdac ) 
+        self.line_KLambdac = StrippingLine( name + '_KFromLambdacDecay', 
+                                            prescale = config[ 'KFromLambdacPrescale' ], 
+                                            selection = self.sel_KLambdac, 
+                                            RequiredRawEvents = ["Muon"] 
+                                            ) 
 
         self.sel_PLambdac = makeLambdacSelection( name + '_PFromLambdac', "proton", self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
-        self.line_PLambdac = StrippingLine( name + '_PFromLambdacDecay', prescale = config[ 'PFromLambdacPrescale' ], selection = self.sel_PLambdac ) 
+        self.line_PLambdac = StrippingLine( name + '_PFromLambdacDecay', 
+                                            prescale = config[ 'PFromLambdacPrescale' ], 
+                                            selection = self.sel_PLambdac, 
+                                            RequiredRawEvents = ["Muon"] 
+                                            ) 
 
         self.sel_PiISMUONLambdac = makeLambdacSelection( name + '_PiISMUONFromLambdac', "pionISMUON", 
                                                          self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
         self.line_PiISMUONLambdac = StrippingLine( name + '_PiISMUONFromLambdacDecay', 
-                                                   prescale = config[ 'PiISMUONFromLambdacPrescale' ], selection = self.sel_PiISMUONLambdac ) 
+                                                   prescale = config[ 'PiISMUONFromLambdacPrescale' ], 
+                                                   selection = self.sel_PiISMUONLambdac, 
+                                                   RequiredRawEvents = ["Muon"] 
+                                                   ) 
 
         self.sel_KISMUONLambdac = makeLambdacSelection( name + '_KISMUONFromLambdac', "kaonISMUON", 
                                                         self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
         self.line_KISMUONLambdac = StrippingLine( name + '_KISMUONFromLambdacDecay', 
-                                                  prescale = config[ 'KISMUONFromLambdacPrescale' ], selection = self.sel_KISMUONLambdac ) 
+                                                  prescale = config[ 'KISMUONFromLambdacPrescale' ], 
+                                                  selection = self.sel_KISMUONLambdac, 
+                                                  RequiredRawEvents = ["Muon"] 
+                                                  ) 
 
         self.sel_PISMUONLambdac = makeLambdacSelection( name + '_PISMUONFromLambdac', "protonISMUON"
                                                         , self.selStdNoPIDPions, self.selStdNoPIDKaons, self.selStdNoPIDProtons)
         self.line_PISMUONLambdac = StrippingLine( name + '_PISMUONFromLambdacDecay', 
-                                                  prescale = config[ 'PISMUONFromLambdacPrescale' ], selection = self.sel_PISMUONLambdac ) 
-
+                                                  prescale = config[ 'PISMUONFromLambdacPrescale' ], 
+                                                  selection = self.sel_PISMUONLambdac, 
+                                                  RequiredRawEvents = ["Muon"] 
+                                                  ) 
 
         #self.registerLine( self.line_Prompt )
         self.registerLine( self.line_Detached )

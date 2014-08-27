@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-27 - Ricardo Vazquez Gomez
+ - StrippingMuIDCalib
+   add the explicit request of the MUON raw bank for all the lines
+
 ! 2014-08-27 - Giulio Dujany
  - Changed order of some cuts in LFVLines to reduce cpu usage
 
