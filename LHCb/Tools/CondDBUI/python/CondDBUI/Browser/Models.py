@@ -710,7 +710,7 @@ class CondDBIoVModel(BaseIoVModel):
         if self._folder and self._actualUntil < newUntil:
             tag = self.tag()
             if tag != self.HEAD:
-                tag = self.db.resolveTag(_folder,self.tag())
+                tag = self.db.resolveTag(self._folder,tag)
             objects = self._folder.browseObjects(self._actualUntil, newUntil,
                                                  self.channelSelection(),
                                                  tag)

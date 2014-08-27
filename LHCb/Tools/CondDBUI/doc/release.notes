@@ -2,6 +2,9 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2014-08-27 - Liang Sun
+ - Fixed a typo in Models.py which stops the program from getting IoVs
+
 ! 2014-08-06 - Liang Sun
  - Fixed a typo in ReleaseNotes.py
 
