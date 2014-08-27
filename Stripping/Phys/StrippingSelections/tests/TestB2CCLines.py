@@ -77,7 +77,7 @@ TimingAuditor().TIMER.NameSize = 60
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 # database
-DaVinci().DDDBtag  = "dddb-20120831" # 2012
+DaVinci().DDDBtag  = "dddb-20120831"
 DaVinci().CondDBtag = "cond-20121008" # 2012
 #DaVinci().CondDBtag = "cond-20121025" # 2011
 
