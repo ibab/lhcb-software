@@ -101,6 +101,8 @@ class Tau23MuLinesConf(LineBuilder) :
                                                                 'Location':'VtxIsoInfo' },
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
                                                                  'RecursionLevel' : 2,
+                                                                 'Variables' : 0,
+                                                                 'Locations': {'Phys/StdAllLooseMuons' : "MuonTrackIsoBDTInfo"},
                                                                  'Location':'TrackBDTIsoInfo'}
                                                                ]
                                      )
@@ -133,6 +135,8 @@ class Tau23MuLinesConf(LineBuilder) :
                                                                 'Location':'VtxIsoInfo' },
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
                                                                  'RecursionLevel' : 2,
+                                                                 'Variables' : 0,
+                                                                 'Locations': {'Phys/StdAllLooseMuons' : "MuonTrackIsoBDTInfo",'Phys/StdAllLoosePions' : "PionTrackIsoBDTInfo"},
                                                                  'Location':'TrackBDTIsoInfo'}
                                                                ]
                                       )
@@ -171,8 +175,8 @@ def makeTau23Mu(name):
     
     Tau2MuMuMu = CombineParticles("Comine"+name)
     Tau2MuMuMu.DecayDescriptor = " [ tau+ -> mu+ mu+ mu- ]cc"
-    Tau2MuMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) "\
-                                 "& ( BPVIPCHI2 () >  9 ) & ( TRGHOSTPROB < 0.3 ) "}
+    Tau2MuMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < 0.3 ) & ( TRCHI2DOF < 3  ) "\
+                                 "& ( BPVIPCHI2 () >  9 ) "}
     Tau2MuMuMu.CombinationCut = "(ADAMASS('tau+')<400*MeV)"
 
     Tau2MuMuMu.MotherCut = """
@@ -197,7 +201,7 @@ def makeDs23Pi(name):
     
     Ds2PiPiPi = CombineParticles("Comine"+name)
     Ds2PiPiPi.DecayDescriptor = " [ D_s+  -> pi+ pi+ pi- ]cc " 
-    Ds2PiPiPi.DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) & ( TRGHOSTPROB < 0.3 ) " }
+    Ds2PiPiPi.DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < 0.3 ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " }
     Ds2PiPiPi.CombinationCut = "(ADAMASS('D_s+')<80*MeV)"
 
     Ds2PiPiPi.MotherCut = """
@@ -260,8 +264,8 @@ def makeDs2PhiPi(name):
     
     Ds2PhiPi = CombineParticles("Comine"+name)
     Ds2PhiPi.DecayDescriptor =   " [ D_s+  -> pi+  mu+ mu- ]cc "
-    Ds2PhiPi.DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) & ( TRGHOSTPROB < 0.3 ) " ,
-                                "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) & ( TRGHOSTPROB < 0.3 ) " }
+    Ds2PhiPi.DaughtersCuts = { "pi+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < 0.3 ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " ,
+                               "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < 0.3 ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " }
 
     Ds2PhiPi.CombinationCut = "(ADAMASS('D_s+')<250*MeV) & in_range ( 970 * MeV , AM23 , 1070 * MeV )"
 
@@ -290,7 +294,7 @@ def makeTau25Mu(name):
     
     Tau2MuMuMuMuMu = CombineParticles("Comine"+name)
     Tau2MuMuMuMuMu.DecayDescriptor = " [ tau+ -> mu+ mu+ mu+ mu- mu-]cc"
-    Tau2MuMuMuMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) & ( TRGHOSTPROB < 0.3 ) " }
+    Tau2MuMuMuMuMu.DaughtersCuts = { "mu+" : " ( PT > 300 * MeV ) & ( TRGHOSTPROB < 0.3 ) & ( TRCHI2DOF < 3  ) & ( BPVIPCHI2 () >  9 ) " }
     Tau2MuMuMuMuMu.CombinationCut = "(ADAMASS('tau+')<400*MeV)"
 
     Tau2MuMuMuMuMu.MotherCut = """

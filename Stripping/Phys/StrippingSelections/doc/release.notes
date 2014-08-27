@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-27 - Paul Seyfert
+ - Isolation configuration for tau23mu lines updated
+
 ! 2014-08-27 - Carlos Vazquez Sierra
  - Hotfix and update in StrippingB2CharmoniumX_6H.py
 
