@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-27 - Carlos Vazquez Sierra
+ - Hotfix and update in StrippingB2CharmoniumX_6H.py
+
 ! 2014-08-27 - Guy Henri Maurice Wormser
  - StrippingB2XTauNu
    Updated to add Lb->Lctau nu;tau->3pi channel. Prescale all NonPhys channels to gain output rate
