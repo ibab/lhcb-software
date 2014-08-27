@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-08-27 - Jibo He
+ - Added weights file for Bs->etac(4h) phi 
+
 ! 2014-08-25 - Rafael Coutinho
  - Added new BDT weight files for the B2KShh analysis, splitted by the KS
    type, year and training.
