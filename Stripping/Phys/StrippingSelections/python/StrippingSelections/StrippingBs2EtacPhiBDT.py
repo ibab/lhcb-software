@@ -198,7 +198,8 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         self.Bs2EtacPhiBDTLine = StrippingLine( self.name + 'Line',                                                
                                                 prescale  = config['Prescale'],
                                                 HLT       = config['HLTCuts'],
-                                                algos     = [ self.MvaBs2EtacPhi ]
+                                                algos     = [ self.MvaBs2EtacPhi ],
+                                                EnableFlavourTagging = True
                                                 )
         self.registerLine( self.Bs2EtacPhiBDTLine )
         
