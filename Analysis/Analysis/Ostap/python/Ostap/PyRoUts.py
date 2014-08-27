@@ -139,7 +139,7 @@ def dsID    () : return rootID  ( 'ds_' )
 #  a = VE(1,1)
 #  b = VE(a)
 #  print a, b
-logger.warnig( 'Disable converison of VE to float. To be checked later')
+logger.warning( 'Disable converison of VE to float. To be checked later')
 del VE.__float__
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
