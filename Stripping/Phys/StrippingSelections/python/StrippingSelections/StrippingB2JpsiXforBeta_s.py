@@ -39,11 +39,11 @@ default_config = {
                  ,       'JpsiMassWindow'            :       80
                  ,       'DaughterPT'                :       1000
                  ,       'VCHI2PDOF'                 :       10
-                 ,       'Jpsi2MuMuPrescale'         :       0.075 # 0.028, 2011: 0.011, 2012: 0.075
-                 ,       'Bd2JpsiKstarPrescale'      :       0.29 # 0.09, 2011: 0.038, 2012: 0.29
-                 ,       'Bd2JpsiKsPrescale'         :       1.0 # 1.0, 2011: 1.0, 2012: 1.0
-                 ,       'Bs2JpsiPhiPrescale'        :       0.62 # 0.27, 2011: 0.104, 2012: 0.62
-                 ,       'Bs2JpsiPi0Prescale'        :       0.9 # 0.4, 2011: 0.164, 2012: 0.9
+                 ,       'Jpsi2MuMuPrescale'         :       0.075   # 2011: 0.014, 2012: 0.075
+                 ,       'Bd2JpsiKstarPrescale'      :       0.29    # 2011: 0.065, 2012: 0.29
+                 ,       'Bd2JpsiKsPrescale'         :       1.0     # 2011: 1.0, 2012: 1.0
+                 ,       'Bs2JpsiPhiPrescale'        :       0.62    # 2011: 0.13, 2012: 0.62
+                 ,       'Bs2JpsiPi0Prescale'        :       0.9     # 2011: 0.185, 2012: 0.9
                          },
     'STREAMS' : {
         'Leptonic' : [
@@ -256,14 +256,14 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                    #PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config )
 				                           PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < 20)" % self.config ) # for the other particles is 10.
 				   
-        Bs2JpsiPhiPrescaledLine = StrippingLine( self.name + "Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPhiPrescale'], EnableFlavourTagging = True )
+        Bs2JpsiPhiPrescaledLine = StrippingLine( self.name + "Bs2JpsiPhiPrescaledLine", algos = [ Bs2JpsiPhi ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPhiPrescale'], MDSTFlag = True, EnableFlavourTagging = True )
 
         Bs2JpsiPhiDetached = self.createSubSel( InputList = Bs2JpsiPhi,
                                                 OutputList = Bs2JpsiPhi.name() + "Detached" + self.name,
                                                 Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
                                                 "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
 
-        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = True )
+        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], MDSTFlag = True, EnableFlavourTagging = True )
         
         self.registerLine(Bs2JpsiPhiPrescaledLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)
@@ -276,7 +276,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                      #PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config)
                                      PostVertexCuts = "in_range(5150,M,5450) & (VFASPF(VCHI2PDOF) < 20)" % self.config) # for the other particles is 10.
 
-        Bd2JpsiKstarPrescaledLine = StrippingLine( self.name + "Bd2JpsiKstarPrescaledLine", algos = [ Bd2JpsiKstar ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bd2JpsiKstarPrescale'], EnableFlavourTagging = True )
+        Bd2JpsiKstarPrescaledLine = StrippingLine( self.name + "Bd2JpsiKstarPrescaledLine", algos = [ Bd2JpsiKstar ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bd2JpsiKstarPrescale'], MDSTFlag = True, EnableFlavourTagging = True )
 
 
         Bd2JpsiKstarDetached = self.createSubSel( InputList = Bd2JpsiKstar,
@@ -298,7 +298,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   PostVertexCuts = "in_range(5150,M,5550) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
 
-        Bd2JpsiKsPrescaledLine = StrippingLine( self.name + "Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bd2JpsiKsPrescale'], EnableFlavourTagging = True )
+        Bd2JpsiKsPrescaledLine = StrippingLine( self.name + "Bd2JpsiKsPrescaledLine", algos = [ Bd2JpsiKs ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bd2JpsiKsPrescale'], MDSTFlag = True, EnableFlavourTagging = True )
 
         Bd2JpsiKsDetached = self.createSubSel( InputList = Bd2JpsiKs,
                                                OutputList = Bd2JpsiKs.name() + "Detached" + self.name,
@@ -306,7 +306,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
 
         Bd2JpsiKsDetachedLine = StrippingLine( self.name + "Bd2JpsiKsDetachedLine",
-                                        algos = [ Bd2JpsiKsDetached ], EnableFlavourTagging = True  )
+                                        algos = [ Bd2JpsiKsDetached ], MDSTFlag = True, EnableFlavourTagging = True  )
 
         self.registerLine(Bd2JpsiKsPrescaledLine)
         self.registerLine(Bd2JpsiKsDetachedLine)
@@ -325,7 +325,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                  Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config)
 
         Bd2JpsiKsLDDetachedLine = StrippingLine( self.name + "Bd2JpsiKsLDDetachedLine",
-                                                 algos = [ Bd2JpsiKsLDDetached ], EnableFlavourTagging = True  )
+                                                 algos = [ Bd2JpsiKsLDDetached ], MDSTFlag = True, EnableFlavourTagging = True  )
 
         self.registerLine(Bd2JpsiKsLDDetachedLine)
    
@@ -336,7 +336,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                 PreVertexCuts = "in_range(5100,AM,5700)",
                                 PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" )
 
-        Bs2JpsiKstarWideLine = StrippingLine( self.name + "Bs2JpsiKstarWideLine", algos = [ Bs2JpsiKstarWide ], EnableFlavourTagging = True )
+        Bs2JpsiKstarWideLine = StrippingLine( self.name + "Bs2JpsiKstarWideLine", algos = [ Bs2JpsiKstarWide ], MDSTFlag = True, EnableFlavourTagging = True )
 
         self.registerLine(Bs2JpsiKstarWideLine)
         
@@ -348,7 +348,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                     PostVertexCuts = "in_range(5120,M,6120) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                     )
 
-        Lambdab2JpsiLambdaUnbiasedLine = StrippingLine( self.name + "Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ], EnableFlavourTagging = True ) 
+        Lambdab2JpsiLambdaUnbiasedLine = StrippingLine( self.name + "Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ] )
         #Lambdab2JpsiLambdaUnbiasedLine = StrippingLine( self.name + "Lambdab2JpsiLambdaUnbiasedLine", algos = [ Lambdab2JpsiLambda ], HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')")
     
         self.registerLine(Lambdab2JpsiLambdaUnbiasedLine)
@@ -361,12 +361,12 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                   PostVertexCuts = "in_range(4700,M,5900) & (VFASPF(VCHI2PDOF) < %(VCHI2PDOF)s)" % self.config
                                   )
 
-        Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine", algos = [ Bd2JpsiPi0 ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPi0Prescale'], EnableFlavourTagging = True )
+        Bd2JpsiPi0PrescaledLine = StrippingLine( self.name + "Bd2JpsiPi0PrescaledLine", algos = [ Bd2JpsiPi0 ] , HLT = "HLT_PASS_RE('Hlt2DiMuonJPsiDecision')", prescale = self.config['Bs2JpsiPi0Prescale'], MDSTFlag = True, EnableFlavourTagging = True )
 
         Bd2JpsiPi0DetachedLine  = StrippingLine( self.name + "Bd2JpsiPi0DetachedLine",
                                             algos = [ self.createSubSel( InputList = Bd2JpsiPi0,
                                                                          OutputList = Bd2JpsiPi0.name() + "Detached" + self.name,
-                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )], EnableFlavourTagging = True )
+                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )], MDSTFlag = True, EnableFlavourTagging = True )
 
         self.registerLine(Bd2JpsiPi0PrescaledLine)
         self.registerLine(Bd2JpsiPi0DetachedLine)
@@ -385,7 +385,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         Lambdab2JpsippiDetachedLine  = StrippingLine( self.name + "Lambdab2JpsippiDetachedLine",
                                             algos = [ self.createSubSel( InputList = Lambdab2Jpsippi,
                                                                          OutputList = Lambdab2Jpsippi.name() + "Detached" + self.name,
-                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )], EnableFlavourTagging = True )
+                                                                         Cuts = "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )] )
 
         self.registerLine(Lambdab2JpsippiDetachedLine)
 

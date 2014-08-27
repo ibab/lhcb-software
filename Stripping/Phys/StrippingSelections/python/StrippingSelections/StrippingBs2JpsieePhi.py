@@ -167,6 +167,7 @@ class Bs2JpsieePhiConf(LineBuilder):
               , postscale = 1
               , selection = Bs
               , EnableFlavourTagging = True
+              , MDSTFlag = True
               )
 
 
@@ -210,6 +211,7 @@ class Bs2JpsieePhiConf(LineBuilder):
               , postscale = 1
               , selection = Bs
               , EnableFlavourTagging = True
+              , MDSTFlag = True
               )
 
     def _DielectronTestLine( self, dielectron, name, config ) :

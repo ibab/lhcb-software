@@ -8,7 +8,8 @@ __version__= '$Revision: 1.0 $'
 
 
 __all__ = (
-    'Bs2EtacPhiBDTConf'
+    'Bs2EtacPhiBDTConf',
+    'default_config'
     )
 
 default_config = {
@@ -199,7 +200,8 @@ class Bs2EtacPhiBDTConf(LineBuilder):
                                                 prescale  = config['Prescale'],
                                                 HLT       = config['HLTCuts'],
                                                 algos     = [ self.MvaBs2EtacPhi ],
-                                                EnableFlavourTagging = True
+                                                EnableFlavourTagging = True,
+                                                MDSTFlag = True
                                                 )
         self.registerLine( self.Bs2EtacPhiBDTLine )
         
