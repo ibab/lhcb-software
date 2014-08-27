@@ -19,14 +19,15 @@ default_config = {
     'CONFIG'      : { 'Q2BPrescale'     : 1.,
                       'Q2BTrkGhostProb' : 0.5,
                       'Q2BTrkMinIPChi2' : 16.,
+                      'Q2BTrkMinPT'     : 400.,
                       'Q2BTrkMinHiPT'   : 1000.,
                       'Q2BResMinPT'     : 600.,
                       'Q2BResMinHiPT'   : 1000.,
                       'Q2BResMaxMass'   : 1100.,
                       'Q2BResVtxChi2DOF': 6.,
                       'Q2BBMinPT'       : 2500.,
-                      'Q2BBMinM3pi'     : 4300.,
-                      'Q2BBMinM4pi'     : 3600.,
+                      'Q2BBMinM3pi'     : 4200.,
+                      'Q2BBMinM4pi'     : 3500.,
                       'Q2BBMaxM3pi'     : 6700.,
                       'Q2BBMaxM4pi'     : 5700.,
                       'Q2BBMaxCorrM3pi' : 7000.,
@@ -54,6 +55,7 @@ class B2Quasi2Body(LineBuilder) :
     __configuration_keys__ = ( 'Q2BPrescale',
                                'Q2BTrkGhostProb',
                                'Q2BTrkMinIPChi2',
+                               'Q2BTrkMinPT',
                                'Q2BTrkMinHiPT',
                                'Q2BResMinPT',
                                'Q2BResMinHiPT',
@@ -72,7 +74,7 @@ class B2Quasi2Body(LineBuilder) :
 	self.name = name
         LineBuilder.__init__(self, name, config)
 
-        trackCuts = "(MIPCHI2DV(PRIMARY) > %(Q2BTrkMinIPChi2)s) & (TRGHOSTPROB < %(Q2BTrkGhostProb)s) & (PT > 250*MeV)" % config
+        trackCuts = "(MIPCHI2DV(PRIMARY) > %(Q2BTrkMinIPChi2)s) & (TRGHOSTPROB < %(Q2BTrkGhostProb)s) & (PT > %(Q2BTrkMinPT)s)" % config
         _trkFilter = FilterDesktop(Code = trackCuts )
 
         self.TrackList = Selection( 'TrackList' + self.name,
