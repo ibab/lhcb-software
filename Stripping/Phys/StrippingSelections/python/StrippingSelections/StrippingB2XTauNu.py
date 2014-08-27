@@ -1,4 +1,4 @@
-# $Id: StrippingB2XTauNu.py,v 1.1 2012-8-13 14:28:54 dhill Exp $
+# $Id: StrippingB2XTauNu.py,v 1.1 2014-8-15 14:28:54 guwormse Exp $
 '''
 Module for constuction of:
 
@@ -8,7 +8,7 @@ Bu->D0TauNu
 Bs->DsTauNu
 Bc->J/psiTauNu
 Bd->D**0TauNu
-
+Lb->LcTauNu
 ==== Description of the lines ====
 
 Bd->DstarTauNu, with Dstar -> pi (D0 -> K pi)
@@ -17,7 +17,7 @@ Bs->DsTauNu, with Ds -> K K pi
 Bu->D0TauNu, with D0 -> K pi
 Bc->JpsiTauNu, with Jpsi -> Mu Mu
 Bd->D**0TauNu, with D**0 -> D*+ pi-
-
+Lb->LcTauNu, with Lc -> p K pi
 Tau -> 3pi in all cases
 
 ==== Description of the configuration ====
@@ -45,9 +45,9 @@ Then to print all cuts do:
 all.printCuts()
 
 '''
-__author__ = [ 'Donal Hill','Conor Fitzpatrick' ]
-__date__ = '2013-4-12'
-__version = '$Revision: 1.2 $'
+__author__ = [ 'Donal Hill','Conor Fitzpatrick','Guy Wormser' ]
+__date__ = '2014-8-18'
+__version = '$Revision: 1.3 $'
 
 #### Next is the dictionary of all tunable cuts ########
 
@@ -57,39 +57,61 @@ confdict={
     'Prescale_Bu2D0TauNu'            : 1.0,
     'Prescale_B0s2DsTauNu'           : 1.0,
     'Prescale_Bc2JpsiTauNu'          : 1.0,
+    'Prescale_Lb2LcTauNu'            : 1.0,
     'Prescale_B0d2DdoubleStarTauNu'  : 1.0,
+    'Prescale_NonPhys'               : 0.1,
     'Postscale'   : 1.0 ,
     #B cuts
-    'B_BPVDIRA'       : 0.999,
+    'B_BPVDIRA'       : 0. ,
     #B combination cuts
     'B_DeltaM_low'       : -2579.0, #MeV
     'B_DeltaM_high'      : 300.0,   #MeV
-    'B_DOCAMAX'          : 0.13,  #mm
+    'B_DOCAMAX'          : .13 , #mm
     'B_upperDeltaM_low'  : 720.0,   #MeV
     'B_upperDeltaM_high' : 1721.0,  #MeV
     #D kaon cuts
     'D_K_PT'          : 150.0,  #MeV
     'Dplus_K_PT'      : 1500.0, #MeV
     'Ds_K_PT'         : 1500.0, #MeV
-    'D_K_TRCHI2DOF'   : 3.0,
-    'D_K_IPCHI2'      : 4.0,
+    'D_K_TRCHI2DOF'   : 30.0,
+    'D_K_IPCHI2'      : 0.0,
     'D_K_PIDK'        : -5.0,
     'Dplus_K_PIDK'    : 0.0,
     'Dplus_K_TRPCHI2' : 0.1,
     #D pion cuts
     'D_Pi_PT'         : 150.0, # MeV
-    'D_Pi_TRCHI2'     : 3.0,
-    'D_Pi_IPCHI2'     : 4.0,
+    'D_Pi_TRCHI2'     : 30.0,
+    'D_Pi_IPCHI2'     : 0.,
     'D_Pi_PIDK'       : 8.0,
     'Dplus_Pi_TRPCHI2' : 0.1,
+      #Lc kaon cuts
+    'Lc_K_PT'          : 150.0,  #MeV
+    'Lc_K_TRCHI2DOF'   : 30.0,
+    'Lc_K_IPCHI2'      : 0.0,
+    'Lc_K_PIDK'        : 3.0,    
+    'Lc_K_TRPCHI2' : 0.,
+        #Lc pion cuts
+    'Lc_Pi_PT'         : 150.0, # MeV
+    'Lc_Pi_TRCHI2'     : 30.0,
+    'Lc_Pi_IPCHI2'     : 0.0,
+    'Lc_Pi_PIDK'       : 50.0,
+    'Lc_Pi_TRPCHI2' : 0.,
+      #Lc proton cuts
+    'Lc_p_PT'          : 150.0,  #MeV
+    'Lc_p_TRCHI2DOF'   : 30.0,
+    'Lc_p_IPCHI2'      : 0.0,
+    'Lc_p_PIDp'        : 5.0,
+    'Lc_p_TRPCHI2' :0.,
+
+    
     #D0-resonance parameters
     'D0_MassW'        : 40.0,      #MeV, 100 in StdLooseD0 
     'D0_BPVVDCHI2'    : 50.0,      #36 in StdLooseD0
     'D0_DIRA'         : 0.999,
-    'D0_PT'           : 1600.0,    #MeV, 1.2 GeV in StdLooseD02KPi
+    'D0_PT'           : 1200.0,    #MeV, 1.2 GeV in StdLooseD02KPi
     'D0_VCHI2'        : 10.0,      #10 in StdLooseD0
     #D0 combination cut
-    'D0_DOCAMAX'      : 0.1,     #mm, 0.5 mm in StdLooseD0
+    'D0_DOCAMAX'      : 0.5,     #mm, 0.5 mm in StdLooseD0
     #D-resonance parameters
     'D_MassW'         : 40.0,      #MeV, 100 in StdLooseDplus
     'D_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
@@ -102,10 +124,19 @@ confdict={
     'slowPi_TRCHI2DOF' : 3.0,
     'slowPi_PT'        : 110.0,    #MeV
     'Dstar_PT'         : 1250.0,   #MeV, 1250 in StdLooseD*
-    'Dstar_VCHI2'      : 10.0,     #MeV, 25 in StdLooseD*WithD02KPi 
+    'Dstar_VCHI2'      : 25.0,     #MeV, 25 in StdLooseD*WithD02KPi 
     'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
     'Dstar_DeltaM_low'  : 135.0,  #MeV
-    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD* 
+    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
+  
+     #Lc-resonance parameters
+    'Lc_MassW'         : 50.0,      #MeV, 100 in StdLooseDplus
+    'Lc_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
+    'Lc_DIRA'          : 0.999,   #0.98 in StdLooseDplus
+    'Lc_PT'            : 1200.0,    #MeV, 1.2 in StdLooseDplus
+    'Lc_VCHI2'         : 10.0,      #30 in StdLooseDplus
+    'Lc_MIPCHI2'       : 10.0,
+    
     #Muon and J/psi cuts
     'Muon_TRCHI2DOF'    : 3.0,
     'Muon_PT'           : 1000.0,  #MeV
@@ -172,6 +203,11 @@ class B2XTauNuAllLinesConf(LineBuilder):
     Ds_PiCut=''
     DsCut=''
     totalDsCut=''
+    Lc_KCut=''
+    Lc_PiCut=''
+    Lc_pCut=''
+    LcCut=''
+    totalLcCut=''
     D0Cut=''
     totalD0Cut=''
     MuonCut=''
@@ -183,6 +219,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
     BplusCombCut=''
     BsCombCut=''
     BcCombCut=''
+    LbCombCut=''
     BCut=''
 
 
@@ -191,13 +228,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
     DplusSel=None
     D0Sel=None
     DsSel=None
+    LcSel=None
     
     B0d2DstarTauNuSel=None
     B0d2DTauNuSel=None
     B0s2DsTauNuSel=None
     Bu2D0TauNuSel=None
     Bc2JpsiTauNuSel=None
-
+    Lb2LcTauNuSel=None
     D12DstarPiSel=None
     
     
@@ -206,11 +244,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
         'Prescale_B0d2DTauNu',            
         'Prescale_Bu2D0TauNu',            
         'Prescale_B0s2DsTauNu',          
-        'Prescale_Bc2JpsiTauNu',          
+        'Prescale_Bc2JpsiTauNu',
+        'Prescale_Lb2LcTauNu',
         'Prescale_B0d2DdoubleStarTauNu',
+        'Prescale_NonPhys',
         'Postscale',
         #B cuts
         'B_BPVDIRA',
+
         #B combi cuts
         'B_DeltaM_low',
         'B_DeltaM_high',
@@ -246,6 +287,31 @@ class B2XTauNuAllLinesConf(LineBuilder):
         'D_PT',
         'D_VCHI2',
         'D_MIPCHI2',
+            #Lc kaon cuts
+    'Lc_K_PT'     ,
+    'Lc_K_TRCHI2DOF' ,
+    'Lc_K_IPCHI2'     ,
+    'Lc_K_PIDK'       ,    
+    'Lc_K_TRPCHI2' ,
+        #Lc pion cuts
+    'Lc_Pi_PT'         ,
+    'Lc_Pi_TRCHI2'     ,
+    'Lc_Pi_IPCHI2'     ,
+    'Lc_Pi_PIDK'       ,
+    'Lc_Pi_TRPCHI2' ,
+      #Lc proton cuts
+    'Lc_p_PT'          , 
+    'Lc_p_TRCHI2DOF'   ,
+    'Lc_p_IPCHI2'      ,
+    'Lc_p_PIDp'        ,
+    'Lc_p_TRPCHI2' ,
+         #Lc-resonance parameters
+    'Lc_MassW',
+    'Lc_BPVVDCHI2' ,      
+    'Lc_DIRA'  ,       
+    'Lc_PT'    ,       
+    'Lc_VCHI2'  ,      
+    'Lc_MIPCHI2' ,    
         #D0 combination cut
         'D0_DOCAMAX',
         #Dstar-resonance parameters
@@ -385,7 +451,28 @@ class B2XTauNuAllLinesConf(LineBuilder):
         #Use cuts listed above for K and pi
         self.totalD0Cut = self.D0Cut + self.D_KCut + self.D_Pi1Cut
 
+#StdLooseLc has the following decay chain: Lc+ -> p K pi
 
+        #Cuts for kaon from Lc (also used as cuts for D0 -> K pi kaon)
+        self.Lc_KCut  = "& INTREE( ('K-'==ABSID) & (PT > %(Lc_K_PT)s*MeV) & "\
+                           " (TRCHI2DOF < %(Lc_K_TRCHI2DOF)s ) & (TRPCHI2 > %(Lc_K_TRPCHI2)s) &"\
+                           " (MIPCHI2DV(PRIMARY)> %(Lc_K_IPCHI2)s ) & (TRGHP < %(TRGHP)s) & "\
+                           " (PIDK > %(Lc_K_PIDK)s)) " % config 
+        
+        # pion (also used as cuts for D0 -> K pi pion)
+        self.Lc_PiCut = "& INTREE ( ('pi+'==ABSID) & (PT> %(Lc_Pi_PT)s*MeV) & (TRPCHI2 > %(Lc_Pi_TRPCHI2)s) &"\
+                            " (TRCHI2DOF < %(Lc_Pi_TRCHI2)s) & (TRGHP < %(TRGHP)s) & "\
+                            " (MIPCHI2DV(PRIMARY)> %(Lc_Pi_IPCHI2)s ) & (PIDK < %(Lc_Pi_PIDK)s))" % config
+
+        #proton
+        self.Lc_pCut = "& INTREE( ('p+'==ABSID) & (PT> %(Lc_p_PT)s*MeV) & (TRPCHI2 > %(Lc_p_TRPCHI2)s) & "\
+                            " (TRCHI2DOF < %(Lc_p_TRCHI2DOF)s) & (TRGHP < %(TRGHP)s) & "\
+                            " (MIPCHI2DV(PRIMARY)> %(Lc_p_IPCHI2)s) & (PIDp > %(Lc_p_PIDp)s))" % config
+   
+        #Lc cuts
+        self.LcCut = "(PT>%(Lc_PT)s*MeV) & (ADMASS('Lambda_c+') < %(Lc_MassW)s *MeV )& (BPVDIRA > %(Lc_DIRA)s) & (BPVVDCHI2 > %(Lc_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<%(Lc_VCHI2)s) & (MIPCHI2DV(PRIMARY)> %(Lc_MIPCHI2)s)"% config
+         
+        self.totalLcCut = self.LcCut  + self.Lc_pCut + self.Lc_PiCut + self.Lc_KCut 
 
         #J/psi cuts for Bc mode
         self.MuonCut = " & (MINTREE('mu+'==ABSID,PT) > %(Muon_PT)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(Muon_TRCHI2DOF)s)" %config
@@ -412,6 +499,8 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         self.BsCombCut="(((DAMASS('B_s0') > %(B_DeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B_s0') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
 
+        self.LbCombCut="(DAMASS('Lambda_b0') < %(B_DeltaM_high)s*MeV)  & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
+      #  self.LbCombCut="(AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
         #B cuts
         self.BCut = " (BPVDIRA > %(B_BPVDIRA)s)" %config
 
@@ -423,6 +512,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.__FilterDplus__()
         self.__FilterD0__()
         self.__FilterDs__()
+        self.__FilterLc__()
         self.__FilterJpsi2MuMu__()
         
         self.__MakeB0d2DstarTauNu__()
@@ -439,7 +529,9 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.__MakeB0s2DsTauNu__()
         self.__MakeB0s2DsTauNuWS__()
         self.__MakeB0s2DsTauNuNonPhysTau__()
-
+        self.__MakeLb2LcTauNu__()
+        self.__MakeLb2LcTauNuWS__()
+        self.__MakeLb2LcTauNuNonPhysTau__()
         self.__MakeDdoubleStar2DstarPi__()
         self.__MakeB0d2DdoubleStarTauNu__()
         self.__MakeB0d2DdoubleStarTauNuWS__()
@@ -501,11 +593,12 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                              )
 
         Bd2DstarTauNuNonPhysTauLine=StrippingLine("Bd2DstarTauNuNonPhysTauFor"+self._name,
-                                          prescale = config['Prescale_B0d2DstarTauNu'],
+                                          prescale = config['Prescale_NonPhys'],
                                           postscale = config['Postscale'],
                                           algos = [ self.TOSBd2DstarTauNuNonPhys ]
                                           )
         self.registerLine(Bd2DstarTauNuNonPhysTauLine)
+
         
 
         self.TOSBd2DTauNu = filterTisTos("TOSBd2DTauNu",
@@ -538,7 +631,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                              )
 
         Bd2DTauNuNonPhysTauLine=StrippingLine("Bd2DTauNuNonPhysTauFor"+self._name,
-                                      prescale = config['Prescale_B0d2DTauNu'],
+                                      prescale = config['Prescale_NonPhys'],
                                       postscale = config['Postscale'],
                                       algos = [ self.TOSBd2DTauNuNonPhys ]
                                       )
@@ -574,7 +667,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                              )
 
         Bu2D0TauNuNonPhysTauLine=StrippingLine("Bu2D0TauNuNonPhysTauFor"+self._name,
-                                       prescale = config['Prescale_Bu2D0TauNu'],
+                                       prescale = config['Prescale_NonPhys'],
                                        postscale = config['Postscale'],
                                        algos = [ self.TOSBu2D0TauNuNonPhys ]
                                        )
@@ -598,12 +691,48 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                              )
 
         Bc2JpsiTauNuNonPhysTauLine=StrippingLine("Bc2JpsiTauNuNonPhysTauFor"+self._name,
-                                       prescale = config['Prescale_Bc2JpsiTauNu'],
+                                       prescale = config['Prescale_NonPhys'],
                                        postscale = config['Postscale'],
                                        algos = [ self.TOSBc2JpsiTauNuNonPhys ]
                                        )
         self.registerLine(Bc2JpsiTauNuNonPhysTauLine)
 
+        self.TOSLb2LcTauNu = filterTisTos("TOSLb2LcTauNu",
+                                             Input = self.Lb2LcTauNuSel,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
+        
+        Lb2LcTauNuLine=StrippingLine("Lb2LcTauNuFor"+self._name,
+                                     prescale = config['Prescale_Lb2LcTauNu'],
+                                     postscale = config['Postscale'],
+                                     algos = [ self.TOSLb2LcTauNu ]
+                                     )
+        self.registerLine(Lb2LcTauNuLine)
+
+        self.TOSLb2LcTauNuWS = filterTisTos("TOSLb2LcTauNuWS",
+                                             Input = self.Lb2LcTauNuSelWS,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
+        
+        Lb2LcTauNuWSLine=StrippingLine("Lb2LcTauNuWSFor"+self._name,
+                                       prescale = config['Prescale_Lb2LcTauNu'],
+                                       postscale = config['Postscale'],
+                                       algos = [ self.TOSLb2LcTauNuWS ]
+                                       )
+        self.registerLine(Lb2LcTauNuWSLine)
+
+        self.TOSLb2LcTauNuNonPhys = filterTisTos("TOSLb2LcTauNuNonPhys",
+                                             Input = self.Lb2LcTauNuSelNonPhysTau,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
+
+        Lb2LcTauNuNonPhysTauLine=StrippingLine("Lb2LcTauNuNonPhysTauFor"+self._name,
+                                       prescale = config['Prescale_NonPhys'],
+                                       postscale = config['Postscale'],
+                                       algos = [ self.TOSLb2LcTauNuNonPhys ]
+                                       )
+        self.registerLine(Lb2LcTauNuNonPhysTauLine)
+        
         self.TOSBs2DsTauNu = filterTisTos("TOSBs2DsTauNu",
                                              Input = self.B0s2DsTauNuSel,
                                              myTisTosSpecs = confdict['TisTosSpecs']
@@ -634,11 +763,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                              )
 
         Bs2DsTauNuNonPhysTauLine=StrippingLine("Bs2DsTauNuNonPhysTauFor"+self._name,
-                                       prescale = config['Prescale_B0s2DsTauNu'],
+                                       prescale = config['Prescale_NonPhys'],
                                        postscale = config['Postscale'],
                                        algos = [ self.TOSBs2DsTauNuNonPhys ]
                                        )
         self.registerLine(Bs2DsTauNuNonPhysTauLine)
+
+
+        
 
         self.TOSBd2DdoubleStarTauNu = filterTisTos("TOSBd2DdoubleStarTauNu",
                                              Input = self.B0d2DdoubleStarTauNuSel,
@@ -670,7 +802,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                              )
 
         Bd2DdoubleStarTauNuNonPhysTauLine=StrippingLine("Bd2DdoubleStarTauNuNonPhysTauFor"+self._name,
-                                          prescale = config['Prescale_B0d2DdoubleStarTauNu'],
+                                          prescale = config['Prescale_NonPhys'],
                                           postscale = config['Postscale'],
                                           algos = [ self.TOSBd2DdoubleStarTauNuNonPhys ]
                                           )
@@ -723,6 +855,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.Line=Bs2DsTauNuNonPhysTauLine
         self.Selections=[self.DsSel, self.B0s2DsTauNuSelNonPhysTau]
 
+        self.Line=Lb2LcTauNuLine
+        self.Selections=[self.LcSel, self.Lb2LcTauNuSel]
+
+        self.Line=Lb2LcTauNuWSLine
+        self.Selections=[self.LcSel, self.Lb2LcTauNuSelWS]
+
+        self.Line=Lb2LcTauNuNonPhysTauLine
+        self.Selections=[self.LcSel, self.Lb2LcTauNuSelNonPhysTau]
 
         self.Line=Bd2DdoubleStarTauNuLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSel]
@@ -796,6 +936,19 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         self.DsSel=SelDsForB0s
         
+    def __FilterLc__(self):
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+         
+        LcForLb = FilterDesktop(
+            Code = self.totalLcCut
+            )
+        MyStdLc = DataOnDemand(Location = 'Phys/StdLooseLambdac2PKPi/Particles')
+        SelLcForLb = Selection("SelLcFor"+self._name,
+                                Algorithm=LcForLb, RequiredSelections = [MyStdLc])
+        
+        self.LcSel=SelLcForLb    
         
     def __FilterJpsi2MuMu__(self):
         
@@ -1170,7 +1323,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
         CombBs2DsTauNuNonPhysTau = CombineParticles(        
-            DecayDescriptors = ["[B_s0 -> D_s+ tau+]cc"],#, "[B_s0 -> D_s+ tau-]cc" ],
+            DecayDescriptors = ["[B_s0 -> D_s+ tau-]cc"],#, "[B_s0 -> D_s+ tau-]cc" ],
             DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
             CombinationCut = self.BsCombCut,
             MotherCut      = self.BCut,
@@ -1180,6 +1333,80 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                     RequiredSelections = [self.DsSel,MyStdLooseDetachedTau])
         
         self.B0s2DsTauNuSelNonPhysTau=SelBs2DsTauNuNonPhysTau
+    def __MakeLb2LcTauNu__(self):
+        """
+        Lb selection:
+        [Lambda_b0 -> Lambda_c+ tau-]cc
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTau
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
+        
+        CombLb2LcTauNu = CombineParticles(        
+            DecayDescriptors = ["[Lambda_b0 -> Lambda_c+ tau-]cc"],
+            DaughtersCuts = { "tau-" : "(BPVDIRA > 0.)" },
+            CombinationCut = self.LbCombCut,
+            MotherCut      = self.BCut,
+           
+            )
+        CombLb2LcTauNu.OutputLevel =  4
+        SelLb2LcTauNu = Selection("SelLb2LcTauNu", Algorithm=CombLb2LcTauNu,
+                                    RequiredSelections = [self.LcSel,MyStdLooseDetachedTau])
+        
+        self.Lb2LcTauNuSel=SelLb2LcTauNu
+
+
+            
+    def __MakeLb2LcTauNuWS__(self):
+        """
+        Lb selection:
+        [Lambda_b0 -> Lambda_c+ tau+]cc
+        use of wrong charge combination is useful for background subtraction
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTau
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
+        
+        CombLb2LcTauNuWS = CombineParticles(        
+            DecayDescriptors = ["[Lambda_b0 -> Lambda_c+ tau+]cc" ],
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.)" },
+            CombinationCut = self.LbCombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelLb2LcTauNuWS = Selection("SelLb2LcTauNuWS", Algorithm=CombLb2LcTauNuWS,
+                                    RequiredSelections = [self.LcSel,MyStdLooseDetachedTau])
+        
+        self.Lb2LcTauNuSelWS=SelLb2LcTauNuWS
+
+
+    def __MakeLb2LcTauNuNonPhysTau__(self):
+        """
+        Lb selection:
+        [Lambda_b0 -> Lambda_c+ tau+++]cc,  [Lambda_b0 -> Lambda_c+ tau---]cc
+        use of non-physical tau+++ is useful as a background source
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTauNonPhys
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
+        
+        CombLb2LcTauNuNonPhysTau = CombineParticles(        
+            DecayDescriptors = ["[Lambda_b0 -> Lambda_c+ tau-]cc"],#, "[Lb -> Lc+ tau-]cc" ],
+            DaughtersCuts = { "tau-" : "(BPVDIRA > 0.)" },
+            CombinationCut = self.LbCombCut,
+            MotherCut      = self.BCut,
+            )
+        
+        SelLb2LcTauNuNonPhysTau = Selection("SelLb2LcTauNuNonPhysTau", Algorithm=CombLb2LcTauNuNonPhysTau,
+                                    RequiredSelections = [self.LcSel,MyStdLooseDetachedTau])
+        
+        self.Lb2LcTauNuSelNonPhysTau=SelLb2LcTauNuNonPhysTau
 
 
     def __MakeB0d2DdoubleStarTauNu__(self):
