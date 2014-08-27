@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-08-27 - Xabier Cid Vidal
+ - Moved Jet Variables RelatedInfo tools to IsolationTools to avoid the break of the nightlies
+
 ! 2014-08-26 - Xabier Cid Vidal
  - Added tools to calculate variables related to Jets Isolation, Cylinder-type Isolation and ParticleFlow. The last two are for BMuNu analysis. Package requirements also modified to access LoKi tools.
 
