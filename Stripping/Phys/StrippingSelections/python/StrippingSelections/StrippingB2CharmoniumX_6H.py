@@ -41,7 +41,7 @@ __all__ = (
   'makeB2ChicKst_Chic2KKKK',
   'makeB2ChicKst_Chic2KKPiPi',
   'makeB2ChicKst_Chic2PiPiPiPi',
-  'config_params'
+  'default_config'
   )
 ################################################################################
 config_params = {
@@ -152,11 +152,9 @@ class StrippingB2CharmoniumX_6HConf(LineBuilder):
   'Bs_window'
   )
 ##### Final state hadrons ######################################################
-  __config_params__={}
   def __init__(self, name, config) :
     self.config=config
     LineBuilder.__init__(self, name, config)
-    self.__config_params__=config
 ##### K+
     self.selKaon = Selection('KaonFor' + name,
                              Algorithm = self._KaonFilter(),
