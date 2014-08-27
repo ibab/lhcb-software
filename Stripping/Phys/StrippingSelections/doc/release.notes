@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-27 - Olga Kochebina
+ -  Isolation cone varables are added to StrippingD2XMuMuSS.py
+
 ! 2014-08-26 - V. Gligorov
  - add new StrippingCharmLTUnbiased.py to init.py 
 

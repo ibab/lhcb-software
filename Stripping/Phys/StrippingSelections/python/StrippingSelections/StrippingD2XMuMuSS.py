@@ -86,7 +86,13 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'Lambdac2PMuMuLinePrescale'  : 1 ,
                   'Lambdac2PMuMuLinePostscale' : 1 ,
                   'Lambdac2PPiPiLinePrescale'  : 0.01 ,
-                  'Lambdac2PPiPiLinePostscale' : 1 
+                  'Lambdac2PPiPiLinePostscale' : 1,
+                  'ExtraInfoTools'      : [ { "Type" : "ConeVariables"
+                                                , "ConeAngle" : 1.5
+                                                , "ConeNumber" : 1
+                                                , "Variables" : ['angle', 'mult', 'ptasy']}
+                                                , {'Type' : 'VertexIsolation'}
+                                                 ]
                   }
 
 __all__ = ('D2XMuMuConf', 'makeD2PiPiPi', 'makeD2PiMuMuOS', 'makeD2PiMuMuSS', 'makeD2KMuMuOS', 'makeD2KMuMuSS', 'makeD2K2Pi', 'makeD22KPi', 'makeD02KKMuMu', 'makeD02PiPiMuMu', 'makeD02KPiMuMu', 'makeD02KKPiPi', 'makeD02K3Pi','makeD02PiPiPiPi','makeLambdac2PMuMu','makeLambdac2PPiPi' )
@@ -203,7 +209,8 @@ class D2XMuMuConf(LineBuilder) :
                                 , 'Lambdac2PMuMuLinePrescale' 
                                 , 'Lambdac2PMuMuLinePostscale'
                                 , 'Lambdac2PPiPiLinePrescale' 
-                                , 'Lambdac2PPiPiLinePostscale' 
+                                , 'Lambdac2PPiPiLinePostscale'
+                                ,  'ExtraInfoTools'
                                 )
     
     def __init__(self, name, config):
@@ -424,43 +431,50 @@ class D2XMuMuConf(LineBuilder) :
         self.PiCalLine = StrippingLine(PiCalLine_name+"Line",
                                       prescale = config['D2PiPiPiCalLinePrescale'],
                                       postscale = config['D2PiPiPiCalLinePostscale'],
-                                      selection = selD2PiPiPi
+                                      selection = selD2PiPiPi,
+                                       ExtraInfoTools = config['ExtraInfoTools']
                                        )
         
         self.PiOSLine = StrippingLine(PiOSLine_name+"Line",
                                       prescale = config['D2PiMuMuOSLinePrescale'],
                                       postscale = config['D2PiMuMuOSLinePostscale'],
-                                      selection = selD2PiMuMuOS
+                                      selection = selD2PiMuMuOS,
+                                      ExtraInfoTools = config['ExtraInfoTools']
                                       )
         
         self.PiSSLine = StrippingLine(PiSSLine_name+"Line",
                                       prescale = config['D2PiMuMuSSLinePrescale'],
                                       postscale = config['D2PiMuMuSSLinePostscale'],
-                                      selection = selD2PiMuMuSS
+                                      selection = selD2PiMuMuSS,
+                                      ExtraInfoTools = config['ExtraInfoTools']
                                       )
         
         self.KOSLine = StrippingLine(KOSLine_name+"Line",
                                      prescale = config['D2KMuMuOSLinePrescale'],
                                      postscale = config['D2KMuMuOSLinePostscale'],
-                                     selection = selD2KMuMuOS
+                                     selection = selD2KMuMuOS,
+                                     ExtraInfoTools = config['ExtraInfoTools']
                                      )
         
         self.KSSLine = StrippingLine(KSSLine_name+"Line",
                                      prescale = config['D2KMuMuSSLinePrescale'],
                                      postscale = config['D2KMuMuSSLinePostscale'],
-                                     selection = selD2KMuMuSS
+                                     selection = selD2KMuMuSS,
+                                     ExtraInfoTools = config['ExtraInfoTools']
                                      )
 
         self.K2PiLine = StrippingLine(K2PiLine_name+"Line",
                                       prescale = config['D2K2PiLinePrescale'],
                                       postscale = config['D2K2PiLinePostscale'],
-                                      selection = selD2K2Pi
+                                      selection = selD2K2Pi,
+                                      ExtraInfoTools = config['ExtraInfoTools'] 
                                       )
 
         self.TwoKPiLine = StrippingLine(TwoKPiLine_name+"Line",
                                         prescale = config['D22KPiLinePrescale'],
                                         postscale = config['D22KPiLinePostscale'],
-                                        selection = selD22KPi
+                                        selection = selD22KPi,
+                                        ExtraInfoTools = config['ExtraInfoTools']
                                         )
 
         
@@ -468,25 +482,29 @@ class D2XMuMuConf(LineBuilder) :
         self.KKLine = StrippingLine(KKLine_name+"Line",
                                     prescale = config['D02KKMuMuLinePrescale'],
                                     postscale = config['D02KKMuMuLinePostscale'],
-                                    selection = selD02KKMuMu
+                                    selection = selD02KKMuMu,
+                                    ExtraInfoTools = config['ExtraInfoTools']
                                     )
         
         self.PiPiLine = StrippingLine(PiPiLine_name+"Line",
                                     prescale = config['D02PiPiMuMuLinePrescale'],
                                     postscale = config['D02PiPiMuMuLinePostscale'],
-                                    selection = selD02PiPiMuMu
+                                    selection = selD02PiPiMuMu,
+                                    ExtraInfoTools = config['ExtraInfoTools']
                                     )
         
         self.KPiLine = StrippingLine(KPiLine_name+"Line",
                                      prescale = config['D02KPiMuMuLinePrescale'],
                                      postscale = config['D02KPiMuMuLinePostscale'],
-                                     selection = selD02KPiMuMu
+                                     selection = selD02KPiMuMu,
+                                     ExtraInfoTools = config['ExtraInfoTools']
                                      )
         
         self.KKPiPiLine = StrippingLine(KKPiPiLine_name+"Line",
                                     prescale = config['D02KKPiPiLinePrescale'],
                                     postscale = config['D02KKPiPiLinePostscale'],
-                                    selection = selD02KKPiPi
+                                    selection = selD02KKPiPi,
+                                    ExtraInfoTools = config['ExtraInfoTools']
                                     )
 
         self.K3PiLine = StrippingLine(K3PiLine_name+"Line",
@@ -498,20 +516,23 @@ class D2XMuMuConf(LineBuilder) :
         self.PiPiPiPiLine = StrippingLine(PiPiPiPiLine_name+"Line",
                                         prescale = config['D02PiPiPiPiLinePrescale'],
                                         postscale = config['D02PiPiPiPiLinePostscale'],
-                                        selection = selD02PiPiPiPi
+                                        selection = selD02PiPiPiPi,
+                                        ExtraInfoTools = config['ExtraInfoTools']
                                         )
 
  
         self.Lambdac2PMuMuLine = StrippingLine(Lambdac2PMuMuLine_name+"Line",
                                                prescale = config['Lambdac2PMuMuLinePrescale'],
                                                postscale = config['Lambdac2PMuMuLinePostscale'],
-                                               selection = selLambdac2PMuMu
+                                               selection = selLambdac2PMuMu,
+                                               ExtraInfoTools = config['ExtraInfoTools']
                                                )
 
         self.Lambdac2PPiPiLine = StrippingLine(Lambdac2PPiPiLine_name+"Line",
                                                prescale = config['Lambdac2PPiPiLinePrescale'],
                                                postscale = config['Lambdac2PPiPiLinePostscale'],
-                                               selection = selLambdac2PPiPi
+                                               selection = selLambdac2PPiPi,
+                                               ExtraInfoTools = config['ExtraInfoTools']
                                                )
         
         
