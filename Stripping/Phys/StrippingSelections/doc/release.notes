@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Carlos Vazquez Sierra
+ - Updated StrippingBs2JpsieePhi.py, StrippingB2JpsiXforBeta_s.py, StrippingBs2EtacPhiBDT.py.
+
 ! 2014-08-27 - Paul Seyfert
  - Isolation configuration for tau23mu lines updated
 
