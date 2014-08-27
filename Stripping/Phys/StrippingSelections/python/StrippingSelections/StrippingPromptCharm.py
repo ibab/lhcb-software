@@ -644,7 +644,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         Pions
         """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdLoosePions as inpts 
+        from StandardParticles                     import StdLooseANNPions as inpts 
         ##
         return self.make_selection (
             'Pion'                 ,
@@ -661,7 +661,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         Kaons for   B -> psi X lines 
         """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdLooseKaons as inpts 
+        from StandardParticles                     import StdLooseANNKaons as inpts 
         ##
         return self.make_selection (
             'Kaon'                 ,
@@ -678,7 +678,7 @@ class StrippingPromptCharmConf(LineBuilder) :
         Protons for   b -> psi X lines 
         """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdLooseProtons as inpts 
+        from StandardParticles                     import StdLooseANNProtons as inpts 
         ##
         return self.make_selection (
             'Proton'                 ,

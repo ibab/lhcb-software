@@ -791,7 +791,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         Kaons for   B -> psi X lines 
         """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdAllLooseKaons as inpts 
+        from StandardParticles                     import StdAllLooseANNKaons as inpts 
         ##
         return self.make_selection (
             'Kaon'                 ,
@@ -808,7 +808,7 @@ class PsiX_BQ_Conf(LineBuilder) :
         Protons for   b -> psi X lines 
         """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdAllLooseProtons as inpts 
+        from StandardParticles                     import StdAllLooseANNProtons as inpts 
         ##
         return self.make_selection (
             'Proton'                 ,
