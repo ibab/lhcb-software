@@ -33,7 +33,11 @@ default_config = {
                           & (VFASPF(VCHI2) < 9.)
                           """ ,
         'BsComCuts'     : "(ADAMASS('B_s0') < 500 *MeV)",
-        'BsMomCuts'     : "(VFASPF(VCHI2/VDOF) < 25.) & (BPVDIRA> 0.99) & (BPVIPCHI2()<25)",
+        'BsMomCuts'     : "(VFASPF(VCHI2/VDOF) < 25.) & (BPVDIRA> 0.99) & (BPVIPCHI2()<25) & (BPVDLS>0)",
+
+        'Bs2EtacPhiMVACut'   :  "0.",
+        'Bs2EtacPhiXmlFile'  :  "$TMVAWEIGHTSROOT/data/Bs2EtacPhi_BDT_v1r0.xml", 
+        
         'Prescale'      : 1.
         },
     'STREAMS'           : ['Bhadron' ],
@@ -60,6 +64,10 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         'PhiCuts',
         'BsComCuts',
         'BsMomCuts',
+        
+        'Bs2EtacPhiMVACut',
+        'Bs2EtacPhiXmlFile',
+        
         'Prescale'
         )
 
@@ -71,9 +79,6 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         self.config = config
 
 
-        """
-        Eta_c
-        """
         self.SelKaons = self.createSubSel( OutputList = self.name + "SelKaons",
                                            InputList =  DataOnDemand(Location = 'Phys/StdLooseKaons/Particles' ), 
                                            Cuts = config['KaonCuts']
@@ -83,7 +88,10 @@ class Bs2EtacPhiBDTConf(LineBuilder):
                                            InputList =  DataOnDemand(Location = 'Phys/StdLoosePions/Particles' ), 
                                            Cuts = config['PionCuts']
                                            )
-        
+
+        """
+        Etac-> K K Pi Pi
+        """
         self.SelEtac2KKPiPi = self.createN4BodySel( OutputList = self.name + "SelEtac2KKPiPi",
                                                     DaughterLists = [ self.SelKaons, self.SelPions ],
                                                     DecayDescriptor = "eta_c(1S) -> K+ K- pi+ pi-",
@@ -92,6 +100,41 @@ class Bs2EtacPhiBDTConf(LineBuilder):
                                                     PostVertexCuts = config['EtacMomN4Cuts']
                                                     )
 
+        """
+        Etac-> K K K K
+        """
+        self.SelEtac2KKKK = self.createN4BodySel( OutputList = self.name + "SelEtac2KKKK",
+                                                  DaughterLists = [ self.SelKaons ],
+                                                  DecayDescriptor = "eta_c(1S) -> K+ K- K+ K-",
+                                                  ComAMCuts      = config['EtacComAMCuts'],
+                                                  PreVertexCuts  = config['EtacComN4Cuts'], 
+                                                  PostVertexCuts = config['EtacMomN4Cuts']
+                                                  )
+
+        
+        """
+        Etac-> Pi Pi Pi Pi
+        """
+        self.SelEtac2PiPiPiPi = self.createN4BodySel( OutputList = self.name + "SelEtac2PiPiPiPi",
+                                                      DaughterLists = [ self.SelPions ],
+                                                      DecayDescriptor = "eta_c(1S) -> pi+ pi- pi+ pi-",
+                                                      ComAMCuts      = config['EtacComAMCuts'],
+                                                      PreVertexCuts  = config['EtacComN4Cuts'], 
+                                                      PostVertexCuts = config['EtacMomN4Cuts']
+                                                      )
+
+        """
+        Eta_c
+        """
+        from PhysSelPython.Wrappers import MergedSelection
+
+        self.SelEtac = MergedSelection(self.name + "SelEtac",
+                                     RequiredSelections =  [ self.SelEtac2KKPiPi, 
+                                                             self.SelEtac2KKKK,
+                                                             self.SelEtac2PiPiPiPi
+                                                             ])
+
+        
         """
         Phi 
         """
@@ -105,14 +148,57 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         """
         self.SelBs2EtacPhi = self.createCombinationSel( OutputList = self.name + "SelBs2EtacPhi",
                                                         DecayDescriptor = "B_s0 -> eta_c(1S) phi(1020)",
-                                                        DaughterLists = [ self.SelPhi, self.SelEtac2KKPiPi ],                    
+                                                        DaughterLists = [ self.SelPhi, self.SelEtac ],                    
                                                         PreVertexCuts  = config['BsComCuts'],
                                                         PostVertexCuts = config['BsMomCuts'] )
+
+        """
+        Apply MVA
+        """
+        self.Bs2EtacPhiVars = {
+            'sqrt(Kp_Etac_IPCHI2_OWNPV)'     : "sqrt( CHILD(MIPCHI2DV(), 1, 1) )",
+            'sqrt(Km_Etac_IPCHI2_OWNPV)'     : "sqrt( CHILD(MIPCHI2DV(), 1, 2) )",
+            'sqrt(Pip_Etac_IPCHI2_OWNPV)'    : "sqrt( CHILD(MIPCHI2DV(), 1, 3) )",
+            'sqrt(Pim_Etac_IPCHI2_OWNPV)'    : "sqrt( CHILD(MIPCHI2DV(), 1, 4) )",           
+            'sqrt(Kp_Phi_IPCHI2_OWNPV)'      : "sqrt( CHILD(MIPCHI2DV(), 2, 1) )",
+            'sqrt(Km_Phi_IPCHI2_OWNPV)'      : "sqrt( CHILD(MIPCHI2DV(), 2, 2) )",
+
+            'EtacSumIPCHI2'                  : "sqrt( CHILD(MIPCHI2DV(), 1, 1)+CHILD(MIPCHI2DV(), 1, 2)+CHILD(MIPCHI2DV(), 1, 3)+CHILD(MIPCHI2DV(), 1, 4))",
+            'sqrt(Etac_IPCHI2_OWNPV)'        : "sqrt( CHILD(MIPCHI2DV(), 1 ) )",
+            'sqrt(Phi_IPCHI2_OWNPV)'         : "sqrt( CHILD(MIPCHI2DV(), 2 ) )",
+            
+
+            'log(Kp_Etac_PT)'      : "log( CHILD(PT, 1, 1) )",
+            'log(Km_Etac_PT)'      : "log( CHILD(PT, 1, 2) )",
+            'log(Pip_Etac_PT)'     : "log( CHILD(PT, 1, 3) )",
+            'log(Pim_Etac_PT)'     : "log( CHILD(PT, 1, 4) )",
+            'log(Kp_Phi_PT)'       : "log( CHILD(PT, 2, 1) )",
+            'log(Km_Phi_PT)'       : "log( CHILD(PT, 2, 2) )",            
+            'log(Etac_PT)'         : "log( CHILD(PT, 1 ) )",
+            'log(Phi_PT)'          : "log( CHILD(PT, 2 ) )",
+            
+            'Etac_ENDVERTEX_CHI2'   :   "CHILD(VFASPF(VCHI2/VDOF), 1)",
+            'Phi_ENDVERTEX_CHI2'    :   "CHILD(VFASPF(VCHI2/VDOF), 2)", 
+
+            'sqrt(B_IPCHI2_OWNPV)'  :   "sqrt( BPVIPCHI2() )", 
+            'B_DIRA_OWNPV'          :   "BPVDIRA",
+            'B_LOKI_FDS'            :   "BPVDLS",
+            'B_PVFit_chi2[0]'       :   "DTF_CHI2 ( True  )"
+            }
+
+
+        self.MvaBs2EtacPhi = self.applyMVA( self.name + "MvaBs2EtacPhi",
+                                             SelB        = self.SelBs2EtacPhi,
+                                             MVAVars     = self.Bs2EtacPhiVars,
+                                             MVACutValue = config['Bs2EtacPhiMVACut'], 
+                                             MVAxmlFile  = config['Bs2EtacPhiXmlFile']
+                                             )
+        
                 
         self.Bs2EtacPhiBDTLine = StrippingLine( self.name + 'Line',                                                
                                                 prescale  = config['Prescale'],
                                                 HLT       = config['HLTCuts'],
-                                                algos     = [ self.SelBs2EtacPhi ]
+                                                algos     = [ self.MvaBs2EtacPhi ]
                                                 )
         self.registerLine( self.Bs2EtacPhiBDTLine )
         
@@ -160,3 +246,24 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         return Selection ( OutputList,
                            Algorithm = combiner,
                            RequiredSelections = DaughterLists)
+
+    def applyMVA( self, name, 
+                  SelB,
+                  MVAVars,
+                  MVAxmlFile,
+                  MVACutValue
+                  ):
+        from MVADictHelpers import addTMVAclassifierValue
+        from Configurables import FilterDesktop as MVAFilterDesktop
+
+        _FilterB = MVAFilterDesktop( name + "Filter",
+                                     Code = "VALUE('LoKi::Hybrid::DictValue/" + name + "')>" + MVACutValue  )
+
+        addTMVAclassifierValue( Component = _FilterB,
+                                XMLFile   = MVAxmlFile,
+                                Variables = MVAVars,
+                                ToolName  = name )
+        
+        return Selection( name,
+                          Algorithm =  _FilterB,
+                          RequiredSelections = [ SelB ] )
