@@ -35,20 +35,13 @@ RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
             );
 
 
+    declareProperty("ParticlePath",   m_ParticlePath="/Event/Phys/StdAllNoPIDsPions/Particles");
 
+	declareProperty( "TrackType", m_trackType = 3,"Set the type of tracks considered for the isoBDT (default = 3)");
+    
 
     //sort these keys out by adding all
     m_keys.clear(); 
-/*    std::vector<std::string>::const_iterator ivar; 
-    for (ivar = m_variables.begin(); ivar != m_variables.end(); ivar++) {
-        short int key = RelatedInfoNamed::indexByName( *ivar ); 
-        if (key != RelatedInfoNamed::Unknown) {
-            m_keys.push_back( key );
-        } else {
-            warning() << "Unknown variable " << *ivar << ", skipping" << endmsg; 
-        }
-    }
-*/
     m_keys.push_back( RelatedInfoNamed::TRKISOBDTFIRSTVALUE );
     m_keys.push_back( RelatedInfoNamed::TRKISOBDTSECONDVALUE );
     m_keys.push_back( RelatedInfoNamed::TRKISOBDTTHIRDVALUE );
@@ -82,37 +75,11 @@ StatusCode RelInfoTrackIsolationBDT::initialize() {
         return StatusCode::FAILURE;
     }
 
-    /// TMVA configuration
-    /*
-       m_Reader = new TMVA::Reader( "!Silent" );
-       m_Reader->AddVariable("PVdist",&var_PVdist) ;
-       m_Reader->AddVariable("SVdist",&var_SVdist) ;
-       m_Reader->AddVariable("fc",&var_fc) ; 
-       m_Reader->AddVariable("log_doca",&var_log_doca) ;
-       m_Reader->AddVariable("angle",&var_angle) ;
-       m_Reader->AddVariable("log_TrackIPchi2AnyPV",&var_ipchisqany) ; 
-       m_Reader->BookMVA( "BDT method", m_weightsName );
-       if( !m_Reader ){
-       Error("Unable to retrieve the IVertexFit tool");
-       return StatusCode::FAILURE;
-       }*/
 
     m_optmap["Name"] = m_transformName ;
     m_optmap["KeepVars"] = "0" ;
     m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_weightsName ;
     m_tmva.Init( m_optmap , info().stream() ) ; //
-    //instance of IParticleDicttool
-    //m_varmap = tool<IParticleDictTool>(m_transformname) ;
-    //if(m_varmap == NULL) {
-    //    Error("Unable to configure IParticleDictTool") ;
-    //    return StatusCode::FAILURE;
-    //}
-    //set up map of variables - doesn't work with GaudiVEctorMap!!!
-    //m_varmap["PVdist"]=0.0 ;
-    //m_varmap["SVdist"]=0.0 ;
-    //m_varmap["angle"]=0.0 ;
-    //m_varmap["doca"]=0.0 ;
-    //m_varmap["fc"]=0.0 ;
     return StatusCode::SUCCESS;   
 
 }
@@ -132,28 +99,26 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
     // -- The vector m_decayParticles contains all the particles that belong to the given decay
     // -- according to the decay descriptor.
 
-    // -- Clear the vector with the particles in the specific decay
-    m_decayParticles.clear();
 
     if ( ! part->isBasicParticle() ) { 
         if ( msgLevel(MSG::DEBUG) ) debug() << "Running track isolation on non-final state particle, skipping" << endmsg;
         return StatusCode::SUCCESS ;
     }
 
-    // -- Add the mother (prefix of the decay chain) to the vector
-    //if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
-    //m_decayParticles.push_back( top );
-    // -- Save all particles that belong to the given decay in the vector m_decayParticles
-    //saveDecayParticles( top );
-
     // -- Get all tracks in the event
-    LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
-    if ( tracks->empty() )
-    {
-        if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
-        return StatusCode::FAILURE;
+    //LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
+    //if ( tracks->empty() )
+    //{
+    //    if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
+    //    return StatusCode::FAILURE;
+    //}
+    //get the LHCb particles of the event
+    LHCb::Particles*  parts = get<LHCb::Particles>(m_ParticlePath);
+    if (!parts) {
+        if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve particles. Skipping" << endmsg;
+      return StatusCode::SUCCESS;
     }
-
+ 
     bool test = true;
 
     //set PV and SV of the mother
@@ -173,10 +138,7 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
         // -- process -- iterate over tracks
         //
         //assign top three bdt values
-        //m_bdt1 = 1 ;
-        //m_bdt2 = 2 ;
-        //m_bdt3 = 3 ;
-        calcBDTValue( part, tracks, PV, SV ) ;
+        calcBDTValue( part, parts, PV, SV ) ;
         if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
         //
         //store
@@ -215,57 +177,9 @@ LHCb::RelatedInfoMap* RelInfoTrackIsolationBDT::getInfo(void) {
 }
 
 
-//=============================================================================
-// Save the particles in the decay chain (recursive function)
-//=============================================================================
-void RelInfoTrackIsolationBDT::saveDecayParticles( const LHCb::Particle *top)
-{
 
-    // -- Get the daughters of the top particle
-    const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
 
-    // -- Fill all the daugthers in m_decayParticles
-    for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
 
-        // -- If the particle is stable, save it in the vector, or...
-        if( (*idau)->isBasicParticle() ){
-            if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
-            m_decayParticles.push_back( (*idau) );
-        }else{
-            // -- if it is not stable, call the function recursively
-            m_decayParticles.push_back( (*idau) );
-            if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
-            saveDecayParticles( (*idau) );
-        }
-
-    }
-
-}
-
-//=============================================================================
-// Check if the track is already in the decay
-//=============================================================================
-bool RelInfoTrackIsolationBDT::isTrackInDecay(const LHCb::Track* track){
-
-    bool isInDecay = false;
-
-    for(  std::vector<const LHCb::Particle*>::iterator it = m_decayParticles.begin() ; it != m_decayParticles.end() ; ++it ){
-
-        const LHCb::ProtoParticle* proto = (*it)->proto();
-        if(proto){
-            const LHCb::Track* myTrack = proto->track();
-
-            if(myTrack){
-
-                if(myTrack == track){
-                    if ( msgLevel(MSG::DEBUG) ) debug() << "Track is in decay, skipping it" << endmsg;
-                    isInDecay = true;
-                }
-            }
-        }
-    }
-    return isInDecay;
-}
 
 
 ///============================================================================
@@ -275,7 +189,7 @@ bool RelInfoTrackIsolationBDT::isTrackInDecay(const LHCb::Track* track){
 
 
 bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
-        , const LHCb::Tracks * tracks
+        , const LHCb::Particles * particles
         , const LHCb::VertexBase * PV 
         , const LHCb::VertexBase * SV 
         ) 
@@ -300,12 +214,14 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
     double trk_nnk = 0;//track ProbNN(K)
     //end MR
 
-    LHCb::Tracks::const_iterator tr_it, tr_it_end( tracks->end() ) ;
-    for ( tr_it = tracks->begin() ; tr_it != tr_it_end ; ++tr_it )
+    LHCb::Particles::const_iterator part_it, part_it_end( particles->end() ) ;
+    for ( part_it = particles->begin() ; part_it != part_it_end ; ++part_it )
     {
-        LHCb::Track * track = * tr_it ;
+        const LHCb::Track * track = (*part_it)->proto()->track() ;
         //pointer comparison
         if ( track == part->proto()->track() ) continue ;
+        //track type comparison
+    	if(track->type()!=m_trackType) continue; 
 
         Gaudi::XYZVector trackMomentum = track->momentum();
         Gaudi::XYZPoint trackPosition = track->position();
@@ -321,12 +237,10 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
 	trk_deta = fabs(track->momentum().Eta() - part->proto()->track()->momentum().Eta());
 	trk_pt = track->pt();
 	trk_ch = (track->charge())*(part->proto()->track()->charge());
-	trk_nnmu = track->info(LHCb::ProtoParticle::ProbNNmu,-9999);
-	trk_nnpi = track->info(LHCb::ProtoParticle::ProbNNpi,-9999);
-	trk_nnk = track->info(LHCb::ProtoParticle::ProbNNk,-9999);
-	//trk_nnmu = (*ipp)->proto()->info(LHCb::ProtoParticle::ProbNNmu,-9999);
-	//trk_nnpi = (*ipp)->proto()->info(LHCb::ProtoParticle::ProbNNpi,-9999);
-	//trk_nnk = (*ipp)->proto()->info(LHCb::ProtoParticle::ProbNNk,-9999);
+    //particle for propbnn variables
+	trk_nnmu = (*part_it)->proto()->info(LHCb::ProtoParticle::ProbNNmu,-9999);
+	trk_nnpi = (*part_it)->proto()->info(LHCb::ProtoParticle::ProbNNpi,-9999);
+	trk_nnk = (*part_it)->proto()->info(LHCb::ProtoParticle::ProbNNk,-9999);
 	//end MR
 
         // -- BDT takes five variables 
@@ -369,26 +283,27 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
             m_varmap.insert( "doca", var_log_doca ) ;
             m_varmap.insert( "fc", var_fc ) ;
         }
-        if (m_variables>=0)
+        if (m_variables>=1)
         {
-            m_varmap.insert( "logtrackips", log_trk_ips ) ;
-        }
-        if (m_variables>=1) 
-        {
-            m_varmap.insert( "trk_gho", trk_gho ) ;
-            m_varmap.insert( "trk_chi", trk_chi ) ;
+            m_varmap.insert( "logtrackips", log_trk_ips ) ; // (a)
         }
         if (m_variables>=2) 
         {
-            m_varmap.insert( "trk_dphi", trk_dphi ) ;
-            m_varmap.insert( "trk_deta", trk_deta ) ;
-            m_varmap.insert( "trk_pt", trk_pt ) ;
+            m_varmap.insert( "trk_dphi", trk_dphi ) ; // (d)
+            m_varmap.insert( "trk_deta", trk_deta ) ; // (e)
+            m_varmap.insert( "trk_pt", trk_pt ) ;     // (f)
         }
         if (m_variables>=3) 
         {
-            m_varmap.insert( "trk_nnmu", trk_nnmu ) ;
-            m_varmap.insert( "trk_nnpi", trk_nnpi ) ;
-            m_varmap.insert( "trk_nnk", trk_nnk ) ;
+            m_varmap.insert( "trk_ch", trk_ch ) ;     // (g)
+            m_varmap.insert( "trk_nnmu", trk_nnmu ) ; // (h)
+            m_varmap.insert( "trk_nnpi", trk_nnpi ) ; // (h)
+            m_varmap.insert( "trk_nnk", trk_nnk ) ;   // (h)
+        }
+        if (m_variables>=4) 
+        {
+            m_varmap.insert( "trk_gho", trk_gho ) ;   // (b) 
+            m_varmap.insert( "trk_chi", trk_chi ) ;   // (c)
         }
 
 

@@ -64,6 +64,10 @@ class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTo
         LHCb::RelatedInfoMap m_map;
         std::vector<short int> m_keys; 
 
+        int m_trackType ;
+
+        std::string m_ParticlePath ;
+
         double m_bdt1;
         double m_bdt2;
         double m_bdt3;
@@ -96,21 +100,13 @@ class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTo
         std::string m_PVInputLocation ;
         LHCb::RecVertex::Container * m_vertices ;
 
-        std::vector<const LHCb::Particle*> m_decayParticles;
-
-        /// Save all particles in your decay descriptor in a vector
-        void saveDecayParticles( const LHCb::Particle *top);
-
-        /// Check if your track belongs to your decay or not
-        bool isTrackInDecay(const LHCb::Track* track);
-
 
         ///============================================================================
         /// Track isolation method
         ///============================================================================
 
         bool calcBDTValue( const LHCb::Particle * part
-                , const LHCb::Tracks * tracks
+                , const LHCb::Particles * particles
                 , const LHCb::VertexBase * PV
                 , const LHCb::VertexBase * SV
                 ) ;
