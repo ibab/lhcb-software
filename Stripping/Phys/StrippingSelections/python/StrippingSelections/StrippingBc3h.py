@@ -348,7 +348,7 @@ class Bc3hConf(LineBuilder) :
         """ Pions for   Bc -> 3h lines """
         ##
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdAllNoPIDsPions as inpts 
+        from StandardParticles                     import StdAllLooseANNPions as inpts 
         return self.make_selection (
             'Pion'                 ,
             FilterDesktop          ,
@@ -360,7 +360,7 @@ class Bc3hConf(LineBuilder) :
     def kaons     ( self ) :
         """ Kaons for   Bc -> 3h lines """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdAllNoPIDsKaons as inpts  
+        from StandardParticles                     import StdAllLooseANNKaons as inpts  
         return self.make_selection (
             'Kaon'                 ,
             FilterDesktop          ,
@@ -372,7 +372,7 @@ class Bc3hConf(LineBuilder) :
     def protons    ( self ) :
         """ Protons for   Bc -> 3h  lines  """
         from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
-        from StandardParticles                     import StdAllNoPIDsProtons as inpts 
+        from StandardParticles                     import StdAllLooseANNProtons as inpts 
         return self.make_selection (
             'Proton'                 ,
             FilterDesktop            ,
