@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-27 - Andrea Contu
+ - Add folder for Stripping21r1 (2011 data)
+
 ! 2014-08-26 - Carlos Vazquez Sierra (B2CC)
  - Updated Stripping21/LineConfigDictionaries_B2CC.py
 
