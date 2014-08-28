@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Roberta Cardinale (for Yury Shcheglov)
+ - Committed new version of StrippingXic2HHH.py
+
 ! 2014-08-28 - Marco Pappagallo
  - Added new StrippingBc2Ds1Gamma.py for radiative Bc decays
 

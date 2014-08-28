@@ -52,7 +52,7 @@ class StrippingXic2HHHConf(LineBuilder):
                                , 'PostscaleXic2PV0'
                                , 'PrescaleXic2KLam'   
                                , 'PostscaleXic2KLam' 
-                               , 'ExtraInfoTools'  
+                               , 'RelatedInfoTools'  
                              )
 
 
@@ -74,7 +74,7 @@ class StrippingXic2HHHConf(LineBuilder):
                           MaxCandidates = "Override",   # Maximum number
                           MaxCombinations = "Override", # Maximum number
                           HDRLocation = None, # other configuration parameter 
-                          ExtraInfoTools = None ) : # ExtraInfoTools to be included  
+                          RelatedInfoTools = None ) : # RelatedInfoTools to be included  
 
 
         if (prescale > 0) and (postscale > 0) : 
@@ -91,7 +91,7 @@ class StrippingXic2HHHConf(LineBuilder):
                                   MaxCandidates   = MaxCandidates,
                                   MaxCombinations = MaxCombinations,
                                   HDRLocation     = HDRLocation, 
-                                  ExtraInfoTools  = ExtraInfoTools)
+                                  RelatedInfoTools  = RelatedInfoTools)
 
             self.registerLine(line)
             return line
@@ -192,7 +192,7 @@ class StrippingXic2HHHConf(LineBuilder):
                , Comb_MASS_MIN  = 1440. * MeV            
                , Comb_MASS_MAX  = 1800. * MeV            
                , Comb_ADOCAMAX_MAX = 1.0 * mm
-               , Xic_PT_MIN = config['Xic_PT_MIN']
+               , Xic_PT_MIN = 2000. * MeV
                , Xic_BPVDIRA_MIN = -100.
                , Xic_BPVIPCHI2_MAX = config['Xic_BPVIPCHI2_MAX']
                , Xic_BPVLTIME_MAX = config['Xic_BPVLTIME_MAX']
@@ -219,25 +219,25 @@ class StrippingXic2HHHConf(LineBuilder):
 
 
         self.line_Xic2PKPi = self._strippingLine( name = xic_PKPi_name + 'Line',
-                                         HLT = config['HltFilter'],
+#                                         HLT = config['HltFilter'],
                                          prescale  = config['PrescaleXic2PKPi'],
                                          postscale = config['PostscaleXic2PKPi'],
-                                         ExtraInfoTools = config['ExtraInfoTools'],
+                                         RelatedInfoTools = config['RelatedInfoTools'],
                                          selection = self.selXic2PKPi,
                                        )
 
         self.line_Xic2PKK = self._strippingLine( name = xic_pKK_name + 'Line',
-                                         HLT = config['HltFilter'],
+#                                         HLT = config['HltFilter'],
                                          prescale  = config['PrescaleXic2PKK'],
                                          postscale = config['PostscaleXic2PKK'],
-                                         ExtraInfoTools = config['ExtraInfoTools'],
+                                         RelatedInfoTools = config['RelatedInfoTools'],
                                          selection = self.selXic2PKK,
                                        )
 
         self.line_Theta2PKS0 = self._strippingLine( name = theta_pks_name + 'Line',
                                          prescale  = config['PrescaleXic2PV0'],
                                          postscale = config['PostscaleXic2PV0'],
-                                         ExtraInfoTools = config['ExtraInfoTools'],
+                                         RelatedInfoTools = config['RelatedInfoTools'],
                                          selection = self.selTheta2PKS0,
                                        )
 
@@ -399,34 +399,36 @@ def makeXic2KLam( name
 
 default_config = {  'Daug_All_PT_MIN'         : 300.0 * MeV
                   , 'Daug_P_MIN'              : 3000.0 * MeV
-                  , 'Daug_TRCHI2DOF_MAX'      : 10.0
-                  , 'Daug_1of3_BPVIPCHI2_MIN' : 0.5
+                  , 'Daug_TRCHI2DOF_MAX'      : 4.0
+                  , 'Daug_1of3_BPVIPCHI2_MIN' : 9
                   , 'Proton_PIDp_MIN'         : 10.0 
                   , 'K_IPCHI2_MIN'            : 0.0 
-                  , 'Comb_MASS_MIN'           : 1950.0 * MeV 
+                  , 'Comb_MASS_MIN'           : 2300.0 * MeV 
                   , 'Comb_MASS_MAX'           : 2800.0 * MeV 
                   , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   
                   , 'Xic_PT_MIN'              : 1500.0 * MeV
                   , 'Xic_VCHI2VDOF_MAX'       : 8.0
                   , 'Xic_BPVVDCHI2_MIN'       : 0.0
-                  , 'Xic_BPVDIRA_MIN'         : 0.9
+                  , 'Xic_BPVDIRA_MIN'         : 0.9999
                   , 'Xic_BPVIPCHI2_MAX'       : 10.
-                  , 'Xic_BPVLTIME_MAX'        : 0.0025 * ns
-                  , 'Xic_BPVLTIME_MIN'        : 0.0002 * ns
-                  , 'HltFilter'               : "HLT_PASS('Hlt2CharmHadD2HHHDecision')"
-                  , 'PrescaleXic2PKPi'        : 1.0
-                  , 'PostscaleXic2PKPi'       : 1.0
+                  , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
+                  , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
+                  , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
+                  , 'PrescaleXic2PKPi'        : 0.0
+                  , 'PostscaleXic2PKPi'       : 0.0
                   , 'PrescaleXic2PKK'         : 1.0
                   , 'PostscaleXic2PKK'        : 1.0
                   , 'PrescaleXic2PV0'         : 1.0
                   , 'PostscaleXic2PV0'        : 1.0
                   , 'PrescaleXic2KLam'        : 0.0 
                   , 'PostscaleXic2KLam'       : 0.0 
-                  , 'ExtraInfoTools' : [
-	                { "Type" : "ConeVariables", "ConeAngle" : 1.5, "ConeNumber" : 1, "Variables" : ['angle', 'mult', 'ptasy']}, 
-	                { "Type" : "ConeVariables", "ConeAngle" : 15., "ConeNumber" : 2, "Variables" : ['angle', 'mult', 'ptasy']}, 
-                        { "Type" : "VertexIsolation"}
-                                       ] 
+                  , 'RelatedInfoTools' : [
+	               { "Type" : "RelInfoConeVariables", "ConeAngle" : 1.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone1"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 15,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone2"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone3"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.25,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone4"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.1,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone5"}
+                                         ] 
                  }
 
 
