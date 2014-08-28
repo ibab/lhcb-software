@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+- 2014-08-28 - Xabier Cid Vidal
+ - Comment lines to avoid breaking nightlies again...
+
 ! 2014-08-28 - Marco Clemencic
  - Fixed CMake configuration.
 

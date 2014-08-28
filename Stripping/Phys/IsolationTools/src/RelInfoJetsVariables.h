@@ -6,7 +6,7 @@
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IRelatedInfoTool.h"            // Interface
-#include "Kernel/IJetTagTool.h"
+//#include "Kernel/IJetTagTool.h"
 #include "Kernel/IDistanceCalculator.h"
 
 
@@ -53,7 +53,7 @@ private:
   
   IDVAlgorithm *m_dva; // parent DVA Algorithm
   const IDistanceCalculator* m_dist;  // for obtaining the best PV
-  IJetTagTool*  m_nnjettag; //Jet Tag NN
+  //IJetTagTool*  m_nnjettag; //Jet Tag NN
   
   // maps for all the extra info for all the jets
   std::map <std::string,double> m_JetNoMu1;

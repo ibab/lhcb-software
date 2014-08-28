@@ -96,7 +96,7 @@ StatusCode RelInfoJetsVariables::initialize() {
                                 StatusCode::FAILURE); }
   
   //initialize the nntag tool
-  m_nnjettag = tool<IJetTagTool>("LoKi::NNBTag",this);
+  //m_nnjettag = tool<IJetTagTool>("LoKi::NNBTag",this);
 
   //initialize the tool keys
   m_keys.clear();
@@ -178,9 +178,10 @@ StatusCode RelInfoJetsVariables::initialize() {
 double RelInfoJetsVariables::jetNNTag(const LHCb::Particle* jet)
 {
   std::map <std::string,double> jetProps;
-  m_nnjettag->calculateJetProperty(jet,jetProps);
-  debug()<< "Jet "<< jet->key()  <<" NN tag = " << jetProps["Tag"] << endmsg;
-  return jetProps["Tag"];
+  //m_nnjettag->calculateJetProperty(jet,jetProps);
+  //debug()<< "Jet "<< jet->key()  <<" NN tag = " << jetProps["Tag"] << endmsg;
+  //return jetProps["Tag"];
+  return -1.;
 }
 
 
