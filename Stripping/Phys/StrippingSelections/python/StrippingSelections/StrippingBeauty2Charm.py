@@ -22,6 +22,7 @@ from Configurables import LoKi__VoidFilter
 from StandardParticles import StdLooseResolvedPi0,StdLooseMergedPi0
 from StandardParticles import StdAllNoPIDsPions, StdAllNoPIDsKaons, \
      StdAllNoPIDsProtons, StdNoPIDsUpPions, StdLooseMuons
+from StandardParticles import StdLooseAllPhotons
 from Beauty2Charm_DBuilder import *
 from Beauty2Charm_HHBuilder import *
 from Beauty2Charm_HHHBuilder import *
@@ -64,6 +65,10 @@ config = {
     'CHILDCL1_MIN'  : 0.25,
     'CHILDCL2_MIN'  : 0.25,
     'FROM_B_P_MIN'  : '2000*MeV'
+    },
+    "gamma" : { # Cuts made on all photons
+    'PT_MIN'  : '400*MeV',
+    'CL_MIN'  : 0.25
     },
     "D2X" : { # Cuts made on all D's and Lc's used in all lines 
     'ASUMPT_MIN'    : '1800*MeV',
@@ -241,7 +246,7 @@ config = {
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
-    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','D2X','B2X','Dstar','HH','HHH',
+    __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Dstar','HH','HHH',
                               'PID','FlavourTagging','RelatedInfoTools', '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
@@ -263,9 +268,8 @@ class Beauty2CharmConf(LineBuilder):
         lambda0_ll = filterInputs('Lambda0_LL',[dataOnDemand("StdLooseLambdaLL")],
                              config['Lambda0'])
         lambda0 = {"DD":[lambda0_dd],"LL":[lambda0_ll]}
-        pi0_merged   = filterPi0s('Merged',[StdLooseMergedPi0],config['Pi0'])
-        pi0_resolved = filterPi0s('Resolved',[StdLooseResolvedPi0],
-                                  config['Pi0'])
+        pi0_merged   = filterPi0s('Merged'  , [StdLooseMergedPi0]  , config['Pi0'])
+        pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], config['Pi0'])
         pi0 = {"Merged":[pi0_merged],"Resolved":[pi0_resolved]}
         pcut = 'P > %s' % config['Pi0']['FROM_B_P_MIN']
         pi0_fromB_merged = filterSelection('Pi0FromBMerged',pcut,[pi0_merged])
@@ -275,14 +279,18 @@ class Beauty2CharmConf(LineBuilder):
                      'Resolved':[pi0_fromB_resolved]}
         muons = filterInputs('MU',[StdLooseMuons],config['ALL']) # make muons (for D -> phi mu nu)
 
+        # Jordi: photon selection.
+        gammacut = '(PT > %(PT_MIN)s) & (CL > %(CL_MIN)f)' % config[ 'gamma' ]
+        photons = filterSelection( 'Gamma', gammacut, [ StdLooseAllPhotons ] )
+
         # pre-filter hard inputs (these could have been used in HLT2)
         topoPions = topoInputs('Pi',[pions])
         topoKaons = topoInputs('K',[kaons])
         topoProtons = topoInputs('P',[protons])
-        
+
         # make D->X, etc. inputs
         d = DBuilder(pions,kaons,ks,pi0,uppions,muons,config['D2X'],config['PID'])
-        dst = DstarBuilder(d,pions,pi0,config['Dstar'],config['PID'])
+        dst = DstarBuilder(d,pions,pi0,photons,config['Dstar'],config['PID'])
 
         # X -> hh
         hh = HHBuilder(pions,kaons,protons,ks,pi0_fromB,config['HH'],
