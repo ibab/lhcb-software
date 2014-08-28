@@ -218,67 +218,43 @@ StatusCode PatFwdTool::initialize ( ) {
 }
 
 #include "VectorizationSupport.h"
-template <typename ... Hits>
+template <bool withoutBField, typename ... Hits>
 std::array<double, sizeof...(Hits)> 
-PatFwdTool::xAtReferencePlane_( const PatFwdTrackCandidate& track, double z_magnet, Hits... hits ) const 
+PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double z_magnet, Hits... hits ) const 
 {
-  using vec_d = typename vector_type<sizeof...(Hits)>::double_v;
+  using double_v = typename vector_type<double,sizeof...(Hits)>::type;
 
-  auto zHit    = vec_d{ hits->z()... };
-  auto xHit    = vec_d{ hits->x()... };
+  auto zHit    = double_v{ hits->z()... };
+  auto xHit    = double_v{ hits->x()... };
+
+  // why not do this after the drift distance correction to xHit??
+  auto zMagnet = ( !withoutBField ? m_zMagnetParams[3] : 0. )  * xHit * xHit + z_magnet; 
    
-  auto zMagnet = m_zMagnetParams[3] * xHit * xHit + z_magnet; // why not wait until the driftdistance is included??
-
   // only OT hits have a non-zero driftDistance. So this is a NOP for everything else...
-  xHit        += vec_d{ double(int(hits->hasNext())-int(hits->hasPrevious()))... }
-               * vec_d{ hits->driftDistance()... };
-    
-  auto dSlope  = ( xHit - track.xStraight(zMagnet) ) / ( zHit - zMagnet ) - track.slX();
-  auto dSl2    = dSlope * dSlope;
-  zMagnet     += m_zMagnetParams[1] * dSl2;
-  auto dz      = 1.e-3 * ( zHit - m_zReference );
-  auto dyCoef  = dSl2 * track.slY();
-  auto dxdY    = vec_d{ hits->hit()->dxDy()... };
-  xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
-                  - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
-
-  auto xMagnet = track.xStraight( zMagnet );
-  xMagnet     += ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
-  return scatter_array<double,sizeof...(Hits)>(xMagnet);
-}
-
-template <bool withoutBField>
-double 
-PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, const PatFwdHit* hit ) const 
-{
-  auto zHit       = hit->z();
-  auto xHit       = hit->x();
-   
-  // only othits have a non-zero driftDistance -- so for the others, this is a NOP
-  // bool to int: false -> 0, true -> 1
-  xHit += ( int( hit->hasNext() )  - int( hit->hasPrevious() ) ) * hit->driftDistance();
-
-  if (!withoutBField) { // sparse conditional constant propagation eliminates this 'if'...
-      zMagnet += m_zMagnetParams[3] * hit->x() * hit->x();
-        
-      auto dSlope  = ( xHit - track.xStraight( zMagnet) ) / ( zHit - zMagnet ) - track.slX();
+  xHit        += double_v{ double(int(hits->hasNext())-int(hits->hasPrevious()))... }
+               * double_v{ hits->driftDistance()... };
+  
+  if (!withoutBField) {
+      auto dSlope  = ( xHit - track.xStraight(zMagnet) ) / ( zHit - zMagnet ) - track.slX();
       auto dSl2    = dSlope * dSlope;
       zMagnet     += m_zMagnetParams[1] * dSl2;
       auto dz      = 1.e-3 * ( zHit - m_zReference );
       auto dyCoef  = dSl2 * track.slY();
-      xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * hit->hit()->dxDy() 
+      auto dxdY    = double_v{ hits->hit()->dxDy()... };
+      xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
                       - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
   }
-  auto    xMagnet = track.xStraight( zMagnet );
-  return  xMagnet + ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
+  auto xMagnet = track.xStraight( zMagnet );
+  xMagnet     += ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
+  return scatter_array<double,sizeof...(Hits)>(xMagnet);
 }
-
-// explicitly instantiate the three relevant templates...
-template double PatFwdTool::xAtReferencePlane<true> ( const PatFwdTrackCandidate& , double , const PatFwdHit* ) const;
+// explicitly instantiate the relevant templates...
 #ifdef PATFWDTOOL_VEC
-template std::array<double, 2ul> PatFwdTool::xAtReferencePlane_<PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
+template std::array<double, 2ul> PatFwdTool::xAtReferencePlane<false,PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
+template std::array<double, 2ul> PatFwdTool::xAtReferencePlane<true,PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
 #endif
-template std::array<double, 1ul> PatFwdTool::xAtReferencePlane_<PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
+template std::array<double, 1ul> PatFwdTool::xAtReferencePlane<false,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
+template std::array<double, 1ul> PatFwdTool::xAtReferencePlane<true,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
 
 double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const PatFwdHit* hit ) {
 

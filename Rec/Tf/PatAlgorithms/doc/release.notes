@@ -10,6 +10,8 @@
    This produces optimal code for both cases (i.e. fully inlined, no extra 
    function calls) without having to write a lot of overloads and/or specializations 
    of the gather/scatter operations. 
+ - generalize the vectorization types 
+ - unify the with/without B-field versions of PatFwdTool::xAtReferencePlane
 
 ! 2014-08-22 - Gerhard Raven
  - Move the skipping of used hits from PatForwardTool to PatForward.

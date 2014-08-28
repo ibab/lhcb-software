@@ -45,11 +45,8 @@ public:
 
 private:
   double storeXAtReferencePlane( PatFwdTrackCandidate& track, const PatFwdHit* hit );
-  template <bool withoutBField>
-  double xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, const PatFwdHit* hit) const;
-  // vectorized version, without B field 
-  template <typename... Hits>
-  std::array<double,sizeof...(Hits)> xAtReferencePlane_( const PatFwdTrackCandidate& track, double zMagnet, Hits... hits ) const ;
+  template <bool withoutBField, typename... Hits>
+  std::array<double,sizeof...(Hits)> xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, Hits... hits ) const ;
 public:
 
   double zReference() const { return m_zReference; }
@@ -99,10 +96,10 @@ public:
           using iter_t = typename std::decay<Iterator1>::type;
           iter_t i = std::forward<Iterator1>(begin);
           for ( ; std::distance( i, end ) % 2 !=0 ; ++i ) {
-                i[0]->setProjection( std::get<0>(xAtReferencePlane_( track, z_Magnet, i[0])) );
+                i[0]->setProjection( std::get<0>(xAtReferencePlane<false>( track, z_Magnet, i[0])) );
           }
           for ( ; i!=end ; i+=2 ) {
-                auto xRef = xAtReferencePlane_( track, z_Magnet, i[0], i[1] );
+                auto xRef = xAtReferencePlane<false>( track, z_Magnet, i[0], i[1] );
                 i[0]->setProjection( std::get<0>(xRef) );
                 i[1]->setProjection( std::get<1>(xRef) );
           }
@@ -110,14 +107,14 @@ public:
           std::for_each( std::forward<Iterator1>(begin), 
                          std::forward<Iterator2>(end), 
                          [&,z_Magnet](PatFwdHit* hit) { 
-                            hit->setProjection( std::get<0>(this->xAtReferencePlane_(track,z_Magnet,hit) ) ) ; 
+                            hit->setProjection( std::get<0>(this->xAtReferencePlane<false>(track,z_Magnet,hit) ) ) ; 
                          } );
 #endif
       } else {
           std::for_each( std::forward<Iterator1>(begin), 
                          std::forward<Iterator2>(end), 
                          [&](PatFwdHit* hit) { 
-                            hit->setProjection( this->xAtReferencePlane<true>(track,0.0,hit ) ); 
+                            hit->setProjection( std::get<0>(this->xAtReferencePlane<true>(track,0.0,hit )) ); 
                          } );
       }
   }
@@ -180,8 +177,7 @@ public:
     PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
     int nbIT = regions.nbInRegion( 2 ) +  regions.nbInRegion( 3 ) +
                regions.nbInRegion( 4 ) +  regions.nbInRegion( 5 ) ;
-    if ( nbIT > 1 ) return false;
-    return regions.nbInRegion( 0 ) + regions.nbInRegion( 1 ) < minCoord ;
+    return ( nbIT < 2 ) && ( regions.nbInRegion( 0 ) + regions.nbInRegion( 1 ) < minCoord );
   }
 
   double changeInY(const  PatFwdTrackCandidate& track ) const {

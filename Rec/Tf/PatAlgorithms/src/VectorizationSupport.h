@@ -1,40 +1,33 @@
 #ifndef VECTORIZATION_SUPPORT_H
 #define VECTORIZATION_SUPPORT_H
 
+#include <type_traits>
 
-template <size_t N>
-struct vector_type { };
+template <typename T,size_t N> struct vector_type;
 
-template<>
-struct vector_type<1> {
-  typedef double double_v;
-  typedef float  float_v;
-};
+template<typename T>
+struct vector_type<T,1> { typedef T type; };
 
-template<>
-struct vector_type<2> {
+template<typename T>
+struct vector_type<T,2> {
+    // 
 #ifdef __clang__
-  typedef double double_v __attribute__ ((ext_vector_type( 2  ))); // vector of two doubles...
-  typedef float  float_v __attribute__ ((ext_vector_type( 2  ))); // vector of two floats...
+  typedef T type __attribute__ ((ext_vector_type( 2  ))); // vector of two Ts...
 #else
   // icc 13 onwards should support this at well... 
-  typedef double double_v __attribute__ ((vector_size( 2 * sizeof(double) ))); // vector of two doubles...
-  typedef float  float_v __attribute__ ((vector_size( 2 * sizeof(float) ))); // vector of two floats...
+  typedef T type __attribute__ ((vector_size( 2 * sizeof(T) ))); // vector of two Ts...
 #endif
 };
 
-template<>
-struct vector_type<4> {
+template<typename T>
+struct vector_type<T,4> {
 #ifdef __clang__
-  typedef double double_v __attribute__ ((ext_vector_type( 4  ))); // vector of two doubles...
-  typedef float  float_v __attribute__ ((ext_vector_type( 4  ))); // vector of two floats...
+  typedef T type __attribute__ ((ext_vector_type( 4  ))); // vector of four Ts...
 #else
   // icc 13 onwards should support this at well... 
-  typedef double double_v __attribute__ ((vector_size( 4 * sizeof(double) ))); // vector of two doubles...
-  typedef float  float_v __attribute__ ((vector_size( 4 * sizeof(float) ))); // vector of two floats...
+  typedef T type __attribute__ ((vector_size( 4 * sizeof(T) ))); // vector of four Ts...
 #endif
 };
-
 
 // C++14 Compile-time integer sequences -- this can go once we use C++14...
 // #include <utility> // defines (in C++14) std::make_index_sequence and std::index_sequence
@@ -58,10 +51,11 @@ template<size_t N> struct make_index_sequence : public make_index_sequence_helpe
 #include <array>
 
 template<typename Ret, typename Arg>
-inline std::array<Ret,1> scatter_array_impl( const Arg& a, index_sequence<0> )
+inline std::array<Ret,1> scatter_array_impl( Arg&& a, index_sequence<0> )
 {
-    return { a };
+    return { std::forward<Arg>(a) };
 }
+
 template<typename Ret, typename Arg, std::size_t... I>
 inline std::array<Ret,sizeof...(I)> scatter_array_impl( const Arg& a, index_sequence<I...> )
 {
@@ -73,6 +67,5 @@ inline std::array<Ret,N> scatter_array(Arg&& a)
 {
     return scatter_array_impl<Ret>( std::forward<Arg>(a), make_index_sequence<N>{} );
 }
-
 
 #endif
