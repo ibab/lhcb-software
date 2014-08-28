@@ -606,5 +606,25 @@ class DstarBuilder(object):
         return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self.pi0[ pi0type ] ) ]
 
 
+    # Jordi: make the list of selections of D*0 -> D0 gamma with given selection of D.
+    def _makeDstar02D0Gamma( self, name, d2x ):
+        decays = [ "[D*(2007)0 -> D0 gamma]cc" ]
+        # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons] ) ]
+
+        combinationCuts = "(AALL)"
+        motherCuts      = "(M-MAXTREE(ABSID=='D0',M)<200*MeV)"
+
+        cp = CombineParticles( CombinationCut   = combinationCuts,
+                               MotherCut        = motherCuts     ,
+                               DecayDescriptors = decays          )
+
+        cp = cp.configurable( name + 'Beauty2CharmCombiner' )
+        cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
+
+        return [ Selection( 'Dstar02D0' + name + 'Beauty2Charm'        ,
+                            Algorithm          = cp                    ,
+                            RequiredSelections = d2x + [ self.photons ] ) ]
+
+
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
