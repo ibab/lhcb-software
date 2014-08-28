@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Marco Pappagallo
+ - Added new StrippingBc2Ds1Gamma.py for radiative Bc decays
+
 ! 2014-08-28 - Carlos Vazquez Sierra
  - Updated StrippingBs2JpsieePhi.py, StrippingB2JpsiXforBeta_s.py, StrippingBs2EtacPhiBDT.py.
  - Added (and updated after that) TestB2CCLines.py to tests
