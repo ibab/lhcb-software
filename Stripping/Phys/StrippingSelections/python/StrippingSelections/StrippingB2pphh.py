@@ -184,7 +184,8 @@ class B2pphhConf(LineBuilder) :
                                    FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
                                              "Preambulo":["from LoKiTracks.decorators import *"]},
                                    algos     = [ Bppkk ],
-                                   EnableFlavourTagging = True)
+                                   EnableFlavourTagging = True,
+                                   MDSTFlag = True)
         
         self.registerLine(BppkkLine)
         
@@ -205,7 +206,8 @@ class B2pphhConf(LineBuilder) :
                                     FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
                                               "Preambulo":["from LoKiTracks.decorators import *"]},
                                     algos     = [ Bppkpi ],
-                                    EnableFlavourTagging = True)
+                                    EnableFlavourTagging = True,
+                                    MDSTFlag = True)
         
         self.registerLine(BppkpiLine)
         
@@ -225,7 +227,8 @@ class B2pphhConf(LineBuilder) :
                                      FILTER = {"Code":"(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < 200 )",
                                                "Preambulo":["from LoKiTracks.decorators import *"]},
                                      algos      = [ Bpppipi ],
-                                     EnableFlavourTagging = True)
+                                     EnableFlavourTagging = True,
+                                     MDSTFlag = True)
         
         self.registerLine(BpppipiLine) 
        

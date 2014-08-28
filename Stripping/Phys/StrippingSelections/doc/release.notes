@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Roberta Cardinale
+ - MDSTFlag = True for B2pphh lines
+ - New updates to StrippingXic2HHH.py
+
 ! 2014-08-28 - Stefano Perazzini
  - Hotfix to some lines
 

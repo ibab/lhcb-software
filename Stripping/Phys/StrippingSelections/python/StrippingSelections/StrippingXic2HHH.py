@@ -248,7 +248,7 @@ class StrippingXic2HHHConf(LineBuilder):
                                        )
 
     def _protonFilter( self ):
-          _code = "(PROBNNp > 0.1) &(TRGHP < 0.4) & (PIDp-PIDpi > %(Proton_PIDp_MIN)s) & (P> 1200.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
+          _code = "(PROBNNp > 0.5) &(TRGHP < 0.4) & (PIDp-PIDpi > %(Proton_PIDp_MIN)s) & (P> 1200.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
           _proton = FilterDesktop( Code = _code )
           return _proton
 
@@ -347,7 +347,7 @@ def makeTheta2PKS0( name
                "& (AMINCHILD(P)  > %(Daug_P_MIN)s)" \
                "& (AMINCHILD(PT) > %(Daug_All_PT_MIN)s)" % locals()
 
-    thetaCuts = "(PT > %(Xic_PT_MIN)s) & (MIPDV(PRIMARY)< 1.0 * mm)" % locals()
+    thetaCuts = "(PT > 1500*MeV) & (MIPDV(PRIMARY)< 1.0 * mm)" % locals()
 
     _ThetaKS0 = CombineParticles(
         DecayDescriptors = decDescriptors
@@ -406,11 +406,11 @@ default_config = {  'Daug_All_PT_MIN'         : 300.0 * MeV
                   , 'Comb_MASS_MIN'           : 2300.0 * MeV 
                   , 'Comb_MASS_MAX'           : 2800.0 * MeV 
                   , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   
-                  , 'Xic_PT_MIN'              : 1500.0 * MeV
+                  , 'Xic_PT_MIN'              : 2000.0 * MeV
                   , 'Xic_VCHI2VDOF_MAX'       : 8.0
                   , 'Xic_BPVVDCHI2_MIN'       : 0.0
-                  , 'Xic_BPVDIRA_MIN'         : 0.9999
-                  , 'Xic_BPVIPCHI2_MAX'       : 10.
+                  , 'Xic_BPVDIRA_MIN'         : 0.99
+                  , 'Xic_BPVIPCHI2_MAX'       : 30.
                   , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
                   , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
                   , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
