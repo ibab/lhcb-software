@@ -549,6 +549,16 @@ class DstarBuilder(object):
         self.d0pi0_merged   = self._makeDstar02D0Pi0( '', 'Merged'  , self.d.hh )
         self.d0pi0_resolved = self._makeDstar02D0Pi0( '', 'Resolved', self.d.hh )
 
+        # Jordi: create the lists of selections for D*0 -> D0 pi0 with merged and resolved LL and DD pi0s.
+        self.d0pi0_kshh_merged_ll   = self._makeDstar02D0Pi0( 'KsHHLL', 'Merged'  , self.d.kshh_ll )
+        self.d0pi0_kshh_merged_dd   = self._makeDstar02D0Pi0( 'KsHHDD', 'Merged'  , self.d.kshh_dd )
+        self.d0pi0_kshh_resolved_ll = self._makeDstar02D0Pi0( 'KsHHLL', 'Resolved', self.d.kshh_ll )
+        self.d0pi0_kshh_resolved_dd = self._makeDstar02D0Pi0( 'KsHHDD', 'Resolved', self.d.kshh_dd )
+
+        # Jordi: create the lists of selections for D*0 -> D0 gamma for LL and DD photons.
+        self.d0gamma_kshh_ll = self._makeDstar02D0Gamma( 'KsHHLL', self.d.kshh_ll )
+        self.d0gamma_kshh_dd = self._makeDstar02D0Gamma( 'KsHHDD', self.d.kshh_dd )
+
         d0pi_2460 = self._makeDstar24602D0pi()
         self.d0pi_2460_pid = [filterPID('Dstar24602D0PiPID',d0pi_2460,
                                         config_pid,2)]
