@@ -7,7 +7,7 @@ given a configuration dictionary.
 """
 
 __author__ = ['Jimmy McCarthy']
-__date__ = '31/08/2013'
+__date__ = '31/08/2014'
 __version__ = 'Stripping20r1'
 __all__ = 'B2XEtaConf'
 
@@ -18,6 +18,11 @@ from Configurables import FilterDesktop, CombineParticles
 from Configurables import DaVinci__N3BodyDecays
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
+#from MVADictHelpers import *
+#from Configurables import LoKi__ODINFilter as ODINFilter
+#from Configurables import LoKi__Hybrid__DictValue as DictValue
+#from Configurables import LoKi__Hybrid__DictTransform_TMVATransform_ as TMVAClassifier
+#from Configurables import LoKi__Hybrid__DictOfFunctors
 
 from StandardParticles import StdLoosePions as Pions
 from StandardParticles import StdLooseKaons as Kaons
@@ -40,8 +45,9 @@ default_config = {
                   'Trk_Chi2'                : 3.0,
                   'Trk_PT'                  : 300.0,
                   'Trk_GP'                  : 0.5,
-                  'pK_PT'                   : 1000,
-                  'kstar_daug_PT'           : 500,
+                  'pK_PT'                   : 500., #1000.
+                  'pK_IPCHI2'               : 20.,
+                  'kstar_daug_PT'           : 500.,
                   'ProbNNCut'               : 0.1,
                   'KS_DD_MassWindow'        : 23.0,
                   'KS_DD_VtxChi2'           : 15.0, 
@@ -90,6 +96,8 @@ default_config = {
                   'Prescale'                : 1.0,
                   'Postscale'               : 1.0,
                   'etaGG_Prescale'          : 0.0
+                  #'TCKs'                : ('0x00470032','0x00790038')
+                  #'TCKs'                : ('0x00470032','0x00790038','0x007E003A','0x0097003D','0x407E003A','0x4097003D','0x00990042','0x00AC0046','0x40990042','0x40AC0046')
                   },
     'STREAMS'     : ['Bhadron']
     }
@@ -124,6 +132,7 @@ class B2XEtaConf(LineBuilder) :
                               'Trk_PT',
                               'Trk_GP',
                               'pK_PT',
+                              'pK_IPCHI2',
                               'kstar_daug_PT',
                               'ProbNNCut',
                               'KS_DD_MassWindow',
@@ -173,6 +182,7 @@ class B2XEtaConf(LineBuilder) :
                               'Prescale',             
                               'Postscale',
                               'etaGG_Prescale'
+                              #'TCKs'
                               )
 
     def __init__(self, name, config):
@@ -202,6 +212,17 @@ class B2XEtaConf(LineBuilder) :
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
+        #TCKFilters  = {'Code' : "(in_range( %s, ODIN_TCK, %s )) | (in_range( %s, ODIN_TCK, %s )) | (in_range( %s, ODIN_TCK, %s )) | (in_range( %s, ODIN_TCK, %s )) | (in_range( %s, ODIN_TCK, %s ))" % config['TCKs'],
+        #               'Preambulo' : ["from LoKiCore.functions import *"]}
+        #TCKFilters  = {'Code' : "(in_range( %s, ODIN_TCK, %s ))" % config['TCKs'],
+        #               'Preambulo' : ["from LoKiCore.functions import *"]}
+        
+        Hlt1Filter = "(HLT_PASS_RE('Hlt1TrackAllL0Decision'))"
+        Hlt2Filter = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))"
+
+        _tagging=True
+        self.refitPVs=True
+        
         self.pions = Pions
         self.kaons = Kaons
         self.protons = Protons
@@ -248,128 +269,137 @@ class B2XEtaConf(LineBuilder) :
                                             prescale = config['Prescale'],
                                             postscale = config['Postscale'],
                                             selection = self.selB2KSLLetap,
+                                            HLT = Hlt1Filter,
                                             FILTER = GECCode,
-                                            EnableFlavourTagging=True
+                                            EnableFlavourTagging=_tagging
                                             )
         self.B2etap_DD_line = StrippingLine(B2etap_DD_name+'Line',
                                             prescale = config['Prescale'],
                                             postscale = config['Postscale'],
                                             selection = self.selB2KSDDetap,
+                                            HLT = Hlt1Filter,
                                             FILTER = GECCode,
-                                            EnableFlavourTagging=True
+                                            EnableFlavourTagging=_tagging
                                             )
         self.B2etaGG_LL_line = StrippingLine(B2etaGG_LL_name+'Line',
                                              prescale = config['etaGG_Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selB2KSLLetaGG,
                                              FILTER = GECCode,
-                                             EnableFlavourTagging=True
+                                             EnableFlavourTagging=_tagging
                                              )
         self.B2etaGG_DD_line = StrippingLine(B2etaGG_DD_name+'Line',
                                              prescale = config['etaGG_Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selB2KSDDetaGG,
                                              FILTER = GECCode,
-                                             EnableFlavourTagging=True
+                                             EnableFlavourTagging=_tagging
                                              )
         self.B2eta3Pi_LL_line = StrippingLine(B2eta3Pi_LL_name+'Line',
                                               prescale = config['Prescale'],
                                               postscale = config['Postscale'],
                                               selection = self.selB2KSLLeta3Pi,
+                                              HLT = Hlt1Filter,
                                               FILTER = GECCode,
-                                              EnableFlavourTagging=True
+                                              EnableFlavourTagging=_tagging
                                               )
         self.B2eta3Pi_DD_line = StrippingLine(B2eta3Pi_DD_name+'Line',
                                               prescale = config['Prescale'],
                                               postscale = config['Postscale'],
                                               selection = self.selB2KSDDeta3Pi,
+                                              HLT = Hlt1Filter,
                                               FILTER = GECCode,
-                                              EnableFlavourTagging=True
+                                              EnableFlavourTagging=_tagging
                                               )        
         self.Lb2etap_LL_line = StrippingLine(Lb2etap_LL_name+'Line',
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selLb2LLLetap,
                                              FILTER = GECCode,
-                                             EnableFlavourTagging=True
+                                             EnableFlavourTagging=_tagging
                                              )
         self.Lb2etap_DD_line = StrippingLine(Lb2etap_DD_name+'Line',
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selLb2LDDetap,
                                              FILTER = GECCode,
-                                             EnableFlavourTagging=True
+                                             EnableFlavourTagging=_tagging
                                              )
         self.Lb2etaGG_LL_line = StrippingLine(Lb2etaGG_LL_name+'Line',
                                               prescale = config['etaGG_Prescale'],
                                               postscale = config['Postscale'],
                                               selection = self.selLb2LLLetaGG,
                                               FILTER = GECCode,
-                                              EnableFlavourTagging=True
+                                              EnableFlavourTagging=_tagging
                                               )
         self.Lb2etaGG_DD_line = StrippingLine(Lb2etaGG_DD_name+'Line',
                                               prescale = config['etaGG_Prescale'],
                                               postscale = config['Postscale'],
                                               selection = self.selLb2LDDetaGG,
                                               FILTER = GECCode,
-                                              EnableFlavourTagging=True
+                                              EnableFlavourTagging=_tagging
                                               )        
         self.Lb2eta3Pi_LL_line = StrippingLine(Lb2eta3Pi_LL_name+'Line',
                                                prescale = config['Prescale'],
                                                postscale = config['Postscale'],
                                                selection = self.selLb2LLLeta3Pi,
                                                FILTER = GECCode,
-                                               EnableFlavourTagging=True
+                                               EnableFlavourTagging=_tagging
                                                )
         self.Lb2eta3Pi_DD_line = StrippingLine(Lb2eta3Pi_DD_name+'Line',
                                                prescale = config['Prescale'],
                                                postscale = config['Postscale'],
                                                selection = self.selLb2LDDeta3Pi,
                                                FILTER = GECCode,
-                                               EnableFlavourTagging=True
+                                               EnableFlavourTagging=_tagging
                                                )
 
         self.B2etap_Kst_line = StrippingLine(B2etap_Kst_name+'Line',
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selB2etapKst,
+                                             HLT = Hlt2Filter,
                                              FILTER = GECCode,
-                                             EnableFlavourTagging=True
+                                             #ODIN = TCKFilters,
+                                             EnableFlavourTagging=_tagging
                                              )
         self.B2etaGG_Kst_line = StrippingLine(B2etaGG_Kst_name+'Line',
                                              prescale = config['etaGG_Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selB2etaGGKst,
                                              FILTER = GECCode,
-                                             EnableFlavourTagging=True
+                                             EnableFlavourTagging=_tagging
                                              )
         self.B2eta3Pi_Kst_line = StrippingLine(B2eta3Pi_Kst_name+'Line',
                                                prescale = config['Prescale'],
                                                postscale = config['Postscale'],
                                                selection = self.selB2eta3PiKst,
+                                               HLT = Hlt1Filter,
                                                FILTER = GECCode,
-                                               EnableFlavourTagging=True
+                                               EnableFlavourTagging=_tagging
                                                )
         self.Lb2etap_pK_line = StrippingLine(Lb2etap_pK_name+'Line',
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
                                              selection = self.selLb2pKetap,
+                                             HLT = Hlt2Filter,
                                              FILTER = GECCode,
-                                             EnableFlavourTagging=True
+                                             EnableFlavourTagging=_tagging
                                              )
         self.Lb2etaGG_pK_line = StrippingLine(Lb2etaGG_pK_name+'Line',
                                               prescale = config['etaGG_Prescale'],
                                               postscale = config['Postscale'],
                                               selection = self.selLb2pKetaGG,
                                               FILTER = GECCode,
-                                              EnableFlavourTagging=True
+                                              EnableFlavourTagging=_tagging
                                               )
         self.Lb2eta3Pi_pK_line = StrippingLine(Lb2eta3Pi_pK_name+'Line',
                                                prescale = config['Prescale'],
                                                postscale = config['Postscale'],
                                                selection = self.selLb2pKeta3Pi,
+                                               HLT = Hlt1Filter,
                                                FILTER = GECCode,
-                                               EnableFlavourTagging=True
+                                               EnableFlavourTagging=_tagging
                                                )
         
         self.registerLine(self.B2etap_LL_line)
@@ -475,8 +505,9 @@ class B2XEtaConf(LineBuilder) :
         _momCut = "(PT>%s*MeV)"           % config['pK_PT']
         _GPCut = "(TRGHOSTPROB<%s)"       % config['Trk_GP']
         _PIDCut = "(PROBNNk>%s)"          % config['ProbNNCut']
+        _IPChi2_Cut = "(BPVIPCHI2()>%s)"  % config['pK_IPCHI2']
 
-        _allCuts = _momCut+'&'+_GPCut+'&'+_PIDCut
+        _allCuts = _momCut+'&'+_GPCut+'&'+_PIDCut+'&'+_IPChi2_Cut
 
         _kaonFilter=FilterDesktop("_kaonFilter", Code=_allCuts)
         self.selKaons = Selection( name, Algorithm=_kaonFilter, RequiredSelections=[self.kaons] )
@@ -486,8 +517,9 @@ class B2XEtaConf(LineBuilder) :
         _momCut = "(PT>%s*MeV)"           % config['pK_PT']
         _GPCut = "(TRGHOSTPROB<%s)"       % config['Trk_GP']
         _PIDCut = "(PROBNNp>%s)"          % config['ProbNNCut']
-
-        _allCuts = _momCut+'&'+_GPCut+'&'+_PIDCut
+        _IPChi2_Cut = "(BPVIPCHI2()>%s)"  % config['pK_IPCHI2']
+        
+        _allCuts = _momCut+'&'+_GPCut+'&'+_PIDCut+'&'+_IPChi2_Cut
 
         _protonFilter=FilterDesktop("_protonFilter", Code=_allCuts)
         self.selProtons = Selection( name, Algorithm=_protonFilter, RequiredSelections=[self.protons] )
@@ -537,7 +569,7 @@ class B2XEtaConf(LineBuilder) :
         _allCuts = _PTCut+'&'+_vtxCut
         _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
-        _combCut12Doca="ADOCA(2,3)<%s"                     % config['eta_DOCA']
+        _combCut12Doca="ADOCA(1,2)<%s"                     % config['eta_DOCA']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_vtxChi2']
         _combCut12=_combCut12Doca
         
@@ -566,7 +598,7 @@ class B2XEtaConf(LineBuilder) :
         _allCuts = _PTCut+'&'+_vtxCut
         _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
-        _combCut12Doca="ADOCA(2,3)<%s"                     % config['eta_prime_DOCA']
+        _combCut12Doca="ADOCA(1,2)<%s"                     % config['eta_prime_DOCA']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_prime_vtxChi2']
         _combCut12=_combCut12Doca
         
@@ -597,6 +629,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "B0 -> KS0 eta_prime",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
+                                       ReFitPVs = self.refitPVs,
                                        ParticleCombiners = {'' : "LoKi::VertexFitter" }     )
         self.selB2KSLLetap = Selection( name, Algorithm=_b2etapksLL, RequiredSelections=[self.selKS2LL, self.selEtap])
 
@@ -616,6 +649,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "B0 -> KS0 eta_prime",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
+                                       ReFitPVs = self.refitPVs,
                                        ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selB2KSDDetap = Selection( name, Algorithm=_b2etapksDD, RequiredSelections=[self.selKS2DD, self.selEtap])
 
@@ -633,6 +667,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "B0 -> KS0 eta",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
+                                        ReFitPVs = self.refitPVs,
                                         ParticleCombiners = {'' : "LoKi::VertexFitter" } )
         self.selB2KSLLetaGG = Selection( name, Algorithm=_b2etaGGksLL, RequiredSelections=[self.selKS2LL, self.selEtaGG])
         
@@ -649,6 +684,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "B0 -> KS0 eta",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
+                                        ReFitPVs = self.refitPVs,
                                         ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selB2KSDDetaGG = Selection( name, Algorithm=_b2etaGGksDD, RequiredSelections=[self.selKS2DD, self.selEtaGG])
         
@@ -668,6 +704,7 @@ class B2XEtaConf(LineBuilder) :
                                       DecayDescriptor = "B0 -> KS0 eta",
                                       CombinationCut = _combCuts,
                                       MotherCut = _allCuts,
+                                      ReFitPVs = self.refitPVs,
                                       ParticleCombiners = {'' : "LoKi::VertexFitter" } )
         self.selB2KSLLeta3Pi = Selection( name, Algorithm=_b2etaksLL, RequiredSelections=[self.selKS2LL, self.selEta3Pi])
         
@@ -687,6 +724,7 @@ class B2XEtaConf(LineBuilder) :
                                          DecayDescriptor = "B0 -> KS0 eta",
                                          CombinationCut = _combCuts,
                                          MotherCut = _allCuts,
+                                         ReFitPVs = self.refitPVs,
                                          ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selB2KSDDeta3Pi = Selection( name, Algorithm=_b2eta3PiksDD, RequiredSelections=[self.selKS2DD, self.selEta3Pi])       
         
@@ -707,6 +745,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "[Lambda_b0 -> Lambda0 eta_prime]cc",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
+                                       ReFitPVs = self.refitPVs,
                                        ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selLb2LLLetap = Selection( name, Algorithm=_Lb2etapLLL, RequiredSelections=[self.selL2LL, self.selEtap])
         
@@ -742,6 +781,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
+                                        ReFitPVs = self.refitPVs,
                                         ParticleCombiners = {'' : "LoKi::VertexFitter" } )
         self.selLb2LLLetaGG = Selection( name, Algorithm=_Lb2etaGGLLL, RequiredSelections=[self.selL2LL, self.selEtaGG])
         
@@ -758,6 +798,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
+                                        ReFitPVs = self.refitPVs,
                                         ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selLb2LDDetaGG = Selection( name, Algorithm=_Lb2etaGGLDD, RequiredSelections=[self.selL2DD, self.selEtaGG])
         
@@ -777,6 +818,7 @@ class B2XEtaConf(LineBuilder) :
                                          DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                          CombinationCut = _combCuts,
                                          MotherCut = _allCuts,
+                                         ReFitPVs = self.refitPVs,
                                          ParticleCombiners = {'' : "LoKi::VertexFitter" } )
         self.selLb2LLLeta3Pi = Selection( name, Algorithm=_Lb2eta3PiLLL, RequiredSelections=[self.selL2LL, self.selEta3Pi])
         
@@ -796,6 +838,7 @@ class B2XEtaConf(LineBuilder) :
                                          DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                          CombinationCut = _combCuts,
                                          MotherCut = _allCuts,
+                                         ReFitPVs = self.refitPVs,
                                          ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selLb2LDDeta3Pi = Selection( name, Algorithm=_Lb2eta3PiLDD, RequiredSelections=[self.selL2DD, self.selEta3Pi])
 
@@ -815,6 +858,7 @@ class B2XEtaConf(LineBuilder) :
                                       DecayDescriptor = "[B0 ->  K*(892)0 eta_prime]cc",
                                       CombinationCut = _combCuts,
                                       MotherCut = _allCuts,
+                                      ReFitPVs = self.refitPVs,
                                       ParticleCombiners = {'' : "LoKi::VertexFitter" }     )
         self.selB2etapKst = Selection( name, Algorithm=_b2etapKst, RequiredSelections=[self.selKstar, self.selEtap])
         
@@ -830,6 +874,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "[B0 -> K*(892)0 eta]cc",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
+                                       ReFitPVs = self.refitPVs,
                                        ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selB2etaGGKst = Selection( name, Algorithm=_b2etaGGKst, RequiredSelections=[self.selKstar, self.selEtaGG])
         
@@ -848,6 +893,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "[B0 -> K*(892)0 eta]cc",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
+                                        ReFitPVs = self.refitPVs,
                                         ParticleCombiners = {'' : "LoKi::VertexFitter" } )
         self.selB2eta3PiKst = Selection( name, Algorithm=_b2eta3PiKst, RequiredSelections=[self.selKstar, self.selEta3Pi])
         
@@ -861,7 +907,7 @@ class B2XEtaConf(LineBuilder) :
         
         _combCuts = _massCut+'&'+_docaCut
         _allCuts = _PTCut+'&'+_vtxCut+'&'+_diraCut+'&'+_IPChi2Cut
-        _combCut12Doca="ADOCA(2,3)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12Doca="ADOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _combCut12=_combCut12Doca
         
@@ -870,6 +916,7 @@ class B2XEtaConf(LineBuilder) :
                                            Combination12Cut = _combCut12,
                                            CombinationCut = _combCuts,
                                            MotherCut = _allCuts,
+                                           ReFitPVs = self.refitPVs,
                                            ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selLb2pKetap = Selection( name, Algorithm=_Lb2pKetap, RequiredSelections=[self.selProtons, self.selKaons, self.selEtap])
         
@@ -880,13 +927,14 @@ class B2XEtaConf(LineBuilder) :
         
         _combCuts = _massCut
         _allCuts = _PTCut+'&'+_IPChi2Cut
-        _combCut12="ADOCA(2,3)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12="ADOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
                
         _Lb2pKetaGG = DaVinci__N3BodyDecays("Lb2pKetaGG",
                                             DecayDescriptor = "[Lambda_b0 -> p+ K- eta]cc",
                                             Combination12Cut = _combCut12,
                                             CombinationCut = _combCuts,
                                             MotherCut = _allCuts,
+                                            ReFitPVs = self.refitPVs,
                                             ParticleCombiners = {'' : "LoKi::VertexFitter" } )
         self.selLb2pKetaGG = Selection( name, Algorithm=_Lb2pKetaGG, RequiredSelections=[self.selProtons, self.selKaons, self.selEtaGG])
         
@@ -900,7 +948,7 @@ class B2XEtaConf(LineBuilder) :
         
         _combCuts = _massCut+'&'+_docaCut
         _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
-        _combCut12Doca="ADOCA(2,3)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12Doca="ADOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _combCut12=_combCut12Doca
         
@@ -909,5 +957,6 @@ class B2XEtaConf(LineBuilder) :
                                              Combination12Cut = _combCut12,
                                              CombinationCut = _combCuts,
                                              MotherCut = _allCuts,
+                                             ReFitPVs = self.refitPVs,
                                              ParticleCombiners = {'' : "LoKi::VertexFitter" })
         self.selLb2pKeta3Pi = Selection( name, Algorithm=_Lb2pKeta3Pi, RequiredSelections=[self.selProtons, self.selKaons, self.selEta3Pi])

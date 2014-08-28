@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - James Mccarthy
+ - Added Hlt filter to B2XEta lines
+
 ! 2014-08-28 - Roberta Cardinale
  - MDSTFlag = True for B2pphh lines
  - New updates to StrippingXic2HHH.py
