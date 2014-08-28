@@ -30,9 +30,10 @@ from Configurables import SubPIDMMFilter
 defaultConfig = {
     'RelatedInfoTools'      : [
     {   "Type" : "RelInfoConeVariables"
-      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+      , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM','CONEPT','CONEP','CONEPASYM','CONEDELTAETA','CONEDELTAPHI']
       , 'Location':'ConeIsoInfo'} 
       , {'Type' : 'RelInfoVertexIsolation'
+      , "Variables" : ['VTXISONUMVTX', 'VTXISODCHI2ONETRACK', 'VTXISODCHI2MASSONETRACK','VTXISODCHI2TWOTRACK','VTXISODCHI2MASSTWOTRACK']
       , 'Location':'VtxIsoInfo'} 
       , {'Type': 'RelInfoVertexIsolationBDT'
       , 'Location':'VtxIsoBDTInfo' }
