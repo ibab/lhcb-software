@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Christoph Hombach
+	- Added Stripping Lines in StrippingB2TwoBaryons:
+		StrippingB2TwoBaryonsDDLine           
+ 		StrippingB2TwoBaryonsLLLine            
+ 		StrippingB2TwoBaryonsLL_MVALine        
+ 		StrippingB2TwoBaryonsDD_MVALine        
+ 		StrippingB2TwoBaryonsBs0ToLambdaLambda 		
+
 ! 2014-08-28 - James Mccarthy
  - Added Hlt filter to B2XEta lines
 
