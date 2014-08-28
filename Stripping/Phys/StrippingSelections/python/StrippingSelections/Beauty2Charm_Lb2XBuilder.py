@@ -696,7 +696,7 @@ class Lb2XBuilder(object):
         inputs = {'B02LcpbarKS'+ks: self.lc_pid+self.ks[ks]+protons}
         rs = makeB2XSels(decays,'Lc2PKPi',inputs,config)
         self.lines.append(ProtoLine(rs,1.0))                  
-        decays = {'B02LcpbarKSWS'+ks: ["[B0 -> Lambda_c+ p+ KS0]cc"}
+        decays = {'B02LcpbarKSWS'+ks: ["[B0 -> Lambda_c+ p+ KS0]cc"]}
         inputs = {'B02LcpbarKSWS'+ks: self.lc_pid+self.ks[ks]+protons}
         ws = makeB2XSels(decays,'Lc2PKPi',inputs,config)
         self.lines.append(ProtoLine(ws,0.1))

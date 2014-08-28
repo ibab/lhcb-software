@@ -933,7 +933,7 @@ class B2DXBuilder(object):
 
     def _makeB02DDKK(self):
         '''Makes RS B0 -> D+D-K+K- + c.c.'''  
-        decays = {'B02DDKK': ["[B0 -> D+ D- K+K-]cc"}                  
+        decays = {'B02DDKK': ["[B0 -> D+ D- K+K-]cc"]}                  
         inputs = {'B02DDKK': self.d.hhh_cf_pid+self.topoKaons}
         b02ddkk = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b02ddkk,1.0))   

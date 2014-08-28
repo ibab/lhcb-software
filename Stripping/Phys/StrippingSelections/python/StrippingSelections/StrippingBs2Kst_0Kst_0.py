@@ -7,9 +7,9 @@ Exported symbols (use python help!):
    - makeKst_02Kpi
 '''
 
-__author__ = ['Paula Alvarez Cartelle']
-__date__ = '04/08/2014'
-__version__= '3.0'
+__author__ = ['Paula Alvarez Cartelle','Brais Sanmartin Sedes']
+__date__ = '27/08/2014'
+__version__= '4.0'
 
 __all__=('StrippingBs2Kst_0Kst_0Conf',
          'makeBs2Kst_0Kst_0',
@@ -17,26 +17,6 @@ __all__=('StrippingBs2Kst_0Kst_0Conf',
          'default_config')
 
 
-# __config_default__ = { 
-#      "KaonPT"		: 500.0 # MeV
-#      ,  "KaonIPCHI2"	: 9. 	# adimensional
-#      ,  "PionPT"           : 500.0 # MeV
-#      ,  "PionIPCHI2"       : 9.	# adimensional
-#      ,  "PionPIDK"         : 0. #adimensional
-#      ,  "KstarVCHI2"	: 9.0   # adimensional
-#      ,  "KstarPT"		: 900.0 # MeV
-#      ,  "KaonPIDK"         : 2.0  # adimensional
-#      ,  "KstarMassWin"     : 680.0 # MeV 
-#      ,  "KstarAPT"         : 800.0 # MeV
-#      ,  "BMassWin"		: 500.0 # MeV
-#      ,  "BVCHI2"		: 15.0	# adimensional
-#      ,  "BDOCA"            : 0.3   # mm
-#      ,  "BIPCHI2"          : 25.   # adimensional
-#      ,  "BFDistanceCHI2"   : 81.   # adimensional
-#      ,  "SumPT"            : 5000  # MeV
-#      ,  "MaxGHOSTPROB"             : 0.8   # adimensional
-#      ,  "BDIRA"                    : 0.99      # adimensional
-#      }
 
 default_config = {
      'NAME'        : 'Bs2K0stK0st',
@@ -162,8 +142,9 @@ class StrippingBs2Kst_0Kst_0Conf(LineBuilder):
           self.Bs2Kst_0Kst_0_line = StrippingLine(Kst_0Kst_0_name+"Line",
                                               prescale = 1,
                                               postscale = 1,
-                                              algos = [ self.selBs2Kst_0Kst_0 ]
-                                              )
+                                              algos = [ self.selBs2Kst_0Kst_0 ],
+					      EnableFlavourTagging = True,
+                                              RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"])
           
 
           self.registerLine(self.Bs2Kst_0Kst_0_line)

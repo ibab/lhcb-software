@@ -8,14 +8,42 @@ Exported symbols (use python help!):
    - makePhi2KK
 '''
 
-__author__ = ['Cibran Santamarina']
-__date__ = '28/07/2011'
-__version__= '3.0'
+__author__ = ['Cibran Santamarina','Brais Sanmartin Sedes']
+__date__ = '27/08/2014'
+__version__= '4.0'
 
 __all__=('StrippingBs2PhiKstConf',
          'makeBs2PhiKst',
          'makeKst2Kpi',
-         'makePhi2KK')
+         'makePhi2KK',
+	 'default_config')
+
+
+default_config = {
+	"NAME"	      	: "Bs2PhiKst",
+	"WGs"	      	: ['Charmless'],
+	"BUILDERTYPE" 	: 'StrippingBs2PhiKstConf',
+	"CONFIG"	: {"KaonPT"                : 500.0 
+          ,     "KaonIPCHI2"            : 9.    
+          ,     "KaonPIDK"              : 0.    
+          ,     "PionPT"                : 500.0 
+          ,     "PionIPCHI2"            : 9.    
+          ,     "PionPIDK"              : 10.    
+          ,     "PhiVCHI2"              : 9.    
+          ,     "PhiPT"                 : 900.0 
+          ,     "PhiMassWin"            : 25.0  
+          ,     "KstarVCHI2"            : 9.0   
+          ,     "KstarPT"               : 900.0 
+          ,     "KstarMassWin"          : 150.0 
+          ,     "BMassWin"              : 500.0 
+          ,     "BVCHI2"                : 15.0  
+          ,     "BDOCA"                 : 0.3   
+          ,  "BDIRA"                    : 0.99     
+          					},
+	"STREAMS"	: ['Bhadron']
+	}
+
+
 
 
 from Gaudi.Configuration import *
@@ -28,24 +56,24 @@ from StrippingUtils.Utils import LineBuilder
 
 default_name = "Bs2PhiKst"
 
-confdict = {
-          "KaonPT"                : 500.0 # MeV
-          ,     "KaonIPCHI2"            : 9.    # adimensional
-          ,     "KaonPIDK"              : 0.    # adimensional
-          ,     "PionPT"                : 500.0 # MeV
-          ,     "PionIPCHI2"            : 9.    # adimensional
-          ,     "PionPIDK"              : 10.    # adimensional
-          ,     "PhiVCHI2"              : 9.    # adimensional
-          ,     "PhiPT"                 : 900.0 # MeV
-          ,     "PhiMassWin"            : 25.0  # MeV
-          ,     "KstarVCHI2"            : 9.0   # adimensional
-          ,     "KstarPT"               : 900.0 # MeV
-          ,     "KstarMassWin"          : 150.0 # MeV
-          ,     "BMassWin"              : 500.0 # MeV
-          ,     "BVCHI2"                : 15.0  # adimensional
-          ,     "BDOCA"                 : 0.3   # mm
-          ,  "BDIRA"                    : 0.99      # adimensional
-          }
+#confdict = {
+#          "KaonPT"                : 500.0 # MeV
+#          ,     "KaonIPCHI2"            : 9.    # adimensional
+#          ,     "KaonPIDK"              : 0.    # adimensional
+#          ,     "PionPT"                : 500.0 # MeV
+#          ,     "PionIPCHI2"            : 9.    # adimensional
+#          ,     "PionPIDK"              : 10.    # adimensional
+#          ,     "PhiVCHI2"              : 9.    # adimensional
+#          ,     "PhiPT"                 : 900.0 # MeV
+#          ,     "PhiMassWin"            : 25.0  # MeV
+#          ,     "KstarVCHI2"            : 9.0   # adimensional
+#          ,     "KstarPT"               : 900.0 # MeV
+#          ,     "KstarMassWin"          : 150.0 # MeV
+#          ,     "BMassWin"              : 500.0 # MeV
+#          ,     "BVCHI2"                : 15.0  # adimensional
+#          ,     "BDOCA"                 : 0.3   # mm
+#          ,  "BDIRA"                    : 0.99      # adimensional
+#          }
 
 
 class StrippingBs2PhiKstConf(LineBuilder):

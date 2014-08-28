@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Stefano Perazzini
+ - Fix of few charmless lines
+
 ! 2014-08-28 - Wenbin Qian
   - Add B->DDKK, B->LcpbarKs lines 
 
@@ -26,9 +29,11 @@
 ! 2014-08-27 - Guy Henri Maurice Wormser
  - StrippingB2XTauNu
    Updated to add Lb->Lctau nu;tau->3pi channel. Prescale all NonPhys channels to gain output rate
+
 ! 2014-08-27 - Rafael Coutinho
  - StrippingHb2V0V0h
    Redesign of the Stripping with generic 3Body reconstruction
+
 ! 2014-08-27 - Ricardo Vazquez Gomez
  - StrippingMuIDCalib
    add the explicit request of the MUON raw bank for all the lines
@@ -91,7 +96,6 @@
 ! 2014-08-26 - Vanya Belyaev
  -  StrippingCharmAssociative 
     Declare dimuon + high-pt gamma for MDST.DST 
-
 
 ! 2014-08-26 - Stefano Perazzini
  - Hotfix to some lines

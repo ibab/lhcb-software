@@ -51,7 +51,10 @@ default_config = {
                      , 'BsMassWindow'        : 300      # MeV/cc
                      , 'WidePrescale'        : 0.15     # adimensional
                      },
-    'STREAMS'     : ['BhadronCompleteEvent']
+    'STREAMS'     : { 'BhadronCompleteEvent' : ['StrippingBetaSBs2PhiPhiLine',
+                                                'StrippingBetaSBs2PhiPhiUpLine'],
+                      'Bhadron'              : ['StrippingBetaSBs2PhiPhiWideLine']
+                    }
     }
 
 class StrippingBs2PhiPhiConf(LineBuilder):
