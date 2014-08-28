@@ -43,7 +43,8 @@ __all__     = (
     'allInts'         , ## natural histogram with natural entries?
     'SE'              , ## StatEntity
     'WSE'             , ## StatEntity with weights
-    'iszero'          , ## is almost zero ?
+    'iszero'          , ## is almost zero  ?
+    'isequal'         , ## is almost equal ?
     #
     'binomEff'        , ## calculate binomial efficiency
     'binomEff2'       , ## calculate binomial efficiency
@@ -83,7 +84,8 @@ binomEff2       = Gaudi.Math.binomEff2
 zechEff         = Gaudi.Math.zechEff
 wilsonEff       = Gaudi.Math.wilsonEff
 agrestiCoullEff = Gaudi.Math.agrestiCoullEff
-iszero          = cpp.LHCb.Math.Zero('double')() 
+iszero          = cpp.LHCb.Math.Zero     ('double')()
+isequal         = cpp.LHCb.Math.Equal_To ('double')()
 #
 ##
 import math, sys
@@ -141,8 +143,8 @@ def dsID    () : return rootID  ( 'ds_' )
 #  print a, b
 _a  = VE( 1 , 1 )
 _b  = VE( _a    )
-_EQ = cpp.LHCb.Math.equal_to_double 
-if _EQ ( _a.value () , _b.value () ) and _EQ ( _a.error () , _b.error () ) : pass 
+
+if  isequal ( _a.value () , _b.value () ) and isequal ( _a.error () , _b.error () ) : pass 
 else :
     logger.warning( 'ROOT(%s) Disable cast of VE to float' % ROOT.gROOT.GetVersion() )
     del VE.__float__
