@@ -219,7 +219,8 @@ class Bu2hhhBuilder(LineBuilder) :
         self.lineKKK_incl = StrippingLine( _KKK_inclName + 'Line',
                                      prescale   = config['KKK_inclLinePrescale'],
                                      postscale  = config['KKK_inclLinePostscale'],
-                                     algos      = self.algosKKK)
+                                     algos      = self.algosKKK,
+                                     EnableFlavourTagging = True)
         
         self.lineKpKpKp_incl = StrippingLine( _KpKpKp_inclName + 'Line',
                                      prescale   = config['KpKpKp_inclLinePrescale'],
@@ -229,7 +230,8 @@ class Bu2hhhBuilder(LineBuilder) :
 	self.linepph_incl = StrippingLine( _pph_inclName + 'Line',
                                      prescale   = config['pph_inclLinePrescale'],
                                      postscale  = config['pph_inclLinePostscale'],
-                                     algos      = self.algospph)
+                                     algos      = self.algospph,
+                                     EnableFlavourTagging = True)
 
         self.registerLine(self.lineKKK_incl)
         self.registerLine(self.lineKpKpKp_incl)
