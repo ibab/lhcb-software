@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Daniel O'Hanlon
+ - Update StrippingLb2V0hh to refit PVs
+
 ! 2014-08-28 - Albert Puig
  - New cuts in StrippingLvb2L0Gamma to keep the rate down.
 

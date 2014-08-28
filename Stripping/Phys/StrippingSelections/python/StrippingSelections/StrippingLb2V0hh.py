@@ -328,7 +328,8 @@ class Lb2V0hhConf(LineBuilder) :
         _Lb.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
-
+        _Lb.ReFitPVs = True
+        
         self.selLb2V0DDh = Selection (name, Algorithm = _Lb, RequiredSelections = [self.selLambda2DD, self.pions ])
 
         return self.selLb2V0DDh
@@ -379,7 +380,8 @@ class Lb2V0hhConf(LineBuilder) :
         _Lb.DaughtersCuts = { "pi+" : _daughtersCuts }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
-
+        _Lb.ReFitPVs = True
+        
         _LbConf = _Lb.configurable(name + '_combined')
 
         if 'SS' in name: # Same sign
@@ -420,7 +422,8 @@ class Lb2V0hhConf(LineBuilder) :
         _Lb.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
-
+        _Lb.ReFitPVs = True
+        
         self.selLb2V0LLh = Selection (name, Algorithm = _Lb, RequiredSelections = [self.selLambda2LL, self.pions  ])
 
         return self.selLb2V0LLh
@@ -470,7 +473,8 @@ class Lb2V0hhConf(LineBuilder) :
         _Lb.DaughtersCuts = { "pi+" : _daughtersCuts }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
-
+        _Lb.ReFitPVs = True
+        
         _LbConf = _Lb.configurable(name + '_combined')
 
         if 'SS' in name: # Same sign
@@ -512,6 +516,7 @@ class Lb2V0hhConf(LineBuilder) :
         _Lb.DaughtersCuts = { "pi+" : "TRCHI2DOF<%s"% config['Trk_Chi2'] }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
+        _Lb.ReFitPVs = True
 
         self.selLb2V0LDh = Selection (name, Algorithm = _Lb, RequiredSelections = [self.selLambda2LD, self.pions ])
 
@@ -563,7 +568,8 @@ class Lb2V0hhConf(LineBuilder) :
         _Lb.DaughtersCuts = { "pi+" : _daughtersCuts }
         _Lb.CombinationCut = _combCuts
         _Lb.MotherCut = _motherCuts
-
+        _Lb.ReFitPVs = True
+        
         _LbConf = _Lb.configurable(name + '_combined')
 
         if 'SS' in name: # Same sign
