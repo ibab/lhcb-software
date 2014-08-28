@@ -55,7 +55,7 @@ StrippingReport                                                INFO Event 100000
 __author__  = 'Andrew Powell a.powell1@physics.ox.ac.uk'
 __date__    = '27-08-2011'
 __version__ = '$Revision: 1.7 $'
-__all__ = ('StrippingV0ForPIDConf')
+__all__ = ('StrippingV0ForPIDConf','default_config')
 # =============================================================================
 
 from Gaudi.Configuration       import *
@@ -82,7 +82,7 @@ from StandardParticles import StdAllNoPIDsPions, StdNoPIDsDownPions, StdAllNoPID
 
 # =============================================================================
 ## Define the default configuration
-default_config = {
+_default_configuration_ = {
     'TrackChi2'            :  5       ,          ## Track Chi2/ndof quality 
     'VertexChi2'           :  16      ,          ## Cut on Vertex chi2-quality
     'DeltaMassK0S'         :  50 * MeV,          ## Mass-window (half)-width for K0S 
@@ -130,19 +130,31 @@ default_config = {
 
     }
 
+## the mandatory element
+
+default_config ={
+    'NAME'        :   'VznoPID'       ,
+    'WGs'         : [ 'ALL'] ,
+    'CONFIG'      : _default_configuration_  , 
+    'BUILDERTYPE' :   'StrippingV0ForPIDConf'            ,
+    'STREAMS'     :  [ 'PID']
+              }    
+
+
+
 # =============================================================================
 class StrippingV0ForPIDConf(LineBuilder) :    
     """
     Helper class to configure 'V0ForPID'-lines
     """
-    __configuration_keys__ = tuple ( default_config.keys() )
+    __configuration_keys__ = tuple ( _default_configuration_.keys() )
 
     ## get the default configuration 
     #@staticmethod
     def defaultConfiguration( key = None ) :
         
         from copy import deepcopy
-        _config = deepcopy ( default_config )
+        _config = deepcopy ( _default_configuration_ )
         if key : return _config[ key ]
         return _config
     
@@ -222,8 +234,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.Lam0_LL_Bin1() ]
-            ) ,
+            algos      = [ self.Lam0_LL_Bin1() ],
+            RequiredRawEvents = ["Muon"]) ,
             ## 
             StrippingLine (
             "Lam0LLLine2" + self._name ,
@@ -231,7 +243,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.Lam0_LL_Bin2() ]
+            algos      = [ self.Lam0_LL_Bin2() ],
+            RequiredRawEvents = ["Muon"]
             ) ,
             ## 
             StrippingLine (
@@ -240,7 +253,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.Lam0_DD_Bin1() ]
+            algos      = [ self.Lam0_DD_Bin1() ],
+            RequiredRawEvents = ["Muon"]
             ),
             ## 
             StrippingLine (
@@ -249,7 +263,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.Lam0_LL_Bin1_IsMUON() ]
+            algos      = [ self.Lam0_LL_Bin1_IsMUON() ],
+            RequiredRawEvents = ["Muon"]
             )
             ,
             ## 
@@ -259,7 +274,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.Lam0_LL_Bin2_IsMUON() ]
+            algos      = [ self.Lam0_LL_Bin2_IsMUON() ],
+            RequiredRawEvents = ["Muon"]
             )
             ,
             ## 
@@ -269,7 +285,8 @@ class StrippingV0ForPIDConf(LineBuilder) :
             checkPV    = True , ## attention! PV is required!
             postscale  = 1 ,
             #HLT        = self._hlt , 
-            algos      = [ self.Lam0_DD_Bin1_IsMUON() ]
+            algos      = [ self.Lam0_DD_Bin1_IsMUON() ],
+            RequiredRawEvents = ["Muon"]
             )
             ]
 

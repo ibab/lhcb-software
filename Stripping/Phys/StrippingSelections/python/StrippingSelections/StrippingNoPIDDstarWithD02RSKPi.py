@@ -22,6 +22,9 @@ StrippingReport                                                INFO Event 100000
  |!StrippingnoPIDDstarLine                           |  0.4800|       480|  1.075|  11.597|
 '''
 
+__all__ =('NoPIDDstarWithD02RSKPiConf','default_config')
+
+
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiKernel.SystemOfUnits import mm, cm , MeV, GeV
@@ -34,6 +37,11 @@ from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsPions
 
 
 default_config =  {
+    'NAME'       : 'noPIDDstar',
+    'WGs'        : ['ALL'],
+    'BUILDERTYPE': 'NoPIDDstarWithD02RSKPiConf',
+    'CONFIG'     :{
+    
       'DaugPt'           : 250 * MeV      ## GeV
     , 'DaugP'            : 2.0 * GeV      ## GeV
     , 'DaugIPChi2'       : 16             ## unitless
@@ -59,8 +67,10 @@ default_config =  {
     , 'Postscale'        : 1.00           ## unitless
     ##
     , 'Monitor'          : False          ## Activate the monitoring?
-    }
+      },
+    'STREAMS'     :['PID']
 
+}
 class NoPIDDstarWithD02RSKPiConf(LineBuilder) :
     """
     Definition of prompt D*+ -> D0( K- pi+) pi+ stripping lines.
@@ -112,7 +122,8 @@ class NoPIDDstarWithD02RSKPiConf(LineBuilder) :
         self.Dstar2D0Pi_line = StrippingLine(name+'Line',
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
-                                             selection = self.selDstar2D0Pi)  
+                                             selection = self.selDstar2D0Pi,
+                                             RequiredRawEvents = ["Muon"])  
 
         self.registerLine(self.Dstar2D0Pi_line)
 
@@ -140,9 +151,11 @@ def D0 ( name,
     & (BPVIPCHI2()<%(D0IPChi2)s)
     & (ADMASS('D0') < %(D0MassWin)s )
     & ( ADWM( 'D0' , WM( 'pi-' , 'K+') ) > %(DCS_WrongMass)s)
-    & ( ADWM( 'D0' , WM( 'K-' , 'K+') ) > %(KK_WrongMass)s)
-    & ( ADWM( 'D0' , WM( 'pi-' , 'pi+') ) > %(PiPi_WrongMass)s)
     """
+# take these out as they shape the sidebands
+   # & ( ADWM( 'D0' , WM( 'K-' , 'K+') ) > %(KK_WrongMass)s)
+   # & ( ADWM( 'D0' , WM( 'pi-' , 'pi+') ) > %(PiPi_WrongMass)s)
+   # """
     _D0.MotherCut = mothercut %locals()['config']
     
     if Monitor != None :    

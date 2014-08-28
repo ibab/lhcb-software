@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Sneha Malde
+ - Added Raw Muon to PID lines.
+ - Update V0 and NOPIDDstar to new format
+
 ! 2014-08-28 - Daniel O'Hanlon
  - Update StrippingLb2V0hh to refit PVs
 
