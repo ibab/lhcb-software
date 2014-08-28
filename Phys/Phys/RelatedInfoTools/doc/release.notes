@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-08-28 - Marco Clemencic
+ - Fixed CMake configuration (after the change made on 2014-08-26).
+
 ! 2014-08-27 - Xabier Cid Vidal
  - Moved Jet Variables RelatedInfo tools to IsolationTools to avoid the break of the nightlies
 
