@@ -8,81 +8,176 @@
 from GaudiKernel.SystemOfUnits import *
 
 ######################################################################
-## StrippingBetaSBs2JpsieePhiDetachedLine (MicroDST)
-## StrippingBetaSBs2JpsieePhiFromTracksLine (MicroDST)
-## StrippingBetaSBs2JpsieePhiLine (MicroDST)
+## StrippingBetaSBu2JpsiKDetachedLine (FullDST)
+## StrippingBetaSBd2JpsiKstarDetachedLine (FullDST)
+## StrippingBetaSJpsi2MuMuLine (MicroDST)
+## StrippingBetaSLambdab2JpsiLambdaUnbiasedLine (MicroDST)
+## StrippingBetaSLambdab2JpsippiDetachedLine (MicroDST)
+## StrippingBetaSBs2JpsiPhiPrescaledLine (MDST.DST)
+## StrippingBetaSBs2JpsiPhiDetachedLine (MDST.DST)
+## StrippingBetaSBd2JpsiKstarPrescaledLine (MDST.DST)
+## StrippingBetaSBd2JpsiKsPrescaledLine (MDST.DST)
+## StrippingBetaSBd2JpsiKsDetachedLine (MDST.DST)
+## StrippingBetaSBd2JpsiKsLDDetachedLine (MDST.DST)
+## StrippingBetaSBs2JpsiKstarWideLine (MDST.DST)
+## StrippingBetaSBd2JpsiPi0PrescaledLine (MDST.DST)
+## StrippingBetaSBd2JpsiPi0DetachedLine (MDST.DST)
 ## -------------------------------------------------------------------
-## Lines defined in StrippingBs2JpsieePhi.py
-## Authors: Artur Ukleja, Jibo He, Konrad Klimaszewski
-## Last changes made by Konrad Klimaszewski
+## Lines defined in StrippingB2JpsiXforBeta_s.py
+## Authors: Greig Cowan, Juan Palacios, Francesca Dordei, Carlos Vazquez Sierra
 ## -------------------------------------------------------------------
-## Stripping reports (Revision 176907):
-##
+## Stripping reports (Revision 176957):
 ## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0530|        53|       |  37.926|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0530|        53|       |  37.919|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0430|        43|  1.721|  23.977|
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.897|   4.405|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0180|        18|  2.000|   0.481|
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0430|        43|       |  30.893|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0430|        43|       |  30.886|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0340|        34|  1.588|  17.630| (x 0.1 if DiElectron is open before)
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.483|   3.653|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0090|         9|  1.778|   0.711|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0460|        46|       |  26.687|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0460|        46|       |  26.680|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0340|        34|  1.294|  15.391|
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0310|        31|  1.484|   3.041|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0140|        14|  1.214|   0.206|
+## |_StrippingGlobal_                                            |  0.3500|       350|       |  35.203|
+## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.3500|       350|       |  35.196|
+## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0490|        49|  1.020|   0.123|
+## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0040|         4|  1.000|   8.768|
+## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0380|        38|  1.105|   3.944|
+## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0450|        45|  1.267|   3.540|
+## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0470|        47|  2.064|   2.356|
+## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0220|        22|  1.409|   0.767|
+## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0510|        51|  2.039|   1.101|
+## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0540|        54|  1.889|   1.450|
+## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0130|        13|  1.000|   0.620|
+## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0020|         2|  1.000|   0.129|
+## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0320|        32|  1.562|   0.312|
+## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0440|        44|  1.068|   0.169|
+## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0360|        36|  1.222|   1.027|
+## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0390|        39|  1.154|   1.722|
 ##
 ######################################################################
 
-BetaSBs2JpsieePhi = {
-    'BUILDERTYPE' : 'Bs2JpsieePhiConf',
-    'CONFIG'      : { 'ElectronPTLoose'            :   500.    # MeV
-                    , 'ElectronPIDLoose'           :     0.    # adimensional
-                    , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
-                    , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
-                    , 'JpsiMassMinLoose'           :  2500.    # MeV
-                    , 'JpsiMassMaxLoose'           :  3300.    # MeV
-                    , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
-                    , 'PhiPTLoose'                 :  1000.    # MeV
-                    , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
-                    , 'PhiMassMinLoose'            :   990.    # MeV
-                    , 'PhiMassMaxLoose'            :  1050.    # MeV
-                    , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
-                    , 'BsMassMinLoose'             :  4600.    # MeV
-                    , 'BsMassMaxLoose'             :  6000.    # MeV
-                    , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
-                    , 'PrescaleLoose'              :     1.    # adimensional
-                    , 'ElectronPT'                 :   500.    # MeV
-                    , 'ElectronPID'                :     0.    # adimensional
-                    , 'ElectronTrackCHI2pDOF'      :     5.    # adimensional
-                    , 'JpsiVertexCHI2pDOF'         :    15.    # adimensional
-                    , 'JpsiMassMin'                :  2500.    # MeV
-                    , 'JpsiMassMax'                :  3300.    # MeV
-                    , 'KaonTrackCHI2pDOF'          :     5.    # adimensional
-                    , 'KaonPID'                    :    -2.    # adimensional
-                    , 'PhiPT'                      :  1000.    # MeV
-                    , 'PhiVertexCHI2pDOF'          :    15.    # adimensional
-                    , 'PhiMassMin'                 :   990.    # MeV
-                    , 'PhiMassMax'                 :  1050.    # MeV
-                    , 'BsVertexCHI2pDOF'           :    10.    # adimensional
-                    , 'BsMassMin'                  :  4600.    # MeV
-                    , 'BsMassMax'                  :  6000.    # MeV
-                    , 'BsDIRA'                     :     0.99  # adimensional
-                    , 'Prescale'                   :     0.1   # adimensional
+BetaS = {
+    'BUILDERTYPE' : 'B2JpsiXforBeta_sConf',
+    'CONFIG'      : { 'TRCHI2DOF'            :       5
+                    , 'BPVLTIME'             :       0.2
+                    , 'JpsiMassWindow'       :       80
+                    , 'DaughterPT'           :       1000
+                    , 'VCHI2PDOF'            :       10
+                    , 'Jpsi2MuMuPrescale'    :       0.075
+                    , 'Bd2JpsiKstarPrescale' :       0.29
+                    , 'Bd2JpsiKsPrescale'    :       1.0
+                    , 'Bs2JpsiPhiPrescale'   :       0.62
+                    , 'Bs2JpsiPi0Prescale'   :       0.9
                     },
-    'STREAMS'     : { 'Radiative': ['StrippingBetaSBs2JpsieePhiDetachedLine',
-                                    'StrippingBetaSBs2JpsieePhiFromTracksLine',
-                                    'StrippingBetaSBs2JpsieePhiLine'] },
+    'STREAMS'     : { 'Leptonic' : ['StrippingBetaSJpsi2MuMuLine',
+                                    'StrippingBetaSBs2JpsiPhiPrescaledLine',
+                                    'StrippingBetaSBs2JpsiPhiDetachedLine',
+                                    'StrippingBetaSBd2JpsiKstarPrescaledLine',
+                                    'StrippingBetaSBd2JpsiKsPrescaledLine',
+                                    'StrippingBetaSBd2JpsiKsDetachedLine',
+                                    'StrippingBetaSBd2JpsiKsLDDetachedLine',
+                                    'StrippingBetaSBs2JpsiKstarWideLine',
+                                    'StrippingBetaSLambdab2JpsiLambdaUnbiasedLine',
+                                    'StrippingBetaSBd2JpsiPi0PrescaledLine',
+                                    'StrippingBetaSBd2JpsiPi0DetachedLine',
+                                    'StrippingBetaSLambdab2JpsippiDetachedLine'],
+                      'Dimuon'  :  ['StrippingBetaSBu2JpsiKDetachedLine',
+                                    'StrippingBetaSBd2JpsiKstarDetachedLine'] },
+    'WGs'         : [ 'B2CC' ]
+    }
+
+######################################################################
+## StrippingBs2EtacPhi_Etac2KKKKB2CharmoniumX_6HLine (MicroDST)
+## StrippingBs2EtacPhi_Etac2KKPiPiB2CharmoniumX_6HLine (MicroDST)
+## StrippingBs2EtacPhi_Etac2PiPiPiPiB2CharmoniumX_6HLine (MicroDST)
+## StrippingBs2ChicPhi_Chic2KKKKB2CharmoniumX_6HLine (MicroDST)
+## StrippingBs2ChicPhi_Chic2KKPiPiB2CharmoniumX_6HLine (MicroDST)
+## StrippingBs2ChicPhi_Chic2PiPiPiPiB2CharmoniumX_6HLine (MicroDST)
+## StrippingB2EtacKst_Etac2KKKKB2CharmoniumX_6HLine (MicroDST)
+## StrippingB2EtacKst_Etac2KKPiPiB2CharmoniumX_6HLine (MicroDST)
+## StrippingB2EtacKst_Etac2PiPiPiPiB2CharmoniumX_6HLine (MicroDST)
+## StrippingB2ChicKst_Chic2KKKKB2CharmoniumX_6HLine (MicroDST)
+## StrippingB2ChicKst_Chic2KKPiPiB2CharmoniumX_6HLine (MicroDST)
+## StrippingB2ChicKst_Chic2PiPiPiPiB2CharmoniumX_6HLine (MicroDST)
+## -------------------------------------------------------------------
+## Lines defined in StrippingB2CharmoniumX_6H.py
+## Authors: Adam Morris
+## -------------------------------------------------------------------
+## Stripping reports (Revision 176954):
+##
+## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
+## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+## |_StrippingGlobal_                                            |  0.1250|       125|       |  22.655|
+## |_StrippingSequenceStreamTest_B2CharmoniumX_6H_               |  0.1250|       125|       |  22.648|
+## |!StrippingBs2EtacPhi_Etac2KKKKB2CharmoniumX_6HLine           |  0.0030|         3|  1.000|   8.623|
+## |!StrippingBs2EtacPhi_Etac2KKPiPiB2CharmoniumX_6HLine         |  0.0090|         9|  2.222|   0.806|
+## |!StrippingBs2EtacPhi_Etac2PiPiPiPiB2CharmoniumX_6HLine       |  0.0170|        17|  1.882|   0.376|
+## |!StrippingBs2ChicPhi_Chic2KKKKB2CharmoniumX_6HLine           |  0.0020|         2|  1.500|   0.110|
+## |!StrippingBs2ChicPhi_Chic2KKPiPiB2CharmoniumX_6HLine         |  0.0270|        27|  2.704|   0.395|
+## |!StrippingBs2ChicPhi_Chic2PiPiPiPiB2CharmoniumX_6HLine       |  0.0370|        37|  2.324|   0.404|
+## |!StrippingB2EtacKst_Etac2KKKKB2CharmoniumX_6HLine            |  0.0020|         2|  1.000|   1.952|
+## |!StrippingB2EtacKst_Etac2KKPiPiB2CharmoniumX_6HLine          |  0.0150|        15|  1.667|   0.204|
+## |!StrippingB2EtacKst_Etac2PiPiPiPiB2CharmoniumX_6HLine        |  0.0220|        22|  1.864|   0.228|
+## |!StrippingB2ChicKst_Chic2KKKKB2CharmoniumX_6HLine            |  0.0010|         1|  2.000|   0.088|
+## |!StrippingB2ChicKst_Chic2KKPiPiB2CharmoniumX_6HLine          |  0.0310|        31|  2.290|   0.214|
+## |!StrippingB2ChicKst_Chic2PiPiPiPiB2CharmoniumX_6HLine        |  0.0350|        35|  2.171|   0.240|
+##
+######################################################################
+
+B2CharmoniumX_6H = {
+    'BUILDERTYPE' : 'StrippingB2CharmoniumX_6HConf',
+    'CONFIG'      : { 'Prescale'             : 1.
+                    , 'Postscale'            : 1.
+                    , 'TRCHI2'               : 3.
+                    , 'DOCA'                 : 0.1
+                    # K parameters:
+                    , 'K_PT'                 : 250.
+                    , 'K_IPCHI2'             : 4.
+                    # pi parameters:
+                    , 'pi_PT'                : 250.
+                    , 'pi_IPCHI2'            : 4.
+                    # 'max' daughters:
+                    , 'PT_maxetacdaughter'   : 1400.
+                    , 'PT_maxchicdaughter'   : 1300.
+                    , 'IPCHI2_maxdaughter'   : 9.
+                    # phi parameters:
+                    , 'phi_DIRA'             : 0.95
+                    , 'phi_VDZ'              : 0.
+                    , 'phi_PT'               : 1000.
+                    , 'phi_IPCHI2'           : 6.
+                    , 'phi_VCHI2'            : 7.
+                    , 'phi_window'           : 30.
+                    # Kst parameters:
+                    , 'Kst_DIRA'             : 0.93
+                    , 'Kst_VDZ'              : 0.
+                    , 'Kst_PT'               : 1000.
+                    , 'Kst_IPCHI2'           : 4.
+                    , 'Kst_VCHI2'            : 12.
+                    , 'Kst_window'           : 100.
+                    # etac parameters:
+                    , 'etac_DIRA'            : 0.9
+                    , 'etac_VDZ'             : 0.
+                    , 'etac_IPCHI2'          : 4.
+                    , 'etac_VCHI2'           : 9.
+                    , 'etac_sumPT'           : 4000.
+                    , 'etac_window'          : 90.
+                    # chic/etac parameters:
+                    , 'chic_DIRA'            : 0.9
+                    , 'chic_VDZ'             : 0.
+                    , 'chic_IPCHI2'          : 4.
+                    , 'chic_VCHI2'           : 9.
+                    , 'chic_sumPT'           : 3600.
+                    , 'chic_window'          : 60.
+                    # Bs parameters:
+                    , 'Bs_VDZ'               : 0.
+                    , 'Bs_DIRA'              : 0.9
+                    , 'Bs_VCHI2'             : 25.
+                    , 'Bs_window'            : 500.
+                    },
+    'STREAMS'     : { 'Bhadron' : ['StrippingBs2EtacPhi_Etac2KKKKB2CharmoniumX_6HLine',
+                                   'StrippingBs2EtacPhi_Etac2KKPiPiB2CharmoniumX_6HLine',
+                                   'StrippingBs2EtacPhi_Etac2PiPiPiPiB2CharmoniumX_6HLine',
+                                   'StrippingBs2ChicPhi_Chic2KKKKB2CharmoniumX_6HLine',
+                                   'StrippingBs2ChicPhi_Chic2KKPiPiB2CharmoniumX_6HLine',
+                                   'StrippingBs2ChicPhi_Chic2PiPiPiPiB2CharmoniumX_6HLine',
+                                   'StrippingB2EtacKst_Etac2KKKKB2CharmoniumX_6HLine',
+                                   'StrippingB2EtacKst_Etac2KKPiPiB2CharmoniumX_6HLine',
+                                   'StrippingB2EtacKst_Etac2PiPiPiPiB2CharmoniumX_6HLine',
+                                   'StrippingB2ChicKst_Chic2KKKKB2CharmoniumX_6HLine',
+                                   'StrippingB2ChicKst_Chic2KKPiPiB2CharmoniumX_6HLine',
+                                   'StrippingB2ChicKst_Chic2PiPiPiPiB2CharmoniumX_6HLine'] },
     'WGs'         : [ 'B2CC' ]
     }
 
@@ -107,26 +202,6 @@ BetaSBs2JpsieePhi = {
 ## |!StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine                   |  0.0210|        21|  2.000|   0.475|
 ## |!StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine               |  0.0080|         8|  1.625|   0.119|
 ## |!StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine                  |  0.0030|         3|  1.000|   0.068|
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0390|        39|       |  17.262|
-## |_StrippingSequenceStreamTest_B2Psi2SX_                       |  0.0390|        39|       |  17.254|
-## |!StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine                 |  0.0130|        13|  1.000|   0.819|
-## |!StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine                 |  0.0020|         2|  1.500|   6.946|
-## |!StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine                   |  0.0180|        18|  2.833|   0.465|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine               |  0.0080|         8|  2.125|   0.138|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine                  |  0.0060|         6|  1.000|   0.069|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0300|        30|       |  15.881|
-## |_StrippingSequenceStreamTest_B2Psi2SX_                       |  0.0300|        30|       |  15.874|
-## |!StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine                 |  0.0170|        17|  1.412|   1.181|
-## |!StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine                 |  0.0010|         1|  1.000|   6.437|
-## |!StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine                   |  0.0090|         9|  1.444|   0.065|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine               |  0.0040|         4|  2.000|   0.117|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine                  |  0.0020|         2|  1.000|   0.068|
 ##
 ######################################################################
 
@@ -216,36 +291,6 @@ BetaSPsi2S = {
 ## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine          |  0.0070|         7|  1.000|   0.077|
 ## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine         |  0.0150|        15|  1.133|   0.058|
 ##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.1630|       163|       |  17.794|
-## |_StrippingSequenceStreamTest_B2Psi2SMuMu_                    |  0.1630|       163|       |  17.787|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine                 |  0.0470|        47|  1.000|   1.204|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetachedLine         |  0.0380|        38|  1.000|   6.867|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLine        |  0.0270|        27|  1.222|   0.085|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetachedLine         |  0.0020|         2|  1.000|   0.079|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetachedLine           |  0.0220|        22|  1.182|   0.062|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine          |  0.0300|        30|  1.467|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetachedLine       |  0.0150|        15|  1.533|   0.250|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine      |  0.0160|        16|  2.562|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine          |  0.0010|         1|  1.000|   0.087|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine         |  0.0120|        12|  1.000|   0.058|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.1730|       173|       |  16.014|
-## |_StrippingSequenceStreamTest_B2Psi2SMuMu_                    |  0.1730|       173|       |  16.006|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine                 |  0.0570|        57|  1.000|   1.167|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetachedLine         |  0.0420|        42|  1.000|   6.175|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLine        |  0.0120|        12|  1.250|   0.076|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetachedLine         |  0.0020|         2|  1.000|   0.079|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetachedLine           |  0.0270|        27|  1.185|   0.061|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine          |  0.0290|        29|  1.931|   0.053|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetachedLine       |  0.0220|        22|  1.818|   0.205|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine      |  0.0080|         8|  2.000|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine          |  0.0020|         2|  1.000|   0.081|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine         |  0.0230|        23|  1.000|   0.058|
-##
 ######################################################################
 
 BetaSPsi2SMuMu = {
@@ -323,6 +368,114 @@ BetaSPsi2SMuMu = {
                                    'StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine',
                                    'StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine',
                                    'StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine'] },
+    'WGs'         : [ 'B2CC' ]
+    }
+
+######################################################################
+## StrippingBetaSBs2JpsieePhiDetachedLine (MDST.DST)
+## StrippingBetaSBs2JpsieePhiFromTracksLine (MDST.DST)
+## StrippingBetaSBs2JpsieePhiLine (MDST.DST)
+## -------------------------------------------------------------------
+## Lines defined in StrippingBs2JpsieePhi.py
+## Authors: Artur Ukleja, Jibo He, Konrad Klimaszewski
+## Last changes made by Konrad Klimaszewski
+## -------------------------------------------------------------------
+## Stripping reports (Revision 176907):
+##
+## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
+## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+## |_StrippingGlobal_                                            |  0.0530|        53|       |  37.926|
+## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0530|        53|       |  37.919|
+## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0430|        43|  1.721|  23.977|
+## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.897|   4.405|
+## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0180|        18|  2.000|   0.481|
+##
+######################################################################
+
+BetaSBs2JpsieePhi = {
+    'BUILDERTYPE' : 'Bs2JpsieePhiConf',
+    'CONFIG'      : { 'ElectronPTLoose'            :   500.    # MeV
+                    , 'ElectronPIDLoose'           :     0.    # adimensional
+                    , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
+                    , 'JpsiVertexCHI2pDOFLoose'    :    15.    # adimensional
+                    , 'JpsiMassMinLoose'           :  2500.    # MeV
+                    , 'JpsiMassMaxLoose'           :  3300.    # MeV
+                    , 'KaonTrackCHI2pDOFLoose'     :     5.    # adimensional
+                    , 'PhiPTLoose'                 :  1000.    # MeV
+                    , 'PhiVertexCHI2pDOFLoose'     :    15.    # adimensional
+                    , 'PhiMassMinLoose'            :   990.    # MeV
+                    , 'PhiMassMaxLoose'            :  1050.    # MeV
+                    , 'BsVertexCHI2pDOFLoose'      :    10.    # adimensional
+                    , 'BsMassMinLoose'             :  4600.    # MeV
+                    , 'BsMassMaxLoose'             :  6000.    # MeV
+                    , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
+                    , 'PrescaleLoose'              :     1.    # adimensional
+                    , 'ElectronPT'                 :   500.    # MeV
+                    , 'ElectronPID'                :     0.    # adimensional
+                    , 'ElectronTrackCHI2pDOF'      :     5.    # adimensional
+                    , 'JpsiVertexCHI2pDOF'         :    15.    # adimensional
+                    , 'JpsiMassMin'                :  2500.    # MeV
+                    , 'JpsiMassMax'                :  3300.    # MeV
+                    , 'KaonTrackCHI2pDOF'          :     5.    # adimensional
+                    , 'KaonPID'                    :    -2.    # adimensional
+                    , 'PhiPT'                      :  1000.    # MeV
+                    , 'PhiVertexCHI2pDOF'          :    15.    # adimensional
+                    , 'PhiMassMin'                 :   990.    # MeV
+                    , 'PhiMassMax'                 :  1050.    # MeV
+                    , 'BsVertexCHI2pDOF'           :    10.    # adimensional
+                    , 'BsMassMin'                  :  4600.    # MeV
+                    , 'BsMassMax'                  :  6000.    # MeV
+                    , 'BsDIRA'                     :     0.99  # adimensional
+                    , 'Prescale'                   :     0.1   # adimensional
+                    },
+    'STREAMS'     : { 'Radiative': ['StrippingBetaSBs2JpsieePhiDetachedLine',
+                                    'StrippingBetaSBs2JpsieePhiFromTracksLine',
+                                    'StrippingBetaSBs2JpsieePhiLine'] },
+    'WGs'         : [ 'B2CC' ]
+    }
+
+######################################################################
+## StrippingBs2EtacPhiBDTLine (MDST.DST)
+## -------------------------------------------------------------------
+## Lines defined in StrippingBs2EtacPhiBDT.py
+## Authors: Morgan Martin, Jibo He
+## -------------------------------------------------------------------
+## Stripping reports (Revision 176954):
+##
+## StrippingReport (2012)                                         INFO Event 100000, Good event 100000
+## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
+## |_StrippingGlobal_                                            |  0.0120|        12|       |  17.928|
+## |_StrippingSequenceStreamTest_Bs2EtacPhi_BDT_                 |  0.0120|        12|       |  17.920|
+## |!StrippingBs2EtacPhiBDTLine                                  |  0.0120|        12|  2.333|   8.622|
+##
+######################################################################
+
+Bs2EtacPhiBDT = {
+    'BUILDERTYPE' : 'Bs2EtacPhiBDTConf',
+    'CONFIG'      : { 'HLTCuts'              : "(HLT_PASS_RE('Hlt2Topo.*Decision') | HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
+                    , 'KaonCuts'             : "(PROBNNk > 0.13) & (PT > 300*MeV) & (TRGHOSTPROB<0.4)"
+                    , 'PionCuts'             : "(PROBNNpi > 0.2) & (PT > 250*MeV) & (TRGHOSTPROB<0.4)"
+                    , 'EtacComAMCuts'        : "(AM<3.25*GeV)"
+                    , 'EtacComN4Cuts'        : """
+                                               (in_range(2.75*GeV, AM, 3.25*GeV))
+                                               & ( (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3)+ACHILD(PT,4) ) > 2.5 *GeV)
+                                               & ( (ACHILD(MIPCHI2DV(), 1) + ACHILD(MIPCHI2DV(), 2) + ACHILD(MIPCHI2DV(), 3) + ACHILD(MIPCHI2DV(), 4))>30)
+                                               """
+                    , 'EtacMomN4Cuts'        : "(VFASPF(VCHI2/VDOF) < 9.) & (in_range(2.8*GeV, MM, 3.2*GeV)) & (MIPCHI2DV(PRIMARY) > 2.)"
+                    , 'PhiCuts'              : """
+                                               (MAXTREE(ABSID=='K+',TRGHOSTPROB) < 0.4)
+                                               & (MM<1.05*GeV)
+                                               & (PT> 800*MeV)
+                                               & (MIPCHI2DV(PRIMARY) > 2.)
+                                               & (VFASPF(VCHI2) < 9.)
+                                               """ 
+                    , 'BsComCuts'              : "(ADAMASS('B_s0') < 500 *MeV)"
+                    , 'BsMomCuts'              : "(VFASPF(VCHI2/VDOF) < 25.) & (BPVDIRA> 0.99) & (BPVIPCHI2()<25) & (BPVDLS>0)"
+                    , 'Bs2EtacPhiMVACut'       :  "0."
+                    , 'Bs2EtacPhiXmlFile'      :  "$TMVAWEIGHTSROOT/data/Bs2EtacPhi_BDT_v1r0.xml"
+                    , 'Prescale'               : 1.
+                    },
+    'STREAMS'     : { 'Bhadron' : 'StrippingBs2EtacPhiBDTLine' },
     'WGs'         : [ 'B2CC' ]
     }
 
