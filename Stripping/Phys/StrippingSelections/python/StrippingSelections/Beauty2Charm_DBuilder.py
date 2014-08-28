@@ -596,13 +596,15 @@ class DstarBuilder(object):
                                DecayDescriptors = decays    )
         cp = cp.configurable( name + 'Beauty2CharmCombiner' )
         cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
-        return Selection( 'Dstar02D0' + name + 'Beauty2Charm'    ,
-                          Algorithm          = cp                ,
-                          RequiredSelections = self.d.hh + inputs )
+        return Selection( 'Dstar02D0' + name + 'Beauty2Charm',
+                          Algorithm          = cp            ,
+                          RequiredSelections = inputs         )
 
-    def _makeDstar02D0Pi0(self,pi0):
-        decays = ["D*(2007)0 -> D0 pi0"]
-        return [ self._makeDstar02D0X0( 'Pi0_' + pi0, decays, self.pi0[pi0] ) ]
+    # Jordi: make the list of selections of D*0 -> D0 pi0 with given selection of D and pi0 type.
+    def _makeDstar02D0Pi0( self, name, pi0type, d2x ):
+        decays = [ "[D*(2007)0 -> D0 pi0]cc" ]
+        return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self.pi0[ pi0type ] ) ]
+
 
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
