@@ -377,7 +377,7 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
 
         for(itPos = m_coordPos[station*m_NRegion + region].begin(); itPos != m_coordPos[station*m_NRegion + region].end(); itPos++){
 
-	  // all muon hits
+	      // all muon hits
           if(m_doVerbose) {
             m_allMuonHitsX.push_back(itPos->m_x);
             m_allMuonHitsDX.push_back(itPos->m_dx);
@@ -460,13 +460,15 @@ StatusCode TupleToolMuonIDCalib::fillVars(  const LHCb::Particle *part,
     tuple->farray(prefix+"_hitInFOI_dZ", m_hitInFOIdz.begin(), m_hitInFOIdz.end(), prefix+"_n_InFOI", 100);
     tuple->farray(prefix+"_hitInFOI_ID", m_hitInFOIID.begin(), m_hitInFOIID.end(), prefix+"_n_InFOI", 100);
     tuple->farray(prefix+"_hitInFOI_uncrossed", m_hitInFOIuncrossed.begin(), m_hitInFOIuncrossed.end(), prefix+"_n_InFOI", 100);
-    tuple->farray(prefix+"_allMuonHits_X",  m_allMuonHitsX.begin(), m_allMuonHitsX.end(),  prefix+"_n_AllHits", 10000);
-    tuple->farray(prefix+"_allMuonHits_dX", m_allMuonHitsDX.begin(), m_allMuonHitsDX.end(), prefix+"_n_AllHits", 10000);
-    tuple->farray(prefix+"_allMuonHits_Y",  m_allMuonHitsY.begin(), m_allMuonHitsY.end(),  prefix+"_n_AllHits", 10000);
-    tuple->farray(prefix+"_allMuonHits_dY", m_allMuonHitsDY.begin(), m_allMuonHitsDY.end(), prefix+"_n_AllHits", 10000);
-    tuple->farray(prefix+"_allMuonHits_Z",  m_allMuonHitsZ.begin(), m_allMuonHitsZ.end(),  prefix+"_n_AllHits", 10000);
-    tuple->farray(prefix+"_allMuonHits_dZ", m_allMuonHitsDZ.begin(), m_allMuonHitsDZ.end(), prefix+"_n_AllHits", 10000);
-    tuple->farray(prefix+"_allMuonHits_uncrossed", m_allMuonHitsUncrossed.begin(), m_allMuonHitsUncrossed.end(), prefix+"_n_AllHits", 10000);
+    if(prefix=="lab2"){
+      tuple->farray(prefix+"_allMuonHits_X",  m_allMuonHitsX.begin(), m_allMuonHitsX.end(),  prefix+"_n_AllHits", 10000);
+      tuple->farray(prefix+"_allMuonHits_dX", m_allMuonHitsDX.begin(), m_allMuonHitsDX.end(), prefix+"_n_AllHits", 10000);
+      tuple->farray(prefix+"_allMuonHits_Y",  m_allMuonHitsY.begin(), m_allMuonHitsY.end(),  prefix+"_n_AllHits", 10000);
+      tuple->farray(prefix+"_allMuonHits_dY", m_allMuonHitsDY.begin(), m_allMuonHitsDY.end(), prefix+"_n_AllHits", 10000);
+      tuple->farray(prefix+"_allMuonHits_Z",  m_allMuonHitsZ.begin(), m_allMuonHitsZ.end(),  prefix+"_n_AllHits", 10000);
+      tuple->farray(prefix+"_allMuonHits_dZ", m_allMuonHitsDZ.begin(), m_allMuonHitsDZ.end(), prefix+"_n_AllHits", 10000);
+      tuple->farray(prefix+"_allMuonHits_uncrossed", m_allMuonHitsUncrossed.begin(), m_allMuonHitsUncrossed.end(), prefix+"_n_AllHits", 10000);
+    }
 
     for(int station = 0; station < m_NStation ; ++station )
     {
