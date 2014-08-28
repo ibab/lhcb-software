@@ -535,18 +535,20 @@ class DBuilder(object):
 class DstarBuilder(object):
     '''Makes D* mesons for Beauty2Charm.'''
 
-    def __init__(self,d,pions,pi0,config,config_pid):
-        self.d = d
-        self.pions = pions
-        self.pi0 = pi0
-        self.config = config
-        self.d0pi = self._makeDstar2D0pi('',self.d.hh)
-        self.d0pi_k3pi = self._makeDstar2D0pi('D2K3Pi',self.d.k3pi)
-        self.d0pi_kshh_ll = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll)
-        self.d0pi_kshh_dd = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd)
-        self.d0pi_pid = [filterPID('Dstar2D0PiPID',self.d0pi,config_pid,2)]
-        self.d0pi0_merged = self._makeDstar02D0Pi0('Merged')
-        self.d0pi0_resolved = self._makeDstar02D0Pi0('Resolved')
+    def __init__(self,d,pions,pi0,photons,config,config_pid):
+        self.d              = d
+        self.pions          = pions
+        self.pi0            = pi0
+        self.photons        = photons
+        self.config         = config
+        self.d0pi           = self._makeDstar2D0pi('',self.d.hh)
+        self.d0pi_k3pi      = self._makeDstar2D0pi('D2K3Pi',self.d.k3pi)
+        self.d0pi_kshh_ll   = self._makeDstar2D0pi('D2KSHHLL',self.d.kshh_ll)
+        self.d0pi_kshh_dd   = self._makeDstar2D0pi('D2KSHHDD',self.d.kshh_dd)
+        self.d0pi_pid       = [filterPID('Dstar2D0PiPID',self.d0pi,config_pid,2)]
+        self.d0pi0_merged   = self._makeDstar02D0Pi0( '', 'Merged'  , self.d.hh )
+        self.d0pi0_resolved = self._makeDstar02D0Pi0( '', 'Resolved', self.d.hh )
+
         d0pi_2460 = self._makeDstar24602D0pi()
         self.d0pi_2460_pid = [filterPID('Dstar24602D0PiPID',d0pi_2460,
                                         config_pid,2)]
@@ -584,20 +586,23 @@ class DstarBuilder(object):
         return self._makeHc2Dpi('D0star2460',massCut,decays,
                                 self.d.hhh_cf_pid+[self.pions])
 
+
     def _makeDstar02D0X0(self,name,decays,inputs):
         ''' Makes all X+ -> HH selections involving neutrals.'''
         comboCuts = "(ADAMASS('D*(2007)0') < %(MASS_WINDOW)s) " % self.config
-        momCuts = "ALL" 
-        cp = CombineParticles(CombinationCut=comboCuts,MotherCut=momCuts,
-                              DecayDescriptors=decays)
-        cp = cp.configurable(name+'Beauty2CharmCombiner')
-        cp.ParticleCombiners.update({'':'MomentumCombiner'})
-        return Selection('Dstar02D0'+name+'Beauty2Charm',Algorithm=cp,
-                         RequiredSelections=self.d.hh+inputs)
+        momCuts = "ALL"
+        cp = CombineParticles( CombinationCut   = comboCuts,
+                               MotherCut        = momCuts  ,
+                               DecayDescriptors = decays    )
+        cp = cp.configurable( name + 'Beauty2CharmCombiner' )
+        cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
+        return Selection( 'Dstar02D0' + name + 'Beauty2Charm'    ,
+                          Algorithm          = cp                ,
+                          RequiredSelections = self.d.hh + inputs )
 
     def _makeDstar02D0Pi0(self,pi0):
         decays = ["D*(2007)0 -> D0 pi0"]
-        return [self._makeDstar02D0X0('Pi0_'+pi0,decays,self.pi0[pi0])]
+        return [ self._makeDstar02D0X0( 'Pi0_' + pi0, decays, self.pi0[pi0] ) ]
 
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
