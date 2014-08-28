@@ -154,7 +154,7 @@ default_config = {
             "StrippingLb2LcpipipiLc2KpiProtonAsymLine",
             "StrippingSc2LcpipLc2KpiProtonAsymLine",
             "StrippingSc2LcpimLc2KpiProtonAsymLine",
-            "StrippingLcst2LcpipiLc2KpiLine"
+            "StrippingLcst2LcpipiLc2KpiProtonAsymLine"
         ]
     }
 }

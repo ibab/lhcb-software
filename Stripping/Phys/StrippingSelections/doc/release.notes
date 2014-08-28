@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Stefano Perazzini
+ - Hotfix to some lines
+
 ! 2014-08-28 - Sneha Malde
  - Added Raw Muon to PID lines.
  - Update V0 and NOPIDDstar to new format

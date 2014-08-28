@@ -30,7 +30,7 @@ default_config =  {
                         'KsIP'          : 1             , #mm
                         'MaxKsMass'     : 800.          , #MeV, comb mass high limit
                     },
-    'STREAMS'     : { 'Dimuon' : ['StrippingKshort2eePiPiLine']}
+    'STREAMS'     : ['Dimuon']
     }
 
 

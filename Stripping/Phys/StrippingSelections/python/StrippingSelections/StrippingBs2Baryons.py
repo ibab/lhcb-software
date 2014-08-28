@@ -54,7 +54,7 @@ default_name = "Bs0"
 default_config = {
 	'NAME' : 'BaryonicBsDecays'
 	,'WGs'  : ['BandQ']
-	,'BUILDERTYPE':'BaryonicBsDecaysLines'
+	,'BUILDERTYPE':'Bs0Builder'
 	,'CONFIG'  : {
 	   'Pi_InputList'               : 'Phys/StdLoosePions/Particles'
 	   , 'K_InputList'              : 'Phys/StdLooseKaons/Particles'

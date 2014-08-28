@@ -88,7 +88,7 @@ default_config = {
     'WGs'               : ['B2CC'],
     'BUILDERTYPE'       : 'B2Psi2SXConf',
     'CONFIG'    : config_params,
-    'STREAMS' : { 'Leptonic' }}
+    'STREAMS' : ['Leptonic'] }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles

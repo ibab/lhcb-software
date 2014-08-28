@@ -48,7 +48,7 @@ default_config = {
                       'DDIRA'              : 0.98,
                       'DTAU'               : 0.00025
                     },
-    'STREAMS'     : { 'Charm' : ['StrippingLTUnbCharmLine']}
+    'STREAMS'     : [ 'Charm' ]
     }
 
 ## Change decay descriptor and re-fit decay tree
