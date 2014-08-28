@@ -183,10 +183,6 @@ PatFwdTool::PatFwdTool( const std::string& type,
   declareProperty( "xMagnetTolSlope" , m_xMagnetTolSlope = 40. );
   declareProperty( "withoutBField"   , m_withoutBField   = false);
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-PatFwdTool::~PatFwdTool() {}
 
 //=========================================================================
 //  Initialisation, check parameters
@@ -221,43 +217,35 @@ StatusCode PatFwdTool::initialize ( ) {
   return StatusCode::SUCCESS;
 }
 
-#ifdef PATFWDTOOL_VEC
-template <>
-std::array<double ,2> 
-PatFwdTool::xAtReferencePlane<false>( const PatFwdTrackCandidate& track, double z_magnet, PatFwdHit** hit ) const 
+#include "VectorizationSupport.h"
+template <typename ... Hits>
+std::array<double, sizeof...(Hits)> 
+PatFwdTool::xAtReferencePlane_( const PatFwdTrackCandidate& track, double z_magnet, Hits... hits ) const 
 {
-#ifdef __clang__
-  typedef double vec_d __attribute__ ((ext_vector_type( 2  ))); // vector of two doubles...
-#else
-  typedef double vec_d __attribute__ ((vector_size( 2 * sizeof(double) ))); // vector of two doubles...
-#endif
+  using vec_d = typename vector_type<sizeof...(Hits)>::double_v;
 
-  auto zHit    = vec_d{ hit[0]->z(), hit[1]->z() };
-  auto xHit    = vec_d{ hit[0]->x(), hit[1]->x() };
+  auto zHit    = vec_d{ hits->z()... };
+  auto xHit    = vec_d{ hits->x()... };
    
   auto zMagnet = m_zMagnetParams[3] * xHit * xHit + z_magnet; // why not wait until the driftdistance is included??
 
-  auto dxdY    = vec_d{ hit[0]->hit()->dxDy(), hit[1]->hit()->dxDy() };
-
   // only OT hits have a non-zero driftDistance. So this is a NOP for everything else...
-  xHit        +=  vec_d{ double(int(hit[0]->hasNext())-int(hit[0]->hasPrevious())), 
-                         double(int(hit[1]->hasNext())-int(hit[1]->hasPrevious())) } 
-                * vec_d{ hit[0]->driftDistance(), 
-                         hit[1]->driftDistance() };
+  xHit        += vec_d{ double(int(hits->hasNext())-int(hits->hasPrevious()))... }
+               * vec_d{ hits->driftDistance()... };
     
   auto dSlope  = ( xHit - track.xStraight(zMagnet) ) / ( zHit - zMagnet ) - track.slX();
   auto dSl2    = dSlope * dSlope;
   zMagnet     += m_zMagnetParams[1] * dSl2;
   auto dz      = 1.e-3 * ( zHit - m_zReference );
   auto dyCoef  = dSl2 * track.slY();
+  auto dxdY    = vec_d{ hits->hit()->dxDy()... };
   xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
                   - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
 
   auto xMagnet = track.xStraight( zMagnet );
   xMagnet     += ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
-  return  { xMagnet[0], xMagnet[1] };
+  return scatter_array<double,sizeof...(Hits)>(xMagnet);
 }
-#endif
 
 template <bool withoutBField>
 double 
@@ -270,12 +258,12 @@ PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet
   // bool to int: false -> 0, true -> 1
   xHit += ( int( hit->hasNext() )  - int( hit->hasPrevious() ) ) * hit->driftDistance();
 
-  if (!withoutBField) { // assume sparse conditional constant propagation will eliminate the 'if'...
+  if (!withoutBField) { // sparse conditional constant propagation eliminates this 'if'...
       zMagnet += m_zMagnetParams[3] * hit->x() * hit->x();
         
       auto dSlope  = ( xHit - track.xStraight( zMagnet) ) / ( zHit - zMagnet ) - track.slX();
       auto dSl2    = dSlope * dSlope;
-      zMagnet       += m_zMagnetParams[1] * dSl2;
+      zMagnet     += m_zMagnetParams[1] * dSl2;
       auto dz      = 1.e-3 * ( zHit - m_zReference );
       auto dyCoef  = dSl2 * track.slY();
       xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * hit->hit()->dxDy() 
@@ -285,9 +273,12 @@ PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet
   return  xMagnet + ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
 }
 
-// explicitly instantiate the two valid versions...
-template double PatFwdTool::xAtReferencePlane<true>  ( const PatFwdTrackCandidate& , double , const PatFwdHit* ) const;
-template double PatFwdTool::xAtReferencePlane<false> ( const PatFwdTrackCandidate& , double , const PatFwdHit* ) const;
+// explicitly instantiate the three relevant templates...
+template double PatFwdTool::xAtReferencePlane<true> ( const PatFwdTrackCandidate& , double , const PatFwdHit* ) const;
+#ifdef PATFWDTOOL_VEC
+template std::array<double, 2ul> PatFwdTool::xAtReferencePlane_<PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
+#endif
+template std::array<double, 1ul> PatFwdTool::xAtReferencePlane_<PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
 
 double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const PatFwdHit* hit ) {
 
@@ -296,8 +287,7 @@ double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const P
   double zHit       = hit->z();
   double xHit       = hit->x();
    
-  if ( hit->hasNext()     ) xHit += hit->driftDistance();
-  if ( hit->hasPrevious() ) xHit -= hit->driftDistance();
+  xHit += (int( hit->hasNext()) - int(hit->hasPrevious()))*hit->driftDistance();
 
   if (!m_withoutBField){
 

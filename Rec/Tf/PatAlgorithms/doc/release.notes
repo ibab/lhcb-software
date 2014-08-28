@@ -3,6 +3,14 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-08-28 - Gerhard Raven
+ - unify scalar and vector version of PatFwdTool::xAtReferencePlane_ by using
+   variadic templates to gather/scatter the vectors to generate both scalar and
+   vector versions from the same source, based on the number of arguments. 
+   This produces optimal code for both cases (i.e. fully inlined, no extra 
+   function calls) without having to write a lot of overloads and/or specializations 
+   of the gather/scatter operations. 
+
 ! 2014-08-22 - Gerhard Raven
  - Move the skipping of used hits from PatForwardTool to PatForward.
    This avoids having to look up all hits for all seeds, and instead

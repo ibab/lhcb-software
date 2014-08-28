@@ -1,6 +1,6 @@
-// $Id: PatFwdTool.h,v 1.7 2009-11-26 18:00:48 mschille Exp $
-#ifndef FWDGEOMETRYTOOL_H
-#define FWDGEOMETRYTOOL_H 1
+// $Id$
+#ifndef PATFWDTOOL_H
+#define PATFWDTOOL_H 1
 
 // Include files
 // from Gaudi
@@ -13,6 +13,7 @@
 #include "PatKernel/PatForwardHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 
+// icc13 onwards should be fine actually, using the gcc extensions...
 #ifndef __INTEL_COMPILER
 #define PATFWDTOOL_VEC 1
 #endif
@@ -39,19 +40,16 @@ public:
               const std::string& name,
               const IInterface* parent);
 
-  virtual ~PatFwdTool( ); ///< Destructor
-
-  virtual StatusCode initialize();
+  ~PatFwdTool( ) = default; ///< Destructor
+  StatusCode initialize() override;
 
 private:
   double storeXAtReferencePlane( PatFwdTrackCandidate& track, const PatFwdHit* hit );
   template <bool withoutBField>
   double xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, const PatFwdHit* hit) const;
-#ifdef PATFWDTOOL_VEC
-  // vectorized version -- vector lenght hardwired to 2 for now...
-  template <bool withoutBField>
-  std::array<double,2> xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, PatFwdHit** hits ) const ;
-#endif
+  // vectorized version, without B field 
+  template <typename... Hits>
+  std::array<double,sizeof...(Hits)> xAtReferencePlane_( const PatFwdTrackCandidate& track, double zMagnet, Hits... hits ) const ;
 public:
 
   double zReference() const { return m_zReference; }
@@ -97,49 +95,51 @@ public:
   void setXAtReferencePlane( const PatFwdTrackCandidate& track, Iterator1&& begin, Iterator2&& end) const {
       if (LIKELY(!m_withoutBField)) {
           auto z_Magnet = zMagnet( track );
-#ifndef  PATFWDTOOL_VEC
-          std::for_each( std::forward<Iterator1>(begin), 
-                         std::forward<Iterator2>(end), 
-                         [&,z_Magnet](PatFwdHit* hit) { hit->setProjection( this->xAtReferencePlane<false>(track,z_Magnet,hit) ) ; } );
-#else
+#ifdef  PATFWDTOOL_VEC
           using iter_t = typename std::decay<Iterator1>::type;
           iter_t i = std::forward<Iterator1>(begin);
-          for ( ;std::distance( i, end ) % 2 !=0 ;++i ) {
-                i[0]->setProjection( xAtReferencePlane<false>(track,z_Magnet,i[0]) );
+          for ( ; std::distance( i, end ) % 2 !=0 ; ++i ) {
+                i[0]->setProjection( std::get<0>(xAtReferencePlane_( track, z_Magnet, i[0])) );
           }
-          for ( ; i!=end; i+=2 ) {
-                auto xRef = xAtReferencePlane<false>(track, z_Magnet, &i[0] );
-                static_assert( xRef.size() == 2, "Incompatible vector size!" );
+          for ( ; i!=end ; i+=2 ) {
+                auto xRef = xAtReferencePlane_( track, z_Magnet, i[0], i[1] );
                 i[0]->setProjection( std::get<0>(xRef) );
                 i[1]->setProjection( std::get<1>(xRef) );
           }
+#else
+          std::for_each( std::forward<Iterator1>(begin), 
+                         std::forward<Iterator2>(end), 
+                         [&,z_Magnet](PatFwdHit* hit) { 
+                            hit->setProjection( std::get<0>(this->xAtReferencePlane_(track,z_Magnet,hit) ) ) ; 
+                         } );
 #endif
       } else {
           std::for_each( std::forward<Iterator1>(begin), 
                          std::forward<Iterator2>(end), 
-                         [&](PatFwdHit* hit) { hit->setProjection( this->xAtReferencePlane<true>(track,0.0,hit ) ); } );
+                         [&](PatFwdHit* hit) { 
+                            hit->setProjection( this->xAtReferencePlane<true>(track,0.0,hit ) ); 
+                         } );
       }
   }
 
   double distanceForFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
     double dist =  distanceHitToTrack( track, hit );
-    if ( hit->hit()->region() > 1)  return dist;
+    if ( hit->hit()->region() > Tf::RegionID::OTIndex::kMaxRegion )  return dist;
     return dist / track.cosAfter();
   }
 
   double distanceHitToTrack( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
     double dz   = hit->z() - m_zReference;
     double dist = hit->x() - track.x( dz );
-    if ( hit->hit()->region() > 1 ) return dist;
+    if ( hit->hit()->region() > Tf::RegionID::OTIndex::kMaxRegion ) return dist;
 
     //OT : distance to a circle, drift time
     dist *= track.cosAfter();
     double dx = hit->driftDistance();
-    if ( hit->rlAmb() > 0 ) return dist + dx;
-    if ( hit->rlAmb() < 0 ) return dist - dx;
-
-    // Take closest distance in the rest
-    return ( fabs( dist - dx ) < fabs( dist + dx ) ) ? (dist - dx) : (dist + dx) ;
+    // Take closest distance if rlAmb == 0
+    auto smallest = [](double a, double b) { return std::abs(a)<std::abs(b) ? a : b ; };
+    auto rlAmb = hit->rlAmb();
+    return rlAmb == 0 ? smallest( dist+dx, dist-dx ) : ( dist + rlAmb * dx );
   }
 
   double chi2Magnet( const PatFwdTrackCandidate& track) const {
@@ -150,14 +150,13 @@ public:
   }
 
   double chi2Hit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
-    double dist = distanceHitToTrack( track, hit );
+    auto dist = distanceHitToTrack( track, hit );
     return dist * dist * hit->hit()->weight();
   }
 
   double distAtMagnetCenter( const PatFwdTrackCandidate& track ) const {
-    double dz   = m_zMagnet - m_zReference;
-    double dist = track.xStraight( m_zMagnet ) - track.xMagnet( dz );
-    return dist;
+    auto dz = m_zMagnet - m_zReference;
+    return track.xStraight( m_zMagnet ) - track.xMagnet( dz );
   }
 
   double chi2PerDoF( PatFwdTrackCandidate& track ) const;
@@ -174,17 +173,15 @@ public:
     if ( hasChanged ) return fitStereoCandidate( track, 1000000., minPlanes );
 
     PatFwdPlaneCounter planeCount( track.coordBegin(), track.coordEnd() );
-    if ( minPlanes > planeCount.nbDifferent() ) return false;
-    return true;
+    return planeCount.nbDifferent() >= minPlanes;
   }
 
   bool filterOT(const   PatFwdTrackCandidate& track, int minCoord ) const {
     PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
-    int nbIT =  regions.nbInRegion( 2 ) +  regions.nbInRegion( 3 ) +
-      regions.nbInRegion( 4 ) +  regions.nbInRegion( 5 ) ;
-    if ( 1 < nbIT ) return false;
-    if ( regions.nbInRegion( 0 ) + regions.nbInRegion( 1 ) < minCoord ) return true;
-    return false;
+    int nbIT = regions.nbInRegion( 2 ) +  regions.nbInRegion( 3 ) +
+               regions.nbInRegion( 4 ) +  regions.nbInRegion( 5 ) ;
+    if ( nbIT > 1 ) return false;
+    return regions.nbInRegion( 0 ) + regions.nbInRegion( 1 ) < minCoord ;
   }
 
   double changeInY(const  PatFwdTrackCandidate& track ) const {
@@ -211,7 +208,6 @@ private:
   double m_zMagnet;
 
   bool m_withoutBField;
-
 };
 
-#endif // FWDGEOMETRYTOOL_H
+#endif // PATFWDTOOL_H
