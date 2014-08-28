@@ -38,7 +38,7 @@ class B2DXBuilder(object):
         #Tighter selection Full DST lines
         self._makeB02D0HH_FULLDST('D2HHFULLDST',self.d.hh_pid_tight)
         self._makeB02D0PPbar_FULLDST('D2HHFULLDST',self.d.hh_pid_tight) 
-        
+
         self._makeB02D0HH('D2HHWS',self.d.hh_ws) # B0  -> D0(HH)WS  H+ H-
         self.lines[-2].pre = 0.1 # WS D line
         self._makeB02D0KS('D2HH',self.d.hh,'DD') # B0  -> D0(HH)  KS
@@ -140,13 +140,19 @@ class B2DXBuilder(object):
         self._makeB02DD()
         #Tighter selection Full DST lines
         self._makeB02DD_FULLDST()
- 
+
         self._makeB2D0D()   
         self._makeB02DstD() 
         self._makeB02D0D0()
         #Tighter selection Full DST lines
         self._makeB02D0D0_FULLDST()
-        
+
+        # Jordi: make [ B -> D*0 ( D0 pi0 ) h ] and [ B -> D*0 ( D0 pi0 ) h ] lines for LL and DD.
+        self._makeB2Dst0H( 'Dst02D0Pi0D2KSHHLL'  , self.dst.d0pi0_kshh_merged_ll + self.dst.d0pi0_kshh_resolved_ll )
+        self._makeB2Dst0H( 'Dst02D0Pi0D2KSHHDD'  , self.dst.d0pi0_kshh_merged_dd + self.dst.d0pi0_kshh_resolved_dd )
+        self._makeB2Dst0H( 'Dst02D0GammaD2KSHHLL', self.dst.d0gamma_kshh_ll                                        )
+        self._makeB2Dst0H( 'Dst02D0GammaD2KSHHDD', self.dst.d0gamma_kshh_dd                                        )
+
         self._makeB2DstD0()
         self._makeB02DstDst()
         # B -> D D K
