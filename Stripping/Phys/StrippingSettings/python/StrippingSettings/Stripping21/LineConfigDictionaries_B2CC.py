@@ -26,25 +26,26 @@ from GaudiKernel.SystemOfUnits import *
 ## Lines defined in StrippingB2JpsiXforBeta_s.py
 ## Authors: Greig Cowan, Juan Palacios, Francesca Dordei, Carlos Vazquez Sierra
 ## -------------------------------------------------------------------
-## Stripping reports (Revision 176957):
+## Stripping reports (Revision 176967):
+##
 ## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.3500|       350|       |  35.203|
-## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.3500|       350|       |  35.196|
-## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0490|        49|  1.020|   0.123|
-## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0040|         4|  1.000|   8.768|
-## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0380|        38|  1.105|   3.944|
-## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0450|        45|  1.267|   3.540|
-## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0470|        47|  2.064|   2.356|
-## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0220|        22|  1.409|   0.767|
-## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0510|        51|  2.039|   1.101|
-## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0540|        54|  1.889|   1.450|
-## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0130|        13|  1.000|   0.620|
-## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0020|         2|  1.000|   0.129|
-## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0320|        32|  1.562|   0.312|
-## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0440|        44|  1.068|   0.169|
-## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0360|        36|  1.222|   1.027|
-## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0390|        39|  1.154|   1.722|
+## |_StrippingGlobal_                                            |  0.3570|       357|       |  37.100|
+## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.3570|       357|       |  37.092|
+## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0480|        48|  1.021|   0.129|
+## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0040|         4|  1.000|   9.100|
+## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0410|        41|  1.122|   3.001|
+## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0480|        48|  1.354|   3.952|
+## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0430|        43|  2.116|   2.496|
+## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0220|        22|  1.455|   0.771|
+## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0510|        51|  1.961|   1.032|
+## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0520|        52|  1.692|   2.598|
+## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0120|        12|  1.000|   0.622|
+## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0020|         2|  1.000|   0.131|
+## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0290|        29|  1.517|   0.321|
+## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0430|        43|  1.070|   0.173|
+## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0490|        49|  1.184|   1.189|
+## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0420|        42|  1.190|   2.014|
 ##
 ######################################################################
 
