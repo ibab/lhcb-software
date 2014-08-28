@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Wenbin Qian
+  - Add B->DDKK, B->LcpbarKs lines 
+
 ! 2014-08-28 - Roberta Cardinale (for Yury Shcheglov)
  - Committed new version of StrippingXic2HHH.py
 

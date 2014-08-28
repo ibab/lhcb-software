@@ -178,7 +178,11 @@ class B2DXBuilder(object):
         self._makeB02D0D0KS('LL')
         self._makeB2DstD0KS('LL')
         self._makeB02DstDstKS('LL')
-        
+        # B->DDKK
+        self._makeB2D0DKK()
+        self._makeB2D0DKPi()
+        self._makeB02DDKK()        
+
     def _makeB02DH(self,dname,d2x,useIP=True):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
         tag = 'B02D%s'
@@ -912,7 +916,28 @@ class B2DXBuilder(object):
         b2dstdstks_ws = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2dstdstks_rs,1.0))
         self.lines.append(ProtoLine(b2dstdstks_ws,0.1))
-    
+
+    def _makeB2D0DKK(self):
+        '''Makes RS B- -> D0D-K+K- + c.c. B- ->Ds- D0 K+ K+ + cc'''
+        decays = {'B2D0DKK': ["[B- -> D0 D- K+K-]cc","[B+ -> D- D0 K+K+]cc"]}
+        inputs = {'B2D0DKK': self.d.hhh_cf_pid+self.d.hh_pid+self.topoKaons}
+        b2d0dkk = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dkk,1.0))
+
+    def _makeB2D0DKPi(self):
+        '''Makes RS B+ -> D0D-K+pi+ + c.c.'''
+        decays = {'B2D0DKPi': ["[B+ -> D- D0 K+ pi+]cc"]}  
+        inputs = {'B2D0DKPi': self.d.hhh_cf_pid+self.d.hh_pid+self.topoPions}
+        b2d0dkpi = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dkpi,1.0))
+
+    def _makeB02DDKK(self):
+        '''Makes RS B0 -> D+D-K+K- + c.c.'''  
+        decays = {'B02DDKK': ["[B0 -> D+ D- K+K-]cc"}                  
+        inputs = {'B02DDKK': self.d.hhh_cf_pid+self.topoKaons}
+        b02ddkk = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b02ddkk,1.0))   
+
     def _makeB02DHD2PhiMu(self,dname,d2x,useIP=True):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
         config = deepcopy(self.config)
