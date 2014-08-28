@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-08-28 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2014-08-26 - Alex Shires
  - Upgrade TrackIsolation to use particles
 

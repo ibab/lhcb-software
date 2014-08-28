@@ -6,7 +6,8 @@ gaudi_subdir(IsolationTools v1r0)
 gaudi_depends_on_subdirs(Phys/DaVinciTools
                          Phys/MVADictTools
                          Phys/DaVinciKernel
-                         Phys/LoKiPhys)
+                         Phys/LoKiPhys
+                         Phys/IncTopoVert)
 
 find_package(Boost COMPONENTS regex)
 
