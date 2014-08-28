@@ -30,7 +30,7 @@
 #include <TMVA/Tools.h>
 #include <TMVA/Reader.h>
 #include "MVADictTools/TMVATransform.h"
-
+#include "CaloUtils/CaloParticle.h"
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/GetIDVAlgorithm.h"
 #include "Kernel/IRelatedInfoTool.h"
@@ -107,7 +107,14 @@ public:
   virtual StatusCode finalize ();
   
 protected:
+private:
 
+        /// Check if a pure CALO Particle
+        inline bool isPureNeutralCalo(const LHCb::Particle* P)const
+        {
+            LHCb::CaloParticle caloP(  (LHCb::Particle*) P );
+            return caloP.isPureNeutralCalo();
+        }  // Helpers
 private:
 
   //   std::vector<std::string> m_variables;

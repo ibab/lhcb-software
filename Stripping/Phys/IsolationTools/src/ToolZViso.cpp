@@ -247,7 +247,14 @@ StatusCode ToolZViso::calculateRelatedInfo( const LHCb::Particle* top,
   
   //const std::string prefix=fullName(head);
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;  
-  
+     if (isPureNeutralCalo(top) )
+    {
+        return Error("Cannot calculate isolation for basic or calorimetric particles!") ;
+    }
+    if( !part )
+    {
+        return Warning( "Found an invalid particle" );
+    }
  
 
   StatusCode scInTracks = Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
