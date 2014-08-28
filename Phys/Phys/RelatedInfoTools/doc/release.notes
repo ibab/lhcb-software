@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-08-28 - Cedric Potterat
+ - Fixed for nightlies compilation. removing LoKi/ParticleCut includes.
+
 ! 2014-08-28 - Marco Clemencic
  - Fixed CMake configuration (after the change made on 2014-08-26).
 

@@ -7,7 +7,6 @@
 #include <Kernel/GetIDVAlgorithm.h>
 #include <Kernel/HitPattern.h>
 #include "Event/Particle.h"
-#include "LoKi/ParticleCuts.h"
 #include "math.h"
 
 //-----------------------------------------------------------------------------
@@ -23,17 +22,17 @@ DECLARE_TOOL_FACTORY( RelInfoCylVariables )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RelInfoCylVariables::RelInfoCylVariables( const std::string& type, 
+RelInfoCylVariables::RelInfoCylVariables( const std::string& type,
                                           const std::string& name,
-                                          const IInterface* parent): 
+                                          const IInterface* parent):
 GaudiTool ( type, name , parent ),
   m_dva(0),
   m_dist(0)
 {
-  
+
   declareInterface<IRelatedInfoTool>(this);
-  declareProperty( "Variables", 
-                   m_variables, 
+  declareProperty( "Variables",
+                   m_variables,
                    "List of variables to store (store all if empty)");
 
   declareProperty( "useVelo",m_useVelo=true,"Use VELO tracks");
@@ -45,30 +44,30 @@ GaudiTool ( type, name , parent ),
 //=============================================================================
 // Destructor
 //=============================================================================
-RelInfoCylVariables::~RelInfoCylVariables() {} 
+RelInfoCylVariables::~RelInfoCylVariables() {}
 
 
 //====================================================================
 // Initialize DVAlg, etc
 //====================================================================
 StatusCode RelInfoCylVariables::initialize() {
-  
+
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;
-  
-  // Get DVAlgo                                                                          
+
+  // Get DVAlgo
   m_dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
   if ( !m_dva ) { return Error("Couldn't get parent DVAlgorithm"); }
-  
-  // Get distance calculator                                                             
+
+  // Get distance calculator
   m_dist = m_dva->distanceCalculator();
   if ( !m_dist ) { return Error("Unable to retrieve the IDistanceCalculator tool"); }
 
 
   //initialize the tool keys
   m_keys.clear();
-  
+
   for ( const auto& var : m_variables )
   {
     short int key = RelatedInfoNamed::indexByName( var );
@@ -104,12 +103,12 @@ double RelInfoCylVariables::invariantMass(const LHCb::Track* tr1, const LHCb::Tr
 // get the PV with the smallest chi2 of all
 //=============================================================================
 void RelInfoCylVariables::getBestPV(const LHCb::Track* track, LHCb::VertexBase* & mypv, double & myipchi2){
-  
+
   if(!exist<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary)){
     debug()<<"No PVs found in the event"<<endmsg;
     return;
   }
-  
+
   double ip,ipchi2;
   LHCb::RecVertex::Container* verts = NULL;
   std::vector<PairDoubleVertex> myvector;
@@ -129,7 +128,7 @@ void RelInfoCylVariables::getBestPV(const LHCb::Track* track, LHCb::VertexBase* 
     debug()<<"No IPchi2 obtained, return"<<endmsg;
     return;
   }
-  
+
   // sort them from smaller to largest
   std::sort(myvector.begin(), myvector.end());
   // now get the bestPV and ipchi2
@@ -138,7 +137,7 @@ void RelInfoCylVariables::getBestPV(const LHCb::Track* track, LHCb::VertexBase* 
   return;
 }
 
-  
+
 
 //=============================================================================
 // find tracks inside the cylinder
@@ -155,50 +154,50 @@ void RelInfoCylVariables::tracksInsideCyl(const LHCb::Track*& mytrack, const int
 
     // this is our track
     if (mytrack->key()==track->key()) continue;
-    
+
     // get only VELO or Long tracks
-    if (!(track->type()==LHCb::Track::Long || track->type()==LHCb::Track::Velo)){ 
+    if (!(track->type()==LHCb::Track::Long || track->type()==LHCb::Track::Velo)){
       debug()<<"Track is not long or velo"<<endmsg;
       continue;
     }
-    
+
 
     if (track->type()==LHCb::Track::Velo && !m_useVelo) {
       debug()<<"Track is VELO"<<endmsg;
       continue;
     }
-    
-    
+
+
     // apply quality tracks
     // chi2
     const double chi2 = track->chi2PerDoF();
     if ( m_trackQuality && (chi2 > m_max_chi2 || chi2< m_min_chi2 || track->nDoF()<=0 ) ){
       debug()<<"Track does not pass the chi2 cut"<<endmsg;
       continue;
-    } 
-    
+    }
+
     // cloneDist (for long tracks)
     const double cloneDist = track->info(LHCb::Track::CloneDist,9e99);
-    if ( m_trackQuality && 
-         (track->type()==LHCb::Track::Long) && ( track->checkFlag(LHCb::Track::Clone) || 
+    if ( m_trackQuality &&
+         (track->type()==LHCb::Track::Long) && ( track->checkFlag(LHCb::Track::Clone) ||
                                                  cloneDist < m_min_clone || cloneDist > m_max_clone ) ) {
       debug()<<"Track does not pass the clone cut"<<endmsg;
       continue;
     }
-    
-    
+
+
     // velo holes (for velo tracks)
     if ( m_trackQuality && (track->type()==LHCb::Track::Velo) )
-    { 
+    {
       LHCb::HitPattern hitpattern(track->lhcbIDs()) ;
       int numVeloHoles = hitpattern.numVeloHoles() ;
       if( numVeloHoles > m_max_nveloholes ) {
         debug()<<"Velo track does not pass the VELO holes cut"<<endmsg;
         continue;
       }
-      
+
     }
-    
+
     // is from the same PV?
     ipchi2=-1.;
     LHCb::VertexBase* pv=NULL;
@@ -210,7 +209,7 @@ void RelInfoCylVariables::tracksInsideCyl(const LHCb::Track*& mytrack, const int
       debug()<<"The track comes from a different PV"<<endmsg;
       continue;
     }
-    
+
 
     // cut in docachi2
     StatusCode sc = m_dist->distance(mytrack,track,doca,docachi2);
@@ -218,12 +217,12 @@ void RelInfoCylVariables::tracksInsideCyl(const LHCb::Track*& mytrack, const int
         debug()<<"Could not find the docachi2 between both tracks"<<endmsg;
         continue;
       }
-    
+
     if (docachi2 > m_cyl_size) {
       debug()<<"Track is outside the cylinder"<<endmsg;
       continue;
     }
-    
+
     MapStringDouble myvect;
     // add pt
     if (track->type()==LHCb::Track::Velo) myvect["pt"]=-1.;
@@ -231,49 +230,49 @@ void RelInfoCylVariables::tracksInsideCyl(const LHCb::Track*& mytrack, const int
 
     // add IPchi2
     myvect["ipchi2"]=ipchi2;
-    
+
     // add the invariant mass in the pipi hypothesis
     if (track->type()==LHCb::Track::Velo) myvect["bmass"]=-1.;
     else myvect["bmass"]=invariantMass(mytrack,track,m_mPi,m_mPi);
-                          
+
     // add DOCAchi2
     myvect["docachi2"]=docachi2;
-    
-    
+
+
     out_list[track]=myvect;
   }
-  
+
 }
 
 //=============================================================================
 // Function to obtain max/min/av inside the cylinder
 // vartype to know if the track we want to extract is the maximum (pT, IPchi2)
-// or the minimum (DOCAchi2) 
+// or the minimum (DOCAchi2)
 //=============================================================================
 void RelInfoCylVariables::varSorted(const MapTrackList mycyl, const std::string vartype,
-                                    LHCb::Track* & out_track, 
+                                    LHCb::Track* & out_track,
                                     double & out_min, double & out_max, double & out_av)
 {
-  
+
   // some initialize
   out_min = 1e7;
   out_max = -1.;
   out_av = 0.;
-  
+
   if (mycyl.empty()) {
     debug()<<"No tracks in the cylinder, nothing to do"<<endmsg;
     return;
   }
-  
+
   MapStringDouble vals;
   double val;
   double c1 = 0.;
-  
+
   // start the loop
   for( MapTrackList::const_iterator it = mycyl.begin(); it != mycyl.end(); ++it){
     vals = it->second;
     val = vals[vartype];
-    
+
     if (val<0) continue; // this can only happen for failures or VELO tracks and pT, so ignore
     // max vals
     if (val>out_max){
@@ -293,7 +292,7 @@ void RelInfoCylVariables::varSorted(const MapTrackList mycyl, const std::string 
     out_av/=c1;
     debug()<< "The selected track is " << out_track->key()<<endmsg;
   }
-  
+
   debug()<< "Loop in cylinder done for var" << vartype << endmsg;
   debug()<< "Number of tracks was" << mycyl.size() << "..." <<endmsg;
   debug()<< "... out of which " << c1 << "had a valid value"  <<endmsg;
@@ -303,44 +302,44 @@ void RelInfoCylVariables::varSorted(const MapTrackList mycyl, const std::string 
 }
 
 //=============================================================================
-// Function to obtain the track yielding a mass closest to the B 
+// Function to obtain the track yielding a mass closest to the B
 // and the value of this mass
 //=============================================================================
 void RelInfoCylVariables::varSortedB(const MapTrackList mycyl, LHCb::Track* & out_track, double & out_val)
 {
-  
+
   // some initialize
   out_val = -1.;
-  
+
   if (mycyl.empty()) {
     debug()<<"No tracks in the cylinder, nothing to do"<<endmsg;
     return;
   }
-  
+
 
   MapStringDouble vals;
   double val, bdiff, bdiff0;
   int c1=0;
   bdiff0 = 1e7;
-  
+
   // start the loop
   for( MapTrackList::const_iterator it = mycyl.begin(); it != mycyl.end(); ++it)
   {
-    
+
     vals = it->second;
     val = vals["bmass"]; // this is the index for Bmass
-    
+
     if (val<0) continue; // this can only happen for failures or VELO tracks and pT, so ignore
     c1+=1;
     // get absolute value of the difference to 5000
     bdiff = val-m_mB;
     if ( bdiff < 0 ) bdiff = -bdiff;
-    
+
     if ( bdiff < bdiff0) {
       out_val = val;
       bdiff0 = bdiff;
       out_track = it->first;
-    }  
+    }
   }
   debug()<< "Loop in cylinder done for B mass" << endmsg;
   debug()<< "Number of tracks was" << mycyl.size() << "..." <<endmsg;
@@ -376,17 +375,17 @@ void RelInfoCylVariables::getBestD0Ks(const MapTrackList & mycyl)
 {
   m_properties["bestD0"]=-1.;
   m_properties["bestKS"]=-1.;
-  
+
   if (mycyl.empty()) {
     debug()<<"The cylinder list is empty, nothing to do"<<endmsg;
     return;
   }
-  
-  
+
+
 
   std::vector< std::pair<double,double> > mylKs;
   std::vector< std::pair<double,double> > mylD0;
-  
+
   for (MapTrackList::const_iterator it1 = mycyl.begin();it1 != mycyl.end(); ++it1){
     LHCb::Track* tr1 = it1->first;
     if (tr1->type()==LHCb::Track::Velo) continue;
@@ -409,13 +408,13 @@ void RelInfoCylVariables::getBestD0Ks(const MapTrackList & mycyl)
     debug()<< "There were not useful tracks, nothing to do"<<endmsg;
     return;
   }
-  
+
   std::sort(mylD0.begin(), mylD0.end());
   m_properties["bestD0"] = mylD0.at(0).second;
-  
+
   std::sort(mylKs.begin(), mylKs.end());
   m_properties["bestKS"] = mylKs.at(0).second;
-  
+
 }
 
 
@@ -429,7 +428,7 @@ void RelInfoCylVariables::emptyProperties(void)
   m_properties["bestD0"]= -1;
   m_properties["bestKS"]= -1;
   m_properties["tracksNCyl"]= -1;
-  
+
   // track with best PT
   m_properties["minPT"]= -1;
   m_properties["maxPT"]= -1;
@@ -437,7 +436,7 @@ void RelInfoCylVariables::emptyProperties(void)
   m_properties["maxPTtrIPchi2"]= -1;
   m_properties["maxPTtrDOCAChi2"]= -1;
   m_properties["maxPTtrBmass"]= -1;
-   
+
   // track with best IPchi2
   m_properties["minIPchi2"]= -1;
   m_properties["maxIPchi2"]= -1;
@@ -445,7 +444,7 @@ void RelInfoCylVariables::emptyProperties(void)
   m_properties["maxIPchi2trPT"]= -1;
   m_properties["maxIPchi2trDOCAChi2"]= -1;
   m_properties["maxIPchi2trBmass"]= -1;
-  
+
   // track with best DOCAchi2
   m_properties["minDOCAchi2"]= -1;
   m_properties["maxDOCAchi2"]= -1;
@@ -453,7 +452,7 @@ void RelInfoCylVariables::emptyProperties(void)
   m_properties["minDOCAtrPT"]= -1;
   m_properties["minDOCAtrIPchi2"]= -1;
   m_properties["minDOCAtrBmass"]= -1;
-  
+
   // track with best B mass
   m_properties["bestBmass"]= -1;
   m_properties["bestBmasstrPT"]= -1;
@@ -479,7 +478,7 @@ MapStringDouble RelInfoCylVariables::fillVar(MapTrackList mycyl,std::string vart
     out_vals["max"]=out_max;
     out_vals["av"]=out_av;
   }
-  
+
   if (mytrack) {
     out_vals["track_pt"]=mycyl[mytrack]["pt"];
     out_vals["track_ipchi2"]=mycyl[mytrack]["ipchi2"];
@@ -512,7 +511,7 @@ void RelInfoCylVariables::fillProperties(MapTrackList mycyl)
   // fill the best D0/Ks info
   getBestD0Ks(mycyl);
   m_properties["tracksNCyl"]=mycyl.size();
-  
+
   // track with best PT
   m_properties["minPT"]=vals_pt["min"];
   m_properties["maxPT"]=vals_pt["max"];
@@ -520,7 +519,7 @@ void RelInfoCylVariables::fillProperties(MapTrackList mycyl)
   m_properties["maxPTtrIPchi2"]=vals_pt["track_ipchi2"];
   m_properties["maxPTtrDOCAChi2"]=vals_pt["track_docachi2"];
   m_properties["maxPTtrBmass"]=vals_pt["track_bmass"];
-   
+
   // track with best IPchi2
   m_properties["minIPchi2"]=vals_ipchi2["min"];
   m_properties["maxIPchi2"]=vals_ipchi2["max"];
@@ -569,14 +568,14 @@ StatusCode RelInfoCylVariables::calculateRelatedInfo( const LHCb::Particle *top,
     debug()<<"Particle has no proto..."<<endmsg;
     return StatusCode::SUCCESS;;
   }
-  
+
   const LHCb::Track* mytrack = myproto->track();
   if (!mytrack) {
     debug()<<"Proto has no track..."<<endmsg;
     return StatusCode::SUCCESS;
   }
-  
-  
+
+
   // get bestPV of the top particle
   double bestipchi2=-1.;
   LHCb::VertexBase* pv=NULL;
@@ -601,13 +600,13 @@ StatusCode RelInfoCylVariables::calculateRelatedInfo( const LHCb::Particle *top,
 // Fill Output m_map
 //=============================================================================
 void  RelInfoCylVariables::fillMap(){
-  
-  m_map.clear();  
+
+  m_map.clear();
   for ( const auto key : m_keys ){
-    
+
     float value = 0;
     switch (key) {
- 
+
     case RelatedInfoNamed::CYLBESTD0    : value = m_properties["bestD0"]; break;
     case RelatedInfoNamed::CYLBESTKS    : value = m_properties["bestKS"]; break;
     case RelatedInfoNamed::CYLTRACKSNCYL    : value = m_properties["tracksNCyl"]; break;
@@ -633,11 +632,11 @@ void  RelInfoCylVariables::fillMap(){
     case RelatedInfoNamed::CYLBESTBMASSTRPT    : value = m_properties["bestBmasstrPT"]; break;
     case RelatedInfoNamed::CYLBESTBMASSTRIPCHI2    : value = m_properties["bestBmasstrIPchi2"]; break;
     case RelatedInfoNamed::CYLBESTBMASSTRDOCACHI2    : value = m_properties["bestBmasstrDOCAChi2"]; break;
-     
+
     default: value = 0.; break;
     }
-    
-    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq; 
+
+    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
     m_map.insert( std::make_pair(key,value) );
   }
 
@@ -648,4 +647,4 @@ LHCb::RelatedInfoMap* RelInfoCylVariables::getInfo(void){
   return &m_map;
 }
 
-  
+

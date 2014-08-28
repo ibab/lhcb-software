@@ -6,7 +6,6 @@
 #include <Kernel/IDVAlgorithm.h>
 #include <Kernel/GetIDVAlgorithm.h>
 #include "Event/Particle.h"
-#include "LoKi/ParticleCuts.h"
 #include "math.h"
 
 //-----------------------------------------------------------------------------
@@ -22,16 +21,16 @@ DECLARE_TOOL_FACTORY( RelInfoPFVariables )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RelInfoPFVariables::RelInfoPFVariables( const std::string& type, 
+RelInfoPFVariables::RelInfoPFVariables( const std::string& type,
                           const std::string& name,
-                          const IInterface* parent): 
+                          const IInterface* parent):
 GaudiTool ( type, name , parent ),
   m_dva(0)
 {
-  
+
    declareInterface<IRelatedInfoTool>(this);
-   declareProperty( "Variables", 
-                    m_variables, 
+   declareProperty( "Variables",
+                    m_variables,
                     "List of variables to store (store all if empty)");
    declareProperty( "PFOutputLocation",  m_PFLocation  =  "Phys/PFParticles/Particles"
                     ,"Location of the PFParticles");
@@ -40,26 +39,26 @@ GaudiTool ( type, name , parent ),
 //=============================================================================
 // Destructor
 //=============================================================================
-RelInfoPFVariables::~RelInfoPFVariables() {} 
+RelInfoPFVariables::~RelInfoPFVariables() {}
 
 
 //====================================================================
 // Initialize DVAlg, etc
 //====================================================================
 StatusCode RelInfoPFVariables::initialize() {
-  
+
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure()) return sc;
-  
-  // Get DVAlgo                                                                          
+
+  // Get DVAlgo
   m_dva = Gaudi::Utils::getIDVAlgorithm( contextSvc(), this ) ;
   if ( !m_dva ) { return Error("Couldn't get parent DVAlgorithm"); }
 
 
   //initialize the tool keys
   m_keys.clear();
-  
+
   for ( const auto& var : m_variables )
   {
     short int key = RelatedInfoNamed::indexByName( var );
@@ -70,7 +69,7 @@ StatusCode RelInfoPFVariables::initialize() {
       warning() << "Unknown variable " << var << ", skipping" << endmsg;
     }
   }
-  
+
 
   debug()<< "Initialization correct" << endmsg;
 
@@ -83,7 +82,7 @@ StatusCode RelInfoPFVariables::initialize() {
 double RelInfoPFVariables::invariantMass(std::vector<Gaudi::LorentzVector> mypars){
   Gaudi::LorentzVector vsum;
   if (mypars.empty()) return -1.;
-  for (std::vector<Gaudi::LorentzVector>::const_iterator it1=mypars.begin(); 
+  for (std::vector<Gaudi::LorentzVector>::const_iterator it1=mypars.begin();
        it1 != mypars.end(); ++it1 ) vsum+=(*it1);
   return vsum.M();
 }
@@ -109,17 +108,17 @@ void RelInfoPFVariables::emptyProperties(void)
 StatusCode RelInfoPFVariables::calculateRelatedInfo( const LHCb::Particle *top,
                                                      const LHCb::Particle *part )
 {
-  
+
   debug() << "The top particle is " << top->key() << endmsg;
   debug() << "And the particle is " << part->key() << endmsg;
-  
+
   emptyProperties();
   fillMap();
   debug()<< "Filled empty dicts" << endmsg;
-  
+
   // only fill infos for top particle!
   if (part!=top) return StatusCode::SUCCESS;
-  
+
   if (!exist<LHCb::Particles>(m_PFLocation)){
     debug()<<"No PFParticles available"<<endmsg;
     return StatusCode::SUCCESS;
@@ -132,12 +131,12 @@ StatusCode RelInfoPFVariables::calculateRelatedInfo( const LHCb::Particle *top,
   BPV = m_dva->bestVertex(top);
   if (BPV) mypvkey  = BPV->key();
   else mypvkey  = -1;
-  
+
   // initialize important variables
   std::vector<Gaudi::LorentzVector> mypars_cha,mypars_all;
   double missptx_cha=0.,misspty_cha=0.,missptx_all=0.,misspty_all=0.;
   double pttot_cha=0.,pttot_all=0.;
-  
+
   // loop in PFparticles
   for (LHCb::Particles::const_iterator it1=PFParticles->begin(); it1 != PFParticles->end(); ++it1 ){
     LHCb::Particle* pfpart = (*it1);
@@ -169,7 +168,7 @@ StatusCode RelInfoPFVariables::calculateRelatedInfo( const LHCb::Particle *top,
     //tot pT
     pttot_all+=pfpart->pt();
   }
-  
+
   m_properties["charged_mass"] = invariantMass(mypars_cha);
   m_properties["all_mass"] = invariantMass(mypars_all);
   m_properties["charged_totpt"] = pttot_cha-top->pt();
@@ -190,10 +189,10 @@ StatusCode RelInfoPFVariables::calculateRelatedInfo( const LHCb::Particle *top,
 // Fill Output m_map
 //=============================================================================
 void  RelInfoPFVariables::fillMap(){
-  
-  m_map.clear();  
+
+  m_map.clear();
   for ( const auto key : m_keys ){
-    
+
     float value = 0;
     switch (key) {
     case RelatedInfoNamed::PFCHARGEDMASS    : value = m_properties["charged_mass"]; break;
@@ -201,19 +200,19 @@ void  RelInfoPFVariables::fillMap(){
     case RelatedInfoNamed::PFCHARGEDTOTPT : value = m_properties["charged_totpt"]; break;
     case RelatedInfoNamed::PFALLTOTPT    : value = m_properties["all_totpt"]; break;
     case RelatedInfoNamed::PFCHARGEDMISSPT    : value = m_properties["charged_misspt"]; break;
-    case RelatedInfoNamed::PFALLMISSPT    : value = m_properties["all_misspt"]; break;   
-      
+    case RelatedInfoNamed::PFALLMISSPT    : value = m_properties["all_misspt"]; break;
+
     default: value = 0.; break;
     }
-    
-    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq; 
+
+    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
     m_map.insert( std::make_pair(key,value) );
   }
-  
+
 }
 
 LHCb::RelatedInfoMap* RelInfoPFVariables::getInfo(void){
   return &m_map;
 }
 
-  
+
