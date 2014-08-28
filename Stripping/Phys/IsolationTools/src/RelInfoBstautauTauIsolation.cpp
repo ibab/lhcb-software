@@ -264,8 +264,8 @@ bool RelInfoBstautauTauIsolation::calcValue( const LHCb::Particle * part
         , const LHCb::VertexBase * SV 
         ) 
 {
-    double bdtval = 0 ;
-    double bdtmin = 0 ;
+    //double bdtval = 0 ;
+    //double bdtmin = 0 ;
     double doca   = 0;
     double angle  = 0;
     double fc     = 0;

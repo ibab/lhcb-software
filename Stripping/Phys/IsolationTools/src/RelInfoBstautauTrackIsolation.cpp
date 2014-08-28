@@ -125,7 +125,7 @@ StatusCode RelInfoBstautauTrackIsolation::calculateRelatedInfo( const LHCb::Part
       if ( msgLevel(MSG::DEBUG) ) debug() << "Running track isolation on non-final state particle, skipping" << endmsg;
       return StatusCode::SUCCESS ;
     }
-    const LHCb::Particle* mother;
+    const LHCb::Particle* mother  = NULL;
     
     const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
     
@@ -148,6 +148,12 @@ StatusCode RelInfoBstautauTrackIsolation::calculateRelatedInfo( const LHCb::Part
       }
     }
 
+    if (mother==NULL) 
+    {
+      if ( msgLevel(MSG::WARNING) ) warning() << "Mother of part not found. Skipping" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
     saveDecayParticles(top);
 
     // -- Get all tracks in the event
@@ -163,6 +169,7 @@ StatusCode RelInfoBstautauTrackIsolation::calculateRelatedInfo( const LHCb::Part
 
     //set PV and SV of the mother
     //
+    
     const LHCb::VertexBase* PV = m_dva->bestVertex(top); 
     const LHCb::VertexBase *SV = mother->endVertex();
 
@@ -285,8 +292,8 @@ bool RelInfoBstautauTrackIsolation::calcValue( const LHCb::Particle * part
         , const LHCb::VertexBase * SV 
         ) 
 {
-    double bdtval = 0 ;
-    double bdtmin = 0 ;
+    //double bdtval = 0 ;
+    //double bdtmin = 0 ;
     double doca   = 0;
     double angle  = 0;
     double fc     = 0;
@@ -294,7 +301,7 @@ bool RelInfoBstautauTrackIsolation::calcValue( const LHCb::Particle * part
     double svDistGeometric(0) ;  
     double ipchisqany(0);
     
-    int isolation1;
+    int isolation1 = 0;
 
     LHCb::Particles::const_iterator tr_it, tr_it_end( tracks->end() ) ;
     for ( tr_it = tracks->begin() ; tr_it != tr_it_end ; ++tr_it )

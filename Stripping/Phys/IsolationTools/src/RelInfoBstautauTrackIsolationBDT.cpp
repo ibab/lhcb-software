@@ -106,7 +106,7 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
       if ( msgLevel(MSG::DEBUG) ) debug() << "Running track isolation on non-final state particle, skipping" << endmsg;
       return StatusCode::SUCCESS ;
     }
-    const LHCb::Particle* mother;
+    const LHCb::Particle* mother = NULL;
     
     const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
     
@@ -127,6 +127,12 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
           }
         }
       }
+    }
+
+    if (mother==NULL) 
+    {
+      if ( msgLevel(MSG::WARNING) ) warning() << "Mother of part not found. Skipping" << endmsg;
+      return StatusCode::FAILURE;
     }
 
     saveDecayParticles(top);
