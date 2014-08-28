@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-8-28 - Andrea Contu
+ - Update of RareStrangeLines
+
 ! 2014-08-28 - Sean Benson
  - Enabled FlavourTagging for Bs2PhiRho and B2Q2Body4K
  - DIRA cut tweak in Bs2PhiRho and Bs2Q2Body4pi

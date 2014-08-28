@@ -4,8 +4,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Francesco Dettori','Andrea Contu']
-__date__ = '16/01/2014'
-__version__ = '$Revision: 1.1 $'
+__date__ = '31/07/2014'
+__version__ = '$Revision: 2.0 $'
 
 __all__ = ('RareStrangeLinesConf',
            'config_default',
@@ -35,14 +35,19 @@ from GaudiKernel.PhysicalConstants import c_light
 from StandardParticles import StdAllNoPIDsPions, StdNoPIDsDownPions, StdLoosePions, StdLooseDownMuons
 
 
-config_default={
+default_config = {
+  'NAME': 'RareStrange',
+  'WGs' : ['RD'],
+  'BUILDERTYPE' : 'RareStrangeLinesConf',
+  'STREAMS' : [ 'Leptonic' ],
+  'CONFIG' : {
         'Postscale'           :1,
-        'SigmaPMuMuPrescale' : 0.,
+        'SigmaPMuMuPrescale' : 1,
         'SigmaPMuMuDownPrescale' :1,
-        'SigmaPEEPrescale' : 0.,
+        'SigmaPEEPrescale' : 1,
         'SigmaPEEDownPrescale' : 0.1,
-        'SigmaPMuMuLFVPrescale' :0.,
-        'SigmaPMuMuLFVDownPrescale' :1,
+        'SigmaPMuMuLFVPrescale' :0.1,
+        'SigmaPMuMuLFVDownPrescale' :0.1,
         'KPiPiPiPrescale' : 0.01,
         'KPiPiPiMassMeasPrescale' :1,
         'KPiMuMuPrescale' :1,
@@ -51,66 +56,70 @@ config_default={
         'KPiPiPiDownPrescale' : 0.1,
         'KPiPiPiMassMeasDownPrescale' :1,
         'KPiMuMuLFVDownPrescale' :1,
-        'SigmaMinTauPs' : 6,
+        'SigmaMinTauPs' : 6.,
         'SigmaMinPt' : 500.,
         'SigmaMaxDOCA' : 2.,
         'SigmaMassWin' : 500.,
         'SigmaMinDIRA' : 0.9,
         'SigmaMaxIpChi2' : 36.,
-        'SigmaVtxChi2' : 36,
-        'SigmaMinTauPsDown' : 7,
+        'SigmaVtxChi2' : 36.,
+        'SigmaMinTauPsDown' : 7.,
         'SigmaMinPtDown' : 0.,
         'SigmaMaxDOCADown' : 10.,
         'SigmaMassWinDown' : 500.,
         'SigmaPEEMassWinDown' : 100.,
         'SigmaMinDIRADown' : 0.9,
         'SigmaMaxIpChi2Down' : 25.,
-        'SigmaVtxChi2Down' : 25,
-        'SigmaDauTrChi2Down': 9,
+        'SigmaVtxChi2Down' : 25.,
+        'SigmaDauTrChi2Down': 9.,
         'muonMinIpChi2' : 9.,
         'protonPIDp': 5.,
         'electronPIDe':2.,
-        'electronMinIpChi2': 9,
+        'electronMinIpChi2': 9.,
         'muonMinIpChi2Down' : 9.,
         'electronMinIpChi2Down': 4.,
-        'KMaxDOCA' : 3,
-        'KMinPT' : 100 ,
-        'KMassWin' : 100,
+        'KMaxDOCA' : 3.,
+        'KMinPT' : 100. ,
+        'KMassWin' : 100.,
         'KMinDIRA' : 0.98,
-        'KMaxIpChi2' : 25,
-        'KVtxChi2': 25,
-        'KMinVDChi2' : 36,
-        'KDauMinIpChi2' : 9,
-        'KDauTrChi2' : 3,
+        'KMaxIpChi2' : 25.,
+        'KVtxChi2': 25.,
+        'KMinVDChi2' : 36.,
+        'KDauMinIpChi2' : 9.,
+        'KDauTrChi2' : 3.,
         'KMaxDOCADown' : 10.,
         'KMinPTDown' : 0. ,
-        'KMassWinDown' : 100,
+        'KMassWinDown' : 100.,
         'KMinDIRADown' : 0.98,
-        'KVtxChi2Down': 25,
-        'KMinVDChi2Down' : 49,
-        'KDauMinIpChi2Down' : 5,
-        'KVDPVMinDown' : 500,
-        'KVDPVMaxDown' : 2500,
+        'KVtxChi2Down': 25.,
+        'KMinVDChi2Down' : 49.,
+        'KDauMinIpChi2Down' : 5.,
+        'KVDPVMinDown' : 500.,
+        'KVDPVMaxDown' : 2500.,
         #Kaons stuff
           'KMaxDOCAMassMeas' : 2.,
-        'KMinPTMassMeas' : 300 ,
-        'KMassWinMassMeas' : 50,
+        'KMinPTMassMeas' : 300. ,
+        'KMassWinMassMeas' : 50.,
         'KMinDIRAMassMeas' : 0.9998,
-        'KMaxIpChi2MassMeas' : 25,
-        'KVtxChi2MassMeas': 10,
-        'KMinVDChi2MassMeas' : 100,
-        'KDauMinIpChi2MassMeas' : 8, 
+        'KMaxIpChi2MassMeas' : 25.,
+        'KVtxChi2MassMeas': 10.,
+        'KMinVDChi2MassMeas' : 100.,
+        'KDauMinIpChi2MassMeas' : 8., 
         #Kaons stuff downstream
         'KMaxDOCAMassMeasDown' : 9999.,
-        'KMinPTMassMeasDown' : 250 ,
-        'KMassWinMassMeasDown' : 100,
+        'KMinPTMassMeasDown' : 250. ,
+        'KMassWinMassMeasDown' : 100.,
         'KMinDIRAMassMeasDown' : 0.999,
-        'KVtxChi2MassMeasDown': 20,
-        'KMinVDChi2MassMeasDown' : 64,
-        'KDauMinIpChi2MassMeasDown' : 4, 
-        'KVDPVMinMassMeasDown' : 900,
-        'KVDPVMaxMassMeasDown' : 2200
+        'KVtxChi2MassMeasDown': 20.,
+        'KMinVDChi2MassMeasDown' : 64.,
+        'KDauMinIpChi2MassMeasDown' : 4., 
+        'KVDPVMinMassMeasDown' : 900.,
+        'KVDPVMaxMassMeasDown' : 2200.
         }
+  }
+  
+
+
 
 #============================================================
 # Line builder 
@@ -240,77 +249,105 @@ class RareStrangeLinesConf(LineBuilder) :
         self.SigmaPMuMuLine = StrippingLine(spmumu_name+"Line",
                                             prescale = config['SigmaPMuMuPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selSigmaPMuMu ]
+                                            algos = [ self.selSigmaPMuMu ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.SigmaPMuMuDownLine = StrippingLine(spmumudown_name+"Line",
                                             prescale = config['SigmaPMuMuDownPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selSigmaPMuMuDown ]
+                                            algos = [ self.selSigmaPMuMuDown ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
 
         self.SigmaPEELine = StrippingLine(spee_name+"Line",
                                             prescale = config['SigmaPEEPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selSigmaPEE ]
+                                            algos = [ self.selSigmaPEE ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.SigmaPEEDownLine = StrippingLine(speedown_name+"Line",
                                             prescale = config['SigmaPEEDownPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selSigmaPEEDown ]
+                                            algos = [ self.selSigmaPEEDown ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.SigmaPMuMuLFVLine = StrippingLine(spmumulfv_name+"Line",
                                                prescale = config['SigmaPMuMuLFVPrescale'],
                                                postscale = config['Postscale'],
-                                               algos = [ self.selSigmaPMuMuLFV ]
+                                               algos = [ self.selSigmaPMuMuLFV ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
 
         self.SigmaPMuMuLFVDownLine = StrippingLine(spmumulfvdown_name+"Line",
                                                prescale = config['SigmaPMuMuLFVDownPrescale'],
                                                postscale = config['Postscale'],
-                                               algos = [ self.selSigmaPMuMuLFVDown ]
+                                               algos = [ self.selSigmaPMuMuLFVDown ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
 
         self.KPiMuMuLine = StrippingLine(kpimumu_name+"Line",
                                              prescale = config['KPiMuMuPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selKPiMuMu ]
+                                            algos = [ self.selKPiMuMu ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.KPiMuMuLFVLine = StrippingLine(kpimumulfv_name+"Line",
                                          prescale = config['KPiMuMuLFVPrescale'],
                                          postscale = config['Postscale'],
-                                         algos = [ self.selKPiMuMuLFV ]
+                                         algos = [ self.selKPiMuMuLFV ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                          )
         
         self.KPiPiPiLine = StrippingLine(kpipipi_name+"Line",
                                              prescale = config['KPiPiPiPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selKPiPiPi ]
+                                            algos = [ self.selKPiPiPi ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.KPiPiPiMassMeasLine = StrippingLine(kpipipimassmeas_name+"Line",
                                              prescale = config['KPiPiPiMassMeasPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selKPiPiPiMassMeas ]
+                                            algos = [ self.selKPiPiPiMassMeas ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.KPiMuMuDownLine = StrippingLine(kpimumudown_name+"Line",
                                              prescale = config['KPiMuMuDownPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selKPiMuMuDown ]
+                                            algos = [ self.selKPiMuMuDown ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.KPiPiPiDownLine = StrippingLine(kpipipidown_name+"Line",
                                              prescale = config['KPiPiPiDownPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selKPiPiPiDown ]
+                                            algos = [ self.selKPiPiPiDown ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
         self.KPiPiPiMassMeasDownLine = StrippingLine(kpipipimassmeasdown_name+"Line",
                                              prescale = config['KPiPiPiMassMeasDownPrescale'],
                                             postscale = config['Postscale'],
-                                            algos = [ self.selKPiPiPiMassMeasDown ]
+                                            algos = [ self.selKPiPiPiMassMeasDown ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                      )
      
         self.KPiMuMuLFVDownLine = StrippingLine(kpimumulfvdown_name+"Line",
                                          prescale = config['KPiMuMuLFVDownPrescale'],
                                          postscale = config['Postscale'],
-                                         algos = [ self.selKPiMuMuLFVDown ]
+                                         algos = [ self.selKPiMuMuLFVDown ],
+                                            RequiredRawEvents = ["Velo"],
+                                            MDSTFlag=True
                                          )
 
         self.registerLine(self.SigmaPMuMuLine)
