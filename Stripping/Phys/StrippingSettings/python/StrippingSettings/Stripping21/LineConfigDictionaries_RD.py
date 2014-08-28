@@ -14,16 +14,147 @@ from GaudiKernel.SystemOfUnits import *
 ################################################################################
 ##                              EWP SubGroup Lines                            ##
 ################################################################################
-## StrippingB2XMuMuInclusive.py                                               ##
-## Inclusive StrippingB2XMuMu Lines, going to fullDST                         ##
+## StrippingB2XMuMu.py                                                        ##
+## StrippingB2XMuMu Lines, going to fullDST                                   ##
 ## -----------------------------------                                        ##
-## StrippingB2XMuMu_InclDiMuHighQ2Line                                        ##
-## StrippingB2XMuMu_InclDiMuLowQ2Line                                         ##
-## StrippingB2XMuMu__InclDiMuCCbarLine                                        ##
+## StrippingB2XMuMuLine                                                       ##
 ## Authors: patrick.haworth.owen@cern.ch, konstantinos.petridis@cern.ch       ##
 ################################################################################
 
-B2XMuMu_Incl = {
+B2XMuMu = {
+    'BUILDERTYPE'  :  'B2XMuMuConf',
+    'CONFIG' : {
+          'RelatedInfoTools'      : [
+                 {   "Type" : "RelInfoConeVariables"
+                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                     , 'Location':'ConeIsoInfo'}
+                 , {'Type' : 'RelInfoVertexIsolation'
+                    , 'Location':'VtxIsoInfo'}
+                 , {'Type': 'RelInfoVertexIsolationBDT'
+                    , 'Location':'VtxIsoBDTInfo' }
+                 ]
+          , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
+          , 'MuonPID'            : -3.0          # dimensionless
+          , 'DimuonUPPERMASS'    : 7100.0        # MeV
+          , 'Pi0MINPT'           : 800.0         # MeV
+          , 'Pi0ForOmegaMINPT'   : 500.0         # MeV
+          , 'DplusLOWERMASS'     : 1600.0        # MeV
+          , 'DplusUPPERMASS'     : 2300.0        # MeV
+          , 'KstarplusWINDOW'    : 300.0         # MeV
+          , 'KsWINDOW'           : 30.0          # MeV
+          , 'LambdaWINDOW'       : 30.0          # MeV
+          , 'LongLivedPT'        : 0.0           # MeV , used to be 500.0 MeV
+          , 'LongLivedTau'        : 2            # ps
+
+          # A1 cuts
+          , 'A1_Comb_MassLow'  :    0.0
+          , 'A1_Comb_MassHigh' : 6050.0
+          , 'A1_MassLow'       :    0.0
+          , 'A1_MassHigh'      : 6000.0
+          , 'A1_MinIPCHI2'     :    4.0
+          , 'A1_FlightChi2'    :   25.0
+          , 'A1_Dau_MaxIPCHI2' :    9.0
+          # From Bd2KstarMuMu line
+          ,'UseNoPIDsHadrons'          : True,
+
+          # B cuts
+          'B_Comb_MassLow'      : 4800.0,
+          'B_Comb_MassHigh'     : 7100.0,
+          'B_MassLow'           : 4900.0,
+          'B_MassHigh'          : 7000.0,
+          'B_VertexCHI2'        :    8.0,
+          'B_IPCHI2'            :   16.0,
+          'B_DIRA'              : 0.9999,
+          'B_FlightCHI2'        :  121.0,
+          'B_Dau_MaxIPCHI2'     :    9.0,
+
+          # Daughter cuts
+          'Dau_VertexCHI2'      :   12.0,
+          'Dau_DIRA'            :   -0.9,
+          # Kstar cuts
+          'Kstar_Comb_MassLow'  :    0.0,
+          'Kstar_Comb_MassHigh' : 6200.0,
+          'Kstar_MassLow'       :    0.0,
+          'Kstar_MassHigh'      : 6200.0,
+          'Kstar_MinIPCHI2'     :    0.0,
+          'Kstar_FlightChi2'    :    9.0,
+          'Kstar_Dau_MaxIPCHI2' :    9.0,
+
+          # Omega cuts
+          'Omega_MassWin'       :   100, #MeV
+          'Omega_CombMassWin'   :   200, #MeV
+          'OmegaChi2Prob'       : 0.00001,  # dimensionless
+
+          #K1->OmegaK cuts
+          'K12OmegaK_MassLow'   :   300, #MeV
+          'K12OmegaK_MassHigh'  :  2500, #MeV
+          'K12OmegaK_CombMassLow'   :   400, #MeV
+          'K12OmegaK_CombMassHigh'  :  2400, #MeV
+
+          # JPsi (dimu) cuts
+          'Dimu_FlightChi2'     :   9.0,
+          'Dimu_Dau_MaxIPCHI2'  :   9.0,
+
+          # Track cuts
+          'Track_GhostProb'     :    0.35,
+
+          # Hadron cuts
+          'Hadron_MinIPCHI2'    :    6.0,
+
+          # Muon cuts
+          'Muon_MinIPCHI2'      :    9.0,
+          'Muon_IsMuon'         :    True,
+          'MuonNoPIDs_PIDmu'    :    0.0,
+
+          # Wrong sign combinations
+          'DimuonWS'            :   True,
+          'HadronWS'            :   True,
+
+          # GEC
+          'SpdMult'             :  600,
+
+          'HLT_FILTER' : "(HLT_PASS('Hlt1TrackAllL0Decision')|HLT_PASS('Hlt1TrackMuonDecision'))&(HLT_PASS_RE('Hlt2DiMuon.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision') | HLT_PASS_RE('Hlt2SingleMuon.*Decision'))",
+
+          'DECAYS'              :  [
+                     "B0 -> J/psi(1S) phi(1020)",
+                     "[B0 -> J/psi(1S) K*(892)0]cc",
+                     "B0 -> J/psi(1S) rho(770)0",
+                     "[B+ -> J/psi(1S) rho(770)+]cc",
+                     "B0 -> J/psi(1S) f_2(1950)",
+                     "B0 -> J/psi(1S) KS0",
+                     "[B0 -> J/psi(1S) D~0]cc",
+                     "[B+ -> J/psi(1S) K+]cc",
+                     "[B+ -> J/psi(1S) pi+]cc",
+                     "[B+ -> J/psi(1S) K*(892)+]cc",
+                     "[B+ -> J/psi(1S) D+]cc",
+                     "[B+ -> J/psi(1S) D*(2010)+]cc",
+                     "[Lambda_b0 -> J/psi(1S) Lambda0]cc",
+                     "[Lambda_b0 -> J/psi(1S) Lambda(1520)0]cc",
+                     "B0 -> J/psi(1S) pi0",
+                     "[B+ -> J/psi(1S) a_1(1260)+]cc",
+                     "[B+ -> J/psi(1S) K_1(1270)+]cc",
+                     "[B+ -> J/psi(1S) K_2(1770)+]cc",
+                     "B0 -> J/psi(1S) K_1(1270)0",
+                     "[B+ -> J/psi(1S) K_1(1400)+]cc",
+                     "B0 -> J/psi(1S) K_1(1400)0"
+                     ]
+
+          },
+    'STREAMS' : ['Leptonic'],
+    'WGs' : ['RD'],
+    }
+
+###############################################################################
+## StrippingB2XMuMuInclusive.py                                               ##
+## Inclusive StrippingB2XMuMu Lines, going to fullDST                         ##
+## -----------------------------------                                        ##
+## StrippingB2XMuMuInclDiMuHighQ2Line                                        ##
+## StrippingB2XMuMuInclDiMuLowQ2Line                                         ##
+## StrippingB2XMuMuInclDiMuCCbarLine                                        ##
+## Authors: patrick.haworth.owen@cern.ch, konstantinos.petridis@cern.ch       ##
+################################################################################
+
+B2XMuMuIncl = {
     'BUILDERTYPE'  :  'B2XMuMuInclusiveConf',
     'CONFIG' : {
          # Incl (dimu) cuts
@@ -117,7 +248,7 @@ B2KstTauTau =  {
 ## Authors: Patrick Koppenburg, Alex Shires, Thomas Blake, Luca Pescatore     ##
 ################################################################################
 Bu2LLK = {
-    'BUILDERTYE' : 'Bu2LLKConf',
+    'BUILDERTYPE' : 'Bu2LLKConf',
     'CONFIG'     : {
           'BFlightCHI2'            : 100
           ,  'BDIRA'               : 0.9995
@@ -587,78 +718,114 @@ B2XTau = {
     'WGs' : ['RD'],
     'BUILDERTYPE' : 'B2XTauConf',
     'CONFIG' :  {
-        'PT_HAD_ALL_FINAL_STATE'        : '250',  # MeV
-        'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
-        'IPCHI2_HAD_ALL_FINAL_STATE'    : '16',    # dimensionless
-        'TRACKCHI2_HAD_ALL_FINAL_STATE' : '3',    # dimensionless
-        'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.3',    # dimensionless
-        #
-        'PT_MU'                         : '1000', # MeV
-        'P_MU'                          : '6000', # MeV
-        'IPCHI2_MU'                     : '16',   # MeV
-        'TRACKCHI2_MU'                  : '3',    # dimensionless
-        'TRGHOPROB_MU'                  : '0.3', # dimensionless
-
-        #
-        'PT_B_TT'                       : '1900', # MeV
-        'PT_B_TT_HIGH'                  : '2000',# MeV
-        'PT_B_TM'                       : '1900', # MeV
-        'PT_B_TM_HIGH'                  : '5000', # MeV
-        'VCHI2_B'                       :   '90', # dimensionless
-        'FDCHI2_B'                      : '225',  # dimensionless
-        'FD_B'                          : '90',   # mm
-        'FD_B_MU'                       : '35',   # mm
-        'DIRA_B'                        : '0.99', # dimensionless
-        'MASS_LOW_B'                    : '2000', # MeV
-        'MASS_HIGH_B'                   : '7000', # MeV
-        'MCOR_LOW_B'                    :    '0', # MeV
-        'MCOR_HIGH_B'                   :'10000', # MeV
-          #
-        'PT_B_CHILD_BEST'               : '2000', # MeV
-        'IPCHI2_B_CHILD_BEST'           : '16',   # dimensionless
-        'PT_B_TAU_CHILD_BEST'           : '4000', # MeV
-        'IPCHI2_B_TAU_CHILD_BEST'       : '150',   # dimensionless
-        'IPCHI2_B_TAU_CHILD_WORSE'       : '16',   # dimensionless
-        'PT_B_PIONS_TOTAL'              :  '7000',# MeV
-        'PT_B_MU_PIONS_TOTAL'           :  '2500',# MeV
-        'IPCHI2_B_TAU_MU'               :  '50',
-        'IPCHI2_B_MU'                   :  '200',
-        'B_TAUPI_2NDMINIPS'             :  '20',  # dimensionless
-        'FDCHI2_TAU'                    :  '4000',
-        'VCHI2_B_TAU_MU'                : '12',
-          #
-        'MASS_LOW_D'                    : '1750', # MeV
-        'MASS_HIGH_D'                   : '2080', # MeV
-        'APT_D'                         : '800',  #MeV
-        'AMAXDOCA_D'                    : '0.2',  # mm
-        'MaxPT_D'                       : '800',  #MeV
-        'PT_D'                          : '1000',  #MeV
-        'DIRA_D'                        : '0.99',
-        'VCHI2_D'                       : '16',
-        'FDCHI2_D'                      : '16',
-        'VDRHOmin_D'                    : '0.1',  #mm
-        'VDRHOmax_D'                    : '7.0',  #mm
-        'VDZ_D'                         : '5.0',  #mm
-          #
-        'MASS_LOW_TAU'                    : '400', # MeV
-        'MASS_HIGH_TAU'                   : '2100', # MeV
-          #
-        'B2TauTau_TOSLinePrescale'      : 1,
-        'B2TauTau_TOSLinePostscale'     : 1,
-        'B2DD_LinePrescale'             : 1,
-        'B2DD_LinePostscale'            : 1,
-        'B2TauMu_TOSLinePrescale'       : 1,
-        'B2TauMu_TOSLinePostscale'      : 1,
-        'B2DPi_LinePrescale'            : 1,
-        'B2DPi_LinePostscale'           : 1,
-        'B2TauTau_SameSign_TOSLinePrescale'      : 0.5,
-        'B2TauTau_SameSign_TOSLinePostscale'     : 1,
-        'B2DD_SameSign_LinePrescale'             : 0.5,
-        'B2DD_SameSign_LinePostscale'            : 1,
-        'B2TauMu_SameSign_TOSLinePrescale'       : 0.5,
-        'B2TauMu_SameSign_TOSLinePostscale'      : 1,
-        'B2DPi_SameSign_LinePrescale'            : 0.5,
-        'B2DPi_SameSign_LinePostscale'           : 1,
+         'PT_HAD_ALL_FINAL_STATE'        : '250',  # MeV
+         'P_HAD_ALL_FINAL_STATE'         : '2000', # MeV
+         'IPCHI2_HAD_ALL_FINAL_STATE'    : '16',    # dimensionless
+         'TRACKCHI2_HAD_ALL_FINAL_STATE' : '3',    # dimensionless
+         'TRGHOPROB_HAD_ALL_FINAL_STATE' : '0.3',    # dimensionless
+         #
+         'PT_MU'                         : '1000', # MeV
+         'P_MU'                          : '6000', # MeV
+         'IPCHI2_MU'                     : '16',   # MeV
+         'TRACKCHI2_MU'                  : '3',    # dimensionless
+         'TRGHOPROB_MU'                  : '0.3', # dimensionless
+         #
+         'PT_B_TT'                       : '1900', # MeV
+         'PT_B_TT_HIGH'                  : '2000',# MeV
+         'PT_B_TM'                       : '1900', # MeV
+         'PT_B_TM_HIGH'                  : '5000', # MeV
+         'VCHI2_B'                       :   '90', # dimensionless
+         'FDCHI2_B'                      : '225',  # dimensionless
+         'FD_B'                          : '90',   # mm
+         'FD_B_MU'                       : '35',   # mm
+         'DIRA_B'                        : '0.99', # dimensionless
+         'MASS_LOW_B'                    : '2000', # MeV
+         'MASS_HIGH_B'                   : '7000', # MeV
+         'MCOR_LOW_B'                    :    '0', # MeV
+         'MCOR_HIGH_B'                   :'10000', # MeV
+         #
+         'PT_B_CHILD_BEST'               : '2000', # MeV
+         'IPCHI2_B_CHILD_BEST'           : '16',   # dimensionless
+         'PT_B_TAU_CHILD_BEST'           : '4000', # MeV
+         'IPCHI2_B_TAU_CHILD_BEST'       : '150',   # dimensionless
+         'IPCHI2_B_TAU_CHILD_WORSE'       : '16',   # dimensionless
+         'PT_B_PIONS_TOTAL'              :  '7000',# MeV
+         'PT_B_MU_PIONS_TOTAL'           :  '2500',# MeV
+         'IPCHI2_B_TAU_MU'               :  '50',
+         'IPCHI2_B_MU'                   :  '200',
+         'B_TAUPI_2NDMINIPS'             :  '20',  # dimensionless
+         'FDCHI2_TAU'                    :  '4000',
+         'VCHI2_B_TAU_MU'                : '12',
+         #
+         'MASS_LOW_D'                    : '1750', # MeV
+         'MASS_HIGH_D'                   : '2080', # MeV
+         'APT_D'                         : '800',  #MeV
+         'AMAXDOCA_D'                    : '0.2',  # mm
+         'MaxPT_D'                       : '800',  #MeV
+         'PT_D'                          : '1000',  #MeV
+         'DIRA_D'                        : '0.99',
+         'VCHI2_D'                       : '16',
+         'FDCHI2_D'                      : '16',
+         'VDRHOmin_D'                    : '0.1',  #mm
+         'VDRHOmax_D'                    : '7.0',  #mm
+         'VDZ_D'                         : '5.0',  #mm
+         #
+         'MASS_LOW_TAU'                    : '400', # MeV
+         'MASS_HIGH_TAU'                   : '2100', # MeV
+         #
+         'B2TauTau_TOSLinePrescale'      : 1,
+         'B2TauTau_TOSLinePostscale'     : 1,
+         'B2DD_LinePrescale'             : 1,
+         'B2DD_LinePostscale'            : 1,
+         'B2TauMu_TOSLinePrescale'       : 1,
+         'B2TauMu_TOSLinePostscale'      : 1,
+         'B2DPi_LinePrescale'            : 1,
+         'B2DPi_LinePostscale'           : 1,
+         'B2TauTau_SameSign_TOSLinePrescale'      : 0.5,
+         'B2TauTau_SameSign_TOSLinePostscale'     : 1,
+         'B2DD_SameSign_LinePrescale'             : 0.5,
+         'B2DD_SameSign_LinePostscale'            : 1,
+         'B2TauMu_SameSign_TOSLinePrescale'       : 0.5,
+         'B2TauMu_SameSign_TOSLinePostscale'      : 1,
+         'B2DPi_SameSign_LinePrescale'            : 0.5,
+         'B2DPi_SameSign_LinePostscale'           : 1,
+         'RelatedInfoTools'      : [
+                { "Type" : "RelInfoBstautauMuonIsolationBDT"
+                  ,"RecursionLevel" : 1
+                  , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
+                  , "Location"  : "BSTAUTAUVARIABLES"
+                  },
+                { "Type" : "RelInfoBstautauMuonIsolation"
+                  ,"RecursionLevel" : 1
+                  , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
+                  , "Location"  : "BSTAUTAUVARIABLES"
+                      },
+                { "Type" : "RelInfoBstautauTauIsolationBDT"
+                  ,"RecursionLevel" : 1
+                  , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUE', 'BSTAUTAUTAUISOBDTSECONDVALUE','BSTAUTAUTAUISOBDTTHIRDVALUE']
+                  , "Location"  : "BSTAUTAUVARIABLES"
+                      },
+                { "Type" : "RelInfoBstautauTauIsolation"
+                  ,"RecursionLevel" : 1
+                  , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUE', 'BSTAUTAUTAUISOSECONDVALUE']
+                  , "Location"  : "BSTAUTAUVARIABLES"
+                      },
+                { "Type" : "RelInfoBstautauTrackIsolationBDT"
+                  ,"RecursionLevel" : 2
+                  , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUE', 'BSTAUTAUTRACKISOBDTSECONDVALUE','BSTAUTAUTRACKISOBDTTHIRDVALUE']
+                  , "Location"  : "BSTAUTAUVARIABLES"
+                      },
+                { "Type" : "RelInfoBstautauTrackIsolation"
+                  ,"RecursionLevel" : 2
+                  , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUE', 'BSTAUTAUTRACKISOSECONDVALUE']
+                  , "Location"  : "BSTAUTAUVARIABLES"
+                      },
+                { "Type" : "RelInfoBstautauCDFIso"
+                  ,"RecursionLevel" : 0
+                  , "Variables" : ['BSTAUTAUCDFISO']
+                  , "Location"  : "BSTAUTAUVARIABLES"
+                      }
+                ]
         },
     'STREAMS' : ['Leptonic']
     }
@@ -762,7 +929,7 @@ Bs2MuMus = {
            'BIPChi2_loose'         : 64,
            'BFDChi2_loose'         : 100,
            'BPVVDChi2'            : 121,
-           'daugt_IPChi2'            : 9 
+           'daugt_IPChi2'            : 9
            },
     'STREAMS' : ['Dimuon']
     }
@@ -840,6 +1007,25 @@ B23MuLines = {
         }
 
 ################################################################################
+## StrippingB24pLines.py                                                      ##
+## B0 -> p+ p+ p- p- lines                                                    ##
+## StrippingB24pLinesB24pLine                                                 ##
+## StrippingB24pLinesB2JpsiKpiLine                                            ##
+## Author: Oliver Gruenberg                                                   ##
+################################################################################ 
+B24pLines = {
+    'WGs' : ['RD'],
+    'BUILDERTYPE' : 'B24pLinesConf',
+    'CONFIG' :{
+         'Postscale'             :1,
+         'B24pPrescale'          :1,
+         'B2JpsiKpiPrescale'     :1,
+         },
+    'STREAMS' : ['Bhadron'],
+    }
+
+
+################################################################################
 ## StrippingBLVLines.py                                                       ##
 ## Baryon-lepton number violating lines                                       ##
 ## StrippingBLVLinesLa2KmuLine                                                ##
@@ -871,7 +1057,7 @@ BLVLines = {
            'Bs2DspiPrescale'     :0.1,
            'B2LcpPrescale'       :0.2,
             },
-    'STREAMS' : ['Leptonic'],
+    'STREAMS' : ['Bhadron'],
             }
 ################################################################################
 ## StrippingK0s2Pi0MuMuLines.py                                               ##
@@ -901,7 +1087,6 @@ K0s2Pi0MuMu = {
                },
     'STREAMS' : ['Leptonic'],
     }
-
 
 ################################################################################
 ## StrippingK0s2MuMuLines.py                                                  ##
@@ -981,6 +1166,10 @@ Kshort2PiPiMuMu = {
                 'MuonMINIPCHI2' : 2     ,    #adminensional
                 'MuonTRCHI2'    : 5     ,    #adminensional
 
+                'PionP'         : 2000. ,    #MeV
+                'PionPT'        : 300.  ,    #MeV
+                'PionMINIPCHI2' : 2     ,    #adminensional
+                'PionTRCHI2'    : 5     ,    #adminensional
 
                                   #4body
                 'MINIPCHI2_mumumumu' : 4. ,  #adminensional --  for the individual pions
@@ -998,7 +1187,7 @@ Kshort2PiPiMuMu = {
                 'MaxDimuonMass'    : 260.  ,    #MeV
                 'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
                 'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
-                
+
                 'Kshort2MuMuMuMuLinePrescale'    : 1 ,
                 'Kshort2MuMuMuMuLinePostscale'   : 1
                 },
@@ -1018,19 +1207,19 @@ Ks2PiPiee = {
     'CONFIG' : {
          'Kshort2eePiPiLinePrescale'    : 1 ,
          'Kshort2eePiPiLinePostscale'   : 1 ,
-         
-         
+
+
          'ePT'           : 100.          , #MeV
          'eMINIPCHI2'    : 16            , #adimensional
          'ePIDe'         : -4            , #adimensional
          'eGhostProb'    : 0.5           , #adimensional
 
-         
+
          'PionMINIPCHI2' : 16            , #adimensional
          'PionPIDK'      : 5             , #adimensional
          'PionGhostProb' : 0.5           , #adimensional
-         
-         
+
+
          #4body
          'KsMAXDOCA'     : 1.            , #mm
          'KsLifetime'    : 0.01*89.53    , #0.01*10^-12s
@@ -1091,11 +1280,29 @@ LFV = {
         'Bu2KJPsieePrescale'  :1,
         'B2TauMuPrescale'       :1,
         'B2hTauMuPrescale'      :1,
+        'RelatedInfoTools'      : [
+                { "Type" : "RelInfoBs2MuMuIsolations"
+                  ,"RecursionLevel" : 0
+                  , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+                  , "Location"  : "BSMUMUVARIABLES"
+                  , "tracktype" : 3
+                  , "angle"      : 0.27
+                  , "fc"         : 0.60
+                  , "doca_iso"   : 0.13
+                  , "ips"        : 3.0
+                  , "svdis"      : -0.15
+                  , "svdis_h"    : 30.
+                  , "pvdis"      : 0.5
+                  , "pvdis_h"    : 40.
+                  , "makeTrackCuts" : False
+                  , "IsoTwoBody" : False
+                  }
+                ] ## matches 'RelatedInfoTools'
         },
     }
 
 ################################################################################
-## StrippingrareStrange.py                                                    ##
+## StrippingRareStrange.py                                                    ##
 ## Rare strange decays lines                                                  ##
 ## StrippingRareStrangeK3PiLine                                               ##
 ## StrippingRareStrangeKPiMuMuLine                                            ##
