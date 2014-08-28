@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-08-28 - Stefano Perazzini
+ - Added raw banks to Bs2PhiPhi lines
+
+! 2014-08-28 - Stefano Perazzini
  - Fix of few charmless lines
 
 ! 2014-08-28 - Wenbin Qian

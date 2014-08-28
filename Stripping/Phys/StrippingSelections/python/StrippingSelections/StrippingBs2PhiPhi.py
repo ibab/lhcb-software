@@ -141,11 +141,20 @@ class StrippingBs2PhiPhiConf(LineBuilder):
 		 Algorithm = _Bs2PhiPhi,
 		 RequiredSelections = [Bs2PhiPhiLooseDetachedPhi2KK])
 
-    	    return StrippingLine(name+"Line"
-              , prescale = ps
-              , postscale = 1
-              , selection = Bs2PhiPhi
-              , EnableFlavourTagging = True)
+            if wide == True:
+      	      return StrippingLine(name+"Line"
+                , prescale = ps
+                , postscale = 1
+                , selection = Bs2PhiPhi
+                , EnableFlavourTagging = True)
+            else:
+              return StrippingLine(name+"Line"
+                , prescale = ps
+                , postscale = 1
+                , selection = Bs2PhiPhi
+                , EnableFlavourTagging = True
+                , RequiredRawEvents = ['Trigger', 'Muon', 'Calo', 'Rich', 'Velo', 'Tracker'])
+
 
     def _Bs2PhiPhiUp_X_Line( self, name, config ) :
 
@@ -191,4 +200,5 @@ class StrippingBs2PhiPhiConf(LineBuilder):
               , prescale = 1
               , postscale = 1
               , selection = Bs2PhiPhiAll
-              , EnableFlavourTagging = True)
+              , EnableFlavourTagging = True
+              , RequiredRawEvents = ['Trigger', 'Muon', 'Calo', 'Rich', 'Velo', 'Tracker'])
