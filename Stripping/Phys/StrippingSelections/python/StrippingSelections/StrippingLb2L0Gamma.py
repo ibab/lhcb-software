@@ -47,11 +47,13 @@ default_config = {'NAME'        : 'StrippingLb2L0Gamma',
                                    'Proton_Pt_Min'               : 800.0, # Can increase
                                    # Lambda0 cuts
                                    'Lambda0_VtxChi2_Max'         : 9.0,
+                                   'Lambda0LL_IP_Min'            : 0.05,
                                    'Lambda0LL_MassWindow'        : 20.0,
                                    'Lambda0DD_MassWindow'        : 30.0,
                                    'Lambda0_Pt_Min'              : 1000.0,
                                    # Photon cuts
                                    'Photon_PT_Min'               : 2500.0,
+                                   'Photon_CL_Min'               : 0.2,
                                    'PhotonCnv_PT_Min'            : 1000.0,
                                    'PhotonCnv_MM_Max'            : 100.0,
                                    'PhotonCnv_VtxChi2_Max'       : 9.0,
@@ -79,10 +81,12 @@ class StrippingLb2L0GammaConf(LineBuilder):
                               'Pion_Pt_Min'                ,
                               'Proton_Pt_Min'              ,
                               'Lambda0_VtxChi2_Max'        ,
+                              'Lambda0LL_IP_Min'           ,
                               'Lambda0LL_MassWindow'       ,
                               'Lambda0DD_MassWindow'       ,
                               'Lambda0_Pt_Min'             ,
                               'Photon_PT_Min'              ,
+                              'Photon_CL_Min'              ,
                               'PhotonCnv_PT_Min'           ,
                               'PhotonCnv_MM_Max'           ,
                               'PhotonCnv_VtxChi2_Max'      ,
@@ -121,6 +125,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda0_ll_code = """(PT>%(Lambda0_Pt_Min)s*MeV) &
                              (VFASPF(VCHI2/VDOF)<%(Lambda0_VtxChi2_Max)s) &
                              (MINTREE(MIPCHI2DV(PRIMARY), ISLONG) > %(TrackLL_IPChi2_Min)s) &
+                             (MIPDV(PRIMARY) > %(Lambda0LL_IP_Min)s*mm) &
                              (ADMASS('Lambda0') < %(Lambda0LL_MassWindow)s*MeV)"""
         lambda0_ll_code = (lambda0_ll_code + " & " + tracks_code) % config
         lambda0_ll_filter = FilterDesktop(Code=lambda0_ll_code)
@@ -141,7 +146,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         #################################################################################
         # Filter photons
         #################################################################################
-        photons_noncnv_filter = FilterDesktop(Code="(PT > %(Photon_PT_Min)s*MeV)" % config)
+        photons_noncnv_filter = FilterDesktop(Code="(PT > %(Photon_PT_Min)s*MeV) & (CL > %(Photon_CL_Min)s)" % config)
         photons_noncnv = Selection("Photons_NonCnv",
                                    Algorithm=photons_noncnv_filter,
                                    RequiredSelections=[StdLooseAllPhotons])
