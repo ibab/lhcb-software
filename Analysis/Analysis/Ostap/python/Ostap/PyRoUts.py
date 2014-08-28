@@ -139,8 +139,14 @@ def dsID    () : return rootID  ( 'ds_' )
 #  a = VE(1,1)
 #  b = VE(a)
 #  print a, b
-logger.warning( 'Disable converison of VE to float. To be checked later')
-del VE.__float__
+_a  = VE( 1 , 1 )
+_b  = VE( _a    )
+_EQ = cpp.LHCb.Math.equal_to_double 
+if _EQ ( _a.value () , _b.value () ) and _EQ ( _a.error () , _b.error () ) : pass 
+else :
+    logger.warning( 'ROOT(%s) Disable cast of VE to float' % ROOT.gROOT.GetVersion() )
+    del VE.__float__
+
 # =============================================================================
 ## a bit modified 'Clone' function for histograms
 #  - it automaticlaly assign unique ID
@@ -1530,7 +1536,11 @@ def binomEff_h1 ( h1 , h2 , func = binomEff ) :
     >>> efficiency = accepted // total
     
     """
-    # 
+    #
+    if isinstance ( h1 , ROOT.TProfile ) :
+        hh = h1.asH1()
+        return binomEff_h1 ( hh , h2 , func )
+                    
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
@@ -1657,8 +1667,8 @@ def binomEff_h3 ( h1 , h2 , func = binomEff ) :
         
     return result 
 
-ROOT.TH3F.  binomEff    = binomEff_h3 
-ROOT.TH3D.  binomEff    = binomEff_h3 
+ROOT.TH3F .  binomEff     = binomEff_h3 
+ROOT.TH3D .  binomEff     = binomEff_h3 
 
 ROOT.TH1F . __floordiv__  = binomEff_h1 
 ROOT.TH1D . __floordiv__  = binomEff_h1 
@@ -1691,6 +1701,10 @@ def zechEff_h1 ( h1 , h2 ) :
     """
     func = zechEff 
     #
+    if isinstance ( h1 , ROOT.TProfile ) :
+        hh = h1.asH1()
+        return zechEff_h1 ( hh , h2 )
+    
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
@@ -1835,8 +1849,10 @@ def _h1_oper_ ( h1 , h2 , oper ) :
     >>> h2     = ...
     >>> result = h1 (oper) h2 
     """
-            
-
+    if isinstance ( h1 , ROOT.TProfile ) :
+        hh = h1.asH1()
+        return _h1_oper_ ( hh , h2 , oper ) 
+    #
     if                                 not h1.GetSumw2() : h1.Sumw2()
     if hasattr ( h2 , 'GetSumw2' ) and not h2.GetSumw2() : h2.Sumw2()
     #
@@ -2035,6 +2051,10 @@ def _h1_pow_ ( h1 , val ) :
     """
     ``pow'' the histogram 
     """
+    if isinstance ( h1 , ROOT.TProfile ) :
+        hh = h1.asH1()
+        return _h1_pow_ ( hh , val )
+    #
     if not h1.GetSumw2() : h1.Sumw2()
     #
     result = h1.Clone( hID() )
@@ -2222,9 +2242,6 @@ for t in ( ROOT.TH1F , ROOT.TH1D ) :
     t .  diff     = _h1_diff_
     t .  chi2     = _h1_chi2_
     t .  average  = _h1_mean_
-
-
-
 
 # =============================================================================
 ## find the first X-value for the given Y-value 
@@ -2489,8 +2506,35 @@ ROOT.TH3 . xminmax = lambda s : ( s.xmin() , s.xmax() )
 ROOT.TH3 . yminmax = lambda s : ( s.ymin() , s.ymax() )
 ROOT.TH3 . zminmax = lambda s : ( s.zmin() , s.zmax() )
 
+# =============================================================================
+## convert TProfile to TH1D  (needed for the proper math) 
+#  @see ROOT::TProfile
+#  @see ROOT::TH1D 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-08-28
+def _prof_asH1_ ( p ) :
+    """ 
+    Convert TProfile to TH1D (needed for the proper math)
 
-    
+    >>> profile = ...
+    >>> h1      = profile.asH1()
+    """
+    h1 = h1_axis ( p.GetXaxis() , double = True )
+    ## copy the content bin-by-bin
+    for i in h1 : h1[i] = p[i]
+    ##
+    return h1 
+
+ROOT.TProfile . asH1     = _prof_asH1_ 
+ROOT.TProfile . toH1     = _prof_asH1_
+ROOT.TProfile . asHisto  = _prof_asH1_
+
+ROOT.TProfile . __idiv__ = NotImplemented 
+ROOT.TProfile . __imul__ = NotImplemented 
+ROOT.TProfile . __iadd__ = NotImplemented 
+ROOT.TProfile . __isub__ = NotImplemented
+ROOT.TProfile . __abs__  = NotImplemented 
+
 # =============================================================================
 ## operation with the histograms 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -4507,10 +4551,12 @@ def h1_axis ( axis           ,
     bins  = axis.edges()
     #
     typ = ROOT.TH1D if double else ROOT.TH1F
-    return typ ( name  ,
-                 title ,
-                 len ( bins ) - 1 , array ( 'd' , bins ) ) 
-
+    h1  = typ ( name  ,
+                title ,
+                len ( bins ) - 1 , array ( 'd' , bins ) )
+    ##
+    h1.Sumw2()
+    return h1 
 
 # =============================================================================
 ## make 2D-histogram from axes
@@ -4540,10 +4586,13 @@ def h2_axes ( x_axis            ,
     y_bins  = y_axis.edges()
     #
     typ = ROOT.TH2D if double else ROOT.TH2F
-    return typ ( name  ,
+    h2  =  typ ( name  ,
                  title ,
                  len ( x_bins ) - 1 , array ( 'd' , x_bins ) ,
-                 len ( y_bins ) - 1 , array ( 'd' , y_bins ) ) 
+                 len ( y_bins ) - 1 , array ( 'd' , y_bins ) )
+    ##
+    h2.Sumw2()
+    return h2
 
 # =============================================================================
 ## make 3D-histogram from axes
