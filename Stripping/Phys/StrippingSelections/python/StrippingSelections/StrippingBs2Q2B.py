@@ -31,7 +31,7 @@ default_config = {
                      'Q2BBVtxChi2DOF'  : 9.,
                      'Q2BIPCHI2' : 20
                      },
-    'STREAMS'     : ['Bhadron']
+    'STREAMS'     : ['BhadronCompleteEvent']
     }
 
 from Gaudi.Configuration import *
@@ -88,7 +88,29 @@ class Bs2Q2Body4piConf(LineBuilder) :
         self.Q2B4piLine = StrippingLine( Bs2Q2BName+"Line",
                                          prescale = config['Q2BPrescale'],
                                          HLT = self.hltFilter,
-                                         selection = self.B2CharmlessQ2B4pi , EnableFlavourTagging = True)
+                                         selection = self.B2CharmlessQ2B4pi , EnableFlavourTagging = True, RequiredRawEvents = ["Trigger","Muon","Calo","Rich","Velo","Tracker"],
+                                         RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 0.8,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4pi,
+                                                                "Location"     : 'P2ConeVar1' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.0,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4pi,
+                                                                "Location"     : 'P2ConeVar2' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.3,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4pi,
+                                                                "Location"     : 'P2ConeVar3' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.7,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4pi,
+                                                                "Location"     : 'P2ConeVar4' },
+                                                              { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ] )
 
         self.registerLine(self.Q2B4piLine)
 
@@ -123,7 +145,7 @@ def mkBs2Q2B4pi( name,
     Charmless Q2B selection
     """
     _B2Q2BPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
-    _B2Q2BPostVertexCuts = "(BPVDIRA > 0.99995) & (MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) &  (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
+    _B2Q2BPostVertexCuts = "(BPVDIRA > 0.9999) & (MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) &  (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
 
     _combineB2Q2B = CombineParticles( DecayDescriptor="B0 -> rho(770)0 rho(770)0",
                                       MotherCut = _B2Q2BPostVertexCuts,

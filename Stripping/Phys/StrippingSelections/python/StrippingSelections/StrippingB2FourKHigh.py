@@ -87,7 +87,29 @@ class Bs2Q2Body4KConf(LineBuilder) :
         self.Q2B4KLine = StrippingLine( Bs2Q2BName+"Line",
                                          prescale = config['Q2BPrescale'],
                                          HLT = self.hltFilter,
-                                         selection = self.B2CharmlessQ2B4K )
+                                         selection = self.B2CharmlessQ2B4K, EnableFlavourTagging = True,
+                                         RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 0.8,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4K,
+                                                                "Location"     : 'P2ConeVar1' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.0,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4K,
+                                                                "Location"     : 'P2ConeVar2' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.3,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4K,
+                                                                "Location"     : 'P2ConeVar3' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.7,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessQ2B4K,
+                                                                "Location"     : 'P2ConeVar4' },
+                                                              { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ] )
 
         self.registerLine(self.Q2B4KLine)
 

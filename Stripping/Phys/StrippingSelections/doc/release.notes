@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Sean Benson
+ - Enabled FlavourTagging for Bs2PhiRho and B2Q2Body4K
+ - DIRA cut tweak in Bs2PhiRho and Bs2Q2Body4pi
+ - Mark Bs2Q2Body4pi for full DST
+
 ! 2014-08-28 - Stefano Perazzini
  - Enabled FlavourTagging for Bu2hhh lines
 

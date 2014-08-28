@@ -97,7 +97,29 @@ class BsPhiRhoConf(LineBuilder) :
         self.PRKKhhLine = StrippingLine( Bs2PRName+"Line",
                                          prescale = config['PRPrescale'],
                                          HLT = self.hltFilter,
-                                         selection = self.B2CharmlessPRKKhh )
+                                         selection = self.B2CharmlessPRKKhh, EnableFlavourTagging = True,
+                                         RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 0.8,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessPRKKhh,
+                                                                "Location"     : 'P2ConeVar1' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.0,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessPRKKhh,
+                                                                "Location"     : 'P2ConeVar2' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.3,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessPRKKhh,
+                                                                "Location"     : 'P2ConeVar3' },
+                                                              { "Type"         : "RelInfoConeVariables",
+                                                                "ConeAngle"    : 1.7,
+                                                                "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                                                "TopSelection" : self.B2CharmlessPRKKhh,
+                                                                "Location"     : 'P2ConeVar4' },
+                                                              { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ] )
 
         self.registerLine(self.PRKKhhLine)
 
@@ -149,7 +171,7 @@ def mkBs2PRKKhh( name,
     Bs to KKhh selection
     """
     _B2PRPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" % locals()
-    _B2PRPostVertexCuts = "(BPVDIRA > 0.99995) & (MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
+    _B2PRPostVertexCuts = "(BPVDIRA > 0.9999) & (MIPCHI2DV(PRIMARY) < %(BIPchi2Cut)s) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s )" % locals()
 
     _combineB2PR = CombineParticles( DecayDescriptor="B0 -> phi(1020) rho(770)0",
                                       MotherCut = _B2PRPostVertexCuts,

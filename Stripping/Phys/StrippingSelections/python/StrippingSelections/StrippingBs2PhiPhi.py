@@ -146,7 +146,30 @@ class StrippingBs2PhiPhiConf(LineBuilder):
                 , prescale = ps
                 , postscale = 1
                 , selection = Bs2PhiPhi
-                , EnableFlavourTagging = True)
+                , EnableFlavourTagging = True,
+                RelatedInfoTools = [ 
+                    { "Type"         : "RelInfoConeVariables",
+                    "ConeAngle"    : 0.8,
+                    "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                    "TopSelection" : Bs2PhiPhi,
+                    "Location"     : 'P2ConeVar1' },
+                    { "Type"         : "RelInfoConeVariables",
+                    "ConeAngle"    : 1.0,
+                    "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                    "TopSelection" : Bs2PhiPhi,
+                    "Location"     : 'P2ConeVar2' },
+                    { "Type"         : "RelInfoConeVariables",
+                    "ConeAngle"    : 1.3,
+                    "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                    "TopSelection" : Bs2PhiPhi,
+                    "Location"     : 'P2ConeVar3' },
+                    { "Type"         : "RelInfoConeVariables",
+                    "ConeAngle"    : 1.7,
+                    "Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                    "TopSelection" : Bs2PhiPhi,
+                    "Location"     : 'P2ConeVar4' },
+                    { "Type"         : "RelInfoVertexIsolation", "Location"     : "VertexIsoInfo" } ] 
+              )
             else:
               return StrippingLine(name+"Line"
                 , prescale = ps
