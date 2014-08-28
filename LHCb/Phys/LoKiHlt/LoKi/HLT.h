@@ -788,6 +788,34 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class TrgConfKey
+     *  simple function which returns the TCK
+     *  @see LHCb::HltDecReports
+     *  @see LHCb::HltDecReports::configuredTCK
+     *  @see LoKi::Cuts::HLT_TCK
+     *  @author Pieter David <pieter.david@nikhef.nl>
+     *  @date 2014-08-28
+     */
+    class GAUDI_API TrgConfKey
+      : public LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: default constructor
+      TrgConfKey() {}
+      /// MANDATORY: virtual destructor
+      virtual ~TrgConfKey () {}
+      /// MANDATORY: clone method ("virtual consructor")
+      virtual  TrgConfKey* clone() const { return new TrgConfKey ( *this ) ; }
+      /// MANDATORY: the only one essential method
+      virtual result_type operator () ( argument a ) const
+      { return a -> configuredTCK () ; }
+      /// OPTIONAL: the nice printout
+      virtual std::ostream& fillStream ( std::ostream& s ) const
+      { return s << "HLT_TCK" ; }
+      // ======================================================================
+    };
+    // ========================================================================
   } //end of namespace LoKi::HLT
   // ==========================================================================
 } // end of namespace LoKi

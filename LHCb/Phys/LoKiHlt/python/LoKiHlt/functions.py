@@ -337,6 +337,9 @@ HLT_COUNT_ERRORBITS_RE = LoKi.HLT.CountErrorBitsRegex
 ## @see LoKi::Cuts::HLT_ROUTINBITS
 HLT_ROUTINGBITS        = LoKi.HLT.HltRoutingBits
 
+## @see LoKi::Cuts::HLT_TCK
+HLT_TCK                = LoKi.HLT.TrgConfKey ()
+
 
 ## @see LoKi::Cuts::ROUTINBITS
 ROUTINGBITS            = LoKi.HLT.RoutingBits

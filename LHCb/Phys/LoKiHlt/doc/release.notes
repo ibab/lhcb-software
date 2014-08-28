@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Pieter David
+ - Add HLT_TCK functor which gets the TCK from the HltDecReports
+
 !========================= LoKiHlt v3r14 2014-03-17 =========================
 ! 2014-03-04 - Chris Jones
  - Add some missing default constructors. Fixes clang compilation failures.

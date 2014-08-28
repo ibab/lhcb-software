@@ -376,6 +376,16 @@ namespace LoKi
      */
     const LoKi::HLT::Size                                            HLT_SIZE ;
     // ========================================================================
+    /** @var HLT_TCK
+     *  simple function which returns the TCK
+     *  @see LoKi::HLT::TrgConfKey
+     *  @see LHCb::HltDecReports
+     *  @see LHCb::HltDecReports::configuredTCK
+     *  @author Pieter David <pieter.david@nikhef.nl>
+     *  @date 2014-08-28
+     */
+    const LoKi::HLT::TrgConfKey                                       HLT_TCK ;
+    // ========================================================================
   } // end of namespace LoKi::Cuts
   // ==========================================================================
 } // end of namespace LoKi
