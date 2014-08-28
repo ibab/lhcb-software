@@ -407,7 +407,13 @@ class StrippingLine(object):
             if isinstance   ( self._L0DU , dict )  :
     		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , **self._L0DU)  } )
 
-        if self._HLT    : mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
+        if self._HLT    : 
+            if isinstance   ( self._HLT , str   ) :
+        	mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
+            if isinstance   ( self._HLT , ( tuple, list) ) and 2 == len ( self._HLT ) :
+    		mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT[0],  Preambulo = self._HLT[1]  )  } )
+            if isinstance   ( self._HLT , dict )  :
+    		mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , **self._HLT)  } )
 
 	# Add flavour tagging tool to the end of line sequence if needed
 	if self._EnableFlavourTagging : 

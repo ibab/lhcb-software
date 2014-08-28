@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Anton Poluektov 
+ - ... and the same for HLT option
+
 ! 2014-08-26 - Anton Poluektov 
  - Allow L0DU option to be configured with Preambulo
    L0DU=('Code', 'Preambulo')
