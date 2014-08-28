@@ -26,45 +26,45 @@ from GaudiKernel.SystemOfUnits import *
 ## Lines defined in StrippingB2JpsiXforBeta_s.py
 ## Authors: Greig Cowan, Juan Palacios, Francesca Dordei, Carlos Vazquez Sierra
 ## -------------------------------------------------------------------
-## Stripping reports (Revision 176957, changing configuration dictionaries after):
+## Stripping reports (Revision 176967, changing configuration dictionaries after):
 ##
 ## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.4120|       412|       |  31.947|
-## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.4120|       412|       |  31.939|
-## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0490|        49|  1.000|   0.078|
-## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0010|         1|  1.000|   8.247|
-## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0320|        32|  1.312|   1.508|
-## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0570|        57|  1.544|   1.253|
-## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0480|        48|  1.646|   3.790|
-## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0140|        14|  1.214|   0.923|
-## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0540|        54|  1.944|   0.740|
-## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0490|        49|  1.755|   1.813|
-## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0480|        48|  1.021|   1.066|
-## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0050|         5|  1.000|   0.080|
-## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0200|        20|  2.800|   0.351|
-## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0420|        42|  1.000|   0.194|
-## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0490|        49|  1.224|   1.450|
-## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0310|        31|  1.161|   1.140|
+## |_StrippingGlobal_                                            |  0.4120|       412|       |  39.150|
+## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.4120|       412|       |  39.141|
+## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0490|        49|  1.000|   0.101|
+## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0010|         1|  1.000|  10.359|
+## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0320|        32|  1.312|   2.001|
+## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0570|        57|  1.544|   1.613|
+## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0480|        48|  1.646|   5.197|
+## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0140|        14|  1.214|   1.277|
+## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0540|        54|  1.944|   0.958|
+## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0490|        49|  1.755|   2.512|
+## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0480|        48|  1.021|   1.270|
+## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0050|         5|  1.000|   0.106|
+## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0200|        20|  2.800|   0.485|
+## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0420|        42|  1.000|   0.260|
+## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0490|        49|  1.224|   1.873|
+## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0310|        31|  1.161|   1.406|
 ##
 ## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.4040|       404|       |  25.612|
-## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.4040|       404|       |  25.604|
-## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0520|        52|  1.000|   0.074|
-## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0030|         3|  1.000|   7.565|
-## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0440|        44|  1.045|   0.747|
-## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0370|        37|  1.459|   1.293|
-## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0360|        36|  1.389|   0.992|
-## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0080|         8|  1.000|   0.134|
-## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0420|        42|  1.952|   0.615|
-## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0460|        46|  1.522|   1.874|
-## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0500|        50|  1.040|   1.156|
-## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0040|         4|  1.000|   0.078|
-## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0240|        24|  1.542|   0.328|
-## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0480|        48|  1.062|   0.187|
-## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0510|        51|  1.118|   0.847|
-## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0410|        41|  1.049|   1.097|
+## |_StrippingGlobal_                                            |  0.4040|       404|       |  30.591|
+## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.4040|       404|       |  30.582|
+## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0520|        52|  1.000|   0.096|
+## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0030|         3|  1.000|   9.371|
+## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0440|        44|  1.045|   1.001|
+## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0370|        37|  1.459|   1.699|
+## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0360|        36|  1.389|   1.316|
+## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0080|         8|  1.000|   0.175|
+## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0420|        42|  1.952|   0.827|
+## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0460|        46|  1.522|   2.572|
+## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0500|        50|  1.040|   1.382|
+## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0040|         4|  1.000|   0.103|
+## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0240|        24|  1.542|   0.461|
+## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0480|        48|  1.062|   0.256|
+## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0510|        51|  1.118|   1.087|
+## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0410|        41|  1.049|   1.300|
 ##
 ######################################################################
 
