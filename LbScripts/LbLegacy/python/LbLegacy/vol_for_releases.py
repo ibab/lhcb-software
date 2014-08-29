@@ -7,12 +7,13 @@
 """
 #-----------------------------------------------------------------------------
 
-from LbLegacy.Utils import getStatusOutput
+import logging
+import os
+
+from  getpass import getuser
 
 from LbConfiguration.Project import getProject
 from LbUtils.afs.volume import createVolume
-import logging
-import sys, os
 
 #-----------------------------------------------------------------------------------
 def create_volume(pname, pversion, size=0):
@@ -23,29 +24,26 @@ def create_volume(pname, pversion, size=0):
     if not size :
         size = projconf.FullSize()
 
-# get user name
-    MYNAME = getStatusOutput('id -u -n')[1]
+    # get user name
+    MYNAME = getuser()
 
-# project directory, afs group, volume root
+    # project directory, afs group, volume root
     PNAME = projconf.NAME()
     P_DIR = projconf.ReleaseArea()
     group = projconf.AFSLibrarianGroup()
 
-# set the volume name
+    # set the volume name
     vol_name = projconf.AFSReleaseVolumeName(pversion)
 
-# check PNAME project existence
-    if not os.path.exists(os.path.join(P_DIR, PNAME)):
-        log.error('The project %s does not exist on %s' % (PNAME, P_DIR))
-        sys.exit()
-    else:
-        if os.path.exists(os.path.join(P_DIR, PNAME, PNAME + '_' + pversion)):
-            log.warning('The version %s of the project %s already exists' % (pversion, projconf.Name()))
-            return
     PPATH = os.path.join(P_DIR, PNAME, PNAME + '_' + pversion)
+    if not os.path.exists(PPATH):
+        if os.path.exists(os.path.dirname(PPATH)):
+            createVolume(PPATH, vol_name, size, MYNAME, group)
+        else:
+            log.error('The project %s does not exist on %s', PNAME, P_DIR)
+            return False
+    else:
+        log.warning('The version %s of the project %s already exists',
+                    pversion, projconf.Name())
 
-
-# create the new volume
-    createVolume(PPATH, vol_name, size, MYNAME, group)
-
-    return
+    return True
