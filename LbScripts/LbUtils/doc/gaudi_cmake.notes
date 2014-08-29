@@ -1,3 +1,238 @@
+! 2014-08-29 - Marco Clemencic (8c189b8)
+
+ - added backward compatibility with old LHCb toolchain file
+
+   
+
+! 2014-07-24 - Marco Clemencic (badc13f)
+
+ - modified InheritHEPTools to use GaudiToolchainMacros
+
+   
+
+! 2014-07-24 - Marco Clemencic (177fdd1)
+
+ - add InstallArea/${BINARY_TAG}/cmake to the search path
+
+   
+
+! 2014-07-24 - Marco Clemencic (d05c22f)
+
+ - factored out the default toolchain code and modified toolchain.cmake
+
+   
+
+! 2014-07-24 - Marco Clemencic (687e6df)
+
+ - add support for special conventions in projects lookup
+
+   
+
+! 2014-07-24 - Marco Clemencic (03ff895)
+
+ - added ATLAS convention test for CMake lookup
+
+   
+
+! 2014-07-23 - Marco Clemencic (50561b5)
+
+ - avoid that the cmake/tests directory goes in the list of packages
+
+   
+
+! 2014-07-23 - Marco Clemencic (6eb80c6)
+
+ - made cmake_coverage.py executable
+
+   
+
+! 2014-07-23 - Marco Clemencic (4f94586)
+
+ - renamed: FindUsedProjects.cmake -> GaudiToolchainMacros.cmake
+
+   
+
+! 2014-07-23 - Marco Clemencic (f3286ad)
+
+ - added functions to prepare search path from projects
+
+   From an original idea of D. Quarrie.
+
+
+! 2014-07-23 - Marco Clemencic (61d9202)
+
+ - helper tools to test CMake modules
+
+   
+
+! 2014-07-23 - Marco Clemencic (59b56d7)
+
+ - minor change in a message
+
+   
+
+! 2014-08-29 - Marco Clemencic (0a04c66)
+
+ - add labels to tests
+
+   Add the name of the package as label for the tests (for easier grouping),
+   and flag test-wrappers (like QMTest) with a label for easier filtering hwne
+   processing the XML reports. It is also possible to use custom labels.
+
+
+! 2014-08-29 - Marco Clemencic (f6ba430)
+
+ - changed the destination of XML QMTest reports
+
+   
+
+! 2014-08-28 - Marco Clemencic (46428e6)
+
+ - fixed handling of CMAKE_PREFIX_PATH environment variable
+
+   
+
+! 2014-07-22 - Marco Clemencic (445e8cf)
+
+ - LBCORE-495: optimize gaudi_resolve_link_libraries CMake function
+
+   introduced some caching to avoid pointless recursion
+
+   https://its.cern.ch/jira/browse/LBCORE-495
+
+! 2014-07-17 - Marco Clemencic (8f9a292)
+
+ - allow overrides of LCG_externals_*.txt
+
+   All the LCG_externals_*.txt in the CMAKE_PREFIX_PATH (+ CMTPROJECTPATH, with 
+   optional suffix dir LCG_<version>) are taken into account to fill the 
+   CMAKE_PREFIX_PATH for the externals.
+
+   The first LCG_Externals_*.txt in the path overrides the content of the 
+   following ones, and the last one is used to determine the base location of 
+   the externals.
+
+
+! 2014-07-17 - Marco Clemencic (d34be1e)
+
+ - allow absolute paths in LCG_externals_*.txt files
+
+   
+
+! 2014-07-10 - Marco Clemencic (bb03b6f)
+
+ - fixed dependency of the <dictionary>PCM target
+
+   The custom command used for the <dictionary>PCM  target must depend on
+   <dictionary>Gen (and not on the pcm file) to avoid that the genreflex 
+   command is called multiple times.
+
+! 2014-07-08 - Marco Clemencic (4262a2f)
+
+ - fixed pcm support in CMake builds
+
+   
+
+! 2014-07-01 - Marco Clemencic (711163f)
+
+ - modified UseHEPTools to pick up the system compiler on Ubuntu
+
+   
+
+! 2014-06-26 - Marco Clemencic (98b8422)
+
+ - fixed dependency problem between generated headers and genreflex step
+
+   
+
+! 2014-06-19 - Marco Clemencic (3e1881e)
+
+ - minor reorganization of ATLAS-specific settings
+
+   
+
+! 2014-06-19 - Marco Clemencic (3e71ee9)
+
+ - consider athena_add_module to imply dependency on GaudiCoreSvc
+
+   
+
+! 2014-06-02 - Marco Clemencic (2139fdb)
+
+ - marked GENCONF_WITH_NO_INIT as advanced
+
+   
+
+! 2014-06-16 - David Quarrie (ea91557)
+
+ - extended the other projects search path to cover ATLAS nightlies
+
+   
+
+! 2014-06-12 - Marco Clemencic (4634280)
+
+ - fixed GAUDI-966: hide confusing files in the build directory
+
+   https://its.cern.ch/jira/browse/GAUDI-966
+
+! 2014-06-12 - Marco Clemencic (9d95504)
+
+ - modified HEPToolsMacros to allow the use of CMakeTools (if it works)
+
+   
+
+! 2014-06-10 - David Quarrie (53518ce)
+
+ - fixed compilation flags for ATLAS
+
+   From: David Quarrie <drquarrie@lbl.gov>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7482
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-05-27 - Marco Clemencic (891aea4)
+
+ - install only a (merged) .confdb instead of the parts and the merged one
+
+   Instead of installing all the .confdb files and the _merged.confdb one, keep
+   the parts in the build directories and install only one .confdb file (result
+   of the merge).
+
+
+! 2014-05-28 - Marco Clemencic (9d39f41)
+
+ - Merge branch 'master' into dev/confdb
+
+   * master: (42 commits)
+    Minor fix to CMake configuration (CMT equivalence).
+    minor fixes to GaudiTest.py
+    minor change in the configure-time messages
+    Removed duplicated dictionary entries (already in RELAX).
+    address the problem described in ROOT-6315
+    fixed locker.py to address some special use case
+    LBCORE-498: allow use of Python subpackages from local builds
+    fixed handling of genconf generated __init__.py
+    fixed minor typo in genconf.cpp
+    modified GaudiProjectConfig.cmake to check if genconf supports --no-init
+    fixed delegation exclusion of makefiles
+    modified the Makefile to disable ninja if the project cannot use it
+    Fixed LBCORE-373: warning about multiple rules for __init__.py
+    minor fix in the detection of ninja
+    modified CMake wrapper makefile to use ninja if available
+    Moved dictionary for InterfaceID from GaudiPython to GaudiKernel.
+    moved dictionaries for GaudiHandle*Prop from Python to Kernel
+    updated version numbers in GaudiPolicy and GaudiPluginService requirements
+    added HAVE_GAUDI_PLUGINSVC macro to CMake configuration
+    prep for tag v1r1
+    ...
+
+   Conflicts:
+   GaudiKernel/doc/release.notes
+   GaudiPolicy/doc/release.notes
+   cmake/GaudiProjectConfig.cmake
+
+
 ! 2014-05-27 - Marco Clemencic (db08d5c)
 
  - Merge branch 'dev/no_reflex' (and 'dev/cmake')
@@ -192,6 +427,18 @@
     git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7440
    53ecefc3-a64d-0410-9bdf-b8581fa3287e
 
+
+! 2014-05-06 - Sebastien Binet (8e9da6c)
+
+ - all: rename ascii files into *.confdb
+
+   
+
+! 2014-04-24 - Sebastien Binet (bf8fa03)
+
+ - cmake: support for confdb as a simple ascii file
+
+   
 
 ! 2014-04-30 - Marco Clemencic (e2d0ed8)
 

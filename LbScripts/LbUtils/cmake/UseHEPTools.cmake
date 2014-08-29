@@ -12,32 +12,61 @@ macro(use_heptools heptools_version)
   lcg_detect_host_platform()
   lcg_get_target_platform()
 
-  # Find the toolchain description
-  find_file(LCG_TOOLCHAIN_INFO
-            NAMES LCG_${heptools_version}_${BINARY_TAG}.txt
+  # Find the toolchain descriptions (base and overrides)
+  set(LCG_TOOLCHAIN_INFOS)
+  file(TO_CMAKE_PATH "$ENV{CMTPROJECTPATH}" _cmt_pp)
+  file(TO_CMAKE_PATH "$ENV{CMAKE_PREFIX_PATH}" _cmake_pp)
+  foreach(_base_dir ${CMAKE_PREFIX_PATH} ${_cmake_pp} ${_cmt_pp})
+    foreach(_name LCG_${heptools_version}_${BINARY_TAG}.txt
                   LCG_${heptools_version}_${LCG_platform}.txt
                   LCG_${heptools_version}_${LCG_system}.txt
                   LCG_externals_${BINARY_TAG}.txt
                   LCG_externals_${LCG_platform}.txt
-                  LCG_externals_${LCG_system}.txt
-            HINTS ENV CMTPROJECTPATH
-            PATH_SUFFIXES LCG_${heptools_version})
+                  LCG_externals_${LCG_system}.txt)
+      if(EXISTS ${_base_dir}/${_name})
+        set(LCG_TOOLCHAIN_INFOS ${_base_dir}/${_name} ${LCG_TOOLCHAIN_INFOS})
+        break()
+      elseif(EXISTS ${_base_dir}/LCG_${heptools_version}/${_name})
+        set(LCG_TOOLCHAIN_INFOS ${_base_dir}/LCG_${heptools_version}/${_name} ${LCG_TOOLCHAIN_INFOS})
+        break()
+      endif()
+    endforeach()
+  endforeach()
 
-  if(LCG_TOOLCHAIN_INFO)
-    message(STATUS "Using heptools ${heptools_version} from ${LCG_TOOLCHAIN_INFO}")
+  if(LCG_TOOLCHAIN_INFOS)
+    # sanitize the list and extract the baseline file
+    list(REMOVE_DUPLICATES LCG_TOOLCHAIN_INFOS)
+    list(GET LCG_TOOLCHAIN_INFOS 0 LCG_TOOLCHAIN_INFO)
+    list(REMOVE_AT LCG_TOOLCHAIN_INFOS 0)
 
     get_filename_component(LCG_releases ${LCG_TOOLCHAIN_INFO} PATH CACHE)
     set(LCG_external ${LCG_releases})
 
+    message(STATUS "Using heptools ${heptools_version} from ${LCG_TOOLCHAIN_INFO}")
+
+    if(LCG_TOOLCHAIN_INFOS)
+      message(STATUS "with overrides from:")
+      foreach(_info_file ${LCG_TOOLCHAIN_INFOS})
+        message(STATUS "  ${_info_file}")
+      endforeach()
+    endif()
+
+    # This information should be found in ${LCG_TOOLCHAIN_INFO}
+    if (BINARY_TAG MATCHES "ubuntu")
+      set(LCG_USE_NATIVE_COMPILER TRUE)
+    endif()
+
     # Enable the right compiler (needs LCG_external)
     lcg_define_compiler()
 
-    file(STRINGS ${LCG_TOOLCHAIN_INFO} _lcg_infos)
-    foreach(_l ${_lcg_infos})
-      if(NOT _l MATCHES "^(PLATFORM|VERSION):")
-        string(REGEX REPLACE "; *" ";" _l "${_l}")
-        lcg_set_external(${_l})
-      endif()
+    foreach(_info_file ${LCG_TOOLCHAIN_INFO} ${LCG_TOOLCHAIN_INFOS})
+       file(STRINGS ${_info_file} _lcg_infos)
+       foreach(_l ${_lcg_infos})
+         if(NOT _l MATCHES "^(PLATFORM|VERSION):")
+           string(REGEX REPLACE "; *" ";" _l "${_l}")
+           lcg_set_external(${_l})
+         endif()
+       endforeach()
     endforeach()
 
     lcg_prepare_paths()

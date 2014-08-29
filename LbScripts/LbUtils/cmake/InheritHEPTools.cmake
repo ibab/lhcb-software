@@ -3,71 +3,41 @@
 
 cmake_minimum_required(VERSION 2.8.5)
 
-include(CMakeParseArguments)
+# FIXME: this is for backward compatibility with the olf LHCb minimal toolchain
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR} ${CMAKE_MODULE_PATH})
+list(REMOVE_DUPLICATES CMAKE_MODULE_PATH)
 
 # detect the required heptols version
 function(guess_heptools_version var)
 
-  # Note: it works even if the env. var. is not set.
-  file(TO_CMAKE_PATH "$ENV{CMAKE_PREFIX_PATH}" sp1)
-  file(TO_CMAKE_PATH "$ENV{CMTPROJECTPATH}" sp2)
-  set(projects_search_path ${CMAKE_PREFIX_PATH} ${sp1} ${sp2})
-  #message(STATUS "projects_search_path -> ${projects_search_path}")
+  if(NOT projects)
+    include(GaudiToolchainMacros)
+    init()
+    find_projects(projects tools ${CMAKE_SOURCE_DIR}/CMakeLists.txt)
+  endif()
 
-  # extract the list of projects we depend on
-  file(READ CMakeLists.txt config_file)
-  string(REGEX MATCH "[\r\n][ \t]*(gaudi_project|athena_project) *\\(([^)]+)\\)" args ${config_file})
-  set(args ${CMAKE_MATCH_2})
-  #message(STATUS "guess_heptools_version: args -> ${args}")
-  # (replace space-type chars with spaces)
-  string(REGEX REPLACE "[ \t\r\n]+" " " args "${args}")
-  separate_arguments(args)
-  CMAKE_PARSE_ARGUMENTS(PROJECT "" "" "USE;TOOLS;DATA" ${args})
-  #message(STATUS "Used projects -> ${PROJECT_USE}")
-
-  while(PROJECT_USE)
-    list(LENGTH PROJECT_USE len)
-    if(len LESS 2)
-      return() # ignore wrong arguments (for the moment)
-    endif()
-    list(GET PROJECT_USE 0 other_project)
-    list(GET PROJECT_USE 1 other_project_version)
-    list(REMOVE_AT PROJECT_USE 0 1)
-
-    string(TOUPPER ${other_project} other_project_upcase)
-    set(suffixes ${other_project}
-                 ${other_project}/${other_project_version}
-                 ${other_project_upcase}/${other_project_upcase}_${other_project_version}
-                 ${other_project_upcase})
-
-    #message(STATUS "other_project -> ${other_project}")
-    #message(STATUS "projects_search_path -> ${projects_search_path}")
-    #message(STATUS "suffixes -> ${suffixes}")
-    foreach(base ${projects_search_path})
-      foreach(suffix ${suffixes})
-        #message(STATUS "trying -> ${base}/${suffix}/InstallArea/*/${other_project}Config.cmake")
-        file(GLOB configs ${base}/${suffix}/InstallArea/*/${other_project}Config.cmake)
-        #message(STATUS "base -> ${base}, config -> ${configs}")
-        foreach(config ${configs})
-          file(READ ${config} config_file)
-          if(config_file MATCHES "set *\\( *${other_project}_VERSION *${other_project_version} *\\)")
-            string(REGEX MATCH "set *\\( *${other_project}_heptools_version *([^ ]*) *\\)" _ ${config_file})
-            set(${var} ${CMAKE_MATCH_1} PARENT_SCOPE)
-            message(STATUS "Detected heptools version ${CMAKE_MATCH_1} in ${base}/${suffix}")
-            return()
-          endif()
-        endforeach()
-      endforeach()
+  foreach(_project ${projects})
+    file(GLOB configs ${${_project}_ROOT_DIR}/InstallArea/*/*Config.cmake)
+    foreach(config ${configs})
+      file(READ ${config} config_file)
+      if(config_file MATCHES "set *\\( *[^ ]*_heptools_version *([^ ]*) *\\)")
+        set(${var} ${CMAKE_MATCH_1} PARENT_SCOPE)
+        message(STATUS "Detected heptools version ${CMAKE_MATCH_1} in ${${_project}_ROOT_DIR}")
+        return()
+      endif()
     endforeach()
-  endwhile()
+  endforeach()
 
 endfunction()
 
-include(${CMAKE_CURRENT_LIST_DIR}/UseHEPTools.cmake)
+include(UseHEPTools)
 
 macro(inherit_heptools)
-  guess_heptools_version(heptools_version)
-  if(heptools_version)
-    use_heptools(${heptools_version})
+  # FIXME: this is for backward compatibility with the olf LHCb minimal toolchain
+  if(NOT CMAKE_SOURCE_DIR MATCHES "CMakeTmp")
+    guess_heptools_version(heptools_version)
+    if(heptools_version)
+      use_heptools(${heptools_version})
+    endif()
   endif()
 endmacro()

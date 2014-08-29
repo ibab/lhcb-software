@@ -126,6 +126,10 @@ if(ROOT_genreflex_CMD)
   set(ROOT_REFLEX_DICT_ENABLED ON)
 endif()
 
+if(ROOT_VERSION_MAJOR EQUAL 6 OR ROOT_VERSION_MAJOR GREATER 6)
+  set(ROOT_HAS_PCMS ON)
+endif()
+
 ################################################################################
 # Useful functions
 ################################################################################
@@ -179,18 +183,32 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
    set(definitions ${definitions} -D${d})
   endforeach()
 
+  # special phony target to allow extensions to the dependencies of the
+  # dictionary generation step
+  add_custom_target(${dictionary}GenDeps)
+
+
+  if(ROOT_HAS_PCMS)
+    set(pcmname ${dictionary}Dict_rdict.pcm)
+  else()
+    set(pcmname)
+  endif()
+
   add_custom_command(
-    OUTPUT ${gensrcdict} ${rootmapname} ${gensrcclassdef}
+    OUTPUT ${gensrcdict} ${rootmapname} ${gensrcclassdef} ${pcmname}
     COMMAND ${ROOT_genreflex_CMD}
          ${headerfiles} -o ${gensrcdict} ${rootmapopts} --select=${selectionfile}
          ${ARG_OPTIONS} ${include_dirs} ${definitions}
-    DEPENDS ${headerfiles} ${selectionfile})
+    DEPENDS ${headerfiles} ${selectionfile} ${dictionary}GenDeps)
 
   # Creating this target at ALL level enables the possibility to generate dictionaries (genreflex step)
   # well before the dependent libraries of the dictionary are build
-  add_custom_target(${dictionary}Gen ALL DEPENDS ${gensrcdict} ${rootmapname} ${gensrcclassdef})
+  add_custom_target(${dictionary}Gen ALL
+                    DEPENDS ${gensrcdict} ${rootmapname} ${gensrcclassdef}
+                            ${pcmname})
 
   set_property(TARGET ${dictionary}Gen PROPERTY ROOTMAPFILE ${rootmapname})
+  set_property(TARGET ${dictionary}Gen PROPERTY PCMFILE ${pcmname})
 endmacro()
 
 #-------------------------------------------------------------------------------
