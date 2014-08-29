@@ -86,13 +86,7 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
                   'Lambdac2PMuMuLinePrescale'  : 1 ,
                   'Lambdac2PMuMuLinePostscale' : 1 ,
                   'Lambdac2PPiPiLinePrescale'  : 0.01 ,
-                  'Lambdac2PPiPiLinePostscale' : 1,
-                  'ExtraInfoTools'      : [ { "Type" : "ConeVariables"
-                                                , "ConeAngle" : 1.5
-                                                , "ConeNumber" : 1
-                                                , "Variables" : ['angle', 'mult', 'ptasy']}
-                                                , {'Type' : 'VertexIsolation'}
-                                                 ]
+                  'Lambdac2PPiPiLinePostscale' : 1
                   }
 
 __all__ = ('D2XMuMuConf', 'makeD2PiPiPi', 'makeD2PiMuMuOS', 'makeD2PiMuMuSS', 'makeD2KMuMuOS', 'makeD2KMuMuSS', 'makeD2K2Pi', 'makeD22KPi', 'makeD02KKMuMu', 'makeD02PiPiMuMu', 'makeD02KPiMuMu', 'makeD02KKPiPi', 'makeD02K3Pi','makeD02PiPiPiPi','makeLambdac2PMuMu','makeLambdac2PPiPi' )
@@ -210,7 +204,6 @@ class D2XMuMuConf(LineBuilder) :
                                 , 'Lambdac2PMuMuLinePostscale'
                                 , 'Lambdac2PPiPiLinePrescale' 
                                 , 'Lambdac2PPiPiLinePostscale'
-                                ,  'ExtraInfoTools'
                                 )
     
     def __init__(self, name, config):
@@ -432,49 +425,91 @@ class D2XMuMuConf(LineBuilder) :
                                       prescale = config['D2PiPiPiCalLinePrescale'],
                                       postscale = config['D2PiPiPiCalLinePostscale'],
                                       selection = selD2PiPiPi,
-                                       ExtraInfoTools = config['ExtraInfoTools']
+                                      RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD2PiPiPi,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                       ]
                                        )
         
         self.PiOSLine = StrippingLine(PiOSLine_name+"Line",
                                       prescale = config['D2PiMuMuOSLinePrescale'],
                                       postscale = config['D2PiMuMuOSLinePostscale'],
                                       selection = selD2PiMuMuOS,
-                                      ExtraInfoTools = config['ExtraInfoTools']
+                                      RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD2PiMuMuOS,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                       ]
                                       )
         
         self.PiSSLine = StrippingLine(PiSSLine_name+"Line",
                                       prescale = config['D2PiMuMuSSLinePrescale'],
                                       postscale = config['D2PiMuMuSSLinePostscale'],
                                       selection = selD2PiMuMuSS,
-                                      ExtraInfoTools = config['ExtraInfoTools']
+                                      RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD2PiMuMuSS,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                      ]
                                       )
         
         self.KOSLine = StrippingLine(KOSLine_name+"Line",
                                      prescale = config['D2KMuMuOSLinePrescale'],
                                      postscale = config['D2KMuMuOSLinePostscale'],
                                      selection = selD2KMuMuOS,
-                                     ExtraInfoTools = config['ExtraInfoTools']
+                                     RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD2KMuMuOS,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                     ]
                                      )
         
         self.KSSLine = StrippingLine(KSSLine_name+"Line",
                                      prescale = config['D2KMuMuSSLinePrescale'],
                                      postscale = config['D2KMuMuSSLinePostscale'],
                                      selection = selD2KMuMuSS,
-                                     ExtraInfoTools = config['ExtraInfoTools']
+                                     RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD2KMuMuSS,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                     ]
                                      )
 
         self.K2PiLine = StrippingLine(K2PiLine_name+"Line",
                                       prescale = config['D2K2PiLinePrescale'],
                                       postscale = config['D2K2PiLinePostscale'],
                                       selection = selD2K2Pi,
-                                      ExtraInfoTools = config['ExtraInfoTools'] 
+                                      RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD2K2Pi,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                      ] 
                                       )
 
         self.TwoKPiLine = StrippingLine(TwoKPiLine_name+"Line",
                                         prescale = config['D22KPiLinePrescale'],
                                         postscale = config['D22KPiLinePostscale'],
                                         selection = selD22KPi,
-                                        ExtraInfoTools = config['ExtraInfoTools']
+                                        RelatedInfoTools = [
+                                          { 
+                                            'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                            'TopSelection' : selD22KPi,
+                                            'Location' : 'P2CVD'
+                                          }, 
+                                        ] 
                                         )
 
         
@@ -483,41 +518,78 @@ class D2XMuMuConf(LineBuilder) :
                                     prescale = config['D02KKMuMuLinePrescale'],
                                     postscale = config['D02KKMuMuLinePostscale'],
                                     selection = selD02KKMuMu,
-                                    ExtraInfoTools = config['ExtraInfoTools']
+                                    RelatedInfoTools = [
+                                       { 
+                                          'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                          'TopSelection' : selD02KKMuMu,
+                                          'Location' : 'P2CVD'
+                                        }, 
+                                    ] 
                                     )
         
         self.PiPiLine = StrippingLine(PiPiLine_name+"Line",
                                     prescale = config['D02PiPiMuMuLinePrescale'],
                                     postscale = config['D02PiPiMuMuLinePostscale'],
                                     selection = selD02PiPiMuMu,
-                                    ExtraInfoTools = config['ExtraInfoTools']
+                                    RelatedInfoTools = [
+                                       { 
+                                         'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                         'TopSelection' : selD02PiPiMuMu,
+                                         'Location' : 'P2CVD'
+                                        }, 
+                                    ] 
                                     )
         
         self.KPiLine = StrippingLine(KPiLine_name+"Line",
                                      prescale = config['D02KPiMuMuLinePrescale'],
                                      postscale = config['D02KPiMuMuLinePostscale'],
                                      selection = selD02KPiMuMu,
-                                     ExtraInfoTools = config['ExtraInfoTools']
+                                     RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD02KPiMuMu,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                     ] 
                                      )
         
         self.KKPiPiLine = StrippingLine(KKPiPiLine_name+"Line",
                                     prescale = config['D02KKPiPiLinePrescale'],
                                     postscale = config['D02KKPiPiLinePostscale'],
                                     selection = selD02KKPiPi,
-                                    ExtraInfoTools = config['ExtraInfoTools']
+                                    RelatedInfoTools = [
+                                       { 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                        'TopSelection' : selD02KKPiPi,
+                                        'Location' : 'P2CVD'
+                                        }, 
+                                    ] 
                                     )
 
         self.K3PiLine = StrippingLine(K3PiLine_name+"Line",
                                         prescale = config['D02K3PiLinePrescale'],
                                         postscale = config['D02K3PiLinePostscale'],
-                                        selection = selD02K3Pi
+                                        selection = selD02K3Pi,
+                                        RelatedInfoTools = [
+                                          { 
+                                           'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                           'TopSelection' : selD02K3Pi,
+                                           'Location' : 'P2CVD'
+                                          }, 
+                                        ] 
                                         )
 
         self.PiPiPiPiLine = StrippingLine(PiPiPiPiLine_name+"Line",
                                         prescale = config['D02PiPiPiPiLinePrescale'],
                                         postscale = config['D02PiPiPiPiLinePostscale'],
                                         selection = selD02PiPiPiPi,
-                                        ExtraInfoTools = config['ExtraInfoTools']
+                                        RelatedInfoTools = [
+                                          { 
+                                           'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                           'TopSelection' : selD02PiPiPiPi,
+                                           'Location' : 'P2CVD'
+                                           }, 
+                                        ] 
                                         )
 
  
@@ -525,14 +597,26 @@ class D2XMuMuConf(LineBuilder) :
                                                prescale = config['Lambdac2PMuMuLinePrescale'],
                                                postscale = config['Lambdac2PMuMuLinePostscale'],
                                                selection = selLambdac2PMuMu,
-                                               ExtraInfoTools = config['ExtraInfoTools']
+                                               RelatedInfoTools = [
+                                                   { 
+                                                    'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                    'TopSelection' :  selLambdac2PMuMu,
+                                                    'Location' : 'P2CVD'
+                                                   }, 
+                                               ] 
                                                )
 
         self.Lambdac2PPiPiLine = StrippingLine(Lambdac2PPiPiLine_name+"Line",
                                                prescale = config['Lambdac2PPiPiLinePrescale'],
                                                postscale = config['Lambdac2PPiPiLinePostscale'],
                                                selection = selLambdac2PPiPi,
-                                               ExtraInfoTools = config['ExtraInfoTools']
+                                               RelatedInfoTools = [
+                                                   { 
+                                                    'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                    'TopSelection' :  selLambdac2PPiPi,
+                                                    'Location' : 'P2CVD'
+                                                   }, 
+                                               ] 
                                                )
         
         

@@ -294,6 +294,16 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
       ,postscale=config['Postscale']
       ,selection=selPromptDstar
       ,checkPV=config['CheckPV']
+      ,RelatedInfoTools = [
+        { 
+          'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.5, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+          'RecursionLevel' : 1, 
+          'Locations' : {
+            selPromptDstar : 'P2CVDstar1', 
+            selD02hhmumu   : 'P2CVD1', 
+          } 
+        }, 
+      ]
       ,FILTER=_GECfilter)
     self.registerLine(self.line_tagged_d02hhhh)
 
