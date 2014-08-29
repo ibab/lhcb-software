@@ -791,15 +791,15 @@ def makeXicPlusToXiPiPi(localName, inputSelections, configDict = _my_immutable_c
 ## NEW for Stripping 21
 ## This is Xic -> pKpi -- uses very similar cuts to Lc -> pKpi
 def makeXicPlusToPKPi(localName, inputSelections, configDict = _my_immutable_config) :
-    _strCutComb = "(( ADAMASS('Xi_c+') < %(Xicplus_ADAMASS_HalfWin)s )" \
+    _strCutComb = "( ( ADAMASS('Xi_c+') < %(Xicplus_ADAMASS_HalfWin)s )" \
                   "& (AMAXCHILD(MIPCHI2DV(PRIMARY))>%(Lc_Daug_1of3_MIPCHI2DV_Min)s)" \
                   "& (ADOCAMAX('')<%(Lc_ADOCAMAX_Max)s)" \
-                  "& (APT>%(Lc_APT_Min)s)" % configDict
+                  "& (APT>%(Lc_APT_Min)s) )" % configDict
 
-    _strCutMoth = "(VFASPF(VCHI2) < %(Lc_VCHI2_Max)s)" \
+    _strCutMoth = "( (VFASPF(VCHI2) < %(Lc_VCHI2_Max)s)" \
                   "& ( ADMASS('Xi_c+') < %(Xicplus_ADMASS_HalfWin)s )" \
                   "& (BPVVDCHI2>%(Xicplus_BPVVDCHI2_Min)s)" \
-                  "& (BPVDIRA>%(Xicplus_BPVDIRA_Min)s)" % configDict
+                  "& (BPVDIRA>%(Xicplus_BPVDIRA_Min)s) )" % configDict
 
     _combineXicPlus = CombineParticles( DecayDescriptor = '[Xi_c+ -> p+ K- pi+]cc',
                                         CombinationCut = _strCutComb,
