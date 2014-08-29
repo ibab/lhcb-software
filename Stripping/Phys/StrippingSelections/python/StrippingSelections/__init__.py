@@ -278,6 +278,8 @@ import StrippingK0s2Pi0MuMuLines
 import StrippingB2DHForTauMu
 import StrippingBs2Baryons
 
+import StrippingB2DDphi
+
 from sys import modules as _modules
 _this = _modules[__name__]
 
