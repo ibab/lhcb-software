@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Giulio Dujany
+	- Updated RelatedInfos in tau2PhiMuLine
+
 ! 2014-08-29 - Christoph Hombach
 	- Updated B2TwoBaryons-Line
 

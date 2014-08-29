@@ -134,7 +134,7 @@ class LFVLinesConf(LineBuilder) :
                                            prescale = config['TauPrescale'],
                                            postscale = config['Postscale'],
                                            MDSTFlag = True,
-                                           algos = [ self.selTau2PhiMu ],
+                                           selection=self.selTau2PhiMu,
                                            RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.5,
                                                                  'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
                                                                  'RecursionLevel' : 2, 
@@ -168,10 +168,14 @@ class LFVLinesConf(LineBuilder) :
                                                                                  'Phys/StdAllLooseKaons' : 'coneInfoKaons12',
                                                                                  } },
                                                                {'Type': 'RelInfoVertexIsolation',
-                                                                'Location':'VtxIsoInfo' },
+                                                                'Location':'VtxIsoInfo',
+                                                                'Variables'  : [ 'VTXISONUMVTX',
+                                                                                 'VTXISODCHI2ONETRACK', 'VTXISODCHI2MASSONETRACK',
+                                                                                 'VTXISODCHI2TWOTRACK', 'VTXISODCHI2MASSTWOTRACK' ],},
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
+                                                                 'RecursionLevel' : 2,
                                                                  'Locations': { 'Phys/StdAllLooseMuons' : "MuonTrackIsoBDTInfo",
-                                                                                #'Phys/StdAllLooseKaons' : "KaonsTrackIsoBDTInfo",
+                                                                                'Phys/StdAllLooseKaons' : "KaonsTrackIsoBDTInfo",
                                                                                 }}
                                                                ]
                                            )

@@ -21,12 +21,14 @@ stream = StrippingStream("Test")
 from StrippingSelections.StrippingBs2MuMuPhi import Bs2MuMuPhiConf
 from StrippingSelections.StrippingBs2MuMuPhi import defaultConfig
 from StrippingSelections.StrippingLFVLines import LFVLinesConf
+from StrippingSelections.StrippingLFVLines import default_config as configLFV
+
 
 #from StrippingSelections.StrippingDiMuonForXsection import DiMuonForXsectionConf
 #from StrippingSelections.StrippingDiMuonForXsection import config_default
 
 Bs2MuMuPhiBuilder = Bs2MuMuPhiConf( name = 'Bs2MuMuPhiBuilder', config = defaultConfig)
-LFVLinesBuilder = LFVLinesConf( name = 'Tau2PhiMuBuilder', config = LFVLinesConf.config_default)
+LFVLinesBuilder = LFVLinesConf( name = 'Tau2PhiMuBuilder', config = configLFV['CONFIG'])
 stream.appendLines( Bs2MuMuPhiBuilder.lines() + LFVLinesBuilder.lines() )
 
 # DiMuonBuilder = DiMuonForXsectionConf( name="DiMuonForXsection", config=config_default )
