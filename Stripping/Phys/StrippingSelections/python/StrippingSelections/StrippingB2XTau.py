@@ -127,7 +127,7 @@ default_config =  {
     },
   { "Type" : "RelInfoBstautauCDFIso"
     ,"RecursionLevel" : 0
-    , "Variables" : ['BSTAUTAUCDFISO']
+    #, "Variables" : ['BSTAUTAUCDFISO']
     , "Location"  : "BSTAUTAUVARIABLES"  
     }
   ]
