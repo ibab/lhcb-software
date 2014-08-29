@@ -3,9 +3,9 @@ Configuration for the Exotic Displaced Vertex Stripping lines
 """
 
 __author__ = ['Neal Gauvin', 'Victor Coco', "Veerle Heijne", "Pieter David"]
-__date__   = '26/12/2013'
+__date__   = '28/08/2014'
 
-__all__ = ( 'DisplVerticesLinesConf' )
+__all__ = ( 'DisplVerticesLinesConf', 'default_config' )
 
 from Gaudi.Configuration import *
 from GaudiKernel import SystemOfUnits as units
@@ -40,22 +40,25 @@ def addPrivateToolAndGet( motherConf, toolConfType, name=None ):
 # constants
 LLPLHCbName = "~chi_10"
 
-config = {
+default_config = {
         ## Velo GEC
           "VeloGEC"                 : { "Apply"                : True
                                       , "MaxVeloRatio"         : 0.1
-                                      , "MaxPhiVectorSize"     : 500.
+                                      , "MaxPhiVectorSize"     : 250.
                                       }
         ## Velo tracks filter
         , "FilterVelo"              : { "Apply"                : True
-                                      , "MinIP"                : 0.1*units.mm
-                                      , "MinIPChi2"            : -1.0
                                       , "MinNumTracks"         : 4
                                       , "PVLocation"           : "Rec/Vertex/Primary"
                                       , "RemoveBackwardTracks" : True
-                                      , "RemovePVTracks"       : True
+                                      , "RemovePVTracks"       : False # use IP(CHI2) cut instead
+                                      , "MinIP"                : 0.1*units.mm
+                                      , "MinIPChi2"            : -1.0
+                                      , "MinDOCABeamLine"      : -2.0
                                       , "RemoveVeloClones"     : True
                                       }
+
+        , "JetID"                   : "( 0.8 > JMPF ) & ( 0.1 < JCPF ) & ( 900. < JMPT )"
 
         #==========        SELECTION CUT VALUES         ==========#
 
@@ -87,7 +90,16 @@ config = {
         #                              , "MaxFractE1Track"      :  0.8
         #                              , "MaxFractTrwHitBefore" :  0.49
         #                              }
-        ## with the jet sequence
+        , "SinglePSSelection"       : { "PreScale"             :  0.005
+                                      , "MinRho"               :  0.5*units.mm
+                                      , "MinMass"              :  3.0*units.GeV
+                                      , "MinSumPT"             :  0.0*units.GeV
+                                      , "MinNumTracks"         :  5
+                                      , "ApplyMatterVeto"      :  False
+                                      , "MaxFractE1Track"      :  10.
+                                      , "MaxFractTrwHitBefore" :  10.
+                                      }
+          ## with the jet sequence
         , "JetSingleLowMassSelection" : { "PreScale"           :  1.0
                                       , "MinRho"               :  0.4
                                       , "MinMass"              :  0.0*units.GeV
@@ -97,12 +109,14 @@ config = {
                                       , "MaxFractE1Track"      :  0.8
                                       , "MaxFractTrwHitBefore" :  0.49
                                       ## Jet-related cuts
+                                      , "ConeSize"             :  1.2
+                                      , "MinDOCABL"            :  0.1*units.mm
                                       , "MinNumJets"           :  1
                                       , "SingleJet"            :  True
-                                      , "MinNJetMass"          : 10.0*units.GeV
-                                      , "MinNJetTransvMass"    : 33.0*units.GeV
-                                      , "JetIDCut"             : "( JNWITHPVINFO >= 5 )"
-                                      } # Tuning: done, 0.053 % 
+                                      , "MinNJetMass"          :  0.0
+                                      , "MinNJetTransvMass"    : None
+                                      , "JetIDCut"             : "( JNWITHPVINFO >= 5 ) & ( JMPT > 1800. ) & ( (PT/M) > 2.5 )"
+                                      } # Tuning: done
         , "JetSingleHighMassSelection" : { "PreScale"          :  1.0
                                       , "MinRho"               :  0.4
                                       , "MinMass"              :  5.0*units.GeV
@@ -112,44 +126,49 @@ config = {
                                       , "MaxFractE1Track"      :  0.8
                                       , "MaxFractTrwHitBefore" :  0.49
                                       ## Jet-related cuts
+                                      , "ConeSize"             :  0.7
+                                      , "MinDOCABL"            :  -2.
                                       , "MinNumJets"           :  2
                                       , "SingleJet"            :  False
-                                      , "MinNJetMass"          :  13.0*units.GeV
+                                      , "MinNJetMass"          :  0.0
                                       , "MinNJetTransvMass"    : None
                                       , "JetIDCut"             : None
-                                      }
+                                      } # Tuning: done
         ## jet sequence on top of Hlt2 candidates
-        ## NOTE the only case where the mass is "wrong", is for a tightened JetID in the Hlt-based jet line (which will produce an error at config time)
         , "JetHltSingleLowMassSelection": { "PreScale"         :  1.0
                                       ## Jet-related cuts
+                                      , "ConeSize"             :  1.2
+                                      , "MinDOCABL"            :  0.1*units.mm
                                       , "MinNumJets"           :  1
                                       , "SingleJet"            :  True
-                                      , "MinNJetMass"          :  8.0*units.GeV
+                                      , "MinNJetMass"          :  0.0
                                       , "MinNJetTransvMass"    : None
-                                      , "JetIDCut"             : "( JNWITHPVINFO >= 3 ) & ( JMPT > 1800. )"
-                                      } # Tuning: done - 0.04 %
+                                      , "JetIDCut"             : "( JNWITHPVINFO >= 5 ) & ( JMPT > 1800. ) & ( (PT/M) > 1.5 )"
+                                      } # Tuning: done
         , "JetHltSingleHighMassSelection" : { "PreScale"       :  1.0
                                       ## Jet-related cuts
+                                      , "ConeSize"             :  0.7
+                                      , "MinDOCABL"            :  -2.
                                       , "MinNumJets"           :  2
                                       , "SingleJet"            :  False
-                                      , "MinNJetMass"          :  0.0*units.GeV
+                                      , "MinNJetMass"          :  0.0
                                       , "MinNJetTransvMass"    : None
                                       , "JetIDCut"             : None
-                                      } # Tuning: fine like this - can cut harder on mass
+                                      } # Tuning: done
 
         ## Double LLP line
-        # , "DoubleSelection"         : { "PreScale"             :  1.0
-        #                               , "MinRho"               :  0.6*units.mm
-        #                               , "MinMass"              :  3.0*units.GeV
-        #                               , "MinSumPT"             :  3.0*units.GeV
-        #                               , "MinNumTracks"         :  6
-        #                               , "ApplyMatterVeto"      :  False
-        #                               , "MaxFractE1Track"      :  0.8
-        #                               , "MaxFractTrwHitBefore" :  0.49
-        #                               ## Double only
-        #                               , "MinHighestMass"       : 3.0*units.GeV
-        #                               , "ApplyMatterVetoOne"   : True
-        #                               }
+        , "DoubleSelection"         : { "PreScale"             :  1.0
+                                      , "MinRho"               :  0.6*units.mm
+                                      , "MinMass"              :  3.0*units.GeV
+                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinNumTracks"         :  6
+                                      , "ApplyMatterVeto"      :  False
+                                      , "MaxFractE1Track"      :  0.8
+                                      , "MaxFractTrwHitBefore" :  0.49
+                                      ## Double only
+                                      , "MinHighestMass"       : 3.0*units.GeV
+                                      , "ApplyMatterVetoOne"   : True
+                                      }
 
         ## Downstream reconstruction
         , "RV2PDown"                : { "MinRho"               :  2.0*units.mm
@@ -181,27 +200,27 @@ config = {
         #                               }
 
         #========== Other lines for efficiency studies ==========#
-        # , "HLTPS"             : { "PreScale"             :  1.0 }
-        # , "HltEffCharmHLTSelection"  : { "PreScale"             :  1.0
-        #                               , "MinRho"               :  0.6*units.mm
-        #                               , "MinMass"              :  6.*units.GeV
-        #                               , "MinSumPT"             :  3.0*units.GeV
-        #                               , "MinNumTracks"         :  6
-        #                               , "ApplyMatterVeto"      : False
-        #                               , "MaxFractE1Track"      :  10.
-        #                               , "MaxFractTrwHitBefore" :  10.
-        #                               }
+        , "HLTPS"                   : { "PreScale"             :  0.2 }
+        , "HltEffCharmHLTSelection" : { "PreScale"             :  1.0
+                                      , "MinRho"               :  0.6*units.mm
+                                      , "MinMass"              :  6.*units.GeV
+                                      , "MinSumPT"             :  3.0*units.GeV
+                                      , "MinNumTracks"         :  6
+                                      , "ApplyMatterVeto"      : False
+                                      , "MaxFractE1Track"      :  10.
+                                      , "MaxFractTrwHitBefore" :  10.
+                                      }
 
         #==========     HLT filters for all lines      ==========#
-        , "HLT"                     : {# "CharmHLT"     : "HLT_PASS('Hlt2CharmHadD02HH_D02KPiDecision')"
-        #                              , "HLTPS"        : [ ( ("0x001c0028", "0x002f002c"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
-        #                                                 , ( ("0x00340032", "0x00730035"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
-        #                                                 , ( ("0x00750037", "0x007b0038"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
-        #                                                 , ( ("0x007e0039", "0x0097003d"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
-        #                                                 , ( ("0x00990042", "0x40000000"), "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')" )
-        #                                                 ]
+        , "HLT"                     : { "CharmHLT"     : "HLT_PASS('Hlt2CharmHadD02HH_D02KPiDecision')"
+                                      , "HLTPS"        : [ ( ("0x001c0028", "0x002f002c"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
+                                                         , ( ("0x00340032", "0x00730035"), "HLT_PASS_RE('Hlt2DisplVerticesSinglePostScaledDecision')" )
+                                                         , ( ("0x00750037", "0x007b0038"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
+                                                         , ( ("0x007e0039", "0x0097003d"), "HLT_PASS_RE('Hlt2DisplVertices(Single|Double|SingleMV)PostScaledDecision')" )
+                                                         , ( ("0x00990042", "0x40000000"), "HLT_PASS_RE('Hlt2DisplVertices(Single|SingleLoose|Double)PSDecision')" )
+                                                         ]
                                       ## For reviving Hlt2 candidates
-                                        "SignalLines"  : [ ( ("0x001c0028", "0x002f002c"), ["Hlt2DisplVerticesSingleDecision"] )
+                                      , "SignalLines"  : [ ( ("0x001c0028", "0x002f002c"), ["Hlt2DisplVerticesSingleDecision"] )
                                                          , ( ("0x00340032", "0x00730035"), ["Hlt2DisplVerticesHighFDSingleDecision", "Hlt2DisplVerticesHighMassSingleDecision", "Hlt2DisplVerticesLowMassSingleDecision", "Hlt2DisplVerticesSingleDownDecision"] )
                                                          , ( ("0x00750037", "0x007b0038"), ["Hlt2DisplVerticesSingleDecision", "Hlt2DisplVerticesSingleDownDecision", "Hlt2DisplVerticesSingleHighFDPostScaledDecision", "Hlt2DisplVerticesSingleHighMassPostScaledDecision"] )
                                                          , ( ("0x007e0039", "0x0097003d"), ["Hlt2DisplVerticesSingleDecision", "Hlt2DisplVerticesSingleDownDecision", "Hlt2DisplVerticesSingleHighFDPostScaledDecision", "Hlt2DisplVerticesSingleHighMassPostScaledDecision"] )
@@ -209,6 +228,7 @@ config = {
                                                          ]
                                       }
         }
+
 
 class DisplVerticesLinesConf(LineBuilder):
     """
@@ -226,17 +246,18 @@ class DisplVerticesLinesConf(LineBuilder):
               "VeloGEC"
             , "FilterVelo"
             , "RV2PWithVelo"
+            , "JetID"
             #, "SingleSelection"
-            #, "SinglePSSelection"
+            , "SinglePSSelection"
             , "JetSingleLowMassSelection"
             , "JetSingleHighMassSelection"
             , "JetHltSingleLowMassSelection"
             , "JetHltSingleHighMassSelection"
-            #, "DoubleSelection"
+            , "DoubleSelection"
             , "RV2PDown"
             #, "SingleDownSelection"
-            #, "HLTPS"
-            #, "HltEffCharmHLTSelection"
+            , "HLTPS"
+            , "HltEffCharmHLTSelection"
             , "HLT"
             )
 
@@ -261,9 +282,9 @@ class DisplVerticesLinesConf(LineBuilder):
                 setattr( conf, p, settings[p] )
 
     veloGECCuts = [ "MaxVeloRatio", "MaxPhiVectorSize" ]
-    veloWithIPCuts = [ "MinNumTracks", "PVLocation", "RemoveBackwardTracks", "RemoveVeloClones", "RemovePVTracks", "MinIP", "MinIPChi2" ]
+    veloWithIPCuts = [ "MinNumTracks", "PVLocation", "RemoveBackwardTracks", "RemoveVeloClones", "RemovePVTracks", "MinIP", "MinIPChi2", "MinDOCABeamLine" ]
     singleCuts = [ "MinNumTracks", "MinRho", "MinMass", "MinSumPT", "ApplyMatterVeto", "MaxFractE1Track", "MaxFractTrwHitBefore" ]
-    jetCuts = [ "MinNJetMass", "MinNJetTransvMass", "SingleJet", "MinNumJets", "JetIDCut" ]
+    jetCuts = [ "MinNJetMass", "MinNJetTransvMass", "SingleJet", "ConeSize", "MinNumJets", "JetIDCut", "MinDOCABL" ]
     jetHltCuts = [ "HltLines" ]
     downCuts = [ "MinZ" ]
     doubleResonanceCuts = [ "MinHighestMass", "ApplyMatterVetoOne" ]
@@ -321,18 +342,14 @@ class DisplVerticesLinesConf(LineBuilder):
         else:
             return commonCutsCode
 
-    def getLLPJetSelection(self, cutValues, JetIDCut=None):
+    def getLLPJetSelection(self, cutValues):
         cut = "ALL"
         if cutValues["SingleJet"]:
             sel = "( MM > {MinNJetMass} )".format(**cutValues)
             if cutValues["MinNJetTransvMass"] is not None:
                 sel = "{0} & ( sqrt(MM**2+PT**2) > {MinNJetTransvMass} )".format(sel, **cutValues)
             cut = sel
-            if JetIDCut is not None:
-                cut = "{0} & INTREE( ISJET & {1} )".format(sel, JetIDCut)
         else:
-            if JetIDCut is not None:
-                logger.error("N-jet selection - there should be no need to tighted the JetID. Change it in the reco instead")
             cut = "( NINTREE(ISJET) >= {MinNumJets} ) & ( MM > {MinNJetMass} )".format(**cutValues)
         return "ISLLP & {0}".format(cut)
 
@@ -348,7 +365,7 @@ class DisplVerticesLinesConf(LineBuilder):
 
         return combCode, motherCode
 
-    def makeJetCandidateAlg(self, name, JetIDCut=None, MinNumJets=1):
+    def makeJetCandidateAlg(self, name, JetIDCut=None, MinNumJets=1, ConeSize=0.7, MinDOCABL=-2.):
         #######################################################################
         ###                                                                 ###
         ###     JET RECONSTRUCTION                                          ###
@@ -370,24 +387,26 @@ class DisplVerticesLinesConf(LineBuilder):
         jetCandidateAlg.MaxIP2DV = 2.
         jetCandidateAlg.MinIPChi22PV = 20.
         jetCandidateAlg.MaxIPChi22DVDown = 30.
+        jetCandidateAlg.MinDOCABL = MinDOCABL
 
         from Configurables import LoKi__FastJetMaker
         jetMaker = addPrivateToolAndGet( jetCandidateAlg, LoKi__FastJetMaker )
         jetCandidateAlg.JetMaker = jetMaker.getTitleName()
         jetMaker.Type = 2 # anti-kt
-        jetMaker.RParameter = 0.7
+        jetMaker.RParameter = ConeSize
         jetMaker.PtMin = 5.*units.GeV
         jetMaker.Recombination = 0
         jetMaker.JetID = 98
 
+        # no JEC in Stripping21, needs to be applied later
         from Configurables import PerPVOffsetJECS20p3
         jecTool = addPrivateToolAndGet( jetCandidateAlg, PerPVOffsetJECS20p3, name="JEC" )
         jetCandidateAlg.ParticleReFitters["JEC"] = jecTool.getTitleName()
         jecTool.Apply = False
-        jecTool.HistoPath = "JEC"
+        jecTool.HistoPath = "%s_JEC" % self.name()
         from Configurables import HistogramSvc
         hSvc = HistogramSvc("HistogramDataSvc")
-        jecFile = "%s DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12_v2.root' TYP='ROOT'" % jecTool.HistoPath
+        jecFile = "%s DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco12_v2.root' TYP='ROOT'" % jecTool.getProp("HistoPath")
         if jecFile not in hSvc.Input:
             hSvc.Input.append(jecFile)
 
@@ -395,13 +414,7 @@ class DisplVerticesLinesConf(LineBuilder):
         jetIDTool = addPrivateToolAndGet( jetCandidateAlg, AddJetIDInfoS20p3, name="JetIDInfo" )
         jetCandidateAlg.JetIDTool = jetIDTool.getTitleName()
 
-        jetCandidateAlg.JetIDCut = ( JetIDCut if JetIDCut is not None
-                else " & ".join((
-                  "in_range( 0., JMTF, 0.7 )"
-                , "( 0.1  <  JCPF )"
-                , "( 0.   <= JN90 )"
-                , "( 900. <  JMPT )"
-                )))
+        jetCandidateAlg.JetIDCut = ( JetIDCut if JetIDCut is not None else self.configurationParameter("JetID") )
         jetCandidateAlg.MinNumberOfJets = MinNumJets
         jetCandidateAlg.CandidatePID = LLPLHCbName
 
@@ -547,8 +560,7 @@ class DisplVerticesLinesConf(LineBuilder):
         revivedHlt2Candidates = "Phys/%sHlt2Cand/Particles" % self.name()
         hltCandReviver = GaudiSequenceroid(ModeOR = True, ShortCircuit = False,
             Members = [ GaudiSequencer( "%sHlt2CandFilterTCK%s-%s" % (self.name(), tckBegin, tckEnd),
-                                        Members = [ ODINFilter("%sODINFilterTCK%s-%s" % (self.name(), tckBegin, tckEnd), Code="in_range( %s, ODIN_TCK, %s )" % (tckBegin, tckEnd))
-                                                  , HltFilter("%sHltDecisionFilterTCK%s-%s" % (self.name(), tckBegin, tckEnd), Code=" | ".join("HLT_PASS('%s')" % ln for ln in hltLines))
+                                        Members = [ HltFilter("%sHltDecisionFilterTCK%s-%s" % (self.name(), tckBegin, tckEnd), Code="in_range( {begin}, HLT_TCK % 0x40000000 , {end} ) & ( {decisions} )".format(begin=tckBegin, end=tckEnd, decisions=" | ".join("HLT_PASS('%s')" % ln for ln in hltLines)))
                                                   , HltVertexConverterS20p3("%sHltConverter%s-%s" % (self.name(), tckBegin, tckEnd), HltLines=hltLines, Recursive=True, Output=revivedHlt2Candidates, WriteP2PVRelations=False, ForceP2PVBuild=False)
                                                   ] )
                         for (tckBegin, tckEnd), hltLines in self.configurationParameter("HLT")["SignalLines"]
@@ -571,11 +583,6 @@ class DisplVerticesLinesConf(LineBuilder):
                                           , ForceP2PVBuild = False
                                           )
                           )
-
-        hlt2CandWithJets = Selection( "".join(( self.name(), "Hlt2CandWithJets" ))
-                       , RequiredSelections = [ hlt2CandAndGECSelection ]
-                       , Algorithm          = self.makeJetCandidateAlg("".join((self.name(), "HltJetAlg")))
-                       )
 
         #######################################################################
         ###                                                                 ###
@@ -629,6 +636,8 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
+                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT = self.configurationParameter("HLT")[lShortName]
@@ -671,9 +680,12 @@ class DisplVerticesLinesConf(LineBuilder):
                            , RequiredSelections = [ goodVertices ]
                            , Algorithm          = self.makeJetCandidateAlg("".join((self.name(), lSelName, "JetAlg"))
                                                       , MinNumJets = jetProps["MinNumJets"]
+                                                      , ConeSize   = jetProps["ConeSize"]
+                                                      , JetIDCut   = jetProps["JetIDCut"]
+                                                      , MinDOCABL  = jetProps["MinDOCABL"]
                                                       )
                            )
-            jetCode = self.getLLPJetSelection(jetProps, JetIDCut= jetProps["JetIDCut"])
+            jetCode = self.getLLPJetSelection(jetProps)
             jetCandFilter = FilterDesktop(
                              DecayDescriptor    = LLPLHCbName
                            , Preambulo          = self.jetSelectionPreambulo
@@ -689,6 +701,8 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
+                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT = self.configurationParameter("HLT")[lShortName]
@@ -709,7 +723,16 @@ class DisplVerticesLinesConf(LineBuilder):
             lLineName  = "%s%s" % (self.name(), lShortName) # DisplVerticesJetHltSingleMedium
 
             jetProps = self.validatedGetProps(lSelName, DisplVerticesLinesConf.jetCuts)
-            jetCode = self.getLLPJetSelection(jetProps, JetIDCut=jetProps["JetIDCut"])
+            vertWithJets = Selection( "".join(( self.name(), lSelName, "HltJets" ))
+                           , RequiredSelections = [ hlt2CandAndGECSelection ]
+                           , Algorithm          = self.makeJetCandidateAlg("".join((self.name(), lSelName, "HltJetAlg"))
+                                                      , MinNumJets = jetProps["MinNumJets"]
+                                                      , ConeSize   = jetProps["ConeSize"]
+                                                      , JetIDCut   = jetProps["JetIDCut"]
+                                                      , MinDOCABL  = jetProps["MinDOCABL"]
+                                                      )
+                           )
+            jetCode = self.getLLPJetSelection(jetProps)
             jetCandFilter = FilterDesktop(
                              DecayDescriptor    = LLPLHCbName
                            , Preambulo          = self.jetSelectionPreambulo
@@ -718,13 +741,15 @@ class DisplVerticesLinesConf(LineBuilder):
                            , ForceP2PVBuild     = False
                            )
             lineSel = Selection( "".join(( self.name(), lSelName ))
-                        , RequiredSelections = [ hlt2CandWithJets ]
+                        , RequiredSelections = [ vertWithJets ]
                         , Algorithm          = jetCandFilter
                         )
 
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
+                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT = self.configurationParameter("HLT")[lShortName]
@@ -761,6 +786,8 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
+                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
                 line.HLT = self.configurationParameter("HLT")[lShortName]
@@ -778,11 +805,9 @@ class DisplVerticesLinesConf(LineBuilder):
             lLineName  = "%s%s" % (self.name(), lShortName) # DisplVerticesSingleMedium
 
             hltSelAlg = GaudiSequenceroid(ModeOR = True, ShortCircuit = False,
-                Members = [ GaudiSequencer( "%sHltFilterTCK%s-%s" % (lLineName, tckBegin, tckEnd),
-                                            Members = [ ODINFilter("%sODINFilterTCK%s-%s" % (lLineName, tckBegin, tckEnd), Code="in_range( %s, ODIN_TCK, %s )" % (tckBegin, tckEnd))
-                                                      , HltFilter("%sHltDecisionFilterTCK%s-%s" % (lLineName, tckBegin, tckEnd), Code=hltFilter) ])
-                            for (tckBegin, tckEnd), hltFilter in self.validatedGetProps("HLT", [lShortName])[lShortName]
-                          ]
+                Members = [ HltFilter("%sHltFilterTCK%s-%s" % (lLineName, tckBegin, tckEnd)
+                              , Code="in_range( {begin}, HLT_TCK % 0x40000000, {end} ) & ( {decisions} )".format(begin=tckBegin, end=tckEnd, decisions=hltFilter)
+                              ) for (tckBegin, tckEnd), hltFilter in self.validatedGetProps("HLT", [lShortName])[lShortName] ]
                 )
 
             hltSelection = EventSelection( "%sHltFilter" % lLineName
@@ -792,6 +817,7 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lShortName, ["PreScale"])["PreScale"]
                      , selection = hltSelection
+                     , RequiredRawEvents = ["Trigger","Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
                      )
 
             self.registerLine(line)
@@ -827,6 +853,8 @@ class DisplVerticesLinesConf(LineBuilder):
                      # these lines MUST have an HLT filter
                      , HLT       = self.configurationParameter("HLT")[lShortName]
                      , selection = lineSel
+                     , RequiredRawEvents = ["Trigger","Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
+                     , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
 
             self.registerLine(line)

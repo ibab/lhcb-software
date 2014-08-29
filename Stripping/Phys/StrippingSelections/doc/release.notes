@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Pieter David
+ - Update StrippingDisplVertices and StrippingLLP2MuX for Stripping21
+
 ! 2014-08-29 - Olga Kochebina
  -  Isolation cone varables with RelatedInfoTools to StrippingD2XMuMuSS.py and StrippingDstarPromptWithD02HHHH.py
 

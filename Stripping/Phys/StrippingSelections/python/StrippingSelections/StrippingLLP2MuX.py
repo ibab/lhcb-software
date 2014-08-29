@@ -2,7 +2,8 @@
 Configuration for the high-PT displaced muon line (for exotic long-lived particle decays with neutralino, and jet studies)
 """
 __author__ = "Pieter David"
-__date__ = "2013-03-18"
+__date__ = "2014-08-28"
+__all__ = ("LLP2MuX", "default_config")
 
 from LHCbKernel.Configuration import *
 from GaudiKernel import SystemOfUnits as units
@@ -13,9 +14,9 @@ from StrippingUtils.Utils import LineBuilder
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 
-config = { "MinPT"  : 12.00*units.GeV
-         , "MinIP"  :  0.25*units.mm
-         }
+default_config = { "MinPT"  : 12.00*units.GeV
+                 , "MinIP"  :  0.25*units.mm
+                 }
 
 class LLP2MuX(LineBuilder):
     """
@@ -36,5 +37,6 @@ class LLP2MuX(LineBuilder):
                         , selection = muonSel
                         , L0DU = "L0_CHANNEL('Muon')"
                         , HLT  = "HLT_PASS('Hlt1SingleMuonHighPTDecision') & HLT_PASS('Hlt2SingleMuonHighPTDecision')"
+                        , RequiredRawEvents = ["Trigger","Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
                         )
         self.registerLine(testLine)
