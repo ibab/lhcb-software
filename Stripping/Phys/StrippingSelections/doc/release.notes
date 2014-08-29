@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Albert Puig
+ - Added RelatedInfo to StrippingLb2L0Gamma.py
+
 ! 2014-08-29 - Andrea Contu
  - Minor fix to StrippingDstarPromptWithD02HHHH.py
 
