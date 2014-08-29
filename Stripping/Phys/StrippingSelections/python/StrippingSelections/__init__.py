@@ -31,6 +31,7 @@ import StrippingB0q2DplusMuX
 import StrippingBd2DstarTauNu
 import StrippingB2XuMuNu
 import StrippingB2DMuNuX
+import StrippingB23MuNu
 import StrippingCharmFromBSemi
 import StrippingDstarD0ToKsHHPi0
 import StrippingCharmFromBSemiForProtonPID
@@ -60,6 +61,7 @@ import StrippingBs2EtacPhiBDT
 
 import StrippingBs2MuMuPhi
 import StrippingB2XMuMu
+import StrippingB2XMuMuInclusive
 import StrippingBd2KstarMuMu
 import StrippingB2XMuMuSS
 import StrippingTriMuons

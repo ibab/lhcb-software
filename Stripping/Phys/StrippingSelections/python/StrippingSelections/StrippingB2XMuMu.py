@@ -29,7 +29,7 @@ from Configurables import SubPIDMMFilter
 
 defaultConfig = {
     'RelatedInfoTools'      : [
-    {   "Type" : "RelInfoConeVariables"
+        {"Type" : "RelInfoConeVariables"
       , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM','CONEPT','CONEP','CONEPASYM','CONEDELTAETA','CONEDELTAPHI']
       , 'Location':'ConeIsoInfo'} 
       , {'Type' : 'RelInfoVertexIsolation'
@@ -37,6 +37,10 @@ defaultConfig = {
       , 'Location':'VtxIsoInfo'} 
       , {'Type': 'RelInfoVertexIsolationBDT'
       , 'Location':'VtxIsoBDTInfo' }
+      #,  {"Type" : "RelInfoBs2MuMuIsolations"
+      #, "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+      #, "Location"  : "BSMUMUVARIABLES"
+      #  }
     ]
     , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
     , 'MuonPID'            : -3.0          # dimensionless

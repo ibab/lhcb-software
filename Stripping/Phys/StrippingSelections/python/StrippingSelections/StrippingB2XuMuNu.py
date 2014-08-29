@@ -160,7 +160,8 @@ confdict= {
     "XMuMassUpperHigh"    : 6500. ,#MeV
     "Enu"                 : 1850. ,#MeV
     "EnuK"                : 2000. ,#MeV
-    'KshZ'                : 0.    #mm
+    'KshZ'                : 0.    ,#mm
+    'PiMuNu_prescale'     : 0.1    
     }
 from Gaudi.Configuration import *
 from StrippingUtils.Utils import LineBuilder
@@ -271,6 +272,7 @@ class B2XuMuNuBuilder(LineBuilder):
         ,"Enu"                 
         ,"EnuK"                
         ,'KshZ'                
+        ,'PiMuNu_prescale'                
         ]
 
     def __init__(self,name,config):
@@ -320,8 +322,8 @@ class B2XuMuNuBuilder(LineBuilder):
         self._KSLLSel=None
         self._KsLLFilter()
 
-        #self.registerLine(self._Pi_line())
-        #self.registerLine(self._PiSS_line())
+        self.registerLine(self._Pi_line())
+        self.registerLine(self._PiSS_line())
         self.registerLine(self._K_line())
         self.registerLine(self._KSS_line())
         self.registerLine(self._Phi_line())
@@ -382,13 +384,13 @@ class B2XuMuNuBuilder(LineBuilder):
     ######Kaon Line######
     def _Pi_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'B2PiLine', prescale = 1.0,
+        return StrippingLine(self._name+'B2PiLine', prescale = confdict["PiMuNu_prescale"],
                              FILTER=self.GECs,
                              algos = [ self._B2PiMuNu()])
    
     def _PiSS_line( self ):
         from StrippingConf.StrippingLine import StrippingLine
-        return StrippingLine(self._name+'B2PiSSLine', prescale = 1.0,
+        return StrippingLine(self._name+'B2PiSSLine', prescale = confdict["PiMuNu_prescale"],
                              FILTER=self.GECs,
                              algos = [ self._B2PiMuNuSS()])
 

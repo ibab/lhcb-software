@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Patrick Owen
+ - Updated B2XMuMu for S21
+ - Seperated inclusive selection to make B2XMuMuInclusive
+ - Loosened upper mass on B2DMuNuX
+ - Added PhiMuNu and PiMuNu to B2XuMuNu
+ - Added B23MuNu module
+ - Fixed bug in CharmForVub
+
 ! 2014-08-29 - Rafael Coutinho
  - Fixed the TCK filter for B2KShh lines
 
