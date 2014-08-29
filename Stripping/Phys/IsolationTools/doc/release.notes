@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-08-28 - Cedric Potterat
+ - new evalutaion of "b"-ness of jet in RelInfoJetsVariables
+
 - 2014-08-28 - Xabier Cid Vidal
  - Comment lines to avoid breaking nightlies again...
 

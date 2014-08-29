@@ -23,19 +23,19 @@ DECLARE_TOOL_FACTORY( RelInfoJetsVariables )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RelInfoJetsVariables::RelInfoJetsVariables( const std::string& type, 
+RelInfoJetsVariables::RelInfoJetsVariables( const std::string& type,
                                             const std::string& name,
-                                            const IInterface* parent): 
+                                            const IInterface* parent):
 GaudiTool ( type, name , parent ),
   m_dva(0),
   m_dist(0)
 {
-  
+
   declareInterface<IRelatedInfoTool>(this);
-  declareProperty( "Variables", 
-                   m_variables, 
+  declareProperty( "Variables",
+                   m_variables,
                    "List of variables to store (store all if empty)");
-  
+
   declareProperty( "ForceSamePV",
                    m_forcePV=true,
                    "Force only banned jets from same PV as initial B");
@@ -43,28 +43,28 @@ GaudiTool ( type, name , parent ),
   declareProperty("LocationJetsNoMu",
                   m_loc_jetsnomu="Phys/StdJetsNoJetIDNoMuFromB/Particles",
                   "Location of the jets where muons have been removed");
-  
+
   declareProperty("LocationJetsNoRemove",
                   m_loc_jetsinc="Phys/StdJetsNoJetID/Particles",
                   "Location of the jets where no particle has been removed");
-  
+
   declareProperty("LocationJetsForceB",
                   m_loc_jetsb="Phys/StdJetsNoJetIDForceB/Particles",
                   "Location of the jets where the B has been forced as a single particle");
-  
+
   declareProperty("UseVarsJetsNoMu",
                   m_use_jetsnomu=true,
                   "Store variables from the jets in which muons from B have been removed");
-  
+
   declareProperty("UseVarsJetsWithMu",
                   m_use_jetsinc=true,
                   "Store variables from the jets in which the B muons are present");
-  
+
   declareProperty("UseVarsJetsWithB",
                   m_use_jetsb=true,
                   "Store variables from the jets in which the B muons are present");
-  
-  
+
+
   declareProperty("IndividualParticlePID",m_ind_part=13,
                   "This is initially for Bmunu or similar, the PID that should be searched for");
 }
@@ -72,29 +72,34 @@ GaudiTool ( type, name , parent ),
 //=============================================================================
 // Destructor
 //=============================================================================
-RelInfoJetsVariables::~RelInfoJetsVariables() {} 
+RelInfoJetsVariables::~RelInfoJetsVariables() {}
 
 
 //====================================================================
 // Initialize DVAlg, etc
 //====================================================================
 StatusCode RelInfoJetsVariables::initialize() {
-  
+
   // initialize the base class  (the first action)
   StatusCode sc = GaudiTool::initialize();
-  if(sc.isFailure()) return sc; 
-  
+  if(sc.isFailure()) return sc;
+
   //initialize the dva algo
   m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc() , this) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
-  
 
-  // Get distance calculator                                                                                  
+
+  // Get distance calculator
   m_dist = m_dva->distanceCalculator();
   if ( !m_dist ) { return Error("Unable to retrieve the IDistanceCalculator tool",
                                 StatusCode::FAILURE); }
-  
+
+  m_TriggerTisTosTool = tool<ITriggerTisTos>( "TriggerTisTos","TriggerTisTos",this );
+    if(m_TriggerTisTosTool == 0)
+        return Error("Couldn't get requested jet tag tool", StatusCode::SUCCESS);
+
+
   //initialize the nntag tool
   //m_nnjettag = tool<IJetTagTool>("LoKi::NNBTag",this);
 
@@ -145,11 +150,11 @@ StatusCode RelInfoJetsVariables::initialize() {
     verbose()<<"RelatedInfoNamed::JETBNNTAG:="<<RelatedInfoNamed::JETBNNTAG<<endmsg;
     verbose()<<"RelatedInfoNamed::JETBMNF:="<<RelatedInfoNamed::JETBMNF<<endmsg;
   }
-  
+
 
   for ( const auto& var : m_variables )
   {
-    
+
     if ( msgLevel(MSG::VERBOSE) ){
       verbose()<<"var="<<var<<endmsg;
       for (int i=0; i<=RelatedInfoNamed::PFALLMISSPT; i++){
@@ -157,7 +162,7 @@ StatusCode RelInfoJetsVariables::initialize() {
         verbose()<<"var.compare(nameByIndex("<<i<<") )="<<var.compare(RelatedInfoNamed::nameByIndex(i) )<<endmsg;
       }
     }
-    
+
 
     short int key = RelatedInfoNamed::indexByName( var );
     if (key != RelatedInfoNamed::UNKNOWN) {
@@ -172,30 +177,137 @@ StatusCode RelInfoJetsVariables::initialize() {
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// Determine NN Tag of the Jet
+//==============================================================================
+// Determine the maximum ratio of shard LHCbID by an HLT2 obj in a jet
 //=============================================================================
 double RelInfoJetsVariables::jetNNTag(const LHCb::Particle* jet)
 {
-  std::map <std::string,double> jetProps;
-  //m_nnjettag->calculateJetProperty(jet,jetProps);
-  //debug()<< "Jet "<< jet->key()  <<" NN tag = " << jetProps["Tag"] << endmsg;
-  //return jetProps["Tag"];
-  return -1.;
+
+    std::vector<const LHCb::HltObjectSummary*> hltObjs
+        = m_TriggerTisTosTool->hltObjectSummaries("Hlt2Topo.*Decision",2,2);
+
+    unsigned int num = hltObjs.size();
+
+    std::vector< LHCb::LHCbID > AllIDs;
+    AllIDs.clear();
+    getJetLHCbIDs(jet, AllIDs);
+    double maxRatio = 0.;
+    for(unsigned int i = 0; i < num; i++){
+        std::vector< LHCb::LHCbID > hltLHCbIDs;
+        hltLHCbIDs.clear();
+        getHltObjLHCbIDs((hltObjs[i]),hltLHCbIDs);
+        double TotN = (double) hltLHCbIDs.size();
+        double TotMatching = 0.0;
+        double ratio = 0.;
+        for(std::vector<LHCb::LHCbID>::iterator iID1 = hltLHCbIDs.begin(); iID1!= hltLHCbIDs.end(); iID1++){
+            for(std::vector<LHCb::LHCbID>::iterator iAllIDs = AllIDs.begin(); iAllIDs != AllIDs.end(); iAllIDs++){
+                if((*iID1).lhcbID() == (*iAllIDs).lhcbID()){
+                    TotMatching+=1.0;
+                    ratio = TotMatching/TotN;
+                }
+            }
+        }
+
+        if(ratio > maxRatio){
+            maxRatio = ratio;
+        }
+
+    }
+
+    return maxRatio;
 }
+
+
+
+
+//=========================================================================
+//Get the LHCbID of HLT obj
+//=========================================================================
+StatusCode RelInfoJetsVariables::getHltObjLHCbIDs(const LHCb::HltObjectSummary * sum, std::vector< LHCb::LHCbID > & AllIDs) const{
+    if (0==sum) return StatusCode::SUCCESS ;
+    if(sum->substructure().size()>0){
+        for ( SmartRefVector< LHCb::HltObjectSummary >::const_iterator s = sum->substructure().begin() ;
+                s != sum->substructure().end() ; ++s)
+            getHltObjLHCbIDs(*s,AllIDs);
+
+
+        const std::vector< LHCb::LHCbID > lIDs = sum->lhcbIDsFlattened();
+        AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
+
+
+    }else{
+
+        const std::vector< LHCb::LHCbID > lIDs = sum->lhcbIDsFlattened();
+        AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
+    }
+
+    return StatusCode::SUCCESS ;
+
+}
+
+
+
+
+//=========================================================================
+//Get daughters track the LHCbID of a jet.
+//=========================================================================
+StatusCode RelInfoJetsVariables::getJetLHCbIDs(const LHCb::Particle* p,
+        std::vector< LHCb::LHCbID > & AllIDs) const{
+
+    if(p->particleID().abspid() == 98 ){
+        LHCb::Particle::ConstVector daus = p->daughtersVector();
+        for(LHCb::Particle::ConstVector::iterator idaus = daus.begin(); idaus != daus.end(); idaus++)
+        {
+            getJetLHCbIDs( (*idaus), AllIDs );
+        }
+    }else{
+        const LHCb::ProtoParticle * proto = p->proto() ;
+        if ( proto )
+        {
+            if ( proto->track() ) {
+                    const std::vector< LHCb::LHCbID > lIDs = proto->track()->lhcbIDs();
+                    AllIDs.insert(AllIDs.end(), lIDs.begin(), lIDs.end());
+            }
+            else
+            {
+                for ( SmartRefVector<LHCb::Particle>::const_iterator iP = p->daughters().begin();
+                        iP != p->daughters().end(); ++iP )
+                {
+                    getJetLHCbIDs( *iP, AllIDs );
+                }
+            }
+        }
+    }
+    return StatusCode::SUCCESS ;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //=============================================================================
 // Function to sort according to pT and same PV as B
 //=============================================================================
-void RelInfoJetsVariables::pt_sorted_samePV(const LHCb::Particles & jets_list, 
+void RelInfoJetsVariables::pt_sorted_samePV(const LHCb::Particles & jets_list,
                                             const int pvkey, std::vector<LHCb::Particle*> & out_list)
 {
   std::vector<PtParticlePair> myPtParticleVector;
   debug()<< jets_list.size()  <<" jets to be sorted" << endmsg;
   for( LHCb::Particles::const_iterator ijet = jets_list.begin() ;
        ijet != jets_list.end() ; ++ijet){
-    
+
     // if pvkey<0, we skip this check
     if (m_forcePV && pvkey>=0){
       const LHCb::VertexBase* BPV = m_dva->bestVertex(*ijet);
@@ -207,10 +319,10 @@ void RelInfoJetsVariables::pt_sorted_samePV(const LHCb::Particles & jets_list,
   }
   //sort by pT (smaller to larger)
   std::sort(myPtParticleVector.begin(), myPtParticleVector.end());
-  //and now reverse it to have from larger to smaller                                              
+  //and now reverse it to have from larger to smaller
   std::reverse(myPtParticleVector.begin(), myPtParticleVector.end());
   debug()<< myPtParticleVector.size()  <<" jets sorted" << endmsg;
-  
+
   // now store only the jets again
   for( std::vector<PtParticlePair>::const_iterator ipair = myPtParticleVector.begin() ;
        ipair != myPtParticleVector.end() ; ++ipair){
@@ -225,26 +337,26 @@ void RelInfoJetsVariables::pt_sorted_samePV(const LHCb::Particles & jets_list,
 StatusCode RelInfoJetsVariables::find_jet_mu(const LHCb::Particles* list_of_jets,
                                              const LHCb::Particle mu, LHCb::Particle& myjet)
 {
-  
+
   debug() << "Looking for jets with muon "<< mu.key() << " inside" <<endmsg;
   LHCb::Particles jets_list;
   for( LHCb::Particles::const_iterator ijet = list_of_jets->begin() ;
        ijet != list_of_jets->end() ; ++ijet){
-    
+
     // for each jet, loop in all the daughters
-    for( SmartRefVector< LHCb::Particle >::const_iterator idau = (*ijet)->daughters().begin() ; 
+    for( SmartRefVector< LHCb::Particle >::const_iterator idau = (*ijet)->daughters().begin() ;
          idau != (*ijet)->daughters().end() ; ++idau){
-      const LHCb::Particle dau = (*(*idau));      
+      const LHCb::Particle dau = (*(*idau));
       // check if the daughter has the same key as the particle
       if (!(dau.proto())) continue;
       if (!(dau.proto()->track())) continue;
-      if (dau.proto()->track()->key()==mu.proto()->track()->key()) 
+      if (dau.proto()->track()->key()==mu.proto()->track()->key())
       {
         jets_list.insert(*ijet,(*ijet)->key());
         debug()<< "Jet " << (*ijet)->key() << " has the muon inside!" <<endmsg;
         break;
       }
-      
+
     }
   }
   // if more than 1, store the one with larger pT
@@ -270,21 +382,21 @@ StatusCode RelInfoJetsVariables::find_jet_b(const LHCb::Particles* list_of_jets,
   for( LHCb::Particles::const_iterator ijet = list_of_jets->begin() ;
        ijet != list_of_jets->end() ; ++ijet){
     // for each jet, loop in all the daughters and store the jet if a B is part of the daughters
-    for( SmartRefVector< LHCb::Particle >::const_iterator idau = (*ijet)->daughters().begin() ; 
+    for( SmartRefVector< LHCb::Particle >::const_iterator idau = (*ijet)->daughters().begin() ;
          idau != (*ijet)->daughters().end() ; ++idau){
       if ((*idau)->particleID().hasBottom()) {
         jets_list.insert(*ijet,(*ijet)->key());
         debug()<< "Jet " << (*ijet)->key() << " has the B inside!" <<endmsg;
         break;
       }
-      
+
     }
   }
   // save the one with larger pT
   if (!jets_list.size()) return StatusCode::FAILURE;
   debug()<< jets_list.size() << " jets found with the B inside" <<endmsg;
   std::vector<LHCb::Particle*> jets_list_sorted;
-  pt_sorted_samePV(jets_list,-1,jets_list_sorted); // the -1 is to avoid any PV check, 
+  pt_sorted_samePV(jets_list,-1,jets_list_sorted); // the -1 is to avoid any PV check,
   // this is not needed because the PV of the B should be the same as the PV of the jet (since the B is inside)
   if (!jets_list_sorted.size()) return StatusCode::FAILURE;
   debug()<< " These jets have been sorted " <<endmsg;
@@ -334,10 +446,10 @@ std::map <std::string,double> RelInfoJetsVariables::fillProperties(LHCb::Particl
 // Fill Output m_map
 //=============================================================================
 void  RelInfoJetsVariables::fillMap(){
-  
-  m_map.clear();  
+
+  m_map.clear();
   for ( const auto key : m_keys ){
-  
+
     float value = 0;
     switch (key) {
     case RelatedInfoNamed::JETNOMU1PX    : value = m_JetNoMu1["Px"]; break;
@@ -382,11 +494,11 @@ void  RelInfoJetsVariables::fillMap(){
     case RelatedInfoNamed::JETBJETWIDTH    : value = m_JetB["JetWidth"]; break;
     case RelatedInfoNamed::JETBNNTAG    : value = m_JetB["NNTag"]; break;
     case RelatedInfoNamed::JETBMNF    : value = m_JetB["MNF"]; break;
-      
+
     default: value = 0.; break;
     }
-    
-    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq; 
+
+    debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
     m_map.insert( std::make_pair(key,value) );
   }
 
@@ -411,23 +523,23 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
   m_JetB = emptyProperties();
   fillMap();
   debug()<< "Filled empty dicts" << endmsg;
-  
+
   // only fill infos for top particle!
   if (part!=top) return StatusCode::SUCCESS;
-  
+
   LHCb::Particle mu1;
   LHCb::Particle mu2;
-  
+
   // get bestPV of the top particle
   const LHCb::VertexBase* BPV = m_dva->bestVertex(top);
-  
-  
+
+
   // now find the RecVertex that is closest to the refitted one
   double dist,distc2_tmp,distc2;
   distc2 = 1e6;
   LHCb::VertexBase* closePV=NULL;
   LHCb::RecVertex::Container* verts = getIfExists<LHCb::RecVertex::Container>(LHCb::RecVertexLocation::Primary);
-  // create a list of pairs ipchi2/vertex                                                                     
+  // create a list of pairs ipchi2/vertex
   for ( LHCb::RecVertex::Container::const_iterator iv = verts->begin(); iv != verts->end(); iv++) {
     StatusCode sc = m_dist->distance(BPV,(*iv),dist,distc2_tmp);
     if (sc.isFailure()) {
@@ -443,7 +555,7 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
   if (closePV) bpvkey  = closePV->key();
   else bpvkey = 0;
   debug() << "The top particle is associated to PV " << bpvkey << endmsg;
-  
+
   // this is for Bmunu (m_ind_particle = 13)
   if (top->particleID().pid()==m_ind_part ||top->particleID().pid()==((-1)*m_ind_part))
   {
@@ -458,7 +570,7 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
     mu2 = *(top->daughters().at(1));
     m_onemu = false;
   }
-  
+
   debug()<< "m_onemu="<<m_onemu<<endmsg;
   debug()<< "m_use_jetsb="<<m_use_jetsb<<endmsg;
 
@@ -466,7 +578,7 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
   if ( m_use_jetsnomu )
   {
     debug() << "Jets no mu" <<endmsg;
-    if ( exist<LHCb::Particles>(m_loc_jetsnomu) ) 
+    if ( exist<LHCb::Particles>(m_loc_jetsnomu) )
     {
       const LHCb::Particles* stdjets_nomu_0 = get<LHCb::Particles>(m_loc_jetsnomu);
       // sort according to pT and same PV as B
@@ -480,22 +592,22 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
     }
     else debug() << "No jets found" << endmsg;
   }
-  
-  
+
+
   if (m_use_jetsinc)
   {
     debug() << "Jets with mu" <<endmsg;
     if ( exist<LHCb::Particles>(m_loc_jetsinc) )
-    { 
+    {
       const LHCb::Particles*  stdjets_inc = get<LHCb::Particles>(m_loc_jetsinc);
       LHCb::Particle myjet1;
       StatusCode sc1 = find_jet_mu(stdjets_inc, mu1, myjet1);
-      if (sc1.isSuccess()){ 
+      if (sc1.isSuccess()){
         m_JetMu1 = fillProperties(&myjet1);
         debug()<< "Jets with mu1, top pT" << myjet1.pt()<< endmsg;
       }
-      
-      if (!m_onemu) 
+
+      if (!m_onemu)
       {
         LHCb::Particle myjet2;
         StatusCode sc2 = find_jet_mu(stdjets_inc, mu2, myjet2);
@@ -507,16 +619,16 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
     }
     else debug() << "No jets found" << endmsg;
   }
-  
+
   if (m_use_jetsb)
   {
     debug() << "Jets with B" <<endmsg;
     if ( exist<LHCb::Particles>(m_loc_jetsb) )
-    {  
+    {
       const LHCb::Particles* stdjets_forceb = get<LHCb::Particles>(m_loc_jetsb);
       LHCb::Particle myjet3;
       StatusCode sc3 = find_jet_b(stdjets_forceb, myjet3);
-      if (sc3.isSuccess()) 
+      if (sc3.isSuccess())
       {
         debug()<< "Jets with B, top pT" << myjet3.pt()<< endmsg;
         m_JetB = fillProperties(&myjet3);
@@ -524,7 +636,7 @@ StatusCode RelInfoJetsVariables::calculateRelatedInfo( const LHCb::Particle *top
     }
     else debug() << "No jets found" << endmsg;
   }
-  
+
   fillMap();
   return StatusCode::SUCCESS;
 }
