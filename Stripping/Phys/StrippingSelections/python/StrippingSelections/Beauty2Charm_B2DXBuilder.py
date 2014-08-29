@@ -944,6 +944,17 @@ class B2DXBuilder(object):
         b02ddkk = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b02ddkk,1.0))   
 
+    def _makeB02D0D0KK(self):
+        '''Makes RS B0 -> D0D~0K+K- + c.c.'''
+        decays = {'B02D0D0KK': ["[B0 -> D0 D~0 K+K-]cc"]}
+        inputs = {'B02D0D0KK': self.d.hh_pid+self.topoKaons}
+        b02d0d0kk_rs = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b02d0d0kk_rs,1.0))
+        decays = {'B02D0D0KKWS': ["[B0 -> D0 D~0 K+K+]cc"]}
+        inputs = {'B02D0D0KKWS': self.d.hh_pid+self.topoKaons}
+        b02d0d0kk_ws = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b02d0d0kk_ws,1.0))
+
     def _makeB02DHD2PhiMu(self,dname,d2x,useIP=True):
         '''Makes RS and WS B0 -> D + h- + c.c.'''
         config = deepcopy(self.config)
