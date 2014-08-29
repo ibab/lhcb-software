@@ -14,7 +14,10 @@ config_params = {
     , 'signalPrescaleViaDp'  : 1.0
     , 'signalPrescaleViaDsp' : 0.0
     , 'signalPrescaleViaD0'  : 1.0
-    , 'Hlt2TisTosSpec' : { 'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt1TrackAllL0Decision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
+    , 'LcHlt2TisTosSpec' : { 'Hlt2.*CharmHadLambdaC2KPPi.*Decision%TOS' : 0 }
+    , 'DzHlt2TisTosSpec' : { 'Hlt2.*CharmHadD02.*Decision%TOS' : 0 }
+    , 'DpHlt2TisTosSpec' : { 'Hlt2.*CharmHadD2HHH.*Decision%TOS' : 0 }
+    , 'XiHlt2TisTosSpec' : { 'Hlt2.*ChargedHyperon.*Decision%TOS' : 0 }
     }
 
 
