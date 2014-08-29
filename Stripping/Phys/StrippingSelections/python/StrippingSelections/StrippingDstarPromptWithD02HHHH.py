@@ -300,7 +300,7 @@ class DstarPromptWithD02HHHHConf(LineBuilder):
           'RecursionLevel' : 1, 
           'Locations' : {
             selPromptDstar : 'P2CVDstar1', 
-            selD02hhmumu   : 'P2CVD1', 
+            selD02hhhh   : 'P2CVD1', 
           } 
         }, 
       ]
