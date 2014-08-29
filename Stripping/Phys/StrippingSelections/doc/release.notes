@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Adlene Hicheur
+ - Refine cuts + MDSTFlag = True for StrippingBc2hhh_BnoC
+
 
 ! 2014-08-29 - Brais Sanmartin Sedes
  - MDSTFlag = True and EnableFlavourTagging = True for Bs2KstKstSameChargeLine

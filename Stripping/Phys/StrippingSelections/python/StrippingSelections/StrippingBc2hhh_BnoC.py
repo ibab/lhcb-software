@@ -1,4 +1,4 @@
- # $Id: StrippingBc2hhh_BnoC.py,v 1.0 2014-08-22 Rio team $
+ # $Id: StrippingBc2hhh_BnoC.py,v 1.1 2014-08-29$
 '''
 Module for construction of Bc->hhh from:   
      Exclusive lines to reconstruct the pipipi, Kpipi, KKpi, KKK, pppi and ppK decay modes.
@@ -14,8 +14,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Alvaro Gomes', 'Adlene Hicheur']
-__date__ = '22/08/2014'
-__version__ = '$Revision: 1.0 $'
+__date__ = '29/08/2014'
+__version__ = '$Revision: 1.1 $'
 
 __all__ = ('Bc2hhhBuilder',
            'makepipipi_excl', 
@@ -27,50 +27,45 @@ __all__ = ('Bc2hhhBuilder',
 	   )
 
 
-default_config = {
-  'NAME' : 'Bc2hhh',
-  'WGs'         : ['Charmless'],
-  'BUILDERTYPE' : 'Bc2hhhBuilder',
-  'CONFIG'      : {'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-                   '_h_PT'                 : 250.,     ## tracks min PT
-                   '_h_P'                  : 2500.,    ## tracks min P  
-                   '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
-                   '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
-                   '_h_TRGHP'              : .3,        ## Track GhostProbability     
-                   '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
-                   '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
-                   '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
-                   '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
-                   '_3h_PVDOCAmin'         : 2.0,      ## Distance between sv and pv
-                   '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
-                   '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
-                   '_3h_PT'                : 1000.,    ## min 3h PT   
-                   '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
-                   '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum 
-                   '_3h_PVIPCHI2sum'       : 200.,     ## min of the 3h tracks IP wrt best 3h PV
-                   '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
-                   '_3h_Mmax'              : 6500.,     ## max 3h mass for exclusive lines
-                   '_3h_Mmin'              : 6000.,     ## min 3h mass for exclusive KKK lines
-                   '_bu3h_Mmax'            : 5479.,     ## min buto3h mass for exclusive lines
-                   '_bu3h_Mmin'            : 5079.,     ## min buto3h mass for exclusive lines
-                   '_probnnpi'             : .15,       ## PROBNNpi for pion tracks. WARNING: DO NOT APPLY THIS CUT FOR PIPIPI OR KPIPI LINES
-                   '_probnnk'              : .20,       ## PROBNNk for kaon tracks.
-                   '_probnnp'              : .05,       ## PROBNNp for proton tracks.
-                   'pipipi_exclLinePrescale'  : 1.0,
-                   'pipipi_exclLinePostscale'  : 1.0,
-                   'Kpipi_exclLinePrescale'  : 1.0,
-                   'Kpipi_exclLinePostscale'  : 1.0,
-                   'KKpi_exclLinePrescale'  : 1.0,
-                   'KKpi_exclLinePostscale'  : 1.0,
-                   'KKK_exclLinePrescale'  : 1.0,
-                   'KKK_exclLinePostscale'  : 1.0,
-                   'pppi_exclLinePrescale'  : 1.0,
-                   'pppi_exclLinePostscale'  : 1.0,
-                   'ppK_exclLinePrescale'  : 1.0,
-                   'ppK_exclLinePostscale'  : 1.0,
-                   },
-  'STREAMS' : ['Bhadron']
-  }
+config_params = {
+    'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
+    '_h_PT'                 : 250.,     ## tracks min PT
+    '_h_P'                  : 2500.,    ## tracks min P  
+    '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
+    '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
+    '_h_TRGHP'              : .5,        ## Track PROBNNghost     
+    '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
+    '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
+    '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
+    '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
+    '_3h_SVPV'              : 1.5,      ## Distance between sv and pv
+    '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
+    '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
+    '_3h_PT'                : 1000.,    ## min 3h PT   
+    '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
+    '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum 
+    '_3h_PVIPCHI2sum'       : 200.,     ## min of the 3h tracks IP wrt best 3h PV
+    '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
+    '_3h_Mmax'              : 6500.,     ## max 3h mass for exclusive lines
+    '_3h_Mmin'              : 6000.,     ## min 3h mass for exclusive KKK lines
+    '_bu3h_Mmax'            : 5500.,     ## min buto3h mass for exclusive lines
+    '_bu3h_Mmin'            : 5100.,     ## min buto3h mass for exclusive lines
+    '_probnnpi'             : .15,       ## PROBNNpi for pion tracks. WARNING: DO NOT APPLY THIS CUT FOR PIPIPI OR KPIPI LINES
+    '_probnnk'              : .20,       ## PROBNNk for kaon tracks.
+    '_probnnp'              : .05,       ## PROBNNp for proton tracks.
+    'pipipi_exclLinePrescale'  : 1.0,
+    'pipipi_exclLinePostscale'  : 1.0,
+    'Kpipi_exclLinePrescale'  : 1.0,
+    'Kpipi_exclLinePostscale'  : 1.0,
+    'KKpi_exclLinePrescale'  : 1.0,
+    'KKpi_exclLinePostscale'  : 1.0,
+    'KKK_exclLinePrescale'  : 1.0,
+    'KKK_exclLinePostscale'  : 1.0,
+    'pppi_exclLinePrescale'  : 1.0,
+    'pppi_exclLinePostscale'  : 1.0,
+    'ppK_exclLinePrescale'  : 1.0,
+    'ppK_exclLinePostscale'  : 1.0,
+    }
 
 
 """
@@ -115,7 +110,7 @@ class Bc2hhhBuilder(LineBuilder) :
                               '_3h_PTmax',          
                               '_3h_DIRA',            
                               '_3h_FDCHI2',         
-                              '_3h_PVDOCAmin',      
+                              '_3h_SVPV',      
                               '_3h_CHI2',           
                               '_3h_IPCHI2',             
                               '_3h_PT',              
@@ -164,7 +159,7 @@ class Bc2hhhBuilder(LineBuilder) :
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
                              _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                             _3h_SVPV   = config['_3h_SVPV'],
                              _3h_CHI2        = config['_3h_CHI2'],
                              _3h_IPCHI2      = config['_3h_IPCHI2'],
                              _3h_PT          = config['_3h_PT'],
@@ -187,7 +182,7 @@ class Bc2hhhBuilder(LineBuilder) :
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
                              _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                             _3h_SVPV   = config['_3h_SVPV'],
                              _3h_CHI2        = config['_3h_CHI2'],
                              _3h_IPCHI2      = config['_3h_IPCHI2'],
                              _3h_PT          = config['_3h_PT'],
@@ -211,7 +206,7 @@ class Bc2hhhBuilder(LineBuilder) :
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
                              _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                             _3h_SVPV   = config['_3h_SVPV'],
                              _3h_CHI2        = config['_3h_CHI2'],
                              _3h_IPCHI2      = config['_3h_IPCHI2'],
                              _3h_PT          = config['_3h_PT'],
@@ -236,7 +231,7 @@ class Bc2hhhBuilder(LineBuilder) :
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
                              _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                             _3h_SVPV   = config['_3h_SVPV'],
                              _3h_CHI2        = config['_3h_CHI2'],
                              _3h_IPCHI2      = config['_3h_IPCHI2'],
                              _3h_PT          = config['_3h_PT'],
@@ -260,7 +255,7 @@ class Bc2hhhBuilder(LineBuilder) :
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
                              _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                             _3h_SVPV   = config['_3h_SVPV'],
                              _3h_CHI2        = config['_3h_CHI2'],
                              _3h_IPCHI2      = config['_3h_IPCHI2'],
                              _3h_PT          = config['_3h_PT'],
@@ -285,7 +280,7 @@ class Bc2hhhBuilder(LineBuilder) :
                              _3h_PTmax       = config['_3h_PTmax'],
                              _3h_DIRA        = config['_3h_DIRA'],
                              _3h_FDCHI2      = config['_3h_FDCHI2'],
-                             _3h_PVDOCAmin   = config['_3h_PVDOCAmin'],
+                             _3h_SVPV   = config['_3h_SVPV'],
                              _3h_CHI2        = config['_3h_CHI2'],
                              _3h_IPCHI2      = config['_3h_IPCHI2'],
                              _3h_PT          = config['_3h_PT'],
@@ -330,32 +325,38 @@ class Bc2hhhBuilder(LineBuilder) :
         self.linepipipi_excl = StrippingLine( _pipipi_exclName + 'Line',
                                      prescale   = config['pipipi_exclLinePrescale'],
                                      postscale  = config['pipipi_exclLinePostscale'],
-                                     algos      = self.algospipipi)
+                                     algos      = self.algospipipi,
+                                     MDSTFlag = True)
 
         self.lineKpipi_excl = StrippingLine( _Kpipi_exclName + 'Line',
                                      prescale   = config['Kpipi_exclLinePrescale'],
                                      postscale  = config['Kpipi_exclLinePostscale'],
-                                     algos      = self.algosKpipi)
+                                     algos      = self.algosKpipi,
+                                     MDSTFlag = True)
 
         self.lineKKpi_excl = StrippingLine( _KKpi_exclName + 'Line',
                                      prescale   = config['KKpi_exclLinePrescale'],
                                      postscale  = config['KKpi_exclLinePostscale'],
-                                     algos      = self.algosKKpi)
+                                     algos      = self.algosKKpi,
+                                     MDSTFlag = True)
 
         self.lineKKK_excl = StrippingLine( _KKK_exclName + 'Line',
                                      prescale   = config['KKK_exclLinePrescale'],
                                      postscale  = config['KKK_exclLinePostscale'],
-                                     algos      = self.algosKKK)
+                                     algos      = self.algosKKK,
+                                     MDSTFlag = True)
 
         self.linepppi_excl = StrippingLine( _pppi_exclName + 'Line',
                                      prescale   = config['pppi_exclLinePrescale'],
                                      postscale  = config['pppi_exclLinePostscale'],
-                                     algos      = self.algospppi)
+                                     algos      = self.algospppi,
+                                     MDSTFlag = True)
         
 	self.lineppK_excl = StrippingLine( _ppK_exclName + 'Line',
                                      prescale   = config['ppK_exclLinePrescale'],
                                      postscale  = config['ppK_exclLinePostscale'],
-                                     algos      = self.algosppK)
+                                     algos      = self.algosppK,
+                                     MDSTFlag = True)
 
         self.registerLine(self.linepipipi_excl)
         self.registerLine(self.lineKpipi_excl)
@@ -374,7 +375,7 @@ def makepipipi_excl(name,
                     _3h_PTmax,
                     _3h_DIRA,
                     _3h_FDCHI2,
-                    _3h_PVDOCAmin,
+                    _3h_SVPV,
                     _3h_CHI2,
                     _3h_IPCHI2,
                     _3h_PT,
@@ -391,13 +392,13 @@ def makepipipi_excl(name,
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='pi+') | (ABSID=='pi-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
-		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
+		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_SVPV)s) \
 		& (VFASPF(VCHI2) < %(_3h_CHI2)s) \
 		& (MIPCHI2DV(PRIMARY) < %(_3h_IPCHI2)s) \
 		& (PT > %(_3h_PT)s*MeV) \
@@ -426,7 +427,7 @@ def makeKpipi_excl(name,
                    _3h_PTmax,
                    _3h_DIRA,
                    _3h_FDCHI2,
-                   _3h_PVDOCAmin,
+                   _3h_SVPV,
                    _3h_CHI2,
                    _3h_IPCHI2,
                    _3h_PT,
@@ -445,18 +446,18 @@ def makeKpipi_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
                       "pi+": "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-') | ('pi+'==ABSID) | ('pi-'==ABSID)),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
-		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
+		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_SVPV)s) \
 		& (VFASPF(VCHI2) < %(_3h_CHI2)s) \
 		& (MIPCHI2DV(PRIMARY) < %(_3h_IPCHI2)s) \
 		& (PT > %(_3h_PT)s*MeV) \
@@ -485,7 +486,7 @@ def makeKKpi_excl(name,
                   _3h_PTmax,
                   _3h_DIRA,
                   _3h_FDCHI2,
-                  _3h_PVDOCAmin,
+                  _3h_SVPV,
                   _3h_CHI2,
                   _3h_IPCHI2,
                   _3h_PT,
@@ -505,19 +506,19 @@ def makeKKpi_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
                       "pi+" : "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNpi > %(_probnnpi)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-') | ('pi+'==ABSID) | ('pi-'==ABSID)),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
-		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
+		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_SVPV)s) \
 		& (VFASPF(VCHI2) < %(_3h_CHI2)s) \
 		& (MIPCHI2DV(PRIMARY) < %(_3h_IPCHI2)s) \
 		& (PT > %(_3h_PT)s*MeV) \
@@ -546,7 +547,7 @@ def makeKKK_excl(name,
                  _3h_PTmax,
                  _3h_DIRA,
                  _3h_FDCHI2,
-                 _3h_PVDOCAmin,
+                 _3h_SVPV,
                  _3h_CHI2,
                  _3h_IPCHI2,
                  _3h_PT,
@@ -565,13 +566,13 @@ def makeKKK_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
-		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
+		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_SVPV)s) \
 		& (VFASPF(VCHI2) < %(_3h_CHI2)s) \
 		& (MIPCHI2DV(PRIMARY) < %(_3h_IPCHI2)s) \
 		& (PT > %(_3h_PT)s*MeV) \
@@ -600,7 +601,7 @@ def makepppi_excl(name,
                   _3h_PTmax,
                   _3h_DIRA,
                   _3h_FDCHI2,
-                  _3h_PVDOCAmin,
+                  _3h_SVPV,
                   _3h_CHI2,
                   _3h_IPCHI2,
                   _3h_PT,
@@ -620,19 +621,19 @@ def makepppi_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNp > %(_probnnp)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
 		      "pi+" :  "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNpi > %(_probnnpi)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='pi+') | (ABSID=='pi-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
-		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
+		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_SVPV)s) \
 		& (VFASPF(VCHI2) < %(_3h_CHI2)s) \
 		& (MIPCHI2DV(PRIMARY) < %(_3h_IPCHI2)s) \
 		& (PT > %(_3h_PT)s*MeV) \
@@ -661,7 +662,7 @@ def makeppK_excl(name,
                  _3h_PTmax,
                  _3h_DIRA,
                  _3h_FDCHI2,
-                 _3h_PVDOCAmin,
+                 _3h_SVPV,
                  _3h_CHI2,
                  _3h_IPCHI2,
                  _3h_PT,
@@ -681,19 +682,19 @@ def makeppK_excl(name,
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNp > %(_probnnp)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals(),
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals(),
 		      "K+" :  "(PT > %(_h_PT)s*MeV) \
                              & (P > %(_h_P)s*MeV) \
                              & (MIPCHI2DV(PRIMARY) > %(_h_IPCHI2)s) \
                              & (TRCHI2DOF < %(_h_TRCHI2DOF)s) \
                              & (PROBNNk > %(_probnnk)s) \
-                             & (TRGHOSTPROB < %(_h_TRGHP)s)" % locals()}
+                             & (PROBNNghost < %(_h_TRGHP)s)" % locals()}
     _combinationCut = "(((AM < %(_3h_Mmax)s*MeV) & (AM > %(_3h_Mmin)s*MeV)) | ((AM < %(_bu3h_Mmax)s*MeV) & (AM > %(_bu3h_Mmin)s*MeV))) \
 		     & (AMAXDOCA('LoKi::TrgDistanceCalculator') < %(_3h_DOCA)s)" % locals()
     _motherCut = "(MAXTREE(((ABSID=='p+') |(ABSID=='p~-') |(ABSID=='K+') | (ABSID=='K-')),PT) > %(_3h_PTmax)s*MeV) \
                 & (BPVDIRA > %(_3h_DIRA)s) \
 		& (BPVVDCHI2 > %(_3h_FDCHI2)s) \
-		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_PVDOCAmin)s) \
+		& (VFASPF(VMINVDDV(PRIMARY)) > %(_3h_SVPV)s) \
 		& (VFASPF(VCHI2) < %(_3h_CHI2)s) \
 		& (MIPCHI2DV(PRIMARY) < %(_3h_IPCHI2)s) \
 		& (PT > %(_3h_PT)s*MeV) \
