@@ -122,5 +122,14 @@ if(GAUDI_BUILD_TESTS)
                        LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
 endif()
 
+if(GAUDI_BUILD_TESTS)
+  gaudi_add_executable(TestBloomFilter
+                       tests/TestBloomFilter.cpp
+                       INCLUDE_DIRS Boost GSL ROOT
+                       LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib)
+endif()
+
 gaudi_install_python_modules()
+
+gaudi_add_test(QMTest QMTEST)
 

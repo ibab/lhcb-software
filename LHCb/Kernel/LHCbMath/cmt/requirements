@@ -60,6 +60,8 @@ application  TestChi2Fit   ../tests/TestChi2Fit.cpp
 macro_append TestChi2Fit_dependencies   " LHCbMathLib "
 application  TestLABug   ../tests/TestLABug.cpp 
 macro_append TestLABug_dependencies   " LHCbMathLib "
+application  TestBloomFilter   ../tests/TestBloomFilter.cpp
+macro_append TestBloomFilter_dependencies   " LHCbMathLib "
         
 # ================= patterns =============================================
 apply_pattern       linker_library library=LHCbMathLib
@@ -91,5 +93,7 @@ macro_append  GSL_linkopts " -Wl,--as-needed " \
 
 macro_append ROOT_linkopts "  -lHist      -lGraf "   \
                      WIN32 " libHist.lib libGraf.lib"
+
+apply_pattern QMTest
 
 end_private

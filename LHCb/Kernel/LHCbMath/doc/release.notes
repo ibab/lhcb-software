@@ -6,6 +6,15 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-08-29 - Manuel Tobias Schiller
+ - add BloomFilter class
+ - add unit test for BloomFilter class
+ - steal enough from other packages to make the tests that seem to be there
+   run within the QMTest framework, and have it check exit codes (I know this
+   is enough for the BloomFilter unit test, as it checks its results and
+   aborts, so stdout/stderr is for human consumption; for the other tests, an
+   expert should take a good look...)
+
 ! 2014-08-25 - Vanya Belyaev
  - add more efficient treatment of normalization integrals 
 
