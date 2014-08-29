@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2014-08-29 - Patrick Owen
+ - MDSTFlag = True and EnableFlavourTagging = True for Bs2KstKstSameChargeLine
+
+
 ! 2014-08-29 - Patrick Owen
  - Updated B2XMuMu for S21
  - Seperated inclusive selection to make B2XMuMuInclusive

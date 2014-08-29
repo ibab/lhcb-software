@@ -156,8 +156,9 @@ class StrippingBs2KstKstConf(LineBuilder):
           self.Bs2KstKstSameCharge_line = StrippingLine(KstKstSameCharge_name+"Line",
                                                         prescale = 1,
                                                         postscale = 1,
-                                                        algos = [ self.selBs2KstKstSameCharge ]
-                                                        )
+                                                        algos = [ self.selBs2KstKstSameCharge ],
+                                                        EnableFlavourTagging = True,
+							MDSTFlag = True)
 
 
           self.registerLine(self.Bs2KstKst_line)
