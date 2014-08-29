@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-08-28 - Pieter David
+ - Add MNF also to Kernel/JetEnums.h
+
 ! 2014-08-25 - Cedric Potterat
  - Setting JEC to False
 

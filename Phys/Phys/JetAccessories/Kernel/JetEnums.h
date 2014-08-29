@@ -48,6 +48,7 @@ namespace LHCb {
         NSatHCAL               = 9009,
         NIPChi2Inf4            = 9010,
         MPT                    = 9011,
+        MNF                    = 9012,
       };
   }
   namespace JECInfo {
