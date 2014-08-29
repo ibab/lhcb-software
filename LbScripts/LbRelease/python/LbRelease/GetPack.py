@@ -6,7 +6,9 @@ from subprocess import Popen, PIPE
 
 from LbUtils.Script import Script
 from LbUtils.VCS import SVNReposInfo, CVSReposInfo
-from LbConfiguration import createProjectMakefile, eclipseConfigurationAddPackage, createEclipseConfiguration
+from LbConfiguration import (createProjectMakefile, createToolchainFile,
+                             eclipseConfigurationAddPackage,
+                             createEclipseConfiguration)
 from LbConfiguration.Repository import repositories as __repositories__
 import rcs
 
@@ -1010,6 +1012,11 @@ class GetPack(Script):
         proj = self.checkoutProject(self.project_name, self.project_version)
         # create a project Makefile for the checked out project (if not present)
         createProjectMakefile(os.path.join(proj[2], "Makefile"))
+        if os.path.exists(os.path.join(proj[2], "CMakeLists.txt")):
+            # not that we overwrite projects usually have obsolete versions
+            overwrite_toolchain = self.project_name not in ('Gaudi', 'Urania')
+            createToolchainFile(os.path.join(proj[2], 'toolchain.cmake'),
+                                overwrite=overwrite_toolchain)
         if self.options.recursive:
             # get the conatiner package too, etc.
             try:

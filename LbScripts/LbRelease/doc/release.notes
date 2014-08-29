@@ -1,3 +1,7 @@
+2014-05-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getpack: use shared toolchain.cmake from LbUtils when checking out projects
+
 2014-07-24  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-572: Add option to disable SVN check when loading Packages
@@ -15,7 +19,7 @@
 	* python/LbRelease/SoftConfDB/SoftConfDB.py
 
 2014-07-10  Ben Couturier <Ben.Couturier@cern.ch>
-	
+
         * python/LbRelease/LCGRpmExtractor.py: Fix for release of LCG 69
 
 2014-06-24  Ben Couturier <Ben.Couturier@cern.ch>
@@ -25,7 +29,7 @@
 2014-06-20  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-534: Make import-installarea more resilient to filesystem errors
-	* python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py 
+	* python/LbRelease/SoftConfDB/LbSdbImportFromInstallArea.py
 	LBCORE-533: New command to copy RPMs to YUM repository
 	* python/LbRelease/RpmRelease.py
 	* scripts/lb-release-rpm
@@ -55,7 +59,7 @@
 	* python/LbRelease/SoftConfDB/SoftConfDB.py
 
 2014-06-05  Ben Couturier <Ben.Couturier@cern.ch>
-	
+
 	LBCORE-511: Add JSON output to lb-sdb-query for the list of staks to release
 	* * python/LbRelease/SoftConfDB/LbSdbQuery.py
 

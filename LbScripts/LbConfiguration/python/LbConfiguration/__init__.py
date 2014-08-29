@@ -3,16 +3,27 @@ import Platform
 import Project
 
 
-
-## Write the generic Makefile for CMT projects.
-#  @param filename: the name of the destination file
-#  @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
-def createProjectMakefile(dest, overwrite = False):
+def createProjectMakefile(dest, overwrite=False):
+    '''Write the generic Makefile for CMT projects.
+    @param dest: the name of the destination file
+    @param overwrite: flag to decide if an already present file has to be kept or not (default is False)
+    '''
     import os, logging
     if overwrite or not os.path.exists(dest):
-        logging.debug("Creating project Makefile in '%s'", dest)
+        logging.debug("Creating '%s'", dest)
         f = open(dest, "w")
         f.write("include ${LBCONFIGURATIONROOT}/data/Makefile\n")
+        f.close()
+
+def createToolchainFile(dest, overwrite=False):
+    '''Write the generic toolchain.cmake file needed by CMake-based projects.
+    @param dest: destination filename
+    '''
+    import os, logging
+    if overwrite or not os.path.exists(dest):
+        logging.debug("Creating '%s'", dest)
+        f = open(dest, "w")
+        f.write("include($ENV{LBUTILSROOT}/data/toolchain.cmake)\n")
         f.close()
 
 def createEclipseConfiguration(dest, projectpath):

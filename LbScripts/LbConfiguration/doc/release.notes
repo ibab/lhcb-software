@@ -1,5 +1,9 @@
 2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-dev: use shared toolchain.cmake from LbUtils
+
+2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-run: added --list option
 
 2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>

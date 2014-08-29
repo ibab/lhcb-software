@@ -1,5 +1,9 @@
 2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* data/toolchain.cmake: added generic (shared) toolchain file for CMake projects
+
+2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* cmake: updated CMake support modules
 
 2014-05-30  Ben Couturier  <ben.couturier@cern.ch>
