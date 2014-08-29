@@ -132,7 +132,7 @@ def main():
             mode = (stat.S_IMODE(os.stat(dest).st_mode) |
                     stat.S_IXUSR | stat.S_IXGRP)
             os.chmod(dest, mode)
-        
+
 
     # When the project name is not the same as the local project name, we need a
     # fake *Sys package for SetupProject (CMT only).
@@ -150,7 +150,7 @@ Successfully created the local project {0} in {1}
 To start working:
 
   > cd {2}
-  > getpack --no-config --no-eclipse MyPackage vXrY
+  > getpack MyPackage vXrY
 
 then
 '''
