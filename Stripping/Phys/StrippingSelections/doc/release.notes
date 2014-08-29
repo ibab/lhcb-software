@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Stephane Tourneur
+ - Removed StrippingBjets.py
+ - Added three lines in StrippingJets.py:
+	- StrippingJets_3jets_Pt7_3sv
+	- StrippingJets_4jets_Pt5_3sv
+	- StrippingJets_4jets_Pt5_0sv_Prescaled
+
 ! 2014-08-29 - Albert Puig
  - Added RelatedInfo to StrippingLb2L0Gamma.py
 

@@ -27,6 +27,9 @@ default_config = {
                       "bJetPT90"   : 1.0,
                       "dibJetT6A"  : 0.05,
                       "dibJetT6PS" : 1.0,
+                      "_3jets_Pt7_3sv" : 1.0,
+                      "_4jets_Pt5_3sv" : 1.0,
+                      "_4jets_Pt5_0sv_Prescaled" : 0.01
                       },
 
         # HLT properties.
@@ -49,6 +52,8 @@ default_config = {
         # Fully reconstructed jet p roperties.
         "JET"   : {"JEC"            : False,     # If no STDJETS, apply JEC.
                    "R"              : 0.5,       # If no STDJETS, set jet radius.
+                   "MIN_PT"         :  5*GeV,    # Transverse momentum.
+                   "EXTLOW_PT"      : 7*GeV,    # Transverse momentum.
                    "VERYLOW_PT"     : 15*GeV,   # Transverse momentum.
                    "LOW_PT"         : 20*GeV,   # Transverse momentum.
                    "MEDIUM_PT"      : 50*GeV,   # Transverse momentum.
@@ -90,8 +95,9 @@ class JetsConf(LineBuilder):
         # Select the particles.
         trks     = self._create_trks([StdAllNoPIDsPions])
         svrs     = self._create_svrs([trks])
+        mptJets  = self._filter_hPTJets([StdJets],str(self._config["JET"]["MIN_PT"]) )
         hptJets  = self._filter_hPTJets([StdJets],str(self._config["JET"]["VERYLOW_PT"]) )
-        bJets    = self._create_bJets(hptJets,svrs)
+        bJets    = self._create_bJets(mptJets,svrs)
         #one jet has 60% of a TOPO object LHCbID, with PT > 15, 50, 90
         fbJets0   = self._filter_bJets(bJets,0,str(self._config["JET"]["VERYLOW_PT"]))
         fbJets1   = self._filter_bJets(bJets,0,str(self._config["JET"]["MEDIUM_PT"]))
@@ -110,8 +116,10 @@ class JetsConf(LineBuilder):
         # continas in the jet
         # cutX == 11 TOS (or all tracks in the jet)
         #
-
-
+        #The three following lines are designed for the 4b analyses (Contact: Stephane Tourneur):
+        _3jets_Pt7_3sv = self._create_3jets([mptJets, bJets], minPT = str(self._config["JET"]["EXTLOW_PT"]), Nsvtag="2.5")
+        _4jets_Pt5_3sv = self._create_4jets([mptJets, bJets], minPT = str(self._config["JET"]["MIN_PT"]), Nsvtag="2.5")
+        _4jets_Pt5_0sv = self._create_4jets([mptJets, bJets], minPT = str(self._config["JET"]["MIN_PT"]), Nsvtag="-0.5")
 
         line_jetDIFF = StrippingLine(
             name + "Diffractive",
@@ -163,8 +171,28 @@ class JetsConf(LineBuilder):
             selection = dijets_T6_PS,
             RequiredRawEvents = ["Calo"]
             )
-
-
+        line__3jets_Pt7_3sv  = StrippingLine(
+            name + "_3jets_Pt7_3sv",
+            prescale = self._config["PRESCALE"]["_3jets_Pt7_3sv"],
+            HLT = hlt,
+            selection = _3jets_Pt7_3sv,
+            RequiredRawEvents = ["Calo"]
+            )
+        line__4jets_Pt5_3sv  = StrippingLine(
+            name + "_4jets_Pt5_3sv",
+            prescale = self._config["PRESCALE"]["_4jets_Pt5_3sv"],
+            HLT = hlt,
+            selection = _4jets_Pt5_3sv,
+            RequiredRawEvents = ["Calo"]
+            )
+        line__4jets_Pt5_0sv_Prescaled  = StrippingLine(
+            name + "_4jets_Pt5_0sv_Prescaled",
+            prescale = self._config["PRESCALE"]["_4jets_Pt5_0sv_Prescaled"],
+            HLT = hlt,
+            selection = _4jets_Pt5_0sv,
+            RequiredRawEvents = ["Calo"]
+            )
+            
         self.registerLine(line_jetMB)
         self.registerLine(line_jetDIFF)
         self.registerLine(line_jetPT0)
@@ -172,6 +200,10 @@ class JetsConf(LineBuilder):
         self.registerLine(line_jetPT2)
         self.registerLine(line_Dijets_T6A)
         self.registerLine(line_Dijets_T6PS)
+        self.registerLine(line__3jets_Pt7_3sv)
+        self.registerLine(line__4jets_Pt5_3sv)
+        self.registerLine(line__4jets_Pt5_0sv_Prescaled)
+
 
     def _filter_hPTJets(self, inputs, ptlim):
         code = ("(PT > "+(ptlim)+")")
@@ -255,17 +287,42 @@ class JetsConf(LineBuilder):
             ParticleCombiners = {"" : "LoKi::VertexFitter"},
             DecayDescriptor = "H_10 -> CELLjet CELLjet",
             DaughtersCuts = {"CELLjet" : "(PT > "+str(PT)+")"},
-#                             % self._config["JET"]["MIN_PT"]},
+            #                             % self._config["JET"]["MIN_PT"]},
             Preambulo = pre,
             CombinationCut = cmb_cuts,
             MotherCut = "INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+"))")
-
-
+            
+            
         if len(inputs) == 1:
             dijets.Inputs = [inputs[0].outputLocation()]
         else:
             dijets.Inputs = [inputs[0].outputLocation(), inputs[1].outputLocation()]
-
+            
         return Selection(self._name + label + "PT" +str(PT).split('*')[0]+"LePT"+ str(LeadingPT).split('*')[0]+ "Selection",
-                         Algorithm = dijets,
-                         RequiredSelections = inputs)
+                                         Algorithm = dijets,
+                                         RequiredSelections = inputs)
+                    
+    def _create_3jets(self, inputs, minPT = 5*GeV, LeadingPT = 0*GeV, Nsvtag = 0):
+                        
+        cmb_cuts = "(abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),2))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),3))<1*mm)"
+        _3jets = CombineParticles(
+            ParticleCombiners = {"" : "LoKi::VertexFitter"},
+            DecayDescriptor = "H_10 -> CELLjet CELLjet CELLjet",
+            CombinationCut = cmb_cuts,
+            DaughtersCuts = {"CELLjet" : "(PT > "+str(minPT)+")"},
+            MotherCut = "((INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+")))&(INTREE((ABSID=='CELLjet')&(PINFO(9990,0)>0)))&("+str(Nsvtag)+" < NINTREE((ABSID=='CELLjet')&(PINFO(9991,0) > 5 ))))")
+        
+        return Selection(self._name + "3jets_PTmin" +str(minPT).split('*')[0]+"LeadPT"+ str(LeadingPT).split('*')[0]+ "Nsv" + str(Nsvtag) +"Selection", Algorithm = _3jets, RequiredSelections = inputs)
+ 
+    def _create_4jets(self, inputs, minPT = 5*GeV, LeadingPT = 0*GeV, Nsvtag = 0):
+                        
+        cmb_cuts = "(abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),2))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),3))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),4))<1*mm)"
+        _4jets = CombineParticles(
+            ParticleCombiners = {"" : "LoKi::VertexFitter"},
+            DecayDescriptor = "H_10 -> CELLjet CELLjet CELLjet CELLjet",
+            CombinationCut = cmb_cuts,
+            DaughtersCuts = {"CELLjet" : "(PT > "+str(minPT)+")"},
+            MotherCut = "((INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+")))&(INTREE((ABSID=='CELLjet')&(PINFO(9990,0)>0)))&("+str(Nsvtag)+" < NINTREE((ABSID=='CELLjet')&(PINFO(9991,0) > 5 ))))")
+        
+        return Selection(self._name + "4jets_PTmin" +str(minPT).split('*')[0]+"LeadPT"+ str(LeadingPT).split('*')[0]+ "Nsv" + str(Nsvtag) +"Selection", Algorithm = _4jets, RequiredSelections = inputs)
+ 

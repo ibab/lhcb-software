@@ -131,7 +131,6 @@ import StrippingWMuJets
 import StrippingWmuAKTJets
 import StrippingWeJets
 import StrippingWeAKTJets
-import StrippingBjets
 import StrippingDijets
 import StrippingH24MuLines
 import StrippingH24MuSameMassLine
