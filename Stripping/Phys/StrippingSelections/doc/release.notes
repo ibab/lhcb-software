@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Rafael Coutinho
+ - Fixed the TCK filter for B2KShh lines
+
 ! 2014-08-28 - Christoph Hombach
 	- Added Stripping Lines in StrippingB2TwoBaryons:
 		StrippingB2TwoBaryonsDDLine           

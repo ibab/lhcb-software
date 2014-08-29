@@ -195,12 +195,11 @@ class B2KShhConf(LineBuilder) :
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
 
-        TCKFilters = {}
+        HltFilters = {}
         for year in _years :
-            TCKFilters[year]  = {'Code' : "(in_range( %s, ODIN_TCK, %s )) | (in_range( %s, ODIN_TCK, %s ))" % config['TCK_%s'%year],
-                                 'Preambulo' : ["from LoKiCore.functions import *"]}
-
-        HltFilter = "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision'))"
+            HltFilters[year] = {'Code' : "(HLT_PASS_RE('Hlt1TrackAllL0Decision') & HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')) & ((in_range( %s, HLT_TCK, %s )) | (in_range( %s, HLT_TCK, %s )))" % config['TCK_%s'%year],
+                                'Preambulo' : ["from LoKiCore.functions import *"]}
+                          
 
         relinfo = [ { "Type" : "RelInfoConeVariables" 
                     , "ConeAngle" : config['ConeAngle'] 
@@ -284,9 +283,8 @@ class B2KShhConf(LineBuilder) :
                                            prescale = config['Prescale'],
                                            postscale = config['Postscale'],
                                            selection = _selB[ks_type][year][sign],
-                                           HLT = HltFilter,
+                                           HLT = HltFilters[year],
                                            FILTER = GECCode,
-                                           ODIN = TCKFilters[year],
                                            RelatedInfoTools = relinfo, 
                                            RelatedInfoFilter = _mvaFilter[ks_type][year][sign],
                                            EnableFlavourTagging = _flavourFlag,
