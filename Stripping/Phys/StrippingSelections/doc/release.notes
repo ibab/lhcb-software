@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Hannah Mary Evans
+ - Added additional dictionary to StrippingBs2MuMuLines
+
 ! 2014-08-29 - Andrea Contu
  - Added isolation info for StrippingRareStrange
 

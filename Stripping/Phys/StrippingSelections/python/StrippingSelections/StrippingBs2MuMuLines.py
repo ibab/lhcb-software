@@ -54,13 +54,39 @@ default_config = {
         'MuTrChi2_loose'        : 10,
         'BIPChi2_loose'         : 64,
         'BFDChi2_loose'         : 100,
-        'BPVVDChi2'            : 121,
+        'BPVVDChi2'            : 121, 
         'daugt_IPChi2'            : 9
         },
     'STREAMS' : ['DiMuon']
         }                
     
-
+tighter_config = {
+    'Name' : 'Bs2MuMuLines',
+    'WGs'  : ['RD'],
+    'BUILDERTYPE' : 'Bs2MuMuLinesConf',
+    'CONFIG'   : {
+        'DefaultLinePrescale'    : 1,
+        'DefaultPostscale'   : 1,
+        'Bs2mmWideLinePrescale'  : 1,
+        'LooseLinePrescale'      : 0.,
+        'BuPrescale'    : 1,
+        'BsPrescale'    : 1,
+        'BdPrescale'    : 1,
+        'JPsiLinePrescale'       : 1,
+        'JPsiLooseLinePrescale'  : 0.1,
+        'JPsiPromptLinePrescale' : 0.005,
+        'SSPrescale'             : 1 ,
+        'Bs2mmLTUBLinePrescale'  : 1 ,
+        'Bs2KKLTUBLinePrescale' : 1 ,
+        'MuIPChi2_loose'        :  9,
+        'MuTrChi2_loose'        : 10,
+        'BIPChi2_loose'         : 64,
+        'BFDChi2_loose'         : 100,
+        'BPVVDChi2'            : 144, 
+        'daugt_IPChi2'            : 12.25
+        },
+    'STREAMS' : ['DiMuon']
+        }  
 
 ##########################################
 ## define local stdjets
@@ -372,7 +398,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     MDSTFlag = True,
                                     RequiredRawEvents = ["Muon"],
                                     algos = [ self.selLTUB ],
-                                   RelatedInfoTools = [
+                                    RelatedInfoTools = [
             {'Type' : 'RelInfoJetsVariables',
              'Location': 'RelatedInfoJets',
              'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
