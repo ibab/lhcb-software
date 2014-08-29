@@ -186,8 +186,10 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       ISOTWOBODYQPLUS        = BSMUMUTRACKMINUSISOTWO + 9, 
 
       //ZVtop isolation 
-      ZVISO = ISOTWOBODYQPLUS + 1
+      ZVISO = ISOTWOBODYQPLUS + 1,
 
+      // Velo phi hits vector size in the transverse plane
+      VELOPHIHITSVECTORSIZE = ZVISO +1
     };
 
     static std::string nameByIndex(int key) {
@@ -359,6 +361,8 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       case RelatedInfoNamed::ISOTWOBODYQPLUS : return "ISOTWOBODYQPLUS";
 
       case RelatedInfoNamed::ZVISO : return "ZVISO"; 
+
+      case RelatedInfoNamed::VELOPHIHITSVECTORSIZE : return "VELOPHIHITSVECTORSIZE";
 
         default : return "UNKNOWN"; 
       }

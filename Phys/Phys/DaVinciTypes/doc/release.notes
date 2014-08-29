@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2014-08-28 - Pieter David
+ - Add VELOPHIHITSVECTORSIZE variable to RelatedInfoNamed.h
+
 ! 2014-08-27 - Anton Poluektov 
  - Add ZVISO variable to RelatedInfoNamed.h
 
