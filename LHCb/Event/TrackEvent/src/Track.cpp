@@ -117,7 +117,7 @@ namespace {
     std::generate( std::next(std::begin(c)), std::end(c), 
                    [=]() mutable { return gsl_cdf_chisq_Qinv(limit, i++ ); } );
     return c;
-  };
+  }
 
   // could put this into probChi2, but then the table is generated at
   // first use of probChi2, i.e. during the event loop. 
