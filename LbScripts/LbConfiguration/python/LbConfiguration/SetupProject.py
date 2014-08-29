@@ -1603,13 +1603,15 @@ class SetupProject(object):
             # check if the next argument can be interpreted as a version for the requested project
             found = False
             pattern = self.args[0]
+            if pattern.upper() == 'HEAD':
+                pattern = self.args[0] = 'HEAD'
             for v in versions:
                 if VersionMatch(v[1], pattern):
                     found = True
                     break
             if found:
                 self.project_version = self.args.pop(0)
-            elif re.match('v[0-9]*r[0-9p]*|HEAD',self.args[0]):
+            elif re.match('v[0-9]*r[0-9p]*|HEAD', self.args[0]):
                 self._error("Cannot find version '%s' of %s. Try with --list-versions." % (self.args[0], self.project_name))
                 return 1
 

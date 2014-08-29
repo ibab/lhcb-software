@@ -1,3 +1,7 @@
+2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* SetupProject: case insensitive handling of version 'HEAD' (LHCBSCRIPTS-82)
+
 2014-06-25 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Package.py: Added package Gen/PGunsData (LBCORE-542)
