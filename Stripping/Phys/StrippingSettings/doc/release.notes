@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Sneha Malde (Calib/PID)
+ - updated Stripping21/LineConfigDictionaries_Calib.py
+ - updated Stripping21r1/LineConfigDictionaries_Calib.py
+
 ! 2014-08-28 - Pablo Ruiz Valls (RD)
  - updated Stripping21/LineConfigDictionaries_RD.py
  - updated Stripping21r1/LineConfigDictionaries_RD.py
