@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - James Mccarthy
+ - Switched to DOCACHI2 cut in StrippingB2XEta.py
+
 ! 2014-08-29 - Mat Charles
  - Updates/patches to StrippingXicc and StrippingXibStarToXibZero
    (plus matching change to tests/test_Xicc.py)

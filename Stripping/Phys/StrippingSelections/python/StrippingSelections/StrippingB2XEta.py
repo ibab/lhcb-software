@@ -47,8 +47,8 @@ default_config = {
                   'Trk_GP'                  : 0.5,
                   'pK_PT'                   : 500., #1000.
                   'pK_IPCHI2'               : 20.,
-                  'kstar_daug_PT'           : 500.,
                   'ProbNNCut'               : 0.1,
+                  'kstar_daug_PT'           : 500.,
                   'KS_DD_MassWindow'        : 23.0,
                   'KS_DD_VtxChi2'           : 15.0, 
                   'KS_DD_FDChi2'            : 20.0,
@@ -69,26 +69,26 @@ default_config = {
                   'Kstar_ipChi2'            : 5.0,
                   'eta_PT'                  : 2000,
                   'eta_MassWindow'          : 150,
-                  'eta_vtxChi2'             : 15,
-                  'eta_DOCA'                : 20,
+                  'eta_vtxChi2'             : 10.,
+                  'eta_DOCA'                : 10.0, #20
                   'gamma_PT'                : 500, #photons from eta
                   'eta_prime_MassWindow'    : 100.0,
                   'eta_prime_PT'            : 2000.0,
-                  'eta_prime_vtxChi2'       : 15.0,
-                  'eta_prime_DOCA'          : 15.0,
+                  'eta_prime_vtxChi2'       : 10.0,
+                  'eta_prime_DOCA'          : 10.0, #15
                   'B_MassWindow'            : 750.0,
                   'B_PTmin'                 : 1500.0,
-                  'BDaug_DD_maxDocaChi2'    : 20.0, 
-                  'BDaug_LL_maxDocaChi2'    : 20.0, 
+                  'BDaug_DD_maxDocaChi2'    : 15.0, #20 
+                  'BDaug_LL_maxDocaChi2'    : 15.0,  #20
                   'B_VtxChi2'               : 15.0,
                   'B_Dira'                  : 0.9995,
                   'B_IPCHI2'                : 20.0,
                   'B_eta_IPCHI2'            : 6.0, 
                   'Lb_MassWindow'           : 750.0,
                   'Lb_PTmin'                : 1000.0,
-                  'LbDaug_DD_maxDocaChi2'   : 20.0,
-                  'LbDaug_LL_maxDocaChi2'   : 20.0,
-                  'Lb_VtxChi2'              : 20.0,
+                  'LbDaug_DD_maxDocaChi2'   : 15.0, #20
+                  'LbDaug_LL_maxDocaChi2'   : 15.0, #20
+                  'Lb_VtxChi2'              : 15.0,
                   'Lb_Dira'                 : 0.9995,
                   'Lb_IPCHI2'               : 20.0,
                   'Lb_eta_IPCHI2'           : 6.0,
@@ -428,6 +428,7 @@ class B2XEtaConf(LineBuilder) :
         _vtxCut  = "(VFASPF(VCHI2/VDOF)<%s)"           % config['KS_LL_VtxChi2']
         _fdCut   = "(BPVVDCHI2>%s)"                    % config['KS_LL_FDChi2']
         _momCut = "(PT>%s*MeV)"                        % config['KS_LL_PTmin']
+        
         _trackChi2_1 = "(CHILDCUT((TRCHI2DOF<%s),1))"  % config['Trk_Chi2']
         _trackChi2_2 = "(CHILDCUT((TRCHI2DOF<%s),2))"  % config['Trk_Chi2']
         _track_PT_1 = "(CHILDCUT((PT>%s*MeV),1))"      % config['Trk_PT']
@@ -448,6 +449,7 @@ class B2XEtaConf(LineBuilder) :
         _vtxCut  = "(VFASPF(VCHI2/VDOF)<%s)"           % config['KS_DD_VtxChi2']
         _fdCut   = "(BPVVDCHI2>%s)"                    % config['KS_DD_FDChi2']
         _momCut  = "(PT>%s*MeV)"                       % config['KS_DD_PTmin']
+        
         _trackChi2_1 = "(CHILDCUT((TRCHI2DOF<%s),1))"  % config['Trk_Chi2']
         _trackChi2_2 = "(CHILDCUT((TRCHI2DOF<%s),2))"  % config['Trk_Chi2']
         _track_PT_1 = "(CHILDCUT((PT>%s*MeV),1))"      % config['Trk_PT']
@@ -467,6 +469,7 @@ class B2XEtaConf(LineBuilder) :
         _massCut = "(ADMASS('Lambda0')<%s*MeV)"        % config['L_LL_MassWindow']
         _vtxCut  = "(VFASPF(VCHI2/VDOF)<%s)"           % config['L_LL_VtxChi2']
         _momCut = "(PT>%s*MeV)"                        % config['L_LL_PTmin']
+
         _trackChi2_1 = "(CHILDCUT((TRCHI2DOF<%s),1))"  % config['Trk_Chi2']
         _trackChi2_2 = "(CHILDCUT((TRCHI2DOF<%s),2))"  % config['Trk_Chi2']
         _track_PT_1 = "(CHILDCUT((PT>%s*MeV),1))"      % config['Trk_PT']
@@ -486,6 +489,7 @@ class B2XEtaConf(LineBuilder) :
         _massCut = "(ADMASS('Lambda0')<%s*MeV)"        % config['L_DD_MassWindow']
         _vtxCut  = "(VFASPF(VCHI2/VDOF)<%s)"           % config['L_DD_VtxChi2']
         _momCut  = "(PT>%s*MeV)"                       % config['L_DD_PTmin']
+        
         _trackChi2_1 = "(CHILDCUT((TRCHI2DOF<%s),1))"  % config['Trk_Chi2']
         _trackChi2_2 = "(CHILDCUT((TRCHI2DOF<%s),2))"  % config['Trk_Chi2']        
         _track_PT_1 = "(CHILDCUT((PT>%s*MeV),1))"      % config['Trk_PT']
@@ -529,7 +533,7 @@ class B2XEtaConf(LineBuilder) :
         _momCut = "(PT>%s*MeV)"                                       % config['Kstar_PTmin']
         _vtxCut  = "(VFASPF(VCHI2/VDOF)<%s)"                          % config['Kstar_vtxChi2']
         _IPChi2Cut = "(BPVIPCHI2()>%s)"                               % config['Kstar_ipChi2']
-        
+              
         _trackChi2_1 = "(CHILDCUT((TRCHI2DOF<%s),1))"                 % config['Trk_Chi2']
         _trackChi2_2 = "(CHILDCUT((TRCHI2DOF<%s),2))"                 % config['Trk_Chi2']        
         _track_PT_1 = "(CHILDCUT((PT>%s*MeV),1))"                     % config['kstar_daug_PT']
@@ -560,7 +564,8 @@ class B2XEtaConf(LineBuilder) :
         _PTCut = "(PT>%s*MeV)"                         % config['eta_PT']
         _massCut = "(ADAMASS('eta')<%s*MeV)"           % config['eta_MassWindow']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_vtxChi2']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['eta_DOCA']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['eta_DOCA']
+
         _track_PT="(PT>%s*MeV)"                        % config['Trk_PT']
         _track_Chi2="(TRCHI2DOF<%s)"                   % config['Trk_Chi2']
         _track_GPCut ="(TRGHOSTPROB<%s)"               % config['Trk_GP']
@@ -569,7 +574,7 @@ class B2XEtaConf(LineBuilder) :
         _allCuts = _PTCut+'&'+_vtxCut
         _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
-        _combCut12Doca="ADOCA(1,2)<%s"                     % config['eta_DOCA']
+        _combCut12Doca="ACHI2DOCA(2,3)<%s"                     % config['eta_DOCA']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_vtxChi2']
         _combCut12=_combCut12Doca
         
@@ -589,7 +594,7 @@ class B2XEtaConf(LineBuilder) :
         _massCut = "(ADAMASS('eta_prime')<%s*MeV)"     % config['eta_prime_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['eta_prime_PT']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_prime_vtxChi2']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['eta_prime_DOCA']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['eta_prime_DOCA']
         _track_PT="(PT>%s*MeV)"                        % config['Trk_PT']
         _track_Chi2="(TRCHI2DOF<%s)"                   % config['Trk_Chi2']
         _track_GPCut ="(TRGHOSTPROB<%s)"               % config['Trk_GP']
@@ -598,7 +603,7 @@ class B2XEtaConf(LineBuilder) :
         _allCuts = _PTCut+'&'+_vtxCut
         _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
-        _combCut12Doca="ADOCA(1,2)<%s"                     % config['eta_prime_DOCA']
+        _combCut12Doca="ACHI2DOCA(2,3)<%s"                     % config['eta_prime_DOCA']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_prime_vtxChi2']
         _combCut12=_combCut12Doca
         
@@ -617,7 +622,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
@@ -637,7 +642,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_DD_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['BDaug_DD_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
@@ -692,7 +697,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
@@ -712,7 +717,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_DD_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['BDaug_DD_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
@@ -733,7 +738,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
@@ -753,7 +758,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
@@ -806,7 +811,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
@@ -826,7 +831,7 @@ class B2XEtaConf(LineBuilder) :
 
         _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
@@ -846,7 +851,7 @@ class B2XEtaConf(LineBuilder) :
     def makeB2Kstetap(self, name, config):
         _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
@@ -881,7 +886,7 @@ class B2XEtaConf(LineBuilder) :
     def makeB2Ksteta3Pi(self, name, config):
         _massCut = "(ADAMASS('B0')<%s*MeV)"            % config['B_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['B_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['BDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['B_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['B_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['B_IPCHI2']
@@ -900,14 +905,14 @@ class B2XEtaConf(LineBuilder) :
     def makeLb2pKetap(self, name, config):
         _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['LbDaug_LL_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
         
         _combCuts = _massCut+'&'+_docaCut
         _allCuts = _PTCut+'&'+_vtxCut+'&'+_diraCut+'&'+_IPChi2Cut
-        _combCut12Doca="ADOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12Doca="ACHI2DOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _combCut12=_combCut12Doca
         
@@ -927,7 +932,7 @@ class B2XEtaConf(LineBuilder) :
         
         _combCuts = _massCut
         _allCuts = _PTCut+'&'+_IPChi2Cut
-        _combCut12="ADOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12="ACHI2DOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
                
         _Lb2pKetaGG = DaVinci__N3BodyDecays("Lb2pKetaGG",
                                             DecayDescriptor = "[Lambda_b0 -> p+ K- eta]cc",
@@ -941,14 +946,14 @@ class B2XEtaConf(LineBuilder) :
     def makeLb2pKeta3Pi(self, name, config):
         _massCut = "(ADAMASS('Lambda_b0')<%s*MeV)"     % config['Lb_MassWindow']
         _PTCut = "(PT>%s*MeV)"                         % config['Lb_PTmin']
-        _docaCut = "(ACUTDOCA(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
+        _docaCut = "(ACUTDOCACHI2(%s,''))"                 % config['LbDaug_DD_maxDocaChi2']
         _vtxCut = "(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _diraCut = "(BPVDIRA>%s)"                      % config['Lb_Dira']
         _IPChi2Cut = "(BPVIPCHI2()<%s)"                % config['Lb_IPCHI2']
         
         _combCuts = _massCut+'&'+_docaCut
         _allCuts = _PTCut+'&'+_IPChi2Cut+'&'+_vtxCut+'&'+_diraCut
-        _combCut12Doca="ADOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
+        _combCut12Doca="ACHI2DOCA(1,2)<%s"                     % config['LbDaug_LL_maxDocaChi2']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['Lb_VtxChi2']
         _combCut12=_combCut12Doca
         
