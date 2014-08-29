@@ -1,5 +1,9 @@
 2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-run: added --list option
+
+2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* SetupProject: case insensitive handling of version 'HEAD' (LHCBSCRIPTS-82)
 
 2014-06-25 Ben Couturier <Ben.Couturier@cern.ch>

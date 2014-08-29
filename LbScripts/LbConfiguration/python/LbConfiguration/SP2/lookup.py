@@ -60,7 +60,8 @@ def findProject(name, version, platform):
 
     @return path to the project binary directory
     '''
-    log.debug('findProject(%r, %r, %r)', name, version, platform)
+    log.debug('findProject(name=%r, version=%r, platform=%r)',
+              name, version, platform)
     # standard project suffixes
     suffixes = ['{0}_{1}'.format(name, version),
                 os.path.join(name.upper(), '{0}_{1}'.format(name.upper(), version))]
@@ -78,6 +79,66 @@ def findProject(name, version, platform):
             return d
     else:
         raise MissingProjectError(name, version, platform, path)
+
+def listVersions(name, platform):
+    '''
+    Find all instances of a Gaudi-based project in the directories specified in
+    the 'path' variable and return the list of versions found.
+
+    @param name: name of the project (case sensitive for local projects)
+    @param platform: binary platform id
+
+    @return generator of pairs (version, fullpath)
+    '''
+    # FIXME: when we drop Python 2.4, this should become
+    # 'from .version import isValidVersion'
+    from LbConfiguration.SP2.version import isValidVersion
+    log.debug('listVersions(name=%r, platform=%r)', name, platform)
+
+    name_u = name.upper()
+    prefix = name + '_'
+    prefix_u = name_u + '_'
+    prefixlen = len(prefix)
+
+    bindir = os.path.join('InstallArea', platform)
+
+    found_versions = set()
+    for p in path:
+        files = set(os.listdir(p))
+        # the plain project name is taken into account as 'latest' version
+        if 'latest' not in found_versions and name in files:
+            fullpath = os.path.join(p, name)
+            if os.path.isdir(os.path.join(fullpath, bindir)):
+                found_versions.add('latest')
+                yield ('latest', fullpath)
+
+        # versions like 'Project_vXrY'
+        for entry in sorted([(filename[prefixlen:], os.path.join(p, filename))
+                             for filename in files
+                             if filename.startswith(prefix) and
+                                 isValidVersion(name, filename[prefixlen:])],
+                            reverse=True):
+            version, fullpath = entry
+            if (version not in found_versions and
+                os.path.isdir(os.path.join(fullpath, bindir))):
+                yield entry
+
+        # versions like PROJECT/PROJECT_vXrY
+        project_dir = os.path.join(p, name_u)
+        if os.path.isdir(project_dir):
+            for entry in sorted([(filename[prefixlen:],
+                                  os.path.join(project_dir, filename))
+                                 for filename in os.listdir(project_dir)
+                                 if filename.startswith(prefix_u) and
+                                     isValidVersion(name,
+                                                    filename[prefixlen:])],
+                                reverse=True):
+                version, fullpath = entry
+                if (version not in found_versions and
+                    os.path.isdir(os.path.join(fullpath, bindir))):
+                    found_versions.add(version)
+                    yield entry
+
 
 def findDataPackage(name, version):
     '''

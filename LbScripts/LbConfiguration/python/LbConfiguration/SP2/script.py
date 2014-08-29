@@ -120,7 +120,7 @@ class SP2(EnvConfig.Script):
     __usage__ = "Usage: %prog [OPTION]... [NAME=VALUE]... PROJECT VERSION [COMMAND [ARG]...]"
 
     def _prepare_parser(self):
-        from options import addSearchPath, addPlatform
+        from options import addSearchPath, addPlatform, addListing
         from optparse import OptionValueError
 
         super(SP2, self)._prepare_parser()
@@ -131,6 +131,7 @@ class SP2(EnvConfig.Script):
 
         addPlatform(parser)
         addSearchPath(parser)
+        addListing(parser)
 
         def extract_project_version(opt_str, rargs):
             if not rargs:
@@ -199,6 +200,12 @@ class SP2(EnvConfig.Script):
 
         if self.opts.user_area and not self.opts.no_user_area:
             path.insert(0, self.opts.user_area)
+
+        if self.opts.list:
+            from lookup import listVersions
+            for entry in listVersions(self.project, self.opts.platform):
+                print '%s in %s' % entry
+            sys.exit(0)
 
         # prepare the list of projects to use
         projects = []

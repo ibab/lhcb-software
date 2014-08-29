@@ -181,3 +181,17 @@ def addPlatform(parser):
     parser.set_defaults(platform=platform)
 
     return parser
+
+
+def addListing(parser):
+    '''
+    Add option to request the list of versions.
+    '''
+
+    parser.add_option('-l', '--list', action='store_true',
+                      help='list the available versions of the requested '
+                           'project and exit')
+
+    parser.set_defaults(list=False)
+
+    return parser
