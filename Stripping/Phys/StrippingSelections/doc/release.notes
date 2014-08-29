@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Andrea Contu
+ - Added isolation info for StrippingRareStrange
+
 ! 2014-08-29 - Adlene Hicheur
  - Refine cuts + MDSTFlag = True for StrippingBc2hhh_BnoC
 

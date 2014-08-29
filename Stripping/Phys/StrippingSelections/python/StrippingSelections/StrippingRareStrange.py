@@ -251,14 +251,72 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPMuMu ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMu : 'P2CVSigma09', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMu : 'P2CVSigma10', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMu : 'P2CVSigma11', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.SigmaPMuMuDownLine = StrippingLine(spmumudown_name+"Line",
                                             prescale = config['SigmaPMuMuDownPrescale'],
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPMuMuDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuDown : 'P2CVSigma09', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuDown : 'P2CVSigma10', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuDown : 'P2CVSigma11', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
                                      )
 
         self.SigmaPEELine = StrippingLine(spee_name+"Line",
@@ -266,21 +324,108 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPEE ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPEE : 'P2CVSigma09', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")   : 'P2CVEl09', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPEE : 'P2CVSigma10', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")   : 'P2CVEl10', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPEE : 'P2CVSigma11', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")   : 'P2CVEl11', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.SigmaPEEDownLine = StrippingLine(speedown_name+"Line",
                                             prescale = config['SigmaPEEDownPrescale'],
                                             postscale = config['Postscale'],
                                             algos = [ self.selSigmaPEEDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                             RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPEEDown : 'P2CVSigma09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownElectrons/Particles")   : 'P2CVEl09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPEEDown : 'P2CVSigma10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownElectrons/Particles")   : 'P2CVEl10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPEEDown : 'P2CVSigma11', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownElectrons/Particles")   : 'P2CVEl11', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.SigmaPMuMuLFVLine = StrippingLine(spmumulfv_name+"Line",
                                                prescale = config['SigmaPMuMuLFVPrescale'],
                                                postscale = config['Postscale'],
                                                algos = [ self.selSigmaPMuMuLFV ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuLFV : 'P2CVSigma09', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuLFV : 'P2CVSigma10', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuLFV : 'P2CVSigma11', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
+                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
                                      )
 
         self.SigmaPMuMuLFVDownLine = StrippingLine(spmumulfvdown_name+"Line",
@@ -288,7 +433,36 @@ class RareStrangeLinesConf(LineBuilder) :
                                                postscale = config['Postscale'],
                                                algos = [ self.selSigmaPMuMuLFVDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuLFVDown : 'P2CVSigma09', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuLFVDown : 'P2CVSigma10', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selSigmaPMuMuLFVDown : 'P2CVSigma11', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton11', 
+                                                }
+                                              }
+                                            ]
                                      )
 
         self.KPiMuMuLine = StrippingLine(kpimumu_name+"Line",
@@ -296,14 +470,72 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiMuMu ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMu: 'P2CVK09', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMu : 'P2CVK10', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMu : 'P2CVK11', 
+                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.KPiMuMuLFVLine = StrippingLine(kpimumulfv_name+"Line",
                                          prescale = config['KPiMuMuLFVPrescale'],
                                          postscale = config['Postscale'],
                                          algos = [ self.selKPiMuMuLFV ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                            {
+                                              'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                              'RecursionLevel' : 1, 
+                                              'Locations' : {
+                                              self.selKPiMuMuLFV : 'P2CVK09', 
+                                              DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
+                                              DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                              }
+                                            },
+                                            {
+                                              'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                              'RecursionLevel' : 1, 
+                                              'Locations' : {
+                                              self.selKPiMuMuLFV : 'P2CVK10', 
+                                              DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
+                                              DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                              }
+                                            },
+                                            {
+                                              'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                              'RecursionLevel' : 1, 
+                                              'Locations' : {
+                                              self.selKPiMuMuLFV : 'P2CVK11', 
+                                              DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
+                                              DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                              }
+                                            }
+                                          ]
                                          )
         
         self.KPiPiPiLine = StrippingLine(kpipipi_name+"Line",
@@ -311,35 +543,168 @@ class RareStrangeLinesConf(LineBuilder) :
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPi ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                             RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPi : 'P2CVK09', 
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPi : 'P2CVK10', 
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPi : 'P2CVK11',
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.KPiPiPiMassMeasLine = StrippingLine(kpipipimassmeas_name+"Line",
                                              prescale = config['KPiPiPiMassMeasPrescale'],
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPiMassMeas ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiMassMeas : 'P2CVK09', 
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiMassMeas : 'P2CVK10', 
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiMassMeas : 'P2CVK11',
+                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.KPiMuMuDownLine = StrippingLine(kpimumudown_name+"Line",
                                              prescale = config['KPiMuMuDownPrescale'],
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiMuMuDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMuDown : 'P2CVK09', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMuDown : 'P2CVK10', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMuDown : 'P2CVK11', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.KPiPiPiDownLine = StrippingLine(kpipipidown_name+"Line",
                                              prescale = config['KPiPiPiDownPrescale'],
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPiDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiDown : 'P2CVK09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiDown : 'P2CVK10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiDown : 'P2CVK11',
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                }
+                                              }
+                                            ]
                                      )
         self.KPiPiPiMassMeasDownLine = StrippingLine(kpipipimassmeasdown_name+"Line",
                                              prescale = config['KPiPiPiMassMeasDownPrescale'],
                                             postscale = config['Postscale'],
                                             algos = [ self.selKPiPiPiMassMeasDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiMassMeasDown : 'P2CVK09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiMassMeasDown : 'P2CVK10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiPiPiMassMeasDown : 'P2CVK11',
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                }
+                                              }
+                                            ]
                                      )
      
         self.KPiMuMuLFVDownLine = StrippingLine(kpimumulfvdown_name+"Line",
@@ -347,7 +712,36 @@ class RareStrangeLinesConf(LineBuilder) :
                                          postscale = config['Postscale'],
                                          algos = [ self.selKPiMuMuLFVDown ],
                                             RequiredRawEvents = ["Velo"],
-                                            MDSTFlag=True
+                                            MDSTFlag=True,
+                                            RelatedInfoTools = [
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 0.9, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMuLFVDown : 'P2CVK09', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.0, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMuLFVDown : 'P2CVK10', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                }
+                                              },
+                                              {
+                                                'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.1, 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], 
+                                                'RecursionLevel' : 1, 
+                                                'Locations' : {
+                                                self.selKPiMuMuLFVDown : 'P2CVK11', 
+                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
+                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                }
+                                              }
+                                            ]
                                          )
 
         self.registerLine(self.SigmaPMuMuLine)
