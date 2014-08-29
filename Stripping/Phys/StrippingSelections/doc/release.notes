@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Mat Charles
+ - Updates/patches to StrippingXicc and StrippingXibStarToXibZero
+   (plus matching change to tests/test_Xicc.py)
+
 ! 2014-08-29 - Hannah Mary Evans
  - Added additional dictionary to StrippingBs2MuMuLines
 
