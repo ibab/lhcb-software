@@ -7,7 +7,7 @@ Authors: Eduardo Rodrigues
 """
 
 ########################################################################
-__author__ = ['Eduardo Rodrigues', 'John Beddow']
+__author__ = ['Eduardo Rodrigues', 'John Beddow', 'Christoph Hombach', 'Yanxi Zhang']
 __date__ = '18/01/2014'
 __version__ = '$Revision: 1.6 $'
 
@@ -65,7 +65,7 @@ default_config = { 'NAME'              : 'B2TwoBaryons',
                    , 'Bs0_BPVIPCHI2_Long_Max'       : 25
                    , 'Bs0_VtxChi2_NDF_Long_Max'     : 16
                    , 'Bs0_BPVVDCHI2_Long_Min'       : 4
-                   },
+                   ,
                    'Trk_Chi2'                 : 3.0,
                    'Lambda_DD_MassWindow'     : 20.0, 
                    'Lambda_DD_VtxChi2'        : 12.0,
@@ -87,8 +87,8 @@ default_config = { 'NAME'              : 'B2TwoBaryons',
                    'BDaug_LL_maxDocaChi2'    : 5.0,
                    'BDaug_DD_PTsum'          : 4200.0,
                    'BDaug_LL_PTsum'          : 3000.0,
-                   'Bh_DD_PTMin'             : 500.0,
-                   'Bh_LL_PTMin'             : 500.0,
+                   'B_DD_PTMin'             : 500.0,
+                   'B_LL_PTMin'             : 500.0,
                    'B_VtxChi2'               : 12.0,
                    'B_DD_Dira'               : 0.995,
                    'B_LL_Dira'               : 0.995,
@@ -101,7 +101,8 @@ default_config = { 'NAME'              : 'B2TwoBaryons',
                    'Prescale'                : 1.0,
                    'Postscale'               : 1.0,
                    'MVAResponseLL'           : 0.99,
-
+                   'MVAResponseDD'           : 0.97,
+                   }
                    }
 
 class B2TwoBaryonLines( LineBuilder ) :
@@ -164,6 +165,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                'Prescale',
                                'Postscale',
                                'MVAResponseLL',
+                               'MVAResponseDD',
                              )
     
     def __init__( self,name,config ) :        
@@ -185,8 +187,8 @@ class B2TwoBaryonLines( LineBuilder ) :
         self.selB2LpDD = self.makeB2LpDD( B2Lp_dd_name, config )
         self.selB2LpLL = self.makeB2LpLL( B2Lp_ll_name, config )
 
-        self.selB2LpLLMVA = self.makeB2LpLLMVA( B2Lp_ll_name+"_MVA", config['MVAResponseLL'] )
-        self.selB2LpDDMVA = self.makeB2LpDDMVA( B2Lp_dd_name+"_MVA", config['MVAResponseLL'] )
+        self.selB2LpLLMVA = self.makeB2LpLLMVA( B2Lp_ll_name+"_MVA", config )
+        self.selB2LpDDMVA = self.makeB2LpDDMVA( B2Lp_dd_name+"_MVA", config )
 
         self.B2PPbar = self.makeB2PPbar( B2PPbarName,
                                     config['MinPTB2PPbar'],
@@ -410,17 +412,20 @@ class B2TwoBaryonLines( LineBuilder ) :
         return Selection (name, Algorithm = _B, RequiredSelections = [self.selLambda2LL, StdLooseProtons  ])
     
                                                                                                                         
-    def makeB2LpLLMVA( self,  name, mvaResponse ):
+    def makeB2LpLLMVA( self,  name, config ):
         """
         Select B -> Lambda~0 p+ event by MVA selcetion
         """
         from Configurables import CombineParticles as CP
         #Selection
         _B = CP("B2LpLLMVA")
+        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_LL_maxDocaChi2']
+        _daugPtSumCut   = "(APT1>%s*MeV)"                   % config['B_LL_PTMin']
+
         #_B.DecayDescriptors = [ "B- -> p~- ( Lambda0 -> p+ pi- )", "B+ -> p+ ( Lambda~0 -> p~- pi+ )" ]
         _B.DecayDescriptors = [ "B- -> p~- Lambda0", "B+ -> p+ Lambda~0" ] 
-        _B.CombinationCut = "ADAMASS('B-')<500*MeV"
-        _B.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse')>  %s" % mvaResponse
+        _B.CombinationCut = "(ADAMASS('B-')<500*MeV)&"+_maxDocaChi2Cut+'&'+_daugPtSumCut
+        _B.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse') >  %s" % config['MVAResponseLL']
         #_B.MotherCut = 'ALL'
         # get the Lambda's to filter
         _stdLambdaLL = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
@@ -432,68 +437,72 @@ class B2TwoBaryonLines( LineBuilder ) :
         from MVADictHelpers import addTMVAclassifierValue
         xmldir = "/afs/cern.ch/user/c/chombach/public/Analysis/B2plb/scripts/Stripping21/weights/"
 
-        Vars =    {"B_LoKi_VCHI2NDOF" : "VFASPF(VCHI2)",
-                   "B_LoKi_BPVIPCHI2"       : "MIPCHI2DV(PRIMARY)",
+        Vars =    {"log(B_LoKi_VCHI2NDOF)" : "log(VFASPF(VCHI2))",
+                   "log(B_LoKi_BPVIPCHI2)"       : "log(MIPCHI2DV(PRIMARY))",
                    "B_LoKi_BPVDIRA"             : "BPVDIRA",
-                   "B_LoKi_FDwrtPV"           : "VFASPF(VMINVDDV(PRIMARY))",
-                   "B_LoKi_FDChi2"      : "BPVVDCHI2",
-                   "B_LoKi_PT"           : "PT",
-                   "pB_LoKi_PT"          : "CHILD(PT,1)",
-                   "pL_LoKi_PT"          : "CHILD( CHILD(PT,1) ,2)",
-                   "L_LoKi_P"           : "CHILD(P,2)",
-                   "L_LoKi_Mass"            : "ADMASS('Lambda0')",
-                   "L_LoKi_VtxChi2" : "CHILD(VFASPF(VCHI2),2)",
-                   "L_LoKi_FDChi2"      : "CHILD(BPVVDCHI2,2)",
-                   "pL_LoKi_TrkChi2"     : "CHILD(CHILD(TRCHI2DOF,2),2)",
-                   "pi_LoKi_TrkChi2"     : "CHILD(CHILD(TRCHI2DOF,1),2)",
+                   "log(B_LoKi_FDwrtPV)"           : "log(VFASPF(VMINVDDV(PRIMARY)))",
+                   "log(B_LoKi_FDChi2)"      : "log(BPVVDCHI2)",
+                   "log(B_LoKi_PT)"           : "log(PT)",
+                   "log(pB_LoKi_PT)"          : "log(CHILD(PT,1))",
+                   "log(pL_LoKi_PT)"          : "log(CHILD( CHILD(PT,1) ,2))",
+                   "log(L_LoKi_P)"           : "log(CHILD(P,2))",
+                   "log(L_LoKi_Mass)"            : "log(ADMASS('Lambda0'))",
+                   "log(L_LoKi_VtxChi2)" : "log(CHILD(VFASPF(VCHI2),2))",
+                   "log(L_LoKi_FDChi2)"      : "log(CHILD(BPVVDCHI2,2))",
+                   "log(pL_LoKi_TrkChi2)"     : "log(CHILD(CHILD(TRCHI2DOF,2),2))",
+                   "log(pi_LoKi_TrkChi2)"     : "log(CHILD(CHILD(TRCHI2DOF,1),2))",
                    } 
         addTMVAclassifierValue(Component = _B ,
                               XMLFile = xmldir+"TMVAClassification_2011_ll_BDTG.weights.xml",
                               Variables = Vars,
                               ToolName = "MVAResponse",
                               )
-        return Selection (name, Algorithm = _B, RequiredSelections = [self.selLambda2LL, StdLooseProtons  ])
-        
-    def makeB2LpDDMVA( self,  name, mvaResponse ):
+#        return Selection (name, Algorithm = _B, RequiredSelections = [self.selLambda2LL, StdLooseProtons  ])
+        return Selection (name, Algorithm = _B, RequiredSelections = [_stdLambdaLL, StdLooseProtons  ])
+    def makeB2LpDDMVA( self,  name, config ):
         """
         Select B -> Lambda~0 p+ event by MVA selcetion
         """
         from Configurables import CombineParticles as CP
         #Selection
-        _B = CP("B2LpLLMVA")
+        _B = CP("B2LpDDMVA")
+        _daugPtSumCut   = "(APT1>%s*MeV)"                   % config['B_DD_PTMin']
+        _maxDocaChi2Cut = "(ACUTDOCACHI2(%s,''))"            % config['BDaug_DD_maxDocaChi2']
+        _daugMaxPtIPCut = "(AVAL_MAX(MIPDV(PRIMARY),PT)>%s)" % config['BDaug_MaxPT_IP']
         #_B.DecayDescriptors = [ "B- -> p~- ( Lambda0 -> p+ pi- )", "B+ -> p+ ( Lambda~0 -> p~- pi+ )" ]
         _B.DecayDescriptors = [ "B- -> p~- Lambda0", "B+ -> p+ Lambda~0" ]
-        _B.CombinationCut = "ADAMASS('B-')<500*MeV"
-        _B.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse')>  %s" % mvaResponse
+        _B.CombinationCut = "(ADAMASS('B-')<500*MeV)&"+_maxDocaChi2Cut+'&'+_daugPtSumCut+'&'+_daugMaxPtIPCut
+        _B.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse')>  %s" % config['MVAResponseDD']
         #_B.MotherCut = 'ALL'
         # get the Lambda's to filter
-        _stdLambdaLL = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
+        _stdLambdaDD = DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")
         
         # make the filter
-        _filterLambdaLL = FilterDesktop( Code = "ALL" )
+        _filterLambdaDD = FilterDesktop( Code = "ALL" )
         
         #Configure tool
         from MVADictHelpers import addTMVAclassifierValue
         xmldir = "/afs/cern.ch/user/c/chombach/public/Analysis/B2plb/scripts/Stripping21/weights/"
         
-        Vars =    {"B_LoKi_VCHI2NDOF" : "VFASPF(VCHI2)",
-                   "B_LoKi_BPVIPCHI2"       : "MIPCHI2DV(PRIMARY)",
+        Vars =    {"log(B_LoKi_VCHI2NDOF)" : "log(VFASPF(VCHI2))",
+                   "log(B_LoKi_BPVIPCHI2)"       : "log(MIPCHI2DV(PRIMARY))",
                    "B_LoKi_BPVDIRA"             : "BPVDIRA",
-                   "B_LoKi_FDwrtPV"           : "VFASPF(VMINVDDV(PRIMARY))",
-                   "B_LoKi_FDChi2"      : "BPVVDCHI2",
-                   "B_LoKi_PT"           : "PT",
-                   "pB_LoKi_PT"          : "CHILD(PT,1)",
-                   "pL_LoKi_PT"          : "CHILD( CHILD(PT,1) ,2)",
-                   "L_LoKi_P"           : "CHILD(P,2)",
-                   "L_LoKi_Mass"            : "ADMASS('Lambda0')",
-                   "L_LoKi_VtxChi2" : "CHILD(VFASPF(VCHI2),2)",
-                   "L_LoKi_FDChi2"      : "CHILD(BPVVDCHI2,2)",
-                   "pL_LoKi_TrkChi2"     : "CHILD(CHILD(TRCHI2DOF,2),2)",
-                   "pi_LoKi_TrkChi2"     : "CHILD(CHILD(TRCHI2DOF,1),2)",
-                   }
+                   "log(B_LoKi_FDwrtPV)"           : "log(VFASPF(VMINVDDV(PRIMARY)))",
+                   "log(B_LoKi_FDChi2)"      : "log(BPVVDCHI2)",
+                   "log(B_LoKi_PT)"           : "log(PT)",
+                   "log(pB_LoKi_PT)"          : "log(CHILD(PT,1))",
+                   "log(pL_LoKi_PT)"          : "log(CHILD( CHILD(PT,1) ,2))",
+                   "log(L_LoKi_P)"           : "log(CHILD(P,2))",
+                   "log(L_LoKi_Mass)"            : "log(ADMASS('Lambda0'))",
+                   "log(L_LoKi_VtxChi2)" : "log(CHILD(VFASPF(VCHI2),2))",
+                   "log(L_LoKi_FDChi2)"      : "log(CHILD(BPVVDCHI2,2))",
+                   "log(pL_LoKi_TrkChi2)"     : "log(CHILD(CHILD(TRCHI2DOF,2),2))",
+                   "log(pi_LoKi_TrkChi2)"     : "log(CHILD(CHILD(TRCHI2DOF,1),2))",
+                                      }
+        
         addTMVAclassifierValue(Component = _B ,
-                               XMLFile = xmldir+"TMVAClassification_2011_ll_BDTG.weights.xml",
+                               XMLFile = xmldir+"TMVAClassification_2011_dd_BDTG.weights.xml",
                                Variables = Vars,
                                ToolName = "MVAResponse",
                                )
-        return Selection (name, Algorithm = _B, RequiredSelections = [_stdLambdaLL, StdLooseProtons  ])
+        return Selection (name, Algorithm = _B, RequiredSelections = [_stdLambdaDD, StdLooseProtons  ])

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Christoph Hombach
+	- Updated B2TwoBaryons-Line
+
 ! 2014-08-29 - James Mccarthy
  - Switched to DOCACHI2 cut in StrippingB2XEta.py
 
