@@ -34,7 +34,7 @@ public:
   // interface methods
   StatusCode calculateExtraInfo( const LHCb::Particle* top, const LHCb::Particle* part );
   int getFirstIndex(void) { return LHCb::JetIDInfo::StartJetIDInfo+1; }
-  int getNumberOfParameters(void) { return LHCb::JetIDInfo::MPT - LHCb::JetIDInfo::StartJetIDInfo; }
+  int getNumberOfParameters(void) { return LHCb::JetIDInfo::MNF - LHCb::JetIDInfo::StartJetIDInfo; }
   int getInfo( int index, double& value, std::string& name );
 private:
   // const versions of the above

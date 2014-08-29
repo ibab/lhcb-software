@@ -36,6 +36,7 @@ DECLARE_ALGORITHM_FACTORY( SelectVeloTracksNotFromPVS20p3 )
 SelectVeloTracksNotFromPVS20p3::SelectVeloTracksNotFromPVS20p3( const std::string& name ,
                                                       ISvcLocator* pSvcLocator )
   : GaudiAlgorithm( name , pSvcLocator )
+  , m_DOCABL( LoKi::Constant<const LHCb::Track*,double>(-1.) )
   , m_uniqueSegmentSelector(0)
 {
   declareProperty( "Inputs"
@@ -61,6 +62,10 @@ SelectVeloTracksNotFromPVS20p3::SelectVeloTracksNotFromPVS20p3( const std::strin
   declareProperty( "MinIPChi2"
                    , m_ipchi2cut = -1.0
                    , "Minimum IPChi2 cut value (negative for no cut)" );
+
+  declareProperty( "MinDOCABeamLine"
+                   , m_docablcut = -2.0
+                   , "Minimum DOCA to the beam line (negative for no cut)" );
 
   declareProperty( "RemoveVeloClones"
                    , m_removeVeloClones = true
@@ -104,6 +109,8 @@ StatusCode SelectVeloTracksNotFromPVS20p3::initialize()
   m_verbose = msgLevel(MSG::VERBOSE);
 
   if (m_debug) { debug() << "==> Initialize the VeloWithIP algorithm" << endmsg; }
+
+  m_DOCABL = LoKi::Cuts::Tr_FASTDOCATOBEAMLINE(10.);
 
   return sc;
 }
@@ -191,7 +198,7 @@ StatusCode SelectVeloTracksNotFromPVS20p3::execute()
     m_allPVTracks.clear();
   } else {
     BOOST_FOREACH( const LHCb::Track* iTr, preselTracks ) {
-      if ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) {
+      if ( ( ( ( m_ipcut < 0. ) && ( m_ipchi2cut < 0. ) ) || ( std::find_if( primaryVertices.begin(), primaryVertices.end(), CutIPAndChi2(iTr, m_ipcut, m_ipchi2cut) ) == primaryVertices.end() ) ) && ( m_docablcut < m_DOCABL(iTr) ) ) {
         selectedTracks->insert(iTr->clone());
       }
     }

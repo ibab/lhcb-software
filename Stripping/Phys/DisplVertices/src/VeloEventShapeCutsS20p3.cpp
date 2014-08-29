@@ -95,6 +95,23 @@ double VeloEventShapeCutsS20p3::calculateVeloRatio() const
   return float(recSummary->info(LHCb::RecSummary::nVeloTracks, 0))/recSummary->info(LHCb::RecSummary::nVeloClusters, 1);
 }
 
+namespace {
+  double phiVectorSize( const LHCb::VeloLiteCluster::VeloLiteClusters* clusters, const DeVelo* velo )
+  {
+    double sumx(0.), sumy(0.);
+    LHCb::VeloChannelID chan; double phi;
+    BOOST_FOREACH( const LHCb::VeloLiteCluster& clus, *clusters ) {
+      if (clus.isPhiType()) {
+        chan = clus.channelID();
+        phi = velo->phiSensor(chan.sensor())->globalPhiOfStrip(chan.strip());
+        sumx += std::sin(phi);
+        sumy += std::cos(phi);
+      }
+    }
+    return std::sqrt(sumx*sumx + sumy*sumy);
+  }
+}
+
 //==============================================================================
 // Phi vector size
 //==============================================================================
@@ -105,19 +122,7 @@ double VeloEventShapeCutsS20p3::calculatePhiVectorSize() const
     Error("Could not find velo clusters at "+LHCb::VeloLiteClusterLocation::Default);
     return 0.;
   }
-
-  double sumx(0.), sumy(0.); std::size_t nphi(0);
-  LHCb::VeloChannelID chan; double phi;
-  BOOST_FOREACH( const LHCb::VeloLiteCluster& clus, *clusters ) {
-    if (clus.isPhiType()) {
-      ++nphi;
-      chan = clus.channelID();
-      phi = m_velo->phiSensor(chan.sensor())->globalPhiOfStrip(chan.strip());
-      sumx += std::sin(phi);
-      sumy += std::cos(phi);
-    }
-  }
-  return std::sqrt(sumx*sumx + sumy*sumy)*clusters->size()/nphi;
+  return phiVectorSize(clusters, m_velo);
 }
 
 //==============================================================================
@@ -128,4 +133,50 @@ StatusCode VeloEventShapeCutsS20p3::finalize()
   if (msgLevel(MSG::DEBUG)) { debug() << "==> Finalize" << endmsg; }
 
   return GaudiAlgorithm::finalize();
+}
+
+// ExtraInfo tool
+
+#include "Kernel/RelatedInfoNamed.h"
+
+DECLARE_TOOL_FACTORY( AddVeloEventShapeS21 )
+
+AddVeloEventShapeS21::AddVeloEventShapeS21( const std::string& type, const std::string& name, const IInterface* parent )
+  : GaudiTool( type, name, parent )
+{
+  declareInterface<IRelatedInfoTool>(this);
+}
+
+AddVeloEventShapeS21::~AddVeloEventShapeS21()
+{}
+
+StatusCode AddVeloEventShapeS21::initialize()
+{
+  if (msgLevel(MSG::DEBUG)) { debug() << "==> Initialize" << endmsg; }
+
+  StatusCode sc = GaudiTool::initialize();
+  if (sc.isFailure()) { return sc; }
+
+  m_velo = getDet<DeVelo>(DeVeloLocation::Default);
+  if (m_velo == 0) { return Error("Could not find Velo detector", StatusCode::FAILURE); }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode AddVeloEventShapeS21::calculateRelatedInfo( const LHCb::Particle* /* top */, const LHCb::Particle* /* part */ )
+{
+  const LHCb::VeloLiteCluster::VeloLiteClusters* clusters = get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
+  if (clusters == 0) {
+    Error("Could not find velo clusters at "+LHCb::VeloLiteClusterLocation::Default);
+    return StatusCode::FAILURE;
+  }
+
+  m_map.insert(std::make_pair(RelatedInfoNamed::VELOPHIHITSVECTORSIZE , phiVectorSize(clusters, m_velo)));
+
+  return StatusCode::SUCCESS;
+}
+
+LHCb::RelatedInfoMap* AddVeloEventShapeS21::getInfo(void)
+{
+    return &m_map;
 }

@@ -5,6 +5,11 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-08-25 - Pieter David
+ - Updated definition of Velo phi hits vector size variable, and added IRelatedInfoTool for it
+ - Include MNF in JetID variables
+ - Add option to cut on DOCA for vertex and jet tracks
+
 !========================= DisplVertices v7r18 2014-03-03 =========================
 
 ! 2014-02-14 - Victor Coco

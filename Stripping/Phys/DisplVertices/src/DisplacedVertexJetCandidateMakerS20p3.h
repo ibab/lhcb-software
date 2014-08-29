@@ -54,9 +54,11 @@ private: // TODO clean up and reorder
   double m_maxIP2DV;
   double m_minIp2PV;
   double m_minIpChi22PV;
+  double m_minDOCABL;
   double m_maxIpChi22DVDown;
   LoKi::Types::Fun BestPVIPChi2;
   LoKi::Types::Fun MinPVIP;
+  LoKi::BeamSpot* m_beamspot;
 
   const IDistanceCalculator* m_dist;
 

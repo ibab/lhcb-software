@@ -9,6 +9,7 @@
 #include "Kernel/ITrackUniqueSegmentSelector.h"
 
 #include "LoKi/UniqueKeeper.h"
+#include "LoKi/TrackTypes.h"
 
 /**
  * @class SelectVeloTracksNotFromPVS20p3 HltDisplVertices/SelectVeloTracksNotFromPVS20p3.h
@@ -51,6 +52,7 @@ private:
   bool m_removeBackwardTracks;                ///< Remove backward tracks
   double m_ipcut;                             ///< Minimum IP cut value
   double m_ipchi2cut;                         ///< Minimum IPChi2 cut value
+  double m_docablcut;                         ///< Minimum DOCA to the beam line cut value
   bool m_removeVeloClones;                    ///< Velo clones
   bool m_removePVTracks;                      ///< Remove tracks that are in a PV
   LoKi::UniqueKeeper<LHCb::Track> m_allPVTracks; // PV track keeper
@@ -62,6 +64,8 @@ private:
   // debug level flags
   bool m_debug;
   bool m_verbose;
+
+  LoKi::TrackTypes::TrFun m_DOCABL;
 
   // unique segment selector
   std::string m_uniqueSegmentSelectorName;

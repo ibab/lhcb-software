@@ -92,13 +92,14 @@ StatusCode AddJetIDInfoS20p3::calculateExtraInfo(const LHCb::Particle* /* top */
   clearCache();
 
   double mtf;    /// Highest pT track / Jet pT
+  double mnf;    /// Highest pT neutral part / Jet pT
   double mpt;    /// Highest pT track
   double cpf;    /// charged pT fraction - V0s are not included
   double width;  /// jet width
   int    n90;    /// Number of items responsible for at least 90% of the jet momentum
   int    ntrk;   /// Number of tracks
 
-  double auxptmax=-1, sumpt=0; int iitems=0;
+  double auxptmax=-1, auxptPmax=-1, sumpt=0; int iitems=0;
   double tpx=0, tpy=0;
   std::vector<double> itemspt;
   ntrk=n90=width=0;
@@ -118,6 +119,8 @@ StatusCode AddJetIDInfoS20p3::calculateExtraInfo(const LHCb::Particle* /* top */
       auxptmax = std::max( daug->momentum().Pt(), auxptmax );
       tpx += daug->momentum().Px();
       tpy += daug->momentum().Py();
+    } else {
+      auxptPmax = std::max( daug->momentum().Pt(), auxptPmax );
     }
     ++iitems;
     double pt = daug->momentum().Pt();
@@ -133,6 +136,7 @@ StatusCode AddJetIDInfoS20p3::calculateExtraInfo(const LHCb::Particle* /* top */
     width += ROOT::Math::VectorUtil::DeltaR(daug->momentum(), jet->momentum()) * daug->momentum().Pt();
   }
   mtf = std::min( std::max( 0., auxptmax / jet->momentum().Pt() ), 1. );
+  mnf = std::min( std::max( 0., auxptPmax / jet->momentum().Pt() ), 1. );
   mpt = auxptmax;
   cpf = sqrt(tpx*tpx + tpy*tpy)/jet->momentum().Pt();
   width /= sumpt;
@@ -152,6 +156,7 @@ StatusCode AddJetIDInfoS20p3::calculateExtraInfo(const LHCb::Particle* /* top */
   setCache(LHCb::JetIDInfo::Ntracks , ntrk );
   setCache(LHCb::JetIDInfo::N90     , n90  );
   setCache(LHCb::JetIDInfo::MTF     , mtf  );
+  setCache(LHCb::JetIDInfo::MNF     , mnf  );
   setCache(LHCb::JetIDInfo::MPT     , mpt  );
   setCache(LHCb::JetIDInfo::CPF     , cpf  );
   setCache(LHCb::JetIDInfo::JetWidth, width);
@@ -188,6 +193,7 @@ int AddJetIDInfoS20p3::getInfo(int index, double& value, std::string& name)
     case LHCb::JetIDInfo::Ntracks     : name = "Ntracks"     ; break;
     case LHCb::JetIDInfo::N90         : name = "N90"         ; break;
     case LHCb::JetIDInfo::MTF         : name = "MTF"         ; break;
+    case LHCb::JetIDInfo::MNF         : name = "MNF"         ; break;
     case LHCb::JetIDInfo::MPT         : name = "MPT"         ; break;
     case LHCb::JetIDInfo::CPF         : name = "CPF"         ; break;
     case LHCb::JetIDInfo::JetWidth    : name = "JetWidth"    ; break;

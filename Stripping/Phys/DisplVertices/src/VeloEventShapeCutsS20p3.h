@@ -34,4 +34,26 @@ private:
   AIDA::IHistogram1D* m_hVeloRatio;
   AIDA::IHistogram1D* m_hPhiVectorSize;
 };
+
+#include "Kernel/IRelatedInfoTool.h"
+#include "GaudiAlg/GaudiTool.h"
+#include "Event/RelatedInfoMap.h"
+class AddVeloEventShapeS21 : public GaudiTool, virtual public IRelatedInfoTool {
+public:
+  AddVeloEventShapeS21( const std::string& type, const std::string& name, const IInterface* parent );
+  virtual ~AddVeloEventShapeS21();
+
+  virtual StatusCode initialize();
+  virtual StatusCode calculateRelatedInfo( const LHCb::Particle* top, const LHCb::Particle* part );
+  virtual LHCb::RelatedInfoMap* getInfo(void);
+
+private:
+  DeVelo* m_velo;
+
+  // cache
+  double m_phiVectorSize;
+
+  LHCb::RelatedInfoMap m_map;
+};
+
 #endif // DISPLVERTICES_VELOEVENTSHAPECUTSS20p3_H

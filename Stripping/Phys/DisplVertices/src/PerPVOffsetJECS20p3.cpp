@@ -35,7 +35,7 @@ PerPVOffsetJECS20p3::PerPVOffsetJECS20p3(const std::string& type, const std::str
   , m_shiftJEC()   // property
 {
   declareInterface<IParticleReFitter>(this);
-  declareProperty("Apply"    , m_apply      = true , "Apply JEC (otherwise, only store values)");
+  declareProperty("Apply"    , m_apply      = false, "Apply JEC (otherwise, only store values)");
   declareProperty("HistoPath", m_histo_path = "JEC", "The path of the JEC histograms" );
   declareProperty("ShiftJEC" , m_shiftJEC   = 0.   , "Shift jet energy correction by n sigma");
 }

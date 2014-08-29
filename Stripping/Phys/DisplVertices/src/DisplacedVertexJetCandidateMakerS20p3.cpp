@@ -12,6 +12,7 @@
 #include "LoKi/TrackCuts.h"
 using namespace LoKi::Cuts;
 #include "LoKi/IHybridFactory.h"
+#include "KalmanFilter/FastVertex.h"
 
 // local
 #include "DisplacedVertexJetCandidateMakerS20p3.h"
@@ -73,6 +74,8 @@ DisplacedVertexJetCandidateMakerS20p3::DisplacedVertexJetCandidateMakerS20p3
                  , "Minimum IP to primary vertex");
   declareProperty("MinIPChi22PV"        , m_minIpChi22PV = 20.
                  , "Minimum IPChi2 to primary vertex");
+  declareProperty("MinDOCABL"           , m_minDOCABL = -1.
+                 , "Minimum DOCA to the beamline");
   declareProperty("MaxIPChi22DVDown"    , m_maxIpChi22DVDown = 30.
                  , "Maximum IPChi2 to displaced vertex, for downstream part");
 
@@ -128,13 +131,17 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::initialize()
   m_jetMaker = tool<IJetMaker>( m_jetMakerName, this );
   if ( m_jetMaker == 0 ) { return Error("Could not retrieve IJetMaker", sc); }
   m_JECtool = particleReFitter("JEC");
-  if ( m_JECtool == 0 ) { return Error("Could not retrieve IParticleReFitter for JEC", sc); }
+  if ( m_JECtool == 0 ) { warning() << "Could not retrieve IParticleReFitter for JEC" << endmsg; }
   m_jetIDInfoTool = tool<IExtraInfoTool>( m_jetIDInfoToolName, this );
   if ( m_jetIDInfoTool == 0 ) { return Error("Could not retrieve IExtraInfoTool for JetID", sc); }
   m_combiner = particleCombiner("MomentumCombiner");
 
   BestPVIPChi2 = BPVIPCHI2("")  ;
   MinPVIP      = MINIPWITHDV("")  ;
+  m_beamspot = new LoKi::BeamSpot(10.);
+  if ( ! m_beamspot ) {
+    return Error("Could not get beamspot ", StatusCode::FAILURE);
+  }
 
   m_candProp = ppSvc()->find(m_candPIDName);
   if ( NULL == m_candProp ) {
@@ -160,6 +167,9 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::finalize()
   BestPVIPChi2    = _PDOUBLE(-1.0);
   MinPVIP         = _PDOUBLE(-1.0);
   JETIDCUT        = _PBOOL(false);
+  if ( m_beamspot ) {
+    delete m_beamspot;
+  }
 
   return DaVinciAlgorithm::finalize();
 }
@@ -213,6 +223,8 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::execute()
   LHCb::Particle::Range allPFInputs = get<LHCb::Particle::Range>(m_pfInputLocation);
 
   double t_ip, t_chi2;
+  LoKi::FastVertex::Line beamline( Gaudi::XYZPoint( m_beamspot->x(), m_beamspot->y(), 0. )
+                                 , Gaudi::XYZVector( 0., 0., 1.) );
   StatusCode sc;
   BOOST_FOREACH( const LHCb::Particle* dvCand, particles() ) {
     const LHCb::Vertex* vertex = dvCand->endVertex();
@@ -233,6 +245,12 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::execute()
               }
             } else {
               // tracks with velo segment and (all) composites
+
+              if ( HASTRACK(pfPart) ) {
+                LoKi::FastVertex::distance( pfPart->proto()->track(), beamline, t_ip );
+                if ( t_ip < m_minDOCABL )
+                  continue;
+              }
 
               // NOTE this can be done cleaner
               if ( BestPVIPChi2(pfPart) < m_minIpChi22PV )
@@ -271,7 +289,9 @@ StatusCode DisplacedVertexJetCandidateMakerS20p3::execute()
 
         addJetIDInfo(jet.get());
 
-        m_JECtool->reFit(*(jet.get()));
+        if ( m_JECtool ) {
+          m_JECtool->reFit(*(jet.get()));
+        }
 
         if ( HASPOINTINGINFO(jet.get()) && JETIDCUT(jet.get()) ) {
           if (msgLevel(MSG::DEBUG)) { debug() << "Good jet, keeping for candidate" << endmsg; }
