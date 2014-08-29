@@ -177,7 +177,7 @@ B2XMuMuIncl = {
         # Track cuts
         'Track_CHI2nDOF'      :    3.0,
         'Track_GhostProb'     :    0.35,
-        # Muon cuts
+         # Muon cuts
         'Muon_MinIPCHI2_LOWQ2'   :    16.0,
         'Muon_PIDmu_LOWQ2'       :    2.0,
         'Muon_PIDmuK_LOWQ2'       :    2.0,
@@ -425,36 +425,40 @@ B2XGammaExcl = {
 Lb2L0Gamma = {
     'WGs'         : ['RD'],
     'BUILDERTYPE' : 'StrippingLb2L0GammaConf',
-    'CONFIG'      : {
-         # Prescales
-         'Lb2L0GammaPrescale'          : 1.0,
-         'Lb2L0GammaConvertedPrescale' : 1.0,
-         # Trigger cuts
-         'L0'                          : ['Photon', 'Electron', 'Hadron'],
-         'HLT'                         : [],
-         # Track cuts
-         'Track_Chi2ndf_Max'           : 3.0,
-         'Track_MinChi2ndf_Max'        : 2.0,
-         'Track_GhostProb_Max'         : 0.4,
-         'Track_IPChi2_Min'            : 16.0,
-         'Track_Pt_Min'                : 300.0,
-         'Track_P_Min'                 : 1000.0,
-         # Lambda0 cuts
-         'Lambda0_VtxChi2_Max'         : 9.0,
-         'Lambda0LL_MassWindow'        : 20.0,
-         'Lambda0DD_MassWindow'        : 30.0,
-         'Lambda0_Pt_Min'              : 1000.0,
-         # Photon cuts
-         'Photon_PT_Min'               : 2500.0,
-         'PhotonCnv_PT_Min'            : 1000.0,
-         'PhotonCnv_MM_Max'            : 100.0,
-         'PhotonCnv_VtxChi2_Max'       : 9.0,
-         # Lambda_b cuts
-         'Lambdab_VtxChi2_Max'         : 9.0,
-         'Lambdab_Pt_Min'              : 1000.0,
-         'Lambdab_IPChi2_Max'          : 9.0,
-         'Lambdab_MTDOCAChi2_Max'      : 10.0, # Can be lowered to 7
-         'Lambdab_MassWindow'          : 1100.0,
+    'CONFIG'      : {# Prescales
+    'Lb2L0GammaPrescale'          : 1.0,
+    'Lb2L0GammaConvertedPrescale' : 1.0,
+                                       # Trigger cuts
+    'L0'                          : ['Photon', 'Electron', 'Hadron'],
+    'HLT'                         : [],
+                                       # Track cuts
+    'Track_Chi2ndf_Max'           : 3.0,
+    'Track_MinChi2ndf_Max'        : 2.0,
+    'Track_GhostProb_Max'         : 0.4,
+    'TrackLL_IPChi2_Min'          : 16.0,
+    'Pion_P_Min'                  : 2000.0,
+    'Proton_P_Min'                : 7000.0, # Can increase
+    'Pion_Pt_Min'                 : 300.0,
+    'Proton_Pt_Min'               : 800.0, # Can increase
+                                       # Lambda0 cuts
+    'Lambda0_VtxChi2_Max'         : 9.0,
+    'Lambda0LL_IP_Min'            : 0.05,
+    'Lambda0LL_MassWindow'        : 20.0,
+    'Lambda0DD_MassWindow'        : 30.0,
+    'Lambda0_Pt_Min'              : 1000.0,
+                                       # Photon cuts
+    'Photon_PT_Min'               : 2500.0,
+    'Photon_CL_Min'               : 0.2,
+    'PhotonCnv_PT_Min'            : 1000.0,
+    'PhotonCnv_MM_Max'            : 100.0,
+    'PhotonCnv_VtxChi2_Max'       : 9.0,
+                                       # Lambda_b cuts
+    'Lambdab_VtxChi2_Max'         : 9.0,
+    'Lambdab_Pt_Min'              : 1000.0,
+    'Lambdab_SumPt_Min'           : 5000.0,
+    'Lambdab_IPChi2_Max'          : 9.0,
+    'Lambdab_MTDOCAChi2_Max'      : 7.0,
+    'Lambdab_MassWindow'          : 1100.0,
          },
     'STREAMS' : ['Leptonic']
     }
@@ -843,6 +847,8 @@ B2XTauZVTOP = {
     'CONFIG' :  {
          'B2TauTau_LinePrescale'      : 1,
          'B2TauTau_LinePostscale'     : 1,
+         'B2TauTauSS_LinePrescale'      : 1,
+         'B2TauTauSS_LinePostscale'     : 1,
          'High_LinePrescale'          : 1,
          'High_LinePostscale'         : 1,
          'PT_HAD_ALL_FINAL_STATE'        : '1200',  # MeV
@@ -1145,8 +1151,8 @@ Kshort2MuMuMuMu = {
                 'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
                 'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
 
-                'Kshort2MuMuMuMuLinePrescale'    : 1,
-                'Kshort2MuMuMuMuLinePostscale'   : 1,
+                'Kshort2MuMuMuMuLinePrescale'    : 1, 
+                'Kshort2MuMuMuMuLinePostscale'   : 1
                 },
     'STREAMS' : ['Leptonic']
     }
@@ -1161,36 +1167,38 @@ Kshort2MuMuMuMu = {
 Kshort2PiPiMuMu = {
     'WGs' : ['RD'],
     'BUILDERTYPE' : 'Kshort2PiPiMuMuConf',
-    'CONFIG' : {'MuonP'         : 3000. ,    #MeV
-                'MuonPT'        : 500.  ,    #MeV
-                'MuonMINIPCHI2' : 2     ,    #adminensional
-                'MuonTRCHI2'    : 5     ,    #adminensional
+    'CONFIG' : {
+    'MuonP'         : 3000. ,    #MeV
+    'MuonPT'        : 500.  ,    #MeV
+    'MuonMINIPCHI2' : 2     ,    #adminensional
+    'MuonTRCHI2'    : 5     ,    #adminensional
 
-                'PionP'         : 2000. ,    #MeV
-                'PionPT'        : 300.  ,    #MeV
-                'PionMINIPCHI2' : 2     ,    #adminensional
-                'PionTRCHI2'    : 5     ,    #adminensional
-
-                                  #4body
-                'MINIPCHI2_mumumumu' : 4. ,  #adminensional --  for the individual pions
-                'PT_mumumumu'        : 300 , #MeV
-                'MuonPIDmu_mumumumu' : -1,   #adimensional
-                'DPT_mumumumu'           : 2500.,     #MeV
-                'DVCHI2DOF_mumumumu'     : 8     ,    #adminensional
-                'DMAXDOCA_mumumumu'      : 0.2  ,    #mm
-                'KsDauMAXIPCHI2_mumumumu' : 15    ,    #adimensinal
-                'DFDCHI2_mumumumu'       : 9     ,   #adimensional
-                'DIPCHI2_mumumumu'       : 20    ,    #adimensional
+    'PionP'         : 2000. ,    #MeV
+    'PionPT'        : 300.  ,    #MeV
+    'PionMINIPCHI2' : 2     ,    #adminensional
+    'PionTRCHI2'    : 5     ,    #adminensional
 
 
-                'DDIRA'         : 0.9999,    #adimensional
-                'MaxDimuonMass'    : 260.  ,    #MeV
-                'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
-                'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
+                      #4body
+    'MINIPCHI2_hhmumu' : 4. ,  #adminensional --  for the individual pions
+    'PT_hhmumu'        : 300 , #MeV
+    'MuonPIDmu_hhmumu' : -1,   #adimensional
+    'DPT_hhmumu'           : 2500.,     #MeV
+    'DVCHI2DOF_hhmumu'     : 8     ,    #adminensional
+    'DMAXDOCA_hhmumu'      : 0.2  ,    #mm
+    'KsDauMAXIPCHI2_hhmumu' : 15    ,    #adimensinal
+    'DFDCHI2_hhmumu'       : 9     ,   #adimensional
+    'DIPCHI2_hhmumu'       : 20    ,    #adimensional
 
-                'Kshort2MuMuMuMuLinePrescale'    : 1 ,
-                'Kshort2MuMuMuMuLinePostscale'   : 1
-                },
+
+    'DDIRA'         : 0.9999,    #adimensional                                                                                                                                                                
+    'MaxDimuonMass'    : 260.  ,    #MeV
+    'MaxKsMass'                   : 550.  ,    #MeV, comb mass window
+    'KsMotherMassCut'             : 540.  ,    # MeV, mother mass cut
+
+    'Kshort2PiPiMuMuLinePrescale'    : 1 ,
+    'Kshort2PiPiMuMuLinePostscale'   : 1
+    },
     'STREAMS' : ['Leptonic']
         }
 
@@ -1203,22 +1211,18 @@ Kshort2PiPiMuMu = {
 
 Ks2PiPiee = {
     'WGs' : ['RD'],
-    'BUILDERTYPE' : 'Kshort2PiPieeConf',
+    'BUILDERTYPE' : 'Kshort2eePiPiConf',
     'CONFIG' : {
          'Kshort2eePiPiLinePrescale'    : 1 ,
          'Kshort2eePiPiLinePostscale'   : 1 ,
-
-
          'ePT'           : 100.          , #MeV
          'eMINIPCHI2'    : 16            , #adimensional
          'ePIDe'         : -4            , #adimensional
          'eGhostProb'    : 0.5           , #adimensional
 
-
          'PionMINIPCHI2' : 16            , #adimensional
          'PionPIDK'      : 5             , #adimensional
          'PionGhostProb' : 0.5           , #adimensional
-
 
          #4body
          'KsMAXDOCA'     : 1.            , #mm
