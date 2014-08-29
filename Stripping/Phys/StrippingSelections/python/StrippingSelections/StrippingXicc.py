@@ -29,7 +29,8 @@ __all__ = ( 'XiccBuilder'               ## LineBuilder class specialization
             , 'makeLc'                  ## Lambda_c+ selection
             , 'makeXi'                  ## Xi selection
             , 'makeXicZero'             ## Xi_c^0 selection
-            , 'makeXicPlus'             ## Xi_c^+ selection
+            , 'makeXicPlusToXiPiPi'     ## Xi_c^+ selection
+            , 'makeXicPlusToPKPi'       ## Xi_c^+ selection
             , 'makeXicc'                ## Xi_cc^{+(+)} selection
             , 'makeTisTos'              ## Apply TisTos filters
             , 'filterKaons'
@@ -282,8 +283,9 @@ class XiccBuilder(LineBuilder) :
 
         # Combine Xi- with pion(s) to make Xic0, Xic+
         self.combineXicZero = makeXicZero(name+"CombineXicZero", [ self.combineXi, self.dauPi ])
-        self.combineXicPlus = makeXicPlus(name+"CombineXicPlus", [ self.combineXi, self.dauPi ])
-
+        self.combineXicPlusToPKPi   = makeXicPlusToPKPi(name+"CombineXicPlusToPKPi", [ self.dauP_GP, self.dauK_GP, self.dauPi_GP ])
+        self.combineXicPlusToXiPiPi = makeXicPlusToXiPiPi(name+"CombineXicPlusToXiPiPi", [ self.combineXi, self.dauPi ])
+        self.combineXicPlus = mergeLists(name+'CombineXicPlus', [ self.combineXicPlusToPKPi, self.combineXicPlusToXiPiPi ])
 
         # Combine Lc+ with a K and a pi to make a Xicc+ or Xicc++:
         self.combineXicc1 = makeXicc(name+'CombineXicc1', [ self.filterLc, self.dauPi, self.dauK ], '[Xi_cc+ -> Lambda_c+ K- pi+]cc', _strCutComb, _strCutMoth3)
@@ -758,7 +760,7 @@ def makeXicZero(localName, inputSelections, configDict = _my_immutable_config) :
     _strCutCombXicZero = "( ADAMASS('Xi_c0') < %(Xic0_ADAMASS_HalfWin)s )" % configDict
     _strCutMothXicZero = "(ADMASS('Xi_c0') < %(Xic0_ADMASS_HalfWin)s)" \
                          "& (VFASPF(VCHI2)<%(Xic0_VCHI2_Max)s)" \
-                         "& (BPVVDCHI2 > %(Xic0_BPVDIRA_Min)s )" \
+                         "& (BPVVDCHI2 > %(Xic0_BPVVDCHI2_Min)s )" \
                          "& (BPVDIRA > %(Xic0_BPVDIRA_Min)s)" % configDict
 
     _combineXicZero = CombineParticles( DecayDescriptor = '[Xi_c0 -> Xi- pi+]cc',
@@ -769,7 +771,7 @@ def makeXicZero(localName, inputSelections, configDict = _my_immutable_config) :
                       RequiredSelections = inputSelections )
 
 
-def makeXicPlus(localName, inputSelections, configDict = _my_immutable_config) :
+def makeXicPlusToXiPiPi(localName, inputSelections, configDict = _my_immutable_config) :
     _strCutCombXicPlus = "(( ADAMASS('Xi_c+') < %(Xicplus_ADAMASS_HalfWin)s )" \
                          "& ( AHASCHILD( (ABSID == 'pi+') & (MIPCHI2DV(PRIMARY) > %(Xicplus_1of2_MIPCHI2DV_Min)s) ) ) )" % configDict
 
@@ -781,6 +783,27 @@ def makeXicPlus(localName, inputSelections, configDict = _my_immutable_config) :
     _combineXicPlus = CombineParticles( DecayDescriptor = '[Xi_c+ -> Xi- pi+ pi+]cc',
                                         CombinationCut = _strCutCombXicPlus,
                                         MotherCut = _strCutMothXicPlus )
+
+    return Selection(localName,
+                      Algorithm = _combineXicPlus,
+                      RequiredSelections = inputSelections )
+
+## NEW for Stripping 21
+## This is Xic -> pKpi -- uses very similar cuts to Lc -> pKpi
+def makeXicPlusToPKPi(localName, inputSelections, configDict = _my_immutable_config) :
+    _strCutComb = "(( ADAMASS('Xi_c+') < %(Xicplus_ADAMASS_HalfWin)s )" \
+                  "& (AMAXCHILD(MIPCHI2DV(PRIMARY))>%(Lc_Daug_1of3_MIPCHI2DV_Min)s)" \
+                  "& (ADOCAMAX('')<%(Lc_ADOCAMAX_Max)s)" \
+                  "& (APT>%(Lc_APT_Min)s)" % configDict
+
+    _strCutMoth = "(VFASPF(VCHI2) < %(Lc_VCHI2_Max)s)" \
+                  "& ( ADMASS('Xi_c+') < %(Xicplus_ADMASS_HalfWin)s )" \
+                  "& (BPVVDCHI2>%(Xicplus_BPVVDCHI2_Min)s)" \
+                  "& (BPVDIRA>%(Xicplus_BPVDIRA_Min)s)" % configDict
+
+    _combineXicPlus = CombineParticles( DecayDescriptor = '[Xi_c+ -> p+ K- pi+]cc',
+                                        CombinationCut = _strCutComb,
+                                        MotherCut = _strCutMoth )
 
     return Selection(localName,
                       Algorithm = _combineXicPlus,
