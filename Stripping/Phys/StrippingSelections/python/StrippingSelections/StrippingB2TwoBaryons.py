@@ -37,6 +37,7 @@ default_config = { 'NAME'              : 'B2TwoBaryons',
                    'PIDppi'            : -1,
                    'PIDpk'             : -2,
                    'MaxPTB2PPbar'      : 2100,
+                   'MaxDaughtPB2PPbar' : 300000,
                    'MaxIPChi2B2PPbar'  : 25,
                    'CombMassWindow'    : 200,
                    'VertexChi2B2PPbar' : 9,
@@ -44,6 +45,40 @@ default_config = { 'NAME'              : 'B2TwoBaryons',
                    'BIPChi2B2PPbar'    : 16,
                    'BDIRA'             : 0.9997,
                    'MaxGhostProb'      : 0.4,
+                   'RelatedInfoTools'  : [ { "Type" : "RelInfoConeVariables",
+                     	   		       "ConeAngle" : 1.4,
+                                               "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                               "RecursionLevel" : 1,
+					       "Location"  : 'ConeVar14'	       	 
+                                             },		
+                                             { "Type" : "RelInfoConeVariables",
+				               "ConeAngle" : 1.2,
+                                               "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+					       "RecursionLevel" : 1,                                               
+					       "Location"  : 'ConeVar12'
+                                             },
+                                             { "Type" : "RelInfoConeVariables",
+					       "ConeAngle" : 1.0,
+                                               "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+                                               "RecursionLevel" : 1,
+					       "Location"  : 'ConeVar10'
+                                             },
+                                             { "Type" : "RelInfoConeVariables",
+                                               "ConeAngle" : 0.8,
+					       "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+					       "RecursionLevel" : 1,
+                                               "Location"  : 'ConeVar08'
+			                     },
+					     { "Type" : "RelInfoConeVariables",
+                                               "ConeAngle" : 0.6,
+					       "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+					       "RecursionLevel" : 1,
+                                               "Location"  : 'ConeVar06'
+			                     },
+                                             { "Type" : "RelInfoVertexIsolation",
+                                               "Location" : "VtxIsolationVar"
+                                             }
+                                           ],
                    'ExtraInfoTools'    : [ { "Type" : "ConeVariables"
                                              , "ConeAngle" : 0.6
                                              , "ConeNumber" : 1
@@ -115,6 +150,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                'PIDppi',
                                'PIDpk',
                                'MaxPTB2PPbar',
+                               'MaxDaughtPB2PPbar',	       
                                'MaxIPChi2B2PPbar',
                                'CombMassWindow',
                                'VertexChi2B2PPbar',
@@ -199,6 +235,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                     config['MaxIPChi2B2PPbar'],
                                     config['CombMassWindow'],
                                     config['MaxPTB2PPbar'], 
+                                    config['MaxDaughtPB2PPbar'],	            
                                     config['VertexChi2B2PPbar'],
                                     config['BIPChi2B2PPbar'],
                                     config['BPTB2PPbar'],
@@ -244,8 +281,9 @@ class B2TwoBaryonLines( LineBuilder ) :
         self.lineB2PPbar = StrippingLine( B2PPbarName+"Line",
                                           prescale = config['PrescaleB2PPbar'],
                                           selection = self.B2PPbar,
-                                          ExtraInfoTools = config['ExtraInfoTools'],
-                                          ExtraInfoDaughters = [self.B2PPbar])
+                                          RelatedInfoTools = config['RelatedInfoTools'])
+                                          #ExtraInfoTools = config['ExtraInfoTools'],
+                                          #ExtraInfoDaughters = [self.B2PPbar])
             
         ## Some generic cuts for Bs0.
         ## Vertex chi2 cut depends on number of daughters:
@@ -286,11 +324,11 @@ class B2TwoBaryonLines( LineBuilder ) :
                      minPT,
                      #trChi2,
                      pidPPi, pidPK, minIPChi2, maxIPChi2,
-                     combMassWindow, maxPT,
+                     combMassWindow, maxPT, maxP,
                      vertexChi2, bIPChi2, bPT, bDIRA, maxGhostProb ) :
 
         #_daughters_cuts = "(PT > %(minPT)s * MeV) & (TRCHI2DOF < %(trChi2)s) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s)" %locals()
-        _daughters_cuts = "(PT > %(minPT)s * MeV) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s) & (TRGHP < %(maxGhostProb)s )" %locals()
+        _daughters_cuts = "(PT > %(minPT)s * MeV) & (P < %(maxP)s * MeV) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s) & (TRGHP < %(maxGhostProb)s )" %locals()
         _combination_cuts = "( (ADAMASS('B0') < %(combMassWindow)s * MeV) | (ADAMASS('B_s0') < %(combMassWindow)s * MeV) ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,PT)) > %(maxPT)s * MeV ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s )" %locals()
         _mother_cuts = "(PT > %(bPT)s * MeV) & ( VFASPF(VCHI2PDOF) < %(vertexChi2)s ) & ( BPVDIRA > %(bDIRA)s ) & ( BPVIPCHI2() < %(bIPChi2)s )" %locals()
 

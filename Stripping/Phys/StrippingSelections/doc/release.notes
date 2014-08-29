@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - John Beddow
+ - Updated B2PPbarLine component of StrippingB2TwoBaryons
+
 ! 2014-08-29 - Maurizio Martinelli
  - Added StrippingB2DDphi for Stripping21
 
