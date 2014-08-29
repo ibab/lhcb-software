@@ -122,7 +122,7 @@ import StrippingHighPtTopo
 import StrippingStrangeBaryons
 import StrippingStrangeBaryonsNoPID
 import StrippingDisplVertices
-#import StrippingJets
+import StrippingJets
 import StrippingHighPtJets
 import StrippingInclbJets
 import StrippingLLP2MuX
@@ -187,7 +187,7 @@ import StrippingChargedHyperons
 
 import StrippingKshort2MuMuMuMu
 import StrippingKshort2PiPiMuMu
-#import StrippingKshort2eePiPi
+import StrippingKshort2eePiPi
 import StrippingK0S24X
 
 #import StrippingBu3hFrom2h
