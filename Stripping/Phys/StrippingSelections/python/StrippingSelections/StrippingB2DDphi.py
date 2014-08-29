@@ -17,6 +17,8 @@ from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter, 
 
 # Default configuration dictionary
 config = {
+    # Lines
+    'FULLDST': 'D0D0',
     # Cuts made on all bachelor tracks
     'TR_CHI2DOF_MAX' :3,
     'TR_PT_MIN': 100, #MeV
@@ -26,9 +28,10 @@ config = {
     # Cuts made on all KK's
     'KK_MASS_MAX': 2300, #MeV
     'KK_MASS_MAX_D0D0': 2300, #MeV
-    'KK_MASS_MAX_DpD0': 2300, #MeV
     'KK_MASS_MAX_DD': 2300, #MeV
-    'KK_MASS_MAX_DsDs': 2100, #MeV
+    'KK_MASS_MAX_DsDs': 2200, #MeV
+    'KK_MASS_MAX_DstDst': 2050, #MeV
+    'KK_MASS_MAX_DstDp': 2150, #MeV
     'KK_VCHI2NDOF': 9, 
     # Cuts made on all D0's
     'D0_MASS_WIN': 65, #MeV
@@ -42,9 +45,14 @@ config = {
     'Ds_MASS_WIN': 65, #MeV
     'Ds_PT': 1500., #MeV
     'Ds_VCHI2NDOF': 10,
+    # Cuts made on all D*+'s
+    'Dst_MASS_WIN': 50, #MeV
+    'Dst_PT': 1500., #MeV
+    'Dst_VCHI2NDOF': 15,
     # Cuts made on all B's
     'B_MASS_MAX': 6000, #MeV
     'B_MASS_MIN': 4500, #MeV
+    'B_MASS_MIN_MDST': 4800, #MeV
 #    'B_DOCA': 0.3, #mm
     'B_DOCACHI2': 16, # 4-body decay
     'B_DIRA': 0.99, 
@@ -58,6 +66,9 @@ config = {
 # Configure the LinBuilder
 class B2DDphiConf(LineBuilder):
     __configuration_keys__ = (
+        # Lines
+        'FULLDST',
+        # Cuts made on all bachelor tracks
         'TR_CHI2DOF_MAX',
         'TR_PT_MIN',
         'TR_P_MIN',
@@ -66,9 +77,10 @@ class B2DDphiConf(LineBuilder):
         # Cuts made on all KK's
         'KK_MASS_MAX',
         'KK_MASS_MAX_D0D0',
-        'KK_MASS_MAX_DpD0',
         'KK_MASS_MAX_DD',
         'KK_MASS_MAX_DsDs',
+        'KK_MASS_MAX_DstDp',
+        'KK_MASS_MAX_DstDst',
         'KK_VCHI2NDOF',
         # Cuts made on all D0's
         'D0_MASS_WIN',
@@ -82,9 +94,14 @@ class B2DDphiConf(LineBuilder):
         'Ds_MASS_WIN',
         'Ds_PT',
         'Ds_VCHI2NDOF',
+        # Cuts made on all D*+'s
+        'Dst_MASS_WIN',
+        'Dst_PT',
+        'Dst_VCHI2NDOF',
         # Cuts made on all B's
         'B_MASS_MAX',
         'B_MASS_MIN',
+        'B_MASS_MIN_MDST',
         'B_DOCACHI2',
         'B_DIRA',
         'B_VCHI2NDOF',
@@ -97,6 +114,9 @@ class B2DDphiConf(LineBuilder):
     def __init__(self, moduleName, config):
         LineBuilder.__init__(self, moduleName, config)
 
+        # Lines
+        FullDstLines = config['FULLDST'].split(',')
+
         # Select D candidates from composite common particles
         self.selD = {}
         DSelections = {'D0': {'name':'D02KPi',
@@ -107,7 +127,10 @@ class B2DDphiConf(LineBuilder):
                               'location': 'StdLooseDplus2KPiPi'},
                         'Ds': {'name': 'Ds2KKPi',
                               'pdgname': 'D_s+',
-                              'location': 'StdLooseDsplus2KKPi'} }
+                              'location': 'StdLooseDsplus2KKPi'},
+                        'Dst': {'name': 'Dst2D0Pi_D02KPi',
+                              'pdgname': 'D*(2010)+',
+                              'location': 'StdLooseDstarWithD02KPi'} }
         for name, args in DSelections.iteritems():
             self.selD.update({name: self.makeDCandidate(args['name']+'For'+moduleName,
                                                         args['pdgname'],
@@ -134,19 +157,21 @@ class B2DDphiConf(LineBuilder):
         self.selB = {}
         BCandidateHelper = {'D0D0': {'decayDescriptor': "[B_s0 -> K+ K- D0 D~0]cc",
                                      'selections': ['D0']},
-                            'DpD0': {'decayDescriptor': "[B+ -> K+ K- D+ D~0]cc",
-                                     'selections': ['D0', 'Dp']},
-                            'DD': {'decayDescriptor': "[B+ -> K+ K- D+ D-]cc",
+                            'DstDp': {'decayDescriptor': "[B_s0 -> K+ K- D*(2010)+ D-]cc",
+                                     'selections': ['Dst', 'Dp']},
+                            'DD': {'decayDescriptor': "[B_s0 -> K+ K- D+ D-]cc",
                                      'selections': ['Dp']},
-                            'DsDs': {'decayDescriptor': "[B+ -> K+ K- D_s+ D_s-]cc",
-                                     'selections': ['Ds']} }
+                            'DsDs': {'decayDescriptor': "[B_s0 -> K+ K- D_s+ D_s-]cc",
+                                     'selections': ['Ds']},
+                            'DstDst': {'decayDescriptor': "[B_s0 -> K+ K- D*(2010)+ D*(2010)-]cc",
+                                     'selections': ['Dst']} }
         for name, args in BCandidateHelper.iteritems():
             self.selB.update({name: self.makeBs2DDPhi('B2'+name+'Phi'+ moduleName,
                                                     args['decayDescriptor'],
                                                     Selections = [ self.selK]+[ self.selD[i] for i in args['selections']],
                                                     KKMassMax = config['KK_MASS_MAX_'+name],
                                                     BMassMax = config['B_MASS_MAX'],
-                                                    BMassMin = config['B_MASS_MIN'],
+                                                    BMassMin = config['B_MASS_MIN' if name in FullDstLines else 'B_MASS_MIN_MDST'],
                                                     BVCHI2 = config['B_VCHI2NDOF'],
                                                     BDOCACHI2 = config['B_DOCACHI2'],
                                                     BDIRA = config['B_DIRA'],

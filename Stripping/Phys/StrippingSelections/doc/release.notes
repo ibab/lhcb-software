@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-29 - Maurizio Martinelli
+ - Minor changes in StrippingB2DDphi
+
 ! 2014-08-29 - Stephane Tourneur
  - Removed StrippingBjets.py
  - Added three lines in StrippingJets.py:
