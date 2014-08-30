@@ -474,7 +474,8 @@ class B2TwoBaryonLines( LineBuilder ) :
 
         #Configure tool
         from MVADictHelpers import addTMVAclassifierValue
-        xmldir = "/afs/cern.ch/user/c/chombach/public/Analysis/B2plb/scripts/Stripping21/weights/"
+        xmldir = "$TMVAWEIGHTSROOT/data/"
+        #xmldir = "./"
 
         Vars =    {"log(B_LoKi_VCHI2NDOF)" : "log(VFASPF(VCHI2))",
                    "log(B_LoKi_BPVIPCHI2)"       : "log(MIPCHI2DV(PRIMARY))",
@@ -521,7 +522,8 @@ class B2TwoBaryonLines( LineBuilder ) :
         
         #Configure tool
         from MVADictHelpers import addTMVAclassifierValue
-        xmldir = "/afs/cern.ch/user/c/chombach/public/Analysis/B2plb/scripts/Stripping21/weights/"
+        xmldir = "$TMVAWEIGHTSROOT/data/"
+        #xmldir = "./"
         
         Vars =    {"log(B_LoKi_VCHI2NDOF)" : "log(VFASPF(VCHI2))",
                    "log(B_LoKi_BPVIPCHI2)"       : "log(MIPCHI2DV(PRIMARY))",

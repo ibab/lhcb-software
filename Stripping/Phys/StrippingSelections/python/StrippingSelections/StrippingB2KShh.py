@@ -243,7 +243,9 @@ class B2KShhConf(LineBuilder) :
 
                 # BDT weight file
                 _weightfile1[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT1_%s_%s.xml' % (ks_type, year)
+                #_weightfile1[ks_type][year] = 'B2KShh_BDT1_%s_%s.xml' % (ks_type, year)
                 _weightfile2[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT2_%s_%s.xml' % (ks_type, year)
+                #_weightfile2[ks_type][year] = 'B2KShh_BDT2_%s_%s.xml' % (ks_type, year)
 
                 for sign in _signs :
 
