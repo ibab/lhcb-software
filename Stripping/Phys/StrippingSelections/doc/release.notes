@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-30 - Sandra Amato 
+ - Added RelatedInfo to StrippingD2hhh_conf.py       
+ - Other changes to parameters to make inclusive and exclusive lines consistent
+
 ! 2014-08-30 - Stefano Perazzini
  - Hotfix to tests/test_allstreams_instantiation.py
 

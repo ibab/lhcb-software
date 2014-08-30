@@ -32,6 +32,50 @@ from StandardParticles import ( StdNoPIDsPions,
                                 StdTightKaons ) 
 
 name = "D2hhh"
+# Cuts to be implemented by the Stripping team in Stripping Settings
+# Parameters for Stripping 21 29/8/2014
+# Some tests still to be done, may require small changes to some parameters
+
+config_default = {
+    'DaughterPT'            : 250.,
+    'DaughterP'             : 2000.,
+    'DaughterIPChi2'        : 4.,
+    'Daughter2IPChi2'       : 10.,
+    'D2KKKDaughterIPChi2'   : 2.,
+    'D2KKKDaughter2IPChi2'  : 4.,
+    'KPIDK'                 : 7.,
+    'piPIDK'                : 3.,
+    'PTSum'                 : 2800.,
+    'DOCAMax'               : 0.5,
+    'DOCAChi2'              : 50.,
+    'DPt'                   : 1000.,
+    'DIPChi2'               : 12.,
+    'DdcaFDChi2'            : 125.,
+    'DDIRA'                 : 0.98,
+    'DVXChi2NDOF'           : 10.,
+    'MinMassPosFit'         : 1800.,
+    'MaxMassPosFit'         : 2040.,
+    'D2KPPMaxMassPosFit'    : 1940.,
+    'Ds2KKPosMinMassPosFit' : 1900.,
+    'D2HHHIncMinMassPosFit' : 600.,
+    'D2HHHIncMaxMassPosFit' : 2070.,
+    'MaxTracksInEvent'      : 500,
+    'D2KKPLinePrescale'     : 1.0,
+    'D2KKPLinePostscale'    : 1.0 ,
+    'D2KPPLinePrescale'     : 0.3,
+    'D2KPPLinePostscale'    : 1.0,
+    'D2PPPLinePrescale'     : 1.0,
+    'D2PPPLinePostscale'    : 1.0,
+    'D2KKKLinePrescale'     : 1.0,
+    'D2KKKLinePostscale'    : 1.0,
+    'Ds2KKPosLinePrescale'  : 1.0,
+    'Ds2KKPosLinePostscale' : 1.0,
+    'D2KPPosLinePrescale'   : 1.0,
+    'D2KPPosLinePostscale'  : 1.0,
+    'D2HHHIncLinePrescale'  : 0.15,
+    'D2HHHIncLinePostscale' : 1.0,
+    'HLT'                   : None
+    }
 
 class D2hhhConf(LineBuilder) :
     """
@@ -71,12 +115,11 @@ class D2hhhConf(LineBuilder) :
                               'Daughter2IPChi2',
                               'D2KKKDaughterIPChi2',
                               'D2KKKDaughter2IPChi2',
-##                               'D2KKKDaughter1IPChi2',
                               'KPIDK',
                               'piPIDK',
                               'PTSum',
+                              'DOCAMax',
                               'DOCAChi2',
-                      #        'DOCAmax',
                               'DPt',
                               'DIPChi2',
                               'DdcaFDChi2',
@@ -131,6 +174,7 @@ class D2hhhConf(LineBuilder) :
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['DaughterIPChi2'],
                                      Daughter2IPChi2 = config['Daughter2IPChi2'],
+                                     DaughterDOCAChi2 = config['DOCAChi2'],
                                      PTSum = config['PTSum'],
 				     DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
@@ -148,6 +192,7 @@ class D2hhhConf(LineBuilder) :
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['DaughterIPChi2'],
                                      Daughter2IPChi2 = config['Daughter2IPChi2'],
+                                     DaughterDOCAChi2 = config['DOCAChi2'],
                                      PTSum = config['PTSum'],
 				     DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
@@ -165,6 +210,7 @@ class D2hhhConf(LineBuilder) :
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['DaughterIPChi2'],
                                      Daughter2IPChi2 = config['Daughter2IPChi2'],
+                                     DaughterDOCAChi2 = config['DOCAChi2'],
                                      PTSum = config['PTSum'],
 				     DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
@@ -181,6 +227,7 @@ class D2hhhConf(LineBuilder) :
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['DaughterIPChi2'],
                                      Daughter2IPChi2 = config['Daughter2IPChi2'],
+                                     DaughterDOCAChi2 = config['DOCAChi2'],
                                      PTSum = config['PTSum'],
 				     DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
@@ -198,6 +245,7 @@ class D2hhhConf(LineBuilder) :
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['D2KKKDaughterIPChi2'],
                                      Daughter2IPChi2 = config['D2KKKDaughter2IPChi2'],
+                                     DaughterDOCAChi2 = config['DOCAChi2'],
                                      PTSum = config['PTSum'],
                                      DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
@@ -214,6 +262,7 @@ class D2hhhConf(LineBuilder) :
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['D2KKKDaughterIPChi2'],
                                      Daughter2IPChi2 = config['D2KKKDaughter2IPChi2'],
+                                     DaughterDOCAChi2 = config['DOCAChi2'],
                                      PTSum = config['PTSum'],
                                      DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
@@ -225,50 +274,14 @@ class D2hhhConf(LineBuilder) :
                                      KPIDK = config['KPIDK'],
                                      piPIDK = config['piPIDK']
                                      )
-        ## self.selD2KKK = makeD2KKK(D2KKK_name,  
-##                                      DaughterPT= config['DaughterPT'],
-##                                      DaughterP = config['DaughterP'],
-##                                      DaughterIPChi2 = config['D2KKKDaughterIPChi2'],
-##                                      Daughter2IPChi2 = config['D2KKKDaughter2IPChi2'],
-##                                      Daughter1IPChi2 = config['D2KKKDaughter1IPChi2'],
-##                                      PTSum = config['PTSum'],
-##                                      DaughterDOCA = config['DOCAChi2'],
-##                                      DOCAmax = config['DOCAmax'],
-## 				     DDIRA= config['DDIRA'],
-## 				     DIPChi2= config['DIPChi2'],
-## 				     DdcaFDChi2= config['DdcaFDChi2'],
-##                                      DPt = config['DPt'],
-##                                      DVXChi2NDOF = config['DVXChi2NDOF'],
-## 				     MinMassPosFit= config['MinMassPosFit'],
-## 				     MaxMassPosFit= config['MaxMassPosFit'],
-##                                      KPIDK = config['KPIDK']
-##                                      )
-       ##  self.selDs2KKPos = makeDs2KKPos(Ds2KKPos_name,  
-##                                      DaughterPT= config['DaughterPT'],
-##                                      DaughterP = config['DaughterP'],
-##                                      DaughterIPChi2 = config['DaughterIPChi2'],
-##                                      Daughter2IPChi2 = config['Daughter2IPChi2'],
-##                                      Daughter1IPChi2 = config['D2KKKDaughter1IPChi2'],
-##                                      PTSum = config['PTSum'],
-##                                      DaughterDOCA = config['DOCAChi2'],
-##                                      DOCAmax = config['DOCAmax'],
-## 				     DDIRA= config['DDIRA'],
-## 				     DIPChi2= config['DIPChi2'],
-## 				     DdcaFDChi2= config['DdcaFDChi2'],
-##                                      DPt = config['DPt'],
-##                                      DVXChi2NDOF = config['DVXChi2NDOF'],
-## 				     Ds2KKPosMinMassPosFit = config['Ds2KKPosMinMassPosFit'],
-##                                      MaxMassPosFit= config['MaxMassPosFit'],
-##                                      KPIDK = config['KPIDK'],
-##                                      piPIDK = config['piPIDK']
-##                                      )
         self.selD2HHHInc = makeD2HHHInc(D2HHHInc_name,  
                                      DaughterPT= config['DaughterPT'],
                                      DaughterP = config['DaughterP'],
                                      DaughterIPChi2 = config['DaughterIPChi2'],
                                      Daughter2IPChi2 = config['Daughter2IPChi2'],
                                      PTSum = config['PTSum'],
-                                     DaughterDOCA = config['DOCAChi2'],
+                                     DaughterDOCA = config['DOCAMax'],
+                                     DaughterDOCAChi2 = config['DOCAChi2'],
 				     DDIRA= config['DDIRA'],
 				     DIPChi2= config['DIPChi2'],
 				     DdcaFDChi2= config['DdcaFDChi2'],
@@ -284,6 +297,23 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['D2KKPLinePrescale'],
                                         postscale = config['D2KKPLinePostscale'],
                                         selection = self.selD2KKP,
+					RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 0.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KKP,
+								"Location"     : 'P2ConeVar1' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.0,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KKP,
+								"Location"     : 'P2ConeVar2' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KKP,
+								"Location"     : 'P2ConeVar3' },
+							      { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ],
                                         FILTER = self.filterGE,
                                         HLT = config['HLT']
                                         )
@@ -291,6 +321,23 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['D2KPPLinePrescale'],
                                         postscale = config['D2KPPLinePostscale'],
                                         selection = self.selD2KPP,
+					RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 0.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KPP,
+								"Location"     : 'P2ConeVar1' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.0,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KPP,
+								"Location"     : 'P2ConeVar2' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KPP,
+								"Location"     : 'P2ConeVar3' },
+							      { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ],
                                         FILTER = self.filterGE,
                                         HLT = config['HLT']
                                         )
@@ -298,6 +345,23 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['D2PPPLinePrescale'],
                                         postscale = config['D2PPPLinePostscale'],
                                         selection = self.selD2PPP,
+					RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 0.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2PPP,
+								"Location"     : 'P2ConeVar1' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.0,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2PPP,
+								"Location"     : 'P2ConeVar2' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2PPP,
+								"Location"     : 'P2ConeVar3' },
+							      { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ],
                                         FILTER = self.filterGE,
                                         HLT = config['HLT']
                                         )
@@ -305,6 +369,23 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['D2KPPosLinePrescale'],
                                         postscale = config['D2KPPosLinePostscale'],
                                         selection = self.selD2KPPos,
+					RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 0.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KPPos,
+								"Location"     : 'P2ConeVar1' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.0,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KPPos,
+								"Location"     : 'P2ConeVar2' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KPPos,
+								"Location"     : 'P2ConeVar3' },
+							      { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ],
                                         FILTER = self.filterGE,
                                         HLT = config['HLT']
                                         )
@@ -312,6 +393,23 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['D2KKKLinePrescale'],
                                         postscale = config['D2KKKLinePostscale'],
                                         selection = self.selD2KKK,
+					RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 0.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KKK,
+								"Location"     : 'P2ConeVar1' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.0,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KKK,
+								"Location"     : 'P2ConeVar2' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2KKK,
+								"Location"     : 'P2ConeVar3' },
+							      { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ],
                                         FILTER = self.filterGE,
                                         HLT = config['HLT']
                                         )
@@ -319,6 +417,23 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['Ds2KKPosLinePrescale'],
                                         postscale = config['Ds2KKPosLinePostscale'],
                                         selection = self.selDs2KKPos,
+					RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 0.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selDs2KKPos,
+								"Location"     : 'P2ConeVar1' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.0,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selDs2KKPos,
+								"Location"     : 'P2ConeVar2' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selDs2KKPos,
+								"Location"     : 'P2ConeVar3' },
+							      { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ],
                                         FILTER = self.filterGE,
                                         HLT = config['HLT']
                                         )
@@ -326,6 +441,23 @@ class D2hhhConf(LineBuilder) :
                                         prescale = config['D2HHHIncLinePrescale'],
                                         postscale = config['D2HHHIncLinePostscale'],
                                         selection = self.selD2HHHInc,
+					RelatedInfoTools = [ { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 0.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2HHHInc,
+								"Location"     : 'P2ConeVar1' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.0,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2HHHInc,
+								"Location"     : 'P2ConeVar2' },
+							      { "Type"         : "RelInfoConeVariables",
+								"ConeAngle"    : 1.5,
+								"Variables"    : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+								"TopSelection" : self.selD2HHHInc,
+								"Location"     : 'P2ConeVar3' },
+							      { "Type"         : "RelInfoVertexIsolation",
+                                                                "Location"     : "VertexIsoInfo" } ],
                                         FILTER = self.filterGE,
                                         HLT = config['HLT']
                                         )
@@ -345,6 +477,7 @@ def makeStdD2hhh(name,
 		 DaughterP,
 		 DaughterIPChi2,
 		 Daughter2IPChi2, 
+		 DaughterDOCAChi2, 
 		 PTSum,
 		 DDIRA,
 		 DIPChi2,
@@ -365,6 +498,7 @@ def makeStdD2hhh(name,
     DaughterIPChi2 : Minimum IPChi2 among daughters
     Daughter2IPChi2: Minimum IPChi2 required to at least 2 daughters 
     DaughterP      : Minimum P among daughters
+    DaughterDOCAChi2:Maximum distance of closest approach between 2 daughters in error units 
     PTSum          : Minimum sum of daughters momenta
     DDIRA          : Minimum opening angle between sum_p and FD-direction
     DIPChi2        : Maximum IPChi2 of the D
@@ -387,8 +521,9 @@ def makeStdD2hhh(name,
                       (MINTREE('K-'==ABSID, MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) 
                       """ %locals() 
     _Combcuts_HHH =""" 
-                   (SUMTREE( ISBASIC , PT ) > %(PTSum)s*MeV) &
-                   (2 <= NINGENERATION((MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) , 1)) 
+                   (DOCACHI2MAX < %(DaughterDOCAChi2)s) & 
+                   ((SUMTREE( ISBASIC , PT ) > %(PTSum)s*MeV) &
+                   (2 <= NINGENERATION((MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) , 1))) 
                    """ % locals()
                     
     _Mothercuts_HHH = """ 
@@ -415,157 +550,13 @@ def makeStdD2hhh(name,
                        RequiredSelections = [hhhSel])
 
 
-## def makeD2KKK(name,
-## #              kaonSel,
-##               DaughterPT,
-##               DaughterP,
-##               DaughterIPChi2,
-##               Daughter2IPChi2,
-##               Daughter1IPChi2,
-##               DaughterDOCA,
-##               DOCAmax,
-##               PTSum,
-##               DDIRA,
-##               DIPChi2,
-##               DdcaFDChi2,
-##               DPt,
-##               DVXChi2NDOF,
-##               MinMassPosFit,
-##               MaxMassPosFit,
-##               KPIDK=None
-##               ):
-##     """
-##     Create and return a D -> KKK Selection object.
-##     Arguments:
-##     name           : name of the Selection.
-##     kaonSel        : Input Selection of Kaons 
-##     DaughterPT     : Minimum PT among daughters
-##     DaughterP      : Minimum P among daughters
-##     DaughterIPChi2 : Minimum IPChi2 among daughters
-##     Daughter2IPChi2: Minimum IPChi2 required to at least 2 daughters 
-##     Daughter1IPChi2: Minimum IPChi2 required to at least 1 daughters 
-##     DaughterDOCA   : Maximum chi2 distance of closest approach between 2 daughters
-##     DOCAmax        : Maximum distance of closest approach between 2 daughter
-##     PTSum          : Minimum sum of daughters momenta
-##     DDIRA          : Minimum opening angle between sum_p and FD-direction
-##     DIPChi2        : Maximum IPChi2 of the D
-##     DdcaFDChi2     : Minimum distance from SV to any PV
-##     DPt            : Minimum D Momentum
-##     DVXChi2NDOF    : Maximum Chi2 of the D Vertex
-##     MinMassPosFit  : Minimum value of HHH invariant mass (MeV)
-##     MaxMassPosFit  : Maximum value of HHH invariant mass (MeV).
-##     KPIDK=None     : Minimum Kaon - pion DLL for kaons
-##     """
-
-##     _Daughtercuts_K = "(PT > %(DaughterPT)s *MeV) & (P > %(DaughterP)s *MeV) &((MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) " % locals() 
-                      
-##     _Combcuts_HHH = "(ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) &(ADOCACHI2CUT( %(DaughterDOCA)s , '' )) &(ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daughter1IPChi2)s)) & (ADOCAMAX('') < %(DOCAmax)s*mm)" % locals() 
-                    
-##     _Mothercuts_HHH = """ 
-##                       (PT > %(DPt)s) & (VFASPF(VCHI2/VDOF) < %(DVXChi2NDOF)s) & 
-##                       (BPVDIRA > %(DDIRA)s) & (BPVIPCHI2() < %(DIPChi2)s) & 
-##                       (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DdcaFDChi2)s)
-##                       """ % locals()
-
-##     _cutsMassPosFit = " (in_range ( %(MinMassPosFit)s ,  M  , %(MaxMassPosFit)s )) " % locals()
-
-##     _DaughterCuts = _Daughtercuts_K
-
-##     if KPIDK != None :
-##        _DaughterCuts += " & ((PIDK-PIDpi) > %(KPIDK)s )" %locals()
-                   
-##     _combKKK = CombineParticles()
-##     _combKKK.DecayDescriptor = '[D+ -> K- K+ K+]cc' 
-##     _combKKK.DaughtersCuts = { "K+" : '(' + _DaughterCuts + ')' } 
-##     _combKKK.CombinationCut = '(' + _Combcuts_HHH + ')' 
-##     _combKKK.MotherCut = '(' + _Mothercuts_HHH + ' & ' + _cutsMassPosFit  + ')' 
-
-
-##     return Selection ( name,
-##                        Algorithm = _combKKK,
-##                        RequiredSelections = [StdTightKaons])
-
-## def makeDs2KKPos(name,
-## #              kaonSel,
-##               DaughterPT,
-##               DaughterP,
-##               DaughterIPChi2,
-##               Daughter2IPChi2,
-##               Daughter1IPChi2,
-##               DaughterDOCA,
-##               DOCAmax,
-##               PTSum,
-##               DDIRA,
-##               DIPChi2,
-##               DdcaFDChi2,
-##               DPt,
-##               DVXChi2NDOF,
-##               Ds2KKPosMinMassPosFit,
-##               MaxMassPosFit,
-##               KPIDK=None,
-##               piPIDK=None
-##               ):
-##     """
-##     Create and return a Ds -> KKpiOS Selection object.
-##     Arguments:
-##     name                  : name of the Selection.
-##     kaonSel               : Input Selection of Kaons 
-##     DaughterPT            : Minimum PT among daughters
-##     DaughterP             : Minimum P among daughters
-##     DaughterIPChi2        : Minimum IPChi2 among daughters
-##     Daughter2IPChi2       : Minimum IPChi2 required to at least 2 daughters 
-##     Daughter1IPChi2       : Minimum IPChi2 required to at least 1 daughters 
-##     DaughterDOCA          : Maximum chi2 distance of closest approach between 2 daughters
-##     DOCAmax               : Maximum distance of closest approach between 2 daughters 
-##     PTSum                 : Minimum sum of daughters momenta
-##     DDIRA                 : Minimum opening angle between sum_p and FD-direction
-##     DIPChi2               : Maximum IPChi2 of the D
-##     DdcaFDChi2            : Minimum distance from SV to any PV
-##     DPt                   : Minimum D Momentum
-##     DVXChi2NDOF           : Maximum Chi2 of the D Vertex
-##     Ds2KKPosMinMassPosFit : Minimum value of KKP invariant mass (MeV)
-##     MaxMassPosFit         : Maximum value of HHH invariant mass (MeV).
-##     KPIDK=None            : Minimum Kaon - pion DLL for kaons
-##     piPIDK=None           : Maximum Kaon - pion DLL for pions
-##     """
-
-##     _Daughtercuts = "(PT > %(DaughterPT)s *MeV) & (P > %(DaughterP)s *MeV) &((MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) " % locals() 
-                      
-##     _Combcuts_HHH = "(ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) &(ADOCACHI2CUT( %(DaughterDOCA)s , '' )) &(ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) & (AHASCHILD((MIPCHI2DV(PRIMARY)) > %(Daughter1IPChi2)s)) & (ADOCAMAX('') < %(DOCAmax)s*mm)" % locals() 
-                    
-##     _Mothercuts_HHH = """ 
-##                       (PT > %(DPt)s) & (VFASPF(VCHI2/VDOF) < %(DVXChi2NDOF)s) & 
-##                       (BPVDIRA > %(DDIRA)s) & (BPVIPCHI2() < %(DIPChi2)s) & 
-##                       (VFASPF(VMINVDCHI2DV(PRIMARY)) > %(DdcaFDChi2)s)
-##                       """ % locals()
-
-##     _cutsMassPosFit = " (in_range ( %(Ds2KKPosMinMassPosFit)s ,  M  , %(MaxMassPosFit)s )) " % locals()
-
-##     _DaughterCuts_K = _Daughtercuts
-##     _DaughterCuts_Pi = _Daughtercuts
-
-##     if KPIDK != None :
-##        _DaughterCuts_K += " & (MINTREE('K-'==ABSID, PIDK-PIDpi) > %(KPIDK)s )" %locals()
-        
-##     if piPIDK != None :
-##        _DaughterCuts_Pi += " & (MAXTREE('pi+'==ABSID, PIDK-PIDpi) < %(piPIDK)s) " % locals()               
-##     _combKKpiOS = CombineParticles()
-##     _combKKpiOS.DecayDescriptor = '[D_s+ -> pi- K+ K+]cc' 
-##     _combKKpiOS.DaughtersCuts = { "K+" : '(' + _DaughterCuts_K + ')', "pi+" :  '(' + _DaughterCuts_Pi + ')' } 
-##     _combKKpiOS.CombinationCut = '(' + _Combcuts_HHH + ')' 
-##     _combKKpiOS.MotherCut = '(' + _Mothercuts_HHH + ' & ' + _cutsMassPosFit  + ')' 
-
-
-##     return Selection ( name,
-##                        Algorithm = _combKKpiOS,
-##                        RequiredSelections = [StdTightKaons, StdNoPIDsPions])
-
 def makeD2HHHInc(name,
               DaughterPT,
               DaughterP,
               DaughterIPChi2,
               Daughter2IPChi2,
               DaughterDOCA,
+              DaughterDOCAChi2,
               PTSum,
               DDIRA,
               DIPChi2,
@@ -585,6 +576,7 @@ def makeD2HHHInc(name,
     DaughterIPChi2 : Minimum IPChi2 among daughters
     Daughter2IPChi2: Minimum IPChi2 required to at least 2 daughters 
     DaughterDOCA   : Maximum distance of closest approach between 2 daughters 
+    DaughterDOCAChi2:Maximum distance of closest approach between 2 daughters in error units 
     PTSum          : Minimum sum of daughters momenta
     DDIRA          : Minimum opening angle between sum_p and FD-direction
     DIPChi2        : Maximum IPChi2 of the D
@@ -597,7 +589,7 @@ def makeD2HHHInc(name,
 
     _DaughterCuts = "((MIPCHI2DV(PRIMARY)) > %(DaughterIPChi2)s ) & (P > %(DaughterP)s *MeV) & (PT > %(DaughterPT)s *MeV) " % locals() 
                       
-    _Combcuts_HHH = "(ADOCACHI2CUT( %(DaughterDOCA)s , '' )) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) " % locals()
+    _Combcuts_HHH = "(ADOCACHI2CUT(%(DaughterDOCAChi2)s,'')) & (ADOCACUT(%(DaughterDOCA)s*mm,'')) & (ACHILD(PT,1)+ACHILD(PT,2)+ACHILD(PT,3) > %(PTSum)s*MeV) & (ANUM(MIPCHI2DV(PRIMARY) > %(Daughter2IPChi2)s ) >= 2) " % locals()
                    
     _Mothercuts_HHH = """ 
                       (PT > %(DPt)s) & (VFASPF(VCHI2/VDOF) < %(DVXChi2NDOF)s) & 
