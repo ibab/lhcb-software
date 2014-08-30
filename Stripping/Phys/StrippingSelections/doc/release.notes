@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-30 - Stefano Perazzini
+ - Hotfix to tests/test_allstreams_instantiation.py
+
 ! 2014-08-29 - Maurizio Martinelli
  - Minor changes in StrippingB2DDphi
 

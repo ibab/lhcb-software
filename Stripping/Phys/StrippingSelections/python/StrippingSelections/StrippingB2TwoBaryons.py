@@ -28,7 +28,7 @@ from GaudiKernel.SystemOfUnits import MeV, GeV, mm, ns
 default_config = { 'NAME'              : 'B2TwoBaryons',
                    'WGs'               : ['Charmless'],
                    'BUILDERTYPE'       : 'B2TwoBaryonLines',
-                   'STREAMS'           : { 'Bhadron' : ['StrippingB2PPbarB2PPbarLine'] },
+                   'STREAMS'           : [ 'Bhadron' ],
                    'CONFIG'            :  {
                    'PrescaleB2PPbar'   : 1,
                    'MinPTB2PPbar'      : 900,
@@ -158,6 +158,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                'BIPChi2B2PPbar',
                                'BDIRA',
                                'MaxGhostProb',
+                               'RelatedInfoTools',
                                'ExtraInfoTools',
                                'Trk_Chi2',
                                'Bs0_APT_Min'
