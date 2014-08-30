@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-30 - Carlos Vazquez Sierra
+ - Modified StrippingB2JpsiXforBeta_s.py
+
 ! 2014-08-30 - Sandra Amato 
  - Added RelatedInfo to StrippingD2hhh_conf.py       
  - Other changes to parameters to make inclusive and exclusive lines consistent
