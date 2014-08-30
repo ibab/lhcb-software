@@ -549,13 +549,11 @@ class DstarBuilder(object):
         self.d0pi0_merged   = self._makeDstar02D0Pi0( '', 'Merged'  , self.d.hh )
         self.d0pi0_resolved = self._makeDstar02D0Pi0( '', 'Resolved', self.d.hh )
 
-        # Jordi: create the lists of selections for D*0 -> D0 pi0 with merged and resolved LL and DD pi0s.
-        self.d0pi0_kshh_merged_ll   = self._makeDstar02D0Pi0( 'KsHHLL', 'Merged'  , self.d.kshh_ll )
-        self.d0pi0_kshh_merged_dd   = self._makeDstar02D0Pi0( 'KsHHDD', 'Merged'  , self.d.kshh_dd )
-        self.d0pi0_kshh_resolved_ll = self._makeDstar02D0Pi0( 'KsHHLL', 'Resolved', self.d.kshh_ll )
-        self.d0pi0_kshh_resolved_dd = self._makeDstar02D0Pi0( 'KsHHDD', 'Resolved', self.d.kshh_dd )
+        # Jordi: create the lists of selections for D*0 -> D0 pi0 with merged and resolved LL and DD Ks.
+        self.d0pi0_kshh_ll   = self._makeDstar02D0Pi0( 'KsHHLL', 'all', self.d.kshh_ll )
+        self.d0pi0_kshh_dd   = self._makeDstar02D0Pi0( 'KsHHDD', 'all', self.d.kshh_dd )
 
-        # Jordi: create the lists of selections for D*0 -> D0 gamma for LL and DD photons.
+        # Jordi: create the lists of selections for D*0 -> D0 gamma for LL and DD Ks.
         self.d0gamma_kshh_ll = self._makeDstar02D0Gamma( 'KsHHLL', self.d.kshh_ll )
         self.d0gamma_kshh_dd = self._makeDstar02D0Gamma( 'KsHHDD', self.d.kshh_dd )
 
@@ -610,11 +608,18 @@ class DstarBuilder(object):
                           Algorithm          = cp            ,
                           RequiredSelections = inputs         )
 
+    # Jordi: return the list of requested pi0s. All of them if 'all' is specified.
+    def _pi0list( self, pi0type ):
+        if pi0type.lower() == 'all':
+            return self.pi0[ 'Merged' ] + self.pi0[ 'Resolved' ]
+
+        # Return only the requested type.
+        return self.pi0[ pi0type ]
+
     # Jordi: make the list of selections of D*0 -> D0 pi0 with given selection of D and pi0 type.
     def _makeDstar02D0Pi0( self, name, pi0type, d2x ):
         decays = [ "[D*(2007)0 -> D0 pi0]cc" ]
-        return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self.pi0[ pi0type ] ) ]
-
+        return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self._pi0list( pi0type ) ) ]
 
     # Jordi: make the list of selections of D*0 -> D0 gamma with given selection of D.
     def _makeDstar02D0Gamma( self, name, d2x ):
