@@ -309,7 +309,7 @@ class Beauty2CharmConf(LineBuilder):
         self._makeLines(b2dx.lines,config)
 
         # Lb -> X
-        lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoKaons,topoProtons,pions,kaons,hhh,dst,lambda0, 
+        lb2x = Lb2XBuilder(lc,xicc,d,hh,topoPions,topoKaons,topoProtons,pions,kaons,ks,hhh,dst,lambda0, 
                            config['B2X'])
         self._makeLines(lb2x.lines,config)
 

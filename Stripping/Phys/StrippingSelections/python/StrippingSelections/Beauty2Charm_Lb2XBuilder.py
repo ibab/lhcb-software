@@ -149,7 +149,7 @@ class XiccBuilder(object):
 class Lb2XBuilder(object):
     '''Makes all Lambda_b -> X lines.'''
 
-    def __init__(self,lc,xicc,d,hh,topoPions,topoKaons,protons,pions,kaons,hhh,dst,lambda0,config):
+    def __init__(self,lc,xicc,d,hh,topoPions,topoKaons,protons,pions,kaons,ks,hhh,dst,lambda0,config):
         self.lc = lc.pkpi
         self.lc_pid = lc.pkpi_pid
         self.xic = lc.xic_pkpi
@@ -172,6 +172,7 @@ class Lb2XBuilder(object):
         self.topoPions = [topoPions]
         self.topoKaons = [topoKaons]
         self.protons = [protons]
+        self.ks = ks
         self.config = deepcopy(config)
         self.config['AM_MIN'] = '5200*MeV'
         self.lines = []
