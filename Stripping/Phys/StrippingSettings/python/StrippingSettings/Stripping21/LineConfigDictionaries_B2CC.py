@@ -13,6 +13,7 @@ from GaudiKernel.SystemOfUnits import *
 ## StrippingBetaSJpsi2MuMuLine (MicroDST)
 ## StrippingBetaSLambdab2JpsiLambdaUnbiasedLine (MicroDST)
 ## StrippingBetaSLambdab2JpsippiDetachedLine (MicroDST)
+## StripingBetaSBu2JpsiKPrescaledLine (MDST.DST)
 ## StrippingBetaSBs2JpsiPhiPrescaledLine (MDST.DST)
 ## StrippingBetaSBs2JpsiPhiDetachedLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKstarPrescaledLine (MDST.DST)
@@ -61,8 +62,10 @@ BetaS = {
                     , 'Bd2JpsiKsPrescale'    :       1.0
                     , 'Bs2JpsiPhiPrescale'   :       0.62
                     , 'Bs2JpsiPi0Prescale'   :       0.9
+                    , 'Bu2JpsiKPrescale'     :       0.2
                     },
     'STREAMS'     : { 'Leptonic' : ['StrippingBetaSJpsi2MuMuLine',
+                                    'StrippingBetaSBu2JpsiKPrescaledLine',
                                     'StrippingBetaSBs2JpsiPhiPrescaledLine',
                                     'StrippingBetaSBs2JpsiPhiDetachedLine',
                                     'StrippingBetaSBd2JpsiKstarPrescaledLine',
