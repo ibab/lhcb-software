@@ -8,6 +8,13 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-08-30 - Vanya Belyaev
+ - small fix 
+
+! 2014-08-28 - Vanya Belyaev
+ - add QM-test for the problmem of bad interfernce between 
+   copy constructor and casting operators in ROOT6 
+
 ! 2014-08-28 - Vanya Belyaev
  - reduce certain operations for TProfile
 

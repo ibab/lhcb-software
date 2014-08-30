@@ -138,15 +138,15 @@ def dsID    () : return rootID  ( 'ds_' )
 
 # =============================================================================
 ## FIX
-#  a = VE(1,1)
-#  b = VE(a)
-#  print a, b
+#  @see https://sft.its.cern.ch/jira/browse/ROOT-6627'
 _a  = VE( 1 , 1 )
 _b  = VE( _a    )
-
-if  isequal ( _a.value () , _b.value () ) and isequal ( _a.error () , _b.error () ) : pass 
+if     isequal ( _a.error () , _b.error () ) : pass 
 else :
-    logger.warning( 'ROOT(%s) Disable cast of VE to float' % ROOT.gROOT.GetVersion() )
+    jira = 'https://sft.its.cern.ch/jira/browse/ROOT-6627'
+    vers = ROOT.gROOT.GetVersion() 
+    logger.warning ( 'The problem %s is not solved yet ( ROOT %s) ' %  ( jira , vers ) )
+    logger.warning ( 'Temporarily disable cast of VE to float' )
     del VE.__float__
 
 # =============================================================================
