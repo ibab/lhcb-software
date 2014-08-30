@@ -17,6 +17,7 @@ use  DaVinciTools          v* Phys
 use  LoKiPhys              v* Phys
 use  MVADictTools          v* Phys
 use  IncTopoVert           v* Phys
+use  HltEvent              v* Event
 
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are
