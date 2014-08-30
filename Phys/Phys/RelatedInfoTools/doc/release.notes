@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-08-30 - Anton Poluektov 
+ - Further fix for selections which filter common particles.
+
 ! 2014-08-28 - Cedric Potterat
  - Fixed for nightlies compilation. removing LoKi/ParticleCut includes.
 

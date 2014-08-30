@@ -97,7 +97,7 @@ void AddRelatedInfo::fill( const Particle* top,
  
   bool isInLocations = false; 
 
-  if (level > 0) { 
+  if (m_maxLevel > 0) { 
     // check if the particle is in the list of info locations
     for ( const auto& infoLoc : m_infoLocations )
     {
@@ -117,7 +117,7 @@ void AddRelatedInfo::fill( const Particle* top,
 
     std::string map_location; 
 
-    if (level > 0) {
+    if (m_maxLevel > 0) {
       if (msgLevel(MSG::DEBUG)) 
         debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
       map_location = top_location + "/" + m_infoLocations[c_location];
