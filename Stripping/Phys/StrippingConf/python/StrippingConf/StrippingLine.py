@@ -356,7 +356,13 @@ class StrippingLine(object):
 	locList = []
     	for sel in selList : 
     	    if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' : 
-        	fullPath = "/Event/" + sel.outputLocation()
+		# Need to check if the selection is the top selection
+		# In that case use line's output location because the 
+		# name of the top algoritm is redefined by the framework
+    		if sel == self._initialSelection : 
+    		    fullPath = "/Event/" + self.outputLocation()
+    		else :
+        	    fullPath = "/Event/" + sel.outputLocation()
         	locList += [ fullPath ]
 #                print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
     	    else : 
@@ -467,10 +473,10 @@ class StrippingLine(object):
 
 		from Configurables import AddRelatedInfo
 		relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, self.name() ) )
-		if 'TopSelection' in itool.keys() : 
+		if 'TopSelection' in itool.keys() : # and 'Locations' in itool.keys() : 
     		    relatedInfoAlg.Inputs = self.selectionsToLocations( [ itool['TopSelection'] ] ) 
     		else : 
-    		    relatedInfoAlg.Inputs = [ self.outputLocation() ]
+    		    relatedInfoAlg.Inputs = [ "/Event/" + self.outputLocation() ]
 
         	if 'Locations' in itool.keys() : 
         	    if 'RecursionLevel' in itool.keys() : 

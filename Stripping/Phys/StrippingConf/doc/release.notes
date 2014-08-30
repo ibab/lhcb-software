@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-08-30 - Anton Poluektov 
+ - Fixes in RelatedInfo option of StrippingLine 
+
 ! 2014-08-28 - Anton Poluektov 
  - ... and the same for HLT option
 
