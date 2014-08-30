@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-08-30 - Stefano Perazzini
+ - Added weights files data/TMVAClassification_2011_ll(dd)_BDTG.weights.xml
+
 ! 2014-08-27 - Alex Shires
  - Added BDT weights files for the Vertex and Track isolation tools
 
