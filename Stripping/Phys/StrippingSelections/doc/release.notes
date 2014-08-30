@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Albert Puig
+ - Fixed RelatedInfo for lambda0 in StrippingLb2L0Gamma.py
+ 
 ! 2014-08-30 - Carlos Vazquez Sierra
  - Modified StrippingB2JpsiXforBeta_s.py
 

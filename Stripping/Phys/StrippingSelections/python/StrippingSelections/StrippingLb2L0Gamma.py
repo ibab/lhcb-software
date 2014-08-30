@@ -191,7 +191,8 @@ class StrippingLb2L0GammaConf(LineBuilder):
         #################################################################################
         # Build lines
         #################################################################################
-        sels_line = {lambda0: 'Lambda0'}
+        sels_line = {'Phys/StdLooseLambdaLL' : 'Lambda0',
+                     'Phys/StdLooseLambdaDD' : 'Lambda0'}
         self.line = StrippingLine("Lb2L0Gamma",
                                   prescale=config["Lb2L0GammaPrescale"],
                                   L0DU=l0,
@@ -200,11 +201,13 @@ class StrippingLb2L0GammaConf(LineBuilder):
                                   RelatedInfoTools=[self.get_cone_relinfo(sels_line, 1.7, 1),
                                                     self.get_cone_relinfo(sels_line, 1.35, 1),
                                                     self.get_cone_relinfo(sels_line, 1.0, 1),
+                                                    self.get_vtxisol_relinfo(lambda_b),
                                                    ],
                                   RequiredRawEvents=['Calo'],
                                   selection=lambda_b)
         self.registerLine(self.line)
-        sels_line_cnv = {lambda0     : 'Lambda0',
+        sels_line_cnv = {'Phys/StdLooseLambdaLL' : 'Lambda0',
+                         'Phys/StdLooseLambdaDD' : 'Lambda0',
                          lambda_b_cnv: 'Lambdab'}
         self.line_cnv = StrippingLine("Lb2L0GammaConverted",
                                       prescale=config["Lb2L0GammaPrescale"],
