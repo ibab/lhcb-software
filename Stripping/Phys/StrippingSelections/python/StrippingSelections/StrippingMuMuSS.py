@@ -110,6 +110,7 @@ class MuMuSSConf( LineBuilder ) :
         self.line_MuMuSS1 = StrippingLine( self._myname + 'Line1',
                                            prescale  = config[ 'MuMuSSLine1Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
+                                           MDSTFlag = True,
                                            selection = self.sel_MuMuSS1
                                            )
 
@@ -127,6 +128,7 @@ class MuMuSSConf( LineBuilder ) :
         self.line_MuMuSS2 = StrippingLine( self._myname + 'Line2',
                                            prescale  = config[ 'MuMuSSLine2Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
+                                           MDSTFlag = True,
                                            selection = self.sel_MuMuSS2
                                            )
 
@@ -144,6 +146,7 @@ class MuMuSSConf( LineBuilder ) :
         self.line_MuMuSS3 = StrippingLine( self._myname + 'Line3',
                                            prescale  = config[ 'MuMuSSLine3Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
+                                           MDSTFlag = True,
                                            selection = self.sel_MuMuSS3
                                            )
 
@@ -161,6 +164,7 @@ class MuMuSSConf( LineBuilder ) :
         self.line_MuMuSS4 = StrippingLine( self._myname + 'Line4',
                                            prescale  = config[ 'MuMuSSLine4Prescale' ],
                                            postscale = config[ 'MuMuSSLinePostscale' ],
+                                           MDSTFlag = True,
                                            selection = self.sel_MuMuSS4
                                            )
 
