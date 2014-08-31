@@ -83,7 +83,7 @@ class SingleTrackTISConf( LineBuilder ) :
         self.line_SingleTrackTIS = StrippingLine( self._myname + 'Line',
                                                   prescale  = config[ 'SingleTrackTIS_Prescale' ],
                                                   postscale = config[ 'SingleTrackTIS_Postscale' ],
-                                                  RequiredRawEvents = ["Muon","Calo","Rich"],
+                                                  RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                   checkPV   = False,
                                                   selection = self.sel_Hlt2TIS
                                                   )
@@ -112,7 +112,7 @@ class SingleTrackTISConf( LineBuilder ) :
         self.line_SingleTrackTISLow = StrippingLine( self._myname + 'LowLine',
                                                      prescale  = config[ 'SingleTrackTISLow_Prescale' ],
                                                      postscale = config[ 'SingleTrackTIS_Postscale' ],
-                                                     RequiredRawEvents = ["Muon","Calo","Rich"],
+                                                     RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                      checkPV   = False,
                                                      selection = self.sel_Hlt2TISLow
                                                      )
