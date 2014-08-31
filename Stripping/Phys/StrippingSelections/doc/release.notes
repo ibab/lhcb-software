@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Ronan Wallace
+ - Stripping{Z02MuMu,Z02ee,DY2MuMu,DY2ee,WMu,We,SingleTrackTIS} raw info specified.
+ - Updated StrippingLowMult.py, both format of cuts and prescales.
 
 ! 2014-08-31 - Vanya Belyaev
  - StrippingPromptCharm.py
