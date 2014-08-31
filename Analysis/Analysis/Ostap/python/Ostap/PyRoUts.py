@@ -5401,6 +5401,113 @@ ROOT. TH3 . projZY = lambda s : s.Project ( 'zy' )
 
 
 # =============================================================================
+## minor extension for TCut
+#  @see ROOT::TCut
+#  @author Vanya BELYAEV Ivan.Belyaev
+#  @date   2014-08-31
+def _tc_and_( c , other ) :
+    """
+    Add cuts using logical AND
+
+    >>> cut       =
+    >>> other_cut = 
+    >>> new_cut1  = cut + other_cut ## create new cut  
+    >>> new_cut2  = cut & other_cut ## ditto 
+    """
+    #
+    nc  = ROOT.TCut( c.strip() )
+    nc += other.strip()
+    #
+    return nc 
+
+# =============================================================================
+## minor extension for TCut
+#  @see ROOT::TCut
+#  @author Vanya BELYAEV Ivan.Belyaev
+#  @date   2014-08-31
+def _tc_mult_( c , other ) :
+    """
+    Multiply cuits values
+    
+    >>> cut       =
+    >>> other_cut = 
+    >>> new_cut1  = cut * other_cut ## create new cut  
+    """
+    #
+    nc  = ROOT.TCut( c.strip() )
+    nc *= other.strip()
+    #
+    return nc 
+
+# =============================================================================
+## minor extension for TCut
+#  @see ROOT::TCut
+#  @author Vanya BELYAEV Ivan.Belyaev
+#  @date   2014-08-31
+def _tc_or_ ( c , other ) :
+    """
+    Logical OR for TCut 
+    
+    >>> cut       =
+    >>> other_cut = 
+    >>> new_cut1  = cut | other_cut ## create new cut  
+    """
+    #
+    nc = ROOT.TCut ( c     .strip() )
+    oc = ROOT.TCut ( other .strip() )
+    #
+    ntit = nc.GetTitle()
+    otit = oc.GetTitle()
+    #
+    if   ntit and otit : return ROOT.TCut ( "(%s)||(%s)" % ( ntit , otit ) )
+    elif ntit          : return nc 
+    elif otit          : return oc  
+    ##
+    return ROOT.TCut()
+
+# =============================================================================
+## minor extension for TCut
+#  @see ROOT::TCut
+#  @author Vanya BELYAEV Ivan.Belyaev
+#  @date   2014-08-31
+def _tc_invert_ ( c ) :
+    """
+    Invert the cut 
+    
+    >>> cut     =
+    >>> new_cut = ~cut 
+    """
+    nc  = ROOT.TCut ( c .strip() )
+    tit = nc.GetTitle() 
+    if tit : return ROOT.TCut( '!(%s)' % tit )
+    ##
+    return ROOT.TCut
+
+# =============================================================================
+## Return the cut string without leading/trailing blanks
+#  @see ROOT::TCut
+#  @author Vanya BELYAEV Ivan.Belyaev
+#  @date   2014-08-31
+def _tc_strip_ ( c ) :
+    """
+    Return the cut string without leading/trailing and excessive blanks 
+    """
+    t = c.GetTitle()
+    t = t.strip()
+    while 0 <= t.find ( '  ' ) : t = t.replace ( '  ' , ' ' )
+    c.SetTitle ( t ) 
+    return c 
+
+ROOT.TCut . __add__    = _tc_and_
+ROOT.TCut . __and__    = _tc_and_
+ROOT.TCut . __or__     = _tc_or_
+ROOT.TCut . __mult__   = _tc_mult_
+ROOT.TCut . __invert__ = _tc_invert_
+ROOT.TCut . strip      = _tc_strip_
+
+ROOT.TCut . __repr__   = ROOT.TCut.__str__ 
+        
+# =============================================================================
 # Other decorations 
 # =============================================================================
 import Ostap.TreeDeco
