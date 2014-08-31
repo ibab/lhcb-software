@@ -205,6 +205,14 @@ class B2KShhConf(LineBuilder) :
                     , "ConeAngle" : config['ConeAngle'] 
                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'] 
                     , "Location"  : 'P2ConeVar' },
+                    { "Type" : "RelInfoConeVariables"
+                    , "ConeAngle" : 1.0
+                    , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                    , "Location"  : 'P2ConeVar10' },
+                    { "Type" : "RelInfoConeVariables"
+                    , "ConeAngle" : 1.7
+                    , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                    , "Location"  : 'P2ConeVar17' },
                     { "Type"      : "RelInfoVertexIsolation"
                     , "Location"  : 'VtxIsolationVar'}
                   ]
@@ -243,9 +251,7 @@ class B2KShhConf(LineBuilder) :
 
                 # BDT weight file
                 _weightfile1[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT1_%s_%s.xml' % (ks_type, year)
-                #_weightfile1[ks_type][year] = 'B2KShh_BDT1_%s_%s.xml' % (ks_type, year)
                 _weightfile2[ks_type][year] = '$TMVAWEIGHTSROOT/data/B2KShh_BDT2_%s_%s.xml' % (ks_type, year)
-                #_weightfile2[ks_type][year] = 'B2KShh_BDT2_%s_%s.xml' % (ks_type, year)
 
                 for sign in _signs :
 
@@ -365,7 +371,6 @@ class B2KShhConf(LineBuilder) :
         _motherCuts = _diraCut+'&'+_KSdiffZ
 
         _combName = name + '_' + ks_type + '_' + year + '_' + sign + '_Comb3Body'
-        #_B = CombineParticles3Body( _combName )
         _B = CombineParticles( _combName )
         _B.DaughtersCuts  = { "pi+" : _daughtersCuts }
         _B.CombinationCut = _combCuts

@@ -281,11 +281,11 @@ class Hb2V0V0hConf(LineBuilder) :
         _daughtersCuts = _trkChi2Cut+'&'+_trkGhostProbCut
 
         if v0v0_comb != 'KSLz':
-            _massCutLow     = "(AM>(5279-%s)*MeV)"               % config['B_Mlow']
-            _massCutHigh    = "(AM<(5279+%s)*MeV)"               % config['B_Mhigh']
+            _massCutLow     = "(AM>(5279-%s)*MeV)"           % config['B_Mlow']
+            _massCutHigh    = "(AM<(5279+%s)*MeV)"           % config['B_Mhigh']
         else :
-            _massCutLow     = "(AM>(5791-%s)*MeV)"               % config['Hb_Mlow']
-            _massCutHigh    = "(AM<(5791+%s)*MeV)"               % config['Hb_Mhigh']
+            _massCutLow     = "(AM>(5791-%s)*MeV)"           % config['Hb_Mlow']
+            _massCutHigh    = "(AM<(5791+%s)*MeV)"           % config['Hb_Mhigh']
 
         _aptCut         = "(APT>%s*MeV)"                     % config['B_APTmin']
 
@@ -354,22 +354,21 @@ class Hb2V0V0hConf(LineBuilder) :
         """
 
         if (v0v0v0_comb != 'KSKSLz') | (v0v0v0_comb != 'LzLzLz') :
-            _massCutLow       = "(AM>(5279-%s)*MeV)"                                                        % config['B_Mlow']
-            _massCutHigh      = "(AM<(5279+%s)*MeV)"                                                        % config['B_Mhigh']
+            _massCutLow       = "(AM>(5279-%s)*MeV)"                                                    % config['B_Mlow']
+            _massCutHigh      = "(AM<(5279+%s)*MeV)"                                                    % config['B_Mhigh']
         else : 
-            _massCutLow       = "(AM>(5619-%s)*MeV)"                                                        % config['Hb_Mlow']
-            _massCutHigh      = "(AM<(5619+%s)*MeV)"                                                        % config['Hb_Mhigh']
+            _massCutLow       = "(AM>(5619-%s)*MeV)"                                                    % config['Hb_Mlow']
+            _massCutHigh      = "(AM<(5619+%s)*MeV)"                                                    % config['Hb_Mhigh']
 
         _aptCut           = "(APT>%s*MeV)"                                                              % config['B_APTmin']
 
         _combCuts = _massCutLow+'&'+_massCutHigh+'&'+_aptCut
 
         _diraCut          = "(BPVDIRA>%s)"                                                              % config['B_Dira']
-        _vtxChi2Cut       = "(VFASPF(VCHI2)<%s)"                                                        % config['B_VtxChi2']
         _fdChi2Cut        = "(BPVVDCHI2>%s)"                                                            % config['B_FDChi2']
         _ipChi2Cut        = "(MIPCHI2DV(PRIMARY)<%s)"                                                   % config['B_IPCHI2wrtPV']
 
-        _motherCuts = _diraCut +'&'+_vtxChi2Cut +'&'+_fdChi2Cut+'&'+_ipChi2Cut
+        _motherCuts = _diraCut +'&'+_fdChi2Cut+'&'+_ipChi2Cut
 
         if v0v0v0_comb == 'LLL' : 
             _motherCuts += "& (CHILDCUT(CHILDCUT(ISLONG, 2), 1)) & (CHILDCUT(CHILDCUT(ISLONG, 2), 2)) & (CHILDCUT(CHILDCUT(ISLONG, 2), 3))"
