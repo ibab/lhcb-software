@@ -26,15 +26,18 @@ default_config = {
     'WGs'         : ['RD'],
     'BUILDERTYPE' : 'Beauty2XGammaExclusiveConf',
     'CONFIG'      : {
-          'TrIPchi2'             : 10.       # Dimensionless
+          'TrIPchi2'             : 25.       # Dimensionless
           ,'TrChi2'              : 5.        # dimensionless
+#          ,'TrMaxPT'             : 1200.     # MeV
           
           ,'PhiMassWin'          : 15.       # MeV
           ,'KstMassWin'          : 100.      # MeV
-          ,'PhiVCHI2'            : 15.       # dimensionless
-          ,'KstVCHI2'            : 15.       # dimensionless
+          ,'PhiVCHI2'            : 9.       # dimensionless
+          ,'KstVCHI2'            : 9.       # dimensionless
 
           ,'photonPT'            : 2600.     # MeV
+
+          ,'B_PT'                : 3000.     # MeV
           
           ,'BsMassWin'           : 1000.     # MeV
           ,'B0MassWin'           : 1000.     # MeV
@@ -69,22 +72,9 @@ class Beauty2XGammaExclusiveConf(LineBuilder):
     selPhoton                    : Photon Selection object
     selPhi2KK                    : nominal Phi -> K+K- Selection object
     selKst                       : nominal K* -> K pi Selection object
-    selKstWide                   : K* -> K pi Selection object with wide K* mass window
-    selBs2PhiGammaWideBMass      : Bs -> Phi Gamma Selection object with wide Bs mass window
-    selBs2PhiGammaLooseDira      : Bs -> Phi Gamma Selection object with loose direction angle cut
     selBs2PhiGamma               : nominal Bs -> Phi Gamma Selection object with wide Bs mass window
-    selBd2KstGammaWideBMass      : B0 -> K* Gamma Selection object with wide Bs mass window
-    selBd2KstGammaWideKstMass    : B0 -> K* Gamma Selection object with wide K* mass window
-    selBd2KstGammaLooseDira      : B0 -> K* Gamma Selection object with loose direction angle cut
-    selBd2KstGammaWide           : B0 -> K* Gamma Selection object with wide mass windows for K* and B
     selBd2KstGamma               : nominal B0 -> K* Gamma object Object 
-    Bs2PhiGammaWideBMassLine     : Stripping line out of selBs2PhiGammaWideBMass
-    Bs2PhiGammaWideLooseDiraLine : Stripping line out of selBs2PhiGammaLooseDira
     Bs2PhiGammaLine              : Stripping line out of selBs2PhiGamma
-    Bd2KstGammaWideBMassLine     : Stripping line out of selBd2KstGammaWideBMass
-    Bd2KstGammaWideKstMassLine   : Stripping line out of selBd2KstGammaWideKstMass
-    Bd2KstGammaLooseDiraLine     : Stripping line out of selBd2KstGammaLooseDira
-    Bd2KstGammaWide              : Stripping line out of selBd2KstGammaWide
     Bd2KstGamma                  : Stripping line out of selBd2KstGamma
     lines                  : List of lines
 
@@ -98,6 +88,7 @@ class Beauty2XGammaExclusiveConf(LineBuilder):
                               ,'PhiVCHI2'
                               ,'KstVCHI2'
                               ,'photonPT'
+                              ,'B_PT'
                               ,'BsMassWin'
                               ,'B0MassWin'
                               ,'BsDirAngle'
@@ -128,28 +119,30 @@ class Beauty2XGammaExclusiveConf(LineBuilder):
                                 config['KstMassWin'],
                                 config['KstVCHI2'])
         # Bs->Phi Gamma selections
-        self.selBs2PhiGamma = makeBs2PhiGamma(self.name + '_Bs2PhiGamma',
+        self.selBs2PhiGamma = makeBs2PhiGamma(self.name + 'Bs2PhiGamma',
                                               self.selPhi2KK,
                                               self.selPhoton,
                                               config['BsDirAngle'],
                                               config['BsPVIPchi2'],
-                                              config['BsMassWin'])
+                                              config['BsMassWin'],
+                                              config['B_PT'])
         # Bd->Kst Gamma selections
-        self.selBd2KstGamma = makeBd2KstGamma(self.name + '_Bd2KstGamma',
+        self.selBd2KstGamma = makeBd2KstGamma(self.name + 'Bd2KstGamma',
                                               self.selKst,
                                               self.selPhoton,
                                               config['B0DirAngle'],
                                               config['B0PVIPchi2'],
-                                              config['B0MassWin'])
+                                              config['B0MassWin'],
+                                              config['B_PT'])
         # Stripping lines
-        self.Bs2PhiGammaLine = StrippingLine(self.name + '_Bs2PhiGamma_Line',
+        self.Bs2PhiGammaLine = StrippingLine(self.name + 'Bs2PhiGammaLine',
                                              prescale=config['Bs2PhiGammaPreScale'],
                                              postscale=config['Bs2PhiGammaPostScale'],
                                              RequiredRawEvents = [ "Velo","Tracker","Calo", "Muon","Rich" ],
                                              selection=self.selBs2PhiGamma)
         self.registerLine(self.Bs2PhiGammaLine)
 
-        self.Bd2KstGammaLine = StrippingLine(self.name + '_Bd2KstGamma_Line',
+        self.Bd2KstGammaLine = StrippingLine(self.name + 'Bd2KstGammaLine',
                                              prescale=config['Bd2KstGammaPreScale'],
                                              postscale=config['Bd2KstGammaPostScale'],
                                              RequiredRawEvents = [ "Velo","Tracker","Calo", "Muon","Rich" ],
@@ -217,7 +210,7 @@ def makeKstar(name, TrIPchi2Kst, TrChi2, KstMassWin, KstVCHI2) :
     _stdKst2Kpi = DataOnDemand(Location="Phys/StdVeryLooseDetachedKst2Kpi/Particles")
     return Selection(name, Algorithm=_kstFilter, RequiredSelections=[_stdKst2Kpi])
 
-def makeBs2PhiGamma(name, phiSel, gammaSel, BsDirAngle, BsPVIPchi2, BsMassWin):
+def makeBs2PhiGamma(name, phiSel, gammaSel, BsDirAngle, BsPVIPchi2, BsMassWin, BPT):
     """
     Create and return a Bs -> Phi Gamma Selection object, starting with the daughters' selections.
   
@@ -231,7 +224,7 @@ def makeBs2PhiGamma(name, phiSel, gammaSel, BsDirAngle, BsPVIPchi2, BsMassWin):
     @return: Selection object
     
     """  
-    _motherCut = "(acos(BPVDIRA) < %(BsDirAngle)s) & (BPVIPCHI2() < %(BsPVIPchi2)s) & (ADMASS('B_s0')<%(BsMassWin)s*MeV)" % locals()
+    _motherCut = "(BPVIPCHI2() < %(BsPVIPchi2)s) & (PT > %(BPT)s) & (ADMASS('B_s0')<%(BsMassWin)s*MeV)" % locals()
     _combinationCut = "(ADAMASS('B_s0')<1.5*%(BsMassWin)s*MeV)"  % locals()
     _Bs = CombineParticles(DecayDescriptor="B_s0 -> phi(1020) gamma",
                            CombinationCut=_combinationCut,
@@ -240,7 +233,7 @@ def makeBs2PhiGamma(name, phiSel, gammaSel, BsDirAngle, BsPVIPchi2, BsMassWin):
     #_Bs.addTool(OfflineVertexFitter)
     return Selection(name, Algorithm=_Bs, RequiredSelections=[gammaSel, phiSel])
 
-def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin):
+def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin, BPT):
     """
     Create and return a Bd -> K* Gamma Selection object, starting with the daughters' selections.
 
@@ -255,7 +248,7 @@ def makeBd2KstGamma(name, kstSel, gammaSel, B0DirAngle, B0PVIPchi2, B0MassWin):
 
     """  
     _combinationCut = "ADAMASS('B0') < 1.5*%(B0MassWin)s*MeV" % locals()
-    _motherCut = "(acos(BPVDIRA) <%(B0DirAngle)s) & (BPVIPCHI2() < %(B0PVIPchi2)s) & (ADMASS('B0')<%(B0MassWin)s*MeV)" % locals()
+    _motherCut = "(acos(BPVDIRA) <%(B0DirAngle)s) & (BPVIPCHI2() < %(B0PVIPchi2)s) & (PT > %(BPT)s) & (ADMASS('B0')<%(B0MassWin)s*MeV)" % locals()
     _Bd = CombineParticles(DecayDescriptor="[B0 -> K*(892)0 gamma]cc",
                            CombinationCut=_combinationCut,
                            MotherCut=_motherCut,

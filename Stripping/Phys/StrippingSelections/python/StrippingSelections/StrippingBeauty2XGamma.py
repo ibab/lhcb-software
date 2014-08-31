@@ -73,11 +73,11 @@ default_config = {
           
           # PHOTON CUTS
           'B2XGGammaPTMin'       : 2000.,
-          'B2XGGammaCL'          : 0.25,# was 0.25
+          'B2XGGammaCL'          : 0.,# was 0.25
           'B2XGGammaCNVPTMin'       : 1000.,
           
           # TRACK COMBINATION CUTS
-          'B2XGResMinPT'     : 0.,
+          'B2XGResMinPT'     : 150., #was 0
           'B2XGResMinMass'   : 0., #was 520
           'B2XGResMaxMass'   : 7900., # was 4940 (3500+4*(mK-mpi). Now is maxMLambda+(mp-mpi)+(mK-mpi) to allow for Kp decays is StdLooseNoPIDPions also covers proton tracks
           'B2XGResVtxChi2DOF': 10., # was 25
@@ -87,7 +87,7 @@ default_config = {
           'B2XGResIPCHI2Min' : 0.0,
           
           # B HADRON CUTS
-          'B2XGBMinPT'       : 0., #250., # was 300
+          'B2XGBMinPT'       : 200., #0
           'B2XGBMinM2pi'     : 3280., # was 3280
           'B2XGBMinM3pi'     : 2900., # was 2900
           'B2XGBMinM4pi'     : 2560., # was 2560
@@ -198,12 +198,14 @@ class Beauty2XGammaConf(LineBuilder) :
                                     RequiredSelections = [StdAllNoPIDsPions])
 
         # Neutral Pions, both merged and resolved
-        _Pi0Sel = FilterDesktop(Code = "(P > 4000*MeV) & (PT > 1200*MeV)" % self.__confdict__ )
+        _Pi0MSel = FilterDesktop(Code = "(P > 4000*MeV) & (PT > 1200*MeV)" % self.__confdict__ )
+        _Pi0RSel = FilterDesktop(Code = "(P > 4000*MeV) & (PT > 1500*MeV)" % self.__confdict__ )
+                
         self.MergedPi0 = Selection( 'MergedPi0Sel' + self.name,
-                                    Algorithm = _Pi0Sel,
+                                    Algorithm = _Pi0MSel,
                                     RequiredSelections = [StdLooseMergedPi0])
         self.ResolvedPi0 = Selection( 'ResolvedPi0Sel' + self.name,
-                                      Algorithm = _Pi0Sel,
+                                      Algorithm = _Pi0RSel,
                                       RequiredSelections = [StdLooseResolvedPi0])
         # Ks0s
         mergedKshorts = MergedSelection('MergedKshorts',RequiredSelections = [DataOnDemand("Phys/StdLooseKsDD/Particles"), DataOnDemand("Phys/StdLooseKsLL/Particles")])
@@ -373,7 +375,7 @@ class Beauty2XGammaConf(LineBuilder) :
         # hhh + Ks0 [built as hhh + Ks0]
         self.FourTrackList_wKS0 = makeFourTrackList_wKS0( name="TriTracks_wKS0ForRadiativeB" + self.name,
                                                           ksList=self.Kshort,
-                                                          tritrkList=self.TriTrackList,
+                                                          tritrkList=self.TriTrackListVanya,
                                                           MinPTCut = config['B2XGResMinPT'],
                                                           MinSumPTCut = config['B2XGResSumPtMin'],
                                                           MaxMassCut = config['B2XGResMaxMass'],
@@ -401,7 +403,7 @@ class Beauty2XGammaConf(LineBuilder) :
         # hhh + merged pi0
         self.FourTrackList_wpi0M = makeFourTrackList_wpi0M( name="TriTracks_wpi0_merged_ForRadiativeB" + self.name,
                                                             pi0List=self.MergedPi0,
-                                                            tritrkList=self.TriTrackList,
+                                                            tritrkList=self.TriTrackListVanya,
                                                             MinPTCut = config['B2XGResMinPT'],
                                                             MinSumPTCut = config['B2XGResSumPtMin'],
                                                             MaxMassCut = config['B2XGResMaxMass'],
@@ -415,7 +417,7 @@ class Beauty2XGammaConf(LineBuilder) :
         # hhh + resolved pi0
         self.FourTrackList_wpi0R = makeFourTrackList_wpi0R( name="TriTracks_wpi0_resolved_ForRadiativeB" + self.name,
                                                             pi0List=self.ResolvedPi0,
-                                                            tritrkList=self.TriTrackList,
+                                                            tritrkList=self.TriTrackListVanya,
                                                             MinPTCut = config['B2XGResMinPT'],
                                                             MinSumPTCut = config['B2XGResSumPtMin'],
                                                             MaxMassCut = config['B2XGResMaxMass'],
@@ -462,7 +464,6 @@ class Beauty2XGammaConf(LineBuilder) :
                                           EnableFlavourTagging = True,
                                           RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True,
-                                          ExtraInfoTools = [{'Type' : 'VertexIsolation'}],
                                           RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
     
         B2XG2piCNVName = self.name + "2pi_wCNV_"
@@ -507,7 +508,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                            MDSTFlag = True,
                                            RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])
 
-        B2XG3piName = self.name + "3pi_"
+        B2XG3piName = self.name + "3pi_old_"
         self.RadiativeB2XG3pi = makeB2B2XG3piGamma ( B2XG3piName,
                                                      triTrkList=self.TriTrackList,
                                                      photons=self.Photon,
@@ -573,7 +574,7 @@ class Beauty2XGammaConf(LineBuilder) :
 
         B2XG3piCNVName = self.name + "3pi_wCNV_"
         self.RadiativeB2XG3piCNV = makeB2B2XG3piGamma ( B2XG3piCNVName,
-                                                        triTrkList=self.TriTrackList,
+                                                        triTrkList=self.TriTrackListVanya,
                                                         photons=self.ConvPhoton,
                                                         MinPTCut = config['B2XGBMinPT'],
                                                         MinMassCut = config['B2XGBMinM3pi'],
@@ -656,7 +657,7 @@ class Beauty2XGammaConf(LineBuilder) :
                                               RelatedInfoTools = [{'Type' : 'RelInfoVertexIsolation', 'Location': "VertexIsoInfo"  }])#,
         #                                              EnableFlavourTagging = True )
 
-        B2XG4piName = self.name + "4pi_"
+        B2XG4piName = self.name + "4pi_old_"
         self.RadiativeB2XG4pi = makeB2B2XG4piGamma ( B2XG4piName,
                                                      fourTrkList=self.FourTrackList,
                                                      photons=self.Photon,
@@ -1023,6 +1024,7 @@ def makeTriTrackListVanya( name,
 #    _TriTrackPreVertexCuts += " & (ASUM(SUMTREE(PT,(ISBASIC | (ID=='gamma')),0.0))> %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & (ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _TriTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
+    _MassRangeCuts = "in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
     
     _TriTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
     
@@ -1031,7 +1033,7 @@ def makeTriTrackListVanya( name,
     #                                      MotherCut = _TriTrackPostVertexCuts )
     
     _combineTriTrack = Combine3Particles( DecayDescriptor="[K_1(1270)+ -> pi+ pi- pi+]cc",
-                                          Combination12Cut = _TriTrackPreVertexCuts,
+                                          Combination12Cut = _MassRangeCuts,
                                           CombinationCut = _TriTrackPreVertexCuts,
                                           MotherCut = _TriTrackPostVertexCuts )
     
@@ -1199,6 +1201,7 @@ def makeFourTrackListVanya( name,
 #    _FourTrackPreVertexCuts += "& (ASUM(SUMTREE(PT,ISBASIC,0.0))> %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += "& (ASUM(PT) > %(MinSumPTCut)s)"%locals()
     _FourTrackPreVertexCuts += " & in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
+    _MassRangeCuts = "in_range( %(MinMassCut)s , AM ,%(MaxMassCut)s)" %locals()
     
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
     
@@ -1207,8 +1210,8 @@ def makeFourTrackListVanya( name,
                                           MotherCut = _FourTrackPostVertexCuts )
 
     _combineFourTrack = Combine4Particles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
-                                           Combination12Cut = _FourTrackPreVertexCuts,
-                                           Combination123Cut = _FourTrackPreVertexCuts,
+                                           Combination12Cut = _MassRangeCuts,
+                                           Combination123Cut = _MassRangeCuts,
                                            CombinationCut = _FourTrackPreVertexCuts,
                                            MotherCut = _FourTrackPostVertexCuts )
     
