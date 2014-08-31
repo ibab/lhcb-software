@@ -30,7 +30,7 @@ apply_pattern      reflex_dictionary                                           \
 
 # ================ constituents ===============================================
 library            AnalysisPythonLib  ../src/*.cpp  \
-                   ../$(tag)/dict/AnalysisPython/AnalysisPythonDict_classdef.cpp
+                   ../$(tag)/dict/AnalysisPython/AnalysisPythonDict*_classdef.cpp
 
 macro_append       ROOT_linkopts " -lPyROOT " \
                    target-winxp  " libPyROOT.lib "

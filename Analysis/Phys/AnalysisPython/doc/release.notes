@@ -5,6 +5,11 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-08-31 - Vanya Belyaev
+ - cmt/requirements
+   release a bit the matching pattern for AnalysisPythonLib, allowing 
+   the same code applicable for "old" and "new" file naming convention 
+
 ! 2014-08-25 - Vanya Belyaev
  - more efficient treatment of normalization integrals 
 
