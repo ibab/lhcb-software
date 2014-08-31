@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Ronan Wallace
+ - Updated LineConfigDictionaries_QEE.py for Stripping21 and Stripping21r1
+
 ! 2014-08-31 - Carlos Vazquez Sierra (B2CC)
  - Updated Stripping21r1/LineConfigDictionaries_B2CC.py
 
