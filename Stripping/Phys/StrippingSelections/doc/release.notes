@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-08-31
+ - Update to StrippingB2XTauNu.py incuding Inverted vertex selections for D* and Lc
 
 ! 2014-08-31 - Mika Vesterinnen
  - Update to StrippinTrackEffD0ToK3Pi.py
