@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Cedric Potterat
+ - putting back StrippingJEts into __init__ after seomone comment it out
+
 ! 2014-08-31 - Ronan Wallace
  - Added new module StrippingDitau.py
  - Updated StrippingDijets.py
