@@ -4,6 +4,38 @@
 
 # Accepts events that passed the relevant HLT line.
 
+__all__ = ('LowMultConf',
+           'makeKaons',
+           'makeKaonsForKK',
+           'makePions',
+           'makeProtons',
+           'makeGamma',
+           'makeDiElectrons',
+           'makePi0R',
+           'makePi0M',
+           'makeKsLL',
+           'makeKsDD',
+           'makePi0D',
+           'makeD2KPi',
+           'makeD2KPiPi',
+           'makeD2K3Pi',
+           'makeD2KPiPi0',
+           'makeD2KsPiPi',
+           'makeDstar2D0Pi',
+           'makeChiC2KK',
+           'makeChiC2PiPi',
+           'makeChiC2PP',
+           'makeChiC2KKPiPi',
+           'makeChiC2KKKK',
+           'makeChiC2PiPiPiPi',
+           'makeDD',
+           'makeKK',
+           'makeLMR2KPi',
+           'makeLMR2KK',
+           'makeLMR2PiPi',
+           'makePHI2KK',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
@@ -11,7 +43,10 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from GaudiKernel.SystemOfUnits import MeV, mm
 
-confdict_LowMult = {
+default_config = {
+    'NAME'        : 'LowMult',
+    'BUILDERTYPE' : 'LowMultConf',
+    'CONFIG'      : {
     'LowMultPrescale'           : 1.0
     , 'LowMultWSPrescale'       : 0.1
     , 'LowMultHHIncPrescale'    : 0.1
@@ -109,9 +144,12 @@ confdict_LowMult = {
     , 'PHI2KK_ADOCAmax'      : 0.1 * mm
     , 'PHI2KK_APmin'         : 4000.0 * MeV
     , 'PHI2KK_VtxChi2DoFmax' : 3.0
-    }
+    },
+    'WGs'         : ['QEE'],
+    'STREAMS'     : [ 'EW' ]
+}
 
-default_name = "LowMult"
+
 
 class LowMultConf(LineBuilder) :
 
@@ -229,6 +267,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultMuon_line = StrippingLine(self._myname+"MuonLine",
                                               prescale = config['LowMultPrescale'],
                                               postscale = config['LowMultPostscale'],
+                                              RequiredRawEvents = ["Velo"],
                                               checkPV = False,
                                               FILTER = ExclusiveMuonGEC,
                                               HLT = "HLT_PASS('Hlt2LowMultMuonDecision')"
@@ -239,6 +278,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultMuon_lineps = StrippingLine(self._myname+"MuonLinePS",
                                                 prescale = config['LowMultPrescale'],
                                                 postscale = config['LowMultPostscale'],
+                                                RequiredRawEvents = ["Velo"],
                                                 checkPV = False,
                                                 HLT = "HLT_PASS('Hlt2LowMultMuonDecision')"
                                                 )
@@ -252,6 +292,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultPP2PPMuMu_line = StrippingLine(self._myname+"PP2PPMuMuLine",
                                                    prescale = config['LowMultPrescale'],
                                                    postscale = config['LowMultPostscale'],
+                                                   RequiredRawEvents = ["Velo"],
                                                    checkPV = False,
                                                    FILTER = ExclusiveDiMuonGEC,
                                                    HLT = "HLT_PASS('Hlt2diPhotonDiMuonDecision')"
@@ -262,6 +303,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultPP2PPMuMu_lineps = StrippingLine(self._myname+"PP2PPMuMuLinePS",
                                                      prescale = config['LowMultPrescale'],
                                                      postscale = config['LowMultPostscale'],
+                                                     RequiredRawEvents = ["Velo"],
                                                      checkPV = False,
                                                      HLT = "HLT_PASS('Hlt2diPhotonDiMuonDecision')"
                                                      )
@@ -277,6 +319,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultElectron_line = StrippingLine(self._myname+"ElectronLine",
                                                   prescale = config['LowMultPrescale'],
                                                   postscale = config['LowMultPostscale'],
+                                                  RequiredRawEvents = ["Velo"],
                                                   checkPV = False,
                                                   FILTER = ExclusiveElectronGEC,
                                                   HLT = "HLT_PASS('Hlt2LowMultElectronDecision')"
@@ -287,6 +330,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultElectron_lineps = StrippingLine(self._myname+"ElectronLinePS",
                                                     prescale = config['LowMultPrescale'],
                                                     postscale = config['LowMultPostscale'],
+                                                    RequiredRawEvents = ["Velo"],
                                                     checkPV = False,
                                                     HLT = "HLT_PASS('Hlt2LowMultElectronDecision')"
                                                     )
@@ -296,6 +340,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultElectron_nofilter_line = StrippingLine(self._myname+"ElectronLineNoFilter",
                                                            prescale = config['LowMultPrescale'],
                                                            postscale = config['LowMultPostscale'],
+                                                           RequiredRawEvents = ["Velo"],
                                                            checkPV = False,
                                                            HLT = "HLT_PASS('Hlt2LowMultElectron_nofilterDecision')"
                                                            )
@@ -313,6 +358,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultHadron_line = StrippingLine(self._myname+"HadronLine",
                                                 prescale = config['LowMultPrescale'],
                                                 postscale = config['LowMultPostscale'],
+                                                RequiredRawEvents = ["Velo"],
                                                 checkPV = False,
                                                 FILTER = ExclusiveHadronGEC,
                                                 HLT = "HLT_PASS('Hlt2LowMultHadronDecision')"
@@ -322,8 +368,9 @@ class LowMultConf(LineBuilder) :
 
 
         self.LowMultHadron_lineps = StrippingLine(self._myname+"HadronLinePS",
-                                                  prescale = config['LowMultPrescale'],
+                                                  prescale = config['LowMultPrescale_ps'],
                                                   postscale = config['LowMultPostscale'],
+                                                  RequiredRawEvents = ["Velo"],
                                                   checkPV = False,
                                                   HLT = "HLT_PASS('Hlt2LowMultHadronDecision')"
                                                   )
@@ -331,8 +378,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultHadron_lineps)
 
         self.LowMultHadron_nofilter_line = StrippingLine(self._myname+"HadronLineNoFilter",
-                                                         prescale = config['LowMultPrescale'],
+                                                         prescale = config['LowMultNoFilterPrescale'],
                                                          postscale = config['LowMultPostscale'],
+                                                         RequiredRawEvents = ["Velo"],
                                                          checkPV = False,
                                                          HLT = "HLT_PASS('Hlt2LowMultHadron_nofilterDecision')"
                                                          )
@@ -345,6 +393,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultPhoton_line = StrippingLine(self._myname+"PhotonLine",
                                                 prescale = config['LowMultPrescale'],
                                                 postscale = config['LowMultPostscale'],
+                                                RequiredRawEvents = ["Velo"],
                                                 checkPV = False,
                                                 HLT = "HLT_PASS('Hlt2LowMultPhotonDecision')"
                                                 )
@@ -1137,6 +1186,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPi_line = StrippingLine(self._myname + "CEP_D2KPi_line",
                                                    prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                    postscale = config['LowMultPostscale'],
+                                                   RequiredRawEvents = ["Velo"],
                                                    checkPV = False,
                                                    FILTER = CEPFilterTracks,
                                                    HLT = CEPHLTReq,
@@ -1147,6 +1197,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KpPipPim_line = StrippingLine(self._myname + "CEP_D2KpPipPim_line",
                                                         prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                         postscale = config['LowMultPostscale'],
+                                                        RequiredRawEvents = ["Velo"],
                                                         checkPV = False,
                                                         FILTER = CEPFilterTracks,
                                                         HLT = CEPHLTReq,
@@ -1157,6 +1208,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_line = StrippingLine(self._myname + "CEP_D2KmPipPip_line",
                                                         prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                         postscale = config['LowMultPostscale'],
+                                                        RequiredRawEvents = ["Velo"],
                                                         checkPV = False,
                                                         FILTER = CEPFilterTracks,
                                                         HLT = CEPHLTReq,
@@ -1167,6 +1219,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2K3Pi_line = StrippingLine(self._myname + "CEP_D2K3Pi_line",
                                                     prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                     postscale = config['LowMultPostscale'],
+                                                    RequiredRawEvents = ["Velo"],
                                                     checkPV = False,
                                                     FILTER = CEPFilterTracks,
                                                     HLT = CEPHLTReq,
@@ -1177,6 +1230,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPiPi0R_line = StrippingLine(self._myname + "CEP_D2KPiPi0R_line",
                                                        prescale = config['LowMultPrescale'],
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracks,
                                                        HLT = CEPHLTReq,
@@ -1187,6 +1241,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPiPi0M_line = StrippingLine(self._myname + "CEP_D2KPiPi0M_line",
                                                        prescale = config['LowMultPrescale'],
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracks,
                                                        HLT = CEPHLTReq,
@@ -1197,6 +1252,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPiPi0D_line = StrippingLine(self._myname + "CEP_D2KPiPi0D_line",
                                                        prescale = config['LowMultPrescale'],
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracks,
                                                        HLT = CEPHLTReq,
@@ -1207,6 +1263,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KsPiPiLL_line = StrippingLine(self._myname + "CEP_D2KsPiPiLL_line",
                                                         prescale = config['LowMultPrescale'],
                                                         postscale = config['LowMultPostscale'],
+                                                        RequiredRawEvents = ["Velo"],
                                                         checkPV = False,
                                                         FILTER = CEPFilterTracks,
                                                         HLT = CEPHLTReq,
@@ -1217,6 +1274,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KsPiPiDD_line = StrippingLine(self._myname + "CEP_D2KsPiPiDD_line",
                                                         prescale = config['LowMultPrescale'],
                                                         postscale = config['LowMultPostscale'],
+                                                        RequiredRawEvents = ["Velo"],
                                                         checkPV = False,
                                                         FILTER = CEPFilterTracks,
                                                         HLT = CEPHLTReq,
@@ -1227,6 +1285,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPi_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_line",
                                                             prescale = config['LowMultPrescale'],
                                                             postscale = config['LowMultPostscale'],
+                                                            RequiredRawEvents = ["Velo"],
                                                             checkPV = False,
                                                             FILTER = CEPFilterTracks,
                                                             HLT = CEPHLTReq,
@@ -1237,6 +1296,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_K3Pi_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_K3Pi_line",
                                                              prescale = config['LowMultPrescale'],
                                                              postscale = config['LowMultPostscale'],
+                                                             RequiredRawEvents = ["Velo"],
                                                              checkPV = False,
                                                              FILTER = CEPFilterTracks,
                                                              HLT = CEPHLTReq,
@@ -1247,6 +1307,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPiPi0R_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPiPi0R_line",
                                                                 prescale = config['LowMultPrescale'],
                                                                 postscale = config['LowMultPostscale'],
+                                                                RequiredRawEvents = ["Velo"],
                                                                 checkPV = False,
                                                                 FILTER = CEPFilterTracks,
                                                                 HLT = CEPHLTReq,
@@ -1257,6 +1318,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPiPi0M_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPiPi0M_line",
                                                                 prescale = config['LowMultPrescale'],
                                                                 postscale = config['LowMultPostscale'],
+                                                                RequiredRawEvents = ["Velo"],
                                                                 checkPV = False,
                                                                 FILTER = CEPFilterTracks,
                                                                 HLT = CEPHLTReq,
@@ -1267,6 +1329,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPiPi0D_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPiPi0D_line",
                                                                 prescale = config['LowMultPrescale'],
                                                                 postscale = config['LowMultPostscale'],
+                                                                RequiredRawEvents = ["Velo"],
                                                                 checkPV = False,
                                                                 FILTER = CEPFilterTracks,
                                                                 HLT = CEPHLTReq,
@@ -1277,6 +1340,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KsPiPiLL_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KsPiPiLL_line",
                                                                  prescale = config['LowMultPrescale'],
                                                                  postscale = config['LowMultPostscale'],
+                                                                 RequiredRawEvents = ["Velo"],
                                                                  checkPV = False,
                                                                  FILTER = CEPFilterTracks,
                                                                  HLT = CEPHLTReq,
@@ -1287,6 +1351,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KsPiPiDD_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KsPiPiDD_line",
                                                                  prescale = config['LowMultPrescale'],
                                                                  postscale = config['LowMultPostscale'],
+                                                                 RequiredRawEvents = ["Velo"],
                                                                  checkPV = False,
                                                                  FILTER = CEPFilterTracks,
                                                                  HLT = CEPHLTReq,
@@ -1297,6 +1362,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_ChiC2KK_line = StrippingLine(self._myname + "CEP_ChiC2KK_line",
                                                      prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                      postscale = config['LowMultPostscale'],
+                                                     RequiredRawEvents = ["Velo"],
                                                      checkPV = False,
                                                      FILTER = CEPFilterTracksChiC2HH,
                                                      HLT = CEPHLTReq,
@@ -1307,6 +1373,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_ChiC2PiPi_line = StrippingLine(self._myname + "CEP_ChiC2PiPi_line",
                                                        prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracksChiC2HH,
                                                        HLT = CEPHLTReq,
@@ -1317,6 +1384,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_ChiC2PP_line = StrippingLine(self._myname + "CEP_ChiC2PP_line",
                                                      prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                      postscale = config['LowMultPostscale'],
+                                                     RequiredRawEvents = ["Velo"],
                                                      checkPV = False,
                                                      FILTER = CEPFilterTracksChiC2HH,
                                                      HLT = CEPHLTReq,
@@ -1327,6 +1395,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_ChiC2KpKpPimPim_line = StrippingLine(self._myname + "CEP_ChiC2KpKpPimPim_line",
                                                              prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                              postscale = config['LowMultPostscale'],
+                                                             RequiredRawEvents = ["Velo"],
                                                              checkPV = False,
                                                              FILTER = CEPFilterTracksChiC2HHHH,
                                                              HLT = CEPHLTReq,
@@ -1337,6 +1406,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_ChiC2KpKmPipPim_line = StrippingLine(self._myname + "CEP_ChiC2KpKmPipPim_line",
                                                              prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                              postscale = config['LowMultPostscale'],
+                                                             RequiredRawEvents = ["Velo"],
                                                              checkPV = False,
                                                              FILTER = CEPFilterTracksChiC2HHHH,
                                                              HLT = CEPHLTReq,
@@ -1347,6 +1417,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_ChiC2KKKK_line = StrippingLine(self._myname + "CEP_ChiC2KKKK_line",
                                                        prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracksChiC2HHHH,
                                                        HLT = CEPHLTReq,
@@ -1357,6 +1428,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_ChiC2PiPiPiPi_line = StrippingLine(self._myname + "CEP_ChiC2PiPiPiPi_line",
                                                            prescale = config['LowMultPrescale'], #Originally LowMultPrescale
                                                            postscale = config['LowMultPostscale'],
+                                                           RequiredRawEvents = ["Velo"],
                                                            checkPV = False,
                                                            FILTER = CEPFilterTracksChiC2HHHH,
                                                            HLT = CEPHLTReq,
@@ -1367,6 +1439,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPi_D2KPi_line = StrippingLine(self._myname + "CEP_D2KPi_D2KPi_line",
                                                          prescale = config['LowMultPrescale'],
                                                          postscale = config['LowMultPostscale'],
+                                                         RequiredRawEvents = ["Velo"],
                                                          checkPV = False,
                                                          FILTER = CEPFilterTracks,
                                                          HLT = CEPHLTReq,
@@ -1377,6 +1450,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2K3Pi_D2K3Pi_line = StrippingLine(self._myname + "CEP_D2K3Pi_D2K3Pi_line",
                                                            prescale = config['LowMultPrescale'],
                                                            postscale = config['LowMultPostscale'],
+                                                           RequiredRawEvents = ["Velo"],
                                                            checkPV = False,
                                                            FILTER = CEPFilterTracks,
                                                            HLT = CEPHLTReq,
@@ -1387,6 +1461,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KsPiPiLL_D2KsPiPiLL_line = StrippingLine(self._myname + "CEP_D2KsPiPiLL_D2KsPiPiLL_line",
                                                                    prescale = config['LowMultPrescale'],
                                                                    postscale = config['LowMultPostscale'],
+                                                                   RequiredRawEvents = ["Velo"],
                                                                    checkPV = False,
                                                                    FILTER = CEPFilterTracks,
                                                                    HLT = CEPHLTReq,
@@ -1397,6 +1472,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KsPiPiDD_D2KsPiPiDD_line = StrippingLine(self._myname + "CEP_D2KsPiPiDD_D2KsPiPiDD_line",
                                                                    prescale = config['LowMultPrescale'],
                                                                    postscale = config['LowMultPostscale'],
+                                                                   RequiredRawEvents = ["Velo"],
                                                                    checkPV = False,
                                                                    FILTER = CEPFilterTracks,
                                                                    HLT = CEPHLTReq,
@@ -1407,6 +1483,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KsPiPiLL_D2KsPiPiDD_line = StrippingLine(self._myname + "CEP_D2KsPiPiLL_D2KsPiPiDD_line",
                                                                    prescale = config['LowMultPrescale'],
                                                                    postscale = config['LowMultPostscale'],
+                                                                   RequiredRawEvents = ["Velo"],
                                                                    checkPV = False,
                                                                    FILTER = CEPFilterTracks,
                                                                    HLT = CEPHLTReq,
@@ -1417,6 +1494,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPi_D2KPiPi0R_line = StrippingLine(self._myname + "CEP_D2KPi_D2KPiPi0R_line",
                                                              prescale = config['LowMultPrescale'],
                                                              postscale = config['LowMultPostscale'],
+                                                             RequiredRawEvents = ["Velo"],
                                                              checkPV = False,
                                                              FILTER = CEPFilterTracks,
                                                              HLT = CEPHLTReq,
@@ -1427,6 +1505,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPi_D2K3Pi_line = StrippingLine(self._myname + "CEP_D2KPi_D2K3Pi_line",
                                                           prescale = config['LowMultPrescale'],
                                                           postscale = config['LowMultPostscale'],
+                                                          RequiredRawEvents = ["Velo"],
                                                           checkPV = False,
                                                           FILTER = CEPFilterTracks,
                                                           HLT = CEPHLTReq,
@@ -1437,6 +1516,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPi_D2KsPiPiLL_line = StrippingLine(self._myname + "CEP_D2KPi_D2KsPiPiLL_line",
                                                               prescale = config['LowMultPrescale'],
                                                               postscale = config['LowMultPostscale'],
+                                                              RequiredRawEvents = ["Velo"],
                                                               checkPV = False,
                                                               FILTER = CEPFilterTracks,
                                                               HLT = CEPHLTReq,
@@ -1447,6 +1527,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KPi_D2KsPiPiDD_line = StrippingLine(self._myname + "CEP_D2KPi_D2KsPiPiDD_line",
                                                               prescale = config['LowMultPrescale'],
                                                               postscale = config['LowMultPostscale'],
+                                                              RequiredRawEvents = ["Velo"],
                                                               checkPV = False,
                                                               FILTER = CEPFilterTracks,
                                                               HLT = CEPHLTReq,
@@ -1457,6 +1538,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2K3Pi_D2KPiPi0R_line = StrippingLine(self._myname + "CEP_D2K3Pi_D2KPiPi0R_line",
                                                               prescale = config['LowMultPrescale'],
                                                               postscale = config['LowMultPostscale'],
+                                                              RequiredRawEvents = ["Velo"],
                                                               checkPV = False,
                                                               FILTER = CEPFilterTracks,
                                                               HLT = CEPHLTReq,
@@ -1467,6 +1549,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2K3Pi_D2KsPiPiLL_line = StrippingLine(self._myname + "CEP_D2K3Pi_D2KsPiPiLL_line",
                                                                prescale = config['LowMultPrescale'],
                                                                postscale = config['LowMultPostscale'],
+                                                               RequiredRawEvents = ["Velo"],
                                                                checkPV = False,
                                                                FILTER = CEPFilterTracks,
                                                                HLT = CEPHLTReq,
@@ -1477,6 +1560,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2K3Pi_D2KsPiPiDD_line = StrippingLine(self._myname + "CEP_D2K3Pi_D2KsPiPiDD_line",
                                                                prescale = config['LowMultPrescale'],
                                                                postscale = config['LowMultPostscale'],
+                                                               RequiredRawEvents = ["Velo"],
                                                                checkPV = False,
                                                                FILTER = CEPFilterTracks,
                                                                HLT = CEPHLTReq,
@@ -1487,6 +1571,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_D2KmPipPip_line = StrippingLine(self._myname + "CEP_D2KmPipPip_D2KmPipPip_line",
                                                                    prescale = config['LowMultPrescale'],
                                                                    postscale = config['LowMultPostscale'],
+                                                                   RequiredRawEvents = ["Velo"],
                                                                    checkPV = False,
                                                                    FILTER = CEPFilterTracks,
                                                                    HLT = CEPHLTReq,
@@ -1497,6 +1582,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KpPipPim_D2KpPipPim_line = StrippingLine(self._myname + "CEP_D2KpPipPim_D2KpPipPim_line",
                                                                    prescale = config['LowMultPrescale'],
                                                                    postscale = config['LowMultPostscale'],
+                                                                   RequiredRawEvents = ["Velo"],
                                                                    checkPV = False,
                                                                    FILTER = CEPFilterTracks,
                                                                    HLT = CEPHLTReq,
@@ -1507,6 +1593,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_D2KpPipPim_line = StrippingLine(self._myname + "CEP_D2KmPipPip_D2KpPipPim_line",
                                                                    prescale = config['LowMultPrescale'],
                                                                    postscale = config['LowMultPostscale'],
+                                                                   RequiredRawEvents = ["Velo"],
                                                                    checkPV = False,
                                                                    FILTER = CEPFilterTracks,
                                                                    HLT = CEPHLTReq,
@@ -1517,6 +1604,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_D2KmPipPip_WS_line = StrippingLine(self._myname + "CEP_D2KmPipPip_D2KmPipPip_WS_line",
                                                                       prescale = config['LowMultPrescale'],
                                                                       postscale = config['LowMultPostscale'],
+                                                                      RequiredRawEvents = ["Velo"],
                                                                       checkPV = False,
                                                                       FILTER = CEPFilterTracks,
                                                                       HLT = CEPHLTReq,
@@ -1527,6 +1615,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KpPipPim_D2KpPipPim_WS_line = StrippingLine(self._myname + "CEP_D2KpPipPim_D2KpPipPim_WS_line",
                                                                       prescale = config['LowMultPrescale'],
                                                                       postscale = config['LowMultPostscale'],
+                                                                      RequiredRawEvents = ["Velo"],
                                                                       checkPV = False,
                                                                       FILTER = CEPFilterTracks,
                                                                       HLT = CEPHLTReq,
@@ -1537,6 +1626,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_D2KpPipPim_WS_line = StrippingLine(self._myname + "CEP_D2KmPipPip_D2KpPipPim_WS_line",
                                                                       prescale = config['LowMultPrescale'],
                                                                       postscale = config['LowMultPostscale'],
+                                                                      RequiredRawEvents = ["Velo"],
                                                                       checkPV = False,
                                                                       FILTER = CEPFilterTracks,
                                                                       HLT = CEPHLTReq,
@@ -1547,6 +1637,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_Dstar2D0Pi_KPi_line = StrippingLine(self._myname + "CEP_D2KmPipPip_Dstar2D0Pi_KPi_line",
                                                                        prescale = config['LowMultPrescale'],
                                                                        postscale = config['LowMultPostscale'],
+                                                                       RequiredRawEvents = ["Velo"],
                                                                        checkPV = False,
                                                                        FILTER = CEPFilterTracks,
                                                                        HLT = CEPHLTReq,
@@ -1557,6 +1648,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_Dstar2D0Pi_K3Pi_line = StrippingLine(self._myname + "CEP_D2KmPipPip_Dstar2D0Pi_K3Pi_line",
                                                                         prescale = config['LowMultPrescale'],
                                                                         postscale = config['LowMultPostscale'],
+                                                                        RequiredRawEvents = ["Velo"],
                                                                         checkPV = False,
                                                                         FILTER = CEPFilterTracks,
                                                                         HLT = CEPHLTReq,
@@ -1567,6 +1659,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_Dstar2D0Pi_KPiPi0R_line = StrippingLine(self._myname + "CEP_D2KmPipPip_Dstar2D0Pi_KPiPi0R_line",
                                                                            prescale = config['LowMultPrescale'],
                                                                            postscale = config['LowMultPostscale'],
+                                                                           RequiredRawEvents = ["Velo"],
                                                                            checkPV = False,
                                                                            FILTER = CEPFilterTracks,
                                                                            HLT = CEPHLTReq,
@@ -1577,6 +1670,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_Dstar2D0Pi_KsPiPiLL_line = StrippingLine(self._myname + "CEP_D2KmPipPip_Dstar2D0Pi_KsPiPiLL_line",
                                                                             prescale = config['LowMultPrescale'],
                                                                             postscale = config['LowMultPostscale'],
+                                                                            RequiredRawEvents = ["Velo"],
                                                                             checkPV = False,
                                                                             FILTER = CEPFilterTracks,
                                                                             HLT = CEPHLTReq,
@@ -1587,6 +1681,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_D2KmPipPip_Dstar2D0Pi_KsPiPiDD_line = StrippingLine(self._myname + "CEP_D2KmPipPip_Dstar2D0Pi_KsPiPiDD_line",
                                                                             prescale = config['LowMultPrescale'],
                                                                             postscale = config['LowMultPostscale'],
+                                                                            RequiredRawEvents = ["Velo"],
                                                                             checkPV = False,
                                                                             FILTER = CEPFilterTracks,
                                                                             HLT = CEPHLTReq,
@@ -1597,6 +1692,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_line",
                                                                            prescale = config['LowMultPrescale'],
                                                                            postscale = config['LowMultPostscale'],
+                                                                           RequiredRawEvents = ["Velo"],
                                                                            checkPV = False,
                                                                            FILTER = CEPFilterTracks,
                                                                            HLT = CEPHLTReq,
@@ -1607,6 +1703,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS_line",
                                                                               prescale = config['LowMultPrescale'],
                                                                               postscale = config['LowMultPostscale'],
+                                                                              RequiredRawEvents = ["Velo"],
                                                                               checkPV = False,
                                                                               FILTER = CEPFilterTracks,
                                                                               HLT = CEPHLTReq,
@@ -1617,6 +1714,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_K3Pi_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_K3Pi_line",
                                                                             prescale = config['LowMultPrescale'],
                                                                             postscale = config['LowMultPostscale'],
+                                                                            RequiredRawEvents = ["Velo"],
                                                                             checkPV = False,
                                                                             FILTER = CEPFilterTracks,
                                                                             HLT = CEPHLTReq,
@@ -1627,6 +1725,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPiPi0R_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KPiPi0R_line",
                                                                                prescale = config['LowMultPrescale'],
                                                                                postscale = config['LowMultPostscale'],
+                                                                               RequiredRawEvents = ["Velo"],
                                                                                checkPV = False,
                                                                                FILTER = CEPFilterTracks,
                                                                                HLT = CEPHLTReq,
@@ -1637,6 +1736,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiLL_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiLL_line",
                                                                                 prescale = config['LowMultPrescale'],
                                                                                 postscale = config['LowMultPostscale'],
+                                                                                RequiredRawEvents = ["Velo"],
                                                                                 checkPV = False,
                                                                                 FILTER = CEPFilterTracks,
                                                                                 HLT = CEPHLTReq,
@@ -1647,6 +1747,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiDD_line = StrippingLine(self._myname + "CEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiDD_line",
                                                                                 prescale = config['LowMultPrescale'],
                                                                                 postscale = config['LowMultPostscale'],
+                                                                                RequiredRawEvents = ["Velo"],
                                                                                 checkPV = False,
                                                                                 FILTER = CEPFilterTracks,
                                                                                 HLT = CEPHLTReq,
@@ -1655,7 +1756,7 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_Dstar2D0Pi_KPi_Dstar2D0Pi_KsPiPiDD_line)
 
         self.LowMultCEP_KpKm_line = StrippingLine(self._myname + "CEP_KpKm_line",
-                                                  prescale = config['LowMultPrescale'], #Originally LowMultHHIncPrescale
+                                                  prescale = config['LowMultHHIncPrescale'], #Originally LowMultHHIncPrescale
                                                   postscale = config['LowMultPostscale'],
                                                   checkPV = False,
                                                   FILTER = CEPFilterTracks,
@@ -1665,8 +1766,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_KpKm_line)
 
         self.LowMultCEP_KpKp_line = StrippingLine(self._myname + "CEP_KpKp_line",
-                                                  prescale = config['LowMultPrescale'], #Originally LowMultHHIncPrescale
+                                                  prescale = config['LowMultHHIncPrescale'], #Originally LowMultHHIncPrescale
                                                   postscale = config['LowMultPostscale'],
+                                                  RequiredRawEvents = ["Velo"],
                                                   checkPV = False,
                                                   FILTER = CEPFilterTracks,
                                                   HLT = CEPHLTReq,
@@ -1675,8 +1777,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_KpKp_line)
 
         self.LowMultCEP_LMR2KPi_line = StrippingLine(self._myname + "CEP_LMR2KPi_line",
-                                                     prescale = config['LowMultPrescale'], #Originally LowMultLMRPrescale
+                                                     prescale = config['LowMultLMRPrescale'], #Originally LowMultLMRPrescale
                                                      postscale = config['LowMultPostscale'],
+                                                     RequiredRawEvents = ["Velo"],
                                                      checkPV = False,
                                                      FILTER = CEPFilterTracksChiC2HHHH,
                                                      HLT = CEPHLTReq,
@@ -1685,8 +1788,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_LMR2KPi_line)
 
         self.LowMultCEP_LMR2KK_line = StrippingLine(self._myname + "CEP_LMR2KK_line",
-                                                    prescale = config['LowMultPrescale'], #Originally LowMultLMRPrescale
+                                                    prescale = config['LowMultLMRPrescale'], #Originally LowMultLMRPrescale
                                                     postscale = config['LowMultPostscale'],
+                                                    RequiredRawEvents = ["Velo"],
                                                     checkPV = False,
                                                     FILTER = CEPFilterTracksChiC2HHHH,
                                                     HLT = CEPHLTReq,
@@ -1695,8 +1799,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_LMR2KK_line)
 
         self.LowMultCEP_LMR2PiPi_line = StrippingLine(self._myname + "CEP_LMR2PiPi_line",
-                                                      prescale = config['LowMultPrescale'], #Originally LowMultLMRPrescale
+                                                      prescale = config['LowMultLMRPrescale'], #Originally LowMultLMRPrescale
                                                       postscale = config['LowMultPostscale'],
+                                                      RequiredRawEvents = ["Velo"],
                                                       checkPV = False,
                                                       FILTER = CEPFilterTracksChiC2HHHH,
                                                       HLT = CEPHLTReq,
@@ -1707,6 +1812,7 @@ class LowMultConf(LineBuilder) :
         self.LowMultCEP_PHI2KK_line = StrippingLine(self._myname + "CEP_PHI2KK_line",
                                                     prescale = config['LowMultPrescale'],
                                                     postscale = config['LowMultPostscale'],
+                                                    RequiredRawEvents = ["Velo"],
                                                     checkPV = False,
                                                     FILTER = CEPFilterTracksChiC2HHHH,
                                                     HLT = CEPHLTReq,
@@ -1715,8 +1821,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_PHI2KK_line)
 
         self.LowMultCEP_D2KPiWS_line = StrippingLine(self._myname + "CEP_D2KPiWS_line",
-                                                     prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                     prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                      postscale = config['LowMultPostscale'],
+                                                     RequiredRawEvents = ["Velo"],
                                                      checkPV = False,
                                                      FILTER = CEPFilterTracks,
                                                      HLT = CEPHLTReq,
@@ -1725,8 +1832,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_D2KPiWS_line)
 
         self.LowMultCEP_D2KPiPiWS_line = StrippingLine(self._myname + "CEP_D2KPiPiWS_line",
-                                                       prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                       prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracks,
                                                        HLT = CEPHLTReq,
@@ -1735,8 +1843,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_D2KPiPiWS_line)
 
         self.LowMultCEP_D2K3PiWS_line = StrippingLine(self._myname + "CEP_D2K3PiWS_line",
-                                                      prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                      prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                       postscale = config['LowMultPostscale'],
+                                                      RequiredRawEvents = ["Velo"],
                                                       checkPV = False,
                                                       FILTER = CEPFilterTracks,
                                                       HLT = CEPHLTReq,
@@ -1745,8 +1854,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_D2K3PiWS_line)
 
         self.LowMultCEP_ChiC2KKWS_line = StrippingLine(self._myname + "CEP_ChiC2KKWS_line",
-                                                       prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                       prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracksChiC2HH,
                                                        HLT = CEPHLTReq,
@@ -1755,8 +1865,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2KKWS_line)
 
         self.LowMultCEP_ChiC2PiPiWS_line = StrippingLine(self._myname + "CEP_ChiC2PiPiWS_line",
-                                                         prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                         prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                          postscale = config['LowMultPostscale'],
+                                                         RequiredRawEvents = ["Velo"],
                                                          checkPV = False,
                                                          FILTER = CEPFilterTracksChiC2HH,
                                                          HLT = CEPHLTReq,
@@ -1765,8 +1876,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2PiPiWS_line)
 
         self.LowMultCEP_ChiC2PPWS_line = StrippingLine(self._myname + "CEP_ChiC2PPWS_line",
-                                                       prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                       prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                        postscale = config['LowMultPostscale'],
+                                                       RequiredRawEvents = ["Velo"],
                                                        checkPV = False,
                                                        FILTER = CEPFilterTracksChiC2HH,
                                                        HLT = CEPHLTReq,
@@ -1775,8 +1887,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2PPWS_line)
 
         self.LowMultCEP_ChiC2KpKpPipPipWS_line = StrippingLine(self._myname + "CEP_ChiC2KpKpPipPipWS_line",
-                                                               prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                               prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                                postscale = config['LowMultPostscale'],
+                                                               RequiredRawEvents = ["Velo"],
                                                                checkPV = False,
                                                                FILTER = CEPFilterTracksChiC2HHHH,
                                                                HLT = CEPHLTReq,
@@ -1785,8 +1898,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2KpKpPipPipWS_line)
 
         self.LowMultCEP_ChiC2KpKpPipPimWS_line = StrippingLine(self._myname + "CEP_ChiC2KpKpPipPimWS_line",
-                                                               prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                               prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                                postscale = config['LowMultPostscale'],
+                                                               RequiredRawEvents = ["Velo"],
                                                                checkPV = False,
                                                                FILTER = CEPFilterTracksChiC2HHHH,
                                                                HLT = CEPHLTReq,
@@ -1795,8 +1909,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2KpKpPipPimWS_line)
 
         self.LowMultCEP_ChiC2KpKmPipPipWS_line = StrippingLine(self._myname + "CEP_ChiC2KpKmPipPipWS_line",
-                                                               prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                               prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                                postscale = config['LowMultPostscale'],
+                                                               RequiredRawEvents = ["Velo"],
                                                                checkPV = False,
                                                                FILTER = CEPFilterTracksChiC2HHHH,
                                                                HLT = CEPHLTReq,
@@ -1805,8 +1920,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2KpKmPipPipWS_line)
 
         self.LowMultCEP_ChiC2KKKKWS_line = StrippingLine(self._myname + "CEP_ChiC2KKKKWS_line",
-                                                         prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                         prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                          postscale = config['LowMultPostscale'],
+                                                         RequiredRawEvents = ["Velo"],
                                                          checkPV = False,
                                                          FILTER = CEPFilterTracksChiC2HHHH,
                                                          HLT = CEPHLTReq,
@@ -1815,8 +1931,9 @@ class LowMultConf(LineBuilder) :
         self.registerLine(self.LowMultCEP_ChiC2KKKKWS_line)
 
         self.LowMultCEP_ChiC2PiPiPiPiWS_line = StrippingLine(self._myname + "CEP_ChiC2PiPiPiPiWS_line",
-                                                             prescale = config['LowMultPrescale'], #Originally LowMultWSPrescale
+                                                             prescale = config['LowMultWSPrescale'], #Originally LowMultWSPrescale
                                                              postscale = config['LowMultPostscale'],
+                                                             RequiredRawEvents = ["Velo"],
                                                              checkPV = False,
                                                              FILTER = CEPFilterTracksChiC2HHHH,
                                                              HLT = CEPHLTReq,
