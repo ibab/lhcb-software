@@ -70,6 +70,7 @@ class Z02MuMuConf( LineBuilder ) :
         self.line_Z02MuMu = StrippingLine( self._myname + 'Line',
                                            prescale  = config[ 'Z02MuMu_Prescale' ],
                                            postscale = config[ 'Z02MuMu_Postscale' ],
+                                           RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                            checkPV   = False,
                                            selection = self.sel_Z02MuMu
                                            )
