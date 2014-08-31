@@ -5425,7 +5425,7 @@ def _tc_and_( c , other ) :
 #  @see ROOT::TCut
 #  @author Vanya BELYAEV Ivan.Belyaev
 #  @date   2014-08-31
-def _tc_mult_( c , other ) :
+def _tc_mul_( c , other ) :
     """
     Multiply cuits values
     
@@ -5496,12 +5496,12 @@ def _tc_strip_ ( c ) :
     t = t.strip()
     while 0 <= t.find ( '  ' ) : t = t.replace ( '  ' , ' ' )
     c.SetTitle ( t ) 
-    return c 
+    return c
 
 ROOT.TCut . __add__    = _tc_and_
 ROOT.TCut . __and__    = _tc_and_
 ROOT.TCut . __or__     = _tc_or_
-ROOT.TCut . __mult__   = _tc_mult_
+ROOT.TCut . __mul__    = _tc_mul_
 ROOT.TCut . __invert__ = _tc_invert_
 ROOT.TCut . strip      = _tc_strip_
 
