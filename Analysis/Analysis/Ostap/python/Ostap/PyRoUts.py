@@ -5490,7 +5490,7 @@ def _tc_invert_ ( c ) :
 #  @date   2014-08-31
 def _tc_strip_ ( c ) :
     """
-    Return the cut string without leading/trailing and excessive blanks 
+    Return string without leading/trailing and excessive blanks 
     """
     t = c.GetTitle()
     t = t.strip()
@@ -5504,6 +5504,10 @@ ROOT.TCut . __or__     = _tc_or_
 ROOT.TCut . __mul__    = _tc_mul_
 ROOT.TCut . __invert__ = _tc_invert_
 ROOT.TCut . strip      = _tc_strip_
+
+ROOT.TCut . __rand__   = lambda s,o : ROOT.TCut(o)&s   
+ROOT.TCut . __ror__    = lambda s,o : ROOT.TCut(o)|s  
+ROOT.TCut . __rmul__   = lambda s,o : ROOT.TCut(o)*s   
 
 ROOT.TCut . __repr__   = ROOT.TCut.__str__ 
         
