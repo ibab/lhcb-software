@@ -65,6 +65,7 @@ class HighPtGammaJetsConf( LineBuilder ) :
         self.line_PhotonJets = StrippingLine( self._myname + 'Line',
                                               prescale  = config[ 'Prescale' ],
                                               postscale = config[ 'Postscale' ],
+                                              RequiredRawEvents = ["Calo"],
                                               checkPV   = False,
                                               selection = self.sel_DiJetGamma
                                               )
@@ -78,6 +79,7 @@ class HighPtGammaJetsConf( LineBuilder ) :
         self.line_PhotonJetsLoose = StrippingLine( self._myname + 'LooseLine',
                                                    prescale  = config[ 'PrescaleLoose' ],
                                                    postscale = config[ 'PostscaleLoose' ],
+                                                   RequiredRawEvents = ["Calo"],
                                                    checkPV   = False,
                                                    selection = self.sel_DiJetGammaLoose
                                                    )
