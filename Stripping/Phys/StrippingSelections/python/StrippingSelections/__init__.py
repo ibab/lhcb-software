@@ -110,6 +110,7 @@ import StrippingBB2DMuNuX
 import StrippingZ02MuMu
 import StrippingZ02ee
 import StrippingZ02TauTauProng
+import StrippingDitau
 import StrippingWMu
 import StrippingWe
 import StrippingDY2MuMu
