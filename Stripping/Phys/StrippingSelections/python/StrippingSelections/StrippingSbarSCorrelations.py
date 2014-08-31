@@ -12,13 +12,18 @@ __author__ = ['Florin MACIUC']
 __date__ = '24/08/2013'
 __version__ = '$Revision: 1.0 $'
 
-__all__ = ('SbarSCorrelationsBuilder',
-#           'filterDaughters',
+__all__ = ('SbarSCorrelationsConf',
+           'filterPions',
+           'filterKaons',
            'makeLambda',
-           'makeLambdabar',           
-           'makePhi')
+           'makePhi',
+           'default_config')
 
-config_default = { 'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')"
+default_config = {
+    'NAME'        : 'SbarSCorrelations',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'SbarSCorrelationsConf',
+    'CONFIG' : { 'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMicroBiasTStationDecision')|HLT_PASS('Hlt1MBMicroBiasVeloDecision')|HLT_PASS('Hlt1MBMicroBiasTStationRateLimitedDecision')|HLT_PASS('Hlt1MBMicroBiasVeloRateLimitedDecision')"
                 ,  'LongTrackGEC'          :    1000 # 150 or 500 might be a better choice
                 ,  'Trk_P_MIN'             : 5000 # to limit material interactions for Kaons
                 ,  'isLong'                : '(ISLONG)'
@@ -40,7 +45,11 @@ config_default = { 'HLT' : "HLT_PASS('Hlt1MBNoBiasDecision')|HLT_PASS('Hlt1MBMic
                 , 'F2prescale'              :    1.0
                 , 'LambdaCprescale'         :    1.0                   
                 , 'postscale'             :    1.0
-                }
+           },
+    'STREAMS'     : [ 'EW' ]
+    }
+
+
 
 from Gaudi.Configuration                   import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -51,9 +60,7 @@ from StrippingUtils.Utils                  import LineBuilder
 
 from GaudiKernel.SystemOfUnits import MeV
 
-name = "SbarSCorrelations"
-
-class SbarSCorrelationsBuilder(LineBuilder):
+class SbarSCorrelationsConf(LineBuilder):
     __configuration_keys__ = ('HLT',
                               'LongTrackGEC',
                               'Trk_P_MIN',
@@ -156,24 +163,28 @@ class SbarSCorrelationsBuilder(LineBuilder):
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['Phiprescale'],
                                                postscale = config['postscale'],
+                                               RequiredRawEvents = ["Muon","Calo","Rich"],
                                                HLT = config['HLT'],
                                                selection = self.selPhi)
         self.lineF2            = StrippingLine(name + 'F2Line',
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['F2prescale'],
                                                postscale = config['postscale'],
+                                               RequiredRawEvents = ["Muon","Calo","Rich"],
                                                HLT = config['HLT'],
                                                selection = self.selF2)
         self.lineLambdaCplus  =  StrippingLine(name+'LambdaCplusLine',
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['LambdaCprescale'],
                                                postscale = config['postscale'],
+                                               RequiredRawEvents = ["Muon","Calo","Rich"],
                                                HLT = config['HLT'],
                                                selection = self.selLambdaCplus)
         self.lineLambdaCminus  = StrippingLine(name+'LambdaCminusLine',
                                                FILTER    = _globalEventCuts,
                                                prescale  = config['LambdaCprescale'],
                                                postscale = config['postscale'],
+                                               RequiredRawEvents = ["Muon","Calo","Rich"],
                                                HLT = config['HLT'],
                                                selection = self.selLambdaCminus)
 
