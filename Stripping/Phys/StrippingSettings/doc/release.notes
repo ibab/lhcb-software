@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Carlos Vazquez Sierra (B2CC)
+ - Updated Stripping21r1/LineConfigDictionaries_B2CC.py
+
 ! 2014-08-31 - Pablo Ruiz Valls (RD)
  - updated Stripping21/LineConfigDictionaries_RD.py
  - updated Stripping21r1/LineConfigDictionaries_RD.py
