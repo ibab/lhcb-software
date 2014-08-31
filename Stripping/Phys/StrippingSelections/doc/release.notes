@@ -8,6 +8,9 @@
  - Added new module StrippingDitau.py.
  - Updated StrippingDijets.py.
  - Specified Calo raw in Stripping{WeAKTJets,WmuAKTJets,HighPtGamma}.py.
+ - Modified StrippingLLP2MuX.py.
+ - Specified raw in StrippingA1MuMu.py.
+ - Changed default name in StrippingH24MuLines.py
  
 ! 2014-08-31 - Ronan Wallace
  - Stripping{StrangeBaryons,StrangeBaryonsNoPID,SbarSCorrelations} prepared for Stripping21.
