@@ -5498,12 +5498,31 @@ def _tc_strip_ ( c ) :
     c.SetTitle ( t ) 
     return c
 
+# =============================================================================
+## create new cut by replacing the expressions  
+#  @see ROOT::TCut
+#  @author Vanya BELYAEV Ivan.Belyaev
+#  @date   2014-08-31
+def _tc_replace_ ( c , oldexp , newexp ) :
+    """
+    Create new cut by replacing the expressions  
+
+    >>> oldcut = ...
+    >>> newcut = oldcut.replace ( 'pt_Bu' , 'pt_Bc' ) 
+    
+    """
+    t = c.strip ()
+    t = ROOT.TCut ( t.replace ( oldexp , newexp ) ) 
+    return ROOT.TCut ( t.strip () ) 
+                       
 ROOT.TCut . __add__    = _tc_and_
 ROOT.TCut . __and__    = _tc_and_
 ROOT.TCut . __or__     = _tc_or_
 ROOT.TCut . __mul__    = _tc_mul_
 ROOT.TCut . __invert__ = _tc_invert_
+
 ROOT.TCut . strip      = _tc_strip_
+ROOT.TCut . replace    = _tc_replace_
 
 ROOT.TCut . __rand__   = lambda s,o : ROOT.TCut(o)&s
 ROOT.TCut . __radd__   = lambda s,o : ROOT.TCut(o)+s   
@@ -5511,6 +5530,7 @@ ROOT.TCut . __ror__    = lambda s,o : ROOT.TCut(o)|s
 ROOT.TCut . __rmul__   = lambda s,o : ROOT.TCut(o)*s   
 
 ROOT.TCut . __repr__   = ROOT.TCut.__str__ 
+
         
 # =============================================================================
 # Other decorations 
