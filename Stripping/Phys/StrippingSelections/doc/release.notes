@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-08-31 - Ronan Wallace
+ - Added new module StrippingDitau.py.
+
+! 2014-08-31 - Ronan Wallace
  - Stripping{StrangeBaryons,StrangeBaryonsNoPID,SbarSCorrelations} prepared for Stripping21.
  - __all__ added to StrippingJets.py.
 
