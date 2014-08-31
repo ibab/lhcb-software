@@ -22,7 +22,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from Configurables import OfflineVertexFitter
 
-default_name = 'H24mu'
+default_name = 'H24Mu'
 
 #### This is the dictionary of all tunable cuts ########
 default_config={
