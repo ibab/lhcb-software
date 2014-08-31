@@ -81,7 +81,7 @@ BetaS = {
                     , 'Bd2JpsiKsPrescale'    :       1.0
                     , 'Bs2JpsiPhiPrescale'   :       0.13
                     , 'Bs2JpsiPi0Prescale'   :       0.185
-                    , 'Bu2JpsiKPrescale'     :       0.1
+                    , 'Bu2JpsiKPrescale'     :       0.04
                     },
     'STREAMS'     : { 'Leptonic' : ['StrippingBetaSJpsi2MuMuLine',
                                     'StrippingBetaSBu2JpsiKPrescaledLine',
