@@ -291,7 +291,7 @@ Beauty2Charm = {
     'StrippingB02LcLambda0PiWSLc2PKPiBeauty2CharmLine', 
     'StrippingB02LcLambda0KWSLc2PKPiBeauty2CharmLine', 
     'StrippingB02DKLTUBD2HHHBeauty2CharmLine', 
-    ]
+    ],
     'RelatedInfoTools' : [
       { "Type" : "RelInfoConeVariables", 
         "ConeAngle" : 1.5, 
