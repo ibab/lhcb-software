@@ -82,7 +82,7 @@ class WeConf( LineBuilder ) :
         self.line_We = StrippingLine( self._myname + 'Line',
                                       prescale  = config[ 'We_Prescale' ],
                                       postscale = config[ 'We_Postscale' ],
-                                      RequiredRawEvents = ["Muon","Calo","Rich"],
+                                      RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                       selection = self.sel_We
                                       )
 
@@ -100,7 +100,7 @@ class WeConf( LineBuilder ) :
         self.line_WeLow = StrippingLine( self._myname + 'LowLine',
                                          prescale  = config[ 'WeLow_Prescale' ],
                                          postscale = config[ 'We_Postscale' ],
-                                         RequiredRawEvents = ["Muon","Calo","Rich"],
+                                         RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                          selection = self.sel_WeLow
                                          )
         
