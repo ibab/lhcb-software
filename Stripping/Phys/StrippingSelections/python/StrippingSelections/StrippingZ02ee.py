@@ -79,6 +79,7 @@ class Z02eeConf( LineBuilder ) :
         self.line_Z02ee = StrippingLine( self._myname + 'Line',
                                          prescale  = config[ 'Z02ee_Prescale' ],
                                          postscale = config[ 'Z02ee_Postscale' ],
+                                         RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                          selection = self.sel_Z02ee
                                          )
 
@@ -96,6 +97,7 @@ class Z02eeConf( LineBuilder ) :
         self.line_Z02eeSS = StrippingLine( self._myname + 'SSLine',
                                            prescale  = config[ 'Z02ee_Prescale' ],
                                            postscale = config[ 'Z02ee_Postscale' ],
+                                           RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                            selection = self.sel_Z02eeSS
                                            )
 
