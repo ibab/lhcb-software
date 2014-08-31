@@ -99,7 +99,7 @@ class A1MuMuConf(LineBuilder) :
         """
         A1 -> mu+ mu- line
         """
-        self.SelA1MuMu           = filterDiMuon( name + 'A1MuMu',
+        self.SelA1MuMu           = filterDiMuon( name,
                                                  MuonPT        = config['PT_MUON_MIN'],
                                                  MuonP         = config['P_MUON_MIN'],
                                                  MuonTRCHI2DOF = config['TRACKCHI2_MUON_MAX'],
@@ -107,9 +107,10 @@ class A1MuMuConf(LineBuilder) :
                                                  MuMuVCHI2PDOF = config['VCHI2_DIMUON_MAX'],
                                                  MuMuPT        = config['PT_DIMUON_MIN']
                                                       )
-        self.A1MuMuLine          = StrippingLine(name + 'A1MuMu' + 'Line',
+        self.A1MuMuLine          = StrippingLine(name + 'Line',
                                                  prescale  = config['A1MuMu_LinePrescale'],
                                                  postscale = config['A1MuMu_LinePrescale'],
+                                                 RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                  checkPV   = config['A1MuMu_checkPV'],
                                                  selection = self.SelA1MuMu
                                                  )
@@ -131,6 +132,7 @@ class A1MuMuConf(LineBuilder) :
         self.A1MuMuSameSignLine = StrippingLine(name + 'A1MuMuSameSign' + 'Line',
                                                 prescale  = config['A1MuMu_LinePrescale'],
                                                 postscale = config['A1MuMu_LinePrescale'],
+                                                RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                 checkPV   = config['A1MuMu_checkPV'],
                                                 selection = self.SelA1MuMuSameSign
                                                 )
