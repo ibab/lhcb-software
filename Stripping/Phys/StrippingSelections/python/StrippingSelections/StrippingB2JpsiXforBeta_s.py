@@ -44,7 +44,7 @@ default_config = {
                  ,       'Bd2JpsiKsPrescale'         :       1.0     # 2011: 1.0, 2012: 1.0
                  ,       'Bs2JpsiPhiPrescale'        :       0.62    # 2011: 0.13, 2012: 0.62
                  ,       'Bs2JpsiPi0Prescale'        :       0.9     # 2011: 0.185, 2012: 0.9
-                 ,       'Bu2JpsiKPrescale'          :       0.2     # 2011: 0.1, 2012: 0.2
+                 ,       'Bu2JpsiKPrescale'          :       0.2     # 2011: 0.04, 2012: 0.2
                          },
     'STREAMS' : {
         'Leptonic' : [
