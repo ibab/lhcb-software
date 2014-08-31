@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Carlos Vazquez Sierra
+ - Updated StrippingSelections/StrippingB2JpsiXforBeta_s.py
+
 ! 2014-08-31 - Rafael Coutinho
  - Added some extra Cone Variables for B2KShh and improved V0V0V0 efficiency
 
