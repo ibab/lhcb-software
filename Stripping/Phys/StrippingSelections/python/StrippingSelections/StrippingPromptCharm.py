@@ -907,14 +907,27 @@ class StrippingPromptCharmConf(LineBuilder) :
             "dmD   = ADMASS  ('D+'  )  <   55 * MeV " , ## D+  mass window
             "dmDs  = ADMASS  ('D_s+')  <   55 * MeV " , ## Ds+ mass window
             ] ,
-            ##
+            ## # require phi
+            ## Combination12Cut = """
+            ## ( AM < 1050 * MeV      ) &
+            ## ( ACHI2DOCA(1,2)  < 16 ) 
+            ## """ ,
+            # do not require phi anymore
             Combination12Cut = """
-            ( AM < 1050 * MeV      ) &
+            ( AM < 2000 * MeV      ) &
             ( ACHI2DOCA(1,2)  < 16 ) 
             """ ,
-            #                     phi
+            ## # require phi
+            ## CombinationCut = """
+            ## ( AM12 < 1050 * MeV   ) &
+            ## ( APT  > %s           ) &
+            ## ( admD | admDs        ) & 
+            ## ( ACHI2DOCA(1,3) < 16 ) &
+            ## ( ACHI2DOCA(2,3) < 16 ) 
+            ## """  %  ( 0.95 * self['pT(Ds+)'] ) ,
+            ## #
+            # do not require phi anymore
             CombinationCut = """
-            ( AM12 < 1050 * MeV   ) &
             ( APT  > %s           ) &
             ( admD | admDs        ) & 
             ( ACHI2DOCA(1,3) < 16 ) &
@@ -925,7 +938,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             MotherCut      = """
             ( chi2vx  < 25  ) &
             ( PT      > %s  ) & 
-            ( dmD  | dmDs    ) &
+            ( dmD  | dmDs   ) &
             ( ctau    > 100 * micrometer )
             """  % self['pT(Ds+)' ] 
             )
