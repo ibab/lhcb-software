@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Cedric Potterat
+ - Update LineConfidDictionaries_QEE for Jets
+
 ! 2014-08-31 - Andrea Contu
  - LineConfigDictionaries_Charm.py in s21 and s21r1
 

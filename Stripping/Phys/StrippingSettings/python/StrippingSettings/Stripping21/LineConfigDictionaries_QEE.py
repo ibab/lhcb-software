@@ -91,7 +91,7 @@ DisplVerticesLines = {
     'BUILDERTYPE' : 'DisplVerticesLinesConf',
     'CONFIG'      : {
         ## Velo GEC
-          "VeloGEC"                 : { "Apply"                : True 
+          "VeloGEC"                 : { "Apply"                : True
                                       , "MaxVeloRatio"         : 0.1
                                       , "MaxPhiVectorSize"     : 250.
                                       }
@@ -99,16 +99,16 @@ DisplVerticesLines = {
         , "FilterVelo"              : { "Apply"                : True
                                       , "MinNumTracks"         : 4
                                       , "PVLocation"           : "Rec/Vertex/Primary"
-                                      , "RemoveBackwardTracks" : True  
+                                      , "RemoveBackwardTracks" : True
                                       , "RemovePVTracks"       : False # use IP(CHI2) cut instead
                                       , "MinIP"                : 0.1*units.mm
                                       , "MinIPChi2"            : -1.0
                                       , "MinDOCABeamLine"      : -2.0
                                       , "RemoveVeloClones"     : True
                                       }
-                                      
+
         , "JetID"                   : "( 0.8 > JMPF ) & ( 0.1 < JCPF ) & ( 900. < JMPT )"
-                                      
+
         #==========        SELECTION CUT VALUES         ==========#
 
         ## Velo reconstruction
@@ -120,7 +120,7 @@ DisplVerticesLines = {
                                       , "MaxFractTrwHitBefore" :  10.
                                       , "ApplyMatterVeto"      :  False
                                       ## Reco only
-                                      , "MaxChi2NonVeloOnly"   : 5.0 
+                                      , "MaxChi2NonVeloOnly"   : 5.0
                                       , "UseVeloTracks"        : False
                                       , "ComputeMatterVeto"    : True
                                       , "FirstPVMaxRho"        : 0.3*units.mm
@@ -156,18 +156,18 @@ DisplVerticesLines = {
                                       , "MinNumTracks"         :  5
                                       , "ApplyMatterVeto"      : True
                                       , "MaxFractE1Track"      :  0.8
-                                      , "MaxFractTrwHitBefore" :  0.49 
+                                      , "MaxFractTrwHitBefore" :  0.49
                                       ## Jet-related cuts
                                       , "ConeSize"             :  1.2
                                       , "MinDOCABL"            :  0.1*units.mm
-                                      , "MinNumJets"           :  1  
+                                      , "MinNumJets"           :  1
                                       , "SingleJet"            :  True
                                       , "MinNJetMass"          :  0.0
                                       , "MinNJetTransvMass"    : None
                                       , "JetIDCut"             : "( JNWITHPVINFO >= 5 ) & ( JMPT > 1800. ) & ( (PT/M) > 2.5 )"
                                       } # Tuning: done
         , "JetSingleHighMassSelection" : { "PreScale"          :  1.0
-                                      , "MinRho"               :  0.4 
+                                      , "MinRho"               :  0.4
                                       , "MinMass"              :  5.0*units.GeV
                                       , "MinSumPT"             :  7.0*units.GeV
                                       , "MinNumTracks"         :  5
@@ -175,7 +175,7 @@ DisplVerticesLines = {
                                       , "MaxFractE1Track"      :  0.8
                                       , "MaxFractTrwHitBefore" :  0.49
                                       ## Jet-related cuts
-                                      , "ConeSize"             :  0.7  
+                                      , "ConeSize"             :  0.7
                                       , "MinDOCABL"            :  -2.
                                       , "MinNumJets"           :  2
                                       , "SingleJet"            :  False
@@ -188,13 +188,13 @@ DisplVerticesLines = {
                                       ## Jet-related cuts
                                       , "ConeSize"             :  1.2
                                       , "MinDOCABL"            :  0.1*units.mm
-                                      , "MinNumJets"           :  1  
+                                      , "MinNumJets"           :  1
                                       , "SingleJet"            :  True
                                       , "MinNJetMass"          :  0.0
                                       , "MinNJetTransvMass"    : None
                                       , "JetIDCut"             : "( JNWITHPVINFO >= 5 ) & ( JMPT > 1800. ) & ( (PT/M) > 1.5 )"
                                       } # Tuning: done
-        , "JetHltSingleHighMassSelection" : { "PreScale"       :  1.0 
+        , "JetHltSingleHighMassSelection" : { "PreScale"       :  1.0
                                       ## Jet-related cuts
                                       , "ConeSize"             :  0.7
                                       , "MinDOCABL"            :  -2.
@@ -207,16 +207,16 @@ DisplVerticesLines = {
 
         ## Double LLP line
         , "DoubleSelection"         : { "PreScale"             :  1.0
-                                      , "MinRho"               :  0.6*units.mm 
+                                      , "MinRho"               :  0.6*units.mm
                                       , "MinMass"              :  3.0*units.GeV
                                       , "MinSumPT"             :  3.0*units.GeV
-                                      , "MinNumTracks"         :  6  
+                                      , "MinNumTracks"         :  6
                                       , "ApplyMatterVeto"      :  False
                                       , "MaxFractE1Track"      :  0.8
                                       , "MaxFractTrwHitBefore" :  0.49
                                       ## Double only
                                       , "MinHighestMass"       : 3.0*units.GeV
-                                      , "ApplyMatterVetoOne"   : True  
+                                      , "ApplyMatterVetoOne"   : True
                                       }
 
         ## Downstream reconstruction
@@ -228,13 +228,13 @@ DisplVerticesLines = {
                                       , "MaxFractTrwHitBefore" :  10.
                                       , "ApplyMatterVeto"      :  False
                                       ## Reco only
-                                      , "MaxChi2NonVeloOnly"   : 5.0 
+                                      , "MaxChi2NonVeloOnly"   : 5.0
                                       , "UseVeloTracks"        : False
                                       , "ComputeMatterVeto"    : False
                                       , "FirstPVMaxRho"        : 0.3*units.mm
                                       , "FirstPVMinZ"          : -300.0*units.mm
                                       , "FirstPVMaxZ"          : 500.0*units.mm
-                                      , "FirstPVMinNumTracks"  : 10  
+                                      , "FirstPVMinNumTracks"  : 10
                                       }
         # , "SingleDownSelection"     : { "PreScale"             :  1.0
         #                               , "MinRho"               :  2.0*units.mm
@@ -248,13 +248,13 @@ DisplVerticesLines = {
         #                               , "MinZ"                 :  170.*units.mm
         #                               }
 
-        #========== Other lines for efficiency studies ==========# 
+        #========== Other lines for efficiency studies ==========#
         , "HLTPS"                   : { "PreScale"             :  0.2 }
         , "HltEffCharmHLTSelection" : { "PreScale"             :  1.0
                                       , "MinRho"               :  0.6*units.mm
                                       , "MinMass"              :  6.*units.GeV
                                       , "MinSumPT"             :  3.0*units.GeV
-                                      , "MinNumTracks"         :  6  
+                                      , "MinNumTracks"         :  6
                                       , "ApplyMatterVeto"      : False
                                       , "MaxFractE1Track"      :  10.
                                       , "MaxFractTrwHitBefore" :  10.
@@ -463,7 +463,7 @@ Dijets = {
     # Pair of jets properties.
     "DIJET" : {"MAX_COSDPHI"   : -0.8}      # Cos of transverse angle.
     },
-    'WGs'         : ['QEE'], 
+    'WGs'         : ['QEE'],
     'STREAMS'         : ['EW']
 }
 
@@ -485,7 +485,7 @@ Jets = {
                       },
 
         # HLT properties.
-        "HLT"   : {"LINETOPO"       : "Hlt2(Topo2Bod|Topo3Bod|Topo4Bod)", # Line to use for TOPO
+        "HLT"   : {"LINETOPO"       : "Hlt2Topo", # Line to use for TOPO
                    "LINEMB"         : "Hlt1MBNoBiasDecision"} , # Line to use for MB
         # Track properties.
         "TRK"   : {"MAX_MULT"       : 2500,       # Multiplicity.
@@ -673,7 +673,7 @@ LowMult = {
     , 'LowMultWSPrescale'       : 0.1
     , 'LowMultHHIncPrescale'    : 0.1
     , 'LowMultLMRPrescale'      : 0.2
-    , 'LowMultPrescale_ps'      : 0.005 
+    , 'LowMultPrescale_ps'      : 0.005
     , 'LowMultNoFilterPrescale' : 0.1
     , 'LowMultPostscale'        : 1.0
     # Final-state particles
@@ -692,19 +692,19 @@ LowMult = {
     , 'Ks_ADMASSmax'    : 50.0 * MeV
     # D0 -> KPi
     , 'D2KPi_APTmin'        : 0.0 * MeV
-    , 'D2KPi_ADAMASSmax'    : 80.0 * MeV  
-    , 'D2KPi_ADOCAmax'      : 0.5 * mm  
+    , 'D2KPi_ADAMASSmax'    : 80.0 * MeV
+    , 'D2KPi_ADOCAmax'      : 0.5 * mm
     , 'D2KPi_APmin'         : 10000.0 * MeV
     , 'D2KPi_VtxChi2DoFmax' : 15.0
     # D+- -> KPiPi
     , 'D2KPiPi_APTmin'        : 0.0 * MeV
-    , 'D2KPiPi_ADAMASSmax'    : 80.0 * MeV  
+    , 'D2KPiPi_ADAMASSmax'    : 80.0 * MeV
     , 'D2KPiPi_ADOCAmax'      : 0.5 * mm
     , 'D2KPiPi_APmin'         : 10000.0 * MeV
     , 'D2KPiPi_VtxChi2DoFmax' : 15.0
     # D0 -> K3Pi
-    , 'D2K3Pi_APTmin'        : 0.0 * MeV  
-    , 'D2K3Pi_ADAMASSmax'    : 80.0 * MeV  
+    , 'D2K3Pi_APTmin'        : 0.0 * MeV
+    , 'D2K3Pi_ADAMASSmax'    : 80.0 * MeV
     , 'D2K3Pi_ADOCAmax'      : 0.7 * mm
     , 'D2K3Pi_APmin'         : 10000.0 * MeV
     , 'D2K3Pi_VtxChi2DoFmax' : 15.0
@@ -725,19 +725,19 @@ LowMult = {
     , 'Dstar2D0Pi_ADAMASSmax'    : 100.0 * MeV
     , 'Dstar2D0Pi_DeltaMmin'     : 135.0 * MeV
     , 'Dstar2D0Pi_DeltaMmax'     : 200.0 * MeV
-    , 'Dstar2D0Pi_VtxChi2DoFmax' : 15.0  
+    , 'Dstar2D0Pi_VtxChi2DoFmax' : 15.0
     # 'ChiC' -> HH (H = K, Pi)
     , 'ChiC2HH_APTmin'        : 0.0 * MeV
     , 'ChiC2HH_APTmax'        : 5000.0 * MeV
     , 'ChiC2HH_AMmin'         : 2850.0 * MeV
-    , 'ChiC2HH_AMmax'         : 4500.0 * MeV  
+    , 'ChiC2HH_AMmax'         : 4500.0 * MeV
     , 'ChiC2HH_ADOCAmax'      : 0.5 * mm
     , 'ChiC2HH_APmin'         : 10000.0 * MeV
     , 'ChiC2HH_VtxChi2DoFmax' : 15.0
     # 'ChiC' -> PP
-    , 'ChiC2PP_APTmin'        : 0.0 * MeV   
+    , 'ChiC2PP_APTmin'        : 0.0 * MeV
     , 'ChiC2PP_APTmax'        : 5000.0 * MeV
-    , 'ChiC2PP_AMmin'         : 2850.0 * MeV  
+    , 'ChiC2PP_AMmin'         : 2850.0 * MeV
     , 'ChiC2PP_AMmax'         : 3650.0 * MeV
     , 'ChiC2PP_ADOCAmax'      : 0.5 * mm
     , 'ChiC2PP_APmin'         : 10000.0 * MeV
@@ -745,7 +745,7 @@ LowMult = {
     # 'ChiC' -> HHHH (H = K, Pi)
     , 'ChiC2HHHH_APTmin'        : 0.0 * MeV
     , 'ChiC2HHHH_APTmax'        : 5000.0 * MeV
-    , 'ChiC2HHHH_AMmin'         : 2850.0 * MeV  
+    , 'ChiC2HHHH_AMmin'         : 2850.0 * MeV
     , 'ChiC2HHHH_AMmax'         : 4500.0 * MeV
     , 'ChiC2HHHH_ADOCAmax'      : 0.7 * mm
     , 'ChiC2HHHH_APmin'         : 10000.0 * MeV
@@ -754,7 +754,7 @@ LowMult = {
     , 'LMR2HH_APTmin'        : 0.0 * MeV
     , 'LMR2HH_APTmax'        : 1500.0 * MeV
     , 'LMR2HH_AMmin'         : 450.0 * MeV
-    , 'LMR2HH_AMmax'         : 1700.0 * MeV   
+    , 'LMR2HH_AMmax'         : 1700.0 * MeV
     , 'LMR2HH_ADOCAmax'      : 0.1 * mm
     , 'LMR2HH_APmin'         : 15000.0 * MeV
     , 'LMR2HH_VtxChi2DoFmax' : 3.0
@@ -762,7 +762,7 @@ LowMult = {
     , 'PHI2KK_APTmin'        : 0.0 * MeV
     , 'PHI2KK_APTmax'        : 1500.0 * MeV
     , 'PHI2KK_AMmin'         : 990.0 * MeV
-    , 'PHI2KK_AMmax'         : 1050.0 * MeV 
+    , 'PHI2KK_AMmax'         : 1050.0 * MeV
     , 'PHI2KK_ADOCAmax'      : 0.1 * mm
     , 'PHI2KK_APmin'         : 4000.0 * MeV
     , 'PHI2KK_VtxChi2DoFmax' : 3.0
@@ -808,14 +808,14 @@ DY2MuMu = {
                       'DY2MuMu3LinePrescale'    : 1.0,
                       'DY2MuMu4LinePrescale'    : 1.0,
                       'DY2MuMuLinePostscale'    : 1.0,
-                      'DY1MinMass' :  3.2,  
-                      'DY1MaxMass' :  5.,   
-                      'DY2MinMass' :  5.,   
-                      'DY2MaxMass' : 10.,   
+                      'DY1MinMass' :  3.2,
+                      'DY1MaxMass' :  5.,
+                      'DY2MinMass' :  5.,
+                      'DY2MaxMass' : 10.,
                       'DY3MinMass' : 10.,
                       'DY3MaxMass' : 20.,
                       'DY4MinMass' : 20.,
-                      'DY4MaxMass' : 40., 
+                      'DY4MaxMass' : 40.,
                       'p'             : 10.,
                       'pT1'           :  1.5,
                       'pT2'           :  3.,
