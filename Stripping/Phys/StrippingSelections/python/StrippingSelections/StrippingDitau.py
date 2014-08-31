@@ -110,7 +110,7 @@ default_config = {
   'NAME'        : 'Ditau',
   'WGs'         : [ 'QEE' ],
   'BUILDERTYPE' : 'DitauConf',
-  'STREAMS'     : { 'EW' : [ 'StrippingDitau_{}Line'.format(s) for s in lines_decays.keys() ] },
+  'STREAMS'     : { 'EW'},
 
   # Configuration for isolated muon + track (MuX)
   'CONFIG_MuX'  : {
@@ -309,7 +309,7 @@ class DitauConf(LineBuilder):
         postscale         = config['postscale'],
         checkPV           = True,
         selection         = selection,
-        RequiredRawEvents = [ 'Calo', 'Rich', 'Muon' ],
+        RequiredRawEvents = [ 'Calo' ],
         MDSTFlag          = False ,
       )
 
