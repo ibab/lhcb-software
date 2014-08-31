@@ -128,16 +128,16 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu1 = StrippingLine( self._myname + 'Line1',
                                             prescale  = config['DY2MuMu1LinePrescale'],
                                             postscale = config['DY2MuMuLinePostscale'],
-                                            RequiredRawEvents = ["Muon","Calo","Rich"],
+                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                             selection = self.sel_DY2MuMu1,
-                                            RelatedInfoTools = [
-                                                               {'Type' : 'RelInfoConeVariables',
-                                                                'ConeAngle' : 0.5,
-                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                'TopSelection' : self.sel_DY2MuMu1,
-                                                                'Location' : 'P2CVD'
-                                                               },
-                                                               ]
+#                                            RelatedInfoTools = [
+#                                                               {'Type' : 'RelInfoConeVariables',
+#                                                                'ConeAngle' : 0.5,
+#                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+#                                                                'TopSelection' : self.sel_DY2MuMu1,
+#                                                                'Location' : 'P2CVD'
+#                                                               },
+#                                                               ]
                                             )
 
         self.registerLine( self.line_DY2MuMu1 )
@@ -154,17 +154,17 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu1Hlt = StrippingLine( self._myname + 'Line1Hlt',
                                                prescale  = config[ 'DY2MuMu1LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
-                                               RequiredRawEvents = ["Muon","Calo","Rich"],
+                                               RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                HLT       = "HLT_PASS_RE( 'Hlt2DiMuonDY.*Decision' )",
                                                selection = self.sel_DY2MuMu1Hlt,
-                                               RelatedInfoTools = [
-                                                               {'Type' : 'RelInfoConeVariables',
-                                                                'ConeAngle' : 0.5,
-                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                'TopSelection' : self.sel_DY2MuMu1Hlt,
-                                                                'Location' : 'P2CVD'
-                                                               },
-                                                              ]
+#                                               RelatedInfoTools = [
+#                                                               {'Type' : 'RelInfoConeVariables',
+#                                                                'ConeAngle' : 0.5,
+#                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+#                                                                'TopSelection' : self.sel_DY2MuMu1Hlt,
+#                                                                'Location' : 'P2CVD'
+#                                                               },
+#                                                              ]
                                                )
 
         self.registerLine( self.line_DY2MuMu1Hlt )
@@ -181,16 +181,16 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu2 = StrippingLine( self._myname + 'Line2',
                                             prescale  = config['DY2MuMu2LinePrescale'],
                                             postscale = config['DY2MuMuLinePostscale'],
-                                            RequiredRawEvents = ["Muon","Calo","Rich"],
+                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                             selection = self.sel_DY2MuMu2,
-                                            RelatedInfoTools = [
-                                                               {'Type' : 'RelInfoConeVariables',
-                                                                'ConeAngle' : 0.5,
-                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                'TopSelection' : self.sel_DY2MuMu2,
-                                                                'Location' : 'P2CVD'
-                                                               },
-                                                              ]
+#                                            RelatedInfoTools = [
+#                                                               {'Type' : 'RelInfoConeVariables',
+#                                                                'ConeAngle' : 0.5,
+#                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+#                                                                'TopSelection' : self.sel_DY2MuMu2,
+#                                                                'Location' : 'P2CVD'
+#                                                               },
+#                                                              ]
                                             )
 
 
@@ -208,17 +208,17 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu2Hlt = StrippingLine( self._myname + 'Line2Hlt',
                                                prescale  = config[ 'DY2MuMu2LineHltPrescale' ],
                                                postscale = config[ 'DY2MuMuLinePostscale' ],
-                                               RequiredRawEvents = ["Muon","Calo","Rich"],
+                                               RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                HLT       = "HLT_PASS_RE( 'Hlt2DiMuonDY.*Decision' )",
                                                selection = self.sel_DY2MuMu2Hlt,
-                                               RelatedInfoTools = [
-                                                               {'Type' : 'RelInfoConeVariables',
-                                                                'ConeAngle' : 0.5,
-                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                'TopSelection' : self.sel_DY2MuMu2Hlt,
-                                                                'Location' : 'P2CVD'
-                                                               },
-                                                              ]
+#                                               RelatedInfoTools = [
+#                                                               {'Type' : 'RelInfoConeVariables',
+#                                                                'ConeAngle' : 0.5,
+#                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+#                                                                'TopSelection' : self.sel_DY2MuMu2Hlt,
+#                                                                'Location' : 'P2CVD'
+#                                                               },
+#                                                              ]
                                                )
 
         self.registerLine( self.line_DY2MuMu2Hlt )
@@ -235,16 +235,16 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu3 = StrippingLine( self._myname + 'Line3',
                                             prescale  = config[ 'DY2MuMu3LinePrescale' ],
                                             postscale = config[ 'DY2MuMuLinePostscale' ],
-                                            RequiredRawEvents = ["Muon","Calo","Rich"],
+                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                             selection = self.sel_DY2MuMu3,
-                                            RelatedInfoTools = [
-                                                               {'Type' : 'RelInfoConeVariables',
-                                                                'ConeAngle' : 0.5,
-                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                'TopSelection' : self.sel_DY2MuMu3,
-                                                                'Location' : 'P2CVD'
-                                                               },
-                                                              ]
+#                                            RelatedInfoTools = [
+#                                                               {'Type' : 'RelInfoConeVariables',
+#                                                                'ConeAngle' : 0.5,
+#                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+#                                                                'TopSelection' : self.sel_DY2MuMu3,
+#                                                                'Location' : 'P2CVD'
+#                                                               },
+#                                                              ]
                                             )
 
         self.registerLine( self.line_DY2MuMu3 )
@@ -261,16 +261,16 @@ class DY2MuMuConf( LineBuilder ) :
         self.line_DY2MuMu4 = StrippingLine( self._myname + 'Line4',
                                             prescale  = config[ 'DY2MuMu4LinePrescale' ],
                                             postscale = config[ 'DY2MuMuLinePostscale' ],
-                                            RequiredRawEvents = ["Muon","Calo","Rich"],
+                                            RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                             selection = self.sel_DY2MuMu4,
-                                            RelatedInfoTools = [
-                                                               {'Type' : 'RelInfoConeVariables',
-                                                                'ConeAngle' : 0.5,
-                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
-                                                                'TopSelection' : self.sel_DY2MuMu4,
-                                                                'Location' : 'P2CVD'
-                                                               },
-                                                              ]
+#                                            RelatedInfoTools = [
+#                                                               {'Type' : 'RelInfoConeVariables',
+#                                                                'ConeAngle' : 0.5,
+#                                                                'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'],
+#                                                                'TopSelection' : self.sel_DY2MuMu4,
+#                                                                'Location' : 'P2CVD'
+#                                                               },
+#                                                              ]
                                             )
 
         self.registerLine( self.line_DY2MuMu4 )
