@@ -61,6 +61,7 @@ class WeAKTJetsConf( LineBuilder ) :
         self.line_WeJets = StrippingLine( self._myname + 'Line',
                                           prescale  = config[ 'WeAKTJets_Prescale' ],
                                           postscale = config[ 'WeAKTJets_Postscale' ],
+                                          RequiredRawEvents = ["Calo"],
                                           checkPV   = False,
                                           selection = self.sel_DiJet
                                           )
