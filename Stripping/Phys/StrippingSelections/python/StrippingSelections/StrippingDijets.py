@@ -1,6 +1,10 @@
 # Stripping lines for b and c di-jet analyses.
 # 19/01/2014
 # P. Ilten and M. Williams
+
+__all__ = ('DijetsConf',
+           'default_config')
+
 from Gaudi.Configuration import *
 from Configurables import TisTosParticleTagger
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
@@ -14,7 +18,12 @@ from Configurables import LoKi__FastJetMaker, LoKi__JetMaker
 from StandardParticles import StdLoosePhotons, StdAllNoPIDsPions, StdJets
 
 # Define the default configuration.
-config_Dijets = {
+
+default_config = {
+    'NAME'        : 'Dijets',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'DijetsConf',
+    'CONFIG'      : { 
     # Prescale for the calibration line.
     "PRESCALE" : 0.03,
     # HLT properties.
@@ -48,7 +57,9 @@ config_Dijets = {
                "MIN_SUM_PT"    : 10*GeV},   # Scalar sum of transverse momenta.
     # Pair of jets properties.
     "DIJET" : {"MAX_COSDPHI"   : -0.8}      # Cos of transverse angle.
-    }
+    },
+    'STREAMS'         : ['EW'] 
+ }
 
 # Define the class for the di-jet stripping.
 class DijetsConf(LineBuilder):
@@ -90,6 +101,7 @@ class DijetsConf(LineBuilder):
         line_dijets = StrippingLine(
             name + "Line",
             prescale = 1.0,
+            RequiredRawEvents = ["Calo"],
             HLT = hlt,
             FILTER = flt,
             selection = dijets
@@ -100,6 +112,7 @@ class DijetsConf(LineBuilder):
         line_prescaled_dijets = StrippingLine(
             name + "PrescaledLine",
             prescale = self._config["PRESCALE"],
+            RequiredRawEvents = ["Calo"],
             HLT = hlt,
             FILTER = flt,
             selection =  self._create_dijets([jets], "Prescaled")
