@@ -105,7 +105,7 @@ class DY2eeConf(LineBuilder) :
         self.line_DY2ee3 = StrippingLine( self._myname + 'Line3',
                                           prescale  = config[ 'DY2eeLine3Prescale' ],
                                           postscale = config[ 'DY2eeLinePostscale' ],
-                                          RequiredRawEvents = ["Muon","Calo","Rich"],
+                                          RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                           selection = self.sel_DY2ee3
                                           )
 
@@ -123,7 +123,7 @@ class DY2eeConf(LineBuilder) :
         self.line_DY2ee4 = StrippingLine( self._myname + 'Line4',
                                           prescale  = config[ 'DY2eeLine4Prescale' ],
                                           postscale = config[ 'DY2eeLinePostscale' ],
-                                          RequiredRawEvents = ["Muon","Calo","Rich"],
+                                          RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                           selection = self.sel_DY2ee4
                                           )
 
