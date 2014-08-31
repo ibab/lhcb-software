@@ -1,6 +1,10 @@
 # Stripping lines for b (di-)jet analyses.
 # 19/01/2014
 # C. Potterat, V. Coco, M. Rangel
+
+__all__ = ('JetsConf',
+           'default_config')
+
 from Gaudi.Configuration import *
 from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
