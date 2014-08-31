@@ -3,6 +3,8 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-08-31 - Wenbin Qian
+ - Update LineConfigDictionaries_B2OC.py  in 21 and 21r1
 
 ! 2014-08-31 - Ronan Wallace
  - Updated LineConfigDictionaries_QEE.py for Stripping21 and Stripping21r1
