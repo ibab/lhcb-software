@@ -32,19 +32,23 @@ B2XMuMu = {
                     , 'Location':'VtxIsoInfo'}
                  , {'Type': 'RelInfoVertexIsolationBDT'
                     , 'Location':'VtxIsoBDTInfo' }
+                 ,  {"Type" : "RelInfoBs2MuMuIsolations"
+                     , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+                     , "Location"  : "BSMUMUVARIABLES"
+                     }
                  ]
-          , 'KpiVXCHI2NDOF'      : 9.0           # dimensionless
-          , 'MuonPID'            : -3.0          # dimensionless
-          , 'DimuonUPPERMASS'    : 7100.0        # MeV
-          , 'Pi0MINPT'           : 800.0         # MeV
-          , 'Pi0ForOmegaMINPT'   : 500.0         # MeV
-          , 'DplusLOWERMASS'     : 1600.0        # MeV
-          , 'DplusUPPERMASS'     : 2300.0        # MeV
-          , 'KstarplusWINDOW'    : 300.0         # MeV
-          , 'KsWINDOW'           : 30.0          # MeV
-          , 'LambdaWINDOW'       : 30.0          # MeV
-          , 'LongLivedPT'        : 0.0           # MeV , used to be 500.0 MeV
-          , 'LongLivedTau'        : 2            # ps
+          , 'KpiVXCHI2NDOF'      : 9.0          # dimensionless
+          , 'MuonPID'            : -3.0         # dimensionless
+          , 'DimuonUPPERMASS'    : 7100.0       # MeV
+          , 'Pi0MINPT'           : 800.0        # MeV
+          , 'Pi0ForOmegaMINPT'   : 500.0       #  MeV
+          , 'DplusLOWERMASS'     : 1600.0      #  MeV
+          , 'DplusUPPERMASS'     : 2300.0      #  MeV
+          , 'KstarplusWINDOW'    : 300.0       #  MeV
+          , 'KsWINDOW'           : 30.0        #  MeV
+          , 'LambdaWINDOW'       : 30.0        #  MeV
+          , 'LongLivedPT'        : 0.0         #  MeV , used to be 500.0 MeV
+          , 'LongLivedTau'        : 2          #  ps
 
           # A1 cuts
           , 'A1_Comb_MassLow'  :    0.0
@@ -80,10 +84,10 @@ B2XMuMu = {
           'Kstar_FlightChi2'    :    9.0,
           'Kstar_Dau_MaxIPCHI2' :    9.0,
 
-          # Omega cuts
+          #Omega cuts
           'Omega_MassWin'       :   100, #MeV
           'Omega_CombMassWin'   :   200, #MeV
-          'OmegaChi2Prob'       : 0.00001,  # dimensionless
+          'OmegaChi2Prob'       : 0.00001,  #dimensionless
 
           #K1->OmegaK cuts
           'K12OmegaK_MassLow'   :   300, #MeV
@@ -91,26 +95,26 @@ B2XMuMu = {
           'K12OmegaK_CombMassLow'   :   400, #MeV
           'K12OmegaK_CombMassHigh'  :  2400, #MeV
 
-          # JPsi (dimu) cuts
+          #JPsi (dimu) cuts
           'Dimu_FlightChi2'     :   9.0,
           'Dimu_Dau_MaxIPCHI2'  :   9.0,
 
-          # Track cuts
+          #Track cuts
           'Track_GhostProb'     :    0.35,
 
-          # Hadron cuts
+          #Hadron cuts
           'Hadron_MinIPCHI2'    :    6.0,
 
-          # Muon cuts
+          #Muon cuts
           'Muon_MinIPCHI2'      :    9.0,
           'Muon_IsMuon'         :    True,
           'MuonNoPIDs_PIDmu'    :    0.0,
 
-          # Wrong sign combinations
+          #Wrong sign combinations
           'DimuonWS'            :   True,
           'HadronWS'            :   True,
 
-          # GEC
+          #GEC
           'SpdMult'             :  600,
 
           'HLT_FILTER' : "(HLT_PASS('Hlt1TrackAllL0Decision')|HLT_PASS('Hlt1TrackMuonDecision'))&(HLT_PASS_RE('Hlt2DiMuon.*Decision') | HLT_PASS_RE('Hlt2Topo.*Decision') | HLT_PASS_RE('Hlt2SingleMuon.*Decision'))",
@@ -343,11 +347,11 @@ B2XGamma = {
 
         # PHOTON CUTS
         'B2XGGammaPTMin'       : 2000.,
-        'B2XGGammaCL'          : 0.25,
+        'B2XGGammaCL'          : 0.,
         'B2XGGammaCNVPTMin'       : 1000.,
 
         # TRACK COMBINATION CUTS
-        'B2XGResMinPT'     : 0.,
+        'B2XGResMinPT'     : 150.,
         'B2XGResMinMass'   : 0.,
         'B2XGResMaxMass'   : 7900.,
         'B2XGResVtxChi2DOF': 10.,
@@ -357,7 +361,7 @@ B2XGamma = {
         'B2XGResIPCHI2Min' : 0.0,
 
         # B HADRON CUTS
-        'B2XGBMinPT'       : 0.,
+        'B2XGBMinPT'       : 200.,
         'B2XGBMinM2pi'     : 3280.,
         'B2XGBMinM3pi'     : 2900.,
         'B2XGBMinM4pi'     : 2560.,
@@ -384,19 +388,20 @@ B2XGammaExcl = {
     'WGs'         : ['RD'],
     'BUILDERTYPE' : 'Beauty2XGammaExclusiveConf',
     'CONFIG'      : {
-         'TrIPchi2'             : 10.       # Dimensionless
+         'TrIPchi2'             : 25.       # Dimensionless
          ,'TrChi2'              : 5.        # dimensionless
 
          ,'PhiMassWin'          : 15.       # MeV
          ,'KstMassWin'          : 100.      # MeV
-         ,'PhiVCHI2'            : 15.       # dimensionless
-         ,'KstVCHI2'            : 15.       # dimensionless
+         ,'PhiVCHI2'            : 9.       # dimensionless
+         ,'KstVCHI2'            : 9.       # dimensionless
 
          ,'photonPT'            : 2600.     # MeV
-
+         ,'B_PT'                : 3000.     # MeV
+         
          ,'BsMassWin'           : 1000.     # MeV
          ,'B0MassWin'           : 1000.     # MeV
-         ,'BsDirAngle'          : 0.02      # radians
+         ,'BsDirAngle'          : 0.0      # radians
          ,'B0DirAngle'          : 0.02      # radians
          ,'BsPVIPchi2'          : 15.       # Dimensionless
          ,'B0PVIPchi2'          : 15.       # Dimensionless
@@ -407,10 +412,7 @@ B2XGammaExcl = {
          ,'Bd2KstGammaPreScale'               : 1.0
          ,'Bd2KstGammaPostScale'              : 1.0
          },
-    'STREAMS'   : {
-         'Radiative' : ['StrippingB2XGammaExclBs2PhiGammaLine'],
-         'Calibration' : ['StrippingB2XGammaExclBd2KstGammaLine'],
-         }
+    'STREAMS'   : ['Radiative'],
     }
 
 
@@ -965,7 +967,7 @@ Bu2MuNu = {
           'pTminMuControl': 2.5,
           'IPchi2MuControl': 100.
           },
-    'STREAMS' : ['Semileptonic'],
+    'STREAMS' : ['Leptonic'],
     }
 
 ################################################################################
@@ -1301,7 +1303,7 @@ LFV = {
                   , "makeTrackCuts" : False
                   , "IsoTwoBody" : False
                   }
-                ] ## matches 'RelatedInfoTools'
+                ] #matches 'RelatedInfoTools'
         },
     }
 
