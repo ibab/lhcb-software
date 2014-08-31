@@ -54,6 +54,7 @@ class WmuAKTJetsConf( LineBuilder ) :
         self.line_WmuJets = StrippingLine( self._myname + 'Line',
                                        prescale  = config[ 'WmuAKTJets_Prescale' ],
                                        postscale = config[ 'WmuAKTJets_Postscale' ],
+                                       RequiredRawEvents = ["Calo"],
                                        checkPV   = False,
                                        selection = self.sel_DiJet
                                        )
