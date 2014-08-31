@@ -2,24 +2,24 @@
 '''
 Module for constuction of:
 
-Bd->DstarTauNu
-Bd->DTauNu
+B0d->DstarTauNu
+B0d->DTauNu
 Bu->D0TauNu
 Bs->DsTauNu
 Bc->J/psiTauNu
-Bd->D**0TauNu
+B0d->D**0TauNu
 Lb->LcTauNu
 ==== Description of the lines ====
 
-Bd->DstarTauNu, with Dstar -> pi (D0 -> K pi)
-Bd->DTauNu, with D -> K pi pi
+B0d->DstarTauNu, with Dstar -> pi (D0 -> K pi)
+B0d->DTauNu, with D -> K pi pi
 Bs->DsTauNu, with Ds -> K K pi
 Bu->D0TauNu, with D0 -> K pi
 Bc->JpsiTauNu, with Jpsi -> Mu Mu
-Bd->D**0TauNu, with D**0 -> D*+ pi-
+B0d->D**0TauNu, with D**0 -> D*+ pi-
 Lb->LcTauNu, with Lc -> p K pi
 Tau -> 3pi in all cases
-
+New selection using inverted vertex cut only
 ==== Description of the configuration ====
 
 The selecton cuts are stored in the dictionary confdict.
@@ -66,7 +66,7 @@ confdict={
     #B combination cuts
     'B_DeltaM_low'       : -2579.0, #MeV
     'B_DeltaM_high'      : 300.0,   #MeV
-    'B_DOCAMAX'          : .13 , #mm
+    'B_DOCAMAX'          : .15 , #mm
     'B_upperDeltaM_low'  : 720.0,   #MeV
     'B_upperDeltaM_high' : 1721.0,  #MeV
     #D kaon cuts
@@ -75,15 +75,15 @@ confdict={
     'Ds_K_PT'         : 1500.0, #MeV
     'D_K_TRCHI2DOF'   : 30.0,
     'D_K_IPCHI2'      : 0.0,
-    'D_K_PIDK'        : -5.0,
+    'D_K_PIDK'        : -10.0,
     'Dplus_K_PIDK'    : 0.0,
-    'Dplus_K_TRPCHI2' : 0.1,
+    'Dplus_K_TRPCHI2' : 0.05,
     #D pion cuts
     'D_Pi_PT'         : 150.0, # MeV
     'D_Pi_TRCHI2'     : 30.0,
     'D_Pi_IPCHI2'     : 0.,
-    'D_Pi_PIDK'       : 8.0,
-    'Dplus_Pi_TRPCHI2' : 0.1,
+    'D_Pi_PIDK'       : 50.0,
+    'Dplus_Pi_TRPCHI2' : 0.05,
       #Lc kaon cuts
     'Lc_K_PT'          : 150.0,  #MeV
     'Lc_K_TRCHI2DOF'   : 30.0,
@@ -98,7 +98,7 @@ confdict={
     'Lc_Pi_TRPCHI2' : 0.,
       #Lc proton cuts
     'Lc_p_PT'          : 150.0,  #MeV
-    'Lc_p_TRCHI2DOF'   : 30.0,
+    'Lc_p_TRCHI2DOF'   : 3.0,
     'Lc_p_IPCHI2'      : 0.0,
     'Lc_p_PIDp'        : 5.0,
     'Lc_p_TRPCHI2' :0.,
@@ -106,8 +106,8 @@ confdict={
     
     #D0-resonance parameters
     'D0_MassW'        : 40.0,      #MeV, 100 in StdLooseD0 
-    'D0_BPVVDCHI2'    : 50.0,      #36 in StdLooseD0
-    'D0_DIRA'         : 0.999,
+    'D0_BPVVDCHI2'    : 36.0,      #36 in StdLooseD0
+    'D0_DIRA'         : 0.98,
     'D0_PT'           : 1200.0,    #MeV, 1.2 GeV in StdLooseD02KPi
     'D0_VCHI2'        : 10.0,      #10 in StdLooseD0
     #D0 combination cut
@@ -116,13 +116,13 @@ confdict={
     'D_MassW'         : 40.0,      #MeV, 100 in StdLooseDplus
     'D_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
     'Ds_BPVVDCHI2'    : 36.0,      #shorter lifetime than Dplus 
-    'D_DIRA'          : 0.999,   #0.98 in StdLooseDplus
+    'D_DIRA'          : 0.98,   #0.98 in StdLooseDplus
     'D_PT'            : 1600.0,    #MeV, 1.2 in StdLooseDplus
     'D_VCHI2'         : 10.0,      #30 in StdLooseDplus
     'D_MIPCHI2'       : 10.0,
     #Dstar-resonance parameters
-    'slowPi_TRCHI2DOF' : 3.0,
-    'slowPi_PT'        : 110.0,    #MeV
+    'slowPi_TRCHI2DOF' : 30.0,
+    'slowPi_PT'        : 50.0,    #MeV
     'Dstar_PT'         : 1250.0,   #MeV, 1250 in StdLooseD*
     'Dstar_VCHI2'      : 25.0,     #MeV, 25 in StdLooseD*WithD02KPi 
     'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
@@ -130,13 +130,16 @@ confdict={
     'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
   
      #Lc-resonance parameters
-    'Lc_MassW'         : 50.0,      #MeV, 100 in StdLooseDplus
+    'Lc_MassW'         : 30.0,      #MeV, 100 in StdLooseDplus
     'Lc_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
-    'Lc_DIRA'          : 0.999,   #0.98 in StdLooseDplus
+    'Lc_DIRA'          : 0.99,   #0.98 in StdLooseDplus
     'Lc_PT'            : 1200.0,    #MeV, 1.2 in StdLooseDplus
     'Lc_VCHI2'         : 10.0,      #30 in StdLooseDplus
     'Lc_MIPCHI2'       : 10.0,
-    
+    # Lb Inverted vertex Cuts
+    'LbInvVertD'       : 1. ,         #mm
+    #Dstar Inverted cut
+    'DInvVertD'        : 0.5 ,         #mm
     #Muon and J/psi cuts
     'Muon_TRCHI2DOF'    : 3.0,
     'Muon_PT'           : 1000.0,  #MeV
@@ -207,7 +210,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
     Lc_PiCut=''
     Lc_pCut=''
     LcCut=''
+    LcLightCut=''
+    Lc_pLightCut=''
+    Lc_KLightCut=''
+    DLightCut=''
+    DLight_partCut=''
     totalLcCut=''
+    LcInvVertCut=''
+    totalLcInvVertCut=''
+    DInvVertCut=''
+    totalDInvVertCut=''
     D0Cut=''
     totalD0Cut=''
     MuonCut=''
@@ -221,6 +233,9 @@ class B2XTauNuAllLinesConf(LineBuilder):
     BcCombCut=''
     LbCombCut=''
     BCut=''
+    LbCombInvVertCut=''
+    B0dCombInvVertCut=''
+    BInvVertCut=''
 
 
     JpsiSel=None
@@ -311,7 +326,10 @@ class B2XTauNuAllLinesConf(LineBuilder):
     'Lc_DIRA'  ,       
     'Lc_PT'    ,       
     'Lc_VCHI2'  ,      
-    'Lc_MIPCHI2' ,    
+    'Lc_MIPCHI2' ,
+           # Inverted Vertex cuts
+    'LbInvVertD',
+    'DInvVertD',
         #D0 combination cut
         'D0_DOCAMAX',
         #Dstar-resonance parameters
@@ -382,11 +400,14 @@ class B2XTauNuAllLinesConf(LineBuilder):
                         " (TRCHI2DOF < %(slowPi_TRCHI2DOF)s) & (TRGHP < %(TRGHP_slowPi)s),1)" % config       
 
         
+
         self.DstarCut = " (VFASPF(VCHI2/VDOF) < %(Dstar_VCHI2)s ) & (M-MAXTREE('D0'==ABSID,M)>%(Dstar_DeltaM_low)s*MeV) & (M-MAXTREE('D0'==ABSID,M)<%(Dstar_DeltaM_high)s*MeV) &"\
                         " (PT>%(Dstar_PT)s *MeV) & ((ADMASS('D*(2010)+')< %(Dstar_MassW)s*MeV))" % config
         
+        
 
-        self.totalDstarCut = self.DstarCut + self.Dstar_KCut + self.Dstar_PiCut + self.Dstar_D0Cut + self.Dstar_slowPiCut
+        self.totalDstarCut = self.DstarCut
+        #+ self.Dstar_KCut + self.Dstar_PiCut + self.Dstar_D0Cut + self.Dstar_slowPiCut
 
         
         #StdLooseDPlus has the following decay chain: D+ -> K pi pi
@@ -474,6 +495,24 @@ class B2XTauNuAllLinesConf(LineBuilder):
          
         self.totalLcCut = self.LcCut  + self.Lc_pCut + self.Lc_PiCut + self.Lc_KCut 
 
+#Lc cuts for Invertex vertex selection
+ 
+       
+        self.LcLightCut = " (ADMASS('Lambda_c+') < %(Lc_MassW)s *MeV )&  (BPVVDCHI2 > %(Lc_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<%(Lc_VCHI2)s)& (MIPCHI2DV(PRIMARY)> %(Lc_MIPCHI2)s) "% config
+        self.Lc_pLightcut="& INTREE( ('p+'==ABSID)& (TRCHI2DOF < %(Lc_p_TRCHI2DOF)s) & (TRGHP < %(TRGHP)s) & (MIPCHI2DV(PRIMARY)> %(Lc_p_IPCHI2)s) & (PIDp > %(Lc_p_PIDp)s))" % config
+        self.Lc_KLightcut = "& INTREE( ('K-'==ABSID) & (TRCHI2DOF < %(Lc_K_TRCHI2DOF)s ) & (MIPCHI2DV(PRIMARY)> %(Lc_K_IPCHI2)s ) & (TRGHP < %(TRGHP)s) & (PIDK > %(Lc_K_PIDK)s)) " % config
+        
+
+        self.totalLcInvVertCut=  self.LcLightCut + self.Lc_pCut+self.Lc_KCut
+
+        #Dstar cuts for Invertex vertex selection
+ 
+       
+        self.DLightCut = "  (M-MAXTREE('D0'==ABSID,M)>%(Dstar_DeltaM_low)s*MeV) & (M-MAXTREE('D0'==ABSID,M)<%(Dstar_DeltaM_high)s*MeV) & (BPVVDCHI2 > %(D0_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<%(D0_VCHI2)s) & CHILDCUT(  (ADMASS('D0') < %(D0_MassW)s *MeV ),2)  "% config
+       
+
+        self.totalDInvVertCut=  self.DLightCut 
+        
         #J/psi cuts for Bc mode
         self.MuonCut = " & (MINTREE('mu+'==ABSID,PT) > %(Muon_PT)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(Muon_TRCHI2DOF)s)" %config
         self.JpsiCut = "(ADMASS('J/psi(1S)') < %(Jpsi_MassW)s *MeV) & (VFASPF(VCHI2PDOF)< %(Jpsi_VCHI2)s) & (PT > %(Jpsi_PT)s *MeV)" %config
@@ -500,10 +539,12 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.BsCombCut="(((DAMASS('B_s0') > %(B_DeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B_s0') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
 
         self.LbCombCut="(DAMASS('Lambda_b0') < %(B_DeltaM_high)s*MeV)  & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
-      #  self.LbCombCut="(AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
+        self.LbCombInvVertCut="(ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) >  %(LbInvVertD)s *mm) & (DAMASS('Lambda_b0') < %(B_DeltaM_high)s*MeV)" %config
+        self.B0dCombInvVertCut="(ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) >  %(DInvVertD)s *mm) & (DAMASS('B0') < %(B_DeltaM_high)s*MeV)" %config
         #B cuts
         self.BCut = " (BPVDIRA > %(B_BPVDIRA)s)" %config
-
+       
+        self.BInvVertCut = " (BPVDIRA >0)" %config
 
         ### Now make all the selections ###
 
@@ -513,6 +554,8 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.__FilterD0__()
         self.__FilterDs__()
         self.__FilterLc__()
+        self.__FilterLcInvVert__()
+        self.__FilterDInvVert__()
         self.__FilterJpsi2MuMu__()
         
         self.__MakeB0d2DstarTauNu__()
@@ -532,6 +575,8 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.__MakeLb2LcTauNu__()
         self.__MakeLb2LcTauNuWS__()
         self.__MakeLb2LcTauNuNonPhysTau__()
+        self.__MakeLb2LcTauNuInvVert__()
+        self.__MakeB0d2DstarTauNuInvVert__()
         self.__MakeDdoubleStar2DstarPi__()
         self.__MakeB0d2DdoubleStarTauNu__()
         self.__MakeB0d2DdoubleStarTauNuWS__()
@@ -561,81 +606,81 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
 
         ##TisTos definition
-        self.TOSBd2DstarTauNu = filterTisTos("TOSBd2DstarTauNu",
+        self.TOSB0d2DstarTauNu = filterTisTos("TOSB0d2DstarTauNu",
                                              Input = self.B0d2DstarTauNuSel,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
 
         ### Now make B stripping line ###
-        Bd2DstarTauNuLine=StrippingLine("Bd2DstarTauNuFor"+self._name,
+        B0d2DstarTauNuLine=StrippingLine("B0d2DstarTauNuFor"+self._name,
                                         prescale = config['Prescale_B0d2DstarTauNu'],
                                         postscale = config['Postscale'],
-                                        algos = [ self.TOSBd2DstarTauNu ]
+                                        algos = [ self.TOSB0d2DstarTauNu ]
                                         )
-        self.registerLine(Bd2DstarTauNuLine)
+        self.registerLine(B0d2DstarTauNuLine)
         
 
-        self.TOSBd2DstarTauNuWS = filterTisTos("TOSBd2DstarTauNuWS",
+        self.TOSB0d2DstarTauNuWS = filterTisTos("TOSB0d2DstarTauNuWS",
                                              Input = self.B0d2DstarTauNuSelWS,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
         
-        Bd2DstarTauNuWSLine=StrippingLine("Bd2DstarTauNuWSFor"+self._name,
+        B0d2DstarTauNuWSLine=StrippingLine("B0d2DstarTauNuWSFor"+self._name,
                                           prescale = config['Prescale_B0d2DstarTauNu'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.TOSBd2DstarTauNuWS ]
+                                          algos = [ self.TOSB0d2DstarTauNuWS ]
                                           )
-        self.registerLine(Bd2DstarTauNuWSLine)
+        self.registerLine(B0d2DstarTauNuWSLine)
 
-        self.TOSBd2DstarTauNuNonPhys = filterTisTos("TOSBd2DstarTauNuNonPhys",
+        self.TOSB0d2DstarTauNuNonPhys = filterTisTos("TOSB0d2DstarTauNuNonPhys",
                                              Input = self.B0d2DstarTauNuSelNonPhysTau,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
 
-        Bd2DstarTauNuNonPhysTauLine=StrippingLine("Bd2DstarTauNuNonPhysTauFor"+self._name,
+        B0d2DstarTauNuNonPhysTauLine=StrippingLine("B0d2DstarTauNuNonPhysTauFor"+self._name,
                                           prescale = config['Prescale_NonPhys'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.TOSBd2DstarTauNuNonPhys ]
+                                          algos = [ self.TOSB0d2DstarTauNuNonPhys ]
                                           )
-        self.registerLine(Bd2DstarTauNuNonPhysTauLine)
+        self.registerLine(B0d2DstarTauNuNonPhysTauLine)
 
         
 
-        self.TOSBd2DTauNu = filterTisTos("TOSBd2DTauNu",
+        self.TOSB0d2DTauNu = filterTisTos("TOSB0d2DTauNu",
                                              Input = self.B0d2DTauNuSel,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
         
-        Bd2DTauNuLine=StrippingLine("Bd2DTauNuFor"+self._name,
+        B0d2DTauNuLine=StrippingLine("B0d2DTauNuFor"+self._name,
                                     prescale = config['Prescale_B0d2DTauNu'],
                                     postscale = config['Postscale'],
-                                    algos = [ self.TOSBd2DTauNu ]
+                                    algos = [ self.TOSB0d2DTauNu ]
                                     )
-        self.registerLine(Bd2DTauNuLine)
+        self.registerLine(B0d2DTauNuLine)
 
-        self.TOSBd2DTauNuWS = filterTisTos("TOSBd2DTauNuWS",
+        self.TOSB0d2DTauNuWS = filterTisTos("TOSB0d2DTauNuWS",
                                              Input = self.B0d2DTauNuSelWS,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
         
-        Bd2DTauNuWSLine=StrippingLine("Bd2DTauNuWSFor"+self._name,
+        B0d2DTauNuWSLine=StrippingLine("B0d2DTauNuWSFor"+self._name,
                                       prescale = config['Prescale_B0d2DTauNu'],
                                       postscale = config['Postscale'],
-                                      algos = [ self.TOSBd2DTauNuWS ]
+                                      algos = [ self.TOSB0d2DTauNuWS ]
                                       )
-        self.registerLine(Bd2DTauNuWSLine)
+        self.registerLine(B0d2DTauNuWSLine)
 
-        self.TOSBd2DTauNuNonPhys = filterTisTos("TOSBd2DTauNuNonPhys",
+        self.TOSB0d2DTauNuNonPhys = filterTisTos("TOSB0d2DTauNuNonPhys",
                                              Input = self.B0d2DTauNuSelNonPhysTau,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
 
-        Bd2DTauNuNonPhysTauLine=StrippingLine("Bd2DTauNuNonPhysTauFor"+self._name,
+        B0d2DTauNuNonPhysTauLine=StrippingLine("B0d2DTauNuNonPhysTauFor"+self._name,
                                       prescale = config['Prescale_NonPhys'],
                                       postscale = config['Postscale'],
-                                      algos = [ self.TOSBd2DTauNuNonPhys ]
+                                      algos = [ self.TOSB0d2DTauNuNonPhys ]
                                       )
-        self.registerLine(Bd2DTauNuNonPhysTauLine)
+        self.registerLine(B0d2DTauNuNonPhysTauLine)
 
         self.TOSBu2D0TauNu = filterTisTos("TOSBu2D0TauNu",
                                              Input = self.Bu2D0TauNuSel,
@@ -733,6 +778,30 @@ class B2XTauNuAllLinesConf(LineBuilder):
                                        )
         self.registerLine(Lb2LcTauNuNonPhysTauLine)
         
+        self.TOSLb2LcTauNuInvVert = filterTisTos("TOSLb2LcTauNuInvVert",
+                                             Input = self.Lb2LcTauNuSelInvVert,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
+        
+        Lb2LcTauNuInvVertLine=StrippingLine("Lb2LcTauNuInvVertFor"+self._name,
+                                     prescale = config['Prescale_Lb2LcTauNu'],
+                                     postscale = config['Postscale'],
+                                     algos = [ self.TOSLb2LcTauNuInvVert ]
+                                     )
+        self.registerLine(Lb2LcTauNuInvVertLine)
+
+        self.TOSB0d2DstarTauNuInvVert = filterTisTos("TOSB0d2DstarTauNuInvVert",
+                                             Input = self.B0d2DstarTauNuSelInvVert,
+                                             myTisTosSpecs = confdict['TisTosSpecs']
+                                             )
+        
+        B0d2DstarTauNuInvVertLine=StrippingLine("B0d2DstarTauNuInvVertFor"+self._name,
+                                     prescale = config['Prescale_B0d2DstarTauNu'],
+                                     postscale = config['Postscale'],
+                                     algos = [ self.TOSB0d2DstarTauNuInvVert ]
+                                     )
+        self.registerLine(B0d2DstarTauNuInvVertLine)
+        
         self.TOSBs2DsTauNu = filterTisTos("TOSBs2DsTauNu",
                                              Input = self.B0s2DsTauNuSel,
                                              myTisTosSpecs = confdict['TisTosSpecs']
@@ -772,60 +841,60 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         
 
-        self.TOSBd2DdoubleStarTauNu = filterTisTos("TOSBd2DdoubleStarTauNu",
+        self.TOSB0d2DdoubleStarTauNu = filterTisTos("TOSB0d2DdoubleStarTauNu",
                                              Input = self.B0d2DdoubleStarTauNuSel,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
 
-        Bd2DdoubleStarTauNuLine=StrippingLine("Bd2DdoubleStarTauNuFor"+self._name,
+        B0d2DdoubleStarTauNuLine=StrippingLine("B0d2DdoubleStarTauNuFor"+self._name,
                                         prescale = config['Prescale_B0d2DdoubleStarTauNu'],
                                         postscale = config['Postscale'],
-                                        algos = [ self.TOSBd2DdoubleStarTauNu ]
+                                        algos = [ self.TOSB0d2DdoubleStarTauNu ]
                                         )
-        self.registerLine(Bd2DdoubleStarTauNuLine)
+        self.registerLine(B0d2DdoubleStarTauNuLine)
         
-        self.TOSBd2DdoubleStarTauNuWS = filterTisTos("TOSBd2DdoubleStarTauNuWS",
+        self.TOSB0d2DdoubleStarTauNuWS = filterTisTos("TOSB0d2DdoubleStarTauNuWS",
                                              Input = self.B0d2DdoubleStarTauNuSelWS,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
         
-        Bd2DdoubleStarTauNuWSLine=StrippingLine("Bd2DdoubleStarTauNuWSFor"+self._name,
+        B0d2DdoubleStarTauNuWSLine=StrippingLine("B0d2DdoubleStarTauNuWSFor"+self._name,
                                           prescale = config['Prescale_B0d2DdoubleStarTauNu'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.TOSBd2DdoubleStarTauNuWS ]
+                                          algos = [ self.TOSB0d2DdoubleStarTauNuWS ]
                                           )
-        self.registerLine(Bd2DdoubleStarTauNuWSLine)
+        self.registerLine(B0d2DdoubleStarTauNuWSLine)
 
-        self.TOSBd2DdoubleStarTauNuNonPhys = filterTisTos("TOSBd2DdoubleStarTauNuNonPhys",
+        self.TOSB0d2DdoubleStarTauNuNonPhys = filterTisTos("TOSB0d2DdoubleStarTauNuNonPhys",
                                              Input = self.B0d2DdoubleStarTauNuSelNonPhysTau,
                                              myTisTosSpecs = confdict['TisTosSpecs']
                                              )
 
-        Bd2DdoubleStarTauNuNonPhysTauLine=StrippingLine("Bd2DdoubleStarTauNuNonPhysTauFor"+self._name,
+        B0d2DdoubleStarTauNuNonPhysTauLine=StrippingLine("B0d2DdoubleStarTauNuNonPhysTauFor"+self._name,
                                           prescale = config['Prescale_NonPhys'],
                                           postscale = config['Postscale'],
-                                          algos = [ self.TOSBd2DdoubleStarTauNuNonPhys ]
+                                          algos = [ self.TOSB0d2DdoubleStarTauNuNonPhys ]
                                           )
-        self.registerLine(Bd2DdoubleStarTauNuNonPhysTauLine)
+        self.registerLine(B0d2DdoubleStarTauNuNonPhysTauLine)
         
         
         ### Collect them all together in a nice way ###
-        self.Line=Bd2DstarTauNuLine
+        self.Line=B0d2DstarTauNuLine
         self.Selections=[self.DstarSel, self.B0d2DstarTauNuSel]
 
-        self.Line=Bd2DstarTauNuWSLine
+        self.Line=B0d2DstarTauNuWSLine
         self.Selections=[self.DstarSel, self.B0d2DstarTauNuSelWS]
 
-        self.Line=Bd2DstarTauNuNonPhysTauLine
+        self.Line=B0d2DstarTauNuNonPhysTauLine
         self.Selections=[self.DstarSel, self.B0d2DstarTauNuSelNonPhysTau]
         
-        self.Line=Bd2DTauNuLine
+        self.Line=B0d2DTauNuLine
         self.Selections=[self.DplusSel, self.B0d2DTauNuSel]
 
-        self.Line=Bd2DTauNuWSLine
+        self.Line=B0d2DTauNuWSLine
         self.Selections=[self.DplusSel, self.B0d2DTauNuSelWS]
 
-        self.Line=Bd2DTauNuNonPhysTauLine
+        self.Line=B0d2DTauNuNonPhysTauLine
         self.Selections=[self.DplusSel, self.B0d2DTauNuSelNonPhysTau]
         
 
@@ -864,13 +933,21 @@ class B2XTauNuAllLinesConf(LineBuilder):
         self.Line=Lb2LcTauNuNonPhysTauLine
         self.Selections=[self.LcSel, self.Lb2LcTauNuSelNonPhysTau]
 
-        self.Line=Bd2DdoubleStarTauNuLine
+        self.Line=Lb2LcTauNuInvVertLine
+        self.Selections=[self.LcSelInvVert, self.Lb2LcTauNuSelInvVert]
+
+        self.Line=B0d2DstarTauNuInvVertLine
+        self.Selections=[self.LcSelInvVert, self.B0d2DstarTauNuSelInvVert]
+        
+
+
+        self.Line=B0d2DdoubleStarTauNuLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSel]
 
-        self.Line=Bd2DdoubleStarTauNuWSLine
+        self.Line=B0d2DdoubleStarTauNuWSLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSelWS]
 
-        self.Line=Bd2DdoubleStarTauNuNonPhysTauLine
+        self.Line=B0d2DdoubleStarTauNuNonPhysTauLine
         self.Selections=[self.DdoubleStar2DstarPiSel, self.B0d2DdoubleStarTauNuSelNonPhysTau]
 
         
@@ -948,7 +1025,35 @@ class B2XTauNuAllLinesConf(LineBuilder):
         SelLcForLb = Selection("SelLcFor"+self._name,
                                 Algorithm=LcForLb, RequiredSelections = [MyStdLc])
         
-        self.LcSel=SelLcForLb    
+        self.LcSel=SelLcForLb
+        
+    def __FilterLcInvVert__(self):
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+         
+        LcForLbInvVert = FilterDesktop(
+            Code = self.totalLcInvVertCut
+            )
+        MyStdLcInvVert = DataOnDemand(Location = 'Phys/StdLooseLambdac2PKPi/Particles')
+        SelLcForLbInvVert = Selection("SelLcForLbInvVert"+self._name,
+                                Algorithm=LcForLbInvVert, RequiredSelections = [MyStdLcInvVert])
+        
+        self.LcSelInvVert=SelLcForLbInvVert
+
+    def __FilterDInvVert__(self):
+        
+        from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+         
+        DstarForB0dInvVert = FilterDesktop(
+            Code = self.totalDInvVertCut
+            )
+        MyStdDstarInvVert = DataOnDemand(Location = 'Phys/StdLooseDstarWithD02KPi/Particles')
+        SelDstarForB0dInvVert = Selection("SelDstarForB0dInvVert"+self._name,
+                                Algorithm=DstarForB0dInvVert, RequiredSelections = [MyStdDstarInvVert])
+        
+        self.DstarSelInvVert=SelDstarForB0dInvVert  
         
     def __FilterJpsi2MuMu__(self):
         
@@ -1001,16 +1106,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
-        CombBd2DstarTauNu = CombineParticles(        
+        CombB0d2DstarTauNu = CombineParticles(        
             DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc"],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DstarTauNu = Selection("SelBd2DstarTauNu", Algorithm=CombBd2DstarTauNu,
+        SelB0d2DstarTauNu = Selection("SelB0d2DstarTauNu", Algorithm=CombB0d2DstarTauNu,
                                     RequiredSelections = [self.DstarSel,MyStdLooseDetachedTau])
         
-        self.B0d2DstarTauNuSel=SelBd2DstarTauNu
+        self.B0d2DstarTauNuSel=SelB0d2DstarTauNu
 
 
     def __MakeB0d2DstarTauNuWS__(self):
@@ -1025,16 +1130,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
-        CombBd2DstarTauNuWS = CombineParticles(        
+        CombB0d2DstarTauNuWS = CombineParticles(        
             DecayDescriptors = ["[B0 -> D*(2010)+ tau+]cc"],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DstarTauNuWS = Selection("SelBd2DstarTauNuWS", Algorithm=CombBd2DstarTauNuWS,
+        SelB0d2DstarTauNuWS = Selection("SelB0d2DstarTauNuWS", Algorithm=CombB0d2DstarTauNuWS,
                                     RequiredSelections = [self.DstarSel,MyStdLooseDetachedTau])
         
-        self.B0d2DstarTauNuSelWS=SelBd2DstarTauNuWS
+        self.B0d2DstarTauNuSelWS=SelB0d2DstarTauNuWS
 
 
 
@@ -1050,16 +1155,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
-        CombBd2DstarTauNuNonPhysTau = CombineParticles(        
+        CombB0d2DstarTauNuNonPhysTau = CombineParticles(        
             DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc"],#, "[B0 -> D*(2010)+ tau+]cc"],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DstarTauNuNonPhysTau = Selection("SelBd2DstarTauNuNonPhysTau", Algorithm=CombBd2DstarTauNuNonPhysTau,
+        SelB0d2DstarTauNuNonPhysTau = Selection("SelB0d2DstarTauNuNonPhysTau", Algorithm=CombB0d2DstarTauNuNonPhysTau,
                                     RequiredSelections = [self.DstarSel,MyStdLooseDetachedTau])
         
-        self.B0d2DstarTauNuSelNonPhysTau=SelBd2DstarTauNuNonPhysTau
+        self.B0d2DstarTauNuSelNonPhysTau=SelB0d2DstarTauNuNonPhysTau
 
         
     def __MakeB0d2DTauNu__(self):
@@ -1073,17 +1178,17 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
-        CombBd2DTauNu = CombineParticles(        
+        CombB0d2DTauNu = CombineParticles(        
             DecayDescriptors = ["[B0 -> D- tau+]cc"],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DTauNu = Selection("SelBd2DTauNu", Algorithm=CombBd2DTauNu,
+        SelB0d2DTauNu = Selection("SelB0d2DTauNu", Algorithm=CombB0d2DTauNu,
                                     RequiredSelections = [self.DplusSel,MyStdLooseDetachedTau])
         
-        self.B0d2DTauNuSel=SelBd2DTauNu
+        self.B0d2DTauNuSel=SelB0d2DTauNu
 
 
             
@@ -1099,17 +1204,17 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
-        CombBd2DTauNuWS = CombineParticles(        
+        CombB0d2DTauNuWS = CombineParticles(        
             DecayDescriptors = ["[B0 -> D+ tau+]cc" ],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DTauNuWS = Selection("SelBd2DTauNuWS", Algorithm=CombBd2DTauNuWS,
+        SelB0d2DTauNuWS = Selection("SelB0d2DTauNuWS", Algorithm=CombB0d2DTauNuWS,
                                     RequiredSelections = [self.DplusSel,MyStdLooseDetachedTau])
         
-        self.B0d2DTauNuSelWS=SelBd2DTauNuWS
+        self.B0d2DTauNuSelWS=SelB0d2DTauNuWS
 
 
     def __MakeB0d2DTauNuNonPhysTau__(self):
@@ -1124,17 +1229,17 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
-        CombBd2DTauNuNonPhysTau = CombineParticles(        
+        CombB0d2DTauNuNonPhysTau = CombineParticles(        
             DecayDescriptors = ["[B0 -> D- tau+]cc"],#, "[B0 -> D+ tau+]cc"],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DTauNuNonPhysTau = Selection("SelBd2DTauNuNonPhysTau", Algorithm=CombBd2DTauNuNonPhysTau,
+        SelB0d2DTauNuNonPhysTau = Selection("SelB0d2DTauNuNonPhysTau", Algorithm=CombB0d2DTauNuNonPhysTau,
                                     RequiredSelections = [self.DplusSel,MyStdLooseDetachedTau])
         
-        self.B0d2DTauNuSelNonPhysTau=SelBd2DTauNuNonPhysTau
+        self.B0d2DTauNuSelNonPhysTau=SelB0d2DTauNuNonPhysTau
 
 
 
@@ -1151,7 +1256,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombBu2D0TauNu = CombineParticles(        
             DecayDescriptors = ["[B- -> D0 tau-]cc"],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.BplusCombCut,
             MotherCut      = self.BCut,
             )
@@ -1177,7 +1282,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombBu2D0TauNuWS = CombineParticles(        
             DecayDescriptors = ["[B- -> D0 tau+]cc"],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.BplusCombCut,
             MotherCut      = self.BCut,
             )
@@ -1202,7 +1307,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombBu2D0TauNuNonPhysTau = CombineParticles(        
             DecayDescriptors = ["[B- -> D0 tau-]cc"],#, "[B- -> D~0 tau-]cc" ],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.BplusCombCut,
             MotherCut      = self.BCut,
             )
@@ -1273,7 +1378,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombBs2DsTauNu = CombineParticles(        
             DecayDescriptors = ["[B_s0 -> D_s- tau+]cc"],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.BsCombCut,
             MotherCut      = self.BCut,
             )
@@ -1299,7 +1404,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombBs2DsTauNuWS = CombineParticles(        
             DecayDescriptors = ["[B_s0 -> D_s+ tau+]cc" ],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.BsCombCut,
             MotherCut      = self.BCut,
             )
@@ -1324,7 +1429,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombBs2DsTauNuNonPhysTau = CombineParticles(        
             DecayDescriptors = ["[B_s0 -> D_s+ tau-]cc"],#, "[B_s0 -> D_s+ tau-]cc" ],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.999)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.98)" },
             CombinationCut = self.BsCombCut,
             MotherCut      = self.BCut,
             )
@@ -1351,7 +1456,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
             MotherCut      = self.BCut,
            
             )
-        CombLb2LcTauNu.OutputLevel =  4
+    
         SelLb2LcTauNu = Selection("SelLb2LcTauNu", Algorithm=CombLb2LcTauNu,
                                     RequiredSelections = [self.LcSel,MyStdLooseDetachedTau])
         
@@ -1408,7 +1513,52 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         self.Lb2LcTauNuSelNonPhysTau=SelLb2LcTauNuNonPhysTau
 
+    def __MakeLb2LcTauNuInvVert__(self):
+        """
+        Lb selection:
+        [Lambda_b0 -> Lambda_c+ tau-]cc, 
+        use of inverted vertex cut only first, should boost the overall efficiency
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTau
 
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
+        
+        CombLb2LcTauNuInvVert = CombineParticles(        
+            DecayDescriptors = ["[Lambda_b0 -> Lambda_c+ tau-]cc"],
+            CombinationCut = self.LbCombInvVertCut,
+            MotherCut      = self.BInvVertCut,
+            )
+        
+        SelLb2LcTauNuInvVert = Selection("SelLb2LcTauNuInvVert", Algorithm=CombLb2LcTauNuInvVert,
+                                    RequiredSelections = [self.LcSelInvVert,MyStdLooseDetachedTau])
+        
+        self.Lb2LcTauNuSelInvVert=SelLb2LcTauNuInvVert
+
+    def __MakeB0d2DstarTauNuInvVert__(self):
+        """
+        Dstar  selection:
+        [B0 -> Dstar*- tau+]cc, 
+        use of inverted vertex cut only first, should boost the overall efficiency
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from PhysSelPython.Wrappers import Selection, DataOnDemand
+        from CommonParticles import StdLooseDetachedTau
+
+        MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
+        
+        CombB0d2DstarTauNuInvVert = CombineParticles(                    
+            DecayDescriptors = ["[B0 -> D*(2010)- tau+]cc"],
+            CombinationCut = self.B0dCombInvVertCut,
+            MotherCut      = self.BInvVertCut,
+            )
+        
+        SelB0d2DstarTauNuInvVert = Selection("SelB0d2DstarTauNuInvVert", Algorithm=CombB0d2DstarTauNuInvVert,
+                                    RequiredSelections = [self.DstarSelInvVert,MyStdLooseDetachedTau])
+        
+        self.B0d2DstarTauNuSelInvVert=SelB0d2DstarTauNuInvVert
+        
     def __MakeB0d2DdoubleStarTauNu__(self):
         """
         B0d selection:
@@ -1421,16 +1571,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
-        CombBd2DdoubleStarTauNu = CombineParticles(        
+        CombB0d2DdoubleStarTauNu = CombineParticles(        
             DecayDescriptors = ["[B~0 -> D_1(2420)0 tau-]cc", "[B~0 -> D*_2(2460)0 tau-]cc" ],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DdoubleStarTauNu = Selection("SelBd2DdoubleStarTauNu", Algorithm=CombBd2DdoubleStarTauNu,
+        SelB0d2DdoubleStarTauNu = Selection("SelB0d2DdoubleStarTauNu", Algorithm=CombB0d2DdoubleStarTauNu,
                                     RequiredSelections = [self.DdoubleStar2DstarPiSel,MyStdLooseDetachedTau])
         
-        self.B0d2DdoubleStarTauNuSel=SelBd2DdoubleStarTauNu
+        self.B0d2DdoubleStarTauNuSel=SelB0d2DdoubleStarTauNu
 
 
     def __MakeB0d2DdoubleStarTauNuWS__(self):
@@ -1445,16 +1595,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3pi/Particles')
         
-        CombBd2DdoubleStarTauNuWS = CombineParticles(        
+        CombB0d2DdoubleStarTauNuWS = CombineParticles(        
             DecayDescriptors = ["[B~0 -> D_1(2420)~0 tau-]cc", "[B~0 -> D*_2(2460)~0 tau-]cc" ],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DdoubleStarTauNuWS = Selection("SelBd2DdoubleStarTauNuWS", Algorithm=CombBd2DdoubleStarTauNuWS,
+        SelB0d2DdoubleStarTauNuWS = Selection("SelB0d2DdoubleStarTauNuWS", Algorithm=CombB0d2DdoubleStarTauNuWS,
                                     RequiredSelections = [self.DdoubleStar2DstarPiSel,MyStdLooseDetachedTau])
         
-        self.B0d2DdoubleStarTauNuSelWS=SelBd2DdoubleStarTauNuWS
+        self.B0d2DdoubleStarTauNuSelWS=SelB0d2DdoubleStarTauNuWS
 
 
     def __MakeB0d2DdoubleStarTauNuNonPhysTau__(self):
@@ -1470,16 +1620,16 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
         MyStdLooseDetachedTau = DataOnDemand(Location = 'Phys/StdLooseDetachedTau3piNonPhys/Particles')
         
-        CombBd2DdoubleStarTauNuNonPhysTau = CombineParticles(        
+        CombB0d2DdoubleStarTauNuNonPhysTau = CombineParticles(        
             DecayDescriptors = ["[B~0 -> D_1(2420)~0 tau-]cc", "[B~0 -> D*_2(2460)~0 tau-]cc"],#, "[B~0 -> D_1(2420)~0 tau+]cc", "[B~0 -> D*_2(2460)~0 tau+]cc" ],
             CombinationCut = self.B0CombCut,
             MotherCut      = self.BCut,
             )
         
-        SelBd2DdoubleStarTauNuNonPhysTau = Selection("SelBd2DdoubleStarTauNuNonPhysTau", Algorithm=CombBd2DdoubleStarTauNuNonPhysTau,
+        SelB0d2DdoubleStarTauNuNonPhysTau = Selection("SelB0d2DdoubleStarTauNuNonPhysTau", Algorithm=CombB0d2DdoubleStarTauNuNonPhysTau,
                                     RequiredSelections = [self.DdoubleStar2DstarPiSel,MyStdLooseDetachedTau])
         
-        self.B0d2DdoubleStarTauNuSelNonPhysTau=SelBd2DdoubleStarTauNuNonPhysTau
+        self.B0d2DdoubleStarTauNuSelNonPhysTau=SelB0d2DdoubleStarTauNuNonPhysTau
 
 
     
@@ -1487,3 +1637,5 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
     
         
+
+  
