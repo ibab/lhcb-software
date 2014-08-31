@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Cedric Potterat
+ - change trigger line in StrippingJets
+
 ! 2014-08-31 - Carlos Vazquez Sierra
  - Updated StrippingSelections/StrippingB2JpsiXforBeta_s.py
 

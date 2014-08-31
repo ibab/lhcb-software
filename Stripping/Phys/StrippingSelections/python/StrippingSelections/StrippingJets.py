@@ -37,7 +37,7 @@ default_config = {
                       },
 
         # HLT properties.
-        "HLT"   : {"LINETOPO"       : "Hlt2(Topo2Bod|Topo3Bod|Topo4Bod)", # Line to use for TOPO
+        "HLT"   : {"LINETOPO"       : "Hlt2Topo", #Line to use for TOPO
                    "LINEMB"         : "Hlt1MBNoBiasDecision"} , # Line to use for MB
         # Track properties.
         "TRK"   : {"MAX_MULT"       : 2500,       # Multiplicity.
@@ -196,7 +196,7 @@ class JetsConf(LineBuilder):
             selection = _4jets_Pt5_0sv,
             RequiredRawEvents = ["Calo"]
             )
-            
+
         self.registerLine(line_jetMB)
         self.registerLine(line_jetDIFF)
         self.registerLine(line_jetPT0)
@@ -295,19 +295,19 @@ class JetsConf(LineBuilder):
             Preambulo = pre,
             CombinationCut = cmb_cuts,
             MotherCut = "INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+"))")
-            
-            
+
+
         if len(inputs) == 1:
             dijets.Inputs = [inputs[0].outputLocation()]
         else:
             dijets.Inputs = [inputs[0].outputLocation(), inputs[1].outputLocation()]
-            
+
         return Selection(self._name + label + "PT" +str(PT).split('*')[0]+"LePT"+ str(LeadingPT).split('*')[0]+ "Selection",
                                          Algorithm = dijets,
                                          RequiredSelections = inputs)
-                    
+
     def _create_3jets(self, inputs, minPT = 5*GeV, LeadingPT = 0*GeV, Nsvtag = 0):
-                        
+
         cmb_cuts = "(abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),2))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),3))<1*mm)"
         _3jets = CombineParticles(
             ParticleCombiners = {"" : "LoKi::VertexFitter"},
@@ -315,11 +315,11 @@ class JetsConf(LineBuilder):
             CombinationCut = cmb_cuts,
             DaughtersCuts = {"CELLjet" : "(PT > "+str(minPT)+")"},
             MotherCut = "((INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+")))&(INTREE((ABSID=='CELLjet')&(PINFO(9990,0)>0)))&("+str(Nsvtag)+" < NINTREE((ABSID=='CELLjet')&(PINFO(9991,0) > 5 ))))")
-        
+
         return Selection(self._name + "3jets_PTmin" +str(minPT).split('*')[0]+"LeadPT"+ str(LeadingPT).split('*')[0]+ "Nsv" + str(Nsvtag) +"Selection", Algorithm = _3jets, RequiredSelections = inputs)
- 
+
     def _create_4jets(self, inputs, minPT = 5*GeV, LeadingPT = 0*GeV, Nsvtag = 0):
-                        
+
         cmb_cuts = "(abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),2))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),3))<1*mm) & (abs(ACHILD(BPV(VZ),1)-ACHILD(BPV(VZ),4))<1*mm)"
         _4jets = CombineParticles(
             ParticleCombiners = {"" : "LoKi::VertexFitter"},
@@ -327,6 +327,6 @@ class JetsConf(LineBuilder):
             CombinationCut = cmb_cuts,
             DaughtersCuts = {"CELLjet" : "(PT > "+str(minPT)+")"},
             MotherCut = "((INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+")))&(INTREE((ABSID=='CELLjet')&(PINFO(9990,0)>0)))&("+str(Nsvtag)+" < NINTREE((ABSID=='CELLjet')&(PINFO(9991,0) > 5 ))))")
-        
+
         return Selection(self._name + "4jets_PTmin" +str(minPT).split('*')[0]+"LeadPT"+ str(LeadingPT).split('*')[0]+ "Nsv" + str(Nsvtag) +"Selection", Algorithm = _4jets, RequiredSelections = inputs)
- 
+
