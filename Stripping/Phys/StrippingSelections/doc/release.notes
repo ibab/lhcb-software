@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-08-31 - Ronan Wallace
+ - Stripping{StrangeBaryons,StrangeBaryonsNoPID,SbarSCorrelations} prepared for Stripping21.
+ - __all__ added to StrippingJets.py.
+
+! 2014-08-31 - Ronan Wallace
  - Stripping{Z02MuMu,Z02ee,DY2MuMu,DY2ee,WMu,We,SingleTrackTIS} raw info specified.
  - Updated StrippingLowMult.py, both format of cuts and prescales.
 
