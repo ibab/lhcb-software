@@ -13,7 +13,7 @@ from GaudiKernel.SystemOfUnits import *
 ## StrippingBetaSJpsi2MuMuLine (MicroDST)
 ## StrippingBetaSLambdab2JpsiLambdaUnbiasedLine (MicroDST)
 ## StrippingBetaSLambdab2JpsippiDetachedLine (MicroDST)
-## StripingBetaSBu2JpsiKPrescaledLine (MDST.DST)
+## StrippingBetaSBu2JpsiKPrescaledLine (MDST.DST)
 ## StrippingBetaSBs2JpsiPhiPrescaledLine (MDST.DST)
 ## StrippingBetaSBs2JpsiPhiDetachedLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKstarPrescaledLine (MDST.DST)
@@ -27,15 +27,16 @@ from GaudiKernel.SystemOfUnits import *
 ## Lines defined in StrippingB2JpsiXforBeta_s.py
 ## Authors: Greig Cowan, Juan Palacios, Francesca Dordei, Carlos Vazquez Sierra
 ## -------------------------------------------------------------------
-## Stripping reports (Revision 176967):
+## Stripping reports (Revision 177153):
 ##
 ## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
 ## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.3570|       357|       |  37.100|
-## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.3570|       357|       |  37.092|
+## |_StrippingGlobal_                                            |  0.3810|       381|       |  37.419|
+## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.3810|       381|       |  37.411|
 ## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0480|        48|  1.021|   0.129|
 ## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0040|         4|  1.000|   9.100|
 ## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0410|        41|  1.122|   3.001|
+## |!StrippingBetaSBu2JpsiKPrescaledLine                         |  0.0240|        24|  1.625|   0.319|
 ## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0480|        48|  1.354|   3.952|
 ## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0430|        43|  2.116|   2.496|
 ## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0220|        22|  1.455|   0.771|

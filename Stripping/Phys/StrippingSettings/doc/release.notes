@@ -3,6 +3,10 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2014-08-31 - Carlos Vazquez Sierra (B2CC)
+ - Update LineConfigDictionaries_B2CC.py in s21 and s21r1
+
 ! 2014-08-31 - Wenbin Qian
  - Update LineConfigDictionaries_B2OC.py  in 21 and 21r1
 
@@ -17,7 +21,7 @@
  - updated Stripping21r1/LineConfigDictionaries_RD.py
 
 ! 2014-08-30 - Carlos Vazquez Sierra (B2CC)
- - Updated B2CC dictionaries for S21, s21r1
+ - Updated B2CC dictionaries for s21, s21r1
 
 ! 2014-08-28 - Pablo Ruiz Valls (RD)
  - updated Stripping21/LineConfigDictionaries_RD.py
