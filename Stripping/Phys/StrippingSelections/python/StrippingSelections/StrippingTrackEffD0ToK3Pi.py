@@ -109,12 +109,12 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
                                              self.VeloPions)
 
         self.MissingKaon4BodyLine = self.MakeLine("%sMissingKaon4Body"%self.name,
-                                             ['[K*(892)+ -> pi- pi+ pi+]cc','[K*(892)+ -> pi- pi- pi+]cc','[K*(892)+ -> pi- pi- pi-]cc','[K*(892)+ -> pi+ pi+ pi+]cc'],
-                                             [SelLongPions],
-                                             ['[D0 -> K*(892)+ K+]cc','[D~0 -> K*(892)- K+]cc'],
-                                              ["[D*(2010)+ -> D0 pi+]cc"],
-                                             ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'],
-                                             self.VeloKaons)
+                                                  ['[K*(892)+ -> pi- pi+ pi+]cc','[K*(892)+ -> pi- pi- pi+]cc','[K*(892)+ -> pi- pi- pi-]cc','[K*(892)+ -> pi+ pi+ pi+]cc'],
+                                                  [SelLongPions],
+                                                  ['[D0 -> K*(892)+ K+]cc','[D~0 -> K*(892)- K+]cc'],
+                                                  ["[D*(2010)+ -> D0 pi+]cc"],
+                                                  ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'],
+                                                  self.VeloKaons)
         
         self.MissingProtonLine = self.MakeLine("%sMissingProton"%self.name,
                                                ['[K*(892)+ -> K- pi+]cc','[K*(892)+ -> K+ pi-]cc','[K*(892)+ -> K+ pi+]cc','[K*(892)+ -> K- pi-]cc'],
@@ -155,29 +155,29 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
         MatchingLongTrackCuts = "(ISLONG) & (TRGHOSTPROB < 0.35)"
         D0CombinationCut = "(AMAXDOCA('') < %(D0_MAX_DOCA)s )" %self.__confdict__
         SlowpionCuts = "(MIPCHI2DV(PRIMARY) < 9) & (PIDe < 5) & (PT > 300*MeV)"
+        #DstPrelimComboCuts = "(AM - ACHILD(M,1) < 225*MeV) & (AALLSAMEBPV)"
+        DstPrelimComboCuts = "(APT > 3500*MeV) & (AALLSAMEBPV)"
         if '4Body' in name:
             D0Preambulo = ["mfit = DTF_FUN(M,True,'D0')"]
-            KstCombinationCut = '(APT > 2000*MeV) & (AM < 1800*MeV)'\
-                '& (AM - ACHILD(M,1) - ACHILD(M,2) - ACHILD(M,3) > 100*MeV)'\
-                '& (ANUM(PT > 500*MeV)>=2)'\
-                '& (ANUM(MIPCHI2DV(PRIMARY)>25)>=2)'\
+            KstCombinationCut = "(APT > 2000*MeV) & (AM < 1800*MeV)"\
+                "& (AM - ACHILD(M,1) - ACHILD(M,2) - ACHILD(M,3) > 100*MeV)"\
+                "& (ANUM(PT > 500*MeV)>=2)"\
+                "& (AMAXCHILD(MIPCHI2DV(PRIMARY)) > 30)"\
                 "& (ADOCACHI2CUT(10,''))"
             if "MissingKaon" in name:
                 KstCombinationCut += '& (AM < 1400*MeV)'
             KstMotherCut = '(VFASPF(VZ) > %(D0_MIN_FD)s) & (BPVDIRA > 0.99) & (VFASPF(VCHI2/VDOF)< 3.0)' %self.__confdict__
             D0MotherCut ='(abs(DTF_FUN(M,True) - 1865) < 250*MeV)'
-            DstPrelimComboCuts = "(AM - ACHILD(M,1) < 225*MeV) & (AALLSAMEBPV)"
             DstMotherCut = "(in_range ( 2 * GeV , mfit , %(Dst_MAX_M)s )) & (DTF_CHI2NDOF(True,'D0') < %(Dst_MAX_DTFCHI2)s)" %self.__confdict__
         elif 'Proton' in name:
             D0Preambulo = ["mfit = DTF_FUN(M,True,'Lambda_c+')"]
             KstCombinationCut = '(APT > 1500*MeV) & (AM < 1500*MeV)'\
                 '& (AM - ACHILD(M,1) - ACHILD(M,2) > 100*MeV)'\
                 '& (ANUM(PT > 500*MeV)>=2)'\
-                '& (ANUM(MIPCHI2DV(PRIMARY)>25)>=2)'\
+                "& (AMAXCHILD(MIPCHI2DV(PRIMARY)) > 30)"\
                 "& (ADOCACHI2CUT(15,''))"
             KstMotherCut = '(VFASPF(VZ) > %(LC_MIN_FD)s) & (BPVDIRA > 0.99) & (VFASPF(VCHI2/VDOF)< 3.0)' %self.__confdict__
             D0MotherCut ='(abs(DTF_FUN(M,True) - 2286) < 250*MeV)'
-            DstPrelimComboCuts = "(AM - ACHILD(M,1) < 500*MeV) & (AALLSAMEBPV)"
             DstMotherCut = "(in_range ( 2.4 * GeV , mfit , %(Sc_MAX_M)s )) & (DTF_CHI2NDOF(True,'Lambda_c+') < %(Sc_MAX_DTFCHI2)s)" %self.__confdict__
         else:
             print name + ' = Bad line name'
