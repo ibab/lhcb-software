@@ -41,6 +41,10 @@ def addPrivateToolAndGet( motherConf, toolConfType, name=None ):
 LLPLHCbName = "~chi_10"
 
 default_config = {
+    'NAME'        : 'DisplVerticesLines',
+    'WGs'         : ['QEE'],
+    'BUILDERTYPE' : 'DisplVerticesLinesConf',
+    'CONFIG'      : {
         ## Velo GEC
           "VeloGEC"                 : { "Apply"                : True
                                       , "MaxVeloRatio"         : 0.1
@@ -227,7 +231,10 @@ default_config = {
                                                          , ( ("0x00990042", "0x40000000"), ["Hlt2DisplVerticesSingleDecision", "Hlt2DisplVerticesSingleDownDecision", "Hlt2DisplVerticesSingleHighFDDecision", "Hlt2DisplVerticesSingleHighMassDecision", "Hlt2DisplVerticesSingleVeryHighFDDecision"] )
                                                          ]
                                       }
-        }
+        },
+    'STREAMS'     : [ 'EW' ]
+}
+
 
 
 class DisplVerticesLinesConf(LineBuilder):
@@ -636,7 +643,7 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
-                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RequiredRawEvents = [ "Calo" ]
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
@@ -701,7 +708,7 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
-                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RequiredRawEvents = [ "Calo" ]
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
@@ -748,7 +755,7 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
-                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RequiredRawEvents = [ "Calo" ]
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
@@ -786,7 +793,7 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lSelName, ["PreScale"])["PreScale"]
                      , selection = lineSel
-                     , RequiredRawEvents = [ "Trigger", "Calo" ]
+                     , RequiredRawEvents = [  "Calo" ]
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
             if lShortName in self.configurationParameter("HLT"):
@@ -817,7 +824,7 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lShortName, ["PreScale"])["PreScale"]
                      , selection = hltSelection
-                     , RequiredRawEvents = ["Trigger","Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
+                     , RequiredRawEvents = ["Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
                      )
 
             self.registerLine(line)
@@ -853,7 +860,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      # these lines MUST have an HLT filter
                      , HLT       = self.configurationParameter("HLT")[lShortName]
                      , selection = lineSel
-                     , RequiredRawEvents = ["Trigger","Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
+                     , RequiredRawEvents = ["Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
 
