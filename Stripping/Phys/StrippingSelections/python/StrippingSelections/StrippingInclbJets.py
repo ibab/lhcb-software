@@ -91,5 +91,5 @@ class InclbJetsLinesConf(LineBuilder) :
         return StrippingLine(name ,
                              HLT = "HLT_PASS_RE('Hlt2*.Topo.*Decision')",
                              prescale = self.__confdict__['scale'],
-                             RequiredRawEvents = ["Muon","Calo","Rich"],
+                             RequiredRawEvents = ["Calo"],
                              selection = self._makeInclbJetSel(name))
