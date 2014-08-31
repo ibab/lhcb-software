@@ -5505,7 +5505,8 @@ ROOT.TCut . __mul__    = _tc_mul_
 ROOT.TCut . __invert__ = _tc_invert_
 ROOT.TCut . strip      = _tc_strip_
 
-ROOT.TCut . __rand__   = lambda s,o : ROOT.TCut(o)&s   
+ROOT.TCut . __rand__   = lambda s,o : ROOT.TCut(o)&s
+ROOT.TCut . __radd__   = lambda s,o : ROOT.TCut(o)+s   
 ROOT.TCut . __ror__    = lambda s,o : ROOT.TCut(o)|s  
 ROOT.TCut . __rmul__   = lambda s,o : ROOT.TCut(o)*s   
 
