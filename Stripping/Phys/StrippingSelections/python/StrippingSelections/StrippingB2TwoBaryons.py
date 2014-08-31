@@ -135,7 +135,7 @@ default_config = { 'NAME'              : 'B2TwoBaryons',
                    'GEC_MaxTracks'           : 250,
                    'Prescale'                : 1.0,
                    'Postscale'               : 1.0,
-                   'MVAResponseLL'           : 0.99,
+                   'MVAResponseLL'           : 0.95,
                    'MVAResponseDD'           : 0.97,
                    }
                    }
@@ -211,8 +211,8 @@ class B2TwoBaryonLines( LineBuilder ) :
         
         B2PPbarName  = name + "B2PPbar"
 
-        B2Lp_dd_name    = name+'DD'
-        B2Lp_ll_name    = name+'LL'
+        B2Lp_dd_name    = name+'B2PLambdabarDD'
+        B2Lp_ll_name    = name+'B2PLambdabarLL'
 
         GECCode = {'Code' : "(recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %s)" % config['GEC_MaxTracks'],
                    'Preambulo' : ["from LoKiTracks.decorators import *"]}
@@ -249,32 +249,38 @@ class B2TwoBaryonLines( LineBuilder ) :
                                          postscale = config['Postscale'],
                                          selection = self.selB2LpDD,
                                          FILTER = GECCode,
-                                         ExtraInfoTools = config['ExtraInfoTools'],
-                                         ExtraInfoDaughters = [self.selB2LpDD]
+                                         RelatedInfoTools = config['RelatedInfoTools'],
+                                         #ExtraInfoTools = config['ExtraInfoTools'],
+                                         #ExtraInfoDaughters = [self.selB2LpDD]
                                          )
         self.B2Lp_ll_line = StrippingLine(B2Lp_ll_name+"Line",
                                          prescale = config['Prescale'],
                                          postscale = config['Postscale'],
                                          selection =  self.selB2LpLL,
                                          FILTER = GECCode,
-                                         ExtraInfoTools = config['ExtraInfoTools'],
-                                         ExtraInfoDaughters = [self.selB2LpLL]
+                                         RelatedInfoTools = config['RelatedInfoTools'],
+                                         #ExtraInfoTools = config['ExtraInfoTools'],
+                                         #ExtraInfoDaughters = [self.selB2LpLL]
                                          )
+        #for alg in config['RelatedInfoTools']:
+        #    alg['TopSelection'] = self.selB2LpLLMVA
         self.B2Lp_ll_MVAline = StrippingLine(B2Lp_ll_name+"_MVALine",
                                           prescale = config['Prescale'],
                                           postscale = config['Postscale'],
                                           selection =  self.selB2LpLLMVA,
                                           FILTER = GECCode,
-                                          ExtraInfoTools = config['ExtraInfoTools'],
-                                          ExtraInfoDaughters = [self.selB2LpLLMVA]
+                                          RelatedInfoTools = config['RelatedInfoTools'],
+                                          #ExtraInfoTools = config['ExtraInfoTools'],
+                                          #ExtraInfoDaughters = [self.selB2LpLLMVA]
                                           )
         self.B2Lp_dd_MVAline = StrippingLine(B2Lp_dd_name+"_MVALine",
                                              prescale = config['Prescale'],
                                              postscale = config['Postscale'],
                                              selection =  self.selB2LpDDMVA,
                                              FILTER = GECCode,
-                                             ExtraInfoTools = config['ExtraInfoTools'],
-                                             ExtraInfoDaughters = [self.selB2LpLLMVA]
+                                             RelatedInfoTools = config['RelatedInfoTools'],
+                                             #ExtraInfoTools = config['ExtraInfoTools'],
+                                             #ExtraInfoDaughters = [self.selB2LpLLMVA]
                                              )
         
 
@@ -383,7 +389,7 @@ class B2TwoBaryonLines( LineBuilder ) :
 
     def makeB2LpDD( self, name, config ) :
         """
-        Create and store a Lb ->Lambda0(DD) p+ h- Selection object.
+        Create and store a B ->Lambda~0(DD) p+  Selection object.
         Arguments:
         name             : name of the Selection.
         config           : config dictionary
@@ -418,7 +424,7 @@ class B2TwoBaryonLines( LineBuilder ) :
 
     def makeB2LpLL( self, name, config ) :
         """
-        Create and store a Lb -> Lambda0(LL) p+ h- Selection object.
+        Create and store a B -> Lambda~0(LL) p+  Selection object.
         Arguments:
         name             : name of the Selection.
         config           : config dictionary
@@ -493,7 +499,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                    "log(pi_LoKi_TrkChi2)"     : "log(CHILD(CHILD(TRCHI2DOF,1),2))",
                    } 
         addTMVAclassifierValue(Component = _B ,
-                              XMLFile = xmldir+"TMVAClassification_2011_ll_BDTG.weights.xml",
+                              XMLFile = xmldir+"B2pLambda_LL_BDT.xml",
                               Variables = Vars,
                               ToolName = "MVAResponse",
                               )
@@ -542,7 +548,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                       }
         
         addTMVAclassifierValue(Component = _B ,
-                               XMLFile = xmldir+"TMVAClassification_2011_dd_BDTG.weights.xml",
+                               XMLFile = xmldir+"B2pLambda_DD_BDT.xml",
                                Variables = Vars,
                                ToolName = "MVAResponse",
                                )
