@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-09-01 - Manuel Tobias Schiller
+ - (hopefully) fix warnings about unneeded semicolons in BloomFilter.h
+
 ! 2014-09-01 - Marco Clemencic
  - Fixed CMake configuration.
 

@@ -43,7 +43,7 @@ namespace BloomFilterImpl {
 		    ((1u << (0 * 6)) * _N * _N * _N * _N * _N) / 5u
 	    };
 	};
-    };
+    }
 
     /** @brief compute log2(N/D) in fixed point as template metaprogram (to
      * about 5%)
@@ -286,7 +286,7 @@ namespace BloomFilterImpl {
 	constexpr result_type operator()(const typearg val, \
 		const result_type hash = __doFNV1a<result_type>::hashinit ) const \
 	{ return __doFNV1a<result_type>()(val, hash); } \
-    };
+    }
     BLOOMFILTER_DOHASHOVERLOAD(bool);
     BLOOMFILTER_DOHASHOVERLOAD(char);
     BLOOMFILTER_DOHASHOVERLOAD(wchar_t);
@@ -313,7 +313,7 @@ namespace BloomFilterImpl {
 	    for ( ; *str; ++str) hash = __doFNV1a<result_type>()(*str, hash); \
 	    return hash; \
 	} \
-    };
+    }
     BLOOMFILTER_DOHASHOVERLOAD_CSTRING(char, uint32_t);
     BLOOMFILTER_DOHASHOVERLOAD_CSTRING(char, uint64_t);
     BLOOMFILTER_DOHASHOVERLOAD_CSTRING(wchar_t, uint32_t);
@@ -335,7 +335,7 @@ namespace BloomFilterImpl {
 		      result_type hash = __doFNV1a<result_type>::hashinit ) const \
 	{ return __doFNV1a<result_type>()( \
 		reinterpret_cast<const void*>(val), hash); } \
-    };
+    }
     BLOOMFILTER_DOHASHOVERLOAD_POINTER(uint32_t);
     BLOOMFILTER_DOHASHOVERLOAD_POINTER(uint64_t);
     /// specialise for C++-style strings
