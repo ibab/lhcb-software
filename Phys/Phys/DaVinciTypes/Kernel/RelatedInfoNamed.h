@@ -189,7 +189,12 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       ZVISO = ISOTWOBODYQPLUS + 1,
 
       // Velo phi hits vector size in the transverse plane
-      VELOPHIHITSVECTORSIZE = ZVISO +1
+      VELOPHIHITSVECTORSIZE = ZVISO +1,
+      
+      B2KSTARMUMUCLASSICISO = VELOPHIHITSVECTORSIZE+1,
+      B2KSTARMUMUBDTISO     = VELOPHIHITSVECTORSIZE+2
+
+
     };
 
     static std::string nameByIndex(int key) {
@@ -363,6 +368,11 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       case RelatedInfoNamed::ZVISO : return "ZVISO"; 
 
       case RelatedInfoNamed::VELOPHIHITSVECTORSIZE : return "VELOPHIHITSVECTORSIZE";
+      case RelatedInfoNamed::B2KSTARMUMUCLASSICISO : return "B2KSTARMUMUCLASSICISO";
+        
+      case RelatedInfoNamed::B2KSTARMUMUBDTISO     : return "B2KSTARMUMUBDTISO";
+        
+
 
         default : return "UNKNOWN"; 
       }
