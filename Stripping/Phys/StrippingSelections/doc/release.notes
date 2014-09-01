@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2014-09-01 - Brais Sanmartin Sedes
+ - ReFitPVs = False for StrippingBs2K0stK0stNominalLine and StrippingBs2KstKstNominalLine
+
 ! 2014-09-01 - Stefano Perazzini
  - Updated postscales for StrippingD2HHBDT lines
 

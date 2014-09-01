@@ -245,7 +245,7 @@ def makeBs2KstKst(name,
        _Bs.CombinationCut = _combinationCut
        _Bs.MotherCut = _motherCuts
 
-       _Bs.ReFitPVs = True
+       _Bs.ReFitPVs = False
 
        _Bs.addTool( OfflineVertexFitter )
 #       _Bs.VertexFitters.update( { "" : "OfflineVertexFitter"} )
