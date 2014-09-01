@@ -290,10 +290,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_default+"/Particles"},
                         
-#            { "Type" : "RelInfoBs2MuMuIsolations"
-#              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-#              , "Location"  : "BSMUMUVARIABLES"  
-#              }
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
             ]
                                           
                                          )
@@ -314,10 +314,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_wide+"/Particles"},
             
-#            { "Type" : "RelInfoBs2MuMuIsolations"
-#              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-#              , "Location"  : "BSMUMUVARIABLES"  
-#              }
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
             ]
                                       )
         
@@ -382,10 +382,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_SS+"/Particles"},
             
-#            { "Type" : "RelInfoBs2MuMuIsolations"
-#              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-#              , "Location"  : "BSMUMUVARIABLES"  
-#              }
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
             ]
                                     )
 
@@ -405,10 +405,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_LTUB+"/Particles",
              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_LTUB+"/Particles"},
-#            { "Type" : "RelInfoBs2MuMuIsolations"
-#              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-#              , "Location"  : "BSMUMUVARIABLES"  
-#              }
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
             ]
                                     )
 
@@ -426,10 +426,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_KKLTUB+"/Particles"},
             
-#            { "Type" : "RelInfoBs2MuMuIsolations"
-#              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-#              , "Location"  : "BSMUMUVARIABLES"  
-#              }
+            { "Type" : "RelInfoBs2MuMuIsolations"
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  
+              }
             ]
                                  )
 

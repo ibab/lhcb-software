@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Hannah Mary Evans
+  - Included Bs2MuMuIsolations Tool to Bs2MuMuLines
+
 ! 2014-09-01 - Stefano Perazzini
  - Hotfix to StrippingHb2V0V0h.py
 
