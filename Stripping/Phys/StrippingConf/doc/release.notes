@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Stefano Perazzini
+ - Added checkPVRefit function to StrippingStream
+
 ! 2014-08-30 - Anton Poluektov 
  - Fixes in RelatedInfo option of StrippingLine 
 

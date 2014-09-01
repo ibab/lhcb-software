@@ -224,6 +224,14 @@ class StrippingStream ( object ) :
                 log.warning("Stream='"+self.name()+"' Line='"+line.name()+
                             "' Requests to run FlavourTagging")
 
+    def checkPVRefit(self) :
+        for line in self.lines :
+            for algo in line._algos:
+              props = algo.algorithm().getProperties()
+              if props.has_key('ReFitPVs'):
+                  if props['ReFitPVs'] == True:
+                    log.warning("Stream='"+self.name()+"' Line='"+line.name()+
+                                "' Requests to refit the PV")
 
     def getRelatedInfoLocations(self) : 
 	locations = []
