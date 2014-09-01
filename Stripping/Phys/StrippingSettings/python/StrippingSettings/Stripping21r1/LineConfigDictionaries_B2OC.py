@@ -292,6 +292,20 @@ Beauty2Charm = {
     'StrippingB02LcLambda0KWSLc2PKPiBeauty2CharmLine', 
     'StrippingB02DKLTUBD2HHHBeauty2CharmLine', 
     ],
+    'PVReFit' : [
+    ],
+            
+    'RawEvents' : [
+     'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
+    'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',
+    'StrippingB02DKD2HHHBeauty2CharmLine',
+    'StrippingB02DKD2Pi0HHHMergedBeauty2CharmLine', 
+    'StrippingB02DKD2Pi0HHHResolvedBeauty2CharmLine',
+    'StrippingB02DPiD2HHHBeauty2CharmLine',
+    'StrippingB02DPiD2Pi0HHHMergedBeauty2CharmLine',
+    'StrippingB02DPiD2Pi0HHHResolvedBeauty2CharmLine'
+    ],
+
     'RelatedInfoTools' : [
       { "Type" : "RelInfoConeVariables", 
         "ConeAngle" : 1.5, 
@@ -328,7 +342,7 @@ Beauty2Charm = {
   }, 
   'STREAMS' : { 
     'BhadronCompleteEvent' : [
-      'StrippingDoubleTopoLine',
+    'StrippingDoubleTopoLine',
     'StrippingPseudoDoubleTopoLine',
     'StrippingD02HHTopoTOSLine',
     'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
