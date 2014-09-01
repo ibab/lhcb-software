@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Andrea Contu
+ - Updates to Charm dictionaries for s21
+
 ! 2014-09-01 - Stefano Perazzini
  - Committed LineConfigDictionaries_Charmless for Stripping21(r1)
 

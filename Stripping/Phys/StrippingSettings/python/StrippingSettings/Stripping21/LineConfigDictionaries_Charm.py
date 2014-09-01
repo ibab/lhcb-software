@@ -2070,3 +2070,30 @@ D2KShh_samesign = {
     'WGs' : ['Charm'],
     'STREAMS' : [ 'Charm' ]
     }
+
+
+#Marco Pappagallo
+#Added in Stripping 21 (2012 only)
+Ds2KKpi4Spectr = {
+'BUILDERTYPE' : 'Ds2KKpiConf' ,
+'CONFIG' : {
+    'Daughter2IPChi2'           :   10.,
+    'PTSum'                     : 2800.,
+    'DsPt'                      : 1000.,
+    'DsIPChi2'                  :    9.,
+    'DsVXChi2NDOF'              :   10.,
+    'MinMassPhi'                : 1010.,
+    'MaxMassPhi'                : 1030.,
+    'MinMassKstar'              :    0., # 836
+    'MaxMassKstar'              :    0., # 956
+    'piPIDK'                    :    3.,
+    'KPIDK'                     :    7.,
+    'DsDIRA'                    :    0.,
+    'MinCosHelAngleKstar'       :    2., # 0.4
+    'MaxTracksInEvent'          :  500,
+    'Ds2KKPLinePrescale'        :    1.0,
+    'Ds2KKPLinePostscale'       :    1.0
+                    },
+'WGs' : [ 'Charm' ],
+'STREAMS' : [ 'CharmCompleteEvent' ]
+}
