@@ -28,7 +28,7 @@ macro_append  use_includes            ' $(ppcmd)"$(OnlineBase_cmtpath)/$(cmt_ins
 
 setup_script  $(ONLINEBASEROOT)/scripts/onlinepatches
 
-macro ONLINE_CPPFLAGS " -ansi -pedantic -Wall -Woverloaded-virtual -Wnon-virtual-dtor " WIN32 ""
+macro ONLINE_CPPFLAGS " -pedantic -Wall -Woverloaded-virtual -Wnon-virtual-dtor " WIN32 ""
 macro_append ONLINE_CPPFLAGS " -Wwrite-strings -Wpointer-arith -Wreturn-type -Wunused -pthread " WIN32 ""
 macro_append ONLINE_CPPFLAGS " -fmessage-length=0 -ftemplate-depth-300 " WIN32 ""
 
