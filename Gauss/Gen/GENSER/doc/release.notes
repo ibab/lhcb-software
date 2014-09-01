@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2014-09-01 - John Back
+ - Changed -lhepmcinterface to -lpythia8tohepmc for LbPythia8 for pythia8.18x.
+
 ! 2014-08-22 - Gloria Corti
  - Set latest versions of all generators as available in both LCG68 and LCG69.
    Those that change with respect to GENSER v14r0 are:
@@ -14,7 +17,7 @@
     . pythia8   "175"    --> "186"
     . pythia6   "427.2"  --> "428.2"
     . rivet     "1.8.3"  --> "1.9.0"
-   Note that photos++ chnaged in v14r0, so it is also different from Sim08
+   Note that photos++ changed in v14r0, so it is also different from Sim08
 
 !========================= GENSER v14r0p1 2014-08-21 =========================
 ! 2014-08-21 - Gloria Corti

@@ -43,12 +43,11 @@ macro tauolapp_native_version "1.1.4"
 
 
 #-- Pythia 8
-#   PYTHIA8DATA is needed by EvtGen? 
+#   PYTHIA8DATA is needed by EvtGen, -lpythia8tohepmc for LbPythia8
 #============================================================================
 macro pythia8_native_version "186"
-macro_append pythia8_linkopts " -lhepmcinterface "
+macro_append pythia8_linkopts " -lpythia8tohepmc "
 set PYTHIA8DATA $(pythia8_home)/xmldoc
-
 
 #-- Pythia 6
 #============================================================================
