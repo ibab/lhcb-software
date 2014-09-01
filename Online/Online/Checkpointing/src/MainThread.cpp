@@ -15,6 +15,7 @@
 #include <cerrno>
 #include <cstring>
 #include <cstdlib>
+#include <pthread.h>
 #include <ucontext.h>
 #include <sys/types.h>
 #include <linux/futex.h>
@@ -45,15 +46,23 @@ extern "C" MainThread* libProcessRestore_main_instance_init(int argc, char** arg
 
 
 /// The function pointer of libC's original clone call
-static MainThread::clone_t s_cloneFunc;
+static MainThread::funcs_t s_funcs;
 static Thread s_thread;
+
 
 void MainThread::init_instance(int argc, char** argv, char** environment) {
   checkpointing_sys_init_stack(&chkpt_sys,argc,argv,environment);
 }
 
 MainThread::MainThread()  {
-  LibC::getSymbol("__clone",s_cloneFunc);
+  ::memset(&s_funcs,0,sizeof(s_funcs));
+  LibC::getSymbol("__clone",s_funcs._clone);
+  //LibC::getSymbol("__sigsetjmp",s_funcs._sigsetjmp);
+  //LibPThread::getSymbol("__libc_sigaction",s_funcs._sigaction);
+  LibPThread::getSymbol("pthread_create",s_funcs._thread_create);
+  //LibPThread::getSymbol("__pthread_unwind_next",s_funcs._thread_unwind_next);
+  //LibPThread::getSymbol("__pthread_register_cancel",s_funcs._thread_register_cancel);
+  //LibPThread::getSymbol("__pthread_unregister_cancel",s_funcs._thread_unregister_cancel);
   chkpt_sys.motherofall   = &s_thread;// new Thread();
   chkpt_sys.savedContext  = &chkpt_sys.motherofall->m_savctx;
   chkpt_sys.restart_type  = SysInfo::RESTART_NORMAL;
@@ -67,14 +76,14 @@ WEAK(MainThread&) MainThread::accessInstance() {
   return s_main;
 }
 
-WEAK(MainThread::clone_t) MainThread::cloneFunction() {
-  return s_cloneFunc;
+WEAK(MainThread::funcs_t*) MainThread::F() {
+  return &s_funcs;
 }
 
 WEAK(void) MainThread::initialize() {
   static bool inited = false;
   if ( !inited ) {
-    chkpt_sys.motherofall->initialize(inited=true);
+    checkpointing_thread_initialize(chkpt_sys.motherofall);
   }
   else {
     chkpt_sys.motherofall->m_tid = mtcp_sys_kernel_gettid ();
@@ -90,6 +99,21 @@ WEAK(void) MainThread::initialize() {
 
 WEAK(void) MainThread::finishRestore() {
   checkpointing_finish_restore();
+}
+
+WEAK(void*) MainThread::execute(void *p)   {
+  typedef void* (*user_thread_function_t)(void*);
+  void**  args= (void**)p;
+  void*   user_arg = args[1];
+  void*   return_value = 0;
+  Thread *thread = checkpointing_thread_current();
+  user_thread_function_t user_thread_function = (user_thread_function_t)args[0];
+
+  ::free(p);  // Release the argument buffer now.
+  pthread_cleanup_push(checkpointing_thread_cleanup_handler,thread);
+  return_value = (*user_thread_function)(user_arg);
+  pthread_cleanup_pop(1);  // This handles regular thread exits as well, since the cleanup is called
+  return return_value;
 }
 
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_finish_restore() {
@@ -112,7 +136,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_finish_restore() {
 }
 
 extern "C" int checkpointing_current_thread_id() {
-  return Thread::current()->tid();
+  return Thread::current()->m_tid;
 }
 
 extern "C" int checkpointing_start_child() {
@@ -146,7 +170,7 @@ extern "C" int checkpointing_stop_process()   {
   checkpointing_thread_save_signals(chkpt_sys.motherofall);
   chkpt_sys.motherofall->saveTLS();
   if ( ::getcontext (&chkpt_sys.motherofall->m_savctx) < 0 )   {
-    mtcp_output(MTCP_FATAL,"stopThreads: failed to retrieve context of motherofall.\n");
+    mtcp_output(MTCP_FATAL,"stop_process: failed to retrieve context of motherofall.\n");
     mtcp_abort();
   }
   while (1) {
@@ -164,7 +188,7 @@ again:
       checkpointing_thread_setup_signals(); //keep pounding the signal handler in
       // If thread no longer running, remove it from thread list
       if (*(thread->m_pActualTID) == 0) {
-        mtcp_output(MTCP_WARNING,"stopThreads[pid:%d]: thread %d disappeared\n",
+        mtcp_output(MTCP_WARNING,"stop_process[pid:%d]: thread %d disappeared\n",
 		    chkpt_sys.motherPID,thread->m_tid);
         checkpointing_threads_unlock ();
         checkpointing_thread_cleanup(thread);
@@ -188,11 +212,11 @@ again:
 	if (!st.set(ST_SIGENABLED, ST_RUNENABLED)) goto again;
 	if (mtcp_sys_kernel_tkill (thread->m_tid, STOPSIGNAL) < 0) {
 	  if (mtcp_sys_errno != ESRCH) {
-	    mtcp_output(MTCP_WARNING,"stopThreads[pid:%d]: error signalling thread %d: %s\n",
+	    mtcp_output(MTCP_WARNING,"stop_process[pid:%d]: error signalling thread %d: %s\n",
 			chkpt_sys.motherPID,thread->m_tid, strerror (mtcp_sys_errno));
 	  }
 	  else {
-	    mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: send KILL to thread %d\n",
+	    mtcp_output(MTCP_INFO,"stop_process[pid:%d]: send STOPSIGNAL to thread %d\n",
 			chkpt_sys.motherPID,thread->m_tid);
 	  }
 	  checkpointing_threads_unlock ();
@@ -207,7 +231,7 @@ again:
 	  // So we wait for it to change state
 	  // We have to unlock because it may need lock to change state
           checkpointing_threads_unlock ();
-	  mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: ST_SIGDISABLED waiting for thread %d\n",
+	  mtcp_output(MTCP_INFO,"stop_process[pid:%d]: ST_SIGDISABLED waiting for thread %d\n",
 		      chkpt_sys.motherPID,thread->m_tid);
           st.wait(ST_SIGDISABLED, &enabletimeout);
           goto rescan;
@@ -218,7 +242,7 @@ again:
 	 */
         case ST_SIGENABLED: {
           checkpointing_threads_unlock ();
-	  mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: ST_SIGENABLED waiting for thread %d\n",
+	  mtcp_output(MTCP_INFO,"stop_process[pid:%d]: ST_SIGENABLED waiting for thread %d\n",
 		      chkpt_sys.motherPID,thread->m_tid);
           st.wait(ST_SIGENABLED, &enabletimeout);
           goto rescan;
@@ -229,7 +253,7 @@ again:
          * We don't need to unlock because it won't use lock before changing state
 	 */
         case ST_SUSPINPROG: {
-	  mtcp_output(MTCP_INFO,"stopThreads[pid:%d]: ST_SUSPINPROG waiting for thread %d\n",
+	  mtcp_output(MTCP_INFO,"stop_process[pid:%d]: ST_SUSPINPROG waiting for thread %d\n",
 		      chkpt_sys.motherPID,thread->m_tid);
           st.wait(ST_SUSPINPROG, &enabletimeout);
           goto again;
@@ -252,22 +276,22 @@ again:
         }
       }
     }
-    mtcp_output(MTCP_INFO,"stopThreads: return address[1] %p\n",__builtin_return_address (0));
+    mtcp_output(MTCP_INFO,"stop_process: return address[1] %p\n",__builtin_return_address (0));
     checkpointing_threads_unlock();
 
     // If need to rescan (ie, some thread possibly not in ST_SUSPENDED STATE), check them all again
     if (needrescan) goto rescan;
 
     RMB; // matched by WMB in stopthisthread
-    mtcp_output(MTCP_INFO,"stopThreads: everything suspended\n");
+    mtcp_output(MTCP_INFO,"stop_process: everything suspended\n");
 
     // If no threads, we're all done
     if ( checkpointing_thread_queue() == 0 ) {
-      mtcp_output(MTCP_WARNING,"stopThreads: exiting (no threads)\n");
+      mtcp_output(MTCP_WARNING,"stop_process: exiting (no threads)\n");
       return 0;
     }
     checkpointing_thread_save_sys_info();
-    mtcp_output(MTCP_INFO,"stopThreads: finished --pid %d  return address:%p\n",
+    mtcp_output(MTCP_INFO,"stop_process: finished --pid %d  return address:%p\n",
 		mtcp_sys_getpid(),__builtin_return_address(0));
     return 1;
   }

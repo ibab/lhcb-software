@@ -22,100 +22,61 @@ using namespace Checkpointing;
  */
 static unsigned long int myinfo_gs;
 
-# define mtcp_sys_get_thread_area(uinfo) \
-    ( mtcp_inline_syscall(arch_prctl,2,ARCH_GET_FS, \
-         (unsigned long int)(&(((struct user_desc *)uinfo)->base_addr))), \
-      mtcp_inline_syscall(arch_prctl,2,ARCH_GET_GS, &myinfo_gs) \
+# define mtcp_sys_get_thread_area(uinfo)				\
+  ( mtcp_inline_syscall(arch_prctl,2,ARCH_GET_FS,			\
+			(unsigned long int)(&(((struct user_desc *)uinfo)->base_addr))), \
+    mtcp_inline_syscall(arch_prctl,2,ARCH_GET_GS, &myinfo_gs)		\
     )
-# define mtcp_sys_set_thread_area_base(base) \
-    ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS, \
-	*(unsigned long*)base), \
-      mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs) \
-    )
-
-# define mtcp_sys_set_thread_area(uinfo) \
-    ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS, \
-	*(unsigned long int *)&(((struct user_desc *)uinfo)->base_addr)), \
-      mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs) \
+# define mtcp_sys_set_thread_area_base(base)			\
+  ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS,		\
+			*(unsigned long*)base),			\
+    mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs)	\
     )
 
-#ifdef CHECKPOINT_TERMINAL
-static struct      termios saved_termios;
-static int         saved_termios_exists = 0;
-#endif
+# define mtcp_sys_set_thread_area(uinfo)				\
+  ( mtcp_inline_syscall(arch_prctl,2,ARCH_SET_FS,			\
+			*(unsigned long int *)&(((struct user_desc *)uinfo)->base_addr)), \
+    mtcp_inline_syscall(arch_prctl,2,ARCH_SET_GS, myinfo_gs)		\
+    )
 
 static Thread     *s_threads = 0;
 static FutexState  restoreinprog;
 static int         s_restoring = 0;
 static sigset_t    sigpending_global;    // pending signals for the process
 static int         dmtcp_info_pid_virtualization_enabled = 0;
-#define SIG_THREAD_CANCEL 32
+#define SIG_THREAD_CANCEL 32 // SIGRTMIN
 #define SIG_THREAD_SETXID 33
 //#define SIG_THREAD_CANCEL 34
 //#define SIG_THREAD_SETXID 35
 
 using namespace Checkpointing;
 
-/**  Set the thread's STOPSIGNAL handler.  Threads are sent STOPSIGNAL when they are to suspend execution the application, save
- *  their state and wait for the checkpointhread to write the checkpoint file.
- *
- *    Output:
- *
- *	Calling thread will call stopthisthread () when sent a STOPSIGNAL
- */
-static void stopthisthread(int /* signum */)  {
-  Thread *thread = Thread::current();
-  thread->stop();
-}
-
-/**  Thread execution wrapper
- *
- *   Simply call the object function.
- */
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_main(void *threadv)  {
-  Thread *const thread = (Thread*)threadv;
-  return thread->Main();
-}
-
-/** Entry point to restart thread after a fork.
- */
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart_main(void* arg) {
-  Thread::RestartArgs* a = (Thread::RestartArgs*)arg;
-  mtcp_output(MTCP_DEBUG,"restartMain: thread: %p.\n",a->self);
-  return checkpointing_thread_restart(a->self,0);
-}
-
-/** Access to the overall thread queue
- */
-STATIC(Thread*) CHECKPOINTING_NAMESPACE::checkpointing_thread_queue() {
-  return s_threads;
-}
-
 typedef void (*sigaction_func_t) (int, siginfo_t *, void *);
-
 
 static sigaction_func_t s_thrCancel = 0;           /// Original pthread cancel handler (default=SIG_DFL)
 static sigaction_func_t s_thrSetxid = 0;           /// Original pthread handler to change the threads' uid/gid (default=SIG_DFL)
 
-static sighandler_t _real_signal(int signum, sighandler_t handler){
-  return signal(signum, handler);
+static int _real_sigaction(int signum, const struct sigaction *act, struct sigaction *oact)  {
+  int result = mtcp_sys_sigaction(signum, act, oact);
+  return result;
 }
-static int _real_sigaction(int signum, const struct sigaction *act, struct sigaction *oldact){
-  return mtcp_sys_sigaction(signum, act, oldact);
-}
+
 static void _thread_cancel_action(int signum, siginfo_t *si, void *ctx)   {
   if ( s_thrCancel ) {
-    Thread *t = Thread::current();
-    char* tls_base = t->tlsBase();
-    pid_t pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
-    mtcp_output(MTCP_INFO,"Signal:%d Calling defererred pthread CANCEL action for pid:%d "
-		"Thread TLS pid:%d tid:[%d-%d] Checkpoint pid:%d Mother pid:%d\n",
-		signum,si->si_pid,pid,t->m_tid,t->m_originalTID,chkpt_sys.chkptPID,
-		chkpt_sys.motherPID);
-    //si->si_pid = chkpt_sys.chkptPID;
-    si->si_pid = pid;
-    s_thrCancel(signum,si,ctx);
-    return;
+    Thread *t = checkpointing_thread_current();
+    if ( t )   {
+      char* tls_base = t->tlsBase();
+      pid_t pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
+      // NOTE: Important for CHECKPOINTING and FORKING using syscall(SYS_fork):
+      //
+      // We have to set the correct signal pid (si->si_pid). 
+      // The pid stored in the pthread tables may since a long time be dead.... 
+      // Otherwise the pthread library does not allow us to perform the 
+      // proper stack unwind.
+      si->si_pid = pid;
+      s_thrCancel(signum,si,ctx);
+      return;
+    }
   }
   mtcp_output(MTCP_INFO,"Signal:%d Ignore pthread cancel action.\n",signum);  
 }
@@ -125,31 +86,22 @@ static void _thread_setxid_action(int signum, siginfo_t *si, void *ctx)   {
     Thread *t = Thread::current();
     char* tls_base = t->tlsBase();
     pid_t pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
-    mtcp_output(MTCP_INFO,"Signal:%d Calling defererred pthread SETXID action for pid:%d "
-		"Thread TLS pid:%d tid:[%d-%d] Checkpoint pid:%d Mother pid:%d\n",
-		signum,si->si_pid,pid,t->m_tid,t->m_originalTID,chkpt_sys.chkptPID,
-		chkpt_sys.motherPID);
     si->si_pid = pid;
     s_thrSetxid(signum,si,ctx);
     return;
   }
   mtcp_output(MTCP_INFO,"Signal:%d Ignore pthread cancel action.\n",signum);  
 }
-
-static int _real_sigprocmask(int how, const sigset_t *set, sigset_t *oldset)   {
-  int rc = sigprocmask(how, set, oldset);
-#if 0
-  char bn[128], bo[128];
-  int i = 0;
-  for(i=0; i<64;++i) {
-    bn[i] = sigismember(set,i)+'0';
-    bo[i] = oldset ? sigismember(oldset,i)+'0' : '-';
-  }
-  bn[i] = bo[i] = 0;
-  mtcp_output(MTCP_INFO,"_real_sigprocmask: New mask:%s\n",bn);
-  mtcp_output(MTCP_INFO,"_real_sigprocmask: Old mask:%s\n",bo);
-#endif
-  return rc;
+/**  Set the thread's STOPSIGNAL handler.  Threads are sent STOPSIGNAL when they are to suspend execution the application, save
+ *  their state and wait for the checkpointhread to write the checkpoint file.
+ *
+ *    Output:
+ *
+ *	Calling thread will call _thread_stop_action() when sent a STOPSIGNAL
+ */
+static void _thread_stop_action(int /* signum */, siginfo_t */* si */, void * /* ctx */)   {
+  Thread *thread = checkpointing_thread_current();
+  thread->stop();
 }
 
 /* Grow the stack by kbStack*1024 so that large stack is allocated on restart
@@ -180,17 +132,12 @@ extern "C" int __getppid()  {
 }
 __asm__ (".global getppid ; .type getppid,@function ; getppid = __getppid");
 
-#include <fcntl.h>
-
 extern "C" int __open(const char* pathname, int flags, mode_t mode)  {
   int rc = mtcp_sys_open(pathname,flags,mode);
   mtcp_output(MTCP_DEBUG,"Open file: fd:%d=%s with flags: %08X Mode:%X\n",rc,pathname,flags,mode);
   return rc;
 }
 __asm__ (".global open ; .type open,@function ; open = __open");
-
-
-#define mtcp_sys_creat(args...)  mtcp_inline_syscall(creat,2,args)
 
 extern "C" int __creat(const char* pathname, mode_t mode)  {
   int rc = mtcp_sys_creat(pathname,mode);
@@ -205,12 +152,16 @@ extern "C" int __close(int fd)  {
 }
 __asm__ (".global close ; .type close,@function ; close = __close");
 
-extern "C" int __pipe(int fd[2])  {
-  int rc = mtcp_sys_pipe(fd);
-  mtcp_output(MTCP_DEBUG,"Pipe: rc=%d fd=[%d,%d]\n",rc,fd[0],fd[1]);
-  return rc;
+extern "C" int checkpointing_pthread_create(void* p1, void* p2, void* (*user_func)(void*), void* user_arg)  {
+  MainThread::funcs_t* f = MainThread::F();
+  void** args=(void**)malloc(2*sizeof(void*));
+  args[0] = (void*)user_func;
+  args[1] = user_arg;
+  //mtcp_output(MTCP_DEBUG,"pthread_create(%p,%p,%p,%p)\n",p1,p2,user_func,user_arg);
+  int ret = (*f->_thread_create)(p1,p2,MainThread::execute,args);
+  return ret;
 }
-__asm__ (".global pipe ; .type pipe,@function ; pipe = __pipe");
+__asm__ (".global pthread_create ; .type pthread_create,@function ; pthread_create = checkpointing_pthread_create");
 
 /****************************************************************************
  *									     
@@ -218,8 +169,9 @@ __asm__ (".global pipe ; .type pipe,@function ; pipe = __pipe");
  *									     
  *    Note:								     
  *									     
- *      pthread_create eventually calls __clone to create threads	     
- *      It uses flags = 0x3D0F00:					     
+ *     -pthread_create eventually calls __clone to create threads	     
+ *     -The argument id the pthread_t - the thread handle.
+ *     -It uses flags = 0x3D0F00:					     
  *	CLONE_VM             = VM shared between processes			     
  *      CLONE_FS             = fs info shared between processes (root, cwd, umask) 
  *      CLONE_FILES          = open files shared between processes (fd table)	     
@@ -239,11 +191,12 @@ extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void
 {
   int rc;
   Thread*  mother = chkpt_sys.motherofall;
-  mtcp_output(MTCP_DEBUG,"wrapper clone: Starting to clone threads: %p(%p) ptid:%p ctid:%p tls:%p %s [%p]\n", 
+  mtcp_output(MTCP_DEBUG,"clone wrapper: %p(%p) ptid:%p ctid:%p tls:%p %s [%p]\n", 
 	      fn, arg, parent_tidptr, child_tidptr, newtls, arg==mother ? "MOTHER_OF_ALL" : "",mother);
   if ( mother != 0 ) {
     // Track this thread
     Thread *t = new Thread();
+
     t->m_startFunc  = fn;   // this is the user's function
     t->m_startArg   = arg;  // ... and the parameter
     // Save exactly what the caller is supplying
@@ -271,13 +224,50 @@ extern "C" int __clone(int (*fn) (void *arg), void *child_stack, int flags, void
   if (rc < 0) {
     mtcp_output(MTCP_ERROR,"wrapper clone*: clone rc=%d, errno=%d\n", rc, errno);
   }
-  else {
-    mtcp_output(MTCP_DEBUG,"wrapper clone*: clone rc=%d  SUCCESS\n", rc);
-  }
   return (rc);
 }
 __asm__ (".global clone ; .type clone,@function ; clone = __clone");
 
+/**  Thread execution wrapper
+ *
+ *   Simply call the object function.
+ */
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_main(void *threadv)  {
+  Thread *const thread = (Thread*)threadv;
+  return thread->Main();
+}
+
+/// Entry point to restart thread after a fork.
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart_main(void* arg) {
+  Thread::RestartArgs* a = (Thread::RestartArgs*)arg;
+  mtcp_output(MTCP_DEBUG,"restartMain: thread: %p.\n",a->self);
+  return checkpointing_thread_restart(a->self,0);
+}
+
+/// Access to the overall thread queue
+STATIC(Thread*) CHECKPOINTING_NAMESPACE::checkpointing_thread_queue() {
+  return s_threads;
+}
+
+STATIC(Thread*) CHECKPOINTING_NAMESPACE::checkpointing_thread_current()  {
+  int tid = mtcp_sys_kernel_gettid();
+  ThreadsLock lock;
+  for(Thread* thread = s_threads; thread != 0; thread = thread->next) {
+    if (thread->m_tid == tid) {
+      checkpointing_threads_unlock();
+      return thread;
+    }
+  }
+  mtcp_output(MTCP_INFO,"Thread::current: can't find thread id %d\n", tid);
+  return 0;
+}
+
+/// Count the number of threads known
+STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_count()  {
+  int cnt = 0;
+  for(Thread* thread = s_threads; thread != 0; thread = thread->next) ++cnt;
+  return cnt;
+}
 
 /// Standard constructor
 Thread::Thread() {
@@ -290,26 +280,44 @@ Thread::~Thread() {
   state.destroy();
 }
 
+/// Handle thread cleanup in case of cancellation of thread_exit
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_cleanup_handler(void* thread) {
+  Thread *t = checkpointing_thread_current();
+  if ( thread != t )  {
+    mtcp_output(MTCP_ERROR,"+++ Thread CLEANUP inconstency: current: %p <-> %d\n",t,thread);
+  }
+  if ( t )   {
+    char* tls_base = t->tlsBase();
+    pid_t pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
+    ThreadsLock lock;
+    checkpointing_thread_cleanup(t);
+    int cnt = checkpointing_thread_count();
+    mtcp_output(MTCP_INFO,"+++ Thread CLEANUP action "
+		"TLS pid:%d tid:[%d-%d] Checkpoint pid:%d Mother pid:%d Count:%d\n",
+		pid,t->m_tid,t->m_originalTID,chkpt_sys.chkptPID,chkpt_sys.motherPID,cnt);
+  }
+}
+
 /// Link thread struct to the lists and finish filling the thread structure.
-WEAK(void) Thread::initialize(bool /* mother */)  {
+STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_initialize(Thread* t)  {
   // Save the thread's ID number and put in threads list so we can look it up
   // Set state to disable checkpointing so checkpointer won't race between 
   // adding to list and setting up handler
-  m_tid = mtcp_sys_kernel_gettid ();
-  m_originalTID = (int)syscall(SYS_gettid);
-  m_restartArgs.tid  = m_tid;
-  m_restartArgs.self = this;
+  t->m_tid = mtcp_sys_kernel_gettid ();
+  t->m_originalTID = (int)syscall(SYS_gettid);
+  t->m_restartArgs.tid  = t->m_tid;
+  t->m_restartArgs.self = t;
   {
     ThreadsLock lock;
-    if ((this->next = s_threads) != 0) {
-      this->next->prev = &this->next;
+    if ((t->next = s_threads) != 0) {
+      t->next->prev = &t->next;
     }
-    this->prev = &s_threads;
-    s_threads = this;
-    Thread* parent = this->m_parent;
+    t->prev = &s_threads;
+    s_threads = t;
+    Thread* parent = t->m_parent;
     if ( parent ) {
-      m_siblings = parent->m_children;
-      parent->m_children = this;
+      t->m_siblings = parent->m_children;
+      parent->m_children = t;
     }
   }
   // Set up signal handler so we can interrupt the thread for checkpointing 
@@ -318,16 +326,7 @@ WEAK(void) Thread::initialize(bool /* mother */)  {
 
 ///  Get current thread struct pointer
 Thread *Thread::current()   {
-  int tid = mtcp_sys_kernel_gettid();
-  ThreadsLock lock;
-  for(Thread* thread = s_threads; thread != 0; thread = thread->next) {
-    if (thread->m_tid == tid) {
-      checkpointing_threads_unlock ();
-      return thread;
-    }
-  }
-  mtcp_output(MTCP_FATAL,"Thread::current: can't find thread id %d\n", tid);
-  return 0; // NOTREACHED : stop compiler warning
+  return checkpointing_thread_current();
 }
 
 /// Save the system info of the process
@@ -336,12 +335,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_save_sys_info() {
   // Do this once, same for all threads.  But restore for each thread.
   if (mtcp_have_thread_sysinfo_offset())
     chkpt_sys.sysInfo = mtcp_get_thread_sysinfo();
-  // Do this once.  It's the same for all threads.
-#ifdef CHECKPOINT_TERMINAL
-  saved_termios_exists = (isatty(STDIN_FILENO)
-			  && tcgetattr(STDIN_FILENO,&saved_termios) >= 0);
-#endif
-  mtcp_output(MTCP_INFO,"saveSysInfo: saved_break=%p\n",chkpt_sys.saved_break);
+  mtcp_output(MTCP_INFO,"save_sys_info: saved_break=%p\n",chkpt_sys.saved_break);
 }
 
 /** Thread has exited - unlink it from lists and free struct
@@ -352,7 +346,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_save_sys_info() {
  */
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_cleanup(Thread* thr)   {
   Thread **lthread, *xthread;
-  ThreadsLock lock;
+  //ThreadsLock lock;
   mtcp_output(MTCP_DEBUG,"cleanup: %p->tid:%d\n",thr,thr->m_tid);
 
   // Remove thread block from 'threads' list
@@ -433,7 +427,8 @@ WEAK(int) Thread::Main()  {
   char* tls_base=0;
   pid_t motherpid=0, pid=0;
   mtcp_output(MTCP_DEBUG,"threadcloned: starting thread %p\n", this);
-  initialize();
+  checkpointing_thread_initialize(this);
+  checkpointing_thread_restore_sigactions();
 
   // The new TLS should have the process ID in place at TLS_PID_OFFSET 
   // This is a verification step and is therefore optional as such 
@@ -456,20 +451,30 @@ WEAK(int) Thread::Main()  {
   if ((m_cloneFlags & (CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID)) == CLONE_CHILD_SETTID) {
     *m_pGivenTID = m_childTID;
   }
-
+  mtcp_output(MTCP_DEBUG,"Thread_Main: Starting thread %p, calling %p (%p) rc:%d\n",
+	      this,m_startFunc,m_startArg,rc);
   // Instrument thread to be "stopable"
   this->instrument();
   // Call the user's function for whatever processing they want done
   rc = (*m_startFunc)(m_startArg);
-  mtcp_output(MTCP_DEBUG,"threadcloned: Started thread %p, calling %p (%p) rc:%d\n",
+
+  // This part is NEVER REACHED, because the pthread library already exited the thread.
+  // To to the necessary cleanup on thread CANCEL and thread-returns, we have installed
+  // a trampolin created by the patched call to pthread_create!
+#if 0 
+  mtcp_output(MTCP_DEBUG,"Thread_Main: Thread ENDED %p, calling %p (%p) rc:%d\n",
 	      this,m_startFunc,m_startArg,rc);
 
   // Make sure checkpointing is inhibited while we clean up and exit
   // Otherwise, checkpointer might wait forever for us to re-enable
   this->wait();
   // Do whatever to unlink and free thread block
-  checkpointing_thread_cleanup(this);
-  // Return the user's status as the exit code
+  {
+    ThreadsLock lock;
+    checkpointing_thread_cleanup(this);
+  }
+#endif
+  // Keep the compiler happy: Return the user's status as the exit code
   return rc;
 }
 
@@ -608,7 +613,7 @@ WEAK(void) Thread::saveTLS()    {
   m_tls[0].entry_number = i;
   rc = mtcp_sys_get_thread_area (&m_tls[0]);
   if (rc < 0) {
-    mtcp_output(MTCP_FATAL,"checkpointeverything: error saving GDT TLS entry[%d]: %s\n",
+    mtcp_output(MTCP_FATAL,"thread: error saving GDT TLS entry[%d]: %s\n",
 		i,::strerror(mtcp_sys_errno));
   }
 }
@@ -619,8 +624,8 @@ WEAK(char*) Thread::tlsBase()   {
   struct user_desc gdtentrytls;
   __asm__ volatile ("movl %%fs,%0" : "=q" (TLSSEGREG)); /* q = a,b,c,d for i386; 8 low bits of r class reg for x86_64 */
   gdtentrytls.entry_number = TLSSEGREG / 8;
-  if ( mtcp_sys_get_thread_area ( &gdtentrytls ) < 0 ) {
-    mtcp_output(MTCP_FATAL,"Threads::tlsBase: error getting GDT TLS entry: %s\n",strerror (mtcp_sys_errno));
+  if ( mtcp_sys_get_thread_area(&gdtentrytls) < 0 ) {
+    mtcp_output(MTCP_FATAL,"thread: error getting GDT TLS entry: %s\n",strerror(mtcp_sys_errno));
   }
   unsigned long *val = (unsigned long*)&gdtentrytls.base_addr;
   return *(char**)val;
@@ -628,17 +633,17 @@ WEAK(char*) Thread::tlsBase()   {
 
 /// Setup the signal handling to stop/restart threads
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_setup_signals()  {
-  void (*oldhandler) (int signum);
-  oldhandler = _real_signal(STOPSIGNAL, &stopthisthread);
-  if (oldhandler == SIG_ERR) {
+  struct sigaction old, act;
+  sigemptyset(&act.sa_mask);
+  act.sa_sigaction = _thread_stop_action;
+  act.sa_flags = SA_SIGINFO;
+  // NOTE: Do NOT call mtcp_sigaction here! The sigaction.sa_restorer 
+  //       is only set by __libc_sigaction !
+  if ( sigaction(STOPSIGNAL,&act,&old) < 0 )  {
     mtcp_output(MTCP_FATAL,"setupSignals: error setting up signal handler: %s\n",strerror (errno));
   }
-  if ((oldhandler != SIG_IGN) && (oldhandler != SIG_DFL) && (oldhandler != stopthisthread)) {
-    mtcp_output(MTCP_FATAL,"setupSignals: signal handler %d already in use (%p).\n"
-                 " You may employ a different signal by setting the\n"
-                 " environment variable MTCP_SIGCKPT (or DMTCP_SIGCKPT)"
-		 " to the number\n of the signal MTCP should "
-                 "use for checkpointing.\n", STOPSIGNAL, oldhandler);
+  if ((old.sa_handler != SIG_IGN) && (old.sa_handler != SIG_DFL) && (old.sa_sigaction != _thread_stop_action)) {
+    mtcp_output(MTCP_FATAL,"setupSignals: signal handler %d already.\n", STOPSIGNAL);
   }
 }
 
@@ -650,13 +655,13 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_save_signals(Thread* 
   sigfillset(&blockall);
   sigdelset(&blockall,STOPSIGNAL);
 
-  if (_real_sigprocmask(SIG_SETMASK,&blockall,&thr->m_sigblockmask) < 0) {
+  if (sigprocmask(SIG_SETMASK,&blockall,&thr->m_sigblockmask) < 0) {
     mtcp_output(MTCP_FATAL,"Failed to set signal mask in thread. tid:%d\n",thr->m_tid);
   }
   // Now save all the signal handlers
   for (int i=1; i<NSIG; ++i) {
     struct sigaction* a = &thr->m_sigactions[i];
-    if (mtcp_sys_sigaction(i,0,a) < 0) {
+    if (_real_sigaction(i,0,a) < 0) {
       if (errno == EINVAL)  {
 	::memset(a,0,sizeof(struct sigaction));
 	continue;
@@ -700,7 +705,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_tls(Thread* t
 }
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_signals(Thread* thr) {
   mtcp_output(MTCP_DEBUG,"restoreSignals: pid:%d tid:%d Restoreinprog:%d\n",mtcp_sys_getpid(),thr->m_tid,restoreinprog.value);
-  if (_real_sigprocmask(SIG_SETMASK, &thr->m_sigblockmask, 0) >= 0) {
+  if ( sigprocmask(SIG_SETMASK, &thr->m_sigblockmask, 0) >= 0 ) {
     // Raise the signals which were pending for only this thread at the time of checkpoint.
     for (int i = 1; i<NSIG; ++i ) {
       if (sigismember(&thr->m_sigpending, i)  == 1  && 
@@ -717,30 +722,32 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_signals(Threa
 STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_sigactions() {
   for (int i=1; i<NSIG; ++i ) {
     struct sigaction act, *a = &chkpt_sys.motherofall->m_sigactions[i];
-    if (mtcp_sys_sigaction(i,0,&act) < 0) {
+    if (_real_sigaction(i,0,&act) < 0) {
       if (errno == EINVAL) ::memset(&act,0,sizeof(act));
     }
     if ( i != STOPSIGNAL ) {
       void** mask = (void**)&a->sa_mask;
-      if ( i == SIG_THREAD_CANCEL && a->sa_sigaction != _thread_cancel_action )  {
-	s_thrCancel  = a->sa_sigaction;
+      if ( i == SIG_THREAD_CANCEL && (a->sa_sigaction!=_thread_cancel_action || s_thrCancel==0) )  {
+	if (a->sa_sigaction!=_thread_cancel_action) s_thrCancel = act.sa_sigaction;
+	*a = act;
 	a->sa_sigaction = _thread_cancel_action;
       }
-      else if ( i == SIG_THREAD_SETXID && a->sa_sigaction != _thread_setxid_action )  {
-	s_thrSetxid  = a->sa_sigaction;
+      else if ( i == SIG_THREAD_SETXID && (a->sa_sigaction!=_thread_setxid_action || s_thrSetxid==0) )  {
+	if (a->sa_sigaction!=_thread_setxid_action) s_thrSetxid  = act.sa_sigaction;
+	*a = act;
 	a->sa_sigaction = _thread_setxid_action;
       }
-      if ( act.sa_handler != a->sa_handler ) {
+      if ( act.sa_sigaction != a->sa_sigaction ) {
 	if ( _real_sigaction(i,a,0) < 0) {
 	  mtcp_output(MTCP_FATAL,"restoreSigActions: Failed to set stored sigaction[%d]:%p. [%s]\n",
-		      i,a->sa_handler,::strerror(errno));
+		      i,a->sa_sigaction,::strerror(errno));
 	}
 	mtcp_output(MTCP_INFO,"restoreSigActions: Restore action [sig:%d] -> %p Flags:%X Mask:%p\n",
-		    i, a->sa_handler, a->sa_flags, *mask);
+		    i, a->sa_sigaction, a->sa_flags, *mask);
       }
-      else if ( 0 != act.sa_handler && SIG_DFL != act.sa_handler && SIG_IGN != act.sa_handler ) {
-	mtcp_output(MTCP_DEBUG,"restoreSigActions: Skip... action [sig:%d] -> %p Flags:%X Mask:%p\n",
-		    i, a->sa_handler, a->sa_flags, *mask);
+      else if ( 0 != act.sa_sigaction && SIG_DFL != act.sa_handler && SIG_IGN != act.sa_handler ) {
+	//mtcp_output(MTCP_DEBUG,"restoreSigActions: Skip... action [sig:%d] -> %p Flags:%X Mask:%p\n",
+	//	    i, a->sa_sigaction, a->sa_flags, *mask);
       }
     }
   }
@@ -750,9 +757,11 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_thread_restore_sigactions() 
 STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, int force_context)     {
   int rip;
   int tid = mtcp_sys_kernel_gettid();
-  const char* thr_typ = thr==chkpt_sys.motherofall ? "MOTHER" : "CHILD";
+  int is_mother = thr==chkpt_sys.motherofall;
+  const char* thr_typ = is_mother ? "MOTHER" : "CHILD";
   mtcp_output(MTCP_DEBUG,"restart[%s] Pid:%d thread:%p tid:%d motherOfAll:%p ctxt:%p\n",
 	      thr_typ,thr,tid,chkpt_sys.motherofall,chkpt_sys.motherPID,thr->m_savctx.SAVEDSP);
+
   checkpointing_thread_restore_tls(thr);
   checkpointing_thread_setup_signals();
 
@@ -767,13 +776,6 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
       tmp = sigpending_global;
     }
     //this->set_tid_address();
-#ifdef CHECKPOINT_TERMINAL
-    // Do it once only, in motherofall thread.
-    if (saved_termios_exists)
-      if ( ! isatty(STDIN_FILENO)
-           || tcsetattr(STDIN_FILENO, TCSANOW, &saved_termios) < 0 )
-        mtcp_output(MTCP_WARNING,"WARNING: restart: failed to restore terminal\n");
-#endif
   }
 
   checkpointing_thread_restore_signals(thr);
@@ -795,7 +797,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
   for (child = thr->m_children; child != 0; child = child->m_siblings)     {
     // Create the thread so it can finish restoring itself.
     errno = -1;
-
+    //if ( child == thr ) { ++cnt; continue; }
     /* 
      * DMTCP needs to know m_originalTID of the thread being created by the 
      *  following clone() call.
@@ -806,18 +808,18 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
      *  (clone_arg->arg) from clone_arg and will pass it on to the real
      *  clone call.                                              (--Kapil)
      */
-    pid_t tid = 0;
+    pid_t tid = -1;
     int cloneFlags = (child->m_cloneFlags & ~CLONE_SETTLS) | CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID;
     child->m_restartArgs.self = child;
     child->m_restartArgs.tid  = child->m_originalTID;
     void* p = (void*)(child->m_savctx.SAVEDSP - 128);
-    mtcp_output(MTCP_DEBUG,"*: CLONE:%d %p %p --> %p  Ctxt:%p State:%d CLONE_SIGHAND:%s\n",
+    mtcp_output(MTCP_DEBUG,"*: CLONE:%d %p %p --> %p  Ctxt:%p State:%d\n",
 		child->m_originalTID, child->m_pParentTID, child->m_pActualTID, CLONE_CALL, p,
-		child->state.value,cloneFlags & CLONE_SIGHAND ? "YES" : "NO");
+		child->state.value);
 
-    if (dmtcp_info_pid_virtualization_enabled == 1) {
+    if ( dmtcp_info_pid_virtualization_enabled == 1 ) {
       tid = syscall(SYS_clone, checkpointing_thread_restart_main,
-		    (void *)(child->m_savctx.SAVEDSP - 128),  // -128 for red zone
+		    p,  // -128 for red zone
 		    cloneFlags,
 		    &child->m_restartArgs, child->m_pParentTID, 0, child->m_pActualTID);
     } else {
@@ -836,8 +838,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
 		restoreinprog.value,chkpt_sys.restart_type);
     ++cnt;
   }
-
-  // All my children have been created, jump to the stopthisthread routine just after getcontext call
+  // All my children have been created, jump to the _thread_stop_action routine just after getcontext call
   // Note that if this is the restored checkpointhread, it jumps to the checkpointhread routine
   if (mtcp_have_thread_sysinfo_offset()) {
     mtcp_set_thread_sysinfo(chkpt_sys.sysInfo);
@@ -863,10 +864,9 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_thread_restart(Thread* thr, i
 
 /// set_tid_address wrapper routine: save the new address of the tidptr that will get cleared when the thread exits
 WEAK(long) Thread::set_tid_address ()   {
-  long rc = 0;
   mtcp_output(MTCP_DEBUG,"set_tid_address*: thread %p->tid:%d, tidptr %p\n",this,m_tid,&m_childTID);
   m_pActualTID = &m_childTID;  // save new tidptr so subsequent restore will create with new pointer
   mtcp_sys_set_tid_address(&m_childTID);
-  return rc;                       // now we tell kernel to change it for the current thread
+  return 0;                    // now we tell kernel to change it for the current thread
 }
 

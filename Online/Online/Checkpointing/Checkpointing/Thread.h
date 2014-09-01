@@ -2,7 +2,7 @@
 #define PROCESSFORK_THREAD_H
 
 #include "FutexState.h"
-#include "csignal"
+#include "signal.h"
 #include "ucontext.h"
 #include "asm/prctl.h"
 #include "asm/ldt.h"
@@ -17,12 +17,12 @@
 #endif
 
 #define ST_RUNDISABLED 0     // thread is running normally but with checkpointing disabled
-#define ST_RUNENABLED 1      // thread is running normally and has checkpointing enabled
+#define ST_RUNENABLED  1     // thread is running normally and has checkpointing enabled
 #define ST_SIGDISABLED 2     // thread is running normally with cp disabled, but checkpoint thread is waiting for it to enable
-#define ST_SIGENABLED 3      // thread is running normally with cp enabled, and checkpoint thread has signalled it to stop
-#define ST_SUSPINPROG 4      // thread context being saved (very brief)
-#define ST_SUSPENDED 5       // thread is suspended waiting for checkpoint to complete
-#define ST_CKPNTHREAD 6      // thread is the checkpointing thread (special state just for that thread)
+#define ST_SIGENABLED  3     // thread is running normally with cp enabled, and checkpoint thread has signalled it to stop
+#define ST_SUSPINPROG  4     // thread context being saved (very brief)
+#define ST_SUSPENDED   5     // thread is suspended waiting for checkpoint to complete
+#define ST_CKPNTHREAD  6     // thread is the checkpointing thread (special state just for that thread)
 
 #include "Checkpointing/Namespace.h"
 
@@ -82,15 +82,6 @@ namespace CHECKPOINTING_NAMESPACE {
      */
     ~Thread();
 
-    /** Link thread struct to the lists and finish filling the thread structure.
-     *
-     *	thread linked to 'threads' list and 'motherofall' tree
-     *	thread->tid = filled in with thread id
-     *	thread->state = ST_RUNDISABLED (thread initially has checkpointing disabled)
-     *	signal handler set up
-     */
-    void initialize(bool mother_of_all=false);
-
     /**  Get current thread struct pointer
      *  It is keyed by the calling thread's gettid value
      *  Maybe improve someday by using TLS
@@ -112,10 +103,6 @@ namespace CHECKPOINTING_NAMESPACE {
     /** Likewise, disable checkpointing
      */
     int wait();
-
-    /** Accessor to the thread identifier
-     */
-    int tid()  const {   return m_tid; }
 
     /** Access the base address of the thread local storage.
      */

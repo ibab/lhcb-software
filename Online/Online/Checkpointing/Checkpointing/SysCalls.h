@@ -1,7 +1,8 @@
 #ifndef SYSCALLS_H
 #define SYSCALLS_H
+#ifdef __cplusplus
 #include "Checkpointing/Namespace.h"
-#include "Checkpointing/Namespace.h"
+#endif
 #include <gnu/libc-version.h>
 #include <sys/syscall.h>
 #include "sysdep-x86_64.h"
@@ -33,6 +34,7 @@
 #define mtcp_sys_read(args...)             mtcp_inline_syscall(read,3,args)
 #define mtcp_sys_write(args...)            mtcp_inline_syscall(write,3,args)
 #define mtcp_sys_lseek(args...)            mtcp_inline_syscall(lseek,3,args)
+#define mtcp_sys_creat(args...)            mtcp_inline_syscall(creat,2,args)
 #define mtcp_sys_open(args...)             mtcp_inline_syscall(open,3,args)
 #define mtcp_sys_open2(args...)            mtcp_sys_open(args,0777)
 #define mtcp_sys_close(args...)            mtcp_inline_syscall(close,1,args)
@@ -72,6 +74,19 @@
 #define mtcp_sys_personality(args...)      mtcp_inline_syscall(personality,1,args)
 #define mtcp_sys_readlink(args...)         mtcp_inline_syscall(readlink, 3, args)
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int* __mtcp_sys_errno();
+#ifdef __cplusplus
+}
+#endif
+
+#define mtcp_sys_errno (*__mtcp_sys_errno())
+#define __set_errno(Val) mtcp_sys_errno = (Val) /* required for sysdep-XXX.h */
+
+#ifdef __cplusplus
 int mtcp_have_thread_sysinfo_offset();
 void *mtcp_get_thread_sysinfo(void);
 void mtcp_set_thread_sysinfo(void *sysinfo);
@@ -83,17 +98,23 @@ STATIC(void) mtcp_set_debug_level(int lvl);
 STATIC(int)  mtcp_get_debug_level();
 #ifndef MTCP_ERRNO
 #define MTCP_ERRNO
-STATIC(int&) __mtcp_sys_errno();
-#define mtcp_sys_errno (__mtcp_sys_errno())
 #endif
 #endif // CHECKPOINTING_OUTPUT
-
-#define __set_errno(Val) mtcp_sys_errno = (Val) /* required for sysdep-XXX.h */
 
 // gcc-3.4 issues a warning that noreturn function returns, if declared noreturn
 // static void inline mtcp_abort (void) __attribute__ ((noreturn));
 //static void inline mtcp_abort (void);
 STATIC(void) mtcp_abort (void);
+
+
+typedef int (*libc_clone_entry_t) (int (*fn) (void *arg),
+				   void *child_stack,
+				   int flags,
+				   void *arg,
+				   int *parent_tidptr,
+				   struct user_desc *newtls,
+				   int *child_tidptr);
+#endif
 
 /* Offset computed (&x.pid - &x) for
  *   struct pthread x;
@@ -147,11 +168,4 @@ STATIC(void) mtcp_abort (void);
 # define TLS_TID_OFFSET (18*sizeof(void *))  // offset of tid in pthread struct
 #endif
 
-typedef int (*libc_clone_entry_t) (int (*fn) (void *arg),
-				   void *child_stack,
-				   int flags,
-				   void *arg,
-				   int *parent_tidptr,
-				   struct user_desc *newtls,
-				   int *child_tidptr);
 #endif // SYSCALLS_H

@@ -4,10 +4,28 @@
 
 namespace CHECKPOINTING_NAMESPACE    {
 
-  struct LibC {
-    private:
+  struct LocalProcess {
+  protected:
     static void* i_getSymbol(const char* name);
-    public:
+  public:
+    template<class T> static int getSymbol(const char* name, T& func_ptr) {
+      func_ptr = (T)i_getSymbol(name);
+      return func_ptr == 0 ? 0 : 1;
+    }
+  };
+  struct LibC {
+  protected:
+    static void* i_getSymbol(const char* name);
+  public:
+    template<class T> static int getSymbol(const char* name, T& func_ptr) {
+      func_ptr = (T)i_getSymbol(name);
+      return func_ptr == 0 ? 0 : 1;
+    }
+  };
+  struct LibPThread {
+  protected:
+    static void* i_getSymbol(const char* name);
+  public:
     template<class T> static int getSymbol(const char* name, T& func_ptr) {
       func_ptr = (T)i_getSymbol(name);
       return func_ptr == 0 ? 0 : 1;

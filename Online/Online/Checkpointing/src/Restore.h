@@ -108,19 +108,37 @@ namespace CHECKPOINTING_NAMESPACE  {
   /** Entry point to restart thread after a fork.
    */
   STATIC(int)  checkpointing_thread_restart_main(void* arg);
+  /// Link thread struct to the lists and finish filling the thread structure.
+  /**
+   *	thread linked to 'threads' list and 'motherofall' tree
+   *	thread->tid = filled in with thread id
+   *	thread->state = ST_RUNDISABLED (thread initially has checkpointing disabled)
+   *	signal handler set up
+   */
+  STATIC(void) checkpointing_thread_initialize(Thread* thr);
   STATIC(void) checkpointing_thread_restore_tls(Thread* thr);
   STATIC(void) checkpointing_thread_restore_signals(Thread* thr);
   STATIC(void) checkpointing_thread_restore_sigactions();
   STATIC(int)  checkpointing_thread_restart(Thread* thr, int force_context);
+  /// Access the head of the global thread queue
   STATIC(Thread*) checkpointing_thread_queue();
+  /// Access the current thread from the TLS 
+  STATIC(Thread*) checkpointing_thread_current();
+  /// Count the number of threads known
+  STATIC(int) checkpointing_thread_count();
+
   ///  Save signal handlers and block signal delivery
   STATIC(void) checkpointing_thread_save_signals(Thread* thr);
   /// Setup the signal handling to stop/restart threads
   STATIC(void) checkpointing_thread_setup_signals();
   /// Thread has exited - unlink it from lists and free struct
-  STATIC(int) checkpointing_thread_cleanup(Thread* thr);
+  STATIC(int)  checkpointing_thread_cleanup(Thread* thr);
+  /// Handle thread cleanup in case of cancellation of thread_exit
+  STATIC(void) checkpointing_thread_cleanup_handler(void* thread);
 
+  /// Unlock thread queue
   STATIC(void) checkpointing_threads_unlock();
+  /// Lock thread queue
   STATIC(void) checkpointing_threads_lock();
 
   // Final last restore call
