@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Pablo Ruiz Valls
+ - Timing fix in StrippingBeauty2XGamma.py (4 track maker was doing 2 combineParticles)
+
 ! 2014-09-01 - Marco Gersabeck
  - Remove usage of ConjugateNeutralPID from StrippingD2hh for swimming reasons
 

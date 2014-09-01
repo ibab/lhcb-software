@@ -1205,9 +1205,9 @@ def makeFourTrackListVanya( name,
     
     _FourTrackPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s) & (PT > %(MinPTCut)s) & (BPVVDCHI2  > %(BPVVDCHI2MinCut)s) & (MIPCHI2DV(PRIMARY) > %(IPChi2MinCut)s)" %locals()
     
-    _combineFourTrack = CombineParticles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
-                                          CombinationCut = _FourTrackPreVertexCuts,
-                                          MotherCut = _FourTrackPostVertexCuts )
+    # _combineFourTrack = CombineParticles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
+    #                                       CombinationCut = _FourTrackPreVertexCuts,
+    #                                       MotherCut = _FourTrackPostVertexCuts )
 
     _combineFourTrack = Combine4Particles( DecayDescriptor="f_2(1270) -> pi+ pi+ pi- pi-",
                                            Combination12Cut = _MassRangeCuts,
