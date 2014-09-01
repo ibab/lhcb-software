@@ -828,7 +828,7 @@ B2XTau = {
                       },
                 { "Type" : "RelInfoBstautauCDFIso"
                   ,"RecursionLevel" : 0
-                  , "Variables" : ['BSTAUTAUCDFISO']
+#                  , "Variables" : ['BSTAUTAUCDFISO']
                   , "Location"  : "BSTAUTAUVARIABLES"
                       }
                 ]

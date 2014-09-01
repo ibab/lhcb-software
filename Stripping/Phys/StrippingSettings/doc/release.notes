@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Pablo Ruiz Valls (RD)
+ - updated Stripping21/LineConfigDictionaries_RD.py
+ - updated Stripping21r1/LineConfigDictionaries_RD.py
+ - Now related info compatible!
+
 ! 2014-09-01 - Roberta Cardinale
  - Update LineConfigDictionaries_BandQ 
 
