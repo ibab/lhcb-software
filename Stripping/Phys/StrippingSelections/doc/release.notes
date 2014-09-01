@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Stefano Perazzini
+ - Hotfix to StrippingHb2V0V0h.py
+
 ! 2014-09-01 - Andrea Contu
  - Added StrippingDs2KKPi4Spectroscopy to __init__.py
 

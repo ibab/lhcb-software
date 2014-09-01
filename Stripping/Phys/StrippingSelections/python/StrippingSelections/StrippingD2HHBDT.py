@@ -10,12 +10,13 @@ __date__ = '21/08/2012'
 __version__ = '$Revision: 1.5 $'
 
 __all__ = ('D2HHBDTLines',
-           'makeD2HHBDT')
+           'makeD2HHBDT',
+           'default_config')
 
 from Gaudi.Configuration import *
 
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
-from StandardParticles                     import StdNoPIDsKaons, StdNoPIDsPions
+from StandardParticles                     import StdNoPIDsKaons, StdAllNoPIDsPions
 
 from PhysSelPython.Wrappers      import Selection
 from StrippingConf.StrippingLine import StrippingLine
@@ -28,7 +29,7 @@ default_config = {
     'BUILDERTYPE' : 'D2HHBDTLines',
     'CONFIG'      : {'PrescaleD2HHBDT' : 1.,
                      'PrescaleDSt'     : 1.,
-                     'PostscaleD02HH'  : 0.3,
+                     'PostscaleD02HH'  : 0.1,
                      'MinPT'           : 1000,
                      'MinIP'           : 0.12,
                      'TrChi2'          : 3,
@@ -150,7 +151,7 @@ def makeDStD0Pi( name, cut, presel):
 
     return Selection( name,
                       Algorithm = CombineDStD0Pi,
-                      RequiredSelections = [ presel, StdNoPIDsPions ])
+                      RequiredSelections = [ presel, StdAllNoPIDsPions ])
 
 def applyBDT( name,
               LineName,

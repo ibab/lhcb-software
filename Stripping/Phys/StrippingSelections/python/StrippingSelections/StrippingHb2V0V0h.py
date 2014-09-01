@@ -10,7 +10,8 @@ Exported symbols (use python help!):
 __author__ = ['Rafael Coutinho']
 __date__ = '18/08/2014'
 __version__ = 'Stripping21'
-__all__ = 'Hb2V0V0hConf'
+__all__ = {'Hb2V0V0hConf',
+           'default_config'}
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -21,6 +22,7 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsPions as Pions
 
 default_config = {
+    'NAME'        : 'Hb2V0V0h'
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Hb2V0V0hConf',
     'CONFIG'      : {
