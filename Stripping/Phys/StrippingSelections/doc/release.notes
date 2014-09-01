@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Andrea Contu
+ - Added StrippingDs2KKPi4Spectroscopy to __init__.py
+
 ! 2014-09-01 - Marco Pappagallo
  - Fixed a minor typo for StrippingDs2KKPi4Spectroscopy.py 
 
