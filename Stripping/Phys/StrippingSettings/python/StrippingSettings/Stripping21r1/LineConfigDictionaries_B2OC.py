@@ -292,9 +292,6 @@ Beauty2Charm = {
     'StrippingB02LcLambda0KWSLc2PKPiBeauty2CharmLine', 
     'StrippingB02DKLTUBD2HHHBeauty2CharmLine', 
     ],
-    'PVReFit' : [
-    ],
-            
     'RawEvents' : [
      'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
     'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',
