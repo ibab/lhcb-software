@@ -30,6 +30,7 @@ default_config = {
     'CONFIG'      : {'PrescaleD2HHBDT' : 1.,
                      'PrescaleDSt'     : 1.,
                      'PostscaleD02HH'  : 0.1,
+                     'PostscaleDSt'    : 0.3,
                      'MinPT'           : 1000,
                      'MinIP'           : 0.12,
                      'TrChi2'          : 3,
@@ -58,6 +59,7 @@ class D2HHBDTLines( LineBuilder ) :
     __configuration_keys__ = ( 'PrescaleD2HHBDT',
                                'PrescaleDSt',
                                'PostscaleD02HH',
+                               'PostscaleDSt',
                                'MinPT',    
                                'MinIP',
                                'TrChi2',
@@ -117,6 +119,7 @@ class D2HHBDTLines( LineBuilder ) :
 
         self.lineDStD0PiD2HHBDT = StrippingLine( "DStD0PiWith"+D2HHBDTName+"Line",
                                                  prescale  = config['PrescaleDSt'],
+                                                 postscale = config['PostscaleDSt'],
                                                  selection = self.DStD0Pi )
 
         self.registerLine(self.lineDStD0PiD2HHBDT)
