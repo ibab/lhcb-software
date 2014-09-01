@@ -41,8 +41,8 @@ using ROOT::Math::CholeskyDecomp;
 DECLARE_ALGORITHM_FACTORY( PrDownstream )
 
 
-bool sortByChi2Tr( PrDownTrack lhs, PrDownTrack rhs) {return lhs.chisq()< rhs.chisq();};
-bool sortByHitsTr(PrDownTrack lhs, PrDownTrack rhs) {return lhs.hits().size()> rhs.hits().size();};
+bool sortByChi2Tr( PrDownTrack lhs, PrDownTrack rhs) {return lhs.chisq()< rhs.chisq();}
+bool sortByHitsTr(PrDownTrack lhs, PrDownTrack rhs) {return lhs.hits().size()> rhs.hits().size();}
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
