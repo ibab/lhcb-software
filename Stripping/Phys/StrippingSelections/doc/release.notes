@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Marco Pappagallo
+ - Fixed a minor typo for StrippingDs2KKPi4Spectroscopy.py 
+
 ! 2014-09-01 - Pablo Ruiz Valls
  - Timing fix in StrippingBeauty2XGamma.py (4 track maker was doing 2 combineParticles)
 

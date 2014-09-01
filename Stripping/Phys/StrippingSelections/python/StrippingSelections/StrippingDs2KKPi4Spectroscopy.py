@@ -47,7 +47,7 @@ default_config = {
                 'Ds2KKPLinePostscale'       :    1.0
                 },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'Charm' ]
+    'STREAMS' : [ 'CharmCompleteEvent' ]
     }
 
 
