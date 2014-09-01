@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Ronan Wallace
+ - Removed mention of 'units' from QEE dictionaries
+
 ! 2014-09-01 - Lucio Anderlini (BandQ)
  - Hotfix of commit conflicts
  - Copy Stripping21/BandQ -> Stripping21r1/BandQ
