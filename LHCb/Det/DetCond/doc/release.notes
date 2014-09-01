@@ -3,6 +3,11 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2014-09-01 - Liang Sun
+ - Changes in Configuration.py:
+   - Removal of the support for Oracle by commenting out the lines related to the option "UseOracle"
+   - Added a layer of CALIBOFF above LHCBCOND when LoadCALIBDB option is OFFLINE 
+
 ! 2014-07-24 - Liang Sun
  - Added qmtest module "detcond.check_db_reading" to check the db reading functionality in Tools/CondDBUI
 

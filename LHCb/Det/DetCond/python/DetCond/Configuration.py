@@ -59,7 +59,7 @@ class CondDB(ConfigurableUser):
                        'Tags' : """ Dictionary of tags (partition:tag) to use for the COOL databases """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        'Upgrade' : """ Boolean flag to select the Upgrade simulation configuration """,
-                       'UseOracle' : """ Boolean flag to enable the usage of the CondDB from Oracle servers """,
+                       'UseOracle' : """ Boolean flag to enable the usage of the CondDB from Oracle servers. NB: Obsolete as Oracle support is now dropped""",
                        'LocalTags' : """ Dictionary with local tags to use to override the global ones (partition: list of local tags) """,
                        'LogFile' : """ Record the requests to the database the specified file """,
                        'Overrides' : """ Internal property used to add layers or alternatives """,
@@ -199,6 +199,7 @@ class CondDB(ConfigurableUser):
 
         # Check if the latest tags should be set for simulation or not
         if not self.getProp("Simulation"):
+#            partitions = ["DDDB", "LHCBCOND", "CALIBOFF"]
             partitions = ["DDDB", "LHCBCOND"]
         else:
             partitions = ["DDDB", "SIMCOND"]
@@ -272,10 +273,10 @@ class CondDB(ConfigurableUser):
         if not local_dir:
             return accsvc
         # Check if we are using Oracle or SQLite
-        if self.getProp("UseOracle"):
-            log.warning("Conflicting properties in CondDB Configurable: "
-                        "ignoring SQLiteLocalCopiesDir because UseOracle is set to True")
-            return accsvc
+#        if self.getProp("UseOracle"):
+#            log.warning("Conflicting properties in CondDB Configurable: "
+#                        "ignoring SQLiteLocalCopiesDir because UseOracle is set to True")
+#            return accsvc
         # Modify partitions to use local copies of the DBs
         newaccsvc = accsvc # fallback return value (no change)
         if isinstance(accsvc, CondDBAccessSvc):
@@ -332,7 +333,7 @@ class CondDB(ConfigurableUser):
     def _configureDBSnapshot(self):
 
         baseloc = self.getProp( "DBSnapshotDirectory" )
-        self.DisableLFC = True
+#        self.DisableLFC = True
 
         # Set alternative connection strings and tags
         # if simulation is False, we use DDDB, LHCBCOND and ONLINE
@@ -416,7 +417,8 @@ class CondDB(ConfigurableUser):
         os.environ['LoadCALIBDB'] = LoadCALIBDB
 
         # Import SQLDDDB specific info
-        if self.getProp("UseOracle") or self.getProp("UseDBSnapshot"):
+#        if self.getProp("UseOracle") or self.getProp("UseDBSnapshot"):
+        if self.getProp("UseDBSnapshot"):
             importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
             if self.getProp("DisableLFC"):
                 COOLConfSvc(UseLFCReplicaSvc = False)
@@ -443,11 +445,13 @@ class CondDB(ConfigurableUser):
         if LoadCALIBDB is "OFFLINE" and exists(join(os.environ["SQLITEDBPATH"], "CALIBOFF.db")):
             parttypes += [("CALIBOFF", CondDBAccessSvc)]
         for (p ,t) in parttypes:
-            partition[p] = getConfigurable(p, t)
+            partition[p] = getAnyDBReader(p, t)
             # Override connection strings:
-            if p in conns and type(partition[p]) is CondDBAccessSvc:
-                partition[p].ConnectionString = conns[p]
-                del conns[p]
+            if p in conns:
+                if type(partition[p]) is CondDBAccessSvc:
+                    partition[p].ConnectionString = conns[p]
+                    del conns[p]
+
             # Override connection strings for Upgrade case
             if self.getProp('Simulation') and self.getProp('Upgrade') and type(partition[p]) is CondDBAccessSvc:
                 partition[p].ConnectionString = os.path.join('sqlite_file:$SQLITEUPGRADEDBPATH', p + '.db', p)
@@ -467,6 +471,12 @@ class CondDB(ConfigurableUser):
                         for ly in config.Layers:
                             if isinstance(ly, CondDBAccessSvc):
                                 self.propagateProperty("QueryGranularity", ly)
+
+        # Load the CALIBOFF layer above LHCBCOND if it exists
+        if len([x for x in parttypes if x[0] == 'CALIBOFF']):
+            lhcbcondsvc = partition['LHCBCOND']
+            layers = [getAnyDBReader('CALIBOFF'),  lhcbcondsvc]
+            partition['LHCBCOND'] = CondDBLayeringSvc("LHCBCONDLAYER", Layers = layers)
 
         if conns:
             log.warning("Cannot override the connection strings of the partitions %r", conns.keys())
@@ -520,9 +530,9 @@ class CondDB(ConfigurableUser):
                 taglist.reverse() # we need to stack the in reverse order to use the first as on top of the others
                 i = 0 # counter
                 # In case of ONLINE partition, add layers for CALIBOFF only, and in time ranges
-                if p is "CALIBOFF":
-                    if LoadCALIBDB is not "OFFLINE": 
-                        raise ValueError("invalid argument LoadCALIBDB set at '%s' instead of 'OFFLINE' for accessing local tags for CALIBOFF.db" % LoadCALIBDB)
+                if p is "CALIBOFF" and LoadCALIBDB is not "OFFLINE":
+#                    if LoadCALIBDB is not "OFFLINE": 
+#                        raise ValueError("invalid argument LoadCALIBDB set at '%s' instead of 'OFFLINE' for accessing local tags for CALIBOFF.db" % LoadCALIBDB)
                     pcolayers = []
                     for t in taglist: 
                         pcolayers.append(partition[p].clone("CALIBOFF_%d" %i, DefaultTAG = t))
@@ -531,7 +541,7 @@ class CondDB(ConfigurableUser):
                         config = allConfigurables[eval(r.split(':')[0]).split("/")[1]]
                         if isinstance(config, CondDBLayeringSvc):
                             config.Layers = pcolayers + config.Layers 
-                elif type(partition[p]) is not CondDBTimeSwitchSvc: # The case for CALIBOFF has been processed in the above lines
+                elif type(partition[p]) is not CondDBTimeSwitchSvc: 
                     for t in taglist:
                         self._addLayer(partition[p].clone("%s_%d" % (p, i),
                             DefaultTAG = t))
@@ -656,6 +666,16 @@ def connStrOnline(ym_tuple):
         return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d%02d.db/ONLINE" % ym_tuple
     return "sqlite_file:$SQLITEDBPATH/ONLINE-%04d.db/ONLINE" % ym_tuple[0]
 
+def getAnyDBReader(layer = 'CALIBOFF', svc = CondDBAccessSvc, CacheHighLevel = 200):
+    # Put the discovered layer on top
+    cfg = getConfigurable(layer, svc)
+    if svc is not CondDBAccessSvc: return cfg
+    try: cfg.ConnectionString
+    except AttributeError: # Set up connection for the 1st time
+        cfg = CondDBAccessSvc(layer, ConnectionString = 
+                "sqlite_file:$SQLITEDBPATH/%s.db/%s" % (layer, layer), CacheHighLevel = CacheHighLevel)
+    return cfg
+
 def getOnlineDBReader(ym_tuple, granularity = 'YEARLY', connStrFunc = None):
     cnstr = ''
     ymstr = ''
@@ -678,15 +698,9 @@ def getOnlineDBReader(ym_tuple, granularity = 'YEARLY', connStrFunc = None):
         # If .db file available for a new layer
         dblayers.insert(0, CondDBAccessSvc(layer + '_' + ymstr, 
             ConnectionString = cnstr.replace('ONLINE-%s.db/ONLINE' %ymstr, "%s-%s.db/%s" % (layer, ymstr, layer))))
-        layer = 'CALIBOFF'
         if LoadCALIBDB is not 'HLT2' and exists(join(dbpath, layer + '.db')): 
             # Put the discovered layer on top
-            cfg = getConfigurable(layer, CondDBAccessSvc)
-            try: cfg.ConnectionString
-            except AttributeError: # Set up connection for the 1st time
-                cfg = CondDBAccessSvc("CALIBOFF", ConnectionString = 
-                        cnstr.replace('ONLINE-%s.db/ONLINE' %ymstr, "%s.db/%s" % (layer, layer)), CacheHighLevel = 200)
-
+            cfg = getAnyDBReader(layer)
             dblayers.insert(0, cfg)
 
     if (len(dblayers) == 1): return accSvc
