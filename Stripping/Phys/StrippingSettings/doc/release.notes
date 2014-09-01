@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Carlos Vazquez Sierra (B2CC)
+  - Hotfix in B2CC dictionaries.
+
 ! 2014-09-01 - Ronan Wallace
  - Fix to StrippingDitau dictionary
  - Change of LowPT(20-->17) cut in Jets.

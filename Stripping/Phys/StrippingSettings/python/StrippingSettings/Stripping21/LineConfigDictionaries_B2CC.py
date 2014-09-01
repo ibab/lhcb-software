@@ -480,7 +480,7 @@ Bs2EtacPhiBDT = {
                     , 'Bs2EtacPhiXmlFile'      :  "$TMVAWEIGHTSROOT/data/Bs2EtacPhi_BDT_v1r0.xml"
                     , 'Prescale'               : 1.
                     },
-    'STREAMS'     : { 'Bhadron' : 'StrippingBs2EtacPhiBDTLine' },
+    'STREAMS'     : { 'Bhadron' : ['StrippingBs2EtacPhiBDTLine'] },
     'WGs'         : [ 'B2CC' ]
     }
 
