@@ -4,7 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-! 2014-09-01 Marco Pappagallo
+! 2014-09-01 - Stefano Perazzini
+ - Hotfix to StrippingBc2hhh_BnoC.py
+
+! 2014-09-01 - Marco Pappagallo
  - Added new Ds -> KKpi stripping line 
 
 ! 2014-08-31 - Adlene Hicheur

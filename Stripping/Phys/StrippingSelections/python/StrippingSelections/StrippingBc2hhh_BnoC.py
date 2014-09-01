@@ -24,48 +24,53 @@ __all__ = ('Bc2hhhBuilder',
            'makeKKK_excl', 
            'makepppi_excl', 
            'makeppK_excl', 
+           'default_config'
 	   )
 
-
-config_params = {
-    'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
-    '_h_PT'                 : 250.,     ## tracks min PT
-    '_h_P'                  : 2500.,    ## tracks min P  
-    '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
-    '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
-    '_h_TRGHP'              : .5,        ## Track PROBNNghost     
-    '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
-    '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
-    '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
-    '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
-    '_3h_SVPV'              : 1.5,      ## Distance between sv and pv
-    '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
-    '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
-    '_3h_PT'                : 1000.,    ## min 3h PT   
-    '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
-    '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum 
-    '_3h_PVIPCHI2sum'       : 200.,     ## min of the 3h tracks IP wrt best 3h PV
-    '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
-    '_3h_Mmax'              : 6500.,     ## max 3h mass for exclusive lines
-    '_3h_Mmin'              : 6000.,     ## min 3h mass for exclusive KKK lines
-    '_bu3h_Mmax'            : 5500.,     ## min buto3h mass for exclusive lines
-    '_bu3h_Mmin'            : 5100.,     ## min buto3h mass for exclusive lines
-    '_probnnpi'             : .15,       ## PROBNNpi for pion tracks. WARNING: DO NOT APPLY THIS CUT FOR PIPIPI OR KPIPI LINES
-    '_probnnk'              : .20,       ## PROBNNk for kaon tracks.
-    '_probnnp'              : .05,       ## PROBNNp for proton tracks.
-    'pipipi_exclLinePrescale'  : 1.0,
-    'pipipi_exclLinePostscale'  : 1.0,
-    'Kpipi_exclLinePrescale'  : 1.0,
-    'Kpipi_exclLinePostscale'  : 1.0,
-    'KKpi_exclLinePrescale'  : 1.0,
-    'KKpi_exclLinePostscale'  : 1.0,
-    'KKK_exclLinePrescale'  : 1.0,
-    'KKK_exclLinePostscale'  : 1.0,
-    'pppi_exclLinePrescale'  : 1.0,
-    'pppi_exclLinePostscale'  : 1.0,
-    'ppK_exclLinePrescale'  : 1.0,
-    'ppK_exclLinePostscale'  : 1.0,
-    }
+default_config = {
+  'NAME'        : 'Bc2hhh',
+  'WGs'         : ['Charmless'],
+  'BUILDERTYPE' : 'Bc2hhhBuilder',
+  'CONFIG' : {'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
+              '_h_PT'                 : 250.,     ## tracks min PT
+              '_h_P'                  : 2500.,    ## tracks min P  
+              '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
+              '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
+              '_h_TRGHP'              : .5,        ## Track PROBNNghost     
+              '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
+              '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
+              '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
+              '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
+              '_3h_SVPV'              : 1.5,      ## Distance between sv and pv
+              '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
+              '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
+              '_3h_PT'                : 1000.,    ## min 3h PT   
+              '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
+              '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum 
+              '_3h_PVIPCHI2sum'       : 200.,     ## min of the 3h tracks IP wrt best 3h PV
+              '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
+              '_3h_Mmax'              : 6500.,     ## max 3h mass for exclusive lines
+              '_3h_Mmin'              : 6000.,     ## min 3h mass for exclusive KKK lines
+              '_bu3h_Mmax'            : 5500.,     ## min buto3h mass for exclusive lines
+              '_bu3h_Mmin'            : 5100.,     ## min buto3h mass for exclusive lines
+              '_probnnpi'             : .15,       ## PROBNNpi for pion tracks. WARNING: DO NOT APPLY THIS CUT FOR PIPIPI OR KPIPI LINES
+              '_probnnk'              : .20,       ## PROBNNk for kaon tracks.
+              '_probnnp'              : .05,       ## PROBNNp for proton tracks.
+              'pipipi_exclLinePrescale'  : 1.0,
+              'pipipi_exclLinePostscale'  : 1.0,
+              'Kpipi_exclLinePrescale'  : 1.0,
+              'Kpipi_exclLinePostscale'  : 1.0,
+              'KKpi_exclLinePrescale'  : 1.0,
+              'KKpi_exclLinePostscale'  : 1.0,
+              'KKK_exclLinePrescale'  : 1.0,
+              'KKK_exclLinePostscale'  : 1.0,
+              'pppi_exclLinePrescale'  : 1.0,
+              'pppi_exclLinePostscale'  : 1.0,
+              'ppK_exclLinePrescale'  : 1.0,
+              'ppK_exclLinePostscale'  : 1.0,
+              },
+  'STREAMS'   : ['Bhadron']
+  }
 
 
 """
