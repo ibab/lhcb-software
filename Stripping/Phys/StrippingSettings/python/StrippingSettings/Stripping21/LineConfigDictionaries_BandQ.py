@@ -678,6 +678,7 @@ Xibc = {
       },
     'STREAMS' : { 'Dimuon' : [
     'StrippingXibcXibc2LcJpsi'
+    ,'StrippingXibcX2JpsiProton'
     ]
                   },
     'WGs'    : ['BandQ']

@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-02 - Roberta Cardinale
+ - Re-added StrippingXibcX2JpsiProton
+
 ! 2014-09-01 - Carlos Vazquez Sierra (B2CC)
   - Hotfix in B2CC dictionaries.
 
