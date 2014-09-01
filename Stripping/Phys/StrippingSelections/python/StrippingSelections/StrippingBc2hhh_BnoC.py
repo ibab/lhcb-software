@@ -1,4 +1,4 @@
- # $Id: StrippingBc2hhh_BnoC.py,v 1.1 2014-08-29$
+ # $Id: StrippingBc2hhh_BnoC.py,v 1.2 2014-08-31$
 '''
 Module for construction of Bc->hhh from:   
      Exclusive lines to reconstruct the pipipi, Kpipi, KKpi, KKK, pppi and ppK decay modes.
@@ -14,8 +14,8 @@ Exported symbols (use python help!):
 '''
 
 __author__ = ['Alvaro Gomes', 'Adlene Hicheur']
-__date__ = '29/08/2014'
-__version__ = '$Revision: 1.1 $'
+__date__ = '31/08/2014'
+__version__ = '$Revision: 1.2 $'
 
 __all__ = ('Bc2hhhBuilder',
            'makepipipi_excl', 
@@ -326,37 +326,43 @@ class Bc2hhhBuilder(LineBuilder) :
                                      prescale   = config['pipipi_exclLinePrescale'],
                                      postscale  = config['pipipi_exclLinePostscale'],
                                      algos      = self.algospipipi,
-                                     MDSTFlag = True)
+                                     MDSTFlag = True,
+                                     EnableFlavourTagging = True)
 
         self.lineKpipi_excl = StrippingLine( _Kpipi_exclName + 'Line',
                                      prescale   = config['Kpipi_exclLinePrescale'],
                                      postscale  = config['Kpipi_exclLinePostscale'],
                                      algos      = self.algosKpipi,
-                                     MDSTFlag = True)
+                                     MDSTFlag = True,
+                                     EnableFlavourTagging = True)
 
         self.lineKKpi_excl = StrippingLine( _KKpi_exclName + 'Line',
                                      prescale   = config['KKpi_exclLinePrescale'],
                                      postscale  = config['KKpi_exclLinePostscale'],
                                      algos      = self.algosKKpi,
-                                     MDSTFlag = True)
+                                     MDSTFlag = True,
+                                     EnableFlavourTagging = True)
 
         self.lineKKK_excl = StrippingLine( _KKK_exclName + 'Line',
                                      prescale   = config['KKK_exclLinePrescale'],
                                      postscale  = config['KKK_exclLinePostscale'],
                                      algos      = self.algosKKK,
-                                     MDSTFlag = True)
+                                     MDSTFlag = True,
+                                     EnableFlavourTagging = True)
 
         self.linepppi_excl = StrippingLine( _pppi_exclName + 'Line',
                                      prescale   = config['pppi_exclLinePrescale'],
                                      postscale  = config['pppi_exclLinePostscale'],
                                      algos      = self.algospppi,
-                                     MDSTFlag = True)
+                                     MDSTFlag = True,
+                                     EnableFlavourTagging = True)
         
 	self.lineppK_excl = StrippingLine( _ppK_exclName + 'Line',
                                      prescale   = config['ppK_exclLinePrescale'],
                                      postscale  = config['ppK_exclLinePostscale'],
                                      algos      = self.algosppK,
-                                     MDSTFlag = True)
+                                     MDSTFlag = True,
+                                     EnableFlavourTagging = True)
 
         self.registerLine(self.linepipipi_excl)
         self.registerLine(self.lineKpipi_excl)
