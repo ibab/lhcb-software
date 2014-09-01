@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Carla Marin Benito
+ - Uncomment StrippingKshort2eePiPi.py from __init__.py
 
 ! 2014-09-01 - Brais Sanmartin Sedes
  - ReFitPVs = False for StrippingBs2K0stK0stNominalLine and StrippingBs2KstKstNominalLine
