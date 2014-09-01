@@ -185,7 +185,21 @@ class D2hhConf(LineBuilder) :
 				 Hlt2TOS = config['Hlt2TOSKPi']
 			        )
 
-        self.selD0KK = makeD2hhAsymm(d2kk_name,  
+        self.selD0WS = makeD2hhAsymm(d0WS_name,  
+			         config,
+ 				 KPIDK_string = ' & (PIDK > %(HighPIDK)s)',
+				 PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
+				 Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KPiMassWindowWidthLow)s* MeV)',
+				 Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KPiMassWindowWidthHigh)s* MeV)',
+				 CombPIDK_string = '',
+				 DecayDescriptor = '[D0 -> K+ pi-]cc',
+			         inputSel = [stdNoPIDsPions, stdNoPIDsKaons],
+				 useTOS = config['UseTOSFilter'],
+				 Hlt1TOS = config['Hlt1TOS'],
+				 Hlt2TOS = config['Hlt2TOSKPi']
+			        )
+
+        self.selD0KKsgl = makeD2hhAsymm(d2kk_name+'_single',  
 			        config,
  				KPIDK_string = ' & (PIDK > %(LowPIDK)s)',
 				PiPIDK_string = '',
@@ -199,7 +213,7 @@ class D2hhConf(LineBuilder) :
 				Hlt2TOS = config['Hlt2TOSKK']
 			       )
 
-        self.selD0PiPi = makeD2hhAsymm(d2pipi_name,  
+        self.selD0PiPisgl = makeD2hhAsymm(d2pipi_name+'_single',  
 			          config,
  				  KPIDK_string = '',
 				  PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
@@ -207,6 +221,34 @@ class D2hhConf(LineBuilder) :
 				  Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0PiPiMassWindowWidthHigh)s* MeV)',
 				  CombPIDK_string = '',
 				  DecayDescriptor = 'D0 -> pi+ pi-',
+			          inputSel = [stdNoPIDsPions], 
+				  useTOS = config['UseTOSFilter'],
+				  Hlt1TOS = config['Hlt1TOS'],
+				  Hlt2TOS = config['Hlt2TOSPiPi']
+			         )
+
+        self.selD0KK = makeD2hhAsymm(d2kk_name,  
+			        config,
+ 				KPIDK_string = ' & (PIDK > %(LowPIDK)s)',
+				PiPIDK_string = '',
+				Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KKMassWindowWidthLow)s* MeV)',
+				Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KKMassWindowWidthHigh)s* MeV)',
+				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
+				DecayDescriptor = '[D0 -> K+ K-]cc',
+			        inputSel = [stdNoPIDsKaons],
+				useTOS = config['UseTOSFilter'],
+				Hlt1TOS = config['Hlt1TOS'],
+				Hlt2TOS = config['Hlt2TOSKK']
+			       )
+
+        self.selD0PiPi = makeD2hhAsymm(d2pipi_name,  
+			          config,
+ 				  KPIDK_string = '',
+				  PiPIDK_string = ' & (PIDK < %(LowPIDK)s)',
+				  Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0PiPiMassWindowWidthLow)s* MeV)',
+				  Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0PiPiMassWindowWidthHigh)s* MeV)',
+				  CombPIDK_string = '',
+				  DecayDescriptor = '[D0 -> pi+ pi-]cc',
 			          inputSel = [stdNoPIDsPions], 
 				  useTOS = config['UseTOSFilter'],
 				  Hlt1TOS = config['Hlt1TOS'],
@@ -234,7 +276,7 @@ class D2hhConf(LineBuilder) :
 				Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0KKMassWindowWidthLow)s* MeV)',
 				Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0KKMassWindowWidthHigh)s* MeV)',
 				CombPIDK_string = ' & (AHASCHILD( PIDK > %(HighPIDK)s ) )',
-				DecayDescriptor = 'D0 -> K- K-',
+				DecayDescriptor = '[D0 -> K- K-]cc',
 			        inputSel = [stdNoPIDsKaons],
 				useTOS = False,
 				Hlt1TOS = config['Hlt1TOS'],
@@ -248,7 +290,7 @@ class D2hhConf(LineBuilder) :
 				  Mass_low_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) > %(D0PiPiMassWindowWidthLow)s* MeV)',
 				  Mass_high_string = '& (DAMASS(%(D0MassWindowCentre)s* MeV) < %(D0PiPiMassWindowWidthHigh)s* MeV)',
 				  CombPIDK_string = '',
-				  DecayDescriptor = 'D0 -> pi- pi-',
+				  DecayDescriptor = '[D0 -> pi- pi-]cc',
 			          inputSel = [stdNoPIDsPions], 
 				  useTOS = False,
 				  Hlt1TOS = config['Hlt1TOS'],
@@ -297,20 +339,6 @@ class D2hhConf(LineBuilder) :
 				  Hlt2TOS = { 'Hlt2Global%TIS' : 0 }
 			         )
 
-        from Configurables import ConjugateNeutralPID
-        from PhysSelPython.Wrappers import Selection
-        _localConj_KPi = ConjugateNeutralPID('Conjugate'+d0WS_name)
-        _localConj_KK = ConjugateNeutralPID('Conjugate'+d2kk_name)
-        _localConj_PiPi = ConjugateNeutralPID('Conjugate'+d2pipi_name)
-        self.selD0WS = Selection(d0WS_name, Algorithm=_localConj_KPi, RequiredSelections=[self.selD2Kpi])
-        self.selD0ConjKK = Selection('SelConjugate'+d2kk_name, Algorithm = _localConj_KK, RequiredSelections = [self.selD0KK])
-        self.selD0ConjPiPi = Selection('SelConjugate'+d2pipi_name, Algorithm = _localConj_PiPi, RequiredSelections = [self.selD0PiPi])
-
-        _localConj_KKSS = ConjugateNeutralPID('Conjugate'+d2kk_name+'SS')
-        _localConj_PiPiSS = ConjugateNeutralPID('Conjugate'+d2pipi_name+'SS')
-        self.selD0ConjKKSS = Selection('SelConjugate'+d2kk_name+'SS', Algorithm = _localConj_KKSS, RequiredSelections = [self.selD0KKSS])
-        self.selD0ConjPiPiSS = Selection('SelConjugate'+d2pipi_name+'SS', Algorithm = _localConj_PiPiSS, RequiredSelections = [self.selD0PiPiSS])
-
         # Dstar -> D0 pi selections
 	self.selDstRS = makeDstar2D0Pi( dst2DRS_name
 				   , config
@@ -327,13 +355,13 @@ class D2hhConf(LineBuilder) :
 	self.selDstKK = makeDstar2D0Pi( dst2DKK_name
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
-                                   , inputSel = [self.selD0KK, self.selD0ConjKK, stdNoPIDsPions]
+                                   , inputSel = [self.selD0KK, stdNoPIDsPions]
                                  )
 
 	self.selDstPiPi = makeDstar2D0Pi( dst2DPiPi_name
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
-                                   , inputSel = [self.selD0PiPi, self.selD0ConjPiPi, stdNoPIDsPions]
+                                   , inputSel = [self.selD0PiPi, stdNoPIDsPions]
                                  )
 
 	self.selDstRSSS = makeDstar2D0Pi( dst2DRS_name+'SS'
@@ -345,13 +373,13 @@ class D2hhConf(LineBuilder) :
 	self.selDstKKSS = makeDstar2D0Pi( dst2DKK_name+'SS'
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
-                                   , inputSel = [self.selD0KKSS, self.selD0ConjKKSS, stdNoPIDsPions]
+                                   , inputSel = [self.selD0KKSS, stdNoPIDsPions]
                                  )
 
 	self.selDstPiPiSS = makeDstar2D0Pi( dst2DPiPi_name+'SS'
 				   , config
                                    , '[D*(2010)+ -> D0 pi+]cc'
-                                   , inputSel = [self.selD0PiPiSS, self.selD0ConjPiPiSS, stdNoPIDsPions]
+                                   , inputSel = [self.selD0PiPiSS, stdNoPIDsPions]
                                  )
 
         self.selDPartial = makeDPartial( dPartial_name
@@ -370,7 +398,6 @@ class D2hhConf(LineBuilder) :
 				   , config
                                    , '[psi(3770) -> D0 D*(2010)+]cc'
                                    , inputSel = [self.selD2Kpi, self.selDstarPartial]
-                                   #, inputSel = [self.selD0PiPi, self.selD0ConjPiPi, self.selD0KK, self.selD0ConjKK, self.selD2Kpi, self.selD0WS, self.selDstarPartial]
                                  )
         # Untagged lines
         self.d2kpi_line = StrippingLine(d2kpi_name+"Line",
@@ -382,13 +409,13 @@ class D2hhConf(LineBuilder) :
         self.d2kk_line = StrippingLine(d2kk_name+"Line",
                                         prescale = config['UntaggedSCSLinePrescale'],
                                         postscale = config['UntaggedSCSLinePostscale'],
-                                        selection = self.selD0KK
+                                        selection = self.selD0KKsgl
                                        )
 
         self.d2pipi_line = StrippingLine(d2pipi_name+"Line",
                                         prescale = config['UntaggedSCSLinePrescale'],
                                         postscale = config['UntaggedSCSLinePostscale'],
-                                        selection = self.selD0PiPi
+                                        selection = self.selD0PiPisgl
                                        )
 
         # Untagged TIS lines
