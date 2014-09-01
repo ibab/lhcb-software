@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Lucio Anderlini (BandQ)
+ - Hotfix of commit conflicts
+ - Copy Stripping21/BandQ -> Stripping21r1/BandQ
+
 ! 2014-08-31 - Cedric Potterat
  - Update LineConfidDictionaries_QEE for Jets
 
