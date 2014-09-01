@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Cedric Potterat
+ - tight cut on bJets
+
 ! 2014-09-01 - Carla Marin Benito
  - Uncomment StrippingKshort2eePiPi.py from __init__.py
 

@@ -59,7 +59,7 @@ default_config = {
                    "MIN_PT"         :  5*GeV,    # Transverse momentum.
                    "EXTLOW_PT"      : 7*GeV,    # Transverse momentum.
                    "VERYLOW_PT"     : 15*GeV,   # Transverse momentum.
-                   "LOW_PT"         : 20*GeV,   # Transverse momentum.
+                   "LOW_PT"         : 17*GeV,   # Transverse momentum.
                    "MEDIUM_PT"      : 50*GeV,   # Transverse momentum.
                    "HIGH_PT"        : 90*GeV},   # Transverse momentum.
         "DIJET" : {"MAX_COSDPHI"    : -0.8}      # Cos of transverse angle.
@@ -108,7 +108,7 @@ class JetsConf(LineBuilder):
         fbJets2   = self._filter_bJets(bJets,0,str(self._config["JET"]["HIGH_PT"]))
         dijets_T6_A  = self._create_dijets([hptJets, bJets], cut2=0, PT = str(self._config["JET"]["LOW_PT"]))
         #one jet has 60% of a TOPO object LHCbID, the other has both trk of one 2-trk SV
-        dijets_T6_PS = self._create_dijets([bJets],   cut1=0,  cut3=5, PT = str(self._config["JET"]["LOW_PT"]))
+        dijets_T6_PS = self._create_dijets([bJets],   cut1=0,  cut3=15, PT = str(self._config["JET"]["LOW_PT"]))
         #
         #cut1 and cut2 act on the TopoObject tagging for jet1 and jet2:
         #    cut1 apply to jet1 and cut2 apply to jet2, or cut2 apply to jet1 and cut1
@@ -296,11 +296,6 @@ class JetsConf(LineBuilder):
             CombinationCut = cmb_cuts,
             MotherCut = "INTREE((ABSID=='CELLjet')&(PT>"+str(LeadingPT)+"))")
 
-
-        if len(inputs) == 1:
-            dijets.Inputs = [inputs[0].outputLocation()]
-        else:
-            dijets.Inputs = [inputs[0].outputLocation(), inputs[1].outputLocation()]
 
         return Selection(self._name + label + "PT" +str(PT).split('*')[0]+"LePT"+ str(LeadingPT).split('*')[0]+ "Selection",
                                          Algorithm = dijets,
