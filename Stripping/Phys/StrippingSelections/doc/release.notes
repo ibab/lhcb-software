@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-08-31 - Adlene Hicheur
+ - Add EnableFlavourTagging = True to StrippingBc2hhh_BnoC
+
 ! 2014-08-31 - Andrea Contu
  - Update to StrippingB2ppipiSigmacmm_Lcpi
 
