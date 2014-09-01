@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Ronan Wallace
+ - Fix to StrippingDitau dictionary
+ - Change of LowPT(20-->17) cut in Jets.
+
 ! 2014-09-01 - Andrea Contu
  - Updates to Charm dictionaries for s21
 
