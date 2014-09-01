@@ -24,6 +24,7 @@ export gaudi_run="${GaudiOnlineExe} libGaudiOnline.so OnlineStart "
 export gaudi_exe="${GaudiOnlineExe} libGaudiOnline.so OnlineTask -msgsvc=$msg_svc -auto "
 export gaudi_exe2="${GaudiOnlineExe} libGaudiOnline.so OnlineTask -msgsvc=MessageSvc -auto "
 export gaudi_task="${GaudiOnlineExe} libGaudiOnline.so OnlineTask -msgsvc=$msg_svc -auto -main=$OPTS/Main.opts "
+
 export Class0_task="${GaudiOnlineExe} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class0Task -msgsvc=$msg_svc -auto -main=$OPTS/Main.opts "
 export Class1_task="${GaudiOnlineExe} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -msgsvc=$msg_svc -auto -main=$OPTS/Main.opts "
 export Class2_task="${GaudiOnlineExe} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class2Task -msgsvc=$msg_svc -auto -main=$OPTS/Main.opts "

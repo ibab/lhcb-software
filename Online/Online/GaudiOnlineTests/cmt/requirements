@@ -9,13 +9,14 @@ version v1r3
 use  GaudiAud      v*
 use  GaudiSvc      v*
 use  GaudiAlg      v*
-###use  GaudiPoolDb   v*
 use  GaudiPython   v*
 use  MDF_ROOT      v* DAQ
-###use  Gaucho        v* Online
 use  GaudiOnline   v* Online
-###use  MBMDump       v* Online
 use  RootCnv       v* Online
+use  FarmConfig    v* Online
+
+###use  Gaucho        v* Online
+###use  MBMDump       v* Online
 #use GaudiUPI      v* Online
 ###use Writer         v* Online
 #use Brunel v* Rec

@@ -1,0 +1,37 @@
+OnlineEnv.PartitionName = "LHCb";
+OnlineEnv.OutputLevel = 3;
+
+#include "$FARMCONFIGROOT/options/SvcMapping.opts"
+#include "$FARMCONFIGROOT/options/Monitoring.opts"
+MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
+ApplicationMgr.EvtSel                = "NONE";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.Runable               = "Runable";
+Runable.MEPManager                   = "";
+//
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = { "RawDataCnvSvc" };
+HistogramPersistencySvc.Warnings     = 0;
+//
+// Prescale events declared to Send buffer
+ApplicationMgr.TopAlg                = { "UpdateAndReset" };
+/*
+ApplicationMgr.TopAlg                = { "LHCb::DelaySleepAlg/Delay"};
+// Delay time in millisecs and in musecs
+Delay.DelayTime                      = 0;
+Delay.MicroDelayTime                 = 0;
+*/
+/*
+ApplicationMgr.TopAlg               += { "LHCb::RTLThreadTestAlg/ThreadTest" };
+ThreadTest.ThreadsAtInit = 1;
+ThreadTest.ThreadsAtStart = 1;
+*/
+ApplicationMgr.ExtSvc               += { "LHCb::CheckpointSvc/CheckpointSvc" };
+//
+#include "$CHECKPOINT_SETUP_OPTIONS"
+CheckpointSvc.OutputLevel            = 2;
+// Child debugging:
+CheckpointSvc.ChildWait              = 0;
+CheckpointSvc.PrintLevel             = 0;
+CheckpointSvc.Checkpoint             = "$CHECKPOINT_FILE";
