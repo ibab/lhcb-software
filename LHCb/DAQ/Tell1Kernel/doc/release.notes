@@ -3,6 +3,9 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+! 2014-09-01 - David Hutchcroft
+ - removed ; from the end of a namespace (fixes cmake warnings)
+
 !========================= Tell1Kernel v1r13 2012-11-26 =========================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.

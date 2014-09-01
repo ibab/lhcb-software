@@ -126,5 +126,5 @@ namespace STTELL1{
   typedef std::vector<u_int8_t> TELL1ADCVec;
   typedef std::map<int,TELL1ADCVec> ADC_MEMORY;
 
-};
+}
 #endif // STTELL1CORE_H
