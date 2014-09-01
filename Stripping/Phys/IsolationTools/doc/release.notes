@@ -2,6 +2,8 @@
 ! Package     : IsolationTools
 ! Responsible : Alex Shires
 !============================================================================
+! 2014-09-01 - Fatima Soomro
+Adding RelInfoBs2MuMuIsolations 
 
 ! 2014-08-31 - Cedric Potterat
  - fixed CMakeLists
