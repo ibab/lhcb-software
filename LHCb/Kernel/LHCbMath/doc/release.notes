@@ -7,6 +7,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-09-01 - Marco Clemencic
+ - Fixed CMake configuration.
+
+! 2014-09-01 - Marco Clemencic
  - Fixed compilation problem with head version of ROOT.
 
 ! 2014-08-29 - Manuel Tobias Schiller
