@@ -5,7 +5,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
 // local
-#include "GetMCCkvSegmentsAlg.h"
+#include "GaussCherenkov/GetMCCkvSegmentsAlg.h"
 
 // namespaces
 using namespace LHCb;
@@ -18,7 +18,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GetMCCkvSegmentsAlg );
+// moved to Factories.cpp
+//DECLARE_ALGORITHM_FACTORY( GetMCCkvSegmentsAlg );
 
 
 //=============================================================================

@@ -38,7 +38,8 @@
 using namespace std;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CkvSensDet );
+// Moved to Factories.cpp
+//DECLARE_TOOL_FACTORY( CkvSensDet );
 
 
 //=============================================================================

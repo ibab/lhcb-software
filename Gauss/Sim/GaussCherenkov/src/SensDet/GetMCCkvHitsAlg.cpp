@@ -5,7 +5,7 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 // local
-#include "GetMCCkvHitsAlg.h"
+#include "GaussCherenkov/GetMCCkvHitsAlg.h"
 #include "GaussRICH/RichG4RadiatorMaterialIdValues.h"
 
 #include "RichDet/DeRichPMT.h"
@@ -28,7 +28,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GetMCCkvHitsAlg );
+// Moved to Factories.cpp
+//DECLARE_ALGORITHM_FACTORY( GetMCCkvHitsAlg );
 
 //=============================================================================
 // Standard constructor, initializes variables

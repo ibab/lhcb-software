@@ -26,7 +26,8 @@
 using namespace std;
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CkvGrandSensDet );
+// moved to Factories.cpp
+//DECLARE_TOOL_FACTORY( CkvGrandSensDet );
 
 //=============================================================================
 // Standard constructor, initializes variables
