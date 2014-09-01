@@ -210,9 +210,6 @@ config = {
         "Location"  : 'P2ConeVar3'
       }, 
     ], 
-      'PVReFit' : [
-    ],
-    
     'RawEvents' : [
      'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
     'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',
@@ -260,7 +257,7 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Dstar','HH','HHH',
-                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','PVReFit','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -403,7 +400,6 @@ class Beauty2CharmConf(LineBuilder):
                                   HLT=hlt,
                                   EnableFlavourTagging = (name in config['FlavourTagging']),
                                   RequiredRawEvents = rawevent, 
-                                  ReFitPVs = (name in config['PVReFit']),
                                   RelatedInfoTools = config['RelatedInfoTools'] )
 
             self.registerLine(sline)
