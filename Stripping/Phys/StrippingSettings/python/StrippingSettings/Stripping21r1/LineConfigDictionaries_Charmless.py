@@ -152,6 +152,7 @@ D2HHBDT = {
     'CONFIG'      : {'PrescaleD2HHBDT' : 1.,
                      'PrescaleDSt'     : 1.,
                      'PostscaleD02HH'  : 0.1,
+                     'PostscaleDSt'    : 0.3,
                      'MinPT'           : 1000,
                      'MinIP'           : 0.12,
                      'TrChi2'          : 3,
