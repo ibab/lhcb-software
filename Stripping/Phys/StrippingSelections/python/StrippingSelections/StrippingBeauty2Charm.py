@@ -210,6 +210,19 @@ config = {
         "Location"  : 'P2ConeVar3'
       }, 
     ], 
+      'PVReFit' : [
+    ],
+    
+    'RawEvents' : [
+     'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
+    'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',
+    'StrippingB02DKD2HHHBeauty2CharmLine',
+    'StrippingB02DKD2Pi0HHHMergedBeauty2CharmLine',   
+    'StrippingB02DKD2Pi0HHHResolvedBeauty2CharmLine',
+    'StrippingB02DPiD2HHHBeauty2CharmLine',
+    'StrippingB02DPiD2Pi0HHHMergedBeauty2CharmLine',
+    'StrippingB02DPiD2Pi0HHHResolvedBeauty2CharmLine'
+    ],
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,
             'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000,
@@ -239,15 +252,15 @@ config = {
     #'B02D0D0Beauty2CharmLine'   : 1.0,
     #'B02DDWSBeauty2CharmLine'   : 1.0,
     #'B2D0DD02K3PiBeauty2CharmLine' : 1.0
-    },
+    }, 
     'GECNTrkMax'   : 500
-    }
+   }
 
 #\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\#
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Dstar','HH','HHH',
-                              'PID','FlavourTagging','RelatedInfoTools', '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','PVReFit','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -380,10 +393,17 @@ class Beauty2CharmConf(LineBuilder):
             hlt = "(HLT_PASS_RE('Hlt2Topo.*Decision') | "\
                   "HLT_PASS_RE('Hlt2IncPhi.*Decision'))"
 
+           
+            if ((name in config['RawEvents'])):
+                rawevent = ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"] 
+            else:
+                rawevent = []
             sline = StrippingLine(name,protoLine.prescale(line,name,config),
                                   selection=tmpSel,checkPV=True,FILTER=filter,
                                   HLT=hlt,
-                                  EnableFlavourTagging = (name in config['FlavourTagging']), 
+                                  EnableFlavourTagging = (name in config['FlavourTagging']),
+                                  RequiredRawEvents = rawevent, 
+                                  ReFitPVs = (name in config['PVReFit']),
                                   RelatedInfoTools = config['RelatedInfoTools'] )
 
             self.registerLine(sline)
