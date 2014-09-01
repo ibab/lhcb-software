@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-09-01 - John Back
+ - Updated Pythia8 includes in EvtPythiaEngine and EvtPythiaRandom.
+
 ! 2014-04-28 - Marco Clemencic
  - Fixes to compile against Pythia8 183 (with CMake).
 

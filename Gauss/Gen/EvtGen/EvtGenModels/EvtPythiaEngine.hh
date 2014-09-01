@@ -28,8 +28,8 @@
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtVector4R.hh"
 
-#include "Pythia.h"
-#include "ParticleData.h"
+#include "Pythia8/Pythia.h"
+#include "Pythia8/ParticleData.h"
 
 #include <string>
 #include <vector>

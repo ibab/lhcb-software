@@ -23,7 +23,7 @@
 
 #include "EvtGenBase/EvtRandom.hh"
 
-#include "Basics.h"
+#include "Pythia8/Basics.h"
 
 class EvtPythiaRandom : public Pythia8::RndmEngine {
 

@@ -28,7 +28,7 @@
 #include "EvtGenBase/EvtExtGeneratorCommandsTable.hh"
 #include "EvtGenModels/EvtPythia6CommandConverter.hh"
 
-#include "Event.h"
+#include "Pythia8/Event.h"
 
 #include <iostream>
 #include <sstream>
