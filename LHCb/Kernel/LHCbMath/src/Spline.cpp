@@ -742,14 +742,14 @@ Gaudi::Math::Interp2D::Interp2D::operator()  ( const double x ,
   const double zx    = x * m_scalex + m_shiftx ;
   const double zy    = y * m_scaley + m_shifty ;  
   //
-  TAxis*       xaxis = m_histo -> GetXaxis () ;
-  TAxis*       yaxis = m_histo -> GetYaxis() ;
+  const TAxis* xaxis = m_histo -> GetXaxis () ;
+  const TAxis* yaxis = m_histo -> GetYaxis() ;
   //
   const int    xbins = xaxis -> GetNbins () ;
   const int    ybins = yaxis -> GetNbins () ;
   //
-  const int    xbin  = xaxis -> FindBin ( zx ) ;
-  const int    ybin  = yaxis -> FindBin ( zy ) ;
+  const int    xbin  = xaxis -> FindFixBin ( zx ) ;
+  const int    ybin  = yaxis -> FindFixBin ( zy ) ;
   //
   if ( m_null ) 
   {

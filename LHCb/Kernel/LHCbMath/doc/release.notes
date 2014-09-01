@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-09-01 - Marco Clemencic
+ - Fixed compilation problem with head version of ROOT.
+
 ! 2014-08-29 - Manuel Tobias Schiller
  - add BloomFilter class
  - add unit test for BloomFilter class
