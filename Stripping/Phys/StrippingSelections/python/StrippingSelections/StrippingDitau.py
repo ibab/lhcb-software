@@ -84,15 +84,19 @@ __all__    = [
                'CUTS_GENERIC',
                'CUTS_MUON',
                'CUTS_ELECTRON',
-               'CUTS_PI',
+               'CUTS_MUPI',
+               'CUTS_EPI',
                'CUTS_COMBINATION',
-               'CUTS_MOTHER',
+               'CUTS_E_MOTHER',
+               'CUTS_MU_MOTHER',
                'parse',
                'get_mu_cut',
                'get_electron_cut',
-               'get_pi_cut',
+               'get_mupi_cut',
+               'get_epi_cut',
                'get_combination_cut',
-               'get_mother_cut',
+               'get_mu_mother_cut',
+               'get_e_mother_cut',
                'get_ditau_selection',
                'DitauConf', 
                'default_config' ]
@@ -100,26 +104,27 @@ __all__    = [
 
 lines_decays   = {
   # Name  : ( Decay descriptor   , Config name ),
-  'MuX'   : ( '[Z0 -> mu+ pi-]cc', 'CONFIG_MuX' ),
-  'MuXss' : ( '[Z0 -> mu+ pi+]cc', 'CONFIG_MuX' ),
-  'EX'    : ( '[Z0 -> e+  pi-]cc', 'CONFIG_EX'  ),
-  'EXss'  : ( '[Z0 -> e+  pi+]cc', 'CONFIG_EX'  ),
+  'MuX'   : ( '[Z0 -> mu+ pi-]cc', 'CONFIG' ),
+  'MuXss' : ( '[Z0 -> mu+ pi+]cc', 'CONFIG' ),
+  'EX'    : ( '[Z0 -> e+  pi-]cc', 'CONFIG'  ),
+  'EXss'  : ( '[Z0 -> e+  pi+]cc', 'CONFIG'  ),
 }
 
 default_config = {
   'NAME'        : 'Ditau',
   'WGs'         : [ 'QEE' ],
   'BUILDERTYPE' : 'DitauConf',
-  'STREAMS'     : { 'EW'},
+  'STREAMS'     : ['EW'],
 
   # Configuration for isolated muon + track (MuX)
-  'CONFIG_MuX'  : {
+  'CONFIG'  : {
 
     # Preambles
     'prescale'  : 1.0,
     'postscale' : 1.0,
-    'HLT'       : "HLT_PASS('Hlt2SingleMuonHighPTDecision')",  # PT > 10 GeV
-    
+    'HLTMuon'       : "HLT_PASS('Hlt2SingleMuonHighPTDecision')",  # PT > 10 GeV
+    'HLTElectron'       : "HLT_PASS('Hlt2SingleTFElectronDecision') | HLT_PASS('Hlt2SingleTFVHighPtElectronDecision') ",  # PT10(tight) | PT15
+
     # Cuts on all single child ( mu / pi )
     'min_TRPCHI2'       : 0.01, # 0.01, 
     'max_BPVIP'         : 1 * mm, # 0.5 * mm,
@@ -130,25 +135,11 @@ default_config = {
     'mu_min_FracCone05E': 0.7,
 
     # Track only (StdAllNoPIDsPions)
-    'pi_min_PT'         : 3 * GeV, # 3
-    'pi_min_FracCone05E': 0.1,
+    'mupi_min_PT'         : 3 * GeV, # 3
+    'mupi_min_FracCone05E': 0.1,
 
     # Cut on ditau
-    'mother_min_MM'     : 11 * GeV, # M**2 >= 4*PT1*PT2
-  } ,
-
-  # Configuration for isolated electron + track (EX)
-  'CONFIG_EX' : {
-    
-    # Preambles
-    'prescale'  : 1.0,
-    'postscale' : 1.0,
-    'HLT'       : "HLT_PASS('Hlt2SingleTFElectronDecision') | HLT_PASS('Hlt2SingleTFVHighPtElectronDecision') ",  # PT10(tight) | PT15
-
-    # Cuts on all single child ( e / pi )
-    'min_TRPCHI2'     : 0.01,
-    'max_BPVIP'       : 1 * mm,
-    'max_Cone_N'      : 2,
+    'mu_mother_min_MM'     : 11 * GeV, # M**2 >= 4*PT1*PT2
     
     # Electron only
     'e_min_PT'          : 10. * GeV,
@@ -159,22 +150,13 @@ default_config = {
     'e_max_CaloHcalE'   : 0.05,  # Fraction of P
     
     # Track only (StdAllNoPIDsPions)
-    'pi_min_PT'         : 2 * GeV,
-    'pi_min_FracCone05E': 0.1,
+    'epi_min_PT'         : 2 * GeV,
+    'epi_min_FracCone05E': 0.1,
 
     # Mother cuts
-    'mother_min_MM'     : 8 * GeV, # M**2 >= 4*PT1*PT2
-  } ,
+    'e_mother_min_MM'     : 8 * GeV, # M**2 >= 4*PT1*PT2
+  } 
 
-  # Configuration for isolated muon + 3-prongs (Mu3P)
-  'CONFIG_Mu3P' : {
-      # FUTURE IMPLEMENTATION
-  },
-
-  # Configuration for 3-prongs + 3-prongs (3P3P)
-  'CONFIG_3P3P' : {
-      # FUTURE IMPLEMENTATION
-  }, 
 }
 
 
@@ -201,17 +183,26 @@ CUTS_ELECTRON = [
   '{e_max_CaloHcalE}*P  > PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)',
 ]
 
-CUTS_PI = [
-  '{pi_min_PT}          < PT',
-  '{pi_min_FracCone05E} < E / ( E + SUMCONE( 0.5, E, "Phys/StdAllNoPIDsPions" ) ) ',
+CUTS_MUPI = [
+  '{mupi_min_PT}          < PT',
+  '{mupi_min_FracCone05E} < E / ( E + SUMCONE( 0.5, E, "Phys/StdAllNoPIDsPions" ) ) ',
+]
+
+CUTS_EPI = [
+  '{epi_min_PT}          < PT',
+  '{epi_min_FracCone05E} < E / ( E + SUMCONE( 0.5, E, "Phys/StdAllNoPIDsPions" ) ) ',
 ]
 
 CUTS_COMBINATION = [
   'AALLSAMEBPV',
 ]
 
-CUTS_MOTHER = [
-  '{mother_min_MM} < MM',
+CUTS_MU_MOTHER = [
+  '{mu_mother_min_MM} < MM',
+]
+
+CUTS_E_MOTHER = [
+  '{e_mother_min_MM} < MM',
 ]
 
 
@@ -225,14 +216,21 @@ def get_mu_cut(config):
 def get_electron_cut(config):
   return parse( CUTS_GENERIC + CUTS_ELECTRON, config )
 
-def get_pi_cut(config):
-  return parse( CUTS_GENERIC + CUTS_PI, config )
+def get_mupi_cut(config):
+  return parse( CUTS_GENERIC + CUTS_MUPI, config )
+
+def get_epi_cut(config):
+  return parse( CUTS_GENERIC + CUTS_EPI, config )
 
 def get_combination_cut(config):
   return parse( CUTS_COMBINATION, config )
 
-def get_mother_cut(config):
-  return parse( CUTS_MOTHER, config )
+def get_mu_mother_cut(config):
+  return parse( CUTS_MU_MOTHER, config )
+
+def get_e_mother_cut(config):
+  return parse( CUTS_E_MOTHER, config )
+
 
 
 
@@ -246,6 +244,7 @@ from StandardParticles import * # StdAllNoPIDsMuons, StdAllNoPIDsElectrons, StdA
 
 def get_ditau_selection(name, decay, config):
 
+  mother_cuts      = dict()
   daughters_cuts   = dict()
   req_selections   = list()
 
@@ -253,28 +252,45 @@ def get_ditau_selection(name, decay, config):
     daughters_cuts['mu+'] = get_mu_cut( config )
     daughters_cuts['mu-'] = get_mu_cut( config )
     req_selections.append( StdAllLooseMuons ) # StdAllLooseMuons ) # StdAllNoPIDsMuons
-
+    
   if ' e' in decay: 
     daughters_cuts['e+'] = get_electron_cut( config )
     daughters_cuts['e-'] = get_electron_cut( config )
     req_selections.append( StdAllNoPIDsElectrons ) # StdAllNoPIDsElectrons
 
-  if ' pi' in decay: 
-    daughters_cuts['pi+'] = get_pi_cut( config )
-    daughters_cuts['pi-'] = get_pi_cut( config )
-    req_selections.append( StdAllNoPIDsPions ) # StdAllNoPIDsPions
+  if ' pi' in decay:
+   if ' mu' in decay:	   
+     daughters_cuts['pi+'] = get_mupi_cut( config )
+     daughters_cuts['pi-'] = get_mupi_cut( config )
+     req_selections.append( StdAllNoPIDsPions ) # StdAllNoPIDsPions
+   elif ' e' in decay:
+     daughters_cuts['pi+'] = get_epi_cut( config ) 
+     daughters_cuts['pi-'] = get_epi_cut( config )
+     req_selections.append( StdAllNoPIDsPions ) # StdAllNoPIDsPions
 
+  if ' mu' in decay:
+   algo = CombineParticles(name+'_Combine',
+                           DecayDescriptor     = decay,
+                           DaughtersCuts       = daughters_cuts,
+                           # DaughtersCuts       = {},
+                           # MotherCut           = 'ALL',
+                           MotherCut           = get_mu_mother_cut(config),
+                           CombinationCut      = get_combination_cut(config),
+                           ParticleCombiners   = {'':'MomentumCombiner'},
+                           # WriteP2PVRelations  = False,
+                          )
+  elif ' mu' not in decay:
+   algo = CombineParticles(name+'_Combine',
+                           DecayDescriptor     = decay,
+                           DaughtersCuts       = daughters_cuts,
+                           # DaughtersCuts       = {},   
+                           # MotherCut           = 'ALL',
+                           MotherCut           = get_e_mother_cut(config),
+                           CombinationCut      = get_combination_cut(config),
+                           ParticleCombiners   = {'':'MomentumCombiner'},
+                           # WriteP2PVRelations  = False,
+                          )
 
-  algo = CombineParticles(name+'_Combine',
-    DecayDescriptor     = decay,
-    DaughtersCuts       = daughters_cuts,
-    # DaughtersCuts       = {},
-    # MotherCut           = 'ALL',
-    MotherCut           = get_mother_cut(config),
-    CombinationCut      = get_combination_cut(config),
-    ParticleCombiners   = {'':'MomentumCombiner'},
-    # WriteP2PVRelations  = False,
-  )
 
   return Selection(name+'_Selection', Algorithm=algo, RequiredSelections=req_selections)
 
@@ -303,8 +319,13 @@ class DitauConf(LineBuilder):
 
       selection = get_ditau_selection(fullname, decay, config)
 
+      if 'mu' in decay:
+       trigger=config['HLTMuon']
+      elif 'e' in decay:
+       trigger=config['HLTElectron']
+
       line = StrippingLine( fullname + 'Line',
-        HLT               = config['HLT'],
+        HLT               = trigger,
         prescale          = config['prescale'],
         postscale         = config['postscale'],
         checkPV           = True,
