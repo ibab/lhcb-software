@@ -1,6 +1,6 @@
 // $Id: PresenterInformation.cpp,v 1.1 2010-08-12 15:43:25 robbep Exp $
 // This class
-#include "PresenterInformation.h" 
+#include "Presenter/PresenterInformation.h" 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
 //====================================================================

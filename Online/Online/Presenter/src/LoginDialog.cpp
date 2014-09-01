@@ -12,8 +12,8 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 
 // Local
-#include "PresenterMainFrame.h"
-#include "LoginDialog.h"
+#include "Presenter/PresenterMainFrame.h"
+#include "Presenter/LoginDialog.h"
 
 using namespace pres;
 

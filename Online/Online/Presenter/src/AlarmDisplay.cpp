@@ -6,8 +6,8 @@
 #include <TGMsgBox.h>
 
 #include "AlarmDisplay.h"
-#include "PresenterMainFrame.h"
-#include "PresenterInformation.h"
+#include "Presenter/PresenterMainFrame.h"
+#include "Presenter/PresenterInformation.h"
 #include "PageDescriptionTextView.h"
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OnlineHistDB/OMAMessage.h"

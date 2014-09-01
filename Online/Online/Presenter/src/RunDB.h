@@ -5,7 +5,7 @@
 // Include files
 #include <string>
 #include <vector>
-#include "PresenterInformation.h"
+#include "Presenter/PresenterInformation.h"
 
 // forward declarations
 namespace boost {

@@ -12,7 +12,7 @@
 #pragma warning( pop )
 #endif
 
-#include "presenter.h"
+#include "Presenter/presenter.h"
 
 class PresenterInformation;
 class Archive;
@@ -44,7 +44,7 @@ public:
   /// Contructor
   IntervalPickerData( ) : m_mode( TimeInterval ) , m_startRun( 0 ) ,
                           m_endRun( 0 ),
-                          m_startDay(0), m_startMonth(0), m_startYear(0), 
+                          m_startDay(0), m_startMonth(0), m_startYear(0),
                           m_startHour(0), m_startMin(0), m_startSec(0) { } ;
 
   /// Destructor

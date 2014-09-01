@@ -24,8 +24,8 @@
 #include <TGComboBox.h>
 
 // Local
-#include "ReferenceDialog.h"
-#include "PresenterMainFrame.h"
+#include "Presenter/ReferenceDialog.h"
+#include "Presenter/PresenterMainFrame.h"
 
 using namespace pres;
 

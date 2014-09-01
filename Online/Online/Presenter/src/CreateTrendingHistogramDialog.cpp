@@ -19,7 +19,7 @@
 #include "OnlineHistDB/OnlineHistDBEnv.h"
 
 // This class
-#include "CreateTrendingHistogramDialog.h"
+#include "Presenter/CreateTrendingHistogramDialog.h"
 
 ClassImp(CreateTrendingHistogramDialog)
 

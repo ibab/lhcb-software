@@ -1,5 +1,5 @@
 // $Id: IntervalPicker.cpp,v 1.15 2010-10-01 12:54:11 frankb Exp $
-#include "IntervalPicker.h"
+#include "Presenter/IntervalPicker.h"
 
 // ROOT
 #include <TGButton.h>
@@ -11,7 +11,7 @@
 #include <TGMsgBox.h>
 
 // Local
-#include "PresenterMainFrame.h"
+#include "Presenter/PresenterMainFrame.h"
 #include "Archive.h"
 #include "RunDB.h"
 

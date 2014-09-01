@@ -3,8 +3,8 @@
 
 #include <string>
 
-#include "dic.hxx"
-#include "presenter.h"
+#include "dim/dic.hxx"
+#include "Presenter/presenter.h"
 
 // forward declaration
 namespace boost {

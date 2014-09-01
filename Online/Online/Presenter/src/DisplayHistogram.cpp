@@ -27,8 +27,8 @@
 #include "OnlineHistDB/OnlineHistogram.h"
 #include "OMAlib/OMAlib.h"
 // local
-#include "DisplayHistogram.h"
-#include "presenter.h"
+#include "Presenter/DisplayHistogram.h"
+#include "Presenter/presenter.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : DisplayHistogram

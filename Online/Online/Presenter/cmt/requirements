@@ -24,7 +24,15 @@ use CLHEP         v*  LCG_Interfaces
 
 # Application building rule
 #============================================================================
-document rootcint cintBootstrap cintBootstrap.h
+# Fix to work with ROOT 6
+apply_pattern install_more_includes more=Presenter
+
+macro cintBootstrapDict_output  "$(PRESENTERROOT)/$(tag)/dict/cintBootstrapDict.cpp"
+macro cintBootstrapDict_deps    "../src/cintBootstrap.h"
+macro cintBootstrapDict_command "mkdir -p $(PRESENTERROOT)/$(tag)/dict && rootcint -f $(PRESENTERROOT)/$(tag)/dict/cintBootstrapDict.cpp -I$(PRESENTERROOT) -inlineInputHeader $(cintBootstrapDict_deps) ../src/LinkDef.h && (if [ -e $(PRESENTERROOT)/$(tag)/dict/cintBootstrapDict_rdict.pcm ] ; then $(install_command) $(PRESENTERROOT)/$(tag)/dict/cintBootstrapDict_rdict.pcm ${CMTINSTALLAREA}/$(tag)/lib ; fi)"
+apply_pattern CallCommand target=cintBootstrapDict
+
+# document rootcint cintBootstrap cintBootstrap.h
 
 application presenter "$(PRESENTERROOT)/$(tag)/dict/*.cpp  *.cpp "
 
@@ -43,7 +51,7 @@ macro_append Boost_linkopts ' $(Boost_linkopts_thread) '
 macro_append Boost_linkopts ' $(Boost_linkopts_system) '
 macro_append Boost_linkopts ' $(Boost_linkopts_regex) '
 
-macro_append presenter_dependencies " cintBootstrap "
+macro_append presenter_dependencies " cintBootstrapDict "
 
 # Remove very annoying boost warnings
 private

@@ -20,8 +20,8 @@
 #include <TGComboBox.h>
 
 // Local
-#include "ElogDialog.h"
-#include "PresenterMainFrame.h"
+#include "Presenter/ElogDialog.h"
+#include "Presenter/PresenterMainFrame.h"
 
 using namespace pres;
 

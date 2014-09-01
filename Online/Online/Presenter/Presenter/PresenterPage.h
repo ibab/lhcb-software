@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef PRESENTERPAGE_H 
+#ifndef PRESENTERPAGE_H
 #define PRESENTERPAGE_H 1
 
 // Include files
@@ -12,8 +12,8 @@ class DimBrowser;
 class TCanvas;
 class TText;
 
-#include "DisplayHistogram.h"
-#include "PresenterInformation.h"
+#include "Presenter/DisplayHistogram.h"
+#include "Presenter/PresenterInformation.h"
 
 struct TaskHistos {
   std::string name;
@@ -42,7 +42,7 @@ struct PadContent {
   bool  hasTitle;
   std::vector<DisplayHistogram*> objects;
 };
-  
+
 
 /** @class PresenterPage PresenterPage.h
  *  This describes the current page in the Presenter
@@ -51,9 +51,9 @@ struct PadContent {
  *  @date   2011-02-09
  */
 class PresenterPage {
-public: 
+public:
   /// Standard constructor
-  PresenterPage( ); 
+  PresenterPage( );
 
   virtual ~PresenterPage( ); ///< Destructor
 
@@ -70,16 +70,16 @@ public:
 
   //== Add a simple histo on the page
   void addSimpleHisto ( std::string dimName, OnlineHistogram* onlH, OnlineHistDB* histDB, std::string partition="LHCb" );
-  
+
   //== Set the DIM browser
   void setDimBrowser( DimBrowser* br )  { m_dimBrowser = br; }
 
   //== OnlineHistograms from DB
   std::vector<OnlineHistoOnPage*>& onlineHistos() { return m_onlineHistosOnPage; }
-  
+
   //== Simple display of pages built by AddDimHistos
   void simpleDisplay (  TCanvas* editorCanvas, OMAlib* analysisLib );
-  
+
   //== Prepare the list of histogram to access
   void prepareAccess( OnlineHistDB* histDB, std::string& partition );
 
@@ -106,7 +106,7 @@ public:
 
   bool buildAnalysisHistos (OMAlib* analysisLib, bool update );
 
-  void loadFromArchive( Archive* archive, 
+  void loadFromArchive( Archive* archive,
                         const std::string & timePoint,
                         const std::string & pastDuration,
                         bool hasChanged = false );
@@ -122,17 +122,17 @@ public:
   void fillTrendingPlots ( unsigned int startTime, unsigned int endTime, bool update=false );
 
   void prepareDisplayHistos();
-  
+
   std::vector<DisplayHistogram*>& displayHistos() { return m_displayHistograms; }
 
   bool okForSave(); /// All histograms properly defined.
 
   void drawBanner( std::string name, std::string source );
-  
+
   void updateBanner( std::string source="" );
 
   bool hasBanner() { return NULL != m_bannerPad; }
-  
+
 protected:
 
 private:

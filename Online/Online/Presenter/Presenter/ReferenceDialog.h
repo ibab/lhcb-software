@@ -1,5 +1,5 @@
 // $Id: $
-#ifndef REFERENCEDIALOG_H 
+#ifndef REFERENCEDIALOG_H
 #define REFERENCEDIALOG_H 1
 
 #ifdef WIN32
@@ -11,7 +11,7 @@
 #pragma warning( pop )
 #endif
 
-#include "presenter.h"
+#include "Presenter/presenter.h"
 
 class PresenterMainFrame;
 class TGComboBox;
@@ -31,9 +31,9 @@ class ReferenceDialog : public TGTransientFrame
 public:
   ReferenceDialog(PresenterMainFrame* gui, int width, int height);
   virtual ~ReferenceDialog();
-  
+
   void setParameters( std::string& tck, int& rRun );
-  
+
   void ok();
   void build();
   void CloseWindow();

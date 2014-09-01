@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2014-09-01 - Marco Clemencic
+ - Fixed CMake and CMT configuration for the latest ROOT 6 (use of .pcm files).
+
 ! 2014-01-07 - Marco Clemencic
  - Added CMakeLists.txt.
 

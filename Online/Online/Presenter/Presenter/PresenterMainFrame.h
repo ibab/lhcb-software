@@ -15,10 +15,10 @@
 #include <vector>
 #include <map>
 
-#include "PresenterInformation.h"
-#include "presenter.h"
+#include "Presenter/PresenterInformation.h"
+#include "Presenter/presenter.h"
 
-#include "PresenterPage.h"
+#include "Presenter/PresenterPage.h"
 
 class TObject;
 class TGDockableFrame;
@@ -175,15 +175,15 @@ public:
   void setPresenterMode(const pres::PresenterMode & presenterMode);
 
   void setDisplayModeVariable(const pres::DisplayMode & displayMode) { m_displayMode = displayMode;}
-  
+
   void displaySimpleHistos ( );
-  
+
   const pres::DisplayMode & displayMode() {return m_displayMode; }
   void setDatabaseMode(const pres::DatabaseMode & databaseMode);
 
   pres::DatabaseMode databaseMode() { return m_databaseMode; }
 
-  void setVerbosity(const pres::MsgLevel & verbosity); ///< Set verbosity level 
+  void setVerbosity(const pres::MsgLevel & verbosity); ///< Set verbosity level
 
   /// Set logbook configuration
   void setLogbookConfig(const std::string & logBookConfig) { m_logBookConfig = logBookConfig ; }
@@ -193,7 +193,7 @@ public:
   void setPbdbConfig(const std::string & pbdbConfig) { m_pbdbConfig = pbdbConfig ; } ;
 
   /// Set name of run database web host
-  void setRundbConfig(const std::string & rundbConfig) { 
+  void setRundbConfig(const std::string & rundbConfig) {
     m_rundbConfig = rundbConfig ; } ;
 
   /// Presenter verbosity
@@ -309,7 +309,7 @@ public:
 
   /// Enable page undocking
   void enablePageUndocking()  ;
- 
+
   /// Disable page undocking
   void disablePageUndocking()  ;
 
@@ -375,13 +375,13 @@ public:
   TCanvas* editorCanvas;
   TRootEmbeddedCanvas* editorEmbCanvas;
 
-  /// Load a web page 
+  /// Load a web page
   void loadWebPage( Int_t item ) ;
 
   /// set partition
-  void setPartition( const std::string & partition ) { 
-    m_presenterInfo.setPartition( partition ) ; } ; 
-  
+  void setPartition( const std::string & partition ) {
+    m_presenterInfo.setPartition( partition ) ; } ;
+
   /// get presenter mode
   const pres::PresenterMode & presenterMode( ) const {
     return m_presenterInfo.presenterMode() ; } ;
@@ -395,11 +395,11 @@ public:
     m_presenterInfo.setPresenterMode( mode ) ; };
 
   /// set the current page name
-  void setCurrentPageName( const std::string & pageName ) { 
+  void setCurrentPageName( const std::string & pageName ) {
     m_currentPageName = pageName ; } ;
 
   /// Set the path for images
-  void setImagePath(const std::string & imagePath) { 
+  void setImagePath(const std::string & imagePath) {
     m_imagePath = imagePath; };
 
   /// Set format for image saving
@@ -407,18 +407,18 @@ public:
     m_dumpFormat = dumpFormat; } ;
 
   PresenterPage& myPage() { return m_presenterPage; }
-  
+
   void reAccessPage();  // After an alarm, if refresh, reload from database.
 
-  void setOfflineContext( bool ctxt, std::string processing, std::string eventType )  { 
-    m_presenterInfo.setOfflineContext( ctxt ); 
-    m_presenterInfo.setProcessing( processing ); 
-    m_presenterInfo.setEventType( eventType ); 
+  void setOfflineContext( bool ctxt, std::string processing, std::string eventType )  {
+    m_presenterInfo.setOfflineContext( ctxt );
+    m_presenterInfo.setProcessing( processing );
+    m_presenterInfo.setEventType( eventType );
   }
 
   void getDatabaseWriter( std::string& pass, std::string& user, std::string& name );
 
-  void setShiftCrew( bool crew ) { m_shiftCrew = crew; }  
+  void setShiftCrew( bool crew ) { m_shiftCrew = crew; }
 
  private:
   UInt_t            m_initWidth;
@@ -621,7 +621,7 @@ public:
   TObject*   m_histogramIdItem;
 
   RunDB * m_runDb ; ///< Interface to run database
-  
+
   std::string m_weblink ; ///< Name of web link to open
 
   std::vector<std::string> m_histoTimerName;
@@ -693,7 +693,7 @@ public:
   void switchToRunNavigation( bool on ) ;
 
   /// Open and select the given page in the histogram tree
-  TGListTreeItem * openHistogramTreeAt( const std::string & pageName ) ; 
+  TGListTreeItem * openHistogramTreeAt( const std::string & pageName ) ;
 
   /// Delete the node and all its children
   void deleteTreeChildrenItemsUserData(TGListTreeItem* node);

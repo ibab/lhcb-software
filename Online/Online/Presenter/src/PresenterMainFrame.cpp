@@ -1,6 +1,6 @@
 // $Id: PresenterMainFrame.cpp,v 1.342 2010-10-19 13:25:42 ggiacomo Exp $
 // This class
-#include "PresenterMainFrame.h"
+#include "Presenter/PresenterMainFrame.h"
 
 // STL
 #include <algorithm>
@@ -68,22 +68,22 @@
 
 // Local
 #include "HistogramIdentifier.h"
-#include "LoginDialog.h"
-#include "DatabasePagePathDialog.h"
-#include "HistoPropDialog.h"
+#include "Presenter/LoginDialog.h"
+#include "Presenter/DatabasePagePathDialog.h"
+#include "Presenter/HistoPropDialog.h"
 #include "Archive.h"
-#include "IntervalPicker.h"
+#include "Presenter/IntervalPicker.h"
 #include "../icons/presenter32.xpm"
 #include "icons.h"
 #include "Elog.h"
-#include "ElogDialog.h"
-#include "ReferenceDialog.h"
+#include "Presenter/ElogDialog.h"
+#include "Presenter/ReferenceDialog.h"
 #include "ShiftDB.h"
 #include "ProblemDB.h"
 #include "RunDB.h"
 #include "PageDescriptionTextView.h"
 #include "AlarmDisplay.h"
-#include "CreateTrendingHistogramDialog.h"
+#include "Presenter/CreateTrendingHistogramDialog.h"
 
 PresenterMainFrame* gPresenter = 0;
 

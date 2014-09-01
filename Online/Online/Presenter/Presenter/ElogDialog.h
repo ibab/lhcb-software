@@ -10,7 +10,7 @@
 #pragma warning( pop )
 #endif
 
-#include "presenter.h"
+#include "Presenter/presenter.h"
 
 class PresenterMainFrame;
 class TGComboBox;
@@ -30,11 +30,11 @@ class ElogDialog : public TGTransientFrame
 public:
   ElogDialog(PresenterMainFrame* gui, int width, int height);
   virtual ~ElogDialog();
-  
-  void setParameters( std::string& logbook, std::string& username, std::string& system, 
-                      std::string& subject, std::string& message, std::string& runNumber, 
+
+  void setParameters( std::string& logbook, std::string& username, std::string& system,
+                      std::string& subject, std::string& message, std::string& runNumber,
                       int& isOK );
-   
+
   void ok();
   void elog();
   void build();

@@ -24,8 +24,8 @@
 #include "OnlineHistDB/OnlineHistDB.h"
 
 // Local
-#include "PresenterMainFrame.h"
-#include "DatabasePagePathDialog.h"
+#include "Presenter/PresenterMainFrame.h"
+#include "Presenter/DatabasePagePathDialog.h"
 
 using namespace pres;
 

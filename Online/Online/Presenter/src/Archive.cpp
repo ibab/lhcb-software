@@ -27,8 +27,8 @@
 //#include "Gaucho/MonObject.h"
 
 // Local
-#include "PresenterInformation.h"
-#include "DisplayHistogram.h"
+#include "Presenter/PresenterInformation.h"
+#include "Presenter/DisplayHistogram.h"
 
 //=============================================================================
 // compare date of two files

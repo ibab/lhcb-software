@@ -22,8 +22,8 @@
 #include <TGFSComboBox.h>
 #include <TGLabel.h>
 
-#include "HistoPropDialog.h"
-#include "PresenterMainFrame.h"
+#include "Presenter/HistoPropDialog.h"
+#include "Presenter/PresenterMainFrame.h"
 
 using namespace pres;
 

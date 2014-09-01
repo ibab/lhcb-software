@@ -32,7 +32,7 @@
 #include "OMAlib/OMAlib.h"
 
 // Local
-#include "PresenterMainFrame.h"
+#include "Presenter/PresenterMainFrame.h"
 
 using namespace boost::program_options;
 using namespace boost::filesystem;

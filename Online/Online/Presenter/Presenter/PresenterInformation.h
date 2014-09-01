@@ -2,7 +2,7 @@
 #ifndef PRESENTER_PRESENTERINFORMATION_H_
 #define PRESENTER_PRESENTERINFORMATION_H_
 
-#include "presenter.h"
+#include "Presenter/presenter.h"
 #include <ctime>
 
 /** @class PresenterInformation PresenterInformation.h
