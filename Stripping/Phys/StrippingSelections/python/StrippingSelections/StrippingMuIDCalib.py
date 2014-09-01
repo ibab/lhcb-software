@@ -16,23 +16,6 @@ __author__  = [ 'S.Furcas', 'G.Lanfranchi', 'M.Palutan', 'A.Sarti', 'D.Milanes',
 __date__    = '23/08/2011'
 __version__ = '$Revision: 1.5 $'
 
-
-config_params = {    
-    'PromptPrescale'           : 0., #not used anymore 0.08 old prescale
-    'DetachedPrescale'         : 1.,
-    'DetachedNoMIPPrescale'    : 1, #0.3,
-    'DetachedNoMIPHiPPrescale' : 0.,
-    'DetachedNoMIPKPrescale'   : 1.,
-    'FromLambdacPrescale'      : 1.,
-    'KFromLambdacPrescale'     : 0.,
-    'PiFromLambdacPrescale'    : 0.,
-    'PFromLambdacPrescale'     : 0.,
-    'KISMUONFromLambdacPrescale' : 0.,
-    'PiISMUONFromLambdacPrescale': 0.,
-    'PISMUONFromLambdacPrescale' : 0.
-    }
-
-
 __all__     = ( 'MuIDCalibConf',
                 'makePromptSelection',
                 'makeDetachedSelection',
@@ -41,8 +24,28 @@ __all__     = ( 'MuIDCalibConf',
                 'makeDetachedNoMIPHiPSelection', 
                 'makeDetachedNoMIPKSelection',
                 'makeLambdacSelection',
-                'makeTISTOS'
+                'makeTISTOS',
+                'default_config'
                 )
+
+default_config = {
+    'NAME'        : 'MuIDCalib',
+    'WGs'         : ['Calibration'],
+    'BUILDERTYPE' : 'MuonIDCalibLines',
+    'CONFIG'      : {'PromptPrescale'           : 0., #not used anymore 0.08 old prescale
+                     'DetachedPrescale'         : 0.,
+                     'DetachedNoMIPPrescale'    : 1, #0.3,
+                     'DetachedNoMIPHiPPrescale' : 0.,
+                     'DetachedNoMIPKPrescale'   : 1.,
+                     'FromLambdacPrescale'      : 1.,
+                     'KFromLambdacPrescale'     : 0.,
+                     'PiFromLambdacPrescale'    : 0.,
+                     'PFromLambdacPrescale'     : 0.,
+                     'KISMUONFromLambdacPrescale' : 0.,
+                     'PiISMUONFromLambdacPrescale': 0.,
+                     'PISMUONFromLambdacPrescale' : 0.},
+    'STREAMS'     :  { 'PID' : ['StrippingMuIDCalib_JpsiFromBNoPIDNoMipLine', 'StrippingMuIDCalib_JpsiKFromBNoPIDNoMipLine', 'StrippingMuIDCalib_FromLambdacDecayLine'] }
+    }
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -54,8 +57,6 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsKaons, StdNoPIDsMuons, StdNoPIDsPions, StdNoPIDsProtons
 from StandardParticles import StdAllNoPIDsKaons, StdAllNoPIDsMuons, StdAllNoPIDsPions, StdAllNoPIDsProtons
 
-
-default_name = 'MuIDCalib'
 class MuIDCalibConf( LineBuilder ):
     __configuration_keys__ = ('PromptPrescale',           
                               'DetachedPrescale',         
@@ -120,6 +121,7 @@ class MuIDCalibConf( LineBuilder ):
         self.line_DetachedNoMIPK = StrippingLine( name + '_JpsiKFromBNoPIDNoMip', 
                                                   prescale = config[ 'DetachedNoMIPKPrescale' ], 
                                                   selection = self.sel_DetachedNoMIPK, 
+                                                  MDSTFlag = True,
                                                   RequiredRawEvents = ["Muon"] 
                                                   ) 
 
@@ -128,6 +130,7 @@ class MuIDCalibConf( LineBuilder ):
         self.line_Lambdac = StrippingLine( name + '_FromLambdacDecay', 
                                            prescale = config[ 'FromLambdacPrescale' ], 
                                            selection = self.sel_Lambdac, 
+                                           MDSTFlag = True,
                                            RequiredRawEvents = ["Muon"] 
                                            ) 
 
@@ -177,7 +180,7 @@ class MuIDCalibConf( LineBuilder ):
                                                   ) 
 
         #self.registerLine( self.line_Prompt )
-        self.registerLine( self.line_Detached )
+        #self.registerLine( self.line_Detached )
         self.registerLine( self.line_DetachedNoMIP )
         #self.registerLine( self.line_DetachedNoMIPHiP )
         self.registerLine( self.line_DetachedNoMIPK )
@@ -210,8 +213,8 @@ def makePromptSelection( name, muons ):
 
     combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
-                                    CombinationCut = "(ADAMASS('J/psi(1S)')<150*MeV)",
-                                    MotherCut = "(VFASPF(VCHI2/VDOF)<10) & ( " + child1cuts + " | " + child2cuts + " ) "
+                                    CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<5) & ( " + child1cuts + " | " + child2cuts + " ) "
                                     )
     return Selection( name, 
                       Algorithm = combination,
@@ -234,8 +237,8 @@ def makeDetachedSelection( name, muons ):
 
     combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
-                                    CombinationCut = "(ADAMASS('J/psi(1S)')<150*MeV)",
-                                    MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (BPVVDCHI2 > 225) & ( ( " + child1cuts + " ) | (" + child2cuts + " ) ) "
+                                    CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<5) & (BPVVDCHI2 > 225) & ( ( " + child1cuts + " ) | (" + child2cuts + " ) ) "
                                     )
     return Selection( name, 
                       Algorithm = combination,
@@ -255,7 +258,7 @@ def makeDetachedNoMIPSelection( name, muons ):
     combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
                                     CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
-                                    MotherCut = "(VFASPF(VCHI2/VDOF)<8) & (BPVVDCHI2 > 225) & ( ( " + tag1cuts + " ) | (" + tag2cuts + " ) ) "
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<5) & (BPVVDCHI2 > 225) & ( ( " + tag1cuts + " ) | (" + tag2cuts + " ) ) "
                                     )
     return Selection( name, 
                       Algorithm = combination,
@@ -274,7 +277,7 @@ def makeDetachedNoMIPNoPCutSelection( name, muons ):
     combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
                                     CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
-                                    MotherCut = "(VFASPF(VCHI2/VDOF)<8) & (BPVVDCHI2 > 225) & ( ( " + tag1cuts + " ) | (" + tag2cuts + " ) ) "
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<5) & (BPVVDCHI2 > 225) & ( ( " + tag1cuts + " ) | (" + tag2cuts + " ) ) "
                                     )
     return Selection( name, 
                       Algorithm = combination,
@@ -299,7 +302,7 @@ def makeDetachedNoMIPHiPSelection( name, muons ):
     combination = CombineParticles( DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                                     DaughtersCuts = { 'mu+' : mucocut , 'mu-' : mucocut },
                                     CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV)",
-                                    MotherCut = "(VFASPF(VCHI2/VDOF)<8) & (BPVVDCHI2 > 225) & ( ( " + child1cuts + " ) | (" + child2cuts + " ) ) "
+                                    MotherCut = "(VFASPF(VCHI2/VDOF)<5) & (BPVVDCHI2 > 225) & ( ( " + child1cuts + " ) | (" + child2cuts + " ) ) "
                                     )
     return Selection( name, 
                       Algorithm = combination,
@@ -307,7 +310,7 @@ def makeDetachedNoMIPHiPSelection( name, muons ):
 
 
 def makeDetachedNoMIPKSelection( name, jpsis, kaons ):
-    jpsi_cuts = "(VFASPF(VCHI2/VDOF)<15) &  (MIPCHI2DV(PRIMARY)>25)"
+    jpsi_cuts = "(VFASPF(VCHI2/VDOF)<5) &  (MIPCHI2DV(PRIMARY)>25)"
     combination = CombineParticles( DecayDescriptor = '[B+ -> J/psi(1S) K+]cc',
                                     DaughtersCuts = { "K+": "(MIPCHI2DV(PRIMARY)>25)" , 'J/psi(1S)' : jpsi_cuts },
                                     CombinationCut = "ADAMASS('B+') < 500.*MeV",

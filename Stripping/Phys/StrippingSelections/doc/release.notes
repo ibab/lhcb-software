@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Ricardo Vazquez Gomez
+ - Update the dictionary in StrippingMuIDCalib.py to match the new syntax.
+ - Remove JpsiFromBNoPIDLine as it is unused.
+ - Tighten Jpsi vertex chi for all lines to reduce retention 
+
 ! 2014-09-01 - Ronan Wallace
  - Fixed dictionary in StrippingDitau.py
 
