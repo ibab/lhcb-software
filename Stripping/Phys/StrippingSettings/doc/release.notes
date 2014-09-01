@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-01 - Roberta Cardinale
+ - Update LineConfigDictionaries_BandQ 
+
 ! 2014-09-01 - Ronan Wallace
  - Removed mention of 'units' from QEE dictionaries
 
