@@ -211,14 +211,14 @@ config = {
       }, 
     ], 
     'RawEvents' : [
-     'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
-    'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',
-    'StrippingB02DKD2HHHBeauty2CharmLine',
-    'StrippingB02DKD2Pi0HHHMergedBeauty2CharmLine',   
-    'StrippingB02DKD2Pi0HHHResolvedBeauty2CharmLine',
-    'StrippingB02DPiD2HHHBeauty2CharmLine',
-    'StrippingB02DPiD2Pi0HHHMergedBeauty2CharmLine',
-    'StrippingB02DPiD2Pi0HHHResolvedBeauty2CharmLine'
+    'B02DKPiPiD2HHHPIDBeauty2CharmLine',
+    'B02DPiPiPiD2HHHPIDBeauty2CharmLine',
+    'B02DKD2HHHBeauty2CharmLine',
+    'B02DKD2Pi0HHHMergedBeauty2CharmLine',   
+    'B02DKD2Pi0HHHResolvedBeauty2CharmLine',
+    'B02DPiD2HHHBeauty2CharmLine',
+    'B02DPiD2Pi0HHHMergedBeauty2CharmLine',
+    'B02DPiD2Pi0HHHResolvedBeauty2CharmLine'
     ],
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,
