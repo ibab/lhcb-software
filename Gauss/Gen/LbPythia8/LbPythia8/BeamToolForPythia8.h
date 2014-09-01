@@ -4,8 +4,8 @@
 
 // Include files
 // from Pythia8
-#include "BeamShape.h"
-#include "Settings.h"
+#include "Pythia8/BeamShape.h"
+#include "Pythia8/Settings.h"
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"

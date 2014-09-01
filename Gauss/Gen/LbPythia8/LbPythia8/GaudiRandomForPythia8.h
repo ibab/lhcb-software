@@ -3,7 +3,7 @@
 #define LBPYTHIA8_GAUDIRANDOMFORPYTHIA8_H 1
 
 // Include files
-#include "Basics.h"
+#include "Pythia8/Basics.h"
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
 

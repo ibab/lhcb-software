@@ -1,7 +1,7 @@
 #ifndef LBPYTHIA8_LHCBHOOKS_H 
 #define LBPYTHIA8_LHCBHOOKS_H 1
 
-#include "Pythia.h"
+#include "Pythia8/Pythia.h"
 
 /** @class LhcbHooks LhcbHooks.h LbPythia8/LhcbHooks.h
  *

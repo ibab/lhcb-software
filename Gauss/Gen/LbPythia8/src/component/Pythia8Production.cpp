@@ -12,16 +12,13 @@
 // from Event
 #include "Event/GenCollision.h"
 
-// from Pythia8
-#include "Pythia.h"
-#include "HepMCInterface.h"
-
 // Generators 
 #include "Generators/IBeamTool.h"
 
 // HepMC
 #include "HepMC/GenEvent.h"
 #include "HepMC/HEPEVT_Wrapper.h"
+#include "Pythia8/Pythia8ToHepMC.h"
 
 // LbPythia8
 #include "LbPythia8/GaudiRandomForPythia8.h" 
@@ -578,7 +575,7 @@ StatusCode Pythia8Production::toHepMC ( HepMC::GenEvent*     theEvent    ,
 
   
   //Convert from Pythia8 format to HepMC format
-  HepMC::I_Pythia8 conversion ;
+  HepMC::Pythia8ToHepMC conversion;
 
   // Force the verification of the HEPEVT  record 
   if ( m_validate_HEPEVT ) 

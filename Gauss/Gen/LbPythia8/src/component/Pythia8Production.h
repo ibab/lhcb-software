@@ -9,7 +9,7 @@
 #include "Generators/ICounterLogFile.h"
 
 // from Pythia8
-#include "Pythia.h"
+#include "Pythia8/Pythia.h"
 
 // LbPythia8.
 #include "LbPythia8/LhcbHooks.h"

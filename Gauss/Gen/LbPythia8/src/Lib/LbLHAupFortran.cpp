@@ -56,7 +56,7 @@ bool LbLHAupFortran::setInit() {
 //=============================================================================
 // Event routine
 //=============================================================================
-bool LbLHAupFortran::setEvent( int idProcIn ) {  
+bool LbLHAupFortran::setEvent( int idProcIn, double /*mRecalculate*/ ) {  
   Pythia8::hepeup_.idprup = idProcIn ;
 
   if ( ! fillHepEup() ) return false ;

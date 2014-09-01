@@ -2,8 +2,8 @@
 #define LBPYTHIA8_LBLHAUPFORTRAN_H 1
 
 // Include files
-#include "LesHouches.h"
-#include "LHAFortran.h"
+#include "Pythia8/LesHouches.h"
+#include "Pythia8/LHAFortran.h"
 
 class IProductionTool ;
 
@@ -25,7 +25,7 @@ public:
   bool setInit() ;
 
   /// Generate one event
-  bool setEvent( int idProcIn = 0 ) ;
+  bool setEvent( int idProcIn = 0, double mRecalculate = -1.0 ) ;
 
   /// Set production tool
   void setProductionTool( IProductionTool * tool )  {

@@ -4,6 +4,15 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-09-01 - John Back
+ - Updated the Pythia8 includes in various classes for Pythia 8.18x.
+   The conversion of the Pythia event to HepMC format within 
+   src/component/Pythia8Production.cpp must now use HepMC::Pythia8ToHepMC
+   instead of HepMC::I_Pythia, which no longer exists. Also, the virtual 
+   LbLHAupFortran::setEvent() function, which overloads that in 
+   Pythia8::LHAup, requires an additional 2nd argument (double mRecalculate) 
+   which does nothing.
+
 !======================== LbPythia8 v8r0 2014-07-24 ========================
 ! 2014-07-14 - Gloria Corti
  - Fix to be able to store all non-gluon gauge boson mediators (e.g. Z, W, ...)
