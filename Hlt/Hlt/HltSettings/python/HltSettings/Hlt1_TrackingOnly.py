@@ -94,16 +94,21 @@ class Hlt1_TrackingOnly( object ):
                                                ,   'AllL0VeloTT_TrNTHits'    : 16.
                                                ,   'AllL0VeloTT_GEC'         : 'Loose'
                                                ,   'AllL0VeloTT_ValidateTT'  : True
+                                               ,   'AllL0Block_PT'          : 500.
+                                               ,   'AllL0Block_P'           : 3000.
+                                               ,   'AllL0Block_IP'          : 0.000
+                                               ,   'AllL0Block_IPChi2'      : 0
+                                               ,   'AllL0Block_TrChi2'      : 2.
                                                ,   'AllL0VeloTTForw_Velo_NHits' : 9.
                                                ,   'AllL0VeloTTForw_Velo_Qcut'  : 3.
                                                ,   'AllL0VeloTTForw_IP'         : 0.0
-                                               ,   'AllL0VeloTTForw_PT'          : 300.
+                                               ,   'AllL0VeloTTForw_PT'          : 500.
                                                ,   'AllL0VeloTTForw_P'           : 3000.
                                                ,   'AllL0VeloTTForw_IPChi2'      : 0.
                                                ,   'AllL0VeloTTForw_TrChi2'      : 2.
                                                ,   'AllL0VeloTTForw_TrNTHits'    : 16.
                                                ,   'AllL0VeloTTForw_GEC'         : 'Loose'
-                                               ,   'AllL0VeloTTForw_ValidateTT'  : True
+                                               ,   'AllL0VeloTTForw_ValidateTT'  : False
                                                ,   'AllL0LifetimeUnbiased_Velo_Qcut'  : 3.
                                                ,   'AllL0LifetimeUnbiased_PT'          : 5000.
                                                ,   'AllL0LifetimeUnbiased_P'           : 15000.
@@ -265,7 +270,9 @@ class Hlt1_TrackingOnly( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0VeloTTForw', 'Hlt1TrackMuon',  'Hlt1TrackPhoton', ]
+        #lines =  ['Hlt1TrackAllL0Block', ]
+        lines = ['Hlt1TrackAllL0VeloTTForw',]
+        #lines = ['Hlt1TrackAllL0',]
         #lines =  [ 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton' ]
        
         return lines 

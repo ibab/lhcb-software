@@ -4,6 +4,12 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-09-02 - Sebastian Neubert
+ Hlt1_TrackingOnly:
+ - switched off validateTT for TrackAllL0VeloTTForw
+ - Added thresholds for en'block tracking
+ - Only run TrackAllL0VeloTTForw 
+
 !========================= HltSettings v6r5 2014-08-16 =========================
 
 ! 2014-07-16 - Gerhard Raven
