@@ -299,6 +299,7 @@ class HltConf(LHCbConfigurableUser):
                       , 53 : "HLT_PASS_RE('Hlt1TrackAllL0VeloTT.*Decision')"
                       , 52 : "HLT_PASS_RE('Hlt1TrackAllL0VeloTTForw.*Decision')"
                       , 56 : "HLT_PASS_RE('Hlt1TrackAllL0.*Decision')"
+                      , 60 : "HLT_PASS_RE('Hlt1TrackAllL0Block.*Decision')"
                       , 57 : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
                       , 58 : "HLT_PASS_RE('Hlt1TrackPhoton.*Decision')"
                       , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
@@ -764,7 +765,7 @@ class HltConf(LHCbConfigurableUser):
                                                                                                             , OutputHltSelReportsLocation = hlt1_selrep_loc
                                                                                                             , **sel_rep_opts )  )
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1, 'InputHltSelReportsLocation': hlt1_selrep_loc } )
-                         , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {} )
+                         , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {})
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt_vtxrep_loc } )
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc 
                                                                                                         ,'SourceID' : 1 } )
@@ -779,7 +780,7 @@ class HltConf(LHCbConfigurableUser):
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter', { 'InputHltSelReportsLocation': hlt2_selrep_loc,
                                                                                                        'SourceID' : 2 } )
                          )
-        
+    
         # make sure we only instantiate members which are used...
         instantiate = lambda name, cfg : Sequence( name, 
                                                    IgnoreFilterPassed = True, 

@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2014-09-02 Sebastian Neubert
+ - Added TrackAllL0Block line
+
 !========================= HltConf v12r0 2014-08-16 =========================
 
 ! 2014-07-31 - Gerhard Raven
