@@ -138,7 +138,7 @@ LoKi::Hlt1::Match::operator()
 
 #endif
 
-  std::for_each( std::begin(*arg1), std::end(*arg2)
+  std::for_each( std::begin(*arg1), std::end(*arg1)
                , [&](const Hlt::Candidate *c1)
                  { auto* t1 = c1 ? c1->get<LHCb::Track> () : nullptr ;
                    if ( !t1 ) return ;
