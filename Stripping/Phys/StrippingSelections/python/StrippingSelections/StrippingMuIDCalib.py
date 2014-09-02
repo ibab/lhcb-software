@@ -31,7 +31,7 @@ __all__     = ( 'MuIDCalibConf',
 default_config = {
     'NAME'        : 'MuIDCalib',
     'WGs'         : ['Calibration'],
-    'BUILDERTYPE' : 'MuonIDCalibLines',
+    'BUILDERTYPE' : 'MuIDCalibConf',
     'CONFIG'      : {'PromptPrescale'           : 0., #not used anymore 0.08 old prescale
                      'DetachedPrescale'         : 0.,
                      'DetachedNoMIPPrescale'    : 1, #0.3,
@@ -44,7 +44,9 @@ default_config = {
                      'KISMUONFromLambdacPrescale' : 0.,
                      'PiISMUONFromLambdacPrescale': 0.,
                      'PISMUONFromLambdacPrescale' : 0.},
-    'STREAMS'     :  { 'PID' : ['StrippingMuIDCalib_JpsiFromBNoPIDNoMipLine', 'StrippingMuIDCalib_JpsiKFromBNoPIDNoMipLine', 'StrippingMuIDCalib_FromLambdacDecayLine'] }
+    'STREAMS'     :  { 'PID' : ['StrippingMuIDCalib_JpsiFromBNoPIDNoMip', 
+                                'StrippingMuIDCalib_JpsiKFromBNoPIDNoMip', 
+                                'StrippingMuIDCalib_FromLambdacDecay'] }
     }
 
 from Gaudi.Configuration import *
