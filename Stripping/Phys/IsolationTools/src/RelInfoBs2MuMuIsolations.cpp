@@ -130,7 +130,7 @@ std::string RelInfoBs2MuMuIsolations::infoPath(void){ // check with Alex
 // Fill the related info with track variables 
 //=============================================================================
 
-StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* part){ //, const LHCb::Particle *top){
+StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* part, const LHCb::Particle *top){
   
   m_otherB_mag=0.;
   m_otherB_angle=-1.;

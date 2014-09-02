@@ -38,7 +38,7 @@ class RelInfoBs2MuMuIsolations : public GaudiTool, virtual public IRelatedInfoTo
 
   virtual StatusCode initialize();    ///< Algorithm initialization
 
-  virtual StatusCode calculateRelatedInfo( const LHCb::Particle*); //, const LHCb::Particle*);
+  virtual StatusCode calculateRelatedInfo( const LHCb::Particle*, const LHCb::Particle*);
   
   virtual LHCb::RelatedInfoMap* getInfo(void);
 
