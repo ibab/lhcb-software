@@ -21,8 +21,10 @@ The ratio of the two yields is the proton reconstructione efficiency, and the
 ratio of this between proton and antiprotons is the proton detection asymmetry.
 
 Responsible: Alex Pearce <alex.pearce@cern.ch>
+Modified by Paolo Gandini
 Date: 21/08/2014
 """
+
 from GaudiKernel.SystemOfUnits import MeV, mm
 from Configurables import CombineParticles, FilterDesktop
 from StandardParticles import (
@@ -43,7 +45,7 @@ __all__ = [
 # Dictionary of cut variables and values
 default_config = {
     "NAME": "ProtonAsym",
-    "WGs": ["Charm"],
+    "WGs": ["Semileptonic"],
     "BUILDERTYPE": "ProtonAsymBuilder",
     "CONFIG": {
         # Are the candidates to be stored on microDST, as opposed to full?
@@ -77,36 +79,36 @@ default_config = {
         "HLTLcst2LcpipiLc2Kpi": None,
 
         # Partial Lambda_c mass window, taken from TGenPhaseSpace studies
-        "LcPartialMassMin": 620*MeV,
+        "LcPartialMassMin": 700*MeV, #620 is the minimum -> cut a bit harder where most of bkg is
         "LcPartialMassMax": 1360*MeV,
         # Minimum sum of Lambda_c daughters' tranverse momentum
         "LcPartialPTSum": 1500.0*MeV,
         # Minimum Lambda_c flight distance fit quality per DOF
-        "LcPartialFDCHI2": 50.0,
+        "LcPartialFDCHI2": 36.0, #50
         # Maximum Lambda_c pairwise daughter distance of closest approach
-        "LcPartialDOCACHI2": 20.0,
+        "LcPartialDOCACHI2": 15.0, #20
         # Maximum Lambda_c vertex fit quality per DOF
-        "LcPartialVCHI2DOF": 15.0,
+        "LcPartialVCHI2DOF": 10.0, #50
 
         # Partial Sigma_c mass window, taken from TGenPhaseSpace studies
         "ScPartialMassMin": 1000*MeV,
         "ScPartialMassMax": 1600*MeV,
         # Minimum Lambda_c vertex displacement wrt Sigma_c vertex along z
-        "ScMinZ": 0.0*mm,
+        "ScMinZ": 0.2*mm,
         # Sigma_c maximum vertex quality per DOF
-        "ScVCHI2DOF": 15.0,
+        "ScVCHI2DOF": 10.0, #15
         # Maximum Sigma_c impact parameter chi2
-        "ScBPVIPCHI2": 20.0,
+        "ScBPVIPCHI2": 15.0, #20
 
         # Partial Lambda_c* mass window, taken from TGenPhaseSpace studies
         "LcstPartialMassMin": 1300*MeV,
         "LcstPartialMassMax": 1660*MeV,
         # Minimum Lambda_c vertex displacement wrt Lambda_c* vertex along z
-        "LcstMinZ": 0.0*mm,
+        "LcstMinZ": 0.2*mm,
         # Lambda_c* maximum vertex quality per DOF
-        "LcstVCHI2DOF": 15.0,
+        "LcstVCHI2DOF": 10.0,
         # Maximum Lambda_c* impact parameter chi2
-        "LcstBPVIPCHI2": 20.0,
+        "LcstBPVIPCHI2": 15.0, #20
 
         # Partial Lambda_b0 mass window, taken from TGenPhaseSpace studies
         "LbToLc1piPartialMassMin": 3000*MeV,
@@ -115,11 +117,13 @@ default_config = {
         # Minimum transverse momentum of combined daughters
         "LbPTSum": 2000*MeV,
         # Lambda_b0 maximum vertex quality
-        "LbVCHI2DOF": 15.0,
+        "LbVCHI2DOF": 20.0, #15.00
         # Minimum Lambda_c vertex displacement wrt Lambda_b vertex along z
-        "LbMinZ": 0.0*mm,
+        "LbMinZ": 0.2*mm,
         # Maximum Lambda_b impact parameter chi2
-        "LbBPVIPCHI2": 20.0,
+        "LbBPVIPCHI2": 15.0, #20
+        # Minimum Lambda_b flight distance fit quality per DOF
+        "LbFDCHI2": 36.0, #50    
 
         # Partial B0/B+ mass window, taken from TGenPhaseSpace studies
         "BPartialMassMin": 3500*MeV,
@@ -127,18 +131,20 @@ default_config = {
         # Minimum transverse momentum of combined daughters
         "BPTSum": 2000*MeV,
         # B0/B+ maximum vertex quality
-        "BVCHI2DOF": 15.0,
+        "BVCHI2DOF": 20.0, #15
         # Minimum Lambda_c vertex displacement wrt B0/B+ vertex along z
-        "BMinZ": 0.0*mm,
+        "BMinZ": 0.2*mm,
         # Maximum B0/B+ impact parameter chi2
-        "BBPVIPCHI2": 20.0,
+        "BBPVIPCHI2": 15.0, #20
+        # Minimum B0/B+ flight distance fit quality per DOF
+        "BFDCHI2": 36.0, #50
 
         # Minimum final state track momentum
-        "TrackP": 3000.0*MeV,
+        "TrackP": 1000.0*MeV, #3000
         # Minimum final state track transverse momentum
-        "TrackPT": 500.0*MeV,
+        "TrackPT": 100.0*MeV, #500
         # Maximum final state track impact parameter chi^2
-        "TrackIPCHI2": 20.0,
+        "TrackIPCHI2": 12.0, #20
         # Minimum Kaon ANN PID
         "ProbNNk": 0.2,
         # Minimum Pion ANN PID
@@ -244,7 +250,8 @@ class ProtonAsymBuilder(LineBuilder):
             "M < {0[BPartialMassMax]}",
             "BPVIPCHI2() < {0[BBPVIPCHI2]}",
             "VFASPF(VCHI2/VDOF) < {0[BVCHI2DOF]}",
-            "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[BMinZ]}"
+            "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[BMinZ]}",
+            "BPVVDCHI2 > {0[BFDCHI2]}"
         ], self.config)
         bd = self.make_partial_and_full_mothers(
             "BdSelectionFor{0}".format(self.name),
@@ -270,7 +277,8 @@ class ProtonAsymBuilder(LineBuilder):
             "M < {0[LbPartialMassMax]}",
             "BPVIPCHI2() < {0[LbBPVIPCHI2]}",
             "VFASPF(VCHI2/VDOF) < {0[LbVCHI2DOF]}",
-            "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[LbMinZ]}"
+            "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[LbMinZ]}",
+            "BPVVDCHI2 > {0[LbFDCHI2]}"
         ], self.config)
         # 1pi and 3pi modes have different mass thresholds
         lb_1pi_combination_cuts = cut_string([
@@ -368,6 +376,8 @@ class ProtonAsymBuilder(LineBuilder):
         sc_full_pim_line = self.make_line("Sc2LcpimLc2pKpi", sc_pim[1])
         lcst_full_line = self.make_line("Lcst2LcpipiLc2pKpi", lcst[1])
 
+
+
         # Make the lines visible to the LineBuilder
         self.registerLine(bu_partial_line)
         self.registerLine(bd_partial_line)
@@ -379,14 +389,22 @@ class ProtonAsymBuilder(LineBuilder):
 
         # Don't need to save the full reconstruction on DST, all tracks are
         # stored anyway
-        if self.config["MicroDST"]:
-            self.registerLine(bu_full_line)
-            self.registerLine(bd_full_line)
-            self.registerLine(lb_full_1pi_line)
-            self.registerLine(lb_full_3pi_line)
-            self.registerLine(sc_full_pip_line)
-            self.registerLine(sc_full_pim_line)
-            self.registerLine(lcst_full_line)
+        #if self.config["MicroDST"]:
+        #    self.registerLine(bu_full_line)
+        #    self.registerLine(bd_full_line)
+        #    self.registerLine(lb_full_1pi_line)
+        #    self.registerLine(lb_full_3pi_line)
+        #    self.registerLine(sc_full_pip_line)
+        #    self.registerLine(sc_full_pim_line)
+        #    self.registerLine(lcst_full_line)
+        self.registerLine(bu_full_line)
+        self.registerLine(bd_full_line)
+        self.registerLine(lb_full_1pi_line)
+        self.registerLine(lb_full_3pi_line)
+        self.registerLine(sc_full_pip_line)
+        self.registerLine(sc_full_pim_line)
+        self.registerLine(lcst_full_line)     
+
 
     def make_line(self, name, selection):
         """Return StrippingLine object for the line.
@@ -413,6 +431,8 @@ class ProtonAsymBuilder(LineBuilder):
             selection=selection,
             HLT=hlt
         )
+
+
 
     def make_partial_and_full_mothers(self, name, decay, required_selections,
                                       combination_cuts, mother_cuts):
@@ -509,7 +529,7 @@ class ProtonAsymBuilder(LineBuilder):
             Preambulo=preambulo,
             CombinationCut=combination_cuts,
             MotherCut=cut_string([
-                "discriminant > ZERO",
+                "discriminant > 0",
                 mother_cuts
             ], {})
         )
