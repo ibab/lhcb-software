@@ -50,6 +50,50 @@ Purpose: LHCb Simulation program
  - Redefine macro alpgen_author_dir to be compatible with new structure of 
    alpgen library and sources in LCGCMT68
 
+!=========================== Mint v3r1 2014-09-02 ============================
+! 2014-07-24 - Jeremy
+ - Minor bug fixes
+
+! 2014-07-22 - Jeremy
+ - Added two new lineshapes for the non-resonant component
+  . Exponential and power law
+  . At present, their shape parameters cannot be floated
+ - In steering file, indicate with ExpNonResD0 or PowNonResD0 keyword
+ - Lineshapes need to be manually added NamedDecayTreeList.cpp to each isobar
+  . add(AmpInitialiser(*dk, "ExpNonRes"));
+  . add(AmpInitialiser(*dk, "PowNonRes"));
+
+! 2014-05-16 - Jeremy
+ - Restore ability to use normalised barrier factors in amplitudes
+  . Control in steering file by setting "NormBF" to 1
+  . Default behaviour is to use unnormalised barrier factors
+  . Note that normalised barrier factors violate conservation of total angular momentum x-(
+
+! 2014-05-16 - Jeremy
+ - root 5.34.18 compatibility updates
+
+! 2014-03-04 - Claire
+ - added method getP() to DalitzEvent which gives back the vector of the four-momenta of all particles in the eve
+nt
+ - build an automatic rejection factor into DalitzMCMC generation
+ - added different constructors to DalitzMCMC
+ - new class DalitzMCMC_corrPairs that generates correlated events
+ - new class DalitzEventPairList that stores std::pair of events
+
+! 2014-02-07 - Jeremy
+ - Bug fix in Gounaris-Sakurai function
+ - Treat GS in the same way as other lineshapes
+  . Deprecate GSSpinFactor
+
+! 2014-02-05 - Jeremy
+ - Deprecate CrystalBallRhoOmega
+ - Create new Rho0Omega lineshape to describe rho-omega mixing
+  . Now the default rho-omega lineshape used by calling RHO_OMEGA in the steering file
+ - Warning added to CrystalBarrelFOCUS
+  . Contains many issues and bugs, only kept for backwards compatibility
+  . Keyword for usage changed to WRONG_RHOOMEGA in the steering file
+  . Hope to deprecate one day
+
 !======================== GiGaVisUI v6r0p1 2014-08-21 ========================
 ! 2014-07-14 - Gloria Corti
  - Put dependency from G4UIbasic since it was removed from G4UIGAG that was

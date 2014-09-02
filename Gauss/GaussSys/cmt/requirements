@@ -31,7 +31,7 @@ use powhegbox           v68r0p1 LCG_GeneratorsInterfaces
 use GenCuts             v3r9    Gen
 use GENSER              v14r0p1 Gen
 use EvtGen              v13r13  Gen
-use Mint                v3r0    Gen
+use Mint                v3r1    Gen
 use EvtGenExtras        v3r10   Gen
 use Generators          v14r6   Gen
 use LbPythia            v14r2   Gen
