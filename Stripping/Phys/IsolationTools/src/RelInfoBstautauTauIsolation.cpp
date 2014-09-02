@@ -305,7 +305,7 @@ bool RelInfoBstautauTauIsolation::calcValue( const LHCb::Particle * part
         fc = calcFC(  trackMomentum, partMomentum, vertex_mu_track, PV);
         if(fc==-1 && msgLevel(MSG::DEBUG) ) debug() << "FC calculation failed: fc_denom == 0!" << endmsg;
         // DOCA
-        StatusCode sc_doca  = m_dist->distance(track,part->proto()->track(),doca);
+        StatusCode sc_doca  = m_dist->distance(part,vertex_mu_track,doca);
         if(!sc_doca)  return StatusCode(sc_doca);
         double pvDist,pvDistChi2 ;
         StatusCode sc_pv    = m_dist->distance(PV, vertex_mu_track, pvDist, pvDistChi2);
