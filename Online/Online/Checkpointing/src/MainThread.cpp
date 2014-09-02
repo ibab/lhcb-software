@@ -57,12 +57,7 @@ void MainThread::init_instance(int argc, char** argv, char** environment) {
 MainThread::MainThread()  {
   ::memset(&s_funcs,0,sizeof(s_funcs));
   LibC::getSymbol("__clone",s_funcs._clone);
-  //LibC::getSymbol("__sigsetjmp",s_funcs._sigsetjmp);
-  //LibPThread::getSymbol("__libc_sigaction",s_funcs._sigaction);
   LibPThread::getSymbol("pthread_create",s_funcs._thread_create);
-  //LibPThread::getSymbol("__pthread_unwind_next",s_funcs._thread_unwind_next);
-  //LibPThread::getSymbol("__pthread_register_cancel",s_funcs._thread_register_cancel);
-  //LibPThread::getSymbol("__pthread_unregister_cancel",s_funcs._thread_unregister_cancel);
   chkpt_sys.motherofall   = &s_thread;// new Thread();
   chkpt_sys.savedContext  = &chkpt_sys.motherofall->m_savctx;
   chkpt_sys.restart_type  = SysInfo::RESTART_NORMAL;
@@ -101,17 +96,23 @@ WEAK(void) MainThread::finishRestore() {
   checkpointing_finish_restore();
 }
 
-WEAK(void*) MainThread::execute(void *p)   {
-  typedef void* (*user_thread_function_t)(void*);
-  void**  args= (void**)p;
-  void*   user_arg = args[1];
-  void*   return_value = 0;
-  Thread *thread = checkpointing_thread_current();
-  user_thread_function_t user_thread_function = (user_thread_function_t)args[0];
+WEAK(int) MainThread::create_thread(void** p1, void* p2, void* (*user_func)(void*), void* user_arg)  {
+  Arg_t* args = (Arg_t*)malloc(sizeof(Arg_t));
+  args->func = user_func;
+  args->parameter  = user_arg;
+  return (*s_funcs._thread_create)(p1,p2,MainThread::execute_thread,args);
+}
 
-  ::free(p);  // Release the argument buffer now.
+WEAK(void*) MainThread::execute_thread(Arg_t *args)   {
+  typedef void* (*user_thread_function_t)(void*);
+  Thread *thread = checkpointing_thread_current();
+  user_thread_function_t function = args->func;
+  void*   argument = args->parameter;
+  void*   return_value = 0;
+
+  ::free(args);  // Release the argument buffer now.
   pthread_cleanup_push(checkpointing_thread_cleanup_handler,thread);
-  return_value = (*user_thread_function)(user_arg);
+  return_value = (*function)(argument);
   pthread_cleanup_pop(1);  // This handles regular thread exits as well, since the cleanup is called
   return return_value;
 }
@@ -141,19 +142,25 @@ extern "C" int checkpointing_current_thread_id() {
 
 extern "C" int checkpointing_start_child() {
   checkpointing_thread_restart(chkpt_sys.motherofall,0);
-  mtcp_output(MTCP_INFO,"startChild: ALL Child threads are now started:%d\n",chkpt_sys.motherPID);
+  mtcp_output(MTCP_INFO,"startChild: ALL Child threads are now started:%d tid:%d otid:%d\n",
+	      chkpt_sys.motherPID,
+	      chkpt_sys.motherofall->m_tid,
+	      chkpt_sys.motherofall->m_originalTID);
   return 1;
 }
 
 extern "C" int checkpointing_fork_process() {
   pid_t pID = mtcp_sys_fork();
   if (pID == 0)     {           // child
-    chkpt_sys.motherPID    = mtcp_sys_getpid();
+    pid_t  pid = mtcp_sys_getpid();
+    pid_t  tid = mtcp_sys_kernel_gettid();
+    char* tls_base = chkpt_sys.motherofall->tlsBase();
+    chkpt_sys.motherPID    = pid;
     chkpt_sys.restart_type = SysInfo::RESTART_NORMAL;
-    chkpt_sys.motherofall->m_tid = mtcp_sys_kernel_gettid();
-    chkpt_sys.motherofall->m_childTID = mtcp_sys_kernel_gettid();
-    mtcp_output(MTCP_INFO,"forkInstance: Child process started:%d -- Need to still start threads\n",
-		chkpt_sys.motherPID);
+    chkpt_sys.motherofall->m_tid = tid;
+    chkpt_sys.motherofall->m_childTID = tid;
+    mtcp_output(MTCP_INFO,"forkInstance: Child process:%d -- TLS:%p\n",
+		chkpt_sys.motherPID,tls_base);
   }
   else {
     mtcp_output(MTCP_INFO,"forkMain:     Child process started:%d -- Need to still start threads\n",
@@ -295,6 +302,24 @@ again:
 		mtcp_sys_getpid(),__builtin_return_address(0));
     return 1;
   }
+}
+
+extern "C" int checkpointing_dump_threads()   {
+  mtcp_output(MTCP_INFO,"++++ Dumping THREADS from internal database:\n");
+  for(Thread* t = checkpointing_thread_queue(); t != NULL; t = t->next) {
+    const char* typ = t==chkpt_sys.motherofall ? "[MOTHER]" : "[CHILD] ";
+    char* arg = (char*)t->m_startArg;
+    char* tls = t->tlsBase();
+    char* tls_base = arg ? arg : tls;
+    int tls_pid = *(pid_t*) (tls_base + TLS_PID_OFFSET);
+    int tls_tid = *(pid_t*) (tls_base + TLS_TID_OFFSET);
+    int tid = t->m_tid;
+    int otid = t->m_originalTID;
+    mtcp_output(MTCP_INFO,"++++ Thread%s pid:%d tid:%d otid:%d TLS[%p%s]->pid:%d tid:%d %p pthread:%p\n",
+		typ, mtcp_sys_getpid(),tid, otid, tls_base, arg ? "" : "/TLS",
+		tls_pid, tls_tid, t, pthread_self());
+  }
+  return 1;
 }
 
 extern "C" int checkpointing_resume_process()   {

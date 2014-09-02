@@ -6,6 +6,7 @@
 #include "ucontext.h"
 #include "asm/prctl.h"
 #include "asm/ldt.h"
+#include "sys/types.h"
 
 #if defined(__x86_64__) || defined(__INTEL_COMPILER)
   typedef unsigned int mtcp_segreg_t;
@@ -72,7 +73,7 @@ namespace CHECKPOINTING_NAMESPACE {
     struct RestartArgs {
       Thread *self;
       pid_t   tid;
-    }          m_restartArgs;
+    } m_restartArgs;
 
     /** Constructor: initialize all variables.
      */

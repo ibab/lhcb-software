@@ -23,6 +23,7 @@ extern "C" {
   int  checkpointing_set_lib_directory(const char* lib_dir);
   int  checkpointing_set_save_flags(int flags);
   int  checkpointing_set_restart_flags(int flags);
+  int  checkpointing_dump_threads();
 }
 
 #endif // CHECKPOINTING_CHKPT_H

@@ -5,6 +5,7 @@
 #endif
 #include <gnu/libc-version.h>
 #include <sys/syscall.h>
+#include <sys/types.h>
 #include "sysdep-x86_64.h"
 
 #if defined(__x86_64__) || defined(__INTEL_COMPILER)
@@ -151,21 +152,36 @@ typedef int (*libc_clone_entry_t) (int (*fn) (void *arg),
 #if __GLIBC_PREREQ (2,11)
 # if defined(__x86_64__) || defined(__INTEL_COMPILER)
 #  define TLS_PID_OFFSET \
-           (512+26*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct
-#  define TLS_TID_OFFSET (512+26*sizeof(void *))  // offset of tid in pthread struct
+           (512+26*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct: glibc/nptl/descr.h
+#  define TLS_TID_OFFSET (512+26*sizeof(void *))  // offset of tid in pthread struct: glibc/nptl/descr.h
 # else
 #  define TLS_PID_OFFSET \
-           (26*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct
-#  define TLS_TID_OFFSET (26*sizeof(void *))  // offset of tid in pthread struct
+           (26*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct: glibc/nptl/descr.h
+#  define TLS_TID_OFFSET (26*sizeof(void *))  // offset of tid in pthread struct: glibc/nptl/descr.h
 # endif
 #elif __GLIBC_PREREQ (2,10)
 # define TLS_PID_OFFSET \
-	  (26*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct
-# define TLS_TID_OFFSET (26*sizeof(void *))  // offset of tid in pthread struct
+	  (26*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct: glibc/nptl/descr.h
+# define TLS_TID_OFFSET (26*sizeof(void *))  // offset of tid in pthread struct: glibc/nptl/descr.h
 #else
 # define TLS_PID_OFFSET \
-	  (18*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct
-# define TLS_TID_OFFSET (18*sizeof(void *))  // offset of tid in pthread struct
+	  (18*sizeof(void *)+sizeof(pid_t))  // offset of pid in pthread struct: glibc/nptl/descr.h
+# define TLS_TID_OFFSET (18*sizeof(void *))  // offset of tid in pthread struct: glibc/nptl/descr.h
 #endif
 
+#define THREAD_SET_PID(x,new_Pid)  *(pid_t*) (((char*)(x)) + TLS_PID_OFFSET) = new_Pid;
+#define THREAD_SET_TID(x,new_Pid)  *(pid_t*) (((char*)(x)) + TLS_TID_OFFSET) = new_Pid;
+#define THREAD_GET_PID(x)  (*(pid_t*) (((char*)(x)) + TLS_PID_OFFSET))
+#define THREAD_GET_TID(x)  (*(pid_t*) (((char*)(x)) + TLS_TID_OFFSET))
+
+
+#if 0
+namespace CHECKPOINTING_NAMESPACE {
+  struct pthread_native  {
+    char header[TLS_TID_OFFSET];
+    pid_t tid;
+    pid_t pid;
+  };
+}
+#endif
 #endif // SYSCALLS_H

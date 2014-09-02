@@ -53,6 +53,15 @@ struct pthread   {
 
 };
 
+Restoring TLS
+=============
+Do NOT restore the thread id (tid) when restoring the tls.
+The tid MUST stay with the old value for restored threads.
+Otherwise existing mutexes do not work and unlock returns EPERM.
+
+Though you MUST set the new PID when restoring after a checkpoint
+or after a fork.
+
 
 For explanation of Thread.cpp SIG_THREAD_CANCEL SIG_THREAD_SETXID
 =================================================================
@@ -70,6 +79,25 @@ kill -l:
 
 which is also the content of signal.h and clearly wrong.
 
+
+
+Attention: sigaction(...) and syscall(SYS_sigaction,...)/mtcp_sigaction
+=======================================================================
+
+1) sigmask CANNOT be used for SIG_THREAD_CANCEL and SIG_THREAD_SETXID.
+This gives an internal error and __lib_sigaction(...), which does not
+perform this check is not accessible outside libc.
+
+2) The compatibility of the struct sigaction arguments between
+sigaction(...) using user space arguments and syscall(SYS_sigaction,...)
+using the kernel structures is fine for the time being, but not 
+guaranteed.
+
+3) NOTE: A call to mtcp_sigaction requires  a valid value of 
+sigaction.sa_restorer which is only set by __libc_sigaction.
+If the argument is invalid the callback on signal occurrence crashes!
+Hence ONLY use syscall(SYS_sigaction,...) if you got a valid restore 
+argument from the previous structure installed.
 
 
 */

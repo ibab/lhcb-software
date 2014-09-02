@@ -48,14 +48,11 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Standard constructor
     MainThread();
   public:
-    struct __attribute__ ((__aligned__)) jmp_buf {
-      __jmp_buf buf;
-      int __mask_was_saved;
-    };
-    struct __attribute__ ((__aligned__)) thread_unwind_buf_t  {
-      jmp_buf buf[1];
-      void *__pad[4];
-    };
+    typedef void* (*user_thread_function_t)(void*);
+    typedef struct  {
+      user_thread_function_t func;
+      void* parameter;
+    } Arg_t;
 
     typedef int (*clone_t)(int (*fn) (void *arg),
 			   void *child_stack,
@@ -64,20 +61,10 @@ namespace CHECKPOINTING_NAMESPACE {
 			   int *parent_tidptr,
 			   struct user_desc *newtls,
 			   int *child_tidptr);
-    typedef int  (*sigsetjmp_t)(jmp_buf *env, int mask);
-    typedef int  (*sigaction_t)(int signum, const struct sigaction *act, struct sigaction *oldact);
-
-    typedef int  (*pthread_create_t)(void* p1, void* p2, void* (*f)(void*), void* p3);
-    typedef void (*pthread_cancel_t)(thread_unwind_buf_t* cancel_buffer);
-
+    typedef int  (*pthread_create_t)(void** handle, void* attr, void* (*fcn)(Arg_t*), Arg_t* arg);
     typedef struct  {
       clone_t _clone;
-      sigsetjmp_t _sigsetjmp;
-      sigaction_t _sigaction;
       pthread_create_t _thread_create;
-      pthread_cancel_t _thread_unwind_next;
-      pthread_cancel_t _thread_register_cancel;
-      pthread_cancel_t _thread_unregister_cancel;
     } funcs_t;
 
     /// Static instance accessor
@@ -86,8 +73,12 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Initialization callback with startup arguments
     void init_instance(int argc, char** argv, char** environ);
     void initialize();
+    /// Create a new thread with cancellation handling
+    static int   create_thread(void** p1, void* p2, void* (*user_func)(void*), void* user_arg);
+    /// Thread execution trampolin with installation of thread cancellation handling
+    static void* execute_thread(Arg_t* arg);
+    ///
     static void     finishRestore();
-    static void*    execute(void* arg);
     static funcs_t* F();
   };
 
