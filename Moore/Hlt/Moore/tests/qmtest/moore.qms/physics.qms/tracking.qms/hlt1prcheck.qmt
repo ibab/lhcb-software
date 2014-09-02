@@ -1,0 +1,63 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout">
+    <integer>1200</integer>
+  </argument>
+  <argument name="args"><set>
+    <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/Input_MC2015B2Kstmumu.py</text>
+    <text>../options/hlt1_trackingonly-threshold.py</text>
+    <text>../options/Moore_Hlt1Only.py</text>
+    <text>../options/AddPrChecker.py</text>
+    <text>--option</text>
+    <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True ; Moore().outputFile = 'hlt1_reqhlt1_track_prcheck.raw'; Moore().EnableTimer="physics.tracking.hlt1PrChecker.csv"; Moore().OutputLevel=VERBOSE</text>
+  </set></argument>
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <!--<argument name="prerequisites"><set>
+    <tuple><text>moore.physics.deferral.hlt1and2</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
+  <argument name="validator"><text>
+prcheckerblock="""
+PrChecker.Velo                             INFO **** Velo                            86362 tracks including          8791 ghosts [10.2 %], Event average   7.6 % ****
+PrChecker.Velo                             INFO **** for P>3GeV,Pt>0.5GeV                0 tracks including             0 ghosts [-nan %]  ****
+PrChecker.Velo                             INFO                             velo :   53844 from    57682 [ 93.3 %]    582 clones [ 1.1 %], purity: 99.16 %, hitEff: 95.55 %
+PrChecker.Velo                             INFO                             long :   33473 from    34877 [ 96.0 %]    236 clones [ 0.7 %], purity: 99.31 %, hitEff: 96.86 %
+PrChecker.Velo                             INFO                        long>5GeV :   23136 from    23818 [ 97.1 %]    117 clones [ 0.5 %], purity: 99.37 %, hitEff: 97.73 %
+PrChecker.Velo                             INFO                     long_strange :    1150 from     1328 [ 86.6 %]      9 clones [ 0.8 %], purity: 98.65 %, hitEff: 93.44 %
+PrChecker.Velo                             INFO                long_strange>5GeV :     594 from      659 [ 90.1 %]      1 clones [ 0.2 %], purity: 98.57 %, hitEff: 95.97 %
+PrChecker.Velo                             INFO                       long_fromB :    4118 from     4234 [ 97.3 %]     25 clones [ 0.6 %], purity: 99.39 %, hitEff: 97.36 %
+PrChecker.Velo                             INFO                  long_fromB>5GeV :    3416 from     3498 [ 97.7 %]     16 clones [ 0.5 %], purity: 99.44 %, hitEff: 97.90 %
+PrChecker.Velo                             INFO      long_fromB_P>3GeV_Pt>0.5GeV :    3106 from     3185 [ 97.5 %]     17 clones [ 0.5 %], purity: 99.47 %, hitEff: 97.90 %
+PrChecker.Velo                             INFO   UT_long_fromB_P>3GeV_Pt>0.5GeV :    2983 from     3057 [ 97.6 %]     17 clones [ 0.6 %], purity: 99.47 %, hitEff: 97.90 %
+PrChecker.Velo                             INFO 
+PrChecker.Forward                          INFO **** Forward                         12897 tracks including          1801 ghosts [14.0 %], Event average   9.4 % ****
+PrChecker.Forward                          INFO **** for P>3GeV,Pt>0.5GeV            12897 tracks including          1801 ghosts [14.0 %]  ****
+PrChecker.Forward                          INFO                             long :   10679 from    34877 [ 30.6 %]     18 clones [ 0.2 %], purity: 95.87 %, hitEff: 95.35 %
+PrChecker.Forward                          INFO                        long>5GeV :    9986 from    23818 [ 41.9 %]     18 clones [ 0.2 %], purity: 95.94 %, hitEff: 95.66 %
+PrChecker.Forward                          INFO                     long_strange :      96 from     1328 [  7.2 %]      0 clones [ 0.0 %], purity: 95.74 %, hitEff: 94.78 %
+PrChecker.Forward                          INFO                long_strange>5GeV :      85 from      659 [ 12.9 %]      0 clones [ 0.0 %], purity: 95.66 %, hitEff: 95.63 %
+PrChecker.Forward                          INFO                       long_fromB :    2130 from     4234 [ 50.3 %]      6 clones [ 0.3 %], purity: 96.22 %, hitEff: 95.77 %
+PrChecker.Forward                          INFO                  long_fromB>5GeV :    2073 from     3498 [ 59.3 %]      6 clones [ 0.3 %], purity: 96.25 %, hitEff: 95.92 %
+PrChecker.Forward                          INFO      long_fromB_P>3GeV_Pt>0.5GeV :    2121 from     3185 [ 66.6 %]      5 clones [ 0.2 %], purity: 96.22 %, hitEff: 95.78 %
+PrChecker.Forward                          INFO   UT_long_fromB_P>3GeV_Pt>0.5GeV :    2105 from     3057 [ 68.9 %]      5 clones [ 0.2 %], purity: 96.22 %, hitEff: 95.77 %
+PrChecker.Forward                          INFO 
+PrChecker.Upstream                         INFO **** Upstream                        26848 tracks including          2504 ghosts [ 9.3 %], Event average   7.8 % ****
+PrChecker.Upstream                         INFO **** for P>3GeV,Pt>0.5GeV            15221 tracks including           888 ghosts [ 5.8 %]  ****
+PrChecker.Upstream                         INFO                             velo :   23700 from    57682 [ 41.1 %]     40 clones [ 0.2 %], purity: 99.39 %, hitEff: 91.69 %
+PrChecker.Upstream                         INFO                          velo+UT :   23068 from    47582 [ 48.5 %]     40 clones [ 0.2 %], purity: 99.41 %, hitEff: 93.89 %
+PrChecker.Upstream                         INFO                     velo+UT>5GeV :   17515 from    24929 [ 70.3 %]     28 clones [ 0.2 %], purity: 99.47 %, hitEff: 93.42 %
+PrChecker.Upstream                         INFO                     velo+notLong :    3807 from    22805 [ 16.7 %]      5 clones [ 0.1 %], purity: 99.32 %, hitEff: 87.19 %
+PrChecker.Upstream                         INFO                  velo+UT+notLong :    3536 from    15322 [ 23.1 %]      5 clones [ 0.1 %], purity: 99.34 %, hitEff: 93.37 %
+PrChecker.Upstream                         INFO             velo+UT+notLong>5GeV :    2333 from     3414 [ 68.3 %]      2 clones [ 0.1 %], purity: 99.45 %, hitEff: 92.72 %
+PrChecker.Upstream                         INFO                             long :   19893 from    34877 [ 57.0 %]     35 clones [ 0.2 %], purity: 99.41 %, hitEff: 92.54 %
+PrChecker.Upstream                         INFO                        long>5GeV :   15508 from    23818 [ 65.1 %]     26 clones [ 0.2 %], purity: 99.46 %, hitEff: 91.81 %
+PrChecker.Upstream                         INFO                       long_fromB :    2770 from     4234 [ 65.4 %]      4 clones [ 0.1 %], purity: 99.51 %, hitEff: 95.18 %
+PrChecker.Upstream                         INFO                  long_fromB>5GeV :    2479 from     3498 [ 70.9 %]      4 clones [ 0.2 %], purity: 99.53 %, hitEff: 95.14 %
+PrChecker.Upstream                         INFO      long_fromB_P>3GeV_Pt>0.5GeV :    2240 from     3185 [ 70.3 %]      3 clones [ 0.1 %], purity: 99.57 %, hitEff: 95.69 %
+PrChecker.Upstream                         INFO   UT+long_fromB_P>3GeV_Pt>0.5GeV :    2224 from     3057 [ 72.8 %]      3 clones [ 0.1 %], purity: 99.58 %, hitEff: 96.10 %
+"""
+findReferenceBlock(prcheckerblock, signature_offset = 0)
+</text></argument>
+</extension>
+

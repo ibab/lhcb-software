@@ -240,3 +240,4 @@ def compareTimingTableFiles(testname,result,causes,myfile,refFile,beginswith=Non
         timingdict[r]=v[1]
     
     listToResult(testname,"h_Timing",timings,refresultdict,timingdict,toomany,result=result)
+

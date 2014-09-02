@@ -21,6 +21,7 @@
   </argument>
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/Input_Default.py</text>
     <text>../options/default-threshold.py</text>
     <text>--option</text>
     <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().EnableTimer='physics.2012.csv'; from Configurables import EventSelector; EventSelector().PrintFreq=100;</text>
