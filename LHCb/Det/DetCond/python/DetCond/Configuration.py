@@ -333,7 +333,7 @@ class CondDB(ConfigurableUser):
     def _configureDBSnapshot(self):
 
         baseloc = self.getProp( "DBSnapshotDirectory" )
-#        self.DisableLFC = True
+        self.DisableLFC = True
 
         # Set alternative connection strings and tags
         # if simulation is False, we use DDDB, LHCBCOND and ONLINE
@@ -417,8 +417,7 @@ class CondDB(ConfigurableUser):
         os.environ['LoadCALIBDB'] = LoadCALIBDB
 
         # Import SQLDDDB specific info
-#        if self.getProp("UseOracle") or self.getProp("UseDBSnapshot"):
-        if self.getProp("UseDBSnapshot"):
+        if self.getProp("UseOracle") or self.getProp("UseDBSnapshot"):
             importOptions("$SQLDDDBROOT/options/SQLDDDB-Oracle.py")
             if self.getProp("DisableLFC"):
                 COOLConfSvc(UseLFCReplicaSvc = False)

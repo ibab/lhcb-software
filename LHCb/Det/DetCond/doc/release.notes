@@ -3,6 +3,9 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2014-09-02 - Liang Sun
+ - In Configuration.py: Keep the lines related to the import of SQLDDDB-Oracle.py for the UseOracle option, in order not to fail the nightlies
+
 ! 2014-09-01 - Liang Sun
  - Changes in Configuration.py:
    - Removal of the support for Oracle by commenting out the lines related to the option "UseOracle"
