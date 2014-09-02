@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-02 - Rafael Coutinho
+ - Fix in the Hb2V0V0V0 Stripping line
+
 ! 2014-09-02 - Andrea Contu
  - Add MDST.DST support for StrippingLTUnbCharm
 

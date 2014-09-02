@@ -10,8 +10,7 @@ Exported symbols (use python help!):
 __author__ = ['Rafael Coutinho']
 __date__ = '18/08/2014'
 __version__ = 'Stripping21'
-__all__ = {'Hb2V0V0hConf',
-           'default_config'}
+__all__ = 'Hb2V0V0hConf'
 
 from Gaudi.Configuration import *
 from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
@@ -22,7 +21,6 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsPions as Pions
 
 default_config = {
-    'NAME'        : 'Hb2V0V0h',
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Hb2V0V0hConf',
     'CONFIG'      : {
@@ -63,7 +61,38 @@ default_config = {
                                                 , 'Location': "VtxIsolationInfo"  }
                                                 ]
                   },
-    'STREAMS'     : [ 'Bhadron' ]
+    'STREAMS'     : { 'Bhadron' : ['StrippingHb2V0V0h_KSKShLL_Line',
+                                   'StrippingHb2V0V0h_KSLzhLL_Line',
+                                   'StrippingHb2V0V0h_LzLzhLL_Line',
+                                   'StrippingHb2V0V0h_KSKShLD_Line',
+                                   'StrippingHb2V0V0h_KSLzhLD_Line',
+                                   'StrippingHb2V0V0h_KSLzhDL_Line',
+                                   'StrippingHb2V0V0h_LzLzhLD_Line',
+                                   'StrippingHb2V0V0h_KSKShDD_Line',
+                                   'StrippingHb2V0V0h_KSLzhDD_Line',
+                                   'StrippingHb2V0V0h_LzLzhDD_Line',
+                                   'StrippingHb2V0V0h_KSKSKSLLL_Line',
+                                   'StrippingHb2V0V0h_KSKSLzLLL_Line',
+                                   'StrippingHb2V0V0h_KSLzLzLLL_Line',
+                                   'StrippingHb2V0V0h_LzLzLzLLL_Line',
+                                   'StrippingHb2V0V0h_KSKSKSLLD_Line',
+                                   'StrippingHb2V0V0h_KSKSLzLLD_Line',
+                                   'StrippingHb2V0V0h_KSKSLzLDL_Line',
+                                   'StrippingHb2V0V0h_KSLzLzLLD_Line',
+                                   'StrippingHb2V0V0h_KSLzLzDLL_Line',
+                                   'StrippingHb2V0V0h_LzLzLzLLD_Line',
+                                   'StrippingHb2V0V0h_KSKSKSLDD_Line',
+                                   'StrippingHb2V0V0h_KSKSLzLDD_Line',
+                                   'StrippingHb2V0V0h_KSKSLzDDL_Line',
+                                   'StrippingHb2V0V0h_KSLzLzLDD_Line',
+                                   'StrippingHb2V0V0h_KSLzLzDLD_Line',
+                                   'StrippingHb2V0V0h_LzLzLzLDD_Line',
+                                   'StrippingHb2V0V0h_KSKSKSDDD_Line',
+                                   'StrippingHb2V0V0h_KSKSLzDDD_Line',
+                                   'StrippingHb2V0V0h_KSLzLzDDD_Line',
+                                   'StrippingHb2V0V0h_LzLzLzDDD_Line',
+                                   ] 
+                    }
     }
 
 class Hb2V0V0hConf(LineBuilder) :
