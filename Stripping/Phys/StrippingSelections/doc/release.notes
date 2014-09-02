@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-02 - Stefano Perazzini
+ - Fix default_config for Hb2V0V0h lines.
+
 ! 2014-09-02 - Rafael Coutinho
  - Fix in the Hb2V0V0V0 Stripping line
 

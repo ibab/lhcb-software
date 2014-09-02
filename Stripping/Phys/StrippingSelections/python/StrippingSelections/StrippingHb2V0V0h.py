@@ -21,6 +21,7 @@ from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdAllNoPIDsPions as Pions
 
 default_config = {
+    'NAME'        : 'Hb2V0V0h',
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Hb2V0V0hConf',
     'CONFIG'      : {
@@ -56,43 +57,12 @@ default_config = {
                                                 { "Type" : "RelInfoConeVariables"
                                                 , "ConeAngle" : 1.7
                                                 , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                                                , "Location"  : 'P2ConeVar2'},
+                                                , "Location"  : 'P2ConeVar3'},
                                                 {'Type' : 'RelInfoVertexIsolation'
                                                 , 'Location': "VtxIsolationInfo"  }
                                                 ]
                   },
-    'STREAMS'     : { 'Bhadron' : ['StrippingHb2V0V0h_KSKShLL_Line',
-                                   'StrippingHb2V0V0h_KSLzhLL_Line',
-                                   'StrippingHb2V0V0h_LzLzhLL_Line',
-                                   'StrippingHb2V0V0h_KSKShLD_Line',
-                                   'StrippingHb2V0V0h_KSLzhLD_Line',
-                                   'StrippingHb2V0V0h_KSLzhDL_Line',
-                                   'StrippingHb2V0V0h_LzLzhLD_Line',
-                                   'StrippingHb2V0V0h_KSKShDD_Line',
-                                   'StrippingHb2V0V0h_KSLzhDD_Line',
-                                   'StrippingHb2V0V0h_LzLzhDD_Line',
-                                   'StrippingHb2V0V0h_KSKSKSLLL_Line',
-                                   'StrippingHb2V0V0h_KSKSLzLLL_Line',
-                                   'StrippingHb2V0V0h_KSLzLzLLL_Line',
-                                   'StrippingHb2V0V0h_LzLzLzLLL_Line',
-                                   'StrippingHb2V0V0h_KSKSKSLLD_Line',
-                                   'StrippingHb2V0V0h_KSKSLzLLD_Line',
-                                   'StrippingHb2V0V0h_KSKSLzLDL_Line',
-                                   'StrippingHb2V0V0h_KSLzLzLLD_Line',
-                                   'StrippingHb2V0V0h_KSLzLzDLL_Line',
-                                   'StrippingHb2V0V0h_LzLzLzLLD_Line',
-                                   'StrippingHb2V0V0h_KSKSKSLDD_Line',
-                                   'StrippingHb2V0V0h_KSKSLzLDD_Line',
-                                   'StrippingHb2V0V0h_KSKSLzDDL_Line',
-                                   'StrippingHb2V0V0h_KSLzLzLDD_Line',
-                                   'StrippingHb2V0V0h_KSLzLzDLD_Line',
-                                   'StrippingHb2V0V0h_LzLzLzLDD_Line',
-                                   'StrippingHb2V0V0h_KSKSKSDDD_Line',
-                                   'StrippingHb2V0V0h_KSKSLzDDD_Line',
-                                   'StrippingHb2V0V0h_KSLzLzDDD_Line',
-                                   'StrippingHb2V0V0h_LzLzLzDDD_Line',
-                                   ] 
-                    }
+    'STREAMS'     : [ 'Bhadron' ]
     }
 
 class Hb2V0V0hConf(LineBuilder) :
@@ -194,7 +164,7 @@ class Hb2V0V0hConf(LineBuilder) :
                                            selection = _selV0V0h[v0v0_type][v0v0_comb],
                                            FILTER = GECCode,
                                            RelatedInfoTools = config['RelatedInfoTools'], 
-                                           EnableFlavourTagging = True,
+                                           EnableFlavourTagging = False,
                                            MDSTFlag = True
                                            )
 
@@ -221,7 +191,7 @@ class Hb2V0V0hConf(LineBuilder) :
                                            selection = _selV0V0V0[v0v0v0_type][v0v0v0_comb],
                                            FILTER = GECCode,
                                            RelatedInfoTools = config['RelatedInfoTools'], 
-                                           EnableFlavourTagging = True,
+                                           EnableFlavourTagging = False,
                                            MDSTFlag = True
                                            )
 
