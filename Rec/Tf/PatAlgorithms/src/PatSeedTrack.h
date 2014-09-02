@@ -15,6 +15,8 @@
 #include "TfKernel/RegionID.h"
 #include "TfKernel/STHit.h"
 
+#include "LHCbMath/BloomFilter.h"
+
 /** @class PatSeedTrack PatSeedTrack.h
  *  This is the working track class during the seeding
  *
@@ -301,6 +303,16 @@ class PatSeedTrack {
       return *this;
     }
 
+    void updateIDs()
+    {
+      m_ids.clear();
+      for (const PatFwdHit* hit : m_coords) {
+	m_ids.insert(hit->hit()->lhcbID());
+      }
+    }
+    const BloomFilter<LHCb::LHCbID, 12, 81789, 1 << 20>& bloomfilter() const
+    { return m_ids; }
+
   protected:
 
 
@@ -322,6 +334,7 @@ class PatSeedTrack {
 
     PlaneArray m_planeList;
     PatFwdHits m_coords;
+    BloomFilter<LHCb::LHCbID, 12, 81789, 1 << 20> m_ids;
 
     struct countIfHighThreshold : /// helper predicate for nbHighThreshold
       public std::unary_function<const PatFwdHit*,bool>

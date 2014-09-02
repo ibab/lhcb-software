@@ -3,6 +3,20 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2014-08-29 - Manuel Tobias Schiller
+ - PatSeedingTool, PatSeedTrack: use a Bloom filter to quickly detect tracks
+   which have no overlap in hits after xz search; this allows for a slight
+   speedup (up to 5% at high nu) and an O(1%) increase in efficiency (while
+   the ghost rate remains stable within +/- 0.2%); the worst case timing of
+   the algorithm is reduced by typically 40% (over the 1000 events tested)
+   [technical note: the false positive probability for the Bloom Filter is
+   chosen such that for 12 hits (maximum in the OT after xz search), the bit
+   set in the Bloom Filter fits into 64 bits, this gives around 8% false
+   positive probability, and seems to be the best compromise]
+ - PatSeedingTool: properties CloneMaxXDistIT and CloneMaxXDistOT are obsolete
+   now (BloomFilter is more reliable and faster)
+
 ! 2014-08-28 - Gerhard Raven
  - unify scalar and vector version of PatFwdTool::xAtReferencePlane_ by using
    variadic templates to gather/scatter the vectors to generate both scalar and
@@ -57,8 +71,8 @@
 ! 2014-08-06 - Sebastian Neubert
  - make the skipping of used seed tracks optional in PatForwardTool
    default: do not skip (false)
-	 can be switched on through property skipUsedSeeds
-	 note that a similar mechanism is also present in PatForward (the algorithm)
+    can be switched on through property skipUsedSeeds
+    note that a similar mechanism is also present in PatForward (the algorithm)
 
 ! 2014-08-05 - Gerhard Raven
  - provide, and use vector, interface version of PatFwdTool::xAtReference, PatFwdTool::setXAtReference

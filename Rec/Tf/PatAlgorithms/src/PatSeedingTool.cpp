@@ -82,8 +82,6 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   declareProperty( "TolCollectITOT",		m_tolCollectITOT	=    .6 * Gaudi::Units::mm );
   // clone killing in xz projection
   declareProperty( "MinXPlanes",		m_minXPlanes		=    5                     );
-  declareProperty( "CloneMaxXDistIT",		m_cloneMaxXDistIT	=    3. * Gaudi::Units::mm );
-  declareProperty( "CloneMaxXDistOT",		m_cloneMaxXDistOT	=    7. * Gaudi::Units::mm );
   declareProperty( "CommonXFraction",		m_commonXFraction	=    0.7                   );
   declareProperty( "QualityWeights",		m_qualityWeights	= { 1.0,-0.2});
   // demands that NDblOTHitsInXSearch out of three layers used for the initial
@@ -447,13 +445,13 @@ void PatSeedingTool::killClonesAndStore(
   // make sure there's space in the output
   outputTracks.reserve(outputTracks.size() + finalSelection.size());
   //== Sort tracks according to their chi2
-  if ( finalSelection.size() > 1 )
+  if (finalSelection.size() > 1)
     std::stable_sort( finalSelection.begin(), finalSelection.end(),
                PatSeedTrack::decreasingQuality() );
 
   bool debug = msgLevel( MSG::DEBUG );
   //== Keep only those with less than maxUsedFraction used clusters
-  for( const PatSeedTrack* track: finalSelection) {
+  for (const PatSeedTrack* track: finalSelection) {
     // this is a funny way to implement the cut on the fraction of used
     // hits, but the advantage is that we stop counting early, if the
     // track does not pass the cut
@@ -1495,10 +1493,6 @@ void PatSeedingTool::debugFwdHit ( const PatFwdHit* coord, MsgStream& msg ) cons
 void PatSeedingTool::addIfBetter (PatSeedTrack& track,
                                   std::vector<PatSeedTrack>& pool) const
 {
-  // this routine assumes that z0() is the same for all tracks
-  const double xTrack = track.xAtZEqZ0();
-  const bool isOT = (*track.coordBegin())->hit()->type() == Tf::RegionID::OT;
-
   bool printing = msgLevel ( MSG::VERBOSE );
 
   if ( printing ) {
@@ -1506,6 +1500,7 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
     for( const PatFwdHit* hit: track.coords() )
       debugFwdHit( hit, info() );
   }
+  track.updateIDs();
 
   // points to invalid entry which we can replace instead of making the
   // vector bigger; is 0 if no invalid entry found
@@ -1516,22 +1511,26 @@ void PatSeedingTool::addIfBetter (PatSeedTrack& track,
       lastInvalidTrack = &othertrack;
       continue;
     }
-    const bool isOtherOT = (*othertrack.coordBegin())->hit()->type() == Tf::RegionID::OT;
-    //== compare the list of hits only if not too far...
-    if ( ((isOT || isOtherOT)?m_cloneMaxXDistOT:m_cloneMaxXDistIT)
-	< std::abs( othertrack.xAtZEqZ0() - xTrack ) ) continue;
+    if ((othertrack.bloomfilter() & track.bloomfilter()).empty()) {
+      // if no common hits whatsoever, go to next track in pool
+      continue;
+    }
 
     // this is a funny way to check if there are too many common hits,
     // but we can stop early if this is the case
     int nCommonMax = int(std::ceil(m_commonXFraction *
-                                   std::min(othertrack.nCoords(), track.nCoords())));
-    for( const PatFwdHit* hit1: othertrack.coords() ) {
-      if ( track.coordEnd() !=
-           std::find(track.coordBegin(), track.coordEnd(), hit1) )
+	  std::min(othertrack.nCoords(), track.nCoords())));
+    int nUniqueMin = track.nCoords() + 1 - nCommonMax;
+    for (const PatFwdHit* hit1: othertrack.coords()) {
+      if (track.coordEnd() !=
+           std::find(track.coordBegin(), track.coordEnd(), hit1)) {
         if (0 > --nCommonMax) break;
+      } else {
+	if (0 > --nUniqueMin) break;
+      }
     }
 
-    if ( 0 <= nCommonMax ) continue;
+    if (0 <= nCommonMax) continue;
     //== enough common in stored track: Keep the best (longest / best chi2)
     if ( printing ) {
       int nCommonMax2 = int(std::ceil(m_commonXFraction *
