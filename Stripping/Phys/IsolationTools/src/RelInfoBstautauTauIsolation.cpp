@@ -287,7 +287,7 @@ bool RelInfoBstautauTauIsolation::calcValue( const LHCb::Particle * part
         Gaudi::XYZVector trackMomentum = track->momentum();
         Gaudi::XYZPoint trackPosition = track->position();
         //exception handling?
-        Gaudi::XYZVector partMomentum = part->momentum();
+        Gaudi::XYZVector partMomentum(part->momentum());
         Gaudi::XYZPoint partPosition = part->endVertex()->position();
 
         // --  takes seven variables 
