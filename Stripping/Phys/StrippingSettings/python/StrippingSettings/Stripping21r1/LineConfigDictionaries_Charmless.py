@@ -457,43 +457,44 @@ B2XEta = {
 Hb2V0V0h = {
     'WGs'         : ['Charmless'],
     'BUILDERTYPE' : 'Hb2V0V0hConf',
-    'CONFIG'      : {'Trk_Chi2'                : 3.0,
-                     'Trk_GhostProb'           : 0.3,
-                     'V0_DD_MassWindow'        : 30.0,
-                     'V0_DD_VtxChi2'           : 12.0,
-                     'V0_DD_FDChi2'            : 50.0,
-                     'V0_LL_MassWindow'        : 20.0,
-                     'V0_LL_VtxChi2'           : 12.0,
-                     'V0_LL_FDChi2'            : 80.0,
-                     'B_Mlow'                  : 1279.0,
-                     'B_Mhigh'                 : 921.0,
-                     'Hb_Mlow'                 : 400.0,
-                     'Hb_Mhigh'                : 400.0,
-                     'B_APTmin'                : 1000.0,
-                     'B_Dira'                  : 0.999,
-                     'B_VtxChi2'               : 12.0,
-                     'B_FDChi2'                : 50.0,
-                     'B_IPCHI2wrtPV'           : 12.0,
-                     'GEC_MaxTracks'           : 250,
-                     'Prescale'                : 1.0,
-                     'Prescale_SameSign'       : 1.0,
-                     'Postscale'               : 1.0,
-                     'RelatedInfoTools'        : [ { "Type" : "RelInfoConeVariables"
-                                                     , "ConeAngle" : 1.0
-                                                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                                                     , "Location"  : 'P2ConeVar1'},
-                                                   { "Type" : "RelInfoConeVariables"
-                                                     , "ConeAngle" : 1.5
-                                                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                                                     , "Location"  : 'P2ConeVar2'},
-                                                   { "Type" : "RelInfoConeVariables"
-                                                     , "ConeAngle" : 1.7
-                                                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
-                                                     , "Location"  : 'P2ConeVar2'},
-                                                   {'Type' : 'RelInfoVertexIsolation'
-                                                    , 'Location': "VtxIsolationInfo"  }
-                                                   ]
-                     },
+    'CONFIG'      : {
+                  'Trk_Chi2'                : 3.0,
+                  'Trk_GhostProb'           : 0.3,
+                  'V0_DD_MassWindow'        : 30.0,
+                  'V0_DD_VtxChi2'           : 12.0,
+                  'V0_DD_FDChi2'            : 50.0,
+                  'V0_LL_MassWindow'        : 20.0,
+                  'V0_LL_VtxChi2'           : 12.0,
+                  'V0_LL_FDChi2'            : 80.0,
+                  'B_Mlow'                  : 1279.0,
+                  'B_Mhigh'                 : 921.0,
+                  'Hb_Mlow'                 : 400.0,
+                  'Hb_Mhigh'                : 400.0,
+                  'B_APTmin'                : 1000.0,
+                  'B_Dira'                  : 0.999,
+                  'B_VtxChi2'               : 12.0,
+                  'B_FDChi2'                : 50.0,
+                  'B_IPCHI2wrtPV'           : 12.0,
+                  'GEC_MaxTracks'           : 250,
+                  'Prescale'                : 1.0,
+                  'Prescale_SameSign'       : 1.0,
+                  'Postscale'               : 1.0,
+                  'RelatedInfoTools'        : [ { "Type" : "RelInfoConeVariables"
+                                                , "ConeAngle" : 1.0
+                                                , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                                                , "Location"  : 'P2ConeVar1'},
+                                                { "Type" : "RelInfoConeVariables"
+                                                , "ConeAngle" : 1.5
+                                                , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                                                , "Location"  : 'P2ConeVar2'},
+                                                { "Type" : "RelInfoConeVariables"
+                                                , "ConeAngle" : 1.7
+                                                , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
+                                                , "Location"  : 'P2ConeVar3'},
+                                                {'Type' : 'RelInfoVertexIsolation'
+                                                , 'Location': "VtxIsolationInfo"  }
+                                                ]
+                  },
     'STREAMS'     : [ 'Bhadron' ]
     }
 

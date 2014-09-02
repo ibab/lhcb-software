@@ -8,6 +8,9 @@
  - first commit of S21 and 21r1 LineConfigDictionaries for semileptonics
 
 ! 2014-09-02 - Stefano Perazzini
+ - Corrected dictionary for Charmless WG for S21(r1)
+
+! 2014-09-02 - Stefano Perazzini
  - Updated stripping21 and stripping21r1 dbases
 
 ! 2014-09-02 - Roberta Cardinale
