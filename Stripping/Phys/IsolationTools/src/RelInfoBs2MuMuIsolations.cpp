@@ -132,6 +132,8 @@ std::string RelInfoBs2MuMuIsolations::infoPath(void){ // check with Alex
 
 StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* part, const LHCb::Particle *top){
   
+  if(part != top) return StatusCode::SUCCESS;
+  
   m_otherB_mag=0.;
   m_otherB_angle=-1.;
   m_otherB_boost_mag=0.;
