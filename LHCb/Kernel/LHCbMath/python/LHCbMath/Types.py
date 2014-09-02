@@ -178,7 +178,6 @@ Gaudi.Math.Vector4        = Gaudi.Vector4
 Gaudi.Math.Vector5        = Gaudi.Vector5
 Gaudi.Math.Vector8        = Gaudi.Vector8
 
-
 Gaudi.SymMatrix2x2        = Gaudi.SymMatrix(2)
 Gaudi.SymMatrix3x3        = Gaudi.SymMatrix(3)
 Gaudi.SymMatrix4x4        = Gaudi.SymMatrix(4)
@@ -315,36 +314,462 @@ _C2F . probability = _c2_prob_
 _C2F . __len__     = lambda s     : s.size  (   )
 _C2F . __getitem__ = lambda s , i : s.param ( i )
 
+
+# =============================================================================
+# Operations  
+# =============================================================================
+
+def _lav_iadd_ ( self , other ) :
+    _typ = type ( self )
+
+    print 'I am SADD', type(other), type(self)
+    print 'I am len' , len(self) 
+    
+    
+    if   isinstance ( other , _typ ) :
+        l = len ( self )
+        for i in range ( 0 , l ) : self[i] += other[i]
+        return self
+    
+    elif isinstance ( other , (float,int,long) ) :
+        l = len ( self )
+        for i in range ( 0 , l ) : self[i] += other
+        return self
+    #
+    print 'NOT-implemented! '
+    #
+    return NotImplemented 
+
+def _lav_isub_ ( self , other ) :
+    _typ = type ( self )
+    if   isinstance ( other , _typ ) :
+        l = len ( self )
+        for i in range ( 0 , l ) : self[i] -= other[i]
+        return self
+    elif isinstance ( other , (float,int,long) ) :
+        l = len ( self )
+        for i in range ( 0 , l ) : self[i] -= other
+        return self
+    #
+    return NotImplemented 
+
+def _lav_imul_ ( self , other ) :
+    
+    if isinstance ( other , (float,int,long) ) :
+        l = len ( self )
+        for i in range ( 0 , l ) : self[i] *= other
+        return self
+    
+def _lav_idiv_ ( self , other ) :
+        
+    if isinstance ( other , (float,int,long) ) :
+        l = len ( self )
+        for i in range ( 0 , l ) : self[i] /= other
+        return self
+    #
+    return NotImplemented 
+
+    
+def _lav_add_ ( self , other ) :
+    """
+    Addition of LA-vectors
+    
+    >>> vct1 = ...
+    >>> vct2 = ...
+    >>> a1   = vct1 + 2
+    >>> a2   = vct1 + vct2
+    """
+    _typ = type( self )
+    tmp  = _typ( self )
+    tmp += other
+    return tmp
+
+def _lav_sub_ ( self , other ) :
+    """
+    Subtract LA-vectors
+    
+    >>> vct1 = ...
+    >>> vct2 = ...
+    >>> a1   = vct1 - 2
+    >>> a2   = vct1 - vct2 
+    """
+    _typ = type( self )
+    tmp  = _typ( self )
+    tmp -= other
+    return tmp
+
+def _lav_rsub_ ( self , other ) :
+    """
+    Right subtraction:
+    
+    >>> vct = ...
+    >>> a1  = 2 - vct  
+    """
+    self *= -1
+    self += other
+    return self 
+
+def _lav_mul_ ( self , other ) :
+    """
+    Multiply/scale LA-vector
+    
+    >>> vct = ...
+    >>> a1  = vct * 2 
+    >>> a2  = 2   * vct
+    >>> a3  = vct * vct  ## ``norm''
+    
+    """
+    _typ = type ( self )
+    if   isinstance ( other , _typ ) :
+        res = 0.0
+        l   = len ( self )
+        for i in range( 0 , l ) : res += self[i]*other[i]
+        return res
+    elif isinstance ( other , (float,int,long) )  :
+        tmp  = _typ ( self )
+        tmp *= other
+        return tmp
+    #
+    return NotImplemented 
+
+def _lav_div_ ( self , other ) :
+    """
+    Divide/scale LA-vector
+    
+    >>> vct = ...
+    >>> a   = vct / 2 
+    
+    """
+    _typ = type( self )
+    tmp  = _typ( self )
+    tmp /= other
+    return tmp
+
+def _lav_pow_ ( self , e ) :
+    """
+    Vector norm
+    
+    >>> vct   = ...
+    >>> norm  = vct ** 2 
+    
+    """
+    if 2 != e : return NotImplemented
+    return self*self
+
+for t in ( Gaudi.Vector2 ,
+           Gaudi.Vector3 ,
+           Gaudi.Vector4 ,
+           Gaudi.Vector5 ,
+           Gaudi.Vector6 ,
+           Gaudi.Vector8 ) :
+    #
+    if not hasattr ( t , '__iadd__' ) : t. __iadd__ = _lad_iadd_
+    if not hasattr ( t , '__isub__' ) : t. __isub__ = _lad_isub_
+    if not hasattr ( t , '__imul__' ) : t. __iadd__ = _lad_idiv_
+    if not hasattr ( t , '__idiv__' ) : t. __isub__ = _lad_imul_
+    #
+    t. __add__  = _lav_add_
+    t. __mul__  = _lav_mul_
+    t. __sub__  = _lav_sub_
+    t. __div__  = _lav_div_
+    t. __pow__  = _lav_pow_
+    
+    t. __radd__ = lambda s,o : s+o
+    t. __rmul__ = lambda s,o : s+o
+    t. __rsub__ = _lav_rsub_ 
+          
+           
+
 ## ============================================================================
 ## some useful decoration:
 ## ============================================================================
 
-_P3D = Gaudi.XYZPoint
-_V3D = Gaudi.XYZVector
 _V4D = Gaudi.LorentzVector
 
-def _o_mul_ ( self , other ) :
-    _typ  = self.__class__
-    if isinstance ( other , _typ ) :
-        return self.Dot ( other )
-    tmp   = _typ ( self )
+## 4-vectors 
+def _v4_iadd_ ( s , other ) :
+    s.SetE    ( s.E  () + other.E  () )
+    s.SetPx   ( s.Px () + other.Px () )
+    s.SetPy   ( s.Py () + other.Py () )
+    s.SetPz   ( s.Pz () + other.Pz () )
+    return s
+
+def _v4_isub_ ( s , other ) :
+    s.SetE    ( s.E  () - other.E  () )
+    s.SetPx   ( s.Px () - other.Px () )
+    s.SetPy   ( s.Py () - other.Py () )
+    s.SetPz   ( s.Pz () - other.Pz () )
+    return s
+
+def _v4_dot_   ( s , other ) :
+    res  = s.e  () * other.e  () 
+    res -= s.px () * other.px ()
+    res -= s.py () * other.py ()
+    res -= s.pz () * other.pz ()
+    return res 
+
+if not hasattr ( _V4D , '__iadd__' ) : _V4D. __iadd__ = _v4_iadd_ 
+if not hasattr ( _V4D , '__isub__' ) : _V4D. __isub__ = _v4_isub_ 
+if not hasattr ( _V4D , 'Dot'      ) : _V4D.Dot       = _v4_dot_
+
+def _v4_mul_ ( self , other ) :
+    """
+    Multiplication/scaling of Lorentz Vectors 
+    
+    >>> vct = ...
+    >>> a   = vct * 2
+    
+    >>> vct2 = ...
+    >>> prod = vct * vct2 ## NB! 
+    """
+    if isinstance ( other , _V4D ) : return self.Dot ( other )
+    #
+    tmp   = _V4D ( self )
     tmp  *= other
     return tmp
 
-def _o_add_ ( self , other ) :
-    _typ  = self.__class__
-    tmp   = _typ ( self )
+def _v4_add_ ( self , other ) :
+    """
+    Addition of Lorentz Vectors 
+    
+    >>> vct1 = ...
+    >>> vct2 = ...
+    >>> a    = vct1 + vct2
+    """
+    tmp   = _V4D ( self )
     tmp  += other
     return tmp
 
-def _o_sub_ ( self , other ) :
-    _typ  = self.__class__
-    tmp   = _typ ( self )
+def _v4_sub_ ( self , other ) :
+    """
+    Subtraction of Lorentz Vectors 
+    
+    >>> vct1 = ...
+    >>> vct2 = ...
+    >>> a    = vct1 - vct2
+    """
+    tmp   = _V4D ( self )
     tmp  -= other
     return tmp
 
+def _v4_div_ ( self , other ) :
+    """
+    Division/scaling of Lorentz Vectors 
+    
+    >>> vct = ...
+    >>> a   = vct / 2 
+    """
+    tmp   = _V4D ( self )
+    tmp  /= other
+    return tmp
+
+_V4D . __mul__  = _v4_mul_
+_V4D . __add__  = _v4_add_
+_V4D . __sub__  = _v4_sub_
+_V4D . __div__  = _v4_div_
+
+_V4D . __radd__ = lambda s,o : s+o 
+_V4D . __rmul__ = lambda s,o : s*o 
+
+## 3-vectors 
+_P3D = Gaudi.XYZPoint
+_V3D = Gaudi.XYZVector
+
+## 3-vectors & points
+
+def _v3_iadd_  ( s , other ) :
+    s.SetX     ( s.X () + other.X () )
+    s.SetY     ( s.Y () + other.Y () )
+    s.SetZ     ( s.Z () + other.Z () )
+    return s
+
+def _v3_isub_  ( s , other ) :
+    s.SetX     ( s.X () - other.X () )
+    s.SetY     ( s.Y () - other.Y () )
+    s.SetZ     ( s.Z () - other.Z () )
+    return s
+
+def _v3_dot_   ( s , other ) :
+    res  = s.X ( ) * other.X ( )
+    res -= s.Y ( ) * other.Y ( )
+    res -= s.Z ( ) * other.Z ( )
+    return res 
+
+if not hasattr ( _V3D , '__iadd__' ) : _V3D. __iadd__ = _v3_iadd_ 
+if not hasattr ( _V3D , '__isub__' ) : _V3D. __isub__ = _v3_isub_ 
+if not hasattr ( _V3D , 'Dot'      ) : _V3D.Dot       = _v3_dot_
+
+if not hasattr ( _P3D , '__iadd__' ) : _P3D. __iadd__ = _v3_iadd_ 
+if not hasattr ( _P3D , '__isub__' ) : _P3D. __isub__ = _v3_isub_ 
+
+
+def _p3_add_ ( self , other ) :
+    """
+    Addition of 3D-point and 3D-vector
+    
+    >>> point  = ...
+    >>> vector = ...
+    >>> result = point + vector 
+    """
+    # POINT + VECTOR = POINT 
+    if isinstance ( other , _V3D ) :
+        tmp   = _P3D ( self )
+        tmp  += other
+        return tmp
+    #
+    return NotImplemented
+
+
+def _p3_sub_ ( self , other ) :
+    """
+    Substraction of 3D-points 
+    
+    >>> point1 = ...
+    >>> point2 = ...
+    >>> vector = ...
+    >>> result_point  = point1 - vector
+    >>> result_vector = point1 - point2  
+    """
+    # POINT - VECTOR = POINT
+    if   isinstance ( other , _V3D ) :
+        tmp   = _P3D ( self )
+        tmp  -= other
+        return tmp
+    # POINT - POINT = VECTOR 
+    elif isinstance ( other , _P3D ) :
+        tmp   = _V3D ( self.x() , self.y() , self.z() )
+        tmp  -= other
+        return tmp
+    #
+    return NotImplemented 
+
+def _p3_mul_ ( self , other ) :
+    """
+    Scaling of 3D-points 
+    
+    >>> point  = ...
+    >>> result = point1 * 2 
+    """
+    tmp  = _P3D ( self )
+    tmp *= other
+    return tmp
+
+def _p3_div_ ( self , other ) :
+    """
+    Scaling of 3D-points 
+    
+    >>> point  = ...
+    >>> result = point1 / 2 
+    """
+    tmp  = _P3D ( self )
+    tmp /= other
+    return tmp
+    
+def _v3_add_ ( self , other ) :
+    """
+    Addition  of 3D-vectors
+    
+    >>> vector1 = ...
+    >>> vector2 = ...
+    >>> result_vector = vector1 + vector2
+    >>> point   =
+    >>> result_point  = vector1 + point 
+    """
+    # VECTOR + VECTOR = VECTOR 
+    if   isinstance ( other , _V3D ) :
+        tmp   = _V3D ( self )
+        tmp  += other
+        return tmp
+    # VECTOR + POINT  = POINT 
+    elif isinstance ( other , _P3D ) : return other + self
+    #
+    return NotImplemented 
+
+def _v3_sub_ ( self , other ) :
+    """
+    Subtraction  of 3D-vectors
+    
+    >>> vector1 = ...
+    >>> vector2 = ...
+    >>> result_vector = vector1 - vector2
+    """
+    # VECTOR - VECTOR = VECTOR 
+    if   isinstance ( other , _V3D ) :
+        tmp   = _V3D ( self )
+        tmp  -= other
+        return tmp
+    #
+    return NotImplemented 
+
+def _v3_mul_ ( self , other ) :
+    """
+    Multiplication  of 3D-vectors
+    
+    >>> vector1 = ...
+    >>> result  = vector1 * 2 
+    >>> vector2 = ...
+    >>> product = vector1 * vector2
+    """
+    # VECTOR * VECTOR = NUMBER
+    if   isinstance ( other , _V3D ) : return self.Dot ( other )
+    # VECTOR * NUMBER = NUMBER 
+    elif isinstance ( other , ( float , int , long ) ) :  
+        tmp  = _V3D ( self )
+        tmp *= other
+        return tmp
+    #
+    return NotImplemented
+
+def _v3_div_ ( self , other ) :
+    """
+    Scaling of 3D-vectors
+    
+    >>> vector = ...
+    >>> result = vector1 / 2 
+    """
+    tmp  = _V3D ( self )
+    tmp /= other
+    return tmp
+
+_P3D . __add__  = _p3_add_
+_P3D . __sub__  = _p3_sub_
+_P3D . __div__  = _p3_div_
+_P3D . __mul__  = _p3_mul_
+
+_V3D . __add__  = _v3_add_
+_V3D . __sub__  = _v3_sub_
+_V3D . __div__  = _v3_div_
+_V3D . __mul__  = _v3_mul_
+
+_P3D . __radd__ = lambda s,o : s+o 
+_P3D . __rmul__ = lambda s,o : s*o 
+_V3D . __radd__ = lambda s,o : s+o 
+_V3D . __rmul__ = lambda s,o : s*o 
+
+
+
+def _v4_pow_ ( self , e ) :
+    """
+    Squared length of the 3D-vector 
+    """
+    if 2 != e : return NotImplemented
+    return self.M2   ()
+
+
+def _v3_pow_ ( self , e ) :
+    """
+    Squared length of the 3D-vector 
+    """
+    if 2 != e : return NotImplemented
+    return self.Mag2 ()
+
+_V4D.__pow__ = _v4_pow_
+_V3D.__pow__ = _v3_pow_
+_P3D.__pow__ = _v3_pow_
+
+
 ## Self-printout of 3D-points and 3D-vectors
-def _o1_str_ ( self , fmt = "( %g, %g, %g) ") :
+def _v3_str_ ( self , fmt = "( %g, %g, %g) ") :
     """
     Self-printout of 3D-points and 3D-vectors
 
@@ -352,44 +777,28 @@ def _o1_str_ ( self , fmt = "( %g, %g, %g) ") :
     return fmt % ( self.X() , self.Y( ), self.Z() )
 
 ## Self-printout of 4D-vectors
-def _o2_str_ ( self , fmt = "[( %g, %g, %g), %g]" ) :
+def _v4_str_ ( self , fmt = "[( %g, %g, %g), %g]" ) :
     """
     Self-printout of 4D-vectors
 
     """
     return fmt % ( self.X() , self.Y( ), self.Z() , self.E() )
 
-_V3D.__mul__ = _o_mul_
-_V4D.__mul__ = _o_mul_
-
-_P3D.__add__ = _o_add_
-_V3D.__add__ = _o_add_
-_V4D.__add__ = _o_add_
-
-_P3D.__sub__ = _o_sub_
-_V3D.__sub__ = _o_sub_
-_V4D.__sub__ = _o_sub_
-
-_V3D. __rmul__ = _V3D.__mul__
-_V4D. __rmul__ = _V4D.__mul__
-
-_P3D. __radd__ = _P3D.__add__
-_V3D. __radd__ = _V3D.__add__
 
 if not hasattr ( _P3D , '_new_str_' ) :
-    _P3D._new_str_ = _o1_str_
-    _P3D.__str__   = _o1_str_
-    _P3D.__repr__  = _o1_str_
+    _P3D . _new_str_ = _v3_str_
+    _P3D . __str__   = _v3_str_
+    _P3D . __repr__  = _v3_str_
 
 if not hasattr ( _V3D , '_new_str_' ) :
-    _V3D._new_str_ = _o1_str_
-    _V3D.__str__   = _o1_str_
-    _V3D.__repr__  = _o1_str_
+    _V3D . _new_str_ = _v3_str_
+    _V3D . __str__   = _v3_str_
+    _V3D . __repr__  = _v3_str_
 
 if not hasattr ( _V4D , '_new_str_' ) :
-    _V4D._new_str_ = _o2_str_
-    _V4D.__str__   = _o2_str_
-    _V4D.__repr__  = _o2_str_
+    _V4D . _new_str_ = _v4_str_
+    _V4D . __str__   = _v4_str_
+    _V4D . __repr__  = _v4_str_
 
 # =============================================================================
 ## Self-printout of line
@@ -398,6 +807,9 @@ if not hasattr ( _V4D , '_new_str_' ) :
 def _l_str_ ( self ) :
     """
     Self-printout of line: (point, direction)
+    
+    >>> line = ... 
+    >>> print line 
     """
     return "(%s,%s)" % ( self.beginPoint() , self.direction() )
 
@@ -498,6 +910,8 @@ for m in ( Gaudi.SymMatrix2x2   ,
 def _p_str_ ( self ) :
     """
     Self-printout of 3D-plane: (point, normal)
+    >>> plane = ...
+    >>> print plance 
     """
     return "(%s,%s)" % ( self.ProjectOntoPlane( Gaudi.XYZPoint()) , self.Normal() )
 
@@ -528,6 +942,9 @@ for t in  ( Gaudi.Vector2 ,
             Gaudi.Vector5 ,
             Gaudi.Vector6 ) :
 
+    ## add len of vectors 
+    t . __len__ = lambda s : s.Dim()
+    
     if not hasattr ( t , '_new_str_' ) :
         t._new_str_ = _v_str_
         t.__str__   = _v_str_
@@ -537,6 +954,7 @@ for t in ( Gaudi.Math.ValueWithError         ,
            Gaudi.Math.Point3DWithError       ,
            Gaudi.Math.Vector3DWithError      ,
            Gaudi.Math.LorentzVectorWithError ,
+           Gaudi.Math.SVector2WithError      ,
            Gaudi.Math.SVector3WithError      ,
            Gaudi.Math.SVector4WithError      ,
            Gaudi.Math.SVector5WithError      ,
@@ -547,6 +965,13 @@ for t in ( Gaudi.Math.ValueWithError         ,
         t.__str__   = t.toString
         t.__repr__  = t.toString
 
+
+Gaudi.Math.SVector2WithError  . __len__ = lambda s : 2 
+Gaudi.Math.SVector3WithError  . __len__ = lambda s : 3 
+Gaudi.Math.SVector4WithError  . __len__ = lambda s : 4 
+Gaudi.Math.SVector5WithError  . __len__ = lambda s : 5 
+Gaudi.Math.SVector6WithError  . __len__ = lambda s : 6 
+Gaudi.Math.SVector8WithError  . __len__ = lambda s : 8 
 
 ## get the eigenvalues for symmetric matrices :
 def _eigen_1_ ( self , sorted = True ) :

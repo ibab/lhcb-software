@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+
+! 2014-09-02 - Vanya Belyaev
+ - Types.py 
+   fix for missing __iadd__, __isub__ operators 
+   extend operators for linear-algebra vectors, 3D-points and 3D-vectors
+   add new QMTEST 
+
 ! 2014-09-01 - Manuel Tobias Schiller
  - (hopefully) fix warnings about unneeded semicolons in BloomFilter.h
 
