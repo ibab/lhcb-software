@@ -22,10 +22,10 @@ ApplicationMgr.TopAlg                = { "LHCb::DelaySleepAlg/Delay"};
 Delay.DelayTime                      = 0;
 Delay.MicroDelayTime                 = 0;
 */
-/*
 ApplicationMgr.TopAlg               += { "LHCb::RTLThreadTestAlg/ThreadTest" };
 ThreadTest.ThreadsAtInit = 1;
-ThreadTest.ThreadsAtStart = 1;
+ThreadTest.ThreadsAtStart = 0;
+/*
 */
 ApplicationMgr.ExtSvc               += { "LHCb::CheckpointSvc/CheckpointSvc" };
 //

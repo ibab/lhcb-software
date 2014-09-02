@@ -1,0 +1,3 @@
+#include "$FARMCONFIGROOT/options/CheckpointRestart.opts"
+CheckpointSvc.ChildWait              = 0;
+CheckpointSvc.OutputLevel            = 2;

@@ -11,11 +11,12 @@ export NODE=`echo $HOST | tr a-z A-Z`;
 #
 export CHECKPOINT_DIR=${GAUDIONLINEROOT}/options;
 export CHECKPOINT_SETUP_OPTIONS=${FARMCONFIGROOT}/options/Checkpoint.opts;
-export CHECKPOINT_RESTART_OPTIONS=${FARMCONFIGROOT}/options/CheckpointRestart.opts;
+export CHECKPOINT_RESTART_OPTIONS=../options/CheckpointTestRestart.opts;
 #
 export PYTHONPATH=${FARMCONFIGROOT}/job:${PYTHONPATH};
 export UTGID=${PARTITION_NAME}_${NODE}_${TASK_TYPE}_00;
 #
+echo "+++ Checkpoint test mode: ${arg}";
 if test "${arg}" = "RESTORE" -o "${arg}" = "TEST";
 then 
     export NBOFSLAVES=3;
@@ -27,7 +28,9 @@ then
 	unset TEST_CHECKPOINT;
 	export NBOFSLAVES=3;
     fi;
+    python -c "import ConfigureFromCheckpoint";
     python -c "import ConfigureFromCheckpoint" | `which restore.exe` -e -p 3 -i Checkpoint.data;
+
 else
     pkill -9 GaudiCheckpoint;
     if test "${arg}" = "CREATE"; 
@@ -39,5 +42,7 @@ else
     export Checkpoint_task="`which GaudiCheckpoint.exe` libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -msgsvc=MessageSvc -auto -main=$OPTS/Main.opts "
     echo "pkill -9 GaudiCheckpoint; debug --args $Checkpoint_task -opt=../options/CheckpointThreads.opts";
     export LD_PRELOAD=${CHECKPOINTINGROOT}/${CMTCONFIG}/libCheckpointing.so;
+    export LD_LIBRARY_PATH=/home/frankm/rpmbuild/BUILDROOT/glibc-2.12-1.7.el6.x86_64/lib64:$LD_LIBRARY_PATH;
+
     ${Checkpoint_task} -opt=../options/CheckpointTest.opts
 fi;
