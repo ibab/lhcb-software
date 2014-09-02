@@ -106,7 +106,8 @@ class LTUnbCharmLines( LineBuilder ) :
                                                  prescale  = config['Prescale'+LTUnbCharmName+thisline],
                                                  selection = self.LTUnbCharm[thisline],
                                                  EnableFlavourTagging = False,
-                                                 RequiredRawEvents = ["Trigger"] )
+                                                 RequiredRawEvents = ["Trigger"],
+                                                 MDSTFlag = True)
         
             self.registerLine(self.lineLTUnbCharm)
 

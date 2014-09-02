@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-02 - Andrea Contu
+ - Add MDST.DST support for StrippingLTUnbCharm
+
 ! 2014-09-01 - Stefano Perazzini
  - Fix of LineBuilder in StrippingDitau.py
 
