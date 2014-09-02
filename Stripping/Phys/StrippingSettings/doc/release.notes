@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-02 - Stefano Perazzini
+ - Updated stripping21 and stripping21r1 dbases
+
 ! 2014-09-02 - Roberta Cardinale
  - Re-added StrippingXibcX2JpsiProton
 
