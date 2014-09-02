@@ -461,7 +461,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, in
     bool found = false;
     for(size_t i=0; i<sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0]);++i) {
       SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[i];
-      if ( tmp.fd > 0 && m_strcmp(a->name,tmp.name) ) {
+      if ( tmp.fd > 0 && m_strcmp(a->name,tmp.name)==0 ) {
         found = true;
         break;
       }

@@ -297,6 +297,7 @@ int main(int argc, char** argv, char** /* envp */) {
   SysInfo::start_restore_t func = 0;
   //environ = envp;
   if ( argc > 1 ) {
+    char tmp_libs[1024];
     int prt = MTCP_WARNING, opts=0;
     const char* libs_dir = 0;
     {
@@ -313,8 +314,9 @@ int main(int argc, char** argv, char** /* envp */) {
         else if ( argc>i && argv[i][1] == 'd' ) ::sleep(10);
       }
       if ( 0 == file_name ) return usage();
+      if ( libs_dir )  {  ::realpath(libs_dir,tmp_libs); libs_dir = tmp_libs; }
       mtcp_set_debug_level(prt /* MTCP_ERROR prt */);
-      mtcp_output(MTCP_INFO,"restore: print level:%d input:%s\n",prt,file_name);
+      mtcp_output(MTCP_INFO,"restore: print level:%d input:%s libs to:%s\n",prt,file_name,libs_dir);
       load(argc, argv, file_name, libs_dir, advise, norestart==1, &func);
     }
     // Now call the restore function - it shouldn't return. 

@@ -1,18 +1,14 @@
 #include "Checkpointing/MainThread.h"
 #include "Checkpointing/Thread.h"
 #include "Checkpointing/MB.h"
-
 #include "Checkpointing/ThreadsLock.h"
 #include "Checkpointing/Static.h"
 #include "Checkpointing/SysCalls.h"
 #include "Checkpointing.h"
 #include "Restore.h"
-#include "linux/futex.h"
 #include <cstring>
-#include <cstdio>
 #include <cerrno>
 #include <unistd.h>
-#include <termios.h>
 
 using namespace Checkpointing;
 
@@ -42,8 +38,8 @@ static unsigned long int myinfo_gs;
 static Thread     *s_threads = 0;
 static FutexState  s_restoreinprog;
 static sigset_t    s_sigpending_global;    // pending signals for the process
-#define SIG_THREAD_CANCEL 32 // SIGRTMIN:   also used by pthread library
-#define SIG_THREAD_SETXID 33 // SIGRTMIN+1: also used by pthread library
+#define SIG_THREAD_CANCEL 32 // SIGRTMIN:   used by pthread library
+#define SIG_THREAD_SETXID 33 // SIGRTMIN+1: used by pthread library
 
 using namespace Checkpointing;
 

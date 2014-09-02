@@ -198,6 +198,9 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo* s) 
   mtcp_output(MTCP_INFO,"checkpoint: Image  begin:  %p end    %p [%X bytes]\n",
               s->addrStart,s->addrEnd,s->addrSize);
 
+  // Library temporary directory
+  mtcp_output(MTCP_INFO,"checkpoint: Tmp.lib. dir: '%s'\n",s->checkpointLibs);
+
   // Heap & Stack
   mtcp_output(MTCP_INFO,"checkpoint: Heap   curr:   %p saved  %p\n",curr_break,s->saved_break);
   mtcp_output(MTCP_INFO,"checkpoint: Stack lim soft:%p hard:  %p\n",s->stackLimitCurr,s->stackLimitHard);
@@ -209,6 +212,12 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_print(const SysInfo* s) 
   mtcp_output(MTCP_INFO,"checkpoint: Restore start: %p finish:%p\n",s->startRestore,s->finishRestore);
   mtcp_output(MTCP_INFO,"checkpoint: Mother of all: %p \n",s->motherofall);
   mtcp_output(MTCP_INFO,"checkpoint: Restore flags: %X \n",s->restart_flags);
+#if 0
+  for(size_t i=0; i<sizeof(s->tmpFiles)/sizeof(s->tmpFiles[0]);++i) {
+    const SysInfo::TmpFile& tmp = s->tmpFiles[i];
+    mtcp_output(MTCP_INFO,"checkpoint: tmp File:  %d  %s\n",tmp.fd,tmp.name);
+  }
+#endif
 }
 #if 0
 /// Get program context
@@ -361,9 +370,21 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_init_stack(SysInfo* sys,
     for(char* ep=*ee; *ee && *ep; ep=*(++ee)) {
       if ( ep ) {
         if ( 0 == m_strncmp(ep,"UTGID=",6) ) {
-          sys->utgid = (char*)ep + 6;
+          sys->utgid = ep + 6;
           sys->utgidLen = m_strlen(sys->utgid);
-          break;
+        }
+        else if ( 0 == m_strncmp(ep,"MTCP_OUTPUT=",11) ) {
+          char* ptr = ep + 12;
+	  if ( *ptr == 'D' || *ptr == 'V' || *ptr=='0' || *ptr == '1' )
+	    mtcp_set_debug_level(MTCP_DEBUG);
+	  if ( *ptr == 'I' || *ptr=='2' )
+	    mtcp_set_debug_level(MTCP_INFO);
+	  if ( *ptr == 'W' || *ptr=='3' )
+	    mtcp_set_debug_level(MTCP_WARNING);
+	  if ( *ptr == 'E' || *ptr=='4' )
+	    mtcp_set_debug_level(MTCP_ERROR);
+	  if ( *ptr == 'F' || *ptr=='5' )
+	    mtcp_set_debug_level(MTCP_FATAL);
         }
         else if ( *(short*)ep == *(short*)"_=" ) break;
       }

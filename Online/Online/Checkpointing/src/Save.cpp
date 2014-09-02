@@ -31,13 +31,12 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_library_fwrite(int fd, const 
   if ( fd <= 0 ) return 0;
   else if ( m_strcmp(a->name,chkpt_sys.checkpointFile)  == 0 ) return 0;
   else if ( m_strcmp(a->name,chkpt_sys.checkpointImage) == 0 ) return 0;
-  else if ( m_strfind(a->name,"(deleted)") == 0 ) return 0;
+  else if ( m_strfind(a->name,"(deleted)") != 0 ) return 0;
   else if ( a->name[0] && a->name[0]=='/' ) {
     int bytes = 0;
     int lib_fd = 0;
     const char *p0, *nam;
-    for(p0=a->name, nam=a->name; *p0; ++p0) if (*p0=='/') nam=p0;
-    nam = nam + 1;
+    for(p0=a->name, nam=a->name; *p0; ++p0) if (*p0=='/') nam=p0+1;
     bytes += writeMarker(fd,LIBRARY_BEGIN_MARKER);
     lib_fd = mtcp_sys_open(a->name,O_RDONLY,0);
     if ( lib_fd > 0 ) {
