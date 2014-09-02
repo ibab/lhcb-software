@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-02 - Mika Vesterinen
+ - first commit of S21 and 21r1 LineConfigDictionaries for semileptonics
+
 ! 2014-09-02 - Stefano Perazzini
  - Updated stripping21 and stripping21r1 dbases
 
