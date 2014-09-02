@@ -4,6 +4,12 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-09-02 - Sebastian Neubert
+ - Added one more location to TrackReportsDecoder/Writer
+ - Changed bit shift for Major SourceID from 13 to 11 
+   to make place for SourceIDs > 3
+   All raw files containing TrackReports have to be rewritten!  
+
 !========================= HltDAQ v4r6 2014-08-16 =========================
 
 ! 2014-08-07 - Sebastian Neubert

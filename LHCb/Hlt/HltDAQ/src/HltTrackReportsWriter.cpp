@@ -40,7 +40,8 @@ HltTrackReportsWriter::HltTrackReportsWriter( const std::string& name,
     : GaudiAlgorithm( name, pSvcLocator ), m_callcount{ 0u }
 {
     declareProperty( "Input2SourceId", m_map = { { "Hlt/Track/Velo",          kSourceID_Hlt1_Velo }
-                                               , { "Hlt1/Track/PestiForward", kSourceID_Hlt1_Forward } 
+                                               , { "Hlt/Track/PestiForward", kSourceID_Hlt1_ForwardPesti} 
+	                                       , { "Hlt/Track/TightForward", kSourceID_Hlt1_Forward } 
                                                } );
     declareProperty( "OutputRawEventLocation",
                      m_outputRawEventLocation = LHCb::RawEventLocation::Default );
@@ -111,7 +112,7 @@ void HltTrackReportsWriter::convert(const std::string& location, unsigned source
 
 
 
-        if ( msgLevel( MSG::VERBOSE ) ) {
+        if ( msgLevel( MSG::VERBOSE ) || true ) {
             verbose() << "----------------------------------------\n";
             verbose() << " Written event " << m_callcount << endmsg;
             verbose() << " Input tracks at " << location << "  -> source ID " << sourceID <<"\n";

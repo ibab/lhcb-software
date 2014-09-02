@@ -35,11 +35,12 @@ public:
 		   kSourceID_Hlt1_Velo = 1,
 		   kSourceID_Hlt1_VeloTT = 2,
 		   kSourceID_Hlt1_Forward = 3,
-		   kSourceID_Hlt1_ForwardFitted = 4,
+		   kSourceID_Hlt1_ForwardFitted = 5,
+		   kSourceID_Hlt1_ForwardPesti = 4,
 		   kSourceID_Max=7,
-		   kSourceID_BitShift=13,         // will need bitshifting to distinguish minor and major sourceIDs 
-		   kSourceID_MinorMask=0x1FFF,
-		   kSourceID_MajorMask=0xE000
+		   kSourceID_BitShift=11,         // will need bitshifting to distinguish minor and major sourceIDs 
+		   kSourceID_MinorMask=0x7FF,
+		   kSourceID_MajorMask=0x3800
   };
 
 

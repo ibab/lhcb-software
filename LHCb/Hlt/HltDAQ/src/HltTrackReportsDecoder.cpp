@@ -20,7 +20,7 @@ namespace
 {
 int sourceID( const RawBank& bank )
 {
-    return bank.sourceID() >> HltTrackReportsWriter::kSourceID_BitShift;
+     return bank.sourceID() >> HltTrackReportsWriter::kSourceID_BitShift;
 }
 int seq( const RawBank& bank )
 {
@@ -58,7 +58,7 @@ HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                            LHCb::RawEventLocation::Default};
     initRawEventSearch();
 
-    declareProperty( "Output2SourceId", m_map = { { "Hlt/Track/Velo", 1 }, { "Hlt2/Track/Forward", 3 } } );
+    declareProperty( "Output2SourceId", m_map = { { "Hlt/Track/Velo", 1 }, { "Hlt/Track/Forward", 3 }, { "Hlt/Track/ForwardPesti", 4 } } );
 }
 
 //=============================================================================
@@ -105,6 +105,13 @@ StatusCode HltTrackReportsDecoder::execute()
     // ----------------------------------------------------------
     std::vector<RawBank*> hltTrackReportsRawBanks =
         rawEvent->banks( RawBank::HltTrackReports );
+
+    //warning() << hltTrackReportsRawBanks.size() << " raw banks found" << endmsg;
+    //for ( const auto & bank : hltTrackReportsRawBanks) {
+    //  warning() << "raw sourceID: " << bank->sourceID() << endmsg;
+    //  warning() << "SourceID: " << sourceID(*bank) << endmsg;
+    //}
+
     // check for bad banks:
     hltTrackReportsRawBanks.erase(
         std::remove_if( std::begin( hltTrackReportsRawBanks ),
@@ -137,7 +144,10 @@ StatusCode HltTrackReportsDecoder::execute()
         // if there is a valid bank, create the output -- even if it is an empty bank...
         // (which results in an empty output ;-). If there is no bank, then do NOT
         // create the output...
-        if ( range.first == range.second ) continue;
+        if ( range.first == range.second ) {
+	  //warning() << "Empty bank " << entry.first << endmsg;
+	  continue;
+	}
 
         // create output container and put it on TES
         LHCb::Tracks* outputTracks = new Tracks();
