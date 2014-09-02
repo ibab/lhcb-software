@@ -40,7 +40,7 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
           , 'MaxOTHits'
           )
 
-MaxOTHits = 15000
+MaxOTHits = 15000 #--> moved to CommonForwardOptions
 
 CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10,
                               "XWindow" : 200,
@@ -53,11 +53,38 @@ CommonpETOptions = {"minMomentum" : 2000.0 ,
                     "fitTracks" : False,
                     "maxChi2" : 256.}
 
+CommonVeloTTFitterOptions = {"NumberFitIterations" : 1,
+                             "MaxNumberOutliers" : 1,
+                             "Extrapolator.ExtraSelector" : "TrackSimpleExtraSelector",
+                             "StateAtBeamLine" : False}
+
+CommonVeloTTOptions = {"minMomentum" : 2000.0,
+                       "minPT" : 200.0 ,
+                       "PassTracks" : True,
+                       "centralHoleSize" : 33,
+                       "PassHoleSize" : 45,
+                       "maxPseudoChi2" : 256.0,
+                       "DxGroupFactor" : 0.0,
+                       "maxSolutionsPerTrack" : 1,
+                       "fitTracks" : False,
+                       "maxChi2" : 256.}
+
+CommonForwardOptions = { "MaxOTHits" : 150000 }
+    
+
 CommonForwardTrackingOptions = { "MaxChi2" : 40,
                                  "MaxChi2Track" : 40,
                                  "MinHits" : 12,  
                                  "MinOTHits" : 14,
-                                 "SecondLoop" : True} 
+                                 "SecondLoop" : True,
+                                 "FlagUsedSeeds" : True }
+ 
+ForwardTrackingOptions_MomEstimate = { "UseMomentumEstimate" : True
+                                       ,"UseWrongSignWindow" : True
+                                       ,"WrongSignPT" : 2000
+                                       ,"Preselection" : True }
+
+
 CommonForwardTrackingOptions_EarlyData = { "MaxChi2" : 40, 
                                  "MaxChi2Track" : 40, 
                                  "MinHits" : 12,  
@@ -135,7 +162,7 @@ OTRawBankDecoder().TimeWindow = ( -8.0, 56.0 ) # add units: ns!!
 #shared between Hlt1 and Hlt2
 #from HltTrackNames import HltSharedRZVeloTracksName, HltSharedVeloTracksName, HltSharedTracksPrefix 
 
-from HltTrackNames import HltSharedVeloLocation
+from HltTrackNames import HltSharedVeloLocation, HltSharedVeloTTLocation, HltSharedForwardLocation
 
 from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
 from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
@@ -152,6 +179,31 @@ from Configurables import TrackStateInitAlg, TrackStateInitTool
 recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = HltSharedVeloLocation) 
 recoVelo.HLT1Only = False 
 recoVelo.HLT2Complement = False 
+recoVelo.StatPrint = True
+
+#### VeloTT Tracking
+from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
+recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt', 
+                        InputTracksName = recoVelo.OutputTracksName,
+                        OutputTracksName = HltSharedVeloTTLocation,
+                        fitTracks=False)
+recoVeloTT.addTool(PatVeloTTHybridTool, name="PatVeloTTTool")
+recoVeloTT.PatVeloTTTool.getProperties().update(CommonVeloTTOptions)
+recoVeloTT.PatVeloTTTool.StatPrint = True
+
+#### Forward Tracking
+from Configurables import PatForward, PatForwardTool
+recoForward = PatForward( 'RecoForwardHlt'
+                          , InputTracksName  = recoVeloTT.OutputTracksName 
+                          , OutputTracksName = HltSharedForwardLocation 
+                          , maxOTHits=MaxOTHits)
+recoForward.addTool(PatForwardTool, name='PatForwardTool')
+recoForward.PatForwardTool.getProperties().update(CommonForwardTrackingOptions)
+recoForward.PatForwardTool.getProperties().update(ForwardTrackingOptions_MomEstimate)
+recoForward.PatForwardTool.MinMomentum = 3000
+recoForward.PatForwardTool.MinPt = 500
+recoForward.PatForwardTool.StatPrint = True
+ 
 
 ##### Hlt selections
 from Configurables import Hlt__TrackFilter as HltTrackFilter
@@ -170,13 +222,20 @@ from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
-#MinimalRZVelo = bindMembers( None, [DecodeVELO, patVeloR ] ).setOutputSelection( patVeloR.OutputTracksName )
+
 
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
 RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( recoVelo.OutputTracksName )
-#Velo = bindMembers( None, [ MinimalVelo, prepare3DVelo ] ).setOutputSelection( 'Velo' )
-
 RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ])
+
+# put selection revive/redo here
+# for now always redo:
+bm_members =  DecodeVELO.members() + [recoVelo]
+bm_members += DecodeTT.members() + [recoVeloTT] 
+bm_members += DecodeIT.members() + [recoForward]
+
+HltTracking = bindMembers(None, bm_members).setOutputSelection( recoForward.OutputTracksName )
+
 
 # ==============================================================================
 # Hlt1Seeding, used by MicroBias

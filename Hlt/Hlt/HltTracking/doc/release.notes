@@ -3,6 +3,26 @@
 ! Responsible : Vladimir Gligorov / Johannes Albrecht
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2014-09-02 - Sebastian Neubert
+ HltReco:
+ - Added En block Tracking Sequence HltTracking
+ 
+ Hlt1TrackUpgradeConf:
+ - Added Hlt__Track2Candidate to make en block reconstructed forward tracks
+   available to the streamer framework
+ - Set pt cut for TrackAllL0VeloTTForw to 500MeV
+
+ Hlt1StreamerConf:
+ - added common Hlt1Root for track locations, will be used later to rework the
+   locations in TrackNames
+ 
+ HltTrackNames:
+ - added SharedTrack names for VeloTT and Forward. This will be reiterated upon soon
+
+ Hlt2Tracking:
+ - look up TrackLocations for TrackUsedLHCbID tool in TrackNames.
+
 ! 2014-08-25 - Gerhard Raven
  - follow change in Patforward{,Tool}: used hits are now (optionally)
    flagged in PatForward instead of skipped in PatForwardTool

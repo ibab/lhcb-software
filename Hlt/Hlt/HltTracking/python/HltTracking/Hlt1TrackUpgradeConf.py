@@ -32,7 +32,6 @@ _minP  = 8000 * MeV #### MOVE TO 8000 (used to be 5000 )
 def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMomEst = False ) :
     if name == None: name = PatForwardTool.__name__
     from HltTracking.HltReco import CommonForwardTrackingOptions 
-
     opts = CommonForwardTrackingOptions.copy()
     if useMomEst :
         opts.update( UseMomentumEstimate = True
@@ -44,7 +43,6 @@ def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMom
                    , name
                    , MinPt = minPt
                    , MinMomentum = minP
-                   , FlagUsedSeeds = True 
                    , **opts 
                    ).createConfigurable( parent )
 
@@ -134,7 +132,7 @@ import Hlt1StreamerConf as Conf
 
 ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000 * MeV , 1250 * MeV )
 ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000 * MeV ,  500 * MeV)
-ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000 * MeV ,  300 * MeV, useMomEst=True)
+ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000 * MeV ,  500 * MeV, useMomEst=True)
 ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 2000 * MeV , 200  * MeV )
 ## Strings for users
 TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
@@ -193,6 +191,26 @@ def VeloCandidates( lineName ):
     bm = bindMembers ( None , [ MinimalVelo, tracks ] )
     return "VeloCandidates = execute( %s ) * SELECTION( '%s' )" % \
                 ( [ m.getFullName() for m in bm.members() ], selection )
+
+# ==============================================================================
+# Track candidates
+# ==============================================================================
+from Configurables import Hlt__Track2Candidate
+import HltLine.HltDecodeRaw 
+from HltReco import HltTracking
+from HltLine.HltLine import bindMembers
+def TrackCandidates( lineName ):
+    selection = 'TrackCandidates%s' % lineName
+    tracks = Hlt__Track2Candidate (
+        'Track2Candidates%s' % lineName,
+        Code            = "~TrBACKWARD"    , ## skip backward tracks 
+        InputSelection  = HltTracking.outputSelection(),
+        OutputSelection = selection,
+        )
+    bm = bindMembers ( None , [ HltTracking, tracks ] )
+    return "TrackCandidates = execute( %s ) * SELECTION( '%s' )" % \
+                ( [ m.getFullName() for m in bm.members() ], selection )
+                
 
 # ==============================================================================
 # L0CaloCandidates as Hlt::Candidates

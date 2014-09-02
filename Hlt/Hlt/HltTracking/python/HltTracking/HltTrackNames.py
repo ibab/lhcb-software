@@ -34,6 +34,7 @@ def _baseProtoPLocation(prefix,protos) :
 # _trackLocation and _protosLocation)
 #
 HltSharedTracksPrefix 			= HltGlobalEventPrefix + "Hlt"
+
 Hlt1TracksPrefix 			= HltGlobalEventPrefix + "Hlt1"
 Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
 #
@@ -42,8 +43,13 @@ Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
 #
 HltSharedRZVeloTracksName               = "RZVelo"
 HltSharedVeloTracksName               = "Velo"
+HltSharedVeloTTTracksName               = "VeloTT"
+HltSharedForwardTracksName               = "Forward"
 #
 HltSharedVeloLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)
+HltSharedVeloTTLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTTTracksName)
+HltSharedForwardLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedForwardTracksName)
+
 #
 Hlt1SeedingTracksName                   = "Seeding"
 Hlt1ForwardTracksName                   = "Forward"
@@ -145,6 +151,8 @@ __all__ = (
            	Hlt1TracksPrefix, 
            	Hlt2TracksPrefix, 
         HltSharedVeloLocation,
+        HltSharedVeloTTLocation,
+        HltSharedForwardLocation,
 		#
 		HltSharedRZVeloTracksName,
 		Hlt2ForwardTracksName, 
