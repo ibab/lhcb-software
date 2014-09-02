@@ -100,6 +100,8 @@ namespace LHCb  {
     Children                  m_children;
 
   protected:
+    /// Debug hook: set option CheckpointSvc.ChildWait to something big. Then connect with gdb
+    void debugWait(int value) const;
 
     /// Create checkpoint file from running process instance
     int saveCheckpoint();
@@ -191,29 +193,31 @@ namespace LHCb  {
 #include <cstdlib>
 #include <fcntl.h>
 #ifdef _WIN32
-  #include <io.h>
-  #include <sys/stat.h>
-  typedef int pid_t;
-  static inline  int   setenv(const char*, const char*, int) { return -1; }
-  static inline  pid_t waitpid(int, int*, int) { return -1; }
-  static inline  int   killpg(int,int) { return -1;}
-  static inline  int   getpgrp() { return -1; }
-  static inline  int   setsid() { return -1; }
-  #define WUNTRACED     1
-  #define WCONTINUED    1
-  #define WNOHANG       1
-  #define STDIN_FILENO  1
-  #define STDOUT_FILENO 2
-  #define STDERR_FILENO 3
-  #define S_IWUSR       _S_IWRITE
-  #define S_IRUSR       _S_IREAD
-  static const int S_IRWXU = (_S_IREAD|_S_IWRITE);
-  static const int S_IRWXG = 0;
-  static const int S_IRWXO = 0;
+#include <io.h>
+#include <sys/stat.h>
+typedef int pid_t;
+static inline  int   setenv(const char*, const char*, int) { return -1; }
+static inline  pid_t waitpid(int, int*, int) { return -1; }
+static inline  int   killpg(int,int) { return -1;}
+static inline  int   getpgrp() { return -1; }
+static inline  int   setsid() { return -1; }
+#define WUNTRACED     1
+#define WCONTINUED    1
+#define WNOHANG       1
+#define STDIN_FILENO  1
+#define STDOUT_FILENO 2
+#define STDERR_FILENO 3
+#define S_IWUSR       _S_IWRITE
+#define S_IRUSR       _S_IREAD
+static const int S_IRWXU = (_S_IREAD|_S_IWRITE);
+static const int S_IRWXG = 0;
+static const int S_IRWXO = 0;
 
 #else
-  #include <unistd.h>
-  #include <sys/wait.h>
+#include <unistd.h>
+#include <sys/wait.h>
+#include <pthread.h>
+#include <syscall.h>
 #endif
 #include <sys/stat.h>
 #include <signal.h>
@@ -230,9 +234,9 @@ DECLARE_SERVICE_FACTORY(CheckpointSvc)
 namespace  {
 
   /** @class Command
-    *
-    *  @author M.Frank
-    */
+   *
+   *  @author M.Frank
+   */
   class Command : public DimCommand  {
     /// Reference to checkpoint service
     LHCb::CheckpointSvc* m_check;
@@ -298,6 +302,7 @@ namespace  {
       }
     }
   };
+
 }
 
 /// Standard constructor
@@ -389,6 +394,7 @@ StatusCode CheckpointSvc::start() {
   if ( m_masterProcess )    {  // Only the master does anything on start!
     if ( m_useCores || (m_numInstances != 0) )   {
       stopMainInstance();
+      checkpointing_dump_threads();
       int n_child = m_useCores ? numCores() + m_numInstances : m_numInstances;
       for(int i=0; i<n_child; ++i)    {
 	pid_t pid = forkChild(i+1);
@@ -433,6 +439,26 @@ StatusCode CheckpointSvc::finalize() {
   return Service::finalize();
 }
 
+//const string& node = RTL::nodeNameShort();
+void CheckpointSvc::debugWait(int value)  const  {
+  bool dbg;// = ( node == "hlte0103" ) && ( m_childWait>0 );
+  dbg = true;
+  if ( dbg )  {
+    bool r = true;
+    int cnt = value;
+    if ( cnt>0 ) {
+      char text[1024];
+      ::snprintf(text,sizeof(text),"[ERROR] +++ Going into wait loop (%d seconds)"
+		 " for debugging: --pid %d\n",value,(int)syscall(SYS_getpid));
+      ::write(STDOUT_FILENO,text,strlen(text));
+    }
+    while( r && cnt>0 ) {
+      --cnt;
+      ::lib_rtl_sleep(1000);
+    }
+  }
+}
+ 
 namespace {
   void string_replace(std::string& s, const std::string& pattern, const std::string& value) {
     size_t idx = string::npos;
@@ -533,7 +559,7 @@ int CheckpointSvc::finishCheckpoint() {
 int CheckpointSvc::finishRestore() {
   // %%HACK%% Sleep 3 secs to let threads pass immediate actions before we modify the
   // environment.
-  ::lib_rtl_sleep(2000);
+  ::lib_rtl_sleep(1000);
 
   checkpointing_update_environment();
   RTL::RTL_reset();
@@ -543,6 +569,10 @@ int CheckpointSvc::finishRestore() {
     err << MSG::FATAL << "Failed to parse job options after checkpoint restart." << endmsg;
     return sc.getCode();
   }
+  // If debugging is enabled (m_childWait>0) call debug hook
+  // Do not call before, because we need the new values from the options!
+  debugWait(m_childWait);
+
   if ( ::getenv("TEST_CHECKPOINT") )  {
     ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
     ::fprintf(stdout,"=  RESTORE TEST WAS SUCCESSFUL.\n");
@@ -550,7 +580,7 @@ int CheckpointSvc::finishRestore() {
     ::fprintf(stdout,"=  The process will now exit.\n");
     ::fprintf(stdout,"%s%s\n",MARKER,MARKER);
     ::fflush(stdout);
-    ::lib_rtl_sleep(20000);
+    ::lib_rtl_sleep(3000);
     ::_exit(EXIT_SUCCESS);
   }
   MsgStream log(msgSvc(),name());
@@ -730,14 +760,6 @@ int CheckpointSvc::forkChild(int which) {
     if ( m_forceUTGID>0 ) {
       checkpointing_force_utgid(utgid.c_str());
     }
-    if ( m_childWait>0 ) {
-      bool r = true;
-      int cnt = m_childWait;
-      while( r && cnt>0 ) {
-	--cnt;
-	::lib_rtl_sleep(1000);
-      }
-    }
     if ( m_childSleep>0 ) {
       int w = which%10;
       ::lib_rtl_sleep(m_childSleep*w);
@@ -778,6 +800,8 @@ int CheckpointSvc::execChild() {
       ::_exit(EXIT_FAILURE);
     }
   }
+  // If debugging is enabled (m_childWait>0) call debug hook
+  debugWait(m_childWait);
   /// Need to reset RTL to get proper processnames etc. afterwards
   RTL::RTL_reset();
   /// Now it should be save to restart the children
@@ -887,6 +911,8 @@ void CheckpointSvc::handle(const Incident& inc) {
   else if ( inc.type() == "APP_RUNNING" ) {
     // string proc  = RTL::processName();
     //    ::dis_start_serving(proc.c_str());
+    ::lib_rtl_sleep(500);
+    checkpointing_dump_threads();
   }
   else if ( inc.type() == "APP_STOPPED" ) {
   }
