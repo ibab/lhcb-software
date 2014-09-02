@@ -29,7 +29,7 @@ then
 	export NBOFSLAVES=3;
     fi;
     python -c "import ConfigureFromCheckpoint";
-    python -c "import ConfigureFromCheckpoint" | `which restore.exe` -e -p 3 -i Checkpoint.data;
+    python -c "import ConfigureFromCheckpoint" | `which restore.exe` -e -p 1 -l ./tmp -i Checkpoint.data;
 
 else
     pkill -9 GaudiCheckpoint;

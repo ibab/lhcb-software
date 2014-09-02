@@ -1,5 +1,15 @@
+// ---------------------------------------------------------------------------
+//
+// Usage:  gentest.exe libGaudiOnlineTests.so pthread_cancellation
+//
+// To test signals with libCheckpointing.so use:
+//
+// $> export LD_PRELOAD=${CHECKPOINTINGROOT}/${CMTCONFIG}/libCheckpointing.so;
+// $> export MTCP_OUTPUT=DEBUG
+// $> GaudiCheckpoint.exe libGaudiOnlineTests.so pthread_cancellation
+//
+// ---------------------------------------------------------------------------
 #include <pthread.h>
-#include <iostream>
 #include <cstdlib>
 #include <csignal>
 #include <cstdio>
@@ -10,13 +20,14 @@
 #include <cstring>
 #include <syscall.h>
 
-#define gettid() syscall(SYS_gettid)
+#define gettid() ((int)syscall(SYS_gettid))
 
 //#define CHECK_THREAD(x,y) test_tid(x)
 //#define CHECK_THREAD(x,y) kill(x,y)
 #define CHECK_THREAD(x,y) syscall(SYS_tkill,3416,y)
 
 using namespace std;
+
 namespace {
   pid_t thread_tid = 0;
   bool run = true;
@@ -30,26 +41,28 @@ namespace {
   }
 
   void cleanup_thread(void*) {
-    ::printf("+++++ CANCEL+++CANCEL+++ Foo was cancelled\n");
+    ::printf("CXX using stack-unwind +++++ CANCEL+++CANCEL+++ Foo was cancelled\n");
+    ::fflush(stdout);
   }
 
   static void *test_thread(void *)   {
-    //pthread_cleanup_push(cleanup_thread,NULL);
+    pthread_cleanup_push(cleanup_thread,NULL);
     ::printf("+++ tid:%5d: Thread starting.\n",gettid());
     thread_tid = gettid();
     while(run) ::usleep(1000);
-    //pthread_cleanup_pop(0);
+    pthread_cleanup_pop(0);
     ::printf("+++ tid:%5d: Thread about to exit.\n",gettid());
     return 0;
   }
   void (*_cancel_action)(int signum, siginfo_t *si, void *ctx);
   void _test_action(int signum, siginfo_t *si, void *ctx)   {
-    ::write(2,"+++ Thread CANCELLED.\n",22);
+    ::printf("C/Signal  +++ Thread CANCELLED.\n");
+    ::fflush(stdout);
     (*_cancel_action)(signum,si,ctx);
   }
 }
 
-int main(int, char**)   {
+extern "C" int pthread_cancellation(int, char**)   {
   void* ret;
   int status;
   pthread_t t_id = 0;
@@ -73,15 +86,14 @@ int main(int, char**)   {
   }
   ::printf("+++ tid:%5d: Kill status: %d errno:%d\n",gettid(),status,errno);
   ::sleep(1);
-  if ( syscall(SYS_rt_sigaction,32,0,&old,NSIG/8) < 0 )  {
+
+  if ( syscall(SYS_rt_sigaction,32,0,&old,NSIG/8) < 0 )
     ::perror("sigaction");
-  }
   ::memcpy(&act,&old,sizeof(act));
   _cancel_action = old.sa_sigaction;
   act.sa_sigaction = _test_action;
-  if ( syscall(SYS_rt_sigaction,32,&act,0,NSIG/8) < 0 )  {
+  if ( syscall(SYS_rt_sigaction,32,&act,0,NSIG/8) < 0 )
     ::perror("sigaction");
-  }
 
   ::pthread_cancel(t_id);
   ::pthread_join(t_id,&ret);

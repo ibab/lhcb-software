@@ -6,20 +6,24 @@
 version v1r3
 #
 #
-use  GaudiAud      v*
-use  GaudiSvc      v*
-use  GaudiAlg      v*
-use  GaudiPython   v*
-use  MDF_ROOT      v* DAQ
-use  GaudiOnline   v* Online
-use  RootCnv       v* Online
-use  FarmConfig    v* Online
+use  GaudiPolicy   v*
+use  GaudiAud      v*                -no_auto_imports
+use  GaudiSvc      v*                -no_auto_imports
+use  GaudiAlg      v*                -no_auto_imports
+use  GaudiPython   v*                -no_auto_imports
+use  MDF_ROOT      v* DAQ            -no_auto_imports
+use  GaudiOnline   v* Online         -no_auto_imports
+use  RootCnv       v* Online         -no_auto_imports
+use  FarmConfig    v* Online         -no_auto_imports
 
 ###use  Gaucho        v* Online
 ###use  MBMDump       v* Online
 #use GaudiUPI      v* Online
 ###use Writer         v* Online
 #use Brunel v* Rec
+
+library  GaudiOnlineTests *.cpp
+apply_pattern linker_library library=GaudiOnlineTests
 
 set GaudiOnlineExe   "GaudiOnlineExe.exe"
 set GAUDIONLINE_OPTS "${GAUDIONLINEROOT}/options"
