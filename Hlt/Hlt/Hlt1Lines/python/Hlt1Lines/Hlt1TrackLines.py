@@ -48,6 +48,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'AllL0_Velo_Qcut'   : 3.
                     ,   'AllL0_GEC'         : 'Loose'
                     ,   'AllL0_ValidateTT'  : False
+                    ,   'AllL0Block_PT'          : 500.
+                    ,   'AllL0Block_P'           : 3000.
+                    ,   'AllL0Block_IP'          : 0.000
+                    ,   'AllL0Block_IPChi2'      : 16.
+                    ,   'AllL0Block_TrChi2'      : 3.
                     ,   'AllL0VeloTT_Velo_NHits' : 9.
                     ,   'AllL0VeloTT_Velo_Qcut'  : 3.
                     ,   'AllL0VeloTT_IP'         : 0.100
@@ -120,12 +125,13 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         #dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
-        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
+        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates, TrackCandidates,
                                                        LooseForward, TightForward, PEstiForward, pET,
                                                        FitTrack, FitVeloTTTrack, MatchVeloMuon, IsMuon )
         from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
  
         Preambulo = [ VeloCandidates( prefix ),
+                      TrackCandidates( prefix ),
                       TightForward,
                       LooseForward,
                       PEstiForward,
@@ -232,7 +238,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         Preambulo = self.hlt1Track_Preambulo( name )
         #Preambulo.append("hPPre = Gaudi.Histo1DDef('preP',0,10000)")
         Preambulo.append("from LoKiCore.functions import *")
-	Preambulo.append("from LoKiPhys.decorators import *")
+        Preambulo.append("from LoKiPhys.decorators import *")
         Preambulo.append("from GaudiPython.HistoUtils import book")              
         Preambulo.append("histo = Gaudi.Histo1DDef('Pre VeloTT Pt', 0.0, 10000.0,100)")
 
@@ -305,9 +311,37 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         from HltTracking.HltPVs import PV3D
         return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1HighPTLifetimeUnbiased_Unit ]
 
-
+    # line using velo+veloTT+forwardUpgrade en'block 
+    def hlt1TrackBlock_Streamer( self, name, props ) :
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        from Configurables import LoKi__HltUnit as HltUnit
+        props['name'] = name
+        
+        lineCode = """ 
+        TrackCandidates
+        >>  ( ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) & ( TrPT > %(PT)s * MeV ) & \
+        ( TrP  > %(P)s  * MeV ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
+        >>  FitTrack
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
+        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
+        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
+        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
+        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
+        >> SINK( 'Hlt1%(name)sDecision' )
+        >> ~TC_EMPTY
+        """ % props
+        hlt1TrackBlock_Unit = HltUnit(
+            'Hlt1'+name+'Unit',
+            OutputLevel = 1 ,
+            Preambulo = self.hlt1Track_Preambulo( name ),
+            Code = lineCode
+            )       
+        from HltTracking.HltPVs import PV3D
+        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackBlock_Unit ]
      
-
     
 
     def hlt1TrackNonMuon_Streamer( self, name, props ) :
@@ -440,6 +474,12 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , postscale = self.postscale
              , L0DU = "L0_DECISION_PHYSICS" 
              , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0", self.localise_props( "AllL0" ) )
+               )
+        Line ( 'TrackAllL0Block'
+             , prescale = self.prescale
+             , postscale = self.postscale
+             , L0DU = "L0_DECISION_PHYSICS" 
+             , algos = self.hlt1TrackBlock_Streamer( "TrackAllL0Block", self.localise_props( "AllL0Block" ) )
                )
         Line ( 'TrackAllL0VeloTT'
              , prescale = self.prescale

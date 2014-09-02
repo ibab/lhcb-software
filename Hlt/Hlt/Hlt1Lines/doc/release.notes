@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-09-02 - Sebastian Neubert
+ - added Hlt1TrackAllL0Block line performing Velo + VeloTT + Forward en block
+
 !========================= Hlt1Lines v7r4 2014-08-16 =========================
 
 ! 2014-07-15 - Gerhard Raven
