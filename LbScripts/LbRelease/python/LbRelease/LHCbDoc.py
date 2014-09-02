@@ -300,6 +300,29 @@ def _getProjDepsX(project, version):
                 to_process.append(b)
     return deps
 
+def findPackages(projdir):
+    '''
+    Return a generator for the package names from the specified project directory.
+    '''
+    for root, dirs, files in os.walk(projdir):
+        if 'InstallArea' in dirs:
+            dirs.remove('InstallArea')
+        if root == projdir:
+            continue # no need to check the top level
+        if 'CMakeLists.txt' in files or 'cmt' in dirs:
+            # this is a package
+            dirs[:] = [] # no need to recurse further
+            yield os.path.relpath(root, projdir)
+
+def findFilesInSubdirs(path):
+    '''
+    Return a generator for all the files in a directory and its subdirs.
+    The path to the files is relative to the top directory passed as argument.
+    '''
+    for root, _, files in os.walk(path):
+        for filename in files:
+            yield os.path.relpath(os.path.join(root, filename), path)
+
 #--- Documentation class
 class Doc(object):
     """
@@ -610,17 +633,66 @@ class Doc(object):
         doxycfg['WARN_LOGFILE']        = "DoxyWarnings.log"
 
         #--- Input related options
-        doxycfg['INPUT'] = [ "%s_%s" % item
-                             for item in self.projects.items()
-                             if item[0] not in ["LCGCMT"] ] # avoid some projects
+        project_dirs = [ "%s_%s" % item
+                         for item in self.projects.items()
+                         if item[0] not in ["LCGCMT"] ] # avoid some projects
+        # find a binary dir common to all projects
+        configs = None
+        for p in project_dirs:
+            inst_area = os.path.join(self.path, p, 'InstallArea')
+            if os.path.exists(inst_area):
+                proj_configs = set(c for c in os.listdir(inst_area)
+                                   if not c.startswith('.'))
+                if configs is None:
+                    configs = proj_configs
+                else:
+                    configs.intersection_update(proj_configs)
+        if configs:
+            config = configs.pop() # let's pick one up at random
+        else:
+            # it's unlikely that we end up with no suitable config,
+            # but we have to cover the case
+            config = None
+
+        # add all subdirs of the projects, but only the include from InstallArea
+        inputs = []
+        excludes = []
+        for p in project_dirs:
+            self._log.debug('project: %s', p)
+            # find all packages and add them to the search path
+            packs = set(findPackages(os.path.join(self.path, p)))
+            inputs.extend(os.path.join(p, subdir) for subdir in packs)
+            self._log.debug('%d packages: %s', len(packs), ', '.join(packs))
+
+            if config:
+                inc_dir = os.path.join(p, 'InstallArea', config, 'include')
+                if os.path.exists(os.path.join(self.path, inc_dir)):
+                    self._log.debug('looking for includes in %s', inc_dir)
+                    # add InstallArea include dir to the search path
+                    inputs.append(inc_dir)
+                    # but we need to remove the duplicates from the various packages
+                    installed_headers = set(findFilesInSubdirs(os.path.join(self.path, inc_dir)))
+                    # for each package, exclude from the files in the install area that
+                    # are already in the package
+                    for pack in packs:
+                        pack_files = set(findFilesInSubdirs(os.path.join(self.path, p, pack)))
+                        to_exclude = installed_headers.intersection(pack_files)
+                        if to_exclude:
+                            self._log.debug('except %d files found in %s', len(to_exclude), pack)
+                            excludes.extend(os.path.join('*', inc_dir, f)
+                                            for f in to_exclude)
+
+        doxycfg['INPUT'] = inputs
+
         doxycfg['RECURSIVE']           = True
-        excludes = [
-            "*/dict/*", "*/InstallArea/*",
+        excludes += [
+            "*/dict/*",
             # Exclude tests
             "*/test/*",
             "*/Test/*",
             "*/tests/*",
             "*/Tests/*",
+            "*/utest/*",
             "*/examples/*",
             "*/GaudiExamples/*",
             # Exclude binaries
@@ -645,11 +717,9 @@ class Doc(object):
         doxycfg["EXCLUDE_PATTERNS"] = excludes
         files = []
         for p in doxycfg["INPUT"]:
-            for d in [ d
-                       for d in os.listdir(os.path.join(self.path, p))
-                       if (d.endswith("Sys") and d != "GaudiSys") or d.endswith("Release")]:
-                # FILE_PATTERNS   += *LHCbSys*requirements
-                files.append("*%s*requirements" % d)
+            if (p.endswith("Sys") and not p.endswith("GaudiSys")) or p.endswith("Release"):
+                # FILE_PATTERNS   += *LHCB_<VERSION>/LHCbSys*requirements
+                files.append("*%s*requirements" % p)
         doxycfg["FILE_PATTERNS"] = files
         doxycfg['LAYOUT_FILE'] = os.path.join("conf", "DoxygenLayout.xml")
         doxycfg['IMAGE_PATH'] = ["conf"]

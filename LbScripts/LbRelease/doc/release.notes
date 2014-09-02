@@ -1,4 +1,8 @@
-2014-05-26  Marco Clemencic  <Marco.Clemencic@cern.ch>
+2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease.LHCbDoc: fixed LBCORE-593
+
+2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* getpack: use shared toolchain.cmake from LbUtils when checking out projects
 
