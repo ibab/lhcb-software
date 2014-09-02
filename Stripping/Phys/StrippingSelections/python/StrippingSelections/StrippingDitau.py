@@ -104,10 +104,10 @@ __all__    = [
 
 lines_decays   = {
   # Name  : ( Decay descriptor   , Config name ),
-  'MuX'   : ( '[Z0 -> mu+ pi-]cc', 'CONFIG' ),
-  'MuXss' : ( '[Z0 -> mu+ pi+]cc', 'CONFIG' ),
-  'EX'    : ( '[Z0 -> e+  pi-]cc', 'CONFIG'  ),
-  'EXss'  : ( '[Z0 -> e+  pi+]cc', 'CONFIG'  ),
+  'MuX'   : '[Z0 -> mu+ pi-]cc',
+  'MuXss' : '[Z0 -> mu+ pi+]cc',
+  'EX'    : '[Z0 -> e+  pi-]cc',
+  'EXss'  : '[Z0 -> e+  pi+]cc'
 }
 
 default_config = {
@@ -303,7 +303,28 @@ from StrippingConf.StrippingLine import StrippingLine
 
 class DitauConf(LineBuilder):
 
-  __configuration_keys__ = default_config.keys()
+  __configuration_keys__ = default_config['CONFIG'].keys()
+  #__configuration_keys__ = ('prescale',
+  #                          'postscale',
+  #                          'HLTMuon',  
+  #                          'HLTElectron',
+  #                          'min_TRPCHI2',
+  #                          'max_BPVIP',  
+  #                          'max_Cone_N', 
+  #                          'mu_min_PT',  
+  #                          'mu_min_FracCone05E',
+  #                          'mupi_min_PT',       
+  #                          'mupi_min_FracCone05E',
+  #                          'mu_mother_min_MM',    
+  #                          'e_min_PT',        
+  #                          'e_min_FracCone05E',
+  #                          'e_max_TRCHI2DOF',  
+  #                          'e_min_CaloPrsE',   
+  #                          'e_min_CaloEcalE',  
+  #                          'e_max_CaloHcalE',  
+  #                          'epi_min_PT',       
+  #                          'epi_min_FracCone05E',
+  #                          'e_mother_min_MM')
 
   # Note: To be instantiated by LineBuilder( default_config['NAME'], default_config )
   def __init__(self, name_strip, dconfig):
@@ -311,9 +332,9 @@ class DitauConf(LineBuilder):
     # Required the explicit name/dconfig, no default allow
     LineBuilder.__init__(self, name_strip, dconfig)
 
-    for name_line, ( decay, name_config) in lines_decays.iteritems():
+    for name_line, decay in lines_decays.iteritems():
 
-      config    = dconfig[name_config]
+      config    = dconfig
 
       fullname  = name_strip + '_' + name_line  # e.g., Ditau_MuX
 
