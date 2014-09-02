@@ -191,7 +191,7 @@ class Hb2V0V0hConf(LineBuilder) :
                                            selection = _selV0V0V0[v0v0v0_type][v0v0v0_comb],
                                            FILTER = GECCode,
                                            RelatedInfoTools = config['RelatedInfoTools'], 
-                                           EnableFlavourTagging = False,
+                                           EnableFlavourTagging = True,
                                            MDSTFlag = True
                                            )
 
