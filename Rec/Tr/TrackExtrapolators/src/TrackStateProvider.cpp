@@ -252,7 +252,10 @@ TrackStateProvider::TrackStateProvider( const std::string& type,
 //=============================================================================
 // TrackStateProvider destructor.
 //=============================================================================
-TrackStateProvider::~TrackStateProvider() {}
+TrackStateProvider::~TrackStateProvider()
+{
+  clearCache() ;
+}
 
 //=============================================================================
 // Initialization
@@ -275,6 +278,7 @@ StatusCode TrackStateProvider::initialize()
 //=============================================================================
 StatusCode TrackStateProvider::finalize()
 {
+  clearCache() ;
   m_extrapolator.release().ignore() ;
   m_interpolator.release().ignore() ;
   return GaudiTool::finalize();
@@ -299,11 +303,14 @@ void TrackStateProvider::clearCache()
 {
   if(m_debugLevel) debug() << "Clearing cache. Size is " << m_trackcache.size() << "." << endreq ;
   counter("Number of tracks seen") += m_trackcache.size()  ;
+  size_t numOwnedStates(0) ;
   for(TrackCacheMap::iterator it = m_trackcache.begin() ; 
       it != m_trackcache.end(); ++it) {
-    counter("Number of states added") += it->second->numOwnedStates() ;
+    numOwnedStates += it->second->numOwnedStates() ;
     delete it->second ;
   }
+  if( !m_trackcache.empty() )
+    counter("Number of states added") += numOwnedStates ;
   m_trackcache.clear() ;
 }
 
