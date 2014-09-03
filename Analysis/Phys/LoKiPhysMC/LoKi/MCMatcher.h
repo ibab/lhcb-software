@@ -67,6 +67,8 @@ namespace LoKi
       /// constructor from protopartcile  matching flag
       MCMatcherBase ( const ProtoPMatch& protoMatch    ,               
                       const std::string& thehead = ""  ) ;
+      /// copy constructor 
+      MCMatcherBase ( const MCMatcherBase& right       ) ;
       // ======================================================================      
       /// virtual destructor
       virtual ~MCMatcherBase() ;
@@ -82,6 +84,8 @@ namespace LoKi
       void clearAll () const ;
       /// get all locations 
       const Locations& locations() const { return m_locations ; }
+      /// get the MC head
+      const std::string& head() const { return m_head ; }
       /// get the algorithm
       const GaudiAlgorithm* alg() const { return m_alg ; }
       /// set the algorithm
@@ -91,10 +95,8 @@ namespace LoKi
       // ======================================================================
       /// the default constructor is disabled 
       MCMatcherBase () ;                 // the default constructor is disabled
-      /// no copy constructor 
-      MCMatcherBase ( const MCMatcherBase& right ) ;     // no copy constructor
-      /// no assigneement 
-      MCMatcherBase& operator=( const MCMatcherBase& right ) ;// no assignement 
+      /// the assignement operator is disabled 
+      MCMatcherBase& operator=( const MCMatcherBase& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -181,10 +183,8 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       MCSelMatch () ;                        // default constructor is disabled 
-      /// no copy constructor 
-      MCSelMatch ( const MCSelMatch& right ) ;           // no copy constructor
-      /// no assigneement 
-      MCSelMatch& operator=( const MCSelMatch& right ) ;      // no assignement 
+      /// the assignement operator is disabled 
+      MCSelMatch& operator=( const MCSelMatch& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -317,10 +317,8 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       MCTreeMatch () ;                       // default constructor is disabled 
-      /// no copy constructor 
-      MCTreeMatch ( const MCTreeMatch& right ) ;         // no copy constructor
-      /// no assigneement 
-      MCTreeMatch& operator=( const MCTreeMatch& right ) ;    // no assignement 
+      /// the assignement operator is disabled 
+      MCTreeMatch& operator=( const MCTreeMatch& ) ;
       // ======================================================================
     private:
       // ======================================================================
@@ -389,10 +387,8 @@ namespace LoKi
       // ======================================================================
       /// default constructor is disabled 
       MCNodeMatch () ;                       // default constructor is disabled 
-      /// no copy constructor 
-      MCNodeMatch ( const MCNodeMatch& right ) ;         // no copy constructor
-      /// no assigneement 
-      MCNodeMatch& operator=( const MCNodeMatch& right ) ;    // no assignement 
+      /// the assignement operator is disabled 
+      MCNodeMatch& operator=( const MCNodeMatch& ) ;
       // ======================================================================
     private:
       // ======================================================================

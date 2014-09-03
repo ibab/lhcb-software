@@ -5,6 +5,10 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Vanya Belyaev
+ - fix a problem with copy of "non-strandard" MCMatcher objects 
+   many thanks to Igor Babushkin! 
+
 ! 2014-08-25 - Vanya Belyaev
  - 1) fix a typo in mcMatch
    2) extend MCMatchers to allow picking MC-particles from non-standard locations 

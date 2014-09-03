@@ -166,6 +166,16 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
   }
 }
 // ============================================================================
+// copy constructor
+// ============================================================================
+LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
+( const LoKi::PhysMCParticles::MCMatcherBase& right ) 
+  : LoKi::PhysMCParticles::MCTruth ()              // NB: do not copy MCTruth!!
+  , m_locations ( right.m_locations )
+  , m_head      ( right.m_head      ) 
+  , m_alg       ( 0                 )              // do not copy the algorithm
+{}
+// ============================================================================
 // destructor
 // ============================================================================
 LoKi::PhysMCParticles::MCMatcherBase::~MCMatcherBase()
@@ -336,7 +346,7 @@ LoKi::PhysMCParticles::MCSelMatch::~MCSelMatch() {}
 // ============================================================================
 LoKi::PhysMCParticles::MCSelMatch*
 LoKi::PhysMCParticles::MCSelMatch::clone() const
-{ return new LoKi::PhysMCParticles::MCSelMatch ( m_cuts , locations() ) ; }
+{ return new LoKi::PhysMCParticles::MCSelMatch ( *this ) ; }
 // ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
@@ -361,6 +371,12 @@ std::ostream&
 LoKi::PhysMCParticles::MCSelMatch::fillStream( std::ostream& s ) const 
 {
   s << "MCSELMATCH(" << m_cuts << "," ;
+  //
+  if ( head() != LHCb::MCParticleLocation::Default ) 
+  {
+    return Gaudi::Utils::toStream ( locations() , s ) << ", '" << head() << "')" ;
+  }
+  //
   switch ( locations().size() ) 
   {
   case 1 : 
@@ -375,6 +391,7 @@ LoKi::PhysMCParticles::MCSelMatch::fillStream( std::ostream& s ) const
   default:
     break ;
   }
+
   return Gaudi::Utils::toStream ( locations() , s ) << ")" ;
 }
 // ============================================================================
@@ -457,7 +474,7 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
   const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations , 
   const std::string& thehead   ) 
   : LoKi::PhysMCParticles::MCMatcherBase ( locations , thehead ) 
-  , m_finder ( s_INVALID ) 
+  , m_finder ( s_INVALID )
 {
   getFinder ( decay ) ;
 }
@@ -512,7 +529,7 @@ LoKi::PhysMCParticles::MCTreeMatch::~MCTreeMatch() {}
 // ============================================================================
 LoKi::PhysMCParticles::MCTreeMatch*
 LoKi::PhysMCParticles::MCTreeMatch::clone() const 
-{ return new LoKi::PhysMCParticles::MCTreeMatch ( m_finder , locations() ) ; }
+{ return new LoKi::PhysMCParticles::MCTreeMatch ( *this ) ; }
 // ============================================================================
 void LoKi::PhysMCParticles::MCTreeMatch::checkFinder ()
 {
@@ -569,6 +586,12 @@ std::ostream&
 LoKi::PhysMCParticles::MCTreeMatch::fillStream( std::ostream& s ) const 
 {
   s << "MCMATCH('" << m_finder << "'," ;
+  //
+  if ( head() != LHCb::MCParticleLocation::Default ) 
+  {
+    return Gaudi::Utils::toStream ( locations() , s ) << ", '" << head() << "')" ;
+  }
+  //
   switch ( locations().size() ) 
   {
   case 1 : 
@@ -583,6 +606,7 @@ LoKi::PhysMCParticles::MCTreeMatch::fillStream( std::ostream& s ) const
   default:
     break ;
   }
+
   return Gaudi::Utils::toStream ( locations() , s ) << ")" ;
 }
 // ============================================================================
@@ -671,7 +695,7 @@ LoKi::PhysMCParticles::MCNodeMatch::~MCNodeMatch() {}
 // ============================================================================
 LoKi::PhysMCParticles::MCNodeMatch*
 LoKi::PhysMCParticles::MCNodeMatch::clone() const
-{ return new LoKi::PhysMCParticles::MCNodeMatch ( m_node , locations() ) ; }
+{ return new LoKi::PhysMCParticles::MCNodeMatch ( *this ) ; }
 // ============================================================================
 void LoKi::PhysMCParticles::MCNodeMatch::checkNode ()
 {
@@ -710,6 +734,12 @@ std::ostream&
 LoKi::PhysMCParticles::MCNodeMatch::fillStream( std::ostream& s ) const 
 {
   s << "MCNODEMATCH('" << m_node << "'," ;
+  //
+  if ( head() != LHCb::MCParticleLocation::Default ) 
+  {
+    return Gaudi::Utils::toStream ( locations() , s ) << ", '" << head() << "')" ;
+  }
+  //
   switch ( locations().size() ) 
   {
   case 1 : 
@@ -724,6 +754,7 @@ LoKi::PhysMCParticles::MCNodeMatch::fillStream( std::ostream& s ) const
   default:
     break ;
   }
+
   return Gaudi::Utils::toStream ( locations() , s ) << ")" ;
 }
 // ============================================================================
