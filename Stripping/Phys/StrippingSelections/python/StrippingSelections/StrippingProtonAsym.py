@@ -21,7 +21,7 @@ The ratio of the two yields is the proton reconstructione efficiency, and the
 ratio of this between proton and antiprotons is the proton detection asymmetry.
 
 Responsible: Alex Pearce <alex.pearce@cern.ch>
-Modified by Paolo Gandini
+Modified by Paolo Gandini to include full reconstruction and reduce rates
 Date: 21/08/2014
 """
 
@@ -150,7 +150,21 @@ default_config = {
         # Minimum Pion ANN PID
         "ProbNNpi": 0.2,
         # Minimum Proton ANN PID
-        "ProbNNp": 0.2
+        "ProbNNp": 0.2,
+
+        #Window for full reconstruction
+        "LcMinWin": 2206*MeV,
+        "LcMaxWin": 2366*MeV,
+
+        "BuMinWin": 5000*MeV,
+        "BuMaxWin": 6500*MeV,
+        "LbMinWin": 5200*MeV,
+        "LbMaxWin": 6500*MeV,
+        "ScMinWin": 2053*MeV,
+        "ScMaxWin": 2753*MeV,
+        "LcstMinWin": 2292*MeV,
+        "LcstMaxWin": 2892*MeV
+             
     },
     "STREAMS": {
         "Calibration": [
@@ -160,7 +174,14 @@ default_config = {
             "StrippingLb2LcpipipiLc2KpiProtonAsymLine",
             "StrippingSc2LcpipLc2KpiProtonAsymLine",
             "StrippingSc2LcpimLc2KpiProtonAsymLine",
-            "StrippingLcst2LcpipiLc2KpiProtonAsymLine"
+            "StrippingLcst2LcpipiLc2KpiProtonAsymLine",
+            "StrippingBd2LcppipiLc2pKpiProtonAsymLine",
+            "StrippingBu2LcppipipiLc2pKpiProtonAsymLine",
+            "StrippingLb2LcpiLc2pKpiProtonAsymLine",
+            "StrippingLb2LcpipipiLc2pKpiProtonAsymLine",
+            "StrippingSc2LcpipLc2pKpiProtonAsymLine",
+            "StrippingSc2LcpimLc2pKpiProtonAsymLine",
+            "StrippingLcst2LcpipiLc2pKpiProtonAsymLine"
         ]
     }
 }
@@ -177,6 +198,15 @@ class ProtonAsymBuilder(LineBuilder):
     lcst_decay = "[Lambda_c(2595)+ -> Lambda_c+ pi- pi+]cc"
     lc_partial_decay = "[Lambda_c+ -> K- pi+]cc"
     lc_full_decay = "[Lambda_c+ -> p+ K- pi+]cc"
+
+    bd_decay_full = "[B0 -> B0 p~-]cc"
+    bu_decay_full = "[B+ -> B+ p~-]cc"
+    lb_1pi_decay_full = "[Lambda_b0 -> Lambda_b0 p+]cc"
+    lb_3pi_decay_full = "[Lambda_b0 -> Lambda_b0 p+]cc"
+    sc_pip_decay_full = "[Sigma_c++ -> Sigma_c++ p+]cc"
+    sc_pim_decay_full = "[Sigma_c0 -> Sigma_c0 p+]cc"
+    lcst_decay_full = "[Lambda_c(2595)+ -> Lambda_c(2595)+ p+]cc"
+ 
 
     # Allowed configuration keys
     __configuration_keys__ = default_config["CONFIG"].keys()
@@ -236,6 +266,8 @@ class ProtonAsymBuilder(LineBuilder):
             RequiredSelections=[StdLooseANNProtons]
         )
 
+
+
         # Lambda_c selection
         lc = self.make_partial_lc("LcSelectionFor{0}".format(self.name))
 
@@ -253,14 +285,14 @@ class ProtonAsymBuilder(LineBuilder):
             "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[BMinZ]}",
             "BPVVDCHI2 > {0[BFDCHI2]}"
         ], self.config)
-        bd = self.make_partial_and_full_mothers(
+        bd = self.make_partial_mother(
             "BdSelectionFor{0}".format(self.name),
             self.bd_decay,
             [lc, self.pions, self.protons],
             b_combination_cuts,
             b_mother_cuts
         )
-        bu = self.make_partial_and_full_mothers(
+        bu = self.make_partial_mother(
             "BuSelectionFor{0}".format(self.name),
             self.bu_decay,
             [lc, self.pions, self.protons],
@@ -297,14 +329,14 @@ class ProtonAsymBuilder(LineBuilder):
             "M > {0[LbToLc3piPartialMassMin]}",
             lb_mother_cuts
         ], self.config)
-        lb_1pi = self.make_partial_and_full_mothers(
+        lb_1pi = self.make_partial_mother(
             "Lb1PiSelectionFor{0}".format(self.name),
             self.lb_1pi_decay,
             [lc, self.pions],
             lb_1pi_combination_cuts,
             lb_1pi_mother_cuts
         )
-        lb_3pi = self.make_partial_and_full_mothers(
+        lb_3pi = self.make_partial_mother(
             "Lb3PiSelectionFor{0}".format(self.name),
             self.lb_3pi_decay,
             [lc, self.pions],
@@ -324,14 +356,14 @@ class ProtonAsymBuilder(LineBuilder):
             "VFASPF(VCHI2/VDOF) < {0[ScVCHI2DOF]}",
             "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[ScMinZ]}"
         ], self.config)
-        sc_pip = self.make_partial_and_full_mothers(
+        sc_pip = self.make_partial_mother(
             "ScPipSelectionFor{0}".format(self.name),
             self.sc_pip_decay,
             [lc, self.pions],
             sc_combination_cuts,
             sc_mother_cuts
         )
-        sc_pim = self.make_partial_and_full_mothers(
+        sc_pim = self.make_partial_mother(
             "ScPimSelectionFor{0}".format(self.name),
             self.sc_pim_decay,
             [lc, self.pions],
@@ -351,7 +383,7 @@ class ProtonAsymBuilder(LineBuilder):
             "VFASPF(VCHI2/VDOF) < {0[LcstVCHI2DOF]}",
             "(CHILD(VFASPF(VZ), 1) - VFASPF(VZ)) > {0[LcstMinZ]}"
         ], self.config)
-        lcst = self.make_partial_and_full_mothers(
+        lcst = self.make_partial_mother(
             "LcstSelectionFor{0}".format(self.name),
             self.lcst_decay,
             [lc, self.pions],
@@ -359,22 +391,135 @@ class ProtonAsymBuilder(LineBuilder):
             lcst_mother_cuts
         )
 
+
+
+
+
+
+
+
+
+
+        #Make Full lines
+        b_combination_cuts_full = cut_string([
+            "AM - 20 > {0[BuMinWin]}",
+            "AM + 20 < {0[BuMaxWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))-20>{0[LcMinWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))+20<{0[LcMaxWin]}"
+            ], self.config)
+        b_mother_cuts_full = cut_string([
+            "M > {0[BuMinWin]}",
+            "M < {0[BuMaxWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))>{0[LcMinWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))<{0[LcMaxWin]}"
+            ], self.config)
+        bd_full= self.make_full_mother(        
+            "BdSelectionFullFor{0}".format(self.name),
+            self.bd_decay_full,
+            [bd, StdAllNoPIDsProtons],
+            b_combination_cuts_full,
+            b_mother_cuts_full
+            )
+        bu_full = self.make_full_mother(
+            "BuSelectionFullFor{0}".format(self.name),
+            self.bu_decay_full,
+            [bu, StdAllNoPIDsProtons],
+            b_combination_cuts_full,
+            b_mother_cuts_full
+            )            
+        lb_combination_cuts_full = cut_string([
+            "AM - 20 > {0[LbMinWin]}",
+            "AM + 20 < {0[LbMaxWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))-20>{0[LcMinWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))+20<{0[LcMaxWin]}"
+            ], self.config)
+        lb_mother_cuts_full = cut_string([
+            "M > {0[LbMinWin]}",
+            "M < {0[LbMaxWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))>{0[LcMinWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))<{0[LcMaxWin]}"
+            ], self.config)
+        lb_1pi_full = self.make_full_mother(
+            "Lb1PiSelectionFullFor{0}".format(self.name),
+            self.lb_1pi_decay_full,
+            [lb_1pi, StdAllNoPIDsProtons],
+            lb_combination_cuts_full,
+            lb_mother_cuts_full
+            )
+        lb_3pi_full = self.make_full_mother(
+            "Lb3PiSelectionFullFor{0}".format(self.name),
+            self.lb_3pi_decay_full,
+            [lb_3pi, StdAllNoPIDsProtons],
+            lb_combination_cuts_full,
+            lb_mother_cuts_full
+            )
+        sc_combination_cuts_full = cut_string([
+            "AM - 20 > {0[ScMinWin]}",
+            "AM + 20 < {0[ScMaxWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))-20>{0[LcMinWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))+20<{0[LcMaxWin]}"
+            ], self.config)
+        sc_mother_cuts_full = cut_string([
+            "M > {0[ScMinWin]}",
+            "M < {0[ScMaxWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))>{0[LcMinWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))<{0[LcMaxWin]}"
+            ], self.config)
+        sc_pip_full = self.make_full_mother(
+            "ScPipSelectionFullFor{0}".format(self.name),
+            self.sc_pip_decay_full,
+            [sc_pip, StdAllNoPIDsProtons],
+            sc_combination_cuts_full,
+            sc_mother_cuts_full
+            )
+        sc_pim_full = self.make_full_mother(
+            "ScPimSelectionFullFor{0}".format(self.name),
+            self.sc_pim_decay_full,
+            [sc_pim, StdAllNoPIDsProtons],
+            sc_combination_cuts_full,
+            sc_mother_cuts_full
+            )
+        lcst_combination_cuts_full = cut_string([
+            "AM - 20 > {0[LcstMinWin]}",
+            "AM + 20 < {0[LcstMaxWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))-20>{0[LcMinWin]}",
+            "sqrt(((ACHILD(CHILD(E,1),1)+ACHILD(E,2))**2)-((ACHILD(CHILD(PX,1),1)+ACHILD(PX,2))**2)-((ACHILD(CHILD(PY,1),1)+ACHILD(PY,2))**2)-((ACHILD(CHILD(PZ,1),1)+ACHILD(PZ,2))**2))+20<{0[LcMaxWin]}"
+            ], self.config)
+        lcst_mother_cuts_full = cut_string([
+            "M > {0[LcstMinWin]}",
+            "M < {0[LcstMaxWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))>{0[LcMinWin]}",
+            "sqrt(((CHILD(CHILD(E,1),1)+CHILD(E,2))**2)-((CHILD(CHILD(PX,1),1)+CHILD(PX,2))**2)-((CHILD(CHILD(PY,1),1)+CHILD(PY,2))**2)-((CHILD(CHILD(PZ,1),1)+CHILD(PZ,2))**2))<{0[LcMaxWin]}"
+            ], self.config)
+        lcst_full = self.make_full_mother(
+            "LcstSelectionFullFor{0}".format(self.name),
+            self.lcst_decay_full,
+            [lcst, StdAllNoPIDsProtons],
+            lcst_combination_cuts_full,
+            lcst_mother_cuts_full
+            )
+                        
+
+
+
+
+
         # Create the stripping lines, first partial..
-        bd_partial_line = self.make_line("Bd2LcppipiLc2Kpi", bd[0])
-        bu_partial_line = self.make_line("Bu2LcppipipiLc2Kpi", bu[0])
-        lb_partial_1pi_line = self.make_line("Lb2LcpiLc2Kpi", lb_1pi[0])
-        lb_partial_3pi_line = self.make_line("Lb2LcpipipiLc2Kpi", lb_3pi[0])
-        sc_partial_pip_line = self.make_line("Sc2LcpipLc2Kpi", sc_pip[0])
-        sc_partial_pim_line = self.make_line("Sc2LcpimLc2Kpi", sc_pim[0])
-        lcst_partial_line = self.make_line("Lcst2LcpipiLc2Kpi", lcst[0])
+        bd_partial_line = self.make_line("Bd2LcppipiLc2Kpi", bd)
+        bu_partial_line = self.make_line("Bu2LcppipipiLc2Kpi", bu)
+        lb_partial_1pi_line = self.make_line("Lb2LcpiLc2Kpi", lb_1pi)
+        lb_partial_3pi_line = self.make_line("Lb2LcpipipiLc2Kpi", lb_3pi)
+        sc_partial_pip_line = self.make_line("Sc2LcpipLc2Kpi", sc_pip)
+        sc_partial_pim_line = self.make_line("Sc2LcpimLc2Kpi", sc_pim)
+        lcst_partial_line = self.make_line("Lcst2LcpipiLc2Kpi", lcst)
         # .. then full
-        bd_full_line = self.make_line("Bd2LcppipiLc2pKpi", bd[1])
-        bu_full_line = self.make_line("Bu2LcppipipiLc2pKpi", bu[1])
-        lb_full_1pi_line = self.make_line("Lb2LcpiLc2pKpi", lb_1pi[1])
-        lb_full_3pi_line = self.make_line("Lb2LcpipipiLc2pKpi", lb_3pi[1])
-        sc_full_pip_line = self.make_line("Sc2LcpipLc2pKpi", sc_pip[1])
-        sc_full_pim_line = self.make_line("Sc2LcpimLc2pKpi", sc_pim[1])
-        lcst_full_line = self.make_line("Lcst2LcpipiLc2pKpi", lcst[1])
+        bd_full_line = self.make_line("Bd2LcppipiLc2pKpi", bd_full)
+        bu_full_line = self.make_line("Bu2LcppipipiLc2pKpi", bu_full)
+        lb_full_1pi_line = self.make_line("Lb2LcpiLc2pKpi", lb_1pi_full)
+        lb_full_3pi_line = self.make_line("Lb2LcpipipiLc2pKpi", lb_3pi_full)
+        sc_full_pip_line = self.make_line("Sc2LcpipLc2pKpi", sc_pip_full)
+        sc_full_pim_line = self.make_line("Sc2LcpimLc2pKpi", sc_pim_full)
+        lcst_full_line = self.make_line("Lcst2LcpipiLc2pKpi", lcst_full)
 
 
 
@@ -434,39 +579,24 @@ class ProtonAsymBuilder(LineBuilder):
 
 
 
-    def make_partial_and_full_mothers(self, name, decay, required_selections,
-                                      combination_cuts, mother_cuts):
-        """Return two Selections object, one for each mother.
+    def make_full_mother(self, name, decay, required_selections,
+                         combination_cuts, mother_cuts):
 
-        Keyword arguments:
-        See make_partial_mother.
-        """
-        partial = self.make_partial_mother(name, decay, required_selections,
-                                      combination_cuts, mother_cuts)
-        full_required_sels = [partial, StdAllNoPIDsProtons]
-        full = self.make_full_mother(name, decay, full_required_sels)
-        return (partial, full)
-
-    def make_full_mother(self, name, decay, required_selections):
-        """Make a B decay using a fully reconstructed Lambda_c+ decay.
-
-        Keyword arguments:
-        name -- String to call the mother Selection instance
-        decay -- Decay descriptor for the decay
-        required_selections -- Required Selection instances for daughters
-        """
         mother = CombineParticles(
             name="CombineFull{0}".format(name),
-            DecayDescriptors=[decay, self.lc_full_decay],
-            CombinationCut="AALL",
-            MotherCut="ALL"
-        )
+            DecayDescriptors=[decay],                       
+            CombinationCut=combination_cuts,
+            MotherCut=mother_cuts
+            )
         selection = Selection(
             name="Full{0}".format(name),
             Algorithm=mother,
             RequiredSelections=required_selections
-        )
+            )
         return selection
+
+
+
 
     def make_partial_mother(self, name, decay, required_selections,
                             combination_cuts, mother_cuts):
