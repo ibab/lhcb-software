@@ -1,6 +1,6 @@
-__author__ = ['Kevin Maguire']
+__author__ = ['Kevin Maguire','Mika Vesterinen']
 __date__ = '20/08/2013'
-__version__ = '$Revision: 0.0 $'
+__version__ = '$Revision: 0.1 $'
 
 """
 Module for D* tagged D0 -> hhpi0.
@@ -116,7 +116,7 @@ class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
                                RequiredSelections = [StdLooseMergedPi0])
                 
         self.Kpipi0_R_Line = DstarMaker(_name+"_Kpipi0_R_",
-                                        ['[K*(892)0 -> K- pi+]cc'],                                                  
+                                        ['[K*(892)0 -> K- pi+]cc','[K*(892)0 -> K+ pi-]cc'],                                                  
                                         ['[D0 -> K*(892)0 pi0]cc'],    
                                         ['[D*(2010)+ -> D0 pi+]cc'],
                                         [self.Pions,self.Kaons],
@@ -139,18 +139,6 @@ class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
                                                  self.__confdict__['prescale_Pi0R_WIDEMASS']
                                                  )
 
-        self.Kpipi0WS_R_Line = DstarMaker(_name+"_Kpipi0WS_R_",
-                                          ['[K*(892)0 -> K+ pi-]cc'],                                                  
-                                          ['[D0 -> K*(892)0 pi0]cc'],    
-                                          ['[D*(2010)+ -> D0 pi+]cc'],
-                                          [self.Pions,self.Kaons],
-                                          self.Pi0R,
-                                          self.Slowpions,
-                                          GECs,
-                                          self.__confdict__ ,
-                                          1.0
-                                          )
-        
         self.pipipi0_R_Line = DstarMaker(_name+"_pipipi0_R_",
                                          ['[K*(892)0 -> pi- pi+]cc'],                                                  
                                          ['[D0 -> K*(892)0 pi0]cc'],    
@@ -176,7 +164,7 @@ class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
                                        )
         
         self.Kpipi0_M_Line = DstarMaker(_name+"_Kpipi0_M_",
-                                        ['[K*(892)0 -> K- pi+]cc'],                                                  
+                                        ['[K*(892)0 -> K- pi+]cc','[K*(892)0 -> K+ pi-]cc'],                                                  
                                         ['[D0 -> K*(892)0 pi0]cc'],    
                                         ['[D*(2010)+ -> D0 pi+]cc'],
                                         [self.Pions,self.Kaons],
@@ -213,7 +201,6 @@ class DstarD0ToHHPi0AllLinesConf(LineBuilder) :
         
         
         self.registerLine(self.Kpipi0_R_Line)
-        self.registerLine(self.Kpipi0WS_R_Line)
         self.registerLine(self.pipipi0_R_Line)
         self.registerLine(self.KKpi0_R_Line)
         self.registerLine(self.Kpipi0_M_Line)
