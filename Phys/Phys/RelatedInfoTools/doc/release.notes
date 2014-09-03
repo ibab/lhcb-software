@@ -4,6 +4,10 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-09-03 - Anton Poluektov 
+ - Fix ConeVariables, ConeVariablesForEW and VertexIsolation tools to 
+   write out all possible variables if the list of variables is empty. 
+
 ! 2014-08-30 - Anton Poluektov 
  - Further fix for selections which filter common particles.
 

@@ -68,15 +68,29 @@ StatusCode RelInfoVertexIsolation::initialize()
 
   m_keys.clear();
 
-  for ( const auto& var : m_variables )
+  if ( m_variables.empty() ) 
   {
-    short int key = RelatedInfoNamed::indexByName( var );
-    if (key != RelatedInfoNamed::UNKNOWN) {
-      m_keys.push_back( key );
-      debug() << "Adding variable " << var << ", key = " << key << endmsg;
-    } else {
-      warning() << "Unknown variable " << var << ", skipping" << endmsg;
+
+    if ( msgLevel(MSG::DEBUG) ) debug() << "List of variables empty, adding all" << endmsg;
+    m_keys.push_back( RelatedInfoNamed::VTXISONUMVTX ); 
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2ONETRACK ); 
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2MASSONETRACK ); 
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2TWOTRACK ); 
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK ); 
+
+  } else {
+
+    for ( const auto& var : m_variables )
+    {
+      short int key = RelatedInfoNamed::indexByName( var );
+      if (key != RelatedInfoNamed::UNKNOWN) {
+        m_keys.push_back( key );
+        debug() << "Adding variable " << var << ", key = " << key << endmsg;
+      } else {
+        warning() << "Unknown variable " << var << ", skipping" << endmsg;
+      }
     }
+
   }
 
   return sc;

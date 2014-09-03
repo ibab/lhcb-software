@@ -48,14 +48,45 @@ StatusCode RelInfoConeVariablesForEW::initialize()
 
   m_keys.clear();
 
-  for ( const auto& var : m_variables )
-  {
-    short int key = RelatedInfoNamed::indexByName( var );
-    if (key != RelatedInfoNamed::UNKNOWN) {
-      m_keys.push_back( key );
-      debug() << "Adding variable " << var << ", key = " << key << endmsg;
-    } else {
-      warning() << "Unknown variable " << var << ", skipping" << endmsg;
+  if ( m_variables.empty() ) {
+
+    if ( msgLevel(MSG::DEBUG) ) debug() << "List of variables empty, adding all" << endmsg;
+    m_keys.push_back( RelatedInfoNamed::EWCONEANGLE); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEMULT); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEPX); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEPY); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEPZ); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEVP); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEVPT); 
+    m_keys.push_back( RelatedInfoNamed::EWCONESP ); 
+    m_keys.push_back( RelatedInfoNamed::EWCONESPT); 
+    m_keys.push_back( RelatedInfoNamed::EWCONETP ); 
+    m_keys.push_back( RelatedInfoNamed::EWCONETPT); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEMINPTE); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEMAXPTE); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEMINPTMU); 
+    m_keys.push_back( RelatedInfoNamed::EWCONEMAXPTMU); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENMULT); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENPX); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENPY); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENPZ); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENVP); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENVPT); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENSP); 
+    m_keys.push_back( RelatedInfoNamed::EWCONENSPT); 
+  
+  } else {
+
+    for ( const auto& var : m_variables )
+    {
+      short int key = RelatedInfoNamed::indexByName( var );
+      if (key != RelatedInfoNamed::UNKNOWN) {
+        m_keys.push_back( key );
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Adding variable " << var << ", key = " << key << endmsg;
+      } else {
+        warning() << "Unknown variable " << var << ", skipping" << endmsg;
+      }
     }
   }
 

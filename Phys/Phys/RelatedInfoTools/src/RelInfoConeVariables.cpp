@@ -48,19 +48,39 @@ StatusCode RelInfoConeVariables::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_keys.clear();
-
-  for ( const auto& var : m_variables )
+  
+  if ( m_variables.empty() ) 
   {
-    short int key = RelatedInfoNamed::indexByName( var );
-    if (key != RelatedInfoNamed::UNKNOWN)
+    if ( msgLevel(MSG::DEBUG) ) debug() << "List of variables empty, adding all" << endmsg;
+    m_keys.push_back( RelatedInfoNamed::CONEANGLE ); 
+    m_keys.push_back( RelatedInfoNamed::CONEMULT ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPX ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPY ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPZ ); 
+    m_keys.push_back( RelatedInfoNamed::CONEP  ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPT ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPXASYM ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPYASYM ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPZASYM ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPASYM ); 
+    m_keys.push_back( RelatedInfoNamed::CONEPTASYM ); 
+    m_keys.push_back( RelatedInfoNamed::CONEDELTAETA ); 
+    m_keys.push_back( RelatedInfoNamed::CONEDELTAPHI ); 
+  } else {
+  
+    for ( const auto& var : m_variables )
     {
-      m_keys.push_back( key );
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Adding variable " << var << ", key = " << key << endmsg;
-    }
-    else
-    {
-      warning() << "Unknown variable " << var << ", skipping" << endmsg;
+      short int key = RelatedInfoNamed::indexByName( var );
+      if (key != RelatedInfoNamed::UNKNOWN)
+      {
+        m_keys.push_back( key );
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "Adding variable " << var << ", key = " << key << endmsg;
+      }
+      else
+      {
+        warning() << "Unknown variable " << var << ", skipping" << endmsg;
+      }
     }
   }
 
