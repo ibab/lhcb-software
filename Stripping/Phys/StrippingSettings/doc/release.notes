@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Mika Vesterinen
+ - Futher changes to ProtonAsym config from Paolo
+
 ! 2014-09-03 - Andrea Contu
  - Updated Charm dictionaries and fix to BandQ ones
 

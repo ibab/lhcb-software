@@ -630,7 +630,7 @@ PhiToKSKS = {
     
 ProtonAsym = {
     "BUILDERTYPE": "ProtonAsymBuilder",
-    "CONFIG": {
+        "CONFIG": {
         # Are the candidates to be stored on microDST, as opposed to full?
         "MicroDST":  True,
 
@@ -733,8 +733,21 @@ ProtonAsym = {
         # Minimum Pion ANN PID
         "ProbNNpi": 0.2,
         # Minimum Proton ANN PID
-        "ProbNNp": 0.2
-    },
+        "ProbNNp": 0.2,
+
+        #Window for full reconstruction
+        "LcMinWin": 2206*MeV,
+        "LcMaxWin": 2366*MeV,
+
+        "BuMinWin": 5000*MeV,
+        "BuMaxWin": 6500*MeV,
+        "LbMinWin": 5200*MeV,
+        "LbMaxWin": 6500*MeV,
+        "ScMinWin": 2053*MeV,
+        "ScMaxWin": 2753*MeV,
+        "LcstMinWin": 2292*MeV,
+        "LcstMaxWin": 2892*MeV
+        },
     "STREAMS": {
         "PID": [
             "StrippingBd2LcppipiLc2KpiProtonAsymLine",
