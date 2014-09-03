@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Mika Vesterinen
+ - Fix missing WS merged pi0 in DstarD0ToHHPi0 by merging WS and RS
+
 ! 2014-09-03 - Carlos Vazquez Sierra
  - Updated StrippingBs2JpsiKstNoPID again: line ONLY for MC PIDCalib purposes (not related to s21).
 
