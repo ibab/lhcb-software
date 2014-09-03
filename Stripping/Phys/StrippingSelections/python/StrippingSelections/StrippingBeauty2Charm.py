@@ -176,7 +176,7 @@ config = {
     'B02DPiD2HHHUPBeauty2CharmLine',
     'B02DRhoPMD2HHHCFPIDBeauty2CharmLine',
     'B02DKstarPMD2HHHCFPIDBeauty2CharmLine',
-    'B02D0PiPiD2HHiBeauty2CharmLine',
+    'B02D0PiPiD2HHBeauty2CharmLine',
     'B02D0PiPiD2HHWSBeauty2CharmLine',
     'B02DKPiPiD2HHHPIDBeauty2CharmLine',
     'B02DKPiPiWSD2HHHPIDBeauty2CharmLine',
@@ -220,6 +220,13 @@ config = {
     'B02DPiD2Pi0HHHMergedBeauty2CharmLine',
     'B02DPiD2Pi0HHHResolvedBeauty2CharmLine'
     ],
+    'MDSTChannels':[
+    'B02D0PiPiD2HHBeauty2CharmLine',
+    'B02D0D0Beauty2CharmLine',
+    'B02DDBeauty2CharmLine',
+    'B02D0PPbarD2HHBeauty2CharmLine',
+    'B02D0KKD2HHBeauty2CharmLine'    
+    ],
     '2TOPO' : {'ANGLE_MIN': (2/57.),'M_MIN':19000,'DPHI_MIN':0},
     'BB' : {'ADDSUMPT':0,'COSANGLE_MAX':0.99,
             'COSDPHI_MAX':0,'M_MIN':0,'MAXPT_MIN': 4000,
@@ -257,7 +264,8 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Dstar','HH','HHH',
-                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','2TOPO','BB','D0INC','Prescales','GECNTrkMax')
+                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','MDSTChannels'
+ 			      '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
         
@@ -400,6 +408,7 @@ class Beauty2CharmConf(LineBuilder):
                                   HLT=hlt,
                                   EnableFlavourTagging = (name in config['FlavourTagging']),
                                   RequiredRawEvents = rawevent, 
+                                  MDSTFlag = (name in config['MDSTChannels']),
                                   RelatedInfoTools = config['RelatedInfoTools'] )
 
             self.registerLine(sline)
