@@ -459,6 +459,7 @@ extern "C" int checkpointing_set_file_descriptors(void* ptr) {
 
 /// After a restart allow to set environment etc. from stdin.
 extern "C" int checkpointing_update_environment() {
+  THREAD_SET_PID(pthread_self(),mtcp_sys_getpid());
   return checkpointing_sys_set_environment(&chkpt_sys);
 }
 
