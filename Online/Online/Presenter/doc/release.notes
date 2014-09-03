@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-09-03 - Marco Clemencic
+ - Fixed compilation with ROOT 5 + CMT.
+
+! 2014-09-03 - Marco Clemencic
  - Fixed problem with parallel builds in CMake.
 
 ! 2014-09-01 - Marco Clemencic
