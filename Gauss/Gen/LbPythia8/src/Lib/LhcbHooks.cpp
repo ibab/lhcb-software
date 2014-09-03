@@ -25,10 +25,8 @@ namespace Pythia8 {
       // Determine alpha strong.
       double aSvalue = settingsPtr->parm("MultipartonInteractions:alphaSvalue");
       double aSorder = settingsPtr->mode("MultipartonInteractions:alphaSorder");
-      alphaS.init(aSvalue, aSorder);
-      // Use these lines for Pythia 8.185.
-      //int    aSnfmax = settingsPtr->mode("StandardModel:alphaSnfmax");
-      //alphaS.init(aSvalue, aSorder, aSnfmax, false);
+      int    aSnfmax = settingsPtr->mode("StandardModel:alphaSnfmax");
+      alphaS.init(aSvalue, aSorder, aSnfmax, false);
       isInit = true;
     }
 
