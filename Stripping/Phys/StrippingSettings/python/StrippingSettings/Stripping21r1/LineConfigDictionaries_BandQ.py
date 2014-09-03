@@ -1328,7 +1328,9 @@ PromptCharm = {
     'D0Prescale'             : 0.05 ,
     'D+Prescale'             : 0.05 ,
     'D*Prescale'             : 0.1 ,
-    'DsPrescale'             : 0.5 
+    'DsPrescale'             : 0.5 ,
+    'D02KKPrescale'          : 0.1 ,
+    'D02pipiPrescale'        : 0.1 
     ## ========================================================================
     },
     'STREAMS' :{ 'Charm'    : [ 'StrippingD02KpiForPromptCharm'         , 
