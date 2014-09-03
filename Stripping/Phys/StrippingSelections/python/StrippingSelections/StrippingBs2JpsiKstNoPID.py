@@ -1,5 +1,6 @@
 __author__ = ['Carlos Vazquez Sierra']
-__date__ = '04/06/2014'
+__date__ = '03/09/2014'
+__version__ = '$Revision: 1.1 $'
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # Stripping line for BsJpsiK* analysis: MC PIDCalib purposes. 
 # Line name: Bs2JpsiKstarWideLineNoPID
@@ -13,18 +14,20 @@ from StandardParticles import StdNoPIDsPions
 from StandardParticles import StdNoPIDsKaons
 from GaudiKernel.SystemOfUnits import MeV
 # -----------------------------------------------------------------------------------------------------------------------------------------
-default_config = {} # Empty dictionary, just because of code requirements.
+__all__ = ('Bs2JpsiKstNoPIDConf','default_config')
+# -----------------------------------------------------------------------------------------------------------------------------------------
+default_config = {'NAME':'Bs2JpsiKstNoPID','BUILDERTYPE':'Bs2JpsiKstNoPIDConf','CONFIG':{'JpsiMassWindow':80},'STREAMS':['Leptonic'],'WGs':['B2CC']}
+# -----------------------------------------------------------------------------------------------------------------------------------------
 class Bs2JpsiKstNoPIDConf(LineBuilder) :
-    __configuration_keys__ = ()
+    __configuration_keys__ = ('JpsiMassWindow')
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
-        self.name = name # Not used.
-	self.config = config # Not used.
+	self.config = config
         # Input daughter lists:
         self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
         self.JpsiList = self.createSubSel( OutputList = "NarrowJpsiListForBsJpsiKstarWideNoPID",
                                            InputList = self.WideJpsiList,
-                                           Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < 80 * MeV)" )
+                                           Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config)
         self.KstarWideListNoPID = self.createCombinationsSel( OutputList = "KstarWideListNoPIDForBsJpsiKstarWideNoPID",
                                                               DaughterLists = [ StdNoPIDsKaons, StdNoPIDsPions ],
                                                               DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc","[K*_0(1430)0 -> K+ pi-]cc" ],
@@ -85,4 +88,3 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
         Bs2JpsiKstarWideLineNoPID = StrippingLine( "Bs2JpsiKstarWideLineNoPID", algos = [Bs2JpsiKstarWideNoPID])
         self.registerLine(Bs2JpsiKstarWideLineNoPID)
     # ---------------------------------------------------------------------------------------------------------------------------------
-

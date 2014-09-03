@@ -183,6 +183,8 @@ import StrippingB2Xic2815Sc2455
 
 import StrippingDs2KKPi4Spectroscopy
 
+import StrippingBs2JpsiKstNoPID ## Test line for MC PID Calib purposes, C. Vazquez Sierra
+
 ## the following two module names added December 13, 2013  M. Sokoloff
 import StrippingChargedHyperons
 #import StrippingKshort2MuMuPiPi
