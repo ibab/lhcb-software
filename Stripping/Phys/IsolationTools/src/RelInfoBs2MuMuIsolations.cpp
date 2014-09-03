@@ -132,7 +132,10 @@ std::string RelInfoBs2MuMuIsolations::infoPath(void){ // check with Alex
 
 StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* part, const LHCb::Particle *top){
   
-  if(part != top) return StatusCode::SUCCESS;
+  if ( msgLevel(MSG::DEBUG) ){
+    if(part != top) debug() << " part != top ... must be a B to Jpsi X decay ?"<<endmsg;
+    else debug() << " part == top ... must be a B -> mu mu  decay "<<endmsg;
+  }
   
   m_otherB_mag=0.;
   m_otherB_angle=-1.;
