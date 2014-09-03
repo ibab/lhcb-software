@@ -90,7 +90,6 @@ class JetsConf(LineBuilder):
         # Preselection strings for HLT and FILTER.
         hlt     = "HLT_PASS_RE('" + self._config["HLT"]["LINETOPO"] + ".*Decision')"
         hltMB   = "HLT_PASS('"+self._config["HLT"]["LINEMB"]+"')"
-        print hlt, hltMB
         fltDIFF = {"Code" : "(recSummary(LHCb.RecSummary.nPVs, 'Rec/Vertex/Primary')<2)"
                             "& (recSummaryTrack(LHCb.RecSummary.nBackTracks, TrBACKWARD) < 1)",
                    'Preambulo' : ['from LoKiTracks.decorators import *',

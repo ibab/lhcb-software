@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Cedric Potterat
+ - remove a print in StrippingJets
+
 ! 2014-09-03 - Pieter David
  - Fix RequiredRawEvents setting for HLT control lines in StrippingDisplVertices
 
