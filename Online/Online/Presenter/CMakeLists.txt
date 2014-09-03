@@ -23,20 +23,16 @@ set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/cintBootstrap.h
 
 if(ROOT_HAS_PCMS)
   # this section is copied and adapted from gaudi_add_dictionary in GaudiProjectConfig
-  add_custom_command(OUTPUT cintBootstrapDict.h cintBootstrapDict.cpp cintBootstrapDict_rdict.pcm
+  file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
+  add_custom_command(OUTPUT cintBootstrapDict.cpp cintBootstrapDict_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
                      COMMAND ${env_cmd} --xml ${env_xml}
                        ${dict_cmd} -f cintBootstrapDict.cpp -c -inlineInputHeader
                              ${dict_srcs}
+                     COMMAND ${CMAKE_COMMAND} -E copy cintBootstrapDict_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
                      DEPENDS ${dict_srcs})
   add_custom_target(cintBootstrapDictGen ALL
                     DEPENDS cintBootstrapDict.cpp)
 
-  file(MAKE_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-  add_custom_command(OUTPUT ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
-                     COMMAND ${CMAKE_COMMAND} -E copy cintBootstrapDict_rdict.pcm ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm
-                     DEPENDS cintBootstrapDict_rdict.pcm)
-  add_custom_target(cintBootstrapDictPCM ALL
-                    DEPENDS ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm)
   install(FILES ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/cintBootstrapDict_rdict.pcm DESTINATION lib OPTIONAL)
 
 else()
