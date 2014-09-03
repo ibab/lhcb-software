@@ -3,6 +3,9 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-09-03 - Roberta Cardinale
+	- Changed stripping stream from DiMuon to Leptonic for Bc2JpsiHDetachedLine
+	- Added PromtCharm lines for Charm WG to the B&Q WG due to name conflict
 
 ! 2014-09-03 - Mika Vesterinen
  - Change stripping stream from Semileptonic to BHadron for XTauNu module

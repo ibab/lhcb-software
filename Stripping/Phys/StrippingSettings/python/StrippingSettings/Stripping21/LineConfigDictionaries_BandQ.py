@@ -789,7 +789,7 @@ Bc2JpsiHDetached = {
 
     'LifetimeCut'         : " & (BPVLTIME()>0.2*ps) & (INTREE( (ABSID=='pi+') & (BPVIPCHI2()>9)))"
     },
-    'STREAMS'   : [ 'Dimuon' ],
+    'STREAMS'   : [ 'Leptonic' ],
     'WGs'    : [ 'BandQ' ]
     }
 
@@ -1338,14 +1338,21 @@ PromptCharm = {
                                 'StrippingDiCharmForPromptCharm'        , ## ? 
                                 'StrippingChiAndCharmForPromptCharm'    ,
                                 'StrippingCharmAndWForPromptCharm'      ,
-                                'StrippingDiMuonAndCharmForPromptCharm' 
+                                'StrippingDiMuonAndCharmForPromptCharm' ,
+                                'StrippingLambdaCForPromptCharm'        ,#Charm
+                                'StrippingLambdaC2pKKForPromptCharm'    ,#Charm
+                                'StrippingSigmaCForPromptCharm'         ,#Charm
+                                'StrippingLambdaCstarForPromptCharm'    ,#Charm
+                                'StrippingD02KKForPromptCharm'          ,#Charm
+                                'StrippingD02pipiForPromptCharm'        ,#Charm
+                                'StrippingDstarCPForPromptCharm'         #Charm
                                 ] , 
                  ## 
                  'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
                                 'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
                                 'StrippingChiAndWForPromptCharm'        ] }
     }
-
+x
 
 #########################################################
 ### StrippingCC2DD
