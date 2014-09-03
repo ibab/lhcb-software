@@ -662,36 +662,36 @@ ProtonAsym = {
         "HLTLcst2LcpipiLc2Kpi": None,
 
         # Partial Lambda_c mass window, taken from TGenPhaseSpace studies
-        "LcPartialMassMin": 620*MeV,
+        "LcPartialMassMin": 700*MeV, #620 is the minimum -> cut a bit harder where most of bkg is
         "LcPartialMassMax": 1360*MeV,
         # Minimum sum of Lambda_c daughters' tranverse momentum
         "LcPartialPTSum": 1500.0*MeV,
         # Minimum Lambda_c flight distance fit quality per DOF
-        "LcPartialFDCHI2": 50.0,
+        "LcPartialFDCHI2": 36.0, #50
         # Maximum Lambda_c pairwise daughter distance of closest approach
-        "LcPartialDOCACHI2": 20.0,
+        "LcPartialDOCACHI2": 15.0, #20
         # Maximum Lambda_c vertex fit quality per DOF
-        "LcPartialVCHI2DOF": 15.0,
+        "LcPartialVCHI2DOF": 10.0, #50
 
         # Partial Sigma_c mass window, taken from TGenPhaseSpace studies
         "ScPartialMassMin": 1000*MeV,
         "ScPartialMassMax": 1600*MeV,
         # Minimum Lambda_c vertex displacement wrt Sigma_c vertex along z
-        "ScMinZ": 0.0*mm,
+        "ScMinZ": 0.2*mm,
         # Sigma_c maximum vertex quality per DOF
-        "ScVCHI2DOF": 15.0,
+        "ScVCHI2DOF": 10.0, #15
         # Maximum Sigma_c impact parameter chi2
-        "ScBPVIPCHI2": 20.0,
+        "ScBPVIPCHI2": 15.0, #20
 
         # Partial Lambda_c* mass window, taken from TGenPhaseSpace studies
         "LcstPartialMassMin": 1300*MeV,
         "LcstPartialMassMax": 1660*MeV,
         # Minimum Lambda_c vertex displacement wrt Lambda_c* vertex along z
-        "LcstMinZ": 0.0*mm,
+        "LcstMinZ": 0.2*mm,
         # Lambda_c* maximum vertex quality per DOF
-        "LcstVCHI2DOF": 15.0,
+        "LcstVCHI2DOF": 10.0,
         # Maximum Lambda_c* impact parameter chi2
-        "LcstBPVIPCHI2": 20.0,
+        "LcstBPVIPCHI2": 15.0, #20
 
         # Partial Lambda_b0 mass window, taken from TGenPhaseSpace studies
         "LbToLc1piPartialMassMin": 3000*MeV,
@@ -700,11 +700,13 @@ ProtonAsym = {
         # Minimum transverse momentum of combined daughters
         "LbPTSum": 2000*MeV,
         # Lambda_b0 maximum vertex quality
-        "LbVCHI2DOF": 15.0,
+        "LbVCHI2DOF": 20.0, #15.00
         # Minimum Lambda_c vertex displacement wrt Lambda_b vertex along z
-        "LbMinZ": 0.0*mm,
+        "LbMinZ": 0.2*mm,
         # Maximum Lambda_b impact parameter chi2
-        "LbBPVIPCHI2": 20.0,
+        "LbBPVIPCHI2": 15.0, #20
+        # Minimum Lambda_b flight distance fit quality per DOF
+        "LbFDCHI2": 36.0, #50    
 
         # Partial B0/B+ mass window, taken from TGenPhaseSpace studies
         "BPartialMassMin": 3500*MeV,
@@ -712,27 +714,29 @@ ProtonAsym = {
         # Minimum transverse momentum of combined daughters
         "BPTSum": 2000*MeV,
         # B0/B+ maximum vertex quality
-        "BVCHI2DOF": 15.0,
+        "BVCHI2DOF": 20.0, #15
         # Minimum Lambda_c vertex displacement wrt B0/B+ vertex along z
-        "BMinZ": 0.0*mm,
+        "BMinZ": 0.2*mm,
         # Maximum B0/B+ impact parameter chi2
-        "BBPVIPCHI2": 20.0,
+        "BBPVIPCHI2": 15.0, #20
+        # Minimum B0/B+ flight distance fit quality per DOF
+        "BFDCHI2": 36.0, #50
 
         # Minimum final state track momentum
-        "TrackP": 3000.0*MeV,
+        "TrackP": 1000.0*MeV, #3000
         # Minimum final state track transverse momentum
-        "TrackPT": 500.0*MeV,
+        "TrackPT": 100.0*MeV, #500
         # Maximum final state track impact parameter chi^2
-        "TrackIPCHI2": 20.0,
+        "TrackIPCHI2": 12.0, #20
         # Minimum Kaon ANN PID
         "ProbNNk": 0.2,
         # Minimum Pion ANN PID
         "ProbNNpi": 0.2,
         # Minimum Proton ANN PID
         "ProbNNp": 0.2
-        },
+    },
     "STREAMS": {
-        "Calibration": [
+        "PID": [
             "StrippingBd2LcppipiLc2KpiProtonAsymLine",
             "StrippingBu2LcppipipiLc2KpiProtonAsymLine",
             "StrippingLb2LcpiLc2KpiProtonAsymLine",
@@ -742,5 +746,5 @@ ProtonAsym = {
             "StrippingLcst2LcpipiLc2KpiProtonAsymLine"
             ]
         },
-    "WGs": ["Charm"]
+    "WGs": ["Semileptonic"]
     }
