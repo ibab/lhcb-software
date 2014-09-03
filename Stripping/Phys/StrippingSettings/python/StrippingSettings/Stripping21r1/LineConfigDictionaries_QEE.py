@@ -463,7 +463,7 @@ Jets = {
                       },
 
         # HLT properties.
-        "HLT"   : {"LINETOPO"       : "Hlt2(Topo2Bod|Topo3Bod|Topo4Bod)", # Line to use for TOPO
+        "HLT"   : {"LINETOPO"       : "Hlt2Topo", # Line to use for TOPO
                    "LINEMB"         : "Hlt1MBNoBiasDecision"} , # Line to use for MB
         # Track properties.
         "TRK"   : {"MAX_MULT"       : 2500,       # Multiplicity.
