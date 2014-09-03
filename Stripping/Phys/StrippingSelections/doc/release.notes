@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Carla Marin Benito
+ - Remove doubled lines from StrippingKshort2eePiPi.py
+
 ! 2014-09-03 - Carlos Vazquez Sierra
  - Updated StrippingBs2JpsiKstNoPID: test line ONLY for MC PIDCalib purposes (not related to s21).
 

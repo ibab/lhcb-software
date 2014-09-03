@@ -121,32 +121,16 @@ class Kshort2eePiPiConf(LineBuilder) :
                                         MDSTFlag  = True
                                         )
         
-        self.eePiPiLine2 = StrippingLine(PiPiLine_name+"Line2",
-                                        prescale  = config['Kshort2eePiPiLinePrescale'],
-                                        postscale = config['Kshort2eePiPiLinePostscale'],
-                                        selection = selKshort2eePiPi,
-                                        MDSTFlag  = True
-                                        )
-        
         self.eePiPiFromTracksLine = StrippingLine(PiPiLine_name+"FromTracks"+"Line",
                                                   prescale  = config['Kshort2eePiPiLinePrescale'],
                                                   postscale = config['Kshort2eePiPiLinePostscale'],
                                                   selection = selKshort2eePiPiFromTracks,
                                                   MDSTFlag  = True
                                                   )
-        
-        self.eePiPiFromTracksLine2 = StrippingLine(PiPiLine_name+"FromTracks"+"Line2",
-                                                  prescale  = config['Kshort2eePiPiLinePrescale'],
-                                                  postscale = config['Kshort2eePiPiLinePostscale'],
-                                                  selection = selKshort2eePiPiFromTracks,
-                                                  MDSTFlag  = True
-                                                  )
-                                                                                                                
+                                                                               
         # 5 : register Line
         self.registerLine( self.eePiPiLine )
-        self.registerLine( self.eePiPiLine2 )
         self.registerLine( self.eePiPiFromTracksLine )
-        self.registerLine( self.eePiPiFromTracksLine2 )
     
 #####################################################
     def _makeKshort2eePiPi(self, name, pionSel, elecSel, params):
