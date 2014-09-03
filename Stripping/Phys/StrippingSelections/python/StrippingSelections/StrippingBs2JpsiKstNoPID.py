@@ -1,6 +1,6 @@
 __author__ = ['Carlos Vazquez Sierra']
-__date__ = '03/09/2014'
-__version__ = '$Revision: 1.1 $'
+__date__ = '04/06/2014'
+__version__ = '$Revision: 1.0 $'
 # -----------------------------------------------------------------------------------------------------------------------------------------
 # Stripping line for BsJpsiK* analysis: MC PIDCalib purposes. 
 # Line name: Bs2JpsiKstarWideLineNoPID
@@ -16,10 +16,15 @@ from GaudiKernel.SystemOfUnits import MeV
 # -----------------------------------------------------------------------------------------------------------------------------------------
 __all__ = ('Bs2JpsiKstNoPIDConf','default_config')
 # -----------------------------------------------------------------------------------------------------------------------------------------
-default_config = {'NAME':'Bs2JpsiKstNoPID','BUILDERTYPE':'Bs2JpsiKstNoPIDConf','CONFIG':{'JpsiMassWindow':80},'STREAMS':['Leptonic'],'WGs':['B2CC']}
+default_config = {'NAME' : 'Bs2JpsiKstNoPID',
+                  'BUILDERTYPE' : 'Bs2JpsiKstNoPIDConf',
+                  'CONFIG' : {'JpsiMassWindow' : 80,
+                              'PostVertexCuts' : 25},
+                  'STREAMS' : ['Leptonic'],
+                  'WGs' : ['B2CC']}
 # -----------------------------------------------------------------------------------------------------------------------------------------
 class Bs2JpsiKstNoPIDConf(LineBuilder) :
-    __configuration_keys__ = ('JpsiMassWindow')
+    __configuration_keys__ = ('JpsiMassWindow', 'PostVertexCuts')
     def __init__(self, name, config) :
         LineBuilder.__init__(self, name, config)
 	self.config = config
@@ -27,14 +32,14 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
         self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
         self.JpsiList = self.createSubSel( OutputList = "NarrowJpsiListForBsJpsiKstarWideNoPID",
                                            InputList = self.WideJpsiList,
-                                           Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config)
+                                           Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config )
         self.KstarWideListNoPID = self.createCombinationsSel( OutputList = "KstarWideListNoPIDForBsJpsiKstarWideNoPID",
                                                               DaughterLists = [ StdNoPIDsKaons, StdNoPIDsPions ],
                                                               DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc","[K*_0(1430)0 -> K+ pi-]cc" ],
                                                               DaughterCuts = { "pi-" : " (PT > 500 *MeV) & (TRGHOSTPROB < 0.8)",
                                                                                "K+"  : " (PT > 500 *MeV) & (TRGHOSTPROB < 0.8)"},
                                                               PreVertexCuts = "(in_range(750,AM,1900))  & (ADOCACHI2CUT(30, ''))",
-                                                              PostVertexCuts = "(VFASPF(VCHI2) < 25)",
+                                                              PostVertexCuts = "(VFASPF(VCHI2) < %(PostVertexCuts)s)" % self.config,
                                                               ReFitPVs = False )
         self.makeBs2JpsiKstarWideNoPID() # Making the line.
     # ---------------------------------------------------------------------------------------------------------------------------------
