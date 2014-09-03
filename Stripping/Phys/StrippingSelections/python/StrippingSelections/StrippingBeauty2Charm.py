@@ -264,7 +264,7 @@ config = {
 
 class Beauty2CharmConf(LineBuilder):
     __configuration_keys__ = ('ALL','UPSTREAM','KS0','Lambda0','Pi0','gamma','D2X','B2X','Dstar','HH','HHH',
-                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','MDSTChannels'
+                              'PID','FlavourTagging','RelatedInfoTools', 'RawEvents','MDSTChannels',
  			      '2TOPO','BB','D0INC','Prescales','GECNTrkMax')
  
     def __init__(self, moduleName, config) :
