@@ -341,7 +341,7 @@ Beauty2Charm = {
     'GECNTrkMax'   : 500
   }, 
   'STREAMS' : { 
-    'StrippingBhadronCompleteEvent' : [
+    'BhadronCompleteEvent' : [
     'StrippingDoubleTopoLine',
     'StrippingPseudoDoubleTopoLine',
     'StrippingD02HHTopoTOSLine',
@@ -364,7 +364,7 @@ Beauty2Charm = {
     'StrippingOmegab2Omegac0PiNoIPOmegac02PKKPiBeauty2CharmLine',
     ],  
     'Bhadron' : [
-        'StrippingB2D0KD2HHWSBeauty2CharmLine', 
+    'StrippingB2D0KD2HHWSBeauty2CharmLine', 
     'StrippingB2D0PiD2HHWSBeauty2CharmLine', 
     'StrippingB2D0KD2HHUPBeauty2CharmLine', 
     'StrippingB2D0PiD2HHUPBeauty2CharmLine', 
@@ -1387,3 +1387,82 @@ B2fourbody = {
     }    
 
 
+Bs2D0KS0 = {
+    'BUILDERTYPE' : 'Bs2D0KS0Conf',
+    'CONFIG' : {
+        "BIPCHI2"      : 20.0,         # Maximum Bs IP chi2.
+        "BVCHI2"       : 10.0,         # Maximum Bs vertex chi2 per degree of freedom.
+        "BsCombMassMin" : 5000.,        # Lower mass of D0+Ks combination
+        "BsCombMassMax" : 5650.,        # Upper mass of D0+Ks combination 
+        "BPVDLS"       : 5.,           # Minimum decay length significance
+        "BsMassMin"    : 5100.,        # Lower mass of Bs
+        "BsMassMax"    : 5550.,        # Upper mass of Bs
+        "D0MassMin"    : 1804.,        # Lower mass of D0
+        "D0MassMax"    : 1924.,        # Upper mass of D0
+        "DTF_CHI2NDOF" : 5.            # Minimum vertex chi2 per degree of freedom after decay tree fitter fit
+    }, 
+    'STREAMS' : [ 'Bhadron' ],
+    'WGs' : [ 'B2OC' ]
+    }  
+
+B2DDphi = {
+    'BUILDERTYPE' : 'B2DDphiConf',
+    'CONFIG' : {
+      # Lines
+    'FULLDST': 'D0D0',
+    # Cuts made on all bachelor tracks
+    'TR_CHI2DOF_MAX' :3,
+    'TR_PT_MIN': 100, #MeV
+    'TR_P_MIN': 1000, #MeV
+    'TR_MIPCHI2DV_MIN': 4,
+    'TR_GHP_MAX': 0.4,
+    # Cuts made on all KK's
+    'KK_MASS_MAX': 2300, #MeV
+    'KK_MASS_MAX_D0D0': 2300, #MeV
+    'KK_MASS_MAX_DD': 2300, #MeV
+    'KK_MASS_MAX_DsDs': 2200, #MeV
+    'KK_MASS_MAX_DstDst': 2050, #MeV
+    'KK_MASS_MAX_DstDp': 2150, #MeV
+    'KK_VCHI2NDOF': 9, 
+    # Cuts made on all D0's
+    'D0_MASS_WIN': 65, #MeV
+    'D0_PT': 1500., #MeV
+    'D0_VCHI2NDOF': 10, 
+    # Cuts made on all D+'s
+    'Dp_MASS_WIN': 65, #MeV
+    'Dp_PT': 1500., #MeV
+    'Dp_VCHI2NDOF': 10,
+    # Cuts made on all Ds+'s
+    'Ds_MASS_WIN': 65, #MeV
+    'Ds_PT': 1500., #MeV
+    'Ds_VCHI2NDOF': 10,
+    # Cuts made on all D*+'s
+    'Dst_MASS_WIN': 50, #MeV
+    'Dst_PT': 1500., #MeV
+    'Dst_VCHI2NDOF': 15,
+    # Cuts made on all B's
+    'B_MASS_MAX': 6000, #MeV
+    'B_MASS_MIN': 4500, #MeV
+    'B_MASS_MIN_MDST': 4800, #MeV
+#    'B_DOCA': 0.3, #mm
+    'B_DOCACHI2': 16, # 4-body decay
+    'B_DIRA': 0.99, 
+    'B_VCHI2NDOF': 15,
+    'B_BPVLTIME': 0.2, #ps
+    # Cuts made on PID for specific particles
+    'K_ProbNNk_MIN': 0.1,
+    'PI_ProbNNpi_MIN': 0.1
+    }, 
+    'STREAMS' : {
+     'Bhadron': [
+     'StrippingB2DDphi_B2DstDpPhiLine',
+     'StrippingB2DDphi_B2DDPhiLine',
+     'StrippingB2DDphi_B2DsDsPhiLine',
+     'StrippingB2DDphi_B2DstDstPhiLine', 
+    ],
+    'BhadronCompleteEvent':[
+     'StrippingB2DDphi_B2D0D0PhiLine',  
+     ]
+    },
+    'WGs' : [ 'B2OC' ]
+    }  
