@@ -418,7 +418,7 @@ B2XTauNu = {
         #HLT1 trigger
         'TisTosSpecs'       : { 'Hlt1TrackAllL0Decision%TOS' : 0 }    
         },
-    'STREAMS' : ['BHadron'],
+    'STREAMS' : ['BhadronCompleteEvent'],
     'WGs'    : ['Semileptonic']
     }                 
 

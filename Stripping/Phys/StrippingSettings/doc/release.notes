@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Mika Vesterinen
+ - Fix to previous commit -- supposed to be BhadronCompleteEvent
+
 ! 2014-09-03 - Roberta Cardinale
 	- Added prescales for PromptCharm lines for Charm WG
 
