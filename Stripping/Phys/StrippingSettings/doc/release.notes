@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Mika Vesterinen
+ - Change stripping stream from Semileptonic to BHadron for XTauNu module
+
 ! 2014-09-03 - Ronan Wallace
  - Minor adjustment to config of QEE dicts 
 
