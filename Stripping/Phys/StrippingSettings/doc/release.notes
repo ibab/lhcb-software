@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Pablo Ruiz Valls (RD)
+ - Fix in ZVTOP dict due to commit in StripSels
+
 ! 2014-09-03 - Stefano Perazzini
  - Updated stripping21(r1) dbases
 

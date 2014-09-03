@@ -895,7 +895,44 @@ B2XTauZVTOP = {
          'IPCHI2_B_TAU_CHILD_WORSE'       : '16',   # dimensionless
          'PT_B_PIONS_TOTAL'              :  '7000',# MeV
          'B_TAUPI_2NDMINIPS'             :  '20',  # dimensionless
-         'HltFilter'               : "HLT_PASS_RE('Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision')"
+         'HltFilter'               : "HLT_PASS_RE('Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision')",
+         'RelatedInfoTools'      : [
+              { "Type" : "RelInfoBstautauMuonIsolationBDT"
+                ,"RecursionLevel" : 1
+                , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
+                , "Location"  : "BSTAUTAUVARIABLES"
+                },
+              { "Type" : "RelInfoBstautauMuonIsolation"
+                ,"RecursionLevel" : 1
+                , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
+                , "Location"  : "BSTAUTAUVARIABLES"
+                },
+              { "Type" : "RelInfoBstautauTauIsolationBDT"
+                ,"RecursionLevel" : 1
+                , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUE', 'BSTAUTAUTAUISOBDTSECONDVALUE','BSTAUTAUTAUISOBDTTHIRDVALUE']
+                , "Location"  : "BSTAUTAUVARIABLES"
+                },
+              { "Type" : "RelInfoBstautauTauIsolation"
+                ,"RecursionLevel" : 1
+                , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUE', 'BSTAUTAUTAUISOSECONDVALUE']
+                , "Location"  : "BSTAUTAUVARIABLES"
+                },
+              { "Type" : "RelInfoBstautauTrackIsolationBDT"
+                ,"RecursionLevel" : 2
+                , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUE', 'BSTAUTAUTRACKISOBDTSECONDVALUE','BSTAUTAUTRACKISOBDTTHIRDVALUE']
+                , "Location"  : "BSTAUTAUVARIABLES"
+                },
+              { "Type" : "RelInfoBstautauTrackIsolation"
+                ,"RecursionLevel" : 2
+                , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUE', 'BSTAUTAUTRACKISOSECONDVALUE']
+                , "Location"  : "BSTAUTAUVARIABLES"
+                },
+              { "Type" : "RelInfoBstautauCDFIso"
+                ,"RecursionLevel" : 0
+                ##, "Variables" : ['BSTAUTAUCDFISO']
+                , "Location"  : "BSTAUTAUVARIABLES"
+                }
+              ],
          },
     'STREAMS' : ['Leptonic']
     }
