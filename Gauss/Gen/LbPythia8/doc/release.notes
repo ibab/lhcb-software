@@ -4,6 +4,9 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-09-03 - Philip Ilten
+ - Significant clean-up of code. Removed unnecessary HEPEVT checking. Utilizing
+   new Pythia features for cross-section names and values.
 ! 2014-09-01 - John Back
  - Updated the Pythia8 includes in various classes for Pythia 8.18x.
    The conversion of the Pythia event to HepMC format within 

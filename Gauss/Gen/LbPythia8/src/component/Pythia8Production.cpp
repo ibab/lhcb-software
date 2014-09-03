@@ -239,7 +239,7 @@ StatusCode Pythia8Production::toHepMC(HepMC::GenEvent* theEvent,
 				      LHCb::GenCollision* theCollision) {
 
   // Convert to HepMC.
-  HepMC::I_Pythia8 conversion;
+  HepMC::Pythia8ToHepMC conversion;
   conversion.set_print_inconsistency(m_validate_HEPEVT);
   if (!(conversion.fill_next_event(*m_pythia, theEvent))) 
     return Error("Failed to convert Pythia 8 event to HepMC.");
