@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Pieter David
+ - Fix RequiredRawEvents setting for HLT control lines in StrippingDisplVertices
+
 ! 2014-09-02 - Stefano Perazzini
  - Fix default_config for Hb2V0V0h lines.
 

@@ -824,7 +824,7 @@ class DisplVerticesLinesConf(LineBuilder):
             line = StrippingLine(lLineName
                      , prescale  = self.validatedGetProps(lShortName, ["PreScale"])["PreScale"]
                      , selection = hltSelection
-                     , RequiredRawEvents = ["Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
+                     , RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"]
                      )
 
             self.registerLine(line)
@@ -860,7 +860,7 @@ class DisplVerticesLinesConf(LineBuilder):
                      # these lines MUST have an HLT filter
                      , HLT       = self.configurationParameter("HLT")[lShortName]
                      , selection = lineSel
-                     , RequiredRawEvents = ["Muon","Calo","Rich"] ## FIXME "Velo" and "Tracker"
+                     , RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"]
                      , RelatedInfoTools = [ { "Type" : "AddVeloEventShapeS21", "RecursionLevel" : 0, "TopSelection" : lineSel, "Location" : "P2VES" } ]
                      )
 
