@@ -1,0 +1,38 @@
+HLT like tracking for 2015
+--------------------------
+
+These are instruction for running HLT like
+tracking similar to what is planned for data taking
+in 2015. It makes it easy to change the tracking
+sequence. Quickly try out new ideas or reconfigure
+everything. It only depends on Brunel, nothing
+from Moore is needed.
+
+This package is meant as a development tool and not
+as authority on how the tracking is actually done. For
+that you should refer to the relevant Moore versions.
+
+
+Install
+-------
+
+To get started you will need the following packages
+in addition to Brunel v46r1 and the latest revision of
+Sft/FstTools:
+
+$ getpack Tf/PatAlgorithms HEAD # tested revision 176720
+$ getpack Phys/DaVinciInterfaces HEAD # tested revision 176704 
+$ getpack Phys/DaVinciTypes HEAD # tested revision 176704
+$ getpack Phys/KalmanFilter HEAD # tested revision 176704
+$ getpack Pr/PrMCTools HEAD # get revision 177315
+
+
+Running
+-------
+
+An example of how to use `StagedRecoConf` is in
+
+    Sft/FstTools/options/HLTLikeReco.py
+
+which you can run with gaudirun.py
+

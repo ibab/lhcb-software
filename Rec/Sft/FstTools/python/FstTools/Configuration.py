@@ -12,6 +12,7 @@ from Configurables import LHCbConfigurableUser
 from Configurables import GaudiSequencer, FstSequencer, FstSelectVeloTracks
 from Configurables import FstSelectForwardTracksPartOne, FstSelectForwardTracksPartTwo
 
+
 ## @class FstConf
 #  Configurable for the Fst simulation for the LHCb upgrade
 #  @author Olivier Callot
@@ -413,3 +414,228 @@ class FstConf(LHCbConfigurableUser):
                                 ]
             writer.Output = "DATAFILE='PFN:%s'"%(self.getProp("OutputFile"))
             
+
+from Configurables import FastVeloTracking, FastVeloDecoding, DecodeVeloRawBuffer
+from Configurables import PatForward, PatForwardTool
+from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
+from Configurables import FastSTDecoding, PatTStationHitManager
+from Configurables import CreateFastTrackCollection
+from Configurables import PatSeeding, PatSeedingTool
+from Configurables import PatMatch, PatMatchTool
+from Configurables import PatDownstream
+from Configurables import STOnlinePosition
+from Configurables import TrackEventCloneKiller, TrackCloneFinder
+from Configurables import TrackEventFitter, TrackMasterFitter
+from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+
+class StagedRecoConf(LHCbConfigurableUser):
+    __slots__ = {"RootInTES" : "Fst/",
+                 # which long tracks to merge into the 'best' container
+                 "AddToBest": ["Fwd1", "Fwd2", "Match"],
+                 # pT threshold of VeloTT tracking
+                 "VeloTTMinPT": 200, # MeV
+                 # pT threshold of first Forward tracking
+                 "Fwd1MinPT": 500, #MeV
+                 # pT threshold of second Forward tracking
+                 "Fwd2MinPT": 200, #MeV
+                 }
+    
+    def applyConf(self):
+        max_OT_hits = 1E8
+        
+        GaudiSequencer("RecoHLTSeq").Members = ["FstSequencer/RecoFstSeq"]
+        FstSequencer("RecoFstSeq").ForcePassOK = True
+
+        fst_seq = FstSequencer("RecoFstSeq")
+
+        killer = EventNodeKiller()
+        killer.Nodes += ["pRec", "Rec", "Raw", "Link/Rec"]
+        fst_seq.Members += [killer]
+
+        # All the decoding
+        from DAQSys.Decoders import DecoderDB
+        from DAQSys.DecoderClass import decodersForBank
+
+        velo_decoder = DecodeVeloRawBuffer("DecodeVeloClusters2")
+        velo_decoder.MaxVeloClusters = 10000
+        velo_decoder.DecodeToVeloClusters = False
+        createTTClusters = decodersForBank(DecoderDB, "TT")
+        createITClusters = decodersForBank(DecoderDB, "IT")
+        fst_seq.Members += [velo_decoder]
+        fst_seq.Members += [d.setup() for d in createTTClusters]
+        fst_seq.Members += [d.setup() for d in createITClusters]
+
+        # Velo tracking as offline
+        velo_tracking = FastVeloTracking("FstVeloTracking")
+        velo_tracking.OutputTracksName = self.getProp("RootInTES") + "Track/Velo"
+        fst_seq.Members += [velo_tracking]
+
+        # VeloTT hybrid-nut
+        veloTT = PatVeloTTHybrid("FstVeloTT")
+        veloTT.InputTracksName = velo_tracking.getProp("OutputTracksName")
+        veloTT.OutputTracksName = self.getProp("RootInTES") + "Track/VeloTT"
+        veloTT.removeUsedTracks = False
+        veloTT.InputUsedTracksNames = []
+        veloTT.maxChi2 = 1280
+        veloTT.fitTracks = False
+
+        veloTT_tool = PatVeloTTHybridTool("PatVeloTTHybridTool")
+        veloTT_tool.minMomentum = 2000
+        veloTT_tool.minPT = self.getProp("VeloTTMinPT")
+        veloTT_tool.maxPseudoChi2 = 1280
+        veloTT_tool.PrintVariables = True
+        veloTT_tool.PassTracks = True
+        # Defines the size of the hole in the center (the tracks there are excluded)
+        veloTT_tool.centralHoleSize = 33
+        # Defines the size of the hole in the center where the tracks
+        # are not used by veloTT but passed to PatForward directly
+        # except for the tracks in the central hole
+        veloTT_tool.PassHoleSize = 45
+
+        fst_seq.Members += [veloTT]
+
+        # Configure same errors as used in the HLT
+        ITOnl = STOnlinePosition("ITLiteClusterPosition")
+        ITOnl.ErrorVec = [0.253, 0.236, 0.273]
+        ITOnl.APE = 0.0758
+
+        # Forward tracking a la HLT1
+        fwd_hlt1 = PatForward("FstFwdHlt1")
+        fwd_hlt1.InputTracksName = veloTT.getProp("OutputTracksName")
+        fwd_hlt1.OutputTracksName = self.getProp("RootInTES") + "Track/FwdHLT1"
+        fwd_hlt1.maxOTHits = 1E8
+        fwd_hlt1.DeltaNumberInT = 1E8
+        fwd_hlt1.DeltaNumberInTT = 1E8
+        fwd_hlt1.MaxNVelo = 1E8
+        
+        fwd_hlt1.addTool(PatForwardTool)
+        fwd_hlt1_tool = fwd_hlt1.PatForwardTool
+        fwd_hlt1_tool.SecondLoop = False
+        fwd_hlt1_tool.MinPt = self.getProp("Fwd1MinPT")
+        # Mark velo tracks which could be extended as "extended"/"used"
+        fwd_hlt1_tool.FlagUsedSeeds = True
+        fwd_hlt1_tool.MinMomentum = 3000
+        fwd_hlt1_tool.UseMomentumEstimate = True
+        fwd_hlt1_tool.UseWrongSignWindow = True
+        fwd_hlt1_tool.WrongSignPT = 2000
+        fwd_hlt1_tool.Preselection = True
+        
+        fst_seq.Members += [fwd_hlt1]
+
+        
+        # Forward tracking a la HLT2
+        # basically try and recover some low momentum tracks
+        # XXX should this run on VeloTT or just Velo tracks?
+        fwd_hlt2 = PatForward("FstFwdHlt2")
+        fwd_hlt2.InputTracksName = veloTT.getProp("OutputTracksName")
+        fwd_hlt2.OutputTracksName = self.getProp("RootInTES") + "Track/FwdHLT2"
+        fwd_hlt2.maxOTHits = max_OT_hits
+        fwd_hlt2.DeltaNumberInT = 1E8
+        fwd_hlt2.DeltaNumberInTT = 1E8
+        fwd_hlt2.MaxNVelo = 1E8
+        
+        fwd_hlt2.addTool(PatForwardTool)
+        fwd_hlt2_tool = fwd_hlt2.PatForwardTool
+        fwd_hlt2_tool.SecondLoop = True
+        fwd_hlt2_tool.MinPt = self.getProp("Fwd2MinPT")
+        # Skip seeds we marked as used in HLT1
+        fwd_hlt2_tool.SkipUsedSeeds = True
+        fwd_hlt2_tool.MinMomentum = 1000
+        fwd_hlt2_tool.UseMomentumEstimate = True
+        fwd_hlt2_tool.UseWrongSignWindow = True
+        fwd_hlt2_tool.WrongSignPT = 2000
+        fwd_hlt2_tool.Preselection = True
+        
+        fst_seq.Members += [fwd_hlt2]
+
+
+        # Merge the two types of Forward tracks into one container
+        # PatForward could already do this for us, but we keep
+        # the output of first and second loop seperate in case
+        # we want to study efficiencies for each one
+        merge_fwd = CreateFastTrackCollection("FstMergeForward")
+        merge_fwd.SlowContainer = True
+        merge_fwd.InputLocations = [fwd_hlt1.getProp("OutputTracksName"),
+                                    fwd_hlt2.getProp("OutputTracksName"),
+                                    ]
+        merge_fwd.OutputLocation = self.getProp("RootInTES") + "Track/Forward"
+
+        fst_seq.Members += [merge_fwd]
+        
+        # XXX fit tracks then release hits used by "bad" tracks so they
+        # XXX can be reused by the seeding
+        
+        # Seeding
+        seeding = PatSeeding("FstSeeding")
+        seeding.OutputTracksName = self.getProp("RootInTES") + "Track/Seed"
+        
+        seeding.addTool(PatSeedingTool, name="PatSeedingTool")
+        seeding.PatSeedingTool.UseForward = True
+        seeding.PatSeedingTool.ForwardCloneMergeSeg = True
+        seeding.PatSeedingTool.NDblOTHitsInXSearch = 2
+        # tracks from the two Forward instances are used to flag hits as used
+        seeding.PatSeedingTool.InputTracksName = merge_fwd.getProp("OutputLocation")
+        seeding.PatSeedingTool.MinMomentum = 1000
+        seeding.PatSeedingTool.MaxOTHits = max_OT_hits
+
+        # Matching
+        matching = PatMatch("FstMatching")
+        matching.VeloInput = velo_tracking.getProp("OutputTracksName")
+        matching.SeedInput = seeding.getProp("OutputTracksName")
+        matching.MatchOutput = self.getProp("RootInTES") + "Track/Match"
+
+        matching.addTool(PatMatchTool, name="PatMatchTool")
+        matching.PatMatchTool.MinMomentum = 1000
+        matching.PatMatchTool.MinPt = 300
+
+        fst_seq.Members += [seeding, matching]
+
+
+        # Merge the containers with long tracks
+        clone_killer = TrackEventCloneKiller('FstCloneKiller')
+        # It makes little difference if you directly use the two Forwards
+        # as input here or merge them first as done in `merge_fwd`
+        merge_to_best = []
+        if "Fwd1" in self.getProp("AddToBest"):
+            merge_to_best.append(fwd_hlt1.getProp("OutputTracksName"))
+        if "Fwd2" in self.getProp("AddToBest"):
+            merge_to_best.append(fwd_hlt2.getProp("OutputTracksName"))
+        if "MergedFwd" in self.getProp("AddToBest"):
+            merge_to_best.append(merge_fwd.getProp("OutputLocation"))
+        if "Match" in self.getProp("AddToBest"):
+            merge_to_best.append(matching.getProp("MatchOutput"))
+        
+        clone_killer.TracksInContainers = merge_to_best
+        clone_killer.TracksOutContainer = self.getProp("RootInTES") + "Track/UnfittedBest"
+        clone_killer.SkipSameContainerTracks = False
+        clone_killer.CopyTracks = True
+
+        clone_killer.addTool(TrackCloneFinder, name='CloneFinderTool')
+        clone_killer.CloneFinderTool.RestrictedSearch = True
+        
+        fst_seq.Members += [clone_killer]
+
+
+        # Fitting
+        fast_fit = TrackEventFitter("FstFastFit")
+        # Fit all long tracks: Forward1, Forward2 and seeding+matching
+        fast_fit.TracksInContainer = clone_killer.getProp("TracksOutContainer")
+        fast_fit.TracksOutContainer = self.getProp("RootInTES") + "Track/Best"
+        fast_fit.addTool(TrackMasterFitter, name='Fitter')
+        fitter = ConfiguredHltFitter(getattr(fast_fit, 'Fitter'))
+
+        fst_seq.Members += [fast_fit]
+
+        
+        # Downstream tracking
+        downstream = PatDownstream("FstDownstream")
+        downstream.InputLocation = seeding.getProp("OutputTracksName")
+        downstream.ForwardLocation = merge_fwd.getProp("OutputLocation")
+        downstream.MatchLocation = matching.getProp("MatchOutput")
+        downstream.OutputLocation = self.getProp("RootInTES") + "Track/Downstream"
+        downstream.RemoveUsed = False
+        downstream.RemoveAll = True
+        downstream.MinMomentum = 0
+        downstream.MinPt = 0
+
+        fst_seq.Members += [downstream]
