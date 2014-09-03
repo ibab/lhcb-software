@@ -283,7 +283,7 @@ Beauty2Charm = {
     'B02DKLTUBD2HHHBeauty2CharmLine', 
     ],
     'RawEvents' : [
-     'B02DKPiPiD2HHHPIDBeauty2CharmLine',
+    'B02DKPiPiD2HHHPIDBeauty2CharmLine',
     'B02DPiPiPiD2HHHPIDBeauty2CharmLine',
     'B02DKD2HHHBeauty2CharmLine',
     'B02DKD2Pi0HHHMergedBeauty2CharmLine', 
@@ -292,7 +292,18 @@ Beauty2Charm = {
     'B02DPiD2Pi0HHHMergedBeauty2CharmLine',
     'B02DPiD2Pi0HHHResolvedBeauty2CharmLine'
     ],
-
+    'MDSTChannels':[
+    'B02D0PiPiD2HHBeauty2CharmLine',
+    'B02D0D0Beauty2CharmLine',
+    'B02DDBeauty2CharmLine',
+    'B02D0PPbarD2HHBeauty2CharmLine',
+    'B02D0KKD2HHBeauty2CharmLine',    
+    'B02DstDstBeauty2CharmLine',
+    'B02D0KKD2KPiPiPiBeauty2CharmLine',
+    'B02D0PiPiD2KPiPiPiBeauty2CharmLine',
+    'B02D0KSDDD2HHBeauty2CharmLine',
+    'B02D0KSLLD2HHBeauty2CharmLine'
+    ],
     'RelatedInfoTools' : [
       { "Type" : "RelInfoConeVariables", 
         "ConeAngle" : 1.5, 
