@@ -264,6 +264,8 @@ Beauty2Charm = {
     'B02DstDstKSLLBeauty2CharmLine', 
     'B02DstDstKSWSLLBeauty2CharmLine', 
     'B02DDKKBeauty2CharmLine', 
+    'B02DstDKKBeauty2CharmLine',
+    'B02DstDstKKBeauty2CharmLine', 
     'B02LcpbarKKLc2PKPiBeauty2CharmLine', 
     'B02LcpbarpbarpLc2PKPiBeauty2CharmLine', 
     'B02LcpbarPiPiLc2PKPiBeauty2CharmLine', 
@@ -601,6 +603,8 @@ Beauty2Charm = {
     'StrippingB2D0DKKBeauty2CharmLine', 
     'StrippingB2D0DKPiBeauty2CharmLine', 
     'StrippingB02DDKKBeauty2CharmLine', 
+    'StrippingB02DstDKKBeauty2CharmLine',
+    'StrippingB02DstDstKKBeauty2CharmLine',
     'StrippingLb2LcKLc2PKPiBeauty2CharmLine', 
     'StrippingLb2LcPiLc2PKPiBeauty2CharmLine', 
     'StrippingLb2LcKWSLc2PKPiBeauty2CharmLine', 
@@ -899,6 +903,8 @@ Beauty2Charm = {
     'StrippingDstarUPB2D0DKKBeauty2CharmLine', 
     'StrippingDstarUPB2D0DKPiBeauty2CharmLine', 
     'StrippingDstarUPB02DDKKBeauty2CharmLine', 
+    'StrippingDstarUPB02DstDKKBeauty2CharmLine',
+    'StrippingDstarUPB02DstDstKKBeauty2CharmLine',
     ]
   },
   'WGs' : [ 'B2OC' ]
@@ -1379,4 +1385,5 @@ B2fourbody = {
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'B2OC' ]
     }    
+
 
