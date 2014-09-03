@@ -380,7 +380,7 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
     
     static short int indexByName(std::string name) {
       short i;
-      for (i=0; i<=RelatedInfoNamed::ZVISO; i++) {
+      for (i=0; i<=RelatedInfoNamed::B2KSTARMUMUBDTISO; i++) {
         if ( name.compare(nameByIndex(i) ) == 0 ) return i; 
       }
       return RelatedInfoNamed::UNKNOWN; 

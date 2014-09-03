@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2014-09-03 - Pieter David
+ - Increase maximum index in indexByName method (for VELOPHIHITSVECTORSIZE, B2KSTARMUMUCLASSICISO and B2KSTARMUMUBDTISO variables)
+
 ! 2014-08-28 - Pieter David
  - Add VELOPHIHITSVECTORSIZE variable to RelatedInfoNamed.h
 
