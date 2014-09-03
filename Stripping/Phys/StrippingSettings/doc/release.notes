@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 - Andrea Contu
+ - Updated Charm dictionaries and fix to BandQ ones
+
 ! 2014-09-03 - Mika Vesterinen
  - Fix to previous commit -- supposed to be BhadronCompleteEvent
 

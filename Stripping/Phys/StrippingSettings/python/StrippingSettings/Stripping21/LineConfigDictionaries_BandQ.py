@@ -1354,7 +1354,7 @@ PromptCharm = {
                                 'StrippingDiMuonAndWForPromptCharm'     , ## Full DST ? 
                                 'StrippingChiAndWForPromptCharm'        ] }
     }
-x
+
 
 #########################################################
 ### StrippingCC2DD

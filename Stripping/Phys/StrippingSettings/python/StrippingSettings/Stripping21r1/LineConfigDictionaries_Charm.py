@@ -13,140 +13,6 @@ StrippingSelections file containing the line builder instance.
 
 from GaudiKernel.SystemOfUnits import *
 
-## Micro-DST, Vanya BELYAEV!
-## Test:  Yes
-PromptCharm = {
-    'BUILDERTYPE' : 'StrippingPromptCharmConf', 
-    'CONFIG'      : {
-    #
-    #
-    ## PT-cuts
-    #
-    #
-    ## attention: with 1GeV pt-cut prescale is needed for D0,D+,D*+ and Ds
-    #
-    'pT(D0)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D0
-    'pT(D+)'     :  1.0 * GeV ,    ## pt-cut for  prompt   D+
-    'pT(Ds+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Ds+
-    'pT(Lc+)'    :  1.0 * GeV ,    ## pt-cut for  prompt   Lc+
-    #
-    'pT(D0->HH)' :  1.0 * GeV ,    ## pt-cut for  prompt   D0->KK,pipi models 
-    #
-    # Selection of basic particles
-    #
-    'PionCut'   : """
-    ( PT          > 250 * MeV ) & 
-    ( CLONEDIST   > 5000      ) & 
-    ( TRGHOSTPROB < 0.5       ) &
-    in_range ( 2          , ETA , 4.9       ) &
-    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
-    HASRICH                     &
-    ( PROBNNpi     > 0.1      ) &
-    ( MIPCHI2DV()  > 9        )
-    """ ,
-    #
-    'KaonCut'   : """
-    ( PT          > 250 * MeV ) & 
-    ( CLONEDIST   > 5000      ) & 
-    ( TRGHOSTPROB < 0.5       ) &
-    in_range ( 2          , ETA , 4.9       ) &
-    in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
-    HASRICH                     &
-    ( PROBNNk      > 0.1      ) &
-    ( MIPCHI2DV()  > 9        )
-    """ ,
-    #
-    'ProtonCut'   : """
-    ( PT           > 250 * MeV ) & 
-    ( CLONEDIST    > 5000      ) & 
-    ( TRGHOSTPROB  < 0.5       ) & 
-    in_range ( 2         , ETA , 4.9       ) &
-    in_range ( 10 * GeV  , P   , 150 * GeV ) &
-    HASRICH                      &
-    ( PROBNNp      > 0.1       ) &
-    ( MIPCHI2DV()  > 9         ) 
-    """ ,
-    ##
-    'MuonCut'   : """
-    ISMUON &
-    in_range ( 2 , ETA , 4.9     ) &
-    ( PT            >  550 * MeV ) &
-    ( PIDmu - PIDpi >    0       ) &
-    ( CLONEDIST     > 5000       )     
-    """ , 
-    #
-    ## photons from chi_(c,b)
-    #
-    'GammaChi'        : " ( PT > 400 * MeV ) & ( CL > 0.05 ) " ,
-    #
-    ## W+- selection
-    #
-    'WCuts'           : " ( 'mu+'== ABSID ) & ( PT > 15 * GeV )" ,
-    #
-    # Global Event cuts
-    #
-    'CheckPV'         : True ,
-    #
-    # Technicalities:
-    #
-    'Preambulo'       : [
-    # the D0 decay channels
-    "pipi   = DECTREE ('[D0]cc -> pi- pi+   ') " ,
-    "kk     = DECTREE ('[D0]cc -> K-  K+    ') " ,
-    "kpi    = DECTREE ('[D0    -> K-  pi+]CC') " ,
-    # number of kaons in final state (as CombinationCuts)
-    "ak2    = 2 == ANUM( 'K+' == ABSID ) "       ,
-    # shortcut for chi2 of vertex fit
-    'chi2vx = VFASPF(VCHI2) '                    ,
-    # shortcut for the c*tau
-    "from GaudiKernel.PhysicalConstants import c_light" ,
-    "ctau     = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
-    "ctau_9   = BPVLTIME (   9 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<9
-    "ctau_16  = BPVLTIME (  16 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<16
-    "ctau_25  = BPVLTIME (  25 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<25
-    "ctau_100 = BPVLTIME ( 100 ) * c_light "  , ## use the embedded cut for chi2(LifetimeFit)<100
-    "ctau_no  = BPVLTIME (     ) * c_light "  , ## no embedded cut for chi2(lifetimeFit)
-    # dimuons:
-    "psi           =   ADAMASS ('J/psi(1S)') < 150 * MeV"  ,
-    "psi_prime     =   ADAMASS (  'psi(2S)') < 150 * MeV"  ,
-    ] ,
-    ## monitoring ?
-    'Monitor'     : False ,
-    ## pescales
-    'D0Prescale'             : 0. ,
-    'D*Prescale'             : 0. ,
-    'DsPrescale'             : 0. ,
-    'D+Prescale'             : 0. ,
-    'LambdaCPrescale'        : 1.0 ,
-    'LambdaCpKKPrescale'     : 1.0 ,
-    'LambdaC*Prescale'       : 1.0 ,
-    'SigmaCPrescale'         : 1.0 ,
-    ##
-    'D02KKPrescale'          : 0.1 ,
-    'D02pipiPrescale'        : 0.1 ,
-    'D*CPPrescale'           : 1.0 ,
-    ##
-    'DiCharmPrescale'        : 0. ,
-    'DiMu&CharmPrescale'     : 0. ,
-    'DoubleDiMuPrescale'     : 0. ,
-    'Chi&CharmPrescale'      : 0. ,
-    'Charm&WPrescale'        : 0. ,
-    'DiMuon&WPrescale'       : 0. ,
-    'Chi&WPrescale'          : 0. ,
-    'Ds&PsiPrescale'         : 0. 
-    },
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : {
-      'Charm'    : [
-                                     'StrippingLambdaCForPromptCharm'        ,
-                                     'StrippingLambdaC2pKKForPromptCharm'    ,
-                                     'StrippingSigmaCForPromptCharm'         ,
-                                     'StrippingLambdaCstarForPromptCharm'    ,
-                                     'StrippingD02KKForPromptCharm'          ,
-                                     'StrippingD02pipiForPromptCharm'        ,
-                                     'StrippingDstarCPForPromptCharm'        ]
-      }
-    }
 
 ## D0 -> h+h- (tagged & untagged).
 ## Responsible: Marco Gersabeck
@@ -1372,74 +1238,10 @@ D2XGamma = {
     ,'PhiLocation' : "Phys/StdLoosePhi2KK/Particles"
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : ['CharmCompleteEvent' ]
+    'STREAMS' : ['Charm' ]
     }
 
 # D0 -> h+ h- pi-
-# Responsible: Marco Gersabeck
-# Added: Stripping19
-# Lives in StrippingDstarD2hhpi0.py
-DstarD2hhpi0 = {
-    'BUILDERTYPE' : 'DstarD2hhpi0Conf',
-    'CONFIG'      : {
-           'DaugPtMin': 800.,
-           'DaugPtMax': 1250.,
-           'DaugPtLoose': 500.,
-           'DaugP': 5000.,
-           'DaugPLoose': 3000.,
-           'DaugIPChi2Loose': 9.,
-           'DaugIPChi2': 25.,
-           'DaugTrkChi2': 3.,
-           'DaugTrkChi2Loose': 4.,
-           'HighPIDK': 5.,
-           'LowPIDK': 0.,
-           'D0Pt': 1800.,
-           'D0PtLoose': 1500.,
-           'D0MassWindowCentre': 1865.,
-           'D0MassWindowWidth': 100.,
-           'D0KPiMassWindowWidthLow':  -100.,
-           'D0KPiMassWindowWidthHigh': 100.,
-           'D0PiPiMassWindowWidthLow':  -75.,
-           'D0PiPiMassWindowWidthHigh': 200.,
-           'D0KKMassWindowWidthLow': -100.,
-           'D0KKMassWindowWidthHigh': 200.,
-           'D0P': 5000.,
-           'D0VtxChi2Ndof': 10.,
-           'D0FDChi2': 40.,
-           'D0BPVDira': 0.9999,
-           'D0DOCA': 0.07,
-           'KstPt': 1800.,
-           'KstP': 5000.,
-           'KstVtxChi2Ndof': 10.,
-           'KstFDChi2': 40.,
-           'KstDOCA': 0.07,
-           'KstMassWindowCentre': 1865.,
-           'KstKPiMassWindowWidthHigh': 50.,
-           'Daug_TRCHI2DOF_MAX': 3.,
-           'Dstar_AMDiff_MAX': 185.,
-           'Dstar_VCHI2VDOF_MAX': 100.,
-           'Dstar_MDiff_MAX': 180.,
-           'Pi0MinPT_R':1000.,
-           'Pi0MinPT_M':2000.,
-           'ResPi0MinGamCL': 0.2,
-           'TaggedRSLinePrescale': 1.,
-           'TaggedRSLinePostscale': 1.,
-           'TaggedWSLinePrescale': 1.,
-           'TaggedWSLinePostscale': 1.,
-           'TaggedSCSLinePrescale': 1.,
-           'TaggedSCSLinePostscale': 1.,
-           'TaggedRSSSLinePrescale': 1.,
-           'TaggedRSSSLinePostscale': 1.,
-           'TaggedSCSSSLinePrescale': 1.,
-           'TaggedSCSSSLinePostscale': 1.,
-           'RunSameSign': True,
-           'RunDefault': True,
-           'UseTOSFilter': True,
-           'Hlt2TOS': { 'Hlt2CharmHadD02HHXDst_hhXDecision%TOS' : 0, 'Hlt2CharmHadD02HHXDst_hhXWideMassDecision%TOS' : 0, 'Hlt2Global%TIS' : 0 }
-         },
-    'WGs' : [ 'Charm' ],
-    'STREAMS' : ['Charm' ] 
-}
 
 # D(s)+ -> KS h+ h+ h-
 # Responsible: Hamish Gordon
@@ -1949,8 +1751,8 @@ D2PiPi0_eegamma = {
     }
     
     
-##D+ -> pi+ (pi0->e+ e- gamma) lines, prompt and smmileptonic, Ed Greening, Brian Meadows
-##FULLDST
+##D* tagged D0 -> hhpi0, Kevin Maguire
+##muDST
 DstarToHHPi0 = {
     'BUILDERTYPE' : 'DstarD0ToHHPi0AllLinesConf' ,
     'CONFIG'      : {
