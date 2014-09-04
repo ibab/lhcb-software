@@ -29,7 +29,7 @@ D02KPiPi0 = {
 MuIDCalib = {
     'BUILDERTYPE' : 'MuIDCalibConf',
     'WGs'         : [ 'ALL' ],
-    'STREAMS'     : [ 'Calibration' ],
+    'STREAMS'     : [ 'PID' ],
     'CONFIG'      : { 'PromptPrescale' : 0., #not used anymore 0.08 old prescale        
     'DetachedPrescale'         : 1.,
     'DetachedNoMIPPrescale'    : 1, #0.3,                                       

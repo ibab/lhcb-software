@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-04 - Stefano Perazzini
+ - Moved MuIDCalib lines to PID stream
+ - Updated stripping21 and stripping21r1 dbases
+
 ! 2014-09-04 - Roberta Cardinale				
  - Removed XibcJpsiProton line
  - Changed prescaleControlHadronic for XibStartToXibzero to 0.1

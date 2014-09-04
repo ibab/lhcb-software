@@ -448,7 +448,8 @@ B2XEta = {
                                    'StrippingB2XEtaLb2eta3piLDDLine',
                                    'StrippingB2XEtaB2etapKstarLine',
                                    'StrippingB2XEtaB2eta3piKstarLine',
-                                   'StrippingB2XEtaLb2pKetapLine']
+                                   'StrippingB2XEtaLb2pKetapLine',
+                                   'StrippingB2XEtaLb2pKeta3piLine']
                       }
     }
 
