@@ -89,7 +89,7 @@ GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
 #--Number of events
-nEvts = 1000
+nEvts = 100
 LHCbApp().EvtMax = nEvts
 Gauss().Production='PGUN'
 

@@ -23,7 +23,7 @@ materialsTodo=['Al']#,'Be','Si'] # 'Al' 'Be' 'Si'
 thicks=['1']  #in mm 1, 5, 10 (only)
 particlesTodo=['pbar','p','Piminus','Piplus','Kminus','Kplus'] #'p','pbar','Piplus','Piminus','Kplus','Kminus'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
 
-nevts = 1000 #Each event fires 100 particles with nevts=1000 statistics is usually decent. Production may break above 50000
+nevts = 100 #Each event fires 100 particles with nevts=1000 statistics is usually decent. Production may break above 50000
 
 
 
