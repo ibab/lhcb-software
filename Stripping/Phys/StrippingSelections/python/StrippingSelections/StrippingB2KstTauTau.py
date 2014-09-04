@@ -98,7 +98,7 @@ class B2KstTauXConf(LineBuilder) :
     #
     selKstar        = self._makeKstar(      name    = "Kstar"+name,
                                       config  = config)
-    rawTau          = DataOnDemand("Phys/StdLooseDetachedTau3pi/Particles")
+    rawTau          = DataOnDemand("Phys/StdTightDetachedTau3pi/Particles")
     
     selMuons        = self._makeMuons(      name    = "MuonsFor"+name,
                                             config  = config)

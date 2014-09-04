@@ -254,7 +254,7 @@ class B2XTauConf(LineBuilder) :
                                       config  = config)
     selKaonsForD        = self._makeKaonsForD(      name    = "KaonsDFor"+name, 
                                       config  = config)
-    rawTau          = DataOnDemand("Phys/StdLooseDetachedTau3pi/Particles")
+    rawTau          = DataOnDemand("Phys/StdTightDetachedTau3pi/Particles")
     
     selTau          = self._filterTau(name       = name+"_TauFilter",
                                       tauInput   = rawTau,
