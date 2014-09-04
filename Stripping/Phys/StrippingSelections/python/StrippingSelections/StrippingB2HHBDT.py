@@ -120,7 +120,8 @@ def makeB2HHBDT( name,
     CombineB2HHBDT = CombineParticles( DecayDescriptor = 'B0 -> pi+ pi-',
                                        DaughtersCuts = { "pi+" : _daughters_cuts },
                                        CombinationCut = _combination_cuts,
-                                       MotherCut = _mother_cuts )
+                                       MotherCut = _mother_cuts,
+                                       ReFitPVs = True )
     
     return Selection( name,
                       Algorithm = CombineB2HHBDT,

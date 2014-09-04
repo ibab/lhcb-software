@@ -138,7 +138,8 @@ def makeD2HHBDT( name,
     CombineD2HHBDT = CombineParticles( DecayDescriptor = 'D0 -> K+ K-',
                                        DaughtersCuts = { "K+" : _daughters_cuts },
                                        CombinationCut = _combination_cuts,
-                                       MotherCut = _mother_cuts )
+                                       MotherCut = _mother_cuts,
+                                       ReFitPVs = True )
     
     return Selection( name,
                       Algorithm = CombineD2HHBDT,
