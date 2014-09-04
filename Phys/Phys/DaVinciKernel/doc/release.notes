@@ -4,6 +4,11 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2014-09-04 - Chris Jones
+ - Switch from boost::assign to c++11 initialiser lists for static maps in
+   DVCommonBase.icpp.
+ - Make an entry in DefaultDVToolTypes.h for ParticleReFitter.
+
 ! 2014-08-11 - Chris Jones
  - Move DaVinciP2VVAngles.{h,cpp} to Phys/DaVinciAngleCalculators.
 

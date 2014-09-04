@@ -9,7 +9,6 @@
 // Boost
 // ============================================================================
 #include "boost/lexical_cast.hpp"
-#include "boost/assign/list_of.hpp"
 #include "boost/algorithm/string.hpp"
 // ============================================================================
 // GaudiKernel
@@ -188,135 +187,135 @@ template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultVertexFittersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""              , DaVinci::DefaultTools::VertexFitter )
-    ( "Offline"       , "OfflineVertexFitter:PUBLIC"    )
-    ( "Trigger"       , "TrgVertexFitter"        )
-    ( "LoKi"          , "LoKi::VertexFitter:PUBLIC"     )
-    ( "Kalman"        , "LoKi::VertexFitter:PUBLIC"     )
-    ( "ParticleAdder" , "ParticleAdder"          )
-    ( "LoKiFast"      , "LoKi::FastVertexFitter:PUBLIC" )
-    ( "FastLoKi"      , "LoKi::FastVertexFitter:PUBLIC" )
-    ;
+  static const ToolMap m = {
+    { ""              , DaVinci::DefaultTools::VertexFitter },
+    { "Offline"       , "OfflineVertexFitter:PUBLIC"    },
+    { "Trigger"       , "TrgVertexFitter"        },
+    { "LoKi"          , "LoKi::VertexFitter:PUBLIC"     },
+    { "Kalman"        , "LoKi::VertexFitter:PUBLIC"     },
+    { "ParticleAdder" , "ParticleAdder"          },
+    { "LoKiFast"      , "LoKi::FastVertexFitter:PUBLIC" },
+    { "FastLoKi"      , "LoKi::FastVertexFitter:PUBLIC" }
+  } ;
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultParticleFiltersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""       , "LoKi::Hybrid::FilterCriterion" )
-    ( "LoKi"   , "LoKi::Hybrid::FilterCriterion" )
-    ( "Hybrid" , "LoKi::Hybrid::FilterCriterion" )
-    ;
+  static const ToolMap m = {
+    { ""       , "LoKi::Hybrid::FilterCriterion" },
+    { "LoKi"   , "LoKi::Hybrid::FilterCriterion" },
+    { "Hybrid" , "LoKi::Hybrid::FilterCriterion" }
+  };
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultParticleCombinersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""                 , DaVinci::DefaultTools::ParticleCombiner )
-    ( "Offline"          , "OfflineVertexFitter:PUBLIC"         )
-    ( "Trigger"          , "TrgVertexFitter"             )
-    ( "Kalman"           , "LoKi::VertexFitter:PUBLIC"          )
-    ( "LoKi"             , "LoKi::VertexFitter:PUBLIC"          )
-    ( "Smart"            , "LoKi::SmartParticleCombiner" )
-    ( "ParticleAdder"    , "ParticleAdder"               )
-    ( "Adder"            , "ParticleAdder"               )
-    ( "Combiner"         , "MomentumCombiner"            )
-    ( "MomentumCombiner" , "MomentumCombiner"            )
-    ( "Momenta"          , "MomentumCombiner"            )
-    ( "LoKiFast"         , "LoKi::FastVertexFitter:PUBLIC"      )
-    ( "FastLoKi"         , "LoKi::FastVertexFitter:PUBLIC"      )
-    ;
+  static const ToolMap m = {
+    { ""                 , DaVinci::DefaultTools::ParticleCombiner },
+    { "Offline"          , "OfflineVertexFitter:PUBLIC"    },
+    { "Trigger"          , "TrgVertexFitter"               },
+    { "Kalman"           , "LoKi::VertexFitter:PUBLIC"     },
+    { "LoKi"             , "LoKi::VertexFitter:PUBLIC"     },
+    { "Smart"            , "LoKi::SmartParticleCombiner"   },
+    { "ParticleAdder"    , "ParticleAdder"                 },
+    { "Adder"            , "ParticleAdder"                 },
+    { "Combiner"         , "MomentumCombiner"              },
+    { "MomentumCombiner" , "MomentumCombiner"              },
+    { "Momenta"          , "MomentumCombiner"              },
+    { "LoKiFast"         , "LoKi::FastVertexFitter:PUBLIC" },
+    { "FastLoKi"         , "LoKi::FastVertexFitter:PUBLIC" }
+  } ;
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultParticleReFittersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""              , "OfflineVertexFitter:PUBLIC"    )
-    ( "Offline"       , "OfflineVertexFitter:PUBLIC"    )
-    ( "Vertex"        , "OfflineVertexFitter:PUBLIC"    )
-    ( "Kalman"        , "LoKi::VertexFitter:PUBLIC"     )
-    ( "LoKi"          , "LoKi::VertexFitter:PUBLIC"     )
-    ( "Mass"          , "LoKi::MassFitter"       )
-    ( "Direction"     , "LoKi::DirectionFitter"  )
-    ( "ParticleAdder" , "ParticleAdder"          )
-    ( "Adder"         , "ParticleAdder"          )
-    ( "LoKiFast"      , "LoKi::FastVertexFitter:PUBLIC" )
-    ( "FastLoKi"      , "LoKi::FastVertexFitter:PUBLIC" )
-    ;
+  static const ToolMap m = {
+    { ""              , DaVinci::DefaultTools::ParticleReFitter },
+    { "Offline"       , "OfflineVertexFitter:PUBLIC"    },
+    { "Vertex"        , "OfflineVertexFitter:PUBLIC"    },
+    { "Kalman"        , "LoKi::VertexFitter:PUBLIC"     },
+    { "LoKi"          , "LoKi::VertexFitter:PUBLIC"     },
+    { "Mass"          , "LoKi::MassFitter"       },
+    { "Direction"     , "LoKi::DirectionFitter"  },
+    { "ParticleAdder" , "ParticleAdder"          },
+    { "Adder"         , "ParticleAdder"          },
+    { "LoKiFast"      , "LoKi::FastVertexFitter:PUBLIC" },
+    { "FastLoKi"      , "LoKi::FastVertexFitter:PUBLIC" }
+  };
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultPVReFittersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""           , "LoKi::PVReFitter:PUBLIC"   )
-    ( "LoKi"       , "LoKi::PVReFitter:PUBLIC"   )
-    ( "PVReFitter" , "PVReFitter"                )
-    ( "Adaptive"   , "AdaptivePVReFitter:PUBLIC" )
-    ( "Cheated"    , "CheatedPVReFitter"         )
-    ;
+  static const ToolMap m = {
+    { ""           , "LoKi::PVReFitter:PUBLIC"   },
+    { "LoKi"       , "LoKi::PVReFitter:PUBLIC"   },
+    { "PVReFitter" , "PVReFitter"                },
+    { "Adaptive"   , "AdaptivePVReFitter:PUBLIC" },
+    { "Cheated"    , "CheatedPVReFitter"         }
+  };
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultDecayTreeFittersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    (  ""     , "LoKi::DecayTreeFit" )
-    (  "LoKi" , "LoKi::DecayTreeFit" )
-    ;
+  static const ToolMap m = {
+    {  ""     , "LoKi::DecayTreeFit" },
+    {  "LoKi" , "LoKi::DecayTreeFit" }
+  };
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultMassFittersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""     , "LoKi::MassFitter" )
-    ( "LoKi" , "LoKi::MassFitter" )
-    ;
+  static const ToolMap m = {
+    { ""     , "LoKi::MassFitter" },
+    { "LoKi" , "LoKi::MassFitter" }
+  };
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultLifetimeFittersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""     , "PropertimeFitter"     )
-    ( "LoKi" , "LoKi::LifetimeFitter" )
-    ;
+  static const ToolMap m = {
+    { ""     , "PropertimeFitter"     },
+    { "LoKi" , "LoKi::LifetimeFitter" }
+  };
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultDirectionFittersNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""     , "DirectionFitter"       )
-    ( "LoKi" , "LoKi::DirectionFitter" )
-    ;
+  static const ToolMap m = {
+    { ""     , "DirectionFitter"       },
+    { "LoKi" , "LoKi::DirectionFitter" }
+  };
   return m;
 }
 template <class PBASE>
 const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultDistanceCalculatorsNames() const
 {
-  static const ToolMap m = boost::assign::map_list_of
-    ( ""                         , "LoKi::DistanceCalculator:PUBLIC"    )
-    ( "LoKi"                     , "LoKi::DistanceCalculator:PUBLIC"    )
-    ( "LoKi::DistanceCalculator" , "LoKi::DistanceCalculator:PUBLIC"    )
-    ( "Trg"                      , "LoKi::TrgDistanceCalculator:PUBLIC" )
-    ( "Hlt"                      , "LoKi::TrgDistanceCalculator:PUBLIC" )
-    ( "Trigger"                  , "LoKi::TrgDistanceCalculator:PUBLIC" )
-    ( "Fast"                     , "LoKi::TrgDistanceCalculator:PUBLIC" )
-    ;
+  static const ToolMap m = {
+    { ""                         , "LoKi::DistanceCalculator:PUBLIC"    },
+    { "LoKi"                     , "LoKi::DistanceCalculator:PUBLIC"    },
+    { "LoKi::DistanceCalculator" , "LoKi::DistanceCalculator:PUBLIC"    },
+    { "Trg"                      , "LoKi::TrgDistanceCalculator:PUBLIC" },
+    { "Hlt"                      , "LoKi::TrgDistanceCalculator:PUBLIC" },
+    { "Trigger"                  , "LoKi::TrgDistanceCalculator:PUBLIC" },
+    { "Fast"                     , "LoKi::TrgDistanceCalculator:PUBLIC" }
+  };
   return m;
 }
 
