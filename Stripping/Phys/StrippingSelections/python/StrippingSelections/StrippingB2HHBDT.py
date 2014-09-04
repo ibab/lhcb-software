@@ -42,7 +42,7 @@ default_config = {
                       'MassLow'         : 4800,
                       'MassHigh'        : 6200,
                       'BDTCut'          : -0.3,
-                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
+                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HH_BDT_v1r4.xml"
                     },
     'STREAMS'     : ['Bhadron']
     }
@@ -51,16 +51,16 @@ default_config = {
 
 class B2HHBDTLines( LineBuilder ) :
     """Class defining the Hb -> hh stripping lines"""
-    
+
     __configuration_keys__ = ( 'PrescaleB2HHBDT',
-                               'MinPT',    
+                               'MinPT',
                                'MinIP',
                                'TrChi2',
                                'TrGhostProb',
                                'CombMassLow',
-                               'CombMassHigh',        
-                               'DOCA',               
-                               'BPT',              
+                               'CombMassHigh',
+                               'DOCA',
+                               'BPT',
                                'BIP',
                                'BTAU',
                                'MassLow',
@@ -68,13 +68,13 @@ class B2HHBDTLines( LineBuilder ) :
                                'BDTCut',
                                'BDTWeightsFile'
                                )
-    
-    def __init__( self,name,config ) :        
-        
+
+    def __init__( self,name,config ) :
+
         LineBuilder.__init__(self, name, config)
-        
+
         B2HHBDTName   = "B2HHBDT"
-        
+
         # make the various stripping selections
         self.B2HHBDT = makeB2HHBDT( B2HHBDTName,
                                     config['TrChi2'],
@@ -90,7 +90,7 @@ class B2HHBDTLines( LineBuilder ) :
                                     config['MassLow'],
                                     config['MassHigh']
                                   )
-        
+
         self.CutBDT  = applyBDT( "CutBDT_" + B2HHBDTName,
                                  LineName       = B2HHBDTName + "Line",
                                  SelB2HHBDT     = self.B2HHBDT,
@@ -103,29 +103,29 @@ class B2HHBDTLines( LineBuilder ) :
                                           selection = self.CutBDT,
                                           EnableFlavourTagging = True,
                                           MDSTFlag = True )
-        
+
         self.registerLine(self.lineB2HHBDT)
 
-def makeB2HHBDT( name, 
+def makeB2HHBDT( name,
                  trChi2,trGhostProb,minPT,minIP,
                  combMassLow,combMassHigh,doca,
-                 bPT,bIP,bTAU,massLow,massHigh ) : 
-    
+                 bPT,bIP,bTAU,massLow,massHigh ) :
+
     _daughters_cuts = "(TRGHOSTPROB < %(trGhostProb)s) & (TRCHI2DOF < %(trChi2)s) & (PT > %(minPT)s * MeV) & ( MIPDV(PRIMARY) > %(minIP)s )" %locals()
-    
+
     _combination_cuts = "( AMAXDOCA('') < %(doca)s ) & ( AM > %(combMassLow)s * MeV ) & ( AM < %(combMassHigh)s * MeV )" %locals()
-    
+
     _mother_cuts = "( PT > %(bPT)s * MeV ) & ( M > %(massLow)s * MeV ) & ( M < %(massHigh)s * MeV ) & ( BPVIP() < %(bIP)s ) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(bTAU)s )" %locals()
-    
+
     CombineB2HHBDT = CombineParticles( DecayDescriptor = 'B0 -> pi+ pi-',
                                        DaughtersCuts = { "pi+" : _daughters_cuts },
                                        CombinationCut = _combination_cuts,
                                        MotherCut = _mother_cuts,
                                        ReFitPVs = True )
-    
+
     return Selection( name,
                       Algorithm = CombineB2HHBDT,
-                      RequiredSelections = [ StdNoPIDsPions ] )    
+                      RequiredSelections = [ StdNoPIDsPions ] )
 
 
 def applyBDT( name,
@@ -141,7 +141,7 @@ def applyBDT( name,
                         RequiredSelections = [ SelB2HHBDT ]
                         )
 
-    """          
+    """
     Name is special here, since this is the last algorithm,
     whose name seems to be the one of the stripping line....
     """
@@ -153,5 +153,5 @@ def applyBDT( name,
     return BDTSel
 
 
-########################################################################  
+########################################################################
 
