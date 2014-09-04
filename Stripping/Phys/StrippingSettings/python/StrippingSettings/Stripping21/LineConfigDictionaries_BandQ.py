@@ -1216,11 +1216,11 @@ XicHHH = {
                   , 'PrescaleXic2KLam'        : 0.0 
                   , 'PostscaleXic2KLam'       : 0.0 
                   , 'RelatedInfoTools' : [
-	               { "Type" : "RelInfoConeVariables", "ConeAngle" : 1.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone1"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 15,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone2"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone3"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.25,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone4"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.1,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone5"}
+	               { "Type" : "RelInfoConeVariables", "ConeAngle" : 1.5, "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone1"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 15,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone2"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.5, "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone3"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.25,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone4"},
+                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.1,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone5"}
                        ] 
                         },
     'STREAMS' : [

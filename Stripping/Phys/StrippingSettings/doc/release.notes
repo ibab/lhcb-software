@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-04 - Roberta Cardinale
+ - Correct Cone variable names in StrippingXic2HHH
+
 ! 2014-09-04 - Stefano Perazzini
  - Moved MuIDCalib lines to PID stream
  - Updated stripping21 and stripping21r1 dbases
