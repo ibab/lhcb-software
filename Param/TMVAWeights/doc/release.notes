@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-09-04 - Jibo He
+ - Updated weights file for Bs->etac(4h) phi 
+
 ! 2014-08-30 - Stefano Perazzini
  - Added weights files data/TMVAClassification_2011_ll(dd)_BDTG.weights.xml
 
