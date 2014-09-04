@@ -74,6 +74,7 @@ private:
   std::string m_seedTracks;
   std::string m_downTracks;
   std::string m_upTracks;
+  std::string m_bestTracks;
   
   IPrCounter* m_velo;
   IPrCounter* m_forward;

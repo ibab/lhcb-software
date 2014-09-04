@@ -67,6 +67,7 @@ PrChecker::PrChecker( const std::string& name,
   declareProperty( "SeedTracks",        m_seedTracks      = LHCb::TrackLocation::Seed       );
   declareProperty( "DownTracks",        m_downTracks      = LHCb::TrackLocation::Downstream );
   declareProperty( "UpTracks",          m_upTracks        = LHCb::TrackLocation::VeloTT     );
+  declareProperty( "BestTracks",        m_bestTracks      = LHCb::TrackLocation::Default    );
  
   declareProperty( "WriteVeloHistos",    m_writeVeloHistos      = -1 );
   declareProperty( "WriteForwardHistos", m_writeForwardHistos   = -1 );
@@ -219,7 +220,7 @@ StatusCode PrChecker::initialize()
   m_downTrack->addSelection( "noVelo+UT+T_SfromDB>5GeV" ,false);
 
   m_best = tool<IPrCounter>( "PrCounter", "Best", this );
-  m_best->setContainer( LHCb::TrackLocation::Default );
+  m_best->setContainer( m_bestTracks );
   m_best->setWriteHistos(m_writeBestHistos);
   m_best->setSelectId( 15 );
   m_best->addSelection( "long" ,true);
@@ -234,7 +235,7 @@ StatusCode PrChecker::initialize()
   }
 
   m_bestLong = tool<IPrCounter>( "PrCounter", "BestLong", this );
-  m_bestLong->setContainer( LHCb::TrackLocation::Default );
+  m_bestLong->setContainer( m_bestTracks );
   m_bestLong->setWriteHistos(m_writeBestLongHistos);
   m_bestLong->setSelectId( 15 );
   m_bestLong->setTrackType( LHCb::Track::Long );
@@ -250,7 +251,7 @@ StatusCode PrChecker::initialize()
   }
 
   m_bestDownstream = tool<IPrCounter>( "PrCounter", "BestDown", this );
-  m_bestDownstream->setContainer( LHCb::TrackLocation::Default );
+  m_bestDownstream->setContainer( m_bestTracks );
   m_bestDownstream->setWriteHistos(m_writeBestDownstreamHistos);
   m_bestDownstream->setSelectId( 12 );
   m_bestDownstream->setTrackType( LHCb::Track::Downstream ); 
