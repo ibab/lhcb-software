@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-04 - Stefano Perazzini
+ - Updated dictionaries for Charmless WG
+
 ! 2014-09-04 - Andrea Contu
  - Quick update to RD dictionaries
  - Updated stripping21 and stripping21r1 dbases
@@ -15,7 +18,7 @@
  - Moved MuIDCalib lines to PID stream
  - Updated stripping21 and stripping21r1 dbases
 
-! 2014-09-04 - Roberta Cardinale				
+! 2014-09-04 - Roberta Cardinale
  - Removed XibcJpsiProton line
  - Changed prescaleControlHadronic for XibStartToXibzero to 0.1
 
@@ -39,7 +42,7 @@
  - Change stripping stream from Semileptonic to BHadron for XTauNu module
 
 ! 2014-09-03 - Ronan Wallace
- - Minor adjustment to config of QEE dicts 
+ - Minor adjustment to config of QEE dicts
 
 ! 2014-09-03 - Pablo Ruiz Valls (RD)
  - Fix in ZVTOP dict due to commit in StripSels
@@ -84,7 +87,7 @@
  - Now related info compatible!
 
 ! 2014-09-01 - Roberta Cardinale
- - Update LineConfigDictionaries_BandQ 
+ - Update LineConfigDictionaries_BandQ
 
 ! 2014-09-01 - Ronan Wallace
  - Removed mention of 'units' from QEE dictionaries

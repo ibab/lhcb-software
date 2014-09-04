@@ -7,7 +7,7 @@
 
 from GaudiKernel.SystemOfUnits import *
 
-## StrippingBu2KSh.py 
+## StrippingBu2KSh.py
 Bu2KSh = {
     'WGs' : ['Charmless'],
     'BUILDERTYPE' : 'Bu2KShConf',
@@ -107,15 +107,15 @@ Bs2KSKS = {
                      'MVA_LD_PROBABILITY_CUT_BCC'  : 0.5,
                      'MVA_LD_PROBABILITY_CUT_BCu'  : 0.5,
                      'MVA_DD_PROBABILITY_CUT_BCu'  : 0.5,
-                     'KS_LL_MASS'                  : 50.0, 
+                     'KS_LL_MASS'                  : 50.0,
                      'KS_DD_MASS'                  : 100.0,
-                     'KS_LL_DOCA'                  : 1.0, 
-                     'KS_DD_DOCA'                  : 4.0, 
-                     'KS_LL_TRGHOSTPROB'           : 1.0, 
-                     'KS_DD_TRGHOSTPROB'           : 1.0, 
+                     'KS_LL_DOCA'                  : 1.0,
+                     'KS_DD_DOCA'                  : 4.0,
+                     'KS_LL_TRGHOSTPROB'           : 1.0,
+                     'KS_DD_TRGHOSTPROB'           : 1.0,
                      'B_MassWindow'                : 600.0,
-                     'B_DOCA_LL'                   : 1.0, 
-                     'B_DOCA_DD'                   : 4.0, 
+                     'B_DOCA_LL'                   : 1.0,
+                     'B_DOCA_DD'                   : 4.0,
                      'Prescale'                    : 1.0,
                      'Postscale'                   : 1.0
                      },
@@ -140,7 +140,7 @@ B2HHBDT = {
                       'MassLow'         : 4800,
                       'MassHigh'        : 6200,
                       'BDTCut'          : -0.3,
-                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml"
+                      'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HH_BDT_v1r4.xml"
                       },
     'STREAMS'     : ['Bhadron']
     }
@@ -166,7 +166,7 @@ D2HHBDT = {
                      'MassLow'         : 1800,
                      'MassHigh'        : 2600,
                      'BDTCut'          : -0.3,
-                     'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HHBDT.xml",
+                     'BDTWeightsFile'  : "$TMVAWEIGHTSROOT/data/B2HH_BDT_v1r4.xml",
                      'VertexChi2'      : 64
                     },
     'STREAMS'     : ['Charm']
@@ -290,29 +290,29 @@ Bc2XK = {
                'CTAU'      : 140 * micrometer ,
                'CTAU_BC'   :  80 * micrometer ,
                'KstarCut'   : """
-               ( PT          > 1000 * MeV               ) & 
+               ( PT          > 1000 * MeV               ) &
                in_range ( 2          , ETA , 4.9       ) &
                in_range ( 5 * GeV  , P   , 500 * GeV ) &
                ( MIPCHI2DV()  > 9.    ) &
                ( CHILDCUT ( ( PT> 300*MeV) , 1 ) ) &
-               ( CHILDCUT ( ( PT> 300*MeV) , 2 ) ) 
+               ( CHILDCUT ( ( PT> 300*MeV) , 2 ) )
                """ ,
                'PhiCut'   : """
-               ( PT          > 750 * MeV               ) & 
+               ( PT          > 750 * MeV               ) &
                in_range ( 2          , ETA , 4.9       ) &
                in_range ( 1 * GeV  , P   , 500 * GeV ) &
                ( MIPCHI2DV()  > 9.    ) &
                ( CHILDCUT ( ( PT> 300*MeV) , 1 ) ) &
-               ( CHILDCUT ( ( PT> 300*MeV) , 2 ) ) 
+               ( CHILDCUT ( ( PT> 300*MeV) , 2 ) )
                """ ,
                'KaonCut'   : """
-               ( CLONEDIST   > 5000   ) & 
-               ( TRCHI2DOF   < 4      ) & 
-               ( TRGHOSTPROB < 0.4    ) & 
-               ( PT          > 750 * MeV               ) & 
+               ( CLONEDIST   > 5000   ) &
+               ( TRCHI2DOF   < 4      ) &
+               ( TRGHOSTPROB < 0.4    ) &
+               ( PT          > 750 * MeV               ) &
                in_range ( 2          , ETA , 4.9       ) &
                in_range ( 3.2 * GeV  , P   , 150 * GeV ) &
-               ( MIPCHI2DV()  > 9.    ) 
+               ( MIPCHI2DV()  > 9.    )
                """ ,
                'Preambulo' : ['chi2vx = VFASPF(VCHI2)   '                                ,
                               "from GaudiKernel.PhysicalConstants import c_light"        ,
@@ -423,7 +423,7 @@ B2XEta = {
                       'eta_prime_DOCA'          : 10.0, #15
                       'B_MassWindow'            : 750.0,
                       'B_PTmin'                 : 1500.0,
-                      'BDaug_DD_maxDocaChi2'    : 15.0, #20 
+                      'BDaug_DD_maxDocaChi2'    : 15.0, #20
                       'BDaug_LL_maxDocaChi2'    : 15.0,  #20
                       'B_VtxChi2'               : 15.0,
                       'B_Dira'                  : 0.9995,
@@ -774,14 +774,14 @@ Bu2rho0rhoPlus = {
     "BUILDERTYPE" : "StrippingBu2rho0rhoPlusConf",
     "CONFIG"      : { "isMC"           : False,  # True = no Hlt filter
                       "refitPVs"       : True,
-                      
+
                       "vetoTrISMUON"   : True,   # ~ISMUON causes errors?
                       "trMinIPChi2"    : 4,
                       "trUpMinIPChi2"  : 8,
                       "trMinProbNNpi"  : 0.0,
                       "trMaxChi2Dof"   : 3.0,
                       "trMaxGhostProb" : 0.5,
-                      
+
                       "longLines"     : { "rhoCombMassMax"        : 1300,   # MeV
                                           "rhoCombMassMin"        : 100,    # MeV
                                           "rhoMothMassMax"        : 1200,   # MeV
@@ -877,7 +877,7 @@ Bu2rho0rhoPlus = {
                       "PrescaleBu2rho0rhoPlusUpMerged"   : 1.0
                       },
     "STREAMS"     : ["Bhadron"]
-    } 
+    }
 
 ## StrippingBu2Kpi0.py
 Bu2Kpi0 = {
@@ -925,20 +925,20 @@ Bc2hhh = {
     'BUILDERTYPE' : 'Bc2hhhBuilder',
     'CONFIG' : {'MaxTrSIZE'             : 200,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
                 '_h_PT'                 : 250.,     ## tracks min PT
-                '_h_P'                  : 2500.,    ## tracks min P  
+                '_h_P'                  : 2500.,    ## tracks min P
                 '_h_IPCHI2'             : 1.,       ## min tracks IP wrt OWNPV
                 '_h_TRCHI2DOF'          : 3.0,      ## max tracks CHI2DOF
-                '_h_TRGHP'              : .5,        ## Track PROBNNghost     
-                '_3h_DOCA'              : .2,       ## max DOCA between h and 2h 
+                '_h_TRGHP'              : .5,        ## Track PROBNNghost
+                '_3h_DOCA'              : .2,       ## max DOCA between h and 2h
                 '_3h_PTmax'             : 1500,     ## min PT of the 3h highest PT track
-                '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction   
-                '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV  
+                '_3h_DIRA'              : .9999,   ## min cos angle between 3h momentum and PV decay direction
+                '_3h_FDCHI2'            : 150.,     ## min 3h FDCHI2 wrt best 3h PV
                 '_3h_SVPV'              : 1.5,      ## Distance between sv and pv
-                '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2 
+                '_3h_CHI2'              : 20.0,     ## max 3h vertex CHI2
                 '_3h_IPCHI2'            : 10.,      ## max 3h IP CHI2 wrt best 3h PV
-                '_3h_PT'                : 1000.,    ## min 3h PT   
-                '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum 
-                '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum 
+                '_3h_PT'                : 1000.,    ## min 3h PT
+                '_3h_PTsum'             : 4500.,    ## min of 3h tracks PT sum
+                '_3h_Psum'              : 22000.,   ## min of 3h tracks P sum
                 '_3h_PVIPCHI2sum'       : 200.,     ## min of the 3h tracks IP wrt best 3h PV
                 '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
                 '_3h_Mmax'              : 6500.,     ## max 3h mass for exclusive lines
@@ -1102,28 +1102,28 @@ B2hhh = {
     'BUILDERTYPE' : 'Bu2hhhBuilder',
     'CONFIG'      : {'MaxTrSIZE'             : 200 ,      ## GEC maximim recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG)
                      '_h_PT'                 : 100. ,     ## tracks min PT
-                     '_h_P'                  : 1500. ,    ## tracks min P  
+                     '_h_P'                  : 1500. ,    ## tracks min P
                      '_h_IPCHI2'             : 1. ,       ## min tracks IP wrt OWNPV
                      '_h_TRCHI2DOF'          : 3.0 ,      ## max tracks CHI2DOF
-                     '_h_TRGHP'              : .5,        ## Track GhostProbability     
-                     '_3h_DOCA'              : .2 ,       ## max DOCA between h and 2h 
+                     '_h_TRGHP'              : .5,        ## Track GhostProbability
+                     '_3h_DOCA'              : .2 ,       ## max DOCA between h and 2h
                      '_3h_PTmax'             : 1500 ,     ## min PT of the 3h highest PT track
-                     '_3h_DIRA'              : .99998 ,   ## min cos angle between 3h momentum and PV decay direction   
-                     '_3h_FDCHI2'            : 500. ,     ## min 3h FDCHI2 wrt best 3h PV  
+                     '_3h_DIRA'              : .99998 ,   ## min cos angle between 3h momentum and PV decay direction
+                     '_3h_FDCHI2'            : 500. ,     ## min 3h FDCHI2 wrt best 3h PV
                      '_3h_PVDOCAmin'         : 3.0 ,      ## min value of the 3h doca wrt any PV
-                     '_3h_CHI2'              : 12.0 ,     ## max 3h vertex CHI2 
+                     '_3h_CHI2'              : 12.0 ,     ## max 3h vertex CHI2
                      '_3h_IPCHI2'            : 10. ,      ## max 3h IP CHI2 wrt best 3h PV
-                     '_3h_PT'                : 1000. ,    ## min 3h PT   
-                     '_3h_PTsum'             : 4500. ,    ## min of 3h tracks PT sum 
-                     '_3h_Psum'              : 20000. ,   ## min of 3h tracks P sum 
+                     '_3h_PT'                : 1000. ,    ## min 3h PT
+                     '_3h_PTsum'             : 4500. ,    ## min of 3h tracks PT sum
+                     '_3h_Psum'              : 20000. ,   ## min of 3h tracks P sum
                      '_3h_PVIPCHI2sum'       : 500. ,     ## min of the 3h tracks IP wrt best 3h PV
                      '_3h_TRKCHIDOFmin'      : 3.0,       ## max track CHI2DOF for the track with smalest CHI2DOF
-                     '_3h_CORRMmax'          : 7000. ,    ## max corrected mass for 3h candidate  
-                     '_3h_CORRMmin'          : 4000. ,    ## min corrected mass for 3h candidate   
-                     '_3hKKK_Mmax'           : 6300. ,    ## max 3h mass for inclusive KKK line       
+                     '_3h_CORRMmax'          : 7000. ,    ## max corrected mass for 3h candidate
+                     '_3h_CORRMmin'          : 4000. ,    ## min corrected mass for 3h candidate
+                     '_3hKKK_Mmax'           : 6300. ,    ## max 3h mass for inclusive KKK line
                      '_3hKKK_Mmin'           : 5050. ,    ## min 3h mass for inclusive KKK line
                      '_3hpph_deltaMmax'      : 400,       ## max 3h mass difference for inclusive ppK line
-                     '_3hpph_deltaMmin'      : 200,       ## min 3h mass difference for inclusive ppK line 
+                     '_3hpph_deltaMmin'      : 200,       ## min 3h mass difference for inclusive ppK line
                      'KKK_inclLinePrescale'  : 1.0,
                      'KKK_inclLinePostscale' : 1.0,
                      'KpKpKp_inclLinePrescale'  : 1.0,
