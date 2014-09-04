@@ -34,7 +34,6 @@ def _baseProtoPLocation(prefix,protos) :
 # _trackLocation and _protosLocation)
 #
 HltSharedTracksPrefix 			= HltGlobalEventPrefix + "Hlt"
-
 Hlt1TracksPrefix 			= HltGlobalEventPrefix + "Hlt1"
 Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
 #

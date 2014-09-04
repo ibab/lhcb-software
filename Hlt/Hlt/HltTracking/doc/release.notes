@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-09-03 - Sebastian Neubert
+ - Starting to refactor Track locations management
+
 ! 2014-09-02 - Sebastian Neubert
  HltReco:
  - Added En block Tracking Sequence HltTracking

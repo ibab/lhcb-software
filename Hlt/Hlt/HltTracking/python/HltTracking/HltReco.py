@@ -176,15 +176,18 @@ from Configurables import TrackStateInitAlg, TrackStateInitTool
 #
 
 # the full Velo reconstruction
-recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = HltSharedVeloLocation) 
-recoVelo.HLT1Only = False 
-recoVelo.HLT2Complement = False 
-recoVelo.StatPrint = True
+def recoVelo(OutputLocation=HltSharedVeloLocation):
+    recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = OutputLocation) 
+    recoVelo.HLT1Only = False 
+    recoVelo.HLT2Complement = False 
+    recoVelo.StatPrint = True
+    return recoVelo
+  
 
 #### VeloTT Tracking
 from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
 recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt', 
-                        InputTracksName = recoVelo.OutputTracksName,
+                        InputTracksName = HltSharedVeloLocation,
                         OutputTracksName = HltSharedVeloTTLocation,
                         fitTracks=False)
 recoVeloTT.addTool(PatVeloTTHybridTool, name="PatVeloTTTool")
@@ -208,7 +211,7 @@ recoForward.PatForwardTool.StatPrint = True
 ##### Hlt selections
 from Configurables import Hlt__TrackFilter as HltTrackFilter
 prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
-                              , InputSelection   = "TES:" + recoVelo.OutputTracksName
+                              , InputSelection   = "TES:" + HltSharedVeloLocation
                               , RequirePositiveInputs = False
                               , Code = [ '~TrBACKWARD' ] 
                               , OutputSelection     = "Velo" )
@@ -224,13 +227,13 @@ from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 #This is the part which is shared between Hlt1 and Hlt2
 
 
-MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo ] ).setOutputSelection( recoVelo.OutputTracksName )
-RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( recoVelo.OutputTracksName )
+MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo(OutputLocation=HltSharedVeloLocation) ] ).setOutputSelection( HltSharedVeloLocation )
+RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( HltSharedVeloLocation )
 RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ])
 
 # put selection revive/redo here
 # for now always redo:
-bm_members =  DecodeVELO.members() + [recoVelo]
+bm_members =  DecodeVELO.members() + [recoVelo()]
 bm_members += DecodeTT.members() + [recoVeloTT] 
 bm_members += DecodeIT.members() + [recoForward]
 
