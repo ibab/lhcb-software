@@ -57,7 +57,7 @@ std::ostream& LHCb::Particle::fillStream(std::ostream& s) const
   const std::string testLocation = 
     ( parent() && parent()->registry() ?
       parent()->registry()->identifier() : "" );
-  if ( !testLocation.empty() ) { s << std::endl << " TES=" << testLocation; }
+  if ( !testLocation.empty() ) { s << std::endl << "TES=" << testLocation; }
   return s << " }";
 }
 
