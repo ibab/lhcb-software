@@ -2,8 +2,13 @@
 ! Package     : IsolationTools
 ! Responsible : Alex Shires
 !============================================================================
+
+! 2014-09-04 - Alex Shires
+ - update to TrackIsolationBDT for Matteo
+ - renamed BDTs, removed IsolationInfo.h
+
 ! 2014-09-01 - Fatima Soomro
-Adding RelInfoBs2MuMuIsolations 
+ - Adding RelInfoBs2MuMuIsolations 
 
 ! 2014-08-31 - Cedric Potterat
  - fixed CMakeLists

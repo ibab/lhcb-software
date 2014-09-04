@@ -27,7 +27,7 @@ RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
         ( "MVATransform" , m_transformName ,
           "path/name of the DictTransform tool"); 
     declareProperty
-        ( "WeightsFile" , m_weightsName = "TrackIsolation.xml" ,
+            ( "WeightsFile" , m_weightsName = "IsolationTools_TrackIsolation_v1r4.xml" ,
           "weights parameter file"); 
     declareProperty(    "PVInputLocation"       
             , m_PVInputLocation = LHCb::RecVertexLocation::Primary 
@@ -239,6 +239,7 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
 	trk_ch = (track->charge())*(part->proto()->track()->charge());
     //particle for propbnn variables
 	trk_nnmu = (*part_it)->proto()->info(LHCb::ProtoParticle::ProbNNmu,-9999);
+	if (trk_nnmu<=0) trk_nnmu=-0.1;
 	trk_nnpi = (*part_it)->proto()->info(LHCb::ProtoParticle::ProbNNpi,-9999);
 	trk_nnk = (*part_it)->proto()->info(LHCb::ProtoParticle::ProbNNk,-9999);
 	//end MR
@@ -285,7 +286,7 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
         }
         if (m_variables>=1)
         {
-            m_varmap.insert( "logtrackips", log_trk_ips ) ; // (a)
+            m_varmap.insert( "log_trk_ips", log_trk_ips ) ; // (a)
         }
         if (m_variables>=2) 
         {

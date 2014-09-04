@@ -25,7 +25,7 @@ RelInfoVertexIsolationBDT::RelInfoVertexIsolationBDT( const std::string& type,
     declareInterface<IRelatedInfoTool>(this);
     declareProperty("InputParticles", m_inputParticles,
             "List of containers to check for extra particle vertexing") ;
-    declareProperty("WeightsFile", m_weightsName = "VertexIsolationHard.xml" );
+    declareProperty("WeightsFile", m_weightsName = "IsolationTools_VertexIsolationHard_v1r4.xml" );
     declareProperty("Type", m_bdttype = "Hard", "Use BDT trained on Hard or Soft tracks" );
     declareProperty("Name", m_transformName = "BDTvalue" );
     //
@@ -91,8 +91,8 @@ StatusCode RelInfoVertexIsolationBDT::initialize()
         m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTSECONDVALUE );
         m_keys.push_back( RelatedInfoNamed::VTXISOBDTSOFTTHIRDVALUE );
         //if using default BDT name and want soft BDT:
-        if ( m_weightsName.compare("VertexIsolationHard.xml") == 0 ) {
-            m_weightsName = "VertexIsolationSoft.xml"; 
+        if ( m_weightsName.compare("IsolationTools_VertexIsolationHard_v1r4.xml") == 0 ) {
+            m_weightsName = "IsolationTools_VertexIsolationSoft_v1r4.xml"; 
         }
     }
 
