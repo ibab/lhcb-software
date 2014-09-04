@@ -151,6 +151,6 @@ std::ostream& LHCb::RecVertex::fillStream(std::ostream& s) const
   const std::string testLocation = 
     ( parent() && parent()->registry() ?
       parent()->registry()->identifier() : "" );
-  if ( !testLocation.empty() ) { s << " TES=" << testLocation; }
+  if ( !testLocation.empty() ) { s << "TES=" << testLocation; }
   return s << " }";
 }
