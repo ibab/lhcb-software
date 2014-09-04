@@ -228,11 +228,12 @@ class StrippingStream ( object ) :
         for line in self.lines :
             sel = line.selection()
             #for algo in line._algos:
-            props = sel.algorithm().getProperties()
-            if props.has_key('ReFitPVs'):
-                if props['ReFitPVs'] == True:
-                  log.warning("Stream='"+self.name()+"' Line='"+line.name()+
-                              "' Requests to refit the PV")
+            if sel != None:
+                props = sel.algorithm().getProperties()
+                if props.has_key('ReFitPVs'):
+                    if props['ReFitPVs'] == True:
+                        log.warning("Stream='"+self.name()+"' Line='"+line.name()+
+                                    "' Requests to refit the PV")
 
     def getRelatedInfoLocations(self) : 
 	locations = []
