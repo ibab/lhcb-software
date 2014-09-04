@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-04 - Pablo Ruiz Valls (RD)
+ - Fixed streams of Bs2MuMu lines
+
 ! 2014-09-04 - Stefano Perazzini
  - Updated dictionaries for Charmless WG
 

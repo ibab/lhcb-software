@@ -976,7 +976,22 @@ Bs2MuMus = {
            'BPVVDChi2'            : 121,
            'daugt_IPChi2'            : 9
            },
-    'STREAMS' : ['Dimuon']
+    'STREAMS' : {
+            'Dimuon' : [
+                 'StrippingBs2MuMusNoMuIDLine',
+                 'StrippingBs2MuMusNoMuIDLooseLine', # Prescaled to 0.
+                 'StrippingBs2MuMusWideMassLine',
+                 ],
+            'Leptonic' : [
+                 'StrippingBs2MuMusBd2JPsiKstLine',
+                 'StrippingBs2JPsiPhiLine',
+                 'StrippingBs2MuMusBu2JPsiKLine',
+                 'StrippingBs2MuMusSSLine',
+                 'StrippingBs2MuMusWideMassLine',
+                 'StrippingBs2MuMusLTUBLine',
+                 'StrippingBs2MuMusBs2KKLTUBLine'
+                 ],
+            },
     }
 
 ################################################################################
