@@ -5,7 +5,11 @@
 // local
 #include "Event/Particle.h"
 
+// Kernel
 #include "LHCbMath/MatrixManip.h"
+
+// Gaudi
+#include "GaudiKernel/IRegistry.h"
 
 //=============================================================================
 
@@ -49,7 +53,12 @@ std::ostream& LHCb::Particle::fillStream(std::ostream& s) const
       s << " " << (*i).first << "=" << (*i).second;
     }
   }
-  return s << " ] }";
+  s << " ]";
+  const std::string testLocation = 
+    ( parent() && parent()->registry() ?
+      parent()->registry()->identifier() : "" );
+  if ( !testLocation.empty() ) { s << std::endl << " TES=" << testLocation; }
+  return s << " }";
 }
 
 //=============================================================================
