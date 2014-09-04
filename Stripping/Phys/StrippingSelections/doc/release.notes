@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-03 Julien Cogan
+ - Following the fresh change in the standard tau selection 
+  (StdLooseDetachedTau3pi renamed in StdTightDetachedTau3pi) : 
+   StrippingB2KstTauTau.py and StrippingB2XTau.py are now using the tight selection
+
 ! 2014-09-03 - Mika Vesterinen
  - Fix missing WS merged pi0 in DstarD0ToHHPi0 by merging WS and RS
 
