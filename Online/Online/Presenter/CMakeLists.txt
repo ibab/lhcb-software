@@ -8,15 +8,18 @@ gaudi_depends_on_subdirs(Online/Gaucho
                          Online/OnlineHistDB
                          Online/PresenterDoc)
 
-find_package(ROOT COMPONENTS Core Cint Thread Gui Graf3d Ged GuiHtml Gpad)
+# first try ROOT 6 (Cling)
+find_package(ROOT COMPONENTS Core Cling Thread Gui Graf3d Ged GuiHtml Gpad)
+if(ROOT_FOUND)
+  set(dict_cmd ${ROOT_rootcling_CMD})
+else()
+  # otherwise try ROOT 5 (Cint)
+  find_package(ROOT COMPONENTS Core Cint Thread Gui Graf3d Ged GuiHtml Gpad)
+  set(dict_cmd ${ROOT_rootcint_CMD})
+endif()
+
 find_package(Boost COMPONENTS filesystem date_time program_options serialization
                               thread system regex)
-
-if(ROOT_rootcint_CMD)
-  set(dict_cmd ${ROOT_rootcint_CMD})
-else()
-  set(dict_cmd ${ROOT_rootcling_CMD})
-endif()
 
 set(dict_srcs ${CMAKE_CURRENT_SOURCE_DIR}/src/cintBootstrap.h
               ${CMAKE_CURRENT_SOURCE_DIR}/src/LinkDef.h)

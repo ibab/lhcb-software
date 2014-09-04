@@ -4,6 +4,9 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+! 2014-09-04 - Marco Clemencic
+ - Fixed one more glitch in the CMake configuration.
+
 ! 2014-09-03 - Marco Clemencic
  - Fixed compilation with ROOT 5 + CMT.
 
