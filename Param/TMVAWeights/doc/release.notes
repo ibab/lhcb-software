@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-09-04 - Rafael Coutinho
+ - Updated name of the B2KShh BDT weights
+
 ! 2014-09-04 - Stefano Perazzini
  - Updated name of B2HHBDT.xml to B2HH_BDT_v1r4.xml
 
