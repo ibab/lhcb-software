@@ -22,6 +22,7 @@ Purpose: LHCb reconstruction program
     of double to float (PrPixel)
   . Performance updates to PatForward (PatAlgorithms, TfKernel)
   . Hide TrackEventFitter counters behind MsgLevel(INFO) (TrackFitter)
+  . PatSeedingTool: use BloomFilter for fast overlap checking (PatAlgorithms)
 
 - Changes to QMTests
   . Added repro2012reco14skiptracking, tests Brunel().SkipTracking functionality
