@@ -125,6 +125,13 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
   unsigned long nSkip  = 0 ;
   m_count[0] += 1;
 
+
+  // .. set origin to first PV when exists
+  if( m_setPV ){
+    const LHCb::RecVertex::Range&  pvs = this->primaryVertices();
+    if( pvs.size() != 0 )setPoint((LHCb::Vertex*) pvs.front() );      
+  }
+
   // Loop over PP
   for( LHCb::ProtoParticle::ConstVector::const_iterator ipp = pps.begin() ;
        pps.end() != ipp ; ++ipp ){

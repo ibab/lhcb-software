@@ -55,5 +55,6 @@ protected:
   double   m_MassWin ; ///< mass window
   double   m_PtCut   ; ///< Pt cut
   unsigned long  m_count[3];
+  bool m_setPV;
 };
 #endif // PI0MAKERBASE_H

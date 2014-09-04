@@ -85,8 +85,15 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
   }
 
   // make photon data
-
   m_photonMaker->setPoint(m_point, m_pointErr);
+  if( m_setPV ){
+    // .. reset origin to first PV when exists
+    const LHCb::RecVertex::Range&  pvs = this->primaryVertices();
+    if( pvs.size() != 0 ){
+      m_photonMaker->setPoint((LHCb::Vertex*) pvs.front() );
+      setPoint((LHCb::Vertex*) pvs.front() );
+    }      
+  }
 
   LHCb::Particle::Vector photons;
   StatusCode sc = m_photonMaker->makeParticles(photons);
@@ -121,10 +128,7 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
                               (LHCb::CaloParticle( *part ,m_point , m_pointErr), false) );
     photons.erase(part);
   }
-  if ( !photons.empty() )
-  {
-    return Error( "Photon candidate sorting was wrong..." );
-  }
+  if ( !photons.empty() )return Error( "Photon candidate sorting was wrong..." );
 
   // Make Pi0 candidates from sorted list
   std::vector< std::pair< LHCb::CaloParticle ,bool> >::iterator ip1, ip2;
@@ -133,9 +137,6 @@ StatusCode ResolvedPi0Maker::makeParticles (LHCb::Particle::Vector & pi0s )
     for( ip2 = ip1+1 ; ip2 != orderedPhotons.end() ; ++ip2 ) {
       if ( m_singlePhotonUse && (*ip2).second ) continue;
       if( !selPi0( (*ip1).first , (*ip2).first) )continue;
-
-
-
       // create pi0
       LHCb::Particle* pi0 = new LHCb::Particle();
       nPi0++;

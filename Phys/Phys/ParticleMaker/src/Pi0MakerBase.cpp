@@ -35,8 +35,9 @@ Pi0MakerBase::Pi0MakerBase
   // Filter
   declareProperty( "MassWindow"     , m_MassWin = 30. * Gaudi::Units::MeV);
   declareProperty( "PtCut"          , m_PtCut = 0. * Gaudi::Units::MeV);
-  // new default
   declareProperty( "Particle"       , m_pid = "pi0");
+  declareProperty( "FirstPVasOrigin", m_setPV = false);
+  // 
   //
   m_point = Gaudi::XYZPoint();
   m_pointErr = Gaudi::SymMatrix3x3();
@@ -67,7 +68,7 @@ StatusCode Pi0MakerBase::initialize    ()
   }
   m_Id   = (*partProp).particleID().pid();
   m_Mass = (*partProp).mass();
-
+  if( m_setPV )info() << "Pi0 momentum is evaluated assuming its origin is the 1st primary vertex (when exist)" << endmsg;
   return StatusCode::SUCCESS ;
 }
 // ============================================================================

@@ -8,6 +8,7 @@
 #include "CaloUtils/CaloParticle.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "Event/CaloDataFunctor.h"
+#include "Event/RecVertex.h"
 //#include "CaloUtils/CaloHypoFilter.h"
 // local
 #include "PhotonMaker.h"
@@ -71,6 +72,7 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
   declareProperty ( "MaxHcalRatio"               , m_maxHcal = -1.);
   declareProperty ( "MinHcalRatio"               , m_minHcal = -1.);
   declareProperty ( "MaxPrsEnergy"               , m_maxPrs  = -1.);
+
  
   // Confidence level techniques
   m_clBase.push_back("IsNotH");
@@ -82,6 +84,10 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
   m_knownCLs.push_back("IsPhoton");
   m_knownCLs.push_back("PhotonDLL");
   m_knownCLs.push_back("CaloTrMatch");
+
+  //
+  m_point = Gaudi::XYZPoint();
+  m_pointErr = Gaudi::SymMatrix3x3();
 
  // declare new interface
   declareInterface<ICaloParticleMaker> (this);
@@ -117,6 +123,8 @@ StatusCode PhotonMaker::initialize    ()
   m_count[1]=0;
   m_count[2]=0;
 
+  //
+  
 
 
   // CL techniques  
@@ -227,6 +235,9 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     double eHcal=pp->info(LHCb::ProtoParticle::CaloNeutralHcal2Ecal,0);
     if( m_maxHcal >=0 && eHcal/(1.+eHcal) > m_maxHcal)continue;
     if( m_minHcal >=0 && eHcal/(1.+eHcal) < m_minHcal)continue;
+
+
+
 
     // == evaluate kinematical properties
     LHCb::CaloMomentum momentum(pp , m_point , m_pointErr);
@@ -372,7 +383,7 @@ double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp, bool useSwitch ) c
       CL *= v;
     }else{
       hasCL= false;
-      Warning("confLevel(): IsNotE is not available",StatusCode::SUCCESS,1).ignore();
+      Warning("confLevel(): IsNotH is not available",StatusCode::SUCCESS,1).ignore();
     }
   }
   

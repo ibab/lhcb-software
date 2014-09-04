@@ -3,6 +3,10 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2014-08-18 - O. Deschamps
+  - PhotonMaker : fix typo  
+  - Photon & Pi0Makers : possibility to set the origin to 1st primary vertex 
+
 !========================= ParticleMaker v6r10 2014-07-25 =========================
 
 ! 2014-06-29 - O. Deschamps

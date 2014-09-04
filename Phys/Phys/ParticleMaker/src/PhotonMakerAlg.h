@@ -40,6 +40,6 @@ private:
 
   std::string m_photonMakerType;
   ICaloParticleMaker* m_photonMaker;
-
+  bool m_setPV;
 };
 #endif // RESOLVEDPI0MAKER_H
