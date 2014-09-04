@@ -1,9 +1,14 @@
-// $Id: $
 
+// STD
+#include <iostream>
 #include <algorithm>
 #include <assert.h>
 
+// Event model
 #include "Event/RecVertex.h"
+
+// Gaudi
+#include "GaudiKernel/IRegistry.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : RecVertex
@@ -130,4 +135,22 @@ std::pair<bool,float> LHCb::RecVertex::trackWeight( const LHCb::Track* track ) c
     }
   }
   return weight;
+}
+
+std::ostream& LHCb::RecVertex::fillStream(std::ostream& s) const
+{
+  VertexBase::fillStream(s);
+  s << "{ " 
+    << "technique :	" << technique() << std::endl
+    << " tracks :	[ ";
+  for ( const auto& tk : tracks() ) { s << tk << " "; }
+  s << "]" << std::endl;
+  s << "weights : [ ";
+  for ( const auto& w : weights() ) { s << w << " "; }
+  s << "]" << std::endl;
+  const std::string testLocation = 
+    ( parent() && parent()->registry() ?
+      parent()->registry()->identifier() : "" );
+  if ( !testLocation.empty() ) { s << " TES=" << testLocation; }
+  return s << " }";
 }

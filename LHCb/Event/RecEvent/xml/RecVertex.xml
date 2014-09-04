@@ -204,6 +204,17 @@
 	desc  = "Returns a pair containing a bool, indicating if the track was part of this vertex or not, and its associated weight (0 if track not included)" >
       </method>
 
+      <method
+         name    = "fillStream"
+         desc    = "Print this RecVertex in a human readable way"
+         type    = "std::ostream&amp;"
+         virtual = "FALSE"
+         const   = "TRUE">
+         <arg
+           type = "std::ostream"
+           name = "s"/>
+      </method>
+
     </class>
   </package>
 </gdd>
