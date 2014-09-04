@@ -4,8 +4,11 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-09-04 - Stefano Perazzini
+ - Updated name of B2HHBDT.xml to B2HH_BDT_v1r4.xml
+
 ! 2014-09-04 - Jibo He
- - Updated weights file for Bs->etac(4h) phi 
+ - Updated weights file for Bs->etac(4h) phi
 
 ! 2014-08-30 - Stefano Perazzini
  - Added weights files data/TMVAClassification_2011_ll(dd)_BDTG.weights.xml
@@ -14,7 +17,7 @@
  - Added BDT weights files for the Vertex and Track isolation tools
 
 ! 2014-08-27 - Jibo He
- - Added weights file for Bs->etac(4h) phi 
+ - Added weights file for Bs->etac(4h) phi
 
 ! 2014-08-25 - Rafael Coutinho
  - Added new BDT weight files for the B2KShh analysis, splitted by the KS
