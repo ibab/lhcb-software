@@ -24,7 +24,7 @@ $ getpack Tf/PatAlgorithms HEAD # tested revision 176720
 $ getpack Phys/DaVinciInterfaces HEAD # tested revision 176704 
 $ getpack Phys/DaVinciTypes HEAD # tested revision 176704
 $ getpack Phys/KalmanFilter HEAD # tested revision 176704
-$ getpack Pr/PrMCTools HEAD # get revision 177315
+$ getpack Pr/PrMCTools HEAD # tested revision 177342
 
 
 Running
