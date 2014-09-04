@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/build/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/build/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName         = 'Brunel'
@@ -98,13 +98,13 @@
 # DstWriter.ItemList=['/Event/Rec/Header#1', '/Event/Rec/Status#1', '/Event/Rec/Summary#1', '/Event/pRec/Track/Best#1', '/Event/pRec/Rich/PIDs#1', '/Event/pRec/Muon/MuonPID#1', '/Event/pRec/Calo/Electrons#1', '/Event/pRec/Calo/Photons#1', '/Event/pRec/Calo/MergedPi0s#1', '/Event/pRec/Calo/SplitPhotons#1', '/Event/pRec/ProtoP/Charged#1', '/Event/pRec/ProtoP/Neutrals#1', '/Event/pRec/Vertex/Primary#1', '/Event/pRec/Vertex/V0#1', '/Event/pRec/Track/Muon#1', '/Event/Calo/RawEvent#1', '/Event/Unstripped/RawEvent#1', '/Event/Trigger/RawEvent#1', '/Event/Velo/RawEvent#1', '/Event/Muon/RawEvent#1', '/Event/Rich/RawEvent#1', '/Event/Tracker/RawEvent#1']
 # DstWriter.OptItemList=[]
 # No Writer defined for DIGI
-# WARNING: Using default tag dddb-20130503-1 for partition DDDB
+# WARNING: Using default tag dddb-20130929-1 for partition DDDB
 # WARNING: Using default tag cond-20140604 for partition LHCBCOND
-# WARNING: Using default tag dq-20130806-1 for partition DQFLAGS
+# WARNING: Using default tag dq-20140822 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v46r0
-                                          running on lxplus0131.cern.ch on Fri Jul 25 15:41:24 2014
+                                                   Welcome to Brunel version v47r0
+                                          running on lxbuild173.cern.ch on Thu Sep  4 05:57:47 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -113,7 +113,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   1.32 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.19 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -133,7 +133,7 @@ LumiNoBeamSeq        INFO Member list: LoKi::ODINFilter/FilterNoBeam, HltLumiSum
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "dddb-20130503-1"
+DDDB                 INFO Using TAG "dddb-20130929-1"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
 LHCBCOND             INFO Using TAG "cond-20140604"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
@@ -696,17 +696,23 @@ TransportSvc      SUCCESS  GEOMETRY ERRORS: 'Codes'    map has the size 0
 TransportSvc         INFO Reset the static pointer to DetDesc::IGeometyrErrorSvc
 FileRecordCnvSvc     INFO Disconnected data IO:008610A7-3964-E111-A3C7-001E4F3D8360 [Brunel.dst]
 ToolSvc              INFO Removing all tools created by ToolSvc
+ToolSvc.TrackSt...SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 MergedPi0Rec.Ec...WARNING  Applied corrections configured via options for  MergedPi0Rec.EcalClusterTag.DBAccessor
 MergedPi0Rec.Ec...WARNING  Applied corrections configured via options for  MergedPi0Rec.EcalCovariance.DBAccessor
 EcalCovar.EcalC...WARNING  Applied corrections configured via options for  EcalCovar.EcalCovarTool.DBAccessor
 EcalCovar.EcalC...WARNING  Applied corrections configured via options for  EcalCovar.EcalClusterTag.DBAccessor
 EcalShare.EcalC...WARNING  Applied corrections configured via options for  EcalShare.EcalClusterTag.DBAccessor
+ToolSvc.TrackVe...SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 ToolSvc.FastVel...   INFO Maximum number of Velo hits 0
 ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   1.32 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.19 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
