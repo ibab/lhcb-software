@@ -2,19 +2,23 @@
 # =============================================================================
 # $Id: StdLooseDetachedTau.py,v 1.0 2012-12-04 14:44:42 elsasser Exp $ 
 # =============================================================================
-## @file  CommonParticles/StdLooseDetachedTau.py
-#  configuration file for 'Standard Loose Detached Tau' 
-#  @author Donal Hill, Conor Fitzpatrick, Christian Elsasser
+## @file  CommonParticles/StdTightDetachedTau.py
+#  configuration file for 'Standard Tight Detached Tau' 
+#  @author Donal Hill, Conor Fitzpatrick, Christian Elsasser, Giampiero Mancinelli
 #  @date 2012-12-02
+# Strongly modified 2012-14-01 by Giampiero Mancinelli
+# Used to make the StdLooseDetachedTau3pi in Stripping20r0p3
+# Renamed tight afterward (in view of Stripping 21), in order to restore the
+# previous loose selection (Sept 9th 2014)
 # =============================================================================
 """
-Configuration file for 'Standard Loose Detached Tau'
+Configuration file for 'Standard Tight Detached Tau'
 """
 __author__  = "Donal Hill, Conor Fitzpatrick, Christian Elsasser"
 __version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.0 $"
 # =============================================================================
 __all__ = (
-           'StdLooseDetachedTau3pi',
+           'StdTightDetachedTau3pi',
            'locations'
            
     )
@@ -25,26 +29,24 @@ from CommonParticles.Utils import *
 
 ## ============================================================================
 ## create the algorithm - physical tau+ -> pi+ pi- pi+
-StdLooseDetachedTau3pi = CombineParticles ( 'StdLooseDetachedTau3pi' )
+StdTightDetachedTau3pi = CombineParticles ( 'StdTightDetachedTau3pi' )
 
-StdLooseDetachedTau3pi.Inputs = [ "Phys/StdLoosePions/Particles" ]
+StdTightDetachedTau3pi.Inputs = [ "Phys/StdLoosePions/Particles" ]
 
 #Build physical tau and tau+++
-StdLooseDetachedTau3pi.DecayDescriptors = ["[tau+ -> pi+ pi- pi+]cc"]
-StdLooseDetachedTau3pi.DaughtersCuts = {
-    "pi+"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)",
-    "pi-"        : "(PT>150.*MeV) & (MIPCHI2DV(PRIMARY) > 4.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.4) & (PIDK < 8)"
+StdTightDetachedTau3pi.DecayDescriptors = ["[tau+ -> pi+ pi- pi+]cc"]
+StdTightDetachedTau3pi.DaughtersCuts = {
+    "pi+"        : "(PT>250.*MeV) & (P>2000.*MeV) & (MIPCHI2DV(PRIMARY) > 16.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNpi > 0.55)",
+    "pi-"        : "(PT>250.*MeV) & (P>2000.*MeV) & (MIPCHI2DV(PRIMARY) > 16.0) & (TRCHI2DOF<3) & (TRGHOSTPROB<0.3) & (PROBNNpi > 0.55)"
     
     }
 
-#Need an upper mass window of 100 MeV for background estimation
-#and a lower mass window of 200 to catch the D+ and Ds
 
-StdLooseDetachedTau3pi.CombinationCut = "((AM>400.*MeV) & (AM<3500.*MeV)) & (ADOCAMAX('')<0.15*mm) & ((AM12<1670.*MeV) or (AM23<1670.*MeV)) & (ANUM(PT < 300*MeV) <= 1) & (1<ANUM( ('pi+'==ABSID) & (MIPCHI2DV(PRIMARY)>5)))"
-StdLooseDetachedTau3pi.MotherCut = "(M>400.*MeV) & (M < 3500.*MeV) & (BPVDIRA>0.99) & (VFASPF(VCHI2) < 25 )"
+StdTightDetachedTau3pi.CombinationCut = "(APT>800.*MeV) & ((AM>400.*MeV) & (AM<2100.*MeV)) & (AMAXDOCA('')<0.2*mm) & (ANUM(PT > 800*MeV) >= 1) "
+StdTightDetachedTau3pi.MotherCut = "(PT>1000.*MeV) & (M>500.*MeV) & (M<2000.*MeV) & (BPVDIRA>0.99) & (VFASPF(VCHI2) < 16) & (BPVVDCHI2>16) & (BPVVDRHO>0.1*mm) & (BPVVDRHO<7.0*mm) & (BPVVDZ>5.0*mm)"
 
 ## configure Data-On-Demand service 
-locations = updateDoD ( StdLooseDetachedTau3pi )
+locations = updateDoD ( StdTightDetachedTau3pi )
 
 
 ## ============================================================================

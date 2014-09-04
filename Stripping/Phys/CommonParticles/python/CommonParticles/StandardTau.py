@@ -18,6 +18,8 @@ _locations = {}
 
 from CommonParticles.StdLooseDetachedTau import *
 _locations.update ( locations )
+from CommonParticles.StdTightDetachedTau import *
+_locations.update ( locations )
 
 
 # redefine the locations 

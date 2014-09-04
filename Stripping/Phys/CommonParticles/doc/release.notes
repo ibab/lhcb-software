@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-09-04 - Julien Cogan
+ - Rename StdLooseDetachedTau3pi to StdTightDetachedTau3pi and restore previous
+   version of the loose selection
+
 ! 2014-08-25 - Cedric Potterat
  - Add StdJetsR07 to StandardJets
 
