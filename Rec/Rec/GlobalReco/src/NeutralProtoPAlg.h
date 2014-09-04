@@ -67,7 +67,6 @@ private:// data
   // ==========================================================================
   std::string               m_protoLocation     ;
   std::vector<std::string>  m_hyposLocations    ;
-  double                    m_bad   ;
   /// flag to indicate "light/calibration" mode 
   bool  m_light_mode ;
   ICaloHypoEstimator* m_estimator ;

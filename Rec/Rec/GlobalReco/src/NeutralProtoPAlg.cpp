@@ -210,7 +210,7 @@ StatusCode NeutralProtoPAlg::execute(){
           pushData(proto, LHCb::ProtoParticle::CaloPrsM30         ,hypo, isPhotonPrsM30);    // -- input to isPhoton
           pushData(proto, LHCb::ProtoParticle::CaloPrsM45         ,hypo, isPhotonPrsM45);    // -- input to isPhoton
           // isPhoton output :
-          pushData(proto, LHCb::ProtoParticle::IsPhoton , hypo, isPhoton , -1. , true    ); // NN-based neutral-ID (anti-pi0) // FORCE
+          pushData(proto, LHCb::ProtoParticle::IsPhoton , hypo, isPhoton , +1. , true    ); // NN-based neutral-ID (anti-pi0) // FORCE to +1 when missing (i.e. PT < 2 GeV)
         }        
       }// lightmode      
     } // loop over CaloHypos
@@ -248,6 +248,7 @@ void NeutralProtoPAlg::pushData(LHCb::ProtoParticle* proto ,LHCb::ProtoParticle:
     std::ostringstream type("");
     type << hypo->hypothesis();
     counter(flag.str()+" for "+ type.str()) += data;
+    //info() << " ---- Stored info : '" << flag.str()<<"' for "<< type.str() << " : " << data << endmsg;
   }
 }
 
