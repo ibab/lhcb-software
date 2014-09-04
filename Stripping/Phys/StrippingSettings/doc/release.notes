@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-04 - Roberta Cardinale				
+ - Removed XibcJpsiProton line
+ - Changed prescaleControlHadronic for XibStartToXibzero to 0.1
+
 ! 2014-09-03 - Mika Vesterinen
  - Futher changes to ProtonAsym config from Paolo
 

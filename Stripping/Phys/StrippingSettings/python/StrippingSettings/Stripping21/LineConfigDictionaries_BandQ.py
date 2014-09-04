@@ -678,7 +678,7 @@ Xibc = {
       },
     'STREAMS' : { 'Dimuon' : [
     'StrippingXibcXibc2LcJpsi'
-    ,'StrippingXibcX2JpsiProton'
+    #,'StrippingXibcX2JpsiProton'
     ]
                   },
     'WGs'    : ['BandQ']
@@ -1285,7 +1285,7 @@ XibStarToXibZero = {
                         'LongTrackGEC'              : 300
                         , 'prescaleSignalDefault'   : 1.0
                         , 'prescaleSignalJpsi'      : 1.0
-                        , 'prescaleControlHadronic' : 1.0
+                        , 'prescaleControlHadronic' : 0.1
                         , 'prescaleControlMuonic'   : 1.0
                         , 'XibStar_PT_Min'          : 2500.0*MeV
                       },
