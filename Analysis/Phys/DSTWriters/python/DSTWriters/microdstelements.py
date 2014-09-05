@@ -244,15 +244,19 @@ class ClonePVRelations(MicroDSTElement) :
     branch   : TES branch for output relations table, appended to '/Event'.
     RecVertexCloner : The vertex cloner to use
     """
+    
     def __init__( self,
                   location,
                   clonePVs = True,
                   branch = '',
-                  RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks" ) :
+                  RecVertexCloner = "VertexBaseFromRecVertexClonerNoTracks",
+                  TESVetoList = [ ]  ) :
         MicroDSTElement.__init__(self, branch)
         self.location = location
         self.clonePVs = clonePVs
         self.clonerType = RecVertexCloner
+        self.tesVetoList = TESVetoList
+        
     def __call__(self, sel) :
         from Configurables import CopyParticle2PVRelations
         cloner = CopyParticle2PVRelations(self.personaliseName(sel,"CopyP2PV_"+self.location))
@@ -269,6 +273,23 @@ class ClonePVRelations(MicroDSTElement) :
                 if refitPVs :
                     cloner.ClonerType = self.clonerType
         self.setOutputPrefix(cloner)
+        # Should be a nicer way to do this ...
+        if cloner.ClonerType == "VertexBaseFromRecVertexClonerNoTracks" :
+            from Configurables import VertexBaseFromRecVertexClonerNoTracks
+            cloner.addTool( VertexBaseFromRecVertexClonerNoTracks, name=cloner.ClonerType )
+        elif cloner.ClonerType == "RecVertexClonerNoTracks" :
+            from Configurables import RecVertexClonerNoTracks
+            cloner.addTool( RecVertexClonerNoTracks, name=cloner.ClonerType )
+        elif cloner.ClonerType == "VertexBaseFromRecVertexCloner" :
+            from Configurables import VertexBaseFromRecVertexCloner
+            cloner.addTool( VertexBaseFromRecVertexCloner, name=cloner.ClonerType )
+        elif cloner.ClonerType == "RecVertexCloner" :
+            from Configurables import RecVertexCloner
+            cloner.addTool( RecVertexCloner, name=cloner.ClonerType )
+        else:
+            raise Exception('Unknown vertex cloner type '+cloner.ClonerType)
+        tool = getattr( cloner, cloner.ClonerType )
+        tool.TESVetoList = self.tesVetoList
         return [cloner]
 
 class CloneTPRelations(MicroDSTElement) :
@@ -479,7 +500,8 @@ class PackParticlesAndVertices(MicroDSTElement) :
                                                 "/Event/"+self.branch+"/Rec/ProtoP/Charged",
                                                 "/Event/"+self.branch+"/Rec/ProtoP/Neutrals",
                                                 "/Event/"+self.branch+"/Rec/Track/Best",
-                                                "/Event/"+self.branch+"/Rec/Track/Muon" ] )
+                                                "/Event/"+self.branch+"/Rec/Track/Muon",
+                                                "/Event/"+self.branch+"/Rec/Muon/MuonPID" ] )
         return [packer]
 
 class PackTrackingClusters(MicroDSTElement):

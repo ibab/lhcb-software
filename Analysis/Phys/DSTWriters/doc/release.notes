@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-09-05 - Chris Jones
+ - Fix a problem that caused unneccesary cloning of PVs on DST streams.
+ - Add support for packing of custom MuonPID locations.
+
 ! 2014-08-20 - Chris Jones
  - Add instance of AddressKillerAlg to DST Writer sequences to remove knowledge
    of ancestor TES locations from Stripping (u)DSTs.

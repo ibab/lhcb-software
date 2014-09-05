@@ -17,12 +17,12 @@ from microdstelements import ( CloneParticleTrees,
                                PackParticlesAndVertices,
                                PackRecObjects,
                                CleanEmptyEventNodes,
-                               KillTESAddresses,
                                PrintTESContents,
                                FindDuplicates )
 
 def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
-    vetoTESList = ["/Event/Rec/ProtoP/Charged",
+    vetoTESList = ["/Event/Rec/Vertex/Primary",
+                   "/Event/Rec/ProtoP/Charged",
                    "/Event/Rec/ProtoP/Neutrals",
                    "/Event/Rec/Track/Best",
                    "/Event/Rec/Rich/PIDs",
@@ -39,7 +39,8 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
                  CloneRelatedInfo( ), 
                  ClonePVRelations( location = "Particle2VertexRelations",
                                    clonePVs = True,
-                                   RecVertexCloner = "VertexBaseFromRecVertexCloner" )
+                                   RecVertexCloner = "VertexBaseFromRecVertexCloner",
+                                   TESVetoList = vetoTESList )
                  ]
     if pack :
         if isinstance(stripPrefix, list) : 
@@ -50,9 +51,6 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
         elements += [ PackParticlesAndVertices(),
                       PackRecObjects(),
                       CleanEmptyEventNodes() ]
-
-    # Kill history to ancestors
-    #elements += [ KillTESAddresses() ]
     
     #elements += [ PrintTESContents() ] # For debugging
         

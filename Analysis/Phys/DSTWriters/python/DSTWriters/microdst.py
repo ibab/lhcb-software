@@ -28,7 +28,6 @@ from microdstelements import ( CloneRecHeader,
                                PackRecObjects,
                                PackMCInfo,
                                CleanEmptyEventNodes,
-                               KillTESAddresses,
                                PackTrackingClusters,
                                PrintTESContents,
                                FindDuplicates )
@@ -78,9 +77,6 @@ def stripMicroDSTElements( pack=True              ,
         if isMC :
             elements += [ PackMCInfo() ]
         elements += [ CleanEmptyEventNodes() ] # Must be last in the packing
-
-    # Kill history to ancestors
-    #elements += [ KillTESAddresses() ]
 
     #elements += [ PrintTESContents() ] # For debugging
         
