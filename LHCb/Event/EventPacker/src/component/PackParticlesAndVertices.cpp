@@ -260,54 +260,54 @@ StatusCode PackParticlesAndVertices::execute()
   //==============================================================================
   // Find ProtoParticles
   //==============================================================================
-  names.clear();
-  selectContainers( root, names, clIdProtoParticles );
-  if ( !names.empty() )
-  {
-    LHCb::PackedProtoParticles * pprotos = new LHCb::PackedProtoParticles();
-    pprotos->setVersion( 2 );
-    put( pprotos, m_inputStream + LHCb::PackedProtoParticleLocation::InStream );
-    if ( msgLevel( MSG::DEBUG ) )
-      debug() << "=== Process ProtoParticle containers :" << endmsg;
-    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( const auto& name : names )
-    {
-      LHCb::ProtoParticles* protos = get<LHCb::ProtoParticles>( name );
-      if ( m_deleteInput ) toBeDeleted.push_back( protos );
-      if ( protos->empty() ) continue;
-      if ( msgLevel( MSG::DEBUG ) )
-        debug() << format( "%4d protoparticles in ", protos->size() ) << name << endmsg;
-      packAProtoParticleContainer( protos, *pprotos );
-    }
-    if ( msgLevel( MSG::DEBUG ) )
-      debug() << "Stored " << pprotos->protos().size() << " packed protoparticles" << endmsg;
-  }
+  // names.clear();
+  // selectContainers( root, names, clIdProtoParticles );
+  // if ( !names.empty() )
+  // {
+  //   LHCb::PackedProtoParticles * pprotos = new LHCb::PackedProtoParticles();
+  //   pprotos->setVersion( 2 );
+  //   put( pprotos, m_inputStream + LHCb::PackedProtoParticleLocation::InStream );
+  //   if ( msgLevel( MSG::DEBUG ) )
+  //     debug() << "=== Process ProtoParticle containers :" << endmsg;
+  //   toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+  //   for ( const auto& name : names )
+  //   {
+  //     LHCb::ProtoParticles* protos = get<LHCb::ProtoParticles>( name );
+  //     if ( m_deleteInput ) toBeDeleted.push_back( protos );
+  //     if ( protos->empty() ) continue;
+  //     if ( msgLevel( MSG::DEBUG ) )
+  //       debug() << format( "%4d protoparticles in ", protos->size() ) << name << endmsg;
+  //     packAProtoParticleContainer( protos, *pprotos );
+  //   }
+  //   if ( msgLevel( MSG::DEBUG ) )
+  //     debug() << "Stored " << pprotos->protos().size() << " packed protoparticles" << endmsg;
+  // }
 
- //==============================================================================
+  //==============================================================================
   // Find Tracks
   //==============================================================================
-  names.clear();
-  selectContainers( root, names, clIdTracks );
-  if ( !names.empty() )
-  {
-    LHCb::PackedTracks * ptracks = new LHCb::PackedTracks();
-    ptracks->setVersion( 4 );
-    put( ptracks, m_inputStream + LHCb::PackedTrackLocation::InStream );
-    if ( msgLevel( MSG::DEBUG ) )
-      debug() << "=== Process Track containers :" << endmsg;
-    toBeDeleted.reserve( names.size() + toBeDeleted.size() );
-    for ( const auto& name : names )
-    {
-      LHCb::Tracks * tracks = get<LHCb::Tracks>( name );
-      if ( m_deleteInput ) toBeDeleted.push_back( tracks );
-      if ( tracks->empty() ) continue;
-      if ( msgLevel( MSG::DEBUG ) )
-        debug() << format( "%4d tracks in ", tracks->size() ) << name << endmsg;
-      packATrackContainer( tracks, *ptracks );
-    }
-    if ( msgLevel( MSG::DEBUG ) )
-      debug() << "Stored " << ptracks->tracks().size() << " packed tracks" << endmsg;
-  }
+  // names.clear();
+  // selectContainers( root, names, clIdTracks );
+  // if ( !names.empty() )
+  // {
+  //   LHCb::PackedTracks * ptracks = new LHCb::PackedTracks();
+  //   ptracks->setVersion( 4 );
+  //   put( ptracks, m_inputStream + LHCb::PackedTrackLocation::InStream );
+  //   if ( msgLevel( MSG::DEBUG ) )
+  //     debug() << "=== Process Track containers :" << endmsg;
+  //   toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+  //   for ( const auto& name : names )
+  //   {
+  //     LHCb::Tracks * tracks = get<LHCb::Tracks>( name );
+  //     if ( m_deleteInput ) toBeDeleted.push_back( tracks );
+  //     if ( tracks->empty() ) continue;
+  //     if ( msgLevel( MSG::DEBUG ) )
+  //       debug() << format( "%4d tracks in ", tracks->size() ) << name << endmsg;
+  //     packATrackContainer( tracks, *ptracks );
+  //   }
+  //   if ( msgLevel( MSG::DEBUG ) )
+  //     debug() << "Stored " << ptracks->tracks().size() << " packed tracks" << endmsg;
+  // }
 
   // MC Information next
 
