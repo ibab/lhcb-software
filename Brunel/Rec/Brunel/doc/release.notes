@@ -23,6 +23,8 @@ Purpose: LHCb reconstruction program
   . Performance updates to PatForward (PatAlgorithms, TfKernel)
   . Hide TrackEventFitter counters behind MsgLevel(INFO) (TrackFitter)
   . PatSeedingTool: use BloomFilter for fast overlap checking (PatAlgorithms)
+  . Use standard tracking sequence also for 2010 data. Previously was using
+    TsaSeed instead of PatSeed and non-standard GECs (TrackSys)
 
 - Changes to QMTests
   . Added repro2012reco14skiptracking, tests Brunel().SkipTracking functionality
