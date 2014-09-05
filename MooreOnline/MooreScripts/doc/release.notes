@@ -4,6 +4,10 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+
+! 2014-09-05 - Eric van Herwijnen
+ - from MooreHacks.MooreHacksConf import etc. in runOnline.py
+
 !========================= MooreScripts v1r4 2014-08-25 =========================
 
 ! 2014-06-30 - Eric van Herwijnen

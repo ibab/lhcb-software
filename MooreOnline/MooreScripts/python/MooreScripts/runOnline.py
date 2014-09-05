@@ -90,7 +90,7 @@ def start(**kwargs) :
         if HltLevel == 'Hlt1' :
             print '#WARNING: Enabling run nr & GPS time hack'
             from Configurables import ApplicationMgr
-	    from MooreHacksConf import HackRunNrAndGPSSvc
+	    from MooreHacks.MooreHacksConf import HackRunNrAndGPSSvc
             ApplicationMgr().ExtSvc.append( HackRunNrAndGPSSvc() )
 
 	elif HltLevel == 'Hlt2' :     
