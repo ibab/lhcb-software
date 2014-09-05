@@ -365,7 +365,6 @@ class B2XMuMuConf(LineBuilder) :
                                daughters = self.DeclaredDaughters,  
                                conf = config)
 
-
         if config['DECAYS']:
             # standard lines
             self.line = StrippingLine(
@@ -379,7 +378,8 @@ class B2XMuMuConf(LineBuilder) :
                 "from LoKiNumbers.decorators import *", "from LoKiCore.basic import LHCb"
                 ]
                 },
-                algos=[self.Bs]
+                algos=[self.Bs],
+                MDSTFlag=True
                 )
         
             self.registerLine(self.line)

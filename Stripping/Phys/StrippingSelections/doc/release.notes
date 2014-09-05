@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-05 -  Konstantinos A. Petridis
+ - Modified StrippingB2XMuMu.py such that it 
+   now goes into mdst.dst
+
 ! 2014-09-04 -  Rafael Coutinho
  - Updated B2KShh BDT weights name
 
