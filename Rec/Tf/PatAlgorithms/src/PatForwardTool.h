@@ -53,7 +53,7 @@ public:
   bool nnSwitch()       const       { return m_nnSwitch;}
 
 private:
-  void buildXCandidatesList( PatFwdTrackCandidate& track );
+  void buildXCandidatesList( PatFwdTrackCandidate& track ) const;
 
   class XInterval {
       double m_xscale,m_offset,m_xmin,m_xmax;
@@ -103,9 +103,9 @@ private:
 
 
   std::pair<PatFwdHits::const_iterator,PatFwdHits::const_iterator> 
-  fillXList( PatFwdTrackCandidate& track );
+  fillXList( PatFwdTrackCandidate& track ) const;
 
-  bool fillStereoList( PatFwdTrackCandidate& track, double tol );
+  bool fillStereoList( PatFwdTrackCandidate& track, double tol ) const;
 
   void debugFwdHits( const PatFwdTrackCandidate& track ) const;
 
@@ -157,7 +157,7 @@ private:
      return m_maxSpreadY + m_maxSpreadSlopeY * qOverP *  qOverP;
   }
 
-  bool hasEnoughStereo( const PatFwdTrackCandidate& c) {
+  bool hasEnoughStereo( const PatFwdTrackCandidate& c) const {
     // Enough stereo planes
     PatFwdPlaneCounter fullCount( std::begin(c), std::end(c) );
     return fullCount.nbStereo() > 3 ;
@@ -214,8 +214,8 @@ private:
   double m_stateErrorTY2;
   double m_stateErrorP;
 
-  PatFwdHits  m_xHitsAtReference;
-  std::vector<PatFwdTrackCandidate> m_candidates;
+  mutable PatFwdHits  m_xHitsAtReference; // workspace
+  mutable std::vector<PatFwdTrackCandidate> m_candidates; // workspace
 
   bool  m_withoutBField;
   bool  m_Preselection;

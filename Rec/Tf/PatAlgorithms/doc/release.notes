@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-09-05 - Gerhard Raven
+ - make PatForwardTool so that it only exposes 'comst' methods.
+ - PatFwdTool: tweak RL ambiguity resolution code so that it can
+   be const
+
 ! 2014-08-29 - Manuel Tobias Schiller
  - PatSeedingTool, PatSeedTrack: use a Bloom filter to quickly detect tracks
    which have no overlap in hits after xz search; this allows for a slight

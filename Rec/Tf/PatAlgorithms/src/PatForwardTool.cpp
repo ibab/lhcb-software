@@ -545,7 +545,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //=========================================================================
 
 std::pair<PatFwdHits::const_iterator,PatFwdHits::const_iterator>
-PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
+PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
 {
   m_xHitsAtReference.clear();
   auto interval = make_XInterval(track);
@@ -619,7 +619,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track )
 //=========================================================================
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
-bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) {
+bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) const {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
       debug() << "Adding stereo coordinates, tol = " << tol << endmsg;
 
@@ -769,7 +769,7 @@ void PatForwardTool::debugFwdHits ( const PatFwdTrackCandidate& track, MsgStream
 //=========================================================================
 //  Build the list of vector of X hit candidates.
 //=========================================================================
-void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) {
+void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
 
   m_candidates.clear();
 

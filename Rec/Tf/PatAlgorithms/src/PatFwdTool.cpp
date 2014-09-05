@@ -21,15 +21,16 @@
 // 2005-04-01 : Olivier Callot
 //
 //-----------------------------------------------------------------------------
-template < typename  Iterator, typename BinaryFunction > 
-BinaryFunction for_each_adjacent_pair(Iterator first, Iterator last, BinaryFunction fun) {
-    if ( first==last ) return fun;
-    auto prev = first;
-    while ( ++first != last ) { 
-        fun(*prev,*first);
-        prev = first; 
-    } 
-    return fun;
+template < typename  Iterator, typename Init, typename Function > 
+Init accumulate_adjacent_pairs(Iterator first, Iterator last, Init init, Function fun) {
+    if ( first!=last ) {
+        auto prev = first;
+        while ( ++first != last ) { 
+            init = fun(init,*prev,*first);
+            prev = first; 
+        }
+    }
+    return init;
 }
       
 
@@ -116,8 +117,6 @@ class RLAmbiguityResolver {
     MsgStream* const m_msg;
     const PatFwdTrackCandidate* const m_track;
     const double m_zRef;
-    double m_distM = 10.;
-    double m_distP = 10.;
 public:
     RLAmbiguityResolver( const PatFwdTrackCandidate& track, double zRef,  MsgStream* msg = nullptr ) : 
         m_msg{ msg }, 
@@ -126,35 +125,27 @@ public:
     {
     }
 
-    void operator()(PatFwdHit *prev, PatFwdHit *hit) {
-      double dz   = hit->z() - m_zRef;
-      //OT : distance to a circle, drift time
-      double dist = (hit->x() - m_track->x( dz ))*m_track->cosAfter();
+    std::pair<double,double> operator()(std::pair<double,double> val, PatFwdHit *prev, PatFwdHit *hit) const {
+      //OT : distance to a circle
+      double dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_track->cosAfter();
       double dx = hit->driftDistance();
-      double distM = dist-dx;
+
       double distP = dist+dx;
+      double distM = dist-dx;
 
-      double minDist = 0.3;
-      int    vP = 0;
-      int    vC = 0;
+      double dm = fabs( distM - val.first );
+      double dp = fabs( distP - val.second );
 
-      if (         fabs( distM - m_distP ) < minDist ) {
-        minDist =  fabs( distM - m_distP );  vP = +1;  vC = -1;
-      }
-      if (         fabs( distP - m_distM ) < minDist ) {
-        minDist =  fabs( distP - m_distM );  vP = -1;  vC = +1;
-      }
-      prev->setRlAmb( vP );
-      hit->setRlAmb( vC );
-
-      m_distP = distP;
-      m_distM = distM;
+      int rl = std::min( dm, dp) > 0.3 ? 0 : dp < dm ? +1 : -1 ; 
+      hit->setRlAmb( rl );
+      prev->setRlAmb( -rl );
 
       if( UNLIKELY( m_msg!=nullptr ) ) {
         (*m_msg) << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
                            hit->z(), hit->x(), hit->hit()->region(),
-                           hit->hasPrevious(), hit->hasNext(), distM, distP, minDist, vC, vP ) << endmsg;
+                           hit->hasPrevious(), hit->hasNext(), distM, distP, std::min(dm,dp),rl, -rl ) << endmsg;
       }
+      return { distP, distM };
     }
 };
 
@@ -580,6 +571,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 //=========================================================================
 //  fit to projection.
 //=========================================================================
+//TODO: remove the 'onlyXPlanes' option, move selection to caller
 template <bool withoutBField>
 bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                                   PatFwdHits::const_iterator itBeg,
@@ -703,7 +695,7 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
                                PatFwdHits::const_iterator ibegin,
                                PatFwdHits::const_iterator iend  ) const 
 {
-  bool isDebug = msgLevel( MSG::DEBUG );
+  const RLAmbiguityResolver resolve{track, zReference(),  UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr };
   PatFwdHits temp; temp.reserve( std::distance(ibegin,iend) );
   // only OT has ambiguity
   std::copy_if( ibegin, iend, std::back_inserter(temp), [](const PatFwdHit *hit) { 
@@ -713,22 +705,29 @@ void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
   auto first = std::begin(temp);
   auto end   = std::end(temp);
 
-  for ( int planeCode = 0; planeCode < 12 ; ++planeCode ) {
+
+  int planeCode = 0;
+  while ( first != end ) {
     auto part = std::partition( first, end, [planeCode](const PatFwdHit *hit) { 
         return hit->planeCode() == planeCode ; 
     } );
+    ++planeCode;
+    if (first == part ) continue;
     std::sort( first, part, Tf::increasingByX<PatForwardHit>() ); 
 
-    if ( UNLIKELY( isDebug ) ) 
-      debug() << "-- Hit of plane " << planeCode << endmsg;
-
+#if 1
     if ( std::distance(first,part) > 1 ) {
-      RLAmbiguityResolver  resolve{track, zReference(),  UNLIKELY( isDebug ) ? &debug() : nullptr };
-      resolve( *first, *first ); //FIXME: required to retain identical results...
-      for_each_adjacent_pair( first, part, std::move(resolve) );
+      accumulate_adjacent_pairs( first, part, 
+                                 resolve( std::make_pair(10.,10.), *first, *first ), //FIXME: required to retain identical results...
+                                 std::cref(resolve) );
     } else if ( first!=part ) {   // no RL solved if only one hit
       (*first)->setRlAmb(0); 
     }
+#else
+    accumulate_adjacent_pairs( first, part,
+                               resolve( std::make_pair(10.,10.), *first, *first ), //FIXME: required to retain identical results...
+                               std::cref(resolve) );
+#endif
     first = part;
   }
   assert(first==end);
