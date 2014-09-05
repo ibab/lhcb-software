@@ -4,6 +4,10 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-09-05 - Marco Cattaneo
+ - Use standard tracking sequence also for 2010 data. Previously was using
+   TsaSeed instead of PatSeed and non-standard GECs
+
 ! 2014-07-24 - Marco Cattaneo
  - In RecoTracking.py, factor out the RAW bank decoding into a separate
    RecoTracking.DecodeTracking(), so it can be called independently, to just

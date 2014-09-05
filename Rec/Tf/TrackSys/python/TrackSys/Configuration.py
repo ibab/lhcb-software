@@ -81,7 +81,7 @@ class TrackSys(LHCbConfigurableUser):
     
       if "cosmics" not in self.getProp("SpecialData"):
           # Defaults changes starting in 2011
-          if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "2010" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :
+          if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :
               defaultPatRecAlgorithms = self.DefaultPatRecAlgorithms_old
               defaultGlobalCuts       = self.DefaultGlobalCuts_old
           else:
