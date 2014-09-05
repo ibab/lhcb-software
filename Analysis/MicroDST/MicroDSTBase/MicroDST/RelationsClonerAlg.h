@@ -102,8 +102,6 @@ namespace MicroDST
 
     virtual StatusCode execute()
     {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
       setFilterPassed(true);
 
       for ( const auto& loc : inputTESLocations() ) { copyTableFromLocation(loc); }
@@ -121,44 +119,48 @@ namespace MicroDST
       const std::string outputLocation =
         this->outputTESLocation( inputLocation );
 
-      if ( msgLevel(MSG::VERBOSE) )
-      {
-        verbose() << "Going to clone relations from "
-                  << inputLocation
-                  << " into " << outputLocation << endmsg;
-      }
-
       if ( exist<TABLE>(outputLocation) )
       {
-        this->Warning("Object "+ outputLocation + " already exists. Not cloning.",
-                      StatusCode::SUCCESS, 0).ignore() ;
+        this->Warning( "Object "+ outputLocation + " already exists. Not cloning.",
+                       StatusCode::SUCCESS, 0 ).ignore();
         return;
       }
 
       const TABLE* table = getIfExists<TABLE>(inputLocation);
       if ( table && !table->relations().empty() )
       {
+        
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "found table with "<< table->relations().size()
-                    << " entries!" << endmsg;
+          verbose() << "Going to clone " << table->relations().size() 
+                    << " relations from " << inputLocation
+                    << " into " << outputLocation << endmsg;
         }
+
         // Note makes a new object !!
         TABLE * cloneTable = m_tableCloner(table);
+
         // deletes if not saved when leaving scope !
         DaVinci::Utils::DataObjectGuard guard(cloneTable);  
+
+        // Print
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "Going to store relations table from "
-                    << inputLocation
-                    << " into " << outputLocation << endmsg;
-          verbose() << "Number of relations in cloned table: "
-                    << cloneTable->relations().size() << endmsg;
+          verbose() << "Cloned Table :- " << endmsg;
+          for ( const auto& rel : cloneTable->relations() )
+          {
+            verbose() << "  From : " << *rel.from() 
+                      <<  " To : "   << *rel.to()
+                      << endmsg;
+          }
         }
+
+        // Save if not empty
         if ( !cloneTable->relations().empty() )
         {
           this->put( cloneTable, outputLocation );
         }
+
       }
       else
       {
@@ -207,8 +209,8 @@ namespace MicroDST
         return 0;
       }
 
-      const typename TABLE::To storedTo = getStoredClone< TO_TYPE >(to);
-      return ( storedTo ? storedTo : (*m_cloner)( to ) );
+      const typename TABLE::To storedTo = getStoredClone<TO_TYPE>(to);
+      return ( storedTo ? storedTo : (*m_cloner)(to) );
     }
 
     //===========================================================================

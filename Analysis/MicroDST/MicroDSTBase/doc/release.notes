@@ -6,6 +6,9 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+! 2014-09-05 - Chris
+ - Fix a problem that caused unneccesary cloning of PVs on DST streams.
+
 ! 2014-08-04 - Chris Jones
  - Add a new option to the RelationsFromParticleLocationsFromClonerAlg base class
    'UseRelationsCLID'. If True (default False) will seach the TES for objects,

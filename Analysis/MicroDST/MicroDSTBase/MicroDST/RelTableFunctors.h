@@ -71,7 +71,7 @@ namespace MicroDST
   {
     TableCloner( const typename Cloners<TABLE>::From& fromCloner,
                  const typename Cloners<TABLE>::To& toCloner )
-      : m_cloner(fromCloner, toCloner)
+      : m_cloner( fromCloner, toCloner )
     { }
     TABLE* operator() ( const TABLE* table )
     {

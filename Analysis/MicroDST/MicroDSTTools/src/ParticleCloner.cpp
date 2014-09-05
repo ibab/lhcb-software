@@ -18,9 +18,9 @@
 ParticleCloner::ParticleCloner( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : base_class         ( type, name, parent ),
-    m_vertexCloner     ( NULL               ),
-    m_ppCloner         ( NULL               )
+  : base_class      ( type, name, parent ),
+    m_vertexCloner  ( NULL               ),
+    m_ppCloner      ( NULL               )
 {
   declareProperty("ICloneVertex",        m_vertexClonerName="VertexCloner"   );
   declareProperty("ICloneProtoParticle", m_ppClonerName="ProtoParticleCloner");

@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2014-09-05 - Chris
+ - Fix a problem that caused unneccesary cloning of PVs on DST streams.
+
 !========================= MicroDSTTools v2r10p1 2014-02-20 =========================
 
 ! 2014-02-20 - Chris Jones

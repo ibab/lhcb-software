@@ -36,11 +36,11 @@ namespace MicroDST
   
   public:
     
-    static LHCb::RecVertex* clone(const LHCb::RecVertex* pv)
+    static LHCb::RecVertex* clone( const LHCb::RecVertex* pv )
     {
       const SmartRefVector<LHCb::Track> & tracks = pv->tracks();
-      std::for_each(tracks.begin(), tracks.end(), MicroDST::DeReference());
-      LHCb::RecVertex* item = pv->clone();
+      std::for_each( tracks.begin(), tracks.end(), MicroDST::DeReference() );
+      LHCb::RecVertex * item = pv->clone();
       return item;
     }
 

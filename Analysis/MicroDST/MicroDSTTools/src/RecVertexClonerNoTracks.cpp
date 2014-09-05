@@ -20,13 +20,15 @@
 RecVertexClonerNoTracks::RecVertexClonerNoTracks( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent )
-  : RecVertexCloner ( type, name , parent ) { }
+  : RecVertexCloner ( type, name, parent ) 
+{
+}
 
 //=============================================================================
 
 LHCb::RecVertex* RecVertexClonerNoTracks::clone(const LHCb::RecVertex* vertex)
 {
-  LHCb::RecVertex* new_vert = RecVertexCloner::clone(vertex);
+  LHCb::RecVertex * new_vert = RecVertexCloner::clone(vertex);
   if ( new_vert ) { new_vert->clearTracks(); }
   return new_vert;
 }

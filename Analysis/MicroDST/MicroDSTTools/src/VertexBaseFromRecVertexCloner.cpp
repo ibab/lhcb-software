@@ -23,7 +23,10 @@ VertexBaseFromRecVertexCloner::
 VertexBaseFromRecVertexCloner( const std::string& type,
                                const std::string& name,
                                const IInterface* parent )
-  : base_class ( type, name , parent ) { }
+  : base_class ( type, name , parent ) 
+{ 
+  //setProperty( "OutputLevel", 2 );
+}
 
 //=============================================================================
 
@@ -47,7 +50,22 @@ VertexBaseFromRecVertexCloner::operator() ( const LHCb::RecVertex* vertex )
 LHCb::RecVertex* 
 VertexBaseFromRecVertexCloner::clone( const LHCb::RecVertex* vertex )
 {
-  return cloneKeyedContainerItem<PVCloner>(vertex);
+  LHCb::RecVertex * clone_v = NULL;
+  
+  const bool veto = isVetoed(vertex);
+  
+  if ( veto ) 
+  {
+    clone_v = const_cast<LHCb::RecVertex*>(vertex);
+  }
+  else
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Cloning RecVertex at " << tesLocation(vertex) << endmsg;
+    clone_v = cloneKeyedContainerItem<PVCloner>(vertex);
+  }
+  
+  return clone_v;
 }
 
 //=============================================================================

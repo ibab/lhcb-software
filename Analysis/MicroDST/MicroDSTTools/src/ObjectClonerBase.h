@@ -45,11 +45,18 @@ protected:
         m_tesVetoList.end() != std::find( m_tesVetoList.begin(),
                                           m_tesVetoList.end(),
                                           tesLoc ) );
-    if ( veto )
+    if ( msgLevel(MSG::DEBUG) )
     {
-      if ( msgLevel(MSG::DEBUG) )
+      if ( veto )
+      {
         debug() << "Object in " << tesLoc
-                << " is VETO'ed from cloning. Returning original pointer" << endmsg;
+                << " is VETO'ed from cloning. Returning original pointer." << endmsg;
+      }
+      else
+      {
+        debug() << "Object in " << tesLoc
+                << " is NOT VETO'ed from cloning. Returning clone." << endmsg;
+      }
     }
     return veto;
   }
