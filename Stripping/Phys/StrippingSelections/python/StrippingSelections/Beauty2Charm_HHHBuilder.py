@@ -25,6 +25,7 @@ class HHHBuilder(object):
         
         self.kkpi = [self._makeKKPi()]
         self.kpipi = [self._makeKPiPi()]
+        self.kpipiSS = [self._makeKPiPiSS()]
 
         #Really tight on the kaon (for FULL DST)
         self.kpipi_realtightk = [filterPID('X2KPiPiPIDREALTIGHTK',self.kpipi,config['PID']['REALTIGHTK'])]
@@ -79,6 +80,13 @@ class HHHBuilder(object):
         '''Makes X -> K+pi-pi+ + c.c.'''
         massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['K1'])
         return self._makeX2HHH('X2KPiPi',['[K_1(1270)+ -> K+ pi- pi+]cc'],
+                              massWindow,self.config,
+                              [self.pions,self.kaons])
+
+    def _makeKPiPiSS(self):
+        '''Makes X -> K-pi+pi+ + c.c.'''
+        massWindow = "(AM < %s)" % (self.config['MASS_WINDOW']['K1'])
+        return self._makeX2HHH('X2KPiPiSS',['[K_1(1270)+ -> K- pi+ pi+]cc'],
                               massWindow,self.config,
                               [self.pions,self.kaons])
 

@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-05 - Anton Poluektov 
+ - Updated Beauty2Charm to include combinations B0->[D+K+pi-pi-]cc, lines 
+     StrippingB02DKPiPiSSD2HHHPIDBeauty2CharmLine
+     StrippingB02DKPiPiSSWSD2HHHPIDBeauty2CharmLine
+
 ! 2014-09-05 - Cédric Potterat
  - Changing option names in StrippingJets  with repect to new name in TopologicalTagging tool
 
