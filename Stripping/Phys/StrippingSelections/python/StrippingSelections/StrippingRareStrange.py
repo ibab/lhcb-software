@@ -999,10 +999,10 @@ def makeKPiPiPiMassMeas(name, config):
     from Configurables import OfflineVertexFitter
     KPiPiPi = CombineParticles("Combine"+name)
     KPiPiPi.DecayDescriptor = "[K+ -> pi+ pi+ pi-]cc"
-    KPiPiPi.addTool( OfflineVertexFitter )
+    #KPiPiPi.addTool( OfflineVertexFitter )
 
-    KPiPiPi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    KPiPiPi.OfflineVertexFitter.useResonanceVertex = False
+    #KPiPiPi.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #KPiPiPi.OfflineVertexFitter.useResonanceVertex = False
     KPiPiPi.DaughtersCuts = {   "pi+":"(P>1000) & (MIPCHI2DV(PRIMARY) > 25.0) & (TRCHI2DOF<5) & (TRGHOSTPROB < 0.3)"
                                  }
     KPiPiPi.CombinationCut = "(ADAMASS('K+') < %(KMassWinMassMeas)s *MeV) & (AMAXDOCA('')< %(KMaxDOCAMassMeas)s *mm)"%config
@@ -1074,9 +1074,9 @@ def makeSigmaPMuMuLFVDown(name, config):
     from Configurables import OfflineVertexFitter
     SigmaPMuMu = CombineParticles("Combine"+name)
     SigmaPMuMu.DecayDescriptor = "[Sigma+ -> p~- mu+ mu+]cc"
-    SigmaPMuMu.addTool( OfflineVertexFitter )
-    SigmaPMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-    SigmaPMuMu.OfflineVertexFitter.useResonanceVertex = False
+    #SigmaPMuMu.addTool( OfflineVertexFitter )
+    #SigmaPMuMu.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
+    #SigmaPMuMu.OfflineVertexFitter.useResonanceVertex = False
     SigmaPMuMu.DaughtersCuts = { "mu+" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3) & (MIPCHI2DV(PRIMARY)>%(muonMinIpChi2)s)"%config,
                                  "p~-" : "(TRCHI2DOF<%(SigmaDauTrChi2Down)s) & (TRGHOSTPROB<0.3)"%config
                                  }

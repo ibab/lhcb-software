@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-05 - Andrea Contu
+ - Minor fix to StrippingRareStrange
+
 ! 2014-09-05 -  Konstantinos A. Petridis
  - Modified StrippingB2XMuMu.py such that it 
    now goes into mdst.dst
