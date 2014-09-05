@@ -18,7 +18,7 @@
 UnpackParticlesAndVertices::
 UnpackParticlesAndVertices( const std::string& name,
                             ISvcLocator* pSvcLocator )
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : GaudiAlgorithm ( name, pSvcLocator )
 {
   declareProperty( "InputStream", m_inputStream = "/Event/" );
   declareProperty( "PostFix",     m_postFix     = "" );
@@ -49,10 +49,8 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       const LHCb::TrackPacker tPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::Tracks * tracks = NULL;
-      for ( std::vector<LHCb::PackedTrack>::iterator itP = ptracks->tracks().begin();
-            ptracks->tracks().end() != itP; ++itP )
+      for ( const LHCb::PackedTrack& ptrack : ptracks->tracks() )
       {
-        const LHCb::PackedTrack& ptrack = *itP;
         int key(0),linkID(0);
         m_pack.indexAndKey64( ptrack.key, linkID, key );
         if ( linkID != prevLink )
@@ -90,6 +88,56 @@ StatusCode UnpackParticlesAndVertices::execute()
   }
 
   //=================================================================
+  //== Process the MuonPIDs
+  //=================================================================
+  {
+    int prevLink = -1;
+    unsigned int nbPartContainer(0), nbPart(0);
+    LHCb::PackedMuonPIDs * ppids =
+      getIfExists<LHCb::PackedMuonPIDs>( m_inputStream + LHCb::PackedMuonPIDLocation::InStream );
+    if ( ppids )
+    {
+      const LHCb::MuonPIDPacker tPacker(*dynamic_cast<GaudiAlgorithm*>(this));
+      LHCb::MuonPIDs * pids = NULL;
+      for ( const LHCb::PackedMuonPID& ppid : ppids->data() )
+      {
+        int key(0),linkID(0);
+        m_pack.indexAndKey64( ppid.key, linkID, key );
+        if ( linkID != prevLink )
+        {
+          prevLink = linkID;
+          const std::string & containerName = ppids->linkMgr()->link( linkID )->path() + m_postFix;
+          // Check to see if container already exists. If it does, unpacking has already been run this
+          // event so quit
+          if ( exist<LHCb::Tracks>(containerName) )
+          {
+            if ( msgLevel(MSG::DEBUG) )
+              debug() << " -> " << containerName << " exists" << endmsg;
+            return StatusCode::SUCCESS;
+          }
+          pids = new LHCb::MuonPIDs();
+          put( pids, containerName );
+          ++nbPartContainer;
+        }
+
+        // Make new object and insert into the output container
+        LHCb::MuonPID * pid = new LHCb::MuonPID();
+        pids->insert( pid, key );
+        ++nbPart;
+
+        // Unpack the physics info
+        tPacker.unpack( ppid, *pid, *ppids, *pids );
+
+      }
+    }
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Retrieved " << nbPart << " MuonPIDs in " << nbPartContainer << " containers" << endmsg;
+    }
+    counter("# Unpacked MuonPIDs") += nbPart;
+  }
+
+  //=================================================================
   //== Process the ProtoParticles
   //=================================================================
   {
@@ -101,10 +149,8 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       const LHCb::ProtoParticlePacker pPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::ProtoParticles * protos = NULL;
-      for ( std::vector<LHCb::PackedProtoParticle>::iterator itP = pprotos->protos().begin();
-            pprotos->protos().end() != itP; ++itP )
+      for ( const LHCb::PackedProtoParticle& pproto : pprotos->protos() )
       {
-        const LHCb::PackedProtoParticle& pproto = *itP;
         int key(0),linkID(0);
         m_pack.indexAndKey64( pproto.key, linkID, key );
         if ( linkID != prevLink )
@@ -153,10 +199,8 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       const LHCb::ParticlePacker pPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::Particles* parts = NULL;
-      for ( std::vector<LHCb::PackedParticle>::iterator itP = pparts->data().begin();
-            pparts->data().end() != itP; ++itP )
+      for ( const LHCb::PackedParticle& ppart : pparts->data() )
       {
-        const LHCb::PackedParticle& ppart = *itP;
         int key(0),linkID(0);
         m_pack.indexAndKey64( ppart.key, linkID, key );
         if ( linkID != prevLink )
@@ -205,10 +249,8 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       const LHCb::VertexPacker vPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::Vertices* verts = NULL;
-      for ( std::vector<LHCb::PackedVertex>::iterator itV = pverts->data().begin();
-            pverts->data().end() != itV; ++itV )
+      for ( const LHCb::PackedVertex& pvert : pverts->data() )
       {
-        const LHCb::PackedVertex& pvert = *itV;
         int key(0),linkID(0);
         m_pack.indexAndKey64( pvert.key, linkID, key );
         if ( linkID != prevLink )
@@ -248,10 +290,8 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       const LHCb::FlavourTagPacker ftPacker(*dynamic_cast<GaudiAlgorithm*>(this));
       LHCb::FlavourTags * fts = NULL;
-      for ( std::vector<LHCb::PackedFlavourTag>::iterator itFT = pfts->data().begin();
-            pfts->data().end() != itFT; ++itFT )
+      for ( const LHCb::PackedFlavourTag& pft : pfts->data() )
       {
-        const LHCb::PackedFlavourTag& pft = *itFT;
         int key(0),linkID(0);
         m_pack.indexAndKey64( pft.key, linkID, key );
         if ( linkID != prevLink )
@@ -300,10 +340,8 @@ StatusCode UnpackParticlesAndVertices::execute()
     {
       LHCb::RecVertices* recVerts = NULL;
       const LHCb::RecVertexPacker rvPacker(*dynamic_cast<GaudiAlgorithm*>(this));
-      for ( std::vector<LHCb::PackedRecVertex>::iterator itV = pRecVerts->vertices().begin();
-            pRecVerts->vertices().end() != itV; ++itV )
+      for ( const LHCb::PackedRecVertex& pRecVert : pRecVerts->vertices() )
       {
-        const LHCb::PackedRecVertex& pRecVert = *itV;
         const int key    = pRecVert.key;
         const int linkID = pRecVert.container;
         if ( linkID != prevLink )

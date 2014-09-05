@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-09-05 - Chris Jones
+ - Add support for packing custom MuonPID objects produced by stripping lines.
+
 ! 2014-08-20 - Chris Jones
  - Add support for packing custom Track and ProtoParticles produced by 
    Stripping Lines.

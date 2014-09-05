@@ -67,7 +67,7 @@ namespace LHCb
 
   class PackedProtoParticles : public DataObject 
   {
-  
+    
   public: 
   
     /// Standard constructor

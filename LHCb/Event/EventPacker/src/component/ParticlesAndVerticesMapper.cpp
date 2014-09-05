@@ -132,6 +132,20 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
       }
     }
 
+    // Load the packed MuonPIDs
+    {
+      LHCb::PackedMuonPIDs * ppids =
+        getIfExists<LHCb::PackedMuonPIDs>(evtSvc(),streamR+LHCb::PackedMuonPIDLocation::InStream);
+      if ( NULL != ppids )
+      {
+        for ( const auto& P : ppids->data() )
+        {
+          m_pack.indexAndKey64( P.key, linkID, key );
+          addPath( ppids->linkMgr()->link(linkID)->path() );
+        }
+      }
+    }
+
     // Load the packed ProtoParticles
     {
       LHCb::PackedProtoParticles * pprotos =

@@ -14,6 +14,7 @@
 // Event model
 #include "Event/PackedTrack.h"
 #include "Event/PackedProtoParticle.h"
+#include "Event/PackedMuonPID.h"
 #include "Event/PackedParticle.h"
 #include "Event/PackedRecVertex.h"
 #include "Event/PackedVertex.h"

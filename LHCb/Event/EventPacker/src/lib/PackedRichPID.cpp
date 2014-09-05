@@ -18,27 +18,25 @@ void RichPIDPacker::pack( const DataVector & pids,
        1 == ppids.packingVersion() ||
        0 == ppids.packingVersion()  )
   {
-    for ( DataVector::const_iterator iD = pids.begin();
-          iD != pids.end(); ++iD )
+    for ( const Data * pid : pids )
     {
-      const Data & pid = **iD;
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       // fill data
-      ppid.key   = pid.key();
-      ppid.pidResultCode = (int)pid.pidResultCode();
-      ppid.dllEl = m_pack.deltaLL( pid.particleDeltaLL(Rich::Electron)       );
-      ppid.dllMu = m_pack.deltaLL( pid.particleDeltaLL(Rich::Muon)           );
-      ppid.dllPi = m_pack.deltaLL( pid.particleDeltaLL(Rich::Pion)           );
-      ppid.dllKa = m_pack.deltaLL( pid.particleDeltaLL(Rich::Kaon)           );
-      ppid.dllPr = m_pack.deltaLL( pid.particleDeltaLL(Rich::Proton)         );
+      ppid.key   = pid->key();
+      ppid.pidResultCode = (int)pid->pidResultCode();
+      ppid.dllEl = m_pack.deltaLL( pid->particleDeltaLL(Rich::Electron)       );
+      ppid.dllMu = m_pack.deltaLL( pid->particleDeltaLL(Rich::Muon)           );
+      ppid.dllPi = m_pack.deltaLL( pid->particleDeltaLL(Rich::Pion)           );
+      ppid.dllKa = m_pack.deltaLL( pid->particleDeltaLL(Rich::Kaon)           );
+      ppid.dllPr = m_pack.deltaLL( pid->particleDeltaLL(Rich::Proton)         );
       if ( ppids.packingVersion() > 0 )
-        ppid.dllBt = m_pack.deltaLL( pid.particleDeltaLL(Rich::BelowThreshold) );
-      if ( NULL != pid.track() )
+        ppid.dllBt = m_pack.deltaLL( pid->particleDeltaLL(Rich::BelowThreshold) );
+      if ( NULL != pid->track() )
       {
         ppid.track = m_pack.reference( &ppids,
-                                       pid.track()->parent(),
-                                       pid.track()->key() );
+                                       pid->track()->parent(),
+                                       pid->track()->key() );
       }
     }
   }
@@ -58,10 +56,8 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
        1 == ppids.packingVersion() ||
        0 == ppids.packingVersion()  )
   {
-    for ( PackedDataVector::Vector::const_iterator iD = ppids.data().begin();
-          iD != ppids.data().end(); ++iD )
+    for ( const PackedData & ppid : ppids.data() )
     {
-      const PackedData & ppid = *iD;
       // make and save new pid in container
       Data * pid  = new Data();
       if ( ppids.packingVersion() < 2 ) { pids.add( pid ); }

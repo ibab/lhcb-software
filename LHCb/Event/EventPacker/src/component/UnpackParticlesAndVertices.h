@@ -12,6 +12,7 @@
 
 #include "Event/PackedTrack.h"
 #include "Event/PackedProtoParticle.h"
+#include "Event/PackedMuonPID.h"
 #include "Event/PackedParticle.h"
 #include "Event/PackedVertex.h"
 #include "Event/PackedRelations.h"
@@ -21,6 +22,7 @@
 
 #include "Event/Track.h"
 #include "Event/ProtoParticle.h"
+#include "Event/MuonPID.h"
 #include "Event/Particle.h"
 #include "Event/Vertex.h"
 #include "Event/FlavourTag.h"

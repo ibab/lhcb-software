@@ -209,7 +209,6 @@ ProtoParticlePacker::unpack( const PackedDataVector & pprotos,
   for ( const LHCb::PackedProtoParticle& pproto : pprotos.protos() )
   {
     LHCb::ProtoParticle * part = new LHCb::ProtoParticle( );
-    //parent().debug() << "Unpacked ProtoParticle key=" << pproto.key << endmsg;
     protos.insert( part, pproto.key );
     unpack( pproto, *part, pprotos, protos );
   }

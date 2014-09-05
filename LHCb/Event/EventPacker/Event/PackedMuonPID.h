@@ -44,7 +44,7 @@ namespace LHCb
     int status;
     int idtrack;
     int mutrack;
-    int key;
+    long long key;
   };
 
   // -----------------------------------------------------------------------
@@ -54,7 +54,8 @@ namespace LHCb
   /// Namespace for locations in TDS
   namespace PackedMuonPIDLocation
   {
-    static const std::string& Default = "pRec/Muon/MuonPID";
+    static const std::string& Default  =  "pRec/Muon/MuonPID";
+    static const std::string& InStream = "/pRec/Muon/CustomPIDs";
   }
 
   /** @class PackedMuonPIDs Event/PackedMuonPID.h
@@ -148,17 +149,32 @@ namespace LHCb
 
   public:
 
+    /// Pack a MuonPID
+    void pack( const Data & pid,
+               PackedData & ppid,
+               PackedDataVector & ppids ) const;
+
     /// Pack MuonPIDs
-    void pack( const DataVector & hits,
-               PackedDataVector & phits ) const;
+    void pack( const DataVector & pids,
+               PackedDataVector & ppids ) const;
+
+    /// Unpack a single MuonPID
+    void unpack( const PackedData       & ppid,
+                 Data                   & pid,
+                 const PackedDataVector & ppids,
+                 DataVector             & pids ) const;
 
     /// Unpack MuonPIDs
-    void unpack( const PackedDataVector & phits,
-                 DataVector             & hits ) const;
+    void unpack( const PackedDataVector & ppids,
+                 DataVector             & pids ) const;
 
-    /// Compare two MuonPIDs to check the packing -> unpacking performance
+    /// Compare two MuonPID containers to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB ) const;
+
+    /// Compare two MuonPIDs to check the packing -> unpacking performance
+    StatusCode check( const Data & dataA,
+                      const Data & dataB ) const;
 
   private:
 

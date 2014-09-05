@@ -78,11 +78,10 @@ void ParticlePacker::pack( const Data & part,
 
     // extra info
     ppart.firstExtra = pparts.extra().size();
-    for ( LHCb::Particle::ExtraInfo::const_iterator iE = part.extraInfo().begin();
-          iE != part.extraInfo().end(); ++iE )
+    for ( const auto& E : part.extraInfo() )
     {
-      pparts.extra().push_back( PackedDataVector::PackedExtraInfo(iE->first,
-                                                                  m_pack.fltPacked(iE->second)) );
+      pparts.extra().push_back( PackedDataVector::PackedExtraInfo(E.first,
+                                                                  m_pack.fltPacked(E.second)) );
     }
     ppart.lastExtra = pparts.extra().size();
 
@@ -132,20 +131,17 @@ void ParticlePacker::pack( const DataVector & parts,
 {
   pparts.data().reserve( parts.size() );
 
-  for ( DataVector::const_iterator iD = parts.begin();
-        iD != parts.end(); ++iD )
+  for ( const Data * part : parts )
   {
-    const Data & part = **iD;
-
     // Make a new packed data object and save
     pparts.data().push_back( PackedData() );
     PackedData & ppart = pparts.data().back();
 
     // fill ppart key from part
-    ppart.key = part.key();
+    ppart.key = part->key();
 
     // Pack all the physics information
-    pack( part, ppart, pparts );
+    pack( *part, ppart, pparts );
   }
 
 }
@@ -280,16 +276,11 @@ void ParticlePacker::unpack( const PackedDataVector & pparts,
                              DataVector       & parts ) const
 {
   parts.reserve( pparts.data().size() );
-
-  for ( PackedDataVector::Vector::const_iterator iD = pparts.data().begin();
-        iD != pparts.data().end(); ++iD )
+  for ( const PackedData & ppart : pparts.data() )
   {
-    const PackedData & ppart = *iD;
-
     // make and save new pid in container
     Data * part = new Data();
     parts.insert( part, ppart.key );
-
     // Fill data from packed object
     unpack( ppart, *part, pparts, parts );
   }
