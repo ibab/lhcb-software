@@ -130,7 +130,7 @@ ToolZViso::ToolZViso( const std::string& type,
   declareProperty("Cut_maxVF"        , m_cut = 0.5);
   
   declareProperty("MVATransform" , m_transformName="ZViso_BDTG" , "path/name of the DictTransform tool"); 
-  declareProperty("Weights_BDTG_ZViso",m_Weights_BDTG_ZViso="IsolationTools_ZVisoBDTG_v1.xml");	
+  declareProperty("Weights_BDTG_ZViso",m_Weights_BDTG_ZViso="IsolationTools_ZVisoBDTG_v1r0.xml");	
   
   
   declareProperty("Profile_step_size",m_step = 0.05 ); //10microns
