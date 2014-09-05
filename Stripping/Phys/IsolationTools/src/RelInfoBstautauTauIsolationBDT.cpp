@@ -27,7 +27,7 @@ RelInfoBstautauTauIsolationBDT::RelInfoBstautauTauIsolationBDT( const std::strin
         ( "MVATransform" , m_transformName ,
           "path/name of the DictTransform tool"); 
     declareProperty
-        ( "WeightsFile" , m_weightsName = "BstautauTauIsolation.xml" ,
+        ( "WeightsFile" , m_weightsName = "Bstautau_TauIsolation_v1r4.xml" ,
           "weights parameter file"); 
     declareProperty(    "PVInputLocation"       
             , m_PVInputLocation = LHCb::RecVertexLocation::Primary 
