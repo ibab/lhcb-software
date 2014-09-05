@@ -4,6 +4,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-09-05 - Stefano Perazzini
+ - Removed exception in checkUniqueOutputLocations function of StrippingConf.
+   A warning has been introduced instead of the exception. This to allow a 
+   stripping line to belong to multiple streams.
+
 ! 2014-09-04 - Stefano Perazzini
  - Fix to checkPVRefit function for StrippingStream
 

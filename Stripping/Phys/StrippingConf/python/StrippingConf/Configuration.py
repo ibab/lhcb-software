@@ -101,7 +101,8 @@ class StrippingConf ( object ) :
 		#sys.stderr.write(message)
 		locationsUnique = False
 	if not locationsUnique : 
-            raise Exception('\n' + message)
+            #raise Exception('\n' + message)
+            log.warning('\n' + message)
 
     def activeStreams (self) :
         """
