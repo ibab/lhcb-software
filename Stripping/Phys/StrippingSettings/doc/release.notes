@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-04 - Andrea Contu
+ - Update to Charm dictionaries
+ - Fix to RD dictionaries
+
 ! 2014-09-04 - Pablo Ruiz Valls (RD)
  - Fixed streams of Bs2MuMu lines (again).
  - Reduced prescaling of Bu2MuNuControlLine

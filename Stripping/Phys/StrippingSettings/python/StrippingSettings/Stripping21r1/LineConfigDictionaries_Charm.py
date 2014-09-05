@@ -1135,80 +1135,71 @@ CharmForVub = {
 }
 
 # Lambdac -> p h+ h-. Responsible: Patrick Spradlin  NEW DICTIONARY IS NEEDED!
-# New in S17b
-# Note that this is for measurement of BFs, *not*
-# cross-sections (even though it uses the same builder)
-#Lambdac2PHH = {
-#    'BUILDERTYPE' : 'StrippingLambdac2PKPiForXSecConf',
-#    'CONFIG'      : {
-#    'Daug_All_PT_MIN'          :  400.0 * MeV
-#    , 'Daug_2of3_PT_MIN'         :  400.0 * MeV
-#    , 'Daug_1of3_PT_MIN'         : 1200.0 * MeV
-#    , 'Daug_All_BPVIPCHI2_MIN'   :    4.0
-#    , 'Daug_2of3_BPVIPCHI2_MIN'  :    1.0
-#    , 'Daug_1of3_BPVIPCHI2_MIN'  :    8.0
-#    , 'Proton_PIDpPIDpi_MIN'     :    5.0
-#    , 'Proton_PIDpPIDK_MIN'      :    0.0
-#    , 'K_PIDK_MIN'               :    5.0
-#    , 'Pi_PIDK_MAX'              :    3.0
-#    , 'Comb_ADAMASS_WIN'         :   90.0 * MeV
-#    , 'Comb_ADOCAMAX_MAX'        :    0.1 * mm
-#    , 'Lambdac_VCHI2VDOF_MAX'    :   20.0
-#    , 'Lambdac_acosBPVDIRA_MAX'  :   35.0 * mrad
-#    , 'Lambdac_PVDispCut'        : "((BPVVDCHI2 > 4.0)|(BPVLTIME() > 0.075 * picosecond))"
-#                  , 'HltFilter'          : "HLT_PASS_RE('Hlt2Global.*')"
-                 # , 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt2CharmHadD02HHXDst.*%TUS' : 0 }
-#                  , 'PrescaleLambdac2PKPi'  :    1.0
-#                  , 'PostscaleLambdac2PKPi' :    1.0
-#                  , 'PrescaleLambdac2PKK'      : 1.0
-#                  , 'PostscaleLambdac2PKK'     : 1.0
-#                  , 'PrescaleLambdac2PPiPi'    : 1.0
-#                  , 'PostscaleLambdac2PPiPi'   : 1.0
-#                  , 'PrescaleLambdac2PPiKWS'   : 1.0
-#                  , 'PostscaleLambdac2PPiKWS'  : 1.0    
-#    },
-#    'WGs'          : ['Charm'],
-#    'STREAMS'      : [ 'Charm' ]
-#    }
+#Lc BFs lines - Patrick Spradlin, S Ogilvy
+Lambdac2PHH = {
+    'BUILDERTYPE' : 'StrippingLambdac2PKPiForXSecConf',
+    'CONFIG'      : {
+                    'Daug_All_PT_MIN'           :  400.0 * MeV
+                  , 'Daug_2of3_PT_MIN'          :  400.0 * MeV
+                  , 'Daug_1of3_PT_MIN'          : 1200.0 * MeV
+                  , 'Daug_All_BPVIPCHI2_MIN'    :    4.0
+                  , 'Daug_2of3_BPVIPCHI2_MIN'   :    4.0
+                  , 'Daug_1of3_BPVIPCHI2_MIN'   :    8.0
+                  , 'Proton_PIDpPIDpi_MIN'      :    5.0
+                  , 'Proton_PIDpPIDK_MIN'       :   -1.0e7
+                  , 'Pi_PIDK_MAX'               :    0.0
+                  , 'K_PIDK_MIN'                :    5.0
+                  , 'Comb_ADAMASS_WIN'          :   90.0 * MeV
+                  , 'Comb_ADOCAMAX_MAX'         :    0.1 * mm
+                  , 'Lambdac_VCHI2VDOF_MAX'     :   20.0
+                  , 'Lambdac_acosBPVDIRA_MAX'   :   14.1 * mrad
+                  , 'Lambdac_PVDispCut'         : "(BPVVDCHI2 > 16.0)"
+                  , 'HltFilter'                 : "HLT_PASS_RE('Hlt2Global.*')"
+                  , 'PrescaleLambdac2PKPi'      :    1.0
+                  , 'PostscaleLambdac2PKPi'     :    1.0
+                  , 'PrescaleLambdac2PKK'       :    1.0
+                  , 'PostscaleLambdac2PKK'      :    1.0
+                  , 'PrescaleLambdac2PPiPi'     :    1.0
+                  , 'PostscaleLambdac2PPiPi'    :    1.0
+                  , 'PrescaleLambdac2PPiKWS'    :    1.0
+                  , 'PostscaleLambdac2PPiKWS'   :    1.0
+    },
+    'WGs'          : ['Charm'],
+    'STREAMS'      : [ 'Charm' ]
+    }
 
-# Lambdac -> p h+ h-. Responsible: Patrick Spradlin NEW DICTIONARY IS NEEDED!
-#Prescaled full dst
-# New in S19b
-#Lambdac2PHHPrescFull = {
-    #'BUILDERTYPE' : 'StrippingLambdac2PKPiForXSecConf',
-    #'CONFIG'      : {
-                  #'Daug_All_PT_MIN'       :  400.0 * MeV
-                  #, 'Daug_1of3_PT_MIN'      : 1200.0 * MeV
-                  #, 'Daug_P_MIN'            : 3200.0 * MeV
-                  #, 'Daug_TRCHI2DOF_MAX'    :   5.0
-                  #, 'Daug_BPVIPCHI2_MIN'    :    4.0
-                  #, 'Daug_1of3_BPVIPCHI2_MIN'   : 8.0
-                  #, 'Proton_PIDp_MIN'       :   5.0
-                  #, 'Pi_PIDK_MAX'           :    0.0
-                  #, 'K_PIDK_MIN'            :   5.0
-                  #, 'Comb_ADAMASS_WIN'      :   90.0 * MeV
-                  #, 'Comb_ADOCAMAX_MAX'     :    0.1 * mm
-                  #, 'Lambdac_PT_MIN'        :    0.0 * MeV
-                  #, 'Lambdac_VCHI2VDOF_MAX' :   20.0
-                  #, 'Lambdac_BPVVDCHI2_MIN' :    16.0
-                  #, 'Lambdac_BPVDIRA_MIN'   :    0.9999
-                  #, 'Lambdac_BPVLTIME_MAX'  :    0.0012 * ns
-                  #, 'Lambdac_BPVLTIME_MIN'  :    0.0 * ns
-                  #, 'HltFilter'          : "HLT_PASS_RE('Hlt2Global.*')"
-                  #, 'Hlt2TisTosSpec'     : { 'Hlt2Global%TIS' : 0,  'Hlt2CharmHad.*Decision%TOS' : 0, 'Hlt2CharmHadD02HHXDst.*%TUS' : 0 }
-                  #, 'PrescaleLambdac2PKPi'  :    0.1
-                  #, 'PostscaleLambdac2PKPi' :    1.0
-                  #, 'PrescaleLambdac2PKK'      : 0.1
-                  #, 'PostscaleLambdac2PKK'     : 1.0
-                  #, 'PrescaleLambdac2PPiPi'    : 0.1
-                  #, 'PostscaleLambdac2PPiPi'   : 1.0
-                  #, 'PrescaleLambdac2PPiKWS'   : 0.1
-                  #, 'PostscaleLambdac2PPiKWS'  : 1.0
-    #},
-    #'WGs'          : ['Charm'],
-    #'STREAMS'      : [ 'CharmCompleteEvent' ]
-    #}
 
+Lambdac2PHHPrescFull = {
+    'BUILDERTYPE' : 'StrippingLambdac2PKPiForXSecConf',
+    'CONFIG'      : {
+                    'Daug_All_PT_MIN'           :  400.0 * MeV
+                  , 'Daug_2of3_PT_MIN'          :  400.0 * MeV
+                  , 'Daug_1of3_PT_MIN'          : 1200.0 * MeV
+                  , 'Daug_All_BPVIPCHI2_MIN'    :    4.0
+                  , 'Daug_2of3_BPVIPCHI2_MIN'   :    4.0
+                  , 'Daug_1of3_BPVIPCHI2_MIN'   :    8.0
+                  , 'Proton_PIDpPIDpi_MIN'      :    5.0
+                  , 'Proton_PIDpPIDK_MIN'       :   -1.0e7
+                  , 'Pi_PIDK_MAX'               :    0.0
+                  , 'K_PIDK_MIN'                :    5.0
+                  , 'Comb_ADAMASS_WIN'          :   90.0 * MeV
+                  , 'Comb_ADOCAMAX_MAX'         :    0.1 * mm
+                  , 'Lambdac_VCHI2VDOF_MAX'     :   20.0
+                  , 'Lambdac_acosBPVDIRA_MAX'   :   14.1 * mrad
+                  , 'Lambdac_PVDispCut'         : "(BPVVDCHI2 > 16.0)"
+                  , 'HltFilter'                 : "HLT_PASS_RE('Hlt2Global.*')"
+                  , 'PrescaleLambdac2PKPi'      :    0.1
+                  , 'PostscaleLambdac2PKPi'     :    1.0
+                  , 'PrescaleLambdac2PKK'       :    0.1
+                  , 'PostscaleLambdac2PKK'      :    1.0
+                  , 'PrescaleLambdac2PPiPi'     :    0.1
+                  , 'PostscaleLambdac2PPiPi'    :    1.0
+                  , 'PrescaleLambdac2PPiKWS'    :    0.1
+                  , 'PostscaleLambdac2PPiKWS'   :    1.0
+    },
+    'WGs'          : ['Charm'],
+    'STREAMS'      : [ 'CharmCompleteEvent' ]
+    }
 # D0 -> phi gamma
 # Responsible: Fatima Soomro
 # Added: Stripping19

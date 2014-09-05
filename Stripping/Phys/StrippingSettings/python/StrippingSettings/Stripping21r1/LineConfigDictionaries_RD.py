@@ -977,22 +977,19 @@ Bs2MuMus = {
            'daugt_IPChi2'            : 9
            },
     'STREAMS' : {
-            'Dimuon' : [
-                 'StrippingBs2MuMusNoMuIDLine',
-                 'StrippingBs2MuMusWideMassLine',
-                 ],
-            'Leptonic' : [
-                 'StrippingBs2MuMusNoMuIDLine',
-                 'StrippingBs2MuMusNoMuIDLooseLine', # Prescaled to 0.
-                 'StrippingBs2MuMusBd2JPsiKstLine',
-                 'StrippingBs2JPsiPhiLine',
-                 'StrippingBs2MuMusBu2JPsiKLine',
-                 'StrippingBs2MuMusSSLine',
-                 'StrippingBs2MuMusWideMassLine',
-                 'StrippingBs2MuMusLTUBLine',
-                 'StrippingBs2MuMusBs2KKLTUBLine'
-                 ],
-            },
+            'Leptonic' : ['StrippingBs2MuMusNoMuIDLine'
+                          ,'StrippingBs2MuMusWideMassLine'
+                          ,'StrippingBs2MuMusNoMuIDLooseLine'
+                          ,'StrippingBs2MuMusBu2JPsiKLine'
+                          ,'StrippingBs2MuMusBs2JPsiPhiLine'
+                          ,'StrippingBs2MuMusBd2JPsiKstLine'
+                          ,'StrippingBs2MuMusSSLine'
+                          ,'StrippingBs2MuMusLTUBLine'
+                          ,'StrippingBs2MuMusBs2KKLTUBLine'],
+            'Dimuon' : ['StrippingBs2MuMusNoMuIDLine'
+                        ,'StrippingBs2MuMusWideMassLine']
+
+            }
     }
 
 ################################################################################
