@@ -833,7 +833,7 @@ B2XTau = {
                       }
                 ]
         },
-    'STREAMS' : ['Leptonic']
+    'STREAMS' : ['Bhadron']
     }
 
 ################################################################################
@@ -934,7 +934,7 @@ B2XTauZVTOP = {
                 }
               ],
          },
-    'STREAMS' : ['Leptonic']
+    'STREAMS' : ['Bhadron']
     }
 
 ################################################################################
@@ -979,10 +979,11 @@ Bs2MuMus = {
     'STREAMS' : {
             'Dimuon' : [
                  'StrippingBs2MuMusNoMuIDLine',
-                 'StrippingBs2MuMusNoMuIDLooseLine', # Prescaled to 0.
                  'StrippingBs2MuMusWideMassLine',
                  ],
             'Leptonic' : [
+                 'StrippingBs2MuMusNoMuIDLine',
+                 'StrippingBs2MuMusNoMuIDLooseLine', # Prescaled to 0.
                  'StrippingBs2MuMusBd2JPsiKstLine',
                  'StrippingBs2JPsiPhiLine',
                  'StrippingBs2MuMusBu2JPsiKLine',
@@ -1007,7 +1008,7 @@ Bu2MuNu = {
     'CONFIG': {
           'PrescaleSignal'  : 1.0,
           'PostscaleSignal' : 1.0,
-          'PrescaleControl'  : 0.03,
+          'PrescaleControl'  : 0.015,
           'PostscaleControl' : 1.0,
           'pTminMu'     : 5.,
           'pTmaxMu'     : 40.,

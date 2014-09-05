@@ -5,7 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-09-04 - Pablo Ruiz Valls (RD)
- - Fixed streams of Bs2MuMu lines
+ - Fixed streams of Bs2MuMu lines (again).
+ - Reduced prescaling of Bu2MuNuControlLine
+ - Changed B2XTau and ZVTOP streams back to Bhadron
 
 ! 2014-09-04 - Stefano Perazzini
  - Updated dictionaries for Charmless WG
