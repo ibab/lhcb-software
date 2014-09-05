@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-05 - Cédric Potterat
+ - Changing option names in StrippingJets  with repect to new name in TopologicalTagging tool
+
 ! 2014-09-05 - Andrea Contu
  - Minor fix to StrippingRareStrange
 

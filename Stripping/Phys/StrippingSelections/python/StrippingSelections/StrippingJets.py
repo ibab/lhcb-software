@@ -217,7 +217,8 @@ class JetsConf(LineBuilder):
 
     def _create_bJets(self, inputs, test):
         bjets = TopologicalTagging(self._name+'taggingJet')
-        bjets.TestInputs = test.outputLocation()
+        bjets.ParticleAbsPID = 98
+        bjets.SVLocation = test.outputLocation()
         bjets.TriggerLine = self._config["HLT"]["LINETOPO"] + ".*Decision"
         imergedSel = MergedSelection(self._name+"merged", RequiredSelections=[inputs,test])
         return Selection(self._name + "bJets",
