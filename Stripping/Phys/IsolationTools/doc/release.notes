@@ -3,6 +3,10 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-09-05 - Stefano Perazzini
+ - Reintroduced IsolationInfo.h as its absence was preventing the 
+   compilation of the package
+
 ! 2014-09-04 - Alex Shires
  - update to TrackIsolationBDT for Matteo
  - renamed BDTs, removed IsolationInfo.h
