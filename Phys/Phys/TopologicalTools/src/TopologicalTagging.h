@@ -113,6 +113,7 @@ class TopologicalTagging :  public DaVinciAlgorithm
     public:
     std::string m_TLine; // algorithm mode - PtRel or IPSig
     std::string m_tinputs;
+    int m_abspid;
 
 
     private:

@@ -14,13 +14,15 @@ TopologicalTagging::TopologicalTagging(const std::string& name,
         ISvcLocator* pSvcLocator)
     : DaVinciAlgorithm(name,pSvcLocator)
       , m_TriggerTisTosTool(0)
-    , m_tinputs              ("cedric")
+      , m_tinputs ("Phys/Test/Particles")
+      , m_abspid  (98)
 
 {
     // Algorithm related properties
     declareProperty("TriggerLine",
-            m_TLine = "Hlt2Topo.*BBDT.*Decision");
-    declareProperty("TestInputs", m_tinputs);
+            m_TLine = "Hlt2Topo.*Decision");
+    declareProperty("SVLocation", m_tinputs);
+    declareProperty("ParticleAbsPID", m_abspid);
 
 }
 
@@ -71,7 +73,7 @@ StatusCode TopologicalTagging::execute()
         const LHCb::Particle* jet = *ijet;
         //std::cout<<"dsize: "<<(jet->daughtersVector()).size()<<std::endl;
         //check if jet is TOS Hlt2Topo*BBDT, if yes add 10 to the tagging HLT value
-        if(jet->particleID().abspid() != 98) continue;
+        if((int) jet->particleID().abspid() != m_abspid) continue;
         int tagTOPO = 0;
         int tagHLT = 0;
         bool closeTopo = false;
