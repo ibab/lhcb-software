@@ -418,7 +418,8 @@ class MASS(PDF) :
         #
         self.mass = makeVar ( mass   ,
                               m_name , m_title ,
-                              None   ,  min ( mn , mx ) , max( mn , mx ) )
+                              mass   , 
+                              min ( mn , mx ) , max( mn , mx ) )
         #
         self._mn = self.mass.getMin ()
         self._mx = self.mass.getMax ()
@@ -434,7 +435,7 @@ class MASS(PDF) :
         #
         if self.mean.isConstant() :
             if not self._mn <= self.mean.getVal() <= self._mx :
-                raise AttributeError ( 'MASS(%s): Fixed mass is not in mass-range (%s,%s)' % ( name , self._mn , self._mx ) )
+                raise AttributeError ( 'MASS(%s): Fixed mass %s is not in mass-range (%s,%s)' % ( name , self.mean.getVal() , self._mn , self._mx ) )
         elif hasattr ( self.mean , 'setMin' ) and hasattr( self.mean , 'setMax' ) : 
             self.mean.setMin ( max ( self.mean.getMin () , self.mass.getMin() - 0.1 * _dm ) )
             self.mean.setMax ( min ( self.mean.getMax () , self.mass.getMax() + 0.1 * _dm ) )

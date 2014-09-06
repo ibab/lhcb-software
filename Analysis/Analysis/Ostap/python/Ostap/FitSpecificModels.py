@@ -235,15 +235,16 @@ class Dp_pdf(Bukin_pdf) :
                    mass                    , ## mass is mandatory here 
                    name     = 'Dp'         ,
                    mean     =  1.869       , 
-                   sigma    =  None        ,
+                   sigma    =  7.1183e-03  ,
                    xi       = -7.7344e-03  ,
                    rhoL     =  3.0241e-01  , 
                    rhoR     =  3.7452e-01  ) :
-        
+
         Bukin_pdf.__init__ ( self          ,
                              name          ,
                              mass.getMin() , 
                              mass.getMax() , 
+                             mass          ,
                              mean          ,
                              sigma         ,
                              xi            ,                            
@@ -313,13 +314,14 @@ class Lc_pdf(Bukin_pdf) :
 # =============================================================================
 ## @class Manca_pdf 
 #  the final full PDF for Y->mu+mu- fit
-#  This is physuically weell-motivated function for fist in narrow
+#  This is physically well-motivated function for fits in narrow
 #  bins in pt and rapidity  
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-08-02
 class Manca_pdf (PDF) :
     """
-    The final full PDF for Y->mu+mu- fit 
+    The final fir model for Y->mu+mu- fit
+    This is physically well-motivated function for fits in narrow bins in pt and rapidity  
     """
     def __init__ ( self          ,
                    mass          ,
@@ -371,11 +373,9 @@ class Manca_pdf (PDF) :
             name + '1S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
-            fixMass  = m_y1s      ,
-            fixSigma = s_y1s      ,
             mass     = self.mass  ,
-            mean     = None       ,
-            sigma    = None       ,
+            mean     = m_y1s      ,
+            sigma    = s_y1s      ,
             a0       = self.a0    ,
             a1       = self.a1    ,
             a2       = self.a2    ) 
@@ -425,8 +425,6 @@ class Manca_pdf (PDF) :
             name + '2S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
-            fixMass  = None       ,
-            fixSigma = None       ,
             mass     = self.mass  ,
             mean     = self.m2s   ,
             sigma    = self.s2s   ,
@@ -465,8 +463,6 @@ class Manca_pdf (PDF) :
             name + '3S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
-            fixMass  = None       ,
-            fixSigma = None       ,
             mass     = self.mass  ,
             mean     = self.m3s   ,
             sigma    = self.s3s   ,
@@ -530,7 +526,7 @@ class Manca_pdf (PDF) :
     def alpha_2S ( self ) : return self.Y2S.pdf.alpha ()
     def alpha_3S ( self ) : return self.Y3S.pdf.alpha ()
 
-
+    
 # =============================================================================
 ## @class Manca2_pdf 
 #  the final full PDF for Y->mu+mu- fit
@@ -539,10 +535,8 @@ class Manca_pdf (PDF) :
 #  @date 2014-06-24
 class Manca2_pdf (PDF) :
     """
-    The final full PDF for Y->mu+mu- fit
-    
+    The final fit model for Y->mu+mu- fit
     This is an effective function for fit in global bin, without pt/y-binning
-    
     """
     def __init__ ( self          ,
                    mass          ,
@@ -594,11 +588,9 @@ class Manca2_pdf (PDF) :
             name + '1S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
-            fixMass  = m_y1s      ,
-            fixSigma = s_y1s      ,
             mass     = self.mass  ,
-            mean     = None       ,
-            sigma    = None       ,
+            mean     = m_y1s      ,
+            sigma    = s_y1s      ,
             alphaL   = self.aL    ,
             alphaR   = self.aR    ,
             nL       = self.nL    ,
@@ -650,8 +642,6 @@ class Manca2_pdf (PDF) :
             name + '2S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
-            fixMass  = None       ,
-            fixSigma = None       ,
             mass     = self.mass  ,
             mean     = self.m2s   ,
             sigma    = self.s2s   ,
@@ -691,8 +681,6 @@ class Manca2_pdf (PDF) :
             name + '3S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
-            fixMass  = None       ,
-            fixSigma = None       ,
             mass     = self.mass  ,
             mean     = self.m3s   ,
             sigma    = self.s3s   ,
