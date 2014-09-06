@@ -68,7 +68,7 @@ class DSTWriterSelectionSequence(object) :
 
         if outputStreamConfiguration.killTESAddressHistory :
             from Configurables import AddressKillerAlg
-            self.algos.append( AddressKillerAlg( name = "KillTESAddresses" ) )
+            self.algos.append( AddressKillerAlg( name = "KillTESAddresses_"+conf.name ) )
         
         for alg in algs:
             if ioh.detectStreamType(alg) in ["FSR"]:

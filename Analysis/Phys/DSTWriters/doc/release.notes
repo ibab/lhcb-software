@@ -4,6 +4,10 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-09-06 - Chris Jones
+ - Run a specific instance of AddressKillerAlg for each writer sequence.
+   Fixes a problem with some ancestor knowledge remaining on DSTs.
+
 ! 2014-09-05 - Chris Jones
  - Fix a problem that caused unneccesary cloning of PVs on DST streams.
  - Add support for packing of custom MuonPID locations.
