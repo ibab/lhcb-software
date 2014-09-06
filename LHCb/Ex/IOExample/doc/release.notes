@@ -4,6 +4,9 @@
 ! Purpose: Tests reading and writing of legacy datasets
 !-------------------------------------------------------------------------------
 
+! 2014-09-06 - Marco Cattaneo
+ - Follow latest EventPacker changes
+
 ! 2014-08-21 - Marco Cattaneo
  - Follow improvements to DumpTracks algorithm
 
