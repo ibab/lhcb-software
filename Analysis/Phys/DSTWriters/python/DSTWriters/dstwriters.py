@@ -63,6 +63,9 @@ class DSTWriterSelectionSequence(object) :
             else:
                 print "WARNING : Output Writer", writer.name(), "does not have property", rawEvPropName
 
+        # Collects the data available on the input file, for subsequent DST streams.
+        # Must be run once per event, before *any* TES address killing.
+        # Only one instance needed, so run an instance here that is not stream specific.
         from Configurables import FixInputCopyStream
         self.algos.append( FixInputCopyStream() )
 
