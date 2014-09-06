@@ -409,6 +409,20 @@ class DaVinci(LHCbConfigurableUser) :
             configurable = self._configurable(alg)
             self.mainSeq.Members += [ configurable ]
 
+################################################################################
+# Preppend to Main sequence
+#
+    def prependToMainSequence(self, algs):
+        """
+        Preppend to main sequence. Can be called from other configurables
+        """
+        log.info("Append to Main Sequence has been called")
+        addseq = [ ]
+        for alg in algs:
+            configurable = self._configurable(alg)
+            addseq += [ configurable ]
+        self.mainSeq.Members = addseq + self.mainSeq.Members
+
     def _configurable(self, obj) :
         _obj2ConfMap = { 'SelectionSequence'         : lambda x : x.sequence(),
                          'MultiSelectionSequence'    : lambda x : x.sequence() }
@@ -426,11 +440,6 @@ class DaVinci(LHCbConfigurableUser) :
         ## 
         itype = self.getProp   ( 'InputType'  ).upper()
         if not 'MDST' == itype : return  ## no action
-        #
-        ## for a time being no action for simulated data
-        #
-        if self.isPropertySet  ( 'Simulation' ) :
-            if self.getProp    ( 'Simulation' ) : return  ## no action   
         #
         if not self.isPropertySet ('RootInTES') : return  ## no action
         rit = self.getProp('RootInTES')

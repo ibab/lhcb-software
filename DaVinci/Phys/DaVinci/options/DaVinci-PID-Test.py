@@ -20,10 +20,10 @@ from Configurables import DaVinci, PhysConf
 DaVinci().EvtMax = 100000                      # Number of events
 DaVinci().PrintFreq = 1000
 DaVinci().SkipEvents = 0                       # Events to skip
-DaVinci().DataType = "2011"                    # Must be given
+DaVinci().DataType = "2012"                    # Must be given
 DaVinci().Simulation   = True
-#DaVinci().HistogramFile = "DVHistos.root"    # Histogram file
-DaVinci().HistogramFile = "pid/test12-pid.root"    # Histogram file
+DaVinci().HistogramFile = "DVHistos.root"    # Histogram file
+#DaVinci().HistogramFile = "pid/test12-pid.root"    # Histogram file
 DaVinci().TupleFile = "DVNtuples.root"          # Ntuple
 #DaVinci().MoniSequence = [ exampleSeq ]        # Monitoring
 # DaVinci().MainOptions  = "" # None
@@ -40,13 +40,13 @@ MessageSvc().Format = "% F%20W%S%7W%R%T %0W%M"
 #
 ########################################################################
 
-from Configurables import ChargedProtoANNPIDConf
-nnpidseq = GaudiSequencer("ANNGPIDSeq")
-annconf = ChargedProtoANNPIDConf( DataType = DaVinci().DataType )
+#from Configurables import ChargedProtoANNPIDConf
+#nnpidseq = GaudiSequencer("ANNGPIDSeq")
+#annconf = ChargedProtoANNPIDConf( DataType = DaVinci().DataType )
 #annconf.TrackTypes = ["Long"]
 #annconf.PIDTypes   = ["Kaon","Proton"]
-annconf.RecoSequencer = nnpidseq
-DaVinci().UserAlgorithms += [nnpidseq]
+#annconf.RecoSequencer = nnpidseq
+#DaVinci().UserAlgorithms += [nnpidseq]
     
 #from Configurables import GlobalRecoChecks
 #moniSeq = GaudiSequencer("ProtoMoniSeq")
@@ -57,82 +57,87 @@ from Configurables import ParticleEffPurMoni
 
 from StandardParticles import ( StdLooseANNElectrons, StdLooseElectrons,
                                 StdTightANNElectrons, StdTightElectrons )
-le = ParticleEffPurMoni('ElectronPerf')
+le = ParticleEffPurMoni('LongElectronPerf')
 le.Inputs = [ "Phys/StdLooseANNElectrons/Particles", "Phys/StdLooseElectrons/Particles",
               "Phys/StdTightANNElectrons/Particles", "Phys/StdTightElectrons/Particles" ]
 DaVinci().UserAlgorithms += [ le ]
 
 from StandardParticles import ( StdLooseMuons,
                                 StdTightANNMuons, StdTightMuons )
-lmu = ParticleEffPurMoni('MuonPerf')
+lmu = ParticleEffPurMoni('LongMuonPerf')
 lmu.Inputs = [ "Phys/StdLooseMuons",
                "Phys/StdTightANNMuons", "Phys/StdTightMuons" ]
 DaVinci().UserAlgorithms += [ lmu ]
 
 from StandardParticles import ( StdLooseANNPions, StdLoosePions,
                                 StdTightANNPions, StdTightPions )
-lpi = ParticleEffPurMoni('PionPerf')
+lpi = ParticleEffPurMoni('LongPionPerf')
 lpi.Inputs = [ "Phys/StdLooseANNPions", "Phys/StdLoosePions",
                "Phys/StdTightANNPions", "Phys/StdTightPions" ]
 DaVinci().UserAlgorithms += [ lpi ]
 
 from StandardParticles import ( StdLooseANNKaons, StdLooseKaons,
                                 StdTightANNKaons, StdTightKaons )
-lk = ParticleEffPurMoni('KaonPerf')
+lk = ParticleEffPurMoni('LongKaonPerf')
 lk.Inputs = [ "Phys/StdLooseANNKaons", "Phys/StdLooseKaons",
               "Phys/StdTightANNKaons", "Phys/StdTightKaons" ]
 DaVinci().UserAlgorithms += [ lk ]
 
 from StandardParticles import ( StdLooseANNProtons, StdLooseProtons,
                                 StdTightANNProtons, StdTightProtons )
-lp = ParticleEffPurMoni('ProtonPerf')
+lp = ParticleEffPurMoni('LongProtonPerf')
 lp.Inputs = [ "Phys/StdLooseANNProtons", "Phys/StdLooseProtons",
               "Phys/StdTightANNProtons", "Phys/StdTightProtons" ]
 DaVinci().UserAlgorithms += [ lp ]
 
-## from StandardParticles import ( StdLooseANNDownElectrons,
-##                                 StdLooseANNDownPions,
-##                                 StdLooseANNDownKaons,
-##                                 StdLooseANNDownProtons,
-##                                 StdTightANNDownElectrons,
-##                                 StdTightANNDownMuons,
-##                                 StdTightANNDownPions,
-##                                 StdTightANNDownKaons,
-##                                 StdTightANNDownProtons )
-## DaVinci().UserAlgorithms += [
-##     ParticleEffPurMoni( "ElPerfDown", Inputs = ["Phys/StdLooseANNDownElectrons",
-##                                                 "Phys/StdTightANNDownElectrons"] ),
-##     ParticleEffPurMoni( "MuPerfDown", Inputs = ["Phys/StdTightANNDownMuons"] ),
-##     ParticleEffPurMoni( "PiPerfDown", Inputs = ["Phys/StdLooseANNDownPions",
-##                                                 "Phys/StdTightANNDownPions"] ),
-##     ParticleEffPurMoni( "KaPerfDown", Inputs = ["Phys/StdLooseANNDownKaons",
-##                                                 "Phys/StdTightANNDownKaons"] ),
-##     ParticleEffPurMoni( "PrPerfDown", Inputs = ["Phys/StdLooseANNDownProtons",
-##                                                 "Phys/StdTightANNDownProtons"] )
-##     ]
+from StandardParticles import ( StdLooseANNDownElectrons,
+                                StdLooseANNDownPions,
+                                StdLooseANNDownKaons,
+                                StdLooseANNDownProtons,
+                                StdTightANNDownElectrons,
+                                StdTightANNDownMuons,
+                                StdTightANNDownPions,
+                                StdTightANNDownKaons,
+                                StdTightANNDownProtons )
+DaVinci().UserAlgorithms += [
+    ParticleEffPurMoni( "DownElectronPerf", Inputs = ["Phys/StdLooseANNDownElectrons",
+                                                      "Phys/StdTightANNDownElectrons"] ),
+    ParticleEffPurMoni( "DownMuonPerf", Inputs = ["Phys/StdTightANNDownMuons"] ),
+    ParticleEffPurMoni( "DownPionPerf", Inputs = ["Phys/StdLooseANNDownPions",
+                                                  "Phys/StdTightANNDownPions"] ),
+    ParticleEffPurMoni( "DownKaonPerf", Inputs = ["Phys/StdLooseANNDownKaons",
+                                                  "Phys/StdTightANNDownKaons"] ),
+    ParticleEffPurMoni( "DownProtonPerf", Inputs = ["Phys/StdLooseANNDownProtons",
+                                                    "Phys/StdTightANNDownProtons"] )
+    ]
 
-## from StandardParticles import ( StdLooseANNUpElectrons,
-##                                 StdLooseANNUpPions,
-##                                 StdLooseANNUpKaons,
-##                                 StdLooseANNUpProtons,
-##                                 StdTightANNUpElectrons,
-##                                 StdTightANNUpMuons,
-##                                 StdTightANNUpPions,
-##                                 StdTightANNUpKaons,
-##                                 StdTightANNUpProtons )
-## DaVinci().UserAlgorithms += [
-##     ParticleEffPurMoni( "ElPerfUp", Inputs = ["Phys/StdLooseANNUpElectrons",
-##                                               "Phys/StdTightANNUpElectrons"] ),
-##     ParticleEffPurMoni( "MuPerfUp", Inputs = ["Phys/StdTightANNUpMuons"] ),
-##     ParticleEffPurMoni( "PiPerfUp", Inputs = ["Phys/StdLooseANNUpPions",
-##                                               "Phys/StdTightANNUpPions"] ),
-##     ParticleEffPurMoni( "KaPerfUp", Inputs = ["Phys/StdLooseANNUpKaons",
-##                                               "Phys/StdTightANNUpKaons"] ),
-##     ParticleEffPurMoni( "PrPerfUp", Inputs = ["Phys/StdLooseANNUpProtons",
-##                                               "Phys/StdTightANNUpProtons"] )
-##     ]
-                                
+from StandardParticles import ( StdLooseANNUpElectrons,
+                                StdLooseANNUpPions,
+                                StdLooseANNUpKaons,
+                                StdLooseANNUpProtons,
+                                StdTightANNUpElectrons,
+                                StdTightANNUpMuons,
+                                StdTightANNUpPions,
+                                StdTightANNUpKaons,
+                                StdTightANNUpProtons )
+DaVinci().UserAlgorithms += [
+    ParticleEffPurMoni( "UpElectronPerf", Inputs = ["Phys/StdLooseANNUpElectrons",
+                                                    "Phys/StdTightANNUpElectrons"] ),
+    ParticleEffPurMoni( "UpMuonPerf", Inputs = ["Phys/StdTightANNUpMuons"] ),
+    ParticleEffPurMoni( "UpPionPerf", Inputs = ["Phys/StdLooseANNUpPions",
+                                                "Phys/StdTightANNUpPions"] ),
+    ParticleEffPurMoni( "UpKaonPerf", Inputs = ["Phys/StdLooseANNUpKaons",
+                                                "Phys/StdTightANNUpKaons"] ),
+    ParticleEffPurMoni( "UpProtonPerf", Inputs = ["Phys/StdLooseANNUpProtons",
+                                                  "Phys/StdTightANNUpProtons"] )
+    ]
 
-# Additional options for accessing Oracle conditions DB.
-#from Configurables import CondDB
-#CondDB(UseOracle = True)
+
+#importOptions( "$PRCONFIGOPTS/DaVinci/Stripping/Collision12-4TeV-Reco14-Stripping20-BHADRONCOMPLETEEVENT.DST.py" )
+from GaudiConf import IOHelper
+IOHelper().inputFiles( [
+    'PFN:/usera/jonesc/NFS/data/MC/MC12/DST/10000000/00024859_00000040_1.allstreams.dst',
+    'PFN:/usera/jonesc/NFS/data/MC/MC12/DST/10000000/00024859_00000041_1.allstreams.dst',
+    'PFN:/usera/jonesc/NFS/data/MC/MC12/DST/10000000/00024859_00000042_1.allstreams.dst',
+    'PFN:/usera/jonesc/NFS/data/MC/MC12/DST/10000000/00024859_00000043_1.allstreams.dst'
+    ] )

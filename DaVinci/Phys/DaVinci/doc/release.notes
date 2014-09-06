@@ -8,6 +8,13 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-09-06 - Chris Jones
+ - Add a new prependToMainSequence method to DaVinci() Configurable.
+ - Allow uDST tuning for MC.
+
+! 2014-08-18 - Chris Jones
+ - Remove limitation that setting RootInTES did nothing with MC uDSTs...
+
 !========================= DaVinci v36r0 2014-07-28 ===========================
 
 ! 2014-07-28 - Chris Jones
