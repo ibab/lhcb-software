@@ -28,13 +28,15 @@ if(len(sys.argv) == 2):
 else :
     out = 'Rad_merged.root'
 
-run_command = "gaudirun.py RadLengthAna.py"
+run_command = "gaudirun.py MaterialEvalGun.py Gauss-Job.py RadLengthAna.py"
 os.system(run_command)
-run_command = "gaudirun.py RadLengthAna_VELO.py"    
+run_command = "gaudirun.py MaterialEvalGun.py Gauss-Job.py RadLengthAna_VELO.py"    
 os.system(run_command)
     
 output=outputpath+'/'+out
 merge_command = ' hadd -f ' + output + ' ' + pwd + '/Rad.root ' + pwd + '/Rad_VELO.root '
 os.system(merge_command)
+
+os.system("./drawPlanes.out")
    
     
