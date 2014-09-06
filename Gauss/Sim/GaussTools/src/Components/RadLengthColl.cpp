@@ -90,7 +90,7 @@ StatusCode RadLengthColl::initialize()  {
 	StatusCode sc= svcLoc()->service( "NTupleSvc" , ntupleSvc , true );
 	if( sc.isFailure()   ) 
 	{ return Error("Unable to locate Ntuple Service ", sc ); }
-  
+
 	ntname = "/NTUPLES/FILE2";
 	info() << "ntupleSvc = " << ntupleSvc << endmsg;
 	NTupleFilePtr ntfile(ntupleSvc, ntname); 
@@ -133,7 +133,7 @@ StatusCode RadLengthColl::initialize()  {
 	}
 
 
-  // Initialize ntuple variables:
+	// Initialize ntuple variables:
 	m_ntrk      = 0;
 	for (m_ntrk = 0; m_ntrk < 100; ++m_ntrk) 
 	{
@@ -146,8 +146,8 @@ StatusCode RadLengthColl::initialize()  {
 		m_cumradlgh[m_ntrk] = -9999.0;
 		m_p2pradlgh[m_ntrk] = -9999.0;
 	}
-  
-  
+
+
 	debug() << "==> Initialize successful" << endmsg;
 	return StatusCode::SUCCESS;
 };
@@ -161,34 +161,34 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 	track = theStep->GetTrack();
 	partdef = track->GetDefinition();
 	ParticleName = partdef->GetParticleName();
-	
+
 	G4int PartPdgId = partdef->GetPDGEncoding();
 	int m_trackpar = track->GetParentID();
-	
+
 	//const G4VProcess* proc = track->GetCreatorProcess();
 	//G4int proctype = proc->GetProcessType();
-	
+
 	debug() << "Projectile ID: " << PartPdgId << ", ID particle: " << m_trackpar << endmsg;
-	
-	
+
+
 	thePreStepPoint = theStep->GetPreStepPoint();
 	Vol = thePreStepPoint->GetPhysicalVolume();
 	VOL = Vol->GetLogicalVolume();
 	initial_position = thePreStepPoint->GetPosition();
-	
-  // initialize the counters at the origin of the track
+
+	// initialize the counters at the origin of the track
 	if(initial_position[0] == 0 && initial_position[1] == 0 && initial_position[2] == 0 )
 	{
-    // Radiation Length
+		// Radiation Length
 		theRadLength = 0;
 		theCumulatedRadLength = 0;
 		thePlane2PlaneRadLength = 0;
 
-    // Interaction Length
-    theInterLength = 0;
-    theCumulatedInterLength = 0;
-    thePlane2PlaneInterLength = 0;
-  
+		// Interaction Length
+		theInterLength = 0;
+		theCumulatedInterLength = 0;
+		thePlane2PlaneInterLength = 0;
+
 		// Other stuff
 		index = 0;
 		m_ntrk = 0;
@@ -208,37 +208,37 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 	theInterLength = StepLength/MaterialInterLength;
 	theCumulatedInterLength += theInterLength;
 	thePlane2PlaneInterLength += theInterLength;
- 
-	
+
+
 	VolName = (std::string) Vol->GetName();
 
-  // This commented block of code does not include interaction lengths
+	// This commented block of code does not include interaction lengths
 	/*
-	debug() << "*** - VolName - *** = " << VolName << endmsg;
-	debug() << "*** - Zpos - *** = " << thePreStepPoint->GetPosition().z() << endmsg;
-	debug() << "*** - stepsize  - *** = " << StepLength << endmsg;
+	   debug() << "*** - VolName - *** = " << VolName << endmsg;
+	   debug() << "*** - Zpos - *** = " << thePreStepPoint->GetPosition().z() << endmsg;
+	   debug() << "*** - stepsize  - *** = " << StepLength << endmsg;
 	//debug() << "*** - Material RadLength - *** = " << MaterialRadiationLength << endmsg;
 	debug() << "*** - theRadLength  - *** = " << theRadLength << endmsg;
 	debug() << "*** - CumulativeRadLength  - *** = " << theCumulatedRadLength << endmsg;
 	*/
-	
-	
-	
-  // get the Volume Name
-  // returns the position of the found string or string::npos if not found
+
+
+
+	// get the Volume Name
+	// returns the position of the found string or string::npos if not found
 	if(VolName.find("Structure")!= std::string::npos)  // "/dd/Geometry"
 	{
-		if(VolName.find("Scoring_Plane")!= std::string::npos)
+		std::string::size_type pos = VolName.find("Scoring_Plane");
+		if(pos!=std::string::npos)
 		{
 			debug() << VolName << endmsg;
-			
-			VolumeName="Scoring_Plane";
-			std::string::size_type i2 = VolName.find("#",25);
 
-			IDPlane = VolName.substr(38,i2-38);
+			VolumeName="Scoring_Plane";
+			IDPlane = VolName.substr(pos+13,100);
+			
 			debug() << IDPlane << endmsg;
 			IDP = atoi(IDPlane.c_str());
-			
+
 			debug() << "IDPlane = " << IDPlane << " IDP " << IDP << endmsg;
 		}
 		else
@@ -252,14 +252,14 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 		float z = thePreStepPoint->GetPosition().z();
 		debug() << "Hit Universe at Z = " << z << " (eta = " << thePreStepPoint->GetPosition().eta() << ")" << endmsg;		
 	}
-  
 
-	
+
+
 
 	if(VolumeName == "Scoring_Plane" && m_trackpar == 0 ) // == if the volume is a dummy scorer plane
 	{
 		debug() << "VolumeName = " << VolumeName << endmsg;
-    
+
 		index++;
 		m_planeID[m_ntrk] = IDP;
 		m_Xpos[m_ntrk] = thePreStepPoint->GetPosition().x();
@@ -269,21 +269,21 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 		m_phi[m_ntrk] = thePreStepPoint->GetPosition().phi();
 		m_cumradlgh[m_ntrk] = theCumulatedRadLength;
 		m_p2pradlgh[m_ntrk] = thePlane2PlaneRadLength;
-    debug() << "theCumulatedInterLength = " << theCumulatedInterLength << "and thePlane2PlaneInterLength = "
-            << thePlane2PlaneInterLength << endmsg;
-    m_cuminterlgh[m_ntrk] = theCumulatedInterLength;
- 		m_p2pinterlgh[m_ntrk] = thePlane2PlaneInterLength;
-		
-    // reinitialize the value of the plane 2 plane radlength and interlength to 0 
+		debug() << "theCumulatedInterLength = " << theCumulatedInterLength << "and thePlane2PlaneInterLength = "
+			<< thePlane2PlaneInterLength << endmsg;
+		m_cuminterlgh[m_ntrk] = theCumulatedInterLength;
+		m_p2pinterlgh[m_ntrk] = thePlane2PlaneInterLength;
+
+		// reinitialize the value of the plane 2 plane radlength and interlength to 0 
 		thePlane2PlaneRadLength = 0;
 		thePlane2PlaneInterLength = 0;
-		
+
 		debug() << "idplane = "<< m_planeID[m_ntrk] << endmsg;
 		debug() << "m_Zpos[m_ntrk], cum and p2p: " << m_Zpos[m_ntrk] << ", " << m_cumradlgh[m_ntrk] << ", " << m_p2pradlgh[m_ntrk]
-            << endmsg;
-		
+			<< endmsg;
+
 		m_ntrk++;
-        
+
 		if(m_ntrk >= m_ntrk->range().distance())
 		{
 			return;
@@ -291,7 +291,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 			getchar();
 			m_ntrk=0;
 		}
-		
+
 		writestatus = ntupleSvc()->writeRecord(ntname);
 		if(! writestatus.isSuccess() )
 		{
@@ -299,7 +299,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 			return;
 		}
 	}
-  
+
 	return;
 };
 
@@ -309,10 +309,10 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 //  Finalize
 //=============================================================================
 StatusCode RadLengthColl::finalize() {
-  
+
 	//m_matScan_PlaneDatas->Draw("cumradlgh:eta:phi>>hh","ID==11","profs");
 	//TH1 * hh = (TH1 *)gPad->GetPrimitive("hh");
-	
+
 	debug() << "==> Finalize" << endmsg;
 	return GiGaStepActionBase::finalize();
 };
