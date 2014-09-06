@@ -111,6 +111,11 @@ def _tt_project_ ( tree , histo , what , *args ) :
     #
     if hasattr (  histo , 'GetName' ) : histo = histo.GetName()
     #
+    if args and isinstance ( args[0] , ROOT.TCut ) :
+        _args     = list  ( args     )
+        _args [0] = str   ( _args[0] )  
+        args      = tuple ( _args    )
+    #
     return tree.Project ( histo , what , *args )
 
 ROOT.TTree .project = _tt_project_
