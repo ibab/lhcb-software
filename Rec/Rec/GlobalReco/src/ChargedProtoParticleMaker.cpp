@@ -88,27 +88,25 @@ StatusCode ChargedProtoParticleMaker::initialize()
 //=============================================================================
 StatusCode ChargedProtoParticleMaker::execute()
 {
-
   // check if output data already exists
-  if ( exist<LHCb::ProtoParticles>(m_protoPath) )
+  LHCb::ProtoParticles * protos = getIfExists<LHCb::ProtoParticles>(m_protoPath);
+  if ( protos )
   {
-    // ProtoParticles already exist, do nothing
-    return Warning( "Existing ProtoParticle container at " + m_protoPath +
-                    " found -> Will do nothing" );
+    Warning( "Existing ProtoParticle container at " + m_protoPath +
+             " found -> Will replace.", StatusCode::SUCCESS, 1 ).ignore();
+    protos->clear();
   }
-
-  // make new container and give to Gaudi
-  LHCb::ProtoParticles * protos = new LHCb::ProtoParticles();
-  put ( protos, m_protoPath );
+  else
+  {
+    // make new container and give to Gaudi
+    protos = new LHCb::ProtoParticles();
+    put ( protos, m_protoPath );
+  }
 
   // Loop over tracks container
   setFilterPassed(false);
-  for ( std::vector<std::string>::const_iterator c = m_tracksPath.begin() ;
-        m_tracksPath.end() != c ; ++c )
+  for ( const std::string& loc : m_tracksPath )
   {
-    // track location
-    const std::string& loc = *c;
-
     // Load the Track objects (mandatory - should be there for each event)
     const LHCb::Tracks * tracks = getIfExists<LHCb::Tracks>( loc );
     if ( NULL == tracks )

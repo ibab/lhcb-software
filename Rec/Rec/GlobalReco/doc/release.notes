@@ -4,9 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
-! 2014-09-04 - O. Deschamps
-  - NeutralProtoPAlg : change default value to +1 for IsPhoton when variable is not evaluated (i.e. pt<2GeV hence not merged)
+! 2014-09-06 - Chris Jones
+ - ChargedProtoParticleMaker : If output already exists clear and reuse.
 
+! 2014-09-04 - O. Deschamps
+ - NeutralProtoPAlg : Change default value to +1 for IsPhoton when variable is
+                      not evaluated (i.e. pt<2GeV hence not merged)
 
 !========================= GlobalReco v6r48 2014-07-14 ========================
 ! 2014-06-29 - O. Deschamps
