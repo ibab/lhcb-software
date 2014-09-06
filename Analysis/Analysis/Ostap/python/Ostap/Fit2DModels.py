@@ -459,7 +459,7 @@ class ExpoPol2Dsym_pdf(object) :
         ## get tau
         # 
         taumax  = 100
-        mn,mx   = mass.minmax()
+        mn,mx   = x.minmax()
         mc      = 0.5 * ( mn + mx )
         #
         if not iszero ( mn ) : taumax =                100.0 / abs ( mn ) 
