@@ -71,8 +71,8 @@ namespace {
           TH1D* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_residual[i] ) ;
           m_parentMean    ->fill( pr && pr->GetEntries() > 0 ? pr->GetMean()     : 0.0 );
           m_parentRMS     ->fill( pr && pr->GetEntries() > 0 ? pr->GetRMS()      : 0.0 );
-          m_parentSkewness->fill( pr && pr->GetEntries() > 0 ? pr->GetSkewness() : 0.0 );
-          m_parentKurtosis->fill( pr && pr->GetEntries() > 0 ? pr->GetKurtosis() : 0.0 );
+          m_parentSkewness->fill( pr && pr->GetEntries() > 0 && pr->GetRMS() > 0 ? pr->GetSkewness() : 0.0 );
+          m_parentKurtosis->fill( pr && pr->GetEntries() > 0 && pr->GetRMS() > 0 ? pr->GetKurtosis() : 0.0 );
           /*
           std::cout <<pr->GetName()
           << ":: MEAN: "  <<pr->GetMean()    <<" RMS: "     <<pr->GetRMS()

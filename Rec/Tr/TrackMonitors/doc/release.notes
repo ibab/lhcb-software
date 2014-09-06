@@ -4,9 +4,12 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-09-06 - Marco Cattaneo
+ - Improve the FPE protection in AlignmentOnlineMonitor
+
 !========================= TrackMonitors v2r3 2014-07-14 =======================
 ! 2014-07-04 - Mark Tobin
- - Added extra histrograms to TT(IT)TrackMonitor for resolution studies.  Usage 
+ - Added extra histograms to TT(IT)TrackMonitor for resolution studies.  Usage 
  controlled by additional flags (false by default).
  - Renamed minNumITHits property to minNumTTHits in TTTrackMonitor (as it should be).
  - Improved indentating in TrackMonitor.cpp.
