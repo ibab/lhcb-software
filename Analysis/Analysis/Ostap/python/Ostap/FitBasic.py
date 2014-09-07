@@ -162,6 +162,8 @@ class PDF (object) :
         self._signals     = ROOT.RooArgSet ()
         self._backgrounds = ROOT.RooArgSet ()
         self._components  = ROOT.RooArgSet ()
+        ## take care about sPlots 
+        self._splots      = []
         
     ## get all declared components 
     def components  ( self ) : return self._components
@@ -222,7 +224,7 @@ class PDF (object) :
             _args.append ( a )
             
         for k,a in kwargs.iteritems() :
-            
+            print 'LOOP INSIDE!!', k, a 
             if isinstance ( a , ROOT.RooCmdArg ) :
                 logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s' % ( self.name , k ) )  
                 _args.append ( a )
@@ -368,6 +370,27 @@ class PDF (object) :
                 
             ## fit it!!
             return self.fitTo ( self.hset , draw , len ( histo ) , silent , *args , **kwargs )
+
+    ## perform sPlot-analysis 
+    def sPlot ( self , dataset ) : 
+        """
+        Make sPlot analysis
+
+        """
+        if not hasattr ( self , 'alist2' ) :
+            logger.error ('PDF(%s) has not attribute "alist2", no sPlot is possible' % self.name ) 
+            raise AttributeError('PDF(%s) his not equipped for sPlot'                % self.name )
+        
+        splot = ROOT.RooStats.SPlot ( rootID( "sPlot_" ) ,
+                                      "sPlot"            ,
+                                      dataset            ,
+                                      self.pdf           ,
+                                      self.alist2        )
+        
+        self._splots += [ splot ]
+        
+        return splot 
+    
 
         
 # =============================================================================
@@ -710,25 +733,6 @@ class Fit1D (PDF) :
                                       "model(%s)" % suffix ,
                                       self.alist1 ,
                                       self.alist2 )
-
-        ## take care about sPlots 
-        self._splots = []
-        
-    ## perform sPlot-analysis 
-    def sPlot ( self , dataset ) : 
-        """
-        Make sPlot analysis 
-        """
-        splot = ROOT.RooStats.SPlot ( rootID( "sPlot_" ) ,
-                                      "sPlot"            ,
-                                      dataset            ,
-                                      self.pdf           ,
-                                      self.alist2        )
-        
-        self._splots += [ splot ]
-        
-        return splot 
-
 
 
 # =============================================================================

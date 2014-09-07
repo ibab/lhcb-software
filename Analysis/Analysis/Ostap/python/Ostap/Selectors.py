@@ -48,7 +48,7 @@
 # The module has been developed and used with great success in
 # ``Kali, framework for fine calibration of LHCb Electormagnetic Calorimeter''
 #
-# @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2010-04-30
 # 
 #                    $Revision$
@@ -95,7 +95,7 @@ SelectorWithCuts and SelectorWithVars classes
 
 """
 # =============================================================================
-__author__  = "Vanya BELYAEV Ivan.Belyaev@cern.ch"
+__author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2010-04-30"
 __version__ = "$Revision$" 
 # =============================================================================
@@ -254,7 +254,7 @@ class SelectorWithCuts (Analysis.SelectorWithCuts) :
 #
 # @see Analysis::Selector 
 # @see Analysis::Process 
-# @author Vanya BELYAEV Ivan.Belyaev@cern.ch
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 # @date   2010-04-30
 #
 def _process_ ( self , selector , *args ) :
@@ -282,9 +282,12 @@ for t in ( ROOT.TTree , ROOT.TChain ) : t.process  = _process_
 
 
 # =============================================================================
-## helper class to decode/keep infomration about the variable in 
+## helper class to decode/keep infomration about the variable in c
+# @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+# @date   2010-04-30
 class VEntry(object) :
     """
+    Helper class to decode/keep infomration about the variable 
     """
     def __init__ ( self , var , *args ) :
         """
@@ -324,8 +327,7 @@ class VEntry(object) :
         ## finally the entry
         self.entry = ( self.var , self.vdesc , self.vmin , self.vmax , self.vfun )
         
-        
-    
+            
 # ==============================================================================
 ## Define generic selector to fill RooDataSet from TChain
 #
@@ -527,7 +529,7 @@ class SelectorWithVars(SelectorWithCuts) :
         #
         ## == getting the next entry from the tree
         #
-        if self.GetEntry ( entry ) <  0 : return 0             ## RETURN 
+        if self.GetEntry ( entry ) <=  0 : return 0             ## RETURN 
         #
         
         if not self._progress :
@@ -574,8 +576,8 @@ class SelectorWithVars(SelectorWithCuts) :
             var.setVal ( value ) 
 
 
-        self.data .add ( self.varset ) 
-
+        self.data .add ( self.varset )
+        
         return 1 
 
     ## add declared variable to RooDataSet 
@@ -633,8 +635,11 @@ class SelectorWithVars(SelectorWithCuts) :
             self._skip   , 
             self.cuts () ) ) 
         self.data.Print('v')
-        if not len ( self.data ) : self._logger.warning("Empty dataset!")
-
+        if not len ( self.data ) :
+            self._logger.warning("Empty dataset!")
+        ##
+        if 0 != self.GetAbort() :
+            self._logger.error('Process has been aborted!')
     # 
     def Init    ( self, chain ) :
         # 
@@ -656,6 +661,12 @@ class SelectorWithVars(SelectorWithCuts) :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
     #
+    def Notify         ( self ) :
+        #
+        if self._progress :
+            self._progress.update_amount ( self.event () )
+            print self._progress , '\r',
+            
     def SlaveTerminate ( self               ) :
         # 
         if self._progress :

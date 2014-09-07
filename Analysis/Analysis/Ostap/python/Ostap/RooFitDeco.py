@@ -415,29 +415,39 @@ ROOT.RooRealVar   . __repr__  = lambda s : "'%s' : %s " % ( s.GetName() , s.ve()
 
 
 # =============================================================================
-## Prepare ``soft'' constraint for the given variable
+## Prepare ``soft'' gaussian constraint for the given variable
 #  @code 
-#    >>> var = ...
-#    >>> excntr = var.constaint( VE(1,0.1**2 ) )
+#    >>> var     = ...                            ## the variable 
+#    >>> extcntr = var.constaint( VE(1,0.1**2 ) ) ## create constrains 
+#    >>> model.fitTo ( ... , extcntr )            ## use it in the fit 
 #  @endcode 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2014-06-23
 def _rar_make_constraint_ ( v , value ) :
     """
     
-    >>> var = ...
-    >>> excntr = var.constaint( VE(1,0.1**2 ) )
-    >>>
+    Prepare ``soft'' gaussian constraint for the variable
+    
+    >>> var     = ...                            ## the variable 
+    >>> extcntr = var.constaint( VE(1,0.1**2 ) ) ## create constrains 
+    >>> model.fitTo ( ... , extcntr )            ## use it in the fit 
+
     """
-    vn          = 'Constr(%s)' % v.GetName()
-    vt          = 'Gauissian constraint(%s) at %s' % ( v.GetName() , value )
-    self._cvv   = ROOT.RooFit.RooConst ( val.value () )
-    self._cve   = ROOT.RooFit.RooConst ( val.error () )
-    self._cntr  = ROOT.RooGaussian     ( vn , vt , self , self._cvv , self._cve )
     #
-    self._cntrs = ROOT.RooArgSet ( self._cntr )
     #
-    return ROOT.RooFit.ExternalConstraints ( self._cntrs ) 
+    ## create gaussian constrains
+    #
+    vn       = 'Constr(%s)' % v.GetName()
+    vt       = 'Gauissian constraint(%s) at %s' % ( v.GetName() , value )
+    #
+    v._cvv   = ROOT.RooFit.RooConst ( value.value () )  ## NB! 
+    v._cve   = ROOT.RooFit.RooConst ( value.error () )  ## NB! 
+    v._cntr  = ROOT.RooGaussian     ( vn , vt , v , v._cvv , v._cve )
+    #
+    ## keep it 
+    v._cntrs = ROOT.RooArgSet       ( v._cntr )
+    #
+    return ROOT.RooFit.ExternalConstraints ( v._cntrs ) 
 
 ROOT.RooAbsReal. constraint = _rar_make_constraint_
 

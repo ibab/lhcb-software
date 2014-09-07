@@ -399,7 +399,7 @@ class Manca_pdf (PDF) :
         ## Y(2S)
         # =====================================================================
         self.dm2s  = makeVar ( None ,
-                               "dm2s"      + name ,
+                               "dm2s"      + name    ,
                                "dm2s(%s)"  % name    ,
                                dm_y2s                ,
                                dm_y2s - 0.20 * s_y1s , 
