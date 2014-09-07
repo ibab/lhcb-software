@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-09-07 - Vanya Belyaev
+ - make more use for TCut
+
 ! 2014-09-05 - Vanya Belyaev
 
  - fix a bit matching criteria in requirements 

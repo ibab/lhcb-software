@@ -15,6 +15,7 @@
 // ROOT 
 // ============================================================================
 #include "TTree.h"
+#include "TCut.h"
 // ============================================================================
 // Boost
 // ============================================================================
@@ -41,6 +42,38 @@ namespace
 Analysis::PyIterator::PyIterator 
 ( TTree*              tree  , 
   const std::string&  cuts  , 
+  const unsigned long first , 
+  const unsigned long last  )  
+  : m_tree     ( tree  ) 
+  , m_formula  ( 0     )  
+  , m_current  ( first )
+  , m_last     ( last  )
+{
+  // 
+  if ( 0 == m_tree ) 
+  {
+    m_current = 0 ;
+    m_last    = 0 ;
+  }
+  else
+  { 
+    //
+    m_last    = std::min ( m_last , (unsigned long) tree->GetEntries() ) ;
+    m_formula = new Analysis::Formula ( "" ,  cuts , m_tree ) ;
+    //
+    if ( !m_formula->GetNdim() ) { delete m_formula ; m_formula = 0 ; }
+    else                         { m_tree->SetNotify ( m_formula )  ; }
+    //
+  }
+  //
+  m_tree = next () ;
+}
+// ============================================================================
+// constructor 
+// ============================================================================
+Analysis::PyIterator::PyIterator 
+( TTree*              tree  , 
+  const TCut&         cuts  , 
   const unsigned long first , 
   const unsigned long last  )  
   : m_tree     ( tree  ) 

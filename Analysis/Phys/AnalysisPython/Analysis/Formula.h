@@ -13,6 +13,8 @@
 // ============================================================================
 #include "TTreeFormula.h"
 // ============================================================================
+class TCut ; // ROOT 
+// ============================================================================
 namespace Analysis 
 {
   // ==========================================================================
@@ -37,6 +39,10 @@ namespace Analysis
     /// constructor from name, expression and the tree 
     Formula ( const std::string& name       , 
               const std::string& expression ,
+              TTree*             tree       ) ;
+    /// constructor from name, expression and the tree 
+    Formula ( const std::string& name       , 
+              const TCut&        expression ,
               TTree*             tree       ) ;
     /// virtual destructor 
     virtual ~Formula () ;

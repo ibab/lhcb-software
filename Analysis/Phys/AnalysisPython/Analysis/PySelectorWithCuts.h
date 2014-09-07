@@ -9,6 +9,9 @@
 // ============================================================================
 #include "Analysis/PySelector.h"
 // ============================================================================
+// forward decalrations 
+class TCut ; // ROOT 
+// ============================================================================
 namespace Analysis
 {
   // ==========================================================================
@@ -32,6 +35,10 @@ namespace Analysis
     /// constructor 
     SelectorWithCuts
     ( const std::string& cuts = "" , 
+      TTree*             tree = 0  , 
+      PyObject*          self = 0  ) ;
+    SelectorWithCuts
+    ( const TCut&        cuts      , 
       TTree*             tree = 0  , 
       PyObject*          self = 0  ) ;
     /// virtual destructor 

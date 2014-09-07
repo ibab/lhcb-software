@@ -9,6 +9,7 @@
 // ROOT 
 // ============================================================================
 #include "TTree.h"
+#include "TCut.h"
 // ============================================================================
 /** Implementation file for class Analysis::Formula
  *  @see Analysis::Formula
@@ -28,6 +29,13 @@ Analysis::Formula::Formula
   const std::string& expression ,
   TTree*             tree       ) 
   : TTreeFormula ( name.c_str() , expression.c_str() , tree )
+{}
+// ============================================================================
+Analysis::Formula::Formula
+( const std::string& name       , 
+  const TCut&        expression ,
+  TTree*             tree       ) 
+  : TTreeFormula ( name.c_str() , expression , tree )
 {}
 // ============================================================================
 // destructor 

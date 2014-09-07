@@ -7,6 +7,10 @@
 #include "Analysis/PySelectorWithCuts.h"
 #include "Analysis/Formula.h"
 // ============================================================================
+// ROOT 
+// ============================================================================
+#include "TCut.h"
+// ============================================================================
 /** @file 
  *  Implementation file for class Analysis::SelectorWithCuts
  * 
@@ -26,6 +30,21 @@ Analysis::SelectorWithCuts::SelectorWithCuts
   PyObject*          self ) 
   : Analysis::Selector ( tree , self ) 
   , fMycuts            ( cuts        ) 
+  , fMyformula         ( 0           ) 
+  , m_event            ( 0           )            
+{
+  if ( 0 != tree ) 
+  { fMyformula = new Analysis::Formula ( "" , fMycuts , tree ) ; }
+}
+// ============================================================================
+// constructor 
+// ============================================================================
+Analysis::SelectorWithCuts::SelectorWithCuts
+( const TCut&        cuts , 
+  TTree*             tree , 
+  PyObject*          self ) 
+  : Analysis::Selector ( tree , self      ) 
+  , fMycuts            ( cuts.GetTitle () ) 
   , fMyformula         ( 0           ) 
   , m_event            ( 0           )            
 {

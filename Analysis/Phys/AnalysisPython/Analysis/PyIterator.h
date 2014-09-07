@@ -21,6 +21,7 @@
 // forward declarations 
 // ============================================================================
 class TTree ; // from ROOT 
+class TCut  ;
 // ============================================================================
 namespace Analysis
 {
@@ -42,10 +43,16 @@ namespace Analysis
     // ========================================================================
     /// constructor 
     PyIterator 
-    ( TTree*              tree      , 
-      const std::string&  cuts      , 
-      const unsigned long first = 0 , 
-      const unsigned long last  = boost::integer_traits<unsigned long>::const_max );
+      ( TTree*              tree      , 
+        const std::string&  cuts      , 
+        const unsigned long first = 0 , 
+        const unsigned long last  = boost::integer_traits<unsigned long>::const_max );
+    //
+    PyIterator 
+      ( TTree*              tree      , 
+        const TCut&         cuts      , 
+        const unsigned long first = 0 , 
+        const unsigned long last  = boost::integer_traits<unsigned long>::const_max );
     /// destructor 
     virtual ~PyIterator() ;  // destructor 
     // ========================================================================
@@ -61,7 +68,7 @@ namespace Analysis
   private:
     // ========================================================================
     PyIterator () ;
-    PyIterator ( const PyIterator& ) ;
+    PyIterator           ( const PyIterator& ) ;
     PyIterator& operator=( const PyIterator& ) ;    
     // ========================================================================
   private:
