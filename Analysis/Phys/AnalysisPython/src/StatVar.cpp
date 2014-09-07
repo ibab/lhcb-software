@@ -14,6 +14,7 @@
 // ROOT 
 // ============================================================================
 #include "TTree.h"
+#include "TCut.h"
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -223,6 +224,34 @@ Analysis::StatVar::statVar
   return result ;
 }
 // ============================================================================
+/*  build statistic for the <code>expression</code>
+ *  @param tree       (INPUT) the tree 
+ *  @param expression (INPUT) the expression
+ *  @param cuts       (INPUT) the selection criteria 
+ *
+ *  @code
+ *  tree = ... 
+ *  stat = tree.statVar( 'S_sw' ,'pt>1000') 
+ *  @endcode 
+ *
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2013-10-13
+ */
+// ============================================================================
+Analysis::StatVar::Statistic
+Analysis::StatVar::statVar 
+( TTree*              tree       , 
+  const std::string&  expression ,
+  const TCut&         cuts       , 
+  const unsigned long first      ,
+  const unsigned long entries    )
+{
+  //
+  const std::string _cuts = cuts.GetTitle() ;
+  //
+  return statVar ( tree , expression , _cuts , first , entries) ;
+}
+// ============================================================================
 /*  calculate the covariance of two expressions 
  *  @param tree  (INPUT)  the input tree 
  *  @param exp1  (INPUT)  the first  expresiion
@@ -377,6 +406,40 @@ Analysis::StatVar::statCov
   cov2 ( 1 , 1 ) -= v2_mean * v2_mean ;  
   //
   return stat1.nEntries() ;
+}
+// ============================================================================
+/*  calculate the covariance of two expressions 
+ *  @param tree  (INPUT)  the inpout tree 
+ *  @param exp1  (INPUT)  the first  expresiion
+ *  @param exp2  (INPUT)  the second expresiion
+ *  @param cuts  (INPUT)  the selection criteria 
+ *  @param stat1 (UPDATE) the statistic for the first  expression
+ *  @param stat2 (UPDATE) the statistic for the second expression
+ *  @param cov2  (UPDATE) the covariance matrix 
+ *  @return number of processed events 
+ *  
+ *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+ *  @date   2014-03-27
+ */
+// ============================================================================
+unsigned long 
+Analysis::StatVar::statCov
+( TTree*               tree    , 
+  const std::string&   exp1    , 
+  const std::string&   exp2    , 
+  const TCut&          cuts    , 
+  Analysis::StatVar::Statistic& stat1 ,  
+  Analysis::StatVar::Statistic& stat2 ,  
+  Gaudi::SymMatrix2x2& cov2    , 
+  const unsigned long  first   ,
+  const unsigned long  entries )
+{
+  const std::string _cuts = cuts.GetTitle() ;
+  //
+  return statCov ( tree  , 
+                   exp1  , exp2    , _cuts , 
+                   stat1 , stat2   , cov2  , 
+                   first , entries ) ; 
 }
 // ============================================================================
 // The END 
