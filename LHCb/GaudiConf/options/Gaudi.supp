@@ -22,9 +22,345 @@
    fun:realpath@@GLIBC_2.3
 }
 
-# glibc problems on slc4
+# Root problems
 
-# Root 5.12.00c problems
+{
+   TGenCollectionProxy::PopProxy()
+   Memcheck:Leak
+   match-leak-kinds: reachable
+   fun:_Znwm
+   ...
+   fun:_ZN19TGenCollectionProxy8PopProxyEv
+}
+
+{
+   TMVA::Reader::BookMVA(TString const&, TString const&) operator new(unsigned long)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN4TMVA6Reader7BookMVAERK7TStringS3_
+}
+
+{
+   TMVA::Reader::BookMVA(TString const&, TString const&) operator new[](unsigned long)
+   Memcheck:Leak
+   fun:_Znam
+   ...
+   fun:_ZN4TMVA6Reader7BookMVAERK7TStringS3_
+}
+
+{
+   ROOT : G__params::operator[](char)
+   Memcheck:Leak
+   fun:malloc
+   fun:_ZN9G__paramsixEc
+   fun:G__memfunc_para_setup
+}
+
+{
+   ROOT : G__incsetup_memfunc
+   Memcheck:Leak
+   fun:_Znwm
+   fun:G__incsetup_memfunc
+}
+
+{
+   ROOT : G__malloc
+   Memcheck:Leak
+   fun:malloc
+   fun:G__malloc
+   fun:_Z16G__alloc_var_refIhPFl8G__valueEEviT0_PKcP12G__var_arrayiRS0_
+   fun:_ZL16G__allocvariable8G__valuePS_P12G__var_arrayS2_iiPKcPciRN4Cint19G__DataMemberHandleE
+   fun:_Z14G__letvariableR18G__FastAllocString8G__valueP12G__var_arrayS3_RN4Cint19G__DataMemberHandleE
+   fun:_Z14G__letvariableR18G__FastAllocString8G__valueP12G__var_arrayS3_
+   fun:G__getexpr
+   fun:G__set_stdio
+   fun:G__main
+   fun:G__init_cint
+   fun:_ZN5TCint8ResetAllEv
+}
+
+{
+   ROOT : G__search_tagname
+   Memcheck:Leak
+   fun:malloc
+   fun:G__search_tagname
+}
+
+{
+   ROOT : G__savestring
+   Memcheck:Leak
+   fun:malloc
+   fun:G__savestring
+}
+
+{
+   ROOT : G__tagtable_setup
+   Memcheck:Leak
+   ...
+   fun:G__tagtable_setup
+}
+
+{
+   TGenCollectionProxy::PopProxy()
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN19TGenCollectionProxy9PushProxyEPv
+}
+
+{
+   int PyROOT::BuildRootClassDict<PyROOT::TScopeAdapter, PyROOT::TBaseAdapter, PyROOT::TMemberAdapter>(PyROOT::TScopeAdapter const&, _object*) 
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6PyROOT18BuildRootClassDictINS_13TScopeAdapterENS_12TBaseAdapterENS_14TMemberAdapterEEEiRKT_P7_object
+}
+
+{
+   PyROOT::MakeRootClass(_object*, _object*)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6PyROOT13MakeRootClassEP7_objectS1_
+}
+
+{
+   PyROOT::MakeRootClassFromType(TClass*)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6PyROOT21MakeRootClassFromTypeEP6TClass
+}
+
+{
+   ROOT::DefineBehavior(TQObject*, TQObject*)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN4ROOT14DefineBehaviorEP8TQObjectS1_
+}
+
+{
+   ROOT::Cintex::CINTTypedefBuilder::Setup(Reflex::Scope const&)
+   Memcheck:Leak
+   fun:malloc
+   fun:G__search_typename
+   fun:G__search_typename2
+   fun:_ZN4ROOT6Cintex18CINTTypedefBuilder5SetupERKN6Reflex4TypeE
+}
+
+
+{
+   ROOT::Cintex::CINTScopeBuilder::Setup(Reflex::Scope const&)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN4ROOT6Cintex16CINTScopeBuilder5SetupERKN6Reflex5ScopeE
+}
+
+{
+   ROOT::Cintex::CINTFunctionBuilder::Setup(Reflex::Member const&)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN4ROOT6Cintex19CINTFunctionBuilder5SetupERKN6Reflex6MemberE
+}
+
+{
+   ROOT::Cintex::CintTag(std::string const&)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN4ROOT6Cintex7CintTagERKSs
+}
+
+{
+   TClass::GetListOfMethods()
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6TClass16GetListOfMethodsEv
+}
+
+{
+   TCint::CreateListOfDataMembers(TClass*)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN5TCint23CreateListOfDataMembersEP6TClass
+}
+
+{
+   ROOT::Cintex::CINTClassBuilder::Setup()
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN4ROOT6Cintex16CINTClassBuilder5SetupEv
+}
+
+{
+   ROOT::TGenericClassInfo::GetClass()
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN4ROOT17TGenericClassInfo8GetClassEv
+}
+
+{
+   Cint::G__DataMemberInfo::Init(Cint::G__ClassInfo&)
+   Memcheck:Leak
+   fun:calloc
+   fun:G__malloc
+   ...
+   fun:_ZN4Cint17G__DataMemberInfo4InitERNS_12G__ClassInfoE
+}
+
+{
+   TCint::ClassInfo_HasMethod(void*, char const*)
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:_ZNK5TCint19ClassInfo_HasMethodEPvPKc
+}
+
+{
+   ROOT::AddClass(char const*, short, std::type_info const&, void (*)(), int)
+   Memcheck:Leak
+   fun:_Znam
+   ...
+   fun:_ZN4ROOT8AddClassEPKcsRKSt9type_infoPFvvEi
+}
+
+{
+   ROOT::TDefaultInitBehavior::Register
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN5TList7NewLinkEP7TObjectP8TObjLink
+   fun:_ZN5TList7AddLastEP7TObject
+   fun:_ZN5TList3AddEP7TObject
+   fun:_ZN10THashTable3AddEP7TObject
+   fun:_ZN4TMap3AddEP7TObjectS1_
+   fun:_ZN4ROOT18TMapTypeToClassRec3AddEPKcRP9TClassRec
+   fun:_ZN11TClassTable3AddEPKcsRKSt9type_infoPFvvEi
+   fun:_ZN4ROOT8AddClassEPKcsRKSt9type_infoPFvvEi
+   fun:_ZNK4ROOT20TDefaultInitBehavior8RegisterEPKcsRKSt9type_infoPFvvEi
+}
+
+{
+   ROOT::Cintex::CINTClassBuilder::Setup_inheritance(Reflex::Object&)
+   Memcheck:Leak
+   fun:malloc
+   fun:_ZN9G__heritsixEc
+   fun:G__inheritance_setup
+   fun:_ZN4ROOT6Cintex16CINTClassBuilder17Setup_inheritanceERN6Reflex6ObjectE
+}
+
+{
+   TCint::ProcessLine(char const*, TInterpreter::EErrorCode*) malloc
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:_ZN5TCint11ProcessLineEPKcPN12TInterpreter10EErrorCodeE
+}
+{
+   TCint::ProcessLine(char const*, TInterpreter::EErrorCode*) calloc
+   Memcheck:Leak
+   fun:calloc
+   ...
+   fun:_ZN5TCint11ProcessLineEPKcPN12TInterpreter10EErrorCodeE
+}
+{
+   TCint::ProcessLine(char const*, TInterpreter::EErrorCode*) operator new
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN5TCint11ProcessLineEPKcPN12TInterpreter10EErrorCodeE
+}
+
+{
+   TROOT::ProcessLine(char const*, int*)
+   Memcheck:Leak
+   fun:_Znam
+   ...
+   fun:_ZN5TROOT11ProcessLineEPKcPi
+}
+
+{
+   ROOT : _GLOBAL__sub_* operator new(unsigned long)
+   Memcheck:Leak
+   ...
+   fun:_GLOBAL__sub_*
+}
+
+{
+   ROOT : _GLOBAL__sub_* operator new[](unsigned long)
+   Memcheck:Leak
+   fun:_Znam
+   ...
+   fun:_GLOBAL__sub_*
+}
+
+{
+   ROOT : _GLOBAL__sub_* calloc
+   Memcheck:Leak
+   fun:calloc
+   ...
+   fun:_GLOBAL__sub_*
+}
+
+{
+   ROOT : _GLOBAL__sub_* malloc
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:_GLOBAL__sub_*
+}
+
+{
+   TCint::ResetAll
+   Memcheck:Leak
+   fun:calloc
+   ...
+   fun:_ZN5TCint8ResetAllEv
+}
+
+{
+   TCint::LoadLibraryMap
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN5TCint14LoadLibraryMapEPKc
+}
+
+{
+   ROOT::Cintex::CINTFunctionBuilder::Setup(Reflex::Member const&)
+   Memcheck:Leak
+   fun:malloc
+   fun:_ZN9G__paramsixEc
+   fun:G__memfunc_setup_imp
+   fun:G__memfunc_setup
+   fun:G__usermemfunc_setup
+   fun:_ZN4ROOT6Cintex19CINTFunctionBuilder5SetupERKN6Reflex6MemberE
+}
+
+{
+   PyROOT : TMethodHolder Initialize()
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN6PyROOT13TMethodHolderINS_13TScopeAdapterENS_14TMemberAdapterEE13InitCallFunc_Ev
+   fun:_ZN6PyROOT13TMethodHolderINS_13TScopeAdapterENS_14TMemberAdapterEE10InitializeEv
+}
+
+{
+   PyROOT : TSTLStringConverter::SetArg
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZNSs4_Rep9_S_createEmmRKSaIcE
+   fun:_ZNSs12_S_constructIPKcEEPcT_S3_RKSaIcESt20forward_iterator_tag
+   fun:_ZNSsC1EPKcmRKSaIcE
+   fun:_ZN6PyROOT19TSTLStringConverter6SetArgEP7_objectRNS_12TParameter_tEPN4Cint11G__CallFuncEl
+}
+
 {
   Reflex/FunctionBuilder
   Memcheck:Addr1
@@ -307,6 +643,30 @@
 }
 
 {
+   Reflex::ScopeName::ScopeName(char const*, Reflex::ScopeBase*)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6Reflex9ScopeNameC1EPKcPNS_9ScopeBaseE
+}
+
+{
+   Reflex::TypeName::TypeName(char const*, Reflex::TypeBase*, std::type_info const*)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN9__gnu_cxx8hash_mapIPPKcPN6Reflex8TypeNameENS_4hashIS3_EESt8equal_toIS3_ESaIS6_EEixERKS3_
+}
+
+{
+   Reflex::TypeName::SetTypeId(std::type_info const&)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZNK6Reflex8TypeName9SetTypeIdERKSt9type_info
+}
+
+{
   memfunc_para_setup
   Memcheck:Leak
   fun:_vgrZU_libcZdsoZa_malloc
@@ -461,6 +821,74 @@
   fun:_ZN14ServiceManager10getServiceERKSsRP8IServiceb
 }
 
+{
+   PropertyWithVerifier<std::vector<std::string, std::allocator<std::string> >, NullVerifier<std::vector<std::string, std::allocator<std::string> > > >::setValue(std::vector<std::string, std::allocator<std::string> > const&)
+   Memcheck:Leak
+   match-leak-kinds: possible
+   fun:_Znwm
+   ...
+   fun:_ZN20PropertyWithVerifierISt6vectorISsSaISsEE12NullVerifierIS2_EE8setValueERKS2_
+}
+
+{
+   PropertyWithVerifier<std::vector<std::string, std::allocator<std::string> >, BoundedVerifier<std::vector<std::string, std::allocator<std::string> > > >::setValue(std::vector<std::string, std::allocator<std::string> > const&)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN20PropertyWithVerifierISt6vectorISsSaISsEE15BoundedVerifierIS2_EE8setValueERKS2_
+}
+
+{
+   GeometryInfoPlus::registerCondition()
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN16GeometryInfoPlus17registerConditionEv
+}
+
+{
+   SimpleProperty<bool, BoundedVerifier<bool> >::SimpleProperty(BoundedVerifier<bool>)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN14SimplePropertyIb15BoundedVerifierIbEEC1ES1_
+}
+
+{
+   SimpleProperty<std::string, BoundedVerifier<std::string> >::SimpleProperty(std::string const&, std::string const&, BoundedVerifier<std::string>)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN14SimplePropertyISs15BoundedVerifierISsEEC1ERKSsS4_S1_
+}
+
+{
+   SimpleProperty<std::string, BoundedVerifier<std::string> >::SimpleProperty(BoundedVerifier<std::string>)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN14SimplePropertyISs15BoundedVerifierISsEEC1ES1_
+}
+
+{
+   Gaudi : SimpleProperty<int, BoundedVerifier<int> >::SimpleProperty(BoundedVerifier<int>)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN14SimplePropertyIi15BoundedVerifierIiEEC1ES1_
+}
+
+{
+   SimpleProperty<unsigned int, BoundedVerifier<unsigned int> >::SimpleProperty(BoundedVerifier<unsigned int>)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN14SimplePropertyIj15BoundedVerifierIjEEC1ES1_
+}
+
+{
+   UpdateManagerSvc::Item::addChild(BaseObjectMemberFunction*, UpdateManagerSvc::Item*)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN16UpdateManagerSvc4Item8addChildEP24BaseObjectMemberFunctionPS0_
+}
+
 # From UnpackMCVertex - LHCb v21r8
 {
   UnpackMCVertex
@@ -472,6 +900,25 @@
 }
 
 # To supress warnings when accessing data via XRootD
+
+{
+   XrdClient : TXNetSystem::TXNetSystem
+   Memcheck:Leak
+   fun:malloc
+   fun:strdup
+   fun:_ZN9XrdOucEnv6PutIntEPKcl
+   fun:_ZN12XrdClientEnvC1Ev
+   fun:_ZN12XrdClientEnv8InstanceEv
+   fun:_ZN11TXNetSystemC1EPKcb
+}
+
+{
+   TXNetSystem::TXNetSystem(char const*, bool)
+   Memcheck:Leak
+   fun:realloc
+   ...
+   fun:_ZN11TXNetSystemC1EPKcb
+}
 
 {
    libcrypto : uninitialised Conditional
@@ -488,11 +935,10 @@
 }
 
 {
-   XrdOucString::bufalloc(int)
+   libNetx.so : Leak
    Memcheck:Leak
-   fun:malloc
-   fun:realloc
-   fun:_ZN12XrdOucString8bufallocEi
+   ...
+   obj:/*/root/lib/libNetx.so
 }
 
 {
@@ -506,12 +952,12 @@
    bn_mul_mont : uninitialised Value8
    Memcheck:Value8
    fun:bn_mul_mont
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
-   obj:*
+}
+
+{
+   Curl_nss_init (in /usr/lib64/libcurl.so.4.1.1)
+   Memcheck:Leak
+   fun:malloc
+   ...
+   fun:Curl_nss_init
 }

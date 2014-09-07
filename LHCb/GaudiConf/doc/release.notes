@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-09-07 - Chris Jones
+ - Add option ClearRegistry to CaloPackingConf.py
+ - Update the valgrind suppression files.
+
 ! 2014-07-24 - Marco Cattaneo
  - Add "Tracking" to KnownUpackingTypes in DstConf. If present in EnableUnpack
    list, enable Track and Vertex unpackers and disable corresponding packers.

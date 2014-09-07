@@ -37,10 +37,11 @@ class CaloDstPackConf ( ConfigurableUser ) :
                            'MergedPi0s'   ,
                            'SplitPhotons'
                            ]       , ## The list of hypos to be packed 
-        'Enable'       : False     , ## Enable/disable the packing 
-        'OutputLevel'  : INFO      , ## The global output level
-        'AlwaysCreate' : False     , ## Abort/continue if missing input to packers
-        'EnableChecks' : False
+        'Enable'        : False    , ## Enable/disable the packing 
+        'OutputLevel'   : INFO     , ## The global output level
+        'AlwaysCreate'  : False    , ## Abort/continue if missing input to packers
+        'ClearRegistry' : True     , ## Clear the registry of the inut data after packing 
+        'EnableChecks'  : False
        }
     ## documentation lines
     _propetyDocDct = {
@@ -49,6 +50,7 @@ class CaloDstPackConf ( ConfigurableUser ) :
         'Enable'      : """ Enable/disable the packing     """ , 
         "OutputLevel" : """ The global output level        """ ,
         'AlwaysCreate': """ Flags whether to create output packed objects even if input missing """,
+        'ClearRegistry':""" Flag to turn on the clearing of the registry for input data """,
         "EnableChecks": """ Enable packing checks """ 
         }
     
@@ -78,11 +80,12 @@ class CaloDstPackConf ( ConfigurableUser ) :
         if not self.getProp('Enable') : return
         
         caloHypoDstPack (
-            self.getProp ('Sequence'    ) ,
-            self.getProp ('Enable'      ) ,
-            self.getProp ('Hypos'       ) ,
-            self.getProp ('OutputLevel' ) ,
-            self.getProp ('AlwaysCreate') ,
+            self.getProp ('Sequence'    )  ,
+            self.getProp ('Enable'      )  ,
+            self.getProp ('Hypos'       )  ,
+            self.getProp ('OutputLevel' )  ,
+            self.getProp ('AlwaysCreate')  ,
+            self.getProp ('ClearRegistry') ,
             self.getProp ('EnableChecks')
             )
 
@@ -146,8 +149,9 @@ def caloHypoDstPack (
                  'MergedPi0s'   ,
                  'SplitPhotons' ] ,
     level    = INFO               ,  
-    alwaysCreate = False          ,
-    EnableChecks = False
+    alwaysCreate  = False         ,
+    clearRegistry = True          ,
+    enableChecks  = False
     ) :
     """
     Define the Dst-packing rules
@@ -164,12 +168,13 @@ def caloHypoDstPack (
         _input  =  'Rec/Calo/' + hypo  
         _output = 'pRec/Calo/' + hypo
         _alg    = PackCaloHypo(
-            name               = _name        ,
-            AlwaysCreateOutput = alwaysCreate ,
-            InputName          = _input       ,
-            OutputName         = _output      ,
-            OutputLevel        = level        ,
-            EnableCheck        = EnableChecks )
+            name               = _name         ,
+            AlwaysCreateOutput = alwaysCreate  ,
+            InputName          = _input        ,
+            OutputName         = _output       ,
+            OutputLevel        = level         ,
+            ClearRegistry      = clearRegistry ,
+            EnableCheck        = enableChecks  )
         sequence.Members .append ( _alg )
         log.debug ('CaloHypoDstPack: add %s ' % _alg.getFullName() )
 

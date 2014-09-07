@@ -1,0 +1,14 @@
+
+{
+   XmlTools : string setItem
+   Memcheck:Leak
+   fun:_Znam
+   fun:_ZL7setItemPKcS0_RK4ItemP6Struct
+}
+
+{
+   XmlTools::Evaluator::setVariable(char const*, char const*)
+   Memcheck:Leak
+   fun:_Znam
+   fun:_ZN8XmlTools9Evaluator11setVariableEPKcS2_
+}

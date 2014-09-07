@@ -4,6 +4,18 @@
 ##-----------------------------------------------------------------------------##
 
 {
+   PyList_New
+   Memcheck:Leak
+   fun:malloc
+   fun:PyList_New
+}
+{
+   PyObject_Malloc
+   Memcheck:Leak
+   fun:malloc
+   fun:PyObject_Malloc
+}
+{
   PyObject_Free : Invalid read of size 4
   Memcheck:Addr4
   fun:PyObject_Free
@@ -70,4 +82,69 @@
    Memcheck:Leak
    fun:malloc
    fun:PyString_FromStringAndSize
+}
+{
+   PyInt_FromLong
+   Memcheck:Leak
+   fun:malloc
+   fun:PyInt_FromLong
+}
+{
+   PyROOT::BuildRootClassDict
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN6PyROOT18BuildRootClassDictINS_13TScopeAdapterENS_12TBaseAdapterENS_14TMemberAdapterEEEiRKT_P7_object
+}
+
+{
+   PyROOT::CreateConverter(std::string const&, long)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6PyROOT15CreateConverterERKSsl
+}
+
+{
+   PyROOT::CreateExecutor(std::string const&)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6PyROOT14CreateExecutorERKSs
+}
+
+{
+   PyROOT::CreateConverter(std::string const&, long)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN12_GLOBAL__N_118CreateIntConverterEl
+}
+
+{
+   PyROOT::CreateExecutor(std::string const&)
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN12_GLOBAL__N_118CreateLongExecutorEv
+}
+
+{
+   PyROOT::MethodProxy::MethodInfo_t::MethodInfo_t()
+   Memcheck:Leak
+   fun:_Znwm
+   fun:_ZN6PyROOT11MethodProxy12MethodInfo_tC1Ev
+}
+
+{
+   PyROOT::MethodProxy_New(std::string const&, PyROOT::PyCallable*)
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6PyROOT15MethodProxy_NewERKSsPNS_10PyCallableE
+}
+
+{
+   PyROOT::TMethodHolder<PyROOT::TScopeAdapter, PyROOT::TMemberAdapter>::InitCallFunc_()
+   Memcheck:Leak
+   fun:_Znwm
+   ...
+   fun:_ZN6PyROOT13TMethodHolderINS_13TScopeAdapterENS_14TMemberAdapterEE13InitCallFunc_Ev
 }
