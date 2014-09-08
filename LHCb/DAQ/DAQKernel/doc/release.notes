@@ -4,6 +4,7 @@
 ! Purpose     : common DAQ/Encoder/decoder base classes
 !------------------------------------------------------------------------------
 
+!========================= DAQKernel v1r1 2014-09-08 =========================
 ! 2014-07-26 - Chris Jones
  - Some minor coding improvements to the base class.
 

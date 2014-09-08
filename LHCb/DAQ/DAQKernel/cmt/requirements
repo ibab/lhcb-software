@@ -4,7 +4,7 @@
 #=====================================================================
 
 package           DAQKernel
-version           v1r0
+version           v1r1
 
 # ================ structure ==============================================
 branches DAQKernel cmt doc src
