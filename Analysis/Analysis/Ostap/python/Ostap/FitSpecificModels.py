@@ -326,7 +326,12 @@ class Manca_pdf (PDF) :
     def __init__ ( self          ,
                    mass          ,
                    name   = 'Y'  ,
-                   power  = 0    ) :
+                   power  = 0    ,
+                   m1s    = None ,
+                   sigma  = None ,
+                   a0     = 1.91 ,
+                   a1     = None ,
+                   a2     = None ) : 
 
         #
         PDF.__init__ ( self , name )
@@ -356,44 +361,47 @@ class Manca_pdf (PDF) :
         ## Y(1S)
         # =====================================================================
         
-        self.a0   = makeVar ( None ,
-                              'a0m_%s' % name ,
-                              "a0 for Needham's function" ,
+        self.a0   = makeVar ( a0                 ,
+                              'a0m_%s' % name    ,
+                              "a0 for Needham's function" , a0 , 
                               1.91               ,    0.1             ,   3.0            )
-        self.a1   = makeVar ( None ,
-                              'a1m_%s' % name ,
-                              "a1 for Needham's function" ,
-                              1.1174 / gev_      ,  -10.0  / gev_     ,  10.0  /gev_     ) 
-        self.a2   = makeVar ( None ,
-                              'a2m_%s' % name ,
-                              "a2 for Needham's function" ,
+
+        self.a1   = makeVar ( a1                 ,
+                              'a1m_%s' % name    ,
+                              "a1 for Needham's function" , a1 ,  
+                              1.1174 / gev_      ,  -10.0  / gev_     ,  10.0  /gev_     )
+        
+        self.a2   = makeVar ( a2                 ,
+                              'a2m_%s' % name    ,
+                              "a2 for Needham's function" , a2 , 
                               -5.299 / gev_**2   , -100.0  / gev_**2  , 100.0  /gev_**2  )
 
-        self.Y1S  = Needham_pdf (
+        ## default logic does not work nicely here, therefore we need to be explicit:
+        if a0 is None and not self.a0.isConstant () : self.a0.fix (  1.91             ) 
+        if a1 is None and not self.a1.isConstant () : self.a1.fix (  1.1174 / gev_    )
+        if a2 is None and not self.a2.isConstant () : self.a2.fix ( -5.299  / gev_**2 ) 
+        
+        self.m1s   = makeVar ( m1s                   ,
+                               "m1S_%s"       % name ,
+                               "mass Y1S(%s)" % name , m1s ,
+                               m_y1s , m_y1s - 0.15 * s_y1s , m_y1s + 0.15 * s_y1s ) 
+        
+        self.s1s   = makeVar ( sigma                  ,
+                               "s1S_%s"        % name ,
+                               "sigma Y1S(%s)" % name , sigma ,
+                               s_y1s , 0.3 * s_y1s , 4 * s_y1s )
+        
+        self.sigma = self.s1s 
+        self.Y1S   = Needham_pdf (
             name + '1S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
             mass     = self.mass  ,
-            mean     = m_y1s      ,
-            sigma    = s_y1s      ,
+            mean     = self.m1s   ,
+            sigma    = self.s1s   ,
             a0       = self.a0    ,
             a1       = self.a1    ,
             a2       = self.a2    ) 
-        #
-        ## adjust a bit the values
-        #
-        self.m1s  = self.Y1S.mean
-        self.m1s.release   ()
-        self.m1s.setVal    ( m_y1s                )
-        self.m1s.setMin    ( m_y1s - 0.15 * s_y1s )
-        self.m1s.setMax    ( m_y1s + 0.15 * s_y1s )
-        #
-        self.sigma = self.Y1S.sigma
-        self.sigma.release () 
-        self.sigma.setVal  (       s_y1s )
-        self.sigma.setMin  ( 0.3 * s_y1s )
-        self.sigma.setMax  ( 3.5 * s_y1s )
-        self.s1s  = self.sigma
         
         # =====================================================================
         ## Y(2S)
@@ -538,10 +546,16 @@ class Manca2_pdf (PDF) :
     The final fit model for Y->mu+mu- fit
     This is an effective function for fit in global bin, without pt/y-binning
     """
-    def __init__ ( self          ,
-                   mass          ,
-                   name   = 'Y'  ,
-                   power  = 0    ) :
+    def __init__ ( self            ,
+                   mass            ,
+                   name   = 'Y'    ,
+                   power  = 0      ,
+                   m1s    = None   ,
+                   sigma  = None   ,
+                   alphaL = 1.5462 ,
+                   alphaR = 1.6952 ,
+                   nL     = 1.3110 ,
+                   nR     = 1.5751e+01 ) :
 
         #
         PDF.__init__ ( self , name )
@@ -554,9 +568,9 @@ class Manca2_pdf (PDF) :
         elif   mass.getMin() < 10000  and  10200  <= mass.getMax()  : gev_ = 1000
         else : raise TypeError ( "Illegal mass range %s<m<%s"
                                  % ( mass.getMin() , mass.getMax() ) ) 
-        
-        m_y1s  =  9.46030     * gev_ 
-        s_y1s  =  4.3679e-02  * gev_ 
+
+        m_y1s  =  9.46030     * gev_
+        s_y1s  =  4.03195e-02 * gev_ 
         dm_y2s = 10.02326     * gev_ - m_y1s
         dm_y3s = 10.3552      * gev_ - m_y1s
 
@@ -571,52 +585,47 @@ class Manca2_pdf (PDF) :
         # =====================================================================
         ## Y(1S)
         # =====================================================================
-        self.aL    = makeVar ( None                    ,
+        self.aL    = makeVar ( alphaL                  ,
                                "aL_%s"          % name ,
-                               "#alpha_{L}(%s)" % name , 1.52 , 1.52 , 0 , 10 )
-        self.nL    = makeVar ( None                    ,                     
+                               "#alpha_{L}(%s)" % name , alphaL , 1.5462     , 0 , 10 )
+        self.nL    = makeVar ( nL                      ,                     
                                "nL_%s"          % name ,
-                               "n_{L}(%s)"      % name , 1.35 , 1.35 , 0 , 10 )
-        self.aR    = makeVar ( None                    ,
+                               "n_{L}(%s)"      % name , nL     , 1.3119     , 0 , 10 )
+        self.aR    = makeVar ( alphaR                  ,
                                "aR_%s"          % name ,
-                               "#alpha_{R}(%s)" % name , 1.76 , 1.76 , 0 , 10 )
-        self.nR    = makeVar ( None                    ,
+                               "#alpha_{R}(%s)" % name , alphaR , 1.6952e+00 , 0 , 10 )
+        self.nR    = makeVar ( nR                      ,
                                "nR_%s"          % name ,
-                               "n_{R}(%s)"      % name , 9    , 9    , 0 , 15 )
+                               "n_{R}(%s)"      % name , nR     , 1.5751e+01 , 0 , 25 )
         
-        self.Y1S  = CB2_pdf (
+        self.m1s   = makeVar ( m1s                   ,
+                               "m1S_%s"       % name ,
+                               "mass Y1S(%s)" % name , m1s ,
+                               m_y1s , m_y1s - 0.15 * s_y1s , m_y1s + 0.15 * s_y1s ) 
+        
+        self.s1s   = makeVar ( sigma                  ,
+                               "s1S_%s"        % name ,
+                               "sigma Y1S(%s)" % name , sigma ,
+                               s_y1s , 0.3 * s_y1s , 4 * s_y1s )
+        self.sigma = self.s1s
+        
+        self.Y1S   = CB2_pdf (
             name + '1S'           ,
             mass.getMin()         ,
             mass.getMax()         ,
             mass     = self.mass  ,
-            mean     = m_y1s      ,
-            sigma    = s_y1s      ,
+            mean     = self.m1s   ,
+            sigma    = self.s1s   ,
             alphaL   = self.aL    ,
             alphaR   = self.aR    ,
             nL       = self.nL    ,
             nR       = self.nR    )
         
-        #
-        ## adjust a bit the values
-        #
-        self.m1s  = self.Y1S.mean
-        self.m1s.release   ()
-        self.m1s.setVal    ( m_y1s                )
-        self.m1s.setMin    ( m_y1s - 0.15 * s_y1s )
-        self.m1s.setMax    ( m_y1s + 0.15 * s_y1s )
-        #
-        self.sigma = self.Y1S.sigma
-        self.sigma.release () 
-        self.sigma.setVal  (       s_y1s )
-        self.sigma.setMin  ( 0.3 * s_y1s )
-        self.sigma.setMax  ( 3.5 * s_y1s )
-        self.s1s  = self.sigma
-
         # =====================================================================
         ## Y(2S)
         # =====================================================================
-        self.dm2s  = makeVar ( None ,
-                               "dm2s"      + name ,
+        self.dm2s  = makeVar ( None                  ,
+                               "dm2s"      + name    ,
                                "dm2s(%s)"  % name    ,
                                dm_y2s                ,
                                dm_y2s - 0.20 * s_y1s , 
@@ -653,8 +662,8 @@ class Manca2_pdf (PDF) :
         # =====================================================================
         ## Y(3S)
         # =====================================================================
-        self.dm3s  = makeVar ( None ,
-                               "dm3s"      + name ,
+        self.dm3s  = makeVar ( None                  ,
+                               "dm3s"      + name    ,
                                "dm3s(%s)"  % name    ,
                                dm_y3s                ,
                                dm_y3s - 0.20 * s_y1s , 

@@ -222,23 +222,32 @@ class PDF (object) :
                 logger.warning ( 'PDF(%s).fitTo, unknown argument type %s, skip it ' % ( self.name , type ( a ) ) ) 
                 continue
             _args.append ( a )
-            
+
+        ncpu_added = False 
         for k,a in kwargs.iteritems() :
-            print 'LOOP INSIDE!!', k, a 
             if isinstance ( a , ROOT.RooCmdArg ) :
                 logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s' % ( self.name , k ) )  
                 _args.append ( a )
                 continue
-            elif k.upper() in ( 'WEIGHTED' , 'SUMW2' , 'SUMW2ERROR' )  and isinstance ( a , bool ) and dataset.isWeighted() :
+            elif k.upper() in ( 'WEIGHTED' , 'SUMW2'  , 'SUMW2ERROR' )  and isinstance ( a , bool ) and dataset.isWeighted() :
                 _args.append   (  ROOT.RooFit.SumW2Error( a ) )
                 logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s/%s' % ( self.name , k , a ) )                 
+            elif k.upper() in ( 'NCPU' , 'NCPUS' , 'NUMCPU' , 'NUMCPUS' )  and isinstance ( a , int ) and 1<= a : 
+                _args.append   (  ROOT.RooFit.NumCPU( a  ) ) 
+                logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s/%s' % ( self.name , k , a ) )
+                ncpu_added = True 
             else : 
                 logger.warning ( 'PDF(%s).fitTo, unknown/illegal keyword argument type %s/%s, skip it ' % ( self.name , k , type ( a ) ) )
                 continue            
 
-        _args = tuple( _args ) 
 
-        
+        ##
+        if not ncpu_added :
+            logger.debug  ( 'PDF(%s).fitTo: NCPU is added ' ) 
+            _args.append  (  ncpu ( len ( dataset ) ) )
+            
+        _args = tuple ( _args )
+            
         if silent : from Ostap.Utils import RooSilent as Context
         else      : from Ostap.Utils import NoContext as Context
         
@@ -247,10 +256,9 @@ class PDF (object) :
         #
         context = Context ()         
         with context :
-            
+
             result =  self.pdf.fitTo ( dataset   ,
                                        ROOT.RooFit.Save (   ) ,
-                                       ncpu ( len ( dataset ) ) ,
                                        *_args     )
             
             if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
@@ -294,9 +302,20 @@ class PDF (object) :
         if not draw :
             return result, None 
         
+        return result, self.draw ( dataset , nbins = nbins , silent = silent )
+    
+    ## draw fit results 
+    def draw ( self , dataset , nbins = 100 , silent = False ) :
+        """    
+        Visualize the fits results
+        """
+
         #
         ## again the context
         # 
+        if silent : from Ostap.Utils import RooSilent as Context
+        else      : from Ostap.Utils import NoContext as Context
+        #
         context = Context () 
         with context :
 
@@ -349,7 +368,7 @@ class PDF (object) :
             
             frame.Draw()
             
-            return result, frame 
+            return frame 
 
     ## fit the histogram (and draw it)
     def fitHisto ( self , histo , draw = False , silent = False , *args , **kwargs ) :
