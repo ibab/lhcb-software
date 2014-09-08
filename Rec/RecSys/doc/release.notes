@@ -5,6 +5,145 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r1>2014-09-09 RecSys v17r1</A></H1><PRE>
+This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
+
+- Packages modified: Calo/CaloPIDs v5r19, Calo/CaloReco v5r21,
+    Pr/PrAlgorithms v1r14, Pr/PrMCTools v2r4, Pr/PrPixel v1r9,
+    Rec/GlobalReco v6r49, Rec/RecAlgs v3r2, Rec/RecConf v2r18,
+    Tf/PatAlgorithms v4r35, Tf/TfKernel v2r26, Tf/TrackSys v9r2,
+    Tr/TrackExtrapolators v2r34, Tr/TrackFitEvent v6r3, Tr/TrackFitter v5r2,
+    Tr/TrackMonitors v2r4, Tr/TrackTools v5r4
+
+- In Calo/CaloPIDs v5r19
+  . CaloElectronMatch, CaloBremMatch.cpp, CaloPhotonMatch.cpp :
+    decrease verbosity of tolerable errors to WARNING
+  . CaloElectronMatch : extrapolate the track to the CaloHypo Z position instead
+                        of ZShowerMax plane
+
+- In Calo/CaloReco v5r21
+  . Various CPU performance improvements.
+  . CaloECorrection.cpp, CaloSCorrection.cpp : correct defaults for missing
+    correction functions in CondDB and add more protection
+  . CaloCorrectionBase/CaloECorrection/CaloSCorrection : implement correction
+    propagation to Covariance
+
+- In Pr/PrAlgorithms v1r14
+  . Removed unused Kalman Fitter tool in PrDownstream.h
+  . Added several improvements to PrDownstream - can be switched on with the
+    option PrDownstream().Mode = False ; the new approach includes
+    1) Vetoing of Seeds that share FT hits with reasonably good ForwardTracks
+    2) Building several track candidates and fiting them separately instead of
+    putting all uv hits on one candidate and doing outlier removal
+    3) Keeping more than one candidate per seed if we can't decide which one is
+    the best in terms of chi2
+  . By default the old algorithm should run
+  . Add Doxygen comments
+
+- In Pr/PrMCTools v2r4
+  . Make Best track location configurable in PrChecker
+
+- In Pr/PrPixel v1r9
+  . Type conversion carried over most of the code from double to single
+    floating point precision.
+  . PrPixelTrack fit and covariance functions coded in SSE / SSE2 intrinsics.
+
+- In Rec/GlobalReco v6r49
+  . ChargedProtoParticleMaker : If output already exists clear and reuse.
+  . NeutralProtoPAlg : Change default value to +1 for IsPhoton when variable is
+                       not evaluated (i.e. pt<2GeV hence not merged)
+
+- In Rec/RecAlgs v3r2
+  . Replace 'Other/RawEvent' with 'Calo/RawEvent' in default RecInit.cpp 
+    search list, for forward compatibility with RawEvent format 4.0
+
+- In Rec/RecConf v2r18
+  . Add 'SkipTracking' slot to RecSysConf and RecMoniConf. If enabled, tracking
+    sequences are skipped. Used by Brunel to reprocess from DST without 
+    rerunning the tracking 
+
+- In Tf/PatAlgorithms v4r34, v4r35
+  . Make PatForwardTool so that it only exposes 'const' methods.
+  . PatFwdTool: tweak RL ambiguity resolution code so that it can be const
+  . PatSeedingTool, PatSeedTrack: use a Bloom filter to quickly detect tracks
+    which have no overlap in hits after xz search. See PatAlgorithms release
+    notes for discussion of performance improvements this brings
+  . PatSeedingTool: properties CloneMaxXDistIT and CloneMaxXDistOT are obsolete
+    now (BloomFilter is more reliable and faster)
+  . Unify scalar and vector version of PatFwdTool::xAtReferencePlane_ by using
+    variadic templates to gather/scatter the vectors to generate both scalar and
+    vector versions from the same source, based on the number of arguments. 
+    This produces optimal code for both cases (i.e. fully inlined, no extra 
+    function calls) without having to write a lot of overloads and/or
+    specializations of the gather/scatter operations. 
+  . Generalize the vectorization types 
+  . Unify the with/without B-field versions of PatFwdTool::xAtReferencePlane
+  . Move the skipping of used hits from PatForwardTool to PatForward. This avoids
+    having to look up all hits for all seeds, and instead does it once per event.
+  . Tweak some inline methods a bit...
+  . Further optimize PatForwardTool:fillXList
+  . Ensure that when using PatForwardTool directly, i.e. not from PatForward,
+    that PatTStationHitManager::prepareHits() is invoked. Without this call, the
+    'hasNext' and 'hasPrevious' information on PatForwardHits is missing (see
+    PatAlgorithms release.notes for effect of this)
+  . Make PatFwdCandidate 'vector friendly' i.e. don't enforce types on a few
+    member functions that perform arithmetic.
+  . Update PatFwdTool to use the above, and make it more 'type neutral' as well.
+  . Added a few useful counters to PatForwardTool 
+  . Added TrackUsedLHCbID tool to PatForwardTool: allows to exclude hits that
+    have already been used elsewhere
+  . Make the skipping of used seed tracks optional in PatForwardTool
+    default: do not skip (false) can be switched on through property skipUsedSeeds
+  . Provide, and use vector, interface version of PatFwdTool::xAtReference, 
+    PatFwdTool::setXAtReference
+    o Update PatForwardTool to use above vector interface (changes results at the
+      permille level as x boundaries are now treated left-right symmetrically)
+    o Implement an explicitly vectorized (using gcc vector extension, see
+      https://gcc.gnu.org/onlinedocs/gcc/Vector-Extensions.html; note that clang
+      supports these as well: 
+      http://clang.llvm.org/docs/LanguageExtensions.html#vectors-and-extended-vectors), 
+      branch-free version of PatFwdTool::xAtReference, 
+      and use it in PatFwdTool::setXAtReference
+    o Enable vectorization only when using gcc...  icc and clang don't (yet)
+      support all of the extensions used for this.
+  . Fix clang brace warnings
+
+ - In Tf/TfKernel v2r26
+   . add a 'hitsInXRange' method to TStationHitManager (i.e. both lower and upper
+     bound)
+  . Extend OTHit such that is possible to get the driftTime _without_ the 
+    (expensive) walk correction. And in the OTHit constructor, which ask for 
+    driftTime at the middle of the station, ensure it skips the walk correction
+  . Add a method in RecoFuncs which allows one to update the hits without
+    doing the walk correction. 
+  . Replace size_t by int to specify layer/station/region -- int more than large
+    enough to enumerate them, and int division is faster than size_t division.
+
+- In Tf/TrackSys v9r2
+  . Use standard tracking sequence also for 2010 data. Previously was using
+    TsaSeed instead of PatSeed and non-standard GECs
+  . In RecoTracking.py, factor out the RAW bank decoding into a separate
+    RecoTracking.DecodeTracking(), so it can be called independently, to just
+    decode the Raw banks without running the tracking sequences.
+
+- In Tr/TrackExtrapolators v2r34
+  . Fix memory leak in TrackStateProvider::finalize
+
+- In Tr/TrackFitEvent v6r3
+  . Added method to KalmanFitResult to count number of active hits of given type
+  . Fixed (inconsequential) bug in FitNode smoother
+
+- In Tr/TrackFitter v5r2
+  . Added functionality to TrackMasterFitter to _not_ set scattering momentum for
+    velo-only tracks
+  . Hide counters in TrackEventFitter behind msgLevel(INFO) to save time
+
+- In Tr/TrackMonitors v2r4
+  . Improve the FPE protection in AlignmentOnlineMonitor
+
+- In Tr/TrackTools v5r4
+  . Make TrackVelodEdxCharge capable of running on tracks without measurements
+
 </PRE><H1><A NAME=v17r0>2014-07-14 RecSys v17r0</A></H1><PRE>
 This version uses Gaudi v25r3, LHCb v38r0 and Lbcom v16r0 (and ROOT v6.00.00)
 
