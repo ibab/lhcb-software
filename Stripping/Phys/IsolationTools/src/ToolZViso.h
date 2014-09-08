@@ -35,7 +35,6 @@
 #include "Kernel/GetIDVAlgorithm.h"
 #include "Kernel/IRelatedInfoTool.h"
 #include "Kernel/IParticleDictTool.h"
-#include "IsolationInfo.h"
 
 
 //#if not defined(__CINT__) || defined(__MAKECINT__)

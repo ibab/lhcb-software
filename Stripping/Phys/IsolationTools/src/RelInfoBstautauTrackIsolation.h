@@ -13,8 +13,6 @@
 #include "MVADictTools/TMVATransform.h"
 #include "Kernel/IParticleDictTool.h"
 #include "Event/Particle.h"
-#include "IsolationInfo.h"
-
 
 /** @class RelInfoBstautauTrackIsolation RelInfoBstautauTrackIsolation.h
  *
