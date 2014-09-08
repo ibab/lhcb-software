@@ -4,11 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v4r4 2014-09-08 =========================
 ! 2014-09-08 - Chris Jones
  - Add an option ClearRegistry to various packers to control if the address
    of the input data is cleared or not after packing.
-
-!========================= EventPacker v4r4 2014-09-08 =========================
 
 ! 2014-09-05 - Chris Jones
  - Add support for packing custom MuonPID objects produced by stripping lines.
