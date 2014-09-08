@@ -112,7 +112,8 @@ class A1MuMuConf(LineBuilder) :
                                                  postscale = config['A1MuMu_LinePrescale'],
                                                  RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                  checkPV   = config['A1MuMu_checkPV'],
-                                                 selection = self.SelA1MuMu
+                                                 selection = self.SelA1MuMu,
+                                                 MDSTFlag = True
                                                  )
                 
                 
@@ -134,7 +135,8 @@ class A1MuMuConf(LineBuilder) :
                                                 postscale = config['A1MuMu_LinePrescale'],
                                                 RequiredRawEvents = ["Muon","Calo","Rich","Velo","Tracker"],
                                                 checkPV   = config['A1MuMu_checkPV'],
-                                                selection = self.SelA1MuMuSameSign
+                                                selection = self.SelA1MuMuSameSign,
+                                                MDSTFlag = True
                                                 )
 
             
