@@ -49,13 +49,13 @@ public:
 
 private:
 
-  IDVAlgorithm* m_dva;
-  ILifetimeFitter* m_fit;
-
   const LHCb::Vertex* originVertex( const  LHCb::Particle*
                                     , const LHCb::Particle* ) const;
 
-  std::string m_toolName;
+private:
+
+  IDVAlgorithm* m_dva;
+  const ILifetimeFitter* m_fit;
   bool        m_fitToPV;
 
 };

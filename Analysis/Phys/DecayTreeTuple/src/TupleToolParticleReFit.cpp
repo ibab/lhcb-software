@@ -43,10 +43,6 @@ DECLARE_TOOL_FACTORY( TupleToolParticleReFit )
     , m_vtxfitter(0)
 {
   declareInterface<IParticleTupleTool>(this);
-
-  declareProperty("PropertimeFitterName", m_timefitterName = "PropertimeFitter" );
-  declareProperty("VertexFitterName",     m_vertexfitterName = "OfflineVertexFitter" );
-
 }
 
 //=============================================================================
@@ -60,16 +56,16 @@ StatusCode TupleToolParticleReFit::initialize()
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
-  m_timefitter = tool<ILifetimeFitter>( m_timefitterName, this );
-  if( !m_timefitter ){
-    Error("Unable to retrieve the ILifetimeFitter tool");
-    return StatusCode::FAILURE;
+  m_timefitter = m_dva->lifetimeFitter();
+  if( !m_timefitter )
+  {
+    return Error("Unable to retrieve the ILifetimeFitter tool");
   }
 
-  m_vtxfitter = tool<IVertexFit>( m_vertexfitterName, this );
-  if( !m_vtxfitter ){
-    Error("Unable to retrieve the IVertexFit tool");
-    return StatusCode::FAILURE;
+  m_vtxfitter = m_dva->vertexFitter();
+  if( !m_vtxfitter )
+  {
+    return Error("Unable to retrieve the IVertexFit tool");
   }
 
   return sc;

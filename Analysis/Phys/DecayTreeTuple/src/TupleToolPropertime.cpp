@@ -41,9 +41,6 @@ DECLARE_TOOL_FACTORY( TupleToolPropertime )
     , m_fit(0)
 {
   declareInterface<IParticleTupleTool>(this);
-
-  declareProperty("ToolName", m_toolName = "PropertimeFitter" );
-
   // true determines proper time of all particles w.r.t. their best PV
   // false (default) determines proper time w.r.t. mother particle
   declareProperty("FitToPV", m_fitToPV = false );
@@ -57,10 +54,10 @@ StatusCode TupleToolPropertime::initialize()
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm",
                              StatusCode::FAILURE);
 
-  m_fit = tool<ILifetimeFitter>( m_toolName, this );
-  if( !m_fit ){
-    Error("Unable to retrieve the ILifetimeFitter tool");
-    return StatusCode::FAILURE;
+  m_fit = m_dva->lifetimeFitter();
+  if( !m_fit )
+  {
+    return Error("Unable to retrieve the ILifetimeFitter tool");
   }
 
   return StatusCode::SUCCESS;
@@ -130,16 +127,20 @@ const Vertex* TupleToolPropertime::originVertex( const Particle* top
   const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
   if( dau.empty() ) return NULL;
 
-  SmartRefVector< LHCb::Particle >::const_iterator it;
-  for( it = dau.begin(); dau.end()!=it; ++it ){
+  for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); 
+       dau.end() != it; ++it )
+  {
     if( P == *it ){
       return top->endVertex();
     }
   }
 
   // vertex not yet found, get deeper in the decay:
-  for( it = dau.begin(); dau.end()!=it; ++it ){
-    if( P != *it && !(*it)->isBasicParticle() ){
+  for( SmartRefVector<LHCb::Particle>::const_iterator it = dau.begin(); 
+       dau.end() != it; ++it )
+  {
+    if( P != *it && !(*it)->isBasicParticle() )
+    {
       const Vertex* vv = originVertex( *it, P );
       if( vv ) return vv;
     }

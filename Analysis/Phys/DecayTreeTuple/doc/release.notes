@@ -4,6 +4,11 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2014-09-08 - Chris Jones
+ - Update TupleToolPropertime and TupleToolParticleReFit to access vertex 
+   fitters and propertime fitters via the IDVAlgorithm interface, instead
+   of defining their own types.
+
 !========================= DecayTreeTuple v4r10 2014-07-25 =========================
 
 ! 2014-07-03 - O. Deschamps

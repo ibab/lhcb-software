@@ -72,15 +72,11 @@ public:
                            const std::string&, 
                            Tuples::Tuple& );
 
-
 private:
 
   IDVAlgorithm* m_dva;
-  ILifetimeFitter* m_timefitter;
-  IVertexFit* m_vtxfitter;
-
-  std::string m_timefitterName;
-  std::string m_vertexfitterName;
+  const ILifetimeFitter* m_timefitter;
+  const IVertexFit* m_vtxfitter;
 
 };
 
