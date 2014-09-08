@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================= GlobalReco v6r49 2014-09-08 =========================
 ! 2014-09-06 - Chris Jones
  - ChargedProtoParticleMaker : If output already exists clear and reuse.
 
