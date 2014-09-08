@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v6r3 2014-09-08 ========================
 ! 2014-08-20 - Wouter Hulsbergen
  - added method to KalmanFitResult to count number of active hits of given type
  - fixed (inconsequential) bug in FitNode smoother
