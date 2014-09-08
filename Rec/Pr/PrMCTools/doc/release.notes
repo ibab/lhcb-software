@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r4 2014-09-08 =========================
 ! 2014-09-04 - Tim Head
  - Make Best track location configurable in PrChecker
 
