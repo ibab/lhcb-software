@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!========================= LHCbAlgs v3r4 2014-09-08 =========================
 ! 2014-08-19 - Chris Jones
  - Add new algorithm AddressKillerAlg (from Markus) that clears the address
    history in the TES. 
