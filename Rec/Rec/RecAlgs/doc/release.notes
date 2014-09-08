@@ -4,6 +4,7 @@
 ! Purpose     : Holds generic reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!========================= RecAlgs v3r2 2014-09-08 =========================
 ! 2014-07-18 - Marco Cattaneo
  - Replace 'Other/RawEvent' with 'Calo/RawEvent' in default RecInit.cpp 
    search list, for forward compatibility with RawEvent format 4.0
