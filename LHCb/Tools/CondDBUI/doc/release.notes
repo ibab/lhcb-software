@@ -3,6 +3,7 @@
 ! package manager : Marco Clemencic
 ! ====================================================================
 
+!========================= CondDBUI v3r30 2014-09-08 =========================
 ! 2014-09-03 - Marco Clemencic
  - Fixed build with ROOT 5 + CMT.
 
