@@ -115,7 +115,7 @@ def makeB2HHBDT( name,
 
     _combination_cuts = "( AMAXDOCA('') < %(doca)s ) & ( AM > %(combMassLow)s * MeV ) & ( AM < %(combMassHigh)s * MeV )" %locals()
 
-    _mother_cuts = "( PT > %(bPT)s * MeV ) & ( M > %(massLow)s * MeV ) & ( M < %(massHigh)s * MeV ) & ( BPVIP() < %(bIP)s ) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(bTAU)s )" %locals()
+    _mother_cuts = "( PT > %(bPT)s * MeV ) & ( M > %(massLow)s * MeV ) & ( M < %(massHigh)s * MeV ) & ( BPVIP() < %(bIP)s ) & ( BPVLTIME() > %(bTAU)s )" %locals()
 
     CombineB2HHBDT = CombineParticles( DecayDescriptor = 'B0 -> pi+ pi-',
                                        DaughtersCuts = { "pi+" : _daughters_cuts },

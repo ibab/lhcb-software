@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-08 - Stefano Perazzini
+ - Removed reference to PropertimeFitter in StrippingB2HHBDT.py and
+   StrippingHb2Charged2Body.py
+
 ! 2014-09-05 - Anton Poluektov 
  - Updated Beauty2Charm to include combinations B0->[D+K+pi-pi-]cc, lines 
      StrippingB02DKPiPiSSD2HHHPIDBeauty2CharmLine
