@@ -12,9 +12,6 @@
 // 2008-11-13 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PackProtoParticle )
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -24,9 +21,10 @@ DECLARE_ALGORITHM_FACTORY( PackProtoParticle )
 {
   declareProperty( "InputName"  , m_inputName  = LHCb::ProtoParticleLocation::Charged );
   declareProperty( "OutputName" , m_outputName = LHCb::PackedProtoParticleLocation::Charged );
-  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
-  declareProperty( "DeleteInput",                m_deleteInput  = false     );
-  declareProperty( "EnableCheck",                m_enableCheck  = false     );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput  = false     );
+  declareProperty( "DeleteInput",                m_deleteInput   = false     );
+  declareProperty( "EnableCheck",                m_enableCheck   = false     );
+  declareProperty( "ClearRegistry",              m_clearRegistry = true      );
   //setProperty( "OutputLevel", 1 );
 }
 
@@ -75,30 +73,43 @@ StatusCode PackProtoParticle::execute()
     packer.check( *parts, *unpacked ).ignore();
     
     // clean up after checks
-    StatusCode sc = evtSvc()->unregisterObject( unpacked );
-    if( sc.isSuccess() ) 
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() ) 
+    {
       delete unpacked;
+    }
     else
-      return Error("Failed to delete test data after unpacking check", sc );
+    {
+      return Error( "Failed to delete test data after unpacking check", sc );  
+    }
   }
 
   // If requested, remove the input data from the TES and delete
   if ( UNLIKELY(m_deleteInput) )
   {
-    StatusCode sc = evtSvc()->unregisterObject( parts );
-    if( sc.isSuccess() ) {
+    const StatusCode sc = evtSvc()->unregisterObject( parts );
+    if ( sc.isSuccess() )
+    {
       delete parts;
       parts = NULL;
     }
     else
+    {
       return Error("Failed to delete input data as requested", sc );
+    }
   }
   else
   {
     // Clear the registry address of the unpacked container, to prevent reloading
-    parts->registry()->setAddress( 0 );
+    if ( m_clearRegistry ) { parts->registry()->setAddress(0); }
   }
 
   return StatusCode::SUCCESS;
 }
+
+//=============================================================================
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( PackProtoParticle )
+
 //=============================================================================

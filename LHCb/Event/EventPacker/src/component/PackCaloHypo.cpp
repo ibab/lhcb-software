@@ -27,6 +27,7 @@ DECLARE_ALGORITHM_FACTORY( PackCaloHypo )
   declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
   declareProperty( "DeleteInput",                m_deleteInput  = false     );
   declareProperty( "EnableCheck",                m_enableCheck  = false     );
+  declareProperty( "ClearRegistry",              m_clearRegistry = true     );
 }
 
 //=============================================================================
@@ -71,28 +72,35 @@ StatusCode PackCaloHypo::execute()
     packer.check( *hypos, *unpacked ).ignore();
     
     // clean up after checks
-    StatusCode sc = evtSvc()->unregisterObject( unpacked );
-    if( sc.isSuccess() ) 
+    const StatusCode sc = evtSvc()->unregisterObject( unpacked );
+    if ( sc.isSuccess() ) 
+    {
       delete unpacked;
+    }
     else
-      return Error("Failed to delete test data after unpacking check", sc );
+    {
+      return Error( "Failed to delete test data after unpacking check", sc );
+    }
   }
 
   // If requested, remove the input data from the TES and delete
   if ( UNLIKELY(m_deleteInput) )
   {
-    StatusCode sc = evtSvc()->unregisterObject( hypos );
-    if( sc.isSuccess() ) {
+    const StatusCode sc = evtSvc()->unregisterObject( hypos );
+    if ( sc.isSuccess() ) 
+    {
       delete hypos;
       hypos = NULL;
     }
     else
-      return Error("Failed to delete input data as requested", sc );
+    {
+      return Error( "Failed to delete input data as requested", sc );
+    }
   }
   else
   {
     // Clear the registry address of the unpacked container, to prevent reloading
-    hypos->registry()->setAddress( 0 );
+    if ( m_clearRegistry ) { hypos->registry()->setAddress( 0 ); }
   }
 
   return StatusCode::SUCCESS;

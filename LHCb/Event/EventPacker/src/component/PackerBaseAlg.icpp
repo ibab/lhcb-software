@@ -19,9 +19,10 @@ Pack<PACKER>::Pack( const std::string& name,
   declareProperty( "OutputName", m_outputName  = PACKER::packedLocation()   );
   declareProperty( "PackingVersion",
                    m_version = (unsigned short int)PACKER::PackedDataVector::defaultPackingVersion() );
-  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
-  declareProperty( "DeleteInput",                m_deleteInput  = false     );
-  declareProperty( "EnableCheck",                m_enableCheck  = false     );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput  = false     );
+  declareProperty( "DeleteInput",                m_deleteInput   = false     );
+  declareProperty( "EnableCheck",                m_enableCheck   = false     );
+  declareProperty( "ClearRegistry",              m_clearRegistry = true      );
 }
 
 template < class PACKER >
@@ -119,14 +120,14 @@ StatusCode Pack<PACKER>::execute()
       // If requested, remove the input data from the TES and delete
       if ( UNLIKELY(m_deleteInput) )
       {
-        StatusCode sc = evtSvc()->unregisterObject( data );
-        if( sc.isSuccess() ) delete data;
+        const StatusCode sc = evtSvc()->unregisterObject( data );
+        if ( sc.isSuccess() ) delete data;
         data = NULL;
       }
       else
       {
         // Clear the registry address of the unpacked container, to prevent reloading
-        data->registry()->setAddress( 0 );
+        if ( m_clearRegistry ) { data->registry()->setAddress( 0 ); }
       }
 
     } // input OK

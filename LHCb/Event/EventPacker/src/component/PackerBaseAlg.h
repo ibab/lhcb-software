@@ -39,6 +39,7 @@ namespace DataPacking
     bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
     bool m_deleteInput;       ///< Flag to turn on the removal of the input data after packing
     bool m_enableCheck;       ///< Flag to turn on automatic unpacking and checking of the output post-packing
+    bool m_clearRegistry;     ///< Flag to turn on the clearing of the registry if the input data is not kept
 
   };
 
