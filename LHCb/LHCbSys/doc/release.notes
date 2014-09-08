@@ -5,6 +5,165 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v38r1>2014-09-09 LHCbSys v38r1</A></H1><PRE>
+This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
+
+- Packages modified: DAQ/DAQKernel v1r1, DAQ/DAQSys v8r4, DAQ/RawEventCompat v1r6,
+    DAQ/Tell1Kernel v1r13p1, Det/DDDB v1r71, Det/DetCond v12r37, 
+    Det/DetDesc v18r34, Det/DetDescChecks v5r11, Det/MuonDet v9r16,
+    Event/DAQEvent v9r17, Event/EventPacker v4r3, Event/PhysEvent v11r27,
+    Event/RecEvent v2r52, Event/TrackEvent v6r2, Ex/IOExample v4r14,
+    GaudiConf v19r4, Hlt/HltDAQ v4r6, Kernel/LHCbAlgs v3r4,
+    Kernel/LHCbKernel v15r4, Kernel/LHCbMath v3r50, Kernel/Relations v6r3,
+    Phys/LoKiCore v11r20p1, Phys/LoKiHlt v3r15, Rich/RichKernel v7r56,
+    Tools/CondDBUI v3r30, Velo/VeloDAQ v6r12
+
+- In DAQ/DAQKernel v1r1
+  . Some minor coding improvements to the base class.
+
+- In DAQ/DAQSys v8r4
+  . Define new instances of decoders (disabled by default) for "expert" banks
+    "TTPedestal","TTFull","TTProcFull","TTError", "ITPedestal","ITFull",
+    "ITProcFull","ITError", "UTPedestal","UTFull","UTError", "OTError",
+    "EcalPackedError", "HcalPackedError", so that these banks can reside in a 
+    different RawEvent from the normal bank of these sub-detectors
+  . Bug fix in DecodeRawEvent, check on algs writing to same location was using
+    a non-existent function of the Decoder class
+  . Commented out Calo trigger banks from DecodersDB configuration of 
+    L0DUFromRawTool, as this was preventing Moore from decoding L0DU on S20
+    input. See https://savannah.cern.ch/task/?19106
+  . Fix indentation bug in Configuration.py, input RawEventLocations were not
+    being updated according to Split RawEvent Input version
+  . Use one HltTrackReportsDecoder for all sourceID/TES locations and update
+    daqsys.decoder-db test accordingly
+
+- In DAQ/RawEventCompat v1r6
+  . If a new bank is requested to be added to a RawEvent in an output location
+    that already existed as input location, print a warning and skip
+    configuration for that bank. Previously, whole configuration was aborted
+
+- In DAQ/Tell1Kernel v1r13p1
+  . Removed ; from the end of a namespace (fixes cmake warnings)
+
+- In Det/DDDB v1r71, v1r72
+  . Add 2015 data type
+  . Update default database tags to the latest ones:
+    o DDDB,     2015                  : dddb-20140729
+    o DDDB,           2013, 2012, 2011: dddb-20130929-1
+    o LHCBCOND,       2013, 2012, 2011: cond-20140604
+    o DQFLAGS,  2015, 2013, 2012, 2011: dq-20140822
+
+- In Det/DetCond v12r37
+  . Configuration.py: added a layer of CALIBOFF above LHCBCOND when LoadCALIBDB
+                      option is OFFLINE 
+  . Added qmtest module "detcond.check_db_reading" to check the db reading
+    functionality in Tools/CondDBUI
+
+- In Det/DetDesc v18r34
+  . Removed obsolete (unused) file ISolidFactory.h.
+
+- In Det/DetDescChecks v5r11
+  . New tests added for DataType 2015: loaddddb-2015 & loaddddb-sim-2015
+
+- In Det/MuonDet v9r16
+  . Various CPU performance improvements
+
+- In Event/DAQEvent v9r17
+  . Add Velo, Tracker and Unstripped RawEvent locations.
+
+- In Event/EventPacker v4r3, v4r4
+  . Add an option ClearRegistry to various packers to control if the address
+    of the input data is cleared or not after packing.
+  . Add support for packing custom MuonPID, Track and ProtoParticles produced by 
+    Stripping Lines.
+  . Change the key in the PackedTrack and PackedProtoParticle classes from a
+    32 to 64 bit int. Needed to allow the packing of the container information.
+  . Added counter to DumpTracks
+  . Add support for packed RelatedInfo relations.
+
+- In Event/PhysEvent v11r27
+  . Include the TES location (when appropriate) in the fillStream printout
+    for the Particle and Vertex classes.
+  . Some minor improvements to RelatedInfoMap, including an operator 
+    ostream << implementation.
+
+- In Event/RecEvent v2r52
+  . Include the TES location (when appropriate) in the fillStream printout
+    for the RecVertex class.
+
+- In Event/TrackEvent v6r2
+  . Improve speed of Track::probChi2
+
+- In Ex/IOExample v4r14
+  . Update tests to follow changes in EventPacker
+
+- In GaudiConf v19r4
+  . Add option ClearRegistry to CaloPackingConf.py
+  . Update the valgrind suppression files.
+  . Add "Tracking" to KnownUpackingTypes in DstConf. If present in EnableUnpack
+    list, enable Track and Vertex unpackers and disable corresponding packers.
+    Used by Brunel to reprocess from DST without rerunning the tracking
+
+- In Hlt/HltDAQ v4r6, v4r7
+  . Changed bit shift for Major SourceID from 13 to 11 to make place for 
+    SourceIDs > 3.  All raw files containing TrackReports have to be rewritten!  
+  . HltTrackReportsDecoder: 
+    o make sure counters are always filled
+    o reset default output location
+    o Suppress unused variable warning by wrapping execute method with a #pragma
+  . HltSelReportsWriter: avoid problems with unsigned arithmetic in case
+    banksize is zero.
+  . HltTrackReportsWriter/Decoder: 
+    o change of strategy: make it possible to use one writer/decoder instance 
+      which deals with all TES location / sourceIDs if so configured
+    o make sure that an emtpy rawbank is properly written
+    o Added one more tracks location
+
+- In Kernel/LHCbAlgs v3r4
+  . Add new algorithm AddressKillerAlg, clears the address history in the TES.
+
+- In Kernel/LHCbKernel v15r4
+  . Added patched merge_files.py to allow work-arounds for ROOT6 runtime warnings
+  . Removed duplicated dictionary entry.
+  . Fix untested StatusCode in LbAppInit.cpp
+  . Change content of PixelPositionInfo struct.
+
+- In Kernel/LHCbMath v3r50
+  . Types.py 
+    o fix for missing __iadd__, __isub__ operators 
+    o extend operators for linear-algebra vectors, 3D-points and 3D-vectors
+    o add new QMTEST 
+  . add BloomFilter class and corresponding unit test
+  . Modify existing tests to run within the QMTest framework, and have it check
+    exit codes (to be checked whether this is sufficient test of failures...)
+  . Add more efficient treatment of normalization integrals 
+  . Few minor fixes in Bukin function
+  . Add SinhAsinh function
+
+- In Kernel/Relations v6r3
+  . Add a size() method to Relation1D and Relation2D.
+    Needed to statisfy templated algorithm requirements in the data packing.
+
+- In Phys/LoKiCore v11r20p1
+  . Fix LoKi::Power to pass an unsigned long exponent to Gaudi::Math::pow
+
+- In Phys/LoKiHlt v3r15
+  . Add HLT_TCK functor which gets the TCK from the HltDecReports
+
+- In Rich/RichKernel v7r56
+  . Remove support for deprecated DetailedTrSegMakerFromRecoTracksStateProvider
+
+- In Tools/CondDBUI v3r30
+  . Fixed a typo in Models.py which stops the program from getting IoVs
+  . Fixes of COOL API compatibility issues with ROOT 6
+  . Exception handlings for COOL added in the Helper by hand.
+  . Ported to CMake the changes in the build (helper library etc.).
+  . Admin/ReleaseNotes.py: lines altered to quell warning messages on coding
+    convention during running 
+
+- In Velo/VeloDAQ v6r12
+  . Added LHCb::RawEventLocation::Velo to the default location list
+
 </PRE><H1><A NAME=v38r0>2014-07-14 LHCbSys v38r0</A></H1><PRE>
 This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
 
