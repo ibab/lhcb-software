@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!========================= DetCond v12r37 2014-09-08 =========================
 ! 2014-09-02 - Liang Sun
  - In Configuration.py: Keep the lines related to the import of SQLDDDB-Oracle.py for the UseOracle option, in order not to fail the nightlies
 
