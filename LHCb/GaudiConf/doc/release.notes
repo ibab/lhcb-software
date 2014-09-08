@@ -3,6 +3,7 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r4 2014-09-08 =========================
 ! 2014-09-07 - Chris Jones
  - Add option ClearRegistry to CaloPackingConf.py
  - Update the valgrind suppression files.
