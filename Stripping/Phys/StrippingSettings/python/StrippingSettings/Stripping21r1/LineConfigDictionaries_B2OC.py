@@ -120,6 +120,8 @@ Beauty2Charm = {
                   'K' : {'PIDK_MIN' : -10}}
     },
     'FlavourTagging':[
+    'B02DKPiPiSSD2HHHPIDBeauty2CharmLine', 
+    'B02DKPiPiSSWSD2HHHPIDBeauty2CharmLine', 
     'B02D0KKD2HHBeauty2CharmLine', 
     'B02D0PiPiD2HHBeauty2CharmLine', 
     'B02D0KPiD2HHBeauty2CharmLine', 
@@ -364,6 +366,8 @@ Beauty2Charm = {
     'StrippingOmegab2Omegac0PiNoIPOmegac02PKKPiBeauty2CharmLine',
     ],  
     'Bhadron' : [
+    'StrippingB02DKPiPiSSD2HHHPIDBeauty2CharmLine',
+    'StrippingB02DKPiPiSSWSD2HHHPIDBeauty2CharmLine', 
     'StrippingB2D0KD2HHWSBeauty2CharmLine', 
     'StrippingB2D0PiD2HHWSBeauty2CharmLine', 
     'StrippingB2D0KD2HHUPBeauty2CharmLine', 
@@ -1385,25 +1389,6 @@ B2fourbody = {
     'STREAMS' : [ 'Bhadron' ],
     'WGs' : [ 'B2OC' ]
     }    
-
-
-Bs2D0KS0 = {
-    'BUILDERTYPE' : 'Bs2D0KS0Conf',
-    'CONFIG' : {
-        "BIPCHI2"      : 20.0,         # Maximum Bs IP chi2.
-        "BVCHI2"       : 10.0,         # Maximum Bs vertex chi2 per degree of freedom.
-        "BsCombMassMin" : 5000.,        # Lower mass of D0+Ks combination
-        "BsCombMassMax" : 5650.,        # Upper mass of D0+Ks combination 
-        "BPVDLS"       : 5.,           # Minimum decay length significance
-        "BsMassMin"    : 5100.,        # Lower mass of Bs
-        "BsMassMax"    : 5550.,        # Upper mass of Bs
-        "D0MassMin"    : 1804.,        # Lower mass of D0
-        "D0MassMax"    : 1924.,        # Upper mass of D0
-        "DTF_CHI2NDOF" : 5.            # Minimum vertex chi2 per degree of freedom after decay tree fitter fit
-    }, 
-    'STREAMS' : [ 'Bhadron' ],
-    'WGs' : [ 'B2OC' ]
-    }  
 
 B2DDphi = {
     'BUILDERTYPE' : 'B2DDphiConf',
