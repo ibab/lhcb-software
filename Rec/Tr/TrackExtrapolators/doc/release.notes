@@ -1,13 +1,14 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackExtrapolators
-! Responsible : Eduardo Rodrigues, Jose A. Hernando
+! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+!========================= TrackExtrapolators v2r34 2014-09-08 ====================
 ! 2014-09-03 - Wouter Hulsbergen
  - Fix memory leak in TrackStateProvider (Marco Cattaneo)
 
-!========================= TrackExtrapolators v2r33 2012-11-28 =========================
+!========================= TrackExtrapolators v2r33 2012-11-28 ====================
 ! 2012-11-22 - Marco Clemencic
  - Added CMake configuration file.
 
@@ -35,11 +36,11 @@
  - Replace all endreq by endmsg
  - Fix some icc remarks (unnecessary ; after DECLARE_TOOL_FACTORY macro)
 
-!========================= TrackExtrapolators v2r30 2011-03-01 =========================
+!========================= TrackExtrapolators v2r30 2011-03-01 ====================
 ! 2011-01-31 - Wouter Hulsbergen
  - fixed bug in TrackStateProvider
 
-!========================= TrackExtrapolators v2r29 2010-09-27 =========================
+!========================= TrackExtrapolators v2r29 2010-09-27 ====================
 ! 2010-09-21 - Wouter Hulsbergen
  - several bug fixes in TrackStateProvider
 
