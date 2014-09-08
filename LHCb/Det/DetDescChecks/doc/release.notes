@@ -4,10 +4,12 @@
 ! Purpose     : Collection of useful components for checking of
 !               Detector Description, Material Budget etc
 ! ------------------------------------------------------------------------------
+
+!========================= DetDescChecks v5r11 2014-09-08 ======================
 ! 2014-07-30 - Liang Sun
  - New tests added for DataType 2015: loaddddb-2015 & loaddddb-sim-2015
 
-!========================= DetDescChecks v5r10 2013-04-29 =========================
+!========================= DetDescChecks v5r10 2013-04-29 ======================
 ! 2013-04-29 - Marco Cattaneo
  - Replace endreq by endmsg
 
@@ -18,14 +20,14 @@
  - Added loaddddb2012-ariadne.qmt test to load CondDB using the Ariadne driven
    tags configuration.
 
-!========================= DetDescChecks v5r9 2012-11-26 =========================
+!========================= DetDescChecks v5r9 2012-11-26 =======================
 ! 2012-11-15 - Marco Clemencic
  - Added CMake configuration file.
 
 ! 2012-10-11 - Marco Clemencic
  - Fixed warning: extra ';' [-pedantic].
 
-!========================= DetDescChecks v5r8 2012-09-28 =========================
+!========================= DetDescChecks v5r8 2012-09-28 =======================
 ! 2012-09-12 - Marco Clemencic
  - Minor change to simplify translation to CMake.
 
@@ -40,20 +42,20 @@
 ! 2012-01-26 - Illya Shapoval
  -  Added tests 'loaddddb2012.qmt','loaddddb-sim-2012.qmt' and 'loaddddb-sim-mc11.qmt'
 
-!========================= DetDescChecks v5r6p1 2011-12-14 =========================
+!========================= DetDescChecks v5r6p1 2011-12-14 ======================
 ! 2011-11-21 - Marco Cattaneo
  - Remove obsolete HepMCBack dependency
 
-!========================= DetDescChecks v5r6 2011-04-26 =========================
+!========================= DetDescChecks v5r6 2011-04-26 =======================
 ! 2011-04-15 - Marco Cattaneo
  - Remove test loaddddb.qmt, was testing DC06, no longer supported
  - Add test loadddddb-sim-mc10.qmt
 
-!========================= DetDescChecks v5r5 2011-02-22 =========================
+!========================= DetDescChecks v5r5 2011-02-22 =======================
 ! 2011-02-01 - Illya Shapoval
  -  Added tests 'loaddddb2011.qmt','loaddddb-sim-2011.qmt'.
 
-!========================= DetDescChecks v5r4 2010-10-25 =========================
+!========================= DetDescChecks v5r4 2010-10-25 =======================
 
 ! 2010-10-05 - Illya Shapoval
  - Added tests 'loaddddb-sim-2010.qmt','loaddddb-sim-2009.qmt' and
