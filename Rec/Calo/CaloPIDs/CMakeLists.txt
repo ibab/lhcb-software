@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloPIDs
 ################################################################################
-gaudi_subdir(CaloPIDs v5r18p1)
+gaudi_subdir(CaloPIDs v5r19)
 
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Calo/CaloUtils
