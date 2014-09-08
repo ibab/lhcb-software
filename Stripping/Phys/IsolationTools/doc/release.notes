@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-09-08 - Alex Shires
+ - removed IsolationInfo again, correctly
+
 ! 2014-09-05 - Stefano Perazzini
  - Reintroduced IsolationInfo.h as its absence was preventing the 
    compilation of the package

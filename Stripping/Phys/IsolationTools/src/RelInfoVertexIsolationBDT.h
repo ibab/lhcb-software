@@ -16,7 +16,6 @@
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IPVReFitter.h"
 #include "MVADictTools/TMVATransform.h"
-#include "IsolationInfo.h"
 
 class IDVAlgorithm;
 class IDistanceCalculator;

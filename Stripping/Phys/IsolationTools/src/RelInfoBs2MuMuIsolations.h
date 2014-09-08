@@ -14,7 +14,6 @@
 #include <Kernel/GetIDVAlgorithm.h>
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IPVReFitter.h"
-#include "IsolationInfo.h"
 #include "Event/RecVertex.h"
 
 
