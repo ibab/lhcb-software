@@ -1,7 +1,7 @@
 ################################################################################
 # Package: RecSys
 ################################################################################
-gaudi_subdir(RecSys v17r0)
+gaudi_subdir(RecSys v17r1)
 
 gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Calo/CaloPIDs
