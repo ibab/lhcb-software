@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloReco
 ################################################################################
-gaudi_subdir(CaloReco v5r20)
+gaudi_subdir(CaloReco v5r21)
 
 gaudi_depends_on_subdirs(Calo/CaloDAQ
                          Calo/CaloInterfaces
