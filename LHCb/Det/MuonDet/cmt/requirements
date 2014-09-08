@@ -1,6 +1,6 @@
-# ========================================================================
+# =====================================================================
 package           MuonDet
-version           v9r15
+version           v9r16
 
 # =============== structure ===============================================
 branches         src cmt doc MuonDet dict
@@ -24,7 +24,7 @@ library   MuonDet component/*.cpp
 apply_pattern component_library library=MuonDet
 apply_pattern linker_library    library=MuonDetLib
 
-# =============== LCG Dictionaries ============================================
+# =============== LCG Dictionaries ===========================================
 apply_pattern     reflex_dictionary                                 \
                   dictionary=MuonDet                                \
                   headerfiles=$(MUONDETROOT)/dict/MuonDetDict.h     \
