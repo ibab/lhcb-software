@@ -8,7 +8,7 @@
 #include "Kernel/CircleTraj.h"
 
 #include "Math/GenVector/AxisAngle.h"
-#include <math.h>
+#include <cmath>
 
 using namespace LHCb;
 using namespace ROOT::Math;
@@ -106,8 +106,7 @@ double CircleTraj::distTo1stError( double /*arclen*/, double tolerance, int /*di
 double CircleTraj::distTo2ndError( double /*arclen*/, double tolerance , int /*direction*/ ) const
 {
   // require 3rd order term to be less than tolerance
-  // cbrt is in the C99 standard -- hope it is available on all platforms...
-  // return cbrt(6*tolerance*m_radius*m_radius);
+  return std::cbrt(6*tolerance*m_radius*m_radius);
   // cbrt is NOT available on windows at this time...
-  return pow(6*tolerance*m_radius*m_radius,double(1)/3);
+  // return pow(6*tolerance*m_radius*m_radius,double(1)/3);
 }
