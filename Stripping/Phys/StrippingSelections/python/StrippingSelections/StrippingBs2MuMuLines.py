@@ -293,6 +293,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
+              },
+            { 'Type' : 'ToolZViso',
+              'RecursionLevel' : 0,
+              "Location"  : "BSMUMUVARIABLES"  
               }
             ]
                                           
@@ -317,6 +321,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
+              },
+            { 'Type' : 'ToolZViso',
+              'RecursionLevel' : 0,
+              "Location"  : "BSMUMUVARIABLES"  
               }
             ]
                                       )
@@ -385,6 +393,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
+              },
+            { 'Type' : 'ToolZViso',
+              'RecursionLevel' : 0,
+              "Location"  : "BSMUMUVARIABLES"  
               }
             ]
                                     )
@@ -408,6 +420,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
+              },
+            { 'Type' : 'ToolZViso',
+              'RecursionLevel' : 0,
+              "Location"  : "BSMUMUVARIABLES"  
               }
             ]
                                     )
@@ -429,6 +445,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
+              },
+            { 'Type' : 'ToolZViso',
+              'RecursionLevel' : 0,
+              "Location"  : "BSMUMUVARIABLES"  
               }
             ]
                                  )
