@@ -198,7 +198,7 @@ StatusCode Pythia8Production::finalize() {
   m_pythia->statistics();
 
   // Write the cross-sections to the XML log.
-  vector<int> codes = m_pythia->codesHard();
+  vector<int> codes = m_pythia->info.codesHard();
   for (unsigned int code = 0; code < codes.size(); ++code)
     if (m_pythia->info.nAccepted(codes[code]))
       m_xmlLogTool->addCrossSection(m_pythia->info.nameProc(codes[code]), 
