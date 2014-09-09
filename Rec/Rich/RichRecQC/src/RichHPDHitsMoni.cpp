@@ -52,6 +52,7 @@ StatusCode HPDHitsMoni::initialize()
   // RichDet
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
+  // return
   return sc;
 }
 
@@ -85,31 +86,28 @@ StatusCode HPDHitsMoni::execute()
   initMap(hpdMap);
 
   // Loop over L1 boards
-  for ( Rich::DAQ::L1Map::const_iterator iL1 = data.begin();
-        iL1 != data.end(); ++iL1 )
+  for ( const auto& L1 : data )
   {
     // loop over ingresses for this L1 board
-    for ( Rich::DAQ::IngressMap::const_iterator iIn = (*iL1).second.begin();
-          iIn != (*iL1).second.end(); ++iIn )
+    for ( const auto& In : L1.second )
     {
-
       // Loop over HPDs in this ingress
-      for ( Rich::DAQ::HPDMap::const_iterator iHPD = (*iIn).second.hpdData().begin();
-            iHPD != (*iIn).second.hpdData().end(); ++iHPD )
+      for ( const auto& HPD : In.second.hpdData() )
       {
+
         // Valid HPD ID
-        if ( !(*iHPD).second.hpdID().isValid() ) { continue; }
+        if ( !HPD.second.hpdID().isValid() ) { continue; }
         // inhibited HPD ?
-        if ( (*iHPD).second.header().inhibit() ) { continue; }
+        if ( HPD.second.header().inhibit() ) { continue; }
 
         // HPD info
-        const LHCb::RichSmartID hpd     = (*iHPD).second.hpdID();
+        const LHCb::RichSmartID hpd     = HPD.second.hpdID();
         const DAQ::HPDHardwareID hardID = m_richSys->hardwareID(hpd);
         const DAQ::Level0ID l0ID        = m_richSys->level0ID(hpd);
         const DAQ::HPDCopyNumber copyN  = m_richSys->copyNumber(hpd);
 
         // Vector of SmartIDs
-        const LHCb::RichSmartID::Vector & rawIDs = (*iHPD).second.smartIDs();
+        const LHCb::RichSmartID::Vector & rawIDs = HPD.second.smartIDs();
 
         // save hits for profiles
         hpdMap[hpd] = rawIDs.size();
@@ -119,7 +117,7 @@ StatusCode HPDHitsMoni::execute()
         detInfo << "CopyN=" << copyN << " L0ID=" << l0ID << " hardID=" << hardID;
 
         // Alice or LHCb mode ? Use to define number of pixel rows for plots
-        const int nPixRows = ( (*iHPD).second.header().aliceMode() ?
+        const int nPixRows = ( HPD.second.header().aliceMode() ?
                                Rich::DAQ::MaxDataSizeALICE : Rich::DAQ::MaxDataSize );
 
         // number of hits plot
@@ -141,58 +139,53 @@ StatusCode HPDHitsMoni::execute()
           std::ostringstream HPD2,hpd2;
           HPD2 << "Hit Map "   << hpd << " " << detInfo.str();
           hpd2 << "PDs/HitMap/CopyNum-" << copyN;
-          for ( LHCb::RichSmartID::Vector::const_iterator iR = rawIDs.begin();
-                iR != rawIDs.end(); ++iR )
+          for ( const auto& R : rawIDs )
           {
 
             // compute overall pixel row (alice or LHCb mode)
-            const int row = ( (*iHPD).second.header().aliceMode() ?
-                              (*iR).pixelRow()*Rich::DAQ::NumAlicePixelsPerLHCbPixel + (*iR).pixelSubRow() :
-                              (*iR).pixelRow() );
+            const int row = ( HPD.second.header().aliceMode() ?
+                              R.pixelRow()*Rich::DAQ::NumAlicePixelsPerLHCbPixel + R.pixelSubRow() :
+                              R.pixelRow() );
 
             // HPD hit map
             richHisto2D( HID(hpd2.str()), HPD2.str(),
                          -0.5,Rich::DAQ::NumPixelColumns-0.5,
                          Rich::DAQ::NumPixelColumns,
                          -0.5,nPixRows-0.5,
-                         nPixRows ) -> fill( (*iR).pixelCol(), row );
+                         nPixRows ) -> fill( R.pixelCol(), row );
 
           } // raw channel ids
         }
 
       } // loop over HPDs
-
     } // ingresses
   } // L1 boards
 
   // HPD column plots
-  for ( RichPDColCount::const_iterator iR = pdColPixCount.begin();
-        iR != pdColPixCount.end(); ++iR )
+  for ( const auto& R : pdColPixCount )
   {
-    for ( PDColCount::const_iterator iC = (*iR).second.begin();
-          iC != (*iR).second.end(); ++iC )
+    for ( const auto& C : R.second )
     {
       std::ostringstream id,title,col;
-      col << (*iR).first.rich() << "-" << Rich::text((*iR).first.rich(),(*iR).first.panel())
-          << "-Col" << (*iC).first;
+      col << R.first.rich() << "-" << Rich::text(R.first.rich(),R.first.panel())
+          << "-Col" << C.first;
       id << "PDCols/NumHits/" << col.str();
       title << "# Hits " << col.str();
-      richHisto1D( HID(id.str()), title.str(), -0.5, 799.5, 100 ) -> fill( (double)(*iC).second );
+      richHisto1D( HID(id.str()), title.str(), -0.5, 799.5, 100 ) -> fill( (double)C.second );
     }
   }
 
     // loop over HPDs for profile plots
-  for ( HPDCountMap::const_iterator iHPD = hpdMap.begin();
-        iHPD != hpdMap.end(); ++iHPD )
+  for ( const auto& HPD : hpdMap )
   {
-    if ( iHPD->first.isValid() )
+    if ( HPD.first.isValid() )
     {
       // use a try block in case of DB lookup errors
       try
       {
-        const Rich::DAQ::HPDCopyNumber copyN = m_richSys->copyNumber(iHPD->first);
+        const Rich::DAQ::HPDCopyNumber copyN = m_richSys->copyNumber(HPD.first);
         // fill plots
-        richProfile1D(HID("PDs/NumHitsVHPDCopyNumber"))->fill(copyN.data(),iHPD->second);
+        richProfile1D(HID("PDs/NumHitsVHPDCopyNumber"))->fill(copyN.data(),HPD.second);
       }
       catch ( const GaudiException & excpt )
       {
@@ -211,9 +204,5 @@ void HPDHitsMoni::initMap( HPDCountMap & hpdMap )
   // get list of all active HPDs
   const LHCb::RichSmartID::Vector & hpds = m_richSys->activePDRichSmartIDs();
   // Loop over all HPDs and (re)set count to zero
-  for ( LHCb::RichSmartID::Vector::const_iterator iHPD = hpds.begin();
-        iHPD != hpds.end(); ++iHPD )
-  {
-    hpdMap[*iHPD] = 0;
-  }
+  for ( const auto& hpd : hpds ) { hpdMap[hpd] = 0; }
 }
