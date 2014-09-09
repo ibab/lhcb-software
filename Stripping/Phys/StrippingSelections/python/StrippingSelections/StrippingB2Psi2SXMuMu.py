@@ -273,8 +273,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.InclPsi2SToMuMu_line = StrippingLine(incl + "Line",
                                                   prescale = config['incl_LinePrescale'],
                                                   postscale = config['incl_LinePostscale'],
-                                                  selection = self.InclPsi2SToMuMu
-                                                  )
+                                                  selection = self.InclPsi2SToMuMu,
+                                                  EnableFlavourTagging = True, 
+                                                  MDSTFlag = True )
         
         self.InclPsi2SToMuMuDetached = makeInclPsi2SToMuMu(incl_detached_name,  
                                                            Psi2SSel = self.selPsi2S2MuMu,
@@ -286,8 +287,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.InclPsi2SToMuMu_detached_line = StrippingLine(incl_detached_name + "Line",
                                                             prescale = config['incl_DetachedLinePrescale'],
                                                             postscale = config['incl_DetachedLinePostscale'],
-                                                            selection = self.InclPsi2SToMuMuDetached
-                                                            )
+                                                            selection = self.InclPsi2SToMuMuDetached,
+                                                            EnableFlavourTagging = True, 
+                                                            MDSTFlag = True )
         
         
 #####################
@@ -306,8 +308,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bs2Psi2SPhi_prescaled_line = StrippingLine(sig_prescaled_name + "Line",
                                                         prescale = config['sig_PrescaledLinePrescale'],
                                                         postscale = config['sig_PrescaledLinePostscale'],
-                                                        selection = self.selBs2Psi2SPhiPrescaled
-                                                        )
+                                                        selection = self.selBs2Psi2SPhiPrescaled,
+                                                        EnableFlavourTagging = True, 
+                                                        MDSTFlag = True )
         
         self.selBs2Psi2SPhiDetached = makeBs2Psi2SPhiMuMu(sig_detached_name,  
                                                            Psi2SSel = self.selPsi2S2MuMu, 
@@ -323,8 +326,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bs2Psi2SPhi_detached_line = StrippingLine(sig_detached_name + "Line",
                                                         prescale = config['sig_DetachedLinePrescale'],
                                                         postscale = config['sig_DetachedLinePostscale'],
-                                                        selection = self.selBs2Psi2SPhiDetached
-                                                        )
+                                                        selection = self.selBs2Psi2SPhiDetached,
+                                                        EnableFlavourTagging = True, 
+                                                        MDSTFlag = True )
         
         self.selBs2Psi2SPhiUnbiased = makeBs2Psi2SPhiMuMu(sig_unbiased_name,  
                                                           Psi2SSel = self.selPsi2S2MuMu, 
@@ -361,8 +365,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bu2Psi2SK_prescaled_line = StrippingLine(K_prescaled_name + "Line",
                                                       prescale = config['K_PrescaledLinePrescale'],
                                                       postscale = config['K_PrescaledLinePostscale'],
-                                                      selection = self.selBu2Psi2SKPrescaled
-                                                      )
+                                                      selection = self.selBu2Psi2SKPrescaled,
+                                                      EnableFlavourTagging = True, 
+                                                      MDSTFlag = True )
         
         self.selBu2Psi2SKDetached = makeBu2Psi2SKMuMu(K_detached_name,  
                                                        Psi2SSel = self.selPsi2S2MuMu, 
@@ -379,8 +384,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bu2Psi2SK_detached_line = StrippingLine(K_detached_name + "Line",
                                                       prescale = config['K_DetachedLinePrescale'],
                                                       postscale = config['K_DetachedLinePostscale'],
-                                                      selection = self.selBu2Psi2SKDetached
-                                                      )
+                                                      selection = self.selBu2Psi2SKDetached,
+                                                      EnableFlavourTagging = True, 
+                                                      MDSTFlag = True )
         
         self.selBu2Psi2SKUnbiased = makeBu2Psi2SKMuMu(K_unbiased_name,  
                                                       Psi2SSel = self.selPsi2S2MuMu, 
@@ -418,8 +424,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bd2Psi2SKstar_prescaled_line = StrippingLine(Kstar_prescaled_name + "Line",
                                                           prescale = config['Kstar_PrescaledLinePrescale'],
                                                           postscale = config['Kstar_PrescaledLinePostscale'],
-                                                          selection = self.selBd2Psi2SKstarPrescaled
-                                                          )
+                                                          selection = self.selBd2Psi2SKstarPrescaled,
+                                                          EnableFlavourTagging = True, 
+                                                          MDSTFlag = True )
         
         self.selBd2Psi2SKstarDetached = makeBd2Psi2SKstarMuMu(Kstar_detached_name,  
                                                                Psi2SSel = self.selPsi2S2MuMu, 
@@ -435,8 +442,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bd2Psi2SKstar_detached_line = StrippingLine(Kstar_detached_name + "Line",
                                                           prescale = config['Kstar_DetachedLinePrescale'],
                                                           postscale = config['Kstar_DetachedLinePostscale'],
-                                                          selection = self.selBd2Psi2SKstarDetached
-                                                          )
+                                                          selection = self.selBd2Psi2SKstarDetached,
+                                                          EnableFlavourTagging = True, 
+                                                          MDSTFlag = True )
         
         self.selBd2Psi2SKstarUnbiased = makeBd2Psi2SKstarMuMu(Kstar_unbiased_name,  
                                                               Psi2SSel = self.selPsi2S2MuMu, 
@@ -474,8 +482,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bd2Psi2SKs_prescaled_line = StrippingLine(Ks_prescaled_name + "Line",
                                                        prescale = config['Ks_PrescaledLinePrescale'],
                                                        postscale = config['Ks_PrescaledLinePostscale'],
-                                                       selection = self.selBd2Psi2SKsPrescaled
-                                                       )
+                                                       selection = self.selBd2Psi2SKsPrescaled,
+                                                       EnableFlavourTagging = True, 
+                                                       MDSTFlag = True )
         
         self.selBd2Psi2SKsDetached = makeBd2Psi2SKsMuMu(Ks_detached_name,  
                                                          Psi2SSel = self.selPsi2S2MuMu, 
@@ -491,8 +500,9 @@ class Bs2Psi2SPhiMuMuConf(LineBuilder) :
         self.Bd2Psi2SKs_detached_line = StrippingLine(Ks_detached_name + "Line",
                                                        prescale = config['Ks_DetachedLinePrescale'],
                                                        postscale = config['Ks_DetachedLinePostscale'],
-                                                       selection = self.selBd2Psi2SKsDetached
-                                                       )
+                                                       selection = self.selBd2Psi2SKsDetached,
+                                                       EnableFlavourTagging = True, 
+                                                       MDSTFlag = True )
         
         self.selBd2Psi2SKsUnbiased = makeBd2Psi2SKsMuMu(Ks_unbiased_name,  
                                                         Psi2SSel = self.selPsi2S2MuMu, 

@@ -224,8 +224,9 @@ class B2Psi2SXConf(LineBuilder) :
         self.InclPsi2SToJpsiPiPi_line = StrippingLine(incl + "Line",
                                                       prescale = config['incl_LinePrescale'],
                                                       postscale = config['incl_LinePostscale'],
-                                                      selection = self.InclPsi2SToJpsiPiPi
-                                                      )
+                                                      selection = self.InclPsi2SToJpsiPiPi,
+                                                      EnableFlavourTagging = True,
+                                                      MDSTFlag = True )
                
 #####################
 ### Bs->Psi(2S)Phi ## 
@@ -244,8 +245,9 @@ class B2Psi2SXConf(LineBuilder) :
         self.Bs2Psi2SPhiJpsiPiPi_line = StrippingLine(sig + "Line",
                                                       prescale = config['sig_LinePrescale'],
                                                       postscale = config['sig_LinePostscale'],
-                                                      selection = self.selBs2Psi2SPhiJpsiPiPi
-                                                      )
+                                                      selection = self.selBs2Psi2SPhiJpsiPiPi,
+                                                      EnableFlavourTagging = True, 
+                                                      MDSTFlag = True )
         
 #####################
 ### Bu->Psi(2S)K+ ###
@@ -265,8 +267,9 @@ class B2Psi2SXConf(LineBuilder) :
         self.Bu2Psi2SKJpsiPiPi_line = StrippingLine(K + "Line",
                                                     prescale = config['K_LinePrescale'],
                                                     postscale = config['K_LinePostscale'],
-                                                    selection = self.selBu2Psi2SKJpsiPiPi
-                                                    )
+                                                    selection = self.selBu2Psi2SKJpsiPiPi,
+                                                    EnableFlavourTagging = True, 
+                                                    MDSTFlag = True )
      
 
 
@@ -289,8 +292,9 @@ class B2Psi2SXConf(LineBuilder) :
         self.Bd2Psi2SKstarJpsiPiPi_line = StrippingLine(Kstar + "Line",
                                                         prescale = config['Kstar_LinePrescale'],
                                                         postscale = config['Kstar_LinePostscale'],
-                                                        selection = self.selBd2Psi2SKstarJpsiPiPi
-                                                        )
+                                                        selection = self.selBd2Psi2SKstarJpsiPiPi,
+                                                        EnableFlavourTagging = True, 
+                                                        MDSTFlag = True )
         
         
 #####################
@@ -310,8 +314,9 @@ class B2Psi2SXConf(LineBuilder) :
         self.Bd2Psi2SKsJpsiPiPi_line = StrippingLine(Ks + "Line",
                                                      prescale = config['Ks_LinePrescale'],
                                                      postscale = config['Ks_LinePostscale'],
-                                                     selection = self.selBd2Psi2SKsJpsiPiPi
-                                                     )
+                                                     selection = self.selBd2Psi2SKsJpsiPiPi,
+                                                     EnableFlavourTagging = True, 
+                                                     MDSTFlag = True )
         
         
         self.registerLine(self.InclPsi2SToJpsiPiPi_line)
