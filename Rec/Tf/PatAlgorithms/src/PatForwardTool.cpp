@@ -293,7 +293,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       //== Count how many weighted hits
       //== reject if below threshold
       return temp.chi2PerDoF() < m_maxChi2Track &&
-             ( !m_withoutBField || fabs(temp.slX()-temp.xSlope(0))<0.005) &&
+             ( !m_withoutBField || fabs(temp.slX()-temp.xSlope(0.))<0.005) &&
              ( nT(temp) >= minOTX || inCenter(temp) ) &&
              passMomentum( temp, track.sinTrack() );
   };
