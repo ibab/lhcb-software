@@ -4,11 +4,14 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2014-09-09 - Marco Clemencic
+ - Minor change to the CMake configuration to avoid pointless rebuilds.
+
 ! 2014-07-14 - Marco Clemencic
  - Fixed CMake configuration to support ROOT 6.
 
 ! 2014-05-07 - Chris Jones
- - Fix sending of 2D histograms, which broke when ROOT decided it was a good 
+ - Fix sending of 2D histograms, which broke when ROOT decided it was a good
    idea to break a previously working method with
   Error in <TH2D::GetBinLowEdge>: Invalid method for a 2-d histogram - return a NaN
    nice...
@@ -57,7 +60,7 @@ Undocumented changes
 
 ! 2010-05-13 - Nicola Mangiafave
 - /src/CameraTool.cpp: fixed bug in dealing with servers up but not
-  responding. The Tool now checks the server availability 10 times for every 
+  responding. The Tool now checks the server availability 10 times for every
 	message. If the server doesn't respond, it	gives up.
 - /src/client.h: added timeout to the Connect() function. It now uses
 	non-blocking sockets to handle the connection. It keeps trying connecting
@@ -65,7 +68,7 @@ Undocumented changes
 - /src/CameraTool.cpp: added a list of algorithms that do not pass throught the
 	MessageRateChecks. So far the only one algorithm present is
 	ToolSvc.RichUKL1Disable.
- 
+
 
 =============== v1r16 ===============
 
@@ -78,7 +81,7 @@ Undocumented changes
 - Changed version to v1r15.
 
 ! 2010-03-03 - Nicola Mangiafave
-- In /src/CameraTool: added automatic message rate setting for changing text 
+- In /src/CameraTool: added automatic message rate setting for changing text
   messages.
 
 ! 2010-03-02 - Nicola Mangiafave
@@ -101,7 +104,7 @@ Undocumented changes
 
 ! 2010-01-14 - Nicola Mangiafave
 - In CameraTool: eliminated the automatic change of data directory with run
-  changes to avoid dependences of the Online package to the LHCb package. 
+  changes to avoid dependences of the Online package to the LHCb package.
 
 =============== v1r12 ===============
 
@@ -123,7 +126,7 @@ Undocumented changes
 =============== v1r10 ===============
 
 ! 2009-10-15 - Nicola Mangiafave
-- Added automatic change of data directory every time the run changes. 
+- Added automatic change of data directory every time the run changes.
   The new directory name is equal to the run number.
 
 

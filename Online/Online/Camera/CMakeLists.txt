@@ -56,7 +56,7 @@ else()
   set(dict_cmd ${ROOT_rootcling_CMD})
 endif()
 
-add_custom_command(OUTPUT MessagePresenterDict.h MessagePresenterDict.cpp
+add_custom_command(OUTPUT MessagePresenterDict.cpp
                    COMMAND ${env_cmd} --xml ${env_xml}
                      ${dict_cmd} -f MessagePresenterDict.cpp -c
                            -inlineInputHeader
