@@ -1,6 +1,9 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2014-09-09 - Marco Clemencic
+ - Minor fix to CMake configuration.
+
 ! 2014-01-21 - Marco Clemencic
  - Fixed problem in requirements to use the new GaudiPluginService:
     replaced generate_rootmap with generate_componentslist
@@ -18,7 +21,7 @@ Author:  Markus Frank
  - Add timeout algorithm. This algorithm may be used to trigger processing timeouts.
    In the event a timeout occurs, the event processing thread throws an out-of-context
    C++ exception, which should stop the current algorithm to process events.
- - Add mechanism to handle exceptions such as segment violations (SIGSEGV) in the 
+ - Add mechanism to handle exceptions such as segment violations (SIGSEGV) in the
    MEP framework of the HLT. In case Moore has an access violation, the Moore task
    flags the event as bad. The Holder service then scans the event descriptor(s)
    and may save the events contained in this mulkti event structure. All events
@@ -59,7 +62,7 @@ Author:  Markus Frank
 
 ! 2008-03-10 Markus Frank
  - MEPManager: Allow to partition buffers by partition name.
-   If the MEPManager.PartitionName is not set partitioning (if requested) will 
+   If the MEPManager.PartitionName is not set partitioning (if requested) will
    be done by partition ID.
 
 ! 2008-01-19 Markus Frank
@@ -73,7 +76,7 @@ Author:  Markus Frank
  - Add pure client connections to network transfer library.
 
 ! 2007-08-08 Markus Frank
- - Add new task classes: Class0, Class1, Class2 based on standard GaudiTask 
+ - Add new task classes: Class0, Class1, Class2 based on standard GaudiTask
    implementation
 
 ! 2007-07-09 Sai Suman
@@ -91,7 +94,7 @@ Author:  Markus Frank
 ! 2007-05-30 Markus Frank
  - Add SocketSender and SocketReceiver class for data transfer based on the
    net library OnlineKernel/NET/DataTransfer.
-   Note: DIM monitoring does not work properly if the data network is not 
+   Note: DIM monitoring does not work properly if the data network is not
    accessible from the controls network and data are transferred using DIM.
    For such cases use OnlineKernel/NET/DataTransfer.
 
@@ -134,7 +137,7 @@ Author:  Markus Frank
 ! 2006-11-20 Markus Frank
  - Remove test scripts from top level cmt area.
    Romove all unnecessary dependencies.
- - Create seperate tests area with cmt directory. 
+ - Create seperate tests area with cmt directory.
    Sub package carries all dependencies to execute tests.
  - Add basic online monitoring quantities to several services
 
