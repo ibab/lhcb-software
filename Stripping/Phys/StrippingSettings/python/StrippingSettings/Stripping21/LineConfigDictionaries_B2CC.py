@@ -187,11 +187,11 @@ B2CharmoniumX_6H = {
     }
 
 ######################################################################
-## StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine (MicroDST)
-## StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine (MicroDST)
-## StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine (MicroDST)
-## StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine (MicroDST)
-## StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine (MicroDST)
+## StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine (MDST.DST)
+## StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine (MDST.DST)
+## StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine (MDST.DST)
+## StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine (MDST.DST)
+## StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine (MDST.DST)
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2Psi2SX.py
 ## Authors: Fred Blanc, Neus Lopez March (left LHCb!)
@@ -265,16 +265,16 @@ BetaSPsi2S = {
     }
 
 ######################################################################
-## StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetachedLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetachedLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetachedLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetachedLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine (MicroDST)
-## StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine (MicroDST)
+## StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetachedLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetachedLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetachedLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetachedLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine (MDST.DST)
+## StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine (MDST.DST)
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2Psi2SXMuMu.py
 ## Authors: Neus Lopez March (left LHCb!)
