@@ -122,10 +122,10 @@ Last modification $Date$
 
 """
 # =============================================================================
-__author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
+__author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2010-09-10"
 __version__ = '$Revision$'
-__all__     = ()  ## nothing to import 
+__all__     = ( 'configure',  ) 
 __usage__   = 'dst_explorer [options] file1 [ file2 [ file3 [ file4 ....'
 # =============================================================================
 # logging 

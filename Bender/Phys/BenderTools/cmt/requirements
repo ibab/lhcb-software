@@ -35,10 +35,12 @@ apply_pattern       install_python_modules
 apply_pattern       install_scripts
 
 # ================= aliases ===================================================
-alias dstExplorer   "dst_explorer"
-alias dst_Explorer  "dst_explorer"
-alias Dst_Explorer  "dst_explorer"
+alias dst_explorer  "dst-explorer"
+#     
 alias check_trg     "trg_check" 
+alias check-trg     "trg_check" 
+alias trg-check     "trg_check" 
+alias trg_check     "trg_check" 
 #
 alias dst-dump      "dst-dump.py" 
 alias dst_dump      "dst-dump.py" 
