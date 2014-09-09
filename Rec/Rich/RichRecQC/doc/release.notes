@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!========================= RichRecQC v2r67 2014-09-09 =========================
 ! 2014-09-09 - Chris Jones
  - Remove Aerogel from default radiator list when DataType is set for Run II.
  - Clean up RichHPDHitsMoni with some C++11 syntax.
