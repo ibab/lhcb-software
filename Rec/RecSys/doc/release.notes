@@ -11,9 +11,9 @@ This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
 - Packages modified: Calo/CaloPIDs v5r19, Calo/CaloReco v5r21,
     Pr/PrAlgorithms v1r14, Pr/PrMCTools v2r4, Pr/PrPixel v1r9,
     Rec/GlobalReco v6r49, Rec/RecAlgs v3r2, Rec/RecConf v2r18,
-    Tf/PatAlgorithms v4r35, Tf/TfKernel v2r26, Tf/TrackSys v9r2,
-    Tr/TrackExtrapolators v2r34, Tr/TrackFitEvent v6r3, Tr/TrackFitter v5r2,
-    Tr/TrackMonitors v2r4, Tr/TrackTools v5r4
+    Rich/RichRecQC v2r67, Tf/PatAlgorithms v4r35, Tf/TfKernel v2r26,
+    Tf/TrackSys v9r2, Tr/TrackExtrapolators v2r34, Tr/TrackFitEvent v6r3,
+    Tr/TrackFitter v5r2, Tr/TrackMonitors v2r4, Tr/TrackTools v5r4
 
 - In Calo/CaloPIDs v5r19
   . CaloElectronMatch, CaloBremMatch.cpp, CaloPhotonMatch.cpp :
@@ -61,6 +61,10 @@ This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
   . Add 'SkipTracking' slot to RecSysConf and RecMoniConf. If enabled, tracking
     sequences are skipped. Used by Brunel to reprocess from DST without 
     rerunning the tracking 
+
+- In Rich/RichRecQC v2r67
+  . Remove Aerogel from default radiator list when DataType is set for Run II.
+  . Clean up RichHPDHitsMoni with some C++11 syntax.
 
 - In Tf/PatAlgorithms v4r34, v4r35
   . Make PatForwardTool so that it only exposes 'const' methods.
