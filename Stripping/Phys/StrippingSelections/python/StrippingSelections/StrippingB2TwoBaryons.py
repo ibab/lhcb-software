@@ -247,7 +247,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                     config['MaxGhostProb']
                                     )
 
-        self.B2PPSameSign = self.makeB2PPSameSign( B2PPSameSignName,
+        """self.B2PPSameSign = self.makeB2PPSameSign( B2PPSameSignName,
                                          config['MinPTB2PPbar'],
                                          #config['TrChi2'],
                                          config['PIDppi'],
@@ -263,7 +263,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                          config['BDIRA'],
                                          config['MaxGhostProb']
                                          )
-
+"""
         self.B2Lp_dd_line = StrippingLine(B2Lp_dd_name+"Line",
                                          prescale = config['Prescale'],
                                          postscale = config['Postscale'],
@@ -310,10 +310,10 @@ class B2TwoBaryonLines( LineBuilder ) :
                                           selection = self.B2PPbar,
                                           RelatedInfoTools = config['RelatedInfoTools'])
          
-        self.lineB2PPSameSign = StrippingLine( B2PPSameSignName+"Line",
-                                          prescale = config['PrescaleB2PPbar'],
-                                          selection = self.B2PPSameSign,
-                                          RelatedInfoTools = config['RelatedInfoTools'])
+        #self.lineB2PPSameSign = StrippingLine( B2PPSameSignName+"Line",
+        #                                  prescale = config['PrescaleB2PPbar'],
+        #                                  selection = self.B2PPSameSign,
+        #                                  RelatedInfoTools = config['RelatedInfoTools'])
          
 
             
@@ -548,7 +548,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                    "log(pi_LoKi_TrkChi2)"     : "log(CHILD(CHILD(TRCHI2DOF,1),2))",
                    } 
         addTMVAclassifierValue(Component = _B ,
-                              XMLFile = xmldir+"B2pLambda_LL_BDT.xml",
+                              XMLFile = xmldir+"B2pLambda_LL_BDT_v1r4.xml",
                               Variables = Vars,
                               ToolName = "MVAResponse",
                               )
@@ -597,7 +597,7 @@ class B2TwoBaryonLines( LineBuilder ) :
                                       }
         
         addTMVAclassifierValue(Component = _B ,
-                               XMLFile = xmldir+"B2pLambda_DD_BDT.xml",
+                               XMLFile = xmldir+"B2pLambda_DD_BDT_v1r4.xml",
                                Variables = Vars,
                                ToolName = "MVAResponse",
                                )
