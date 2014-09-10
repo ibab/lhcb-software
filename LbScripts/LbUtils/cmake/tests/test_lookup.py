@@ -8,7 +8,12 @@ from cmake_coverage import cmake_script
 base_dir = dirname(__file__)
 
 def setup():
-    os.environ['CMTPROJECTPATH'] = join(base_dir, 'data', 'projects')
+    # There is no 'projects_cmt' directory, but it helps testing the priorities
+    # of CMAKE_PREFIX_PATH and CMTPROJECTPATH
+    os.environ['CMTPROJECTPATH'] = join(base_dir, 'data', 'projects_cmt')
+    os.environ['CMAKE_PREFIX_PATH'] = join(base_dir, 'data', 'projects')
+    #os.environ['CMTPROJECTPATH'] = ''
+    #os.environ['CMAKE_PREFIX_PATH'] = join(base_dir, 'data', 'projects')
     os.environ['CMTCONFIG'] = 'x86_64-slc6-gcc48-opt'
 
 def cmake_script_runner(name):

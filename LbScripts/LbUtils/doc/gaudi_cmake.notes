@@ -1,3 +1,82 @@
+! 2014-09-10 - Marco Clemencic (7a92111)
+
+ - Merge branch 'dev/cmake'
+
+   * dev/cmake: (26 commits)
+    updated tests after commit 341ac7 (fixed handling of CMAKE_PREFIX_PATH)
+    Removed 'endreq', slipped in with a relatively recent patch.
+    improved support for launch rules and allow use of ctest launchers
+    setting CMake policy CMP0026 to OLD (LOCATION vs $<TARGET_FILE>)
+    fixed handling of CMAKE_PREFIX_PATH env var in GaudiToolchainMacros
+    added backward compatibility with old LHCb toolchain file
+    modified InheritHEPTools to use GaudiToolchainMacros
+    add InstallArea/${BINARY_TAG}/cmake to the search path
+    factored out the default toolchain code and modified toolchain.cmake
+    added tests on CMake modules to the default test suite
+    add support for special conventions in projects lookup
+    added ATLAS convention test for CMake lookup
+    avoid that the cmake/tests directory goes in the list of packages
+    made cmake_coverage.py executable
+    renamed: FindUsedProjects.cmake -> GaudiToolchainMacros.cmake
+    added functions to prepare search path from projects
+    helper tools to test CMake modules
+    minor change in a message
+    ignore test wrappers in the HTML report (if successful)
+    add labels to tests
+    ...
+
+   Conflicts:
+   GaudiPolicy/doc/release.notes
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7516
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-09-10 - Marco Clemencic (253f057)
+
+ - updated tests after commit 341ac7 (fixed handling of CMAKE_PREFIX_PATH)
+
+   
+
+! 2014-09-09 - Marco Clemencic (4f5856d)
+
+ - improved support for launch rules and allow use of ctest launchers
+
+   Improved the way ccache/distcc are used so that they can be enabled also 
+   with the CTest launch rules.
+
+   Added the option GAUDI_USE_CTEST_LAUNCHERS to use launchers from ctest, 
+   which produce XML reports about warnings and errors in a dedicated directory
+   under CMAKE_CURRENT_BINARY_DIR.
+
+! 2014-09-09 - Marco Clemencic (64e173d)
+
+ - setting CMake policy CMP0026 to OLD (LOCATION vs $<TARGET_FILE>)
+
+   The use of the LOCATION property is deprecated and should be replaced with
+   the generator expression $<TARGET_FILE>, but the way we use it requires
+   CMake >= 2.8.12, so we must keep the old behavior until we bump the
+   cmake_minimum_required version.
+   (this policy have been defined in CMake 3.0)
+
+! 2014-09-08 - Marco Clemencic (341ac7d)
+
+ - fixed handling of CMAKE_PREFIX_PATH env var in GaudiToolchainMacros
+
+   
+
+! 2014-09-01 - Marco Clemencic (f994497)
+
+ - Fixed use of "-ansi" gcc option.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7515
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2014-08-29 - Marco Clemencic (8c189b8)
 
  - added backward compatibility with old LHCb toolchain file

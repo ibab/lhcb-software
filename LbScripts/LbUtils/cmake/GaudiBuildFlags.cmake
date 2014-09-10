@@ -66,11 +66,11 @@ if(NOT GAUDI_FLAGS_SET)
 
     # Common compilation flags
     set(CMAKE_CXX_FLAGS
-        "-fmessage-length=0 -pipe -ansi -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Woverloaded-virtual -Wno-long-long"
+        "-fmessage-length=0 -pipe -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Woverloaded-virtual -Wno-long-long"
         CACHE STRING "Flags used by the compiler during all build types."
         FORCE)
     set(CMAKE_C_FLAGS
-        "-fmessage-length=0 -pipe -ansi -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Wno-long-long"
+        "-fmessage-length=0 -pipe -Wall -Wextra -Werror=return-type -pthread -pedantic -Wwrite-strings -Wpointer-arith -Wno-long-long"
         CACHE STRING "Flags used by the compiler during all build types."
         FORCE)
     set(CMAKE_Fortran_FLAGS
@@ -205,6 +205,9 @@ if (GAUDI_CPP11)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
   endif()
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi")
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi")
 endif()
 
 if(NOT GAUDI_V21)
@@ -272,7 +275,7 @@ if(GAUDI_ATLAS)
   #        unfortunately it's not possible to detect the version of Gaudi at this point
   #        so we assume that any CMake-based build in ATLAS uses Gaudi >= v25
   add_definitions(-DHAVE_GAUDI_PLUGINSVC)
-  
+
   add_definitions(-DATLAS_GAUDI_V21)
   include(AthenaBuildFlags OPTIONAL)
 endif()

@@ -3,9 +3,17 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: e7d47ec7f14bdded3caf7edf89c9bc0de0ad891b
+# Commit Id: 7a921110b9a2321927b9df49995ec8d8cac84810
 
 cmake_minimum_required(VERSION 2.8.5)
+
+# FIXME: use of LOCATION property is deprecated and should be replaced with the
+#        generator expression $<TARGET_FILE>, but the way we use it requires
+#        CMake >= 2.8.12, so we must keep the old behavior until we bump the
+#        cmake_minimum_required version. (policy added in CMake 3.0)
+if(NOT CMAKE_VERSION VERSION_LESS 3.0) # i.e CMAKE_VERSION >= 3.0
+  cmake_policy(SET CMP0026 OLD)
+endif()
 
 # Preset the CMAKE_MODULE_PATH from the environment, if not already defined.
 if(NOT CMAKE_MODULE_PATH)
@@ -35,34 +43,79 @@ set(CMAKE_INCLUDE_DIRECTORIES_BEFORE ON)
 set(GAUDI_VERSION_REGEX "v?([0-9]+)[r.]([0-9]+)([p.]([0-9]+)(([a-z.])([0-9]+))?)?")
 
 if (GAUDI_BUILD_PREFIX_CMD)
-  set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "${GAUDI_BUILD_PREFIX_CMD}")
-  message(STATUS "Prefix build commands with '${GAUDI_BUILD_PREFIX_CMD}'")
-else()
-  find_program(ccache_cmd NAMES ccache ccache-swig)
-  find_program(distcc_cmd distcc)
-  mark_as_advanced(ccache_cmd distcc_cmd)
+  set(GAUDI_RULE_LAUNCH_COMPILE "${GAUDI_RULE_LAUNCH_COMPILE} ${GAUDI_BUILD_PREFIX_CMD}")
+endif()
 
-  if(ccache_cmd)
-    option(CMAKE_USE_CCACHE "Use ccache to speed up compilation." OFF)
-    if(CMAKE_USE_CCACHE)
-      set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${ccache_cmd})
-      message(STATUS "Using ccache for building")
-    endif()
+find_program(ccache_cmd NAMES ccache ccache-swig)
+find_program(distcc_cmd distcc)
+mark_as_advanced(ccache_cmd distcc_cmd)
+
+if(ccache_cmd)
+  option(CMAKE_USE_CCACHE "Use ccache to speed up compilation." OFF)
+  if(CMAKE_USE_CCACHE)
+    set(GAUDI_RULE_LAUNCH_COMPILE "${GAUDI_RULE_LAUNCH_COMPILE} ${ccache_cmd}")
+    message(STATUS "Using ccache for building")
   endif()
+endif()
 
-  if(distcc_cmd)
-    option(CMAKE_USE_DISTCC "Use distcc to speed up compilation." OFF)
-    if(CMAKE_USE_DISTCC)
-      if(CMAKE_USE_CCACHE)
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE "CCACHE_PREFIX=${distcc_cmd} ${ccache_cmd}")
-        message(STATUS "Enabling distcc builds in ccache")
-      else()
-        set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ${distcc_cmd})
-        message(STATUS "Using distcc for building")
-      endif()
+if(distcc_cmd)
+  option(CMAKE_USE_DISTCC "Use distcc to speed up compilation." OFF)
+  if(CMAKE_USE_DISTCC)
+    if(CMAKE_USE_CCACHE)
+      set(GAUDI_RULE_LAUNCH_COMPILE "${GAUDI_RULE_LAUNCH_COMPILE} CCACHE_PREFIX=${distcc_cmd} ${ccache_cmd}")
+      message(STATUS "Enabling distcc builds in ccache")
+    else()
+      set(GAUDI_RULE_LAUNCH_COMPILE "${GAUDI_RULE_LAUNCH_COMPILE} ${distcc_cmd}")
+      message(STATUS "Using distcc for building")
     endif()
   endif()
 endif()
+
+option(GAUDI_USE_CTEST_LAUNCHERS "Use CTest launchers to record details about warnings and errors." OFF)
+if(GAUDI_USE_CTEST_LAUNCHERS)
+  file(MAKE_DIRECTORY ${CMAKE_BINARY_DIR}/launch_logs)
+
+  # Code copied and adapted from the CTestUseLaunchers.cmake module
+  set(__launch_common_options
+    "--target-name <TARGET_NAME> --build-dir <CMAKE_CURRENT_BINARY_DIR>")
+
+  set(__launch_compile_options
+    "${__launch_common_options} --output <OBJECT> --source <SOURCE> --language <LANGUAGE>")
+
+  set(__launch_link_options
+    "${__launch_common_options} --output <TARGET> --target-type <TARGET_TYPE> --language <LANGUAGE>")
+
+  set(__launch_custom_options
+    "${__launch_common_options} --output <OUTPUT>")
+
+  if("${CMAKE_GENERATOR}" MATCHES "Ninja" AND NOT CMAKE_VERSION VERSION_LESS 3.0)
+    # this make sense only with CMamke >= 3.0
+    set(__launch_compile_options "${__launch_compile_options} --filter-prefix <CMAKE_CL_SHOWINCLUDES_PREFIX>")
+  endif()
+
+  set(GAUDI_RULE_LAUNCH_COMPILE
+    "CTEST_LAUNCH_LOGS=${CMAKE_BINARY_DIR}/launch_logs \"${CMAKE_CTEST_COMMAND}\" --launch ${__launch_compile_options} -- ${GAUDI_RULE_LAUNCH_COMPILE}")
+
+  set(GAUDI_RULE_LAUNCH_LINK
+    "CTEST_LAUNCH_LOGS=${CMAKE_BINARY_DIR}/launch_logs \"${CMAKE_CTEST_COMMAND}\" --launch ${__launch_link_options} -- ${GAUDI_RULE_LAUNCH_LINK}")
+
+  set(GAUDI_RULE_LAUNCH_CUSTOM
+    "CTEST_LAUNCH_LOGS=${CMAKE_BINARY_DIR}/launch_logs \"${CMAKE_CTEST_COMMAND}\" --launch ${__launch_custom_options} -- ${GAUDI_RULE_LAUNCH_CUSTOM}")
+
+  if("${CMAKE_GENERATOR}" MATCHES "Make")
+    set(GAUDI_RULE_LAUNCH_LINK "env ${GAUDI_RULE_LAUNCH_LINK}")
+  endif()
+endif()
+
+# apply launch rules
+foreach(_rule COMPILE LINK CUSTOM)
+  if(GAUDI_RULE_LAUNCH_${_rule})
+    string(STRIP "${GAUDI_RULE_LAUNCH_${_rule}}" GAUDI_RULE_LAUNCH_${_rule})
+    set_property(GLOBAL PROPERTY RULE_LAUNCH_${_rule} "${GAUDI_RULE_LAUNCH_${_rule}}")
+    message(STATUS "Prefix ${_rule} commands with '${GAUDI_RULE_LAUNCH_${_rule}}'")
+  endif()
+endforeach()
+
 
 # If Vera++ is available and it is requested by the user, check every source
 # file for style problems.

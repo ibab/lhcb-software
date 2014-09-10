@@ -17,5 +17,5 @@ assert_strequal(tools "ATool;AnotherTool")
 assert_strequal(ATool_DIR "${base_dir}/ATool/1.5.7")
 assert_strequal(AnotherTool_DIR "${base_dir}/AnotherTool/0.0.0/${BINARY_TAG}")
 
-assert_strequal(CMAKE_PREFIX_PATH "${ATool_DIR};${AnotherTool_DIR};${TOOLUSER_ROOT_DIR}/AtlasExternalsRelease/cmake;${TOOLUSER_ROOT_DIR};${base_dir}")
+assert_strequal(CMAKE_PREFIX_PATH "${ATool_DIR};${AnotherTool_DIR};${TOOLUSER_ROOT_DIR}/AtlasExternalsRelease/cmake;${TOOLUSER_ROOT_DIR};${base_dir};${base_dir}_cmt")
 assert_strequal(CMAKE_MODULE_PATH "${ATool_DIR};${AnotherTool_DIR};${TOOLUSER_ROOT_DIR}/AtlasExternalsRelease/cmake;${TOOLUSER_ROOT_DIR};${CMAKE_CURRENT_LIST_DIR};..;.")
