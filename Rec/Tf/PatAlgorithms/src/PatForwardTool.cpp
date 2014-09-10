@@ -94,7 +94,7 @@ public:
     template <typename Iterator> bool operator()(Iterator&& first, Iterator&& last) const { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
     template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
 
-    template <typename  Iterator,typename Predicate>
+    template <typename Iterator, typename Predicate>
     std::pair<Iterator,Iterator> next_range(Iterator first, Predicate predicate)
     {
         auto mid = this->next(first);
@@ -571,44 +571,40 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     for (unsigned int lay = 0; lay< nLay; lay++) {
       if (lay == 1 || lay == 2) continue;  // X layers
       for (unsigned int region = 0; region <nReg; region ++) {
-        const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
+        const auto* regionB = m_tHitManager->region(sta,lay,region);
         auto z = regionB->z();
-        double yRegion = track.yStraight( z );
+        auto yRegion = track.yStraight( z );
         if (!regionB->isYCompatible( yRegion, yCompat )) continue;
 
         auto xRange = symmetricRange( track.xStraight(z),
                                       interval.xKick( z ) + fabs( yRegion * regionB->sinT() ) + 20. );
 
-        auto hitRange =  m_tHitManager->hitsWithMinX(xRange.min(), sta, lay, region);
-        auto last = std::upper_bound( std::begin(hitRange), std::end(hitRange), xRange.max(), compByX );
+        auto hitRange =  m_tHitManager->hitsInXRange(xRange.min(), xRange.max(), sta, lay, region);
 
         // grow capacity so that things don't move around afterwards...
-        m_xHitsAtReference.reserve( m_xHitsAtReference.size() + std::distance( std::begin(hitRange), last) );
-        auto current = std::end(m_xHitsAtReference);
-
-        std::copy_if( std::begin(hitRange), last, 
+        m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
+        auto first = std::end(m_xHitsAtReference);
+        std::copy_if( std::begin(hitRange), std::end(hitRange), 
                       std::back_inserter(m_xHitsAtReference), 
                       [=](PatForwardHit* hit){
                               return !hit->hit()->ignore() &&  
                                      hit->hit()->isYCompatible( yRegion, yCompat );
                       } );
-        updateHitsForTrack( current, std::end(m_xHitsAtReference) );
-        m_xHitsAtReference.erase( std::remove_if( current, std::end(m_xHitsAtReference), 
-                                      [](const PatForwardHit* hit) {
-                                           return !hit->isSelected();
-                                      } ),
-                                  std::end(m_xHitsAtReference) );
-        m_fwdTool->setXAtReferencePlane(track, current, std::end(m_xHitsAtReference) );
-        m_xHitsAtReference.erase( std::remove_if( current, std::end(m_xHitsAtReference), 
-                                      [&](const PatForwardHit* hit) {
-                                           return interval.outside(hit->projection());
-                                      } ),
-                                  std::end(m_xHitsAtReference) );
+        auto last = std::end(m_xHitsAtReference);
+        updateHitsForTrack( first, last  );
+        last = std::remove_if( first, last, [](const PatForwardHit* hit) {
+                        return !hit->isSelected();
+               } );
+        m_fwdTool->setXAtReferencePlane(track, first, last );
+        last = std::remove_if( first, last, [&](const PatForwardHit* hit) {
+                        return interval.outside(hit->projection());
+               } );
+        m_xHitsAtReference.erase( last, std::end(m_xHitsAtReference) );
         // make sure we are ordered by the right criterium -- until now, things
         // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
         // so this sort is actually needed (not always though...), for both IT and OT...
-        std::sort( current, std::end(m_xHitsAtReference), Tf::increasingByProjection<PatForwardHit>() );
-        std::inplace_merge(std::begin(m_xHitsAtReference),current,std::end(m_xHitsAtReference), 
+        std::sort( first, last , Tf::increasingByProjection<PatForwardHit>() );
+        std::inplace_merge(std::begin(m_xHitsAtReference),first,last, 
                            Tf::increasingByProjection<PatForwardHit>() );
       }
     }

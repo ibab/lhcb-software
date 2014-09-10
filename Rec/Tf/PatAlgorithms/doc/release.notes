@@ -4,6 +4,12 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-09-09 - Gerhard Raven
+ - PatFwdTool:setRLDefault: simplify enough so the compiler inlines
+   the RLAmbiguityResolver completely
+ - PatFwdTool: change max_projected_element to return the iterator pointing
+   at the max element instead of the max element itself.
+
 !========================= PatAlgorithms v4r35 2014-09-09 =======================
 ! 2014-09-09 - Gerhard Raven
  - fix failure in PatForward when running without B field

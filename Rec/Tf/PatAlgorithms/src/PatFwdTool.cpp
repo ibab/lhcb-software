@@ -1,5 +1,6 @@
 // Include files
 #include <type_traits>
+#include <iterator>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -50,7 +51,8 @@ Iterator reverse_find_if(Iterator begin, Iterator end, Predicate&& pred) {
 
 
 template < typename  Iterator, typename Predicate >
-std::pair<Iterator,Iterator> find_first_and_last(Iterator begin, Iterator end, Predicate&& pred) {
+std::pair<Iterator,Iterator> find_first_and_last(Iterator begin, Iterator end, Predicate&& pred) 
+{
     Iterator first = std::find_if( begin, end, pred );
     if ( first == end ) return { first, end };
     auto rbegin = std::reverse_iterator<Iterator>(std::next(first));
@@ -60,22 +62,28 @@ std::pair<Iterator,Iterator> find_first_and_last(Iterator begin, Iterator end, P
 
 template < typename Iterator, 
            typename Projection, 
-           typename Predicate, 
-           typename Result = std::pair<typename Iterator::value_type, typename std::result_of<Projection(typename Iterator::value_type)>::type> >
+           typename Result,
+           typename Predicate >
 Result
-max_projected_element( Iterator first, Iterator last, Projection proj, Result init, Predicate pred ) {
-    // TODO: can we write this using std::accumulate???
-    for (; first != last; ++first) {
-        if ( pred(*first) ) {
-            auto x = proj(*first);
-            if ( !( x < init.second ) ) {
-                init.first  = *first;
-                init.second = x;
-            }
-        }
+max_projected_element( Iterator first, Iterator last, Projection proj, Result init, Predicate pred ) 
+{
+    for ( ; first!=last ; ++first) {
+        if ( !pred(*first) ) continue;
+        auto x = proj(*first);
+        if ( x<init.second ) continue;
+        init.first = first;
+        init.second = x;
     }
     return init;
 }
+
+template <typename C, typename Predicate>
+C& erase_if( C& c, Predicate&& pred ) {
+    c.erase( std::remove_if( std::begin(c), std::end(c), std::forward<Predicate>(pred) ),
+             std::end(c) );
+    return c;
+}
+
 
 template <typename Iterator, typename Predicate> 
 bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator last, Predicate pred ) 
@@ -116,18 +124,19 @@ bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator las
 class RLAmbiguityResolver {
     MsgStream* const m_msg;
     const PatFwdTrackCandidate* const m_track;
-    const double m_zRef;
+    const double m_zRef, m_ca;
 public:
     RLAmbiguityResolver( const PatFwdTrackCandidate& track, double zRef,  MsgStream* msg = nullptr ) : 
         m_msg{ msg }, 
         m_track{ &track } ,
-        m_zRef(zRef)
+        m_zRef{zRef},
+        m_ca{ track.cosAfter() }
     {
     }
 
     std::pair<double,double> operator()(std::pair<double,double> val, PatFwdHit *prev, PatFwdHit *hit) const {
       //OT : distance to a circle
-      double dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_track->cosAfter();
+      double dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_ca;
       double dx = hit->driftDistance();
 
       double distP = dist+dx;
@@ -140,11 +149,13 @@ public:
       hit->setRlAmb( rl );
       prev->setRlAmb( -rl );
 
+#if 0
       if( UNLIKELY( m_msg!=nullptr ) ) {
         (*m_msg) << format( "  z%10.2f x%10.2f region%2d P%2d N%2d distM%7.3f distP%7.3f minDist%7.3f vC%3d vP%3d",
                            hit->z(), hit->x(), hit->hit()->region(),
                            hit->hasPrevious(), hit->hasNext(), distM, distP, std::min(dm,dp),rl, -rl ) << endmsg;
       }
+#endif
       return { distP, distM };
     }
 };
@@ -443,14 +454,14 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
       return false;
     }
 
-    PatFwdHit* worst = nullptr;
+    auto worst = itEnd;
     std::tie( worst, highestChi2 ) = max_projected_element( itBeg, itEnd
                                                           , [&](const PatFwdHit* hit) { return chi2Hit(track,hit); }
                                                           , std::make_pair( worst, 0. )
                                                           , [] (const PatFwdHit* hit) { return hit->isSelected(); });
-    if ( highestChi2 > maxChi2 && worst ) {
-      planeCount.removeHit( worst );
-      worst->setSelected( false );
+    if ( highestChi2 > maxChi2 && worst!=itEnd ) {
+      planeCount.removeHit( *worst );
+      (*worst)->setSelected( false );
       if( UNLIKELY( isDebug ) ) 
         verbose() << "--- Remove worst and retry, plane count = " << planeCount.nbDifferent() << endmsg;
     }
@@ -460,6 +471,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
       if ( highestChi2 > minChi2 ) minChi2 = highestChi2 - 0.0001;  // down't find again the worst...
 
       if( UNLIKELY( isDebug ) ) debug() << "Collect all hits with chi2 below " << minChi2 << endmsg;
+      // WARNING: itBeg, itEnd must point into the same container as std::begin(track.coords)!!!!
       bool hasNewHits = extend_range( itBeg, itEnd, std::begin(track.coords()), std::end(track.coords()), 
                                     [&](const PatFwdHit* hit) { return !hit->isIgnored() && chi2Hit(track,hit) < minChi2; } );
       if ( hasNewHits ) {
@@ -528,14 +540,14 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
     }
 
     highestChi2 = 0;
-    PatFwdHit* worst = nullptr;
+    auto worst = std::end(track.coords());
     auto predicate = [=](const PatFwdHit* hit) { return hit->isSelected() && ! ( ignoreX && (hit->hit()->layer()==0 || hit->hit()->layer()==3 ) ) ; };
     auto  chi2hit  = [&](const PatFwdHit* hit) { return chi2Hit(track,hit); };
     std::tie(worst,highestChi2) = max_projected_element( std::begin(track.coords()), std::end(track.coords()),
                                                          chi2hit, std::make_pair( worst, 0. ), predicate);
-    if ( highestChi2 > maxChi2 && worst) {
-      planeCount.removeHit( worst );
-      worst->setSelected( false );
+    if ( highestChi2 > maxChi2 && worst!=std::end(track.coords())) {
+      planeCount.removeHit( *worst );
+      (*worst)->setSelected( false );
       if( UNLIKELY( isDebug ) ) debug() << " Remove hit and try again " << endmsg;
       //== Remove in one go all hits with bad contribution...
       if ( highestChi2 > 1000. ) {
@@ -692,44 +704,30 @@ double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
 //=========================================================================
 
 void PatFwdTool::setRlDefault( PatFwdTrackCandidate& track,
-                               PatFwdHits::const_iterator ibegin,
-                               PatFwdHits::const_iterator iend  ) const 
+                               PatFwdHits::const_iterator begin,
+                               PatFwdHits::const_iterator end  ) const 
 {
   const RLAmbiguityResolver resolve{track, zReference(),  UNLIKELY( msgLevel( MSG::DEBUG ) ) ? &debug() : nullptr };
-  PatFwdHits temp; temp.reserve( std::distance(ibegin,iend) );
+
+  PatFwdHits temp; temp.reserve( std::distance(begin,end) );
   // only OT has ambiguity
-  std::copy_if( ibegin, iend, std::back_inserter(temp), [](const PatFwdHit *hit) { 
+  std::copy_if( begin, end, std::back_inserter(temp), [](const PatFwdHit *hit) { 
       return /* hit->isSelected() && */ hit->hit()->type() == Tf::RegionID::OT ;
   } );
 
-  auto first = std::begin(temp);
-  auto end   = std::end(temp);
-
-
   int planeCode = 0;
-  while ( first != end ) {
-    auto part = std::partition( first, end, [planeCode](const PatFwdHit *hit) { 
-        return hit->planeCode() == planeCode ; 
+  auto first = std::begin(temp);
+  const auto last  = std::end(temp);
+  while ( first != last ) {
+    auto part = std::partition( first, last, [planeCode](const PatFwdHit* hit) { 
+        return hit->planeCode() == planeCode; 
     } );
     ++planeCode;
-    if (first == part ) continue;
     std::sort( first, part, Tf::increasingByX<PatForwardHit>() ); 
-
-#if 1
-    if ( std::distance(first,part) > 1 ) {
-      accumulate_adjacent_pairs( first, part, 
-                                 resolve( std::make_pair(10.,10.), *first, *first ), //FIXME: required to retain identical results...
-                                 std::cref(resolve) );
-    } else if ( first!=part ) {   // no RL solved if only one hit
-      (*first)->setRlAmb(0); 
-    }
-#else
-    accumulate_adjacent_pairs( first, part,
-                               resolve( std::make_pair(10.,10.), *first, *first ), //FIXME: required to retain identical results...
-                               std::cref(resolve) );
-#endif
+    if ( part != first ) accumulate_adjacent_pairs( first, part, 
+                                                    resolve( std::make_pair(10000.,10000.), *first, *first ),
+                                                    std::cref(resolve) );
     first = part;
   }
-  assert(first==end);
 }
 //=============================================================================
