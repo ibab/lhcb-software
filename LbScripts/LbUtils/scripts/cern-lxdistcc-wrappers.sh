@@ -41,8 +41,9 @@ setup_clang() {
 
         _clang_version=$1
         case ${_clang_version} in
-          3.3) setup_gcc 4.8.1 ;;
-          *)   setup_gcc 4.6.3 ;;
+          3.2) setup_gcc 4.6.3 ;;
+          3.3|3.4) setup_gcc 4.8.1 ;;
+          *) setup_gcc 4.8.1 ;;
         esac
 
         _platform=${LCG_hostos:-$(hostos)}
@@ -72,6 +73,8 @@ case ${_self} in
 
                 _version=${_self##*-}
                 setup_clang $_version
+                _self=${_self%-*}
+                _self=${_self#*-}
                 ;;
 
         *)

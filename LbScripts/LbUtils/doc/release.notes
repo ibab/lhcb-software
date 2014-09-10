@@ -1,5 +1,9 @@
 2014-09-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* scripts: fixed compiler wrapper for clang and added links for gcc 4.8.1 and clang 3.4
+
+2014-09-10  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* cmake: updated CMake support modules
 
 2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
