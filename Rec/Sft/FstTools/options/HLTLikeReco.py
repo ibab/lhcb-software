@@ -19,19 +19,26 @@ Brunel().InputType = "DIGI"
 Brunel().WithMC = True
 Brunel().PrintFreq = 100
 Brunel().Simulation = True
-Brunel().EvtMax = 5000
+Brunel().EvtMax = 1000
 Brunel().CondDBtag = 'sim-20131023-vc-md100' # use the mu100 for MagUp data
 Brunel().DDDBtag = 'dddb-20130929-1'
+Brunel().DatasetName = "full-hlt-plus-offline"
 
 MessageSvc().Format = '% F%50W%S%7W%R%T %0W%M'
 
 staged = StagedRecoConf()
-#staged.AddToBest = ["Fwd1", "Fwd2", "Match"]
+staged.AddToBest = ["Fwd1", "Fwd2", "OfflineFwd", "Match"]
+#staged.AddToBest = ["Fwd1", "Fwd2"]# "Match"]
 
 # sim://MC/Dev/Beam6500GeV-RunII-MagDown-Nu1.5-25ns-Pythia8/Sim08e/30000000 ( minbias )/XDIGI
 #
 # dirac-dms-get-file /lhcb/MC/Dev/XDIGI/00034696/0000/00034696_00000024_1.xdigi
 inputFiles = ['/tmp/thead/minbias/00034696_00000024_1.xdigi']
+
+# sim://MC/Dev/Beam6500GeV-RunII-MagDown-Nu1.5-25ns-Pythia8/Sim08e/11114001 ( Bd_Kstmumu=DecProdCut )/XDIGI
+#
+# dirac-dms-get-file /lhcb/MC/Dev/XDIGI/00034672/0000/00034672_00000001_1.xdigi
+inputFiles= ['/tmp/thead/kstmumu/00034672_00000001_1.xdigi']
 IOHelper('ROOT').inputFiles(inputFiles)
 
 def setup_mc_truth_matching():
@@ -43,6 +50,16 @@ def setup_mc_truth_matching():
     PrTrackAssociator().RootOfContainers = "/Event/Fst/Track"
 
     PrChecker().TriggerNumbers = True
+    PrChecker().Eta25Cut = True
+    PrChecker().WriteVeloHistos = 2
+    PrChecker().WriteForwardHistos = 2
+    PrChecker().WriteMatchHistos = 2
+    PrChecker().WriteDownHistos = 2
+    PrChecker().WriteUpHistos = 2
+    PrChecker().WriteTTrackHistos = 2
+    PrChecker().WriteBestHistos = 2
+    PrChecker().WriteBestLongHistos = 2
+    PrChecker().WriteBestDownstreamHistos = 2
     PrChecker().VeloTracks = "/Event/Fst/Track/Velo"
     PrChecker().UpTracks = "/Event/Fst/Track/VeloTT"
     PrChecker().ForwardTracks = "/Event/Fst/Track/Forward"

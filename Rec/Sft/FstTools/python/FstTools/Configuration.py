@@ -416,7 +416,7 @@ class FstConf(LHCbConfigurableUser):
             
 
 from Configurables import FastVeloTracking, FastVeloDecoding, DecodeVeloRawBuffer
-from Configurables import PatForward, PatForwardTool
+from Configurables import PatForward, PatForwardTool, TrackUsedLHCbID
 from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
 from Configurables import FastSTDecoding, PatTStationHitManager
 from Configurables import CreateFastTrackCollection
@@ -536,10 +536,12 @@ class StagedRecoConf(LHCbConfigurableUser):
         
         fwd_hlt2.addTool(PatForwardTool)
         fwd_hlt2_tool = fwd_hlt2.PatForwardTool
+        #fwd_hlt2_tool.AddTTClusterName = "PatAddTTCoord"
         fwd_hlt2_tool.SecondLoop = True
         fwd_hlt2_tool.MinPt = self.getProp("Fwd2MinPT")
         # Skip seeds we marked as used in HLT1
         fwd_hlt2_tool.SkipUsedSeeds = True
+        fwd_hlt2_tool.FlagUsedSeeds = True
         fwd_hlt2_tool.MinMomentum = 1000
         fwd_hlt2_tool.UseMomentumEstimate = True
         fwd_hlt2_tool.UseWrongSignWindow = True
@@ -548,7 +550,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         
         fst_seq.Members += [fwd_hlt2]
 
-
+        
         # Merge the two types of Forward tracks into one container
         # PatForward could already do this for us, but we keep
         # the output of first and second loop seperate in case
@@ -561,6 +563,33 @@ class StagedRecoConf(LHCbConfigurableUser):
         merge_fwd.OutputLocation = self.getProp("RootInTES") + "Track/Forward"
 
         fst_seq.Members += [merge_fwd]
+
+
+        # Hyperloop, third loop, or running the forward tracking
+        # as is done offline. This could be the first step of the
+        # new offline track reconstruction
+        offline_fwd = PatForward("FstOfflineForward")
+        offline_fwd.InputTracksName = velo_tracking.getProp("OutputTracksName")
+        offline_fwd.OutputTracksName = self.getProp("RootInTES") + "Track/OfflineFwd"
+        offline_fwd.maxOTHits = max_OT_hits
+        offline_fwd.DeltaNumberInT = 1E8
+        offline_fwd.DeltaNumberInTT = 1E8
+        offline_fwd.MaxNVelo = 1E8
+        
+        offline_fwd.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+        offline_fwd.UsedLHCbIDToolName = "TrackUsedLHCbID"
+        offline_fwd.TrackUsedLHCbID.inputContainers = [merge_fwd.getProp("OutputLocation")]
+        offline_fwd.TrackUsedLHCbID.selectorNames = ['ForwardSelector']
+        
+        offline_fwd.addTool(PatForwardTool)
+        offline_fwd_tool = offline_fwd.PatForwardTool
+        offline_fwd_tool.SecondLoop = True
+        #offline_fwd_tool.MinPt = 70#self.getProp("Fwd2MinPT")
+        # Skip seeds we marked as used in HLT1
+        offline_fwd_tool.SkipUsedSeeds = True
+
+        fst_seq.Members += [offline_fwd]
+        
         
         # XXX fit tracks then release hits used by "bad" tracks so they
         # XXX can be reused by the seeding
@@ -591,7 +620,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         fst_seq.Members += [seeding, matching]
 
 
-        # Merge the containers with long tracks
+        # Merge the various containers with long tracks
         clone_killer = TrackEventCloneKiller('FstCloneKiller')
         # It makes little difference if you directly use the two Forwards
         # as input here or merge them first as done in `merge_fwd`
@@ -600,6 +629,8 @@ class StagedRecoConf(LHCbConfigurableUser):
             merge_to_best.append(fwd_hlt1.getProp("OutputTracksName"))
         if "Fwd2" in self.getProp("AddToBest"):
             merge_to_best.append(fwd_hlt2.getProp("OutputTracksName"))
+        if "OfflineFwd" in self.getProp("AddToBest"):
+            merge_to_best.append(offline_fwd.getProp("OutputTracksName"))
         if "MergedFwd" in self.getProp("AddToBest"):
             merge_to_best.append(merge_fwd.getProp("OutputLocation"))
         if "Match" in self.getProp("AddToBest"):
