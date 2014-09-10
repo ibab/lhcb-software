@@ -4,6 +4,70 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
 
+</PRE><H1><A NAME=v47r1>2014-09-12 Brunel v47r1</A></H1><PRE>
+This version uses projects:
+ LCG 69root6 (ROOT 6.00/01), Gaudi v25r3, LHCb v38r1, Lbcom v16r0p1, Rec v17r1
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality
+  . Add support for 2015 DataType (Brunel(), RichRecQC v2r67, DDDB v1r71)
+  . Add possibility to reprocess from DST without rerunning the tracking,
+    enabled by Brunel().SkipTracking=True.
+    Currently not implemented for MC (is it needed?) or for upgrade
+    (RecConf v2r10, TrackSys v9r2, GaudiConf v19r4)
+
+- Changes to persistency
+  . Change default RawEvent output version to 4.0 (requires RawEventFormat v1r1):
+    RawEvent/Other further split into RawEvent/{Velo,Tracker,Unstripped}
+    (RecAlgs v3r2, DAQSys b8r4, RawEventCompat v1r6, DAQEvent v9r17, VeloDAQ v6r12)
+  . Change the key in the PackedTrack and PackedProtoParticle classes from a
+    32 to 64 bit int. Needed to allow the packing of the container information.
+    (EventPacker v4r4)
+
+- Configuration changes
+  . Use standard tracking sequence also for 2010 data. Previously was using
+    TsaSeed instead of PatSeed and non-standard GECs (TrackSys v9r2)
+  . Remove Aerogel from default radiator list when DataType is set for Run II.
+    (RichRecQC v2r67)
+
+- New physics tuning
+  . Propagate energy/position corrections to the photon/electron covariance
+    (CaloReco v5r21)
+  . Extrapolate the track to the CaloHypo Z position instead of ZShowerMax plane
+    (CaloPIDs v5r19)
+  . Several improvements to PrDownstream (PrAlgorithms v1r14)
+  . NeutralProtoPAlg : Change default value to +1 for IsPhoton when variable is
+    not evaluated (i.e. pt<2GeV hence not merged) (GlobalReco v6r49)
+
+- Performance improvements
+  . Vectorization of PrPixelTrack::fit and PrPixelTrack::covariance, conversion
+    of double to float (PrPixel v1r9)	 
+  . Performance updates to PatForward (PatAlgorithms v4r35, TfKernel v2r26)
+  . Hide TrackEventFitter counters behind MsgLevel(INFO) (TrackFitter v5r2)
+  . PatSeedingTool: use BloomFilter for fast overlap checking
+    (PatAlgorithms v4r35, LHCbMath v3r50)
+  . Various CPU performance improvements (CaloReco v5r21, MuonDet v9r16)
+  . Improve speed of Track::probChi2 (TrackEvent v6r2)
+
+- Bug fixes
+  . Fix memory leak in TrackStateProvider::finalize (TrackExtrapolators v2r4)
+  . Fixed (inconsequential) bug in FitNode smoother (TrackFitEvent v6r3)
+  . Improve the FPE protection in AlignmentOnlineMonitor (TrackMonitors v2r4)
+  . Make TrackVelodEdxCharge capable of running on tracks without measurements
+    (TrackTools v5r4)
+  . Fix untested StatusCode in LbAppInit.cpp (LHCbKernel v15r4)
+
+- Changes to QMTests
+  . Added repro2012reco14skiptracking, tests Brunel().SkipTracking functionality
+    Checks also that RawEvent output version 4.0 can be recombined back to 2.0
+    (Reco14 version)
+  . brunel-mc11a-xdst.qmt now explicitly tests RawEvent output version 2.0
+    (a few other tests adapted to default output version 4.0)
+  . Added 2015magdown to test 2015 DataType configuration. Currently uses 2012
+    raw data, to be updated...
+  . BrunelExclusions.py: Clean up obsolete exclusions
+  . Update the valgrind suppression files (GaudiConf v19r4)
+
 </PRE><H1><A NAME=v47r0>2014-07-21 Brunel v47r0</A></H1><PRE>
 This version uses projects:
  LCG 69root6 (ROOT 6.00/01), Gaudi v25r3, LHCb v38r0, Lbcom v16r0, Rec v17r0
