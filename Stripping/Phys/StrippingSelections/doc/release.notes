@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-10 - John Beddow
+ - Added B2PPSameSignLine to B2TwoBaryons.py 
+
 ! 2014-09-09 - Carlos Vazquez Sierra
  - Updated StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py
 

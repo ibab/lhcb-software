@@ -13,6 +13,7 @@ __version__ = '$Revision: 1.6 $'
 
 __all__ = ('B2TwoBaryonLines',
            'makeB2PPbar',
+           'makeB2PPSameSign',
            'default_config')
 
 from Gaudi.Configuration import *
@@ -211,6 +212,8 @@ class B2TwoBaryonLines( LineBuilder ) :
         
         B2PPbarName  = name + "B2PPbar"
 
+        B2PPSameSignName  = name + "B2PPSameSign"
+
         B2Lp_dd_name    = name+'B2PLambdabarDD'
         B2Lp_ll_name    = name+'B2PLambdabarLL'
 
@@ -243,7 +246,24 @@ class B2TwoBaryonLines( LineBuilder ) :
                                     config['BDIRA'],
                                     config['MaxGhostProb']
                                     )
-        
+
+        self.B2PPSameSign = self.makeB2PPSameSign( B2PPSameSignName,
+                                         config['MinPTB2PPbar'],
+                                         #config['TrChi2'],
+                                         config['PIDppi'],
+                                         config['PIDpk'],
+                                         config['MinIPChi2B2PPbar'],
+                                         config['MaxIPChi2B2PPbar'],
+                                         config['CombMassWindow'],
+                                         config['MaxPTB2PPbar'], 
+                                         config['MaxDaughtPB2PPbar'],	            
+                                         config['VertexChi2B2PPbar'],
+                                         config['BIPChi2B2PPbar'],
+                                         config['BPTB2PPbar'],
+                                         config['BDIRA'],
+                                         config['MaxGhostProb']
+                                         )
+
         self.B2Lp_dd_line = StrippingLine(B2Lp_dd_name+"Line",
                                          prescale = config['Prescale'],
                                          postscale = config['Postscale'],
@@ -289,8 +309,13 @@ class B2TwoBaryonLines( LineBuilder ) :
                                           prescale = config['PrescaleB2PPbar'],
                                           selection = self.B2PPbar,
                                           RelatedInfoTools = config['RelatedInfoTools'])
-                                          #ExtraInfoTools = config['ExtraInfoTools'],
-                                          #ExtraInfoDaughters = [self.B2PPbar])
+         
+        self.lineB2PPSameSign = StrippingLine( B2PPSameSignName+"Line",
+                                          prescale = config['PrescaleB2PPbar'],
+                                          selection = self.B2PPSameSign,
+                                          RelatedInfoTools = config['RelatedInfoTools'])
+         
+
             
         ## Some generic cuts for Bs0.
         ## Vertex chi2 cut depends on number of daughters:
@@ -339,7 +364,7 @@ class B2TwoBaryonLines( LineBuilder ) :
         _combination_cuts = "( (ADAMASS('B0') < %(combMassWindow)s * MeV) | (ADAMASS('B_s0') < %(combMassWindow)s * MeV) ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,PT)) > %(maxPT)s * MeV ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s )" %locals()
         _mother_cuts = "(PT > %(bPT)s * MeV) & ( VFASPF(VCHI2PDOF) < %(vertexChi2)s ) & ( BPVDIRA > %(bDIRA)s ) & ( BPVIPCHI2() < %(bIPChi2)s )" %locals()
 
-        CombineB2PPbar = CombineParticles( DecayDescriptor = 'B0 -> p+ p~-',
+        CombineB2PPbar = CombineParticles(DecayDescriptor = 'B0 -> p+ p~-',
                                        DaughtersCuts = { "p+" : _daughters_cuts },
                                        CombinationCut = _combination_cuts,
                                        MotherCut = _mother_cuts )
@@ -349,6 +374,30 @@ class B2TwoBaryonLines( LineBuilder ) :
                           RequiredSelections = [ StdLooseProtons ] )
 
     ########################################################################  
+    def makeB2PPSameSign( self,
+                          name,
+                          minPT,
+                          #trChi2,
+                          pidPPi, pidPK, minIPChi2, maxIPChi2,
+                          combMassWindow, maxPT, maxP,
+                          vertexChi2, bIPChi2, bPT, bDIRA, maxGhostProb ) :
+        
+        #_daughters_cuts = "(PT > %(minPT)s * MeV) & (TRCHI2DOF < %(trChi2)s) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s)" %locals()
+        _daughters_cuts = "(PT > %(minPT)s * MeV) & (P < %(maxP)s * MeV) & ((PIDp-PIDpi) > %(pidPPi)s) & ( (PIDp-PIDK) > %(pidPK)s ) & (MIPCHI2DV(PRIMARY) > %(minIPChi2)s) & (TRGHP < %(maxGhostProb)s )" %locals()
+        _combination_cuts = "( (ADAMASS('B0') < %(combMassWindow)s * MeV) | (ADAMASS('B_s0') < %(combMassWindow)s * MeV) ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,PT)) > %(maxPT)s * MeV ) & ( AMAXCHILD(MAXTREE('p+'==ABSID,MIPCHI2DV(PRIMARY))) > %(maxIPChi2)s )" %locals()
+        _mother_cuts = "(PT > %(bPT)s * MeV) & ( VFASPF(VCHI2PDOF) < %(vertexChi2)s ) & ( BPVDIRA > %(bDIRA)s ) & ( BPVIPCHI2() < %(bIPChi2)s )" %locals()
+        
+        CombineB2PPSameSign = CombineParticles( DecayDescriptor = ['B0 -> p+ p+', 'B0 -> p~- p~-'], 
+                                                DaughtersCuts = { "p+" : _daughters_cuts },
+                                                CombinationCut = _combination_cuts,
+                                                MotherCut = _mother_cuts )
+
+        return Selection( name,
+                          Algorithm = CombineB2PPSameSign,
+                          RequiredSelections = [ StdLooseProtons ] )
+
+    ###################################################################################
+
     def makeLambda2DD( self, name, config ) :
         # define all the cuts
         _massCut   = "(ADMASS('Lambda0')<%s*MeV)"      % config['Lambda_DD_MassWindow']
