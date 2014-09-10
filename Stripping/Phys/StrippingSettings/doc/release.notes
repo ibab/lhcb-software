@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-10 - Pablo Ruiz Valls
+ - StrippingB2XGammaExclBd2KstGammaLine moved to Calib stream
+
 ! 2014-09-09 - Carlos Vazquez Sierra (B2CC)
  - Updated B2CC dictionaries for s21(r1).
 

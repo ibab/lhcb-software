@@ -412,7 +412,10 @@ B2XGammaExcl = {
          ,'Bd2KstGammaPreScale'               : 1.0
          ,'Bd2KstGammaPostScale'              : 1.0
          },
-    'STREAMS'   : ['Radiative'],
+    'STREAMS'   : {
+               'Radiative' : ['StrippingB2XGammaExclBs2PhiGammaLine'],
+               'Calibration' : ['StrippingB2XGammaExclBd2KstGammaLine'],
+                   },
     }
 
 
