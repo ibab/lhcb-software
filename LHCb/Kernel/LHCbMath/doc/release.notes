@@ -6,6 +6,11 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-09-10 - Manuel Tobias Schiller
+ - BloomFilter: get the constexpr qualifiers correct (icc warning); now that I
+   understand about constexpr a bit better, the whole template metaprogrammed
+   fixed point log2 story can be replaced by nice and short constexpr functions
+
 !========================= LHCbMath v3r50 2014-09-08 =========================
 ! 2014-09-02 - Vanya Belyaev
  - Types.py 

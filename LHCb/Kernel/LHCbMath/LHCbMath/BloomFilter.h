@@ -17,134 +17,50 @@
 
 /// implementation details for BloomFilter
 namespace BloomFilterImpl {
-    /// implementation details for template metaprogram log2
-    namespace log2impl {
-	/// integer part of log2(_N) (rounding down to next integer)
-	template <unsigned _N> struct ilog2
-	{ enum { value = 1 + ilog2<_N / 2>::value }; };
-	/// specialise for _N == 1
-	template <> struct ilog2<1>
-	{ enum { value = 0 }; };
-	/// specialise for _N == 0 (absence of value enum will cause error)
-	template <> struct ilog2<0> {};
-
-	/// integer part of log2(_N) (rounding up to next integer)
-	template <unsigned _N> struct ilog2up
-	{ enum { value = ilog2<_N>::value + (_N != (1u << ilog2<_N>::value)) }; };
-
-	/// fractional part of log2(1-_N/64) (Taylor series)
-	template<unsigned _N> struct flog2
-	{
-	    enum { value =
-		((1u << (4 * 6)) * _N) / 1u -
-		    ((1u << (3 * 6)) * _N * _N) / 2u +
-		    ((1u << (2 * 6)) * _N * _N * _N) / 3u -
-		    ((1u << (1 * 6)) * _N * _N * _N * _N) / 4u +
-		    ((1u << (0 * 6)) * _N * _N * _N * _N * _N) / 5u
-	    };
-	};
+    /** @brief compute length of Bloom filter in bits
+     *
+     * @param CAPACITY	appox. number of elements
+     * @param PNUMER	numerator of false positive probability
+     * @param PDENOM	denominator of false positive probability
+     *
+     * @author Manuel Schiller <manuel.schiller@cern.ch>
+     * @date 2014-09-10
+     */
+    static constexpr unsigned nBits(const unsigned CAPACITY,
+	    const unsigned PNUMER, const unsigned PDENOM)
+    {
+	return -double(CAPACITY) * std::log(double(PNUMER) / double(PDENOM)) /
+	    std::pow(std::log(2.), 2);
     }
 
-    /** @brief compute log2(N/D) in fixed point as template metaprogram (to
-     * about 5%)
+    /** @brief compute number of hash functions for Bloom filter
      *
-     * @tparam N numerator
-     * @tparam D denominator
+     * @param PNUMER	numerator of false positive probability
+     * @param PDENOM	denominator of false positive probability
      *
-     * @author Manuel Schiller <manuel.schiller@nikhef.nl>
-     * @date 2014-08-15
+     * @author Manuel Schiller <manuel.schiller@cern.ch>
+     * @date 2014-09-10
      */
-    template<unsigned N, unsigned D> struct log2
+    static constexpr unsigned nHashes(const unsigned PNUMER, const unsigned PDENOM)
     {
-	public:
-	    /// denominator of fractional part of log2(N/D)
-	    enum { denom = 594482189 };
-	    /// numerator of fractional part of log2(N/D)
-	    enum { numer = int(denom -
-		    ((N != (1u << log2impl::ilog2<N>::value)) *
-		     log2impl::flog2<(64u *
-			 ((1u << log2impl::ilog2up<N>::value) - N)) /
-		     (1u << log2impl::ilog2up<N>::value)>::value -
-		     (D != (1 << log2impl::ilog2<D>::value)) *
-		     log2impl::flog2<(64u *
-			 ((1u << log2impl::ilog2up<D>::value) - D)) /
-		     (1u << log2impl::ilog2up<D>::value)>::value))
-	    };
-	    /// integer part of log2(N/D)
-	    enum { integer = int(log2impl::ilog2up<N>::value -
-		log2impl::ilog2up<D>::value - 1) };
-
-	    /// return result as double
-	    constexpr static double value()
-	    { return double(integer) + double(numer) / double(denom); }
-    };
-
-    /** @brief template metaprogram to compute length of Bloom filter in bits
-     *
-     * @tparam N	appox. number of elements
-     * @tparam PNUMER	numerator of false positive probability
-     * @tparam PDENOM	denominator of false positive probability
-     *
-     * @note Since the implementation of log2 as template metaprogram isn't
-     * perfect in terms of accuracy, the best results are achieved with
-     * PNUMER = 1 and PDENOM = 1 << k.
-     *
-     * @author Manuel Schiller <manuel.schiller@nikhef.nl>
-     * @date 2014-08-15
-     */
-    template<unsigned N, unsigned PNUMER, unsigned PDENOM> struct bits {
-	static_assert(PNUMER < PDENOM, "Probability >= 1, error.");
-	enum { value = int(
-		((-int64_t(N) *
-		  (int64_t(log2<PNUMER, PDENOM>::denom) *
-		   int64_t(log2<PNUMER, PDENOM>::integer) +
-		   int64_t(log2<PNUMER, PDENOM>::numer))) /
-		 int64_t(412063653)))
-	};
-    };
-
-    /** @brief template metaprogram to compute number of hash functions for
-     * Bloom filter
-     *
-     * @tparam PNUMER	numerator of false positive probability
-     * @tparam PDENOM	denominator of false positive probability
-     *
-     * @note Since the implementation of log2 as template metaprogram isn't
-     * perfect in terms of accuracy, the best results are achieved with
-     * PNUMER = 1 and PDENOM = 1 << k.
-     *
-     * @author Manuel Schiller <manuel.schiller@nikhef.nl>
-     * @date 2014-08-15
-     */
-    template<unsigned PNUMER, unsigned PDENOM> struct nhashes {
-	static_assert(PNUMER < PDENOM, "Probability >= 1, error.");
-	enum { value = int(-(int64_t(log2<PNUMER, PDENOM>::denom) *
-		    int64_t(log2<PNUMER, PDENOM>::integer) +
-		    int64_t(log2<PNUMER, PDENOM>::numer)) /
-		int64_t(594482189u))
-	};
-    };
+	return -std::log(double(PNUMER) / double(PDENOM)) / std::log(2.);
+    }
 
     /** @brief decide if very fast hashing can be used
      *
-     * @author Manuel Schiller <manuel.schiller@nikhef.nl>
-     * @date 2014-08-15
+     * @author Manuel Schiller <manuel.schiller@cern.ch>
+     * @date 2014-09-10
      *
      * If NBITS ^ NHASHES <= MAX, we can get our NHASHES hashes from a single
      * hash function invocation by extracting base NBITS digits from the hash
      * value...
      */
-    template<uint64_t MAX, uint64_t NBITS, unsigned NHASHES>
-    struct canUseVeryFastHash {
-	enum { value =
-	    canUseVeryFastHash<MAX / NBITS, NBITS, NHASHES - 1>::value
-	};
-    };
-    /// specialisation to handle termination of recursion
-    template<uint64_t MAX, uint64_t NBITS>
-    struct canUseVeryFastHash<MAX, NBITS, 0> {
-	enum { value = MAX != 0 };
-    };
+    static constexpr bool canUseVeryFastHash(uint64_t MAX,
+	    uint64_t NBITS, unsigned NHASHES)
+    {
+	return (0 == NHASHES) ? (0 != MAX) :
+	    canUseVeryFastHash(MAX / NBITS, NBITS, NHASHES - 1);
+    }
 
     /// very dumb FNV1a implementation
     template<class T> struct __doFNV1a
@@ -418,19 +334,21 @@ template <class T, unsigned CAPACITY = 128,
 	 class HASH = BloomFilterImpl::HashFNV1a<T> >
 class BloomFilter
 {
+    private:
+	static_assert(PNUMER < PDENOM, "Probability >= 1, error.");
     public:
 	/// capacity of Bloom filter
 	enum { capacity = CAPACITY };
-	/// probability for false positive at capacity
-	constexpr static double pFalsePositive()
-	{ return std::pow(2., BloomFilterImpl::log2<PNUMER, PDENOM>::value()); }
 	/// target probability for false positive at capacity
 	constexpr static double pFalsePositiveTarget()
 	{ return double(PNUMER) / double(PDENOM); }
 	/// number of hash functions used by Bloom filter
-	enum { nHashes = BloomFilterImpl::nhashes<PNUMER, PDENOM>::value };
+	enum { nHashes = BloomFilterImpl::nHashes(PNUMER, PDENOM) };
 	/// number of bits in Bloom filter
-	enum { nBits = BloomFilterImpl::bits<CAPACITY, PNUMER, PDENOM>::value };
+	enum { nBits = BloomFilterImpl::nBits(CAPACITY, PNUMER, PDENOM) };
+	/// probability for false positive at capacity
+	constexpr static double pFalsePositive()
+	{ return std::pow(2., -nBits * std::log(2.) / capacity); }
     private:
 	/// bits in Bloom filter
 	std::bitset<nBits> m_bits;
@@ -458,15 +376,15 @@ class BloomFilter
 #endif
 	/// true if number if bits is small enough to use very fast hashing
 	enum { canUseVeryFastHash =
-	    BloomFilterImpl::canUseVeryFastHash<
+	    BloomFilterImpl::canUseVeryFastHash(
 		std::numeric_limits<hashresult1_type>::max(),
-	        nBits, nHashes>::value
+	        nBits, nHashes)
 	};
 
     public:
 	/** @brief create empty set
 	 */
-	BloomFilter() { }
+	constexpr BloomFilter() { }
 
 	/// clear the Bloom filter
 	void clear() { m_bits.reset(); }
@@ -496,7 +414,7 @@ class BloomFilter
 	 * \frac{m}{k} \ln(1-\frac{\mathrm{popcount}}{m})@f$ where popcount
 	 * denotes the number of bits set in the Bloom filter's bit set.
 	 */
-	inline constexpr size_t size() const
+	inline size_t size() const
 	{
 	    return std::round(-double(nBits) / double(nHashes) *
 		    std::log(1. - double(popcount()) / double(nBits)));
