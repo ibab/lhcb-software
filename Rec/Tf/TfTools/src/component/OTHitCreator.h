@@ -47,9 +47,10 @@ namespace Tf
    *  @date   2007-06-01
    */
 
-  class OTHitCreator: public GaudiTool,
-                      virtual public IOTHitCreator,
-                      virtual public IIncidentListener
+  class OTHitCreator final: public GaudiTool,
+                            virtual public IOTHitCreator,
+                            virtual public IIncidentListener 
+                      
   {
 
   public:
@@ -60,64 +61,64 @@ namespace Tf
                  const IInterface* parent);
 
     // destructer
-    virtual ~OTHitCreator() ;
+    ~OTHitCreator() override = default;
 
     /// initialisation
-    virtual StatusCode initialize();
+    StatusCode initialize() override;
     /// finalisation
-    virtual StatusCode finalize();
+    StatusCode finalize() override;
 
     /// incident service handle
-    virtual void handle( const Incident& incident ) ;
-
+    void handle( const Incident& incident ) override;
+ private:
     /// update manager handle
-    virtual StatusCode updateGeometry() ;
-
+    StatusCode updateGeometry() ;
+ public:
     // RestUsed flag for all OT hits
-    virtual  void resetUsedFlagOfHits() const;
+    void resetUsedFlagOfHits() const override;
 
     // Load all the OT hits
-    virtual OTHitRange hits() const ;
+    OTHitRange hits() const override;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation) const ;
+    OTHitRange hits(const TStationID iStation) const override;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation,
-                            const TLayerID iLayer) const ;
+    OTHitRange hits(const TStationID iStation,
+                    const TLayerID iLayer) const override;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation,
-                            const TLayerID iLayer,
-                            const OTRegionID iRegion) const ;
+    OTHitRange hits(const TStationID iStation,
+                    const TLayerID iLayer,
+                    const OTRegionID iRegion) const override;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation,
-                            const TLayerID iLayer,
-                            const OTRegionID iRegion,
-                            const double xmin,
-                            const double xmax) const ;
+    OTHitRange hits(const TStationID iStation,
+                    const TLayerID iLayer,
+                    const OTRegionID iRegion,
+                    const double xmin,
+                    const double xmax) const override ;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hitsLocalXRange(const TStationID iStation,
-				       const TLayerID iLayer,
-				       const OTRegionID iRegion,
-				       const double xmin,
-				       const double xmax) const ;
+    OTHitRange hitsLocalXRange(const TStationID iStation,
+		       const TLayerID iLayer,
+		       const OTRegionID iRegion,
+		       const double xmin,
+		       const double xmax) const override;
 
     // Load the hits for a given region of interest
-    virtual OTHitRange hits(const TStationID iStation,
-                            const TLayerID iLayer,
-                            const OTRegionID iRegion,
-                            const double xmin,
-                            const double xmax,
-                            const double ymin,
-                            const double ymax) const ;
+    OTHitRange hits(const TStationID iStation,
+                    const TLayerID iLayer,
+                    const OTRegionID iRegion,
+                    const double xmin,
+                    const double xmax,
+                    const double ymin,
+                    const double ymax) const override;
 
     // Retrieve the OTRegion for a certain region ID. The region
-    virtual const OTRegion* region(const TStationID iStation,
-                                   const TLayerID iLayer,
-                                   const OTRegionID iRegion) const ;
+    const OTRegion* region(const TStationID iStation,
+                           const TLayerID iLayer,
+                           const OTRegionID iRegion) const override;
 
 
     // Create a single OTHit from an lhcbid

@@ -18,13 +18,9 @@
 
 #include <algorithm>
 #include <cmath>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/construct.hpp>
 
 #include "HitCreatorGeom.h"
 
-//#include "TfKernel/RegionID.h"
 #include "TfKernel/Region.h"
 #include "TfKernel/OTHit.h"
 
@@ -91,44 +87,34 @@ namespace Tf
         LHCb::OTLiteTimeRange otlitetimes = decoder.decodeModule( moduleelement.elementID() ) ;
 
         // create the hits
-        size_t numhits = otlitetimes.size() ;
-        m_ownedhits.reserve( numhits ) ;
+        m_ownedhits.reserve(  otlitetimes.size() );
         // put if-statement before loop to fork only once
         if (0 == m_rtrel) {
           // don't use custom rt relation - drift times are on
           if( tmin < tmax ) {
-            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
-                 ihit != otlitetimes.end(); ++ihit) {
-              double calibTime = ihit->calibratedTime() ;
-              if( tmin <= calibTime && calibTime <= tmax )
-                m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
-            }
+            std::for_each( std::begin(otlitetimes), std::end(otlitetimes), [this,tmin,tmax,&moduleelement](const LHCb::OTLiteTime& hit) {
+              auto calibTime = hit.calibratedTime() ;
+              if( tmin <= calibTime && calibTime <= tmax ) this->m_ownedhits.emplace_back( moduleelement,hit ) ;
+            } );
           } else {
-            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
-                 ihit != otlitetimes.end(); ++ihit)
-              m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit ) ) ;
+            for( const auto& hit : otlitetimes ) m_ownedhits.emplace_back( moduleelement,hit ) ;
           }
         } else {
           // use custom rt relation - drift times are off
           const OTDet::RtRelation& rtrel = *m_rtrel;
           if( tmin < tmax ) {
-            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
-                 ihit != otlitetimes.end(); ++ihit) {
-              double calibTime = ihit->calibratedTime() ;
-              if( tmin <= calibTime && calibTime <= tmax )
-                m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit,rtrel) ) ;
-            }
+            std::for_each( std::begin(otlitetimes), std::end(otlitetimes), [this,tmin,tmax,&moduleelement,&rtrel](const LHCb::OTLiteTime& hit) {
+              auto calibTime = hit.calibratedTime() ;
+              if( tmin <= calibTime && calibTime <= tmax ) this->m_ownedhits.emplace_back( moduleelement,hit,rtrel);
+            } );
           } else {
-            for( LHCb::OTLiteTimeRange::const_iterator ihit = otlitetimes.begin() ;
-                 ihit != otlitetimes.end(); ++ihit)
-              m_ownedhits.push_back( Tf::OTHit(moduleelement,*ihit,rtrel) ) ;
+            for( const auto& hit : otlitetimes ) m_ownedhits.emplace_back( moduleelement,hit,rtrel ) ;
           }
         }
 
         // create the sorted hits
         m_sortedhits.reserve(m_ownedhits.size()) ;
-        for(HitContainer::const_iterator it = m_ownedhits.begin();
-            it !=  m_ownedhits.end(); ++it) m_sortedhits.push_back( &(*it) ) ;
+        std::transform( std::begin(m_ownedhits), std::end(m_ownedhits), std::back_inserter(m_sortedhits), std::addressof<OTHit> );
         std::sort( m_sortedhits.begin(), m_sortedhits.end(), compareHitX() ) ;
 
         m_isloaded = true ;
@@ -155,29 +141,23 @@ namespace Tf
       : m_parent(&parent)
     {
       size_t nummodules(0) ;
-      for( DeOTDetector::Stations::const_iterator istation = otdet.stations().begin() ;
-           istation != otdet.stations().end() ; ++istation)
-        for( DeOTStation::Layers::const_iterator ilayer = (*istation)->layers().begin() ;
-             ilayer != (*istation)->layers().end() ; ++ilayer)
-          for( DeOTLayer::Quarters::const_iterator iquadrant = (*ilayer)->quarters().begin() ;
-               iquadrant != (*ilayer)->quarters().end() ; ++iquadrant)
-            for( DeOTQuarter::Modules::const_iterator imodule = (*iquadrant)->modules().begin() ;
-                 imodule != (*iquadrant)->modules().end() ; ++imodule) {
+      for( const auto& station : otdet.stations() ) 
+        for( const auto& layer :  station->layers() ) 
+          for( const auto& quadrant : layer->quarters() ) 
+            for( const auto& module : quadrant->modules() ) {
               // create the region (if it doesn't exist)
-              RegionID regionid( LHCb::OTChannelID((*imodule)->elementID()) ) ;
+              RegionID regionid( LHCb::OTChannelID(module->elementID()) ) ;
               OTRegionImp* aregion = const_cast<OTRegionImp*>(region(regionid)) ;
               if(!aregion) {
                 aregion = new OTRegionImp(regionid,*this) ;
                 insert( aregion ) ;
               }
-              size_t moduleindex = OTModule::moduleIndexInRegion((*imodule)->elementID()) ;
-              aregion->insert( moduleindex, new HitCreatorGeom::OTModule(**imodule,
-                                                                         m_parent->getRtRelation()) ) ;
+              aregion->insert( OTModule::moduleIndexInRegion(module->elementID()),
+                               new HitCreatorGeom::OTModule(*module, m_parent->getRtRelation()) ) ;
               ++nummodules ;
             }
-      for(RegionContainer::iterator ireg = regions().begin() ; ireg != regions().end() ; ++ireg)
-        for(OTRegionImp::ModuleContainer::iterator it = (*ireg)->modules().begin() ; it != (*ireg)->modules().end() ; ++it)
-          m_modules.push_back( *it ) ;
+      for(const auto& reg : regions() ) for(auto& mod : reg->modules() ) 
+          m_modules.push_back( mod ) ;
 
     }
 
@@ -187,28 +167,23 @@ namespace Tf
     {
       if(!isLoaded()) {
         unsigned int numhits(0) ;
-        for(OTRegionImp::ModuleContainer::const_iterator imodule=begin ;
-            imodule!= end; ++imodule) {
-          if(!(*imodule)->isLoaded()) {
-            OTModule* module = const_cast<OTModule*>(*imodule) ;
-            module->loadHits(*(m_parent->decoder()),m_parent->tmin(),m_parent->tmax()) ;
+        std::for_each( begin, end, [this,&numhits](const OTModule* module) { 
+          if (!module->isLoaded()) {
+            const_cast<OTModule*>(module)->loadHits(*(this->m_parent->decoder()),this->m_parent->tmin(),this->m_parent->tmax()) ;
           }
-          numhits += (*imodule)->sortedhits().size() ;
-        }
+          numhits += module->sortedhits().size() ;
+        } );
 
         // FIXME. This invalidates all pointers to hits ranges,
         // including those set in 'other' modules.
         HitContainer& thehits = hits() ;
         thehits.resize(numhits,0) ;
-        HitContainer::const_iterator hitsbegin = thehits.begin() ;
-        size_t lasthit(0) ;
-        for(OTRegionImp::ModuleContainer::const_iterator imodule = begin ; imodule!= end; ++imodule) {
-          size_t firsthit = lasthit ;
-          for(OTModule::SortedHitContainer::const_iterator ihit = (*imodule)->sortedhits().begin() ;
-              ihit != (*imodule)->sortedhits().end(); ++ihit)
-            thehits[lasthit++] = *ihit ;
-          (const_cast<OTModule*>(*imodule))->setRange( hitsbegin + firsthit, hitsbegin + lasthit ) ;
-        }
+        auto lasthit  = std::begin(thehits);
+        std::for_each( begin, end, [&lasthit]( const OTModule* module ) { 
+          auto firsthit = lasthit ;
+          lasthit = std::copy( std::begin(  module->sortedhits() ), std::end( module->sortedhits()),  firsthit  );
+          (const_cast<OTModule*>(module))->setRange( firsthit, lasthit ) ;
+        } );
       }
     }
 
@@ -217,7 +192,6 @@ namespace Tf
       loadHits(m_modules.begin(), m_modules.end() ) ;
       setIsLoaded(true) ;
     }
-
   }
 
   DECLARE_TOOL_FACTORY( OTHitCreator )
@@ -247,10 +221,6 @@ namespace Tf
     declareProperty("RawBankDecoder",m_otdecoder) ;
   }
 
-  OTHitCreator::~OTHitCreator()
-  {
-    // destructer
-  }
 
   StatusCode OTHitCreator::initialize()
   {
@@ -290,9 +260,7 @@ namespace Tf
       // need a vector to construct polynomial approximation to the tweaked
       // rt relation; rtrelpoly: t(r) = rtrelpoly[0] + rtrelpoly[1] * r + ...
       // a linear approximation does the job
-      std::vector<double> rtrelpoly;
-      rtrelpoly.push_back(- m_forceDriftRadius / vdrift);
-      rtrelpoly.push_back(1. / vdrift);
+      std::vector<double> rtrelpoly{ - m_forceDriftRadius / vdrift, 1. / vdrift };
       // construct new r-t relation - all drift times are mapped to
       // m_forceDriftRadius and the resolution is set to m_forceResolution
       m_rtrel = new OTDet::RtRelation(m_otdetector->modules().front()->rtRelation().rmax(),
@@ -322,9 +290,9 @@ namespace Tf
   {
     if (m_detectordata) m_detectordata->clearEvent();
     delete m_detectordata ;
-    m_detectordata = 0 ;
+    m_detectordata = nullptr ;
     delete m_rtrel;
-    m_rtrel = 0;
+    m_rtrel = nullptr;
     m_otdecoder.release().ignore() ;
     return GaudiTool::finalize() ;
   }
@@ -422,15 +390,14 @@ namespace Tf
     const Tf::HitCreatorGeom::OTRegionImp* thisregion =
       m_detectordata->region(regionid.station(),regionid.layer(),regionid.region()) ;
     size_t modindex = Tf::HitCreatorGeom::OTModule::moduleIndexInRegion( id ) ;
-    const Tf::HitCreatorGeom::OTModule* thismodule = thisregion->modules()[modindex] ;
-    return thismodule ;
+    return thisregion->modules()[modindex] ;
   }
 
   Tf::OTHit OTHitCreator::hit( const LHCb::OTChannelID id ) const
   {
     // we could as well use OTDet here .. we only need the element.
     const DeOTModule& thismodule = module(id)->detelement() ;
-    if (0 != m_rtrel)
+    if ( m_rtrel )
       return Tf::OTHit( thismodule, m_otdecoder->time( id ), *m_rtrel ) ;
     else
       return Tf::OTHit( thismodule, m_otdecoder->time( id )  ) ;
@@ -445,11 +412,7 @@ namespace Tf
   // RestUsed flag for all OT hits
   void OTHitCreator::resetUsedFlagOfHits() const
   {
-    Tf::OTHitRange hits = m_detectordata->hits() ;
-
-    for( Tf::OTHits::const_iterator it = hits.begin(); it != hits.end() ; ++it){
-      const Tf::OTHit* hit = (*it);
-      hit->resetUsedFlag();
-    }
+    std::for_each( std::begin( m_detectordata->hits() ), std::end( m_detectordata->hits() ),
+                   [](const OTHit *hit) { hit->resetUsedFlag() ; } );
   }
 }
