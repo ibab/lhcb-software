@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-09-10 - Pablo Ruiz Valls
+ - StrippingBd2eeKstarBDT was missing, added to RD dictionaries under Bhadron stream
+
+! 2014-09-10 - Pablo Ruiz Valls
  - StrippingB2XGammaExclBd2KstGammaLine moved to Calib stream
 
 ! 2014-09-09 - Carlos Vazquez Sierra (B2CC)

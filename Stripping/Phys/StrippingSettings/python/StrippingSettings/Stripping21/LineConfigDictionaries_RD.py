@@ -507,6 +507,57 @@ Bs2GammaGamma = {
     }
 
 ################################################################################
+## StrippingBd2eeKstarBDT.py                                                  ##
+## Bd -> K* e+e- line                                                         ##
+## -----------------------------------------                                  ##
+## StrippingBd2eeKstarBDTLine                                                 ##
+## StrippingBd2eeKstarBDTLine2                                                ##
+## Authors: Jibo He, Marie-Helene Schune                                      ##
+################################################################################
+Bd2eeKstarBDT = {
+    'WGs' : ['RD'],
+    'BUILDERTYPE' : 'Bd2eeKstarBDTConf',
+    'CONFIG' :  {
+        'LinePrescale'            :    1.   ,
+        'LinePostscale'           :    1.   ,
+        #
+        'ElectronPT'              :  200.   ,  # MeV
+        'ElectronTrackCHI2pNDOF'  :    5.   ,
+        'ElectronGhostProb'       :    0.5  ,
+        'ElectronIPCHI2'          :    1.   ,
+        'ElectronPIDepi'          :   -2.   ,
+        #
+        'eeCuts'                  : "(HASVERTEX) & (VFASPF(VCHI2)<16) & (((MM<1.5*GeV)) | ((MM>2.2*GeV) & (MM<4.2*GeV)))",
+        #
+        'KaonPT'                  :  400.   ,  # MeV
+        'KaonP'                   : 3000.   ,  # MeV
+        'KaonTrackCHI2pNDOF'      :    5.   ,
+        'KaonGhostProb'           :    0.35 ,
+        'KaonIPCHI2'              :    4.   ,
+        'KaonPIDKpi'              :   -5.   ,
+        #
+        'PionPT'                  :  250.   ,  # MeV
+        'PionP'                   : 2000.   ,  # MeV
+        'PionTrackCHI2pNDOF'      :    5.   ,
+        'PionGhostProb'           :    0.35 ,
+        'PionIPCHI2'              :    4.   ,
+        'PionPIDpiK'              :   10.   ,  # PIDpi-PIDK > -5, i.e., PIDK<5
+        #
+        'KstarVertexCHI2'         :   16.   ,
+        'KstarMassW'              :  150.   ,  # MeV
+        #
+        'BComMassW'               : 1200.   ,  # MeV
+        'BVertexCHI2'             :   16.   ,  # /ndf
+        'BMassW'                  : 1000.   ,  # MeV
+        'BDIRA'                   :    0.999,
+        'BDTCutValue'             :   -0.95 ,
+        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
+        },
+    'STREAMS' : ['Bhadron']
+}
+
+
+################################################################################
 ##                              VRD SubGroup Lines                            ##
 ################################################################################
 ## StrippingDarkBoson.py                                                     ###
