@@ -8,6 +8,11 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2014-09-11 - Michel De Cian
+ - In MuonCombRec: Make tools public, protect debug statements, some simplifications in the code.
+ - In MuonHitDecode: Introduce option to skip the calculations of the 'hardware numbers', 
+   as it is not needed for pure track reconstruction (as in MuonTT tracking).
+
 !========================= MuonTrackRec v3r11 2014-07-14 ======================
 ! 2014-06-30 - G Graziani
  - New tool MuonPadFromCoord(IMuonPadRec) to bypass the need for raw data banks

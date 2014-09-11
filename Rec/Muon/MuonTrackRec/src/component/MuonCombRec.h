@@ -1,3 +1,4 @@
+
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -23,7 +24,7 @@ class IMuonTrackMomRec;
  *  @date   2009-10-07
  */
 class MuonCombRec : public GaudiTool, virtual public IMuonTrackRec, 
-                      virtual public IIncidentListener {
+                    virtual public IIncidentListener {
 public: 
   /// Standard constructor
   MuonCombRec( const std::string& type, 
@@ -117,18 +118,16 @@ private:
   IMuonTrackMomRec* m_momentumTool;
 
 
-  //  IMuonFastPosTool* m_posTool;
   DeMuonDetector* m_muonDetector;
   bool m_recDone;
   bool m_recOK;
   bool m_hitsDone; // MuonHit container filled
   bool m_sortDone; // MuonHit-s sorted
-  //  bool m_tooManyHits;
-
+  
   std::vector<float> m_xFOIs;
   std::vector<float> m_yFOIs;
 
-  std::vector<float> m_zStations;
+  double m_zStations[5];
   
   std::vector< MuonHit* > m_trackhits;
   std::vector< MuonTrack* > m_tracks;
@@ -138,34 +137,32 @@ private:
 
   int m_nStation;
   int m_nRegion;
-
-  ISequencerTimerTool* m_timer;
-  int m_timeLoad;
-  int m_timePad;
-  int m_timeMuon;              
-  //  int m_timeTag;
-  int m_timeMuonStore;
-
-  // pad sizes are hardwired to speed up the algorithm
-  std::vector<double> m_pad_x;
-  std::vector<double> m_pad_y;
-
   
-  // counters
-  //  int m_countEvents;
-  //  int m_countMuCandidates;
+  // -- timing
+  ISequencerTimerTool* m_timer;
+  int m_timeTotal;
+  int m_timeLoadHits;
+  int m_timeClusters;
+  int m_timeMuon;              
+  int m_timeBuildLogicalPads;
+  int m_timeCloneKilling;
+  int m_timeFitting;
 
+  // -- pad sizes are hardwired to speed up the algorithm
+  std::array<double, 20> m_padX;
+  std::array<double, 20> m_padY;
+  std::array<double, 4> m_tolForRegion;
+  
+  
   // properties
 
 
-  // maximum number of tracks axcepted
-  //  int m_maxMuonFound;  
   // enable timers
   bool m_measureTime;  
   // enable clone finding and killing
   bool m_optCloneKiller;
   bool m_cloneKiller;
-  // enable strong clone fining and killing
+  // enable strong clone finding and killing
   bool m_optStrongCloneKiller;
   bool m_strongCloneKiller;
 
@@ -179,14 +176,13 @@ private:
   bool m_assumeCosmics;
   // if true we assume that tracks have the "right" direction (pz>0)
   bool m_assumePhysics;
-  // name of decoding tool (MuonHitDecode for offline, MuonMonHitDecode for online monitoring)
+  
+  /// name of decoding tool (MuonHitDecode for offline, MuonMonHitDecode for online monitoring)
   std::string m_decToolName;
-  // name of pad rec tool (MuonPadRec only option so far)
+  /// name of pad rec tool (MuonPadRec only option so far)
   std::string m_padToolName;
   // name of clustering tool
   std::string m_clusterToolName;
-  // name of tile 2 coordinate conversion tool (MuonDetPosTool for using MuonDet, faster alternative provided by HltMuon)
-  //  std::string m_posToolName;
   /// cross talk
   bool m_XTalk;
   /// station used for seed
@@ -195,13 +191,13 @@ private:
   /// LHCb tracks output location in TES
   std::string m_trackOutputLoc ;
 
-  // main steering reconstruction routine
+  /// main steering reconstruction routine
   StatusCode muonTrackFind();
 
-  StatusCode findMatching( double x, double y,
-                           int lookInStation,
-                           int lookInRegion,
-                           std::vector<MuonHit*> &Vec_candidate );
+  /// find matching muon hits in other stations
+  StatusCode findMatching( const double x, const double y,
+                           const int lookInStation, const int lookInRegion,
+                           std::vector<MuonHit*> &candidates );
 
   StatusCode sortMuonHits();
   StatusCode muonSearch();

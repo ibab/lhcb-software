@@ -15,7 +15,8 @@ class DeMuonDetector;
  *  Parameters:
  *  - NumberRawLocations: Number of raw locations to look for data (default = 1). 
  *  Values larger than one will result in looking for data in Prev# / Next#
- *  
+ *  - SkipHWNumber: Skip the calculation of the hardware numbers. Can be set 'true' 
+ *    for reconstructing MuonTT tracks as it is faster.
  *  
  *
  */
@@ -105,6 +106,7 @@ private:
   bool m_hitsDecoded;
   std::string nullstring;
   int m_TAENum;
+  bool m_skipHWNumber;
   
 };
 #endif // LIB_MUONHITDECODE_H

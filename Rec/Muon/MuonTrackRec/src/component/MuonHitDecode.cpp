@@ -19,13 +19,11 @@ DECLARE_TOOL_FACTORY( MuonHitDecode )
   MuonHitDecode::MuonHitDecode( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : GaudiTool ( type, name , parent ), 
-      m_recTool(NULL),
-      m_muonDetector(NULL),
-      m_hitsDecoded(false)   
+    : GaudiTool ( type, name , parent ), m_hitsDecoded(false)
 {
   declareInterface<IMuonHitDecode>(this);
   declareProperty( "NumberRawLocations", m_TAENum = 1 );
+  declareProperty( "SkipHWNumber", m_skipHWNumber = false );
 }
 
 MuonHitDecode::~MuonHitDecode() {
@@ -35,7 +33,7 @@ MuonHitDecode::~MuonHitDecode() {
 void MuonHitDecode::handle ( const Incident& incident )
 {
   if ( IncidentType::EndEvent == incident.type() ) {
-    debug() << "End Event: clear hits"<<endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "End Event: clear hits"<<endmsg;
     clearHits() ;
     m_hitsDecoded = false;
   }
@@ -114,8 +112,8 @@ StatusCode MuonHitDecode::decodeRawData()
       // set the time taking into account the BX. must be positive so I need to add an offset...
       unsigned int tprim = (*it).second;
       (*it).second += (7+i)*16;
-      verbose()<<"time conversion: before "<<tprim
-               <<" after"<<(*it).second<<endmsg;
+      if ( msgLevel(MSG::VERBOSE) ) verbose()<<"time conversion: before "<<tprim
+                                             <<" after"<<(*it).second<<endmsg;
     }
 
     m_tilesAndTDC.insert(m_tilesAndTDC.end(), tileAndTDC.begin(), tileAndTDC.end());
@@ -140,8 +138,8 @@ StatusCode MuonHitDecode::decodeRawData()
   {
     newhit = new MuonLogHit( &((*it).first) );
     long L1Number,link_number,ODE_number,ode_ch;
-    m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first,
-                                                 L1Number,link_number,ODE_number,ode_ch);
+    if(!m_skipHWNumber)  m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first,
+                                                                      L1Number,link_number,ODE_number,ode_ch);
     unsigned int on=ODE_number, oc=ode_ch;
     newhit->setOdeNumber( on );
     newhit->setOdeChannel( oc );
