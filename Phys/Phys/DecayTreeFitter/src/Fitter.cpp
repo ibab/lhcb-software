@@ -1,11 +1,24 @@
 // $Id: Fitter.cpp,v 1.16 2010/06/09 17:55:46 ibelyaev Exp $ 
 // ============================================================================
+
+// STL
 #include <iomanip>
 #include <stdio.h>
 #include <sstream>
+
+// Boost
 #include <boost/foreach.hpp>
 
+// gaudi
 #include "GaudiKernel/PhysicalConstants.h"
+#include "GaudiKernel/IAlgorithm.h"
+#include "GaudiKernel/ISvcLocator.h"
+#include "GaudiKernel/IAlgContextSvc.h"
+#include "GaudiKernel/IMessageSvc.h"
+#include "GaudiKernel/Bootstrap.h"
+#include "GaudiKernel/MsgStream.h"
+
+// Event model
 #include "Event/Particle.h"
 
 #include "DecayTreeFitter/Fitter.h"
@@ -78,9 +91,9 @@ namespace DecayTreeFitter
     , m_chiSquare  ( -1  )
     , m_niter      ( -1  )
     , m_errCode    (  0  )
-  //
+      //
     , m_extrapolator ( const_cast<ITrackStateProvider*>(extrapolator) )
-  //
+      //
   {
     Configuration config(forceFitAll,extrapolator) ;
     m_decaychain = new DecayChain(bc,pv,config) ;
@@ -101,9 +114,9 @@ namespace DecayTreeFitter
     , m_chiSquare  ( -1  )
     , m_niter      ( -1  )
     , m_errCode    (  0  )
-  //
+      //
     , m_extrapolator ( const_cast<ITrackStateProvider*>(extrapolator) )
-  //
+      //
   {
     Configuration config(forceFitAll,extrapolator) ;
     m_decaychain = new DecayChain(bc,pv,config) ;
@@ -161,10 +174,10 @@ namespace DecayTreeFitter
         double chisq = m_fitparams->chiSquare() ;
         double deltachisq = chisq - m_chiSquare ;
         // if chi2 increases by more than this --> fit failed
-	int ndof = nDof() ;
-	const double dChisqQuit = std::max(double(2*ndof),2*m_chiSquare) ;
-	const double dChisqConv = reldChisqConv * std::max(double(ndof),std::min(chisq,m_chiSquare)) ;
-	
+        int ndof = nDof() ;
+        const double dChisqQuit = std::max(double(2*ndof),2*m_chiSquare) ;
+        const double dChisqConv = reldChisqConv * std::max(double(ndof),std::min(chisq,m_chiSquare)) ;
+
         if( 0 != m_errCode ) {
           finished = true ;
           m_status = Failed ;
@@ -192,24 +205,28 @@ namespace DecayTreeFitter
             }
           }
           if ( deltachisq < 0 ) ndiverging=0 ; // start over with counting
-	  if(!finished) {
-	    m_chiSquare = chisq ;
-	    prevabsdeltachisq = std::abs(deltachisq) ;
-	  }
-	}
-
-        if(vtxverbose>=1) {
-          std::cout << "step, chiSquare: "
-                    << std::setw(3) << m_niter
-                    << std::setw(3) << m_status
-                    << std::setw(3) << nDof()
-                    << std::setprecision(6)
-                    << std::setw(12) << chisq
-                    << std::setw(12) << deltachisq << std::endl ;
+          if(!finished) {
+            m_chiSquare = chisq ;
+            prevabsdeltachisq = std::abs(deltachisq) ;
+          }
         }
 
-        if(vtxverbose>=4) {
-	  fillStream(std::cout) ;
+        if(vtxverbose>=1) 
+        {
+          std::ostringstream mess;
+          mess << "step, chiSquare: "
+               << std::setw(3) << m_niter
+               << std::setw(3) << m_status
+               << std::setw(3) << nDof()
+               << std::setprecision(6)
+               << std::setw(12) << chisq
+               << std::setw(12) << deltachisq;
+          print( mess.str(), MSG::VERBOSE );
+        }
+
+        if(vtxverbose>=4) 
+        {
+          fillStream(std::cout) ;
           std::cout << "press a key ...." << std::endl ;
           getchar() ;
         }
@@ -223,8 +240,10 @@ namespace DecayTreeFitter
       if( !(m_fitparams->testCov() ) ) {
         static int counter(10) ;
         if( --counter>=0)
-          std::cout << "DecayTreeFitterter::Fitter: Error matrix not positive definite. "
-                    << "Changing status to failed." << std::endl ;
+        {
+          print( "DecayTreeFitter::Fitter: Error matrix not positive definite."
+                 " Changing status to failed.", MSG::WARNING );
+        }
         m_status = Failed ;
         //print() ;
       }
@@ -239,7 +258,11 @@ namespace DecayTreeFitter
     m_decaychain->filter(*m_fitparams,firstpass) ;
     m_chiSquare = m_fitparams->chiSquare() ;
     if(vtxverbose>=1)
-      std::cout << "In VtkFitter::fitOneStep(): " << m_status << " " << firstpass << " " << m_chiSquare << std::endl ;
+    {
+      std::ostringstream mess;
+      mess << "In VtkFitter::fitOneStep(): " << m_status << " " << firstpass << " " << m_chiSquare;
+      print( mess.str(), MSG::VERBOSE );
+    }
     m_status = Success ;
   }
 
@@ -300,8 +323,10 @@ namespace DecayTreeFitter
 
       //    print() ;
     } else {
-      std::cout << "cannot add track to this vertex ..."
-                << m_decaychain->mother()->type() << std::endl ;
+      std::ostringstream mess;
+      mess << "cannot add track to this vertex ..."
+           << m_decaychain->mother()->type();
+      print( mess.str(), MSG::WARNING );
     }
     return deltachisq ;
   }
@@ -340,7 +365,7 @@ namespace DecayTreeFitter
     m_decaychain->setMassConstraint(bc,mass) ;
     m_status = UnFitted ;
   }
-  
+
   void Fitter::setMassConstraint( const LHCb::ParticleID& pid, bool add)
   {
     m_decaychain->setMassConstraint(pid,add) ;
@@ -482,7 +507,10 @@ namespace DecayTreeFitter
     // const ParticleBase* pb = m_decaychain->locate(thecand) ;
     const ParticleBase* pb = m_decaychain->locate( *particle() ) ;
     if( pb ) updateCand(*pb, thecand) ;
-    else std::cout << "Error: cannot find particle in tree" << std::endl ;
+    else
+    {
+      print( "Error: cannot find particle in tree", MSG::ERROR );
+    }
     return thecand ;
   }
 
@@ -494,7 +522,7 @@ namespace DecayTreeFitter
     // find the ParticleBase corresponding to the original particle.
     const ParticleBase* pb = m_decaychain->locate(cand) ;
     if( pb ) updateCand(*pb, thecand) ;
-    else std::cout << "Error: cannot find particle in tree" << std::endl ;
+    else { print( "Error: cannot find particle in tree", MSG::ERROR ); }
     return thecand ;
   }
 
@@ -510,7 +538,7 @@ namespace DecayTreeFitter
   Fitter::fittedCand(const LHCb::Particle& /*cand*/,
                      LHCb::Particle* /*headOfTree*/) const
   {
-    std::cout << "Fitter::fittedCand: not yet implemented" << std::endl ;
+    print( "Fitter::fittedCand: not yet implemented", MSG::WARNING );
     return 0 ;
     // assigns fitted parameters to candidate in tree
     //LHCb::Particle* acand = const_cast<LHCb::Particle*>(headOfTree->cloneInTree(cand)) ;
@@ -642,8 +670,56 @@ namespace DecayTreeFitter
   {
     return m_decaychain->chiSquare(particle, *m_fitparams) ;
   }
-}
 
+  IMessageSvc * Fitter::msgService() const
+  {
+    IMessageSvc * msgSvc = NULL;
+    ISvcLocator* svcLocator = Gaudi::svcLocator();
+    if ( svcLocator )
+    {
+      svcLocator->service("MessageSvc",msgSvc);
+    }
+    return msgSvc;
+  }
+
+  const IAlgorithm* Fitter::getAlg() const
+  {
+    // alg pointer
+    const IAlgorithm* alg = NULL;
+
+    // Service locator
+    ISvcLocator* svcLocator = Gaudi::svcLocator();
+    if ( svcLocator )
+    {
+      // Locate the context service
+      const IAlgContextSvc* asvc = NULL;
+      svcLocator->service("AlgContextSvc",asvc);
+      // Get the current alg
+      alg = ( asvc ? asvc->currentAlg() : NULL );
+    }
+   
+    // return the alg pointer
+    return alg;
+  }
+
+ void Fitter::print( const std::string& msg, const MSG::Level level ) const
+ {
+   // Try and get current alg
+   const IAlgorithm* alg = getAlg();
+   // get the message svc
+   IMessageSvc * msgSvc = msgService();
+   if ( msgSvc && alg )
+   {
+     MsgStream log( msgSvc, alg->name() );
+     log << level << msg << endmsg;
+   }
+   else
+   {
+     std::cout << msg << std::endl;
+   }
+ }
+
+}
 
 // ============================================================================
 // The END

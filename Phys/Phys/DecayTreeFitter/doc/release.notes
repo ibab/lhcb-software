@@ -8,6 +8,9 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2014-09-11 - Chris Jones
+ - Use Gaudi Message Service in DecayTreeFitter::Fitter when possible.
+
 !========================= DecayTreeFitter v1r17 2014-04-02 =========================
 
 ! 2014-03-12 - Wouter Hulsbergen
