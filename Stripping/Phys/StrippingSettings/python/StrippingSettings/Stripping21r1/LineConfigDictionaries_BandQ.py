@@ -1549,7 +1549,7 @@ Bc2Ds1Gamma = {
     ,'KaonProbNN'          : 0.1       # Dimensionless
     ,'pionProbNN'          : 0.1       # Dimensionless
     ,'TrGhostProb'         : 0.5       # Dimensionless
-    ,'Ds1DeltaMassWin'     : 800       # MeV
+    ,'Ds1DeltaMassWin'     : 650       # MeV
     ,'MaxDs1VertChi2DOF'   : 10        # Dimensionless
     ,'Bc_PT'               : 1000      # MeV
     ,'CTAU_Bc'             : 75        # microMeter

@@ -3,6 +3,8 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-09-11 - Roberta Cardinale (BandQ)
+	- Updated dictionaries of Bc2Ds1Gamma
 
 ! 2014-09-11 - Lucio Anderlini (BandQ)
   - Updated dictionaries for PromptCharm to include line 
