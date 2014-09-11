@@ -239,6 +239,7 @@ _default_configuration_ = {
     'LambdaCPrescale'        : 1.0 ,
     'LambdaCpKKPrescale'     : 1.0 ,
     'LambdaC*Prescale'       : 1.0 ,
+    'OmegaC*Prescale'        : 1.0 ,
     'SigmaCPrescale'         : 1.0 ,
     ##
     'D02KKPrescale'          : 1.0 ,
@@ -270,6 +271,7 @@ default_config = {
                                      'StrippingLambdaC2pKKForPromptCharm'    ,
                                      'StrippingSigmaCForPromptCharm'         ,
                                      'StrippingLambdaCstarForPromptCharm'    ,
+                                     'StrippingOmegaCstarForPromptCharm'     ,
                                      'StrippingDiCharmForPromptCharm'        , ## ? 
                                      'StrippingChiAndCharmForPromptCharm'    ,
                                      'StrippingCharmAndWForPromptCharm'      ,
@@ -416,6 +418,7 @@ class StrippingPromptCharmConf(LineBuilder) :
                  self.LamC2pKK       () ,
                  self.SigC           () ,
                  self.LamCstar       () ,
+                 self.OmgCstar       () ,
                  self.DiMuon         () ,
                  self.DiCharm        () ,
                  self.DoubleDiMuon   () ,
@@ -523,6 +526,13 @@ class StrippingPromptCharmConf(LineBuilder) :
             prescale = self['LambdaC*Prescale'] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.LamCstar () ]
+            ) ,
+            ## Pmega_c*
+            StrippingLine (
+            "OmegaCstarFor" + self.name() ,
+            prescale = self['OmegaC*Prescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.OmgCstar () ]
             ) ,
             ## DiCharm
             StrippingLine (
@@ -1106,9 +1116,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             #
             ## algorithm properties 
             # 
-            DecayDescriptors = [
-            " [ Lambda_c(2625)+ -> Lambda_c+ pi+ pi-]cc"
-            ] ,
+            DecayDescriptor = " [ Lambda_c(2625)+ -> Lambda_c+ pi+ pi-]cc", 
             ##
             Combination12Cut = """
             ( AM < 3 * GeV         ) &
@@ -1124,7 +1132,42 @@ class StrippingPromptCharmConf(LineBuilder) :
             """ ,
             ##
             )
+
+    # =============================================================================
+    # Omega_C*0 -> Xi_c+ K- selection for Marco Pappagallo
+    # =============================================================================
+    def OmgCstar ( self ) :
+        """
+        Omega_C* -> Xi_C+ K- selection for Marco Pappagallo 
+        """
+        from GaudiConfUtils.ConfigurableGenerators import CombineParticles
+        from StandardParticles                     import StdAllLooseANNKaons as inpts 
+        return self.make_selection (
+            'OmgCstar'         ,
+            CombineParticles   ,
+            [ self.LamC() , inpts ] , 
+            #
+            ## algorithm properties 
+            DecayDescriptor  = " [ Omega_c*0 -> Lambda_c+ K- ]cc" ,
+            DaughtersCuts    = {
+            ## use only Xic+
+            'Lambda_c+' : " ADMASS ( 'Xi_c+' ) < 60 * MeV "       ,  ## actually Xi_c+
+            ## refine kaon selection 
+            'K-'        : """
+            ( CLONEDIST   > 5000      ) & 
+            ( TRGHOSTPROB < 0.5       ) &
+            in_range ( 2  , ETA , 4.9 ) &
+            HASRICH                     &
+            ( PROBNNk      > 0.1      ) &
+            """ ,
+            } , 
+            ##
+            CombinationCut = " AM - AM1 < ( 500 * MeV + 150 * MeV ) " ,
+            ##
+            MotherCut      = " chi2vx  < 16 "
+            )
     
+    # =============================================================================    
     ## helper merged selection of all charmed particles
     def PromptCharm ( self ) :
         """
