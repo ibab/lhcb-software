@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-11 - Marco Pappagallo
+ - Tighten cut for Ds1 DeltaM
+   StrippingBc2Ds1Gamma.py
+
 ! 2014-09-11 - Jason Andrews
  - Removed neutrals CL cuts in
    StrippingBu2Kpi0.py
