@@ -6,6 +6,12 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-09-11 - Manuel Tobias Schiller
+ - BloomFilter: constexpr is nice, but it's not well supported with the
+   version of icc we usually build with, so add the old template based log2
+   again for that compiler (this should be REMOVED AS SOON AS THE INTEL AND
+   CLANG COMPILERS FULLY SUPPORT CONSTEXPR!)
+
 ! 2014-09-10 - Manuel Tobias Schiller
  - BloomFilter: get the constexpr qualifiers correct (icc warning); now that I
    understand about constexpr a bit better, the whole template metaprogrammed
