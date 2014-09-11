@@ -4,6 +4,9 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-09-11 - Stefano Perazzini
+ - Assigned "Silent" as default configuration for the TMVA::Reader
+
 !========================= MVADictTools v1r5 2014-07-25 =========================
 
 ! 2014-06-30 - Chris Jones

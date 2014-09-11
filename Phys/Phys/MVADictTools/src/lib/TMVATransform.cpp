@@ -13,7 +13,7 @@
 //==============================================================================
 TMVATransform::TMVATransform()
   : m_setup_success(false)
-  , m_reader_opts("!Color") //Silent : none,  V : verbose, Color : colored
+  , m_reader_opts("Silent") //Silent : none,  V : verbose, Color : colored
   , m_weightfile("")
   , m_name("")
   , m_branchname("")
@@ -201,7 +201,7 @@ bool TMVATransform::parseOpts(optmap& options, std::ostream& info) {
   parse.add<std::string>("XMLFile", "Some XML file (Required)",
       m_weightfile, info);
   parse.add<std::string>("TMVAOptions", "Must be Color, Silent, V",
-      m_reader_opts, info, "Color");
+      m_reader_opts, info, "Silent");
   parse.add<bool>("KeepVars", "Keep BDT input variables, \"1\" or \"0\"",
       m_keep_all_vars, info, false);
   pass = parse.check(info);
