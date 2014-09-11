@@ -16,6 +16,9 @@
 #include <algorithm>
 #include <type_traits>
 
+#undef _nBits
+#undef _nNashes
+#undef _canUseVeryFastHash
 /// implementation details for BloomFilter
 namespace BloomFilterImpl {
 #if !defined(__INTEL_COMPILER) && !defined(__clang__)
@@ -787,7 +790,6 @@ class BloomFilter
 	}
 };
 
-
 /// perform set intersection
 template <class T, unsigned CAPACITY, unsigned PNUMER, unsigned PDENOM, class HASH>
 BloomFilter<T, CAPACITY, PNUMER, PDENOM, HASH> operator&(
@@ -801,6 +803,10 @@ BloomFilter<T, CAPACITY, PNUMER, PDENOM, HASH> operator|(
 	const BloomFilter<T, CAPACITY, PNUMER, PDENOM, HASH>& s1,
 	const BloomFilter<T, CAPACITY, PNUMER, PDENOM, HASH>& s2)
 { return BloomFilter<T, CAPACITY, PNUMER, PDENOM, HASH>(s1) |= s2; }
+
+#undef _nBits
+#undef _nNashes
+#undef _canUseVeryFastHash
 
 #endif // BLOOMFILTER_H
 
