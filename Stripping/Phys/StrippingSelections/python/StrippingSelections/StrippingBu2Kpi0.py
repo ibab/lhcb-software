@@ -41,7 +41,7 @@ default_config = {
                       "MKuMinPT"         : 1100,  # MeV
                       "Mpi0MinP"         : 0,     # MeV
                       "Mpi0MinPT"        : 2400,  # MeV
-                      "Mpi0MinCL"        : 0.0,
+                      "Mpi0MinCL"        :-1000,
                       "MBuMinM"          : 4000,  # MeV
                       "MBuMaxM"          : 6050,  # MeV
                       "MBuMinPT"         : 1800,  # MeV
@@ -52,7 +52,7 @@ default_config = {
                       "RKuMinPT"         : 1300,  # MeV
                       "Rpi0MinP"         : 8000,  # MeV
                       "Rpi0MinPT"        : 1400,  # MeV
-                      "RgammaMinCL"      : 0.07,
+                      "RgammaMinCL"      :-1000,
                       "RBuMinM"          : 4800,  # MeV
                       "RBuMaxM"          : 5800,  # MeV
                       "RBuMinPT"         : 0,     # MeV
