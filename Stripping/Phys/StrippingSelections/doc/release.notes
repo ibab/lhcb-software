@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-11 - Mat Charles
+ - Update to StrippingXibStar: remove a bunch of lines and final states
+   to bring down the retention and CPU.
+
 ! 2014-09-10 - John Beddow
  - Added B2PPSameSignLine to B2TwoBaryons.py 
 
