@@ -520,19 +520,19 @@ class StrippingPromptCharmConf(LineBuilder) :
             checkPV  = self['CheckPV'       ] ,
             algos    =     [ self.SigC ()   ]
             ) ,
+            ## Omega_c*
+            StrippingLine (
+            "OmegaCstarFor" + self.name() ,
+            prescale = self['OmegaC*Prescale' ] , ## ATTENTION! Prescale here !!
+            checkPV  = self['CheckPV'         ] ,
+            algos    =     [ self.OmgCstar () ]
+            ) ,
             ## Lambda_c*
             StrippingLine (
             "LambdaCstarFor" + self.name() ,
             prescale = self['LambdaC*Prescale'] , ## ATTENTION! Prescale here !!
             checkPV  = self['CheckPV'         ] ,
             algos    =     [ self.LamCstar () ]
-            ) ,
-            ## Pmega_c*
-            StrippingLine (
-            "OmegaCstarFor" + self.name() ,
-            prescale = self['OmegaC*Prescale' ] , ## ATTENTION! Prescale here !!
-            checkPV  = self['CheckPV'         ] ,
-            algos    =     [ self.OmgCstar () ]
             ) ,
             ## DiCharm
             StrippingLine (
@@ -1089,7 +1089,7 @@ class StrippingPromptCharmConf(LineBuilder) :
             ] ,
             ##
             CombinationCut = """
-            ( AM - AM1 < ( 140*MeV + 100* MeV ) ) 
+            ( AM - AM1 < ( 140 * MeV + 100 * MeV ) ) 
             """ ,
             ##
             MotherCut      = """
@@ -1138,7 +1138,8 @@ class StrippingPromptCharmConf(LineBuilder) :
     # =============================================================================
     def OmgCstar ( self ) :
         """
-        Omega_C* -> Xi_C+ K- selection for Marco Pappagallo 
+        Omega_C* -> Xi_c+ K- selection for Marco Pappagallo
+        The line also includes   Lambda_C+ K- 
         """
         from GaudiConfUtils.ConfigurableGenerators import CombineParticles
         from StandardParticles                     import StdAllLooseANNKaons as inpts 
@@ -1150,19 +1151,17 @@ class StrippingPromptCharmConf(LineBuilder) :
             ## algorithm properties 
             DecayDescriptor  = " [ Omega_c*0 -> Lambda_c+ K- ]cc" ,
             DaughtersCuts    = {
-            ## use only Xic+
-            'Lambda_c+' : " ADMASS ( 'Xi_c+' ) < 60 * MeV "       ,  ## actually Xi_c+
             ## refine kaon selection 
             'K-'        : """
             ( CLONEDIST   > 5000      ) & 
             ( TRGHOSTPROB < 0.5       ) &
             in_range ( 2  , ETA , 4.9 ) &
             HASRICH                     &
-            ( PROBNNk      > 0.1      ) &
+            ( PROBNNk      > 0.1      ) 
             """ ,
             } , 
             ##
-            CombinationCut = " AM - AM1 < ( 500 * MeV + 150 * MeV ) " ,
+            CombinationCut = " AM - AM1 < ( 500 * MeV + 260 * MeV ) " ,
             ##
             MotherCut      = " chi2vx  < 16 "
             )
@@ -1568,7 +1567,7 @@ if '__main__' == __name__ :
     logger.info ( 'Configuration keys are: %s' % other    ) 
     logger.info ( 'Prescale      keys are: %s' % prescale ) 
     logger.info ( 80*'*' ) 
-    
+
 # =============================================================================
 # The END
 # =============================================================================

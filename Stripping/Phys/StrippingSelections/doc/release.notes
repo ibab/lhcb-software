@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-11 - Vanya Belyaev
+
+ - StrippingPromptCharm 
+   Extend the line Omega_c*- > Xi_c+ K- to accept also Lambda_C+ K- combinations 
+   and enlarge the mass window 
+
+ 
+
 ! 2014-09-11 - Andrea Contu
  - Fix to StrippingB2MuMuMuMuLines.py
 
