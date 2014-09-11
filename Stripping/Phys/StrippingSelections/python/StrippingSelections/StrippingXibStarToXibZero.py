@@ -184,15 +184,22 @@ class XibStarBuilder(LineBuilder) :
         self.stdLc   = DataOnDemand(Location = _my_immutable_config['DisplacedLcInputList'])
 
         # Filter the Lc to be tighter:
-        _LcFiltCut = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( MINTREE('p+'==ABSID, PROBNNp) > 0.02 ) & ( PT > 2.0*GeV ) & (ADMASS('Lambda_c+')<50*MeV)"
+        _LcFiltCutBase = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( MINTREE('p+'==ABSID, PROBNNp) > 0.02 ) & ( PT > 2.0*GeV ) & (ADMASS('Lambda_c+')<50*MeV)"
+        _LcFiltCutGhostPi = "( MAXTREE('pi+'==ABSID, TRGHOSTPROB) < %(DisplacedTrack_GhostProb_Max)s )" % _my_immutable_config
+        _LcFiltCutGhostK  = "( MAXTREE('K+'==ABSID, TRGHOSTPROB) < %(DisplacedTrack_GhostProb_Max)s )" % _my_immutable_config
+        _LcFiltCutGhostP  = "( MAXTREE('p+'==ABSID, TRGHOSTPROB) < %(DisplacedTrack_GhostProb_Max)s )" % _my_immutable_config
+        _LcFiltCutGhost   = _LcFiltCutGhostPi + " & " + _LcFiltCutGhostK + " & " + _LcFiltCutGhostP
+        _LcFiltCut = _LcFiltCutBase + " & " + _LcFiltCutGhost
         self.Lc = filterGeneric(name+"DisplacedLcFilt", self.stdLc, _LcFiltCut)
         # Even tighter:
         _LcTightFiltCut = "( MINTREE('K+'==ABSID, PROBNNk) > 0.05 ) & ( MINTREE('p+'==ABSID, PROBNNp) > 0.1 )"
         self.TightLc = filterGeneric(name+"DisplacedLcTightFilt", self.Lc, _LcTightFiltCut)
 
-
         # Filter the D0 and D+ to be tighter...
-        _DFiltCutGeneric = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( PT > 2.0*GeV )"
+        _DFiltCutGenericBase = "( MINTREE('pi+'==ABSID, PROBNNpi) > 0.01 ) & ( MINTREE('K+'==ABSID, PROBNNk) > 0.02 ) & ( PT > 2.0*GeV )"
+        _DFiltCutGhostPi = "( MAXTREE('pi+'==ABSID, TRGHOSTPROB) < %(DisplacedTrack_GhostProb_Max)s )" % _my_immutable_config
+        _DFiltCutGhostK  = "( MAXTREE('K+'==ABSID, TRGHOSTPROB) < %(DisplacedTrack_GhostProb_Max)s )" % _my_immutable_config
+        _DFiltCutGeneric = _DFiltCutGenericBase + " & " + _DFiltCutGhostPi + " & " + _DFiltCutGhostK
         _DpFiltCut = _DFiltCutGeneric + " & (ADMASS('D+')<50*MeV)"
         _D0FiltCut = _DFiltCutGeneric + " & (ADMASS('D0')<50*MeV)"
         self.D0 = filterGeneric(name+"DisplacedD0Filt", self.stdD0, _D0FiltCut)
@@ -306,7 +313,7 @@ def filterSoft(localName, inputSelection, configDict = _my_immutable_config) :
     _strCut = "(TRCHI2DOF<%(SoftTrack_TRCHI2DOF_Max)s)" \
               "& (P>%(SoftTrack_P_Min)s)" \
               "& (PT>%(SoftTrack_PT_Min)s)" \
-              "& (PROBNNp<%(SoftTrack_ProbNN_e_Max)s)" \
+              "& (PROBNNe<%(SoftTrack_ProbNN_e_Max)s)" \
               "& (MIPCHI2DV(PRIMARY)>%(SoftTrack_MIPCHI2DV_Min)s)" % configDict    
     return filterGeneric(localName, inputSelection, _strCut)
 

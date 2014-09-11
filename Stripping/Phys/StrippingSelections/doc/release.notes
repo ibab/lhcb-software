@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-09-11 - Mat Charles
+ - Patches to StrippingXibStar suggested by Marco P.
+
+! 2014-09-11 - Mat Charles
  - Update to StrippingXibStar: remove a bunch of lines and final states
    to bring down the retention and CPU.
 
