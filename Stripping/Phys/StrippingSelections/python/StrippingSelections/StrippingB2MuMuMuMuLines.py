@@ -94,7 +94,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
             'BPVDIRA_MIN'      : 0.0,
             'MASS_MIN'         : {'B':'4600*MeV'},
             'MASS_MAX'         : {'B':'6000*MeV'}
-            }
+            },
         'B2DetachedDiMuonsAndJpsi': {
             'SUMPT_MIN'        : '2000*MeV',
             'VCHI2DOF_MAX'     : 6,

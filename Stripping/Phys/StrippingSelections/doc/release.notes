@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-11 - Andrea Contu
+ - Fix to StrippingB2MuMuMuMuLines.py
+
 ! 2014-09-11 - Vanya Belyaev
  - StrippingPromptCharm 
    add new line for Omega_c*- > Xi_c+ K- for Marco Pappagallo
