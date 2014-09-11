@@ -214,7 +214,7 @@ namespace DecayTreeFitter
         if(vtxverbose>=1) 
         {
           std::ostringstream mess;
-          mess << "step, chiSquare: "
+          mess << "DecayTreeFitter::Fitter: step, chiSquare: "
                << std::setw(3) << m_niter
                << std::setw(3) << m_status
                << std::setw(3) << nDof()
@@ -241,11 +241,10 @@ namespace DecayTreeFitter
         static int counter(10) ;
         if( --counter>=0)
         {
-          print( "DecayTreeFitter::Fitter: Error matrix not positive definite."
+          print( "DecayTreeFitter::Fitter: Warning: Error matrix not positive definite."
                  " Changing status to failed.", MSG::WARNING );
         }
         m_status = Failed ;
-        //print() ;
       }
     }
   }
@@ -260,7 +259,7 @@ namespace DecayTreeFitter
     if(vtxverbose>=1)
     {
       std::ostringstream mess;
-      mess << "In VtkFitter::fitOneStep(): " << m_status << " " << firstpass << " " << m_chiSquare;
+      mess << "DecayTreeFitter::Fitter::fitOneStep(): " << m_status << " " << firstpass << " " << m_chiSquare;
       print( mess.str(), MSG::VERBOSE );
     }
     m_status = Success ;
@@ -321,10 +320,9 @@ namespace DecayTreeFitter
       // we want this somewhere else, but too much work now
       decaychain()->initConstraintList() ;
 
-      //    print() ;
     } else {
       std::ostringstream mess;
-      mess << "cannot add track to this vertex ..."
+      mess << "DecayTreeFitter::Fitter: WARNING: Cannot add track to this vertex ..."
            << m_decaychain->mother()->type();
       print( mess.str(), MSG::WARNING );
     }
@@ -509,7 +507,7 @@ namespace DecayTreeFitter
     if( pb ) updateCand(*pb, thecand) ;
     else
     {
-      print( "Error: cannot find particle in tree", MSG::ERROR );
+      print( "DecayTreeFitter::Fitter: ERROR: Cannot find particle in tree", MSG::ERROR );
     }
     return thecand ;
   }
@@ -519,10 +517,10 @@ namespace DecayTreeFitter
   {
     // clone the particle
     LHCb::Particle thecand = cand ;
-    // find the ParticleBase corresponding to the original particle.
+    // find the ParticleBase corresponding to the originaERROR: l particle.
     const ParticleBase* pb = m_decaychain->locate(cand) ;
     if( pb ) updateCand(*pb, thecand) ;
-    else { print( "Error: cannot find particle in tree", MSG::ERROR ); }
+    else { print( "DecayTreeFitter::Fitter: ERROR: Cannot find particle in tree", MSG::ERROR ); }
     return thecand ;
   }
 
@@ -538,7 +536,7 @@ namespace DecayTreeFitter
   Fitter::fittedCand(const LHCb::Particle& /*cand*/,
                      LHCb::Particle* /*headOfTree*/) const
   {
-    print( "Fitter::fittedCand: not yet implemented", MSG::WARNING );
+    print( "DecayTreeFitter::Fitter::fittedCand: WARNING: Not yet implemented", MSG::WARNING );
     return 0 ;
     // assigns fitted parameters to candidate in tree
     //LHCb::Particle* acand = const_cast<LHCb::Particle*>(headOfTree->cloneInTree(cand)) ;
