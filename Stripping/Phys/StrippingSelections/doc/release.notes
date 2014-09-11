@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2014-09-11 - Alexander Baranov
+ - Returned accidently deleted B2DetachedDimuonsAndJpsiLine
+ - Added separate config for it
+
 ! 2014-09-11 - Mat Charles
  - Patches to StrippingXibStar suggested by Marco P.
 
