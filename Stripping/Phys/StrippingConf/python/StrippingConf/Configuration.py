@@ -25,7 +25,8 @@ class StrippingConf ( object ) :
                   BadEventSelection = None, 
                   AcceptBadEvents = True,
                   MaxCandidates = None, 
-                  MaxCombinations = None ) :
+                  MaxCombinations = None,
+                  Verbose = False ) :
         
         log.info("Initialising StrippingConf "+ name)
         if name == "" :
@@ -33,6 +34,7 @@ class StrippingConf ( object ) :
         else :
             self._name = name
 
+        self._verbose = Verbose
         self._streams = []
         self._streamSequencers = []
         self._sequence = None
@@ -49,9 +51,10 @@ class StrippingConf ( object ) :
 	self.checkAppendedLines()
 	self.checkUniqueOutputLocations()
 
-        self.checkRawEventRequests()
-        self.checkMDSTFlag()
-        self.checkFlavourTagging()
+        if self._verbose:
+          self.checkRawEventRequests()
+          self.checkMDSTFlag()
+          self.checkFlavourTagging()
 
 	from Gaudi.Configuration import appendPostConfigAction
 	appendPostConfigAction ( defaultToolConfigCheck )

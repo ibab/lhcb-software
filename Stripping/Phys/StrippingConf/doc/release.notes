@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-09-11 - Stefano Perazzini
+ - Added attribute Verbose to StrippingConf. If Verbose == True it executes
+   the checks checkRawEventRequests, checkMDSTFlag, checkFlavourTagging
+
+! 2014-09-11 - Stefano Perazzini
  - Added a fix that remove lines with prescale <= 0 during the initialization
    of a StrippingStream
 
