@@ -95,6 +95,15 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
             'MASS_MIN'         : {'B':'4600*MeV'},
             'MASS_MAX'         : {'B':'6000*MeV'}
             }
+        'B2DetachedDiMuonsAndJpsi': {
+            'SUMPT_MIN'        : '2000*MeV',
+            'VCHI2DOF_MAX'     : 6,
+            'BPVIPCHI2_MAX'    : 16,
+            'BPVVDCHI2_MIN'    : 50,
+            'BPVDIRA_MIN'      : 0.0,
+            'MASS_MIN'         : {'B':'4600*MeV'},
+            'MASS_MAX'         : {'B':'7000*MeV'}
+            }
         }                
     
     
@@ -167,7 +176,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                                                               self.inMuons])
 
         self.selB2DetachedDimuonAndJpsi = makeB2DetachedDimuonAndJpsi(B2DetachedDimuonAndJpsi_name,
-                                                  config['B2DetachedDiMuons'],
+                                                  config['B2DetachedDiMuonsAndJpsi'],
                                                   inputSel = [self.selJpsiWide,
                                                               self.inDetachedDimuons])
 
