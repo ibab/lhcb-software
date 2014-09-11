@@ -1190,39 +1190,40 @@ BuToKX3872 = {
 XicHHH = {
     'WGs'           : ['BandQ'],
     'BUILDERTYPE'   : 'StrippingXic2HHHConf',
-    'CONFIG'        : { 'Daug_All_PT_MIN'         : 300.0 * MeV
-                  , 'Daug_P_MIN'              : 3000.0 * MeV
-                  , 'Daug_TRCHI2DOF_MAX'      : 4.0
-                  , 'Daug_1of3_BPVIPCHI2_MIN' : 9
-                  , 'Proton_PIDp_MIN'         : 10.0 
-                  , 'K_IPCHI2_MIN'            : 0.0 
-                  , 'Comb_MASS_MIN'           : 2300.0 * MeV 
-                  , 'Comb_MASS_MAX'           : 2800.0 * MeV 
-                  , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   
-                  , 'Xic_PT_MIN'              : 2000.0 * MeV
-                  , 'Xic_VCHI2VDOF_MAX'       : 8.0
-                  , 'Xic_BPVVDCHI2_MIN'       : 0.0
-                  , 'Xic_BPVDIRA_MIN'         : 0.99
-                  , 'Xic_BPVIPCHI2_MAX'       : 30.
-                  , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
-                  , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
-                  , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
-                  , 'PrescaleXic2PKPi'        : 0.0
-                  , 'PostscaleXic2PKPi'       : 0.0
-                  , 'PrescaleXic2PKK'         : 1.0
-                  , 'PostscaleXic2PKK'        : 1.0
-                  , 'PrescaleXic2PV0'         : 1.0
-                  , 'PostscaleXic2PV0'        : 1.0
-                  , 'PrescaleXic2KLam'        : 0.0 
-                  , 'PostscaleXic2KLam'       : 0.0 
-                  , 'RelatedInfoTools' : [
-	               { "Type" : "RelInfoConeVariables", "ConeAngle" : 1.5, "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone1"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 15,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone2"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.5, "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone3"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.25,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone4"},
-                       { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.1,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone5"}
-                       ] 
-                        },
+    'CONFIG'        : { 
+                       'Daug_All_PT_MIN'         : 300.0 * MeV
+                     , 'Daug_P_MIN'              : 3000.0 * MeV
+                     , 'Daug_TRCHI2DOF_MAX'      : 4.0
+                     , 'Daug_1of3_BPVIPCHI2_MIN' : 9
+                     , 'Proton_PIDp_MIN'         : 10.0 
+                     , 'K_IPCHI2_MIN'            : 0.0 
+                     , 'Comb_MASS_MIN'           : 2300.0 * MeV 
+                     , 'Comb_MASS_MAX'           : 2800.0 * MeV 
+                     , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   
+                     , 'Xic_PT_MIN'              : 2000.0 * MeV
+                     , 'Xic_VCHI2VDOF_MAX'       : 8.0
+                     , 'Xic_BPVVDCHI2_MIN'       : 0.0
+                     , 'Xic_BPVDIRA_MIN'         : 0.99
+                     , 'Xic_BPVIPCHI2_MAX'       : 30.
+                     , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
+                     , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
+                     , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
+                     , 'PrescaleXic2PKPi'        : 0.0
+                     , 'PostscaleXic2PKPi'       : 0.0
+                     , 'PrescaleXic2PKK'         : 1.0
+                     , 'PostscaleXic2PKK'        : 1.0
+                     , 'PrescaleXic2PV0'         : 1.0
+                     , 'PostscaleXic2PV0'        : 1.0
+                     , 'PrescaleXic2KLam'        : 0.0 
+                     , 'PostscaleXic2KLam'       : 0.0 
+                     , 'RelatedInfoTools' : [
+	                  { "Type" : "RelInfoConeVariables", "ConeAngle" : 1.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone1"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 15,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone2"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone3"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.25,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone4"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.1,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone5"}
+                                            ] 
+                    },
     'STREAMS' : [
     'Charm' 
     ],
