@@ -30,13 +30,21 @@ class StrippingStream ( object ) :
 		   MaxCombinations = "Override", 
 		   TESPrefix = None
                  ) :
-        self.lines = copy(Lines)
+
+        self._name = name
+
+        self.lines = []
+        for line in Lines:
+          if line.prescale() > 0:
+            self.lines += [line]
+          else:
+            log.warning('Line '+line.name()+' has prescale <= 0, it will be removed from stream '+self.name())
+
         for line in Lines : 
     	    line.declareAppended()
 
         self.algs = []
         self.seq = None
-        self._name = name
         self.streamLine = None                   # Line with OR of all stream lines, created in createConfigurables()
         self.eventSelectionLine = None           # Line to mark bad events, created in createConfigurables()
         self.BadEventSelection = BadEventSelection

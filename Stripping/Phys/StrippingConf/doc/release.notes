@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-09-11 - Stefano Perazzini
+ - Added a fix that remove lines with prescale <= 0 during the initialization
+   of a StrippingStream
+
 ! 2014-09-05 - Stefano Perazzini
  - Removed exception in checkUniqueOutputLocations function of StrippingConf.
    A warning has been introduced instead of the exception. This to allow a 
