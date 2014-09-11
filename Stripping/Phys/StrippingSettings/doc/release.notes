@@ -4,6 +4,11 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-11 - Lucio Anderlini (BandQ)
+  - Updated dictionaries for PromptCharm to include line 
+    StrippingOmegaCstarForPromptCharm
+  - Updated dictionaries of XicHHH to speed it up
+
 ! 2014-09-10 - Pablo Ruiz Valls
  - StrippingBd2eeKstarBDT was missing, added to RD dictionaries under Bhadron stream
 

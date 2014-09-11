@@ -1307,6 +1307,7 @@ XibStarToXibZero = {
 ### StrippingDiCharmForPromptCharm              
 ### StrippingDiMuonAndCharmForPromptCharm       
 ### StrippingDoubleDiMuonForPromptCharm         
+### StrippingOmegaCstarForPromptCharm
 ### StrippingChiAndCharmForPromptCharm          
 ### StrippingChiAndWForPromptCharm              
 ### StrippingXicc+ForPromptCharm                
@@ -1347,7 +1348,8 @@ PromptCharm = {
                                 'StrippingLambdaCstarForPromptCharm'    ,#Charm
                                 'StrippingD02KKForPromptCharm'          ,#Charm
                                 'StrippingD02pipiForPromptCharm'        ,#Charm
-                                'StrippingDstarCPForPromptCharm'         #Charm
+                                'StrippingDstarCPForPromptCharm'        ,#Charm
+                                'StrippingOmegaCstarForPromptCharm'      #Charm
                                 ] , 
                  ## 
                  'Leptonic' : [ 'StrippingDoubleDiMuonForPromptCharm'   , ## Full DST ?
