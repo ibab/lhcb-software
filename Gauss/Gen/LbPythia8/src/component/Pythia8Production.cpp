@@ -115,9 +115,7 @@ StatusCode Pythia8Production::initialize( ) {
 
   // Initialize the beam tool.
   m_beamTool = tool<IBeamTool>(m_beamToolName, this);
-  m_pythiaBeamTool = new BeamToolForPythia8(m_beamTool, m_pythia->settings, sc);
-  if (!sc.isSuccess())
-    Exception("Failed to initialize BeamToolForPythia8.");
+  if (!m_beamTool) Exception("Failed to initialize the IBeamTool.");
 
   // Initialize the user hooks.
   if (!m_hooks) m_hooks = new Pythia8::LhcbHooks();
@@ -140,9 +138,14 @@ StatusCode Pythia8Production::initializeGenerator() {
   // Create the Pythia 8 generator.
   m_pythia = new Pythia8::Pythia(xmlpath, m_showBanner);
   m_pythia->setRndmEnginePtr(m_randomEngine);
-  m_pythia->setBeamShapePtr(m_pythiaBeamTool);
   m_pythia->setUserHooksPtr(m_hooks);
-  
+
+  // Set the beam shape pointer.
+  m_pythiaBeamTool = new BeamToolForPythia8(m_beamTool, m_pythia->settings, sc);
+  if (!sc.isSuccess()) 
+    return Error("Failed to initialize the BeamToolForPythia8."); 
+  m_pythia->setBeamShapePtr(m_pythiaBeamTool);
+
   // Set the beam configuration.
   Gaudi::XYZVector beamA, beamB;
   m_beamTool->getMeanBeams(beamA, beamB);
