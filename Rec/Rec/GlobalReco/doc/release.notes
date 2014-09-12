@@ -4,8 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
-
-
+!========================= GlobalReco v6r50 2014-09-12 =========================
 ! 2014-09-12 - O. Deschamps
   - NeutralProtoPAlg : add ClusterCode & ClusterFrac as extra info
 
