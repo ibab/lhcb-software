@@ -20,7 +20,7 @@ def jetMakerConfig( name , Inputs  , R ):
     
     from Configurables         import LoKi__JetMaker, LoKi__FastJetMaker
     algo =  LoKi__JetMaker ( name )
-    algo.JetMaker = 'LoKi__FastJetMaker'
+    algo.JetMaker = 'LoKi::FastJetMaker'
     algo.addTool ( LoKi__FastJetMaker )
     algo.Inputs = Inputs
     tool = getattr ( algo , 'LoKi__FastJetMaker' )
