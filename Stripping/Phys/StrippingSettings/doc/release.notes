@@ -4,6 +4,10 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-12 - Roberta Cardinale
+ - Update to XicHHH
+ - Deleted Strippingbetac2phip from stripping21 
+
 ! 2014-09-12 - Andrea Contu
   - Update to Semileptonic and new dbase for s21(r1)
 

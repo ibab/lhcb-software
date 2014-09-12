@@ -536,32 +536,32 @@ Ccbar2PpbarDetached = {
 ### Documentation:              
 ###   https://twiki.cern.ch/twiki/bin/view/LHCbPhysics/BetaC2PhiProton
 #########################################################
-Betac2PhiP = {
-    'BUILDERTYPE'  : 'StrippingBetac2PhiPConf',
-    'CONFIG'       : {
-                    'Daug_TRCHI2DOF_MAX'        : 10.
-                  , 'Daug_P_MIN'                : 10000.0 * MeV
-                  , 'Daug_PT_MIN'               : 400.0 * MeV
-                  , 'Daug_MIPDV'                : 0.05 * mm
-                  , 'Proton_PIDpi_MIN'          : 25.0
-                  , 'Proton_PIDK_MIN'           : 5.0
-                  , 'Phi_WIN'                   : 10.0 * MeV
-                  , 'Phi_PT'                    : 0.0 * MeV
-                  , 'Betac_AM_MIN'              : 1950.0 * MeV
-                  , 'Betac_AM_MAX'              : 2800.0 * MeV
-                  , 'Betac_BPVDIRA_MIN'         : 0.999
-                  , 'Betac_VCHI2VDOF_MAX'       : 10.0
-                  , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
-                  , 'Betac_BPVLTIME_MAX'        : 0.006 * ns
-                  , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecision')"
-                  , 'Hlt2CharmHadD2HHHDecision':  "HLT_PASS_RE('Hlt2CharmHadD2HHHDecision')"
-                  , 'PrescaleBetac2PhiP'        : 1.0
-                  , 'PostscaleBetac2PhiP'       : 1.0
-    },
-    'STREAMS' : [ 'CharmCompleteEvent' ],                                                                
-    'WGs'    : ['BandQ']                                                                
-    }
-
+#Betac2PhiP = {
+#    'BUILDERTYPE'  : 'StrippingBetac2PhiPConf',
+#    'CONFIG'       : {
+#                    'Daug_TRCHI2DOF_MAX'        : 10.
+#                  , 'Daug_P_MIN'                : 10000.0 * MeV
+#                  , 'Daug_PT_MIN'               : 400.0 * MeV
+#                  , 'Daug_MIPDV'                : 0.05 * mm
+#                  , 'Proton_PIDpi_MIN'          : 25.0
+#                  , 'Proton_PIDK_MIN'           : 5.0
+#                  , 'Phi_WIN'                   : 10.0 * MeV
+#                  , 'Phi_PT'                    : 0.0 * MeV
+#                  , 'Betac_AM_MIN'              : 1950.0 * MeV
+#                  , 'Betac_AM_MAX'              : 2800.0 * MeV
+#                  , 'Betac_BPVDIRA_MIN'         : 0.999
+#                  , 'Betac_VCHI2VDOF_MAX'       : 10.0
+#                  , 'Betac_BPVLTIME_MIN'        : 0.0 * ns
+#                  , 'Betac_BPVLTIME_MAX'        : 0.006 * ns
+#                  , 'Hlt2IncPhiDecision'        : "HLT_PASS_RE('Hlt2IncPhiDecision')"
+#                  , 'Hlt2CharmHadD2HHHDecision':  "HLT_PASS_RE('Hlt2CharmHadD2HHHDecision')"
+#                  , 'PrescaleBetac2PhiP'        : 1.0
+#                  , 'PostscaleBetac2PhiP'       : 1.0
+#    },
+#    'STREAMS' : [ 'CharmCompleteEvent' ],                                                                
+#    'WGs'    : ['BandQ']                                                                
+#    }
+#
 
 
 #########################################################
@@ -1194,22 +1194,22 @@ XicHHH = {
                        'Daug_All_PT_MIN'         : 300.0 * MeV
                      , 'Daug_P_MIN'              : 3000.0 * MeV
                      , 'Daug_TRCHI2DOF_MAX'      : 4.0
-                     , 'Daug_1of3_BPVIPCHI2_MIN' : 9
-                     , 'Proton_PIDp_MIN'         : 10.0 
-                     , 'K_IPCHI2_MIN'            : 0.0 
-                     , 'Comb_MASS_MIN'           : 2300.0 * MeV 
+                     , 'Daug_1of3_BPVIPCHI2_MIN' : 0.
+                     , 'Proton_PIDp_MIN'         : 0.0 
+                     , 'K_IPCHI2_MIN'            : 9.0 
+                     , 'Comb_MASS_MIN'           : 2215.0 * MeV 
                      , 'Comb_MASS_MAX'           : 2800.0 * MeV 
                      , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   
                      , 'Xic_PT_MIN'              : 2000.0 * MeV
-                     , 'Xic_VCHI2VDOF_MAX'       : 8.0
+                     , 'Xic_VCHI2VDOF_MAX'       : 12.0
                      , 'Xic_BPVVDCHI2_MIN'       : 0.0
                      , 'Xic_BPVDIRA_MIN'         : 0.99
-                     , 'Xic_BPVIPCHI2_MAX'       : 30.
+                     , 'Xic_BPVIPCHI2_MAX'       : 20.
                      , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
-                     , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
+                     , 'Xic_BPVLTIME_MIN'        : 0.0 * ns
                      , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
-                     , 'PrescaleXic2PKPi'        : 0.0
-                     , 'PostscaleXic2PKPi'       : 0.0
+                     , 'PrescaleXic2PKPi'        : 1.0
+                     , 'PostscaleXic2PKPi'       : 1.0
                      , 'PrescaleXic2PKK'         : 1.0
                      , 'PostscaleXic2PKK'        : 1.0
                      , 'PrescaleXic2PV0'         : 1.0
@@ -1217,11 +1217,11 @@ XicHHH = {
                      , 'PrescaleXic2KLam'        : 0.0 
                      , 'PostscaleXic2KLam'       : 0.0 
                      , 'RelatedInfoTools' : [
-	                  { "Type" : "RelInfoConeVariables", "ConeAngle" : 1.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone1"},
-                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 15,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone2"},
-                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.5, "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone3"},
-                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.25,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone4"},
-                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.1,  "Variables" : ['angle', 'mult', 'ptasy'], "Location": "Cone5"}
+	                  { "Type" : "RelInfoConeVariables", "ConeAngle" : 1.5, "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone1"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 15,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone2"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.5, "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone3"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.25,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone4"},
+                          { "Type" : "RelInfoConeVariables", "ConeAngle" : 0.1,  "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'], "Location": "Cone5"}
                                             ] 
                     },
     'STREAMS' : [
