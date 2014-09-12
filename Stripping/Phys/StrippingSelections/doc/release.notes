@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-09-12 -Wenbin Qian
+  fix duplicated inputs
+
 ! 2014-09-12 - Roberta Cardinale (for Yury Shcheglov)
 	- Updated StrippingXic2HHH
 
@@ -61,7 +64,7 @@
      StrippingB02DKPiPiSSD2HHHPIDBeauty2CharmLine
      StrippingB02DKPiPiSSWSD2HHHPIDBeauty2CharmLine
 
-! 2014-09-05 - Cédric Potterat
+! 2014-09-05 - C??dric Potterat
  - Changing option names in StrippingJets  with repect to new name in TopologicalTagging tool
 
 ! 2014-09-05 - Andrea Contu
