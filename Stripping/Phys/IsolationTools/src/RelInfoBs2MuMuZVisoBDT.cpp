@@ -19,13 +19,13 @@
 //#include "Event/GenHeader.h" 
 //#include "Event/MCHeader.h" 
 
-#include "ToolZViso.h"
+#include "RelInfoBs2MuMuZVisoBDT.h"
 #include "TMath.h"
-#include "TFile.h"
+
 #include "TString.h"
 #include <TROOT.h>
 #include <TObject.h>
-#include "TH1D.h"
+
 //#include "TMVA/Reader.h"
 #include "Math/Boost.h"
 #include "Event/VertexBase.h"
@@ -51,9 +51,9 @@
 
  
 //-----------------------------------------------------------------------------
-// Implementation file for class : TupleToolMuonVariables
+// Implementation file for class : RelInfoBs2MuMuZVisoBDT
 //
-// 2011-09-13 : Giampiero Mancinelli 
+// 2014-9-9 : Alessandro Morda'
 //-----------------------------------------------------------------------------
 
 using namespace TMVA;
@@ -65,13 +65,13 @@ template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
 
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( ToolZViso );
+DECLARE_TOOL_FACTORY( RelInfoBs2MuMuZVisoBDT );
 
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-ToolZViso::ToolZViso( const std::string& type,
+RelInfoBs2MuMuZVisoBDT::RelInfoBs2MuMuZVisoBDT( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent) 
   : GaudiTool ( type, name , parent )
@@ -96,12 +96,11 @@ ToolZViso::ToolZViso( const std::string& type,
   m_keys.clear();
 
 
-    m_keys.push_back(RelatedInfoNamed::ZVISO );//m_ZViso     ; break;
+ 
 
 
 
-
-  declareInterface<IEventTupleTool>(this);
+  declareInterface<IRelatedInfoTool>(this);
   declareProperty( "tracktype", m_tracktype = 3,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
   
@@ -137,7 +136,8 @@ ToolZViso::ToolZViso( const std::string& type,
   declareProperty("Profile_step_number_p",m_n_step_p = 1000 ); 
   declareProperty("Profile_step_number_m",m_n_step_m = 600 ); 
   
-  
+    declareProperty( "Variables", m_variables, 
+            "List of variables to store (store all if empty)");
   
   
   
@@ -146,26 +146,26 @@ ToolZViso::ToolZViso( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-ToolZViso::~ToolZViso() {} 
+RelInfoBs2MuMuZVisoBDT::~RelInfoBs2MuMuZVisoBDT() {} 
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode ToolZViso::initialize() {
+StatusCode RelInfoBs2MuMuZVisoBDT::initialize() {
+  
+  
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-
  m_dva = Gaudi::Utils::getIDVAlgorithm ( contextSvc(), this ) ;
   if ( !m_dva ) { return Error( "Couldn't get parent DVAlgorithm",
                                 StatusCode::FAILURE ); }
-
+  
   m_Geom = tool<IDistanceCalculator>("LoKi::DistanceCalculator", this);
   if ( ! m_Geom ) {
     fatal() << "DistanceCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
   
-
   m_dist = m_dva->distanceCalculator ();
   if( !m_dist ){
     Error("Unable to retrieve the IDistanceCalculator tool");
@@ -177,19 +177,19 @@ StatusCode ToolZViso::initialize() {
     fatal() << "Unable to retrieve AdaptivePVReFitter" << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   m_vertextool = tool<IVertexFunctionTool>("VertexFunctionTool", this );
   if(! m_vertextool) {
     fatal() << "Unable to retrieve ZVtop" << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   m_topotool = tool<ITopoVertexTool>("TopoVertexTool", this );
   if(! m_topotool) {
     fatal() << "Unable to retrieve ZVtop" << endreq;
     return StatusCode::FAILURE;
   }
-
+  
   m_Geom = tool<IDistanceCalculator>("LoKi::DistanceCalculator", this);
   if ( ! m_Geom ) {
     fatal() << "DistanceCalculator could not be found" << endreq;
@@ -201,20 +201,20 @@ StatusCode ToolZViso::initialize() {
     fatal() << "ParticleTransporter could not be found" << endreq;
     return StatusCode::FAILURE;
   }
- 
+  
   m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
   if( ! m_descend ) {
     fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
     return StatusCode::FAILURE;
   }
-
-
+  
  if (!m_Weights_BDTG_ZViso.size())
     return Error("WeightsFile _BDTS MUST be defined", StatusCode::FAILURE);
-
  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
-
+   debug()<<"sc 11"<<endmsg;
+  
+//configure keys                                                                          
+    m_keys.push_back(RelatedInfoNamed::ZVISO );//m_ZViso     ; break;
  
 //------------------Initialize TMVA reader A.Shires Method--------------------------------
 
@@ -222,10 +222,7 @@ StatusCode ToolZViso::initialize() {
    m_optmap["KeepVars"] = "0" ;
    m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_Weights_BDTG_ZViso ;
    m_tmva.Init( m_optmap , info().stream() ) ; //
-
- 
-
-
+  
  return StatusCode::SUCCESS;
  
   
@@ -234,7 +231,7 @@ StatusCode ToolZViso::initialize() {
 
 
 
-StatusCode ToolZViso::finalize(){
+StatusCode RelInfoBs2MuMuZVisoBDT::finalize(){
   return GaudiTool::finalize();
 }
 
@@ -242,29 +239,32 @@ StatusCode ToolZViso::finalize(){
 //=============================================================================
 // Fill the tuple
 //=============================================================================
-StatusCode ToolZViso::calculateRelatedInfo( const LHCb::Particle* top,
+StatusCode RelInfoBs2MuMuZVisoBDT::calculateRelatedInfo( const LHCb::Particle* top,
                                      const LHCb::Particle *part){
   
   //const std::string prefix=fullName(head);
+  debug()<<"starting \"calculateRelatedInfo\" from RelInfoBs2MuMuZVisoBDT"<<endmsg;
+  
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;  
      if (isPureNeutralCalo(top) )
     {
         return Error("Cannot calculate isolation for basic or calorimetric particles!") ;
     }
-    if( !part )
+     if( !part )
     {
         return Warning( "Found an invalid particle" );
     }
- 
 
-  StatusCode scInTracks = Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
-  StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
-  StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
-  StatusCode scZViso    =  ZViso();//, prefix, tuple);
+    
+     
+
+    StatusCode scInTracks = Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
+    StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
+    StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
+    StatusCode scZViso    =  ZViso();//, prefix, tuple);
 
 
-
-  if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	//
+    if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	//
   
   
 
@@ -285,7 +285,7 @@ StatusCode ToolZViso::calculateRelatedInfo( const LHCb::Particle* top,
   
 }
 
-LHCb::RelatedInfoMap* ToolZViso::getInfo(void) {
+LHCb::RelatedInfoMap* RelInfoBs2MuMuZVisoBDT::getInfo(void) {
   
   return &m_map; 
 }
@@ -296,9 +296,8 @@ LHCb::RelatedInfoMap* ToolZViso::getInfo(void) {
 //  Fill VERT   try of ZVTop
 //=============================================================================
 
-StatusCode ToolZViso::Initialize_tracksVF_ZVtop()
+StatusCode RelInfoBs2MuMuZVisoBDT::Initialize_tracksVF_ZVtop()
 {
-  
   double ipsall/*, ipall*/;
   std::vector<const LHCb::Track*> tracks;
   std::vector<const LHCb::Track*> tracksVF;
@@ -360,9 +359,10 @@ StatusCode ToolZViso::Initialize_tracksVF_ZVtop()
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
-StatusCode ToolZViso::IsoTopo2Body(const LHCb::Particle *part)//, const std::string prefix, Tuples::Tuple& tuple )  //Isolation of Mathieu - uses only the Vertex Function
+StatusCode RelInfoBs2MuMuZVisoBDT::IsoTopo2Body(const LHCb::Particle *part)//, const std::string prefix, Tuples::Tuple& tuple )  //Isolation of Mathieu - uses only the Vertex Function
 {
   //declare the vector to store the Vf scan info
+  
   std::vector<double> v_Vf, v_Position;
   std::vector<double> v_Vf_Scan_Max, v_Position_Scan_Max; 
   std::vector<double> v_Vf_Scan_Max_DwS, v_Position_Scan_Max_DwS; 
@@ -451,7 +451,7 @@ StatusCode ToolZViso::IsoTopo2Body(const LHCb::Particle *part)//, const std::str
 //=============================================================================
 //  VfProfile
 //=============================================================================
-int ToolZViso::VfProfile(double zB,const LHCb::Particle* Part, std::vector<double> *v_Vf, std::vector<double>* v_Position){//
+int RelInfoBs2MuMuZVisoBDT::VfProfile(double zB,const LHCb::Particle* Part, std::vector<double> *v_Vf, std::vector<double>* v_Position){//
   v_Vf->clear();
   v_Position->clear();
   double dist = 0;
@@ -495,7 +495,7 @@ int ToolZViso::VfProfile(double zB,const LHCb::Particle* Part, std::vector<doubl
 //=============================================================================
 //  VfAlongTrackTrans
 //=============================================================================
-double ToolZViso::VfAlongTrack(double zB, const LHCb::Particle* Part, double delta, float* z_f_m ){//
+double RelInfoBs2MuMuZVisoBDT::VfAlongTrack(double zB, const LHCb::Particle* Part, double delta, float* z_f_m ){//
   Gaudi::XYZVector Slope = Part->slopes();
   double zNew = zB + delta * Slope.Z()/Slope.R();  
   *z_f_m=zNew;
@@ -522,7 +522,7 @@ double ToolZViso::VfAlongTrack(double zB, const LHCb::Particle* Part, double del
 ///////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-StatusCode ToolZViso::GMPiso(const LHCb::Particle *part)
+StatusCode RelInfoBs2MuMuZVisoBDT::GMPiso(const LHCb::Particle *part)
 {
   const RecVertex* sIPSPVrefit =  dynamic_cast<const RecVertex*> (m_dva->bestVertex(part));//
   Particle::ConstVector vdaugh = m_descend->descendants(part);
@@ -549,7 +549,7 @@ StatusCode ToolZViso::GMPiso(const LHCb::Particle *part)
   
 }
 
-std::vector<LHCb::RecVertex*> ToolZViso::zvtop(const LHCb::Particle* dau1,//
+std::vector<LHCb::RecVertex*> RelInfoBs2MuMuZVisoBDT::zvtop(const LHCb::Particle* dau1,//
                                                 const LHCb::Particle* dau2)//, 
 						      //const LHCb::Particle *part, 
 						    
@@ -603,7 +603,7 @@ std::vector<LHCb::RecVertex*> ToolZViso::zvtop(const LHCb::Particle* dau1,//
 
 
 
-void  ToolZViso::zvtop_iso(const LHCb::Particle* dau,//
+void  RelInfoBs2MuMuZVisoBDT::zvtop_iso(const LHCb::Particle* dau,//
                             const std::vector<LHCb::RecVertex*> vertices,//
                             const LHCb::VertexBase* primary)//,
 
@@ -699,7 +699,7 @@ void  ToolZViso::zvtop_iso(const LHCb::Particle* dau,//
 } 
 
 
-StatusCode ToolZViso::ZViso(void/*const LHCb::Particle *part*/)//, const std::string prefix, Tuples::Tuple& tuple )//
+StatusCode RelInfoBs2MuMuZVisoBDT::ZViso(void/*const LHCb::Particle *part*/)//, const std::string prefix, Tuples::Tuple& tuple )//
 {
 
   m_varmap.clear();
@@ -719,7 +719,8 @@ StatusCode ToolZViso::ZViso(void/*const LHCb::Particle *part*/)//, const std::st
   m_tmva(m_varmap,m_out) ;
   m_ZViso = m_out[m_transformName];
 
-
+  debug()<<"ZVisoBDT_value : "<<m_ZViso<<endmsg;
+  
 
 
   return StatusCode::SUCCESS;
@@ -730,7 +731,7 @@ StatusCode ToolZViso::ZViso(void/*const LHCb::Particle *part*/)//, const std::st
 
 
 
-Gaudi::XYZPoint ToolZViso::close_point(Gaudi::XYZPoint o,
+Gaudi::XYZPoint RelInfoBs2MuMuZVisoBDT::close_point(Gaudi::XYZPoint o,
                                               Gaudi::XYZPoint o_mu,Gaudi::XYZVector
                                               p_mu) 
 {

@@ -1,6 +1,6 @@
 // $Id: TupleToolMuonVariables.h 
-#ifndef TOOLZVISO_H 
-#define TOOLZVISO_H 1
+#ifndef RELINFOBS2MUMUZVISOBDT_H 
+#define RELINFOBS2MUMUZVISOBDT_H 1
 
 // Include files
 #include "Kernel/IEventTupleTool.h"            // Interface
@@ -64,7 +64,7 @@ class DVAlgorithm;
 
 
 
-class ToolZViso : public GaudiTool/*, virtual public IParticleTupleTool*/ {
+class RelInfoBs2MuMuZVisoBDT : public GaudiTool, virtual public IRelatedInfoTool /*, virtual public IParticleTupleTool*/ {
 public: 
 
 
@@ -74,7 +74,7 @@ public:
   typedef std::vector<const LHCb::Track*> TrackVector;
 
   /// Standard constructor
-  ToolZViso( const std::string& type, 
+  RelInfoBs2MuMuZVisoBDT( const std::string& type, 
               const std::string& name,
               const IInterface* parent );
   /// Loop over differnt conesizes and fill the variables into the tuple
@@ -100,7 +100,7 @@ public:
 
   
 
-  virtual ~ToolZViso( ); ///< Destructor
+  virtual ~RelInfoBs2MuMuZVisoBDT( ); ///< Destructor
   
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode finalize ();
@@ -117,6 +117,7 @@ private:
 private:
 
   //   std::vector<std::string> m_variables;
+ std::vector<std::string> m_variables;
   LHCb::RelatedInfoMap m_map;
   std::vector<short int> m_keys; 
 
