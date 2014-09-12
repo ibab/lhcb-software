@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !-------------------------------------------------------------------------------
 
+
+! 2014-09-12 - O. Deschamps
+  - CaloHypoEstimator.cpp : implement ClusterCode & ClusterFrac 
+
 !========================= CaloTools v6r9 2014-07-14 =========================
 ! 2014-06-30 - Olivier Deschamps
   - GammaPi0SeparationTool : improve & speed-up the evaluation of Prs-related variables 

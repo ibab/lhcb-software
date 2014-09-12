@@ -392,9 +392,14 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
     e4s.push_back(0);
     e4s.push_back(0);
     double e9 = 0.;
+    double ee9 =0.; // full cluster energy without fraction applied
+    double e2  = 0.;
+    bool hasShared=false;
+    int code = 0.;
+    int mult = 0.;
     for( LHCb::CaloCluster::Entries::const_iterator ie = cluster->entries().begin() ; cluster->entries().end() != ie ; ++ie){
       const LHCb::CaloDigit* dig = (*ie).digit();
-      double ecel = dig->e()*(*ie).fraction();
+      double ecel = dig->e()*ie->fraction();
       if( NULL == dig)continue;
       LHCb::CaloCellID id = dig->cellID();
       if( id.area() != sid.area() || abs((int)id.col() - (int)sid.col()) > 1 ||  abs((int)id.row() - (int)sid.row()) > 1)continue;
@@ -403,12 +408,28 @@ bool CaloHypoEstimator::estimator(const LHCb::CaloCluster* cluster, const LHCb::
       if(id.col() >= sid.col() && id.row() <= sid.row() )e4s[2] += ecel;
       if(id.col() <= sid.col() && id.row() <= sid.row() )e4s[3] += ecel;    
       e9 += ecel;
+      // new info
+      ee9+= dig->e();
+      mult++;
+      if( ie->status() & LHCb::CaloDigitStatus::SharedCell)hasShared=true;
+      if( !(id == sid) && ecel > e2){
+        e2 = ecel;
+        int dc  =  (int)id.col() - (int)sid.col()+1;
+        int dr  =  (int)id.row() - (int)sid.row()+1;
+        code =  3*dr + dc;
+      }
     }
     
     double e4max = 0;
     for( std::vector<double>::iterator ih = e4s.begin();e4s.end() != ih;++ih){
       if( *ih >= e4max)e4max=*ih;
     }
+
+    code = mult * 10 + code;
+    if( hasShared )code *= -1;
+    m_data[ClusterCode] = (double) code;
+    m_data[ClusterFrac] = (e9 > 0.) ? e9/ee9 : -1;
+
     m_data[E4]  = e4max;
     m_data[E9]  = e9;
     m_data[E49] = (e9>0.) ? e4max /e9 : 0.;
