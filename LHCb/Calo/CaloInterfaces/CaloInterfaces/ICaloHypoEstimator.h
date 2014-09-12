@@ -12,7 +12,7 @@
 #include "Event/Track.h"
 #include "CaloInterfaces/ICaloHypo2Calo.h"
 
-static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 4, 0 );
+static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 3, 0 );
 
 
 
