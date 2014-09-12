@@ -5,18 +5,21 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v38r1>2014-09-09 LHCbSys v38r1</A></H1><PRE>
+</PRE><H1><A NAME=v38r1>2014-09-15 LHCbSys v38r1</A></H1><PRE>
 This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
 
-- Packages modified: DAQ/DAQKernel v1r1, DAQ/DAQSys v8r4, DAQ/RawEventCompat v1r6,
-    DAQ/Tell1Kernel v1r13p1, Det/DDDB v1r71, Det/DetCond v12r37, 
-    Det/DetDesc v18r34, Det/DetDescChecks v5r11, Det/MuonDet v9r16,
-    Event/DAQEvent v9r17, Event/EventPacker v4r3, Event/PhysEvent v11r27,
-    Event/RecEvent v2r52, Event/TrackEvent v6r2, Ex/IOExample v4r14,
-    GaudiConf v19r4, Hlt/HltDAQ v4r6, Kernel/LHCbAlgs v3r4,
-    Kernel/LHCbKernel v15r4, Kernel/LHCbMath v3r50, Kernel/Relations v6r3,
-    Phys/LoKiCore v11r20p1, Phys/LoKiHlt v3r15, Rich/RichKernel v7r56,
-    Tools/CondDBUI v3r30, Velo/VeloDAQ v6r12
+- Packages modified: Calo/CaloInterfaces v8r9, DAQ/DAQKernel v1r1,
+    DAQ/DAQSys v8r4, DAQ/RawEventCompat v1r6, DAQ/Tell1Kernel v1r13p1,
+    Det/DDDB v1r71, Det/DetCond v12r37, Det/DetDesc v18r34,
+    Det/DetDescChecks v5r11, Det/MuonDet v9r16, Event/DAQEvent v9r17,
+    Event/EventPacker v4r3, Event/PhysEvent v11r27, Event/RecEvent v2r53,
+    Event/TrackEvent v6r2, Ex/IOExample v4r14, GaudiConf v19r4, Hlt/HltDAQ v4r6,
+    Kernel/LHCbAlgs v3r4, Kernel/LHCbKernel v15r4, Kernel/LHCbMath v3r50,
+    Kernel/Relations v6r3, Phys/LoKiCore v11r20p1, Phys/LoKiHlt v3r15,
+    Rich/RichKernel v7r56, Tools/CondDBUI v3r30, Velo/VeloDAQ v6r12
+
+- In Calo/CaloInterfaces v8r9
+  . ICaloHypoEstimator.h : add ClusterCode & ClusterFrac as extra info
 
 - In DAQ/DAQKernel v1r1
   . Some minor coding improvements to the base class.
@@ -87,9 +90,10 @@ This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
   . Some minor improvements to RelatedInfoMap, including an operator 
     ostream << implementation.
 
-- In Event/RecEvent v2r52
+- In Event/RecEvent v2r52, v2r53
   . Include the TES location (when appropriate) in the fillStream printout
     for the RecVertex class.
+  . ProtoParticle.xml : add ClusterCode & ClusterFrac as extra info
 
 - In Event/TrackEvent v6r2
   . Improve speed of Track::probChi2
