@@ -21,7 +21,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand, AutomaticData, MergedSelection
 #from Configurables import LoKi__VoidFilte
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdNoPIDsPions, StdTightPions,StdNoPIDsKaons, StdAllNoPIDsProtons
+from StandardParticles import StdLooseANNPions, StdLooseANNKaons, StdAllLooseANNProtons
 
 from Configurables import TisTosParticleTagger
 
@@ -123,13 +123,13 @@ class StrippingXic2HHHConf(LineBuilder):
 
         self.inProtons = Selection( "Protonsfor" + name,
                                   Algorithm = self._protonFilter(),
-                                  RequiredSelections = [StdAllNoPIDsProtons])
+                                  RequiredSelections = [StdAllLooseANNProtons])
 
  ############### PIONS, Lambda0, KS0 and KAONS SELECTIONS ##################
         
         self.inPions   = Selection( "Pionsfor" + name,
                                   Algorithm = self._pionFilter(),
-                                  RequiredSelections = [StdNoPIDsPions])
+                                  RequiredSelections = [StdLooseANNPions])
 
 
         self.KS0 =  Selection( "KSfor" + name,
@@ -142,8 +142,7 @@ class StrippingXic2HHHConf(LineBuilder):
   
         self.inKaons  = Selection( "Kaonsfor" + name,
                                       Algorithm = self._kaonFilter(),
-                                      RequiredSelections = [StdNoPIDsKaons])
-
+                                      RequiredSelections = [StdLooseANNKaons])
 
  ###############################################################
 
@@ -153,8 +152,8 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_1of3_BPVIPCHI2_MIN = config['Daug_1of3_BPVIPCHI2_MIN']
                , Daug_P_MIN = config['Daug_P_MIN']
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
-               , Comb_MASS_MIN  = 2190. * MeV 
-               , Comb_MASS_MAX  = 2570. * MeV  
+               , Comb_MASS_MIN  = config['Comb_MASS_MIN']  
+               , Comb_MASS_MAX  = config['Comb_MASS_MAX']
                , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
                , Xic_PT_MIN = config['Xic_PT_MIN']
                , Xic_VCHI2VDOF_MAX = config['Xic_VCHI2VDOF_MAX']
@@ -172,7 +171,7 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_P_MIN = config['Daug_P_MIN']
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
                , Comb_MASS_MIN  = config['Comb_MASS_MIN']
-               , Comb_MASS_MAX  = 2800. * MeV  
+               , Comb_MASS_MAX  = config['Comb_MASS_MAX']
                , Comb_ADOCAMAX_MAX = config['Comb_ADOCAMAX_MAX']
                , Xic_PT_MIN = config['Xic_PT_MIN']
                , Xic_VCHI2VDOF_MAX = config['Xic_VCHI2VDOF_MAX']
@@ -191,7 +190,7 @@ class StrippingXic2HHHConf(LineBuilder):
                , Daug_TRCHI2DOF_MAX = config['Daug_TRCHI2DOF_MAX']
                , Comb_MASS_MIN  = 1440. * MeV            
                , Comb_MASS_MAX  = 1800. * MeV            
-               , Comb_ADOCAMAX_MAX = 1.0 * mm
+               , Comb_ADOCAMAX_MAX = 2.0 * mm
                , Xic_PT_MIN = 2000. * MeV
                , Xic_BPVDIRA_MIN = -100.
                , Xic_BPVIPCHI2_MAX = config['Xic_BPVIPCHI2_MAX']
@@ -248,31 +247,31 @@ class StrippingXic2HHHConf(LineBuilder):
                                        )
 
     def _protonFilter( self ):
-          _code = "(PROBNNp > 0.5) &(TRGHP < 0.4) & (PIDp-PIDpi > %(Proton_PIDp_MIN)s) & (P> 1200.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
+          _code = "HASRICH & (CLONEDIST > 5000) & (TRGHOSTPROB < 0.5) & (PROBNNp > 0.5) &(TRGHP < 0.4) & (P> 3000.0*MeV) & (TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__
           _proton = FilterDesktop( Code = _code )
           return _proton
 
 
 
     def _pionFilter( self ):
-          _code = "(PROBNNpi > 0.1) &(TRGHP < 0.4) & (P>1200*MeV)& (PT>300*MeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
+          _code = "HASRICH & (CLONEDIST > 5000) & (TRGHOSTPROB < 0.5) & (PROBNNpi > 0.1) &(TRGHP < 0.4) & (MIPCHI2DV(PRIMARY) > %(K_IPCHI2_MIN)s) & (P>3000*MeV)& (PT>300*MeV)&(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s) " % self.__confdict__
           _pion = FilterDesktop( Code = _code )
           return _pion
 
 
     def _kaonFilter( self ):
-          _code = "(PROBNNk > 0.1) &(TRGHP < 0.4) & (MIPCHI2DV(PRIMARY) > %(K_IPCHI2_MIN)s) & (P>1200*MeV) & (PT>300*MeV) &(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__          
+          _code = "HASRICH & (CLONEDIST > 5000) & (TRGHOSTPROB < 0.5) & (PROBNNk > 0.1) &(TRGHP < 0.4) & (MIPCHI2DV(PRIMARY) > %(K_IPCHI2_MIN)s) & (P>3000*MeV) & (PT>300*MeV) &(TRCHI2DOF < %(Daug_TRCHI2DOF_MAX)s)" % self.__confdict__          
           _kaon = FilterDesktop( Code = _code )
           return _kaon
 
     def _ksFilter( self ):
-          _code = "(MIPDV(PRIMARY)<1.*mm)&(BPVDIRA>0)&(MM>487.*MeV)&(MM<507.*MeV)&(VFASPF(VCHI2PDOF)<10.)&(P>4000.*MeV)&(PT>1500.*MeV)&(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>0.01*ns)&CHILDCUT((MIPCHI2DV(PRIMARY)>50.),1)&CHILDCUT((MIPCHI2DV(PRIMARY)>50.),2)&CHILDCUT((TRCHI2DOF<4.),1)&CHILDCUT((TRCHI2DOF<4.),2)" % self.__confdict__  
+          _code = "(MIPDV(PRIMARY)<5.*mm)&(BPVDIRA>0)&(MM>487.*MeV)&(MM<507.*MeV)&(VFASPF(VCHI2PDOF)<10.)&(P>4000.*MeV)&(PT>1500.*MeV)&(BPVLTIME()>0.01*ns)&CHILDCUT((MIPCHI2DV(PRIMARY)>50.),1)&CHILDCUT((MIPCHI2DV(PRIMARY)>50.),2)&CHILDCUT((TRCHI2DOF<4.),1)&CHILDCUT((TRCHI2DOF<4.),2)" % self.__confdict__  
           _ks = FilterDesktop( Code = _code )
           return _ks
 
 
     def _lamFilter( self ):          
-          _code = "(BPVDIRA>0.)&(P>6000.*MeV)&(PT>2000.*MeV)&(VFASPF(VCHI2PDOF)<10.)&(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>0.03*ns)&(MM>1106.*MeV)&(MM<1126.*MeV)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),1)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),2)&CHILDCUT((TRCHI2DOF < 5. ),1)&CHILDCUT((TRCHI2DOF < 5. ),2)" % self.__confdict__
+          _code = "(BPVDIRA>0.)&(P>6000.*MeV)&(PT>2000.*MeV)&(VFASPF(VCHI2PDOF)<10.)&(BPVLTIME()>0.03*ns)&(MM>1106.*MeV)&(MM<1126.*MeV)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),1)&CHILDCUT((MIPCHI2DV(PRIMARY)>120.),2)&CHILDCUT((TRCHI2DOF < 5. ),1)&CHILDCUT((TRCHI2DOF < 5. ),2)" % self.__confdict__
           _lam = FilterDesktop( Code = _code )
           return _lam
 
@@ -301,8 +300,9 @@ def makeXic2PKPi( name
                "& (AM < %(Comb_MASS_MAX)s)" \
                "& (AMINCHILD(PT) > %(Daug_All_PT_MIN)s)" \
                "& (AMINCHILD(P)  > %(Daug_P_MIN)s)" \
-               "& (AMAXCHILD(BPVIPCHI2()) > %(Daug_1of3_BPVIPCHI2_MIN)s)" \
-               "& (ADOCAMAX('') < %(Comb_ADOCAMAX_MAX)s)" % locals()
+               "& ( ACHI2DOCA(1,3) < 16 )"\
+               "& ( ACHI2DOCA(2,3) < 16 )" % locals()
+
 
 
     xicCuts =  "(PT > %(Xic_PT_MIN)s)" \
@@ -310,8 +310,8 @@ def makeXic2PKPi( name
                "& (BPVIPCHI2() < %(Xic_BPVIPCHI2_MAX)s)" \
                "& (BPVVDCHI2 > %(Xic_BPVVDCHI2_MIN)s)" \
                "& (BPVDIRA > %(Xic_BPVDIRA_MIN)s)" \
-               "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(Xic_BPVLTIME_MIN)s)" \
-               "& (BPVLTIME('PropertimeFitter/properTime:PUBLIC') < %(Xic_BPVLTIME_MAX)s)" % locals()
+               "& (BPVLTIME() > %(Xic_BPVLTIME_MIN)s)" \
+               "& (BPVLTIME() < %(Xic_BPVLTIME_MAX)s)" % locals()
 
 
     _Xic = CombineParticles(
@@ -400,22 +400,22 @@ def makeXic2KLam( name
 default_config = {  'Daug_All_PT_MIN'         : 300.0 * MeV
                   , 'Daug_P_MIN'              : 3000.0 * MeV
                   , 'Daug_TRCHI2DOF_MAX'      : 4.0
-                  , 'Daug_1of3_BPVIPCHI2_MIN' : 9
-                  , 'Proton_PIDp_MIN'         : 10.0 
-                  , 'K_IPCHI2_MIN'            : 0.0 
-                  , 'Comb_MASS_MIN'           : 2300.0 * MeV 
+                  , 'Daug_1of3_BPVIPCHI2_MIN' : 0.
+                  , 'Proton_PIDp_MIN'         : 0.0 
+                  , 'K_IPCHI2_MIN'            : 9.0 
+                  , 'Comb_MASS_MIN'           : 2215.0 * MeV 
                   , 'Comb_MASS_MAX'           : 2800.0 * MeV 
                   , 'Comb_ADOCAMAX_MAX'       : 0.3 * mm   
                   , 'Xic_PT_MIN'              : 2000.0 * MeV
-                  , 'Xic_VCHI2VDOF_MAX'       : 8.0
+                  , 'Xic_VCHI2VDOF_MAX'       : 12.0
                   , 'Xic_BPVVDCHI2_MIN'       : 0.0
                   , 'Xic_BPVDIRA_MIN'         : 0.99
-                  , 'Xic_BPVIPCHI2_MAX'       : 30.
+                  , 'Xic_BPVIPCHI2_MAX'       : 20.
                   , 'Xic_BPVLTIME_MAX'        : 0.005 * ns
-                  , 'Xic_BPVLTIME_MIN'        : -0.005 * ns
+                  , 'Xic_BPVLTIME_MIN'        : 0.0 * ns
                   , 'HltFilter'               : "HLT_PASS('Hlt2*Decision')"
-                  , 'PrescaleXic2PKPi'        : 0.0
-                  , 'PostscaleXic2PKPi'       : 0.0
+                  , 'PrescaleXic2PKPi'        : 1.0
+                  , 'PostscaleXic2PKPi'       : 1.0
                   , 'PrescaleXic2PKK'         : 1.0
                   , 'PostscaleXic2PKK'        : 1.0
                   , 'PrescaleXic2PV0'         : 1.0

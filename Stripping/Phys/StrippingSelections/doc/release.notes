@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-09-12 - Roberta Cardinale (for Yury Shcheglov)
+	- Updated StrippingXic2HHH
 
 ! 2014-09-12 - Chris Jones
  - Fix some python warnings.
