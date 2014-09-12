@@ -590,7 +590,7 @@ class StagedRecoConf(LHCbConfigurableUser):
 
         matching.addTool(PatMatchTool, name="PatMatchTool")
         matching.PatMatchTool.MinMomentum = 1000
-        matching.PatMatchTool.MinPt = 300
+        matching.PatMatchTool.MinPt = self.getProp("Fwd2MinPT")
 
         fst_seq.Members += [seeding, matching]
 
@@ -599,8 +599,8 @@ class StagedRecoConf(LHCbConfigurableUser):
         # as is done offline. This could be the first step of the
         # new offline track reconstruction
         # Somehow PatForward interacts with seed+match because
-        # if this is run before the seed+match then it finds no more
-        # tracks. Weird.
+        # of this we run after seed+match, as all these algos
+        # share a HitManager
         offline_fwd = PatForward("FstOfflineForward")
         offline_fwd.InputTracksName = velo_tracking.getProp("OutputTracksName")
         offline_fwd.OutputTracksName = self.getProp("RootInTES") + "Track/OfflineFwd"

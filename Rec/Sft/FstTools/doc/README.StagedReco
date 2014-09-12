@@ -17,14 +17,17 @@ Install
 -------
 
 To get started you will need the following packages
-in addition to Brunel v46r1 and the latest revision of
+in addition to Brunel v47r0 and the latest revision of
 Sft/FstTools:
 
-$ getpack Tf/PatAlgorithms HEAD # tested revision 176720
-$ getpack Phys/DaVinciInterfaces HEAD # tested revision 176704 
-$ getpack Phys/DaVinciTypes HEAD # tested revision 176704
-$ getpack Phys/KalmanFilter HEAD # tested revision 176704
-$ getpack Pr/PrMCTools HEAD # tested revision 177342
+$ getpack Kernel/LHCbMath HEAD # tested revision: 177589
+$ getpack Phys/DaVinciInterfaces HEAD # tested revision: 175472
+$ getpack Phys/DaVinciTypes HEAD # tested revision: 177317
+$ getpack Phys/KalmanFilter HEAD # tested revision: 170916
+$ getpack Pr/PrMCTools HEAD # tested revision: 177518
+$ getpack Sft/FstTools HEAD # tested revision: 177601
+$ getpack Tf/PatAlgorithms HEAD # tested revision: 177591
+$ getpack Tf/TfKernel HEAD # tested revision: 177531
 
 
 Running
