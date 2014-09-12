@@ -3,6 +3,10 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2014-09-12 - Andrea Contu
+  - Update to Semileptonic and new dbase for s21(r1)
+
 ! 2014-09-11 - Roberta Cardinale (BandQ)
 	- Updated dictionaries of Bc2Ds1Gamma
 

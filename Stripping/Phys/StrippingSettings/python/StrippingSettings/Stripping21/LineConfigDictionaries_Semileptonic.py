@@ -150,7 +150,7 @@ B2XuMuNu = {
         "KaonMINIPCHI2"       : 16     ,#adminensional
         
         
-        "PhiMassWindow"       : 20.  ,#MeV
+        "PhiMassWindow"       : 4000.  ,#MeV
         "PhiVCHI2DOF"         : 6     ,#adimensional
         "PhiPT"               : 500.  ,#MeV
         "PhiMINIPCHI2"        : 4     ,#adimensional
@@ -756,7 +756,14 @@ ProtonAsym = {
             "StrippingLb2LcpipipiLc2KpiProtonAsymLine",
             "StrippingSc2LcpipLc2KpiProtonAsymLine",
             "StrippingSc2LcpimLc2KpiProtonAsymLine",
-            "StrippingLcst2LcpipiLc2KpiProtonAsymLine"
+            "StrippingLcst2LcpipiLc2KpiProtonAsymLine",
+            "StrippingBd2LcppipiLc2pKpiProtonAsymLine",
+            "StrippingBu2LcppipipiLc2pKpiProtonAsymLine",
+            "StrippingLb2LcpiLc2pKpiProtonAsymLine",
+            "StrippingLb2LcpipipiLc2pKpiProtonAsymLine",
+            "StrippingSc2LcpipLc2pKpiProtonAsymLine",
+            "StrippingSc2LcpimLc2pKpiProtonAsymLine",
+            "StrippingLcst2LcpipiLc2pKpiProtonAsymLine"
             ]
         },
     "WGs": ["Semileptonic"]
