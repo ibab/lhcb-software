@@ -333,8 +333,8 @@ class DBuilder(object):
         wm = awmFunctor(decays,min,max)
         config = deepcopy(self.config)    
         config.pop('AMAXDOCA_MAX')
-        extrainputs = self.ks[which]
-        if up : extrainputs += [self.uppions]
+        if up : extrainputs = self.ks[which] + [self.uppions]
+        else: extrainputs = self.ks[which]
         protoDp2Ksh = self._makeD2X('D+2KsH_'+which,['D+ -> KS0 pi+'],wm,up,config,extrainputs)
         psels = subPIDSels(decays,'D+2KsH'+tag,which,min,max,[protoDp2Ksh])
         protoDm2Ksh = self._makeD2X('D-2KsH_'+which,['D- -> KS0 pi-'],wm,up,config,extrainputs)
@@ -351,8 +351,8 @@ class DBuilder(object):
         config = deepcopy(self.config)    
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
-        extrainputs = self.ks[which]
-        if up : extrainputs += [self.uppions]
+        if up : extrainputs = self.ks[which] +  [self.uppions]
+        else: extrainputs = self.ks[which]
         protoD2Kshh = self._makeD2X('D2KSHH'+which,['D0 -> KS0 pi+ pi-'],
                                     wm,up,config,extrainputs)
         name = 'D2KsHH'
@@ -370,8 +370,8 @@ class DBuilder(object):
         config = deepcopy(self.config)    
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
-        extrainputs = self.ks[which]
-        if up : extrainputs += [self.uppions]
+        if up : extrainputs = self.ks[which] + [self.uppions]
+        else : extrainputs = self.ks[which]
         protoPlus = self._makeD2X('D2KSHHWSPlus'+which,['D0 -> KS0 pi+ pi+'],
                                   wm,up,config,extrainputs)
         psels = subPIDSels(decays,'D2KSHHWSPlus'+tag,which,min,max,[protoPlus])
@@ -397,8 +397,8 @@ class DBuilder(object):
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
         config['ADOCA(2,4)_MAX'] = self.config['AMAXDOCA_MAX']
         config['ADOCA(3,4)_MAX'] = self.config['AMAXDOCA_MAX']
-        extrainputs = self.pi0[which]
-        if up : extrainputs += [self.uppions]
+        if up : extrainputs = self.pi0[which] + [self.uppions]
+        else : extrainputs = self.pi0[which]
         protoDp2pi0hhh = self._makeD2X('D+2Pi0HHH_'+which,
                                        ['D+ -> pi0 pi+ pi+ pi-'],
                                        wm,up,config,extrainputs)
@@ -420,8 +420,8 @@ class DBuilder(object):
         config = deepcopy(self.config)    
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
-        extrainputs = self.pi0[which]
-        if up : extrainputs += [self.uppions]
+        if up : extrainputs = self.pi0[which]+ [self.uppions]
+        else : extrainputs = self.pi0[which]  
         protoD2pi0hh = self._makeD2X('D2Pi0HH_'+which,['D0 -> pi0 pi+ pi-'],
                                      wm,up,config,extrainputs)
         name = 'D2Pi0HH'
@@ -439,8 +439,8 @@ class DBuilder(object):
         config = deepcopy(self.config)    
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(2,3)_MAX'] = self.config['AMAXDOCA_MAX']
-        extrainputs = self.pi0[which]
-        if up : extrainputs += [self.uppions]
+        if up : extrainputs = self.pi0[which] + [self.uppions]
+        else : extrainputs = self.pi0[which]
         psel = self._makeD2X('D2Pi0HHWSPlus'+which,['D0 -> pi0 pi+ pi+'],wm,
                              up,config,extrainputs)
         psel = subPIDSels(decays,'D2Pi0HHWSPlus'+tag,which,min,max,[psel])
@@ -459,8 +459,8 @@ class DBuilder(object):
         config = deepcopy(self.config)    
         config.pop('AMAXDOCA_MAX')
         config['ADOCA(3,4)_MAX'] = self.config['AMAXDOCA_MAX']
-        extrainputs = self.pi0[whichPi0]+self.ks[whichKs]
-        if up : extrainputs += [self.uppions]
+        if up : extrainputs = self.pi0[whichPi0]+self.ks[whichKs] + [self.uppions]
+        else : extrainputs = self.pi0[whichPi0]+self.ks[whichKs]
         protoD2Kspi0hh = self._makeD2X('D2KSPi0HH_'+whichKs+'_'+whichPi0,['D0 -> KS0 pi0 pi+ pi-'],
                                        wm,up,config,extrainputs)
         name = 'D2KsPi0HH'

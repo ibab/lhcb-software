@@ -681,14 +681,14 @@ class B2DXBuilder(object):
     def _makeB02D0D0(self):
         '''Makes B0 -> D0 D0'''
         dec = ["B0 -> D0 D0"]
-        decays = {'B02D0D0' : dec}
-        inputs = {'B02D0D0' : self.d.d0_cf_pid}
-        #decays = {'B02D0D0_HH_HH'    : dec,
-        #          'B02D0D0_HH_K3Pi'  : dec,
-        #          'B02D0D0_K3Pi_K3Pi': dec}
-        #inputs = {'B02D0D0_HH_HH'  : self.d.hh_pid,
-        #          'B02D0D0_HH_K3Pi':self.d.hh_pid+self.d.k3pi_pid,
-        #          'B02D0D0_K3Pi_K3Pi':self.d.k3pi_pid}
+ #       decays = {'B02D0D0' : dec}
+  #      inputs = {'B02D0D0' : self.d.d0_cf_pid}
+        decays = {'B02D0D0D02HHD02HH'    : dec,
+                  'B02D0D0D02HHD02K3Pi'  : dec,
+                  'B02D0D0D02K3PiD02K3Pi': dec}
+        inputs = {'B02D0D0D02HHD02HH'  : self.d.hh_pid,
+                  'B02D0D0D02HHD02K3Pi':self.d.hh_pid+self.d.k3pi_pid,
+                  'B02D0D0D02K3PiD02K3Pi':self.d.k3pi_pid}
         b2d0d0 = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d0,1.0))
 
@@ -724,6 +724,9 @@ class B2DXBuilder(object):
         inputs = {'B2DstD0': self.dst.d0pi_pid+self.d.hh_pid}
         b2dstd0 = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2dstd0,1.0))
+        inputs = {'B2DstD0': self.dst.d0pi_pid+self.d.k3pi_pid}
+        b2dstd0 = makeB2XSels(decays,'D02K3Pi',inputs,self.config)  
+        self.lines.append(ProtoLine(b2dstd0,1.0))
 
     def _makeB02DstDst(self):
         '''Makes the RS and WS B+ -> D*+- D*-+ + c.c.'''
@@ -752,16 +755,28 @@ class B2DXBuilder(object):
         decays = {'B02D0DK': ["B0 -> D0 D- K+","B0 -> D0 D+ K-"]}
         inputs = {'B02D0DK': self.d.hhh_cf_pid+self.d.hh_pid+self.topoKaons}
         b2d0dk_rs = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dk_rs,1.0))
+        inputs = {'B02D0DK': self.d.hhh_cf_pid+self.d.k3pi_pid+self.topoKaons}
+        b2d0dk_rs = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dk_rs,1.0))
         decays = {'B02D0DKWS': ["B0 -> D0 D- K-","B0 -> D0 D+ K+"]}
         inputs = {'B02D0DKWS': self.d.hhh_cf_pid+self.d.hh_pid+self.topoKaons}
         b2d0dk_ws = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2d0dk_rs,1.0))
         self.lines.append(ProtoLine(b2d0dk_ws,0.1))
+        inputs = {'B02D0DKWS': self.d.hhh_cf_pid+self.d.k3pi_pid+self.topoKaons}
+        b2d0dk_ws = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dk_ws,0.1))
+    
 
     def _makeB2D0D0K(self):
         '''Makes B+- -> D0 D0 K+-'''
-        decays = {'B2D0D0K': ["B+ -> D0 D0 K+","B- -> D0 D0 K-"]}
-        inputs = {'B2D0D0K': self.d.d0_cf_pid+self.topoKaons}
+        dec = ["B+ -> D0 D0 K+","B- -> D0 D0 K-"]
+        decays = {'B2D0D0KD02HHD02HH': dec,
+ 		  'B2D0D0KD02HHD02K3Pi': dec,
+		  'B2D0D0KD02K3PiD02K3Pi': dec}
+        inputs = {'B2D0D0KD02HHD02HH': self.d.hh_pid+self.topoKaons,
+		  'B2D0D0KD02HHD02K3Pi': self.d.hh_pid+self.d.k3pi_pid+self.topoKaons,
+		  'B2D0D0KD02K3PiD02K3Pi':self.d.k3pi_pid+self.topoKaons}
         b2d0d0k = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d0k,1.0))
 
@@ -783,12 +798,19 @@ class B2DXBuilder(object):
         decays = {'B2DstD0K':["B0 -> D*(2010)+ D0 K-","B0 -> D*(2010)- D0 K+"]}
         inputs ={'B2DstD0K':self.dst.d0pi_pid+self.d.hh_pid+self.topoKaons}
         b2dstd0k_rs = makeB2XSels(decays,'',inputs,self.config)
+        self.lines.append(ProtoLine(b2dstd0k_rs,1.0))
+        inputs ={'B2DstD0K':self.dst.d0pi_pid+self.d.k3pi_pid+self.topoKaons}
+        b2dstd0k_rs = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2dstd0k_rs,1.0))
         decays = {'B2DstD0KWS':["B0 -> D*(2010)+ D0 K+",
                                 "B0 -> D*(2010)- D0 K-"]}
         inputs ={'B2DstD0KWS': self.dst.d0pi_pid+self.d.hh_pid+self.topoKaons}
         b2dstd0k_ws = makeB2XSels(decays,'',inputs,self.config)
-        self.lines.append(ProtoLine(b2dstd0k_rs,1.0))
         self.lines.append(ProtoLine(b2dstd0k_ws,0.1))
+        inputs ={'B2DstD0KWS': self.dst.d0pi_pid+self.d.k3pi_pid+self.topoKaons}
+        b2dstd0k_ws = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2dstd0k_ws,0.1))
+
 
     def _makeB2DstDstK(self):
         '''Makes the RS and WS B+ -> D*+- D*-+ K+ + c.c.'''
@@ -826,11 +848,16 @@ class B2DXBuilder(object):
 
     def _makeB02D0D0Kst(self):
         '''Makes the RS B0 -> D0 D0 K*'''
-        decays = {'B02D0D0Kst':["B0 -> D0 D0 K*(892)0",
-                                "B0 -> D0 D0 K*(892)~0"]}
-        inputs = {'B02D0D0Kst':self.d.d0_cf_pid+self.hh.kpi}
+        dec = ["B0 -> D0 D0 K*(892)0","B0 -> D0 D0 K*(892)~0"]
+        decays = {'B02D0D0KstD02HHD02HH':dec,
+		  'B02D0D0KstD02HHD02K3Pi':dec,
+		  'B02D0D0KstD02K3PiD02K3Pi':dec}
+        inputs = {'B02D0D0KstD02HHD02HH':self.d.hh_pid+self.hh.kpi,
+		  'B02D0D0KstD02HHD02K3Pi':self.d.hh_pid+self.d.k3pi_pid+self.hh.kpi,
+		  'B02D0D0KstD02K3PiD02K3Pi':self.d.k3pi_pid+self.hh.kpi}
         b2ddkst = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2ddkst,1.0))
+        
 
     def _makeB02DDKst(self):
         '''Makes the RS B0 -> D+ D- K*'''
@@ -864,6 +891,9 @@ class B2DXBuilder(object):
         inputs = {'B2DD0Kst':self.d.hhh_cf_pid+self.d.hh_pid+self.hh.kpi}
         b2dd0kst = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2dd0kst,1.0))
+        inputs = {'B2DD0Kst':self.d.hhh_cf_pid+self.d.k3pi_pid+self.hh.kpi}
+        b2dd0kst = makeB2XSels(decays,'D02K3Pi',inputs,self.config)      
+        self.lines.append(ProtoLine(b2dd0kst,1.0))
 
     def _makeB2DstD0Kst(self):
         '''Makes the RS B+ -> D*(2010)+ D~0 K*'''
@@ -871,7 +901,9 @@ class B2DXBuilder(object):
         inputs = {'B2DstD0Kst':self.dst.d0pi_pid+self.d.hh_pid+self.hh.kpi}
         b2dstd0kst = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2dstd0kst,1.0))
-
+        inputs = {'B2DstD0Kst':self.dst.d0pi_pid+self.d.k3pi_pid+self.hh.kpi}
+        b2dstd0kst = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2dstd0kst,1.0))
 
     def _makeB02DDKS(self,ks):
         '''Makes RS and WS B0 -> D+D-KS'''
@@ -890,11 +922,19 @@ class B2DXBuilder(object):
         inputs = {'B2D0DKS'+ks: self.d.hhh_cf_pid+self.d.hh_pid+self.ks[ks]}
         b2d0dks = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0dks,1.0))
+        inputs = {'B2D0DKS'+ks: self.d.hhh_cf_pid+self.d.k3pi_pid+self.ks[ks]}
+        b2d0dks = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dks,1.0))
 
     def _makeB02D0D0KS(self,ks):
         '''Makes B0 -> D0 D0 KS'''
-        decays = {'B02D0D0KS'+ks: ["B0 -> D0 D0 KS0"]}
-        inputs = {'B02D0D0KS'+ks: self.d.d0_cf_pid+self.ks[ks]}
+        dec = ["B0 -> D0 D0 KS0"]
+        decays = {'B02D0D0KSD02HHD02HH'+ks: dec,
+		  'B02D0D0KSD02HHD02K3Pi'+ks: dec,
+		  'B02D0D0KSD02K3PiD02K3Pi'+ks: dec}
+        inputs = {'B02D0D0KSD02HHD02HH'+ks: self.d.hh_pid+self.ks[ks],
+		  'B02D0D0KSD02HHD02K3Pi'+ks: self.d.hh_pid+self.d.k3pi_pid+self.ks[ks],
+		  'B02D0D0KSD02K3PiD02K3Pi'+ks: self.d.k3pi_pid+self.ks[ks]}
         b2d0d0ks = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0d0ks,1.0))
 
@@ -916,6 +956,9 @@ class B2DXBuilder(object):
         inputs={'B2DstD0KS'+ks:self.dst.d0pi_pid+self.d.hh_pid+self.ks[ks]}
         b2dstd0ks = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2dstd0ks,1.0))
+        inputs={'B2DstD0KS'+ks:self.dst.d0pi_pid+self.d.k3pi_pid+self.ks[ks]}
+        b2dstd0ks = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2dstd0ks,1.0))
 
     def _makeB02DstDstKS(self,ks):
         '''Makes the RS and WS B0 -> D*+- D*-+ KS'''
@@ -934,6 +977,9 @@ class B2DXBuilder(object):
         inputs = {'B2D0DKK': self.d.hhh_cf_pid+self.d.hh_pid+self.topoKaons}
         b2d0dkk = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0dkk,1.0))
+        inputs = {'B2D0DKK': self.d.hhh_cf_pid+self.d.k3pi_pid+self.topoKaons}
+        b2d0dkk = makeB2XSels(decays,'D2K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dkk,1.0))
 
     def _makeB2D0DKPi(self):
         '''Makes RS B+ -> D0D-K+pi+ + c.c.'''
@@ -941,6 +987,10 @@ class B2DXBuilder(object):
         inputs = {'B2D0DKPi': self.d.hhh_cf_pid+self.d.hh_pid+self.topoPions}
         b2d0dkpi = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b2d0dkpi,1.0))
+        inputs = {'B2D0DKPi': self.d.hhh_cf_pid+self.d.k3pi_pid+self.topoPions}
+        b2d0dkpi = makeB2XSels(decays,'D02K3Pi',inputs,self.config)
+        self.lines.append(ProtoLine(b2d0dkpi,1.0))
+
 
     def _makeB02DDKK(self):
         '''Makes RS B0 -> D+D-K+K- + c.c.'''  
@@ -966,12 +1016,22 @@ class B2DXBuilder(object):
 
     def _makeB02D0D0KK(self):
         '''Makes RS B0 -> D0D~0K+K- + c.c.'''
-        decays = {'B02D0D0KK': ["[B0 -> D0 D~0 K+ K-]cc"]}
-        inputs = {'B02D0D0KK': self.d.hh_pid+self.topoKaons}
+        dec = ["[B0 -> D0 D~0 K+ K-]cc"]
+        decays = {'B02D0D0KKD02HHD02HH': dec,
+	          'B02D0D0KKD02HHD02K3Pi': dec,
+		  'B02D0D0KKD02K3PiD02K3Pi': dec }
+        inputs = {'B02D0D0KKD02HHD02HH': self.d.hh_pid+self.topoKaons,
+		  'B02D0D0KKD02HHD02K3Pi': self.d.hh_pid+self.d.k3pi_pid+self.topoKaons,
+		  'B02D0D0KKD02K3PiD02K3Pi': self.d.k3pi_pid+self.topoKaons}
         b02d0d0kk_rs = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b02d0d0kk_rs,1.0))
-        decays = {'B02D0D0KKWS': ["[B0 -> D0 D~0 K+ K+]cc"]}
-        inputs = {'B02D0D0KKWS': self.d.hh_pid+self.topoKaons}
+        dec = ["[B0 -> D0 D~0 K+ K+]cc"]
+        decays = {'B02D0D0KKWSD02HHD02HH': dec,
+		  'B02D0D0KKWSD02HHD02K3Pi': dec,
+		  'B02D0D0KKWSD02K3PiD02K3Pi': dec}
+        inputs = {'B02D0D0KKWSD02HHD02HH': self.d.hh_pid+self.topoKaons,
+                  'B02D0D0KKWSD02HHD02K3Pi': self.d.hh_pid+self.d.k3pi_pid+self.topoKaons, 
+                  'B02D0D0KKWSD02K3PiD02K3Pi': self.d.k3pi_pid+self.topoKaons}	
         b02d0d0kk_ws = makeB2XSels(decays,'',inputs,self.config)
         self.lines.append(ProtoLine(b02d0d0kk_ws,1.0))
 
