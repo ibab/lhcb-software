@@ -174,7 +174,7 @@ class DijetsConf(LineBuilder):
         else:
             jets =  LoKi__JetMaker(
                 self._name + "JetsMaker",
-                JetMaker = 'LoKi__FastJetMaker',
+                JetMaker = 'LoKi::FastJetMaker',
                 JetID = False,
                 Associate2Vertex = True,
                 ApplyJEC = self._config["JET"]["JEC"],
