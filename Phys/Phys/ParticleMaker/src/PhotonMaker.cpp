@@ -72,6 +72,7 @@ DECLARE_TOOL_FACTORY(PhotonMaker)
   declareProperty ( "MaxHcalRatio"               , m_maxHcal = -1.);
   declareProperty ( "MinHcalRatio"               , m_minHcal = -1.);
   declareProperty ( "MaxPrsEnergy"               , m_maxPrs  = -1.);
+  declareProperty( "ClusterCodeMasks"  , m_clusterMasks);
 
  
   // Confidence level techniques
@@ -236,6 +237,18 @@ StatusCode PhotonMaker::makeParticles (LHCb::Particle::Vector & particles )
     if( m_maxHcal >=0 && eHcal/(1.+eHcal) > m_maxHcal)continue;
     if( m_minHcal >=0 && eHcal/(1.+eHcal) < m_minHcal)continue;
 
+    // ---- apply mask on ClusterCode
+    bool pass=true;
+    if( m_clusterMasks.size() != 0){
+      for(std::map<std::string,std::pair<double,double> >::iterator im = m_clusterMasks.begin(); m_clusterMasks.end() != im ; im++){
+        std::string type = im->first;
+        std::pair<double,double> window = im->second;
+        int code = ClusterCode(pp,type);
+        if( code == -1)Warning("Unknown ClusterCode mask '"+type+"'",StatusCode::SUCCESS,1.).ignore();
+        else if( code < (int)window.first || (int)code > window.second)pass=false;
+      }
+    }
+    if( !pass ) continue;
 
 
 
@@ -432,3 +445,18 @@ double PhotonMaker::confLevel( const LHCb::ProtoParticle* pp, bool useSwitch ) c
   // return
   return CL ;
 }
+
+
+int PhotonMaker::ClusterCode( const LHCb::ProtoParticle* pp, std::string type ) const{
+  int code  = (int)pp->info(LHCb::ProtoParticle::CaloClusterCode,0.);
+  int mult  = abs(code)/10;
+  int pos   = abs(code) - mult*10;
+  int isol  = (code > 0) ? 1 : 0;
+  int conf  = pos % 2;
+  if(type == "Size")return mult;
+  else if(type == "2ndPosition")return pos;
+  else if(type == "Shape")return conf;
+  else if(type == "Isolated")return isol;
+  return -1;
+}
+

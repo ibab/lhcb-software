@@ -50,6 +50,7 @@ MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator
   declareProperty( "GammaPtCut"        , m_gPtCut = 0. * Gaudi::Units::MeV );
   declareProperty( "GammaGammaDistCut" , m_ggDistCut = 1.8 ); // Unit = cellSize
   declareProperty( "Chi2Cut"           , m_chi2Cut   = 1.  );
+  declareProperty( "ClusterCodeMasks"  , m_clusterMasks);
 
  // Confidence level techniques
   m_clBase.push_back("IsPhoton");
@@ -152,15 +153,29 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
 
     // ---- apply mass window
     double mass = pi0Momentum.mass();
-    if (m_MassWin < fabs(mass-m_Mass) ){continue;}
+    if (m_MassWin < fabs(mass-m_Mass) )continue;
 
     // ---- apply Pt(pi0) cut
-    if ( m_PtCut  > pi0Momentum.pt()     ){continue;}
+    if ( m_PtCut  > pi0Momentum.pt()     )continue;
 
     // ---- apply chi2(Tr,cluster) cut 
     const double chi2 = pp->info(LHCb::ProtoParticle::CaloTrMatch,+1.e+06);
-    if ( m_chi2Cut >= 0 && chi2          < m_chi2Cut                ){continue;}
+    if ( m_chi2Cut >= 0 && chi2          < m_chi2Cut                )continue;
 
+
+    // ---- apply mask on ClusterCode
+    bool pass=true;
+    if( m_clusterMasks.size() != 0){
+      for(std::map<std::string,std::pair<double,double> >::iterator im = m_clusterMasks.begin(); m_clusterMasks.end() != im ; im++){
+        std::string type = im->first;
+        std::pair<double,double> window = im->second;
+        int code = ClusterCode(pp,type);
+        if( code == -1)Warning("Unknown ClusterCode mask '"+type+"'",StatusCode::SUCCESS,1.).ignore();
+        else if( code < (int)window.first || (int)code > window.second)pass=false;
+      }
+    }
+    if( !pass ) continue;
+    
 
     // == extract SplitPhotons hypos
     const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
@@ -352,4 +367,17 @@ double MergedPi0Maker::confLevel( const LHCb::ProtoParticle* pp, bool useSwitch 
   return CL ;
 }
 
+
+int MergedPi0Maker::ClusterCode( const LHCb::ProtoParticle* pp, std::string type ) const{
+  int code  = (int)pp->info(LHCb::ProtoParticle::CaloClusterCode,0.);
+  int mult  = abs(code)/10;
+  int pos   = abs(code) - mult*10;
+  int isol  = (code > 0) ? 1 : 0;
+  int conf  = pos % 2;
+  if(type == "Size")return mult;
+  else if(type == "2ndPosition")return pos;
+  else if(type == "Shape")return conf;
+  else if(type == "Isolated")return isol;
+  return -1;
+}
 

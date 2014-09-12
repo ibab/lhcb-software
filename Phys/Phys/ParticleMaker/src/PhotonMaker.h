@@ -56,6 +56,9 @@ protected:
 
 private:
 
+  int ClusterCode( const LHCb::ProtoParticle* pp, std::string type ) const;
+  std::map<std::string,std::pair<double,double> >m_clusterMasks;
+
   long m_Id;
   // Input PP container
   std::string                        m_input            ;
