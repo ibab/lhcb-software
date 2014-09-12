@@ -175,6 +175,8 @@ StatusCode NeutralProtoPAlg::execute(){
         pushData(proto, LHCb::ProtoParticle::ShowerShape, hypo, Spread);         // ** input to neutralID  && isPhoton (as Fr2)
         pushData(proto, LHCb::ProtoParticle::CaloNeutralSpd, hypo, HypoSpdM );   // ** input to neutralID
         pushData(proto, LHCb::ProtoParticle::CaloNeutralHcal2Ecal, hypo, Hcal2Ecal); // ** input to neutralID
+        pushData(proto, LHCb::ProtoParticle::CaloClusterCode, hypo , ClusterCode);
+        pushData(proto, LHCb::ProtoParticle::CaloClusterFrac, hypo , ClusterFrac,1);        
 
         double dep = (m_estimator->data(hypo,  ToSpdM ) > 0) ? -1. : +1.;
         dep *= m_estimator->data(hypo,  ToPrsE );
