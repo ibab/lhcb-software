@@ -671,33 +671,33 @@ namespace DecayTreeFitter
 
   IMessageSvc * Fitter::msgService() const
   {
-    IMessageSvc * msgSvc = NULL;
-    ISvcLocator* svcLocator = Gaudi::svcLocator();
-    if ( svcLocator )
+    static IMessageSvc * msgSvc = NULL;
+    if ( !msgSvc )
     {
-      svcLocator->service("MessageSvc",msgSvc);
+      ISvcLocator * svcLocator = Gaudi::svcLocator();
+      if ( svcLocator ) { svcLocator->service("MessageSvc",msgSvc); }
     }
     return msgSvc;
   }
 
+  const IAlgContextSvc * Fitter::algContextSvc() const
+  {
+    static const IAlgContextSvc * asvc = NULL;
+    if ( !asvc )
+    {
+      ISvcLocator * svcLocator = Gaudi::svcLocator();
+      if ( svcLocator ) { svcLocator->service("AlgContextSvc",asvc); }
+    }
+    return asvc;
+  }
+
   const IAlgorithm* Fitter::getAlg() const
   {
-    // alg pointer
-    const IAlgorithm* alg = NULL;
-
-    // Service locator
-    ISvcLocator* svcLocator = Gaudi::svcLocator();
-    if ( svcLocator )
-    {
-      // Locate the context service
-      const IAlgContextSvc* asvc = NULL;
-      svcLocator->service("AlgContextSvc",asvc);
-      // Get the current alg
-      alg = ( asvc ? asvc->currentAlg() : NULL );
-    }
-   
-    // return the alg pointer
-    return alg;
+    // Locate the context service
+    const IAlgContextSvc * asvc = algContextSvc();
+    
+    // return the current alg
+    return ( asvc ? asvc->currentAlg() : NULL );
   }
 
  void Fitter::print( const std::string& msg, const MSG::Level level ) const
@@ -708,11 +708,13 @@ namespace DecayTreeFitter
    IMessageSvc * msgSvc = msgService();
    if ( msgSvc && alg )
    {
+     // Use gaudi messaging
      MsgStream log( msgSvc, alg->name() );
      log << level << msg << endmsg;
    }
    else
    {
+     // Gaudi not available, so use basic cout...
      std::cout << msg << std::endl;
    }
  }

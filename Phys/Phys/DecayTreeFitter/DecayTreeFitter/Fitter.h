@@ -34,6 +34,7 @@ namespace DecayTreeFitter
   class ChiSquare ;
 }
 class IAlgorithm;
+class IAlgContextSvc;
 // ============================================================================
 namespace DecayTreeFitter
 {
@@ -190,6 +191,8 @@ namespace DecayTreeFitter
     // ========================================================================
   private:
     // ========================================================================
+    /// Get context service
+    const IAlgContextSvc * algContextSvc() const;
     /// Get message service
     IMessageSvc * msgService() const;
     /// Print a message
