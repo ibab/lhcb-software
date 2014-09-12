@@ -522,8 +522,8 @@ class StrippingLine(object):
 
 		self._members.append(relatedInfoAlg)
 		
-		if self.RelatedInfoFilter : 
-		    self._members.append( self.RelatedInfoFilter )
+	    if self.RelatedInfoFilter : 
+		self._members.append( self.RelatedInfoFilter )
 
         if self._members : 
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })

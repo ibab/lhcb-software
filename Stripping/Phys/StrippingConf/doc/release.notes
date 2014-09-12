@@ -4,6 +4,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-09-11 - Anton Poluektov 
+ - Fix bug in StrippingLine with RelatedInfoFilter
+   (which was added after every single entry of RelatedInfoTool 
+    instead of once in the end of the line sequence)
+
 ! 2014-09-11 - Stefano Perazzini
  - Added attribute Verbose to StrippingConf. If Verbose == True it executes
    the checks checkRawEventRequests, checkMDSTFlag, checkFlavourTagging
