@@ -12,7 +12,7 @@
 #include "Event/Track.h"
 #include "CaloInterfaces/ICaloHypo2Calo.h"
 
-static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 3, 0 );
+static const InterfaceID IID_ICaloHypoEstimator ( "ICaloHypoEstimator", 4, 0 );
 
 
 
@@ -76,7 +76,9 @@ namespace CaloDataType{
                     isPhotonPrsE2,
                     isNotH,
                     isNotE,
-                    Last // dummy end (54)
+                    ClusterCode,
+                    ClusterFrac,
+                    Last // dummy end (56)
   };                
 
   static const  int TypeMask[Last] ={  // 0x1 : neutral ; 0x2 : charged ; 0x3 : both
@@ -85,7 +87,7 @@ namespace CaloDataType{
     0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3,0x3, // 12
     0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,  // 8  Gamma/Pi0 input (Ecal-based)
     0x1,0x1,0x1,0x1,0x1,0x1,0x1,0x1,  // 8  Gamma/Pi0 input (Prs-based)  
-    0x1,0x1 //2
+    0x1,0x1,0x3,0x3 //4
   };
   static const  std::string Name[Last] = {
     "HypoE"     , // 0
@@ -142,15 +144,17 @@ namespace CaloDataType{
     "isPhoton_PrsEmax",
     "isPhoton_PrsE2",
     "isNotH",
-    "isNotE"
+    "isNotE",
+    "ClusterCode",
+    "ClusterFrac"
   };
 }
 
 namespace CaloMatchType{
   enum MatchType  {  ClusterMatch     = 0,  
-                    ElectronMatch      ,     
-                    BremMatch   , 
-                    Last};
+                     ElectronMatch      ,     
+                     BremMatch   , 
+                     Last};
   static const  std::string Name[Last] = { "ClusterMatch","ElectronMatch","BremMatch"};
 }
 

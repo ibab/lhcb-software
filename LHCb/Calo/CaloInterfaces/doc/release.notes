@@ -3,6 +3,10 @@
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =====================================================================
 
+
+! 2014-09-12 - O. Deschamps
+  - ICaloHypoEstimator.h : add ClusterCode & ClusterFrac as extra info
+
 !========================= CaloInterfaces v8r8 2014-07-14 =======================
 ! 2014-05-30 - Olivier Deschamps
  - IGammaPi0SeparatioTool : change method signature
