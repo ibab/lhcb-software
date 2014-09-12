@@ -93,7 +93,8 @@ class RecSysConf(LHCbConfigurableUser):
                 from PatPV import PVConf
                 PVConf.LoosePV().configureAlg()
             elif ( not ( self.getProp("Simulation") and
-                         self.getProp("DataType") in ["2008","2009","2010","MC09","Upgrade"] ) ): 
+                         self.getProp("DataType") in ["2008","2009","2010","MC09","Upgrade"] ) ):
+                # Deafult setting uses beam spot constraint from DB, available from 2011. Prior to 2011 stability of beam spot is not certain
                 from PatPV import PVConf
                 PVConf.StandardPV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
