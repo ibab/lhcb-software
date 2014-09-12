@@ -191,7 +191,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                               'Bs2mmLTUBLinePrescale',
                               'Bs2KKLTUBLinePrescale',
                               'BPVVDChi2',
-                              'daugt_IPChi2',                             
+                              'daugt_IPChi2'                             
                               )
 
 
@@ -294,8 +294,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
               },
-            { 'Type' : 'ToolZViso',
-              'RecursionLevel' : 0,
+            { "Type" : "RelInfoBs2MuMuZVisoBDT",
+              "RecursionLevel" : 0,
+              "Variables" : ['ZVISO'],
               "Location"  : "BSMUMUVARIABLES"  
               }
             ]
@@ -322,8 +323,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
               },
-            { 'Type' : 'ToolZViso',
-              'RecursionLevel' : 0,
+            { "Type" : "RelInfoBs2MuMuZVisoBDT",
+             "RecursionLevel" : 0,
+              "Variables" : ['ZVISO'],
               "Location"  : "BSMUMUVARIABLES"  
               }
             ]
@@ -394,8 +396,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
               },
-            { 'Type' : 'ToolZViso',
-              'RecursionLevel' : 0,
+            { "Type" : "RelInfoBs2MuMuZVisoBDT",
+             "RecursionLevel" : 0,
+              "Variables" : ['ZVISO'],
               "Location"  : "BSMUMUVARIABLES"  
               }
             ]
@@ -421,8 +424,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
               },
-            { 'Type' : 'ToolZViso',
-              'RecursionLevel' : 0,
+            { "Type" : "RelInfoBs2MuMuZVisoBDT",
+             "RecursionLevel" : 0,
+              "Variables" : ['ZVISO'],
               "Location"  : "BSMUMUVARIABLES"  
               }
             ]
@@ -446,8 +450,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
               },
-            { 'Type' : 'ToolZViso',
-              'RecursionLevel' : 0,
+            { "Type" : "RelInfoBs2MuMuZVisoBDT",
+               "RecursionLevel" : 0,
+              "Variables" : ['ZVISO'],
               "Location"  : "BSMUMUVARIABLES"  
               }
             ]
