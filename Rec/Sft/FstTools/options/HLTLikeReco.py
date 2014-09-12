@@ -19,10 +19,10 @@ Brunel().InputType = "DIGI"
 Brunel().WithMC = True
 Brunel().PrintFreq = 100
 Brunel().Simulation = True
-Brunel().EvtMax = 1000
+Brunel().EvtMax = 10000
 Brunel().CondDBtag = 'sim-20131023-vc-md100' # use the mu100 for MagUp data
 Brunel().DDDBtag = 'dddb-20130929-1'
-Brunel().DatasetName = "full-hlt-plus-offline"
+Brunel().DatasetName = "full-hlt-plus-offline-noSkipping"
 
 MessageSvc().Format = '% F%50W%S%7W%R%T %0W%M'
 
@@ -67,4 +67,11 @@ def setup_mc_truth_matching():
     PrChecker().MatchTracks = "/Event/Fst/Track/Match"
     PrChecker().DownTracks = "/Event/Fst/Track/Downstream"
     PrChecker().BestTracks = "/Event/Fst/Track/Best"
+
+    offline = PrChecker("CheckOffline")
+    offline.TriggerNumbers = True
+    offline.Eta25Cut = True
+    offline.ForwardTracks = "/Event/Fst/Track/OfflineFwd"
+    GaudiSequencer("CheckPatSeq" ).Members += [offline]
+    
 GC.appendPostConfigAction(setup_mc_truth_matching)

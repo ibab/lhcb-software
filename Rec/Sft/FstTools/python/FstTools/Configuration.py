@@ -426,7 +426,9 @@ from Configurables import PatDownstream
 from Configurables import STOnlinePosition
 from Configurables import TrackEventCloneKiller, TrackCloneFinder
 from Configurables import TrackEventFitter, TrackMasterFitter
+from Configurables import TrackContainerCopy, TrackSelector
 from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+
 
 class StagedRecoConf(LHCbConfigurableUser):
     __slots__ = {"RootInTES" : "Fst/",
@@ -563,33 +565,6 @@ class StagedRecoConf(LHCbConfigurableUser):
         merge_fwd.OutputLocation = self.getProp("RootInTES") + "Track/Forward"
 
         fst_seq.Members += [merge_fwd]
-
-
-        # Hyperloop, third loop, or running the forward tracking
-        # as is done offline. This could be the first step of the
-        # new offline track reconstruction
-        offline_fwd = PatForward("FstOfflineForward")
-        offline_fwd.InputTracksName = velo_tracking.getProp("OutputTracksName")
-        offline_fwd.OutputTracksName = self.getProp("RootInTES") + "Track/OfflineFwd"
-        offline_fwd.maxOTHits = max_OT_hits
-        offline_fwd.DeltaNumberInT = 1E8
-        offline_fwd.DeltaNumberInTT = 1E8
-        offline_fwd.MaxNVelo = 1E8
-        
-        offline_fwd.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
-        offline_fwd.UsedLHCbIDToolName = "TrackUsedLHCbID"
-        offline_fwd.TrackUsedLHCbID.inputContainers = [merge_fwd.getProp("OutputLocation")]
-        offline_fwd.TrackUsedLHCbID.selectorNames = ['ForwardSelector']
-        
-        offline_fwd.addTool(PatForwardTool)
-        offline_fwd_tool = offline_fwd.PatForwardTool
-        offline_fwd_tool.SecondLoop = True
-        #offline_fwd_tool.MinPt = 70#self.getProp("Fwd2MinPT")
-        # Skip seeds we marked as used in HLT1
-        offline_fwd_tool.SkipUsedSeeds = True
-
-        fst_seq.Members += [offline_fwd]
-        
         
         # XXX fit tracks then release hits used by "bad" tracks so they
         # XXX can be reused by the seeding
@@ -620,6 +595,35 @@ class StagedRecoConf(LHCbConfigurableUser):
         fst_seq.Members += [seeding, matching]
 
 
+        # Hyperloop, third loop, or running the forward tracking
+        # as is done offline. This could be the first step of the
+        # new offline track reconstruction
+        # Somehow PatForward interacts with seed+match because
+        # if this is run before the seed+match then it finds no more
+        # tracks. Weird.
+        offline_fwd = PatForward("FstOfflineForward")
+        offline_fwd.InputTracksName = velo_tracking.getProp("OutputTracksName")
+        offline_fwd.OutputTracksName = self.getProp("RootInTES") + "Track/OfflineFwd"
+        offline_fwd.maxOTHits = max_OT_hits
+        offline_fwd.DeltaNumberInT = 1E8
+        offline_fwd.DeltaNumberInTT = 1E8
+        offline_fwd.MaxNVelo = 1E8
+        
+        #offline_fwd.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+        #offline_fwd.UsedLHCbIDToolName = "TrackUsedLHCbID"
+        #offline_fwd.TrackUsedLHCbID.inputContainers = [merge_fwd.getProp("OutputLocation")]
+        #offline_fwd.TrackUsedLHCbID.selectorNames = ['ForwardSelector']
+        
+        offline_fwd.addTool(PatForwardTool)
+        offline_fwd_tool = offline_fwd.PatForwardTool
+        offline_fwd_tool.SecondLoop = True
+        #offline_fwd_tool.MinPt = 70#self.getProp("Fwd2MinPT")
+        # Skip seeds we marked as used in HLT1
+        #offline_fwd_tool.SkipUsedSeeds = True
+
+        fst_seq.Members += [offline_fwd]
+
+        
         # Merge the various containers with long tracks
         clone_killer = TrackEventCloneKiller('FstCloneKiller')
         # It makes little difference if you directly use the two Forwards
@@ -649,13 +653,24 @@ class StagedRecoConf(LHCbConfigurableUser):
 
         # Fitting
         fast_fit = TrackEventFitter("FstFastFit")
-        # Fit all long tracks: Forward1, Forward2 and seeding+matching
+        # Fit all long tracks which were merged by the clone killer
         fast_fit.TracksInContainer = clone_killer.getProp("TracksOutContainer")
-        fast_fit.TracksOutContainer = self.getProp("RootInTES") + "Track/Best"
+        fast_fit.TracksOutContainer = self.getProp("RootInTES") + "Track/FittedBest"
         fast_fit.addTool(TrackMasterFitter, name='Fitter')
         fitter = ConfiguredHltFitter(getattr(fast_fit, 'Fitter'))
 
         fst_seq.Members += [fast_fit]
+
+
+        # Remove ghosts by requiring chi2/ndof < 5, similar to TrackBestTrackCreator
+        ghost_killer = TrackContainerCopy("FstGhostKiller")
+        ghost_killer.inputLocation = fast_fit.getProp("TracksOutContainer")
+        ghost_killer.outputLocation = self.getProp("RootInTES") + "Track/Best"
+        max_chi2 = TrackSelector("MaxChi2Selector")
+        max_chi2.MaxChi2Cut = 5
+        ghost_killer.Selector = max_chi2
+        
+        fst_seq.Members += [ghost_killer]
 
         
         # Downstream tracking
