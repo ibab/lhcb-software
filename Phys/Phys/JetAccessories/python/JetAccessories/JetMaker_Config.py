@@ -33,7 +33,7 @@ class JetMakerConf:
         self.PtMin = PtMin
         self.JetEnergyCorrection = JetEnergyCorrection
         self.JetIDCut = JetIDCut
-        self.jetMakerTool =  'LoKi__FastJetMaker'
+        self.jetMakerTool =  'LoKi::FastJetMaker'
         self.jetMakerType =  jetname_dict[algtype]
         self.jetidnumber = jetidnumber
         self.OnlySaveWithB = onlySaveB
@@ -71,7 +71,7 @@ class JetMakerConf:
         algo.Inputs = self.Inputs
         algo.BanCandidates = self.BanCandidates
         algo.PFParticleTypes = self.PFParticleTypes
-        tool = getattr ( algo , 'LoKi__FastJetMaker' )
+        tool = getattr ( algo , 'LoKi::FastJetMaker' )
         tool.Type = self.jetMakerType 
         tool.RParameter = self.R
         tool.PtMin = self.PtMin
