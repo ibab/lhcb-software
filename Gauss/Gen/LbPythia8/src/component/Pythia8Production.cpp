@@ -141,6 +141,7 @@ StatusCode Pythia8Production::initializeGenerator() {
   m_pythia->setUserHooksPtr(m_hooks);
 
   // Set the beam shape pointer.
+  StatusCode sc;
   m_pythiaBeamTool = new BeamToolForPythia8(m_beamTool, m_pythia->settings, sc);
   if (!sc.isSuccess()) 
     return Error("Failed to initialize the BeamToolForPythia8."); 
@@ -187,8 +188,10 @@ StatusCode Pythia8Production::initializeGenerator() {
   }
   
   // Initialize.
-  bool sc = m_lhaup ? m_pythia->init(m_lhaup) : m_pythia->init();
-  if (sc) return StatusCode::SUCCESS;
+  if (m_lhaup) 
+    if (m_pythia->init(m_lhaup)) return StatusCode::SUCCESS;
+    else return StatusCode::FAILURE;
+  else if (m_pythia->init()) return StatusCode::SUCCESS;
   else return StatusCode::FAILURE;
 }
 
