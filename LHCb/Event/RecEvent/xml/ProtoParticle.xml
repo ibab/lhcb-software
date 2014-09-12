@@ -101,7 +101,9 @@
         <enumval name="CaloPrsM"              value="353"  desc="Prs mult (>0) shape variable - input to gamma/pi0 separation (neutral)"/>        
         <enumval name="CaloPrsM15"            value="354"  desc="Prs mult (>15) shape variable - input to gamma/pi0 separation (neutral)"/>        
         <enumval name="CaloPrsM30"            value="355"  desc="Prs mult (>30) shape variable - input to gamma/pi0 separation (neutral)"/>        
-        <enumval name="CaloPrsM45"            value="356"  desc="Prs mult (>45) shape variable - input to gamma/pi0 separation (neutral)"/>        
+        <enumval name="CaloPrsM45"            value="356"  desc="Prs mult (>45) shape variable - input to gamma/pi0 separation (neutral)"/>         
+        <enumval name="CaloClusterCode"       value="357"  desc="Cluster configuration code"/>
+        <enumval name="CaloClusterFrac"       value="358"  desc="Cluster energy fraction"/>        
         <enumval name="EcalPIDe"        value="360"  desc="Ecal-based DLL for electron-ID (charged)"/>
         <enumval name="PrsPIDe"         value="361"  desc="Prs-based  DLL for electron-ID (charged)"/>
         <enumval name="BremPIDe"        value="362"  desc="Brem-based DLL for electron-ID (charged)"/>

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output)
 !-----------------------------------------------------------------------------
 
+! 2014-09-04 - O. Deschamps
+  - ProtoParticle.xml : add ClusterCode & ClusterFrac as extra info
+
 !========================= RecEvent v2r52 2014-09-08 =========================
 ! 2014-09-04 - Chris Jones
  - Include the TES location (when appropriate) in the fillStream printout
