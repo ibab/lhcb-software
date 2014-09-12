@@ -87,7 +87,7 @@ Phi=tuple.Phi.addTupleTool(LoKi__Hybrid__Dict2Tuple, "Dummy2Tuple")
 # the DummyTransform implements an indentity "transformation:" on a dictionary 
 # and prints the contents of the input dict to std::cout 
 Phi.addTool(DummyTransform,"Trafo")
-Phi.Source = "LoKi__Hybrid__DictTransform_DummyTransform_/Trafo"
+Phi.Source = "LoKi::Hybrid::DictTransform<DummyTransform>/Trafo"
 # Configure the  (options depend on which classifier is used)
 Phi.Trafo.Options = {
     "Name"       : "OysterSauce",      # DictTransforms can be configured with custom options
@@ -100,7 +100,7 @@ Phi.Trafo.Options = {
 # Add a DictOfFunctors as the source of the transformation
 # the MultiTool will use LoKiFunctors to query the variables needed  
 Phi.Trafo.addTool(LoKi__Hybrid__DictOfFunctors,"dict")
-Phi.Trafo.Source = "LoKi__Hybrid__DictOfFunctors/dict"
+Phi.Trafo.Source = "LoKi::Hybrid::DictOfFunctors/dict"
 # the variable names have to correspond exactly to what is needed by the transformation tool 
 # the prefixing with the node names has to be done manually here!
 Phi.Trafo.dict.Variables = {

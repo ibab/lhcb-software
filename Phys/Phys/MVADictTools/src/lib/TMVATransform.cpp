@@ -19,21 +19,23 @@ TMVATransform::TMVATransform()
   , m_branchname("")
   , m_default_path("TMVATRANSFORMPATH")
   , m_reader(NULL)
+  , m_debug(false)
 {
-  return;
 }
 
-TMVATransform::~TMVATransform() {
+TMVATransform::~TMVATransform()
+{
   delete m_reader;
-  return;
 }
-
 
 //==============================================================================
 // Implementation of required functions to fulfill the DictTransform policy
 //==============================================================================
 bool
-TMVATransform::Init(optmap options, std::ostream& info){
+TMVATransform::Init(const optmap& options, std::ostream& info, const bool debug )
+{
+  m_debug = debug;
+
   // parse options into member variables, also empties map
   m_setup_success = parseOpts(options, info);
   if (!m_setup_success) { return false ; }
@@ -101,7 +103,7 @@ TMVATransform::checkWeightsFile(std::ostream& info) {
   }
   return false;
 }
-   
+
 
 //==============================================================================
 // Implementation of other functions
@@ -117,7 +119,7 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
     return;
   }
   // Setup the XML parser
-  info << "Reading WeightFile \"" << m_weightfile << "\"" << std::endl;
+  if (m_debug) info << "Reading WeightFile \"" << m_weightfile << "\"" << std::endl;
   TXMLEngine xmlparser;
   XMLDocPointer_t doc = xmlparser.ParseFile(m_weightfile.c_str());
   XMLNodePointer_t root = xmlparser.DocGetRootElement(doc);
@@ -133,33 +135,33 @@ void TMVATransform::readWeightsFile(std::ostream& info) {
   while (child != NULL) {
     nodename = xmlparser.GetNodeName(child);
     if (nodename == "GeneralInfo") { // Get general info
-      info << "Node name: " << nodename << std::endl;
+      if (m_debug) info << "Node name: " << nodename << std::endl;
       gchild = xmlparser.GetChild(child);
       while (gchild != NULL) {
         name = xmlparser.GetAttr(gchild, "name");
         val = xmlparser.GetAttr(gchild, "value");
-        info << name << " : " << val << std::endl;
+        if (m_debug) info << name << " : " << val << std::endl;
         gchild = xmlparser.GetNext(gchild);
       }
     } else if (nodename == "Variables") { // Get training variables
-      info << "Node name: " << nodename << std::endl;
+      if (m_debug) info << "Node name: " << nodename << std::endl;
       nvar = atoi(xmlparser.GetAttr(child, "NVar"));
-      info << "Identified " << nvar << " training variables:" << std::endl;
+      if (m_debug) info << "Identified " << nvar << " training variables:" << std::endl;
       gchild = xmlparser.GetChild(child);
       for (unsigned i=0; i<nvar; ++i) {
         exp = xmlparser.GetAttr(gchild, "Expression");
-        info << "  " << exp; // << std::endl;
+        if (m_debug) info << "  " << exp; // << std::endl;
         m_variables.push_back(exp);
         gchild = xmlparser.GetNext(gchild);
       }
     } else if (nodename == "Spectators") { // Get spectator variables
-      info << "Node name: " << nodename << std::endl;
+      if (m_debug) info << "Node name: " << nodename << std::endl;
       nvar = atoi(xmlparser.GetAttr(child, "NSpec"));
-      info << "Identified " << nvar << " spectator variables:" << std::endl;
+      if (m_debug) info << "Identified " << nvar << " spectator variables:" << std::endl;
       gchild = xmlparser.GetChild(child);
       for (unsigned i=0; i<nvar; ++i) {
         exp = xmlparser.GetAttr(gchild, "Expression");
-        info << "  " << exp; // << std::endl;
+        if (m_debug) info << "  " << exp; // << std::endl;
         m_spectator.push_back(exp);
         gchild = xmlparser.GetNext(gchild);
       }
@@ -193,17 +195,18 @@ void TMVATransform::setupReader(std::ostream& info) {
 }
 
 //==============================================================================
-bool TMVATransform::parseOpts(optmap& options, std::ostream& info) {
+bool TMVATransform::parseOpts(const optmap& options, std::ostream& info)
+{
   bool pass = true;
   Options parse(options);
   parse.add<std::string>("Name", "Name of output branch (Required)",
-      m_name, info);
+                         m_name, info);
   parse.add<std::string>("XMLFile", "Some XML file (Required)",
-      m_weightfile, info);
+                         m_weightfile, info);
   parse.add<std::string>("TMVAOptions", "Must be Color, Silent, V",
-      m_reader_opts, info, "Silent");
+                         m_reader_opts, info, "Silent");
   parse.add<bool>("KeepVars", "Keep BDT input variables, \"1\" or \"0\"",
-      m_keep_all_vars, info, false);
+                  m_keep_all_vars, info, false);
   pass = parse.check(info);
   return pass;
 }

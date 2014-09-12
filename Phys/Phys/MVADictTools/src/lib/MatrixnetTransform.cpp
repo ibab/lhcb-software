@@ -4,24 +4,24 @@
 #include <math.h>
 
 // it works - don't touch it!
-#define array(type, name, fml) \
+#define array(type, name, fml)                            \
   unsigned int name##_count = *(unsigned int const *)fml; \
-  fml += sizeof(unsigned int); \
-  type const *name = (type const *)fml; \
+  fml += sizeof(unsigned int);                            \
+  type const *name = (type const *)fml;                   \
   fml = (char const *)(name + name##_count)
 
-#define array_check(type, name, fml, limit, info) \
-  if(fml + sizeof(unsigned int) > limit) { \
-    info << "formula truncated" << std::endl; \
-    return false; \
-  } \
+#define array_check(type, name, fml, limit, info)         \
+  if(fml + sizeof(unsigned int) > limit) {                \
+    info << "formula truncated" << std::endl;             \
+    return false;                                         \
+  }                                                       \
   unsigned int name##_count = *(unsigned int const *)fml; \
-  fml += sizeof(unsigned int); \
-  if(fml + name##_count * sizeof(type) > limit) { \
-    info << "formula truncated" << std::endl; \
-    return false; \
-  } \
-  type const *name = (type const *)fml; \
+  fml += sizeof(unsigned int);                            \
+  if(fml + name##_count * sizeof(type) > limit) {         \
+    info << "formula truncated" << std::endl;             \
+    return false;                                         \
+  }                                                       \
+  type const *name = (type const *)fml;                   \
   fml = (char const *)(name + name##_count)
 
 unsigned int yabs_mx_check(char const *fml, size_t len, std::ostream& info) {
@@ -142,6 +142,7 @@ MatrixnetTransform::MatrixnetTransform()
   , m_name("")
   , m_default_path("MATRIXNETTRANSFORMPATH") // ???
   , m_formula("")
+  , m_debug(false)
   , m_variables(0)
 {
   return;
@@ -151,7 +152,8 @@ MatrixnetTransform::~MatrixnetTransform() {}
 
 
 bool
-MatrixnetTransform::Init(optmap options, std::ostream& info){
+MatrixnetTransform::Init(const optmap& options, std::ostream& info, const bool debug ){
+  m_debug = debug;
   m_setup_success = parseOpts(options, info);
   if (!m_setup_success) { return false ; }
 
@@ -204,7 +206,7 @@ MatrixnetTransform::checkWeightsFile(std::ostream& info) {
   }
   return false;
 }
-  
+
 
 void MatrixnetTransform::readWeightsFile(std::ostream& info) {
   if (!checkWeightsFile(info)) {
@@ -237,15 +239,15 @@ void MatrixnetTransform::readWeightsFile(std::ostream& info) {
 }
 
 
-bool MatrixnetTransform::parseOpts(optmap& options, std::ostream& info) {
+bool MatrixnetTransform::parseOpts(const optmap& options, std::ostream& info) {
   bool pass = true;
   Options parse(options);
   parse.add<std::string>("Name", "Name of output branch (Required)",
-      m_name, info);
+                         m_name, info);
   parse.add<std::string>("MatrixnetFile", "File with matrixnet formula",
-      m_matrixnet_file, info);
+                         m_matrixnet_file, info);
   parse.add<bool>("KeepVars", "Keep input variables, \"1\" or \"0\"",
-      m_keep_all_vars, info, false);
+                  m_keep_all_vars, info, false);
   pass = parse.check(info);
   return pass;
 }

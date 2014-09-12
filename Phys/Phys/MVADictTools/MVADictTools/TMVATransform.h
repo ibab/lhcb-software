@@ -9,7 +9,7 @@
 
 #include "MVADictTools/Options.h"
 
-/** @class TMVATransform 
+/** @class TMVATransform
  *  Policy class to be used by the DictTransform template
  *  Implementing the TMVA Reader backend
  *
@@ -17,11 +17,15 @@
  *  @date   2013-07-29
  */
 
-class TMVATransform {
+class TMVATransform
+{
+
 public:
+
   typedef std::map<std::string, std::string> optmap;
 
 private:
+
   bool m_setup_success;
   bool m_keep_all_vars;
   std::string m_reader_opts;
@@ -30,26 +34,30 @@ private:
   std::string m_branchname;
   std::string m_default_path;
   std::vector<std::string> m_spectator;
-  //std::vector<double> m_values; // because of const this is defined within operator()
- 
-  //std::map<std::string, OptionBase*> m_options;
 
   // TMVA bits
   TMVA::Reader* m_reader;
 
+  bool m_debug;
+
+private:
+
   // Helper Functions
   void readWeightsFile(std::ostream&);
   void setupReader(std::ostream&);
-  bool parseOpts(optmap&, std::ostream&);
-
+  bool parseOpts(const optmap&, std::ostream&);
 
 public:
+
   std::vector<std::string> m_variables; /// variables needed by the classifier
+
+public:
+
   TMVATransform();
   ~TMVATransform();
 
   // the policy methods neede for collaboration with DictTransform
-  bool Init(optmap options, std::ostream& info);
+  bool Init(const optmap& options, std::ostream& info, const bool debug = false );
   bool operator()(const IParticleDictTool::DICT& in, IParticleDictTool::DICT& out) const;
   bool checkWeightsFile(std::ostream& info);
 

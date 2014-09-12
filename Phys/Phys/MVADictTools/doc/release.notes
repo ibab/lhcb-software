@@ -4,6 +4,11 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-09-12 - Chris Jones
+ - Turn off a number of info level messages, unless 'debug' mode is explicitly
+   requested.
+ - Fix some python warnings.
+
 ! 2014-09-11 - Stefano Perazzini
  - Assigned "Silent" as default configuration for the TMVA::Reader
 

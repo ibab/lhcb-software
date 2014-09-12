@@ -7,7 +7,7 @@ def addTMVAclassifierValue(Component, XMLFile, Variables, ToolName) :
     MVAResponse = getattr(Component,ToolName)
     Key = "BDT"
     MVAResponse.Key = Key
-    MVAResponse.Source = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA"
+    MVAResponse.Source = "LoKi::Hybrid::DictTransform<TMVATransform>/TMVA"
     Options = {
         "XMLFile"    : XMLFile,
         "Name"       : Key,
@@ -18,7 +18,7 @@ def addTMVAclassifierValue(Component, XMLFile, Variables, ToolName) :
 
     MVAResponse.addTool(TMVAtransform,"TMVA")
     MVAResponse.TMVA.Options = Options
-    MVAResponse.TMVA.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict"
+    MVAResponse.TMVA.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
     MVAResponse.TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
     MVAResponse.TMVA.MVAdict.Variables = Variables
     # end of function
@@ -32,7 +32,7 @@ def addTMVAclassifierTuple(Branch, XMLFile, Variables,
     #Key = "BDT"
     #MVAResponse.Key = Key
 
-    MVAResponse.Source = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA"
+    MVAResponse.Source = "LoKi::Hybrid::DictTransform<TMVATransform>/TMVA"
     Options = {
         "XMLFile"    : XMLFile,
         "Name"       : Name,
@@ -43,7 +43,7 @@ def addTMVAclassifierTuple(Branch, XMLFile, Variables,
 
     MVAResponse.addTool(TMVAtransform,"TMVA")
     MVAResponse.TMVA.Options = Options
-    MVAResponse.TMVA.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict"
+    MVAResponse.TMVA.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
     MVAResponse.TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
     MVAResponse.TMVA.MVAdict.Preambulo = Preambulo
     MVAResponse.TMVA.MVAdict.Variables = Variables
@@ -56,7 +56,7 @@ def addMatrixnetclassifierValue(Component, MatrixnetFile, Variables, ToolName) :
     MVAResponse = getattr(Component,ToolName)
     Key = "BDT"
     MVAResponse.Key = Key
-    MVAResponse.Source = "LoKi__Hybrid__DictTransform_MatrixnetTransform_/Matrixnet"
+    MVAResponse.Source = "LoKi::Hybrid::DictTransform<MatrixnetTransform>/Matrixnet"
     Options = {
         "MatrixnetFile"    : MatrixnetFile,
         "Name"       : Key,
@@ -67,7 +67,7 @@ def addMatrixnetclassifierValue(Component, MatrixnetFile, Variables, ToolName) :
 
     MVAResponse.addTool(Matrixnettransform,"Matrixnet")
     MVAResponse.Matrixnet.Options = Options
-    MVAResponse.Matrixnet.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict"
+    MVAResponse.Matrixnet.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
     MVAResponse.Matrixnet.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
     MVAResponse.Matrixnet.MVAdict.Variables = Variables
     # end of function
@@ -81,7 +81,7 @@ def addMatrixnetclassifierTuple(Branch, MatrixnetFile, Variables,
     #Key = "BDT"
     #MVAResponse.Key = Key
 
-    MVAResponse.Source = "LoKi__Hybrid__DictTransform_MatrixnetTransform_/Matrixnet"
+    MVAResponse.Source = "LoKi::Hybrid::DictTransform<MatrixnetTransform>/Matrixnet"
     Options = {
         "MatrixnetFile"    : MatrixnetFile,
         "Name"       : Name,
@@ -92,7 +92,7 @@ def addMatrixnetclassifierTuple(Branch, MatrixnetFile, Variables,
 
     MVAResponse.addTool(Matrixnettransform,"Matrixnet")
     MVAResponse.Matrixnet.Options = Options
-    MVAResponse.Matrixnet.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict"
+    MVAResponse.Matrixnet.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
     MVAResponse.Matrixnet.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
     MVAResponse.Matrixnet.MVAdict.Preambulo = Preambulo
     MVAResponse.Matrixnet.MVAdict.Variables = Variables

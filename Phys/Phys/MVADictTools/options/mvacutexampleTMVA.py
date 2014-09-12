@@ -50,7 +50,7 @@ TMVA.Options = {
 # and write them into the dictionary
 
 TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict")
-TMVA.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict"
+TMVA.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict"
 # the variable names have to correspond exactly to what is needed by the classifier
 # the prefixing with the node names has to be done manually here!
 # this allows to apply this to arbitary branches in a decay tree
@@ -65,14 +65,14 @@ TMVA.MVAdict.Variables = {
 
 
 _manager.addTool(TMVA) # using TMVA
-_manager.MVATransform = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA"
+_manager.MVATransform = "LoKi::Hybrid::DictTransform<TMVATransform>/TMVA"
 
 # use the VALUE functor to access IParticleValue tools
-_phi2kk.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse')> -0.5"
+_phi2kk.MotherCut = "VALUE('LoKi::Hybrid::DictValue/MVAResponse')> -0.5"
 # we will get our cut value from a dictionary tool
 _phi2kk.addTool(DictValue,"MVAResponse")
 _phi2kk.MVAResponse.Key = "BDT" # this is the variable we will take from the dictionary
-_phi2kk.MVAResponse.Source = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA:PUBLIC"
+_phi2kk.MVAResponse.Source = "LoKi::Hybrid::DictTransform<TMVATransform>/TMVA:PUBLIC"
 
 
 #####################################################################################

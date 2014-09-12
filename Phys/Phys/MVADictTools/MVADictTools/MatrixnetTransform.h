@@ -26,6 +26,7 @@ public:
   typedef std::map<std::string, std::string> optmap;
 
 private:
+
   bool m_setup_success;
   bool m_keep_all_vars;
   std::string m_matrixnet_file;
@@ -35,18 +36,23 @@ private:
   // Matrixnet bits
   std::string m_formula;
 
+  bool m_debug;
+
+private:
+
   // Helper Functions
   void readWeightsFile(std::ostream&);
-  bool parseOpts(optmap&, std::ostream&);
+  bool parseOpts(const optmap&, std::ostream&);
 
 public:
+
   std::vector<std::string> m_variables; /// variables needed by the classifier
   MatrixnetTransform();
   ~MatrixnetTransform();
 
   bool checkWeightsFile(std::ostream& info);
 
-  bool Init(optmap options, std::ostream& info);
+  bool Init(const optmap& options, std::ostream& info, const bool debug = false );
 
   bool operator()(const DICT& in, DICT& out) const;
 };

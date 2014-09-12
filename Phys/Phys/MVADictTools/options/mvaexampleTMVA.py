@@ -84,7 +84,7 @@ Phi_tmva=tuple.Phi.addTupleTool(LoKi__Hybrid__Dict2Tuple, "TMVA2Tuple")
 
 # Add the TMVAClassifier to the Dict2Tuple
 Phi_tmva.addTool(TMVAClassifier,"TMVA")
-Phi_tmva.Source = "LoKi__Hybrid__DictTransform_TMVATransform_/TMVA"
+Phi_tmva.Source = "LoKi::Hybrid::DictTransform_TMVATransform_/TMVA"
 # Configure the classifier (available options depend on which classifier is used)
 Phi_tmva.TMVA.Options = {
     "Name"       : "MyBDT",           # Name for the MVA response variable
@@ -99,7 +99,7 @@ Phi_tmva.TMVA.Options = {
 # Add a DictOfFunctors as the source of the classifier
 # the MultiTool will use LoKiFunctors to query the variables needed
 Phi_tmva.TMVA.addTool(LoKi__Hybrid__DictOfFunctors,"MVAdict3")
-Phi_tmva.TMVA.Source = "LoKi__Hybrid__DictOfFunctors/MVAdict3"
+Phi_tmva.TMVA.Source = "LoKi::Hybrid::DictOfFunctors/MVAdict3"
 # the variable names have to correspond exactly to what is needed by the classifier
 # the prefixing with the node names has to be done manually here!
 Phi_tmva.TMVA.MVAdict3.Variables = {
