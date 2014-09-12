@@ -259,7 +259,7 @@ class B2KShhConf(LineBuilder) :
 
                     _selB[ks_type][year][sign] = self.makeB2KShh( name, ks_type, year, sign, config )
 
-                    _mvaCut[ks_type][year][sign] = "(VALUE('LoKi__Hybrid__DictValue/MVA1Response_%s_%s_%s')>%s) | (VALUE('LoKi__Hybrid__DictValue/MVA2Response_%s_%s_%s')>%s)" % ( ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)], ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)] )
+                    _mvaCut[ks_type][year][sign] = "(VALUE('LoKi::Hybrid::DictValue/MVA1Response_%s_%s_%s')>%s) | (VALUE('LoKi::Hybrid::DictValue/MVA2Response_%s_%s_%s')>%s)" % ( ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)], ks_type, year, sign, config['B_%s_MVA_%s'%(ks_type,year)] )
 
                     _mvaFilter[ks_type][year][sign] = FilterDesktopConf( name+'_MVAFilter_%s_%s_%s'%(ks_type,year,sign),  Code = _mvaCut[ks_type][year][sign],  Inputs = [ 'Phys/' + name + '_' + ks_type + '_' + year + '_' + sign + '_Line/Particles' ] )
 

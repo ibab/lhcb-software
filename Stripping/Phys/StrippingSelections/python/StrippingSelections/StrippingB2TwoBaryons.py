@@ -519,7 +519,7 @@ class B2TwoBaryonLines( LineBuilder ) :
         #_B.DecayDescriptors = [ "B- -> p~- ( Lambda0 -> p+ pi- )", "B+ -> p+ ( Lambda~0 -> p~- pi+ )" ]
         _B.DecayDescriptors = [ "B- -> p~- Lambda0", "B+ -> p+ Lambda~0" ] 
         _B.CombinationCut = "(ADAMASS('B-')<500*MeV)&"+_maxDocaChi2Cut+'&'+_daugPtSumCut
-        _B.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse') >  %s" % config['MVAResponseLL']
+        _B.MotherCut = "VALUE('LoKi::Hybrid::DictValue/MVAResponse') >  %s" % config['MVAResponseLL']
         #_B.MotherCut = 'ALL'
         # get the Lambda's to filter
         _stdLambdaLL = DataOnDemand(Location = "Phys/StdLooseLambdaLL/Particles")
@@ -567,7 +567,7 @@ class B2TwoBaryonLines( LineBuilder ) :
         #_B.DecayDescriptors = [ "B- -> p~- ( Lambda0 -> p+ pi- )", "B+ -> p+ ( Lambda~0 -> p~- pi+ )" ]
         _B.DecayDescriptors = [ "B- -> p~- Lambda0", "B+ -> p+ Lambda~0" ]
         _B.CombinationCut = "(ADAMASS('B-')<500*MeV)&"+_maxDocaChi2Cut+'&'+_daugPtSumCut+'&'+_daugMaxPtIPCut
-        _B.MotherCut = "VALUE('LoKi__Hybrid__DictValue/MVAResponse')>  %s" % config['MVAResponseDD']
+        _B.MotherCut = "VALUE('LoKi::Hybrid::DictValue/MVAResponse')>  %s" % config['MVAResponseDD']
         #_B.MotherCut = 'ALL'
         # get the Lambda's to filter
         _stdLambdaDD = DataOnDemand(Location = "Phys/StdLooseLambdaDD/Particles")

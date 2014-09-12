@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-12 - Chris Jones
+ - Fix some python warnings.
+
 ! 2014-09-11 - Marco Pappagallo
  - Tighten cut for Ds1 DeltaM
    StrippingBc2Ds1Gamma.py
