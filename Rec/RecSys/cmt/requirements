@@ -11,7 +11,7 @@ branches cmt doc tests
 use CaloMoniDst          v5r17   Calo # Olivier Deschamps
 use CaloPIDs             v5r19   Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v5r21   Calo # Olivier Deschamps
-use CaloTools            v6r9    Calo # Olivier Deschamps
+use CaloTools            v6r10   Calo # Olivier Deschamps
 
 # Hlt
 use HltMonitors          v1r6p1  Hlt  # Roel Aaij
@@ -36,7 +36,7 @@ use PrVeloUT             v2r2    Pr   # Jianchun Wang
 
 # Non sub-detector specific components
 use ChargedProtoANNPID   v2r7    Rec  # Chris Jones
-use GlobalReco           v6r49   Rec  # Chris Jones
+use GlobalReco           v6r50   Rec  # Chris Jones, Olivier Deschamps
 use LumiAlgs             v9r4    Rec  # Jaap Panman
 use RecAlgs              v3r2    Rec  # Marco Cattaneo
 use RecConf              v2r18   Rec  # Marco Cattaneo

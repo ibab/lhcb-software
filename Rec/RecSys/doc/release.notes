@@ -5,12 +5,12 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-</PRE><H1><A NAME=v17r1>2014-09-09 RecSys v17r1</A></H1><PRE>
+</PRE><H1><A NAME=v17r1>2014-09-15 RecSys v17r1</A></H1><PRE>
 This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
 
 - Packages modified: Calo/CaloPIDs v5r19, Calo/CaloReco v5r21,
-    Pr/PrAlgorithms v1r14, Pr/PrMCTools v2r4, Pr/PrPixel v1r9,
-    Rec/GlobalReco v6r49, Rec/RecAlgs v3r2, Rec/RecConf v2r18,
+    Calo/CaloTools v6r10, Pr/PrAlgorithms v1r14, Pr/PrMCTools v2r4,
+    Pr/PrPixel v1r9, Rec/GlobalReco v6r50, Rec/RecAlgs v3r2, Rec/RecConf v2r18,
     Rich/RichRecQC v2r67, Tf/PatAlgorithms v4r35, Tf/TfKernel v2r26,
     Tf/TrackSys v9r2, Tr/TrackExtrapolators v2r34, Tr/TrackFitEvent v6r3,
     Tr/TrackFitter v5r2, Tr/TrackMonitors v2r4, Tr/TrackTools v5r4
@@ -27,6 +27,9 @@ This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
     correction functions in CondDB and add more protection
   . CaloCorrectionBase/CaloECorrection/CaloSCorrection : implement correction
     propagation to Covariance
+
+- In Calo/CaloTools v6r10
+  . CaloHypoEstimator.cpp : implement ClusterCode & ClusterFrac 
 
 - In Pr/PrAlgorithms v1r14
   . Removed unused Kalman Fitter tool in PrDownstream.h
@@ -48,10 +51,12 @@ This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
     floating point precision.
   . PrPixelTrack fit and covariance functions coded in SSE / SSE2 intrinsics.
 
-- In Rec/GlobalReco v6r49
+- In Rec/GlobalReco v6r49, v6r50
   . ChargedProtoParticleMaker : If output already exists clear and reuse.
-  . NeutralProtoPAlg : Change default value to +1 for IsPhoton when variable is
-                       not evaluated (i.e. pt<2GeV hence not merged)
+  . NeutralProtoPAlg : 
+    o Change default value to +1 for IsPhoton when variable is not evaluated
+      (i.e. pt<2GeV hence not merged)
+    o add ClusterCode & ClusterFrac as extra info
 
 - In Rec/RecAlgs v3r2
   . Replace 'Other/RawEvent' with 'Calo/RawEvent' in default RecInit.cpp 
