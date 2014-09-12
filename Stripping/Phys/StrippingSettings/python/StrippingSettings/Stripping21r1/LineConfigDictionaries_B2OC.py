@@ -338,7 +338,13 @@ Beauty2Charm = {
     # Defaults are defined in, eg, Beauty2Charm_B2DXBuilder.py.  Put the full
     # line name here to override. E.g. 'B2D0HD2HHBeauty2CharmTOSLine':0.5.
     'B02DKLTUBD2HHHBeauty2CharmLine' : 0.04,
-    'B02DDWSBeauty2CharmLine'   : 1.0
+    'B02DDWSBeauty2CharmLine'   : 1.0,
+    'B02DKWSD2HHHBeauty2CharmLine' : 1.0,
+    'B02DPiWSD2HHHBeauty2CharmLine': 1.0,
+    'B02DPiWSNoIPD2HHHCFPIDBeauty2CharmLine' : 1.0,
+    'B02DPiWSNoIPDs2HHHPIDBeauty2CharmLine' : 1.0,
+    'B02DPiPiPiWSD2HHHPIDBeauty2CharmLine': 1.0,
+    'B02DKPiPiWSD2HHHPIDBeauty2CharmLine' : 1.0
     },
     'GECNTrkMax'   : 500
   }, 
