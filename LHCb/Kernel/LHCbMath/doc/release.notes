@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-09-12 - Manuel Tobias Schiller
+ - BloomFilter: make old clang versions happy
+
 ! 2014-09-11 - Manuel Tobias Schiller
  - BloomFilter: be nice and undefine the preprocessor macros which do not have
    the BLOOMFILTER prefix...

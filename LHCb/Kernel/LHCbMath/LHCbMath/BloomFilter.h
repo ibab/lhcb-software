@@ -29,7 +29,12 @@ namespace BloomFilterImpl {
     // ICC (the Intel C++ compiler) and Clang currently need a workarounds,
     // because they cannot deal with a constexpr std::log...
 #warning "activating constexpr workarounds for std::log for Intel or clang compilers"
+#if defined(__clang__) && (__clang_major__ < 3 || \
+	(__clang_major__ == 3 && __clang_minor__ <=3))
+    static constexpr double abs(const double x) { return (x < 0.) ? -x : x; }
+#else
     using std::abs;
+#endif
     /// for tiny x - 1, use a Taylor expansion
     static constexpr double log2_tiny(const double xm1)
     {
@@ -142,6 +147,7 @@ namespace BloomFilterImpl {
     // old versions of the Intel compiler s..., no, are not much fun to work
     // with...
 #warning "Intel compilers before 14.x are really difficult to support"
+    using std::log;
     /// implementation details for template metaprogram log2
     namespace log2impl {
 	/// integer part of log2(_N) (rounding down to next integer)
