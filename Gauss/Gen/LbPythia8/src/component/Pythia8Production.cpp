@@ -190,9 +190,9 @@ StatusCode Pythia8Production::initializeGenerator() {
   // Initialize.
   if (m_lhaup) 
     if (m_pythia->init(m_lhaup)) return StatusCode::SUCCESS;
-    else return StatusCode::FAILURE;
+    else return Error("Failed to initialize Pythia 8 with LHAUP pointer.");
   else if (m_pythia->init()) return StatusCode::SUCCESS;
-  else return StatusCode::FAILURE;
+  else return Error("Failed to initialize Pythia 8.");
 }
 
 //=============================================================================
