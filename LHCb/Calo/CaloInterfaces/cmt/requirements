@@ -1,6 +1,6 @@
 # ====================================================================
 package           CaloInterfaces
-version           v8r8
+version           v8r9
 
 # =============== structure ===============================================
 branches          cmt doc CaloInterfaces src 
