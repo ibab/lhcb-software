@@ -3,6 +3,12 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+
+! 2014-09-12
+ - Added RelInfoBs2MuMuZVisoBDT to compute ZVtop based 
+ isolation to BsMuMu lines
+
+
 ! 2014-09-08 - Alex Shires
  - removed IsolationInfo again, correctly
 
