@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2014-09-12 - Chris Jones
+ - Suppress some unneccessary info level messages.
+
 !========================= LoKiArrayFunctors v10r5 2014-02-20 =========================
 
 ! 2014-02-01 - Vanya Belyaev

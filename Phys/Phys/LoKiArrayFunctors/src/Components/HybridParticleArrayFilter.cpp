@@ -193,7 +193,7 @@ StatusCode LoKi::Hybrid::ParticleArrayFilter::initVar ()
   if ( sc.isFailure() ) 
   { return Error ( "Error from IHybridFactory", sc   ) ; }     // RETURN 
   // 
-  info() << "CUT: '" << m_cut << "' "<< endreq ;
+  debug() << "CUT: '" << m_cut << "' "<< endreq ;
   //
   return StatusCode::SUCCESS ;  
 }

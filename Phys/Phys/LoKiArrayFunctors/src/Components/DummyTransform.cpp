@@ -23,23 +23,31 @@ typedef std::map<std::string,std::string> optmap;
 
 
 class DummyTransform {
+
+private:
+
+  bool m_debug;
+
 public:
- 
-  bool Init(optmap options, std::ostream& info);
+
+  DummyTransform() : m_debug(false) { }
+
+  bool Init(const optmap& options, std::ostream& info, const bool debug = false );
   bool operator()(const IParticleDictTool::DICT& in, IParticleDictTool::DICT& out) const;
-  
+
 };
 
 ///---------------------------------------------------------------------------------------
 bool
-DummyTransform::Init(optmap options, std::ostream& info){
-  /// do something to configure the tool 
+DummyTransform::Init(const optmap& options, std::ostream& info, const bool debug ){
+  m_debug = debug;
+  /// do something to configure the tool
   // print options
   BOOST_FOREACH(optmap::value_type opt, options){
-    info << opt.first << " : " << opt.second << std::endl;
+    if ( m_debug ) info << opt.first << " : " << opt.second << std::endl;
   }
 
-  info << "Initializing DummyTransform" << std::endl;
+  if ( m_debug ) info << "Initializing DummyTransform" << std::endl;
   return true; // true signals success
 }
 ///---------------------------------------------------------------------------------------
@@ -49,11 +57,11 @@ DummyTransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool:
 
   // loop over items and print names and values
   // Put the items in the dictionaire into the tuple
-  for ( IParticleDictTool::DICT::const_iterator item = in.begin() ; 
-        in.end() != item ; ++item ) 
+  for ( IParticleDictTool::DICT::const_iterator item = in.begin() ;
+        in.end() != item ; ++item )
   {
-    // fill N-tuple 
-    std::cout <<  item->first << "    :    " << item->second << std::endl; 
+    // fill N-tuple
+    if ( m_debug ) std::cout <<  item->first << "    :    " << item->second << std::endl;
   }
   //
 
@@ -64,7 +72,7 @@ DummyTransform::operator()(const IParticleDictTool::DICT& in, IParticleDictTool:
 
 ///---------------------------------------------------------------------------------------
 /** @class DictTransformDummy
- *  Implements a concrete DictTransform 
+ *  Implements a concrete DictTransform
  *  @author Sebastian Neubert
  *  @date   2013-07-10
  */
