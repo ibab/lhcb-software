@@ -386,7 +386,7 @@ for report in ["Dec","Sel","Vertex"]:
 Decoder("HltTrackReportsDecoder",
         active=False, banks=["HltTrackReports"],
         inputs = {"RawEventLocations":None},
-        outputs=["Hlt/Track/Velo","Hlt1/Track/PestiForward"],
+        outputs={"Output2SourceId": { "Hlt/Track/Velo" : 1, "Hlt1/Track/ForwardHPT" : 4 }},
         conf=DecoderDB
         )
 #outputs={"Output2SourceId": { "Hlt/Track/Velo" : 1, "Hlt1/Track/PestiForward" : 3 }}, set logically in the code, resetting may not work...

@@ -4,6 +4,9 @@
 ! Purpose     : Place holder package for RawEvent decoding configurable
 !-----------------------------------------------------------------------------
 
+! 2014-09-13 - Sebastian Neubert
+ - New TrackReports Decoder locations - this is only affecting the HLT internally
+
 !========================= DAQSys v8r4 2014-07-28 =========================
 
 ! 2014-07-23 - Marco Cattaneo
