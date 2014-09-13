@@ -4,6 +4,26 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-13-09 - Sebastian Neubert
+ - reintegrate merge of branch task51867tracklocations into trunk
+ - New track locations for Hlt1 and Hlt2
+
+! 2014-12-09 - Sebastian Neubert
+ - HltShared locations added
+ - Removed trackmerge for Hlt2
+ - This needs the CloneKiller working on LHCb::Track::Range
+
+! 2014-10-09 - Sebastian Neubert
+ - Track locations finished for Hlt2
+ - ToDo: check PVreco track-locations, check derived locations for protoparticles
+
+! 2014-09-09 - Sebastian Neubert
+ - New track locations scheme for Velo and Forward in HLT2
+ - Added TrackListMergers to merge Hlt1 tracks and Hlt2 complement
+
+! 2014-09-08 - Sebastian Neubert
+ - New track locations scheme for HLT1
+
 ! 2014-09-03 - Sebastian Neubert
  - Starting to refactor Track locations management
 

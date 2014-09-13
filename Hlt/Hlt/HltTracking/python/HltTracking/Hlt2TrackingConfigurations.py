@@ -3,9 +3,8 @@
 #
 __author__  =  "V. Gligorov vladimir.gligorov@cern.ch"
 from Hlt2Tracking  import Hlt2Tracking
-from HltTrackNames import Hlt2TracksPrefix, Hlt2ForwardTracksName
-from HltTrackNames import HltBiDirectionalKalmanFitSuffix,Hlt2DownstreamTracksName 
-from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix 
+from HltTrackNames import HltBiDirectionalKalmanFitSuffix
+from HltTrackNames import HltUniDirectionalKalmanFitSuffix 
 #
 # Define all the instances of Hlt2Tracking
 #
@@ -16,9 +15,8 @@ from HltTrackNames import Hlt2LongTracksName, HltUniDirectionalKalmanFitSuffix
 #
 def Hlt2BiKalmanFittedForwardTracking() :
         return Hlt2Tracking("Hlt2BiKalmanFittedForwardTracking",        
-                                                                                 Prefix                 = Hlt2TracksPrefix,
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = Hlt2LongTracksName,
+                                                                                 Hlt2Tracks             = 'Long',
                                                                                  DoFastFit              = True,
                                                                                  DoSeeding              = True,
                                                                                  DoCloneKilling         = True
@@ -27,10 +25,9 @@ def Hlt2BiKalmanFittedForwardTracking() :
 # With seeding and track fitting
 #
 def Hlt2BiKalmanFittedLongTracking() :
-        return Hlt2Tracking("Hlt2BiKalmanFittedLongTracking",           
-                                                                                 Prefix                 = Hlt2TracksPrefix,
+        return Hlt2Tracking("Hlt2BiKalmanFittedLongTracking",  
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = Hlt2LongTracksName,
+                                                                                 Hlt2Tracks             = 'Long',
                                                                                  DoFastFit              = True,
                                                                                  DoSeeding              = True,
                                                                                  DoCloneKilling         = True
@@ -39,10 +36,9 @@ def Hlt2BiKalmanFittedLongTracking() :
 # Now the Downstream tracks with the bidirectional Kalman fit.
 #
 def Hlt2BiKalmanFittedDownstreamTracking() :
-    return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking",            
-                                                                                 Prefix                 = Hlt2TracksPrefix,
+    return Hlt2Tracking("Hlt2BiKalmanFittedDownstreamTracking", 
                                                                                  FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                                                                                 Hlt2Tracks             = Hlt2DownstreamTracksName,
+                                                                                 Hlt2Tracks             = 'Downstream',
                                                                                  DoFastFit              = True,
                                                                                  DoSeeding              = True,
                                                                                  DoCloneKilling         = False,
@@ -53,9 +49,8 @@ def Hlt2BiKalmanFittedDownstreamTracking() :
 #
 def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
      return Hlt2Tracking("Hlt2BiKalmanFittedRichForProtonsForwardTracking", 
-                         Prefix                 = Hlt2TracksPrefix,
                          FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                         Hlt2Tracks             = Hlt2LongTracksName,
+                         Hlt2Tracks             = 'Long',
                          DoFastFit              = True,
                          DoSeeding              = True,
                          DoCloneKilling         = True,
@@ -69,9 +64,8 @@ def Hlt2BiKalmanFittedRichForProtonsForwardTracking() :
 #
 def Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking() :
      return Hlt2Tracking("Hlt2BiKalmanFittedRichForLowPTParticlesForwardTracking", 
-                         Prefix                 = Hlt2TracksPrefix,
                          FastFitType            = HltBiDirectionalKalmanFitSuffix,
-                         Hlt2Tracks             = Hlt2LongTracksName,
+                         Hlt2Tracks             = 'Long',
                          DoFastFit              = True,
                          DoSeeding              = True,
                          DoCloneKilling         = True,

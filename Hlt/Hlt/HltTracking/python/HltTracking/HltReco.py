@@ -40,7 +40,7 @@ __all__ = ( 'MinimalRZVelo'   # bindMembers instance with algorithms needed to g
           , 'MaxOTHits'
           )
 
-MaxOTHits = 15000 #--> moved to CommonForwardOptions
+MaxOTHits = 15000 #--> move to CommonForwardOptions
 
 CommonMatchVeloMuonOptions = {"MaxChi2DoFX" : 10,
                               "XWindow" : 200,
@@ -162,9 +162,10 @@ OTRawBankDecoder().TimeWindow = ( -8.0, 56.0 ) # add units: ns!!
 #shared between Hlt1 and Hlt2
 #from HltTrackNames import HltSharedRZVeloTracksName, HltSharedVeloTracksName, HltSharedTracksPrefix 
 
-from HltTrackNames import HltSharedVeloLocation, HltSharedVeloTTLocation, HltSharedForwardLocation
+#from HltTrackNames import HltSharedVeloLocation, HltSharedVeloTTLocation, HltSharedForwardLocation
+from HltTrackNames import Hlt1TrackLoc, HltSharedTrackLoc, Hlt2TrackLoc
 
-from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
+#from HltTrackNames import Hlt1TracksPrefix, _baseTrackLocation, Hlt1SeedingTracksName  
 from Configurables import Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool
 from Configurables import FastVeloHitManager, DecodeVeloRawBuffer
 from Configurables import TrackStateInitAlg, TrackStateInitTool
@@ -176,7 +177,7 @@ from Configurables import TrackStateInitAlg, TrackStateInitTool
 #
 
 # the full Velo reconstruction
-def recoVelo(OutputLocation=HltSharedVeloLocation):
+def recoVelo(OutputLocation=HltSharedTrackLoc["Velo"]):
     recoVelo = FastVeloTracking( 'FastVeloHlt', OutputTracksName = OutputLocation) 
     recoVelo.HLT1Only = False 
     recoVelo.HLT2Complement = False 
@@ -187,8 +188,8 @@ def recoVelo(OutputLocation=HltSharedVeloLocation):
 #### VeloTT Tracking
 from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
 recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt', 
-                        InputTracksName = HltSharedVeloLocation,
-                        OutputTracksName = HltSharedVeloTTLocation,
+                        InputTracksName = HltSharedTrackLoc["Velo"],
+                        OutputTracksName = Hlt1TrackLoc["VeloTTHPT"],
                         fitTracks=False)
 recoVeloTT.addTool(PatVeloTTHybridTool, name="PatVeloTTTool")
 recoVeloTT.PatVeloTTTool.getProperties().update(CommonVeloTTOptions)
@@ -198,11 +199,12 @@ recoVeloTT.PatVeloTTTool.StatPrint = True
 from Configurables import PatForward, PatForwardTool
 recoForward = PatForward( 'RecoForwardHlt'
                           , InputTracksName  = recoVeloTT.OutputTracksName 
-                          , OutputTracksName = HltSharedForwardLocation 
+                          , OutputTracksName = Hlt1TrackLoc["ForwardHPT"] 
                           , maxOTHits=MaxOTHits)
 recoForward.addTool(PatForwardTool, name='PatForwardTool')
 recoForward.PatForwardTool.getProperties().update(CommonForwardTrackingOptions)
 recoForward.PatForwardTool.getProperties().update(ForwardTrackingOptions_MomEstimate)
+#### TODO: WHERE DO WE PUT THESE VALUES???
 recoForward.PatForwardTool.MinMomentum = 3000
 recoForward.PatForwardTool.MinPt = 500
 recoForward.PatForwardTool.StatPrint = True
@@ -211,7 +213,7 @@ recoForward.PatForwardTool.StatPrint = True
 ##### Hlt selections
 from Configurables import Hlt__TrackFilter as HltTrackFilter
 prepare3DVelo = HltTrackFilter( 'Hlt1Prepare3DVelo'
-                              , InputSelection   = "TES:" + HltSharedVeloLocation
+                              , InputSelection   = "TES:" + HltSharedTrackLoc["Velo"]
                               , RequirePositiveInputs = False
                               , Code = [ '~TrBACKWARD' ] 
                               , OutputSelection     = "Velo" )
@@ -227,9 +229,9 @@ from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 #This is the part which is shared between Hlt1 and Hlt2
 
 
-MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo(OutputLocation=HltSharedVeloLocation) ] ).setOutputSelection( HltSharedVeloLocation )
-RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( HltSharedVeloLocation )
-RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ])
+MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo(OutputLocation=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
+RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( HltSharedTrackLoc["Velo"] )
+RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ]).setOutputSelection( Hlt1TrackLoc["Forward"] )
 
 # put selection revive/redo here
 # for now always redo:
@@ -245,7 +247,7 @@ HltTracking = bindMembers(None, bm_members).setOutputSelection( recoForward.Outp
 # ==============================================================================
 from Configurables import PatSeeding, PatSeedingTool
 from HltLine.HltDecodeRaw import DecodeIT
-ps = PatSeeding('Hlt1MBSeeding' , OutputTracksName = _baseTrackLocation(Hlt1TracksPrefix,Hlt1SeedingTracksName))
+ps = PatSeeding('Hlt1MBSeeding' , OutputTracksName = Hlt1TrackLoc["Seeding"])
 ps.addTool(PatSeedingTool, name="PatSeedingTool")
 ps.PatSeedingTool.MaxOTHits = MaxOTHits
 

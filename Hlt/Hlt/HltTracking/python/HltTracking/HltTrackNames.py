@@ -33,35 +33,73 @@ def _baseProtoPLocation(prefix,protos) :
 # prefixes where to put the tracks (these go into the prefix field of 
 # _trackLocation and _protosLocation)
 #
-HltSharedTracksPrefix 			= HltGlobalEventPrefix + "Hlt"
+HltSharedTracksPrefix 		= HltGlobalEventPrefix + "Hlt"
 Hlt1TracksPrefix 			= HltGlobalEventPrefix + "Hlt1"
 Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
+
+Hlt1TrackRoot               = Hlt1TracksPrefix + "/" + HltGlobalTrackLocation
+Hlt2TrackRoot               = Hlt2TracksPrefix + "/" + HltGlobalTrackLocation
+HltSharedTrackRoot          = HltSharedTracksPrefix + "/" + HltGlobalTrackLocation
+
 #
 # names of track types (these go into the tracks field of _trackLocation 
 # and _protosLocation)
 #
+
+
 HltSharedRZVeloTracksName               = "RZVelo"
-HltSharedVeloTracksName               = "Velo"
-HltSharedVeloTTTracksName               = "VeloTT"
-HltSharedForwardTracksName               = "Forward"
+
+TrackName = { "Velo"         : "Velo"          # full Velo recoonstruction
+              ,"VeloTTHPT"   : "VeloTTHPT"     # VeloTT for high pt and p thresholds (HLT1-like)
+              ,"VeloTTComp"  : "VeloTTComp"    # VeloTT complement (HLT2 relaxed pt & p cuts) 
+              ,"VeloTT"      : "VeloTT"        # Full VeloTT (HLT2)
+              ,"ForwardHPT"  : "ForwardHPT"    # Forward for high pt and p thresholds (HLT1-like)
+              ,"ForwardComp" : "ForwardComp"   # Forward complement
+              ,"ForwardCompLPT"  : "ForwardCompLPT"    # low PT complement (aka secondLoop)
+              ,"Forward"     : "Forward"       # Full Forward
+              ,"Seeding"     : "Seeding"       # Seeding
+              ,"ForwardSecondLoop" : "ForwardSecondLoop"
+              ,"Match"       : "Match"
+              ,"Long"        : "Long"
+              ,"Downstream"  : "SeedTT"
+              }    
+
+# The prefix says where this track has been produced
+Hlt1TrackLoc = { name : _baseTrackLocation(Hlt1TracksPrefix,loc) for name,loc in TrackName.iteritems() }
+Hlt2TrackLoc = { name : _baseTrackLocation(Hlt2TracksPrefix,loc) for name,loc in TrackName.iteritems() }
+HltSharedTrackLoc = { name : _baseTrackLocation(HltSharedTracksPrefix,loc) for name,loc in TrackName.iteritems() }
+
+# check if the Decoders are writing to the correct locations
+from DAQSys.Decoders import DecoderDB
+DecoderLocations = DecoderDB["HltTrackReportsDecoder"].listOutputs()
+for loc in DecoderLocations :
+    if not loc in Hlt1TrackLoc.values() + HltSharedTrackLoc.values()  : 
+        print "TrackReports location: " + loc + " not found in track locations. Go synchronize HltTrackNames.py and HltDAQ."
+        raise Exception("TrackReports location not found in TrackNames") 
+    #else : print "Checked TrackReports location "+loc
+    #endif#endloop    
+
+#HltSharedVeloTracksName               = "Velo"
+#HltSharedVeloTTTracksName               = "VeloTT"
+#HltSharedForwardTracksName               = "Forward"
 #
-HltSharedVeloLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)
-HltSharedVeloTTLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTTTracksName)
-HltSharedForwardLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedForwardTracksName)
+#HltSharedVeloLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTracksName)
+#HltSharedVeloTTLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedVeloTTTracksName)
+#HltSharedForwardLocation = _baseTrackLocation(HltSharedTracksPrefix,HltSharedForwardTracksName)
 
 #
-Hlt1SeedingTracksName                   = "Seeding"
-Hlt1ForwardTracksName                   = "Forward"
-Hlt1ForwardPestimateTracksName                   = "PestiForward"
+#Hlt1SeedingTracksName                   = "Seeding"
+
+#Hlt1ForwardPestimateTracksName          = "PestiForward"
 
 #
-Hlt2VeloTracksName 			= "Velo"
-Hlt2ForwardTracksName 			= "Forward"
-Hlt2ForwardSecondLoopTracksName = "ForwardSecondLoop"
-Hlt2MatchTracksName 			= "Match"
-Hlt2LongTracksName 			= "Long"
-Hlt2SeedingTracksName 			= Hlt1SeedingTracksName
-Hlt2DownstreamTracksName 		= "SeedTT"
+#Hlt2VeloTracksName 			= "Velo"
+#Hlt2ForwardTracksName 			= "Forward"
+#Hlt2ForwardSecondLoopTracksName = "ForwardSecondLoop"
+#Hlt2MatchTracksName 			= "Match"
+#Hlt2LongTracksName 			= "Long"
+#Hlt2SeedingTracksName 			= Hlt1SeedingTracksName
+#Hlt2DownstreamTracksName 		= "SeedTT"
 # The next two are "trackified" PID objects
 HltMuonTracksName			= "MuonSegments"
 HltAllMuonTracksName			= "AllMuonSegments"
@@ -75,10 +113,9 @@ HltUniDirectionalKalmanFitSuffix 	= "UniKalmanFitted"
 #
 # The recognised track types for the Hlt2 Tracking
 #
-Hlt2TrackingRecognizedTrackTypes 	= [	Hlt2ForwardTracksName, 
-						Hlt2LongTracksName, 
-						Hlt2DownstreamTracksName
-					  ]
+Hlt2TrackingRecognizedTrackTypes 	= [	"Forward",
+                                        "Long", 
+                                        "Downstream" ]
 #
 # The recognised fit types for the Hlt2 Tracking
 # 
@@ -149,17 +186,25 @@ __all__ = (
 		HltSharedTracksPrefix, 
            	Hlt1TracksPrefix, 
            	Hlt2TracksPrefix, 
-        HltSharedVeloLocation,
-        HltSharedVeloTTLocation,
-        HltSharedForwardLocation,
+#        HltSharedVeloLocation,
+#        HltSharedVeloTTLocation,
+#        HltSharedForwardLocation,
 		#
+        TrackName,
+        Hlt1TrackRoot,
+        Hlt2TrackRoot,
+        HltSharedTrackRoot,
+        Hlt1TrackLoc,
+        Hlt2TrackLoc,
+        HltSharedTrackLoc,
+        #
 		HltSharedRZVeloTracksName,
-		Hlt2ForwardTracksName, 
-		Hlt2ForwardSecondLoopTracksName,
-        Hlt2MatchTracksName, 
-		Hlt2LongTracksName, 
-		Hlt2SeedingTracksName, 
-		Hlt2DownstreamTracksName,
+#Hlt2ForwardTracksName, 
+#		Hlt2ForwardSecondLoopTracksName,
+#        Hlt2MatchTracksName, 
+#		Hlt2LongTracksName, 
+#		Hlt2SeedingTracksName, 
+#		Hlt2DownstreamTracksName,
 		HltMuonTracksName,
 		HltAllMuonTracksName,
 		#

@@ -47,7 +47,7 @@ ProtoPV3DSelection = 'Proto' + PV3DSelection
 
 def PV3D(where):
     """ PV3D(where) -- where must either by Hlt1 or Hlt2 """
-    from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
+    #from HltTrackNames import HltSharedRZVeloTracksName, HltSharedTracksPrefix, _baseTrackLocation
     from HltVertexNames import HltSharedVerticesPrefix
     from HltVertexNames import HltGlobalVertexLocation
 

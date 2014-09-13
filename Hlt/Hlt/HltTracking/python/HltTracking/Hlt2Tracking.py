@@ -15,11 +15,13 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from HltTrackNames import Hlt2LongTracksName, HltSharedTracksPrefix
+#from HltTrackNames import Hlt2LongTracksName, HltSharedTracksPrefix
 from HltTrackNames import HltBiDirectionalKalmanFitSuffix
-from HltTrackNames import Hlt2ForwardTracksName, Hlt2SeedingTracksName, Hlt2ForwardSecondLoopTracksName
-from HltTrackNames import Hlt2MatchTracksName, Hlt2DownstreamTracksName   
-from HltTrackNames import Hlt2VeloTracksName, HltSharedRZVeloTracksName
+from HltTrackNames import TrackName, Hlt2TrackRoot, Hlt2TrackLoc, Hlt1TrackLoc, HltSharedTrackLoc
+
+#from HltTrackNames import Hlt2ForwardTracksName, Hlt2SeedingTracksName, Hlt2ForwardSecondLoopTracksName
+#from HltTrackNames import Hlt2MatchTracksName, Hlt2DownstreamTracksName   
+#from HltTrackNames import Hlt2VeloTracksName, HltSharedRZVeloTracksName
 from HltTrackNames import Hlt2ChargedProtoParticleSuffix, Hlt2TrackingRecognizedTrackTypes
 from HltTrackNames import Hlt2TrackingRecognizedFitTypes
 from HltTrackNames import _baseTrackLocation, _baseProtoPLocation
@@ -72,8 +74,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
                              # $HLTCONFROOT/python/HltConf/Hlt2.py 
     __slots__ = { "DataType"                        : '2012' # datatype  2009, MC09, DC06...
                 , "EarlyDataTracking"               : False
-                , "Hlt2Tracks"                      : Hlt2ForwardTracksName
-                , "Prefix"                          : HltSharedTracksPrefix 
+                , "Hlt2Tracks"                      : "Long" # type of HLT2 tracks
+                , "Prefix"                          : "Hlt2"                 # Why should we need this? It's never changed
                 , "FastFitType"                     : HltUnfittedTracksSuffix
                 , "DoFastFit"                       : False
                 , "DoSeeding"                       : False
@@ -310,7 +312,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         log.debug('## INFO The data type is %s'     % self.getProp("DataType"       ))
         log.debug('## INFO Early data tuning? %s'   % self.getProp("EarlyDataTracking"))
         log.debug('## INFO Tracks to make are %s'   % self.getProp("Hlt2Tracks"     ))
-        log.debug('## INFO The prefix is %s'        % self.getProp("Prefix"         ))
+        #log.debug('## INFO The prefix is %s'        % self.getProp("Prefix"         ))
         log.debug('## INFO The fit type is %s'      % self.getProp("FastFitType"    ))
         log.debug('## INFO Fast Fit? = %s'          % self.getProp("DoFastFit"      ))
         log.debug('## INFO Seeding? = %s'           % self.getProp("DoSeeding"      ))
@@ -321,7 +323,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #
         # First of all check that I have been called with a sensible set of options
         #
-        outputOfHlt2Tracking = self.__shortTrackLocation()
+        outputOfHlt2Tracking = self.__trackType()
         if (outputOfHlt2Tracking == 'Unknown') :
             self.__fatalErrorUnknownTrackType()
             return []
@@ -424,43 +426,51 @@ class Hlt2Tracking(LHCbConfigurableUser):
     # 
     # Start with the naming conventions
     #
-    # The "short" track location for the derived tracks
+    # The track type for the derived tracks
     # This function checks that the track asked for by the Hlt2Tracking instance
     # is in the recognised track types, and returns "Unknown" or the correct
     # suffix based on the configuration of the Hlt2Tracking. 
     #
-    def __shortTrackLocation(self,secondLoop=False) :
-        if (self.getProp("Hlt2Tracks") not in Hlt2TrackingRecognizedTrackTypes) :
+    def __trackType(self,secondLoop=False) :
+        if ( self.getProp("Hlt2Tracks") not in Hlt2TrackingRecognizedTrackTypes) :
             return "Unknown"
         elif secondLoop:
-            return Hlt2ForwardSecondLoopTracksName
-        elif (self.getProp("Hlt2Tracks") == Hlt2LongTracksName) :
+            return "ForwardCompLPT"
+        elif ( self.getProp("Hlt2Tracks") == "Long") :
             if self.getProp("DoSeeding") :
-                return Hlt2LongTracksName
+                return "Long"
             else : 
                 self.__warningAskLongGetForward()
-                return Hlt2ForwardTracksName
-        elif (self.getProp("Hlt2Tracks") == Hlt2ForwardTracksName) :
+                return "Long"
+        elif ( self.getProp("Hlt2Tracks") == "Forward") :
             if self.getProp("DoSeeding") :
                 self.__warningAskForwardGetLong()
-                return Hlt2LongTracksName
+                return "Long"
             else :
-                return Hlt2ForwardTracksName
-        elif (self.getProp("Hlt2Tracks") == Hlt2DownstreamTracksName) :
-            return Hlt2DownstreamTracksName
+                return "Long"
+        elif ( self.getProp("Hlt2Tracks") == "Downstream") :
+            return "Downstream"
+
+    def trackType(self,secondLoop=False) :
+        return self.__trackType(secondLoop)    
     #
     # Now the "long" track location, for the tracks which will be used to
     # make particles, protoparticles, etc. baseTrack/ProtoPLocation live in
-    # HltTrackNames.py  
+    # HltTrackNames.py   WE NEED TO REWORK THIS SHIT. GOD DAMMIT
     # 
     def __trackLocation(self,secondLoop=False):
         thisTrackLocation     = self.getProp("FastFitType") + "/" + \
-                                self.__shortTrackLocation(secondLoop)
-        return _baseTrackLocation(self.getProp("Prefix"), thisTrackLocation)
+                                TrackName[self.__trackType(secondLoop)]
+        return Hlt2TrackRoot + thisTrackLocation
+
+    def trackLocation(self,secondLoop=False):
+        return self.__trackLocation(secondLoop);
+    
+    
     ## For protos, the format is e.g. Hlt2/ProtoP/Unfitted/Forward/Charged #   
     def __protosLocation(self,protosType,secondLoop=False):
         thisProtosLocation = self.getProp("FastFitType") + "/" + \
-                             self.__shortTrackLocation(secondLoop) + "/" + \
+                             self.__trackType(secondLoop) + "/" + \
                              protosType
         return _baseProtoPLocation(self.getProp("Prefix"), thisProtosLocation)
     #
@@ -516,10 +526,10 @@ class Hlt2Tracking(LHCbConfigurableUser):
     # The prefixes for the various tools and algorithms used
     #
     def __trackingAlgosAndToolsPrefix(self,secondLoop=False) :
-        return self.getProp("Prefix") + self.__shortTrackLocation(secondLoop)
+        return self.getProp("Prefix") + self.__trackType(secondLoop)
     #
     def __trackfitAlgosAndToolsPrefix(self,secondLoop=False) :
-        return self.getProp("Prefix") + self.getProp("FastFitType") + self.__shortTrackLocation(secondLoop)
+        return self.getProp("Prefix") + self.getProp("FastFitType") + self.__trackType(secondLoop)
     #
     def __pidAlgosAndToolsPrefix(self) :
         return self.name()
@@ -1038,7 +1048,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # the forward tracking, otherwise the final output is the long 
         # (forward + match) tracking.
         #
-        hlt2TrackingOutput      = _baseTrackLocation(self.getProp("Prefix"),self.__shortTrackLocation())
+        hlt2TrackingOutput      = Hlt2TrackLoc[self.__trackType()]
         
         # Finally make the sequence
         # The sequence called depends on the track type, so far we recognise two track types
@@ -1046,7 +1056,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # for SeedTT tracks the seeding is mandatory and the CloneKilling is irrelevant 
         # This part gets done in either case
         trackRecoSequence = []
-        if (self.__shortTrackLocation() == Hlt2LongTracksName) :
+        if (self.__trackType() == "Long") :
             # Do the forward, seeding + matching
             trackRecoSequence        =    [self.__hlt2ForwardTracking()]
             trackRecoSequence       +=    [self.__hlt2MatchTracking()]
@@ -1077,9 +1087,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
                                                      , SlowContainer  = True) 
                 trackRecoSequence        +=     [recoCopy]
 
-        elif (self.__shortTrackLocation() == Hlt2ForwardTracksName) :
+        elif (self.__trackType() == "Forward") :
             trackRecoSequence        =     [self.__hlt2ForwardTracking()]
-        elif (self.__shortTrackLocation() == Hlt2DownstreamTracksName ) :
+        elif (self.__trackType() == "Downstream" ) :
             trackRecoSequence         =    [self.__hlt2DownstreamTracking()]
   
         # Build the bindMembers        
@@ -1101,21 +1111,29 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables  import Hlt2Conf
         from HltLine.HltLine    import bindMembers 
         
-        veloTracksOutputLocation = _baseTrackLocation(HltSharedTracksPrefix,Hlt2VeloTracksName) 
+        veloTracksOutputLocation = HltSharedTrackLoc["Velo"]
 
-        # select which Velo sequence we want, depending on configuration
+        # select which Velo sequence we want, depending on Hlt1TrackOption
+        # Decode: Pick up the tracks from HLt1 decoded into Hlt1TrackLoc["Velo"] (default)
+        # Rerun:  Rerun the full minimal Velo 
+                
         #veloOptions = { 'Decode' : RevivedVelo, 'Encode-Decode' : RevivedVelo, 'Rerun' : MinimalVelo, 'Copy' : MinimalVelo} 
         veloOptions = { 'Decode' : RevivedVelo, 'Rerun' : MinimalVelo }
-        
         Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
 
-        from Configurables import DumpTracks
+        #from Configurables import DumpTracks
         #veloDumper = DumpTracks('VeloDumper',TracksLocation = veloTracksOutputLocation )
         #veloDumper.StatPrint = True
-   
+        
+        #rom Configurables import TrackListMerger
+        #veloMerger = TrackListMerger('veloMerger',
+        #                             inputLocations=[ Hlt1TrackLoc["Velo"] ], 
+        #                             outputLocation=veloTracksOutputLocation) 
+                                                      
+        
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"VeloTracking"
-        bm_members      =  Velo.members() #+ [ veloDumper ] 
+        bm_members      =  Velo.members() 
         bm_output       = veloTracksOutputLocation
         
         
@@ -1134,11 +1152,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from HltTracking.HltReco import MaxOTHits, RevivedForward
         #        from Hlt1Lines.HltConfigurePR import ConfiguredPR
         
-        forwardTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2ForwardTracksName) 
+        
     
         recoForward = PatForward( self.getProp("Prefix")+'RecoForward'
                                 , InputTracksName  = self.__hlt2VeloTracking().outputSelection() 
-                                , OutputTracksName = forwardTrackOutputLocation 
+                                , OutputTracksName = Hlt2TrackLoc["ForwardComp"] 
                                 , maxOTHits = MaxOTHits
                                 )
 
@@ -1160,6 +1178,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions["MaxChi2Track"]
         recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
         recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
+        # HARDCODED PARAMETERS HERE
         recoForward.PatForwardTool.MinMomentum = 3000
         recoForward.PatForwardTool.MinPt = 300
         # look for already used TStation hits if we are in resurrection mode
@@ -1169,7 +1188,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
             from Configurables import TrackUsedLHCbID
             recoForward.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
             recoForward.UsedLHCbIDToolName="TrackUsedLHCbID"
-            recoForward.TrackUsedLHCbID.inputContainers=[forwardTrackOutputLocation] # FIXME: Grab the output location of decoder instead...
+            recoForward.TrackUsedLHCbID.inputContainers=[ Hlt1TrackLoc["ForwardHPT"] ] 
             recoForward.TrackUsedLHCbID.selectorNames=['ForwardSelector']
         # make them a bit more verbose
         recoForward.StatPrint = True
@@ -1193,6 +1212,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #forwardDumper = DumpTracks('ForwardDumper',TracksLocation = forwardTrackOutputLocation )
         #forwardDecoDumper = DumpTracks('ForwardDecoDumper',TracksLocation = "Hlt2/Track/Forward" )
 
+        from Configurables import TrackListMerger
+        forwardMerger = TrackListMerger('forwardMerger',
+                                        inputLocations=[Hlt1TrackLoc["ForwardHPT"], Hlt2TrackLoc["ForwardComp"]] ,
+                                        outputLocation=Hlt2TrackLoc["Forward"] )
+        
+        
         # Build the sequences according to whether or not we reuse tracks from HLT1
         # Build the bindMembers        
         bm_name         = self.getProp("Prefix")+"ForwardTracking"
@@ -1201,9 +1226,9 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if Hlt1TrackOption in ['Decode','Encode-Decode'] :
             bm_members += RevivedForward.members()  
             #bm_members += [forwardDecoDumper]
-        bm_members +=  [recoForward]
+        bm_members +=  [recoForward, forwardMerger]
         #bm_members +=  [forwardDumper]
-        bm_output       = forwardTrackOutputLocation
+        bm_output       = forwardMerger.outputLocation
 
         return bindMembers(bm_name, bm_members).setOutputSelection(bm_output)
     #########################################################################################
@@ -1214,13 +1239,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
     def __hlt2ForwardSecondLoopTracking(self) :
         """
         Forward track reconstruction for Hlt2 for recovery of lower momentum tracks
-        limit is 300/3000 MeV (PT/P) as opposed to (500/5000) for first loop
         """
         from Configurables    import PatForward
         from Configurables      import PatForwardTool
         from HltLine.HltLine    import bindMembers
 
-        forwardTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2ForwardSecondLoopTracksName)
+        forwardTrackOutputLocation = Hlt2TrackLoc["ForwardCompLPT"]
 
         from HltTracking.HltReco import MaxOTHits
         recoForwardSecondLoop      = PatForward( self.getProp("Prefix")+'RecoForwardSecondLoop'
@@ -1241,6 +1265,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForwardSecondLoop.PatForwardTool.MaxChi2Track   = CommonForwardTrackingOptions["MaxChi2Track"]
         recoForwardSecondLoop.PatForwardTool.MinHits        = CommonForwardTrackingOptions["MinHits"]
         recoForwardSecondLoop.PatForwardTool.MinOTHits      = CommonForwardTrackingOptions["MinOTHits"]
+        # HARDCODED PARAMETERS HERE
         recoForwardSecondLoop.PatForwardTool.MinMomentum    = 1000
         recoForwardSecondLoop.PatForwardTool.MinPt          = 150
 
@@ -1270,7 +1295,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         # We depend on the forward tracking
         fwdtracks = self.__hlt2ForwardTracking()
         # Now our output location 
-        seedTrackOutputLocation    = _baseTrackLocation(self.getProp("Prefix"),Hlt2SeedingTracksName)
+        seedTrackOutputLocation    = Hlt2TrackLoc["Seeding"]
     
         #### Seeding 
         recoSeeding = PatSeeding(self.getProp("Prefix")+'Seeding', OutputTracksName = seedTrackOutputLocation)
@@ -1318,7 +1343,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables    import PatMatch
         from HltLine.HltLine    import bindMembers
     
-        matchTrackOutputLocation = _baseTrackLocation(self.getProp("Prefix"),Hlt2MatchTracksName)
+        matchTrackOutputLocation = Hlt2TrackLoc["Match"]
  
         #### Matching
         recoMatch         = PatMatch(self.getProp("Prefix")+'Match'
@@ -1352,7 +1377,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables    import PatDownstream
         from HltLine.HltLine    import bindMembers
     
-        downstreamTrackOutputLocation    = _baseTrackLocation(self.getProp("Prefix"),Hlt2DownstreamTracksName)
+        downstreamTrackOutputLocation    = Hlt2TrackLoc["Downstream"]
 
         fwdtracks   = self.__hlt2ForwardTracking()    
         matchtracks = self.__hlt2MatchTracking()
@@ -1411,11 +1436,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #neutralProtosHighEtOutputLocation = self.__protosLocation(Hlt2HighEtNeutralProtoParticleSuffix)
  
         #outputCALOPID            = self.__caloIDLocation()
-        caloName = "HLT2CaloLines"+ mode.capitalize() + self.__shortTrackLocation()
+        caloName = "HLT2CaloLines"+ mode.capitalize() + self.__trackType()
         # Create configurable
         from Configurables import CaloLines
         caloLines = CaloLines(caloName)
-        bm_name    = self.__pidAlgosAndToolsPrefix() + mode.capitalize() + self.__shortTrackLocation()
+        bm_name    = self.__pidAlgosAndToolsPrefix() + mode.capitalize() + self.__trackType()
         bm_members = [tracks]
         bm_output = ''
         if mode.lower() == 'photon':
