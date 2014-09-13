@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-09-13 - Sebastian Neubert
+ - TrackEventCloneKiller uses LHCb::Track::Range now. This allows it to run
+   on selections as well as containers.
+
 !========================= TrackUtils v1r55 2014-03-18 =========================
 ! 2014-03-17 - Frederic Dupertuis
  - Add new property MassOffset to ChargedParticlesToTracks.

@@ -224,22 +224,23 @@ void TrackEventCloneKiller::getInputTracks( std::vector<LHCb::Track*>&
   std::vector<std::string>::const_iterator 
     itInCont = m_tracksInContainers.begin();
 
-  LHCb::Tracks::const_iterator iTrack;
-  SmartRefVector<LHCb::Track>::iterator it;
+  //LHCb::Tracks::const_iterator iTrack;
+  //SmartRefVector<LHCb::Track>::iterator it;
   while( itInCont != m_tracksInContainers.end()){
 
-    LHCb::Tracks* inTracks = get<LHCb::Tracks>( *itInCont);
+    //LHCb::Tracks* inTracks = get<LHCb::Tracks>( *itInCont);
+    LHCb::Track::Range inTracks = get<LHCb::Track::Range>( *itInCont );
 
     if( m_debugLevel) debug() << "# Tracks in " << *itInCont
-			      << " = " << inTracks -> size() << endmsg;
+			      << " = " << inTracks.size() << endmsg;
 
-    allTracks.reserve( allTracks.size() + inTracks->size());
+    allTracks.reserve( allTracks.size() + inTracks.size());
     // loop over container
-    for( iTrack = inTracks->begin(); iTrack != inTracks->end(); ++iTrack){
+    for( auto iTrack = inTracks.begin(); iTrack != inTracks.end(); ++iTrack){
       // label ancestors as clones 
       if( *itInCont != "LHCb::TrackLocation::Tsa"){
- 	SmartRefVector<LHCb::Track>& ancestors = (*iTrack)->ancestors();
-	for ( it = ancestors.begin(); it != ancestors.end(); ++it){
+ 	auto ancestors = (*iTrack)->ancestors();
+	for ( auto it = ancestors.begin(); it != ancestors.end(); ++it){
 	  if( (*it)->checkFlag( LHCb::Track::Clone))continue;
 	  (*it)->setFlag( LHCb::Track::Clone, true);
 	}
@@ -248,7 +249,7 @@ void TrackEventCloneKiller::getInputTracks( std::vector<LHCb::Track*>&
 	  (*iTrack)->checkFlag( LHCb::Track::Clone))continue;
       
       if( !(*iTrack)->checkFlag( LHCb::Track::Invalid))
-	allTracks.push_back( *iTrack);
+	allTracks.push_back( const_cast<LHCb::Track*>(*iTrack));
     }// end loop over container
     ++itInCont;
   }
