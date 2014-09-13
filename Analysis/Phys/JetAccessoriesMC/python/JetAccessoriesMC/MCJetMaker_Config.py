@@ -46,7 +46,7 @@ class HEPMCJetMakerConf:
         algo.JetMaker = self.jetMakerTool
         algo.addTool ( LoKi__FastJetMaker )
         algo.MCParticleTypes = self.MCParticleTypes
-        tool = getattr ( algo , 'LoKi::FastJetMaker' )
+        tool = getattr ( algo , 'LoKi__FastJetMaker' )
         tool.Type = self.jetMakerType
         tool.RParameter = self.R
         tool.PtMin = self.PtMin
@@ -98,7 +98,7 @@ class MCJetMakerConf:
         algo.SimpleAcceptance = self.SimpleAcceptance
         algo.JetMaker = self.jetMakerTool
         algo.addTool ( LoKi__FastJetMaker )
-        tool = getattr ( algo , 'LoKi::FastJetMaker' )
+        tool = getattr ( algo , 'LoKi__FastJetMaker' )
         tool.Type = self.jetMakerType
         tool.RParameter = self.R
         tool.PtMin = self.PtMin
