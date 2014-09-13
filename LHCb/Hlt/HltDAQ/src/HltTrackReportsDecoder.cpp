@@ -58,7 +58,7 @@ HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                            LHCb::RawEventLocation::Default};
     initRawEventSearch();
 
-    declareProperty( "Output2SourceId", m_map = { { "Hlt/Track/Velo", 1 }, { "Hlt/Track/Forward", 3 }, { "Hlt/Track/ForwardPesti", 4 } } );
+    declareProperty( "Output2SourceId", m_map = { { "Hlt/Track/Velo", 1 }, { "Hlt1/Track/Forward", 3 }, { "Hlt1/Track/ForwardHPT", 4 } } );
 }
 
 //=============================================================================

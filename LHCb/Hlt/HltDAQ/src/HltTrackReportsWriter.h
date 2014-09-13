@@ -36,7 +36,7 @@ public:
 		   kSourceID_Hlt1_VeloTT = 2,
 		   kSourceID_Hlt1_Forward = 3,
 		   kSourceID_Hlt1_ForwardFitted = 5,
-		   kSourceID_Hlt1_ForwardPesti = 4,
+		   kSourceID_Hlt1_ForwardHPT = 4,
 		   kSourceID_Max=7,
 		   kSourceID_BitShift=11,         // will need bitshifting to distinguish minor and major sourceIDs 
 		   kSourceID_MinorMask=0x7FF,

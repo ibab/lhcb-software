@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-09-13 - Sebastian Neubert
+ - Hlt track root locations changed to Hlt1/Track and Hlt/Track   
+ - Renamed track location Hlt/Track/ForwardPEsti to Hlt1/Track/ForwardHPT 
+
 !========================= HltDAQ v4r7 2014-09-08 =========================
 ! 2014-09-02 - Sebastian Neubert
  - Added one more location to TrackReportsDecoder/Writer

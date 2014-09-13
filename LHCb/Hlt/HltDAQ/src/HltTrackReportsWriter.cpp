@@ -40,8 +40,8 @@ HltTrackReportsWriter::HltTrackReportsWriter( const std::string& name,
     : GaudiAlgorithm( name, pSvcLocator ), m_callcount{ 0u }
 {
     declareProperty( "Input2SourceId", m_map = { { "Hlt/Track/Velo",          kSourceID_Hlt1_Velo }
-                                               , { "Hlt/Track/PestiForward", kSourceID_Hlt1_ForwardPesti} 
-	                                       , { "Hlt/Track/TightForward", kSourceID_Hlt1_Forward } 
+                                               , { "Hlt1/Track/ForwardHPT", kSourceID_Hlt1_ForwardHPT} 
+	                                       , { "Hlt1/Track/Forward", kSourceID_Hlt1_Forward } 
                                                } );
     declareProperty( "OutputRawEventLocation",
                      m_outputRawEventLocation = LHCb::RawEventLocation::Default );
