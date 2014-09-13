@@ -3,8 +3,16 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+
+! 2014-13-12
+ - Added RelInfoBstautauZVisoBDT.h(cpp) to compute ZVtop based 
+ isolation to Bs2TauTau lines
+
 ! 2014-09-12 - Chris Jones
  - Suppress various info level messages to debug or verbose
+
+
+
 
 ! 2014-09-12
  - Added RelInfoBs2MuMuZVisoBDT to compute ZVtop based isolation to BsMuMu lines
