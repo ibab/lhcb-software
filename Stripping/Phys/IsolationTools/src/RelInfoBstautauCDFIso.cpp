@@ -57,7 +57,6 @@ RelInfoBstautauCDFIso::RelInfoBstautauCDFIso( const std::string& type,
         if (key != RelatedInfoNamed::Unknown) {
         m_keys.push_back( key );
         } else {
-        warning() << "Unknown variable " << *ivar << ", skipping" << endmsg;
         }
         }
   */
@@ -109,7 +108,7 @@ StatusCode RelInfoBstautauCDFIso::calculateRelatedInfo( const LHCb::Particle *to
   }
   LHCb::Particles*  parts = get<LHCb::Particles>("/Event/Phys/StdAllNoPIDsPions/Particles");
   if (!parts) {
-    error() << " Failed to get particles container " << endmsg;
+    Error( " Failed to get particles container " );
     return StatusCode::SUCCESS;
   }
 

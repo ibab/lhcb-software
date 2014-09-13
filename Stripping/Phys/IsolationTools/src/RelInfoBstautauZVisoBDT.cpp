@@ -343,14 +343,14 @@ StatusCode RelInfoBstautauZVisoBDT::Initialize_tracksVF_ZVtop()
       verts = get<LHCb::RecVertex::Container>(m_PVInputLocation);
     }
     else {
-      warning()<<"No primary vertex at location"<<endreq; 
+      Warning("No primary vertex at location"); 
     }
     RecVertex::Container::const_iterator iv;   
     for ( iv = verts->begin(); iv != verts->end(); iv++) {//Here he's looking at the minimum value of the actual track in the loop wrt all the reconstructed PV
       StatusCode sc2 = m_Geom->distance((it_ptrk),(*iv),imp,impchi2); 
       if (sc2.isFailure() ) 
         {    
-          warning()<<"m_Geom problems"<<endreq;    
+          Warning("m_Geom problems");    
           continue;
         }
       if (impchi2<ipsall) { 
@@ -439,7 +439,7 @@ StatusCode RelInfoBstautauZVisoBDT::IsoTopo2Body(const LHCb::Particle *part)//Is
         const LHCb::Track* Trk_rm = Daug_rm->proto()->track(); 
         std::vector<const LHCb::Track*>::iterator it = std::find(tracksDaughters.begin(),tracksDaughters.end(),Trk_rm);//
         if (it != tracksDaughters.end()) tracksDaughters.erase(it);
-        else warning()<<"The track was not in the preselected tracks!!!"<<endmsg;
+        else Warning("The track was not in the preselected tracks!!!");
       }//A   end of for on i_daug_rm    
     }//AA    end of for on i_daug_rm_b
         
@@ -544,7 +544,7 @@ double RelInfoBstautauZVisoBDT::VfAlongTrack(double zB, const LHCb::Particle* Pa
   Gaudi::XYZPoint newPosition;
   StatusCode sc  = m_transporter->transport(Part,zNew,transPart);
   if (sc.isFailure()){
-    warning()<<"Problem in Part Transport"<<endmsg;
+    Warning("Problem in Part Transport");
     newPosition = Part->referencePoint();
   }
   else newPosition = transPart.referencePoint();

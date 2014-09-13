@@ -70,7 +70,6 @@ RelInfoBstautauMuonIsolation::RelInfoBstautauMuonIsolation( const std::string& t
         if (key != RelatedInfoNamed::Unknown) {
         m_keys.push_back( key );
         } else {
-        warning() << "Unknown variable " << *ivar << ", skipping" << endmsg;
         }
         }
   */
@@ -133,7 +132,7 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
   //    LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
   if ( tracks->empty() )
   {
-    if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
+    if ( msgLevel(MSG::WARNING) ) Warning( "Could not retrieve tracks. Skipping" );
     return StatusCode::FAILURE;
   }
 
@@ -179,7 +178,7 @@ StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Parti
 
   else
   {
-    if ( msgLevel(MSG::WARNING) ) warning() << "The particle in question is not valid" << endmsg;
+    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" );
     return StatusCode::FAILURE;
   }
 

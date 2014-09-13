@@ -169,7 +169,7 @@ StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* 
   LHCb::Tracks* tracks = get<LHCb::Tracks>(m_TracksPath);
   if ( tracks->empty() )
   {
-    if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks at location: "<< m_TracksPath<< " .... Skipping" << endmsg;
+    if ( msgLevel(MSG::WARNING) ) Warning( std::string("Could not retrieve tracks at location: ")+m_TracksPath+ " .... Skipping" );
     return StatusCode::FAILURE;
   }
 
@@ -385,8 +385,7 @@ std::vector<int>  RelInfoBs2MuMuIsolations::getIso(const LHCb::Particle* B, int 
 
   LHCb::Particles* allparts = get<LHCb::Particles>(m_ParticlePath);
   if (!allparts) {
-    error() << " Failed to get particles container "
-            <<  m_ParticlePath << endmsg;
+    Error( " Failed to get particles container "+m_ParticlePath);
     return iso;
   }
 
@@ -420,7 +419,7 @@ std::vector<int>  RelInfoBs2MuMuIsolations::getIso(const LHCb::Particle* B, int 
     i++;
   }
 
-  if (i>2) { error()<<"more than 2 daughters of the B" <<endmsg;
+  if (i>2) { Error("more than 2 daughters of the B" );
     return iso;
   }
 
@@ -726,7 +725,7 @@ StatusCode RelInfoBs2MuMuIsolations::CDFIsolation(const LHCb::Particle* B,
 
   LHCb::Particles*  parts = get<LHCb::Particles>(m_ParticlePath);
   if (!parts) {
-    error() << " Failed to get particles container " << endmsg;
+    Error( " Failed to get particles container " );
     return StatusCode::SUCCESS;
   }
 

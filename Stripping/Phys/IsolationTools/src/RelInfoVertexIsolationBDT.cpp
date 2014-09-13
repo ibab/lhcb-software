@@ -37,7 +37,7 @@ RelInfoVertexIsolationBDT::RelInfoVertexIsolationBDT( const std::string& type,
     if (key != RelatedInfoNamed::Unknown) {
     m_keys.push_back( key );
     } else {
-    warning() << "Unknown variable " << *ivar << ", skipping" << endmsg;
+    Warning( std::string("Unknown variable ") + *ivar + ", skipping" ) ;
     }
     }*/
 
@@ -430,7 +430,7 @@ double RelInfoVertexIsolationBDT::getminipchi(const LHCb::Particle* track, const
     }
 
   }
-  else{warning() << "IP Chi2 NOT FOUND PV" << endreq;}
+  else{ Warning( "IP Chi2 NOT FOUND PV" ) ; }
 
   return minchi2;
 }
@@ -456,7 +456,7 @@ double RelInfoVertexIsolationBDT::getfdchi2(const LHCb::Track* track
     }
 
   }
-  else{warning() << "FC Chi2 NOT FOUND PV" << endreq;}
+  else{ Warning( "FC Chi2 NOT FOUND PV" ) ;}
   return fdchi2;
 }
 

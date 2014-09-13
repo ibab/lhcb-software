@@ -42,7 +42,6 @@ RelInfoBstautauTrackIsolationBDT::RelInfoBstautauTrackIsolationBDT( const std::s
         if (key != RelatedInfoNamed::Unknown) {
         m_keys.push_back( key );
         } else {
-        warning() << "Unknown variable " << *ivar << ", skipping" << endmsg;
         }
         }
   */
@@ -131,7 +130,7 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
 
   if (mother==NULL)
   {
-    if ( msgLevel(MSG::WARNING) ) warning() << "Mother of part not found. Skipping" << endmsg;
+    if ( msgLevel(MSG::WARNING) ) Warning( "Mother of part not found. Skipping");
     return StatusCode::FAILURE;
   }
 
@@ -147,7 +146,7 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
   //    LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
   if ( tracks->empty() )
   {
-    if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
+    if ( msgLevel(MSG::WARNING) ) Warning(  "Could not retrieve tracks. Skipping" );
     return StatusCode::FAILURE;
   }
 
@@ -194,7 +193,7 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
 
   else
   {
-    if ( msgLevel(MSG::WARNING) ) warning() << "The particle in question is not valid" << endmsg;
+    if ( msgLevel(MSG::WARNING) ) Warning(  "The particle in question is not valid" );
     return StatusCode::FAILURE;
   }
 

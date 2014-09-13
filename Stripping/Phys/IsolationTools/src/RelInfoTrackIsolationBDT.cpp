@@ -104,13 +104,11 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
   //LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
   //if ( tracks->empty() )
   //{
-  //    if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
-  //    return StatusCode::FAILURE;
   //}
   //get the LHCb particles of the event
   LHCb::Particles*  parts = get<LHCb::Particles>(m_ParticlePath);
   if (!parts) {
-    if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve particles. Skipping" << endmsg;
+    Warning( "Could not retrieve particles. Skipping" );
     return StatusCode::SUCCESS;
   }
 
@@ -157,7 +155,7 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
 
   else
   {
-    if ( msgLevel(MSG::WARNING) ) warning() << "The particle in question is not valid" << endmsg;
+    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" ) ;
     return StatusCode::FAILURE;
   }
 
