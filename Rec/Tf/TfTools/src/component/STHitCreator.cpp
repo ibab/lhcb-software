@@ -24,15 +24,12 @@
 #include "STHitCreator.h"
 #include "HitCreatorGeom.h"
 
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-
 namespace Tf
 {
   namespace HitCreatorGeom
   {
 
-    class STModule : public Envelope<DeSTSector>
+    class STModule final : public Envelope<DeSTSector>
     {
     public:
       // typedefs, basically for template traits
@@ -58,16 +55,17 @@ namespace Tf
 
     typedef RegionOfModules<STModule, STDetector> STRegionImp ;
 
-    class STDetector : public Detector<STRegionImp>
+    class STDetector final : public Detector<STRegionImp>
     {
     public:
       STDetector(const DeSTDetector& stdetector, const std::string& clusterlocation, GaudiTool& parent) ;
+      ~STDetector() { clearEvent(); }
       void loadHits() ;
       // no loading on demand
       void loadHits( STRegionImp::ModuleContainer::const_iterator /*begin*/,
                      STRegionImp::ModuleContainer::const_iterator /*end*/) { loadHits() ; }
       void clearEvent() {
-	m_clusters = 0 ;
+	m_clusters = nullptr ;
 	Detector<STRegionImp>::clearEvent() ;
       }
       const LHCb::STLiteCluster::FastContainer* clusters() {
@@ -82,20 +80,19 @@ namespace Tf
 
     STDetector::STDetector(const DeSTDetector& stdetector, const std::string& clusterlocation,
                            GaudiTool& parent)
-      : m_clusterlocation(clusterlocation), m_parenttool(&parent), m_clusters(NULL)
+      : m_clusterlocation(clusterlocation), m_parenttool(&parent), m_clusters{nullptr}
     {
       // copy the entire hierarchy
       size_t nummodules(0) ;
-      for( DeSTDetector::Sectors::const_iterator isector = stdetector.sectors().begin() ;
-           isector != stdetector.sectors().end(); ++isector ) {
+      for( const auto *sector : stdetector.sectors() ) {
 
-        RegionID regionid( LHCb::STChannelID((*isector)->elementID()) ) ;
+        RegionID regionid( LHCb::STChannelID(sector->elementID()) ) ;
         STRegionImp* aregion = const_cast<STRegionImp*>(region(regionid)) ;
         if(!aregion) {
           aregion = new STRegionImp(regionid,*this) ;
           insert( aregion ) ;
         }
-        aregion->insert( (*isector)->elementID().sector(), new HitCreatorGeom::STModule(**isector) ) ;
+        aregion->insert( sector->elementID().sector(), new HitCreatorGeom::STModule(*sector) ) ;
         ++nummodules ;
       }
     }
@@ -108,42 +105,35 @@ namespace Tf
     {
       if(!isLoaded()) {
         // retrieve clusters
-        const LHCb::STLiteCluster::FastContainer* liteCont = clusters() ;
+        const auto* liteCont = clusters() ;
 	
         // create hits clusters. don't assume anything about order
-        HitCreatorGeom::STModule* cachedSector(0) ;
+        HitCreatorGeom::STModule* cachedSector{nullptr} ;
         unsigned int cachedSectorID(0xFFFFFFFF) ;
 
-        for(  LHCb::STLiteCluster::FastContainer::const_iterator iclus = liteCont->begin();
-              iclus != liteCont->end(); ++iclus) {
-          const LHCb::STChannelID channelid = iclus->channelID() ;
-
+        for( const auto& clus : *liteCont ) {
+          const LHCb::STChannelID channelid = clus.channelID() ;
           // find the sector ;
-          if( cachedSector ==0 || channelid.uniqueSector() != cachedSectorID ) {
-            RegionID regionid( channelid ) ;
-            STRegionImp* aregion = region(regionid) ;
+          if( !cachedSector || channelid.uniqueSector() != cachedSectorID ) {
+            STRegionImp* aregion = region( RegionID{ channelid } ) ;
             cachedSector = aregion->modules()[channelid.sector()] ;
           }
-          const DeSTSector& detelement = cachedSector->detelement() ;
-          cachedSector->ownedhits().push_back( Tf::STHit( detelement, *iclus) ) ;
+          cachedSector->ownedhits().emplace_back( cachedSector->detelement(), clus ) ;
         }
 
         // now set up pointers for hit navigation. we don't want any hits
         // to change place. hits should be sorted now by (station, layer,
         // region, x)
-        STDetector::HitContainer& thehits = hits() ;
+        auto& thehits = hits() ;
         thehits.clear() ; // should not be necessary
         thehits.reserve(liteCont->size()) ; // to make sure things don't change place anymore.
-        for( RegionContainer::iterator ireg = regions().begin(); ireg!=regions().end(); ++ireg)
-          for( STRegionImp::ModuleContainer::iterator imodule = (*ireg)->modules().begin() ;
-               imodule != (*ireg)->modules().end() ; ++imodule) {
-            Detector<STRegionImp>::HitContainer::iterator begin = thehits.end() ;
-            for( STModule::HitContainer::const_iterator ihit = (*imodule)->ownedhits().begin() ;
-                 ihit != (*imodule)->ownedhits().end(); ++ihit)
-              thehits.push_back( &(*ihit) ) ;
-            std::sort( begin, thehits.end(),compareHitX()) ;
+        for( auto reg : regions() ) for( auto module : reg->modules() ) {
+            auto begin = std::end(thehits);
+            for( auto hit : module->ownedhits() ) thehits.push_back( &hit ) ;
+            auto end = std::end(thehits);
+            std::sort( begin, end,compareHitX()) ;
             // now set the pointers from the module
-            (*imodule)->setRange( begin, thehits.end() ) ;
+            module->setRange( begin, end ) ;
           }
         setIsLoaded(true) ;
       }
@@ -155,7 +145,7 @@ namespace Tf
 				    const std::string& name,
 				    const IInterface* parent):
     GaudiTool(type, name, parent),
-    m_stdet(0), m_detectordata(0)
+    m_stdet{nullptr}, m_detectordata{nullptr}
   {
     declareInterface<typename Trait::ISTHitCreator>(this);
     declareProperty("ClusterLocation", m_clusterLocation=Trait::defaultClusterLocation()) ;
@@ -187,8 +177,7 @@ namespace Tf
   template<class Trait>
   StatusCode STHitCreator<Trait>::finalize()
   {
-    if (m_detectordata) m_detectordata->clearEvent();
-    delete m_detectordata;
+    m_detectordata.reset(nullptr);
     return GaudiTool::finalize();
   }
 
@@ -196,21 +185,14 @@ namespace Tf
   StatusCode STHitCreator<Trait>::updateGeometry()
   {
     if(msgLevel(MSG::DEBUG)) debug() << "In STHitCreator::updateGeometry()" << endreq ;
-    if(m_detectordata) {
-      m_detectordata->clearEvent();
-      delete m_detectordata ;
-    }
-    m_detectordata = new HitCreatorGeom::STDetector(*m_stdet,m_clusterLocation,*this) ;
+    m_detectordata.reset(new HitCreatorGeom::STDetector(*m_stdet,m_clusterLocation,*this)) ;
     return StatusCode::SUCCESS ;
   }
 
   template<class Trait>
   void STHitCreator<Trait>::handle ( const Incident& incident )
   {
-    if ( IncidentType::BeginEvent == incident.type() ) 
-    {
-      if ( m_detectordata ) m_detectordata->clearEvent() ;
-    }
+    if ( IncidentType::BeginEvent == incident.type() && m_detectordata) m_detectordata->clearEvent() ;
   }
 
   template<class Trait>
@@ -287,12 +269,11 @@ namespace Tf
   template<class Trait>
   Tf::STHit STHitCreator<Trait>::hit(LHCb::STChannelID stid) const
   {
-    const DeSTSector* sector = m_stdet->findSector( stid ) ;
     const LHCb::STLiteCluster::FastContainer* clusters = m_detectordata->clusters() ;
-    LHCb::STLiteCluster::FastContainer::const_iterator iclus =  
-      clusters->find< LHCb::STLiteCluster::findPolicy >( stid )  ;
+    auto iclus =  clusters->find< LHCb::STLiteCluster::findPolicy >( stid )  ;
     if( iclus == clusters->end() )
       throw GaudiException("STHitCreator::hit cannot find cluster", "STHitCreatorException" , StatusCode::FAILURE ) ;
+    const DeSTSector* sector = m_stdet->findSector( stid ) ;
     return Tf::STHit(*sector, *iclus ) ;
   }
   
@@ -341,12 +322,9 @@ namespace Tf
   template<class Trait>
   void STHitCreator<Trait>::resetUsedFlagOfHits() const
    {
-     Tf::STHitRange hits = m_detectordata->hits() ;
-   
-     for( Tf::STHits::const_iterator it = hits.begin(); it != hits.end() ; ++it){
-       const Tf::STHit* hit = (*it);
+     auto hits = m_detectordata->hits() ;
+     std::for_each( std::begin(hits), std::end(hits), [](const Tf::STHit* hit) {
        hit->resetUsedFlag();
-     }
+     } );
    }
 }
-

@@ -142,12 +142,12 @@ namespace Tf
     //mutable HitCreatorGeom::Detector<HitCreatorGeom::OTRegion>* m_detectordata ;
     //mutable HitCreatorGeom::Detector<HitCreatorGeom::RegionOfModules<HitCreatorGeom::OTModule> > *m_detectordata ;
     const DeOTDetector* m_otdetector ;
-    HitCreatorGeom::OTDetector *m_detectordata ;
+    std::unique_ptr<HitCreatorGeom::OTDetector> m_detectordata ;
 
     bool m_noDriftTimes;
     double m_forceDriftRadius;
     double m_forceResolution;
-    OTDet::RtRelation *m_rtrel;
+    std::unique_ptr<OTDet::RtRelation> m_rtrel;
   };
 }
 

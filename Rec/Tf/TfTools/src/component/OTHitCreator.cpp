@@ -89,7 +89,7 @@ namespace Tf
         // create the hits
         m_ownedhits.reserve(  otlitetimes.size() );
         // put if-statement before loop to fork only once
-        if (0 == m_rtrel) {
+        if ( !m_rtrel) {
           // don't use custom rt relation - drift times are on
           if( tmin < tmax ) {
             std::for_each( std::begin(otlitetimes), std::end(otlitetimes), [this,tmin,tmax,&moduleelement](const LHCb::OTLiteTime& hit) {
@@ -130,6 +130,7 @@ namespace Tf
     {
     public:
       OTDetector(const OTHitCreator& parent, const DeOTDetector& otdet) ;
+      ~OTDetector();
       void loadHits( OTRegionImp::ModuleContainer::const_iterator begin, OTRegionImp::ModuleContainer::const_iterator end) ;
       void loadHits() ;
     private:
@@ -160,6 +161,8 @@ namespace Tf
           m_modules.push_back( mod ) ;
 
     }
+
+    OTDetector::~OTDetector() { clearEvent(); }
 
 
     void OTDetector::loadHits( OTRegionImp::ModuleContainer::const_iterator begin,
@@ -201,12 +204,10 @@ namespace Tf
                              const std::string& name,
                              const IInterface* parent):
     GaudiTool(type, name, parent),
-    m_otdecoder("OTRawBankDecoder"),
-    m_rejectOutOfTime(false),
+    m_otdecoder{"OTRawBankDecoder"},
+    m_rejectOutOfTime{false},
     m_tmin(-8*Gaudi::Units::ns),
-    m_tmax(56*Gaudi::Units::ns),
-    m_detectordata(0),
-    m_rtrel(0)
+    m_tmax(56*Gaudi::Units::ns)
   {
     // interfaces
     declareInterface<IOTHitCreator>(this);
@@ -263,8 +264,8 @@ namespace Tf
       std::vector<double> rtrelpoly{ - m_forceDriftRadius / vdrift, 1. / vdrift };
       // construct new r-t relation - all drift times are mapped to
       // m_forceDriftRadius and the resolution is set to m_forceResolution
-      m_rtrel = new OTDet::RtRelation(m_otdetector->modules().front()->rtRelation().rmax(),
-                                      rtrelpoly, m_forceResolution);
+      m_rtrel.reset(new OTDet::RtRelation(m_otdetector->modules().front()->rtRelation().rmax(),
+                                          rtrelpoly, m_forceResolution) );
       /* if we run without drift times, this should appear in the log */
       info() << "Drift times are not used, drift radius set to " <<
         m_forceDriftRadius / Gaudi::Units::mm <<
@@ -288,31 +289,22 @@ namespace Tf
 
   StatusCode OTHitCreator::finalize()
   {
-    if (m_detectordata) m_detectordata->clearEvent();
-    delete m_detectordata ;
-    m_detectordata = nullptr ;
-    delete m_rtrel;
-    m_rtrel = nullptr;
+    m_detectordata.reset( nullptr );
+    m_rtrel.reset( nullptr );
     m_otdecoder.release().ignore() ;
     return GaudiTool::finalize() ;
   }
 
   StatusCode OTHitCreator::updateGeometry()
   {
-    if(m_detectordata) {
-      m_detectordata->clearEvent();
-      delete m_detectordata ;
-    }
-    m_detectordata = new HitCreatorGeom::OTDetector(*this,*m_otdetector) ;
+    m_detectordata.reset( new HitCreatorGeom::OTDetector(*this,*m_otdetector) );
     return StatusCode::SUCCESS ;
   }
 
   void OTHitCreator::handle ( const Incident& incident )
   {
-    if ( IncidentType::BeginEvent == incident.type() )
-    {
-      if ( m_detectordata ) m_detectordata->clearEvent() ;
-    }
+    if ( IncidentType::BeginEvent == incident.type() && m_detectordata )
+       m_detectordata->clearEvent() ;
   }
 
   Tf::OTHitRange OTHitCreator::hits(const TStationID iStation,
@@ -406,7 +398,7 @@ namespace Tf
   // return a pointer to an rt relation for switching drift times off
   // or null if that is not desired
   const OTDet::RtRelation* OTHitCreator::getRtRelation() const
-  { return m_rtrel; }
+  { return m_rtrel.get(); }
 
 
   // RestUsed flag for all OT hits

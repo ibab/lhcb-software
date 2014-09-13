@@ -4,9 +4,6 @@
 #include <vector>
 #include <algorithm>
 #include <boost/checked_delete.hpp>
-#include <boost/lambda/lambda.hpp>
-#include <boost/lambda/bind.hpp>
-
 #include "TfKernel/Region.h"
 
 namespace Tf
@@ -97,8 +94,8 @@ namespace Tf
       typedef IndexedVector<RegionType> RegionContainer ;
       RegionContainer regions ;
       typename RegionType::HitRangeType hits() const {
-        return typename RegionType::HitRangeType(regions.front()->hits().begin(),
-                                                 regions.back()->hits().end()) ; }
+        return { regions.front()->hits().begin(),
+                 regions.back()->hits().end() } ; }
       void insert( RegionType* region) {
         RegionType* altregion = regions[region->id().region()] ;
         if( altregion ) throw std::runtime_error("region already exists!") ;
@@ -122,11 +119,11 @@ namespace Tf
       typedef IndexedVector<Layer<RegionType> > LayerContainer ;
       LayerContainer layers ;
       typename RegionType::HitRangeType hits() const {
-        return typename RegionType::HitRangeType(layers.front()->hits().begin(),
-                                                 layers.back()->hits().end()) ; };
+        return { layers.front()->hits().begin(),
+                 layers.back()->hits().end()} ; };
       void insert( RegionType* region) {
         Layer<RegionType>* layer = layers[region->id().layer()] ;
-        if( layer==0 ) {
+        if( !layer ) {
           layer = new Layer<RegionType>() ;
           layers.insert( region->id().layer(), layer ) ;
         }
@@ -175,7 +172,7 @@ namespace Tf
 
       void insert( RegionType* region) {
         Station<RegionType>* station = m_stations[region->id().station()] ;
-        if( station==0 ) {
+        if( !station ) {
           station = new Station<RegionType>() ;
           m_stations.insert( region->id().station(), station ) ;
         }
@@ -186,9 +183,7 @@ namespace Tf
       void clearEvent() {
         m_isloaded = false ;
         m_hits.clear() ;
-        for(typename RegionContainer::iterator ireg = m_regions.begin() ;
-            ireg != m_regions.end(); ++ireg)
-          (*ireg)->clearEvent() ;
+        std::for_each(  std::begin(m_regions),  std::end(m_regions), [](const RegionType* r) { r->clearEvent(); } );
       }
 
       void setIsLoaded(bool b=true) { m_isloaded = b ; }
@@ -244,8 +239,7 @@ namespace Tf
 
       /// Clear event data
       void clearEvent() const {
-        for(typename ModuleContainer::const_iterator it = m_modules.begin(); it != m_modules.end(); ++it)
-          (*it)->clearEvent() ;
+        std::for_each( std::begin(m_modules), std::end(m_modules), [](ModuleType* m) { m->clearEvent(); });
       }
 
       /// Get all hits
@@ -287,8 +281,8 @@ namespace Tf
     typename RegionOfModules<ModuleType,HitLoader>::HitRangeType
     RegionOfModules<ModuleType,HitLoader>::hits(double xmin, double xmax) const
     {
-      typename ModuleContainer::const_iterator first = modules().begin() ;
-      typename ModuleContainer::const_iterator last = modules().end() ; --last ;
+      auto first = std::begin(modules()) ;
+      auto last = std::end(modules()); ; --last ;
 
       if( xmin > (*last)->xmax() || xmax < (*first)->xmin()) return HitRangeType() ;
       
@@ -305,17 +299,17 @@ namespace Tf
       // binary search to find first hit in first module
       //const HitRangeType& firstrange = (*first)->hits() ;
       const HitRangeType& firstrange = (*first)->hits() ;
-      typename HitRangeType::const_iterator beginhit = firstrange.begin() ;
+      auto beginhit = firstrange.begin() ;
       if( firstrange.size()>0)
-        beginhit = std::lower_bound(firstrange.begin(), firstrange.end(), xmin,
-                                    boost::lambda::bind(&HitType::xMax,boost::lambda::_1) <  boost::lambda::_2) ;
+        beginhit = std::lower_bound(firstrange.begin(), firstrange.end(), xmin, 
+                                    [](const HitType* hit, double x) { return hit->xMax() < x; });
 
       // binary search to find last hit in last module
       const HitRangeType& lastrange = (*last)->hits() ;
-      typename HitRangeType::const_iterator endhit = lastrange.end() ;
+      auto endhit = lastrange.end() ;
       if( lastrange.size()>0)
         endhit = std::lower_bound(lastrange.begin(), lastrange.end(), xmax,
-                                  boost::lambda::bind(&HitType::xMin,boost::lambda::_1) <  boost::lambda::_2) ;
+                                  [](const HitType* hit, double x) { return hit->xMin() <  x ; });
 
       // let's at least check that all the hits that we return are actually in this window
       //  for( OTHitRange::const_iterator ihit = beginhit ; ihit != endhit; ++ihit) {
@@ -345,8 +339,8 @@ namespace Tf
         //     << thisxmin << " " << thisxmax << " " << thisymin << " " << thisymax << std::endl ;
         //  std::cout << "Stereo-angle: " << asin(RegionOfModules<ModuleType,HitLoader>::sinT()) << std::endl ;
 
-        typename ModuleContainer::const_iterator beginmodule = modules().begin() ;
-        typename ModuleContainer::const_iterator endmodule   = modules().end() ;
+        auto beginmodule = modules().begin() ;
+        auto endmodule   = modules().end() ;
         // if there is more than one module, we need to find the right
         // module(s) first.
         if( modules().size()>1) {
@@ -373,20 +367,20 @@ namespace Tf
 
           // binary search to find first hit in first module
           const HitRangeType& firstrange = (*beginmodule)->hits() ;
-          typename HitRangeType::const_iterator beginhit = firstrange.begin() ;
+          auto beginhit = firstrange.begin() ;
           double thisxTmin = xTMin( (*beginmodule)->cosT(), (*beginmodule)->sinT(), thisxmin, thisymin,thisymax) ;
           if( firstrange.size()>0)
             beginhit = std::lower_bound(firstrange.begin(), firstrange.end(),thisxTmin ,
-                                        boost::lambda::bind(&HitType::xT,boost::lambda::_1) <  boost::lambda::_2) ;
+                                        [](const HitType* hit, double x) { return hit->xT() < x; } );
 
           // binary search to find last hit in last module
-          typename ModuleContainer::const_iterator lastmodule = endmodule - 1 ;
+          auto lastmodule = endmodule - 1 ;
           const HitRangeType& lastrange = (*lastmodule)->hits() ;
           double thisxTmax = xTMax( (*lastmodule)->cosT(), (*lastmodule)->sinT(), thisxmax, thisymin,thisymax) ;
-          typename HitRangeType::const_iterator endhit = lastrange.end() ;
+          auto endhit = lastrange.end() ;
           if( lastrange.size()>0)
             endhit = std::lower_bound(lastrange.begin(), lastrange.end(), thisxTmax,
-                                      boost::lambda::bind(&HitType::xT,boost::lambda::_1) <  boost::lambda::_2) ;
+                                      [](const HitType* hit, double x) { return hit->xT() < x; } );
 
           rc = HitRangeType( beginhit, endhit ) ;
           //    std::cout << "X-window in local coordinates: " << thisxTmin << " " << thisxTmax << std::endl ;
@@ -407,8 +401,8 @@ namespace Tf
     RegionOfModules<ModuleType,HitLoader>::hitsLocalXRange(double xmin, double xmax) const
     {
  
-      typename ModuleContainer::const_iterator first = modules().begin() ;
-      typename ModuleContainer::const_iterator last = modules().end() ; --last ;
+      auto first = modules().begin() ;
+      auto last = modules().end() ; --last ;
 
       if( xmin > (*last)->xmaxT() || xmax < (*first)->xminT()) return HitRangeType() ;
       
@@ -425,17 +419,17 @@ namespace Tf
       // binary search to find first hit in first module
       //const HitRangeType& firstrange = (*first)->hits() ;
       const HitRangeType& firstrange = (*first)->hits() ;
-      typename HitRangeType::const_iterator beginhit = firstrange.begin() ;
+      auto beginhit = firstrange.begin() ;
       if( firstrange.size()>0)
         beginhit = std::lower_bound(firstrange.begin(), firstrange.end(), xmin,
-                                    boost::lambda::bind(&HitType::xT,boost::lambda::_1) <  boost::lambda::_2) ;
+                                    [](const HitType* hit, double x) { return hit->xT() < x; } );
 
       // binary search to find last hit in last module
       const HitRangeType& lastrange = (*last)->hits() ;
-      typename HitRangeType::const_iterator endhit = lastrange.end() ;
+      auto endhit = lastrange.end() ;
       if( lastrange.size()>0)
         endhit = std::lower_bound(lastrange.begin(), lastrange.end(), xmax,
-                                  boost::lambda::bind(&HitType::xT,boost::lambda::_1) <  boost::lambda::_2) ;
+                                  [](const HitType* hit, double x) { return hit->xT() < x; } );
       return HitRangeType( beginhit, endhit ) ;
     }
 

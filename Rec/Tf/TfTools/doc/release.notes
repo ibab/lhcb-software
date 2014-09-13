@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2014-09-13 - Gerhard Raven
+ - more C++11-ification in {OT,ST}HitCreator and HitCreatorGeom
+
 ! 2014-09-10 - Gerhard Raven
  - take advantage of C++11 in OTHitCreator -- according to callgrind, this results 
    in a 10% relative CPU gain (which improves the overall Hlt time by 0.1% -- still

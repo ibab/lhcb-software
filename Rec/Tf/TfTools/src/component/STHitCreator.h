@@ -41,7 +41,7 @@ namespace Tf
    */
 
   template<class Trait>
-  class STHitCreator: public GaudiTool,
+  class STHitCreator final  : public GaudiTool,
                       virtual public Trait::ISTHitCreator,
                       virtual public IIncidentListener
 
@@ -60,62 +60,62 @@ namespace Tf
     virtual ~STHitCreator();
 
     /// initialize
-    virtual StatusCode initialize();
+    StatusCode initialize() override;
 
     /// finalize
-    virtual StatusCode finalize();
-
+    StatusCode finalize() override;
+ private:
     /// incident service handle
-    virtual void handle( const Incident& incident ) ;
-
+    void handle( const Incident& incident ) override;
+ public:
     /// update manager handle
-    virtual StatusCode updateGeometry() ;
+    StatusCode updateGeometry() ;
 
     // RestUsed flag for all OT hits
-    virtual  void resetUsedFlagOfHits() const;
+    void resetUsedFlagOfHits() const override;
 
     // Load all the IT hits
-    virtual STHitRange hits() const ;
+    STHitRange hits() const override;
 
     // Load the ST hits for a given region of interest
-    virtual STHitRange hits(const typename Trait::StationID iStation,
-                            const typename Trait::LayerID iLayer) const ;
+    STHitRange hits(const typename Trait::StationID iStation,
+                    const typename Trait::LayerID iLayer) const override;
 
     // Load the ST hits for a given region of interest
-    virtual STHitRange hits(const typename Trait::StationID iStation,
-                            const typename Trait::LayerID iLayer,
-                            const typename Trait::RegionID iRegion) const ;
+    STHitRange hits(const typename Trait::StationID iStation,
+                    const typename Trait::LayerID iLayer,
+                    const typename Trait::RegionID iRegion) const override;
 
     // Load the ST hits for a given region of interest
-    virtual STHitRange hits(const typename Trait::StationID iStation,
-                            const typename Trait::LayerID iLayer,
-                            const typename Trait::RegionID iRegion,
-                            const double xmin,
-                            const double xmax) const ;
+    STHitRange hits(const typename Trait::StationID iStation,
+                    const typename Trait::LayerID iLayer,
+                    const typename Trait::RegionID iRegion,
+                    const double xmin,
+                    const double xmax) const override;
 
     // Load the ST hits for a given region of interest
-    virtual STHitRange hitsLocalXRange(const typename Trait::StationID iStation,
-				       const typename Trait::LayerID iLayer,
-				       const typename Trait::RegionID iRegion,
-				       const double xmin,
-				       const double xmax) const ;
+    STHitRange hitsLocalXRange(const typename Trait::StationID iStation,
+		       const typename Trait::LayerID iLayer,
+		       const typename Trait::RegionID iRegion,
+		       const double xmin,
+		       const double xmax) const override;
     
     // Load the hits for a given region of interest
-    virtual STHitRange hits(const typename Trait::StationID iStation,
-                            const typename Trait::LayerID iLayer,
-                            const typename Trait::RegionID iRegion,
-                            const double xmin,
-                            const double xmax,
-                            const double ymin,
-                            const double ymax) const ;
+    STHitRange hits(const typename Trait::StationID iStation,
+                    const typename Trait::LayerID iLayer,
+                    const typename Trait::RegionID iRegion,
+                    const double xmin,
+                    const double xmax,
+                    const double ymin,
+                    const double ymax) const override;
 
     // Retrieve the STRegion for a certain region ID. The region
-    virtual const STRegion* region(const typename Trait::StationID iStation,
-                                   const typename Trait::LayerID iLayer,
-                                   const typename Trait::RegionID  iRegion) const ;
+    const STRegion* region(const typename Trait::StationID iStation,
+                           const typename Trait::LayerID iLayer,
+                           const typename Trait::RegionID  iRegion) const override;
 
     // create a single STHit from an STChannelID
-    virtual Tf::STHit hit(LHCb::STChannelID stid) const ;
+    Tf::STHit hit(LHCb::STChannelID stid) const override;
 
   private:
 
@@ -124,7 +124,7 @@ namespace Tf
 
   private:
     const DeSTDetector* m_stdet ;
-    mutable HitCreatorGeom::STDetector* m_detectordata ;
+    mutable std::unique_ptr<HitCreatorGeom::STDetector> m_detectordata ;
     std::string m_clusterLocation;
     std::string m_detectorLocation;
   };
