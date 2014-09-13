@@ -17,7 +17,7 @@ def myAction() :
                                 MCParticleSelector, PrLHCbID2MCParticle,
                                 UnpackMCParticle, UnpackMCVertex, DebugTrackingLosses )
 
-    from HltTracking.HltTrackNames import HltSharedVeloLocation, HltSharedVeloTTLocation, HltSharedForwardLocation
+    from HltTracking.HltTrackNames import Hlt1TrackLoc, Hlt1TrackRoot
     
     from DAQSys.Decoders import DecoderDB
     from DAQSys.DecoderClass import decodersForBank
@@ -40,14 +40,15 @@ def myAction() :
     PrChecker("PrChecker").WriteVeloHistos  = 1
 
     #(N.B.: container base for velo tracks was renamed to Hlt1)
-    PrChecker("PrChecker").VeloTracks = HltSharedVeloLocation
-    PrChecker("PrChecker").ForwardTracks = "Hlt/Track/PestiForward" #HltSharedForwardLocation
-    PrChecker("PrChecker").UpTracks = "Hlt/Track/VeloTT";
+    # Figure out which HLT is run from HltConf
+    #PrChecker("PrChecker").VeloTracks = Hlt1TrackLoc["Velo"]
+    PrChecker("PrChecker").ForwardTracks = Hlt1TrackLoc["ForwardHPT"] #HltSharedForwardLocation
+    PrChecker("PrChecker").UpTracks = Hlt1TrackLoc["VeloTTHPT"];
 
     PrChecker("PrChecker").HistoPrint = True
     #PrChecker("PrChecker").OutputLevel = 1
 
-    PrTrackAssociator("AssocAll").RootOfContainers = "Hlt/Track"
+    PrTrackAssociator("AssocAll").RootOfContainers = Hlt1TrackRoot
     
     PatCheck.Members += [ PrTrackAssociator("AssocAll") ]
     PatCheck.Members += [ PrChecker("PrChecker") ]

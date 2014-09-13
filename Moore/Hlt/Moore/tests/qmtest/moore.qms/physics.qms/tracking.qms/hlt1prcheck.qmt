@@ -19,18 +19,6 @@
   </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
   <argument name="validator"><text>
 prcheckerblock="""
-PrChecker.Velo                             INFO **** Velo                            86362 tracks including          8791 ghosts [10.2 %], Event average   7.6 % ****
-PrChecker.Velo                             INFO **** for P>3GeV,Pt>0.5GeV                0 tracks including             0 ghosts [-nan %]  ****
-PrChecker.Velo                             INFO                             velo :   53844 from    57682 [ 93.3 %]    582 clones [ 1.1 %], purity: 99.16 %, hitEff: 95.55 %
-PrChecker.Velo                             INFO                             long :   33473 from    34877 [ 96.0 %]    236 clones [ 0.7 %], purity: 99.31 %, hitEff: 96.86 %
-PrChecker.Velo                             INFO                        long>5GeV :   23136 from    23818 [ 97.1 %]    117 clones [ 0.5 %], purity: 99.37 %, hitEff: 97.73 %
-PrChecker.Velo                             INFO                     long_strange :    1150 from     1328 [ 86.6 %]      9 clones [ 0.8 %], purity: 98.65 %, hitEff: 93.44 %
-PrChecker.Velo                             INFO                long_strange>5GeV :     594 from      659 [ 90.1 %]      1 clones [ 0.2 %], purity: 98.57 %, hitEff: 95.97 %
-PrChecker.Velo                             INFO                       long_fromB :    4118 from     4234 [ 97.3 %]     25 clones [ 0.6 %], purity: 99.39 %, hitEff: 97.36 %
-PrChecker.Velo                             INFO                  long_fromB>5GeV :    3416 from     3498 [ 97.7 %]     16 clones [ 0.5 %], purity: 99.44 %, hitEff: 97.90 %
-PrChecker.Velo                             INFO      long_fromB_P>3GeV_Pt>0.5GeV :    3106 from     3185 [ 97.5 %]     17 clones [ 0.5 %], purity: 99.47 %, hitEff: 97.90 %
-PrChecker.Velo                             INFO   UT_long_fromB_P>3GeV_Pt>0.5GeV :    2983 from     3057 [ 97.6 %]     17 clones [ 0.6 %], purity: 99.47 %, hitEff: 97.90 %
-PrChecker.Velo                             INFO 
 PrChecker.Forward                          INFO **** Forward                         12897 tracks including          1801 ghosts [14.0 %], Event average   9.4 % ****
 PrChecker.Forward                          INFO **** for P>3GeV,Pt>0.5GeV            12897 tracks including          1801 ghosts [14.0 %]  ****
 PrChecker.Forward                          INFO                             long :   10679 from    34877 [ 30.6 %]     18 clones [ 0.2 %], purity: 95.87 %, hitEff: 95.35 %

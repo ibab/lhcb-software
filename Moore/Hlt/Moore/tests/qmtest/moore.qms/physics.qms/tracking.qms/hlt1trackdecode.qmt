@@ -16,8 +16,9 @@
 block="""
 TrackreportsDec...SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Hlt/Track/ForwardPesti"                        |      1178 |      11700 |     9.9321 |     6.0705 |      1.0000 |      52.000 |
  | "Hlt/Track/Velo"                                |      1178 |     125039 |     106.15 |     57.170 |      10.000 |      670.00 |
+ | "Hlt1/Track/ForwardHPT"                         |      1178 |      11700 |     9.9321 |     6.0705 |      1.0000 |      52.000 |
+ 
 """
 findReferenceBlock(block, signature_offset = 0)
 </text></argument>

@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-09-13 - Sebastian Neubert
+ - Updated tracking tests to new track locations scheme
+
 ! 2014-09-02 - Sebastian Neubert
  - Add test with PrChecker running on 2015 signal MC
  - Add test of standalone decoding of HLT1 TrackReports
