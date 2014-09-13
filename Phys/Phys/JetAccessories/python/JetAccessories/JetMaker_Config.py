@@ -71,7 +71,7 @@ class JetMakerConf:
         algo.Inputs = self.Inputs
         algo.BanCandidates = self.BanCandidates
         algo.PFParticleTypes = self.PFParticleTypes
-        tool = getattr ( algo , 'LoKi::FastJetMaker' )
+        tool = getattr ( algo , 'LoKi__FastJetMaker' )
         tool.Type = self.jetMakerType 
         tool.RParameter = self.R
         tool.PtMin = self.PtMin
