@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-09-14 - Xabier Cid Vidal
+ - Change a couple of warning() to Warning(
+
 ! 2014-09-03 - Anton Poluektov 
  - Fix ConeVariables, ConeVariablesForEW and VertexIsolation tools to 
    write out all possible variables if the list of variables is empty. 

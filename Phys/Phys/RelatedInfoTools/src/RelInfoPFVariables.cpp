@@ -66,7 +66,7 @@ StatusCode RelInfoPFVariables::initialize() {
       m_keys.push_back( key );
       debug() << "Adding variable " << var << ", key = " << key << endmsg;
     } else {
-      warning() << "Unknown variable " << var << ", skipping" << endmsg;
+      Warning("Unknown variable " + var + ", skipping");
     }
   }
 
