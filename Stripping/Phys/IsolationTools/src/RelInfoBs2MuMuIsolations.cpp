@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( RelInfoBs2MuMuIsolations );
+DECLARE_TOOL_FACTORY( RelInfoBs2MuMuIsolations )
 
 //=============================================================================
 // Standard constructor, initializes variables

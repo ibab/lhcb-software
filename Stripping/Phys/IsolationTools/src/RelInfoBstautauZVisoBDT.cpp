@@ -65,7 +65,7 @@ template <class FROM,class TO,class WEIGHT> class IRelationWeighted2D ;
 
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( RelInfoBstautauZVisoBDT );
+DECLARE_TOOL_FACTORY( RelInfoBstautauZVisoBDT )
 
 
 //=============================================================================
