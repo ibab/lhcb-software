@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v47r1>2014-09-12 Brunel v47r1</A></H1><PRE>
+</PRE><H1><A NAME=v47r1>2014-09-15 Brunel v47r1</A></H1><PRE>
 This version uses projects LHCb v38r1, Lbcom v16r0p1,
  Rec v17r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
@@ -29,6 +29,8 @@ This version uses projects LHCb v38r1, Lbcom v16r0p1,
   . PatSeedingTool: use BloomFilter for fast overlap checking (PatAlgorithms)
   . Use standard tracking sequence also for 2010 data. Previously was using
     TsaSeed instead of PatSeed and non-standard GECs (TrackSys)
+  . NeutralProtoPAlg : add ClusterCode & ClusterFrac as extra info
+    (RecEvent, CaloInterfaces, CaloTools, GlobalReco)
 
 - Changes to QMTests
   . Added repro2012reco14skiptracking, tests Brunel().SkipTracking functionality
