@@ -144,14 +144,16 @@ StatusCode RelInfoBstautauCDFIso::calculateRelatedInfo( const LHCb::Particle *to
   } // ipp
 
   m_bdt1 = pt_bs/(iso_giampi+pt_bs);
+   if (msgLevel(MSG::DEBUG)) debug()<<"Tool7*** - m_bdt1 : "<<m_bdt1<<"  , pt_bs/(iso_giampi+pt_bs) : "<<pt_bs<<"/"<<iso_giampi+pt_bs<<endmsg;
+  
   m_map.clear();
 
   std::vector<short int>::const_iterator ikey;
   for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
 
-    float value = 0;
+    float value = 0.0;
     switch (*ikey) {
-    case RelatedInfoNamed::BSTAUTAUTAUISOFIRSTVALUE : value = m_bdt1; break;
+    case RelatedInfoNamed::BSTAUTAUCDFISO : value = m_bdt1; break;
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
 
