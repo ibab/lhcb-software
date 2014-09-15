@@ -1,0 +1,32 @@
+###############################################
+# TeslaTools, An LHCb Application
+###############################################
+
+package TeslaTools
+version v1r0
+
+branches doc cmt options src python tests
+
+use GaudiPolicy v*
+use GaudiKernel v*
+
+# Component library building rule
+#============================================================================
+library          TeslaTools    ../src/*.cpp
+
+#########################################
+# Configurable (python) dependencies
+#########################################
+
+use  MicroDst    v* Event
+use  HltEvent    v* Event
+use  LHCbAlgs    v* Kernel
+use  GaudiConf   v*
+use  RecEvent    v* Event
+use  DaVinciKernel v*    Phys
+use  DaVinciInterfaces v*    Phys
+
+# standard patterns (order is essential!)
+# ============================================================================
+apply_pattern component_library library=TeslaTools
+# ============================================================================
