@@ -25,12 +25,14 @@
   <argument name="reference"><text>../refs/2015magdown.ref</text></argument>
   <argument name="validator"><text>
 #check if the output exists, and check the split locations are on it
-from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
-checkIsSplit("2015magdown-10ev.dst",4.0,causes,result,"brunel.2015magdown")
-checkIsGone("2015magdown-10ev.dst",["Event/DAQ"],causes,result,"brunel.2015magdown")
+#from RawEventCompat.QMTest.FormatTests import checkIsSplit, checkIsGone
+#checkIsSplit("2015magdown-10ev.dst",4.0,causes,result,"brunel.2015magdown")
+#checkIsGone("2015magdown-10ev.dst",["Event/DAQ"],causes,result,"brunel.2015magdown")
 
-from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
-preprocessor = BrunelPreprocessor + \
-  RegexpReplacer(r'mdf:\S*(/lhcb/data\S*\.raw)(\?\S*)?',r'\1')
+from Brunel.QMTest.BrunelExclusions import preprocessor
+#from Brunel.QMTest.BrunelExclusions import preprocessor as BrunelPreprocessor
+#preprocessor = BrunelPreprocessor + \
+#  RegexpReplacer(r'mdf:\S*(/lhcb/data\S*\.raw)(\?\S*)?',r'\1')
+validateWithReference(preproc = preprocessor)
 </text></argument>
 </extension>
