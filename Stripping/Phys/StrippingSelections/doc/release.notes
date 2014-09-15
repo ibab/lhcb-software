@@ -3,6 +3,9 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-09-15 -Marianna Fontana (on behalf of Markward Britsch)
+  - Modified BPVLTISIGNCHI2('PropertimeFitter/properTime:PUBLIC') in BPVLTISIGNCHI2() 
+
 ! 2014-09-12 -Wenbin Qian
   fix duplicated inputs
 
