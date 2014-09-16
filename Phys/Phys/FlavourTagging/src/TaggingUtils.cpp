@@ -327,6 +327,9 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
 
   const unsigned int d0_pid = LoKi::Particles::_ppFromName("D0")->particleID().abspid();
   const unsigned int d_pid = LoKi::Particles::_ppFromName("D+")->particleID().abspid();
+  const unsigned int lambdaC_pid = LoKi::Particles::_ppFromName("Lambda_c+")->particleID().abspid();
+  const unsigned int lambda_pid = LoKi::Particles::_ppFromName("Lambda0")->particleID().abspid();
+  const unsigned int p_pid = LoKi::Particles::_ppFromName("p+")->particleID().abspid();
   const unsigned int k_pid = LoKi::Particles::_ppFromName("K+")->particleID().abspid();
   const unsigned int ks_pid = LoKi::Particles::_ppFromName("KS0")->particleID().abspid();
   const unsigned int pi_pid = LoKi::Particles::_ppFromName("pi+")->particleID().abspid();
@@ -335,123 +338,180 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
   const unsigned int mu_pid = LoKi::Particles::_ppFromName("mu+")->particleID().abspid();
 
   const SmartRefVector<Particle>& daus = cand->daughters();
-
-  switch(candType){
+  int numDaus = daus.size();
+  
+  switch (candType) {
     
   case 0: // full reco, exclusive
     
     if (cand->particleID().abspid() == d0_pid) {
 
-      switch(daus.size()){
+      switch (numDaus) {
       
       case 2:
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = "D0_Kpi";//0; // D0 -> K pi
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == pi_pid)
+          mode = "D0_Kpi";
         break;
       
       case 3:
-        if (daus[0]->particleID().abspid()==ks_pid && daus[1]->particleID().abspid()==pi_pid 
-            && daus[2]->particleID().abspid()==pi_pid) mode = "D0_Kspipi";//2; // D0 -> Ks pi pi
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid 
-            && daus[2]->particleID().abspid()==pi0_pid) mode = "D0_Kpipi0";//3; // D0 -> K pi pi0
+        if (daus[0]->particleID().abspid() == ks_pid and
+            daus[1]->particleID().abspid() == pi_pid and
+            daus[2]->particleID().abspid() == pi_pid)
+          mode = "D0_Kspipi";
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == pi_pid and 
+            daus[2]->particleID().abspid() == pi0_pid)
+          mode = "D0_Kpipi0";
         break;
       
       case 4:
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid
-            && daus[2]->particleID().abspid()==pi_pid && daus[3]->particleID().abspid()==pi_pid) mode = "D0_Kpipipi";//1; // D0 -> K pi pi pi
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == pi_pid and
+            daus[2]->particleID().abspid() == pi_pid and
+            daus[3]->particleID().abspid() == pi_pid)
+          mode = "D0_Kpipipi";
         break;
 
       default:
-        fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
 
       }
       
     } else if (cand->particleID().abspid() == d_pid) {
 
-      switch(daus.size()){
+      switch (numDaus) {
       
       case 2:
-        if (daus[0]->particleID().abspid()==ks_pid && daus[1]->particleID().abspid()==pi_pid) mode = "Dp_Kspi";//5; // D+ -> Ks pi
+        if (daus[0]->particleID().abspid() == ks_pid and
+            daus[1]->particleID().abspid() == pi_pid)
+          mode = "Dp_Kspi";
         break;
       
       case 3:
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid 
-            && daus[2]->particleID().abspid()==pi_pid) mode = "Dp_Kpipi";//4; // D+ -> K pi pi
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == pi_pid and
+            daus[2]->particleID().abspid() == pi_pid)
+          mode = "Dp_Kpipi";
         break;
       
-//       case 4:
-//         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
-//         break;
       default:
-        fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
 
       }
-      
+
+    } else {
+      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endreq;
     }
     
     break;
 
-  case 1:// part reco, inclusive
+  case 1: // part reco, inclusive
 
-    switch(daus.size()){
+    if (cand->particleID().abspid() == d0_pid) {
       
-    case 2:
-
-      if (cand->particleID().abspid() == d0_pid) {
-
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = "D0_KpiX";//6; // D0 -> K pi X
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==e_pid) mode = "D0_KeX";//7; // D0 -> K e X
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==mu_pid) mode = "D0_KmuX";//8; // D0 -> K mu X
-
-      } else if (cand->particleID().abspid() == d_pid) {
-
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = "Dp_KpiX";//10; // D+ -> K pi X
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==e_pid) mode = "Dp_KeX";//11; // D+ -> K e X
-        if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==mu_pid) mode = "Dp_KmuX";//12; // D+ -> K mu X
+      switch (numDaus) {
+      
+      case 2:
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == pi_pid)
+          mode = "D0_KpiX";
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == e_pid)
+          mode = "D0_KeX";
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == mu_pid)
+          mode = "D0_KmuX";
+        break;
+        
+      default:
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
 
       }
-      break;
       
-      //       case 3:
-      //         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
-      //         break;
-      
-      //       case 4:
-      //         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
-      //         break;
-      
-    default:
-      fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
-    }
-    break;
-      
-  case 2:// dstar reco
+    } else if (cand->particleID().abspid() == d_pid) {
 
-    switch(daus.size()){
+      switch (numDaus) {
       
-      //     case 2:
-      //       if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 6; // D -> K pi X
-      //       if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==e_pid) mode = 7; // D0 -> K e X
-      //       if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==mu_pid) mode = 8; // D0 -> K pi X
-      //       break;
+      case 2:
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == pi_pid)
+          mode = "Dp_KpiX";
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == e_pid)
+          mode = "Dp_KeX";
+        if (daus[0]->particleID().abspid() == k_pid and
+            daus[1]->particleID().abspid() == mu_pid)
+          mode = "Dp_KmuX";
+        break;
+      
+      default:
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
+        
+      }
+
+    } else {
+      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endreq;
+    }
+
+    break;
+    
+  case 2: // dstar reco
+
+    switch (numDaus) {
       
     case 3:
-      if (daus[0]->particleID().abspid()==ks_pid && daus[1]->particleID().abspid()==pi_pid 
-          && daus[2]->particleID().abspid()==pi_pid) mode = "Dstar_D0_Kspipi";//9; // D0 -> Ks pi pi
+      if (daus[0]->particleID().abspid() == ks_pid and
+          daus[1]->particleID().abspid() == pi_pid and
+          daus[2]->particleID().abspid() == pi_pid)
+        mode = "Dstar_D0_Kspipi";
       break;
-      //       case 4:
-      //         if (daus[0]->particleID().abspid()==k_pid && daus[1]->particleID().abspid()==pi_pid) mode = 0; // D0 -> K pi
-      //         break;
+
     default:
-      fatal()<<"Invalid daus size: "<<daus.size()<<" candtype: "<<candType<<endreq;
+      fatal() << "Invalid daus size: " << numDaus << " candtype: " << candType << endreq;
+
     }
     break;
 
+  case 3: // lambda reco
+
+    if (cand->particleID().abspid() == lambdaC_pid) {
+
+      switch (numDaus) {
+      
+      case 2:
+        if (daus[0]->particleID().abspid() == p_pid and
+            daus[1]->particleID().abspid() == ks_pid)
+          mode = "LambdaC_pKs";
+        if (daus[0]->particleID().abspid() == lambda_pid and
+            daus[1]->particleID().abspid() == pi_pid)
+          mode = "LambdaC_LambdaPi";
+        break;
+      
+      case 3:
+        if (daus[0]->particleID().abspid() == p_pid and
+            daus[1]->particleID().abspid() == k_pid and
+            daus[2]->particleID().abspid() == pi_pid)
+          mode = "LambdaC_pKpi";
+        break;
+        
+      default:
+        fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
+        
+      }
+
+    } else {
+      fatal() << "Invalid charm type: " << cand->particleID().abspid() << " for candtype: " << candType << endreq;
+    }
+    break;
+      
   default:
-    fatal()<<"Invalid candtype: "<<candType<<endreq;
+    fatal() << "Invalid candtype: " << candType << endreq;
 
   }
   
-  if (mode.length()==0) fatal() << "unknown Charm cand type: " << candType << endreq;
+  if (mode.length() == 0)
+    fatal() << "unknown Charm cand type: " << candType << endreq;
 
   return mode;
   
@@ -464,21 +524,23 @@ int TaggingUtils::getCharmDecayModeInt(const LHCb::Particle* cand, int candType)
   
   std::string mode = getCharmDecayMode(cand, candType);
 
-  if(mode=="D0_Kpi") return 0;
-  else if(mode=="D0_Kspipi") return 2;
-  else if(mode=="D0_Kpipi0") return 3;
-  else if(mode=="D0_Kpipipi") return 1;
-  else if(mode=="Dp_Kspi") return 5;
-  else if(mode=="Dp_Kpipi") return 4;
-  else if(mode=="D0_KpiX") return 6;
-  else if(mode=="D0_KeX") return 7;
-  else if(mode=="D0_KmuX") return 8;
-  else if(mode=="Dp_KpiX") return 10;
-  else if(mode=="Dp_KeX") return 11;
-  else if(mode=="Dp_KmuX") return 12;
-  else if(mode=="Dstar_D0_Kspipi") return 9;
+  if (mode == "D0_Kpi") return 0;
+  else if (mode == "D0_Kspipi") return 2;
+  else if (mode == "D0_Kpipi0") return 3;
+  else if (mode == "D0_Kpipipi") return 1;
+  else if (mode == "Dp_Kspi") return 5;
+  else if (mode == "Dp_Kpipi") return 4;
+  else if (mode == "D0_KpiX") return 6;
+  else if (mode == "D0_KeX") return 7;
+  else if (mode == "D0_KmuX") return 8;
+  else if (mode == "Dp_KpiX") return 10;
+  else if (mode == "Dp_KeX") return 11;
+  else if (mode == "Dp_KmuX") return 12;
+  else if (mode == "Dstar_D0_Kspipi") return 9;
+  else if (mode == "LambdaC_pKpi") return 13;
+  else if (mode == "LambdaC_LambdaPi") return 14;
+  else if (mode == "LambdaC_pKs") return 15;
   else return -1;
-  
 }
 
 //====================================================================

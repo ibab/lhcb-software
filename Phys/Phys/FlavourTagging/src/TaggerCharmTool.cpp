@@ -78,33 +78,31 @@ GaudiTool ( type, name, parent ),
   def_CharmStarTagLocations.push_back("Phys/Tag_StdDstar2D0Pi2KsPiPi/Particles");
   declareProperty( "CharmStarTagLocations", m_CharmStarTagLocations = def_CharmStarTagLocations);
 
+  std::vector<std::string> def_CharmLambdaTagLocations;
+  def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2PKPi/Particles");
+  def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2LambdaPi/Particles");
+  def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2PKs/Particles");
+  declareProperty( "CharmLambdaTagLocations", m_CharmLambdaTagLocations = def_CharmLambdaTagLocations);
 
   declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.3371);
   declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 0.9111);
   declareProperty( "Charm_Eta_Cal",          m_Eta_Cal_charm  = 0.3121);
 
   // initialize decay map
-  CharmDecayModeMap["D0_Kpi"]          = CharmDecayMode("D0_Kpi",0,          1,0,0,0, 1.82, 1.915, -0.0223261, 0.630175 );
-  CharmDecayModeMap["D0_Kpipipi"]      = CharmDecayMode("D0_Kpipipi",1,      1,0,0,0, 1.82, 1.915, -0.0118087, 0.420859 );
-  CharmDecayModeMap["D0_Kspipi"]       = CharmDecayMode("D0_Kspipi",2,       0,0,0,0, 1.82, 1.915, 0.,         0.       );
-  CharmDecayModeMap["D0_Kpipi0"]       = CharmDecayMode("D0_Kpipi0",3,       1,0,0,0, 1.82, 1.915, -0.0199824, 0.0592187);
-  CharmDecayModeMap["Dp_Kpipi"]        = CharmDecayMode("Dp_Kpipi",4,        1,0,0,0, 1.82, 1.915, -0.0120574, 0.525746 );
-  CharmDecayModeMap["Dp_Kspi"]         = CharmDecayMode("Dp_Kspi",5,         0,0,0,0, 1.82, 1.915, 0.731183,   0.731183 );
-  CharmDecayModeMap["D0_KpiX"]         = CharmDecayMode("D0_KpiX",6,         1,0,0,0, 0.8,  1.915, -0.0587858, 0.235058 );
-  CharmDecayModeMap["D0_KeX"]          = CharmDecayMode("D0_KeX",7,          1,1,0,0, 0.8,  1.915, -0.0483723, 0.291827 );
-  CharmDecayModeMap["D0_KmuX"]         = CharmDecayMode("D0_KmuX",8,         1,0,1,0, 0.8,  1.915, -0.0207928, 0.39514  );
-  CharmDecayModeMap["Dstar_D0_Kspipi"] = CharmDecayMode("Dstar_D0_Kspipi",9, 0,0,0,1, 1.82, 1.915, -0.358734,  0.073132 );
-  CharmDecayModeMap["Dp_KpiX"]         = CharmDecayMode("Dp_KpiX",10,        1,0,0,0, 0.8,  1.915, -0.115402,  0.10732  );
-  CharmDecayModeMap["Dp_KeX"]          = CharmDecayMode("Dp_KeX",11,         1,1,0,0, 0.8,  1.915, -0.0594275, 0.148148 );
-  CharmDecayModeMap["Dp_KmuX"]         = CharmDecayMode("Dp_KmuX",12,        1,0,1,0, 0.8,  1.915, -0.054475,  0.189587 );
-
-  //const double c_optCutVal[nCharmDecayModes] = { -0.0223261, -0.0118087, 6.95325e-310, -0.0199824,
-  //-0.0120574, 1, -0.0587858, -0.0483723, -0.0207928, -0.358734, -0.115402, -0.0594275, -0.054475};
-  //const double c_PurVal[nCharmDecayModes] = { 0.630175, 0.420859, 2.02369e-320, 0.0592187, 0.525746,
-  //0.731183, 0.235058, 0.291827, 0.39514, 0.073132, 0.10732, 0.148148, 0.189587};
-  //const int c_nSig[nCharmDecayModes] = { 3711, 1512, 0, 673, 1595, 68, 3834, 310, 457, 23, 6032, 504, 857};
-  //const int c_nBkg[nCharmDecayModes] = { 40442, 192514, 0, 2504383, 81255, 25, 102308, 99943, 102233,
-  //25972, 304834, 294041, 299594};
+  //                                                                       Idx   K  E   Mu  D* M-    M+      MVA Cut     Purity
+  CharmDecayModeMap["D0_Kpi"]          = CharmDecayMode("D0_Kpi",	         0,    1,	0,	0,	0, 1.82, 1.915, -0.0223261, 0.630175 );
+  CharmDecayModeMap["D0_Kpipipi"]      = CharmDecayMode("D0_Kpipipi",	     1,    1,	0,	0,	0, 1.82, 1.915, -0.0118087, 0.420859 );
+  CharmDecayModeMap["D0_Kspipi"]       = CharmDecayMode("D0_Kspipi",	     2,    0,	0,	0,	0, 1.82, 1.915, 0.,         0.       );
+  CharmDecayModeMap["D0_Kpipi0"]       = CharmDecayMode("D0_Kpipi0",	     3,    1,	0,	0,	0, 1.82, 1.915, -0.0199824, 0.0592187);
+  CharmDecayModeMap["Dp_Kpipi"]        = CharmDecayMode("Dp_Kpipi",	       4,    1,	0,	0,	0, 1.82, 1.915, -0.0120574, 0.525746 );
+  CharmDecayModeMap["Dp_Kspi"]         = CharmDecayMode("Dp_Kspi",	       5,    0,	0,	0,	0, 1.82, 1.915, 0.731183,   0.731183 );
+  CharmDecayModeMap["D0_KpiX"]         = CharmDecayMode("D0_KpiX",	       6,    1,	0,	0,	0, 0.8,  1.915, -0.0587858, 0.235058 );
+  CharmDecayModeMap["D0_KeX"]          = CharmDecayMode("D0_KeX",	         7,    1,	1,	0,	0, 0.8,  1.915, -0.0483723, 0.291827 );
+  CharmDecayModeMap["D0_KmuX"]         = CharmDecayMode("D0_KmuX",	       8,    1,	0,	1,	0, 0.8,  1.915, -0.0207928, 0.39514  );
+  CharmDecayModeMap["Dstar_D0_Kspipi"] = CharmDecayMode("Dstar_D0_Kspipi", 9,    0,	0,	0,	1, 1.82, 1.915, -0.358734,  0.073132 );
+  CharmDecayModeMap["Dp_KpiX"]         = CharmDecayMode("Dp_KpiX",	       10,   1,	0,	0,	0, 0.8,  1.915, -0.115402,  0.10732  );
+  CharmDecayModeMap["Dp_KeX"]          = CharmDecayMode("Dp_KeX",	         11,   1,	1,	0,	0, 0.8,  1.915, -0.0594275, 0.148148 );
+  CharmDecayModeMap["Dp_KmuX"]         = CharmDecayMode("Dp_KmuX",	       12,   1,	0,	1,	0, 0.8,  1.915, -0.054475,  0.189587 );
 
 }
 
@@ -163,9 +161,11 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
 
   std::vector< CharmParticle > cands;
 
-  addCands(cands, m_CharmTagLocations    , *signalB, RecVert, 0);
-  addCands(cands, m_CharmInclTagLocations, *signalB, RecVert, 1);
-  addCands(cands, m_CharmStarTagLocations, *signalB, RecVert, 2);
+  addCands(cands, m_CharmTagLocations    ,   *signalB, RecVert, 0);
+  addCands(cands, m_CharmInclTagLocations,   *signalB, RecVert, 1);
+  addCands(cands, m_CharmStarTagLocations,   *signalB, RecVert, 2);
+  // Uncomment once I add in all the new trainings!
+  //addCands(cands, m_CharmLambdaTagLocations, *signalB, RecVert, 3);
 
   if ( msgLevel(MSG::DEBUG) )  debug() << "Number of charm cands retrieved: "<<cands.size()<<endreq;
 

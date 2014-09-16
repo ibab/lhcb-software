@@ -119,6 +119,7 @@ private:
   std::vector<std::string> m_CharmTagLocations;
   std::vector<std::string> m_CharmInclTagLocations;
   std::vector<std::string> m_CharmStarTagLocations;
+  std::vector<std::string> m_CharmLambdaTagLocations;
 
   float m_P0_Cal_charm, m_P1_Cal_charm, m_Eta_Cal_charm;
 
