@@ -6,6 +6,7 @@
 
 ! 2014-09-16 - Carlos Vazquez Sierra
   - Minor typo fixed in StrippingB2JpsiXforBeta_s.py
+  - Updated test utility tests/TestB2CCLines.py for B2CC.
 
 ! 2014-09-16 - Wenbin Qian
    Add more lines with D->k3pi 

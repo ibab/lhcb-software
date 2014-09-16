@@ -1,7 +1,6 @@
 # Test all B2CC lines.
 # Carlos Vazquez Sierra (carlos.vazquez@cern.ch)
 
-
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from StrippingConf.Configuration import StrippingConf
@@ -11,43 +10,66 @@ from CommonParticles.Utils import DefaultTrackingCuts
 DefaultTrackingCuts().Cuts  = { "Chi2Cut" : [ 0, 3 ],
                                 "CloneDistCut" : [5000, 9e+99 ] }
 
-# Now build the stream
+#from StrippingSelections.Utils import buildStreams, lineBuilder
+#from StrippingSettings.Utils import *
+from StrippingConf.Configuration import StrippingConf, StrippingStream
+from StrippingSelections import buildersConf
+from StrippingSelections.Utils import buildStreams, lineBuilder
+from StrippingSettings.Utils import *
+
+current_stripping="stripping21"
+db = strippingConfiguration( current_stripping )
+all_lines = groupFromDBase( db,'WGs')
+lines_in_myWG=all_lines["B2CC"]
+print lines_in_myWG
+print "here are the lines I'm testing"
+for ln in lines_in_myWG:
+  print ln, db[ln]['STREAMS']
+
 from StrippingConf.StrippingStream import StrippingStream
-streamBetaS = StrippingStream("Test_B2JpsiXforBeta_s")
-streamPsi2S = StrippingStream("Test_B2Psi2SX")
-streamPsi2SMuMu = StrippingStream("Test_B2Psi2SMuMu")
-streamJpsieePhi = StrippingStream("Test_Bs2JpsieePhi")
-streamCharmonium = StrippingStream("Test_B2CharmoniumX_6H")
-streamEtacPhiBDT = StrippingStream("Test_Bs2EtacPhiBDT")
+stream = StrippingStream("Test_all_B2CC")
+for config in lines_in_myWG:
+  stream.appendLines( lineBuilder(current_stripping, config).lines() )
+
+# Now build the stream
+#from StrippingConf.StrippingStream import StrippingStream
+#streamBetaS = StrippingStream("Test_B2JpsiXforBeta_s")
+#streamPsi2S = StrippingStream("Test_B2Psi2SX")
+#streamPsi2SMuMu = StrippingStream("Test_B2Psi2SMuMu")
+#streamJpsieePhi = StrippingStream("Test_Bs2JpsieePhi")
+#streamCharmonium = StrippingStream("Test_B2CharmoniumX_6H")
+#streamEtacPhiBDT = StrippingStream("Test_Bs2EtacPhiBDT")
 
 # Append the lines
-from StrippingSelections import buildersConf
-confs = buildersConf()
-from StrippingSelections.Utils import lineBuilder
+#from StrippingSelections import buildersConf
+#confs = buildersConf()
+#from StrippingSelections.Utils import lineBuilder
 
-builderBetaS = lineBuilder(confs,'BetaS') #StrippingB2JpsiXforBeta_s.py
-builderPsi2S = lineBuilder(confs, 'BetaSPsi2S') #StrippingB2Psi2SX.py
-builderPsi2SMuMu = lineBuilder(confs, 'BetaSPsi2SMuMu') #StrippingB2Psi2SXMuMu.py
-builderBs2JpsieePhi = lineBuilder(confs, 'BetaSBs2JpsieePhi') #StrippingBs2JpsieePhi.py
-builderB2CharmoniumX = lineBuilder(confs, 'B2CharmoniumX_6H') #StrippingB2CharmoniumX_6H.py
-builderEtacPhiBDT = lineBuilder(confs, 'Bs2EtacPhiBDT') #StrippingBs2EtacPhiBDT.py
+#builderBetaS = lineBuilder(confs,'BetaS') #StrippingB2JpsiXforBeta_s.py
+#builderPsi2S = lineBuilder(confs, 'BetaSPsi2S') #StrippingB2Psi2SX.py
+#builderPsi2SMuMu = lineBuilder(confs, 'BetaSPsi2SMuMu') #StrippingB2Psi2SXMuMu.py
+#builderBs2JpsieePhi = lineBuilder(confs, 'BetaSBs2JpsieePhi') #StrippingBs2JpsieePhi.py
+#builderB2CharmoniumX = lineBuilder(confs, 'B2CharmoniumX_6H') #StrippingB2CharmoniumX_6H.py
+#builderEtacPhiBDT = lineBuilder(confs, 'Bs2EtacPhiBDT') #StrippingBs2EtacPhiBDT.py
 
-streamBetaS.appendLines( builderBetaS.lines() )
-streamPsi2S.appendLines( builderPsi2S.lines() )
-streamPsi2SMuMu.appendLines( builderPsi2SMuMu.lines() )
-streamJpsieePhi.appendLines( builderBs2JpsieePhi.lines() )
-streamCharmonium.appendLines( builderB2CharmoniumX.lines() )
-streamEtacPhiBDT.appendLines( builderEtacPhiBDT.lines() )
+#streamBetaS.appendLines( builderBetaS.lines() )
+#streamPsi2S.appendLines( builderPsi2S.lines() )
+#streamPsi2SMuMu.appendLines( builderPsi2SMuMu.lines() )
+#streamJpsieePhi.appendLines( builderBs2JpsieePhi.lines() )
+#streamCharmonium.appendLines( builderB2CharmoniumX.lines() )
+#streamEtacPhiBDT.appendLines( builderEtacPhiBDT.lines() )
 
 # Standard configuration of Stripping, do NOT change them
 from Configurables import  ProcStatusCheck
 filterBadEvents =  ProcStatusCheck()
 
-sc = StrippingConf( Streams = [ streamBetaS, streamPsi2S, streamPsi2SMuMu, streamJpsieePhi, streamCharmonium, streamEtacPhiBDT ],
+#sc = StrippingConf( Streams = [ streamBetaS, streamPsi2S, streamPsi2SMuMu, streamJpsieePhi, streamCharmonium, streamEtacPhiBDT ],
+sc = StrippingConf ( Streams = [ stream ],
                     MaxCandidates = 2000,
                     AcceptBadEvents = False,
                     BadEventSelection = filterBadEvents,
-                    TESPrefix = 'Strip'
+                    TESPrefix = 'Strip',
+                    Verbose = True
                     )
 
 from Configurables import AuditorSvc, ChronoAuditor
