@@ -5,7 +5,7 @@
 package Tesla
 version v1r0
 
-branches doc cmt options python
+branches doc cmt options python tests
 
 use GaudiPolicy v*
 use GaudiKernel v*
