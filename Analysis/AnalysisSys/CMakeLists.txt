@@ -41,6 +41,7 @@ gaudi_depends_on_subdirs(Analysis/PyAna
                          Phys/LoKiPhysMC
                          Phys/Particle2MCTruth
                          Phys/ParticleMakerChecker
+                         Phys/TeslaTools
                          Phys/TrackSmearing
                          Phys/VertexFitCheck
                          Phys/CommonMCParticles
