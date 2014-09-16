@@ -174,9 +174,9 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                              InputList = self.LambdaListLoose ,
                                              Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) & (MAXTREE('pi-'==ABSID, PT) > 100.*MeV) & (ADMASS('Lambda0') < 15.*MeV) & (VFASPF(VCHI2) < 20)")
 
-        self.Pi0ListLoose = self.MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
-                                                  RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
-                                                                        DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")])
+        self.Pi0ListLoose = MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
+                                             RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
+                                                                   DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")])
 
         self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
                                           InputList = self.Pi0ListLoose,
