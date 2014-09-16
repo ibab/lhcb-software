@@ -22,6 +22,7 @@ from StandardParticles import StdLoosePions
 from StandardParticles import StdLooseKaons
 from StandardParticles import StdAllLooseKaons
 from StandardParticles import StdLooseResolvedPi0
+from StandardParticles import StdLooseMergedPi0
 from StandardParticles import StdNoPIDsPions
 from StandardParticles import StdLooseProtons
 from PhysSelPython.Wrappers import Selection, DataOnDemand, MergedSelection
@@ -51,7 +52,6 @@ default_config = {
          'StrippingBetaSJpsi2MuMuLine',
          'StrippingBetaSBu2JpsiKPrescaledLine',
          'StrippingBetaSBs2JpsiPhiPrescaledLine',
-         'StrippingBetaSBs2JpsiPhiDetachedLine',
          'StrippingBetaSBd2JpsiKstarPrescaledLine',
          'StrippingBetaSBd2JpsiKsPrescaledLine',
          'StrippingBetaSBd2JpsiKsDetachedLine',
@@ -64,7 +64,8 @@ default_config = {
         ],
         'Dimuon' : [
          'StrippingBetaSBu2JpsiKDetachedLine',
-         'StrippingBetaSBd2JpsiKstarDetachedLine'
+         'StrippingBetaSBd2JpsiKstarDetachedLine',
+         'StrippingBetaSBs2JpsiPhiDetachedLine'
         ]
     }
     }
@@ -172,11 +173,14 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
         self.LambdaList =  self.createSubSel(OutputList = "LambdaForBetaS" + self.name,
                                              InputList = self.LambdaListLoose ,
                                              Cuts = "(MAXTREE('p+'==ABSID, PT) > 500.*MeV) & (MAXTREE('pi-'==ABSID, PT) > 100.*MeV) & (ADMASS('Lambda0') < 15.*MeV) & (VFASPF(VCHI2) < 20)")
-        
+
+        self.Pi0ListLoose = self.MergedSelection("StdLooseCocktailPi0ForBetaS" + self.name,
+                                                  RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
+                                                                        DataOnDemand(Location = "Phys/StdLooseMergedPi0/Particles")])
+
         self.Pi0List = self.createSubSel( OutputList = "Pi0ForBetaS" + self.name,
-                                          InputList = DataOnDemand(Location = "Phys/StdLooseResolvedPi0/Particles"),
-                                          Cuts = "(PT > 1500.*MeV)"\
-                                          "& (MINTREE('gamma'==ABSID, PT) > 500.*MeV)")
+                                          InputList = self.Pi0ListLoose,
+                                          Cuts = "(PT > 1500.*MeV)")
         
         self.makeInclJpsi()
         self.makeBd2JpsiKsLD()
@@ -270,7 +274,7 @@ class B2JpsiXforBeta_sConf(LineBuilder) :
                                                 Cuts = "(CHILD('Beauty -> ^J/psi(1S) X', PFUNA(ADAMASS('J/psi(1S)'))) < %(JpsiMassWindow)s * MeV) & "\
                                                 "(BPVLTIME() > %(BPVLTIME)s*ps)" % self.config )
 
-        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], MDSTFlag = True, EnableFlavourTagging = True )
+        Bs2JpsiPhiDetachedLine  = StrippingLine( self.name + "Bs2JpsiPhiDetachedLine", algos = [ Bs2JpsiPhiDetached ], EnableFlavourTagging = True )
         
         self.registerLine(Bs2JpsiPhiPrescaledLine)
         self.registerLine(Bs2JpsiPhiDetachedLine)

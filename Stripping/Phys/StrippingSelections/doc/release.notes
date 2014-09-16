@@ -3,6 +3,12 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2014-09-16 - Carlos Vazquez Sierra
+  - Updated some lines in StrippingB2JpsiXforBeta_s.py:
+    + StrippingBetaSBd2JpsiPi0DetachedLine/PrescaledLine updated.
+    + StrippingBetaSBs2JpsiPhiDetachedLine moved to Dimuon stream (FullDST).
+
 ! 2014-09-15 -Marianna Fontana (on behalf of Markward Britsch)
   - Modified BPVLTISIGNCHI2('PropertimeFitter/properTime:PUBLIC') in BPVLTISIGNCHI2() 
 
