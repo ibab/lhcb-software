@@ -145,18 +145,22 @@ std::ostream& LHCb::ParticleProperty::fillStream ( std::ostream& s ) const
   else if (   0 == lifeTime  () )                       {} // ATTENTION!!
   else if (   1 * Gaudi::Units::meter      < ctau  () )
   { s << BF (",  ctau:%|11.5g| m")   % ( ctau () / Gaudi::Units::meter      ) ; }
+  else if (   1 * Gaudi::Units::cm          < ctau  () )
+  { s << BF (",  ctau:%|10.5g| cm")  % ( ctau () / Gaudi::Units::cm         ) ; }
   else if ( 0.5 * Gaudi::Units::mm          < ctau  () )
   { s << BF (",  ctau:%|10.5g| mm")  % ( ctau () / Gaudi::Units::mm         ) ; }
   else if ( 0.1 * Gaudi::Units::micrometer < ctau  () )
   { s << BF (",  ctau:%|10.5g| um")  % ( ctau () / Gaudi::Units::micrometer ) ; }
   else if ( 1   * Gaudi::Units::GeV        <= width () )
-  { s << BF (", width:%|9.5g| GeV") % ( width () / Gaudi::Units::GeV       ) ; }
+  { s << BF (", width:%|9.5g| GeV")  % ( width () / Gaudi::Units::GeV        ) ; }
   else if ( 1   * Gaudi::Units::MeV        <= width () )
-  { s << BF (", width:%|9.5g| MeV") % ( width () / Gaudi::Units::MeV       ) ; }
+  { s << BF (", width:%|9.5g| MeV")  % ( width () / Gaudi::Units::MeV        ) ; }
   else if ( 1   * Gaudi::Units::keV        <= width () )
-  { s << BF (", width:%|9.5g| keV") % ( width () / Gaudi::Units::keV       ) ; }
+  { s << BF (", width:%|9.5g| keV")  % ( width () / Gaudi::Units::keV        ) ; }
+  else if ( 1   * Gaudi::Units::eV         <= width () )
+  { s << BF (", width:%|9.5g| eV" )  % ( width () / Gaudi::Units::eV         ) ; }
   else
-  { s << BF (", ltime:%|10.4g| ns") % ( lifetime () / Gaudi::Units::ns     ) ; }
+  { s << BF (", ltime:%|10.4g| ns")  % ( lifetime () / Gaudi::Units::ns      ) ; }
   // Evt Gen name
   if ( evtGen    () != name   () )
   { s << BF ( ", EvtGen: %|-10s|" ) % evtGen () ; }

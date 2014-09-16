@@ -4,6 +4,10 @@
 ! Purpose     :
 ! -----------------------------------------------------------------------------
 
+! 2014-09-16 - Vanya Belyaev
+ - ParticleProperty.cpp 
+   tiny improvement for printout 
+
 !========================= PartProp v1r18 2014-03-17 =========================
 ! 2014-02-24 - Marco Clemencic
  - Moved (correctly) operators inside namespaces (fixed a problem with ROOT 6).
