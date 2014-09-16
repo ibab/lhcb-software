@@ -83,17 +83,14 @@ namespace Tf
       : m_clusterlocation(clusterlocation), m_parenttool(&parent), m_clusters{nullptr}
     {
       // copy the entire hierarchy
-      size_t nummodules(0) ;
-      for( const auto *sector : stdetector.sectors() ) {
-
-        RegionID regionid( LHCb::STChannelID(sector->elementID()) ) ;
+      for( const auto& sector : stdetector.sectors() ) {
+        RegionID regionid{ LHCb::STChannelID(sector->elementID()) } ;
         STRegionImp* aregion = const_cast<STRegionImp*>(region(regionid)) ;
         if(!aregion) {
           aregion = new STRegionImp(regionid,*this) ;
           insert( aregion ) ;
         }
         aregion->insert( sector->elementID().sector(), new HitCreatorGeom::STModule(*sector) ) ;
-        ++nummodules ;
       }
     }
 
@@ -127,14 +124,14 @@ namespace Tf
         auto& thehits = hits() ;
         thehits.clear() ; // should not be necessary
         thehits.reserve(liteCont->size()) ; // to make sure things don't change place anymore.
-        for( auto reg : regions() ) for( auto module : reg->modules() ) {
-            auto begin = std::end(thehits);
-            for( auto hit : module->ownedhits() ) thehits.push_back( &hit ) ;
+        for(const auto& reg : regions() ) for( const auto& module : reg->modules() ) {
+            auto begin = std::end(thehits) ;
+            for( auto& hit : module->ownedhits() ) thehits.push_back( &hit ) ;
             auto end = std::end(thehits);
-            std::sort( begin, end,compareHitX()) ;
+            std::sort( begin, end, compareHitX()) ;
             // now set the pointers from the module
             module->setRange( begin, end ) ;
-          }
+        }
         setIsLoaded(true) ;
       }
     }
@@ -227,7 +224,7 @@ namespace Tf
 					    const double xmax ) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
-    const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
+    const auto* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax) ;
   }
   
@@ -239,7 +236,7 @@ namespace Tf
 						       const double xmax ) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
-    const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
+    const auto* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hitsLocalXRange(xmin,xmax) ;
   }
   
@@ -253,7 +250,7 @@ namespace Tf
 					    const double ymax) const
   {
     if( !m_detectordata->isLoaded() ) m_detectordata->loadHits() ;
-    const Tf::HitCreatorGeom::STRegionImp* region = m_detectordata->region(iStation,iLayer,iRegion) ;
+    const auto* region = m_detectordata->region(iStation,iLayer,iRegion) ;
     return region->hits(xmin,xmax,ymin,ymax) ;
   }
 
@@ -274,7 +271,7 @@ namespace Tf
     if( iclus == clusters->end() )
       throw GaudiException("STHitCreator::hit cannot find cluster", "STHitCreatorException" , StatusCode::FAILURE ) ;
     const DeSTSector* sector = m_stdet->findSector( stid ) ;
-    return Tf::STHit(*sector, *iclus ) ;
+    return { *sector, *iclus } ;
   }
   
   //====================================================================================
@@ -320,11 +317,10 @@ namespace Tf
 
   // RestUsed flag for all OT hits 
   template<class Trait>
-  void STHitCreator<Trait>::resetUsedFlagOfHits() const
-   {
+  void STHitCreator<Trait>::resetUsedFlagOfHits() const {
      auto hits = m_detectordata->hits() ;
      std::for_each( std::begin(hits), std::end(hits), [](const Tf::STHit* hit) {
-       hit->resetUsedFlag();
-     } );
-   }
+         hit->resetUsedFlag();
+     });
+  }
 }

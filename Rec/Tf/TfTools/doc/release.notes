@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2014-09-17 - Gerhard Raven
+ - improve auto usage
 
 ! 2014-09-13 - Gerhard Raven
  - more C++11-ification in {OT,ST}HitCreator and HitCreatorGeom
