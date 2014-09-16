@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-16 - Carlos Vazquez Sierra
+  - Minor typo fixed in StrippingB2JpsiXforBeta_s.py
+
 ! 2014-09-16 - Wenbin Qian
    Add more lines with D->k3pi 
  
