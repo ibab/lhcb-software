@@ -288,7 +288,12 @@ class Beauty2CharmConf(LineBuilder):
         lambda0 = {"DD":[lambda0_dd],"LL":[lambda0_ll]}
         pi0_merged   = filterPi0s('Merged'  , [StdLooseMergedPi0]  , config['Pi0'])
         pi0_resolved = filterPi0s('Resolved', [StdLooseResolvedPi0], config['Pi0'])
-        pi0 = {"Merged":[pi0_merged],"Resolved":[pi0_resolved]}
+        pi0_all      = MergedSelection( 'pi0all', RequiredSelections = [ pi0_merged, pi0_resolved ] )
+
+        pi0 = { 'Merged'   : [ pi0_merged   ],
+                'Resolved' : [ pi0_resolved ],
+                'all'      : [ pi0_all      ] }
+
         pcut = 'P > %s' % config['Pi0']['FROM_B_P_MIN']
         pi0_fromB_merged = filterSelection('Pi0FromBMerged',pcut,[pi0_merged])
         pi0_fromB_resolved = filterSelection('Pi0FromBResolved',pcut,

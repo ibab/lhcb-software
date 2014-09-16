@@ -147,7 +147,7 @@ class B2DXBuilder(object):
         #Tighter selection Full DST lines
         #self._makeB02D0D0_FULLDST()
 
-        # Jordi: make [ B -> D*0 ( D0 pi0 ) h ] and [ B -> D*0 ( D0 pi0 ) h ] lines for LL and DD.
+        # Jordi: make [ B -> D*0 ( D0 pi0 ) h ] and [ B -> D*0 ( D0 gamma ) h ] lines for LL and DD.
         self._makeB2Dst0H( 'Dst02D0Pi0D2KSHHLL'  , self.dst.d0pi0_kshh_ll   )
         self._makeB2Dst0H( 'Dst02D0Pi0D2KSHHDD'  , self.dst.d0pi0_kshh_dd   )
         self._makeB2Dst0H( 'Dst02D0GammaD2KSHHLL', self.dst.d0gamma_kshh_ll )

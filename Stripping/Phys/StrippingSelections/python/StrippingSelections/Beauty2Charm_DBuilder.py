@@ -608,23 +608,15 @@ class DstarBuilder(object):
                           Algorithm          = cp            ,
                           RequiredSelections = inputs         )
 
-    # Jordi: return the list of requested pi0s. All of them if 'all' is specified.
-    def _pi0list( self, pi0type ):
-        if pi0type.lower() == 'all':
-            return self.pi0[ 'Merged' ] + self.pi0[ 'Resolved' ]
-
-        # Return only the requested type.
-        return self.pi0[ pi0type ]
-
     # Jordi: make the list of selections of D*0 -> D0 pi0 with given selection of D and pi0 type.
     def _makeDstar02D0Pi0( self, name, pi0type, d2x ):
         decays = [ "[D*(2007)0 -> D0 pi0]cc" ]
-        return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self._pi0list( pi0type ) ) ]
+        return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self.pi0[ pi0type ] ) ]
 
     # Jordi: make the list of selections of D*0 -> D0 gamma with given selection of D.
     def _makeDstar02D0Gamma( self, name, d2x ):
         decays = [ "[D*(2007)0 -> D0 gamma]cc" ]
-        # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons] ) ]
+        # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons ] ) ]
 
         combinationCuts = "(AALL)"
         motherCuts      = "(M-MAXTREE(ABSID=='D0',M)<200*MeV)"
