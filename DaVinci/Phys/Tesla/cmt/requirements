@@ -1,0 +1,33 @@
+###############################################
+# Tesla, An LHCb Application
+###############################################
+
+package Tesla
+version v1r0
+
+branches doc cmt options python
+
+use GaudiPolicy v*
+use GaudiKernel v*
+
+use HltDAQ       v* Hlt
+
+use GaudiConfUtils  v* -no_auto_imports
+
+
+#########################################
+# Configurable (python) dependencies
+#########################################
+
+use  MicroDst    v* Event
+use  HltEvent    v* Event
+use  LHCbAlgs    v* Kernel
+use  GaudiConf   v*
+use  RecEvent    v* Event
+
+# ============================================================================
+apply_pattern install_python_modules
+# ============================================================================
+apply_pattern QMTest
+# ============================================================================
+apply_pattern GaudiApp
