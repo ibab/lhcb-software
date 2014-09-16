@@ -7,15 +7,15 @@
 
 from GaudiKernel.SystemOfUnits import *
 
-######################################################################
+###############################################################################
 ## StrippingBetaSBu2JpsiKDetachedLine (FullDST)
 ## StrippingBetaSBd2JpsiKstarDetachedLine (FullDST)
+## StrippingBetaSBs2JpsiPhiDetachedLine (FullDST)
 ## StrippingBetaSJpsi2MuMuLine (MicroDST)
 ## StrippingBetaSLambdab2JpsiLambdaUnbiasedLine (MicroDST)
 ## StrippingBetaSLambdab2JpsippiDetachedLine (MicroDST)
 ## StrippingBetaSBu2JpsiKPrescaledLine (MDST.DST)
 ## StrippingBetaSBs2JpsiPhiPrescaledLine (MDST.DST)
-## StrippingBetaSBs2JpsiPhiDetachedLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKstarPrescaledLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKsPrescaledLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKsDetachedLine (MDST.DST)
@@ -23,33 +23,10 @@ from GaudiKernel.SystemOfUnits import *
 ## StrippingBetaSBs2JpsiKstarWideLine (MDST.DST)
 ## StrippingBetaSBd2JpsiPi0PrescaledLine (MDST.DST)
 ## StrippingBetaSBd2JpsiPi0DetachedLine (MDST.DST)
-## -------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ## Lines defined in StrippingB2JpsiXforBeta_s.py
 ## Authors: Greig Cowan, Juan Palacios, Francesca Dordei, Carlos Vazquez Sierra
-## -------------------------------------------------------------------
-## Stripping reports (Revision 177153):
-##
-## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.3810|       381|       |  37.419|
-## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.3810|       381|       |  37.411|
-## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0480|        48|  1.021|   0.129|
-## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0040|         4|  1.000|   9.100|
-## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0410|        41|  1.122|   3.001|
-## |!StrippingBetaSBu2JpsiKPrescaledLine                         |  0.0240|        24|  1.625|   0.319|
-## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0480|        48|  1.354|   3.952|
-## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0430|        43|  2.116|   2.496|
-## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0220|        22|  1.455|   0.771|
-## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0510|        51|  1.961|   1.032|
-## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0520|        52|  1.692|   2.598|
-## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0120|        12|  1.000|   0.622|
-## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0020|         2|  1.000|   0.131|
-## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0290|        29|  1.517|   0.321|
-## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0430|        43|  1.070|   0.173|
-## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0490|        49|  1.184|   1.189|
-## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0420|        42|  1.190|   2.014|
-##
-######################################################################
+###############################################################################
 
 BetaS = {
     'BUILDERTYPE' : 'B2JpsiXforBeta_sConf',
@@ -68,7 +45,6 @@ BetaS = {
     'STREAMS'     : { 'Leptonic' : ['StrippingBetaSJpsi2MuMuLine',
                                     'StrippingBetaSBu2JpsiKPrescaledLine',
                                     'StrippingBetaSBs2JpsiPhiPrescaledLine',
-                                    'StrippingBetaSBs2JpsiPhiDetachedLine',
                                     'StrippingBetaSBd2JpsiKstarPrescaledLine',
                                     'StrippingBetaSBd2JpsiKsPrescaledLine',
                                     'StrippingBetaSBd2JpsiKsDetachedLine',
@@ -79,7 +55,8 @@ BetaS = {
                                     'StrippingBetaSBd2JpsiPi0DetachedLine',
                                     'StrippingBetaSLambdab2JpsippiDetachedLine'],
                       'Dimuon'  :  ['StrippingBetaSBu2JpsiKDetachedLine',
-                                    'StrippingBetaSBd2JpsiKstarDetachedLine'] },
+                                    'StrippingBetaSBd2JpsiKstarDetachedLine',
+                                    'StrippingBetaSBs2JpsiPhiDetachedLine'] },
     'WGs'         : [ 'B2CC' ]
     }
 
@@ -99,26 +76,6 @@ BetaS = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2CharmoniumX_6H.py
 ## Authors: Adam Morris
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176954):
-##
-## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.1250|       125|       |  22.655|
-## |_StrippingSequenceStreamTest_B2CharmoniumX_6H_               |  0.1250|       125|       |  22.648|
-## |!StrippingBs2EtacPhi_Etac2KKKKB2CharmoniumX_6HLine           |  0.0030|         3|  1.000|   8.623|
-## |!StrippingBs2EtacPhi_Etac2KKPiPiB2CharmoniumX_6HLine         |  0.0090|         9|  2.222|   0.806|
-## |!StrippingBs2EtacPhi_Etac2PiPiPiPiB2CharmoniumX_6HLine       |  0.0170|        17|  1.882|   0.376|
-## |!StrippingBs2ChicPhi_Chic2KKKKB2CharmoniumX_6HLine           |  0.0020|         2|  1.500|   0.110|
-## |!StrippingBs2ChicPhi_Chic2KKPiPiB2CharmoniumX_6HLine         |  0.0270|        27|  2.704|   0.395|
-## |!StrippingBs2ChicPhi_Chic2PiPiPiPiB2CharmoniumX_6HLine       |  0.0370|        37|  2.324|   0.404|
-## |!StrippingB2EtacKst_Etac2KKKKB2CharmoniumX_6HLine            |  0.0020|         2|  1.000|   1.952|
-## |!StrippingB2EtacKst_Etac2KKPiPiB2CharmoniumX_6HLine          |  0.0150|        15|  1.667|   0.204|
-## |!StrippingB2EtacKst_Etac2PiPiPiPiB2CharmoniumX_6HLine        |  0.0220|        22|  1.864|   0.228|
-## |!StrippingB2ChicKst_Chic2KKKKB2CharmoniumX_6HLine            |  0.0010|         1|  2.000|   0.088|
-## |!StrippingB2ChicKst_Chic2KKPiPiB2CharmoniumX_6HLine          |  0.0310|        31|  2.290|   0.214|
-## |!StrippingB2ChicKst_Chic2PiPiPiPiB2CharmoniumX_6HLine        |  0.0350|        35|  2.171|   0.240|
-##
 ######################################################################
 
 B2CharmoniumX_6H = {
@@ -195,19 +152,6 @@ B2CharmoniumX_6H = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2Psi2SX.py
 ## Authors: Fred Blanc, Neus Lopez March (left LHCb!)
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176850):
-##
-## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0300|        30|       |  18.212|
-## |_StrippingSequenceStreamTest_B2Psi2SX_                       |  0.0300|        30|       |  18.206|
-## |!StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine                 |  0.0060|         6|  1.000|   0.874|
-## |!StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine                 |  0.0010|         1|  1.000|   7.671|
-## |!StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine                   |  0.0210|        21|  2.000|   0.475|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine               |  0.0080|         8|  1.625|   0.119|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine                  |  0.0030|         3|  1.000|   0.068|
-##
 ######################################################################
 
 BetaSPsi2S = {
@@ -278,24 +222,6 @@ BetaSPsi2S = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2Psi2SXMuMu.py
 ## Authors: Neus Lopez March (left LHCb!)
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176850):
-##
-## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.1100|       110|       |  18.789|
-## |_StrippingSequenceStreamTest_B2Psi2SMuMu_                    |  0.1100|       110|       |  18.782|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine                 |  0.0020|         2|  1.000|   0.929|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetachedLine         |  0.0610|        61|  1.000|   7.690|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLine        |  0.0020|         2|  1.500|   0.076|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetachedLine         |  0.0020|         2|  1.000|   0.072|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetachedLine           |  0.0350|        35|  1.286|   0.477|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine          |  0.0170|        17|  2.118|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetachedLine       |  0.0100|        10|  1.900|   0.187|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine      |  0.0090|         9|  1.889|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine          |  0.0070|         7|  1.000|   0.077|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine         |  0.0150|        15|  1.133|   0.058|
-##
 ######################################################################
 
 BetaSPsi2SMuMu = {
@@ -384,17 +310,6 @@ BetaSPsi2SMuMu = {
 ## Lines defined in StrippingBs2JpsieePhi.py
 ## Authors: Artur Ukleja, Jibo He, Konrad Klimaszewski
 ## Last changes made by Konrad Klimaszewski
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176907):
-##
-## StrippingReport (2012)                                        INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0530|        53|       |  37.926|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0530|        53|       |  37.919|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0430|        43|  1.721|  23.977|
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.897|   4.405|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0180|        18|  2.000|   0.481|
-##
 ######################################################################
 
 BetaSBs2JpsieePhi = {
@@ -444,15 +359,6 @@ BetaSBs2JpsieePhi = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingBs2EtacPhiBDT.py
 ## Authors: Morgan Martin, Jibo He
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176954):
-##
-## StrippingReport (2012)                                         INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0120|        12|       |  17.928|
-## |_StrippingSequenceStreamTest_Bs2EtacPhi_BDT_                 |  0.0120|        12|       |  17.920|
-## |!StrippingBs2EtacPhiBDTLine                                  |  0.0120|        12|  2.333|   8.622|
-##
 ######################################################################
 
 Bs2EtacPhiBDT = {

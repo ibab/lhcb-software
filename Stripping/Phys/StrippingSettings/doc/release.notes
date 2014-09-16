@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-16 - Carlos Vazquez Sierra (B2CC)
+ - Updated s21 and s21r1 dictionaries: moved StrippingBetaSBs2JpsiPhiDetachedLine to Dimuon stream.
+
 ! 2014-09-12 - Roberta Cardinale
  - Update to XicHHH
  - Deleted Strippingbetac2phip from stripping21 

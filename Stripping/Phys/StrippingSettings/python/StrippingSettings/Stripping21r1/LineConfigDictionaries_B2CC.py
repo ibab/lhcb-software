@@ -1,5 +1,5 @@
 ################################################################################
-##                         S T R I P P I N G  2 1 r 1                         ##
+##                        S T R I P P I N G  2 1 r 1                          ##
 ##                                                                            ##
 ##  Configuration for B2CC WG                                                 ##
 ##  Contact person: Carlos Vazquez Sierra (carlos.vazquez@cern.ch)            ##
@@ -7,15 +7,15 @@
 
 from GaudiKernel.SystemOfUnits import *
 
-######################################################################
+###############################################################################
 ## StrippingBetaSBu2JpsiKDetachedLine (FullDST)
 ## StrippingBetaSBd2JpsiKstarDetachedLine (FullDST)
+## StrippingBetaSBs2JpsiPhiDetachedLine (FullDST)
 ## StrippingBetaSJpsi2MuMuLine (MicroDST)
 ## StrippingBetaSLambdab2JpsiLambdaUnbiasedLine (MicroDST)
 ## StrippingBetaSLambdab2JpsippiDetachedLine (MicroDST)
 ## StrippingBetaSBu2JpsiKPrescaledLine (MDST.DST)
 ## StrippingBetaSBs2JpsiPhiPrescaledLine (MDST.DST)
-## StrippingBetaSBs2JpsiPhiDetachedLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKstarPrescaledLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKsPrescaledLine (MDST.DST)
 ## StrippingBetaSBd2JpsiKsDetachedLine (MDST.DST)
@@ -23,53 +23,10 @@ from GaudiKernel.SystemOfUnits import *
 ## StrippingBetaSBs2JpsiKstarWideLine (MDST.DST)
 ## StrippingBetaSBd2JpsiPi0PrescaledLine (MDST.DST)
 ## StrippingBetaSBd2JpsiPi0DetachedLine (MDST.DST)
-## -------------------------------------------------------------------
+## ----------------------------------------------------------------------------
 ## Lines defined in StrippingB2JpsiXforBeta_s.py
 ## Authors: Greig Cowan, Juan Palacios, Francesca Dordei, Carlos Vazquez Sierra
-## -------------------------------------------------------------------
-## Stripping reports (Revision 177153):
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.4450|       445|       |  40.567|
-## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.4450|       445|       |  40.558|
-## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0490|        49|  1.000|   0.101|
-## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0010|         1|  1.000|  10.359|
-## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0320|        32|  1.312|   2.001|
-## |!StrippingBetaSBu2JpsiKPrescaledLine                         |  0.0330|        33|  1.394|   1.417|
-## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0570|        57|  1.544|   1.613|
-## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0480|        48|  1.646|   5.197|
-## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0140|        14|  1.214|   1.277|
-## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0540|        54|  1.944|   0.958|
-## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0490|        49|  1.755|   2.512|
-## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0480|        48|  1.021|   1.270|
-## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0050|         5|  1.000|   0.106|
-## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0200|        20|  2.800|   0.485|
-## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0420|        42|  1.000|   0.260|
-## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0490|        49|  1.224|   1.873|
-## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0310|        31|  1.161|   1.406|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.4490|       449|       |  31.038|
-## |_StrippingSequenceStreamTest_B2JpsiXforBeta_s_               |  0.4490|       449|       |  31.029|
-## |!StrippingBetaSJpsi2MuMuLine                                 |  0.0520|        52|  1.000|   0.096|
-## |!StrippingBetaSBd2JpsiKsLDDetachedLine                       |  0.0030|         3|  1.000|   9.371|
-## |!StrippingBetaSBu2JpsiKDetachedLine                          |  0.0440|        44|  1.045|   1.001|
-## |!StrippingBetaSBu2JpsiKPrescaledLine                         |  0.0450|        45|  1.378|   0.447|
-## |!StrippingBetaSBs2JpsiPhiPrescaledLine                       |  0.0370|        37|  1.459|   1.699|
-## |!StrippingBetaSBs2JpsiPhiDetachedLine                        |  0.0360|        36|  1.389|   1.316|
-## |!StrippingBetaSBs2JpsiKstarWideLine                          |  0.0080|         8|  1.000|   0.175|
-## |!StrippingBetaSBd2JpsiKstarPrescaledLine                     |  0.0420|        42|  1.952|   0.827|
-## |!StrippingBetaSBd2JpsiKstarDetachedLine                      |  0.0460|        46|  1.522|   2.572|
-## |!StrippingBetaSBd2JpsiKsPrescaledLine                        |  0.0500|        50|  1.040|   1.382|
-## |!StrippingBetaSBd2JpsiKsDetachedLine                         |  0.0040|         4|  1.000|   0.103|
-## |!StrippingBetaSLambdab2JpsippiDetachedLine                   |  0.0240|        24|  1.542|   0.461|
-## |!StrippingBetaSLambdab2JpsiLambdaUnbiasedLine                |  0.0480|        48|  1.062|   0.256|
-## |!StrippingBetaSBd2JpsiPi0PrescaledLine                       |  0.0510|        51|  1.118|   1.087|
-## |!StrippingBetaSBd2JpsiPi0DetachedLine                        |  0.0410|        41|  1.049|   1.300|
-##
-######################################################################
+###############################################################################
 
 BetaS = {
     'BUILDERTYPE' : 'B2JpsiXforBeta_sConf',
@@ -88,7 +45,6 @@ BetaS = {
     'STREAMS'     : { 'Leptonic' : ['StrippingBetaSJpsi2MuMuLine',
                                     'StrippingBetaSBu2JpsiKPrescaledLine',
                                     'StrippingBetaSBs2JpsiPhiPrescaledLine',
-                                    'StrippingBetaSBs2JpsiPhiDetachedLine',
                                     'StrippingBetaSBd2JpsiKstarPrescaledLine',
                                     'StrippingBetaSBd2JpsiKsPrescaledLine',
                                     'StrippingBetaSBd2JpsiKsDetachedLine',
@@ -99,7 +55,8 @@ BetaS = {
                                     'StrippingBetaSBd2JpsiPi0DetachedLine',
                                     'StrippingBetaSLambdab2JpsippiDetachedLine'],
                       'Dimuon'  :  ['StrippingBetaSBu2JpsiKDetachedLine',
-                                    'StrippingBetaSBd2JpsiKstarDetachedLine'] },
+                                    'StrippingBetaSBd2JpsiKstarDetachedLine',
+                                    'StrippingBetaSBs2JpsiPhiDetachedLine'] },
     'WGs'         : [ 'B2CC' ]
     }
 
@@ -119,43 +76,6 @@ BetaS = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2CharmoniumX_6H.py
 ## Authors: Adam Morris
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176954):
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0470|        47|       |  17.866|
-## |_StrippingSequenceStreamTest_B2CharmoniumX_6H_               |  0.0470|        47|       |  17.858|
-## |!StrippingBs2EtacPhi_Etac2KKKKB2CharmoniumX_6HLine           |  0.0000|         0|  0.000|   5.992|
-## |!StrippingBs2EtacPhi_Etac2KKPiPiB2CharmoniumX_6HLine         |  0.0030|         3|  2.000|   0.374|
-## |!StrippingBs2EtacPhi_Etac2PiPiPiPiB2CharmoniumX_6HLine       |  0.0080|         8|  1.375|   0.183|
-## |!StrippingBs2ChicPhi_Chic2KKKKB2CharmoniumX_6HLine           |  0.0000|         0|  0.000|   0.083|
-## |!StrippingBs2ChicPhi_Chic2KKPiPiB2CharmoniumX_6HLine         |  0.0020|         2|  1.500|   0.167|
-## |!StrippingBs2ChicPhi_Chic2PiPiPiPiB2CharmoniumX_6HLine       |  0.0080|         8|  2.125|   0.190|
-## |!StrippingB2EtacKst_Etac2KKKKB2CharmoniumX_6HLine            |  0.0000|         0|  0.000|   1.399|
-## |!StrippingB2EtacKst_Etac2KKPiPiB2CharmoniumX_6HLine          |  0.0080|         8|  1.125|   0.138|
-## |!StrippingB2EtacKst_Etac2PiPiPiPiB2CharmoniumX_6HLine        |  0.0050|         5|  1.200|   0.155|
-## |!StrippingB2ChicKst_Chic2KKKKB2CharmoniumX_6HLine            |  0.0010|         1|  1.000|   0.082|
-## |!StrippingB2ChicKst_Chic2KKPiPiB2CharmoniumX_6HLine          |  0.0080|         8|  1.500|   0.141|
-## |!StrippingB2ChicKst_Chic2PiPiPiPiB2CharmoniumX_6HLine        |  0.0160|        16|  1.312|   0.161|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0480|        48|       |  16.334|
-## |_StrippingSequenceStreamTest_B2CharmoniumX_6H_               |  0.0480|        48|       |  16.327|
-## |!StrippingBs2EtacPhi_Etac2KKKKB2CharmoniumX_6HLine           |  0.0000|         0|  0.000|   5.479|
-## |!StrippingBs2EtacPhi_Etac2KKPiPiB2CharmoniumX_6HLine         |  0.0040|         4|  1.500|   0.310|
-## |!StrippingBs2EtacPhi_Etac2PiPiPiPiB2CharmoniumX_6HLine       |  0.0040|         4|  1.250|   0.161|
-## |!StrippingBs2ChicPhi_Chic2KKKKB2CharmoniumX_6HLine           |  0.0000|         0|  0.000|   0.078|
-## |!StrippingBs2ChicPhi_Chic2KKPiPiB2CharmoniumX_6HLine         |  0.0070|         7|  1.143|   0.143|
-## |!StrippingBs2ChicPhi_Chic2PiPiPiPiB2CharmoniumX_6HLine       |  0.0070|         7|  1.429|   0.165|
-## |!StrippingB2EtacKst_Etac2KKKKB2CharmoniumX_6HLine            |  0.0000|         0|  0.000|   1.310|
-## |!StrippingB2EtacKst_Etac2KKPiPiB2CharmoniumX_6HLine          |  0.0030|         3|  1.000|   0.127|
-## |!StrippingB2EtacKst_Etac2PiPiPiPiB2CharmoniumX_6HLine        |  0.0090|         9|  1.333|   0.145|
-## |!StrippingB2ChicKst_Chic2KKKKB2CharmoniumX_6HLine            |  0.0030|         3|  1.333|   0.077|
-## |!StrippingB2ChicKst_Chic2KKPiPiB2CharmoniumX_6HLine          |  0.0090|         9|  2.444|   0.128|
-## |!StrippingB2ChicKst_Chic2PiPiPiPiB2CharmoniumX_6HLine        |  0.0160|        16|  1.875|   0.148|
-##
 ######################################################################
 
 B2CharmoniumX_6H = {
@@ -232,29 +152,6 @@ B2CharmoniumX_6H = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2Psi2SX.py
 ## Authors: Fred Blanc, Neus Lopez March (left LHCb!)
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176850):
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0390|        39|       |  17.262|
-## |_StrippingSequenceStreamTest_B2Psi2SX_                       |  0.0390|        39|       |  17.254|
-## |!StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine                 |  0.0130|        13|  1.000|   0.819|
-## |!StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine                 |  0.0020|         2|  1.500|   6.946|
-## |!StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine                   |  0.0180|        18|  2.833|   0.465|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine               |  0.0080|         8|  2.125|   0.138|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine                  |  0.0060|         6|  1.000|   0.069|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0300|        30|       |  15.881|
-## |_StrippingSequenceStreamTest_B2Psi2SX_                       |  0.0300|        30|       |  15.874|
-## |!StrippingBetaSPsi2S_InclPsi2SToJpsiPiPiLine                 |  0.0170|        17|  1.412|   1.181|
-## |!StrippingBetaSPsi2S_Bs2Psi2SPhiJpsiPiPiLine                 |  0.0010|         1|  1.000|   6.437|
-## |!StrippingBetaSPsi2S_Bu2Psi2SKJpsiPiPiLine                   |  0.0090|         9|  1.444|   0.065|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKstarJpsiPiPiLine               |  0.0040|         4|  2.000|   0.117|
-## |!StrippingBetaSPsi2S_Bd2Psi2SKsJpsiPiPiLine                  |  0.0020|         2|  1.000|   0.068|
-##
 ######################################################################
 
 BetaSPsi2S = {
@@ -325,39 +222,6 @@ BetaSPsi2S = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingB2Psi2SXMuMu.py
 ## Authors: Neus Lopez March (left LHCb!)
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176850):
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.1630|       163|       |  17.794|
-## |_StrippingSequenceStreamTest_B2Psi2SMuMu_                    |  0.1630|       163|       |  17.787|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine                 |  0.0470|        47|  1.000|   1.204|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetachedLine         |  0.0380|        38|  1.000|   6.867|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLine        |  0.0270|        27|  1.222|   0.085|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetachedLine         |  0.0020|         2|  1.000|   0.079|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetachedLine           |  0.0220|        22|  1.182|   0.062|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine          |  0.0300|        30|  1.467|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetachedLine       |  0.0150|        15|  1.533|   0.250|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine      |  0.0160|        16|  2.562|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine          |  0.0010|         1|  1.000|   0.087|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine         |  0.0120|        12|  1.000|   0.058|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.1730|       173|       |  16.014|
-## |_StrippingSequenceStreamTest_B2Psi2SMuMu_                    |  0.1730|       173|       |  16.006|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuLine                 |  0.0570|        57|  1.000|   1.167|
-## |!StrippingBetaSPsi2SMuMu_InclPsi2SToMuMuDetachedLine         |  0.0420|        42|  1.000|   6.175|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuPrescaledLine        |  0.0120|        12|  1.250|   0.076|
-## |!StrippingBetaSPsi2SMuMu_Bs2Psi2SPhiMuMuDetachedLine         |  0.0020|         2|  1.000|   0.079|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuDetachedLine           |  0.0270|        27|  1.185|   0.061|
-## |!StrippingBetaSPsi2SMuMu_Bu2Psi2SKMuMuPrescaledLine          |  0.0290|        29|  1.931|   0.053|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuDetachedLine       |  0.0220|        22|  1.818|   0.205|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKstarMuMuPrescaledLine      |  0.0080|         8|  2.000|   0.054|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuDetachedLine          |  0.0020|         2|  1.000|   0.081|
-## |!StrippingBetaSPsi2SMuMu_Bd2Psi2SKsMuMuPrescaledLine         |  0.0230|        23|  1.000|   0.058|
-##
 ######################################################################
 
 BetaSPsi2SMuMu = {
@@ -446,25 +310,6 @@ BetaSPsi2SMuMu = {
 ## Lines defined in StrippingBs2JpsieePhi.py
 ## Authors: Artur Ukleja, Jibo He, Konrad Klimaszewski
 ## Last changes made by Konrad Klimaszewski
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176907):
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0430|        43|       |  30.893|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0430|        43|       |  30.886|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0340|        34|  1.588|  17.630| (x 0.1 if DiElectron is open before)
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0290|        29|  1.483|   3.653|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0090|         9|  1.778|   0.711|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0460|        46|       |  26.687|
-## |_StrippingSequenceStreamTest_Bs2JpsieePhi_                   |  0.0460|        46|       |  26.680|
-## |!StrippingBetaSBs2JpsieePhiDetachedLine                      |  0.0340|        34|  1.294|  15.391|
-## |!StrippingBetaSBs2JpsieePhiFromTracksLine                    |  0.0310|        31|  1.484|   3.041|
-## |!StrippingBetaSBs2JpsieePhiLine                              |  0.0140|        14|  1.214|   0.206|
-##
 ######################################################################
 
 BetaSBs2JpsieePhi = {
@@ -514,21 +359,6 @@ BetaSBs2JpsieePhi = {
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingBs2EtacPhiBDT.py
 ## Authors: Morgan Martin, Jibo He
-## -------------------------------------------------------------------
-## Stripping reports (Revision 176954):
-##
-## StrippingReport (2011, magnet down)                           INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0070|         7|       |  15.707|
-## |_StrippingSequenceStreamTest_Bs2EtacPhi_BDT_                 |  0.0070|         7|       |  15.699|
-## |!StrippingBs2EtacPhiBDTLine                                  |  0.0070|         7|  1.429|   6.973|
-##
-## StrippingReport (2011, magnet up)                             INFO Event 100000, Good event 100000
-## |                                              *Decision name*|*Rate,%*|*Accepted*| *Mult*|*ms/evt*|
-## |_StrippingGlobal_                                            |  0.0100|        10|       |  14.309|
-## |_StrippingSequenceStreamTest_Bs2EtacPhi_BDT_                 |  0.0100|        10|       |  14.302|
-## |!StrippingBs2EtacPhiBDTLine                                  |  0.0100|        10|  1.800|   6.255|
-##
 ######################################################################
 
 Bs2EtacPhiBDT = {
