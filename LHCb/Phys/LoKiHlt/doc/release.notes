@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-09-17 - Marco Clemencic
+ - Fixed genreflex warnings (ROOT 6).
+
 !========================= LoKiHlt v3r15 2014-09-08 =========================
 ! 2014-08-28 - Pieter David
  - Add HLT_TCK functor which gets the TCK from the HltDecReports
