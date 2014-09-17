@@ -38,7 +38,6 @@
   <class pattern   = "LoKi::Constant<*LHCb::MC*>"         />
 
   <class pattern   = "LoKi::Valid<*LHCb::MC*>"            />
-  <class pattern   = "LoKi::TheSame<*LHCb::MC*>"          />
 
   <class pattern   = "LoKi::Functors::Size<*LHCb::MC*>"     />
   <class pattern   = "LoKi::Functors::Empty<*LHCb::MC*>"     />
@@ -143,12 +142,6 @@
       <method name="=" />
     </class>
     <class pattern="LoKi::Valid&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::TheSame&lt;*&gt;">
-      <method name="=" />
-    </class>
-    <class pattern="LoKi::Identity&lt;*&gt;">
       <method name="=" />
     </class>
     
