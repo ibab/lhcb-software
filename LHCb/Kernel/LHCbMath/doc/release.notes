@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-09-17 - Marco Clemencic
+ - Fixed genreflex warnings (ROOT 6).
+
 ! 2014-09-12 - Manuel Tobias Schiller
  - BloomFilter: make old clang versions happy
 

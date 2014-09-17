@@ -215,7 +215,7 @@
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Value"       />
     <class name = "Gaudi::Math::SVectorWithError&lt;8,double&gt;::Covariance"  />
     
-    <class name = "Gaudi::Math::Workspace">  
+    <class name = "Gaudi::Math::WorkSpace">
       <field name = "m_workspace"/>      
     </class>
     <class name = "Gaudi::Math::Spline">  
