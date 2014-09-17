@@ -35,12 +35,12 @@ BetaS = {
                     , 'JpsiMassWindow'       :       80
                     , 'DaughterPT'           :       1000
                     , 'VCHI2PDOF'            :       10
-                    , 'Jpsi2MuMuPrescale'    :       0.075
-                    , 'Bd2JpsiKstarPrescale' :       0.29
-                    , 'Bd2JpsiKsPrescale'    :       1.0
-                    , 'Bs2JpsiPhiPrescale'   :       0.62
-                    , 'Bs2JpsiPi0Prescale'   :       0.9
-                    , 'Bu2JpsiKPrescale'     :       0.2
+                    , 'Jpsi2MuMuPrescale'    :       0.75 #0.075
+                    , 'Bd2JpsiKstarPrescale' :       1.0 #0.29
+                    , 'Bd2JpsiKsPrescale'    :       1.0 #1.0
+                    , 'Bs2JpsiPhiPrescale'   :       1.0 #0.62
+                    , 'Bs2JpsiPi0Prescale'   :       1.0 #0.9
+                    , 'Bu2JpsiKPrescale'     :       1.0 #0.2
                     },
     'STREAMS'     : { 'Leptonic' : ['StrippingBetaSJpsi2MuMuLine',
                                     'StrippingBetaSBu2JpsiKPrescaledLine',

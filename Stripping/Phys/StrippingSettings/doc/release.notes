@@ -3,6 +3,10 @@
 ! Responsible : Stripping coordinators
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2014-09-17 - Carlos Vazquez Sierra (B2CC)
+ - Updated s21 and s21r1 dictionaries: prescaled tuned up.
+
 ! 2014-09-16 - Wenbin Qian
  - Add more lines 
 
