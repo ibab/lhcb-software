@@ -38,12 +38,24 @@
   <class pattern = "std::pair<std::string,*LHCb::TurningPoint*>" />
 
   <class pattern = "std::pair<*,bool>" />
+
   <class pattern = "std::map<*,bool>" />
   <class pattern = "std::map<*,bool>*iterator" />
   <class pattern = "std::map<*,double>*iterator" />
   <class pattern = "std::map<*,std::map*>" />
   <class pattern = "std::map<*,std::map*>*iterator" />
   <class pattern = "std::pair<std::string,std::map*>" />
+
+  <!-- FIXME: work-around for https://sft.its.cern.ch/jira/browse/ROOT-6704 -->
+  <class name="std::map<std::string,bool>" />
+  <class name="std::map<unsigned long,bool>" />
+  <class name="std::map<const unsigned long,bool>" />
+  <class name="std::map<std::string,std::map<unsigned long,bool> >" />
+  <class name="std::pair<const std::string,bool>" />
+  <class name="std::pair<const unsigned long,bool>" />
+  <class name="std::pair<std::string,std::map<unsigned long,bool> >" />
+  <class name="std::pair<std::string,std::vector<LHCb::TurningPoint> >" />
+  <!-- end work-around -->
 
   <class name="LHCb::Relation2D<LHCb::Particle,LHCb::SwimmingReport>" 
          id="80E09471-0000-0000-0000-000000000000" />
@@ -82,9 +94,6 @@
   <class name="std::vector<Relations::Entry_<LHCb::Particle,LHCb::SwimmingReport> >" /> 
   <class name="std::vector<Relations::Entry_<LHCb::SwimmingReport,LHCb::Particle> >" /> 
 
-  <class pattern="Relations::Pointer<*>"   /> 
-  <class pattern="Relations::Reference<*>" /> 
-
   <exclusion>
 
   <class pattern="std::pair<*,LHCb::*>" />
@@ -103,16 +112,7 @@
   <class pattern="Relations::Entry_*">
     <method name="="/>
   </class>
-  <class pattern="Relations::WEntry_*">
-    <method name="="/>
-  </class>
   <class pattern="Relations::Range_*">
-    <method name="="/>
-  </class>
-  <class pattern="Relations::Pointer*">
-    <method name="="/>
-  </class>
-  <class pattern="Relations::Reference*">
     <method name="="/>
   </class>
   <class pattern="std::vector&lt;Relations::*&gt;">
