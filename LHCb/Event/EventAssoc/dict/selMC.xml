@@ -396,7 +396,9 @@
  <class name="std::vector<Relations::WEntry_<LHCb::Track,LHCb::MCParticle,double> >" /> 
 
  <class pattern="Relations::Pointer<*>"   /> 
- <class pattern="Relations::Reference<*>" /> 
+ <!-- Unused
+ <class pattern="Relations::Reference<*>" />
+ -->
 
  <!-- * EXCLUSIONS                       * -->
  <!-- *  1) Not needed for interactivity * -->
@@ -425,9 +427,11 @@
  <class pattern="Relations::Pointer*">
     <method name="="/>
  </class>
+ <!-- Unused
  <class pattern="Relations::Reference*">
     <method name="="/>
  </class>
+ -->
  <class pattern="std::vector&lt;Relations::*&gt;">
     <method name="="/>
  </class>

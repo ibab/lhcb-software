@@ -187,9 +187,11 @@
  <class name="std::vector<Relations::WEntry_<LHCb::Track,LHCb::CaloCluster,float> >" /> 
  <class name="std::vector<Relations::WEntry_<LHCb::Track,LHCb::CaloHypo,float> >" /> 
 
- <class pattern="Relations::Pointer<*>"   /> 
+ <!-- Unused
+ <class pattern="Relations::Pointer<*>"   />
  <class pattern="Relations::Reference<*>" /> 
-
+ -->
+ 
  <!-- * EXCLUSIONS                       * -->
  <!-- *  1) Not needed for interactivity * -->
  <!-- *  2) Not needed for persistency   * -->
@@ -214,12 +216,14 @@
  <class pattern="Relations::Range_*">
     <method name="="/>
  </class>
+ <!-- Unused
  <class pattern="Relations::Pointer*">
     <method name="="/>
  </class>
  <class pattern="Relations::Reference*">
     <method name="="/>
  </class>
+ -->
  <class pattern="std::vector&lt;Relations::*&gt;">
     <method name="="/>
  </class>
