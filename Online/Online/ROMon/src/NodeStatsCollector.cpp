@@ -40,7 +40,8 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   : m_sys(0), m_print(0), m_verbose(false),
     m_mbmDelay(500), m_mbmSvc(0), m_mbmSize(100), m_mbmBuffer(0),
     m_statDelay(4000), m_statSvc(0), m_statSize(300), m_statBuffer(0),
-    m_hltSvc(0), m_hltSize(10), m_hltBuffer(0),
+    m_hltSize(10), m_hlt_1_Svc(0), m_hlt_2_Svc(0), 
+    m_hlt_1_Buffer(0), m_hlt_2_Buffer(0),
     m_mbm(0), m_fsm()
 {
   RTL::CLI cli(argc, argv, NodeStatsCollector::help);
@@ -59,7 +60,8 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   m_mbmSize    *= 1024;
   m_mbmBuffer   = new char[m_mbmSize];
   m_hltSize    *= 1024;
-  m_hltBuffer   = new char[m_hltSize];
+  m_hlt_1_Buffer   = new char[m_hltSize];
+  m_hlt_2_Buffer   = new char[m_hltSize];
   nam = strupper(RTL::nodeNameShort())+"_MEPRx_01/OverflowStatus";
   //log() << "MEPRx service:" << nam << endl;
   m_overflow    = '?';
@@ -69,7 +71,8 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
   cpu.node->reset();
   ROMonData mbm(m_mbmBuffer);
   mbm.node->reset();
-  new(m_hltBuffer) DeferredHLTStats(RTL::nodeNameShort());
+  new(m_hlt_1_Buffer) DeferredHLTStats(RTL::nodeNameShort());
+  new(m_hlt_2_Buffer) DeferredHLTStats(RTL::nodeNameShort());
 
   nam = svc;
   if ( !svc.empty() )  {
@@ -79,8 +82,10 @@ NodeStatsCollector::NodeStatsCollector(int argc, char** argv)
     m_statSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedStats,(long)this);
     nam = svc + "/Readout";
     if ( has_mbm ) m_mbmSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedMBM,(long)this);
+    nam = svc + "/Hlt1";
+    if ( has_mbm ) m_hlt_1_Svc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT_1,(long)this);
     nam = svc + "/HltDefer";
-    if ( has_mbm ) m_hltSvc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT,(long)this);
+    if ( has_mbm ) m_hlt_2_Svc = ::dis_add_service((char*)nam.c_str(),(char*)"C",0,0,feedHLT_2,(long)this);
   }
   else  {
     log() << "Unknown data type -- cannot be published." << std::endl;
@@ -96,7 +101,8 @@ NodeStatsCollector::~NodeStatsCollector() {
   ::dic_release_service(m_overflowSvc);
   ::dis_remove_service(m_statSvc);
   if ( 0 != m_mbmSvc ) ::dis_remove_service(m_mbmSvc);
-  if ( 0 != m_hltSvc ) ::dis_remove_service(m_hltSvc);
+  if ( 0 != m_hlt_1_Svc ) ::dis_remove_service(m_hlt_1_Svc);
+  if ( 0 != m_hlt_2_Svc ) ::dis_remove_service(m_hlt_2_Svc);
 }
 
 /// Dim callback to retrieve the overflow status
@@ -135,65 +141,75 @@ void NodeStatsCollector::help() {
 }
 
 /// Feed data to DIS when updating data
-void NodeStatsCollector::feedStats(void* tag, void** buf, int* size, int* ) {
+void NodeStatsCollector::feedStats(void* tag, void** buff, int* size, int* ) {
   static const char* empty = "";
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
   if ( h ) {
     if ( h->m_sys ) {
       CPUMonData cpu(h->m_statBuffer);
       if ( h->m_statBuffer && cpu.node ) {
-	*buf = h->m_statBuffer;
-	*size  = cpu.node->length();
+	*buff = h->m_statBuffer;
+	*size = cpu.node->length();
 	if ( h->m_verbose ) {
 	  log() << "[NodeStatsCollector] Published " << *size 
-		<< " Bytes of Stat data @" << *buf << std::endl;
+		<< " Bytes of Stat data @" << *buff << std::endl;
 	}
 	return;
       }
     }
   }
   *size = 0;
-  *buf = (void*)empty;
+  *buff = (void*)empty;
 }
 
 /// Feed data to DIS when updating data
-void NodeStatsCollector::feedMBM(void* tag, void** buf, int* size, int* ) {
+void NodeStatsCollector::feedMBM(void* tag, void** buff, int* size, int* ) {
   static const char* empty = "";
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
   if ( h && h->m_mbmBuffer ) {
     ROMonData ro(h->m_mbmBuffer);
     if ( ro.node ) {
-      *buf = h->m_mbmBuffer;
+      *buff = h->m_mbmBuffer;
       *size  = ro.node->length();
       if ( h->m_verbose ) {
 	log() << "[NodeStatsCollector] Published " << *size 
-	      << " Bytes of data MBM @" << *buf << std::endl;
+	      << " Bytes of data MBM @" << *buff << std::endl;
       }
       return;
     }
   }
   *size = 0;
-  *buf = (void*)empty;
+  *buff = (void*)empty;
 }
 
 /// Feed data to DIS when updating data
-void NodeStatsCollector::feedHLT(void* tag, void** buf, int* size, int* ) {
-  static const char* empty = "";
+void NodeStatsCollector::feedHLT_1(void* tag, void** buf, int* size, int* first) {
   NodeStatsCollector* h = *(NodeStatsCollector**)tag;
-  if ( h && h->m_hltBuffer ) {
-    CPUMonData hlt(h->m_hltBuffer);
+  h->feedHLT(h->m_hlt_1_Buffer,buf,size,first);
+}
+/// Feed data to DIS when updating data
+void NodeStatsCollector::feedHLT_2(void* tag, void** buf, int* size, int* first) {
+  NodeStatsCollector* h = *(NodeStatsCollector**)tag;
+  h->feedHLT(h->m_hlt_2_Buffer,buf,size,first);
+}
+
+/// Feed data to DIS when updating data
+void NodeStatsCollector::feedHLT(char* data_buff, void** buff, int* size, int* ) {
+  static const char* empty = "";
+  if ( data_buff ) {
+    CPUMonData hlt(data_buff);
     if ( hlt.hlt ) {
-      *buf = h->m_hltBuffer;
-      *size  = hlt.hlt->length();
-      if ( h->m_verbose ) {
+      *buff = data_buff;
+      *size = hlt.hlt->length();
+      if ( m_verbose ) {
 	log() << "[NodeStatsCollector] Published " << *size 
-	      << " Bytes of data HLTMon @" << *buf << std::endl;
+	      << " Bytes of data HLTMon @" << *buff << std::endl;
       }
       return;
     }
   }
   *size = 0;
-  *buf = (void*)empty;
+  *buff = (void*)empty;
 }
 
 /// Monitor Node statistics information
@@ -212,20 +228,20 @@ int NodeStatsCollector::monitorStats() {
 }
 
 /// Monitor Deferred HLT statistics information
-int NodeStatsCollector::monitorHLT() {
+int NodeStatsCollector::monitorHLT(char* buffer, const std::string& dir_name) {
   int count = 0;
   map<int,int> files;
   unsigned long long blk_size=0,total_blk=0,availible_blk=0;
-  DeferredHLTStats* h = new(m_hltBuffer) DeferredHLTStats(RTL::nodeNameShort());
+  DeferredHLTStats* h = new(buffer) DeferredHLTStats(RTL::nodeNameShort());
 
   /// Now load data into object
   ro_gettime(&h->time,&h->millitm);
   h->overflowState = ((::time(0) - m_overflowTime) > 30) ? '?' : m_overflow;
 
-  DIR* dir = ::opendir("/localdisk/overflow");
+  DIR* dir = ::opendir(dir_name.c_str());
   if ( dir ) {
     struct dirent *entry;
-    ::lib_rtl_diskspace("/localdisk/overflow",&blk_size,&total_blk,&availible_blk);
+    ::lib_rtl_diskspace(dir_name.c_str(),&blk_size,&total_blk,&availible_blk);
     h->localdisk.blockSize  = blk_size;
     h->localdisk.numBlocks  = total_blk;
     h->localdisk.freeBlocks = availible_blk;
@@ -313,7 +329,8 @@ int NodeStatsCollector::monitor() {
       }
       if ( stat_delay<=0 ) {
         monitorStats();
-        monitorHLT();
+        monitorHLT(m_hlt_1_Buffer,"/localdisk/hlt1");
+        monitorHLT(m_hlt_2_Buffer,"/localdisk/overflow");
       }
     }
     catch(const std::exception& e) {
@@ -335,8 +352,15 @@ int NodeStatsCollector::monitor() {
 	  log() << "No client was listening to my node statistics information." << std::endl;
 	}
       }
-      if ( 0 != m_hltSvc ) {
-	if ( (nclients=::dis_update_service(m_hltSvc)) == 0 ) {
+      if ( 0 != m_hlt_1_Svc ) {
+	if ( (nclients=::dis_update_service(m_hlt_1_Svc)) == 0 ) {
+	  if ( m_print )  {
+	    log() << "No client was listening to the deferred HLT information." << std::endl;
+	  }
+	}
+      }
+      if ( 0 != m_hlt_2_Svc ) {
+	if ( (nclients=::dis_update_service(m_hlt_2_Svc)) == 0 ) {
 	  if ( m_print )  {
 	    log() << "No client was listening to the deferred HLT information." << std::endl;
 	  }

@@ -142,6 +142,7 @@ ClusterListener::ClusterListener(bool verbose, const string& sf, const string& p
   addService(svc0+"/Tasks");
   addService(svc0+"/ROTasks");
   addService(svc0+"/HLTDefer");
+  addService(svc0+"/HLT1");
   svc0 = "/" + strupper(sf) + "/TaskSupervisor";
   addService(svc0+"/Summary");
   addService(svc0+"/Status");

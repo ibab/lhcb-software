@@ -239,17 +239,22 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   m_service[1] = new _Svc<CPUfarm> (m_stat, 32,svc + "/CPU");
   m_service[2] = new _Svc<ProcFarm>(m_stat,512,svc + "/Tasks");
   m_service[3] = new _Svc<ProcFarm>(m_stat, 64,svc + "/ROTasks",1);
-  m_service[4] = new _Svc<HLTStats>(m_hlt, 512,svc + "/HLTDefer");
+  m_service[4] = new _Svc<HLTStats>(m_hlt1,512,svc + "/HLTDefer");
+  m_service[5] = new _Svc<HLTStats>(m_hlt2,512,svc + "/HLT1");
 
   if ( svc.empty() )  {
     log() << "Unknown data type -- cannot be published." << std::endl;
     throw std::runtime_error("Unknown data type and unknwon service name -- cannot be published.");
   }
 
-  m_hlt.setMatch(match);
-  m_hlt.setItem("HltDefer");
-  m_hlt.setVerbose(m_verbose);
-  m_hlt.setUpdateHandler(this);
+  m_hlt1.setMatch(match);
+  m_hlt1.setItem("HltDefer");
+  m_hlt1.setVerbose(m_verbose);
+  m_hlt1.setUpdateHandler(this);
+  m_hlt2.setMatch(match);
+  m_hlt2.setItem("Hlt1");
+  m_hlt2.setVerbose(m_verbose);
+  m_hlt2.setUpdateHandler(this);
   m_stat.setMatch(match);
   m_stat.setItem("Statistics");
   m_stat.setVerbose(m_verbose);
@@ -258,7 +263,8 @@ NodeStatsPublisher::NodeStatsPublisher(int argc, char** argv)
   m_mbm.setItem("Readout");
   m_mbm.setVerbose(m_verbose);
   m_mbm.setUpdateHandler(this);
-  m_hlt.start();
+  m_hlt1.start();
+  m_hlt2.start();
   m_mbm.start();
   m_stat.start();
   for(size_t i=0; i<sizeof(m_service)/sizeof(m_service[0]); ++i)

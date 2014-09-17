@@ -44,10 +44,11 @@ namespace ROMon {
   protected:
     FMCMonListener m_stat;
     FMCMonListener m_mbm;
-    FMCMonListener m_hlt;
+    FMCMonListener m_hlt1;
+    FMCMonListener m_hlt2;
     int            m_print;
     bool           m_verbose;
-    _BaseSvc*      m_service[5];
+    _BaseSvc*      m_service[6];
     bool           m_needUpdate;
     int            m_mbmDelay;
     int            m_statDelay;

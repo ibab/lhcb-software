@@ -48,9 +48,11 @@ namespace ROMon  {
     int               m_statSvc;
     size_t            m_statSize;
     char*             m_statBuffer;
-    int               m_hltSvc;
     size_t            m_hltSize;
-    char*             m_hltBuffer;
+    int               m_hlt_1_Svc;
+    int               m_hlt_2_Svc;
+    char*             m_hlt_1_Buffer;
+    char*             m_hlt_2_Buffer;
     int               m_overflow;
     int               m_overflowSvc;
     long              m_overflowTime;
@@ -67,15 +69,18 @@ namespace ROMon  {
     /// Monitor Node statistics information
     virtual int monitorStats();
     /// Monitor deferred HLT statistics information
-    virtual int monitorHLT();
+    virtual int monitorHLT(char* buffer, const std::string& dir_name);
     /// Monitor task and MBM information
     virtual int monitorTasks();
+    /// Feed data to disk monitor services
+    void feedHLT(char* data_buff, void** buf, int* size, int* first); 
     /// Help printout in case of -h /? or wrong arguments
     static void help();
     /// Feed data to DIS when updating data
     static void feedStats(void* tag, void** buf, int* size, int* first);
     static void feedMBM(void* tag, void** buf, int* size, int* first);
-    static void feedHLT(void* tag, void** buf, int* size, int* first);
+    static void feedHLT_1(void* tag, void** buf, int* size, int* first);
+    static void feedHLT_2(void* tag, void** buf, int* size, int* first);
     /// Dim callback to retrieve the overflow status
     static void overflowHandler(void* tag, void* address, int* size);
   };
