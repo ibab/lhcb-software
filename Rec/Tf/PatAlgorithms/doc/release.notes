@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-09-17 - Gerhard Raven
+ - PatForwardTool: use specialized update{OT,NonOT}HitForTrack to avoid branches 
+   in innermost loop
+
 ! 2014-09-09 - Gerhard Raven
  - PatFwdTool:setRLDefault: simplify enough so the compiler inlines
    the RLAmbiguityResolver completely

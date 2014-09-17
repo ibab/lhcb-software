@@ -553,24 +553,45 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     debug() << "Search X coordinates, xMin " << interval.xMin()
             << " xMax " << interval.xMax() << endmsg;
   }
+  auto outside_interval = [&](const PatForwardHit* hit) { return interval.outside(hit->projection()); } ;
+  auto not_selected = [](const PatForwardHit* hit) { return !hit->isSelected(); };
+
   double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
+  auto not_ignored_and_y_compatible = [yCompat](double yRegion) {
+        return [yRegion,yCompat](const PatForwardHit* hit) {
+                              return !hit->hit()->ignore() &&  
+                                     hit->hit()->isYCompatible( yRegion, yCompat );
+        };
+  };
 
   //TODO: use C++14 generalized capture...
   double ty = track.slY();
   double y0 = track.yStraight( 0. );
-  auto updateHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
-    std::for_each( first, last, [=](PatForwardHit* hit) { 
-                       updateHitForTrack( hit, y0, ty);
-                       hit->setIgnored( false );
-                       hit->setRlAmb( 0 );
-                       hit->setSelected( this->driftOK(*hit) );
-                   } );
+  auto updateOTHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
+        std::for_each( first, last, [=](PatForwardHit* hit) { 
+                           updateOTHitForTrack( hit, y0, ty);
+                           hit->setIgnored( false );
+                           hit->setRlAmb( 0 );
+                           hit->setSelected( this->driftInRange(*hit) );
+                       } ); 
+        return std::remove_if( first, last, not_selected );
+  };
+  auto updateITHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
+        std::for_each( first, last, [=](PatForwardHit* hit) { 
+                           updateNonOTHitForTrack( hit, y0, ty);
+                           hit->setIgnored( false );
+                           hit->setRlAmb( 0 );
+                           hit->setSelected( true );
+                       } ); 
+        return last;
   };
 
-  for (unsigned int sta = 0; sta < nSta; sta ++) {
-    for (unsigned int lay = 0; lay< nLay; lay++) {
-      if (lay == 1 || lay == 2) continue;  // X layers
-      for (unsigned int region = 0; region <nReg; region ++) {
+  auto isOT= [](unsigned region) { return region < nOTReg; };
+
+  static_assert(nLay == 4, "expecting exactly four layers" );
+  for (unsigned sta = 0; sta != nSta; ++sta) {
+    for (const auto& lay : { 0,3 } ) {  // X layers only...
+      for (unsigned region = 0; region != nReg; ++region) {
         const auto* regionB = m_tHitManager->region(sta,lay,region);
         auto z = regionB->z();
         auto yRegion = track.yStraight( z );
@@ -584,21 +605,12 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
         // grow capacity so that things don't move around afterwards...
         m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
         auto first = std::end(m_xHitsAtReference);
-        std::copy_if( std::begin(hitRange), std::end(hitRange), 
-                      std::back_inserter(m_xHitsAtReference), 
-                      [=](PatForwardHit* hit){
-                              return !hit->hit()->ignore() &&  
-                                     hit->hit()->isYCompatible( yRegion, yCompat );
-                      } );
-        auto last = std::end(m_xHitsAtReference);
-        updateHitsForTrack( first, last  );
-        last = std::remove_if( first, last, [](const PatForwardHit* hit) {
-                        return !hit->isSelected();
-               } );
-        m_fwdTool->setXAtReferencePlane(track, first, last );
-        last = std::remove_if( first, last, [&](const PatForwardHit* hit) {
-                        return interval.outside(hit->projection());
-               } );
+        std::copy_if( std::begin(hitRange), std::end(hitRange), std::back_inserter(m_xHitsAtReference), 
+                      not_ignored_and_y_compatible( yRegion ) );
+        auto last = isOT(region) ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
+                                 : updateITHitsForTrack( first, std::end(m_xHitsAtReference) ) ;
+        m_fwdTool->setXAtReferencePlane( track, first, last );
+        last = std::remove_if( first, last, outside_interval ) ; 
         m_xHitsAtReference.erase( last, std::end(m_xHitsAtReference) );
         // make sure we are ordered by the right criterium -- until now, things
         // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
