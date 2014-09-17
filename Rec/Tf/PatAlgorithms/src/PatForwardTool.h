@@ -117,10 +117,6 @@ private:
      return m_minOTDrift < drift && drift < m_maxOTDrift ; 
   }
 
-  bool driftOK(const PatFwdHit& hit) const {
-     return (hit.hit()->type() != Tf::RegionID::OT) || driftInRange(hit);
-  }
-
   double allowedXSpread(const PatFwdHit *hit, double xExtrap ) const { 
     auto spreadSl = ( hit->projection() - xExtrap ) * m_maxSpreadSlopeX;
     return m_maxSpreadX + 

@@ -636,11 +636,14 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   //== get position and slope at z=0 from track at zReference (0 for y/ySlope functions)
   auto ty = track.ySlope( 0. );
   auto y0 = track.y( 0. - m_fwdTool->zReference() );  // Extrapolate from back...
-  auto update = [=](PatFwdHit* hit, double yRegion) {
-    if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) return false;;
-    updateHitForTrack( hit, y0, ty );
-    hit->setIgnored( false );
-    auto ok = this->driftOK(*hit);
+  auto updateITHit = [=](PatFwdHit* hit ) {
+    updateNonOTHitForTrack( hit, y0, ty );
+    hit->setSelected( true );
+    return true;
+  };
+  auto updateOTHit = [=](PatFwdHit* hit ) {
+    updateOTHitForTrack( hit, y0, ty );
+    auto ok = this->driftInRange(*hit);
     hit->setSelected( ok );
     return ok;
   };
@@ -654,6 +657,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
         double yRegion = track.y( dz );
         if (!regionB->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
 
+        bool isOT = region < nOTReg;
+
         double xPred   = track.x( dz );
         //== Correct for stereo
         double xHitMin = xPred - fabs( yRegion * regionB->sinT() ) - 40. - tol;
@@ -662,10 +667,13 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
         //== displacement also in this projectio.
         bool  flipSign = std::signbit( regionB->sinT() );
         double minProj = tol;
-        if ( region< nOTReg ) minProj += 1.5;
+        if ( isOT  ) minProj += 1.5;
 
         for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
-          if (!update(hit,yRegion)) continue;
+          if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
+          hit->setIgnored( false );
+          bool ok = isOT ? updateOTHit(hit) : updateITHit(hit);
+          if (!ok) continue;
 
           double xRef = ( hit->x() - xPred );
           hit->setProjection( flipSign ? -xRef : xRef );
