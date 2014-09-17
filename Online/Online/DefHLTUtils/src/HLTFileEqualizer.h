@@ -73,16 +73,27 @@ public:
   MBMStat Send_prev;
   MBMStat ProcPerf_prev;
 };
-class myNode
+
+typedef struct
 {
-  public:
-    std::string m_name;
-    std::string m_subfarm;
     int m_nofiles;
     int m_state;
     char m_ROC_state;
     RunMap m_runmap;
     bool m_excl;
+    long ReadTime;
+    long ReadTime_prev;
+    float m_nodePerformance;
+    bool m_active;
+    float m_cfiles;
+} NodeQuantities;
+class myNode
+{
+  public:
+    std::string m_name;
+    std::string m_subfarm;
+    NodeQuantities m_DefQ;
+    NodeQuantities m_HLT1Q;
     PartMBMs AnyPart;
     PartMBMs LHCb2;
 //    MBMStat Events;
@@ -93,25 +104,30 @@ class myNode
 //    MBMStat Overflow_prev;
 //    MBMStat Send_prev;
 //    MBMStat ProcPerf_prev;
-    long ReadTime;
-    long ReadTime_prev;
-    float m_nodePerformance;
-    bool m_active;
-    float m_cfiles;
     myNode(std::string n)
     {
       m_name = n;
-      m_state = 1;
-      m_nofiles = 0;
+      m_DefQ.m_state = 1;
+      m_DefQ.m_nofiles = 0;
       m_subfarm = m_name.substr(0,6);
-      m_ROC_state = '?';
-      m_runmap.clear();
-      m_excl = false;
-      ReadTime_prev = 0;
-      ReadTime = 0;
-      m_nodePerformance = 0.0;
-      m_active = false;
-      m_cfiles = 0.0;
+      m_DefQ.m_ROC_state = '?';
+      m_DefQ.m_runmap.clear();
+      m_DefQ.m_excl = false;
+      m_DefQ.ReadTime_prev = 0;
+      m_DefQ.ReadTime = 0;
+      m_DefQ.m_nodePerformance = 0.0;
+      m_DefQ.m_active = false;
+      m_DefQ.m_cfiles = 0.0;
+      m_HLT1Q.m_state = 1;
+      m_HLT1Q.m_nofiles = 0;
+      m_HLT1Q.m_ROC_state = '?';
+      m_HLT1Q.m_runmap.clear();
+      m_HLT1Q.m_excl = false;
+      m_HLT1Q.ReadTime_prev = 0;
+      m_HLT1Q.ReadTime = 0;
+      m_HLT1Q.m_nodePerformance = 0.0;
+      m_HLT1Q.m_active = false;
+      m_HLT1Q.m_cfiles = 0.0;
     };
 };
 class SFarm
@@ -121,6 +137,7 @@ class SFarm
 
 };
 class DefHltInfoHandler;
+class HLT1InfoHandler;
 class MBMInfoHandler;
 typedef std::map<std::string,myNode*> myNodeMap;
 typedef std::map<std::string,std::list<std::pair<std::string,int> > > myActionMap; //list of nodes per subfarm to execute an action on.
@@ -134,7 +151,8 @@ class HLTFileEqualizer
     myNodeMap m_AllNodes;
     nodemap M_PMap;
     std::map<std::string,DimUpdatedInfo*> m_infoMap;
-    DefHltInfoHandler *m_InfoHandler;
+    DefHltInfoHandler *m_DefHandler;
+    HLT1InfoHandler *m_HLT1Handler;
     MBMInfoHandler *m_MBMInfoHandler;
     int m_nnodes;
     int m_nfiles;
@@ -142,17 +160,23 @@ class HLTFileEqualizer
     int m_low;
     int m_high;
     DimInfo *m_DefStateInfo;
-    DimService *m_NodeList;
-    DimService *m_NodeListDiff;
-    DimService *m_NodesRunsFiles;
-    DimService *m_StatServ;
+    DimService *m_DefNodeList;
+    DimService *m_DefNodeListDiff;
+    DimService *m_DefNodesRunsFiles;
+    DimService *m_DefStatServ;
     DimService *m_NodesBuffersEvents;
     DimService *m_NodesBuffersEvents_LHCb2;
-    std::string m_servdat;
-    std::string m_servdatDiff;
-    std::string m_servdatNodesRunsFiles;
-    std::string m_servdatNodesBuffersEvents;
-    std::string m_servdatNodesBuffersEvents_LHCb2;
+    DimService *m_HLT1NodeList;
+    DimService *m_HLT1NodeListDiff;
+    DimService *m_HLT1NodesRunsFiles;
+    std::string m_Defservdat;
+    std::string m_DefservdatDiff;
+    std::string m_DefservdatNodesRunsFiles;
+    std::string m_HLT1servdat;
+    std::string m_HLT1servdatDiff;
+    std::string m_HLT1servdatNodesRunsFiles;
+    std::string m_DefservdatNodesBuffersEvents;
+    std::string m_DefservdatNodesBuffersEvents_LHCb2;
     NodeSet m_enabledFarm;
     NodeSet m_recvNodes;
     NodeSet m_BufferrecvNodes;
@@ -176,6 +200,17 @@ class DefHltInfoHandler : public DimInfoHandler
     int m_bufsiz;
     HLTFileEqualizer *m_Equalizer;
     DefHltInfoHandler(HLTFileEqualizer *e);
+    void infoHandler();
+};
+
+class HLT1InfoHandler : public DimInfoHandler
+{
+  public:
+    SFarm *m_subfarm;
+    _DHLTSF *m_sfstatus;
+    int m_bufsiz;
+    HLTFileEqualizer *m_Equalizer;
+    HLT1InfoHandler(HLTFileEqualizer *e);
     void infoHandler();
 };
 
