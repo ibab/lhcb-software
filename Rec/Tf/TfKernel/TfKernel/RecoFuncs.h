@@ -407,59 +407,77 @@ namespace Tf
      *  @return boolean indicating the sorting of lhs and rhs by x at the point y=0
      */
     inline bool operator() ( const Hit* lhs,
-	                     const Hit* rhs ) const
+	                         const Hit* rhs ) const
     { return rhs->xAtYEq0() < lhs->xAtYEq0(); }
   };
 
   template<class Hit>
-  inline void updateTTHitForTrack ( Hit* hit, 
+  inline constexpr double updateTTHitForTrack ( Hit&& hit, 
+                                                const double y0, 
+                                                const double dyDz ) 
+  {
+    return updateNonOTHitForTrack( std::forward<Hit>(hit), y0, dyDz );
+  }
+
+  template<class Hit>
+  inline constexpr double updateUTHitForTrack ( Hit&& hit, 
+                                                const double y0, 
+                                                const double dyDz ) 
+  {
+    return updateNonOTHitForTrack( std::forward<Hit>(hit), y0, dyDz );
+  }
+
+  template<class Hit>
+  inline double updateNonOTHitForTrack ( Hit* hit, 
+                                         const double y0, 
+                                         const double dyDz ) 
+  {
+    auto y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
+    hit->setZ( hit->hit()->z(y) ) ;
+    hit->setX( hit->hit()->x(y) ); 
+    return y;
+  }
+
+  template<class Hit>
+  inline double updateOTHitForTrack ( Hit* hit, 
+                                      const double y0, 
+                                      const double dyDz ) 
+  {
+    auto  y  = updateNonOTHitForTrack(hit,y0,dyDz) ; 
+    hit->setDriftDistance(hit->hit()->othit()->untruncatedDriftDistance(y));
+    return y;
+  }
+
+  template<class Hit>
+  inline double approxUpdateOTHitForTrack ( Hit* hit, 
+                                          const double y0, 
+                                          const double dyDz ) 
+  {
+    auto y = updateNonOTHitForTrack(hit,y0,dyDz);
+    hit->setDriftDistance(hit->hit()->othit()->approxUntruncatedDriftDistance(y));
+    return y;
+  }
+
+  template<class Hit>
+  inline double updateHitForTrack ( Hit* hit, 
                                     const double y0, 
                                     const double dyDz ) 
   {
-    const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
-    hit->setZ( hit->hit()->z(y) ) ;
-    hit->setX( hit->hit()->x(y) ) ;
-  }
-
-  template<class Hit>
-  inline void updateUTHitForTrack ( Hit* hit, 
-                                    const double y0, 
-                                    const double dyDz ) 
-  {
-    const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
-    hit->setZ( hit->hit()->z(y) ) ;
-    hit->setX( hit->hit()->x(y) ) ;
-  }
-
-
-  template<class Hit>
-  inline void updateHitForTrack ( Hit* hit, 
-                                  const double y0, 
-                                  const double dyDz ) 
-  {
-    const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
-    hit->setZ( hit->hit()->z(y) ) ;
-    hit->setX( hit->hit()->x(y) ); 
+    auto y  = updateNonOTHitForTrack(hit,y0,dyDz);
     const Tf::OTHit* otHit = hit->hit()->othit();
-    if(otHit) 
-    {
-      hit->setDriftDistance(otHit->untruncatedDriftDistance(y));
-    }
+    if(otHit) hit->setDriftDistance(otHit->untruncatedDriftDistance(y));
+    return y;
   }
 
   template<class Hit>
-  inline void approxUpdateHitForTrack ( Hit* hit, 
-                                       const double y0, 
-                                       const double dyDz ) 
+  inline double approxUpdateHitForTrack ( Hit* hit, 
+                                          const double y0, 
+                                          const double dyDz ) 
   {
-    const double y  = ( y0 + dyDz * hit->hit()->zAtYEq0() ) / ( 1. - hit->hit()->dzDy() * dyDz );
-    hit->setZ( hit->hit()->z(y) ) ;
-    hit->setX( hit->hit()->x(y) ); 
+    auto y = updateNonOTHitForTrack(hit,y0,dyDz);
     const Tf::OTHit* otHit = hit->hit()->othit();
-    if(otHit) 
-    {
-      hit->setDriftDistance(otHit->approxUntruncatedDriftDistance(y));
-    }
+    if(otHit) hit->setDriftDistance(otHit->approxUntruncatedDriftDistance(y));
+    return y;
   }
 
   /** Function to find the intersection of a (line) hit with a plane

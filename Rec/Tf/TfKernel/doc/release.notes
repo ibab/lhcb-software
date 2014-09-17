@@ -3,9 +3,13 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2014-09-17 - Gerhard Raven
+ - add specialized updateXYZHitsForTrack without any branches
+ - reduce code duplication by having the above return the computed y coordinate,
+   which allows daisy chaining the OT version.
 
 !========================= TfKernel v2r26 2014-09-08 =========================
-! 2014-07-26 - Gerhard Raven
+! 2014-08-26 - Gerhard Raven
  - add a 'hitsInXRange' method to TStationHitManager (i.e. both lower and upper
    bound)
  - extend OTHit such that is possible to get the driftTime _without_ the 
