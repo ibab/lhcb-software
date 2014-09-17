@@ -350,7 +350,7 @@ void HLTFileEqualizer::Analyze()
     m_HLT1servdat += nfile;
   }
   m_HLT1servdat += '\0';
-  m_HLT1NodeList->setData((void*)m_Defservdat.c_str(),m_Defservdat.size());
+  m_HLT1NodeList->setData((void*)m_HLT1servdat.c_str(),m_HLT1servdat.size());
   m_HLT1NodeList->updateService();
   m_HLT1servdatDiff.erase();
   m_HLT1servdatNodesRunsFiles.erase();
