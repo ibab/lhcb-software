@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014_06-07 - Hannah Mary Evans
+  - In StrippingBs2MuMuLines.py changed 'Location' for RelInfoBs2MuMuZVisoBDT so it was different to RelInfoBs2MuMuIsolations 'Location'.
+
 ! 2014-09-16 - Carlos Vazquez Sierra
   - Minor typo fixed in StrippingB2JpsiXforBeta_s.py
   - Updated test utility tests/TestB2CCLines.py for B2CC.

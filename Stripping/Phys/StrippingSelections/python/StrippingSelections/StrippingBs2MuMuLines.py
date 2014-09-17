@@ -289,7 +289,8 @@ class Bs2MuMuLinesConf(LineBuilder) :
              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_default+"/Particles",
              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_default+"/Particles"},
-                        
+                               
+      
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
@@ -297,10 +298,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
               "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
-              "Location"  : "BSMUMUVARIABLES"  
+              "Location"  : "RelInfoZVisoBDT"  
               }
-            ]
-                                          
+            ]       
                                          )
 
          
@@ -326,7 +326,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
              "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
-              "Location"  : "BSMUMUVARIABLES"  
+              "Location"  : "RelInfoZVisoBDT"  
               }
             ]
                                       )
@@ -399,7 +399,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
              "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
-              "Location"  : "BSMUMUVARIABLES"  
+              "Location"  : "RelInfoZVisoBDT"  
               }
             ]
                                     )
@@ -427,7 +427,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
              "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
-              "Location"  : "BSMUMUVARIABLES"  
+              "Location"  : "RelInfoZVisoBDT"  
               }
             ]
                                     )
@@ -453,7 +453,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
                "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
-              "Location"  : "BSMUMUVARIABLES"  
+              "Location"  : "RelInfoZVisoBDT"  
               }
             ]
                                  )
