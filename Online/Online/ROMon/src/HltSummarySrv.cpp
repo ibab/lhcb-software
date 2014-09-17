@@ -33,7 +33,7 @@ namespace ROMon {
     Interactor* m_parent;
   public:
     /// Standard constructor with initialization
-    HltSummaryListener(Interactor* parent, const std::string& name, bool verbose);
+    HltSummaryListener(Interactor* parent, const std::string& name, const std::string& svn_name, bool verbose);
     /// Default destructor    
     virtual ~HltSummaryListener();
     /// Update handler
@@ -56,6 +56,10 @@ namespace ROMon {
     Servers         m_servers;
     /// Process name
     std::string     m_name;
+    /// Service name part to listen to
+    std::string     m_listenTo;
+    /// Service name part to publish to
+    std::string     m_publishTo;
     /// String buffer with run information result
     std::string     m_run_result;
     /// String buffer with summary result
@@ -135,15 +139,15 @@ typedef FMCMonListener::Descriptor DSC;
 typedef RODimListener::Clients     Clients;
 
 /// Standard constructor with initialization
-HltSummaryListener::HltSummaryListener(Interactor* parent, const std::string& sf, bool verbose)
+HltSummaryListener::HltSummaryListener(Interactor* parent, const std::string& sf, const string& svc, bool verbose)
   : FMCMonListener(verbose), m_parent(parent)
 {
   m_infoTMO = 0;
   setItem("");
   setMatch("/RO/hlt*");
   setUpdateHandler(this);
-  string svc = "/RO/" + strlower(sf) + "/ROpublish/HLTDefer";
-  addHandler(sf,svc);
+  string svc_name = "/RO/" + strlower(sf) + svc;
+  addHandler(sf,svc_name);
   ::lib_rtl_output(LIB_RTL_DEBUG,"[HltSummarySrv] Added services for subfarm:%s",sf.c_str());
 }
 
@@ -173,13 +177,17 @@ static void feed(void* tag, void** buff, int* size, int* /* first */) {
 HltSummarySrv::HltSummarySrv(int argc, char** argv) : m_delay(5), m_print(LIB_RTL_WARNING)  {
   RTL::CLI cli(argc, argv, HltSummarySrv::help);
   m_name = "/"+RTL::nodeNameShort()+"/"+RTL::processName();
+  m_listenTo = "/ROpublish/HLTDefer";
+  m_publishTo  = "/HLT/Deferred";
   cli.getopt("print",2,m_print);
   cli.getopt("delay",2,m_delay);
-
+  cli.getopt("listen",2,m_listenTo);
+  cli.getopt("publish",2,m_publishTo);
   ::lib_rtl_install_printer(ro_rtl_print,(void*)m_print);
+
   PartitionListener p(this,"Subfarms","hlt*",true);
-  m_runSvc = ::dis_add_service((char*)"/HLT/Deferred/Runs",(char*)"C",0,0,feed,(long)&m_run_result);
-  m_sumSvc = ::dis_add_service((char*)"/HLT/Deferred/Summary",(char*)"C",0,0,feed,(long)&m_summary_result);
+  m_runSvc = ::dis_add_service((char*)(m_publishTo+"/Runs").c_str(),(char*)"C",0,0,feed,(long)&m_run_result);
+  m_sumSvc = ::dis_add_service((char*)(m_publishTo+"/Summary").c_str(),(char*)"C",0,0,feed,(long)&m_summary_result);
   ::dis_start_serving((char*)m_name.c_str());
   TimeSensor::instance().add(this,m_delay,(void*)CMD_UPDATE);
 }
@@ -192,7 +200,7 @@ HltSummarySrv::~HltSummarySrv() {
 
 /// Add cluster data points to bridge
 void HltSummarySrv::addCluster(const string& sf) {
-  m_servers.push_back(new HltSummaryListener(this, sf, m_print<LIB_RTL_INFO));
+  m_servers.push_back(new HltSummaryListener(this, sf, m_listenTo, m_print<LIB_RTL_INFO));
 }
 #define GIGA_BYTE (1<<30)
 /// Publish collected data to DIM services
