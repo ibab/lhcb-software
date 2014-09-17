@@ -14,10 +14,10 @@
   <class    name    = "std::vector<CardParam>"  /> 
 
   <class    pattern = "CaloVector<CellParam*>"  />
-  <class    patetrn = "CaloVector<CaloPin*>"    />
+  <class    pattern = "CaloVector<CaloPin*>"    />
   <class    name    = "std::vector<CellParam>" />
   <class    name    = "std::vector<CaloPin>"   />
 
 
-  <variable pattern = "LHCb::DeCalorimeterLocation::*" />
+  <variable pattern = "DeCalorimeterLocation::*" />
 </lcgdict>

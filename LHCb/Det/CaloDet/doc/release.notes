@@ -3,6 +3,9 @@
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! ====================================================================
 
+! 2014-09-17 - Marco Clemencic
+ - Fixed genreflex warnings (ROOT 6).
+
 !========================= CaloDet v10r19p1 2014-05-12 ========================
 ! 2014-05-06 - Marco Cattaneo
  - Fix unprotected debug
