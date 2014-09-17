@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-09-17 - Marco Clemencic
+ - Fixed genreflex warnings (ROOT 6).
+
 !========================= LHCbKernel v15r4 2014-09-08 =========================
 ! 2014-09-08 - Gerhard Raven
  - CircleTraj: replace pow(..,double(1)/3) with std::cbrt as the reason for not 

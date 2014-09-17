@@ -67,8 +67,8 @@
   <class name = "Rich::Particles" />
   <function pattern="Rich::particles*" />
 
-  <variable pattern="Rich::NTotalHPDPanels"  />
-  <variable pattern="Rich::NHPDPanelsPerRICH"  />
+  <variable pattern="Rich::NTotalPDPanels"  />
+  <variable pattern="Rich::NPDPanelsPerRICH"  />
   <enum name = "Rich::Side" />
   <class name = "Rich::RichSideVector" />
   <class name = "Rich::Sides" />
