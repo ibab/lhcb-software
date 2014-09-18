@@ -4,6 +4,9 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2014-09-18 - Marco Clemencic 
+ - Fixed compilation problem with head version of ROOT. 
+
 !========================= DaVinciTrackScaling v1r3 2013-10-07 =========================
 
 ! 2013-10-05 - Vanya Belyaev

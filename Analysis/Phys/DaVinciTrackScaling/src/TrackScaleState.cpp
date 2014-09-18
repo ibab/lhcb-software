@@ -350,10 +350,10 @@ private: // data
 // TrackScaleState::CalScale 
 // ============================================================================
 inline int 
-TrackScaleState::CalScale::bin ( const double value , TAxis* axis ) const 
+TrackScaleState::CalScale::bin ( const double value , const TAxis* axis ) const 
 {
   if ( 0 == axis ) { return 1 ; } // arbitrary....
-  const int i = axis->FindBin ( value ) ;
+  const int i = axis->FindFixBin ( value ) ;
   //
   return 
     0 == i               ? 1 :
