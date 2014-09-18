@@ -4,6 +4,7 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+!========================= SwimmingEvent v1r5p2 2014-09-18 =========================
 ! 2014-09-17 - Marco Clemencic
  - Minor fix to work around https://sft.its.cern.ch/jira/browse/ROOT-6704.
 

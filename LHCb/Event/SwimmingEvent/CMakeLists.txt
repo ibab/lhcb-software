@@ -1,7 +1,7 @@
 ################################################################################
 # Package: SwimmingEvent
 ################################################################################
-gaudi_subdir(SwimmingEvent v1r5p1)
+gaudi_subdir(SwimmingEvent v1r5p2)
 
 gaudi_depends_on_subdirs(Event/PhysEvent
                          GaudiKernel
