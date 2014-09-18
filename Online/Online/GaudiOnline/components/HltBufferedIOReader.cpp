@@ -57,6 +57,8 @@ namespace LHCb
     std::string              m_buffer;
     /// Property: Data directory name
     std::string              m_directory;
+    /// Property: File prefix to select files from data directory
+    std::string              m_filePrefix;
     /// Property: Path to the file containing broken nodes, where no reading should happen
     std::string              m_brokenHostsFile;
     /// Property: List of runs to be processed (as strings!)
@@ -163,10 +165,11 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   : OnlineService(nam, svcLoc), m_receiveEvts(false), m_lock(0), m_mepMgr(0), 
     m_producer(0), m_evtCount(0), m_disabled(false)
 {
-  declareProperty("Buffer",      m_buffer = "Mep");
-  declareProperty("Directory",   m_directory = "/localdisk");
+  declareProperty("Buffer",      m_buffer          = "Mep");
+  declareProperty("Directory",   m_directory       = "/localdisk");
+  declareProperty("FilePrefix",  m_filePrefix      = "Run_");
   declareProperty("BrokenHosts", m_brokenHostsFile = "");
-  declareProperty("DeleteFiles", m_deleteFiles = true);
+  declareProperty("DeleteFiles", m_deleteFiles     = true);
   declareProperty("AllowedRuns", m_allowedRuns);
   m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
@@ -306,7 +309,7 @@ size_t HltBufferedIOReader::scanFiles()   {
       bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
       while ((entry = ::readdir(dir)) != 0)    {
         //cout << "File:" << entry->d_name << endl;
-        if ( 0 != ::strncmp(entry->d_name,"Run_",4) ) {
+        if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),4) ) {
           continue;
         }
         else if ( !take_all )  {
