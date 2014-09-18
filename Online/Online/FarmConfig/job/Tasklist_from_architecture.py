@@ -1,5 +1,6 @@
 from xml.dom import minidom
 import sys
+import os
 import OnlineEnvBase
 
 def TaskListfromArch(arch, tasklist):
@@ -8,10 +9,14 @@ def TaskListfromArch(arch, tasklist):
 #    tasklist = []
     for s in itemlist:
         tasklist.append(s.attributes['name'].value)
-def OptionsfromTasks(tasklist,level,ofile,pname):
+def OptionsfromTasks(tasklist,level,ofile,pname,dohostdns):
     f = open(ofile,'w')
     f.write("//  Adder Level "+level+"\n")
     if level == "1":
+        InDns = os.getenv("InDns","<dns>")
+        OutDns = os.getenv("OutDns","<dns>")
+        InDns = "\""+InDns+"\""
+        OutDns = "\""+OutDns+"\""
         f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","BusySvc"};
@@ -55,7 +60,9 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 3;\n")
             f.write("\n")
-
+            if dohostdns:
+                f.write(svc+".InDNS = "+InDns+";\n")
+                f.write(svc+".OutDNS = "+OutDns+";\n")
         for s in cntsvc:
             svc = s+"CountAdder"
             f.write(svc+".PartitionName  = @OnlineEnv.PartitionName;\n")
@@ -67,8 +74,15 @@ MonitorSvc.CounterUpdateInterval     = 5;
             if pname == "LHCbA":
               f.write(svc+".GotoPause = true;\n")
               f.write(svc+".ReceiveTimeout = 0;\n")
+            if dohostdns:
+                f.write(svc+".InDNS = "+InDns+";\n")
+                f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write("\n")
     elif level == "2":
+        InDns = os.getenv("InDns","<node>")
+        OutDns = os.getenv("OutDns","hlt01")
+        InDns = "\""+InDns+"\""
+        OutDns = "\""+OutDns+"\""
         f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyAdder"};
@@ -97,6 +111,8 @@ BusyAdder.InDNS                 = "<node>";
 BusyAdder.OutDNS                = "hlt01";
 BusyAdder.ReceiveTimeout          = 3;
 """)
+        f.write("BusyAdder.InDns     = "+InDns+";\n")
+        f.write("BusyAdder.OutDns     = "+OutDns+";\n")
         histsvc = []
         cntsvc = []
         for s in tasklist:
@@ -118,8 +134,8 @@ BusyAdder.ReceiveTimeout          = 3;
             f.write(svc+".ServicePattern  = \"MON_<part>_<node>[0-9][0-9]_"+s+"/Histos/\";\n")
             f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 6;\n")
-            f.write(svc+".InDNS = \"<node>\";\n")
-            f.write(svc+".OutDNS = \"hlt01\";\n")
+            f.write(svc+".InDNS = "+InDns+";\n")
+            f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write("\n")
 
 
@@ -131,13 +147,17 @@ BusyAdder.ReceiveTimeout          = 3;
             f.write(svc+".ServicePattern  = \"MON_<part>_<node>[0-9][0-9]_"+s+"/Counter/\";\n")
             f.write(svc+".ReceiveTimeout = 6;\n")
             f.write(svc+".AdderClass = \"Counter\";\n")
-            f.write(svc+".InDNS = \"<node>\";\n")
-            f.write(svc+".OutDNS = \"hlt01\";\n")
+            f.write(svc+".InDNS = "+InDns+";\n")
+            f.write(svc+".OutDNS = "+OutDns+";\n")
             if pname == "LHCbA":
               f.write(svc+".GotoPause = true;\n")
               f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
     elif level == "3":
+        InDns = os.getenv("InDns","hlt01")
+        OutDns = os.getenv("OutDns","mona08")
+        InDns = "\""+InDns+"\""
+        OutDns = "\""+OutDns+"\""
         f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyCountAdder"};
@@ -179,8 +199,8 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Histos/\";\n")
             f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
-            f.write(svc+".InDNS = \"hlt01\";\n")
-            f.write(svc+".OutDNS = \"mona08\";\n")
+            f.write(svc+".InDNS = "+InDns+";\n")
+            f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write(svc+".SaveRootDir = \"/hist/Savesets\";\n");
             f.write(svc+".IsSaver = true;\n");
             f.write(svc+".SaveSetTaskName= \""+svc+"\";\n");
@@ -194,13 +214,17 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt[a-z][0-9][0-9]_"+s+"/Counter/\";\n")
             f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
-            f.write(svc+".InDNS = \"hlt01\";\n")
-            f.write(svc+".OutDNS = \"mona08\";\n")
+            f.write(svc+".InDNS = "+InDns+";\n")
+            f.write(svc+".OutDNS = "+OutDns+";\n")
             if pname == "LHCbA":
               f.write(svc+".ReceiveTimeout = 0;\n")
 #              f.write(svc+".GotoPause = true;\n")
             f.write("\n")
     elif level == "4":
+        InDns = os.getenv("InDns","mona08")
+        OutDns = os.getenv("OutDns","mona08")
+        InDns = "\""+InDns+"\""
+        OutDns = "\""+OutDns+"\""
         f.write("""#include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {"MonitorSvc","AdderSvc/BusyCountAdder"};
@@ -242,8 +266,8 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Histos/\";\n")
             f.write(svc+".AdderClass  = \"hists\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
-            f.write(svc+".InDNS = \"mona08\";\n")
-            f.write(svc+".OutDNS = \"mona08\";\n")
+            f.write(svc+".InDNS = "+InDns+";\n")
+            f.write(svc+".OutDNS = "+OutDns+";\n")
             f.write("\n")
 
         for s in cntsvc:
@@ -254,8 +278,8 @@ MonitorSvc.CounterUpdateInterval     = 5;
             f.write(svc+".ServicePattern  = \"MON_<part>_hlt01_"+s+"/Counter/\";\n")
             f.write(svc+".AdderClass  = \"Counter\";\n")
             f.write(svc+".ReceiveTimeout = 12;\n")
-            f.write(svc+".InDNS = \"mona08\";\n")
-            f.write(svc+".OutDNS = \"mona08\";\n")
+            f.write(svc+".InDNS = "+InDns+";\n")
+            f.write(svc+".OutDNS = "+OutDns+";\n")
             if pname == "LHCbA":
               f.write(svc+".ReceiveTimeout = 0;\n")
             f.write("\n")
@@ -263,11 +287,16 @@ MonitorSvc.CounterUpdateInterval     = 5;
 tasklist = []
 arch = OnlineEnvBase.HltArchitecture
 part = OnlineEnvBase.PartitionName
+arch = os.getenv("ARCH",arch)
+hostdns = False
+if arch == "Calib":
+    hostdns = True
 arch = "/group/online/dataflow/architectures/lbDataflowArch_"+arch+".xml"
 level = sys.argv[1]
 TaskListfromArch(arch, tasklist)
+ofile = ""
 if len(sys.argv) >= 3:
     ofile = sys.argv[2]
-else:
+if ofile == "":
     ofile = "/tmp/AdderOptions.opts"
-OptionsfromTasks(tasklist,level,ofile,part)
+OptionsfromTasks(tasklist,level,ofile,part,hostdns)

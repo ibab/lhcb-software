@@ -1,0 +1,5 @@
+#include "$FARMCONFIGROOT/options/BasicDiskReader.opts"
+Runable.Directory                    = "/localdisk/overflow";
+Runable.FilePrefix                   = "Run_";
+Runable.Buffer                       = @OnlineEnv.OvrReader_Output;
+MEPManager.Buffers                   = @OnlineEnv.OvrReader_Buffers;

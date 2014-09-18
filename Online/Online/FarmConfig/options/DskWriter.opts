@@ -23,7 +23,7 @@ LHCbFileWriter_Overflow.Requirements         = {
 "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 LHCbFileWriter_Overflow.MEPFilePrefix         = "/localdisk/overflow/NewRun_";
-LHCbFileWriter_Overflow.EvtFilePrefix         = "/localdisk/overflow/NewRun_";
+LHCbFileWriter_Overflow.EvtFilePrefix         = "/localdisk/hlt1/Run_";
 MessageSvc.fifoPath              = "$LOGFIFO";
 MessageSvc.LoggerOnly            = 1;
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
