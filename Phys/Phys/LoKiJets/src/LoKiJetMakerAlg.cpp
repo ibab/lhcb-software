@@ -386,8 +386,8 @@ StatusCode LoKi::JetMaker::JEC( LHCb::Particle* jet )
   const int PV = this->primaryVertices().size();
   const int usePV = ( PV > 3 ? 3 : PV );
   const TH2D* histo = m_histosJEC[usePV-1];
-  const int xbin = histo->GetXaxis()->FindBin(LoKi::Cuts::PT(jet)/1000.);
-  const int ybin = histo->GetYaxis()->FindBin(LoKi::Cuts::ETA(jet));
+  const int xbin = histo->GetXaxis()->FindFixBin(LoKi::Cuts::PT(jet)/1000.);
+  const int ybin = histo->GetYaxis()->FindFixBin(LoKi::Cuts::ETA(jet));
   const double cor = histo->GetBinContent(xbin,ybin);
   // Store the uncorrected kinematics
 
