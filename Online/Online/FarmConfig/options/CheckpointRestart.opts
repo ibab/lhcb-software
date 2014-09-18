@@ -5,7 +5,7 @@
 MEPManager.PartitionID            = @OnlineEnv.PartitionID;
 MEPManager.PartitionName          = @OnlineEnv.PartitionName;
 MessageSvc.OutputLevel            = @OnlineEnv.OutputLevel;
-MessageSvc.doPrintAlways          = False;
+//MessageSvc.doPrintAlways          = False;
 #include "$CHECKPOINT_SETUP_OPTIONS"
 CheckpointSvc.NumberOfInstances   = "$NUMBER_OF_CHILDREN";
 CheckpointSvc.ExitAfterCheckpoint = false;
