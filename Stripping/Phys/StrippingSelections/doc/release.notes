@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-18 - Sean Benson
+  - Fix very very rare duplication in StrippingBs2gammagamma
+
 ! 2014_06-07 - Hannah Mary Evans
   - In StrippingBs2MuMuLines.py changed 'Location' for RelInfoBs2MuMuZVisoBDT so it was different to RelInfoBs2MuMuIsolations 'Location'.
 

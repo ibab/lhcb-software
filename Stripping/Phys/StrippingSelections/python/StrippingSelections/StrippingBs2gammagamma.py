@@ -80,7 +80,9 @@ class StrippingBs2gammagammaConf(LineBuilder):
 	def __init__(self, name, config) :
 		LineBuilder.__init__(self, name, config)
 
-		fltrCode_LL = "(PT>(%(gammaConvPT)s-200.0)*MeV) & (MIPCHI2DV(PRIMARY)>%(gammaConvIPCHI)s)" % config
+		self.L0cut = "L0_CHANNEL_RE('Electron') | L0_CHANNEL_RE('Photon')"
+		
+                fltrCode_LL = "(PT>(%(gammaConvPT)s-200.0)*MeV) & (MIPCHI2DV(PRIMARY)>%(gammaConvIPCHI)s)" % config
 		self._trkFilter_LL = FilterDesktop( Code = fltrCode_LL )
 		fltrCode_DD = "(PT>%(gammaConvPT)s*MeV) & (MIPCHI2DV(PRIMARY)>(2.0/3.0)*%(gammaConvIPCHI)s)" % config
 		self._trkFilter_DD = FilterDesktop( Code = fltrCode_DD )
@@ -144,7 +146,8 @@ class StrippingBs2gammagammaConf(LineBuilder):
 		return StrippingLine(name+"_LLLine"
 				, prescale = 1
 				, postscale = 1
-				, selection = self.mergedTOS(name+"_LLTOSLine",Bs2gammagamma_LL,"L0PhotonDecision","L0ElectronDecision")
+				, selection = self.TOSFilter(name+"_LLTOSLine",[Bs2gammagamma_LL],"L0(Photon|Electron)Decision")
+                                , L0DU = self.L0cut
                                 , RequiredRawEvents = ["Calo"],MDSTFlag = True
 				, EnableFlavourTagging = False
                                 )
@@ -169,7 +172,8 @@ class StrippingBs2gammagammaConf(LineBuilder):
     	    	return StrippingLine(name+"_DDLine"
 				, prescale = 1
 				, postscale = 1
-				, selection = self.mergedTOS(name+"_DDTOSLine",Bs2gammagamma_DD,"L0PhotonDecision","L0ElectronDecision")
+				, selection = self.TOSFilter(name+"_DDTOSLine",[Bs2gammagamma_DD],"L0(Photon|Electron)Decision")
+                                , L0DU = self.L0cut
                                 , RequiredRawEvents = ["Calo"],MDSTFlag = True
 				, EnableFlavourTagging = False)
 	def _Bs2gammagammaDouble_X_Line( self, name, config) :
@@ -192,7 +196,8 @@ class StrippingBs2gammagammaConf(LineBuilder):
 		return StrippingLine(name+"_doubleLine"
 				, prescale = 1
 				, postscale = 1
-				, selection = self.mergedTOS(name+"_doubleTOSLine",Bs2gammagamma_double,"L0PhotonDecision","L0ElectronDecision")
+				, selection = self.TOSFilter(name+"_doubleTOSLine",[Bs2gammagamma_double],"L0(Photon|Electron)Decision")
+                                , L0DU = self.L0cut
                                 , RequiredRawEvents = ["Calo"],MDSTFlag = True
 				, EnableFlavourTagging = False)
 	def _Bs2gammagammaNone_X_Line( self, name, config, wide) :
@@ -225,7 +230,8 @@ class StrippingBs2gammagammaConf(LineBuilder):
 		return StrippingLine(name+"_NoConvLine"
 				, prescale = scaleWide
 				, postscale = 1
-				, selection = self.mergedTOS(name+"_NoConvTOSLine",Bs2gammagamma_none,"L0PhotonDecision","L0ElectronDecision")
+				, selection = self.TOSFilter(name+"_NoConvTOSLine",[Bs2gammagamma_none],"L0(Photon|Electron)Decision")
+                                , L0DU = self.L0cut
                                 , RequiredRawEvents = ["Calo"],MDSTFlag = True
 				, EnableFlavourTagging = False)
 
@@ -233,7 +239,6 @@ class StrippingBs2gammagammaConf(LineBuilder):
             from Configurables import TisTosParticleTagger
             _filter = TisTosParticleTagger(name+"_TriggerTos")
             _filter.TisTosSpecs = { trigger+"%TOS" : 0 }
-            _filter.NoRegex = True
             from PhysSelPython.Wrappers import Selection
             _sel = Selection("Sel" + name + "_TriggerTos", RequiredSelections = sel, Algorithm = _filter )
             return _sel
