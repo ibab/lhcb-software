@@ -277,7 +277,7 @@ private : // some local private class
     // ========================================================================
   private: // histogram manipulations
     // ========================================================================
-    inline int  bin    ( const double v  ,       TAxis* axis  ) const ;
+    inline int  bin    ( const double v  , const TAxis* axis  ) const ;
     inline int  binTx  ( const double tx , const TH2D*  histo ) const ;
     inline int  binTy  ( const double ty , const TH2D*  histo ) const ;
     // ========================================================================
