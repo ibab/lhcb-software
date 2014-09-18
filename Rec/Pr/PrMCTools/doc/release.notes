@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-09-18 - Michel De Cian
+- Add some more doxygen comments to PrPlotFTHits.
+
 !========================= PrMCTools v2r4 2014-09-08 =========================
 ! 2014-09-04 - Tim Head
  - Make Best track location configurable in PrChecker

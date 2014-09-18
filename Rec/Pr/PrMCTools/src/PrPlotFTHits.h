@@ -48,6 +48,14 @@
  *  DataOnDemandSvc().NodeMap[ "/Event/Link/MC" ] = "DataObject"
  *  @endcode
  * 
+ *  Also note that the IdealStateCreator needs to be given the correct detectors to find the MCHits it needs internally
+ *  
+ *  @code
+ *  from Configurables import IdealStateCreator
+ *  plotFTHits.addTool( IdealStateCreator("IdealStateCreator"))
+ *  plotFTHits.IdealStateCreator.Detectors = [ "FT" ]
+ *  @endcode
+ *
  *  
  *  @author Michel De Cian
  *  @date   2014-05-08
