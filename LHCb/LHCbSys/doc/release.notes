@@ -13,10 +13,11 @@ This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
     Det/DDDB v1r71, Det/DetCond v12r37, Det/DetDesc v18r34,
     Det/DetDescChecks v5r11, Det/MuonDet v9r16, Event/DAQEvent v9r17,
     Event/EventPacker v4r3, Event/PhysEvent v11r27, Event/RecEvent v2r53,
-    Event/TrackEvent v6r2, Ex/IOExample v4r14, GaudiConf v19r4, Hlt/HltDAQ v4r6,
-    Kernel/LHCbAlgs v3r4, Kernel/LHCbKernel v15r4, Kernel/LHCbMath v3r50,
-    Kernel/Relations v6r3, Phys/LoKiCore v11r20p1, Phys/LoKiHlt v3r15,
-    Rich/RichKernel v7r56, Tools/CondDBUI v3r30, Velo/VeloDAQ v6r12
+    Event/SwimmingEvent v1r5p2, Event/TrackEvent v6r2, Ex/IOExample v4r14,
+    GaudiConf v19r4, Hlt/HltDAQ v4r6, Kernel/LHCbAlgs v3r4, Kernel/LHCbKernel v15r4,
+    Kernel/LHCbMath v3r50, Kernel/Relations v6r3, Phys/LoKiCore v11r20p1,
+    Phys/LoKiHlt v3r15, Rich/RichKernel v7r56, Tools/CondDBUI v3r30,
+    Velo/VeloDAQ v6r12
 
 - In Calo/CaloInterfaces v8r9
   . ICaloHypoEstimator.h : add ClusterCode & ClusterFrac as extra info
@@ -94,6 +95,9 @@ This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
   . Include the TES location (when appropriate) in the fillStream printout
     for the RecVertex class.
   . ProtoParticle.xml : add ClusterCode & ClusterFrac as extra info
+
+- In Event/SwimmingEvent v1r5p2
+  . Workaround for ROOT-6704 (incorrect dictionary)
 
 - In Event/TrackEvent v6r2
   . Improve speed of Track::probChi2

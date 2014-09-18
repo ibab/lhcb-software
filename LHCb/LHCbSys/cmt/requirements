@@ -63,7 +63,7 @@ use MicroDst              v1r2    Event   # ??
 use PhysEvent             v11r27  Event   # Anton Poluetkov
 use RecEvent              v2r53   Event   # Marco Cattaneo and sub-det experts
 use RecreatePIDTools      v1r7    Event   # Chris Jones
-use SwimmingEvent         v1r5p1  Event   # Roel Aaij, Vava Gligorov
+use SwimmingEvent         v1r5p2  Event   # Roel Aaij, Vava Gligorov
 use TrackEvent            v6r2    Event   # Wouter Hulsbergen
 use VeloEvent             v16r11  Event   # Tomasz Szumlak, Chris Parkes
 
