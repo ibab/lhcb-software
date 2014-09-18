@@ -8,6 +8,17 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-09-18 - Vanya Belyaev
+ - 2D-fits: add possibility to visualize fit projections using Cut/Projection ranges 
+   
+   >>> r,f = model.fitTo ( dataset ) ## fit dataset
+   >>> fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
+            
+   >>> model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
+   >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
+
+   thanks to Vladimir Romanovsky 
+
 ! 2014-09-08 - Vanya Belyaev
  - few minor impromevents for Manca's models 
 

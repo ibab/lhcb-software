@@ -208,11 +208,22 @@ class PDF (object) :
                                                self.adj_alist2 )
             
     ## make the actual fit (and optionally draw it!)
+    #  @code
+    #  r,f = model.fitTo ( dataset )
+    #  r,f = model.fitTo ( dataset , weighted = True )    
+    #  r,f = model.fitTo ( dataset , ncpu     = 10   )    
+    #  r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
+    #  @endcode 
     def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , *args , **kwargs ) :
         """
         Perform the actual fit (and draw it)
+        >>> r,f = model.fitTo ( dataset )
+        >>> r,f = model.fitTo ( dataset , weighted = True )    
+        >>> r,f = model.fitTo ( dataset , ncpu     = 10   )    
+        >>> r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
         """
-
+        if isinstance ( dataset , ROOT.TH1 ) :
+            return self.fitHisto ( dataset , draw , silent , *args , **kwargs ) 
         #
         ## treat the arguments properly
         # 
@@ -243,7 +254,7 @@ class PDF (object) :
 
         ##
         if not ncpu_added :
-            logger.debug  ( 'PDF(%s).fitTo: NCPU is added ' ) 
+            logger.debug  ( 'PDF(%s).fitTo: NCPU is added ' % self.name ) 
             _args.append  (  ncpu ( len ( dataset ) ) )
             
         _args = tuple ( _args )
@@ -304,12 +315,19 @@ class PDF (object) :
         
         return result, self.draw ( dataset , nbins = nbins , silent = silent )
     
-    ## draw fit results 
+    ## draw fit results
+    #  @code
+    #  r,f = model.fitTo ( dataset )
+    #  model.draw ( datatset , nbins = 100 ) 
+    #  @endcode 
     def draw ( self , dataset , nbins = 100 , silent = False ) :
         """    
         Visualize the fits results
+        
+        >>> r,f = model.fitTo ( dataset )
+        >>> model.draw ( datatset , nbins = 100 )
+        
         """
-
         #
         ## again the context
         # 
@@ -369,11 +387,19 @@ class PDF (object) :
             frame.Draw()
             
             return frame 
-
+        
     ## fit the histogram (and draw it)
+    #  @code
+    #  histo = ...
+    #  r,f = model.fitHisto ( histo , draw = True ) 
+    #  @endcode 
     def fitHisto ( self , histo , draw = False , silent = False , *args , **kwargs ) :
         """
         Fit the histogram (and draw it)
+
+        >>> histo = ...
+        >>> r,f = model.fitHisto ( histo , draw = True ) 
+        
         """
         
         if silent : from Ostap.Utils import RooSilent as Context
@@ -391,10 +417,17 @@ class PDF (object) :
             return self.fitTo ( self.hset , draw , len ( histo ) , silent , *args , **kwargs )
 
     ## perform sPlot-analysis 
+    #  @code
+    #  r,f = model.fitTo ( dataset )
+    #  model.sPlot ( dataset ) 
+    #  @endcode 
     def sPlot ( self , dataset ) : 
         """
         Make sPlot analysis
 
+        >>> r,f = model.fitTo ( dataset )
+        >>> model.sPlot ( dataset ) 
+        
         """
         if not hasattr ( self , 'alist2' ) :
             logger.error ('PDF(%s) has not attribute "alist2", no sPlot is possible' % self.name ) 
@@ -756,12 +789,41 @@ class Fit1D (PDF) :
 
 # =============================================================================
 ## @class Fit2D
-#  The actual model for 2D-fits 
+#  The actual model for 2D-fits
+#
+#  @code
+# 
+#  model   = Models.Fit2D (
+#      signal_1 = Models.Gauss_pdf ( 'Gx' , m_x.getMin () , m_x.getMax () , mass = m_x ) ,
+#      signal_2 = Models.Gauss_pdf ( 'Gy' , m_y.getMin () , m_y.getMax () , mass = m_y ) ,
+#      power1   = 1 , 
+#      power2   = 1 )
+#
+#  r,f = model.fitTo ( dataset ) ## fit dataset 
+#
+#  print r                       ## get results  
+#
+#  fx  = model.draw1 ()          ## visualize X-projection
+#  fy  = model.draw2 ()          ## visualize X-projection
+#
+#  @endcode 
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2011-07-25
 class Fit2D (object) :
     """
-    The actual model for 2D-fits 
+    The actual model for 2D-fits
+    
+    >>>  model   = Models.Fit2D (
+    ...      signal_1 = Models.Gauss_pdf ( 'Gx' , m_x.getMin () , m_x.getMax () , mass = m_x ) ,
+    ...      signal_2 = Models.Gauss_pdf ( 'Gy' , m_y.getMin () , m_y.getMax () , mass = m_y ) ,
+    ...      power1   = 1 , 
+    ...      power2   = 1 )
+    >>> r,f = model.fitTo ( dataset ) ## fit dataset 
+    >>> print r                       ## get results  
+    >>> fx  = model.draw1 ()          ## visualize X-projection
+    >>> fy  = model.draw2 ()          ## visualize X-projection
+
     """
     def __init__ ( self              ,
                    #
@@ -889,7 +951,9 @@ class Fit2D (object) :
             icmp += 1
             
             if   isinstance ( cmp , ROOT.RooAbsPdf         ) : pass 
-            elif hasattr    ( cmp , 'pdf'                  ) : cmp = cmp.pdf 
+            elif hasattr    ( cmp , 'pdf'                  ) :
+                self._cmps += [ cmp ] 
+                cmp = cmp.pdf 
             elif isinstance ( cmp , ( float , int , long ) ) and not isinstance ( cmp , bool ) :
                 px  = ROOT.RooPolynomial ( 'Px%d'    % icmp + suffix ,
                                            'Px(%d)'  % icmp + suffix , self.m1 ) 
@@ -921,20 +985,58 @@ class Fit2D (object) :
         
         self._splots = []
 
-    ## fit 
+    ## Fit dataset and (optionally draw the results)
+    #  @code 
+    #  r,f = model.fitTo ( dataset ) ## fit dataset 
+    #  print r                       ## get results
+    #  @endcode 
     def fitTo ( self            ,
                 dataset         ,
                 draw   = False  ,
                 xbins  = 50     ,
                 ybins  = 50     ,
-                silent = False  , *args ) :
+                silent = False  , *args , **kwargs ) :
         """
-        Perform the fit
+        Perform the fit and optionally draw the results
+        
+        >>> r,f = model.fitTo ( dataset , draw = True ) ## fit dataset 
+        
         """
-        result = self.pdf.fitTo ( dataset                  , 
-                                  ROOT.RooFit.Save ()      ,
-                                  ncpu ( len ( dataset ) ) ,
-                                  *args                    )
+        if isinstance ( dataset , ROOT.TH2 ) :
+            return self.fitHisto ( dataset , draw , silent , *args ) 
+
+        _args = []
+        for a in args :
+            if not isinstance ( a , ROOT.RooCmdArg ) :
+                logger.warning ( 'Fit2D.fitTo, unknown argument type %s, skip it ' % type ( a ) ) 
+                continue
+            _args.append ( a )
+            
+        ncpu_added = False 
+        for k,a in kwargs.iteritems() :
+            if isinstance ( a , ROOT.RooCmdArg ) :
+                logger.debug   ( 'Fit2D.fitTo, add keyword argument %s' % k )  
+                _args.append ( a )
+                continue
+            elif k.upper() in  ( 'WEIGHTED' , 'SUMW2'  , 'SUMW2ERROR' )  and isinstance ( a , bool ) and dataset.isWeighted() :
+                _args.append   (  ROOT.RooFit.SumW2Error( a ) )
+                logger.debug   ( 'Fit2D.fitTo, add keyword argument %s/%s' % ( k , a ) )                 
+            elif k.upper() in  ( 'NCPU' , 'NCPUS' , 'NUMCPU' , 'NUMCPUS' )  and isinstance ( a , int ) and 1<= a : 
+                _args.append   (  ROOT.RooFit.NumCPU( a  ) ) 
+                logger.debug   ( 'Fit2D.fitTo, add keyword argument %s/%s' % ( k , a ) )
+                ncpu_added = True 
+            else : 
+                logger.warning ( 'Fit2D.fitTo, unknown/illegal keyword argument type %s/%s, skip it ' % ( self.name , k , type ( a ) ) )
+                continue              
+        ##
+        if not ncpu_added :
+            logger.debug  ( 'Fit2D.fitTo: NCPU is added ' ) 
+            _args.append  (  ncpu ( len ( dataset ) ) )
+        _args = tuple( _args )
+        
+        result = self.pdf.fitTo ( dataset              , 
+                                  ROOT.RooFit.Save ()  ,
+                                  *_args               )
 
         st   = result.status()
         if 0 != st   : logger.warning('Fit2D.fitTo: fit status is %s' % st   )
@@ -967,25 +1069,63 @@ class Fit2D (object) :
             return result,None
         
         return result, self.draw ( None , dataset , nbins , ybins , silent , *args ) 
-    
-    ## draw the projection over 1st variable 
-    def draw1 ( self , dataset = None , nbins = 100 , silent = True , *args ) :
-        """Draw the projection over 1st variable"""
-        return self.draw ( self.m1 , dataset , nbins , 20    , silent , *args ) 
-    ## draw the projection over 12nd variable 
-    def draw2 ( self , dataset = None , nbins = 100 , silent = True , *args ) :
-        """Draw the projection over 2nd variable"""
-        return self.draw ( self.m2 , dataset , nbins   , 20 , silent , *args ) 
 
-    ## make 1D-plot 
-    def draw ( self           ,
-               drawvar = None ,
-               dataset = None ,
-               nbins   = 100  ,
-               ybins   =  20  ,
-               silent  = True ,
-               projvar = None ,  
-               *args )  : 
+    
+    ## draw the projection over 1st variable
+    #
+    #  @code
+    #  r,f = model.fitTo ( dataset ) ## fit dataset
+    #  fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
+    #
+    #  model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
+    #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
+    #
+    #  @endcode 
+    def draw1 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
+        """
+        Draw the projection over 1st variable
+        
+        >>> r,f = model.fitTo ( dataset ) ## fit dataset
+        >>> fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
+        
+        >>> model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
+        >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
+        
+        """
+        return self.draw ( self.m1 , dataset , nbins , 20     , silent , in_range         , *args )
+    
+    ## draw the projection over 2nd variable
+    #
+    #  @code
+    #  r,f = model.fitTo ( dataset ) ## fit dataset
+    #  fy  = model.draw2 ( dataset , nbins = 100 ) ## draw results
+    #
+    #  model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
+    #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
+    #
+    #  @endcode 
+    def draw2 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
+        """
+        Draw the projection over 2nd variable
+        
+        >>> r,f = model.fitTo ( dataset ) ## fit dataset
+        >>> fy  = model.draw1 ( dataset , nbins = 100 ) ## draw results
+        
+        >>> model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
+        >>> f2  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
+        
+        """
+        return self.draw ( self.m2 , dataset , nbins , 20     , silent , in_range         , *args ) 
+    
+    ## make 1D-plot
+    def draw ( self            ,
+               drawvar  = None ,
+               dataset  = None ,
+               nbins    = 100  ,
+               ybins    =  20  ,
+               silent   = True ,
+               in_range = None ,
+               *args           )  : 
         """
         Make 1D-plot:
         """
@@ -995,7 +1135,7 @@ class Fit2D (object) :
         
         if not dataset :
             if hasattr ( self , 'dataset' ) : dataset = self.dataset 
-            
+
         with context :
                 
             if not drawvar :
@@ -1019,8 +1159,16 @@ class Fit2D (object) :
             
             frame = drawvar.frame( nbins )
             
-            if dataset : dataset  .plotOn ( frame , *args )
+            if dataset :
+                if not in_range : dataset .plotOn ( frame ,                                      *args )
+                else            : dataset .plotOn ( frame , ROOT.RooFit.CutRange ( in_range ) , *args )
 
+            _args = args 
+            if in_range :
+                _args = list  (  args )
+                _args.append  ( ROOT.RooFit.ProjectionRange( in_range) )
+                _args = tuple ( _args ) 
+                               
             ## if projvar :
                 
             ##     projvar.setBins( 10 )
@@ -1033,32 +1181,27 @@ class Fit2D (object) :
             ##     print 'ARGS: ', args
 
             self.pdf .plotOn ( frame ,
-                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.Components ( self.sb_pdf.GetName() ) ,
                                ROOT.RooFit.LineStyle  ( ROOT.kDashed   ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kGreen    ) , *args )
+                               ROOT.RooFit.LineColor  ( ROOT.kGreen    ) , *_args )
             
             self.pdf .plotOn ( frame ,
-                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.Components ( self.bs_pdf.GetName() ) ,
                                ROOT.RooFit.LineStyle  ( ROOT.kDotted   ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kMagenta  ) , *args )
+                               ROOT.RooFit.LineColor  ( ROOT.kMagenta  ) , *_args )
             
             self.pdf .plotOn ( frame ,
-                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.Components ( self.bb_pdf.GetName() ) ,          
                                ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kBlack    ) , *args )
+                               ROOT.RooFit.LineColor  ( ROOT.kBlack    ) , *_args )
             
             self.pdf .plotOn ( frame ,
-                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
                                ROOT.RooFit.Components ( self.ss_pdf.GetName() ) ,
                                ROOT.RooFit.LineWidth  ( 1              ) ,
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *args )
+                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
             
             self.pdf .plotOn ( frame ,
-                               ## ROOT.RooFit.ProjWData( self.projdata ) , 
-                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *args )
+                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
             
             frame.SetXTitle ( '' )
             frame.SetYTitle ( '' )
@@ -1068,10 +1211,21 @@ class Fit2D (object) :
             
             return frame
 
-    ## fit the histogram (and draw it)
+    ## fit the 2D-histogram (and draw it)
+    #
+    #  @code
+    #
+    #  histo = ...
+    #  r,f = model.fitHisto ( histo )
+    #
+    #  @endcode
     def fitHisto ( self , histo , draw = False , silent = False , *args ) :
         """
         Fit the histogram (and draw it)
+        
+        >>> histo = ...
+        >>> r,f = model.fitHisto ( histo , draw = True )
+        
         """
         context = NoContext () 
         if silent : context = RooSilent() 
@@ -1088,12 +1242,20 @@ class Fit2D (object) :
                             histo.nbinsy() ,
                             silent         , *args ) 
     
-    ## make splot-analysis 
+    ## make splot-analysis
+    #  @code
+    #  r,f = model.fitTo ( dataset )
+    #  model.sPlot ( dataset ) 
+    #  @endcode 
     def sPlot ( self     ,
                 dataset  ,
                 *args    ) : 
         """
-        make sPlot analysis 
+        make sPlot analysis:
+        
+        >>> r,f = model.fitTo ( dataset )
+        >>> model.sPlot ( dataset ) 
+        
         """
         splot = ROOT.RooStats.SPlot ( rootID ( "sPlot_" ) ,
                                       "sPlot"             ,
