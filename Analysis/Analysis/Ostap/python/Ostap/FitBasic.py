@@ -1077,6 +1077,8 @@ class Fit2D (object) :
     #  r,f = model.fitTo ( dataset ) ## fit dataset
     #  fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
     #
+    #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
+    #
     #  model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
     #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
     #
@@ -1088,10 +1090,15 @@ class Fit2D (object) :
         >>> r,f = model.fitTo ( dataset ) ## fit dataset
         >>> fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
         
+        >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
+
         >>> model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
         >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
         
         """
+        if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
+            self.m2.setRange ( 'aux_rng2' , in_range[0] , in_range[1] )
+            in_range = 'aux_rng2' 
         return self.draw ( self.m1 , dataset , nbins , 20     , silent , in_range         , *args )
     
     ## draw the projection over 2nd variable
@@ -1099,6 +1106,8 @@ class Fit2D (object) :
     #  @code
     #  r,f = model.fitTo ( dataset ) ## fit dataset
     #  fy  = model.draw2 ( dataset , nbins = 100 ) ## draw results
+    #
+    #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
     #
     #  model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
     #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
@@ -1109,12 +1118,17 @@ class Fit2D (object) :
         Draw the projection over 2nd variable
         
         >>> r,f = model.fitTo ( dataset ) ## fit dataset
-        >>> fy  = model.draw1 ( dataset , nbins = 100 ) ## draw results
+        >>> fy  = model.draw2 ( dataset , nbins = 100 ) ## draw results
         
+        >>> f2  = model.draw2 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
+
         >>> model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
-        >>> f2  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
-        
+        >>> f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
+
         """
+        if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
+            self.m1.setRange ( 'aux_rng1' , in_range[0] , in_range[1] )
+            in_range = 'aux_rng1' 
         return self.draw ( self.m2 , dataset , nbins , 20     , silent , in_range         , *args ) 
     
     ## make 1D-plot

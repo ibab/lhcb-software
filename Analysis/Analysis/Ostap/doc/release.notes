@@ -9,6 +9,12 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-09-18 - Vanya Belyaev
+ - allow also 
+
+   >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = (1,2) ) ## draw results
+
+
+! 2014-09-18 - Vanya Belyaev
  - 2D-fits: add possibility to visualize fit projections using Cut/Projection ranges 
    
    >>> r,f = model.fitTo ( dataset ) ## fit dataset
