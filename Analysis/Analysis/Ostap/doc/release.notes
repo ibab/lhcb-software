@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-09-19 - Vanya Belyaev
+ - RooFitDeco.py  
+   minor fix 
+   (thanks to Vladimir Romanovsky) 
+
 ! 2014-09-18 - Vanya Belyaev
  - allow also 
 

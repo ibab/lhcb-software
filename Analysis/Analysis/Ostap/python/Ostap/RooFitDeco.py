@@ -860,7 +860,7 @@ def _ds_project_  ( dataset , histo , what , *args ) :
             return _ds_project_ ( dataset , histo , what , *args )
         
         if 3 == len ( what ) :
-            histo = ROOT.TH2F ( hID() ,
+            histo = ROOT.TH3F ( hID() ,
                                 what[2].GetName() + ' : ' + what[1].GetName() + ' : ' + what[0].GetName() ,
                                 20 , what[0].getMin () ,     what[0].getMax () ,
                                 20 , what[1].getMin () ,     what[1].getMax () , 
