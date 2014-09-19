@@ -251,13 +251,17 @@ StatusCode TeslaReportAlgo::execute()
       for ( LHCb::VertexBase::Container::const_iterator pv = cont_PV->begin() ; pv!=cont_PV->end() ; ++pv){
         double ip, chi2;
         StatusCode test = m_dist->distance ( Part, *pv, ip, chi2 );
-        if( ((chi2<min_var) && (m_PV=="Offline")) || (min_var<0.)){
-          min_var = chi2 ;
-          key = (*pv)->key();
+        if(m_PV=="Offline"){
+          if( (chi2<min_var) || (min_var<0.)){
+            min_var = chi2 ;
+            key = (*pv)->key();
+          }
         }
-        if( ((ip<min_var) && (m_PV=="Online")) || (min_var<0.)){
-          min_var = ip;
-          key = (*pv)->key();
+        else if(m_PV=="Online"){
+          if( (ip<min_var) || (min_var<0.)){
+            min_var = ip;
+            key = (*pv)->key();
+          }
         }
         else{
           warning() << "Choose a valid PV requirement or use the default (online)" << endmsg;
