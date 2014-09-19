@@ -530,10 +530,10 @@ class B2XMuMuConf(LineBuilder) :
 
     def __Lambda__(self, conf):
         """
-        Filter Lambda from StdLooseLambda and StdLooseLambda
+        Filter Lambda from StdVeryLooseLambdaLL and StdLooseLambdaDD
         """  
         _lambdadd = AutomaticData(Location = 'Phys/StdLooseLambdaDD/Particles')
-        _lambdall = AutomaticData(Location = 'Phys/StdLooseLambdaLL/Particles')
+        _lambdall = AutomaticData(Location = 'Phys/StdVeryLooseLambdaLL/Particles')
         _filter_lambdadd = FilterDesktop(Code = self.__LambdaCuts__(conf))
         _filter_lambdall = FilterDesktop(Code = self.__LambdaCuts__(conf))        
         _sellambdadd = Selection("Selection_"+self.name+"_Lambdadd",

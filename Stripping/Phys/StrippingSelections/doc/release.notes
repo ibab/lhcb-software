@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-19 - Michal Kreps
+  - Fix to B2XMuMu line to use StdVeryLooseLambdaLL instead of
+    StdLooseLambdaLL.
+
 ! 2014-09-18 - Sean Benson
   - Fix very very rare duplication in StrippingBs2gammagamma
 
