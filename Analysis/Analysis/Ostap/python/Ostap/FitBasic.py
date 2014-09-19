@@ -279,9 +279,11 @@ class PDF (object) :
             logger.warning ( 'PDF(%s).fitTo: status is %s. Refit in non-silent regime ' % ( self.name , st  ) )    
             return self.fitTo ( dataset , draw , nbins , False , *args , **kwargs )
         
-        if 0 != st   : logger.warning ( 'PDF(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )    
+        if 0 != st   : logger.warning ( 'PDF(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )
+        #
         qual = result.covQual()
-        if 3 != qual : logger.warning ( 'PDF(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
+        if   -1 == qual : logger.debug   ( 'PDF(%s).fitTo: covQual    is unknown ' ) 
+        elif  3 != qual : logger.warning ( 'PDF(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
 
         #
         ## check the integrals (is possible)
@@ -1040,8 +1042,10 @@ class Fit2D (object) :
 
         st   = result.status()
         if 0 != st   : logger.warning('Fit2D.fitTo: fit status is %s' % st   )
+        #
         qual = result.covQual()
-        if 3 != qual : logger.warning('Fit2D.fitTo: covQual    is %s' % qual )
+        if   -1 == qual : logger.debug   ('Fit2D.fitTo: covQual is unknown'      )
+        elif  3 != qual : logger.warning ('Fit2D.fitTo: covQual    is %s' % qual )
         
         #
         ## keep dataset (for drawing)
