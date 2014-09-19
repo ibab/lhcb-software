@@ -171,7 +171,8 @@ IConverter* RootCnvSvc::createConverter(long typ,const CLID& wanted,const ICnvFa
 void RootCnvSvc::loadConverter(DataObject* pObject) {
   if (pObject) {
     string cname = System::typeinfoName(typeid(*pObject));
-    log() << MSG::DEBUG << "Trying to 'Autoload' dictionary for class " << cname << endmsg;
+    if( log().level() <= MSG::DEBUG )
+      log() << MSG::DEBUG << "Trying to 'Autoload' dictionary for class " << cname << endmsg;
     TClass* cl = s_classesNames[cname];
     if ( 0 == cl ) {
       cl = TClass::GetClass(cname.c_str());
@@ -265,7 +266,6 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
         string fid = pc->fid();
         string section = m_recordName[0] == '/' ? m_recordName.substr(1) : m_recordName;
         TBranch* b = pc->getBranch(section,m_recordName);
-        log() << MSG::VERBOSE;
         if ( b ) {
           const string par[2] = { fid, m_recordName };
           unsigned long ipar[2] = { (unsigned long)(*con), (unsigned long)b->GetEntries()-1 };
@@ -274,18 +274,22 @@ RootCnvSvc::connectDatabase(CSTR dataset, int mode, RootDataConnection** con)  {
             if ( !pc->mergeFIDs().empty() )
               fid = pc->mergeFIDs()[i];
             if ( !createAddress(repSvcType(),CLID_DataObject,par,ipar,pAddr).isSuccess() ) {
-              log() << "Failed to create address for " << m_recordName << " in:" << fid
-                << " [" << pc->fid() << "][" << i << "]" << endmsg;
+              if( log().level() <= MSG::VERBOSE )
+                log() << MSG::VERBOSE << "Failed to create address for " << m_recordName << " in:" << fid
+                      << " [" << pc->fid() << "][" << i << "]" << endmsg;
               continue;
             }
-            log() << "Prepare " << m_recordName << " " << fid << " [" << par[0] << "][" << i << "]" << endmsg;
+            if( log().level() <= MSG::VERBOSE )
+              log()  << MSG::VERBOSE << "Prepare " << m_recordName << " " << fid << " [" << par[0] << "][" << i << "]" << endmsg;
             m_incidentSvc->fireIncident(ContextIncident<IOpaqueAddress*>(fid,"FILE_OPEN_READ",pAddr));
           }
         }
         else {
-          log() << "No valid Records " << m_recordName << " present in:" << pc->fid() << endmsg;
+          if( log().level() <= MSG::VERBOSE )
+            log() << MSG::VERBOSE << "No valid Records " << m_recordName << " present in:" << pc->fid() << endmsg;
         }
       }
+
       // We can remove retired connections, which are no longer used....
       IIODataManager::Connections cons = m_ioMgr->connections(this);
       for(IIODataManager::Connections::iterator i=cons.begin(); i != cons.end(); ++i)  {
@@ -334,23 +338,23 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
       TTree* t = b->GetTree();
       TObjArray* a = t->GetListOfBranches();
       Int_t nb = a->GetEntriesFast();
-      log() << MSG::DEBUG;
       /// fill NULL pointers to all branches, which have less entries than the section branch
       for(Int_t i=0; i<nb; ++i) {
-	TBranch* br_ptr = (TBranch*)a->UncheckedAt(i);
-	Long64_t br_evt = br_ptr->GetEntries();
-	if ( br_evt < evt ) {
-	  Long64_t num = evt-br_evt;
-	  br_ptr->SetAddress(0);
-	  while(num>0) {
-	    br_ptr->Fill();
-	    --num;
-	  }
-	  log() << "commit: Added " << long(evt-br_evt)
-		<< " Section: " << evt << " Branch: " << br_ptr->GetEntries()
-		<< " RefNo: " << br_ptr->GetEntries()-1
-		<< " NULL entries to:" << br_ptr->GetName() << endmsg;
-	}
+        TBranch* br_ptr = (TBranch*)a->UncheckedAt(i);
+        Long64_t br_evt = br_ptr->GetEntries();
+        if ( br_evt < evt ) {
+          Long64_t num = evt-br_evt;
+          br_ptr->SetAddress(0);
+          while(num>0) {
+            br_ptr->Fill();
+            --num;
+          }
+          if( log().level() <= MSG::DEBUG ) log() << MSG::DEBUG
+                << "commit: Added " << long(evt-br_evt)
+                << " Section: " << evt << " Branch: " << br_ptr->GetEntries()
+                << " RefNo: " << br_ptr->GetEntries()-1
+                << " NULL entries to:" << br_ptr->GetName() << endmsg;
+        }
       }
 
       b->GetTree()->SetEntries(evt);
@@ -366,8 +370,9 @@ StatusCode  RootCnvSvc::commitOutput(CSTR dsn, bool /* doCommit */) {
           b->GetTree()->FlushBaskets();
         }
       }
-      log() << MSG::DEBUG << "Set section entries of " << m_currSection
-	    << " to " << long(evt) << " entries." << endmsg;
+      if( log().level() <= MSG::DEBUG )
+        log() << MSG::DEBUG << "Set section entries of " << m_currSection
+              << " to " << long(evt) << " entries." << endmsg;
     }
     else {
       return error("commitOutput> Failed to update entry numbers on "+dsn);
@@ -408,8 +413,9 @@ StatusCode RootCnvSvc::createNullRef(const std::string& path) {
   string section = path.substr(1,len==string::npos ? string::npos : len-1);
   pair<int,unsigned long> ret =
     m_current->save(section,path+"#R",0,refs,m_bufferSize,m_splitLevel);
-  log() << MSG::VERBOSE << "Writing object:" << path << " "
-	<< ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
+  if( log().level() <= MSG::VERBOSE )
+    log() << MSG::VERBOSE << "Writing object:" << path << " "
+          << ret.first << " " << hex << ret.second << dec << " [NULL]" << endmsg;
   return S_OK;
 }
 
@@ -466,8 +472,9 @@ StatusCode RootCnvSvc::i__fillRepRefs(IOpaqueAddress* /* pA */, DataObject* pObj
 	pair<int,unsigned long> ret =
 	  m_current->save(sect,id+"#R",m_classRefs,&refs,m_bufferSize,m_splitLevel,true);
 	if ( ret.first > 1 ) {
-	  log() << MSG::DEBUG << "Writing object:" << id << " "
-		<< ret.first << " " << hex << ret.second << dec << endmsg;
+    if( log().level() <= MSG::DEBUG )
+      log() << MSG::DEBUG << "Writing object:" << id << " "
+            << ret.first << " " << hex << ret.second << dec << endmsg;
 	  return S_OK;
 	}
       }
@@ -518,7 +525,6 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
       size_t len = par[1].find('/',1);
       string section = par[1].substr(1,len==string::npos ? string::npos : len-1);
       int nb = con->loadRefs(section,par[1],ipar[1],refs);
-      log() << MSG::VERBOSE;
       if ( nb >= 1 ) {
         string npar[3];
         unsigned long nipar[2];
@@ -527,7 +533,6 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
         SmartIF<IService> isvc(pR->dataSvc());
 	SmartIF<IDataManagerSvc> dataMgr(pR->dataSvc());
         LinkManager* mgr = pObj->linkMgr();
-        bool active = log().isActive();
         for(vector<int>::const_iterator i=refs.links.begin(); i!=refs.links.end();++i) {
           mgr->addLink(con->getLink(*i),0);
         }
@@ -540,10 +545,9 @@ StatusCode RootCnvSvc::i__fillObjRefs(IOpaqueAddress* pA, DataObject* pObj) {
           nipar[1] = r.entry;
           StatusCode sc = addressCreator()->createAddress(r.svc,r.clid,npar,nipar,nPA);
           if ( sc.isSuccess() ) {
-            if ( active )  {
-              log() << isvc->name() << " -> Register:" << pA->registry()->identifier()
-                << "#" << npar[2] << "[" << r.entry << "]" << endmsg;
-            }
+            if( log().level() <= MSG::VERBOSE )
+              log() << MSG::VERBOSE << isvc->name() << " -> Register:" << pA->registry()->identifier()
+                    << "#" << npar[2] << "[" << r.entry << "]" << endmsg;
             sc = dataMgr->registerAddress(pA->registry(),npar[2],nPA);
             if ( sc.isSuccess() ) {
               continue;
