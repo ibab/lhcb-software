@@ -48,7 +48,8 @@ apply_pattern    install_python_modules
 #============================================================================
 private
 macro_append ROOT_linkopts " -lTMVA "
-macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version} "
+macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}" \
+    experimental&target-dbg " -lboost_unit_test_framework-${Boost_compiler_version}-mt-d-${Boost_file_version}"
 # Note: libgslcblas is needed by libgsl, but the link is missing.
 macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
 	            Darwin ""
