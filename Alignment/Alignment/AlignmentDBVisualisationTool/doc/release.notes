@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-09-19 - Jason Andrews
+ - fixed Velo plots in the local frame by removing the motion system parameters
+
 !========================= AlignmentDBVisualisationTool v1r2 2014-08-23 =========================
 
 ! 2014-08-20 - Jason Andrews

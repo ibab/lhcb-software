@@ -9,6 +9,8 @@ __all__  = ( "AlignmentsWithIOVs"
            , "TrackingDetectorTESNodes"
            , "TrackingAlignmentCondDBNodes"
            , "getGlobalPositionFromGeometryInfo"
+           , "getLocalPositionFromGeometryInfo"
+           , "ValueExtractors"
            , "parseTimeMin"
            , "parseTimeMax"
            , "preparePeriodsAndAlignments"
@@ -30,7 +32,7 @@ from SimpleAlignmentRepresentation import Transformation, AlignableTreeNode, loo
 #                detSvc -> transformations                 #
 ############################################################
 
-def getGlobalPositionFromGeometryInfo( geo ):
+def getGlobalPositionFromGeometryInfo( geo, corr ):
     """
     Extract the global position from geometry info
     (transformation from nominal to db in global frame)
@@ -38,10 +40,10 @@ def getGlobalPositionFromGeometryInfo( geo ):
     trans = gbl.vector('double')(3)
     rot = gbl.vector('double')(3)
     gbl.DetDesc.getZYXTransformParameters( geo.toGlobalMatrix(), trans, rot )
-    # gbl.DetDesc.getZYXTransformParameters( geo.alignmentCondition().offNominalMatrix(), trans, rot )
-    return Transformation( ( trans[0], trans[1], trans[2] ), ( rot[0], rot[1], rot[2] ) )
+    shift = corr["global"]
+    return Transformation( ( trans[0]-shift[0], trans[1]-shift[1], trans[2] ), ( rot[0], rot[1], rot[2] ) )
 
-def getLocalPositionFromGeometryInfo( geo ):
+def getLocalPositionFromGeometryInfo( geo, corr ):
     """
     Extract the local position from geometry info
     Gives the parameters exactly as they are stored in the db
@@ -49,12 +51,13 @@ def getLocalPositionFromGeometryInfo( geo ):
     trans = gbl.vector('double')(3)
     rot = gbl.vector('double')(3)
     gbl.DetDesc.getZYXTransformParameters( geo.alignmentCondition().offNominalMatrix(), trans, rot )
-    return Transformation( ( trans[0], trans[1], trans[2] ), ( rot[0], rot[1], rot[2] ) )
+    shift = corr["local"]
+    return Transformation( ( trans[0]-shift[0], trans[1]-shift[1], trans[2] ), ( rot[0], rot[1], rot[2] ) )
 
-ValueExtractors = { "global" : lambda detElm : getGlobalPositionFromGeometryInfo(detElm.geometry()) if detElm.geometry().alignmentCondition() else None,
-                    "local"  : lambda detElm : getLocalPositionFromGeometryInfo(detElm.geometry()) if detElm.geometry().alignmentCondition() else None }
+ValueExtractors = { "global" : lambda detElm, corr : getGlobalPositionFromGeometryInfo(detElm.geometry(),corr) if detElm.geometry().alignmentCondition() else None,
+                    "local"  : lambda detElm, corr : getLocalPositionFromGeometryInfo(detElm.geometry(),corr)  if detElm.geometry().alignmentCondition() else None }
 
-def getAlignableTreeFromDetectorElement( detElm, nodeValue=lambda det : None, parentName=None ):
+def getAlignableTreeFromDetectorElement( detElm, nodeValue=lambda det : None, parentName=None, motionSystem=None, ):
     """
     Create a simple alignment tree from a detector element
 
@@ -67,14 +70,21 @@ def getAlignableTreeFromDetectorElement( detElm, nodeValue=lambda det : None, pa
     shortName = name
     if parentName: # if not the root node: subtract the parent name
         shortName = name[len(parentName)+1:]
-
-    alignNode = AlignableTreeNode( shortName, nodeValue(detElm) )
-    alignNode.children = filter( None, ( getAlignableTreeFromDetectorElement(childDet, nodeValue, name) for childDet in detElm.childIDetectorElements() ) )
+    # remove velo resolver motion
+    Corrections = { "global" : [0,0], "local" : [0,0] }
+    for veloHalf, xParameter in ( ("VeloLeft","ResolPosLA"), ("VeloRight","ResolPosRC") ):
+        if veloHalf in name:
+            Corrections["global"][0] = motionSystem.paramAsDouble(xParameter)
+            Corrections["global"][1] = motionSystem.paramAsDouble("ResolPosY")
+            if veloHalf == shortName:
+                Corrections["local"][0] = motionSystem.paramAsDouble(xParameter)
+                Corrections["local"][1] = motionSystem.paramAsDouble("ResolPosY")
+    alignNode = AlignableTreeNode( shortName, nodeValue(detElm,Corrections) )
+    alignNode.children = filter( None, ( getAlignableTreeFromDetectorElement(childDet, nodeValue, name, motionSystem) for childDet in detElm.childIDetectorElements() ) )
     # we also look through nodes without alignment condition
     # but if there is no node value (no alignment) and all children are None
     # they should not be added (the above statement makes sure it does not get added to the parent then)
     if ( alignNode.value is not None ) or any( cn is not None for cn in alignNode.children ):
-#        print "Created alignable tree node for element %s" % name
         logging.debug("Created alignable tree node for element %s" % name)
         return alignNode
     else:
@@ -292,12 +302,13 @@ def extractAlignmentParameters(
         for begin, end in iovs:
             detDataSvc.setEventTime(gbl.Gaudi.Time(toTimeStamp(begin + (end-begin)/2)))
             updateManagerSvc.newEvent()
-
+            motionSystem = None if detName != "Velo" else gaudi.detSvc().getObject("/dd/Conditions/Online/Velo/MotionSystem")
             logging.info( "Extracting parameters for %s between %s and %s" % ( detName, begin, end ) )
             detTree = getAlignableTreeFromDetectorElement(
                           gaudi.detSvc().getObject(detPath)
                         , nodeValue  = valueExtractor
-                        , parentName = detPath
+                        , parentName = detPath,
+                          motionSystem = motionSystem
                         )
             detTree.name = detName
 

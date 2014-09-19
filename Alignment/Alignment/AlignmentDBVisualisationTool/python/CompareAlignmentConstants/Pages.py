@@ -307,6 +307,8 @@ ElementGroups = { "TT.Layers"       : ElementGroup("(?P<page>TT)/TT[ab]/(?P<elm>
                 , "OT.CFrames"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2))/(?P<elm>Q[0-3])$", 2, 2)
                 , "OT.Modules"      : ElementGroup("OT/(?P<page>T[1-3]/(?:X1|U|V|X2)/Q[0-3])/(?P<elm>M[1-9])$", 3, 3)
 
+                , "Velo.Velo"     : ElementGroup("(?P<page>(?P<elm>Velo))$", 1, 2)
+
                 , "Velo.Halves"     : ElementGroup("(?P<page>Velo)/(?P<elm>Velo(?:Left|Right))$", 1, 2)
 
                 , "Velo.Modules"    : [ "Velo.Modules.a", "Velo.Modules.b" ]
