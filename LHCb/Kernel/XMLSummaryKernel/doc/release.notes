@@ -4,9 +4,12 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2014-09-19 - Marco Clemencic
+ - Workaround for bug https://sft.its.cern.ch/jira/browse/ROOT-6516
+
 !========================= XMLSummaryKernel v1r11 2013-06-03 =======================
 ! 2013-06-03 - Marco Cattaneo
- - Follow move to python2.7 (LCG 56), changes format of <summary> entity 
+ - Follow move to python2.7 (LCG 56), changes format of <summary> entity
 
 !========================= XMLSummaryKernel v1r10 2013-04-29 =======================
 ! 2013-04-23 - Marco Clemencic
