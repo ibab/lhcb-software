@@ -10,10 +10,26 @@ branches doc cmt options python tests
 use GaudiPolicy v*
 use GaudiKernel v*
 
+#########################################
+# explicitly declare all L0 dependencies 
+#########################################
+
+use L0Interfaces v* L0
+use L0Event      v* Event
+use DAQEvent     v* Event
+use L0Base       v* L0
+use L0Muon       v* L0
+use L0MuonKernel v* L0
+use L0Calo       v* L0
+use L0DU         v* L0
+
 use HltDAQ       v* Hlt
 
+use ProcessorKernel v* L0
 use GaudiConfUtils  v* -no_auto_imports
 
+use CaloDet v* Det
+use MuonDet v* Det
 
 #########################################
 # Configurable (python) dependencies
@@ -24,6 +40,16 @@ use  HltEvent    v* Event
 use  LHCbAlgs    v* Kernel
 use  GaudiConf   v*
 use  RecEvent    v* Event
+use  TeslaTools  v* Phys
+
+#########################################
+# DBASE
+#########################################
+
+use L0TCK       v* TCK
+use DDDB        v* Det
+use PRConfig    v* 
+use AppConfig   v*
 
 # ============================================================================
 apply_pattern install_python_modules

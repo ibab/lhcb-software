@@ -44,6 +44,12 @@ class Tesla(LHCbConfigurableUser):
         , 'RecombineRAW'  	: 'Recombine raw event'
         , 'OuputPrefix'  	: 'Output prefix on TES'
         }
+        
+        def _safeSet(self,conf,param):
+            for p in param:
+                if (not self.isPropertySet(p)) or conf.isPropertySet(p):
+                    continue
+            conf.setProp(p,self.getProp(p))
 
 	def _configureDataOnDemand(self) :
 		if not self.getProp("EnableDataOnDemand") :
@@ -93,8 +99,9 @@ class Tesla(LHCbConfigurableUser):
 	def __apply_configuration__(self):
 		GaudiKernel.ProcessJobOptions.PrintOff()
 		############## Set other properties ###########
-		app = LHCbApp()
-		self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType', 'Persistency', 'CondDBtag','DDDBtag' ] )
+                self._safeSet( LHCbApp(), ['EvtMax','SkipEvents','Simulation', 'DataType' , 'CondDBtag','DDDBtag'] )
+                ApplicationMgr().AppName="*********Tesla*********, utilising DaVinci"
+                #self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType', 'Persistency', 'CondDBtag','DDDBtag' ] )
 		############## The raw event ##################
 		from Configurables import DecodeRawEvent, RecombineRawEvent
 		if self.getProp("RecombineRAW"):
