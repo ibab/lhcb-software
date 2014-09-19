@@ -800,7 +800,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
   auto sentinel = make_RangeFinder( m_minXPlanes, std::end(rng) );
   double xExtrap = track.xStraight( m_fwdTool->zReference() );
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
-  while ( sentinel( itP+1 ) ) { //TODO: why the +1 here??? (other than historical reasons)
+  while ( sentinel( itP ) ) {
     auto  predicate = make_predicate(*itP) ;
     auto range = sentinel.next_range( itP, predicate );
     if (!range.empty()) {

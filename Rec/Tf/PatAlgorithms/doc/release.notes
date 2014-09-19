@@ -6,7 +6,7 @@
 
 ! 2014-09-19 - Gerhard Raven
  - PatForwardTool: use boost::iterator_range, reduce triple nesting in loop 
-   over station/layer/region to a single loop.
+   over station/layer/region to a single loop. Fix off-by-one bug
  - PatFwdTool: factor out search for 'best region' and 'shortest range',
    move towards providing a 'const' interface, use boost::iterator_range
  - PatForward: make acceptTrack const
