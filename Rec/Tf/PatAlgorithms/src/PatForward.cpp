@@ -92,10 +92,6 @@ PatForward::PatForward( const std::string& name,
   // switch on or off NN var. writing
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-PatForward::~PatForward() {}
 
 //=============================================================================
 // Initialization
@@ -133,7 +129,7 @@ StatusCode PatForward::initialize() {
 //=========================================================================
 //  Check if a track should be processed. Default flags, and selector if defined
 //=========================================================================
-bool PatForward::acceptTrack(const LHCb::Track& track) 
+bool PatForward::acceptTrack(const LHCb::Track& track) const
 {
     bool ok = !(track.checkFlag( LHCb::Track::Invalid) );
     ok = ok && (!(track.checkFlag( LHCb::Track::Backward) ));
@@ -182,7 +178,7 @@ StatusCode PatForward::execute() {
   LHCb::Tracks* outputTracks  = 
     getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_outputTracksName);
 
-  if (inputTracks->size() > (unsigned int) m_maxNVelo) {
+  if (inputTracks->size() > m_maxNVelo) {
     LHCb::ProcStatus* procStat =
       getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
 		 LHCb::ProcStatusLocation::Default);

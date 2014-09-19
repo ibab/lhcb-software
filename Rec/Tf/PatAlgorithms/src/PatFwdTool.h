@@ -40,11 +40,11 @@ public:
               const std::string& name,
               const IInterface* parent);
 
-  ~PatFwdTool( ) = default; ///< Destructor
+  ~PatFwdTool( ) override = default;
   StatusCode initialize() override;
 
 private:
-  double storeXAtReferencePlane( PatFwdTrackCandidate& track, const PatFwdHit* hit );
+  double  updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, const PatFwdHit* hit ) const;
   template <bool withoutBField, typename... Hits>
   std::array<double,sizeof...(Hits)> xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, Hits... hits ) const ;
 public:
@@ -53,11 +53,9 @@ public:
 
   const std::vector<double>& zOutputs() const { return m_zOutputs; }
 
-  bool fitXCandidate( PatFwdTrackCandidate& track,
-  double maxChi2, int minPlanes );
+  bool fitXCandidate( PatFwdTrackCandidate& track, double maxChi2, int minPlanes ); // FIXME: for now, this updates m_zMagnet
 
-  bool fitStereoCandidate( PatFwdTrackCandidate& track,
-  double maxChi2, int minPlanes ) const;
+  bool fitStereoCandidate( PatFwdTrackCandidate& track, double maxChi2, int minPlanes ) const;
 private:
   template <bool withoutBField>
   bool fitXProjection_ ( PatFwdTrackCandidate& track,

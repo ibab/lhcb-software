@@ -3,6 +3,7 @@
 #define PATFORWARDTOOL_H 1
 
 // Include files
+#include "boost/range/iterator_range.hpp"
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/extends.h"
@@ -41,12 +42,13 @@ public:
 
   ~PatForwardTool( ) override = default; ///< Destructor
 
+  StatusCode initialize() override;
+
   void forwardTrack( const LHCb::Track* track, LHCb::Tracks* output ) override;
 
   StatusCode tracksFromTrack( const LHCb::Track& seed,
                               std::vector<LHCb::Track*>& tracks ) override;
 
-  StatusCode initialize() override;
 
   // added for NNTools
   void setNNSwitch( bool nnSwitch) override { m_nnSwitch = nnSwitch;}
@@ -102,7 +104,7 @@ private:
   };
 
 
-  std::pair<PatFwdHits::const_iterator,PatFwdHits::const_iterator> 
+  boost::iterator_range<typename PatFwdHits::const_iterator>
   fillXList( PatFwdTrackCandidate& track ) const;
 
   bool fillStereoList( PatFwdTrackCandidate& track, double tol ) const;

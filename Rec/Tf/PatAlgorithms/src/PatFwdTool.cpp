@@ -2,6 +2,8 @@
 #include <type_traits>
 #include <iterator>
 
+#include "boost/range/iterator_range.hpp"
+
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
@@ -22,6 +24,13 @@
 // 2005-04-01 : Olivier Callot
 //
 //-----------------------------------------------------------------------------
+
+constexpr struct proj_distance_t {
+       template <typename Iter> 
+       auto operator()(Iter&& f, Iter&& l) const -> decltype( (*f)->projection() )  //TODO: use C++14 auto return deduction
+       { return (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() ; };
+} proj_distance {};
+
 template < typename  Iterator, typename Init, typename Function > 
 Init accumulate_adjacent_pairs(Iterator first, Iterator last, Init init, Function fun) {
     if ( first!=last ) {
@@ -33,7 +42,6 @@ Init accumulate_adjacent_pairs(Iterator first, Iterator last, Init init, Functio
     }
     return init;
 }
-      
 
 template < typename  Iterator, typename Predicate > 
 Iterator reverse_partition_point(Iterator begin, Iterator end, Predicate&& pred) {
@@ -48,7 +56,6 @@ Iterator reverse_find_if(Iterator begin, Iterator end, Predicate&& pred) {
                          std::reverse_iterator<Iterator>(end), 
                          std::forward<Predicate>(pred) ).base();
 }
-
 
 template < typename  Iterator, typename Predicate >
 std::pair<Iterator,Iterator> find_first_and_last(Iterator begin, Iterator end, Predicate&& pred) 
@@ -76,14 +83,6 @@ max_projected_element( Iterator first, Iterator last, Projection proj, Result in
     }
     return init;
 }
-
-template <typename C, typename Predicate>
-C& erase_if( C& c, Predicate&& pred ) {
-    c.erase( std::remove_if( std::begin(c), std::end(c), std::forward<Predicate>(pred) ),
-             std::end(c) );
-    return c;
-}
-
 
 template <typename Iterator, typename Predicate> 
 bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator last, Predicate pred ) 
@@ -159,6 +158,111 @@ public:
       return { distP, distM };
     }
 };
+
+
+// find the consequitive range between itBeg and last which has at least bestPlanes planes, and has the smallest lenght
+template <typename Iter>
+boost::iterator_range<Iter> 
+find_shortest_range(Iter begin, Iter last, int bestPlanes ) 
+{
+  // assert( std::distance(begin,last) >= bestPlanes );
+  // assert( std::is_sorted( begin, last, []( x,y ) { return x->projection()<y->projection() } ) );
+
+  auto itEnd = std::next(begin, bestPlanes);
+  //== get enough planes fired
+  PatFwdPlaneCounter planeCount1( begin, itEnd );
+  itEnd = planeCount1.addHitsUntilEnough( itEnd, last, bestPlanes );
+  if ( planeCount1.nbDifferent() < bestPlanes ) return {last,last};
+
+  double minDist = proj_distance(begin,itEnd) ;
+#if 0
+  if ( UNLIKELY(isDebug) ) {
+    debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
+                       minDist, (*begin)->projection(), (*std::prev(itEnd))->projection(), bestPlanes )
+            << endmsg;
+  }
+#endif
+  //== Better range ? Remove first, try to complete, measure spread...
+  auto itBest = begin;
+  auto itLast = itEnd;
+  while ( itEnd != last &&  planeCount1.nbDifferent() >= bestPlanes ) {
+    planeCount1.removeHit( *begin );
+    ++begin;
+    itEnd = planeCount1.addHitsUntilEnough( itEnd, last, bestPlanes );
+    if ( planeCount1.nbDifferent() >= bestPlanes ) {
+      auto dist = proj_distance( begin, itEnd ) ;
+      if ( dist < minDist ) {
+        minDist = dist;
+        itBest = begin;
+        itLast = itEnd;
+        bestPlanes = std::max( bestPlanes, planeCount1.nbDifferent() );
+#if 0
+        if ( isDebug ) {
+          debug() << format( " better range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
+                             minDist, (*begin)->projection(), (*(itEnd-1))->projection(), bestPlanes )
+                  << endmsg;
+        }
+#endif
+      }
+    }
+  }
+  //== OK, itBest is the start...
+  return { itBest, itLast };
+}
+
+template <typename Iter1, typename Iter2, typename Predicate>
+int count_planes(Iter1&& first ,Iter2&& last, Predicate predicate ) 
+{
+        auto pc = make_predicated_planecounter( std::forward<Iter1>(first), std::forward<Iter2>(last), 
+                                                [&](const PatFwdHit* hit) { 
+            return hit->isSelected() && predicate(hit); 
+        } );
+        return pc.nbDifferent();
+
+}
+
+template <typename Iter>
+void select_hits_in_best_region_only(Iter begin, Iter end)
+{
+  int bestRegion = -1;
+  double spread = 1000.;
+  enum { nPlanes = 6 };
+
+  auto in_region = [](unsigned int r) {
+    return [r](const PatForwardHit* hit) {
+      unsigned int region = hit->hit()->region();
+      if ( region != Tf::RegionID::OT) region+=2; // TODO: how does this work??? TfRegionID::OT = 4, which is the 'DetType' of the OT...
+                                                  // FIXME: shouldn't this instead do what PatFwdRegionCounter::region does???
+                                                  // as-is, this 'just' maps IT region 2 and IT region 4 together, and confuses the 
+                                                  // this predicate, as 'r' varies from [0,5], and hence will select 
+      return region == r;
+    };
+  };
+
+  PatFwdRegionCounter regions{ begin, end };
+  for( unsigned int maxRegion = 0; maxRegion < nPlanes ; ++maxRegion ) {
+    if ( regions.nbInRegion( maxRegion ) < nPlanes ) continue;  // count by plane
+   
+    auto predicate = in_region(maxRegion);
+    auto hits = find_first_and_last( begin, end, predicate ); // can we do this with std::equal_range??? are we still sorted by region???
+    if ( hits.second == end ) continue;
+
+    double mySpread = (*hits.second)->projection() - (*hits.first)->projection();
+    if ( mySpread < spread && count_planes( hits.first, std::next(hits.second), predicate ) == nPlanes ) {
+      spread = mySpread;
+      bestRegion = maxRegion;
+    }
+  }
+
+  if ( bestRegion != -1 ) {
+    // remove other regions !
+    // if( UNLIKELY( isDebug ) ) debug() << "========= Keep only hits of region " << bestRegion << endmsg;
+    auto predicate = in_region(bestRegion);
+    std::for_each( begin, end, [&](PatForwardHit *hit) {
+      if (!predicate(hit)) hit->setSelected( false );
+    } );
+  }
+}
 
 
 DECLARE_TOOL_FACTORY( PatFwdTool )
@@ -246,9 +350,9 @@ PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double z_magne
       xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
                       - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
   }
-  auto xMagnet = track.xStraight( zMagnet );
-  xMagnet     += ( xHit - xMagnet ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
-  return scatter_array<double,sizeof...(Hits)>(xMagnet);
+  auto x = track.xStraight( zMagnet );
+  x     += ( xHit - x ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
+  return scatter_array<double,sizeof...(Hits)>(x);
 }
 // explicitly instantiate the relevant templates...
 #ifdef PATFWDTOOL_VEC
@@ -258,21 +362,20 @@ template std::array<double, 2ul> PatFwdTool::xAtReferencePlane<true,PatForwardHi
 template std::array<double, 1ul> PatFwdTool::xAtReferencePlane<false,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
 template std::array<double, 1ul> PatFwdTool::xAtReferencePlane<true,PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit* ) const;
 
-double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const PatFwdHit* hit ) {
-
-  double x;
+double PatFwdTool::updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, const PatFwdHit* hit ) const {
 
   double zHit       = hit->z();
   double xHit       = hit->x();
    
   xHit += (int( hit->hasNext()) - int(hit->hasPrevious()))*hit->driftDistance();
 
+  double zMagnet = 0;
   if (!m_withoutBField){
 
-    double zMagnet    = ( m_zMagnetParams[0] +
-			  m_zMagnetParams[2] * track.slX2() +
-			  m_zMagnetParams[3] * hit->x() * hit->x() +
-			  m_zMagnetParams[4] * track.slY2() );
+    zMagnet += ( m_zMagnetParams[0] +
+				 m_zMagnetParams[2] * track.slX2() +
+				 m_zMagnetParams[3] * hit->x() * hit->x() +
+				 m_zMagnetParams[4] * track.slY2() );
     
     double xMagnet    = track.xStraight( zMagnet);
     
@@ -287,7 +390,7 @@ double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const P
     xHit             += dy * hit->hit()->dxDy() - dxCoef * dSlope ;
     xMagnet           = track.xStraight( zMagnet );
     slopeAfter        = ( xHit - xMagnet ) / ( zHit - zMagnet );
-    x                 = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
+    double x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
     
     track.setParameters( x,
 	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
@@ -295,26 +398,22 @@ double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const P
 	  	   1.e-9 * m_xParams[1] * dSlope,
 	  	   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
 	  	   track.slY() + dyCoef * m_yParams[1] );
-    m_zMagnet = zMagnet;
   } else {
     
-    double zMagnet    = 0.0;
     double xMagnet    = track.xStraight( zMagnet);
     double slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
     double dSlope     = 0.0;
     double dyCoef     = 0.0;
     
-    x                 = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
+    double x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
     track.setParameters( x, 
 	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
 	  	   1.e-6 * m_xParams[0] * dSlope,
 	  	   1.e-9 * m_xParams[1] * dSlope,
 	  	   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
 	  	   track.slY() + dyCoef * m_yParams[1] );
-    m_zMagnet = zMagnet;
   }
-    
-  return x;
+  return zMagnet;
 }
 
 
@@ -323,101 +422,28 @@ double PatFwdTool::storeXAtReferencePlane ( PatFwdTrackCandidate& track, const P
 //=========================================================================
 
 bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
-                                 double maxChi2, int minPlanes ) {
+                                 double maxChi2, int minPlanes ) 
+{
 
   if ( track.setSelectedCoords() < minPlanes ) return false;
   PatFwdPlaneCounter maxPlanes( track.coordBegin(), track.coordEnd() );
   int bestPlanes = maxPlanes.nbDifferent();
   if ( maxPlanes.nbDifferent() < minPlanes ) return false;
 
-  //=== Is there a region with 6 planes ?
-
-  int bestRegion = -1;
-  double spread = 1000.;
-
-  auto in_region = [](unsigned int r) {
-    return [r](const PatForwardHit* hit) {
-      unsigned int region = hit->hit()->region();
-      if ( region != Tf::RegionID::OT) region+=2;
-      return region == r ;
-    };
-  };
-
-  PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
-  for( unsigned int maxRegion = 0; maxRegion < 6 ; ++maxRegion ) {
-    if ( regions.nbInRegion( maxRegion ) < 6 ) continue;  // count by plane
-   
-    auto predicate = in_region(maxRegion);
-    auto hits = find_first_and_last( std::begin(track.coords()), std::end(track.coords()), predicate );
-    if ( hits.second == std::end(track.coords()) ) continue;
-
-    double mySpread = (*hits.second)->projection() - (*hits.first)->projection();
-
-    if ( mySpread < spread ) {
-        auto planes = make_predicated_planecounter( hits.first, std::next(hits.second), [&](const PatFwdHit* hit) { 
-            return hit->isSelected() && predicate(hit); 
-        } );
-        if ( planes.nbDifferent() == 6 ) {
-            spread = mySpread;
-            bestRegion = maxRegion;
-        }
-    }
-  }
   bool isDebug = msgLevel( MSG::DEBUG );
-  if ( bestRegion != -1 ) {
-    // remove other regions !
-    if( UNLIKELY( isDebug ) ) debug() << "========= Keep only hits of region " << bestRegion << endmsg;
-    auto predicate = in_region(bestRegion);
-    std::for_each( std::begin(track.coords()), std::end(track.coords()), [=](PatForwardHit *hit) {
-      if (!predicate(hit)) hit->setSelected( false );
-    } );
-  }
 
-  auto itBeg = std::begin(track.coords());
-  auto itEnd = std::next(itBeg, bestPlanes);
-  //== get enough planes fired
-  PatFwdPlaneCounter planeCount1( itBeg, itEnd );
-  itEnd = planeCount1.addHitsUntilEnough( itEnd, std::end(track.coords()), bestPlanes );
-  if ( planeCount1.nbDifferent() < bestPlanes ) return false;
+  //=== Is there a region with 6 planes ?
+  select_hits_in_best_region_only( std::begin(track.coords()), std::end(track.coords()) );
 
-
-  double minDist = (*std::prev(itEnd))->projection() - (*itBeg)->projection();
-  if ( UNLIKELY(isDebug) ) {
-    debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
-                       minDist, (*itBeg)->projection(), (*std::prev(itEnd))->projection(), bestPlanes )
-            << endmsg;
-  }
-  //== Better range ? Remove first, try to complete, measure spread...
-  auto itBest = itBeg;
-  auto itLast = itEnd;
-  auto last = std::end(track.coords());
-  while ( itEnd != last &&  planeCount1.nbDifferent() >= bestPlanes ) {
-    planeCount1.removeHit( *itBeg );
-    ++itBeg;
-    itEnd = planeCount1.addHitsUntilEnough( itEnd, last, bestPlanes );
-    if ( planeCount1.nbDifferent() >= bestPlanes ) {
-      auto dist = (*std::prev(itEnd))->projection() - (*itBeg)->projection() ;
-      if ( dist < minDist ) {
-        minDist = dist;
-        itBest = itBeg;
-        itLast = itEnd;
-        bestPlanes = std::max( bestPlanes, planeCount1.nbDifferent() );
-        if ( isDebug ) {
-          debug() << format( " better range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
-                             minDist, (*itBeg)->projection(), (*(itEnd-1))->projection(), bestPlanes )
-                  << endmsg;
-        }
-      }
-    }
-  }
-  //== OK, itBest is the start...
-
-  itBeg = itBest;
-  itEnd = itLast;
+  //=== find shortest range with enough planes
+  auto rng = find_shortest_range( std::begin(track.coords()), std::end(track.coords()), bestPlanes);
+  if (rng.empty()) return false;
+  auto itBeg = std::begin(rng);
+  auto itEnd = std::end(rng);
 
   //== Add hits before/after
-  regions = PatFwdRegionCounter{ itBeg, itEnd };
-  double tolSide = ( regions.maxRegion() < 2 ) ? 2.0 : 0.2 ;
+  PatFwdRegionCounter regions{ itBeg, itEnd };
+  double tolSide = ( regions.maxRegion() < Tf::RegionID::OTIndex::kNRegions ) ? 2.0 : 0.2 ;
 
   // note that PatForwardTool::buildXCandidatesList has sorted the hits by projection
   // so we can use this ordering here if advantageous... (depends on how far we typically
@@ -432,24 +458,22 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   itEnd = std::find_if(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() > maxProj; });
   // itEnd = std::partition_point(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() <= maxProj; });
 
-  PatFwdPlaneCounter planeCount( itBeg, itEnd );
-  if ( isDebug ) debug() << "... X fit, planeCount " << planeCount.nbDifferent()
-                         << " size " << itEnd - itBeg << endmsg;
-
-
   // initial value;
   int minHit = std::distance(itBeg,itEnd) / 2;
-  storeXAtReferencePlane( track, track.coords()[minHit] );
+  m_zMagnet = updateTrackAndComputeZMagnet( track, track.coords()[minHit] ); // how to get this to the fitXProjection inside fitStereoCandidate????? Add it to the the track!!!
 
   updateHitsForTrack( track, itBeg, itEnd );
   setRlDefault( track, itBeg, itEnd );
 
-  bool first = true;
+  bool   first = true;
   double highestChi2 = 1.e10;
+  PatFwdPlaneCounter planeCount( itBeg, itEnd );
+  if ( isDebug ) debug() << "... X fit, planeCount " << planeCount.nbDifferent()
+                         << " size " << itEnd - itBeg << endmsg;
 
-  while ( maxChi2 < highestChi2 && minPlanes <= planeCount.nbDifferent() ) {
+  while ( highestChi2 > maxChi2 && minPlanes <= planeCount.nbDifferent() ) {
 
-    if (!fitXProjection( track, itBeg, itEnd, true )) {
+    if (!fitXProjection( track, itBeg, itEnd, true )) { // uses m_zMagnet...
       if( UNLIKELY( isDebug ) ) debug() << "Abandon: Matrix not positive definite." << endmsg;
       return false;
     }
@@ -467,8 +491,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     }
     if ( first && highestChi2 <  20 * maxChi2 ) {  // Add possibly removed hits 
       first = false;
-      double minChi2 = maxChi2;
-      if ( highestChi2 > minChi2 ) minChi2 = highestChi2 - 0.0001;  // down't find again the worst...
+      double minChi2 = std::max( highestChi2 - 0.0001, maxChi2 );  // don't find again the worst...
 
       if( UNLIKELY( isDebug ) ) debug() << "Collect all hits with chi2 below " << minChi2 << endmsg;
       // WARNING: itBeg, itEnd must point into the same container as std::begin(track.coords)!!!!
@@ -511,7 +534,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 
   while ( highestChi2 > maxChi2 ) {
     //== Improve X parameterisation
-    if (!fitXProjection( track, track.coordBegin(), track.coordEnd(), false )) {
+    if (!fitXProjection( track, track.coordBegin(), track.coordEnd(), false )) { // uses m_zMagnet -- move it into PatFwdTrackCandidate...
       if( UNLIKELY( isDebug ) ) debug() << "Abandon: Matrix not positive definite." << endmsg;
 	  return false;
     }
@@ -588,8 +611,8 @@ template <bool withoutBField>
 bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                                   PatFwdHits::const_iterator itBeg,
                                   PatFwdHits::const_iterator itEnd,
-                                  bool onlyXPlanes  ) const {
-
+                                  bool onlyXPlanes  ) const 
+{
   //= Fit the straight line, forcing the magnet centre. Use only position and slope.
   bool isDebug = msgLevel( MSG::DEBUG );
   double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
@@ -613,7 +636,6 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
       if (accept(hit)) curve.addPoint( hit->z() - m_zReference, 
                                        distanceForFit( track, hit ),
                                        hit->hit()->weight() );
-
     } );
     if (!curve.solve()) return false;
     double dax = curve.ax();
@@ -626,7 +648,6 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
       verbose() << format( " dax %10.4f dbx%10.4f dcx %10.4f distCent %10.2f",
                            dax, dbx*1.e3, dcx*1.e6, distAtMagnetCenter( track ) ) << endmsg;
     }
-
     if ( fabs( dax ) < 5.e-3 &&
          fabs( dbx ) < 5.e-6 &&
          fabs( dcx ) < 5.e-9    ) break;  // wait until stable, due to OT.
@@ -637,8 +658,6 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
 // explicitly instantiate the two valid versions...
 template bool PatFwdTool::fitXProjection_<true>  ( PatFwdTrackCandidate& , PatFwdHits::const_iterator , PatFwdHits::const_iterator , bool onlyXPlanes ) const;
 template bool PatFwdTool::fitXProjection_<false> ( PatFwdTrackCandidate& , PatFwdHits::const_iterator , PatFwdHits::const_iterator , bool onlyXPlanes ) const;
-
-
 
 //=========================================================================
 //  Compute the chi2 per DoF of the track

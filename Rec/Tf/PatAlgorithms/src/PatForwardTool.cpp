@@ -41,6 +41,7 @@ static const unsigned int nReg = Tf::RegionID::OTIndex::kNRegions + Tf::RegionID
 static const unsigned int nOTReg = Tf::RegionID::OTIndex::kNRegions;
 static const unsigned int nITReg = Tf::RegionID::ITIndex::kNRegions;
 
+static const  auto isOT= [](unsigned region) { return region < nOTReg; };
 
 DECLARE_TOOL_FACTORY( PatForwardTool )
 
@@ -80,7 +81,8 @@ template <typename Iterator>
 int nbDifferent( Iterator first, Iterator last)  {
     return PatFwdPlaneCounter{ first, last }.nbDifferent();
 }
-int nbDifferent( const PatFwdTrackCandidate &c) {
+template <typename Container>
+int nbDifferent( const Container& c) {
     return nbDifferent( std::begin(c), std::end(c) );
 }
 
@@ -95,7 +97,7 @@ public:
     template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
 
     template <typename Iterator, typename Predicate>
-    std::pair<Iterator,Iterator> next_range(Iterator first, Predicate predicate)
+    boost::iterator_range<Iterator> next_range(Iterator first, Predicate predicate)
     {
         auto mid = this->next(first);
         using reference = typename std::iterator_traits<Iterator>::reference;
@@ -129,7 +131,7 @@ public:
         while ( std::distance(i,mid) != (m_minPlanes-1)  && j != m_last ) {
           counter.removeHit(*i);
           ++i;
-          for (; j!=m_last && predicate(*i,*j) ; ++j ) counter.addHit(*j);
+          for (; j!=m_last && predicate(*i,*j) ; ++j ) counter.addHit(*j); // TODO: first find, then addHits with a range...
           if ( enough_planes() ) mid = j;
         }
         return { first, mid };
@@ -288,19 +290,20 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   std::vector<PatFwdTrackCandidate> xCandidates;
 
   int minOTX = int( 1.5 * m_minXPlanes );
-  auto accept = [=](const PatFwdTrackCandidate& temp) {
+  auto accept = [=](const PatFwdTrackCandidate& cnd) {
       //== Check the chi2 with magnet center constraint.
       //== Count how many weighted hits
       //== reject if below threshold
-      return temp.chi2PerDoF() < m_maxChi2Track &&
-             ( !m_withoutBField || fabs(temp.slX()-temp.xSlope(0.))<0.005) &&
-             ( nT(temp) >= minOTX || inCenter(temp) ) &&
-             passMomentum( temp, track.sinTrack() );
+      return cnd.chi2PerDoF() < m_maxChi2Track &&
+             ( !m_withoutBField || fabs(cnd.slX()-cnd.xSlope(0.))<0.005) &&
+             ( nT(cnd) >= minOTX || inCenter(cnd) ) &&
+             passMomentum( cnd, track.sinTrack() );
   };
+
 
   for( auto& icand : m_candidates ) {
 
-    //== Fit the candidate, and store them
+    //== Fit the candidate, and store them (fitXCandidate also updates the hits
     while ( m_fwdTool->fitXCandidate( icand, m_maxChi2, m_minXPlanes ) ) {
 
       // Copy the whole stuff, keep only used ones and store it.
@@ -544,7 +547,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 //  Fill the vector of hit pointer, sorted by projection.
 //=========================================================================
 
-std::pair<PatFwdHits::const_iterator,PatFwdHits::const_iterator>
+boost::iterator_range<typename PatFwdHits::const_iterator> 
 PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
 {
   m_xHitsAtReference.clear();
@@ -569,6 +572,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
   double y0 = track.yStraight( 0. );
   auto updateOTHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
         std::for_each( first, last, [=](PatForwardHit* hit) { 
+                           // approxUpdateOTHitForTrack( hit, y0, ty);
                            updateOTHitForTrack( hit, y0, ty);
                            hit->setIgnored( false );
                            hit->setRlAmb( 0 );
@@ -586,40 +590,41 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
         return last;
   };
 
-  auto isOT= [](unsigned region) { return region < nOTReg; };
 
   static_assert(nLay == 4, "expecting exactly four layers" );
-  for (unsigned sta = 0; sta != nSta; ++sta) {
-    for (const auto& lay : { 0,3 } ) {  // X layers only...
-      for (unsigned region = 0; region != nReg; ++region) {
-        const auto* regionB = m_tHitManager->region(sta,lay,region);
-        auto z = regionB->z();
-        auto yRegion = track.yStraight( z );
-        if (!regionB->isYCompatible( yRegion, yCompat )) continue;
+  const unsigned nr = nSta*2*nReg;
+  for (unsigned index = 0; index!= nr ; ++index ) {
+    // TODO: package index, and its three 'indices' into a small class a-la std::array_view's index
+    auto region = index%nReg;
+    auto lay    = 3*((index/nReg)%2);  // X layers only: {0,3} // base 0, stride 3, extent between 3 and 5
+    auto sta    = index/(2*nReg);
 
-        auto xRange = symmetricRange( track.xStraight(z),
-                                      interval.xKick( z ) + fabs( yRegion * regionB->sinT() ) + 20. );
+    const auto* regionB = m_tHitManager->region(sta,lay,region);
+    auto z = regionB->z();
+    auto yRegion = track.yStraight( z );
+    if (!regionB->isYCompatible( yRegion, yCompat )) continue;
 
-        auto hitRange =  m_tHitManager->hitsInXRange(xRange.min(), xRange.max(), sta, lay, region);
+    auto xRange = symmetricRange( track.xStraight(z),
+                                  interval.xKick( z ) + fabs( yRegion * regionB->sinT() ) + 20. );
 
-        // grow capacity so that things don't move around afterwards...
-        m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
-        auto first = std::end(m_xHitsAtReference);
-        std::copy_if( std::begin(hitRange), std::end(hitRange), std::back_inserter(m_xHitsAtReference), 
-                      not_ignored_and_y_compatible( yRegion ) );
-        auto last = isOT(region) ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
-                                 : updateITHitsForTrack( first, std::end(m_xHitsAtReference) ) ;
-        m_fwdTool->setXAtReferencePlane( track, first, last );
-        last = std::remove_if( first, last, outside_interval ) ; 
-        m_xHitsAtReference.erase( last, std::end(m_xHitsAtReference) );
-        // make sure we are ordered by the right criterium -- until now, things
-        // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
-        // so this sort is actually needed (not always though...), for both IT and OT...
-        std::sort( first, last , Tf::increasingByProjection<PatForwardHit>() );
-        std::inplace_merge(std::begin(m_xHitsAtReference),first,last, 
-                           Tf::increasingByProjection<PatForwardHit>() );
-      }
-    }
+    auto hitRange =  m_tHitManager->hitsInXRange(xRange.min(), xRange.max(), sta, lay, region);
+
+    // grow capacity so that things don't move around afterwards...
+    m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
+    auto first = std::end(m_xHitsAtReference);
+    std::copy_if( std::begin(hitRange), std::end(hitRange), std::back_inserter(m_xHitsAtReference), 
+                  not_ignored_and_y_compatible( yRegion ) );
+    auto last = isOT(region) ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
+                             : updateITHitsForTrack( first, std::end(m_xHitsAtReference) ) ;
+    m_fwdTool->setXAtReferencePlane( track, first, last );
+    last = std::remove_if( first, last, outside_interval ) ; 
+    m_xHitsAtReference.erase( last, std::end(m_xHitsAtReference) );
+    // make sure we are ordered by the right criterium -- until now, things
+    // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
+    // so this sort is actually needed (not always though...), for both IT and OT...
+    std::sort( first, last , Tf::increasingByProjection<PatForwardHit>() );
+    std::inplace_merge(std::begin(m_xHitsAtReference),first,last, 
+                       Tf::increasingByProjection<PatForwardHit>() );
   }
   return { std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) };
 }
@@ -642,46 +647,46 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     return true;
   };
   auto updateOTHit = [=](PatFwdHit* hit ) {
+    // approxUpdateOTHitForTrack( hit, y0, ty );
     updateOTHitForTrack( hit, y0, ty );
     auto ok = this->driftInRange(*hit);
     hit->setSelected( ok );
     return ok;
   };
 
-  for (unsigned int sta=0; sta<nSta; ++sta) {
-    for (unsigned int lay=1; lay<nLay-1; ++lay) {
-      for (unsigned int region=0; region<nReg; ++region) {
+  static_assert(nLay == 4, "expecting exactly four layers" );
+  const unsigned nr = nSta*2*nReg;
+  for (unsigned index = 0 ; index != nr; ++index ) {
+    auto region = index%nReg;
+    auto lay = 1 + (index/nReg)%2; // {1,2} -- stereo only
+    auto sta = index/(2*nReg);
 
-        const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
-        double dz = regionB->z() - m_fwdTool->zReference();
-        double yRegion = track.y( dz );
-        if (!regionB->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
+    const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
+    double dz = regionB->z() - m_fwdTool->zReference();
+    double yRegion = track.y( dz );
+    if (!regionB->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
 
-        bool isOT = region < nOTReg;
+    double xPred   = track.x( dz );
+    //== Correct for stereo
+    double xHitMin = xPred - ( fabs( yRegion * regionB->sinT() ) + 40. + tol );
 
-        double xPred   = track.x( dz );
-        //== Correct for stereo
-        double xHitMin = xPred - fabs( yRegion * regionB->sinT() ) - 40. - tol;
+    bool ot = isOT(region); 
+    //== Project in Y, in fact in X but oriented, such that a displacement in Y is a
+    //== displacement also in this projectio.
+    bool  flipSign = std::signbit( regionB->sinT() );
+    double minProj = tol + int(ot) * 1.5;
 
-        //== Project in Y, in fact in X but oriented, such that a displacement in Y is a
-        //== displacement also in this projectio.
-        bool  flipSign = std::signbit( regionB->sinT() );
-        double minProj = tol;
-        if ( isOT  ) minProj += 1.5;
+    for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
+      if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
+      hit->setIgnored( false );
+      bool ok = ot ? updateOTHit(hit) : updateITHit(hit);
+      if (!ok) continue;
 
-        for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
-          if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
-          hit->setIgnored( false );
-          bool ok = isOT ? updateOTHit(hit) : updateITHit(hit);
-          if (!ok) continue;
+      double xRef = hit->x() - xPred;
+      hit->setProjection( flipSign ? -xRef : xRef );
 
-          double xRef = ( hit->x() - xPred );
-          hit->setProjection( flipSign ? -xRef : xRef );
-
-          if (  xRef > minProj ) break;
-          if (  xRef >= -minProj ) temp.push_back( hit );
-        }
-      }
+      if (  xRef > minProj ) break;
+      if (  xRef >= -minProj ) temp.push_back( hit );
     }
   }
 
@@ -704,7 +709,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   }
 
   //== Select a coherent group
-  auto bestList = std::make_pair(temp.end(),temp.end());
+  auto bestList = boost::make_iterator_range(std::end(temp),std::end(temp));
   int inbDifferent = 0;
   double size = 1000.;
   int minYPlanes = 4;
@@ -715,19 +720,19 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
 
   while ( sentinel( itP ) ) {
     auto range = sentinel.next_range( itP, make_predicate(*itP) );
-    if ( range.first != range.second ) {
+    if ( !range.empty() ) {
 
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
           verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                               (*range.first)->projection(), (*std::prev(range.second))->projection(),
-                               std::distance(range.first,range.second), nbDifferent(range.first,range.second),
+                               range.front()->projection(), range.back()->projection(),
+                               range.size(), nbDifferent(range),
                                allowedStereoSpread(*itP) )
                     << endmsg;
         }
         //== We have the first list. The best one ????
-        auto cnt = nbDifferent( range.first, range.second );
+        auto cnt = nbDifferent(range);
         if ( cnt >= inbDifferent ) {
-          auto delta = (*std::prev(range.second))->projection() - (*range.first)->projection();
+          auto delta = range.back()->projection() - range.front()->projection();
           if ( cnt > inbDifferent || delta < size ) {
             inbDifferent =  cnt;
             size = delta;
@@ -736,17 +741,17 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
           }
         }
     }
-    itP = range.second;
+    itP = std::end(range);
   }
 
-  if ( std::distance(bestList.first,bestList.second) < minYPlanes ) return false;
+  if ( bestList.size() < minYPlanes ) return false;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-    debug() << "...Selected " << std::distance(bestList.first,bestList.second) << " hits from "
-            << (*bestList.first)->projection()
-            << " to " << (*(bestList.second-1))->projection() << endmsg;
+    debug() << "...Selected " << bestList.size() << " hits from "
+            << bestList.front()->projection()
+            << " to " << bestList.back()->projection() << endmsg;
 
-  track.addCoords( bestList.first, bestList.second );
+  track.addCoords( std::begin(bestList), std::end(bestList) );
 
   //== Sort by Z
   std::sort( std::begin(track), std::end(track), Tf::increasingByZ<PatForwardHit>() );
@@ -789,35 +794,34 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
 
   m_candidates.clear();
 
-  auto range = fillXList( track ) ;
+  auto rng = fillXList( track ) ;
 
+  auto itP = std::begin(rng);
+  auto sentinel = make_RangeFinder( m_minXPlanes, std::end(rng) );
   double xExtrap = track.xStraight( m_fwdTool->zReference() );
-
-  auto itP = range.first;
-  auto sentinel = make_RangeFinder( m_minXPlanes, range.second );
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
   while ( sentinel( itP+1 ) ) { //TODO: why the +1 here??? (other than historical reasons)
     auto  predicate = make_predicate(*itP) ;
-    auto range = sentinel.next_range( itP, predicate);
-    if (range.first != range.second) {
+    auto range = sentinel.next_range( itP, predicate );
+    if (!range.empty()) {
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
           verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                               (*range.first)->projection(),(*std::prev(range.second))->projection(),
-                               std::distance(range.second,range.first), nbDifferent(range.first,range.second),
+                               range.front()->projection(),range.back()->projection(),
+                               range.size(), nbDifferent(range),
                                predicate.spread)
                     << endmsg;
         }
         //== Protect against too dirty area.
-        if ( std::distance(range.first,range.second ) <  m_maxXCandidateSize ) {
+        if ( range.size()  <  m_maxXCandidateSize ) {
           //== Merge the lists, if the first new point is close to the last one...
-          if (!m_candidates.empty() && predicate(m_candidates.back().coords().back(), *range.first) ) {
-            m_candidates.back().addCoords( range.first, range.second );
+          if (!m_candidates.empty() && predicate(m_candidates.back().coords().back(), range.front() )) {
+            m_candidates.back().addCoords( std::begin(range), std::end(range));
           } else {
-            m_candidates.emplace_back( track.track(), range.first, range.second );
+            m_candidates.emplace_back( track.track(), std::begin(range), std::end(range) );
           }
         }
     }
-    itP = range.second;
+    itP = std::end(range);
   }
 }
 

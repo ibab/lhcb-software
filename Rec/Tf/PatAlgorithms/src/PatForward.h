@@ -27,14 +27,14 @@ class IOTRawBankDecoder;
     /// Standard constructor
     PatForward( const std::string& name, ISvcLocator* pSvcLocator );
     
-    virtual ~PatForward( ); ///< Destructor
+    ~PatForward( ) override = default; ///< Destructor
     
-    virtual StatusCode initialize();    ///< Algorithm initialization
-    virtual StatusCode execute   ();    ///< Algorithm execution
+    StatusCode initialize() override;    ///< Algorithm initialization
+    StatusCode execute   () override;    ///< Algorithm execution
     
   private:
     
-    bool acceptTrack(const LHCb::Track& track);
+    bool acceptTrack(const LHCb::Track& track) const;
     int overlaps(const LHCb::Track* lhs, const LHCb::Track* rhs ) const;
     
     int              m_fwdTime;
