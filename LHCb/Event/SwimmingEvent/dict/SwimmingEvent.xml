@@ -1,5 +1,10 @@
 <lcgdict>
   <function name = "Swimming::hashParticle" />
+  <function name = "Swimming::hashParticleNoCompositePID" />
+  <function name = "Swimming::intHashParticle" />
+  <function name = "Swimming::intHashParticleNoCompositePID" />
+  <function name = "Swimming::matchParticles" />
+  <function name = "Swimming::matchParticlesNoCompositePID" />
   
   <class name = "LHCb::SwimmingReport" id="00000900-0000-0000-0000-000000000000"/>
   <class name = "LHCb::TurningPoint" id="00000901-0000-0000-0000-000000000000"/>

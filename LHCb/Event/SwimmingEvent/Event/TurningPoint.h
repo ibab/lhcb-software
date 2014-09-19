@@ -41,26 +41,24 @@ namespace {
    }
 }
 
-namespace GaudiUtils {
-   
-/// Particle Hash function
-template <> struct Hash<const LHCb::Particle&>
-{ 
-   size_t operator() (const LHCb::Particle& p) const
+namespace {
+   void getIDVector(const LHCb::Particle &p, bool includeCompositePIDs, std::vector<unsigned int> &ids)
    {
       LHCb::Particle::ConstVector particles;
       decayTree(p, particles);
-      std::vector<unsigned int> ids;
+      ids.clear();
       ids.reserve(80);
-      
+
       for (LHCb::Particle::ConstVector::const_iterator it = particles.begin(), end = particles.end();
            it != end; ++it) {
          const LHCb::Particle* particle = *it;
 
          // Add the pid so that both different decay trees and Particles from the same ProtoParticle
          // have different hashes.
-         ids.push_back(particle->particleID().pid());
-         if (!particle->isBasicParticle()) continue;
+         if (includeCompositePIDs)
+            ids.push_back(particle->particleID().pid());
+         if (!particle->isBasicParticle())
+            continue;
 
          const LHCb::ProtoParticle* pp = particle->proto();
          if (!pp) {
@@ -77,6 +75,36 @@ template <> struct Hash<const LHCb::Particle&>
          std::transform(lhcbIDs.begin(), lhcbIDs.end(), std::back_inserter(ids),
                         std::mem_fun_ref(&LHCb::LHCbID::lhcbID));
       }
+
+      if(!includeCompositePIDs)
+        std::sort(ids.begin(), ids.end());
+   }
+
+   bool matchParticles(const LHCb::Particle &a, const LHCb::Particle &b, bool includeCompositePIDs)
+   {
+     std::vector<unsigned int> ids_a, ids_b;
+     getIDVector(a, includeCompositePIDs, ids_a);
+     getIDVector(b, includeCompositePIDs, ids_b);
+     return ids_a == ids_b;
+   }
+}
+
+namespace GaudiUtils {
+   
+/// Particle Hash function
+template <> struct Hash<const LHCb::Particle&>
+{
+   size_t operator() (const LHCb::Particle& p, bool includeCompositePIDs = true) const
+   {
+      std::vector<unsigned int> ids;
+      getIDVector(p, includeCompositePIDs, ids);
+      return _hash(ids);
+   }
+
+   int intHash(const LHCb::Particle& p, bool includeCompositePIDs = true) const
+   {
+      std::vector<unsigned int> ids;
+      getIDVector(p, includeCompositePIDs, ids);
       return _hash(ids);
    }
 };
@@ -89,7 +117,27 @@ namespace {
 
 namespace Swimming {
    inline size_t hashParticle(const LHCb::Particle& p) {
-      return _hashParticle(p);
+      return _hashParticle(p, true);
+   }
+
+   inline size_t hashParticleNoCompositePID(const LHCb::Particle &p) {
+      return _hashParticle(p, false);
+   }
+
+   inline int intHashParticle(const LHCb::Particle &p) {
+      return _hashParticle.intHash(p, true);
+   }
+
+   inline int intHashParticleNoCompositePID(const LHCb::Particle &p) {
+      return _hashParticle.intHash(p, false);
+   }
+
+   inline bool matchParticles(const LHCb::Particle &a, const LHCb::Particle &b) {
+     return ::matchParticles(a, b, true);
+   }
+
+   inline bool matchParticlesNoCompositePID(const LHCb::Particle &a, const LHCb::Particle &b) {
+     return ::matchParticles(a, b, false);
    }
 }
 
