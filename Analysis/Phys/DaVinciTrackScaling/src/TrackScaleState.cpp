@@ -416,9 +416,9 @@ namespace
     const double x         , 
     const double def   = 0 )
   {
-    TAxis* axis = histo.GetXaxis() ;
+    const TAxis* axis = histo.GetXaxis() ;
     if ( 0 == axis ) { return def ; }                     // RETURN
-    const int bin = axis->FindBin ( x )  ;
+    const int bin = axis->FindiFixBin ( x )  ;
     if ( 0 == bin || axis->GetNbins() + 1 ==  bin ) { return def ; } // RETURN
     //
     return histo.GetBinContent ( bin ) ;

@@ -4,6 +4,10 @@
 ! Purpose     : Track scaling and smearing
 !-----------------------------------------------------------------------------
 
+! 2014-09-19 - Marco Clemencic 
+ - Fixed compilation problem with head version of ROOT. 
+   (same problem as yesterday, but in a slightly different place).
+
 ! 2014-09-18 - Marco Clemencic 
  - Fixed compilation problem with head version of ROOT. 
 
