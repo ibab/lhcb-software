@@ -73,5 +73,47 @@ def getTransform(name,triggerstorun) :
             'CombineParticles/.*Combine_Dstar_.*' : { 'DaughtersCuts' : { '^.*$' :\
             str({ '' : 'ALL' , 'K*(892)0' : "(INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(TRCHI2DOF < 2.25),1)) & (INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(MIPCHI2DV(PRIMARY) > 36.0),1)) & (BPVVDCHI2 > 100.0) & (BPVDIRA > 0.99) & (M < 2500.0) & (VFASPF(VCHI2PDOF) < 20.0)" , 'K*(892)~0' : "(INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(TRCHI2DOF < 2.25),1)) & (INGENERATION((('pi+'==ABSID)|('K+'==ABSID)|('mu+'==ABSID)|('p+'==ABSID))&(MIPCHI2DV(PRIMARY) > 36.0),1)) & (BPVVDCHI2 > 100.0) & (BPVDIRA > 0.99) & (M < 2500.0) & (VFASPF(VCHI2PDOF) < 20.0)" , 'pi+' : "ALL" , 'pi-' : "ALL" })}},
             'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}}
+  elif name == "2012_WithBeamSpotFilter_NoRecoLines_ForInclusiveDstar_tight" :
+    PrescalerFiddlePrefix = 'DeterministicPrescaler/'
+    PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global).*PreScaler'
+    PrescalerFiddle = "".join(['(?!%s)'%trigger.split('Decision')[0] for trigger in triggerstorun])
+    print PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix
+    return {PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix : { 'AcceptFraction' : {'.*' : '0'} },
+            'DeterministicPrescaler/Hlt2ForwardPreScaler' : { 'AcceptFraction' : {'.*' : '1'}} ,
+            '.*HltPV3D' : {'Code' : {"'PV3D'":"'PV3D_PreSwim'"}},
+            'GaudiSequencer/Hlt2CharmHadD02HHXDst_hhX(|WideMass)FilterSequence' : {
+              'Members' : { ", 'FilterDesktop/Hlt2CharmHadD02HHXDstSlowPionFilter'" : "", ", 'CombineParticles/Hlt2CharmHadD02HHXDst_hhX(|WideMass)Combine_Dstar(|_CharmHadD02HHXDst_hhX)(|WideMass)'" : ""}
+              },
+            'HltCopySelection<LHCb::Particle>/Hlt2CharmHadD02HHXDst_hhXDecision' : {
+              'InputSelection' : { 'Combine_Dstar' : 'Hlt1TOSFilter'}
+              },
+            'HltCopySelection<LHCb::Particle>/Hlt2CharmHadD02HHXDst_hhXWideMassDecision' : {
+              'InputSelection' : { 'WideMassCombine_Dstar' : 'Hlt1TOSFilter', '_CharmHadD02HHXDst_hhXWideMass' : '_CharmHadD02HHXDst_hhX' }
+              },
+            'CombineParticles/Hlt2CharmHadTwoBodyForD02HHHHHHXCombineHHX' : { 'MotherCut' : { '^.*$' :\
+              "(BPVVD> 0.0 )& (BPVCORRM < 3500.0)& (BPVVDCHI2> 100.0 ) & (BPVDIRA > 0.99) & (M < 2500.0) & (VFASPF(VCHI2PDOF) < 20.0)&(INGENERATION((('pi+'==ABSID)|('K+'==ABSID))&(TRCHI2DOF < 2.25),1)) & (INGENERATION((('pi+'==ABSID)|('K+'==ABSID))&(MIPCHI2DV(PRIMARY) > 36.0),1))"}},
+            'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}
+            }
+  elif name == "2012_WithBeamSpotFilter_NoRecoLines_ForInclusiveDstar_loose" :
+    PrescalerFiddlePrefix = 'DeterministicPrescaler/'
+    PrescalerFiddleSuffix = '(?!Hlt1Global)(?!Hlt2Global).*PreScaler'
+    PrescalerFiddle = "".join(['(?!%s)'%trigger.split('Decision')[0] for trigger in triggerstorun])
+    print PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix
+    return {PrescalerFiddlePrefix+PrescalerFiddle+PrescalerFiddleSuffix : { 'AcceptFraction' : {'.*' : '0'} },
+            'DeterministicPrescaler/Hlt2ForwardPreScaler' : { 'AcceptFraction' : {'.*' : '1'}} ,
+            '.*HltPV3D' : {'Code' : {"'PV3D'":"'PV3D_PreSwim'"}},
+            'GaudiSequencer/Hlt2CharmHadD02HHXDst_hhX(|WideMass)FilterSequence' : {
+              'Members' : { ", 'FilterDesktop/Hlt2CharmHadD02HHXDstSlowPionFilter'" : "", ", 'CombineParticles/Hlt2CharmHadD02HHXDst_hhX(|WideMass)Combine_Dstar(|_CharmHadD02HHXDst_hhX)(|WideMass)'" : ""}
+              },
+            'HltCopySelection<LHCb::Particle>/Hlt2CharmHadD02HHXDst_hhXDecision' : {
+              'InputSelection' : { 'Combine_Dstar' : 'Hlt1TOSFilter'}
+              },
+            'HltCopySelection<LHCb::Particle>/Hlt2CharmHadD02HHXDst_hhXWideMassDecision' : {
+              'InputSelection' : { 'WideMassCombine_Dstar' : 'Hlt1TOSFilter', '_CharmHadD02HHXDst_hhXWideMass' : '_CharmHadD02HHXDst_hhX' }
+              },
+            'CombineParticles/Hlt2CharmHadTwoBodyForD02HHHHHHXCombineHHX' : { 'MotherCut' : { '^.*$' :\
+              "(BPVVD> 0.0 )& (BPVCORRM < 3500.0)& (BPVVDCHI2> 100.0 ) & (BPVDIRA > 0.99) & (M < 2500.0) & (VFASPF(VCHI2PDOF) < 20.0)&(INGENERATION((('pi+'==ABSID)|('K+'==ABSID))&(TRCHI2DOF < 2.0),1)) & (INGENERATION((('pi+'==ABSID)|('K+'==ABSID))&(MIPCHI2DV(PRIMARY) > 25.0),1))"}},
+            'GaudiSequencer/.*' : {'Members':{"HltPV3D'":"HltPV3D', 'HltMoveVerticesForSwimming/HltMovePVs4Swimming'"}}
+            }
   else :
     return {}

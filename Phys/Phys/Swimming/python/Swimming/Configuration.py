@@ -5,11 +5,14 @@ __author__ = "V. Gligorov <vladimir.gligorov@cern.ch>"
 
 import os
 from LHCbKernel.Configuration import *
+#from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import ( LHCbConfigurableUser, LHCbApp,
-                            DstConf, CaloDstUnPackConf )
+                            DstConf
+                            #                            , CaloDstUnPackConf
+                            )
 
-from Gaudi.Configuration import * 
+from Gaudi.Configuration import *
 
 import GaudiKernel.ProcessJobOptions
 
@@ -36,21 +39,22 @@ class Swimming(LHCbConfigurableUser) :
         , "OutputType"         : ""              # Type of output for swimming the stripping, DST or MDST
         # Swimming Options
         , "Debug"              : False           # Switch on debug mode
+        , "OnlyEvents"         : []              # Which events to print debug info for
         , "SwimStripping"      : False           # Swim the stripping
         , "SwimOffSel"         : False           # Swim the offline selection
         , "TCK"                : ''              # The TCK to swim
         , "StrippingStream"    : ''              # The stripping stream name to swim e.g. 'CharmCompleteEvent'
-        , "StrippingVersion"   : ''              # The stripping version, e.g. 'Stripping17'  
+        , "StrippingVersion"   : ''              # The stripping version, e.g. 'Stripping17' 
         , "StrippingLineGroup" : ''              # The group of stripping lines to swim
-        , "StrippingLine"      : ''              # The specific single stripping line to swim
+        , "StrippingLines"     : []             # The specific stripping lines to swim
         , "StrippingFile"      : ''              #
         , "Hlt1Triggers"       : []              # The Hlt1 triggers to swim
         , "Hlt2Triggers"       : []              # The Hlt2 triggers to swim  
         , "OffSelModuleName"   : ''              # The name of the module containing the offline selection
         , "Hlt1RecoLine"       : 'Hlt1TrackForwardPassThroughLooseDecision' # The trigger line used for Hlt1 reconstruction studies
         , "Hlt2RecoLine"       : 'Hlt2ForwardDecision'                      # The trigger line used for Hlt2 reconstruction studies                 
-        , "OffCands"           : ''              # The TES location of the offline selected candidates
-        , "StripCands"         : ''              # The TES location of the stripping candidates
+        , "OffCands"           : {}              # The TES location of the offline selected candidates
+        , "StripCands"         : {}              # The TES locations of the stripping candidates and corresponding offline locations
         , "MuDSTCands"         : []              # The TES location of the candidates to write to MuDST
         , "OnlinePV"           : 'TES:Hlt/Vertex/PV3D'      # The TES location of the HLT primary vertices
         , "OfflinePV"          : '/Event/Rec/Vertex/Primary'# The TES location of the offline primary vertices
@@ -58,6 +62,9 @@ class Swimming(LHCbConfigurableUser) :
         , "RelPVFinder"        : 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2' # Related PV finder
         , "DistCalc"           : 'LoKi::DistanceCalculator' # The distance calculator
         , "TauCalc"            : 'PropertimeFitter'         # The decay time calculator
+        , "LifetimeFitter"     : 'LifetimeFitter'
+        , "RefitPVs"           : False
+        , "PVRefitter"         : 'AdaptivePVReFitter/SwimmingPVReFitter'
         , "HltNodesToKill"     : ["Hlt","Hlt1","Hlt2","Trig","Raw","Rec/Vertices/Hlt2DisplVerticesV3D",
                                   "/Event/Rec/Rich/RecoEvent/Hlt2BiKalmanFittedForwardTracking_RichRecSysConf",
                                   "/Event/Rec/Rich/GlobalPID/Hlt2BiKalmanFittedForwardTracking_RichRecSysConf",   
@@ -76,6 +83,8 @@ class Swimming(LHCbConfigurableUser) :
         , "WriteFSR"           : True            # Write FSRs in output DST.
         , "EventPrint"         : "L0Muon INFO - Total number of events processed : %d"
         , "SkipEventIfNoMuDSTCandFound" : False
+        , "SkipEventIfNoMuDSTCandsAnywhere" : True
+        , "OverrideStageName"  : ""
        }
 
     _propertyDocDct = {  
@@ -96,21 +105,22 @@ class Swimming(LHCbConfigurableUser) :
         , "OutputFile"         : """ Name of output file"""
         , "OutputType"         : """ Type of output for swimming the stripping, either DST or MDST."""
         , "Debug"              : """ Switch on debug mode"""
+        , "OnlyEvents"         : """ Which events to run on"""
         , "SwimStripping"      : """ Swim the stripping"""
         , "SwimOffSel"         : """ Swim the offline selection"""
         , "TCK"                : """ The TCK to swim"""
         , "StrippingStream"    : """ The stripping stream name to swim e.g. 'CharmCompleteEvent'"""
         , "StrippingVersion"   : """ The stripping version, e.g. 'Stripping17'  """
         , "StrippingLineGroup" : """ The group of stripping lines to swim"""
-        , "StrippingLine"      : """ The specific single stripping line to swim"""
+        , "StrippingLines"      : """ The specific stripping lines to swim"""
         , "StrippingFile"      : """   """
         , "Hlt1Triggers"       : """ The Hlt1 triggers to swim"""
         , "Hlt2Triggers"       : """ The Hlt2 triggers to swim  """
         , "OffSelModuleName"   : """ The name of the module containing the offline selection"""
         , "Hlt1RecoLine"       : """ The trigger line used for Hlt1 reconstruction studies"""
         , "Hlt2RecoLine"       : """ The trigger line used for Hlt2 reconstruction studies                 """
-        , "OffCands"           : """ The TES location of the offline selected candidates"""
-        , "StripCands"         : """ The TES location of the stripping candidates"""
+        , "OffCands"           : """ The TES locations of the offline selected candidates -- { offline loc : prefix for P2TP }"""
+        , "StripCands"         : """ The TES locations of the stripping candidates and corresponding offline locations -- { offline loc : strip loc }"""
         , "MuDSTCands"         : """ The TES locations of extra candidates to write to MuDST"""
         , "OnlinePV"           : """ The TES location of the HLT primary vertices"""
         , "OfflinePV"          : """ The TES location of the offline primary vertices"""
@@ -118,6 +128,9 @@ class Swimming(LHCbConfigurableUser) :
         , "RelPVFinder"        : """ Related PV finder"""
         , "DistCalc"           : """ The distance calculator"""
         , "TauCalc"            : """ The decay time calculator"""
+        , "LifetimeFitter"     : """ Must be either LifetimeFitter or DecayTreeFitter."""
+        , "RefitPVs"           : """ Refit related PVs. """
+        , "PVRefitter"         : """ Tool to use to refit the PV. """
         , "HltNodesToKill"     : """ Which TES nodes must be killed to rerun the HLT multiple times for the same event """
         , "MaxSwimDistance"    : """ The maximum distance to swim with "fine" granularity"""
         , "InitialGranularity" : """ The "fine" granularity with which to swim.              """
@@ -132,11 +145,15 @@ class Swimming(LHCbConfigurableUser) :
         , "WriteFSR"           : """ Write FSRs in output DST. """
         , "EventPrint"         : """ The string to be printed at the end of the job. Should contain once %d """
         , "SkipEventIfNoMuDSTCandFound" : """ If this is True (default is False) not only the OffCands location but also the MuDSTCands location must contain candidates for the event to be processed """
+        , "SkipEventIfNoMuDSTCandsAnywhere" : """ No effect if SkipEventIfNoMuDSTCandFound is False. If True (default) then SkipEventIfNoMuDSTCandFound requires *all* locations in MuDSTCands to contain \
+            an event, if False then only one location must contain a candidate for the event to be processed. """
+        , "OverrideStageName" : """ If not None (default) then override the stage name under which the swimming reports are saved from the default of 'Stripping' or 'Trigger'. For TupleToolSwimmingInfo \
+            compatibility 'Trigger_XXX' style names are advised. """
         }
 
     __used_configurables__ = [
         DstConf,
-        CaloDstUnPackConf,
+        #CaloDstUnPackConf,
         LHCbApp
         ]
 
@@ -155,44 +172,62 @@ class Swimming(LHCbConfigurableUser) :
         if not self.getProp('SwimStripping') and self.getProp('SwimOffSel'):
             raise TypeError, "You cannot swim the trigger and offline selection in the same job!"
                 
-        if self.getProp('SelectMethod') not in ['random', 'first', 'none']:
-            raise TypeError, 'The selectMethod must be eiter "random", "first", or "none".'
+        if self.getProp('SelectMethod') not in ['random', 'first', 'all', 'none']:
+            raise TypeError, 'The selectMethod must be eiter "random", "first", "all" or "none".'
+
+        if type(self.getProp('OffCands')) != dict:
+            raise TypeError, 'OffCands must be a dict'
+        if type(self.getProp('StripCands')) != dict:
+            raise TypeError, 'StripCands must be a dict'
+        if type(self.getProp('MuDSTCands')) != list:
+            raise TypeError, 'MuDSTCands must be a list'
+        if type(self.getProp('StrippingLines')) != list:
+            raise TypeError, 'StrippingLines must be a list'
 
         if not self.getProp('OutputType') in ['DST', 'MDST']:
             raise TypeError, "The only supported output types are DST and MDST."
         if not self.getProp('SwimStripping') and self.getProp('OutputType') == 'MDST':
             raise TypeError, "You cannot write a MicroDST when swimming the trigger."
-               
-        if type(self.getProp('MuDSTCands')) != list:
-            raise TypeError, "MuDSTCands must be a list."
 
+        if not self.getProp('LifetimeFitter') in ['LifetimeFitter', 'DecayTreeFitter']:
+            raise TypeError, "The Lifetime fitter must be either LifetimeFitter or DecayTreeFitter."
+               
         extension = self.getProp("OutputFile").rsplit(os.path.extsep, 1)[-1]
         if extension.upper() != self.getProp('OutputType'):
             log.warning("You have specified a different output file extension " +
                         "than OutputType; this is ignored.")
         
-        from Configurables import DataOnDemandSvc,PhysConf
+        from Configurables import DataOnDemandSvc
 
         app = LHCbApp()
         self.setOtherProps(app, ['EvtMax', 'SkipEvents', 'Simulation', 'DataType',
                                  'Persistency'])
+
         # Configure XMLSummarySvc
         if self.getProp('XMLSummary'):
             app.XMLSummary = self.getProp('XMLSummary')
             from Configurables import XMLSummarySvc
             XMLSummarySvc('CounterSummarySvc').EndEventIncident = 'SwimmingEndEvent'
-            
-        DstConf           ( EnableUnpack = ["Reconstruction","Stripping"] ) 
+
+        DstConf           ( EnableUnpack = ["Reconstruction","Stripping"] )
+
+        # TODO check if we need: CaloDstUnPackConf ( Enable = True )
 
         importOptions("$STDOPTS/DecodeRawEvent.py")
         appConf = ApplicationMgr()
         appConf.HistogramPersistency = 'ROOT'
         appConf.ExtSvc += ['DataOnDemandSvc']
         EventSelector().PrintFreq = -1
-        EventSelector().OutputLevel = 6
+        EventSelector().OutputLevel = 6 
         if not (self.getProp('Input') == []) :
             from GaudiConf import IOHelper
             IOHelper('ROOT').inputFiles(self.getProp('Input'))
+
+        # Swimming::Service
+        ApplicationMgr().ExtSvc += ['Swimming::Service']
+        from Configurables import Swimming__Service as Service
+        Service().RefitPVs = self.getProp('RefitPVs')
+        Service().OfflinePVLocation = self.getProp('OfflinePV')
 
         # FileStager
         if self.getProp('UseFileStager'):
@@ -204,7 +239,8 @@ class Swimming(LHCbConfigurableUser) :
         from Configurables import TriggerTisTos
         ToolSvc().addTool(TriggerTisTos,'TriggerTisTos')
         ToolSvc().TriggerTisTos.TOSFracMuon = 0.
-
+        # Disable TT hits also
+        ToolSvc().TriggerTisTos.TOSFracTT = 0.
 
 def ConfigureMoore():
     config = Swimming()
@@ -212,23 +248,23 @@ def ConfigureMoore():
     thisTransform = getTransform(config.getProp('TransformName'),
                                  config.getProp('Hlt1Triggers') + config.getProp('Hlt2Triggers'))
 
-    from Configurables import HltMoveVerticesForSwimming
-    from Configurables import Moore,HltConfigSvc
+    from Configurables import (HltConfigSvc, EventNodeKiller,
+                               HltMoveVerticesForSwimming, Moore)
 
     #Global configuration
-    from Configurables import EventNodeKiller
     mykiller    = EventNodeKiller("killHlt")
     mykiller.Nodes          = config.getProp('HltNodesToKill')
     deathstar               = GaudiSequencer("killHltSeq")
     deathstar.Members       = [mykiller]
     from Swimming import MooreSetup
     #
+
     dddb = config.getProp('DDDBtag')
     conddb = config.getProp('CondDBtag')
     tck = config.getProp('TCK')
     run = config.getProp('RunNumber')
     if not dddb and not conddb and not tck and run:
-        import shelve
+        import shelve 
         tag_db = os.path.expandvars(config.getProp('TagDatabase'))
         if not os.path.exists(tag_db):
             raise OSError, "Tag database file %s does not exist" % config.getProp('TagDatabase')
@@ -256,14 +292,13 @@ def ConfigureMoore():
     # Add extra locations to writer
     from Configurables import InputCopyStream
     writer = InputCopyStream('Writer')
-    writer.ItemList = [config.getProp('OffCands') + '/P2TPRelations#1',
-                       config.getProp('SwimmingPrefix') + '/Reports#1']
+    writer.ItemList = [config.getProp('SwimmingPrefix') + '/Reports#1']
+    writer.OptItemList = list(set([l  + '/P2TPRelations#1' for l in config.getProp('OffCands').values() ]))
     
     #
     # Define the TCK transformation
     # 
     HltConfigSvc().ApplyTransformation = thisTransform
-    from Configurables import HltConfigSvc
     from pprint import pprint
     pprint( HltConfigSvc().ApplyTransformation )
     #
@@ -271,15 +306,31 @@ def ConfigureMoore():
     #
     myswimmer                   = HltMoveVerticesForSwimming("HltMovePVs4Swimming")
     myswimmer.SwimmingDistance  = 0.0
-    loc = None
-    if config.getProp('SelectMethod') == 'none':
-        loc = config.OffCands 
-    else:
-        loc = config.getProp('SwimmingPrefix')
+    loc = config.getProp('SwimmingPrefix') # TODO check differences with trunk more carefully
     myswimmer.Bcontainer        = loc
     myswimmer.InputSelection    = config.getProp('OnlinePV')
     myswimmer.OutputSelection   = config.getProp('OutPVSel')
     myswimmer.OutputLevel       = 4
+
+    # Configure an extra TisTos Tool and some decoder algos to debug TisTos issues
+    prefix = config.getProp('SwimmingPrefix')
+    from Configurables import HltDecReportsDecoder, HltSelReportsDecoder
+    decoders = [(HltDecReportsDecoder, [('OutputHltDecReportsLocation', 'Hlt/DecReports')]),
+                (HltSelReportsDecoder, [('OutputHltSelReportsLocation', 'Hlt/SelReports'),
+                                        ('HltDecReportsLocation', 'Hlt/DecReports')])]
+    from Configurables import TriggerTisTos
+    ToolSvc().addTool(TriggerTisTos, 'SwimmingDebugTisTos')
+    ToolSvc().SwimmingDebugTisTos.TOSFracMuon = 0.
+    for conf, d in decoders:
+        configurable = conf('Swimming' + d[0][1].split('/')[-1])
+        output = None
+        for prop, loc in d:
+            if not output: output = prefix + '/' + loc
+            setattr(configurable, prop, prefix + '/' + loc)
+        DataOnDemandSvc().AlgMap[output] = configurable
+        prop = d[0][0][6:]
+        print prop, output
+        setattr(ToolSvc().SwimmingDebugTisTos, prop, output)
 
     class Deathstar(object):
         def __init__(self, seq):
@@ -289,11 +340,9 @@ def ConfigureMoore():
 
     d = Deathstar(deathstar)
     appendPostConfigAction(d.insert)
-   
-    # Need to rebuild the raw event which is in pieces on the DST
-    from Configurables import RecombineRawEvent
-    RecombineRawEvent()
- 
+
+    # recombine raw event stuff was here in trunk -- it would actually work in future so leaving a comment here.
+    
 def ConfigureDaVinci():
     config = Swimming()
     from Configurables import DaVinci
@@ -312,24 +361,26 @@ def ConfigureDaVinci():
         strippingFile = config.getProp('StrippingLineGroup')
     myconfig = lineBuilderConfiguration(config.getProp('StrippingVersion'),
                                         config.getProp('StrippingLineGroup'))
-    
     import StrippingArchive
     mylineconf = getattr(__import__('StrippingArchive.'+config.getProp('StrippingVersion')+'.Stripping' + strippingFile,
                                     globals(),locals(),
                                     [myconfig["BUILDERTYPE"]],-1),myconfig["BUILDERTYPE"])
     mylinedict = myconfig["CONFIG"]
-    print mylineconf
-    print mylinedict
+    print "mylineconf:",mylineconf
+    print "mylinedict:",mylinedict
 
     from StrippingConf.StrippingStream import StrippingStream
     stream = StrippingStream(config.getProp('StrippingStream') + "Swimming")
     allLines = mylineconf(config.getProp('StrippingLineGroup'), mylinedict).lines()
     lines = []
+    #lineNames = [l.split('/')[-1] for l in config.getProp('StripCands').keys()]
+    lineNames = config.getProp('StrippingLines')
+    print "lineNames:",lineNames
     for l in allLines:
-        lineName = config.getProp('StrippingLine')
-        if l.outputLocation().find(lineName) != -1:
-            lines.append(l)
-            print l.outputLocation()
+        for lineName in lineNames:
+            if l.outputLocation().find(lineName) != -1:
+                lines.append(l)
+                print l.outputLocation()
     stream.appendLines(lines)
 
     # Define the stream
@@ -337,14 +388,24 @@ def ConfigureDaVinci():
     sc = StrippingConf( Streams = [stream],
                         MaxCandidates       = 2000,
                         AcceptBadEvents     = False,
-                        BadEventSelection   = filterBadEvents)
+                        BadEventSelection   = filterBadEvents )
 
     # Define the node killer, and make sure to kill everything corresponding to
     # the stream which we want to swim
-    outputs = []
+    outputs = [] 
+    from Configurables import Swimming__PVReFitter as ReFitter
     for l in lines:
         for f in l.filterMembers():
-            if not hasattr(f, 'Output'):
+            if hasattr(f, 'ReFitPVs') and f.ReFitPVs:
+                if not config.getProp('RefitPVs'):
+                    log.warning('RefitPVs is not set, but stripping line applies refitting. Refitted ' + \
+                                'PVs will be used for turning-point lifetime calculations.')
+                    config.setProp('RefitPVs', True)
+                t = f.PVReFitters['']
+                f.PVReFitters = {'' : 'Swimming::PVReFitter/PVReFitter'}
+                f.addTool(ReFitter, 'PVReFitter')
+                f.PVReFitter.PVReFitter = t
+            elif not hasattr(f, 'Output'):
                 continue
             # Remove the last item so we get everything (Particle, relations,
             # decayVertices, etc...
@@ -387,20 +448,39 @@ def ConfigureDaVinci():
 
     dstWriter = None
     print config.getProp('OutputType')
+
+    # Offline candidate selection sequences
+    sequences = []
+    offCands = config.getProp('OffCands').keys()
+    for i, cands in enumerate(offCands):
+        data = AutomaticData(Location =  cands + "/Particles")
+        offSeq = SelectionSequence("OfflineCandidates_%d" % i, TopSelection = data)
+        sequences.append(offSeq)
+
+    # selection sequence for offline candidates
+    muCands = config.getProp('MuDSTCands')
+    for i, cands in enumerate(muCands):
+        # Add extra selections for additional MuDSTCands
+        data = AutomaticData(Location = cands + "/Particles")
+        seq = SelectionSequence("MuDSTCands_%d" % i, TopSelection = data)
+        sequences.append(seq)
+        
+    selectionSeq = MultiSelectionSequence(seqName, Sequences = sequences)
+
     if config.getProp('OutputType') == 'MDST':
         # Try the dev version, if not...
         try :
             from DSTWriters.__dev__.Configuration import MicroDSTWriter, microDSTStreamConf
             from DSTWriters.__dev__.microdstelements import (CloneRecHeader,
-                                                         CloneODIN,
-                                                         ClonePVs,
-                                                         CloneSwimmingReports,
-                                                         CloneParticleTrees,
-                                                         ClonePVRelations,
-                                                         CloneTPRelations,
-                                                         ReFitAndClonePVs,
-                                                         CloneLHCbIDs,
-                                                         CloneRawBanks)
+                                                             CloneODIN,
+                                                             ClonePVs,
+                                                             CloneSwimmingReports,
+                                                             CloneParticleTrees,
+                                                             ClonePVRelations,
+                                                             CloneTPRelations,
+                                                             ReFitAndClonePVs,
+                                                             CloneLHCbIDs,
+                                                             CloneRawBanks)
         except ImportError :
             from DSTWriters.Configuration import MicroDSTWriter, microDSTStreamConf
             from DSTWriters.microdstelements import (CloneRecHeader,
@@ -413,33 +493,23 @@ def ConfigureDaVinci():
                                                          ReFitAndClonePVs,
                                                          CloneLHCbIDs,
                                                          CloneRawBanks)
-        # selection sequence for offline candidates
-        offData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
-        offSeq = SelectionSequence("OfflineCandidates", TopSelection = offData)
-        sequences = [offSeq]
-        muCands = config.getProp('MuDSTCands')
-        for i, cands in enumerate(muCands):
-            # Add extra selections for additional MuDSTCands
-            data = AutomaticData(Location = cands + "/Particles")
-            seq = SelectionSequence("MuDSTCands_%d" % i, TopSelection = data)
-            sequences.append(seq)
-        selectionSeq = MultiSelectionSequence(seqName, Sequences = sequences)
 
         SwimmingConf = microDSTStreamConf()
-        streamConf = { 'default' : SwimmingConf }
-        SwimmingElements = [ CloneRecHeader(),
-                             CloneODIN(),
-                             ClonePVs(),
-                             CloneSwimmingReports(),
-                             CloneParticleTrees(),
-                             ClonePVRelations("Particle2VertexRelations", True),
-                             CloneTPRelations("P2TPRelations", True),
-                             ReFitAndClonePVs(),
-                             CloneLHCbIDs(),
-                             CloneRawBanks(banks = ['HltSelReports', 'HltDecReports',
-                                                    'L0DU', 'L0Calo', 'L0CaloError', 'L0CaloFull',
-                                                    'L0Muon', 'L0MuonProcCand', 'L0MuonError'],
-                                           inputRawEvent = 'DAQ/RawEvent')]
+        streamConf = {'default' : SwimmingConf}
+        SwimmingElements = [CloneRecHeader(),
+                            CloneODIN(),
+                            ClonePVs(),
+                            CloneSwimmingReports(),
+                            CloneParticleTrees(),#copyProtoParticles = True),
+                            ClonePVRelations("Particle2VertexRelations", True),
+                            CloneTPRelations("P2TPRelations", True),
+                            ReFitAndClonePVs(),
+                            CloneLHCbIDs(),
+                            CloneRawBanks(banks = ['HltSelReports', 'HltDecReports',
+                                                   'L0DU', 'L0Calo', 'L0CaloError', 'L0CaloFull',
+                                                   'L0Muon', 'L0MuonProcCand', 'L0MuonError'],
+                                          inputRawEvent = 'DAQ/RawEvent')]
+
         elementsConf = { 'default' : SwimmingElements }
         dstWriter = MicroDSTWriter('MicroDST',
                                    StreamConf         = streamConf,
@@ -454,14 +524,11 @@ def ConfigureDaVinci():
         except ImportError :
             from DSTWriters.streamconf import OutputStreamConf
             from DSTWriters.Configuration import SelDSTWriter
-        # Output
-        inputData = AutomaticData(Location = config.getProp('OffCands') + "/Particles")
-        selectionSeq = SelectionSequence(seqName, TopSelection = inputData)
 
         streamConf = OutputStreamConf(streamType = InputCopyStream,
                                       fileExtension = '.dst',
-                                      extraItems = [config.getProp('OffCands') + '/P2TPRelations#1',
-                                                    config.getProp('SwimmingPrefix') + '/Reports#1'])
+                                      extraItems = [config.getProp('SwimmingPrefix') + '/Reports#1'] +\
+                                      list(set([l + '/P2TPRelations#1' for l in config.getProp('OffCands').values()])))
         SelDSTWriterElements = {'default' : []}
         SelDSTWriterConf = {'default' : streamConf}
         dstWriter = SelDSTWriter('FullDST',

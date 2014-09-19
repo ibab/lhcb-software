@@ -7,6 +7,8 @@
 #include <boost/integer_traits.hpp>
 #include <boost/integer/integer_mask.hpp>
 
+#include <Swimming/Interfaces.h>
+
 namespace Random {
    boost::uint32_t mix(boost::uint32_t state);
    boost::uint32_t mix32(boost::uint32_t state, boost::uint32_t extra);

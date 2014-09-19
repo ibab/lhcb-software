@@ -5,6 +5,65 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2014-09-18 - Olli Lupton
+ - Merge in changes from v2r4b branch, commit messages from that branch below.
+ - Many small fixes to blend Roel's work of 2 years ago into the current head.
+ - This now supports multiple offline candidates etc, and should be OK with e.g.
+   swimming KsPiPi and KsKK in the same job without getting them mixed up with
+   one another.
+ - This should behave sensibly when given both D0 and D0bar versions of the same
+   event, building a list of distinct track combinations rather than just reading
+   in the containers from the DST.
+ - Reset the PV positions after the swimming loop. There are 2 PV containers on
+   Stripping20 DSTs but one of these is missing PVs which were not used by any
+   stripping candidates. The other contains all PVs, but they have their positions
+   offset after the stripping swimming using old versions of the swimming code.
+ - Add CMT dependency on Event/SwimmingEvent.
+ - Populate the extra information field of LHCb::TurningPoint objects we produce,
+   saving the lifetime fit, chi2 etc. at the turning points.
+ - Change StrippingLine string property to StrippingLines list property in the
+   Configurable so we can enable multiple stripping lines.
+ - Change OffCands to be a dict mapping { offline candidate location : p2tpprefix }.
+ - Change StripCands to be a dict mapping { offline candidate location : stripping
+   candidate location }.
+ - Adjust full DST output options for swimming the stripping to use the MuDSTCands
+   property. Otherwise you get the 'D0' written out but not the 'D*'.
+ - Set TOSFracTT = 0 for Trigger TISTOSing. 
+ - Add SkipEventIfNoMuDSTCandsAnywhere option to modify the behaviour of 
+   SkipEventIfNoMuDSTCandFound (do we require *all* locations contain candidates
+   or only some of them).
+ - Add OverrideStageName option so we can override what name the TPs are stored under
+   in the SwimmingReport. e.g. Trigger_Exclusive if we're swimming both the inclusive
+   and exclusive triggers for KsHH in the same production.
+ - Add two new HLT transforms for swimming the inclusive D* trigger (2012). We need
+   two different ones because an IPCHI2 cut value changed partway through the year.
+ - Use new functions defined in Event/SwimmingEvent for hashing and matching particles,
+   optionally including the PIDs of composite particles (i.e. optionally considering a
+   D0 and D0bar to be the same if they are built from the same tracks).
+ - Note currently the P2TPRelations are destroyed by the step in the swimming workflow
+   which prepares the DSTs on which the trigger swimming has been run for the stripping
+   swimming stage. It is recommended to write the trigger P2TPRelations to a dummy
+   location and remove them before running the stripping swimming.
+ - As of this commit, the package is tested for swimming KsHH without refitted PVs or
+   advanced lifetime fitters.
+ - Include example configuration scripts for swimming KsHH exclusive/inclusive triggers
+   and stripping to scripts/
+
+! 2012-03-06 - Roel Aaij
+ - Add functions to Swimming::Service to set and get signal tracks.
+
+! 2012-02-08 - Roel Aaij
+ - Add extra TisTos tool for debugging
+ - Add OnlyEvents configuration option to run the swimming only on specified events.
+
+! 2011-12-26 - Roel Aaij
+   Support for:
+ - Multiple offline candidates
+ - Multiple offline candidate locations
+ - Support for stripping lines which refit PVs
+ - PV refitting for lifetime calculations
+ - Use of DecayTreeFitter for lifetime calculations
+
 !========================= Swimming v3r2 2014-05-19 =========================
 
 ! No commit release notes ;(

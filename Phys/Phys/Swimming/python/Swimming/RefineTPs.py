@@ -3,9 +3,9 @@ from pprint import pprint
 __all__ = ["refine"]
 
 #The recursive refinement of the turning points
-def refine(myGlobs, mycand, thisturn, lastGranularity, numberOfRefinements) :
+def refine(myGlobs, mycand, locations, thisturn, lastGranularity, numberOfRefinements) :
     #
-    from SwimmingUtils  import getBinfo, runSwimmingStep
+    from SwimmingUtils  import getCandidateInfo, runSwimmingStep
     from SwimmingTisTos import evaluateTisTos
 
     # This algorithm recursively refines the turning points searching
@@ -16,7 +16,7 @@ def refine(myGlobs, mycand, thisturn, lastGranularity, numberOfRefinements) :
     # it was 1, the refinement searches between 40 and 44. If you then
     # find that 41.2mm was 0 and 41.6mm was 1 you search between these 
     # two, and so on. 
-    HltDecLast = copy(thisturn[4])
+    HltDecLast = copy(thisturn[3])
     refinedTurningPoints = []
     # How far to swim
     newGranularity = lastGranularity / myGlobs.granularityRefinement
@@ -24,10 +24,10 @@ def refine(myGlobs, mycand, thisturn, lastGranularity, numberOfRefinements) :
     swimPoint = thisturn[0] - lastGranularity + newGranularity 
     while (swimPoint < (thisturn[0] + newGranularity)) :
         runSwimmingStep(myGlobs, mycand, swimPoint)
-        HltDec = evaluateTisTos(myGlobs, mycand,swimPoint)
+        HltDec = evaluateTisTos(myGlobs, mycand, locations, swimPoint)
         if HltDec != HltDecLast:
-            bParams = getBinfo(myGlobs, mycand)
-            refinedTurningPoints.append([swimPoint, bParams[0], bParams[1], HltDec, HltDecLast])
+            info = getCandidateInfo(myGlobs, mycand)
+            refinedTurningPoints.append([swimPoint, info, HltDec, HltDecLast])
             HltDecLast = copy(HltDec)
         swimPoint += newGranularity
     if refinedTurningPoints == []:
@@ -48,10 +48,8 @@ def refine(myGlobs, mycand, thisturn, lastGranularity, numberOfRefinements) :
             if myGlobs.DEBUGMODE:
                 print "final splitting of the interval which goes from %s to %s" % (turn[0], swimPoint)
             runSwimmingStep(myGlobs, mycand, swimPoint)
-            bParams = getBinfo(myGlobs, mycand)
             turn[0] = swimPoint
-            turn[1] = bParams[0]
-            turn[2] = bParams[1]
+            turn[1] = getCandidateInfo(myGlobs, mycand)
         if myGlobs.DEBUGMODE :
             print "****************************"
             print "The final refined turning point is:"
@@ -62,5 +60,5 @@ def refine(myGlobs, mycand, thisturn, lastGranularity, numberOfRefinements) :
         #Need to refine every new turning point which we find
         toreturn = []
         for turn in refinedTurningPoints :
-            toreturn += refine(myGlobs, mycand, turn, newGranularity, numberOfRefinements)
+            toreturn += refine(myGlobs, mycand, locations, turn, newGranularity, numberOfRefinements)
         return toreturn

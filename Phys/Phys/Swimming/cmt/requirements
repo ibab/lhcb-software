@@ -20,13 +20,15 @@ use     LHCbKernel      v*  Kernel
 use     DetCond         v*  Det
 use     TisTosTobbing   v*  Phys
 use     DetCond         v*  Det
+use     SwimmingEvent   v*  Event
 
 include_path      none
+apply_pattern install_more_includes more=Swimming
 
 #============================================================================
 # Linker library
 #============================================================================
-library          Swimming          ../src/*.cpp
+library          Swimming           ../src/Lib/*.cpp
 apply_pattern    linker_library    library=Swimming
 
 #============================================================================
@@ -44,6 +46,16 @@ apply_pattern     reflex_dictionary                                \
                   selectionfile=$(SWIMMINGROOT)/dict/hacks.xml \
                   options="-U__MINGW32__"
 
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          SwimmingComponent ../src/Component/*.cpp
+apply_pattern    component_library library=SwimmingComponent
+
+#============================================================================
+# define compoent library link options
+#============================================================================
 apply_pattern install_python_modules
 
 macro_append SwimmingGenConfUser_dependencies SwimmingConfDbMerge

@@ -1,6 +1,8 @@
 #The TISTOS function of the swimming. For TISTOSing the trigger
 #we use the regular TISTOS tools, the stripping is done "by hand"
 from collections import defaultdict
+from GaudiPython.Bindings import gbl
+from SwimmingUtils import hashParticle, matchParticles
 
 __all__ = ["evaluateTisTos","appendToFSP"]
 
@@ -20,12 +22,12 @@ def isTob(myGlobs,trigger) :
         return True
     return False 
 
-def evaluateTisTos(myGlobs,mycand,swimPoint):
-    from GaudiPython.Bindings import gbl
-    ## import GaudiPython
-    ## GaudiPython.loaddict('SwimmingEventDict')
-    Swimming = gbl.Swimming
-    hashParticle = Swimming.hashParticle
+def evaluateTisTos(myGlobs, mycand, locations, swimPoint):
+    # This is the setup for return values,
+    # - The first value is a global Pass/Fail
+    # - The second a {name : boolean} where the name is a trigger
+    # decision or a stripping candidate location
+    # - The third is only filled for when swimming the trigger with a {name : {FSP.key() : boolean}}
 
     #Evaluate whether or not you TOS-ed on your triggers
     decisions = {}
@@ -75,46 +77,50 @@ def evaluateTisTos(myGlobs,mycand,swimPoint):
                     
         return (globalPass, decisions, dict(daughterInfo))
     else :
-        if myGlobs.DEBUGMODE :
-            print "Evaluating TISTOS for stripping"
-            print "Will look for candidates at", myGlobs.triggers
-        candidates = myGlobs.TES[myGlobs.triggers+"/Particles"]
-        if not candidates:
+        decisions = {}
+        for offlinelocation in locations:
+        #for striplocation, offlinelocation in myGlobs.triggers.iteritems():
+            # Find where we should look for stripping candidates given the offline location
+            # 'mycand' was found at.
+            striplocation = myGlobs.triggers[offlinelocation]
             if myGlobs.DEBUGMODE :
-                print "Found no candidates, returning false" 
-            return myGlobs.StrDecFalse
-        else :
-            if candidates.size() == 0:
+                print "Evaluating TISTOS for stripping"
+                print "Will look for candidates at", striplocation
+            candidates = myGlobs.TES[striplocation + "/Particles"]
+            if not candidates:
                 if myGlobs.DEBUGMODE :
-                    print "0 candidates found, return False"
-                return myGlobs.StrDecFalse
-            else :
+                    print "Found no candidate container at %s" % striplocation
+                    #print myGlobs.TES.dump()
+                decisions[offlinelocation] = False
+            elif candidates.size() == 0:
+                if myGlobs.DEBUGMODE :
+                    print "0 candidates found at %s" % striplocation
+                decisions[offlinelocation] = False
+            else:
+                # Make a list to ensure acces by index does what we want
+                #candidates = [c for c in candidates ] 
                 if myGlobs.DEBUGMODE :
                     print "Found", candidates.size(), "candidates"
                     print "About to match them"
-                for i in xrange(candidates.size()):
-                    cand = candidates(i)
+                for stripCand in candidates:
                     if myGlobs.DEBUGMODE :
                         print "########################"
-                        print "About to match these two candidates"
-                        print "The stripping candidate"
-                        print cand
-                        print "The offline candidate"
-                        print mycand
+                        "About to match these two candidates"
+                        print stripCand, mycand
                         print "########################"
-                    if matchCands(myGlobs,mycand,cand):
-                        # If we're not swimming the offline selection, we're done
-                        if not myGlobs.swimOffline :
-                            return myGlobs.StrDecTrue
+                    match = matchParticles(mycand, stripCand)
+                    if not myGlobs.swimOffline:
+                        decisions[offlinelocation] = match
+                    else:
                         # Import offline selection
                         OffSelFunc = __import__(myGlobs.offSelName,
                                                 fromlist = ['OffSelFunc']).OffSelFunc
-                        if OffSelFunc(myGlobs,mycand):
-                            return myGlobs.StrDecTrue
-        return myGlobs.StrDecFalse
-#
-#
-#
+                        decisions[offlinelocation] = match and OffSelFunc(myGlobs, mycand)
+        globalPass = False
+        for d in decisions.itervalues():
+            globalPass = globalPass or d
+        return (globalPass, decisions, {})
+
 #Two functions to match two candidates
 #together, one for particles the other one for tracks
 def matchLists(list1,list2) :
@@ -136,34 +142,3 @@ def appendToFSP(parent, daughter,finalstateparticles) :
     else :
         for gd in daughter.daughtersVector() :
             appendToFSP(daughter, gd, finalstateparticles)
-#
-#
-#
-def matchCands(myGlobs,cand1,cand2) :
-    finalstateparticles_cand1 = []
-    finalstateparticles_cand2 = []
-    appendToFSP(0,cand1,finalstateparticles_cand1)
-    appendToFSP(0,cand2,finalstateparticles_cand2)
-    num_cand1 = finalstateparticles_cand1.__len__()
-    num_cand2 = finalstateparticles_cand2.__len__()
-    nummatch = 0
-    if myGlobs.DEBUGMODE :
-        print "Number of daughters of each candidate"
-        print num_cand1,num_cand2
-    if num_cand1 <> num_cand2 :
-        print "Trying to match unequal candidates!"
-        print "You have probably supplied the wrong stripping or offline candidate location!"
-        print "The swimming will not work, returning False"
-        return False
-    else :
-        try :
-            for kid1 in finalstateparticles_cand1 :
-                for kid2 in finalstateparticles_cand2 :
-                    if matchLists(kid1["child"].proto().track().lhcbIDs(),kid2["child"].proto().track().lhcbIDs()) :
-                        nummatch += 1
-        except :
-            return False
-    if myGlobs.DEBUGMODE:
-        print (nummatch*1.)/(num_cand1*1.)
-    # Rely on integer rounding for the return value
-    return nummatch/num_cand1

@@ -2,6 +2,7 @@ from Configurables import Swimming
 from os import environ
 from pprint import pprint
 from math import *
+from collections import defaultdict
 
 # I'm being lazy here
 swimStripping           = Swimming().getProp('SwimStripping')
@@ -10,9 +11,12 @@ offCands                = Swimming().getProp('OffCands')
 swimCands               = Swimming().getProp('SwimmingPrefix')
 offlinePVs              = Swimming().getProp('OfflinePV')
 DEBUGMODE               = Swimming().getProp('Debug')
+onlyEvents              = Swimming().getProp('OnlyEvents')
 startingEvent           = Swimming().getProp('SkipEvents')
 skipIfNoMuDSTCand       = Swimming().getProp('SkipEventIfNoMuDSTCandFound')
+skipIfNoMuDSTCandsAnywhere = Swimming().getProp('SkipEventIfNoMuDSTCandsAnywhere')
 muDSTCands              = Swimming().getProp('MuDSTCands')
+overrideStageName       = Swimming().getProp('OverrideStageName')
 
 # Shorter names for some of the options
 # The maximum swimming distance is maxSwimDistance (in mm)
@@ -59,6 +63,7 @@ def SwimmingEventLoop(gaudi, nEvents):
     #Now after the initialize some more job dependent stuff
     if swimStripping :
         dod = gaudi.service('DataOnDemandSvc')
+        svc = gaudi.service('Swimming::Service')
         outputs = gaudi.algorithm('killStripping').Nodes
         for l in dod.AlgMap.keys():
             if l.find('Phys') == -1:
@@ -85,38 +90,18 @@ def SwimmingEventLoop(gaudi, nEvents):
         if Swimming().getProp('WriteFSR'):
             gaudi.algorithm('FSRInputCopyStreamWriter').Enable = False
 
-    #The tis tos tool
-    tistostool      = gaudi.toolsvc().create('TriggerTisTos'    ,interface='ITriggerTisTos')
-    tistosbools     = [tistostool.kAnything,tistostool.kTrueRequired,tistostool.kFalseRequired]
-    #The tools used for swimming the stripping/offline
-    m_lifetimeTool  = gaudi.toolsvc().create(Swimming().getProp('TauCalc'), interface = 'ILifetimeFitter')
-    m_distanceTool  = gaudi.toolsvc().create(Swimming().getProp('DistCalc'), interface = 'IDistanceCalculator')
-    m_relatedPVTool = gaudi.toolsvc().create(Swimming().getProp('RelPVFinder'), interface = 'IRelatedPVFinder')
-
     #Make the class of globals for passing information around
-
-    from GaudiPython import InterfaceCast
-    tmpSvc = gaudi.service("IncidentSvc")
-    incidentSvc = InterfaceCast("IIncidentSvc")(tmpSvc.getInterface())
-
-    from Swimming.Globals import globalParams
-    myGlobs = globalParams( GaudiPython, gaudi, SEL, TES, incidentSvc,
-                            m_lifetimeTool, m_distanceTool, m_relatedPVTool,
-                            tistostool, tistosbools, triggers, 
-                            Swimming().getProp('Hlt1RecoLine'), Swimming().getProp('Hlt2RecoLine'),
-                            granularityRefinement,
-                            DEBUGMODE, startingEvent, swimStripping, Swimming().getProp('SwimOffSel'),
-                            Swimming().getProp('OffSelModuleName'), offCands, offlinePVs
-                          )
+    from Swimming.Globals import GlobalParams
+    myGlobs = GlobalParams(gaudi, triggers)
     gaudi.__dict__['globs'] = myGlobs
 
     def __next__():
         # Emit special end event Incident.
-        incidentSvc.fireIncident(GaudiPython.gbl.Incident("SwimmingLoop", "SwimmingEndEvent"))
+        myGlobs.incidentSvc.fireIncident(GaudiPython.gbl.Incident("SwimmingLoop", "SwimmingEndEvent"))
 
     # Import the utilities
-    from Swimming.SwimmingUtils import (getBinfo, runSwimmingStep,
-                                        createObject, getSelector)
+    from Swimming.SwimmingUtils import (getCandidateInfo, runSwimmingStep,
+                                        createObject, getSelector, movePVs)
     from Swimming.RefineTPs import refine
     from Swimming.SwimmingTisTos import evaluateTisTos 
 
@@ -154,8 +139,8 @@ def SwimmingEventLoop(gaudi, nEvents):
     # in HLT1 (5 hits)
     #
     # Get the candidate selector.
-
-    selector = getSelector(Swimming().getProp('SelectMethod'))(myGlobs)
+    if Swimming().getProp('SelectMethod') != 'all':
+        selector = getSelector(Swimming().getProp('SelectMethod'))(myGlobs)
 
     # Initialize at -1 so the eventNumber can be incremented at the top of the loop.
     eventNumber = -1
@@ -177,10 +162,6 @@ def SwimmingEventLoop(gaudi, nEvents):
         elif (eventNumber % 100) == 0: 
             print "Processing event", eventNumber
 
-        # Containers to store the turningpoints
-        roughTurningPoints = []
-        finalTurningPointsForWriting = []
-
         gaudi.run(1)
         if not TES["/Event/Rec/Header"] :
                 print "Reached end of file, we're done!"
@@ -189,6 +170,11 @@ def SwimmingEventLoop(gaudi, nEvents):
         odin = TES['/Event/DAQ/ODIN']
         if DEBUGMODE :
             print "Processing %d %d" % (odin.runNumber(), odin.eventNumber())
+
+        if onlyEvents and not (odin.runNumber(), odin.eventNumber()) in onlyEvents:
+            __next__()
+            continue
+
         if not swimStripping and not Swimming().getProp('Simulation') and \
                odin.triggerConfigurationKey() != int(Swimming().getProp('TCK'), 16):
             print "WARNING, TCK 0x%08x does not match configured TCK %s, skipping event." \
@@ -196,226 +182,343 @@ def SwimmingEventLoop(gaudi, nEvents):
             __next__()
             continue
         
-        #Safety checks
-        mycands = TES[offCands + "/Particles"]
-        if not mycands :
-            if DEBUGMODE :
+        # Safety checks
+        if skipIfNoMuDSTCand :
+            skipEventBools = [ ]
+            for candloc in muDSTCands :
+                skipEvent = False
+                mdstcands = TES[candloc + "/Particles"]
+                if not mdstcands :
+                    if DEBUGMODE:
+                        print "Incident while processing event number",startingEvent+eventNumber
+                        print "No container of muDST candidates "+candloc+" found!" 
+                    skipEvent = True
+                elif mdstcands.size() == 0 :
+                    if DEBUGMODE:
+                        print "Incident while processing event number",startingEvent+eventNumber
+                        print "Empty container of muDST candidates "+candloc+" found!" 
+                    skipEvent = True
+                skipEventBools += [ skipEvent ]
+            # skipIfNoMuDSTCandsAnywhere is a new flag to decide whether skipIfNoMuDSTCand means *all* MuDSTCand locations have to
+            # be populated or just *some*
+            if (skipIfNoMuDSTCandsAnywhere and not any(skipEventBools)) or (not skipIfNoMuDSTCandsAnywhere and all(skipEventBools)):
+                if DEBUGMODE:  
+                    print "Skipping the event"
+                __next__()
+                continue
+
+        # Create a list of unique candidates
+        from Swimming.SwimmingUtils import Candidate
+        candidates = defaultdict(list)
+        for loc in offCands.keys():
+            particles = TES[loc + '/Particles']
+            if not particles:
+                if DEBUGMODE:
+                    print "No particles found at %s" % loc
+                continue
+            elif DEBUGMODE:
+                print "Found %d particles at %s" % (particles.size(), loc)
+
+            for particle in particles:
+                candidates[Candidate(particle)].append((loc, particle))
+        candidates = [Candidate(c.particle(), dict(selections)) for \
+                      c, selections in candidates.iteritems()]
+        if DEBUGMODE:
+            print "Found %s unique candidates:" % len(candidates)
+            for c in candidates:
+                print c
+
+        #if len(candidates) < 2:
+        #    print "debug: skipping"
+        #    __next__()
+        #    continue
+
+        turningPoints = {}
+
+        if len(candidates) == 0 :
+            if DEBUGMODE:
                 print "Problem while processing event number",startingEvent+eventNumber
-                print "No container of offline candidates found!"
-                print "Skipping the event but this is bad, check what you are doing!!"   
-            __next__()
-            continue
-        elif mycands.size() == 0 : 
-            if DEBUGMODE :
-                print "Problem while processing event number",startingEvent+eventNumber
-                print "Container of offline candidates empty!" 
+                print "Container of offline candidates empty!"
                 print "Skipping the event but this is bad, check what you are doing!!"
             __next__()
             continue
-        if skipIfNoMuDSTCand :
-            skipEvent = False
-            for candloc in muDSTCands :
-                mdstcands = TES[candloc + "/Particles"]
-                if not mdstcands :
-                    if DEBUGMODE :
-                        print "Incident while processing event number",startingEvent+eventNumber
-                        print "No container of muDST candidates "+candloc+" found!" 
-                        print "Skipping the event"
-                    skipEvent = True
-                elif mdstcands.size() == 0 :
-                    if DEBUGMODE :
-                        print "Incident while processing event number",startingEvent+eventNumber
-                        print "Empty container of muDST candidates "+candloc+" found!" 
-                        print "Skipping the event"
-                    skipEvent = True
-            if skipEvent :
+
+        if DEBUGMODE:
+            print "Passed the safety checks OK"
+            print "Candidates in event =", len(candidates)
+
+        # Fire BeginSwimming to signal the swimming service to clear its internal PV container
+        myGlobs.incidentSvc.fireIncident(GaudiPython.gbl.Incident("SwimmingLoop", "BeginSwimming"))
+
+        # Select the candidate to swim
+        if Swimming().getProp('SelectMethod') != 'all':
+            candidates = [selector(candidates)]
+        
+        for i, candidate in enumerate(candidates):
+            # Containers to store the turningpoints
+            roughTurningPoints = []
+            finalTurningPointsForWriting = []
+
+            if not candidate :
+                print "Somehow there is no candidate!!! This should never happen."
+                print "Skipping this event."
                 __next__()
                 continue
-        if DEBUGMODE :
-            print "Passed the safety checks OK"
-            print "Candidates in event =", mycands.size()
 
-        mycand = selector(mycands)
-        
-        if not mycand:
-            print "Somehow there is no candidate!!! This should never happen."
-            print "Skipping this event."
-            __next__()
-            continue
+            if DEBUGMODE and not swimStripping:
+                # Use the debugging TisTos tool to dump info on what the TisTos is
+                # wrt all the trigger lines before the swimming starts.
+                extraTisTos = gaudi.toolSvc().create('TriggerTisTos/SwimmingDebugTisTos',
+                                                     interface = 'ITriggerTisTos')
+                lines = []
+                for level in triggers: lines.extend(level)
+                for trigger in lines:
+                    extraTisTos.setOfflineInput()
+                    extraTisTos.addToOfflineInput(candidate.particle())
+                    extraTisTos.setTriggerInput()
+                    extraTisTos.addToTriggerInput(trigger)
+                    print extraTisTos.analysisReportTrigger(trigger)
 
-        if DEBUGMODE :
-            print "Got the offline candidate OK"
-            print "About to store its information"
-            print mycand
+            # If we are swimming the trigger and have a non-trivial selection method,
+            # put the selected candidate in a separate location.
+            if not swimStripping and Swimming().getProp('SelectMethod') != 'none':
+                swimmingParticles = createObject(SharedParticles)
+                swimmingParticles.insert(candidate.particle())
+                TES.unregisterObject(swimCands + '/Particles')
+                TES.registerObject(swimCands + '/Particles', swimmingParticles)
 
-        # If we are swimming the trigger and have a non-trivial selection method,
-        # put the selected candidate in a separate location.
-        if not swimStripping and Swimming().getProp('SelectMethod') != 'none':
-            swimmingParticles = createObject(SharedParticles)
-            swimmingParticles.insert(mycand)
-            TES.unregisterObject(swimCands + '/Particles')
-            TES.registerObject(swimCands + '/Particles', swimmingParticles)
+            HltDecLast  = None
+            HltDec      = None
+            swimLoop    = int(-1. * maxSwimDistance + -1. * extraSwimDistance)
+            while (swimLoop <= (maxSwimDistance + extraSwimDistance)) :
+                if DEBUGMODE:
+                    print "Running over event", startingEvent + eventNumber, "swimming step", swimLoop \
+                          , "candidate", i
+                # We got this far now get the candidate and, for the "zero" step only
+                # fill the corresponding event variables for it 
+                # Note that this function call also executes the stripping algorithm
+                # having moved the primary vertices around first
+                runSwimmingStep(myGlobs, candidate.particle(), swimLoop)
 
-        HltDecLast  = None
-        HltDec      = None
-        swimLoop    = int(-1.*maxSwimDistance + -1.*extraSwimDistance)
-        while (swimLoop <= (maxSwimDistance + extraSwimDistance)) :
-            if DEBUGMODE:
-                print "Running over event", startingEvent+eventNumber,"swimming step",swimLoop            
-            # We got this far now get the candidate and, for the "zero" step only
-            # fill the corresponding event variables for it 
-            # Note that this function call also executes the stripping algorithm
-            # having moved the primary vertices around first
-            runSwimmingStep(myGlobs, mycand, swimLoop)
+                # Now get the trigger decision for this swimming step
+                HltDec = evaluateTisTos(myGlobs, candidate.particle(), candidate.selectedParticles().keys(), swimLoop)
+                if DEBUGMODE :
+                    print "Retrieved HLT decision", HltDec, "OK for this event" 
 
-            # Now get the trigger decision for this swimming step
-            HltDec = evaluateTisTos(myGlobs,mycand,swimLoop)
-            if DEBUGMODE :
-                print "Retrieved HLT decision",HltDec,"OK for this event" 
+                # If this is the very first swimming step, set HltDecLast to the global
+                # HltDec at this point, otherwise get it from the previous step.
+                if swimLoop == int(-1.*maxSwimDistance + -1.*extraSwimDistance):
+                    HltDecLast = HltDec
+                elif roughTurningPoints != []:
+                    # before we had [raw, tau, ip, dec, declast ]
+                    # now we have [raw, {info}, dec, declast ]
+                    # hence 3->2 for index
+                    HltDecLast = roughTurningPoints[-1][2]
 
-            # If this is the very first swimming step, set HltDecLast to the global
-            # HltDec at this point, otherwise get it from the previous step.
-            if swimLoop == int(-1.*maxSwimDistance + -1.*extraSwimDistance):
-                HltDecLast = HltDec
-            elif roughTurningPoints != []:
-                HltDecLast = roughTurningPoints[-1][3]
+                # The first and last point are a special case for the bookkeeping
+                # as we want to record the limits of our swimming and the trigger
+                # decisions at these limits 
+                if (abs(swimLoop) == int(1. * maxSwimDistance + 1. * extraSwimDistance)) or \
+                   (HltDec != HltDecLast): 
+                    # Get the lifetime and IP of the B/D with respect to its favourite PV
+                    info = getCandidateInfo(myGlobs, candidate.particle())
+                    roughTurningPoints.append([swimLoop, info, HltDec, HltDecLast])
 
-            # The first and last point are a special case for the bookkeeping
-            # as we want to record the limits of our swimming and the trigger
-            # decisions at these limits 
-            if (abs(swimLoop) == int(1.*maxSwimDistance + 1.*extraSwimDistance)) or \
-               (HltDec != HltDecLast): 
-                # Get the lifetime and IP of the B/D with respect to its favourite PV
-                bParams = getBinfo(myGlobs,mycand)
-                roughTurningPoints.append([swimLoop,bParams[0],bParams[1],HltDec,HltDecLast])
-
-            # Now the granularity varies with the position 
-            # We swim more finely close to the actual decay point
-            if ((swimLoop >= -int(maxSwimDistance)) and (swimLoop < int(maxSwimDistance))) :
-                swimLoop += int(initialGranularity)
-            else :
-                swimLoop += int(extraGranularity) 
-        # Now the refinement step
-        # We have to refine every turning point, but the first and last
-        # ones which we save don't count as they are just there to
-        # demarcate the limits of our search, so we don't use them
-        if roughTurningPoints == [] :
-            __next__()
-            continue
-        if DEBUGMODE :
-            print "****************************"
-            print "The rough turning points are"
-            pprint(roughTurningPoints)
-            print "****************************"
-        for thisturn in roughTurningPoints:
-            # Write the first and last as is, no refinement
-            if (thisturn == roughTurningPoints[0]) or (thisturn == roughTurningPoints[-1]) :
-                finalTurningPointsForWriting.append(thisturn)
+                # Now the granularity varies with the position 
+                # We swim more finely close to the actual decay point
+                if ((swimLoop >= -int(maxSwimDistance)) and (swimLoop < int(maxSwimDistance))) :
+                    swimLoop += int(initialGranularity)
+                else :
+                    swimLoop += int(extraGranularity) 
+            # Now the refinement step
+            # We have to refine every turning point, but the first and last
+            # ones which we save don't count as they are just there to
+            # demarcate the limits of our search, so we don't use them
+            if roughTurningPoints == [] :
+                # no __next__() because this is continuing from the loop over candidates
                 continue
             if DEBUGMODE :
                 print "****************************"
-                print "About to refine TP"
-                pprint(thisturn)
+                print "The rough turning points are"
+                pprint(roughTurningPoints)
                 print "****************************"
-            if ((thisturn[0] > -int(maxSwimDistance)) and (thisturn[0] <= int(maxSwimDistance))) :
-                finalTurningPointsForWriting += refine(myGlobs,mycand,thisturn,initialGranularity,numberOfRefinements)
-            else : 
-                finalTurningPointsForWriting += refine(myGlobs,mycand,thisturn,extraGranularity,numberOfRefinements)
-        if DEBUGMODE :
-            print "****************************"
-            print "The final turning points for writing are:" 
-            pprint(finalTurningPointsForWriting)
-            print "****************************" 
+            for thisturn in roughTurningPoints:
+                # Write the first and last as is, no refinement
+                if (thisturn == roughTurningPoints[0]) or (thisturn == roughTurningPoints[-1]) :
+                    finalTurningPointsForWriting.append(thisturn)
+                    continue
+                if DEBUGMODE :
+                    print "****************************"
+                    print "About to refine TP"
+                    pprint(thisturn)
+                    print "****************************"
+                if ((thisturn[0] > -int(maxSwimDistance)) and (thisturn[0] <= int(maxSwimDistance))):
+                    finalTurningPointsForWriting += refine(myGlobs, candidate.particle(), 
+                                                           candidate.selectedParticles().keys(), thisturn,
+                                                           initialGranularity, numberOfRefinements)
+                else: 
+                    finalTurningPointsForWriting += refine(myGlobs, candidate.particle(),
+                                                           candidate.selectedParticles().keys(), thisturn,
+                                                           extraGranularity, numberOfRefinements)
+            if DEBUGMODE :
+                print "****************************"
+                print "The final turning points for writing are:" 
+                pprint(finalTurningPointsForWriting)
+                print "****************************" 
+            turningPoints[candidate] = finalTurningPointsForWriting
+            # Reset the PV positions so we don't end up with junk on the DST
+            movePVs(myGlobs, candidate.particle(), 0.0)
+        # End of loop over candidates
 
-        # Which stage are we swimming?
+        # Which stage are we swimming
         stage = None
-        if swimStripping:
-            stage = 'Stripping'
+        if len(overrideStageName):
+          stage = overrideStageName
+        elif swimStripping:
+          stage = 'Stripping'
         else:
-            stage = 'Trigger'
+          stage = 'Trigger'
 
         # Get or Create the KeyedContainer for the SwimmingReports
         reportLocation = Swimming().getProp('SwimmingPrefix') + '/Reports'
         reports = TES[reportLocation]
+        hadreports = True
         if not reports:
             reports = createObject(SwimmingReports)
+            hadreports = False
+            if DEBUGMODE:
+                print "Created new SwimmingReports object, storing it at " + reportLocation
             # Put the container in the TES
             sc = TES.registerObject(reportLocation, reports)
             if not sc.isSuccess():
                 print "Failed to register SwimmingReports in TES"
-                break
-        # Get or create the SwimmingReport
-        report = reports(mycand.key())
-
-        if not report:
-            report = createObject(SwimmingReport, mycand)
-            # Put the SwimmingReport in the container.
-            reports.insert(report)
-        elif report.hasStage(stage):
-            print "WARNING, stage %s already present, this is unsupported and will fail!"
-            return StatusCode(False)
-
-        # symbols for std::map; create them here the first time we pass by. They
-        # used to be in Swimming.decorators, but something goes pear-shaped with
-        # the dictionary loading in that case...
-        if 'std_map_sb' not in locals():
-            from GaudiPython import gbl
-            std_map_sinfo = gbl.std.map('string', 'map<unsigned long,bool>')
-            std_map_ulb = gbl.std.map('unsigned long', 'bool')
-            pair_ulb = gbl.std.pair('const unsigned long', 'bool')
-            std_map_ulb.__pair = pair_ulb
-            std_map_sb = gbl.std.map('std::string', 'bool')
-            pair_sb = gbl.std.pair('const std::string', 'bool')
-            std_map_sb.__pair = pair_sb
-            
-            def set_map(self, k, v):
-                p = self.__pair(k, v)
-                it = self.find(k)
-                if it != self.end():
-                    self.erase(it)
-                self.insert(p)
-            
-            std_map_ulb.__setitem__ = set_map
-            std_map_sb.__setitem__ = set_map
-
-            GaudiPython.loaddict("SwimmingHacksDict")
-            createTurningPoint = gbl.SwimmingHacks.createTurningPoint
-            
-        # Create the TurningPoint objects and put them in the report
-        for turn in finalTurningPointsForWriting:
-            d = std_map_sb()
-            for decision, value in turn[3][1].iteritems():
-                d[decision] = value
-            m = std_map_sinfo()
-            for decision, info in turn[3][2].iteritems():
-                i = std_map_ulb()
-                for k, v in info.iteritems():
-                    i[k] = v
-                m[decision] = i
-                
-            tp = createTurningPoint(turn[0], turn[1], turn[2], turn[3][0], d, m)
-            report.addTurningPoint(stage, tp)
-
-        # Create the relations table
-        relations = TES[offCands + '/P2TPRelations']
-        if not relations:
-            relations = createObject(P2TPRelation)
-            # Put the relations table in the TES
-            sc = TES.registerObject(offCands + '/P2TPRelations', relations)
-            if not sc.isSuccess():
-                print "Failed to register SwimmingReports in TES"
-                break
-
-        from Swimming.SwimmingTisTos import appendToFSP
-        rel = relations.relations(mycand)
-        particles = [{"child" : mycand, "parent" : 0}]
-        appendToFSP(0, mycand, particles)
-        for particle in particles:
-            if rel.empty():
-                relations.relate(particle["child"], report)
-            elif rel(0).to().key() != report.key():
-                print "There is a relation, but it points to another swimming report, this is very bad!!"
                 return StatusCode(False)
+
+        if DEBUGMODE:
+            print turningPoints
+        for candidate, tps in turningPoints.iteritems():
+            # Look if there is already a report present for one of the locations
+            # of a candidate.
+            report = reports(candidate.intHash())
+            
+            if not report:
+                report = createObject(SwimmingReport)
+                if DEBUGMODE:
+                    print "Created new SwimmingReport object, inserting it into the SwimmingReports"
+                reports.insert(report, candidate.intHash())
+            elif report.hasStage(stage):
+                # I think this would be the outcome if the intHash method had a collision.
+                print "WARNING, stage %s already present, this is unsupported and will fail!"
+                return StatusCode(False)
+
+            if DEBUGMODE:
+                print candidate.selectedParticles()
+
+            # Now that we have a report, relate the particles
+            for loc, particle in candidate.selectedParticles().iteritems():
+                p2tploc = offCands[loc] + '/P2TPRelations'
+                relations = TES[p2tploc]
+                if not relations:
+                    relations = createObject(P2TPRelation)
+                    if DEBUGMODE:
+                        print "Created new P2TPRelation object, storing it at", p2tploc
+                    # Put it in the TES
+                    if not TES.registerObject(p2tploc, relations).isSuccess():
+                        print "Failed to register relations table in TES at", p2tploc
+                        return StatusCode(False)
+
+                rel = relations.relations(particle)
+                if rel.empty():
+                    relations.relate(particle, report)
+                elif not hadreports:
+                    print "Found", rel.size(), "relations already for", particle,"from",loc
+                    print "WARNING: already have relations for one of our offline candidates, this should only happen for FSPs"
+                    #return StatusCode(False)
+
+                # get the list of final state particles
+                fsps = [ ]
+                from Swimming.SwimmingTisTos import appendToFSP
+                appendToFSP(0, particle, fsps)
+
+                for fsp in fsps:
+                  #rel = relations.relations(fsp['child'])
+                  # a track can be related to more than one report if more than one candidate is swum
+                  # this should do nothing if we've already related, which will happen for each swimming
+                  # stage after the first (i.e. stripping, or 2nd trigger swimming)
+                  relations.relate(fsp['child'], report)
+                  #    print "WARNING: Attempted to relate the same FSP to the same report more than once..."
+                  #    return StatusCode(False)
+
+            # TODO MAKE THIS MAKE SENSE WITH MULTIPLE CANDIDATE SWIMMING
+            # I guess this still makes sense, sort of. To use the information
+            # you would have to try and relate a track with all of the different
+            # P2TPRelations, and deal with the fact you may find it was part of 
+            # more than one B/D candidate which was swum.
+            #from Swimming.SwimmingTisTos import appendToFSP
+            #rel = relations.relations(mycand)
+            #particles = [{"child" : mycand, "parent" : 0}]
+            #appendToFSP(0, mycand, particles)
+            #for particle in particles:
+            #    if rel.empty():
+            #        relations.relate(particle["child"], report)
+            #    elif rel(0).to().key() != report.key():
+            #        print "There is a relation, but it points to another swimming report, this is very bad!!"
+            #        return StatusCode(False)
+            # END TODO
+
+            # symbols for std::map; create them here the first time we pass by. They
+            # used to be in Swimming.decorators, but something goes pear-shaped with
+            # the dictionary loading in that case...
+            if 'std_map_sb' not in locals():
+                from GaudiPython import gbl
+                std_map_sinfo = gbl.std.map('string', 'map<unsigned long,bool>')
+                std_map_ulb = gbl.std.map('unsigned long', 'bool')
+                pair_ulb = gbl.std.pair('const unsigned long', 'bool')
+                std_map_ulb.__pair = pair_ulb
+                std_map_sb = gbl.std.map('std::string', 'bool')
+                pair_sb = gbl.std.pair('const std::string', 'bool')
+                std_map_sb.__pair = pair_sb
+                #std_map_sd = gbl.std.map('std::string', 'double')
+                #pair_sd = gbl.std.pair('std::string', 'double') # Not const according to comment in v2r4b python/Swimming/decorators.py
+                #std_map_sd.__pair = pair_sd
+
+                pair_sd = gbl.std.pair('std::string', 'double')
+                std_vec_sd = gbl.std.vector('std::pair<std::string,double>')
+
+                def set_map(self, k, v):
+                    p = self.__pair(k, v)
+                    it = self.find(k)
+                    if it != self.end():
+                        self.erase(it)
+                    self.insert(p)
+    
+                std_map_ulb.__setitem__ = set_map
+                std_map_sb.__setitem__ = set_map
+                #std_map_sd.__setitem__ = set_map
+
+                GaudiPython.loaddict("SwimmingHacksDict")
+                createTurningPoint = gbl.SwimmingHacks.createTurningPoint
+
+            # Create the TurningPoint objects and put them in the report
+            for turn in tps:
+                d = std_map_sb()
+                for decision, value in turn[2][1].iteritems():
+                    d[decision] = value
+                m = std_map_sinfo()
+                for decision, info in turn[2][2].iteritems():
+                    i = std_map_ulb()
+                    for k, v in info.iteritems():
+                        i[k] = v
+                    m[decision] = i
+                tau = turn[1].pop('tau')
+                mip = turn[1].pop('mip') # TODO make sure this is actually consistet
+                # and we call ipchi2 ipchi2...
+                e = std_vec_sd()
+                for info, value in turn[1].iteritems():
+                    e.push_back(pair_sd(info, float(value)))
+                #tp = LHCb.TurningPoint(turn[0], tau, mip, turn[2][0], d, m, e)
+                tp = createTurningPoint(turn[0], tau, mip, turn[2][0], d, m, e)
+                report.addTurningPoint(stage, tp)
 
         # Write the Output
         myGlobs.gaudi.algorithm(writerName).execute()
