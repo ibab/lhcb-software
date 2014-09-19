@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-09-19 - Marco Clemencic
+ - Small hack to be able to compile against LCG experimental builds.
+
 ! 2014-09-13 - Sebastian Neubert
  - Hlt track root locations changed to Hlt1/Track and Hlt/Track   
  - Renamed track location Hlt/Track/ForwardPEsti to Hlt1/Track/ForwardHPT 
