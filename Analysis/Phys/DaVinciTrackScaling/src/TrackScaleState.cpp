@@ -418,7 +418,7 @@ namespace
   {
     const TAxis* axis = histo.GetXaxis() ;
     if ( 0 == axis ) { return def ; }                     // RETURN
-    const int bin = axis->FindiFixBin ( x )  ;
+    const int bin = axis->FindFixBin ( x )  ;
     if ( 0 == bin || axis->GetNbins() + 1 ==  bin ) { return def ; } // RETURN
     //
     return histo.GetBinContent ( bin ) ;
