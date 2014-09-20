@@ -5,6 +5,9 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2014-09-20 - Marco Clemencic
+ - Updated CMake configuration after latest changes.
+
 ! 2014-09-18 - Olli Lupton
  - Merge in changes from v2r4b branch, commit messages from that branch below.
  - Many small fixes to blend Roel's work of 2 years ago into the current head.
