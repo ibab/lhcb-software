@@ -806,28 +806,24 @@ class LowMultConf(LineBuilder) :
                                                   ChiC2PiPiPiPi_VtxChi2DoFmax = config['ChiC2HHHH_VtxChi2DoFmax']
                                                   )
 
-        self.selD2KPi_D2KPi = makeDD("selD2KPi_D2KPi",
+        self.selD2KPi_D2KPi = makeDDSame("selD2KPi_D2KPi",
                                      decayDesc = ["psi(3770) -> D0 D~0", "[psi(3770) -> D0 D0]cc"],
-                                     inD_1 = self.selD2KPi,
-                                     inD_2 = self.selD2KPi
+                                     inD = self.selD2KPi
                                      )
         
-        self.selD2K3Pi_D2K3Pi = makeDD("selD2K3Pi_D2K3Pi",
+        self.selD2K3Pi_D2K3Pi = makeDDSame("selD2K3Pi_D2K3Pi",
                                        decayDesc = ["psi(3770) -> D0 D~0", "[psi(3770) -> D0 D0]cc"],
-                                       inD_1 = self.selD2K3Pi,
-                                       inD_2 = self.selD2K3Pi
+                                       inD = self.selD2K3Pi
                                        )
         
-        self.selD2KsPiPiLL_D2KsPiPiLL = makeDD("selD2KsPiPiLL_D2KsPiPiLL",
+        self.selD2KsPiPiLL_D2KsPiPiLL = makeDDSame("selD2KsPiPiLL_D2KsPiPiLL",
                                                decayDesc = ["psi(3770) -> D0 D~0", "[psi(3770) -> D0 D0]cc"],
-                                               inD_1 = self.selD2KsPiPiLL,
-                                               inD_2 = self.selD2KsPiPiLL
+                                               inD = self.selD2KsPiPiLL
                                                )
         
-        self.selD2KsPiPiDD_D2KsPiPiDD = makeDD("selD2KsPiPiDD_D2KsPiPiDD",
+        self.selD2KsPiPiDD_D2KsPiPiDD = makeDDSame("selD2KsPiPiDD_D2KsPiPiDD",
                                                decayDesc = ["psi(3770) -> D0 D~0", "[psi(3770) -> D0 D0]cc"],
-                                               inD_1 = self.selD2KsPiPiDD,
-                                               inD_2 = self.selD2KsPiPiDD
+                                               inD = self.selD2KsPiPiDD
                                                )
         
         self.selD2KsPiPiLL_D2KsPiPiDD = makeDD("selD2KsPiPiLL_D2KsPiPiDD",
@@ -944,16 +940,14 @@ class LowMultConf(LineBuilder) :
                                                         inD_2 = self.selDstar2D0Pi_KsPiPiDD
                                                         )
         
-        self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi = makeDD("selDstar2D0Pi_KPi_Dstar2D0Pi_KPi",
+        self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi = makeDDSame("selDstar2D0Pi_KPi_Dstar2D0Pi_KPi",
                                                        decayDesc = ["psi(4040) -> D*(2010)+ D*(2010)-"],
-                                                       inD_1 = self.selDstar2D0Pi_KPi,
-                                                       inD_2 = self.selDstar2D0Pi_KPi
+                                                       inD = self.selDstar2D0Pi_KPi
                                                        )
         
-        self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS = makeDD("selDstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS",
+        self.selDstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS = makeDDSame("selDstar2D0Pi_KPi_Dstar2D0Pi_KPi_WS",
                                                           decayDesc = ["[psi(4040) -> D*(2010)+ D*(2010)+]cc"],
-                                                          inD_1 = self.selDstar2D0Pi_KPi,
-                                                          inD_2 = self.selDstar2D0Pi_KPi
+                                                          inD = self.selDstar2D0Pi_KPi
                                                           )
         
         self.selDstar2D0Pi_KPi_Dstar2D0Pi_K3Pi = makeDD("selDstar2D0Pi_KPi_Dstar2D0Pi_K3Pi",
@@ -2421,6 +2415,20 @@ def makeChiC2PiPiPiPi(name,
 #
 #=== DD combination ===#
 #
+
+def makeDDSame(name,
+           decayDesc,
+           inD
+           ) :
+
+    CombineDDSame = CombineParticles( DecayDescriptors = decayDesc
+                                  , CombinationCut = "AALL"
+                                  , MotherCut = "ALL"
+                                  )
+
+    return Selection(name,
+                     Algorithm = CombineDDSame,
+                     RequiredSelections = [inD])
 
 def makeDD(name,
            decayDesc,
