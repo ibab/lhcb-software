@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-19 - Ronan Wallace
+  - Fix to StrippingLowMult.py (duplicate inputs in combine particles).
+
 ! 2014-09-19 - Michal Kreps
   - Fix to B2XMuMu line to use StdVeryLooseLambdaLL instead of
     StdLooseLambdaLL.
