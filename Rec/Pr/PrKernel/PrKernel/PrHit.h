@@ -38,7 +38,7 @@ public:
     m_size       = size;
     m_charge     = charge;
     m_segment    = segment;
-    m_w          = 1./(errX*errX);
+    m_w          = 1./(errX);
     m_coord      = segment.x(0.);
     m_zone       = zone;
     m_planeCode  = planeCode;
@@ -51,7 +51,8 @@ public:
   int   charge()        const { return m_charge; }
   float x( float y=0. ) const { return m_segment.x( y ); }
   float z( float y=0. ) const { return m_segment.z( y ); }
-  float w()             const { return m_w;      }
+  float w()             const { return m_w * m_w; }
+  float werr()          const { return m_w; }
   float yMin()          const { return m_segment.yMin();   }
   float yMax()          const { return m_segment.yMax();   }
   float coord()         const { return m_coord;  }
