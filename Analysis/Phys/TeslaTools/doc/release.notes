@@ -1,2 +1,5 @@
-! 2015-09-15 - Sean Benson
+! 2014-09-22 - Marco Clemencic
+ - Fixes to the CMake configuration.
+
+! 2014-09-15 - Sean Benson
  - First import. 

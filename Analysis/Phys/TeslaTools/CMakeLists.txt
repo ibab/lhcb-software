@@ -13,9 +13,8 @@ gaudi_depends_on_subdirs(Event/MicroDst
 
 gaudi_add_module(TeslaTools
                  src/*.cpp
-                 INCLUDE_DIRS Boost
-                 LINK_LIBRARIES Boost HltEvent RecEvent DaVinciKernelLib
-                 MicroDST DaVinciInterfacesLib LHCbAlgs)
+                 LINK_LIBRARIES HltEvent RecEvent DaVinciKernelLib
+                 DaVinciInterfacesLib)
 
 gaudi_install_python_modules()
 
