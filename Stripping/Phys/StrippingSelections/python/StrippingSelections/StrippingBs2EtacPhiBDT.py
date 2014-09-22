@@ -26,6 +26,7 @@ default_config = {
                           & ( (ACHILD(MIPCHI2DV(), 1) + ACHILD(MIPCHI2DV(), 2) + ACHILD(MIPCHI2DV(), 3) + ACHILD(MIPCHI2DV(), 4))>30)
                           """,
         'EtacMomN4Cuts' : "(VFASPF(VCHI2/VDOF) < 9.) & (in_range(2.8*GeV, MM, 3.2*GeV)) & (MIPCHI2DV(PRIMARY) > 2.)" ,
+        'EtacComCuts'   : "(in_range(2.75*GeV, AM, 3.25*GeV))",
         'PhiCuts'       : """
                           (MAXTREE(ABSID=='K+',TRGHOSTPROB) < 0.4)
                           & (MM<1.05*GeV)
@@ -33,6 +34,7 @@ default_config = {
                           & (MIPCHI2DV(PRIMARY) > 2.)
                           & (VFASPF(VCHI2) < 9.)
                           """ ,
+        'KsCuts'        : "(ADMASS('KS0') < 30.*MeV) & (BPVDLS>5)",
         'BsComCuts'     : "(ADAMASS('B_s0') < 500 *MeV)",
         'BsMomCuts'     : "(VFASPF(VCHI2/VDOF) < 25.) & (BPVDIRA> 0.99) & (BPVIPCHI2()<25) & (BPVDLS>0)",
 
@@ -62,7 +64,9 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         'EtacComAMCuts',
         'EtacComN4Cuts',
         'EtacMomN4Cuts',
+        'EtacComCuts',
         'PhiCuts',
+        'KsCuts',
         'BsComCuts',
         'BsMomCuts',
         
@@ -129,12 +133,12 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         """
         from PhysSelPython.Wrappers import MergedSelection
 
-        self.SelEtac = MergedSelection(self.name + "SelEtac",
-                                     RequiredSelections =  [ self.SelEtac2KKPiPi, 
-                                                             self.SelEtac2KKKK,
-                                                             self.SelEtac2PiPiPiPi
-                                                             ])
-
+        self.SelEtac = MergedSelection( self.name + "SelEtac",
+                                        RequiredSelections =  [ self.SelEtac2KKPiPi, 
+                                                                self.SelEtac2KKKK,
+                                                                self.SelEtac2PiPiPiPi
+                                                                ])
+        
         
         """
         Phi 
@@ -143,6 +147,47 @@ class Bs2EtacPhiBDTConf(LineBuilder):
                                          InputList =  DataOnDemand(Location = 'Phys/StdTightPhi2KK/Particles' ), 
                                          Cuts = config['PhiCuts']
                                          )
+
+        """
+        Kshort 
+        """
+        # Both LL and DD 
+        self.InputKs = MergedSelection( self.name + "InputKs",
+                                        RequiredSelections = [DataOnDemand(Location = "Phys/StdLooseKsDD/Particles"),
+                                                              DataOnDemand(Location = "Phys/StdLooseKsLL/Particles")] )
+
+        self.SelKs = self.createSubSel( OutputList = self.name + "SelKs",
+                                        InputList = self.InputKs,
+                                        Cuts = config['KsCuts'] ) 
+
+        # Eta_c -> KS0 K Pi 
+        self.SelEtac2KsKPi = self.createCombinationSel( OutputList = self.name + "SelEtac2KsKPi",
+                                                        DecayDescriptor = "[eta_c(1S) -> KS0 K+ pi-]cc",
+                                                        DaughterLists = [ self.SelKs, self.SelKaons, self.SelPions ],                                                        
+                                                        PreVertexCuts  = config['EtacComCuts'], 
+                                                        PostVertexCuts = config['EtacMomN4Cuts']
+                                                        )
+
+        """
+        Bs->Eta_c(KsKPi) Phi 
+        """
+        self.SelBs2EtacPhi_KsKPi = self.createCombinationSel( OutputList = self.name + "SelBs2EtacPhi_KsKPi",
+                                                              DecayDescriptor = "B_s0 -> eta_c(1S) phi(1020)",
+                                                              DaughterLists = [ self.SelPhi, self.SelEtac2KsKPi ],                    
+                                                              PreVertexCuts  = config['BsComCuts'],
+                                                              PostVertexCuts = config['BsMomCuts'] )
+
+        self.Bs2EtacPhi_KsKPiLine = StrippingLine( self.name + '_KsKPiLine',                                                
+                                                   prescale  = config['Prescale'],
+                                                   HLT       = config['HLTCuts'],
+                                                   algos     = [ self.SelBs2EtacPhi_KsKPi ],
+                                                   EnableFlavourTagging = True,
+                                                   MDSTFlag = True
+                                                   )
+
+        self.registerLine( self.Bs2EtacPhi_KsKPiLine )
+        
+
 
         """
         Bs->Eta_c Phi 
@@ -249,6 +294,7 @@ class Bs2EtacPhiBDTConf(LineBuilder):
         return Selection ( OutputList,
                            Algorithm = combiner,
                            RequiredSelections = DaughterLists)
+    
 
     def applyMVA( self, name, 
                   SelB,

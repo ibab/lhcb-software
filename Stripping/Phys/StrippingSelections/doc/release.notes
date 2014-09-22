@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-22 - Jibo He
+  - Added Bs->eta_c (Ks K Pi) phi lines 
+
 ! 2014-09-19 - Ronan Wallace
   - Fix to StrippingLowMult.py (duplicate inputs in combine particles).
 
