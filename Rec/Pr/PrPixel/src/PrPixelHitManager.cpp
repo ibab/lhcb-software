@@ -1,3 +1,5 @@
+#include <cmath>
+
 #include "GaudiKernel/ToolFactory.h"
 
 #include "Event/RawEvent.h"
@@ -382,7 +384,7 @@ void PrPixelHitManager::buildHitsFromSPRawBank(
   // timing performance. And yes, this has been measured. Just don't.
 
   // Assume binary resolution of hit position. This is the weight.
-  const float w = 12.0 / (0.055 * 0.055);
+  const float w = std::sqrt(12.0) / (0.055);
 
   // Loop over VP RawBanks
   std::vector<LHCb::RawBank *>::const_iterator iterBank = tBanks.begin();
@@ -701,7 +703,7 @@ void PrPixelHitManager::buildHitsFromLCRawBank(
     const std::vector<LHCb::RawBank *> &tBanks) {
 
   // Assume binary resolution of hit position. This is the weight.
-  const float w = 12.0 / (0.055 * 0.055);
+  const float w = std::sqrt(12.0) / (0.055);
 
   // The unit of the inter pixel fractions.
   const float fractScale = 1.0 / (1 << (YFRACTSHIFT - XFRACTSHIFT));
@@ -910,7 +912,7 @@ void PrPixelHitManager::buildHits() {
     m_pool.resize(clusters->size() + 100);
   }
   // Assume binary resolution of hit position. This is the weight.
-  const float w = 12.0 / (0.055 * 0.055);
+  const float w = std::sqrt(12.0) / (0.055);
   // Loop over clusters.
   LHCb::VPClusters::const_iterator itc;
   LHCb::VPClusters::const_iterator itc_end(clusters->end());

@@ -20,8 +20,8 @@ class PrPixelHit {
       : m_x(0.),
         m_y(0.),
         m_z(0.),
-        m_wx(0.),
-        m_wy(0.),
+        m_wxerr(0.),
+        m_wyerr(0.),
         m_module(0),
         m_id(0),
         m_isUsed(false) {}
@@ -29,26 +29,26 @@ class PrPixelHit {
   virtual ~PrPixelHit() {}
 
   void setHit(const LHCb::LHCbID id, const Gaudi::XYZPoint &point,
-              const float wx, const float wy, const unsigned int module) {
+              const float wxerr, const float wyerr, const unsigned int module) {
     m_id = id;
     m_x = point.x();
     m_y = point.y();
     m_z = point.z();
-    m_wx = wx;
-    m_wy = wy;
+    m_wxerr = wxerr;
+    m_wyerr = wyerr;
     m_module = module;
     m_isUsed = false;
   }
 
   void setHit(const LHCb::LHCbID id, const float x, const float y,
-              const float z, const float wx, const float wy,
+              const float z, const float wxerr, const float wyerr,
               const unsigned int module) {
     m_id = id;
     m_x = x;
     m_y = y;
     m_z = z;
-    m_wx = wx;
-    m_wy = wy;
+    m_wxerr = wxerr;
+    m_wyerr = wyerr;
     m_module = module;
     m_isUsed = false;
   }
@@ -57,8 +57,10 @@ class PrPixelHit {
   float x() const { return m_x; }
   float y() const { return m_y; }
   float z() const { return m_z; }
-  float wx() const { return m_wx; }
-  float wy() const { return m_wy; }
+  float wx() const { return m_wxerr * m_wxerr; }
+  float wy() const { return m_wyerr * m_wyerr; }
+  float wxerr() const { return m_wxerr; }
+  float wyerr() const { return m_wyerr; }
   int module() const { return m_module; }
   bool isUsed() const { return m_isUsed; }
   void setUsed(const bool flag) { m_isUsed = flag; }
@@ -75,9 +77,9 @@ class PrPixelHit {
 
   /// Calculate distance-square / sigma-square
   float chi2(const float x, const float y) const {
-    const float dx = x - m_x;
-    const float dy = y - m_y;
-    return dx * dx * m_wx + dy * dy * m_wy;
+    const float dx = m_wxerr * (x - m_x);
+    const float dy = m_wyerr * (y - m_y);
+    return dx * dx + dy * dy;
   }
 
   // Operators for sorting the vectors of pointers to hits
@@ -107,10 +109,10 @@ class PrPixelHit {
   float m_x;
   float m_y;
   float m_z;
-  /// Weight (1 / squared error) in X
-  float m_wx;
-  /// Weight (1 / squared error) in Y 
-  float m_wy;
+  /// Weight (1 / error) in X
+  float m_wxerr;
+  /// Weight (1 / error) in Y 
+  float m_wyerr;
   /// Module number
   unsigned int m_module;
   /// Channel ID
