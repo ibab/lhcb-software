@@ -3,7 +3,7 @@
 ################################################################################
 gaudi_subdir(Swimming v3r2)
 
-gaudi_depends_on_subdirs(Event/SwimminEvent
+gaudi_depends_on_subdirs(Event/SwimmingEvent
                          GaudiConf
                          GaudiKernel
                          Kernel/LHCbKernel
