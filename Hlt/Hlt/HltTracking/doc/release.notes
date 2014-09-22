@@ -4,16 +4,20 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
-! 2014-13-09 - Sebastian Neubert
+! 2014-09-22 - Sebastian Neubert
+ - removed input into forward merger for the case that 
+   the track report decoder is not running and that container is missing
+
+! 2014-09-13 - Sebastian Neubert
  - reintegrate merge of branch task51867tracklocations into trunk
  - New track locations for Hlt1 and Hlt2
 
-! 2014-12-09 - Sebastian Neubert
+! 2014-09-11 - Sebastian Neubert
  - HltShared locations added
  - Removed trackmerge for Hlt2
  - This needs the CloneKiller working on LHCb::Track::Range
 
-! 2014-10-09 - Sebastian Neubert
+! 2014-09-10 - Sebastian Neubert
  - Track locations finished for Hlt2
  - ToDo: check PVreco track-locations, check derived locations for protoparticles
 

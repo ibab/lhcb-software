@@ -1213,8 +1213,11 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #forwardDecoDumper = DumpTracks('ForwardDecoDumper',TracksLocation = "Hlt2/Track/Forward" )
 
         from Configurables import TrackListMerger
+        forwardLocations = [Hlt2TrackLoc["ForwardComp"]]
+        if Hlt1TrackOption in ['Decode','Encode-Decode'] :
+            forwardLocations += [Hlt1TrackLoc["ForwardHPT"]]
         forwardMerger = TrackListMerger('forwardMerger',
-                                        inputLocations=[Hlt1TrackLoc["ForwardHPT"], Hlt2TrackLoc["ForwardComp"]] ,
+                                        inputLocations=forwardLocations ,
                                         outputLocation=Hlt2TrackLoc["Forward"] )
         
         
