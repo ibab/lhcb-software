@@ -1,0 +1,30 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout">
+    <integer>1200</integer>
+  </argument>
+  <argument name="args"><set>
+    <text>../options/Moore_Hlt1And2.py</text>
+    <text>../options/Input_Default.py</text>
+    <text>../options/hlt2_trackingonly-threshold.py</text>
+    <text>../options/Moore_Hlt2Only.py</text>
+    <text>--option</text>
+    <text>from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); from Configurables import Moore; Moore().inputFiles = [ 'hlt1_reqhlt1_track.raw' ]; Moore().EnableTimer="physics.tracking.hlt2.csv";  from Configurables import HltConf, Hlt2Conf ; HltConf().PruneHltANNSvc = False ; Hlt2Conf().Hlt1TrackOption = 'Rerun'</text>
+  </set></argument>
+  <!--<argument name="prerequisites"><set>
+    <tuple><text>moore.physics.deferral.hlt1only</text><enumeral>PASS</enumeral></tuple>
+  </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
+  <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
+  <argument name="validator"><text>
+
+#count error lines, shouldn't be any warnings or errors, ideally -- except for the one warning we 
+# explicitly look for as reference...
+countErrorLines({"FATAL":0,"ERROR":0,"WARNING":1})
+findReferenceBlock("""
+Hlt1DecReportsDecoder                   WARNING TCK in rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck...
+""", id = "AllowTCKZero" )
+
+</text></argument>
+</extension>
+
