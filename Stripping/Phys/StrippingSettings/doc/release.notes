@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+| 2014-09-22 - Carlos Vazquez Sierra (B2CC)
+ - Updated s21 and s21r1 dictionaries: new Bs->eta_c (Ks K Pi) phi line configuration added for StrippingBs2EtacPhiBDT.py
+
 ! 2014-09-17 - Carlos Vazquez Sierra (B2CC)
  - Updated s21 and s21r1 dictionaries: prescaled tuned up.
 

@@ -356,6 +356,7 @@ BetaSBs2JpsieePhi = {
 
 ######################################################################
 ## StrippingBs2EtacPhiBDTLine (MDST.DST)
+## StrippingBs2EtacPhiBDT_KsKPiLine (MDST.DST)
 ## -------------------------------------------------------------------
 ## Lines defined in StrippingBs2EtacPhiBDT.py
 ## Authors: Morgan Martin, Jibo He
@@ -373,6 +374,8 @@ Bs2EtacPhiBDT = {
                                                & ( (ACHILD(MIPCHI2DV(), 1) + ACHILD(MIPCHI2DV(), 2) + ACHILD(MIPCHI2DV(), 3) + ACHILD(MIPCHI2DV(), 4))>30)
                                                """
                     , 'EtacMomN4Cuts'        : "(VFASPF(VCHI2/VDOF) < 9.) & (in_range(2.8*GeV, MM, 3.2*GeV)) & (MIPCHI2DV(PRIMARY) > 2.)"
+                    , 'EtacComCuts'          : "(in_range(2.75*GeV, AM, 3.25*GeV))"
+                    , 'KsCuts'               : "(ADMASS('KS0') < 30.*MeV) & (BPVDLS>5)"
                     , 'PhiCuts'              : """
                                                (MAXTREE(ABSID=='K+',TRGHOSTPROB) < 0.4)
                                                & (MM<1.05*GeV)
@@ -386,7 +389,7 @@ Bs2EtacPhiBDT = {
                     , 'Bs2EtacPhiXmlFile'      :  "$TMVAWEIGHTSROOT/data/Bs2EtacPhi_BDT_v1r0.xml"
                     , 'Prescale'               : 1.
                     },
-    'STREAMS'     : { 'Bhadron' : ['StrippingBs2EtacPhiBDTLine'] },
+    'STREAMS'     : { 'Bhadron' : ['StrippingBs2EtacPhiBDTLine','StrippingBs2EtacPhiBDT_KsKPiLine'] },
     'WGs'         : [ 'B2CC' ]
     }
 
