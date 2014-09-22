@@ -116,7 +116,7 @@ namespace Tf {
                    , double coord
                    , double coordHalfBox
                    , double coordIdeal
-                   , double variance
+                   , double error
                    , double signal);
 
   protected:
@@ -139,12 +139,12 @@ namespace Tf {
                           , double coord
                           , double coordHalfBox
                           , double coordIdeal
-                          , double variance
+                          , double error
                           , double signal)
     : HitBase(LHCb::LHCbID(c.channelID())
               , rid
               , coord
-              , variance)
+              , error)
     , m_clu(c)
     , m_coordHalfBox(coordHalfBox)
     , m_coordIdeal(coordIdeal)

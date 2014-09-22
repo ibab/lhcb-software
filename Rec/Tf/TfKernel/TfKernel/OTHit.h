@@ -150,8 +150,8 @@ namespace Tf
     const OTDet::RtRelation* m_rtrel;	 ///< The rt relation used to convert drift times to radii
 
   private: // methods
-    /** set drift distance and variance to avoid duplicate code in constructors */
-    void setDriftDistAndVar();
+    /** set drift distance and error to avoid duplicate code in constructors */
+    void setDriftDistAndErr();
   };
 
   /// Type for container for OTHit
@@ -167,30 +167,30 @@ namespace Tf
   // Inline function definitions
   ////////////////////////////////////////////////////////////////////////////////////
 
-  inline void OTHit::setDriftDistAndVar()
+  inline void OTHit::setDriftDistAndErr()
   {
     // setting things from the OTHit. the cached drift distance is the
     // one in the middle of the wire, for now.
     const double time = approxDriftTime(yMid()) ;
     OTDet::RadiusWithError r = m_rtrel->radiusWithError( time ) ;
     m_driftDistance  = r.val ;
-    setVariance(r.err*r.err) ;
+    setError(r.err) ;
   }
 
   inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit,
 		  const OTDet::RtRelation& rtrel ) :
-    LineHit(aModule,rawhit),
+    LineHit(aModule, rawhit),
     m_module(&aModule),
     m_rawhit(rawhit),
     m_rtrel(&rtrel)
-    { setDriftDistAndVar(); }
+    { setDriftDistAndErr(); }
   
   inline OTHit::OTHit( const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit ) :
     LineHit(aModule,rawhit),
     m_module(&aModule),
     m_rawhit(rawhit),
     m_rtrel(&aModule.rtRelation())
-  { setDriftDistAndVar(); }
+  { setDriftDistAndErr(); }
 
   inline bool OTHit::outOfTime( double globaly, double numsigma ) const 
   {

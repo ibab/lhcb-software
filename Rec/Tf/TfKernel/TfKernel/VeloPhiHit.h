@@ -78,7 +78,7 @@ namespace Tf {
               , s->globalPhi(c.channelID().strip(),c.interStripFraction())
               , s->halfboxPhi(c.channelID().strip(),c.interStripFraction())
               , s->idealPhi(c.channelID().strip(),c.interStripFraction())
-              , s->phiPitch( c.channelID().strip() ) * s->phiPitch( c.channelID().strip() ) / 12.0
+              , s->phiPitch( c.channelID().strip() ) / std::sqrt(12.0)
               , signal
               )
     , m_sensor(s)

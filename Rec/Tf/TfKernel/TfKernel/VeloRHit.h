@@ -82,7 +82,7 @@ namespace Tf {
               , s->globalR(c.channelID().strip(),c.interStripFraction())
               , s->halfboxR(c.channelID().strip(),c.interStripFraction())
               , s->rOfStrip(c.channelID().strip(),c.interStripFraction())
-              , s->rPitch( c.channelID().strip() ) * s->rPitch( c.channelID().strip() ) / 12.0
+              , s->rPitch( c.channelID().strip() ) / std::sqrt(12.0)
               , signal
               )
       , m_sensor(s)

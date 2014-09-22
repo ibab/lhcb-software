@@ -15,6 +15,8 @@
 #ifndef TFKERNEL_HITBASE_H
 #define TFKERNEL_HITBASE_H 1
 
+#include <cmath>
+
 // STL
 #include <bitset>
 
@@ -108,11 +110,19 @@ namespace Tf
 
     /** Access the variance value
      *  @return The value of the variance for this hit */
-    inline double        variance()      const { return m_variance ; }
+    inline double        variance()      const { return 1. / (m_weight * m_weight); }
 
     /** Access the weight (1/variance) value
      *  @return The value of the weight for this hit */
-    inline double        weight  ()      const { return (double)(1.0/variance());  }
+    inline double        weight  ()      const { return m_weight * m_weight; }
+
+    /** Access the variance value
+     *  @return The value of the variance for this hit */
+    inline double        error()         const { return 1. / m_weight; }
+
+    /** Access the (error) weight (1/error) value
+     *  @return The value of the weight for this hit */
+    inline double        errweight  ()   const { return m_weight; }
 
     /** Access the LHCbID channel identifier
      *  @return The channel identifier for this hit */
@@ -253,13 +263,13 @@ namespace Tf
      *  @param id       The LHCbID channel ID for this hit
      *  @param regionid The RegionID for this hit
      *  @param coord    The coord value for this hit (XXX???XXX What is this ?)
-     *  @param variance The value of the variance for this hit
+     *  @param error    The value of the error for this hit
      */
     HitBase( const LHCb::LHCbID id,
              const RegionID& regionid,
              const double coord    = 0,
-             const double variance = 0 )
-      : m_lhcbID(id), m_regionID(regionid), m_coord(coord), m_variance(variance), m_ignore (false) {}
+             const double error = 0 )
+      : m_lhcbID(id), m_regionID(regionid), m_coord(coord), m_weight(1. / error), m_ignore (false) {}
 
     /** Set the coord value
      *  @param x The coord value to use 
@@ -269,14 +279,19 @@ namespace Tf
     /** Set the variance value
      *  @param v The variance value to use 
      */
-    void setVariance(const double v) { m_variance = v ; }
+    void setVariance(const double v) { m_weight = 1. / std::sqrt(v) ; }
+
+    /** Set the error value
+     *  @param v The variance value to use 
+     */
+    void setError(const double e) { m_weight = 1. / e ; }
 
   protected:
 
     LHCb::LHCbID m_lhcbID;          ///< The hit LHCbID channel identifier
     RegionID m_regionID;            ///< The hit RegionID
     double m_coord;                 ///< The hit coord (XXX???XXX X value ?)
-    double m_variance;              ///< The hit variance
+    double m_weight;                ///< The hit weight (1/error)
     mutable StatusFlag m_status;    ///< The hit status word (bit packed)
     mutable bool m_ignore;                 ///< Flag for efficiency studies 
 

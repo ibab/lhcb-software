@@ -150,7 +150,7 @@ namespace Tf
   protected:
 
     /** Constructor from an OT module and a raw OT hit (OTLiteTime) */
-    LineHit(const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit) ;
+    LineHit(const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit, const double error) ;
 
     /** Constructor from an ST sector and a raw ST cluster (STLiteCluster) */
     LineHit(const DeSTSector& aSector, const LHCb::STLiteCluster& clus ) ;
@@ -171,9 +171,10 @@ namespace Tf
   // Inline function definitions.
   ////////////////////////////////////////////////////////////////////////////////////
 
-  inline LineHit::LineHit(const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit)
+  inline LineHit::LineHit(const DeOTModule& aModule, const LHCb::OTLiteTime& rawhit,
+	  const double error = 4.9 / std::sqrt(12.))
     : HitBase ( LHCb::LHCbID ( rawhit.channel() ),
-                RegionID     ( rawhit.channel() ) )
+                RegionID     ( rawhit.channel() ), 0, error)
   {
 
     aModule.trajectory( rawhit.channel().straw(), m_dxdy, m_dzdy, m_xAtYEq0, m_zAtYEq0, m_ybegin, m_yend) ;
@@ -185,7 +186,7 @@ namespace Tf
     : HitBase ( LHCb::LHCbID ( clus.channelID() ),
                 RegionID     ( clus.channelID() ),
                 0,
-                aSector.pitch()*aSector.pitch()/12.0)  
+                aSector.pitch()/std::sqrt(12.0))  
   {
     aSector.trajectory( clus.channelID().strip(), 
                         clus.interStripFraction(), 

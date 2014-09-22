@@ -3,6 +3,31 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+
+! 2014-09-22 - Manuel Tobias Schiller
+ - save 1/error instead of variance in hit classes; provide the glue code to
+   run client code without modification.
+   the reason for this change is that this formulation facilitates exploiting
+   the hit-level parallelism in chi^2 fits done inside the pattern recognition
+   algorithms:
+   - hit-parallel fits work by expressing covariance matrix elements and
+     elements of the right hand side of the linear system as dot product of
+     vectors (length: number of hits)
+   - to obtain the right answer, it's more convenient to weight the components
+     with 1/error as it saves a multiplication (sum += v1[i] * v2[i] vs sum +=
+     w[i] * v1[i] * v2[i] with w[i] = 1/err^2, i.e. both v1 and v2 get a
+     factor 1/err in the definition)  
+   - the old version of our hit classes did not provide access to the inverse
+     error, only the inverse variance; since squaring a is cheap, whereas
+     taking the square root is expensive, we change what is saved inside the
+     hit classes (not a problem, never persisted)
+   - at the same time, we provide code which allows the old interfaces to be
+     used without change to client code
+   - no changes in efficiency or ghost rate are expected (apart from maybe
+     slight rounding differences, should be below permille level); timing
+     should also remain largely unaffected (expect the usual run-to-run
+     variations)
+
 ! 2014-09-17 - Gerhard Raven
  - add specialized updateXYZHitsForTrack without any branches
  - reduce code duplication by having the above return the computed y coordinate,
