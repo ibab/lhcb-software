@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references to reflect changes since v47r1
+  . Change to hit classes to facilitate exploitation of hit-level parallelism in
+    chi^2 fits (PrKernel, TfKernel, PrPixel)
+
 </PRE><H1><A NAME=v47r1>2014-09-15 Brunel v47r1</A></H1><PRE>
 This version uses projects LHCb v38r1, Lbcom v16r0p1,
  Rec v17r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
