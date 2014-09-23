@@ -274,7 +274,14 @@ StatusCode RelInfoBstautauZVisoBDT::calculateRelatedInfo( const LHCb::Particle* 
       return Warning( "Trying to compute isolation on B ==> needs a tau", StatusCode::SUCCESS,50);//
     }
   
+  //check on the muon
 
+  if (part->isBasicParticle())
+    {
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
+      return Warning( "Trying to compute isolation on muon  ==> needs a tau", StatusCode::SUCCESS,50);//
+    }
+  
    if ( msgLevel(MSG::DEBUG) ) cout <<"B***"<<endl;
   StatusCode scInTracks = Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
   if ( msgLevel(MSG::DEBUG) )  cout <<"C***"<<endl;
