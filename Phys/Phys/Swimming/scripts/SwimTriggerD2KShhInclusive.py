@@ -23,6 +23,12 @@ Swimming().SelectMethod = 'all'
 Swimming().OutputType = 'DST'
 Swimming().UseFileStager = False
 Swimming().OverrideStageName = 'Trigger_Inclusive'
+Swimming().LifetimeFitter = ['DecayTreeFitter', 'LifetimeFitter']
+Swimming().DecayTreeFitterConstraints = {
+    'DTFD0KS0'  : { 'D0' : -1.0, 'KS0' : -1.0 },
+    'DTFKS0'    : { 'KS0' : -1.0 }  
+    }
+Swimming().StoreExtraTPs = True
 
 # The custom event loop
 from Gaudi.Configuration import setCustomMainLoop
