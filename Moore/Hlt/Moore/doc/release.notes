@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-09-23 Sebastian Neubert
+ - updated test references after small changes to forward tracking algos 
+
 ! 2014-09-22 - Sebastian Neubert
  - added tracking test to check the rerunning of the foward reco in hlt2
 

@@ -19,10 +19,10 @@
   </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
   <argument name="validator"><text>
 prcheckerblock="""
-PrChecker.Forward                          INFO **** Forward                         12897 tracks including          1801 ghosts [14.0 %], Event average   9.4 % ****
-PrChecker.Forward                          INFO **** for P>3GeV,Pt>0.5GeV            12897 tracks including          1801 ghosts [14.0 %]  ****
-PrChecker.Forward                          INFO                             long :   10679 from    34877 [ 30.6 %]     18 clones [ 0.2 %], purity: 95.87 %, hitEff: 95.35 %
-PrChecker.Forward                          INFO                        long>5GeV :    9986 from    23818 [ 41.9 %]     18 clones [ 0.2 %], purity: 95.94 %, hitEff: 95.66 %
+PrChecker.Forward                          INFO **** Forward                         12900 tracks including          1802 ghosts [14.0 %], Event average   9.4 % ****
+PrChecker.Forward                          INFO **** for P>3GeV,Pt>0.5GeV            12900 tracks including          1802 ghosts [14.0 %]  ****
+PrChecker.Forward                          INFO                             long :   10681 from    34877 [ 30.6 %]     18 clones [ 0.2 %], purity: 95.87 %, hitEff: 95.36 %
+PrChecker.Forward                          INFO                        long>5GeV :    9988 from    23818 [ 41.9 %]     18 clones [ 0.2 %], purity: 95.94 %, hitEff: 95.66 %
 PrChecker.Forward                          INFO                     long_strange :      96 from     1328 [  7.2 %]      0 clones [ 0.0 %], purity: 95.74 %, hitEff: 94.78 %
 PrChecker.Forward                          INFO                long_strange>5GeV :      85 from      659 [ 12.9 %]      0 clones [ 0.0 %], purity: 95.66 %, hitEff: 95.63 %
 PrChecker.Forward                          INFO                       long_fromB :    2130 from     4234 [ 50.3 %]      6 clones [ 0.3 %], purity: 96.22 %, hitEff: 95.77 %
