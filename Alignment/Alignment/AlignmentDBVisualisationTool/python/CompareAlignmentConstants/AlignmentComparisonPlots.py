@@ -112,12 +112,16 @@ def plotAlignmentParametersComparison( elmGroup, dofs
     if isinstance( binLabels, str ):
         binLabelPattern = re.compile(binLabels)
         binLabels = list()
-        for connection, start, end, tag in sliceConnectStringsAndTags:
+        for index, ( connection, start, end, tag ) in enumerate( sliceConnectStringsAndTags ):
             if len( connection ) == 0:
                 # no label for IOVs from CondDB; let the drawing method figure the label out
                 binLabels.append( None )
             else:
-                binLabels.append( binLabelPattern.match(connection[0][0] ).group("label") )
+                labelMatch = binLabelPattern.match( connection[0][0] )
+                if labelMatch == None:
+                    binLabels.append( "file %s" % index )
+                else:
+                    binLabels.append( labelMatch.group("label") )
         logging.debug( "Extracted bin labels from connection strings: %s" % binLabels )
     if not isinstance(binLabels, list):
         binLabels = list( None for cS, t in sliceConnectStringsAndTags )

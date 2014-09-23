@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-09-23 - Jason Andrews
+ - added default bin labels for plotAlignDiff in case the user doesn't provide a bin label regex
+
 ! 2014-09-19 - Jason Andrews
  - fixed Velo plots in the local frame by removing the motion system parameters
 
