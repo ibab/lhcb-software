@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-23 - Ronan Wallace
+  - Document change to StrippingDitau.py. Nice python.
+
 ! 2014-09-22 - Jibo He
   - Added Bs->eta_c (Ks K Pi) phi lines 
 
