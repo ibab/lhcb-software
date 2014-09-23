@@ -165,7 +165,8 @@ class Selector2 ( Analysis.Selector) :
         ## put your code here 
         #
         
-        return 1 
+        return 1
+    
 # =============================================================================
 ## @class SelectorWithCuts
 #  Efficient selector that runs only for ``good''-events  
@@ -451,8 +452,8 @@ class SelectorWithVars(SelectorWithCuts) :
                    selection                      ,  ## Tree-selection 
                    cuts         = lambda s : True ,
                    name         = ''              ,
-                   fullname     = ''              ) : 
-
+                   fullname     = ''              ,
+                   silence      = False           ) :
         
         if not     name :
             from   Ostap.PyRoUts import dsID 
@@ -507,14 +508,16 @@ class SelectorWithVars(SelectorWithCuts) :
         self._progress = None 
         self._total    = 1
         self._skip     = 0 
+        self._silence  = silence
 
     ## delete the selector, try to clear and delete the dataset 
     def __del__    ( self  )  :
         #
-        self.data.Clear()
-        self.data.reset()
-        #
-        del self.data
+        if hasattr ( self , 'data' ) and self.data : 
+            self.data.Clear()
+            self.data.reset()
+            #
+            del self.data
         
     ## get the dataset 
     def dataset   ( self  ) :
@@ -532,7 +535,7 @@ class SelectorWithVars(SelectorWithCuts) :
         if self.GetEntry ( entry ) <=  0 : return 0             ## RETURN 
         #
         
-        if not self._progress :
+        if not self._progress and not self._silence :
             self._total =  self.fChain.GetEntries()
             self._logger.info ( 'TChain entries: %d' % self._total  )
             ## decoration:
@@ -543,7 +546,7 @@ class SelectorWithVars(SelectorWithCuts) :
                 80                       ,
                 mode = 'fixed'           )
             
-        if 0 == self._events % 500 :
+        if 0 == self._events % 500 and not self._silence :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
             
@@ -623,18 +626,20 @@ class SelectorWithVars(SelectorWithCuts) :
     #
     def Terminate ( self  ) :
         #
-        if self._progress :
+        if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
-        #        
-        print '' 
-        self._logger.info (
-            'Events Processed/Total/Skept %d/%d/%d\nCUTS: "%s"' % (
-            self._events ,
-            self._total  ,
-            self._skip   , 
-            self.cuts () ) ) 
-        self.data.Print('v')
+        #
+        if not self._silence : 
+            print '' 
+            self._logger.info (
+                'Events Processed/Total/Skept %d/%d/%d\nCUTS: "%s"' % (
+                self._events ,
+                self._total  ,
+                self._skip   , 
+                self.cuts () ) ) 
+            self.data.Print('v')
+            
         if not len ( self.data ) :
             self._logger.warning("Empty dataset!")
         ##
@@ -643,7 +648,7 @@ class SelectorWithVars(SelectorWithCuts) :
     # 
     def Init    ( self, chain ) :
         # 
-        if self._progress :
+        if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
         #
@@ -651,25 +656,25 @@ class SelectorWithVars(SelectorWithCuts) :
 
     def Begin          ( self , tree = None ) :
         ## 
-        if self._progress :
+        if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
     #
     def SlaveBegin     ( self , tree        ) :
         # 
-        if self._progress :
+        if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
     #
     def Notify         ( self ) :
         #
-        if self._progress :
+        if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
             
     def SlaveTerminate ( self               ) :
         # 
-        if self._progress :
+        if self._progress and not self._silence :
             self._progress.update_amount ( self.event () )
             print self._progress , '\r',
         #

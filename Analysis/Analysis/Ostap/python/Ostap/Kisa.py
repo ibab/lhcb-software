@@ -25,8 +25,10 @@ __version__ = "$Revision: 177429 $"
 __author__  = "Vanya BELYAEV Ivan.Belyaev@itep.ru"
 __date__    = "2011-06-07"
 __all__     = (
-    'ProjectTask' ,
-    'project'
+    'ProjectTask' , 
+    'FillTask'    , 
+    'project'     , 
+    'fillDataSet'
     ) 
 # =============================================================================
 import GaudiMP.Parallel as Parallel  
@@ -149,6 +151,99 @@ def  project ( chain , histo , what , cuts ) :
 
 import ROOT 
 ROOT.TChain._project = project
+
+# =============================================================================
+## The simplest object for more efficient firll fo RooDataSet from TChain 
+#  @see GaudiMP.Parallel
+#  @see GaudiMP.Parallel.Task
+#  @see Ostap.SelectorWithVars
+#  For 12-core machine, clear speed-up factor of about 10 is achieved 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-09-23 
+class  FillTask(Parallel.Task) :
+    """
+    The simplest object for more efficient firll fo RooDataSet from TChain 
+    """
+    ## 
+    def __init__ ( self ,  variables , selection ) :
+        
+        self.variables = variables
+        self.selection = selection 
+        
+        self.output   = ()  
+
+    def initializeLocal   ( self ) : pass
+    def initializeRemote  ( self ) : pass
+
+    ## the actual processing 
+    def process ( self , params ) :
+
+        
+        import ROOT
+        import Ostap.PyRoUts
+        
+        tree,fname = params
+        tree = ROOT.TChain( tree )
+        tree.Add ( fname )
+        
+        from Ostap.Selectors import SelectorWithVars
+        sel = SelectorWithVars ( self.variables ,
+                                 self.selection ,
+                                 silence = True ) 
+        
+        tree.process ( sel )
+        self.output = sel.data
+        
+        sel.data    = None
+        del sel 
+        
+
+    def finalize ( self ) : pass 
+
+    ## methge resulsts/datasets 
+    def _mergeResults(self, result) :
+        #
+        if not isinstance ( self.output , ROOT.RooDataSet ) :  
+            self.output = result
+            return
+        #
+        self.output.append ( result )
+        result.Delete () 
+
+
+
+# ==============================================================================
+## Fill dataset from long TChain using per-file parallelisation
+#  @code
+#  >>> chain =
+#  >>> vars  = ...
+#  >>> dset  = fillDataSet ( chain , vars , 'pt>10' )
+#  @endcode
+#  @see GaudiMP.Parallel
+#  @see GaudiMP.Parallel.Task
+#  @see Ostap.SelectorWithVars
+#  For 12-core machine, clear speed-up factor of about 10 is achieved 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-09-23 
+def  fillDataSet ( chain , variables , selection ) :
+    """
+    Fill dataset from long TChain using per-file parallelisation
+    
+    >>> chain =
+    >>> vars  = ...
+    >>> dset  = fillDataSet ( chain , vars , 'pt>10' )
+    
+    """
+    task  = FillTask ( variables , selection )
+    wmgr  = Parallel.WorkManager()
+    
+    cname = chain.GetName() 
+    files = chain.files() 
+    pairs = [ ( cname,i ) for i in files ] 
+
+    wmgr.process( task, pairs )
+    return task.output
+
 
 # =============================================================================
 # The END 
