@@ -87,6 +87,7 @@ class Swimming(LHCbConfigurableUser) :
         , "SkipEventIfNoMuDSTCandsAnywhere" : True
         , "OverrideStageName"  : ""
         , "UseCompositePIDsWhenMatching" : False
+        , "StoreExtraTPs"      : False
        }
 
     _propertyDocDct = {  
@@ -153,6 +154,7 @@ class Swimming(LHCbConfigurableUser) :
         , "OverrideStageName" : """ If not None (default) then override the stage name under which the swimming reports are saved from the default of 'Stripping' or 'Trigger'. For TupleToolSwimmingInfo \
             compatibility 'Trigger_XXX' style names are advised. """
         , "UseCompositePIDsWhenMatching" : """ Include the PID of composite particles when matching candidates (e.g. offline with stripping) """
+        , "StoreExtraTPs"     : """ If True (default: False) then each swimming stage will evaluate the candidate info (lifetime etc.) and decision at the RAW values already saved in the Swimming report. """
         }
 
     __used_configurables__ = [

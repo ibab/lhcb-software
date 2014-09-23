@@ -80,3 +80,4 @@ class GlobalParams(object):
         self.offlinePVs            = Swimming().getProp('OfflinePV')
         self.refitPVs              = Swimming().getProp('RefitPVs')
         self.matchCandsUsingPID    = Swimming().getProp('UseCompositePIDsWhenMatching')
+        self.storeExtraTPs         = Swimming().getProp('StoreExtraTPs')

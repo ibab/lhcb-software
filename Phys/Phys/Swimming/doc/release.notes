@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-09-23 - Olli Lupton
+ - Add extra option which makes the current swimming stage evaluate the
+   decision and candidate information at the RAW values saved by previous
+   stages. This is needed for DecayTreeFitter, and may be useful for debugging.
  - Fix logic error in matching stripping candidates.
  - Allow multiple search locations for stripping candidates, i.e. StripCands is now
    { offline candidate location : [ stripping locations ] }

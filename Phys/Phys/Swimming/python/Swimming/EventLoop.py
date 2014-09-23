@@ -417,6 +417,27 @@ def SwimmingEventLoop(gaudi, nEvents):
                 print "WARNING, stage %s already present, this is unsupported and will fail!"
                 return StatusCode(False)
 
+            if myGlobs.storeExtraTPs:
+                # Loop over the existing TPs + RAW=0.0 and evaluate our own decision and candidate info.
+                oldtps = [ 0.0 ]
+                for oldstage in report.stages():
+                    oldtps = [ 0.0 ]
+                    for tp in report.turningPoints(oldstage):
+                        oldtps += [ tp.raw() ]
+                oldtps = list(set(oldtps).difference([tp[0] for tp in tps]))
+                extratps = [ ]
+                for oldraw in oldtps:
+                    runSwimmingStep(myGlobs, candidate.particle(), oldraw)
+                    HltDec = evaluateTisTos(myGlobs, candidate.particle(), candidate.selectedParticles().keys(), oldraw)
+                    info = getCandidateInfo(myGlobs, candidate.particle())
+                    extratps.append([oldraw, info, HltDec])
+                movePVs(myGlobs, candidate.particle(), 0.0)
+
+                print "TPs for writing:", tps
+                print "Extra TPs from old stages:", extratps
+                tps += extratps
+                tps.sort() # sort operates on the first element of each list element, i.e. the RAW value
+
             if DEBUGMODE:
                 print candidate.selectedParticles()
 
