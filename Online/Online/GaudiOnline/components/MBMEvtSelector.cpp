@@ -271,14 +271,18 @@ StatusCode MBMContext::receiveEvent()  {
 	}
       }
       const MBM::EventDesc& e = m_consumer->event();
+      // The event is a MEP with multiple events, which must be decoded:
+      if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
+        return convertMEP(m_partID,e);
+      }
+#if 0
+      // This does no longer exist, since we have no descriptor events anymore.
+
       // The event is a descriptor event, which must be decoded using the MEP data:
       if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
 	return convertDescriptor(m_partID,e);
       }
-      // The event is a MEP with multiple events, which must be decoded:
-      else if ( m_sel->mustDecode() && e.type == EVENT_TYPE_MEP )  {
-        return convertMEP(m_partID,e);
-      }
+#endif
       else { // Or: simple case data are data - as it should be
         return convertMDF(m_partID,e);
       }
