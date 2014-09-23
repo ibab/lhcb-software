@@ -20,23 +20,11 @@ use HltLuminosity       v4r1    Hlt   # Jaap Panman
 use HltRawData          v4r2    Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v3r1    Hlt   # Jose Angel Hernando-Morata
 use HltSettings         v6r5    Hlt   # Parick Koppenburg, Gerhard Raven
-use HltTisTosTobbing    v3r1    Hlt   # Tomasz Skwarnicki
+# use HltTisTosTobbing    v3r1    Hlt   # Tomasz Skwarnicki
 use HltTracking         v13r0   Hlt   # Johannes Albrecht, Vava Gligorov
 use TCKUtils            v1r12p4 Hlt   # Gerhard Raven
 use LoKiTrigger         v15r2   Phys  # Vanya Belyaev
 
-#temporary
-
-#please update to tagged version of current HEAD  prior to release of v23r1!!!
-use HltDAQ              v4r6    Hlt
-use DAQSys              v8r4    DAQ
-use RawEventCompat      v1r6    DAQ
-use DAQEvent            v9r17   Event
-use VeloDAQ             v6r12   Velo
-use DDDB                v1r71   Det
-use Relations           v6r3    Kernel
-use EventPacker         v4r3    Event
-use PatAlgorithms       v4r34   Tf
 
 # Declare this as a container package
 apply_pattern container_package
