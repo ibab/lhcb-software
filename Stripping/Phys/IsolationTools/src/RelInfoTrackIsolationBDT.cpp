@@ -27,7 +27,7 @@ RelInfoTrackIsolationBDT::RelInfoTrackIsolationBDT( const std::string& type,
     ( "MVATransform" , m_transformName ,
       "path/name of the DictTransform tool");
   declareProperty
-    ( "WeightsFile" , m_weightsName = "IsolationTools_TrackIsolation_v1r4.xml" ,
+    ( "WeightsFile" , m_weightsName = "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml" ,
       "weights parameter file");
   declareProperty(    "PVInputLocation"
                       , m_PVInputLocation = LHCb::RecVertexLocation::Primary
@@ -293,13 +293,30 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
       m_varmap.insert( "trk_chi", trk_chi ) ;   // (c)
     }
 
-
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "PVdist"<<'\t' << var_PVdist <<  endmsg;
       verbose() << "SVdist"<<'\t' << var_SVdist <<  endmsg;
       verbose() << "angle"<<'\t' << var_angle <<  endmsg;
       verbose() << "doca"<<'\t' << var_log_doca <<  endmsg;
       verbose() << "fc value"<<'\t' << var_fc <<  endmsg;
+      if (m_variables>=1) { 
+        verbose() << "log_trk_ips"<<'\t' << log_trk_ips <<  endmsg;
+      }
+      if (m_variables>=2) {
+        verbose() << "trk_dphi"<<'\t' << trk_dphi <<  endmsg;
+        verbose() << "trk_deta"<<'\t' << trk_deta <<  endmsg;
+        verbose() << "trk_pt"<<'\t' << trk_pt <<  endmsg; 
+      }
+      if (m_variables>=3) {
+        verbose() << "trk_ch"<<'\t' << trk_ch <<  endmsg;
+        verbose() << "trk_nnmu"<<'\t' << trk_nnmu <<  endmsg;
+        verbose() << "trk_nnpi"<<'\t' << trk_nnpi <<  endmsg;
+        verbose() << "trk_nnk"<<'\t' << trk_nnk <<  endmsg;
+      }
+      if (m_variables>=4) {
+        verbose() << "trk_gho"<<'\t' << trk_gho <<  endmsg;
+        verbose() << "trk_chi"<<'\t' << trk_chi <<  endmsg;
+      }
     }
 
     m_tmva(m_varmap,m_out) ;

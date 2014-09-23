@@ -3,6 +3,10 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-09-23 - Ricardo Vazquez Gomez
+ - updated default xml file of RelInfoTrackIsolationBDT.cpp to new syntax.
+ - add more verbosity to RelInfoTrackIsolationBDT.cpp 
+
 ! 2014-09-15 Alex Shires
  - change some lists into Ranges
 
