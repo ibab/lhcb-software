@@ -170,7 +170,8 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 // ============================================================================
 LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
 ( const LoKi::PhysMCParticles::MCMatcherBase& right ) 
-  : LoKi::PhysMCParticles::MCTruth ()              // NB: do not copy MCTruth!!
+  : LoKi::AuxFunBase               ()
+  , LoKi::PhysMCParticles::MCTruth ()              // NB: do not copy MCTruth!!
   , m_locations ( right.m_locations )
   , m_head      ( right.m_head      ) 
   , m_alg       ( 0                 )              // do not copy the algorithm

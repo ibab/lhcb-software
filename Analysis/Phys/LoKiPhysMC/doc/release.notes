@@ -5,15 +5,18 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-09-23 - Chris Jones
+ - Explicitly initialise LoKi::AuxFunBase() base class in 
+   LoKi::PhysMCParticles::MCMatcherBase copy constructor.
+
 ! 2014-09-03 - Vanya Belyaev
- - fix a problem with copy of "non-strandard" MCMatcher objects 
+ - Fix a problem with copy of "non-strandard" MCMatcher objects 
    many thanks to Igor Babushkin! 
 
 ! 2014-08-25 - Vanya Belyaev
- - 1) fix a typo in mcMatch
-   2) extend MCMatchers to allow picking MC-particles from non-standard locations 
+ - 1) Fix a typo in mcMatch
+   2) Extend MCMatchers to allow picking MC-particles from non-standard locations 
       (thanks to Igor Babuschkin)
-
 
 !========================= LoKiPhysMC v9r6p2 2013-05-07 =========================
 
