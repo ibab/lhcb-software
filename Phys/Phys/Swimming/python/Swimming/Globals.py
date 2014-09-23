@@ -27,12 +27,39 @@ class GlobalParams(object):
      
         self.distanceTool  = gaudi.toolsvc().create(Swimming().getProp('DistCalc'),
                                                     interface = 'IDistanceCalculator')
+        DTFconstraints = [ ]
+        for configname, constraints in Swimming().getProp('DecayTreeFitterConstraints').iteritems():
+            tmpconstraints = { }
+            for constraint, value in constraints.iteritems():
+                newid = None
+                if type(constraint) == int:
+                    newid = constraint
+                elif isinstance(constraint, basestring):
+                    try:
+                        newid = gaudi.ppSvc().find(constraint).particleID().pid()
+                    except:
+                        print "ERROR: failed to convert", constraint, "to LHCb::ParticleID"
+                        raise
+                else:
+                    print "ERROR: currently can't handle conversion of ", constraint, "to LHCb::ParticleID"
+                if newid:
+                    print "Storing DTF constraint: (%d, %f)" % (newid, value)
+                    tmpconstraints[newid] = value
+                    tmpconstraints[-newid]= value
+            DTFconstraints += [ ( configname, tmpconstraints) ]
+
         from SwimmingUtils import LifetimeFitter, DTFFitter, BestPVFinder
         self.relatedPVFinder = BestPVFinder(self)
-        if Swimming().getProp('LifetimeFitter') == "LifetimeFitter":
-            self.lifetimeFitter = LifetimeFitter(self)
-        else:
-            self.lifetimeFitter = DTFFitter(self)
+
+        self.lifetimeFitter = [ ]
+        for lifetimefitter in Swimming().getProp('LifetimeFitter'):
+            if lifetimefitter == "LifetimeFitter":
+                self.lifetimeFitter += [ LifetimeFitter(self) ]
+            else:
+                # DecayTreeFitter
+                # examine the constraints we have been given, and add DTFFitter objects as appropriate
+                for configname, constraints in DTFconstraints:
+                    self.lifetimeFitter += [ DTFFitter(self, configname, constraints) ]
 
         self.tistostool    = gaudi.toolsvc().create('TriggerTisTos', interface='ITriggerTisTos')
         self.tistosbools   = [self.tistostool.kAnything,
@@ -52,3 +79,4 @@ class GlobalParams(object):
         self.offCands              = Swimming().getProp('OffCands')
         self.offlinePVs            = Swimming().getProp('OfflinePV')
         self.refitPVs              = Swimming().getProp('RefitPVs')
+        self.matchCandsUsingPID    = Swimming().getProp('UseCompositePIDsWhenMatching')

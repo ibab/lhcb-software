@@ -41,13 +41,13 @@ import pprint
 from copy import copy
 
 class Candidate(object):
-    def __init__(self, particle, selection = None):
+    def __init__(self, globs, particle, selection = None):
         if not particle:
             raise RuntimeError('must provide a particle')
         self._particle = particle
-        self.__hash = None
-        self.__inthash = None
-        self.__ids = None
+        self._globs = globs
+        self._hash = None
+        self._inthash = None
         self._selections = {}
         if not selection:
             return
@@ -57,6 +57,18 @@ class Candidate(object):
             self._selections = copy(selection)
         else:
             raise TypeError('Selection must be a string')
+
+    def _hashfun(self, particle):
+        if self._globs.matchCandsUsingPID:
+            return hashParticle(particle)
+        else:
+            return hashParticleNoCompositePID(particle)
+
+    def _matchfun(self, particle1, particle2):
+        if self._globs.matchCandsUsingPID:
+            return matchParticles(particle1, particle2)
+        else:
+            return matchParticlesNoCompositePID(particle1, particle2)
 
     def particle(self, selection = None):
         if selection:
@@ -75,7 +87,7 @@ class Candidate(object):
             raise KeyError('Selections %s is already present')
         if not p:
             self._selections[sel] = self._particle
-        elif hashParticleNoCompositePID(p) != self.__hash__():
+        elif self._hashfun(p) != self.__hash__():
             raise RuntimeError('Attempting to add a particle with a different hash')
         self._selections[sel] = p
 
@@ -95,26 +107,26 @@ class Candidate(object):
         return self._selections
   
     def __hash__(self):
-        if not self.__hash:
-            self.__hash = hashParticleNoCompositePID(self.particle())#self.__hp()#self.particle())
-            #print "Calculating hash:",self.__hash
-        return self.__hash
+        if not self._hash:
+            self._hash = self._hashfun(self.particle())
+        return self._hash
 
     def intHash(self):
-        if not self.__inthash:
-            self.__inthash = intHashParticleNoCompositePID(self.particle())
-        return self.__inthash
+        if not self._inthash:
+            if self._globs.matchCandsUsingPID:
+                self._inthash = intHashParticle(self.particle())
+            else:
+                self._inthash = intHashParticleNoCompositePID(self.particle())
+        return self._inthash
 
     def __nonzero__(self):
         return not not self.particle()
 
     def __eq__(self, other):
         if type(other) == type(self):
-            return matchParticlesNoCompositePID(self.particle(), other.particle())#self.ids() == other.ids()
-            #return hash(self) == hash(other)
+            return self._matchfun(self.particle(), other.particle())
         elif type(other) == GaudiPython.Bindings.gbl.LHCb.Particle:
-            return matchParticlesNoCompositePID(self.particle(), other)#self.ids() == self.__ids(other)
-            #return hash(self) == self.__hp(other)
+            return self._matchfun(self.particle(), other)
         else:
             return False
 
@@ -146,42 +158,73 @@ class LifetimeFitter(object):
     def lifetime(self, candidate):
         pv = self._globs.relatedPVFinder.relatedPV(candidate)
         if not pv:
-            return {'tau' : -1e6, 'LTF_tau_error' : -1e6,
+            return {'tau' : -1e6, 'LTF_tau' : -1e6, 'LTF_tau_error' : -1e6,
                     'LTF_chi2dof' : 1e6, 'LTF_StatusCode' : 515}
         tau     = ROOT.Double(-1000000.0)
         tauerr  = ROOT.Double(-1000000.0)
         tauchi2 = ROOT.Double(-1000000.0)
         sc = self._lifetimeTool.fit(pv, candidate, tau, tauerr, tauchi2)
         if sc.isFailure():
-            return {'tau' : -1e6, 'LTF_tau_error' : -1e6,
+            return {'tau' : -1e6, 'LTF_tau' : -1e6, 'LTF_tau_error' : -1e6,
                     'LTF_chi2dof' : 1e6, 'LTF_StatusCode' : sc.getCode()}
         else:
             # DoF of the lifetime fitter is always 2
-            return {'tau' : tau, 'LTF_tau_error' : tauerr,
+            return {'tau' : tau, 'LTF_tau' : tau, 'LTF_tau_error' : tauerr,
                     'LTF_chi2dof' : tauchi2 / 2., 'LTF_StatusCode' : sc.getCode()}
 
 class DTFFitter(object):
-    def __init__(self, globs):
+    def __init__(self, globs, prefix, constraints):
         self._globs = globs
-        self._dtfTool = globs.gaudi.toolsvc().create('LoKi::DecayTreeFit',
-                                                     interface = 'IDecayTreeFit')
+        self._prefix = prefix
+        self._constraints = constraints
+        #self._dtfTool = globs.gaudi.toolsvc().create('LoKi::DecayTreeFit',
+        #                                             interface = 'IDecayTreeFit')
 
     def lifetime(self, candidate):
         pv = self._globs.relatedPVFinder.relatedPV(candidate)
         if not pv:
-            return {'tau' : -1e6, 'DTF_sigma_tau' : -1e6,
-                    'DTF_chi2dof' : 1e6, 'DTF_StatusCode' : 515}
-        sc = self._dtfTool.fit(candidate, pv)
-        if sc.isFailure():
-            return {'tau' : -1e6, 'DTF_tau_error' : -1e6,
-                    'DTF_chi2dof' : 1e6, 'DTF_StatusCode' : sc.getCode()}
+            return {
+                'tau' : -1e6,
+                self._prefix + '_tau' : -1e6,
+                self._prefix + '_sigma_tau' : -1e6,
+                self._prefix + '_chi2dof' : 1e6,
+                self._prefix + '_StatusCode' : 515
+                }
+        gbl = self._globs.GaudiPython.Bindings.gbl
+        dtf = gbl.DecayTreeFitter.Fitter(candidate, pv)
+        for pid, value in self._constraints.iteritems():
+            pido = gbl.LHCb.ParticleID(pid)
+            if value > 0.0:
+                dtf.setMassConstraint(pido, value)
+                #self._dtfTool.addConstraint(pid, value)
+            else:
+                dtf.setMassConstraint(pido)
+                #self._dtfTool.addConstraint(pid)
+
+        #sc = self._dtfTool.fit(candidate, pv)
+        dtf.fit()
+        if dtf.status() != gbl.DecayTreeFitter.Fitter.Success:
+        #if sc.isFailure():
+            return {
+                'tau' : -1e6,
+                self._prefix + '_tau' : -1e6,
+                self._prefix + '_tau_error' : -1e6,
+                self._prefix + '_chi2dof' : 1e6,
+                self._prefix + '_StatusCode' : gbl.StatusCode.FAILURE
+                }#sc.getCode()}
         else:
-            params = self._dtfTool.fitted(candidate)
+            #params = self._dtfTool.fitted(candidate)
+            params = dtf.fitParams(candidate)
             ctau = params.ctau()
-            return {'tau' : ctau.value() / c_light,
-                    'DTF_tau_error' : ctau.error() / c_light,
-                    'DTF_chi2dof' : self._dtfTool.chi2() / self._dtfTool.nDoF(),
-                    'DTF_StatusCode' : sc.getCode()}
+            return {
+                'tau' : ctau.value() / c_light,
+                self._prefix + '_tau' : ctau.value() / c_light,
+                self._prefix + '_tau_error' : ctau.error() / c_light,
+                #'DTF_chi2dof' : self._dtfTool.chi2() / self._dtfTool.nDoF(),
+                self._prefix + '_chi2dof' : dtf.chiSquare() / dtf.nDof(),
+                self._prefix + '_StatusCode' : gbl.StatusCode.SUCCESS
+                }
+                #'DTF_StatusCode' : sc.getCode()}
         
 class BestPVFinder(object):
     def __init__(self, globs):
@@ -284,7 +327,9 @@ def getCandidateInfo(globs, candidate):
 
     relatedPV = globs.relatedPVFinder.relatedPV(candidate) # TODO check the extra layer of abstraction...
     #now the temporary ROOT rubbish
-    info = globs.lifetimeFitter.lifetime(candidate)
+    info = { }
+    for ltf in globs.lifetimeFitter:
+        info.update(ltf.lifetime(candidate))
     #Now the flight distance and ips
     fd      = ROOT.Double(-1000000.0)
     fdchi2  = ROOT.Double(-1000000.0)

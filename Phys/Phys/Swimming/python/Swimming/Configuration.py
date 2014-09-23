@@ -62,7 +62,8 @@ class Swimming(LHCbConfigurableUser) :
         , "RelPVFinder"        : 'GenericParticle2PVRelator__p2PVWithIPChi2_OfflineDistanceCalculatorName_/P2PVWithIPChi2' # Related PV finder
         , "DistCalc"           : 'LoKi::DistanceCalculator' # The distance calculator
         , "TauCalc"            : 'PropertimeFitter'         # The decay time calculator
-        , "LifetimeFitter"     : 'LifetimeFitter'
+        , "LifetimeFitter"     : ['LifetimeFitter']
+        , "DecayTreeFitterConstraints" : { 'DTF' : { } }     # List of particles whose masses should be constrained in the lifetime fit.
         , "RefitPVs"           : False
         , "PVRefitter"         : 'AdaptivePVReFitter/SwimmingPVReFitter'
         , "HltNodesToKill"     : ["Hlt","Hlt1","Hlt2","Trig","Raw","Rec/Vertices/Hlt2DisplVerticesV3D",
@@ -85,6 +86,7 @@ class Swimming(LHCbConfigurableUser) :
         , "SkipEventIfNoMuDSTCandFound" : False
         , "SkipEventIfNoMuDSTCandsAnywhere" : True
         , "OverrideStageName"  : ""
+        , "UseCompositePIDsWhenMatching" : False
        }
 
     _propertyDocDct = {  
@@ -129,6 +131,7 @@ class Swimming(LHCbConfigurableUser) :
         , "DistCalc"           : """ The distance calculator"""
         , "TauCalc"            : """ The decay time calculator"""
         , "LifetimeFitter"     : """ Must be either LifetimeFitter or DecayTreeFitter."""
+        , "DecayTreeFitterConstraints" : """ List of particles whose masses should be constrained in the lifetime fit. """
         , "RefitPVs"           : """ Refit related PVs. """
         , "PVRefitter"         : """ Tool to use to refit the PV. """
         , "HltNodesToKill"     : """ Which TES nodes must be killed to rerun the HLT multiple times for the same event """
@@ -149,6 +152,7 @@ class Swimming(LHCbConfigurableUser) :
             an event, if False then only one location must contain a candidate for the event to be processed. """
         , "OverrideStageName" : """ If not None (default) then override the stage name under which the swimming reports are saved from the default of 'Stripping' or 'Trigger'. For TupleToolSwimmingInfo \
             compatibility 'Trigger_XXX' style names are advised. """
+        , "UseCompositePIDsWhenMatching" : """ Include the PID of composite particles when matching candidates (e.g. offline with stripping) """
         }
 
     __used_configurables__ = [
@@ -189,8 +193,14 @@ class Swimming(LHCbConfigurableUser) :
         if not self.getProp('SwimStripping') and self.getProp('OutputType') == 'MDST':
             raise TypeError, "You cannot write a MicroDST when swimming the trigger."
 
-        if not self.getProp('LifetimeFitter') in ['LifetimeFitter', 'DecayTreeFitter']:
-            raise TypeError, "The Lifetime fitter must be either LifetimeFitter or DecayTreeFitter."
+        if type(self.getProp('LifetimeFitter')) != list:
+            raise TypeError, "LifetimeFitter must be a list of strings."
+        for lifetimefitter in self.getProp('LifetimeFitter'):
+            if lifetimefitter not in ['LifetimeFitter', 'DecayTreeFitter']:
+                raise TypeError, "Allowed LifetimeFitters are LifetimeFitter and DecayTreeFitter."
+            
+        if type(self.getProp('DecayTreeFitterConstraints')) != dict:
+            raise TypeError, "DecayTreeFitterConstraints must be a dict"
                
         extension = self.getProp("OutputFile").rsplit(os.path.extsep, 1)[-1]
         if extension.upper() != self.getProp('OutputType'):

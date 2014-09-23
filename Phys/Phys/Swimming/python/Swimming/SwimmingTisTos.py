@@ -2,7 +2,7 @@
 #we use the regular TISTOS tools, the stripping is done "by hand"
 from collections import defaultdict
 from GaudiPython.Bindings import gbl
-from SwimmingUtils import hashParticle, matchParticles
+from SwimmingUtils import hashParticle, matchParticles, matchParticlesNoCompositePID
 
 __all__ = ["evaluateTisTos","appendToFSP"]
 
@@ -108,7 +108,10 @@ def evaluateTisTos(myGlobs, mycand, locations, swimPoint):
                         "About to match these two candidates"
                         print stripCand, mycand
                         print "########################"
-                    match = matchParticles(mycand, stripCand)
+                    if myGlobs.matchCandsUsingPID:
+                      match = matchParticles(mycand, stripCand)
+                    else:
+                      match = matchParticlesNoCompositePID(mycand, stripCand)
                     if not myGlobs.swimOffline:
                         decisions[offlinelocation] = match
                     else:
@@ -121,21 +124,6 @@ def evaluateTisTos(myGlobs, mycand, locations, swimPoint):
             globalPass = globalPass or d
         return (globalPass, decisions, {})
 
-#Two functions to match two candidates
-#together, one for particles the other one for tracks
-def matchLists(list1,list2) :
-    num = list1.size()
-    nummatch = 0
-    for id in list1 :
-        for ID in list2 :
-            if (id.lhcbID() == ID.lhcbID()) :
-                nummatch += 1
-                break
-    # Rely on integer rounding for the return value
-    return nummatch/num
-#
-#
-#
 def appendToFSP(parent, daughter,finalstateparticles) :
     if parent and daughter.isBasicParticle() : 
         finalstateparticles += [{"child" :daughter, "parent" : parent}]

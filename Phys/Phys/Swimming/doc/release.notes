@@ -5,6 +5,16 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2014-09-23 - Olli Lupton
+ - Add configurable option to control whether or not composite particles made
+   from the same tracks are considered identical or not. Just in case the correct
+   logic for prompt KsHH isn't correct elsewhere.
+ - Make sure the matching behaviour is consistent when matching offline candidates
+   to stripping candidates.
+ - Add configurable option for DecayTreeFitter mass constraints, and allow for
+   storing >1 set of TAU values at the turning points.
+ - The DecayTreeFitter lifetime fitter option now seems to work for KsHH.
+
 ! 2014-09-20 - Marco Clemencic
  - Updated CMake configuration after latest changes.
 

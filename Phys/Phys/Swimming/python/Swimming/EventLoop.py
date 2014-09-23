@@ -52,6 +52,12 @@ elif Swimming().getProp('OutputType') == 'DST':
     writerName = 'FullDSTMainSeq'
 def SwimmingEventLoop(gaudi, nEvents):
     import GaudiPython
+    #import PartProp.PartPropAlg
+    import PartProp.decorators
+    import PartProp.Service
+    #from GaudiPython.Bindings import AppMgr
+    #from PartProp.Nodes import *
+
     StatusCode = GaudiPython.gbl.StatusCode
     if gaudi.targetFSMState() < 2:
         gaudi.initialize()
@@ -220,8 +226,8 @@ def SwimmingEventLoop(gaudi, nEvents):
                 print "Found %d particles at %s" % (particles.size(), loc)
 
             for particle in particles:
-                candidates[Candidate(particle)].append((loc, particle))
-        candidates = [Candidate(c.particle(), dict(selections)) for \
+                candidates[Candidate(myGlobs, particle)].append((loc, particle))
+        candidates = [Candidate(myGlobs, c.particle(), dict(selections)) for \
                       c, selections in candidates.iteritems()]
         if DEBUGMODE:
             print "Found %s unique candidates:" % len(candidates)
