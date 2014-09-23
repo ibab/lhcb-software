@@ -9,7 +9,7 @@ def _get_conddb_data(configuration):
   nam,ext = os.path.splitext(os.path.basename(configuration))
   if not sys.modules.has_key(nam):
     if not dir_name in sys.path:
-      print 'add path:'+dir_name
+      print '[DEBUG] add python path:'+dir_name
       sys.path.insert(0,dir_name)
     mod = imp.find_module(nam,None)
     module=imp.load_module(nam,mod[0],mod[1],mod[2])
