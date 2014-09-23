@@ -122,7 +122,7 @@ class Swimming(LHCbConfigurableUser) :
         , "Hlt1RecoLine"       : """ The trigger line used for Hlt1 reconstruction studies"""
         , "Hlt2RecoLine"       : """ The trigger line used for Hlt2 reconstruction studies                 """
         , "OffCands"           : """ The TES locations of the offline selected candidates -- { offline loc : prefix for P2TP }"""
-        , "StripCands"         : """ The TES locations of the stripping candidates and corresponding offline locations -- { offline loc : strip loc }"""
+        , "StripCands"         : """ The TES locations of the stripping candidates and corresponding offline locations -- { offline loc : [ strip locs ] }"""
         , "MuDSTCands"         : """ The TES locations of extra candidates to write to MuDST"""
         , "OnlinePV"           : """ The TES location of the HLT primary vertices"""
         , "OfflinePV"          : """ The TES location of the offline primary vertices"""
@@ -183,6 +183,9 @@ class Swimming(LHCbConfigurableUser) :
             raise TypeError, 'OffCands must be a dict'
         if type(self.getProp('StripCands')) != dict:
             raise TypeError, 'StripCands must be a dict'
+        for key, value in self.getProp('StripCands').iteritems():
+            if type(value) != list or not isinstance(key, basestring):
+                raise TypeError, 'StripCands must be a { string : [ ] } dict'
         if type(self.getProp('MuDSTCands')) != list:
             raise TypeError, 'MuDSTCands must be a list'
         if type(self.getProp('StrippingLines')) != list:

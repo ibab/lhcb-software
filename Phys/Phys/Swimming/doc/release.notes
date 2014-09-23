@@ -6,6 +6,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-09-23 - Olli Lupton
+ - Fix logic error in matching stripping candidates.
+ - Allow multiple search locations for stripping candidates, i.e. StripCands is now
+   { offline candidate location : [ stripping locations ] }
  - Add configurable option to control whether or not composite particles made
    from the same tracks are considered identical or not. Just in case the correct
    logic for prompt KsHH isn't correct elsewhere.

@@ -79,49 +79,54 @@ def evaluateTisTos(myGlobs, mycand, locations, swimPoint):
     else :
         decisions = {}
         for offlinelocation in locations:
-        #for striplocation, offlinelocation in myGlobs.triggers.iteritems():
             # Find where we should look for stripping candidates given the offline location
             # 'mycand' was found at.
-            striplocation = myGlobs.triggers[offlinelocation]
+            striplocations = myGlobs.triggers[offlinelocation]
             if myGlobs.DEBUGMODE :
                 print "Evaluating TISTOS for stripping"
-                print "Will look for candidates at", striplocation
-            candidates = myGlobs.TES[striplocation + "/Particles"]
-            if not candidates:
-                if myGlobs.DEBUGMODE :
-                    print "Found no candidate container at %s" % striplocation
-                    #print myGlobs.TES.dump()
-                decisions[offlinelocation] = False
-            elif candidates.size() == 0:
-                if myGlobs.DEBUGMODE :
-                    print "0 candidates found at %s" % striplocation
-                decisions[offlinelocation] = False
-            else:
-                # Make a list to ensure acces by index does what we want
-                #candidates = [c for c in candidates ] 
-                if myGlobs.DEBUGMODE :
-                    print "Found", candidates.size(), "candidates"
-                    print "About to match them"
-                for stripCand in candidates:
+                print "Will look for candidates at", striplocations
+            for striplocation in striplocations:
+                candidates = myGlobs.TES[striplocation + "/Particles"]
+                if not candidates:
                     if myGlobs.DEBUGMODE :
-                        print "########################"
-                        "About to match these two candidates"
-                        print stripCand, mycand
-                        print "########################"
-                    if myGlobs.matchCandsUsingPID:
-                      match = matchParticles(mycand, stripCand)
-                    else:
-                      match = matchParticlesNoCompositePID(mycand, stripCand)
-                    if not myGlobs.swimOffline:
-                        decisions[offlinelocation] = match
-                    else:
-                        # Import offline selection
-                        OffSelFunc = __import__(myGlobs.offSelName,
-                                                fromlist = ['OffSelFunc']).OffSelFunc
-                        decisions[offlinelocation] = match and OffSelFunc(myGlobs, mycand)
+                        print "Found no candidate container at %s" % striplocation
+                    decisions[striplocation] = False
+                elif candidates.size() == 0:
+                    if myGlobs.DEBUGMODE :
+                        print "0 candidates found at %s" % striplocation
+                    decisions[striplocation] = False
+                else:
+                    # Make a list to ensure acces by index does what we want
+                    #candidates = [c for c in candidates ] 
+                    if myGlobs.DEBUGMODE :
+                        print "Found", candidates.size(), "candidates"
+                        print "About to match them"
+                    for stripCand in candidates:
+                        if myGlobs.DEBUGMODE :
+                            print "########################"
+                            "About to match these two candidates"
+                            print stripCand, mycand
+                            print "########################"
+                        if myGlobs.matchCandsUsingPID:
+                            match = matchParticles(mycand, stripCand)
+                        else:
+                            match = matchParticlesNoCompositePID(mycand, stripCand)
+                        if not myGlobs.swimOffline:
+                            if match:
+                                decisions[striplocation] = True
+                                break
+                        else:
+                            # Import offline selection
+                            OffSelFunc = __import__(myGlobs.offSelName,
+                                                    fromlist = ['OffSelFunc']).OffSelFunc
+                            if match and OffSelFunc(myGlobs, mycand):
+                                decisions[striplocation] = True
+                                break
         globalPass = False
         for d in decisions.itervalues():
             globalPass = globalPass or d
+        if myGlobs.DEBUGMODE:
+            print "Stripping TisTos returning", decisions
         return (globalPass, decisions, {})
 
 def appendToFSP(parent, daughter,finalstateparticles) :
