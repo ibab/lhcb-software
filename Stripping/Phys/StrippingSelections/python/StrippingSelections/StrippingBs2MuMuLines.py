@@ -271,10 +271,6 @@ class Bs2MuMuLinesConf(LineBuilder) :
         stdjets_name_ban_KKLTUB = "StdJetsNoJetIDBanMuonsKKLTUB"
         stdjets_name_addb_KKLTUB = "StdJetsNoJetIDAddBKKLTUB"
 
-
-
-
-
         
         self.defaultLine = StrippingLine(default_name+"Line",
                                          prescale = config['DefaultLinePrescale'],
@@ -283,14 +279,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                          RequiredRawEvents = ["Muon"],
                                          algos = [ self.selDefault ],
                                          RelatedInfoTools = [
-            {'Type' : 'RelInfoJetsVariables',
-             'Location': 'RelatedInfoJets',
-             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
-             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_default+"/Particles",
-             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
-             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_default+"/Particles"},
-                               
-      
+            { 'Type' : 'RelInfoJetsVariables',
+              'Location': 'RelatedInfoJets',
+              'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_default+"/Particles",
+              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_default+"/Particles"},
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
@@ -299,8 +293,38 @@ class Bs2MuMuLinesConf(LineBuilder) :
               "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
               "Location"  : "RelInfoZVisoBDT"  
-              }
-            ]       
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 0,
+              "Locations" : { "Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_0"},
+              "WeightsFile" : "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 1,
+              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_1"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 2,
+              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_2"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 3,
+              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_3"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 4,    
+              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_4"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
+              } 
+            ]
                                          )
 
          
@@ -312,13 +336,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                       RequiredRawEvents = ["Muon"],
                                       algos = [ self.selWide ],
                                       RelatedInfoTools = [
-            {'Type' : 'RelInfoJetsVariables',
-             'Location': 'RelatedInfoJets',
-             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
-             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_wide+"/Particles",
-             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
-             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_wide+"/Particles"},
-            
+            { 'Type' : 'RelInfoJetsVariables',
+              'Location': 'RelatedInfoJets',
+              'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_wide+"/Particles",
+              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_wide+"/Particles"},
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
@@ -327,6 +350,36 @@ class Bs2MuMuLinesConf(LineBuilder) :
              "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
               "Location"  : "RelInfoZVisoBDT"  
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 0,
+              "Locations" : { "Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_0"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 1,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_1"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 2,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_2"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 3,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_3"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 4,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_4"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
             ]
                                       )
@@ -351,8 +404,6 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     )
 
 
-
-
      
         self.bsLine = StrippingLine(bs_name+"Line",
                                     prescale = config['BsPrescale'],
@@ -361,8 +412,6 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     RequiredRawEvents = ["Muon"],
                                     algos = [ self.selBs ],
                                     )
-
-
 
 
 
@@ -376,8 +425,6 @@ class Bs2MuMuLinesConf(LineBuilder) :
 
 
 
-
-
         self.ssLine = StrippingLine(ss_name+"Line",
                                     prescale = config['SSPrescale'],
                                     postscale = config['DefaultPostscale'],
@@ -385,13 +432,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     RequiredRawEvents = ["Muon"],
                                     algos = [ self.selSS ],
                                     RelatedInfoTools = [
-            {'Type' : 'RelInfoJetsVariables',
-             'Location': 'RelatedInfoJets',
-             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
-             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_SS+"/Particles",
-             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
-             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_SS+"/Particles"},
-            
+            { 'Type' : 'RelInfoJetsVariables',
+              'Location': 'RelatedInfoJets',
+              'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_SS+"/Particles",
+              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_SS+"/Particles"},
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
@@ -400,6 +446,36 @@ class Bs2MuMuLinesConf(LineBuilder) :
              "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
               "Location"  : "RelInfoZVisoBDT"  
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 0,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_0"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 1,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_1"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 2,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_2"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 3,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_3"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 4,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_4"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
             ]
                                     )
@@ -414,12 +490,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     RequiredRawEvents = ["Muon"],
                                     algos = [ self.selLTUB ],
                                     RelatedInfoTools = [
-            {'Type' : 'RelInfoJetsVariables',
-             'Location': 'RelatedInfoJets',
-             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
-             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_LTUB+"/Particles",
-             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
-             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_LTUB+"/Particles"},
+            { 'Type' : 'RelInfoJetsVariables',
+              'Location': 'RelatedInfoJets',
+              'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_LTUB+"/Particles",
+              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_LTUB+"/Particles"},
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
@@ -428,6 +504,36 @@ class Bs2MuMuLinesConf(LineBuilder) :
              "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
               "Location"  : "RelInfoZVisoBDT"  
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 0,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_0"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 1,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_1"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 2,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_2"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 3,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_3"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 4,
+              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_4"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
             ]
                                     )
@@ -439,13 +545,12 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     RequiredRawEvents = ["Muon"],
                                     algos = [ self.selBs2KKLTUB ],
                                     RelatedInfoTools = [
-            {'Type' : 'RelInfoJetsVariables',
-             'Location': 'RelatedInfoJets',
-             'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
-             'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_KKLTUB+"/Particles",
-             'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
-             'LocationJetsForceB' : "Phys/"+stdjets_name_addb_KKLTUB+"/Particles"},
-            
+            { 'Type' : 'RelInfoJetsVariables',
+              'Location': 'RelatedInfoJets',
+              'Variables': ["JETNOMU1PX","JETNOMU1PY", "JETNOMU1PZ", "JETNOMU1PT", "JETNOMU1JETWIDTH", "JETNOMU1NNTAG", "JETNOMU1MNF", "JETNOMU2PX", "JETNOMU2PY", "JETNOMU2PZ", "JETNOMU2PT", "JETNOMU2JETWIDTH", "JETNOMU2NNTAG", "JETNOMU2MNF", "JETNOMU3PX", "JETNOMU3PY", "JETNOMU3PZ", "JETNOMU3PT", "JETNOMU3JETWIDTH", "JETNOMU3NNTAG", "JETNOMU3MNF", "JETMU1PX", "JETMU1PY", "JETMU1PZ", "JETMU1PT", "JETMU1JETWIDTH", "JETMU1NNTAG", "JETMU1MNF", "JETMU2PX", "JETMU2PY", "JETMU2PZ", "JETMU2PT", "JETMU2JETWIDTH", "JETMU2NNTAG", "JETMU2MNF", "JETBPX", "JETBPY", "JETBPZ", "JETBPT", "JETBJETWIDTH", "JETBNNTAG", "JETBMNF"],
+              'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_KKLTUB+"/Particles",
+              'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
+              'LocationJetsForceB' : "Phys/"+stdjets_name_addb_KKLTUB+"/Particles"},
             { "Type" : "RelInfoBs2MuMuIsolations"
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
               , "Location"  : "BSMUMUVARIABLES"  
@@ -454,10 +559,39 @@ class Bs2MuMuLinesConf(LineBuilder) :
                "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
               "Location"  : "RelInfoZVisoBDT"  
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 0,
+              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_0"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 1,
+              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_1"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 2,
+              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_2"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 3,
+              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_3"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
+              },
+            { "Type" : "RelInfoTrackIsolationBDT",
+              "RecursionLevel" : 2,
+              "Variables" : 4,
+              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_4"},
+              "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
-            ]
+           ]
                                  )
-
 
 
         create_stdjets(self,self.defaultLine.outputLocation(),stdjets_name_ban_default, stdjets_name_addb_default)
@@ -465,7 +599,6 @@ class Bs2MuMuLinesConf(LineBuilder) :
         create_stdjets(self,self.ssLine.outputLocation(),stdjets_name_ban_SS, stdjets_name_addb_SS)
         create_stdjets(self,self.ltubLine.outputLocation(),stdjets_name_ban_LTUB, stdjets_name_addb_LTUB)
         create_stdjets(self,self.Bs2KKltubLine.outputLocation(),stdjets_name_ban_KKLTUB, stdjets_name_addb_KKLTUB)
-
 
         
         self.registerLine(self.defaultLine)

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-23 - Ricardo Vazquez Gomez
+  - Added 5 TrackIsolationBDT types to StrippingBs2MuMuLines.py
+
 ! 2014-09-23 - Ronan Wallace
   - Document change to StrippingDitau.py. Nice python.
 
