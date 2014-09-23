@@ -78,85 +78,93 @@ from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
 
 __author__ = 'chitsanu.khurewathanakul@epfl.ch'
-__date__   = '2014-08-15'
-__all__    = [ 
-               'lines_decays',
-               'CUTS_GENERIC',
-               'CUTS_MUON',
-               'CUTS_ELECTRON',
-               'CUTS_MUPI',
-               'CUTS_EPI',
-               'CUTS_COMBINATION',
-               'CUTS_E_MOTHER',
-               'CUTS_MU_MOTHER',
-               'parse',
-               'get_mu_cut',
-               'get_electron_cut',
-               'get_mupi_cut',
-               'get_epi_cut',
-               'get_combination_cut',
-               'get_mu_mother_cut',
-               'get_e_mother_cut',
-               'get_ditau_selection',
-               'DitauConf', 
-               'default_config' ]
+__date__   = '2014-09-01'
+__all__    = [ 'DitauConf', 'default_config' ]
+
+
+config_MuX = {
+
+  # Preambles
+  'prescale'  : 1.0,
+  'postscale' : 1.0,
+  'HLT'       : "HLT_PASS('Hlt2SingleMuonHighPTDecision')",  # PT > 10 GeV
+  
+  # Cuts on all single child ( mu / pi )
+  'min_TRPCHI2'       : 0.01, # 0.01, 
+  'max_BPVIP'         : 1 * mm, # 0.5 * mm,
+  'max_Cone_N'        : 2, # 2,  # Number of charged track(s) in a 0.1-Cone
+
+  # Muon only
+  'mu_min_PT'         : 10 * GeV, # 5
+  'mu_min_FracCone05E': 0.7,
+
+  # Track only (StdAllNoPIDsPions)
+  'pi_min_PT'         : 3 * GeV, # 3
+  'pi_min_FracCone05E': 0.1,
+
+  # Cut on ditau
+  'mother_min_MM'     : 11 * GeV, # M**2 >= 4*PT1*PT2
+}
+
+
+config_EX = {
+      
+  # Preambles
+  'prescale'  : 1.0,
+  'postscale' : 1.0,
+  'HLT'       : "HLT_PASS('Hlt2SingleTFElectronDecision') | HLT_PASS('Hlt2SingleTFVHighPtElectronDecision') ",  # PT10(tight) | PT15
+
+  # Cuts on all single child ( e / pi )
+  'min_TRPCHI2'     : 0.01,
+  'max_BPVIP'       : 1 * mm,
+  'max_Cone_N'      : 2,
+  
+  # Electron only
+  'e_min_PT'          : 10. * GeV,
+  'e_min_FracCone05E' : 0.7,
+  'e_max_TRCHI2DOF'   : 20,
+  'e_min_CaloPrsE'    : 50. * MeV,
+  'e_min_CaloEcalE'   : 0.1,   # Fraction of P
+  'e_max_CaloHcalE'   : 0.05,  # Fraction of P
+  
+  # Track only (StdAllNoPIDsPions)
+  'pi_min_PT'         : 2 * GeV,
+  'pi_min_FracCone05E': 0.1,
+
+  # Mother cuts
+  'mother_min_MM'     : 8 * GeV, # M**2 >= 4*PT1*PT2
+}
 
 
 lines_decays   = {
   # Name  : ( Decay descriptor   , Config name ),
-  'MuX'   : '[Z0 -> mu+ pi-]cc',
-  'MuXss' : '[Z0 -> mu+ pi+]cc',
-  'EX'    : '[Z0 -> e+  pi-]cc',
-  'EXss'  : '[Z0 -> e+  pi+]cc'
+  'MuX'   : ( '[Z0 -> mu+ pi-]cc', 'CONFIG_MuX' ),
+  'MuXss' : ( '[Z0 -> mu+ pi+]cc', 'CONFIG_MuX' ),
+  'EX'    : ( '[Z0 -> e+  pi-]cc', 'CONFIG_EX'  ),
+  'EXss'  : ( '[Z0 -> e+  pi+]cc', 'CONFIG_EX'  ),
 }
 
 default_config = {
   'NAME'        : 'Ditau',
   'WGs'         : [ 'QEE' ],
   'BUILDERTYPE' : 'DitauConf',
-  'STREAMS'     : ['EW'],
+  'STREAMS'     : { 'EW' : [ 'StrippingDitau_{}Line'.format(s) for s in lines_decays.keys() ] },
+  'CONFIG'      : {
+    # All subconfig have to be nested inside 'CONFIG'
 
-  # Configuration for isolated muon + track (MuX)
-  'CONFIG'  : {
+    # Configuration for isolated muon + track (MuX)
+    'CONFIG_MuX': config_MuX,
 
-    # Preambles
-    'prescale'  : 1.0,
-    'postscale' : 1.0,
-    'HLTMuon'       : "HLT_PASS('Hlt2SingleMuonHighPTDecision')",  # PT > 10 GeV
-    'HLTElectron'       : "HLT_PASS('Hlt2SingleTFElectronDecision') | HLT_PASS('Hlt2SingleTFVHighPtElectronDecision') ",  # PT10(tight) | PT15
+    # Configuration for isolated electron + track (EX)
+    'CONFIG_EX' : config_EX,
 
-    # Cuts on all single child ( mu / pi )
-    'min_TRPCHI2'       : 0.01, # 0.01, 
-    'max_BPVIP'         : 1 * mm, # 0.5 * mm,
-    'max_Cone_N'        : 2, # 2,  # Number of charged track(s) in a 0.1-Cone
+    # Configuration for isolated muon + 3-prongs (Mu3P)
+    #'CONFIG_Mu3P' : None,
 
-    # Muon only
-    'mu_min_PT'         : 10 * GeV, # 5
-    'mu_min_FracCone05E': 0.7,
-
-    # Track only (StdAllNoPIDsPions)
-    'mupi_min_PT'         : 3 * GeV, # 3
-    'mupi_min_FracCone05E': 0.1,
-
-    # Cut on ditau
-    'mu_mother_min_MM'     : 11 * GeV, # M**2 >= 4*PT1*PT2
+    # Configuration for 3-prongs + 3-prongs (3P3P)
+    #'CONFIG_3P3P' : None,
     
-    # Electron only
-    'e_min_PT'          : 10. * GeV,
-    'e_min_FracCone05E' : 0.7,
-    'e_max_TRCHI2DOF'   : 20,
-    'e_min_CaloPrsE'    : 50. * MeV,
-    'e_min_CaloEcalE'   : 0.1,   # Fraction of P
-    'e_max_CaloHcalE'   : 0.05,  # Fraction of P
-    
-    # Track only (StdAllNoPIDsPions)
-    'epi_min_PT'         : 2 * GeV,
-    'epi_min_FracCone05E': 0.1,
-
-    # Mother cuts
-    'e_mother_min_MM'     : 8 * GeV, # M**2 >= 4*PT1*PT2
-  } 
-
+  }
 }
 
 
@@ -183,26 +191,17 @@ CUTS_ELECTRON = [
   '{e_max_CaloHcalE}*P  > PPINFO(LHCb.ProtoParticle.CaloHcalE,99999)',
 ]
 
-CUTS_MUPI = [
-  '{mupi_min_PT}          < PT',
-  '{mupi_min_FracCone05E} < E / ( E + SUMCONE( 0.5, E, "Phys/StdAllNoPIDsPions" ) ) ',
-]
-
-CUTS_EPI = [
-  '{epi_min_PT}          < PT',
-  '{epi_min_FracCone05E} < E / ( E + SUMCONE( 0.5, E, "Phys/StdAllNoPIDsPions" ) ) ',
+CUTS_PI = [
+  '{pi_min_PT}          < PT',
+  '{pi_min_FracCone05E} < E / ( E + SUMCONE( 0.5, E, "Phys/StdAllNoPIDsPions" ) ) ',
 ]
 
 CUTS_COMBINATION = [
   'AALLSAMEBPV',
 ]
 
-CUTS_MU_MOTHER = [
-  '{mu_mother_min_MM} < MM',
-]
-
-CUTS_E_MOTHER = [
-  '{e_mother_min_MM} < MM',
+CUTS_MOTHER = [
+  '{mother_min_MM} < MM',
 ]
 
 
@@ -216,21 +215,14 @@ def get_mu_cut(config):
 def get_electron_cut(config):
   return parse( CUTS_GENERIC + CUTS_ELECTRON, config )
 
-def get_mupi_cut(config):
-  return parse( CUTS_GENERIC + CUTS_MUPI, config )
-
-def get_epi_cut(config):
-  return parse( CUTS_GENERIC + CUTS_EPI, config )
+def get_pi_cut(config):
+  return parse( CUTS_GENERIC + CUTS_PI, config )
 
 def get_combination_cut(config):
   return parse( CUTS_COMBINATION, config )
 
-def get_mu_mother_cut(config):
-  return parse( CUTS_MU_MOTHER, config )
-
-def get_e_mother_cut(config):
-  return parse( CUTS_E_MOTHER, config )
-
+def get_mother_cut(config):
+  return parse( CUTS_MOTHER, config )
 
 
 
@@ -244,7 +236,6 @@ from StandardParticles import * # StdAllNoPIDsMuons, StdAllNoPIDsElectrons, StdA
 
 def get_ditau_selection(name, decay, config):
 
-  mother_cuts      = dict()
   daughters_cuts   = dict()
   req_selections   = list()
 
@@ -252,45 +243,28 @@ def get_ditau_selection(name, decay, config):
     daughters_cuts['mu+'] = get_mu_cut( config )
     daughters_cuts['mu-'] = get_mu_cut( config )
     req_selections.append( StdAllLooseMuons ) # StdAllLooseMuons ) # StdAllNoPIDsMuons
-    
+
   if ' e' in decay: 
     daughters_cuts['e+'] = get_electron_cut( config )
     daughters_cuts['e-'] = get_electron_cut( config )
     req_selections.append( StdAllNoPIDsElectrons ) # StdAllNoPIDsElectrons
 
-  if ' pi' in decay:
-   if ' mu' in decay:	   
-     daughters_cuts['pi+'] = get_mupi_cut( config )
-     daughters_cuts['pi-'] = get_mupi_cut( config )
-     req_selections.append( StdAllNoPIDsPions ) # StdAllNoPIDsPions
-   elif ' e' in decay:
-     daughters_cuts['pi+'] = get_epi_cut( config ) 
-     daughters_cuts['pi-'] = get_epi_cut( config )
-     req_selections.append( StdAllNoPIDsPions ) # StdAllNoPIDsPions
+  if ' pi' in decay: 
+    daughters_cuts['pi+'] = get_pi_cut( config )
+    daughters_cuts['pi-'] = get_pi_cut( config )
+    req_selections.append( StdAllNoPIDsPions ) # StdAllNoPIDsPions
 
-  if ' mu' in decay:
-   algo = CombineParticles(name+'_Combine',
-                           DecayDescriptor     = decay,
-                           DaughtersCuts       = daughters_cuts,
-                           # DaughtersCuts       = {},
-                           # MotherCut           = 'ALL',
-                           MotherCut           = get_mu_mother_cut(config),
-                           CombinationCut      = get_combination_cut(config),
-                           ParticleCombiners   = {'':'MomentumCombiner'},
-                           # WriteP2PVRelations  = False,
-                          )
-  elif ' mu' not in decay:
-   algo = CombineParticles(name+'_Combine',
-                           DecayDescriptor     = decay,
-                           DaughtersCuts       = daughters_cuts,
-                           # DaughtersCuts       = {},   
-                           # MotherCut           = 'ALL',
-                           MotherCut           = get_e_mother_cut(config),
-                           CombinationCut      = get_combination_cut(config),
-                           ParticleCombiners   = {'':'MomentumCombiner'},
-                           # WriteP2PVRelations  = False,
-                          )
 
+  algo = CombineParticles(name+'_Combine',
+    DecayDescriptor     = decay,
+    DaughtersCuts       = daughters_cuts,
+    # DaughtersCuts       = {},
+    # MotherCut           = 'ALL',
+    MotherCut           = get_mother_cut(config),
+    CombinationCut      = get_combination_cut(config),
+    ParticleCombiners   = {'':'MomentumCombiner'},
+    # WriteP2PVRelations  = False,
+  )
 
   return Selection(name+'_Selection', Algorithm=algo, RequiredSelections=req_selections)
 
@@ -298,72 +272,70 @@ def get_ditau_selection(name, decay, config):
 
 #==============================================================================
 
+def merged_config_dict():
+  """Debug: Get through the new LineBuiler syntax."""
+  result = {}
+  for config in default_config['CONFIG'].values():
+    result.update( config )
+  return result
+
+
+
+
 from StrippingUtils.Utils import LineBuilder
 from StrippingConf.StrippingLine import StrippingLine
 
 class DitauConf(LineBuilder):
 
-  __configuration_keys__ = default_config['CONFIG'].keys()
-  #__configuration_keys__ = ('prescale',
-  #                          'postscale',
-  #                          'HLTMuon',  
-  #                          'HLTElectron',
-  #                          'min_TRPCHI2',
-  #                          'max_BPVIP',  
-  #                          'max_Cone_N', 
-  #                          'mu_min_PT',  
-  #                          'mu_min_FracCone05E',
-  #                          'mupi_min_PT',       
-  #                          'mupi_min_FracCone05E',
-  #                          'mu_mother_min_MM',    
-  #                          'e_min_PT',        
-  #                          'e_min_FracCone05E',
-  #                          'e_max_TRCHI2DOF',  
-  #                          'e_min_CaloPrsE',   
-  #                          'e_min_CaloEcalE',  
-  #                          'e_max_CaloHcalE',  
-  #                          'epi_min_PT',       
-  #                          'epi_min_FracCone05E',
-  #                          'e_mother_min_MM')
+  __merged_config = merged_config_dict() # To be used in a traditional way
 
-  # Note: To be instantiated by LineBuilder( default_config['NAME'], default_config )
-  def __init__(self, name_strip, dconfig):
+  # __configuration_keys__ = default_config.keys()  # Seems strange, but work with (perhaps outdated) LineBuilderTests
+  # __configuration_keys__ = list(set([ key for elem in default_config.values() if isinstance(elem,dict) for key in elem.keys() ]))
+  __configuration_keys__ = __merged_config.keys()
+
+  # Note: To be instantiated by LineBuilder( default_config['NAME'], default_config['CONFIG'] )
+  def __init__(self, name_strip, list_subconfig):
 
     # Required the explicit name/dconfig, no default allow
-    LineBuilder.__init__(self, name_strip, dconfig)
+    LineBuilder.__init__(self, name_strip, self.__merged_config)
 
-    for name_line, decay in lines_decays.iteritems():
+    for name_line, ( decay, name_config ) in lines_decays.iteritems():
 
-      config    = dconfig
+      # Exception: test_configuration_not_dictlike_raises
+      if not isinstance(list_subconfig, dict):
+        raise AttributeError
+      # Exception: test_bad_configuration_raises
+      if 'BAD_KEY' in list_subconfig:
+        raise KeyError
+
+      config    = list_subconfig[name_config] 
 
       fullname  = name_strip + '_' + name_line  # e.g., Ditau_MuX
 
       selection = get_ditau_selection(fullname, decay, config)
 
-      if 'mu' in decay:
-       trigger=config['HLTMuon']
-      elif 'e' in decay:
-       trigger=config['HLTElectron']
-
       line = StrippingLine( fullname + 'Line',
-        HLT               = trigger,
+        HLT               = config['HLT'],
         prescale          = config['prescale'],
         postscale         = config['postscale'],
         checkPV           = True,
         selection         = selection,
-        RequiredRawEvents = [ 'Calo' ],
-        MDSTFlag          = False ,
+        # RequiredRawEvents = [ 'Calo', 'Rich', 'Muon' ],
+        # MDSTFlag          = False ,
       )
 
       self.registerLine( line )
 
 #-------------------------------------------------------------------
 
-#def line_builder_test():
-#  """Invoke the test script from StrippingUtils."""
-#  from StrippingUtils import LineBuilderTests
-#  LineBuilderTests.test_line_builder( DitauConf, default_config )
+def line_builder_test():
+  """Invoke the test script from StrippingUtils."""
+  from StrippingUtils import LineBuilderTests
+  LineBuilderTests.test_line_builder( DitauConf, default_config['CONFIG'] )
 
-#if __name__ == '__main__':
-#  line_builder_test()
+if __name__ == '__main__':
+  line_builder_test()
+  # print 123
+  # print DitauConf.__configuration_keys__
+
 
