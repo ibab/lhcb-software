@@ -101,12 +101,7 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
   }
 
   // -- Get all tracks in the event
-  //LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
-  //if ( tracks->empty() )
-  //{
-  //}
-  //get the LHCb particles of the event
-  LHCb::Particles*  parts = get<LHCb::Particles>(m_ParticlePath);
+  LHCb::Particle::Range parts = get<LHCb::Particle::Range>(m_ParticlePath);
   if (!parts) {
     Warning( "Could not retrieve particles. Skipping" );
     return StatusCode::SUCCESS;
@@ -119,9 +114,7 @@ StatusCode RelInfoTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle 
   const LHCb::VertexBase* PV = m_dva->bestVertex(top);
   const LHCb::VertexBase *SV = top->endVertex();
 
-  if(exist<LHCb::RecVertex::Container>(m_PVInputLocation)){
-    m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
-  }
+    m_vertices = get<LHCb::RecVertex::Range>(m_PVInputLocation);
 
   if( part )
   {
@@ -182,7 +175,7 @@ LHCb::RelatedInfoMap* RelInfoTrackIsolationBDT::getInfo(void) {
 
 
 bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
-                                             , const LHCb::Particles * particles
+                                             , const LHCb::Particle::Range particles
                                              , const LHCb::VertexBase * PV
                                              , const LHCb::VertexBase * SV
                                              )
@@ -207,8 +200,8 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
   double trk_nnk = 0;//track ProbNN(K)
   //end MR
 
-  LHCb::Particles::const_iterator part_it, part_it_end( particles->end() ) ;
-  for ( part_it = particles->begin() ; part_it != part_it_end ; ++part_it )
+  LHCb::Particle::Range::const_iterator part_it, part_it_end( particles.end() ) ;
+  for ( part_it = particles.begin() ; part_it != part_it_end ; ++part_it )
   {
     const LHCb::Track * track = (*part_it)->proto()->track() ;
     //pointer comparison
@@ -341,10 +334,10 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
 
 double RelInfoTrackIsolationBDT::calcIPToAnyPV( const LHCb::Track * track )
 {
-  LHCb::RecVertex::Container::const_iterator iv;
+  LHCb::RecVertex::Range::const_iterator iv;
   double ips(-1),imp(-1),impchi2(-1);
   ips = 6.0e5;
-  for(iv = m_vertices->begin();iv!=m_vertices->end();iv++){
+  for(iv = m_vertices.begin();iv!=m_vertices.end();iv++){
     StatusCode sc_ips = m_dist->distance(track,(*iv),imp,impchi2);
     if(!sc_ips) return StatusCode(sc_ips);
     if(ips>impchi2) ips = impchi2;

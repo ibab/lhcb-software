@@ -97,7 +97,7 @@ class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTo
 
         //save the vertice
         std::string m_PVInputLocation ;
-        LHCb::RecVertex::Container * m_vertices ;
+        LHCb::RecVertex::Range m_vertices ;
 
 
         ///============================================================================
@@ -105,7 +105,7 @@ class RelInfoTrackIsolationBDT : public GaudiTool, virtual public IRelatedInfoTo
         ///============================================================================
 
         bool calcBDTValue( const LHCb::Particle * part
-                , const LHCb::Particles * particles
+                , const LHCb::Particle::Range particles
                 , const LHCb::VertexBase * PV
                 , const LHCb::VertexBase * SV
                 ) ;

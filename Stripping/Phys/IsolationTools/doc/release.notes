@@ -3,6 +3,8 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-09-15 Alex Shires
+ - change some lists into Ranges
 
 ! 2014-09-15 Alex Shires
  - change format of warning messages
@@ -14,9 +16,6 @@
 
 ! 2014-09-12 - Chris Jones
  - Suppress various info level messages to debug or verbose
-
-
-
 
 ! 2014-09-12
  - Added RelInfoBs2MuMuZVisoBDT to compute ZVtop based isolation to BsMuMu lines

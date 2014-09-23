@@ -723,7 +723,7 @@ StatusCode RelInfoBs2MuMuIsolations::CDFIsolation(const LHCb::Particle* B,
     return StatusCode::SUCCESS;
   }
 
-  LHCb::Particles*  parts = get<LHCb::Particles>(m_ParticlePath);
+  LHCb::Particle::Range  parts = get<LHCb::Particle::Range>(m_ParticlePath);
   if (!parts) {
     Error( " Failed to get particles container " );
     return StatusCode::SUCCESS;
@@ -736,7 +736,7 @@ StatusCode RelInfoBs2MuMuIsolations::CDFIsolation(const LHCb::Particle* B,
   double iso_giampi = 0.0;
   double iso_giampi_tc = 0.0;
 
-  for(LHCb::Particles::const_iterator ipp=parts->begin();ipp!=parts->end();ipp++){
+  for(LHCb::Particle::Range::const_iterator ipp=parts.begin();ipp!=parts.end();ipp++){
     const LHCb::ProtoParticle *proto = (*ipp)->proto();
     if(proto) {
       const LHCb::Track* atrack = proto->track();
@@ -799,7 +799,7 @@ StatusCode RelInfoBs2MuMuIsolations::IsolationTwoBodyVariables(const LHCb::Parti
   const LHCb::VertexBase *PV = m_dva->bestVertex(P);
   const LHCb::VertexBase *SV = P->endVertex();
 
-  LHCb::Particles*  m_allparts = get<LHCb::Particles>(m_ParticlePath);
+  LHCb::Particle::Range  m_allparts = get<LHCb::Particle::Range>(m_ParticlePath);
 
   const Gaudi::XYZPoint& PosPV = PV->position();
   const Gaudi::XYZPoint& PosSV = SV->position();
@@ -817,7 +817,7 @@ StatusCode RelInfoBs2MuMuIsolations::IsolationTwoBodyVariables(const LHCb::Parti
   LHCb::Particle::ConstVector iso_parts_1;
 
   // thats where you decide which daughter is at [0] and [1] of the arrays
-  LHCb::Particle::ConstVector::const_iterator ip_part;
+  LHCb::Particle::Range::const_iterator ip_part;
   for ( ip_part = parts.begin(); ip_part != parts.end(); ip_part++)
   {
     const LHCb::Particle* part = *(ip_part);
@@ -846,17 +846,17 @@ StatusCode RelInfoBs2MuMuIsolations::IsolationTwoBodyVariables(const LHCb::Parti
   float bestdoca[2];
   bestdoca[0]=10000.;
   bestdoca[1]=10000.;
-  LHCb::Particle* bestpart_0(0) ;
-  LHCb::Particle* bestpart_1(0) ;
+  const LHCb::Particle* bestpart_0(0) ;
+  const LHCb::Particle* bestpart_1(0) ;
 
-  LHCb::Particles::const_iterator ip;
-  for ( ip = m_allparts->begin(); ip != m_allparts->end() ; ++ip) {
+  LHCb::Particle::Range::const_iterator ip;
+  for ( ip = m_allparts.begin(); ip != m_allparts.end() ; ++ip) {
 
     if ( msgLevel(MSG::DEBUG) ) debug() <<" looping over all parts "<< endreq;
     j++;
     const LHCb::ProtoParticle * proto =  (*ip)->proto();
     const LHCb::Track* track = proto->track();
-    LHCb::Particle*  cand = (*ip);
+    const LHCb::Particle*  cand = (*ip);
     Gaudi::XYZPoint o(track->position());
     Gaudi::XYZVector p(track->momentum());
     bool isInList = 0;
