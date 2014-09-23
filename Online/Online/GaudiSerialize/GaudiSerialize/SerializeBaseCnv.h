@@ -11,6 +11,8 @@
 #include "GaudiKernel/Converter.h"
 #include "GaudiSerialize/SerializeCnvSvc.h"
 
+#include "GAUDI_VERSION.h"
+
 /*
  *  Gaudi namespace declaration
  */
@@ -36,10 +38,17 @@ namespace Gaudi {
     SerializeCnvSvc* m_dbMgr;
 
   public:
+#if GAUDI_VERSION > CALC_GAUDI_VERSION(25, 3)
+    typedef Gaudi::PluginService::Factory<IConverter*,
+                                          long,
+                                          const CLID&,
+                                          ISvcLocator*> Factory;
+#else
     typedef Gaudi::PluginService::Factory3<IConverter*,
                                            long,
                                            const CLID&,
                                            ISvcLocator*> Factory;
+#endif
 
     /** Initializing Constructor
      * @param      typ      [IN]     Concrete storage type of the converter

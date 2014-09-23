@@ -1,6 +1,10 @@
  Package: GaudiSerialize
  Package Manager: Albert Puig
 
+! 2014-09-23 - Marco Clemencic
+ - Modified SerializeBaseCnv.h to work with the latest Gaudi
+   (https://its.cern.ch/jira/browse/GAUDI-430).
+
 ! 2014-09-03 - Marco Clemencic
  - Fixed CMake configuration to work with ROOT 6.
 
