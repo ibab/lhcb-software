@@ -262,7 +262,29 @@ def _rt_print_ ( t ) :
 
 ROOT.TTree.__repr__ = _rt_print_
 ROOT.TTree.__str__  = _rt_print_
+
+# =============================================================================
+## get lst of files used for th egiven chain
+#  @code
+#
+#  >>> chain = ... ## get the files 
+#  >>> files = chain.files() 
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2014-02-04
+def _rc_files_ ( chain ) :
+    """
+    Get the list of files used for the chain
     
+    >>> chain = ... ## get the files 
+    >>> files = chain.files()
+    """
+    lst = chain.GetListOfFiles()
+    return [ i.GetTitle() for i in lst ]
+
+
+ROOT.TChain. files = _rc_files_
+
 
 # =============================================================================
 if '__main__' == __name__ :

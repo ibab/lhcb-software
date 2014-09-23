@@ -18,6 +18,7 @@ use           AnalysisPython v* Phys
 use           ROOT           v* LCG_Interfaces 
 use           fftw           v* LCG_Interfaces 
 use           PyAna          v* Analysis
+use           GaudiMP        v*               
 
 # =========== patterns ========================================================
 apply_pattern install_python_modules

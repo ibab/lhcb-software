@@ -8,6 +8,10 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-09-23 - Vanya Belyaev
+ - Kisa.py  - new module with the first attempt for multiprocessing for Ostap  
+   
+
 ! 2014-09-19 - Vanya Belyaev
  - RooFitDeco.py  
    minor fix 
