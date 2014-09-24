@@ -30,9 +30,11 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
 	self.config = config
         # Input daughter lists:
         self.WideJpsiList = DataOnDemand(Location = "Phys/StdMassConstrainedJpsi2MuMu/Particles")
+
         self.JpsiList = self.createSubSel( OutputList = "NarrowJpsiListForBsJpsiKstarWideNoPID",
                                            InputList = self.WideJpsiList,
                                            Cuts = "(PFUNA(ADAMASS('J/psi(1S)')) < %(JpsiMassWindow)s * MeV)" % self.config )
+
         self.KstarWideListNoPID = self.createCombinationsSel( OutputList = "KstarWideListNoPIDForBsJpsiKstarWideNoPID",
                                                               DaughterLists = [ StdNoPIDsKaons, StdNoPIDsPions ],
                                                               DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc","[K*_0(1430)0 -> K+ pi-]cc" ],
@@ -41,9 +43,20 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                                                               PreVertexCuts = "(in_range(750,AM,1900))  & (ADOCACHI2CUT(30, ''))",
                                                               PostVertexCuts = "(VFASPF(VCHI2) < %(PostVertexCuts)s)" % self.config,
                                                               ReFitPVs = False )
+        # Excluding K*_0(1430) resonance in mcMatch.
+        self.KstarWideListTruth = self.createCombinationsSelTruth( OutputList = "KstarWideListNoPIDForBsJpsiKstarWideTruth",
+                                       DaughterLists = [ StdNoPIDsKaons, StdNoPIDsPions ],
+                                       DecayDescriptors = [ "[K*(892)0 -> K+ pi-]cc","[K*_0(1430)0 -> K+ pi-]cc" ],
+                                       DaughterCuts = { "pi-" : " mcMatch('[K*(892)0 ==> K+ ^pi-]CC','Relations/Rec/ProtoP/Charged') ",
+                                                        "K+"  : " mcMatch('[K*(892)0 ==> ^K+ pi-]CC','Relations/Rec/ProtoP/Charged') " }, 
+                                       #DaughterCuts = { "pi-" : " mcMatch('[K*(892)0 ==> K+ ^pi-]CC||[K*_0(1430)0 ==> K+ ^pi-]CC','Relations/Rec/ProtoP/Charged') ",
+                                       #                 "K+"  : " mcMatch('[K*(892)0 ==> ^K+ pi-]CC||[K*_0(1430)0 ==> K+ ^pi-]CC','Relations/Rec/ProtoP/Charged') " }, 
+                                       ReFitPVs = False )
+
         self.makeBs2JpsiKstarWideNoPID() # Making the line.
+        self.makeBs2JpsiKstarWideTruth() # Making the line.
     # ---------------------------------------------------------------------------------------------------------------------------------
-    def createSubSel( self, OutputList, InputList, Cuts ) :
+    def createSubSel( self, OutputList, InputList, Cuts ="ALL" ) :
         '''create a selection using a FilterDesktop'''
         filter = FilterDesktop(Code = Cuts)
         return Selection( OutputList,
@@ -56,13 +69,31 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                           DaughterCuts = {} ,
                           PreVertexCuts = "ALL",
                           PostVertexCuts = "ALL",
-                          ReFitPVs = True ) :
+                          ReFitPVs = True,
+                          Preambulo = [ "from LoKiPhysMC.decorators import *" , "from LoKiPhysMC.functions import mcMatch" ] ) :
         '''create a selection using a ParticleCombiner with a single decay descriptor'''
         combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
                                      DaughtersCuts = DaughterCuts,
                                      MotherCut = PostVertexCuts,
                                      CombinationCut = PreVertexCuts,
-                                     ReFitPVs = ReFitPVs)
+                                     ReFitPVs = ReFitPVs,
+                                     Preambulo = Preambulo )
+        return Selection ( OutputList,
+                           Algorithm = combiner,
+                           RequiredSelections = DaughterLists)
+   # ---------------------------------------------------------------------------------------------------------------------------------
+    def createCombinationSelTruth( self, OutputList,
+                          DecayDescriptor,
+                          DaughterLists,
+                          DaughterCuts = {} ,
+                          ReFitPVs = True,
+                          Preambulo = [ "from LoKiPhysMC.decorators import *" , "from LoKiPhysMC.functions import mcMatch" ] ) :
+        '''create a selection using a ParticleCombiner with a single decay descriptor'''
+        combiner = CombineParticles( DecayDescriptor = DecayDescriptor,
+                                     DaughtersCuts = DaughterCuts,
+                                     MotherCut = "ALL",
+                                     ReFitPVs = ReFitPVs,
+                                     Preambulo = Preambulo )
         return Selection ( OutputList,
                            Algorithm = combiner,
                            RequiredSelections = DaughterLists)
@@ -73,16 +104,34 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                           DaughterCuts = {} ,
                           PreVertexCuts = "ALL",
                           PostVertexCuts = "ALL",
-                          ReFitPVs = True ) :
+                          ReFitPVs = True,
+                          Preambulo = [ "from LoKiPhysMC.decorators import *" , "from LoKiPhysMC.functions import mcMatch" ] ) :
         '''For taking in multiple decay descriptors'''
         combiner = CombineParticles( DecayDescriptors = DecayDescriptors,
                                  DaughtersCuts = DaughterCuts,
                                  MotherCut = PostVertexCuts,
                                  CombinationCut = PreVertexCuts,
-                                 ReFitPVs = ReFitPVs)
+                                 ReFitPVs = ReFitPVs,
+                                 Preambulo = Preambulo )
         return Selection ( OutputList,
-                       Algorithm = combiner,
-                       RequiredSelections = DaughterLists)
+                            Algorithm = combiner,
+                            RequiredSelections = DaughterLists)
+    # ---------------------------------------------------------------------------------------------------------------------------------
+    def createCombinationsSelTruth( self, OutputList,
+	                  DecayDescriptors,
+                          DaughterLists,
+                          DaughterCuts = {} ,
+                          ReFitPVs = True,
+                          Preambulo = [ "from LoKiPhysMC.decorators import *" , "from LoKiPhysMC.functions import mcMatch" ] ) :
+        '''For taking in multiple decay descriptors'''
+        combiner = CombineParticles( DecayDescriptors = DecayDescriptors,
+                                 DaughtersCuts = DaughterCuts,
+                                 MotherCut = "ALL",
+                                 ReFitPVs = ReFitPVs,
+                                 Preambulo = Preambulo )
+        return Selection ( OutputList,
+                            Algorithm = combiner,
+                            RequiredSelections = DaughterLists)
     # ---------------------------------------------------------------------------------------------------------------------------------
     def makeBs2JpsiKstarWideNoPID( self ): # Line maker.
         Bs2JpsiKstarWideNoPID = self.createCombinationSel( OutputList = "Bs2JpsiKstarWideNoPID",
@@ -92,4 +141,12 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                                 PostVertexCuts = "(VFASPF(VCHI2PDOF) < 10) & (BPVDIRA >0.999) & (BPVVD > 1.5 *mm)" )
         Bs2JpsiKstarWideLineNoPID = StrippingLine( "Bs2JpsiKstarWideLineNoPID", algos = [Bs2JpsiKstarWideNoPID])
         self.registerLine(Bs2JpsiKstarWideLineNoPID)
+    # ---------------------------------------------------------------------------------------------------------------------------------
+    def makeBs2JpsiKstarWideTruth( self ): # Line maker.
+        Bs2JpsiKstarWideTruth = self.createCombinationSelTruth( OutputList = "Bs2JpsiKstarWideTruth",
+                                DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc",
+                                DaughterLists  = [ self.WideJpsiList, self.KstarWideListTruth ])
+                                #,DaughtersCuts = {mcMatch here for J/psi(1S) and K*(892)0})
+        Bs2JpsiKstarWideLineTruth = StrippingLine( "Bs2JpsiKstarWideLineTruth", algos = [Bs2JpsiKstarWideTruth])
+        self.registerLine(Bs2JpsiKstarWideLineTruth)
     # ---------------------------------------------------------------------------------------------------------------------------------
