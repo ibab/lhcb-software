@@ -42,7 +42,7 @@ BremAdder::BremAdder( const std::string& type,
 
   // Method 2 :  looking for brem candidate(s) from a photon container  (active if m_bInput is not empty)
   declareProperty("BremInput"   , m_bInput = "/Event/Phys/StdVeryLooseAllPhotons/Particles");
-  declareProperty("PhotonCL"    , m_bremid = 0.005);        //  brem photon ID lower threshold
+  declareProperty("PhotonCL"    , m_bremid = 0.1);        //  brem photon ID lower threshold
   declareProperty("PhotonPT"    , m_ptg =75.);
   declareProperty("ExtrapolatorType" , m_extrapolatorType = "TrackRungeKuttaExtrapolator" ) ;
   declareProperty ("PosTolerance" , m_stol =2.);
