@@ -1,5 +1,5 @@
 ################################################################################
-##                          S T R I P P I N G  2 1 r 1                        ##
+##                          S T R I P P I N G  2 1 r 1                            ##
 ##                                                                            ##
 ##  Configuration for QEE WG                                                  ##
 ##  Contact person: Ronan Wallace - ronan.wallace@cern.ch                     ##
@@ -300,43 +300,69 @@ Ditau = {
 
   # Configuration for isolated muon + track (MuX)
   'CONFIG'  : {
+    # All subconfig have to be nested inside 'CONFIG'
+  
+    # Configuration for isolated muon + track (MuX)
+    'CONFIG_MuX':              { 
+                                # Preambles
+                                'prescale'  : 1.0,
+                                'postscale' : 1.0,
+                                'HLT'       : "HLT_PASS('Hlt2SingleMuonHighPTDecision')",  # PT > 10 GeV
 
-    # Preambles
-    'prescale'  : 1.0,
-    'postscale' : 1.0,
-    'HLTMuon'       : "HLT_PASS('Hlt2SingleMuonHighPTDecision')",  # PT > 10 GeV
-    'HLTElectron'       : "HLT_PASS('Hlt2SingleTFElectronDecision') | HLT_PASS('Hlt2SingleTFVHighPtElectronDecision') ",  # PT10(tight) | PT15
+                                # Cuts on all single child ( mu / pi )
+                                'min_TRPCHI2'       : 0.01, # 0.01,
+                                'max_BPVIP'         : 1 * mm, # 0.5 * mm,
+                                'max_Cone_N'        : 2, # 2,  # Number of charged track(s) in a 0.1-Cone
 
-    # Cuts on all single child ( mu / pi )
-    'min_TRPCHI2'       : 0.01, # 0.01,
-    'max_BPVIP'         : 1 * mm, # 0.5 * mm,
-    'max_Cone_N'        : 2, # 2,  # Number of charged track(s) in a 0.1-Cone
+                                # Muon only
+                                'mu_min_PT'         : 10 * GeV, # 5
+                                'mu_min_FracCone05E': 0.7,
 
-    # Muon only
-    'mu_min_PT'         : 10 * GeV, # 5
-    'mu_min_FracCone05E': 0.7,
+                                # Track only (StdAllNoPIDsPions)
+                                'pi_min_PT'         : 3 * GeV, # 3
+                                'pi_min_FracCone05E': 0.1,
 
-    # Track only (StdAllNoPIDsPions)
-    'mupi_min_PT'         : 3 * GeV, # 3
-    'mupi_min_FracCone05E': 0.1,
+                                # Cut on ditau
+                                'mother_min_MM'     : 11 * GeV, # M**2 >= 4*PT1*PT2
+                               },
+ 
 
-    # Cut on ditau
-    'mu_mother_min_MM'     : 11 * GeV, # M**2 >= 4*PT1*PT2
+    # Configuration for isolated electron + track (EX)
+    'CONFIG_EX' :             {
 
-    # Electron only
-    'e_min_PT'          : 10. * GeV,
-    'e_min_FracCone05E' : 0.7,
-    'e_max_TRCHI2DOF'   : 20,
-    'e_min_CaloPrsE'    : 50. * MeV,
-    'e_min_CaloEcalE'   : 0.1,   # Fraction of P
-    'e_max_CaloHcalE'   : 0.05,  # Fraction of P
+                               # Preambles
+                               'prescale'  : 1.0,
+                               'postscale' : 1.0,
+                               'HLT'       : "HLT_PASS('Hlt2SingleTFElectronDecision') | HLT_PASS('Hlt2SingleTFVHighPtElectronDecision') ",  # PT10(tight) | PT15
 
-    # Track only (StdAllNoPIDsPions)
-    'epi_min_PT'         : 2 * GeV,
-    'epi_min_FracCone05E': 0.1,
+                               # Cuts on all single child ( e / pi )
+                               'min_TRPCHI2'     : 0.01,
+                               'max_BPVIP'       : 1 * mm,
+                               'max_Cone_N'      : 2,
 
-    # Mother cuts
-    'e_mother_min_MM'     : 8 * GeV, # M**2 >= 4*PT1*PT2
+                               # Electron only
+                               'e_min_PT'          : 10. * GeV,
+                               'e_min_FracCone05E' : 0.7,
+                               'e_max_TRCHI2DOF'   : 20,
+                               'e_min_CaloPrsE'    : 50. * MeV,
+                               'e_min_CaloEcalE'   : 0.1,   # Fraction of P
+                               'e_max_CaloHcalE'   : 0.05,  # Fraction of P
+
+                               # Track only (StdAllNoPIDsPions)
+                               'pi_min_PT'         : 2 * GeV,
+                               'pi_min_FracCone05E': 0.1,
+
+                               # Mother cuts
+                               'mother_min_MM'     : 8 * GeV, # M**2 >= 4*PT1*PT2
+                              },
+
+
+    # Configuration for isolated muon + 3-prongs (Mu3P)
+    #'CONFIG_Mu3P' : None,
+  
+    # Configuration for 3-prongs + 3-prongs (3P3P)
+    #'CONFIG_3P3P' : None,
+
   }
 
 }
