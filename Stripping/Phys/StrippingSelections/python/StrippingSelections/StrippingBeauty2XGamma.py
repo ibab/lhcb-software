@@ -63,6 +63,10 @@ default_config = {
           'B2XGLambda2piPrescale'  : 1.,
           'B2XGLambda3piPrescale'  : 1.,
           'B2XGLbLambdaPrescale'   : 1., # UNUSED
+
+          ### WARNING ###
+          ## Additional selection present in hard-coded cuts, starting somewhere below!!! 
+          ### WARNING ###
           
           # TRACK CUTS
           'B2XGTrkChi2DOF': 3., # was nothing
