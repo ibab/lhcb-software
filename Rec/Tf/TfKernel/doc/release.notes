@@ -4,7 +4,10 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
-! 2014-09-23 - Gerhard Raven
+! 2014-09-24 - Marco Clemencic
+ - hide some more C++11 from gccxml...
+
+! 2014-09-24 - Gerhard Raven
  - hide some C++11 from gccxml...
 
 ! 2014-09-22 - Manuel Tobias Schiller

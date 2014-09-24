@@ -22,6 +22,10 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "LHCbMath/GeomFun.h"
 
+#if defined(__GCCXML__) && ! defined(constexpr)
+#define constexpr
+#endif
+
 namespace Tf
 {
   /** @class compByX TfKernel/RecoFuncs.h

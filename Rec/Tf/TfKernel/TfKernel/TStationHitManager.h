@@ -251,12 +251,16 @@ namespace Tf
                                   const TLayerID   lay,
                                   const TRegionID  region ) const
     {
+#ifndef __GCCXML__
       if ( !allHitsPrepared(sta,lay,region) ) { prepareHits(sta,lay,region); }
       HitRange range = m_hits.range(sta,lay,region);
       return HitRange( std::lower_bound( range.begin(), range.end(),
                                          xMin,
                                          Tf::compByX_LB< Hit >() ),
                        range.end()); 
+#else
+      return HitRange();
+#endif
     }
 
     /** Load the hits for a given region of interest
