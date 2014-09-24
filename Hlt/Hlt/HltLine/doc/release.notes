@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2014-09-24 - Sean Benson
+ - Implemented the update to the default Hlt1 filter
+
 ! 2014-08-21 - Gerhard Raven
  - avoid making lots and lots of StringKeys
 
