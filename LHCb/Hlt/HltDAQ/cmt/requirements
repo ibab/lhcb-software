@@ -65,8 +65,7 @@ apply_pattern    component_library library=HltDAQ
 #=====================================================================
 application      utestTrackingCoder -import=Boost   utest/utestTrackingCoder.cpp utest/HltTrackingCoder_utest.cpp
 macro_append Boost_linkopts " $(Boost_linkopts_iostreams)  $(Boost_linkopts_filesystem)"
-macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_file_version}" \
-    experimental&target-dbg " -lboost_unit_test_framework-${Boost_compiler_version}-mt-d-${Boost_file_version}"
+macro_append Boost_linkopts " -lboost_unit_test_framework-${Boost_compiler_version}-mt-${Boost_debug}${Boost_file_version}"
 
 private
 # Work around to be able to compile with Gaudi v22r5
