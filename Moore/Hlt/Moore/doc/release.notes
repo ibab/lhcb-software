@@ -4,7 +4,7 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
-! 2014-09-24
+! 2014-09-24 Sean Benson
  - Made TISTOS test split aware
 
 ! 2014-09-23 Sebastian Neubert
