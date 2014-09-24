@@ -4,6 +4,9 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-09-24 - Marco Clemencic
+ - Updated hack for LCG experimental builds.
+
 ! 2014-09-19 - Marco Clemencic
  - Small hack to be able to compile against LCG experimental builds.
 
