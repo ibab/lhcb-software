@@ -104,10 +104,7 @@ RelInfoBstautauZVisoBDT::RelInfoBstautauZVisoBDT( const std::string& type,
   , m_max_zv_ntrkvtx(0)  */
 {
 
-  m_keys.clear();
 
-  m_keys.push_back(RelatedInfoNamed:: ZVISO);
- 
 
 
 
@@ -150,7 +147,10 @@ RelInfoBstautauZVisoBDT::RelInfoBstautauZVisoBDT( const std::string& type,
   declareProperty("cut_ntrk"     , m_cut_ntrk  = 150     ); //
   
   
-  
+  m_keys.clear();
+
+  m_keys.push_back(RelatedInfoNamed:: ZVISO);
+   
   
   
 }
@@ -241,9 +241,9 @@ StatusCode RelInfoBstautauZVisoBDT::initialize() {
 
 
 
-StatusCode RelInfoBstautauZVisoBDT::finalize(){
-  return GaudiTool::finalize();
-}
+//StatusCode RelInfoBstautauZVisoBDT::finalize(){
+//  return GaudiTool::finalize();
+//}
 
 
 //=============================================================================
@@ -252,86 +252,93 @@ StatusCode RelInfoBstautauZVisoBDT::finalize(){
 StatusCode RelInfoBstautauZVisoBDT::calculateRelatedInfo( const LHCb::Particle* top,
                                   const LHCb::Particle *part){//, const std::string &head, Tuples::Tuple &tuple	) {
 
+  m_ZViso=-10;
   
   
   //  const std::string prefix=fullName(head);
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;  
-  if ( msgLevel(MSG::DEBUG) ) cout <<"A*** "<<part <<" "<<top<<endl;
-  if ( msgLevel(MSG::DEBUG) ) cout <<"AA*** "<<part->particleID().pid() <<" "<<top->particleID().pid()<<endl;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "RelInfoBstautauZVisoBDT ==> Fill" << endmsg;  
+  //  if ( msgLevel(MSG::DEBUG) ) cout <<"A*** "<<part <<" "<<top<<endl;
+  //  if ( msgLevel(MSG::DEBUG) ) cout <<"AA*** "<<part->particleID().pid() <<" "<<top->particleID().pid()<<endl;
   if ( top->isBasicParticle() || isPureNeutralCalo(top) )
     {
       if ( msgLevel(MSG::DEBUG) ) 
         debug() << "Running ZVTOP isolation on basic, neutral or calorimetric particles, skipping" << endmsg;
       return StatusCode::SUCCESS ;
     }
-  if( !part )
+
+  if(part)
     {
-      return Warning( "Found an invalid particle" ,StatusCode::SUCCESS,50);
-    }
-  if ((part->particleID().pid())==(top->particleID().pid()))
+      if ((part->particleID().pid())==(top->particleID().pid()))
+        {
+          if ( msgLevel(MSG::DEBUG) ) {
+            debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
+            debug()<<"Trying to compute isolation on B ==> needs a tau"<<endreq; 
+          }
+          return StatusCode::SUCCESS;//
+        }
+  
+      //check on the muon or pion
+      if (part->isBasicParticle())
+        {
+          if ( msgLevel(MSG::DEBUG) ){
+            debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
+            debug()<<"Trying to compute ZViso BDT on basic particles (Muons or Pions) ==> needs a tau or D"<<endreq;
+          }
+          return  StatusCode::SUCCESS;//
+        }
+      
+      StatusCode scInTracks =  Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
+      StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
+      StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
+      StatusCode scZViso    =  ZViso();
+      
+      
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"ZVisoBDT_value : "<<m_ZViso<<endmsg;
+      
+      
+      if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	
+      
+      
+      m_map.clear();
+      std::vector<short int>::const_iterator ikey; 
+      for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
+        float value = 0;
+        switch (*ikey) {
+        case  RelatedInfoNamed::ZVISO : value = m_ZViso; break;//
+        }
+        if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
+        m_map.insert( std::make_pair( *ikey, value) );
+      }
+ }
+  
+
+ else
     {
-       if ( msgLevel(MSG::DEBUG) ) debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
-      return Warning( "Trying to compute isolation on B ==> needs a tau", StatusCode::SUCCESS,50);//
+      return Warning( "Found an invalid particle" ,StatusCode::FAILURE,50);
     }
-  
-  //check on the muon
-
-  if (part->isBasicParticle())
-    {
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
-      return Warning( "Trying to compute isolation on muon  ==> needs a tau", StatusCode::SUCCESS,50);//
-    }
-  
-   if ( msgLevel(MSG::DEBUG) ) cout <<"B***"<<endl;
-  StatusCode scInTracks = Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
-  if ( msgLevel(MSG::DEBUG) )  cout <<"C***"<<endl;
-  StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
-  if ( msgLevel(MSG::DEBUG) )  cout <<"D***"<<endl;
-  StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
-  if ( msgLevel(MSG::DEBUG) )  cout <<"E***"<<endl;
-  StatusCode scZViso    =  ZViso();
-  if ( msgLevel(MSG::DEBUG) )  cout <<"F***"<<endl;
-
-
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"ZVisoBDT_value : "<<m_ZViso<<endmsg;
-  
-
-  if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	
-  
-  
-  m_map.clear();
-  std::vector<short int>::const_iterator ikey; 
-  for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-    
-    float value = 0;
-    switch (*ikey) {
-    case  RelatedInfoNamed::ZVISO                   : value =m_ZViso     ;              break;//
-
-
-    }
-    m_map.insert( std::make_pair( *ikey, value) );
-  }
-  
-  
-  
+ 
 
 
   return StatusCode::SUCCESS;
   
 }
 
-LHCb::RelatedInfoMap* RelInfoBstautauZVisoBDT::getInfo(void) {
-  
+LHCb::RelatedInfoMap* RelInfoBstautauZVisoBDT::getInfo(void) 
+{
   return &m_map; 
 }
 
+std::string RelInfoBstautauZVisoBDT::infoPath(void) {
+  std::stringstream ss;
+  ss << std::string("Particle2BsTauTauZViso");
+  return ss.str();
+}
 
 //=============================================================================
 //  Fill VERT   try of ZVTop
 //=============================================================================
 
-StatusCode RelInfoBstautauZVisoBDT::Initialize_tracksVF_ZVtop()
-{
+StatusCode RelInfoBstautauZVisoBDT::Initialize_tracksVF_ZVtop(){
   
   double ipsall/*, ipall*/;
   std::vector<const LHCb::Track*> tracks;

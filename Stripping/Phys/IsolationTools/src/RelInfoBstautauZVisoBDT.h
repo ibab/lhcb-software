@@ -46,10 +46,10 @@
 
 
 
-/** @class TupleToolMuonVariables TupleToolMuonVariables.h
+/** @class RelInfoBstautauZVisoBDT RelInfoBstautauZVisoBDT.h
 
  * 
- *  @author Giampiero Mancinelli
+ *  @author Alessadro Morda'
  *  @date   2012-09-13
  */
 
@@ -61,7 +61,7 @@ class IDVAlgorithm;
 class IPVReFitter;
 class IVertexFunctionTool;
 class ITopoVertexTool;
-class DVAlgorithm;
+class IDVAlgorithm;
 //class Reader;
 
 
@@ -71,43 +71,28 @@ public:
 
 
 
-
-  typedef std::vector<LHCb::RecVertex*> RecVertexVector;
-  typedef std::vector<const LHCb::Track*> TrackVector;
-
   /// Standard constructor
   RelInfoBstautauZVisoBDT( const std::string& type, 
               const std::string& name,
               const IInterface* parent );
-  /// Loop over differnt conesizes and fill the variables into the tuple
-  //  virtual StatusCode fill( const LHCb::Particle*
-  //                         , const LHCb::Particle*
-  //                         , const std::string&
-  //                  , Tuples::Tuple& );
-
-   StatusCode calculateRelatedInfo( const LHCb::Particle* top,
-                                       const LHCb::Particle *part	);
-  LHCb::RelatedInfoMap* getInfo(void);
   
-    
 
-  StatusCode Initialize_tracksVF_ZVtop();
-  StatusCode IsoTopo2Body(const LHCb::Particle *part);  //Isolation of Mathieu
-  double VfAlongTrack(double zB, const LHCb::Particle* Part, double delta, float* z_f_m );//
-  int VfProfile(double zB,const LHCb::Particle* Part, std::vector<double> *v_Vf, std::vector<double>* v_Position);//
-  StatusCode GMPiso(const LHCb::Particle *part );//
-  std::vector<LHCb::RecVertex*> zvtop(const LHCb::Particle* dau1, const LHCb::Particle* dau2, const LHCb::Particle* dau3 );//
-  void zvtop_iso(const LHCb::Particle* dau, const std::vector<LHCb::RecVertex*> vertices, const LHCb::VertexBase* primary);//
-  Gaudi::XYZPoint close_point(Gaudi::XYZPoint o, Gaudi::XYZPoint o_mu, Gaudi::XYZVector p_mu);// 
-  StatusCode ZViso( );//
-
-
+  virtual StatusCode calculateRelatedInfo( const LHCb::Particle* ,
+                                       const LHCb::Particle*	);
+  virtual LHCb::RelatedInfoMap* getInfo(void);
+  
+  virtual std::string infoPath(void);
 
   virtual ~RelInfoBstautauZVisoBDT( ); ///< Destructor
   
   virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode finalize ();
   
+  // virtual StatusCode finalize();
+  
+
+  typedef std::vector<LHCb::RecVertex*> RecVertexVector;
+  typedef std::vector<const LHCb::Track*> TrackVector;
+
 protected:
 private:
 
@@ -244,7 +229,18 @@ private:
   
   TMVA::Reader* m_reader_ZViso;//= new TMVA::Reader( "!Color:!Silent" );
    
- 
+  
+
+  StatusCode Initialize_tracksVF_ZVtop();
+  StatusCode IsoTopo2Body(const LHCb::Particle *part);  //Isolation of Mathieu
+  double VfAlongTrack(double zB, const LHCb::Particle* Part, double delta, float* z_f_m );//
+  int VfProfile(double zB,const LHCb::Particle* Part, std::vector<double> *v_Vf, std::vector<double>* v_Position);//
+  StatusCode GMPiso(const LHCb::Particle *part );//
+  std::vector<LHCb::RecVertex*> zvtop(const LHCb::Particle* dau1, const LHCb::Particle* dau2, const LHCb::Particle* dau3 );//
+  void zvtop_iso(const LHCb::Particle* dau, const std::vector<LHCb::RecVertex*> vertices, const LHCb::VertexBase* primary);//
+  Gaudi::XYZPoint close_point(Gaudi::XYZPoint o, Gaudi::XYZPoint o_mu, Gaudi::XYZVector p_mu);// 
+  StatusCode ZViso( );//
+
   
 
 };
