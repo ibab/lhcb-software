@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2014-09-24 - Alex Shires
+ - additions for Hlt1ElectronTrack and Hlt1TrackElectron lines
+
 ! 2014-09-02 Sebastian Neubert
  - Added TrackAllL0Block line
 

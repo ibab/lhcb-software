@@ -143,7 +143,8 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1SingleElectronFromPi0Decision"     :  406,
     "Hlt1SingleElectronNoIPDecision"        :  407,
     "Hlt1SingleElectronWithIPDecision"      :  408,
-
+    "Hlt1TrackElectronDecision"             :  409,
+ 
     # CO
     "Hlt1CosmicOTDecision"                  :  480,
     # MiniBias
@@ -223,7 +224,12 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesVertexDisplVertex'       : 10123,
     'VeloCandidatesVertexDisplVertexPS'     : 10124,
     'Hlt1VertexDisplVertexTracks'           : 10125,
-    'VeloCandidatesMBMicroBiasLowMultVelo'  : 10127
+    'VeloCandidatesMBMicroBiasLowMultVelo'  : 10127,
+    #Electron additions
+    'VeloCandidatesElectronTrack'           : 10131,
+    'CaloCandidatesElectronTrack'           : 10132,
+    'VeloCandidatesTrackElectron'           : 10133,
+    'CaloCandidatesTrackElectron'           : 10134
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2
