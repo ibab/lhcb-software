@@ -5,6 +5,11 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-09-24 - Alex Shires
+ - adding track electron (track with electron ID) for future dev
+ - adding electron plus track line for 2015
+ - consistent with changed to HltTracking and HltConf 
+
 ! 2014-09-02 - Sebastian Neubert
  - added Hlt1TrackAllL0Block line performing Velo + VeloTT + Forward en block
 

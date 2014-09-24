@@ -15,7 +15,43 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
         ,'SingleElectronNoIP_Velo_NHits'           :     0 #OFF
         ,'SingleElectronNoIP_Velo_Qcut'            :   999 #OFF
         ,'SingleElectronNoIP_GEC'                  : 'Loose'
-        ,'L0Channels'                              : { 'SingleElectronNoIP'   : ( 'Electron', ) }
+        #ElectronTrack cuts
+        ,'ElectronTrack_L0ElectronThreshold'  :   254
+        ,'ElectronTrack_TrChi2'               :     4
+        ,'ElectronTrack_TrNTHits'             :     0 #OFF
+        ,'ElectronTrack_Velo_NHits'           :     0 #OFF
+        ,'ElectronTrack_Velo_Qcut'            :   999 #OFF
+        ,'ElectronTrack_GEC'                  : 'Loose'
+        ,'ElectronTrack_P'                    :  6000
+        ,'ElectronTrack_PT'                   :  500
+        ,'ElectronTrack_VxDOCA'               :  0.2
+        ,'ElectronTrack_VxChi2'               :   25.
+        ,'ElectronTrack_M'                    : 100.
+        ,'ElectronTrack_IP'                   :  0.1
+        ,'ElectronTrack_IPChi2'               :  9
+
+        #TrackElectron cuts
+        ,'TrackElectron_L0ElectronThreshold'  :   254
+        ,'TrackElectron_TrChi2'               :     4
+        ,'TrackElectron_TrNTHits'             :     0 #OFF
+        ,'TrackElectron_Velo_NHits'           :     0 #OFF
+        ,'TrackElectron_Velo_Qcut'            :   999 #OFF
+        ,'TrackElectron_GEC'                  : 'Loose'
+        ,'TrackElectron_P'                    :  6000
+        ,'TrackElectron_PT'                   :  500
+        ,'TrackElectron_IP'                   :  0.1
+        ,'TrackElectron_IPChi2'               :  9
+        
+
+        ,'L0Channels'                              : { 'SingleElectronNoIP'   : ( 'Electron', ) 
+                                                     , 'ElectronTrack'        : ( 'Electron', ) 
+                                                     , 'TrackElectron'           : ( 'Electron', ) 
+                                                     }
+        ,'Priorities'                              : { 'SingleElectronNoIP'   : 1 
+                                                     , 'ElectronTrack'        : 2 
+                                                     , 'TrackElectron'           : 3  
+                                                     }
+
         }
     
     def localise_props( self, prefix ):
@@ -42,15 +78,33 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
         unit.Code = code
         return unit
 
+    #make into a function
+    def getCaloUnit( self, properties ) :
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.Hlt1TrackUpgradeConf import L0CaloCandidates
+        caloUnit = HltUnit(
+            'Hlt1%(name)sL0CaloStreamer' % properties,
+            Preambulo = [ L0CaloCandidates( properties[ 'name' ] ) ],
+            Code = """
+            L0CaloCandidates
+            >>  TC_CUT( LoKi.L0.L0CaloCut( 0, %(L0ElectronThreshold)s ), 0 )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass L0CaloCut', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nCaloCandidates' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( '%(CaloCandidates)s' )
+            >> ~TC_EMPTY
+            """ % properties
+            )
+        return caloUnit
+
     def singleElectron_preambulo( self, properties ):
         from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
                                                        TightForward, FitTrack )
-        from HltTracking.Hlt1TrackMatchConf import MatchVeloL0Calo
+        from HltTracking.Hlt1TrackMatchConf import FilterVeloL0Calo
         from Configurables import Hlt__L0Calo2Candidate
 
         ## define the preambulo 
         preambulo = [ VeloCandidates( properties[ 'name' ] ),
-                      MatchVeloL0Calo( properties[ 'CaloCandidates' ] ),
+                      FilterVeloL0Calo( properties[ 'CaloCandidates' ] ),
                       TightForward,
                       FitTrack ]
         return preambulo
@@ -58,8 +112,42 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
     def singleElectron_streamer( self, properties ):
         from Configurables import LoKi__HltUnit as HltUnit
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from HltTracking.Hlt1TrackUpgradeConf import L0CaloCandidates
         properties[ 'CaloCandidates' ] = 'ElectronCandidates'
+
+        trackUnit = HltUnit(
+            'Hlt1%(name)sTrackStreamer' % properties,
+            ##OutputLevel = 1 ,
+            Preambulo = self.singleElectron_preambulo( properties ),
+            Code = """
+            VeloCandidates
+            >>  FilterVeloL0Calo
+            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s ) )
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  TightForward
+            >>  (TrTNORMIDC > %(TrNTHits)s ) 
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
+            >>  FitTrack
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrCHI2PDOF < %(TrChi2)s ) )
+            >>  SINK( 'Hlt1%(name)sDecision' )
+            >> ~TC_EMPTY
+            """ % properties
+            )
+        return [ Hlt1GECUnit( properties[ 'GEC' ] )
+                , self.getCaloUnit( properties )
+                , trackUnit ]
+
+    def singleTrackElectron_streamer( self, properties ):
+        from Configurables import LoKi__HltUnit as HltUnit
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        properties[ 'CaloCandidates' ] = 'ElectronCandidates'
+
+        from Configurables import LoKi__HltUnit as HltUnit
+        from HltTracking.Hlt1TrackUpgradeConf import L0CaloCandidates
         caloUnit = HltUnit(
             'Hlt1%(name)sL0CaloStreamer' % properties,
             Preambulo = [ L0CaloCandidates( properties[ 'name' ] ) ],
@@ -79,10 +167,8 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.singleElectron_preambulo( properties ),
             Code = """
             VeloCandidates
-            >>  MatchVeloL0Calo
-            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s )  )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s )   \
+                & ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) )  
             >>  TightForward
             >>  (TrTNORMIDC > %(TrNTHits)s ) 
             >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
@@ -91,12 +177,80 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
             >>  FitTrack
             >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
-            >>  ( TrCHI2PDOF < %(TrChi2)s )
+            >>  ( ( TrCHI2PDOF < %(TrChi2)s )\
+                & ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) ) 
+            >>  FilterVeloL0Calo
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
             >>  SINK( 'Hlt1%(name)sDecision' )
             >> ~TC_EMPTY
             """ % properties
             )
-        return [ Hlt1GECUnit( properties[ 'GEC' ] ), caloUnit, trackUnit ]
+        from HltTracking.HltPVs import PV3D
+        return [ Hlt1GECUnit( properties[ 'GEC' ] )
+                , PV3D()
+                , trackUnit ]
+
+
+    def singleElectronPlusTrack_preambulo( self, properties ) :
+        from HltTracking.Hlt1TrackUpgradeConf import LooseForward
+        from HltTracking.Hlt1TrackMatchConf import FilterVeloL0Calo
+        from HltTracking.Hlt1TrackMatchConf import MatchVeloL0CaloCands
+        ## define some "common" preambulo 
+        preambulo = self.singleElectron_preambulo( properties ) + \
+             [ "VertexConf = LoKi.Hlt1.VxMakerConf( %(VxDOCA)f * mm, %(VxChi2)f )" % properties,
+               "MakeVertex = TC_VXMAKE4( '', VertexConf )",
+               "from LoKiPhys.decorators import RV_MASS" , 
+               MatchVeloL0CaloCands( properties[ 'CaloCandidates' ] ),
+               LooseForward ]
+        return preambulo
+
+    def singleElectronPlusTrack_streamer( self, properties ) :
+        from Configurables import LoKi__HltUnit as HltUnit
+        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
+        properties[ 'CaloCandidates' ] = 'ElectronCandidates'
+
+        trackUnit = HltUnit(
+            'Hlt1%(name)sTrackStreamer' % properties,
+            ##OutputLevel = 1 ,
+            Preambulo = self.singleElectronPlusTrack_preambulo( properties ),
+            Code = """
+            VeloCandidates
+            >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & ( TrNVELOMISS < %(Velo_Qcut)s )   \
+                & ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) )  
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass match', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE    , 'nMatched' , LoKi.Monitoring.ContextSvc ) )
+            >>  LooseForward
+            >>  (TrTNORMIDC > %(TrNTHits)s ) 
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass forward', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nForward' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrPT > %(PT)s * MeV ) & ( TrP  > %(P)s  * MeV ) )
+            >>  FitTrack
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass fit', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nFitted' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( ( TrCHI2PDOF < %(TrChi2)s )\
+                & ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) ) 
+            >>  MakeVertex
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass vertex', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nVertices' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( RV_MASS ( 'e+' , 'e-' ) > %(M)s * MeV ) 
+            >>  tee  ( monitor( TC_SIZE > 0, '# pass mass', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nPassedMassCut' , LoKi.Monitoring.ContextSvc ) )
+            >>  ( RV_TrHAS( MatchVeloL0CaloCands ) ) 
+            >>  tee  ( monitor( TC_SIZE > 0, '# has electron', LoKi.Monitoring.ContextSvc ) )
+            >>  tee  ( monitor( TC_SIZE , 'nHasElectron' , LoKi.Monitoring.ContextSvc ) )
+            >>  SINK( 'Hlt1%(name)sDecision' )
+            >> ~TC_EMPTY
+            """ % properties
+            )
+        gec = properties[ 'GEC' ]
+        from HltTracking.HltPVs import PV3D
+        return [ Hlt1GECUnit( gec )
+                , PV3D()
+                    , trackUnit ]
+
+
+
 
     def build_line( self, name, streamer ):
         from HltLine.HltLine import Hlt1Line
@@ -114,6 +268,8 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
 
     def __apply_configuration__( self ) : 
          ## Create the lines
-        to_build = [ ( 'SingleElectronNoIP',   self.singleElectron_streamer ) ]
+        to_build = [ ( 'SingleElectronNoIP', self.singleElectron_streamer ) ]
+        to_build += [ ( 'TrackElectron',        self.singleTrackElectron_streamer ) ]
+        to_build += [ ( 'ElectronTrack',     self.singleElectronPlusTrack_streamer ) ]
         for line, streamer in to_build:
             self.build_line( line, streamer )
