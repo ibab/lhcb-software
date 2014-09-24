@@ -57,6 +57,7 @@
   <class name = "LoKi::Hlt1::UpgradeMultiTracks"  />
   <class name = "LoKi::Hlt1::UpgradeVertices"     />
   <class name = "LoKi::Hlt1::FilterTracks"        />
+  <class name = "LoKi::Hlt1::MatchTracks"        />
 
   <!-- Hlt::Stage -->
 

@@ -217,6 +217,8 @@ TC_MATCH2     = LoKi.Hlt1.Match2
 TC_MATCHFLTR  = LoKi.Hlt1.FilterMatch
 ## @see LoKi::Cuts::TC_MATCH2
 TC_MATCHFLTR2 = LoKi.Hlt1.FilterMatch2
+## @see LoKi::Cuts::TC_MATCHTOOL
+TC_MATCHCANDS = LoKi.Hlt1.MatchTracks
 
 # =============================================================================
 ## vertex making 

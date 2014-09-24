@@ -32,6 +32,7 @@
 #include "LoKi/TrUpgrade.h"
 #include "LoKi/TrMatch.h"
 #include "LoKi/TrFilter.h"
+#include "LoKi/MatchTracks.h"
 #include "LoKi/VxMaker.h"
 #include "LoKi/UpgradeVertices.h"
 #include "LoKi/Hlt1Wrappers.h"
