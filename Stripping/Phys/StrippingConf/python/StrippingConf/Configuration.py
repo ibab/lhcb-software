@@ -21,7 +21,9 @@ class StrippingConf ( object ) :
                   name = "",
                   TESPrefix = 'Strip', 
                   HDRLocation = 'Phys/DecReports', 
-                  Streams = [], 
+                  Streams = [],
+                  DSTStreams = [],
+                  MicroDSTStreams = [],
                   BadEventSelection = None, 
                   AcceptBadEvents = True,
                   MaxCandidates = None, 
@@ -40,6 +42,8 @@ class StrippingConf ( object ) :
         self._sequence = None
         self._tesPrefix = TESPrefix
         self._hdrLocation = HDRLocation
+        self.DSTStreams = DSTStreams
+        self.MicroDSTStreams = MicroDSTStreams
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
@@ -54,7 +58,8 @@ class StrippingConf ( object ) :
         if self._verbose:
           self.checkRawEventRequests()
           self.checkMDSTFlag()
-          self.checkFlavourTagging()
+        
+        self.checkFlavourTagging()
 
 	from Gaudi.Configuration import appendPostConfigAction
 	appendPostConfigAction ( defaultToolConfigCheck )
@@ -66,7 +71,10 @@ class StrippingConf ( object ) :
         for stream in self.activeStreams() : stream.checkMDSTFlag()
 
     def checkFlavourTagging(self) :
-        for stream in self.activeStreams() : stream.checkFlavourTagging()
+        for stream in self.activeStreams() : 
+          if stream.name() in self.DSTStreams : stream.checkFlavourTagging(disableFT=True,verbose=self._verbose)
+          elif stream.name() in self.MicroDSTStreams : stream.checkFlavourTagging(disableFT=False,verbose=self._verbose)
+          else : stream.checkFlavourTagging(disableFT=False,verbose=self._verbose)
 
     def checkAppendedLines (self) : 
         """

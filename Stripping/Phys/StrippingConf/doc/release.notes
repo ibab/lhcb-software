@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-09-24 - Andrea Contu
+ - Modified how Flavour Tagging is handled in StrippingStream and StrippingConf
+   Flavour tagging is checked forcedly disabled (is enabled) for lines going to full DST streams
+
 ! 2014-09-11 - Anton Poluektov 
  - Fix bug in StrippingLine with RelatedInfoFilter
    (which was added after every single entry of RelatedInfoTool 

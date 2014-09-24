@@ -226,11 +226,14 @@ class StrippingStream ( object ) :
                 log.warning("Stream='"+self.name()+"' Line='"+line.name()+
                             "' Requests to go to MDST.DST")
 
-    def checkFlavourTagging(self) :
+    def checkFlavourTagging(self,disableFT=False,verbose=False) :
         for line in self.lines :
             if line._EnableFlavourTagging :
-                log.warning("Stream='"+self.name()+"' Line='"+line.name()+
+                if verbose: log.warning("Stream='"+self.name()+"' Line='"+line.name()+
                             "' Requests to run FlavourTagging")
+                if disableFT:
+                    line._EnableFlavourTagging = False
+                    log.warning("Stream='"+self.name()+"' Line='"+line.name()+"' Requests Flavor Tagging but is not assigned to a micro-dst stream, Flavour Tagging has been disabled")
 
     def checkPVRefit(self) :
         for line in self.lines :
