@@ -44,6 +44,12 @@ dieLL.DiElectronPtMin = 200.*MeV
 locations.update( updateDoD(dieLL) )
 StdDiElectronFromTracks = dieLL
 
+# gamma version (clone)
+StdDiElectronGamma =  DiElectronMaker('StdDiElectronFromTracks').clone("StdDiElectronGamma")
+StdDiElectronGamma.Particle = "gamma"
+locations.update(updateDoD( StdDiElectronGamma ))
+
+
 ## ============================================================================
 if '__main__' == __name__ :
 

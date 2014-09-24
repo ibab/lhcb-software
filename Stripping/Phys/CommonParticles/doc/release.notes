@@ -8,6 +8,12 @@
 !
 !-----------------------------------------------------------------------------
 
+
+
+! 2014-09-22 - Olivier Deschamps
+  - move to Loki::VertexFitter in DiElectron making
+
+
 ! 2014-09-04 - Julien Cogan
  - Rename StdLooseDetachedTau3pi to StdTightDetachedTau3pi and restore previous
    version of the loose selection

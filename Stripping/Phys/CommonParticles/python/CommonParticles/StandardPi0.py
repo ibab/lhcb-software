@@ -22,6 +22,11 @@ _locations.update ( locations )
 from CommonParticles.StdLooseResolvedPi0 import *
 _locations.update ( locations )
 
+from CommonParticles.StdLooseDalitzPi0 import *
+_locations.update ( locations )
+
+
+
 
 # redefine the locations 
 locations = _locations

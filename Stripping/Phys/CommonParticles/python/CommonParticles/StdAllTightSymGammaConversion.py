@@ -22,10 +22,12 @@ __all__ = (
 from Gaudi.Configuration   import *
 from CommonParticles.Utils import *
 from GaudiKernel.SystemOfUnits import *
+from Configurables import ( DiElectronMaker, ProtoParticleCALOFilter,
+                            ParticleTransporter )
+from Configurables import LoKi__VertexFitter 
 
 
 ###--- Long pair
-from Configurables import DiElectronMaker,ProtoParticleCALOFilter
 dieSymLL = DiElectronMaker('StdAllTightSymGammaLL')
 dieSymLL.DecayDescriptor = "gamma -> e+ e-"
 selector = trackSelector ( dieSymLL , trackTypes = [ "Long"]) 
@@ -34,7 +36,7 @@ dieSymLL.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'0.0'"]
 dieSymLL.DeltaY = 3.
 dieSymLL.DeltaYmax = 200 * mm
 dieSymLL.DiElectronMassMax = 100.*MeV
-dieSymLL.DiElectronPtMin = 400.*MeV
+dieSymLL.DiElectronPtMin = 200.*MeV
 dieSymLL.SymetricPair = True
 
 locations = updateDoD ( dieSymLL )
@@ -49,8 +51,19 @@ dieSymDD.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'0.0'"]
 dieSymDD.DeltaY = 3.
 dieSymDD.DeltaYmax = 200 * mm
 dieSymDD.DiElectronMassMax = 100.*MeV
-dieSymDD.DiElectronPtMin = 400.*MeV
+dieSymDD.DiElectronPtMin = 200.*MeV
 dieSymDD.SymetricPair = True
+
+#-- improved vertex fitter settings
+dieSymDD.UseCombinePair = True
+dieSymDD.addTool( ParticleTransporter, name='TransporterDie' )
+dieSymDD.TransporterDie.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
+
+dieSymDD.ParticleCombiners.update( { "" : "LoKi::VertexFitter"} )
+dieSymDD.addTool( LoKi__VertexFitter )
+dieSymDD.LoKi__VertexFitter.addTool( ParticleTransporter, name='Transporter' )
+dieSymDD.LoKi__VertexFitter.Transporter.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
+dieSymDD.LoKi__VertexFitter.DeltaDistance = 100 * mm
 
 locations.update( updateDoD ( dieSymDD ) )
 StdAllTightSymGammaDD=dieSymDD

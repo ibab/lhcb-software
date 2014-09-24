@@ -23,7 +23,8 @@ from Gaudi.Configuration   import *
 from CommonParticles.Utils import *
 from GaudiKernel.SystemOfUnits import *
 from Configurables import ( DiElectronMaker, ProtoParticleCALOFilter,
-                            OfflineVertexFitter, ParticleTransporter )
+                            ParticleTransporter )
+from Configurables import LoKi__VertexFitter 
 
 ###--- Long pair
 dieLL = DiElectronMaker('StdAllLooseGammaLL')
@@ -52,11 +53,12 @@ dieDD.DiElectronPtMin = 200.*MeV
 dieDD.UseCombinePair = True
 dieDD.addTool( ParticleTransporter, name='TransporterDie' )
 dieDD.TransporterDie.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
-dieDD.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-dieDD.addTool( OfflineVertexFitter )
-dieDD.OfflineVertexFitter.addTool( ParticleTransporter, name='Transporter' )
-dieDD.OfflineVertexFitter.Transporter.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
-dieDD.OfflineVertexFitter.maxDeltaZ = 100 * mm
+
+dieDD.ParticleCombiners.update( { "" : "LoKi::VertexFitter"} )
+dieDD.addTool( LoKi__VertexFitter )
+dieDD.LoKi__VertexFitter.addTool( ParticleTransporter, name='Transporter' )
+dieDD.LoKi__VertexFitter.Transporter.TrackExtrapolator = "TrackRungeKuttaExtrapolator"
+dieDD.LoKi__VertexFitter.DeltaDistance = 100 * mm
 
 locations.update( updateDoD ( dieDD ))
 StdAllLooseGammaDD=dieDD
