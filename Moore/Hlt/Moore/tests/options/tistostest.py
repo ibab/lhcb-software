@@ -15,6 +15,7 @@ Moore().Simulation = True
 Moore().CheckOdin = False
 Moore().EnableDataOnDemand = True
 Moore().WriterRequires = []
+Moore().RemoveInputHltRawBanks=True
 Moore().DDDBtag   = "dddb-20130929-1"
 Moore().CondDBtag = "sim-20131023-vc-md100"
 
@@ -59,6 +60,8 @@ gaudi.initialize()
 gaudi.algorithm('Hlt').Enable = False
 gaudi.algorithm('KillTrigRawEvent').Enable = False
 triggerTisTosTool = gaudi.toolsvc().create('TriggerTisTos', interface='ITriggerTisTos')
+triggerTisTosTool1 = gaudi.toolsvc().create('Hlt1TriggerTisTos', interface='ITriggerTisTos')
+triggerTisTosTool2 = gaudi.toolsvc().create('Hlt2TriggerTisTos', interface='ITriggerTisTos')
 tes = gaudi.evtsvc()
 
 hlt1names = [ 
@@ -91,8 +94,12 @@ while n<evtmax:
     gaudi.executeEvent()
     gaudi.algorithm("KillTrigRawEvent").execute()
     gaudi.algorithm("Hlt").execute()
-    #if i==0:
-    #    tes.dump()
+    if i==0:
+        tes.dump()
+
+    split = True
+    if not tes["Hlt1/SelReports"]:
+        split = False
 
     if not tes['/Event/DAQ/RawEvent']:
         print "End of file"
@@ -104,22 +111,40 @@ while n<evtmax:
     for cand in cands:
         i+=1
         triggerTisTosTool.setOfflineInput(cands[0])
+        triggerTisTosTool1.setOfflineInput(cands[0])
+        triggerTisTosTool2.setOfflineInput(cands[0])
         #
         for trigger in hlt1names:
-            triggerTisTosTool.setTriggerInput(trigger)
-            classified = triggerTisTosTool.tisTosTobTrigger()
-            if classified.decision() == True:
-                count_hlt1_Dec[trigger]+=1
-            if classified.tos() == True:
-                count_hlt1_TOS[trigger]+=1
+            if split == True:
+                triggerTisTosTool1.setTriggerInput(trigger)
+                classified = triggerTisTosTool1.tisTosTobTrigger()
+                if classified.decision() == True:
+                    count_hlt1_Dec[trigger]+=1
+                if classified.tos() == True:
+                    count_hlt1_TOS[trigger]+=1
+            else:
+                triggerTisTosTool.setTriggerInput(trigger)
+                classified = triggerTisTosTool.tisTosTobTrigger()
+                if classified.decision() == True:
+                    count_hlt1_Dec[trigger]+=1
+                if classified.tos() == True:
+                    count_hlt1_TOS[trigger]+=1 
         #
         for trigger in hlt2names:
-            triggerTisTosTool.setTriggerInput(trigger)
-            classified = triggerTisTosTool.tisTosTobTrigger()
-            if classified.decision() == True:
-                count_hlt2_Dec[trigger]+=1
-            if classified.tos() == True:
-                count_hlt2_TOS[trigger]+=1
+            if split == True:
+                triggerTisTosTool2.setTriggerInput(trigger)
+                classified = triggerTisTosTool2.tisTosTobTrigger()
+                if classified.decision() == True:
+                    count_hlt2_Dec[trigger]+=1
+                if classified.tos() == True:
+                    count_hlt2_TOS[trigger]+=1
+            else:
+                triggerTisTosTool.setTriggerInput(trigger)
+                classified = triggerTisTosTool.tisTosTobTrigger()
+                if classified.decision() == True:
+                    count_hlt2_Dec[trigger]+=1
+                if classified.tos() == True:
+                    count_hlt2_TOS[trigger]+=1
 # print efficiencies
 print "Hlt1 efficiencies"
 print "Trigger"+"   "+"Eff. (Decision)"+"   "+"Eff. (TOS)"

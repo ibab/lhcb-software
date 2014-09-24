@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-09-24
+ - Made TISTOS test split aware
+
 ! 2014-09-23 Sebastian Neubert
  - updated test references after small changes to forward tracking algos 
 
