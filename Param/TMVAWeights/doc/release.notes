@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-09-24 - Ricardo Vazquez Gomez
+ - changed name of doca to log_doca in BsMuMu_TrackIsolationBDTXXX
+
 ! 2014-09-24 - Alex Shires
  - changed name of log_trk_ips to be consistent in Bs2MuMu_TrackIsolationBDT weight file
 

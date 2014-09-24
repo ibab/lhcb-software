@@ -58,7 +58,7 @@
     <Variable VarIndex="0" Expression="PVdist" Label="PVdist" Title="PVdist" Unit="mm" Internal="PVdist" Type="F" Min="-3.71738086e+04" Max="2.43797637e+04"/>
     <Variable VarIndex="1" Expression="SVdist" Label="SVdist" Title="SVdist" Unit="mm" Internal="SVdist" Type="F" Min="-3.72316562e+04" Max="2.43701973e+04"/>
     <Variable VarIndex="2" Expression="fc" Label="fc" Title="fc" Unit="" Internal="fc" Type="F" Min="3.61404265e-04" Max="9.95820463e-01"/>
-    <Variable VarIndex="3" Expression="doca" Label="doca" Title="doca" Unit="mm" Internal="doca" Type="F" Min="-1.57132206e+01" Max="5.01501513e+00"/>
+    <Variable VarIndex="3" Expression="log_doca" Label="log_doca" Title="log_doca" Unit="mm" Internal="log_doca" Type="F" Min="-1.57132206e+01" Max="5.01501513e+00"/>
     <Variable VarIndex="4" Expression="angle" Label="angle" Title="angle" Unit="rad" Internal="angle" Type="F" Min="5.34912833e-05" Max="7.58942246e-01"/>
     <Variable VarIndex="5" Expression="log_trk_ips" Label="log_trk_ips" Title="log_trk_ips" Unit="" Internal="log_trk_ips" Type="F" Min="-7.21995258e+00" Max="6.65234232e+00"/>
   </Variables>
