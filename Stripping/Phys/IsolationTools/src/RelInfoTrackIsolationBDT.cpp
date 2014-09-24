@@ -267,7 +267,7 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
             m_varmap.insert( "PVdist", var_PVdist ) ;
             m_varmap.insert( "SVdist", var_SVdist ) ;
             m_varmap.insert( "angle", var_angle ) ;
-            m_varmap.insert( "doca", var_log_doca ) ;
+            m_varmap.insert( "log_doca", var_log_doca ) ;
             m_varmap.insert( "fc", var_fc ) ;
             m_varmap.insert( "log_trk_ips", log_trk_ips ) ; // (a)
         }
@@ -294,7 +294,7 @@ bool RelInfoTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
             verbose() << "PVdist"<<'\t' << var_PVdist <<  endmsg;
             verbose() << "SVdist"<<'\t' << var_SVdist <<  endmsg;
             verbose() << "angle"<<'\t' << var_angle <<  endmsg;
-            verbose() << "doca"<<'\t' << var_log_doca <<  endmsg;
+            verbose() << "log_doca"<<'\t' << var_log_doca <<  endmsg;
             verbose() << "fc value"<<'\t' << var_fc <<  endmsg;
             if (m_variables>=1) { 
                 verbose() << "log_trk_ips"<<'\t' << log_trk_ips <<  endmsg;

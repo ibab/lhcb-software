@@ -2,6 +2,9 @@
 ! Package     : IsolationTools
 ! Responsible : Alex Shires
 !============================================================================
+! 2014-09-24 - Ricardo Vazquez Gomez
+ - changed doca to log_doca in RelInfoTrackIsolationBDT.cpp 
+
 ! 2014-09-23 - Alex Shires
  - changed RelInfoTrackIsolationBDT to use logipchi2any for options 1 and 2
 
