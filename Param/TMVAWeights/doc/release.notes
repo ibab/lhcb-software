@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-09-24 - Alex Shires
+ - changed name of log_trk_ips to be consistent in Bs2MuMu_TrackIsolationBDT weight file
+
 ! 2014-09-23 - Ricardo Vazquez Gomez
  - Updated name of IsolationTools_TrackIsolation_v1r4.xml to BsMuMu_TrackIsolationBDT6varsA_v1r4.xml
  - Added four xml files for BsMuMu used with the TrackIsolationBDT tool with 6 (version B), 9 13 and 15 variables 
