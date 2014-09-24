@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-24 - Ronan Wallace
+ - Document updates to Ditau config in S21(r1).
+
 ! 2014-09-23 - Andrea Contu
  - Updated stripping21 and stripping21r1 dbase
 
