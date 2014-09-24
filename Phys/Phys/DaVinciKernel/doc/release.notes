@@ -4,6 +4,10 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2014-09-24 - Chris Jones
+ - Remove C++11 features from Kernel/ParticleFilters.h, to fix problems with
+   ROOT5 based builds.
+
 ! 2014-09-04 - Chris Jones
  - Switch from boost::assign to c++11 initialiser lists for static maps in
    DVCommonBase.icpp.

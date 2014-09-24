@@ -84,11 +84,12 @@ namespace DaVinci
     LHCb::Particle::ConstVector& output    ) 
   {
     std::size_t added = 0 ;
-    for ( const LHCb::Particle * p : input )
+    for ( LHCb::Particle::ConstVector::const_iterator ip = input.begin() ; 
+          input.end ()  != ip ; ++ip ) 
     {
-      if ( criterion(p) ) 
+      if ( criterion (*ip) ) 
       {
-        output.push_back(p) ;
+        output.push_back ( *ip ) ;
         ++added ;
       }
     }
@@ -159,7 +160,8 @@ namespace DaVinci
     const PREDICATE&                   criterion , 
     LHCb::Particle::ConstVector&       output    ) 
   {
-    return filter( LHCb::Particle::Range ( input ) , criterion , output ) ;
+    return filter 
+      ( LHCb::Particle::Range ( input ) , criterion , output ) ;
   }
   // ==========================================================================
   /** split the particles into two containers according some criteria
@@ -234,17 +236,16 @@ namespace DaVinci
     LHCb::Particle::ConstVector& output2   ) 
   {
     std::size_t added = 0 ;
-    for ( const LHCb::Particle * p : input )
+    for ( LHCb::Particle::ConstVector::const_iterator ip = input.begin() ; 
+          input.end ()  != ip ; ++ip ) 
     {
-      if ( criterion(p) ) 
+      if ( criterion (*ip) ) 
       {
-        output.push_back(p) ;
+        output.push_back ( *ip ) ;
         ++added ;
       }
-      else 
-      { 
-        output2.push_back(p) ; 
-      }
+      else { output2.push_back ( *ip ) ; }
+      
     }
     return added ;
   }
@@ -320,7 +321,8 @@ namespace DaVinci
     LHCb::Particle::ConstVector&       output    ,
     LHCb::Particle::ConstVector&       output2   ) 
   {
-    return filter( LHCb::Particle::Range ( input ) , criterion , output , output2 ) ;
+    return filter 
+      ( LHCb::Particle::Range ( input ) , criterion , output , output2 ) ;
   }
   // ==========================================================================
   /** filter the particles according to some criteria
