@@ -4,6 +4,11 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-09-24 - Alex Shires
+ - changed MatchVel0L0Calo to FilterVeloL0Calo (better english description!)
+ - added FilterVel0L0CaloCands algorithm to work with filtering functor
+ - added Track2L0Calo tool into framework for future development
+
 ! 2014-09-22 - Sebastian Neubert
  - removed input into forward merger for the case that 
    the track report decoder is not running and that container is missing
