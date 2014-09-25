@@ -4,6 +4,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-09-25 - Stefano Perazzini
+ - Added attribute GlobalFlavourTagging (default=True) to StrippingConf class.
+   If the value is True the flavour tagging will be run using a unique instance
+   of BTagging, otherwise a per-line instantiation will be done.
+
 ! 2014-09-24 - Andrea Contu
  - Modified how Flavour Tagging is handled in StrippingStream and StrippingConf
    Flavour tagging is checked forcedly disabled (is enabled) for lines going to full DST streams

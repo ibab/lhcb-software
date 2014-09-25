@@ -24,6 +24,7 @@ class StrippingConf ( object ) :
                   Streams = [],
                   DSTStreams = [],
                   MicroDSTStreams = [],
+                  GlobalFlavourTagging = True,
                   BadEventSelection = None, 
                   AcceptBadEvents = True,
                   MaxCandidates = None, 
@@ -44,13 +45,25 @@ class StrippingConf ( object ) :
         self._hdrLocation = HDRLocation
         self.DSTStreams = DSTStreams
         self.MicroDSTStreams = MicroDSTStreams
+        self._GlobalFlavourTagging = GlobalFlavourTagging
+        self._taggingLocations = []
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
 
+        if self._GlobalFlavourTagging:
+          for stream in Streams:
+            for line in stream.lines:
+              if line._EnableFlavourTagging: 
+                line._EnableFlavourTagging = False
+                self._taggingLocations += [ line.outputLocation().replace("/Particles","") ]
+
         for stream in Streams :
             self.appendStream(stream)
+
+        if self._GlobalFlavourTagging:
+            self.appendFlavourTagging()
 
 	self.checkAppendedLines()
 	self.checkUniqueOutputLocations()
@@ -193,6 +206,13 @@ class StrippingConf ( object ) :
 	stream.createConfigurables()
 	self._streams.append(stream)
         self._appendSequencer(stream)
+
+    def appendFlavourTagging(self) :
+        from Configurables import BTagging, GaudiSequencer
+        btag = BTagging( "BTag_Global",Inputs = self._taggingLocations )
+        taggingSeq = GaudiSequencer("BTaggingSequence")
+        taggingSeq.Members += [btag]
+        self._streamSequencers.append(taggingSeq)
         
     def _appendSequencer(self, stream) :
         self._streamSequencers.append(stream.sequence())
