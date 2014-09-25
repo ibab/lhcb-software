@@ -62,11 +62,11 @@ confdict={
     'Prescale_NonPhys'               : 0.1,
     'Postscale'   : 1.0 ,
     #B cuts
-    'B_BPVDIRA'       : 0. ,
+    'B_BPVDIRA'       : 0.995 ,
     #B combination cuts
     'B_DeltaM_low'       : -2579.0, #MeV
     'B_DeltaM_high'      : 300.0,   #MeV
-    'B_DOCAMAX'          : .15 , #mm
+    'B_DOCAMAX'          : 0.15 , #mm
     'B_upperDeltaM_low'  : 720.0,   #MeV
     'B_upperDeltaM_high' : 1721.0,  #MeV
     #D kaon cuts
@@ -74,40 +74,40 @@ confdict={
     'Dplus_K_PT'      : 1500.0, #MeV
     'Ds_K_PT'         : 1500.0, #MeV
     'D_K_TRCHI2DOF'   : 30.0,
-    'D_K_IPCHI2'      : 0.0,
-    'D_K_PIDK'        : -10.0,
-    'Dplus_K_PIDK'    : 0.0,
-    'Dplus_K_TRPCHI2' : 0.05,
+    'D_K_IPCHI2'      : 10.0,
+    'D_K_PIDK'        : -3 ,
+    'Dplus_K_PIDK'    : 3,
+    'Dplus_K_TRPCHI2' : 0.1,
     #D pion cuts
     'D_Pi_PT'         : 150.0, # MeV
-    'D_Pi_TRCHI2'     : 30.0,
-    'D_Pi_IPCHI2'     : 0.,
+    'D_Pi_TRCHI2'     : 3.0,
+    'D_Pi_IPCHI2'     : 10.,
     'D_Pi_PIDK'       : 50.0,
-    'Dplus_Pi_TRPCHI2' : 0.05,
+    'Dplus_Pi_TRPCHI2' : 0.1,
       #Lc kaon cuts
     'Lc_K_PT'          : 150.0,  #MeV
-    'Lc_K_TRCHI2DOF'   : 30.0,
-    'Lc_K_IPCHI2'      : 0.0,
+    'Lc_K_TRCHI2DOF'   : 3.0,
+    'Lc_K_IPCHI2'      : 10.0,
     'Lc_K_PIDK'        : 3.0,    
-    'Lc_K_TRPCHI2' : 0.,
+    'Lc_K_TRPCHI2' : 0.01,
         #Lc pion cuts
     'Lc_Pi_PT'         : 150.0, # MeV
-    'Lc_Pi_TRCHI2'     : 30.0,
-    'Lc_Pi_IPCHI2'     : 0.0,
+    'Lc_Pi_TRCHI2'     : 3.0,
+    'Lc_Pi_IPCHI2'     : 10.0,
     'Lc_Pi_PIDK'       : 50.0,
-    'Lc_Pi_TRPCHI2' : 0.,
+    'Lc_Pi_TRPCHI2' : 0.01,
       #Lc proton cuts
     'Lc_p_PT'          : 150.0,  #MeV
     'Lc_p_TRCHI2DOF'   : 3.0,
-    'Lc_p_IPCHI2'      : 0.0,
+    'Lc_p_IPCHI2'      : 10.0,
     'Lc_p_PIDp'        : 5.0,
-    'Lc_p_TRPCHI2' :0.,
+    'Lc_p_TRPCHI2' :0.01,
 
     
     #D0-resonance parameters
     'D0_MassW'        : 40.0,      #MeV, 100 in StdLooseD0 
     'D0_BPVVDCHI2'    : 36.0,      #36 in StdLooseD0
-    'D0_DIRA'         : 0.98,
+    'D0_DIRA'         : 0.995,
     'D0_PT'           : 1200.0,    #MeV, 1.2 GeV in StdLooseD02KPi
     'D0_VCHI2'        : 10.0,      #10 in StdLooseD0
     #D0 combination cut
@@ -116,7 +116,7 @@ confdict={
     'D_MassW'         : 40.0,      #MeV, 100 in StdLooseDplus
     'D_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
     'Ds_BPVVDCHI2'    : 36.0,      #shorter lifetime than Dplus 
-    'D_DIRA'          : 0.98,   #0.98 in StdLooseDplus
+    'D_DIRA'          : 0.995,   #0.98 in StdLooseDplus
     'D_PT'            : 1600.0,    #MeV, 1.2 in StdLooseDplus
     'D_VCHI2'         : 10.0,      #30 in StdLooseDplus
     'D_MIPCHI2'       : 10.0,
@@ -127,19 +127,19 @@ confdict={
     'Dstar_VCHI2'      : 25.0,     #MeV, 25 in StdLooseD*WithD02KPi 
     'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
     'Dstar_DeltaM_low'  : 135.0,  #MeV
-    'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
+    'Dstar_DeltaM_high' : 150.0,   #MeV, 165.5 in StdLooseD*
   
      #Lc-resonance parameters
     'Lc_MassW'         : 30.0,      #MeV, 100 in StdLooseDplus
     'Lc_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
-    'Lc_DIRA'          : 0.99,   #0.98 in StdLooseDplus
+    'Lc_DIRA'          : 0.995,   #0.98 in StdLooseDplus
     'Lc_PT'            : 1200.0,    #MeV, 1.2 in StdLooseDplus
     'Lc_VCHI2'         : 10.0,      #30 in StdLooseDplus
     'Lc_MIPCHI2'       : 10.0,
     # Lb Inverted vertex Cuts
     'LbInvVertD'       : 1. ,         #mm
     #Dstar Inverted cut
-    'DInvVertD'        : 0.5 ,         #mm
+    'DInvVertD'        : 1. ,         #mm
     #Muon and J/psi cuts
     'Muon_TRCHI2DOF'    : 3.0,
     'Muon_PT'           : 1000.0,  #MeV
@@ -406,8 +406,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         
 
-        self.totalDstarCut = self.DstarCut
-        #+ self.Dstar_KCut + self.Dstar_PiCut + self.Dstar_D0Cut + self.Dstar_slowPiCut
+        self.totalDstarCut = self.DstarCut + self.Dstar_KCut + self.Dstar_PiCut + self.Dstar_D0Cut+ self.Dstar_slowPiCut
 
         
         #StdLooseDPlus has the following decay chain: D+ -> K pi pi
@@ -499,8 +498,8 @@ class B2XTauNuAllLinesConf(LineBuilder):
  
        
         self.LcLightCut = " (ADMASS('Lambda_c+') < %(Lc_MassW)s *MeV )&  (BPVVDCHI2 > %(Lc_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<%(Lc_VCHI2)s)& (MIPCHI2DV(PRIMARY)> %(Lc_MIPCHI2)s) "% config
-        self.Lc_pLightcut="& INTREE( ('p+'==ABSID)& (TRCHI2DOF < %(Lc_p_TRCHI2DOF)s) & (TRGHP < %(TRGHP)s) & (MIPCHI2DV(PRIMARY)> %(Lc_p_IPCHI2)s) & (PIDp > %(Lc_p_PIDp)s))" % config
-        self.Lc_KLightcut = "& INTREE( ('K-'==ABSID) & (TRCHI2DOF < %(Lc_K_TRCHI2DOF)s ) & (MIPCHI2DV(PRIMARY)> %(Lc_K_IPCHI2)s ) & (TRGHP < %(TRGHP)s) & (PIDK > %(Lc_K_PIDK)s)) " % config
+        self.Lc_pLightcut="& INTREE( ('p+'==ABSID)& (TRCHI2DOF < %(Lc_p_TRCHI2DOF)s) & (TRGHP < %(TRGHP)s) & (PIDp > %(Lc_p_PIDp)s))" % config
+        self.Lc_KLightcut = "& INTREE( ('K-'==ABSID) & (TRCHI2DOF < %(Lc_K_TRCHI2DOF)s ) & (TRGHP < %(TRGHP)s) & (PIDK > %(Lc_K_PIDK)s)) " % config
         
 
         self.totalLcInvVertCut=  self.LcLightCut + self.Lc_pCut+self.Lc_KCut
@@ -508,10 +507,10 @@ class B2XTauNuAllLinesConf(LineBuilder):
         #Dstar cuts for Invertex vertex selection
  
        
-        self.DLightCut = "  (M-MAXTREE('D0'==ABSID,M)>%(Dstar_DeltaM_low)s*MeV) & (M-MAXTREE('D0'==ABSID,M)<%(Dstar_DeltaM_high)s*MeV) & (BPVVDCHI2 > %(D0_BPVVDCHI2)s) & (VFASPF(VCHI2/VDOF)<%(D0_VCHI2)s) & CHILDCUT(  (ADMASS('D0') < %(D0_MassW)s *MeV ),2)  "% config
+        self.DLightCut = "  (M-MAXTREE('D0'==ABSID,M)>%(Dstar_DeltaM_low)s*MeV) & (M-MAXTREE('D0'==ABSID,M)<%(Dstar_DeltaM_high)s*MeV) & (VFASPF(VCHI2/VDOF)<%(D0_VCHI2)s) & CHILDCUT(  (ADMASS('D0') < %(D0_MassW)s *MeV ),2)  "% config
        
-
-        self.totalDInvVertCut=  self.DLightCut 
+        self.DLight_partCut="& INTREE( ('K-'==ABSID)& (TRCHI2DOF < %(D_K_TRCHI2DOF)s) & (TRGHP < %(TRGHP)s)) &INTREE( ('pi+'==ABSID)& (TRCHI2DOF < %(D_Pi_TRCHI2)s) & (TRGHP < %(TRGHP)s)) " % config
+        self.totalDInvVertCut=  self.DLightCut +self.DLight_partCut
         
         #J/psi cuts for Bc mode
         self.MuonCut = " & (MINTREE('mu+'==ABSID,PT) > %(Muon_PT)s *MeV) & (MAXTREE('mu+'==ABSID,TRCHI2DOF) < %(Muon_TRCHI2DOF)s)" %config
@@ -530,21 +529,21 @@ class B2XTauNuAllLinesConf(LineBuilder):
 
        
         #B combination cuts
-        self.B0CombCut="(((DAMASS('B0') > %(B_DeltaM_low)s*MeV) & (DAMASS('B0') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B0') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B0') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
+        self.B0CombCut="(((DAMASS('B0') > %(B_DeltaM_low)s*MeV) & (DAMASS('B0') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B0') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B0') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('',0) < %(B_DOCAMAX)s*mm)" %config
 
-        self.BplusCombCut="(((DAMASS('B+') > %(B_DeltaM_low)s*MeV) & (DAMASS('B+') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B+') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B+') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
+        self.BplusCombCut="(((DAMASS('B+') > %(B_DeltaM_low)s*MeV) & (DAMASS('B+') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B+') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B+') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('',0) < %(B_DOCAMAX)s*mm)" %config
 
-        self.BcCombCut="(((DAMASS('B_c+') > %(B_DeltaM_low)s*MeV) & (DAMASS('B_c+') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B_c+') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B_c+') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
+        self.BcCombCut="(((DAMASS('B_c+') > %(B_DeltaM_low)s*MeV) & (DAMASS('B_c+') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B_c+') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B_c+') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('',0) < %(B_DOCAMAX)s*mm)" %config
 
-        self.BsCombCut="(((DAMASS('B_s0') > %(B_DeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B_s0') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
+        self.BsCombCut="(((DAMASS('B_s0') > %(B_DeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_DeltaM_high)s*MeV)) or ((DAMASS('B_s0') > %(B_upperDeltaM_low)s*MeV) & (DAMASS('B_s0') < %(B_upperDeltaM_high)s*MeV))) & (AMAXDOCA('',0) < %(B_DOCAMAX)s*mm)" %config
 
         self.LbCombCut="(DAMASS('Lambda_b0') < %(B_DeltaM_high)s*MeV)  & (AMAXDOCA('') < %(B_DOCAMAX)s*mm)" %config
-        self.LbCombInvVertCut="(ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) >  %(LbInvVertD)s *mm) & (DAMASS('Lambda_b0') < %(B_DeltaM_high)s*MeV)" %config
-        self.B0dCombInvVertCut="(ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) >  %(DInvVertD)s *mm) & (DAMASS('B0') < %(B_DeltaM_high)s*MeV)" %config
+        self.LbCombInvVertCut="(ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) >  %(LbInvVertD)s *mm)& (ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) <50. ) & (DAMASS('Lambda_b0') < %(B_DeltaM_high)s*MeV)" %config
+        self.B0dCombInvVertCut="(ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) >  %(DInvVertD)s *mm)&(ACHILD(VFASPF(VZ),2) - ACHILD(VFASPF(VZ),1) <50.) & (DAMASS('B0') < %(B_DeltaM_high)s*MeV)" %config
         #B cuts
         self.BCut = " (BPVDIRA > %(B_BPVDIRA)s)" %config
        
-        self.BInvVertCut = " (BPVDIRA >0)" %config
+        self.BInvVertCut = " (BPVDIRA >%(B_BPVDIRA)s)" %config
 
         ### Now make all the selections ###
 
@@ -1451,7 +1450,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombLb2LcTauNu = CombineParticles(        
             DecayDescriptors = ["[Lambda_b0 -> Lambda_c+ tau-]cc"],
-            DaughtersCuts = { "tau-" : "(BPVDIRA > 0.)" },
+            DaughtersCuts = { "tau-" : "(BPVDIRA > 0.995)" },
             CombinationCut = self.LbCombCut,
             MotherCut      = self.BCut,
            
@@ -1478,7 +1477,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombLb2LcTauNuWS = CombineParticles(        
             DecayDescriptors = ["[Lambda_b0 -> Lambda_c+ tau+]cc" ],
-            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.)" },
+            DaughtersCuts = { "tau+" : "(BPVDIRA > 0.995)" },
             CombinationCut = self.LbCombCut,
             MotherCut      = self.BCut,
             )
@@ -1503,7 +1502,7 @@ class B2XTauNuAllLinesConf(LineBuilder):
         
         CombLb2LcTauNuNonPhysTau = CombineParticles(        
             DecayDescriptors = ["[Lambda_b0 -> Lambda_c+ tau-]cc"],#, "[Lb -> Lc+ tau-]cc" ],
-            DaughtersCuts = { "tau-" : "(BPVDIRA > 0.)" },
+            DaughtersCuts = { "tau-" : "(BPVDIRA > 0.995)" },
             CombinationCut = self.LbCombCut,
             MotherCut      = self.BCut,
             )
