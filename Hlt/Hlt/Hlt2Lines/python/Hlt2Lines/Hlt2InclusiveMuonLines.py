@@ -390,13 +390,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                       )
 
 
-        line = Hlt2Line('TrackEffMuonTT1'
+        line = Hlt2Line('TrackEffMuonTT2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
                       , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, ProbeMuonTTMuons, filterMinus1, JPsiCombine1 ]
                       , postscale = self.postscale
                       )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT1Decision" : 50602 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT2Decision" : 50602 } )
 
 	########################### VeloMuon method #######################
 
