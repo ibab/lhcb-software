@@ -433,8 +433,9 @@ def SwimmingEventLoop(gaudi, nEvents):
                     extratps.append([oldraw, info, HltDec])
                 movePVs(myGlobs, candidate.particle(), 0.0)
 
-                print "TPs for writing:", tps
-                print "Extra TPs from old stages:", extratps
+                if DEBUGMODE:
+                    print "TPs for writing:", tps
+                    print "Extra TPs from old stages:", extratps
                 tps += extratps
                 tps.sort() # sort operates on the first element of each list element, i.e. the RAW value
 

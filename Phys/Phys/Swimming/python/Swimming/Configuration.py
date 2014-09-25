@@ -88,6 +88,8 @@ class Swimming(LHCbConfigurableUser) :
         , "OverrideStageName"  : ""
         , "UseCompositePIDsWhenMatching" : False
         , "StoreExtraTPs"      : False
+        , "MicroDSTElements"   : []
+        , "MicroDSTStreamConf" : False
        }
 
     _propertyDocDct = {  
@@ -155,6 +157,8 @@ class Swimming(LHCbConfigurableUser) :
             compatibility 'Trigger_XXX' style names are advised. """
         , "UseCompositePIDsWhenMatching" : """ Include the PID of composite particles when matching candidates (e.g. offline with stripping) """
         , "StoreExtraTPs"     : """ If True (default: False) then each swimming stage will evaluate the candidate info (lifetime etc.) and decision at the RAW values already saved in the Swimming report. """
+        , "MicroDSTElements"  : """ List, default []: if not empty then override the list of MicroDST writer elements. """
+        , "MicroDSTStreamConf": """ Override the MicroDST output stream configuration. """
         }
 
     __used_configurables__ = [
@@ -192,6 +196,8 @@ class Swimming(LHCbConfigurableUser) :
             raise TypeError, 'MuDSTCands must be a list'
         if type(self.getProp('StrippingLines')) != list:
             raise TypeError, 'StrippingLines must be a list'
+        if type(self.getProp('MicroDSTElements')) != list:
+            raise TypeError, 'MicroDSTElements must be a list'
 
         if not self.getProp('OutputType') in ['DST', 'MDST']:
             raise TypeError, "The only supported output types are DST and MDST."
@@ -483,49 +489,28 @@ def ConfigureDaVinci():
     selectionSeq = MultiSelectionSequence(seqName, Sequences = sequences)
 
     if config.getProp('OutputType') == 'MDST':
-        # Try the dev version, if not...
-        try :
-            from DSTWriters.__dev__.Configuration import MicroDSTWriter, microDSTStreamConf
-            from DSTWriters.__dev__.microdstelements import (CloneRecHeader,
-                                                             CloneODIN,
-                                                             ClonePVs,
-                                                             CloneSwimmingReports,
-                                                             CloneParticleTrees,
-                                                             ClonePVRelations,
-                                                             CloneTPRelations,
-                                                             ReFitAndClonePVs,
-                                                             CloneLHCbIDs,
-                                                             CloneRawBanks)
-        except ImportError :
-            from DSTWriters.Configuration import MicroDSTWriter, microDSTStreamConf
-            from DSTWriters.microdstelements import (CloneRecHeader,
-                                                         CloneODIN,
-                                                         ClonePVs,
-                                                         CloneSwimmingReports,
-                                                         CloneParticleTrees,
-                                                         ClonePVRelations,
-                                                         CloneTPRelations,
-                                                         ReFitAndClonePVs,
-                                                         CloneLHCbIDs,
-                                                         CloneRawBanks)
+        pack = False
+        SwimmingConf = config.getProp('MicroDSTStreamConf')
+        SwimmingElements = config.getProp('MicroDSTElements')
+        if SwimmingConf == False:
+            from DSTWriters.Configuration import stripMicroDSTStreamConf
+            SwimmingConf = stripMicroDSTStreamConf(pack = pack)
+        if len(SwimmingElements) == 0:
+            from DSTWriters.Configuration import stripMicroDSTElements
+            from DSTWriters.microdstelements import CloneSwimmingReports, CloneParticleTrees, CloneTPRelations
+            mdstElements = stripMicroDSTElements(pack = pack)
+            SwimmingElements = [ CloneSwimmingReports() ]
+            for element in mdstElements:
+              SwimmingElements += [ element ]
+              if type(element) == CloneParticleTrees:
+                  SwimmingElements += [ CloneTPRelations("P2TPRelations") ]
 
-        SwimmingConf = microDSTStreamConf()
-        streamConf = {'default' : SwimmingConf}
-        SwimmingElements = [CloneRecHeader(),
-                            CloneODIN(),
-                            ClonePVs(),
-                            CloneSwimmingReports(),
-                            CloneParticleTrees(),#copyProtoParticles = True),
-                            ClonePVRelations("Particle2VertexRelations", True),
-                            CloneTPRelations("P2TPRelations", True),
-                            ReFitAndClonePVs(),
-                            CloneLHCbIDs(),
-                            CloneRawBanks(banks = ['HltSelReports', 'HltDecReports',
-                                                   'L0DU', 'L0Calo', 'L0CaloError', 'L0CaloFull',
-                                                   'L0Muon', 'L0MuonProcCand', 'L0MuonError'],
-                                          inputRawEvent = 'DAQ/RawEvent')]
-
+        streamConf = { 'default' : SwimmingConf }
         elementsConf = { 'default' : SwimmingElements }
+        try:
+            from DSTWriters.__dev__.Configuration import MicroDSTWriter
+        except:
+            from DSTWriters.Configuration import MicroDSTWriter
         dstWriter = MicroDSTWriter('MicroDST',
                                    StreamConf         = streamConf,
                                    MicroDSTElements   = elementsConf,

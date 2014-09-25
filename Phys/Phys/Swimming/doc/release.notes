@@ -5,6 +5,12 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2014-09-24 - Olli Lupton
+ - Add MicroDSTElements option so these can be overriden by options. More flexibility
+   to cope with the eventual (M)DST layout for a data taking period not being set when
+   the Moore releases for that data are made. (e.g. DAQ/RawEvent -> Trigger/RawEvent).
+ - Make the default MDST elements more in line with the recent stripping elements.  
+
 ! 2014-09-23 - Olli Lupton
  - Add extra option which makes the current swimming stage evaluate the
    decision and candidate information at the RAW values saved by previous
