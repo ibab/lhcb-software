@@ -86,7 +86,7 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
                           DecayDescriptor,
                           DaughterLists,
                           DaughterCuts = {} ,
-                          ReFitPVs = True,
+                          ReFitPVs = False,
                           Preambulo = [ "from LoKiPhysMC.decorators import *" , "from LoKiPhysMC.functions import mcMatch" ] ) :
         '''create a selection using a ParticleCombiner with a single decay descriptor'''
         combiner = CombineParticles( DecayDescriptor = DecayDescriptor,

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-25 - Carlos Vazquez Sierra
+ - Updated StrippingBs2JpsiKstNoPID again: line ONLY for MC PIDCalib purposes (not related to s21).
+
 ! 2014-09-25 - Andrea Contu
  - Added new key to StrippingD2hh and StrippingDstarD2KShh to specify raw event banks
 
