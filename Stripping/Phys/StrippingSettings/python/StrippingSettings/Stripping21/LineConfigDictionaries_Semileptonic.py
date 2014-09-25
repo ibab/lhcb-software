@@ -320,11 +320,11 @@ B2XTauNu = {
         'Prescale_NonPhys'               : 0.1,
         'Postscale'   : 1.0 ,
         #B cuts
-        'B_BPVDIRA'       : 0. ,
+        'B_BPVDIRA'       : 0.995 ,
         #B combination cuts
         'B_DeltaM_low'       : -2579.0, #MeV
         'B_DeltaM_high'      : 300.0,   #MeV
-        'B_DOCAMAX'          : .15 , #mm
+        'B_DOCAMAX'          : 0.15 , #mm
         'B_upperDeltaM_low'  : 720.0,   #MeV
         'B_upperDeltaM_high' : 1721.0,  #MeV
         #D kaon cuts
@@ -332,38 +332,40 @@ B2XTauNu = {
         'Dplus_K_PT'      : 1500.0, #MeV
         'Ds_K_PT'         : 1500.0, #MeV
         'D_K_TRCHI2DOF'   : 30.0,
-        'D_K_IPCHI2'      : 0.0,
-        'D_K_PIDK'        : -10.0,
-        'Dplus_K_PIDK'    : 0.0,
-        'Dplus_K_TRPCHI2' : 0.05,
+        'D_K_IPCHI2'      : 10.0,
+        'D_K_PIDK'        : -3 ,
+        'Dplus_K_PIDK'    : 3,
+        'Dplus_K_TRPCHI2' : 0.1,
         #D pion cuts
         'D_Pi_PT'         : 150.0, # MeV
-        'D_Pi_TRCHI2'     : 30.0,
-        'D_Pi_IPCHI2'     : 0.,
+        'D_Pi_TRCHI2'     : 3.0,
+        'D_Pi_IPCHI2'     : 10.,
         'D_Pi_PIDK'       : 50.0,
-        'Dplus_Pi_TRPCHI2' : 0.05,
+        'Dplus_Pi_TRPCHI2' : 0.1,
         #Lc kaon cuts
         'Lc_K_PT'          : 150.0,  #MeV
-        'Lc_K_TRCHI2DOF'   : 30.0,
-        'Lc_K_IPCHI2'      : 0.0,
+        'Lc_K_TRCHI2DOF'   : 3.0,
+        'Lc_K_IPCHI2'      : 10.0,
         'Lc_K_PIDK'        : 3.0,    
-        'Lc_K_TRPCHI2' : 0.,
+        'Lc_K_TRPCHI2' : 0.01,
         #Lc pion cuts
         'Lc_Pi_PT'         : 150.0, # MeV
-        'Lc_Pi_TRCHI2'     : 30.0,
-        'Lc_Pi_IPCHI2'     : 0.0,
+        'Lc_Pi_TRCHI2'     : 3.0,
+        'Lc_Pi_IPCHI2'     : 10.0,
         'Lc_Pi_PIDK'       : 50.0,
-        'Lc_Pi_TRPCHI2' : 0.,
+        'Lc_Pi_TRPCHI2' : 0.01,
         #Lc proton cuts
         'Lc_p_PT'          : 150.0,  #MeV
         'Lc_p_TRCHI2DOF'   : 3.0,
-        'Lc_p_IPCHI2'      : 0.0,
+        'Lc_p_IPCHI2'      : 10.0,
         'Lc_p_PIDp'        : 5.0,
-        'Lc_p_TRPCHI2' :0.,
+        'Lc_p_TRPCHI2' :0.01,
+        
+        
         #D0-resonance parameters
         'D0_MassW'        : 40.0,      #MeV, 100 in StdLooseD0 
         'D0_BPVVDCHI2'    : 36.0,      #36 in StdLooseD0
-        'D0_DIRA'         : 0.98,
+        'D0_DIRA'         : 0.995,
         'D0_PT'           : 1200.0,    #MeV, 1.2 GeV in StdLooseD02KPi
         'D0_VCHI2'        : 10.0,      #10 in StdLooseD0
         #D0 combination cut
@@ -372,7 +374,7 @@ B2XTauNu = {
         'D_MassW'         : 40.0,      #MeV, 100 in StdLooseDplus
         'D_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
         'Ds_BPVVDCHI2'    : 36.0,      #shorter lifetime than Dplus 
-        'D_DIRA'          : 0.98,   #0.98 in StdLooseDplus
+        'D_DIRA'          : 0.995,   #0.98 in StdLooseDplus
         'D_PT'            : 1600.0,    #MeV, 1.2 in StdLooseDplus
         'D_VCHI2'         : 10.0,      #30 in StdLooseDplus
         'D_MIPCHI2'       : 10.0,
@@ -383,18 +385,19 @@ B2XTauNu = {
         'Dstar_VCHI2'      : 25.0,     #MeV, 25 in StdLooseD*WithD02KPi 
         'Dstar_MassW'      : 50.0,     #MeV, 50 MeV in StdLooseD*WithD02KPi
         'Dstar_DeltaM_low'  : 135.0,  #MeV
-        'Dstar_DeltaM_high' : 160.0,   #MeV, 165.5 in StdLooseD*
+        'Dstar_DeltaM_high' : 150.0,   #MeV, 165.5 in StdLooseD*
+        
         #Lc-resonance parameters
         'Lc_MassW'         : 30.0,      #MeV, 100 in StdLooseDplus
         'Lc_BPVVDCHI2'     : 50.0,      #36 in StdLooseDplus
-        'Lc_DIRA'          : 0.99,   #0.98 in StdLooseDplus
+        'Lc_DIRA'          : 0.995,   #0.98 in StdLooseDplus
         'Lc_PT'            : 1200.0,    #MeV, 1.2 in StdLooseDplus
         'Lc_VCHI2'         : 10.0,      #30 in StdLooseDplus
         'Lc_MIPCHI2'       : 10.0,
         # Lb Inverted vertex Cuts
         'LbInvVertD'       : 1. ,         #mm
         #Dstar Inverted cut
-        'DInvVertD'        : 0.5 ,         #mm
+        'DInvVertD'        : 1. ,         #mm
         #Muon and J/psi cuts
         'Muon_TRCHI2DOF'    : 3.0,
         'Muon_PT'           : 1000.0,  #MeV
