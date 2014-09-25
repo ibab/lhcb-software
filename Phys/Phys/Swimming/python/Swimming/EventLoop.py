@@ -274,16 +274,14 @@ def SwimmingEventLoop(gaudi, nEvents):
             if DEBUGMODE and not swimStripping:
                 # Use the debugging TisTos tool to dump info on what the TisTos is
                 # wrt all the trigger lines before the swimming starts.
-                extraTisTos = gaudi.toolSvc().create('TriggerTisTos/SwimmingDebugTisTos',
-                                                     interface = 'ITriggerTisTos')
                 lines = []
                 for level in triggers: lines.extend(level)
                 for trigger in lines:
-                    extraTisTos.setOfflineInput()
-                    extraTisTos.addToOfflineInput(candidate.particle())
-                    extraTisTos.setTriggerInput()
-                    extraTisTos.addToTriggerInput(trigger)
-                    print extraTisTos.analysisReportTrigger(trigger)
+                    myGlobs.debugtistos.setOfflineInput()
+                    myGlobs.debugtistos.addToOfflineInput(candidate.particle())
+                    myGlobs.debugtistos.setTriggerInput()
+                    myGlobs.debugtistos.addToTriggerInput(trigger)
+                    print myGlobs.debugtistos.analysisReportTrigger(trigger)
 
             # If we are swimming the trigger and have a non-trivial selection method,
             # put the selected candidate in a separate location.

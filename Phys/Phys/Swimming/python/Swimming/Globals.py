@@ -62,6 +62,7 @@ class GlobalParams(object):
                     self.lifetimeFitter += [ DTFFitter(self, configname, constraints) ]
 
         self.tistostool    = gaudi.toolsvc().create('TriggerTisTos', interface='ITriggerTisTos')
+        self.debugtistos   = gaudi.toolSvc().create('TriggerTisTos/SwimmingDebugTisTos', interface = 'ITriggerTisTos')
         self.tistosbools   = [self.tistostool.kAnything,
                               self.tistostool.kTrueRequired,
                               self.tistostool.kFalseRequired]

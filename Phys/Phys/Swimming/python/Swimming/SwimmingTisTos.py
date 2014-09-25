@@ -46,6 +46,16 @@ def evaluateTisTos(myGlobs, mycand, locations, swimPoint):
             if not passedlevel:
                 globalPass = False
 
+        if myGlobs.DEBUGMODE :                                                            
+            lines = []
+            for level in myGlobs.triggers: lines.extend(level)
+            for trigger in lines:
+                myGlobs.tistostool.setOfflineInput()
+                myGlobs.tistostool.addToOfflineInput(mycand)
+                myGlobs.tistostool.setTriggerInput()
+                myGlobs.tistostool.addToTriggerInput(trigger)
+                print myGlobs.tistostool.analysisReportTrigger(trigger)
+
         # So it passed the trigger, now we need to evaluate
         # which tracks caused HLT1 to fire, and which were
         # reco'd in HLT1 and HLT2

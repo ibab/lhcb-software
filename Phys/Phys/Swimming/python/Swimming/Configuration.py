@@ -341,9 +341,15 @@ def ConfigureMoore():
                                         ('HltDecReportsLocation', 'Hlt/DecReports')])]
     from Configurables import TriggerTisTos
     ToolSvc().addTool(TriggerTisTos, 'SwimmingDebugTisTos')
-    ToolSvc().SwimmingDebugTisTos.TOSFracMuon = 0.
+    ToolSvc().SwimmingDebugTisTos.TOSFracMuon = 0.0
+    ToolSvc().SwimmingDebugTisTos.TOSFracTT   = 0.0
     for conf, d in decoders:
         configurable = conf('Swimming' + d[0][1].split('/')[-1])
+        print configurable
+        try:
+            configurable.InputRawEventLocation = 'PrevTrig/RawEvent'
+        except:
+            configurable.RawEventLocations = [ 'PrevTrig/RawEvent' ] + configurable.RawEventLocations
         output = None
         for prop, loc in d:
             if not output: output = prefix + '/' + loc
