@@ -226,10 +226,10 @@ HltANNSvc().Hlt1SelectionID = {
     'Hlt1VertexDisplVertexTracks'           : 10125,
     'VeloCandidatesMBMicroBiasLowMultVelo'  : 10127,
     #Electron additions
-    'VeloCandidatesElectronTrack'           : 10131,
-    'CaloCandidatesElectronTrack'           : 10132,
-    'VeloCandidatesTrackElectron'           : 10133,
-    'CaloCandidatesTrackElectron'           : 10134
+    'VeloCandidatesElectronTrack'           : 10135,
+    'CaloCandidatesElectronTrack'           : 10136,
+    'VeloCandidatesTrackElectron'           : 10137,
+    'CaloCandidatesTrackElectron'           : 10138
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2
