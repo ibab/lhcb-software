@@ -181,8 +181,8 @@ class Bs2JpsiKstNoPIDConf(LineBuilder) :
     def makeBs2JpsiKstarWideTruth( self ): # Line maker.
         Bs2JpsiKstarWideTruth = self.createCombinationSelTruth( OutputList = "Bs2JpsiKstarWideTruth",
                                 DecayDescriptor = "[B_s~0 -> J/psi(1S) K*(892)0]cc",
-                                DaughterLists  = [ self.WideJpsiList, self.KstarWideListTruth ],
-                                ReFitPVs = False )
+                                DaughterLists  = [ self.WideJpsiList, self.KstarWideListTruth ] )
+                                #,ReFitPVs = False )
                                 #,DaughtersCuts = {mcMatch here for J/psi(1S) and K*(892)0})
         Bs2JpsiKstarWideLineTruth = StrippingLine( "Bs2JpsiKstarWideLineTruth", algos = [Bs2JpsiKstarWideTruth])
         self.registerLine(Bs2JpsiKstarWideLineTruth)
