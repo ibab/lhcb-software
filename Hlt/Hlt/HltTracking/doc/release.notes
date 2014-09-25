@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-09-25 - Alex Shires
+ - clear up errors in ostream from lhcb-cmake
+
 ! 2014-09-24 - Alex Shires
  - changed MatchVel0L0Calo to FilterVeloL0Calo (better english description!)
  - added FilterVel0L0CaloCands algorithm to work with filtering functor

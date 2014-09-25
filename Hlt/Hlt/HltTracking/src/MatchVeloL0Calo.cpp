@@ -189,8 +189,8 @@ StatusCode Hlt::MatchVeloL0Calo::match
    //matching [from HltVeloEcalMatch::match]                                            
    double matchChi2 = 10.e+10; 
 
-   debug() << "Match1: track " << track.key() << '\t' << track.index()  << endmsg ;
-   debug() << "Match1: L0 Candidate " << l0 << endmsg ;
+   //debug() << "Match1: track " << track.key() << '\t' << track.index()  << endmsg ;
+   //debug() << "Match1: L0 Candidate " << l0 << endmsg ;
 
    // get track slopes
    double trackDxDz = track.firstState().tx();
