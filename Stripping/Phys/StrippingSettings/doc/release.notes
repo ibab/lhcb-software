@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-25 - Andrea Contu
+ - Minor update to Charm dictionaries and new dbases (s21 and s21r1)
+
 ! 2014-09-25 - Mika Vesterinen
  - Picked up new config from Guy Wormser for B2XTauNu in semileptonics (21 and 21r1)
 
