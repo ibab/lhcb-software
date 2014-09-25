@@ -52,6 +52,13 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
   declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.3250 );
   declareProperty( "Personality",  m_personality          = "Reco14");
   declareProperty( "isMonteCarlo", m_isMonteCarlo         = 0);
+  //vtx scaleX=-5.77134 scaleY=1.11591 offsetY=0.113682 pivotX=0.570684
+  declareProperty( "P0_vtx_scale", m_P0vtx =  -5.77134);
+  declareProperty( "P1_vtx_scale", m_P1vtx =  1.11591);
+  declareProperty( "P2_vtx_scale", m_P2vtx =  0.113682);
+  declareProperty( "P3_vtx_scale", m_P3vtx =  0.570684);
+
+
   m_svtool = NULL;
   m_nnet   = NULL;
   m_util   = NULL;
@@ -91,9 +98,41 @@ StatusCode TaggerVertexChargeTool::initialize()
     return StatusCode::FAILURE;
   };
   
+
+  if(m_personality !="Reco12")  {
+    std::vector<std::string> variable_names;
+    variable_names.push_back("mult");       
+    variable_names.push_back("nnkrec");     
+    variable_names.push_back("ptB");        
+    variable_names.push_back("vflag");      
+    variable_names.push_back("ptmean");     
+    variable_names.push_back("ipsmean");    
+    variable_names.push_back("vcharge");    
+    variable_names.push_back("svm");        
+    variable_names.push_back("svp");        
+    variable_names.push_back("BDphiDir");   
+    variable_names.push_back("svtau");      
+    variable_names.push_back("docamax");    
+
+    if (m_isMonteCarlo) m_myMCreader = new MCVertexOSWrapper(variable_names);
+    else  m_myDATAreader = new VertexOSWrapper(variable_names);
+  }
+  
   return sc;
 }
-
+//================================================================================
+StatusCode  TaggerVertexChargeTool::finalize()
+{
+  if(m_isMonteCarlo==1){
+    delete m_myMCreader; 
+    m_myMCreader = NULL;
+  } else {
+    delete m_myDATAreader; 
+    m_myDATAreader = NULL;
+  }
+  
+  return GaudiTool::finalize();
+}
 //=====================================================================
 Tagger TaggerVertexChargeTool::tag( const Particle* AXB0,
                                     const RecVertex* RecVert,
@@ -348,26 +387,32 @@ Tagger TaggerVertexChargeTool::tagReco14( const Particle* AXB0,
   }
 
   if(m_CombinationTechnique == "NNet") {
-    std::vector<std::string> inputVars;
     std::vector<double> inputVals;
-    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
-    inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
-    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
-    inputVars.push_back("vflag");       inputVals.push_back( (double)vflagged);
-    inputVars.push_back("ptmean");      inputVals.push_back( (double)log(Vptmean));
-    inputVars.push_back("ipsmean");     inputVals.push_back( (double)log(Vipsmean));
-    inputVars.push_back("vcharge");     inputVals.push_back( (double)fabs(Vch));
-    inputVars.push_back("svm");         inputVals.push_back( (double)log(SVM));
-    inputVars.push_back("svp");         inputVals.push_back( (double)log(SVP));
-    inputVars.push_back("BDphiDir");    inputVals.push_back( (double)BDphiDir );
-    inputVars.push_back("svtau");       inputVals.push_back( (double)log(SVtau));
-    inputVars.push_back("docamax");     inputVals.push_back( (double)Vdocamax);
+    inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVals.push_back( (double)nPV);
+    inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVals.push_back( (double)vflagged);
+    inputVals.push_back( (double)log(Vptmean));
+    inputVals.push_back( (double)log(Vipsmean));
+    inputVals.push_back( (double)fabs(Vch));
+    inputVals.push_back( (double)log(SVM));
+    inputVals.push_back( (double)log(SVP));
+    inputVals.push_back( (double)BDphiDir );
+    inputVals.push_back( (double)log(SVtau));
+    inputVals.push_back( (double)Vdocamax);
 
-    if(m_isMonteCarlo) omega = 1. - m_nnet->MLPvtxTMVA_MC(inputVars,inputVals);
-    else omega = 1. - m_nnet->MLPvtxTMVA(inputVars,inputVals);
+    double rnet;    
+    if(m_isMonteCarlo) rnet = m_myMCreader->GetMvaValue(inputVals);
+    else  rnet = m_myDATAreader->GetMvaValue(inputVals);
     
-    if ( msgLevel(MSG::VERBOSE) )
-      verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts" <<", omega= "<< omega <<endreq;
+    if (rnet>=0 && rnet<=1) {
+      pn = 1.0 -TaggingHelpers::funcNN(rnet, m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx);
+    } else {
+      debug()<<"**********************BAD TRAINING vtx"<<rnet<<endmsg;
+      pn = -1.;      
+    }
+
+    omega= 1. - pn;    
     
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     omega =  m_P0_Cal_vtx + m_P1_Cal_vtx * ( omega-m_Eta_Cal_vtx);

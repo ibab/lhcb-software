@@ -11,6 +11,9 @@
 #define TAGGING_HELPERS_H 1
 
 namespace TaggingHelpers {
+
+    double funcNN(double x, double a0, double a1, double a2, double a3);
+   
     /** @brief return the difference between two angles
      *
      * @author Manuel Schiller <manuel.schiller@nikhef.nl>

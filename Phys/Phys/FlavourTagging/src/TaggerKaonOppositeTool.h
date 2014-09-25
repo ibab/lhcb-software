@@ -13,6 +13,8 @@
 #include <TROOT.h>
 
 // from local
+#include "KaonOSWrapper.h"
+#include "MCKaonOSWrapper.h"
 #include "INNetTool.h"
 #include "Kernel/IParticleDescendants.h"
 #include "FlavourTagging/ITaggingUtils.h"
@@ -38,8 +40,9 @@ public:
                           const std::string& name,
                           const IInterface* parent );
   virtual ~TaggerKaonOppositeTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
-
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();
+  
   //-------------------------------------------------------------
   MultiplePersonalityCall<boost::function<
   LHCb::Tagger(
@@ -80,6 +83,8 @@ public:
   //-------------------------------------------------------------
 
 private:
+  MCKaonOSWrapper*   m_myMCreader;
+  KaonOSWrapper*     m_myDATAreader;
 
   ITaggingUtils* m_util;
   IParticleDescendants* m_descend;
@@ -112,7 +117,9 @@ private:
   double m_P1_Cal_kaon ;
   double m_Eta_Cal_kaon ;
   std::string m_personality;
-  int m_isMonteCarlo;
+  int    m_isMonteCarlo;
+  double m_P0k, m_P1k, m_P2k, m_P3k;
+  
 };
 
 //===============================================================//

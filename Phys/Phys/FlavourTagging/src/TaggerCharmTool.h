@@ -25,9 +25,9 @@
 
 // from local
 #include "FlavourTagging/ITaggingUtils.h"
-#include "INNetTool.h"
+//#include "INNetTool.h"
 #include "TMVAWrapper.h"
-
+#include "CharmOSWrapper.h"
 // struct
 
 struct CharmDecayMode 
@@ -87,8 +87,8 @@ public:
                    const IInterface* parent );
   virtual ~TaggerCharmTool( ); ///< Destructor
 
-  StatusCode initialize();    ///<  initialization
-  StatusCode finalize();      ///<  finalization
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();      ///<  finalization
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger  tag( const LHCb::Particle* signalB,
@@ -114,6 +114,8 @@ private:
 
 private:
 
+  CharmOSWrapper * m_myDATAreader;
+
   std::map < std::string, CharmDecayMode> CharmDecayModeMap;
 
   std::vector<std::string> m_CharmTagLocations;
@@ -121,7 +123,8 @@ private:
   std::vector<std::string> m_CharmStarTagLocations;
   std::vector<std::string> m_CharmLambdaTagLocations;
 
-  float m_P0_Cal_charm, m_P1_Cal_charm, m_Eta_Cal_charm;
+  double m_P0_Cal_charm, m_P1_Cal_charm, m_Eta_Cal_charm;
+  double m_P0charm, m_P1charm, m_P2charm, m_P3charm;
 
   //std::string  m_MvaFileDir;
 
@@ -131,7 +134,7 @@ private:
   ITaggingUtils* m_util;
   ILifetimeFitter*           m_pLifetimeFitter;
   IParticleDescendants* m_descend;
-  INNetTool* m_nnet;
+  //INNetTool* m_nnet;
 
 };
 

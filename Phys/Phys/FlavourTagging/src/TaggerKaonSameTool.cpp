@@ -1,6 +1,5 @@
 // Include files 
 #include "TaggerKaonSameTool.h"
-
 #include "TaggingHelpers.h"
 
 //--------------------------------------------------------------------
@@ -19,7 +18,9 @@ DECLARE_TOOL_FACTORY( TaggerKaonSameTool )
   TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent ) :
-    GaudiTool ( type, name, parent )
+    GaudiTool ( type, name, parent ),
+    m_myMCreader( NULL),
+    m_util( NULL )
 {
   declareInterface<ITagger>(this);
 
@@ -47,8 +48,12 @@ DECLARE_TOOL_FACTORY( TaggerKaonSameTool )
   declareProperty( "KaonSame_Eta_Cal", m_Eta_Cal_kaonS  = 0.324 );
   declareProperty( "isMonteCarlo",     m_isMonteCarlo  = 0 );
 
+  declareProperty( "P0_ks_scale", m_P0ks =  1.22418); //dec2011_v2
+  declareProperty( "P1_ks_scale", m_P1ks = -1.63297);
+  declareProperty( "P2_ks_scale", m_P2ks =  0.401361);
+  declareProperty( "P3_ks_scale", m_P3ks =  0.);
+
   m_nnet = 0;
-  m_util = 0;
   m_descend = 0;
 }
 
@@ -70,7 +75,32 @@ StatusCode TaggerKaonSameTool::initialize()
 
   m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
 
+  if (m_isMonteCarlo) {
+    std::vector<std::string> variable_names;
+    
+    variable_names.push_back("mult");      
+    variable_names.push_back("ptB");       
+    variable_names.push_back("partPt");    
+    variable_names.push_back("IPs");       
+    variable_names.push_back("nndeta");    
+    variable_names.push_back("nndphi");    
+    variable_names.push_back("nndq");      
+    variable_names.push_back("nnkrec");    
+    variable_names.push_back("nndr");      
+    m_myMCreader = new MCKaonSSWrapper(variable_names);
+  }
+  
   return sc;
+}
+//================================================================================
+StatusCode  TaggerKaonSameTool::finalize()
+{
+  if(m_isMonteCarlo==1){
+    delete m_myMCreader; 
+    m_myMCreader = NULL;
+  }
+  
+  return GaudiTool::finalize();
 }
 
 //=====================================================================
@@ -188,19 +218,25 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0,
     const double dphi = std::fabs(TaggingHelpers::dphi(ikaonS->momentum().Phi(), ptotB.Phi()));
     const double dR   = std::sqrt(deta*deta+dphi*dphi);
     if(m_isMonteCarlo ) {
-      std::vector<std::string> inputVars;
       std::vector<double> inputVals;
-      inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
-      inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
-      inputVars.push_back("partPt");      inputVals.push_back( (double)log(ikaonS->pt()/GeV));
-      inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPsig)));
-      inputVars.push_back("nndeta");      inputVals.push_back( (double)deta);
-      inputVars.push_back("nndphi");      inputVals.push_back( (double)save_dphi);
-      inputVars.push_back("nndq");        inputVals.push_back( (double)save_dQ/GeV);
-      inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
-      inputVars.push_back("nndr");        inputVals.push_back( (double)dR);
+      inputVals.push_back( (double)m_util->countTracks(vtags));
+      inputVals.push_back( (double)log(AXB0->pt()/GeV));
+      inputVals.push_back( (double)log(ikaonS->pt()/GeV));
+      inputVals.push_back( (double)log(fabs(save_IPsig)));
+      inputVals.push_back( (double)deta);
+      inputVals.push_back( (double)save_dphi);
+      inputVals.push_back( (double)save_dQ/GeV);
+      inputVals.push_back( (double)nPV);
+      inputVals.push_back( (double)dR);
 
-      pn = m_nnet->MLPkSTMVA_MC(inputVars,inputVals);
+      double rnet = m_myMCreader->GetMvaValue(inputVals);
+      if (rnet>=0 && rnet<=1) {
+        pn = 1.0 -TaggingHelpers::funcNN(rnet, m_P0ks, m_P1ks, m_P2ks, m_P3ks);
+      } else {
+        debug()<<"**********************BAD TRAINING kSame"<<rnet<<endmsg;
+        pn = -1.;
+      }
+
 
       if ( msgLevel(MSG::DEBUG) )
       {

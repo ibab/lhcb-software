@@ -17,6 +17,8 @@
 #include <TROOT.h>
 
 // from local
+#include "MCVertexOSWrapper.h"
+#include "VertexOSWrapper.h"
 #include "FlavourTagging/ITaggingUtils.h"
 #include "INNetTool.h"
 #include <list>
@@ -43,7 +45,8 @@ public:
                           const std::string& name,
                           const IInterface* parent );
   virtual ~TaggerVertexChargeTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();
 
   //-------------------------------------------------------------
   MultiplePersonalityCall<boost::function<
@@ -71,7 +74,9 @@ public:
   //-------------------------------------------------------------
 
 private:
-
+  MCVertexOSWrapper * m_myMCreader;
+  VertexOSWrapper * m_myDATAreader;
+  
   INNetTool* m_nnet;
   ITaggingUtils* m_util;
   ISecondaryVertexTool* m_svtool;
@@ -88,6 +93,7 @@ private:
   double m_wSameSign2, m_wSameSignMoreThan2, m_P0, m_P1, m_Gt075;
   std::string m_personality;
   int    m_isMonteCarlo;
+  double m_P0vtx, m_P1vtx, m_P2vtx, m_P3vtx;  
 };
 
 //===============================================================//

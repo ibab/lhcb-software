@@ -13,6 +13,7 @@
 
 // from local
 #include "INNetTool.h"
+#include "MCKaonSSWrapper.h"
 #include "Kernel/IParticleDescendants.h"
 #include "FlavourTagging/ITaggingUtils.h"
 
@@ -34,7 +35,8 @@ public:
                       const std::string& name,
                       const IInterface* parent );
   virtual ~TaggerKaonSameTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, 
@@ -44,6 +46,8 @@ public:
   //-------------------------------------------------------------
 
 private:
+  MCKaonSSWrapper *m_myMCreader;
+  
 
   INNetTool* m_nnet;
   IParticleDescendants* m_descend;
@@ -69,6 +73,7 @@ private:
   double m_Eta_Cal_kaonS ;
   double m_AverageOmega;
   int    m_isMonteCarlo;
+  double m_P0ks,  m_P1ks,  m_P2ks,  m_P3ks;
   
 };
 

@@ -13,6 +13,8 @@
 #include <TROOT.h>
 
 // from local
+#include "MCElectronOSWrapper.h"
+#include "ElectronOSWrapper.h"
 #include "FlavourTagging/ITaggingUtils.h"
 #include "INNetTool.h"
 #include "Kernel/IParticleDescendants.h"
@@ -36,8 +38,9 @@ public:
                       const std::string& name,
                       const IInterface* parent );
   virtual ~TaggerElectronTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
-
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();
+  
  //-------------------------------------------------------------
   MultiplePersonalityCall<boost::function<
   LHCb::Tagger(
@@ -90,6 +93,9 @@ public:
  //-------------------------------------------------------------
 
 private:
+  MCElectronOSWrapper*   m_myMCreader;
+  ElectronOSWrapper*     m_myDATAreader;
+
   INNetTool* m_nnet;
   ITaggingUtils*  m_util;
   IParticleDescendants* m_descend;
@@ -123,6 +129,8 @@ private:
   
   std::string m_personality;
   int m_isMonteCarlo;
+  double m_P0e, m_P1e, m_P2e, m_P3e;
+  
 };
 
 //===============================================================//

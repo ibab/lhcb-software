@@ -1,6 +1,6 @@
 // Include files 
 #include "TaggerMuonTool.h"
-
+#include "TaggingHelpers.h"
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerMuonTool
 //
@@ -17,7 +17,10 @@ DECLARE_TOOL_FACTORY( TaggerMuonTool )
   TaggerMuonTool::TaggerMuonTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent ) :
-    GaudiTool ( type, name, parent ), m_eventSvc(0)
+    GaudiTool ( type, name, parent ), 
+    m_myMCreader( NULL ),
+    m_myDATAreader( NULL ),
+    m_util( NULL)
 {
 
   declareInterface<ITagger>(this);
@@ -47,8 +50,14 @@ DECLARE_TOOL_FACTORY( TaggerMuonTool )
   declareProperty( "Muon_AverageOmega",  m_AverageOmega  = 0.33 );
   declareProperty( "Personality",        m_personality = "Reco14");
   declareProperty( "isMonteCarlo",       m_isMonteCarlo = 0);
+
+  //mu scaleX=-5.47039 scaleY=1.23885 offsetY=-0.00793716 pivotX=0.647253
+  declareProperty( "P0_mu_scale", m_P0mu =  -5.47039);
+  declareProperty( "P1_mu_scale", m_P1mu =  1.23885);
+  declareProperty( "P2_mu_scale", m_P2mu =  -0.00793716);
+  declareProperty( "P3_mu_scale", m_P3mu =  0.647253);
+
   m_nnet = 0;
-  m_util = 0;
   m_descend = 0;
 }
 
@@ -63,13 +72,6 @@ StatusCode TaggerMuonTool::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Mu calib ctt: P0_Cal "<<m_P0_Cal_muon
             <<", P1_Cal "<<m_P1_Cal_muon<<endreq;
-
-  sc = service("EventDataSvc", m_eventSvc, true);
-  if( sc.isFailure() )
-  {
-    fatal() << " Unable to locate Event Data Service" << endreq;
-    return sc;
-  }
 
   m_util = tool<ITaggingUtils> ( "TaggingUtils", this );
 
@@ -93,8 +95,39 @@ StatusCode TaggerMuonTool::initialize()
       return StatusCode::FAILURE;
   };
 
+  if(m_personality !="Reco12")  {
+    std::vector<std::string> variable_names;
+    variable_names.push_back("mult");     
+    variable_names.push_back("partP");    
+    variable_names.push_back("partPt");   
+    variable_names.push_back("ptB");      
+    variable_names.push_back("IPs");      
+    variable_names.push_back("partlcs");  
+    variable_names.push_back("PIDNNm");   
+    variable_names.push_back("ghostProb");
+    variable_names.push_back("IPPU");
+
+    if (m_isMonteCarlo) m_myMCreader = new MCMuonOSWrapper(variable_names);
+    else  m_myDATAreader = new MuonOSWrapper(variable_names);
+    
+  }
+
   return sc;
 }
+//================================================================================
+StatusCode  TaggerMuonTool::finalize()
+{
+  if(m_isMonteCarlo==1){
+    delete m_myMCreader; 
+    m_myMCreader = NULL;
+  } else {
+    delete m_myDATAreader; 
+    m_myDATAreader = NULL;
+  }
+  
+  return GaudiTool::finalize();
+}
+
 //================================================================================
 Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                             const int nPV,
@@ -324,24 +357,33 @@ Tagger TaggerMuonTool::tagReco14( const Particle* AXB0, const RecVertex* RecVert
 
   //calculate omega
   double pn = 1. - m_AverageOmega;
+  double rnet;  
   double sign=1.;
+
   if(m_CombinationTechnique == "NNet") {
     if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endreq;
 
-    std::vector<std::string> inputVars;
     std::vector<double> inputVals;
-    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
-    inputVars.push_back("partP");       inputVals.push_back( (double)log(imuon->p()/GeV));
-    inputVars.push_back("partPt");      inputVals.push_back( (double)log(imuon->pt()/GeV));
-    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
-    inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPs)));
-    inputVars.push_back("partlcs");     inputVals.push_back( (double)log(imuon->proto()->track()->chi2PerDoF()));
-    inputVars.push_back("PIDNNm");      inputVals.push_back( (double)save_PIDNNm );
-    inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(imuon->proto()->track()->ghostProbability()));
-    inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
-    
-    if(m_isMonteCarlo) pn = m_nnet->MLPmTMVA_MC(inputVars,inputVals);
-    else pn = m_nnet->MLPmTMVA(inputVars,inputVals);
+    inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVals.push_back( (double)log(imuon->p()/GeV));
+    inputVals.push_back( (double)log(imuon->pt()/GeV));
+    inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVals.push_back( (double)log(fabs(save_IPs)));
+    inputVals.push_back( (double)log(imuon->proto()->track()->chi2PerDoF()));
+    inputVals.push_back( (double)save_PIDNNm );
+    inputVals.push_back( (double)log(imuon->proto()->track()->ghostProbability()));
+    inputVals.push_back( (double)log(save_IPPU));
+
+    if(m_isMonteCarlo) rnet = m_myMCreader->GetMvaValue(inputVals);
+    else  rnet = m_myDATAreader->GetMvaValue(inputVals);
+
+    if (rnet>=0 && rnet<=1) {
+      pn = 1.0 - TaggingHelpers::funcNN(rnet, m_P0mu, m_P1mu, m_P2mu, m_P3mu);
+    } else {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug()<<"**********************BAD TRAINING Muon"<<rnet<<endmsg;
+      pn = -1.;
+    }    
     
     //Calibration (w=1-pn) w' = p0 + p1(w-eta)
     pn = 1. - m_P0_Cal_muon - m_P1_Cal_muon * ( (1.-pn)-m_Eta_Cal_muon);

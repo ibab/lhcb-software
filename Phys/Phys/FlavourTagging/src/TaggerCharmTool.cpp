@@ -48,11 +48,12 @@ DECLARE_TOOL_FACTORY( TaggerCharmTool )
 TaggerCharmTool::TaggerCharmTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent ) :
-GaudiTool ( type, name, parent ),
+  GaudiTool ( type, name, parent ),
+  m_myDATAreader( NULL ),
   m_util(0),
   m_pLifetimeFitter(0),
-  m_descend(0),
-  m_nnet(0)
+  m_descend(0)
+                                //  m_nnet(0)
 {
   declareInterface<ITagger>(this);
 
@@ -88,6 +89,11 @@ GaudiTool ( type, name, parent ),
   declareProperty( "Charm_P1_Cal",           m_P1_Cal_charm   = 0.9111);
   declareProperty( "Charm_Eta_Cal",          m_Eta_Cal_charm  = 0.3121);
 
+  declareProperty( "P0_charm_scale", m_P0charm =  0.3206);
+  declareProperty( "P1_charm_scale", m_P1charm =  -0.8247);
+  declareProperty( "P2_charm_scale", m_P2charm =  0.6732);
+  declareProperty( "P3_charm_scale", m_P3charm =  0.);
+
   // initialize decay map
   //                                                                       Idx   K  E   Mu  D* M-    M+      MVA Cut     Purity
   CharmDecayModeMap["D0_Kpi"]          = CharmDecayMode("D0_Kpi",	         0,    1,	0,	0,	0, 1.82, 1.915, -0.0223261, 0.630175 );
@@ -103,11 +109,11 @@ GaudiTool ( type, name, parent ),
   CharmDecayModeMap["Dp_KpiX"]         = CharmDecayMode("Dp_KpiX",	       10,   1,	0,	0,	0, 0.8,  1.915, -0.115402,  0.10732  );
   CharmDecayModeMap["Dp_KeX"]          = CharmDecayMode("Dp_KeX",	         11,   1,	1,	0,	0, 0.8,  1.915, -0.0594275, 0.148148 );
   CharmDecayModeMap["Dp_KmuX"]         = CharmDecayMode("Dp_KmuX",	       12,   1,	0,	1,	0, 0.8,  1.915, -0.054475,  0.189587 );
-
+  
 }
 
-TaggerCharmTool::~TaggerCharmTool() {}
 
+TaggerCharmTool::~TaggerCharmTool() {}
 //=====================================================================
 StatusCode TaggerCharmTool::initialize()
 {
@@ -131,12 +137,29 @@ StatusCode TaggerCharmTool::initialize()
     return StatusCode::FAILURE;
   }
 
-  m_nnet = tool<INNetTool> ( "NNetTool_MLP", this);
+  //  m_nnet = tool<INNetTool> ( "NNetTool_MLP", this);
 
   //   //load tmva readers
   //   int nFoundReaders = 0;
 
   //   if ( msgLevel(MSG::DEBUG) )  debug() << " Number of TMVA readers found: " << nFoundReaders << endreq;
+
+  std::vector<std::string> variable_names;
+
+  variable_names.push_back("mult"                    );
+  variable_names.push_back("nnkrec"                  );
+  variable_names.push_back("ptB"                     );
+  variable_names.push_back("charm_mass"              );
+  variable_names.push_back("charm_mode"              );
+  variable_names.push_back("charm_bpvdira"           );
+  variable_names.push_back("charm_probchi2"          );
+  variable_names.push_back("charm_tau"               );
+  variable_names.push_back("charm_flightdistchi2"    );
+  variable_names.push_back("charm_kprobnnk"          );
+  variable_names.push_back("charm_kippvchi2"         );
+  variable_names.push_back("charm_maxprobnnghostdaus");
+
+  m_myDATAreader = new CharmOSWrapper(variable_names);
 
   return sc;
 }
@@ -145,6 +168,8 @@ StatusCode TaggerCharmTool::initialize()
 
 StatusCode TaggerCharmTool::finalize()
 {
+  delete m_myDATAreader; 
+  m_myDATAreader = NULL;
   for ( auto i : m_classifiers ) { delete i.second; }
   m_classifiers.clear();
   return GaudiTool::finalize();
@@ -574,32 +599,39 @@ double TaggerCharmTool::getOmega(const CharmParticle* cpart, const int nPV, cons
 {
 
   const Particle *part = cpart->part;
-
-  std::vector<std::string> inputVars;
   std::vector<double> inputVals;
+  inputVals.push_back( (double)multiplicity                        );
+  inputVals.push_back( (double)nPV                                 );
+  inputVals.push_back( (double)safe_log(signalB.pt()/GeV)          );
+  inputVals.push_back( (double)part->measuredMass()/GeV            );
+  inputVals.push_back( (double)CharmDecayModeMap[cpart->mode].index);
+  inputVals.push_back( (double)cpart->bpvdira                      );
+  inputVals.push_back( (double)cpart->pchi2                        );
+  inputVals.push_back( (double)cpart->tau                          );
+  inputVals.push_back( (double)cpart->fdchi2                       );
+  inputVals.push_back( (double)cpart->kaonProbnnk                  );
+  inputVals.push_back( (double)cpart->kaonIppvchi2                 );
+  inputVals.push_back( (double)cpart->maxProbGhostDaus             );
 
-  inputVars.push_back("mult"                    ); inputVals.push_back( (double)multiplicity                        );
-  inputVars.push_back("nnkrec"                  ); inputVals.push_back( (double)nPV                                 );
-  inputVars.push_back("ptB"                     ); inputVals.push_back( (double)safe_log(signalB.pt()/GeV)          );
-  inputVars.push_back("charm_mass"              ); inputVals.push_back( (double)part->measuredMass()/GeV            );
-  inputVars.push_back("charm_mode"              ); inputVals.push_back( (double)CharmDecayModeMap[cpart->mode].index);
-  inputVars.push_back("charm_bpvdira"           ); inputVals.push_back( (double)cpart->bpvdira                      );
-  inputVars.push_back("charm_probchi2"          ); inputVals.push_back( (double)cpart->pchi2                        );
-  inputVars.push_back("charm_tau"               ); inputVals.push_back( (double)cpart->tau                          );
-  inputVars.push_back("charm_flightdistchi2"    ); inputVals.push_back( (double)cpart->fdchi2                       );
-  inputVars.push_back("charm_kprobnnk"          ); inputVals.push_back( (double)cpart->kaonProbnnk                  );
-  inputVars.push_back("charm_kippvchi2"         ); inputVals.push_back( (double)cpart->kaonIppvchi2                 );
-  inputVars.push_back("charm_maxprobnnghostdaus"); inputVals.push_back( (double)cpart->maxProbGhostDaus             );
-
-  if (msgLevel(MSG::DEBUG)) {
-    debug()<<"Set NNetCharm Omega Var:";
-    for (unsigned int ivec = 0; ivec<inputVars.size();ivec++){
-      debug()<<" "<<inputVars[ivec]<<" "<<inputVals[ivec];
-    }
-    debug()<<endreq;
+  double rnet = m_myDATAreader->GetMvaValue(inputVals);
+  double pn;
+  
+  if (rnet>=0 && rnet<=1) {
+    pn = 1.0 - (m_P0charm + m_P1charm * (rnet - m_P2charm));
+    verbose()<<"Using MLPBNN for charm - rnet "<<rnet<<" pn "<<pn<<endmsg;
+  } else {
+    debug()<<"**********************BAD TRAINING charm"<<rnet<<endmsg;
+    pn = -1.;
   }
 
-  double omega = 1 - m_nnet->MLPcharmTMVA(inputVars,inputVals);
+  double omega = 1 - pn;
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug()<<"Set NNetCharm Omega Inputs:";
+    for (unsigned int ivec = 0; ivec<inputVals.size();ivec++)
+      debug()<<" "<<inputVals[ivec];    
+    debug()<<endreq;
+  }
 
   //Calibration (w=1-pn) w' = p0 + p1(w-eta)
   omega = m_P0_Cal_charm + m_P1_Cal_charm * ( omega-m_Eta_Cal_charm);

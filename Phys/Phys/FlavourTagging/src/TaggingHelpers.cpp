@@ -24,6 +24,14 @@
 namespace TaggingHelpers
 {
 
+  double funcNN(double x, double a0=0, double a1=0., double a2=0., double a3=0.)
+  {
+    // arcTAN = atan((x-[3])*[0])+1.5)*[1]*0.17+[2]
+    double arg = ((x-a3)*a0);
+    double res = ((std::atan(arg))+1.5)*a1*0.17+a2;
+    return res;
+  }
+  
   double dphi(const double phi1, const double phi2)
   {
     const double c1 = std::cos(phi1), s1 = std::sin(phi1);

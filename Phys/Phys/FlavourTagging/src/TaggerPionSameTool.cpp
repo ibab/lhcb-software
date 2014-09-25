@@ -1,6 +1,5 @@
 // Include files 
 #include "TaggerPionSameTool.h"
-
 #include "TaggingHelpers.h"
 
 //--------------------------------------------------------------------
@@ -19,7 +18,10 @@ DECLARE_TOOL_FACTORY( TaggerPionSameTool )
 TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent ) :
-  GaudiTool ( type, name, parent )
+  GaudiTool ( type, name, parent ),
+  m_myMCreader( NULL ),
+  m_util( NULL)
+
 {
   declareInterface<ITagger>(this);
 
@@ -62,9 +64,12 @@ TaggerPionSameTool::TaggerPionSameTool( const std::string& type,
   declareProperty( "PionSame_AverageOmega",  m_AverageOmega   = 0.40 );
   declareProperty( "PionSame_ProbMin",       m_PionProbMin   = 0.56);
   declareProperty( "isMonteCarlo",       m_isMonteCarlo   = 0);
+  declareProperty( "P0_ps_scale", m_P0ps =  1.22123);
+  declareProperty( "P1_ps_scale", m_P1ps = -1.76027);
+  declareProperty( "P2_ps_scale", m_P2ps =  0.651766);
+  declareProperty( "P3_ps_scale", m_P3ps =  0.);
 
   m_nnet = 0;
-  m_util = 0;
   m_descend = 0;
 
 }
@@ -86,8 +91,31 @@ StatusCode TaggerPionSameTool::initialize()
   m_nnet = tool<INNetTool> ( m_NeuralNetName, this);
 
   m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  
+  if (m_isMonteCarlo) {
+    std::vector<std::string> variable_names;
+    variable_names.push_back("mult");    
+    variable_names.push_back("ptB");     
+    variable_names.push_back("partPt");  
+    variable_names.push_back("IPs");     
+    variable_names.push_back("nndr");    
+    variable_names.push_back("nndq");    
+    variable_names.push_back("nnkrec");  
+
+    m_myMCreader = new MCPionSSWrapper(variable_names);
+  }
 
   return sc;
+}
+//================================================================================
+StatusCode  TaggerPionSameTool::finalize()
+{
+  if(m_isMonteCarlo==1){
+    delete m_myMCreader; 
+    m_myMCreader = NULL;
+  }
+  
+  return GaudiTool::finalize();
 }
 
 //=====================================================================
@@ -213,17 +241,23 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     const double dR  = std::sqrt(deta*deta+dphi*dphi);
 
     if(m_isMonteCarlo) {
-      std::vector<std::string> inputVars;
       std::vector<double> inputVals;
-      inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
-      inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
-      inputVars.push_back("partPt");      inputVals.push_back( (double)log(ipionS->pt()/GeV));
-      inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(IP/IPerr)));
-      inputVars.push_back("nndr");        inputVals.push_back( (double)dR);
-      inputVars.push_back("nndq");        inputVals.push_back( (double)dQ/GeV);
-      inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
+      inputVals.push_back( (double)m_util->countTracks(vtags));
+      inputVals.push_back( (double)log(AXB0->pt()/GeV));
+      inputVals.push_back( (double)log(ipionS->pt()/GeV));
+      inputVals.push_back( (double)log(fabs(IP/IPerr)));
+      inputVals.push_back( (double)dR);
+      inputVals.push_back( (double)dQ/GeV);
+      inputVals.push_back( (double)nPV);
       
-      pn = m_nnet->MLPpSTMVA_MC(inputVars,inputVals);
+      double  rnet = m_myMCreader->GetMvaValue(inputVals);
+      if (rnet>=0 && rnet<=1) {
+        pn = 1.0 - TaggingHelpers::funcNN(rnet, m_P0ps, m_P1ps, m_P2ps, m_P3ps);
+      } else {
+        if ( msgLevel(MSG::DEBUG) ) 
+          debug()<<"**********************BAD TRAINING PionSS"<<rnet<<endmsg;
+        pn = -1.;
+      }
 
       if ( msgLevel(MSG::DEBUG) )
       {

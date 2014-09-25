@@ -192,40 +192,40 @@ tunings = {
 
 
          #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
-        "TaggerMuonTool.NNetTool_MLP.P0_mu_scale"        : -5.47039,
-        "TaggerMuonTool.NNetTool_MLP.P1_mu_scale"        :  1.23885,
-        "TaggerMuonTool.NNetTool_MLP.P2_mu_scale"        : -0.00793716,
-        "TaggerMuonTool.NNetTool_MLP.P3_mu_scale"        :  0.647253,
+        "TaggerMuonTool.P0_mu_scale"        : -5.47039,
+        "TaggerMuonTool.P1_mu_scale"        :  1.23885,
+        "TaggerMuonTool.P2_mu_scale"        : -0.00793716,
+        "TaggerMuonTool.P3_mu_scale"        :  0.647253,
   
-        "TaggerElectronTool.NNetTool_MLP.P0_e_scale"     :  -3.04032,
-        "TaggerElectronTool.NNetTool_MLP.P1_e_scale"     :   1.7055,
-        "TaggerElectronTool.NNetTool_MLP.P2_e_scale"     :  -0.136785,
-        "TaggerElectronTool.NNetTool_MLP.P3_e_scale"     :   0.646733,
+        "TaggerElectronTool.P0_e_scale"     :  -3.04032,
+        "TaggerElectronTool.P1_e_scale"     :   1.7055,
+        "TaggerElectronTool.P2_e_scale"     :  -0.136785,
+        "TaggerElectronTool.P3_e_scale"     :   0.646733,
 
-        "TaggerKaonOppositeTool.NNetTool_MLP.P0_k_scale"     :  -5.12122,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P1_k_scale"     :   1.21427,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P2_k_scale"     :   0.088854,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P3_k_scale"     :   0.573943,
+        "TaggerKaonOppositeTool.P0_k_scale"     :  -5.12122,
+        "TaggerKaonOppositeTool.P1_k_scale"     :   1.21427,
+        "TaggerKaonOppositeTool.P2_k_scale"     :   0.088854,
+        "TaggerKaonOppositeTool.P3_k_scale"     :   0.573943,
 
-        "TaggerVertexChargeTool.NNetTool_MLP.P0_vtx_scale"   :-5.77134,
-        "TaggerVertexChargeTool.NNetTool_MLP.P1_vtx_scale"   : 1.11591,
-        "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale"   : 0.113682,
-        "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale"   : 0.570684,
+        "TaggerVertexChargeTool.P0_vtx_scale"   :-5.77134,
+        "TaggerVertexChargeTool.P1_vtx_scale"   : 1.11591,
+        "TaggerVertexChargeTool.P2_vtx_scale"   : 0.113682,
+        "TaggerVertexChargeTool.P3_vtx_scale"   : 0.570684,
 
-        "TaggerKaonSameTool.NNetTool_MLP.P0_ks_scale"        :  1.22418, 
-        "TaggerKaonSameTool.NNetTool_MLP.P1_ks_scale"        : -1.63297,  
-        "TaggerKaonSameTool.NNetTool_MLP.P2_ks_scale"        :  0.401361,
-        "TaggerKaonSameTool.NNetTool_MLP.P3_ks_scale"        :  0.,
+        "TaggerKaonSameTool.P0_ks_scale"        :  1.22418, 
+        "TaggerKaonSameTool.P1_ks_scale"        : -1.63297,  
+        "TaggerKaonSameTool.P2_ks_scale"        :  0.401361,
+        "TaggerKaonSameTool.P3_ks_scale"        :  0.,
 
-        "TaggerPionSameTool.NNetTool_MLP.P0_ps_scale"        :  1.22123,
-        "TaggerPionSameTool.NNetTool_MLP.P1_ps_scale"        :  -1.76027,
-        "TaggerPionSameTool.NNetTool_MLP.P2_ps_scale"        :  0.651766,
-        "TaggerPionSameTool.NNetTool_MLP.P3_ps_scale"        :  0.,          
+        "TaggerPionSameTool.P0_ps_scale"        :  1.22123,
+        "TaggerPionSameTool.P1_ps_scale"        :  -1.76027,
+        "TaggerPionSameTool.P2_ps_scale"        :  0.651766,
+        "TaggerPionSameTool.P3_ps_scale"        :  0.,          
 
-        "TaggerPionSameTool.NNetTool_MLP.P0_charm_scale"        :  0.3206,
-        "TaggerPionSameTool.NNetTool_MLP.P1_charm_scale"        :  -0.8247,
-        "TaggerPionSameTool.NNetTool_MLP.P2_charm_scale"        :  0.6732,
-        "TaggerPionSameTool.NNetTool_MLP.P3_charm_scale"        :  0.          
+        "TaggerCharmTool.P0_charm_scale"        :  0.3206,
+        "TaggerCharmTool.P1_charm_scale"        :  -0.8247,
+        "TaggerCharmTool.P2_charm_scale"        :  0.6732,
+        "TaggerCharmTool.P3_charm_scale"        :  0.          
 
         },
 
@@ -435,10 +435,10 @@ tunings = {
         "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale":   0.,
         "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,          
 
-        "TaggerPionSameTool.NNetTool_MLP.P0_charm_scale"        :  0.3206,
-        "TaggerPionSameTool.NNetTool_MLP.P1_charm_scale"        :  -0.8247,
-        "TaggerPionSameTool.NNetTool_MLP.P2_charm_scale"        :  0.6732,
-        "TaggerPionSameTool.NNetTool_MLP.P3_charm_scale"        :  0.
+        "TaggerCharmTool.P0_charm_scale"        :  0.3206,
+        "TaggerCharmTool.P1_charm_scale"        :  -0.8247,
+        "TaggerCharmTool.P2_charm_scale"        :  0.6732,
+        "TaggerCharmTool.P3_charm_scale"        :  0.          
         
         },
 
@@ -647,11 +647,11 @@ tunings = {
         "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale":   0.,
         "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,          
 
-        "TaggerPionSameTool.NNetTool_MLP.P0_charm_scale"        :  0.3206,
-        "TaggerPionSameTool.NNetTool_MLP.P1_charm_scale"        :  -0.8247,
-        "TaggerPionSameTool.NNetTool_MLP.P2_charm_scale"        :  0.6732,
-        "TaggerPionSameTool.NNetTool_MLP.P3_charm_scale"        :  0.
-        
+        "TaggerCharmTool.P0_charm_scale"        :  0.3206,
+        "TaggerCharmTool.P1_charm_scale"        :  -0.8247,
+        "TaggerCharmTool.P2_charm_scale"        :  0.6732,
+        "TaggerCharmTool.P3_charm_scale"        :  0.          
+
         },
 
     'Xmass_2011' : { 
@@ -947,35 +947,35 @@ tunings = {
         "TaggerVertexChargeTool.isMonteCarlo"   : 1,
 
          #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
-        "TaggerMuonTool.NNetTool_MLP.P0_mu_scale"        :  -0.141137,
-        "TaggerMuonTool.NNetTool_MLP.P1_mu_scale"        :  41.5316,
-        "TaggerMuonTool.NNetTool_MLP.P2_mu_scale"        : -10.2783,
-        "TaggerMuonTool.NNetTool_MLP.P3_mu_scale"        :   0.685294,
+        "TaggerMuonTool.P0_mu_scale"        :  -0.141137,
+        "TaggerMuonTool.P1_mu_scale"        :  41.5316,
+        "TaggerMuonTool.P2_mu_scale"        : -10.2783,
+        "TaggerMuonTool.P3_mu_scale"        :   0.685294,
 
-        "TaggerElectronTool.NNetTool_MLP.P0_e_scale"     :  -5.94519,
-        "TaggerElectronTool.NNetTool_MLP.P1_e_scale"     :   0.81266,
-        "TaggerElectronTool.NNetTool_MLP.P2_e_scale"     :   0.118091, 
-        "TaggerElectronTool.NNetTool_MLP.P3_e_scale"     :   0.674805,
+        "TaggerElectronTool.P0_e_scale"     :  -5.94519,
+        "TaggerElectronTool.P1_e_scale"     :   0.81266,
+        "TaggerElectronTool.P2_e_scale"     :   0.118091, 
+        "TaggerElectronTool.P3_e_scale"     :   0.674805,
 
-        "TaggerKaonOppositeTool.NNetTool_MLP.P0_k_scale"     :   -3.52673,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P1_k_scale"     :    1.59036,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P2_k_scale"     :   -0.0650637,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P3_k_scale"     :    0.660806,
+        "TaggerKaonOppositeTool.P0_k_scale"     :   -3.52673,
+        "TaggerKaonOppositeTool.P1_k_scale"     :    1.59036,
+        "TaggerKaonOppositeTool.P2_k_scale"     :   -0.0650637,
+        "TaggerKaonOppositeTool.P3_k_scale"     :    0.660806,
 
-        "TaggerVertexChargeTool.NNetTool_MLP.P0_vtx_scale"   :  -0.151015,
-        "TaggerVertexChargeTool.NNetTool_MLP.P1_vtx_scale"   :  41.1709,
-        "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale"   : -10.1307,
-        "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale"   :   0.636393,
+        "TaggerVertexChargeTool.P0_vtx_scale"   :  -0.151015,
+        "TaggerVertexChargeTool.P1_vtx_scale"   :  41.1709,
+        "TaggerVertexChargeTool.P2_vtx_scale"   : -10.1307,
+        "TaggerVertexChargeTool.P3_vtx_scale"   :   0.636393,
 
-        "TaggerKaonSameTool.NNetTool_MLP.P0_ks_scale"        :  -0.127331,
-        "TaggerKaonSameTool.NNetTool_MLP.P1_ks_scale"        :  44.3673,
-        "TaggerKaonSameTool.NNetTool_MLP.P2_ks_scale"        :  -11.,
-        "TaggerKaonSameTool.NNetTool_MLP.P3_ks_scale"        :  0.715702,
+        "TaggerKaonSameTool.P0_ks_scale"        :  -0.127331,
+        "TaggerKaonSameTool.P1_ks_scale"        :  44.3673,
+        "TaggerKaonSameTool.P2_ks_scale"        :  -11.,
+        "TaggerKaonSameTool.P3_ks_scale"        :  0.715702,
 
-        "TaggerPionSameTool.NNetTool_MLP.P0_ps_scale"        :  -0.16746,
-        "TaggerPionSameTool.NNetTool_MLP.P1_ps_scale"        :  34.4145,
-        "TaggerPionSameTool.NNetTool_MLP.P2_ps_scale"        :  -8.35356,
-        "TaggerPionSameTool.NNetTool_MLP.P3_ps_scale"        :   0.574669                  
+        "TaggerPionSameTool.P0_ps_scale"        :  -0.16746,
+        "TaggerPionSameTool.P1_ps_scale"        :  34.4145,
+        "TaggerPionSameTool.P2_ps_scale"        :  -8.35356,
+        "TaggerPionSameTool.P3_ps_scale"        :   0.574669                  
         },
 
 
@@ -1158,35 +1158,35 @@ tunings = {
         "TaggerVertexChargeTool.isMonteCarlo"   : 1,
 
          #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
-        "TaggerMuonTool.NNetTool_MLP.P0_mu_scale"        :  -0.141137,
-        "TaggerMuonTool.NNetTool_MLP.P1_mu_scale"        :  41.5316,
-        "TaggerMuonTool.NNetTool_MLP.P2_mu_scale"        : -10.2783,
-        "TaggerMuonTool.NNetTool_MLP.P3_mu_scale"        :   0.685294,
+        "TaggerMuonTool.P0_mu_scale"        :  -0.141137,
+        "TaggerMuonTool.P1_mu_scale"        :  41.5316,
+        "TaggerMuonTool.P2_mu_scale"        : -10.2783,
+        "TaggerMuonTool.P3_mu_scale"        :   0.685294,
 
-        "TaggerElectronTool.NNetTool_MLP.P0_e_scale"     :  -5.94519,
-        "TaggerElectronTool.NNetTool_MLP.P1_e_scale"     :   0.81266,
-        "TaggerElectronTool.NNetTool_MLP.P2_e_scale"     :   0.118091, 
-        "TaggerElectronTool.NNetTool_MLP.P3_e_scale"     :   0.674805,
+        "TaggerElectronTool.P0_e_scale"     :  -5.94519,
+        "TaggerElectronTool.P1_e_scale"     :   0.81266,
+        "TaggerElectronTool.P2_e_scale"     :   0.118091, 
+        "TaggerElectronTool.P3_e_scale"     :   0.674805,
 
-        "TaggerKaonOppositeTool.NNetTool_MLP.P0_k_scale"     :   -3.52673,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P1_k_scale"     :    1.59036,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P2_k_scale"     :   -0.0650637,
-        "TaggerKaonOppositeTool.NNetTool_MLP.P3_k_scale"     :    0.660806,
+        "TaggerKaonOppositeTool.P0_k_scale"     :   -3.52673,
+        "TaggerKaonOppositeTool.P1_k_scale"     :    1.59036,
+        "TaggerKaonOppositeTool.P2_k_scale"     :   -0.0650637,
+        "TaggerKaonOppositeTool.P3_k_scale"     :    0.660806,
 
-        "TaggerVertexChargeTool.NNetTool_MLP.P0_vtx_scale"   :  -0.151015,
-        "TaggerVertexChargeTool.NNetTool_MLP.P1_vtx_scale"   :  41.1709,
-        "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale"   : -10.1307,
-        "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale"   :   0.636393,
+        "TaggerVertexChargeTool.P0_vtx_scale"   :  -0.151015,
+        "TaggerVertexChargeTool.P1_vtx_scale"   :  41.1709,
+        "TaggerVertexChargeTool.P2_vtx_scale"   : -10.1307,
+        "TaggerVertexChargeTool.P3_vtx_scale"   :   0.636393,
 
-        "TaggerKaonSameTool.NNetTool_MLP.P0_ks_scale"        :  -0.127331,
-        "TaggerKaonSameTool.NNetTool_MLP.P1_ks_scale"        :  44.3673,
-        "TaggerKaonSameTool.NNetTool_MLP.P2_ks_scale"        :  -11.,
-        "TaggerKaonSameTool.NNetTool_MLP.P3_ks_scale"        :  0.715702,
+        "TaggerKaonSameTool.P0_ks_scale"        :  -0.127331,
+        "TaggerKaonSameTool.P1_ks_scale"        :  44.3673,
+        "TaggerKaonSameTool.P2_ks_scale"        :  -11.,
+        "TaggerKaonSameTool.P3_ks_scale"        :  0.715702,
 
-        "TaggerPionSameTool.NNetTool_MLP.P0_ps_scale"        :  -0.16746,
-        "TaggerPionSameTool.NNetTool_MLP.P1_ps_scale"        :  34.4145,
-        "TaggerPionSameTool.NNetTool_MLP.P2_ps_scale"        :  -8.35356,
-        "TaggerPionSameTool.NNetTool_MLP.P3_ps_scale"        :   0.574669                  
+        "TaggerPionSameTool.P0_ps_scale"        :  -0.16746,
+        "TaggerPionSameTool.P1_ps_scale"        :  34.4145,
+        "TaggerPionSameTool.P2_ps_scale"        :  -8.35356,
+        "TaggerPionSameTool.P3_ps_scale"        :   0.574669                  
         },
 
 

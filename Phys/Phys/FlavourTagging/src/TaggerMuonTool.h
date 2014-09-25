@@ -13,6 +13,8 @@
 #include <TROOT.h>
 
 // from local
+#include "MuonOSWrapper.h"
+#include "MCMuonOSWrapper.h"
 #include "FlavourTagging/ITaggingUtils.h"
 #include "Kernel/IParticleDescendants.h"
 #include "INNetTool.h"
@@ -39,7 +41,8 @@ public:
                   const std::string& name,
                   const IInterface* parent );
   virtual ~TaggerMuonTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();    ///<  finalization
 
   //-------------------------------------------------------------
   MultiplePersonalityCall<boost::function<
@@ -90,12 +93,14 @@ public:
   //-------------------------------------------------------------
 
 private:
+  MCMuonOSWrapper*   m_myMCreader;
+  MuonOSWrapper*     m_myDATAreader;
 
   INNetTool* m_nnet;
   IParticleDescendants* m_descend;
   ITaggingUtils* m_util;
 
-  IDataProviderSvc* m_eventSvc;
+  // IDataProviderSvc* m_eventSvc;
   std::string m_CombinationTechnique, m_NeuralNetName;
 
   //properties
@@ -118,7 +123,8 @@ private:
   double m_P1_Cal_muon ;
   double m_Eta_Cal_muon ;
   std::string m_personality;
-  int   m_isMonteCarlo;
+  int    m_isMonteCarlo;
+  double m_P0mu, m_P1mu, m_P2mu, m_P3mu;
   
 };
 

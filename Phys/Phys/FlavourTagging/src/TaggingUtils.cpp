@@ -95,7 +95,6 @@ StatusCode TaggingUtils::initialize()
 
   return sc;
 }
-
 //==========================================================================
 StatusCode TaggingUtils::calcDOCAmin( const Particle* axp,
                                       const Particle* p1,

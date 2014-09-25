@@ -39,7 +39,6 @@ public:
   StatusCode finalize();    ///<  finalization
 
   //-------------------------------------------------------------
-
   StatusCode calcIP( const LHCb::Particle* axp,
                      const LHCb::VertexBase* v,
                      double& ip, double& iperr) ;

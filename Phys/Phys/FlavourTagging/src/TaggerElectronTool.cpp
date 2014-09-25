@@ -1,6 +1,6 @@
 // Include files 
 #include "TaggerElectronTool.h"
-
+#include "TaggingHelpers.h"
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerElectronTool
 //
@@ -17,7 +17,10 @@ DECLARE_TOOL_FACTORY( TaggerElectronTool )
   TaggerElectronTool::TaggerElectronTool( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent ) :
-    GaudiTool ( type, name, parent )
+    GaudiTool ( type, name, parent ),
+    m_myMCreader( NULL ),
+    m_myDATAreader( NULL ),
+    m_util( NULL)
 {
 
     declareInterface<ITagger>(this);
@@ -52,8 +55,14 @@ DECLARE_TOOL_FACTORY( TaggerElectronTool )
     declareProperty( "Ele_AverageOmega",  m_AverageOmega  = 0.33 );
     declareProperty( "Personality",       m_personality   = "Reco14");
     declareProperty( "isMonteCarlo",      m_isMonteCarlo = 0);
+
+    //e scaleX=-3.04032 scaleY=1.7055 offsetY=-0.136785 pivotX=0.646733
+    declareProperty( "P0_e_scale", m_P0e =  -3.04032);
+    declareProperty( "P1_e_scale", m_P1e =  1.7055);
+    declareProperty( "P2_e_scale", m_P2e =  -0.136785);
+    declareProperty( "P3_e_scale", m_P3e =  0.646733);
+
     m_nnet = 0;
-    m_util = 0;
     m_descend = 0;
     m_electron = 0;
   }
@@ -93,8 +102,35 @@ StatusCode TaggerElectronTool::initialize()
       return StatusCode::FAILURE;
   };
 
+  if(m_personality !="Reco12")  {
+    std::vector<std::string> variable_names;
+    variable_names.push_back("mult");     
+    variable_names.push_back("partP");    
+    variable_names.push_back("partPt");   
+    variable_names.push_back("ptB");      
+    variable_names.push_back("IPs");      
+    variable_names.push_back("partlcs");  
+    variable_names.push_back("eOverP");   
+    variable_names.push_back("ghostProb");
+    variable_names.push_back("IPPU");
 
+    if (m_isMonteCarlo) m_myMCreader = new MCElectronOSWrapper(variable_names);
+    else  m_myDATAreader = new ElectronOSWrapper(variable_names);
+  }
   return sc;
+}
+//================================================================================
+StatusCode  TaggerElectronTool::finalize()
+{
+  if(m_isMonteCarlo==1){
+    delete m_myMCreader; 
+    m_myMCreader = NULL;
+  } else {
+    delete m_myDATAreader; 
+    m_myDATAreader = NULL;
+  }
+  
+  return GaudiTool::finalize();
 }
 //================================================================================
 Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert, 
@@ -359,24 +395,32 @@ Tagger TaggerElectronTool::tagReco14( const Particle* AXB0, const RecVertex* Rec
   //calculate omega
   double sign = 1.;  
   double pn = 1-m_AverageOmega;
-
+  double rnet;
+  
   if(m_CombinationTechnique == "NNet") {
     if ( msgLevel(MSG::DEBUG) ) debug()<< nPV<< endreq;
-    std::vector<std::string> inputVars;
-    std::vector<double> inputVals;
-    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
-    inputVars.push_back("partP");       inputVals.push_back( (double)log(iele->p()/GeV));
-    inputVars.push_back("partPt");      inputVals.push_back( (double)log(iele->pt()/GeV));
-    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
-    inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPs)));
-    inputVars.push_back("partlcs");     inputVals.push_back( (double)log(iele->proto()->track()->chi2PerDoF()));
-    inputVars.push_back("eOverP");      inputVals.push_back( (double)save_eOverP );
-    inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(iele->proto()->track()->ghostProbability()));
-    inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
-    
-    if(m_isMonteCarlo ) pn = m_nnet->MLPeTMVA_MC(inputVars,inputVals);
-    else pn = m_nnet->MLPeTMVA(inputVars,inputVals);
 
+    std::vector<double> inputVals;
+    inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVals.push_back( (double)log(iele->p()/GeV));
+    inputVals.push_back( (double)log(iele->pt()/GeV));
+    inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVals.push_back( (double)log(fabs(save_IPs)));
+    inputVals.push_back( (double)log(iele->proto()->track()->chi2PerDoF()));
+    inputVals.push_back( (double)save_eOverP );
+    inputVals.push_back( (double)log(iele->proto()->track()->ghostProbability()));
+    inputVals.push_back( (double)log(save_IPPU));
+    
+    if(m_isMonteCarlo) rnet = m_myMCreader->GetMvaValue(inputVals);
+    else  rnet = m_myDATAreader->GetMvaValue(inputVals);
+
+    if (rnet>=0 && rnet<=1) {
+      pn = 1.0 - TaggingHelpers::funcNN(rnet, m_P0e, m_P1e, m_P2e, m_P3e);
+    } else {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug()<<"**********************BAD TRAINING Electron"<<rnet<<endmsg;
+      pn = -1.;
+    }    
 
     if(msgLevel(MSG::VERBOSE)) verbose() << " Elec pn=" << pn << endreq;
 

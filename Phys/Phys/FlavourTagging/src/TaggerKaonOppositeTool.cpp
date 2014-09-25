@@ -1,6 +1,6 @@
 // Include files 
 #include "TaggerKaonOppositeTool.h"
-
+#include "TaggingHelpers.h"
 //--------------------------------------------------------------------
 // Implementation file for class : TaggerKaonOppositeTool
 //
@@ -17,7 +17,11 @@ DECLARE_TOOL_FACTORY( TaggerKaonOppositeTool )
   TaggerKaonOppositeTool::TaggerKaonOppositeTool( const std::string& type,
                                                   const std::string& name,
                                                   const IInterface* parent ) :
-    GaudiTool ( type, name, parent )
+    GaudiTool ( type, name, parent ),
+    m_myMCreader( NULL ),
+    m_myDATAreader( NULL ),
+    m_util( NULL)
+
 {
     declareInterface<ITagger>(this);
 
@@ -49,8 +53,13 @@ DECLARE_TOOL_FACTORY( TaggerKaonOppositeTool )
     declareProperty( "Kaon_ProbMin",     m_ProbMin_kaon  = 0. ); //no cut
     declareProperty( "Personality",      m_personality   = "Reco14");
     declareProperty( "isMonteCarlo",     m_isMonteCarlo         = 0);
+    //k scaleX=-5.12122 scaleY=1.21427 offsetY=0.088854 pivotX=0.573943
+    declareProperty( "P0_k_scale", m_P0k =  -5.12122);
+    declareProperty( "P1_k_scale", m_P1k =  1.21427);
+    declareProperty( "P2_k_scale", m_P2k =  0.088854);
+    declareProperty( "P3_k_scale", m_P3k =  0.573943);
+    
     m_nnet = 0;
-    m_util = 0;
     m_descend = 0;
 
   }
@@ -86,10 +95,45 @@ StatusCode TaggerKaonOppositeTool::initialize()
       "personality: " << e.what() << endmsg;
     return StatusCode::FAILURE;
   };
+
+  if(m_personality !="Reco12")  {
+    std::vector<std::string> variable_names;
+    variable_names.push_back("mult");     
+    variable_names.push_back("partP");    
+    variable_names.push_back("partPt");   
+    variable_names.push_back("nnkrec");   
+    variable_names.push_back("ptB");      
+    variable_names.push_back("IPs");      
+    variable_names.push_back("partlcs");  
+    variable_names.push_back("PIDNNk");   
+    variable_names.push_back("PIDNNpi");  
+    variable_names.push_back("PIDNNp");   
+    variable_names.push_back("ghostProb");
+    variable_names.push_back("IPPU");
+    
+    if (m_isMonteCarlo) m_myMCreader = new MCKaonOSWrapper(variable_names);
+    else  m_myDATAreader = new KaonOSWrapper(variable_names);
+    
+  }
+  
   
   return sc;
 }
 //================================================================================
+StatusCode  TaggerKaonOppositeTool::finalize()
+{
+  if(m_isMonteCarlo==1){
+    delete m_myMCreader; 
+    m_myMCreader = NULL;
+  } else {
+    delete m_myDATAreader; 
+    m_myDATAreader = NULL;
+  }
+  
+  return GaudiTool::finalize();
+}
+
+//=====================================================================
 Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                                     const int nPV,
                                     Particle::ConstVector& vtags )
@@ -331,27 +375,35 @@ Tagger TaggerKaonOppositeTool::tagReco14( const Particle* AXB0,
   //calculate omega
   double pn = 1-m_AverageOmega;
   double sign = 1.;
+  double rnet;
   
   std::vector<std::string> inputVars;
   std::vector<double> inputVals;
   if(m_CombinationTechnique == "NNet") {
 
-    inputVars.push_back("mult");        inputVals.push_back( (double)m_util->countTracks(vtags));
-    inputVars.push_back("partP");       inputVals.push_back( (double)log(ikaon->p()/GeV));
-    inputVars.push_back("partPt");      inputVals.push_back( (double)log(ikaon->pt()/GeV));
-    inputVars.push_back("nnkrec");      inputVals.push_back( (double)nPV);
-    inputVars.push_back("ptB");         inputVals.push_back( (double)log(AXB0->pt()/GeV));
-    inputVars.push_back("IPs");         inputVals.push_back( (double)log(fabs(save_IPs)));
-    inputVars.push_back("partlcs");     inputVals.push_back( (double)log(ikaon->proto()->track()->chi2PerDoF()));
-    inputVars.push_back("PIDNNk");      inputVals.push_back( (double)save_PIDNNk );
-    inputVars.push_back("PIDNNpi");     inputVals.push_back( (double)save_PIDNNpi );
-    inputVars.push_back("PIDNNp");      inputVals.push_back( (double)save_PIDNNp );
-    inputVars.push_back("ghostProb");   inputVals.push_back( (double)log(ikaon->proto()->track()->ghostProbability()));
-    inputVars.push_back("IPPU");        inputVals.push_back( (double)log(save_IPPU));
+    inputVals.push_back( (double)m_util->countTracks(vtags));
+    inputVals.push_back( (double)log(ikaon->p()/GeV));
+    inputVals.push_back( (double)log(ikaon->pt()/GeV));
+    inputVals.push_back( (double)nPV);
+    inputVals.push_back( (double)log(AXB0->pt()/GeV));
+    inputVals.push_back( (double)log(fabs(save_IPs)));
+    inputVals.push_back( (double)log(ikaon->proto()->track()->chi2PerDoF()));
+    inputVals.push_back( (double)save_PIDNNk );
+    inputVals.push_back( (double)save_PIDNNpi );
+    inputVals.push_back( (double)save_PIDNNp );
+    inputVals.push_back( (double)log(ikaon->proto()->track()->ghostProbability()));
+    inputVals.push_back( (double)log(save_IPPU));
 
-    if(m_isMonteCarlo) pn = m_nnet->MLPkaonTMVA_MC(inputVars,inputVals);
-    else  pn = m_nnet->MLPkaonTMVA(inputVars,inputVals);
+    if(m_isMonteCarlo) rnet = m_myMCreader->GetMvaValue(inputVals);
+    else  rnet = m_myDATAreader->GetMvaValue(inputVals);
 
+    if (rnet>=0 && rnet<=1) {
+      pn = 1.0 - TaggingHelpers::funcNN(rnet, m_P0k, m_P1k, m_P2k, m_P3k);
+    } else {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug()<<"**********************BAD TRAINING Kaon"<<rnet<<endmsg;
+      pn = -1.;
+    }
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " Kaon pn="<< pn <<endmsg;
 

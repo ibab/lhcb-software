@@ -13,6 +13,7 @@
 #include "Kernel/ITagger.h"
 
 // from local
+#include "MCPionSSWrapper.h"
 #include "FlavourTagging/ITaggingUtils.h"
 #include "Kernel/IParticleDescendants.h"
 #include "INNetTool.h"
@@ -34,7 +35,8 @@ public:
                       const std::string& name,
                       const IInterface* parent );
   virtual ~TaggerPionSameTool( ); ///< Destructor
-  StatusCode initialize();    ///<  initialization
+  virtual StatusCode initialize();    ///<  initialization
+  virtual StatusCode finalize();
 
   //-------------------------------------------------------------
   virtual LHCb::Tagger tag( const LHCb::Particle*, 
@@ -44,7 +46,8 @@ public:
   //-------------------------------------------------------------
 
 private:
-
+  MCPionSSWrapper * m_myMCreader;
+  
   INNetTool* m_nnet;
   IParticleDescendants* m_descend;
   ITaggingUtils* m_util;
@@ -71,6 +74,7 @@ private:
   double m_P2_Cal_pionS ;
   double m_Eta_Cal_pionS ;
   int    m_isMonteCarlo;
+  double m_P0ps, m_P1ps, m_P2ps, m_P3ps;
   
 };
 //===============================================================//
