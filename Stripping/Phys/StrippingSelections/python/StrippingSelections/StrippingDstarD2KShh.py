@@ -87,7 +87,8 @@ class DstarD2KShhBuilder(LineBuilder) :
                               'KPDDPostscale',
                               'PPDDPrescale',
                               'PPDDPostscale',
-                              'LongTrackGEC')
+                              'LongTrackGEC',
+                              'RequiredRawEvents')
 
     def __init__(self, name, config) :
 
@@ -133,32 +134,38 @@ class DstarD2KShhBuilder(LineBuilder) :
                                       prescale = config['KKLLPrescale'],
                                       postscale = config['KKLLPostscale'],
                                       FILTER = _globalEventCuts,
-                                      selection = self.selDstar_KKLL)
+                                      selection = self.selDstar_KKLL,
+                                      RequiredRawEvents = config['RequiredRawEvents'])
         self.lineKPLL = StrippingLine(name+'KPLLLine',
                                       prescale = config['KPLLPrescale'],
                                       postscale = config['KPLLPostscale'],
                                       FILTER = _globalEventCuts,
-                                      selection = self.selDstar_KPLL)
+                                      selection = self.selDstar_KPLL,
+                                      RequiredRawEvents = config['RequiredRawEvents'])
         self.linePPLL = StrippingLine(name+'PPLLLine',
                                       prescale = config['PPLLPrescale'],
                                       postscale = config['PPLLPostscale'],
                                       FILTER = _globalEventCuts,
-                                      selection = self.selDstar_PPLL)
+                                      selection = self.selDstar_PPLL,
+                                      RequiredRawEvents = config['RequiredRawEvents'])
         self.lineKKDD = StrippingLine(name+'KKDDLine',
                                       prescale = config['KKDDPrescale'],
                                       postscale = config['KKDDPostscale'],
                                       FILTER = _globalEventCuts,
-                                      selection = self.selDstar_KKDD)
+                                      selection = self.selDstar_KKDD,
+                                      RequiredRawEvents = config['RequiredRawEvents'])
         self.lineKPDD = StrippingLine(name+'KPDDLine',
                                       prescale = config['KPDDPrescale'],
                                       postscale = config['KPDDPostscale'],
                                       FILTER = _globalEventCuts,
-                                      selection = self.selDstar_KPDD)
+                                      selection = self.selDstar_KPDD,
+                                      RequiredRawEvents = config['RequiredRawEvents'])
         self.linePPDD = StrippingLine(name+'PPDDLine',
                                       prescale = config['PPDDPrescale'],
                                       postscale = config['PPDDPostscale'],
                                       FILTER = _globalEventCuts,
-                                      selection = self.selDstar_PPDD)
+                                      selection = self.selDstar_PPDD,
+                                      RequiredRawEvents = config['RequiredRawEvents'])
 
         self.registerLine(self.lineKKLL)
         self.registerLine(self.lineKPLL)

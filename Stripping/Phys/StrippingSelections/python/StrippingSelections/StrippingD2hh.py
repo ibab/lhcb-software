@@ -68,7 +68,8 @@ default_config = { 'DaugPtMin': 800.,
 	   'Hlt1TOS': { 'Hlt1TrackAllL0Decision%TOS' : 0 },
 	   'Hlt2TOSKPi': { 'Hlt2CharmHadD02HH_D02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KPiDecision%TOS' : 0, 'Hlt2CharmHadD02KPiWideMassDecision%TOS' : 0 },
 	   'Hlt2TOSKK': { 'Hlt2CharmHadD02HH_D02KKDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02KKWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02KKDecision%TOS' : 0, 'Hlt2CharmHadD02KKWideMassDecision%TOS' : 0 },
-	   'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 }
+	   'Hlt2TOSPiPi': { 'Hlt2CharmHadD02HH_D02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02HH_D02PiPiWideMassDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiDecision%TOS' : 0, 'Hlt2CharmHadD02PiPiWideMassDecision%TOS' : 0 },
+	   'RequiredRawEvents' : ["Muon","Calo","Rich","Velo","Tracker","Trigger"]
          }
 
 class D2hhConf(LineBuilder) :
@@ -146,7 +147,8 @@ class D2hhConf(LineBuilder) :
 			      'Hlt1TOS',
 	                      'Hlt2TOSKPi',
 	                      'Hlt2TOSKK',
-	                      'Hlt2TOSPiPi'
+	                      'Hlt2TOSPiPi',
+	                      'RequiredRawEvents'
                               )
 
     def __init__(self, name, config) :
@@ -403,89 +405,103 @@ class D2hhConf(LineBuilder) :
         self.d2kpi_line = StrippingLine(d2kpi_name+"Line",
                                         prescale = config['UntaggedCFLinePrescale'],
                                         postscale = config['UntaggedCFLinePostscale'],
-                                        selection = self.selD2Kpi
+                                        selection = self.selD2Kpi,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.d2kk_line = StrippingLine(d2kk_name+"Line",
                                         prescale = config['UntaggedSCSLinePrescale'],
                                         postscale = config['UntaggedSCSLinePostscale'],
-                                        selection = self.selD0KKsgl
+                                        selection = self.selD0KKsgl,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.d2pipi_line = StrippingLine(d2pipi_name+"Line",
                                         prescale = config['UntaggedSCSLinePrescale'],
                                         postscale = config['UntaggedSCSLinePostscale'],
-                                        selection = self.selD0PiPisgl
+                                        selection = self.selD0PiPisgl,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         # Untagged TIS lines
         self.d2kpiTIS_line = StrippingLine(d2kpi_name+"TISLine",
                                         prescale = config['UntaggedTISLinePrescale'],
                                         postscale = config['UntaggedTISLinePostscale'],
-                                        selection = self.selD2KpiTIS
+                                        selection = self.selD2KpiTIS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.d2kkTIS_line = StrippingLine(d2kk_name+"TISLine",
                                         prescale = config['UntaggedTISLinePrescale'],
                                         postscale = config['UntaggedTISLinePostscale'],
-                                        selection = self.selD0KKTIS
+                                        selection = self.selD0KKTIS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.d2pipiTIS_line = StrippingLine(d2pipi_name+"TISLine",
                                         prescale = config['UntaggedTISLinePrescale'],
                                         postscale = config['UntaggedTISLinePostscale'],
-                                        selection = self.selD0PiPiTIS
+                                        selection = self.selD0PiPiTIS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         # Tagged lines
         self.dstRS_line = StrippingLine(dst2DRS_name+"Line",
                                         prescale = config['TaggedRSLinePrescale'],
                                         postscale = config['TaggedRSLinePostscale'],
-                                        selection = self.selDstRS
+                                        selection = self.selDstRS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.dstWS_line = StrippingLine(dst2DWS_name+"Line",
                                         prescale = config['TaggedWSLinePrescale'],
                                         postscale = config['TaggedWSLinePostscale'],
-                                        selection = self.selDstWS
+                                        selection = self.selDstWS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.dstKK_line = StrippingLine(dst2DKK_name+"Line",
                                         prescale = config['TaggedSCSLinePrescale'],
                                         postscale = config['TaggedSCSLinePostscale'],
-                                        selection = self.selDstKK
+                                        selection = self.selDstKK,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.dstPiPi_line = StrippingLine(dst2DPiPi_name+"Line",
                                         prescale = config['TaggedSCSLinePrescale'],
                                         postscale = config['TaggedSCSLinePostscale'],
-                                        selection = self.selDstPiPi
+                                        selection = self.selDstPiPi,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         # Tagged same sign lines
         self.dstRSSS_line = StrippingLine(dst2DRS_name+"SSLine",
                                         prescale = config['TaggedRSLinePrescale'],
                                         postscale = config['TaggedRSLinePostscale'],
-                                        selection = self.selDstRSSS
+                                        selection = self.selDstRSSS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.dstKKSS_line = StrippingLine(dst2DKK_name+"SSLine",
                                         prescale = config['TaggedSCSLinePrescale'],
                                         postscale = config['TaggedSCSLinePostscale'],
-                                        selection = self.selDstKKSS
+                                        selection = self.selDstKKSS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         self.dstPiPiSS_line = StrippingLine(dst2DPiPi_name+"SSLine",
                                         prescale = config['TaggedSCSLinePrescale'],
                                         postscale = config['TaggedSCSLinePostscale'],
-                                        selection = self.selDstPiPiSS
+                                        selection = self.selDstPiPiSS,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
 	# Pseudo Psi line
         self.pseudoPsi_line = StrippingLine(pseudoPsi_name+"Line",
                                         prescale = 1.,
                                         postscale = 1.,
-                                        selection = self.selPseudoPsi
+                                        selection = self.selPseudoPsi,
+                                        RequiredRawEvents = config['RequiredRawEvents']
                                        )
 
         # register lines
