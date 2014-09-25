@@ -188,7 +188,7 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
             )
         from HltTracking.HltPVs import PV3D
         return [ Hlt1GECUnit( properties[ 'GEC' ] )
-                , PV3D()
+                , PV3D('Hlt1')
                 , trackUnit ]
 
 
@@ -246,7 +246,7 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
         gec = properties[ 'GEC' ]
         from HltTracking.HltPVs import PV3D
         return [ Hlt1GECUnit( gec )
-                , PV3D()
+                , PV3D('Hlt1')
                     , trackUnit ]
 
 
