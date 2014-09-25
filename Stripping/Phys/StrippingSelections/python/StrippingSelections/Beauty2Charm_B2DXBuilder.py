@@ -43,7 +43,10 @@ class B2DXBuilder(object):
         self.lines[-2].pre = 0.1 # WS D line
         self._makeB02D0KS('D2HH',self.d.hh,'DD') # B0  -> D0(HH)  KS
         self._makeB02D0KS('D2HH',self.d.hh,'LL') # B0  -> D0(HH)  KS
-        self._makeB2D0HH('D2HHPID',self.d.hh_pid) # B+- -> D0(HH) H+- H0
+        self._makeB2D0HH('D2HH',self.d.hh) # B+- -> D0(HH) H+- H0
+        self._makeB2D0HH('D2KSHHLL',self.d.kshh_ll) # B+- -> D0(HH) H+- H0
+        self._makeB2D0HH('D2KSHHDD',self.d.kshh_dd) # B+- -> D0(HH) H+- H0
+        self._makeB2D0HH('D2K3Pi',self.d.k3pi_pid) # B+- -> D0(HH) H+- H0
         self._makeB02DHD2PhiMu('D2PhiMuNu',self.d.phimu) # B0 -> D( phi mu nu) H+-
         # B -> D+-(HHH) X
         self._makeB02DH('D2HHH',self.d.hhh) # B0  -> D+-(HHH) H-+   (+WS)
