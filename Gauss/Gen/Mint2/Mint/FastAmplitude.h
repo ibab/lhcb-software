@@ -20,6 +20,8 @@ class FastAmplitude : public Amplitude
   std::map<IDalitzEvent*, std::complex<double> > _resultMap;
 
   bool knownEvent(IDalitzEvent& evt, std::complex<double>& value);
+  mutable long int _rememberNumber; // for cashing
+  long int rememberNumber() const;
 
  public:
   FastAmplitude( const DecayTree& decay

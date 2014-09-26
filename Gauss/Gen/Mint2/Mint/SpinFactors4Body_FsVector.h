@@ -75,7 +75,7 @@ protected:
     return "SpinFactor4:SF_BtoAV0_AtoVP1_VtoP2P3(" 
       + theBareDecay().oneLiner() + ")";
   }
-  const int getPolarisation() {return _pol;}
+  int getPolarisation() const{return _pol;}
     
     
 };

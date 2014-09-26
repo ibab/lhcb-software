@@ -41,8 +41,8 @@ class IDalitzEvent{
 
   virtual void print(std::ostream& os = std::cout) const=0;
 
-  virtual bool retrieveComplex(void* key, std::complex<double>& value)=0;
-  virtual void setComplex(void* key, const std::complex<double>& value)=0;
+  virtual bool retrieveComplex(int i, std::complex<double>& value)=0;
+  virtual void setComplex(int i, const std::complex<double>& value)=0;
 
   virtual int numPermutations() const=0;
   virtual void setPermutationIndex(int i)=0;

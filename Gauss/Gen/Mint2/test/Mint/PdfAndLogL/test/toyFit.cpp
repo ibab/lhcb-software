@@ -37,7 +37,7 @@ int toyFit(){
 
   TimePdf myTimePdf;
 
-  Neg2LL<double> fcn(&myTimePdf, &times);
+  Neg2LL fcn(myTimePdf, times);
 
   Minimiser mini(&fcn);
   mini.doFit();
