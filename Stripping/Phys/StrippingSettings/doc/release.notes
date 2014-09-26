@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-26 - Stefano Perazzini
+ - Hotfix to dbases for stripping21 and stripping21r1
+
 ! 2014-09-25 - Andrea Contu
  - Minor update to Charm dictionaries and new dbases (s21 and s21r1)
 
