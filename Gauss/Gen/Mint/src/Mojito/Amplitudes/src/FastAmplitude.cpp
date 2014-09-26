@@ -91,7 +91,7 @@ long int FastAmplitude::rememberNumber() const{
   return _rememberNumber;
 }
 bool FastAmplitude::knownEvent(complex<double>& value){
-  // old cashing - much (!) slower, us only for tests etc
+  // old cashing - much (!) slower, use only for tests etc
   // return getEvent()->retrieveComplex(this, value);
   // new cashing:
   return getEvent()->retrieveComplex(rememberNumber(), value);
