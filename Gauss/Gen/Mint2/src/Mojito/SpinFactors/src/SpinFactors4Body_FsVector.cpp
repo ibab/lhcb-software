@@ -159,7 +159,7 @@ const DecayTree& SF_BtoAV0_AtoVP1_VtoP2P3_D::exampleDecay(){
 
 //SF 1
 complex<double> SF_BtoAV0_AtoVP1_VtoP2P3::ComplexVal(IDalitzEvent& evt){
-  bool debugThis = false;
+  //  bool debugThis = false;
     
   if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
       
@@ -200,7 +200,7 @@ void SF_BtoAV0_AtoVP1_VtoP2P3::printYourself(ostream& os) const{
 
 //SF 2
 complex<double> SF_BtoAV0_AtoVP1Dwave_VtoP2P3::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -249,7 +249,7 @@ void SF_BtoAV0_AtoVP1Dwave_VtoP2P3::printYourself(ostream& os) const{
 
 //SF 3
 complex<double> SF_BtoAV0_AtoVP1_VtoP2P3_P::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -293,7 +293,7 @@ void SF_BtoAV0_AtoVP1_VtoP2P3_P::printYourself(ostream& os) const{
 
 //SF 4
 complex<double> SF_BtoAV0_AtoVP1_VtoP2P3_D::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -420,7 +420,7 @@ const DecayTree& SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D::exampleDecay(){
 
 //SF 5
 complex<double> SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -464,7 +464,7 @@ void SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_P::printYourself(ostream& os) const{
 
 //SF 6
 complex<double> SF_BtoPseudoTV0_PseudoTtoVP1_VtoP2P3_D::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -578,7 +578,7 @@ const DecayTree& SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P::exampleDecay(){
 }
 
 complex<double> SF_BtoPseudoTV0_PseudoTtoSP1_StoP2P3_P::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -687,7 +687,7 @@ const DecayTree& SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P::exampleDecay(){
 }
 
 complex<double> SF_BtoPseudoTV0_PseudoTtoTP1_TtoP2P3_P::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -807,7 +807,7 @@ const DecayTree& SF_BtoTV0_TtoVP1_VtoP2P3_P::exampleDecay(){
 }
 
 complex<double> SF_BtoTV0_TtoVP1_VtoP2P3_P::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -918,13 +918,13 @@ bool SF_BtoVP1_VtoV0S_StoP2P3_BASE::parseTree(const DalitzEventPattern& pat){
 }
 
 complex<double> SF_BtoVP1_VtoV0S_StoP2P3::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
     double MV    = mRes(V,evt);
     //double MV0   = mRes(fsPS[0],evt); // ??  
-    double MV0   = p(0,evt).M(); // ??  
+    //double MV0   = p(0,evt).M(); // ??  
     
     //cout << "pol in spinFactor class" << getPolarisation() << endl;
     
@@ -1025,7 +1025,7 @@ bool SF_BtoAV0_AtoSP1_StoP2P3_BASE::parseTree(const DalitzEventPattern& pat){
 }
 
 complex<double> SF_BtoAV0_AtoSP1_StoP2P3::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     
@@ -1130,7 +1130,7 @@ const DecayTree& SF_BtoV1V0_V1toV2P1_V2toP2P3::exampleDecay(){
 }
 
 complex<double> SF_BtoV1V0_V1toV2P1_V2toP2P3::ComplexVal(IDalitzEvent& evt){
-    bool debugThis = false;
+  //    bool debugThis = false;
     
     if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree(evt.eventPattern());
     

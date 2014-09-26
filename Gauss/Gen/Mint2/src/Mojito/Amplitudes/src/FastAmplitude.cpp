@@ -30,8 +30,15 @@ FastAmplitude::FastAmplitude( const Amplitude& other)
   _resultMap.clear();
 }
 
+long int FastAmplitude::rememberNumber() const{
+  if(_rememberNumber < 0){
+    _rememberNumber = DalitzEvent::assignUniqueRememberNumber();
+  }
+  return _rememberNumber;
+}
+
 bool FastAmplitude::knownEvent(IDalitzEvent& evt, complex<double>& value){
-  return evt.retrieveComplex(this, value);
+  return evt.retrieveComplex(rememberNumber(), value);
 }
 
 std::complex<double> FastAmplitude::getVal(IDalitzEvent* evt){
@@ -61,7 +68,7 @@ complex<double> FastAmplitude::getVal(IDalitzEvent& evt){
   }
   if(dbThis) cout << " result is not known - getting Amplitude " << endl;
   result = Amplitude::getVal(evt);
-  evt.setComplex(this,result);
+  evt.setComplex(rememberNumber(),result);
   if(dbThis)cout << "FastAmplitude returning " << result << endl;
   return result;
 }
