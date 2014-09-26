@@ -312,7 +312,9 @@ StatusCode HltSelReportsDecoder::execute() {
             infoPersistent.insert( "0#RecVertex.position.x", floatFromInt(stdInfo[0]) ); 
             infoPersistent.insert( "1#RecVertex.position.y", floatFromInt(stdInfo[1]) ); 
             infoPersistent.insert( "2#RecVertex.position.z", floatFromInt(stdInfo[2]) ); 
-
+            if (stdInfo.size()>=4) {
+                infoPersistent.insert( "3#RecVertex.chi2", floatFromInt(stdInfo[3]) ); 
+            }
           } else {
             
             std::ostringstream mess;

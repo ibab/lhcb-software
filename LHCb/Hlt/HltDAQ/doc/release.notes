@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-09-26 - Alex Shires
+ - adding recvertex chi2 to summary objects
+
 ! 2014-09-24 - Marco Clemencic
  - Updated hack for LCG experimental builds.
 
