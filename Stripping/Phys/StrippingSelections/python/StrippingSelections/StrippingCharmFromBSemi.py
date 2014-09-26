@@ -264,7 +264,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         self.combLooseKsLL = CombineParticles ("KsLLCombFor"+name,
                                                DecayDescriptor = "KS0 -> pi+ pi-",
                                                CombinationCut = "(ADAMASS('KS0') < 27.*MeV) & (ADOCACHI2CUT(25, '')) ",
-                                               MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
+                                               MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME() > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
         
         self.selLooseKsLL = Selection("SelKsLLFor"+name,
                                       Algorithm = self.combLooseKsLL,
@@ -275,14 +275,14 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                                  DaughtersCuts = { "pi+" : "(ISLONG)",
                                                                    "pi-" : "(ISUP)" } ,
                                                  CombinationCut = "(ADAMASS('KS0') < 27.*MeV) & (ADOCACHI2CUT(25, '')) ",
-                                                 MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
+                                                 MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME() > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
         
         self.combKsLU_NegLong = CombineParticles("KsLUComb_NegLongFor"+name,
                                                  DecayDescriptor = "KS0 -> pi+ pi-",
                                                  DaughtersCuts = { "pi+" : "(ISUP)",
                                                                    "pi-" : "(ISLONG)" } ,
                                                  CombinationCut = "(ADAMASS('KS0') < 27.*MeV) & (ADOCACHI2CUT(25, '')) ",
-                                                 MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
+                                                 MotherCut = "(ADMASS('KS0') < 25.*MeV) & ( BPVLTIME() > 3.0*ps) & (VFASPF(VCHI2) < 9.)")
         
         self.selKsLU_PosLong = Selection("SelKsLU_PosLongFor"+name,
                                          Algorithm = self.combKsLU_PosLong,
@@ -835,8 +835,8 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
             "& (ADOCACHI2CUT( %(DDocaChi2Max)s, ''))" % self.__confdict__
         _motherCut = "(DMASS('D_s+') < %(DsMassWin)s *MeV) & (DMASS('D+') > -%(DsMassWin)s *MeV)"\
             " & (MINTREE(((ABSID=='KS0')) , VFASPF(VZ))-VFASPF(VZ) > 0.0 *mm )"\
-            " & (CHILD(BPVLTIME('PropertimeFitter/properTime:PUBLIC'),1) > 3.0*ps)"\
-            " & (BPVLTIME('PropertimeFitter/properTime:PUBLIC') > 0.1*ps)"\
+            " & (CHILD(BPVLTIME(),1) > 3.0*ps)"\
+            " & (BPVLTIME() > 0.1*ps)"\
             " & (VFASPF(VCHI2/VDOF) < %(DsVCHI2DOF)s) & (BPVDIRA> %(DsDIRA)s)"  % self.__confdict__
         _ds2ksh = CombineParticles( name = _name,
                                     DecayDescriptors = _decayDescriptors,

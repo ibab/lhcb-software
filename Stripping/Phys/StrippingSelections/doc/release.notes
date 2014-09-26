@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-26 - Mika Vesterinen
+ - Remove PropertimeFitter usage in CharmFromBSemi
+
 ! 2014-09-25 - Carlos Vazquez Sierra
  - Updated StrippingBs2JpsiKstNoPID again: line ONLY for MC PIDCalib purposes (not related to s21).
 
