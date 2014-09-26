@@ -21,6 +21,8 @@ class FastAmplitude : public Amplitude
 
   bool knownEvent(std::complex<double>& value);
 
+  mutable long int _rememberNumber; // for cashing
+  long int rememberNumber() const;
  public:
   FastAmplitude( const DecayTree& decay
 		 , IDalitzEventAccess* events
@@ -48,7 +50,6 @@ class FastAmplitude : public Amplitude
   FastAmplitude( const Amplitude& other);
   FastAmplitude( const Amplitude& other, IDalitzEventAccess* newEvents);
   FastAmplitude( const Amplitude& other, IDalitzEventList* newEvents);
-
 
   virtual std::complex<double> getVal();
   virtual std::complex<double> getVal(IDalitzEvent* evt);

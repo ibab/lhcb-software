@@ -16,6 +16,7 @@
 #include "Mint/Calculate4BodyProps.h"
 
 #include "Mint/RememberAnything.h"
+#include "Mint/RememberAnythingFast.h"
 
 #include "Mint/Permutator.h"
 
@@ -35,6 +36,8 @@ class DalitzEvent : virtual public IDalitzEvent{
 
   static long int _eventCounter;
 
+  static long int _rememberVectorCounter;
+
   // begin all data members:
   DalitzEventPattern          _pat;
   std::vector<TLorentzVector> _p;
@@ -42,6 +45,7 @@ class DalitzEvent : virtual public IDalitzEvent{
   mutable double _rememberPhaseSpace;
 
   RememberAnything<std::complex<double> >  _rememberAmps;
+  RememberAnythingFast<std::complex<double> >  _rememberAmpsFast;
 
   double _aValue;
   double _weight;
@@ -107,6 +111,8 @@ public:
 
   virtual ~DalitzEvent();
 
+  static long int assignUniqueRememberNumber();
+
   IDalitzEvent* clone() const;
 
   static long int eventCounter(){ return _eventCounter;}
@@ -166,9 +172,15 @@ public:
   virtual bool retrieveComplex(void* key, std::complex<double>& value){
     return _rememberAmps.find(key, value);
   }
+  virtual bool retrieveComplex(int i, std::complex<double>& value){
+    return _rememberAmpsFast.get(i, value);
+  }
 
   virtual void setComplex(void* key, const std::complex<double>& value){
     _rememberAmps.set(key, value);
+  }
+  virtual void setComplex(int i, const std::complex<double>& value){
+    _rememberAmpsFast.set(i,value);
   }
  
   // helpful
