@@ -67,6 +67,10 @@ class StrippingConfigurator:
     from Configurables import ProcStatusCheck
     _filterBadEvents = ProcStatusCheck()
 
+    for stream in streams:
+      for line in stream.lines:
+        print stream.name(), ": ", line.name()
+
 
     _sc = StrippingConf(Streams = streams,
                         MaxCandidates = 2000,
@@ -126,7 +130,6 @@ class PersistencyConfigurator:
 
   def getWriter(self, mdstStreams):
     "Configure the dst and microdst Writer and return the algorithm"
-    from DSTWriters.microdstelements import *
     from DSTWriters.Configuration import (SelDSTWriter,
                                           stripDSTStreamConf,
                                           stripDSTElements,

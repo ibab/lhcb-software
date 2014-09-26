@@ -23,6 +23,7 @@ def getDaVinciVersion( version ):
 stripping = 'stripping21'
 t = JobTemplate()
 t.application = DaVinci ( version = getDaVinciVersion(stripping) 
+                          #, setupProjectOptions = "--nightly lhcb-head"
                           , optsfile = 'TestBandQLine.py'
                           , extraopts =  
                               "configureStrippingTest('BandQ', ['BandQ'])"

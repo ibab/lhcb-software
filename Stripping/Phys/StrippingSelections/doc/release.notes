@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-09-26 - Lucio Anderlini
+ - Remove PropertimeFitter usage in StrippingXibc
+
 ! 2014-09-26 - Mika Vesterinen
  - Remove PropertimeFitter usage in CharmFromBSemi
 

@@ -476,7 +476,7 @@ def makeLambdac (localname, _RequiredSelections, config=default_config['CONFIG']
   _lambdacCP.MotherCut = ("(VFASPF(VCHI2/VDOF) < %(Lambdac_ENDVERTEXCHI2)s) & "+
                           "(ADMASS('Lambda_c+') < %(Lambdac_MassWindowTight)s) & "+
                           "(BPVDIRA > %(Lambdac_BPVDIRA)s) & "+
-                          "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(Lambdac_minTAU)s)"
+                          "(BPVLTIME()>%(Lambdac_minTAU)s)"
                           ) % config
 
 	
@@ -681,7 +681,7 @@ def makeXibc2JpsiKp (localname, _RequiredSelections, config=default_config['CONF
                              "(AM < %(JpsiKp_MassMax)s  )  " )%config
                                                                           
   myXibc.MotherCut = ("(VFASPF(VCHI2/VDOF)< %(JpsiKp_MaxVertexChi2)s) & "
-                      "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')> %(JpsiKp_MinTAU)s)"
+                      "(BPVLTIME()> %(JpsiKp_MinTAU)s)"
                       ) %config
   myXibc.DaughtersCuts = {"J/psi(1S)" : ("(PT > %(JpsiKp_Jpsi_MinPT)s) & "+
                                          "(ADMASS('J/psi(1S)') < %(JpsiKp_Jpsi_MassWin)s) &"+
