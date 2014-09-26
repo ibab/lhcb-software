@@ -115,7 +115,8 @@ public: // classes
         cutType(">"),
         secCutType(">"),
         useFixedGraphRange(true),
-        minGraphX(60), maxGraphX(100), minGraphY(1), maxGraphY(40)
+        minGraphX(60), maxGraphX(100), minGraphY(1), maxGraphY(40),
+        minAngle(30.0),maxAngle(300.0)
     { }
   public:
     double minIDeff,maxIDeff,minMisIDeff,maxMisIDeff;
@@ -142,7 +143,7 @@ public: // classes
     std::string imageFile;
     std::string cutType, secCutType;
     bool useFixedGraphRange;
-    double minGraphX,maxGraphX,minGraphY,maxGraphY;
+    double minGraphX,maxGraphX,minGraphY,maxGraphY,minAngle, maxAngle ;
   };
 
 public:
@@ -335,7 +336,7 @@ private: // inline methods
     return ( config.cutType == ">" ? var > cut : var < cut );
   }
 
-private :
+public :
 
   /// Utility class to add labels to the eff v pur curves
   class Label

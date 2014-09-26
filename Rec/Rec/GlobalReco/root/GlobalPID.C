@@ -71,11 +71,27 @@ bool GlobalPID::passTrackSelection() const
   if ( TrackP  > config.maxP  || TrackP  < config.minP  ||
        TrackPt > config.maxPt || TrackPt < config.minPt ) return false;
 
-  // track quality cuts
-  if ( TrackGhostProb  > config.maxGhostProb       || 
+  //std::cout<<" Pass Track momentum cut "<< std::endl;
+  
+
+  //Angle Cuts
+  double  aAngle= TrackP > 0.0 ? fabs(1000.0*asin(TrackPt/TrackP)) : 0.0;
+  if(aAngle< config.minAngle) return false;
+  if(aAngle> config.maxAngle) return false;
+  //  std::cout<<" Pass Track angle cut "<< std::endl;
+
+
+
+
+
+
+  // track quality cuts. Not to be used for upgrade since tracking does not have these yet.
+
+    if ( TrackGhostProb  > config.maxGhostProb       || 
        TrackGhostProb  < config.minGhostProb       ||
        TrackLikelihood > config.maxTrackLikelihood ||
        TrackLikelihood < config.minTrackLikelihood ) return false;
+  
 
   return true;
 }
@@ -461,7 +477,7 @@ double GlobalPID::variable( const Variable var ) const
 
 void GlobalPID::fillLabelBox() const
 {
-  ostringstream line0,line1,line2,line3,line4,line5;
+  ostringstream line0,line1,line2,line3,line4,line5,line6;
   line0 << config.subtitle;
   line1 << name(config.var1);
   if ( config.var2 != NoVar ) line1 << "-" << name(config.var2);
@@ -472,21 +488,22 @@ void GlobalPID::fillLabelBox() const
   line3 << name(config.trackType) << " tracks | ";
   line3 << config.minP/1000  << " < P(GeV) < " << config.maxP/1000;
   line3 << " | " << config.minPt/1000 << " < Pt(GeV) < " << config.maxPt/1000;
+  line4 << "  " << config.minAngle << " < Track Angle(mrad)< "<< config.maxAngle ;
 
-  line5 << "Required Dets : ";
-  if ( config.mustHaveAerogel )   line5 << "Aero ";
-  if ( config.mustHaveR1Gas   )   line5 << "R1Gas ";
-  if ( config.mustHaveR2Gas   )   line5 << "R2Gas ";
-  if ( config.mustHaveAnyRICH )   line5 << "AnyRICH ";
-  if ( config.mustHaveECAL    )   line5 << "ECAL ";
-  if ( config.mustHaveHCAL    )   line5 << "HCAL ";
-  if ( config.mustHavePRS     )   line5 << "PRS ";
-  if ( config.mustHaveBREM    )   line5 << "Brem ";
-  if ( config.mustHaveECALorPRS ) line5 << "ECAL or PRS ";
-  if ( config.mustHaveECALorPRSorRICH ) line5 << "ECAL or PRS or RICH ";
-  if ( config.mustHaveMUON    )   line5 << "MUON ";
+  line6 << "Required Dets : ";
+  if ( config.mustHaveAerogel )   line6 << "Aero ";
+  if ( config.mustHaveR1Gas   )   line6 << "R1Gas ";
+  if ( config.mustHaveR2Gas   )   line6 << "R2Gas ";
+  if ( config.mustHaveAnyRICH )   line6 << "AnyRICH ";
+  if ( config.mustHaveECAL    )   line6 << "ECAL ";
+  if ( config.mustHaveHCAL    )   line6 << "HCAL ";
+  if ( config.mustHavePRS     )   line6 << "PRS ";
+  if ( config.mustHaveBREM    )   line6 << "Brem ";
+  if ( config.mustHaveECALorPRS ) line6 << "ECAL or PRS ";
+  if ( config.mustHaveECALorPRSorRICH ) line6 << "ECAL or PRS or RICH ";
+  if ( config.mustHaveMUON    )   line6 << "MUON ";
 
-  line4 << tksInAcc[config.idType] << " " << name(config.idType) << "s in Acceptance";
+  line5 << tksInAcc[config.idType] << " " << name(config.idType) << "s in Acceptance";
 
   TLatex * text = new TLatex();
   text->SetTextColor(config.color);
@@ -497,12 +514,23 @@ void GlobalPID::fillLabelBox() const
   if ( !config.superImpose ) yOffset = 0.88;
   if ( !config.subtitle.empty() )
   { text->DrawText( xOffset, yOffset-=yInc, line0.str().c_str() ); }
+ if( !config.superImpose ) 
+  {
+ 
+
   text->DrawText( xOffset, yOffset-=yInc, line1.str().c_str() );
   if ( config.secvar1 != NoVar )
   { text->DrawText( xOffset, yOffset-=yInc, line2.str().c_str() ); }
   text->DrawText( xOffset, yOffset-=yInc, line3.str().c_str() );
   text->DrawText( xOffset, yOffset-=yInc, line5.str().c_str() );
   text->DrawText( xOffset, yOffset-=yInc, line4.str().c_str() );
+
+  text->DrawText( xOffset, yOffset-=yInc, line6.str().c_str() );
+
+  }
+  
+  text->DrawText( xOffset, yOffset-=yInc, line5.str().c_str() );
+
   yOffset-=yInc/2;
 }
 
@@ -632,6 +660,9 @@ void GlobalPID::Init(TTree *tree)
   fChain->SetBranchAddress("TrackNumDof", &TrackNumDof, &b_TrackNumDof);
   fChain->SetBranchAddress("TrackType", &TrackType, &b_TrackType);
   fChain->SetBranchAddress("TrackHistory", &TrackHistory, &b_TrackHistory);
+  fChain->SetBranchAddress("TrackGhostProb", &TrackGhostProb, &b_TrackGhostProb);
+  fChain->SetBranchAddress("TrackLikelihood", &TrackLikelihood, &b_TrackLikelihood);
+
   fChain->SetBranchAddress("RichDLLe", &RichDLLe, &b_RichDLLe);
   fChain->SetBranchAddress("RichDLLmu", &RichDLLmu, &b_RichDLLmu);
   fChain->SetBranchAddress("RichDLLpi", &RichDLLpi, &b_RichDLLpi);
