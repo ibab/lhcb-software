@@ -1190,6 +1190,7 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
         infoPersistent.insert( "0#RecVertex.position.x", float( candi->position().x() ) );
         infoPersistent.insert( "1#RecVertex.position.y", float( candi->position().y() ) );
         infoPersistent.insert( "2#RecVertex.position.z", float( candi->position().z() ) );
+        infoPersistent.insert( "3#RecVertex.chi2", float( candi->chi2() ) );
       }      
     }    
     break;
