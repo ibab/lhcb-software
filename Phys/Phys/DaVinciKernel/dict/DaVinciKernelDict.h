@@ -19,8 +19,6 @@
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/DaVinciHistoAlgorithm.h"
 #include "Kernel/DaVinciTupleAlgorithm.h"
-#define DAVINCIKERNEL_DVALGORITHM_NOOBSOLETEWARNING
-#include "Kernel/DVAlgorithm.h"
 // ============================================================================
 // The END
 // ============================================================================

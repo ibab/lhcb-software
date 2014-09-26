@@ -4,6 +4,9 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2014-09-26 - Chris Jones
+ - Completely remove deepreciated DVAlgorithm base class.
+
 ! 2014-09-24 - Chris Jones
  - Remove C++11 features from Kernel/ParticleFilters.h, to fix problems with
    ROOT5 based builds.
