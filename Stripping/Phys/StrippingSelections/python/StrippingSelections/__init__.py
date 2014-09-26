@@ -104,7 +104,6 @@ import StrippingPsiX0
 import StrippingPsiXForBandQ
 import StrippingX2psiPiPi
 import StrippingX2psiGamma
-import StrippingBetac2PhiP
 import StrippingBB2DMuNuX
 
 import StrippingZ02MuMu
@@ -204,7 +203,6 @@ import StrippingBs2KKhh
 import StrippingBs2KSKS
 import StrippingB2XEta
 import StrippingBu2KSh
-import StrippingB2HHBkg
 
 import StrippingB2SameChargeMuon
 import StrippingHyperCPX
