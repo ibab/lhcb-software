@@ -26,9 +26,9 @@ namespace io = boost::iostreams;
 #include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/GaudiException.h"
 
-namespace
-{
 
+namespace ConfigTarFileAccessSvc_details
+{
 
 /* POSIX tar Header Block, from POSIX 1003.1-1990  */
 struct posix_header
@@ -51,10 +51,28 @@ struct posix_header
     char prefix[155];   /* 345-499 */
     char padding[12];   /* 500-512 (pad to exactly the TAR_BLOCK_SIZE) */
 };
+
+inline bool isZero( const struct ConfigTarFileAccessSvc_details::posix_header& h )
+{
+    const char* i = (const char*)( &h );
+    static_assert( sizeof(h) == 512 , "unexpected size of header" );
+    return std::all_of( i, i + 512, []( const char& c ) { return c == 0; } );
 }
 
-namespace ConfigTarFileAccessSvc_details
+struct Info
 {
+    Info() : size( 0 ), offset( 0 ), compressed( false ), mtime(0),uid(0)
+    { }
+    std::string name;
+    size_t size;
+    size_t offset;
+    bool compressed;
+    time_t mtime;
+    uid_t uid;
+};
+
+bool interpretHeader(std::fstream& file, ConfigTarFileAccessSvc_details::posix_header& header, struct Info& info ) ;
+
 class TarFile : public IArchive, private boost::noncopyable
 {
   public:
@@ -88,17 +106,6 @@ class TarFile : public IArchive, private boost::noncopyable
     ~TarFile();
 
   private:
-    struct Info
-    {
-        Info() : size( 0 ), offset( 0 ), compressed( false ), mtime(0),uid(0)
-        { }
-        std::string name;
-        size_t size;
-        size_t offset;
-        bool compressed;
-        time_t mtime;
-        uid_t uid;
-    };
 
     bool _append( const std::string& name, std::stringstream& is );
     bool index( std::streamoff start = 0 ) const;
@@ -111,7 +118,6 @@ class TarFile : public IArchive, private boost::noncopyable
         }
         return m_index;
     }
-    bool interpretHeader( posix_header& header, struct Info& info ) const;
     // Read an octal value in a field of the specified width, with optional
     // spaces on both sides of the number and with an optional null character
     // at the end.  Returns -1 on an illegal format.

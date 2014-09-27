@@ -311,7 +311,7 @@ class CDB
         return ok ? 3 : 0;
     }
 
-    std::vector<unsigned char> make_record( std::string str )
+    std::vector<unsigned char> make_cdb_record( std::string str, uid_t uid, std::time_t t )
     {
         auto flags = compress( str );
         std::vector<unsigned char> buffer( 12 + str.size(), 0 );
@@ -320,18 +320,16 @@ class CDB
         *buf++ = flags; // compression
         *buf++ = 0;     // reserved;
         *buf++ = 0;     // reserved;
-        uid_t uid = getUid();
         assert( sizeof( uid_t ) == 4 );
         *buf++ = ( uid & 0xff );
         *buf++ = ( ( uid >> 8 ) & 0xff );
         *buf++ = ( ( uid >> 16 ) & 0xff );
         *buf++ = ( ( uid >> 24 ) & 0xff );
-        std::time_t now = std::time( nullptr );
-        assert( sizeof( now ) == 4 ); // seconds since 1970  ( ok for 136 years )
-        *buf++ = ( now & 0xff );
-        *buf++ = ( ( now >> 8 ) & 0xff );
-        *buf++ = ( ( now >> 16 ) & 0xff );
-        *buf++ = ( ( now >> 24 ) & 0xff );
+        assert( sizeof( t ) == 4 ); // seconds since 1970  ( ok for 136 years )
+        *buf++ = ( t & 0xff );
+        *buf++ = ( ( t >> 8 ) & 0xff );
+        *buf++ = ( ( t >> 16 ) & 0xff );
+        *buf++ = ( ( t >> 24 ) & 0xff );
         if ( std::distance( std::begin( buffer ), buf ) != 12 ) {
             std::cerr << "ERROR" << std::endl;
         }
@@ -340,6 +338,11 @@ class CDB
             std::cerr << "ERROR" << std::endl;
         }
         return buffer;
+    }
+
+    std::vector<unsigned char> make_cdb_record( std::string str )
+    {
+        return make_cdb_record( std::move(str), getUid(), std::time(nullptr) );
     }
 
     bool append( const string& key, std::stringstream& is )
@@ -370,7 +373,7 @@ class CDB
         // aha, this is an as yet unknown key... insert it!
         m_shadow.emplace( key, is.str() );
 
-        auto record = make_record( is.str() );
+        auto record = make_cdb_record( is.str() );
         if ( cdb_make_add( &m_ocdb,
                            reinterpret_cast<const unsigned char*>( key.data() ),
                            key.size(), record.data(), record.size() ) != 0 ) {

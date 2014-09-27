@@ -2,16 +2,13 @@
 #include <sstream>
 #include <set>
 #include "boost/iostreams/copy.hpp"
-#ifndef _WIN32
 #include "boost/iostreams/filter/gzip.hpp"
-#endif
 #include "boost/iostreams/slice.hpp"
 #include "boost/iostreams/operations.hpp"
 #include "boost/iostreams/seek.hpp"
 
 namespace
 {
-#ifndef _WIN32
 class CleanupAtExit
 {
   public:
@@ -43,7 +40,6 @@ class CleanupAtExit
     }
     std::set<std::string> m_files;
 };
-#endif
 
 bool isOctal( const char& ch )
 {
@@ -63,7 +59,7 @@ long getOctal( const char* cp, int size )
     return val;
 }
 
-long computeChecksum( const posix_header& header )
+long computeChecksum( const ConfigTarFileAccessSvc_details::posix_header& header )
 {
     /* Check the checksum */
     long sum = 0;
@@ -108,11 +104,6 @@ bool putOctal( T val, char ( &buf )[Size] )
     return true;
 }
 
-bool isZero( const struct posix_header& h )
-{
-    const char* i = (const char*)( &h );
-    return std::all_of( i, i + 512, []( const char& c ) { return c == 0; } );
-}
 
 /* A nice enum with all the possible tar file content types */
 enum TarFileType {
@@ -126,10 +117,62 @@ typedef enum TarFileType TarFileType;
 
 namespace ConfigTarFileAccessSvc_details
 {
+bool interpretHeader(std::fstream& file,  ConfigTarFileAccessSvc_details::posix_header& header, Info& info )
+{
+    if ( strncmp( header.magic, "ustar ", 6 ) &&
+         strncmp( header.magic, "ustar\0", 6 ) ) {
+        return false;
+    }
+    long chksum = getOctal( header.chksum, sizeof( header.chksum ) );
+    /* Check the checksum */
+    long sum = computeChecksum( header );
+    if ( sum != chksum ) {
+        std::cerr << " bad chksum " << sum << " vs. " << chksum << std::endl;
+        return false;
+    }
+    long size = getOctal( header.size, sizeof( header.size ) );
+    if ( size < 0 ) {
+        std::cerr << " got negative file size: " << info.size << std::endl;
+        return false;
+    }
+    info.size = size;
+    info.name = convert( header.name );
+    if ( header.prefix[0] != 0 ) {
+        std::string prefix = convert( header.prefix );
+        info.name = prefix + "/" + info.name;
+    }
+
+    if ( TarFileType( header.typeflag ) == TarFileType::GNUTYPE_LONGNAME ) {
+        // current header is a dummy 'flag', followed by data blocks
+        // with name as content (length of name is 'size' of data)
+        assert( info.name == "././@LongLink" );
+        // first read the real, untruncated name as data
+        std::ostringstream fname;
+        io::copy( io::slice( file, 0, info.size ), fname );
+        size_t padding = info.size % 512;
+        if ( padding != 0 ) file.seekg( 512 - padding, std::ios::cur );
+        // and now get another header, which contains a truncated name
+        // but which is otherwise the 'real' one
+        file.read( (char*)&header, sizeof( header ) );
+        if ( !interpretHeader( file, header, info ) ) return false;
+        // so we overwrite the truncated one with the long one...
+        info.name = fname.str();
+    }
+    info.uid    = getOctal( header.uid, sizeof(header.uid) );
+    info.mtime  = getOctal( header.mtime, sizeof(header.mtime) );
+    info.offset = file.tellg(); // this goes here, as the longlink handling
+                                  // reads an extra block...
+    // if name ends in .gz, assume it is gzipped.
+    // Strip the name down, and flag as compressed in info.
+    info.compressed = ( info.name.size() > 3 &&
+                        info.name.compare( info.name.size() - 3, 3, ".gz" ) == 0 );
+    if ( info.compressed ) info.name = info.name.substr( 0, info.name.size() - 3 );
+
+    return true;
+}
 
 bool TarFile::append( const std::string& name, std::stringstream& is )
 {
-#ifndef _WIN32
     if ( m_compressOnWrite && is.str().size() > 512 &&
          ( name.size() < 3 || name.compare( name.size() - 3, 3, ".gz" ) != 0 ) ) {
         std::stringstream out;
@@ -141,7 +184,6 @@ bool TarFile::append( const std::string& name, std::stringstream& is )
         //       if not, it's useless to compress..
         return _append( name + ".gz", out );
     }
-#endif
     return _append( name, is );
 }
 
@@ -155,7 +197,7 @@ bool TarFile::_append( const std::string& name, std::stringstream& is )
     if ( m_file.tellp() >= 0 && m_leof != m_file.tellp() ) {
         m_file.seekp( m_leof, std::ios::beg ); // where do we start writing?
     }
-    posix_header header;
+    ConfigTarFileAccessSvc_details::posix_header header;
     memset( &header, 0, sizeof( header ) );
     if ( name.size() > sizeof( header.name ) ) {
         // generate GNU longlink header...
@@ -177,11 +219,7 @@ bool TarFile::_append( const std::string& name, std::stringstream& is )
         memset( &header, 0, sizeof( header ) );
     }
     putString( name.c_str(), header.name );
-#ifdef _WIN32
-    putOctal( 33060u, header.mode );
-#else
     putOctal( S_IFREG | S_IRUSR | S_IRGRP | S_IROTH, header.mode );
-#endif
     putString( "ustar ", header.magic );
     putString( "00", header.version );
     putOctal( getUid(), header.uid );
@@ -221,63 +259,10 @@ bool TarFile::_append( const std::string& name, std::stringstream& is )
     return true;
 }
 
-bool TarFile::interpretHeader( posix_header& header, Info& info ) const
-{
-    if ( strncmp( header.magic, "ustar ", 6 ) &&
-         strncmp( header.magic, "ustar\0", 6 ) ) {
-        return false;
-    }
-    long chksum = getOctal( header.chksum, sizeof( header.chksum ) );
-    /* Check the checksum */
-    long sum = computeChecksum( header );
-    if ( sum != chksum ) {
-        std::cerr << " bad chksum " << sum << " vs. " << chksum << std::endl;
-        return false;
-    }
-    long size = getOctal( header.size, sizeof( header.size ) );
-    if ( size < 0 ) {
-        std::cerr << " got negative file size: " << info.size << std::endl;
-        return false;
-    }
-    info.size = size;
-    info.name = convert( header.name );
-    if ( header.prefix[0] != 0 ) {
-        std::string prefix = convert( header.prefix );
-        info.name = prefix + "/" + info.name;
-    }
-
-    if ( TarFileType( header.typeflag ) == TarFileType::GNUTYPE_LONGNAME ) {
-        // current header is a dummy 'flag', followed by data blocks
-        // with name as content (length of name is 'size' of data)
-        assert( info.name == "././@LongLink" );
-        // first read the real, untruncated name as data
-        std::ostringstream fname;
-        io::copy( io::slice( m_file, 0, info.size ), fname );
-        size_t padding = info.size % 512;
-        if ( padding != 0 ) m_file.seekg( 512 - padding, std::ios::cur );
-        // and now get another header, which contains a truncated name
-        // but which is otherwise the 'real' one
-        m_file.read( (char*)&header, sizeof( header ) );
-        if ( !interpretHeader( header, info ) ) return false;
-        // so we overwrite the truncated one with the long one...
-        info.name = fname.str();
-    }
-    info.uid    = getOctal( header.uid, sizeof(header.uid) );
-    info.mtime  = getOctal( header.mtime, sizeof(header.mtime) );
-    info.offset = m_file.tellg(); // this goes here, as the longlink handling
-                                  // reads an extra block...
-    // if name ends in .gz, assume it is gzipped.
-    // Strip the name down, and flag as compressed in info.
-    info.compressed = ( info.name.size() > 3 &&
-                        info.name.compare( info.name.size() - 3, 3, ".gz" ) == 0 );
-    if ( info.compressed ) info.name = info.name.substr( 0, info.name.size() - 3 );
-
-    return true;
-}
 
 bool TarFile::index( std::streamoff offset ) const
 {
-    posix_header header;
+    ConfigTarFileAccessSvc_details::posix_header header;
     if ( offset == 0 ) m_index.clear();
     // check whether file is empty
     m_file.seekg( offset, std::ios::end );
@@ -286,7 +271,7 @@ bool TarFile::index( std::streamoff offset ) const
     m_file.seekg( offset, std::ios::beg );
     while ( m_file.read( (char*)&header, sizeof( header ) ) ) {
         Info info;
-        if ( !interpretHeader( header, info ) ) {
+        if ( !interpretHeader(m_file, header, info ) ) {
             // check whether we're at the end of the file: (at least) two all-zero
             // headers)
             if ( isZero( header ) ) {
@@ -338,7 +323,6 @@ bool TarFile::setupStream( io::filtering_istream& s, const std::string& name ) c
     // istream...
     m_file.seekg( 0, std::ios_base::beg );
     if ( i->second.compressed ) {
-#ifndef _WIN32
 #ifdef __INTEL_COMPILER          // Disable ICC warning
 #pragma warning( disable : 279 ) // gzip.hpp(551) controlling expression constant
 #pragma warning( push )
@@ -347,9 +331,6 @@ bool TarFile::setupStream( io::filtering_istream& s, const std::string& name ) c
 #ifdef __INTEL_COMPILER // Re-enable ICC warning 279
 #pragma warning( pop )
 #endif
-#else
-        return false;
-#endif // _WIN32
     }
     s.push( io::slice( m_file, i->second.offset, i->second.size ) );
     return true;
@@ -365,7 +346,6 @@ TarFile::TarFile( const std::string& name, std::ios::openmode mode,
     , m_compressOnWrite( compressOnWrite )
 {
     if ( mode & std::ios::out ) {
-#ifndef _WIN32
         std::string lckname = m_name + ".lock";
         // From http://pubs.opengroup.org/onlinepubs/7908799/xsh/open.html:
         //
@@ -397,16 +377,12 @@ TarFile::TarFile( const std::string& name, std::ios::openmode mode,
 // pid...
 //       which can be used in the above failure case to point out the source of the
 // clash...
-#else
-        m_lock = 1;
-#endif
     }
     m_file.open( m_name.c_str(), mode | std::ios::in | std::ios::binary );
 }
 TarFile::~TarFile()
 {
     m_file.close();
-#ifndef _WIN32
     if ( !( m_lock < 0 ) ) {
         std::cerr << "releasing lock " << std::endl;
         close( m_lock );
@@ -414,6 +390,5 @@ TarFile::~TarFile()
         std::cerr << "removed lock file " << ( m_name + ".lock" ) << std::endl;
         CleanupAtExit::instance().remove( m_name + ".lock" );
     }
-#endif
 }
 }

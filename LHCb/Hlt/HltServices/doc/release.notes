@@ -3,6 +3,10 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2014-09-27 - Gerhard Raven
+ - move code around so tar access is possible in utilities
+ - add option to utlity to literally convert a config.tar file to a config.cdb 
+   file
 
 !========================= HltServices v2r3 2014-06-10 =========================
 ! 2014-05-29 - Gerhard Raven
