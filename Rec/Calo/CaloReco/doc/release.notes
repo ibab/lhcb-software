@@ -4,9 +4,11 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r21p1 2014-09-28 =========================
 ! 2014-09-28
   - CaloMergedPi0 : fix bug that affect sub-seed definition in some configuration
-  - Configuration.py : decrease MergedPi0Pt threshold from 2 GeV to 1.5 GeV  (applies on cluster pT before merged hypothesis is fully reconstructed)
+  - Configuration.py : decrease MergedPi0Pt threshold from 2 GeV to 1.5 GeV 
+     (applies on cluster pT before merged hypothesis is fully reconstructed)
 
 !========================= CaloReco v5r21 2014-09-08 =========================
 ! 2014-08-22 - Gerhard Raven
