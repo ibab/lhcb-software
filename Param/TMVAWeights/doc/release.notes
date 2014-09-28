@@ -4,6 +4,9 @@
 ! Purpose     : To accommodate weights file of all TMVA based selections
 !-----------------------------------------------------------------------------
 
+! 2014-09-28 - Stefano Perazzini
+ - Restored data/B2HHBDT.xml
+
 ! 2014-09-24 - Ricardo Vazquez Gomez
  - changed name of doca to log_doca in BsMuMu_TrackIsolationBDTXXX
 
