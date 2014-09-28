@@ -39,6 +39,7 @@ MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator
 // PID techniques
   , m_clBase           ()
   , m_clSwitch         ()
+  , m_clusterMasks     ()
 {
   declareProperty ( "Input" , m_input = LHCb::ProtoParticleLocation::Neutrals ) ;
   //
@@ -48,7 +49,7 @@ MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator
   declareProperty( "ConfLevelCut"      , m_clCut = -99.     ) ; 
   declareProperty( "PtCut"             , m_PtCut = 2000. * Gaudi::Units::MeV );
   declareProperty( "GammaPtCut"        , m_gPtCut = 0. * Gaudi::Units::MeV );
-  declareProperty( "GammaGammaDistCut" , m_ggDistCut = 1.8 ); // Unit = cellSize
+  declareProperty( "GammaGammaDistCut" , m_ggDistCut = 2.8 ); // Unit = cellSize
   declareProperty( "Chi2Cut"           , m_chi2Cut   = 1.  );
   declareProperty( "ClusterCodeMasks"  , m_clusterMasks);
 
@@ -147,6 +148,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
     if(LHCb::CaloHypo::Pi0Merged != hypo->hypothesis() )continue;
 
     ++nPp;
+    //counter("0 - ProtoParticle MergedPi0") += 1;
 
     // Filters
     LHCb::CaloMomentum pi0Momentum( pp , m_point , m_pointErr);
@@ -154,13 +156,16 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
     // ---- apply mass window
     double mass = pi0Momentum.mass();
     if (m_MassWin < fabs(mass-m_Mass) )continue;
+    //counter("1 - pass mass window")+=1;
 
     // ---- apply Pt(pi0) cut
     if ( m_PtCut  > pi0Momentum.pt()     )continue;
+    //counter("2 -  pass momentum cut")+=1;
 
     // ---- apply chi2(Tr,cluster) cut 
     const double chi2 = pp->info(LHCb::ProtoParticle::CaloTrMatch,+1.e+06);
     if ( m_chi2Cut >= 0 && chi2          < m_chi2Cut                )continue;
+    //counter("3 -  pass chi2 cut")+=1;
 
 
     // ---- apply mask on ClusterCode
@@ -175,6 +180,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
       }
     }
     if( !pass ) continue;
+    //counter("4 -  pass mask selection")+=1;
     
 
     // == extract SplitPhotons hypos
@@ -183,11 +189,13 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
     const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
     LHCb::CaloMomentum g1Momentum( g1 , m_point , m_pointErr );
     LHCb::CaloMomentum g2Momentum( g2 , m_point , m_pointErr );
+    //info()  << hypos.size() << "    -> " << g1Momentum.pt() << " " << g2Momentum.pt() << endmsg;
 
 
     // ---- Apply SplitPhoton pT cut
     if ( m_gPtCut    > g1Momentum.pt()      ){continue;}
     if ( m_gPtCut    > g2Momentum.pt()      ){continue;}
+    //counter("5 -pass pT(g) cut")+=1;
 
 
     // Gamma-Gamma Min distance
@@ -206,11 +214,13 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
     double epi0     =  pi0Momentum.e();
     double dmin     =  ( epi0 * CellSize > 0 ) ? zpos * 2. * m_Mass / epi0 / CellSize : +9999.; // rare FPE ( hypo outside Calo acceptance ?)
     if ( m_ggDistCut < dmin                 ){continue;}
+    //counter("6 - pass dist(gg) cut")+=1;
 
     // ---- apply CL cut 
     const double CL = confLevel( pp,false );
     if ( m_clCut >= 0 && CL          < m_clCut                ){continue;}
     counter("Confidence Level") += CL;
+    //counter(" pass CL cut")+=1;
 
 
     ++nSelPp;
@@ -234,6 +244,7 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles ){
       --nSelPp;
       continue ;
     }
+
 
     //-- set mass and mass uncertainties
     particle -> setMeasuredMass( mass ) ; 

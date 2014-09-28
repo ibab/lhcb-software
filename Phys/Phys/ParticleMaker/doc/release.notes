@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2014-09-28 : O. Deschamps
+  - MergedPi0Maker : release dist(gamma-gamma) cut from 1.8 to 2.8
+
 ! 2014-09-12 - O. Deschamps
   - PhotonMaker & MergedPi0Maker : add selection according to ClusterCode
 
