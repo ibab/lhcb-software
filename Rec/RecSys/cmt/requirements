@@ -10,7 +10,7 @@ branches cmt doc tests
 # Calorimeter                         # Maintainer
 use CaloMoniDst          v5r17   Calo # Olivier Deschamps
 use CaloPIDs             v5r19   Calo # Victor Egorychev, Vanya Belyaev
-use CaloReco             v5r21   Calo # Olivier Deschamps
+use CaloReco             v5r21p1 Calo # Olivier Deschamps
 use CaloTools            v6r10   Calo # Olivier Deschamps
 
 # Hlt

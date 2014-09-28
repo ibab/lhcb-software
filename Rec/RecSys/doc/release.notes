@@ -5,10 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-</PRE><H1><A NAME=v17r1>2014-09-15 RecSys v17r1</A></H1><PRE>
+</PRE><H1><A NAME=v17r1>2014-09-29 RecSys v17r1</A></H1><PRE>
 This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
 
-- Packages modified: Calo/CaloPIDs v5r19, Calo/CaloReco v5r21,
+- Packages modified: Calo/CaloPIDs v5r19, Calo/CaloReco v5r21p1,
     Calo/CaloTools v6r10, Pr/PrAlgorithms v1r14, Pr/PrMCTools v2r4,
     Pr/PrPixel v1r9, Rec/GlobalReco v6r50, Rec/RecAlgs v3r2, Rec/RecConf v2r18,
     Rich/RichRecQC v2r67, Tf/PatAlgorithms v4r35, Tf/TfKernel v2r26,
@@ -21,7 +21,10 @@ This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
   . CaloElectronMatch : extrapolate the track to the CaloHypo Z position instead
                         of ZShowerMax plane
 
-- In Calo/CaloReco v5r21
+- In Calo/CaloReco v5r21, v5r21p1
+  . CaloMergedPi0 : fix bug that affect sub-seed definition in some configuration 
+ 	. Configuration.py : decrease MergedPi0Pt threshold from 2 GeV to 1.5 GeV
+   (applies on cluster pT before merged hypothesis is fully reconstructed)
   . Various CPU performance improvements.
   . CaloECorrection.cpp, CaloSCorrection.cpp : correct defaults for missing
     correction functions in CondDB and add more protection
