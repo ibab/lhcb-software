@@ -41,7 +41,7 @@ CaloECorrection::CaloECorrection( const std::string& type   ,
   else if (  uName.find( "PHOTON" ) ){
     m_conditionName = "Conditions/Reco/Calo/PhotonECorrection"; 
   }
-    
+
   declareInterface<ICaloHypoTool> ( this ) ;  
 }
 // ============================================================================
@@ -60,6 +60,11 @@ StatusCode CaloECorrection::initialize (){
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "Condition name : " << m_conditionName << endmsg;
+
+  //info() << "  =========== Condition name : " << m_conditionName << endmsg;
+
+
+
 
   return StatusCode::SUCCESS ;
 }
@@ -119,7 +124,7 @@ StatusCode CaloECorrection::process    ( LHCb::CaloHypo* hypo  ) const{
   /*
     Position information (e/x/y )
   */
-  if( 0 == MainCluster )return Warning ( "CaloCLuster* points to NULL -> no correction applied" , StatusCode::SUCCESS) ;
+  if( 0 == MainCluster )return Warning ( "CaloCluster* points to NULL -> no correction applied" , StatusCode::SUCCESS) ;
   
   // For Split Photon - share the Prs energy
   if(  LHCb::CaloHypo::PhotonFromMergedPi0 == hypo->hypothesis() ){

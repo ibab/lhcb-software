@@ -90,7 +90,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'ForceOnDemand'       : False      # force DoD for ALL components (incl. those not in RecList)
         , 'PhotonPt'            : 50.*MeV    # Min Cluster Et
         , 'ElectronPt'          : 50.*MeV    # Min Cluster Et 
-        , 'MergedPi0Pt'         : 2.*GeV
+        , 'MergedPi0Pt'         : 1.5*GeV
         , 'ClusterPt'           : 0.
         , 'MakeExternalClustersWithTag': ''
         , 'NoSpdPrs'            : False

@@ -34,7 +34,7 @@ DECLARE_ALGORITHM_FACTORY( CaloMergedPi0 )
   , m_mergedPi0s    (LHCb::CaloHypoLocation::MergedPi0s         )
   , m_splitPhotons  ( LHCb::CaloHypoLocation::    SplitPhotons  )
   , m_splitClusters ( LHCb::CaloClusterLocation:: EcalSplit     )
-  , m_etCut         ( 1500 * Gaudi::Units::GeV                  )
+  , m_etCut         ( 1500 * Gaudi::Units::MeV                  )
   , m_iter          ( 25                                        )
   , m_photonTools   ()
   , m_pi0Tools      ()
@@ -189,9 +189,9 @@ StatusCode CaloMergedPi0::execute(){
   // ============ loop over all clusters ==============
   for( Iterator icluster = clusters->begin() ; clusters->end() != icluster ; ++icluster ){
     LHCb::CaloCluster* cluster = *icluster ;
-    if( 0 == cluster )                { continue ; }   
+    if( 0 == cluster )                { continue ; }
     if ( 0 < m_etCut &&  m_etCut > eT( cluster ) ) { continue ; }
-    
+
     // -- remove small clusters :
     if( 1 >=  cluster->entries().size() )continue;
 
@@ -217,7 +217,8 @@ StatusCode CaloMergedPi0::execute(){
       if( 0 == dig) { continue ; }
       LHCb::CaloCellID seed  = dig->cellID() ;
       double ecel = dig->e()*it->fraction();
-      if (ecel > sube && ecel < seede && isNeighbor( seed1, seed)){
+      if (ecel > sube && ecel < seede && isNeighbor( seed1, seed) && !(seed==seed1)){
+        //if (ecel > sube && ecel < seede && isNeighbor( seed1, seed) ){
         sube=ecel;
         dig2=dig;
       } 

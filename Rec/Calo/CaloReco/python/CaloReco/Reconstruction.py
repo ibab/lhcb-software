@@ -354,7 +354,7 @@ def electronReco ( context , enableRecoOnDemand , useTracksE = True , useSpdE = 
 # =============================================================================
 ## define the reconstruction of Merged Pi0s Hypos 
 def mergedPi0Reco ( context , enableRecoOnDemand , clusterOnly = False , neutralID = True , useTracks = True,
-                    mergedPi0Pt = 2.* GeV ,fastReco = False, external = '',noSpdPrs=False,
+                    mergedPi0Pt = 2* GeV ,fastReco = False, external = '',noSpdPrs=False,
                     masksE=[] , masksP=[] ) :
 
     """
