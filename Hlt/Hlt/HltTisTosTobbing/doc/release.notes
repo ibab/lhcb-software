@@ -4,6 +4,11 @@
 ! Purpose     : Hlt-project-dependent implementation of TisTosTobbing tools
 !-----------------------------------------------------------------------------
 
+!========================= HltTisTosTobbing v3r2 2014-09-29 =========================
+
+! 2014-09-24
+ - SVN executable property removed
+
 !========================= HltTisTosTobbing v3r1 2014-08-18 =========================
 
  - Pick up Rob's test comments.
