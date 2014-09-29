@@ -19,7 +19,7 @@
 #include "TfKernel/ISTHitCleaner.h"
 #include "TfKernel/IOTHitCleaner.h"
 
-#include "TfKernel/TStationHitManager.h"
+#include "TfKernel/IStationSelector.h"
 #include "TfKernel/RegionSelectors.h"
 
 // instantiate some templated classes, to get them into the dictionary

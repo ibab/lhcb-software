@@ -4,6 +4,11 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2014-09-29 - Marco Clemencic
+ - reverted hiding from gccxml
+ - moved Tf::IStationSelector (C++11-free) to an independent header (it is the
+   only class needed in the dictionary).
+
 ! 2014-09-24 - Marco Clemencic
  - hide some more C++11 from gccxml...
 

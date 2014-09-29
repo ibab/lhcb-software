@@ -39,27 +39,13 @@
 #include "TfKernel/RegionID.h"
 #include "TfKernel/TfIDTypes.h"
 #include "TfKernel/RegionSelectors.h"
-
+#include "TfKernel/IStationSelector.h"
 
 /// Static interface ID
 static const InterfaceID IID_TStationHitManager ( "TStationHitManager", 1, 0 );
 
 namespace Tf
 {
-  /** @class IStationSelector TStationHitManager.h TfKernel/TStationHitManager.h 
-   *
-   *  Interface to region selectors
-   */
-  class IStationSelector {
-  public:
-    /// Returns the search window for a given z position
-    virtual XYSearchWindow searchWindow(double z) const = 0;
-    /// Get the max and min z region of validity
-    virtual void getValidity(double& zmin, double& zmax) const = 0;
-    /// Virtual destructor
-    virtual ~IStationSelector() { }
-  };
-
   /** @class TStationHitManager TStationHitManager.h TfKernel/TStationHitManager.h 
    *
    *  T station hit manager. Used to manage extended hit objects for the T

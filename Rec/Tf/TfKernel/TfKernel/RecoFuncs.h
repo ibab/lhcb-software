@@ -22,10 +22,6 @@
 #include "GaudiKernel/Vector3DTypes.h"
 #include "LHCbMath/GeomFun.h"
 
-#if defined(__GCCXML__) && ! defined(constexpr)
-#define constexpr
-#endif
-
 namespace Tf
 {
   /** @class compByX TfKernel/RecoFuncs.h
@@ -60,10 +56,9 @@ namespace Tf
    *  @date   2007-05-30
    */
 
-#ifndef __GCCXML__
   template <class Hit>
   using compByX_LB = compByX<Hit>; 
-#endif
+
   /** @class increasingByProjection TfKernel/RecoFuncs.h
    *  Binary sorting function to sort hits by projection
    *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
