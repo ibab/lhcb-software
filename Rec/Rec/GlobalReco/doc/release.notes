@@ -3,8 +3,14 @@
 ! Responsible : Global PID Group (C. Jones)
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
-!2014-09-26 - Sajan Easo
- - Adaption for recent ROOT version and minor modifications to plotting PID-curves 
+
+! 2014-09-29 - Chris Jones
+ - Add some additional debug messages.
+
+! 2014-09-26 - Sajan Easo
+ - Adaption for recent ROOT version and minor modifications to plotting 
+   PID-curves.
+
 !========================= GlobalReco v6r50 2014-09-12 =========================
 ! 2014-09-12 - O. Deschamps
   - NeutralProtoPAlg : add ClusterCode & ClusterFrac as extra info

@@ -101,7 +101,7 @@ private:
 private:
 
   /// Event count
-  unsigned long m_nEvts;
+  unsigned long long m_nEvts;
 
   /// Total number of tracks considered and selected
   TrackMap m_nTracks;

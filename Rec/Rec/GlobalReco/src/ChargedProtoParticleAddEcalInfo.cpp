@@ -59,7 +59,6 @@ ChargedProtoParticleAddEcalInfo( const std::string& name,
   declareProperty("InputEcalPIDeLocation"      , m_ecalPIDePath       );
   declareProperty("InputEcalPIDmuLocation"     , m_ecalPIDmuPath      );
 
-
   // ProtoParticles
   declareProperty( "ProtoParticleLocation", m_protoPath );
 
