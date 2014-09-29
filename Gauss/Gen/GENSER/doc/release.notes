@@ -4,6 +4,7 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v15r0 2014-09-29 ==========================
 ! 2014-09-01 - John Back
  - Changed -lhepmcinterface to -lpythia8tohepmc for LbPythia8 for pythia8.18x.
 
