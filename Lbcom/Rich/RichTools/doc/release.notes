@@ -3,6 +3,10 @@
 ! Responsible : Antonis Papanestis,  Chris Jones
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
+! 2014-09-29 - Gerhard Raven
+ - on readback of conditions, explicitly catch the case where SmartID have been 
+   printed as unsigned instead of int, and an 'out of bounds' exception is thrown
+ - when printing the 'key' print it explicitly as_int and not as an unsigned 
 
 !========================= RichTools v2r43 2014-02-18 =========================
 ! 2014-02-06 - Chris Jones

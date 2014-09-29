@@ -11,6 +11,10 @@
 
 #include "GaudiKernel/ToolFactory.h"
 
+namespace {
+    inline int as_int(unsigned int u) { return reinterpret_cast<int&>(u); }
+}
+
 // local
 #include "RichHPDOccupancyTool.h"
 
@@ -150,24 +154,28 @@ StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
   
   // read data from conditions
   const Condition * data = getDet<Condition>(m_condBDLocs[rich]);
-  // vector of data values
-  const std::vector<std::string> & values = data->paramAsStringVect( "Occupancies" );
 
   // loop over data values from cond DB
-  for ( std::vector<std::string>::const_iterator iS = values.begin();
-        iS != values.end(); ++iS )
+  for ( const auto& s : data->paramAsStringVect( "Occupancies" ) )
   {
-    // extract numbers from string
-    const unsigned int slash = (*iS).find_first_of( "/" );
-    if ( slash == 0 ) return Error( "Badly formed data value = " + *iS );
-    const LHCb::RichSmartID HPD ( boost::lexical_cast<int>    ( (*iS).substr(0,slash) ) );
-    const double            occ ( boost::lexical_cast<double> ( (*iS).substr(slash+1) ) );
-    // update local data map
-    if ( msgLevel(MSG::VERBOSE) )
-    {
-      verbose() << " -> Updating " << HPD << " occupancy to " << occ << endmsg;
+    const unsigned int slash = s.find_first_of( "/" );
+    if ( slash == 0 ) return Error( "HPDOccupancyTool::initOccMap: Badly formed data value = " + s );
+    try {
+        // extract numbers from string
+        const LHCb::RichSmartID HPD( std::stoi( s.substr(0,slash) ) );
+        const double            occ{ std::stod( s.substr(slash+1) ) };
+
+        // update local data map
+        if ( msgLevel(MSG::VERBOSE) ) {
+          verbose() << " -> Updating " << HPD << " occupancy to " << occ << endmsg;
+        }
+        m_occMap[rich][HPD] = HPDData{ m_minFills+1 , occ };
+    } catch (const std::exception& e) {
+        error() << "HPDOccupancyTool::initOccMap: failed to either convert " << ( s.substr(0,slash) )  << " to int "
+                << " or " <<  s.substr(slash+1)  << " to double; exception " << e.what() << endmsg;
+        return Error("HPDOccupancyTool::initOccMap Failed to convert either " + s.substr(0,slash) 
+                      + " or " + s.substr(slash+1) + " : " + e.what() );
     }
-    (m_occMap[rich])[HPD] = HPDData( m_minFills+1 , occ );
   }
 
   return StatusCode::SUCCESS;
@@ -294,23 +302,23 @@ void HPDOccupancyTool::createHPDBackXML( const Rich::DetectorType rich ) const
   std::vector<std::string> entries;
 
   // loop over final occupancies
-  for ( OccMap::const_iterator iS = m_occMap[rich].begin(); iS != m_occMap[rich].end(); ++iS )
+  for ( const auto& s : m_occMap[rich] )
   {
-    const HPDData & d = (*iS).second;
-    const Rich::DAQ::HPDHardwareID hID = m_richSys->hardwareID( (*iS).first );
+    const HPDData & d = s.second;
+    const Rich::DAQ::HPDHardwareID hID = m_richSys->hardwareID( s.first );
     const double occ =
       ( d.fillCount() < m_minFills ?
         ( d.fillCount()>0 ? d.avOcc()/d.fillCount() : 0 ) : d.avOcc() );
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << (*iS).first << " hID=" << hID << " nMeas=" << d.fillCount()
+      debug() << s.first << " hID=" << hID << " nMeas=" << d.fillCount()
               << " final occ = " << occ << endmsg;
     }
     // Create condition string
     if ( d.fillCount() > m_minFills )
     {
       std::ostringstream entry;
-      entry << (*iS).first.key() << "/" << occ;
+      entry << as_int( s.first.key() ) << "/" << occ; // force key to be printed as a _signed_ int...
       entries.push_back( entry.str() );
     }
   }
