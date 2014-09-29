@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-09-29 - Sebastian Neubert
+ - ensure that TrackCandidates is only instantiated when needed in Hlt1TrackLines
+
 ! 2014-09-25 - Alex Shires
  - follow up fix to PV3D
 

@@ -125,13 +125,12 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         #dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
-        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates, TrackCandidates,
+        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates, 
                                                        LooseForward, TightForward, PEstiForward, pET,
                                                        FitTrack, FitVeloTTTrack, MatchVeloMuon, IsMuon )
         from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
  
         Preambulo = [ VeloCandidates( prefix ),
-                      TrackCandidates( prefix ),
                       TightForward,
                       LooseForward,
                       PEstiForward,
@@ -333,10 +332,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >> SINK( 'Hlt1%(name)sDecision' )
         >> ~TC_EMPTY
         """ % props
+        from HltTracking.Hlt1TrackUpgradeConf import TrackCandidates
         hlt1TrackBlock_Unit = HltUnit(
             'Hlt1'+name+'Unit',
             OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name ),
+            Preambulo = self.hlt1Track_Preambulo( name ) + [TrackCandidates( name )],
             Code = lineCode
             )       
         from HltTracking.HltPVs import PV3D
