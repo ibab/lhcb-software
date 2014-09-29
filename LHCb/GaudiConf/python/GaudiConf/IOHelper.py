@@ -1026,16 +1026,17 @@ class IOExtension(object):
     #_rootTypePersistency=IOExtension._defaultPersistency
 
     _knownExtensions={ 'XDIGI' : '',
-                       'DIGI' : '',
-                       'SIM'  : '',
-                       'DST'  : '',
+                       'DIGI'  : '',
+                       'SIM'   : '',
+                       'DST'   : '',
                        'XDST'  : '',
                        'MDST'  : '',
+                       'FMDST'  : '',
                        'SDST'  : 'Warning',
-                       'GEN'  : 'Warning',
+                       'GEN'   : 'Warning',
                        'XGEN'  : 'Warning',
-                       'MDF'    : 'MDF',
-                       'RAW'  : 'MDF'
+                       'MDF'   : 'MDF',
+                       'RAW'   : 'MDF'
                        }
 
     def __init__(self, Persistency=None):
@@ -1075,7 +1076,7 @@ class IOExtension(object):
 
         returns the string of the file type, or "UNKNOWN" if there is a problem
         '''
-        iohtype=IOHelper().detectFileType(filename)
+        iohtype = IOHelper().detectFileType(filename)
         if iohtype is not "UNKNOWN":
             return iohtype
 

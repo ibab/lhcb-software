@@ -3,6 +3,9 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-09-29 - Chris Jones
+ - Add FMDST to list of known file extensions in IOHelper.
+
 !========================= GaudiConf v19r4 2014-09-08 =========================
 ! 2014-09-07 - Chris Jones
  - Add option ClearRegistry to CaloPackingConf.py
