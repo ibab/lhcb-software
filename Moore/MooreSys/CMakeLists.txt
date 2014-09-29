@@ -7,7 +7,6 @@ gaudi_depends_on_subdirs(Hlt/HltMonitor
                          Hlt/IndependenceTests
                          Hlt/Moore
                          L0/L0App
-                         Phys/Swimming
                          Det/DetCond # TEMP
                          Hlt/HltServices # TEMP
                          )

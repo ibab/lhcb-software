@@ -9,7 +9,6 @@ branches doc cmt
 use  Moore               v23r1      Hlt
 use  IndependenceTests   v1r9       Hlt
 use  HltMonitor          v1r4	    Hlt   # Diego Martinez
-use  Swimming            v3r2       Phys  # Nick Torr
 use  L0App               v2r3       L0    # 
 
 # Declare this as a container package
