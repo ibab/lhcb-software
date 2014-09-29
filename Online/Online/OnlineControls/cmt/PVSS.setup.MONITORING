@@ -1,3 +1,0 @@
-#/bin/bash
-. ./setup.slc4_ia32_gcc34.vars
-PVSS_II="/localdisk/pvss/MONITORING/config/config"; export PVSS_II
