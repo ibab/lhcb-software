@@ -10,11 +10,16 @@
     code concerned: TaggerKaonOppositeTool.* TaggerMuonTool.* TaggerElectronTool.*
     TaggerVertexChargeTool.* TaggerKaonSameTool.* TaggerPionSameTool.* NNetMLP_Tool.*
 
+! 2014-09-29 - Chris Jones
+ - Downgrade "No particles found at ..." messages from warning to debug,
+   to avoid uneccessary spamming in production.
+
 ! 2014-09-16 - Jack Wimberley
-	- Added LambdaC modes (and other online selection changes) to CharmTaggerLists
-	- Making a corresponding commit (with necessary changes to BTaggingAnalysis) to FlavourTaggingChecker
-  - With these two commits, new modes are added to mytagging
-  - A later commit will include the actual changes to TaggerCharmTool
+ - Added LambdaC modes (and other online selection changes) to CharmTaggerLists
+ - Making a corresponding commit (with necessary changes to BTaggingAnalysis) to
+   FlavourTaggingChecker
+ - With these two commits, new modes are added to mytagging
+ - A later commit will include the actual changes to TaggerCharmTool
 
 !========================= FlavourTagging v13r7 2014-06-13 =========================
 

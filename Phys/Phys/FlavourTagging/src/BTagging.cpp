@@ -60,8 +60,10 @@ void BTagging::performTagging(const std::string & location)
 
   if ( parts.empty() )
   {
-    Warning("No particles found at " + particlesLocation,
-            StatusCode::SUCCESS,10).ignore();
+    //Warning("No particles found at " + particlesLocation,
+    //       StatusCode::SUCCESS,10).ignore();
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "No particles found at " << particlesLocation << endmsg;
     return;
   }
 
