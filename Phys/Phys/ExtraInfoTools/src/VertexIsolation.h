@@ -2,8 +2,6 @@
 #define VERTEXISOLATION_H 1
 
 // Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
-//#include "Kernel/DVAlgorithm.h"
 #include "Kernel/IExtraInfoTool.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloUtils/CaloParticle.h"

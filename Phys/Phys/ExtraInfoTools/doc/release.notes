@@ -4,5 +4,8 @@
 ! Purpose     : Extra Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-09-29 - Eduardo Rodrigues
+ - Removed code lines related to obsolete algorithm DVAlgorithm.
+
 ! 2014-08-05 - Chris Jones
  - First version. Split of the ExtraInfo tools from DaVinciTools.
