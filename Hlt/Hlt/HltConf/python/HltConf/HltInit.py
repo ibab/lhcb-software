@@ -206,7 +206,6 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesTrackAllL0VeloTTForw'    :10129,
     'VeloCandidatesTrackAllL0LifetimeUnbiased'    :10130,
     'TrackCandidatesTrackAllL0Block'        :10131,
-    'TrackCandidatesTrackAllL0VeloTTForw'   :10132,
     'VeloCandidatesTrackMuon'               :10109,
     'VeloCandidatesTrackPhoton'             :10110,
     'VeloCandidatesDiMuonHighMass'          :10111,

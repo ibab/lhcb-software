@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2014-09-29 - Sebastian Neubert
+ - removed superflous entry in ANNsvc for TrackCandidatesXXX
+
 ! 2014-09-24 - Alex Shires
  - remove conflicting numbers!
 
