@@ -1,0 +1,6 @@
+#include "$FARMCONFIGROOT/options/PassThroughBasic.opts"
+MEPManager.Buffers                   = @OnlineEnv.PassThroughMDF_Buffers;
+EventSelector.Input                  = @OnlineEnv.PassThroughMDF_Input;
+Merger.Buffer                        = @OnlineEnv.PassThroughMDF_Output;
+EventSelector.REQ1   = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0";
+EventSelector.Decode = false;
