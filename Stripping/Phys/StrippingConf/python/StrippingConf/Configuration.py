@@ -47,6 +47,7 @@ class StrippingConf ( object ) :
         self.MicroDSTStreams = MicroDSTStreams
         self._GlobalFlavourTagging = GlobalFlavourTagging
         self._taggingLocations = []
+        self._taggingSeq = None
         self.BadEventSelection = BadEventSelection
         self.AcceptBadEvents = AcceptBadEvents
         self.MaxCandidates = MaxCandidates
@@ -154,14 +155,21 @@ class StrippingConf ( object ) :
         """
         Return GaudiSequencer containing stream sequencers
         """
+        from Configurables import GaudiSequencer
+        log.debug("Initialising GaudiSequencer/"+ self._name)
         if self._sequence == None :
-            from Configurables import GaudiSequencer
             log.debug("Initialising GaudiSequencer/"+ self._name)
-            self._sequence = GaudiSequencer(self._name,
-                                            ModeOR = True, 
-                                            ShortCircuit = False,
-                                            OutputLevel = WARNING, 
-                                            Members = self._streamSequencers)
+            selSeq = GaudiSequencer(self._name+"_Selection",
+                                    ModeOR = True, 
+                                    ShortCircuit = False,
+                                    OutputLevel = WARNING, 
+                                    Members = self._streamSequencers)
+
+            self._sequence = GaudiSequencer(self._name,Members = [selSeq])
+
+            if self._GlobalFlavourTagging:
+                self._sequence.Members += [self._taggingSeq]
+
         return self._sequence
 
     def selections (self) :
@@ -210,9 +218,7 @@ class StrippingConf ( object ) :
     def appendFlavourTagging(self) :
         from Configurables import BTagging, GaudiSequencer
         btag = BTagging( "BTag_Global",Inputs = self._taggingLocations )
-        taggingSeq = GaudiSequencer("BTaggingSequence")
-        taggingSeq.Members += [btag]
-        self._streamSequencers.append(taggingSeq)
+        self._taggingSeq = GaudiSequencer("BTaggingSequence", Members = [btag])
         
     def _appendSequencer(self, stream) :
         self._streamSequencers.append(stream.sequence())
