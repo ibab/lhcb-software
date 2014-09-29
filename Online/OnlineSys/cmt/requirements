@@ -15,6 +15,7 @@ use GaudiObjDesc        v11r20
 #=======================================================
 # LHCb Online packages
 #=======================================================
+use Alignment           v0r0     Online
 use Camera              v1r27    Online
 use Checkpointing       v0r16    Online
 macro CondDBServer_use "CondDBServer v1r6 Online" target-i686 ""
