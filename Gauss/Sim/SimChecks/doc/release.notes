@@ -6,6 +6,17 @@
 
 
 !========================== SimChecks v1r2 2014-07-03 ========================
+
+! 2014-09-29 - Luca Pescatore
+ - Updated RadLength scripts to get the database from the offical
+   location, since it is not released. Also added eta-phi plots as final output.
+
+! 2014-09-06 - Luca Pescatore
+ - Added cpp file to extract radiation length profile plots from the output files of the gauss jobs.
+
+! 2014-09-04 - Luca Pescatore
+ - Changed default number of events
+
 ! 2014-05-13 - Luca Pescatore
  - Added folder with code for post production analysis and option file which
    launches it automatically after producting events
@@ -19,12 +30,6 @@
  - Updated all python options for Single and Multiple taget. Untested Ganga 
    functionalities are removed and scripts are reorganizied to make them easier
    to use.
-
-! 2014-09-04 - Luca Pescatore
- - Changed default number of events
-
-! 2014-09-06 - Luca Pescatore
- - Added cpp file to extract radiation length profile plots from the output files of the gauss jobs.
 
 !========================== SimChecks v1r1 2014-02-02 ========================
 ! 2014-01-20 - Sajan Easo

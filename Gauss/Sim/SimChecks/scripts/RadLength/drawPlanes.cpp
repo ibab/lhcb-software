@@ -21,10 +21,10 @@ int main(int argc, char **argv)
 
 	if(argc > 1)
 		fileName = argv[1];
-	if(argc > 2)
-		path = argv[2];
 	if(argc > 3)
-		type = argv[3];
+		path = argv[3];
+	if(argc > 2)
+		type = argv[2];
 
 
 	TFile * f = TFile::Open(fileName.c_str());
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 	else cout << "File or tree not found" << endl;
 
 	int nplanes = 11;
-	stringstream select, var, namehisto, namefile;
+	TString select, var, namehisto, namefile;
 	TCanvas * c = new TCanvas();
 		
 	TGraphErrors * cumul = new TGraphErrors();
@@ -41,56 +41,42 @@ int main(int argc, char **argv)
 	TGraphErrors * p2p = new TGraphErrors();
 	
 	
-	for(int i = 1; i < nplanes+1; i++)
+	for(int i = 2; i < nplanes+1; i++)
 	{
 		c->SetLogy();
-		select.str("");
-		namehisto.str("");
-		namefile.str("");
-		var.str("");
-		select << "ID == " << i;
-		namehisto << "cum_lgh_" << i;
-		var << "cum"+type+"lgh>>" << namehisto.str();
-		tree->Draw(var.str().c_str(),select.str().c_str());
-		TH1F * h1 = (TH1F *)gPad->GetPrimitive(namehisto.str().c_str());
+		select = Form("ID == %i",i);
+		namehisto = Form("cum_lgh_%i",i);
+		var = "cum"+type+"lgh>>"+namehisto;
+		tree->Draw(var,select);
+		TH1F * h1 = (TH1F *)gPad->GetPrimitive(namehisto);
 		h1->GetXaxis()->SetTitle("n_{X0}^{tot}");
 		h1->GetYaxis()->SetTitle("N_{evt}");
-		h1->Draw();
 		cumul->SetPoint(i-1,i,h1->GetMean());
 		cumul->SetPointError(i-1,0,h1->GetRMS()/TMath::Sqrt((double)h1->GetEntries()));
-		namefile << path << namehisto.str() << "_" << type << ".pdf";
-		c->Print(namefile.str().c_str());
+		namefile = path + namehisto + "_" + type + ".pdf";
+		c->Print(namefile);
 		
-		namehisto.str("");
-		namehisto << "Z_" << i;
-		var.str("");
-		var << "Zpos>>" << namehisto.str();
-		tree->Draw(var.str().c_str(),select.str().c_str());
-		TH1F * hZ = (TH1F *)gPad->GetPrimitive(namehisto.str().c_str());
+		namehisto = Form("Z_%i",i);
+		var = "Zpos>>" + namehisto;
+		tree->Draw(var,select);
+		TH1F * hZ = (TH1F *)gPad->GetPrimitive(namehisto);
 		cumulZ->SetPoint(i-1,hZ->GetMean(),h1->GetMean());
 		cumulZ->SetPointError(i-1,hZ->GetRMS()/TMath::Sqrt((double)hZ->GetEntries()),h1->GetRMS()/TMath::Sqrt((double)h1->GetEntries()));
 		
 
-		namehisto.str("");
-		namefile.str("");
-		var.str("");
-		namehisto << "p2p_lgh_" << i;
-		var << "p2p"+type+"lgh>>" << namehisto.str();
-		tree->Draw(var.str().c_str(),select.str().c_str());
-		TH1F * h2 = (TH1F *)gPad->GetPrimitive(namehisto.str().c_str());
+		namehisto = Form("p2p_lgh_%i",i);
+		var = "p2p"+type+"lgh>>" + namehisto;
+		tree->Draw(var,select);
+		TH1F * h2 = (TH1F *)gPad->GetPrimitive(namehisto);
 		h2->GetXaxis()->SetTitle("n_{X0}^{p2p}");
 		h2->GetYaxis()->SetTitle("N_{evt}");
-		h2->Draw();
 		p2p->SetPoint(i-1,i,h2->GetMean());
 		p2p->SetPointError(i-1,0,h2->GetRMS()/TMath::Sqrt((double)h2->GetEntries()));
-		namefile << path << namehisto.str() << "_" << type << ".pdf";
-		c->Print(namefile.str().c_str());
+		namefile = path + namehisto + "_" + type + ".pdf";
+		c->Print(namefile);
 
-        
+        /*
 		c->SetLogy(0);
-		namehisto.str("");
-		namefile.str("");
-		var.str("");
 		namehisto << "eta_" << i;
 		var << "eta>>" << namehisto.str() << "(80,1.5,5.5)";
 		tree->Draw(var.str().c_str(),select.str().c_str());
@@ -100,21 +86,30 @@ int main(int argc, char **argv)
 		h3->Draw();
 		namefile << path << namehisto.str() << "_" << type << ".pdf";
 		c->Print(namefile.str().c_str());
-		
+		*/
+
+		c->SetLogy(0);
 		gStyle->SetOptStat(0);
-		namehisto.str("");
-		namefile.str("");
-		var.str("");
-		namehisto << "length_prof_" << i;
-		var << "cum"+type+"lgh:eta:phi>>" << namehisto.str() << "(80,-3.3,3.3,80,2.,5.)";
-		tree->Draw(var.str().c_str(),select.str().c_str(),"profs");
-		TH1 * hh = (TH1 *)gPad->GetPrimitive(namehisto.str().c_str());
+		namehisto = Form("length_prof_%i",i);
+		var = "cum"+type+"lgh:eta:phi>>" + namehisto + "(80,-3.3,3.3,80,2.,5.)";
+		tree->Draw(var,select,"profs");
+		TH1 * hh = (TH1 *)gPad->GetPrimitive(namehisto);
 		hh->GetXaxis()->SetTitle("#phi");
 		hh->GetYaxis()->SetTitle("#eta");
 		if(type=="inter") { c->SetLogz(); hh->SetMinimum(20); }
 		hh->Draw("colz");
-		namefile << path << namehisto.str() << "_" << type << ".pdf";
-		c->Print(namefile.str().c_str());
+		namefile = path + namehisto + "_" + type + ".pdf";
+		c->Print(namefile);
+
+		gStyle->SetOptStat(0);
+		namehisto = Form("etaphi_%i",i);
+		var = "eta:phi>>" + namehisto;// + "(80,-3.3,3.3,80,2.,5.)";
+		tree->Draw(var,select,"colz");
+		TH1 * hhetaphi = (TH1 *)gPad->GetPrimitive(namehisto);
+		hhetaphi->GetXaxis()->SetTitle("#phi");
+		hhetaphi->GetYaxis()->SetTitle("#eta");
+		namefile = path + namehisto + "_" + type + ".pdf";
+		c->Print(namefile);
 	}
 
 	
