@@ -70,7 +70,7 @@ kali = secondPass (
     )
 
 from Configurables import CondDB
-CondDB ( UseLatestTags = ['2011'] )
+CondDB ( UseLatestTags = ['2012'] )
 
 
 # =============================================================================
@@ -90,15 +90,15 @@ if '__main__' == __name__ :
     ##DaVinci().InputType = 'SDST'                            # use SDSTs as an input
     #### SDSTs for Stripping tests, 2010 data, mu = 2.7
     ##importOptions('$STRIPPINGSELECTIONSROOT/tests/data/RUN_81430_RealData+Reco08-Stripping12_90000000_SDST.py')
-
     
+    #eos      = 'root://eoslhcb.cern.ch//eos/lhcb/grid/prod'
+    #pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
+    #pattern  = '/lhcb/LHCb/Collision12/FMDST/00021391/0000/00021391_00000%03d_1.fmdst'
+
+    from PRConfig import TestFileDB
     from GaudiConf.IOHelper import IOHelper
     
-    ioh = IOHelper()
-    
-    eos      = 'root://eoslhcb.cern.ch//eos/lhcb/grid/prod'
-    pattern  = '/lhcb/LHCb/Collision11/FMDST/00011385/0000/00011385_00000%03d_1.fmdst'
-    ioh.inputFiles ( [ eos+pattern%i for i in range(1,10) ] )
+    IOHelper().inputFiles ( TestFileDB.test_file_db["2012_CaloFemtoDST"].filenames )
     
     #evtSel.open ( 'KaliPi0_2k+11.fmdst_test')
 
@@ -109,10 +109,10 @@ if '__main__' == __name__ :
     
     evtSel = gaudi.evtSel()
         
-    ## run 100 events
+    ## run over events
     gaudi.run(5000)
     
-    from   KaliCalo.FitUtils import fitPi0 , getPi0Params, s2b   
+    from   KaliCalo.FitUtils import fitPi0, getPi0Params, s2b   
     import GaudiPython.GaudiAlgs 
     pi0    = gaudi.algorithm('KaliPi0')
     histos = pi0.Histos()
