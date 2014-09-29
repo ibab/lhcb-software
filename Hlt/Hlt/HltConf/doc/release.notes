@@ -4,6 +4,8 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================= HltConf v12r1 2014-09-29 =========================
+
 ! 2014-09-29 - Sebastian Neubert
  - removed superflous entry in ANNsvc for TrackCandidatesXXX
 
