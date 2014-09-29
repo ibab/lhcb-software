@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r6 2014-09-29 =========================
+
 ! 2014-09-02 - Sebastian Neubert
  Hlt1_TrackingOnly:
  - switched off validateTT for TrackAllL0VeloTTForw
