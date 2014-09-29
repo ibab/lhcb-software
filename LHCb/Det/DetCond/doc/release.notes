@@ -3,6 +3,12 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+! 2014-09-39 - Gerhard Raven
+ - DetCond configurable: combine the RunChangeHandlerConditions and XMLFilename 
+   properties into a single dictioary of filename -> list of conditions so that 
+   the RunChangeHandler can be configured to use multiple <subsystem>_<runnr>.xml 
+   files.
+ - avoid a spurios warning about ONLINE tag
 
 !========================= DetCond v12r37 2014-09-08 =========================
 ! 2014-09-02 - Liang Sun
