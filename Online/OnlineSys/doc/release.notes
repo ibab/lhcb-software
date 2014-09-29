@@ -6,6 +6,26 @@
 !-----------------------------------------------------------------------------
 </PRE>
 
+<H1><A NAME=v5r11>2014-09-29 OnlineSys v5r11</A></H1>
+<PRE>
+  Use Gaudi v25r3
+  Updated/new packages:	
+     Alignment           v1r0     Online
+     Camera              v1r28    Online
+     DefHLTUtils         v1r9     Online
+     EventBuilder        v0r3     Online
+     FarmConfig          v0r8     Online
+     GauchoAppl          v1r16    Online
+     GaudiCheckpointing  v0r18    Online
+     GaudiOnline         v2r72    Online
+     GaudiOnlineTests    v1r4     Online
+     GaudiSerialize      v0r14    Online
+     OnlineBase          v1r23    Online
+     Presenter           v3r10    Online
+     RawBankSizes        v2r20    Online
+     ROMon               v1r47    Online
+</PRE>
+
 <H1><A NAME=v5r10>2014-08-21 OnlineSys v5r10</A></H1>
 <PRE>
   Use Gaudi v25r3
