@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-09-29 - Eduardo Rodrigues
+ - Removed code lines related to obsolete algorithm DVAlgorithm.
+
 ! 2014-09-14 - Xabier Cid Vidal
  - Change a couple of warning() to Warning(
 

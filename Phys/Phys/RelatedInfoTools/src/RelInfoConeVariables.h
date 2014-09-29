@@ -2,8 +2,6 @@
 #define RELINFOCONEVARIABLES_H 1
 
 // Include files
-// from DaVinci, this is a specialized GaudiAlgorithm
-//#include "Kernel/DVAlgorithm.h"
 #include "Kernel/IRelatedInfoTool.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "Event/RelatedInfoMap.h"
