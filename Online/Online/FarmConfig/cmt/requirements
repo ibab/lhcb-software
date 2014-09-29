@@ -1,5 +1,5 @@
 package FarmConfig
-version v0r7
+version v0r8
 author "Markus Frank"
 
 branches cmt doc
