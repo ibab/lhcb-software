@@ -12,9 +12,9 @@ find_package(GaudiProject)
 set(override_subdirs RootCnv)
 
 # Declare project name and version
-gaudi_project(MooreOnline v23r0
-              USE Moore v23r0 
-                  Online v5r10
+gaudi_project(MooreOnline v23r1
+              USE Moore v23r1 
+                  Online v5r11
               DATA AppConfig VERSION v3r*
                    FieldMap VERSION v5r*
                    PRConfig
