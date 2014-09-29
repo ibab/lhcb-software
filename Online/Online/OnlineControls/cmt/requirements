@@ -2,7 +2,6 @@ package OnlineControls
 version v1r0
 
 branches  cmt doc
-use RELAX         v* LCG_Interfaces -no_auto_imports
 use UPI           v* Online -no_auto_imports
 use UPIR          v* Online -no_auto_imports
 use PVSSInterface v* Online -no_auto_imports
@@ -11,5 +10,5 @@ use PVSSInterface v* Online -no_auto_imports
 
 path_remove  PYTHONPATH "/OnlineControls/" WIN32 "\OnlineControls\"
 path_prepend PYTHONPATH "$(ONLINECONTROLSROOT)/python"
-set          PYTHONHOME "$(Python_home)"
+##Not for default python:set          PYTHONHOME "$(Python_home)"
 

@@ -155,11 +155,25 @@ class Reconstruction(General):
     # Define reconstruction tasks: treat them like receivers (they are all class 1 tasks)
     monReceivers = []
     worker = self.monitoringTypes()[0]
-    i = 0
+    used_nodes = {}
+    task_nodes = {}
+    parent = None
     for s in mon_slots:
-      j,k=s.split(':')
-      monReceivers.append(j+'/'+self.name+'_'+j+'_'+worker+'_'+str(i)+'/'+worker+'_'+str(i)+'/'+worker+cl1)
-      i = i + 1
+      node,k=s.split(':')
+      if not used_nodes.has_key(node): 
+        used_nodes[node] = 0
+        task_nodes[node] = []
+      else:
+        used_nodes[node] = used_nodes[node]+1
+      i = "%s_%02d"%(worker,used_nodes[node],)
+      task_nodes[node].append(node+'/'+self.name+'_'+node+'_'+i+'/'+i+'/'+worker+cl1)
+
+    for i in task_nodes.keys():
+      cnt = 0
+      for p in task_nodes[i]:
+        if cnt==0: monReceivers.append(p+'/NBOFSLAVES='+str(len(task_nodes[i])-1))
+        else:  monReceivers.append(p+'/FORKEE='+str(cnt))
+        cnt = cnt + 1
 
     # Fill all datapoints:
     # First the senders on the storage system

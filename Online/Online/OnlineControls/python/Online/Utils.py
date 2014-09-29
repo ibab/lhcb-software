@@ -5,7 +5,7 @@ lib_prefix = ''
 if platform.system()=='Linux':
   lib_prefix = 'lib'
 
-Dictionary.loadDict(lib_prefix+'STLRflx')
+Dictionary.loadDict(lib_prefix+'PVSS_STLDict')
 
 gbl  = Dictionary.makeNamespace('')
 std  = gbl.std

@@ -1,7 +1,7 @@
 #!/bin/bash
-. /group/online/dataflow/scripts/pvss_preamble.sh $*
-cd $RELEASE_DIR/Online/OnlineControls/cmt
-. setup.slc4_ia32_gcc34.vars
+#. /group/online/dataflow/scripts/pvss_preamble.sh $*
+export RELEASEDIR=/group/online/dataflow/cmtuser/WINCC_OA_dev;
+cd ${RELEASEDIR}/Online/OnlineControls/cmt;
 #
 # Clean runtime environment
 #
@@ -18,6 +18,8 @@ for i in xrange(len(args)):
     print 'PVSSMGR_Num='+str(args[i+1])+';'
 EOF`
 # export UTGID=${2}${PVSSMGR_Num}
-export PVSS_II=/localdisk/pvss/${PVSS_system}/config/config
-echo exec -a ${2} ${PVSS00api} $*
+export PVSS_II=/localdisk/wincc/${PVSS_system}/config/config
+. ./WCCOA.setup.${PVSS_system}
+#
+echo $PVSS_II -- exec -a ${2} ${PVSS00api} $*
 exec ${PVSS00api} $*

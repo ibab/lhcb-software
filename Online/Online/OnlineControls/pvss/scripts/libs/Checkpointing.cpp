@@ -1,3 +1,5 @@
+#uses "lbECS_TCK.ctl"
+
 //=============================================================================
 // 
 // @author  M.Frank
@@ -155,13 +157,20 @@ void Checkpoint_readL0Types()  {
 // @version 1.0
 //=============================================================================
 string Checkpoint_directory()  {
-  string f=m_outdir.text +
-            "/" + Checkpoint_AppType +
-            "/" + m_app.text;
+  string f=m_outdir.text;
+  if ( m_hltType.text == "PassThrough" )  {
+    f = f + "/" + m_hltType.text;
+    f = f + "/" + m_online.text;
+    f = f + "/" + m_hltProgram.text;
+    return f;
+  }
+  f = f + "/" + Checkpoint_AppType +
+          "/" + m_app.text;
   if ( strlen(Checkpoint_HLTType)> 0 ) f = f + "/" + m_hltType.text;
   if ( Checkpoint_useDBtags )  {
     f = f +   "/" + m_condDB.text + "/" + m_ddDB.text;
   }
+  if ( strlen(Checkpoint_HLTProgram)> 0 ) f = f + "/" + m_hltProgram.text;
   return f;
 }
 
@@ -333,10 +342,14 @@ void MooreCheckpoint_init(string partition, string triggerConf)   {
   m_outdir.text              = dir;
   m_partSelector.toolTipText = "Select partition name.";
   m_partSelectorLabel.toolTipText = m_partSelector.toolTipText;
+  m_hltProgram.toolTipText      = "Select the Moore application type";
+  m_hltProgramLabel.toolTipText = m_hltProgram.toolTipText;
   m_triggerConf.toolTipText  = "Select trigger configuration by nick name.";
   m_triggerConfLabel.toolTipText = m_triggerConf.toolTipText;
-  m_appLabel.toolTipText   = "Select here the Moore version used to create the checkpoint";
-  m_app.toolTipText        = m_appLabel.toolTipText;
+  m_mooreLabel.toolTipText   = "Select Moore software version";
+  m_mooreVsn.toolTipText     = m_mooreLabel.toolTipText;
+  m_appLabel.toolTipText     = "Select here the MooreOnline version used to create the checkpoint";
+  m_app.toolTipText          = m_appLabel.toolTipText;
   m_hltTypeLabel.toolTipText = "Select the TCK family to create the checkpoint.";
   m_hltType.toolTipText      = m_hltTypeLabel.toolTipText;
   m_condDBLabel.toolTipText  = "Select the conditions database tag to create the checkpoint.";
@@ -361,13 +374,17 @@ void MooreCheckpoint_init(string partition, string triggerConf)   {
   m_partSelector.items       = makeDynString(partition);
   m_partSelector.text        = partition;
   m_partSelector.editable    = false;
+  m_hltProgram.items         = makeDynString("Moore1","Moore2","PassThrough");
+  m_hltProgram.text          = "Moore1";
+  Checkpoint_HLTProgram      = m_hltProgram.text;
   if ( partition == "ANY" )  {
     m_partSelector.editable = true;
     Checkpoint_initPartitionSelector();
     MooreCheckpoint_initValuesFromRecipeCache(Checkpoint_Partition,triggerConf);
   }
   else if ( strlen(partition)>0 )  {
-    MooreCheckpoint_initValuesFromRecipeCache(partition,triggerConf);
+    //MooreCheckpoint_initValuesFromRecipeCache(partition,triggerConf);
+    MooreCheckpoint_initValuesFromMapping(partition,triggerConf);
   }
   else  {
     MooreCheckpoint_initValuesFromRunInfo();
@@ -430,7 +447,8 @@ void MooreCheckpoint_reloadApp(string app)  {
 //=============================================================================
 void MooreCheckpoint_initValuesFromRunInfo()   {
   int tckHex;
-  dpGet(Checkpoint_RunInfoDp+".Trigger.mooreVersion", Checkpoint_AppVsn,
+  dpGet(Checkpoint_RunInfoDp+".Trigger.mooreVersion", Checkpoint_MooreVsn,
+        Checkpoint_RunInfoDp+".Trigger.mooreOnlineVersion", Checkpoint_AppVsn,
         Checkpoint_RunInfoDp+".Trigger.HLTType", Checkpoint_HLTType,
         Checkpoint_RunInfoDp+".Trigger.L0Type", Checkpoint_L0Type,
         Checkpoint_RunInfoDp+".Trigger.TCKLabel", Checkpoint_TCKLabel,
@@ -497,6 +515,7 @@ void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerC
   dpGet(name+".DataPoints.DPNames",infos,
         name+".Values.DPENames",pars,
         name+".Values.DPEValues",vals);
+  Checkpoint_AppVsn = "";
   Checkpoint_CondDB = "";
   Checkpoint_RunInfoDp = infos[1];
   DebugN("Partition:"+partition+" triggerConf:"+triggerConf+" Sys:"+sys+
@@ -510,6 +529,8 @@ void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerC
     else if(pars[i] == Checkpoint_RunInfoDp+".Trigger.gaudiVersion")  {      
     }
     else if(pars[i] == Checkpoint_RunInfoDp+".Trigger.mooreVersion")
+      Checkpoint_MooreVsn = vals[i];
+    else if(pars[i] == Checkpoint_RunInfoDp+".Trigger.mooreOnlineVersion")
       Checkpoint_AppVsn = vals[i];
     else if(pars[i] == Checkpoint_RunInfoDp+".Trigger.HLTType")
       Checkpoint_HLTType = vals[i];
@@ -534,7 +555,12 @@ void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerC
     else if(pars[i] == Checkpoint_RunInfoDp+".Trigger.DDDBTag")
       Checkpoint_DDDB = vals[i];
   }
+
+  if ( strlen(Checkpoint_AppVsn) == 0 ) Checkpoint_AppVsn = Checkpoint_MooreVsn;
   DebugN("Checkpoint_DDDB:"+Checkpoint_DDDB+" Checkpoint_CondDB:"+Checkpoint_CondDB);
+  m_mooreVsn.items   = makeDynString(Checkpoint_MooreVsn);
+  m_mooreVsn.text    = Checkpoint_MooreVsn;
+
   m_app.items   = makeDynString(Checkpoint_AppVsn);
   m_app.text    = Checkpoint_AppVsn;
 
@@ -548,6 +574,7 @@ void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerC
 
   Checkpoint_showdbTags();
   bool val = false;
+  m_mooreVsn.editable   = val;
   m_app.editable   = val;
   m_outdir.editable  = val;
   m_hltType.editable = val;
@@ -559,6 +586,75 @@ void MooreCheckpoint_initValuesFromRecipeCache(string partition, string triggerC
   m_reload.visible   = val;
   //m_create.enabled  = val;
   //m_options.enabled = val;
+}
+
+//=============================================================================
+// Initialialize panel constants from the recipe chache
+// 
+// @author  M.Frank
+// @version 1.0
+//=============================================================================
+void MooreCheckpoint_initValuesFromMapping(string partition, string triggerConf)  {
+  string name, sys=getSystemName();
+  mapping parameters;
+  int tckHex;
+  float lumi;
+  lbECS_getHltPars(parameters,"ECS:"+partition+"_RunInfo",triggerConf);
+  //DebugN("Run Parameters:"+parameters);
+
+  Checkpoint_Editable = false;
+  m_triggerConf.items = makeDynString(triggerConf);
+  m_triggerConf.editable = false;
+  m_triggerConf.text  = triggerConf;
+  //DebugN("Partition:"+partition+" triggerConf:"+triggerConf+" Sys:"+sys);
+  m_online.text             = parameters["OnlineV"];
+  Checkpoint_MooreVsn       = parameters["MooreV"];
+  Checkpoint_AppVsn         = parameters["MooreOnlineV"];
+  Checkpoint_TCKLabel       = parameters["TCKLabel"];
+  Checkpoint_L0Type         = parameters["L0Type"];
+  Checkpoint_HLTType        = parameters["HLTType"];
+  Checkpoint_DDDB           = parameters["DDDBTag"];
+  Checkpoint_CondDB         = parameters["CondDBTag"];
+  Checkpoint_LumiBB         = parameters["LumiBBRate"];
+  Checkpoint_BeamGasEnabled = parameters["BeamGasTrigger"] == "FALSE" ? 0 : 1;
+  Checkpoint_LumiEnabled    = parameters["LumiTrigger"] == "FALSE" ? 0 : 1;
+  tckHex                    = parameters["TCK"];
+  //else if(pars[i] == Checkpoint_RunInfoDp+".Trigger.swPath")
+  //  Checkpoint_SwPath = vals[i];
+  //else if(pars[i] == Checkpoint_RunInfoDp+".Trigger.runType")
+  //  Checkpoint_RunType = vals[i];
+  DebugN("Checkpoint_DDDB:"+Checkpoint_DDDB+" Checkpoint_CondDB:"+Checkpoint_CondDB);
+  m_mooreVsn.items   = makeDynString(Checkpoint_MooreVsn);
+  m_mooreVsn.text    = Checkpoint_MooreVsn;
+
+  m_app.items        = makeDynString(Checkpoint_AppVsn);
+  m_app.text         = Checkpoint_AppVsn;
+
+  m_hltType.items    = makeDynString(Checkpoint_HLTType);
+  m_hltType.text     = Checkpoint_HLTType;
+
+  sprintf(name,"%s (%08x)",Checkpoint_TCKLabel,tckHex);
+  m_tck.text = name;
+  m_tckList.items = makeDynString(name);
+  // Nothing better yet for the moment
+  Checkpoint_LumiPars = makeDynFloat(Checkpoint_LumiBB,0,0,0);
+
+  Checkpoint_showdbTags();
+  bool val = false;
+  m_mooreVsn.editable = val;
+  m_app.editable   = val;
+  m_outdir.editable  = val;
+  m_hltType.editable = val;
+  m_output.editable  = val;
+  m_online.editable  = val;
+  m_mooreVsn.editable  = val;
+  m_tck.editable     = val;
+  m_tckList.enabled  = val;
+  m_enable.visible   = val;
+  m_reload.visible   = val;
+  //m_create.enabled  = val;
+  //m_options.enabled = val;
+  Checkpoint_update();
 }
 
 //=============================================================================
@@ -576,6 +672,7 @@ void MooreCheckpoint_enableCommands(bool val)   {
   m_hltType.editable = edit;
   m_output.editable  = edit;
   m_online.editable  = edit;
+  m_mooreVsn.editable  = edit;
   m_tck.editable     = edit;
   m_tckList.enabled  = edit;
   // DB tags
@@ -774,39 +871,45 @@ string MooreCheckpoint_createOptions(int mode=0)  {
   tckhex = substr(tckhex,pos,strpos(tckhex,")")-pos);
   text = 
       "// ---------------- General partition information:  \n" +
-      "OnlineEnv.PartitionID      = 1;\n" +
-      "OnlineEnv.PartitionIDName  = \"0001\";\n"  +
-      "OnlineEnv.PartitionName    = \""+Checkpoint_Partition+"\";\n"  +
-      "OnlineEnv.Activity         = \"COLLISION\";\n"  +
-      "OnlineEnv.TAE              = 0;\n"  +
-      "OnlineEnv.OutputLevel      = 4;\n"  +
+      "OnlineEnv.PartitionID        = 1;\n" +
+      "OnlineEnv.PartitionIDName    = \"0001\";\n"  +
+      "OnlineEnv.PartitionName      = \""+Checkpoint_Partition+"\";\n"  +
+      "OnlineEnv.Activity           = \"COLLISION\";\n"  +
+      "OnlineEnv.TAE                = 0;\n"  +
+      "OnlineEnv.OutputLevel        = 4;\n"  +
+      "OnlineEnv.HltArchitecture    = \""+m_hltType.text+"\";\n"  +
+      "OnlineEnv.CalibArchitecture  = \"None\";\n"  +
       "// ---------------- Trigger parameters:    \n"  +
-      "OnlineEnv.DeferHLT         = 0;\n"  +
-      "OnlineEnv.passThroughDelay = 0;\n"  +
-      "OnlineEnv.AcceptRate       = 1.0;\n"  +
-      "OnlineEnv.InitialTCK       = \""+tckhex+"\";\n"  +
-      "OnlineEnv.MooreStartupMode = "+mode+";\n" +
-      "OnlineEnv.CondDBTag        = \""+m_condDB.text+"\";\n"  +
-      "OnlineEnv.DDDBTag          = \""+m_ddDB.text+"\";\n"  +
-      "OnlineEnv.LumiTrigger      = "+Checkpoint_LumiEnabled+";\n"  +
-      "OnlineEnv.BeamGasTrigger   = "+Checkpoint_BeamGasEnabled+";\n"  +
-      "OnlineEnv.LumiPars         = {"+lumi_param+"};\n"  +
-      "OnlineEnv.L0Type           = \""+Checkpoint_L0Type+"\";\n"  +
-      "OnlineEnv.HLTType          = \""+m_hltType.text+"\";\n"  +
-      "OnlineEnv.MooreVersion     = \""+m_app.text+"\";\n"  +
-      "OnlineEnv.OnlineVersion    = \""+m_online.text+"\";\n"  +
+      "OnlineEnv.DeferHLT           = 0;\n"  +
+      "OnlineEnv.passThroughDelay   = 0;\n"  +
+      "OnlineEnv.AcceptRate         = 1.0;\n"  +
+      "OnlineEnv.InitialTCK         = \""+tckhex+"\";\n"  +
+      "OnlineEnv.MooreStartupMode   = "+mode+";\n" +
+      "OnlineEnv.CondDBTag          = \""+m_condDB.text+"\";\n"  +
+      "OnlineEnv.DDDBTag            = \""+m_ddDB.text+"\";\n"  +
+      "OnlineEnv.LumiTrigger        = "+Checkpoint_LumiEnabled+";\n"  +
+      "OnlineEnv.BeamGasTrigger     = "+Checkpoint_BeamGasEnabled+";\n"  +
+      "OnlineEnv.LumiPars           = {"+lumi_param+"};\n"  +
+      "OnlineEnv.L0Type             = \""+Checkpoint_L0Type+"\";\n"  +
+      "OnlineEnv.HLTType            = \""+m_hltType.text+"\";\n"  +
+      "OnlineEnv.MooreOnlineVersion = \""+m_app.text+"\";\n"  +
+      "OnlineEnv.OnlineVersion      = \""+m_online.text+"\";\n"  +
+      "OnlineEnv.MooreVersion       = \""+m_mooreVsn.text+"\";\n"  +
       "// \n";
   file f = fopen(fname + "OnlineEnv.opts","w");
   fprintf(f,text);
   fclose(f);
-  m_messages.append(">>>Python option file prepared:"+fname+ "OnlineEnv.py");
+  m_messages.append(">>>Python option file prepared:"+fname+ "OnlineEnvBase.py");
   strreplace(text,";\n","\n");
   strreplace(text,"{","[");
   strreplace(text,"}","]");
   strreplace(text,"// ","# ");
   strreplace(text,"OnlineEnv.","");
+  f = fopen(fname + "OnlineEnvBase.py","w");
+  fprintf(f,text);
+  fclose(f);
   f = fopen(fname + "OnlineEnv.py","w");
-  fprintf(f,text+"from OnlineConfig import *\n");
+  fprintf(f,"from OnlineEnvBase import *\n\nfrom OnlineConfig import *\n\n");
   fclose(f);
   m_messages.append(">>>Option file prepared:"+fname+ "OnlineEnv.opts");
   return tckhex;
@@ -818,10 +921,10 @@ string MooreCheckpoint_createOptions(int mode=0)  {
 // @version 1.0
 //=============================================================================
 string MooreCheckpoint_submitCreateCheckpoint(string tck)  {
-  string tag = m_condDB.text + "_" + m_ddDB.text;
+  string tag   = m_condDB.text + "_" + m_ddDB.text;
   string utgid = m_app.text+"_"+tag+"_"+tck+"_create";
-  string part = m_partSelector.text;
-  string hlt = m_hltType.text;
+  string part  = m_partSelector.text;
+  string hlt   = m_hltType.text;
   string args = "-E /tmp/logGaudi.fifo -O /tmp/logGaudi.fifo";
   args = args + " -n online";
   args = args + " -u "+utgid;
@@ -830,7 +933,7 @@ string MooreCheckpoint_submitCreateCheckpoint(string tck)  {
   args = args + " -D CHECKPOINT_FILE="+Checkpoint_directory()+"/Checkpoint.data";
   args = args + " -D CHECKPOINT_DIR="+Checkpoint_directory();
   args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Moore_checkpoint.sh ";
-  args = args + m_app.text + " storectl01 " + part + " 1 " + hlt;
+  args = args + m_app.text + " storectl01 " + part + "  " + m_hltProgram.text;
   DebugN(args);
   dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
   return utgid;
@@ -857,7 +960,7 @@ string MooreCheckpoint_submitTestCheckpoint()  {
   args = args + " -D CHECKPOINT_FILE="+Checkpoint_directory()+"/Checkpoint.data";
   args = args + " -D CHECKPOINT_DIR="+Checkpoint_directory();
   args = args + " /group/online/dataflow/cmtuser/checkpoints/cmds/Moore_checkpoint.sh ";
-  args = args + m_app.text + " storectl01 " + part + " 1 " + hlt;
+  args = args + m_app.text + " storectl01 " + part + "  " + m_hltProgram.text + " 1 ";
   DebugN(args);
   dpSet("STORAGE:STORESTRM02_StreamTaskCreator.Start",args);
   return utgid;

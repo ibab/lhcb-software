@@ -1,4 +1,4 @@
-V 11
+V 12
 1
 LANG:1 19 StreamConfiguration
 PANEL,-1 -1 383 430 N "_3DFace" 1
@@ -171,7 +171,7 @@ LANG:1 4 Save
 29 72
 "m_workerInfraTypes"
 ""
-1 200 303 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 196 303 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 94 0 0 0 0 0
 E E E
@@ -182,13 +182,13 @@ LANG:1 0
 0
 1
 LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
-0  200 303 369 352
+0  160 302 369 351
 15 PVSS.TextEdit.1
 0
 E21 60
 "m_workerStrategy"
 ""
-1 200 280 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 161 280 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 89 0 0 0 0 0
 E E E
@@ -199,7 +199,7 @@ LANG:1 0
 0
 1
 LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
-0  198 278 242 302
+0  159 278 203 302
 0
 
 E
@@ -225,7 +225,7 @@ E E 0 1 1 2 1 E U  1 E 16 281 176 301
 1
 LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
 0 1
-LANG:1 30 Allocation Strategy Parameter:
+LANG:1 20 Allocation Strategy:
 2 58
 "m_workerInfraText"
 ""
@@ -252,7 +252,7 @@ LANG:1 0
 29 77
 "m_ctrlInfraTypes"
 ""
-1 199 137 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 160 137 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 76 0 0 0 0 0
 E E E
@@ -263,7 +263,7 @@ LANG:1 0
 0
 1
 LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
-0  199 137 368 186
+0  160 137 369 186
 15 PVSS.TextEdit.1
 0
 E2 50
@@ -429,7 +429,7 @@ LANG:1 7 Options
 14 94
 "m_workerType"
 ""
-1 200 357 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 196 357 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 130 0 0 0 0 0
 E E E
@@ -440,7 +440,7 @@ LANG:1 0
 0
 1
 LANG:1 45 Bitstream Vera Sans Mono,-1,11,5,50,0,0,0,0,0
-0  198 355 371 379
+0  158 355 371 379
 3 "0s" 0 0 0 0 0 -1  E E E
 2 95
 "m_workerTypeText"
@@ -491,7 +491,7 @@ LANG:1 0
 29 101
 "m_relayInfraTypes"
 ""
-1 200 207 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 199 207 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 144 0 0 0 0 0
 E E E
@@ -502,7 +502,7 @@ LANG:1 0
 0
 1
 LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
-0  200 207 369 256
+0  160 207 369 256
 15 PVSS.TextEdit.1
 0
 E30 97
@@ -549,7 +549,7 @@ LANG:1 0
 29 102
 "m_strmTypes"
 ""
-1 201 68.00000000000009 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 160 68.00000000000009 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 146 0 0 0 0 0
 E E E
@@ -560,7 +560,7 @@ LANG:1 0
 0
 1
 LANG:1 31 Sans Serif,11,-1,5,50,0,0,0,0,0
-0  201 68 370 117
+0  160 68 369 117
 15 PVSS.TextEdit.1
 0
 E30 104
@@ -581,6 +581,46 @@ E E 0 0 1 0 1 E 0.6491228070175434 0 0.6902458366375923 0.5087719298245652 95.31
 LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
 0 1
 LANG:1 22 Controls PC Parameters
+2 106
+"m_startupLabel"
+""
+1 212 280 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+152 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  0 E 212 280 247 296
+0 2 2 "0s" 0 0 0 64 0 0  212 280 1
+1
+LANG:1 30 Sans Serif,8,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 7 Startup
+22 105
+"m_startup"
+""
+1 178.8876404494382 279 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+151 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,8,-1,5,50,0,0,0,0,0
+0  249 276 371 300
+0
+
+E
+E
+E
+ 1 0
 0
 LAYER, 2 
 1

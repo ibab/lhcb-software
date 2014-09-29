@@ -113,10 +113,11 @@ class General:
     self.hltType         = None
     self.condDBtag       = None
     self.DDDBtag         = None
-    self.gaudiVersion    = None
+    self.mooreOnlineVersion = None
     self.mooreVersion    = None
     self.onlineVersion   = None
     self.dataflowVersion = None
+    self.gaudiVersion    = None
     self.lumiTrigger     = None
     self.lumiPars        = None
     self.beamgasTrigger  = None
@@ -124,6 +125,8 @@ class General:
     self.deferredRuns    = None
     self.hltARCH         = None
     self.calARCH         = None
+    self.recStartup      = None
+    self.triggerConditionsMap = None
 
     dpn = self.manager.name()+':'+self.name+postfix+'.general.outputLevel'
     if self.devMgr.exists(dpn):
@@ -228,6 +231,11 @@ class General:
       self.gaudiVersion = self.dp('Trigger.gaudiVersion')
       self.reader.add(self.gaudiVersion)
 
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.mooreOnlineVersion'
+    if self.devMgr.exists(dpn):
+      self.mooreOnlineVersion = self.dp('Trigger.mooreOnlineVersion')
+      self.reader.add(self.mooreOnlineVersion)
+
     dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.mooreVersion'
     if self.devMgr.exists(dpn):
       self.mooreVersion = self.dp('Trigger.mooreVersion')
@@ -272,6 +280,11 @@ class General:
     if self.devMgr.exists(dpn):
       self.deferredRuns = self.dp('Trigger.DeferredRuns')
       self.reader.add(self.deferredRuns)
+
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Trigger.dynCondList'
+    if self.devMgr.exists(dpn):
+      self.triggerConditionsMap = self.dp('Trigger.dynCondList')
+      self.reader.add(self.triggerConditionsMap)
 
     return self
 
@@ -328,6 +341,12 @@ class General:
     self.reader.add(self.recStrmInfra)
     self.reader.add(self.recNodeInfra)
     self.reader.add(self.recRelayInfra)
+
+    dpn = self.manager.name()+':'+self.name+self.postfix+'.Reco.startupMode'
+    if self.devMgr.exists(dpn):
+      self.recStartup = self.dp('reco.startupMode')
+      self.reader.add(self.recStartup)
+
     return self
 
   # ===========================================================================
@@ -476,6 +495,8 @@ class General:
       log(' %-32s  %s'%('HLT type',str(self.hltType.data),))
     if self.gaudiVersion is not None:
       log(' %-32s  %s'%('Gaudi Version',str(self.gaudiVersion.data),))
+    if self.mooreOnlineVersion is not None:
+      log(' %-32s  %s'%('Moore Online Version',str(self.mooreOnlineVersion.data),))
     if self.mooreVersion is not None:
       log(' %-32s  %s'%('Moore Version',str(self.mooreVersion.data),))
     if self.onlineVersion is not None:
@@ -595,8 +616,9 @@ class General:
     "Access HLT architecture name from run info."
     if self.hltARCH:
       if self.hltARCH.data is None: self.load()
+      if self.hltARCH.data is None: return 'PassThrough'
       return self.hltARCH.data
-    return None
+    return 'PassThrough'
   
   # ===========================================================================
   def calibArchitecture(self):

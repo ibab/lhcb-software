@@ -1,7 +1,7 @@
-V 11
+V 12
 1
 LANG:1 24 Moore Checkpoint Utility
-PANEL,-1 -1 849 850 N "_3DFace" 2
+PANEL,-1 -1 850 900 N "_3DFace" 2
 "$part"
 "$trgConf"
 "main()    {
@@ -17,14 +17,17 @@ PANEL,-1 -1 849 850 N "_3DFace" 2
 }" 0
  E E E E 1 -1 -1 0  30 23
 ""0  1
-E "#uses \"ctrlUtils.cpp\"
+E "#uses \"lbECS_TCK.ctl\"
+#uses \"ctrlUtils.cpp\"
 #uses \"Checkpointing.cpp\"
 
 string    Checkpoint_AppType              = \"Moore\";
 string    Checkpoint_AppVsn               = \"\";
+string    Checkpoint_MooreVsn             = \"\";
 string    Checkpoint_L0Type               = \"\";
 string    Checkpoint_Partition            = \"LHCb\";
 string    Checkpoint_HLTType              = \"\";
+string    Checkpoint_HLTProgram           = \"\";
 string    Checkpoint_TCKLabel             = \"\";
 string    Checkpoint_RunType              = \"\";
 string    Checkpoint_SwPath               = \"/group/hlt\";
@@ -66,7 +69,7 @@ LANG:1 26 Fixed,10,-1,5,50,0,0,0,0,0
 E13 1
 "m_close"
 ""
-1 1024 555 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1024 597 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 22 0 0 0 0 0
 E E E
@@ -77,7 +80,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  685 806 758 832
+0  685 848 758 874
 
 T 
 1
@@ -124,9 +127,9 @@ LANG:1 31 Sans Serif,12,-1,5,75,0,0,0,0,0
 0 1
 LANG:1 20 Checkpointing result
 22 4
-"m_app"
+"m_mooreVsn"
 ""
-1 304 530.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 304 570.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 6 0 0 0 0 0
 E E E
@@ -137,7 +140,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 528 655 551
+0  302 568 655 591
 0
 
 E
@@ -147,9 +150,9 @@ E
 E
  1 0
 2 5
-"m_appLabel"
+"m_mooreLabel"
 ""
-1 35 532.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 35 572.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 5 0 0 0 0 0
 E E E
@@ -159,8 +162,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 35 532.0000000000002 280 547.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  35 532.0000000000002 1
+E E 0 1 1 2 1 E U  0 E 35 572.0000000000002 280 587.0000000000002
+0 2 2 "0s" 0 0 0 64 0 0  35 572.0000000000002 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -168,7 +171,7 @@ LANG:1 13 Moore version
 22 6
 "m_hltType"
 ""
-1 304 614.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 304 654.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 12 0 0 0 0 0
 E E E
@@ -179,7 +182,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 612 655 635
+0  302 652 655 675
 0
 
 E
@@ -191,7 +194,7 @@ E
 2 7
 "m_hltTypeLabel"
 ""
-1 35 616.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 35 656.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 7 0 0 0 0 0
 E E E
@@ -201,8 +204,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 35 616.0000000000002 280 631.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  35 616.0000000000002 1
+E E 0 1 1 2 1 E U  0 E 35 656.0000000000001 280 671.0000000000001
+0 2 2 "0s" 0 0 0 64 0 0  35 656.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -210,7 +213,7 @@ LANG:1 8 HLT type
 2 8
 "PRIMITIVE_TEXT19"
 ""
-1 33 640.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 33 680.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 8 0 0 0 0 0
 E E E
@@ -220,8 +223,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 642.0000000000002 200 658
-0 2 0 "0s" 0 0 0 192 0 0  35 642.0000000000002 1
+E E 0 1 1 0 1 E U  0 E 35 682.0000000000001 149 693.9999999999999
+0 2 0 "0s" 0 0 0 192 0 0  35 682.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -229,7 +232,7 @@ LANG:1 27 Trigger Configuration Keys:
 17 9
 "m_tckList"
 ""
-1 90.00000000000003 330.0000000000003 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 90.00000000000003 370.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 14 0 0 0 0 0
 E E E
@@ -240,7 +243,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 633 825 716
+0  302 673 825 756
 0
 
 E
@@ -257,7 +260,7 @@ E
 14 10
 "m_tck"
 ""
-1 364 509.0000000000003 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 364 549.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 25 0 0 0 0 0
 E E E
@@ -268,12 +271,12 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 717 825 740
+0  302 757 825 780
 3 "0s" 0 0 0 0 0 -1  E E E
 2 11
 "m_selectedTckLabel"
 ""
-1 33 719.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 33 759.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 11 0 0 0 0 0
 E E E
@@ -283,8 +286,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 721.0000000000002 158 737
-0 2 0 "0s" 0 0 0 192 0 0  35 721.0000000000002 1
+E E 0 1 1 0 1 E U  0 E 35 761.0000000000001 124 772.9999999999999
+0 2 0 "0s" 0 0 0 192 0 0  35 761.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -292,7 +295,7 @@ LANG:1 20 Currently active TCK
 22 12
 "m_condDB"
 ""
-1 304 572.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 304 612.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 9 0 0 0 0 0
 E E E
@@ -303,7 +306,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 570 655 593
+0  302 610 655 633
 0
 
 E
@@ -315,7 +318,7 @@ E
 2 13
 "m_condDBLabel"
 ""
-1 35 574.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 35 614.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 13 0 0 0 0 0
 E E E
@@ -325,8 +328,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 35 574.0000000000002 280 589.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  35 574.0000000000002 1
+E E 0 1 1 2 1 E U  0 E 35 614.0000000000001 280 629.0000000000001
+0 2 2 "0s" 0 0 0 64 0 0  35 614.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -334,7 +337,7 @@ LANG:1 23 Conditions database tag
 22 14
 "m_ddDB"
 ""
-1 304 593.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 304 633.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 10 0 0 0 0 0
 E E E
@@ -345,7 +348,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 591 655 614
+0  302 631 655 654
 0
 
 E
@@ -357,7 +360,7 @@ E
 2 15
 "m_ddDBLabel"
 ""
-1 35 597.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 35 637.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 15 0 0 0 0 0
 E E E
@@ -367,8 +370,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 35 597.0000000000002 280 612.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  35 597.0000000000002 1
+E E 0 1 1 2 1 E U  0 E 35 637.0000000000001 280 652.0000000000001
+0 2 2 "0s" 0 0 0 64 0 0  35 637.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -376,7 +379,7 @@ LANG:1 28 Detector database tag (DDDB)
 13 16
 "m_create"
 ""
-1 748 555 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 748 597 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 18 0 0 0 0 0
 E E E
@@ -387,7 +390,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  6 806 134 832
+0  6 848 134 874
 
 T 
 1
@@ -408,7 +411,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 0 1 0 1 E 1.092493297587132 0 1.238493723849372 -1.572386058981237 -90.75313807531356 0 E 17 456 764 696
+E E 0 0 1 0 1 E 1.092493297587132 0 1.460251046025104 -1.572386058981237 -201.8744769874476 0 E 17 456 764 696
 1
 LANG:1 30 Sans Serif,7,-1,5,75,0,0,0,0,0
 0 1
@@ -416,7 +419,7 @@ LANG:1 36 Parameter setup to create checkpoint
 13 18
 "m_reload"
 ""
-1 1094 555 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1094 597 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 23 0 0 0 0 0
 E E E
@@ -427,7 +430,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  606 806 679 832
+0  606 848 679 874
 
 T 
 1
@@ -438,7 +441,7 @@ LANG:1 6 Reload
 14 19
 "m_outdir"
 ""
-1 364 532.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 364 572.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 16 0 0 0 0 0
 E E E
@@ -453,12 +456,12 @@ LANG:1 0
 }"
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 740 825 763
+0  302 780 825 803
 3 "0s" 0 0 0 0 0 -1  E E E
 2 20
 "m_outdirLabel"
 ""
-1 33 742.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 33 782.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 20 0 0 0 0 0
 E E E
@@ -468,8 +471,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 744.0000000000002 161 760
-0 2 0 "0s" 0 0 0 192 0 0  35 744.0000000000002 1
+E E 0 1 1 0 1 E U  0 E 35 784.0000000000001 121 795.9999999999999
+0 2 0 "0s" 0 0 0 192 0 0  35 784.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -477,7 +480,7 @@ LANG:1 20 Checkpoint directory
 14 21
 "m_output"
 ""
-1 94.32618025751073 459 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 94.32618025751073 501 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 26 0 0 0 0 0
 E E E
@@ -488,12 +491,12 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  16 777 819 800
+0  16 819 819 842
 3 "0s" 0 0 0 0 0 -1  E E E
 14 22
 "m_online"
 ""
-1 364 341.0000000000003 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 364 381.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 27 0 0 0 0 0
 E E E
@@ -508,12 +511,12 @@ LANG:1 0
 }"
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 549 655 572
+0  302 589 655 612
 3 "0s" 0 0 0 0 0 -1  E E E
 2 23
 "m_onlineLabel"
 ""
-1 33 551.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 33 591.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 23 0 0 0 0 0
 E E E
@@ -523,8 +526,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 553.0000000000002 120 569
-0 2 0 "0s" 0 0 0 192 0 0  35 553.0000000000002 1
+E E 0 1 1 0 1 E U  0 E 35 593.0000000000001 94 604.9999999999999
+0 2 0 "0s" 0 0 0 192 0 0  35 593.0000000000001 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -550,7 +553,7 @@ LANG:1 39 Logger Messages of checkpoint processes
 13 25
 "m_test"
 ""
-1 891 555 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 891 597 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 19 0 0 0 0 0
 E E E
@@ -561,7 +564,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  149 806 277 832
+0  149 848 277 874
 
 T 
 1
@@ -572,7 +575,7 @@ LANG:1 15 Test Checkpoint
 13 26
 "m_enable"
 ""
-1 1103 555 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1103 597 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 33 0 0 0 0 0
 E E E
@@ -583,7 +586,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  764 806 837 832
+0  764 848 837 874
 
 T 
 1
@@ -594,7 +597,7 @@ LANG:1 6 Enable
 13 27
 "m_clear"
 ""
-1 1177 181 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1177 182 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 36 0 0 0 0 0
 E E E
@@ -605,7 +608,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  777 432 830 458
+0  777 433 830 459
 
 T 
 1
@@ -616,7 +619,7 @@ LANG:1 5 Clear
 22 30
 "m_triggerConf"
 ""
-1 304 509.0000000000003 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 304 528.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 4 0 0 0 0 0
 E E E
@@ -627,7 +630,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 507 655 530
+0  302 526 655 549
 0
 
 E
@@ -639,7 +642,7 @@ E
 2 31
 "m_triggerConfLabel"
 ""
-1 35 511.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 35 530.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 31 0 0 0 0 0
 E E E
@@ -649,8 +652,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 35 511.0000000000002 280 526.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  35 511.0000000000002 1
+E E 0 1 1 2 1 E U  0 E 35 530.0000000000002 280 545.0000000000002
+0 2 2 "0s" 0 0 0 64 0 0  35 530.0000000000002 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -658,7 +661,7 @@ LANG:1 21 Trigger configuration
 2 32
 "m_scan"
 ""
-1 790 605.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 790 645.0000000000001 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 32 0 0 0 0 0
 E E E
@@ -668,8 +671,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 790 605.0000000000002 824 632.0000000000002
-0 2 2 "0s" 0 0 0 64 0 0  790 605.0000000000002 1
+E E 0 1 1 2 1 E U  0 E 790 645.0000000000001 824 672.0000000000001
+0 2 2 "0s" 0 0 0 64 0 0  790 645.0000000000001 1
 1
 LANG:1 31 Sans Serif,13,-1,5,50,0,0,0,0,0
 0 1
@@ -677,7 +680,7 @@ LANG:1 1 0
 22 33
 "m_partSelector"
 ""
-1 304 489 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 304 487 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 1 0 0 0 0 0
 E E E
@@ -688,7 +691,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  302 487 425 509
+0  302 485 425 507
 0
 
 E
@@ -699,7 +702,7 @@ E
 2 34
 "m_partSelectorLabel"
 ""
-1 34 494 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 34 491 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 34 0 0 0 0 0
 E E E
@@ -709,8 +712,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 34 494 79 509
-0 2 2 "0s" 0 0 0 64 0 0  34 494 1
+E E 0 1 1 2 1 E U  0 E 34 491 79 506
+0 2 2 "0s" 0 0 0 64 0 0  34 491 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -718,7 +721,7 @@ LANG:1 9 Partition
 2 35
 "m_suggestions"
 ""
-1 551 836 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 551 878 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 35 0 0 0 0 0
 E E E
@@ -728,8 +731,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  0 E 551 836 846 851
-0 2 2 "0s" 0 0 0 64 0 0  551 836 1
+E E 0 1 1 2 1 E U  0 E 551 878 846 893
+0 2 2 "0s" 0 0 0 64 0 0  551 878 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
 0 1
@@ -737,7 +740,7 @@ LANG:1 45 Comments and suggestions to M.Frank CERN/LHCb
 13 36
 "m_options"
 ""
-1 1034 555 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1034 597 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 21 0 0 0 0 0
 E E E
@@ -748,7 +751,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  292 806 420 832
+0  292 848 420 874
 
 T 
 1
@@ -759,7 +762,7 @@ LANG:1 14 Create Options
 2 38
 "m_logo"
 ""
-1 702 487 E E E 1 E 1 E N {0,0,255} E N "cyan" E E
+1 702 501.9999999999999 E E E 1 E 1 E N {0,0,255} E N "cyan" E E
  E E
 38 0 0 0 0 0
 E E E
@@ -773,8 +776,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E "main()   {   Checkpoint_About(Checkpoint_AppType);  }
 " 0
- 0 1 1 0 1 E U  0 E 704 489 823 534
-1 1 0 "0s" 0 0 0 64 0 0  704 489 1
+ 0 1 1 0 1 E U  0 E 704 503.9999999999999 823 548.9999999999999
+1 1 0 "0s" 0 0 0 64 0 0  704 503.9999999999999 1
 1
 LANG:1 31 Sans Serif,25,-1,5,75,1,0,0,0,0
 0 1
@@ -782,7 +785,7 @@ LANG:1 4 LHCb
 2 39
 "m_logo2"
 ""
-1 703 534 E E E 1 E 1 E N {255,255,255} E N {255,0,51} E E
+1 703 548.9999999999999 E E E 1 E 1 E N {255,255,255} E N {255,0,51} E E
  E E
 39 0 0 0 0 0
 E E E
@@ -794,8 +797,8 @@ LANG:1 0
 "dashclr"N "_Transparent"
 E "main()   {   Checkpoint_About(Checkpoint_AppType);  }
 " 0
- 0 1 1 0 1 E U  1 E 705 536 822 556
-1 1 0 "0s" 0 0 0 64 0 0  705 536 1
+ 0 1 1 0 1 E U  1 E 705 550.9999999999999 822 570.9999999999999
+1 1 0 "0s" 0 0 0 64 0 0  705 550.9999999999999 1
 1
 LANG:1 34 MS Sans Serif,-1,16,5,69,1,0,0,0,0
 0 1
@@ -803,7 +806,7 @@ LANG:1 15   Online
 13 40
 "m_gzip"
 ""
-1 1042 555 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
+1 1042 597 E E E 1 E 1 E N "_ButtonText" E N "_Button" E E
  E E
 40 0 0 0 0 0
 E E E
@@ -814,7 +817,7 @@ LANG:1 0
 0
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
-0  429 806 572 832
+0  429 848 572 874
 
 T 
 1
@@ -822,6 +825,90 @@ LANG:1 19 Create gzip and md5
 "main()  { Checkpoint_createZip(); }
 " 0
  E E E
+22 41
+"m_hltProgram"
+""
+1 304 507.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+41 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  302 505 425 528
+0
+
+E
+"main()  {  Checkpoint_HLTProgram = m_hltProgram.text; Checkpoint_update();  }
+" 0
+
+E
+ 1 0
+2 42
+"m_hltProgramLabel"
+""
+1 35 509 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+42 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  0 E 35 509 280 524
+0 2 2 "0s" 0 0 0 64 0 0  35 509 1
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 17 Moore Application
+22 43
+"m_app"
+""
+1 304 549.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+43 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  302 547 655 570
+0
+
+E
+"main()  {  MooreCheckpoint_reload();  }
+" 0
+
+E
+ 1 0
+2 44
+"m_appLabel"
+""
+1 35 551.0000000000002 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+ E E
+44 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+1
+"dashclr"N "_Transparent"
+E E 0 1 1 2 1 E U  0 E 35 551.0000000000002 280 566.0000000000002
+0 2 2 "0s" 0 0 0 64 0 0  35 551.0000000000002 1
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0 1
+LANG:1 19 MooreOnline version
 0
 LAYER, 1 
 1

@@ -259,7 +259,7 @@ def _check(val):
   raise 'Test Failed'
 
 def server():
-  t=Test('dist_17')
+  t=Test('dist_55')
   _check(t.test_access('ExampleDP_AlertHdl1','BIT'))
   _check(t.test_access('ExampleDP_Arg1','FLOAT'))
   _check(t.test_access('ExampleDP_SumAlert','TEXT'))

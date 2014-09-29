@@ -1,4 +1,4 @@
-V 11
+V 12
 1
 LANG:1 19 StreamConfiguration
 PANEL,-1 -1 383 430 N "_3DFace" 2
@@ -554,7 +554,7 @@ LANG:1 9 Run info:
 2 85
 "m_strmTypesText"
 ""
-1 10 300 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 9 300 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 119 0 0 0 0 0
 E E E
@@ -564,8 +564,8 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 14 320 195 385
-0 2 2 "0s" 0 0 0 64 0 0  14 320 1
+E E 0 1 1 2 1 E U  1 E 13 320 194 385
+0 2 2 "0s" 0 0 0 64 0 0  13 320 1
 1
 LANG:1 40 Bitstream Vera Sans,-1,11,5,50,0,0,0,0,0
 0 1
@@ -655,7 +655,7 @@ LANG:1 0
 2 86
 "m_sliceNotInUse"
 ""
-1 10 90 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
+1 8.859504132231404 90 E E E 1 E 1 E N "_WindowText" E N "_Transparent" E E
  E E
 120 0 0 0 0 0
 E E E
@@ -665,7 +665,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 2 1 E U  1 E 10 90 369 376
+E E 0 1 1 2 1 E 0.4297520661157025 0 1 4.56198347107438 0 1 E 10 90 369 376
 0 2 2 "0s" 0 0 0 64 0 0  10 90 1
 1
 LANG:1 40 Bitstream Vera Sans,-1,28,5,50,0,0,0,0,0

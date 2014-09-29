@@ -376,7 +376,7 @@ class FSMmanip:
     
   # ===========================================================================
   def _configureTask(self, fsm_node, item, task):
-    "Configure single task object"
+    print "Configure single task object",task
     node    = task[0]
     utgid   = task[1]
     sysname = task[6]
@@ -399,7 +399,13 @@ class FSMmanip:
           ' -D TASKCLASS='+clazz+\
           ' -D PARTITION='+self.info.detectorName()
     if len(detector)>0: cmd = cmd + ' -D DETECTOR='+detector
-    cmd = cmd + ' '+script+' '+opts+' '+clazz+' '+type+' '+dimdns
+    for t in task:
+      if t[:11] == 'NBOFSLAVES=':
+        cmd = cmd + ' -D ' + t
+      if t[:7] == 'FORKEE=':
+        cmd = 'FORKEE'
+    if cmd != 'FORKEE':
+      cmd = cmd + ' '+script+' '+opts+' '+clazz+' '+type+' '+dimdns
     self.setupTask(item,node=fsm_node,name=utgid,type=type,inUse=1,prio=0,cmd=cmd,sysname=sysname,dimdns=dimdns,nodename=node)
     return self
 

@@ -301,6 +301,7 @@ void StreamControlPanel_initAllocPanel(string name, string partition)  {
   m_strmInfraTaskTypes.font = font;
   m_strmTypes.font          = font;
   m_strmTypesText.visible   = 1;
+  DebugN("StreamControlPanel_initAllocPanel: "+name+" part:"+partition);
   StreamControlPanel_initAllocData(name,partition);
   LayerOn(2);
 }

@@ -32,7 +32,7 @@ LANG:1 0
 29 0
 "m_messages"
 ""
-1 43.00000000000005 19 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
+1 23.00000000000005 19 E E E 1 E 1 E N "_WindowText" E N "_Window" E E
  E E
 30 0 0 0 0 0
 E E E
@@ -43,7 +43,7 @@ LANG:1 0
 0
 1
 LANG:1 26 Fixed,10,-1,5,50,0,0,0,0,0
-0  43 19 850 420
+0  23 19 830 420
 15 PVSS.TextEdit.1
 0
 E13 1
@@ -324,7 +324,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 614.0000000000002 152 629
+E E 0 1 1 0 1 E U  0 E 35 614.0000000000002 129 627
 0 2 0 "0s" 0 0 0 192 0 0  35 614.0000000000002 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -544,7 +544,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 525.0000000000002 114 540
+E E 0 1 1 0 1 E U  0 E 35 525.0000000000002 98 538
 0 2 0 "0s" 0 0 0 192 0 0  35 525.0000000000002 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -579,7 +579,7 @@ LANG:1 0
 
 1
 "dashclr"N "_Transparent"
-E E 0 1 1 0 1 E U  0 E 35 547.0000000000002 115 562
+E E 0 1 1 0 1 E U  0 E 35 547.0000000000002 99 560
 0 2 0 "0s" 0 0 0 192 0 0  35 547.0000000000002 1
 1
 LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
@@ -615,6 +615,27 @@ E"main(int button, int state)    {
   Checkpoint_useDBtags = state;
   Checkpoint_update();
 }" 0
+22 47
+"m_appType"
+""
+1 659 502.0000000000002 E E E 1 E 0 E N "_WindowText" E N "_Window" E E
+ E E
+47 0 0 0 0 0
+E E E
+0
+1
+LANG:1 0 
+
+0
+1
+LANG:1 30 Sans Serif,7,-1,5,50,0,0,0,0,0
+0  657 500 699 523
+0
+
+E
+E
+E
+ 1 0
 0
 LAYER, 1 
 1

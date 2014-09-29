@@ -104,18 +104,26 @@ void RecoControlPanel_initAllocPanel(string name, string partition)  {
   m_workerType.toolTipText        = m_workerTypeText.toolTipText;
   m_workerType.font               = font;
 
+  m_startup.toolTipText           = "Change startup mode";
+  m_startupLabel.toolTipText      = "Change startup mode";
+  m_startup.visible               = 1;
+  m_startupLabel.visible          = 1;
+  
   m_options.toolTipText           = "Invoke job options editor.";
   m_Reset.toolTipText             = "Discard changes and reset to original values";
   m_Cancel.toolTipText            = "Discard changes and close panel";
   m_Save.toolTipText              = "Save changes to datapoints but keep panel open.";
   m_Ok.toolTipText                = "Save changes to datapoints and close panel.";
 
+  m_startup.items = makeDynString("OLD startup mode","Forking");
+  m_startup.editable = 0;
+  m_startup.selectedPos = 1;
   RecoControlPanel_initAllocData(name,partition);
   LayerOn(2);
 }
 //=============================================================================
 void RecoControlPanel_initAllocData(string stream, string partition)  {
-  int recvStrategy = 2, strmStrategy = 2;
+  int startup = 1, recvStrategy = 2, strmStrategy = 2;
   string dp, worker, info = "LBECS:"+partition+"_RunInfo";
   dyn_string rcvInfra, strmInfra, ctrlInfra, nodeInfra, relayInfra, strmTypes;
 
@@ -132,6 +140,7 @@ void RecoControlPanel_initAllocData(string stream, string partition)  {
   }
   if ( 0 == res )  {
     res = dpGet(info+".Reco.recvInfrastructure", rcvInfra,
+		//info+".Reco.startupMode",        startup,
 		info+".Reco.strmInfrastructure", strmInfra,
 		info+".Reco.ctrlInfrastructure", ctrlInfra,
 		info+".Reco.nodeInfrastructure", nodeInfra,
@@ -178,6 +187,9 @@ void RecoControlPanel_initAllocData(string stream, string partition)  {
   m_workerStrategy.sbMaximum = 50;
   m_workerStrategy.sbStep = 1;
   m_workerStrategy.text = strmStrategy;
+  m_startup.selectedPos = startup;
+  StreamControl_trace("RecoControlPanel_initAllocData> Startup: pos: "+
+		      m_startup.selectedPos+" -> "+m_startup.text+" "+m_startup.items());
 }
 //=============================================================================
 int RecoControlPanel_AllocSave(string stream, string partition)  {
@@ -211,12 +223,14 @@ int RecoControlPanel_AllocSave(string stream, string partition)  {
     int res = dpGet(strtoupper(stream)+":"+m_runInfoDP.text,info);
     if ( !dpExists(info) ) res = -1;
     if ( 0 == res )  {
+      int startup = m_startup.selectedPos;
       int strategy = m_workerStrategy.text;
       res = dpSet(info+".Reco.streams",            result[1],
 		  info+".Reco.ctrlInfrastructure", result[2],
 		  info+".Reco.relayInfrastructure",result[3],
 		  info+".Reco.nodeInfrastructure", result[4],
 		  info+".Reco.worker",             m_workerType.text,
+		  //info+".Reco.startupMode",        startup,
 		  info+".Reco.strmStrategy",       strategy);
     }
     ctrlUtils_checkErrors(res);

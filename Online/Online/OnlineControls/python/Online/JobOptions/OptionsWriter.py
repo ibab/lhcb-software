@@ -39,7 +39,7 @@ class Options:
       v = str(value)
       if isinstance(value,str): v = '"'+v+'"'
       v = v.replace("'",'"').replace('[','{').replace(']','}')      
-      s = '%s.%-16s %s %s;\n'%(self.object,name,operator,v)
+      s = '%s.%-24s %s %s;\n'%(self.object,name,operator,v)
       self.value = self.value + s
     elif len(name)>0:
       self.value = self.value + name + '\n'
@@ -66,7 +66,7 @@ class PyOptions:
       v = str(value)
       if isinstance(value,str): v = '"'+v+'"'
       v = v.replace("'",'"').replace('{','[').replace('}',']')      
-      s = '%-16s %s %s\n'%(name,operator,v)
+      s = '%-24s %s %s\n'%(name,operator,v)
       self.value = self.value + s
     elif len(name)>0:
       self.value = self.value + name + '\n'
@@ -166,12 +166,12 @@ class OptionsWriter(Control.AllocatorClient):
     return self.writeOptionsFile(self.run.name, task.name, opts.value)
 
   # ===========================================================================
-  def writeOptionsFile(self, partition, name, opts):
+  def writeOptionsFile(self, partition, name, opts, suffix='opts'):
     import os
     if self.optionsDir is not None:
       try:
         fd = self.optionsDir+'/'+partition
-        fn = fd+'/'+name+'.opts'
+        fn = fd+'/'+name+'.'+suffix
         ####log('###   Writing options: '+fn,timestamp=1)
         try:
           os.stat(fd)
@@ -261,7 +261,7 @@ class OptionsWriter(Control.AllocatorClient):
     opts.add('MonFarm.monMultiplicity',       [i for i in self.run.monMult.data])
     opts.add('MonFarm.monInfrastructure',     [i for i in self.run.monInfra.data])
     opts.add('MonFarm.relayInfrastructure',   [i for i in self.run.relayInfra.data])
-    if partition != 'LHCb1':
+    if partition != 'LHCb1' and partition != 'LHCb2' and partition != 'LHCbA':
       opts.add('SubDetectors.tell1List',        [i for i in self.run.tell1Boards.data])
     #print opts.value
     return self.writeOptionsFile(self.run.name, self.run.name+'_RunInfo', opts.value)
@@ -298,7 +298,7 @@ class OptionsWriter(Control.AllocatorClient):
     opts.add('AcceptRate',     float('%.7f'%(self.run.acceptRate(),)))
     tck = self.run.TCK()
     if tck is not None:
-      opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck)))[:-1])
+      opts.add('InitialTCK',   str(hex(0xFFFFFFFF&int(tck))).strip())
     else:
       opts.comment('Note: No TCK information present for partition:'+str(partition))
 
@@ -307,17 +307,17 @@ class OptionsWriter(Control.AllocatorClient):
     else: 
       opts.add('MooreStartupMode',   0)
 
-    if self.run.condDBtag is not None:
+    if self.run.condDBtag is not None and len(self.run.condDBtag.data)>0:
       opts.add('CondDBTag',   str(self.run.condDBtag.data))
       opts.add('condDBTag',   str(self.run.condDBtag.data))
     else:
-      opts.add('CondDBTag',   '')
-      opts.add('condDBTag',   '')
+      opts.add('CondDBTag',   'cond-20120831')
+      opts.add('condDBTag',   'cond-20120831')
 
-    if self.run.DDDBtag is not None:
+    if self.run.DDDBtag is not None and len(self.run.DDDBtag.data)>0:
       opts.add('DDDBTag',   str(self.run.DDDBtag.data))
     else:
-      opts.add('DDDBTag',   '')
+      opts.add('DDDBTag',   'dddb-20120831')
 
     if self.run.lumiTrigger is not None:
       opts.add('LumiTrigger',   self.run.lumiTrigger.data)
@@ -341,14 +341,27 @@ class OptionsWriter(Control.AllocatorClient):
       opts.add('L0Type',   str(self.run.L0Type.data))
     if self.run.hltType is not None:
       opts.add('HLTType',   str(self.run.hltType.data))
-    if self.run.gaudiVersion is not None:
-      opts.add('GaudiVersion',   str(self.run.gaudiVersion.data))
+    if self.run.mooreOnlineVersion is not None:
+      opts.add('MooreOnlineVersion',str(self.run.mooreOnlineVersion.data))
     if self.run.mooreVersion is not None:
       opts.add('MooreVersion',   str(self.run.mooreVersion.data))
     if self.run.onlineVersion is not None:
       opts.add('OnlineVersion',   str(self.run.onlineVersion.data))
     if self.run.dataflowVersion is not None:
       opts.add('DataflowVersion',   str(self.run.dataflowVersion.data))
+    if self.run.gaudiVersion is not None:
+      opts.add('GaudiVersion',   str(self.run.gaudiVersion.data))
+
+    if hasattr(self.run,'recStartup') and self.run.recStartup is not None:
+      opts.add('RecoStartupMode',self.run.recStartup.data)
+    else: 
+      opts.add('RecoStartupMode',   1)
+
+    if self.run.triggerConditionsMap is not None:
+      opts.add('ConditionsMapping',self.run.triggerConditionsMap.data)
+    else: 
+      opts.add('ConditionsMapping',"None")
+
     return opts
 
   # ===========================================================================
@@ -648,7 +661,7 @@ class HLTOptionsWriter(OptionsWriter):
       if self.writeOptionsFile(partition, partition+'_Info', opts.value) is None:
         return None
 
-      if partition != 'LHCb1':
+      if partition != 'LHCb1' and partition != 'LHCb2' and partition != 'LHCbA':
         opts = self._getTell1Boards(partition,hdr)
         if self.writeOptionsFile(partition, partition+'_Tell1Boards', opts.value) is None:
           return None
@@ -701,7 +714,7 @@ class HLTOptionsWriter(OptionsWriter):
         return None
 
       # Do not write Tell1 board content for LHCb1 (HLT reprocessing)
-      if partition == 'LHCb1':
+      if partition == 'LHCb1' or partition == 'LHCb2' or partition == 'LHCbA':
         self._makeRunInfo(partition)
         return self.run
         
@@ -900,6 +913,7 @@ class StreamingOptionsWriter(OptionsWriter):
 
   # ===========================================================================
   def _configure(self, partition):
+    self.taskList = None
     self.streamInfo = self.getStreamInfo(self.streamMgr,self.name)
     if self.streamInfo:
       result = self
@@ -911,7 +925,6 @@ class StreamingOptionsWriter(OptionsWriter):
         res = OptionsWriter._configure(self,partition)
         if res is None:
           result = None
-      self.taskList = None
       return result
     error('Failed to access the Storage info:'+self.streamMgr.name()+' '+self.name)
     return None
@@ -960,10 +973,23 @@ class MonitoringOptionsWriter(StreamingOptionsWriter):
       return _addTasks([i.streamReceivers(),i.streamSenders(),i.streamInfrastructure()])
     return []
   # ===========================================================================
+  def _writeTaskList(self, partition,fname):
+    opts = ''
+    # This gives back ALL tasks: 
+    # for i in self.taskList:
+    #
+    # We only use the 'true' monitoring tasks
+    for i in self.streamInfo.streamSenders():
+      itm = i.split('/')
+      opts = opts + itm[1] + '\n'
+    self.writeOptionsFile(self.run.name, fname, opts[:-1], suffix='txt')
+    return self
+  # ===========================================================================
   def _configure(self, partition):
     res=StreamingOptionsWriter._configure(self,partition)
     self._writePyOnlineEnv(partition,fname='MonitoringEnv')
     self._writePyOnlineEnv(partition,fname='OnlineEnv',subdir='MONITORING')
+    self._writeTaskList(partition,fname='MonitoringTasks')
     return res
 
 # =============================================================================
