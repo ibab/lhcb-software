@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v7r4 2014-09-29 =========================
+
 ! 2014-09-24 - Sean Benson
  - Implemented the update to the default Hlt1 filter
 
