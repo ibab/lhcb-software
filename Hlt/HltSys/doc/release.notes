@@ -1,9 +1,24 @@
 <PRE>
 Package: HltSys
-Package Coordinator: R. Lambert, Gerhard Raven, S. Benson
+Package Coordinator: Gerhard Raven, S. Benson
 Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
+
+</PRE><H1><A NAME=v23r1>2014-09-29 HltSys v23r1</A></H1><PRE>
+
+For HLT commissioning week at the beginning of October.
+
+Major changes include:
+    - Addition of Hlt1TrackAllL0Block that uses TrackCandidates rather than VeloCandidates in the streamer.
+    - Addition of Hlt1 electron lines.
+    - Updates to the CALO matching (including MatchTracks functor).
+    - Picks up updates to PatAlgorithms.
+    - Addition of new location to TrackReports, with change of bit shift of major SourceID from 13 to 11 for TrackReports.
+    - Various updates and fixes related to the new split infrastructure.
+
+A complete list can be seen here:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r1
 
 </PRE><H1><A NAME=v23r0>2014-08-17 HltSys v23r0</A></H1><PRE>
 

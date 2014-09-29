@@ -1,20 +1,9 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v23r0)
+gaudi_subdir(HltSys v23r1)
 
-gaudi_depends_on_subdirs(GaudiConf # temporary
-                         Kernel/LHCbAlgs # temporary
-                         Hlt/HltDAQ   # temporary
-                         DAQ/DAQSys   # temporary
-                         DAQ/RawEventCompat   # temporary
-                         Event/DAQEvent   # temporary
-                         Velo/VeloDAQ   # temporary
-                         Det/DDDB   # temporary
-                         Kernel/Relations   # temporary
-                         Event/EventPacker   # temporary
-                         Tf/PatAlgorithms   # temporary
-                         Hlt/Hlt1Lines
+gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
                          Hlt/Hlt2Lines
                          Hlt/Hlt2SharedParticles
