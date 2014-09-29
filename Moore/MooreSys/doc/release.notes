@@ -3,6 +3,22 @@ Package     : MooreSys
 Package Coordinator : S. Benson
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v23r1>2014-9-29 MooreSys v23r1</A></H1><PRE>
+
+For HLT commissioning week at the beginning of October.
+
+Major changes include:
+    - Addition of Hlt1TrackAllL0Block that uses TrackCandidates rather than VeloCandidates in the streamer.
+    - Addition of Hlt1 electron lines.
+    - Updates to the CALO matching (including MatchTracks functor).
+    - Picks up updates to PatAlgorithms.
+    - Addition of new location to TrackReports, with change of bit shift of major SourceID from 13 to 11 for TrackReports.
+    - Various updates and fixes related to the new split infrastructure.
+
+A complete list can be seen here:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r1
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v23r1
+
 </PRE><H1><A NAME=v23r0>2014-8-17 MooreSys v23r0</A></H1><PRE>
 
 For HLT commissioning week of the end of August. This is the first version to use ROOT 6 and should be considered as a development version. 
