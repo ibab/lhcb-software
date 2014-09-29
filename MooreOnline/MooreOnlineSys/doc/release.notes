@@ -3,6 +3,12 @@ Package     : MooreOnlineSys
 Package Coordinator : S. Benson
 Purpose     : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v23r1>2014-09-29 MooreOnlineSys v23r1</A></H1><PRE>
+
+Depends on Moore v23r1 and Online v5r11.
+
+Includes update to runMoore.py in MooreScripts.
+
 </PRE><H1><A NAME=v23r0>2014-08-25 MooreOnlineSys v23r0</A></H1><PRE>
 
 Depends on Moore v23r0 and Online v5r10

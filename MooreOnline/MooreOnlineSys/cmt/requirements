@@ -1,12 +1,12 @@
 package MooreOnlineSys
-version           v23r0
+version           v23r1
 branches doc cmt tests
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  MooreScripts  v1r4
+use  MooreScripts  v1r5
 use  MooreOnlineConf  v1r3
 
 # Declare this as a container package
