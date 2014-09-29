@@ -4,6 +4,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v15r3 2014-09-29 =========================
+
 ! 2014-09-24 - Alex Shires
  - adding new functor - MatchTracks - which looks for matching tracks and returns a bool
  - (compare to FilterTracks, which filters and writes a new stream if the matching is successful ) 
