@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v23r1 2014-09-29 =========================
+
 ! 2014-09-24 Sean Benson
  - Made TISTOS test split aware
 
