@@ -12,6 +12,7 @@
   Updated/new packages:	
      Alignment           v1r0     Online
      Camera              v1r28    Online
+     Checkpointing       v0r17    Online
      DefHLTUtils         v1r9     Online
      EventBuilder        v0r3     Online
      FarmConfig          v0r8     Online
@@ -23,6 +24,7 @@
      OnlineBase          v1r23    Online
      Presenter           v3r10    Online
      RawBankSizes        v2r20    Online
+     RootCnv             v1r23p1  Online
      ROMon               v1r47    Online
 </PRE>
 
