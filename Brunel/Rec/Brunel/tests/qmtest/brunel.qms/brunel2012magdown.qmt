@@ -22,11 +22,11 @@ validateWithReference(preproc = preprocessor)
 findReferenceBlock("""
 ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PROTO/ChargedProtoANNPIDMoni" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   4302  |   0.054633 | 0.163      |     4.0798 |     16.798 |
+ | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   4302  |   0.054638 | 0.163      |     4.0798 |     16.798 |
  | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   4302  |     0.8048 | 0.28285    |     -1.593 |     1.1928 |
  | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   4302  |   0.010231 | 0.040098   |     12.699 |      210.1 |
  | Downstream/MuonANN        | "Downstream Muon ANN PID"                     |   4302  |    0.00241 | 0.035293   |     21.609 |     507.67 |
- | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   4302  |    0.10629 | 0.20681    |     2.6921 |      6.715 |
+ | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   4302  |    0.10628 | 0.20681    |     2.6921 |     6.7149 |
  | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   4302  |   0.023101 | 0.063178   |     6.0059 |     45.569 |
  | Long/ElectronANN          | "Long Electron ANN PID"                       |  10437  |   0.023313 | 0.1112     |     6.4039 |     43.336 |
  | Long/GhostANN             | "Long Ghost ANN PID"                          |  10437  |    0.43248 | 0.42891    |    0.32106 |    -1.7363 |
