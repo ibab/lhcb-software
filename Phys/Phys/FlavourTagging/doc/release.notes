@@ -6,6 +6,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-09-16 - Jack Wimberley
+ - Deleted unused lines
+ - Improved timing for other lines
+
 ! 2014-09-29 - Chris Jones
  - Downgrade "No particles found at ..." messages from warning to debug,
    to avoid uneccessary spamming in production.

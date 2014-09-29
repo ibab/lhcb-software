@@ -15,17 +15,17 @@
 #include "TaggerCharmTool.h"
 #include "CharmD0KpiWrapper.h"
 #include "CharmD0KpipipiWrapper.h"
-//#include "CharmD0KspipiWrapper.h"
 #include "CharmD0Kpipi0Wrapper.h"
 #include "CharmDpKpipiWrapper.h"
-#include "CharmDpKspiWrapper.h"
 #include "CharmD0KpiXWrapper.h"
 #include "CharmD0KeXWrapper.h"
 #include "CharmD0KmuXWrapper.h"
-#include "CharmDstD0KspipiWrapper.h"
-#include "CharmDpKpiXWrapper.h"
-#include "CharmDpKeXWrapper.h"
-#include "CharmDpKmuXWrapper.h"
+//#include "CharmD0KspipiWrapper.h"
+//#include "CharmDpKspiWrapper.h"
+//#include "CharmDstD0KspipiWrapper.h"
+//#include "CharmDpKpiXWrapper.h"
+//#include "CharmDpKeXWrapper.h"
+//#include "CharmDpKmuXWrapper.h"
 
 using namespace std;
 using namespace LoKi::Cuts;
@@ -60,29 +60,18 @@ TaggerCharmTool::TaggerCharmTool( const std::string& type,
   std::vector<std::string> def_CharmTagLocations;
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPi/Particles");
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPiPi/Particles");
-  def_CharmTagLocations.push_back("Phys/Tag_StdD02KsPiPi/Particles");
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPi0/Particles");
   def_CharmTagLocations.push_back("Phys/Tag_StdDp2KPiPi/Particles");
-  def_CharmTagLocations.push_back("Phys/Tag_StdDp2KsPi/Particles");
   declareProperty( "CharmTagLocations", m_CharmTagLocations = def_CharmTagLocations);
 
   std::vector<std::string> def_CharmInclTagLocations;
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02KPipart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kepart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kmupart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2KPipart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kepart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kmupart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD2KPipart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD2Kepart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD2Kmupart/Particles");
   declareProperty( "CharmInclTagLocations", m_CharmInclTagLocations = def_CharmInclTagLocations);
-
-  std::vector<std::string> def_CharmStarTagLocations;
-  def_CharmStarTagLocations.push_back("Phys/Tag_StdDstar2D0Pi2KsPiPi/Particles");
-  declareProperty( "CharmStarTagLocations", m_CharmStarTagLocations = def_CharmStarTagLocations);
 
   std::vector<std::string> def_CharmLambdaTagLocations;
   def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2PKPi/Particles");
-  def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2LambdaPi/Particles");
-  def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2PKs/Particles");
   declareProperty( "CharmLambdaTagLocations", m_CharmLambdaTagLocations = def_CharmLambdaTagLocations);
 
   declareProperty( "Charm_P0_Cal",           m_P0_Cal_charm   = 0.3371);
@@ -98,17 +87,11 @@ TaggerCharmTool::TaggerCharmTool( const std::string& type,
   //                                                                       Idx   K  E   Mu  D* M-    M+      MVA Cut     Purity
   CharmDecayModeMap["D0_Kpi"]          = CharmDecayMode("D0_Kpi",	         0,    1,	0,	0,	0, 1.82, 1.915, -0.0223261, 0.630175 );
   CharmDecayModeMap["D0_Kpipipi"]      = CharmDecayMode("D0_Kpipipi",	     1,    1,	0,	0,	0, 1.82, 1.915, -0.0118087, 0.420859 );
-  CharmDecayModeMap["D0_Kspipi"]       = CharmDecayMode("D0_Kspipi",	     2,    0,	0,	0,	0, 1.82, 1.915, 0.,         0.       );
   CharmDecayModeMap["D0_Kpipi0"]       = CharmDecayMode("D0_Kpipi0",	     3,    1,	0,	0,	0, 1.82, 1.915, -0.0199824, 0.0592187);
   CharmDecayModeMap["Dp_Kpipi"]        = CharmDecayMode("Dp_Kpipi",	       4,    1,	0,	0,	0, 1.82, 1.915, -0.0120574, 0.525746 );
-  CharmDecayModeMap["Dp_Kspi"]         = CharmDecayMode("Dp_Kspi",	       5,    0,	0,	0,	0, 1.82, 1.915, 0.731183,   0.731183 );
   CharmDecayModeMap["D0_KpiX"]         = CharmDecayMode("D0_KpiX",	       6,    1,	0,	0,	0, 0.8,  1.915, -0.0587858, 0.235058 );
   CharmDecayModeMap["D0_KeX"]          = CharmDecayMode("D0_KeX",	         7,    1,	1,	0,	0, 0.8,  1.915, -0.0483723, 0.291827 );
   CharmDecayModeMap["D0_KmuX"]         = CharmDecayMode("D0_KmuX",	       8,    1,	0,	1,	0, 0.8,  1.915, -0.0207928, 0.39514  );
-  CharmDecayModeMap["Dstar_D0_Kspipi"] = CharmDecayMode("Dstar_D0_Kspipi", 9,    0,	0,	0,	1, 1.82, 1.915, -0.358734,  0.073132 );
-  CharmDecayModeMap["Dp_KpiX"]         = CharmDecayMode("Dp_KpiX",	       10,   1,	0,	0,	0, 0.8,  1.915, -0.115402,  0.10732  );
-  CharmDecayModeMap["Dp_KeX"]          = CharmDecayMode("Dp_KeX",	         11,   1,	1,	0,	0, 0.8,  1.915, -0.0594275, 0.148148 );
-  CharmDecayModeMap["Dp_KmuX"]         = CharmDecayMode("Dp_KmuX",	       12,   1,	0,	1,	0, 0.8,  1.915, -0.054475,  0.189587 );
   
 }
 
@@ -188,7 +171,6 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
 
   addCands(cands, m_CharmTagLocations    ,   *signalB, RecVert, 0);
   addCands(cands, m_CharmInclTagLocations,   *signalB, RecVert, 1);
-  addCands(cands, m_CharmStarTagLocations,   *signalB, RecVert, 2);
   // Uncomment once I add in all the new trainings!
   //addCands(cands, m_CharmLambdaTagLocations, *signalB, RecVert, 3);
 
@@ -542,10 +524,6 @@ TMVAWrapper * TaggerCharmTool::getMVA( const std::string& mode )
   {
     m_classifiers[mode] = new CharmD0KpipipiWrapper(inputVarMap["D0_Kpipipi"]);
   }
-  else if ( mode == "D0_Kspipi" )
-  {
-    m_classifiers[mode] = NULL; //new CharmD0KspipiWrapper(inputVarMap["D0_Kspipi"]);
-  }
   else if ( mode == "D0_Kpipi0" )
   {
     m_classifiers[mode] = new CharmD0Kpipi0Wrapper(inputVarMap["D0_Kpipi0"]);
@@ -553,10 +531,6 @@ TMVAWrapper * TaggerCharmTool::getMVA( const std::string& mode )
   else if ( mode == "Dp_Kpipi" )
   {
     m_classifiers[mode] = new CharmDpKpipiWrapper(inputVarMap["Dp_Kpipi"]);
-  }
-  else if ( mode == "Dp_Kspi" )
-  {
-    m_classifiers[mode] = new CharmDpKspiWrapper(inputVarMap["Dp_Kspi"]);
   }
   else if ( mode == "D0_KpiX" )
   {
@@ -569,22 +543,6 @@ TMVAWrapper * TaggerCharmTool::getMVA( const std::string& mode )
   else if ( mode == "D0_KmuX" )
   {
     m_classifiers[mode] = new CharmD0KmuXWrapper(inputVarMap["D0_KmuX"]);
-  }
-  else if ( mode == "Dstar_D0_Kspipi" )
-  {
-    m_classifiers[mode] = new CharmDstD0KspipiWrapper(inputVarMap["Dstar_D0_Kspipi"]);
-  }
-  else if ( mode == "Dp_KpiX" )
-  {
-    m_classifiers[mode] = new CharmDpKpiXWrapper(inputVarMap["Dp_KpiX"]);
-  }
-  else if ( mode == "Dp_KeX" )
-  {
-    m_classifiers[mode] = new CharmDpKeXWrapper(inputVarMap["Dp_KeX"]);
-  }
-  else if ( mode == "Dp_KmuX" )
-  {
-    m_classifiers[mode] = new CharmDpKmuXWrapper(inputVarMap["Dp_KmuX"]);
   }
   else
   {
