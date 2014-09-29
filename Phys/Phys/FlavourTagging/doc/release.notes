@@ -5,14 +5,17 @@
 !                                               ---> Stefania Vecchi(2013--now)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
-! 2014-09-25 - Stefania Vecchi
-  - Add Wrappers for cut-based NNet taggers to limit the memory consumption
-    code concerned: TaggerKaonOppositeTool.* TaggerMuonTool.* TaggerElectronTool.*
-    TaggerVertexChargeTool.* TaggerKaonSameTool.* TaggerPionSameTool.* NNetMLP_Tool.*
 
 ! 2014-09-29 - Chris Jones
  - Downgrade "No particles found at ..." messages from warning to debug,
    to avoid uneccessary spamming in production.
+ - Remove the 'if exists' check, which for Ranges never fails... 
+   Just rely on the empty() test to cover bnoth missing and empty containers.
+
+! 2014-09-25 - Stefania Vecchi
+ - Add Wrappers for cut-based NNet taggers to limit the memory consumption
+   code concerned: TaggerKaonOppositeTool.* TaggerMuonTool.* TaggerElectronTool.*
+   TaggerVertexChargeTool.* TaggerKaonSameTool.* TaggerPionSameTool.* NNetMLP_Tool.*
 
 ! 2014-09-16 - Jack Wimberley
  - Added LambdaC modes (and other online selection changes) to CharmTaggerLists

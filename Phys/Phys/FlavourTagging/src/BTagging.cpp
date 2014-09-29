@@ -48,20 +48,9 @@ void BTagging::performTagging(const std::string & location)
 
   const std::string particlesLocation = location+"/Particles";
 
-  //look in location where Selection has put the B candidates
-  if ( !exist<LHCb::Particle::Range>(particlesLocation) )
-  {
-    if ( msgLevel(MSG::DEBUG) )
-      debug() << "No selection found in " << particlesLocation << endreq;
-    return;
-  }
-
-  const Particle::Range parts = get<Particle::Range>( particlesLocation );
-
+  const Particle::Range parts = getIfExists<Particle::Range>( particlesLocation );
   if ( parts.empty() )
   {
-    //Warning("No particles found at " + particlesLocation,
-    //       StatusCode::SUCCESS,10).ignore();
     if ( msgLevel(MSG::DEBUG) )
       debug() << "No particles found at " << particlesLocation << endmsg;
     return;
