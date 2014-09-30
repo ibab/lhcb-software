@@ -4,6 +4,8 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+!========================= MVADictTools v1r6 2014-09-30 =========================
+
 ! 2014-09-24 - Marco Clemencic
  - Updated hack for LCG experimental builds.
 

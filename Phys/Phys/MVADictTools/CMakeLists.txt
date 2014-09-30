@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MVADictTools
 ################################################################################
-gaudi_subdir(MVADictTools v1r5)
+gaudi_subdir(MVADictTools v1r6)
 
 gaudi_depends_on_subdirs(Phys/LoKiArrayFunctors
                          Phys/DaVinciInterfaces)
