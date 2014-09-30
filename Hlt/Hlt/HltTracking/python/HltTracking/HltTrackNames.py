@@ -62,6 +62,9 @@ TrackName = { "Velo"         : "Velo"          # full Velo recoonstruction
               ,"Match"       : "Match"
               ,"Long"        : "Long"
               ,"Downstream"  : "SeedTT"
+              ,"MuonTT"      : "MuonTT"		#tag track for tracking efficiency from Muon and TT hits
+              ,"VeloMuon"    : "VeloMuon"	#tag track for tracking efficiency from Velo and Muon hits
+              ,"FullDownstream"  : "FullDownstream"	#tag track for tracking efficiency, needs full downstream reco.
               }    
 
 # The prefix says where this track has been produced
