@@ -4,6 +4,10 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2014-09-30 - Sean Benson
+ - Update to Configuration.py to reflect RunChangeHandlerconditions merged with XMLFilename
+   (list now becomes a dictionary)
+
 !========================= MooreOnlineConf v1r3 2014-08-25 =========================
 
 ! 2014-06-30 - Eric van Herwijnen

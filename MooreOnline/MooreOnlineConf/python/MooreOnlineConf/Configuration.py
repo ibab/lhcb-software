@@ -28,13 +28,13 @@ class MooreOnline(LHCbConfigurableUser):
         , 'EnableRunChangeHandler' : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
         , "PartitionName" : "LHCb"
-        , "RunChangeHandlerConditions" : [ "Conditions/Online/LHCb/Magnet/Set"
+        , "RunChangeHandlerConditions" : {  'online_%d.xml' :  [ "Conditions/Online/LHCb/Magnet/Set"
                                          , "Conditions/Online/Velo/MotionSystem"        
                                          , "Conditions/Online/LHCb/Lumi/LumiSettings"   
                                          , "Conditions/Online/LHCb/LHCFillingScheme"    
                                          , "Conditions/Online/LHCb/RunParameters"       
                                          , "Conditions/Online/Rich1/R1HltGasParameters" 
-                                         , "Conditions/Online/Rich2/R2HltGasParameters" ]
+                                         , "Conditions/Online/Rich2/R2HltGasParameters" ] }
         , 'IgnoreDBHeartBeat'  : False
         ################################################################
         # Options to Moore which have a different default in online mode
