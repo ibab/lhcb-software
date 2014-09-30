@@ -3,7 +3,8 @@
 ! Responsible : DaVinci Coordinator
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
-
+! 2014-09-30 - Stefania Vecchi
+ - Update tagging references (changed Charm Tagger)
 ! 2014-08-11 - Stefano Perazzini
  - Corrected DataType in 
    tests/options/CommonParticles/DVTestStandardIntermediate.py
