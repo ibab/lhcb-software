@@ -4,6 +4,8 @@
 ! Purpose     : Tools for dealing with overlaps and clones
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciOverlapsAndClones v1r0 2014-09-30 =========================
+
 ! 2014-08-05 - Chris Jones
  - First Version. Export tools for dealing with overlaps and clones to the
    dedicated package.
