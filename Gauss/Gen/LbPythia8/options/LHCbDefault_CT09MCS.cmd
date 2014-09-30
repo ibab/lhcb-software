@@ -40,7 +40,7 @@ SigmaProcess:alphaSorder = 2
 # be carefull it changes (behind the scene) pythia8 settings
 # -------------------------------
 PDF:useLHAPDF = on 
-PDF:LHAPDFset = CT09MCS.LHgrid 
+PDF:LHAPDFset = CT09MCS 
 PDF:LHAPDFmember = 0
 # -------------------------------
 # rough tuning for pythia8 and cteq6L1
