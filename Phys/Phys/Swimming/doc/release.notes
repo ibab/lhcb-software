@@ -5,6 +5,8 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v3r3 2014-09-30 =========================
+
 ! 2014-09-30 - Olli Lupton
  - Add StrippingConfigSubstitutions option to allow manipulation of the stripping options
    via the Configurable. This is useful for swimming MC if PID cuts are turned off.
