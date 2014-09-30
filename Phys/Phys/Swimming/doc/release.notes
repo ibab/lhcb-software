@@ -9,6 +9,7 @@
  - Add StrippingConfigSubstitutions option to allow manipulation of the stripping options
    via the Configurable. This is useful for swimming MC if PID cuts are turned off.
  - Other fixes for MicroDST writing when swimming MC.
+ - Cope with DaVinci not having a persistency attribute.
 
 ! 2014-09-24 - Olli Lupton
  - Add MicroDSTElements option so these can be overriden by options. More flexibility

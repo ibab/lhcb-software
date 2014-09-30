@@ -458,7 +458,10 @@ def ConfigureDaVinci():
     DaVinci().Simulation  = config.getProp('Simulation')
     DaVinci().DDDBtag     = config.getProp('DDDBtag')
     DaVinci().CondDBtag   = config.getProp('CondDBtag')
-    DaVinci().Persistency = config.getProp('Persistency')
+    try:
+        DaVinci().Persistency = config.getProp('Persistency')
+    except AttributeError:
+        print "DaVinci doesn't have a Persistency attribute to set"
     
     # The sequence for the swimming has to be configured 
     # by hand inserting the node killer before it
