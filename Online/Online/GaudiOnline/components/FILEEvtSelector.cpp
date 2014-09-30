@@ -125,11 +125,20 @@ namespace LHCb  {
 
   protected:
     /// Data Members
-    /// Current context
+
+    /// Current input context
     mutable FILEContext* m_currContext;
+    /// Handle of currently read file.
     int                  m_file;
+    /// Property: Max. number of events to be processed. Taken from ApplicationMgr
+    int                  m_evtMax;
+    /// Current event counter
+    int                  m_numEvt;
+    /// Event descriptor
     MBM::EventDesc       m_event;
+    /// Buffer of the event data
     int*                 m_buff;
+    /// Maximal size of the buffered event data
     size_t               m_buffSize;
   };
 }
@@ -149,6 +158,7 @@ namespace LHCb  {
 //  Author     : M.Frank, B.Jost
 //====================================================================
 #include "GaudiKernel/SvcFactory.h"
+#include "GaudiKernel/IProperty.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiKernel/Incident.h"
 #include "MDF/RawEventHelpers.h"
@@ -264,7 +274,8 @@ void FILEContext::close()  {
 }
 
 FILEEvtSelector::FILEEvtSelector(const string& nam, ISvcLocator* svc)
-  : OnlineBaseEvtSelector(nam,svc), m_currContext(0), m_file(0), m_buff(0), m_buffSize(0)
+  : OnlineBaseEvtSelector(nam,svc), m_currContext(0), 
+    m_file(0), m_evtMax(-1), m_numEvt(0), m_buff(0), m_buffSize(0)
 {
   m_input = "";
   m_decode = true;
@@ -273,6 +284,7 @@ FILEEvtSelector::FILEEvtSelector(const string& nam, ISvcLocator* svc)
   declareProperty("BrokenHosts", m_brokenHostsFile = "");
   declareProperty("DeleteFiles", m_deleteFiles = false);
   declareProperty("AllowedRuns", m_allowedRuns);
+  declareProperty("EvtMax", m_evtMax);
   m_allowedRuns.push_back("*");
 }
 
@@ -285,6 +297,9 @@ StatusCode FILEEvtSelector::initialize()    {
 /// IService overload: start MEP manager service
 StatusCode FILEEvtSelector::start() {
   StatusCode sc = OnlineBaseEvtSelector::start();
+  SmartIF<IProperty> appMgrProperty(serviceLocator());
+  setProperty(appMgrProperty->getProperty("EvtMax")).ignore();  
+  m_numEvt = 0; 
   if ( m_currContext ) {
     sc = m_currContext->connect(m_input);
     if ( sc.isSuccess() ) {
@@ -331,12 +346,17 @@ StatusCode FILEEvtSelector::readNext()  {
       return error(m_comment);
     info(m_comment);
   }
-  int ret = readEvent(m_file, 0);
-  if ( ret == FileScanner::EVENT_OK )
-    return StatusCode::SUCCESS;
+  bool stop_processing = m_evtMax > 0 && ++m_numEvt > m_evtMax;
+  if ( !stop_processing )  {
+    int ret = readEvent(m_file, 0);
+    if ( ret == FileScanner::EVENT_OK )
+      return StatusCode::SUCCESS;
+  }
   if ( m_file ) ::close(m_file);
   m_file = 0;
-  if ( !m_files.empty() ) goto NextFile;
+  if ( !stop_processing && !m_files.empty() )   {
+    goto NextFile;
+  }
   return StatusCode::FAILURE;
 }
 
