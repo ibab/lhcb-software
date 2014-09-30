@@ -1,7 +1,7 @@
 ################################################################################
 # Package: FlavourTagging
 ################################################################################
-gaudi_subdir(FlavourTagging v13r7)
+gaudi_subdir(FlavourTagging v13r8)
 
 gaudi_depends_on_subdirs(Calo/CaloInterfaces
                          Event/PhysEvent

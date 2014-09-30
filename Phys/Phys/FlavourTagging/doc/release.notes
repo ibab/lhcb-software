@@ -6,6 +6,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v13r8 2014-09-30 =========================
+
 ! 2014-09-16 - Jack Wimberley
  - Deleted unused lines
  - Improved timing for other lines
