@@ -8,8 +8,15 @@
 !
 !----------------------------------------------------------------------------
 
+! 2014-09-30 - Michael Kolpin
+ - corrected variable names of tracking efficiency lines in 
+   Hlt2InclusiveMuonLines
+
 ! 2014-09-25 - Sean Benson
  - Hotfix to Hlt2InclusiveMuonLines
+
+! 2014-09-24 - Michael Kolpin
+ - added tracking efficiency lines to Hlt2InclusiveMuonLines
 
 !========================= Hlt2Lines v9r3 2014-08-16 =========================
 

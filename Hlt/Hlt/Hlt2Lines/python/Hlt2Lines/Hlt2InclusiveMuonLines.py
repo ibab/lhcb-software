@@ -59,14 +59,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'MuTrackNoIPDoca'    : 0.100      # mm
                   ,'MuTrackNoIPMass'    : 2900       # MeV
 		  # Muon TT cuts
-                  ,'MuonTTProbePt'              :   0 #MeV
+                  ,'MuonTTTagPt'                :   0 #MeV
                   ,'MuonTTLongMuonPID'          :   2 #dimensionless
                   ,'MuonTTLongPt'               :1300 #MeV
                   ,'MuonTTJPsiPt'               :1000 #MeV
                   ,'MuonTTMassWindow'           : 500 #MeV
 		  # VeloMuon cuts
-                  ,'VeloProbePt'                  :   0 #MeV
-		  ,'VeloProbeTrchi2'		  :   5 #dimensionless
+                  ,'VeloTagPt'                    :   0 #MeV
+		  ,'VeloTagTrchi2'		  :   5 #dimensionless
                   ,'VeloLongMuonPID'              :   1 #dimensionless
                   ,'VeloLongPt'                   :   0 #MeV
                   ,'VeloLongP'                    :7000 #MeV
@@ -75,9 +75,9 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'VeloJPsiPt'                   : 500 #MeV
 		  ,'VeloVertchi2'		  :   2 #dimensionless
 		  # DownstreamMuon cuts
-                  ,'DownstreamProbePt'                  : 200 #MeV
-                  ,'DownstreamProbeP'                   :2000 #MeV
-		  ,'DownstreamProbeTrchi2'	        :  10 #dimensionless
+                  ,'DownstreamTagPt'                    : 200 #MeV
+                  ,'DownstreamTagP'                     :2000 #MeV
+		  ,'DownstreamTagTrchi2'	        :  10 #dimensionless
                   ,'DownstreamLongPt'                   : 200 #MeV
                   ,'DownstreamLongP'                    :2000 #MeV
 		  ,'DownstreamLongTrchi2'		:  10 #dimensionless
@@ -296,19 +296,19 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2MuTrackNoIPDecision" : 50197 } )
 
         #############################################################################################
-        #--------Trigger lines for track efficiency studies, combining long tag and probe track------
+        #--------Trigger lines for track efficiency studies, combining long tag and tag track--------
         #############################################################################################
         # ---------------------Michael Kolpin, michael.kolpin@cern.ch--------------------------------
         #############################################################################################
 
-	# Import probe track muons #
-	from Hlt2SharedParticles.TagAndProbeParticles import ProbeMuonTTMuons, ProbeVeloMuons, ProbeDownstreamMuons
+	# Import tag track muons #
+	from Hlt2SharedParticles.TagAndProbeParticles import TagMuonTTMuons, TagVeloMuons, TagDownstreamMuons
 
         #--------------Muon+TT track combination lines------------------------------------------------
 
-	# Create two triggerlines to distunguish positive-charge tag- and negative probe-track and vice versa
+	# Create two triggerlines to distunguish positive-charge long and negative tag-track and vice versa
 
-	# Positive tag-track / negative probe-track
+	# Positive long track / negative tag-track
 
         from HltLine.Hlt2Monitoring import Hlt2Monitor,Hlt2MonitorMinMax
 
@@ -332,8 +332,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         filterMinus1 = Hlt2Member( FilterDesktop
                                  , "filterMinus1"
-                                 , Code = "(Q < 0) & (PT>%(MuonTTProbePt)s*MeV)"%self.getProps()
-                                 , Inputs  = [ ProbeMuonTTMuons ]
+                                 , Code = "(Q < 0) & (PT>%(MuonTTTagPt)s*MeV)"%self.getProps()
+                                 , Inputs  = [ TagMuonTTMuons ]
                                  , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
                                  )
                              
@@ -350,12 +350,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffMuonTT1'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, ProbeMuonTTMuons, filterMinus1, JPsiCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, TagMuonTTMuons, filterMinus1, JPsiCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT1Decision" : 50601 } )
 
-	###################### positive probe track, negative tag track ###########################
+	###################### positive tag track, negative long track ###########################
 
         filterMinus2 = Hlt2Member( FilterDesktop
                                 , "filterMinus2"
@@ -376,8 +376,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         filterPlus2 = Hlt2Member( FilterDesktop
                                  , "filterPlus2"
-                                 , Code = "(Q > 0) & (PT>%(MuonTTProbePt)s*MeV)"%self.getProps()
-                                 , Inputs  = [ ProbeMuonTTMuons ]
+                                 , Code = "(Q > 0) & (PT>%(MuonTTTagPt)s*MeV)"%self.getProps()
+                                 , Inputs  = [ TagMuonTTMuons ]
                                  , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
                                  )
                              
@@ -393,16 +393,16 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffMuonTT2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, ProbeMuonTTMuons, filterMinus1, JPsiCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, TagMuonTTMuons, filterMinus1, JPsiCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT2Decision" : 50602 } )
 
 	########################### VeloMuon method #######################
 
-	# Create two triggerlines to distunguish positive-charge tag- and negative probe-track and vice versa
+	# Create two triggerlines to distunguish positive-charge long and negative tag-track and vice versa
 
-	############### positive tag track, negative probe track #########################
+	############### positive long track, negative tag track #########################
 
 
         filterVeloPlus1 = Hlt2Member( FilterDesktop
@@ -424,8 +424,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         filterVeloMinus1 = Hlt2Member( FilterDesktop
                                  , "filterVeloMinus1"
-                                 , Code = "(Q < 0) & (TRCHI2DOF <%(VeloProbeTrchi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
-                                 , Inputs  = [ ProbeVeloMuons ]
+                                 , Code = "(Q < 0) & (TRCHI2DOF <%(VeloTagTrchi2)s) & (PT>%(VeloTagPt)s*MeV)"%self.getProps()
+                                 , Inputs  = [ TagVeloMuons ]
                                  )
 
 
@@ -441,12 +441,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffVeloMuon1'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterVeloPlus1, TOSTagVeloMuonsFilter1, ProbeVeloMuons, filterVeloMinus1, JPsiVeloCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterVeloPlus1, TOSTagVeloMuonsFilter1, TagVeloMuons, filterVeloMinus1, JPsiVeloCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuon1Decision" : 50603 } )
 
-	################ positive probe track, negative tag track ######################
+	################ positive tag track, negative long track ######################
 
         filterVeloMinus2 = Hlt2Member( FilterDesktop
                                 , "filterVeloMinus2"
@@ -467,8 +467,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         filterVeloPlus2 = Hlt2Member( FilterDesktop
                                  , "filterVeloPlus2"
-                                 , Code = "(Q > 0) & (TRCHI2DOF <%(VeloProbeTrchi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
-                                 , Inputs  = [ ProbeVeloMuons ]
+                                 , Code = "(Q > 0) & (TRCHI2DOF <%(VeloTagTrchi2)s) & (PT>%(VeloTagPt)s*MeV)"%self.getProps()
+                                 , Inputs  = [ TagVeloMuons ]
                                  )
 
 
@@ -484,16 +484,16 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffVeloMuon2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterVeloMinus2, TOSTagVeloMuonsFilter2, ProbeVeloMuons, filterVeloPlus2, JPsiVeloCombine2 ]
+                      , algos = [ BiKalmanFittedMuons, filterVeloMinus2, TOSTagVeloMuonsFilter2, TagVeloMuons, filterVeloPlus2, JPsiVeloCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuon2Decision" : 50604 } )
 
 	############## Downstream method #######################
 
-	# Create two triggerlines to distunguish positive-charge tag- and negative probe-track and vice versa
+	# Create two triggerlines to distunguish positive-charge long and negative tag-track and vice versa
 
-	############### positive tag track, negative probe track #########################
+	############### positive long track, negative tag track #########################
 
         filterDownstreamPlus1 = Hlt2Member( FilterDesktop
                                 , "filterDownstreamPlus1"
@@ -514,8 +514,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         filterDownstreamMinus1 = Hlt2Member( FilterDesktop
                                  , "filterDownstreamMinus1"
-                                 , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV)"%self.getProps()
-                                 , Inputs  = [ ProbeDownstreamMuons ]
+                                 , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamTagTrchi2)s) & (PT>%(DownstreamTagPt)s*MeV) & (P>%(DownstreamTagP)s*MeV)"%self.getProps()
+                                 , Inputs  = [ TagDownstreamMuons ]
                                  )
 
 
@@ -532,12 +532,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffDownstream1'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterDownstreamPlus1, TOSTagDownstreamMuonsFilter1, ProbeDownstreamMuons, filterDownstreamMinus1, JPsiDownstreamCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterDownstreamPlus1, TOSTagDownstreamMuonsFilter1, TagDownstreamMuons, filterDownstreamMinus1, JPsiDownstreamCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstream1Decision" : 50605 } )
 
-	################# positive probe track, negative tag track ####################
+	################# positive tag track, negative long track ####################
 
         filterDownstreamMinus2 = Hlt2Member( FilterDesktop
                                 , "filterDownstreamMinus2"
@@ -558,8 +558,8 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         filterDownstreamPlus2 = Hlt2Member( FilterDesktop
                                  , "filterDownstreamPlus2"
-                                 , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV)"%self.getProps()
-                                 , Inputs  = [ ProbeDownstreamMuons ]
+                                 , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamTagTrchi2)s) & (PT>%(DownstreamTagPt)s*MeV) & (P>%(DownstreamTagP)s*MeV)"%self.getProps()
+                                 , Inputs  = [ TagDownstreamMuons ]
                                  )
 
 
@@ -576,7 +576,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffDownstream2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterDownstreamMinus2, TOSTagDownstreamMuonsFilter2, ProbeDownstreamMuons, filterDownstreamPlus2, JPsiDownstreamCombine2 ]
+                      , algos = [ BiKalmanFittedMuons, filterDownstreamMinus2, TOSTagDownstreamMuonsFilter2, TagDownstreamMuons, filterDownstreamPlus2, JPsiDownstreamCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstream2Decision" : 50606 } )
