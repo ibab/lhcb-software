@@ -4,6 +4,8 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+!========================= RelatedInfoTools v1r0 2014-09-30 =========================
+
 ! 2014-09-29 - Eduardo Rodrigues
  - Removed code lines related to obsolete algorithm DVAlgorithm.
 
@@ -24,10 +26,13 @@
  - Fixed CMake configuration (after the change made on 2014-08-26).
 
 ! 2014-08-27 - Xabier Cid Vidal
- - Moved Jet Variables RelatedInfo tools to IsolationTools to avoid the break of the nightlies
+ - Moved Jet Variables RelatedInfo tools to IsolationTools to avoid the
+   break of the nightlies
 
 ! 2014-08-26 - Xabier Cid Vidal
- - Added tools to calculate variables related to Jets Isolation, Cylinder-type Isolation and ParticleFlow. The last two are for BMuNu analysis. Package requirements also modified to access LoKi tools.
+ - Added tools to calculate variables related to Jets Isolation, Cylinder-type
+   Isolation and ParticleFlow. The last two are for BMuNu analysis. Package
+   requirements also modified to access LoKi tools.
 
 ! 2014-08-23 - Anton Poluektov 
  - Fixed problem with selections which filter common particles. 
