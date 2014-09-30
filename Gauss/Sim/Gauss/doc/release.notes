@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-09-30 - Gloria Corti
+ - Change version of LHAPDFSet to v2r* for tests, will only be for v47r1
+
 ! 2014-08-22 - Gloria Corti
  - Increase major version for dependency to LCG68
 
