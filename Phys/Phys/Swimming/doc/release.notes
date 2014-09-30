@@ -5,6 +5,11 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+! 2014-09-30 - Olli Lupton
+ - Add StrippingConfigSubstitutions option to allow manipulation of the stripping options
+   via the Configurable. This is useful for swimming MC if PID cuts are turned off.
+ - Other fixes for MicroDST writing when swimming MC.
+
 ! 2014-09-24 - Olli Lupton
  - Add MicroDSTElements option so these can be overriden by options. More flexibility
    to cope with the eventual (M)DST layout for a data taking period not being set when

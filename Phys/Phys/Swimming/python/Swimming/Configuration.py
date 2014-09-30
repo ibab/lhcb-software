@@ -90,6 +90,7 @@ class Swimming(LHCbConfigurableUser) :
         , "StoreExtraTPs"      : False
         , "MicroDSTElements"   : []
         , "MicroDSTStreamConf" : False
+        , "StrippingConfigSubstitutions" : { }
        }
 
     _propertyDocDct = {  
@@ -159,6 +160,7 @@ class Swimming(LHCbConfigurableUser) :
         , "StoreExtraTPs"     : """ If True (default: False) then each swimming stage will evaluate the candidate info (lifetime etc.) and decision at the RAW values already saved in the Swimming report. """
         , "MicroDSTElements"  : """ List, default []: if not empty then override the list of MicroDST writer elements. """
         , "MicroDSTStreamConf": """ Override the MicroDST output stream configuration. """
+        , "StrippingConfigSubstitutions" : """ Dictionary which can be used to tweak the Stripping configuration. This is useful for swimming filtered MC, where the stripping cuts are sometimes modified. """
         }
 
     __used_configurables__ = [
@@ -393,8 +395,12 @@ def ConfigureDaVinci():
                                     globals(),locals(),
                                     [myconfig["BUILDERTYPE"]],-1),myconfig["BUILDERTYPE"])
     mylinedict = myconfig["CONFIG"]
+    substitutions = config.getProp('StrippingConfigSubstitutions')
+    print "mylinedict before substitutions:",mylinedict
+    print "stripping config substitutions:",substitutions
+    mylinedict.update(substitutions)
     print "mylineconf:",mylineconf
-    print "mylinedict:",mylinedict
+    print "mylinedict after substitutions:",mylinedict
 
     from StrippingConf.StrippingStream import StrippingStream
     stream = StrippingStream(config.getProp('StrippingStream') + "Swimming")
@@ -496,15 +502,16 @@ def ConfigureDaVinci():
 
     if config.getProp('OutputType') == 'MDST':
         pack = False
+        isMC = config.getProp("Simulation")
         SwimmingConf = config.getProp('MicroDSTStreamConf')
         SwimmingElements = config.getProp('MicroDSTElements')
         if SwimmingConf == False:
             from DSTWriters.Configuration import stripMicroDSTStreamConf
-            SwimmingConf = stripMicroDSTStreamConf(pack = pack)
+            SwimmingConf = stripMicroDSTStreamConf(pack = pack, isMC = isMC)
         if len(SwimmingElements) == 0:
             from DSTWriters.Configuration import stripMicroDSTElements
             from DSTWriters.microdstelements import CloneSwimmingReports, CloneParticleTrees, CloneTPRelations
-            mdstElements = stripMicroDSTElements(pack = pack)
+            mdstElements = stripMicroDSTElements(pack = pack, isMC = isMC)
             SwimmingElements = [ CloneSwimmingReports() ]
             for element in mdstElements:
               SwimmingElements += [ element ]
