@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2014-09-30 - Gloria Corti
+ - Replace use of lhapdf with phapdf6
+
 !========================== GENSER v15r0 2014-09-29 ==========================
 ! 2014-09-01 - John Back
  - Changed -lhepmcinterface to -lpythia8tohepmc for LbPythia8 for pythia8.18x.
