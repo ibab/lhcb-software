@@ -23,6 +23,9 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltTisTosTobbing
                          Hlt/HltTracking
                          Hlt/TCKUtils
+                         DAQ/DAQSys #TEMP
+                         Det/DetCond #TEMP
+                         Hlt/HltDAQ #TEMP
                          Phys/LoKiTrigger)
 
 
