@@ -5,8 +5,11 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTypes v2r8 2014-09-30 =========================
+
 ! 2014-09-03 - Pieter David
- - Increase maximum index in indexByName method (for VELOPHIHITSVECTORSIZE, B2KSTARMUMUCLASSICISO and B2KSTARMUMUBDTISO variables)
+ - Increase maximum index in indexByName method (for VELOPHIHITSVECTORSIZE, 
+   B2KSTARMUMUCLASSICISO and B2KSTARMUMUBDTISO variables)
 
 ! 2014-08-28 - Pieter David
  - Add VELOPHIHITSVECTORSIZE variable to RelatedInfoNamed.h
