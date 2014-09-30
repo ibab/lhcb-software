@@ -154,6 +154,7 @@ macro(reflex_generate_dictionary dictionary _headerfile _selectionfile)
   foreach(d ${CMAKE_CURRENT_SOURCE_DIR} ${_incdirs})
    set(include_dirs ${include_dirs} -I${d})
   endforeach()
+  list(REMOVE_DUPLICATES include_dirs)
 
   get_directory_property(_defs COMPILE_DEFINITIONS)
   foreach(d ${_defs})

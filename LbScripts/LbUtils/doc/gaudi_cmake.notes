@@ -1,3 +1,50 @@
+! 2014-09-29 - Marco Clemencic (cd08bdf)
+
+ - fixed detection of ROOT version (allow '-rc#' suffix)
+
+   
+
+! 2014-09-29 - Marco Clemencic (548ce55)
+
+ - removed duplicated '-I' flags in the call to genreflex
+
+   
+
+! 2014-09-24 - Marco Clemencic (d7c68af)
+
+ - added explicit versions for gcc49, clang34 and clang35
+
+   
+
+! 2014-09-22 - Marco Clemencic (19cdfb7)
+
+ - Fixed a problem introduced with commit 3084f142
+
+   
+
+! 2014-09-22 - Marco Clemencic (4cb266e)
+
+ - fixed propagation of include directories through exported targets
+
+   The include directories added as external package names were not expanded in
+   the "export" files, thus forcing users to include
+   (find_package) the extenal packagesi, but only in some cases. Now the paths
+   are expanded before they are stored in the export files, exactly as it
+   happens for libraries.
+
+
+! 2014-09-21 - David Quarrie (3084f14)
+
+ - avoid error when 'libs' is set to NOTFOUND
+
+   
+
+! 2014-09-22 - Marco Clemencic (083c0ca)
+
+ - prevent link against module libraries
+
+   
+
 ! 2014-09-10 - Marco Clemencic (7a92111)
 
  - Merge branch 'dev/cmake'
