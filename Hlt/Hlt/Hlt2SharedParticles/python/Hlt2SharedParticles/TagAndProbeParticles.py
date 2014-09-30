@@ -19,8 +19,8 @@ from GaudiKernel.SystemOfUnits import MeV
 # These are all based on unfitted tracks
 #
 from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking, Hlt2BiKalmanFittedDownstreamTracking
-from HltTracking.HltTrackNames import _baseTrackLocation, HltSharedTracksPrefix
-from HltTracking.HltTrackNames import HltSharedTrackLoc 
+from HltTracking.HltTrackNames import _baseProtoPLocation, Hlt2TrackLoc, TrackName
+from HltTracking.HltTrackNames import HltSharedTrackLoc, Hlt2TrackRoot, HltBiDirectionalKalmanFitSuffix, HltSharedPIDPrefix, HltMuonIDSuffix, HltMuonTracksName, Hlt2ChargedProtoParticleSuffix, HltMuonProtosSuffix
 Hlt2BiKalmanFittedForwardTracking   			= Hlt2BiKalmanFittedForwardTracking()
 Hlt2BiKalmanFittedDownstreamTracking   			= Hlt2BiKalmanFittedDownstreamTracking()
 ##########################################################################
@@ -74,46 +74,6 @@ from PatAlgorithms import PatAlgConf
 from TrackFitter.ConfiguredFitters import ConfiguredFitDownstream, ConfiguredHltFitter
 from MuonID import ConfiguredMuonIDs
 from Configurables import FastVeloTracking, TrackPrepareVelo, DecodeVeloRawBuffer, DelegatingTrackSelector, VeloMuonBuilder, TrackEventFitter
-# Downstream Muons
-##########################################################################
-# new seeding required, as in Hlt2 seeding hits from forward tracks are removed
-DownSeed = PatSeeding("DownSeed")
-DownSeed.addTool(PatSeedingTool, name='PatSeedingTool')
-DownSeed.PatSeedingTool.MinMomentum = 1500
-DownSeed.PatSeedingTool.NDblOTHitsInXSearch = 2
-downstreamTracking = PatDownstream()
-downstreamTracking.OutputLocation = 'Hlt/FullDownstream/Tracks'
-downstreamFit = TrackEventFitter('DownstreamFitter')
-downstreamFit.TracksInContainer = 'Hlt/FullDownstream/Tracks'
-downstreamFit.TracksOutContainer = 'Hlt/FullDownstream/FittedTracks'
-downstreamFit.addTool(TrackMasterFitter, name = 'Fitter')
-fitter = ConfiguredHltFitter(getattr(downstreamFit,'Fitter'))
-# add muon ID
-idalg = MuonIDAlg("IDalg")
-cm=ConfiguredMuonIDs.ConfiguredMuonIDs( "2012" ) #data=DaVinci().getProp("DataType"))
-cm.configureMuonIDAlg(idalg)
-idalg.TrackLocation = "Hlt/FullDownstream/FittedTracks"
-idalg.MuonIDLocation = "Hlt/FullDownstreamMuonPID"
-idalg.MuonTrackLocation = "Hlt/Track/MuonForFullDownstream" # I would call it FromDownstream
-# make protos
-downprotos = ChargedProtoParticleMaker("downprotos")
-downprotos.Inputs = ["Hlt/FullDownstream/FittedTracks"]
-downprotos.Output = "Hlt/FullDownProtos/ProtoParticles"
-downprotos.addTool( DelegatingTrackSelector, name="TrackSelector" )
-tracktypes = ["Downstream"]
-downprotos.TrackSelector.TrackTypes = tracktypes
-addmuonpid = ChargedProtoParticleAddMuonInfo("addmuonpid")
-addmuonpid.InputMuonPIDLocation = "Hlt/FullDownstreamMuonPID"
-addmuonpid.ProtoParticleLocation = "Hlt/FullDownProtos/ProtoParticles"
-combinedll = ChargedProtoCombineDLLsAlg("combineDLL")
-combinedll.ProtoParticleLocation = "Hlt/FullDownProtos/ProtoParticles"
-# make particles
-DownParts = BestPIDParticleMaker("DownParts" , Particle = "muon")
-DownParts.addTool(ProtoParticleMUONFilter,name="muon")
-DownParts.muon.Selection = ["RequiresDet='MUON' IsMuonLoose=True"]
-DownParts.Particles = [ "muon" ]
-DownParts.Input = "Hlt/FullDownProtos/ProtoParticles"
-DownParts.Output = "Hlt2/Hlt2DownstreamMuons/Particles"
 #
 # MuonTT particles
 #######################################################################
@@ -122,7 +82,7 @@ Hlt2MuonTTTrack = MuonTTTrack("Hlt2MuonTTTrack")
 Hlt2MuonTTTrack.AddTTHits = True
 Hlt2MuonTTTrack.FillMuonStubInfo = False
 Hlt2MuonTTTrack.ToolName = "MuonCombRec"
-Hlt2MuonTTTrack.OutputLevel = 4 
+Hlt2MuonTTTrack.OutputLevel = 6 
 Hlt2MuonTTTrack.MC = False
 Hlt2MuonTTTrack.addTool( MuonCombRec )
 Hlt2MuonTTTrack.MuonCombRec.ClusterTool = "MuonFakeClustering" # to enable: "MuonClusterRec"
@@ -143,28 +103,28 @@ Hlt2MuonTTTrack.PatAddTTCoord.MaxChi2Tol = 7.0 # was not included
 Hlt2MuonTTTrack.PatAddTTCoord.MinAxProj = 5.5 # was 2.5
 Hlt2MuonTTTrack.PatAddTTCoord.MajAxProj = 25.0 # was 22.0
 Hlt2MuonTTTrack.addTool( TrackMasterFitter )
-Hlt2MuonTTTrack.TrackMasterFitter.OutputLevel = 4 
+Hlt2MuonTTTrack.TrackMasterFitter.OutputLevel = 6 
 Hlt2MuonTTTrack.TrackMasterFitter.MaterialLocator = "SimplifiedMaterialLocator"
 Hlt2MuonTTTrack.addTool( TrackMasterExtrapolator )
 Hlt2MuonTTTrack.TrackMasterExtrapolator.MaterialLocator = "SimplifiedMaterialLocator"
-Hlt2MuonTTTrack.Output = "Hlt2/Track/MuonTTTracks"
+Hlt2MuonTTTrack.Output = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+TrackName["MuonTT"]
 ###################################################################################
 # create the protos
 Hlt2MuonTTPParts = ChargedProtoParticleMaker("Hlt2MuonTTPParts")
 Hlt2MuonTTPParts.addTool( TrackSelector )
 Hlt2MuonTTPParts.TrackSelector.TrackTypes = [ "Long" ]
-Hlt2MuonTTPParts.Inputs = ["Hlt2/Track/MuonTTTracks"]
-Hlt2MuonTTPParts.Output = "Hlt2/ProtoP/MuonTTProtoP"
-Hlt2MuonTTPParts.OutputLevel = 4 
+Hlt2MuonTTPParts.Inputs = [Hlt2MuonTTTrack.Output]
+Hlt2MuonTTPParts.Output = _baseProtoPLocation("Hlt2", HltBiDirectionalKalmanFitSuffix+"/"+TrackName["MuonTT"])
+Hlt2MuonTTPParts.OutputLevel = 6 
 ##################################################################################
 # create the particles
 Hlt2MuonTTParts = NoPIDsParticleMaker("Hlt2MuonTTParts")
 Hlt2MuonTTParts.Particle = 'muon'
 Hlt2MuonTTParts.addTool( TrackSelector )
 Hlt2MuonTTParts.TrackSelector.TrackTypes = [ "Long" ]
-Hlt2MuonTTParts.Input =  "Hlt2/ProtoP/MuonTTProtoP"
+Hlt2MuonTTParts.Input =  Hlt2MuonTTPParts.Output
 Hlt2MuonTTParts.Output =  "Hlt2/Hlt2MuonTTMuons/Particles"
-Hlt2MuonTTParts.OutputLevel = 4 
+Hlt2MuonTTParts.OutputLevel = 6 
 
 ######## VeloMuon Particles for trackeff TT method ###################
 ############### Build the MuonVelo tracks #########################
@@ -180,11 +140,11 @@ Hlt2VeloMuonBuild = VeloMuonBuilder('Hlt2VeloMuonBuild')
 Hlt2VeloMuonBuild.MuonLocation = 'Hlt1/Track/MuonSeg'
 Hlt2VeloMuonBuild.VeloLocation = HltSharedTrackLoc["Velo"] #Velo track location in Hlt
 Hlt2VeloMuonBuild.lhcbids = 4
-Hlt2VeloMuonBuild.OutputLocation = 'Hlt2/Track/VeloMuon'
+Hlt2VeloMuonBuild.OutputLocation = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+TrackName["VeloMuon"]
 #build protos out of tracks
 Hlt2VeloMuonProtos = ChargedProtoParticleMaker('Hlt2VeloMuonProtos')
-Hlt2VeloMuonProtos.Inputs = ['Hlt2/Track/VeloMuon']
-Hlt2VeloMuonProtos.Output = 'Hlt2/ProtoP/VeloMuonProtoP'
+Hlt2VeloMuonProtos.Inputs = [Hlt2VeloMuonBuild.OutputLocation]
+Hlt2VeloMuonProtos.Output = _baseProtoPLocation("Hlt2", HltBiDirectionalKalmanFitSuffix+"/"+TrackName["VeloMuon"])
 Hlt2VeloMuonProtos.addTool(DelegatingTrackSelector, name='delTrackSel')
 Hlt2VeloMuonProtos.delTrackSel.TrackTypes = ['Long']
 Hlt2VeloMuonProtos.OutputLevel = 6
@@ -192,9 +152,49 @@ Hlt2VeloMuonProtos.OutputLevel = 6
 Hlt2VeloMuonParts = NoPIDsParticleMaker("Hlt2VeloMuonParts")
 Hlt2VeloMuonParts.Particle = 'Muon'
 Hlt2VeloMuonParts.OutputLevel = 6
-Hlt2VeloMuonParts.Input =  "Hlt2/ProtoP/VeloMuonProtoP"
+Hlt2VeloMuonParts.Input =  Hlt2VeloMuonProtos.Output
 Hlt2VeloMuonParts.Output =  "Hlt2/Hlt2VeloMuons/Particles"
 	
+# Downstream Muons
+##########################################################################
+# new seeding required, as in Hlt2 seeding hits from forward tracks are removed
+DownSeed = PatSeeding("DownSeed")
+DownSeed.addTool(PatSeedingTool, name='PatSeedingTool')
+DownSeed.PatSeedingTool.MinMomentum = 1500 #momentum cut to reduce timing, softer than cut used in the line
+DownSeed.PatSeedingTool.NDblOTHitsInXSearch = 2
+DownstreamTracking = PatDownstream()
+DownstreamTracking.OutputLocation = Hlt2TrackLoc["FullDownstream"]
+DownstreamFit = TrackEventFitter('DownstreamFitter')
+DownstreamFit.TracksInContainer = DownstreamTracking.OutputLocation
+DownstreamFit.TracksOutContainer = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+TrackName["FullDownstream"]
+DownstreamFit.addTool(TrackMasterFitter, name = 'Fitter')
+fitter = ConfiguredHltFitter(getattr(DownstreamFit,'Fitter')) #use HltFitter for timing reasons
+# add muon ID
+idalg = MuonIDAlg("IDalg")
+cm=ConfiguredMuonIDs.ConfiguredMuonIDs( "2012" ) #TODO: hardcoded right now, find better solution
+cm.configureMuonIDAlg(idalg)
+idalg.TrackLocation = DownstreamFit.TracksOutContainer
+idalg.MuonIDLocation = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonIDSuffix
+idalg.MuonTrackLocation = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+HltSharedPIDPrefix+"/"+HltMuonTracksName
+# make protos
+DownProtos = ChargedProtoParticleMaker("DownProtos")
+DownProtos.Inputs = [DownstreamFit.TracksOutContainer]
+DownProtos.Output = _baseProtoPLocation("Hlt2", HltBiDirectionalKalmanFitSuffix+"/"+TrackName["FullDownstream"]+"/"+Hlt2ChargedProtoParticleSuffix+"/"+HltMuonProtosSuffix)
+DownProtos.addTool( DelegatingTrackSelector, name="TrackSelector" )
+tracktypes = ["Downstream"]
+DownProtos.TrackSelector.TrackTypes = tracktypes
+addmuonpid = ChargedProtoParticleAddMuonInfo("addmuonpid")
+addmuonpid.InputMuonPIDLocation = idalg.MuonIDLocation
+addmuonpid.ProtoParticleLocation = DownProtos.Output
+combinedll = ChargedProtoCombineDLLsAlg("combineDLL")
+combinedll.ProtoParticleLocation = DownProtos.Output
+# make particles
+DownParts = BestPIDParticleMaker("DownParts" , Particle = "muon")
+DownParts.addTool(ProtoParticleMUONFilter,name="muon")
+DownParts.muon.Selection = ["RequiresDet='MUON' IsMuonLoose=True"]
+DownParts.Particles = [ "muon" ]
+DownParts.Input = DownProtos.Output
+DownParts.Output = "Hlt2/Hlt2DownstreamMuons/Particles"
 
 #
 # define exported symbols -- these are for available
@@ -203,10 +203,10 @@ Hlt2VeloMuonParts.Output =  "Hlt2/Hlt2VeloMuons/Particles"
 # from Hlt2SharedParticles.TagAndProbeParticles import TagAndProbeMuons
 #
 
-__all__ = ( 'TagAndProbePions', 'TagAndProbeMuons', 'ProbeMuonTTMuons', 'ProbeVeloMuons', 'ProbeDownstreamMuons' )
+__all__ = ( 'TagAndProbePions', 'TagAndProbeMuons', 'TagMuonTTMuons', 'TagVeloMuons', 'TagDownstreamMuons' )
 
 TagAndProbePions   = bindMembers( None, [ caloProtos		,	Hlt2TagAndProbePions 	] )
 TagAndProbeMuons   = bindMembers( None, [ muonWithCaloProtos	, 	Hlt2TagAndProbeMuons	] )
-ProbeMuonTTMuons	= bindMembers( None, [ Hlt2MuonTTTrack	, 	Hlt2MuonTTPParts	,	Hlt2MuonTTParts	] )
-ProbeVeloMuons   	= bindMembers( None, [ DecodeVelo, StandaloneMuonRec('MyMuonStandalone'), Hlt2VeloMuonBuild, Hlt2VeloMuonProtos, Hlt2VeloMuonParts] )
-ProbeDownstreamMuons	= bindMembers( None, [ DownSeed, downstreamTracking, downstreamFit, idalg, downprotos, addmuonpid, combinedll, DownParts] )
+TagMuonTTMuons		= bindMembers( None, [ Hlt2MuonTTTrack	, 	Hlt2MuonTTPParts	,	Hlt2MuonTTParts	] )
+TagVeloMuons   		= bindMembers( None, [ DecodeVelo, StandaloneMuonRec('MyMuonStandalone'), Hlt2VeloMuonBuild, Hlt2VeloMuonProtos, Hlt2VeloMuonParts] )
+TagDownstreamMuons	= bindMembers( None, [ DownSeed, DownstreamTracking, DownstreamFit, idalg, DownProtos, addmuonpid, combinedll, DownParts] )
