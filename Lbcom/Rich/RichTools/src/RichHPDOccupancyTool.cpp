@@ -12,7 +12,7 @@
 #include "GaudiKernel/ToolFactory.h"
 
 namespace {
-    inline int as_int(unsigned int u) { return reinterpret_cast<int&>(u); }
+  inline int as_int(unsigned int u) { return reinterpret_cast<int&>(u); }
 }
 
 // local
@@ -27,11 +27,11 @@ DECLARE_TOOL_FACTORY( HPDOccupancyTool )
 HPDOccupancyTool::HPDOccupancyTool( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
-  : ToolBase            ( type, name, parent ),
-    m_richSys           ( NULL               ),
-    m_SmartIDDecoder    ( NULL               ),
-    m_condBDLocs        ( Rich::NRiches      ),
-    m_updateRunningOccs ( false              )
+: ToolBase            ( type, name, parent ),
+  m_richSys           ( NULL               ),
+  m_SmartIDDecoder    ( NULL               ),
+  m_condBDLocs        ( Rich::NRiches      ),
+  m_updateRunningOccs ( false              )
 {
 
   // Define interface
@@ -146,35 +146,39 @@ StatusCode HPDOccupancyTool::umsUpdateRICH2()
 StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
 {
   if ( msgLevel(MSG::DEBUG) )
-    verbose() << "Update triggered for " << rich 
+    verbose() << "Update triggered for " << rich
               << " HPD average occupancies" << endmsg;
 
   // clear the map
   m_occMap[rich].clear();
-  
+
   // read data from conditions
   const Condition * data = getDet<Condition>(m_condBDLocs[rich]);
 
   // loop over data values from cond DB
-  for ( const auto& s : data->paramAsStringVect( "Occupancies" ) )
+  for ( const auto& s : data->paramAsStringVect("Occupancies") )
   {
     const unsigned int slash = s.find_first_of( "/" );
     if ( slash == 0 ) return Error( "HPDOccupancyTool::initOccMap: Badly formed data value = " + s );
-    try {
-        // extract numbers from string
-        const LHCb::RichSmartID HPD( std::stoi( s.substr(0,slash) ) );
-        const double            occ{ std::stod( s.substr(slash+1) ) };
+    try 
+    {
+    
+      // extract numbers from string
+      const LHCb::RichSmartID HPD( std::stoi( s.substr(0,slash) ) );
+      const double            occ{ std::stod( s.substr(slash+1) ) };
 
-        // update local data map
-        if ( msgLevel(MSG::VERBOSE) ) {
-          verbose() << " -> Updating " << HPD << " occupancy to " << occ << endmsg;
-        }
-        m_occMap[rich][HPD] = HPDData{ m_minFills+1 , occ };
-    } catch (const std::exception& e) {
-        error() << "HPDOccupancyTool::initOccMap: failed to either convert " << ( s.substr(0,slash) )  << " to int "
-                << " or " <<  s.substr(slash+1)  << " to double; exception " << e.what() << endmsg;
-        return Error("HPDOccupancyTool::initOccMap Failed to convert either " + s.substr(0,slash) 
-                      + " or " + s.substr(slash+1) + " : " + e.what() );
+      // update local data map
+      if ( msgLevel(MSG::VERBOSE) ) 
+      {
+        verbose() << " -> Updating " << HPD << " occupancy to " << occ << endmsg;
+      }
+      m_occMap[rich][HPD] = HPDData{ m_minFills+1 , occ };
+
+    } 
+    catch ( const std::exception& e ) 
+    {
+      return Error( "HPDOccupancyTool::initOccMap Failed to convert either " + s.substr(0,slash)
+                    + " or " + s.substr(slash+1) + " : " + e.what() );
     }
   }
 
@@ -188,7 +192,7 @@ HPDOccupancyTool::hpdData( const LHCb::RichSmartID hpdID ) const
   if ( m_updateRunningOccs )
   {
     // Must set to false before call to updateOccupancies() to avoid infinite loop ...
-    m_updateRunningOccs = false; 
+    m_updateRunningOccs = false;
     updateOccupancies();
   }
   // if different HPD, search for new data object
@@ -284,7 +288,7 @@ HPDOccupancyTool::findHpdData( const LHCb::RichSmartID hpdID ) const
 StatusCode HPDOccupancyTool::finalize()
 {
   // Print XML ?
-  if ( m_printXML ) 
+  if ( m_printXML )
   {
     createHPDBackXML( Rich::Rich1 );
     createHPDBackXML( Rich::Rich2 );
