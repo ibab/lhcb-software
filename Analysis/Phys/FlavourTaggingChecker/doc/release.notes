@@ -5,6 +5,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2014-09-30 - Jack Wimberley
+ - Deleted ununsed charm tagger lines
+ - Added proton variables, other vars needed for new BDTs
+
 !========================= FlavourTaggingChecker v7r5 2014-07-25 =========================
 
 ! 2014-07-23 - Stefania Vecchi

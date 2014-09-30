@@ -92,10 +92,11 @@ private:
 
   StatusCode FillCharmInfo(Tuple& tuple, const Particle::ConstVector& charmCands, 
                            const Particle::ConstVector& charmInclCands, 
-                           const Particle::ConstVector& charmStarCands, 
+                           const Particle::ConstVector& charmLambdaCands, 
+                           const RecVertex::Range verts,
                            const RecVertex* RecVert); //, const Particle* BS);
 
-  StatusCode AddCharmInfo(const Particle::ConstVector& cands, const RecVertex* RecVert, const int type, vecptrMap& infoMap);
+  StatusCode AddCharmInfo(const Particle::ConstVector& cands, const RecVertex::Range verts, const RecVertex* RecVert, const int type, vecptrMap& infoMap);
 
   double GetInvariantMass(double MA, Gaudi::LorentzVector PA, double MB, Gaudi::LorentzVector PB);
   
@@ -107,7 +108,7 @@ private:
     m_taggerLocation;
   std::vector<std::string> m_CharmTagLocations;
   std::vector<std::string> m_CharmInclTagLocations;
-  std::vector<std::string> m_CharmStarTagLocations;
+  std::vector<std::string> m_CharmLambdaTagLocations;
   bool m_ReFitPVs;
   
   IPrintMCDecayTreeTool*     m_debug;
