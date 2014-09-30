@@ -43,11 +43,14 @@ namespace LHCb
 
   public:
 
-    /// Retrieve const  The bit-packed internal data word
+    /// Retrieve the bit-packed internal data word
     inline KeyType key() const { return m_key; }
 
     /// implicit conversion to internal type
     inline operator LHCb::RichSmartID::KeyType() const { return key(); }
+
+    /// implicit conversion to signed int (for interactions with CondDB/DetDesc)
+    inline operator int() const { return as_int(); }
 
     /// Update  The bit-packed internal data word
     inline void setKey( const KeyType value ) { m_key = value; }
@@ -234,6 +237,9 @@ namespace LHCb
     };
 
   private:
+    
+    /// Reinterpret the internal unsigned representation as a signed int
+    inline int as_int( ) const { return reinterpret_cast<const int&>(m_key); }
 
     /// Set the given data into the given field, without validity bit
     inline void setData( const int value,
@@ -272,6 +278,10 @@ namespace LHCb
 
     /// Constructor from internal type
     explicit RichSmartID( const LHCb::RichSmartID::KeyType key ) : m_key(key) { }
+
+    /// Constructor from signed int type (for interactions with CondDB/DetDesc)
+    explicit RichSmartID( int key ) 
+      : m_key( reinterpret_cast<LHCb::RichSmartID::KeyType&>(key) ) { }
 
     /// Pixel level constructor including sub-pixel information
     RichSmartID( const Rich::DetectorType rich,
@@ -344,10 +354,40 @@ namespace LHCb
 
   public:
 
-    /// Comparison operator using internal representation
+    /// Equality operator
     inline bool operator==( const LHCb::RichSmartID& id ) const
     {
       return ( key() == id.key() );
+    }
+
+    /// Inequality operator
+    inline bool operator!=( const LHCb::RichSmartID& id ) const
+    {
+      return ( key() != id.key() );
+    }
+
+    /// > operator
+    inline bool operator>( const LHCb::RichSmartID& id ) const
+    {
+      return ( key() > id.key() );
+    }
+
+    /// < operator
+    inline bool operator<( const LHCb::RichSmartID& id ) const
+    {
+      return ( key() < id.key() );
+    }
+
+    /// >= operator
+    inline bool operator>=( const LHCb::RichSmartID& id ) const
+    {
+      return ( key() >= id.key() );
+    }
+
+    /// <= operator
+    inline bool operator<=( const LHCb::RichSmartID& id ) const
+    {
+      return ( key() <= id.key() );
     }
 
   public:

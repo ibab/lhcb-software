@@ -4,6 +4,11 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-09-30 - Chris Jones
+ - Add support to RichSmartID to convert to and from a signed int (internal
+   representation is an unsigned int). Useful for interactions with CondDB or
+   DetDesc which only supports signed ints.
+
 ! 2014-09-17 - Marco Clemencic
  - Fixed genreflex warnings (ROOT 6).
 

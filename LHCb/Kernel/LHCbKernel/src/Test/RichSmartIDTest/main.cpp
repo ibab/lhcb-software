@@ -47,14 +47,35 @@ int main ( int /*argc*/, char** /*argv*/ )
                 }
 
                 // Test conversion to and from an LHCbID
-                const LHCb::LHCbID lID( id );
-                const LHCb::RichSmartID nid( lID.richID() );
-                if ( nid.key() != id.key() )
                 {
-                  cerr << "Problem with RichSmartID <-> LHCbID conversion" << endl;
-                  cerr << "  Original  ID : " << id  << endl;
-                  cerr << "  Converted ID : " << nid << endl;
-                  OK = false;
+                  const LHCb::LHCbID lID( id );
+                  const LHCb::RichSmartID nid( lID.richID() );
+                  if ( nid.key() != id.key() )
+                  {
+                    cerr << "Problem with RichSmartID <-> LHCbID conversion" << endl;
+                    cerr << "  Original  ID : " << id  << endl;
+                    cerr << "  Converted ID : " << nid << endl;
+                    OK = false;
+                  }
+                }
+
+                // Test conversion to/from a signed int (for CondDB interactions)
+                {
+                  const          int isHPD = id;
+                  const unsigned int iuHPD = id;
+                  const LHCb::RichSmartID s_id(isHPD), u_id(iuHPD);
+                  if ( id != s_id )
+                  {
+                    cerr << "Problem with RichSmartID <-> signed int conversion" << endl;
+                    cerr << "  Original  ID : " << id  << endl;
+                    cerr << "  Converted ID : " << s_id << endl;
+                  }
+                  if ( id != u_id )
+                  {
+                    cerr << "Problem with RichSmartID <-> unsigned int conversion" << endl;
+                    cerr << "  Original  ID : " << id  << endl;
+                    cerr << "  Converted ID : " << u_id << endl;
+                  }
                 }
 
               }
