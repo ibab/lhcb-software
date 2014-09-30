@@ -10,11 +10,11 @@ Dump.OutputLevel                     = 4;
 Dump.Debug                           = 0;
 
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 1.0;
+StoreExplorerAlg.PrintFreq           = 0.0001;
 
 EventSelector.Input                  = "mepData_0.dat";
 EventSelector.Input                  = "$HOME/data/data.mdf";
 EventSelector.Input                  = "data/mdfData_1.dat";
-EventSelector.Input                  = "data";
+EventSelector.Input                  = "data/Run_137312_0000000002.raw";
 EventSelector.Decode = false;
 EventSelector.OutputLevel = 1;

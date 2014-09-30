@@ -299,6 +299,9 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
       // Need to aquire the mutex if suspended
       sc = pCtxt->rearmEvent();
       if ( !sc.isSuccess() ) {
+	if ( m_gotoPause )   {
+	  incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
+	}
 	return sc;
       }
       if ( m_allowSuspend )   {
