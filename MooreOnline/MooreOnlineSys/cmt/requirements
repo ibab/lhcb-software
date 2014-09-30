@@ -7,7 +7,7 @@ branches doc cmt tests
 #=======================================================
 
 use  MooreScripts  v1r5
-use  MooreOnlineConf  v1r3
+use  MooreOnlineConf  v1r4
 
 # Declare this as a container package
 apply_pattern container_package
