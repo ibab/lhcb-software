@@ -12,7 +12,7 @@ Development release, based on Rec v17r1, LHCb v38r1 and Gaudi v25r3.
    MVADictTools, ParticleMaker, Swimming, TisTosTobbing, TopologicalTools
 
 - New packages :
-   DaVinciDecayFinder, DaVinciFilters, DaVinciNeutralTools, 
+   DaVinciDecayFinder, DaVinciFilters, DaVinciNeutralTools, ParticleCombiners,
    DaVinciOverlapsAndClones, DaVinciPVTools, ExtraInfoTools, RelatedInfoTools
 
 In DaVinciDecayFinder :
@@ -32,6 +32,9 @@ In DaVinciKernel :
  . Import DecodeSimpleDecayString from DaVinciTools
  . Create a new component library within this package, that contains 'core'
    components. Import DaVinciInit from DaVinciTools.
+
+In ParticleCombiners :
+ . First version. Split off from DaVinciTools the particle 'combiners'.
 
 In DaVinciNeutralTools :
  . BremAdder : change default CL cut on brem photons (CL>0.1)
