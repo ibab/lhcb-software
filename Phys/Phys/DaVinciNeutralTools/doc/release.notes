@@ -4,8 +4,10 @@
 ! Purpose     : DaVinci Neutral Tools
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciNeutralTools v1r0 2014-09-30 =========================
+
 ! 2014-09-24 - O. Deschamps for E. Tournefier
-  - BremAdder : change default CL cut on brem photons (CL>0.1)
+ - BremAdder : change default CL cut on brem photons (CL>0.1)
 
 ! 2014-08-05 - Chris Jones
  - First version. Split off from DaVinciTools tools relating to neutrals to
