@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-09-30 - Michael Kolpin
+ - added names of tag tracks needed for tracking efficiency lines to HltTrackNames
+
 !========================= HltTracking v13r1 2014-09-29 =========================
 
 ! 2014-09-25 - Alex Shires
