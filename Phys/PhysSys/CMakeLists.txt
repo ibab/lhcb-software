@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PhysSys
 ################################################################################
-gaudi_subdir(PhysSys v19r0)
+gaudi_subdir(PhysSys v19r1)
 
 gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/BBDecTreeTool
@@ -12,6 +12,7 @@ gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/RelatedInfoTools
                          Phys/ParticleCombiners
                          Phys/RelatedInfoTools
+                         Phys/ExtraInfoTools
                          Phys/DaVinciPVTools
                          Phys/DaVinciFilters
                          Phys/DaVinciDecayFinder

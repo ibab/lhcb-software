@@ -3,6 +3,155 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v19r1>2014-09-30 Phys v19r1</A></H1><PRE>
+Development release, based on Rec v17r1, LHCb v38r1 and Gaudi v25r3.
+
+- Packages Updated :
+   DaVinciKernel, DaVinciTools, DaVinciTypes, DecayTreeFitter, FlavourTagging,
+   JetAccessories, LoKiAlgo, LoKiArrayFunctors, LoKiFitters, LoKiJets,
+   MVADictTools, ParticleMaker, Swimming, TisTosTobbing, TopologicalTools
+
+- New packages :
+   DaVinciDecayFinder, DaVinciFilters, DaVinciNeutralTools, 
+   DaVinciOverlapsAndClones, DaVinciPVTools, ExtraInfoTools, RelatedInfoTools
+
+In DaVinciDecayFinder :
+ . First version. Move DecayFinder to its own package (effectively depreciated).
+
+In DaVinciFilters :
+ . First version. Split off from DaVinciTools the components related to filtering.
+
+In DaVinciKernel :
+ . Completely remove depreciated DVAlgorithm base class.
+ . Remove C++11 features from Kernel/ParticleFilters.h, to fix problems with
+   ROOT5 based builds.
+ . Switch from boost::assign to c++11 initialiser lists for static maps in
+   DVCommonBase.icpp.
+ . Make an entry in DefaultDVToolTypes.h for ParticleReFitter.
+ . Move DaVinciP2VVAngles.{h,cpp} to Phys/DaVinciAngleCalculators.
+ . Import DecodeSimpleDecayString from DaVinciTools
+ . Create a new component library within this package, that contains 'core'
+   components. Import DaVinciInit from DaVinciTools.
+
+In DaVinciNeutralTools :
+ . BremAdder : change default CL cut on brem photons (CL>0.1)
+ . First version. Split off from DaVinciTools tools relating to neutrals to
+   this dedicated package.
+
+In DaVinciOverlapsAndClones :
+ . First Version. Export tools for dealing with overlaps and clones to the
+   dedicated package.
+
+In DaVinciPVTools :
+ . First version. Export all PV related tools from DaVinciTools.
+
+In ExtraInfoTools :
+ . Removed code lines related to obsolete algorithm DVAlgorithm.
+ . First version. Split of the ExtraInfo tools from DaVinciTools.
+
+In RelatedInfoTools :
+ . Removed code lines related to obsolete algorithm DVAlgorithm.
+ . Change a couple of warning() to Warning(
+ . Fix ConeVariables, ConeVariablesForEW and VertexIsolation tools to 
+   write out all possible variables if the list of variables is empty. 
+ . Further fix for selections which filter common particles.
+ . Fixed for nightlies compilation. removing LoKi/ParticleCut includes.
+ . Fixed CMake configuration (after the change made on 2014-08-26).
+ . Moved Jet Variables RelatedInfo tools to IsolationTools to avoid the
+   break of the nightlies
+ . Added tools to calculate variables related to Jets Isolation, Cylinder-type
+   Isolation and ParticleFlow. The last two are for BMuNu analysis. Package
+   requirements also modified to access LoKi tools.
+ . Fixed problem with selections which filter common particles. 
+ . Make sure all info locations in AddRelatedInfo start with "/Event/"
+ . Some minor cleanups and optimisations.
+ . First version. Split off from DaVinciTools those components related to the
+   'RelatedInfo' framework.
+
+In TopologicalTools :
+ . Adding TopologicalTagging (Filter based on FilterDesktop)
+ . First version. Export topological tools to a dedicated package.
+
+In DaVinciTools :
+ . Disable QM tests. Did not really do much of use, and no longer works
+   with the package broken up. Remove the direct uses of the sub-packages.
+ . Break up this monolithic package into a set of more dedicated packages.
+   The components remaining in this package are a miscellaneous collection
+   of things left over ...
+  . RelatedInfoTools - Components related to the RelatedInfo framework.
+  . ExtraInfoTools   - Components related to the (depreciated) ExtraInfo framework.
+  . DaVinciPVTools   - Components related to PVs.
+	. DaVinciFilters   - Components related to general filtering
+  . DaVinciDecayFinder - The (depreciated) decay finder.
+  . TopologicalTools   - Topological tools.
+  . DaVinciOverlapsAndClones - Tools for dealing with clones, duplicates and overlaps.
+  . DaVinciNeutralTools      - Components dealing specifically with neutral objects.
+  . DaVinciAngleCalculators  - Various 'angle' calculator tools (moved to Analysis).
+ . Clean up the related info tools + Fix a bug where initialize() was not being
+   properly called on the base classes.
+
+In DaVinciTypes :
+ . Increase maximum index in indexByName method (for VELOPHIHITSVECTORSIZE, 
+   B2KSTARMUMUCLASSICISO and B2KSTARMUMUBDTISO variables)
+ . Add VELOPHIHITSVECTORSIZE variable to RelatedInfoNamed.h
+ . Add ZVISO variable to RelatedInfoNamed.h
+ . Add more variables for Bs2MuMu
+ . Add names for BS2TauTau isolation variables by Giampiero Mancinelli to RelatedInfoNamed.h
+ . Add names for new Jets Variables, Cylinder Variables and ParticleFlow Variables
+ . Add names for Bs2Mumu isolation tool by Fatima Soomro to RelatedInfoNamed.h
+
+In DecayTreeFitter :
+ . Use Gaudi Message Service in DecayTreeFitter::Fitter when possible.
+
+In FlavourTagging :
+ . Deleted unused lines + Improved timing for other lines
+ . Downgrade "No particles found at ..." messages from warning to debug,
+   to avoid uneccessary spamming in production.
+ . Remove the 'if exists' check, which for Ranges never fails... 
+   Just rely on the empty() test to cover bnoth missing and empty containers.
+ . Add Wrappers for cut-based NNet taggers to limit the memory consumption
+   code concerned: TaggerKaonOppositeTool.* TaggerMuonTool.* TaggerElectronTool.*
+   TaggerVertexChargeTool.* TaggerKaonSameTool.* TaggerPionSameTool.* NNetMLP_Tool.*
+ . Added LambdaC modes (and other online selection changes) to CharmTaggerLists
+
+In JetAccessories :
+ . Add MNF also to Kernel/JetEnums.h
+ . Setting JEC to False
+ . Adding the new ghost killer for Long/Down/Up trk via ProbNNghost
+ . Add particle composite and/or banning at the jet level rather than at the 
+   PF level (less CPU intensive when several config) 
+
+In LoKiFitters :
+ . Add current algorithm name to Warnings and Errors from PVReFitter.
+
+In MVADictTools :
+ . Turn off a number of info level messages, unless 'debug' mode is explicitly
+   requested + Fix some python warnings.
+ . Assigned "Silent" as default configuration for the TMVA::Reader
+
+In ParticleMaker :
+ . MergedPi0Maker : release dist(gamma-gamma) cut from 1.8 to 2.8
+ . PhotonMaker & MergedPi0Maker : add selection according to ClusterCode
+ . PhotonMaker : fix typo  
+ . Photon & Pi0Makers : possibility to set the origin to 1st primary vertex 
+
+In Swimming : 
+ . Numerous updates. See package release notes.
+
+In TisTosTobbing :
+ . Remove special configuration of TisTosParticleTagger when context() = 'Hlt'
+   as this is no longer needed.
+
+
+
+
+
+
+
+
+
+
+
 ! 2014-08-11 - Chris Jones
  - Move Phys/DaVinciAngleCalculators to Analysis
 
