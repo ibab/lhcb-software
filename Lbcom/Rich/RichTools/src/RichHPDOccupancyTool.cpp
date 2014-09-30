@@ -11,10 +11,6 @@
 
 #include "GaudiKernel/ToolFactory.h"
 
-namespace {
-  inline int as_int(unsigned int u) { return reinterpret_cast<int&>(u); }
-}
-
 // local
 #include "RichHPDOccupancyTool.h"
 
@@ -158,11 +154,13 @@ StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
   // loop over data values from cond DB
   for ( const auto& s : data->paramAsStringVect("Occupancies") )
   {
+    
+    // Locate the / seperator in the data string
     const unsigned int slash = s.find_first_of( "/" );
     if ( slash == 0 ) return Error( "HPDOccupancyTool::initOccMap: Badly formed data value = " + s );
+    
     try 
     {
-    
       // extract numbers from string
       const LHCb::RichSmartID HPD( std::stoi( s.substr(0,slash) ) );
       const double            occ{ std::stod( s.substr(slash+1) ) };
@@ -180,6 +178,7 @@ StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
       return Error( "HPDOccupancyTool::initOccMap Failed to convert either " + s.substr(0,slash)
                     + " or " + s.substr(slash+1) + " : " + e.what() );
     }
+
   }
 
   return StatusCode::SUCCESS;
@@ -322,7 +321,7 @@ void HPDOccupancyTool::createHPDBackXML( const Rich::DetectorType rich ) const
     if ( d.fillCount() > m_minFills )
     {
       std::ostringstream entry;
-      entry << as_int( s.first.key() ) << "/" << occ; // force key to be printed as a _signed_ int...
+      entry << (int)s.first << "/" << occ; // force key to be printed as a _signed_ int...
       entries.push_back( entry.str() );
     }
   }
