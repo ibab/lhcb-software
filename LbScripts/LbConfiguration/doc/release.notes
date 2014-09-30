@@ -1,3 +1,7 @@
+2014-09-30  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-run: fixed issue with malformed variables when using SetupProject compatibility
+
 2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-dev: minor improvement to messages

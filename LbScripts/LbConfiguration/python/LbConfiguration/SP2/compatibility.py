@@ -24,7 +24,13 @@ def expandAllVars(env, iterations=10):
     {'MYDATA': '/main/path/subdir', 'DATA': '/main/path'}
     '''
     from string import Template
-    new_env = dict((key, Template(value).substitute(env))
+    def expandVars(value, env):
+        '''expand variables in a string using env, ignoring format errors'''
+        try:
+            return Template(value).substitute(env)
+        except ValueError:
+            return value
+    new_env = dict((key, expandVars(value, env))
                    for key, value in env.iteritems())
     if new_env !=  env: # we did some change
         if iterations > 0:
