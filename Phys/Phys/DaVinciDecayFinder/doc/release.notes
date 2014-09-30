@@ -4,5 +4,7 @@
 ! Purpose     : Depreciated Decay Finder
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciDecayFinder v1r0 2014-09-30 =========================
+
 ! 2014-08-05 - Chris Jones
  - First version. Move DecayFinder to its own package (effectively depreciated).
