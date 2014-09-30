@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-09-30 - Michael Kolpin
+ - added TrackEffLines settings file for testing of tracking efficiency lines
+
 !========================= HltSettings v6r6 2014-09-29 =========================
 
 ! 2014-09-02 - Sebastian Neubert
