@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-10-01 - Chris Jones
+ - Add some more operators and constructors ...
+
 ! 2014-09-30 - Chris Jones
  - Add support to RichSmartID to convert to and from a signed int (internal
    representation is an unsigned int). Useful for interactions with CondDB or

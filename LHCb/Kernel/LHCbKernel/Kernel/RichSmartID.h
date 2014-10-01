@@ -44,16 +44,22 @@ namespace LHCb
   public:
 
     /// Retrieve the bit-packed internal data word
-    inline KeyType key() const { return m_key; }
+    inline KeyType key()             const { return m_key; }
 
-    /// implicit conversion to internal type
-    inline operator LHCb::RichSmartID::KeyType() const { return key(); }
+    /// implicit conversion to unsigned int
+    inline operator unsigned int()   const { return key(); }
 
-    /// implicit conversion to signed int (for interactions with CondDB/DetDesc)
-    inline operator int() const { return as_int(); }
+    /// implicit conversion to unsigned long
+    inline operator unsigned long()  const { return (unsigned long)key(); }
 
-    /// Update  The bit-packed internal data word
-    inline void setKey( const KeyType value ) { m_key = value; }
+    /// implicit conversion to signed int
+    inline operator int()            const { return as_int(); }
+
+    /// implicit conversion to signed long
+    inline operator long()           const { return (long)as_int(); }
+
+    /// Set the bit-packed internal data word
+    inline void setKey( const LHCb::RichSmartID::KeyType value ) { m_key = value; }
 
   private:
 
@@ -276,13 +282,25 @@ namespace LHCb
     /// Default Constructor
     RichSmartID() : m_key(0) { setIDType( HPDID ); }
 
-    /// Constructor from internal type
-    explicit RichSmartID( const LHCb::RichSmartID::KeyType key ) : m_key(key) { }
+    /// Constructor from internal type (unsigned int)
+    explicit RichSmartID( const LHCb::RichSmartID::KeyType key ) 
+      : m_key(key) { }
+    
+    /// Constructor from unsigned long int
+    explicit RichSmartID( const unsigned long int key ) 
+      : m_key( (LHCb::RichSmartID::KeyType)key ) { }
 
-    /// Constructor from signed int type (for interactions with CondDB/DetDesc)
+    /// Constructor from signed int type
     explicit RichSmartID( int key ) 
       : m_key( reinterpret_cast<LHCb::RichSmartID::KeyType&>(key) ) { }
 
+    /// Constructor from signed long type 
+    explicit RichSmartID( long int key )
+    {
+      int _key = (int)key;
+      m_key = reinterpret_cast<LHCb::RichSmartID::KeyType&>(_key);
+    }
+    
     /// Pixel level constructor including sub-pixel information
     RichSmartID( const Rich::DetectorType rich,
                  const Rich::Side panel,
