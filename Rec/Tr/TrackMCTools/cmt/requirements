@@ -16,6 +16,8 @@ include_path      none
 #=====================================================================
 use   GaudiAlg          v*
 
+use   PhysEvent         v*   Event
+
 use   MCEvent           v*   Event
 use   TrackEvent        v*   Event
 use   LinkerEvent       v*   Event

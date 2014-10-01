@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-10-01 - Angelo Di Canto
+ - Add PGPrimaryVertex
+
 !========================= TrackMCTools v3r9 2014-05-13 =======================
 ! 2014-04-25 - Heinrich Schindler
  - Move PatPixelDebugTool to Pr/PrMCTools.
