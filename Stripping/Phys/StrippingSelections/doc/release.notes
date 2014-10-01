@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 214-10-01 - Alexander Baranov
+ - Added MDSTFlag for B2MuMuMuMu
+
 ! 2014-09-26 - Stefano Perazzini
  - Remove PropertimeFitter usage from StrippingD2HHBDT.py
  - Removed from the release StrippingB2HHBkg.py and StrippingBetac2PhiP.py

@@ -185,6 +185,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.defaultLine = StrippingLine(default_name+"Line",
                                             prescale = config['B2MuMuMuMuLinePrescale'],
                                             postscale = config['B2MuMuMuMuLinePostscale'],
+                                            MDSTFlag = True,
                                             algos = [ self.selDefault ]
                                             )
 
@@ -214,6 +215,7 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
         self.B2DetachedDimuonAndJpsiLine = StrippingLine(B2DetachedDimuonAndJpsi_name+"Line",
                                                prescale = config['B2DetachedDimuonAndJpsiLinePrescale'],
                                                postscale = config['B2DetachedDimuonAndJpsiLinePostscale'],
+                                               MDSTFlag = True,
                                                algos = [ self.selB2DetachedDimuonAndJpsi]
                                                )
 
