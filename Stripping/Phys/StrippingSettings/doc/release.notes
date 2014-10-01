@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-01 - Pablo Ruiz Valls (RD)
+ - Added missing B24Mu lines for s21 and s21r1
+
 ! 2014-09-26 - Stefano Perazzini
  - Hotfix to dbases for stripping21 and stripping21r1
 

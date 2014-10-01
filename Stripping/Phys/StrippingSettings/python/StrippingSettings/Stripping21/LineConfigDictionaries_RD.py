@@ -1554,3 +1554,54 @@ Tau23Mu = {
          },
     'STREAMS'     : { 'Leptonic' : ['StrippingTau23MuTau23MuLine','StrippingTau23MuDs2PhiPiLine','StrippingTau23MuTau2PMuMuLine','StrippingTau23MuDs23PiLine','StrippingTau23MuTau25MuLine']}
     }
+
+################################################################################
+## StrippingB2MuMuMuMuLines.py                                                ##
+## B to 4 Mu lines                                                            ##
+## StrippingB2MuMuMuMuLinesB2DetachedDimuonAndJpsi                            ##
+## StrippingB2MuMuMuMuLinesB24Mu                                              ##
+## Authors: Marc-Olivier Bettler, Francesco Dettori, Alexander Baranov        ##
+################################################################################
+B2MuMuMuMuLines = {
+    'WGs'            : ['RD'],
+    'BUILDERTYPE'    : 'B2MuMuMuMuLinesConf',
+    'CONFIG'         : {
+            'B2MuMuMuMuLinePrescale'    : 1,
+            'B2MuMuMuMuLinePostscale'   : 1,
+            'D2MuMuMuMuLinePrescale'    : 1,
+            'D2MuMuMuMuLinePostscale'   : 1,
+            'B2TwoDetachedDimuonLinePrescale'  : 1,
+            'B2TwoDetachedDimuonLinePostscale' : 1,
+            'B2JpsiKmumuLinePrescale'  : 1,
+            'B2JpsiKmumuLinePostscale' : 1,
+            'B2JpsiPhimumuLinePrescale'  : 1,
+            'B2JpsiPhimumuLinePostscale' : 1,
+            'B2DetachedDimuonAndJpsiLinePrescale' : 1,
+            'B2DetachedDimuonAndJpsiLinePostscale': 1,
+            'DetachedDiMuons': {
+                 'AMAXDOCA_MAX'  : '0.5*mm',
+                 'ASUMPT_MIN'    : '1000*MeV',
+                 'VCHI2DOF_MAX'  : 16,
+                 'BPVVDCHI2_MIN' : 16,
+                 },
+            'B2DetachedDiMuons': {
+                'SUMPT_MIN'        : '2000*MeV',
+                'VCHI2DOF_MAX'     : 6,
+                'BPVIPCHI2_MAX'    : 16,
+                'BPVVDCHI2_MIN'    : 50,
+                'BPVDIRA_MIN'      : 0.0,
+                'MASS_MIN'         : {'B':'4600*MeV'},
+                'MASS_MAX'         : {'B':'6000*MeV'}
+                },
+            'B2DetachedDiMuonsAndJpsi': {
+                'SUMPT_MIN'        : '2000*MeV',
+                'VCHI2DOF_MAX'     : 6,
+                'BPVIPCHI2_MAX'    : 16,
+                'BPVVDCHI2_MIN'    : 50,
+                'BPVDIRA_MIN'      : 0.0,
+                'MASS_MIN'         : {'B':'4600*MeV'},
+                'MASS_MAX'         : {'B':'7000*MeV'}
+                }
+            },
+    'STREAMS' : { 'Bhadron' : ['StrippingB2MuMuMuMuLinesB2DetachedDimuonAndJpsiLine','StrippingB2MuMuMuMuLinesB24MuLine']}
+    }
