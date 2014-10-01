@@ -84,3 +84,41 @@ remove_tag()
     svn rm -m "Need to remove tag Online/$1 version $2" svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/Online/${1}/${2};
 }
 echo "+++"
+echo "+++ Define macro \$> make_release <version> "
+make_release()
+{
+    if test "$1" != "";
+    then
+	echo "+++ Project ONLINE version = $1";
+    else
+	echo "+++ The second argument to make_release must be the project version";
+    fi;
+#
+#
+#
+    if test "$ONLINESYSROOT" = "";
+    then
+	eval `cmt run printenv|grep ONLINESYSROOT`;
+    fi;
+#
+#
+#
+    while true; do
+	read -p "+++ Is this correct? Y/N Cr=[Y]" yn;
+	case $yn in
+            [Yy]* ) break;;
+            [Nn]* ) return 0;;
+            * ) break;;
+	esac;
+    done;
+#
+#
+#
+    echo "+++ Copy project area .... ";
+    cd ${ONLINESYSROOT}/../cmt;
+    svn commit -m ONLINE_${1};
+    cd ${ONLINESYSROOT}/cmt;
+    svn mkdir -m ONLINE_${1} svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/ONLINE/ONLINE_${1};
+    svn cp -m ONLINE_${1} svn+ssh://svn.cern.ch/reps/lhcb/Online/trunk/cmt svn+ssh://svn.cern.ch/reps/lhcb/Online/tags/ONLINE/ONLINE_${1}/;
+}
+echo "+++"
