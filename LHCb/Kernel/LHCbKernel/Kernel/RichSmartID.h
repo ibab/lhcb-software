@@ -284,7 +284,7 @@ namespace LHCb
 
     /// Constructor from internal type (unsigned int)
     explicit RichSmartID( const LHCb::RichSmartID::KeyType key ) 
-      : m_key(key) { }
+      : m_key( key ) { }
     
     /// Constructor from unsigned long int
     explicit RichSmartID( const unsigned long int key ) 
@@ -296,12 +296,7 @@ namespace LHCb
 
     /// Constructor from signed long type 
     explicit RichSmartID( const long int key )
-      : m_key ( (LHCb::RichSmartID::KeyType) key & 0x00000000FFFFFFFF ) { }
-
-    //{
-    //  int _key = (int)key;
-    //  m_key = reinterpret_cast<LHCb::RichSmartID::KeyType&>(_key);
-    //}
+      : m_key( (LHCb::RichSmartID::KeyType) key & 0x00000000FFFFFFFF ) { }
     
     /// Pixel level constructor including sub-pixel information
     RichSmartID( const Rich::DetectorType rich,
