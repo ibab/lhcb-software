@@ -5,7 +5,7 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-</PRE><H1><A NAME=v17r1>2014-09-29 RecSys v17r1</A></H1><PRE>
+</PRE><H1><A NAME=v17r1>2014-10-01 RecSys v17r1</A></H1><PRE>
 This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
 
 - Packages modified: Calo/CaloPIDs v5r19, Calo/CaloReco v5r21p1,
@@ -13,7 +13,8 @@ This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
     Pr/PrPixel v1r9, Rec/GlobalReco v6r50, Rec/RecAlgs v3r2, Rec/RecConf v2r18,
     Rich/RichRecQC v2r67, Tf/PatAlgorithms v4r35, Tf/TfKernel v2r26,
     Tf/TrackSys v9r2, Tr/TrackExtrapolators v2r34, Tr/TrackFitEvent v6r3,
-    Tr/TrackFitter v5r2, Tr/TrackMonitors v2r4, Tr/TrackTools v5r4
+    Tr/TrackFitter v5r2, Tr/TackMCTools v3r10, Tr/TrackMonitors v2r4,
+    Tr/TrackTools v5r4
 
 - In Calo/CaloPIDs v5r19
   . CaloElectronMatch, CaloBremMatch.cpp, CaloPhotonMatch.cpp :
@@ -149,6 +150,9 @@ This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
   . Added functionality to TrackMasterFitter to _not_ set scattering momentum for
     velo-only tracks
   . Hide counters in TrackEventFitter behind msgLevel(INFO) to save time
+
+- In Tf/TrackMCTools v3r10
+  . Add PGPrimaryVertex
 
 - In Tr/TrackMonitors v2r4
   . Improve the FPE protection in AlignmentOnlineMonitor

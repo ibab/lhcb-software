@@ -88,7 +88,7 @@ use TrackFitter          v5r2    Tr   # Wouter Hulsbergen
 use TrackIdealPR         v2r20   Tr   # Eduardo Rodrigues
 use TrackInterfaces      v4r26   Tr   # Wouter Hulsbergen
 use TrackKernel          v2r0    Tr   # Wouter Hulsbergen
-use TrackMCTools         v3r9    Tr   # Eduardo Rodrigues
+use TrackMCTools         v3r10   Tr   # Eduardo Rodrigues
 use TrackMonitors        v2r4    Tr   # Wouter Hulsbergen, Stephanie Menzemer
 use TrackProjectors      v3r1    Tr   # Wouter Hulsbergen
 use TrackTools           v5r4    Tr   # Wouter Hulsbergen
