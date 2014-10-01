@@ -327,7 +327,7 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
       if ( ID.isValid() )
       {
         inacts.push_back( ID );
-        if ( std::find( softIDs.begin(), softIDs.end(), ID) == softIDs.end() )
+        if ( std::find( softIDs.begin(), softIDs.end(), (int)ID ) == softIDs.end() )
           warning() << "Invalid smartID in list of inactive PDs: " << *inpd << endmsg;
       }
       else
