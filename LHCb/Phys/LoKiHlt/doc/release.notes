@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-10-01 - Pieter David
+ - LoKi::Hybrid::EvtTupleTool: get HltDecReports from the location in the HLT_Location property
+
 ! 2014-09-17 - Marco Clemencic
  - Fixed genreflex warnings (ROOT 6).
 

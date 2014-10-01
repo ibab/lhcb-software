@@ -656,8 +656,7 @@ StatusCode LoKi::Hybrid::EvtTupleTool::fill( Tuples::Tuple& t )
   // HLT
   if ( !m_hdr.empty() ) 
   {
-    const LHCb::HltDecReports* hdr = get<LHCb::HltDecReports>  
-      ( LHCb::HltDecReportsLocation::Default ) ;
+    const LHCb::HltDecReports* hdr = get<LHCb::HltDecReports> ( m_HDRLocation ) ;
     //
     for ( HLT_Items::const_iterator item = m_hdr.begin() ; 
           m_hdr.end() != item ; ++item ) 
