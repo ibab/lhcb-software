@@ -29,6 +29,8 @@ use LoKiTrigger         v15r3   Phys  # Vanya Belyaev
 use DAQSys              v8r5    DAQ
 use DetCond             v12r38  Det
 use HltDAQ              v4r8    Hlt
+use HltServices         v2r4    Hlt
+use TrackUtils          v1r56   Tr
 
 # Declare this as a container package
 apply_pattern container_package

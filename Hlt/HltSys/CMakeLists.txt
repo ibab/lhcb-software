@@ -26,6 +26,8 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          DAQ/DAQSys #TEMP
                          Det/DetCond #TEMP
                          Hlt/HltDAQ #TEMP
+                         Hlt/HltServices #TEMP
+                         Tr/TrackUtils #TEMP
                          Phys/LoKiTrigger)
 
 
