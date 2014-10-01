@@ -24,6 +24,7 @@
 #include "MCInterfaces/IDecayTool.h"
 #include "Generators/IVertexSmearingTool.h"
 #include "MCInterfaces/IFullGenEventCutTool.h"
+#include "MCInterfaces/IGenCutTool.h"
 #include "Generators/GenCounters.h"
 #include "GenEvent/HepMCUtils.h"
 
@@ -53,12 +54,15 @@ ParticleGun::ParticleGun( const std::string& name,
     m_sampleGenerationTool  ( 0 ) ,
     m_vertexSmearingTool    ( 0 ) ,
     m_fullGenEventCutTool   ( 0 ) ,
+    m_genCutTool            ( 0 ) ,
     m_nEvents               ( 0 ) ,
     m_nAcceptedEvents       ( 0 ) ,
     m_nParticles            ( 0 ) ,
     m_nAcceptedParticles    ( 0 ) ,
     m_nBeforeFullEvent      ( 0 ) ,
-    m_nAfterFullEvent       ( 0 ) {
+    m_nAfterFullEvent       ( 0 ) ,
+    m_nBeforeCut            ( 0 ) ,
+    m_nAfterCut             ( 0 ) {
   // Generation Method
   declareProperty ( "ParticleGunTool" ,
                     m_particleGunToolName = "GenericGun" ) ;
@@ -83,6 +87,10 @@ ParticleGun::ParticleGun( const std::string& name,
   // Tool name to cut on full event
   declareProperty( "FullGenEventCutTool" ,
                    m_fullGenEventCutToolName = "" ) ;
+  // Tool name to cut on generator-level
+  declareProperty( "GenCutTool" ,
+                   m_genCutToolName = "" ) ;
+
 }
 
 //=============================================================================
@@ -96,6 +104,7 @@ ParticleGun::~ParticleGun() {};
 StatusCode ParticleGun::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize( ) ; // Initialize base class
   if ( sc.isFailure() ) return sc ;
+
   debug() << "==> Initialise" << endmsg ;
 
   // Initialization of the Common Flat Random generator if not already done
@@ -140,6 +149,10 @@ StatusCode ParticleGun::initialize() {
   // Retrieve full gen event cut tool
   if ( "" != m_fullGenEventCutToolName ) m_fullGenEventCutTool =
                                            tool< IFullGenEventCutTool >( m_fullGenEventCutToolName , this ) ;
+
+  // Retrieve gen cut tool
+  if ( "" != m_genCutToolName ) m_genCutTool =
+                                           tool< IGenCutTool >( m_genCutToolName , this ) ;
 
   // Message relative to event type
   always()
@@ -236,9 +249,22 @@ StatusCode ParticleGun::execute() {
       unsigned short iPart( 0 ) ;
       for ( itEvents = theEvents->begin() ; itEvents != theEvents->end() ;
             ++itEvents ) {
-        sc = decayEvent( *itEvents ) ;
+        ParticleVector theParticleList ;
+        theParticleList.clear();
+        sc = decayEvent( *itEvents, theParticleList ) ;
         (*itEvents) -> pGenEvt() -> set_event_number( ++iPart ) ;
         if ( ! sc.isSuccess() ) return sc ;
+        // Add Cut tool
+        if ( m_genCutTool ) {
+          if (goodEvent) {
+            ++m_nBeforeCut;
+          }
+          goodEvent = m_genCutTool -> applyCut( theParticleList , theGenEvent ,
+                                                          theGenCollision ) ;
+          if ( goodEvent){
+            m_nAfterCut++ ;
+          }
+        }
       }
     }
 
@@ -335,6 +361,8 @@ StatusCode ParticleGun::finalize() {
 
   printEfficiency( info() , "full event cut" , m_nAfterFullEvent ,
                    m_nBeforeFullEvent ) ;
+  printEfficiency( info() , "cut" , m_nAfterCut ,
+                   m_nBeforeCut ) ;
   info() << endmsg ;
 
   m_particleGunTool -> printCounters() ;
@@ -344,6 +372,7 @@ StatusCode ParticleGun::finalize() {
   if ( 0 != m_particleGunTool ) release( m_particleGunTool ) ;
   if ( 0 != m_vertexSmearingTool ) release( m_vertexSmearingTool ) ;
   if ( 0 != m_fullGenEventCutTool ) release( m_fullGenEventCutTool ) ;
+  if ( 0 != m_genCutTool ) release( m_genCutTool ) ;
 
   return GaudiAlgorithm::finalize( ) ; // Finalize base class
 }
@@ -352,7 +381,8 @@ StatusCode ParticleGun::finalize() {
 // Decay in the event all particles which have been left stable by the
 // production generator
 //=============================================================================
-StatusCode ParticleGun::decayEvent( LHCb::HepMCEvent * theEvent ) {
+StatusCode ParticleGun::decayEvent( LHCb::HepMCEvent * theEvent,
+                                    ParticleVector & theParticleList ) {
   using namespace LHCb;
   m_decayTool -> disableFlip() ;
   StatusCode sc = StatusCode::SUCCESS ;
@@ -383,6 +413,7 @@ StatusCode ParticleGun::decayEvent( LHCb::HepMCEvent * theEvent ) {
         else thePart -> set_status( HepMCEvent::DecayedByDecayGen ) ;
 
         sc = m_decayTool -> generateDecay( thePart ) ;
+        theParticleList.push_back( thePart );
         if ( ! sc.isSuccess() ) return sc ;
       }
     }

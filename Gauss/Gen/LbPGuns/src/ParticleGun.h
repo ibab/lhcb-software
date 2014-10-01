@@ -13,6 +13,7 @@ class IDecayTool             ;
 class ISampleGenerationTool  ;
 class IVertexSmearingTool    ;
 class IFullGenEventCutTool   ;
+class IGenCutTool   ;
 
 namespace HepMC {
 class GenEvent ;
@@ -27,6 +28,7 @@ class GenEvent ;
  */
 class ParticleGun : public GaudiAlgorithm {
  public:
+  typedef std::vector< HepMC::GenParticle * > ParticleVector ;
   /// Standard constructor
   ParticleGun( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -54,7 +56,7 @@ class ParticleGun : public GaudiAlgorithm {
 
 protected:
   /// Decay the event with the IDecayTool.
-  StatusCode decayEvent( LHCb::HepMCEvent * theEvent ) ;
+  StatusCode decayEvent( LHCb::HepMCEvent * theEvent, ParticleVector & particleList ) ;
 
   /// Perpare the particle containers
   void prepareInteraction( LHCb::HepMCEvents * theEvents ,
@@ -86,6 +88,8 @@ private:
 
   IFullGenEventCutTool     * m_fullGenEventCutTool    ; ///< Cut tool
 
+  IGenCutTool              * m_genCutTool    ; ///< Cut tool
+
   /// Name of the IParticleGunTool (set by options)
   std::string m_particleGunToolName ;
 
@@ -100,6 +104,9 @@ private:
 
   /// Name of the IFullGenEventCutTool (set by options)
   std::string m_fullGenEventCutToolName  ;
+
+  /// Name of the IGenCutTool (set by options)
+  std::string m_genCutToolName  ;
   
   /// Name to put in the event
   std::string m_particleGunName ;
@@ -118,5 +125,11 @@ private:
 
   /// Counter of events after the full event generator level cut
   unsigned int m_nAfterFullEvent ;
+
+  /// Counter of events before the generator level cut  
+  unsigned int m_nBeforeCut ;
+
+  /// Counter of events after the generator level cut
+  unsigned int m_nAfterCut ;
 };
 #endif // PARTICLEGUNS_PARTICLEGUN_H

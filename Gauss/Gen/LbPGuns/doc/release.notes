@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2014-10-01 - Stefanie Reichert
+ - Modified ParticleGun.cpp and ParticleGun.h to enable usage of GenCutTools like DaughtersInLHCb.
+
 !========================== LbPGuns v5r0 2014-07-03 ==========================
 ! 2014-07-03 - Gloria Corti
  - Use new data package with v*. Exact version to be set in Gauss itself.
