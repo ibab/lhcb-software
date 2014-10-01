@@ -15,9 +15,9 @@
 //#include "Trending/ISimpleTrendWriter.h"
 //#include "OnlineBase/WT/wtdef.h"
 //#include "OnlineBase/WT/wt_facilities.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include "/cvmfs/lhcb.cern.ch/lib/lcg/external/ROOT/5.32.02/x86_64-slc5-gcc46-opt/root/include/TMinuit.h"
+#include <cstdio>
+#include <cstdlib>
+#include "TMinuit.h"
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,AlignDrv)
 
 using namespace LHCb;

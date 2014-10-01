@@ -7,8 +7,8 @@
 #include "GaudiOnline/OnlineService.h"
 #include "GaudiKernel/IIncidentSvc.h"
 #include "RTL/rtl.h"
-#include "Alignment/IAlignUser.h"
-#include "Alignment/IAlignSys.h"
+#include "OnlineAlign/IAlignUser.h"
+#include "OnlineAlign/IAlignSys.h"
 
 namespace LHCb
 {

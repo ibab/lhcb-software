@@ -10,8 +10,8 @@
 #include "RTL/rtl.h"
 #include "Gaucho/CounterTask.h"
 #include "Gaucho/BRTL_Lock.h"
-#include "Alignment/IAlignUser.h"
-#include "Alignment/IAlignSys.h"
+#include "OnlineAlign/IAlignUser.h"
+#include "OnlineAlign/IAlignSys.h"
 // Forward declarations
 //class DimService;
 //class ISimpleTrendWriter;
