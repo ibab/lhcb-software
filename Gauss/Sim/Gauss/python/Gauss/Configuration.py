@@ -1779,10 +1779,10 @@ class Gauss(LHCbConfigurableUser):
         gen_t0.FixedNInteractions.NInteractions = 1
     
         # Special signal  (Bc with BcVegPy)
+        pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
+        ecmInGeV = 2*pInGeV
+        txtECM = "upcom ecm "+str(ecmInGeV)
         ## Tmp off 2014-10-01 start
-        ## pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
-        ## ecmInGeV = 2*pInGeV
-        ## txtECM = "upcom ecm "+str(ecmInGeV)
         ## gen_t0.addTool(Special,name="Special")
         ## gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
         ## gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
