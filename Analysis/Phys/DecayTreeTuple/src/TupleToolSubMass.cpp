@@ -79,11 +79,13 @@ StatusCode TupleToolSubMass::fill( const LHCb::Particle*
   std::string decay = property( P->particleID())->name() + " -> [";
   for( unsigned int pos =0; pos < tree.size() ; pos++){
     if( pos >= tree.size())return Warning("Unexpected error",StatusCode::FAILURE);
-    if(msgLevel(MSG::DEBUG))debug() << " Ancestor : " << P->particleID().pid() << " daughter " << pos << " : " << tree[pos]->particleID().pid() << endmsg;
+    //if(msgLevel(MSG::DEBUG))debug() << " Ancestor : " << P->particleID().pid() << " daughter " << pos << " : " << tree[pos]->particleID().pid() << endmsg;
     std::string sep = ( pos != 0) ? "," : "";
     decay += sep +  property( tree[pos]->particleID() )->name();
   }
   decay += "]";
+  if(msgLevel(MSG::DEBUG))debug() << "===> sorted decay structure for " << P->particleID().pid() << " : " << decay << endmsg;
+  
   counter(decay)+=1;
   
 

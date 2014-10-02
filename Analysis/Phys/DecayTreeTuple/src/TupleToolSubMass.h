@@ -59,6 +59,11 @@ public:
   bool operator()(const LHCb::Particle* c1, const LHCb::Particle* c2) {
     int p1 = ( property( c1->particleID())->selfcc() ) ? c1->particleID().pid() : m_sign*c1->particleID().pid();
     int p2 = ( property( c2->particleID())->selfcc() ) ? c2->particleID().pid() : m_sign*c2->particleID().pid();
+    // special case  c1 == c2 but with different decay structure (e.g.  pi0->g(g->ee) : check daughters size
+    if( p1 == p2 && c1->daughters().size() != c2->daughters().size())return c1->daughters().size() > c2->daughters().size() ;
+    // add a complete test of the decay structure (above test won't work for e.g. Bs->phi(KsKs)phi(K+K-) decay
+    // ..
+    // else
     return p1 > p2 ;
   };
 private :
@@ -98,7 +103,7 @@ private :
 
   unsigned int m_max;
   std::vector<std::string> m_subst;
-  std::vector<std::string> m_subst2;
+  std::vector<std::string> m_subst2; 
   LHCb::IParticlePropertySvc* m_ppsvc;
   const LHCb::ParticleProperty* property(std::string name){return (m_ppsvc) ? m_ppsvc->find( name ) : NULL;};    
   const LHCb::ParticleProperty* property(const LHCb::ParticleID pid){return (m_ppsvc) ? m_ppsvc->find( pid ) : NULL;};    
