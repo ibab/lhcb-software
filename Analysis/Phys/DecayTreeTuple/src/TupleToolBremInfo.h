@@ -9,6 +9,8 @@
 #include "Kernel/IParticleTupleTool.h"
 #include "Kernel/IBremAdder.h"
 #include <memory>
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 
 //============================================================================
@@ -29,12 +31,13 @@ public:
                            const LHCb::Particle*,
                            const std::string&,
                            Tuples::Tuple& );
-private:
-
+private :
+  const LHCb::ParticleProperty* property(const LHCb::ParticleID pid){return (m_ppsvc) ? m_ppsvc->find( pid ) : NULL;};
+  LHCb::IParticlePropertySvc* m_ppsvc;
   IBremAdder* m_adder;
   std::vector<std::string> m_parts;
   std::vector<unsigned int> m_pids;
-
+  bool m_dst;
 };
 
 #endif // _TUPLETOOLBREMINFO_H
