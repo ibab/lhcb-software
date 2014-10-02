@@ -6,8 +6,8 @@
 #include "AIDA/IHistogram2D.h"
 
 #include "AlignmentInterfaces/IAlignSolvTool.h"
+#include "AlignmentInterfaces/IAlignUpdateTool.h"
 
-#include "IAlignUpdateTool.h"
 #include "IGetElementsToBeAligned.h"
 #include "IAlignConstraintTool.h"
 #include "IAlignChisqConstraintTool.h"

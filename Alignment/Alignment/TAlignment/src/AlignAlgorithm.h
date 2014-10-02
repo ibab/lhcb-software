@@ -36,6 +36,7 @@
 
 // from AlignmentInterfaces
 #include "AlignmentInterfaces/IAlignSolvTool.h"
+#include "AlignmentInterfaces/IAlignUpdateTool.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
@@ -48,7 +49,6 @@
 #include "ITrackResidualTool.h"
 #include "IVertexResidualTool.h"
 #include "IAlignConstraintTool.h"
-#include "IAlignUpdateTool.h"
 #include "AlignmentElement.h"
 #include "AlElementHistos.h"
 
