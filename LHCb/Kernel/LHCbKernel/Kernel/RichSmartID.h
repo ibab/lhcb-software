@@ -288,7 +288,7 @@ namespace LHCb
     
     /// Constructor from unsigned long int
     explicit RichSmartID( const unsigned long int key ) 
-      : m_key( (LHCb::RichSmartID::KeyType) key & 0x00000000FFFFFFFF ) { }
+      : m_key( (LHCb::RichSmartID::KeyType) ( key & 0x00000000FFFFFFFF ) ) { }
 
     /// Constructor from signed int type
     explicit RichSmartID( int key ) 
@@ -296,7 +296,7 @@ namespace LHCb
 
     /// Constructor from signed long type 
     explicit RichSmartID( const long int key )
-      : m_key( (LHCb::RichSmartID::KeyType) key & 0x00000000FFFFFFFF ) { }
+      : m_key( (LHCb::RichSmartID::KeyType) ( key & 0x00000000FFFFFFFF ) ) { }
     
     /// Pixel level constructor including sub-pixel information
     RichSmartID( const Rich::DetectorType rich,
@@ -306,8 +306,7 @@ namespace LHCb
                  const int pixelRow,
                  const int pixelCol,
                  const int pixelSubRow,
-                 const IDType type = HPDID )
-      : m_key( 0 )
+                 const IDType type = HPDID ) : m_key( 0 )
     {
       setIDType        ( type              );
       setRich          ( rich              );
@@ -325,8 +324,7 @@ namespace LHCb
                  const int pdCol,
                  const int pixelRow,
                  const int pixelCol,
-                 const IDType type = HPDID )
-      : m_key( 0 )
+                 const IDType type = HPDID ) : m_key( 0 )
     {
       setIDType        ( type              );
       setRich          ( rich              );
@@ -341,8 +339,7 @@ namespace LHCb
                  const Rich::Side panel,
                  const int pdNumInCol,
                  const int pdCol,
-                 const IDType type = HPDID )
-      : m_key( 0 )
+                 const IDType type = HPDID ) : m_key( 0 )
     {
       setIDType        ( type              );
       setRich          ( rich              );
@@ -353,8 +350,7 @@ namespace LHCb
     /// PD panel level constructor
     RichSmartID( const Rich::DetectorType rich,
                  const Rich::Side panel,
-                 const IDType type = HPDID )
-      : m_key( 0 )
+                 const IDType type = HPDID ) : m_key( 0 )
     {
       setIDType        ( type  );
       setRich          ( rich  );
@@ -384,13 +380,13 @@ namespace LHCb
     /// > operator
     inline bool operator>( const LHCb::RichSmartID& id ) const
     {
-      return ( key() > id.key() );
+      return ( key() >  id.key() );
     }
 
     /// < operator
     inline bool operator<( const LHCb::RichSmartID& id ) const
     {
-      return ( key() < id.key() );
+      return ( key() <  id.key() );
     }
 
     /// >= operator
