@@ -1,3 +1,8 @@
+! 2014-10-02 - Sean Benson
+ - Added report checker tool.
+ - Tool used to provide safety net if choose new reports but DST has old reports.
+ - Improved ability to choose a lower amount of information when more is available.
+
 ! 2014-09-22 - Marco Clemencic
  - Fixes to the CMake configuration.
 

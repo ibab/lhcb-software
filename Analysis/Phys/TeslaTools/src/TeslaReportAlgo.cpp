@@ -23,7 +23,7 @@ DECLARE_ALGORITHM_FACTORY( TeslaReportAlgo )
 //=============================================================================
 TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
                                     ISvcLocator* pSvcLocator)
-: GaudiAlgorithm ( name , pSvcLocator ), m_dist(NULL)
+: GaudiAlgorithm ( name , pSvcLocator ), m_dist(NULL), m_check(NULL)
 {
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
@@ -51,6 +51,11 @@ StatusCode TeslaReportAlgo::initialize()
   {
     return Error("Unable to retrieve the IDistanceCalculator tool");
   }
+  m_check = tool<IReportCheck>("ReportCheckTool", this );
+  if ( !m_check ) 
+  {
+    return Error("Unable to retrieve the ReportCheckTool");
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -59,8 +64,27 @@ StatusCode TeslaReportAlgo::initialize()
 //=============================================================================
 StatusCode TeslaReportAlgo::execute()
 {
-	
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+  // First thing's first, let's check the reports against the
+  // requested version
+  bool toolow=false;
+  std::stringstream HltLoc;
+  HltLoc << m_inputName << "Decision";
+  int versionNum = m_check->VersionTopLevel( HltLoc.str() );
+  
+  debug() << "VersionNum = " << versionNum << endmsg;
+
+  if( versionNum != 99 ){
+    if( versionNum != m_ReportVersion ) {
+      warning() << "Requested version number does not equal checker response" << endmsg;
+      if( versionNum < m_ReportVersion ) {
+        m_ReportVersion = versionNum;
+        warning() << "For your own safety, I will give you less information than requested, please check report generation" << endmsg;
+      }
+      else toolow = true;
+    }
+  }
+	
   // Set our output locations
   std::stringstream ss_PartLoc;
   ss_PartLoc << m_OutputPref << "/Particles";
@@ -164,8 +188,6 @@ StatusCode TeslaReportAlgo::execute()
   //const LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
   //
   // Go and get the information from the Hlt
-  std::stringstream HltLoc;
-  HltLoc << m_inputName << "Decision";
   const LHCb::HltObjectSummary * MotherRep = selReports->selReport(HltLoc.str().c_str());
 
   if ( msgLevel(MSG::DEBUG) ){ 
@@ -290,6 +312,7 @@ StatusCode TeslaReportAlgo::execute()
             debug() << "Setting mother decay vertex" << endmsg;
             continue;
           }
+          if( (mothersubloop_last==true) && (toolow == true) ) continue;
 
           // do we have a basic particle?
           double d1_ID = (int)Obj_d1->numericalInfo()["0#Particle.particleID.pid"];
@@ -354,6 +377,7 @@ StatusCode TeslaReportAlgo::execute()
                 debug() << "Setting first generation daughter decay vertex" << d1_ID << endmsg;
                 continue;
               }
+              if( (d1_subloop_last==true) && (toolow == true) ) continue;
               
               debug() << "2nd Gen. Daughter ID: " << Obj_d2->numericalInfo()["0#Particle.particleID.pid"] << endmsg;
               // We should have a basic particle now

@@ -25,6 +25,9 @@
 #include "LoKi/Services.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/Particle2Vertex.h"
+//
+#include "ReportCheckTool.h"
+
 /** @class TeslaReportAlgo TeslaReportAlgo.h
  * 
  *
@@ -59,5 +62,6 @@ private:
 	std::string m_OutputPref;
 	int m_ReportVersion; // 1=OldSelReports, 2=Extended (GaudiMap)
         IDistanceCalculator *   m_dist;
+        IReportCheck*   m_check;
 };
 #endif // TESLAREPORTALGO_H
