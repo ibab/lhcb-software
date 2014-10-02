@@ -1,4 +1,5 @@
 <lcgdict>
+  <class name    = "Al::IAlignUpdateTool" />
   <class name    = "IAlignSolvTool" />
   <class name    = "IATrackSelectorTool" />
   <class name    = "IDerivatives" />
