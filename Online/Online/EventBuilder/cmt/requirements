@@ -20,6 +20,6 @@ apply_pattern install_more_includes more=EventBuilder
 library EventBuilder *.cpp -import=AIDA  -import=DIM -import=DAQEvent -import=MDF 
 macro_append EventBuilder_shlibflags ' $(MDFlib_linkopts) -lrt'
 apply_pattern component_library library=EventBuilder
-apply_pattern generate_rootmap library=EventBuilder
+apply_pattern generate_componentlist library=EventBuilder
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
 
