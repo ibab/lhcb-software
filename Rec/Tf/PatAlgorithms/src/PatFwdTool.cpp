@@ -161,43 +161,41 @@ public:
 // find the consequitive range between itBeg and last which has at least bestPlanes planes, and has the smallest lenght
 template <typename Iter>
 boost::iterator_range<Iter> 
-find_shortest_range(Iter begin, Iter last, int bestPlanes ) 
+find_shortest_range(Iter begin, Iter end, int bestPlanes ) 
 {
-  // assert( std::distance(begin,last) >= bestPlanes );
-  // assert( std::is_sorted( begin, last, []( x,y ) { return x->projection()<y->projection() } ) );
+  // assert( std::distance(begin,end) >= bestPlanes );
+  // assert( std::is_sorted( begin, end, []( x,y ) { return x->projection()<y->projection() } ) );
 
-  auto itEnd = std::next(begin, bestPlanes);
+  auto current = std::next(begin, bestPlanes);
   //== get enough planes fired
-  PatFwdPlaneCounter planeCount1( begin, itEnd );
-  itEnd = planeCount1.addHitsUntilEnough( itEnd, last, bestPlanes );
-  if ( planeCount1.nbDifferent() < bestPlanes ) return {last,last};
+  PatFwdPlaneCounter planeCount1( begin, current );
+  current = planeCount1.addHitsUntilEnough( current, end, bestPlanes );
+  if ( planeCount1.nbDifferent() < bestPlanes ) return {end,end};
 
-  double minDist = proj_distance(begin,itEnd) ;
+  double minDist = proj_distance(begin,current) ;
 #if 0
   if ( UNLIKELY(isDebug) ) {
     debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
-                       minDist, (*begin)->projection(), (*std::prev(itEnd))->projection(), bestPlanes )
+                       minDist, (*begin)->projection(), (*std::prev(current))->projection(), bestPlanes )
             << endmsg;
   }
 #endif
   //== Better range ? Remove first, try to complete, measure spread...
-  auto itBest = begin;
-  auto itLast = itEnd;
-  while ( itEnd != last &&  planeCount1.nbDifferent() >= bestPlanes ) {
+  auto bestRange = boost::make_iterator_range(begin,current);
+  while ( current != end &&  planeCount1.nbDifferent() >= bestPlanes ) {
     planeCount1.removeHit( *begin );
     ++begin;
-    itEnd = planeCount1.addHitsUntilEnough( itEnd, last, bestPlanes );
+    current = planeCount1.addHitsUntilEnough( current, end, bestPlanes );
     if ( planeCount1.nbDifferent() >= bestPlanes ) {
-      auto dist = proj_distance( begin, itEnd ) ;
+      auto dist = proj_distance( begin, current ) ;
       if ( dist < minDist ) {
         minDist = dist;
-        itBest = begin;
-        itLast = itEnd;
+        bestRange = boost::make_iterator_range(begin,current);
         bestPlanes = std::max( bestPlanes, planeCount1.nbDifferent() );
 #if 0
         if ( isDebug ) {
           debug() << format( " better range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
-                             minDist, (*begin)->projection(), (*(itEnd-1))->projection(), bestPlanes )
+                             minDist, (*begin)->projection(), (*(current-1))->projection(), bestPlanes )
                   << endmsg;
         }
 #endif
@@ -205,7 +203,7 @@ find_shortest_range(Iter begin, Iter last, int bestPlanes )
     }
   }
   //== OK, itBest is the start...
-  return { itBest, itLast };
+  return bestRange;
 }
 
 template <typename Iter1, typename Iter2, typename Predicate>
@@ -262,6 +260,15 @@ void select_hits_in_best_region_only(Iter begin, Iter end)
   }
 }
 
+template <typename Iterator1, typename Iterator2>
+void updateHitsForTrack ( const PatFwdTrackCandidate& track, Iterator1&& begin, Iterator2&& end, double zRef ) {
+    auto z0=zRef;
+    auto y0=track.y(-z0);
+    std::for_each( std::forward<Iterator1>(begin), std::forward<Iterator2>(end) , 
+                   [y0,z0,&track](PatForwardHit *hit) {
+          updateHitForTrack( hit, y0, track.ySlope( hit->z()-z0 ) ); // does not change 'selected' 
+    } );
+}
 
 DECLARE_TOOL_FACTORY( PatFwdTool )
 
@@ -461,7 +468,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   int minHit = std::distance(itBeg,itEnd) / 2;
   m_zMagnet = updateTrackAndComputeZMagnet( track, track.coords()[minHit] ); // how to get this to the fitXProjection inside fitStereoCandidate????? Add it to the the track!!!
 
-  updateHitsForTrack( track, itBeg, itEnd );
+  updateHitsForTrack( track, itBeg, itEnd, m_zReference );
   setRlDefault( track, itBeg, itEnd );
 
   bool   first = true;
@@ -525,7 +532,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   if ( isDebug ) debug() << "+++ Stereo fit, planeCount " << planeCount.nbDifferent()
                          << " size " << track.coordEnd() - track.coordBegin() << endmsg;
 
-  updateHitsForTrack( track, track.coordBegin(), track.coordEnd() );
+  updateHitsForTrack( track, track.coordBegin(), track.coordEnd(), m_zReference );
   setRlDefault( track, track.coordBegin(), track.coordEnd() );
 
   double highestChi2 = 10*maxChi2;
@@ -534,31 +541,13 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   while ( highestChi2 > maxChi2 ) {
     //== Improve X parameterisation
     if (!fitXProjection( track, track.coordBegin(), track.coordEnd(), false )) { // uses m_zMagnet -- move it into PatFwdTrackCandidate...
-      if( UNLIKELY( isDebug ) ) debug() << "Abandon: Matrix not positive definite." << endmsg;
+      if( UNLIKELY( isDebug ) ) debug() << "Abandon: Matrix x-fit not positive definite." << endmsg;
 	  return false;
     }
 
-    for ( unsigned int kk = 0; kk < 10; ++kk ) {
-      PatFwdFitLine line;
-      for ( PatFwdHit *hit : track.coords() ) {
-        if ( !hit->isSelected()  || hit->hit()->layer() == 0 || hit->hit()->layer() == 3) continue;
-        line.addPoint( hit->z() - m_zReference
-                     , - distanceForFit( track, hit ) / hit->hit()->dxDy()
-                     , hit->hit()->weight() );
-      }
-      if (!line.solve()) {
-        if( UNLIKELY( isDebug ) ) 
-          debug() << "Abandon: Matrix not positive definite." << endmsg;
-        return false;
-      }
-      double day = line.ax();
-      double dby = line.bx();
-      if( UNLIKELY( isDebug ) ) 
-        verbose() << "    day " << day << " dby " << dby << endmsg;
-
-      track.updateParameters( 0., 0., 0., 0., day, dby );
-      updateHitsForTrack( track, track.coordBegin(), track.coordEnd() );
-      if ( fabs( day ) < 0.05 && fabs( dby ) < 0.00005 ) break;
+    if (!fitYProjection(track, track.coordBegin(), track.coordEnd())) {
+      if( UNLIKELY( isDebug ) ) debug() << "Abandon: Matrix y-fit not positive definite." << endmsg;
+	  return false;
     }
 
     highestChi2 = 0;
@@ -605,6 +594,34 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 //=========================================================================
 //  fit to projection.
 //=========================================================================
+bool PatFwdTool::fitYProjection( PatFwdTrackCandidate& track,
+                                 PatFwdHits::const_iterator itBeg,
+                                 PatFwdHits::const_iterator itEnd ) const 
+{
+    auto accept = [=](const PatFwdHit* hit) {
+      return !( !hit->isSelected()  || hit->hit()->layer() == 0 || hit->hit()->layer() == 3) ;
+    };
+    bool isDebug = msgLevel( MSG::DEBUG );
+
+    for ( unsigned int kk = 0; kk < 10; ++kk ) {
+      PatFwdFitLine line;
+      std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
+        if (accept(hit)) line.addPoint( hit->z() - m_zReference
+                                      , - distanceForFit( track, hit ) / hit->hit()->dxDy()
+                                      , hit->hit()->weight() );
+      } );
+      if (!line.solve()) return false;
+      double day = line.ax();
+      double dby = line.bx();
+      if( UNLIKELY( isDebug ) ) verbose() << "    day " << day << " dby " << dby << endmsg;
+
+      track.updateParameters( 0., 0., 0., 0., day, dby );
+      updateHitsForTrack( track, track.coordBegin(), track.coordEnd(), m_zReference );
+      if ( fabs( day ) < 0.05 && fabs( dby ) < 0.00005 ) break;
+    }
+    return true;
+}
+
 //TODO: remove the 'onlyXPlanes' option, move selection to caller
 template <bool withoutBField>
 bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
@@ -632,8 +649,8 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
   for ( unsigned int kk = 0 ; kk < 10  ; ++kk ) {
     auto curve = make_curve(track);
     std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
-      if (accept(hit)) curve.addPoint( hit->z() - m_zReference, 
-                                       distanceForFit( track, hit ),
+      if (accept(hit)) curve.addPoint( hit->z()-m_zReference, 
+                                       distanceForFit(track, hit),
                                        hit->hit()->weight() );
     } );
     if (!curve.solve()) return false;

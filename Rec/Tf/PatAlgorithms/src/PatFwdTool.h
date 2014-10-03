@@ -46,7 +46,7 @@ public:
 private:
   double  updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, const PatFwdHit* hit ) const;
   template <bool withoutBField, typename... Hits>
-  std::array<double,sizeof...(Hits)> xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, Hits... hits ) const ;
+  std::array<double,sizeof...(Hits)> xAtReferencePlane( const PatFwdTrackCandidate& track, double zMagnet, Hits... hits ) const;
 public:
 
   double zReference() const { return m_zReference; }
@@ -69,22 +69,14 @@ private:
   return LIKELY(!m_withoutBField) ? fitXProjection_<false>( track, itBeg, itEnd, onlyXPlanes )
                                   : fitXProjection_<true> ( track, itBeg, itEnd, onlyXPlanes );
   }
+  bool fitYProjection( PatFwdTrackCandidate& track, 
+                       PatFwdHits::const_iterator itBeg,
+                       PatFwdHits::const_iterator itEnd ) const ;
 
 public:
   void setRlDefault ( PatFwdTrackCandidate& track,
                       PatFwdHits::const_iterator itBeg,
                       PatFwdHits::const_iterator itEnd ) const;
-
-  template <typename Iterator1, typename Iterator2>
-  void updateHitsForTrack ( const PatFwdTrackCandidate& track, Iterator1&& begin, Iterator2&& end ) const {
-      auto z0=m_zReference; 
-      auto y0=track.y(-z0);
-      std::for_each( std::forward<Iterator1>(begin), std::forward<Iterator2>(end) , 
-                     [y0,z0,&track](PatForwardHit *hit) {
-            updateHitForTrack( hit, y0, track.ySlope( hit->z()-z0 ) );
-      } );
-  }
-
 
   template <typename Iterator1,typename Iterator2>
   void setXAtReferencePlane( const PatFwdTrackCandidate& track, Iterator1&& begin, Iterator2&& end) const {
