@@ -77,7 +77,7 @@ StatusCode TupleToolBremInfo::fill(const Particle*,
 
   
   bool filltuple = true;
-  if( P->isBasicParticle() ){
+  if( P->isBasicParticle() && P->proto() != NULL && P->proto()->track() != NULL ){
     LHCb::CaloMomentum brem =m_adder->bremMomentum( P, Gaudi::Utils::toString(P->particleID().pid()) );
     if ( msgLevel(MSG::VERBOSE) ){ // https://savannah.cern.ch/bugs/?92524
       verbose() << "Multi : " << brem.multiplicity() << endmsg ;
