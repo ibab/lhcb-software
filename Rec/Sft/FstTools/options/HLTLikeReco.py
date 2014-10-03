@@ -2,6 +2,8 @@ from Configurables import Brunel
 from Configurables import MessageSvc
 from Configurables import RecMoniConf
 from Configurables import GaudiSequencer, PrTrackAssociator, PrChecker
+from Configurables import TrackResChecker, MCReconstructible, MCParticleSelector
+from Configurables import HitEffPlotter, TrackMonitor
 
 from GaudiConf import IOHelper
 import Gaudi.Configuration as GC
@@ -19,10 +21,10 @@ Brunel().InputType = "DIGI"
 Brunel().WithMC = True
 Brunel().PrintFreq = 100
 Brunel().Simulation = True
-Brunel().EvtMax = 1000
+Brunel().EvtMax = 10000
 Brunel().CondDBtag = 'sim-20131023-vc-md100' # use the mu100 for MagUp data
 Brunel().DDDBtag = 'dddb-20130929-1'
-Brunel().DatasetName = "full-hlt-plus-offline-noSkipping"
+Brunel().DatasetName = "hlt-offline-all_velo_LHCbID"
 
 MessageSvc().Format = '% F%50W%S%7W%R%T %0W%M'
 
@@ -31,6 +33,7 @@ staged = StagedRecoConf()
 # container, remove OfflienFwd if you do not
 # care for it
 staged.AddToBest = ["Fwd1", "Fwd2", "OfflineFwd", "Match"]
+#staged.AddToBest = ["GhostBustedFwd", "OfflineFwd", "Match"]
 
 # sim://MC/Dev/Beam6500GeV-RunII-MagDown-Nu1.5-25ns-Pythia8/Sim08e/30000000 ( minbias )/XDIGI
 #
@@ -47,10 +50,34 @@ def setup_mc_truth_matching():
     GaudiSequencer("CaloBanksHandler").Members = []
     GaudiSequencer("DecodeTriggerSeq").Members = []
     GaudiSequencer("MCLinksTrSeq").Members = ["PrLHCbID2MCParticle", "PrTrackAssociator"]
-    GaudiSequencer("CheckPatSeq" ).Members = ["PrChecker"]
+    GaudiSequencer("CheckPatSeq" ).Members = ["PrChecker",
+                                              "TrackMonitor",
+                                              "HitEffPlotter",
+                                              "TrackResChecker",
+                                              ]
+
+    track_location = "/Event/Fst/Track/Best"
     
     PrTrackAssociator().RootOfContainers = "/Event/Fst/Track"
 
+    track_monitor = TrackMonitor()
+    track_monitor.TracksInContainer = track_location
+
+    hit_eff = HitEffPlotter()
+    hit_eff.InputCollection = track_location
+    
+    res_checker = TrackResChecker("TrackResChecker")
+    res_checker.addTool(MCReconstructible, name="Selector")
+    res_checker.Selector.addTool(MCParticleSelector, name="Selector")
+    res_checker.Selector.Selector.rejectElectrons = True
+    res_checker.Selector.Selector.rejectInteractions = True
+    res_checker.Selector.Selector.zInteraction = 9400.
+    res_checker.HistoPrint = False
+    res_checker.StatPrint = False
+    res_checker.FullDetail = False
+    res_checker.SplitByType = True
+    res_checker.TracksInContainer = track_location
+    
     PrChecker().TriggerNumbers = True
     PrChecker().Eta25Cut = True
     PrChecker().WriteVeloHistos = 2

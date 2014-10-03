@@ -4,6 +4,14 @@
 ! Purpose     : First Software Trigger tools for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-10-03 - Tim Head
+ - Added recycling of ghost hits in HLT
+ - Several 'checkers' were added to monitor the performance
+ - this configuration achieves offline tracking efficiency with
+   slightly increased ghost rate, or lower ghost rate with small
+   decrease in efficiency in the case were hits are veto'ed in the
+   'offline forward' tracking algorithm
+
 ! 2013-05-04 - Tim Head
  - Record state of play before move to Brunel v44r3p1
 

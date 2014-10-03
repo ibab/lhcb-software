@@ -427,7 +427,8 @@ from Configurables import STOnlinePosition
 from Configurables import TrackEventCloneKiller, TrackCloneFinder
 from Configurables import TrackEventFitter, TrackMasterFitter
 from Configurables import TrackContainerCopy, TrackSelector
-from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
+from Configurables import RecycleGhostHits
+from TrackFitter.ConfiguredFitters import ConfiguredHltFitter, ConfiguredMasterFitter
 
 
 class StagedRecoConf(LHCbConfigurableUser):
@@ -460,7 +461,7 @@ class StagedRecoConf(LHCbConfigurableUser):
 
         velo_decoder = DecodeVeloRawBuffer("DecodeVeloClusters2")
         velo_decoder.MaxVeloClusters = 10000
-        velo_decoder.DecodeToVeloClusters = False
+        velo_decoder.DecodeToVeloClusters = True
         createTTClusters = decodersForBank(DecoderDB, "TT")
         createITClusters = decodersForBank(DecoderDB, "IT")
         fst_seq.Members += [velo_decoder]
@@ -520,6 +521,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         fwd_hlt1_tool.UseMomentumEstimate = True
         fwd_hlt1_tool.UseWrongSignWindow = True
         fwd_hlt1_tool.WrongSignPT = 2000
+        fwd_hlt1_tool.PreselectionPT = 0.8 * self.getProp("Fwd1MinPT")
         fwd_hlt1_tool.Preselection = True
         
         fst_seq.Members += [fwd_hlt1]
@@ -530,6 +532,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         # XXX should this run on VeloTT or just Velo tracks?
         fwd_hlt2 = PatForward("FstFwdHlt2")
         fwd_hlt2.InputTracksName = veloTT.getProp("OutputTracksName")
+        #fwd_hlt2.InputTracksName = velo_tracking.getProp("OutputTracksName")
         fwd_hlt2.OutputTracksName = self.getProp("RootInTES") + "Track/FwdHLT2"
         fwd_hlt2.maxOTHits = max_OT_hits
         fwd_hlt2.DeltaNumberInT = 1E8
@@ -548,6 +551,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         fwd_hlt2_tool.UseMomentumEstimate = True
         fwd_hlt2_tool.UseWrongSignWindow = True
         fwd_hlt2_tool.WrongSignPT = 2000
+        fwd_hlt2_tool.PreselectionPT = 0.8 * self.getProp("Fwd2MinPT")
         fwd_hlt2_tool.Preselection = True
         
         fst_seq.Members += [fwd_hlt2]
@@ -562,12 +566,26 @@ class StagedRecoConf(LHCbConfigurableUser):
         merge_fwd.InputLocations = [fwd_hlt1.getProp("OutputTracksName"),
                                     fwd_hlt2.getProp("OutputTracksName"),
                                     ]
-        merge_fwd.OutputLocation = self.getProp("RootInTES") + "Track/Forward"
+        merge_fwd.OutputLocation = self.getProp("RootInTES") + "Track/TmpForward"
 
         fst_seq.Members += [merge_fwd]
         
-        # XXX fit tracks then release hits used by "bad" tracks so they
-        # XXX can be reused by the seeding
+        # fit tracks then release hits used by "ghost" tracks so they
+        # can be reused by the seeding
+        fast_fit = TrackEventFitter("FstFastForwardFit")
+        # Fit all long tracks which were merged by the clone killer
+        fast_fit.TracksInContainer = merge_fwd.getProp("OutputLocation")
+        fast_fit.TracksOutContainer = self.getProp("RootInTES") + "Track/ForwardFitted"
+        fast_fit.addTool(TrackMasterFitter, name='Fitter')
+        fitter = ConfiguredHltFitter(getattr(fast_fit, 'Fitter'))
+
+        recycle_ghosts = RecycleGhostHits("FstRecycler")
+        recycle_ghosts.inputLocation = fast_fit.getProp("TracksOutContainer")
+        recycle_ghosts.outputLocation = self.getProp("RootInTES") + "Track/Forward"
+        max_chi2 = TrackSelector("MaxChi2Selector")
+        max_chi2.MaxChi2Cut = 5
+        recycle_ghosts.Selector = max_chi2
+        fst_seq.Members += [fast_fit, recycle_ghosts]
         
         # Seeding
         seeding = PatSeeding("FstSeeding")
@@ -578,7 +596,8 @@ class StagedRecoConf(LHCbConfigurableUser):
         seeding.PatSeedingTool.ForwardCloneMergeSeg = True
         seeding.PatSeedingTool.NDblOTHitsInXSearch = 2
         # tracks from the two Forward instances are used to flag hits as used
-        seeding.PatSeedingTool.InputTracksName = merge_fwd.getProp("OutputLocation")
+        #seeding.PatSeedingTool.InputTracksName = merge_fwd.getProp("OutputLocation")
+        seeding.PatSeedingTool.InputTracksName = recycle_ghosts.getProp("outputLocation")
         seeding.PatSeedingTool.MinMomentum = 1000
         seeding.PatSeedingTool.MaxOTHits = max_OT_hits
 
@@ -608,10 +627,14 @@ class StagedRecoConf(LHCbConfigurableUser):
         offline_fwd.DeltaNumberInT = 1E8
         offline_fwd.DeltaNumberInTT = 1E8
         offline_fwd.MaxNVelo = 1E8
-        
+
+        # With this enabled we achieve lower ghostrate but also lose 1% efficiency
         #offline_fwd.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
         #offline_fwd.UsedLHCbIDToolName = "TrackUsedLHCbID"
-        #offline_fwd.TrackUsedLHCbID.inputContainers = [merge_fwd.getProp("OutputLocation")]
+        ##offline_fwd.TrackUsedLHCbID.inputContainers = [merge_fwd.getProp("OutputLocation")]
+        #offline_fwd.TrackUsedLHCbID.inputContainers = [recycle_ghosts.getProp("outputLocation"),
+        #                                               #matching.getProp("MatchOutput")
+        #                                               ]
         #offline_fwd.TrackUsedLHCbID.selectorNames = ['ForwardSelector']
         
         offline_fwd.addTool(PatForwardTool)
@@ -637,6 +660,8 @@ class StagedRecoConf(LHCbConfigurableUser):
             merge_to_best.append(offline_fwd.getProp("OutputTracksName"))
         if "MergedFwd" in self.getProp("AddToBest"):
             merge_to_best.append(merge_fwd.getProp("OutputLocation"))
+        if "GhostBustedFwd" in self.getProp("AddToBest"):
+            merge_to_best.append(recycle_ghosts.getProp("outputLocation"))
         if "Match" in self.getProp("AddToBest"):
             merge_to_best.append(matching.getProp("MatchOutput"))
         
@@ -658,10 +683,17 @@ class StagedRecoConf(LHCbConfigurableUser):
         fast_fit.TracksOutContainer = self.getProp("RootInTES") + "Track/FittedBest"
         fast_fit.addTool(TrackMasterFitter, name='Fitter')
         fitter = ConfiguredHltFitter(getattr(fast_fit, 'Fitter'))
+        #fitter = ConfiguredMasterFitter(getattr(fast_fit, 'Fitter'),
+        #                                FieldOff=False,
+        #                                SimplifiedGeometry=False,
+        #                                NoDriftTimes=False,
+        #                                KalmanSmoother=False,
+        #                                ApplyMaterialCorrections=True,
+        #                                )
 
         fst_seq.Members += [fast_fit]
-
-
+        
+        
         # Remove ghosts by requiring chi2/ndof < 5, similar to TrackBestTrackCreator
         ghost_killer = TrackContainerCopy("FstGhostKiller")
         ghost_killer.inputLocation = fast_fit.getProp("TracksOutContainer")
