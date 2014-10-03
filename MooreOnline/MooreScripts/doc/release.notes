@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-09-05 - Eric van Herwijnen
+ - Do not enable the runchange handler for Commissioning_OTCosmics in runOnline.py
+
 !========================= MooreScripts v1r5 2014-09-26 =========================
 ! 2014-09-05 - Eric van Herwijnen
  - from MooreHacks.MooreHacksConf import etc. in runOnline.py

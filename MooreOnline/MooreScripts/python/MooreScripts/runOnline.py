@@ -6,13 +6,13 @@ from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
 import logging
 PrintOff(999)
 InstallRootLoggingHandler(level = logging.CRITICAL)
-import sys
+#import sys
 # never search for anything from current directory...
 #if sys.path[0]=='' : sys.path.pop(0)
-from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
-import logging
-PrintOff(999)
-InstallRootLoggingHandler(level = logging.CRITICAL)
+#from GaudiKernel.ProcessJobOptions import PrintOff, InstallRootLoggingHandler
+#import logging
+#PrintOff(999)
+#InstallRootLoggingHandler(level = logging.CRITICAL)
 
 
 def start(**kwargs) :
@@ -53,7 +53,7 @@ def start(**kwargs) :
 
     #default is OK moore.UseDBSnapshot = True
     #default is OK moore.IgnoreDBHeartBeat = True
-    mooreOnline.EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
+    mooreOnline.EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough', 'Commissioning_OTCosmics'] )
     mooreOnline.PartitionName = OnlineEnv.PartitionName
     
     ## is this still needed??? YES -- the run_XYZ.xml files are not generated for FEST...
