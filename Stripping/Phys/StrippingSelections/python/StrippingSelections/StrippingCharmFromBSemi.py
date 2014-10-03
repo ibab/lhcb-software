@@ -1028,7 +1028,6 @@ def TOSFilter( name = None, sel = None, Specs = None ):
     
     _filter = TisTosParticleTagger(name+"_TriggerTos")
     _filter.TisTosSpecs = Specs
-    _filter.NoRegex = True
     
     _sel = Selection("Sel" + name + "_TriggerTos", RequiredSelections = [ sel ], Algorithm = _filter )
     return _sel

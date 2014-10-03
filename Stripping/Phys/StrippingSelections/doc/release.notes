@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-03 - Mika Vesterinen
+ - remove NoRegex=True from CharmFromBSemi
+
 ! 214-10-01 - Alexander Baranov
  - Added MDSTFlag for B2MuMuMuMu
 
