@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2014-10-03 - Angelo Di Canto
+ - Added HistoSmearVertex
+
 ! 2014-10-01 - Stefanie Reichert
  - Modified ParticleGun.cpp and ParticleGun.h to enable usage of GenCutTools like DaughtersInLHCb.
 
