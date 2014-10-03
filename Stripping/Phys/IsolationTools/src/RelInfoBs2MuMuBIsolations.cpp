@@ -337,150 +337,6 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
 }
 
 
-//=============================================================================
-// IsHLTGood method,used by isolation calculation
-//=============================================================================
-
-void  RelInfoBs2MuMuBIsolations::IsHltGood(Gaudi::XYZPoint o,Gaudi::XYZVector p,
-                                          Gaudi::XYZPoint o_mu,Gaudi::XYZVector
-                                          p_mu, Gaudi::XYZPoint PV, bool& hltgood,
-                                          double& fc) {
-
-  Gaudi::XYZVector rv;
-  Gaudi::XYZPoint vtx;
-  Gaudi::XYZPoint close;
-  Gaudi::XYZPoint close_mu;
-  bool fail(false);
-
-  closest_point(o,p,o_mu,p_mu,close,close_mu,vtx,fail);
-
-  if (fail) {
-    fc = -1.;
-    hltgood = -1;
-  }
-  else {
-    double pete = p.Rho();
-    rv = vtx - PV;
-    double DOCA_b = (close-close_mu).R();
-    double ZZ = rv.z();
-    fc = pointer(rv,p,p_mu);
-    
-    if       ((DOCA_b<0.2) && (ZZ>0.) && (ZZ<30.) && (fc<0.4) && (pete>2.)) hltgood = 1;
-  }
-}
-
-
-//=============================================================================
-// Other functions needed by isolation
-//=============================================================================
-
-double RelInfoBs2MuMuBIsolations::pointer (Gaudi::XYZVector vertex,
-                                          Gaudi::XYZVector p, Gaudi::XYZVector
-                                          p_mu)  {
-  double pt=p.Rho()+p_mu.Rho();
-  Gaudi::XYZVector ptot(p+p_mu);
-  double temp = arcosine(vertex,ptot);
-  double  num=ptot.R()*sin(temp);
-  double  den=(num+pt);
-  double fc = num/den;
-  return fc;
-}
-
-//=============================================================================
-
-double RelInfoBs2MuMuBIsolations::getphi(const LHCb::Particle* vdau1, const LHCb::Particle* vdau2){
-  double dphi = vdau1->momentum().Phi() - vdau2->momentum().Phi();
-  return dphi;
-}
-
-//=============================================================================
-double RelInfoBs2MuMuBIsolations::gettheta(const LHCb::Particle* vdau1, const LHCb::Particle* vdau2){
-
-  double dtheta = vdau1->momentum().Eta() -  vdau2->momentum().Eta();
-  return dtheta;
-}
-
-//=============================================================================
-double RelInfoBs2MuMuBIsolations::ratio( double p1, double p2){
-  return fabs(p1 -p2)*(1./fabs(p1+p2));
-}
-
-//=============================================================================
-double RelInfoBs2MuMuBIsolations::IsClose(const LHCb::Particle* p1,const LHCb::Particle* p2) {
-
-  double deta = gettheta(p1,p2);
-  double dphi = getphi(p1,p2);
-  return sqrt(deta*deta+dphi*dphi);
-}
-
-//=============================================================================
-void RelInfoBs2MuMuBIsolations::closest_point(Gaudi::XYZPoint o,Gaudi::XYZVector p,
-                                             Gaudi::XYZPoint o_mu,Gaudi::XYZVector p_mu,
-                                             Gaudi::XYZPoint& close1,
-                                             Gaudi::XYZPoint& close2,
-                                             Gaudi::XYZPoint& vertex, bool& fail) {
-
-  Gaudi::XYZVector v0(o - o_mu);
-  Gaudi::XYZVector v1(p.unit());
-  Gaudi::XYZVector v2(p_mu.unit());
-  Gaudi::XYZPoint temp1(0.,0.,0.);
-  Gaudi::XYZPoint temp2(0.,0.,0.);
-  fail = false;
-  double  d02 = v0.Dot(v2);
-  double  d21 = v2.Dot(v1);
-  double  d01 = v0.Dot(v1);
-  double  d22 = v2.Dot(v2);
-  double  d11 = v1.Dot(v1);
-  double  denom = d11 * d22 - d21 * d21;
-  if (fabs(denom) <= 0.) {
-    close1 = temp1;
-    close2 = temp2;
-    fail = true;
-  }
-  else {
-    double numer = d02 * d21 - d01 * d22;
-    double mu1 = numer / denom;
-    double mu2 = (d02 + d21 * mu1) / d22;
-    close1 = o+v1*mu1;
-    close2 = o_mu+v2*mu2;
-  }
-  vertex = (close1+(close2-close1)*0.5);
-}
-
-
-double RelInfoBs2MuMuBIsolations::arcosine(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
-
-  double num    = (p1.Cross(p2)).R();
-  double den    = p1.R()*p2.R();
-  double seno   = num/den;
-  double coseno = p1.Dot(p2)/den;
-  double alpha  = asin(fabs(seno));
-  if (coseno < 0 ) {
-    alpha = ROOT::Math::Pi() - alpha;
-  }
-  return alpha;
-}
-
-//=============================================================================
-void RelInfoBs2MuMuBIsolations::InCone(Gaudi::XYZPoint o1,
-                                      Gaudi::XYZVector p1,Gaudi::XYZPoint o2,
-                                      Gaudi::XYZVector p2,
-                                      Gaudi::XYZPoint& vtx, double&
-                                      doca, double& angle){
-  Gaudi::XYZPoint rv;
-  Gaudi::XYZPoint close;
-  Gaudi::XYZPoint close_mu;
-  bool fail(false);
-  closest_point(o1,p1,o2,p2,close,close_mu,vtx, fail);
-  if (fail) {
-    doca =-1.;
-    angle=-1.;
-  }
-  else {
-    doca = (close-close_mu).R();
-    angle = arcosine(p1,p2);
-  }
-}
 
 
 //=============================================================================
@@ -521,9 +377,9 @@ StatusCode RelInfoBs2MuMuBIsolations::CDFIsolation(const LHCb::Particle* top,
 	double delta_phi =  part->momentum().Phi() - (*ipp)->momentum().Phi();
 	delta_phi = TMath::Abs(delta_phi);
 	
-	if(!m_IsoTwoBody){
+	//if(!m_IsoTwoBody){
 	  if (delta_phi > TMath::Pi() )  delta_phi = 2*TMath::Pi() - delta_phi;
-	}
+	  //	}
 	
 	double rad_cone = TMath::Sqrt(  (delta_phi*delta_phi + deta*deta) );
 	if (  rad_cone <=1.0)
@@ -554,4 +410,21 @@ StatusCode RelInfoBs2MuMuBIsolations::CDFIsolation(const LHCb::Particle* top,
 
 }
 
+
+//=============================================================================
+// Other functions needed by isolation
+//=============================================================================
+
+double RelInfoBs2MuMuBIsolations::arcosine(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
+
+  double num    = (p1.Cross(p2)).R();
+  double den    = p1.R()*p2.R();
+  double seno   = num/den;
+  double coseno = p1.Dot(p2)/den;
+  double alpha  = asin(fabs(seno));
+  if (coseno < 0 ) {
+    alpha = ROOT::Math::Pi() - alpha;
+  }
+  return alpha;
+}
 
