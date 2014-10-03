@@ -119,7 +119,6 @@ bool extend_range(Iterator& start, Iterator& stop,  Iterator first, Iterator las
       return extended;
 }
 
-
 class RLAmbiguityResolver {
     MsgStream* const m_msg;
     const PatFwdTrackCandidate* const m_track;
@@ -135,14 +134,13 @@ public:
 
     std::pair<double,double> operator()(std::pair<double,double> val, PatFwdHit *prev, PatFwdHit *hit) const {
       //OT : distance to a circle
-      double dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_ca;
-      double dx = hit->driftDistance();
+      auto dist = (hit->x() - m_track->x( hit->z() - m_zRef ))*m_ca;
+      auto dx = hit->driftDistance();
 
-      double distP = dist+dx;
-      double distM = dist-dx;
+      auto residual = std::make_pair( dist + dx, dist - dx );
 
-      double dm = fabs( distM - val.first );
-      double dp = fabs( distP - val.second );
+      auto dm = fabs( residual.second - val.first );
+      auto dp = fabs( residual.first - val.second );
 
       int rl = std::min( dm, dp) > 0.3 ? 0 : dp < dm ? +1 : -1 ; 
       hit->setRlAmb( rl );
@@ -155,7 +153,7 @@ public:
                            hit->hasPrevious(), hit->hasNext(), distM, distP, std::min(dm,dp),rl, -rl ) << endmsg;
       }
 #endif
-      return { distP, distM };
+      return residual;
     }
 };
 
@@ -339,7 +337,7 @@ PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double z_magne
   // only OT hits have a non-zero driftDistance. So this is a NOP for everything else...
   xHit        += double_v{ double(int(hits->hasNext())-int(hits->hasPrevious()))... }
                * double_v{ hits->driftDistance()... };
-  
+
   if (!withoutBField) {
       auto dSlope  = ( xHit - track.xStraight(zMagnet) ) / ( zHit - zMagnet ) - track.slX();
       auto dSl2    = dSlope * dSlope;
@@ -354,6 +352,7 @@ PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double z_magne
   x     += ( xHit - x ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
   return scatter_array<double,sizeof...(Hits)>(x);
 }
+
 // explicitly instantiate the relevant templates...
 #ifdef PATFWDTOOL_VEC
 template std::array<double, 2ul> PatFwdTool::xAtReferencePlane<false,PatForwardHit*, PatForwardHit*>(const PatFwdTrackCandidate&, double, PatForwardHit*, PatForwardHit*) const;
@@ -693,7 +692,7 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
 double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
   double qop(1.0/Gaudi::Units::GeV) ;
   double magscalefactor = m_magFieldSvc->signedRelativeCurrent() ;
-  if( std::abs(magscalefactor) > 1e-6 ) {
+  if ( std::abs(magscalefactor) > 1e-6 ) {
     double bx = track.bx();
     double bx2 = bx * bx;
     double slY2 = track.slY2();

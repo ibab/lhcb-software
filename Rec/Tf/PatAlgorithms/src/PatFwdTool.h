@@ -171,13 +171,6 @@ public:
     return planeCount.nbDifferent() >= minPlanes;
   }
 
-  bool filterOT(const   PatFwdTrackCandidate& track, int minCoord ) const {
-    PatFwdRegionCounter regions( track.coordBegin(), track.coordEnd() );
-    int nbIT = regions.nbInRegion( 2 ) +  regions.nbInRegion( 3 ) +
-               regions.nbInRegion( 4 ) +  regions.nbInRegion( 5 ) ;
-    return ( nbIT < 2 ) && ( regions.nbInRegion( 0 ) + regions.nbInRegion( 1 ) < minCoord );
-  }
-
   double changeInY(const  PatFwdTrackCandidate& track ) const {
     double yOriginal = track.yStraight( m_zReference );
     if (LIKELY(!m_withoutBField))
