@@ -529,13 +529,31 @@ static int _mbm_declare_event (BMID bm, int len, int evtype, const unsigned int*
   ::memcpy(evt.trmask,trmask,sizeof(evt.trmask));
   *free_add = 0;
   *free_size = 0;
-  int status = msg.communicate(bm->reqFifo,bm->fifo);
-  if ( status == MBM_NORMAL ) {
-    *free_add  = (bm->buffer_add + evt.freeAddr);
-    *free_size = evt.freeSize;
-    if ( msg.type != MSG::DECLARE_EVENT ) {
-      ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s instead of expected DECLARE_EVENT",
-		       msg.typeStr(msg.type));
+  int status = msg.write(bm->reqFifo);
+  if ( status == MBM_NORMAL )   {
+    if ( bm->cancelled )  {
+      *free_add  = 0;
+      *free_size = 0;
+      bm->cancelled = false;
+      return MBM_REQ_CANCEL;
+    }
+    status = msg.wait(bm->fifo,&bm->cancelled);
+    if ( status == MBM_NORMAL ) {
+      *free_add  = (bm->buffer_add + evt.freeAddr);
+      *free_size = evt.freeSize;
+      if ( msg.type != MSG::DECLARE_EVENT ) {
+	::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: Got message of type:%s "
+			 "instead of expected DECLARE_EVENT",
+			 msg.typeStr(msg.type));
+      }
+    }
+    else if ( MBM_REQ_CANCEL == status )  {
+      *free_add  = 0;
+      *free_size = 0;
+      bm->cancelled = false;
+    }
+    else {
+      ::lib_rtl_output(LIB_RTL_FATAL,"MBM Error: _mbm_declare_event got message with bad status",msg.status);
     }
   }
   return status;
