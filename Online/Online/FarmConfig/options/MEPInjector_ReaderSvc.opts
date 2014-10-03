@@ -1,0 +1,20 @@
+// SliceReaderSvc.opts
+#include "/group/online/dataflow/options/FEST/Injector_Info.opts"
+ApplicationMgr.HistogramPersistency = "NONE";
+ApplicationMgr.EvtSel               = "NONE";
+ApplicationMgr.EventLoop            = "LHCb::OnlineRunable/EmptyEventLoop";
+ApplicationMgr.Runable              = "LHCb::SLICEReaderSvc/Reader";
+ApplicationMgr.SvcOptMapping        = {
+  "LHCb::OnlineRunable/EmptyEventLoop" , 
+  "LHCb::SLICEReaderSvc/Reader"
+};
+ApplicationMgr.ExtSvc               = {"IncidentSvc","MonitorSvc"};
+ApplicationMgr.OutputLevel          = 5;
+MessageSvc.OutputLevel              = 3;
+
+Reader.OutputLevel                 = 3;
+Reader.IgnoreLumi                  = true;
+Reader.Loop                        = @OnlineEnv.Injector_LoopFiles;
+Reader.BufferName                  = @OnlineEnv.Reader1_Name;
+Reader.PartitionID                 = @OnlineEnv.PartitionID;
+Reader.Requirements = { "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"};

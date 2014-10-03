@@ -1,0 +1,3 @@
+#include "$FARMCONFIGROOT/options/MEPInjector_ReaderSvc.opts"
+Reader.InputFiles = @OnlineEnv.Reader3_Files;
+Reader.BufferName = @OnlineEnv.Reader3_Name;
