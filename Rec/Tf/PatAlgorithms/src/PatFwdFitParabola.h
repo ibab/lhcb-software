@@ -26,15 +26,16 @@ using ROOT::Math::CholeskyDecomp;
 
     void addPoint( double z, double x, double w ) {
       const double dz = 1.e-3*z;
+      const double dz2 = dz * dz;
       m_data[0] += w;
       m_data[1] += w * dz;
-      m_data[2] += w * dz * dz;
-      m_data[3] += w * dz * dz;
-      m_data[4] += w * dz * dz * dz;
-      m_data[5] += w * dz * dz * dz * dz;
+      m_data[2] += w * dz2;
+      m_data[3] += w * dz2;
+      m_data[4] += w * dz * dz2 ;
+      m_data[5] += w * dz2 * dz2;
       m_data[6] += w * x;
       m_data[7] += w * x * dz;
-      m_data[8] += w * x * dz * dz;
+      m_data[8] += w * x * dz2 ;
     }
 
     /// return false if matrix is singular
