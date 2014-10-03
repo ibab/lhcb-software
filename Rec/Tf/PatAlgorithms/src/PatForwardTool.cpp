@@ -18,17 +18,6 @@
 #include "PatFwdPlaneCounter.h"
 #include "PatFwdRegionCounter.h"
 
-constexpr struct compByX_t {
-  template <typename T> bool operator() (const T* hit, double testVal) const
-  {
-    return hit->hit()->xAtYEq0() < testVal;
-  }
-  template <typename T> bool operator() (double testVal, const T* hit)  const
-  {
-    return testVal < hit->hit()->xAtYEq0();
-  }
-} compByX{};
-
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatForwardTool
 //
@@ -287,7 +276,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   int minPlanes = m_minPlanes;  //== Initial value, can be updated later...
 
-  std::vector<PatFwdTrackCandidate> xCandidates;
+  std::vector<PatFwdTrackCandidate> xCandidates; xCandidates.reserve( m_candidates.size() );
 
   int minOTX = int( 1.5 * m_minXPlanes );
   auto accept = [=](const PatFwdTrackCandidate& cnd) {
@@ -302,7 +291,6 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
 
   for( auto& icand : m_candidates ) {
-
     //== Fit the candidate, and store them (fitXCandidate also updates the hits
     while ( m_fwdTool->fitXCandidate( icand, m_maxChi2, m_minXPlanes ) ) {
 
@@ -310,7 +298,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       PatFwdTrackCandidate temp = icand;
       temp.cleanCoords();
       m_fwdTool->chi2PerDoF( temp );  // Compute and store chi2/dof
-      if ( isDebug ) {
+      if ( UNLIKELY(isDebug) ) {
         debug() << "Chi2/nDof = " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
                 << " dist at center " << m_fwdTool->distAtMagnetCenter( temp )
                 << endmsg;
@@ -319,9 +307,9 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       if ( accept(temp) ) xCandidates.push_back( std::move(temp) );
 
       //== tag these coordinates in the original, so that we don't find the same track again
-      for ( auto* hit :  icand ) {
+      std::for_each( std::begin(icand), std::end(icand), [](PatFwdHit* hit) {
         if ( hit->isSelected() ) hit->setIgnored( true );
-      }
+      } );
     }
   }
 
@@ -334,18 +322,19 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
       debugFwdHits( itL );
     }
     if ( !xCandidates.empty() ) debug() << "---- Now get the stereo hits on these ---" << endmsg;
+    nCand=0;
+    for ( PatFwdTrackCandidate& temp :  xCandidates ) {
+      debug() << "--- Candidate " << ++nCand
+              << "  X cord size " << temp.coords().size()
+              << endmsg;
+    }
   }
 
   //== Now try to get space track from these X track.
   std::vector<PatFwdTrackCandidate> goodCandidates;
   int maxPlanes = 0;
 
-  unsigned nCand = 0;
   for ( PatFwdTrackCandidate& temp :  xCandidates ) { //TODO: make this one big 'remove_if'?
-    if( UNLIKELY( isDebug ) )
-      debug() << "--- Candidate " << ++nCand
-              << "  X cord size " << temp.coords().size()
-              << endmsg;
 
     for ( auto *hit : temp.coords() ) hit->setIgnored( false);  // restore normal flag.
     temp.setSelectedCoords( );
@@ -559,7 +548,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
   auto outside_interval = [&](const PatForwardHit* hit) { return interval.outside(hit->projection()); } ;
   auto not_selected = [](const PatForwardHit* hit) { return !hit->isSelected(); };
 
-  double yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
+  auto yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
   auto not_ignored_and_y_compatible = [yCompat](double yRegion) {
         return [yRegion,yCompat](const PatForwardHit* hit) {
                               return !hit->hit()->ignore() &&  
@@ -568,8 +557,8 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
   };
 
   //TODO: use C++14 generalized capture...
-  double ty = track.slY();
-  double y0 = track.yStraight( 0. );
+  auto ty = track.slY();
+  auto y0 = track.yStraight( 0. );
   auto updateOTHitsForTrack = [&](PatFwdHits::iterator first, PatFwdHits::iterator last) {
         std::for_each( first, last, [=](PatForwardHit* hit) { 
                            // approxUpdateOTHitForTrack( hit, y0, ty);
@@ -617,7 +606,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     auto last = isOT(region) ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
                              : updateITHitsForTrack( first, std::end(m_xHitsAtReference) ) ;
     m_fwdTool->setXAtReferencePlane( track, first, last );
-    last = std::remove_if( first, last, outside_interval ) ; 
+    last = std::remove_if( first, last, outside_interval ) ;  // we should be partitioned wrt. outside_interval here... can we utilize that??
     m_xHitsAtReference.erase( last, std::end(m_xHitsAtReference) );
     // make sure we are ordered by the right criterium -- until now, things
     // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
@@ -661,20 +650,20 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     auto lay = 1 + (index/nReg)%2; // {1,2} -- stereo only
     auto sta = index/(2*nReg);
 
-    const Tf::EnvelopeBase* regionB = m_tHitManager->region(sta,lay,region);
-    double dz = regionB->z() - m_fwdTool->zReference();
-    double yRegion = track.y( dz );
+    const auto* regionB = m_tHitManager->region(sta,lay,region);
+    auto dz = regionB->z() - m_fwdTool->zReference();
+    auto yRegion = track.y( dz );
     if (!regionB->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
 
-    double xPred   = track.x( dz );
+    auto xPred   = track.x( dz );
     //== Correct for stereo
-    double xHitMin = xPred - ( fabs( yRegion * regionB->sinT() ) + 40. + tol );
+    auto xHitMin = xPred - ( fabs( yRegion * regionB->sinT() ) + 40. + tol );
 
     bool ot = isOT(region); 
     //== Project in Y, in fact in X but oriented, such that a displacement in Y is a
     //== displacement also in this projectio.
     bool  flipSign = std::signbit( regionB->sinT() );
-    double minProj = tol + int(ot) * 1.5;
+    auto minProj = tol + int(ot) * 1.5;
 
     for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
       if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
@@ -682,7 +671,7 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
       bool ok = ot ? updateOTHit(hit) : updateITHit(hit);
       if (!ok) continue;
 
-      double xRef = hit->x() - xPred;
+      auto xRef = hit->x() - xPred;
       hit->setProjection( flipSign ? -xRef : xRef );
 
       if (  xRef > minProj ) break;
@@ -796,13 +785,13 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
 
   auto rng = fillXList( track ) ;
 
-  auto itP = std::begin(rng);
+  auto iter = std::begin(rng);
   auto sentinel = make_RangeFinder( m_minXPlanes, std::end(rng) );
   double xExtrap = track.xStraight( m_fwdTool->zReference() );
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
-  while ( sentinel( itP ) ) {
-    auto  predicate = make_predicate(*itP) ;
-    auto range = sentinel.next_range( itP, predicate );
+  while ( sentinel( iter ) ) {
+    auto  predicate = make_predicate(*iter) ;
+    auto range = sentinel.next_range( iter, predicate );
     if (!range.empty()) {
         if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
           verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
@@ -821,7 +810,7 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
           }
         }
     }
-    itP = std::end(range);
+    iter = std::end(range);
   }
 }
 
