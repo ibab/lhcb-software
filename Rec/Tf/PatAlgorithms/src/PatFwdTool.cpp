@@ -31,6 +31,23 @@ constexpr struct proj_distance_t {
        { return (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() ; };
 } proj_distance {};
 
+class inRegion {
+    int m_region;
+public:
+    inRegion(int region) : m_region(region) {}
+    template <typename Hit>
+    bool operator()(const Hit* hit) const {
+      unsigned int region = hit->hit()->region();
+      static_assert( 2 ==Tf::RegionID::OTIndex::kNRegions, "bkw compat");
+      if ( region != Tf::RegionID::OT) region+=Tf::RegionID::OTIndex::kNRegions ; // TODO: how does this work??? TfRegionID::OT = 4, which is the 'DetType' of the OT...
+                                                  // FIXME: shouldn't this instead do what PatFwdRegionCounter::region does???
+                                                  // as-is, this 'just' maps IT region 2 and IT region 4 together, and confuses the 
+                                                  // this predicate, as 'r' varies from [0,5], and hence will select 
+      // if ( hit->hit()->type() != Tf::RegionID::OT) region+=Tf::RegionID::OTIndex::kNRegions ; // I suspect this is what was intended... matching the code in PatFwdRegionCounter...
+      return region == m_region;
+    }
+};
+
 template < typename  Iterator, typename Init, typename Function > 
 Init accumulate_adjacent_pairs(Iterator first, Iterator last, Init init, Function fun) {
     if ( first!=last ) {
@@ -223,25 +240,15 @@ void select_hits_in_best_region_only(Iter begin, Iter end)
   int bestRegion = -1;
   double spread = 1000.;
   enum { nPlanes = 6 };
-
-  auto in_region = [](unsigned int r) {
-    return [r](const PatForwardHit* hit) {
-      unsigned int region = hit->hit()->region();
-      if ( region != Tf::RegionID::OT) region+=2; // TODO: how does this work??? TfRegionID::OT = 4, which is the 'DetType' of the OT...
-                                                  // FIXME: shouldn't this instead do what PatFwdRegionCounter::region does???
-                                                  // as-is, this 'just' maps IT region 2 and IT region 4 together, and confuses the 
-                                                  // this predicate, as 'r' varies from [0,5], and hence will select 
-      return region == r;
-    };
-  };
+  enum { nRegions =  Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions };
 
   PatFwdRegionCounter regions{ begin, end };
-  for( unsigned int maxRegion = 0; maxRegion < nPlanes ; ++maxRegion ) {
+  for( int maxRegion = 0; maxRegion != nRegions ; ++maxRegion ) {
     if ( regions.nbInRegion( maxRegion ) < nPlanes ) continue;  // count by plane
    
-    auto predicate = in_region(maxRegion);
-    auto hits = find_first_and_last( begin, end, predicate ); // can we do this with std::equal_range??? are we still sorted by region???
-    if ( hits.second == end ) continue;
+    auto predicate = inRegion{maxRegion};
+    auto hits = find_first_and_last( begin, end, predicate );
+    if ( hits.second == end ) continue; // should never happen, if nbInRegion is at least nPlanes, which is > 1 -- provided the way PatFwdRegionCounter counts regions is the same, which it isn't
 
     double mySpread = (*hits.second)->projection() - (*hits.first)->projection();
     if ( mySpread < spread && count_planes( hits.first, std::next(hits.second), predicate ) == nPlanes ) {
@@ -253,7 +260,7 @@ void select_hits_in_best_region_only(Iter begin, Iter end)
   if ( bestRegion != -1 ) {
     // remove other regions !
     // if( UNLIKELY( isDebug ) ) debug() << "========= Keep only hits of region " << bestRegion << endmsg;
-    auto predicate = in_region(bestRegion);
+    auto predicate = inRegion(bestRegion);
     std::for_each( begin, end, [&](PatForwardHit *hit) {
       if (!predicate(hit)) hit->setSelected( false );
     } );
@@ -722,16 +729,6 @@ double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
   return qop ;
 }
 
-//=========================================================================
-//  Returns center of magnet for velo track
-//=========================================================================
-double PatFwdTool::zMagnet( const PatFwdTrackCandidate& track ) const
-{
-  //== correction behind magnet neglected
-  return  ( m_zMagnetParams[0] +
-            m_zMagnetParams[2] * track.slX2() +
-            m_zMagnetParams[4] * track.slY2() );
-}
 
 
 //=========================================================================

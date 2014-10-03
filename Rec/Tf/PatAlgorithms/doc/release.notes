@@ -9,7 +9,8 @@
  - PatFwdRegionCounter, PatForwardTool: replace some for loops with std::for_each,
    more use of auto, improve formatting
  - PatFwdTool: make updateHitsForTrack a standalone function, factor out the
-   fit in the Y projection
+   fit in the Y projection, inline zMagnet, upgrade inRegion check from lambda
+   to functor
 
 ! 2014-09-19 - Gerhard Raven
  - PatForwardTool: use boost::iterator_range, reduce triple nesting in loop 

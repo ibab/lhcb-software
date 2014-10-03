@@ -171,7 +171,16 @@ public:
   }
 
   double qOverP( const PatFwdTrackCandidate& track ) const;
-  double zMagnet( const PatFwdTrackCandidate& track ) const;
+//=========================================================================
+//  Returns center of magnet for velo track
+//=========================================================================
+  double zMagnet( const PatFwdTrackCandidate& track ) const
+{
+  //== correction behind magnet neglected
+  return  ( m_zMagnetParams[0] +
+            m_zMagnetParams[2] * track.slX2() +
+            m_zMagnetParams[4] * track.slY2() );
+}
   double magscalefactor() const { return m_magFieldSvc->signedRelativeCurrent();} ;
 
 private:
