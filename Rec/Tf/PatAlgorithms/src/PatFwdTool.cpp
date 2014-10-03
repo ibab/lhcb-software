@@ -38,7 +38,6 @@ public:
     template <typename Hit>
     bool operator()(const Hit* hit) const {
       unsigned int region = hit->hit()->region();
-      static_assert( 2 ==Tf::RegionID::OTIndex::kNRegions, "bkw compat");
       if ( region != Tf::RegionID::OT) region+=Tf::RegionID::OTIndex::kNRegions ; // TODO: how does this work??? TfRegionID::OT = 4, which is the 'DetType' of the OT...
                                                   // FIXME: shouldn't this instead do what PatFwdRegionCounter::region does???
                                                   // as-is, this 'just' maps IT region 2 and IT region 4 together, and confuses the 
@@ -189,7 +188,7 @@ find_shortest_range(Iter begin, Iter end, int bestPlanes )
   current = planeCount1.addHitsUntilEnough( current, end, bestPlanes );
   if ( planeCount1.nbDifferent() < bestPlanes ) return {end,end};
 
-  double minDist = proj_distance(begin,current) ;
+  auto minDist = proj_distance(begin,current) ;
 #if 0
   if ( UNLIKELY(isDebug) ) {
     debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
@@ -238,7 +237,7 @@ template <typename Iter>
 void select_hits_in_best_region_only(Iter begin, Iter end)
 {
   int bestRegion = -1;
-  double spread = 1000.;
+  auto spread = 1000.0;
   enum { nPlanes = 6 };
   enum { nRegions =  Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions };
 
@@ -250,7 +249,7 @@ void select_hits_in_best_region_only(Iter begin, Iter end)
     auto hits = find_first_and_last( begin, end, predicate );
     if ( hits.second == end ) continue; // should never happen, if nbInRegion is at least nPlanes, which is > 1 -- provided the way PatFwdRegionCounter counts regions is the same, which it isn't
 
-    double mySpread = (*hits.second)->projection() - (*hits.first)->projection();
+    auto mySpread = (*hits.second)->projection() - (*hits.first)->projection();
     if ( mySpread < spread && count_planes( hits.first, std::next(hits.second), predicate ) == nPlanes ) {
       spread = mySpread;
       bestRegion = maxRegion;
@@ -377,12 +376,12 @@ template std::array<double, 1ul> PatFwdTool::xAtReferencePlane<true,PatForwardHi
 
 double PatFwdTool::updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, const PatFwdHit* hit ) const {
 
-  double zHit       = hit->z();
-  double xHit       = hit->x();
+  auto zHit       = hit->z();
+  auto xHit       = hit->x();
    
   xHit += (int( hit->hasNext()) - int(hit->hasPrevious()))*hit->driftDistance();
 
-  double zMagnet = 0;
+  auto zMagnet = 0.0;
   if (!m_withoutBField){
 
     zMagnet += ( m_zMagnetParams[0] +
@@ -390,20 +389,20 @@ double PatFwdTool::updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, co
 				 m_zMagnetParams[3] * hit->x() * hit->x() +
 				 m_zMagnetParams[4] * track.slY2() );
     
-    double xMagnet    = track.xStraight( zMagnet);
+    auto xMagnet    = track.xStraight( zMagnet);
     
-    double slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
-    double dSlope     = slopeAfter - track.slX();
-    double dSl2       = dSlope * dSlope;
+    auto slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
+    auto dSlope     = slopeAfter - track.slX();
+    auto dSl2       = dSlope * dSlope;
     zMagnet          += m_zMagnetParams[1] * dSl2;
-    double dz         = 1.e-3 * ( zHit - m_zReference );
-    double dyCoef     = dSl2 * track.slY();
-    double dy         = dyCoef * ( m_yParams[0] + dz * m_yParams[1] );
-    double dxCoef     = dz * dz * ( m_xParams[0] + m_xParams[1] * dz );
+    auto dz         = 1.e-3 * ( zHit - m_zReference );
+    auto dyCoef     = dSl2 * track.slY();
+    auto dy         = dyCoef * ( m_yParams[0] + dz * m_yParams[1] );
+    auto dxCoef     = dz * dz * ( m_xParams[0] + m_xParams[1] * dz );
     xHit             += dy * hit->hit()->dxDy() - dxCoef * dSlope ;
     xMagnet           = track.xStraight( zMagnet );
     slopeAfter        = ( xHit - xMagnet ) / ( zHit - zMagnet );
-    double x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
+    auto x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
     
     track.setParameters( x,
 	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
@@ -413,12 +412,12 @@ double PatFwdTool::updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, co
 	  	   track.slY() + dyCoef * m_yParams[1] );
   } else {
     
-    double xMagnet    = track.xStraight( zMagnet);
-    double slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
-    double dSlope     = 0.0;
-    double dyCoef     = 0.0;
+    auto xMagnet    = track.xStraight( zMagnet);
+    auto slopeAfter = ( xHit - xMagnet ) / ( zHit - zMagnet );
+    auto dSlope     = 0.0;
+    auto dyCoef     = 0.0;
     
-    double x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
+    auto x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
     track.setParameters( x, 
 	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
 	  	   1.e-6 * m_xParams[0] * dSlope,
@@ -456,18 +455,18 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   //== Add hits before/after
   PatFwdRegionCounter regions{ itBeg, itEnd };
-  double tolSide = ( regions.maxRegion() < Tf::RegionID::OTIndex::kNRegions ) ? 2.0 : 0.2 ;
+  auto tolSide = ( regions.maxRegion() < Tf::RegionID::OTIndex::kNRegions ) ? 2.0 : 0.2 ;
 
   // note that PatForwardTool::buildXCandidatesList has sorted the hits by projection
   // so we can use this ordering here if advantageous... (depends on how far we typically
   // traverse before finding our target
 
-  double minProj = (*itBeg)->projection() - tolSide;
+  auto minProj = (*itBeg)->projection() - tolSide;
   // choice between std::partition_point and std::find_if depends on the 2log(size_of_range) vs distance
   // from the start to the target...
   itBeg = reverse_find_if( itBeg, std::begin(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() < minProj; });
   // itBeg = reverse_partition_point( itBeg, std::begin(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() >= minProj; });
-  double maxProj = (*std::prev(itEnd))->projection() + tolSide;
+  auto maxProj = (*std::prev(itEnd))->projection() + tolSide;
   itEnd = std::find_if(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() > maxProj; });
   // itEnd = std::partition_point(itEnd, std::end(track.coords()), [=](const PatFwdHit *hit) { return hit->projection() <= maxProj; });
 
@@ -479,7 +478,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   setRlDefault( track, itBeg, itEnd );
 
   bool   first = true;
-  double highestChi2 = 1.e10;
+  auto highestChi2 = 1.e10;
   PatFwdPlaneCounter planeCount( itBeg, itEnd );
   if ( isDebug ) debug() << "... X fit, planeCount " << planeCount.nbDifferent()
                          << " size " << itEnd - itBeg << endmsg;
@@ -504,7 +503,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
     }
     if ( first && highestChi2 <  20 * maxChi2 ) {  // Add possibly removed hits 
       first = false;
-      double minChi2 = std::max( highestChi2 - 0.0001, maxChi2 );  // don't find again the worst...
+      auto minChi2 = std::max( highestChi2 - 0.0001, maxChi2 );  // don't find again the worst...
 
       if( UNLIKELY( isDebug ) ) debug() << "Collect all hits with chi2 below " << minChi2 << endmsg;
       // WARNING: itBeg, itEnd must point into the same container as std::begin(track.coords)!!!!
@@ -542,7 +541,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   updateHitsForTrack( track, track.coordBegin(), track.coordEnd(), m_zReference );
   setRlDefault( track, track.coordBegin(), track.coordEnd() );
 
-  double highestChi2 = 10*maxChi2;
+  auto highestChi2 = 10*maxChi2;
   bool   ignoreX = true;
 
   while ( highestChi2 > maxChi2 ) {
@@ -618,8 +617,8 @@ bool PatFwdTool::fitYProjection( PatFwdTrackCandidate& track,
                                       , hit->hit()->weight() );
       } );
       if (!line.solve()) return false;
-      double day = line.ax();
-      double dby = line.bx();
+      auto day = line.ax();
+      auto dby = line.bx();
       if( UNLIKELY( isDebug ) ) verbose() << "    day " << day << " dby " << dby << endmsg;
 
       track.updateParameters( 0., 0., 0., 0., day, dby );
@@ -638,8 +637,8 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
 {
   //= Fit the straight line, forcing the magnet centre. Use only position and slope.
   bool isDebug = msgLevel( MSG::DEBUG );
-  double errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
-  double weightCenter = 1./errCenter;
+  auto errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
+  auto weightCenter = 1./errCenter;
   auto dz = m_zMagnet - m_zReference;
 
   using Curve = typename std::conditional<withoutBField, PatFwdFitLine, PatFwdFitParabola>::type;
@@ -661,9 +660,9 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                                        hit->hit()->weight() );
     } );
     if (!curve.solve()) return false;
-    double dax = curve.ax();
-    double dbx = curve.bx();
-    double dcx = curve.cx();   
+    auto dax = curve.ax();
+    auto dbx = curve.bx();
+    auto dcx = curve.cx();   
 
     track.updateParameters( dax, dbx, dcx );
 
@@ -689,7 +688,7 @@ template bool PatFwdTool::fitXProjection_<false> ( PatFwdTrackCandidate& , PatFw
 double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
 
   //== Error component due to the contraint of the magnet centre
-  double totChi2 = chi2Magnet( track );
+  auto totChi2 = chi2Magnet( track );
   if( UNLIKELY( msgLevel( MSG::DEBUG )) ) 
     debug() << "   chi2 magnet center " << totChi2 << endmsg;
 
@@ -715,15 +714,15 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
 //=========================================================================
 double PatFwdTool::qOverP ( const PatFwdTrackCandidate& track ) const {
   double qop(1.0/Gaudi::Units::GeV) ;
-  double magscalefactor = m_magFieldSvc->signedRelativeCurrent() ;
+  auto magscalefactor = m_magFieldSvc->signedRelativeCurrent() ;
   if ( std::abs(magscalefactor) > 1e-6 ) {
-    double bx = track.bx();
-    double bx2 = bx * bx;
-    double slY2 = track.slY2();
-    double slX2 = track.slX2();
-    double coef = std::inner_product( std::begin(m_momentumParams), std::end(m_momentumParams),
-                                      std::begin({ 1.0, bx2, bx2*bx2, bx*track.slX(), slY2, slY2*slY2 }), 0. );
-    double proj = sqrt( ( 1. + slX2 + slY2 ) / ( 1. + slX2 ) );
+    auto bx = track.bx();
+    auto bx2 = bx * bx;
+    auto slY2 = track.slY2();
+    auto slX2 = track.slX2();
+    auto coef = std::inner_product( std::begin(m_momentumParams), std::end(m_momentumParams),
+                                    std::begin({ 1.0, bx2, bx2*bx2, bx*track.slX(), slY2, slY2*slY2 }), 0.0 );
+    auto proj = sqrt( ( 1. + slX2 + slY2 ) / ( 1. + slX2 ) );
     qop = track.dSlope() / ( coef * Gaudi::Units::GeV * proj * magscalefactor*(-1)) ;
   }
   return qop ;

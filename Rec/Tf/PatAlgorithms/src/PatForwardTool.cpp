@@ -140,8 +140,7 @@ make_RangeFinder( int nPlanes, Iterator&& last)
 PatForwardTool::PatForwardTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-    : base_class( type, name , parent ),
-      m_nnSwitch(false)
+    : base_class( type, name , parent )
 {
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
@@ -339,7 +338,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     for ( auto *hit : temp.coords() ) hit->setIgnored( false);  // restore normal flag.
     temp.setSelectedCoords( );
 
-    double qOverP = computeQOverP(temp);  // in 1/GeV
+    auto qOverP = computeQOverP(temp);  // in 1/GeV
     if ( !fillStereoList( temp, computeStereoTol(qOverP) ) ) continue; // Get the stereo coordinates
 
     if ( isDebug )  debugFwdHits( temp );
@@ -470,7 +469,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     //== Add a new state in the T stations ...
 
-    double qOverP = m_fwdTool->qOverP( cand );
+    auto qOverP = m_fwdTool->qOverP( cand );
     // set q/p in all of the existing states
     std::for_each( std::begin( fwTra->states() ), std::end( fwTra->states() ),
                    [qOverP]( LHCb::State* state ) {
@@ -483,12 +482,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     cov(1,1) = m_stateErrorY2;
     cov(2,2) = m_stateErrorTX2;
     cov(3,3) = m_stateErrorTY2;
-    double errQOverP = m_stateErrorP*qOverP;
+    auto errQOverP = m_stateErrorP*qOverP;
     cov(4,4) = errQOverP * errQOverP;
 
 
     for ( const auto& z : m_fwdTool->zOutputs() ) {
-      double dz = z - m_fwdTool->zReference();
+      auto  dz = z - m_fwdTool->zReference();
       LHCb::State temp;
       temp.setLocation( LHCb::State::AtT );
       temp.setState( cand.x( dz ), cand.y( dz ), z,
@@ -601,7 +600,8 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     // grow capacity so that things don't move around afterwards...
     m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
     auto first = std::end(m_xHitsAtReference);
-    std::copy_if( std::begin(hitRange), std::end(hitRange), std::back_inserter(m_xHitsAtReference), 
+    std::copy_if( std::begin(hitRange), std::end(hitRange), 
+                  std::back_inserter(m_xHitsAtReference), 
                   not_ignored_and_y_compatible( yRegion ) );
     auto last = isOT(region) ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
                              : updateITHitsForTrack( first, std::end(m_xHitsAtReference) ) ;
@@ -674,8 +674,8 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
       auto xRef = hit->x() - xPred;
       hit->setProjection( flipSign ? -xRef : xRef );
 
-      if (  xRef > minProj ) break;
-      if (  xRef >= -minProj ) temp.push_back( hit );
+      if ( xRef > minProj ) break;
+      if ( xRef >= -minProj ) temp.push_back( hit );
     }
   }
 
@@ -707,11 +707,12 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   auto sentinel = make_RangeFinder(minYPlanes, std::end(temp));
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { this->allowedStereoSpread(hit) }; };
 
+  bool isVerbose = msgLevel(MSG::VERBOSE);
   while ( sentinel( itP ) ) {
     auto range = sentinel.next_range( itP, make_predicate(*itP) );
     if ( !range.empty() ) {
 
-        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+        if( UNLIKELY( isVerbose ) ) {
           verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                                range.front()->projection(), range.back()->projection(),
                                range.size(), nbDifferent(range),
@@ -787,13 +788,14 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
 
   auto iter = std::begin(rng);
   auto sentinel = make_RangeFinder( m_minXPlanes, std::end(rng) );
-  double xExtrap = track.xStraight( m_fwdTool->zReference() );
+  auto xExtrap = track.xStraight( m_fwdTool->zReference() );
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
+  bool isVerbose = msgLevel(MSG::VERBOSE);
   while ( sentinel( iter ) ) {
-    auto  predicate = make_predicate(*iter) ;
+    auto predicate = make_predicate(*iter);
     auto range = sentinel.next_range( iter, predicate );
     if (!range.empty()) {
-        if( UNLIKELY( msgLevel(MSG::VERBOSE) ) ) {
+        if( UNLIKELY( isVerbose ) ) {
           verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
                                range.front()->projection(),range.back()->projection(),
                                range.size(), nbDifferent(range),
