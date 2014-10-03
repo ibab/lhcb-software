@@ -1,6 +1,6 @@
-// $Id: RelInfoBs2MuMuIsolations.h 
-#ifndef RELINFOBS2MUMUISOLATIONS_H 
-#define RELINFOBS2MUMUISOLATIONS_H 1
+// $Id: RelInfoBs2MuMuTrackIsolations.h 
+#ifndef RELINFOBS2MUMUTRACKISOLATIONS_H 
+#define RELINFOBS2MUMUTRACKISOLATIONS_H 1
 
 #include "GaudiKernel/ToolFactory.h"
 #include "Kernel/RelatedInfoNamed.h"
@@ -16,22 +16,20 @@
 #include "Kernel/IPVReFitter.h"
 #include "Event/RecVertex.h"
 
-
-/** @class RelInfoBs2MuMuIsolations RelInfoBs2MuMuIsolations.h
-
+/** @class RelInfoBs2MuMuTrackIsolations RelInfoBs2MuMuTrackIsolations.h
  * 
  *  @author Fatima Soomro
- *  @date   2014-08-08
+ *  @date   2014-10-02
  */
 
 class IDistanceCalculator;
 class IDVAlgorithm;
 class IPVReFitter;
 
-class RelInfoBs2MuMuIsolations : public GaudiTool, virtual public IRelatedInfoTool{
+class RelInfoBs2MuMuTrackIsolations : public GaudiTool, virtual public IRelatedInfoTool{
  public: 
   /// Standard constructor
-  RelInfoBs2MuMuIsolations( const std::string& type, 
+  RelInfoBs2MuMuTrackIsolations( const std::string& type, 
               const std::string& name,
               const IInterface* parent );
 
@@ -43,11 +41,9 @@ class RelInfoBs2MuMuIsolations : public GaudiTool, virtual public IRelatedInfoTo
 
   virtual std::string infoPath(void);
 
-  virtual ~RelInfoBs2MuMuIsolations( ); ///< Destructor
+  virtual ~RelInfoBs2MuMuTrackIsolations( ); ///< Destructor
 
-  
 protected:
-
 
 private:
 
@@ -60,14 +56,6 @@ private:
 
   StatusCode TrackIsolations(const LHCb::Particle* , const LHCb::Particle*);
 
-  StatusCode CDFIsolation(const LHCb::Particle* B, 
-			  const LHCb::Particle* vdau1, 
-			  const LHCb::Particle* vdau2);
-  
-  StatusCode OtherB(const LHCb::Particle* B,
-		     const LHCb::Particle* vdau1,
-		     const LHCb::Particle* vdau2);
-  
   StatusCode IsolationTwoBodyVariables(const LHCb::Particle*, const LHCb::Particle*); //, std::string, Tuples::Tuple& );
   
   LHCb::RelatedInfoMap m_map;
@@ -98,23 +86,11 @@ private:
 
   // //// Variables that are calculated and stored 
   double m_count_mup_Giampi; 
-  //double m_count_mum_Giampi; 
-  //double m_count_mum_iso2;
   double m_count_mup_iso2;
-  double m_CDFIso;
-  double m_otherB_mag;
-  double m_otherB_angle;
-  double m_otherB_boost_mag;
-  double m_otherB_boost_angle;
-  int otherBtracks;
   double m_massisoplus ;
-  //double m_massisominus;
   double m_chargeplus  ;
-  //double m_chargeminus ;
   double m_chi2isoplus ;
-  //double m_chi2isominus;
   double m_iso5plus    ;
-  //double m_iso5minus   ;
 
   //// Computes Giampi's isolations 
   std::vector<int> getIso(const LHCb::Particle*,  int isotype, bool);
@@ -124,7 +100,7 @@ private:
   */
   void IsHltGood(Gaudi::XYZPoint o, Gaudi::XYZVector p, Gaudi::XYZPoint o_mu,Gaudi::XYZVector p_mu, Gaudi::XYZPoint PV, bool& hltgood, double& fc);
   
-  /** pointer: given two particles and the vector between the PV and vertex defined                                                                                                                                   *  by them, it returns :                                                                                                                                                                                 *   fc=\frac{\left|\vec{P_{\mu}}+\vec{P_{tr}}\right|\cdot\alpha^{\mu+tr,PV}}                                                                                                                             *   {\left|\vec{P_{\mu}}+\vec{P_{tr}}\right|\cdot\alpha^{\mu+tr,PV}+P_{T\mu}                                                                                                                             *   +P_{Ttr}}                                                                                                                                                                                            *  where $P_{T\mu}$ and  $P_{Ttr}$ are the transverse momenta (with respect                                                                                                                              *  to the beam line) of the two tracks.                                                                                                                                                                  */
+  /** pointer: given two particles and the vector between the PV and vertex defined                                                                                                       *  by them, it returns :                                                                                                                                                                  *   fc=\frac{\left|\vec{P_{\mu}}+\vec{P_{tr}}\right|\cdot\alpha^{\mu+tr,PV}}                                                                                                             *   {\left|\vec{P_{\mu}}+\vec{P_{tr}}\right|\cdot\alpha^{\mu+tr,PV}+P_{T\mu}                                                                                                             *   +P_{Ttr}}                                                                                                                                                                            *  where $P_{T\mu}$ and  $P_{Ttr}$ are the transverse momenta (with respect                                                                                                              *  to the beam line) of the two tracks.                                                                                                                                                                  */
   double pointer (Gaudi::XYZVector vtx, Gaudi::XYZVector P_tr,  Gaudi::XYZVector P_mu);
   
   double gettheta(const LHCb::Particle* vdau1, const LHCb::Particle* vdau2);
@@ -148,6 +124,4 @@ private:
   
 };
 
-
-
-#endif // RELINFOBS2MUMUISOLATIONS_H
+#endif // RELINFOBS2MUMUTRACKISOLATIONS_H

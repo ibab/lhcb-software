@@ -10,26 +10,24 @@
 #include <TObject.h>
 #include "TH1D.h"
 #include <iostream>
-//#include "TMVA/Reader.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Math/Boost.h"
 
-#include "RelInfoBs2MuMuIsolations.h"
-
+#include "RelInfoBs2MuMuTrackIsolations.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : RelInfoBs2MuMuIsolations
+// Implementation file for class : RelInfoBs2MuMuTrackIsolations
 //
-// 2014-08-18 : Fatima Soomro
+// 2014-10-02 : Fatima Soomro
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_TOOL_FACTORY( RelInfoBs2MuMuIsolations )
+DECLARE_TOOL_FACTORY( RelInfoBs2MuMuTrackIsolations )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-RelInfoBs2MuMuIsolations::RelInfoBs2MuMuIsolations( const std::string& type,
+RelInfoBs2MuMuTrackIsolations::RelInfoBs2MuMuTrackIsolations( const std::string& type,
                                                     const std::string& name,
                                                     const IInterface* parent)
   : GaudiTool( type, name , parent )
@@ -62,12 +60,12 @@ RelInfoBs2MuMuIsolations::RelInfoBs2MuMuIsolations( const std::string& type,
 //=============================================================================
 // Destructor
 //=============================================================================
-RelInfoBs2MuMuIsolations::~RelInfoBs2MuMuIsolations() {}
+RelInfoBs2MuMuTrackIsolations::~RelInfoBs2MuMuTrackIsolations() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode RelInfoBs2MuMuIsolations::initialize() {
+StatusCode RelInfoBs2MuMuTrackIsolations::initialize() {
 
   StatusCode sc = GaudiTool::initialize() ;
   if ( sc.isFailure() ) return sc ;
@@ -89,19 +87,6 @@ StatusCode RelInfoBs2MuMuIsolations::initialize() {
   debug()<<" ==> Initialize"<<endmsg;
 
   //configure keys
-  m_keys.push_back(RelatedInfoNamed::BSMUMUCDFISO);
-  m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBMAG);
-  m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBANGLE);
-  m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBBOOSTMAG);
-  m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBBOOSTANGLE);
-  m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBTRACKS);
-
-  //m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKMINUSISO);
-  //m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKMINUSISOTWO);
-  //m_keys.push_back(RelatedInfoNamed::ISOTWOBODYQMINUS);
-  //m_keys.push_back(RelatedInfoNamed::ISOTWOBODYMASSISOMINUS);
-  //m_keys.push_back(RelatedInfoNamed::ISOTWOBODYCHI2ISOMINUS);
-  //m_keys.push_back(RelatedInfoNamed::ISOTWOBODYISO5MINUS);
   m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKPLUSISO); //
   m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKPLUSISOTWO); //
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYQPLUS);
@@ -113,11 +98,11 @@ StatusCode RelInfoBs2MuMuIsolations::initialize() {
 }
 
 //rel infor methods
-LHCb::RelatedInfoMap* RelInfoBs2MuMuIsolations::getInfo(void) {
+LHCb::RelatedInfoMap* RelInfoBs2MuMuTrackIsolations::getInfo(void) {
   return &m_map;
 }
 
-std::string RelInfoBs2MuMuIsolations::infoPath(void){ // check with Alex
+std::string RelInfoBs2MuMuTrackIsolations::infoPath(void){ // check with Alex
   std::stringstream ss;
   // // this function is redundant (Anton)
   ss << std::string("Particle2VertexIsolationRelations");
@@ -128,28 +113,16 @@ std::string RelInfoBs2MuMuIsolations::infoPath(void){ // check with Alex
 //=============================================================================
 // Fill the related info with track variables
 //=============================================================================
-StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* top, const LHCb::Particle *part){
+StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Particle* top, const LHCb::Particle *part){
  
   if ( msgLevel(MSG::DEBUG) )  debug() << " part is "<<part->particleID().pid()<<" while top is "<< top->particleID().pid()<< endmsg;
 
-  m_otherB_mag=0.;
-  m_otherB_angle=-1.;
-  m_otherB_boost_mag=0.;
-  m_otherB_boost_angle=-1.;
-  otherBtracks= 0;
-  m_CDFIso = -1;
   m_count_mup_Giampi = -1;
-  //m_count_mum_Giampi = -1;
   m_count_mup_iso2 = -1;
-  //m_count_mum_iso2 = -1;
   m_massisoplus = -1;
-  //m_massisominus= -1;
   m_chargeplus  = -100;
-  //m_chargeminus = -100;
   m_chi2isoplus = -1;
-  //m_chi2isominus= -1;
   m_iso5plus    = -1;
-  //m_iso5minus   = -1;
 
   // -- The vector m_decayParticles contains all the particles that belong to the given decay
   // -- according to the decay descriptor.
@@ -159,25 +132,6 @@ StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* 
   saveDecayParticles( top );
   info()<<"this should be printed. I am looking at particle "<<part->particleID().pid()<<endmsg;
   
-  StatusCode testcode ;
-
-  if ( part->isBasicParticle() ) {
-    
-    info()<<" will call isotwobody "<<m_IsoTwoBody<<endreq;
-    if(m_IsoTwoBody){
-      info()<< "Going to call IsolationTwoBody to compute IsolationTwoBody variables "<<endmsg;
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call IsolationTwoBody to compute IsolationTwoBody variables " << endmsg ;
-      testcode = IsolationTwoBodyVariables(part, top);
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Computed IsolationTwoBody variables "<< m_massisoplus<<" and "<< m_chi2isoplus<<" with statuscode "<<testcode <<endmsg;
-      info()<< "Computed IsolationTwoBody variables "<< m_massisoplus<<" and "<< m_chi2isoplus<<" with statuscode "<<endreq;
-      if(!testcode) return StatusCode::FAILURE;
-      
-    } // if m_IsoTwoBody 
-    
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Do not run this tool on basic particles... skipping" << endmsg;
-    //return StatusCode::SUCCESS ;
-  }
-
   LHCb::Tracks* tracks = get<LHCb::Tracks>(m_TracksPath);
   if ( tracks->empty() )
   {
@@ -185,73 +139,44 @@ StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* 
     return StatusCode::FAILURE;
   }
 
-  //  if(exist<LHCb::RecVertex::Container>(m_PVInputLocation)){
-  //    m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
-  //}
+  StatusCode testcode ;
 
-  /// check that it is a 2 body decay
-  const LHCb::Particle::ConstVector& daughterVec = part->daughtersVector();
-  int idx = 0;
-  for (LHCb::Particle::ConstVector::const_iterator ipart=daughterVec.begin();ipart!=daughterVec.end();++ipart)
-  {
-    if ( NULL==(*ipart)->proto() ) continue;
-    idx++;
+  if( !part->isBasicParticle()) {
+    if ( msgLevel(MSG::WARNING) ) Warning( std::string("I received a composite particle!! Skipping" ));
+    return StatusCode::FAILURE;
   }
-  if(idx != 2 )  {
-    info()<<"well, daughters were "<<idx<<endreq;
-    //return StatusCode::SUCCESS;
-  }
-
-  //StatusCode testcode ;
-  // Call functions to do the work and assign values
-
-  if( false) //!part->isBasicParticle())
-    {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call CDFIsolation computation" << endmsg ;
-  testcode = CDFIsolation(part, daughterVec.at(0), daughterVec.at(1));
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Computed CDFIsolation: "<< m_CDFIso <<" with statuscode "<<testcode <<endmsg;
-  if(!testcode) return StatusCode::FAILURE;
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call OtherB computation" << endmsg ;
-  testcode = OtherB(part, daughterVec.at(0), daughterVec.at(1));
-  if ( msgLevel(MSG::DEBUG) )
-    debug() << "Computed quantities "<< m_otherB_mag<<" "<< m_otherB_angle<< " "<<m_otherB_boost_mag<<" "<<m_otherB_boost_angle <<" "<< otherBtracks<<" with statuscode "<< testcode <<endmsg;
-  if(!testcode) return StatusCode::FAILURE;
-
-    } // fatima 
-
+					   
+  info()<<" will call isotwobody "<<m_IsoTwoBody<<endreq;
+  if(m_IsoTwoBody){
+    info()<< "Going to call IsolationTwoBody to compute IsolationTwoBody variables "<<endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call IsolationTwoBody to compute IsolationTwoBody variables " << endmsg ;
+    testcode = IsolationTwoBodyVariables(part, top);
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Computed IsolationTwoBody variables "<< m_massisoplus<<" and "<< m_chi2isoplus<<" with statuscode "<<testcode <<endmsg;
+    info()<< "Computed IsolationTwoBody variables "<< m_massisoplus<<" and "<< m_chi2isoplus<<" with statuscode "<<endreq;
+    if(!testcode) return StatusCode::FAILURE;
+    
+  } // if m_IsoTwoBody 
+  
   if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call TrackIsolations computation" << endmsg ;
   testcode = TrackIsolations(part, top);
   if ( msgLevel(MSG::DEBUG) ) debug() << "Computed TrackIsolations: "<< m_count_mup_Giampi<<endmsg;
   if(!testcode) return StatusCode::FAILURE;
-
+  
   m_map.clear();
   info()<<" Map cleared.... "<<endreq;
   std::vector<short int>::const_iterator ikey;
   for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-
+    
     double value = 0;
 
     switch (*ikey) {
-    case RelatedInfoNamed::BSMUMUCDFISO           : value = m_CDFIso; break;
-    case RelatedInfoNamed::BSMUMUOTHERBMAG        : value = m_otherB_mag; break;
-    case RelatedInfoNamed::BSMUMUOTHERBANGLE      : value = m_otherB_angle; break;
-    case RelatedInfoNamed::BSMUMUOTHERBBOOSTMAG   : value = m_otherB_boost_mag; break;
-    case RelatedInfoNamed::BSMUMUOTHERBBOOSTANGLE : value = m_otherB_boost_angle; break;
-    case RelatedInfoNamed::BSMUMUOTHERBTRACKS     : value = otherBtracks; break;
+      
     case RelatedInfoNamed::BSMUMUTRACKPLUSISO         : value = m_count_mup_Giampi; break;
-      //case RelatedInfoNamed::BSMUMUTRACKMINUSISO        : value = m_count_mum_Giampi; break;
     case RelatedInfoNamed::BSMUMUTRACKPLUSISOTWO      : value = m_count_mup_iso2; break;
-      //case RelatedInfoNamed::BSMUMUTRACKMINUSISOTWO     : value = m_count_mum_iso2; break;
-
     case RelatedInfoNamed::ISOTWOBODYMASSISOPLUS  : value = m_massisoplus ; break;
     case RelatedInfoNamed::ISOTWOBODYCHI2ISOPLUS  : value = m_chi2isoplus ; break;
     case RelatedInfoNamed::ISOTWOBODYISO5PLUS     : value = m_iso5plus    ; break;
     case RelatedInfoNamed::ISOTWOBODYQPLUS        : value = m_chargeplus    ; break;
-      //case RelatedInfoNamed::ISOTWOBODYQMINUS       : value = m_chargeminus    ; break;
-      //case RelatedInfoNamed::ISOTWOBODYISO5MINUS    : value = m_iso5minus    ; break;
-      //case RelatedInfoNamed::ISOTWOBODYMASSISOMINUS : value = m_massisominus; break;
-      //case RelatedInfoNamed::ISOTWOBODYCHI2ISOMINUS : value = m_chi2isominus ; break;
     
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
@@ -266,7 +191,7 @@ StatusCode RelInfoBs2MuMuIsolations::calculateRelatedInfo(const LHCb::Particle* 
 //=============================================================================
 // Save the particles in the decay chain (recursive function)
 //=============================================================================
-void RelInfoBs2MuMuIsolations::saveDecayParticles( const LHCb::Particle *top){
+void RelInfoBs2MuMuTrackIsolations::saveDecayParticles( const LHCb::Particle *top){
 
   // -- Fill all the daugthers in m_decayParticles
   for ( const auto& dau : top->daughters() ) {
@@ -285,7 +210,7 @@ void RelInfoBs2MuMuIsolations::saveDecayParticles( const LHCb::Particle *top){
 
 }
 
-bool RelInfoBs2MuMuIsolations::isTrackInDecay(const LHCb::Track* track){
+bool RelInfoBs2MuMuTrackIsolations::isTrackInDecay(const LHCb::Track* track){
   
   bool isInDecay = false;
   for ( const LHCb::Particle * part : m_decayParticles ) {
@@ -306,94 +231,11 @@ bool RelInfoBs2MuMuIsolations::isTrackInDecay(const LHCb::Track* track){
 
 }
 
-//=============================================================================
-// Other B quantities 
-// From /afs/cern.ch/user/s/serranoj/public/Bs2MuMu/Bs2MuMuAnalysis.cpp
-//=============================================================================
-
-StatusCode RelInfoBs2MuMuIsolations::OtherB(const LHCb::Particle *part,
-                                            const LHCb::Particle *vdau1,
-                                            const LHCb::Particle *vdau2){
-
-  const LHCb::VertexBase* goodPV = m_dva->bestVertex(part);
-
-  double ptmu1 =  vdau1->proto()->track()->momentum().rho();
-  double ptmu2 =  vdau2->proto()->track()->momentum().rho();
-
-  LHCb::Particles OTHERB_parts;
-
-  // in cppm code m_ParticlePath="/Event/Phys/StdAllNoPIDsPions/Particles";
-  LHCb::Particles* m_allparts = get<LHCb::Particles>(m_ParticlePath);
-  for ( LHCb::Particles::const_iterator ipp = m_allparts->begin(); ipp != m_allparts->end() ; ++ipp) {
-    Gaudi::XYZVector p_track = ((*ipp)->proto()->track()->momentum());
-    double pttrack = p_track.rho();
-    double ptrackmag = p_track.R();
-    double imp = 0.;
-    double ips = -1.;
-    m_dist->distance ( (*ipp), goodPV, imp, ips );
-    ips = TMath::Sqrt(ips);
-
-    if (ips>4.0 && ips<40.0 && pttrack>200.0 && pttrack<2000.0
-        && ptrackmag<30000.0 && ratio(pttrack, ptmu1) > 0.0001 && ratio(pttrack,ptmu2) > 0.0001)
-    {
-      LHCb::Particle* track = *(ipp);
-      OTHERB_parts.add(track) ;
-      otherBtracks++;
-    }
-  }// ipp
-
-  if ( otherBtracks>0 )
-  {
-
-    Gaudi::XYZVector ptproj(0.,0.,0.);
-    LHCb::Particles::const_iterator ipp;
-    for ( ipp = (&OTHERB_parts)->begin(); ipp != (&OTHERB_parts)->end() ; ++ipp) {
-      Gaudi::XYZVector ptrack = ((*ipp)->proto()->track()->momentum());
-      ptproj += ptrack;
-    }
-
-    m_otherB_mag = ptproj.R();
-    m_otherB_angle=arcosine( ptproj, part->slopes());
-
-    const LHCb::Particle *myDau = NULL;
-    if (vdau1->charge()>0) myDau = vdau1;
-    else if (vdau2->charge()>0) myDau = vdau2;
-    if(vdau1->charge() == vdau2->charge() ) myDau = vdau2;
-
-
-    Gaudi::XYZVector ptproj2(0.,0.,0.);
-    const Gaudi::LorentzVector p2(part->momentum());
-    ROOT::Math::Boost boostToB( p2.BoostToCM() );
-    const Gaudi::LorentzVector p3(myDau->momentum());
-    const Gaudi::LorentzVector boostedMu = boostToB( p3 );
-    const Gaudi::XYZVector pmuplus = Gaudi::XYZVector( boostedMu ) ;
-    for ( ipp = (&OTHERB_parts)->begin(); ipp != (&OTHERB_parts)->end() ; ++ipp) {
-      const Gaudi::LorentzVector p1((*ipp)->momentum());
-      const Gaudi::LorentzVector boostedTrk = boostToB( p1 );
-      const Gaudi::XYZVector ptrack = Gaudi::XYZVector( boostedTrk ) ;
-      ptproj2 += ptrack;
-    }
-
-    m_otherB_boost_mag= ptproj2.R();
-    m_otherB_boost_angle =  arcosine(pmuplus,ptproj2);
-
-  } // if ntracks>0
-
-  else {
-    m_otherB_mag=-1.;
-    m_otherB_angle= -1;
-    m_otherB_boost_mag=-1.;
-    m_otherB_boost_angle= -1;
-  }
-
-  return StatusCode::SUCCESS;
-
-}
 
 //-------------------------------------------------------------------------
 // isolation variables
 //-------------------------------------------------------------------------
-StatusCode RelInfoBs2MuMuIsolations::TrackIsolations(const LHCb::Particle *part, const LHCb::Particle *top){
+StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *part, const LHCb::Particle *top){
 
   if ( msgLevel(MSG::DEBUG) ) debug() <<" Entering  TrackIsolations "<<endmsg;
   info() <<" Entering  TrackIsolations "<<endmsg;
@@ -424,10 +266,8 @@ StatusCode RelInfoBs2MuMuIsolations::TrackIsolations(const LHCb::Particle *part,
   double isonew2 = 0.;
   double o_mu[3];
   double p_mu[3];
-  //ROOT::Math::SVector<double, 2> ptmu; check 
 
   //Loop over input particles, get their simple kinematics
-  //const LHCb::ProtoParticle * proto =  ;
   const LHCb::Track* parttrack = (part->proto())->track();
   o_mu[0] = parttrack->position().x();
   o_mu[1] = parttrack->position().y();
@@ -435,7 +275,6 @@ StatusCode RelInfoBs2MuMuIsolations::TrackIsolations(const LHCb::Particle *part,
   p_mu[0] = parttrack->momentum().x();
   p_mu[1] = parttrack->momentum().y();
   p_mu[2] = parttrack->momentum().z();
-  //ptmu[i] = sqrt(pow(p_mu[0],2)+pow(p_mu[1],2));
 
   bool hltgood = false;
   double fc = 0.;
@@ -455,7 +294,6 @@ StatusCode RelInfoBs2MuMuIsolations::TrackIsolations(const LHCb::Particle *part,
     Gaudi::XYZPoint o(track->position());
     Gaudi::XYZVector p(track->momentum());
     
-    //if(cutOnTracks && isotype ==5 && (track->ghostProbability()>0.3 || track->chi2PerDoF()> 3)) continue; fix this 
     if (track->type()!=m_tracktype)   continue;
     ntracks++;
     
@@ -468,7 +306,6 @@ StatusCode RelInfoBs2MuMuIsolations::TrackIsolations(const LHCb::Particle *part,
 
     IsHltGood(o, p, omu, pmu ,PosPV, hltgood, fc);
     if(hltgood) iso0 ++;
-
 
     // find doca and angle between input and other tracks
     Gaudi::XYZPoint vtx(0.,0.,0.);
@@ -553,7 +390,7 @@ StatusCode RelInfoBs2MuMuIsolations::TrackIsolations(const LHCb::Particle *part,
 // IsHLTGood method,used by isolation calculation
 //=============================================================================
 
-void  RelInfoBs2MuMuIsolations::IsHltGood(Gaudi::XYZPoint o,Gaudi::XYZVector p,
+void  RelInfoBs2MuMuTrackIsolations::IsHltGood(Gaudi::XYZPoint o,Gaudi::XYZVector p,
                                           Gaudi::XYZPoint o_mu,Gaudi::XYZVector
                                           p_mu, Gaudi::XYZPoint PV, bool& hltgood,
                                           double& fc) {
@@ -586,7 +423,7 @@ void  RelInfoBs2MuMuIsolations::IsHltGood(Gaudi::XYZPoint o,Gaudi::XYZVector p,
 // Other functions needed by isolation
 //=============================================================================
 
-double RelInfoBs2MuMuIsolations::pointer (Gaudi::XYZVector vertex,
+double RelInfoBs2MuMuTrackIsolations::pointer (Gaudi::XYZVector vertex,
                                           Gaudi::XYZVector p, Gaudi::XYZVector
                                           p_mu)  {
   double pt=p.Rho()+p_mu.Rho();
@@ -600,25 +437,25 @@ double RelInfoBs2MuMuIsolations::pointer (Gaudi::XYZVector vertex,
 
 //=============================================================================
 
-double RelInfoBs2MuMuIsolations::getphi(const LHCb::Particle* vdau1, const LHCb::Particle* vdau2){
+double RelInfoBs2MuMuTrackIsolations::getphi(const LHCb::Particle* vdau1, const LHCb::Particle* vdau2){
   double dphi = vdau1->momentum().Phi() - vdau2->momentum().Phi();
   return dphi;
 }
 
 //=============================================================================
-double RelInfoBs2MuMuIsolations::gettheta(const LHCb::Particle* vdau1, const LHCb::Particle* vdau2){
+double RelInfoBs2MuMuTrackIsolations::gettheta(const LHCb::Particle* vdau1, const LHCb::Particle* vdau2){
 
   double dtheta = vdau1->momentum().Eta() -  vdau2->momentum().Eta();
   return dtheta;
 }
 
 //=============================================================================
-double RelInfoBs2MuMuIsolations::ratio( double p1, double p2){
+double RelInfoBs2MuMuTrackIsolations::ratio( double p1, double p2){
   return fabs(p1 -p2)*(1./fabs(p1+p2));
 }
 
 //=============================================================================
-double RelInfoBs2MuMuIsolations::IsClose(const LHCb::Particle* p1,const LHCb::Particle* p2) {
+double RelInfoBs2MuMuTrackIsolations::IsClose(const LHCb::Particle* p1,const LHCb::Particle* p2) {
 
   double deta = gettheta(p1,p2);
   double dphi = getphi(p1,p2);
@@ -626,7 +463,7 @@ double RelInfoBs2MuMuIsolations::IsClose(const LHCb::Particle* p1,const LHCb::Pa
 }
 
 //=============================================================================
-void RelInfoBs2MuMuIsolations::closest_point(Gaudi::XYZPoint o,Gaudi::XYZVector p,
+void RelInfoBs2MuMuTrackIsolations::closest_point(Gaudi::XYZPoint o,Gaudi::XYZVector p,
                                              Gaudi::XYZPoint o_mu,Gaudi::XYZVector p_mu,
                                              Gaudi::XYZPoint& close1,
                                              Gaudi::XYZPoint& close2,
@@ -660,7 +497,7 @@ void RelInfoBs2MuMuIsolations::closest_point(Gaudi::XYZPoint o,Gaudi::XYZVector 
 }
 
 
-double RelInfoBs2MuMuIsolations::arcosine(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
+double RelInfoBs2MuMuTrackIsolations::arcosine(Gaudi::XYZVector p1,Gaudi::XYZVector p2) {
 
   double num    = (p1.Cross(p2)).R();
   double den    = p1.R()*p2.R();
@@ -674,7 +511,7 @@ double RelInfoBs2MuMuIsolations::arcosine(Gaudi::XYZVector p1,Gaudi::XYZVector p
 }
 
 //=============================================================================
-void RelInfoBs2MuMuIsolations::InCone(Gaudi::XYZPoint o1,
+void RelInfoBs2MuMuTrackIsolations::InCone(Gaudi::XYZPoint o1,
                                       Gaudi::XYZVector p1,Gaudi::XYZPoint o2,
                                       Gaudi::XYZVector p2,
                                       Gaudi::XYZPoint& vtx, double&
@@ -694,87 +531,10 @@ void RelInfoBs2MuMuIsolations::InCone(Gaudi::XYZPoint o1,
   }
 }
 
-
-//=============================================================================
-// CDF isolation variable for the B
-//=============================================================================
-StatusCode RelInfoBs2MuMuIsolations::CDFIsolation(const LHCb::Particle* B,
-                                                  const LHCb::Particle* vdau1,
-                                                  const LHCb::Particle* vdau2){
-
-  bool test = true;
-  if ( (NULL == vdau1 ) || NULL == vdau2) {
-    debug()<<"Inside CDFisloation, one or both  daughters are NULL"<<endmsg;
-    return StatusCode::SUCCESS;
-  }
-
-  LHCb::Particle::Range  parts = get<LHCb::Particle::Range>(m_ParticlePath);
-  if (!parts) {
-    Error( " Failed to get particles container " );
-    return StatusCode::SUCCESS;
-  }
-
-  double ptmu1 =  vdau1->proto()->track()->momentum().rho();
-  double ptmu2 =  vdau2->proto()->track()->momentum().rho();
-  double pt_bs = B->momentum().rho();
-
-  double iso_giampi = 0.0;
-  double iso_giampi_tc = 0.0;
-
-  for(LHCb::Particle::Range::const_iterator ipp=parts.begin();ipp!=parts.end();ipp++){
-    const LHCb::ProtoParticle *proto = (*ipp)->proto();
-    if(proto) {
-      const LHCb::Track* atrack = proto->track();
-      if(atrack) {
-
-        Gaudi::XYZVector ptrack =  ((*ipp)->proto()->track()->momentum());
-        double pttrack = ptrack.rho();
-
-        double del1 = (TMath::Abs (ptmu1 - pttrack))/(TMath::Abs (ptmu1 + pttrack));
-        double del2 = (TMath::Abs (ptmu2 - pttrack))/(TMath::Abs (ptmu2 + pttrack));
-        if ( del1 > 0.0001 && del2 > 0.0001 ){
-
-          double deta      =  B->momentum().Eta() - (*ipp)->momentum().Eta() ;
-          double delta_phi =  B->momentum().Phi() - (*ipp)->momentum().Phi();
-          delta_phi = TMath::Abs(delta_phi);
-
-          if(!m_IsoTwoBody)
-            if (delta_phi > TMath::Pi() )  delta_phi = 2*TMath::Pi() - delta_phi;
-
-          double rad_cone = TMath::Sqrt(  (delta_phi*delta_phi + deta*deta) );
-          if (  rad_cone <=1.0)
-          {
-            iso_giampi += pttrack;
-
-            if(atrack->ghostProbability()<0.3 && atrack->chi2PerDoF()< 3)
-            {
-              iso_giampi_tc += pttrack;
-            }
-          }
-
-        }// del1/2
-      } // atrack
-    } //proto
-  } // ipp
-
-  iso_giampi = pt_bs/(iso_giampi+pt_bs);  // stored by TupleToolMuonVariables as "_yetanother_CDF_iso"
-  m_CDFIso = iso_giampi;
-
-  //Version with track cuts
-  iso_giampi_tc = pt_bs/(iso_giampi_tc+pt_bs);  // stored by TupleToolMuonVariables as "_yetanother_CDF_iso_tc"
-  if(m_makeTrackCuts) m_CDFIso = iso_giampi_tc;
-
-  debug()<<"isotwobody was "<<m_IsoTwoBody<<" and maketrackcuts was "<<m_makeTrackCuts<<" so I computed "<<iso_giampi<<" and "<<iso_giampi_tc<<" and set "<<m_CDFIso<<endmsg;
-
-  return test;
-
-}
-
-
 //=============================================================================
 // Compute IsolationTwoBody variables
 //=============================================================================
-StatusCode RelInfoBs2MuMuIsolations::IsolationTwoBodyVariables(const LHCb::Particle *P,const LHCb::Particle *top){
+StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::Particle *P,const LHCb::Particle *top){
 
   info() <<"Inside IsolationTwoBodyVariables...  "<< endreq;
   if ( !(P->isBasicParticle())) {
