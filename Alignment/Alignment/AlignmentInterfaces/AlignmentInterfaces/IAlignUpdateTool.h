@@ -12,10 +12,16 @@ namespace Al
   class IAlignUpdateTool : virtual public IAlgTool
   {
   public:
+    enum ConvergenceStatus { NotConverged=0, Converged=1, Unknown } ;
+
     // Retrieve interface ID
     static const InterfaceID& interfaceID() { return IID_IAlignUpdateTool ; }
     
+    // Old interface
     virtual StatusCode process( const Al::Equations& equations, size_t iter, size_t maxiter ) const = 0;
+
+    // New interface
+    virtual StatusCode process( const Al::Equations& equations, ConvergenceStatus& status ) const = 0 ;
   } ;
 }
 

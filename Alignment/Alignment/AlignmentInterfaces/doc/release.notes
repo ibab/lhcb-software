@@ -3,6 +3,11 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+! 2014-10-05 - Wouter Hulsbergen
+ - added IWriteAlignmentConditionsTool
+ - modified interface of IAlignUpdateTool to have access to convergence status
+ - modified interface of IAlignSolvTool to have access to chi2 of worst mode
+
 ! 2014-10-02 - Maurizio Martinelli
  - Moved IAlignUpdateTool from TAlignment
 

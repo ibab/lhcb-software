@@ -28,7 +28,14 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IAlignSolvTool; }
-  
+
+  // simple struct that stores some info on solution
+  struct SolutionInfo {
+    double totalChisq ;
+    double maxChisqEigenMode ;
+    double minEigenValue ;
+  } ;
+
   // Solves the system Ax=b for x. Returns A=A^{-1} and b=x.
   virtual bool compute(AlSymMat& A, AlVec&b) const = 0;
   
@@ -36,6 +43,13 @@ public:
   // eigenvalues of A.
   virtual bool compute(AlSymMat& A, AlVec& b, AlVec& /*S*/) const {
     return compute(A,b) ;
+  }
+
+  // Solves the system Ax=b for x. Return A=A^{-1} and
+  // b=x. Furthermore, returns an object with some characteristics of
+  // system/solution.
+  virtual StatusCode compute(AlSymMat& A, AlVec& b, SolutionInfo& /*info*/ ) const {
+    return compute(A,b) ? StatusCode::SUCCESS : StatusCode::FAILURE ;
   }
   
 protected:
