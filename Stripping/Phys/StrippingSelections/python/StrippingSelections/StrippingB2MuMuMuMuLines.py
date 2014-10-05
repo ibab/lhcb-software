@@ -60,12 +60,12 @@ class B2MuMuMuMuLinesConf(LineBuilder) :
                               'B2JpsiKmumuLinePostscale',
                               'B2JpsiPhimumuLinePrescale',
                               'B2JpsiPhimumuLinePostscale',
-                              'DetachedDiMuons',
-                              'B2DetachedDiMuons',
                               'B2DetachedDimuonAndJpsiLinePrescale',
                               'B2DetachedDimuonAndJpsiLinePostscale',
-                              )
-    
+                              'DetachedDiMuons',
+                              'B2DetachedDiMuons',
+                              'B2DetachedDiMuonsAndJpsi')
+
     #### This is the dictionary of all tunable cuts ########
     config_default={
         'B2MuMuMuMuLinePrescale'    : 1,

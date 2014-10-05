@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-05 - Stefano Perazzini
+ - corrected __configuration_keys__ for StrippingB2MuMuMuMuLine.py
+
 ! 2014-10-03 - Mika Vesterinen
  - remove NoRegex=True from CharmFromBSemi
 
