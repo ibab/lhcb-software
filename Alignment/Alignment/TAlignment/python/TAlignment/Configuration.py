@@ -50,7 +50,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "OTTopLevelElement"            : "/dd/Structure/LHCb/AfterMagnetRegion/T/OT"
         , "MuonTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Muon"
         , "EcalTopLevelElement"          : "/dd/Structure/LHCb/DownstreamRegion/Ecal"
-        , "Precision"                    : 16                          # Set precision for conditions
+        , "Precision"                    : 10                          # Set precision for conditions
         , "OutputLevel"                  : INFO                        # Output level
         , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
         , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
@@ -166,41 +166,43 @@ class TAlignment( LHCbConfigurableUser ):
             postMonitorSeq.Members.append( copy )
         return postMonitorSeq
 
-    def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
-        from Configurables import WriteAlignmentConditions
+    def addXmlWriter( self, alg, subdet, condname, depths ) :
+        from Configurables import WriteAlignmentConditionsTool
         import getpass
-        xmlfile = self.getProp('CondFilePrefix') + 'Conditions/' + subdet + '/Alignment/' +condname + '.xml'
-        return WriteAlignmentConditions( 'Write' + subdet + condname + 'ToXML',
-                                         OutputLevel = outputLevel,
-                                         topElement = self.getProp( subdet + 'TopLevelElement' ),
-                                         precision = self.getProp( "Precision" ),
-                                         depths = depths,
-                                         outputFile = xmlfile,
-                                         author = getpass.getuser(),
-                                         desc = self.getProp('DatasetName') )
+        name = 'Write' + subdet + condname + 'ToXML'
+        alg.addTool( WriteAlignmentConditionsTool, name )
+        for i in alg.getTools() :
+            if i.name() == alg.name() + "." + name:
+                handle = i
+        handle.topElement = self.getProp( subdet + 'TopLevelElement' )
+        handle.precision = self.getProp( "Precision" )   
+        handle.depths = depths
+        handle.outputFile = self.getProp('CondFilePrefix') + 'Conditions/' + subdet + '/Alignment/' +condname + '.xml'
+        handle.author = getpass.getuser()
+        handle.desc = self.getProp('DatasetName')
+        alg.XmlWriters.append("WriteAlignmentConditionsTool/" + name)
 
-    def writeSeq( self, listOfCondToWrite ) :
-        writeSequencer = GaudiSequencer( "WriteCondSeq" )
-        from Configurables import WriteAlignmentConditions
+    def addXmlWriters( self, alg ) :
+        alg.XmlWriters = []
+        listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
         if 'Velo' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'Velo', 'Global', [0,1] ) )
-            writeSequencer.Members.append ( self.writeAlg( 'Velo','Modules', [2] ) )
-            writeSequencer.Members.append ( self.writeAlg( 'Velo','Detectors', [4] ) )
+            self.addXmlWriter( alg, 'Velo', 'Global', [0,1] )
+            self.addXmlWriter( alg, 'Velo','Modules', [2] )
+            self.addXmlWriter( alg, 'Velo','Detectors', [4] )
         if 'TT' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'TT','Detectors', [0,1,2] ) )
-            writeSequencer.Members.append ( self.writeAlg( 'TT','Modules', [3] ) )
-            writeSequencer.Members.append ( self.writeAlg( 'TT','Sensors', [4,5] ) )
+            self.addXmlWriter( alg, 'TT','Detectors', [0,1,2] )
+            self.addXmlWriter( alg, 'TT','Modules', [3] )
+            self.addXmlWriter( alg, 'TT','Sensors', [4,5] )
         if 'IT' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'IT','Detectors', [] ) )
+            self.addXmlWriter( alg, 'IT','Detectors', [] )
         if 'OT' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'OT','Elements', [] ) )
+            self.addXmlWriter( alg, 'OT','Elements', [] )
         if 'Muon' in listOfCondToWrite:
-            #writeSequencer.Members.append ( self.writeAlg( 'Muon','Detectors', [] ) )
-            writeSequencer.Members.append ( self.writeAlg( 'Muon','Global', [0,1,2] ) )
+            #self.addXmlWriter( alg, 'Muon','Detectors', [] )
+            self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
         if 'Ecal' in listOfCondToWrite:
-            writeSequencer.Members.append ( self.writeAlg( 'Ecal','alignment', [] ) )
-        return writeSequencer
-
+            self.addXmlWriter( alg, 'Ecal','alignment', [] )
+        
     def alignmentSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "AlignmentSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Alignment Sequencer not defined! Defining!"
@@ -224,7 +226,8 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.HistoPrint                   = False
             alignAlg.UpdateInFinalize             = self.getProp( "UpdateInFinalize" )
             alignAlg.OutputDataFile               = self.getProp( "OutputDataFile" )
-            
+            self.addXmlWriters(alignAlg)
+                                        
             #print alignAlg
             # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
@@ -271,8 +274,5 @@ class TAlignment( LHCbConfigurableUser ):
         mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
         if self.getProp( "NumIterations" ) > 1 :
             mainSeq.Members.append( self.postMonitorSeq() )
-            
-        listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
-        if listOfCondToWrite:
-            mainSeq.Members.append( self.writeSeq( listOfCondToWrite ) )
+
         
