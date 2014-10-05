@@ -28,7 +28,7 @@
 #include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackProjector.h"
 #include "TrackInterfaces/ITrackSelector.h"
-
+#include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
 
 // from AlignSolvTools
 #include "AlignKernel/AlVec.h"
@@ -137,6 +137,8 @@ private:
   ToolHandle<Al::IVertexResidualTool>  m_vertexresidualtool ;
   ToolHandle<Al::IAlignUpdateTool>  m_updatetool ;
   ToolHandle<ITrackSelector> m_vertextrackselector ;
+  std::vector<std::string>          m_xmlWriterNames ;
+  std::vector<IWriteAlignmentConditionsTool*> m_xmlWriters ;
   std::string                       m_alignSummaryDataSvc ;
   std::string                       m_alignSummaryLocation ;
   bool                              m_fillHistos ;

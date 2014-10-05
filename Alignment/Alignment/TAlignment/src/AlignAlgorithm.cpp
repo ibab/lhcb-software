@@ -99,6 +99,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("AlignSummaryLocation", m_alignSummaryLocation = "AlignDerivativeData") ;
   declareProperty("FillHistos", m_fillHistos = false ) ;
   declareProperty("ForcedInitialTime", m_forcedInitTime = 0 ) ;
+  declareProperty("XmlWriters",m_xmlWriterNames) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -177,6 +178,9 @@ StatusCode AlignAlgorithm::initialize() {
   }
 
   info() << "Use correlations = " << m_correlation << endreq ;
+
+  for( auto i : m_xmlWriterNames ) 
+    m_xmlWriters.push_back( tool<IWriteAlignmentConditionsTool>(i,this) ) ;
 
   return StatusCode::SUCCESS;
 }
@@ -551,6 +555,8 @@ void AlignAlgorithm::update(const Al::Equations& equations)
   if(!m_outputDataFileName.empty())
     m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
   m_updatetool->process(equations,m_iteration,m_nIterations).ignore() ;
+  // write the xml
+  for( auto i: m_xmlWriters ) i->write() ;
 }
 
 void AlignAlgorithm::reset() {
