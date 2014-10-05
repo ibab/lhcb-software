@@ -18,6 +18,7 @@
 #include <boost/lexical_cast.hpp>
 #include <boost/foreach.hpp>
 #include "TH1D.h"
+#include "TMath.h"
 
 namespace Al
 {
@@ -35,6 +36,8 @@ namespace Al
     StatusCode initialize() ;
     StatusCode finalize() ;
     StatusCode process( const Al::Equations& equations, size_t iter, size_t maxiter ) const ;
+    StatusCode process( const Al::Equations& equations, ConvergenceStatus& convergencestatus) const ;
+    StatusCode process( const Al::Equations& equations, ConvergenceStatus& convergencestatus, size_t iter, size_t maxiter ) const ;
     StatusCode queryInterface(const InterfaceID& riid, void** ppvi ) ;
 
   private:
@@ -48,6 +51,7 @@ namespace Al
     StatusCode addDaughterDerivatives(Al::Equations& equations) const ;
     void dumpMostImportantDofs(const Elements& elements,const Al::Equations& equations,std::ostream& logmessage) const ;
     void dumpWorstSurveyOffenders(const Elements& elements,std::ostream& logmessage) const ;
+    static double computeLookElsewhereChi2Cut(double chi2, double n) ;
 
   private:
     std::string                m_matrixSolverToolName;          ///< Name of linear algebra solver tool
@@ -57,14 +61,11 @@ namespace Al
     ToolHandle<IAlignChisqConstraintTool> m_chisqconstrainttool ;
     size_t                     m_minNumberOfHits ;              ///< Minimum number of hits for an Alignable to be aligned
     bool                       m_usePreconditioning ;           ///< Precondition the system of equations before calling solver
+    double                     m_maxDeltaChi2PDofForConvergence ;
+    double                     m_maxModeDeltaChi2ForConvergence ;
     std::string                m_logFileName ;
     mutable std::ostringstream m_logMessage ;
-    AIDA::IProfile1D*          m_totNusedTracksvsIterHisto;
-    AIDA::IProfile1D*          m_totChi2vsIterHisto;
-    AIDA::IProfile1D*          m_norTotChi2vsIterHisto;
-    AIDA::IProfile1D*          m_avgChi2vsIterHisto;
-    AIDA::IProfile1D*          m_dAlignChi2vsIterHisto;
-    AIDA::IProfile1D*          m_nordAlignChi2vsIterHisto;
+    mutable unsigned int       m_iteration ;
   } ;
   
   DECLARE_TOOL_FACTORY( AlignUpdateTool )
@@ -74,7 +75,8 @@ namespace Al
 					   const IInterface* parent)
     : GaudiHistoTool(type,name,parent),
       m_lagrangeconstrainttool("Al::AlignConstraintTool",this),
-      m_chisqconstrainttool("Al::AlignChisqConstraintTool",this)
+      m_chisqconstrainttool("Al::AlignChisqConstraintTool",this),
+      m_iteration(0)
   {
     // interfaces
     declareInterface<IAlignUpdateTool>(this); 
@@ -84,6 +86,8 @@ namespace Al
     declareProperty("LogFile"                     , m_logFileName                  = "alignlog.txt" ) ;
     declareProperty("SurveyConstraintTool", m_chisqconstrainttool ) ;
     declareProperty("LagrangeConstraintTool", m_lagrangeconstrainttool ) ;
+    declareProperty("MaxDeltaChi2PDofForConvergence",m_maxDeltaChi2PDofForConvergence = 4) ;
+    declareProperty("MaxModeDeltaChi2ForConvergence",m_maxModeDeltaChi2ForConvergence = 9) ;
   }
 
   AlignUpdateTool::~AlignUpdateTool()
@@ -339,15 +343,33 @@ namespace Al
       }
     return StatusCode::SUCCESS ;
   }
-  
+
   StatusCode AlignUpdateTool::process( const Al::Equations& constequations,
 				       size_t iteration,
 				       size_t maxiteration) const
+  {
+    ConvergenceStatus status ;
+    return process( constequations, status, iteration, maxiteration ) ;
+  }
+
+  
+  StatusCode AlignUpdateTool::process( const Al::Equations& constequations,
+				       ConvergenceStatus& convergencestatus ) const
+  {
+    return process( constequations, convergencestatus, m_iteration++, 20 ) ;
+  }
+
+  
+  StatusCode AlignUpdateTool::process( const Al::Equations& constequations,
+				       ConvergenceStatus& convergencestatus,
+				       size_t iteration,
+				       size_t maxiteration ) const
   {
     // Print a warning if the geometry used to compute the derivatives
     // is not the same as the actual one. It is no longer a reason to
     // abort since we allow using derivatives computed with a
     // different geometry.
+    convergencestatus = Converged ;
     StatusCode sc = StatusCode::SUCCESS ;
     Al::Equations equations = constequations ;
     if( m_elementProvider->initTime() != equations.initTime() ) {
@@ -367,14 +389,6 @@ namespace Al
     info() << "\n";
     debug() << "==> iteration " << iteration << " : Initial alignment conditions  : [";
     const Elements& elements = m_elementProvider->elements() ;
-    std::vector<double> deltas;
-    deltas.reserve(elements.size()*6u);  
-    getAlignmentConstants(elements, deltas);
-    for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
-      debug() << (*i) << (i != iEnd-1u ? ", " : "]");
-    }
-    debug() << endmsg;
-    
     info() << "==> Updating constants" << endmsg ;
     std::ostringstream logmessage ;
     logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
@@ -387,8 +401,6 @@ namespace Al
 	       << "Time at initialize [ns] : " << equations.initTime().ns() 
 	       << " --> " << equations.initTime().format(true,"%F %r") << std::endl
 	       << "First/last run number: " << equations.firstRun() << "/" << equations.lastRun() << std::endl
-      //<< "Total number of tracks: " << m_nTracks << std::endl
-      //<< "Number of covariance calculation failures: " << m_covFailure << std::endl
 	       << "Used " << equations.numVertices() << " vertices for alignment" << std::endl
 	       << "Used " << equations.numDiMuons() << " particles for alignment" << std::endl
 	       << "Used " << equations.numTracks() << " tracks for alignment" << std::endl
@@ -487,14 +499,14 @@ namespace Al
       
       // add the lagrange constraints to the linear system
       size_t numConstraints = m_lagrangeconstrainttool->addConstraints(elements,equations,halfDChi2dX,halfD2Chi2dX2) ;
-      
+      size_t numDoFs = numParameters - numConstraints ;
+
       logmessage << "Number of alignables with insufficient statistics: " << numExcluded << std::endl
 		 << "Number of lagrange constraints: "                    << numConstraints << std::endl
 		 << "Number of chisq constraints:    "                    << surveychisq.nDoF() << std::endl
 		 << "Number of active parameters:    "                    << numParameters << std::endl ;
       
-      int numDoFs = halfDChi2dX.size() ;
-      if (numDoFs < 20 ) {
+      if ( halfDChi2dX.size() < 20 ) {
 	info() << "AlVec Vector    = " << halfDChi2dX << endmsg;
 	info() << "AlSymMat Matrix = " << halfD2Chi2dX2      << endmsg;
       } else {
@@ -510,13 +522,15 @@ namespace Al
 	preCondition(elements,equations,solution,covmatrix, scale) ;
       }
       info() << "Calling solver tool" << endreq ;
-      bool solved = m_matrixSolverTool->compute(covmatrix, solution);
-      if (m_usePreconditioning) {
-	info() << "Applying post-conditioning" << endreq ;
-	postCondition(solution,covmatrix, scale) ;
-      }
+      IAlignSolvTool::SolutionInfo solinfo ;
+      sc = m_matrixSolverTool->compute(covmatrix, solution,solinfo);
+      if (sc.isSuccess()) {
+
+	if (m_usePreconditioning) {
+	  info() << "Applying post-conditioning" << endreq ;
+	  postCondition(solution,covmatrix, scale) ;
+	}
       
-      if (solved) {
 	info() << "computing delta-chi2" << endreq ;
 	double deltaChi2 = solution * halfDChi2dX ; //somewhere we have been a bit sloppy with two minus signs!
 	if( deltaChi2 < 0 ) {
@@ -527,17 +541,20 @@ namespace Al
 	  //solved = m_matrixSolverTool->compute(covmatrix, solution);
 	  //deltaChi2 = solution * halfDChi2dX ;
 	}
-	
+
 	if (printDebug()) {
 	  info() << "Solution = " << solution << endmsg ;
 	  info() << "Covariance = " << covmatrix << endmsg ;
 	}
 	logmessage << "Alignment delta chisquare/dof: " 
-		   << deltaChi2 << " / " << numParameters << std::endl
-		   << "Normalised alignment change chisquare: " << deltaChi2 / numParameters << std::endl
+		   << deltaChi2 << " / " << numDoFs << std::endl
+		   << "Normalised alignment change chisquare: " << deltaChi2 / numDoFs << std::endl
 		   << "Alignment delta chisquare/track dof: "
 		   << deltaChi2 / equations.totalTrackNumDofs() << std::endl;
-	
+	logmessage << "Alternative total chisq: " << solinfo.totalChisq  << std::endl
+		   << "Smallest eigenvalue: " << solinfo.minEigenValue << std::endl
+		   << "Maximum chisq contribution of eigenmode: " << solinfo.maxChisqEigenMode << std::endl ;
+
 	m_lagrangeconstrainttool->printConstraints(solution, covmatrix, logmessage) ;
 	
 	if (printDebug()) debug() << "==> Putting alignment constants" << endmsg;
@@ -638,6 +655,15 @@ namespace Al
 	}
 	logmessage << "total local delta chi2 / dof: " << totalLocalDeltaChi2 << " / " << numParameters << std::endl ;
 
+
+	// Did we converge?
+	if( deltaChi2 / numDoFs <  m_maxDeltaChi2PDofForConvergence &&
+	    solinfo.maxChisqEigenMode < computeLookElsewhereChi2Cut(m_maxModeDeltaChi2ForConvergence,numDoFs) ) 
+	  convergencestatus = Converged ;
+	else 
+	  convergencestatus = NotConverged ;
+	logmessage << "Convergence status: " << convergencestatus << std::endl ;
+	
 	// dump information on the worst survey constraints
 	dumpWorstSurveyOffenders( elements, logmessage ) ;
 	
@@ -661,13 +687,6 @@ namespace Al
     logmessage << "********************* END OF ALIGNMENT LOG ************************" ;
     info() << logmessage.str() << endmsg ;
     info() << "\n";
-    debug() << "==> iteration " << iteration << " : Updated alignment conditions  : [";
-    deltas.clear();
-    getAlignmentConstants(elements, deltas);
-    for (std::vector<double>::const_iterator i = deltas.begin(), iEnd = deltas.end(); i != iEnd; ++i) {
-      debug() << (*i) << (i != iEnd-1u ? ", " : "]");
-    }
-    debug() << endmsg;
     m_logMessage << logmessage.str() ;
     
     if( iteration == 0 ) {
@@ -808,4 +827,22 @@ namespace Al
 		 << " surveyerr=" << std::setprecision(3) << dofchi2s[i].surerr 	
 		 << " deltaerr=" << std::setprecision(3) << dofchi2s[i].err << std::endl ;
     }
+
+  double AlignUpdateTool::computeLookElsewhereChi2Cut(double chi2, double n)
+  {
+    // one convergence criterion is the maximum chi2 of any of the
+    // alignment 'modes' after diagonalization. of course, due to
+    // statistics the maximum that we find depends on the number of
+    // modes. the following corrects the chi2 cut for this
+    // 'look-elsewhere effect'.
+    double chi2prime = chi2 ;
+    if(n>0) {
+      double p = TMath::Erfc(std::sqrt(chi2/2)) ;
+      double pprime = 1-std::pow((1-p),1./n) ;
+      double x = TMath::ErfcInverse(pprime) ;
+      chi2prime = 2*x*x ;
+    }
+    return chi2prime ;
+  }
+
 }
