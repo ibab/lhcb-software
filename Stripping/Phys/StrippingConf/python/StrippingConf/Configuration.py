@@ -53,6 +53,9 @@ class StrippingConf ( object ) :
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
 
+
+
+        self.checkFlavourTagging()
         if self._GlobalFlavourTagging:
           for stream in Streams:
             for line in stream.lines:
@@ -60,11 +63,11 @@ class StrippingConf ( object ) :
                 line._EnableFlavourTagging = False
                 self._taggingLocations += [ line.outputLocation().replace("/Particles","") ]
 
+        if self._GlobalFlavourTagging and self._taggingLocations != []:
+            self.appendFlavourTagging()
+
         for stream in Streams :
             self.appendStream(stream)
-
-        if self._GlobalFlavourTagging:
-            self.appendFlavourTagging()
 
 	self.checkAppendedLines()
 	self.checkUniqueOutputLocations()
@@ -73,8 +76,6 @@ class StrippingConf ( object ) :
           self.checkRawEventRequests()
           self.checkMDSTFlag()
         
-        self.checkFlavourTagging()
-
 	from Gaudi.Configuration import appendPostConfigAction
 	appendPostConfigAction ( defaultToolConfigCheck )
 
@@ -85,7 +86,7 @@ class StrippingConf ( object ) :
         for stream in self.activeStreams() : stream.checkMDSTFlag()
 
     def checkFlavourTagging(self) :
-        for stream in self.activeStreams() : 
+        for stream in Streams : 
           if stream.name() in self.DSTStreams : stream.checkFlavourTagging(disableFT=True,verbose=self._verbose)
           elif stream.name() in self.MicroDSTStreams : stream.checkFlavourTagging(disableFT=False,verbose=self._verbose)
           else : stream.checkFlavourTagging(disableFT=False,verbose=self._verbose)
@@ -167,7 +168,7 @@ class StrippingConf ( object ) :
 
             self._sequence = GaudiSequencer(self._name,Members = [selSeq])
 
-            if self._GlobalFlavourTagging:
+            if self._GlobalFlavourTagging and self._taggingLocations != []:
                 self._sequence.Members += [self._taggingSeq]
 
         return self._sequence

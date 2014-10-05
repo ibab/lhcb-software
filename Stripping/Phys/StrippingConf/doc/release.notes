@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-10-05 - Stefano Perazzini
+ - Change to the introduction of global FT algorithm
+
 ! 2014-09-29 - Stefano Perazzini
  - Fix to the way the global flavour tagging sequence is introduced
 
