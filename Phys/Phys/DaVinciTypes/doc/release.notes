@@ -5,6 +5,9 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+! 2014-10-05 - Anton Poluektov 
+ - Add new variables to RelatedInfoNamed for Fatima Soomro
+
 !========================= DaVinciTypes v2r8 2014-09-30 =========================
 
 ! 2014-09-03 - Pieter David

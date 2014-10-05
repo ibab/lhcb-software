@@ -192,8 +192,12 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       VELOPHIHITSVECTORSIZE = ZVISO +1,
       
       B2KSTARMUMUCLASSICISO = VELOPHIHITSVECTORSIZE+1,
-      B2KSTARMUMUBDTISO     = VELOPHIHITSVECTORSIZE+2
-
+      B2KSTARMUMUBDTISO     = VELOPHIHITSVECTORSIZE+2, 
+      
+      BSMUMUTRACKID         = B2KSTARMUMUBDTISO + 1, 
+      BSMUMUTRACKTOPID      = BSMUMUTRACKID + 1, 
+      BSMUMUPARTID          = BSMUMUTRACKID + 2, 
+      BSMUMUTOPID           = BSMUMUTRACKID + 3
 
     };
 
@@ -372,7 +376,10 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
         
       case RelatedInfoNamed::B2KSTARMUMUBDTISO     : return "B2KSTARMUMUBDTISO";
         
-
+      case RelatedInfoNamed::BSMUMUTRACKID         : return "BSMUMUTRACKID";
+      case RelatedInfoNamed::BSMUMUTRACKTOPID      : return "BSMUMUTRACKTOPID";
+      case RelatedInfoNamed::BSMUMUPARTID          : return "BSMUMUPARTID";
+      case RelatedInfoNamed::BSMUMUTOPID           : return "BSMUMUTOPID";
 
         default : return "UNKNOWN"; 
       }
@@ -380,7 +387,7 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
     
     static short int indexByName(std::string name) {
       short i;
-      for (i=0; i<=RelatedInfoNamed::B2KSTARMUMUBDTISO; i++) {
+      for (i=0; i<=RelatedInfoNamed::BSMUMUTOPID; i++) {
         if ( name.compare(nameByIndex(i) ) == 0 ) return i; 
       }
       return RelatedInfoNamed::UNKNOWN; 
