@@ -5,9 +5,6 @@
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiAlg/GaudiTupleTool.h"
-#include "GaudiKernel/NTuple.h"
-
 #include "AlignmentInterfaces/IAlignSolvTool.h"            // Interface
 
 class AlSymMat;
@@ -20,7 +17,7 @@ class AlVec;
  *  @author Adlene Hicheur
  *  @date   2007-06
  */
-class DiagSolvTool : public GaudiTupleTool, virtual public IAlignSolvTool {
+class DiagSolvTool : public GaudiTool, virtual public IAlignSolvTool {
 public: 
   /// Standard constructor
   DiagSolvTool( const std::string& type, 
@@ -32,7 +29,12 @@ public:
   ///< Call method to compute the solution, get symetric 
   /// matrix and vector in input and replaces them by 
   /// inverse matrix and solution vector in output.
-  virtual bool compute(AlSymMat& ,AlVec&) const; 
+  virtual bool compute(AlSymMat& ,AlVec&) const ; 
+
+  // Solves the system Ax=b for x. Return A=A^{-1} and
+  // b=x. Furthermore, returns the total chi2 (b^T*A^{-1}*b) and the
+  // largest contribution to the chi2 from a single mode.
+  virtual StatusCode compute(AlSymMat& A, AlVec& b, IAlignSolvTool::SolutionInfo&) const ;
 
   StatusCode initialize() ;
   //enum Solver {SPMINV, 
@@ -49,23 +51,8 @@ private:
   bool m_applyScaling ;
   double m_eigenValueThreshold ;
   double m_minEigenModeChisquare ;
-  size_t par_modcut;
-  bool par_writentp;
   
-  //Monitoring Ntuple variables
-  NTuple::Tuple* m_tuple;
-  //  NTuple::Item<float> nteig_tx,nteig_ty,nteig_tz,nteig_rx,nteig_ry,nteig_rz;
-  //  NTuple::Item<float> nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
-  float nteig_tx,nteig_ty,nteig_tz,nteig_rx,nteig_ry,nteig_rz;
-  float nteig_mode,nteig_eigval,nteig_eigmod,nteig_erreigmod;
-
-  int SolvDiag(AlSymMat& m_bigmatrix, AlVec& m_bigvector);
   void MonitorDiag(AlMat& z, AlVec& w, AlVec& D, double scale);
   int SolvMinRes(AlSymMat& m_bigmatrix, AlVec& m_bigvector, AlVec& result);
-  void Precond(AlSymMat& M, AlVec& r, AlVec& c, bool equIn);
-  double findMax(AlSymMat& M);
-  
-
-
 };
 #endif // ALIGNSOLVTOOLS_ALIGNSOLVTOOL_H
