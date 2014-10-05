@@ -55,7 +55,7 @@ class StrippingConf ( object ) :
 
 
 
-        self.checkFlavourTagging()
+        self.checkFlavourTagging(Streams)
         if self._GlobalFlavourTagging:
           for stream in Streams:
             for line in stream.lines:
@@ -85,8 +85,8 @@ class StrippingConf ( object ) :
     def checkMDSTFlag(self) :
         for stream in self.activeStreams() : stream.checkMDSTFlag()
 
-    def checkFlavourTagging(self) :
-        for stream in Streams : 
+    def checkFlavourTagging(self,streams) :
+        for stream in streams : 
           if stream.name() in self.DSTStreams : stream.checkFlavourTagging(disableFT=True,verbose=self._verbose)
           elif stream.name() in self.MicroDSTStreams : stream.checkFlavourTagging(disableFT=False,verbose=self._verbose)
           else : stream.checkFlavourTagging(disableFT=False,verbose=self._verbose)
