@@ -37,15 +37,6 @@ RelInfoBs2MuMuBIsolations::RelInfoBs2MuMuBIsolations( const std::string& type,
   declareInterface<IRelatedInfoTool>(this);
   declareProperty( "tracktype", m_tracktype = 3,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
-  declareProperty("angle"     , m_angle  = 0.27     ); // 
-  declareProperty("fc"        , m_fc  = 0.60     ); // 
-  declareProperty("doca_iso"  , m_doca_iso  = 0.13     ); // 
-  declareProperty("ips"       , m_ips  = 3.0     ); // 
-  declareProperty("svdis"     , m_svdis  = -0.15     ); // 
-  declareProperty("svdis_h"   , m_svdis_h  = 30.     ); // 
-  declareProperty("pvdis"     , m_pvdis  = 0.5     ); // 
-  declareProperty("pvdis_h"   , m_pvdis_h  = 40.    ); // 
-  declareProperty("clone_cut"   , m_clone_cut  = -9999. ); // 
   declareProperty("ghost_cut"   , m_ghost_cut  = 0.3 ); // 
   declareProperty("trchi2_cut"   , m_trchi2_cut  = 3.0 ); // 
   declareProperty("makeTrackCuts", m_makeTrackCuts = false);
@@ -95,6 +86,8 @@ StatusCode RelInfoBs2MuMuBIsolations::initialize() {
   m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBBOOSTMAG);
   m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBBOOSTANGLE);
   m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBTRACKS);
+  //  m_keys.push_back(RelatedInfoNamed::ID);
+  //  m_keys.push_back(RelatedInfoNamed::TOPID);
 
   return sc;
 }
@@ -119,13 +112,15 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
  
   if ( msgLevel(MSG::DEBUG) )  debug() << " part is "<<part->particleID().pid()<<" while top is "<< top->particleID().pid()<< endmsg;
 
+  m_CDFIso = -1.;
   m_otherB_mag=0.;
   m_otherB_angle=-1.;
   m_otherB_boost_mag=0.;
   m_otherB_boost_angle=-1.;
-  otherBtracks= 0;
-  m_CDFIso = -1;
- 
+  m_otherBtracks= 0;
+  m_partID = 0;
+  m_topID = 0;
+
   // -- The vector m_decayParticles contains all the particles that belong to the given decay
   // -- according to the decay descriptor.
   // -- Clear the vector with the particles in the specific decay Probably not needed here
@@ -143,7 +138,7 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
     return StatusCode::FAILURE;
   }
 
-  // If xthis 
+  // FIX this 
   /// check that it is a 2 body decay
   const LHCb::Particle::ConstVector& daughterVec = part->daughtersVector();
   int idx = 0;
@@ -168,7 +163,7 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
   if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call OtherB computation" << endmsg ;
   testcode = OtherB(top, part);
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Computed quantities "<< m_otherB_mag<<" "<< m_otherB_angle<< " "<<m_otherB_boost_mag<<" "<<m_otherB_boost_angle <<" "<< otherBtracks<<" with statuscode "<< testcode <<endmsg;
+    debug() << "Computed quantities "<< m_otherB_mag<<" "<< m_otherB_angle<< " "<<m_otherB_boost_mag<<" "<<m_otherB_boost_angle <<" "<< m_otherBtracks<<" with statuscode "<< testcode <<endmsg;
   if(!testcode) return StatusCode::FAILURE;
 
   m_map.clear();
@@ -184,7 +179,10 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
     case RelatedInfoNamed::BSMUMUOTHERBANGLE      : value = m_otherB_angle; break;
     case RelatedInfoNamed::BSMUMUOTHERBBOOSTMAG   : value = m_otherB_boost_mag; break;
     case RelatedInfoNamed::BSMUMUOTHERBBOOSTANGLE : value = m_otherB_boost_angle; break;
-    case RelatedInfoNamed::BSMUMUOTHERBTRACKS     : value = otherBtracks; break;
+    case RelatedInfoNamed::BSMUMUOTHERBTRACKS     : value = m_otherBtracks; break;
+
+      //    case RelatedInfoNamed::ID     : value = m_partID; break;
+      //    case RelatedInfoNamed::TOPID     : value = m_topID; break;
     
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
@@ -248,19 +246,19 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
 					     const LHCb::Particle *part){
 
   const LHCb::VertexBase* goodPV = m_dva->bestVertex(top);
-
+  
   LHCb::Particles OTHERB_parts;
   
   // in cppm code m_ParticlePath="/Event/Phys/StdAllNoPIDsPions/Particles";
   LHCb::Particles* m_allparts = get<LHCb::Particles>(m_ParticlePath);
   for ( LHCb::Particles::const_iterator ipp = m_allparts->begin(); ipp != m_allparts->end() ; ++ipp) {
-
+    
     bool isInList = isTrackInDecay((*ipp)->proto()->track());
     if ( msgLevel(MSG::DEBUG) ) debug() <<" check isInList = "<<isInList<< endreq;    
     if (isInList) continue;
     
     if ( msgLevel(MSG::DEBUG) ) debug() <<"particle inNOTinlist of siblings... will continue with computation"<< endreq;
-
+    
     Gaudi::XYZVector p_track = ((*ipp)->proto()->track()->momentum());
     double pttrack = p_track.rho();
     double ptrackmag = p_track.R();
@@ -268,18 +266,18 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
     double ips = -1.;
     m_dist->distance ( (*ipp), goodPV, imp, ips );
     ips = TMath::Sqrt(ips);
-
+    
     
     if ( (ips>4.0) && (ips<40.0) && (pttrack> 200.0) && (pttrack< 2000.0) && (ptrackmag< 30000.0) )
-    {
-      LHCb::Particle* track = *(ipp);
-      OTHERB_parts.add(track) ;
-      otherBtracks++;
-    }
+      {
+	LHCb::Particle* track = *(ipp);
+	OTHERB_parts.add(track) ;
+	m_otherBtracks++;
+      }
   }
       
-
-  if ( otherBtracks>0  && (m_decayParticles.size()>2))
+      
+  if ( m_otherBtracks>0  && (m_decayParticles.size()>2))
   {
 
     Gaudi::XYZVector ptproj(0.,0.,0.);
@@ -288,11 +286,10 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
       Gaudi::XYZVector ptrack = ((*ipp)->proto()->track()->momentum());
       ptproj += ptrack;
     }
-
+    
     m_otherB_mag = ptproj.R();
     m_otherB_angle=arcosine( ptproj, part->slopes());
-
-
+  
     info()<<" size of decayparts "<<m_decayParticles.size()<<endreq;
 
 
@@ -304,8 +301,7 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
     if (vdau1->charge()>0) myDau = vdau1;
     else if (vdau2->charge()>0) myDau = vdau2;
     if(vdau1->charge() == vdau2->charge() ) myDau = vdau2;
-
-
+    
     Gaudi::XYZVector ptproj2(0.,0.,0.);
     const Gaudi::LorentzVector p2(part->momentum());
     ROOT::Math::Boost boostToB( p2.BoostToCM() );
@@ -324,19 +320,24 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
 
     
   } // if ntracks>0
-
+      
   else {
     m_otherB_mag=-1.;
     m_otherB_angle= -1;
     m_otherB_boost_mag=-1.;
     m_otherB_boost_angle= -1;
   }
+   
+   m_partID = part->particleID().pid();
+   m_topID = top->particleID().pid();
+      
+  info()<<"computed quantities "<<m_otherB_mag<<" "<<m_otherB_angle<<" "<<m_otherB_boost_mag<<" "<< m_otherB_boost_angle<<" "<<m_otherBtracks<<endreq;
+  info()<<"partID "<<m_partID<<" topID "<<m_topID<<endreq;
 
   return StatusCode::SUCCESS;
-
+      
+      
 }
-
-
 
 
 //=============================================================================
@@ -344,6 +345,8 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
 //=============================================================================
 StatusCode RelInfoBs2MuMuBIsolations::CDFIsolation(const LHCb::Particle* top, 
 						   const LHCb::Particle* part){
+
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"part = "<<part->particleID().pid()<< " and top = "<<top->particleID().pid()<< endreq;
   
   bool test = true;
   
@@ -377,16 +380,14 @@ StatusCode RelInfoBs2MuMuBIsolations::CDFIsolation(const LHCb::Particle* top,
 	double delta_phi =  part->momentum().Phi() - (*ipp)->momentum().Phi();
 	delta_phi = TMath::Abs(delta_phi);
 	
-	//if(!m_IsoTwoBody){
-	  if (delta_phi > TMath::Pi() )  delta_phi = 2*TMath::Pi() - delta_phi;
-	  //	}
+	if (delta_phi > TMath::Pi() )  delta_phi = 2*TMath::Pi() - delta_phi;
 	
 	double rad_cone = TMath::Sqrt(  (delta_phi*delta_phi + deta*deta) );
 	if (  rad_cone <=1.0)
           {
             iso_giampi += pttrack;
 	    
-            if(atrack->ghostProbability()<0.3 && atrack->chi2PerDoF()< 3)
+            if(atrack->ghostProbability()< m_ghost_cut && atrack->chi2PerDoF()< m_trchi2_cut)
 	      {
 		iso_giampi_tc += pttrack;
 	      }

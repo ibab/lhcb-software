@@ -87,13 +87,17 @@ StatusCode RelInfoBs2MuMuTrackIsolations::initialize() {
   debug()<<" ==> Initialize"<<endmsg;
 
   //configure keys
-  m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKPLUSISO); //
-  m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKPLUSISOTWO); //
+  m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKPLUSISO);
+  m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKPLUSISOTWO);
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYQPLUS);
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYMASSISOPLUS);
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYCHI2ISOPLUS);
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYISO5PLUS);
-
+  m_keys.push_back(RelatedInfoNamed::ISOTWOBODYISO5PLUS);
+  /*
+  m_keys.push_back(RelatedInfoNamed::TRACKID);
+  m_keys.push_back(RelatedInfoNamed::TOPID);
+  */
   return sc;
 }
 
@@ -123,6 +127,8 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
   m_chargeplus  = -100;
   m_chi2isoplus = -1;
   m_iso5plus    = -1;
+  m_trackID = 0;
+  m_topID = 0;
 
   // -- The vector m_decayParticles contains all the particles that belong to the given decay
   // -- according to the decay descriptor.
@@ -177,7 +183,10 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
     case RelatedInfoNamed::ISOTWOBODYCHI2ISOPLUS  : value = m_chi2isoplus ; break;
     case RelatedInfoNamed::ISOTWOBODYISO5PLUS     : value = m_iso5plus    ; break;
     case RelatedInfoNamed::ISOTWOBODYQPLUS        : value = m_chargeplus    ; break;
-    
+      /*
+    case RelatedInfoNamed::TRACKID        : value = m_trackID ; break;
+    case RelatedInfoNamed::TOPID        : value = m_topID ; break;
+      */
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
     info () << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
@@ -377,8 +386,11 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
 
   m_count_mup_iso2 = isonew2;
   m_count_mup_Giampi = iso5;
-
+  m_trackID = part->particleID().pid();
+  m_topID = top->particleID().pid();
+  
   info()<<"looped over "<<ntracks<<" tracks \n Returning values "<<m_count_mup_iso2<<"   "<< m_count_mup_Giampi<<endreq;
+  info()<<" trackID "<<m_trackID<<" topID  "<<m_topID<<endreq;
 
   return StatusCode::SUCCESS;
 
@@ -667,13 +679,15 @@ StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::
    
   if(iso_parts_size <=1) massiso = -1.;
   
-  if ( msgLevel(MSG::DEBUG) ) debug()<<"NTRACKS "<<ntracks<<endreq;
-  if (msgLevel(MSG::DEBUG) ) debug()<<"massiso " << massiso << " chi2iso " << chi2iso<<" usual iso5 " << iso5<<endmsg;
-
   // // store values in the relevant variables 
   m_massisoplus =  massiso;
   m_chi2isoplus = chi2iso;
   m_iso5plus    = iso5;
+  m_trackID = P->particleID().pid();
+  m_topID = top->particleID().pid();
+  
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"NTRACKS "<<ntracks<<". \n trackID "<<m_trackID<<" topID  "<<m_topID<<endreq;
+  if (msgLevel(MSG::DEBUG) ) debug()<<"massiso " << m_massisoplus << " chi2iso " << m_chi2isoplus<<" usual iso5 " << m_iso5plus <<endmsg;
 
   return StatusCode::SUCCESS;
 

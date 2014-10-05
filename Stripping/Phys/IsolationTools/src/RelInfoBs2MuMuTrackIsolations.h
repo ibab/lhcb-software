@@ -91,7 +91,9 @@ private:
   double m_chargeplus  ;
   double m_chi2isoplus ;
   double m_iso5plus    ;
-
+  int m_trackID;
+  int m_topID;
+   
   //// Computes Giampi's isolations 
   std::vector<int> getIso(const LHCb::Particle*,  int isotype, bool);
 
