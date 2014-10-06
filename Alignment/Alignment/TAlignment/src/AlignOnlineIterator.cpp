@@ -37,6 +37,7 @@ class AlignOnlineIterator : public GaudiTool, virtual public LHCb::IAlignIterato
   std::string m_PartitionName;
   ToolHandle<Al::IAlignUpdateTool> m_alignupdatetool ;
   ToolHandle<IWriteAlignmentConditionsTool> m_xmlwriter ;
+  unsigned int m_maxIteration ;
 };
 
 
@@ -64,13 +65,16 @@ AlignOnlineIterator::AlignOnlineIterator(const std::string &  type,
     m_xmlwriter("WriteMultiAlignmentConditionsTool")
 {
   declareInterface<LHCb::IAlignIterator>(this) ;
-  declareProperty("PartitionName",   m_PartitionName= "LHCbA");
+  declareProperty("PartitionName",   m_PartitionName= "LHCbA") ;
+  declareProperty("MaxIteration", m_maxIteration = 10 ) ;
   IInterface *p=(IInterface*)parent;
   StatusCode sc = p->queryInterface(LHCb::IAlignDrv::interfaceID(),(void**)(&m_parent));
 }
 
 StatusCode AlignOnlineIterator::initialize()
 {  
+  debug() << "AlignOnlineIterator::initialize()" << endreq ;
+
   StatusCode sc = GaudiTool::initialize() ;
   if(sc.isSuccess() ) {
     sc = m_alignupdatetool.retrieve() ;
@@ -96,46 +100,56 @@ StatusCode AlignOnlineIterator::finalize()
 
 StatusCode AlignOnlineIterator::i_run()
 {
+  StatusCode sc = StatusCode::SUCCESS ;
   // only called once
+  unsigned int iteration(0) ;
+  while( iteration < m_maxIteration ) {
+    debug() << "Iteration " << ++iteration << endreq ;
 
-  while( 1 ) {
-    
     // 1. writes a little file with number of iteration step
     debug() << "calling parent->writeReference()" << endreq ;
     m_parent->writeReference();
  
     // 2. write the xml
     debug() << "writing xml files" << endreq ;
-    m_xmlwriter->write() ;
+    sc = m_xmlwriter->write() ;
+    if( !sc.isSuccess() ) {
+      error() << "Error writing xml files" << endreq ;
+      break ;
+    }
     
-    // 3. break the loop if converged
-    // if( convergencestatus == Converged ) break ;
-
-    // 4. start the analyzers and wait 
+    // 3. start the analyzers and wait 
     debug() << "wait for analyzers" << endreq ;
     m_parent->doContinue();
     m_parent->waitRunOnce();
     
-    // 5. read ASDs and compute new constants
+    // 4. read ASDs and compute new constants
+    debug() << "Collecting ASD files" << endreq ;
     Al::IAlignUpdateTool::ConvergenceStatus convergencestatus ;
     Al::Equations equations ;
     std::vector<std::string> filenames ;
     for(auto filename : filenames ) {
       Al::Equations tmp(0) ;
       tmp.readFromFile( filename.c_str() ) ;
-      if( equations.numHits()==0 ) 
+      debug() << "Adding derivatives from input file: " << filename << " " << tmp.numHits() << " "
+	      << tmp.totalChiSquare()  << endreq ;
+      if( equations.nElem()==0 )
 	equations = tmp ;
       else
 	equations.add( tmp ) ;
-      warning() << "Adding derivatives from input file: " << filename << " " << tmp.numHits() << " "
-		<< tmp.totalChiSquare()  << endreq ;
     }
-    StatusCode sc = m_alignupdatetool->process( equations, convergencestatus ) ;
+    debug() << "Calling AlignUpdateTool" << endreq ;
     
-    // 6. break the loop if converged
+    StatusCode sc = m_alignupdatetool->process( equations, convergencestatus ) ;
+    if( !sc.isSuccess() ) {
+      error() << "Error calling alignupdate tool" << endreq ;
+      break ;
+    }
+
+    // 5. break the loop if converged
     if( convergencestatus == Al::IAlignUpdateTool::Converged ) {
       // write the xml one last time ?
-      m_xmlwriter->write() ;
+      sc = m_xmlwriter->write() ;
       break ;
     }
   }
