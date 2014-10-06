@@ -19,12 +19,7 @@ export HOME=/home/$(/usr/bin/whoami)
 #
 . /group/hlt/MOORE/${MOOREONLINE_VERSION}/InstallArea/${CMTCONFIG}/setupMoore.sh;
 #
-export LOGFIFO=/tmp/logGaudi.fifo
-#Fixme: to be removed!
-#export LD_LIBRArY_PATH=/group/online/dataflow/cmtuser/Online_v5r9/InstallArea/x86_64-slc6-gcc48-dbg/lib:$LD_LIBRARY_PATH;
-#export FARMCONFIGROOT=/group/online/dataflow/cmtuser/Online_v5r9/Online/FarmConfig;
-#
-## python ${FARMCONFIGROOT}/job/ConfigureShell.py;
+
 eval `python ${FARMCONFIGROOT}/job/ConfigureShell.py`;
 renice 19 -p $$>>/dev/null
 #

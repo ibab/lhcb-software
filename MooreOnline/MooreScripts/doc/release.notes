@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+
+! 2014-09-10 - Eric van Herwijnen
+ - remove export LOGFIFO from all HLT startup scripts
 ! 2014-09-05 - Eric van Herwijnen
  - Do not enable the runchange handler for Commissioning_OTCosmics in runOnline.py
 
