@@ -16,7 +16,6 @@ macro Checkpointing_package_cpp_build_flags ' -Wextra ' WIN32 '' \
   target-gcc ' -Wextra -Wvariadic-macros '
 macro_append Checkpointing_package_cpp_build_flags ' -ansi -Wreturn-type -Wunused ' WIN32 ''
 macro_remove cppflags "-pthread"
-macro_remove cppflags "-std=c++11"
 
 # ==================== component libraries ==================================
 public
