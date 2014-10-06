@@ -95,8 +95,8 @@ StatusCode RelInfoBs2MuMuTrackIsolations::initialize() {
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYISO5PLUS);
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYISO5PLUS);
   /*
-  m_keys.push_back(RelatedInfoNamed::TRACKID);
-  m_keys.push_back(RelatedInfoNamed::TOPID);
+  m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKID);
+  m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKTOPID);
   */
   return sc;
 }
@@ -184,8 +184,8 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
     case RelatedInfoNamed::ISOTWOBODYISO5PLUS     : value = m_iso5plus    ; break;
     case RelatedInfoNamed::ISOTWOBODYQPLUS        : value = m_chargeplus    ; break;
       /*
-    case RelatedInfoNamed::TRACKID        : value = m_trackID ; break;
-    case RelatedInfoNamed::TOPID        : value = m_topID ; break;
+    case RelatedInfoNamed::BSMUMUTRACKID        : value = m_trackID ; break;
+    case RelatedInfoNamed::BSMUMUTRACKTOPID        : value = m_topID ; break;
       */
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;

@@ -86,8 +86,8 @@ StatusCode RelInfoBs2MuMuBIsolations::initialize() {
   m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBBOOSTMAG);
   m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBBOOSTANGLE);
   m_keys.push_back(RelatedInfoNamed::BSMUMUOTHERBTRACKS);
-  //  m_keys.push_back(RelatedInfoNamed::ID);
-  //  m_keys.push_back(RelatedInfoNamed::TOPID);
+  //  m_keys.push_back(RelatedInfoNamed::BSMUMUPARTID);
+  //  m_keys.push_back(RelatedInfoNamed::BSMUMUTOPID);
 
   return sc;
 }
@@ -181,8 +181,8 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
     case RelatedInfoNamed::BSMUMUOTHERBBOOSTANGLE : value = m_otherB_boost_angle; break;
     case RelatedInfoNamed::BSMUMUOTHERBTRACKS     : value = m_otherBtracks; break;
 
-      //    case RelatedInfoNamed::ID     : value = m_partID; break;
-      //    case RelatedInfoNamed::TOPID     : value = m_topID; break;
+      //    case RelatedInfoNamed::BSMUMUPARTID     : value = m_partID; break;
+      //    case RelatedInfoNamed::BSMUMUTOPID     : value = m_topID; break;
     
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
