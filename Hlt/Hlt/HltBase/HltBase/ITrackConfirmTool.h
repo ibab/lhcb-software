@@ -14,6 +14,7 @@ namespace LHCb
 {
 class State;
 class Track;
+class LHCbID;
 }
 
 static const InterfaceID IID_ITrackConfirmTool( "ITrackConfirmTool", 1, 0 );

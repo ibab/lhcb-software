@@ -2,7 +2,7 @@
 #define PARABOLAHYPOTHESIS_H 1
 
 // Include files
-#include "TfKernel/TStationHitManager.h"
+#include "TfKernel/IStationSelector.h"
 #include "Event/StateParameters.h"
 
 /** @class ParabolaHypothesis ParabolaHypothesis.h

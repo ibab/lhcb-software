@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2014-10-06 - Gerhard Raven
+ - replace inclusion of TStationHitManager with IStationSelector to avoid
+   exposing more than strictly needed.
 
 !========================= HltBase v15r2 2014-08-16 =========================
 

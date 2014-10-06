@@ -7,8 +7,6 @@
   <class name = "Hlt::Selection" />
   <class name = "Hlt::TrackSelection" />
   <class name = "Hlt::VertexSelection" />
-  <!-- <class name = "ISequencerTimerTool" /> -->
-  <!-- <class name = "IConfigTreeEditor" /> -->
   <class name = "Hlt::ITrack2CandidateMatch" />
 
   

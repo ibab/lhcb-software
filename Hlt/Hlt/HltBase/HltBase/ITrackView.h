@@ -8,7 +8,7 @@
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
-#include "TfKernel/TStationHitManager.h"
+#include "TfKernel/IStationSelector.h"
 #include "Kernel/LHCbID.h"
 #include "Event/Track.h"
 

@@ -19,7 +19,6 @@
 #include "HltBase/IHltInspector.h"
 #include "HltBase/HltSelection.h"
 
-#include "GaudiAlg/ISequencerTimerTool.h"
 
 #include "Event/HltCandidate.h"
 #include "Event/HltL0DiMuonCandidate.h"
