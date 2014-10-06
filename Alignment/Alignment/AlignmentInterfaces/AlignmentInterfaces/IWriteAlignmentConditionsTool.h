@@ -30,12 +30,5 @@ public:
 
   virtual StatusCode write() const = 0 ;
   
-  virtual StatusCode write( const std::string& filename,
-			    const std::string& topelement,
-			    const std::vector<unsigned int>& depths,
-			    const std::string& tag = "",
-			    const std::string& author = "",
-			    const std::string& description = "") const = 0 ;
-
 };
 #endif
