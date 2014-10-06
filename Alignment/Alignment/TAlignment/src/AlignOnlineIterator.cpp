@@ -12,6 +12,8 @@
 #include "OnlineAlign/IAlignUser.h"
 #include "RTL/rtl.h"
 
+#include "ASDCollector.h"
+
 #include "GaudiKernel/ToolHandle.h"
 #include "AlignmentInterfaces/IAlignUpdateTool.h"
 #include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
@@ -38,6 +40,7 @@ class AlignOnlineIterator : public GaudiTool, virtual public LHCb::IAlignIterato
   ToolHandle<Al::IAlignUpdateTool> m_alignupdatetool ;
   ToolHandle<IWriteAlignmentConditionsTool> m_xmlwriter ;
   unsigned int m_maxIteration ;
+  ASDCollector m_asdCollector ;
 };
 
 
@@ -67,6 +70,9 @@ AlignOnlineIterator::AlignOnlineIterator(const std::string &  type,
   declareInterface<LHCb::IAlignIterator>(this) ;
   declareProperty("PartitionName",   m_PartitionName= "LHCbA") ;
   declareProperty("MaxIteration", m_maxIteration = 10 ) ;
+  declareProperty("ASDDir", m_asdCollector.m_dir ) ;
+  declareProperty("ASDFilePattern", m_asdCollector.m_filePatt ) ;
+
   IInterface *p=(IInterface*)parent;
   StatusCode sc = p->queryInterface(LHCb::IAlignDrv::interfaceID(),(void**)(&m_parent));
 }
@@ -127,17 +133,20 @@ StatusCode AlignOnlineIterator::i_run()
     debug() << "Collecting ASD files" << endreq ;
     Al::IAlignUpdateTool::ConvergenceStatus convergencestatus ;
     Al::Equations equations ;
-    std::vector<std::string> filenames ;
-    for(auto filename : filenames ) {
-      Al::Equations tmp(0) ;
-      tmp.readFromFile( filename.c_str() ) ;
-      debug() << "Adding derivatives from input file: " << filename << " " << tmp.numHits() << " "
-	      << tmp.totalChiSquare()  << endreq ;
-      if( equations.nElem()==0 )
-	equations = tmp ;
-      else
-	equations.add( tmp ) ;
-    }
+    m_asdCollector.collectASDs(equations) ;
+    debug() << "Collected ASDs: numevents = " << equations.numEvents() << endreq ;
+
+    // std::vector<std::string> filenames ;
+    // for(auto filename : filenames ) {
+    //   Al::Equations tmp(0) ;
+    //   tmp.readFromFile( filename.c_str() ) ;
+    //   debug() << "Adding derivatives from input file: " << filename << " " << tmp.numHits() << " "
+    // 	      << tmp.totalChiSquare()  << endreq ;
+    //   if( equations.nElem()==0 )
+    // 	equations = tmp ;
+    //   else
+    // 	equations.add( tmp ) ;
+    // }
     debug() << "Calling AlignUpdateTool" << endreq ;
     
     StatusCode sc = m_alignupdatetool->process( equations, convergencestatus ) ;

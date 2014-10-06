@@ -82,7 +82,10 @@ void ASDCollector::collectASDs( Al::Equations &eqs)
 		{
 			Al::Equations tmp(0);
 			tmp.readFromFile(fileList[i].c_str());
-			eqs.add(tmp);
+			if(eqs.nElem()==0) 
+			  eqs = tmp;
+			else
+			  eqs.add(tmp);
 		}
 	}
 	return;

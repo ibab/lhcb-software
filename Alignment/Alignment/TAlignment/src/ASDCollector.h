@@ -18,6 +18,7 @@ class ASDCollector
 		std::string m_dir;
 		std::string m_filePatt;
 		time_t m_time;
+		ASDCollector() {}
 		ASDCollector(std::string &FilePatt, std::string &dir);
 		void setTime(time_t t);
 		void setTime();
