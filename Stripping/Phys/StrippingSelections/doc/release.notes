@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-10-06 - Jason Andrews
+ - minor adjustment to StrippingBu2Kpi0MergedLine mass window
 
 ! 2014-10-06 - Hannah Mary Evans
  - added "Calo" RAW banks to StrippingBu2MuNu.py

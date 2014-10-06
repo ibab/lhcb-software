@@ -42,8 +42,8 @@ default_config = {
                       "Mpi0MinP"         : 0,     # MeV
                       "Mpi0MinPT"        : 2400,  # MeV
                       "Mpi0MinCL"        :-1000,
-                      "MBuMinM"          : 4000,  # MeV
-                      "MBuMaxM"          : 6050,  # MeV
+                      "MBuMinM"          : 4200,  # MeV
+                      "MBuMaxM"          : 6300,  # MeV
                       "MBuMinPT"         : 1800,  # MeV
                       "MBuMaxMTDOCAChi2" : 10,
                       "PrescaleBu2Kpi0Merged"   : 1.0,
