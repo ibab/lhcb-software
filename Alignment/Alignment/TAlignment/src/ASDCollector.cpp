@@ -10,10 +10,7 @@
 #include <sys/stat.h> /* for stat() */
 #include <sys/types.h>
 #include <dirent.h>
-#include "AlignKernel/AlEquations.h"
 #include <string.h>
-#include <string>
-#include <vector>
 #include <unistd.h>
 using namespace std;
 
@@ -26,6 +23,10 @@ ASDCollector::ASDCollector(std::string &FilePatt, std::string &dir)
 void ASDCollector::setTime(time_t t)
 {
 	m_time = t;
+}
+void ASDCollector::setTime()
+{
+	m_time = time(0);
 }
 int ASDCollector::getfiles(string dir, vector<string> &fileList)
 {

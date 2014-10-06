@@ -20,6 +20,7 @@ class ASDCollector
 		time_t m_time;
 		ASDCollector(std::string &FilePatt, std::string &dir);
 		void setTime(time_t t);
+		void setTime();
 		void collectASDs(Al::Equations &eqs);
 	private:
 		int getfiles(std::string dir, std::vector<std::string> &fileList);
