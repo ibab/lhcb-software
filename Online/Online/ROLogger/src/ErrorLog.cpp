@@ -55,8 +55,10 @@ using namespace std;
 ErrorLog::ErrorLog(int argc, char** argv) 
 {
   RTL::CLI cli(argc, argv, help_fun);
-  string name, info;
+  string name, facility;
   cli.getopt("service",1,name);
+  cli.getopt("facility",1,facility);
+
   if ( strncasecmp(name.c_str(),"-pa",3)==0 ) {
     if ( name.find("=") != string::npos ) {
       name = name.substr(name.find("=")+1);
@@ -64,6 +66,9 @@ ErrorLog::ErrorLog(int argc, char** argv)
   }
   else if ( strncasecmp(name.c_str(),"-re",3)==0 )
     name = "reco";
+
+  if ( facility.empty() && name == "LHCb2" ) facility = "hlt2";
+  else if ( facility.empty() ) facility = "gaudi";
 
   m_messageLog = new Logger(RTL::processName()+"_display");
   m_historyLog = new Logger(RTL::processName()+"_history");
@@ -82,7 +87,7 @@ ErrorLog::ErrorLog(int argc, char** argv)
   else if ( name == "reco" || cli.getopt("reco",3) != 0 )  
     m_partListener = new RecoListener(this,name);
   else
-    m_partListener = new PartitionListener(this,name);
+    m_partListener = new PartitionListener(this,name,facility);
 }
 
 /// Standard destructor

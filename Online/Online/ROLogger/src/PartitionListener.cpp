@@ -138,16 +138,18 @@ void PartitionListener::recSliceHandler(void* tag, void* address, int* size) {
 
 /// DIM command service callback
 void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
-  string svc;
+  string svc, host;
   auto_ptr<_SV> f(new _SV());
   PartitionListener* h = *(PartitionListener**)tag;
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
     f->push_back(fmcLogger(data,h->m_facility));
-  if ( h->name() == "LHCb" ) {
+  host = h->name().substr(0,4);
+  
+  if ( host == "LHCb" ) {
     f->push_back(fmcLogger("HLT01",h->m_facility));
     f->push_back(fmcLogger("CALD07",h->m_facility));
   }
-  if ( h->name() == "LHCb" || h->name() == "FEST" ) {
+  if ( host == "LHCb" || host == "FEST" ) {
     f->push_back(fmcLogger("MONA09","pvssconfig"));
   }
   f->push_back(fmcLogger("MONA08","pvssconfig"));
