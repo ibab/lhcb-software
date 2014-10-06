@@ -146,7 +146,7 @@ void PartitionListener::dnsDataHandler(void* tag, void* address, int* size) {
 
 /// DIM command service callback
 void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
-  string svc;
+  string svc, host;
   auto_ptr<StringV > f(new StringV());
   PartitionListener* h = *(PartitionListener**)tag;
   f->push_back(h->name());
@@ -160,7 +160,8 @@ void PartitionListener::subFarmHandler(void* tag, void* address, int* size) {
     else if ( ::strcase_match_wild(s.c_str(),h->m_match.c_str()) ) 
       f->push_back(s);
   }
-  if ( h->name() == "LHCb" )   {
+  host = h->name();
+  if ( host.substr(0,4) == "LHCb" )   {
     f->push_back("cald07");
     f->push_back("mona09");
   }
