@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2014-10-06 - Maurizio Martinelli
+ - modified AlignAlgorithm to rely on a tool for managing xml writers
+
 ! 2014-10-05 - Wouter Hulsbergen
  - adapted interface of IAlignUpdateTool to have access to convergence status
  - adapted to interface change in IAlignSolvTool

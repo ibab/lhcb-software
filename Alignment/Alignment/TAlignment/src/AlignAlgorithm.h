@@ -28,7 +28,6 @@
 #include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackProjector.h"
 #include "TrackInterfaces/ITrackSelector.h"
-#include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
 
 // from AlignSolvTools
 #include "AlignKernel/AlVec.h"
@@ -37,6 +36,8 @@
 // from AlignmentInterfaces
 #include "AlignmentInterfaces/IAlignSolvTool.h"
 #include "AlignmentInterfaces/IAlignUpdateTool.h"
+#include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
+//#include "AlignmentInterfaces/IWriteMultiAlignmentConditionsTool.h"
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
@@ -137,9 +138,10 @@ private:
   ToolHandle<Al::ITrackResidualTool>   m_trackresidualtool ;
   ToolHandle<Al::IVertexResidualTool>  m_vertexresidualtool ;
   ToolHandle<Al::IAlignUpdateTool>  m_updatetool ;
-  ToolHandle<ITrackSelector> m_vertextrackselector ;
-  std::vector<std::string>          m_xmlWriterNames ;
-  std::vector<IWriteAlignmentConditionsTool*> m_xmlWriters ;
+  ToolHandle<ITrackSelector>        m_vertextrackselector ;
+  ToolHandle<IWriteAlignmentConditionsTool> m_xmlWritersTool ;
+  //  std::vector<std::string>          m_xmlWriterNames ;
+  //  std::vector<IWriteAlignmentConditionsTool*> m_xmlWriters ;
   std::string                       m_alignSummaryDataSvc ;
   std::string                       m_alignSummaryLocation ;
   bool                              m_fillHistos ;

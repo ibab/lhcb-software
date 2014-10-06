@@ -214,7 +214,8 @@ class TAlignment( LHCbConfigurableUser ):
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
                                         gslSVDsolver, CLHEPSolver, SparseSolver, DiagSolvTool,
                                         Al__AlignConstraintTool, Al__AlignUpdateTool,
-                                        Al__TrackResidualTool )
+                                        Al__TrackResidualTool, WriteMultiAlignmentConditionsTool )
+            
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations" )
@@ -228,7 +229,7 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.UpdateInFinalize             = self.getProp( "UpdateInFinalize" )
             alignAlg.OutputDataFile               = self.getProp( "OutputDataFile" )
             alignAlg.OnlineMode                   = self.getProp( "OnlineMode" )
-            self.addXmlWriters(alignAlg)
+#            self.addXmlWriters(alignAlg)
 
             #print alignAlg
             # and also the update tool is in the toolsvc
@@ -251,6 +252,10 @@ class TAlignment( LHCbConfigurableUser ):
             elementtool.Elements                  = self.getProp( "ElementsToAlign" )
             elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )
             #alignAlg.addTool( elementtool )
+
+            # Setup XML writers
+            xmlwriters = WriteMultiAlignmentConditionsTool()
+            self.addXmlWriters(xmlwriters)
 
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )

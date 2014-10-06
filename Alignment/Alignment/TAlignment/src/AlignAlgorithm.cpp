@@ -74,6 +74,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_vertexresidualtool("Al::VertexResidualTool"),
     m_updatetool("Al::AlignUpdateTool"),
     m_vertextrackselector("TrackSelector",this),
+    m_xmlWritersTool("WriteMultiAlignmentConditionsTool"),
     m_equations(0),
     m_resetHistos(false)
 {
@@ -91,6 +92,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("UpdateTool",m_updatetool) ;
   declareProperty("TrackResidualTool",m_trackresidualtool) ;
   declareProperty("VertexResidualTool",m_vertexresidualtool) ;
+  declareProperty("XmlWritersTool",m_xmlWritersTool) ;
   declareProperty("MaxTracksPerVertex",m_maxTracksPerVertex = 8 ) ;
   declareProperty("MinTracksPerVertex",m_minTracksPerVertex = 2 ) ;
 
@@ -100,7 +102,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("FillHistos", m_fillHistos = false ) ;
   declareProperty("ForcedInitialTime", m_forcedInitTime = 0 ) ;
   declareProperty("OnlineMode", m_Online=false);
-  declareProperty("XmlWriters",m_xmlWriterNames) ;
+  //  declareProperty("XmlWriters",m_xmlWriterNames) ;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -180,8 +182,8 @@ StatusCode AlignAlgorithm::initialize() {
 
   info() << "Use correlations = " << m_correlation << endreq ;
 
-  for( auto i : m_xmlWriterNames )
-    m_xmlWriters.push_back( tool<IWriteAlignmentConditionsTool>(i,this) ) ;
+  //  for( auto i : m_xmlWriterNames )
+  //    m_xmlWriters.push_back( tool<IWriteAlignmentConditionsTool>(i,this) ) ;
 
   return StatusCode::SUCCESS;
 }
@@ -576,7 +578,8 @@ void AlignAlgorithm::update(const Al::Equations& equations)
     m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
   m_updatetool->process(equations,m_iteration,m_nIterations).ignore() ;
   // write the xml
-  for( auto i: m_xmlWriters ) i->write() ;
+  m_xmlWritersTool->write();
+  //  for( auto i: m_xmlWriters ) i->write() ;
 }
 
 void AlignAlgorithm::reset() {
