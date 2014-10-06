@@ -126,6 +126,7 @@ StatusCode AlignOnlineIterator::i_run()
     
     // 3. start the analyzers and wait 
     debug() << "wait for analyzers" << endreq ;
+    m_asdCollector.setTime() ;
     m_parent->doContinue();
     m_parent->waitRunOnce();
     
