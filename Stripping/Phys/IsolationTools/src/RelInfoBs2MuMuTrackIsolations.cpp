@@ -94,10 +94,10 @@ StatusCode RelInfoBs2MuMuTrackIsolations::initialize() {
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYCHI2ISOPLUS);
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYISO5PLUS);
   m_keys.push_back(RelatedInfoNamed::ISOTWOBODYISO5PLUS);
-  /*
+  
   m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKID);
   m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKTOPID);
-  */
+  
   return sc;
 }
 
@@ -183,10 +183,10 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
     case RelatedInfoNamed::ISOTWOBODYCHI2ISOPLUS  : value = m_chi2isoplus ; break;
     case RelatedInfoNamed::ISOTWOBODYISO5PLUS     : value = m_iso5plus    ; break;
     case RelatedInfoNamed::ISOTWOBODYQPLUS        : value = m_chargeplus    ; break;
-      /*
+
     case RelatedInfoNamed::BSMUMUTRACKID        : value = m_trackID ; break;
     case RelatedInfoNamed::BSMUMUTRACKTOPID        : value = m_topID ; break;
-      */
+
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
     info () << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
@@ -347,7 +347,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
     // non-isolating criteria #5
     if (angle <m_angle && fc<m_fc && doca<m_doca_iso && ips>m_ips && svdis>m_svdis && svdis<m_svdis_h && pvdis>m_pvdis && pvdis<m_pvdis_h ){
       if(m_makeTrackCuts) {
-	if (track->ghostProbability()>0.3 || track->chi2PerDoF()> 3)     iso5 += 1;
+	if (track->ghostProbability() < m_ghost_cut || track->chi2PerDoF() <  m_trchi2_cut)     iso5 += 1;
       }
       else  iso5 += 1;
     }// if
