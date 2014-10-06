@@ -49,11 +49,13 @@ private:
   IRelatedInfoTool* m_tool;
   int m_maxLevel;
 
-  typedef std::map<std::string, std::string> InfoMap;
+  typedef std::map<std::string, std::vector<std::string> > InfoMap;
   InfoMap m_infoLocations;
 
   typedef std::map<std::string, ParticleInfoRelation> RelationLocationMap;
   mutable RelationLocationMap m_relMap;
+
+  std::map<std::string, unsigned int> m_locationCounter; 
 
 };
 

@@ -76,6 +76,13 @@ StatusCode AddRelatedInfo::execute()
     // Loop over particles in the locations
     for ( const Particle * p : parts )
     {
+      // Zero locations counter
+      for ( const auto& loc2 : m_infoLocations ) {
+        std::string tmpLoc2 = loc2.first;
+        boost::erase_all( tmpLoc2, "/Event/" );
+        tmpLoc2 = "/Event/" + tmpLoc2;
+        m_locationCounter[tmpLoc2] = 0;
+      }
       Particle * c = const_cast<Particle*>(p);
       fill( c, c, 0, tmpLoc );
     }
@@ -118,15 +125,25 @@ void AddRelatedInfo::fill( const Particle* top,
     std::string map_location; 
 
     if (m_maxLevel > 0) {
+      unsigned int iloc = m_locationCounter[c_location]; 
+      
+      if (iloc >= m_infoLocations[c_location].size() ) {
+        warning() << "Index of particle at " << c_location << "(" << iloc << ")"
+                  << "is larger than location vector size " << "(" << m_infoLocations[c_location].size() 
+                  << "). Skipping RelatedInfo calculation. " << endreq; 
+        return; 
+      }
+      
       if (msgLevel(MSG::DEBUG)) 
-        debug() << "Filling RelatedInfo for particle at " << c_location << endreq;
-      map_location = top_location + "/" + m_infoLocations[c_location];
+        debug() << "Filling RelatedInfo for particle " << iloc << " at location " << c_location << endreq;
+      map_location = top_location + "/" + m_infoLocations[c_location][iloc];
+      m_locationCounter[c_location]++; 
     } else {
       // In case the line just filters the common particles and does not produce
       // its own candidates
       if (msgLevel(MSG::DEBUG)) 
         debug() << "Filling RelatedInfo for particle at top location " << top_location << endreq;
-      map_location = top_location + "/" + m_infoLocations[top_location + "/Particles"];
+      map_location = top_location + "/" + m_infoLocations[top_location + "/Particles"][0];
     } 
     
     if (msgLevel(MSG::DEBUG)) 
@@ -149,7 +166,7 @@ void AddRelatedInfo::fill( const Particle* top,
       debug() << "Got RelatedInfoMap : " << *map << endreq;
     }
       
-    relation->i_relate(c, *map); 
+    relation->i_relate(top, *map); 
 
   } 
   else 

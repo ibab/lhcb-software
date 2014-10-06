@@ -4,6 +4,16 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-10-06 - Anton Poluektov 
+ - Modify behaviour of AddRelatedInfo: 
+
+    * Instead of ParticleLocation:RelatedInfoLocation map for InfoLocations property, it takes 
+      the map ParticleLocation:vector<RelatedInfoLocations>, where each element of the vector 
+      corresponds to the unique particle from ParticleLocation in the decay tree
+      (e.g. for Bs->MuMu need to specify two RelatedInfoLocations, tau->mu+mu-mu- - tree)
+
+    * RelatedInfo is related from the B candidate rather than from daughter particle
+
 !========================= RelatedInfoTools v1r0 2014-09-30 =========================
 
 ! 2014-09-29 - Eduardo Rodrigues
