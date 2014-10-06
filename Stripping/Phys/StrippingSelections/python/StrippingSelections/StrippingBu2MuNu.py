@@ -221,6 +221,7 @@ class Bu2MuNuConf( LineBuilder ) :
                                           postscale = config[ 'PostscaleControl' ],
                                           selection = DataOnDemand( self.selMuonsLocationControl ),
                                           RelatedInfoTools = RelatedInfoToolsControl,
+                                          RequiredRawEvents = ["Calo"],
                                           MDSTFlag = True                                         
                                           )
         
@@ -231,6 +232,7 @@ class Bu2MuNuConf( LineBuilder ) :
                                          FILTER = self.filterTracks,
                                          selection = DataOnDemand( self.selMuonsLocation ),
                                          RelatedInfoTools = RelatedInfoToolsSignal,
+                                         RequiredRawEvents = ["Calo"],
                                          MDSTFlag = True
                                          )
         
