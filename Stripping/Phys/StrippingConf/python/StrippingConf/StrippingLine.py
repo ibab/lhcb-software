@@ -485,6 +485,8 @@ class StrippingLine(object):
         		relatedInfoAlg.MaxLevel = 1
         	    infoLocations = {}
         	    for k,v in itool['Locations'].iteritems() : 
+			if not isinstance(v, list) : 
+			    v = [ v ]
     			if type(k).__name__ in  [ 'Selection', 'MergedSelection', 'AutomaticData', 'DataOnDemand' ] : 
 
 			    # Need to check if the selection is the top selection
@@ -504,7 +506,7 @@ class StrippingLine(object):
         	    if 'Locations' in itool.keys() :
         		raise Exception('\n Both "Location" and "Locations" are defined in RelatedInfo dictionary, use either of them.')
         	    relatedInfoAlg.MaxLevel = 0
-        	    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : itool['Location'] }
+        	    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : [ itool['Location'] ] }
         	else : 
         	    raise Exception('\n "Location" or "Locations" is not defined in RelatedInfo dictionary')
         	toolType = itool["Type"]
@@ -517,7 +519,7 @@ class StrippingLine(object):
         	    if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
         	    setattr( toolInstance, property, value)
 
-#		relatedInfoAlg.OutputLevel = VERBOSE
+		relatedInfoAlg.OutputLevel = VERBOSE
        		relatedInfoAlg.Tool = toolType + '/' + toolName
 
 		self._members.append(relatedInfoAlg)
