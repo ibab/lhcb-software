@@ -99,6 +99,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("AlignSummaryLocation", m_alignSummaryLocation = "AlignDerivativeData") ;
   declareProperty("FillHistos", m_fillHistos = false ) ;
   declareProperty("ForcedInitialTime", m_forcedInitTime = 0 ) ;
+  declareProperty("OnlineMode", m_Online=false);
   declareProperty("XmlWriters",m_xmlWriterNames) ;
 }
 
@@ -122,7 +123,7 @@ StatusCode AlignAlgorithm::initialize() {
   if (!m_align) return Error("==> Failed to retrieve detector selector tool!", StatusCode::FAILURE);
   // This is for debugging, mostly
   if( m_forcedInitTime ) m_align->initAlignmentFrame( m_forcedInitTime ) ;
-  
+
   sc = m_trackresidualtool.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
@@ -137,7 +138,7 @@ StatusCode AlignAlgorithm::initialize() {
 
     /// Get range  detector elements
   const Elements& elements = m_align->elements();
-  
+
   if (printDebug()) {
     debug() << "==> Got " << elements.size() << " elements to align!" << endmsg;
     for(Elements::const_iterator i = elements.begin(); i!= elements.end(); ++i) {
@@ -151,7 +152,7 @@ StatusCode AlignAlgorithm::initialize() {
       debug() << endmsg;
     }
   }
-  
+
   /// create the summary data and register in the TES
   LHCb::AlignSummaryData* m_summaryData = new LHCb::AlignSummaryData(0) ;
   IDataProviderSvc* datasvc = svc<IDataProviderSvc>(m_alignSummaryDataSvc,true) ;
@@ -172,14 +173,14 @@ StatusCode AlignAlgorithm::initialize() {
   /// @todo: this should go into a monitoring tool
   if( m_fillHistos ) {
     info() << "booking histograms assuming " << m_nIterations << " iterations " << endmsg;
-    for(Elements::const_iterator i = elements.begin(); i!= elements.end(); ++i) 
+    for(Elements::const_iterator i = elements.begin(); i!= elements.end(); ++i)
       m_elemHistos.push_back( new AlElementHistos(*this,**i,m_nIterations) ) ;
     m_resetHistos = false ;
   }
 
   info() << "Use correlations = " << m_correlation << endreq ;
 
-  for( auto i : m_xmlWriterNames ) 
+  for( auto i : m_xmlWriterNames )
     m_xmlWriters.push_back( tool<IWriteAlignmentConditionsTool>(i,this) ) ;
 
   return StatusCode::SUCCESS;
@@ -187,7 +188,7 @@ StatusCode AlignAlgorithm::initialize() {
 
 StatusCode AlignAlgorithm::finalize() {
   if (m_updateInFinalize) update() ;
-  
+
   for( std::vector<AlElementHistos*>::iterator ielem = m_elemHistos.begin() ;
        ielem != m_elemHistos.end(); ++ielem) delete *ielem ;
 
@@ -197,6 +198,25 @@ StatusCode AlignAlgorithm::finalize() {
   return GaudiHistoAlg::finalize();
 }
 
+StatusCode AlignAlgorithm::stop()
+{
+	if (m_Online)
+	{
+		if(!m_outputDataFileName.empty())
+			m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
+	}
+  return StatusCode::SUCCESS;
+}
+
+StatusCode AlignAlgorithm::start()
+{
+	if (m_Online)
+	{
+		reset() ;
+	}
+  return StatusCode::SUCCESS;
+}
+
 //=============================================================================
 // Main execution
 //=============================================================================
@@ -204,20 +224,20 @@ StatusCode AlignAlgorithm::execute() {
 
   // Reset histograms if required
   if(m_resetHistos) resetHistos() ;
-  
+
   // Make sure that the alignment frames are properly initialized on the first event
   if( m_equations->initTime() != 0 && m_equations->initTime() != m_align->initTime() ) {
     error() << "Mismatch in init time: " << m_equations->initTime() << " " << m_align->initTime() << ". Aborting."
   	    << endreq ;
     return StatusCode::FAILURE ;
   }
-  
+
   if( m_equations->initTime() == 0 ) {
     if ( m_align->initTime() == 0 )
       m_align->initAlignmentFrame() ;
     m_align->initEquations( *m_equations ) ;
   }
-  
+
   // Get tracks. Copy them into a vector, because that's what we need for dealing with vertices.
   LHCb::Track::Range tracks;
   if( !m_tracksLocation.empty() ) {
@@ -225,7 +245,7 @@ StatusCode AlignAlgorithm::execute() {
     if (printVerbose()) verbose() << "Number of tracks in container " + m_tracksLocation + ": " << tracks.size() << endmsg;
   }
   m_nTracks += tracks.size() ;
-  
+
   // First just copy the tracks
   std::vector<const LHCb::Track*> selectedtracks ;
   for(  LHCb::Track::Range::const_iterator iTrack = tracks.begin() ; iTrack != tracks.end() ; ++iTrack)
@@ -240,7 +260,7 @@ StatusCode AlignAlgorithm::execute() {
 	selectedtracks.push_back( *iTrack ) ;
       } else {
 	warning() << "Error computing residual cov matrix. Skipping track of type "
-		  << (*iTrack)->type() << " with key: " << (*iTrack)->key() 
+		  << (*iTrack)->type() << " with key: " << (*iTrack)->key()
 		  << " and chi2 / dof: " << (*iTrack)->chi2() << "/" << (*iTrack)->nDoF() << endmsg ;
 	++m_covFailure;
       }
@@ -250,11 +270,11 @@ StatusCode AlignAlgorithm::execute() {
 	      << " nDoF = " << (*iTrack)->nDoF()
 	      << " #nodes = " << (*iTrack)->nodes().size() << endreq ;
     }
-  
+
   // Now I got a bit worried about overlaps. Sort these tracks in the
   // number of LHCbIDs. Then remove overlapping tracks.
-  std::sort(selectedtracks.begin(), selectedtracks.end(), 
-	    boost::lambda::bind(&LHCb::Track::nLHCbIDs,*boost::lambda::_1) > 
+  std::sort(selectedtracks.begin(), selectedtracks.end(),
+	    boost::lambda::bind(&LHCb::Track::nLHCbIDs,*boost::lambda::_1) >
 	    boost::lambda::bind(&LHCb::Track::nLHCbIDs,*boost::lambda::_2)) ;
   std::vector< const LHCb::Track* > nonoverlappingtracks ;
   std::set< unsigned int > selectedlhcbids ;
@@ -265,13 +285,13 @@ StatusCode AlignAlgorithm::execute() {
 	 iid != (*itr)->lhcbIDs().end(); ++iid) ids.insert( iid->lhcbID() ) ;
     //std::set<LHCb::LHCbID> ids( (*itr)->lhcbIDs().begin(), (*itr)->lhcbIDs().end() ) ;
     if( ids.size() != (*itr)->lhcbIDs().size() ) {
-      warning() << "Skipping track with non-unique LHCbIds. Type= " 
+      warning() << "Skipping track with non-unique LHCbIds. Type= "
 		<< (*itr)->type() << " " << (*itr)->history() << endreq ;
     } else {
       std::set<unsigned int> allids = selectedlhcbids ;
       allids.insert( ids.begin(), ids.end() ) ;
       if( allids.size() != selectedlhcbids.size() + ids.size() ) {
-	//warning() << "Skipping track of type " << (*itr)->type() 
+	//warning() << "Skipping track of type " << (*itr)->type()
 	// << "because it overlaps with another selected track" << endreq ;
       } else {
 	nonoverlappingtracks.push_back(*itr) ;
@@ -286,7 +306,7 @@ StatusCode AlignAlgorithm::execute() {
 		<< selectedtracks.size() << " tracks because of overlaps." << endreq ;
   }
   selectedtracks = nonoverlappingtracks ;
-  
+
   // Now deal with dimuons, vertices, if there are any.
   size_t numusedtracks(0) ;
   size_t numusedvertices(0) ;
@@ -303,7 +323,7 @@ StatusCode AlignAlgorithm::execute() {
       }
     }
   }
-  
+
   if( !m_dimuonLocation.empty() ) {
     const LHCb::TwoProngVertices* vertices = get<LHCb::TwoProngVertices>(m_dimuonLocation);
     if(vertices ) {
@@ -326,7 +346,7 @@ StatusCode AlignAlgorithm::execute() {
       }
     }
   }
-  
+
   if( !m_vertexLocation.empty() ) {
     LHCb::RecVertex::Range vertices = get<LHCb::RecVertex::Range>(m_vertexLocation);
 
@@ -345,24 +365,24 @@ StatusCode AlignAlgorithm::execute() {
 	    numusedtracks += res->numTracks() ;
 	    removeVertexTracks( *isubver, selectedtracks ) ;
 	    plot( isubver->tracks().size(), "NumTracksPerPV", -0.5,30.5,31) ;
-	  } 
+	  }
 	}
       }
     }
-  }	
-  
+  }
+
   // Loop over the remaining tracks
   if (printVerbose()) verbose() << "Number of tracks left after processing vertices: " << selectedtracks.size() << endreq ;
 
   for( std::vector<const LHCb::Track*>::const_iterator iTrack = selectedtracks.begin() ;
        iTrack != selectedtracks.end(); ++iTrack ) {
-    
+
     // this cannot return a zero pointer since we have already checked before
     const Al::Residuals* res = m_trackresidualtool->get(**iTrack) ;
     assert(res!=0) ;
     if( res && accumulate( *res ) ) ++numusedtracks ;
-  } 
-  
+  }
+
   Gaudi::Time eventtime ;
   unsigned int runnr(0) ;
   if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) ){
@@ -371,7 +391,7 @@ StatusCode AlignAlgorithm::execute() {
     runnr = odin->runNumber() ;
   }
   m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons, eventtime, runnr ) ;
-    
+
   return StatusCode::SUCCESS;
 }
 
@@ -382,13 +402,13 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
   if( residuals.size() > 0 &&
       (residuals.nAlignables() > 1 || residuals.nExternalHits()>0 ) ) {
     accept = true ;
-    
+
     // let's first get the derivatives
     typedef Gaudi::Matrix1x6 Derivative ;
     std::vector< Derivative > derivatives ;
     derivatives.reserve( residuals.size() ) ;
-    for (Al::Residuals::ResidualContainer::const_iterator 
-	   ires = residuals.residuals().begin(); 
+    for (Al::Residuals::ResidualContainer::const_iterator
+	   ires = residuals.residuals().begin();
 	 ires != residuals.residuals().end() && accept;++ires) {
       // Project measurement
       const LHCb::Measurement& meas = ires->node().measurement() ;
@@ -404,15 +424,15 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 
     if( accept ) {
       size_t nodeindex(0) ;
-      for (Al::Residuals::ResidualContainer::const_iterator 
-	     ires = residuals.residuals().begin() ; 
+      for (Al::Residuals::ResidualContainer::const_iterator
+	     ires = residuals.residuals().begin() ;
 	   ires != residuals.residuals().end();++ires, ++nodeindex) {
 	const Derivative& deriv = derivatives[nodeindex] ;
 	Al::ElementData& elementdata = m_equations->element(ires->element().index()) ;
 	elementdata.addHitSummary(ires->V(), ires->R(), ires->node().state().position()) ;
 
 	// add to the first derivative
-	
+
 	// 'alignment' outliers are not added to the first
 	// derivative. However, since they have been used in the track
 	// fit, they must be added to the 2nd derivative, otherwise we
@@ -428,7 +448,7 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	Gaudi::SymMatrix6x6 tmpsym ;
 	ROOT::Math::AssignSym::Evaluate(tmpsym,Transpose(deriv)*deriv ) ;
 	elementdata.m_d2Chi2DAlpha2 += (1/ ires->V() * ires->R() * 1/ ires->V() ) * tmpsym ;
-         
+
 	// compute the derivative of the track parameters, used for one of the
 	// canonical constraints:
 	//   dx/dalpha = - dchi^2/dalphadx * ( dchi^2/dx^2)^{-1}
@@ -479,7 +499,7 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
  	  }
 	}
       }
-      
+
       // fill some histograms
       if( m_fillHistos ) {
 	nodeindex = 0 ;
@@ -504,7 +524,7 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	  }
 	}
       }
-      
+
       // keep some information about the tracks that we have seen
       m_equations->addChi2Summary( residuals.chi2(), residuals.nDoF(), residuals.nExternalHits() ) ;
 
@@ -517,29 +537,29 @@ bool AlignAlgorithm::accumulate( const Al::Residuals& residuals )
 	   icol != newend; ++icol) {
 	m_equations->element(*icol).addTrack() ;
 	for( std::vector<size_t>::const_iterator irow= elementsOnTrack.begin();
-	     irow != icol; ++irow) 
+	     irow != icol; ++irow)
 	  m_equations->element(*irow).m_d2Chi2DAlphaDBeta[*icol].addTrack() ;
       }
     }
   }
   return accept ;
 }
- 
- 
+
+
 //=============================================================================
 //  Update
 //=============================================================================
-void AlignAlgorithm::update() 
+void AlignAlgorithm::update()
 {
   if(m_equations) {
     info() << "Total number of tracks: " << m_nTracks << endreq ;
     info() << "Number of covariance calculation failures: " << m_covFailure << endreq ;
     if( !m_inputDataFileNames.empty() ) {
-      for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ; 
+      for(std::vector<std::string>::const_iterator ifile = m_inputDataFileNames.begin() ;
 	  ifile != m_inputDataFileNames.end(); ++ifile) {
 	Al::Equations tmp(0) ;
 	tmp.readFromFile( (*ifile).c_str() ) ;
-	m_equations->add( tmp ) ; 
+	m_equations->add( tmp ) ;
 	warning() << "Adding derivatives from input file: " << *ifile << " " << tmp.numHits() << " "
 		  << tmp.totalChiSquare() << " " << m_equations->totalChiSquare() << endreq ;
       }
@@ -572,7 +592,7 @@ void AlignAlgorithm::reset() {
   m_resetHistos = true ;
 }
 
-void AlignAlgorithm::resetHistos() 
+void AlignAlgorithm::resetHistos()
 {
   m_resetHistos = false ;
   // moved this seperately such that histograms are not reset on last iteration
@@ -605,19 +625,19 @@ namespace {
   void extractTracks( const LHCb::Particle& p,
 		      std::vector<const LHCb::Track*>& tracks)
   {
-    if( p.proto() && p.proto()->track() ) 
+    if( p.proto() && p.proto()->track() )
       tracks.push_back(p.proto()->track() ) ;
     BOOST_FOREACH( const LHCb::Particle* dau,
 		   p.daughters() )
       extractTracks( *dau, tracks ) ;
   }
-  
+
   struct CompareLHCbIds {
     bool operator()(const LHCb::LHCbID& lhs, const LHCb::LHCbID& rhs) const {
       return lhs.lhcbID() < rhs.lhcbID() ;
     }
   } ;
-  
+
   struct TrackClonePredicate
   {
     const LHCb::Track* lhs ;
@@ -628,7 +648,7 @@ namespace {
 	lhs->nCommonLhcbIDs(*rhs) == std::min(lhs->lhcbIDs().size(),rhs->lhcbIDs().size()) ;
     }
   } ;
-  
+
   struct CompareTypeAndSide
   {
     int direction( const LHCb::Track& track ) const {
@@ -640,7 +660,7 @@ namespace {
     }
     bool operator() ( const LHCb::Track* lhs, const LHCb::Track* rhs ) const {
       return lhs->type() < rhs->type() ||
-	(lhs->type()==rhs->type() && 
+	(lhs->type()==rhs->type() &&
 	 (side(*lhs) < side(*rhs) ||
 	  (side(*lhs) == side(*rhs) && direction(*lhs) < direction(*rhs) ) ) );
     }
@@ -658,7 +678,7 @@ namespace {
 
 // void AlignAlgorithm::removeUsedTracks( const Al::MultiTrackResidual& vertex,
 // 				       TrackContainer& tracks) const
-// { 
+// {
 //   TrackContainer unusedtracks ;
 //   for( TrackContainer::iterator itrack = tracks.begin(); itrack != tracks.end(); ++itrack)
 //     if( std::find_if( vertex.tracks().begin(), vertex.tracks().end(),
@@ -670,22 +690,22 @@ namespace {
 void AlignAlgorithm::selectVertexTracks( const LHCb::RecVertex& vertex,
 					 const TrackContainer& tracks,
 					 TrackContainer& tracksinvertex) const
-{ 
+{
   // loop over the list of vertices, collect tracks in the vertex
   tracksinvertex.reserve( tracks.size() ) ;
   for( SmartRefVector<LHCb::Track>::const_iterator itrack = vertex.tracks().begin() ;
-       itrack !=  vertex.tracks().end(); ++itrack) 
+       itrack !=  vertex.tracks().end(); ++itrack)
     if( *itrack) {
       // we'll use the track in the provided list, not the track in the vertex
       TrackContainer::const_iterator jtrack = std::find_if( tracks.begin(), tracks.end(), TrackClonePredicate(*itrack) ) ;
-      if( jtrack != tracks.end() && m_vertextrackselector->accept( **jtrack ) ) 
+      if( jtrack != tracks.end() && m_vertextrackselector->accept( **jtrack ) )
 	tracksinvertex.push_back( *jtrack ) ;
     }
 }
 
 void AlignAlgorithm::removeVertexTracks( const LHCb::RecVertex& vertex,
 					 TrackContainer& tracks) const
-{ 
+{
   TrackContainer unusedtracks ;
   for( TrackContainer::iterator itrack = tracks.begin(); itrack != tracks.end(); ++itrack)
     if( std::find_if( vertex.tracks().begin(), vertex.tracks().end(),
@@ -720,22 +740,22 @@ void AlignAlgorithm::splitVertex( const LHCb::RecVertex& vertex,
   if( printVerbose() )
     verbose() << "Tracks in vertex, selected: "
 	      << vertex.tracks().size() << ", " << tracksinvertex.size() << endreq ;
-  
+
   if( tracksinvertex.size() >= m_minTracksPerVertex ) {
     // sort the tracks by track type, then by side in the velo
     std::sort( tracksinvertex.begin(), tracksinvertex.end(), CompareTypeAndSide()) ;
     // the number of vertices after splitting. minimum 2 tracks per vertex.
-    size_t numsplit = 
+    size_t numsplit =
       tracksinvertex.size() / m_maxTracksPerVertex +
       ( (tracksinvertex.size()%m_maxTracksPerVertex)>=m_minTracksPerVertex ? 1 : 0) ;
-    splitvertices.clear() ;    
+    splitvertices.clear() ;
     splitvertices.resize(numsplit,LHCb::RecVertex( vertex.position() ) ) ;
     for( size_t itrack=0; itrack<tracksinvertex.size(); ++itrack)
       splitvertices[  itrack%numsplit ].addToTracks( tracksinvertex[itrack] ) ;
   }
-  
+
   if( printVerbose() )
-    verbose() << "Divided " << tracksinvertex.size() << " over " 
+    verbose() << "Divided " << tracksinvertex.size() << " over "
 	      << splitvertices.size() << " vertices." << endreq ;
   // for( VertexContainer::const_iterator iver = splitvertices.begin() ;
   //        iver != splitvertices.end(); ++iver) {
@@ -746,7 +766,7 @@ void AlignAlgorithm::splitVertex( const LHCb::RecVertex& vertex,
 
 void AlignAlgorithm::removeParticleTracks( const LHCb::Particle& particle,
 					   TrackContainer& tracks) const
-{ 
+{
   std::vector<const LHCb::Track*> particletracks ;
   extractTracks(particle,particletracks) ;
 
@@ -762,24 +782,24 @@ void AlignAlgorithm::removeParticleTracks( const LHCb::Particle& particle,
 bool AlignAlgorithm::testNodes( const LHCb::Track& track ) const
 {
   bool success = true ;
-  BOOST_FOREACH( const LHCb::Node* node, track.nodes() ) 
+  BOOST_FOREACH( const LHCb::Node* node, track.nodes() )
     if( node->hasMeasurement() && node->type() == LHCb::Node::HitOnTrack ) {
 
       if( !(node->errResidual2() > TrackParameters::lowTolerance )) {
 	warning() << "Found node with zero error on residual: " << track.type() << " "
 		  << node->measurement().type() << " " << node->errResidual2() << endreq ;
 	success = false ;
-      } 
+      }
       if( !(node->errResidual2() < node->errMeasure2() ) ) {
 	warning() << "Found node with R2 > V2: " << track.type() << " "
 		  << node->measurement().type() << " " << node->errResidual2() << " " << node->errMeasure2() << endreq ;
 	success = false ;
-      } 
+      }
       if( !( node->errMeasure2() > 1e-6 ) ) {
 	warning() << "Found node with very small error on measurement: " << track.type() << " "
 		  << node->measurement().type() << " " << node->errMeasure2() << endreq ;
 	success = false ;
-      } 
+      }
       if( node->errResidual2() < 1e-3 * node->errMeasure2() ) {
 	std::stringstream str ;
 	str << "Found node with negligible weight: " << track.type() << " " << node->measurement().type() ;

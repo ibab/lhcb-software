@@ -16,8 +16,8 @@ from TrackSelections import GoodLongTracks
 
 class TAlignment( LHCbConfigurableUser ):
     INFO=3
-    
-    __used_configurables__ = [ AlignTrTools ]    
+
+    __used_configurables__ = [ AlignTrTools ]
     __queried_configurables__ = [ SurveyConstraints ]
     __version__= "$Id: Configuration.py"
     __author__= "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
@@ -35,7 +35,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "DimuonLocation"               : ""                          # Location of input vertex list
         , "ParticleLocation"             : ""                          # Location of input vertex list
         , "UseCorrelations"              : True                        # Correlations
-        , "Constraints"                  : []                          # Specifies 'exact' (lagrange) constraints  
+        , "Constraints"                  : []                          # Specifies 'exact' (lagrange) constraints
         , "UseWeightedAverageConstraint" : False                       # Weighted average constraint
         , "MinNumberOfHits"              : 10                          # Min number of hits per element
         , "Chi2Outlier"                  : 10000                       # Chi2 cut for outliers
@@ -57,6 +57,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "UpdateInFinalize"             : True
         , "OutputDataFile"               : ""
         , "DatasetName"                  : "Unknown"
+        , "OnlineMode"                  : False
         }
 
     def __apply_configuration__(self):
@@ -66,7 +67,7 @@ class TAlignment( LHCbConfigurableUser ):
         if  mainseq.name() == "" :
             mainseq = GaudiSequencer("AlignSeq")
         mainseq.MeasureTime = True
-            
+
         print "****** setting up Kalman type alignment!"
         self.setProp("Incident", 'UpdateConstants')
         self.sequencers()
@@ -109,7 +110,7 @@ class TAlignment( LHCbConfigurableUser ):
                 particlemerger.Code = "ALL"
                 particlemerger.CloneFilteredParticles = False
                 for i in self.getProp("ParticleSelections"):
-                    alg = i.algorithm() 
+                    alg = i.algorithm()
                     if alg: particleInputSeq.Members.append( alg )
                     particlemerger.Inputs.append( i.location() )
                 particleInputSeq.Members.append(particlemerger)
@@ -122,7 +123,7 @@ class TAlignment( LHCbConfigurableUser ):
 
             return inputSequencer
         else :
-            if outputLevel == VERBOSE: print "VERBOSE: AlignInputSeq already defined!" 
+            if outputLevel == VERBOSE: print "VERBOSE: AlignInputSeq already defined!"
             return allConfigurables.get( "AlignInputSeq" )
 
     # set up the monitoring sequence
@@ -135,7 +136,7 @@ class TAlignment( LHCbConfigurableUser ):
                TrackITOverlapMonitor(name + "ITOverlapMonitor",
                                      TrackLocation =location)]
         return seq
-               
+
     def monitorSeq( self ) :
         from Configurables import (TrackVertexMonitor,ParticleToTrackContainer)
         monitorSeq = GaudiSequencer("AlignMonitorSeq")
@@ -151,7 +152,7 @@ class TAlignment( LHCbConfigurableUser ):
                                                              ParticleLocation = location,
                                                              TrackLocation = location + "Tracks")]
             monitorSeq.Members += self.createTrackMonitors(name,location + "Tracks")
-                                  
+
         if self.getProp("VertexLocation") != "":
              monitorSeq.Members.append(TrackVertexMonitor("AlignVertexMonitor",
                                                           PVContainer = self.getProp("VertexLocation")))
@@ -175,7 +176,7 @@ class TAlignment( LHCbConfigurableUser ):
             if i.name() == alg.name() + "." + name:
                 handle = i
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
-        handle.precision = self.getProp( "Precision" )   
+        handle.precision = self.getProp( "Precision" )
         handle.depths = depths
         handle.outputFile = self.getProp('CondFilePrefix') + 'Conditions/' + subdet + '/Alignment/' +condname + '.xml'
         handle.author = getpass.getuser()
@@ -202,14 +203,14 @@ class TAlignment( LHCbConfigurableUser ):
             self.addXmlWriter( alg, 'Muon','Global', [0,1,2] )
         if 'Ecal' in listOfCondToWrite:
             self.addXmlWriter( alg, 'Ecal','alignment', [] )
-        
+
     def alignmentSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "AlignmentSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Alignment Sequencer not defined! Defining!"
 
             alignSequencer = GaudiSequencer("AlignmentAlgSeq")
             alignSequencer.MeasureTime = True
-            
+
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
                                         gslSVDsolver, CLHEPSolver, SparseSolver, DiagSolvTool,
                                         Al__AlignConstraintTool, Al__AlignUpdateTool,
@@ -226,8 +227,9 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.HistoPrint                   = False
             alignAlg.UpdateInFinalize             = self.getProp( "UpdateInFinalize" )
             alignAlg.OutputDataFile               = self.getProp( "OutputDataFile" )
+            alignAlg.OnlineMode                   = self.getProp( "OnlineMode" )
             self.addXmlWriters(alignAlg)
-                                        
+
             #print alignAlg
             # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
@@ -238,36 +240,36 @@ class TAlignment( LHCbConfigurableUser ):
             updatetool.MatrixSolverTool           = self.getProp( "SolvTool" )
             # for now we do it like this
             SurveyConstraints().configureTool( updatetool.SurveyConstraintTool )
-            
+
             updatetool.LagrangeConstraintTool.Constraints        = self.getProp( "Constraints" )
             updatetool.LagrangeConstraintTool.UseWeightedAverage = self.getProp( "UseWeightedAverageConstraint" )
-            
+
             # configure in the tool service
             elementtool 			  = GetElementsToBeAligned( "GetElementsToBeAligned" )
             elementtool.OutputLevel               = outputLevel
             #print "(1)I will try to aling ", self.getProp( "ElementsToAlign" ), " elements!"
             elementtool.Elements                  = self.getProp( "ElementsToAlign" )
-            elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )  
+            elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )
             #alignAlg.addTool( elementtool )
-            
+
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
-                        
+
             alignSequencer.Members.append(alignAlg)
-                             
+
             return alignSequencer
         else :
-            if outputLevel == VERBOSE : print "VERBOSE: Alignment Sequencer already defined!" 
+            if outputLevel == VERBOSE : print "VERBOSE: Alignment Sequencer already defined!"
             return allConfigurables.get( "AlignmentSeq" )
-    
+
     def sequencers( self ) :
         print "**** setting the main kalman aligment sequence!"
         ## The main sequence
         mainSeq = self.getProp("Sequencer")
         mainSeq.MeasureTime = True
         #ApplicationMgr().TopAlg.append( mainSeq )
-        
+
         # Different sequencers depending on whether we use pat or not
         mainSeq.Members.append( self.inputSeq(    self.getProp( "OutputLevel" ) ) )
         mainSeq.Members.append( self.monitorSeq() )
@@ -275,4 +277,4 @@ class TAlignment( LHCbConfigurableUser ):
         if self.getProp( "NumIterations" ) > 1 :
             mainSeq.Members.append( self.postMonitorSeq() )
 
-        
+

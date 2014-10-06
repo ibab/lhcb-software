@@ -83,7 +83,8 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode finalize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-
+  virtual StatusCode stop ();  ///<Transition executed upon the Stop command
+  virtual StatusCode start();  ///<Transition executed upon the Start command
   /// Virtuals incident
   void handle(const Incident& incident);
   StatusCode queryInterface(const InterfaceID& id, void** ppI);
@@ -94,7 +95,7 @@ public:
   const Al::Equations* equations() const { return m_equations ; }
 
   void reset();
-  
+
   /** Method to get alignment constants, posXYZ and rotXYZ for a given set
   * of detector elements
   * @param elements flat vector of detector elements, i.e. std::vector<DetectorElements>
@@ -103,12 +104,12 @@ public:
   void getAlignmentConstants(const Elements& elements, AlignConstants& alignConstants) const;
 
 protected:
-  
+
   bool printDebug()   const {return msgLevel(MSG::DEBUG);};
   bool printVerbose() const {return msgLevel(MSG::VERBOSE);};
   bool accumulate( const Al::Residuals& residuals ) ;
   void resetHistos() ;
-  
+
   typedef std::vector<LHCb::RecVertex> VertexContainer ;
   typedef std::vector<const LHCb::Track*> TrackContainer ;
   void selectVertexTracks( const LHCb::RecVertex& vertex, const TrackContainer& tracks,
@@ -119,7 +120,7 @@ protected:
 		    VertexContainer& splitvertices) const  ;
   LHCb::RecVertex* cloneVertex( const LHCb::RecVertex& vertex, const TrackContainer& selectedtracks ) const ;
   bool testNodes( const LHCb::Track& track ) const ;
-  
+
 private:
 
   size_t                            m_iteration;                     ///< Iteration counter
@@ -158,6 +159,7 @@ private:
   std::vector<AlElementHistos*>     m_elemHistos ;
   bool                              m_resetHistos ; // reset histos on next event processing
   long long                         m_forcedInitTime ; // force the alignment geometry to initialize with this time (rather than first event)
+  bool															m_Online;
 };
 
 #endif // TALIGNMENT_ALIGNALGORITHM_H
