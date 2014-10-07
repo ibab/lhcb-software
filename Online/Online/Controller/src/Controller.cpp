@@ -125,7 +125,7 @@ FSM::ErrCond Controller::fail()  {
   if ( tr ) {
     string m = msg.str().substr(0,100);
     m += "....";
-    display(ERROR,tr->c_name(),"FAILED. %s.",m.c_str());
+    display(ERROR,tr->c_name(),"FAILED %s.",m.c_str());
     //display(ERROR,c_name(),"Controller: Special action on failed transition %s needed.",tr->c_name());
     if ( tr->name() == "recover" )  {
     }
