@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-07 - Stefano Perazzini
+ - Slightly modified the dictionaries for Bu2Kpi0.
+
 ! 2014-10-01 - Pablo Ruiz Valls (RD)
  - Added missing B24Mu lines for s21 and s21r1
 
