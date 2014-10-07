@@ -442,9 +442,7 @@ class StrippingLine(object):
     		extraInfoAlg.DaughterLocations = self.selectionsToLocations( self.ExtraInfoDaughters )
             else : 
         	extraInfoAlg.MaxLevel = 0
-        	
-#    	    extraInfoAlg.OutputLevel = DEBUG
-        	
+        		
             toolNames = []
             toolNum = 0
             
@@ -519,7 +517,6 @@ class StrippingLine(object):
         	    if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
         	    setattr( toolInstance, property, value)
 
-		relatedInfoAlg.OutputLevel = VERBOSE
        		relatedInfoAlg.Tool = toolType + '/' + toolName
 
 		self._members.append(relatedInfoAlg)
