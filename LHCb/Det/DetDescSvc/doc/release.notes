@@ -4,6 +4,9 @@
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
 
+! 2014-10-07 Wouter Hulsbergen
+ - Fixed small bug in handling incident without a run change.
+
 !========================= DetDescSvc v3r7 2014-07-14 =========================
 ! 2014-07-10 - Marco Clemencic
  - Modified RunChangeHandlerSvc to clean the XmlParserSvc cache if it gets a
