@@ -315,7 +315,7 @@ StatusCode BTaggingAnalysis::execute() {
   //--------------------------------------------------------------------
   //Official tag of the event ------------------------------------------
   ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS );
-  //  ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS , RecVert); //to select ourselves PV
+  //  ProtoParticle::ConstVector partsInSV = tagevent( tuple, AXBS , ecVert); //to select ourselves PV
 
   //---------------------------------------
   //trigger
@@ -398,7 +398,7 @@ StatusCode BTaggingAnalysis::execute() {
   }
   
   debug() << "Filling charm info" << endreq;
-  FillCharmInfo(tuple,charmCands,charmInclCands,charmLambdaCands,verts,RecVert);//,AXBS);  
+  FillCharmInfo(tuple,charmCands,charmInclCands,charmLambdaCands,RecVert);//,AXBS);  
 
   //------------------------------------------------------------------------------
   //Fill Tagger info -------------------------------------------------------------
@@ -1803,7 +1803,6 @@ StatusCode BTaggingAnalysis::FillCharmInfo(Tuple& tuple,
                                            const Particle::ConstVector& charmCands, 
                                            const Particle::ConstVector& charmInclCands,
                                            const Particle::ConstVector& charmLambdaCands,
-                                           const RecVertex::Range verts,
                                            const RecVertex* RecVert) {
 
   vecptrMap infoMap;
@@ -1902,9 +1901,9 @@ StatusCode BTaggingAnalysis::FillCharmInfo(Tuple& tuple,
     infoMap[i_str] = &pCharm_dauID[i];
   }
 
-  AddCharmInfo(charmCands, verts, RecVert, 0, infoMap);
-  AddCharmInfo(charmInclCands, verts, RecVert, 1, infoMap);
-  AddCharmInfo(charmLambdaCands, verts, RecVert, 3, infoMap);
+  AddCharmInfo(charmCands, RecVert, 0, infoMap);
+  AddCharmInfo(charmInclCands, RecVert, 1, infoMap);
+  AddCharmInfo(charmLambdaCands, RecVert, 3, infoMap);
   
   int nmaxCharmCand = 200;
 
@@ -1964,7 +1963,6 @@ StatusCode BTaggingAnalysis::FillCharmInfo(Tuple& tuple,
   tuple -> farray ("Charm_pionPT", pCharm_pionPT, "C", nmaxCharmCand);
   tuple -> farray ("Charm_pionId", pCharm_pionId, "C", nmaxCharmCand);
 
-
   // Electron
   tuple -> farray ("Charm_elecNNe", pCharm_elecNNe, "C", nmaxCharmCand);
   tuple -> farray ("Charm_elecPT", pCharm_elecPT, "C", nmaxCharmCand);
@@ -1994,7 +1992,6 @@ StatusCode BTaggingAnalysis::FillCharmInfo(Tuple& tuple,
 
 //=============================================================================
 StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
-                                          const RecVertex::Range verts,
                                           const RecVertex* RecVert, 
                                           const int type,
                                           vecptrMap& infoMap)
@@ -2014,9 +2011,9 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
   }    
 
   // Functors
-  Fun fDIRA = DIRA( RecVert );
-  Fun fVD = VD ( RecVert );
-  Fun fVDCHI2 = VDCHI2 ( RecVert );
+  Fun fDIRA = DIRA(RecVert);
+  Fun fVD = VD(RecVert);
+  Fun fVDCHI2 = VDCHI2(RecVert);
   VFun dist = VVDCHI2(RecVert);
 
   Particle::ConstVector::const_iterator icand;
@@ -2042,7 +2039,15 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
     ///////////////
 
     // Set Charm, D*, soft pion
-    const Particle *cand;
+    const Particle *cand, *dstar_cand, *pisoft_cand;
+    if (type==2) {
+      dstar_cand = (*icand);
+      cand = (*icand)->daughters().at(0);
+      pisoft_cand = (*icand)->daughters().at(1);
+    } else {
+      dstar_cand = pisoft_cand = NULL;
+      cand = (*icand);
+    }
 
     debug() << " ## Charm cand, candType = " << type << endreq;
 
@@ -2057,20 +2062,29 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
         ancID = ancestor->particleID().pid();
       }
     }
-
+    
     if (abs(charm_MCid) == 421
         or abs(charm_MCid) == 411
         or abs(charm_MCid) == 4122)
       counter(std::string("# TruthMatched charm candidates"))++;
-
+    
     // Background Category info
+    std::cerr << __LINE__ << std::endl;
     int bcat = -2;
-    if (not cand->isBasicParticle()) {
+    std::cerr << __LINE__ << std::endl;
+    bool testvar = cand->isBasicParticle();
+    std::cerr << __LINE__ << std::endl;
+    if (not testvar) {
+      std::cerr << __LINE__ << std::endl;
       IBackgroundCategory::categories cat = IBackgroundCategory::Undefined;
+      std::cerr << __LINE__ << std::endl;
       cat = m_bkgCategory->category(cand);
+      std::cerr << __LINE__ << std::endl;
       debug() << "Result of BackgroundCategory for charm cand is: " << (int) cat << endreq;
+      std::cerr << __LINE__ << std::endl;
       bcat = (int) cat;
     }
+    std::cerr << __LINE__ << std::endl;
 
     // Lifetime
     double ct = 0.0, ctErr = 0.0, ctChi2 = 0.0;
@@ -2264,7 +2278,10 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
     ///////////////
 
     // Candidate
-    infoMap["mode"]->push_back(m_utilFT->getCharmDecayModeInt(cand,type));
+    CharmTaggerSpace::CharmMode mode = m_utilFT->getCharmDecayMode(cand,type);
+    int modeInt = static_cast<int>(mode);
+    warning() << "MODE NUMBER IS " << modeInt << endreq;
+    infoMap["mode"]->push_back(modeInt);
     infoMap["id"]->push_back(cand->particleID().pid());
     infoMap["MCid"]->push_back(charm_MCid);
     infoMap["ancID"]->push_back(ancID);

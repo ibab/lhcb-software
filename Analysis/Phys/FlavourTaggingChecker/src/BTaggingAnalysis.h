@@ -93,10 +93,9 @@ private:
   StatusCode FillCharmInfo(Tuple& tuple, const Particle::ConstVector& charmCands, 
                            const Particle::ConstVector& charmInclCands, 
                            const Particle::ConstVector& charmLambdaCands, 
-                           const RecVertex::Range verts,
                            const RecVertex* RecVert); //, const Particle* BS);
 
-  StatusCode AddCharmInfo(const Particle::ConstVector& cands, const RecVertex::Range verts, const RecVertex* RecVert, const int type, vecptrMap& infoMap);
+  StatusCode AddCharmInfo(const Particle::ConstVector& cands, const RecVertex* RecVert, const int type, vecptrMap& infoMap);
 
   double GetInvariantMass(double MA, Gaudi::LorentzVector PA, double MB, Gaudi::LorentzVector PB);
   
