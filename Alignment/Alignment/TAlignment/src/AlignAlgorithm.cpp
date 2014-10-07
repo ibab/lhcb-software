@@ -38,6 +38,7 @@
 #include "Event/AlignSummaryData.h"
 
 #include <boost/foreach.hpp>
+#include "DetDesc/RunChangeIncident.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : AlignAlgorithm
@@ -212,10 +213,13 @@ StatusCode AlignAlgorithm::stop()
 
 StatusCode AlignAlgorithm::start()
 {
-	if (m_Online)
-	{
-		reset() ;
-	}
+  if (m_Online) {
+    // throw a runchange incident to make sure it reads the xml
+    IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
+    incSvc->fireIncident(RunChangeIncident(name(),0)) ;
+    // reset contents of ASD
+    reset() ;
+  }
   return StatusCode::SUCCESS;
 }
 
