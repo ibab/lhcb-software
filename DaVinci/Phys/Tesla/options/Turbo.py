@@ -5,8 +5,8 @@ from Gaudi.Configuration import *
 RecombineRawEvent()
 DecodeRawEvent().DataOnDemand = True
 
-#from Configurables import ConfigTarFileAccessSvc
-#ConfigTarFileAccessSvc().File='/afs/cern.ch/user/s/sbenson/cmtuser/Moore_v22r1p1/TCKData/config.tar'
+from Configurables import ConfigTarFileAccessSvc
+ConfigTarFileAccessSvc().File='/afs/cern.ch/work/s/sbenson/public/forTeslaExtendedReps/config.tar'
 
 MyTesla = Tesla()
 
