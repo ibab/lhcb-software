@@ -1,3 +1,9 @@
+2014-10-01  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-591: Added read-only interface to the SOftConfDB to be 
+	exported by the XMLRPC server.
+	* python/LbRelease/SoftConfDB/ROInterface.py
+
 2014-08-29  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* LbRelease.LHCbDoc: fixed LBCORE-593
