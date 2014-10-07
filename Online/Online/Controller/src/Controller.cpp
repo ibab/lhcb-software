@@ -118,6 +118,7 @@ FSM::ErrCond Controller::fail()  {
 	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')); n = m; }
 	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')); n = m; }
 	msg << m << " ";
+      }
     }
   }
   // Invoke special actions for certain transitions
