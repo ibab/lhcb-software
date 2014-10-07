@@ -1,5 +1,5 @@
-#ifndef RELINFOTRACKISOVARIABLES_H 
-#define RELINFOTRACKISOVARIABLES_H 1
+#ifndef RELINFOTRACKISOVARIABLESV2_H 
+#define RELINFOTRACKISOVARIABLESV2_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -13,7 +13,7 @@
 #include "MVADictTools/TMVATransform.h"
 #include "Kernel/IParticleDictTool.h"
 #include "Event/Particle.h"
-
+#include "Kernel/IParticleDescendants.h"
 
 /** @class RelInfoBstautauTrackIsolationBDT RelInfoBstautauTrackIsolationBDT.h
  *
@@ -67,6 +67,28 @@ class RelInfoBstautauTrackIsolationBDT : public GaudiTool, virtual public IRelat
         double m_bdt2;
         double m_bdt3;
 
+
+double  m_bdt1_TauP_piM ;
+double   m_bdt2_TauP_piM ;
+double   m_bdt3_TauP_piM ;
+double   m_bdt1_TauP_piP1 ;
+double   m_bdt2_TauP_piP1 ;
+double   m_bdt3_TauP_piP1 ;
+double   m_bdt1_TauP_piP2 ;
+double   m_bdt2_TauP_piP2 ;
+double   m_bdt3_TauP_piP2 ;
+double   m_bdt1_TauM_piP ;
+double   m_bdt2_TauM_piP ;
+double   m_bdt3_TauM_piP ;
+double   m_bdt1_TauM_piM1 ;
+double   m_bdt2_TauM_piM1 ;
+double   m_bdt3_TauM_piM1 ;
+double   m_bdt1_TauM_piM2 ;
+double   m_bdt2_TauM_piM2 ;
+double   m_bdt3_TauM_piM2 ;
+
+
+
         //distance calculator
         //
         IDVAlgorithm* m_dva;
@@ -85,7 +107,7 @@ class RelInfoBstautauTrackIsolationBDT : public GaudiTool, virtual public IRelat
         float var_PVdist ;
         float var_SVdist ;
         float var_ipchisqany ;
-
+  IParticleDescendants* m_descend;
         TMVATransform m_tmva ;
         TMVATransform::optmap m_optmap ;
         IParticleDictTool::DICT m_varmap ; 

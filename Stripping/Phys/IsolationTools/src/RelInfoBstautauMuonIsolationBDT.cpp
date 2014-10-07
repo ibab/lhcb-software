@@ -75,6 +75,11 @@ StatusCode RelInfoBstautauMuonIsolationBDT::initialize() {
     return StatusCode::FAILURE;
   }
 
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
   m_optmap["Name"] = m_transformName ;
   m_optmap["KeepVars"] = "0" ;
   m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_weightsName ;
@@ -88,7 +93,7 @@ StatusCode RelInfoBstautauMuonIsolationBDT::initialize() {
 // Fill Extra Info structure
 //=============================================================================
 StatusCode RelInfoBstautauMuonIsolationBDT::calculateRelatedInfo( const LHCb::Particle *top,
-                                                                  const LHCb::Particle *part )
+                                                                  const LHCb::Particle *top_bis )
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating MuonIso extra info" << endmsg;
@@ -96,11 +101,34 @@ StatusCode RelInfoBstautauMuonIsolationBDT::calculateRelatedInfo( const LHCb::Pa
   m_bdt2 = -1 ;
   m_bdt3 = -1 ;
 
-  // -- The vector m_decayParticles contains all the particles that belong to the given decay
-  // -- according to the decay descriptor.
 
-  // -- Clear the vector with the particles in the specific decay
-  m_decayParticles.clear();
+ if ( top->isBasicParticle() || top!=top_bis)
+    {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "top != top_bis" << endmsg;
+      return StatusCode::SUCCESS ;
+    }
+
+
+
+ const LHCb::Particle* part;
+ 
+ LHCb::Particle::ConstVector Daughters = m_descend->descendants(top);
+ if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
+ LHCb::Particle::ConstVector::const_iterator i_daug; 
+ for ( i_daug = Daughters.begin(); i_daug != Daughters.end(); i_daug++){
+     const LHCb::Particle* Part = *i_daug;
+    if ( Part->isBasicParticle() ) part=*i_daug;
+ }
+ if ( msgLevel(MSG::DEBUG) ) debug()<<"part ID : "<<part->particleID().pid()<<endreq;
+ 
+ 
+ 
+ // -- The vector m_decayParticles contains all the particles that belong to the given decay
+ // -- according to the decay descriptor.
+ 
+ // -- Clear the vector with the particles in the specific decay
+ m_decayParticles.clear();
 
   saveDecayParticles(top);
 

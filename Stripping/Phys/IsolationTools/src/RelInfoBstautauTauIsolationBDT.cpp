@@ -46,9 +46,13 @@ RelInfoBstautauTauIsolationBDT::RelInfoBstautauTauIsolationBDT( const std::strin
         }
         }
   */
-  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTFIRSTVALUE );
-  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTSECONDVALUE );
-  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTTHIRDVALUE );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTFIRSTVALUETAUP );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTSECONDVALUETAUP );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTTHIRDVALUETAUP );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTFIRSTVALUETAUM );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTSECONDVALUETAUM );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTAUISOBDTTHIRDVALUETAUM );
+
 
 }
 
@@ -74,6 +78,12 @@ StatusCode RelInfoBstautauTauIsolationBDT::initialize() {
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
+ 
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
 
   m_optmap["Name"] = m_transformName ;
   m_optmap["KeepVars"] = "0" ;
@@ -88,7 +98,7 @@ StatusCode RelInfoBstautauTauIsolationBDT::initialize() {
 // Fill Extra Info structure
 //=============================================================================
 StatusCode RelInfoBstautauTauIsolationBDT::calculateRelatedInfo( const LHCb::Particle *top,
-                                                                 const LHCb::Particle *part )
+                                                                 const LHCb::Particle *top_bis )
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating TauIso extra info" << endmsg;
@@ -96,13 +106,32 @@ StatusCode RelInfoBstautauTauIsolationBDT::calculateRelatedInfo( const LHCb::Par
   m_bdt2 = -1. ;
   m_bdt3 = -1. ;
 
+  m_bdt1_TauP = -1. ;
+  m_bdt2_TauP = -1. ;
+  m_bdt3_TauP = -1. ;
+  
+  m_bdt1_TauM = -1. ;
+  m_bdt2_TauM = -1. ;
+  m_bdt3_TauM = -1. ;
+
+
+if ( top->isBasicParticle() || top!=top_bis)
+    {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "top != top_bis" << endmsg;
+      return StatusCode::SUCCESS ;
+    }
+
+
+
+
   // -- The vector m_decayParticles contains all the particles that belong to the given decay
   // -- according to the decay descriptor.
 
   // -- Clear the vector with the particles in the specific decay
   m_decayParticles.clear();
 
-  if (  part->isBasicParticle() ) {
+  if (  top->isBasicParticle() ) {
     if ( msgLevel(MSG::DEBUG) ) debug() << "Running tau isolation on non-final state particle, skipping" << endmsg;
     return StatusCode::SUCCESS ;
   }
@@ -128,42 +157,70 @@ StatusCode RelInfoBstautauTauIsolationBDT::calculateRelatedInfo( const LHCb::Par
     m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
   }
 
-  if( part )
-  {
+  LHCb::Particle::ConstVector Daughters = m_descend->descendants(top,1);
+if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
 
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
-
-    // -- process -- iterate over tracks
-    //
-
-    calcBDTValue( part, tracks, PV, SV ) ;
-    if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
-    //
-    //store
-    m_map.clear();
-
-    std::vector<short int>::const_iterator ikey;
-    for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-
-      float value = 0;
-      switch (*ikey) {
-      case RelatedInfoNamed::BSTAUTAUTAUISOBDTFIRSTVALUE : value = m_bdt1; break;
-      case RelatedInfoNamed::BSTAUTAUTAUISOBDTSECONDVALUE : value = m_bdt2; break;
-      case RelatedInfoNamed::BSTAUTAUTAUISOBDTTHIRDVALUE : value = m_bdt3; break;
+  LHCb::Particle::ConstVector::const_iterator i_daug; 
+  for ( i_daug = Daughters.begin(); i_daug != Daughters.end(); i_daug++){
+    const LHCb::Particle* part = *i_daug;
+    if(!part) {
+      return Warning( "Found an invalid particle" ,StatusCode::FAILURE,50);
+    }else if( part )
+      {
+        if(part->isBasicParticle())
+          {
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << "Trying to compute Tau (D) isolation on a muon (pion)"<<endmsg;
+          }
+        else
+          {
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
+            //  calcBDTValue( part, tracks, PV, SV ) ;
+            //  if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+            if(part->charge()>0)
+              {
+                calcBDTValue( part, tracks, PV, SV ) ;
+                if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+                m_bdt1_TauP=m_bdt1;
+                m_bdt2_TauP=m_bdt2;
+                m_bdt3_TauP=m_bdt3;
+              }else if(part->charge()<0)
+              {
+                calcBDTValue( part, tracks, PV, SV ) ;
+                if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+                m_bdt1_TauM=m_bdt1;
+                m_bdt2_TauM=m_bdt2;
+                m_bdt3_TauM=m_bdt3;
+              }
+          }
       }
-      if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
+  }
+  
+  
+  if ( msgLevel(MSG::DEBUG) ) debug()<<" m_bdt1_TauP : "<<m_bdt1_TauP<<"  ,  m_bdt2_TauP : "<<m_bdt2_TauP<<"  ,  m_bdt3_TauP : "<<m_bdt3_TauP<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<" m_bdt1_TauM : "<<m_bdt1_TauM<<"  ,  m_bdt2_TauM : "<<m_bdt2_TauM<<"  ,  m_bdt3_TauM : "<<m_bdt3_TauM<<endmsg;
 
-      m_map.insert( std::make_pair( *ikey, value) );
+  m_map.clear();
+  
+  std::vector<short int>::const_iterator ikey;
+  for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
+    
+    float value = 0;
+    switch (*ikey) {
+    case RelatedInfoNamed::BSTAUTAUTAUISOBDTFIRSTVALUETAUP : value = m_bdt1_TauP; break;
+    case RelatedInfoNamed::BSTAUTAUTAUISOBDTSECONDVALUETAUP : value = m_bdt2_TauP; break;
+    case RelatedInfoNamed::BSTAUTAUTAUISOBDTTHIRDVALUETAUP : value = m_bdt3_TauP; break;
+    case RelatedInfoNamed::BSTAUTAUTAUISOBDTFIRSTVALUETAUM : value = m_bdt1_TauM; break;
+    case RelatedInfoNamed::BSTAUTAUTAUISOBDTSECONDVALUETAUM : value = m_bdt2_TauM; break;
+    case RelatedInfoNamed::BSTAUTAUTAUISOBDTTHIRDVALUETAUM : value = m_bdt3_TauM; break;
     }
-
+    if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
+    
+    m_map.insert( std::make_pair( *ikey, value) );
   }
-
-  else
-  {
-    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" );
-    return StatusCode::FAILURE;
-  }
-
+  
+  
+  
+  
   return StatusCode(test);
 }
 

@@ -100,7 +100,11 @@ StatusCode RelInfoBstautauMuonIsolation::initialize() {
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
-
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
   return sc;
 }
 
@@ -108,12 +112,34 @@ StatusCode RelInfoBstautauMuonIsolation::initialize() {
 // Fill Extra Info structure
 //=============================================================================
 StatusCode RelInfoBstautauMuonIsolation::calculateRelatedInfo( const LHCb::Particle *top,
-                                                               const LHCb::Particle *part )
+                                                               const LHCb::Particle *top_bis )
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating MuonIso extra info" << endmsg;
   m_bdt1 = 0 ;
   m_bdt2 = 0 ;
+
+ if (top->isBasicParticle() || top!=top_bis)
+    {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "top!=top_bis" << endmsg;
+      return StatusCode::SUCCESS ;
+    }
+
+
+
+  const LHCb::Particle* part;
+  
+  LHCb::Particle::ConstVector Daughters = m_descend->descendants(top);
+ if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
+
+  LHCb::Particle::ConstVector::const_iterator i_daug; 
+  for ( i_daug = Daughters.begin(); i_daug != Daughters.end(); i_daug++){
+    const LHCb::Particle* Part = *i_daug;
+    if ( Part->isBasicParticle() ) part = *i_daug;
+  }
+  
+
 
   // -- The vector m_decayParticles contains all the particles that belong to the given decay
   // -- according to the decay descriptor.

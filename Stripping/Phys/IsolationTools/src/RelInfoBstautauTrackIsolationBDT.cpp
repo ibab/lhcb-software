@@ -45,9 +45,29 @@ RelInfoBstautauTrackIsolationBDT::RelInfoBstautauTrackIsolationBDT( const std::s
         }
         }
   */
-  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUE );
-  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUE );
-  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUE );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUPPIM );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUPPIM );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUPPIM );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUPPIP1 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUPPIP1 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUPPIP1 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUPPIP2 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUPPIP2 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUPPIP2 );
+
+
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUMPIP );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUMPIP );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUMPIP );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUMPIM1 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUMPIM1 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUMPIM1 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUMPIM2 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUMPIM2 );
+  m_keys.push_back( RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUMPIM2 );
+
+
+
 
 }
 
@@ -73,6 +93,12 @@ StatusCode RelInfoBstautauTrackIsolationBDT::initialize() {
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
+  
+  m_descend = tool<IParticleDescendants> ( "ParticleDescendants", this );
+  if( ! m_descend ) {
+    fatal() << "Unable to retrieve ParticleDescendants tool "<< endreq;
+    return StatusCode::FAILURE;
+  }
 
   m_optmap["Name"] = m_transformName ;
   m_optmap["KeepVars"] = "0" ;
@@ -87,13 +113,42 @@ StatusCode RelInfoBstautauTrackIsolationBDT::initialize() {
 // Fill Extra Info structure
 //=============================================================================
 StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::Particle *top,
-                                                                   const LHCb::Particle *part )
+                                                                   const LHCb::Particle *top_bis )
 {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Calculating TrackIso extra info" << endmsg;
   m_bdt1 = -1 ;
   m_bdt2 = -1 ;
   m_bdt3 = -1 ;
+  m_bdt1_TauP_piM = -1.0;
+  m_bdt2_TauP_piM = -1.0;
+  m_bdt3_TauP_piM = -1.0;
+  m_bdt1_TauP_piP1 = -1.0;
+  m_bdt2_TauP_piP1 = -1.0;
+  m_bdt3_TauP_piP1 = -1.0;
+  m_bdt1_TauP_piP2 = -1.0;
+  m_bdt2_TauP_piP2 = -1.0;
+  m_bdt3_TauP_piP2 = -1.0;
+  m_bdt1_TauM_piP = -1.0;
+  m_bdt2_TauM_piP = -1.0;
+  m_bdt3_TauM_piP = -1.0;
+  m_bdt1_TauM_piM1 = -1.0;
+  m_bdt2_TauM_piM1 = -1.0;
+  m_bdt3_TauM_piM1 = -1.0;
+  m_bdt1_TauM_piM2 = -1.0;
+  m_bdt2_TauM_piM2 = -1.0;
+  m_bdt3_TauM_piM2 = -1.0;
+  
+                      
+ if ( top->isBasicParticle() || top!=top_bis)
+    {
+      if ( msgLevel(MSG::DEBUG) ) 
+        debug() << "top != top_bis" << endmsg;
+      return StatusCode::SUCCESS ;
+    }
+
+
+
 
   // -- The vector m_decayParticles contains all the particles that belong to the given decay
   // -- according to the decay descriptor.
@@ -101,47 +156,12 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
   // -- Clear the vector with the particles in the specific decay
   m_decayParticles.clear();
 
-  if ( ! part->isBasicParticle() ) {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Running track isolation on non-final state particle, skipping" << endmsg;
-    return StatusCode::SUCCESS ;
-  }
-  const LHCb::Particle* mother = NULL;
+  bool test = true;
 
-  const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
-
-  // -- Fill all the daugthers in m_decayParticles
-  for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
-
-    const SmartRefVector< LHCb::Particle > & daughters2 = (*idau)->daughters();
-
-    // -- Fill all the daugthers in m_decayParticles
-    for( SmartRefVector< LHCb::Particle >::const_iterator idau2 = daughters2.begin() ; idau2 != daughters2.end() ; ++idau2){
-      const LHCb::ProtoParticle* proto = (*idau2)->proto();
-      if(proto){
-        const LHCb::Track* myTrack = proto->track();
-
-        if(myTrack){
-
-          if(myTrack == part->proto()->track()) mother=(*idau);
-        }
-      }
-    }
-  }
-
-  if (mother==NULL)
-  {
-    if ( msgLevel(MSG::WARNING) ) Warning( "Mother of part not found. Skipping");
-    return StatusCode::FAILURE;
-  }
-
-  saveDecayParticles(top);
-
-  if ( ! part->isBasicParticle() ) {
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Running track isolation on non-final state particle, skipping" << endmsg;
-    return StatusCode::SUCCESS ;
-  }
-
-  // -- Get all tracks in the event
+  //set PV and SV of the mother
+  //
+  const LHCb::VertexBase* PV = m_dva->bestVertex(top);
+   const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
   LHCb::Particles* tracks = get<LHCb::Particles>("/Event/Phys/StdAllNoPIDsPions/Particles");
   //    LHCb::Tracks* tracks = get<LHCb::Tracks>(LHCb::TrackLocation::Default);
   if ( tracks->empty() )
@@ -150,53 +170,194 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
     return StatusCode::FAILURE;
   }
 
-  bool test = true;
-
-  //set PV and SV of the mother
-  //
-  const LHCb::VertexBase* PV = m_dva->bestVertex(top);
-  const LHCb::VertexBase *SV = mother->endVertex();
-
+  saveDecayParticles(top);
   if(exist<LHCb::RecVertex::Container>(m_PVInputLocation)){
     m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
   }
 
-  if( part )
-  {
 
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
 
-    // -- process -- iterate over tracks
-    //
-
-    calcBDTValue( part, tracks, PV, SV ) ;
-    if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
-    //
-    //store
-    m_map.clear();
-
-    std::vector<short int>::const_iterator ikey;
-    for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-
-      float value = 0;
-      switch (*ikey) {
-      case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUE : value = m_bdt1; break;
-      case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUE : value = m_bdt2; break;
-      case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUE : value = m_bdt3; break;
-      }
-      if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
-
-      m_map.insert( std::make_pair( *ikey, value) );
+  for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){//
+    const LHCb::Particle* Part = *idau;
+    if (Part->isBasicParticle()){
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"Trying to compute pions isolation on particle of ID "<<Part->particleID().pid()<<endmsg;
     }
+    else{
+      LHCb::Particle::ConstVector Daughters_2 = m_descend->descendants(Part);
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << "number of PID "<<Part->particleID().pid()<<"'s daughters : "<<Daughters_2.size()<<endmsg;//
+      LHCb::Particle::ConstVector::const_iterator i_daug;
+      for(i_daug = Daughters_2.begin(); i_daug!=Daughters_2.end();++i_daug){
+          const LHCb::Particle* part = *i_daug;
+          if(! part ) {
+            if ( msgLevel(MSG::WARNING) ) Warning(  "The particle in question is not valid" );
+            return StatusCode::FAILURE;
+          }
+          else{
+            const LHCb::Particle* mother = NULL;
+            // -- Fill all the daugthers in m_decayParticles
+            for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){//
+              const SmartRefVector< LHCb::Particle > & daughters2 = (*idau)->daughters();//
+              // -- Fill all the daugthers in m_decayParticles
+              for( SmartRefVector< LHCb::Particle >::const_iterator idau2 = daughters2.begin() ; idau2 != daughters2.end() ; ++idau2){//
+                const LHCb::ProtoParticle* proto = (*idau2)->proto();
+                if(proto){
+                  const LHCb::Track* myTrack = proto->track();
+                  if(myTrack){
+                    if(myTrack == part->proto()->track()) mother=(*idau);
+                  }
+                }
+              }
+            }
+            
+            if (mother==NULL)
+              {
+                if ( msgLevel(MSG::WARNING) ) Warning( "Mother of part not found. Skipping");
+                return StatusCode::FAILURE;
+              }
+            
+          
+            const LHCb::VertexBase *SV = mother->endVertex();
+            
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
+            calcBDTValue( part, tracks, PV, SV ) ;
+            if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
 
+            if ( msgLevel(MSG::DEBUG) ) debug()  << "after \"calcBDTValue\" "  << endmsg ;
+
+            const LHCb::Particle* part2 = NULL;
+            LHCb::Particle::ConstVector::const_iterator i_daug_2;
+            for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
+              const LHCb::Particle* part_2 = *(i_daug_2);
+              if((i_daug_2!=i_daug)&&(part_2->charge()== part->charge())) part2= *(i_daug_2);//
+              
+            }
+            
+            
+          
+         
+            if(Part->charge()>0)
+              {
+                if ( msgLevel(MSG::VERBOSE) ) verbose() << "Part ID "<<Part->particleID().pid()<<endmsg;//
+                
+                if (part->charge()<0)
+                  {
+                    if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
+                    m_bdt1_TauP_piM = m_bdt1;
+                    m_bdt2_TauP_piM = m_bdt2;
+                    m_bdt3_TauP_piM = m_bdt3;
+                  }else {
+                  if(part->p() >= part2->p())
+                    { 
+                      if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
+                      m_bdt1_TauP_piP1 = m_bdt1;
+                      m_bdt2_TauP_piP1 = m_bdt2;
+                      m_bdt3_TauP_piP1 = m_bdt3;
+                    }else
+                    {
+                      m_bdt1_TauP_piP2 = m_bdt1;
+                      m_bdt2_TauP_piP2 = m_bdt2;
+                      m_bdt3_TauP_piP2 = m_bdt3;
+                    }
+                }
+                
+              }else
+              {
+                if ( msgLevel(MSG::VERBOSE) ) verbose() << "Part ID "<<Part->particleID().pid()<<endmsg;//
+
+                if (part->charge()>0)
+                  {
+                    if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
+                 
+                    m_bdt1_TauM_piP = m_bdt1;
+                    m_bdt2_TauM_piP = m_bdt2;
+                    m_bdt3_TauM_piP = m_bdt3;
+                  }else {
+                    
+                     
+                     if(part->p() >= part2->p())
+                     { 
+                     m_bdt1_TauM_piM1 = m_bdt1;
+                     m_bdt2_TauM_piM1 = m_bdt2;
+                     m_bdt3_TauM_piM1 = m_bdt3;
+                     }else
+                     {
+                     m_bdt1_TauM_piM2 = m_bdt1;
+                     m_bdt2_TauM_piM2 = m_bdt2;
+                     m_bdt3_TauM_piM2 = m_bdt3;
+                     }
+                     }
+                          
+              }
+            
+            
+            
+          
+          }
+      }
+    }
   }
+  
+  
+  
 
-  else
-  {
-    if ( msgLevel(MSG::WARNING) ) Warning(  "The particle in question is not valid" );
-    return StatusCode::FAILURE;
+
+
+
+
+
+
+
+
+
+
+
+  
+  m_map.clear();
+  
+  std::vector<short int>::const_iterator ikey;
+  for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
+    
+    float value = 0;
+    switch (*ikey) {
+      
+      
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUPPIM : value = m_bdt1_TauP_piM ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUPPIM : value = m_bdt2_TauP_piM ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUPPIM : value = m_bdt3_TauP_piM ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUPPIP1 : value = m_bdt1_TauP_piP1 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUPPIP1 : value = m_bdt2_TauP_piP1 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUPPIP1 : value = m_bdt3_TauP_piP1 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUPPIP2 : value = m_bdt1_TauP_piP2 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUPPIP2 : value = m_bdt2_TauP_piP2 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUPPIP2 : value = m_bdt3_TauP_piP2 ; break;//
+      
+      
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUMPIP : value = m_bdt1_TauM_piP ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUMPIP : value = m_bdt2_TauM_piP ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUMPIP : value = m_bdt3_TauM_piP; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUMPIM1 : value = m_bdt1_TauM_piM1 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUMPIM1 : value = m_bdt2_TauM_piM1 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUMPIM1 : value = m_bdt3_TauM_piM1 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUMPIM2 : value = m_bdt1_TauM_piM2 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUMPIM2 : value = m_bdt2_TauM_piM2 ; break;//
+    case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUMPIM2 : value = m_bdt3_TauM_piM2 ; break;//
+
+
+
+
+
+
+
+
+
+
+      //   case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUE : value = m_bdt1; break;
+      //   case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUE : value = m_bdt2; break;
+      //   case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUE : value = m_bdt3; break;
+    }
+    if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
+    m_map.insert( std::make_pair( *ikey, value) );
   }
-
   return StatusCode(test);
 }
 

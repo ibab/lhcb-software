@@ -1,6 +1,6 @@
 // $Id: TupleToolMuonVariables.h 
-#ifndef RELINFOBSTAUTAUZVISOBDT_H 
-#define RELINFOBSTAUTAUZVISOBDT_H 1
+#ifndef RELINFOBSTAUTAUZVISOBDTV2_H 
+#define RELINFOBSTAUTAUZVISOBDTV2_H 1
 
 // Include files
 #include "Kernel/IEventTupleTool.h"            // Interface
@@ -107,7 +107,7 @@ private:
   //   std::vector<std::string> m_variables;
   LHCb::RelatedInfoMap m_map;
   std::vector<short int> m_keys; 
-
+  std::vector<std::string> m_variables;
   //std::vector<const LHCb::Particle*> m_decayParticles;
   double m_pvdis_h;
   double m_pvdis;
@@ -203,8 +203,9 @@ private:
 
   std::string m_Weights_BDTG_ZViso;
   float m_ZViso;
+  float m_ZViso_TauP;
+  float m_ZViso_TauM;
 
- 
   std::string m_TracksPath;
   std::string m_ParticlePath;
   std::string m_PVInputLocation;

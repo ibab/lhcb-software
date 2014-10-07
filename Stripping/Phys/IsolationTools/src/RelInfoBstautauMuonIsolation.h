@@ -1,5 +1,5 @@
-#ifndef RELINFOMUONISOVARIABLES_H 
-#define RELINFOMUONISOVARIABLES_H 1
+#ifndef RELINFOMUONISOVARIABLESV2_H 
+#define RELINFOMUONISOVARIABLESV2_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -13,7 +13,7 @@
 #include "MVADictTools/TMVATransform.h"
 #include "Kernel/IParticleDictTool.h"
 #include "Event/Particle.h"
-
+#include "Kernel/IParticleDescendants.h"
 
 /** @class RelInfoBstautauMuonIsolation RelInfoBstautauMuonIsolation.h
  *
@@ -89,7 +89,7 @@ class RelInfoBstautauMuonIsolation : public GaudiTool, virtual public IRelatedIn
   std::string m_TracksPath;
   std::string m_ParticlePath;
   std::string m_PVInputLocation;		\
-
+  IParticleDescendants* m_descend;
         IParticleDictTool::DICT m_varmap ; 
         IParticleDictTool::DICT m_out ; 
 

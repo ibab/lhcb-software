@@ -114,6 +114,8 @@ RelInfoBstautauZVisoBDT::RelInfoBstautauZVisoBDT( const std::string& type,
   
   declareProperty("ParticlePath",   m_ParticlePath="/Event/Phys/StdAllNoPIDsPions/Particles");
   declareProperty("PVInputLocation",m_PVInputLocation = LHCb::RecVertexLocation::Primary);
+  declareProperty( "Variables", m_variables,
+                   "List of variables to store (store all if empty)");
 
   declareProperty("angle"     , m_angle  = 0.27     ); // 
   declareProperty("fc"        , m_fc  = 0.60     ); // 
@@ -149,8 +151,8 @@ RelInfoBstautauZVisoBDT::RelInfoBstautauZVisoBDT( const std::string& type,
   
   m_keys.clear();
 
-  m_keys.push_back(RelatedInfoNamed:: ZVISO);
-   
+  m_keys.push_back(RelatedInfoNamed:: ZVISOTAUP);
+  m_keys.push_back(RelatedInfoNamed:: ZVISOTAUM);
   
   
 }
@@ -250,75 +252,73 @@ StatusCode RelInfoBstautauZVisoBDT::initialize() {
 // Fill the tuple
 //=============================================================================
 StatusCode RelInfoBstautauZVisoBDT::calculateRelatedInfo( const LHCb::Particle* top,
-                                  const LHCb::Particle *part){//, const std::string &head, Tuples::Tuple &tuple	) {
+                                  const LHCb::Particle *top_bis){//, const std::string &head, Tuples::Tuple &tuple	) {
 
   m_ZViso=-10;
+  m_ZViso_TauP=-10;
+  m_ZViso_TauM=-10;
+  
   
   
   //  const std::string prefix=fullName(head);
   if ( msgLevel(MSG::DEBUG) ) debug() << "RelInfoBstautauZVisoBDT ==> Fill" << endmsg;  
   //  if ( msgLevel(MSG::DEBUG) ) cout <<"A*** "<<part <<" "<<top<<endl;
   //  if ( msgLevel(MSG::DEBUG) ) cout <<"AA*** "<<part->particleID().pid() <<" "<<top->particleID().pid()<<endl;
-  if ( top->isBasicParticle() || isPureNeutralCalo(top) )
+  if ( top->isBasicParticle() || isPureNeutralCalo(top) || top!=top_bis)
     {
       if ( msgLevel(MSG::DEBUG) ) 
         debug() << "Running ZVTOP isolation on basic, neutral or calorimetric particles, skipping" << endmsg;
       return StatusCode::SUCCESS ;
     }
 
-  if(part)
-    {
-      if ((part->particleID().pid())==(top->particleID().pid()))
-        {
-          if ( msgLevel(MSG::DEBUG) ) {
-            debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
-            debug()<<"Trying to compute isolation on B ==> needs a tau"<<endreq; 
-          }
-          return StatusCode::SUCCESS;//
-        }
-  
-      //check on the muon or pion
-      if (part->isBasicParticle())
-        {
-          if ( msgLevel(MSG::DEBUG) ){
-            debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
-            debug()<<"Trying to compute ZViso BDT on basic particles (Muons or Pions) ==> needs a tau or D"<<endreq;
-          }
-          return  StatusCode::SUCCESS;//
-        }
-      
-      StatusCode scInTracks =  Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
-      StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
-      StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
-      StatusCode scZViso    =  ZViso();
-      
-      
-      if ( msgLevel(MSG::DEBUG) ) debug()<<"ZVisoBDT_value : "<<m_ZViso<<endmsg;
-      
-      
-      if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	
-      
-      
-      m_map.clear();
-      std::vector<short int>::const_iterator ikey; 
-      for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-        float value = 0;
-        switch (*ikey) {
-        case  RelatedInfoNamed::ZVISO : value = m_ZViso; break;//
-        }
-        if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
-        m_map.insert( std::make_pair( *ikey, value) );
-      }
- }
-  
-
- else
-    {
+  LHCb::Particle::ConstVector Daughters = m_descend->descendants(top,1);
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
+  LHCb::Particle::ConstVector::const_iterator i_daug; 
+  for ( i_daug = Daughters.begin(); i_daug != Daughters.end(); i_daug++){
+    const LHCb::Particle* part = *i_daug;
+    if(!part) {
       return Warning( "Found an invalid particle" ,StatusCode::FAILURE,50);
+    }else if (part->isBasicParticle())
+      {
+        if ( msgLevel(MSG::DEBUG) ) debug()<<"part->particleID().pid() : "<<part->particleID().pid()<<" , "<<"top->particleID().pid() : "<<top->particleID().pid()<<endreq;
+        if ( msgLevel(MSG::DEBUG) )   debug()<<"Trying to compute ZViso BDT on basic particles (Muons or Pions) ==> needs a tau or D"<<endreq;
+      }
+    else if(part)
+      {
+     
+        StatusCode scInTracks =  Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
+        StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
+        StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
+        StatusCode scZViso    =  ZViso();
+        if ( msgLevel(MSG::DEBUG) ) debug()<<"ZVisoBDT_value : "<<m_ZViso<<endmsg;
+        if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	
+        if(part->charge()>0)
+          {
+            m_ZViso_TauP=m_ZViso;
+          }else if(part->charge()<0)
+          {
+            m_ZViso_TauM=m_ZViso;
+          }
+      }
+  }
+  
+  
+  
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"ZVisoBDT_value TauP : "<<m_ZViso_TauP<<" , ZVisoBDT_value TauM : "<<m_ZViso_TauM<<endmsg;
+  
+  m_map.clear();
+  std::vector<short int>::const_iterator ikey; 
+  for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
+    float value = 0;
+    switch (*ikey) {
+    case  RelatedInfoNamed::ZVISOTAUP : value = m_ZViso_TauP; break;//
+    case  RelatedInfoNamed::ZVISOTAUM : value = m_ZViso_TauM; break;//
     }
- 
-
-
+    if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
+    m_map.insert( std::make_pair( *ikey, value) );
+  }
+  
+  
   return StatusCode::SUCCESS;
   
 }
@@ -357,7 +357,7 @@ StatusCode RelInfoBstautauZVisoBDT::Initialize_tracksVF_ZVtop(){
       verts = get<LHCb::RecVertex::Container>(m_PVInputLocation);
     }
     else {
-      Warning("No primary vertex at location"); 
+      if ( msgLevel(MSG::DEBUG) ) Warning("No primary vertex at location"); 
     }
     RecVertex::Container::const_iterator iv;   
     for ( iv = verts->begin(); iv != verts->end(); iv++) {//Here he's looking at the minimum value of the actual track in the loop wrt all the reconstructed PV
@@ -379,7 +379,7 @@ StatusCode RelInfoBstautauZVisoBDT::Initialize_tracksVF_ZVtop(){
     
     if (ipsall>m_cut_ips && ghostProb <m_cut_ghost &&  (*it_ptrk).momentum().rho()>350.) {  //if the minimum is greater than a treshold cut the track is saved
       tracks.push_back(it_ptrk);
-      debug() <<"IPS_pass "<<ipsall<<endmsg;    
+      if ( msgLevel(MSG::DEBUG) )debug() <<"IPS_pass "<<ipsall<<endmsg;    
     }
     if (ipsall>m_cut_ips_VF && ghostProb <m_cut_ghost ) {
       tracksVF.push_back(it_ptrk);

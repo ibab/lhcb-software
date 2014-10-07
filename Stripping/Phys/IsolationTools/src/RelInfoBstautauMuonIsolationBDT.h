@@ -1,5 +1,5 @@
-#ifndef RELINFOMUONISOVARIABLES_H 
-#define RELINFOMUONISOVARIABLES_H 1
+#ifndef RELINFOMUONISOVARIABLESV2_H 
+#define RELINFOMUONISOVARIABLESV2_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -13,7 +13,7 @@
 #include "MVADictTools/TMVATransform.h"
 #include "Kernel/IParticleDictTool.h"
 #include "Event/Particle.h"
-
+#include "Kernel/IParticleDescendants.h"
 
 /** @class RelInfoBstautauMuonIsolationBDT RelInfoBstautauMuonIsolationBDT.h
  *
@@ -38,38 +38,38 @@ class IDistanceCalculator;
 class IParticleDictTool ;
 
 class RelInfoBstautauMuonIsolationBDT : public GaudiTool, virtual public IRelatedInfoTool {
-    public:
-        /// Standard constructor
-        RelInfoBstautauMuonIsolationBDT( const std::string& type,
-                const std::string& name,
-                const IInterface* parent );
-
-        virtual StatusCode initialize();
-
-        virtual StatusCode calculateRelatedInfo( const LHCb::Particle*,
-                                         const LHCb::Particle*);
-
-        virtual LHCb::RelatedInfoMap* getInfo(void);
+public:
+  /// Standard constructor
+  RelInfoBstautauMuonIsolationBDT( const std::string& type,
+                                      const std::string& name,
+                                      const IInterface* parent );
   
-        virtual std::string infoPath(void);
-
-        virtual ~RelInfoBstautauMuonIsolationBDT( ); ///< Destructor
-
+  virtual StatusCode initialize();
+  
+  virtual StatusCode calculateRelatedInfo( const LHCb::Particle*,
+                                           const LHCb::Particle*);
+  
+  virtual LHCb::RelatedInfoMap* getInfo(void);
+  
+  virtual std::string infoPath(void);
+  
+  virtual ~RelInfoBstautauMuonIsolationBDT( ); ///< Destructor
+  
     protected:
-
-    private:
-
-        std::vector<std::string> m_variables;
-        LHCb::RelatedInfoMap m_map;
-        std::vector<short int> m_keys; 
-
-        double m_bdt1;
-        double m_bdt2;
-        double m_bdt3;
-
+  
+private:
+  
+  std::vector<std::string> m_variables;
+  LHCb::RelatedInfoMap m_map;
+  std::vector<short int> m_keys; 
+  IParticleDescendants* m_descend;
+  double m_bdt1;
+  double m_bdt2;
+  double m_bdt3;
+  
         //distance calculator
         //
-        IDVAlgorithm* m_dva;
+  IDVAlgorithm* m_dva;
         const IDistanceCalculator*  m_dist;
 
         std::string m_weightsName;

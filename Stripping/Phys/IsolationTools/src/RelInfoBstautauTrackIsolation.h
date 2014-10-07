@@ -1,5 +1,5 @@
-#ifndef RELINFOTRACKISOVARIABLES_H 
-#define RELINFOTRACKISOVARIABLES_H 1
+#ifndef RELINFOTRACKISOVARIABLESV2_H 
+#define RELINFOTRACKISOVARIABLESV2_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -13,7 +13,7 @@
 #include "MVADictTools/TMVATransform.h"
 #include "Kernel/IParticleDictTool.h"
 #include "Event/Particle.h"
-
+#include "Kernel/IParticleDescendants.h"
 /** @class RelInfoBstautauTrackIsolation RelInfoBstautauTrackIsolation.h
  *
  * \brief Calculate track isolation.
@@ -62,8 +62,14 @@ class RelInfoBstautauTrackIsolation : public GaudiTool, virtual public IRelatedI
         LHCb::RelatedInfoMap m_map;
         std::vector<short int> m_keys; 
 
-        double m_bdt1;
-
+  double m_bdt1;
+  double   m_bdt1_TauP_piM ;
+  double   m_bdt1_TauP_piP1 ;
+  double   m_bdt1_TauP_piP2 ;
+  double   m_bdt1_TauM_piP ;
+  double   m_bdt1_TauM_piM1 ;
+  double   m_bdt1_TauM_piM2 ;
+  
         //distance calculator
         //
         IDVAlgorithm* m_dva;
@@ -75,7 +81,7 @@ class RelInfoBstautauTrackIsolation : public GaudiTool, virtual public IRelatedI
         //TMVA::Reader *m_Reader;
         std::string m_transformName ;
         //variables
-
+ IParticleDescendants* m_descend;
   double m_pvdis_h;
   double m_pvdis;
   double m_svdis_h;

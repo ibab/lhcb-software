@@ -1,5 +1,5 @@
-#ifndef RELINFOTAUISOVARIABLES_H 
-#define RELINFOTAUISOVARIABLES_H 1
+#ifndef RELINFOTAUISOVARIABLESV2_H 
+#define RELINFOTAUISOVARIABLESV2_H 1
 
 // Include files
 // from DaVinci, this is a specialized GaudiAlgorithm
@@ -13,7 +13,7 @@
 #include "MVADictTools/TMVATransform.h"
 #include "Kernel/IParticleDictTool.h"
 #include "Event/Particle.h"
-
+#include "Kernel/IParticleDescendants.h"
 
 /** @class RelInfoBstautauTauIsolationBDT RelInfoBstautauTauIsolationBDT.h
  *
@@ -67,6 +67,14 @@ class RelInfoBstautauTauIsolationBDT : public GaudiTool, virtual public IRelated
         double m_bdt2;
         double m_bdt3;
 
+        double m_bdt1_TauP;
+        double m_bdt2_TauP;
+        double m_bdt3_TauP;
+
+        double m_bdt1_TauM;
+        double m_bdt2_TauM;
+        double m_bdt3_TauM;
+
         //distance calculator
         //
         IDVAlgorithm* m_dva;
@@ -90,6 +98,7 @@ class RelInfoBstautauTauIsolationBDT : public GaudiTool, virtual public IRelated
         TMVATransform::optmap m_optmap ;
         IParticleDictTool::DICT m_varmap ; 
         IParticleDictTool::DICT m_out ; 
+  IParticleDescendants* m_descend;
 
 
         //save the vertice
