@@ -77,7 +77,7 @@ RadLengthColl::~RadLengthColl() {};
 //=============================================================================
 StatusCode RadLengthColl::initialize()  {
 
-	info() << "********** Initialize RadLengthColl tool **********"<<endmsg;
+	info() << "********** Initializing RadLengthColl tool **********"<<endmsg;
 
 	StatusCode scb = GiGaStepActionBase::initialize();
 	if( scb.isFailure() ) 
@@ -92,7 +92,7 @@ StatusCode RadLengthColl::initialize()  {
 	{ return Error("Unable to locate Ntuple Service ", sc ); }
 
 	ntname = "/NTUPLES/FILE2";
-	info() << "ntupleSvc = " << ntupleSvc << endmsg;
+	debug() << "ntupleSvc = " << ntupleSvc << endmsg;
 	NTupleFilePtr ntfile(ntupleSvc, ntname); 
 	if( !ntfile )
 	{
@@ -148,7 +148,7 @@ StatusCode RadLengthColl::initialize()  {
 	}
 
 
-	debug() << "==> Initialize successful" << endmsg;
+	info() << "==> Initialize successful" << endmsg;
 	return StatusCode::SUCCESS;
 };
 
@@ -164,9 +164,8 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 
 	G4int PartPdgId = partdef->GetPDGEncoding();
 	int m_trackpar = track->GetParentID();
-
-	//const G4VProcess* proc = track->GetCreatorProcess();
-	//G4int proctype = proc->GetProcessType();
+	const G4VProcess* proc = track->GetCreatorProcess();
+	if(proc!=0) return;
 
 	debug() << "Projectile ID: " << PartPdgId << ", ID particle: " << m_trackpar << endmsg;
 
@@ -213,14 +212,14 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 	VolName = (std::string) Vol->GetName();
 
 	// This commented block of code does not include interaction lengths
-	/*
+	
 	   debug() << "*** - VolName - *** = " << VolName << endmsg;
+	
 	   debug() << "*** - Zpos - *** = " << thePreStepPoint->GetPosition().z() << endmsg;
 	   debug() << "*** - stepsize  - *** = " << StepLength << endmsg;
-	//debug() << "*** - Material RadLength - *** = " << MaterialRadiationLength << endmsg;
-	debug() << "*** - theRadLength  - *** = " << theRadLength << endmsg;
-	debug() << "*** - CumulativeRadLength  - *** = " << theCumulatedRadLength << endmsg;
-	*/
+		debug() << "*** - Material RadLength - *** = " << MaterialRadiationLength << endmsg;
+		debug() << "*** - theRadLength  - *** = " << theRadLength << endmsg;
+		debug() << "*** - CumulativeRadLength  - *** = " << theCumulatedRadLength << endmsg;
 
 
 
@@ -243,7 +242,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 		}
 		else
 		{
-			debug() << "Particle was not recorded in Scoring_Plane?" << endmsg;
+			debug() << "Particle was not recorded in a Scoring_Plane" << endmsg;
 		}
 	}
 	else if(VolName=="Universe")

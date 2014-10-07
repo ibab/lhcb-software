@@ -110,12 +110,23 @@ private:
   //  Flags:
   /// bool to check the multiplicity
   std::vector<std::string> m_intVolumeName;
-  std::vector<std::string> m_intMaterialName;
   std::vector<std::string> m_intVolumeString;
+  std::vector<std::string> mp_targMat;
+  std::vector<std::string> mp_physList;
+  std::vector<int>         mp_projPdgID; 
+  std::vector<double>      mp_projEng;
+  std::vector<double>      mp_targThick;
+
 
   NTuple::Tuple*    m_ntuple;
 
   // track-level variables
+  NTuple::Item< int >        m_projPdgID;
+  NTuple::Item< double >       m_projEng;
+  NTuple::Item< double >     m_targThick;
+  NTuple::Item< char >       m_targMat;
+  NTuple::Item< char >      m_physList;
+
   NTuple::Item< int >       m_trackid;
   NTuple::Item< int >      m_trackpdg;
   NTuple::Item< int >      m_trackpar;
