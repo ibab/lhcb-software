@@ -28,16 +28,16 @@
 constexpr struct proj_distance_t {
        template <typename Iter> 
        auto operator()(Iter&& f, Iter&& l) const -> decltype( (*f)->projection() )  //TODO: use C++14 auto return deduction
-       { return (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() ; };
+       { return (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() ; }
 } proj_distance {};
 
 class inRegion {
-    int m_region;
+    unsigned int m_region;
 public:
-    inRegion(int region) : m_region(region) {}
+    inRegion(unsigned int region) : m_region(region) {}
     template <typename Hit>
     bool operator()(const Hit* hit) const {
-      unsigned int region = hit->hit()->region();
+      auto region = hit->hit()->region();
       if ( region != Tf::RegionID::OT) region+=Tf::RegionID::OTIndex::kNRegions ; // TODO: how does this work??? TfRegionID::OT = 4, which is the 'DetType' of the OT...
                                                   // FIXME: shouldn't this instead do what PatFwdRegionCounter::region does???
                                                   // as-is, this 'just' maps IT region 2 and IT region 4 together, and confuses the 
@@ -236,13 +236,13 @@ int count_planes(Iter1&& first ,Iter2&& last, Predicate predicate )
 template <typename Iter>
 void select_hits_in_best_region_only(Iter begin, Iter end)
 {
-  int bestRegion = -1;
   auto spread = 1000.0;
   enum { nPlanes = 6 };
   enum { nRegions =  Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions };
+  unsigned bestRegion = nRegions;
 
   PatFwdRegionCounter regions{ begin, end };
-  for( int maxRegion = 0; maxRegion != nRegions ; ++maxRegion ) {
+  for( unsigned int maxRegion = 0; maxRegion != nRegions ; ++maxRegion ) {
     if ( regions.nbInRegion( maxRegion ) < nPlanes ) continue;  // count by plane
    
     auto predicate = inRegion{maxRegion};
@@ -256,7 +256,7 @@ void select_hits_in_best_region_only(Iter begin, Iter end)
     }
   }
 
-  if ( bestRegion != -1 ) {
+  if ( bestRegion != nRegions ) {
     // remove other regions !
     // if( UNLIKELY( isDebug ) ) debug() << "========= Keep only hits of region " << bestRegion << endmsg;
     auto predicate = inRegion(bestRegion);
