@@ -95,40 +95,55 @@ default_config =  {
   'B2DPi_SameSign_LinePrescale'            : 0.5,
   'B2DPi_SameSign_LinePostscale'           : 1,
   'RelatedInfoTools'      : [
+  #1
   { "Type" : "RelInfoBstautauMuonIsolationBDT"
-    ,"RecursionLevel" : 1
+    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
-    , "Location"  : "BSTAUTAUVARIABLES"  
+     , "Location"  : "MuonIsolationBDT"  
     },
+  #2
   { "Type" : "RelInfoBstautauMuonIsolation"
-    ,"RecursionLevel" : 1
+    ,"RecursionLevel" : 0
     , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
-    , "Location"  : "BSTAUTAUVARIABLES"  
+     , "Location"  : "MuonIsolation"  
     },
+  #3
   { "Type" : "RelInfoBstautauTauIsolationBDT"
-    ,"RecursionLevel" : 1
-    , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUE', 'BSTAUTAUTAUISOBDTSECONDVALUE','BSTAUTAUTAUISOBDTTHIRDVALUE']
-    , "Location"  : "BSTAUTAUVARIABLES"  
+    ,"RecursionLevel" : 0
+    , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUETAUP', 'BSTAUTAUTAUISOBDTSECONDVALUETAUP','BSTAUTAUTAUISOBDTTHIRDVALUETAUP','BSTAUTAUTAUISOBDTFIRSTVALUETAUM', 'BSTAUTAUTAUISOBDTSECONDVALUETAUM','BSTAUTAUTAUISOBDTTHIRDVALUETAUM']
+     , "Location"  : "TauIsolationBDT"  
     },
+  #4
   { "Type" : "RelInfoBstautauTauIsolation"
-    ,"RecursionLevel" : 1
-    , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUE', 'BSTAUTAUTAUISOSECONDVALUE']
-    , "Location"  : "BSTAUTAUVARIABLES"  
+    ,"RecursionLevel" : 0
+    , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUETAUP', 'BSTAUTAUTAUISOSECONDVALUETAUP','BSTAUTAUTAUISOFIRSTVALUETAUM', 'BSTAUTAUTAUISOSECONDVALUETAUM']
+     , "Location"  : "TauIsolation"  
     },
-  { "Type" : "RelInfoBstautauTrackIsolationBDT"
-    ,"RecursionLevel" : 2
-    , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUE', 'BSTAUTAUTRACKISOBDTSECONDVALUE','BSTAUTAUTRACKISOBDTTHIRDVALUE']
-    , "Location"  : "BSTAUTAUVARIABLES"  
+  #5
+
+ { "Type" : "RelInfoBstautauTrackIsolationBDT" 
+    ,"RecursionLevel" : 0
+    , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIM','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIM','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP1', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIP','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIP','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM1','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM2']
+     , "Location"  : "TrackIsolationBDT"  
     },
-  { "Type" : "RelInfoBstautauTrackIsolation"
-    ,"RecursionLevel" : 2
-    , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUE', 'BSTAUTAUTRACKISOSECONDVALUE']
-    , "Location"  : "BSTAUTAUVARIABLES"  
+
+  #6
+  { "Type" : "RelInfoBstautauTrackIsolation" 
+    ,"RecursionLevel" : 0
+    , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOFIRSTVALUETAUPPIP1','BSTAUTAUTRACKISOFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOFIRSTVALUETAUMPIM1', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIM2']
+     , "Location"  : "TrackIsolation"  
     },
-  { "Type" : "RelInfoBstautauCDFIso"
+  #7
+  { "Type" : "RelInfoBstautauCDFIso" 
     ,"RecursionLevel" : 0
     #, "Variables" : ['BSTAUTAUCDFISO']
-    , "Location"  : "BSTAUTAUVARIABLES"  
+     , "Location"  : "CDFIso"  
+    },
+  #8
+  { "Type" : "RelInfoBstautauZVisoBDT" 
+    ,"RecursionLevel" : 0
+    , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
+     , "Location"  : "ZVisoBDT"
     }
   ]
   },
@@ -144,7 +159,10 @@ from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
 from StandardParticles import StdNoPIDsKaons, StdNoPIDsPions, StdTightMuons
 from StandardParticles import StdLoosePions, StdTightPions
+from StandardParticles import StdAllLoosePions,StdAllNoPIDsPions
 from StandardParticles import StdLooseKaons 
+
+from copy import deepcopy
 
 default_name = "B2XTau"
 HLT_DECISIONS_HAD   = "Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision"
@@ -246,6 +264,10 @@ class B2XTauConf(LineBuilder) :
   def __init__(self, name, config):
     LineBuilder.__init__(self, name, config)
     #
+
+    #
+    # Selections
+    #
     selPions        = self._makePions(      name    = "PionsFor"+name, 
                                       config  = config)
     selMuons        = self._makeMuons(      name    = "MuonsFor"+name,
@@ -299,110 +321,188 @@ class B2XTauConf(LineBuilder) :
                                    pionSel = selPions,
                                    config  = config)
 
+    selB2TauTauTOS     = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
+    selB2TauTauSSTOS   = self._makeTOS(name+"_TOSForTauTauSS",selB2TauTauSS)
+    selB2TauTaupiSSTOS = self._makeTOS(name+"_TOSForTauTaupiSS",selB2TauTaupiSS)
+    selB2TauMuTOS      = self._makeTOS(name+"_TOSForTauMu",selB2TauMu)
+    selB2TauMupiSSTOS  = self._makeTOS(name+"_TOSForTauMupiSS",selB2TauMupiSS)
+    selB2TauMuSSTOS    = self._makeTOS(name+"_TOSForTauMuSS",selB2TauMuSS)
+
+
+#    for isotool in config['RelatedInfoTools']:
+#      isotool_type = isotool['Type']
+#      isotool_short_type = isotool_type.replace('RelInfo',"")
+#      if isotool_type in ['RelInfoBstautauCDFIso','RelInfoBstautauMuonIsolationBDT', 'RelInfoBstautauMuonIsolation','RelInfoBstautauTauIsolationBDT', 'RelInfoBstautauTauIsolation', 'RelInfoBstautauZVisoBDT','RelInfoBstautauTrackIsolationBDT','RelInfoBstautauTrackIsolation']: # recursion level 0
+#        bselections = [selB2TauTauTOS,selB2TauTauSSTOS,selB2TauTaupiSSTOS,selB2DD,selB2DDSS,selB2TauMuTOS,selB2TauMupiSSTOS,selB2TauMuSSTOS,selB2DPi,selB2DPiSS]
+#    isotool['Location'] = dict([(bsel,isotool_short_type+'_B') for bsel in bselections])
+    
+    
+    
+ #   def filter_relatedinfo_locations(relatedinfo_config, allowed_selections):
+#      """ From the given RelatedInfoTools config, return a new config with a reduced set of locations"""
+#      filtered_config = deepcopy(relatedinfo_config)
+#      for relatedinfo in filtered_config:
+#        possible_selections = set(relatedinfo['Location'].keys())
+#        notexisting_selections = possible_selections - set(allowed_selections)
+#        for selection in notexisting_selections:
+#          del relatedinfo['Location'][selection]
+#      return filtered_config    
+    
+    
+
+    # Set all possible locations for each RelatedInfoTool
+    #    for isotool in config['RelatedInfoTools']:
+#      isotool_type = isotool['Type']
+#      isotool_short_type = isotool_type.replace('RelInfo',"")
+#      if isotool_type in ['RelInfoBstautauMuonIsolationBDT', 'RelInfoBstautauMuonIsolation']: # recursion level 1 : "stable" B daughters
+#        isotool['Locations'] = {selMuons :isotool_short_type+'_Muon', selPions:isotool_short_type+'_Pion'} 
+#      if isotool_type in ['RelInfoBstautauTauIsolationBDT', 'RelInfoBstautauTauIsolation', 'RelInfoBstautauZVisoBDT']:  # recursion level 1 : "decaying" B daughters
+#        isotool['Locations'] = {selTau:isotool_short_type+'_Tau', selTauSS:isotool_short_type+'_Tau',selD :isotool_short_type+'_D'}
+#      if isotool_type in ['RelInfoBstautauTrackIsolationBDT','RelInfoBstautauTrackIsolation']: # recursion level 2
+#        isotool['Locations'] = {StdAllLoosePions:isotool_short_type+'_Pions',selPionsForD:isotool_short_type+'_Pions',selKaonsForD:isotool_short_type+'_Kaons'} 
+#      if isotool_type in ['RelInfoBstautauCDFIso']: # recursion level 0
+#        bselections = [selB2TauTauTOS,selB2TauTauSSTOS,selB2TauTaupiSSTOS,selB2DD,selB2DDSS,selB2TauMuTOS,selB2TauMupiSSTOS,selB2TauMuSSTOS,selB2DPi,selB2DPiSS]
+#        isotool['Locations'] = dict([(bsel,isotool_short_type+'_B') for bsel in bselections])
+
+
+    
+ #   def filter_relatedinfo_locations(relatedinfo_config, allowed_selections):
+ #     """ From the given RelatedInfoTools config, return a new config with a reduced set of locations"""
+ #     filtered_config = deepcopy(relatedinfo_config)
+ #     for relatedinfo in filtered_config:
+ #       possible_selections = set(relatedinfo['Location'].keys())
+ #       notexisting_selections = possible_selections - set(allowed_selections)
+ #       for selection in notexisting_selections:
+ #         del relatedinfo['Locations'][selection]
+ #     return filtered_config    
+    
+    
+
+    #
+    # Define StrippingLines
+    #
+    # 1. TauTau_TOSLine
+#    relatedInfoToolsConfig4TauTau_TOSLine = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2TauTauTOS,selTau,StdAllLoosePions])
     self.TauTau_TOSLine    = StrippingLine(name+"_TauTau_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauTau_TOSLinePrescale'],
                                            postscale   = config['B2TauTau_TOSLinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
-                                           selection   = self._makeTOS(name+"_TOSForTauTau",selB2TauTau)
-#                                           selection = selB2TauTau
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4TauTau_TOSLine, #config['RelatedInfoTools'],
+                                           selection   = selB2TauTauTOS
                                            )
 
+    # 5. TauTau_SameSign_TOSLine
+#    relatedInfoToolsConfig4TauTau_SS_TOSLine = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2TauTauSSTOS,selTau,StdAllLoosePions])
     self.TauTau_SS_TOSLine = StrippingLine(name+"_TauTau_SameSign_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauTau_SameSign_TOSLinePrescale'],
                                            postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
-                                           selection   = self._makeTOS(name+"_TOSForTauTauSS",selB2TauTauSS)     
-#                                           selection   = selB2TauTauSS
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4TauTau_SS_TOSLine, #config['RelatedInfoTools'],
+                                           selection   = selB2TauTauSSTOS
                                            )
+
+    # 9. TauTau_piSS_TOSLine
+#    relatedInfoToolsConfig4TauTau_piSS_TOSLine = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2TauTaupiSSTOS,selTauSS,selPionsForD])
     self.TauTau_piSS_TOSLine    = StrippingLine(name+"_TauTau_piSS_TOSLine",
                                                 #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                                 prescale    = config['B2TauTau_SameSign_TOSLinePrescale'],
                                                 postscale   = config['B2TauTau_SameSign_TOSLinePostscale'],
                                                 MDSTFlag = True,
-                                                RelatedInfoTools = config['RelatedInfoTools'],
-                                                selection   = self._makeTOS(name+"_TOSForTauTaupiSS",selB2TauTaupiSS)
-                                                #                                           selection = selB2TauTau
+                                                RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4TauTau_piSS_TOSLine, #config['RelatedInfoTools'],
+                                                selection   = selB2TauTaupiSSTOS
                                                 )
 
+    # 2. DD_Line
+#    relatedInfoToolsConfig4DD_Line = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2DD,selD,selPionsForD,selKaonsForD])
     self.DD_Line        = StrippingLine(name+"_DD_Line",
                                         #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                         prescale    = config['B2DD_LinePrescale'],
                                         postscale   = config['B2DD_LinePostscale'],
                                         MDSTFlag = True,
-                                        RelatedInfoTools = config['RelatedInfoTools'],
-#                                           selection   = self._makeTOS(name+"_TOSForDD",selB2DD)
+                                        RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4DD_Line, #config['RelatedInfoTools'],
                                         selection   = selB2DD
                                         )
+
+    # 6. DD_SameSign_Line
+ #   relatedInfoToolsConfig4DD_SS_Line = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2DDSS,selD,selPionsForD,selKaonsForD])
     self.DD_SS_Line     = StrippingLine(name+"_DD_SameSign_Line",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2DD_SameSign_LinePrescale'],
                                            postscale   = config['B2DD_SameSign_LinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
-#                                           selection   = self._makeTOS(name+"_TOSForDDSS",selB2DDSS)
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4DD_SS_Line, #config['RelatedInfoTools'],
                                            selection   = selB2DDSS
                                            )
+
+    # 3. TauMu_TOSLine
+ #   relatedInfoToolsConfig4TauMu_TOSLine = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2TauMuTOS,selMuons,selTau,StdAllLoosePions])
     self.TauMu_TOSLine     = StrippingLine(name+"_TauMu_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauMu_TOSLinePrescale'],
                                            postscale   = config['B2TauMu_TOSLinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
-                                           selection   = self._makeTOS(name+"_TOSForTauMu",selB2TauMu)
-#                                           selection   = selB2TauMu
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4TauMu_TOSLine, #config['RelatedInfoTools'],
+                                           selection   = selB2TauMuTOS
                                            )
+    
+    # 10. TauMu_piSS_TOSLine
+ #   relatedInfoToolsConfig4TauMu_piSS_TOSLine = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2TauMupiSSTOS,selMuons,selTauSS,selPionsForD])
     self.TauMu_piSS_TOSLine     = StrippingLine(name+"_TauMu_piSS_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauMu_SameSign_TOSLinePrescale'],
                                            postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
-                                           selection   = self._makeTOS(name+"_TOSForTauMupiSS",selB2TauMupiSS)
-#                                           selection   = selB2TauMu
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4TauMu_piSS_TOSLine, #config['RelatedInfoTools'],
+                                           selection   = selB2TauMupiSSTOS
                                            )
-   
+
+    # 7. TauMu_SameSign_TOSLine
+ #   relatedInfoToolsConfig4TauMu_SS_TOSLine = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2TauMuSSTOS,selMuons,selTau,StdAllLoosePions])
     self.TauMu_SS_TOSLine  = StrippingLine(name+"_TauMu_SameSign_TOSLine",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2TauMu_SameSign_TOSLinePrescale'],
                                            postscale   = config['B2TauMu_SameSign_TOSLinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
-                                           selection   = self._makeTOS(name+"_TOSForTauMuSS",selB2TauMuSS)
-#                                           selection   = selB2TauMuSS
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4TauMu_SS_TOSLine, #config['RelatedInfoTools'],
+                                           selection   = selB2TauMuSSTOS
                                            )
+
+    # 4. DPi_Line
+ #   relatedInfoToolsConfig4DPi_Line = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2DPi,selD,selPionsForD,selKaonsForD,selPions])
     self.DPi_Line       = StrippingLine(name+"_DPi_Line",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2DPi_LinePrescale'],
                                            postscale   = config['B2DPi_LinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4DPi_Line, #config['RelatedInfoTools'],
                                            selection   = selB2DPi
                                            )
+
+    # 8. DPi_SameSign_Line
+#    relatedInfoToolsConfig4DPi_SS_Line = filter_relatedinfo_locations(config['RelatedInfoTools'],[selB2DPiSS,selD,selPionsForD,selKaonsForD,selPions])
     self.DPi_SS_Line    = StrippingLine(name+"_DPi_SameSign_Line",
                                            #HLT         = " HLT_PASS_RE('"+HLT_DECISIONS+"') ",
                                            prescale    = config['B2DPi_SameSign_LinePrescale'],
                                            postscale   = config['B2DPi_SameSign_LinePostscale'],
                                            MDSTFlag = True,
-                                           RelatedInfoTools = config['RelatedInfoTools'],
+                                           RelatedInfoTools =  config['RelatedInfoTools'], #relatedInfoToolsConfig4DPi_SS_Line, #config['RelatedInfoTools'],
                                            selection   = selB2DPiSS
                                            )
     #
+    # Register StrippingLines
     #
-
-    self.registerLine( self.TauTau_TOSLine )
-    self.registerLine( self.DD_Line )
-    self.registerLine( self.TauMu_TOSLine )
-    self.registerLine( self.DPi_Line )    
-    self.registerLine( self.TauTau_SS_TOSLine )
-    self.registerLine( self.DD_SS_Line )
-    self.registerLine( self.TauMu_SS_TOSLine )
-    self.registerLine( self.DPi_SS_Line )    
-    self.registerLine( self.TauTau_piSS_TOSLine )
-    self.registerLine( self.TauMu_piSS_TOSLine )
+    self.registerLine( self.TauTau_TOSLine )        #  1
+    self.registerLine( self.DD_Line )               #  2
+    self.registerLine( self.TauMu_TOSLine )         #  3
+    self.registerLine( self.DPi_Line )              #  4
+    self.registerLine( self.TauTau_SS_TOSLine )     #  5
+    self.registerLine( self.DD_SS_Line )            #  6
+    self.registerLine( self.TauMu_SS_TOSLine )      #  7
+    self.registerLine( self.DPi_SS_Line )           #  8
+    self.registerLine( self.TauTau_piSS_TOSLine )   #  9
+    self.registerLine( self.TauMu_piSS_TOSLine )    # 10
   
   
   #####################################################
