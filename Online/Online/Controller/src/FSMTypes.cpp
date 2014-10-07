@@ -20,8 +20,13 @@ using namespace FiniteStateMachine;
 using namespace FiniteStateMachine::DAQ;
 using namespace std;
 
+enum DaqType  {
+  DAQ_NORMAL=0,
+  DAQ_PAUSE_ALL=1<<0
+};
+
 /// Create DAQ machine type
-static Type* defineDAQType()    {
+static Type* defineDAQType(DaqType daqType = DAQ_NORMAL)    {
   typedef Transition Tr;
   Type *daq = new Type("DAQ");
   const State* offline   = daq->addState(ST_NAME_OFFLINE, State::STARTUP);
@@ -46,7 +51,10 @@ static Type* defineDAQType()    {
   running->when  (  anyChildInState(error),        moveTo(error));
   running->when  (  anyChildInState(offline),      moveTo(offline));
   running->when  (  anyChildInState(not_ready),    moveTo(not_ready));
-  running->when  (  anyChildInState(paused),       moveTo(paused));
+  if ( daqType&DAQ_PAUSE_ALL )
+    running->when(  allChildrenInState(paused),       moveTo(paused));
+  else
+    running->when(  anyChildInState(paused),       moveTo(paused));
   running->when  (  allChildrenInState(ready),     moveTo(ready));
   //running->when  (  allChildrenInState(running),   moveTo(running));
 
@@ -126,24 +134,23 @@ static Type* defineDAQType()    {
   reset3->adoptRule(reset0).adoptRule(reset1).adoptRule(reset3);
 
   /// Offline -> Not Ready
-  Tr*  load      = daq->addTransition("load",      offline,     not_ready, CHECK|CREATE);
-
+  Tr*  load      = daq->addTransition("load",    offline,     not_ready, CHECK|CREATE);
   load->addPredicate( AllChildrenOfType(daq).inState(offline, not_ready, ready, paused, running));
-  load->adoptRule(    AllChildrenOfType(daq).move(offline,   not_ready));
-  load->adoptRule(    AllChildrenOfType(daq).move(paused,    ready));
-  load->adoptRule(    AllChildrenOfType(daq).move(offline,   ready)); // --> Checkpointing
+  load->adoptRule(    AllChildrenOfType(daq).move(offline,    not_ready));
+  load->adoptRule(    AllChildrenOfType(daq).move(paused,     ready));
+  load->adoptRule(    AllChildrenOfType(daq).move(offline,    ready)); // --> Checkpointing
 
   /// Not Ready -> Ready
-  Tr*  configure = daq->addTransition("configure", not_ready,   ready);
+  Tr*  configure = daq->addTransition("configure", not_ready,    ready);
   configure->addPredicate(AllChildrenOfType(daq).inState(not_ready, ready, paused, running));
   configure->adoptRule(   AllChildrenOfType(daq).move(not_ready, ready));
   configure->adoptRule(   AllChildrenOfType(daq).move(paused,    ready));
 
-  /// Ready -> Running
+  /// Ready     -> Running
   Tr*  start0    = daq->addTransition("start",     ready,       running);
   start0->addPredicate(AllChildrenOfType(daq).inState(ready,    paused,  running));
 #if 0  
-  /// Paused -> Running
+  /// Paused    -> Running
   Tr*  start1    = daq->addTransition("start",     paused,      running);
   start1->addPredicate(AllChildrenOfType(daq).inState(ready,    running));
   //start1->addPredicate(AllChildrenOfType(daq).inState(ready,    paused,  running));
@@ -153,22 +160,22 @@ static Type* defineDAQType()    {
 #endif
   start0->adoptRule(start0);
 
-  /// Running -> Paused
+  /// Running   -> Paused
   Tr*  pause     = daq->addTransition("pause",     running,     paused);
   pause->adoptRule(ParentOfType(daq).move(running, paused));
   pause->adoptRule(pause);
 
-  /// Paused  -> Running for children in state paused
+  /// Paused    -> Running for children in state paused
   Tr*  cont      = daq->addTransition("continue",  paused,      running);
   cont->addPredicate(AllChildrenOfType(daq).inState(paused, ready, running));
   cont->adoptRule(   AllChildrenOfType(daq).move(ready,  running));
   cont->adoptRule(   AllChildrenOfType(daq).move(paused, running));
 
-  /// Running -> Ready
+  /// Running   -> Ready
   Tr*  stop0     = daq->addTransition("stop",      running,     ready);
-  /// Paused -> Ready
+  /// Paused    -> Ready
   Tr*  stop1     = daq->addTransition("stop",      paused,      ready);
-  /// Ready -> Ready
+  /// Ready     -> Ready
   Tr*  stop2     = daq->addTransition("stop",      ready,       ready);
   /// In case Children died, the controller is OFFLINE; still must accept commands
   Tr*  stop3     = daq->addTransition("stop",      offline,     offline,   NO_CHECKS);
@@ -320,7 +327,8 @@ Type* FiniteStateMachine::fsm_type(const std::string& typ)  {
   static _M m;
   _M::iterator i = m.find(typ);
   if ( i == m.end() )  {
-    if ( typ == "DAQ" ) return m[typ]=defineDAQType();
+    if      ( typ == "DAQ"      ) return m[typ]=defineDAQType(DAQ_NORMAL);
+    else if ( typ == "DAQPause" ) return m[typ]=defineDAQType(DAQ_PAUSE_ALL);
     else if ( typ == "DAQSteer" ) return m[typ]=defineDAQSteerType();
     throw runtime_error("Request for undefined FSM type:"+typ);
   }
