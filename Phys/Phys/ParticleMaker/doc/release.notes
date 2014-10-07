@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
 
+! 2014-10-07 : O. Deschamps
+  - MergedPi0Maker : fix compilation warnings
+
 !========================= ParticleMaker v6r11 2014-09-30 =========================
 
 ! 2014-09-28 : O. Deschamps

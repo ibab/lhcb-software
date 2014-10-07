@@ -42,9 +42,9 @@ protected:
 
 private:
 
+  DeCalorimeter* m_calo;
   int ClusterCode( const LHCb::ProtoParticle* pp, std::string type ) const;
   std::map<std::string,std::pair<double,double> >m_clusterMasks;
-  DeCalorimeter* m_calo;
   /// techniques for CL evaluation
   std::vector<std::string> m_clBase   ;
   std::vector<std::string> m_clSwitch;

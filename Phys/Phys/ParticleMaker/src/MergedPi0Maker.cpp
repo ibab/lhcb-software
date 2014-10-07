@@ -36,10 +36,9 @@ DECLARE_ALGORITHM_FACTORY( MergedPi0Maker )
 MergedPi0Maker::MergedPi0Maker( const std::string& name,ISvcLocator* pSvcLocator )
 : Pi0MakerBase ( name , pSvcLocator ),
   m_calo       ( NULL )
-// PID techniques
+  , m_clusterMasks     ()
   , m_clBase           ()
   , m_clSwitch         ()
-  , m_clusterMasks     ()
 {
   declareProperty ( "Input" , m_input = LHCb::ProtoParticleLocation::Neutrals ) ;
   //
