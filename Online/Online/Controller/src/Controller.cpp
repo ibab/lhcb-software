@@ -115,8 +115,8 @@ FSM::ErrCond Controller::fail()  {
     if ( slv == Slave::SLAVE_FAILED || slv == Slave::SLAVE_TIMEOUT || slv ==  Slave::SLAVE_DEAD )  {
       for(SlaveMap::mapped_type::const_iterator j=(*i).second.begin(); j!=(*i).second.end(); ++j)  {
 	string n = (*j)->name(), m = (*j)->name();
-	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')); n = m; }
-	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')); n = m; }
+	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
+	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')+1); n = m; }
 	msg << m << " ";
       }
     }
