@@ -43,7 +43,6 @@ class CondDB(ConfigurableUser):
                   "QueryGranularity" : 0,
                   "UseDBSnapshot"     : False ,
                   "DBSnapshotDirectory" : "/group/online/hlt/conditions" ,
-                  "PartitionName" : "LHCb" ,
                   'EnableRunChangeHandler' : False,
                   'RunChangeHandlerConditions' : { 'online_%d.xml' :  [ "Conditions/Online/LHCb/Magnet/Set"
                                                                       , "Conditions/Online/Velo/MotionSystem"
@@ -352,10 +351,9 @@ class CondDB(ConfigurableUser):
 
         # Set the location of the Online run-by-run conditions
         if self.getProp('EnableRunChangeHandler') :
-            xml_path = '%s/%s/' % (baseloc, self.getProp('PartitionName') )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
-            rch.Conditions = dict( (c,xml_path+f) for f,cs in self.getProp("RunChangeHandlerConditions").iteritems() for c in cs )
+            rch.Conditions = dict( (c,'/'.join(baseloc,f)) for f,cs in self.getProp("RunChangeHandlerConditions").iteritems() for c in cs )
             ApplicationMgr().ExtSvc.append(rch)
 
     def __apply_configuration__(self):
