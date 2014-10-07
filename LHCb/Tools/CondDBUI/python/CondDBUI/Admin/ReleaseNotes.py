@@ -55,7 +55,7 @@ class ReleaseNotes(object):
             for d in description:
                 ET.SubElement(desc_el, _xel("di")).text = d
             if patch:
-                ET.SubElement(desc_el, _xel("patch")).text = str(patch)
+                ET.SubElement(desc_el, _xel("newpatch")).text = str(patch)
         return desc_el
 
     def _makeEntry(self, type_name, contributor, date = None):
@@ -96,7 +96,7 @@ class ReleaseNotes(object):
         contributor: person providing the changes
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
         tag: the name of the global tag
-        patch: numeric id of the patch (on savannah)
+        patch: numeric id of the patch (on JIRA)
         description: list of comments, ["comment1","comment2"]
         """
 
@@ -161,7 +161,7 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
         partitions: dictionary in the format {"PARTITION":("tag",{'modified':["file1","file2"],'added':["file3","file4"]})}
         description: list of comments, ["comment1","comment2"]
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
-        patch: numeric id of the patch (on savannah)
+        patch: numeric id of the patch (on JIRA)
         forceNewLT: boolean flag to control unconditional creation of local tag entry in release_notes.xml
         """
         local_tag = partitions[partitions.keys()[0]][0]
@@ -209,7 +209,7 @@ new one except the data types. Previous data type set:%s. New one:%s" %(found_da
         partitions: dictionary in the format {"PARTITION":("base_tag",["tag1","tag2"])}
         description: list of comments, ["comment1","comment2"]
         date: date in the format "YYYY-MM-DD", the current date is used if omitted
-        patch: numeric id of the patch (on savannah)
+        patch: numeric id of the patch (on JIRA)
         forceNewGT: flag for forcing creation of a new global tag entry in a release_notes.xml file
                     as a stand-alone entry in case any previous homogeneous entries are found.
         """

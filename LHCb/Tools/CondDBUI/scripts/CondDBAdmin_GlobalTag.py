@@ -222,7 +222,7 @@ ask for the contributor name.""")
         nodes_tags[n] = None
         for r in localTags + [base_globalTag]:
             try:
-                loc = f.resolveTag(r)
+                loc = db.resolveTag(f,r)
                 nodes_tags[n] = loc
                 found_tags.add(r)
                 break
