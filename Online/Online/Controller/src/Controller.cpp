@@ -113,8 +113,11 @@ FSM::ErrCond Controller::fail()  {
     Slave::SlaveState slv = (*i).first;
     msg << (Slave::metaName(slv)+6) << ":" << (*i).second.size() << " ";
     if ( slv == Slave::SLAVE_FAILED || slv == Slave::SLAVE_TIMEOUT || slv ==  Slave::SLAVE_DEAD )  {
-      for(SlaveMap::mapped_type::const_iterator j=(*i).second.begin(); j!=(*i).second.end(); ++j)
-	msg << (*j)->name() << " ";
+      for(SlaveMap::mapped_type::const_iterator j=(*i).second.begin(); j!=(*i).second.end(); ++j)  {
+	string n = (*j)->name(), m = (*j)->name();
+	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')); n = m; }
+	if ( n.find('_') != string::npos ) { m = n.substr(n.find('_')); n = m; }
+	msg << m << " ";
     }
   }
   // Invoke special actions for certain transitions
