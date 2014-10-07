@@ -43,7 +43,7 @@ void CherenkovG4HistoDefineSet4::bookRichG4HistogramsSet4()
 
   MsgStream RichG4Histolog(CkvG4SvcLocator::RichG4MsgSvc(), 
                                          "RichG4HistoSet4" );
-  RichG4Histolog << MSG::INFO << "Now Booking Rich G4 Histo Set4" << endreq;
+  RichG4Histolog << MSG::INFO << "Now Booking Rich Ckv G4 Histo Set4" << endreq;
   
   IHistogramSvc* CurHistoSvc = CkvG4SvcLocator::RichG4HistoSvc();
 

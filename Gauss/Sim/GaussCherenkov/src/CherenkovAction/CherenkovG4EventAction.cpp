@@ -45,6 +45,9 @@ CherenkovG4EventAction::CherenkovG4EventAction( const std::string& type   ,
                                       const std::string& name   ,
                                       const IInterface*  parent )
   : GiGaEventActionBase( type , name , parent ),
+    m_NumRichColl(0),
+    m_NumRichClassicColl(0),
+    m_RichHitCName(0),
     m_RichG4HistoFillSet1(0),
     m_RichG4HistoFillSet2(0),
     m_RichG4HistoFillSet3(0),
@@ -139,6 +142,8 @@ CherenkovG4EventAction::~CherenkovG4EventAction( ){
   delPointer( m_RichG4HistoFillTimer );
   delPointer( m_RichG4EventHitCounter );
   delPointer( m_RichG4InputMon);
+  delPointer(m_RichHitCName );
+  
 }
 StatusCode CherenkovG4EventAction::initialize() 
 {
@@ -175,6 +180,7 @@ StatusCode CherenkovG4EventAction::initialize()
   
   m_RichG4InputMon = new RichG4InputMon();
 
+  if(!m_RichHitCName)  m_RichHitCName= new CkvG4HitCollName();
 
 
   return sc;  
@@ -199,13 +205,15 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 {
   MsgStream msg(msgSvc(), name());
 
+
   if(m_RichEventActionHistoFillActivateTimer) {
     m_RichG4HistoFillTimer->RichG4BeginEventTimer();
   }
+
   if(!m_RichHitCName)  m_RichHitCName= new CkvG4HitCollName();
+
   m_NumRichColl=m_RichHitCName->RichHCSize();
   m_RichG4CollectionID.assign(m_NumRichColl,-1);
-
   
 
   //  m_RichG4CollectionID.reserve(m_NumRichColl);
@@ -218,7 +226,7 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
   for (int icol=0; icol<m_NumRichColl; ++icol ) {
     if(m_RichG4CollectionID[icol]<0){
       colNam=  m_RichHitCName->RichHCName(icol);
-      m_RichG4CollectionID[icol] = SDman->GetCollectionID(colNam);
+     m_RichG4CollectionID[icol] = SDman->GetCollectionID(colNam);
       
     }
   }
@@ -254,6 +262,7 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 
   // now for the reconstruction for test.
 
+
   if(m_RichG4EventActivateCkvRecon) {
       m_RichG4HitRecon -> setuseOnlySignalHitsInRecon(m_CkvG4HitReconUseOnlySignalHit);
       m_RichG4HitRecon -> setactivateMinMomForTrackRecon(m_CkvG4HitReconUseOnlyHighMom);
@@ -286,6 +295,7 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
     
   }
 
+
   if( m_IsRichG4FirstEvent ) {
     if( m_RichG4HistoActivateQw ) {
 
@@ -301,6 +311,7 @@ void CherenkovG4EventAction::BeginOfEventAction ( const G4Event* /* aEvt */ )
 
     }
   }
+
 
 
   // Print("'BeginOfEventAction' method is invoked by CherenkovG4EventAction");

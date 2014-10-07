@@ -16,7 +16,7 @@ CkvG4HitCollName::CkvG4HitCollName() {
   m_FinalCollectListNumForOutput=m_NumberOfHCollectionInRICH-1;  
   m_InitCollectListNumForStdPmtOutput=0;
   m_FinalCollectListNumForStdPmtOutput=m_NumberOfHCollectionInRICH-1;
-
+  
    CkvGeometrySetupUtil * aCkvGeometrySetup= CkvGeometrySetupUtil::getCkvGeometrySetupUtilInstance();
    bool aRich2UseGrandPmt= aCkvGeometrySetup ->Rich2_UseGrandPmt();
    if(aRich2UseGrandPmt)setCollConfigWithMixedPmtSet();

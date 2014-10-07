@@ -41,7 +41,7 @@ void CherenkovG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 
   MsgStream RichG4Histolog(RichG4SvcLocator::RichG4MsgSvc(), 
                                          "RichG4HistoSet2" );
-  RichG4Histolog << MSG::INFO << "Now Booking Rich G4 Histo Set2" << endreq;
+  RichG4Histolog << MSG::INFO << "Now Booking Rich Ckv G4 Histo Set2" << endreq;
   std::string title;
 
   IHistogramSvc* CurHistoSvc = RichG4SvcLocator::RichG4HistoSvc();

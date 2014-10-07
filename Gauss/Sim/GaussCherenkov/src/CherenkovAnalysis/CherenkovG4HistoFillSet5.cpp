@@ -153,7 +153,8 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit,
 
       if( curRichSect ==0 ) {
           
-          yC += 400.0;
+          yC += 450.0;
+          // yC += 400.0;
           Rich1Mirror2YC -= 345.0;
           yCLens += 400.0;
 
@@ -170,7 +171,8 @@ void CherenkovG4HistoFillSet5::FillRichG4HistoSet5Coord( CkvG4Hit* adHit,
          
       }else if (curRichSect ==1 ) {
 
-        yC -= 400.0;
+        // yC -= 400.0;
+        yC -= 450.0;
         yCLens -= 400.0;
 
         Rich1Mirror2YC += 345.0;
