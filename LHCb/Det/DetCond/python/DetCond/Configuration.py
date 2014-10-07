@@ -353,7 +353,7 @@ class CondDB(ConfigurableUser):
         if self.getProp('EnableRunChangeHandler') :
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
-            rch.Conditions = dict( (c,'/'.join(baseloc,f)) for f,cs in self.getProp("RunChangeHandlerConditions").iteritems() for c in cs )
+            rch.Conditions = dict( (c,'/'.join([baseloc,f])) for f,cs in self.getProp("RunChangeHandlerConditions").iteritems() for c in cs )
             ApplicationMgr().ExtSvc.append(rch)
 
     def __apply_configuration__(self):
