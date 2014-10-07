@@ -102,8 +102,8 @@ class Tau23MuLinesConf(LineBuilder) :
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
                                                                  'RecursionLevel' : 2,
                                                                  'Variables' : 0,
-                                                                 'Locations': {'Phys/StdAllLooseMuons' : "MuonTrackIsoBDTInfo"},
-                                                                 'Location':'TrackBDTIsoInfo'}
+                                                                 'Locations': {'Phys/StdAllLooseMuons' : ["MuonTrackIsoBDTInfo1","MuonTrackIsoBDTInfo2","MuonTrackIsoBDTInfo3"]},
+                                                               }
                                                                ]
                                      )
         
@@ -136,8 +136,9 @@ class Tau23MuLinesConf(LineBuilder) :
                                                                { 'Type': 'RelInfoTrackIsolationBDT',
                                                                  'RecursionLevel' : 2,
                                                                  'Variables' : 0,
-                                                                 'Locations': {'Phys/StdAllLooseMuons' : "MuonTrackIsoBDTInfo",'Phys/StdAllLoosePions' : "PionTrackIsoBDTInfo"},
-                                                                 'Location':'TrackBDTIsoInfo'}
+                                                                 'Locations': {'Phys/StdAllLooseMuons' : ["MuonTrackIsoBDTInfo1","MuonTrackIsoBDTInfo2"],
+                                                                               'Phys/StdAllLoosePions' : ["PionTrackIsoBDTInfo"]},
+                                                                }
                                                                ]
                                       )
 
@@ -154,7 +155,20 @@ class Tau23MuLinesConf(LineBuilder) :
                                            postscale = config['TauPostscale'],
                                            MDSTFlag = True,
                                            RequiredRawEvents = [ ],
-                                           algos = [ self.selTau2PMuMu ]
+                                           algos = [ self.selTau2PMuMu ] ,
+                                           RelatedInfoTools = [{ 'Type' : 'RelInfoConeVariables', 'ConeAngle' : 1.,
+                                                                 'Variables' : ['CONEANGLE', 'CONEMULT', 'CONEPT', 'CONEPTASYM'],
+                                                                 'RecursionLevel' : 1,
+                                                                 'Location':'ConeIsoInfo' },
+                                                               {'Type': 'RelInfoVertexIsolation',
+                                                                'Location':'VtxIsoInfo' },
+                                                               { 'Type': 'RelInfoTrackIsolationBDT',
+                                                                 'RecursionLevel' : 2,
+                                                                 'Variables' : 0,
+                                                                 'Locations': {'Phys/StdAllLooseMuons' : ["MuonTrackIsoBDTInfo1","MuonTrackIsoBDTInfo2"],
+                                                                               'Phys/StdAllLooseProtons' : ["ProtonTrackIsoBDTInfo"]},
+                                                                }
+                                                               ]
                                            )
         
         self.registerLine(self.tau23MuLine)

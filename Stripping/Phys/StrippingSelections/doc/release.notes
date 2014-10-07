@@ -4,6 +4,9 @@ va! ----------------------------------------------------------------------------
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-07 - Paul Seyfert
+ - Modified tau->mumumu lines to use the updated AddRelatedInfo interface
+
 ! 2014-10-07 - Giulio Dujany
  - Modified tau2PhiMuLine to use the updated AddRelatedInfo interface
 
