@@ -6,11 +6,8 @@ from GaudiKernel.PhysicalConstants import c_light
 __all__ = ['getCandidateinfo',
            'runSwimmingStep',
            'hashParticle',
-           'hashParticleNoCompositePID',
            'intHashParticle',
-           'intHashParticleNoCompositePID',
            'matchParticles',
-           'matchParticlesNoCompositePID',
            'createObject',
            'getSelector']
 
@@ -18,12 +15,9 @@ __all__ = ['getCandidateinfo',
 import GaudiPython
 GaudiPython.loaddict('SwimmingEventDict')
 from GaudiPython.Bindings import gbl
-hashParticle                  = gbl.Swimming.hashParticle
-hashParticleNoCompositePID    = gbl.Swimming.hashParticleNoCompositePID
-intHashParticle               = gbl.Swimming.intHashParticle
-intHashParticleNoCompositePID = gbl.Swimming.intHashParticleNoCompositePID
-matchParticles                = gbl.Swimming.matchParticles
-matchParticlesNoCompositePID  = gbl.Swimming.matchParticlesNoCompositePID
+hashParticle                  = gbl.Swimming.Helpers.hashParticle
+intHashParticle               = gbl.Swimming.Helpers.intHashParticle
+matchParticles                = gbl.Swimming.Helpers.matchParticles
 import ROOT
 
 def createObject(t, *args):
@@ -59,16 +53,10 @@ class Candidate(object):
             raise TypeError('Selection must be a string')
 
     def _hashfun(self, particle):
-        if self._globs.matchCandsUsingPID:
-            return hashParticle(particle)
-        else:
-            return hashParticleNoCompositePID(particle)
+        return hashParticle(particle, self._globs.matchCandsUsingPID)
 
     def _matchfun(self, particle1, particle2):
-        if self._globs.matchCandsUsingPID:
-            return matchParticles(particle1, particle2)
-        else:
-            return matchParticlesNoCompositePID(particle1, particle2)
+        return matchParticles(particle1, particle2, self._globs.matchCandsUsingPID)
 
     def particle(self, selection = None):
         if selection:
@@ -113,10 +101,7 @@ class Candidate(object):
 
     def intHash(self):
         if not self._inthash:
-            if self._globs.matchCandsUsingPID:
-                self._inthash = intHashParticle(self.particle())
-            else:
-                self._inthash = intHashParticleNoCompositePID(self.particle())
+            self._inthash = intHashParticle(self.particle(), self._globs.matchCandsUsingPID)
         return self._inthash
 
     def __nonzero__(self):

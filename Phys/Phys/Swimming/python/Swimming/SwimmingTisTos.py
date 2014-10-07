@@ -2,7 +2,7 @@
 #we use the regular TISTOS tools, the stripping is done "by hand"
 from collections import defaultdict
 from GaudiPython.Bindings import gbl
-from SwimmingUtils import hashParticle, matchParticles, matchParticlesNoCompositePID
+from SwimmingUtils import hashParticle, matchParticles
 
 __all__ = ["evaluateTisTos","appendToFSP"]
 
@@ -117,10 +117,7 @@ def evaluateTisTos(myGlobs, mycand, locations, swimPoint):
                             "About to match these two candidates"
                             print stripCand, mycand
                             print "########################"
-                        if myGlobs.matchCandsUsingPID:
-                            match = matchParticles(mycand, stripCand)
-                        else:
-                            match = matchParticlesNoCompositePID(mycand, stripCand)
+                        match = matchParticles(mycand, stripCand, myGlobs.matchCandsUsingPID)
                         if not myGlobs.swimOffline:
                             if match:
                                 decisions[striplocation] = True

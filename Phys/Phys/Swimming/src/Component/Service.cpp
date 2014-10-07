@@ -46,7 +46,7 @@ Swimming::Service::VertexEntry::VertexEntry
  const LHCb::Particle* const particle, const std::string& refitter)
    : m_refitter(refitter), m_pv(pv), m_original(original), m_particle(particle)
 {
-   m_particleHash = Swimming::hashParticle(*particle);
+   m_particleHash = Swimming::Helpers::hashParticle(*particle);
    size_t seed = m_particleHash;
    boost::hash_combine(seed, refitter);
    m_hash = seed;
@@ -164,7 +164,7 @@ void Swimming::Service::setOffset(const Gaudi::XYZVector& o)
 LHCb::RecVertex::ConstVector Swimming::Service::getOfflinePVs
 (const LHCb::Particle* particle, const IPVReFitter* refitter)
 {
-   size_t hash = Swimming::hashParticle(*particle);
+   size_t hash = Swimming::Helpers::hashParticle(*particle);
    std::string refitterName = refitter ? refitter->name() : "";
 
    // 
