@@ -249,12 +249,13 @@ def netSelector(input=None,type=None,event_type=2):
 
 #------------------------------------------------------------------------------------------------
 def end_config_normal(print_config=True):
-  import traceback
+  import sys, traceback
   import GaudiPython
   try:
     gaudi = GaudiPython.AppMgr()
     patchExitHandler()
     if print_config: printConfiguration()
+    return gaudi
   except Exception,X:
     print '[ERROR] Exception:',str(X)
     info = sys.exc_info()
@@ -262,7 +263,7 @@ def end_config_normal(print_config=True):
       lns=traceback.format_exception(info[0],info[1],info[2])
       for line in lns:
         print '[ERROR] Exception:',str(line)
-  return gaudi
+  return None
 
 #------------------------------------------------------------------------------------------------
 def end_config_checkpoint(print_config, checkpoint):
