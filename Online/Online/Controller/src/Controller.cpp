@@ -119,7 +119,9 @@ FSM::ErrCond Controller::fail()  {
   }
   // Invoke special actions for certain transitions
   if ( tr ) {
-    display(ERROR,c_name(),"Controller: Transition %s FAILED: %s.",tr->c_name(),msg.str().c_str());
+    string m = msg.str().substr(0,100);
+    m += "....";
+    display(ERROR,tr->c_name(),"FAILED: %s.",m.c_str());
     //display(ERROR,c_name(),"Controller: Special action on failed transition %s needed.",tr->c_name());
     if ( tr->name() == "recover" )  {
     }
