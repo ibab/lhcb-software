@@ -68,7 +68,7 @@ use VisSvc              v5r7p1    Vis
 use ClhepTools          v2r1p2    Tools
 
 # Simulation specialized packages
-use GaussKine           v6r3p1    Sim
+use GaussKine           v6r4      Sim
 use GaussAlgs		v8r0      Sim
 use GaussTools          v19r1     Sim
 use GaussRICH		v14r2     Sim

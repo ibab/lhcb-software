@@ -3,8 +3,11 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+! 2014-09-30 - Gloria Corti
+ - Replace use of lhapdf with that of lhapdf6
+
 !=============================================================================
-</PRE><H1><A NAME="v47r0">2014-08-22 - GaussSys v47r0</A></H1><PRE>
+</PRE><H1><A NAME="v47r0">2014-10-07 - GaussSys v47r0</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Based on LCG_68.
 </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -26,7 +29,7 @@ Purpose: LHCb Simulation program
    alpgen 2.1.4 and powhegbox r2092 (via LCG_GeneratorsInterfaces),
    herwig++ 2.6.1b and thepeg 1.8.1 (via LCG_GeneratorsInterfaces),
    rivet 1.8.3 (via LCG_GeneratorsInterfaces),
-   EvtGen v13r12, EvtGenExtras v3r10 and Mint v3r0 
+   EvtGen v13r12, EvtGenExtras v3r10 and <b>Mint v3r1</b> 
    (private LHCb version),
    BcVegPy v3r1 + BcVegPyData v2r*, GenXicc v2r1 + GenXiccData v3r0 and 
    HidValley v4r0 (private LHCb versions)
@@ -37,7 +40,16 @@ Purpose: LHCb Simulation program
  - Use new version of LCG_Settings and all LCG_GeneratorsIinterfaces to adapt
    to differences and change of paths in LCG 68
 
-!========================== Gauss v47r0 2014-08-22 ===========================
+!========================== Gauss v47r0 2014-10-07 ===========================
+! 2014-10-07 - Gloria Corti
+ - Revert back to LHAPDFSet v1r*
+ - Put back configuration of BcVegPy that had been temporarily switched off
+ - Introuduce DataType = 2015
+ - New property RICHRandomHits to have backgorund hits in RICH2
+
+! 2014-09-30 - Gloria Corti
+ - Change version of LHAPDFSet to v2r* for tests, will only be for v47r1
+
 ! 2014-08-22 - Gloria Corti
  - Increase major version for dependency to LCG68
 
@@ -98,6 +110,11 @@ nt
 ! 2014-07-14 - Gloria Corti
  - Put dependency from G4UIbasic since it was removed from G4UIGAG that was
    picked up via GiGaVisUI
+
+!========================= GaussKine v6r4 2014-10-07 =========================
+! 2014-08-25 - Philip Ilten
+ - GenerationToSimulation.{h,cpp}: cleaned code and added functionality to
+   specify additional particle types to keep
 
 !=========================== GenTune v2r2 2014-08-21 =========================
 ! 2014-07-28 - Alex Grecu
