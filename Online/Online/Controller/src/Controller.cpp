@@ -102,7 +102,7 @@ FSM::ErrCond Controller::fail()  {
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
   SlaveMap sl_map;
   stringstream msg;
-  msg << "Controller: Slave summary: ";
+  msg << "Summary:";
   for(Slaves::const_iterator i=sl.begin(); i!= sl.end(); ++i)  {
     const Slave* s = *i;
     display(DEBUG,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
@@ -125,7 +125,7 @@ FSM::ErrCond Controller::fail()  {
   if ( tr ) {
     string m = msg.str().substr(0,100);
     m += "....";
-    display(ERROR,tr->c_name(),"FAILED: %s.",m.c_str());
+    display(ERROR,tr->c_name(),"FAILED. %s.",m.c_str());
     //display(ERROR,c_name(),"Controller: Special action on failed transition %s needed.",tr->c_name());
     if ( tr->name() == "recover" )  {
     }
