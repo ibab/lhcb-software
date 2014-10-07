@@ -68,6 +68,9 @@ class Escher(LHCbConfigurableUser):
        , "UseFileStager"        : False
        , "ExpertTracking"       : [ "simplifiedGeometry"]
        , "HltFilterCode"        : None # Loki filter on Hlt decision
+       ,"UseDBSnapshot" : False
+       ,"PartitionName" : "LHCb"
+       ,"DBSnapshotDirectory" : "/group/online/hlt/conditions"
         }
 
     def defineGeometry(self):
@@ -315,6 +318,31 @@ class Escher(LHCbConfigurableUser):
     def evtMax(self):
         return LHCbApp().evtMax()
 
+    def configureDBSnapshot(self):
+        """
+        Configure the database to use the online snapshot
+        """
+        tag = { "DDDB":     self.getProp('DDDBtag')
+                , "LHCBCOND": self.getProp('CondDBtag')
+                , "SIMCOND" : self.getProp('CondDBtag') 
+                , "ONLINE"  : 'fake'
+                }
+
+        # https://savannah.cern.ch/bugs/?94454#comment12
+        from Configurables import MagneticFieldSvc
+        MagneticFieldSvc().UseSetCurrent = True
+
+        from Configurables import CondDB
+        cdb = CondDB()
+        cdb.Tags = tag
+        cdb.setProp('IgnoreHeartBeat', True)
+        cdb.setProp('EnableRunChangeHandler', True)
+        self.setOtherProps( cdb, [ 'UseDBSnapshot',
+                                   'DBSnapshotDirectory',
+                                   'PartitionName' ])
+        from Configurables import MagneticFieldSvc
+        MagneticFieldSvc().UseSetCurrent = True
+
     ## Apply the configuration
     def __apply_configuration__(self):
         
@@ -332,7 +360,10 @@ class Escher(LHCbConfigurableUser):
         self.setOtherProps(RecMoniConf(),["Context","DataType"])
         RecMoniConf().MoniSequence = self.getProp("MoniSequence")
         self.setOtherProps(TAlignment(),["DatasetName"])
-        
+
+        # database hacking for online
+        if self.getProp('UseDBSnapshot') : self.configureDBSnapshot()
+
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
