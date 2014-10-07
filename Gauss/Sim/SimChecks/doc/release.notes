@@ -7,6 +7,10 @@
 
 !========================== SimChecks v1r2 2014-07-03 ========================
 
+! 2014-10-07 - Luca Pescatore
+- Scripts for post-job analysis for the RadLength and Target tools have been
+converted from c++ to python. All scripts are updated to reflect the new structure. RadLengthAna.py scripts updated to use the last tag of the geometry 
+
 ! 2014-09-29 - Luca Pescatore
  - Updated RadLength scripts to get the database from the offical
    location, since it is not released. Also added eta-phi plots as final output.

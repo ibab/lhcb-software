@@ -19,8 +19,12 @@ importOptions("$APPCONFIGOPTS/Gauss/Sim08-Beam4000GeV-md100-2012-nu2.5.py")
 from Configurables import LHCbApp
 from Configurables import DDDBConf
 
-
-target = 'Target_1mmAl'
+physList = 'FTFP_BERT'
+targetThick = 5
+targetMat = 'Si'
+projEng = 100
+projID = 321
+target = 'Target_'+str(targetThick)+'mm'+targetMat
 
 from Configurables import CondDB
 
@@ -37,13 +41,13 @@ Gauss.DetectorSim = { "Detectors": [ ] }
 Gauss.DetectorMoni ={ "Detectors": [ ] }
 
 Gauss.DataType = "Upgrade"
-Gauss.PhysicsList = {"Em":'NoCuts', "Hadron":'QGSP_BERT', "GeneralPhys":True, "LHCbPhys":True}
+Gauss.PhysicsList = {"Em":'NoCuts', "Hadron": physList, "GeneralPhys":True, "LHCbPhys":True}
 
 
 def targetGeo():
     from Configurables import GiGaInputStream
     geo = GiGaInputStream('Geo')
-#    geo.StreamItems      = ["/dd/Structure/TargetDet/"+target] #Adds only the target you are currently looking at
+#   geo.StreamItems      = ["/dd/Structure/TargetDet/"+target] #Adds only the target you are currently looking at
     geo.StreamItems      = ["/dd/Structure/TargetDet"]          #Adds all targets at once
     
     from Configurables import SimulationSvc
@@ -69,8 +73,13 @@ giga = GiGa()
 giga.addTool( GiGaTrackActionSequence("TrackSeq") , name = "TrackSeq" )
 giga.TrackSeq.addTool( GaussTargetMultiplicity )
 giga.TrackSeq.GaussTargetMultiplicity.InteractionVolumeName = [ "/dd/Structure/TargetDet/"+target+"#pv" + target.replace('Target','Targ') ]
-giga.TrackSeq.GaussTargetMultiplicity.InteractionMaterialName = []
 giga.TrackSeq.GaussTargetMultiplicity.InteractionVolumeString = [target]
+giga.TrackSeq.GaussTargetMultiplicity.TargetMaterial = [targetMat]
+giga.TrackSeq.GaussTargetMultiplicity.TargetThickness = [targetThick]
+giga.TrackSeq.GaussTargetMultiplicity.PhysicsList = [physList]
+giga.TrackSeq.GaussTargetMultiplicity.ProjectileEnergy = [projEng]
+giga.TrackSeq.GaussTargetMultiplicity.ProjectilePdgID  = [projID]
+
 #giga.TrackSeq.GaussTargetMultiplicity.OutputLevel = DEBUG
 
 
@@ -89,23 +98,24 @@ GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
 #--Number of events
-nEvts = 100
+nEvts = 10000
 LHCbApp().EvtMax = nEvts
+
 Gauss().Production='PGUN'
 
 Gauss().OutputType = 'NONE'
-#Gauss().Histograms = 'NONE'
+Gauss().Histograms = 'NONE'
 #--Set name of output files for given job (uncomment the lines)
 #  Note that if you do not set it Gauss will make a name based on event type,
 #  number of events and the date
 #idFile = 'Test43r3'
-histoFile = 'Multi_Kplus_inAl'
-HistogramPersistencySvc().OutputFile = histoFile + '-histos.root'
+#histoFile = 'Multi_p_inAl'
+#HistogramPersistencySvc().OutputFile = histoFile + '-histos.root'
 
 #OutputStream("GaussTape").Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 # --- Save ntuple with hadronic cross section information
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Kplus_inAl.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Kplus_inSi.root' TYP='ROOT' OPT='NEW'"]
 
 importOptions ("TargetMaterialGunMultiTargetLocalTemporary.py")
 

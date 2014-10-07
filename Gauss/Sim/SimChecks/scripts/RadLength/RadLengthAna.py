@@ -24,13 +24,12 @@ from Configurables import CondDB, LHCbApp, CondDBAccessSvc
 from Configurables import DDDBConf
 
 #DDDBConf(DbRoot = "myDDDB/lhcb.xml")
-#DDDBConf(DbRoot = "$SQLDDDBROOT/db/myDDDB-RadLength-InRegion-CurrentLHCb-dddb-20130929-1-sim-20130522-1-Data2012/lhcb.xml")
 LHCbApp().DDDBtag   = "dddb-20130929-1"
 LHCbApp().CondDBtag = "sim-20130522-1-vc-md100"
-CondDB.LocalTags = {"DDDB" : ["radlength-20140908-1","radlength-20140908"]  }
-from Configurables import CondDB
-conddb = CondDB()
-conddb.addLayer(dbFile = "$PWD/db_test/DDDB_Addon.db", dbName = "DDDB")
+CondDB.LocalTags = {"DDDB" : ["radlength-20141003","radlength-20140908","radlength-20141003"]  }
+#from Configurables import CondDB
+#conddb = CondDB()
+#conddb.addLayer(dbFile = "$PWD/db_test/DDDB_Addon.db", dbName = "DDDB")
 
 
 

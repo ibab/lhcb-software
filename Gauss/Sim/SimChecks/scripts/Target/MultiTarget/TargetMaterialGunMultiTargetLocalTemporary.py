@@ -42,8 +42,8 @@ ParticleGun.ParticleGunTool = "MaterialEval"
 from Configurables import FlatNParticles
 ParticleGun.addTool(FlatNParticles, name="FlatNParticles")
 ParticleGun.NumberOfParticlesTool = "FlatNParticles"
-ParticleGun.FlatNParticles.MinNParticles = 100
-ParticleGun.FlatNParticles.MaxNParticles = 100
+ParticleGun.FlatNParticles.MinNParticles = 1
+ParticleGun.FlatNParticles.MaxNParticles = 1
 ParticleGun.MaterialEval.PdgCode = 321
 
 # The vertex of each particle gun is produced in a single point of given
@@ -52,7 +52,7 @@ ParticleGun.MaterialEval.PdgCode = 321
 # given point. 
 #ParticleGun.MaterialEval.Xorig = 0*mm
 #ParticleGun.MaterialEval.Yorig = 0*mm
-ParticleGun.MaterialEval.Zorig = 100*mm
+ParticleGun.MaterialEval.Zorig = 1500*mm
 
 # The abs(P) of the particle if fixed at the given value (default = 500 GeV)
 ParticleGun.MaterialEval.ModP = 100 * GeV
@@ -67,7 +67,7 @@ ParticleGun.MaterialEval.EtaPhi = True
 # and size of the "target rectangle". The default plane is at z = 10*m, 
 # with -3.2*m < x < 3.2*m and -2.6*m < y < -2.6*m, i.e. a little more
 # than the LHCb acceptance
-ParticleGun.MaterialEval.ZPlane = 200*mm
+ParticleGun.MaterialEval.ZPlane = 1600*mm
 #ParticleGun.MaterialEval.Xmin   = -15*m
 #ParticleGun.MaterialEval.Ymin   = -15*m
 #ParticleGun.MaterialEval.Xmax   =  15*m

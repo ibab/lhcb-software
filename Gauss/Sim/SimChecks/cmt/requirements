@@ -1,11 +1,30 @@
 #============================================================================
-# Created    : 2009-04-01
-# Maintainer : Silvia Miglioranzi
+# Created    : 2014-10-03
+# Maintainer : Luca Pescatore
 #============================================================================
 package           SimChecks
 version           v1r2
+
+#macro_append ROOT_linkopts " -lMLP -lTMVA -lGraf -lHist -lMatrix -lTreePlayer -lGpad -lGraf3d -lPhysics"
+
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc scripts
+
+use GaudiAlg v*
+#use   ROOT                v*    LCG_Interfaces -no_auto_imports
+
+#path_remove  PATH "$(ROOTSYS)/bin"
+#path_prepend PATH "$(ROOTSYS)/bin"
+#path_remove  LD_LIBRARY_PATH "$(ROOTSYS)/lib"
+#path_prepend LD_LIBRARY_PATH "$(ROOTSYS)/lib"
+
+macro ROOT_includedirs "-I$(ROOTSYS)/include"
+macro ROOT_linkopts "-L$(ROOTSYS)/lib $(shell root-config --glibs)"
+
+application RadLengthPlots ../scripts/RadLength/*.cpp
+
+application TargetPlots ../scripts/Target/MultiTarget/TargetAnalysis/Multi.cpp
+

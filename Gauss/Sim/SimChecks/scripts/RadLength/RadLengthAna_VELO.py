@@ -11,27 +11,13 @@
 from Gaudi.Configuration import *
 from Gauss.Configuration import *
 from Configurables import CondDB, LHCbApp, CondDBAccessSvc
-
-# Define the new tags
-#base_tag = "dddb-20130503"
-#cond_base_tag = "HEAD"
-
-# Set the default tags
-#LHCbApp(DDDBtag = base_tag, CondDBtag = cond_base_tag)
-
-
-
 from Configurables import DDDBConf
 
 #DDDBConf(DbRoot = "myDDDB/lhcb.xml")
 #DDDBConf(DbRoot = "$SQLDDDBROOT/db/myDDDB-RadLength-InRegion-CurrentLHCb-dddb-20130929-1-sim-20130522-1-Data2012/lhcb.xml")
 LHCbApp().DDDBtag   = "dddb-20130929-1"
 LHCbApp().CondDBtag = "sim-20130522-1-vc-md100"
-CondDB.LocalTags = {"DDDB" : ["radlength-20140908-1","radlength-20140908"]  }
-from Configurables import CondDB
-conddb = CondDB()
-conddb.addLayer(dbFile = "$PWD/db_test/DDDB_Addon.db", dbName = "DDDB")
-
+CondDB.LocalTags = {"DDDB" : ["radlength-20141003","radlength-20140908"]  }
 
 from Configurables import Gauss
 from Gauss.Configuration import *
@@ -41,9 +27,9 @@ Gauss().Production = 'PGUN'
 Gauss().PhysicsList = {"Em":'NoCuts', "Hadron":'FTFP_BERT', "GeneralPhys":True, "LHCbPhys":True}
 
 
-Gauss().DetectorGeo = { "Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-Gauss().DetectorSim = { "Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
-Gauss().DetectorMoni = { "Detectors": ['PuVeto', 'Velo', 'TT', 'IT', 'OT', 'Rich1', 'Rich2', 'Spd', 'Prs', 'Ecal', 'Hcal', 'Muon', 'Magnet'] }
+Gauss().DetectorGeo = { "Detectors": ['PuVeto', 'Velo', 'Rich1', 'Rich2' ] } 
+Gauss().DetectorSim = { "Detectors": ['PuVeto', 'Velo', 'Rich1', 'Rich2' ] } 
+Gauss().DetectorMoni = { "Detectors": ['PuVeto', 'Velo', 'Rich1', 'Rich2' ] }
 importOptions ("$GAUSSOPTS/RICHesOff.py"  )
 Gauss().DeltaRays = False
 

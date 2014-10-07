@@ -13,15 +13,15 @@ import shutil
 import fileinput
 import string
 import subprocess
-
+from TargetSummary import *
 
 path=os.environ['PWD']+'/TargetOutput' # where you want your output (absolute or relative path)
 
-models=['QGSP_BERT']#any present in the version of Gauss you are using es. 'FTFP_BERT','LHEP'
-energies=['3']#any
-materialsTodo=['Al'] # 'Al' 'Be' 'Si'
-thicks=['1']  #in mm 1, 5, 10 (only)
-particlesTodo=['p','pbar'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
+models=['QGSP_BERT','FTFP_BERT']#any present in the version of Gauss you are using es. 'FTFP_BERT','LHEP'
+energies=[1,2,5,10,50,100]#any
+materialsTodo=['Al','Be','Si'] # 'Al' 'Be' 'Si'
+thicks=[1,5]  #in mm 1, 5, 10 (only)
+particlesTodo=['p','pbar','Piminus', 'Piplus','Kminus', 'Kplus'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
 
 
 
@@ -59,7 +59,7 @@ def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,th
     opt_file.write('\n\n#Set the energies of your particles in GeV: any energy available, write just number without units')
     opt_file.write('\n\nEnergies: ')
     for energy in energies:
-       opt_file.write( energy + " ")
+       opt_file.write( str(energy) + " ")
 
     opt_file.write('\n\n#Set the materials in which you want to fire your particles: "Al", "Be", "Cu", "Si", "Pb" are available')
     opt_file.write('\n\nMaterials: ')
@@ -69,7 +69,7 @@ def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,th
     opt_file.write('\n\n#Set the thicknesses of this material in mm, write just number without units')
     opt_file.write('\n\nThicknesses: ')
     for thick in thicks:
-       opt_file.write( thick + " ")
+       opt_file.write( str(thick) + " ")
 
     opt_file.close()
 
@@ -77,8 +77,8 @@ def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,th
 
 
 particles = {'Piminus': '-211', 'Piplus': '211', 'Kminus': '-321', 'Kplus': '321', 'p': '2212', 'pbar': '-2212'}
-Zplane = {'Al': {'1': '200*mm', '5': '400*mm', '10': '600*mm'}, 'Be': {'1': '800*mm', '5': '1000*mm', '10': '1200*mm'}, 'Si': {'1': '1400*mm', '5': '1600*mm', '10': '1800*mm'}}
-Zorig = {'Al': {'1': '100*mm', '5': '300*mm', '10': '500*mm'}, 'Be': {'1': '700*mm', '5': '900*mm', '10': '1100*mm'}, 'Si': {'1': '1300*mm', '5': '1500*mm', '10': '1700*mm'}}
+Zplane = {'Al': {1: '200*mm', 5: '400*mm', 10: '600*mm'}, 'Be': {1: '800*mm', 5: '1000*mm', 10: '1200*mm'}, 'Si': {1: '1400*mm', 5: '1600*mm', '10': '1800*mm'}}
+Zorig = {'Al': {1: '100*mm', 5: '300*mm', 10: '500*mm'}, 'Be': {1: '700*mm', 5: '900*mm', 10: '1100*mm'}, 'Si': {1: '1300*mm', 5: '1500*mm', '10': '1700*mm'}}
 
 
 #Creating option file for analysis with all the options available
@@ -102,17 +102,17 @@ for model in models:
 
    for energy in energies:
       
-      if not os.path.exists(path+"/"+model+"/E"+energy+"GeV"):
-         os.makedirs(path+"/"+model+"/E"+energy+"GeV")
+      if not os.path.exists(path+"/"+model+"/E"+str(energy)+"GeV"):
+         os.makedirs(path+"/"+model+"/E"+str(energy)+"GeV")
 
-      log.write('  -----------------  ' + energy +'GeV\n')
+      log.write('  -----------------  ' + str(energy) +'GeV\n')
 
       for thick in thicks:
          
-         if not os.path.exists(path+"/"+model+"/E"+energy+"GeV/T"+thick+"mm"):
-            os.makedirs(path+"/"+model+"/E"+energy+"GeV/T"+thick+"mm")
+         if not os.path.exists(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm"):
+            os.makedirs(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm")
          
-         log.write('  ------------  ' + thick+'mm\n')
+         log.write('  ------------  ' + str(thick)+'mm\n')
  
          for material in materialsTodo:
 
@@ -126,7 +126,7 @@ for model in models:
                inputfile = "TargetMaterialGunMultiTargetLocalTemporary.py"
                command = 's/PdgCode.*/PdgCode = ' + particles[particle] + '/'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|MaterialEval.ModP = .*|MaterialEval.ModP = ' + energy + ' * GeV|'
+               command = 's|MaterialEval.ModP = .*|MaterialEval.ModP = ' + str(energy) + ' * GeV|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
                command = 's|ParticleGun.MaterialEval.ZPlane =.*|ParticleGun.MaterialEval.ZPlane = ' + Zplane[material][thick] + '|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
@@ -136,17 +136,23 @@ for model in models:
                inputfile = "Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py"
                command = 's/Multi.*.root/Multi_' + particle + '_in' + material + '.root/'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|\"Hadron\":.*, \"Gen|\"Hadron\":'"'"'' + model +''"'"', \"Gen|'
+               command = 's|physList = .*|physList = \''+model+'\'|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|target = \'Target_.*|target = \'Target_'+ thick + 'mm' + material + '\'|'
+               command = 's|targetThick = .*|targetThick = '+str(thick)+'|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|histoFile = \'Multi.*|histoFile = \'Multi_' + particle + '_in' + material + '\'|'
+               command = 's|targetMat = .*|targetMat = \''+material+'\'|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
+               command = 's|projID = .*|projID = '+particles[particle]+'|'
+               sub = subprocess.call(['sed', '-i', command, inputfile])
+               command = 's|projEng = .*|projEng = '+str(energy)+'|'
+               sub = subprocess.call(['sed', '-i', command, inputfile])
+			   #command = 's|histoFile = \'Multi.*|histoFile = \'Multi_' + particle + '_in' + material + '\'|'
+               #sub = subprocess.call(['sed', '-i', command, inputfile])
 	            
-               sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+               #sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
 
 
-         dest = path+"/"+model+"/E"+energy+"GeV/T"+thick+"mm/"
+         dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
          sourcedir = os.environ['PWD']
          source = os.listdir(sourcedir)
    
@@ -156,6 +162,11 @@ for model in models:
                   os.remove(dest+'/'+file)
                shutil.move(file,dest)
 
+output = path+"/TargetOutput.root"
+command = 'find '+path+'/*/*/* -name *.root | xargs hadd -f ' + output
+#os.system(command)
+
+p = Plotter(path+"/", path+"/", models, particlesTodo, energies, materialsTodo, thicks)
 
 log.write('----------------   END  ------------------')
 log.close()

@@ -7,16 +7,12 @@
 ##  @date   : last modified on 2014-02-14                                      ##
 #################################################################################
 
-
-
-
 import sys
 import os
 import shutil
 import fileinput
 import string
-import subprocess
-
+from RadLengthMakePlots import makePlots
 
 useganga = False
 
@@ -28,15 +24,17 @@ if(len(sys.argv) == 2):
 else :
     out = 'Rad_merged.root'
 
+os.system("mkdir -p plots")
 run_command = "gaudirun.py MaterialEvalGun.py Gauss-Job.py RadLengthAna.py"
 os.system(run_command)
-#run_command = "gaudirun.py MaterialEvalGun.py Gauss-Job.py RadLengthAna_VELO.py"    
-#os.system(run_command)
+run_command = "gaudirun.py MaterialEvalGun.py Gauss-Job.py RadLengthAna_VELO.py"    
+os.system(run_command)
     
-#output=outputpath+'/'+out
-#merge_command = ' hadd -f ' + output + ' ' + pwd + '/Rad.root ' + pwd + '/Rad_VELO.root '
-#os.system(merge_command)
+output=outputpath+'/'+out
+merge_command = ' hadd -f ' + output + ' ' + pwd + '/Rad.root ' + pwd + '/Rad_VELO.root '
+os.system(merge_command)
 
-os.system("./drawPlanes.out")
-   
+makePlots(out,"plots/","rad")
+makePlots(out,"plots/","inter")
+
     
