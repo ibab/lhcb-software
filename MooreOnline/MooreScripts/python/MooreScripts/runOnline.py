@@ -49,7 +49,7 @@ def start(**kwargs) :
 
     fwdOnlineEnv( 'CondDBTag', moore, 'CondDBtag' )
     fwdOnlineEnv( 'DDDBTag',   moore, 'DDDBtag' )
-    fwdOnlineEnv( 'Items', mooreOnline, 'RunChangeHandlerConditions' )
+    fwdOnlineEnv( 'RunChangeHandlerConditions', mooreOnline )
 
     #default is OK moore.UseDBSnapshot = True
     #default is OK moore.IgnoreDBHeartBeat = True
