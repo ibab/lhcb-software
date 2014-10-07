@@ -24,6 +24,7 @@ using namespace LoKi::Cuts;
 using namespace LoKi::Types;
 using namespace LoKi::Particles;
 
+using CharmTaggerSpace::CharmMode;
 
 // Declaration of the Algorithm Factory
 DECLARE_TOOL_FACTORY( TaggingUtils )
@@ -319,18 +320,18 @@ LHCb::Particle::ConstVector TaggingUtils::purgeCands(const LHCb::Particle::Range
 }
 
 //=============================================================================
-std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candType)
+CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candType)
 {
 
-  std::string mode = "None";
+  CharmMode mode = CharmMode::None;
 
   const unsigned int d0_pid = LoKi::Particles::_ppFromName("D0")->particleID().abspid();
   const unsigned int d_pid = LoKi::Particles::_ppFromName("D+")->particleID().abspid();
   const unsigned int lambdaC_pid = LoKi::Particles::_ppFromName("Lambda_c+")->particleID().abspid();
-  const unsigned int lambda_pid = LoKi::Particles::_ppFromName("Lambda0")->particleID().abspid();
+  // const unsigned int lambda_pid = LoKi::Particles::_ppFromName("Lambda0")->particleID().abspid();
   const unsigned int p_pid = LoKi::Particles::_ppFromName("p+")->particleID().abspid();
   const unsigned int k_pid = LoKi::Particles::_ppFromName("K+")->particleID().abspid();
-  const unsigned int ks_pid = LoKi::Particles::_ppFromName("KS0")->particleID().abspid();
+  // const unsigned int ks_pid = LoKi::Particles::_ppFromName("KS0")->particleID().abspid();
   const unsigned int pi_pid = LoKi::Particles::_ppFromName("pi+")->particleID().abspid();
   const unsigned int pi0_pid = LoKi::Particles::_ppFromName("pi0")->particleID().abspid();
   const unsigned int e_pid = LoKi::Particles::_ppFromName("e+")->particleID().abspid();
@@ -350,18 +351,18 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
       case 2:
         if (daus[0]->particleID().abspid() == k_pid and
             daus[1]->particleID().abspid() == pi_pid)
-          mode = "D0_Kpi";
+          mode = CharmMode::Dz2kpi;
         break;
       
       case 3:
-        if (daus[0]->particleID().abspid() == ks_pid and
-            daus[1]->particleID().abspid() == pi_pid and
-            daus[2]->particleID().abspid() == pi_pid)
-          mode = "D0_Kspipi";
+        // if (daus[0]->particleID().abspid() == ks_pid and
+        //     daus[1]->particleID().abspid() == pi_pid and
+        //     daus[2]->particleID().abspid() == pi_pid)
+        //   mode = "D0_Kspipi";
         if (daus[0]->particleID().abspid() == k_pid and
             daus[1]->particleID().abspid() == pi_pid and 
             daus[2]->particleID().abspid() == pi0_pid)
-          mode = "D0_Kpipi0";
+          mode = CharmMode::Dz2kpipiz;
         break;
       
       case 4:
@@ -369,7 +370,7 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
             daus[1]->particleID().abspid() == pi_pid and
             daus[2]->particleID().abspid() == pi_pid and
             daus[3]->particleID().abspid() == pi_pid)
-          mode = "D0_Kpipipi";
+          mode = CharmMode::Dz2kpipipi;
         break;
 
       default:
@@ -381,17 +382,17 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
 
       switch (numDaus) {
       
-      case 2:
-        if (daus[0]->particleID().abspid() == ks_pid and
-            daus[1]->particleID().abspid() == pi_pid)
-          mode = "Dp_Kspi";
-        break;
+      // case 2:
+      //   if (daus[0]->particleID().abspid() == ks_pid and
+      //       daus[1]->particleID().abspid() == pi_pid)
+      //     mode = "Dp_Kspi";
+      //   break;
       
       case 3:
         if (daus[0]->particleID().abspid() == k_pid and
             daus[1]->particleID().abspid() == pi_pid and
             daus[2]->particleID().abspid() == pi_pid)
-          mode = "Dp_Kpipi";
+          mode = CharmMode::Dp2kpipi;
         break;
       
       default:
@@ -414,13 +415,13 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
       case 2:
         if (daus[0]->particleID().abspid() == k_pid and
             daus[1]->particleID().abspid() == pi_pid)
-          mode = "D0_KpiX";
+          mode = CharmMode::Dz2kpiX;
         if (daus[0]->particleID().abspid() == k_pid and
             daus[1]->particleID().abspid() == e_pid)
-          mode = "D0_KeX";
+          mode = CharmMode::Dz2keX;
         if (daus[0]->particleID().abspid() == k_pid and
             daus[1]->particleID().abspid() == mu_pid)
-          mode = "D0_KmuX";
+          mode = CharmMode::Dz2kmuX;
         break;
         
       default:
@@ -432,17 +433,17 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
 
       switch (numDaus) {
       
-      case 2:
-        if (daus[0]->particleID().abspid() == k_pid and
-            daus[1]->particleID().abspid() == pi_pid)
-          mode = "Dp_KpiX";
-        if (daus[0]->particleID().abspid() == k_pid and
-            daus[1]->particleID().abspid() == e_pid)
-          mode = "Dp_KeX";
-        if (daus[0]->particleID().abspid() == k_pid and
-            daus[1]->particleID().abspid() == mu_pid)
-          mode = "Dp_KmuX";
-        break;
+      // case 2:
+      //   if (daus[0]->particleID().abspid() == k_pid and
+      //       daus[1]->particleID().abspid() == pi_pid)
+      //     mode = "Dp_KpiX";
+      //   if (daus[0]->particleID().abspid() == k_pid and
+      //       daus[1]->particleID().abspid() == e_pid)
+      //     mode = "Dp_KeX";
+      //   if (daus[0]->particleID().abspid() == k_pid and
+      //       daus[1]->particleID().abspid() == mu_pid)
+      //     mode = "Dp_KmuX";
+      //   break;
       
       default:
         fatal() << "Invalid daus size: " << numDaus << " for candtype: " << candType << endreq;
@@ -459,12 +460,12 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
 
     switch (numDaus) {
       
-    case 3:
-      if (daus[0]->particleID().abspid() == ks_pid and
-          daus[1]->particleID().abspid() == pi_pid and
-          daus[2]->particleID().abspid() == pi_pid)
-        mode = "Dstar_D0_Kspipi";
-      break;
+    // case 3:
+    //   if (daus[0]->particleID().abspid() == ks_pid and
+    //       daus[1]->particleID().abspid() == pi_pid and
+    //       daus[2]->particleID().abspid() == pi_pid)
+    //     mode = "Dstar_D0_Kspipi";
+    //   break;
 
     default:
       fatal() << "Invalid daus size: " << numDaus << " candtype: " << candType << endreq;
@@ -478,20 +479,20 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
 
       switch (numDaus) {
       
-      case 2:
-        if (daus[0]->particleID().abspid() == p_pid and
-            daus[1]->particleID().abspid() == ks_pid)
-          mode = "LambdaC_pKs";
-        if (daus[0]->particleID().abspid() == lambda_pid and
-            daus[1]->particleID().abspid() == pi_pid)
-          mode = "LambdaC_LambdaPi";
-        break;
+      // case 2:
+      //   if (daus[0]->particleID().abspid() == p_pid and
+      //       daus[1]->particleID().abspid() == ks_pid)
+      //     mode = "LambdaC_pKs";
+      //   if (daus[0]->particleID().abspid() == lambda_pid and
+      //       daus[1]->particleID().abspid() == pi_pid)
+      //     mode = "LambdaC_LambdaPi";
+      //   break;
       
       case 3:
         if (daus[0]->particleID().abspid() == p_pid and
             daus[1]->particleID().abspid() == k_pid and
             daus[2]->particleID().abspid() == pi_pid)
-          mode = "LambdaC_pKpi";
+          mode = CharmMode::LambdaC2pkpi;
         break;
         
       default:
@@ -509,38 +510,10 @@ std::string TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int cand
 
   }
   
-  if (mode.length() == 0)
-    fatal() << "unknown Charm cand type: " << candType << endreq;
-
   return mode;
   
 }
 
-
-//====================================================================
-int TaggingUtils::getCharmDecayModeInt(const LHCb::Particle* cand, int candType)
-{
-  
-  std::string mode = getCharmDecayMode(cand, candType);
-
-  if (mode == "D0_Kpi") return 0;
-  else if (mode == "D0_Kspipi") return 2;
-  else if (mode == "D0_Kpipi0") return 3;
-  else if (mode == "D0_Kpipipi") return 1;
-  else if (mode == "Dp_Kspi") return 5;
-  else if (mode == "Dp_Kpipi") return 4;
-  else if (mode == "D0_KpiX") return 6;
-  else if (mode == "D0_KeX") return 7;
-  else if (mode == "D0_KmuX") return 8;
-  else if (mode == "Dp_KpiX") return 10;
-  else if (mode == "Dp_KeX") return 11;
-  else if (mode == "Dp_KmuX") return 12;
-  else if (mode == "Dstar_D0_Kspipi") return 9;
-  else if (mode == "LambdaC_pKpi") return 13;
-  else if (mode == "LambdaC_LambdaPi") return 14;
-  else if (mode == "LambdaC_pKs") return 15;
-  else return -1;
-}
 
 //====================================================================
 StatusCode TaggingUtils::finalize() { return GaudiTool::finalize(); }

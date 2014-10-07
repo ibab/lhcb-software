@@ -186,9 +186,9 @@ tunings = {
         "TaggerVertexChargeTool.Vtx_ProbMin"    : 0.0,
         "TaggerVertexChargeTool.Vtx_AverageOmega" : 0.41,
 
-        "TaggerCharmTool.Charm_P0_Cal"     : 0.3371,
-        "TaggerCharmTool.Charm_P1_Cal"     : 0.9111,
-        "TaggerCharmTool.Charm_Eta_Cal"    : 0.3121,
+        "TaggerCharmTool.Charm_P0_Cal"     : 0.0,
+        "TaggerCharmTool.Charm_P1_Cal"     : 1.0,
+        "TaggerCharmTool.Charm_Eta_Cal"    : 0.0,
 
 
          #// cuts_Moriond2013 trained on CloneKO, lowCorrelation, newNNPID D,N, CE tanh, Split i%3=0,1  
@@ -221,11 +221,6 @@ tunings = {
         "TaggerPionSameTool.P1_ps_scale"        :  -1.76027,
         "TaggerPionSameTool.P2_ps_scale"        :  0.651766,
         "TaggerPionSameTool.P3_ps_scale"        :  0.,          
-
-        "TaggerCharmTool.P0_charm_scale"        :  0.3206,
-        "TaggerCharmTool.P1_charm_scale"        :  -0.8247,
-        "TaggerCharmTool.P2_charm_scale"        :  0.6732,
-        "TaggerCharmTool.P3_charm_scale"        :  0.          
 
         },
 
@@ -435,11 +430,6 @@ tunings = {
         "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale":   0.,
         "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,          
 
-        "TaggerCharmTool.P0_charm_scale"        :  0.3206,
-        "TaggerCharmTool.P1_charm_scale"        :  -0.8247,
-        "TaggerCharmTool.P2_charm_scale"        :  0.6732,
-        "TaggerCharmTool.P3_charm_scale"        :  0.          
-        
         },
 
     #use cuts optimized and calibrated with Strip17 (2011 data 1fb-1)
@@ -646,11 +636,6 @@ tunings = {
         "TaggerVertexChargeTool.NNetTool_MLP.P1_vtx_scale":  -0.93411,
         "TaggerVertexChargeTool.NNetTool_MLP.P2_vtx_scale":   0.,
         "TaggerVertexChargeTool.NNetTool_MLP.P3_vtx_scale":   0.,          
-
-        "TaggerCharmTool.P0_charm_scale"        :  0.3206,
-        "TaggerCharmTool.P1_charm_scale"        :  -0.8247,
-        "TaggerCharmTool.P2_charm_scale"        :  0.6732,
-        "TaggerCharmTool.P3_charm_scale"        :  0.          
 
         },
 

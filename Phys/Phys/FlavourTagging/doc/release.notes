@@ -6,6 +6,11 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-10-07
+ - New CharmTagger framework, w/ mistag estimated from BDTs instead of NN
+ - Deleted obsolete CharmTagger BDT/NN algorithms
+ - SKIP_TMVA_COMPILE flag in src/compileSettings.h
+
 !========================= FlavourTagging v13r8 2014-09-30 =========================
 
 ! 2014-09-16 - Jack Wimberley

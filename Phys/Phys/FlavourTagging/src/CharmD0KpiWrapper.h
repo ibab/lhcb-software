@@ -8,6 +8,7 @@
 
 namespace MyD0KpiSpace {
   class ReadBDT;
+  class PurityTable;
 }
 
 /** @class CharmD0KpiWrapper CharmD0KpiWrapper.h
@@ -27,6 +28,7 @@ class CharmD0KpiWrapper : public TMVAWrapper {
 
  private:
   MyD0KpiSpace::ReadBDT* mcreader;
+  MyD0KpiSpace::PurityTable* purtable;
 
 };
 #endif // CHARMD0KPIWRAPPER_H

@@ -58,9 +58,8 @@ public:
                  const LHCb::Particle::ConstVector& , double& );
 
   // classify charm decay modes
-  std::string getCharmDecayMode(const LHCb::Particle*, int);
-  int getCharmDecayModeInt(const LHCb::Particle*, int);
-
+  CharmTaggerSpace::CharmMode getCharmDecayMode(const LHCb::Particle*, int);
+  
   // remove any charm cand that has descendents in common with the signal B
   LHCb::Particle::ConstVector purgeCands(const LHCb::Particle::Range& cands, const LHCb::Particle& BS);
 

@@ -8,6 +8,7 @@
 
 namespace MyD0KmuXSpace {
   class ReadBDT;
+  class PurityTable;
 }
 
 /** @class CharmD0KmuXWrapper CharmD0KmuXWrapper.h
@@ -27,6 +28,6 @@ class CharmD0KmuXWrapper : public TMVAWrapper {
 
  private:
   MyD0KmuXSpace::ReadBDT* mcreader;
-
+  MyD0KmuXSpace::PurityTable* purtable;
 };
 #endif // CHARMD0KMUXWRAPPER_H

@@ -7,6 +7,8 @@
 #include <cmath>
 #include <iostream>
 
+//#include "compileSettings.h"
+
 /** @class TMVAWrapper TMVAWrapper.h
  *  
  *  A wrapper for the Read<Method> classes in TMVAClassiification

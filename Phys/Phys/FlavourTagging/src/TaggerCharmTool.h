@@ -22,50 +22,78 @@
 #include "Kernel/ITriggerTisTos.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IVertexFit.h"
+#include <Kernel/IDVAlgorithm.h>
+#include <Kernel/GetIDVAlgorithm.h>
 
 // from local
 #include "FlavourTagging/ITaggingUtils.h"
 //#include "INNetTool.h"
 #include "TMVAWrapper.h"
-#include "CharmOSWrapper.h"
+//#include "CharmOSWrapper.h"
 // struct
 
-struct CharmDecayMode 
-{
-  std::string mode;
-  int index;
-  bool hasK, hasE, hasMu, hasDstar;
-  float lowMcut, highMcut;
-  float mvaCut, purity;
-  CharmDecayMode (){}
-  CharmDecayMode (std::string s, int idx, bool h1, bool h2, bool h3, bool h4, float lmc, float hmc, float mvac, float pur) : 
-    mode(s), index(idx), hasK(h1), hasE(h2), hasMu(h3), hasDstar(h4), lowMcut(lmc), highMcut(hmc), mvaCut(mvac), purity(pur){}
+namespace CharmTaggerSpace {
   
-};
+  const double charmOmegaBDTCut = 0.45;
+  
+  
+  struct CharmDecay 
+  {
+    std::string name;
+    CharmMode index;
+    bool hasP, hasK, hasPi, hasE, hasMu, hasDstar;
+    double natMistag;
+    double cal_eta, cal_p0, cal_p1;
+    CharmDecay (){}
+    CharmDecay (std::string s, int idx, bool h1, bool h2, bool h3, bool h4, bool h5, bool h6,
+                double nmt, double eta, double p0, double p1) : 
+      name(s),
+      index(static_cast<CharmTaggerSpace::CharmMode>(idx)),
+      hasP(h1),
+      hasK(h2),
+      hasPi(h3),
+      hasE(h4),
+      hasMu(h5),
+      hasDstar(h6),
+      natMistag(nmt),
+      cal_eta(eta),
+      cal_p0(p0),
+      cal_p1(p1) {}
+    
+  };
+  
+  typedef std::map < CharmTaggerSpace::CharmMode, CharmTaggerSpace::CharmDecay> CharmDecayMap;
 
-struct CharmParticle 
-{
-  std::string mode;
-  const LHCb::Particle *part;
-  float mass;
-  int flavour;
-  float pchi2, fd, fdchi2, tau, bpvdira;
-  float maxProbGhostDaus;
-  float kaonId, kaonProbnnk, kaonIppvchi2, kaonIpMinchi2;
-  float elecProbnne, muonProbnnmu;
-  float dstarDm;
-  CharmParticle (){}
-  CharmParticle (const std::string s, const LHCb::Particle* p, const float m, const int flavour,
-                 const float pchi2, const float fd, const float fdchi2, const float tau, const float bpvdira, 
-                 const float maxProbGhostDaus, 
-                 const float kaonId, const float kaonProbnnk, const float kaonIppvchi2, const float kaonIpMinchi2,
-                 const float elecProbnne, const float muonProbnnmu, const float dstarDm) 
-    : mode(s), part(p), mass(m), flavour(flavour), 
-      pchi2(pchi2), fd(fd), fdchi2(fdchi2), tau(tau), bpvdira(bpvdira),
-      maxProbGhostDaus(maxProbGhostDaus),
-      kaonId(kaonId), kaonProbnnk(kaonProbnnk), kaonIppvchi2(kaonIppvchi2), kaonIpMinchi2(kaonIpMinchi2),
-      elecProbnne(elecProbnne), muonProbnnmu(muonProbnnmu), dstarDm(dstarDm) {}
-};
+  struct CharmParticle 
+  {
+    CharmMode mode;
+    const LHCb::Particle *part;
+    float mass;
+    int flavour;
+    float pchi2, fd, fdchi2, tau, bpvdira;
+    float maxProbGhostDaus;
+    float proId, proProbnnp, proProbnnk, proIppvchi2, proIpMinchi2, proPT;
+    float kaonId, kaonProbnnp, kaonProbnnk, kaonIppvchi2, kaonIpMinchi2, kaonPT;
+    float pionId, pionProbnnp, pionProbnnk, pionIppvchi2, pionIpMinchi2, pionPT;
+    float elecProbnne, elecPT, muonProbnnmu, muonPT;
+    float dstarDm;
+    CharmParticle (){}
+    CharmParticle (CharmTaggerSpace::CharmMode mode, const LHCb::Particle* p, const float m, const int flavour,
+                   const float pchi2, const float fd, const float fdchi2, const float tau, const float bpvdira, 
+                   const float maxProbGhostDaus, 
+                   const float proId, const float proProbnnp, const float proProbnnk, const float proIppvchi2, const float proIpMinchi2, const float proPT,
+                   const float kaonId, const float kaonProbnnp, const float kaonProbnnk, const float kaonIppvchi2, const float kaonIpMinchi2, const float kaonPT,
+                   const float pionId, const float pionProbnnp, const float pionProbnnk, const float pionIppvchi2, const float pionIpMinchi2, const float pionPT,
+                   const float elecProbnne, const float elecPT, const float muonProbnnmu, const float muonPT, const float dstarDm) 
+      : mode(mode), part(p), mass(m), flavour(flavour), 
+        pchi2(pchi2), fd(fd), fdchi2(fdchi2), tau(tau), bpvdira(bpvdira),
+        maxProbGhostDaus(maxProbGhostDaus),
+        proId(proId), proProbnnp(proProbnnp), proProbnnk(proProbnnk), proIppvchi2(proIppvchi2), proIpMinchi2(proIpMinchi2), proPT(proPT),
+        kaonId(kaonId), kaonProbnnp(kaonProbnnp), kaonProbnnk(kaonProbnnk), kaonIppvchi2(kaonIppvchi2), kaonIpMinchi2(kaonIpMinchi2), kaonPT(kaonPT),
+        pionId(pionId), pionProbnnp(pionProbnnp), pionProbnnk(pionProbnnk), pionIppvchi2(pionIppvchi2), pionIpMinchi2(pionIpMinchi2), pionPT(pionPT),
+        elecProbnne(elecProbnne), elecPT(elecPT), muonProbnnmu(muonProbnnmu), muonPT(muonPT), dstarDm(dstarDm) {}
+  };
+}
 
   
 
@@ -96,12 +124,12 @@ public:
                              const int nPV,
                              LHCb::Particle::ConstVector& tagParticles);
 
-  virtual int addCands(std::vector< CharmParticle> & cands, const std::vector< std::string > & locations,
+  virtual int addCands(std::vector< CharmTaggerSpace::CharmParticle> & cands, const std::vector< std::string > & locations,
                        const LHCb::Particle& signalB, const LHCb::RecVertex* RecVert, const int type);
 
-  virtual double getMvaVal(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB);
+  virtual double getMvaVal(const CharmTaggerSpace::CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB);
   
-  virtual double getOmega(const CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB);
+  virtual double getOmega(double bdtMistag, CharmTaggerSpace::CharmMode mode);  
   
 private:
 
@@ -110,30 +138,33 @@ private:
     return ( x>0 ? std::log(x) : -9e30 );
   }
   
-  TMVAWrapper * getMVA( const std::string& mode );
+  TMVAWrapper * getMVA( CharmTaggerSpace::CharmMode );
+
+  // classify charm decay modes
+  CharmTaggerSpace::CharmMode getCharmDecayMode(const LHCb::Particle*, int);
 
 private:
 
-  CharmOSWrapper * m_myDATAreader;
+  //  CharmOSWrapper * m_myDATAreader;
 
-  std::map < std::string, CharmDecayMode> CharmDecayModeMap;
+  CharmTaggerSpace::CharmDecayMap decayMap;
 
   std::vector<std::string> m_CharmTagLocations;
   std::vector<std::string> m_CharmInclTagLocations;
   std::vector<std::string> m_CharmLambdaTagLocations;
 
   double m_P0_Cal_charm, m_P1_Cal_charm, m_Eta_Cal_charm;
-  double m_P0charm, m_P1charm, m_P2charm, m_P3charm;
 
   //std::string  m_MvaFileDir;
 
-  typedef std::map< std::string, TMVAWrapper* > Classifiers;
+  typedef std::map< CharmTaggerSpace::CharmMode, TMVAWrapper* > Classifiers;
   Classifiers m_classifiers;
 
   ITaggingUtils* m_util;
   ILifetimeFitter*           m_pLifetimeFitter;
   IParticleDescendants* m_descend;
-  //INNetTool* m_nnet;
+  IDVAlgorithm* m_dva;
+
 
 };
 

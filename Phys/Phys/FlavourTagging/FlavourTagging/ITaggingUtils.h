@@ -9,6 +9,23 @@
 
 #include <Kernel/IDistanceCalculator.h>
 
+namespace CharmTaggerSpace 
+{
+    enum CharmMode {
+    None = -1,
+    Dz2kpi,
+    Dz2kpipipi,
+    Dz2kpipiz,
+    Dp2kpipi,
+    Dz2kpiX,
+    Dz2keX,
+    Dz2kmuX,
+    LambdaC2pkpi,
+    Max
+  };    
+}
+
+
 static const InterfaceID IID_ITaggingUtils("ITaggingUtils", 1 , 0); 
 
 /** @class ITaggingUtils ITaggingUtils.h 
@@ -44,20 +61,7 @@ public:
 
   virtual const IDistanceCalculator* getDistanceCalculator()=0;
 
-  virtual std::string getCharmDecayMode(const LHCb::Particle*, int)=0;
-
-  // classify charm decay modes
-  // 0) D0 -> K pi, full reco
-  // 1) D0 -> K pi pi pi, full reco
-  // 2) D0 -> Ks pi pi, full reco
-  // 3) D0 -> K pi pi0, full reco
-  // 4) D+ -> K pi pi, full reco
-  // 5) D+ -> Ks pi, full reco
-  // 6) D0 -> K pi X, part reco
-  // 7) D0 -> K e X, part reco
-  // 8) D0 -> K mu X, part reco
-  // 9) D* -> (D0 -> Ks pi pi) pi, full reco
-  virtual int getCharmDecayModeInt(const LHCb::Particle*, int)=0;
+  virtual CharmTaggerSpace::CharmMode getCharmDecayMode(const LHCb::Particle*, int)=0;
 
   // remove candidates with daughters in common with signal B
   virtual LHCb::Particle::ConstVector purgeCands(const LHCb::Particle::Range& cands, const LHCb::Particle& BS)=0;

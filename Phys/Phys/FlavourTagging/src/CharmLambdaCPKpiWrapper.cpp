@@ -1,44 +1,43 @@
 // Include files 
 
 // local
-#include "CharmDpKpipiWrapper.h"
-#include "TMVAClassification/mva_charmtagger_reco14/pur_Dp2kpipi.C"
+#include "CharmLambdaCPKpiWrapper.h"
+#include "TMVAClassification/mva_charmtagger_reco14/pur_LambdaC2pkpi.C"
 
-namespace MyDpKpipiSpace {
+namespace MyLambdaCPKpiSpace {
 #ifndef SKIP_TMVA_COMPILE
-#include "TMVAClassification/mva_charmtagger_reco14/train_Dp_Kpipi_BDT.class.C"
+#include "TMVAClassification/mva_charmtagger_reco14/train_LambdaC_PKPi_BDT.class.C"
 #endif
 }
 
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : CharmDpKpipiWrapper
+// Implementation file for class : CharmLambdaCPKpiWrapper
 //
 // 2014-02-18 : Jack Timpson Wimberley
 //-----------------------------------------------------------------------------
 
-CharmDpKpipiWrapper::CharmDpKpipiWrapper(std::vector<std::string> & names) {
+CharmLambdaCPKpiWrapper::CharmLambdaCPKpiWrapper(std::vector<std::string> & names) {
 #ifndef SKIP_TMVA_COMPILE
-  mcreader = new MyDpKpipiSpace::ReadBDT(names);
-  purtable = new MyDpKpipiSpace::PurityTable();
+	mcreader = new MyLambdaCPKpiSpace::ReadBDT(names);
+  purtable = new MyLambdaCPKpiSpace::PurityTable();
 #endif
 }
 
-CharmDpKpipiWrapper::~CharmDpKpipiWrapper() {
+CharmLambdaCPKpiWrapper::~CharmLambdaCPKpiWrapper() {
 #ifndef SKIP_TMVA_COMPILE
   delete mcreader;
   delete purtable;
 #endif
 }
 
-double CharmDpKpipiWrapper::GetMvaValue(std::vector<double> const & values) {
+double CharmLambdaCPKpiWrapper::GetMvaValue(std::vector<double> const & values) {
 #ifndef SKIP_TMVA_COMPILE
   double bdtOut = mcreader->GetMvaValue(values);
   double purity = purtable->GetPurityAtBDT(bdtOut);
   return purity;
 #endif
   return 0.0;
-  
 }
 
 //=============================================================================

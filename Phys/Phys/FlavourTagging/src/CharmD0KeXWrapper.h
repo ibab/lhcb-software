@@ -8,6 +8,7 @@
 
 namespace MyD0KeXSpace {
   class ReadBDT;
+  class PurityTable;
 }
 
 /** @class CharmD0KeXWrapper CharmD0KeXWrapper.h
@@ -27,6 +28,6 @@ public:
 
  private:
   MyD0KeXSpace::ReadBDT* mcreader;
-
+  MyD0KeXSpace::PurityTable* purtable;
 };
 #endif // CHARMD0KEXWRAPPER_H
