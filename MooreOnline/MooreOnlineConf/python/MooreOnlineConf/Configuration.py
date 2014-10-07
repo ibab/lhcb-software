@@ -27,7 +27,6 @@ class MooreOnline(LHCbConfigurableUser):
         , "UseDBSnapshot"     : True
         , 'EnableRunChangeHandler' : True
         , "DBSnapshotDirectory" : "/group/online/hlt/conditions"
-        , "PartitionName" : "LHCb"
         , "RunChangeHandlerConditions" : {  'online_%d.xml' :  [ "Conditions/Online/LHCb/Magnet/Set"
                                          , "Conditions/Online/Velo/MotionSystem"        
                                          , "Conditions/Online/LHCb/Lumi/LumiSettings"   
@@ -56,7 +55,6 @@ class MooreOnline(LHCbConfigurableUser):
         conddb.setProp('IgnoreHeartBeat',self.getProp('IgnoreDBHeartBeat')  )
         self.setOtherProps( conddb, [ 'UseDBSnapshot',
                                       'DBSnapshotDirectory',
-                                      'PartitionName',
                                       'EnableRunChangeHandler',
                                       'RunChangeHandlerConditions' ])
         
