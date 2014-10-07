@@ -42,14 +42,14 @@ def start(**kwargs) :
     moore.DDDBtag    = 'unknown-please-specify-in-PVSS-RunInfo' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
     moore.CondDBtag  = 'unknown-please-specify-in-PVSS-RunInfo' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
 
-    
     ### pick up requested DB tags
+    import ConditionsMap
     def fwdOnlineEnv(attr,cfg,attr2 = None) :
-        if hasattr(OnlineEnv,attr) and getattr(OnlineEnv,attr) : setattr(cfg,attr2 if attr2 else attr,getattr(OnlineEnv,attr))
+        if hasattr(ConditionsMap,attr) and getattr(ConditionsMap,attr) : setattr(cfg,attr2 if attr2 else attr,getattr(ConditionsMap,attr))
 
     fwdOnlineEnv( 'CondDBTag', moore, 'CondDBtag' )
     fwdOnlineEnv( 'DDDBTag',   moore, 'DDDBtag' )
-    fwdOnlineEnv( 'RunChangeHandlerConditions', mooreOnline )
+    fwdOnlineEnv( 'Items', mooreOnline, 'RunChangeHandlerConditions' )
 
     #default is OK moore.UseDBSnapshot = True
     #default is OK moore.IgnoreDBHeartBeat = True
