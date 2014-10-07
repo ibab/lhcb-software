@@ -1,10 +1,20 @@
-! -----------------------------------------------------------------------------
+va! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+
+! 2014-10-07 - Alessandro Morda'
+ - Modified StrippingB2XTau.py and StrippingZVTOP.py to solve issues related with the RecursionLevel,
+changed output locations for the IsolationTools variables
+
 ! 2014-10-06 - Jason Andrews
  - minor adjustment to StrippingBu2Kpi0MergedLine mass window
+
+! 2014-09-12 - Alessandro Morda'
+- Added isolation variable 'ZViso' in the Bs2MuMuLines selections
+ computed with the RelInfoBs2MuMuZVisoBDT.h(cpp) code in IsolationTools
 
 ! 2014-10-06 - Hannah Mary Evans
  - added "Calo" RAW banks to StrippingBu2MuNu.py
