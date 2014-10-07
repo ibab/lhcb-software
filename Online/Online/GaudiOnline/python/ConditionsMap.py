@@ -16,5 +16,8 @@ def _get_conddb_data(configuration):
     return module
   return sys.modules[nam]
 
-OnlineConditionsModule = _get_conddb_data(ConditionsMapping)
-Items = OnlineConditionsModule.ConditionMap
+RunChangeHandlerConditions = {}
+OnlineConditionsModule = None
+if len(ConditionsMapping)>0:
+  OnlineConditionsModule = _get_conddb_data(ConditionsMapping)
+  RunChangeHandlerConditions = OnlineConditionsModule.ConditionMap
