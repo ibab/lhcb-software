@@ -4,6 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================== Gauss v47r0 2014-10-07 ===========================
+! 2014-10-07 - Gloria Corti
+ - Revert back to LHAPDFSet v1r*
+ - Put back configuration of BcVegPy that had been temporarily switched off
+ - Introuduce DataType = 2015
+ - New property RICHRandomHits to have backgorund hits in RICH2
+
 ! 2014-09-30 - Gloria Corti
  - Change version of LHAPDFSet to v2r* for tests, will only be for v47r1
 

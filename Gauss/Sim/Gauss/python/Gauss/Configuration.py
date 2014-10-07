@@ -88,6 +88,7 @@ class Gauss(LHCbConfigurableUser):
         ,"SpilloverPaths"    : []
         ,"PhysicsList"       : {"Em":'NoCuts', "Hadron":'FTFP_BERT', "GeneralPhys":True, "LHCbPhys":True, "Other": '' }
         ,"DeltaRays"         : True
+        ,"RICHRandomHits"    : False
         ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
         ,"BeamMomentum"      : 3.5*SystemOfUnits.TeV
         ,"BeamHCrossingAngle" : -0.520*SystemOfUnits.mrad
@@ -1782,15 +1783,13 @@ class Gauss(LHCbConfigurableUser):
         pInGeV   = beamMom*SystemOfUnits.GeV/SystemOfUnits.TeV
         ecmInGeV = 2*pInGeV
         txtECM = "upcom ecm "+str(ecmInGeV)
-        ## Tmp off 2014-10-01 start
-        ## gen_t0.addTool(Special,name="Special")
-        ## gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
-        ## gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
-        ## gen_t0.Special.addTool( Pythia8Production , "Pythia8Production" ) 
-        ## gen_t0.Special.Pythia8Production.addTool( LbLHAup , "LbLHAup" )
-        ## gen_t0.Special.Pythia8Production.LbLHAup.addTool( BcVegPyProduction , "BcVegPyProduction" ) 
-        ## gen_t0.Special.Pythia8Production.LbLHAup.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
-        ## Tmp off 2014-10-01 end
+        gen_t0.addTool(Special,name="Special")
+        gen_t0.Special.addTool(BcVegPyProduction,name="BcVegPyProduction")
+        gen_t0.Special.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
+        gen_t0.Special.addTool( Pythia8Production , "Pythia8Production" ) 
+        gen_t0.Special.Pythia8Production.addTool( LbLHAup , "LbLHAup" )
+        gen_t0.Special.Pythia8Production.LbLHAup.addTool( BcVegPyProduction , "BcVegPyProduction" ) 
+        gen_t0.Special.Pythia8Production.LbLHAup.BcVegPyProduction.BcVegPyCommands += [ txtECM ]
 
         # or with LbPowheg
         from Configurables import PowhegProductionbb, PowhegProductiontt, PowhegProductionWbb
@@ -2800,9 +2799,18 @@ class Gauss(LHCbConfigurableUser):
                  GiGaPhysConstructorOp,
                  GiGaPhysConstructorHpd
                  )
-             SimulationSvc().SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml"
+
+             if self.getProp("DataType") == "2015" :
+                 # Line to remove AEROGEL warnings
+                 SimulationSvc().SimulationDbLocation = "$GAUSSROOT/xml/SimulationRICHesOff.xml"
+             else:
+                 SimulationSvc().SimulationDbLocation = "$GAUSSROOT/xml/Simulation.xml"
+
              if [det for det in ['Rich1', 'Rich2'] if det in self.getProp('DetectorSim')['Detectors']]:
                  importOptions("$GAUSSRICHROOT/options/Rich.opts")
+                 if self.getProp("DataType") == "2015" :
+                     importOptions("$GAUSSRICHROOT/options/RichRemoveAerogel.opts")
+                 
              else:
                  if not skipG4:
                      giga.ModularPL.addTool( GiGaPhysConstructorOp,
@@ -2818,6 +2826,11 @@ class Gauss(LHCbConfigurableUser):
                  giga.ModularPL.GiGaPhysConstructorOp.RichActivateRichPhysicsProcVerboseTag = True
                  giga.StepSeq.Members += [ "RichG4StepAnalysis4/RichStepAgelExit" ]
                  giga.StepSeq.Members += [ "RichG4StepAnalysis5/RichStepMirrorRefl" ]
+                 if self.getProp("RICHRandomHits") == True :
+                     giga.ModularPL.GiGaPhysConstructorOp.Rich2BackgrHitsActivate = True
+                     giga.ModularPL.GiGaPhysConstructorOp.Rich2BackgrHitsProbabilityFactor = 0.5
+                 
+
 
          # END OF richPmt IF STATEMENT
 
