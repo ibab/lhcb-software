@@ -477,6 +477,8 @@ class StrippingLine(object):
     		    relatedInfoAlg.Inputs = [ "/Event/" + self.outputLocation() ]
 
         	if 'Locations' in itool.keys() : 
+        	    if 'Location' in itool.keys() :
+        		raise Exception('\n Both "Location" and "Locations" are defined in RelatedInfo dictionary, use either of them.')
         	    if 'RecursionLevel' in itool.keys() : 
         		relatedInfoAlg.MaxLevel = itool['RecursionLevel']
         	    else : 
@@ -501,8 +503,6 @@ class StrippingLine(object):
             	    	    infoLocations[k] = v
     		    relatedInfoAlg.InfoLocations = infoLocations
         	elif 'Location' in itool.keys() :
-        	    if 'Locations' in itool.keys() :
-        		raise Exception('\n Both "Location" and "Locations" are defined in RelatedInfo dictionary, use either of them.')
         	    relatedInfoAlg.MaxLevel = 0
         	    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : [ itool['Location'] ] }
         	else : 

@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-10-06 - Anton Poluektov 
+ - Fix StrippingLine to raise an exception if both 'Location' and 'Locations'
+   are defined in RelatedInfoTools
+
+! 2014-10-06 - Anton Poluektov 
  - Modify StrippingLine to use the updated AddRelatedInfo interface 
    (which takes the list of RelatedInfo locations in "InfoLocations" map)
 
