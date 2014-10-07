@@ -276,7 +276,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                          prescale = config['DefaultLinePrescale'],
                                          postscale = config['DefaultPostscale'],
                                          MDSTFlag = True,
-                                         RequiredRawEvents = ["Muon"],
+                                         RequiredRawEvents = ["Muon", "Calo"],
                                          algos = [ self.selDefault ],
                                          RelatedInfoTools = [
             { 'Type' : 'RelInfoJetsVariables',
@@ -333,7 +333,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                       prescale = config['Bs2mmWideLinePrescale'],
                                       postscale = config['DefaultPostscale'],
                                       MDSTFlag = True,
-                                      RequiredRawEvents = ["Muon"],
+                                      RequiredRawEvents = ["Muon", "Calo"],
                                       algos = [ self.selWide ],
                                       RelatedInfoTools = [
             { 'Type' : 'RelInfoJetsVariables',
@@ -389,7 +389,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                        prescale = config['LooseLinePrescale'],
                                        postscale = config['DefaultPostscale'],
                                        MDSTFlag = True,
-                                       RequiredRawEvents = ["Muon"],
+                                       RequiredRawEvents = ["Muon", "Calo"],
                                        algos = [ self.selLoose ],
                                        )
 
@@ -399,7 +399,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     prescale = config['BuPrescale'],
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
-                                    RequiredRawEvents = ["Muon"],
+                                    RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBu ],
                                     )
 
@@ -409,7 +409,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     prescale = config['BsPrescale'],
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
-                                    RequiredRawEvents = ["Muon"],
+                                    RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBs ],
                                     )
 
@@ -419,7 +419,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     prescale = config['BdPrescale'],
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
-                                    RequiredRawEvents = ["Muon"],
+                                    RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBd ],                                  
                                     )
 
@@ -429,7 +429,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     prescale = config['SSPrescale'],
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
-                                    RequiredRawEvents = ["Muon"],
+                                    RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selSS ],
                                     RelatedInfoTools = [
             { 'Type' : 'RelInfoJetsVariables',
@@ -487,7 +487,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     prescale = config['Bs2mmLTUBLinePrescale'],
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
-                                    RequiredRawEvents = ["Muon"],
+                                    RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selLTUB ],
                                     RelatedInfoTools = [
             { 'Type' : 'RelInfoJetsVariables',
@@ -542,7 +542,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     prescale = config['Bs2KKLTUBLinePrescale'],
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
-                                    RequiredRawEvents = ["Muon"],
+                                    RequiredRawEvents = ["Muon", "Calo"],
                                     algos = [ self.selBs2KKLTUB ],
                                     RelatedInfoTools = [
             { 'Type' : 'RelInfoJetsVariables',

@@ -4,6 +4,8 @@ va! ----------------------------------------------------------------------------
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-07 - Hannah Mary Evans
+ - Added Calo raw banks to StrippingBu2MuMuLines.py
 
 ! 2014-10-07 - Alessandro Morda'
  - Modified StrippingB2XTau.py and StrippingZVTOP.py to solve issues related with the RecursionLevel,
