@@ -24,7 +24,7 @@ use GaudiAlg v*
 macro ROOT_includedirs "-I$(ROOTSYS)/include"
 macro ROOT_linkopts "-L$(ROOTSYS)/lib $(shell root-config --glibs)"
 
-application RadLengthPlots ../scripts/RadLength/*.cpp
+#application RadLengthPlots ../scripts/RadLength/*.cpp
 
-application TargetPlots ../scripts/Target/MultiTarget/TargetAnalysis/Multi.cpp
+#application TargetPlots ../scripts/Target/MultiTarget/TargetAnalysis/Multi.cpp
 

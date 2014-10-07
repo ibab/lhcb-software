@@ -2,6 +2,7 @@ from string import find
 from ROOT import *
 from TargetSummary import *
 from array import array
+from copy import *
 
 def ScalarProd(ncomp, v, c) :
 
@@ -41,7 +42,23 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 		var = "multi_gamma"
 
 	if(find(finalPlot,"RATIO") > -1 or find(finalPlot,"ASYM") > -1) :
-	
+
+		mystr = " in " +str(Dx) + " mm"
+		if(xvar=="thickness") :
+			mystr = " for " + str(E0) + " GeV"
+
+		titleMultigr = finalPlot
+		if(finalPlot == "RATIO_TOTAL") :
+			titleMultigr = "Ratio of total (inel + el) cross sections" + mystr
+		if(finalPlot == "ASYM_TOTAL") :
+			titleMultigr = "Asymmetry of total (inel + el) cross sections" + mystr
+		if(finalPlot == "RATIO_INELL") :
+			titleMultigr = "Ratio of inelastic cross sections" + mystr
+		if(finalPlot == "ASYM_INEL") :
+			titleMultigr = "Asymmetry of inelastic  cross sections" + mystr
+
+
+
 		pdgenergies  = [ 1, 5, 10, 50, 100 ]
 		pdgRatios_p  = [ 1.67, 1.42, 1.31, 1.14, 1.10 ]
 		pdgRatios_pi = [ 1.22, 1.13, 1.10, 1.05, 1.03 ]
@@ -52,14 +69,14 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 		#ratiotxt.write( "$p$ (GeV) & LHEP & BERT \\\\ \\hline \n" )
 
 		PDGRatio = []
-		mgRatio = TMultiGraph("mgrRatio","")
+		mgRatio = TMultiGraph("mgrRatio",titleMultigr)
 
 		leg2 = TLegend(0.60,0.79,0.99,0.99)
 
 		for pg in range(0, len(pguns)-1, 2) :
 		
 			#ratiotxt.write( "\\multicolumn{2}{c}{ratio " + pguns[pg+1].GetLatex("$") + "/"  << pguns[pg].GetLatex("$") + "} \\\\ \\hline \n" )
-
+			nm = 0
 			for m in models :
 			
 				#ratiotxt.write( "\\multicolumn{2}{c}{ratio " + models[m] + "} \\\\ \\hline" )
@@ -79,10 +96,16 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				dataTree.Draw(xvar+":"+var+":"+var+"_err")
 
 				errx = array( 'd' , [0.] * entries )
-				gr1 = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
-
-				varexp = "h_"+str(pg)+m
-				select = "model == " + str(ord(m[0])) + " && material == " + str(ord(materials[0][0])) + " && pGun == " + str(dict._all_pguns[pguns[pg]].GetPDG())
+				ty1 = dataTree.GetV2()
+				terry1 = dataTree.GetV3()
+				y1=[]
+				erry1=[]
+				for i in range(0,entries) :
+					y1.append(ty1[i])
+					erry1.append(terry1[i])
+									
+				varexp = "h_"+str(pg+1)+m
+				select = "model == " + str(ord(m[0])) + " && material == " + str(ord(materials[0][0])) + " && pGun == " + str(dict._all_pguns[pguns[pg+1]].GetPDG())
 				if(xvar=="energy") : 
 						select += " && thickness == " + str(Dx)
 				elif(xvar=="thickness") :
@@ -94,93 +117,89 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				dataTree.SetEntryList(list2)
 				dataTree.Draw(xvar+":"+var+":"+var+"_err")
 
-				gr2 = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
-				x = dataTree.GetV1()
+				tx = dataTree.GetV1() 
+				ty2 = dataTree.GetV2() 
+				terry2 = dataTree.GetV3() 
+				x = []
+				y2=[]
+				erry2=[]
+				for i in range(0,entries) :
+					y2.append(ty2[i])
+					erry2.append(terry2[i])
+					x.append(tx[i])
 
-				for ee in range(0,gr1.GetN()) : 
-				
+				y = []
+				erry = []
+				for ee in range(0,entries) : 
+
 					#ratiotxt << energies[ee]
-
-					x1 = 0
-					x2 = 0
-					y1 = 0
-					y2 = 0
-					e1 = 0
-					e2 = 0
-
-					gr1.GetPoint(ee, x1,y1)
-					gr2.GetPoint(ee, x2,y2)
-					e1 = gr1.GetErrorY(ee)
-					e2 = gr2.GetErrorY(ee)
-
-					if(find(finalPlot,"RATIO")>0) :
-						y[ee] = y2 / y1
+					if(find(finalPlot,"RATIO")>-1) :
+						y.append(y2[ee] / y1[ee])
 					else :
-						y[ee] = 100*TMath.Abs(y1 - y2)/(2. - y1 - y2)
+						y.append(100*TMath.Abs(y1[ee] - y2[ee])/(2. - y1[ee] - y2[ee]))
 
-					totErr2 = TMath.Power(e1/y1,2) + TMath.Power(e2/y2,2)
-					erry[ee] = y[ee] * TMath.Sqrt(totErr2)
+					totErr2 = TMath.Power(erry1[ee]/y1[ee],2) + TMath.Power(erry2[ee]/y2[ee],2)
+					erry.append(y[ee] * TMath.Sqrt(totErr2))
 
 					#ratiotxt << fixed << setprecision(2) << " & $" << y[ee]  << " \\pm " << erry[ee] << "\\\\" << endl
 
-
-				gr = TGraphErrors(entries,x,y,errx,erry)
+				gr = TGraphErrors(entries,array('d',x),array('d',y),array('d',errx),array('d',erry))
 
 				gr.SetMarkerColor(1+pg/2)
-				gr.SetMarkerStyle(20+m)
+				gr.SetMarkerStyle(20+nm)
 
-				label = dict._all_pguns[pg+1].GetLatex("LEG") + " / " + dict._all_pguns[pg].GetLatex("LEG")
+				label = dict._all_pguns[pguns[pg+1]].GetLatex("LEG") + " / " + dict._all_pguns[pguns[pg]].GetLatex("LEG")
 				if(len(models) > 1) :
 					label += " (" + m + ")"
 				leg2.AddEntry(gr,label,"P")
 
-				if(plotData) :
+				if(plotData and (find(finalPlot,"TOTAL")>-1 or find(finalPlot,"INEL")>-1) and find(finalPlot,"RATIO")>-1 ) :
 				
-					if(pguns[pg].GetName()=="p") :
-						grPDG = TGraphErrors(5,pdgenergies,pdgRatios_p)
-					elif(pguns[pg].GetName()=="Piplus") :
-						grPDG = TGraphErrors(5,pdgenergies,pdgRatios_pi)
-					elif(pguns[pg].GetName()=="Kplus") :
-						grPDG = TGraphErrors(5,pdgenergies,pdgRatios_K)
+					if(dict._all_pguns[pguns[pg]].GetName()=="p") :
+						grPDG = TGraphErrors(5,array('d',pdgenergies),array('d',pdgRatios_p))
+					elif(dict._all_pguns[pguns[pg]].GetName()=="Piplus") :
+						grPDG = TGraphErrors(5,array('d',pdgenergies),array('d',pdgRatios_pi))
+					elif(dict._all_pguns[pguns[pg]].GetName()=="Kplus") :
+						grPDG = TGraphErrors(5,array('d',pdgenergies),array('d',pdgRatios_K))
 
 					grPDG.SetMarkerColor(4)
 					grPDG.SetMarkerStyle(34)
 					grPDG.SetMarkerSize(1.2)
-					if(m==0) :
-						PDGRatio.push_back(grPDG)
+					if(nm==(len(models)-1)) :
+						PDGRatio.append(grPDG)
 						leg2.AddEntry(grPDG,"PDG ratio","P")
 				
-				mgrRatio.Add(gr)
+				mgRatio.Add(gr)
 			
 			#ratiotxt << "\\hline" << endl
 		
 		#ratiotxt << "\\end{tabular}" << endl
 
 
-		if(plotData and finalPlot == "RATIO_TOTAL") :
-			mgrRatio.Add(PDGRatio[0])
+		if(plotData and len(PDGRatio)>0) :
+			mgRatio.Add(PDGRatio[0])
 
 		cratio = TCanvas()
 		cratio.SetLogx()
 		cratio.SetGrid()
 
-		mgrRatio.SetTitle(finalPlot)
-		mgrRatio.Draw("APL")
+		mgRatio.Draw("APL")
 		if(finalPlot.find("RATIO") > 0) :
-			mgrRatio.GetYaxis().SetTitle("Ratio")
+			mgRatio.GetYaxis().SetTitle("Ratio")
 		else :
-			mgrRatio.GetYaxis().SetTitle("Asym (%)")
+			mgRatio.GetYaxis().SetTitle("Asym (%)")
 		
 		if(xvar=="energy") :
-			mgrRatio.GetXaxis().SetTitle("|p| (GeV)")
-			mgrRatio.GetXaxis().SetLimits(0.5,300)
+			mgRatio.GetXaxis().SetTitle("|p| (GeV)")
+			mgRatio.GetXaxis().SetLimits(0.5,300)
 		elif(xvar=="thickness") :
-			mgrRatio.GetXaxis().SetTitle("#Delta x (mm)")
+			mgRatio.GetXaxis().SetTitle("#Delta x (mm)")
+	
+		mgRatio.Draw("APL")
 
 		leg2.Draw("same")
 
-		cratio.Print(outputPath + "/" + finalPlot + ".pdf")
-		
+		cratio.Print(outputPath + "/" + finalPlot + mystr.replace(" ","_") +".pdf")	
 	
 	else :
 	
@@ -213,9 +232,9 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 		mgr = TMultiGraph(nameMultigr,titleMultigr)
 
-		PintOverSigmaFactor = Dx /(1000. * dict._all_materials["Al"].GetSigmaDxOverPintFactor() * 1000.)	
+		PintOverSigmaFactor = Dx /(1000. * dict._all_materials[materials[0]].GetSigmaDxOverPintFactor() * 1000.)	
 
-		if(plotData) :
+		if(plotData and (materials[0] == "Al" or materials[0] == "Be") and (find(finalPlot,"TOTAL")>-1 or find(finalPlot,"INEL")>-1) ) :
 	
 			#COMPAS Inelastic Xsec data in Al
 			COMPAS_p_x           = [ 1.52, 5., 9., 20., 30., 60. ]
@@ -244,19 +263,19 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 			#COMPAS Total Xsec data in Al
 
-			COMPASTot_p_x               = array ( 'd' , [ 1.52, 1.8, 19.3, 20. ] ) 
-			COMPASTot_p_sigmaErr        = array ( 'd' , [ 22., 27., 10., 10. ] )
-			COMPASTot_p_sigma           = array ( 'd' , [ 687., 694., 687., 687. ] )
-			COMPASTot_p_y               = array ( 'd' , ScalarProd(4,COMPASTot_p_sigma,PintOverSigmaFactor) )
-			COMPASTot_p_yErr            = array ( 'd' , ScalarProd(4,COMPASTot_p_sigmaErr,PintOverSigmaFactor) )
-			COMPASTot_pbar_x            = array ( 'd' , [ 1.45,1.8 ] )
-			COMPASTot_pbar_sigma        = array ( 'd' , [ 1034., 1066. ] )
-			COMPASTot_pbar_sigmaErr     = array ( 'd' , [ 40., 40. ] )
-			COMPASTot_pbar_y            = array ( 'd' , ScalarProd(2,COMPASTot_pbar_sigma,PintOverSigmaFactor) )
-			COMPASTot_pbar_yErr         = array ( 'd' , ScalarProd(2,COMPASTot_pbar_sigmaErr,PintOverSigmaFactor) )
+			COMPASTot_p_x               = [ 1.52, 1.8, 19.3, 20. ]  
+			COMPASTot_p_sigmaErr        = [ 22., 27., 10., 10. ] 
+			COMPASTot_p_sigma           = [ 687., 694., 687., 687. ] 
+			COMPASTot_p_y               = ScalarProd(4,COMPASTot_p_sigma,PintOverSigmaFactor) 
+			COMPASTot_p_yErr            = ScalarProd(4,COMPASTot_p_sigmaErr,PintOverSigmaFactor) 
+			COMPASTot_pbar_x            = [ 1.45,1.8 ] 
+			COMPASTot_pbar_sigma        = [ 1034., 1066. ] 
+			COMPASTot_pbar_sigmaErr     = [ 40., 40. ] 
+			COMPASTot_pbar_y            = ScalarProd(2,COMPASTot_pbar_sigma,PintOverSigmaFactor) 
+			COMPASTot_pbar_yErr         = ScalarProd(2,COMPASTot_pbar_sigmaErr,PintOverSigmaFactor) 
 
-			COMPAS_p_gr = TGraphErrors(6,COMPAS_p_x,COMPAS_p_x)#,array ( 'd' , [0.]*6 ),COMPAS_p_yErr)
-			COMPAS_pbar_gr = TGraphErrors(6,COMPAS_pbar_x,COMPAS_pbar_y)#,array ( 'd' , [0.]*6 ),COMPAS_pbar_yErr)
+			COMPAS_p_gr = TGraphErrors(6,array('d', COMPAS_p_x ), array('d', COMPAS_p_y ), array('d', [0.]*6 ), array('d', COMPAS_p_yErr))
+			COMPAS_pbar_gr = TGraphErrors(6, array('d', COMPAS_pbar_x), array('d', COMPAS_pbar_y), array ('d', [0.]*6 ), array('d', COMPAS_pbar_yErr) )
 			COMPAS_p_gr.SetMarkerColor(4)
 			COMPAS_p_gr.SetMarkerStyle(29)
 			COMPAS_p_gr.SetMarkerSize(1.1)
@@ -264,8 +283,8 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 			COMPAS_pbar_gr.SetMarkerStyle(30)
 			COMPAS_pbar_gr.SetMarkerSize(1.2)
 
-			COMPASTot_p_gr = TGraphErrors(4,COMPASTot_p_x,COMPASTot_p_y,array ( 'd' , [0.]*4 ),COMPASTot_p_yErr)
-			COMPASTot_pbar_gr = TGraphErrors(2,COMPASTot_pbar_x,COMPASTot_pbar_y,array ( 'd' , [0.]*2 ),COMPASTot_pbar_yErr)
+			COMPASTot_p_gr = TGraphErrors(4, array('d', COMPASTot_p_x), array('d', COMPASTot_p_y), array('d', [0.]*4 ), array('d', COMPASTot_p_yErr))
+			COMPASTot_pbar_gr = TGraphErrors(2, array('d', COMPASTot_pbar_x), array('d', COMPASTot_pbar_y), array('d', [0.]*2 ), array('d', COMPASTot_pbar_yErr))
 			COMPASTot_p_gr.SetMarkerColor(4)
 			COMPASTot_p_gr.SetMarkerStyle(29)
 			COMPASTot_p_gr.SetMarkerSize(1.1)
@@ -273,16 +292,14 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 			COMPASTot_pbar_gr.SetMarkerStyle(30)
 			COMPASTot_pbar_gr.SetMarkerSize(1.2)
 
-			COMPAS_inBe_p_gr = TGraphErrors(6,COMPAS_inBe_p_x,COMPAS_inBe_p_y,0,COMPAS_inBe_p_yErr)
-			COMPAS_inBe_pbar_gr = TGraphErrors(5,COMPAS_inBe_pbar_x,COMPAS_inBe_pbar_y,0,COMPAS_inBe_pbar_yErr)
+			COMPAS_inBe_p_gr = TGraphErrors(6, array('d', COMPAS_inBe_p_x), array('d', COMPAS_inBe_p_y), array('d', [0.]*6 ), array('d', COMPAS_inBe_p_yErr))
+			COMPAS_inBe_pbar_gr = TGraphErrors(5, array('d', COMPAS_inBe_pbar_x), array('d', COMPAS_inBe_pbar_y), array('d', [0.]*5 ), array('d', COMPAS_inBe_pbar_yErr))
 			COMPAS_inBe_p_gr.SetMarkerColor(4)
 			COMPAS_inBe_p_gr.SetMarkerStyle(29)
 			COMPAS_inBe_p_gr.SetMarkerSize(1.1)
 			COMPAS_inBe_pbar_gr.SetMarkerColor(4)
 			COMPAS_inBe_pbar_gr.SetMarkerStyle(30)
 			COMPAS_inBe_pbar_gr.SetMarkerSize(1.2)
-
-
 
 			if(finalPlot == "TOTAL") :
 				mgr.Add(COMPASTot_p_gr)
@@ -296,8 +313,6 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				leg.AddEntry(COMPAS_p_gr,"COMPAS p","P")
 				leg.AddEntry(COMPAS_pbar_gr,"COMPAS #bar{p}","P")
 			
-		
-
 
 		#Plotting Gauss values
 		n0 = 0
@@ -386,6 +401,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 if __name__ == "__main__" :
 
+	plots = [ "ASYM_INEL", "RATIO_TOTAL" ,"MULTI" ]
 	models = ["QGSP_BERT","FTFP_BERT"]
 	thicks = [1]
 	materials = ["Al"]
@@ -396,4 +412,5 @@ if __name__ == "__main__" :
 	file = TFile(path+"/TargetsPlots.root")
 	dataTree = file.Get("summaryTree")
 	
-	Plot( dataTree, "thickness", "RATIO_TOTAL", path, models , pguns , materials , 2 , 1 )
+	for p in plots :
+		Plot( dataTree, "thickness", p, path, models , pguns , materials , 2 , 1, True )
