@@ -51,7 +51,7 @@ namespace FiniteStateMachine {
       SLAVE_TRANSITION         = 1<<27,
       SLAVE_FINISHED           = 1<<28,
       // Timeout values
-      SLAVETIMEOUT             = 1<<29,
+      SLAVE_TIMEOUT            = 1<<29,
       SLAVE_UNLOAD_TIMEOUT,
       SLAVE_TERMINATE_TIMEOUT,
       SLAVE_KILL_TIMEOUT,
@@ -73,6 +73,8 @@ namespace FiniteStateMachine {
 
     /// The slave's meta-state
     SlaveState        m_meta;
+    /// The slave's meta-state
+    SlaveState        m_status;
     /// Reference to the managing machine
     Machine*          m_machine;
     /// Current slave state. During transition the original state
@@ -93,10 +95,19 @@ namespace FiniteStateMachine {
     Slave(const Type* typ, const std::string& nam, Machine* machine, bool internal);
     /// Standatrd destructor
     virtual ~Slave();    
+    /// Meta state name translation from enumeration to string
+    static const char* metaName(SlaveState st);
     /// Internal meta-state of the slave
     SlaveState currentState() const                       {  return m_meta;                 }
     /// Internal meta-state of the slave
     void setCurrentState(SlaveState new_state)            {  m_meta = new_state;            }
+    /// Access meta state as string
+    const char* metaStateName() const;
+    /// Access to error conditions if they occurred during the last sequence
+    SlaveState statusState() const                        {  return m_status;               }
+    /// Access meta state as string
+    const char* statusName() const;
+
     /// Check if the task is alive
     bool isAlive() const                                  {  return m_alive;                }
     /// Check if the slave is limbo
@@ -105,8 +116,6 @@ namespace FiniteStateMachine {
     bool isInternal() const                               {  return m_internal;             }
     /// Access flag indicating (initial) internal transition actions
     void setInternal(bool internal_flag)                  {  m_internal = internal_flag;    }
-    /// Access meta state as string
-    const char* metaStateName() const;
     /// Access current state of the slave
     const State* state() const                            {  return m_state;                }
     /// Set current state of the slave. Note: be careful modifying the state if it does not correspond to the object 

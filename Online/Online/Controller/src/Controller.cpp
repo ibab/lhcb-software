@@ -94,19 +94,33 @@ Controller::~Controller() {
 
 /// Publish state information when transition failed. 
 FSM::ErrCond Controller::fail()  {
+  typedef map<Slave::SlaveState,vector<const Slave*> > SlaveMap;
   const Transition* tr = m_machine->currTrans();
   const Slaves      sl = m_machine->slaves();
   display(ALWAYS,c_name(),"%s> Controller: FAILED to invoke transition %s from %s.",
 	  m_machine->type()->c_name(), tr ? tr->c_name() : "??Unknown??",m_machine->c_state());
   m_machine->setSlaveState(Slave::SLAVE_FAILED,m_errorState);
+  SlaveMap sl_map;
+  stringstream msg;
+  msg << "Controller: Slave summary: ";
   for(Slaves::const_iterator i=sl.begin(); i!= sl.end(); ++i)  {
     const Slave* s = *i;
-    display(ALWAYS,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
+    display(DEBUG,c_name(),"Controller: Slave %s in state %s has meta-state:%s",
 	    s->c_name(), s->c_state(), s->metaStateName());
+    sl_map[s->statusState()].push_back(s);
+  }
+  for(SlaveMap::const_iterator i=sl_map.begin(); i!=sl_map.end(); ++i)  {
+    Slave::SlaveState slv = (*i).first;
+    msg << (Slave::metaName(slv)+6) << ":" << (*i).second.size() << " ";
+    if ( slv == Slave::SLAVE_FAILED || slv == Slave::SLAVE_TIMEOUT || slv ==  Slave::SLAVE_DEAD )  {
+      for(SlaveMap::mapped_type::const_iterator j=(*i).second.begin(); j!=(*i).second.end(); ++j)
+	msg << (*j)->name() << " ";
+    }
   }
   // Invoke special actions for certain transitions
   if ( tr ) {
-    display(ERROR,c_name(),"Controller: Special action on failed transition %s needed.",tr->c_name());
+    display(ERROR,c_name(),"Controller: Transition %s FAILED: %s.",tr->c_name(),msg.str().c_str());
+    //display(ERROR,c_name(),"Controller: Special action on failed transition %s needed.",tr->c_name());
     if ( tr->name() == "recover" )  {
     }
   }

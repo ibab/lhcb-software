@@ -36,20 +36,20 @@ static const char* _metaStateName(int meta)   {
     MakeName(SLAVE_TRANSITION);
     MakeName(SLAVE_FINISHED);
     // Timeout handling
-    MakeName(SLAVETIMEOUT);
+    MakeName(SLAVE_TIMEOUT);
     MakeName(SLAVE_UNLOAD_TIMEOUT);
     MakeName(SLAVE_TERMINATE_TIMEOUT);
     MakeName(SLAVE_KILL_TIMEOUT);
     MakeName(SLAVE_START_TIMEOUT);
 #undef  MakeName
   }
-  return "UNKNOWN";
+  return "SLAVE_UNKNOWN";
 }
 
 /// Class Constructor
 Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
   : TypedObject(typ,nam), m_timerID(0,0), m_tmo(5), 
-    m_meta(SLAVE_LIMBO), m_machine(machine), m_state(0), 
+    m_meta(SLAVE_LIMBO), m_status(SLAVE_LIMBO), m_machine(machine), m_state(0), 
     m_rule(0), m_internal(internal), m_alive(false)
 {
   m_state = type()->initialState();
@@ -62,6 +62,17 @@ Slave::~Slave()    {
 /// Access meta state as string
 const char* Slave::metaStateName() const  {
   return _metaStateName(m_meta);
+}
+
+/// Access meta state as string
+const char* Slave::metaName(SlaveState st)   {
+  return _metaStateName(st);
+}
+
+/// Retrieve reference to current State structure name
+const char* Slave::statusName ()  const
+{
+  return _metaStateName(m_status);
 }
 
 /// Retrieve reference to current State structure name
@@ -91,9 +102,10 @@ FSM::ErrCond Slave::notifyMachine(int meta_state)  {
 
 /// Callback on alive signs of slave process
 FSM::ErrCond Slave::iamHere()  {
-  m_alive = true;
-  m_meta  = SLAVE_ALIVE;
-  m_state = type()->initialState();
+  m_alive  = true;
+  m_meta   = SLAVE_ALIVE;
+  m_status = SLAVE_ALIVE;
+  m_state  = type()->initialState();
   if ( !m_machine->currTrans() )
     return notifyMachine(SLAVE_TRANSITION);
   return m_machine->checkAliveSlaves();
@@ -101,10 +113,11 @@ FSM::ErrCond Slave::iamHere()  {
 
 /// Callback on sudden death of slave process
 FSM::ErrCond Slave::iamDead()  {
-  m_rule  = 0;
-  m_alive = false;
-  m_meta  = SLAVE_LIMBO;
-  m_state = type()->initialState();
+  m_rule   = 0;
+  m_alive  = false;
+  m_meta   = SLAVE_LIMBO;
+  m_status = SLAVE_LIMBO;
+  m_state  = type()->initialState();
   if ( !m_machine->currTrans() )
     return notifyMachine(SLAVE_TRANSITION);
   return m_machine->checkSlaves();
@@ -112,9 +125,10 @@ FSM::ErrCond Slave::iamDead()  {
 
 /// Callback, when transition was executed successfully
 FSM::ErrCond Slave::transitionDone(const State* state)  {
-  m_alive = true;
-  m_state = state;
-  m_meta  = SLAVE_ALIVE;
+  m_alive  = true;
+  m_state  = state;
+  m_meta   = SLAVE_ALIVE;
+  m_status = SLAVE_FINISHED;
   if ( !m_machine->currTrans() )
     return notifyMachine(SLAVE_TRANSITION);
   return m_machine->checkSlaves();
@@ -126,6 +140,8 @@ FSM::ErrCond Slave::transitionSlave(const State* state)  {
     m_alive = true;
     m_state = state;
     m_meta  = SLAVE_ALIVE;
+    if ( state->isFailure() ) m_status = SLAVE_FAILED;
+    else m_status = SLAVE_ALIVE;
     // State change by slave. Handle the request.
     return notifyMachine(SLAVE_TRANSITION);
   }
@@ -134,8 +150,9 @@ FSM::ErrCond Slave::transitionSlave(const State* state)  {
 
 /// Callback, when transition failed (called on receipt of answer message)
 FSM::ErrCond Slave::transitionFailed()  {
-  m_meta  = SLAVE_FAILED;
-  m_state = m_rule ? m_rule->currState() : 0;
+  m_meta   = SLAVE_FAILED;
+  m_status = SLAVE_FAILED;
+  m_state  = m_rule ? m_rule->currState() : 0;
   return notifyMachine(SLAVE_FAILED);
 }
 
@@ -154,7 +171,7 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
       return send(SLAVE_FINISHED,tr->to());
     }
     ErrCond ret = sendRequest(tr);
-    startTimer(SLAVETIMEOUT,tr);
+    startTimer(SLAVE_TIMEOUT,tr);
     return ret;
   }
   return FSM::TRANNOTFOUND;
@@ -214,13 +231,16 @@ void Slave::handleTimeout()  {
   }
   else if ( isLimbo() )  {  // Slave died in between
     transitionFailed();
+    m_status = SLAVE_TIMEOUT;
   }
-  else if ( m_timerID.second == SLAVETIMEOUT && SLAVE_EXECUTING == st )  {
+  else if ( m_timerID.second == SLAVE_TIMEOUT && SLAVE_EXECUTING == st )  {
     if ( _onTimeoutKill(m_rule) ) {
       forceKill();
+      m_status = SLAVE_TIMEOUT;
     }
     else {
       transitionFailed();
+      m_status = SLAVE_TIMEOUT;
     }
   }
   else if ( SLAVE_EXECUTING == st )  {
