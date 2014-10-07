@@ -123,7 +123,6 @@ protected:
   bool testNodes( const LHCb::Track& track ) const ;
 
 private:
-
   size_t                            m_iteration;                     ///< Iteration counter
   size_t                            m_nIterations;                   ///< Number of iterations
   size_t                            m_nTracks;                       ///< Number of tracks used
@@ -145,6 +144,7 @@ private:
   std::string                       m_alignSummaryDataSvc ;
   std::string                       m_alignSummaryLocation ;
   bool                              m_fillHistos ;
+  bool                              m_fireRunChange ;
 
   Al::Equations*                    m_equations;                     ///< Equations to solve
   bool                              m_correlation ;                  ///< Do we take into account correlations between residuals?
@@ -155,6 +155,7 @@ private:
   size_t                            m_maxTracksPerVertex ;
   std::string                       m_outputDataFileName ;
   std::vector<std::string>          m_inputDataFileNames ;
+  unsigned int                      m_runnr;
 
   /// Monitoring
   // @todo: Move this to a monitoring tool

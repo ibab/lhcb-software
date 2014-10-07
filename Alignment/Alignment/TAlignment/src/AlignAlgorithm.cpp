@@ -76,6 +76,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
     m_updatetool("Al::AlignUpdateTool"),
     m_vertextrackselector("TrackSelector",this),
     m_xmlWritersTool("WriteMultiAlignmentConditionsTool"),
+    m_fireRunChange(false),
     m_equations(0),
     m_resetHistos(false)
 {
@@ -104,6 +105,7 @@ AlignAlgorithm::AlignAlgorithm( const std::string& name,
   declareProperty("ForcedInitialTime", m_forcedInitTime = 0 ) ;
   declareProperty("OnlineMode", m_Online=false);
   //  declareProperty("XmlWriters",m_xmlWriterNames) ;
+  m_runnr = 0;
 }
 
 AlignAlgorithm::~AlignAlgorithm() {}
@@ -120,6 +122,7 @@ StatusCode AlignAlgorithm::initialize() {
   IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
   if (!incSvc) return Error("==> Failed to retrieve IncidentSvc!", StatusCode::FAILURE);
   incSvc->addListener(this, "UpdateConstants");
+  incSvc->addListener(this, "BeginEvent");
 
   /// Get tool to align detector
   m_align = tool<IGetElementsToBeAligned>("GetElementsToBeAligned");
@@ -207,6 +210,7 @@ StatusCode AlignAlgorithm::stop()
 	{
 		if(!m_outputDataFileName.empty())
 			m_equations->writeToFile( m_outputDataFileName.c_str() ) ;
+		m_fireRunChange = true ;
 	}
   return StatusCode::SUCCESS;
 }
@@ -214,9 +218,6 @@ StatusCode AlignAlgorithm::stop()
 StatusCode AlignAlgorithm::start()
 {
   if (m_Online) {
-    // throw a runchange incident to make sure it reads the xml
-    IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
-    incSvc->fireIncident(RunChangeIncident(name(),0)) ;
     // reset contents of ASD
     reset() ;
   }
@@ -390,13 +391,12 @@ StatusCode AlignAlgorithm::execute() {
   }
 
   Gaudi::Time eventtime ;
-  unsigned int runnr(0) ;
   if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) ){
     const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
     eventtime = odin->eventTime() ;
-    runnr = odin->runNumber() ;
+    m_runnr = odin->runNumber() ;
   }
-  m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons, eventtime, runnr ) ;
+  m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons, eventtime, m_runnr ) ;
 
   return StatusCode::SUCCESS;
 }
@@ -623,6 +623,12 @@ void AlignAlgorithm::handle(const Incident& incident) {
   if ("UpdateConstants" == incident.type()) {
     update();
     reset();
+  }
+  if( m_Online && m_fireRunChange && "BeginEvent"==incident.type() ) {
+    // throw a runchange incident to make sure it reads the xml
+    IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
+    incSvc->fireIncident(RunChangeIncident(name(),m_runnr)) ;
+    m_fireRunChange = false ;
   }
 }
 

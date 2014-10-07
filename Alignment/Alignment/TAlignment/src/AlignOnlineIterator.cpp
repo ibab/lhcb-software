@@ -41,6 +41,7 @@ class AlignOnlineIterator : public GaudiTool, virtual public LHCb::IAlignIterato
   ToolHandle<IWriteAlignmentConditionsTool> m_xmlwriter ;
   unsigned int m_maxIteration ;
   ASDCollector m_asdCollector ;
+  unsigned int m_iteration;
 };
 
 
@@ -60,8 +61,8 @@ extern "C"
 
 }
 
-AlignOnlineIterator::AlignOnlineIterator(const std::string &  type, 
-				 const std::string &  name, 
+AlignOnlineIterator::AlignOnlineIterator(const std::string &  type,
+				 const std::string &  name,
 				 const IInterface *  parent  )
   : GaudiTool(type,name,parent),
     m_alignupdatetool("Al::AlignUpdateTool"),
@@ -72,28 +73,28 @@ AlignOnlineIterator::AlignOnlineIterator(const std::string &  type,
   declareProperty("MaxIteration", m_maxIteration = 10 ) ;
   declareProperty("ASDDir", m_asdCollector.m_dir ) ;
   declareProperty("ASDFilePattern", m_asdCollector.m_filePatt ) ;
-
+  m_iteration = 0;
   IInterface *p=(IInterface*)parent;
   StatusCode sc = p->queryInterface(LHCb::IAlignDrv::interfaceID(),(void**)(&m_parent));
 }
 
 StatusCode AlignOnlineIterator::initialize()
-{  
+{
   debug() << "AlignOnlineIterator::initialize()" << endreq ;
 
   StatusCode sc = GaudiTool::initialize() ;
   if(sc.isSuccess() ) {
     sc = m_alignupdatetool.retrieve() ;
-    if(!sc.isSuccess() ) 
+    if(!sc.isSuccess() )
       error() << "Cannot retrieve alignupdatetool" << endreq ;
   }
 
   if(sc.isSuccess() ) {
     sc = m_xmlwriter.retrieve() ;
-    if(!sc.isSuccess() ) 
+    if(!sc.isSuccess() )
       error() << "Cannot retrieve xmlwriter" << endreq ;
   }
-  
+
   return StatusCode::SUCCESS;
 }
 
@@ -108,28 +109,9 @@ StatusCode AlignOnlineIterator::i_run()
 {
   StatusCode sc = StatusCode::SUCCESS ;
   // only called once
-  unsigned int iteration(0) ;
-  while( iteration < m_maxIteration ) {
-    debug() << "Iteration " << ++iteration << endreq ;
-
-    // 1. writes a little file with number of iteration step
-    debug() << "calling parent->writeReference()" << endreq ;
-    m_parent->writeReference();
- 
-    // 2. write the xml
-    debug() << "writing xml files" << endreq ;
-    sc = m_xmlwriter->write() ;
-    if( !sc.isSuccess() ) {
-      error() << "Error writing xml files" << endreq ;
-      break ;
-    }
-    
-    // 3. start the analyzers and wait 
-    debug() << "wait for analyzers" << endreq ;
-    m_asdCollector.setTime() ;
-    m_parent->doContinue();
+  while( m_iteration < m_maxIteration ) {
     m_parent->waitRunOnce();
-    
+
     // 4. read ASDs and compute new constants
     debug() << "Collecting ASD files" << endreq ;
     Al::IAlignUpdateTool::ConvergenceStatus convergencestatus ;
@@ -149,7 +131,7 @@ StatusCode AlignOnlineIterator::i_run()
     // 	equations.add( tmp ) ;
     // }
     debug() << "Calling AlignUpdateTool" << endreq ;
-    
+
     StatusCode sc = m_alignupdatetool->process( equations, convergencestatus ) ;
     if( !sc.isSuccess() ) {
       error() << "Error calling alignupdate tool" << endreq ;
@@ -162,8 +144,26 @@ StatusCode AlignOnlineIterator::i_run()
       sc = m_xmlwriter->write() ;
       break ;
     }
+
+    // 1. writes a little file with number of iteration step
+    debug() << "calling parent->writeReference()" << endreq ;
+    m_parent->writeReference();
+
+    // 2. write the xml
+    debug() << "writing xml files" << endreq ;
+    sc = m_xmlwriter->write() ;
+    if( !sc.isSuccess() ) {
+      error() << "Error writing xml files" << endreq ;
+      break ;
+    }
+
+    // 3. start the analyzers and wait
+    debug() << "wait for analyzers" << endreq ;
+    m_asdCollector.setTime() ;
+    debug() << "Iteration " << ++m_iteration << endreq ;
+    m_parent->doContinue();
   }
-  
+
   //fflush(stdout);
   m_parent->doStop();
   return StatusCode::SUCCESS;
@@ -171,8 +171,26 @@ StatusCode AlignOnlineIterator::i_run()
 
 StatusCode AlignOnlineIterator::i_start()
 {
+  StatusCode sc;
   // called only once
   // don't touch this
+  debug() << "Iteration " << ++m_iteration << endreq ;
+
+  // 1. writes a little file with number of iteration step
+  debug() << "calling parent->writeReference()" << endreq ;
+  m_parent->writeReference();
+
+  // 2. write the xml
+  debug() << "writing xml files" << endreq ;
+  sc = m_xmlwriter->write() ;
+  if( !sc.isSuccess() ) {
+    error() << "Error writing xml files" << endreq ;
+    return sc;
+  }
+
+  // 3. start the analyzers and wait
+  debug() << "wait for analyzers" << endreq ;
+  m_asdCollector.setTime() ;
   ::lib_rtl_start_thread(AlignOnlineIteratorThreadFunction,this,&m_thread);
   return StatusCode::SUCCESS;
 }
