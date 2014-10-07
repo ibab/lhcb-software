@@ -478,7 +478,7 @@ class StrippingLine(object):
 
         	if 'Locations' in itool.keys() : 
         	    if 'Location' in itool.keys() :
-        		raise Exception('\n Both "Location" and "Locations" are defined in RelatedInfo dictionary, use either of them.')
+        		raise Exception('Both "Location" and "Locations" are defined in %s RelatedInfo dictionary, use either of them.' %  self.name() )
         	    if 'RecursionLevel' in itool.keys() : 
         		relatedInfoAlg.MaxLevel = itool['RecursionLevel']
         	    else : 
