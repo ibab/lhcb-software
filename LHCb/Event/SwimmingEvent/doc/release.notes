@@ -4,6 +4,13 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+! 2014-10-07 - Olli Lupton
+ - Move the various helper functions to be static members of a Swimming::Helpers
+   class. This allows the swimming code to work in ROOT6 applications, which
+   couldn't cope with the inline globals.
+ - Remove sorting of LHCb IDs when we are matching without composite PIDs. This
+   was never needed for ConjugateNeutralPID()'d locations and introduced a rare bug.
+
 ! 2014-09-17 - Olli Lupton
  - Add some extra hashing/matching functions for particles for use in
    Phys/Swimming -- these include variants/options to pick whether or
