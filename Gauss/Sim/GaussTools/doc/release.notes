@@ -4,15 +4,16 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
-!======================== GaussTools v19r1 2014-07-03 ========================
-
+!======================== GaussTools v19r2 2014-10-08 ========================
 ! 2014-10-07 - Luca Pescatore
-- GaussTargetMultiplicity.cpp modified adding new properties to store projectile and target features in the produced tree
+ - GaussTargetMultiplicity.cpp modified adding new properties to store 
+   projectile and target features in the produced tree
 
 ! 2014-09-06 - Luca Pescatore
  - Modified RadLengthColl.cpp to reflect the new naming of the planes
- in the xml files which are now officially released.
+   in the xml files which are now officially released.
 
+!======================== GaussTools v19r1 2014-07-03 ========================
 ! 2014-05-09 - Heinrich Schindler
  - Add GiGaMagFieldSpecial class by Marius Bjornstad.
 
