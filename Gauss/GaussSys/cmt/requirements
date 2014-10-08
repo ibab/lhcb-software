@@ -1,5 +1,5 @@
 package GaussSys
-version v47r0
+version v48r0
 
 branches cmt doc
 
@@ -11,7 +11,7 @@ branches cmt doc
 use MCInterfaces        v1r18  Kernel
 
 # Gauss application: the application is not built on Win32
-use Gauss               v47r0   Sim
+use Gauss               v48r0   Sim
 
 # LCG interfaces to generators, until available in LCGCMT
 use LCG_Settings        v68r0p1 
@@ -29,8 +29,8 @@ use powhegbox           v68r0p1 LCG_GeneratorsInterfaces
 
 # Generator packages: Basic configuration
 use GenCuts             v3r9    Gen
-use GENSER              v14r0p1 Gen
-use EvtGen              v13r13  Gen
+use GENSER              v15r0   Gen
+use EvtGen              v14r0   Gen
 use Mint                v3r1    Gen
 use EvtGenExtras        v3r10   Gen
 use Generators          v14r6   Gen
@@ -47,7 +47,7 @@ use LbOniaPairs         v2r1    Gen
 use LbPowheg            v1r0p3  Gen
 
 # Generators packages: alternative to Pythia6 for pp collisions
-use LbPythia8           v8r0    Gen
+use LbPythia8           v9r0    Gen
 use LbHerwigpp          v3r0    Gen
 
 # Generators packages: alternative to Pythia6 for p-A collisions
