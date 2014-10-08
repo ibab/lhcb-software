@@ -27,13 +27,13 @@ DefineMarker(LIBRARY_BEGIN_MARKER,"XLIB");
 DefineMarker(LIBRARY_END_MARKER,  "xlib");
 
 /// Write single library content to file identified by fileno fd_out
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_library_fwrite(int fd, const Area* a)    {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_library_fwrite(int fd, const Area* a)    {
   if ( fd <= 0 ) return 0;
   else if ( m_strcmp(a->name,chkpt_sys.checkpointFile)  == 0 ) return 0;
   else if ( m_strcmp(a->name,chkpt_sys.checkpointImage) == 0 ) return 0;
   else if ( m_strfind(a->name,"(deleted)") != 0 ) return 0;
   else if ( a->name[0] && a->name[0]=='/' ) {
-    int bytes = 0;
+    long bytes = 0;
     int lib_fd = 0;
     const char *p0, *nam;
     for(p0=a->name, nam=a->name; *p0; ++p0) if (*p0=='/') nam=p0+1;
@@ -84,9 +84,9 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_library_fwrite(int fd, const 
 }
 
 /// Write all mapped libraries to file identified by fileno fd_out
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_libs_fwrite(int fd) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_libs_fwrite(int fd) {
   if ( fd > 0 ) {
-    int  bytes  = writeMarker(fd,LIBS_BEGIN_MARKER);
+    long  bytes  = writeMarker(fd,LIBS_BEGIN_MARKER);
     long off, offset = ::lseek(fd,0,SEEK_CUR);
     bytes += writeLong(fd,0);
     bytes += writeInt(fd,0);
@@ -119,7 +119,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_libs_fwrite(int fd) {
 }
 
 /// Write descriptor and possibly data to file identified by fileno fd_out
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fwrite(const FileDesc* d,int fd_out) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpoint_file_fwrite(const FileDesc* d,int fd_out) {
   if ( fd_out > 0 ) {
     long len   = sizeof(FileDesc)-sizeof(d->name)+d->name_len+1;
     long bytes = writeMarker(fd_out,FILE_BEGIN_MARKER);
@@ -139,7 +139,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fwrite(const FileDesc* d,in
 }
 
 /// Write descriptor and possibly data to memory block
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_write(const FileDesc* d,void* address) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpoint_file_write(const FileDesc* d,void* address) {
   unsigned char* out = (unsigned char*)address;
   if ( out != 0 ) {
     long len = sizeof(FileDesc)-sizeof(d->name)+d->name_len+1;
@@ -155,7 +155,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_write(const FileDesc* d,voi
 }
 
 /// Write full process information to checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fwrite(int fd)   {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fwrite(int fd)   {
   long rc = 0, tot = 0, offset = 0;
   if ( fd != 0 ) {
     checkpointing_sys_aquire(&chkpt_sys);
@@ -203,17 +203,17 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fwrite(int fd)   {
 }
 
 /// Write header information to checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_write_header(int fd)   {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_write_header(int fd)   {
   return writeMarker(fd,PROCESS_BEGIN_MARKER);
 }
 
 /// Write trailer information to checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_write_trailer(int fd)   {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_write_trailer(int fd)   {
   return writeMarker(fd,PROCESS_END_MARKER);
 }
 
 /// Write the file descriptor information to checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_files_write(int fd)   {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_files_write(int fd)   {
   FileMap f;
   FileWriteHandler wr(fd);
   long len = f.scan(wr.start());
@@ -226,7 +226,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_files_write(int fd)   {
 }
 
 /// Collect in process information about the memory mappings
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_memory_scan(AreaHandler* handler) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_memory_scan(AreaHandler* handler) {
   int fd = mtcp_sys_open("/proc/self/maps",O_RDONLY,0);
   if ( fd>0 ) {
     int count = 0;
@@ -279,9 +279,9 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_memory_scan(AreaHandler* hand
 }
 
 /// Write the memory areas to checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_memory_write(int fd)   {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_memory_write(int fd)   {
   if ( fd > 0 ) {
-    int  bytes  = writeMarker(fd,MEMMAP_BEGIN_MARKER);
+    long bytes  = writeMarker(fd,MEMMAP_BEGIN_MARKER);
     off_t off, offset = ::lseek(fd,0,SEEK_CUR);
     if ( offset != (off_t)-1 )  {
       bytes += writeInt(fd,0);

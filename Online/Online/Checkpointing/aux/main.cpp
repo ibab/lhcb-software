@@ -71,7 +71,7 @@ static void load(int org_argc, char** org_argv, const char* file_name, const cha
   if ( rc < 0 ) {
     mtcp_output(MTCP_FATAL,"restore: Failed [%d] to stat checkpoint file:%s\n",mtcp_sys_errno,file_name);
   }
-  fd = mtcp_sys_open(file_name, O_RDONLY, 0);
+  fd = mtcp_sys_open(file_name, O_RDONLY|O_LARGEFILE, 0);
   if ( fd < 0 ) {
     mtcp_output(MTCP_FATAL,"Failed to open checkpoint file:%s\n",file_name);
   }

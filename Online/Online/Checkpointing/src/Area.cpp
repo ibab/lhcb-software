@@ -20,13 +20,13 @@ DefineMarker(MEMAREA_END_MARKER,  "area");
 #endif
 
 /// Read memory area descriptor and data from file given by the file handle
-int Area::read(const void* ptr, const AreaHandler& handler) {
-  int rc = checkpointing_area_read(this,ptr,handler.f_map,&handler);
+long Area::read(const void* ptr, const AreaHandler& handler) {
+  long rc = checkpointing_area_read(this,ptr,handler.f_map,&handler);
   return rc;
 }
 
 /// Write memory area descriptor and data to file given by the file handle
-int Area::streamOut(void* ptr, bool write_nulls)    const {
+long Area::streamOut(void* ptr, bool write_nulls)    const {
   unsigned char* out = (unsigned char*)ptr;
   const char* my_name = name;
   if ( 0 == out ) return 0;
@@ -71,13 +71,13 @@ int Area::streamOut(void* ptr, bool write_nulls)    const {
 }
 
 /// Write memory area descriptor and data to file given by the file handle
-int Area::write(int fd, bool write_nulls)    const {
+long Area::write(int fd, bool write_nulls)    const {
   const char* my_name = name;
   if ( fd <= 0 ) return 0;
   else if ( m_strcmp(my_name,chkpt_sys.checkpointFile)  == 0 ) return 0;
   else if ( m_strcmp(my_name,chkpt_sys.checkpointImage) == 0 ) return 0;
   else {
-    int    bytes = 0;
+    long   bytes = 0;
     int    flg = mapFlags();
     size_t len = sizeof(Area)-sizeof(name)+name_len+1;
 

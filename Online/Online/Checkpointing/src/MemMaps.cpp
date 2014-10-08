@@ -19,15 +19,15 @@ DefineMarker(MEMMAP_BEGIN_MARKER,"MMAP");
 DefineMarker(MEMMAP_END_MARKER,  "mmap");
 #endif
 
-template <class T> int default_map(const AreaHandler* ,const Area& a, const unsigned char* data, int data_len) {
+template <class T> long default_map(const AreaHandler* ,const Area& a, const unsigned char* data, long data_len) {
   return T::do_map(a, data, data_len);
 }
 
-template <class T> int default_handle(const AreaHandler* p,int which, const Area& a) {
+template <class T> long default_handle(const AreaHandler* p,int which, const Area& a) {
   return ((T*)p)->handle(which,a);
 }
 
-static int checkpointing_area_skip(const Area& a) {
+STATIC(long) checkpointing_area_skip(const Area& a) {
   if ( m_strcmp(a.name,"/usr/lib/locale/locale-archive") == 0 ) {
     checkpointing_area_print(&a,MTCP_INFO,"*** WARNING: Skip locale-archive:");
     return 1;
@@ -66,12 +66,12 @@ int AreaBaseHandler::updateCounts(const Area& a)   {
   return 1;
 }
 
-int AreaBaseHandler::mapArea(const Area& a, const unsigned char* in, int data_len)  {
+long AreaBaseHandler::mapArea(const Area& a, const unsigned char* in, long data_len)  {
   return checkpointing_area_map(a,0,in,data_len);
 }
 
 /// Handler callback
-int AreaBaseHandler::handle(int, const Area& a)    {
+long AreaBaseHandler::handle(int, const Area& a)    {
   return updateCounts(a);
 }
 
@@ -81,7 +81,7 @@ AreaPrintHandler::AreaPrintHandler() : AreaBaseHandler()  {
 }
 
 /// Handler callback
-int AreaPrintHandler::handle(int, const Area& a)    {
+long AreaPrintHandler::handle(int, const Area& a)    {
   checkpointing_area_print(&a,MTCP_INFO,"");
   return updateCounts(a);
 }
@@ -110,7 +110,7 @@ void AreaLibHandler::release()  {
 }
 
 /// Handler callback
-int AreaLibHandler::handle(int, const Area& a)    {
+long AreaLibHandler::handle(int, const Area& a)    {
   // Skip images, which are no files
   if ( a.name[0] != '/' ) {
     return 0;
@@ -157,7 +157,7 @@ AreaInfoHandler::AreaInfoHandler() {
 }
 
 /// Handler callback
-int AreaInfoHandler::handle(int, const Area& a)  {
+long AreaInfoHandler::handle(int, const Area& a)  {
   //if ( m_prev && a.name[0] != 0 ) m_prev = false;
   if ( a.name[0]=='[' ) {
     if ( m_intcheck(a.name,"[stack]") ) {
@@ -207,7 +207,7 @@ AreaWriteHandler::AreaWriteHandler(int fd) : m_fd(fd)
 }
 
 /// Handler callback
-int AreaWriteHandler::handle(int, const Area& a)    {
+long AreaWriteHandler::handle(int, const Area& a)    {
   // Skip if the memory region is where we actually write!
   long rc;
   if ( a.high == chkpt_sys.addrEnd ) {
@@ -244,7 +244,7 @@ AreaChkptWriteHandler::AreaChkptWriteHandler(int fd) : AreaWriteHandler(fd) {
 }
 
 /// Handler callback
-int AreaChkptWriteHandler::handle(int, const Area& a)    {
+long AreaChkptWriteHandler::handle(int, const Area& a)    {
   bool is_image = m_strcmp(a.name,chkpt_sys.checkpointImage) == 0;
   if ( m_prev || is_image ) {
     long rc = 0;

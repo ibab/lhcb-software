@@ -24,7 +24,7 @@ int MMap::create(const char* file_name, long len) {
     }
     if ( 0 == ::ftruncate(fd,len) ) {
       ::close(fd);
-      fd = ::open(file_name,O_RDWR);
+      fd = ::open(file_name,O_RDWR|O_LARGEFILE);
       if ( fd != chkpt_sys.checkpointFD ) {
 	if (mtcp_sys_dup2 (fd, chkpt_sys.checkpointFD) < 0) {
 	  mtcp_output(MTCP_ERROR,"FileDesc: cannot mmap file %s to fid:%d. %d:%s\n",
@@ -88,7 +88,7 @@ int MMap::open(const char* file_name) {
   struct stat buf;
   if ( 0 == ::stat(file_name,&buf) ) {
     long len = buf.st_size;
-    int fd = ::open(file_name,O_RDONLY);
+    int fd = ::open(file_name,O_RDONLY|O_LARGEFILE);
     if ( fd != -1 ) {
       if ( fd != chkpt_sys.checkpointFD ) {
 	if (mtcp_sys_dup2 (fd, chkpt_sys.checkpointFD) < 0) {

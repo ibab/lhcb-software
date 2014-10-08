@@ -41,11 +41,11 @@ namespace CHECKPOINTING_NAMESPACE {
     char    name[PATH_MAX];
 
     /// Read memory area descriptor and data from file given by the file handle
-    int  read(const void* address, const AreaHandler& handler);
+    long read(const void* address, const AreaHandler& handler);
     /// Write memory area descriptor and data to file given by the file handle
-    int  write(int fd, bool force_nulls=false) const;
+    long write(int fd, bool force_nulls=false) const;
     /// Stream out memory area descriptor and to memory
-    int  streamOut(void* address, bool force_nulls=false) const;
+    long streamOut(void* address, bool force_nulls=false) const;
     /// Access protection flags for this memory area
     int  protection() const;
     /// Access mmap flags for this memory area
@@ -61,8 +61,8 @@ namespace CHECKPOINTING_NAMESPACE {
    */
   class AreaHandler {
   public:
-    int (*f_map)(const AreaHandler* self,const Area& a, const unsigned char* data, int data_len);
-    int (*f_handle)(const AreaHandler* self,int which, const Area& a);
+    long (*f_map)(const AreaHandler* self,const Area& a, const unsigned char* data, long data_len);
+    long (*f_handle)(const AreaHandler* self,int which, const Area& a);
     /// Initializing constructor
     AreaHandler() : f_map(0), f_handle(0) {}
   };
@@ -82,11 +82,11 @@ namespace CHECKPOINTING_NAMESPACE {
     AreaBaseHandler();
     long bytes() const {  return m_bytes; }
     long count() const {  return m_count; }
-    static int do_map(const Area&, const unsigned char*, int data_len) 
+    static long do_map(const Area&, const unsigned char*, long data_len) 
     {      return data_len;    }
-    static int mapArea(const Area& a, const unsigned char* data, int data_len);
+    static long mapArea(const Area& a, const unsigned char* data, long data_len);
     /// Handler callback
-    int handle(int which, const Area& a);
+    long handle(int which, const Area& a);
   };
 
   /** @class AreaPrintHandler
@@ -99,7 +99,7 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Initializing constructor
     AreaPrintHandler();
     /// Handler callback
-    int handle(int which, const Area& a);
+    long handle(int which, const Area& a);
   };
 
   /** @class AreaLibHandler
@@ -118,7 +118,7 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Default destructor
     ~AreaLibHandler();
     /// Handler callback
-    int handle(int which, const Area& a);
+    long handle(int which, const Area& a);
     int numLibs() const {  return m_numLibs; }
     void release();
   };
@@ -143,7 +143,7 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Initializing constructor
     AreaInfoHandler();
     /// Handler callback
-    int handle(int which, const Area& a);
+    long handle(int which, const Area& a);
   };
 
   /** @class AreaWriteHandler
@@ -158,7 +158,7 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Initializing constructor
     AreaWriteHandler(int fd);
     /// Handler callback
-    int  handle(int which, const Area& a);
+    long handle(int which, const Area& a);
     long bytesWritten() const { return m_bytes; }
   };
 
@@ -173,7 +173,7 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Initializing constructor
     AreaChkptWriteHandler(int fd);
     /// Handler callback
-    int handle(int which, const Area& a);
+    long handle(int which, const Area& a);
   };
 
   /** @class AreaMapper
@@ -186,7 +186,7 @@ namespace CHECKPOINTING_NAMESPACE {
     /// Initializing constructor
     AreaMapper();
     /// Handler callback
-    int handle(int, const Area& ) { return 1; }
+    long handle(int, const Area& ) { return 1; }
     static int do_map(const Area& a, const unsigned char* data, int data_len) {
       return mapArea(a,data,data_len);
     }

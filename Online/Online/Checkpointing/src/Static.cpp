@@ -306,7 +306,7 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_sys_fwrite(int fd, const Sys
 }
 
 /// Read system information from checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_skip_sys(Process*,const void* addr)  {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_skip_sys(Process*,const void* addr)  {
   int siz;
   const_Pointer in = (const_Pointer)addr;
   in += checkMarker(in,SYS_BEGIN_MARKER);
@@ -321,7 +321,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_skip_sys(Process*,con
 }
 
 /// Read system information from checkpoint file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_sys(Process*,int fd)  {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_sys(Process*,int fd)  {
   int siz, in = 0;
   in += readMarker(fd,SYS_BEGIN_MARKER);
   in += readInt(fd,&siz);

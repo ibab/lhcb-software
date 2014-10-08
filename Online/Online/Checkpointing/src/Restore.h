@@ -14,47 +14,47 @@ namespace CHECKPOINTING_NAMESPACE  {
   /// Reopen file descriptor for process restoration
   STATIC(int) checkpoint_file_reopen(FileDesc* d);
   /// Read file descriptor information from file
-  STATIC(int) checkpoint_file_fread(FileDesc* d, int fd, bool restore);
+  STATIC(long) checkpoint_file_fread(FileDesc* d, int fd, bool restore);
   /// Read file descriptor information from memory block
-  STATIC(int) checkpoint_file_read(FileDesc* d, const void* addr, bool restore);
+  STATIC(long) checkpoint_file_read(FileDesc* d, const void* addr, bool restore);
 
   class Process;
   /// Read process descriptor header from memory
-  STATIC(int) checkpointing_process_read_header(Process*, const void* addr);
+  STATIC(long) checkpointing_process_read_header(Process*, const void* addr);
   /// Read process descriptor trailer from memory
-  STATIC(int) checkpointing_process_read_trailer(Process*, const void* addr);
+  STATIC(long) checkpointing_process_read_trailer(Process*, const void* addr);
   /// Read process descriptor header from file
-  STATIC(int) checkpointing_process_fread_header(Process*,int fd);
+  STATIC(long) checkpointing_process_fread_header(Process*,int fd);
   /// Read process descriptor trailer from file
-  STATIC(int) checkpointing_process_fread_trailer(Process*,int fd);
-  STATIC(int) checkpointing_process_skip_sys(Process*,const void* addr);
+  STATIC(long) checkpointing_process_fread_trailer(Process*,int fd);
+  STATIC(long) checkpointing_process_skip_sys(Process*,const void* addr);
   /// Read full file descriptor information from memory
-  STATIC(int) checkpointing_process_read_files(Process*,const void* addr);
+  STATIC(long) checkpointing_process_read_files(Process*,const void* addr);
 
-  STATIC(int) checkpointing_process_read_memory(Process*, const void* addr);
-  STATIC(int) checkpointing_process_read(Process* p, const void* addr);
+  STATIC(long) checkpointing_process_read_memory(Process*, const void* addr);
+  STATIC(long) checkpointing_process_read(Process* p, const void* addr);
 
   /// Skip library section. We got it already....
-  STATIC(int) checkpointing_process_fskip_libs(Process*, int fd);
+  STATIC(long) checkpointing_process_fskip_libs(Process*, int fd);
 
-  STATIC(int) checkpointing_process_fskip_sys(Process*,int fd);
-  STATIC(int) checkpointing_process_fread_files(Process*,int fd);
-  STATIC(int) checkpointing_process_fread_memory(Process*,int fd);
-  STATIC(int) checkpointing_process_fread(Process* p, int fd);
+  STATIC(long) checkpointing_process_fskip_sys(Process*,int fd);
+  STATIC(long) checkpointing_process_fread_files(Process*,int fd);
+  STATIC(long) checkpointing_process_fread_memory(Process*,int fd);
+  STATIC(long) checkpointing_process_fread(Process* p, int fd);
 
   class AreaHandler;
   class Area;
-  STATIC(int) checkpointing_process_map_memory(const AreaHandler* ,const Area& a, const unsigned char* data, int data_len);
-  STATIC(int) checkpointing_process_fmap_memory(const AreaHandler* ,const Area& a, int fd, int data_len);
-  STATIC(int) checkpointing_area_datalength(const Area* a);
+  STATIC(long) checkpointing_process_map_memory(const AreaHandler* ,const Area& a, const unsigned char* data, long data_len);
+  STATIC(long) checkpointing_process_fmap_memory(const AreaHandler* ,const Area& a, int fd, long data_len);
+  STATIC(long) checkpointing_area_datalength(const Area* a);
   STATIC(void) checkpointing_area_print(const Area* a,int lvl,const char* opt);
-  STATIC(int) checkpointing_area_read(Area* a, const void* addr, int (*map)(const AreaHandler*, const Area& a,const unsigned char*,int), const AreaHandler* handler);
+  STATIC(long) checkpointing_area_read(Area* a, const void* addr, long (*map)(const AreaHandler*, const Area& a,const unsigned char*,long), const AreaHandler* handler);
 
-  STATIC(int) checkpointing_area_fread(Area* a,int fd, int (*map)(const AreaHandler*, const Area& a,int fd,int), const AreaHandler* handler);
+  STATIC(long) checkpointing_area_fread(Area* a,int fd, long (*map)(const AreaHandler*, const Area& a,int fd,long), const AreaHandler* handler);
   STATIC(int) checkpointing_area_protection(const Area* a);
   STATIC(int) checkpointing_area_mapFlags(const Area* a);
 
-  STATIC(int) checkpointing_area_map(const Area& a,int fd_in,const unsigned char* in,int data_len);
+  STATIC(long) checkpointing_area_map(const Area& a,int fd_in,const unsigned char* in,long data_len);
 
   class SysInfo;
   struct Stack;
@@ -160,30 +160,30 @@ namespace CHECKPOINTING_NAMESPACE  {
 
   class FileDesc;
   /// Write descriptor and possibly data to file identified by fileno fd_out
-  STATIC(int) checkpoint_file_fwrite(const FileDesc* d, int fd_out);
+  STATIC(long) checkpoint_file_fwrite(const FileDesc* d, int fd_out);
   /// Write descriptor and possibly data to memory block
-  STATIC(int) checkpoint_file_write(const FileDesc* d, void* address);
+  STATIC(long) checkpoint_file_write(const FileDesc* d, void* address);
 
   /// Write header information to checkpoint file
-  STATIC(int) checkpointing_process_write_header(int fd);
+  STATIC(long) checkpointing_process_write_header(int fd);
   /// Write trailer information to checkpoint file
-  STATIC(int) checkpointing_process_write_trailer(int fd);
+  STATIC(long) checkpointing_process_write_trailer(int fd);
   /// Write full process information to checkpoint file
-  STATIC(int) checkpointing_process_fwrite(int fd);
+  STATIC(long) checkpointing_process_fwrite(int fd);
 
   /// Write the file descriptor information to checkpoint file
-  STATIC(int) checkpointing_files_write(int fd);
+  STATIC(long) checkpointing_files_write(int fd);
 
   /// Collect in process information about the memory mappings
-  STATIC(int) checkpointing_memory_scan(AreaHandler* handler);
+  STATIC(long) checkpointing_memory_scan(AreaHandler* handler);
   /// Write the memory areas to checkpoint file
-  STATIC(int) checkpointing_memory_write(int fd);
+  STATIC(long) checkpointing_memory_write(int fd);
 
   class Area;
   /// Write all mapped libraries to file identified by fileno fd_out
-  STATIC(int) checkpointing_libs_fwrite(int fd);
+  STATIC(long) checkpointing_libs_fwrite(int fd);
   /// Write single library content to file identified by fileno fd_out
-  STATIC(int) checkpointing_library_fwrite(int fd, const Area* a);
+  STATIC(long) checkpointing_library_fwrite(int fd, const Area* a);
 
 
   // CHECKPOINTING_NAMESPACE::

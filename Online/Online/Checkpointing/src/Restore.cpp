@@ -107,7 +107,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_reopen(FileDesc* d) {
 }
 
 /// Read file descriptor information from memory block
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const void* addr, bool restore) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const void* addr, bool restore) {
   unsigned char* in = (unsigned char*)addr;
   if ( in ) {
     int  is_sock = 0, is_pipe = 0;
@@ -142,7 +142,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_read(FileDesc* d, const voi
 }
 
 /// Read file descriptor information from file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, bool restore) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, bool restore) {
   int is_pipe=0, is_sock=0, in = 0;
   if ( fd > 0 ) {
     long len = sizeof(FileDesc)-sizeof(d->name);
@@ -177,7 +177,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpoint_file_fread(FileDesc* d, int fd, 
 }
 
 /// Read process descriptor header from memory
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_header(Process*, const void* addr) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_read_header(Process*, const void* addr) {
   const_Pointer ptr = (const_Pointer)addr;
   if ( ptr ) {
     ptr += checkMarker(ptr,PROCESS_BEGIN_MARKER);
@@ -186,26 +186,26 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_header(Process*,
 }
 
 /// Read process descriptor trailer from memory
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_trailer(Process*, const void* addr) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_read_trailer(Process*, const void* addr) {
   size_t sz = checkMarker(addr,PROCESS_END_MARKER);
   return sz;
 }
 
 /// Read process descriptor header from file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_header(Process*,int fd) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_header(Process*,int fd) {
   int sz = readMarker(fd,PROCESS_BEGIN_MARKER);
   return sz;
 }
 
 
 /// Read process descriptor trailer from file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_trailer(Process*,int fd) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_trailer(Process*,int fd) {
   int sz = readMarker(fd,PROCESS_END_MARKER);
   return sz;
 }
 
 /// Read full file descriptor information from memory
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_files(Process*,const void* addr)  {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_read_files(Process*,const void* addr)  {
   const_Pointer in = (const_Pointer)addr;
   if ( in ) {
     //#ifdef __STATIC__
@@ -229,11 +229,11 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_files(Process*,c
   return 0;
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_map_memory(const AreaHandler* ,const Area& a, const unsigned char* data, int data_len) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_map_memory(const AreaHandler* ,const Area& a, const unsigned char* data, long data_len) {
   return checkpointing_area_map(a,0,data,data_len);
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_memory(Process*, const void* addr) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_read_memory(Process*, const void* addr) {
   mtcp_output(MTCP_INFO,"checkpointing_process_read_memory\n");
   MemMaps m;
   const_Pointer in = (const_Pointer)addr;
@@ -244,7 +244,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_memory(Process*,
     Area a;
     mtcp_output(MTCP_INFO,"restore: Need to restore %d memory areas\n",numArea);
     for(int i=0; i<numArea; ++i) {
-      int rc = checkpointing_area_read(&a,in,checkpointing_process_map_memory,(const AreaHandler*)0);
+      long rc = checkpointing_area_read(&a,in,checkpointing_process_map_memory,(const AreaHandler*)0);
       if ( rc<0 ) {
         mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d] %s\n",i,a.name);
       }
@@ -259,7 +259,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read_memory(Process*,
   return 0;
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read(Process* p, const void* addr) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_read(Process* p, const void* addr) {
   long rc = 0;
   if ( addr != 0 ) {
     const_Pointer in = (const_Pointer)addr;
@@ -287,7 +287,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_read(Process* p, cons
 }
 
 /// Read full file descriptor information from file
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_files(Process*,int fd)  {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_files(Process*,int fd)  {
   int in = 0;
   if ( fd>0 ) {
 #ifdef __STATIC__
@@ -311,11 +311,11 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_files(Process*,
   return in;
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fmap_memory(const AreaHandler* ,const Area& a, int fd, int data_len) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fmap_memory(const AreaHandler* ,const Area& a, int fd, long data_len) {
   return checkpointing_area_map(a,fd,0,data_len);
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process*,int fd) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process*,int fd) {
   MemMaps m;
   if ( fd>0 ) {
     int in = 0;
@@ -325,7 +325,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process*
     Area a;
     mtcp_output(MTCP_INFO,"fd:%d, restore: Need to restore %d memory areas\n",fd,numArea);
     for(int i=0; i<numArea; ++i) {
-      int rc = checkpointing_area_fread(&a,fd,checkpointing_process_fmap_memory,(const AreaHandler*)0);
+      long rc = checkpointing_area_fread(&a,fd,checkpointing_process_fmap_memory,(const AreaHandler*)0);
       if ( rc<0 ) {
         mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d] %s\n",i,a.name);
       }
@@ -340,7 +340,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process*
 }
 
 /// Skip library section. We got it already....
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_libs(Process*, int fd) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_libs(Process*, int fd) {
   int num_libs;
   long offset, len = 0;
   int in = readMarker(fd,LIBS_BEGIN_MARKER);
@@ -355,7 +355,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fskip_libs(Process*, 
 }
 
 /// Read entire process information from checkpoint file. Skip irrelevant enteties
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread(Process* p, int fd) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread(Process* p, int fd) {
   long rc = 0;
   if ( fd > 0 ) {
     mtcp_output(MTCP_DEBUG,"fd:%d, Start reading at position:%p\n",fd,rc);
@@ -405,7 +405,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_process_fread(Process* p, int
   return 0;
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_datalength(const Area* a) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_datalength(const Area* a) {
   if ( m_intcheck(a->name,"[stack]") ) {
     // Only write NULL-size marker
     return a->size;
@@ -432,7 +432,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_area_print(const Area* a,int
               a->prot[0],a->prot[1],a->prot[2],a->prot[3],a->offset,a->name);
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_read(Area* a, const void* addr, int (*map)(const AreaHandler*, const Area& a,const unsigned char*,int), const AreaHandler* handler) 
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_read(Area* a, const void* addr, long (*map)(const AreaHandler*, const Area& a,const unsigned char*,long), const AreaHandler* handler) 
 {
   const unsigned char* in = (const unsigned char*)addr;
   int l = 0;
@@ -447,8 +447,8 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_read(Area* a, const void
   return addr_diff(in,addr);  
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, int (*map)(const AreaHandler*, const Area& a,int fd,int), const AreaHandler* handler) {
-  int in = 0;
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, long (*map)(const AreaHandler*, const Area& a,int fd,long), const AreaHandler* handler) {
+  long in = 0;
   int l = 0;
   int len = sizeof(Area)-sizeof(a->name);
   in += readMarker(fd,MEMAREA_BEGIN_MARKER);
@@ -501,7 +501,7 @@ STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_mapFlags(const Area* a) 
   return f;
 }
 
-STATIC(int) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd_in,const unsigned char* in,int data_len) {
+STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int fd_in,const unsigned char* in,long data_len) {
   //mtcp_output(MTCP_DEBUG,"*** Mapping area \"%s\"  %p->%p.\n",a.name,a.low,a.high);
   int flags = checkpointing_area_mapFlags(&a);
   int prot  = checkpointing_area_protection(&a);

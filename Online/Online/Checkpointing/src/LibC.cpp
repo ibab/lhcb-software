@@ -14,7 +14,7 @@ namespace CHECKPOINTING_NAMESPACE    {
   struct LibHandler : public AreaHandler  {
     char text[1024];
     const char* lib_name;
-    static int s_handle(const AreaHandler* self,int,const Area& a) {
+    static long s_handle(const AreaHandler* self,int,const Area& a) {
       LibHandler* h=(LibHandler*)self;
       if ( m_strfind(a.name,h->lib_name) ) {
 	m_strcpy(h->text,a.name);
