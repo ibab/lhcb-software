@@ -86,7 +86,7 @@ default_config = {
         # Minimum Lambda_c flight distance fit quality per DOF
         "LcPartialFDCHI2": 36.0, #50
         # Maximum Lambda_c pairwise daughter distance of closest approach
-        "LcPartialDOCACHI2": 15.0, #20
+        "LcPartialDOCACHI2": 25.0, #20
         # Maximum Lambda_c vertex fit quality per DOF
         "LcPartialVCHI2DOF": 10.0, #50
 
