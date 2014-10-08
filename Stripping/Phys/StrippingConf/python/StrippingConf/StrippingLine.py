@@ -707,6 +707,19 @@ def limitCombinatorics( configurable,
     	    return True
 	else :
 	    return False
+    elif hasattr( configurable, 'StopAtMaxCandidates') and hasattr( configurable, 'MaxCandidates') \
+     and hasattr(configurable, 'StopAtMaxCombinations') and hasattr(configurable, 'MaxCombinations'):
+        if MaxCandidates != None :
+            configurable.StopAtMaxCandidates = True
+            configurable.MaxCandidates       = MaxCandidates
+        if MaxCombinations != None :
+            configurable.StopAtMaxCombinations = True
+            configurable.MaxCombinations       = MaxCombinations
+        if MaxCandidates != None or MaxCombinations != None :
+            configurable.StopIncidentType    = incidentName
+            return True
+        else :
+            return False
     elif type(configurable) == SubPIDMMFilter or \
              type(configurable) == SubstitutePID:
 	if MaxCandidates != None: 
