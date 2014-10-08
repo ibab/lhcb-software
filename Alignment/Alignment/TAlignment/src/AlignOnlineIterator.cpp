@@ -20,7 +20,6 @@
 
 #include "AlignOnlineXMLCopier.h"
 #include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
 
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -107,6 +106,9 @@ StatusCode AlignOnlineIterator::initialize()
   
   // instantiate the objects that will take care of copying and versioning files
   const std::string runningdir = m_alignxmldir + "/running" ;
+  if( !boost::filesystem::exists(runningdir) )
+    boost::filesystem::create_directory(runningdir) ;
+
   std::vector<std::string> condnames = { { 
       "Velo/VeloGlobal","Velo/VeloModules",
       "TT/TTGlobal","TT/TTModules",
@@ -120,7 +122,7 @@ StatusCode AlignOnlineIterator::initialize()
     StatusCode thissc = i.copyFromOnlineArea() ;
     if(!thissc.isSuccess()) {
       error() << "Cannot find input xml file \'" << i.onlinefilename() << "\'" << endmsg ;
-      sc = StatusCode::FAILURE ;
+      //sc = StatusCode::FAILURE ;
     }
   }
 
@@ -212,7 +214,7 @@ StatusCode AlignOnlineIterator::i_run()
   }
 
   // move the 'running' dir to a dirname with current run
-  std::string rundir = m_alignxmldir + "/run" + boost::lexical_cast<std::string>( runnr ) ;
+  std::string rundir = m_alignxmldir + "/run" + std::to_string( runnr) ;
   boost::filesystem::rename( m_alignxmldir + "/running", rundir ) ;
 
   //fflush(stdout);

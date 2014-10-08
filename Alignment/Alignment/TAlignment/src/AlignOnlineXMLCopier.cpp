@@ -1,6 +1,5 @@
 #include "AlignOnlineXMLCopier.h"
 #include <boost/filesystem.hpp>
-#include <boost/lexical_cast.hpp>
 
 AlignOnlineXMLCopier::AlignOnlineXMLCopier( const std::string& onlinedir,
 					    const std::string& aligndir,
@@ -12,7 +11,7 @@ AlignOnlineXMLCopier::AlignOnlineXMLCopier( const std::string& onlinedir,
 
 std::string AlignOnlineXMLCopier::onlinefilename( FileVersion v ) const 
 {
-  return m_onlinedir + "/" + m_condname + "/v" + boost::lexical_cast<std::string>( v ) + ".xml" ;
+  return m_onlinedir + "/" + m_condname + "/v" + std::to_string(v) + ".xml" ;
 }
 
 std::string AlignOnlineXMLCopier::alignfilename() const
@@ -31,6 +30,7 @@ StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
     else break ;
   }
   if( v==0 ) {
+    m_version = v ;
     sc = StatusCode::FAILURE ;
   } else {
     m_version = v-1 ;
