@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-10-08- Gerhard Raven
+ - add inclusion of TfKernel/THitManager which is no longer included upstream
+
 !========================= HltL0Conf v4r1 2014-08-18 =========================
 
  - Pick up Rob's test comments.
