@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2014-10-08 - Gerhard Raven
+ - remove no longer needed includes
+ - replace boost::lexical_cast<std::string> with std::to_string
+
 ! 2014-10-06 - Gerhard Raven
  - replace inclusion of TStationHitManager with IStationSelector to avoid
    exposing more than strictly needed.

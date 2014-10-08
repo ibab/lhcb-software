@@ -8,12 +8,6 @@
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltSelection.h"
 #include "boost/utility.hpp"
-#include "boost/type_traits/integral_constant.hpp"
-#include <boost/type_traits/remove_const.hpp>
-
-#include "boost/iterator/transform_iterator.hpp"
-#include "boost/mpl/if.hpp"
-#include "boost/lambda/casts.hpp"
 
 /** @class HltAlgorithm
  *
@@ -170,9 +164,7 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit
 
     struct CallBack
     {
-        virtual ~CallBack()
-        {
-        }
+        virtual ~CallBack() = default;
         virtual StatusCode execute() = 0;
     };
 

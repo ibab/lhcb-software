@@ -3,8 +3,6 @@
 #define IL0CONFEXTRAPOLATOR_H 1
 
 // Include files
-// from STL
-#include <string>
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
@@ -14,12 +12,10 @@
 
 static const InterfaceID IID_IL0ConfExtrapolator( "IL0ConfExtrapolator", 1, 0 );
 
-namespace LHCb
-{
+namespace LHCb {
 class Track;
 }
-namespace GAUDI
-{
+namespace GAUDI {
 class XYZPoint;
 }
 

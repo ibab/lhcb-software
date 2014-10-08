@@ -7,7 +7,6 @@
 #include "HltBase/HltAlgorithm.h"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/GaudiException.h"
-#include "boost/lexical_cast.hpp"
 #include "boost/utility.hpp"
 #include <vector>
 #include <utility>
@@ -191,7 +190,7 @@ class declare_
             m_alg.declareProperty( "OutputSelection", t.property );
         } else {
             std::string prop{"InputSelection"};
-            if ( N > 2 ) prop += boost::lexical_cast<std::string>( m_counter );
+            if ( N > 2 ) prop += std::to_string( m_counter );
             if ( !def.empty() )
                 t.property = Gaudi::StringKey( def );  // set default input name...
             m_alg.declareProperty( prop, t.property ); // TODO: add callback, locked
