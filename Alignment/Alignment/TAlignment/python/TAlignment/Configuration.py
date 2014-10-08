@@ -172,9 +172,7 @@ class TAlignment( LHCbConfigurableUser ):
         import getpass
         name = 'Write' + subdet + condname + 'ToXML'
         alg.addTool( WriteAlignmentConditionsTool, name )
-        for i in alg.getTools() :
-            if i.name() == alg.name() + "." + name:
-                handle = i
+        handle = getattr ( alg , name ) 
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
         handle.precision = self.getProp( "Precision" )
         handle.depths = depths
@@ -204,6 +202,39 @@ class TAlignment( LHCbConfigurableUser ):
         if 'Ecal' in listOfCondToWrite:
             self.addXmlWriter( alg, 'Ecal','alignment', [] )
 
+    def addOnlineXmlWriter( self, alg, subdet, condname, depths ) :
+        from Configurables import WriteAlignmentConditionsTool
+        import getpass
+        name = 'Write' + subdet + condname + 'ToXML'
+        alg.addTool( WriteAlignmentConditionsTool, name )
+        handle = getattr ( alg , name ) 
+        handle.topElement = self.getProp( subdet + 'TopLevelElement' )
+        handle.precision = self.getProp( "Precision" )
+        handle.depths = depths
+        handle.outputFile = '/group/online/AligWork/running/' + subdet + '/' +subdet+condname + '.xml'
+        handle.author = getpass.getuser()
+        handle.desc = self.getProp('DatasetName')
+        alg.XmlWriters.append("WriteAlignmentConditionsTool/" + name)
+
+    def addOnlineXmlWriters( self, alg ) :
+        listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
+        if 'Velo' in listOfCondToWrite:
+            self.addOnlineXmlWriter( alg, 'Velo','Global', [0,1] )
+            self.addOnlineXmlWriter( alg, 'Velo','Modules', [2,4] )
+        if 'TT' in listOfCondToWrite:
+            self.addOnlineXmlWriter( alg, 'TT','Global', [0,1,2,3] )
+        if 'IT' in listOfCondToWrite:
+            self.addOnlineXmlWriter( alg, 'IT','Global', [0,1,2] )
+            self.addOnlineXmlWriter( alg, 'IT','Modules', [3] )
+        if 'OT' in listOfCondToWrite:
+            self.addOnlineXmlWriter( alg, 'OT','Global', [0,1,2] )
+            self.addOnlineXmlWriter( alg, 'OT','Modules', [3] )
+        if 'Muon' in listOfCondToWrite:
+            #self.addXmlWriter( alg, 'Muon','Detectors', [] )
+            self.addOnlineXmlWriter( alg, 'Muon','Global', [0,1,2] )
+        if 'Ecal' in listOfCondToWrite:
+            self.addOnlineXmlWriter( alg, 'Ecal','alignment', [] )
+            
     def alignmentSeq( self, outputLevel = INFO ) :
         if not allConfigurables.get( "AlignmentSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Alignment Sequencer not defined! Defining!"
@@ -230,6 +261,13 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.OutputDataFile               = self.getProp( "OutputDataFile" )
             alignAlg.OnlineMode                   = self.getProp( "OnlineMode" )
 #            self.addXmlWriters(alignAlg)
+
+            # xmlwritertool, also a public tool
+            xmlwriter = WriteMultiAlignmentConditionsTool("WriteMultiAlignmentConditionsTool")
+            if self.getProp( "OnlineMode" ) :
+                self.addOnlineXmlWriters(xmlwriter)
+            else :
+                self.addXmlWriters(xmlwriter)
 
             #print alignAlg
             # and also the update tool is in the toolsvc
