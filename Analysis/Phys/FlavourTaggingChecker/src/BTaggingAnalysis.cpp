@@ -2039,13 +2039,13 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
     ///////////////
 
     // Set Charm, D*, soft pion
-    const Particle *cand, *dstar_cand, *pisoft_cand;
+    const Particle *cand;//, *dstar_cand, *pisoft_cand;
     if (type==2) {
-      dstar_cand = (*icand);
+      // dstar_cand = (*icand);
       cand = (*icand)->daughters().at(0);
-      pisoft_cand = (*icand)->daughters().at(1);
+      // pisoft_cand = (*icand)->daughters().at(1);
     } else {
-      dstar_cand = pisoft_cand = NULL;
+      //      dstar_cand = pisoft_cand = NULL;
       cand = (*icand);
     }
 
@@ -2069,22 +2069,14 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
       counter(std::string("# TruthMatched charm candidates"))++;
     
     // Background Category info
-    std::cerr << __LINE__ << std::endl;
     int bcat = -2;
-    std::cerr << __LINE__ << std::endl;
     bool testvar = cand->isBasicParticle();
-    std::cerr << __LINE__ << std::endl;
     if (not testvar) {
-      std::cerr << __LINE__ << std::endl;
       IBackgroundCategory::categories cat = IBackgroundCategory::Undefined;
-      std::cerr << __LINE__ << std::endl;
       cat = m_bkgCategory->category(cand);
-      std::cerr << __LINE__ << std::endl;
       debug() << "Result of BackgroundCategory for charm cand is: " << (int) cat << endreq;
-      std::cerr << __LINE__ << std::endl;
       bcat = (int) cat;
     }
-    std::cerr << __LINE__ << std::endl;
 
     // Lifetime
     double ct = 0.0, ctErr = 0.0, ctChi2 = 0.0;
