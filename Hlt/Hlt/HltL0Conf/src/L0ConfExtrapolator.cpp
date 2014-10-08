@@ -19,6 +19,7 @@
 // local
 #include "L0ConfExtrapolator.h"
 
+#include "TfKernel/RecoFuncs.h"
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0ConfExtrapolator
 //

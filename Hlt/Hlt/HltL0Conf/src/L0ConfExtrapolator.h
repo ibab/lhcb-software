@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/Point3DTypes.h"
-#include "TfKernel/TStationHitManager.h" 
 #include "Kernel/ILHCbMagnetSvc.h"
 
 #include "HltBase/IL0ConfExtrapolator.h"            // Interface
