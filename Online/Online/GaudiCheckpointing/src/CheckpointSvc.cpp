@@ -660,7 +660,7 @@ int CheckpointSvc::saveCheckpoint() {
     if ( 0 != m_saveFlags ) {
       checkpointing_set_save_flags(m_saveFlags);
     }
-    int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY,S_IRWXU|S_IRWXG|S_IRWXO);
+    int fd = ::open(m_checkPoint.c_str(),O_CREAT|O_TRUNC|O_WRONLY|O_LARGEFILE,S_IRWXU|S_IRWXG|S_IRWXO);
     if ( fd != -1 ) {
       int ret = checkpointing_write_checkpoint(fd);
       write(3,"[Error] Restore complete.....\n",31);
