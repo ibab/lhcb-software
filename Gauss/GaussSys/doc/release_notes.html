@@ -3,11 +3,8 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
-! 2014-09-30 - Gloria Corti
- - Replace use of lhapdf with that of lhapdf6
-
 !=============================================================================
-</PRE><H1><A NAME="v47r0">2014-10-07 - GaussSys v47r0</A></H1><PRE>
+</PRE><H1><A NAME="v47r0">2014-10-08 - GaussSys v47r0</A></H1><PRE>
 <H2><A NAME="Note"For development and Upgrade studies. Based on LCG_68.
 </A></H2>
 <H3><A NAME="Use">This version uses:
@@ -115,6 +112,51 @@ nt
 ! 2014-08-25 - Philip Ilten
  - GenerationToSimulation.{h,cpp}: cleaned code and added functionality to
    specify additional particle types to keep
+
+!======================== GaussTools v19r2 2014-10-08 ========================
+! 2014-10-07 - Luca Pescatore
+ - GaussTargetMultiplicity.cpp modified adding new properties to store 
+   projectile and target features in the produced tree
+
+! 2014-09-06 - Luca Pescatore
+ - Modified RadLengthColl.cpp to reflect the new naming of the planes
+   in the xml files which are now officially released.
+
+!===================== GaussCherenkov v4r4 2014-10-08 ========================
+! 2014-10-07 - Sajan Easo
+ - Minor modifications to the Cherenkov analysis in booking and filling 
+   histograms with new collection set.
+
+! 2014-08-24  - Sajan Easo 
+ - Added the file GetMCCkvTracksAlg  to avoid problems with collection 
+   name in that file.
+ - Kept some of the factories in Factories.cpp
+
+! 2014-08-24  - Sajan Easo
+ - For using the mixed set of PMTS, the sensitive detector and collection name
+  configurations are modified. The hits from large PMTS are in a separate 
+  sensitive detector and are stored in two
+  extra collection sets. All this is made transparent to the rest of the 
+  program.
+  Modified several files in the SensDet subdirectory and corresponding .h files.
+
+!========================== SimChecks v1r3 2014-10-08 ========================
+! 2014-10-07 - Luca Pescatore
+ - Scripts for post-job analysis for the RadLength and Target tools have been
+   converted from c++ to python. All scripts are updated to reflect the new 
+   structure. RadLengthAna.py scripts updated to use the last tag of the 
+   geometry 
+
+! 2014-09-29 - Luca Pescatore
+ - Updated RadLength scripts to get the database from the offical
+   location, since it is not released. Also added eta-phi plots as final output.
+
+! 2014-09-06 - Luca Pescatore
+ - Added cpp file to extract radiation length profile plots from the output 
+   files of the gauss jobs.
+
+! 2014-09-04 - Luca Pescatore
+ - Changed default number of events
 
 !=========================== GenTune v2r2 2014-08-21 =========================
 ! 2014-07-28 - Alex Grecu
