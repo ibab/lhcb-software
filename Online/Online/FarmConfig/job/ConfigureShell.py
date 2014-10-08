@@ -20,13 +20,15 @@ def configureForRunning():
   COND   = Online.CondDBTag
   App    = Online.HLTType
   Mode   = Online.MooreStartupMode
+  Mapping= Online.ConditionsMapping
 
   if Online.MooreVersion == "":
     checkpoint_reloc = sep+Online.HltArchitecture+sep+Online.OnlineVersion+sep+Online.HLTType
   else:
     app_name = os.environ['TASK_TYPE']
     checkpoint_reloc = sep+'Moore'+sep+Online.MooreOnlineVersion+sep+\
-                       Online.HLTType+sep+Online.CondDBTag+sep+Online.DDDBTag+sep+app_name
+                       Online.HLTType+sep+Online.CondDBTag+sep+Online.DDDBTag+sep+\
+                       Mapping+sep+app_name
 
   directory  = checkpoint_dir+checkpoint_reloc
   checkpoint_torrent = None
@@ -73,7 +75,7 @@ def configureForRunning():
   if Mode > 1:
     print 'export CHECKPOINT_DIR='+os.path.dirname(checkpoint_path)+';'
     print 'export CHECKPOINT_FILE='+checkpoint_path+';'
-    print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
+    print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 1 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
     if not os.environ.has_key('TEST_CHECKPOINT'):
       print 'echo "[INFO] Copy checkpoint:'+checkpoint_path+'";'
       print 'bash '+checkpoint_dir+'/cmds/copy_torrent '+checkpoint_reloc+';'
@@ -86,16 +88,17 @@ def configureForRunning():
 
 #=========================================================================================
 def configureForCheckpoint():
-  print 'echo "[ERROR] Running in checkkpoint PRODUCTION mode....";'
   print 'export APP_STARTUP_OPTS="-checkpoint -auto";'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
   print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
   print 'export MBM_SETUP_OPTIONS='+checkpoint_dir+'/cmds/MBM_setup.opts;'
   print 'export CHECKPOINT_SETUP_OPTIONS='+checkpoint_dir+'/cmds/Checkpoint.opts;'
-  print 'echo "=============================================================================";'
-  print 'echo "== File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
-  print 'echo "== Producing CHECKPOINT file......Please be patient.";'
-  print 'echo "=============================================================================";'
+  print 'echo "[ERROR] =============================================================================";'
+  print 'echo "[ERROR] == Running in checkkpoint PRODUCTION mode....";'
+  print 'echo "[ERROR] == File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
+  print 'echo "[ERROR] == Producing CHECKPOINT file......Please be patient.";'
+  print 'echo "[ERROR] == LD_PRELOAD=${CHECKPOINTING_BIN}/libCheckpointing.so";'
+  print 'echo "[ERROR] =============================================================================";'
   # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
   print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/libCheckpointing.so;'
 
@@ -105,9 +108,11 @@ def configureForTest():
   print 'export APP_STARTUP_OPTS=-restore;'
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
   print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
-  print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
+  print 'mkdir -p /dev/shm/checkpoint;'
+  print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE}";'
   print 'echo "=============================================================================";'
   print 'echo "== File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
+  print 'echo "== Command ${RESTORE_CMD}";'
   print 'echo "== Testing CHECKPOINT file......Please be patient.";'
   print 'echo "=============================================================================";'
   print 'if test ! -f "${CHECKPOINT_FILE}";then'
