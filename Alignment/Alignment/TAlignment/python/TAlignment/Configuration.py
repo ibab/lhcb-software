@@ -264,13 +264,6 @@ class TAlignment( LHCbConfigurableUser ):
             alignAlg.OnlineMode                   = self.getProp( "OnlineMode" )
 #            self.addXmlWriters(alignAlg)
 
-            # xmlwritertool, also a public tool
-            xmlwriter = WriteMultiAlignmentConditionsTool("WriteMultiAlignmentConditionsTool")
-            if self.getProp( "OnlineMode" ) :
-                self.addOnlineXmlWriters(xmlwriter)
-            else :
-                self.addXmlWriters(xmlwriter)
-
             #print alignAlg
             # and also the update tool is in the toolsvc
             updatetool = Al__AlignUpdateTool("Al::AlignUpdateTool")
@@ -293,9 +286,12 @@ class TAlignment( LHCbConfigurableUser ):
             elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )
             #alignAlg.addTool( elementtool )
 
-            # Setup XML writers
-            xmlwriters = WriteMultiAlignmentConditionsTool()
-            self.addXmlWriters(xmlwriters)
+            # Setup XML writer, also a public tool
+            xmlwriter = WriteMultiAlignmentConditionsTool("WriteMultiAlignmentConditionsTool")
+            if self.getProp( "OnlineMode" ) :
+                self.addOnlineXmlWriters(xmlwriter)
+            else :
+                self.addXmlWriters(xmlwriter)
 
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
