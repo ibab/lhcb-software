@@ -707,8 +707,8 @@ def limitCombinatorics( configurable,
     	    return True
 	else :
 	    return False
-    elif hasattr( configurable, 'StopAtMaxCandidates') and hasattr( configurable, 'MaxCandidates') \
-     and hasattr(configurable, 'StopAtMaxCombinations') and hasattr(configurable, 'MaxCombinations'):
+    elif hasattr( type(configurable), 'StopAtMaxCandidates' )   and hasattr( type(configurable), 'MaxCandidates' ) \
+     and hasattr( type(configurable), 'StopAtMaxCombinations' ) and hasattr( type(configurable), 'MaxCombinations' ):
         if MaxCandidates != None :
             configurable.StopAtMaxCandidates = True
             configurable.MaxCandidates       = MaxCandidates
