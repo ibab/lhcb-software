@@ -7,14 +7,14 @@
 #include "GaudiKernel/DeclareFactoryEntries.h"
 
 
-#include "Math/CholeskyDecomp.h"
-
 // local
-#include "PatFwdFitLine.h"
-#include "PatFwdFitParabola.h"
 #include "PatSeedTool.h"
 
 #include "TfKernel/RegionID.h"
+
+#include "PatSeedFits.h"
+
+using namespace PatSeedFits;
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatSeedTool
@@ -44,6 +44,97 @@ PatSeedTool::PatSeedTool( const std::string& type,
 //=============================================================================
 PatSeedTool::~PatSeedTool() {}
 
+template <class FIT, bool xOnly>
+bool PatSeedTool::removeHitsWhileChi2TooLarge(
+    PatSeedTrack& track, const double maxChi2,
+    const unsigned minPlanes, const bool debug) const
+{
+  /// little helper to make things a bit more readable
+  struct WorstHitFinder {
+    typename FIT::value_type m_chi2;
+    typename FIT::value_type m_worstchi2;
+    PatFwdHits::iterator m_worst;
+    WorstHitFinder(const FIT& fit, PatSeedTrack& track) :
+      m_chi2(0), m_worstchi2(0), m_worst(track.coordBegin())
+    {
+      for (auto it = m_worst; track.coordEnd() != it; ++it) {
+	const auto hit = *it;
+	if (!hit->isSelected()) continue;
+	if (xOnly && !hit->hit()->isX()) continue;
+	const auto chi2hit = fit.chi2(track, hit);
+	m_chi2 += chi2hit;
+	if (chi2hit > m_worstchi2) m_worstchi2 = chi2hit, m_worst = it;
+      }
+    }
+  };
+
+  // keep track of number of degrees of freedom ourselves...
+  int nHitsX = -3, nHitsStereo = xOnly ? 0 : -2;
+  for (const PatFwdHit* hit : track.m_coords) {
+    if (!hit->isSelected()) continue;
+    if (xOnly || hit->hit()->isX()) ++nHitsX;
+    else if (!xOnly) ++nHitsStereo;
+  }
+  // ... and stop early if we don't have enough hits
+  if (0 > nHitsX || 0 > nHitsStereo) return false;
+
+  FIT fit(track, track.m_coords);
+  if (!fit) return false;
+
+  bool okay;
+  do {
+    WorstHitFinder worst(fit, track);
+
+    if (debug) {
+      MsgStream& msg = info();
+      for (const PatFwdHit* hit: track.coords()) {
+	if (!hit->isSelected()) continue;
+	printTCoord(msg, track, hit);
+	if (*worst.m_worst == hit) msg << " -- worst";
+	msg << endmsg;
+      }
+    }
+    okay = (!(0. < maxChi2) || maxChi2 >= worst.m_worstchi2) &&
+      minPlanes <= track.nPlanes() && 0 <= nHitsX && 0 <= nHitsStereo;
+    // if we're above thresholds, and can remove hits, do so, and refit
+    if (!okay) {
+      if (debug) {
+	info() << " Remove hit and try again " << endmsg;
+      }
+      // keep track of what we're about to remove...
+      if (xOnly || (*worst.m_worst)->hit()->isX()) --nHitsX;
+      else if (!xOnly) --nHitsStereo;
+      // ... remove ...
+      track.removeCoord(worst.m_worst);
+      // ... and refit only if we know it should work...
+      const bool expectFitOkay = 0 <= nHitsX && 0 <= nHitsStereo && 0 < fit.ndf()
+	&& minPlanes <= track.nPlanes();
+      if (expectFitOkay) {
+	// full refit because of OT!
+	fit.refit(track, track.m_coords);
+      }
+
+      if (!expectFitOkay || !fit) {
+	if (debug) info() << " Abandon: Only " << track.nPlanes()
+	  << " planes, min " << minPlanes  << " highestChi2 "
+	    << worst.m_worstchi2 << " status " << fit.status() << " nDoF "
+	    << fit.ndf() << endmsg;
+	return false;
+      }
+      // force next iteration
+      continue;
+    }
+    // okay, we're done (either below chi^2 threshold, or not enough planes)
+    if ( debug ) info() << ".. done with " << track.nPlanes()
+      << " planes, min " << minPlanes << " highestChi2 "
+	<< worst.m_worstchi2 << endmsg;
+    // set chi2/ndf, but avoid division by 0
+    track.setChi2((0 < fit.ndf()) ?
+	(worst.m_chi2 / typename FIT::value_type(fit.ndf())) :
+	std::numeric_limits<typename FIT::value_type>::max());
+  } while (!okay);
+  return okay;
+}
 
 //=========================================================================
 //  Fit a Seed track
@@ -51,7 +142,7 @@ PatSeedTool::~PatSeedTool() {}
 bool PatSeedTool::fitTrack( PatSeedTrack& track,
     double maxChi2, unsigned minPlanes, bool xOnly, bool forceDebug ) const
 {
-  bool isDebug = msgLevel( MSG::DEBUG ) || forceDebug;
+  const bool isDebug = msgLevel( MSG::DEBUG ) || forceDebug;
 
   //== get enough planes fired
   if ( minPlanes > track.nPlanes() ) return false;
@@ -59,490 +150,222 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
   if ( isDebug ) info() << "+++ Track fit, planeCount " << track.nPlanes()
     << " size " << track.coordEnd() - track.coordBegin() << endmsg;
 
-  if ( !xOnly ) track.updateHits( );
+  // special treatment for OT hits: try to fix ambiguities
+  // (the for loop is a safety harness, in normal operation, the body will
+  // execute only once!)
+  workspace wksp;
+  for (auto it = track.coordBegin(); track.coordEnd() > it;
+      it += wksp.size()) {
+    // get selected OT hits
+    auto range = as_range(std::begin(wksp),
+	std::copy_if(it, std::min(it + wksp.size(), track.coordEnd()),
+	  std::begin(wksp), [] (const PatFwdHit* hit) {
+	  return hit->isSelected() && Tf::RegionID::OT == hit->hit()->type();
+	  }));
+    // stop if no OT hits
+    if (std::end(range) == std::begin(range)) continue;
+    // reset ambiguities for OT hits
+    for (auto hit: range) hit->setRlAmb(0);
+    // resolve ambiguities from pitch residuals where possible
+    if (m_ambigFromPitchResiduals) resAmbFromPitchRes(track, range);
+    if (m_ambigFromLargestDrift) resAmbFromLargestDrift(track, range, isDebug);
+  }
+  if (xOnly) {
+    XFit<true, 1, false, false, false> xfit(track, track.m_coords);
+    if (!xfit) return false;
+    else return removeHitsWhileChi2TooLarge<XFit<false, 10>, true>(
+	track, maxChi2, minPlanes, isDebug);
+  } else {
+    track.updateHits();
+    XYFit<true, 1, false> xyfit(track, track.m_coords);
+    if (!xyfit) return false;
+    else return removeHitsWhileChi2TooLarge<XYFit<false, 10>, false>(
+	track, maxChi2, minPlanes, isDebug);
+  }
+  // should never get here
+  return false;
+}
 
-  double highestChi2;
-
-  if (!fitInitialXProjection( track, forceDebug )) return false;
-  if (!xOnly)
-    if (!fitInitialStereoProjection( track, forceDebug)) return false;
-
-  unsigned nXPlanes = track.nXPlanes();
-  unsigned nStPlanes = track.nPlanes() - nXPlanes;
-
-  do {
-    if (!xOnly) {
-      if (!fitSimultaneousXY(track, forceDebug)) return false;
-    } else {
-      if (!fitXProjection(track, forceDebug)) return false;
-    }
-    // work out chi^2 and worst outlier
-    highestChi2 = 0.;
-    double totChi2 = 0.;
-    int nDoF  = -3; // ndf for x layers
-    int nDoFS = (!xOnly)?(-2):0; // ndf for stereo layers
-    PatFwdHits::iterator worst = track.coordBegin(),
-      end = track.coordEnd();
-    for (PatFwdHits::iterator itH = worst; end != itH; ++itH) {
-      const PatFwdHit* hit = *itH;
-      if ( !hit->isSelected() ) continue;
-      if ( xOnly && !hit->hit()->isX() ) continue;
-      const double chi2 = track.chi2Hit( hit );
-      totChi2 += chi2;
-      if (hit->hit()->isX()) ++nDoF;
-      else ++nDoFS;
-      if ( highestChi2 < chi2 )
-	highestChi2 = chi2, worst = itH;
-    }
-
-    if ( msgLevel( MSG::VERBOSE ) || forceDebug ) {
-      MsgStream& msg = info();
-      for( const PatFwdHit* hit: track.coords() ) {
-	if ( !hit->isSelected() ) continue;
-	printTCoord( msg, track, hit );
-	if ( *worst == hit ) msg << " -- worst";
-	msg << endmsg;
-      }
-    }
-
-    if ( highestChi2 > maxChi2 && maxChi2 > 0. && track.nPlanes() >= minPlanes ) {
-      // remove worst outlier if above threshold
-      const bool isXhit = (*worst)->hit()->isX();
-      if (isXhit) --nDoF;
-      else --nDoFS;
-      track.removeCoord( worst );
-      if ( isDebug ) info() << " Remove hit and try again " << endmsg;
-      if (track.nPlanes() != nXPlanes + nStPlanes) {
-	if (isXhit) --nXPlanes;
-	else --nStPlanes;
-      }
-
-      if ( minPlanes > track.nPlanes() ||
-	  0 > nDoF || (!xOnly && 0 > nDoFS) ||
-	  nXPlanes < 2 || (!xOnly && nStPlanes < 2)) {
-	if ( isDebug ) info() << " Abandon: Only " << track.nPlanes()
-	  << " planes, min " << minPlanes  << " highestChi2 " << highestChi2
-	    << " nDoF " << nDoF << " nDoFS " << nDoFS << endmsg;
-	return false;
-      }
-      // and force another iteration
+//=========================================================================
+//  Find the best RL solution using the hits with highest
+//  drift distance in the 3 stations.
+//=========================================================================
+template <class Range>
+bool PatSeedTool::resAmbFromLargestDrift (
+		PatSeedTrack& track, Range othits, bool forceDebug ) const
+{
+  // we use builtin arrays because we know there are three stations, and
+  // the cost of allocating memory dynamically for std::vector is too
+  // high
+  othits.second = std::remove_if(std::begin(othits), std::end(othits),
+      [] (const PatFwdHit* hit) { return !hit->hit()->isX(); });
+  std::array<double, 3> largestDrift = { { 0., 0., 0. } };
+  std::array<PatFwdHit*, 3> seeds = { { nullptr, nullptr, nullptr } };
+  for( PatFwdHit* hit: othits ) {
+    const int sta = hit->hit()->station();
+    if ( !seeds[sta] ) seeds[sta] = hit;
+    if ( hit->rlAmb() ) {
+      // if we have a solution from pitch residulas, we forcibly use it
+      seeds[sta] = hit;
+      largestDrift[sta] = 100.;
       continue;
     }
-
-    // catch the case where there are too few hits left to determine track
-    // parameters with some redundancy (i.e. number of data points <= number
-    // of fit parameters)
-    if (0 > nDoF || (!xOnly && 0 > nDoFS)) {
-      // not enough points to determine fit parameters: return false!
-	return false;
-    } else if (0 == nDoF && (xOnly || 0 == nDoFS)) {
-      // have fit parameters, but ndf = 0: chi^2/ndf is infinity
-      track.setChi2( HUGE_VAL );
-    } else {
-      // all fine
-      track.setChi2( totChi2 / double(nDoF + nDoFS) );
+    if ( largestDrift[sta] < std::abs(hit->driftDistance()) ) {
+      largestDrift[sta] = std::abs(hit->driftDistance());
+      seeds[sta] = hit;
     }
-  } while ( highestChi2 > maxChi2 && maxChi2 > 0. && track.nPlanes() >= minPlanes);
+  }
+  if (100. == largestDrift[0]) largestDrift[0] = 0.;
+  if (100. == largestDrift[1]) largestDrift[1] = 0.;
+  if (100. == largestDrift[2]) largestDrift[2] = 0.;
+  // make sure we can solve the fit equations below: we have at least three
+  // hits for three parameters
+  if (seeds[0] && seeds[1] && seeds[2]) {
+    // twiddle the ambiguities of the three seed hits to find best combination
+    double bestChi2 = 1e10;
+    int bestMask    = 0;
+    for ( unsigned mask = 8; mask--; ) {
+      if (largestDrift[0] < 0.1 && mask & 1) continue;
+      if (largestDrift[1] < 0.1 && mask & 2) continue;
+      if (largestDrift[2] < 0.1 && mask & 4) continue;
+      // fix ambiguities for current combination
+      if (largestDrift[0] >= 0.1) seeds[0]->setRlAmb( ((mask << 1) & 2) - 1 );
+      if (largestDrift[1] >= 0.1) seeds[1]->setRlAmb( (mask & 2) - 1 );
+      if (largestDrift[2] >= 0.1) seeds[2]->setRlAmb( ((mask >> 1) & 2) - 1 );
 
-  if ( isDebug ) info() << ".. OK with " << track.nPlanes() << " planes, min " << minPlanes
-    << " highestChi2 " << highestChi2 << endmsg;
-  if ( minPlanes > track.nPlanes() ) return false;
+      XFit<true, 1, true, false, false> fit(track, track.m_coords);
+      if (!fit) return false;
+
+      // determine chi^2 for current combination
+      const double totChi2 = fit.chi2(track, track.m_coords);
+      if ( totChi2 < bestChi2 ) {
+	// if better than previous best, save
+	bestChi2 = totChi2;
+	bestMask = mask;
+      }
+      if ( forceDebug )
+	info() << format( "     mask %2d chi2 %10.2f", mask, totChi2) << endmsg;
+    }
+    // fix ambiguities to best combination
+    if (largestDrift[0] >= 0.1) seeds[0]->setRlAmb( ((bestMask << 1) & 2) - 1 );
+    if (largestDrift[1] >= 0.1) seeds[1]->setRlAmb( (bestMask & 2) - 1 );
+    if (largestDrift[2] >= 0.1) seeds[2]->setRlAmb( ((bestMask >> 1) & 2) - 1 );
+  }
   return true;
 }
 
-//=========================================================================
-//  Parabolic fit to projection.
-//=========================================================================
-template<bool forceRLAmb, unsigned maxIter>
-bool PatSeedTool::fitXProjection(PatSeedTrack& track, bool forceDebug) const
-{
-  const bool debug = msgLevel(MSG::VERBOSE) || forceDebug;
-  // up to 10 iterations of simultaneous fit
-  double mat[9], *rhs = mat + 6, z0;
-  unsigned nHitsX, kk;
-  for ( kk = maxIter ; kk ; --kk ) {
-    nHitsX = 0;
-    track.getParameters(z0, rhs[0], rhs[0], rhs[1], rhs[2], rhs[0], rhs[0]);
-    const double dRatio = (std::abs(rhs[1]) > 1e-42) ? (1e3 * rhs[2] / rhs[1]) : 0.;
-    std::fill(mat, mat + 9, 0.);
-    for( const PatFwdHit* hit: track.coords() ) {
-      if ( !hit->isSelected() ) continue;
-      ++nHitsX;
-      const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
-      // prepare auxiliary variables
-      const double dist = forceRLAmb ?
-	track.distanceWithRL( hit ) : track.distanceForFit( hit );
-      double w = hit->hit()->weight();
-      if (isOT) w *= track.cosine() * track.cosine();
-      const double dz = 1e-3 * (hit->z() - z0); // better numerical stability
-      const double wdz = w * dz;
-      const double eta = dz * dz * (1. + dz * dRatio);
-      const double weta = w * eta;
-      // fill matrix
-      mat[0] += w;
-      mat[1] += wdz;
-      mat[2] += wdz * dz;
-      mat[3] += weta;
-      mat[4] += weta * dz;
-      mat[5] += weta * eta;
-      // fill right hand side
-      rhs[0] += w * dist;
-      rhs[1] += wdz * dist;
-      rhs[2] += weta * dist;
-    }
-    // protect against too few hits for unique solution
-    if (nHitsX < 3) return false;
-    // decompose matrix, protect against numerical trouble
-    ROOT::Math::CholeskyDecomp<double, 3> decomp(mat);
-    if (!decomp) return false;
-    // solve linear system
-    decomp.Solve(rhs);
-    // undo dz scaling
-    rhs[1] *= 1e-3; rhs[2] *= 1e-6; rhs[4] *= 1e-3;
-    if (debug) {
-      info() << format( " dax %10.4f dbx %10.4f dcx %10.4f",
-	  rhs[0], 1e3 * rhs[1], 1e6 * rhs[2] ) << endmsg;
-    }
-    // protect against unreasonable track parameter corrections
-    if (std::abs(rhs[0]) > 1e4 || std::abs(rhs[1]) > 5. ||
-	std::abs(rhs[2]) > 1e-3) return false;
-    // update track parameters
-    track.updateParameters(rhs[0], rhs[1], rhs[2], 1e-3 * rhs[2] * dRatio);
-
-    // wait until stable, due to OT.
-    if (std::abs(rhs[0]) < 5e-3 && std::abs(rhs[1]) < 5e-6 &&
-	std::abs(rhs[2]) < 5e-9) break;
-  }
-  return (0 != kk || 1 == maxIter);
-}
-
-//=========================================================================
-//  Initial fit: Find the best RL solution using the hits with highest
-//  drift distance in teh 3 stations.
-//=========================================================================
-bool PatSeedTool::fitInitialXProjection (
-		PatSeedTrack& track, bool forceDebug ) const
-{
-  // reset ambiguities for OT hits
-  unsigned nOT = 0;
-  for( PatFwdHit* hit: track.coords() ) {
-    if ( !hit->isSelected() ) continue;
-    if ( hit->hit()->type() != Tf::RegionID::OT ) continue;
-    hit->setRlAmb(0);
-    ++nOT;
-  }
-  if (nOT > 1) {
-    // resolve ambiguities from pitch residuals where possible
-    if (m_ambigFromPitchResiduals)
-      resAmbFromPitchRes(track);
-    if (m_ambigFromLargestDrift) {
-      // we use builtin arrays because we know there are three stations, and
-      // the cost of allocating memory dynamically for std::vector is too
-      // high
-      std::array<double, 3> largestDrift = { { 0., 0., 0. } };
-      std::array<PatFwdHit*, 3> seeds = { { nullptr, nullptr, nullptr } };
-      for( PatFwdHit* hit: track.coords() ) {
-	if ( !hit->isSelected() ) continue;
-	if ( !hit->hit()->isX() ) continue;
-	const int sta = hit->hit()->station();
-	if ( !seeds[sta] ) seeds[sta] = hit;
-	if ( hit->hit()->type() != Tf::RegionID::OT ) continue;
-	if ( hit->rlAmb() ) {
-	  // if we have a solution from pitch residulas, we forcibly use it
-	  seeds[sta] = hit;
-	  largestDrift[sta] = 100.;
-	  continue;
-	}
-	if ( largestDrift[sta] < std::abs(hit->driftDistance()) ) {
-	  largestDrift[sta] = std::abs(hit->driftDistance());
-	  seeds[sta] = hit;
-	}
-      }
-      if (100. == largestDrift[0]) largestDrift[0] = 0.;
-      if (100. == largestDrift[1]) largestDrift[1] = 0.;
-      if (100. == largestDrift[2]) largestDrift[2] = 0.;
-      // make sure we can solve the fit equations below: we have at least three
-      // hits for three parameters
-      if (seeds[0] && seeds[1] && seeds[2]) {
-	// twiddle the ambiguities of the three seed hits to find best combination
-	double bestChi2 = 1e10;
-	int bestMask    = 0;
-	for ( unsigned mask = 8; mask--; ) {
-	  if (largestDrift[0] < 0.1 && mask & 1) continue;
-	  if (largestDrift[1] < 0.1 && mask & 2) continue;
-	  if (largestDrift[2] < 0.1 && mask & 4) continue;
-	  // fix ambiguities for current combination
-	  if (largestDrift[0] >= 0.1) seeds[0]->setRlAmb( ((mask << 1) & 2) - 1 );
-	  if (largestDrift[1] >= 0.1) seeds[1]->setRlAmb( (mask & 2) - 1 );
-	  if (largestDrift[2] >= 0.1) seeds[2]->setRlAmb( ((mask >> 1) & 2) - 1 );
-
-	  // get track parameters for current combination
-	  if (!fitXProjection<true, 1>(track, forceDebug)) return false;
-
-	  // determine chi^2 for current combination
-	  double totChi2 = 0.;
-	  for( const PatFwdHit* hit: track.coords() ) {
-	    if ( !hit->isSelected() ) continue;
-	    if ( !hit->hit()->isX() ) continue;
-	    totChi2 += track.chi2Hit( hit );
-	  }
-	  if ( totChi2 < bestChi2 ) {
-	    // if better than previous best, save
-	    bestChi2 = totChi2;
-	    bestMask = mask;
-	  }
-	  if ( forceDebug )
-	    info() << format( "     mask %2d chi2 %10.2f", mask, totChi2) << endmsg;
-	}
-	// fix ambiguities to best combination
-	if (largestDrift[0] >= 0.1) seeds[0]->setRlAmb( ((bestMask << 1) & 2) - 1 );
-	if (largestDrift[1] >= 0.1) seeds[1]->setRlAmb( (bestMask & 2) - 1 );
-	if (largestDrift[2] >= 0.1) seeds[2]->setRlAmb( ((bestMask >> 1) & 2) - 1 );
-      }
-    }
-  }
-  // work out final track parameters
-  return fitXProjection<true, 1>(track, forceDebug);
-}
-
-//=========================================================================
-//  Initial fit: Use the RL flags set in fitLineInY.
-//=========================================================================
-bool PatSeedTool::fitInitialStereoProjection (
-		PatSeedTrack& track, bool forceDebug ) const
-{
-  int nStereo = 0;
-  PatFwdFitLine firstLine;
-  for( const PatFwdHit* hit: track.coords() ) {
-    if ( hit->hit()->isX() ) continue;
-    if ( !hit->isSelected() ) continue;
-    const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
-    firstLine.addPoint( hit->z(),
-	-track.distanceWithRL( hit ) / hit->hit()->dxDy(),
-       	hit->hit()->weight() * (isOT? (track.cosine() * track.cosine()) : 1.) );
-    ++nStereo;
-  }
-
-  if ( 2 > nStereo ) return false;
-  if (!firstLine.solve()) return false;
-  if ( forceDebug ) info() << "    day " << firstLine.ax() << " dby "
-    << firstLine.bx() << " initial" << endmsg;
-  track.updateYParameters( firstLine.ax(), firstLine.bx() );
-  return true;
-}
 //=============================================================================
 
-bool PatSeedTool::isNeighbour(const PatFwdHit* h1, const PatFwdHit* h2) const
+template <class Range>
+void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const
 {
-  // skip IT hits
-  if (h2->hit()->type() != Tf::RegionID::OT) return false;
-  // skip hits with predetermined ambiguity
-  if (h2->rlAmb()) return false;
-  if (!h2->isSelected()) return false;
-  const LHCb::OTChannelID ot1(h1->hit()->lhcbID().otID());
-  const LHCb::OTChannelID ot2(h2->hit()->lhcbID().otID());
-  // require hits in same module
-  if (ot1.uniqueModule() != ot2.uniqueModule()) return false;
-  // check in detail: distance in z at y = 0 must be compatible with straws
-  // in different monolayers and distance in x must be compatible with the
-  // pitch
-  const double dz = std::abs(h1->hit()->zAtYEq0() - h2->hit()->zAtYEq0());
-  if (dz > 6.5 || dz < 4.5) return false;
-  const double dx = std::abs(h1->hit()->xAtYEq0() - h2->hit()->xAtYEq0());
-  if (dx > 3.5 || dx < 1.5) return false;
-  return true;
-}
-
-void PatSeedTool::resAmbFromPitchRes(PatSeedTrack& tr) const
-{
-  PatFwdHits::const_iterator beg(tr.coordBegin()), end(tr.coordEnd());
-  for (PatFwdHits::const_iterator it = beg; end != it; ++it) {
-    // skip IT hits
-    if ((*it)->hit()->type() != Tf::RegionID::OT) continue;
-    // skip hits with predetermined ambiguity
-    if ((*it)->rlAmb()) continue;
-    if (!(*it)->isSelected()) continue;
-    for (PatFwdHits::const_iterator jt = it + 1; end != jt; ++jt ) {
-      if (!isNeighbour(*it, *jt)) continue;
-      // have two neighbouring hits, calculate pitch residual
-      PatFwdHit *h1 = *it, *h2 = *jt;
-      // get 2D wire distance vector in module coordinates
-      const double sinT = h1->hit()->sinT(), cosT = h1->hit()->cosT();
-      const double dzdy = h1->hit()->dzDy();
-      const double dx = (h1->hit()->xAtYEq0() - h2->hit()->xAtYEq0()) * cosT;
-      const double dz = (h1->hit()->zAtYEq0() - h2->hit()->zAtYEq0()) /
-	std::sqrt(1. + dzdy * dzdy);
-      // work out effective slope in module frame
-      const double z0 = 0.5 * (h1->hit()->zAtYEq0() + h2->hit()->zAtYEq0());
-      const double txeff = tr.xSlope(z0) * cosT + tr.ySlope(z0) * sinT;
-      // calculate effective pitch (i.e. pitch seen by tr)
-      const double scale = (dx * txeff + dz) / (1. + txeff * txeff);
-      const double eprx = dx - scale * txeff, eprz = dz - scale;
-      const double epr = std::sqrt(eprx * eprx + eprz * eprz);
-      // get radii
-      const double r1 = h1->driftDistance(), r2 = h2->driftDistance();
-      // calculate pitch residual (convert back from effective pitch)
-      // case 1: track passes between hits, case 2: not case 1
-      const double pr1 = std::abs(dx / epr) * (epr - r1 - r2);
-      const double pr2 = std::abs(dx / epr) * (epr - std::abs(r1 - r2));
-      if (pr1 * pr1 <= pr2 * pr2) {
-	// set ambiguities accordingly
-	if (dx > 0.) {
-	  h1->setRlAmb(-1);
-	  h2->setRlAmb(+1);
-	  break;
-	} else {
-	  h1->setRlAmb(+1);
-	  h2->setRlAmb(-1);
-	  break;
-	}
-      } else {
-	// try to figure out ambiguity by comparing slope estimate obtained
-	// from drift radii (assuming hits do not pass in between the wires)
-	// to the (well measured) effective slope
-	//
-	// as the slopes are usually big, we have to correct for the fact that
-	// the radius is no longer in x direction (using the measured txeff)
-	const double corr = std::sqrt(1. + txeff * txeff);
-	const double dslplus = (dx + (r1 - r2) * corr) - txeff * dz;
-	const double dslminus = (dx - (r1 - r2) * corr) - txeff * dz;
-	if (dslplus * dslplus < dslminus * dslminus) {
-	  h1->setRlAmb(+1);
-	  h2->setRlAmb(+1);
-	  break;
-	} else {
-	  h1->setRlAmb(-1);
-	  h2->setRlAmb(-1);
-	  break;
-	}
-      }
+  // ignore hits which have their ambiguities set from elsewhere
+  hits.second = std::partition(std::begin(hits), std::end(hits),
+      [] (const PatFwdHit* hit) { return 0 == hit->rlAmb(); });
+  // stop if nothing to do
+  if (hits.second - hits.first < 2) return;
+  // sort such that hits in the same module stay together and are ordered by
+  // increasing x - this brings together neighbouring straws
+  std::sort(std::begin(hits), std::end(hits),
+      [] (const PatFwdHit* hit1, const PatFwdHit* hit2) {
+        const LHCb::OTChannelID ot1(hit1->hit()->lhcbID().otID());
+        const LHCb::OTChannelID ot2(hit2->hit()->lhcbID().otID());
+        if (ot1.uniqueModule() < ot2.uniqueModule()) return true;
+        else if (ot2.uniqueModule() < ot1.uniqueModule()) return false;
+        else if (hit1->hit()->xAtYEq0() < hit2->hit()->xAtYEq0()) return true;
+        else if (hit2->hit()->xAtYEq0() < hit1->hit()->xAtYEq0()) return false;
+        else return hit1->hit()->lhcbID() < hit2->hit()->lhcbID();
+      });
+  // predicate which checks if two hits are in neighbouring straws in
+  // different monolayers
+  const auto areNeighbours = [] (const PatFwdHit* h1, const PatFwdHit* h2) {
+    // require hits in same module
+    const LHCb::OTChannelID ot1(h1->hit()->lhcbID().otID());
+    const LHCb::OTChannelID ot2(h2->hit()->lhcbID().otID());
+    if (ot1.uniqueModule() != ot2.uniqueModule()) return false;
+    // check in detail: distance in z at y = 0 must be compatible with straws
+    // in different monolayers and distance in x must be compatible with the
+    // pitch
+    const auto dz = std::abs(h1->hit()->zAtYEq0() - h2->hit()->zAtYEq0());
+    const auto dx = std::abs(h1->hit()->xAtYEq0() - h2->hit()->xAtYEq0());
+    typedef decltype(dz) F;
+    const F dzmax = F(13) / F(2), dzmin = F(9) / F(2);
+    const F dxmax = F( 7) / F(2), dxmin = F(3) / F(2);
+    return dzmin <= dz && dz <= dzmax && dxmin <= dx && dx <= dxmax;
+  };
+  // loop over pairs of neighbouring straws in the same OT module
+  for (auto end = std::end(hits), begin = std::adjacent_find(
+	std::begin(hits), std::end(hits), areNeighbours);
+      end != begin && end != begin + 1;
+      begin = std::adjacent_find(begin + 1, end, areNeighbours)) {
+    PatFwdHit *h1 = *begin, *h2 = *(begin + 1);
+    // have two neighbouring hits, calculate pitch residual
+    // work out effective slope in module frame
+    const auto sinT = h1->hit()->sinT(), cosT = h1->hit()->cosT();
+    typedef decltype(sinT) F;
+    const auto z0 = (h1->hit()->zAtYEq0() + h2->hit()->zAtYEq0()) / F(2);
+    const auto txeff = tr.xSlope(z0) * cosT + tr.ySlope(z0) * sinT;
+    // get 2D wire distance vector in module coordinates
+    const auto dx = (h1->hit()->xAtYEq0() - h2->hit()->xAtYEq0()) * cosT;
+    const auto dzdy = h1->hit()->dzDy();
+    const auto dz = (h1->hit()->zAtYEq0() - h2->hit()->zAtYEq0()) /
+      std::sqrt(F(1) + dzdy * dzdy);
+    // calculate effective pitch (i.e. pitch seen by tr)
+    const auto scale = (dx * txeff + dz) / (F(1) + txeff * txeff);
+    const auto eprx = dx - scale * txeff, eprz = dz - scale;
+    const auto epr = std::sqrt(eprx * eprx + eprz * eprz);
+    // get radii
+    const auto r1 = h1->driftDistance(), r2 = h2->driftDistance();
+    // calculate pitch residual (convert back from effective pitch)
+    // case 1: track passes between hits, case 2: not case 1
+    const auto pr1 = std::abs(dx / epr) * (epr - r1 - r2);
+    const auto pr2 = std::abs(dx / epr) * (epr - std::abs(r1 - r2));
+    if (std::abs(pr1) <= std::abs(pr2)) {
+      // set ambiguities accordingly
+      HitPairAmbSetter<false>::set(h1, h2, (dx > F(0)) ? -1 : +1);
+    } else {
+      // try to figure out ambiguity by comparing slope estimate obtained
+      // from drift radii (assuming hits do not pass in between the wires)
+      // to the (well measured) effective slope
+      //
+      // as the slopes are usually big, we have to correct for the fact that
+      // the radius is no longer in x direction (using the measured txeff)
+      const auto corr = std::sqrt(F(1) + txeff * txeff);
+      const auto dslplus = (dx + (r1 - r2) * corr) - txeff * dz;
+      const auto dslminus = (dx - (r1 - r2) * corr) - txeff * dz;
+      HitPairAmbSetter<true>::set(h1, h2,
+	  (std::abs(dslplus) < std::abs(dslminus)) ? +1 : -1);
     }
   }
 }
 
-bool PatSeedTool::fitSimultaneousXY(PatSeedTrack& track, bool forceDebug) const
+bool PatSeedTool::refitStub(PatSeedTrack& track, double arrow) const
 {
-  const bool debug = msgLevel(MSG::VERBOSE) || forceDebug;
-  // up to 10 iterations of simultaneous fit
-  double mat[20], *rhs = mat + 15, z0;
-  unsigned nHitsX, nHitsStereo, kk;
-  for ( kk = 10; kk; --kk ) {
-    nHitsX = 0, nHitsStereo = 0;
-    track.getParameters(z0, rhs[0], rhs[0], rhs[1], rhs[2], rhs[0], rhs[0]);
-    const double dRatio = (std::abs(rhs[1]) > 1e-42) ? (1e3 * rhs[2] / rhs[1]) : 0.;
-    std::fill(mat, mat + 20, 0.);
-    for( const PatFwdHit* hit: track.coords() ) {
-      if ( !hit->isSelected() ) continue;
-      if (hit->hit()->isX()) ++nHitsX;
-      else ++nHitsStereo;
-      const bool isOT = hit->hit()->type() == Tf::RegionID::OT;
-      // prepare auxiliary variables
-      const double dist = track.distanceForFit( hit );
-      double w = hit->hit()->weight();
-      if (isOT) w *= track.cosine() * track.cosine();
-      const double dxdy = hit->hit()->dxDy();
-      const double dz = 1e-3 * (hit->z() - z0); // better numerical stability
-      const double wdz = w * dz;
-      const double eta = dz * dz * (1. + dz * dRatio);
-      const double weta = w * eta;
-      const double wdxdy = w * dxdy;
-      const double wdxdydz = wdxdy * dz;
-      // fill matrix
-      mat[0] += w;
-      mat[1] += wdz;
-      mat[2] += wdz * dz;
-      mat[3] += weta;
-      mat[4] += weta * dz;
-      mat[5] += weta * eta;
-      mat[6] -= wdxdy;
-      mat[7] -= wdxdydz;
-      mat[8] -= wdxdy * eta;
-      mat[9] += wdxdy * dxdy;
-      mat[10] -= wdxdydz;
-      mat[11] -= wdxdydz * dz;
-      mat[12] -= wdxdydz * eta;
-      mat[13] += wdxdydz * dxdy;
-      mat[14] += wdxdydz * dz * dxdy;
-      // fill right hand side
-      rhs[0] += w * dist;
-      rhs[1] += wdz * dist;
-      rhs[2] += weta * dist;
-      rhs[3] -= wdxdy * dist;
-      rhs[4] -= wdxdydz * dist;
-    }
-    // protect against too few hits for unique solution
-    if (nHitsX < 3 || nHitsStereo < 2) return false;
-    // decompose matrix, protect against numerical trouble
-    ROOT::Math::CholeskyDecomp<double, 5> decomp(mat);
-    if (!decomp) return false;
-    // solve linear system
-    decomp.Solve(rhs);
-    // undo dz scaling
-    rhs[1] *= 1e-3; rhs[2] *= 1e-6; rhs[4] *= 1e-3;
-    // PatSeedTrack y is expanded around z = 0
-    rhs[3] -= rhs[4] * z0;
-    if (debug) {
-      info() << format( " dax %10.4f dbx %10.4f dcx %10.4f day %10.4f dby %10.4f",
-	  rhs[0], 1e3 * rhs[1], 1e6 * rhs[2], rhs[3], 1e3 * rhs[4] ) << endmsg;
-    }
-    // protect against unreasonable track parameter corrections
-    if (std::abs(rhs[0]) > 1e4 || std::abs(rhs[1]) > 5. ||
-	std::abs(rhs[2]) > 1e-3 || std::abs(rhs[3]) > 1e4 ||
-	std::abs(rhs[4]) > 1.) return false;
-    // update track parameters
-    track.updateParameters(rhs[0], rhs[1], rhs[2], 1e-3 * rhs[2] * dRatio);
-    track.updateYParameters(rhs[3], rhs[4]);
+  /// we have to pass a variable into the fit, so swap it for the track's chi^2
+  struct TrackFiddler {
+    PatSeedTrack& m_track;
+    const double m_chi2saved;
+    TrackFiddler(PatSeedTrack& track, double arrow) :
+      m_track(track), m_chi2saved(track.chi2())
+    { track.setChi2(arrow); }
+    ~TrackFiddler() { m_track.setChi2(m_chi2saved); }
+  } guard(track, -arrow);
 
-    // wait until stable, due to OT.
-    if (std::abs(rhs[0]) < 5e-3 && std::abs(rhs[1]) < 5e-6 &&
-	std::abs(rhs[2]) < 5e-9 && std::abs(rhs[3]) < 5e-2 &&
-	std::abs(rhs[4]) < 5e-6) break;
-  }
-  return 0 != kk;
+  // do the fit...
+  StubFit<false, 10> fit(track, track.m_coords);
+  return fit;
 }
 
-bool PatSeedTool::refitStub(PatSeedTrack& track, double dRatio, double arrow) const
+void PatSeedTool::printTCoord( MsgStream& msg,
+    const PatSeedTrack& track, const PatFwdHit* hit ) const
 {
-  unsigned iter = 0;
-  double rhs[9], *mat = rhs + 3;
-  do {
-    const double z0 = track.z0();
-    std::fill(rhs, rhs + 9, 0.);
-    for( const PatFwdHit* hit: track.coords() ) {
-      const double z = hit->z();
-      const double w = hit->hit()->weight();
-      const double dz = 1e-3 * (z - z0);
-      const double dx = track.distanceForFit(hit);
-      const double eta = - hit->hit()->dxDy() * z / z0;
-      rhs[0] += w * eta * dx;
-      rhs[1] += w * dx;
-      rhs[2] += w * dz * dx;
-      mat[0] += w * eta * eta;
-      mat[1] += w * eta;
-      mat[2] += w;
-      mat[3] += w * eta * dz;
-      mat[4] += w * dz;
-      mat[5] += w * dz * dz;
-    }
-    ROOT::Math::CholeskyDecomp<double, 3> decomp(mat);
-    // protect against singular matrix and no convergence
-    const bool ok = decomp && (++iter < 10);
-    if (!ok) return false;
-    // solve linear system
-    decomp.Solve(rhs);
-    rhs[2] *= 1e-3;
-    // protect against unreasonably large changes in parameters
-    if (std::abs(rhs[0]) > 1e3 || std::abs(rhs[1]) > 1e3 || std::abs(rhs[2]) > 5.0)
-      return false;
-    // update track parameters
-    track.updateParameters(rhs[1], rhs[2],
-	-arrow * (rhs[1] - z0 * rhs[2]),
-	-arrow * (rhs[1] - z0 * rhs[2]) * dRatio);
-    track.updateYParameters(0., rhs[0] / z0);
-    // until track parameters are stable
-  } while (std::abs(rhs[1]) > 1e-3 || std::abs(rhs[2]) > 1e-6 ||
-      std::abs(rhs[0]) > 1e-5);
-  return true;
+  double dist = track.distance( hit );
+  double chi2 = dist*dist* hit->hit()->weight();
+  msg << "  Hit st " << hit->hit()->station() << " lay " << hit->hit()->layer()
+    << " region " << hit->hit()->region()
+    << format( " code%3d z %7.1f distWire%7.2f drift%5.2f dist%8.3f rl%2d Chi2 %8.3f",
+	hit->planeCode(), hit->z(), hit->x() - track.xAtZ( hit->z() ),
+	hit->driftDistance(), dist, hit->rlAmb(), chi2 );
 }
 
 // vim:shiftwidth=2:tw=78

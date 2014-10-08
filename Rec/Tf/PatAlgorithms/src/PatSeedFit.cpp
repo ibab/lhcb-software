@@ -179,15 +179,14 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
 	seedhits[0]->hit()->xAtYEq0() * StateParameters::ZEndT / seedhits[0]->hit()->zAtYEq0(),
 	StateParameters::ZEndT,
 	StateParameters::ZMidT, m_dRatio);
-  double z0, bx, ax, cx, dx, ay, by;
+  double z0, ax, bx, cx, ay, by;
   if (goodhits) {
     tr.setValid(true);
 
     // save initial track parameters in case, internal fit fails later
-    double z0, bx, ax, cx, dx, ay, by;
-    tr.getParameters( z0, bx, ax, cx, dx, ay, by);
+    tr.getParameters( z0, ax, bx, cx, ay, by);
 
-    const bool fitOK = !m_patSeedTool->refitStub(tr, m_dRatio, m_initialArrow);
+    const bool fitOK = !m_patSeedTool->refitStub(tr, m_initialArrow);
     for( PatFwdHit& ihit: hits ) {
       // if the hit is not on the track, add it
       if (seedhits.end() == 
@@ -197,7 +196,7 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     if (!fitOK) {
       Warning("Stub fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
       // restore best guess of track parameters in case of fit failure
-      tr.setParameters(z0, bx, ax, cx, dx, ay, by);
+      tr.setParameters(z0, ax, bx, cx, ay, by);
       tr.updateHits();
       tr.setValid(false);
       return tr;
@@ -211,25 +210,25 @@ PatSeedTrack PatSeedFit::getTrackITOT(std::vector<PatFwdHit>& hits, int staIT) c
     tr.setYParams(0., ty);
     for( PatFwdHit& ihit: hits ) tr.addCoord( &ihit );
     tr.updateHits();
-    tr.getParameters( z0, bx, ax, cx, dx, ay, by);
+    tr.getParameters( z0, ax, bx, cx, ay, by);
     // first full fit for the emergency case
     if (!m_patSeedTool->fitTrack( tr, m_maxChi2, 5, false, false )) {
 	Warning("First full fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
 	// restore best guess of track parameters in case of fit failure
-	tr.setParameters(z0, bx, ax, cx, dx, ay, by);
+	tr.setParameters(z0, ax, bx, cx, ay, by);
     }
     // reset ambiguities to make sure next fit starts from scratch
     for( PatFwdHit& ihit: hits ) ihit.setRlAmb(0);
   }
   tr.updateHits();
   // new best guess (is typically result from stub fit)
-  tr.getParameters( z0, bx, ax, cx, dx, ay, by);
+  tr.getParameters( z0, ax, bx, cx, ay, by);
 
   // full refit
   if (!m_patSeedTool->fitTrack( tr, m_maxChi2, 5, false, false )) {
     Warning("First full fit failed, using best guess parameters", StatusCode::FAILURE, 0).ignore();
     // restore best guess of track parameters in case of fit failure
-    tr.setParameters(z0, bx, ax, cx, dx, ay, by);
+    tr.setParameters(z0, ax, bx, cx, ay, by);
     tr.setValid(false);
   }
   tr.updateHits();
@@ -449,15 +448,15 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
 	getTrackITOT(hits, hasITOTSta)));
 
   // save initial track parameters in case internal refit fails
-  double z0, bx, ax, cx, dx, ay, by;
-  pattrack.getParameters(z0, bx, ax, cx, dx, ay, by);
+  double z0, ax, bx, cx, ay, by;
+  pattrack.getParameters(z0, ax, bx, cx, ay, by);
 
   // refit (unless we have a troublesome track)
   if (pattrack.valid() &&
       !m_patSeedTool->fitTrack(pattrack, m_maxChi2, 5, false, false)) {
     Warning("Second full fit failed, falling back on best guess parameters", StatusCode::FAILURE, 0).ignore();
     // fall back on old track parameters
-    pattrack.setParameters(z0, bx, ax, cx, dx, ay, by);
+    pattrack.setParameters(z0, ax, bx, cx, ay, by);
   }
 
   LHCb::State temp(Gaudi::TrackVector(pattrack.xAtZ(m_zReference), 

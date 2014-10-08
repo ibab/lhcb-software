@@ -22,23 +22,27 @@ PatSeedTrack::PatSeedTrack(
     double z0, double z1, double z2,
     double zRef, double dRatio ) :
   m_valid(true), m_nbPlanes(0),
-  m_z0(0.5 * (z0 + z2)), m_bx((x2 - x0) / (z2 - z0)),
-  m_ax(x1 - (z1 - m_z0) * m_bx),
-  m_cx((x2 + x0 - 2. * m_ax) * 2.0 / ((z2 - z0) * (z2 - z0))),
+  m_z0(0.5 * (z0 + z2)), m_ax((x2 - x0) / (z2 - z0)),
+  m_bx(x1 - (z1 - m_z0) * m_ax),
+  m_cx((x2 + x0 - 2. * m_bx) * 2.0 / ((z2 - z0) * (z2 - z0))),
+  m_dx(dRatio),
   m_ay(0.), m_by(0.), m_cosine(1.), m_chi2(HUGE_VAL)
 {
+  // swap below is needed to avoid warnings about the order of
+  // initialisation - apologies... (Manuel)
+  std::swap(m_ax, m_bx);
   // Applies a correction in cubic term, proportional to cx at zRef.
   const double zDiff = zRef - m_z0;
   const double dz = 0.5 * (z2 - z0);
   // apply cubic term
-  m_dx = dRatio * m_cx / ( 1. - 3. * zDiff * dRatio ) ;
+  const double dx = dRatio * m_cx / ( 1. - 3. * zDiff * dRatio ) ;
   // Correct so that we still go through the points
-  m_bx -= m_dx * dz * dz;
+  m_bx -= dx * dz * dz;
 
   // shift reference point from midpoint between z0 and z2 to zRef
-  m_ax += zDiff * ( m_bx + zDiff * ( m_cx + zDiff * m_dx ));
-  m_bx += zDiff * ( 2. * m_cx + zDiff * 3. * m_dx );
-  m_cx += zDiff * ( 3. * m_dx );
+  m_ax += zDiff * ( m_bx + zDiff * ( m_cx + zDiff * dx ));
+  m_bx += zDiff * ( 2. * m_cx + zDiff * 3. * dx );
+  m_cx += zDiff * ( 3. * dx );
   m_z0 = zRef;
 
   std::fill(m_planeList.begin(), m_planeList.end(), 0);
@@ -52,7 +56,7 @@ PatSeedTrack::PatSeedTrack(
 PatSeedTrack::PatSeedTrack(
     PatFwdHit* c0, PatFwdHit* c1, PatFwdHit* c2, PatFwdHit* c3,
     double zRef, double dRatio, double arrow ) :
-  m_valid(true), m_nbPlanes(0), m_ay(0.0), m_cosine(1.),
+  m_valid(true), m_nbPlanes(0), m_dx(dRatio), m_ay(0.0), m_cosine(1.),
   m_chi2(HUGE_VAL)
 {
   //== x = a + b*dz + c*dz^2 + d*dz^3
@@ -77,7 +81,6 @@ PatSeedTrack::PatSeedTrack(
   m_bx = ( x0 * a3 - a0 * x3 ) / ( b0 * a3 - a0 * b3 );
   m_ax = ( x0 * b3 - b0 * x3 ) / ( a0 * b3 - b0 * a3 );
   m_cx = curvature * ( m_ax - zRef * m_bx );
-  m_dx = dRatio * m_cx;
 
   m_by = .5 * ( ( xAtZ( c1->z() ) - c1->x() ) / c1->hit()->dxDy() +
                 ( xAtZ( c2->z() ) - c2->x() ) / c2->hit()->dxDy()  ) / m_z0 ;

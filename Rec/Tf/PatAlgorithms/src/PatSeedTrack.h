@@ -17,6 +17,8 @@
 
 #include "LHCbMath/BloomFilter.h"
 
+class PatSeedTool;
+
 /** @class PatSeedTrack PatSeedTrack.h
  *  This is the working track class during the seeding
  *
@@ -38,6 +40,8 @@ class PatSeedTrack {
     typedef std::array<unsigned char, kNPlanes> PlaneArray;
 
   public:
+    friend class PatSeedTool;
+
     /// Standard constructor
     PatSeedTrack( double x0, double x1, double x2, 
 	double z0, double z1, double z2, double zRef, double dRatio);
@@ -50,25 +54,23 @@ class PatSeedTrack {
     virtual ~PatSeedTrack( ); ///< Destructor
 
     /// get track parameters
-    void getParameters( double& z0, double& bx, double &ax, double &cx, double& dx,
+    void getParameters( double& z0, double& ax, double &bx, double &cx,
 			double& ay, double& by) const {
       z0 = m_z0;
-      bx = m_bx;
       ax = m_ax;
+      bx = m_bx;
       cx = m_cx;
-      dx = m_dx;
       ay = m_ay;
       by = m_by;
     }
 
     /// set track parameters
-    void setParameters (double z0, double bx, double ax, double cx, double dx,
+    void setParameters (double z0, double ax, double bx, double cx,
 			double ay, double by) {
       m_z0 = z0;
-      m_bx = bx;
       m_ax = ax;
+      m_bx = bx;
       m_cx = cx;
-      m_dx = dx;
       m_ay = ay;
       m_by = by;
       m_cosine =  1. / std::sqrt( 1. +  m_bx * m_bx  );
@@ -80,13 +82,13 @@ class PatSeedTrack {
     double xAtZ( double z ) const ///< return x at given z
     {
       const double dz = z - m_z0;
-      return m_ax + dz * ( m_bx + dz * ( m_cx + dz * m_dx ));
+      return m_ax + dz * ( m_bx + dz * ( m_cx * (1. + dz * m_dx )));
     }
 
     double xSlope( double z ) const ///< return slope in x at given z
     {
       const double dz = z - m_z0;
-      return m_bx + dz * ( 2. * m_cx + 3. * dz * m_dx );
+      return m_bx + dz * ( 2. * m_cx * (1. + 1.5 * dz * m_dx) );
     }
 
     double yAtZ( double z ) const ///< return y at given z
@@ -195,8 +197,8 @@ class PatSeedTrack {
     /// chi^2 contribution of a hit
     double chi2Hit( const PatFwdHit* hit) const
     {
-      const double dist = distance( hit );
-      return dist * dist * hit->hit()->weight();
+      const double dist = distance( hit ) * hit->hit()->errweight();
+      return dist * dist;
     }
 
     void setYParams( double y0, double sl ) ///< set track parameters in y
@@ -225,14 +227,17 @@ class PatSeedTrack {
     }
 
     /// update track parameters in x
-    void updateParameters( double dax, double dbx, double dcx, double ddx = 0. )
+    void updateParameters( double dax, double dbx, double dcx )
     {
       m_ax += dax;
       m_bx += dbx;
       m_cx += dcx;
-      m_dx += ddx;
       m_cosine =  1. / std::sqrt( 1. +  m_bx * m_bx  );
     }
+
+    /// return ratio of cubic/parabolic coefficient
+    double dRatio() const
+    { return m_dx; }
 
     /// return length of track (start layer - end layer + 1)
     unsigned length() const
@@ -321,8 +326,8 @@ class PatSeedTrack {
     unsigned    m_nbPlanes;
 
     double m_z0;
-    double m_bx;
     double m_ax;
+    double m_bx;
     double m_cx;
     double m_dx;
 

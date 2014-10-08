@@ -59,23 +59,12 @@ class PatSeedTool : public GaudiTool {
      * from the x intercept of a straight line extrapolation to z = 0
      *
      * @param track PatSeedTrack to refit
-     * @param dRatio ratio of cubic to parabolic term to be used
      * @param arrow conversion constant from x intercept at z=0 to curvature
      * @return false on failure, true otherwise
      */
-    bool refitStub(PatSeedTrack& track, double dRatio, double arrow) const;
+    bool refitStub(PatSeedTrack& track, double arrow) const;
 
   protected:
-
-    /// do an initial fit in xz projection, fixing OT ambiguities if possible
-    bool fitInitialXProjection( PatSeedTrack& track, bool forceDebug ) const;
-
-    /// do a fit in xz projection, return false if fewer than 3 x hits on track
-    template<bool forceRLAmb = false, unsigned maxIter = 10>
-    bool fitXProjection( PatSeedTrack& track, bool forceDebug ) const;
-
-    /// do a fit in yz projection, return false if fewer than 2 stereo hits on track
-    bool fitInitialStereoProjection( PatSeedTrack& track, bool forceDebug ) const;
 
     /// helper for debugging output
     inline void printTCoord( MsgStream& msg,
@@ -84,23 +73,40 @@ class PatSeedTool : public GaudiTool {
     bool m_ambigFromPitchResiduals; ///< OT ambiguities from pitch residuals
     bool m_ambigFromLargestDrift; ///< OT ambig. from largest drift time in each station
 
-    bool isNeighbour(const PatFwdHit* h1, const PatFwdHit* h2) const;
-    void resAmbFromPitchRes(PatSeedTrack& tr) const;
-    bool fitSimultaneousXY(PatSeedTrack& track, bool forceDebug) const;
+    /// @brief class to wrap an iterator pair for use as a range
+    template<class IT> struct iter_pair_range : public std::pair<IT, IT> {
+      iter_pair_range(IT begin, IT end) : std::pair<IT, IT>(begin, end) { }
+      IT begin() const { return std::pair<IT, IT>::first; }
+      IT end() const { return std::pair<IT, IT>::second; }
+    };
+    /// @brief construct a range from an iterator pair
+    template <class IT>
+    static iter_pair_range<IT> as_range(IT begin, IT end)
+    { return iter_pair_range<IT>(begin, end); }
+    /// workspace (temporary hit collection)
+    typedef std::array<PatFwdHit*, 32> workspace;
+    /// resolve ambiguities from pitch residuals
+    template <class Range>
+    void resAmbFromPitchRes(PatSeedTrack& tr, Range hits) const;
+    /// resolve ambiguities from largest drift time in each station
+    template <class Range>
+    bool resAmbFromLargestDrift( PatSeedTrack& track, Range othits, bool forceDebug ) const;
+
+    /// remove hits while max chi^2 per hit too large
+    template <class FIT, bool xOnly>
+    bool removeHitsWhileChi2TooLarge(
+	PatSeedTrack& track, const double maxChi2,
+	const unsigned minPlanes, bool debug) const;
+
+    /// little helper class to set ambiguities in a pair of hits
+    template <bool sameSign>
+    struct HitPairAmbSetter {
+      /// set ambiguity of h1 to amb, h2 according to sameSign
+      template <class HIT>
+      static inline void set(HIT& h1, HIT& h2, int amb)
+      { h1->setRlAmb(amb); h2->setRlAmb(sameSign ? amb : -amb); }
+    };
 };
-
-
-void PatSeedTool::printTCoord( MsgStream& msg,
-    const PatSeedTrack& track, const PatFwdHit* hit ) const
-{
-  double dist = track.distance( hit );
-  double chi2 = dist*dist* hit->hit()->weight();
-  msg << "  Hit st " << hit->hit()->station() << " lay " << hit->hit()->layer()
-    << " region " << hit->hit()->region()
-    << format( " code%3d z %7.1f distWire%7.2f drift%5.2f dist%8.3f rl%2d Chi2 %8.3f",
-	hit->planeCode(), hit->z(), hit->x() - track.xAtZ( hit->z() ),
-	hit->driftDistance(), dist, hit->rlAmb(), chi2 );
-}
 
 #endif // PATSEEDTOOL_H
 // vim:shiftwidth=2:tw=78

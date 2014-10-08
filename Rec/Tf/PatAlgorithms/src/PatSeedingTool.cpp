@@ -1024,7 +1024,7 @@ void PatSeedingTool::collectITOT(
 		continue;
 	      }
 	      // refit, using fixed curvature and slope ty fixed to y0/z0
-	      if (!m_seedTool->refitStub(track, m_dRatio, m_initialArrow)) {
+	      if (!m_seedTool->refitStub(track, m_initialArrow)) {
 		if ( m_printing )
 		  info() << "   refitStub: matrix singular or no convergence" << endmsg;
 		pool.pop_back();

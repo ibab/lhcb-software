@@ -3,6 +3,12 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2014-10-08 - Manuel Tobias Schiller
+ - use the new SIMDChi2Fit framework for the seeding; efficiencies and ghost
+   rates are stable at the permille level, timing is unaffected within the
+   usual 5% fluctuations I see on my system
+
 ! 2014-10-03 - Gerhard Raven
  - PatFwdFitParabola: reduce the # of multiplications needed. This slightly 
    changes the rounding, which affects the results at the 1e-5 level.
