@@ -10,9 +10,9 @@
 
 // Muon detector
 #include <Event/MuonCoord.h>
+#include <Hlt1Muons/Hlt1MuonHit.h>
 
 // local
-#include "Hlt1MuonHit.h"
 #include "Hlt1MuonStation.h"
 
 class DeMuonDetector;

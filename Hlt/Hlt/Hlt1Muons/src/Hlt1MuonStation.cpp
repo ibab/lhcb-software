@@ -13,9 +13,11 @@
 #include <Kernel/MuonTileID.h>
 #include <Event/MuonCoord.h>
 
+// Hlt1Muons
+#include <Hlt1Muons/Hlt1MuonHit.h>
+
 // local
 #include "Hlt1MuonStation.h"
-#include "Hlt1MuonHit.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Hlt1MuonStation

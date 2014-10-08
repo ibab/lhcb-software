@@ -18,14 +18,27 @@ use MuonDet             v*    Det
 use TrackInterfaces     v*    Tr
 
 #============================================================================
+# Install headers
+#============================================================================
+apply_pattern install_more_includes more=Hlt1Muons
+
+#============================================================================
 # Component library building rule
 #============================================================================
 library          Hlt1Muons    ../src/*.cpp
 
 #============================================================================
+# Dictionary
+#============================================================================
+apply_pattern reflex_dictionary dictionary=Hlt1MuonsDict \
+              headerfiles=$(HLT1MUONSROOT)/dict/Hlt1MuonsDict.h \
+              selectionfile=$(HLT1MUONSROOT)/dict/Hlt1MuonsDict.xml
+
+#============================================================================
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=Hlt1Muons
+
 
 # ==== Auto added tests ====
 apply_pattern    QMTest

@@ -15,13 +15,14 @@
 // Muon Detector
 #include <MuonDet/DeMuonDetector.h>
 
+// Hlt1Muons
+#include <Hlt1Muons/Candidate.h>
+#include <Hlt1Muons/Hlt1MuonHit.h>
+
 // local
 #include "HltVeloIsMuon.h"
-#include "Hlt1MuonHit.h"
-#include "Candidate.h"
 #include "Hlt1MuonHitManager.h"
 #include "Hlt1MuonStation.h"
-#include "Candidate.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltVeloIsMuon
@@ -219,7 +220,7 @@ void Hlt::HltVeloIsMuon::findSeeds( const Candidate& veloSeed,
 
     // Use sum rule for tan and approximate tan( dSlope ) with dSlope to
     // calculate window in x
-    double dz = ( zStation - zMagnet ) / veloSeed.cosTy();
+    double dz = ( zStation - zMagnet );
     // double sign = ( veloSeed.tx() > 0) - ( veloSeed.tx() < 0 );
     double tanMin = ( veloSeed.tx() - dSlope ) / ( 1 + veloSeed.tx() * dSlope );
     double xMin = xMagnet + dz * tanMin - m_xWindow;

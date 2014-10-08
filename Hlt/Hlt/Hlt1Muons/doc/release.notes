@@ -4,6 +4,13 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-10-08 - Roel Aaij
+ - Fix small bug in MatchVeloMuon:
+   calculation of search window in x gave too large windows for seeds with
+   ty > 0.
+ - Move some code into headers and add IMatchVeloMuon.h to make internals
+   accessible when needed.
+
 !========================= Hlt1Muons v1r9 2014-08-16 =========================
 
 ! 2014-07-14 - Gerhard Raven

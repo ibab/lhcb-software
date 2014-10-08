@@ -13,9 +13,11 @@
 // Muon Detector
 #include <MuonDet/DeMuonDetector.h>
 
+// Hlt1Muons
+#include <Hlt1Muons/Hlt1MuonHit.h>
+
 // local
 #include "IsMuonTool.h"
-#include "Hlt1MuonHit.h"
 #include "Hlt1MuonHitManager.h"
 #include "Hlt1MuonStation.h"
 
