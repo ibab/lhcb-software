@@ -258,8 +258,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMu : 'P2CVSigma09', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton09', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
                                                 }
                                               },
                                               {
@@ -267,8 +267,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMu : 'P2CVSigma10', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton10', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
                                                 }
                                               },
                                               {
@@ -276,8 +276,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMu : 'P2CVSigma11', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton11', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
                                                 }
                                               }
                                             ]
@@ -294,8 +294,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuDown : 'P2CVSigma09', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton09', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton09', 
                                                 }
                                               },
                                               {
@@ -303,8 +303,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuDown : 'P2CVSigma10', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton10', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton10', 
                                                 }
                                               },
                                               {
@@ -312,8 +312,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuDown : 'P2CVSigma11', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton11', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton11', 
                                                 }
                                               }
                                             ]
@@ -331,8 +331,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPEE : 'P2CVSigma09', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")   : 'P2CVEl09', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton09', 
+                                                "Phys/StdAllLooseElectrons"   : ['P2CVEl09_1','P2CVEl09_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
                                                 }
                                               },
                                               {
@@ -340,8 +340,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPEE : 'P2CVSigma10', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")   : 'P2CVEl10', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton10', 
+                                                "Phys/StdAllLooseElectrons"   : ['P2CVEl10_1','P2CVEl10_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
                                                 }
                                               },
                                               {
@@ -349,8 +349,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPEE : 'P2CVSigma11', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseElectrons/Particles")   : 'P2CVEl11', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton11', 
+                                                "Phys/StdAllLooseElectrons"   : ['P2CVEl11_1','P2CVEl11_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
                                                 }
                                               }
                                             ]
@@ -367,8 +367,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPEEDown : 'P2CVSigma09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownElectrons/Particles")   : 'P2CVEl09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton09', 
+                                                "Phys/StdNoPIDsDownElectrons"   : ['P2CVEl09_1','P2CVEl09_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton09', 
                                                 }
                                               },
                                               {
@@ -376,8 +376,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPEEDown : 'P2CVSigma10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownElectrons/Particles")   : 'P2CVEl10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton10', 
+                                                "Phys/StdNoPIDsDownElectrons"   : ['P2CVEl10_1','P2CVEl10_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton10', 
                                                 }
                                               },
                                               {
@@ -385,8 +385,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPEEDown : 'P2CVSigma11', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownElectrons/Particles")   : 'P2CVEl11', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton11', 
+                                                "Phys/StdNoPIDsDownElectrons"   : ['P2CVEl11_1','P2CVEl11_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton11', 
                                                 }
                                               }
                                             ]
@@ -403,8 +403,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuLFV : 'P2CVSigma09', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton09', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton09', 
                                                 }
                                               },
                                               {
@@ -412,8 +412,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuLFV : 'P2CVSigma10', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton10', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton10', 
                                                 }
                                               },
                                               {
@@ -421,8 +421,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuLFV : 'P2CVSigma11', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
-                                                DataOnDemand(Location = "Phys/StdLooseProton/Particles")   : 'P2CVProton11', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdAllLooseProton"   : 'P2CVProton11', 
                                                 }
                                               }
                                             ]
@@ -440,8 +440,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuLFVDown : 'P2CVSigma09', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton09', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton09', 
                                                 }
                                               },
                                               {
@@ -449,8 +449,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuLFVDown : 'P2CVSigma10', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton10', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton10', 
                                                 }
                                               },
                                               {
@@ -458,8 +458,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selSigmaPMuMuLFVDown : 'P2CVSigma11', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownProtons/Particles")   : 'P2CVProton11', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdNoPIDsDownProtons"   : 'P2CVProton11', 
                                                 }
                                               }
                                             ]
@@ -477,8 +477,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMu: 'P2CVK09', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdAllLoosePions"   : 'P2CVPion09', 
                                                 }
                                               },
                                               {
@@ -486,8 +486,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMu : 'P2CVK10', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdAllLoosePions"   : 'P2CVPion10', 
                                                 }
                                               },
                                               {
@@ -495,8 +495,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMu : 'P2CVK11', 
-                                                DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                                "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdAllLoosePions"   : 'P2CVPion11', 
                                                 }
                                               }
                                             ]
@@ -513,8 +513,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                               'RecursionLevel' : 1, 
                                               'Locations' : {
                                               self.selKPiMuMuLFV : 'P2CVK09', 
-                                              DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu09', 
-                                              DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                              "Phys/StdAllLooseMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdAllLoosePions"   : 'P2CVPion09', 
                                               }
                                             },
                                             {
@@ -522,8 +522,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                               'RecursionLevel' : 1, 
                                               'Locations' : {
                                               self.selKPiMuMuLFV : 'P2CVK10', 
-                                              DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu10', 
-                                              DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                              "Phys/StdAllLooseMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdAllLoosePions"   : 'P2CVPion10', 
                                               }
                                             },
                                             {
@@ -531,8 +531,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                               'RecursionLevel' : 1, 
                                               'Locations' : {
                                               self.selKPiMuMuLFV : 'P2CVK11', 
-                                              DataOnDemand(Location = "Phys/StdAllLooseMuons/Particles")   : 'P2CVMu11', 
-                                              DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                              "Phys/StdAllLooseMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdAllLoosePions"   : 'P2CVPion11', 
                                               }
                                             }
                                           ]
@@ -550,7 +550,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPi : 'P2CVK09', 
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                                "Phys/StdAllLoosePions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3']
                                                 }
                                               },
                                               {
@@ -558,7 +558,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPi : 'P2CVK10', 
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                                "Phys/StdAllLoosePions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3']
                                                 }
                                               },
                                               {
@@ -566,7 +566,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPi : 'P2CVK11',
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                                "Phys/StdAllLoosePions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3']
                                                 }
                                               }
                                             ]
@@ -583,7 +583,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiMassMeas : 'P2CVK09', 
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion09', 
+                                                "Phys/StdAllLoosePions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3']
                                                 }
                                               },
                                               {
@@ -591,7 +591,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiMassMeas : 'P2CVK10', 
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion10', 
+                                                "Phys/StdAllLoosePions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3']
                                                 }
                                               },
                                               {
@@ -599,7 +599,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiMassMeas : 'P2CVK11',
-                                                DataOnDemand(Location = "Phys/StdAllLoosePions/Particles")   : 'P2CVPion11', 
+                                                "Phys/StdAllLoosePions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3']
                                                 }
                                               }
                                             ]
@@ -616,8 +616,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMuDown : 'P2CVK09', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion09', 
                                                 }
                                               },
                                               {
@@ -625,8 +625,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMuDown : 'P2CVK10', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion10', 
                                                 }
                                               },
                                               {
@@ -634,8 +634,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMuDown : 'P2CVK11', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion11', 
                                                 }
                                               }
                                             ]
@@ -652,7 +652,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiDown : 'P2CVK09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3'] 
                                                 }
                                               },
                                               {
@@ -660,7 +660,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiDown : 'P2CVK10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3'] 
                                                 }
                                               },
                                               {
@@ -668,7 +668,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiDown : 'P2CVK11',
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3'] 
                                                 }
                                               }
                                             ]
@@ -685,7 +685,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiMassMeasDown : 'P2CVK09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion09_1','P2CVPion09_2','P2CVPion09_3'] 
                                                 }
                                               },
                                               {
@@ -693,7 +693,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiMassMeasDown : 'P2CVK10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion10_1','P2CVPion10_2','P2CVPion10_3'] 
                                                 }
                                               },
                                               {
@@ -701,7 +701,7 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiPiPiMassMeasDown : 'P2CVK11',
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                "Phys/StdNoPIDsDownPions"   : ['P2CVPion11_1','P2CVPion11_2','P2CVPion11_3'] 
                                                 }
                                               }
                                             ]
@@ -719,8 +719,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMuLFVDown : 'P2CVK09', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu09', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion09', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu09_1','P2CVMu09_2'], 
+                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion09'
                                                 }
                                               },
                                               {
@@ -728,8 +728,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMuLFVDown : 'P2CVK10', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu10', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion10', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu10_1','P2CVMu10_2'], 
+                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion10' 
                                                 }
                                               },
                                               {
@@ -737,8 +737,8 @@ class RareStrangeLinesConf(LineBuilder) :
                                                 'RecursionLevel' : 1, 
                                                 'Locations' : {
                                                 self.selKPiMuMuLFVDown : 'P2CVK11', 
-                                                DataOnDemand(Location = "Phys/StdLooseDownMuons/Particles")   : 'P2CVMu11', 
-                                                DataOnDemand(Location = "Phys/StdNoPIDsDownPions/Particles")   : 'P2CVPion11', 
+                                                "Phys/StdLooseDownMuons"   : ['P2CVMu11_1','P2CVMu11_2'], 
+                                                "Phys/StdNoPIDsDownPions"   : 'P2CVPion11', 
                                                 }
                                               }
                                             ]

@@ -1,7 +1,7 @@
 #
 __author__ = ['Andrea Contu', 'Francesco Dettori', 'Walter Bonivento']
-__date__ = '2014/07/31'
-__version__ = '$Revision: 2.0 $'
+__date__ = '2014/10/08'
+__version__ = '$Revision: 2.1 $'
 __all__ = ('StrippingDstarD02xxConf'
            ,'combinetwobody'
            ,'combineDstar'
@@ -191,14 +191,57 @@ class StrippingDstarD02xxConf(LineBuilder):
             }
         coneinfo = []
         for conekey, coneitem in (config['ConeAngles']).iteritems():
-          coneinfo.append({ 
+          if xplus!=xminus and xplus!="pi" and xminus!="pi":
+            coneinfo.append({ 
                                         'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
                                         'RecursionLevel' : 2, 
                                         'Locations' : {
                                           _tag_sel : 'P2CVDstar'+conekey,
                                           xxCombSel   : 'P2CVD'+conekey, 
-                                          DataOnDemand( Location=inputLoc[xplus] ) : 'P2CVplus'+conekey,
-                                          DataOnDemand( Location=inputLoc[xminus] ) : 'P2CVminus'+conekey
+                                          (inputLoc[xplus]).replace("/Particles","") : 'P2CVplus'+conekey,
+                                          (inputLoc[xminus]).replace("/Particles","") : 'P2CVminus'+conekey
+                                        } 
+                                      })
+          elif xplus!=xminus and xminus=="pi":
+            coneinfo.append({ 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'RecursionLevel' : 2, 
+                                        'Locations' : {
+                                          _tag_sel : 'P2CVDstar'+conekey,
+                                          xxCombSel   : 'P2CVD'+conekey, 
+                                          (inputLoc[xplus]).replace("/Particles","") : 'P2CVplus'+conekey,
+                                          (inputLoc[xminus]).replace("/Particles","") : ['P2CVminus'+conekey,'P2CVslow'+conekey]
+                                        } 
+                                      })
+          elif xplus!=xminus and xplus=="pi":
+            coneinfo.append({ 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'RecursionLevel' : 2, 
+                                        'Locations' : {
+                                          _tag_sel : 'P2CVDstar'+conekey,
+                                          xxCombSel   : 'P2CVD'+conekey, 
+                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CVplus'+conekey,'P2CVslow'+conekey],
+                                          (inputLoc[xminus]).replace("/Particles","") : 'P2CVminus'+conekey
+                                        } 
+                                      })
+          elif xplus==xminus and xminus!="pi":
+            coneinfo.append({ 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'RecursionLevel' : 2, 
+                                        'Locations' : {
+                                          _tag_sel : 'P2CVDstar'+conekey,
+                                          xxCombSel   : 'P2CVD'+conekey, 
+                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CVplus'+conekey,'P2CVminus'+conekey]
+                                        } 
+                                      })
+          elif xplus==xminus and xminus=="pi":
+            coneinfo.append({ 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'RecursionLevel' : 2, 
+                                        'Locations' : {
+                                          _tag_sel : 'P2CVDstar'+conekey,
+                                          xxCombSel   : 'P2CVD'+conekey, 
+                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CVplus'+conekey,'P2CVminus'+conekey,'P2slowCV'+conekey]
                                         } 
                                       })
         
@@ -247,13 +290,23 @@ class StrippingDstarD02xxConf(LineBuilder):
             }
         coneinfo = []
         for conekey, coneitem in (config['ConeAngles']).iteritems():
-          coneinfo.append({ 
+          if xplus!=xminus:
+            coneinfo.append({ 
                                         'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
                                         'RecursionLevel' : 1, 
                                         'Locations' : {
                                           xxCombSel   : 'P2CVD'+conekey,
-                                          DataOnDemand( Location=inputLoc[xplus] ) : 'P2CVplus'+conekey,
-                                          DataOnDemand( Location=inputLoc[xminus] ) : 'P2CVminus'+conekey
+                                          (inputLoc[xplus]).replace("/Particles","") : 'P2CVplus'+conekey,
+                                          (inputLoc[xminus]).replace("/Particles","") : 'P2CVminus'+conekey
+                                        } 
+                                      })
+          elif xplus==xminus:
+            coneinfo.append({ 
+                                        'Type' : 'RelInfoConeVariables', 'ConeAngle' : coneitem, 'Variables' : config['ConeVariables'], 
+                                        'RecursionLevel' : 1, 
+                                        'Locations' : {
+                                          xxCombSel   : 'P2CVD'+conekey,
+                                          (inputLoc[xplus]).replace("/Particles","") : ['P2CV'+conekey+"_1",'P2CV'+conekey+"_2"]
                                         } 
                                       })
         if(minbias==1):
