@@ -36,6 +36,7 @@ use     LoKiCore        	v*      Phys
 use     LinkerEvent		v*	Event
 use     OnlineKernel            v*      Online
 use     OnlineAlign		v*      Online
+use     Boost            	v*	LCG_Interfaces -no_auto_imports
 #============================================================================
 # Component library building rule
 #============================================================================
@@ -64,6 +65,10 @@ apply_pattern install_python_modules
 ##macro_remove cppdebugflags "-O2"
 ##macro_append cppdebugflags " -O1"
 #end_private
+
+private
+macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
+end_private
 
 macro TAlignmentDict_use_linkopts $(use_linkopts)
 
