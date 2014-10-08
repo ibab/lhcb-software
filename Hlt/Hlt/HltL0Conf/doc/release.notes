@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-10-08- Gerhard Raven
- - add inclusion of TfKernel/THitManager which is no longer included upstream
+ - add inclusion of ValidDataObject now that TfKernel/THitManager which
+   eventually included it is no longer included upstream
 
 !========================= HltL0Conf v4r1 2014-08-18 =========================
 
