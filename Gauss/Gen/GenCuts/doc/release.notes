@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-10-08 - Xabier Cid Vidal
+ - Add InvariantMassQQMCJets tool, to apply gen cuts in the invariant mass of dijets
+
 !========================== GenCuts v3r9 2014-06-18 ========================== 
 ! 2014-06-19 - Gloria Corti
  - Adapt to move of QQqBaryons header file into MCInterfaces package
