@@ -117,6 +117,19 @@ class VeloBackwardTracks( TrackRefiner ):
         if self._fitted:
             a.Selector.MaxChi2Cut = 5
 
+# selection of Velo backward tracks
+class VeloOnlyTracks( TrackRefiner ):
+    def __init__( self, Name = "VeloOnlyTracks", InputLocation = "Rec/Track/Best", Fitted = True ) :
+        TrackRefiner.__init__(self, Name = Name, InputLocation = InputLocation, Fitted = Fitted)
+    def configureSelector( self, a ):
+        from Configurables import TrackSelector
+        a.Selector = TrackSelector()
+        a.Selector.TrackTypes = ["Velo","Backward"]
+        a.Selector.MinNVeloRHits = 4
+        a.Selector.MinNVeloPhiHits = 4
+        a.Selector.MaxNVeloHoles = 0
+        if self._fitted:
+            a.Selector.MaxChi2Cut = 5
 
 # selection of Velo overlap tracks
 class VeloOverlapTracks( TrackRefiner ):
@@ -129,8 +142,8 @@ class VeloOverlapTracks( TrackRefiner ):
         a.Selector.MinHitsCSide = 1
         a.Selector.MinNVeloRHits = 4
         a.Selector.MinNVeloPhiHits = 4
-        a.Selector.MaxNVeloHoles = 0
-        a.Selector.TrackTypes = ["Long","Velo"]
+        a.Selector.MaxNVeloHoles = 1
+        a.Selector.TrackTypes = ["Long","Velo","Backward"]
         if self._fitted:
             a.Selector.MaxChi2PerDoFVelo = 5
             a.Selector.MaxChi2Cut = 5

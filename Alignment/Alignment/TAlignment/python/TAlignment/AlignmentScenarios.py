@@ -57,13 +57,13 @@ def configureVeloHalfAlignment():
     # define the alignment elements
     elements = Alignables()
     elements.Velo("None")
-    elements.VeloRight("Tx")
-    elements.VeloLeft("Tx")
+    elements.VeloRight("TxTyTzRxRyRz")
+    elements.VeloLeft("TxTyTzRxRyRz")
     TAlignment().ElementsToAlign = list(elements)
 
     # make sure that the velo stays where it was
     TAlignment().Constraints = constraints = []
-    constraints.append("VeloHalfAverage : Velo/Velo(Left|Right) : Tx ")
+    constraints.append("VeloHalfAverage : Velo/Velo(Left|Right) : Tx Ty Tz Rx Ry Rz")
  
     # tweak the survey a little bit to fix the z-scale to survey
     surveyconstraints = SurveyConstraints()
@@ -87,9 +87,9 @@ def configureVeloSensorAlignment():
 
     elements = Alignables()
     elements.Velo("None")
-    elements.VeloRight("TxTy")
-    elements.VeloLeft("TxTy")
-    elements.VeloModules("TxTyTzRz")
+    elements.VeloRight("TxTyTzRxRyRz")
+    elements.VeloLeft("TxTyTzRxRyRz")
+    elements.VeloModules("TxTyTzRxRyRz")
     elements.VeloPhiSensors("TxTyTz")
     elements.VeloRSensors("None")
     TAlignment().ElementsToAlign += list(elements)
@@ -97,15 +97,26 @@ def configureVeloSensorAlignment():
     # make sure that the velo stays where it was. Important note: the
     # dofs here must match the ones that we actually align for. If you
     # specify too many, things will go rather wrong.
-    TAlignment().Constraints.append("VeloHalfAverage : Velo/Velo(Left|Right) : Tx Ty")
+    TAlignment().Constraints.append("VeloHalfAverage : Velo/Velo(Left|Right) : Tx Ty Tz Rx Ry Rz")
     
     # now constrain the total shearing and z-scale in each Velo half
     # to get the z-axis nominal. we'll do this by tightening the
-    # survey errors:
+    # survey errors.
+
+    # we need to align the relative twist of the two halves. the
+    # C-side (minus X, Right) is known to have a corkscrew ('twist')
+    # in the base plate. so, for the right half we don't fix the Rz rotation:
     surveyconstraints = SurveyConstraints()
     surveyconstraints.All()
-    surveyconstraints.XmlUncertainties += [ 
-        'Velo/Velo(Left|Right)/Module(00|01|40|41) : 0.0001 0.0001 0.0001 0.000001 0.000001 0.000001' ]
+    #surveyconstraints.XmlUncertainties += [ 
+    #    'Velo/VeloLeft/Module(00|40) : 0.0001 0.0001 0.0001 0.000001 0.000001 0.000001' ]
+    ## for the right half, we fix the shearing and z-scale, but not the Rz rotation 
+    #surveyconstraints.XmlUncertainties += [ 
+    #    'Velo/VeloRight/Module(01|41) : 0.0001 0.0001 0.0001 0.000001 0.000001 0.0001' ]
+
+    # bad idea: release the shearing:
+    #surveyconstraints.XmlUncertainties += [ 
+    #    'Velo/VeloRight/Module(01|41) : 0.02 0.02 0.0001 0.000001 0.000001 0.0001' ]
 
 # Early 2012 data alignment
 def configureEarlyDataAlignment( fixQOverPBias = True ) :

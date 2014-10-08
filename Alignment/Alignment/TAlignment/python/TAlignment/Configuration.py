@@ -217,6 +217,7 @@ class TAlignment( LHCbConfigurableUser ):
         alg.XmlWriters.append("WriteAlignmentConditionsTool/" + name)
 
     def addOnlineXmlWriters( self, alg ) :
+        print 'Configuring XML writer for online alignment'
         listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
         if 'Velo' in listOfCondToWrite:
             self.addOnlineXmlWriter( alg, 'Velo','Global', [0,1] )

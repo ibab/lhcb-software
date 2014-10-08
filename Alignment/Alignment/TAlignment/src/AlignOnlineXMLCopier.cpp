@@ -6,7 +6,8 @@ AlignOnlineXMLCopier::AlignOnlineXMLCopier( const std::string& onlinedir,
 					    const std::string& condname) 
   : m_condname(condname),
     m_onlinedir(onlinedir),
-    m_aligndir(aligndir)
+    m_aligndir(aligndir),
+    m_version(0)
 {}
 
 std::string AlignOnlineXMLCopier::onlinefilename( FileVersion v ) const 

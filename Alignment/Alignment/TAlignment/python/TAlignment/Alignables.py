@@ -24,6 +24,7 @@ class Alignables( list ):
         self.m_otLayers   = [ "/X1", "/U", "/V", "/X2" ]
         self.m_otQuarters = [ "/Q(0|2)", "/Q(1|3)" ]
         self.m_otModules  = [ "/M1", "/M2", "/M3", "/M4", "/M5", "/M6", "/M7", "/M8", "/M9" ]
+        self.m_otRealQuarters = [ "/Q0", "/Q1", "/Q2", "/Q3" ]
         
         self.m_muon            = "/dd/Structure/LHCb/DownstreamRegion/Muon"
         self.m_mustations      = ["/M1","/M2","/M3","/M4","/M5"] ###cosmici
@@ -319,15 +320,21 @@ class Alignables( list ):
                     ## Nine modules numbered from 1 to 9
                     for l in self.m_otModules :
                         elements.append( 'OT/' + i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
-                    #    if ( i.strip('/') != 'T1' and ( j.strip('/') != 'X1' or j.strip('/') != 'U' )
-                    #         and i.strip('/') != 'T3' and ( j.strip('/') != 'X2' or j.strip('/') != 'V' ) ) :
-                    #        elements.append( i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
-                    #    elif ( i.strip('/') == 'T1' and ( j.strip('/') == 'X2' or j.strip('/') == 'V' ) ) :
-                    #        elements.append( i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
-                    #    elif ( i.strip('/') == 'T3' and ( j.strip('/') == 'X1' or j.strip('/') == 'U' ) ) :
-                    #        elements.append( i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
         self.__append( elements, dofs )    
 
+    def OTHalfModules( self, dofs = "" ) :
+        elements = []
+        ## 3 Stations numbered from 1 to 3
+        for i in self.m_otStations :
+            ## There are four layers X1, U, V and X2
+            for j in self.m_otLayers :
+                ## Quarters 0 and 2 (C-Side) and Quarters 1 and 3 (A-side)
+                for k in self.m_otRealQuarters :
+                    ## Nine modules numbered from 1 to 9
+                    for l in self.m_otModules :
+                        elements.append( 'OT/' + i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
+        self.__append( elements, dofs )
+        
     def XOTModules( self, dofs = '' ) :
         elements = []
         for i in self.m_otStations :
