@@ -4,6 +4,12 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2014-10-08 - Manuel Tobias Schiller
+ - include new header SIMDChi2Fit.h, a fully customisable chi^2 track fit for
+   use inside pattern recognition algorithms which can (to some degree)
+   exploit the parallelism inherent in simultaneously working on several hits
+   using autovectorisation in selected bits of code
+
 ! 2014-09-29 - Marco Clemencic
  - reverted hiding from gccxml
  - moved Tf::IStationSelector (C++11-free) to an independent header (it is the
