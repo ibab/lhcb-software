@@ -41,7 +41,7 @@ class SurveyConstraints( LHCbConfigurableUser ):
             ver = 'latest'
         for f in XmlFilesDict['Velo'][ver]: self.XmlFiles += [ self.defaultSurveyDir() + "Velo/"+f+".xml" ]
         self.XmlUncertainties += ["Module(PU|).. : 0.02 0.02 0.02 0.0002 0.0002 0.0002",
-                                  "Detector(PU|)..-.. : 0.02 0.02 0.02 0.0001 0.0001 0.0001" ]
+ 				  "Detector(PU|)..-.. : 0.005 0.005 0.005 0.0001 0.0001 0.0001" ]
         self.Constraints += [ "Velo      : 0 0 0 -0.0001 0 -0.0001 : 0.2 0.2 0.2 0.0001 0.0001 0.001",
                               "Velo/Velo(Right|Left) : 0 0 0 0 0 0 : 10 1 0.2 0.0001 0.0001 0.0001" ]
         
