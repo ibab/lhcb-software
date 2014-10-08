@@ -322,11 +322,11 @@ class PDF (object) :
     #  r,f = model.fitTo ( dataset )
     #  model.draw ( datatset , nbins = 100 ) 
     #  @endcode 
-    def draw ( self , dataset , nbins = 100 , silent = False ) :
+    def draw ( self , dataset = None , nbins = 100 , silent = False ) :
         """    
         Visualize the fits results
         
-        >>> r,f = model.fitTo ( dataset )
+        >>> r,f = model.draw ( dataset )
         >>> model.draw ( datatset , nbins = 100 )
         
         """
@@ -341,7 +341,8 @@ class PDF (object) :
 
             frame = self.mass.frame( nbins )
             #
-            dataset  .plotOn ( frame )
+            if dataset :
+                dataset  .plotOn ( frame )
             #
             iB = 0 
             for i in self.backgrounds() :
