@@ -21,6 +21,7 @@
 #include "CharmD0KpiXWrapper.h"
 #include "CharmD0KeXWrapper.h"
 #include "CharmD0KmuXWrapper.h"
+#include "CharmLambdaCPKpiWrapper.h"
 //#include "CharmD0KspipiWrapper.h"
 //#include "CharmDpKspiWrapper.h"
 //#include "CharmDstD0KspipiWrapper.h"
@@ -722,41 +723,38 @@ TMVAWrapper * TaggerCharmTool::getMVA( CharmMode mode )
 
   case CharmMode::Dz2kpi:
     m_classifiers[mode] = new CharmD0KpiWrapper(inputVarMap[mode]);
-    fatal() << "Instantiated D0Kpi Wrapper" << endreq;
     break;
   
   case CharmMode::Dz2kpipipi:
     m_classifiers[mode] = new CharmD0KpipipiWrapper(inputVarMap[mode]);
-    fatal() << "Instantiated D0Kpipipi Wrapper" << endreq;
     break;
     
   case CharmMode::Dz2kpipiz:
     m_classifiers[mode] = new CharmD0Kpipi0Wrapper(inputVarMap[mode]);
-    fatal() << "Instantiated D0Kpipiz Wrapper" << endreq;
     break;
 
   case CharmMode::Dp2kpipi:
     m_classifiers[mode] = new CharmDpKpipiWrapper(inputVarMap[mode]);
-    fatal() << "Instantiated DKpipi Wrapper" << endreq;
     break;
 
   case CharmMode::Dz2kpiX:
     m_classifiers[mode] = new CharmD0KpiXWrapper(inputVarMap[mode]);
-    fatal() << "Instantiated D0KpiX Wrapper" << endreq;
     break;
     
   case CharmMode::Dz2keX:
     m_classifiers[mode] = new CharmD0KeXWrapper(inputVarMap[mode]);
-    fatal() << "Instantiated D0KeX Wrapper" << endreq;
     break;
     
   case CharmMode::Dz2kmuX:
     m_classifiers[mode] = new CharmD0KmuXWrapper(inputVarMap[mode]);
-    fatal() << "Instantiated D0KmuX Wrapper" << endreq;
+    break;
+
+  case CharmMode::LambdaC2pkpi:
+    m_classifiers[mode] = new CharmLambdaCPKpiWrapper(inputVarMap[mode]);
     break;
 
   default:
-    Exception( "Unknown mode" );
+    warning() << "Unknown charm mode" << endreq;
     break;
 
   }

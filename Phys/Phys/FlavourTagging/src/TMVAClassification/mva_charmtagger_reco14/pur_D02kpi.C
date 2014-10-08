@@ -1,7 +1,4 @@
 //========= Macro generated from object: purS_BDT/purS_BDT
-//========= by ROOT version6.00/02
-   
-//========= Macro generated from object: purS_BDT/purS_BDT
 //========= by ROOT version5.34/20
 
 #include "TH1F.h"

@@ -2,6 +2,8 @@
 //========= by ROOT version6.00/02
 
 #include "TH1F.h"
+#include "TDirectory.h"
+#include <iostream>
 
 namespace MyLambdaCPKpiSpace 
 {
@@ -30,7 +32,9 @@ double PurityTable::GetPurityAtBDT(double bdt) {
 
 PurityTable::PurityTable() {
    
-   purS_BDT = new TH1F("purS_BDT_LambdaC2pkpi","purS_BDT_LambdaC2pkpi",10000,-0.543232,0.175363);
+   purS_BDT = (TH1F*)gDirectory->Get("purS_BDT_LambdaC2pkpi");
+   if (purS_BDT == NULL)
+     purS_BDT = new TH1F("purS_BDT_LambdaC2pkpi","purS_BDT_LambdaC2pkpi",10000,-0.543232,0.175363);
    purS_BDT->SetBinContent(1,0.00185741);
    purS_BDT->SetBinContent(2,0.00185742);
    purS_BDT->SetBinContent(3,0.00185742);

@@ -7,7 +7,7 @@
 #include <cmath>
 #include <iostream>
 
-//#include "compileSettings.h"
+#define SKIP_TMVA_COMPILE
 
 /** @class TMVAWrapper TMVAWrapper.h
  *  

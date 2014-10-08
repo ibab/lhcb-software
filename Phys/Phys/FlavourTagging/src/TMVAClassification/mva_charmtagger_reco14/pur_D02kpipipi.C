@@ -2,6 +2,7 @@
 //========= by ROOT version6.00/02
    
 #include "TH1F.h"
+#include "TDirectory.h"
 
 namespace MyD0KpipipiSpace 
 {
@@ -30,7 +31,9 @@ double PurityTable::GetPurityAtBDT(double bdt) {
 
 PurityTable::PurityTable() {
   
-   purS_BDT1 = new TH1F("purS_BDT_D02kpipipi","purS_BDT_D02kpipipi",10000,-0.66214,0.279998);
+   purS_BDT1 = (TH1F*)gDirectory->Get("purS_BDT_D02kpipipi");
+   if (purS_BDT1 == NULL)
+     purS_BDT1 = new TH1F("purS_BDT_D02kpipipi","purS_BDT_D02kpipipi",10000,-0.66214,0.279998);
    purS_BDT1->SetBinContent(1,0.071107);
    purS_BDT1->SetBinContent(2,0.0711079);
    purS_BDT1->SetBinContent(3,0.0711079);

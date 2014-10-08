@@ -2,6 +2,7 @@
 //========= by ROOT version5.34/20
 
 #include "TH1F.h"
+#include "TDirectory.h"
 
 namespace MyD0KeXSpace 
 {
@@ -30,7 +31,10 @@ double PurityTable::GetPurityAtBDT(double bdt) {
 
 
 PurityTable::PurityTable() {
-   purS_BDT = new TH1F("purS_BDT_D02keX","purS_BDT_D02keX",10000,-0.610798,0.186177);
+
+   purS_BDT = (TH1F*)gDirectory->Get("purS_BDT_D02keX");
+   if (purS_BDT == NULL)
+     purS_BDT = new TH1F("purS_BDT_D02keX","purS_BDT_D02keX",10000,-0.610798,0.186177);
    purS_BDT->SetBinContent(1,0.0637813);
    purS_BDT->SetBinContent(2,0.0637827);
    purS_BDT->SetBinContent(3,0.0637827);
