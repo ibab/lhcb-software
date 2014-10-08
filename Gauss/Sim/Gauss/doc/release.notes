@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !========================== Gauss v47r0 2014-10-07 ===========================
+! 2014-10-08 - Gloria Corti
+ - Introduce changes for Upgrade RICH in configurable, requires GaussCherenkov
+   v4r4 
+
 ! 2014-10-07 - Gloria Corti
  - Revert back to LHAPDFSet v1r*
  - Put back configuration of BcVegPy that had been temporarily switched off

@@ -627,9 +627,9 @@ class Gauss(LHCbConfigurableUser):
     ##
     def configureRichSim (self, slot, detHits ):
         from Configurables import (
-            GetMCCkvHitsAlg,
-            GetMCCkvOpticalPhotonsAlg,
-            GetMCCkvSegmentsAlg,
+            GetMCRichHitsAlg,
+            GetMCRichOpticalPhotonsAlg,
+            GetMCRichSegmentsAlg,
             GetMCRichTracksAlg
             )
 
@@ -724,14 +724,14 @@ class Gauss(LHCbConfigurableUser):
             GetMCCkvHitsAlg,
             GetMCCkvOpticalPhotonsAlg,
             GetMCCkvSegmentsAlg,
-            GetMCRichTracksAlg
+            GetMCCkvTracksAlg
             )
         richHitsSeq = GaudiSequencer( "RichHits" + slot )
         detHits.Members += [ richHitsSeq ]
         richHitsSeq.Members = [ GetMCCkvHitsAlg( "GetRichHits"+slot),
                                 GetMCCkvOpticalPhotonsAlg("GetRichPhotons"+slot),
                                 GetMCCkvSegmentsAlg("GetRichSegments"+slot), 
-                                GetMCRichTracksAlg("GetRichTracks"+slot), 
+                                GetMCCkvTracksAlg("GetRichTracks"+slot), 
                                 Rich__MC__MCPartToMCRichTrackAlg("MCPartToMCRichTrack"+slot), 
                                 Rich__MC__MCRichHitToMCRichOpPhotAlg("MCRichHitToMCRichOpPhot"+slot) ]
 
