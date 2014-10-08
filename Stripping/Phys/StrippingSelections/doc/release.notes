@@ -4,6 +4,9 @@ va! ----------------------------------------------------------------------------
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-08 - Hannah Mary Evans
+ - Modified Bs2MuMuLined to use the updated AddRelatedInfo interface and using new Bs2MuMuIsolation tools
+
 ! 2014-10-07 - Paul Seyfert
  - Modified tau->mumumu lines to use the updated AddRelatedInfo interface
 

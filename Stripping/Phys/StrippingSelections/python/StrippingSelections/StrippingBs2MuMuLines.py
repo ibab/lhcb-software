@@ -265,6 +265,9 @@ class Bs2MuMuLinesConf(LineBuilder) :
         stdjets_name_ban_SS = "StdJetsNoJetIDBanMuonsSS"
         stdjets_name_addb_SS = "StdJetsNoJetIDAddBSS"
  
+
+
+
         stdjets_name_ban_LTUB = "StdJetsNoJetIDBanMuonsLTUB"
         stdjets_name_addb_LTUB = "StdJetsNoJetIDAddBLTUB"
 
@@ -285,10 +288,32 @@ class Bs2MuMuLinesConf(LineBuilder) :
               'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_default+"/Particles",
               'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
               'LocationJetsForceB' : "Phys/"+stdjets_name_addb_default+"/Particles"},
-            { "Type" : "RelInfoBs2MuMuIsolations"
-              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-              , "Location"  : "BSMUMUVARIABLES"  
+            { "Type" : "RelInfoBs2MuMuBIsolations"
+              ,"RecursionLevel" : 0
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS', 'BSMUMUPARTID','BSMUMUTOPID']
+              , "Location"  : "BSMUMUVARIABLES"},
+
+ 
+            { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                      ,"RecursionLevel" : 1
+                      , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' ,'BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
+                                                                                                                                                               
+              ,"Locations" : {
+                    'Phys/StdAllNoPIDsMuons' :  ['Muon1iso', 'Muon2iso']
+                   }
+              , "tracktype" : 3
+              , "angle"      : 0.27
+              , "fc"         : 0.60
+              , "doca_iso"   : 0.13
+              , "ips"        : 3.0
+              , "svdis"      : -0.15
+              , "svdis_h"    : 30.
+              , "pvdis"      : 0.5
+              , "pvdis_h"    : 40.
+              , "makeTrackCuts" : False
+              , "IsoTwoBody" : True
               },
+
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
               "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
@@ -297,25 +322,25 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 0,
-              "Locations" : { "Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_0"},
+              "Locations" : { "Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_0" },
               "WeightsFile" : "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 1,
-              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_1"},
+              "Locations" : {"Phys/StdAllNoPIDsMuons" :  "MuonTrackIsoBDTInfo_1"},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 2,
-              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_2"},
+              "Locations" : {"Phys/StdAllNoPIDsMuons" :  "MuonTrackIsoBDTInfo"},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 3,
-              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_3"},
+              "Locations" : {"Phys/StdAllNoPIDsMuons" :  "MuonTrackIsoBDTInfo_3"},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
@@ -342,10 +367,33 @@ class Bs2MuMuLinesConf(LineBuilder) :
               'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_wide+"/Particles",
               'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
               'LocationJetsForceB' : "Phys/"+stdjets_name_addb_wide+"/Particles"},
-            { "Type" : "RelInfoBs2MuMuIsolations"
-              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-              , "Location"  : "BSMUMUVARIABLES"  
+
+       { "Type" : "RelInfoBs2MuMuBIsolations"
+              ,"RecursionLevel" : 0
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS', 'BSMUMUPARTID','BSMUMUTOPID']
+              , "Location"  : "BSMUMUVARIABLES"},
+
+ 
+            { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                      ,"RecursionLevel" : 1
+                      , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' ,'BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
+                                                                                                                                                               
+              ,"Locations" : {
+                    'Phys/StdAllLooseMuons' :  ['Muon1iso', 'Muon2iso']
+                   }
+              , "tracktype" : 3
+              , "angle"      : 0.27
+              , "fc"         : 0.60
+              , "doca_iso"   : 0.13
+              , "ips"        : 3.0
+              , "svdis"      : -0.15
+              , "svdis_h"    : 30.
+              , "pvdis"      : 0.5
+              , "pvdis_h"    : 40.
+              , "makeTrackCuts" : False
+              , "IsoTwoBody" : True
               },
+
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
              "RecursionLevel" : 0,
               "Variables" : ['ZVISO'],
@@ -420,7 +468,8 @@ class Bs2MuMuLinesConf(LineBuilder) :
                                     postscale = config['DefaultPostscale'],
                                     MDSTFlag = True,
                                     RequiredRawEvents = ["Muon", "Calo"],
-                                    algos = [ self.selBd ],                                  
+                                    algos = [ self.selBd ], 
+                               
                                     )
 
 
@@ -438,9 +487,30 @@ class Bs2MuMuLinesConf(LineBuilder) :
               'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_SS+"/Particles",
               'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
               'LocationJetsForceB' : "Phys/"+stdjets_name_addb_SS+"/Particles"},
-            { "Type" : "RelInfoBs2MuMuIsolations"
-              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-              , "Location"  : "BSMUMUVARIABLES"  
+  { "Type" : "RelInfoBs2MuMuBIsolations"
+              ,"RecursionLevel" : 0
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS', 'BSMUMUPARTID','BSMUMUTOPID']
+              , "Location"  : "BSMUMUVARIABLES"},
+
+ 
+            { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                      ,"RecursionLevel" : 1
+                      , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' , 'BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
+                                                                                                                                                               
+              ,"Locations" : {
+                    'Phys/StdAllLooseMuons' :['Muon1iso', 'Muon2iso']
+                   }
+              , "tracktype" : 3
+              , "angle"      : 0.27
+              , "fc"         : 0.60
+              , "doca_iso"   : 0.13
+              , "ips"        : 3.0
+              , "svdis"      : -0.15
+              , "svdis_h"    : 30.
+              , "pvdis"      : 0.5
+              , "pvdis_h"    : 40.
+              , "makeTrackCuts" : False
+              , "IsoTwoBody" : True
               },
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
              "RecursionLevel" : 0,
@@ -496,9 +566,30 @@ class Bs2MuMuLinesConf(LineBuilder) :
               'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_LTUB+"/Particles",
               'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
               'LocationJetsForceB' : "Phys/"+stdjets_name_addb_LTUB+"/Particles"},
-            { "Type" : "RelInfoBs2MuMuIsolations"
-              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-              , "Location"  : "BSMUMUVARIABLES"  
+            { "Type" : "RelInfoBs2MuMuBIsolations"
+              ,"RecursionLevel" : 0
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS', 'BSMUMUPARTID','BSMUMUTOPID']
+              , "Location"  : "BSMUMUVARIABLES"},
+
+ 
+            { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                      ,"RecursionLevel" : 1
+                      , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' , 'BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
+                                                                                                                                                               
+              ,"Locations" : {
+                    'Phys/StdAllLooseMuons' : ['Muon1iso', 'Muon2iso']
+                   }
+              , "tracktype" : 3
+              , "angle"      : 0.27
+              , "fc"         : 0.60
+              , "doca_iso"   : 0.13
+              , "ips"        : 3.0
+              , "svdis"      : -0.15
+              , "svdis_h"    : 30.
+              , "pvdis"      : 0.5
+              , "pvdis_h"    : 40.
+              , "makeTrackCuts" : False
+              , "IsoTwoBody" : True
               },
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
              "RecursionLevel" : 0,
@@ -551,9 +642,30 @@ class Bs2MuMuLinesConf(LineBuilder) :
               'LocationJetsNoMu' : "Phys/"+stdjets_name_ban_KKLTUB+"/Particles",
               'LocationJetsNoRemove' : "Phys/"+stdjets_name_noban+"/Particles",
               'LocationJetsForceB' : "Phys/"+stdjets_name_addb_KKLTUB+"/Particles"},
-            { "Type" : "RelInfoBs2MuMuIsolations"
-              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-              , "Location"  : "BSMUMUVARIABLES"  
+            { "Type" : "RelInfoBs2MuMuBIsolations"
+              ,"RecursionLevel" : 0
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS', 'BSMUMUPARTID','BSMUMUTOPID']
+              , "Location"  : "BSMUMUVARIABLES"},
+
+ 
+            { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                      ,"RecursionLevel" : 1
+                      , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' ,'BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
+                                                                                                                                                               
+              ,"Locations" : {
+                    'Phys/StdAllLooseKaons' :  ['Muon1iso', 'Muon2iso']
+                   }
+              , "tracktype" : 3
+              , "angle"      : 0.27
+              , "fc"         : 0.60
+              , "doca_iso"   : 0.13
+              , "ips"        : 3.0
+              , "svdis"      : -0.15
+              , "svdis_h"    : 30.
+              , "pvdis"      : 0.5
+              , "pvdis_h"    : 40.
+              , "makeTrackCuts" : False
+              , "IsoTwoBody" : True
               },
             { "Type" : "RelInfoBs2MuMuZVisoBDT",
                "RecursionLevel" : 0,
