@@ -4,7 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================== Gauss v47r0 2014-10-07 ===========================
+!========================== Gauss v48r0 2014-10-08 ===========================
+! 2014-10-08 - Gloria Corti
+ - Change major version to reflect changes in generators
+
+!========================== Gauss v47r0 2014-10-08 ===========================
 ! 2014-10-08 - Gloria Corti
  - Introduce changes for Upgrade RICH in configurable, requires GaussCherenkov
    v4r4 
