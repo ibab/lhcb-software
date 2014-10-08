@@ -18,6 +18,10 @@
 #include "AlignmentInterfaces/IAlignUpdateTool.h"
 #include "AlignmentInterfaces/IWriteAlignmentConditionsTool.h"
 
+#include "AlignOnlineXMLCopier.h"
+#include <boost/filesystem.hpp>
+#include <boost/lexical_cast.hpp>
+
 //#include <stdio.h>
 //#include <stdlib.h>
 
@@ -42,6 +46,9 @@ class AlignOnlineIterator : public GaudiTool, virtual public LHCb::IAlignIterato
   unsigned int m_maxIteration ;
   ASDCollector m_asdCollector ;
   unsigned int m_iteration;
+  std::string m_onlinexmldir ;
+  std::string m_alignxmldir ;
+  std::vector<AlignOnlineXMLCopier> m_xmlcopiers ;
 };
 
 
@@ -73,6 +80,9 @@ AlignOnlineIterator::AlignOnlineIterator(const std::string &  type,
   declareProperty("MaxIteration", m_maxIteration = 10 ) ;
   declareProperty("ASDDir", m_asdCollector.m_dir ) ;
   declareProperty("ASDFilePattern", m_asdCollector.m_filePatt ) ;
+  declareProperty("OnlineXmlDir", m_onlinexmldir = "/group/online/alignment") ;
+  declareProperty("AlignXmlDir", m_alignxmldir = "/group/online/AligWork") ;
+
   m_iteration = 0;
   IInterface *p=(IInterface*)parent;
   StatusCode sc = p->queryInterface(LHCb::IAlignDrv::interfaceID(),(void**)(&m_parent));
@@ -94,8 +104,27 @@ StatusCode AlignOnlineIterator::initialize()
     if(!sc.isSuccess() )
       error() << "Cannot retrieve xmlwriter" << endreq ;
   }
+  
+  // instantiate the objects that will take care of copying and versioning files
+  const std::string runningdir = m_alignxmldir + "/running" ;
+  std::vector<std::string> condnames = { { 
+      "Velo/VeloGlobal","Velo/VeloModules",
+      "TT/TTGlobal","TT/TTModules",
+      "IT/TTGlobal","IT/TTModules",
+      "OT/TTGlobal","OT/TTModules"
+    }} ;
+  for(auto i : condnames) 
+    m_xmlcopiers.push_back( AlignOnlineXMLCopier(m_onlinexmldir,runningdir, i) ) ;
+  
+  for( auto i : m_xmlcopiers ) {
+    StatusCode thissc = i.copyFromOnlineArea() ;
+    if(!thissc.isSuccess()) {
+      error() << "Cannot find input xml file \'" << i.onlinefilename() << "\'" << endmsg ;
+      sc = StatusCode::FAILURE ;
+    }
+  }
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode AlignOnlineIterator::finalize()
@@ -109,6 +138,13 @@ StatusCode AlignOnlineIterator::i_run()
 {
   StatusCode sc = StatusCode::SUCCESS ;
   // only called once
+
+  // read the xml. need to implement a tool with similar functionality as runchangehandlersvc
+  
+  // somewhere in between: tell the thing the runchangehandler uses which files? or at least that things have changed ...
+  // probably the easiest is to call the runchangehandlersvc::handle function directly!
+
+  int runnr = 0 ;
   while( m_iteration < m_maxIteration ) {
     m_parent->waitRunOnce();
 
@@ -118,6 +154,7 @@ StatusCode AlignOnlineIterator::i_run()
     Al::Equations equations ;
     m_asdCollector.collectASDs(equations) ;
     debug() << "Collected ASDs: numevents = " << equations.numEvents() << endreq ;
+    runnr = equations.firstRun() ;
 
     // std::vector<std::string> filenames ;
     // for(auto filename : filenames ) {
@@ -164,9 +201,23 @@ StatusCode AlignOnlineIterator::i_run()
     m_parent->doContinue();
   }
 
+  if(sc.isSuccess() && m_iteration > 1 ) {
+    // after last update, if more than one iteration
+    for( auto i : m_xmlcopiers ) {
+      StatusCode thissc = i.copyToOnlineArea() ;
+      if(!thissc.isSuccess()) {
+	error() << "Error copying file to online area" << endmsg ;
+      }
+    }
+  }
+
+  // move the 'running' dir to a dirname with current run
+  std::string rundir = m_alignxmldir + "/run" + boost::lexical_cast<std::string>( runnr ) ;
+  boost::filesystem::rename( m_alignxmldir + "/running", rundir ) ;
+
   //fflush(stdout);
   m_parent->doStop();
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode AlignOnlineIterator::i_start()
