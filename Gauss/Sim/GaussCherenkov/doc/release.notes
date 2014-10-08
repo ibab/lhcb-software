@@ -4,18 +4,25 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-!2014-10-07 - Sajan Easo
-- Minor modifications to the Cherenkov analysis in booking and filling histograms with new
-  collection set.
-!2014-08-24  - Sajan Easo 
- -  Added the file GetMCCkvTracksAlg  to avoid problems with collection name in that file.
- -  Kept some of the factories in Factories.cpp
-!2014-08-24  - Sajan Easo
-- For using the mixed set of PMTS, the sensitive detector and collection name
+
+!===================== GaussCherenkov v4r4 2014-10-08 ========================
+! 2014-10-07 - Sajan Easo
+ - Minor modifications to the Cherenkov analysis in booking and filling 
+   histograms with new collection set.
+
+! 2014-08-24  - Sajan Easo 
+ - Added the file GetMCCkvTracksAlg  to avoid problems with collection 
+   name in that file.
+ - Kept some of the factories in Factories.cpp
+
+! 2014-08-24  - Sajan Easo
+ - For using the mixed set of PMTS, the sensitive detector and collection name
   configurations are modified. The hits from large PMTS are in a separate 
   sensitive detector and are stored in two
-  extra collection sets. All this is made transparent to the rest of the program.
+  extra collection sets. All this is made transparent to the rest of the 
+  program.
   Modified several files in the SensDet subdirectory and corresponding .h files.
+
 !===================== GaussCherenkov v4r3 2014-07-28 ========================
 ! 2014-06-06 - Jibo He
  - GiGaPhysConstructorOpCkv -> RichPmtPhotoElectricEffect -> RichPmtProperties 
