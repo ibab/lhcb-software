@@ -193,7 +193,7 @@ StatusCode AlignAlgorithm::initialize() {
 }
 
 StatusCode AlignAlgorithm::finalize() {
-  if (m_updateInFinalize) update() ;
+  if ( m_updateInFinalize && !m_Online ) update() ;
 
   for( std::vector<AlElementHistos*>::iterator ielem = m_elemHistos.begin() ;
        ielem != m_elemHistos.end(); ++ielem) delete *ielem ;
