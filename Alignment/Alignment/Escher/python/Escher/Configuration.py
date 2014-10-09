@@ -342,7 +342,7 @@ class Escher(LHCbConfigurableUser):
                                    'PartitionName' ])
 
         #path = self.getProp('DBSnapshotDirectory') + "/.."*4 + "/group/online/AligWork/current/"
-        path = "/group/online/AligWork/current/"
+        path = "/group/online/AligWork/running/"
         from Configurables import RunChangeHandlerSvc
         rch = RunChangeHandlerSvc()
         ApplicationMgr().ExtSvc.append(rch)
