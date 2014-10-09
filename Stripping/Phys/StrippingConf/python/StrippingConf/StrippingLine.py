@@ -696,26 +696,13 @@ def limitCombinatorics( configurable,
         if val : configurable.IncidentsToBeFlagged += [ incidentName ]
         return val
     elif type(configurable) == CombineParticles :
-	if MaxCandidates != None : 
-    	    configurable.StopAtMaxCandidates = True
-    	    configurable.MaxCandidates       = MaxCandidates
-    	if MaxCombinations != None : 
-    	    configurable.StopAtMaxCombinations = True
-    	    configurable.MaxCombinations       = MaxCombinations
-    	if MaxCandidates != None or MaxCombinations != None : 
-    	    configurable.StopIncidentType    = incidentName
-    	    return True
-	else :
-	    return False
-    elif hasattr( type(configurable), 'StopAtMaxCandidates' )   and hasattr( type(configurable), 'MaxCandidates' ) \
-     and hasattr( type(configurable), 'StopAtMaxCombinations' ) and hasattr( type(configurable), 'MaxCombinations' ):
-        if MaxCandidates != None :
+        if MaxCandidates != None : 
             configurable.StopAtMaxCandidates = True
             configurable.MaxCandidates       = MaxCandidates
-        if MaxCombinations != None :
+        if MaxCombinations != None : 
             configurable.StopAtMaxCombinations = True
             configurable.MaxCombinations       = MaxCombinations
-        if MaxCandidates != None or MaxCombinations != None :
+        if MaxCandidates != None or MaxCombinations != None : 
             configurable.StopIncidentType    = incidentName
             return True
         else :
@@ -728,4 +715,32 @@ def limitCombinatorics( configurable,
     	    return True
 	else :
 	    return False
-        
+    elif type(configurable) != CombineParticles and \
+         hasattr(type(configurable),'StopAtMaxCandidates') and hasattr(type(configurable),'MaxCandidates') and \
+         hasattr(type(configurable),'StopAtMaxCombinations') and hasattr(type(configurable),'MaxCombinations'):
+        ### Comments will be removed before the release.
+        if MaxCandidates != None:
+            configurable.StopAtMaxCandidates = True
+            configurable.MaxCandidates = MaxCandidates
+            #log.warning('Set StopAtMaxCandidates = '+str(configurable.StopAtMaxCandidates)+
+            #           ' and MaxCandidates = '+str(configurable.MaxCandidates)+
+            #           ' for algorithm '+configurable.name()+'/'+str(type(configurable)))
+        if MaxCombinations != None:
+            configurable.StopAtMaxCombinations = True
+            configurable.MaxCombinations = MaxCombinations
+            #log.warning('Set StopAtMaxCombinations = '+str(configurable.StopAtMaxCombinations)+
+            #           ' and MaxCombinations = '+str(configurable.MaxCombinations)+
+            #           ' for algorithm '+configurable.name()+'/'+str(type(configurable)))
+        if MaxCandidates != None or MaxCombinations != None :
+            configurable.StopIncidentType    = incidentName
+            #log.warning('Set StopIncidentType = '+str(configurable.StopIncidentType)+
+            #           ' for algorithm '+configurable.name()+'/'+str(type(configurable)))
+            return True
+        else :
+            return False
+    else: 
+        #log.warning('Not able to set MaxCandidates and MaxCombinations to algorithm '+str(type(configurable))+'/'+configurable.name())
+        return False
+
+
+
