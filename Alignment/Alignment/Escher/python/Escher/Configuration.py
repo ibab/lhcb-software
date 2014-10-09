@@ -345,6 +345,7 @@ class Escher(LHCbConfigurableUser):
         path = "/group/online/AligWork/current/"
         from Configurables import RunChangeHandlerSvc
         rch = RunChangeHandlerSvc()
+        ApplicationMgr().ExtSvc.append(rch)
         rch.Conditions = {
             path + 'Velo/VeloGlobal.xml'  : [ 
                 'Conditions/Alignment/Velo/VeloSystem'
