@@ -6,7 +6,6 @@
 // from Gaudi
 #include <GaudiKernel/ToolFactory.h>
 #include <GaudiKernel/SystemOfUnits.h>
-#include <GaudiKernel/boost_allocator.h>
 #include <DetDesc/Condition.h>
 
 // from LHCb
@@ -137,7 +136,6 @@ StatusCode Hlt::HltVeloIsMuon::initialize()
 StatusCode Hlt::HltVeloIsMuon::finalize()
 {
     clean();
-    boost::singleton_pool<Candidate, sizeof( Candidate )>::release_memory();
     return GaudiHistoTool::finalize();
 }
 

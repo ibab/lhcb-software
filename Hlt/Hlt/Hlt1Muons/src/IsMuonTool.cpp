@@ -1,6 +1,4 @@
 // $Id: $
-// boost
-#include <boost/foreach.hpp>
 
 // from Gaudi
 #include <GaudiKernel/ToolFactory.h>
