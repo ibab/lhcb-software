@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-10-09 - Vanya Belyaev
+ - Functions.cpp 
+   fix stupid typo 
+
 ! 2014-09-17 - Marco Clemencic
  - Fixed genreflex warnings (ROOT 6).
 

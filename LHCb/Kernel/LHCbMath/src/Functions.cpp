@@ -2978,7 +2978,7 @@ double Gaudi::Math::Apolonios::pdf ( const double x ) const
   //
   if  ( dx < -m_alpha )
   {
-    const double frac = np1 () / ( np1 () - ( m_alpha + dx ) / aa () )  ;
+    const double frac = np1 () / ( np1 () - ( m_alpha + dx ) * aa () )  ;
     return std::pow ( frac , np1 () ) * m_A * s_SQRT2PIi / sigma() ;
   }
   //
