@@ -75,7 +75,7 @@ AlignOnlineIterator::AlignOnlineIterator(const std::string &  type,
     m_xmlwriter("WriteMultiAlignmentConditionsTool")
 {
   declareInterface<LHCb::IAlignIterator>(this) ;
-  declareProperty("PartitionName",   m_PartitionName= "LHCbA") ;
+  declareProperty("PartitionName", m_PartitionName= "LHCbA") ;
   declareProperty("MaxIteration", m_maxIteration = 10 ) ;
   declareProperty("ASDDir", m_asdCollector.m_dir ) ;
   declareProperty("ASDFilePattern", m_asdCollector.m_filePatt ) ;
@@ -90,6 +90,10 @@ AlignOnlineIterator::AlignOnlineIterator(const std::string &  type,
 StatusCode AlignOnlineIterator::initialize()
 {
   debug() << "AlignOnlineIterator::initialize()" << endreq ;
+  debug() << "ASDDir         : " << m_asdCollector.m_dir << endreq ;
+  debug() << "ASDFilePattern : " << m_asdCollector.m_dir << endreq ;
+  debug() << "PartitionName  : " << m_PartitionName << endreq ;
+  debug() << "MaxIteration    : " << m_maxIteration << endreq ;
 
   StatusCode sc = GaudiTool::initialize() ;
   if(sc.isSuccess() ) {
@@ -109,7 +113,7 @@ StatusCode AlignOnlineIterator::initialize()
   if( !boost::filesystem::exists(runningdir) )
     boost::filesystem::create_directory(runningdir) ;
 
-  std::vector<std::string> condnames = { { 
+  const std::vector<std::string> condnames = { { 
       "Velo/VeloGlobal","Velo/VeloModules",
       "TT/TTGlobal","TT/TTModules",
       "IT/TTGlobal","IT/TTModules",
@@ -141,14 +145,12 @@ StatusCode AlignOnlineIterator::i_run()
   StatusCode sc = StatusCode::SUCCESS ;
   // only called once
 
-  // read the xml. need to implement a tool with similar functionality as runchangehandlersvc
-  
-  // somewhere in between: tell the thing the runchangehandler uses which files? or at least that things have changed ...
-  // probably the easiest is to call the runchangehandlersvc::handle function directly!
-
   int runnr = 0 ;
   while( m_iteration < m_maxIteration ) {
     m_parent->waitRunOnce();
+
+    // FIXME: fire incident in the run changehandler to read the xml.
+
 
     // 4. read ASDs and compute new constants
     debug() << "Collecting ASD files" << endreq ;
@@ -169,26 +171,15 @@ StatusCode AlignOnlineIterator::i_run()
     //   else
     // 	equations.add( tmp ) ;
     // }
-    debug() << "Calling AlignUpdateTool" << endreq ;
 
+    debug() << "Calling AlignUpdateTool" << endreq ;
     StatusCode sc = m_alignupdatetool->process( equations, convergencestatus ) ;
     if( !sc.isSuccess() ) {
       error() << "Error calling alignupdate tool" << endreq ;
       break ;
     }
 
-    // 5. break the loop if converged
-    if( convergencestatus == Al::IAlignUpdateTool::Converged ) {
-      // write the xml one last time ?
-      sc = m_xmlwriter->write() ;
-      break ;
-    }
-
-    // 1. writes a little file with number of iteration step
-    debug() << "calling parent->writeReference()" << endreq ;
-    m_parent->writeReference();
-
-    // 2. write the xml
+    // write the xml
     debug() << "writing xml files" << endreq ;
     sc = m_xmlwriter->write() ;
     if( !sc.isSuccess() ) {
@@ -196,7 +187,16 @@ StatusCode AlignOnlineIterator::i_run()
       break ;
     }
 
-    // 3. start the analyzers and wait
+    // break the loop if converged
+    if( convergencestatus == Al::IAlignUpdateTool::Converged ) {
+      break ;
+    }
+
+    // writes a little file with number of iteration step
+    debug() << "calling parent->writeReference()" << endreq ;
+    m_parent->writeReference();
+
+    // start the analyzers and wait
     debug() << "wait for analyzers" << endreq ;
     m_asdCollector.setTime() ;
     debug() << "Iteration " << ++m_iteration << endreq ;
@@ -215,6 +215,7 @@ StatusCode AlignOnlineIterator::i_run()
 
   // move the 'running' dir to a dirname with current run
   std::string rundir = m_alignxmldir + "/run" + std::to_string( runnr) ;
+  if( boost::filesystem::exists(rundir) ) boost::filesystem::remove_all(rundir) ;
   boost::filesystem::rename( m_alignxmldir + "/running", rundir ) ;
 
   //fflush(stdout);
