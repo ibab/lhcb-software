@@ -336,7 +336,7 @@ class Escher(LHCbConfigurableUser):
         cdb = CondDB()
         cdb.Tags = tag
         cdb.setProp('IgnoreHeartBeat', True)
-        cdb.setProp('EnableRunChangeHandler', True)
+        cdb.setProp('EnableRunChangeHandler', False) # otherwise it will overwrite our configuration!
         self.setOtherProps( cdb, [ 'UseDBSnapshot',
                                    'DBSnapshotDirectory',
                                    'PartitionName' ])
