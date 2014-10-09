@@ -346,7 +346,7 @@ class Escher(LHCbConfigurableUser):
         from Configurables import RunChangeHandlerSvc
         rch = RunChangeHandlerSvc()
         ApplicationMgr().ExtSvc.append(rch)
-        rch.Conditions = {
+        conditionmap = {
             path + 'Velo/VeloGlobal.xml'  : [ 
                 'Conditions/Alignment/Velo/VeloSystem'
                 'Conditions/Alignment/Velo/VeloRight',
@@ -381,6 +381,9 @@ class Escher(LHCbConfigurableUser):
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in [1,3]      for m in range(6,7)]
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU']           for r in [1,3]      for m in range(4,6)]
         }
+
+        rch.Conditions = dict( (c,f) for f,cs in conditionmap.iteritems() for c in cs )
+                
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
 
