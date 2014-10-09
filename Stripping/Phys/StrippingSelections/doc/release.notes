@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2014-10-09 - Ricardo Vazquez Gomez
+ - Modified Bs2MuMuLines following changes in AddRelatedInfo
 
 ! 2014-10-08 - Paul Seyfert
  - Added calo raw banks to tau23mu for future jet-awesomeness

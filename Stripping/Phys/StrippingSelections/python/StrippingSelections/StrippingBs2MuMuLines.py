@@ -322,31 +322,31 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 0,
-              "Locations" : { "Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_0" },
+              "Locations" : { "Phys/StdAllNoPIDsMuons" : ["Muon1TrackIsoBDTInfo_0","Muon2TrackIsoBDTInfo_0"] },
               "WeightsFile" : "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 1,
-              "Locations" : {"Phys/StdAllNoPIDsMuons" :  "MuonTrackIsoBDTInfo_1"},
+              "Locations" : { "Phys/StdAllNoPIDsMuons" : ["Muon1TrackIsoBDTInfo_1","Muon2TrackIsoBDTInfo_1"] },
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 2,
-              "Locations" : {"Phys/StdAllNoPIDsMuons" :  "MuonTrackIsoBDTInfo"},
+              "Locations" : { "Phys/StdAllNoPIDsMuons" : ["Muon1TrackIsoBDTInfo_2","Muon2TrackIsoBDTInfo_2"] },
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 3,
-              "Locations" : {"Phys/StdAllNoPIDsMuons" :  "MuonTrackIsoBDTInfo_3"},
+              "Locations" : { "Phys/StdAllNoPIDsMuons" : ["Muon1TrackIsoBDTInfo_3","Muon2TrackIsoBDTInfo_3"] },
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 4,    
-              "Locations" : {"Phys/StdAllNoPIDsMuons" : "MuonTrackIsoBDTInfo_4"},
+              "Locations" : { "Phys/StdAllNoPIDsMuons" : ["Muon1TrackIsoBDTInfo_4","Muon2TrackIsoBDTInfo_4"] },
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               } 
             ]
@@ -402,31 +402,31 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 0,
-              "Locations" : { "Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_0"},
+              "Locations" : { "Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_0","Muon2TrackIsoBDTInfo_0"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 1,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_1"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_1","Muon2TrackIsoBDTInfo_1"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 2,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_2"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_2","Muon2TrackIsoBDTInfo_2"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 3,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_3"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_3","Muon2TrackIsoBDTInfo_3"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 4,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_4"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_4","Muon2TrackIsoBDTInfo_4"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
             ]
@@ -496,10 +496,7 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoBs2MuMuTrackIsolations"
                       ,"RecursionLevel" : 1
                       , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' , 'BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
-                                                                                                                                                               
-              ,"Locations" : {
-                    'Phys/StdAllLooseMuons' :['Muon1iso', 'Muon2iso']
-                   }
+                      ,"Locations" : {'Phys/StdAllLooseMuons' :['Muon1iso', 'Muon2iso'] }
               , "tracktype" : 3
               , "angle"      : 0.27
               , "fc"         : 0.60
@@ -520,31 +517,31 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 0,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_0"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_0","Muon2TrackIsoBDTInfo_0"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 1,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_1"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_1","Muon2TrackIsoBDTInfo_1"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 2,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_2"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_2","Muon2TrackIsoBDTInfo_2"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 3,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_3"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_3","Muon2TrackIsoBDTInfo_3"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 4,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_4"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_4","Muon2TrackIsoBDTInfo_4"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
             ]
@@ -599,31 +596,31 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 0,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_0"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_0","Muon2TrackIsoBDTInfo_0"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 1,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_1"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_1","Muon2TrackIsoBDTInfo_1"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 2,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_2"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_2","Muon2TrackIsoBDTInfo_2"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 3,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_3"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_3","Muon2TrackIsoBDTInfo_3"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 4,
-              "Locations" : {"Phys/StdAllLooseMuons" : "MuonTrackIsoBDTInfo_4"},
+              "Locations" : {"Phys/StdAllLooseMuons" : ["Muon1TrackIsoBDTInfo_4","Muon2TrackIsoBDTInfo_4"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
             ]
@@ -646,15 +643,10 @@ class Bs2MuMuLinesConf(LineBuilder) :
               ,"RecursionLevel" : 0
               , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS', 'BSMUMUPARTID','BSMUMUTOPID']
               , "Location"  : "BSMUMUVARIABLES"},
-
- 
             { "Type" : "RelInfoBs2MuMuTrackIsolations"
                       ,"RecursionLevel" : 1
                       , "Variables" : [  'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO' ,'BSMUMUTRACKID','BSMUMUTRACKTOPID' ]
-                                                                                                                                                               
-              ,"Locations" : {
-                    'Phys/StdAllLooseKaons' :  ['Muon1iso', 'Muon2iso']
-                   }
+                      ,"Locations" : { 'Phys/StdAllLooseKaons' :  ['Muon1iso', 'Muon2iso'] }
               , "tracktype" : 3
               , "angle"      : 0.27
               , "fc"         : 0.60
@@ -675,31 +667,31 @@ class Bs2MuMuLinesConf(LineBuilder) :
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 0,
-              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_0"},
+              "Locations" : {"Phys/StdAllLooseKaons" : ["Kaon1TrackIsoBDTInfo_0","Kaon2TrackIsoBDTInfo_0"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsA_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 1,
-              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_1"},
+              "Locations" : {"Phys/StdAllLooseKaons" : ["Kaon1TrackIsoBDTInfo_1","Kaon2TrackIsoBDTInfo_1"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT6varsB_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 2,
-              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_2"},
+              "Locations" : {"Phys/StdAllLooseKaons" : ["Kaon1TrackIsoBDTInfo_2","Kaon2TrackIsoBDTInfo_2"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT9vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 3,
-              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_3"},
+              "Locations" : {"Phys/StdAllLooseKaons" : ["Kaon1TrackIsoBDTInfo_3","Kaon2TrackIsoBDTInfo_3"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT13vars_v1r4.xml"
               },
             { "Type" : "RelInfoTrackIsolationBDT",
               "RecursionLevel" : 2,
               "Variables" : 4,
-              "Locations" : {"Phys/StdAllLooseKaons" : "KaonTrackIsoBDTInfo_4"},
+              "Locations" : {"Phys/StdAllLooseKaons" : ["Kaon1TrackIsoBDTInfo_4","Kaon2TrackIsoBDTInfo_4"]},
               "WeightsFile"  :  "BsMuMu_TrackIsolationBDT15vars_v1r4.xml"
               }
            ]
