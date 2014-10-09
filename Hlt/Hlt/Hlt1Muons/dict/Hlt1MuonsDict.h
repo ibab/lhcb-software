@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "Hlt1Muons/Candidate.h"
-#include "Hlt1Muons/Hlt1MuonHit.h"
+// #include "Hlt1Muons/Hlt1MuonHit.h"
 #include "Hlt1Muons/IMatchVeloMuon.h"
 
 namespace 
