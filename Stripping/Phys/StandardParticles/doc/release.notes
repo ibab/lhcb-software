@@ -4,6 +4,10 @@
 ! Purpose     : Selection-type instances corresponding to CommonParticles.
 !-----------------------------------------------------------------------------
 
+! 2014-10-09 - Stefano Perazzini
+ - Added locations as global variable in __init__.py in order to retrieve
+   all the algorithms used for StandardParticles
+
 ! 2014-08-13 - Chris Jones
  - Add StandardIntermediate to list of standard particles.
 
