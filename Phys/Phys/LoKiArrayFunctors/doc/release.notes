@@ -5,6 +5,9 @@
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2014-10-09 - Sebastian Neubert
+ - Demote warning for non-empty tool stack to Debug level
+
 !========================= LoKiArrayFunctors v10r5p1 2014-09-30 =========================
 
 ! 2014-09-12 - Chris Jones

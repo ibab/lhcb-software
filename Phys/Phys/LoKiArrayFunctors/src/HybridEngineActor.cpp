@@ -91,11 +91,12 @@ StatusCode LoKi::Hybrid::EngineActor::releaseTool
     msg << "LoKi:Hybrid::EngineActor::releaseTool():  tool stack not empty after release.\n"
 	<< " Number of tools left on stack: " << m_tool.size() << "   Next tool on stack: " << m_tool.top()->name() << std::endl
 	<< " This is expected if you are using a chain of tools.";
-    return LoKi::Report::Warning(msg.str(),StatusCode::SUCCESS) ;
+    LoKi::Report::Print(msg.str(),StatusCode::SUCCESS, MSG::DEBUG) ;
+    return StatusCode::SUCCESS;
   }
   //
-  LoKi::Report::Print("LoKi:Hybrid::EngineActor::releaseTool(): Stack empty after release. All is well.",
-                      StatusCode::SUCCESS,MSG::DEBUG) ;
+  else LoKi::Report::Print("LoKi:Hybrid::EngineActor::releaseTool(): Stack empty after release. All is well.",
+			   StatusCode::SUCCESS,MSG::DEBUG) ;
   return StatusCode::SUCCESS;
 }
 // ============================================================================
