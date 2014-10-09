@@ -21,6 +21,10 @@
 #include "AlignOnlineXMLCopier.h"
 #include <boost/filesystem.hpp>
 
+#include "GaudiKernel/IDetDataSvc.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "DetDesc/RunChangeIncident.h"
+
 //#include <stdio.h>
 //#include <stdlib.h>
 
@@ -122,14 +126,6 @@ StatusCode AlignOnlineIterator::initialize()
   for(auto i : condnames) 
     m_xmlcopiers.push_back( AlignOnlineXMLCopier(m_onlinexmldir,runningdir, i) ) ;
   
-  for( auto i : m_xmlcopiers ) {
-    StatusCode thissc = i.copyFromOnlineArea() ;
-    if(!thissc.isSuccess()) {
-      error() << "Cannot find input xml file \'" << i.onlinefilename() << "\'" << endmsg ;
-      //sc = StatusCode::FAILURE ;
-    }
-  }
-
   return sc;
 }
 
@@ -149,9 +145,6 @@ StatusCode AlignOnlineIterator::i_run()
   while( m_iteration < m_maxIteration ) {
     m_parent->waitRunOnce();
 
-    // FIXME: fire incident in the run changehandler to read the xml.
-
-
     // 4. read ASDs and compute new constants
     debug() << "Collecting ASD files" << endreq ;
     Al::IAlignUpdateTool::ConvergenceStatus convergencestatus ;
@@ -160,18 +153,20 @@ StatusCode AlignOnlineIterator::i_run()
     debug() << "Collected ASDs: numevents = " << equations.numEvents() << endreq ;
     runnr = equations.firstRun() ;
 
-    // std::vector<std::string> filenames ;
-    // for(auto filename : filenames ) {
-    //   Al::Equations tmp(0) ;
-    //   tmp.readFromFile( filename.c_str() ) ;
-    //   debug() << "Adding derivatives from input file: " << filename << " " << tmp.numHits() << " "
-    // 	      << tmp.totalChiSquare()  << endreq ;
-    //   if( equations.nElem()==0 )
-    // 	equations = tmp ;
-    //   else
-    // 	equations.add( tmp ) ;
-    // }
+    // FIXME: fire incident in the run changehandler to read the xml:
+    // otherwise it will just use the geometry from the snapshot
+    // Don't know if we need all of this ... Need to think.
+    IDetDataSvc* detDataSvc(0) ;
+    sc = service("DetectorDataSvc",detDataSvc, false);
+    if ( sc.isFailure() ) {
+      error() << "Could not retrieve DetectorDataSvc" << endmsg ;
+      return sc;
+    }
+    detDataSvc->setEventTime( equations.lastTime() ) ;
+    IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
+    incSvc->fireIncident(RunChangeIncident(name(),runnr)) ;
 
+    // Now call the update tool
     debug() << "Calling AlignUpdateTool" << endreq ;
     StatusCode sc = m_alignupdatetool->process( equations, convergencestatus ) ;
     if( !sc.isSuccess() ) {
@@ -225,7 +220,7 @@ StatusCode AlignOnlineIterator::i_run()
 
 StatusCode AlignOnlineIterator::i_start()
 {
-  StatusCode sc;
+  StatusCode sc = StatusCode::SUCCESS ;
   // called only once
   // don't touch this
   debug() << "Iteration " << ++m_iteration << endreq ;
@@ -234,19 +229,29 @@ StatusCode AlignOnlineIterator::i_start()
   debug() << "calling parent->writeReference()" << endreq ;
   m_parent->writeReference();
 
-  // 2. write the xml
-  debug() << "writing xml files" << endreq ;
-  sc = m_xmlwriter->write() ;
-  if( !sc.isSuccess() ) {
-    error() << "Error writing xml files" << endreq ;
-    return sc;
+  // 2. copy the files from the online area. if this doesn't work,
+  // dump the current database.
+  for( auto i : m_xmlcopiers ) {
+    StatusCode thissc = i.copyFromOnlineArea() ;
+    if(!thissc.isSuccess()) {
+      error() << "Cannot find input xml file \'" << i.onlinefilename() << "\'" << endmsg ;
+      sc = StatusCode::FAILURE ;
+    }
   }
-
+  
+  // if some of the input files are missing, bootstrap this by writing
+  // from the database.
+  if (!sc.isSuccess() ) {
+    debug() << "writing xml files in i_start to bootstrap alignment" << endreq ;
+    sc = m_xmlwriter->write() ;
+    if( !sc.isSuccess() ) error() << "Error writing xml files" << endreq ;
+  }
+  
   // 3. start the analyzers and wait
   debug() << "wait for analyzers" << endreq ;
   m_asdCollector.setTime() ;
   ::lib_rtl_start_thread(AlignOnlineIteratorThreadFunction,this,&m_thread);
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 StatusCode AlignOnlineIterator::stop()
