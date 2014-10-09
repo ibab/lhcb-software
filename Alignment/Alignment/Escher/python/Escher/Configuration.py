@@ -343,8 +343,9 @@ class Escher(LHCbConfigurableUser):
 
         #path = self.getProp('DBSnapshotDirectory') + "/.."*4 + "/group/online/AligWork/current/"
         path = "/group/online/AligWork/current/"
-        
-        cdb.RunChangeHandlerConditions =  {
+        from Configurables import RunChangeHandlerSvc
+        rch = RunChangeHandlerSvc()
+        rch.Conditions = {
             path + 'Velo/VeloGlobal.xml'  : [ 
                 'Conditions/Alignment/Velo/VeloSystem'
                 'Conditions/Alignment/Velo/VeloRight',
@@ -355,7 +356,7 @@ class Escher(LHCbConfigurableUser):
             path + 'IT/ITGlobal.xml' : []
                      + [ 'Conditions/Alignment/IT/ITSystem' ]
                      + [ 'Conditions/Alignment/IT/ITT%d' % i for i in range(1,4) ]
-                     + [ 'Conditions/Alignment/IT/ITT%d%sBox' % (i,b) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] ]
+                     + [ 'Conditions/Alignment/IT/ITT%d%sBox' % (i,b) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] ] ,
             path + 'IT/ITModules.xml' : []
                      + [ 'Conditions/Alignment/IT/ITT%d%sLayer%s' % (i,b,l) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] ]
                      + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%d' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ] ,
@@ -378,7 +379,7 @@ class Escher(LHCbConfigurableUser):
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['bV','bX']           for r in range(1,4) for m in range(4,6)]
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in [1,3]      for m in range(6,7)]
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU']           for r in [1,3]      for m in range(4,6)]
-        
+        }
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
 
