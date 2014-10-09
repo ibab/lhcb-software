@@ -124,10 +124,6 @@ namespace Al
 
   StatusCode AlignUpdateTool::finalize()
   { 
-    if(!m_logFileName.empty()) {
-      std::ofstream logfile(m_logFileName.c_str()) ;
-      logfile << m_logMessage.str() << std::endl ;
-    }
     m_lagrangeconstrainttool.release().ignore() ;
     m_chisqconstrainttool.release().ignore() ;
     return GaudiHistoTool::finalize() ;
@@ -703,6 +699,12 @@ namespace Al
              jeq != ieq->d2Chi2DAlphaDBeta().end() ; ++jeq)
 	  h2->fill(double(index),double(jeq->first),jeq->second.numTracks()) ;
       }
+    }
+
+    // FIXME: we don't want to do this on every update! Yet, we cannot wait for finalize in online.
+    if(!m_logFileName.empty()) {
+      std::ofstream logfile(m_logFileName.c_str()) ;
+      logfile << m_logMessage.str() << std::endl ;
     }
     return sc ;
   }
