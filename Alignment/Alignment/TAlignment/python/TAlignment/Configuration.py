@@ -292,6 +292,7 @@ class TAlignment( LHCbConfigurableUser ):
             xmlwriter = WriteMultiAlignmentConditionsTool("WriteMultiAlignmentConditionsTool")
             if self.getProp( "OnlineMode" ) :
                 self.addOnlineXmlWriters(xmlwriter)
+                updatetool.LogFile = self.getProp('OnlineAlignDir') + '/' + self.getProp( 'LogFile' )
             else :
                 self.addXmlWriters(xmlwriter)
             print '=================== OnlineMode = ', self.getProp( "OnlineMode" ) 
