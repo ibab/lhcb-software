@@ -348,7 +348,7 @@ class Escher(LHCbConfigurableUser):
         ApplicationMgr().ExtSvc.append(rch)
         conditionmap = {
             path + 'Velo/VeloGlobal.xml'  : [ 
-                'Conditions/Alignment/Velo/VeloSystem'
+                'Conditions/Alignment/Velo/VeloSystem',
                 'Conditions/Alignment/Velo/VeloRight',
                 'Conditions/Alignment/Velo/VeloLeft' ],
             path + 'Velo/VeloModules.xml' : [] 
