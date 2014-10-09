@@ -54,6 +54,9 @@ class StrippingConf ( object ) :
         self.MaxCombinations = MaxCombinations
 
 
+        ## To be uncommented to limit combinatorics for StandardParticles
+        #if self.MaxCandidates != None or self.MaxCombinations != None:
+        #  self.limitCombForStdParticles()
 
         self.checkFlavourTagging(Streams)
         if self._GlobalFlavourTagging:
@@ -233,6 +236,26 @@ class StrippingConf ( object ) :
 		if loc != None and loc not in locs : locs.append(loc)
 
 	return locs
+
+    def limitCombForStdParticles(self,incidentName = 'ExceedsCombinatoricsLimit'):
+        from StandardParticles import locations as stdLoc
+        for loc,alg in stdLoc.iteritems():
+            if hasattr(type(alg),'StopAtMaxCandidates') and \
+               hasattr(type(alg),'MaxCandidates') and \
+               hasattr(type(alg),'StopAtMaxCombinations') and \
+               hasattr(type(alg),'MaxCombinations'):
+                if self.MaxCandidates != None:
+                    alg.StopAtMaxCandidates = True
+                    alg.MaxCandidates = self.MaxCandidates
+                if self.MaxCombinations != None:
+                    alg.StopAtMaxCombinations = True
+                    alg.MaxCombinations = self.MaxCandidates
+                if self.MaxCandidates != None or self.MaxCombinations != None :
+                    alg.StopIncidentType = incidentName
+                ## comment to be removed once performed some more test
+                #if self._verbose: log.warning('Changed parameters StopAtMaxCandidates = '+str(alg.StopAtMaxCandidates)+' MaxCandidates = '+str(alg.MaxCandidates)+' StopIncidentType = '+str(alg.StopIncidentType)+' for algorithm '+str(alg.name()))
+
+
 
 # =============================================================================
 # Some useful decorations 

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-10-09 - Stefano Perazzini
+ - Added a function in StrippingConf to limit combinatorics 
+   in StandardParticles
+
 ! 2014-10-08 - Stefano Perazzini
  - Added the configuration of MaxCandidates and MaxCombinations for any 
    configurable in a StrippingLine
