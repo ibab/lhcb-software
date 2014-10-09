@@ -137,7 +137,11 @@ void RunChangeHandlerSvc::update(CondData &cond){
         // This is a bit of a hack, but it is the only way of replacing the
         // URL to use for an object.
         std::string* par = const_cast<std::string*>(addr->par());
-        par[0] = (boost::format(cond.pathTemplate) % m_currentRun).str();
+	if( cond.pathTemplate.find("%d") != std::string::npos )
+	  par[0] = (boost::format(cond.pathTemplate) % m_currentRun).str();
+	else
+	  par[0] = cond.pathTemplate ;
+
         // notify the UMS and the object that they have to be updated.
         cond.object->forceUpdateMode();
         updMgrSvc()->invalidate(cond.object.ptr());
