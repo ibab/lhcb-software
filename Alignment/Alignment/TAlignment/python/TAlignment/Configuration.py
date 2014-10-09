@@ -57,7 +57,8 @@ class TAlignment( LHCbConfigurableUser ):
         , "UpdateInFinalize"             : True
         , "OutputDataFile"               : ""
         , "DatasetName"                  : "Unknown"
-        , "OnlineMode"                  : False
+        , "OnlineMode"                   : False
+        , "OnlineAlignDir"               : '/group/online/AligWork/running'
         }
 
     def __apply_configuration__(self):
@@ -212,7 +213,7 @@ class TAlignment( LHCbConfigurableUser ):
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
         handle.precision = self.getProp( "Precision" )
         handle.depths = depths
-        handle.outputFile = '/group/online/AligWork/running/' + subdet + '/' +subdet+condname + '.xml'
+        handle.outputFile = self.getProp('OnlineAlignDir') + '/' + subdet + '/' +subdet+condname + '.xml'
         handle.author = getpass.getuser()
         handle.desc = self.getProp('DatasetName')
         alg.XmlWriters.append("WriteAlignmentConditionsTool/" + name)
@@ -224,13 +225,14 @@ class TAlignment( LHCbConfigurableUser ):
             self.addOnlineXmlWriter( alg, 'Velo','Global', [0,1] )
             self.addOnlineXmlWriter( alg, 'Velo','Modules', [2,4] )
         if 'TT' in listOfCondToWrite:
-            self.addOnlineXmlWriter( alg, 'TT','Global', [0,1,2,3] )
+            self.addOnlineXmlWriter( alg, 'TT','Global', [0,1,2] )
+            self.addOnlineXmlWriter( alg, 'TT','Modules', [3] )
         if 'IT' in listOfCondToWrite:
             self.addOnlineXmlWriter( alg, 'IT','Global', [0,1,2] )
-            self.addOnlineXmlWriter( alg, 'IT','Modules', [3] )
+            self.addOnlineXmlWriter( alg, 'IT','Modules', [3,4] )
         if 'OT' in listOfCondToWrite:
-            self.addOnlineXmlWriter( alg, 'OT','Global', [0,1,2] )
-            self.addOnlineXmlWriter( alg, 'OT','Modules', [3] )
+            self.addOnlineXmlWriter( alg, 'OT','Global', [0,1,2,3] )
+            self.addOnlineXmlWriter( alg, 'OT','Modules', [4] )
         if 'Muon' in listOfCondToWrite:
             #self.addXmlWriter( alg, 'Muon','Detectors', [] )
             self.addOnlineXmlWriter( alg, 'Muon','Global', [0,1,2] )
@@ -292,7 +294,8 @@ class TAlignment( LHCbConfigurableUser ):
                 self.addOnlineXmlWriters(xmlwriter)
             else :
                 self.addXmlWriters(xmlwriter)
-
+            print '=================== OnlineMode = ', self.getProp( "OnlineMode" ) 
+                
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
