@@ -75,6 +75,7 @@ void ASDCollector::collectASDs( Al::Equations &eqs)
 	std::vector<string> fileList;
 	getfiles(m_dir, fileList);
 	struct stat Statres;
+	printf("------------> Collecting ASDs from %ld Files\n",fileList.size());
 	for (size_t i=0;i<fileList.size();i++)
 	{
 		stat(fileList[i].c_str(),&Statres);
@@ -82,7 +83,7 @@ void ASDCollector::collectASDs( Al::Equations &eqs)
 		{
 			Al::Equations tmp(0);
 			tmp.readFromFile(fileList[i].c_str());
-			if(eqs.nElem()==0) 
+			if(eqs.nElem()==0)
 			  eqs = tmp;
 			else
 			  eqs.add(tmp);

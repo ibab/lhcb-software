@@ -3,14 +3,14 @@
 
 AlignOnlineXMLCopier::AlignOnlineXMLCopier( const std::string& onlinedir,
 					    const std::string& aligndir,
-					    const std::string& condname) 
+					    const std::string& condname)
   : m_condname(condname),
     m_onlinedir(onlinedir),
     m_aligndir(aligndir),
     m_version(0)
 {}
 
-std::string AlignOnlineXMLCopier::onlinefilename( FileVersion v ) const 
+std::string AlignOnlineXMLCopier::onlinefilename( FileVersion v ) const
 {
   return m_onlinedir + "/" + m_condname + "/v" + std::to_string(v) + ".xml" ;
 }
@@ -18,6 +18,11 @@ std::string AlignOnlineXMLCopier::onlinefilename( FileVersion v ) const
 std::string AlignOnlineXMLCopier::alignfilename() const
 {
   return m_aligndir + "/" + m_condname + "/current.xml" ;
+}
+
+std::string AlignOnlineXMLCopier::aligndirname() const
+{
+  return m_aligndir + "/" + m_condname;
 }
 
 StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
@@ -37,6 +42,8 @@ StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
     m_version = v-1 ;
     boost::filesystem::path origin(onlinefilename(m_version)) ;
     boost::filesystem::path target(alignfilename()) ;
+    boost::filesystem::path aligndir(aligndirname());
+    boost::filesystem::create_directories(aligndir);
     boost::filesystem::copy_file(origin,target, boost::filesystem::copy_option::overwrite_if_exists) ;
     if( boost::filesystem::exists(target) ){
       m_time = boost::filesystem::last_write_time(target) ;

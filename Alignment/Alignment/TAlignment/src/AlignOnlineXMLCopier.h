@@ -16,6 +16,7 @@ public:
   StatusCode copyToOnlineArea() const ;
 
   std::string alignfilename() const ;
+  std::string aligndirname() const ;
   FileVersion version() const { return m_version ; }
   std::string onlinefilename() const { return onlinefilename(m_version) ; }
 
