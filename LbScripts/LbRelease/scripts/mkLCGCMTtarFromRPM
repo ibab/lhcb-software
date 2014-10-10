@@ -186,6 +186,9 @@ class BuildLCGTarScript(Script):
         # Now prepare the list of RPMs based on the externals found
         allrpms = []
         for k, v in externalsDict.items():
+            # Ignore packages from the system for the moment
+            if v[3].startswith("/usr"):
+                continue
             # Exception for expat to unblock things for the moment
             if k == "Expat":
                 k = "expat"
