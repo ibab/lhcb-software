@@ -111,21 +111,21 @@ StatusCode AlignOnlineIterator::initialize()
     if(!sc.isSuccess() )
       error() << "Cannot retrieve xmlwriter" << endreq ;
   }
-  
+
   // instantiate the objects that will take care of copying and versioning files
   const std::string runningdir = m_alignxmldir + "/running" ;
   if( !boost::filesystem::exists(runningdir) )
     boost::filesystem::create_directory(runningdir) ;
 
-  const std::vector<std::string> condnames = { { 
+  const std::vector<std::string> condnames = { {
       "Velo/VeloGlobal","Velo/VeloModules",
       "TT/TTGlobal","TT/TTModules",
-      "IT/TTGlobal","IT/TTModules",
-      "OT/TTGlobal","OT/TTModules"
+      "IT/ITGlobal","IT/ITModules",
+      "OT/OTGlobal","OT/OTModules"
     }} ;
-  for(auto i : condnames) 
+  for(auto i : condnames)
     m_xmlcopiers.push_back( AlignOnlineXMLCopier(m_onlinexmldir,runningdir, i) ) ;
-  
+
   return sc;
 }
 
@@ -238,7 +238,7 @@ StatusCode AlignOnlineIterator::i_start()
       sc = StatusCode::FAILURE ;
     }
   }
-  
+
   // if some of the input files are missing, bootstrap this by writing
   // from the database.
   if (!sc.isSuccess() ) {
@@ -246,7 +246,7 @@ StatusCode AlignOnlineIterator::i_start()
     sc = m_xmlwriter->write() ;
     if( !sc.isSuccess() ) error() << "Error writing xml files" << endreq ;
   }
-  
+
   // 3. start the analyzers and wait
   debug() << "wait for analyzers" << endreq ;
   m_asdCollector.setTime() ;
