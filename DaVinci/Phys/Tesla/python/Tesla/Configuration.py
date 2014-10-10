@@ -22,12 +22,16 @@ class Tesla(LHCbConfigurableUser):
           , "BanksToKill"	: []		# Which banks can go
           , "DDDBtag" 		: 'default' 	# default as set in DDDBConf for DataType
           , "CondDBtag" 	: 'default' 	# default as set in DDDBConf for DataType
-          , 'Persistency' 	: '' 		#None, Root or Pool?
+          , 'Persistency' 	: '' 		# None, Root or Pool?
+          , 'OutputLevel' 	: 2 		# Er, output level
           , "outputFile" 	: 'Tesla.dst' 	# output filename
-          , 'WriteFSR'    	: False 	#copy FSRs as required
+          , 'WriteFSR'    	: False 	# copy FSRs as required
           , 'EnableDataOnDemand': True		# Do we want data on demand
           , 'RecombineRAW'	: True		# Do we need the RAW event recombined
           , 'OutputPrefix'	: 'Tesla'	# Output prefix on TES
+          , 'PV'	        : "Online"      # Associate to the PV chosen by the HLT or the offline one
+          , 'ReportVersion'	: 2	        # Do we have the normal or extendedselection reports
+          , 'TriggerLine'	: "Hlt2IncPhi"  # Which trigger line
           }
 	_propertyDocDct ={
           "EvtMax"		: "Maximum number of events to process, default all"
@@ -38,11 +42,15 @@ class Tesla(LHCbConfigurableUser):
         , "DDDBtag" 		: "Databse tag, default as set in DDDBConf for DataType"
         , "CondDBtag" 		: "Databse tag, default as set in DDDBConf for DataType"
         , 'Persistency' 	: "Root or Pool?"
+        , 'OutputLevel' 	: "Output level"
         , "outputFile" 		: 'output filename, automatically selects MDF or InputCopyStream'
         , 'WriteFSR'    	: 'copy FSRs as required'
         , 'EnableDataOnDemand'  : 'Activate data on demand service'
         , 'RecombineRAW'  	: 'Recombine raw event'
         , 'OuputPrefix'  	: 'Output prefix on TES'
+        , 'PV'     	        : 'Associate to the PV chosen by the HLT or the offline one'
+        , 'ReportVersion'     	: '1: Normal HLT reports, 2: New extended reports'
+        , 'TriggerLine'     	: 'Which trigger line to process'
         }
         
         def _safeSet(self,conf,param):
@@ -92,6 +100,10 @@ class Tesla(LHCbConfigurableUser):
 		from Configurables import TeslaReportAlgo
 		trig1 = TeslaReportAlgo("TeslaReportAlgo")
                 trig1.OutputPrefix=self.getProp('OutputPrefix')
+                trig1.ReportVersion=self.getProp('ReportVersion')
+                trig1.PV=self.getProp('PV')
+                trig1.TriggerLine=self.getProp('TriggerLine')
+                trig1.OutputLevel=self.getProp('OutputLevel')
                 seq=GaudiSequencer('TeslaReportAlgoSeq')
 		seq.Members+=[trig1]
 		ApplicationMgr().TopAlg += [ seq ]
@@ -103,10 +115,6 @@ class Tesla(LHCbConfigurableUser):
                 ApplicationMgr().AppName="*********Tesla*********, utilising DaVinci"
                 #self.setOtherProps( app, ['EvtMax','SkipEvents','Simulation', 'DataType', 'Persistency', 'CondDBtag','DDDBtag' ] )
 		############## The raw event ##################
-		from Configurables import DecodeRawEvent, RecombineRawEvent
-		if self.getProp("RecombineRAW"):
-			RecombineRawEvent()
-		DecodeRawEvent().DataOnDemand = True
 		#        
 		#from Configurables import bankKiller
 		#bkKill = bankKiller("BrunelBankKiller")

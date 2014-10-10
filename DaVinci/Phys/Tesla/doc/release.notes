@@ -1,3 +1,7 @@
+! 2014-10-09 - Sean Benson
+ - Give Tesla more slots so the report algorithm does not need 
+ congiguring by the user.
+
 ! 2014-10-07 - Sean Benson
  - Temporarily send users in Turbo.py to use the TCK in my public area.
 
