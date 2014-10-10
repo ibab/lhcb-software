@@ -3,6 +3,10 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2014-10-10 - Stefano Perazzini
+ - Changed instances of OfflineVertexFitter with OfflineVertexFitter:PUBLIC
+
 ! 2014-10-09 - Ricardo Vazquez Gomez
  - Modified Bs2MuMuLines following changes in AddRelatedInfo
 

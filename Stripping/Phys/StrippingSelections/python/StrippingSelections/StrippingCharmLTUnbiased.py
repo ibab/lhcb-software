@@ -150,7 +150,7 @@ def makeLTUnbCharm( name,
 
     _combination_cuts = "(APT > %(DPT)s * MeV ) & (AM > 1700.*MeV) & ( AMAXDOCA('') < %(DOCA)s )" %locals()
     
-    _mother_cuts = "(VFASPF(VCHI2PDOF) < %(VTXCHI2)s) & ( PT > %(DPT)s * MeV ) & ( ADMASS('D0') < %(MassWindow)s * MeV ) & ( BPVDIRA > %(DDIRA)s ) & ( BPVLTIME('PropertimeFitter/properTime:PUBLIC') > %(DTAU)s )" %locals()
+    _mother_cuts = "(VFASPF(VCHI2PDOF) < %(VTXCHI2)s) & ( PT > %(DPT)s * MeV ) & ( ADMASS('D0') < %(MassWindow)s * MeV ) & ( BPVDIRA > %(DDIRA)s ) & ( BPVLTIME() > %(DTAU)s )" %locals()
    
     CombineLTUnbCharmTIS = {}
  

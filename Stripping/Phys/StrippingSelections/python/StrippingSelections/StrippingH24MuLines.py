@@ -20,7 +20,7 @@ from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from Configurables import OfflineVertexFitter
+#from Configurables import OfflineVertexFitter
 
 default_name = 'H24Mu'
 
@@ -332,7 +332,6 @@ class H24MuLineConf(LineBuilder) :
         type        : 0 (prompt), 1 (simple), 2 (detached), 3 (loose)
         """
         
-        from Configurables import OfflineVertexFitter
         
         SelA1 = self.makeA1("A1"+name,type)
         setattr(self,"A1"+name,SelA1)

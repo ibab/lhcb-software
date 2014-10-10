@@ -13,7 +13,7 @@ from StrippingConf.StrippingLine import StrippingLine
 from PhysSelPython.Wrappers import Selection , DataOnDemand
 from StrippingUtils.Utils import LineBuilder
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter, DaVinci__N4BodyDecays
+from Configurables import FilterDesktop, CombineParticles, DaVinci__N4BodyDecays
 
 # Default configuration dictionary
 config = {

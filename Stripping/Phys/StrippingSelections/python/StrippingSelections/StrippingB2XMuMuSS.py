@@ -42,7 +42,7 @@ config_params =  {'MuonP'         : 3000. ,    #MeV
 __all__ = ('B2XMuMuSSConf', 'makeB2PiMuMuOS', 'makeB2PiMuMuSS', 'makeB2KMuMuOS', 'makeB2KMuMuSS' )
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder

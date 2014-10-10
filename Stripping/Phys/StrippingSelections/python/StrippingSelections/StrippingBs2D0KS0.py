@@ -31,7 +31,7 @@ default_config = {
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from CommonParticles.Utils import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter	
+from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder

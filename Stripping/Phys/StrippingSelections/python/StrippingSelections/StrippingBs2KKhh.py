@@ -36,7 +36,7 @@ default_config = {
     }
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import CombineParticles, FilterDesktop#, OfflineVertexFitter
+from GaudiConfUtils.ConfigurableGenerators import CombineParticles, FilterDesktop
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder

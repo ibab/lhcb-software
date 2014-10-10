@@ -93,7 +93,7 @@ __all__ = ('D2XMuMuConf', 'makeD2PiPiPi', 'makeD2PiMuMuOS', 'makeD2PiMuMuSS', 'm
 
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles, OfflineVertexFitter
+from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -1651,7 +1651,7 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
         return _ka
     
     def _D2PiMuMuSS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
+        from Configurables import CombineParticles
         _PiMuMu = CombineParticles(self.getProp("prefix") + "D2PiMuMuSS")
         _PiMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
 				  "Phys/" + self.getProp("prefix") + "Pi_forD2XMuMu"]
@@ -1663,7 +1663,7 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
         return _PiMuMu
 
     def _D2PiMuMuOS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
+        from Configurables import CombineParticles
         _PiMuMu = CombineParticles(self.getProp("prefix") + "D2PiMuMuOS")
         _PiMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
 				  "Phys/" + self.getProp("prefix") + "Pi_forD2XMuMu"]
@@ -1675,7 +1675,7 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
         return _PiMuMu
     
     def _D2KMuMuSS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
+        from Configurables import CombineParticles
         _KMuMu = CombineParticles(self.getProp("prefix") + "D2KMuMuSS")
         _KMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
 				 "Phys/" + self.getProp("prefix") + "K_forD2XMuMu"]
@@ -1687,7 +1687,7 @@ class StrippingD2XMuMuSSConf(LHCbConfigurableUser):
         return _KMuMu
     
     def _D2KMuMuOS( self ):
-        from Configurables import CombineParticles, OfflineVertexFitter
+        from Configurables import CombineParticles
         _KMuMu = CombineParticles(self.getProp("prefix") + "D2KMuMuOS")
         _KMuMu.InputLocations = ["Phys/" + self.getProp("prefix") + "Mu_forD2XMuMu",
 				 "Phys/" + self.getProp("prefix") + "K_forD2XMuMu"]

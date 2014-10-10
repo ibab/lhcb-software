@@ -11,7 +11,7 @@ __version__ = '$Revision: 0.0 $'
 
 from Gaudi.Configuration import *
 
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
+from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder

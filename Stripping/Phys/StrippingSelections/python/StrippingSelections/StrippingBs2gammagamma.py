@@ -26,7 +26,7 @@ from CommonParticles import StdAllLooseGammaConversion
 from CommonParticles import StdLooseAllPhotons
 
 from Configurables import ( DiElectronMaker, ProtoParticleCALOFilter,
-                                                    OfflineVertexFitter, ParticleTransporter, BremAdder )
+                            ParticleTransporter, BremAdder )
 
 default_config = {
     'NAME'        : 'Bs2GammaGamma',

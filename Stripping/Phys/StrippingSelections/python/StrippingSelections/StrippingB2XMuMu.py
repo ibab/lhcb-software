@@ -657,7 +657,7 @@ class B2XMuMuConf(LineBuilder) :
                                  
 
         _omegaConf = _omega2pipipizero.configurable("Combine_"+self.name+"_PiPiPi0")
-        _omegaConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter' } )
+        _omegaConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
                                                  
         _selOMEGA2PIPIPIZERO = Selection( "Selection_"+self.name+"_omega2pipipizero",
                                        Algorithm = _omegaConf,
@@ -675,7 +675,7 @@ class B2XMuMuConf(LineBuilder) :
         _k12omegak.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV)" %conf
         
         _k12omegakConf = _k12omegak.configurable("Combine_"+self.name+"_OmegaK")
-        _k12omegakConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter' } )
+        _k12omegakConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
 
                             
         
@@ -695,7 +695,7 @@ class B2XMuMuConf(LineBuilder) :
         _k12omegaks.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV)" %conf
 
         _k12omegaksConf = _k12omegaks.configurable("Combine_"+self.name+"_OmegaKs")
-        _k12omegaksConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter' } )
+        _k12omegaksConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
                 
         _selK12OMEGAKS = Selection( "Selection_"+self.name+"_k12omegaks",
                                      Algorithm = _k12omegaks,

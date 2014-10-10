@@ -10,7 +10,7 @@ __date__ = '08/03/2012'
 __version__ = '$Revision: 0.9 $'
 
 from Gaudi.Configuration import *
-from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
+from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
