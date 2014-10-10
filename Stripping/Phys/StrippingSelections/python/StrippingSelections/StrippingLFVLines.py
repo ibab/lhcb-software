@@ -47,22 +47,36 @@ default_config = {
     'B2TauMuPrescale'       :1,
     'B2hTauMuPrescale'      :1,
     'RelatedInfoTools'      : [
-            { "Type" : "RelInfoBs2MuMuIsolations"
+            { "Type" : "RelInfoBs2MuMuBIsolations"
               ,"RecursionLevel" : 0
-              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKMINUSISO', 'BSMUMUOTHERBTRACKS']
-              , "Location"  : "BSMUMUVARIABLES"  
+              , "Variables" : ['BSMUMUCDFISO', 'BSMUMUOTHERBMAG', 'BSMUMUOTHERBANGLE', 'BSMUMUOTHERBBOOSTMAG', 'BSMUMUOTHERBBOOSTANGLE', 'BSMUMUOTHERBTRACKS']
+              , "Location"  : "BSMUMUVARIABLES"  ## For the B
               , "tracktype" : 3
-              , "angle"      : 0.27
-              , "fc"         : 0.60
-              , "doca_iso"   : 0.13 
-              , "ips"        : 3.0
-              , "svdis"      : -0.15
-              , "svdis_h"    : 30.
-              , "pvdis"      : 0.5
-              , "pvdis_h"    : 40.
               , "makeTrackCuts" : False
-              , "IsoTwoBody" : False
-              }
+             }
+            , { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                ,"RecursionLevel" : 2
+                , "Variables" : [
+                    'BSMUMUTRACKPLUSISO', 'BSMUMUTRACKPLUSISOTWO'
+                    , 'ISOTWOBODYQPLUS', 'ISOTWOBODYMASSISOPLUS'
+                    , 'ISOTWOBODYCHI2ISOPLUS', 'ISOTWOBODYISO5PLUS'
+                    ]
+                ,"Locations" : {
+                    'Phys/StdAllLooseMuons' :  'MuonISO'
+                    ,'Phys/StdAllLooseElectrons' : 'ElectronISO'
+                    }
+                , "tracktype" : 3
+                , "angle"      : 0.27
+                , "fc"         : 0.60
+                , "doca_iso"   : 0.13 
+                , "ips"        : 3.0
+                , "svdis"      : -0.15
+                , "svdis_h"    : 30.
+                , "pvdis"      : 0.5
+                , "pvdis_h"    : 40.
+                , "makeTrackCuts" : False
+                , "IsoTwoBody" : True
+                }
             ] ## matches 'RelatedInfoTools'
     } # matches 'CONFIG' 
     }
