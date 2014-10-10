@@ -6,7 +6,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-! 2014-10-07
+! 2014-10-10 - Chris Jones
+ - Fix compilation failure due to the last commit ...
+
+! 2014-10-07 - Jack Wimberley
  - New CharmTagger framework, w/ mistag estimated from BDTs instead of NN
  - Deleted obsolete CharmTagger BDT/NN algorithms
  - SKIP_TMVA_COMPILE flag in src/compileSettings.h

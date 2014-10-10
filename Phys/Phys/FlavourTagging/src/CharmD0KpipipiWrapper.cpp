@@ -1,7 +1,11 @@
 // Include files 
 
+#include <vector>
+#include <cmath>
+#include <string>
+#include <iostream>
+
 // local
-#include "CharmD0KpipipiWrapper.h"
 #include "TMVAClassification/mva_charmtagger_reco14/pur_D02kpipipi.C"
 
 namespace MyD0KpipipiSpace {
@@ -10,6 +14,7 @@ namespace MyD0KpipipiSpace {
 #endif
 }
 
+#include "CharmD0KpipipiWrapper.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CharmD0KpipipiWrapper
@@ -17,28 +22,32 @@ namespace MyD0KpipipiSpace {
 // 2014-02-18 : Jack Timpson Wimberley
 //-----------------------------------------------------------------------------
 
-CharmD0KpipipiWrapper::CharmD0KpipipiWrapper(std::vector<std::string> & names) {
+CharmD0KpipipiWrapper::CharmD0KpipipiWrapper(std::vector<std::string> & names)
+  : mcreader(NULL), purtable(NULL)
+{
 #ifndef SKIP_TVMA_COMPILE	
   mcreader = new MyD0KpipipiSpace::ReadBDT(names);
   purtable = new MyD0KpipipiSpace::PurityTable();
 #endif
 }
 
-CharmD0KpipipiWrapper::~CharmD0KpipipiWrapper() {
+CharmD0KpipipiWrapper::~CharmD0KpipipiWrapper() 
+{
 #ifndef SKIP_TMVA_COMPILE
   delete mcreader;
   delete purtable;
 #endif
 }
 
-double CharmD0KpipipiWrapper::GetMvaValue(std::vector<double> const & values) {
+double CharmD0KpipipiWrapper::GetMvaValue(std::vector<double> const & values) 
+{
 #ifndef SKIP_TMVA_COMPILE
-  double bdtOut = mcreader->GetMvaValue(values);
-  double purity = purtable->GetPurityAtBDT(bdtOut);
+  const double bdtOut = mcreader->GetMvaValue(values);
+  const double purity = purtable->GetPurityAtBDT(bdtOut);
   return purity;
-#endif
+#else
   return 0.0;
-  
+#endif
 }
 
 //=============================================================================
