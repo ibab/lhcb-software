@@ -5,7 +5,6 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop
 from GaudiConfUtils.ConfigurableGenerators import CombineParticles
 from PhysSelPython.Wrappers import DataOnDemand, Selection, MergedSelection
 from Beauty2Charm_LoKiCuts import LoKiCuts
-from Configurables import OfflineVertexFitter
 from Configurables import SubstitutePID
 from Configurables import ConeJetProxyFilter
 
