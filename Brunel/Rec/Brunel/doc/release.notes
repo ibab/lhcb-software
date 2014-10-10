@@ -11,6 +11,7 @@ Purpose: LHCb reconstruction program
   . Configuration.py : decrease MergedPi0Pt threshold from 2 GeV to 1.5 GeV
     (CaloReco)
   . New calorimeter calibration in cond-20141007 (DDDB)
+  . use new SIMDChi2Fit framework in PatSeeding (PatAlgorithm)
 
 </PRE><H1><A NAME=v47r1>2014-09-15 Brunel v47r1</A></H1><PRE>
 This version uses projects LHCb v38r1, Lbcom v16r0p1,
