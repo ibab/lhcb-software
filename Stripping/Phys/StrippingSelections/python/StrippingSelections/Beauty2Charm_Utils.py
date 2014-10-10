@@ -260,10 +260,7 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
                            MotherCut=momCuts)
     if not resVert:
-        b2x = b2x.configurable(name+'Beauty2CharmVertexFitter')
-        b2x.addTool(OfflineVertexFitter)
-        b2x.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
-        b2x.OfflineVertexFitter.useResonanceVertex = False
+       print "there is no this option now"       
     return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
 
 def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
