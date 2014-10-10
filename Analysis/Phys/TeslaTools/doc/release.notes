@@ -1,3 +1,6 @@
+! 2014-10-10 - Sean Benson
+ - Added helper functions to restore truth matching in XDSTs
+
 ! 2014-10-02 - Sean Benson
  - Added report checker tool.
  - Tool used to provide safety net if choose new reports but DST has old reports.

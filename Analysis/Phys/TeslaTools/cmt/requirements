@@ -29,4 +29,5 @@ use  DaVinciInterfaces v*    Phys
 # standard patterns (order is essential!)
 # ============================================================================
 apply_pattern component_library library=TeslaTools
+apply_pattern install_python_modules
 # ============================================================================
