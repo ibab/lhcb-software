@@ -3,6 +3,9 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+! 2014-10-10 - Gerhard Raven
+ - add missing declareInterface to MatchVeloMuon 
+
 ! 2014-10-09 - Gerhard Raven
  - remove Hlt1MuonHit from the dictionary, as that requires the default c'tor
    to exists, which is explicitly deleted...
