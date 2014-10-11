@@ -7,6 +7,7 @@
 #include <fstream>
 #include <string>
 #include <math.h>
+#include <set>
 
 
 // from Gaudi
@@ -156,6 +157,7 @@ StatusCode DiagSolvTool::compute(AlSymMat& m_bigmatrix, AlVec& m_bigvector,
 
     double sumchisqaccepted(0), sumchisqrejected(0), maxchisq(0) ;
     size_t numrejected(0) ;
+    std::multiset<double> chisqvalues ;
     for( size_t i=0; i<N; i++) {
       double thischisq = D[i]*D[i]/w[i] ;
       if( !keepEigenValue[i] ) {
@@ -164,6 +166,7 @@ StatusCode DiagSolvTool::compute(AlSymMat& m_bigmatrix, AlVec& m_bigvector,
 	++numrejected ;
 	sumchisqrejected += thischisq ;
       } else {
+	chisqvalues.insert(thischisq) ;
 	if( maxchisq < thischisq ) maxchisq = thischisq ;
 	sumchisqaccepted += thischisq ;
 	if( std::abs(w[i]) < m_eigenValueThreshold )
@@ -171,14 +174,33 @@ StatusCode DiagSolvTool::compute(AlSymMat& m_bigmatrix, AlVec& m_bigvector,
 		 << " chisq = " << thischisq << endreq ;
       }
     }
-    
+
     solinfo.totalChisq = sumchisqaccepted ;
-    solinfo.maxChisqEigenMode = maxchisq ;
-    
+
     info() << "Number / total chi2 of rejected eigenvalues: "
 	     << numrejected << " " << sumchisqrejected << endreq ;
     info() << "Total chi2 of accepted eigenvalues: " <<  sumchisqaccepted << endreq ;
     info() << "Maximum chi2 of individual mode: " << maxchisq << endreq ;
+
+    // because the lagrange constraints lead to negative ev, they also
+    // give negative chi2 contributions. that's all fine for the total
+    // chi2, but it leads to problems if you want to identify the
+    // 'largest' chi2 contribution: such contributions may be
+    // compensated by large negative contributions. Let's solve this
+    // pragmatically:
+    // - make a multiset of all chisq contributions
+    // - while the smallest one is negative, remove the smallest and
+    //   largest from the set, and reinsert the sum
+    // - the largest remaining eigenvalue is the one we need;
+    while( !chisqvalues.empty() && *(chisqvalues.begin())<0 && *(chisqvalues.rbegin())>0  ) {
+      double a = *(chisqvalues.begin()) ; chisqvalues.erase(chisqvalues.begin()) ;
+      double b = *(chisqvalues.rbegin()) ; chisqvalues.erase(--(chisqvalues.rbegin().base())) ;
+      chisqvalues.insert( a + b ) ;
+    }
+    if( !chisqvalues.empty() ) solinfo.maxChisqEigenMode = *(chisqvalues.rbegin()) ;
+
+    info() << "Maximum chi2 of individual mode after correcting for lagrange constraints: " 
+	   << solinfo.maxChisqEigenMode << endreq ;
     
     // reset the input
     for( size_t i=0; i<N; i++) {
