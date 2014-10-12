@@ -1,6 +1,19 @@
+2014-10-12  Ben Couturier <Ben.Couturier@cern.ch>
+
+	Added command to prepare GENSER tarball from LCG RPMs
+	* python/LbRelease/LbYum
+	* python/LbRelease/LbYum/DependencyManager.py
+	* python/LbRelease/LbYum/LCGConfig.py
+	* python/LbRelease/LbYum/__init__.py
+	* python/LbRelease/LbYum/LbInstall.py
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGYumInstaller.py
+	* python/LbRelease/LCGRpmExtractor.py
+	* scripts/mkMCGentarFromRPM
+
 2014-10-10  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* scripts/mkLCGCMTTarFromRPMi: Fixed to ignore packages taken from
+	* scripts/mkLCGCMTTarFromRPM: Fixed to ignore packages taken from
 	/usr like uuid
 
 2014-10-01  Ben Couturier <Ben.Couturier@cern.ch>

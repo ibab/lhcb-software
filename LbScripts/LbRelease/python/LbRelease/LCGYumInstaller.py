@@ -21,101 +21,45 @@ import urllib
 import subprocess
 import stat
 
-LCGRPMURL = "http://service-spi.web.cern.ch/service-spi/external/rpms"
+from LbRelease.LbYum.LbInstall import LbInstallConfig, InstallArea
+from LbRelease.LbYum.LCGConfig import Config
+
 INSTALLERNAME = "lcg_install.sh"
 RELEASEDIRNAME = "releases"
 PACKAGE_EXCLUSION_LIST = ['etc', 'lib', 'tmp',  'usr',  'var', INSTALLERNAME ]
 
-
-class LCGRpmInstaller(object):
+class LCGYumInstaller(object):
     '''
     Class to install a set of LCG packages to a specific area
     '''
     def __init__(self, siteroot):
         '''
-        Initialize the siteroot, and downloads the installer
+        Initialize the siteroot an the client
         '''
         self.log  = logging.getLogger(__name__)
-        # Making sure we have an abs path
         self._siterootBase = os.path.abspath(siteroot)
         self._siteroot = os.path.join(self._siterootBase, RELEASEDIRNAME)
-        self._installer = os.path.join(self._siteroot, INSTALLERNAME)
-        self._tmpdir = os.path.join(self._siteroot, "tmp")
-        self.log.warning("Preparing LCG RPM install area: %s" % self._siteroot)
-        
-        # Checking the directory
-        if not os.path.exists(self._siteroot):
-            os.makedirs(self._siteroot)
+        self._config = LbInstallConfig("LCGConfig")
+        self._config.configInst = Config()            
+        self._config.siteroot = self._siteroot
+        self._installArea = InstallArea(self._config)
 
-        # Downloading the installer
-        import urllib
-        urllib.urlretrieve ("/".join([LCGRPMURL, INSTALLERNAME]),
-                            self._installer)
-        if not os.path.exists(self._installer):
-            raise Exception("Failed downloading installer, cannot continue")
-        st = os.stat(self._installer)
-        os.chmod(self._installer, st.st_mode | stat.S_IEXEC)
-
-    def run(self, commands):
-        '''
-        Run an install comamnd on the install area
-        '''
-        cmd = [ self._installer, "--root", self._siteroot] + commands
-        self.log.debug("Running: %s" % " ".join(cmd))
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        out, err = p.communicate()
-        rcode = p.returncode
-        return (out, err, rcode )
-
-
-    def install(self, rpm):
-        '''
-        Run an install comamnd on the install area
-        '''
-        cmd = [ self._installer, "--root", self._siteroot, "install", rpm]
-        self.log.debug("Installing RPM: %s" % " ".join(rpm))
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        out, err = p.communicate()
-        rcode = p.returncode
-        return (out, err, rcode )
-
-    def findReleases(self, rpm):
-        '''
-        Run an install comamnd on the install area
-        '''
-        cmd = [ self._installer, "--root", self._siteroot, "list"]
-        self.log.debug("listing RPM versions/releases: %s" % rpm )
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        out, err = p.communicate()
-        rcode = p.returncode
-        res = out.split("\n")
-        print "XXX", out, "YYY"
-        matching = [ r for r in res if rpm in r ]
-        print "XXX", matching
-        # CAREFUL, order is assumed
-        return matching[-1]
-
-
-    def installNoDeps(self, rpm):
+    def install(self, rpm, nodeps=False):
         '''
         Run an install command on the install area
         '''
-        rpmver = self.findReleases(rpm)
-        rpmname = ".".join([ rpmver, "noarch", "rpm"])
-        rpmurl = "/".join([LCGRPMURL, "lcg",  rpmname])
-        rpmlocal = os.path.join(self._tmpdir, rpmname)
+        if isinstance(rpm, str) or isinstance(rpm, unicode):
+            return self._installArea.installRpm(rpm, nodeps=nodeps)
+        else:
+            return self._installArea.installPackage(rpm, nodeps=nodeps)
+    
 
-        import urllib
-        self.log.warning("Downloading %s to %s" % (rpmurl, self._tmpdir))
-        urllib.urlretrieve (rpmurl, rpmlocal)
-
-        cmd = [ self._installer, "--root", self._siteroot, "rpm", "-ivh", "--nodeps", rpmlocal]
-        self.log.debug("Installing with command: %s" % " ".join(cmd) )
-        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
-        out, err = p.communicate()
-        rcode = p.returncode
-        return (out, err, rcode )
-
+    def findRpm(self, rpm):
+        '''
+        Fin a specific RPM instance
+        '''
+        package =  self._installArea.lbYumClient.findLatestMatchingName(rpm)
+        return package
 
     def checkInstallArea(self, packageList):
         '''
@@ -208,4 +152,7 @@ class LCGRpmInstaller(object):
         Check whether an install was already done or not
         '''
         isEmpty = False
-        return (len(os.listdir(self._siterootBase)) == 0)
+        return (len([ f for f in os.listdir(self._siteroot)
+                      if f not in PACKAGE_EXCLUSION_LIST] ) == 0)
+
+

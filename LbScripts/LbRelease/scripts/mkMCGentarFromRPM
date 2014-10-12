@@ -1,0 +1,258 @@
+#!/usr/bin/env python
+# $Id$
+###############################################################################
+# (c) Copyright 2014 CERN                                                     #
+#                                                                             #
+# This software is distributed under the terms of the GNU General Public      #
+# Licence version 3 (GPL Version 3), copied verbatim in the file "COPYING".   #
+#                                                                             #
+# In applying this licence, CERN does not waive the privileges and immunities #
+# granted to it by virtue of its status as an Intergovernmental Organization  #
+# or submit itself to any jurisdiction.                                       #
+###############################################################################
+'''
+Script to generate the LCG tarball based on the RPMs provided by PH-SFT 
+
+Created on Oct 10, 2014
+
+@author: Ben Couturier
+'''
+
+from LbUtils.Script import Script
+from LbConfiguration.Version import ParseSvnVersion
+from LbRelease import LCGYumInstaller
+from LbRelease import CMTNativeTools 
+from LbLegacy.install_project import calculateMD5
+
+import logging
+import sys
+import os
+
+__version__ = ParseSvnVersion("$Id$", "$URL$")
+
+class BuildMCGentarScript(Script):
+    _version = __version__
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(output_dir=None)
+        parser.add_option("-o", "--output-dir",
+                          help = "define the output directory for the created tarballs" \
+                          "[default: the LHCBTAR directory for the project]")
+        parser.set_defaults(exclude=[])
+        parser.add_option("-e", "--exclude",
+                          action = "append",
+                          help = "add exclude glob pattern to the file/dir paths")
+        parser.add_option("-s","--siteroot",
+                          help = "temporary directory where the RPMs will be installed before repackaging" \
+                          "[default: /tmp/siteroot",
+                          default="/tmp/siteroot")
+        parser.set_defaults(md5=True)
+        parser.add_option("--md5",
+                          action = "store_true",
+                          help = "Create the md5 sum file for each tarball [default: %default]")
+        parser.add_option("--no-md5",
+                          dest = "md5",
+                          action = "store_false",
+                          help = "Prevent the creation of the md5 sum file")
+        parser.add_option("--no-install",
+                          dest = "noinstall",
+                          action = "store_true",
+                          default = False,
+                          help = "For DEV: does packaging, do not redo install")
+        parser.add_option("--force",
+                          dest = "force",
+                          action = "store_true",
+                          default = False,
+                          help = "Ignore installation errors and continue packaging")        
+        parser.add_option("--explicit-deps",
+                          dest = "explicit_deps",
+                          action = "store_true",
+                          default = False,
+                          help = "Restrict to the packages explicitely mentioned in the project")
+        parser.add_option("-y", "--siteroot-not-empty",
+                          dest = "ackSiterootNotEmpty",
+                          action = "store_true",
+                          default = False,
+                          help = "Acknowledge the fact that there are files in the installation dir already")
+
+
+    def main(self):
+        log = logging.getLogger()
+        self.log = log
+        args = self.args
+        opts = self.options
+        version = None
+        self.externalsDict = None
+        self.baseOutputFilename = None
+        if len(args) < 2 :
+            log.error("Not enough arguments")
+            sys.exit(1)
+        else :
+            self.project   = args[0]
+            self.version   = args[1]
+            self.cmtconfig = args[2]
+
+        # preparing the actual RPM install area
+        log.warning("Repackaging %s %s for CMTCONFIG %s" % (self.project, self.version, self.cmtconfig))
+        installer = LCGYumInstaller.LCGYumInstaller(opts.siteroot)
+
+        # CHeck whether there is an install already
+        if not installer.isAreaEmpty() and not opts.ackSiterootNotEmpty:
+            log.error("The install area %s already contains files, please remove them of force installation with -y" % installer._siteroot)
+            sys.exit(1)
+
+
+        # performing the installation if requested
+        if opts.noinstall == False:
+            self.install(self.project, self.version, self.cmtconfig, installer)
+
+        # Now preparing the tar file
+        output_dir = None
+        if opts.output_dir == None:
+            output_dir = os.environ['LHCBTAR']
+        else:
+            output_dir = os.path.abspath(opts.output_dir)
+        
+        log.warning("Will use DIST directory: %s" % output_dir)
+        htmldir = os.path.join(output_dir, "html")
+        sourcedir = os.path.join(output_dir, "source")
+        if not os.path.exists(htmldir):
+            os.makedirs(htmldir)
+        if not os.path.exists(sourcedir):
+            os.makedirs(sourcedir)
+    
+        baseFilename = self.getOutputFilename()
+        filename = "%s_%s" % (baseFilename, self.cmtconfig)
+        log.warning("Output Base filename: %s" % filename)
+
+        htmlFilename = os.path.join(output_dir, "html", filename + ".html")
+        tarFilename = os.path.join(output_dir, "source", filename + ".tar.gz")
+
+        # Preparing the tar file
+        (lcgVer, externalsDict) = self.getExternalsDict()
+        packageList = None
+        if opts.explicit_deps:
+            packageList = externalsDict.keys()
+            # Now adding the files in LCG_XX
+            for k in externalsDict.keys():
+                packageList.append(os.path.join("LCG_" + self.lcgVer,
+                                                k))
+        installer.prepareLCGTar(tarFilename, packageList)
+        self.createMD5File(tarFilename, "tar.gz")
+        self.createHTMLFile(htmlFilename, baseFilename, self.cmtconfig)
+        self.createMD5File(htmlFilename, "html")
+
+    def createMD5File(self, tarfile, origExtension):
+        '''
+        Create the md5sum file of the install area
+        '''
+        md5file = tarfile.replace("." + origExtension, ".md5")
+        md5sum = calculateMD5(tarfile)
+        mdf = open(md5file,"w")
+        mdf.write("%s  %s" % (md5sum,os.path.basename(tarfile)))
+        mdf.close()
+
+    def createHTMLFile(self, htmlfile, baseName, cmtconfig):
+        '''
+        Create the HTML file for the tar
+        '''
+        fileProj = baseName.split("_")[0]
+        fileVer = baseName[baseName.find("_")+1]
+        namecfg =  baseName + "_" + cmtconfig
+        fd = open(htmlfile, "w")
+        fd.write("<H3>Project %s version %s (%s binary files) </H3>\n" % (fileProj, fileVer, cmtconfig))
+        fd.write("<A NAME=%s HREF=source/%s>%s</A>\n" % (namecfg, namecfg + ".tar.gz", namecfg))
+        fd.close()
+
+    def getExternalsDict(self):
+        '''
+        Gets the list of all externals needed
+        '''
+        if self.externalsDict == None:
+            (lcgVerTmp, externalsDict) = CMTNativeTools.get_genser_native_versions(self.project.upper() + "_" + self.version)
+            self.lcgVer = lcgVerTmp.split("_", 1)[1]
+            self.externalsDict = externalsDict
+
+        return (self.lcgVer, self.externalsDict)
+
+    def getOutputFilename(self):
+        '''
+        Derive the output filename from the project specified
+        '''
+        if self.baseOutputFilename == None:
+            GENSER_vers = 'GENSER_'+  self.getExternalsDict()[1]['GENSER']
+            self.baseOutputFilename = GENSER_vers
+        return self.baseOutputFilename
+
+
+    def listPackagesForGenerator(rpmName, installer):
+        '''
+        Extract the list of packages neee for a specific generator
+        '''
+        
+
+
+
+
+        
+    def install(self, project, version, cmtconfig, installer):
+        '''
+        Perform the installation of the needed packages in the install area
+        '''
+        # Retrieving the list of externals from the mentioned project
+        (lcgVer, externalsDict) = self.getExternalsDict()
+
+        self.log.debug("lcgVer:" + lcgVer)
+        self.log.debug("Externals list:" + str(externalsDict))
+        
+        # Now prepare the list of RPMs based on the externals found
+        allrpms = []
+        for k, v in externalsDict.items():
+            self.log.warning("==> %s, %s" % (k, v))
+            if k == "GENSER":
+                # Just skip
+                continue
+            
+            # Temporary hack until we find a better solution !
+            packagesToFix = { "photospp" : "photos++",
+                              "tauolapp": "tauola++",
+                              "herwigpp": "herwig++",
+                              "powhegbox": "powheg-box" }
+            pkgName = k
+            if k in packagesToFix.keys():
+                pkgName = packagesToFix[k]
+            
+            rpmName = "LCG_%s_%s_%s_%s" % (lcgVer, pkgName,  v.replace('-', '_'),
+                                               cmtconfig.replace('-', '_'))
+            self.log.warning("Adding RPM: %s" % rpmName)
+
+
+            linkPackage = installer.findRpm(rpmName)
+            req = [ r for r in  linkPackage.requires if pkgName in r.name ]
+            mainPackage = installer.findRpm(req[0].name)
+            allrpms.append(rpmName)
+            allrpms.append(req[0].name)
+
+        # Now performing the install
+        self.log.warning("Now performing the actual install")
+        packageErrors = []
+        for rpm in allrpms:
+            installer.install(rpm, nodeps=True)
+            #packageErrors.append(rpm)
+
+        if len(packageErrors) > 0:
+            self.log.error("Errors installing the following packages:")
+            for p in packageErrors:
+                self.log.error(p)
+            if not self.options.force:
+                self.log.error("Some packages are missing -stopping installation")
+                self.log.error("Use --force option to continue nonetheless")
+                sys.exit(1)
+        else:
+                self.log.warning("All packaged installed successfully")
+                
+if __name__ == '__main__':
+    s = BuildMCGentarScript(usage="%prog [options] project version cmtconfig")
+    sys.exit(s.run())
+    

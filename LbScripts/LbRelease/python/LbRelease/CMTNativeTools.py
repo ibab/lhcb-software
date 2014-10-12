@@ -17,16 +17,6 @@ Created on Mar 25, 2014
 
 @author: Ben Couturier
 '''
-###############################################################################
-# (c) Copyright 2014 CERN                                                     #
-#                                                                             #
-# This software is distributed under the terms of the GNU General Public      #
-# Licence version 3 (GPL Version 3), copied verbatim in the file "COPYING".   #
-#                                                                             #
-# In applying this licence, CERN does not waive the privileges and immunities #
-# granted to it by virtue of its status as an Intergovernmental Organization  #
-# or submit itself to any jurisdiction.                                       #
-###############################################################################
 
 import os
 import re
@@ -37,6 +27,7 @@ from subprocess import Popen, PIPE
 from LbLegacy.Utils import getStatusOutput
 from LbUtils.Temporary import TempDir
 from LbUtils.CMT.Common import CMTCommand as CMT
+from LbUtils.CMT.Common import isCMTMessage
 
 tmpdir = TempDir(prefix="LHCbExternalsRpmSpec")
 __log__ = logging.getLogger(__name__)
@@ -64,7 +55,11 @@ def get_macro_value(cmtdir, macro, extratags):
     if cmtdir != None:
         os.chdir(here)
     return line
-
+#
+# BEWARE BEWARE BEWARE BEWARE
+# This function leaves you in the cmt directory of the project
+# !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#
 def get_base_project(native_version):
     NAME = native_version.split('_')[0]
     version = native_version.split('_',1)[1]
@@ -355,3 +350,58 @@ def get_output_filename(native_version, binary, packages_versions):
     else:
         filename = 'PLUGINS'
     return filename
+
+
+#----------------------------------------------------------------------------
+#
+#  get GENSER native versions ==============================================
+#
+def get_genser_native_versions(native_version):
+    __log__.debug('Called with arg ' + native_version)
+    packages_versions = {}
+
+    # Looking up project properties
+    NAME, version, Name, NameSys, release_area = get_base_project(native_version)
+    name = Name # Capitalized...
+    __log__.debug('release_area = ' +release_area +' '+ name)
+
+    # Look it up properly with this method
+    release_area = find_project_in_cmtprojectpath(NAME, native_version)
+    CMTPATH = get_cmtpath(native_version)
+    lcgv = get_lcg_version(CMTPATH)
+    __log__.debug('LCG Version  = ' + lcgv)
+    __log__.debug('release_area = ' +release_area +' '+ name)
+
+    Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys','cmt')
+    if not os.path.exists(Sys_dir) :
+        Sys_dir = os.path.join(release_area,NAME,native_version,name+'Sys',version,'cmt')
+    __log__.debug('SysDir=' + Sys_dir)
+    os.chdir(Sys_dir)
+
+    status,value = getStatusOutput('cmt sh macro_value GENSERVERSION')
+    if isCMTMessage(value) :
+        GENSERVERSION = value.split('\n')[1]
+    else:
+        GENSERVERSION = value
+    packages_versions['GENSER'] = GENSERVERSION
+    __log__.debug('GENSERVERSION=' +  GENSERVERSION)
+
+    for fdline in os.popen('cmt show macros native').readlines():
+        if fdline.find('config_version') == -1:
+            pack = fdline.split('_')[0]
+            vers = fdline.split("'")[1]
+            packages_versions[pack] = vers
+
+    #packages_homes = {}
+    #for p in packages_versions :
+    #    packages_homes[p] = os.popen("cmt show macro_value %s_home" % p).read()[:-1]
+
+    os.chdir(release_area)
+    return lcgv, packages_versions
+
+#----------------------------------------------------------------------------
+#
+# Various utils for the mkMCGentar
+#
+def get_MCGen_base(package_home, genname, genversion):
+    return os.path.dirname(os.path.dirname(os.path.dirname(package_home)))
