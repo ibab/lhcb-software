@@ -788,7 +788,7 @@ Bu2rho0rhoPlus = {
                                           "rhoMothMassMin"        : 200,    # MeV
                                           "rho0MinVChi2Dof"       : 14,
 
-                                          "pi0ResMinCL"           : 0.0009,
+                                          "pi0ResMinCL"           : -1000,
                                           "pi0ResMinP"            : 3500,   # MeV
                                           "pi0ResMinPT"           : 400,    # MeV
                                           "piPRhoPResMinIPChi2"   : 20,
@@ -832,7 +832,7 @@ Bu2rho0rhoPlus = {
                                           "rhoMothMassMin"        : 200,    # MeV
                                           "rho0MinVChi2Dof"       : 14,
 
-                                          "pi0ResMinCL"           : 0.0009,
+                                          "pi0ResMinCL"           : -1000,
                                           "pi0ResMinP"            : 1000,   # MeV
                                           "pi0ResMinPT"           : 400,    # MeV
                                           "piPRhoPResMinIPChi2"   : 10,

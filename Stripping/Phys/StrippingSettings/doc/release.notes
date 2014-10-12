@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-12 - Stefano Perazzini
+ - Corrected dictionaries for StrippingBu2rho0rhoPlus.py 
+
 ! 2014-10-07 - Stefano Perazzini
  - Slightly modified the dictionaries for Bu2Kpi0.
 
