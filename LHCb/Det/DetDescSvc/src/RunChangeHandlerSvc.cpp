@@ -137,7 +137,7 @@ void RunChangeHandlerSvc::update(CondData &cond){
         // This is a bit of a hack, but it is the only way of replacing the
         // URL to use for an object.
         std::string* par = const_cast<std::string*>(addr->par());
-	if( cond.pathTemplate.find("%d") != std::string::npos )
+	if( cond.pathTemplate.find("%") != std::string::npos )
 	  par[0] = (boost::format(cond.pathTemplate) % m_currentRun).str();
 	else
 	  par[0] = cond.pathTemplate ;
