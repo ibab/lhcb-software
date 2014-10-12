@@ -83,8 +83,8 @@ StatusCode RelInfoBs2MuMuTrackIsolations::initialize() {
   m_combiner  = m_dva->particleCombiner();
   //m_combiner = tool<IParticleCombiner>("LoKi::", this)
  
-  info()<<" ==> Initialize"<<endmsg;
-  debug()<<" ==> Initialize"<<endmsg;
+  
+  if ( msgLevel(MSG::DEBUG) ) debug()<<" ==> Initialize"<<endmsg;
 
   //configure keys
   m_keys.push_back(RelatedInfoNamed::BSMUMUTRACKPLUSISO);
@@ -136,7 +136,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
   m_decayParticles.clear();
   m_decayParticles.push_back( top );
   saveDecayParticles( top );
-  info()<<"this should be printed. I am looking at particle "<<part->particleID().pid()<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"this should be printed. I am looking at particle "<<part->particleID().pid()<<endmsg;
   
   LHCb::Tracks* tracks = get<LHCb::Tracks>(m_TracksPath);
   if ( tracks->empty() )
@@ -152,13 +152,11 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
     return StatusCode::FAILURE;
   }
 					   
-  info()<<" will call isotwobody "<<m_IsoTwoBody<<endreq;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<" will call isotwobody "<<m_IsoTwoBody<<endreq;
   if(m_IsoTwoBody){
-    info()<< "Going to call IsolationTwoBody to compute IsolationTwoBody variables "<<endmsg;
-    if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call IsolationTwoBody to compute IsolationTwoBody variables " << endmsg ;
+    if ( msgLevel(MSG::DEBUG) ) debug()<< "Going to call IsolationTwoBody to compute IsolationTwoBody variables "<<endmsg;
     testcode = IsolationTwoBodyVariables(part, top);
     if ( msgLevel(MSG::DEBUG) ) debug() << "Computed IsolationTwoBody variables "<< m_massisoplus<<" and "<< m_chi2isoplus<<" with statuscode "<<testcode <<endmsg;
-    info()<< "Computed IsolationTwoBody variables "<< m_massisoplus<<" and "<< m_chi2isoplus<<" with statuscode "<<endreq;
     if(!testcode) return StatusCode::FAILURE;
     
   } // if m_IsoTwoBody 
@@ -169,7 +167,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
   if(!testcode) return StatusCode::FAILURE;
   
   m_map.clear();
-  info()<<" Map cleared.... "<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<" Map cleared.... "<<endreq;
   std::vector<short int>::const_iterator ikey;
   for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
     
@@ -189,7 +187,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
 
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
-    info () << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
+    if ( msgLevel(MSG::DEBUG) )  debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
     m_map.insert( std::make_pair( *ikey, value) );
   } //iter over keys
 
@@ -247,7 +245,7 @@ bool RelInfoBs2MuMuTrackIsolations::isTrackInDecay(const LHCb::Track* track){
 StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *part, const LHCb::Particle *top){
 
   if ( msgLevel(MSG::DEBUG) ) debug() <<" Entering  TrackIsolations "<<endmsg;
-  info() <<" Entering  TrackIsolations "<<endmsg;
+  if ( msgLevel(MSG::DEBUG) )  debug() <<" Entering  TrackIsolations "<<endmsg;
   int isotype = 5;
   if ( msgLevel(MSG::DEBUG) ) debug()<<" calling iso with isotype  "<<isotype<<endreq;
 
@@ -268,7 +266,6 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
   StatusCode sc = StatusCode::SUCCESS;
   Gaudi::XYZPoint PosPV = PV->position();
   Gaudi::XYZPoint PosSV = SV->position();
-  info()<<"got PV "<<PosPV<<" got SV "<<PosSV<<endreq;
 
   double iso0 = 0.;
   double iso5 = 0.;
@@ -289,8 +286,6 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
   double fc = 0.;
   Gaudi::XYZPoint omu(o_mu[0],o_mu[1],o_mu[2]);
   Gaudi::XYZVector pmu(p_mu[0],p_mu[1],p_mu[2]);
-  
-  info()<<" looping over parts.. "<<endreq;
   
   //Loop over all particles
   LHCb::Particles::const_iterator ip;
@@ -333,7 +328,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
       verts = get<LHCb::RecVertex::Container>(m_PVInputLocation);
     else {
       return StatusCode::FAILURE;
-      info() << "Could not find any vertices "<<endreq;
+      if ( msgLevel(MSG::DEBUG) )  debug() << "Could not find any vertices "<<endreq;
     }
     for ( iv = verts->begin(); iv != verts->end(); iv++) {
       m_dist->distance(&(*cand),(*iv),imp,impchi2);
@@ -389,8 +384,8 @@ StatusCode RelInfoBs2MuMuTrackIsolations::TrackIsolations(const LHCb::Particle *
   m_trackID = part->particleID().pid();
   m_topID = top->particleID().pid();
   
-  info()<<"looped over "<<ntracks<<" tracks \n Returning values "<<m_count_mup_iso2<<"   "<< m_count_mup_Giampi<<endreq;
-  info()<<" trackID "<<m_trackID<<" topID  "<<m_topID<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<"looped over "<<ntracks<<" tracks \n Returning values "<<m_count_mup_iso2<<"   "<< m_count_mup_Giampi<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<" trackID "<<m_trackID<<" topID  "<<m_topID<<endreq;
 
   return StatusCode::SUCCESS;
 
@@ -548,7 +543,7 @@ void RelInfoBs2MuMuTrackIsolations::InCone(Gaudi::XYZPoint o1,
 //=============================================================================
 StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::Particle *P,const LHCb::Particle *top){
 
-  info() <<"Inside IsolationTwoBodyVariables...  "<< endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug() <<"Inside IsolationTwoBodyVariables...  "<< endreq;
   if ( !(P->isBasicParticle())) {
     if ( msgLevel(MSG::DEBUG) ) debug() <<"Inside IsolationTwoBodyVariables... P was composite. Returning "<< endreq;
     return StatusCode::SUCCESS;
@@ -559,7 +554,7 @@ StatusCode RelInfoBs2MuMuTrackIsolations::IsolationTwoBodyVariables(const LHCb::
   
   const LHCb::VertexBase *PV = m_dva->bestVertex(top); 
   const LHCb::VertexBase *SV = top->endVertex();
-  info()<<" got vertices "<<PV->position()<<" and "<<SV->position()<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<" got vertices "<<PV->position()<<" and "<<SV->position()<<endreq;
 
   LHCb::Particles*  m_allparts = get<LHCb::Particles>(m_ParticlePath);
   

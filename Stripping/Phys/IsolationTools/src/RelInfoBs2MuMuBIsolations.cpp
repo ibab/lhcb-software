@@ -76,8 +76,7 @@ StatusCode RelInfoBs2MuMuBIsolations::initialize() {
   m_combiner  = m_dva->particleCombiner();
   //m_combiner = tool<IParticleCombiner>("LoKi::", this)
  
-  info()<<" ==> Initialize"<<endmsg;
-  debug()<<" ==> Initialize"<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<" ==> Initialize"<<endmsg;
 
   //configure keys
   m_keys.push_back(RelatedInfoNamed::BSMUMUCDFISO);
@@ -127,7 +126,7 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
   m_decayParticles.clear();
   m_decayParticles.push_back( top );
   saveDecayParticles( top );
-  info()<<"this should be printed. I am looking at particle "<<part->particleID().pid()<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() <<"this should be printed. I am looking at particle "<<part->particleID().pid()<<endmsg;
   
   StatusCode testcode ;
 
@@ -138,21 +137,6 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
     return StatusCode::FAILURE;
   }
 
-  // FIX this 
-  /// check that it is a 2 body decay
-  const LHCb::Particle::ConstVector& daughterVec = part->daughtersVector();
-  int idx = 0;
-  for (LHCb::Particle::ConstVector::const_iterator ipart=daughterVec.begin();ipart!=daughterVec.end();++ipart)
-  {
-    if ( NULL==(*ipart)->proto() ) continue;
-    idx++;
-  }
-  if(idx != 2 )  {
-    info()<<"well, daughters were "<<idx<<endreq;
-    //return StatusCode::SUCCESS;
-  }
-
-  //StatusCode testcode ;
   // Call functions to do the work and assign values
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "Going to call CDFIsolation computation" << endmsg ;
@@ -167,7 +151,7 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
   if(!testcode) return StatusCode::FAILURE;
 
   m_map.clear();
-  info()<<" Map cleared.... "<<endreq;
+  if ( msgLevel(MSG::DEBUG) )  debug()<<" Map cleared.... "<<endreq;
   std::vector<short int>::const_iterator ikey;
   for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
 
@@ -186,7 +170,7 @@ StatusCode RelInfoBs2MuMuBIsolations::calculateRelatedInfo(const LHCb::Particle*
     
     }
     if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
-    info () << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
     m_map.insert( std::make_pair( *ikey, value) );
   } //iter over keys
 
@@ -290,12 +274,12 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
     m_otherB_mag = ptproj.R();
     m_otherB_angle=arcosine( ptproj, part->slopes());
   
-    info()<<" size of decayparts "<<m_decayParticles.size()<<endreq;
+    if ( msgLevel(MSG::DEBUG) )  debug()<<" size of decayparts "<<m_decayParticles.size()<<endreq;
 
 
     const LHCb::Particle *vdau1 = m_decayParticles[1];
     const LHCb::Particle *vdau2 = m_decayParticles[2];
-    info()<<"found daughters with charges "<<vdau1->charge()<<"  "<<vdau2->charge()<<endreq;
+    if ( msgLevel(MSG::DEBUG) ) debug()<<"found daughters with charges "<<vdau1->charge()<<"  "<<vdau2->charge()<<endreq;
 
     const LHCb::Particle *myDau = NULL;
     if (vdau1->charge()>0) myDau = vdau1;
@@ -331,8 +315,8 @@ StatusCode RelInfoBs2MuMuBIsolations::OtherB(const LHCb::Particle *top,
    m_partID = part->particleID().pid();
    m_topID = top->particleID().pid();
       
-  info()<<"computed quantities "<<m_otherB_mag<<" "<<m_otherB_angle<<" "<<m_otherB_boost_mag<<" "<< m_otherB_boost_angle<<" "<<m_otherBtracks<<endreq;
-  info()<<"partID "<<m_partID<<" topID "<<m_topID<<endreq;
+   if ( msgLevel(MSG::DEBUG) ) debug()<<"computed quantities "<<m_otherB_mag<<" "<<m_otherB_angle<<" "<<m_otherB_boost_mag<<" "<< m_otherB_boost_angle<<" "<<m_otherBtracks<<endreq;
+   if ( msgLevel(MSG::DEBUG) ) debug()<<"partID "<<m_partID<<" topID "<<m_topID<<endreq;
 
   return StatusCode::SUCCESS;
       
