@@ -148,8 +148,9 @@ StatusCode RelInfoBs2MuMuTrackIsolations::calculateRelatedInfo(const LHCb::Parti
   StatusCode testcode ;
 
   if( !part->isBasicParticle()) {
-    if ( msgLevel(MSG::WARNING) ) Warning( std::string("I received a composite particle!! Skipping" ));
-    return StatusCode::FAILURE;
+    if ( msgLevel(MSG::DEBUG) ) debug() << "I received a composite particle!! Skipping" << endmsg;
+    m_map.clear(); 
+    return StatusCode::SUCCESS;
   }
 					   
   if ( msgLevel(MSG::DEBUG) ) debug()<<" will call isotwobody "<<m_IsoTwoBody<<endreq;

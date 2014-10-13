@@ -3,6 +3,9 @@
 ! Responsible : Alex Shires
 !============================================================================
 
+! 2014-10-13 - Anton Poluektov 
+ - Modify Bs2MuMuTrackIsolation not to produce warning when applied to combined particles
+
 ! 2014-10-07 - Alessandro Mordà
 - Modified all the RelInfoBstautau* tools (exept the RelInfoBstautauCDFiso*) to solve issues related to the RecursionLevel
 
