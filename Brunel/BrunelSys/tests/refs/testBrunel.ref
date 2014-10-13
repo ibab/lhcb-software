@@ -1,5 +1,5 @@
-# --> Including file '/build/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/build/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName         = 'Brunel'
@@ -99,12 +99,12 @@
 # DstWriter.OptItemList=[]
 # No Writer defined for DIGI
 # WARNING: Using default tag dddb-20130929-1 for partition DDDB
-# WARNING: Using default tag cond-20140604 for partition LHCBCOND
+# WARNING: Using default tag cond-20141007 for partition LHCBCOND
 # WARNING: Using default tag dq-20140822 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v47r0
-                                          running on lxbuild173.cern.ch on Thu Sep  4 05:57:47 2014
+                                                   Welcome to Brunel version v47r1
+                                          running on lbbuild09.cern.ch on Mon Oct 13 06:23:38 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -113,7 +113,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.19 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.46 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -135,7 +135,7 @@ COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                 INFO Using TAG "dddb-20130929-1"
 LHCBCOND             INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/LHCBCOND.db/LHCBCOND"
-LHCBCOND             INFO Using TAG "cond-20140604"
+LHCBCOND             INFO Using TAG "cond-20141007"
 LumiBeamCrossin...   INFO Member list: LoKi::ODINFilter/FilterBeamCrossing, HltLumiSummaryDecoder/LumiDecodeBeamCrossing, FilterOnLumiSummary/LumiFilterBeamCrossing, LumiAccounting/LumiCountBeamCrossing, with context 'Offline'
 LumiBeam1Seq         INFO Member list: LoKi::ODINFilter/FilterBeam1, HltLumiSummaryDecoder/LumiDecodeBeam1, FilterOnLumiSummary/LumiFilterBeam1, FilterFillingScheme/FillingBeam1, LumiAccounting/LumiCountBeam1, with context 'Offline'
 ONLINE_2012          INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/ONLINE-2012.db/ONLINE"
@@ -321,23 +321,20 @@ RecoCALOSeq          INFO Member list: GaudiSequencer/CaloProcessorCaloSeq, with
 CaloProcessorCa...   INFO Member list: GaudiSequencer/CaloRecoForCaloProcessor, GaudiSequencer/CaloPIDsCaloPIDsForCaloProcessor, with context 'Offline'
 CaloRecoForCalo...   INFO Member list: GaudiSequencer/CaloDigits, GaudiSequencer/ClusterReco, GaudiSequencer/PhotonReco, GaudiSequencer/MergedPi0Reco, GaudiSequencer/ElectronReco, with context 'Offline'
 ClusterReco          INFO Member list: GaudiSequencer/CaloDigits, CaloDigitFilterAlg/CaloDigitFilter, CellularAutomatonAlg/EcalClust, CaloShowerOverlap/EcalShare, CaloClusterCovarianceAlg/EcalCovar, with context 'Offline'
-EcalShare.EcalC...   INFO Condition 'Conditions/Reco/Calo/EcalClusterMasks' has not been found
 EcalShare.EcalC...   INFO  Energy   mask : [3x3, 3x3, 3x3] (from DB)
 EcalShare.EcalC...   INFO  Position mask : [3x3, 3x3, 3x3] (from DB)
-EcalCovar.EcalC...   INFO Condition 'Conditions/Reco/Calo/EcalClusterMasks' has not been found
 EcalCovar.EcalC...   INFO  Energy   mask : [3x3, 3x3, 3x3] (from DB)
 EcalCovar.EcalC...   INFO  Position mask : [3x3, 3x3, 3x3] (from DB)
-EcalCovar.EcalC...   INFO Condition 'Conditions/Reco/Calo/EcalCovariance' has not been found
 EcalCovar.EcalC...   INFO  Has initialized with parameters:
 EcalCovar.EcalC...   INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
 EcalCovar.EcalC...   INFO  	 ==  Parameters for covariance estimation ==
-EcalCovar.EcalC...   INFO Stochastic 	 : [0.1, 0.1, 0.1] Sqrt(GeV)	 : from options
-EcalCovar.EcalC...   INFO GainError 	 : [0.01, 0.01, 0.01] 	 : from options
-EcalCovar.EcalC...   INFO IncoherentNoise 	 : [1.2, 1.2, 1.2] ADC	 : from options
-EcalCovar.EcalC...   INFO CoherentNoise 	 : [0.3, 0.3, 0.3] ADC	 : from options
-EcalCovar.EcalC...   INFO ConstantE 	 : [0, 0, 0] MeV	 : from options
-EcalCovar.EcalC...   INFO ConstantX 	 : [0, 0, 0] mm	 : from options
-EcalCovar.EcalC...   INFO ConstantY 	 : [0, 0, 0] mm	 : from options
+EcalCovar.EcalC...   INFO Stochastic 	 : [0.21, 0.14, 0.14] Sqrt(GeV)	 : from Covariance DB
+EcalCovar.EcalC...   INFO GainError 	 : [0.045, 0.025, 0.025] 	 : from Covariance DB
+EcalCovar.EcalC...   INFO IncoherentNoise 	 : [2.2, 2.2, 2.2] ADC	 : from Covariance DB
+EcalCovar.EcalC...   INFO CoherentNoise 	 : [1.3, 1.3, 1.3] ADC	 : from Covariance DB
+EcalCovar.EcalC...   INFO ConstantE 	 : [0, 0, 0] MeV	 : from Covariance DB
+EcalCovar.EcalC...   INFO ConstantX 	 : [9, 2, 0.5] mm	 : from Covariance DB
+EcalCovar.EcalC...   INFO ConstantY 	 : [9, 2, 0.5] mm	 : from Covariance DB
 PhotonReco           INFO Member list: GaudiSequencer/CaloTrackMatch, CaloSinglePhotonAlg/SinglePhotonRec, with context 'Offline'
 CaloTrackMatch       INFO Member list: InEcalAcceptanceAlg/InECAL, PhotonMatchAlg/ClusterMatch, with context 'Offline'
 InECAL               INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clone'  'Backward' ] Accepted FitStatus: [ 'Fitted' ]; Accepted Types: [ 'Long'  'Downstream'  'Ttrack' ]; Rejected History: [];
@@ -345,18 +342,16 @@ ClusterMatch         INFO  Check Tracks: YES Rejected flags: [  'Invalid'  'Clon
 SinglePhotonRec      INFO No Hypo    Correction(1) tools are specified!
 SinglePhotonRec      INFO No Hypo    Processing(2) tools are specified!
 MergedPi0Reco        INFO Member list: CaloMergedPi0/MergedPi0Rec, with context 'Offline'
-MergedPi0Rec.Ec...   INFO Condition 'Conditions/Reco/Calo/EcalCovariance' has not been found
 MergedPi0Rec.Ec...   INFO  Has initialized with parameters:
 MergedPi0Rec.Ec...   INFO  	 'Detector'         = '/dd/Structure/LHCb/DownstreamRegion/Ecal'
 MergedPi0Rec.Ec...   INFO  	 ==  Parameters for covariance estimation ==
-MergedPi0Rec.Ec...   INFO Stochastic 	 : [0.1, 0.1, 0.1] Sqrt(GeV)	 : from options
-MergedPi0Rec.Ec...   INFO GainError 	 : [0.01, 0.01, 0.01] 	 : from options
-MergedPi0Rec.Ec...   INFO IncoherentNoise 	 : [1.2, 1.2, 1.2] ADC	 : from options
-MergedPi0Rec.Ec...   INFO CoherentNoise 	 : [0.3, 0.3, 0.3] ADC	 : from options
-MergedPi0Rec.Ec...   INFO ConstantE 	 : [0, 0, 0] MeV	 : from options
-MergedPi0Rec.Ec...   INFO ConstantX 	 : [0, 0, 0] mm	 : from options
-MergedPi0Rec.Ec...   INFO ConstantY 	 : [0, 0, 0] mm	 : from options
-MergedPi0Rec.Ec...   INFO Condition 'Conditions/Reco/Calo/EcalClusterMasks' has not been found
+MergedPi0Rec.Ec...   INFO Stochastic 	 : [0.21, 0.14, 0.14] Sqrt(GeV)	 : from Covariance DB
+MergedPi0Rec.Ec...   INFO GainError 	 : [0.045, 0.025, 0.025] 	 : from Covariance DB
+MergedPi0Rec.Ec...   INFO IncoherentNoise 	 : [2.2, 2.2, 2.2] ADC	 : from Covariance DB
+MergedPi0Rec.Ec...   INFO CoherentNoise 	 : [1.3, 1.3, 1.3] ADC	 : from Covariance DB
+MergedPi0Rec.Ec...   INFO ConstantE 	 : [0, 0, 0] MeV	 : from Covariance DB
+MergedPi0Rec.Ec...   INFO ConstantX 	 : [9, 2, 0.5] mm	 : from Covariance DB
+MergedPi0Rec.Ec...   INFO ConstantY 	 : [9, 2, 0.5] mm	 : from Covariance DB
 MergedPi0Rec.Ec...   INFO  Energy   mask : [3x3, 3x3, 3x3] (from DB)
 MergedPi0Rec.Ec...   INFO  Position mask : [3x3, 3x3, 3x3] (from DB)
 ElectronReco         INFO Member list: GaudiSequencer/CaloTrackMatch, CaloElectronAlg/SingleElectronRec, with context 'Offline'
@@ -699,11 +694,6 @@ ToolSvc              INFO Removing all tools created by ToolSvc
 ToolSvc.TrackSt...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
-MergedPi0Rec.Ec...WARNING  Applied corrections configured via options for  MergedPi0Rec.EcalClusterTag.DBAccessor
-MergedPi0Rec.Ec...WARNING  Applied corrections configured via options for  MergedPi0Rec.EcalCovariance.DBAccessor
-EcalCovar.EcalC...WARNING  Applied corrections configured via options for  EcalCovar.EcalCovarTool.DBAccessor
-EcalCovar.EcalC...WARNING  Applied corrections configured via options for  EcalCovar.EcalClusterTag.DBAccessor
-EcalShare.EcalC...WARNING  Applied corrections configured via options for  EcalShare.EcalClusterTag.DBAccessor
 ToolSvc.TrackVe...SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "Number of tracks seen"                         |         1 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
@@ -712,7 +702,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.19 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   2.46 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
