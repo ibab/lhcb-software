@@ -170,6 +170,8 @@ C*******************************************************************************
 C...For reading grid files for different center of mass energy
       IF( ABS(ECM-14000).LE.1. )THEN 
         ENERGYNAME='14TeV/'
+      ELSE IF( ABS(ECM-13000).LE.1. )THEN
+        ENERGYNAME='13TeV/'
       ELSE IF( ABS(ECM-10000).LE.1. )THEN
         ENERGYNAME='10TeV/'
       ELSE IF( ABS(ECM-8000).LE.1. )THEN
