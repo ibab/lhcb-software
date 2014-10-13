@@ -600,12 +600,12 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
           const double TrackQOP = Track_info["5#Track.firstState.qOverP"];
           const double TrackChi2PerDoF = Track_info["6#Track.chi2PerDoF"]; debug() << "Track #chi^{2}/DoF = " << TrackChi2PerDoF << endmsg; // end of basic SelReports info
           //
-          //double TrackDoF;
+          double TrackDoF;
           double TrackLikelihood, TrackGhostProb;
           double flags;
           double lTrackZ, lTrackX, lTrackY, lTrackTX, lTrackTY, lTrackQOP;
           if( m_ReportVersion == 2 ){
-            //TrackDoF = Track_info["7#Track.nDoF"];
+            TrackDoF = Track_info["7#Track.nDoF"];
             TrackLikelihood = Track_info["8#Track.Likelihood"];
             TrackGhostProb = Track_info["9#Track.GhostProb"];
             flags = Track_info["10#Track.flags"];
@@ -619,7 +619,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
           //
           if( m_ReportVersion == 2 ){
             debug() << "Track extra for Rep v2, adding last state" << endmsg;
-            //track->setNDoF( (int)TrackDoF );
+            track->setNDoF( (int)TrackDoF );
             track->setGhostProbability( TrackGhostProb );
             track->setLikelihood( TrackLikelihood );
             LHCb::State* last = new LHCb::State();
