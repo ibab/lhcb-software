@@ -4,6 +4,10 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-10-13 - Anton Poluektov 
+ - Small modification of AddRelatedInfo: do not count element of InfoLocations list 
+   if the map returned by the tool is empty. 
+
 ! 2014-10-06 - Anton Poluektov 
  - Modify behaviour of AddRelatedInfo: 
 

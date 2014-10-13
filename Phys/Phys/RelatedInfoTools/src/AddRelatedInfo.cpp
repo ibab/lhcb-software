@@ -129,7 +129,7 @@ void AddRelatedInfo::fill( const Particle* top,
       
       if (iloc >= m_infoLocations[c_location].size() ) {
         warning() << "Index of particle at " << c_location << "(" << iloc << ")"
-                  << "is larger than location vector size " << "(" << m_infoLocations[c_location].size() 
+                  << "is >= than location vector size " << "(" << m_infoLocations[c_location].size() 
                   << "). Skipping RelatedInfo calculation. " << endreq; 
         return; 
       }
@@ -137,7 +137,6 @@ void AddRelatedInfo::fill( const Particle* top,
       if (msgLevel(MSG::DEBUG)) 
         debug() << "Filling RelatedInfo for particle " << iloc << " at location " << c_location << endreq;
       map_location = top_location + "/" + m_infoLocations[c_location][iloc];
-      m_locationCounter[c_location]++; 
     } else {
       // In case the line just filters the common particles and does not produce
       // its own candidates
@@ -160,13 +159,14 @@ void AddRelatedInfo::fill( const Particle* top,
     }
 
     RelatedInfoMap* map = m_tool->getInfo(); 
-
-    if (msgLevel(MSG::DEBUG))
-    {
-      debug() << "Got RelatedInfoMap : " << *map << endreq;
+    
+    if (map->size() == 0) {
+      if (msgLevel(MSG::DEBUG)) debug() << "Got empty RelatedInfoMap. " << endreq;
+    } else {
+      if (msgLevel(MSG::DEBUG)) debug() << "Got RelatedInfoMap : " << *map << endreq;
+      relation->i_relate(top, *map); 
+      if (m_maxLevel > 0) m_locationCounter[c_location]++;
     }
-      
-    relation->i_relate(top, *map); 
 
   } 
   else 
