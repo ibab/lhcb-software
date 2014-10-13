@@ -4,6 +4,9 @@
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
 
+! 2014-10-12 Wouter Hulsbergen
+ - Change runchangehandler such that it also works without '%04d' in the filename.
+
 ! 2014-10-07 Wouter Hulsbergen
  - Fixed small bug in handling incident without a run change.
 
