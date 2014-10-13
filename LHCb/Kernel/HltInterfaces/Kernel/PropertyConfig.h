@@ -83,6 +83,8 @@ public:
     digest_type digest() const { if (!m_digest.valid()) updateCache(); return m_digest; }
 
 private:
+    std::string str() const;
+
     Properties   m_properties;
     std::string  m_type,m_name,m_kind;
     mutable digest_type  m_digest;

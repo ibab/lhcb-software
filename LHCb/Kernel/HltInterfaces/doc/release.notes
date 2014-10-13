@@ -2,6 +2,8 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+! 2014-10-13 - Gerhard Raven
+ - PropertyConfig, ConfigTreeNode: avoid strstream in computation of digest 
 
 !========================= HltInterfaces v5r1 2014-06-10 ========================
 ! 2014-05-28 - Gerhard Raven

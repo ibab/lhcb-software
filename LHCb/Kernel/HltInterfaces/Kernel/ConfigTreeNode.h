@@ -81,6 +81,7 @@ public:
     const std::string& label() const { return m_label; }
 
 private:
+    std::string str() const;
     NodeRefs    m_nodes;
     LeafRef     m_leaf;
     std::string m_label;

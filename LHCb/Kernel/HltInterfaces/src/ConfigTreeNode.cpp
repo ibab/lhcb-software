@@ -3,7 +3,6 @@
 
 #include "GaudiKernel/GaudiException.h"
 
-using namespace std;
 using Gaudi::Math::MD5;
 
 ConfigTreeNode::ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const std::string& label)
@@ -17,8 +16,7 @@ ConfigTreeNode::ConfigTreeNode(const LeafRef& leaf, const NodeRefs& nodes, const
 }
 
 void ConfigTreeNode::updateCache() const { 
-    std::ostringstream str; this->print(str);
-    m_digest = digest_type::compute(str.str());
+    m_digest = digest_type::compute(str());
 }
 
 #include <boost/property_tree/ptree.hpp>
@@ -27,7 +25,7 @@ void ConfigTreeNode::updateCache() const {
 #include <boost/property_tree/xml_parser.hpp>
 using boost::property_tree::ptree;
 namespace {
-void read_custom(istream& is, ptree& top) {
+void read_custom(std::istream& is, ptree& top) {
     bool parsing_nodes = false;
     static boost::regex leaf("^Leaf: ([a-fA-F0-9]{32})$"),
                         label("^Label: (.*)$"),
@@ -37,7 +35,7 @@ void read_custom(istream& is, ptree& top) {
     std::string s;
     boost::smatch what;
     ptree& nodes = top.put_child(ptree::path_type("Nodes"),ptree());
-    while (istream::traits_type::not_eof( is.peek()) ) {
+    while (std::istream::traits_type::not_eof( is.peek()) ) {
         getline(is,s);
         if (s.empty()) break;
         if (parsing_nodes)  {
@@ -46,7 +44,7 @@ void read_custom(istream& is, ptree& top) {
             } else if (boost::regex_match(s,what,node) ) { 
                 nodes.push_back(ptree::value_type(std::string(),ptree(what[1].str())));
             } else {
-                cerr << "ConfigTreeNode: read_custom: parsing error while looking for nodes!!! : [" << s << "]" << endl;
+                std::cerr << "ConfigTreeNode: read_custom: parsing error while looking for nodes!!! : [" << s << "]" << std::endl;
                 top = ptree() ; return;
             }
         } else {
@@ -57,7 +55,7 @@ void read_custom(istream& is, ptree& top) {
             } else if (boost::regex_match(s,what,label) ) {
                 top.put(ptree::path_type("Label"),what[1].str());
             } else {
-                cerr << "ConfigTreeNode: read_custom: parsing error!!! : [" << s << "]" << endl;
+                std::cerr << "ConfigTreeNode: read_custom: parsing error!!! : [" << s << "]" << std::endl;
                 top = ptree() ; return;
             }
         }
@@ -83,7 +81,7 @@ namespace boost { namespace property_tree {
 } }
 
 
-istream& ConfigTreeNode::read(istream& is) {
+std::istream& ConfigTreeNode::read(std::istream& is) {
     m_digest = digest_type::createInvalid();
     ptree top;
     int fmt = is.peek();
@@ -109,12 +107,20 @@ istream& ConfigTreeNode::read(istream& is) {
 // when switching to JSON (or XML) make Label and nodes optional (saves space!)
 // ditto for Leaf: top level nodes have no leaf. (value if not present: MD5::createInvalid)
 // NOTE: when switching, make sure that digest continues to use this representation...
-ostream& ConfigTreeNode::print(ostream& os) const {
-    os << "Label: " << label() << '\n'
-       << "Leaf: " << leaf() << '\n'
-       << "Nodes: [\n";
-    for (NodeRefs::const_iterator i=nodes().begin();i!=nodes().end();++i ) os << " "<< *i <<'\n';
-    return os << "]" << endl;
+std::string ConfigTreeNode::str() const {
+    std::string out; out.reserve(128);
+    out +=  "Label: "; out += label();       out+= '\n';
+    out +=  "Leaf: ";  out += leaf().str();  out+= '\n';
+    out +=  "Nodes: [\n";
+    std::for_each( std::begin(nodes()), std::end(nodes()), [&out]( const NodeRef& i ) {
+         out +=  " "; out +=  i.str() ; out += '\n';
+    } );
+    out +=  "]\n";
+    return out;
+}
+
+std::ostream& ConfigTreeNode::print(std::ostream& os) const {
+    return os << str() << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os); }
