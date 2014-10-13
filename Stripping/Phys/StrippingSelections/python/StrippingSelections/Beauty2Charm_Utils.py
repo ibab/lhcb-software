@@ -258,8 +258,7 @@ def makeB2X(name,decay,inputs,config,useIP=True,resVert=True):
     momCuts = LoKiCuts.combine(momCuts)
     b2x = CombineParticles(DecayDescriptors=decay,CombinationCut=comboCuts,
                            MotherCut=momCuts)
-    if not resVert:
-       print "there is no this option now"       
+       
     return Selection(name,Algorithm=b2x,RequiredSelections=inputs)
 
 def makeB2XSels(decays,xtag,inputs,config,useIP=True,resVert=True):
