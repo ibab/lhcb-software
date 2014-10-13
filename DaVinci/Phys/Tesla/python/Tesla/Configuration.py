@@ -23,7 +23,7 @@ class Tesla(LHCbConfigurableUser):
           , "DDDBtag" 		: 'default' 	# default as set in DDDBConf for DataType
           , "CondDBtag" 	: 'default' 	# default as set in DDDBConf for DataType
           , 'Persistency' 	: '' 		# None, Root or Pool?
-          , 'OutputLevel' 	: 2 		# Er, output level
+          , 'OutputLevel' 	: 4 		# Er, output level
           , "outputFile" 	: 'Tesla.dst' 	# output filename
           , 'WriteFSR'    	: False 	# copy FSRs as required
           , 'EnableDataOnDemand': True		# Do we want data on demand
