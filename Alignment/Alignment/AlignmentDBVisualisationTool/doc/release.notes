@@ -3,6 +3,10 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-10-13 - Pieter David
+ - added option to write out ROOT objects (TGraphs/TH1F's) with plotAlignDiff and plotAlignTrends
+   (if the outdir argument is given a filename ending with ".root")
+
 ! 2014-09-23 - Jason Andrews
  - added default bin labels for plotAlignDiff in case the user doesn't provide a bin label regex
 

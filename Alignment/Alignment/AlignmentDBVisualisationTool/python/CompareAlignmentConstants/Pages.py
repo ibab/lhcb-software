@@ -7,7 +7,6 @@ __date__   = "November 2012"
 
 __all__  = ( "ElementGroups"
            , "drawTimeTrends"
-           , "folders"
            )
 
 import os
@@ -28,7 +27,28 @@ from matplotlib.patches import Rectangle
 from matplotlib.collections import PatchCollection
 import numpy as np
 
-class PlotRegion(object):
+class Region(object):
+    """
+    Base for PlotRegion and ROOTRegion
+    """
+    def __init__(self, name, var, parent):
+        self.name = name
+        self.var = var
+        self.parent = parent
+
+    def getFullName(self):
+        return "".join((self.parent.getFullName(), self.name))
+
+    def addAlignment(self, parValues, **drawOptions):
+        pass
+    
+    def addReference(self, parValues, **drawOptions):
+        pass
+
+    def draw(self):
+        pass
+
+class PlotRegion(Region):
     """
     A class representing a "plot region" on a page (axes)
 
@@ -36,18 +56,10 @@ class PlotRegion(object):
     @see the subclasses for time trends (TrendPlotRegion) and diffs (DiffPlotRegion)
     """
     def __init__(self, name, var, parent, axes):
-        self.name = name
-        self.var = var
-        self.parent = parent
+        super(PlotRegion, self).__init__(name, var, parent)
 
         self.axes = axes
 
-    def getFullName(self):
-        return "".join((self.parent.getFullName(), self.name))
-
-    def draw(self):
-        pass
-    
     def makeYLabel(self):    
         if self.var.startswith("T"):
             self.axes.set_ylabel("%s (mm)" % self.var)
@@ -55,12 +67,6 @@ class PlotRegion(object):
             self.axes.set_ylabel("%s (mrad)" % self.var)
         else:
             self.axes.set_ylabel(self.var)
-
-    def addAlignment(self, parValues, **drawOptions):
-        pass
-    
-    def addReference(self, parValues, **drawOptions):
-        pass
 
 def roundUp( num, resolution=1.0 ):
     return math.ceil( num / resolution )*resolution
@@ -260,19 +266,209 @@ class Folder(object):
     def getFullName(self):
         return self.name
 
-    def addPage(self, name, nRows, nCols):
-        self.pages[name] = Page(name, self, nRows, nCols)
+    def addPage(self, name, *args):
+        pass
 
     def __getitem__(self, name):
         return self.pages.__getitem__(name)
 
-    def save(self, outputDir=".", extension="pdf"):
-        outputDirFull = os.path.join(*([ outputDir ] + self.name.split(".")[:2]))
+    def save(self, output="."):
+        pass
+
+class FSFolder(Folder):
+    """
+    Folder that saves its pages in directories on the filesystem
+    """
+    def __init__(self, name):
+        super(FSFolder, self).__init__(name)
+
+    def addPage(self, name, nRows, nCols):
+        self.pages[name] = Page(name, self, nRows, nCols)
+
+    def save(self, output=".", extension="pdf"):
+        outputDirFull = os.path.join(*([ output ] + self.name.split(".")[:2]))
         if not os.path.isdir(outputDirFull):
             os.makedirs(outputDirFull)
         for n, p in self.pages.iteritems():
             logging.info("Saving page %s to directory %s (%s)" % ( self.getFullName(), outputDirFull, ".".join((n,extension)) ))
             p.save(os.path.join(outputDirFull, ".".join((n, extension))))
+
+### Equivalent classes for saving TGraphs instead of making plots with matplotlib
+
+class ROOTRegion(Region):
+    """
+    Region, base for ROOTTrendRegion and ROOTDiffRegion
+    """
+    def __init__(self, name, var, parent):
+        super(ROOTRegion, self).__init__(name, var, parent)
+        self.objs = []
+
+    def save(self, output=None):
+        import ROOT
+        assert isinstance( output, ROOT.TDirectoryFile ) and output.IsWritable()
+        reqPath = "/".join((self.name, self.var))
+        output.cd()
+        assert output.mkdir(reqPath)
+        myDir = output.GetDirectory(reqPath)
+        myPath = myDir.GetPath()
+        myDir.cd()
+        for g in self.objs:
+            g.Write()
+
+class ROOTTrendRegion(ROOTRegion):
+    def __init__(self, name, var, parent, timezone="CET", periods=None):
+        self.timezone = timezone
+        self.periods  = periods
+        self.alignments = []
+        self.references = []
+        self.mn = None
+        self.mx = None
+        super(ROOTTrendRegion, self).__init__(name, var, parent)
+
+    def addAlignment(self, parValues, **drawOptions):
+        # rad -> mrad
+        if self.var.startswith("R"):
+            parValues = list( 1000.*p for p in parValues )
+
+        if not len(parValues) == sum(1 for p in self.periods if p.status.needAlignment):
+            logging.error("Too few parameter values, check!!")
+            return
+
+        self.alignments.append( parValues )
+
+    def addReference(self, parValue, **drawOptions):
+        # rad -> mrad
+        if self.var.startswith("R"):
+            parValue = 1000.*parValue
+
+        self.references.append( parValue )
+
+    def save(self, output=None):
+        tz = pytz.timezone(self.timezone)
+        epoch = datetime.datetime(1995, 1, 1, 0, 0, 0, 0, tz)
+        def toROOTTime(someTime):
+            # seconds since 1995
+            return (someTime-epoch).total_seconds()
+
+        from ParseStatusTable import StatusTimePeriod
+
+        import ROOT
+        colors = { StatusTimePeriod.MagUp : ROOT.kRed, StatusTimePeriod.MagDown : ROOT.kBlue, StatusTimePeriod.MagOff : ROOT.kBlack }
+
+        mnTime, mxTime = None, None
+        for alignment in self.alignments:
+            entriesPerStatus = { StatusTimePeriod.MagUp : [], StatusTimePeriod.MagDown : [], StatusTimePeriod.MagOff : [] }
+
+            valsIt = iter(alignment)
+            for period in self.periods:
+                if period.status.needAlignment:
+                    val = next(valsIt)
+                    entriesPerStatus[period.status].append([toROOTTime(period.startTime.astimezone(tz)), toROOTTime(period.endTime.astimezone(tz)), val])
+
+            mg = ROOT.TMultiGraph()
+            for status, entries in entriesPerStatus.iteritems():
+                beginTimes, endTimes, values = tuple(np.array(x) for x in zip(*entries))
+                mnTime = min(mnTime, min(beginTimes)) if mnTime is not None else min(beginTimes)
+                mxTime = max(mxTime, max(endTimes)) if mxTime is not None else max(endTimes)
+                g = ROOT.TGraphErrors(values.shape[0], 0.5*(beginTimes+endTimes), values, 0.5*(endTimes-beginTimes), np.zeros(values.shape))
+                g.SetName("_".join((self.name, status.name)))
+                g.GetXaxis().SetTimeDisplay(True)
+                g.SetMarkerColor(colors[status])
+                g.SetLineColor(colors[status])
+                mg.Add(g, "EZ")
+            mg.SetName(self.name)
+            mg.SetTitle(" ".join((self.getFullName(), self.var)))
+            self.objs.append(mg)
+
+        for i, ref in enumerate(self.references):
+            g = ROOT.TGraphErrors(1, np.array([0.5*(mnTime+mxTime)]), np.array([ref]), np.array([0.5*(mxTime-mnTime)]), np.array([0.]))
+            g.SetName("_".join((self.name, "ref", str(i))))
+            g.GetXaxis().SetTimeDisplay(True)
+            self.objs.append(g)
+
+        super(ROOTTrendRegion, self).save(output=output)
+
+class ROOTDiffRegion(ROOTRegion):
+    def __init__(self, name, var, parent):
+        self._x = -1.
+        self._xr = 0.
+        self.x = []
+        self.y = []
+        self.labels = []
+        self.xRef = []
+        self.yRef = []
+        self.refLabels = []
+        super(ROOTDiffRegion, self).__init__(name, var, parent)
+
+    def addAlignment(self, parValue, label=None, **drawOptions):
+        # rad -> mrad
+        if self.var.startswith("R"):
+            parValue = 1000.*parValue
+
+        self._x += 1.
+        self.labels.append(label if label is not None else str(self._x))
+        self.x.append(self._x)
+        self.y.append(parValue)
+
+    def addReference(self, parValue, label=None, **drawOptions):
+        # rad -> mrad
+        if self.var.startswith("R"):
+            parValue = 1000.*parValue
+
+        self._xr -= 1.
+        self.refLabels.append(label if label is not None else str(self._xr))
+        self.xRef.append(self._xr)
+        self.yRef.append(parValue)
+
+    def save(self, output=None):
+        import ROOT
+        h = ROOT.TH1F()
+        h.SetBins(len(self.x)+len(self.xRef), -len(self.xRef), len(self.x))
+        h.SetName(self.name)
+        h.SetTitle(self.name.replace("_", " "))
+        axis = h.GetXaxis()
+        from itertools import izip
+        for ix,iy,iLbl in izip(self.x, self.y, self.labels):
+            b = h.FindBin(ix)
+            h.SetBinContent(b, iy)
+            axis.SetBinLabel(b, iLbl)
+        for ix,iy,iLbl in izip(self.xRef, self.yRef, self.refLabels):
+            b = h.FindBin(ix)
+            h.SetBinContent(b, iy)
+            axis.SetBinLabel(b, iLbl)
+        self.objs.append(h)
+        super(ROOTDiffRegion, self).save(output=output)
+
+class ROOTFolder(Folder):
+    """
+    Save pages in directories of a ROOT file
+    """
+    def __init__(self, name):
+        super(ROOTFolder, self).__init__(name)
+
+    def addPage(self, name, *args):
+        self.pages[name] = ROOTFolder(name)
+
+    def save(self, output=None):
+        import ROOT
+        assert isinstance( output, ROOT.TDirectoryFile ) and output.IsWritable()
+        reqPath = self.name.split("__")[0].replace("_", "/")
+        output.cd()
+        assert output.mkdir(reqPath)
+        myDir = output.GetDirectory(reqPath)
+        myPath = myDir.GetPath()
+        myDir.cd()
+        for n, p in self.pages.iteritems():
+            logging.info("Saving page %s to directory %s" % ( p.name, myPath ))
+            p.save(myDir)
+
+    ## Also a Page, actually
+    def addRegion(self, name, var, **kwargs):
+        self.pages[name] = kwargs.pop("RegionType", ROOTRegion)(name, var, self, **kwargs)
+
+    @property
+    def regions(self):
+        return self.pages
 
 class ElementGroup(object):
     """
@@ -334,12 +530,12 @@ ElementGroups = { "TT.Layers"       : ElementGroup("(?P<page>TT)/TT[ab]/(?P<elm>
                 }
 # TODO implement an "ElementGroupFolder" that has ElementGroup, the regular expressions all methods below in its members
 
-folders = {}
+defaultFolders = {}
 
-def getOrCreateFolder(folderName):
+def getOrCreateFolder(folderName, folders=defaultFolders, folderType=FSFolder):
     folder = folders.get(folderName, None)
     if not folder:
-        folder = Folder(folderName)
+        folder = folderType(folderName)
         folders[folderName] = folder
     return folder
 
@@ -355,8 +551,8 @@ def getRegion( folder, elmGroup, elmPageName, dof, RegionType=TrendPlotRegion, *
         page.addRegion( regName, dof, RegionType=RegionType, **kwargs )
     return page[regName]
 
-def drawTimeTrends( periods, elmGroupName, alignmentsWithIOVs, dofs, timezone="CET", addStats=False ):
-    folder = getOrCreateFolder(elmGroupName)
+def drawTimeTrends( periods, elmGroupName, alignmentsWithIOVs, dofs, timezone="CET", addStats=False, folders=defaultFolders, folderType=FSFolder, regionType=TrendPlotRegion ):
+    folder = getOrCreateFolder(elmGroupName, folders=folders, folderType=folderType)
     elmGroup = ElementGroups[elmGroupName]
     elmDetName = elmGroupName.split(".")[0]
 
@@ -364,12 +560,12 @@ def drawTimeTrends( periods, elmGroupName, alignmentsWithIOVs, dofs, timezone="C
 
     for geomName, elmPageName, matrixForAll in alignmentsWithIOVs.loopWithTimesAndValues(elmDetName, elmGroup, periods):
         for dof in dofs:
-            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=TrendPlotRegion, periods=periods, timezone=timezone )
+            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=regionType, periods=periods, timezone=timezone )
             logging.debug("Adding constants for element %s: %s to region %s (%s)" % ( geomName, [ getattr(align, dof) for align in matrixForAll ], region, region.name ))
             region.addAlignment( [ getattr(align, dof) for align in matrixForAll ], addStats=addStats )
 
-def drawTimeTrendReference( periods, elmGroupName, alignmentsWithIOVs, dofs ):
-    folder = getOrCreateFolder(elmGroupName)
+def drawTimeTrendReference( periods, elmGroupName, alignmentsWithIOVs, dofs, folders=defaultFolders, folderType=FSFolder, regionType=TrendPlotRegion ):
+    folder = getOrCreateFolder(elmGroupName, folders=folders, folderType=folderType)
     elmGroup = ElementGroups[elmGroupName]
     elmDetName = elmGroupName.split(".")[0]
 
@@ -377,11 +573,11 @@ def drawTimeTrendReference( periods, elmGroupName, alignmentsWithIOVs, dofs ):
 
     for geomName, elmPageName, matrix in alignmentsWithIOVs.loopWithTimesAndValues(elmDetName, elmGroup, list(p for p in periods if p.status.needAlignment)[0:1]):
         for dof in dofs:
-            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=TrendPlotRegion, periods=periods )
+            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=regionType, periods=periods )
             region.addReference(getattr(matrix[0], dof))
 
-def drawDiffAlignment( periods, elmGroupName, alignment, dofs, label=None, draw="P" ):
-    folder = getOrCreateFolder(elmGroupName)
+def drawDiffAlignment( periods, elmGroupName, alignment, dofs, label=None, draw="P", folders=defaultFolders, folderType=FSFolder, regionType=DiffPlotRegion ):
+    folder = getOrCreateFolder(elmGroupName, folders=folders, folderType=folderType)
     elmGroup = ElementGroups[elmGroupName]
     elmDetName = elmGroupName.split(".")[0]
 
@@ -389,14 +585,14 @@ def drawDiffAlignment( periods, elmGroupName, alignment, dofs, label=None, draw=
 
     for geomName, elmPageName, matrix in alignment.loopWithTimesAndValues(elmDetName, elmGroup, periods ):
         for dof in dofs:
-            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=DiffPlotRegion )
+            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=regionType )
             for align, period in zip(matrix, periods):
                 region.addAlignment(getattr(align, dof), period.startTime.date().isoformat() if label == None else label)
                 # region.addAlignment(getattr(align, dof), label = period.startTime.date().isoformat())
             # region.addAlignment(getattr(matrix[0], dof), label=label)
 
-def drawDiffReference( periods, elmGroupName, alignment, dofs, draw="P" ):
-    folder = getOrCreateFolder(elmGroupName)
+def drawDiffReference( periods, elmGroupName, alignment, dofs, draw="P", folders=defaultFolders, folderType=Folder, regionType=DiffPlotRegion ):
+    folder = getOrCreateFolder(elmGroupName, folders=folders, folderType=folderType)
     elmGroup = ElementGroups[elmGroupName]
     elmDetName = elmGroupName.split(".")[0]
 
@@ -404,7 +600,7 @@ def drawDiffReference( periods, elmGroupName, alignment, dofs, draw="P" ):
 
     for geomName, elmPageName, matrix in alignment.loopWithTimesAndValues(elmDetName, elmGroup, periods ):
         for dof in dofs:
-            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=DiffPlotRegion )
+            region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=regionType )
             region.addReference(getattr(matrix[0], dof))
 
 def generateRegionEntries( DictName, detectorName, layerName, regionName, moduleNamePrefix, moduleNameSuffix # most of these are used to build the key string

@@ -31,7 +31,8 @@ from ParseStatusTable              import ( statusPeriodsFromTable
                                           , prepareTimePeriods
                                           )
 
-from Pages                         import ( folders
+from Pages                         import ( FSFolder, TrendPlotRegion, DiffPlotRegion
+                                          , ROOTFolder, ROOTTrendRegion, ROOTDiffRegion
                                           , drawTimeTrends
                                           , drawTimeTrendReference
                                           , drawDiffAlignment
@@ -78,17 +79,29 @@ def plotAlignmentParametersTimeSeries( elmGroup, dofs
     theAlignmentParameters = AlignmentsWithIOVs( alignConnectStringsAndTags, detsToLoad, since, until, timezone=timezone,
                                                  defaultTag=defaultTag, valueExtractor=ValueExtractors[coordinateFrame] )
 
+    rootOutput = outputdir.endswith(".root")
+
+    myFolders = {}
+    outType_kwargs = { "folderType" : ROOTFolder, "regionType" : ROOTTrendRegion } if rootOutput else { "folderType" : FSFolder, "regionType" : TrendPlotRegion }
     for elmSubGroup in elmSubGroups:
-        drawTimeTrends( timePeriods, elmSubGroup, theAlignmentParameters, dofs, timezone=timezone, addStats=addStats )
+        drawTimeTrends( timePeriods, elmSubGroup, theAlignmentParameters, dofs, timezone=timezone, addStats=addStats, folders=myFolders, **outType_kwargs)
 
     if refConnectString:
         refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, timezone=timezone,
                                                      defaultTag=defaultTag, valueExtractor=ValueExtractors[coordinateFrame] )
         for elmSubGroup in elmSubGroups:
-            drawTimeTrendReference( timePeriods, elmSubGroup, refAlignmentParameters, dofs )
+            drawTimeTrendReference( timePeriods, elmSubGroup, refAlignmentParameters, dofs, folders=myFolders, **outType_kwargs)
 
-    for folder in folders.itervalues():
-        folder.save(outputdir)
+    if rootOutput:
+        import ROOT
+        outFile = ROOT.TFile(outputdir, "RECREATE")
+        assert outFile.IsOpen() and outFile.IsWritable()
+        for folder in myFolders.itervalues():
+            folder.save(outFile)
+        outFile.Close()
+    else:
+        for folder in myFolders.itervalues():
+            folder.save(outputdir)
 
 def plotAlignmentParametersComparison( elmGroup, dofs
                                      , sliceConnectStringsAndTags
@@ -126,19 +139,31 @@ def plotAlignmentParametersComparison( elmGroup, dofs
     if not isinstance(binLabels, list):
         binLabels = list( None for cS, t in sliceConnectStringsAndTags )
 
+    rootOutput = outputdir.endswith(".root")
+
+    myFolders = {}
+    outType_kwargs = { "folderType" : ROOTFolder, "regionType" : ROOTDiffRegion } if rootOutput else { "folderType" : FSFolder, "regionType" : DiffPlotRegion }
     parametersAndPeriods = preparePeriodsAndAlignments( sliceConnectStringsAndTags, detsToLoad, coordinateFrame )
     for [ timePeriods, theAlignmentParameters ], label in zip( parametersAndPeriods, binLabels ):
         for elmSubGroup in elmSubGroups:
             logging.debug("calling draw method, elmSubGroup %s in %r" % (elmSubGroup, elmSubGroups))
-            drawDiffAlignment( timePeriods, elmSubGroup, theAlignmentParameters, dofs, label )
+            drawDiffAlignment( timePeriods, elmSubGroup, theAlignmentParameters, dofs, label, folders=myFolders, **outType_kwargs)
     if refConnectString:
         timePeriods = [ StatusTimePeriod( "MagDown", parseTimeMin(since), parseTimeMax(until) ) ]
         refAlignmentParameters = AlignmentsWithIOVs( [ (refConnectString, refTag) ], detsToLoad, since, until, defaultTag=defaultTag, valueExtractor=ValueExtractors[coordinateFrame] )
         for elmSubGroup in elmSubGroups:
-            drawDiffReference( timePeriods, elmGroup, refAlignmentParameters, dofs )
+            drawDiffReference( timePeriods, elmGroup, refAlignmentParameters, dofs, folders=myFolders, **outType_kwargs )
 
-    for folder in folders.itervalues():
-        folder.save(outputdir)
+    if rootOutput:
+        import ROOT
+        outFile = ROOT.TFile(outputdir, "RECREATE")
+        assert outFile.IsOpen() and outFile.IsWritable()
+        for folder in myFolders.itervalues():
+            folder.save(outFile)
+        outFile.Close()
+    else:
+        for folder in myFolders.itervalues():
+            folder.save(outputdir)
 
 # detector dictionary which contains an ElementGroup instantiation to call the database methods appropriately, and a tuple of the detector's layer names
 Dets = {
