@@ -2,10 +2,10 @@
 
 // local
 #include "PionSSWrapper.h"
-#include "compileSettings.h"
+
 
 namespace MyPionSSSpace {
-#ifndef SKIP_TMVA_COMPILE
+#ifndef SKIP_TMVA
 #include "TMVAClassification/BDT_SSpion/BDT_SSpion_Reco14.class.C"
 #endif
 }
@@ -18,19 +18,28 @@ namespace MyPionSSSpace {
 //-----------------------------------------------------------------------------
 
 PionSSWrapper::PionSSWrapper(std::vector<std::string> & names) {
-#ifndef SKIP_TMVA_COMPILE
+#ifdef SKIP_TMVA
+  int size = names.size();
+  if (size == 0)
+    std::cout << "WARNING: NO VALUES PASSED" << std::endl;
+#else
   reader = new MyPionSSSpace::ReadssPion(names);
 #endif
 }
 
 PionSSWrapper::~PionSSWrapper() {
-#ifndef SKIP_TMVA_COMPILE
+#ifndef SKIP_TMVA
   delete reader;
 #endif
 }
 
 double PionSSWrapper::GetMvaValue(std::vector<double> const & values) {
-#ifndef SKIP_TMVA_COMPILE
+#ifdef SKIP_TMVA
+  int size = values.size();
+  if (size == 0)
+    std::cout << "WARNING: NO VALUES PASSED" << std::endl;
+  return 0.0;
+#else
   return reader->GetMvaValue(values);
 #endif
   return 0.0;

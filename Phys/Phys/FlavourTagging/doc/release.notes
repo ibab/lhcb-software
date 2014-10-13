@@ -6,6 +6,10 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2014-10-13 - Jack Wimberley
+ - Fix other compilation warnings due to two commits ago
+ - Use Stefania's suggestion -- add printouts so that variables aren't unused
+
 ! 2014-10-10 - Chris Jones
  - Fix compilation failure due to the last commit ...
 

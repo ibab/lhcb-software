@@ -2,10 +2,10 @@
 
 // local
 #include "ProtonSSWrapper.h"
-#include "compileSettings.h"
+
 
 namespace MyProtonSSSpace {
-#ifndef SKIP_TMVA_COMPILE
+#ifndef SKIP_TMVA
 #include "TMVAClassification/BDT_SSproton/BDT_SSproton_Reco14.class.C"
 #endif
 }
@@ -18,22 +18,31 @@ namespace MyProtonSSSpace {
 //-----------------------------------------------------------------------------
 
 ProtonSSWrapper::ProtonSSWrapper(std::vector<std::string> & names) {
-#ifndef SKIP_TMVA_COMPILE
+#ifdef SKIP_TMVA
+  int size = names.size();
+  if (size == 0)
+    std::cout << "WARNING: NO VALUES PASSED" << std::endl;
+#else
   reader = new MyProtonSSSpace::ReadssProton(names);
 #endif
 }
 
 ProtonSSWrapper::~ProtonSSWrapper() {
-#ifndef SKIP_TMVA_COMPILE
+#ifndef SKIP_TMVA
   delete reader;
 #endif
 }
 
 double ProtonSSWrapper::GetMvaValue(std::vector<double> const & values) {
-#ifndef SKIP_TMVA_COMPILE  
+#ifdef SKIP_TMVA
+  int size = values.size();
+  if (size == 0)
+    std::cout << "WARNING: NO VALUES PASSED" << std::endl;
+  return 0.0;
+#else
   return reader->GetMvaValue(values);
 #endif
-  return 0;
+  return 0.0;
 }
 
 //=============================================================================
