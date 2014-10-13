@@ -587,7 +587,7 @@ def drawDiffAlignment( periods, elmGroupName, alignment, dofs, label=None, draw=
         for dof in dofs:
             region = getRegion(folder, elmGroup, elmPageName, dof, RegionType=regionType )
             for align, period in zip(matrix, periods):
-                region.addAlignment(getattr(align, dof), period.startTime.date().isoformat() if label == None else label)
+                region.addAlignment(getattr(align, dof), label if label else period.startTime.date().isoformat())
                 # region.addAlignment(getattr(align, dof), label = period.startTime.date().isoformat())
             # region.addAlignment(getattr(matrix[0], dof), label=label)
 

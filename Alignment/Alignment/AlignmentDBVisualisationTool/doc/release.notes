@@ -4,6 +4,9 @@
 !------------------------------------------------------------------------------
 
 ! 2014-10-13 - Pieter David
+ - replaced "== None" by "is None" (PEP8)
+
+! 2014-10-13 - Pieter David
  - added option to write out ROOT objects (TGraphs/TH1F's) with plotAlignDiff and plotAlignTrends
    (if the outdir argument is given a filename ending with ".root")
 

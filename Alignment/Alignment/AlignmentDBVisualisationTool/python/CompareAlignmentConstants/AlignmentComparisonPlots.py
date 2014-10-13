@@ -131,10 +131,10 @@ def plotAlignmentParametersComparison( elmGroup, dofs
                 binLabels.append( None )
             else:
                 labelMatch = binLabelPattern.match( connection[0][0] )
-                if labelMatch == None:
-                    binLabels.append( "file %s" % index )
-                else:
+                if labelMatch:
                     binLabels.append( labelMatch.group("label") )
+                else:
+                    binLabels.append( "file %s" % index )
         logging.debug( "Extracted bin labels from connection strings: %s" % binLabels )
     if not isinstance(binLabels, list):
         binLabels = list( None for cS, t in sliceConnectStringsAndTags )
@@ -330,5 +330,5 @@ def parseRequestedAlignments( alignments, titles = None, defaultTag = "cond-2013
                 tag = alignment[2]
             alignments[index] = [ [], since, until, tag ]
             print "Alignment %s input as the %s using CondDBtag %r" % ( index, title, tag )
-        if not titles == None:
+        if titles is not None:
             titles.append( title )
