@@ -101,7 +101,8 @@ StatusCode RelInfoVertexIsolationBDT::initialize()
   m_optmap["Name"] = m_transformName ;
   m_optmap["KeepVars"] = "0" ;
   m_optmap["XMLFile"] = System::getEnv("TMVAWEIGHTSROOT") + "/data/" + m_weightsName ;
-  m_tmva.Init( m_optmap , verbose().stream() ) ; //
+  m_tmva.Init( m_optmap, debug().stream(), msgLevel(MSG::DEBUG) ) ;
+
 
   /*m_Reader->AddSpectator( "Track_TYPE",&m_var_type);
     m_Reader->AddVariable( "Track_MINIPCHI2",&m_var_minipchi2);
