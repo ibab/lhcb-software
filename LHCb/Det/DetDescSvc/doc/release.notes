@@ -4,6 +4,7 @@
 ! purpose:          Component library for Detector Description Services
 ! ====================================================================
 
+!========================= DetDescSvc v3r8 2014-10-14 =========================
 ! 2014-10-12 Wouter Hulsbergen
  - Change runchangehandler such that it also works without '%04d' in the filename.
 
