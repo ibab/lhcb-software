@@ -4,6 +4,7 @@
 ! Purpose     : Pattern recognition for the Pixel detector of the upgraded LHCb
 !-----------------------------------------------------------------------------
 
+!========================= PrPixel v1r10 2014-10-14 =========================
 ! 2014-09-22 - Manuel Tobias Schiller
  - changed PrPixelHit class to save 1/error instead of 1/error^2 - exploiting
    hit-level parallelism in chi^2 fits becomes easier this way; for now,
