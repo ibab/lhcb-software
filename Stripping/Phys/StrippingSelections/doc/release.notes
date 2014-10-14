@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-14 - Jibo He
+ - Enabled isolation for Bd->eeKstarBDT lines 
+
 ! 2014-10-10 - Stefano Perazzini
  - Changed instances of OfflineVertexFitter with OfflineVertexFitter:PUBLIC
 
