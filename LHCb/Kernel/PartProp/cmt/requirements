@@ -3,7 +3,7 @@
 # Maintainer : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # ====================================================================
 package           PartProp
-version           v1r18
+version           v1r19
 
 # ================ structure ==============================================
 branches          cmt doc Kernel src python dict tests scripts
