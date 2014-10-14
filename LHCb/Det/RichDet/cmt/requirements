@@ -4,7 +4,7 @@
 #=====================================================================
 
 package           RichDet
-version           v16r24
+version           v16r25
 
 # ================ structure ==============================================
 branches src RichDet dict doc cmt
