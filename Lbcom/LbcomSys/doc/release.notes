@@ -6,6 +6,16 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v16r1>2014-10-15 LbcomSys v16r1</A></H1><PRE>
+This version uses Gaudi v25r4 and LHCb v38r2 (and ROOT 5.43.21)
+
+- Packages modified: Rich/RichTools v2r44
+
+- In Rich/RichTools v2r44
+  . On read back of conditions, explicitly catch the case where SmartID have been
+    printed as unsigned instead of int, and an 'out of bounds' exception is thrown
+  . When printing the 'key' print it explicitly as_int and not as an unsigned
+
 </PRE><H1><A NAME=v16r0p1>2014-09-09 LbcomSys v16r0p1</A></H1><PRE>
 This version uses Gaudi v25r3 and LHCb v38r1 (and ROOT 6.00.00)
 
