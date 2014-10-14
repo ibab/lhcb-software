@@ -551,7 +551,44 @@ Bd2eeKstarBDT = {
         'BMassW'                  : 1000.   ,  # MeV
         'BDIRA'                   :    0.999,
         'BDTCutValue'             :   -0.95 ,
-        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml'
+        'BDTWeightsFile'          : '$TMVAWEIGHTSROOT/data/Bd2eeKstar_BDTG_v1r0.xml',
+        #
+        'RelatedInfoTools'       : [ { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                                       , "RecursionLevel" : 2
+                                       , "Locations" : { 'Phys/StdAllLooseElectrons' : [ 'Electron1ISO', 'Electron2ISO' ] ,
+                                                         'Phys/StdAllLooseKaons'     :  'KaonISO',
+                                                         'Phys/StdAllLoosePions'     :  'PionISO'
+                                                         }
+                                       , "tracktype"  : 3
+                                       , "angle"      : 0.27
+                                       , "fc"         : 0.60
+                                       , "doca_iso"   : 0.13
+                                       , "ips"        : 3.0
+                                       , "svdis"      : -0.15
+                                       , "svdis_h"    : 30.
+                                       , "pvdis"      : 0.5
+                                       , "pvdis_h"    : 40.
+                                       , "makeTrackCuts" : False
+                                       , "IsoTwoBody" : False
+                                       } ],
+        'RelatedInfoTools2'       : [ { "Type" : "RelInfoBs2MuMuTrackIsolations"
+                                        , "RecursionLevel" : 2
+                                        , "Locations" : { 'Phys/StdDiElectronFromTracks' : [ 'Electron1ISO', 'Electron2ISO' ] ,
+                                                          'Phys/StdAllLooseKaons'     :  'KaonISO',
+                                                          'Phys/StdAllLoosePions'     :  'PionISO'
+                                                          }
+                                        , "tracktype"  : 3
+                                        , "angle"      : 0.27
+                                        , "fc"         : 0.60
+                                        , "doca_iso"   : 0.13
+                                        , "ips"        : 3.0
+                                        , "svdis"      : -0.15
+                                        , "svdis_h"    : 30.
+                                        , "pvdis"      : 0.5
+                                        , "pvdis_h"    : 40.
+                                        , "makeTrackCuts" : False
+                                        , "IsoTwoBody" : False
+                                        } ],
         },
     'STREAMS' : ['Bhadron']
 }
