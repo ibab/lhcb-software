@@ -4,6 +4,12 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-10-14 - Chris Jones
+ - Add a new method to StrippingConf that implements a check where all
+   know configurables are searched, to see if they implement the 'MacCandidate'
+   limits, and if they do applies the given settings. 
+   Usage is currently disabled by default.
+
 ! 2014-10-09 - Stefano Perazzini
  - Added a function in StrippingConf to limit combinatorics 
    in StandardParticles

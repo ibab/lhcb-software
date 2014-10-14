@@ -56,7 +56,11 @@ class StrippingConf ( object ) :
 
         ## To be uncommented to limit combinatorics for StandardParticles
         #if self.MaxCandidates != None or self.MaxCombinations != None:
-        #  self.limitCombForStdParticles()
+        #    self.limitCombForStdParticles()
+
+        ## Forces the limits on all configurables that implement the option...
+        #if self.MaxCandidates != None or self.MaxCombinations != None:
+        #    self.checkAllForCombLimit()
 
         self.checkFlavourTagging(Streams)
         if self._GlobalFlavourTagging:
@@ -227,7 +231,6 @@ class StrippingConf ( object ) :
     def _appendSequencer(self, stream) :
         self._streamSequencers.append(stream.sequence())
 
-
     def decReportLocations(self) : 
 	locs = []
 	for stream in self._streams : 
@@ -255,6 +258,31 @@ class StrippingConf ( object ) :
                 ## comment to be removed once performed some more test
                 #if self._verbose: log.warning('Changed parameters StopAtMaxCandidates = '+str(alg.StopAtMaxCandidates)+' MaxCandidates = '+str(alg.MaxCandidates)+' StopIncidentType = '+str(alg.StopIncidentType)+' for algorithm '+str(alg.name()))
 
+
+    # Loops over all known configurables and applies MaxCandidate limits
+    def checkAllForCombLimit(self) :
+
+        from Gaudi.Configuration import allConfigurables
+        
+        for conf in allConfigurables.values() :
+            
+            if ( hasattr(type(conf),'StopAtMaxCandidates') and
+                 hasattr(type(conf),'MaxCandidates') and 
+                 hasattr(type(conf),'StopAtMaxCombinations') and
+                 hasattr(type(conf),'MaxCombinations') ):
+
+                if self.MaxCandidates != None and not conf.isPropertySet("MaxCandidates") :
+                    log.warning( "Forcing MaxCandidate settings for " + conf.name() )
+                    conf.StopAtMaxCandidates = True
+                    conf.MaxCandidates = self.MaxCandidates
+                    
+                if self.MaxCombinations != None and not conf.isPropertySet("MaxCombinations") :
+                    log.warning( "Forcing MaxCombinations settings for " + conf.name() )
+                    conf.StopAtMaxCombinations = True
+                    conf.MaxCombinations = self.MaxCombinations
+
+                if self.MaxCandidates != None or self.MaxCombinations != None :
+                    conf.StopIncidentType = 'ExceedsCombinatoricsLimit'
 
 
 # =============================================================================
