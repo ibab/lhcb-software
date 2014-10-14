@@ -1,5 +1,5 @@
 // $Id: ParticleGun.h,v 1.1.1.1 2009-09-18 16:18:24 gcorti Exp $
-#ifndef PARTICLEGUNS_PARTICLEGUN_H 
+#ifndef PARTICLEGUNS_PARTICLEGUN_H
 #define PARTICLEGUNS_PARTICLEGUN_H 1
 
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -20,7 +20,7 @@ class GenEvent ;
 }
 
 /** @class ParticleGun ParticleGun.h "ParticleGun.h"
- *  
+ *
  *  Main algorithm to generate particle gun events.
  *
  *  @author Patrick Robbe
@@ -35,17 +35,17 @@ class ParticleGun : public GaudiAlgorithm {
   virtual ~ParticleGun( ); ///< Destructor
 
   /** Algorithm initialization.
-   *  -# Initializes the common Gaudi random number generator used in all 
+   *  -# Initializes the common Gaudi random number generator used in all
    *     generators,
-   *  -# Retrieve particle gun tool, decay tool, vertex smearing tool and 
+   *  -# Retrieve particle gun tool, decay tool, vertex smearing tool and
    *     full event cut tool used in the generation of events.
    */
   virtual StatusCode initialize();
 
   /** Algorithm execution.
-   *  Repeat the following sequence until a good set of interactions is 
+   *  Repeat the following sequence until a good set of interactions is
    *  generated.
-   *  -# 
+   *  -#
    */
   virtual StatusCode execute   ();
 
@@ -56,11 +56,11 @@ class ParticleGun : public GaudiAlgorithm {
 
 protected:
   /// Decay the event with the IDecayTool.
-  StatusCode decayEvent( LHCb::HepMCEvent * theEvent, ParticleVector & particleList ) ;
+  HepMC::GenParticle *decayEvent( LHCb::HepMCEvent * theEvent, ParticleVector & particleList, StatusCode & sc) ;
 
   /// Perpare the particle containers
   void prepareInteraction( LHCb::HepMCEvents * theEvents ,
-                           LHCb::GenCollisions * theCollisions , 
+                           LHCb::GenCollisions * theCollisions ,
                            HepMC::GenEvent * & theGenEvent ,
                            LHCb::GenCollision * & theGenCollision ) const ;
 
@@ -68,16 +68,16 @@ private:
   int          m_eventType ; ///< Event type (set by options)
 
   /// Location where to store generator events (set by options)
-  std::string  m_hepMCEventLocation ; 
+  std::string  m_hepMCEventLocation ;
 
   /// Location where to store the Header of the events (set by options)
   std::string  m_genHeaderLocation ;
 
   /// Location where to store HardInfo (set by options)
   std::string  m_genCollisionLocation ;
-  
+
   IParticleGunTool         * m_particleGunTool        ; ///< Particle gun tool
-  
+
   IPileUpTool              * m_numberOfParticlesTool  ; ///< Number of particles tool
 
   IDecayTool               * m_decayTool              ; ///< Decay tool
@@ -95,7 +95,7 @@ private:
 
   /// Name of the tool to set number of particles per event (set by options)
   std::string m_numberOfParticlesToolName ;
-  
+
   /// Name of the IDecayTool (set by options)
   std::string m_decayToolName            ;
 
@@ -107,7 +107,7 @@ private:
 
   /// Name of the IGenCutTool (set by options)
   std::string m_genCutToolName  ;
-  
+
   /// Name to put in the event
   std::string m_particleGunName ;
 
@@ -120,16 +120,19 @@ private:
   /// Number of particles in accepted events
   unsigned int m_nAcceptedParticles ;
 
-  /// Counter of events before the full event generator level cut  
+  /// Counter of events before the full event generator level cut
   unsigned int m_nBeforeFullEvent ;
 
   /// Counter of events after the full event generator level cut
   unsigned int m_nAfterFullEvent ;
 
-  /// Counter of events before the generator level cut  
+  /// Counter of events before the generator level cut
   unsigned int m_nBeforeCut ;
 
   /// Counter of events after the generator level cut
   unsigned int m_nAfterCut ;
+
+  /// PDG id of signal particle.
+  int          m_sigPdgCode ;
 };
 #endif // PARTICLEGUNS_PARTICLEGUN_H

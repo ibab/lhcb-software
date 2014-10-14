@@ -90,7 +90,8 @@ ParticleGun::ParticleGun( const std::string& name,
   // Tool name to cut on generator-level
   declareProperty( "GenCutTool" ,
                    m_genCutToolName = "" ) ;
-
+  // Flag to generate signal
+  declareProperty( "SignalPdgCode" , m_sigPdgCode = 0) ;
 }
 
 //=============================================================================
@@ -121,8 +122,10 @@ StatusCode ParticleGun::initialize() {
     m_numberOfParticlesTool = tool< IPileUpTool >( m_numberOfParticlesToolName , this ) ;
 
   // Retrieve decay tool
-  if ( "" != m_decayToolName ) m_decayTool =
-                                 tool< IDecayTool >( m_decayToolName ) ;
+  if ( "" != m_decayToolName ) {
+    m_decayTool = tool< IDecayTool >( m_decayToolName ) ;
+    if ( m_decayTool && m_sigPdgCode!=0 ) m_decayTool -> setSignal( m_sigPdgCode ) ;
+  }
 
   // Retrieve generation method tool
   if ( "" == m_particleGunToolName )
@@ -188,7 +191,7 @@ StatusCode ParticleGun::execute() {
   // Create temporary containers for this event
   LHCb::HepMCEvents* theEvents = new LHCb::HepMCEvents( );
   LHCb::GenCollisions* theCollisions = new LHCb::GenCollisions( );
-  
+
   // Working set of pointers
   LHCb::GenCollision * theGenCollision( 0 ) ;
   HepMC::GenEvent * theGenEvent( 0 ) ;
@@ -251,19 +254,22 @@ StatusCode ParticleGun::execute() {
             ++itEvents ) {
         ParticleVector theParticleList ;
         theParticleList.clear();
-        sc = decayEvent( *itEvents, theParticleList ) ;
+
+        HepMC::GenParticle *theSignal = decayEvent( *itEvents, theParticleList, sc) ;
+        if ( ! sc.isSuccess() ) return sc;
+
         (*itEvents) -> pGenEvt() -> set_event_number( ++iPart ) ;
-        if ( ! sc.isSuccess() ) return sc ;
+
         // Add Cut tool
-        if ( m_genCutTool ) {
-          if (goodEvent) {
-            ++m_nBeforeCut;
-          }
-          goodEvent = m_genCutTool -> applyCut( theParticleList , theGenEvent ,
-                                                          theGenCollision ) ;
-          if ( goodEvent){
-            m_nAfterCut++ ;
-          }
+        bool passCut(true);
+        if ( m_genCutTool && theSignal ) {
+          ++m_nBeforeCut;
+          passCut = m_genCutTool -> applyCut( theParticleList , theGenEvent ,
+                                              theGenCollision ) ;
+          // event does not pass cuts
+          if ( !passCut || theParticleList.empty() )
+            HepMCUtils::RemoveDaughters( theSignal ) ;
+          else ++m_nAfterCut;
         }
       }
     }
@@ -361,7 +367,7 @@ StatusCode ParticleGun::finalize() {
 
   printEfficiency( info() , "full event cut" , m_nAfterFullEvent ,
                    m_nBeforeFullEvent ) ;
-  printEfficiency( info() , "cut" , m_nAfterCut ,
+  printEfficiency( info() , "signal cut" , m_nAfterCut ,
                    m_nBeforeCut ) ;
   info() << endmsg ;
 
@@ -381,11 +387,13 @@ StatusCode ParticleGun::finalize() {
 // Decay in the event all particles which have been left stable by the
 // production generator
 //=============================================================================
-StatusCode ParticleGun::decayEvent( LHCb::HepMCEvent * theEvent,
-                                    ParticleVector & theParticleList ) {
+HepMC::GenParticle *ParticleGun::decayEvent( LHCb::HepMCEvent * theEvent,
+                                             ParticleVector & theParticleList,
+                                             StatusCode & sc) {
   using namespace LHCb;
   m_decayTool -> disableFlip() ;
-  StatusCode sc = StatusCode::SUCCESS ;
+  sc = StatusCode::SUCCESS ;
+  HepMC::GenParticle *theSignal(0);
 
   HepMC::GenEvent * pEvt = theEvent -> pGenEvt() ;
 
@@ -412,13 +420,20 @@ StatusCode ParticleGun::decayEvent( LHCb::HepMCEvent * theEvent,
             set_status( HepMCEvent::DecayedByDecayGenAndProducedByProdGen ) ;
         else thePart -> set_status( HepMCEvent::DecayedByDecayGen ) ;
 
-        sc = m_decayTool -> generateDecay( thePart ) ;
+        if ( abs(m_sigPdgCode) == abs(thePart->pdg_id()) ) {
+          bool hasFlipped(false);
+          sc = m_decayTool -> generateSignalDecay( thePart, hasFlipped ) ;
+          theSignal = thePart;
+        } else
+          sc = m_decayTool -> generateDecay( thePart ) ;
+
         theParticleList.push_back( thePart );
-        if ( ! sc.isSuccess() ) return sc ;
+
+        if ( ! sc.isSuccess() ) return 0 ;
       }
     }
   }
-  return sc ;
+  return theSignal ;
 }
 
 //=============================================================================
@@ -435,7 +450,7 @@ void ParticleGun::prepareInteraction( LHCb::HepMCEvents * theEvents ,
 
   theGenCollision = new LHCb::GenCollision() ;
   theGenCollision -> setEvent( theHepMCEvent ) ;
-  theGenCollision -> setIsSignal( false ) ;
+  theGenCollision -> setIsSignal( (m_sigPdgCode!=0) ) ;
 
   theEvents -> insert( theHepMCEvent ) ;
   theCollisions -> insert( theGenCollision ) ;

@@ -19,25 +19,25 @@
 /** @class MomentumSpectrum MomentumSpectrum.h "MomentumSpectrum.h"
  *
  *  \brief Particle gun with momentum spectrum given by 3D histogram
- *  
+ *
  * Options:
  * - PdgCodes: PDG numbers of particles to be produced by particle gun
  * - InputFile: Name of the file containing the histogram
  * - HistogramPath: Path to the histogram in the file
- * 
+ *
  *  @author Dan Johnson (adapted from Michel De Cian)
  *  @date   2014-02-03
  */
 class MomentumSpectrum : public GaudiTool , virtual public IParticleGunTool {
  public:
-  
+
   /// Constructor
-  MomentumSpectrum( const std::string & type , const std::string& name, 
+  MomentumSpectrum( const std::string & type , const std::string& name,
                  const IInterface * parent ) ;
-  
+
   /// Destructor
   virtual ~MomentumSpectrum();
-  
+
   /// Initialize particle gun parameters
   virtual StatusCode initialize();
 
@@ -48,9 +48,8 @@ class MomentumSpectrum : public GaudiTool , virtual public IParticleGunTool {
 
   /// Print counters
   virtual void printCounters( ) { ; } ;
-                                 
+
  private:
-  
   /// Pdg Codes of particles to generate (Set by options)
   std::vector<int>         m_pdgCodes;
 
@@ -69,14 +68,13 @@ class MomentumSpectrum : public GaudiTool , virtual public IParticleGunTool {
   /// Path of histogram in input file
   std::string m_histoPath;
 
-	/// Variables used to bin the histogram
-	std::string m_binningVars;
-	
-	/// Histogram pointers (ready for TH2D if using ptpz binning or TH3D if using pxpypz binning
-	TH1* m_hist;
-	TH2D* m_hist2d;
-	TH3D* m_hist3d;
+  /// Variables used to bin the histogram
+  std::string m_binningVars;
 
+  /// Histogram pointers (ready for TH2D if using ptpz binning or TH3D if using pxpypz binning
+  TH1* m_hist;
+  TH2D* m_hist2d;
+  TH3D* m_hist3d;
 };
 
 #endif // PARTICLEGUNS_MOMENTUMSPECTRUM_H

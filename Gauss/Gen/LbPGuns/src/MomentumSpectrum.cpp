@@ -10,7 +10,7 @@
 #include "Kernel/IParticlePropertySvc.h"
 #include "Kernel/ParticleProperty.h"
 #include "GaudiKernel/SystemOfUnits.h"
-#include "GaudiKernel/IRndmGenSvc.h" 
+#include "GaudiKernel/IRndmGenSvc.h"
 #include "TMath.h"
 #include "TRandom3.h"
 #include "Event/GenHeader.h"
@@ -28,37 +28,35 @@ DECLARE_TOOL_FACTORY( MomentumSpectrum );
 // Constructor
 //===========================================================================
 MomentumSpectrum::MomentumSpectrum( const std::string & type ,
-                              const std::string & name , 
+                              const std::string & name ,
                               const IInterface * parent )
   : GaudiTool( type , name, parent ) {
     declareInterface< IParticleGunTool >( this ) ;
-      
-    declareProperty( "PdgCodes", m_pdgCodes);
-    declareProperty( "InputFile", m_inputFileName);
-    declareProperty( "HistogramPath", m_histoPath);
-		declareProperty( "BinningVariables", m_binningVars);
-    
+
+    declareProperty("PdgCodes", m_pdgCodes);
+    declareProperty("InputFile", m_inputFileName);
+    declareProperty("HistogramPath", m_histoPath);
+    declareProperty("BinningVariables", m_binningVars);
 }
+
 //===========================================================================
 // Destructor
 //===========================================================================
-MomentumSpectrum::~MomentumSpectrum() { }
+MomentumSpectrum::~MomentumSpectrum() {;}
+
 //===========================================================================
 // Initialize Particle Gun parameters
 //===========================================================================
 StatusCode MomentumSpectrum::initialize() {
   StatusCode sc = GaudiTool::initialize() ;
   if ( ! sc.isSuccess() ) return sc ;
-  
-  
+
   IRndmGenSvc * randSvc = svc< IRndmGenSvc >( "RndmGenSvc" , true ) ;
   sc = m_flatGenerator.initialize( randSvc , Rndm::Flat( 0. , 1. ) ) ;
-  
   if ( ! sc.isSuccess() ) return Error( "Cannot initialize flat generator" ) ;
-  
+
   // Get the mass of the particle to be generated
-  //
-  LHCb::IParticlePropertySvc* ppSvc = 
+  LHCb::IParticlePropertySvc* ppSvc =
     svc< LHCb::IParticlePropertySvc >( "LHCb::ParticlePropertySvc" , true ) ;
 
   // setup particle information
@@ -67,104 +65,113 @@ StatusCode MomentumSpectrum::initialize() {
   info() << "Particle type chosen randomly from :";
   PIDs::iterator icode ;
   for ( icode = m_pdgCodes.begin(); icode != m_pdgCodes.end(); ++icode ) {
-    const LHCb::ParticleProperty * particle = 
+    const LHCb::ParticleProperty * particle =
       ppSvc->find( LHCb::ParticleID( *icode ) ) ;
     m_masses.push_back( ( particle->mass() ) ) ;
     m_names.push_back( particle->particle() ) ;
     info() << " " << particle->particle() ;
   }
-  
   info() << endmsg ;
 
   release( ppSvc ) ;
 
   // -- Open the file containing the spectrum
-  TFile* file = TFile::Open( m_inputFileName.c_str(), "READ" );
+  TFile *file = TFile::Open( m_inputFileName.c_str(), "READ" );
   if( !file ){
     error() << "Could not find spectrum template file!" << endmsg;
     return StatusCode::FAILURE;
   }
-  
+
   // -- Get the histogram template file for the particle momentum spectrum
-  m_hist = (TH1*)file->Get( m_histoPath.c_str() );
-  
-  
+  m_hist = (TH1*) file->Get( m_histoPath.c_str() );
   if( !m_hist ){
     error() << "Could not find spectrum histogram!" << endmsg;
     return StatusCode::FAILURE;
   }
-	
-	// -- Check the binning format specified
-	// Make sure accept an empty binningVars variable for backwards-compatability;
-	if(m_binningVars=="")	m_binningVars="pxpypz";
-	if(m_binningVars!="ptpz" && m_binningVars!="pxpypz") {
-		error() << "binningVariables set to unrecognised value: " << m_binningVars <<
-							 ". Only \"pxpypz\" (default) or \"ptpz\" allowed)"   << endmsg;
-	}
 
-  info() << "Using file '" << m_inputFileName << "' with histogram '" 
-	 << m_histoPath << "' for sampling the momentum spectrum" << endmsg;
+  // -- Check the binning format specified
+  // Make sure accept an empty binningVars variable for backwards-compatability;
+  if(m_binningVars=="")	m_binningVars="pxpypz";
 
-  return sc ;
+  if(m_binningVars=="pxpypz") {
+    if( m_hist->GetDimension()!=3 ) {
+      error() << "BinningVariables set to " << m_binningVars
+              << " but histogram " << m_histoPath
+              << " has dimension " << m_hist->GetDimension()
+              << endmsg;
+      return StatusCode::FAILURE;
+    }
+    m_hist2d = 0;
+    m_hist3d = (TH3D*) m_hist;
+  } else if (m_binningVars!="ptpz" || m_binningVars!="pteta") {
+    if( m_hist->GetDimension()!=2 ) {
+      error() << "BinningVariables set to " << m_binningVars
+              << " but histogram " << m_histoPath
+              << " has dimension " << m_hist->GetDimension()
+              << endmsg;
+      return StatusCode::FAILURE;
+    }
+    m_hist2d = (TH2D*) m_hist;
+    m_hist3d = 0;
+  } else {
+    error() << "BinningVariables set to unrecognised value: " << m_binningVars
+            << ". Only \"pxpypz\" (default), \"ptpz\" or \"pteta\" allowed)" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  info() << "Using file '" << m_inputFileName << "' with histogram '"
+         << m_histoPath << "' for sampling the momentum spectrum" << endmsg;
+
+  return sc;
 }
 
 //===========================================================================
 // Generate the particles
 //===========================================================================
-void MomentumSpectrum::generateParticle( Gaudi::LorentzVector & momentum , 
-					 Gaudi::LorentzVector & origin , 
-					 int & pdgId ) {  
-  
-  unsigned int currentType = 
-    (unsigned int)( m_pdgCodes.size() * m_flatGenerator() );
-  // protect against funnies
-  if ( currentType >= m_pdgCodes.size() ) currentType = 0; 
+void MomentumSpectrum::generateParticle( Gaudi::LorentzVector & momentum ,
+					 Gaudi::LorentzVector & origin , int & pdgId ) {
 
-  // -- Sample components of momentum according to template in histogram
-  origin.SetCoordinates( 0. , 0. , 0. , 0. ) ;  
-  // -- Cast m_hist to TH2D or TH3D depending on binning variables
+	// -- Determine which particle is generated
+	unsigned int currentType = (unsigned int)( m_pdgCodes.size() * m_flatGenerator() );
+	// protect against funnies
+	if ( currentType >= m_pdgCodes.size() ) currentType = 0;
+	pdgId = m_pdgCodes[ currentType ] ;
+
+	// -- Set origin to (0,0,0,0)
+	origin.SetCoordinates( 0. , 0. , 0. , 0. ) ;
+
+	// -- Sample components of momentum according to template in histogram
+	LHCb::GenHeader* evt =  get<LHCb::GenHeader>(  LHCb::GenHeaderLocation::Default );
+	gRandom->SetSeed(evt->runNumber() * evt->evtNumber());
 	if ( m_binningVars == "pxpypz" ) {
-		m_hist2d = 0;
-		m_hist3d = (TH3D*) m_hist;
-		// -- Sample components of momentum according to template in histogram
 		double px(0), py(0), pz(0);
-    LHCb::GenHeader* evt =  get<LHCb::GenHeader>(  LHCb::GenHeaderLocation::Default );
-    gRandom->SetSeed(evt->runNumber() * evt->evtNumber());
 		m_hist3d->GetRandom3(px, py, pz);
-		momentum.SetPx( px ) ; momentum.SetPy( py ) ; momentum.SetPz( pz ) ;
-		momentum.SetE( std::sqrt( m_masses[currentType] * m_masses[currentType] +
-					momentum.P2() ) ) ;
+		momentum.SetPx( px );
+		momentum.SetPy( py );
+		momentum.SetPz( pz );
 	}
 	else if( m_binningVars == "ptpz" ) {
-		m_hist2d = (TH2D*) m_hist;
-		m_hist3d = 0;
-		// -- Sample components of momentum according to template in histogram
-		double pt(0), pz(0);
-
-    LHCb::GenHeader* evt =  get<LHCb::GenHeader>(  LHCb::GenHeaderLocation::Default );
-    gRandom->SetSeed(evt->runNumber() * evt->evtNumber());
+		double pt(0.), pz(0.);
 		m_hist2d->GetRandom2(pt , pz);
-
 		double phi = (-1.*Gaudi::Units::pi + m_flatGenerator() * Gaudi::Units::twopi) * Gaudi::Units::rad;
 		momentum.SetPx( pt*cos(phi) );
 		momentum.SetPy( pt*sin(phi) );
 		momentum.SetPz( pz );
-		momentum.SetE( std::sqrt( m_masses[currentType] * m_masses[currentType] +
-					momentum.P2() ) ) ;
-    
 	}
-  
-                        
-  pdgId = m_pdgCodes[ currentType ] ;                      
-    
-  debug() << " -> " << m_names[ currentType ] << endmsg 
-          << "   P   = " << momentum << endmsg ;
+	else if( m_binningVars == "pteta" ) {
+		double pt(0.), eta(0.);
+		m_hist2d->GetRandom2(pt , eta);
+		double phi = (-1.*Gaudi::Units::pi + m_flatGenerator() * Gaudi::Units::twopi) * Gaudi::Units::rad;
+		momentum.SetPx( pt*cos(phi)  );
+		momentum.SetPy( pt*sin(phi)  );
+		momentum.SetPz( pt*sinh(eta) );
+	} else
+		error() << "This should never happen!" << endmsg;
+
+	momentum.SetE( std::sqrt( m_masses[currentType] * m_masses[currentType] + momentum.P2() ) ) ;
+
+	if (msgLevel(MSG::DEBUG))
+		debug() << " -> " << m_names[ currentType ] << endmsg
+	           << "   P   = " << momentum << endmsg ;
 }
 
-
-
-// return 2 random numbers along axis x and y distributed according
-   // the cellcontents of a 2-dim histogram
-   // return a NaN if the histogram has a bin with negative content
-
-  
