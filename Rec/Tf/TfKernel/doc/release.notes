@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r27 2014-10-14 =========================
 ! 2014-10-08 - Manuel Tobias Schiller
  - include new header SIMDChi2Fit.h, a fully customisable chi^2 track fit for
    use inside pattern recognition algorithms which can (to some degree)
