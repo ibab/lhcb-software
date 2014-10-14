@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+
+!========================= CondDBUI v3r31 2014-10-14 =========================
 ! 2014-10-07 - Liang Sun
  - Added JIRA support when writing to release_notes.xml
  - Fixed a bug in script CondDBAdmin_GlobalTag.py
