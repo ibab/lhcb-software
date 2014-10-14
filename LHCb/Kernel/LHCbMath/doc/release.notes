@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r51 2014-10-14 =========================
 ! 2014-10-09 - Vanya Belyaev
  - Functions.cpp 
    fix stupid typo 
