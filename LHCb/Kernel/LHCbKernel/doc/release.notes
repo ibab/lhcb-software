@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r5 2014-10-14 =========================
 ! 2014-10-01 - Chris Jones
  - Add some more operators and constructors ...
 
