@@ -5,8 +5,101 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v38r2>2014-10-15 LHCbSys v38r2</A></H1><PRE>
+This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
+
+- Packages modified: DAQ/DAQSys v8r5, Det/CaloDet v10r20, Det/DDDB v1r73,
+    Det/DetCond v12r39, Det/DetDescSvc v3r8, Det/RichDet v16r25,
+    Event/EventAssoc v5r6, Event/L0Event v19r9, Event/SwimmingEvent v1r6,
+    Hlt/HltDAQ v4r8, Hlt/HltServices v2r4, Kernel/HltInterfaces v5r2,
+    Kernel/LHCbKernel v15r5, Kernel/LHCbMath v3r51, Kernel/PartProp v1r19,
+    Kernel/XMLSummaryKernel v1r12, Phys/LoKiGen v10r18, Phys/LoKiHlt v3r16,
+    Phys/LoKiMC v10r14, Phys/LoKiNumbers v10r7, Tools/CondDBUI v3r31
+
+- In DAQ/DAQSys v8r5
+  . New TrackReports Decoder locations - only affecting the HLT internally
+
+- In Det/DDDB v1r73
+  . Update default database tags to the latest ones:
+    o LHCBCOND, 2015, 2013, 2012, 2011, 2010 : cond-20141007
+
+- In Det/DetCond v12r38, v12r39
+  . DetCond configurable: 
+    o Remove explicit partition name and defer this to the keys (i.e. filename)
+      in the RunChangeHandlerConditions map.
+    o Combine the RunChangeHandlerConditions and XMLFilename properties into a
+      single dictionary of filename -> list of conditions so that the 
+      RunChangeHandler can be configured to use multiple <subsystem>_<runnr>.xml 
+      files.
+  . Avoid a spurious warning about ONLINE tag
+
+- In Det/DetDescSvc v3r8
+  . Change runchangehandler so that it also works without '%04d' in the filename.
+  . Fixed small bug in handling incident without a run change.
+
+- In Det/RichDet v16r25
+  . Update RichSmartID search in DeRichSystem to avoid type mis-matches caused by
+    updates to RichSmartID.
+
+- In Event/SwimmingEvent v1r6
+  . Move the various helper functions to be static members of a Swimming::Helpers
+    class. This allows the swimming code to work in ROOT6 applications, which
+    couldn't cope with the inline globals.
+  . Remove sorting of LHCb IDs when we are matching without composite PIDs. This
+    was never needed for ConjugateNeutralPID()'d locations and introduced a rare
+    bug.
+  . Add some extra hashing/matching functions for particles for use in
+    Phys/Swimming -- these include variants/options to pick whether or
+    not we include the PID of composite particles in the hashes.
+
+- In Hlt/HltDAQ v4r8
+  . Added recvertex chi2 to summary objects
+  . Small hack to be able to compile against LCG experimental builds.
+  . Hlt track root locations changed to Hlt1/Track and Hlt/Track   
+  . Renamed track location Hlt/Track/ForwardPEsti to Hlt1/Track/ForwardHPT 
+
+- In Hlt/HltServices v2r4
+  . Move code around so tar access is possible in utilities
+  . Add option to utlity to literally convert a config.tar file to a config.cdb 
+    file
+
+- In Kernel/HltInterfaces v5r2
+  . PropertyConfig, ConfigTreeNode: avoid strstream in computation of digest 
+
+- In Kernel/LHCbKernel v15r5
+  . Add support to RichSmartID to convert to and from a signed int (internal
+    representation is an unsigned int). Useful for interactions with CondDB or
+    DetDesc which only supports signed ints.
+
+- In Kernel/LHCbMath v3r51
+  . Functions.cpp: fix stupid typo 
+  . BloomFilter: 
+    o Be nice and undefine the preprocessor macros which do not have
+      the BLOOMFILTER prefix...
+    o Replace  template metaprogrammed fixed point log2 by constexpr functions.
+      Not done for icc as constexpr is not well supported by that compiler
+
+- In Kernel/PartProp v1r19
+  . ParticleProperty.cpp: tiny improvement for printout 
+
+- In Kernel/XMLSummaryKernel v1r12
+  . Workaround for bug https://sft.its.cern.ch/jira/browse/ROOT-6516
+
+- In Phys/LoKiHlt v3r16
+  . LoKi::Hybrid::EvtTupleTool: get HltDecReports from the location in the
+    HLT_Location property
+
+- In Tools/CondDBUI v3r31
+  . Added JIRA support when writing to release_notes.xml
+  . Fixed a bug in script CondDBAdmin_GlobalTag.py
+
+- In Det/CaloDet v10r20, Event/EventAssoc v5r6, Event/L0Event v19r9, 
+     Kernel/LHCbKernel v15r5, Kernel/LHCbMath v3r51, Phys/LoKiGen v10r18,
+     Phys/LoKiHlt v3r16, Phys/LoKiMC v10r14, Phys/LoKiNumbers v10r7
+  . Fixed genreflex warnings (ROOT 6).
+
 </PRE><H1><A NAME=v38r1>2014-09-15 LHCbSys v38r1</A></H1><PRE>
-This version uses Gaudi v25r3 and LCG_69 with ROOT 6.00.00.
+This version uses Gaudi v25r3 and LCG_69root6 with ROOT 6.00.00.
 
 - Packages modified: Calo/CaloInterfaces v8r9, DAQ/DAQKernel v1r1,
     DAQ/DAQSys v8r4, DAQ/RawEventCompat v1r6, DAQ/Tell1Kernel v1r13p1,
