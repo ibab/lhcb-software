@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-14 - Jason Andrews
+ - Explicitly require OfflineVertexFitter in StrippingBu2rho0rhoPlus.py lines
+
 ! 2014-10-14 - Hannah Mary Evans
  - Added isolation tools to all lines in Bs2MuMuLines
 

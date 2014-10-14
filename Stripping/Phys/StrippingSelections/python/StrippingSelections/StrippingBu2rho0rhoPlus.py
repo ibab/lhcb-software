@@ -321,7 +321,8 @@ def makeRho0( name ,
     rho0 = CombineParticles( DecayDescriptor = "rho(770)0 -> pi+ pi-",
                              DaughtersCuts = DaughtersCuts,
                              CombinationCut = combCuts,
-                             MotherCut = motherCuts )
+                             MotherCut = motherCuts,
+                             ParticleCombiners = { "" : "OfflineVertexFitter" } )
     ### -------------------------------------------------------------------------
     return Selection( name,
                       Algorithm = rho0,
@@ -452,7 +453,8 @@ def makeBu2rho0rhoPlus( name,
     Bu = CombineParticles( DecayDescriptor = "[B+ -> rho(770)0 rho(770)+]cc",
                            CombinationCut = combCuts,
                            MotherCut = motherCuts,
-                           ReFitPVs = refit )
+                           ReFitPVs = refit,
+                           ParticleCombiners = { "" : "OfflineVertexFitter" } )
     ### -------------------------------------------------------------------------
     daughters = [ rho0, rhoP ]
     return ( Selection( name + "Sel", Algorithm = Bu, RequiredSelections = daughters ),
