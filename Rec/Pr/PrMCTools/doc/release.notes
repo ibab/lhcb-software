@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r4p1 2014-10-14 =========================
 ! 2014-09-18 - Michel De Cian
 - Add some more doxygen comments to PrPlotFTHits.
 
