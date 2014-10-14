@@ -3,6 +3,8 @@
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+!========================= DetCond v12r39 2014-10-14 =========================
 ! 2014-10-07 - Gerhard Raven
  - DetCond configurable: remove explicit paritition name and defer this to the
    keys (i.e. filename) in the RunChangeHandlerCondiions map.
