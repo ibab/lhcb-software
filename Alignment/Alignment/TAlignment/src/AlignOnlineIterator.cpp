@@ -51,7 +51,7 @@ class AlignOnlineIterator : public GaudiTool, virtual public LHCb::IAlignIterato
   unsigned int m_iteration;
   std::string m_onlinexmldir ;
   std::string m_alignxmldir ;
-  std::vector<AlignOnlineXMLCopier> m_xmlcopiers ;
+  std::vector<AlignOnlineXMLCopier*> m_xmlcopiers ;
 };
 
 
@@ -95,7 +95,7 @@ StatusCode AlignOnlineIterator::initialize()
 {
   debug() << "AlignOnlineIterator::initialize()" << endreq ;
   debug() << "ASDDir         : " << m_asdCollector.m_dir << endreq ;
-  debug() << "ASDFilePattern : " << m_asdCollector.m_dir << endreq ;
+  debug() << "ASDFilePattern : " << m_asdCollector.m_filePatt << endreq ;
   debug() << "PartitionName  : " << m_PartitionName << endreq ;
   debug() << "MaxIteration    : " << m_maxIteration << endreq ;
 
@@ -124,13 +124,21 @@ StatusCode AlignOnlineIterator::initialize()
       "OT/OTGlobal","OT/OTModules"
     }} ;
   for(auto i : condnames)
-    m_xmlcopiers.push_back( AlignOnlineXMLCopier(m_onlinexmldir,runningdir, i) ) ;
+  {
+    AlignOnlineXMLCopier* acpy = new AlignOnlineXMLCopier(m_onlinexmldir,runningdir, i);
+    m_xmlcopiers.push_back( acpy ) ;
+  }
+  fflush(stdout);
 
   return sc;
 }
 
 StatusCode AlignOnlineIterator::finalize()
 {
+  for( auto i : m_xmlcopiers ) {
+    delete(i);
+  }
+  m_xmlcopiers.clear();
   m_alignupdatetool.release().ignore() ;
   m_xmlwriter.release().ignore() ;
   return GaudiTool::finalize() ;
@@ -201,11 +209,12 @@ StatusCode AlignOnlineIterator::i_run()
   if(sc.isSuccess() && m_iteration > 1 ) {
     // after last update, if more than one iteration
     for( auto i : m_xmlcopiers ) {
-      StatusCode thissc = i.copyToOnlineArea() ;
+      StatusCode thissc = i->copyToOnlineArea() ;
       if(!thissc.isSuccess()) {
 	error() << "Error copying file to online area" << endmsg ;
       }
     }
+    fflush(stdout);
   }
 
   // move the 'running' dir to a dirname with current run
@@ -232,12 +241,13 @@ StatusCode AlignOnlineIterator::i_start()
   // 2. copy the files from the online area. if this doesn't work,
   // dump the current database.
   for( auto i : m_xmlcopiers ) {
-    StatusCode thissc = i.copyFromOnlineArea() ;
+    StatusCode thissc = i->copyFromOnlineArea() ;
     if(!thissc.isSuccess()) {
-      error() << "Cannot find input xml file \'" << i.onlinefilename() << "\'" << endmsg ;
+      error() << "Cannot find input xml file \'" << i->onlinefilename() << "\'" << endmsg ;
       sc = StatusCode::FAILURE ;
     }
   }
+  fflush(stdout);
 
   // if some of the input files are missing, bootstrap this by writing
   // from the database.

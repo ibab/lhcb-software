@@ -47,6 +47,7 @@ StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
     boost::filesystem::copy_file(origin,target, boost::filesystem::copy_option::overwrite_if_exists) ;
     if( boost::filesystem::exists(target) ){
       m_time = boost::filesystem::last_write_time(target) ;
+      printf("+++++++++++++++++++++++++++ AlignOnlineXMLCopier: copied %s to %s\n",origin.c_str(),target.c_str());
     } else {
       sc = StatusCode::FAILURE ;
     }
@@ -61,6 +62,7 @@ StatusCode AlignOnlineXMLCopier::copyToOnlineArea() const
   if( boost::filesystem::exists(origin) &&
       boost::filesystem::last_write_time(origin) > m_time ) {
     boost::filesystem::path target(onlinefilename(m_version+1)) ;
+    printf("++++++++++++++++++++++++++++ AlignOnlineXMLCopier: copying %s to %s\n",origin.c_str(),target.c_str());
     boost::filesystem::copy( origin, target ) ;
     if( !boost::filesystem::exists(target) ) {
       sc = StatusCode::FAILURE ;
