@@ -6,6 +6,6 @@ find_package(GaudiProject)
 #---------------------------------------------------------------
 
 # Declare project name and version
-gaudi_project(Rec v17r1
-              USE Lbcom v16r0p1
+gaudi_project(Rec v17r2
+              USE Lbcom v16r1
               DATA TCK/HltTCK)
