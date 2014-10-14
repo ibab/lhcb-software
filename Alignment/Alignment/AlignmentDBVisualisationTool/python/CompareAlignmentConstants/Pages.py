@@ -308,7 +308,8 @@ class ROOTRegion(Region):
         assert isinstance( output, ROOT.TDirectoryFile ) and output.IsWritable()
         reqPath = "/".join((self.name, self.var))
         output.cd()
-        assert output.mkdir(reqPath)
+        if not output.GetDirectory(reqPath):
+            assert output.mkdir(reqPath)
         myDir = output.GetDirectory(reqPath)
         myPath = myDir.GetPath()
         myDir.cd()
@@ -454,7 +455,8 @@ class ROOTFolder(Folder):
         assert isinstance( output, ROOT.TDirectoryFile ) and output.IsWritable()
         reqPath = self.name.split("__")[0].replace("_", "/")
         output.cd()
-        assert output.mkdir(reqPath)
+        if not output.GetDirectory(reqPath):
+            assert output.mkdir(reqPath)
         myDir = output.GetDirectory(reqPath)
         myPath = myDir.GetPath()
         myDir.cd()

@@ -3,6 +3,9 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+! 2014-10-14 - Pieter David
+ - ROOT output: do not try to make the same directory twice
+
 ! 2014-10-13 - Pieter David
  - replaced "== None" by "is None" (PEP8)
 
