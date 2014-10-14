@@ -384,6 +384,8 @@ private: // private data members
   double m_layerMinZ, m_layerMaxZ;
   double m_layerHalfSizeX, m_layerHalfSizeY, m_layerHalfSizeZ;
   double m_innerHoleRadius;
+  double m_fibreMatinnerHoleSize;
+
   double m_layerPosZ;           ///< center of the fibremat in z   
  
   double m_fibreMatMinX, m_fibreMatMaxX;
@@ -421,6 +423,9 @@ private: // private data members
   int m_quarter;       //DBL
   int m_relativemodule;
   double m_fibreMatPosZ;   
+  std::string  m_DeFTLocaton;
+  int m_FTGeomVersion_reference;
+  
 };
 
 // -----------------------------------------------------------------------------

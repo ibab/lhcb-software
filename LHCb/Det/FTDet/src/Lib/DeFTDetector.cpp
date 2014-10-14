@@ -5,6 +5,9 @@
 
 // Gaudi Kernel
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/SmartDataPtr.h"
+#include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 
 /** @file DeFTDetector.cpp
@@ -13,6 +16,7 @@
  *
  *  @author Plamen Hopchev
  *  @date   2012-04-25
+ *  Mod  SE 2014-10-12
  */
 
 //=============================================================================
@@ -27,6 +31,8 @@ DeFTDetector::DeFTDetector( const std::string& name ) :
   m_modules(),
   m_fibremodules(),
   m_fibremats(),
+  m_FibreModuleNameSpec("FibreModule"),
+  m_FibreMatNameSpec("Fibre"),
   m_msg(NULL)
 {
 
@@ -61,51 +67,104 @@ StatusCode DeFTDetector::initialize(){
   /// instead of the ususual name(), which gives a too long string
   if ( 0 == m_msg ) m_msg = new MsgStream( msgSvc(), "DeFTDetector" );
 
-  *m_msg << MSG::INFO << "==> Initialize DeFTDetector" << endmsg;
+
+  *m_msg << MSG::DEBUG << "==> Initialize DeFTDetector" << endmsg;
 
   //load ftversion
-  if( exists("FTversion") ) m_FTversion = this->params()->param<int>("FTversion")  ;
-
+  if( exists("FTversion") ) {
+      m_FTversion = this->params()->param<int>("FTversion")  ;
+  }else {
+    m_FTversion=0;
+  }
+  
+  *m_msg << MSG::INFO << "Current FT geometry version =   " <<  m_FTversion<<endmsg;
+  
   /// Fill in the vectors holding pointers to the Daugther DetElements
   // loop over stations
   typedef IDetectorElement::IDEContainer::const_iterator DEIter;
   DEIter iS, iBL, iL, iM, iFM, iFMat;
 
-  if( m_FTversion == 20 ){
-    for (iS = this->childBegin(); iS != this->childEnd(); ++iS) {
-      DeFTStation* station = dynamic_cast<DeFTStation*>(*iS);
-      if ( station != 0 ) {
+  const IDetectorElement::IDEContainer & detelems = childIDetectorElements();
+  updMgrSvc()->registerCondition( this, geometry(), &DeFTDetector::geometryUpdate );
+
+  if( ( m_FTversion == 20 )  || ( m_FTversion >=  40 )  ){
+    for (iS = detelems.begin(); iS != detelems.end(); ++iS) {
+      SmartDataPtr<DeFTStation> station(dataSvc(), (*iS)->name());
+      if (station  ) {
         /// fill the vector of stations
         m_stations.push_back(station);
+        // register UMS dependency
+        updMgrSvc()->registerCondition( this, station->geometry(), &DeFTDetector::geometryUpdate );
         ///loop over layers and fill the vector of layers
-        for (iL = (*iS)->childBegin(); iL!= (*iS)->childEnd(); ++iL) {
-          DeFTLayer* layer = dynamic_cast<DeFTLayer*>(*iL);
-          if ( layer != 0 ) {
+        if( ! (station->childIDetectorElements().empty()) ){
+          for (iL = station->childIDetectorElements().begin() ; 
+               iL != station->childIDetectorElements().end(); ++iL) {
+          SmartDataPtr<DeFTLayer>  layer (dataSvc(),(*iL)->name());
+          if ( layer ) {
             m_layers.push_back(layer);
+            updMgrSvc()->registerCondition( this, 
+                                            layer->geometry(), &DeFTDetector::geometryUpdate );
+            //*m_msg << MSG::INFO <<"registered FT  layer "<< iL - station->childIDetectorElements().begin() <<endmsg;
             ///loop over modules and fill the vector of modules
-            for (iM = (*iL)->childBegin(); iM!= (*iL)->childEnd(); ++iM) {
-              DeFTModule* module = dynamic_cast<DeFTModule*>(*iM);
-              if ( module != 0 ) {
+            if( !(layer ->childIDetectorElements().empty()) ){
+            for (iM = layer->childIDetectorElements().begin(); iM != layer->childIDetectorElements().end(); ++iM) {
+              SmartDataPtr<DeFTModule> module (dataSvc(),(*iM)->name());
+              if ( module ) {
                 m_modules.push_back(module);
+                updMgrSvc()->registerCondition( this, 
+                                                module->geometry(), &DeFTDetector::geometryUpdate );
+
+                if( ! (module ->childIDetectorElements().empty()) ){
                 ///loop over fibremodules and fill the vector of fibremodules
-                for (iFM = (*iM)->childBegin(); iFM!= (*iM)->childEnd(); ++iFM) {
-                  DeFTFibreModule* fibremodule = dynamic_cast<DeFTFibreModule*>(*iFM);
-                  if ( fibremodule != 0 ) {
-                    m_fibremodules.push_back(fibremodule);
-                    ///loop over fibremats and fill the vector of fibremats
-                    for (iFMat = (*iFM)->childBegin(); iFMat!= (*iFM)->childEnd(); ++iFMat) {
-                      DeFTFibreMat* fibremat = dynamic_cast<DeFTFibreMat*>(*iFMat);
-                      if ( fibremat != 0 ) m_fibremats.push_back(fibremat);
-                    } // loop fibremat
-                  }
+                  for (iFM = module ->childIDetectorElements().begin(); 
+                       iFM != module->childIDetectorElements().end() ; ++iFM) {
+                    if ( std::string::npos != (*iFM)->name().find(m_FibreModuleNameSpec) ){
+
+                      SmartDataPtr<DeFTFibreModule> fibremodule (dataSvc(),(*iFM)->name());
+                      if ( fibremodule) {
+                        m_fibremodules.push_back(fibremodule);
+                        updMgrSvc()->registerCondition( this, 
+                                     fibremodule->geometry(), &DeFTDetector::geometryUpdate );
+                        //*m_msg << MSG::INFO <<"registered FT fibremodule "
+                        //       << iFM - module->childIDetectorElements().begin() <<endmsg;
+                        
+                        if( ! (fibremodule ->childIDetectorElements().empty()) ){
+                           ///loop over fibremats and fill the vector of fibremats
+                           for (iFMat = fibremodule ->childIDetectorElements().begin() ; 
+                                iFMat != fibremodule ->childIDetectorElements().end() ; ++iFMat) {
+                             if ( std::string::npos != (*iFMat)->name().find(m_FibreMatNameSpec) ){
+
+                               SmartDataPtr<DeFTFibreMat> fibremat (dataSvc(),(*iFMat)->name());
+                               if ( fibremat) {
+                                 m_fibremats.push_back(fibremat);
+                                 updMgrSvc()->registerCondition( this,
+                                              fibremat->geometry(), &DeFTDetector::geometryUpdate );
+                                  
+                               }} // tests for  existance of fibremat
+                             
+                           } // loop fibremat
+
+                           } // test existance of children of fibre module
+                        
+
+                      }} //tests for existance of fibre module                    
                 }// loop fibremodules
-              }
+                }//test existance of chilren of module
+                
+                
+              }// test existanace of module              
             } //loop modules
-          }
-        } // loop layers
-      }
+            } // test existance of children of layer
+            
+          }  //test existance of layer
+          } // loop layers
+        } // test of existance of children of station
+        
+      }// test existance of station
     } // loop stations
-  }else{
+
+  }else if ( m_FTversion < 20 )  {
+    // old version of geometry; to become obsolete
     for (iS = this->childBegin(); iS != this->childEnd(); ++iS) {
       DeFTStation* station = dynamic_cast<DeFTStation*>(*iS);
       if ( station != 0 ) {
@@ -129,6 +188,7 @@ StatusCode DeFTDetector::initialize(){
     } // loop stations 
   }
   
+
   ///>>> print the layer properties <<<///
   if ( m_msg->level() <= MSG::DEBUG ) {
     
@@ -167,8 +227,24 @@ StatusCode DeFTDetector::initialize(){
   /// sort the fibremats according to their fibreMatID
   std::sort(m_fibremats.begin(), m_fibremats.end(), 
             [](const DeFTFibreMat* lhs, const DeFTFibreMat* rhs){ return lhs->FibreMatID() < rhs->FibreMatID(); });
-  
+
+
+    // trigger first UMS update
+  const StatusCode update = updMgrSvc()->update(this);
+
+  return ( sc && update) ;
+}
+//=============================================================================
+// geometryUpdate
+//=============================================================================
+
+StatusCode DeFTDetector::geometryUpdate ( ) 
+{
+  MsgStream msg ( msgSvc(), "DeFTDetector" );
+  //get geometry and other user parameters
+
   return StatusCode::SUCCESS;
+
 }
 
 //=============================================================================

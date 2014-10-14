@@ -97,7 +97,7 @@ public:
 
   /** */
 
-
+  
 
   /** Find the FT Station where a global point is
    *  @return Pointer to the relevant Station
@@ -135,7 +135,11 @@ public:
    */
 
   const DeFTFibreMat* findFibreMat( const LHCb::FTChannelID id ) const;
+
+  // update and acquire any user geometry paramters
+  StatusCode geometryUpdate ( );
   
+
   //OBSOLETE
   //const DeFTLayer* findLayer( const LHCb::FTChannelID id ) const;
 
@@ -154,9 +158,14 @@ private: // private data members
   FibreModules m_fibremodules;   ///< vector of pointers to fibremodules
   FibreMats m_fibremats;         ///< vector of pointers to fibremats
 
+  std::string m_FibreModuleNameSpec;
+  std::string m_FibreMatNameSpec;
+
   /// Use a single MsgStream instance (created in initialize)
   MsgStream* m_msg;
 
+
+  
 }; //end of class
 
 #endif // DEFTDETECTOR_H

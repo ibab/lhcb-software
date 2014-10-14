@@ -18,9 +18,11 @@
 #include "LHCbMath/Line.h"
 #include "LHCbMath/GeomFun.h"
 #include "LHCbMath/LineTypes.h"
+#include "GaudiKernel/GaudiException.h"
 
 // FTDet
 #include "FTDet/DeFTFibreMat.h"
+#include "FTDet/DeFTDetector.h"
 
 
 /** @file DeFTFibreMat.cpp
@@ -65,6 +67,7 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   m_layerHalfSizeY(0.),
   m_layerHalfSizeZ(0.),
   m_innerHoleRadius(0.),
+  m_fibreMatinnerHoleSize(0.),
   m_layerPosZ(0.),
   // fibremat dimension
   m_fibreMatMinX(0.),
@@ -99,6 +102,8 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   m_relativemodule(0),
   m_fibreMatPosZ(0.)   
 {
+  m_DeFTLocaton= "/dd/Structure/LHCb/AfterMagnetRegion/T/FT";
+  m_FTGeomVersion_reference=40;
   
 }
 
@@ -132,6 +137,7 @@ StatusCode DeFTFibreMat::initialize(){
   if ( 0 == m_msg ) m_msg = new MsgStream( msgSvc(), "DeFTFibreMat" );
 
   if( m_msg->level() <= MSG::DEBUG) debug() << "==> Initialize DeFTFibreMat" << endmsg;
+
   
   /// Set the layer ID and stereo angle: take them from the xml DDDB
   m_angle = this->params()->param<double>("stereoAngle");
@@ -160,18 +166,43 @@ StatusCode DeFTFibreMat::initialize(){
   else if ( ( mod == 5 || mod == 6 || mod == 7 || mod == 8 || mod == 9 || mod == 11 ) && m_mat  ) m_quarter = 0;
   else if ( ( mod == 5 || mod == 6 || mod == 7 || mod == 8 || mod == 9 || mod == 11 ) && !m_mat ) m_quarter = 2;
   else{
-    if( m_msg->level() <= MSG::DEBUG ) debug() << "Aborting calculateHits(...) because it is not possible to find module/quarter" << endmsg;
+    if( m_msg->level() <= MSG::DEBUG ) debug() 
+    << "Aborting calculateHits(...) because it is not possible to find module/quarter" << endmsg;
     return StatusCode::FAILURE;
   }
     
   m_layer  = int( m_FibreMatID / 10000 ); 
   m_layerID = m_layer;
   m_holey = ( m_module == 10 || m_module == 11 );
+  //  if( m_msg->level() <= MSG::INFO) info() << "Deftfibremat layer holey " <<m_layer<<"  "<< m_holey<< "  "
+  //                                        << this->geometry()->lvolume()->solid()->name()<< endmsg;
 
   /// Get geometrical limits of the layer
   /// Note that the following approach is not robust in the sense that every
   /// time a 'structural' modification is made to the layer geometry (xml DDDB)
   /// we need to revisit the way we obtain the detector element geometrical limits
+  // A replacement made by just copying these parameters from xml user parameters.
+  // This is done only for the new versions (FT v40 onwards) of XML. SE 12-10-2014
+
+  SmartDataPtr<DeFTDetector>  deFT( dataSvc(),m_DeFTLocaton);
+  if(! deFT ) 
+  {  debug() << "DeFTFibremat : DeFT does not exist "<< endmsg; }
+  
+  const int Cur_FTGeom_version =  ( deFT)  ?  (deFT->version())  : 0 ;
+
+  //if( m_msg->level() <= MSG::INFO) info() <<" FtFibermat Ft geom version "<<  Cur_FTGeom_version <<endmsg;
+  if(Cur_FTGeom_version >=  m_FTGeomVersion_reference  ) {
+    m_fibreMatHalfSizeX  =  deFT->exists("FTFibreMatSizeX") ?  ( 0.5 * deFT-> param<double> ("FTFibreMatSizeX")) : 0.0 ;
+    m_fibreMatHalfSizeY  =  deFT->exists("FTFibreMatSizeY") ?  ( 0.5 * deFT-> param<double> ("FTFibreMatSizeY")) : 0.0 ;
+    m_fibreMatHalfSizeZ  =  deFT->exists("FTFibreMatSizeZ") ?  ( 0.5 * deFT-> param<double> ("FTFibreMatSizeZ")) : 0.0 ;
+    m_innerHoleRadius    =  deFT->exists("FTFibreMatHoleSize") ?  deFT-> param<double>("FTFibreMatHoleSize" ) : 0.0 ;
+    m_fibreMatinnerHoleSize = deFT->exists("FTFibreMatHoleSize") ? deFT-> param<double>("FTFibreMatHoleSize" ): 0.0 ;    
+
+  }else {
+    
+     // use of older version of FT geometry. To be made obsolete in the future.
+     // for now kept for backward compatibility. 
+  
 
   if( !m_holey ){
     const SolidBox* outerBox = dynamic_cast<const SolidBox*>( this->geometry()->lvolume()->solid() );
@@ -183,8 +214,14 @@ StatusCode DeFTFibreMat::initialize(){
     m_fibreMatHalfSizeY = outerBox->yHalfLength();
     m_fibreMatHalfSizeZ = outerBox->zHalfLength();
     m_innerHoleRadius = 0.0;
-  }
-  else{
+    //if( m_msg->level() <= MSG::INFO) info() << "info fiber mat non-mholey " <<m_holey<< "  "
+    //                                        << this->geometry()->lvolume()->solid()->name()
+    //                                        << "  "<<m_fibreMatHalfSizeX<<"   "<<m_fibreMatHalfSizeY<<"  "
+    //                                        << m_fibreMatHalfSizeZ<<" "<<m_innerHoleRadius<<   endmsg;
+
+
+  }  else{
+ 
     const SolidSubtraction* subtrObject = dynamic_cast<const SolidSubtraction*>( this->geometry()->lvolume()->solid() );
     if ( 0 == subtrObject ) {
       fatal() << "Can't acquire layer geometry (SolidSubtraction)" << endmsg;
@@ -205,11 +242,22 @@ StatusCode DeFTFibreMat::initialize(){
       fatal() << "Can't acquire layer geometry (SolidCons)" << endmsg;
       return StatusCode::FAILURE;
     }
+
     m_fibreMatHalfSizeX = outerBox->xHalfLength();
     m_fibreMatHalfSizeY = outerBox->yHalfLength();
     m_fibreMatHalfSizeZ = outerBox->zHalfLength();
     m_innerHoleRadius = innerCons->outerRadiusAtPlusZ();
+
+
   }
+  
+  
+
+  } // end of test on FT Geom version
+  
+  //  if( m_msg->level() <= MSG::DEBUG) debug() << "info fiber mat parameers "
+  //                                          << "  "<<m_fibreMatHalfSizeX<<"   "<<m_fibreMatHalfSizeY<<"  "
+  //                                          << m_fibreMatHalfSizeZ<<" "<<m_innerHoleRadius<<   endmsg;
   
 
   Gaudi::XYZPoint fibreMatCenter = this->geometry()->toGlobal( Gaudi::XYZPoint(0.,0.,0.) );

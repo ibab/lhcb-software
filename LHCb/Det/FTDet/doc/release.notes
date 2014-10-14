@@ -3,7 +3,10 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
- 
+! 2014-10-14 - Sajan Easo
+  - Made some cleanup in DeFTDetector for adapting to different geometry versions
+  - Made minor modifications to DeFTFibreMat in order to process version 40 of the
+    FT geometry without a crash and to read user parameters from xml database. 
 !========================= FTDet v2r7 2014-06-10 =========================
 ! 2014-05-17 - Michel De Cian
  - Reintroduce binary search in DeFTDetector.
