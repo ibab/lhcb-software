@@ -329,15 +329,15 @@ StatusCode RelInfoBs2MuMuZVisoBDT::Initialize_tracksVF_ZVtop()
 
     double ghostProb;
     ghostProb = (*it_ptrk).ghostProbability();
-    debug()<< (it_ptrk) <<endmsg;
+    if ( msgLevel(MSG::DEBUG) ) debug() <<  (it_ptrk) <<endmsg;
 
     if (ipsall>m_cut_ips && ghostProb <m_cut_ghost &&  (*it_ptrk).momentum().rho()>350.) {  //if the minimum is greater than a treshold cut the track is saved
       tracks.push_back(it_ptrk);
-      debug() <<"IPS_pass "<<ipsall<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() << "IPS_pass "<<ipsall<<endmsg;
     }
     if (ipsall>m_cut_ips_VF && ghostProb <m_cut_ghost ) {
       tracksVF.push_back(it_ptrk);
-      debug() <<"IPS_VF "<<ipsall<<endmsg;
+      if ( msgLevel(MSG::DEBUG) ) debug() <<"IPS_VF "<<ipsall<<endmsg;
     }
 
   }//end loop on the tracks
@@ -397,7 +397,7 @@ StatusCode RelInfoBs2MuMuZVisoBDT::IsoTopo2Body(const LHCb::Particle *part)//, c
         const LHCb::Track* Trk_rm = Daug_rm->proto()->track();
         std::vector<const LHCb::Track*>::iterator it = std::find(tracksDaughters.begin(),tracksDaughters.end(),Trk_rm);//
         if (it != tracksDaughters.end()) tracksDaughters.erase(it);
-        else Warning("The track was not in the preselected tracks!!!");
+        else {if ( msgLevel(MSG::DEBUG) ) Warning("The track was not in the preselected tracks!!!");}
       }//end of if
     }//end of for on i_daug_rm
 
