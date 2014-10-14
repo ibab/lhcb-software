@@ -4,6 +4,7 @@
 ! Purpose     : Event Model classes for persistency of the swimming result
 !-----------------------------------------------------------------------------
 
+!========================= SwimmingEvent v1r6 2014-10-14 =======================
 ! 2014-10-07 - Olli Lupton
  - Move the various helper functions to be static members of a Swimming::Helpers
    class. This allows the swimming code to work in ROOT6 applications, which
@@ -16,7 +17,8 @@
    Phys/Swimming -- these include variants/options to pick whether or
    not we include the PID of composite particles in the hashes.
 
-!========================= SwimmingEvent v1r5p2 2014-09-18 =========================
+!========================= SwimmingEvent v1r5p2 2014-09-18 =====================
+
 ! 2014-09-17 - Marco Clemencic
  - Minor fix to work around https://sft.its.cern.ch/jira/browse/ROOT-6704.
 
