@@ -68,20 +68,29 @@ void EvtLb2Lll::init(){
     ::abort();
   }
 
+  EvtId LbID = EvtPDL::getId(std::string("Lambda_b0"));
+  EvtId aLbID = EvtPDL::getId(std::string("anti-Lambda_b0"));
+  EvtId eID = EvtPDL::getId(std::string("e-"));
+  EvtId aeID = EvtPDL::getId(std::string("e+"));
+  EvtId muID = EvtPDL::getId(std::string("mu-"));
+  EvtId amuID = EvtPDL::getId(std::string("mu+"));
+  EvtId tauID = EvtPDL::getId(std::string("tau-"));
+  EvtId atauID = EvtPDL::getId(std::string("tau+"));
+
   // TODO: better check based on spin and falvour is needed to allow usage of aliases !
-  if(EvtPDL::name(getParentId())=="Lambda_b0"){ // Check daughters of Lambda_b0
+  if(getParentId()==LbID){ // Check daughters of Lambda_b0
     report(INFO,"EvtGen") << " EvtLb2Lll generator found Lambda_b0" << std::endl;
     //if(EvtPDL::name(getDaug(0))!="Lambda0"){
     //  report(ERROR,"EvtGen") << " ERROR: EvtLb2Lll generator expected Lambda0 daughter but found: " << EvtPDL::name(getDaug(0)) << std::endl;
     //  ::abort();
     //}
-    if(EvtPDL::name(getDaug(1))=="e-" && EvtPDL::name(getDaug(2))=="e+"){
+    if(getDaug(1)==eID && getDaug(2)==aeID){
       m_decayName="Lambda_b0 -> Lambda0 e- e+";
       report(INFO,"EvtGen") << " EvtLb2Lll generator found decay:  Lambda_b0 -> Lambda0 e- e+" << std::endl;
-    }else if(EvtPDL::name(getDaug(1))=="mu-" && EvtPDL::name(getDaug(2))=="mu+"){
+    }else if(getDaug(1)==muID && getDaug(2)==amuID){
       m_decayName="Lambda_b0 -> Lambda0 mu- mu+";
       report(INFO,"EvtGen") << " EvtLb2Lll generator found decay:  Lambda_b0 -> Lambda0 mu- mu+" << std::endl;
-    }else if(EvtPDL::name(getDaug(1))=="tau-" && EvtPDL::name(getDaug(2))=="tau+"){
+    }else if(getDaug(1)==tauID && getDaug(2)==atauID){
       m_decayName="Lambda_b0 -> Lambda0 tau- tau+";
       report(INFO,"EvtGen") << " EvtLb2Lll generator found decay:  Lambda_b0 -> Lambda0 tau- tau+" << std::endl;
     }else{
@@ -89,19 +98,19 @@ void EvtLb2Lll::init(){
       ::abort();
     }
   //TODO: The model is known not to work correctly for anti-Lambda_b0 (A_FB does not change its sign)
-  }else if(EvtPDL::name(getParentId())=="anti-Lambda_b0"){ // Check daughters of anti-Lambda_b0
+  }else if(getParentId()==aLbID){ // Check daughters of anti-Lambda_b0
     report(INFO,"EvtGen") << " EvtLb2Lll generator found anti-Lambda_b0" << std::endl;
     //if(EvtPDL::name(getDaug(0))!="anti-Lambda0"){
     //  report(ERROR,"EvtGen") << " ERROR: EvtLb2Lll generator expected anti-Lambda0 daughter but found: " << EvtPDL::name(getDaug(0)) << std::endl;
     //  ::abort();
     //}
-    if(EvtPDL::name(getDaug(1))=="e+" && EvtPDL::name(getDaug(2))=="e-"){
+    if(getDaug(1)==aeID && getDaug(2)==eID){
       m_decayName="anti-Lambda_b0 -> anti-Lambda0 e+ e-";
       report(INFO,"EvtGen") << " EvtLb2Lll generator found decay:  anti-Lambda_b0 -> anti-Lambda0 e+ e-" << std::endl;
-    }else if(EvtPDL::name(getDaug(1))=="mu+" && EvtPDL::name(getDaug(2))=="mu-"){
+    }else if(getDaug(1)==amuID && getDaug(2)==muID){
       m_decayName="anti-Lambda_b0 -> anti-Lambda0 mu+ mu-";
       report(INFO,"EvtGen") << " EvtLb2Lll generator found decay:  anti-Lambda_b0 -> anti-Lambda0 mu+ mu-" << std::endl;
-    }else if(EvtPDL::name(getDaug(1))=="tau-" && EvtPDL::name(getDaug(2))=="tau+"){
+    }else if(getDaug(1)==atauID && getDaug(2)==tauID){
       m_decayName="anti-Lambda_b0 -> anti-Lambda0 tau+ tau-";
       report(INFO,"EvtGen") << " EvtLb2Lll generator found decay:  anti-Lambda_b0 -> anti-Lambda0 tau+ tau-" << std::endl;
     }else{
