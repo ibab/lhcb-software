@@ -4,6 +4,7 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiHlt v3r16 2014-10-14 =========================
 ! 2014-10-01 - Pieter David
  - LoKi::Hybrid::EvtTupleTool: get HltDecReports from the location in the HLT_Location property
 
