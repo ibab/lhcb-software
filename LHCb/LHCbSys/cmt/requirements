@@ -76,7 +76,7 @@ use FTDAQ                 v1r6p1  FT      # Eric Cogneras
 
 # Packages without Hat, cannot have comment field.
 # Maintainer M.Cattaneo
-use GaudiConf             v19r4
+use GaudiConf             v19r5
 # Maintainer ??
 use GaudiConfUtils        v1r1
 # Maintainer I.Shapoval

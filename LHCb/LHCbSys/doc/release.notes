@@ -14,7 +14,8 @@ This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
     Hlt/HltDAQ v4r8, Hlt/HltServices v2r4, Kernel/HltInterfaces v5r2,
     Kernel/LHCbKernel v15r5, Kernel/LHCbMath v3r51, Kernel/PartProp v1r19,
     Kernel/XMLSummaryKernel v1r12, Phys/LoKiGen v10r18, Phys/LoKiHlt v3r16,
-    Phys/LoKiMC v10r14, Phys/LoKiNumbers v10r7, Tools/CondDBUI v3r31
+    Phys/LoKiMC v10r14, Phys/LoKiNumbers v10r7, Tools/CondDBUI v3r31,
+    GaudiConf v19r5
 
 - In DAQ/DAQSys v8r5
   . New TrackReports Decoder locations - only affecting the HLT internally
@@ -51,6 +52,9 @@ This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
   . Add some extra hashing/matching functions for particles for use in
     Phys/Swimming -- these include variants/options to pick whether or
     not we include the PID of composite particles in the hashes.
+
+- In GaudiConf v19r5
+  . Add FMDST to list of known file extensions in IOHelper
 
 - In Hlt/HltDAQ v4r8
   . Added recvertex chi2 to summary objects
