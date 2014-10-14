@@ -23,6 +23,15 @@
 #include "boost/filesystem/fstream.hpp"
 #include "boost/algorithm/string/predicate.hpp"
 
+#include "Kernel/ConfigTreeNode.h"
+#include "Kernel/PropertyConfig.h"
+
+template <typename T> std::string convert(const std::string& s) {
+    std::istringstream in(s);
+    std::ostringstream out;
+    T t; in >> t; out << t;
+    return out.str();
+}
 
 #include "../src/cdb.h"
 #include "../src/tar.h"
@@ -123,6 +132,7 @@ std::string format_time(std::time_t t) {
 
 class TAR {
     std::fstream m_file;
+    std::map<std::string,std::streamoff> m_index;
 public:
 
     TAR(const std::string& fname) {
@@ -150,10 +160,15 @@ public:
             return value;
         }
         unsigned int valuePersistentSize() const { return m_info.size; }
+        bool isTCK() { return key().size()==22 && key().compare(0,12,"Aliases/TCK/")==0 ; }
+        bool isTopLevel() { return key().back()!='/' && key().compare(0,17,"Aliases/TOPLEVEL/")==0; }
+        std::string TCK() { return isTCK() ? key().substr(12) : std::string{} ; }
+        std::string topLevel() { return isTopLevel() ? key().substr(17) : std::string{}; }
 
     };
 
     class iterator {
+        friend class TAR;
         std::fstream*  m_file;
         std::streamoff m_pos;
 
@@ -182,7 +197,7 @@ public:
             return info;
         }
     public:
-        iterator( ) : m_file{ nullptr }, m_pos{0}  {}
+        iterator( ) : m_file{ nullptr }, m_pos{0}  { }
         iterator( std::fstream* file, std::streamoff pos = 0 ) : m_file{file}, m_pos{pos} 
         { }
 
@@ -212,6 +227,23 @@ public:
 
     iterator begin() { return { &m_file }; }
     iterator end() const { return { }; }
+
+    iterator find(const std::string& key) { 
+         if (m_index.empty()) index();
+         auto i = m_index.find(key);
+         if (i==std::end(m_index)) return {};
+         return { &m_file, i->second };
+    }
+
+    iterator findTreeNode(const std::string& hash) {
+        return find( std::string("ConfigTreeNodes/")+hash );
+    }
+
+    void index() {
+        for ( auto i = begin(), e = end(); i!=e ; ++i) {
+            m_index.emplace( (*i).key(), i.m_pos );
+        }
+    }
 
 };
 
@@ -270,6 +302,11 @@ public:
             std::copy(std::istreambuf_iterator<char>(s), std::istreambuf_iterator<char>(), std::back_inserter(value));
             return value;
         }
+
+        bool isTCK() { return key().compare(0,7,"AL/TCK/")==0; }
+        bool isTopLevel() { return key().compare(0,12,"AL/TOPLEVEL/")==0; }
+        std::string TCK() { return isTCK() ? key().substr(7) : std::string{} ; }
+        std::string topLevel() { return isTopLevel() ? key().substr(12) : std::string{}; }
     };
 
     class iterator {
@@ -309,29 +346,33 @@ public:
         return end();
     }
 
+    iterator findTreeNode(const std::string& hash) const {
+        return find( std::string("TN/")+hash );
+    }
+
     bool ok() const { return cdb_fileno(&m_db)>=0; }
 };
 
 
-
-void dump_manifest(CDB& db) {
+template <typename DB>
+void dump_manifest(DB& db) {
     std::multiset< manifest_entry > manifest;
 
     // first: get TCK -> id map, and invert.
     // needed so that we can make immutable manifest_entries later...
     std::map< std::string , std::string > tck;     // id -> TCK
     for ( auto record : db )  { // TODO: allow loop with predicate on key...
+        if (!record.isTCK() ) continue;
         auto key = record.key() ; 
-        if (key.compare(0,6,"AL/TCK")!=0) continue;
-        tck.emplace( record.value() , key.substr(7));
+        tck.emplace( record.value() , record.TCK());
     }
     // next: create manifest
     for ( auto record : db ) { // TODO: allow loop with predicate on key... 
+        if (!record.isTopLevel()) continue;
         auto key = record.key();
-        if (key.compare(0,11,"AL/TOPLEVEL")!=0) continue;
         // the 'comment' is in the 'label' member of the treenode this alias "points" at
         std::string comment;
-        auto i = db.find( std::string("TN/")+key.substr(key.rfind("/")+1) );
+        auto i = db.findTreeNode( key.substr(key.rfind("/")+1) );
         if ( i != std::end(db) ) {
             auto value = (*i).value();
             if (value.compare(0,6,"Label:")==0) {
@@ -339,15 +380,19 @@ void dump_manifest(CDB& db) {
                    comment = value.substr(6, x!=std::string::npos ? x-6 : x );
             }
         }
-        manifest.emplace( key.substr(12), tck, comment );
+        manifest.emplace( record.topLevel(), tck, comment );
     }
-    for (auto& m : manifest ) std::cout << m <<   std::endl;
+    std::copy( std::begin(manifest), std::end(manifest),
+               std::ostream_iterator<manifest_entry>(std::cout,"\n") );
 }
 
 template <typename DB>
 void dump_keys(DB& db) {
     for ( auto record : db ) {
-        std::cout << record.uid() << "     " << record.valuePersistentSize()  << "      " << format_time( record.time() ) << "     "  << record.key() << "\n";
+        std::cout << std::setw(5) << record.uid() 
+                  << "   " << std::setw(6) <<  record.valuePersistentSize()  
+                  << "   " << std::setw(34) << format_time( record.time() ) 
+                  << "   " << record.key() << "\n";
     }
     std::cout << std::flush;
 }
@@ -355,7 +400,10 @@ void dump_keys(DB& db) {
 template <typename DB>
 void dump_records(DB& db) {
     for ( auto record : db ) {
-        std::cout << record.uid() << "     " << record.valuePersistentSize()  << "      "<< format_time( record.time() ) << "     "  << record.key() << "\n";
+        std::cout << std::setw(5) << record.uid() 
+                  << "   " << std::setw(6) << record.valuePersistentSize()  
+                  << "   " << std::setw(34) << format_time( record.time() ) 
+                  << "   " << record.key() << "\n";
         std::cout << record.value() <<"\n";
     }
     std::cout << std::flush;
@@ -396,6 +444,7 @@ void extract_records(TAR& db) {
     }
 }
 
+// TODO: add option to 'repack' the content of ConfigTreeNode and PropertyConfig... (read into T and then stream again)
 void convert_records( TAR& in, const std::string& oname ) {
     int ofd = open( oname.c_str(), 
                     O_RDWR  | O_CREAT | O_EXCL,
@@ -407,8 +456,15 @@ void convert_records( TAR& in, const std::string& oname ) {
     for ( auto record : in ) {
         auto key = record.key();
         if ( key.back() == '\0' ) key = key.substr(0, key.size()-1);
-        if ( key.back() == '/' ) { std::cout << "got " << key << " in loop " << std::endl; continue;}
-        auto val = make_cdb_record( record.value(), record.uid(), record.time() );
+        if ( key.back() == '/' ) { /* std::cout << "got " << key << " in loop " << std::endl;*/  continue;}
+        if (key.compare(0,16,"ConfigTreeNodes/")==0)  key.replace(0,18, "TN" ) ;
+        if (key.compare(0,16,"PropertyConfigs/")==0)  key.replace(0,18 ,"PC");
+        if (key.compare(0,8,"Aliases/")==0)           key.replace(0,7,"AL");
+        auto v = record.value();
+        if      (key.compare(0,2,"TN")==0) { v = convert<ConfigTreeNode>(v); }
+        else if (key.compare(0,2,"PC")==0) { v = convert<PropertyConfig>(v); }
+
+        auto val = make_cdb_record( v, record.uid(), record.time() );
         if ( cdb_make_add( &ocdb,
                            reinterpret_cast<const unsigned char*>( key.data() ),
                            key.size(), val.data(), val.size() ) != 0 ) {
@@ -456,6 +512,8 @@ int main(int argc, char* argv[]) {
         TAR db(fname) ;
         if (!db.ok()) return 1;
 
+
+        if (vm.count("list-manifest"))   dump_manifest(db);
         if (vm.count("list-keys"))       dump_keys(db);
         if (vm.count("list-records"))    dump_records(db);
         if (vm.count("extract-records")) extract_records(db);
@@ -464,5 +522,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-// TODO: add method for config.tar -> config.cdb conversion, which maintains timestamp, uid, order...

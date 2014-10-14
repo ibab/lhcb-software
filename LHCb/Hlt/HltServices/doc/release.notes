@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2014-10-14 - Gerhard Raven
+ - utility: fix key prefix in .tar to .cdb conversion, add re-formatting during
+   conversion, add option to create manifest from .tar, improve dump formatting
 
 !========================= HltServices v2r4 2014-10-01 =========================
 
