@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r36 2014-10-14 =======================
 ! 2014-10-08 - Manuel Tobias Schiller
  - use the new SIMDChi2Fit framework for the seeding; efficiencies and ghost
    rates are stable at the permille level, timing is unaffected within the
