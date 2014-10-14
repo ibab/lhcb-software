@@ -5,6 +5,84 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r2>2014-10-15 RecSys v17r2</A></H1><PRE>
+This version uses Gaudi v25r4, LHCb v38r2 and Lbcom v16r1 (and ROOT v5.43.21)
+
+- Packages modified: Muon/MuonTrackRec v3r12, Pr/PrKernel v1r5,
+    Pr/PrMCTools v2r4p1, Pr/PrPixel v1r10, Rec/GlobalReco v6r51,
+    Tf/PatAlgorithms v4r36, Tf/TfKernel v2r27, Tf/TfTools v1r19,
+    Tr/TrackMCTools v3r10p1, Tr/TrackUtils v1r56
+
+- In Muon/MuonTrackRec v3r12
+  . MuonCombRec: Make tools public, protect debug statements, some 
+                 simplifications in the code.
+  . MuonHitDecode: Introduce option to skip the calculations of the
+    'hardware numbers', as it is not needed for pure track reconstruction
+
+- In Pr/PrKernel v1r5, Pr/PrPixel v1r10, TfKernel v2r27
+  . Save 1/error in hit class instead of 1/error^2; this should facilitate
+    exploiting hit-level parallelism in chi^2 fits in the pattern reco; client
+    code should run correctly without modification (and without appreciable
+    change in performance). See reasoning in TfKernel release notes
+
+- In Pr/PrMCTools v2r4p1
+  . Add some more doxygen comments to PrPlotFTHits.
+
+- In Rec/GlobalReco v6r51
+  . Add some additional debug messages.
+  . Adaption for recent ROOT version and minor modifications to plotting 
+    PID-curves.
+
+- In Tf/PatAlgorithms v4r36
+  . Use the new SIMDChi2Fit framework for the seeding; efficiencies and ghost
+    rates are stable at the permille level, timing is unaffected within the
+    usual 5% fluctuations I see on my system
+  . PatFwdFitParabola: reduce the # of multiplications needed. This slightly 
+    changes the rounding, which affects the results at the 1e-5 level.
+  . PatFwdRegionCounter, PatForwardTool: replace some for loops with 
+    std::for_each, more use of auto, improve formatting
+  . PatFwdTool: 
+    o Make updateHitsForTrack a standalone function, factor out the fit in the Y
+      projection, inline zMagnet, upgrade inRegion check from lambda to functor
+    o Factor out search for 'best region' and 'shortest range',
+      move towards providing a 'const' interface, use boost::iterator_range
+    o Change max_projected_element to return the iterator pointing
+      at the max element instead of the max element itself.
+  . PatFwdTool, PatForwardTool: replace (allmost) all double with auto, to make
+    it easier to see how  a single precision version would work at a later time.
+  . PatForwardTool:
+    o Use boost::iterator_range, reduce triple nesting in loop over
+      station/layer/region to a single loop. Fix off-by-one bug
+    o Use specialized update{OT,NonOT}HitForTrack to avoid branches in innermost
+      loop
+  . PatForward: make acceptTrack const
+  . PatFwdTool:setRLDefault: simplify enough so the compiler inlines
+    the RLAmbiguityResolver completely
+
+- In Tf/TfKernel v2r27
+  . Include new header SIMDChi2Fit.h, a fully customisable chi^2 track fit for
+    use inside pattern recognition algorithms which can (to some degree)
+    exploit the parallelism inherent in simultaneously working on several hits
+    using autovectorisation in selected bits of code
+  . Moved Tf::IStationSelector (C++11-free) to an independent header (it is the
+    only class needed in the dictionary).
+  . Add specialized updateXYZHitsForTrack without any branches
+  . Reduce code duplication by having the above return the computed y coordinate,
+    which allows daisy chaining the OT version.
+
+- In Tf/TfTools v1r19
+  . Improve auto usage
+  . More C++11-ification in {OT,ST}HitCreator and HitCreatorGeom
+  . Take advantage of C++11 in OTHitCreator -- according to callgrind, this
+    results in a 10% relative CPU gain
+
+- In Tr/TrackMCTools v3r10p1
+  . Add missing PhysEvent dependency in CMakeLists.txt 
+
+- In Tr/TrackUtils v1r56
+  . TrackEventCloneKiller uses LHCb::Track::Range now. This allows it to run
+    on selections as well as containers.
+
 </PRE><H1><A NAME=v17r1>2014-10-01 RecSys v17r1</A></H1><PRE>
 This version uses Gaudi v25r3, LHCb v38r1 and Lbcom v16r0p1 (and ROOT v6.00.00)
 
