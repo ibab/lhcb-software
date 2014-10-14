@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-14 - Hannah Mary Evans
+ - Added isolation tools to all lines in Bs2MuMuLines
+
 ! 2014-10-14 - Jibo He
  - Enabled isolation for Bd->eeKstarBDT lines 
 
