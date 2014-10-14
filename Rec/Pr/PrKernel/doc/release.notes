@@ -4,6 +4,7 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrKernel v1r5 2014-10-14 =========================
 ! 2014-09-22 - Manuel Tobias Schiller
  - save 1/error in hit class instead of 1/error^2; this should facilitate
    exploiting hit-level parallelism in chi^2 fits in the pattern reco; client
