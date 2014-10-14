@@ -4,6 +4,9 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2014-10-14 - Chris Jones
+ - Make the LoKi vertex fitter and propertime fitter the defaults.
+
 !========================= DaVinciKernel v11r8 2014-09-30 =========================
 
 ! 2014-09-26 - Chris Jones

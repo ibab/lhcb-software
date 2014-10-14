@@ -238,7 +238,7 @@ DVCommonBase<PBASE>::defaultParticleReFittersNames() const
   static const ToolMap m = {
     { ""              , DaVinci::DefaultTools::ParticleReFitter },
     { "Offline"       , "OfflineVertexFitter:PUBLIC"    },
-    { "Vertex"        , "OfflineVertexFitter:PUBLIC"    },
+    { "Vertex"        , "LoKi::VertexFitter:PUBLIC"    },
     { "Kalman"        , "LoKi::VertexFitter:PUBLIC"     },
     { "LoKi"          , "LoKi::VertexFitter:PUBLIC"     },
     { "Mass"          , "LoKi::MassFitter"       },
@@ -288,8 +288,9 @@ const typename DVCommonBase<PBASE>::ToolMap &
 DVCommonBase<PBASE>::defaultLifetimeFittersNames() const
 {
   static const ToolMap m = {
-    { ""     , "PropertimeFitter"     },
-    { "LoKi" , "LoKi::LifetimeFitter" }
+    { ""        , "LoKi::LifetimeFitter" },
+    { "Offline" , "PropertimeFitter"     },
+    { "LoKi"    , "LoKi::LifetimeFitter" }
   };
   return m;
 }
