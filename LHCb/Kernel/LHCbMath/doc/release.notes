@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-10-15 - Vanya Belyaev
+ - Types.py
+   fix for ROOT5/ROOT6 issues 
+
 !========================= LHCbMath v3r51 2014-10-14 =========================
 ! 2014-10-09 - Vanya Belyaev
  - Functions.cpp 

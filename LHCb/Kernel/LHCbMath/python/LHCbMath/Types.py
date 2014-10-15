@@ -322,10 +322,6 @@ _C2F . __getitem__ = lambda s , i : s.param ( i )
 def _lav_iadd_ ( self , other ) :
     _typ = type ( self )
 
-    print 'I am SADD', type(other), type(self)
-    print 'I am len' , len(self) 
-    
-    
     if   isinstance ( other , _typ ) :
         l = len ( self )
         for i in range ( 0 , l ) : self[i] += other[i]
@@ -336,7 +332,9 @@ def _lav_iadd_ ( self , other ) :
         for i in range ( 0 , l ) : self[i] += other
         return self
     #
-    print 'NOT-implemented! '
+    ## print 'NOT-implemented! '
+    ## print 'I am SADD', type(other), type(self)
+    ## print 'I am len' , len(self)     
     #
     return NotImplemented 
 
@@ -595,12 +593,28 @@ def _v3_dot_   ( s , other ) :
     res -= s.Z ( ) * other.Z ( )
     return res 
 
-if not hasattr ( _V3D , '__iadd__' ) : _V3D. __iadd__ = _v3_iadd_ 
-if not hasattr ( _V3D , '__isub__' ) : _V3D. __isub__ = _v3_isub_ 
+if not hasattr ( _V3D , '__iadd__' ) : _V3D. __iadd__ = _v3_iadd_
+if not hasattr ( _V3D , '__isub__' ) : _V3D. __isub__ = _v3_isub_
 if not hasattr ( _V3D , 'Dot'      ) : _V3D.Dot       = _v3_dot_
+## _V3D. __iadd__ = _v3_iadd_
+## _V3D. __isub__ = _v3_isub_
+## _V3D.Dot       = _v3_dot_
 
 if not hasattr ( _P3D , '__iadd__' ) : _P3D. __iadd__ = _v3_iadd_ 
 if not hasattr ( _P3D , '__isub__' ) : _P3D. __isub__ = _v3_isub_ 
+## _P3D. __iadd__ = _v3_iadd_ 
+## _P3D. __isub__ = _v3_isub_ 
+
+
+def _p3_as_v3_ ( self ) :
+    """ Conversion to 3D-vector"""
+    return _V3D( self.x() , self.y() , self.z() )
+def _v3_as_p3_ ( self ) :
+    """ Conversion to 3D-point """    
+    return _P3D( self.x() , self.y() , self.z() )
+
+_P3D. asV3 = _p3_as_v3_
+_V3D. asP3 = _v3_as_p3_
 
 
 def _p3_add_ ( self , other ) :
@@ -637,8 +651,9 @@ def _p3_sub_ ( self , other ) :
         return tmp
     # POINT - POINT = VECTOR 
     elif isinstance ( other , _P3D ) :
-        tmp   = _V3D ( self.x() , self.y() , self.z() )
-        tmp  -= other
+        tmp   = _V3D (  self.x() ,  self.y() ,  self.z() )
+        ## tmp  -= other
+        tmp  -= _V3D ( other.x() , other.y() , other.z() ) 
         return tmp
     #
     return NotImplemented 
