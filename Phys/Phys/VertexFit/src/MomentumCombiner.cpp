@@ -81,7 +81,7 @@ public:
     if ( !m_transporterName.empty() )
     { m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; }
     if ( 0 == m_transporter )
-    { Warning(" Only 4-momenta sum will be used (no ParticleTransporter specified)") ; }
+    { _Warning(" Only 4-momenta sum will be used (no ParticleTransporter specified)").ignore() ; }
     //
     return StatusCode::SUCCESS ;
   }
@@ -118,9 +118,43 @@ protected:
   {
     declareInterface<IParticleCombiner> ( this ) ;
     declareProperty ( "Transporter" , m_transporterName ) ;
+    declareProperty( "PrintMyAlg",  m_printMyAlg = true , 
+                     "Print the name of ``associated'' algorithm" ) ;
   }
   /// viertuakl and protected destructor
   virtual ~MomentumCombiner() {}
+private:
+  // ============================================================================
+  // get the correct algorithm context
+  // ============================================================================
+  std::string getMyAlg() const
+  {
+    std::string myAlg = "" ;
+    if ( m_printMyAlg )
+    {
+      const IAlgContextSvc * asvc =  contextSvc();
+      const IAlgorithm *  current = ( asvc ? asvc->currentAlg() : NULL );
+      if ( current ) { myAlg = " [" + current->name() + "]" ; }
+    }
+    return myAlg ;
+  }
+  // ========================================================================
+  inline StatusCode _Warning
+  ( const std::string& msg,
+    const StatusCode&  code = StatusCode::FAILURE,
+    const size_t mx = 10 ) const
+  {
+    return Warning ( msg + getMyAlg(), code, mx );
+  }
+  // ========================================================================
+  inline StatusCode _Error
+  ( const std::string& msg,
+    const StatusCode&  code = StatusCode::FAILURE,
+    const size_t mx = 10 ) const
+  {
+    return Error ( msg + getMyAlg(), code, mx );
+  }
+  // ========================================================================
 private:
   // default constructor is disabled
   MomentumCombiner() ;
@@ -135,6 +169,8 @@ private:
   IParticleTransporter*  m_transporter     ; ///< the transporter itself
   // temporary Particle
   mutable LHCb::Particle m_tmp             ; ///< temporary particle
+  /// Option to include alg name in printout
+  bool m_printMyAlg  ; 
 } ;
 // ============================================================================
 // Declaration of the Tool Factory
@@ -184,7 +220,7 @@ StatusCode MomentumCombiner::combine
       // extrapolate it to new position
       const double zNew = mother.referencePoint().z() ;
       StatusCode sc = m_transporter->transport ( p , zNew , m_tmp ) ;
-      if ( sc.isFailure() ) { Warning ("Unable to transport the particle!", sc ) ;  }
+      if ( sc.isFailure() ) { _Warning ("Unable to transport the particle!", sc ).ignore() ;  }
       else
       {
         // use the properly transported particle
@@ -206,18 +242,18 @@ StatusCode MomentumCombiner::combine
   // transsform vector
   Gaudi::Vector4 vct
     ( - momentum.Px () , - momentum.Py () , - momentum.Pz () , momentum.E  () ) ;
-  vct /= ( fabs(mass)>0 ? mass : 1e-30 ) ; 
+  vct /= ( fabs(mass)>0 ? mass : 1e-30 ) ;
   //
   double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
   //const double massErr2 = ROOT::Math::Product( covariance , vct ) ;
   if ( massErr2 < -999 )
-  { 
-    Warning( "MassErr^2 < -999 -> Fit aborted" ).ignore(); 
+  {
+    _Warning( "MassErr^2 < -999 -> Fit aborted" ).ignore();
     sc = StatusCode::FAILURE;
   }
   if ( massErr2 < 0 )
   {
-    if ( msgLevel(MSG::DEBUG) ) 
+    if ( msgLevel(MSG::DEBUG) )
       debug() << " -> Negative MeasuredMassError^2 = " << massErr2
               << " reset to 0" << endmsg;
     massErr2 = 0;

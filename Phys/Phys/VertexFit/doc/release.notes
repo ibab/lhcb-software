@@ -7,6 +7,7 @@
 ! 2014-10-15 - Chris Jones
  - Add depreciation warnings to OfflineVertexFitter and PropertimeFitter
  - Add algorithm context names to Warnings and Errors from OfflineVertexFitter
+   and MomentumCombiner.
 
 !========================= VertexFit v6r19p1 2014-07-25 =========================
 
