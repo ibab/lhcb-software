@@ -40,6 +40,8 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
   declareProperty( "maxDeltaChi2", m_maxDeltaChi2 = 0.001);
   declareProperty( "maxDeltaZ",  m_maxDeltaZ = 1.0 * mm) ;
   declareProperty( "Transporter", m_transporterName = "ParticleTransporter:PUBLIC" );
+  declareProperty( "PrintMyAlg",  m_printMyAlg = true , 
+                   "Print the name of ``associated'' algorithm" ) ;
 
   //setProperty( "OutputLevel", 1 );
 }
@@ -66,6 +68,9 @@ StatusCode OfflineVertexFitter::initialize()
 
   partProp = m_ppSvc->find( "pi0" );
   m_pi0ID  = partProp->particleID().pid();
+
+  warning() << "OfflineVertexFitter is no longer maintained and thus depreciated." 
+            << endmsg;
 
   return sc;
 }
@@ -110,7 +115,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
     const Particle* parPointer = *iPart;
     if ( !parPointer )
     {
-      Warning( "Cannot use a NULL pointer !!" ).ignore();
+      _Warning( "Cannot use a NULL pointer !!" ).ignore();
       continue;
     }
     if ( msgLevel(MSG::VERBOSE) )
@@ -265,7 +270,7 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
   {
     if ( V.nDoF() <= 0 )
     {
-      Warning( "Particle fitted successfully but final EndVertex nDoF<=0 !!" ).ignore();
+      _Warning( "Particle fitted successfully but final EndVertex nDoF<=0 !!" ).ignore();
     }
   }
 
@@ -330,7 +335,7 @@ StatusCode OfflineVertexFitter::classify(const LHCb::Particle* part,
                                          LHCb::Particle::ConstVector& MergedPi0s,
                                          LHCb::Particle::ConstVector& PhotonPairs) const
 {
-  if ( !part ) return Warning( "Cannot classify a NULL pointer !!" );
+  if ( !part ) return _Warning( "Cannot classify a NULL pointer !!" );
 
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -1829,7 +1834,7 @@ StatusCode OfflineVertexFitter::updateParticle( LHCb::Particle& part,
   if ( measuredMassErr < -999 )
   {
     // 'Very' negative mass error, so declare fit failed ...
-    Warning( "Mass Error Squared < -999 -> Fit aborted" ).ignore();
+    _Warning( "Mass Error Squared < -999 -> Fit aborted" ).ignore();
     //sc = StatusCode::FAILURE;
   }
   if ( measuredMassErr < 0 )
@@ -2111,7 +2116,7 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
   std::array<double,5> l{ { s1.Mag2(), -s1.Dot(s2) , s2.Mag2() , -s1.Dot(delta), s2.Dot(delta) } };
   CholeskyDecomp<double, 2> decomp(l.data());
   if (!decomp)  { 
-    Warning( "parallel tracks" ).ignore();
+    _Warning( "parallel tracks" ).ignore();
     l[3]=0;l[4]=0;
   } else {
     auto bh = l.data()+3;
@@ -2138,14 +2143,14 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
 
   int pid=photon.particleID().pid();
   if ( pid != m_photonID )
-  { return Error ( "Particle is not a photon!" ) ; }
+  { return _Error ( "Particle is not a photon!" ) ; }
 
   const LHCb::ProtoParticle*   proto  = photon.proto() ;
   if( 0 == proto  )
-  { return Error( "ProtoParticle points to NULL!" ) ; }
+  { return _Error( "ProtoParticle points to NULL!" ) ; }
 
   if( proto->calo().empty() )
-  { return Error ( "ProtoParticle has no CaloHypos " ) ; }
+  { return _Error ( "ProtoParticle has no CaloHypos " ) ; }
 
   const LHCb::CaloHypo* hypo  = *( (proto->calo()).begin() );
   if(LHCb::CaloHypo::Photon != hypo->hypothesis() ) return StatusCode::FAILURE;
@@ -2153,7 +2158,7 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
   // get the position
   const CaloPosition* pos = hypo->position() ;
   if( 0 == pos    )
-  { return Error ( "CaloPosition* points to NULL! " ); }
+  { return _Error ( "CaloPosition* points to NULL! " ); }
 
   zg=pos->z();
   para(0)=pos->x();
@@ -2185,14 +2190,14 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
 
   const int pid = pi0.particleID().pid();
   if ( pid != m_pi0ID )
-  { return Error ( "Particle is not a photon!" ) ; }
+  { return _Error ( "Particle is not a photon!" ) ; }
 
   const LHCb::ProtoParticle*   proto  = pi0.proto() ;
   if ( !proto )
-  { return Error ( "ProtoParticle points to NULL!" ) ; }
+  { return _Error ( "ProtoParticle points to NULL!" ) ; }
 
   if ( proto->calo().empty() )
-  { return Error ( "ProtoParticle has no CaloHypos " ) ; }
+  { return _Error ( "ProtoParticle has no CaloHypos" ) ; }
 
   const LHCb::CaloHypo * hypo = *( ( proto->calo()).begin() );
   if ( LHCb::CaloHypo::Pi0Merged != hypo->hypothesis() ) return StatusCode::FAILURE;
@@ -2205,7 +2210,7 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
   // get the positions
   const CaloPosition* pos1 = g1->position() ;
   if ( !pos1 )
-  { return Error ( "CaloPosition* points to NULL! " ) ; }
+  { return _Error ( "CaloPosition* points to NULL!" ) ; }
 
   zg1      = pos1->z();
   para1(0) = pos1->x();
@@ -2220,7 +2225,7 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
 
   const CaloPosition* pos2 = g2->position() ;
   if ( !pos2 )
-  { return Error ( "CaloPosition* points to NULL! ") ; }
+  { return _Error ( "CaloPosition* points to NULL!" ) ; }
 
   zg2      = pos2->z();
   para2(0) = pos2->x();

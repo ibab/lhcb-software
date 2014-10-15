@@ -53,6 +53,9 @@ StatusCode PropertimeFitter::initialize()
 
   m_ppSvc = svc<LHCb::IParticlePropertySvc>("LHCb::ParticlePropertySvc");
 
+  warning() << "PropertimeFitter is no longer maintained and thus depreciated." 
+            << endmsg;
+
   return sc;
 }
 

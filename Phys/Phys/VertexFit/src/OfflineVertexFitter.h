@@ -192,6 +192,40 @@ private:
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle::ConstVector& ) const ; // add to vertex particles
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle* ) const ; // add to vertex particles
 
+  private:
+
+    // ============================================================================
+    // get the correct algorithm context 
+    // ============================================================================
+    std::string getMyAlg() const 
+    {
+      std::string myAlg = "" ;
+      if ( m_printMyAlg )
+      {
+        const IAlgContextSvc * asvc =  contextSvc();
+        const IAlgorithm *  current = ( asvc ? asvc->currentAlg() : NULL );
+        if ( current ) { myAlg = " [" + current->name() + "]" ; }
+      }
+      return myAlg ;
+    }
+    // ========================================================================
+    inline StatusCode _Warning
+    ( const std::string& msg, 
+      const StatusCode&  code = StatusCode::FAILURE,
+      const size_t mx = 10 ) const 
+    {
+      return Warning ( msg + getMyAlg(), code, mx );
+    }
+    // ========================================================================
+    inline StatusCode _Error 
+    ( const std::string& msg, 
+      const StatusCode&  code = StatusCode::FAILURE,
+      const size_t mx = 10 ) const 
+    {
+      return Error ( msg + getMyAlg(), code, mx );
+    }
+    // ========================================================================
+
 private:
 
   int m_photonID; ///< Photon particle ID
@@ -211,6 +245,9 @@ private:
   double m_maxDeltaZ;
 
   std::string m_transporterName;
+
+  /// Option to include alg name in printout
+  bool m_printMyAlg  ; 
 
 };
 

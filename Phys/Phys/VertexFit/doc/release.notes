@@ -4,6 +4,10 @@
 ! Responsible : Yuehong Xie
 !===========================================================================
 
+! 2014-10-15 - Chris Jones
+ - Add depreciation warnings to OfflineVertexFitter and PropertimeFitter
+ - Add algorithm context names to Warnings and Errors from OfflineVertexFitter
+
 !========================= VertexFit v6r19p1 2014-07-25 =========================
 
 ! 2014-07-18 - Gerhard Raven
