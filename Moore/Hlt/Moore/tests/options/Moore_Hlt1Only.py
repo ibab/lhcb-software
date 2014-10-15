@@ -7,11 +7,12 @@
 #   ../options/Moore.py
 #
 import Gaudi.Configuration
-from Moore.Configuration import Moore 
+from Moore.Configuration import Moore
 
 
 Moore().WriterRequires = [ 'Hlt1' ]
 Moore().outputFile = 'hlt1_reqhlt1.raw'
+Moore().EnableTimer = 'hlt1_timer.csv'
 
 
 #use new splitting of Hlt2
