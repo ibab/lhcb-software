@@ -17,7 +17,7 @@ std::string AlignOnlineXMLCopier::onlinefilename( FileVersion v ) const
 
 std::string AlignOnlineXMLCopier::alignfilename() const
 {
-  return m_aligndir + "/" + m_condname + "/current.xml" ;
+  return m_aligndir + "/" + m_condname + ".xml" ;
 }
 
 std::string AlignOnlineXMLCopier::aligndirname() const
@@ -71,3 +71,35 @@ StatusCode AlignOnlineXMLCopier::copyToOnlineArea() const
   return sc ;
 }
 
+
+#ifdef LATER
+namespace {
+  bool filesAreIdentical( const std::string& filename1, const std::string& filename2, size_t numlinestoskip )
+  {
+    bool identical = false ;
+    
+    std::ifstream file1(filename1.c_str()) ;
+    std::ifstream file2(filename2.c_str()) ;
+    if( file1 && file2 ) {
+
+      // compare every line, but skip the header
+      const headerlength = 5 ;
+      size_t numlines(0) ;
+      identical = true ;
+      
+      std::string line1,line2;
+      while(!file1.eof() && identical) {
+	getline(file1,line1) ;
+	getline(file2,line2) ;
+	if(!file1.eof()) {
+	  if( ++numlines > numlinestoskip ) {
+	    identical = identical && line1 == line2 ;
+	  }
+	}
+      }
+    }
+    return identical ;
+  }
+}
+
+#endif
