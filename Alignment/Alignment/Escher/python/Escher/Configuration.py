@@ -347,35 +347,35 @@ class Escher(LHCbConfigurableUser):
         rch = RunChangeHandlerSvc()
         ApplicationMgr().ExtSvc.append(rch)
         conditionmap = {
-            path + 'Velo/VeloGlobal/current.xml'  : [
+            path + 'Velo/VeloGlobal.xml'  : [
                 'Conditions/Alignment/Velo/VeloSystem',
                 'Conditions/Alignment/Velo/VeloRight',
                 'Conditions/Alignment/Velo/VeloLeft' ],
-            path + 'Velo/VeloModules/current.xml' : []
+            path + 'Velo/VeloModules.xml' : []
                      + [ 'Conditions/Alignment/Velo/Module%02d'%i for i in range(0,42) ]
                      + [ 'Conditions/Alignment/Velo/Detector%02d-%02d'%(i,(1+i/2)%2) for i in range(0,42)  ] ,
-            path + 'IT/ITGlobal/current.xml' : []
+            path + 'IT/ITGlobal.xml' : []
                      + [ 'Conditions/Alignment/IT/ITSystem' ]
                      + [ 'Conditions/Alignment/IT/ITT%d' % i for i in range(1,4) ]
                      + [ 'Conditions/Alignment/IT/ITT%d%sBox' % (i,b) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] ] ,
-            path + 'IT/ITModules/current.xml' : []
+            path + 'IT/ITModules.xml' : []
                      + [ 'Conditions/Alignment/IT/ITT%d%sLayer%s' % (i,b,l) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] ]
                      + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%d' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ] ,
         #         + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ]
         #            + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector_Sensor1' % (i,b,l,a) for i in range(1,4) for b in ['Top','Bottom','ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ]
         #            + [ 'Conditions/Alignment/IT/ITT%d%sLayer%sLadder%dSector_Sensor2' % (i,b,l,a) for i in range(1,4) for b in ['ASide','CSide' ] for l in ['X1','U','V','X2' ] for a in range(1,8) ] ,
-            path + 'OT/OTGlobal/current.xml' : []
+            path + 'OT/OTGlobal.xml' : []
                      + [ 'Conditions/Alignment/OT/OTSystem' ]
                      + [ 'Conditions/Alignment/OT/T%d' %i for i in range(1,4) ]
                      + [ 'Conditions/Alignment/OT/T%d%s' % (i,l) for i in range(1,4) for l in ['X1','U','V','X2' ] ]
                      + [ 'Conditions/Alignment/OT/T%d%sQ%d' % (i,l,q) for i in range(1,4) for l in ['X1','U','V','X2' ] for q in range(0,4) ] ,
-            path + 'OT/OTModules/current.xml' : []
+            path + 'OT/OTModules.xml' : []
                      + [ 'Conditions/Alignment/OT/T%d%sQ%dM%d' % (i,l,q,m) for i in range(1,4) for l in ['X1','U','V','X2' ] for q in range(0,4) for m in range(1,10) ] ,
-            path + 'TT/TTGlobal/current.xml' : []
+            path + 'TT/TTGlobal.xml' : []
                      + [ 'Conditions/Alignment/TT/TTSystem' ]
                      + [ 'Conditions/Alignment/TT/TT%s' % i for i in ['a','b' ] ]
                      + [ 'Conditions/Alignment/TT/TT%sLayer' % (l) for l in ['aX','aU','bV','bX' ] ],
-            path + 'TT/TTModules/current.xml' : []
+            path + 'TT/TTModules.xml' : []
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in range(1,4) for m in range(1,4)]
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['bV','bX']           for r in range(1,4) for m in range(4,6)]
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU','bV','bX'] for r in [1,3]      for m in range(6,7)]
