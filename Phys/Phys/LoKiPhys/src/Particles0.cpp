@@ -40,6 +40,10 @@
 #include "LoKi/Particles0.h"
 #include "LoKi/Child.h"
 // ============================================================================
+// VDT
+// ============================================================================
+#include "vdt/sincos.h"
+// ============================================================================
 /** @file
  *
  *  Implementation file for functions from namespace  LoKi::Particles
@@ -970,10 +974,12 @@ LoKi::Particles::TransverseMomentumRel::TransverseMomentumRel
   : LoKi::BasicFunctors<const LHCb::Particle*>::Function() 
   , m_momentum ( ) 
 {
-  m_momentum.SetXYZ 
-    ( ::sin ( theta ) * ::cos ( phi ) ,
-      ::sin ( theta ) * ::sin ( phi ) ,
-      ::cos ( theta )                 ) ;
+  double cos_theta(0), sin_theta(0), cos_phi(0), sin_phi(0);
+  vdt::fast_sincos( theta, sin_theta, cos_theta );
+  vdt::fast_sincos( phi,   sin_phi,   cos_phi   );
+  m_momentum.SetXYZ ( sin_theta * cos_phi ,
+                      sin_theta * sin_phi ,
+                      cos_theta         ) ;
 }
 // ============================================================================
 //  constructor from 3-vector 
@@ -1056,7 +1062,7 @@ double LoKi::Particles::TransverseMomentumRel::ptDir
  *            \left|p_{T}^{\prime}\right|^2 } +
  *            \left|p_{T}^{\prime}\right|, \f] 
  *  where \f$ \left|p_{T}^{\prime}\right|\f$ stands for the 
- *  transverse momentum relative to the fligth direction 
+ *  transverse momentum relative to the flight direction 
  *
  *  @param p  (INPUT) the 4-momentum
  *  @param d  (INPUT) the 3-direction 
@@ -1069,11 +1075,11 @@ double LoKi::Particles::TransverseMomentumRel::mCorrDir
 ( const LoKi::LorentzVector& p  , 
   const LoKi::ThreeVector&   d  ) const 
 {
-  //
   const double m2 = p.M2() ;
   const double pt = ptDir ( p , d ) ; 
-  //
-  return std::sqrt ( m2 + pt*pt ) + pt ;
+  // Protect against badily defined lorentz vectors
+  if ( m2 < 0 ) { Warning( "mCorrDir: M^2 < 0 !!" ); }
+  return std::sqrt ( std::max(m2,0.0) + pt*pt ) + pt ;
 }
 // ============================================================================
 //  OPTIONAL: the specific printout 
@@ -1084,7 +1090,6 @@ LoKi::Particles::TransverseMomentumRel::fillStream( std::ostream& s ) const
            << m_momentum.Theta () << ","
            << m_momentum.Phi   () <<  ")" ; }
 // ============================================================================
-
 
 
 // ============================================================================
@@ -1315,12 +1320,6 @@ LoKi::Particles::M2err2::operator()
 std::ostream& 
 LoKi::Particles::M2err2::fillStream( std::ostream& s ) const 
 { return s << "M2ERR2" ; }
-
-
-
-
-
-  
 
 
 // ============================================================================

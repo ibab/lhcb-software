@@ -5,6 +5,12 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-10-15 - Chris Jones
+ - Add protection to TransverseMomentumRel::mCorrDir against badily defined
+   Lorentz vectors that result in a negative M^2.
+ - Use VDT library for fast sin and cos calculations in TransverseMomentumRel
+   constructor from theta and phi values.
+
 !========================= LoKiPhys v10r19 2014-07-25 =========================
 
 ! 2014-07-11 - Marco Clemencic

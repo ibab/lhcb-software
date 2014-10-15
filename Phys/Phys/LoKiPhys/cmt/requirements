@@ -10,6 +10,7 @@ version           v10r19
 branches          cmt doc src dict python LoKi 
 
 # =============== dependencies ===============================================
+use               vdt               v* LCG_Interfaces
 use               PhysEvent         v* Event 
 use               LoKiCore          v* Phys 
 use               LoKiNumbers       v* Phys
