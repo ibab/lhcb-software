@@ -47,8 +47,6 @@ class Hlt1CharmLinesConf( HltLinesConfigurableUser ) :
                   "D0barMassCut = in_range( %(LowKPimass)f *MeV, RV_MASS('K+','pi-') , %(HighKPimass)f *MeV )"%props,
                   "from LoKiPhys.decorators import RV_PT",
                   "D0PtCut      = RV_PT > %(D0PT)f *MeV"%props,
-                  "from LoKiPhys.decorators import DIRA",
-                  "D0DiraCut    = DIRA > 0.98",
                  ]
 
     return preambulo
@@ -89,9 +87,6 @@ class Hlt1CharmLinesConf( HltLinesConfigurableUser ) :
     >>  D0PtCut
     >>  tee  ( monitor( TC_SIZE > 0, '# pass pT', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nD0s pass pT'  , LoKi.Monitoring.ContextSvc ) )
-    >>  D0DiraCut
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass DIRA', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nD0s pass DIRA'  , LoKi.Monitoring.ContextSvc ) )
     >>  SINK(  'Hlt1%(name)sDecision' )
     >>  ~TC_EMPTY
     """ %props
