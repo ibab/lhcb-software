@@ -21,18 +21,18 @@ def __forAll__( c, prop_value_dict, types=['FilterDesktop','CombineParticles',"D
     """
     if type(prop_value_dict) is not dict:
         raise TypeError("Hey, you need to give me a dictionary, you passed me a, "+str(type(prop_value_dict)))
-    
+
     if "*" in types or ".*" in types or c.getType() in types:
         for prop in prop_value_dict:
             if hasattr(c,prop) or (hasattr(c,"properties") and prop in c.properties()):
                 c.setProp(prop,prop_value_dict[prop])
-    
+
     #iterate/recurse over all subparts
     for p in [ 'Members','Filter0','Filter1' ] :
         if not hasattr(c,p) : continue
         seq = getattr(c,p)
         if type(seq) is not list: seq = [ seq ]
-        for i in seq : __forAll__(i,prop_value_dict,types) 
+        for i in seq : __forAll__(i,prop_value_dict,types)
 
 ### TODO: move this into HltPVs...
 def __onlinePV__():
@@ -81,7 +81,7 @@ class HltConf(LHCbConfigurableUser):
                 , 'RequireRoutingBits'             : [] # to require not lumi exclusive, set to [ 0x0, 0x4, 0x0 ]
                 , 'VetoRoutingBits'                : []
                 , 'SkipHltRawBankOnRejectedEvents' : True
-                , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))|(HLT_PASS_SUBSTR('Hlt2Lumi') & ~HLT_PASS_RE('Hlt2(?!Lumi).*Decision'))"  
+                , 'LumiBankKillerPredicate'        : "(HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision'))|(HLT_PASS_SUBSTR('Hlt2Lumi') & ~HLT_PASS_RE('Hlt2(?!Lumi).*Decision'))"
                 , 'BeetleSyncMonitorRate'          : 5000
                 , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
                                                                 # (only matters if EnablelumiEventWriting = True)
@@ -92,7 +92,7 @@ class HltConf(LHCbConfigurableUser):
                 , "PruneHltANNSvc"                    : True
                   }
 
-    __settings__ = None 
+    __settings__ = None
     #import logging
     #_log = logging.getLogger( 'HltConf.Configuration')
     #handler = logging.StreamHandler()
@@ -111,9 +111,9 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
             log.warning( '###############################################################')
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
-            decodeL0Channels( L0TCK 
+            decodeL0Channels( L0TCK
                             , skipDisabled               = self.getProp('SkipDisabledL0Channels')
-                            , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration') 
+                            , forceSingleL0Configuration = self.getProp('ForceSingleL0Configuration')
                             )
         else :
             log.warning( '##################################################################################################')
@@ -122,7 +122,7 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '## WARNING Please make sure you know what you are doing!!                                       ##' )
             log.warning( '##################################################################################################')
         from Hlt1Lines.HltL0Candidates import setupL0Channels
-        setupL0Channels() 
+        setupL0Channels()
 
 ##################################################################################
     def settings(self) :
@@ -167,10 +167,10 @@ class HltConf(LHCbConfigurableUser):
                 log.warning( '####################################################################################' )
             L0TCK = self.getProp('L0TCK')
         self.defineL0Channels( L0TCK )
-        
+
         # obtain list of lines,
         activehlt1lines,activehlt2lines=self._runHltLines()
-        # and push into the Hlt1Lines and Hlt2Lines code... 
+        # and push into the Hlt1Lines and Hlt2Lines code...
         #  (for backwards compatible behaviour, just skip the next three lines... )
         from  HltLine.HltLine import setRequestedHlt1Lines, setRequestedHlt2Lines
         setRequestedHlt1Lines( activehlt1lines )
@@ -186,8 +186,8 @@ class HltConf(LHCbConfigurableUser):
             Hlt1Conf()
             Hlt1Conf().ThresholdSettings = ThresholdSettings
             # disable the Hlt1 decoders in case Hlt1 is actually running...
-            ## TODO/FIXME: alternative: add the output location of the decoder to the VetoObjects 
-            ##             property? That can be done unconditionally, and will automatically do 
+            ## TODO/FIXME: alternative: add the output location of the decoder to the VetoObjects
+            ##             property? That can be done unconditionally, and will automatically do
             ##             the right thing!
             from DAQSys.Decoders import DecoderDB
             for n in [ "HltDecReportsDecoder/Hlt1DecReportsDecoder",
@@ -195,7 +195,7 @@ class HltConf(LHCbConfigurableUser):
                        "HltTrackReportsDecoder"] :
                 decoder = DecoderDB[n]
                 decoder.setup().Enable = False
-        
+
         #
         # dispatch Hlt2 configuration
         #
@@ -211,31 +211,31 @@ class HltConf(LHCbConfigurableUser):
             if thresClass and hasattr( thresClass, 'Hlt2DefaultVoidFilter' ) :
                 Hlt2Conf().DefaultVoidFilter = getattr( thresClass, 'Hlt2DefaultVoidFilter' )
 
-        
+
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = [ Sequence('HltDecisionSequence')
-                                   , Sequence('HltEndSequence') 
-                                   ] 
+                                   , Sequence('HltEndSequence')
+                                   ]
                        )
         if self.getProp('RequireRoutingBits') or self.getProp('VetoRoutingBits') :
             from Configurables import HltRoutingBitsFilter
             filter = HltRoutingBitsFilter( "PhysFilter" )
             if self.getProp('RequireRoutingBits') : filter.RequireMask = self.getProp('RequireRoutingBits')
-            if self.getProp('VetoRoutingBits')    : filter.VetoMask    = self.getProp('VetoRoutingBits') 
+            if self.getProp('VetoRoutingBits')    : filter.VetoMask    = self.getProp('VetoRoutingBits')
             Sequence("HltDecisionSequence").Members.insert(0,filter)
             Sequence("HltEndSequence").Members.insert(0,filter)
-        
+
 
         #fix input locations, for the moment do with a post-config action,
         #TODO: in the future set in Hlt1 and Hlt2 separately
-        
+
         #get the vertex locations required
         loc=__onlinePV__()["PV3D"]
         def __setOnlinePV__(hlt=Hlt, loc=loc):
             __forAll__(hlt, {"InputPrimaryVertices":loc})
         appendPostConfigAction(__setOnlinePV__)
 
-    
+
 ##################################################################################
     def configureRoutingBits(self) :
         """
@@ -247,8 +247,8 @@ class HltConf(LHCbConfigurableUser):
         # 32-63: reserved for Hlt1
         # 64-91: reserved for Hlt2
 
-        ### NOTE: any change in the _meaning_ of any of the following needs to be 
-        ###       communicated (at least!) with online, to insure the events are 
+        ### NOTE: any change in the _meaning_ of any of the following needs to be
+        ###       communicated (at least!) with online, to insure the events are
         ###       still properly routed!!! (this goes esp. for [32,36]!!!)
         ### NOTE: current usage:
         ###       bit 46 -> 'physics triggers'
@@ -263,7 +263,7 @@ class HltConf(LHCbConfigurableUser):
         from Configurables import HltRoutingBitsWriter
         routingBits = {  0 : '( ODIN_BXTYP == LHCb.ODIN.Beam1 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
                       ,  1 : '( ODIN_BXTYP == LHCb.ODIN.Beam2 ) | ( ODIN_BXTYP == LHCb.ODIN.BeamCrossing )'
-                      ,  3 : 'ODIN_TRUE' 
+                      ,  3 : 'ODIN_TRUE'
                       ,  4 : 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
                       ,  8 : 'L0_DECISION_PHYSICS'
                       ,  9 : "L0_CHANNEL_RE('B?gas')"
@@ -271,9 +271,9 @@ class HltConf(LHCbConfigurableUser):
                       , 11 : "|".join( [ "L0_CHANNEL('%s')" % chan for chan in [ 'Electron','Photon','Hadron','Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron,lowMult','Photon,lowMult','DiEM,lowMult','DiHadron,lowMult'] if chan in L0Channels() ] )
                       , 12 : "L0_CHANNEL('CALO')" if 'CALO' in L0Channels() else "" # note: need to take into account prescale in L0...
                       , 13 : "L0_CHANNEL( 'Hadron' )" if 'Hadron' in L0Channels() else ""
-                      , 14 : "L0_CHANNEL_RE('Electron|Photon')" 
+                      , 14 : "L0_CHANNEL_RE('Electron|Photon')"
                       , 15 : "L0_CHANNEL_RE('Muon|DiMuon')"
-                      , 16 : "L0_CHANNEL_RE('.*NoSPD')" 
+                      , 16 : "L0_CHANNEL_RE('.*NoSPD')"
                       , 17 : "L0_CHANNEL_RE('.*,lowMult')"
                       , 18 : "L0_CHANNEL('DiMuon')" if 'DiMuon' in L0Channels() else ""
                       , 32 : "HLT_PASS('Hlt1Global')"
@@ -303,6 +303,8 @@ class HltConf(LHCbConfigurableUser):
                       , 57 : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
                       , 58 : "HLT_PASS_RE('Hlt1TrackPhoton.*Decision')"
                       , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
+                      , 61 : "HLT_PASS_RE('Hlt1IncPhi.*Decision')"
+                      , 62 : "HLT_PASS_RE('Hlt1IncCharm.*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
@@ -315,33 +317,34 @@ class HltConf(LHCbConfigurableUser):
                       , 72 : "HLT_PASS_RE('Hlt2.*IncPhi.*Decision')"
                       , 73 : "HLT_PASS_RE('Hlt2.*B.*Gamma.*Decision')"
                       , 74 : "HLT_PASS_RE('Hlt2.*TriMuon.*Decision')"
-                      , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|Dst2|DisplVertices).*Decision')" 
+                      , 76 : "HLT_PASS_RE('Hlt2.*(Bu2|Bs2|Bd2|Bc2|B2HH|Dst2|DisplVertices).*Decision')"
                       , 77 : "HLT_PASS_RE('Hlt2(?!Forward)(?!DebugEvent)(?!Express)(?!Lumi)(?!Transparent)(?!PassThrough).*Decision')"
                       , 78 : "HLT_PASS_RE('Hlt2.*Muon.*Decision')"
                       , 79 : "HLT_PASS_RE('Hlt2.*(Topo|Charm|IncPhi).*Decision')"
                       , 80 : "HLT_PASS_RE('Hlt2.*Electron.*Decision')"
-                      , 81 : "HLT_PASS_RE('Hlt2Topo.*2Body.*Decision')"   
-                      , 82 : "HLT_PASS_RE('Hlt2Topo.*3Body.*Decision')"   
-                      , 83 : "HLT_PASS_RE('Hlt2Topo.*4Body.*Decision')"   
-                      , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"   
-                      , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"   
+                      , 81 : "HLT_PASS_RE('Hlt2Topo.*2Body.*Decision')"
+                      , 82 : "HLT_PASS_RE('Hlt2Topo.*3Body.*Decision')"
+                      , 83 : "HLT_PASS_RE('Hlt2Topo.*4Body.*Decision')"
+                      , 84 : "HLT_PASS_RE('Hlt2TopoMu[234]Body.*Decision')"
+                      , 85 : "HLT_PASS_RE('Hlt2TopoE[234]Body.*Decision')"
                       , 86 : "HLT_PASS_RE('Hlt2Topo[234]Body.*Decision')"
                       , 87 : "HLT_PASS_RE('Hlt2DisplVertices.*Decision')"
                       , 88 : "HLT_PASS_RE('Hlt2HighPtJets.*Decision')"
 		              , 89 : "HLT_PASS_RE('Hlt2PassThrough.*Decision')"
-                      , 90 : "HLT_PASS_RE('Hlt2.*Charm.*hhX.*Decision')"  
+                      , 90 : "HLT_PASS_RE('Hlt2.*Charm.*hhX.*Decision')"
                       , 91 : "HLT_PASS_RE('Hlt2.*Charm.*_hhX.*Decision')"
                       , 92 : "HLT_PASS_RE('Hlt2.*Charm.*_Baryon.*hhX.*Decision')"
-                      , 93 : "HLT_PASS_RE('Hlt2.*Charm.*_Lepton.*hhX.*Decision')"    
+                      , 93 : "HLT_PASS_RE('Hlt2.*Charm.*_Lepton.*hhX.*Decision')"
+                      , 94 : "HLT_PASS_RE('Hlt2.*IncHlt1Phi.*Decision')"
                          }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
         HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
 
         ## and record the settings in the ANN service
-        from Configurables       import HltANNSvc 
+        from Configurables       import HltANNSvc
         HltANNSvc().RoutingBits = dict( [ (v,k) for k,v in routingBits.iteritems() ] )
         # LoKi::Hybrid::HltFactory is what RoutingBitsWriter uses as predicate factory..
-        # make sure 'strings' is known... 
+        # make sure 'strings' is known...
         # make sure 'RATE,SCALE and SKIP' are known...
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions', 'LoKiNumbers.sources' ]
@@ -356,7 +359,7 @@ class HltConf(LHCbConfigurableUser):
         """
         ## and persist some vertices...
         from Configurables import HltVertexReportsMaker
-        vertices =[ 'PV3D', 'ProtoPV3D'  ] 
+        vertices =[ 'PV3D', 'ProtoPV3D'  ]
         selections = []
         from HltLine.HltLine     import hlt1Lines
         for i in hlt1Lines() :
@@ -366,7 +369,7 @@ class HltConf(LHCbConfigurableUser):
         #Can't do this any longer, need replacing with a smart way to get the vertex locations
         #HltVertexReportsMaker().Context = "HLT"
         HltVertexReportsMaker().PVLocation=__onlinePV__()["PV3D"]
-        ## do not write out the candidates for the vertices we store 
+        ## do not write out the candidates for the vertices we store
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
         # We are in a post-config action so Hlt2 has already been called and has set the properties
@@ -376,7 +379,7 @@ class HltConf(LHCbConfigurableUser):
         # TODO: fix locations from tracking!!!!!
         # Note : if no Hlt2 lines are run, this is meaningless since the Hlt1 muons are
         #        handled differently, so we pass some empty "default" location instead
-             
+
         from HltTracking.Hlt2TrackingConfigurations import Hlt2BiKalmanFittedForwardTracking
         Hlt2BiKalmanFittedForwardTracking = Hlt2BiKalmanFittedForwardTracking()
         # We need to get the "extra" piece of the Muon stubs location compared to the track location
@@ -389,13 +392,13 @@ class HltConf(LHCbConfigurableUser):
             HltSelReportsMaker().MuonIDSuffix = "/PID/MuonSegments"
         if tracking :
             trackLoc    = tracking.outputSelection()
-            muonStubLoc	= Hlt2BiKalmanFittedForwardTracking._trackifiedMuonIDLocation() 	 
+            muonStubLoc	= Hlt2BiKalmanFittedForwardTracking._trackifiedMuonIDLocation()
             HltSelReportsMaker().MuonIDSuffix = "/" + muonStubLoc.strip(trackLoc)
 
         veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
                , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt2/Track/Forward',
                  'TES:Hlt/Track/RZVelo',    'TES:Hlt2/Track/Velo'
-               , 'TES:Hlt/Vertex/PV3D' 
+               , 'TES:Hlt/Vertex/PV3D'
                , 'TES:Hlt/Track/MuonSegmentForL0Single'
                , 'RZVeloBW'
                ]
@@ -418,7 +421,7 @@ class HltConf(LHCbConfigurableUser):
         ###       but which have names not prefixed by the line name
         ### Make sure that the ANN Svc has everything it will need
         from HltLine.HltLine     import hlt1Selections
-        from Configurables       import HltANNSvc 
+        from Configurables       import HltANNSvc
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
         missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
         updateDict( HltANNSvc().Hlt1SelectionID, 1000, missingDecisions )
@@ -433,8 +436,8 @@ class HltConf(LHCbConfigurableUser):
             # prune all Decisions which are not members of Htl1 or Hlt2...
             def genName( c ) :
                 if type(c) != str : c = c.name()
-                return '%sDecision'%c                  
-            
+                return '%sDecision'%c
+
             hlt1decnames = [  genName(i) for i in Sequence('Hlt1').Members ]
             hlt2decnames = [  genName(i) for i in Sequence('Hlt2').Members ]
             # remove 'stale' entries
@@ -453,7 +456,7 @@ class HltConf(LHCbConfigurableUser):
         # is the number, and it first checks Hlt1SelectionID).
         overlap =  set( HltANNSvc().Hlt1SelectionID.values() ).intersection( HltANNSvc().Hlt2SelectionID.values() )
         if overlap :
-            raise RuntimeError, ' # Hlt1 and Hlt2 have overlapping ID values: %s -- this will cause problems when decoding the raw bank' % overlap 
+            raise RuntimeError, ' # Hlt1 and Hlt2 have overlapping ID values: %s -- this will cause problems when decoding the raw bank' % overlap
 
         if False :
             from HltLine.HltLine     import hlt1Lines
@@ -461,7 +464,7 @@ class HltConf(LHCbConfigurableUser):
                 print ( "checking " + i.name() )
                 decisionName = i.name() + 'Decision'
                 if decisionName in HltANNSvc().Hlt1SelectionID :
-                    id = HltANNSvc().Hlt1SelectionID[ decisionName ] 
+                    id = HltANNSvc().Hlt1SelectionID[ decisionName ]
                 else :
                     id = None
 
@@ -499,7 +502,7 @@ class HltConf(LHCbConfigurableUser):
         """
         ## and tell the monitoring what it should expect..
         # the keys are the Labels for the Histograms in the GUI
-        # the values are the Pattern Rules to for the Decisions contributing 
+        # the values are the Pattern Rules to for the Decisions contributing
         from Configurables import HltGlobalMonitor,HltL0GlobalMonitor
         HltGlobalMonitor().DecToGroupHlt1  = self.groupLines( [ i.decision() for i in lines1 ],
                                 [ ("L0"         , "Hlt1L0.*Decision"),
@@ -533,10 +536,10 @@ class HltConf(LHCbConfigurableUser):
                                  )
 
         # don't look for things that won't be there...
-        if not lines1 : 
+        if not lines1 :
             HltGlobalMonitor().Hlt1DecReports = ""
             HltL0GlobalMonitor().Hlt1DecReports = ""
-        if not lines2 : 
+        if not lines2 :
             HltGlobalMonitor().Hlt2DecReports = ""
             HltL0GlobalMonitor().Hlt2DecReports = ""
         # Configure vertex monitoring
@@ -551,7 +554,7 @@ class HltConf(LHCbConfigurableUser):
                 for i in x : _recurse(i,fun)
 
         def _enableMonitoring(c) :
-            if c.getType() in ['FilterDesktop','CombineParticles' ] : 
+            if c.getType() in ['FilterDesktop','CombineParticles' ] :
                 c.Monitor = True
                 c.HistoProduce = True
 
@@ -562,13 +565,13 @@ class HltConf(LHCbConfigurableUser):
                 if not hasattr(c,p) : continue
                 x = getattr(c,p)
                 if list is not type(x) : x = [ x ]
-                for i in x : _disableHistograms(i,filter) 
+                for i in x : _disableHistograms(i,filter)
         from HltLine.HltLine     import hlt1Lines, hlt2Lines
-        if   self.getProp('HistogrammingLevel') == 'None' : 
+        if   self.getProp('HistogrammingLevel') == 'None' :
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable() )
-        elif self.getProp('HistogrammingLevel') == 'Line' : 
-            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='Hlt::Line' ) 
-        elif self.getProp('HistogrammingLevel') == 'NotLine' : 
+        elif self.getProp('HistogrammingLevel') == 'Line' :
+            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='Hlt::Line' )
+        elif self.getProp('HistogrammingLevel') == 'NotLine' :
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='Hlt::Line' )
         if self.getProp('EnableMonitoring') :
             for i in hlt1Lines()+hlt2Lines() : _recurse( i.configurable(),_enableMonitoring )
@@ -577,7 +580,7 @@ class HltConf(LHCbConfigurableUser):
 ##################################################################################
     def _runHltLines(self):
         from HltLine.HltLine     import hlt2Lines
-        
+
         activeHlt1Lines = []
         activeHlt2Lines = []
         sets = self.settings()
@@ -587,7 +590,7 @@ class HltConf(LHCbConfigurableUser):
         else :
             activeHlt1Lines = [ i.name() for i in hlt1Lines() ]
             activeHlt2Lines = [ i.name() for i in hlt2Lines() ]
-        
+
         activeHlt1Lines.extend( self.getProp('AdditionalHlt1Lines')  )
         activeHlt2Lines.extend( self.getProp('AdditionalHlt2Lines')  )
 
@@ -599,7 +602,7 @@ class HltConf(LHCbConfigurableUser):
         def unique( s ) :
             u = []
             for x in s:
-               if x not in u: 
+               if x not in u:
                     u.append(x)
                else :
                     log.warning('Duplicate entry in requested list of lines: %s; please fix ' % x  )
@@ -615,8 +618,8 @@ class HltConf(LHCbConfigurableUser):
                 raise KeyError("invalid value for property 'Split': %s -- must be either 'Hlt1', or 'Hlt2', or ''." % self.getProp('Split'))
 
         return activeHlt1Lines, activeHlt2Lines
-    
-    def postConfigAction(self) : 
+
+    def postConfigAction(self) :
         """
         Add the configured lines into the Hlt1 and Hlt2 sequencers,
         provided there is no reason not to do so...
@@ -627,20 +630,20 @@ class HltConf(LHCbConfigurableUser):
         from HltLine.HltLine     import hlt2Lines
         activeHlt1Lines, activeHlt2Lines = self._runHltLines()
 
-        print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
-        # print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
+        print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines
+        # print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ]
         awol1 = set( activeHlt1Lines ) - set( [ i.name() for i in hlt1Lines() ] )
         if awol1 : log.fatal(' # some requested Hlt1 lines are absent : %s ' % awol1 )
 
-        print '# List of requested Hlt2Lines : %s ' % activeHlt2Lines 
-        # print '# List of available Hlt2Lines : %s ' % [ i.name() for i in hlt2Lines() ] 
+        print '# List of requested Hlt2Lines : %s ' % activeHlt2Lines
+        # print '# List of available Hlt2Lines : %s ' % [ i.name() for i in hlt2Lines() ]
         awol2 = set( activeHlt2Lines ) - set( [ i.name() for i in hlt2Lines() ] )
         if awol2 : log.fatal(' # some requested Hlt2 lines are absent : %s ' % awol2 )
 
         if awol1 or awol2 :
             raise RuntimeError, ' # some requested lines are absent;\n Hlt1: %s\n Hlt2: %s' % ( awol1 , awol2 )
 
-        
+
         lines1 = [ i for i in hlt1Lines() if  i.name() in activeHlt1Lines ]
         log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines()) )
         log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) )
@@ -648,27 +651,27 @@ class HltConf(LHCbConfigurableUser):
         Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ]
 
         # for i in hlt2Lines() : print '# active line :', i.name(), ' found :', i.name() in activeHlt2Lines
-        
+
         lines2 = [ i for i in hlt2Lines() if i.name() in activeHlt2Lines  ]
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
         log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
         log.info( '# List of configured Hlt2Lines not added to Hlt2 : ' + str(set(hlt2Lines())-set(lines2)) )
-        Sequence('Hlt2').Members += [ i.configurable() for i in lines2 ] 
+        Sequence('Hlt2').Members += [ i.configurable() for i in lines2 ]
 
         # switch on timing limit / accept if slow
         for i in hlt1Lines() :
-                i.configurable().AcceptIfSlow = self.getProp('EnableAcceptIfSlow') 
+                i.configurable().AcceptIfSlow = self.getProp('EnableAcceptIfSlow')
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt1Threshold')
         for i in hlt2Lines() :
                 i.configurable().AcceptIfSlow =  self.getProp('EnableAcceptIfSlow')
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt2Threshold')
-        
+
         self.configureHltMonitoring(lines1, lines2)
         self.configureVertexPersistence( [ i.name() for i in lines1 ] ) # TODO: add lines2...
         self.configureANNSelections()
 
-        if self.getProp("Verbose") : print Sequence('Hlt') 
-         
+        if self.getProp("Verbose") : print Sequence('Hlt')
+
 ##################################################################################
 #
 # end sequence
@@ -684,7 +687,7 @@ class HltConf(LHCbConfigurableUser):
             return False
         self.setProp(option, newVal)
         return True
-    
+
     def endSequence(self):
         """
         define end sequence (persistence + monitoring)
@@ -711,13 +714,13 @@ class HltConf(LHCbConfigurableUser):
             for option in ['EnableHltGlobalMonitor','EnableHltL0GlobalMonitor','EnableBeetleSyncMonitor','EnableHltSelReports','EnableHltVtxReports', 'EnableHltTrkReports','EnableLumiEventWriting']:
                 self._safeSet(option, (option in strip))
 
-        
+
         activehlt1lines,activehlt2lines=self._runHltLines()
-        
+
         # switch on TrackReports in a split scenario in Hlt1
         if activehlt1lines and not activehlt2lines :
             self._safeSet( "EnableHltTrkReports", True)
-            
+
 
         # Setup the beetle sync sequence
         BeetleMonitorAccept = Sequence( 'BeetleSyncMonitorAcceptSequence' )
@@ -767,29 +770,29 @@ class HltConf(LHCbConfigurableUser):
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1, 'InputHltSelReportsLocation': hlt1_selrep_loc } )
                          , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {})
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt_vtxrep_loc } )
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc 
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc
                                                                                                         ,'SourceID' : 1 } )
                          )
-        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc, 
+        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
                                                                                                         'Hlt2DecReportsLocation' : hlt2_decrep_loc,
-                                                                                                        'UpdateExistingRawBank'  : True} ) 
-                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'InputHltDecReportsLocation' : hlt2_decrep_loc } ) 
+                                                                                                        'UpdateExistingRawBank'  : True} )
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'InputHltDecReportsLocation' : hlt2_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
                                                                                                            OutputHltSelReportsLocation = hlt2_selrep_loc,
                                                                                                            **sel_rep_opts  ) )
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter', { 'InputHltSelReportsLocation': hlt2_selrep_loc,
                                                                                                        'SourceID' : 2 } )
                          )
-    
+
         # make sure we only instantiate members which are used...
-        instantiate = lambda name, cfg : Sequence( name, 
-                                                   IgnoreFilterPassed = True, 
+        instantiate = lambda name, cfg : Sequence( name,
+                                                   IgnoreFilterPassed = True,
                                                    Members = [ tp( nm, **props ) for (gate,tp,nm,props) in cfg if self.getProp(gate) ]  )
         End           = instantiate( 'HltEndSequence',_endlist )
         Hlt1PostAmble = instantiate( 'Hlt1Postamble',_hlt1postamble )
         Hlt2PostAmble = instantiate( 'Hlt2Postamble',_hlt2postamble )
-        
-            
+
+
         if (self.getProp("EnableLumiEventWriting")) :
             if sets and hasattr(sets, 'NanoBanks') :
                 if not self.isPropertySet('NanoBanks') :
@@ -798,14 +801,14 @@ class HltConf(LHCbConfigurableUser):
                     log.warning('Setting %s requested NanoBanks = %s, but also explicitly set; using %s.' % (sets.HltType(), sets.NanoBanks, self.getProp('NanoBanks')))
             if self.isPropertySet('NanoBanks') :
                     log.warning('Using non-default NanoBanks = %s.' % (self.getProp('NanoBanks')))
-                
+
             from DAQSys.Decoders import DecoderDB
             decoder = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"]
             End.Members += [ HltLumiWriter()
-                           , Sequence( 'LumiStripper' , Members = 
+                           , Sequence( 'LumiStripper' , Members =
                                        [ decoder.setup()
                                        , HltFilter('LumiStripperFilter', Code = self.getProp('LumiBankKillerPredicate'), Location = decoder.listOutputs()[0])
-                                       , Prescale('LumiStripperPrescaler', AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
+                                       , Prescale('LumiStripperPrescaler', AcceptFraction=self.getProp('LumiBankKillerAcceptFraction'))
                                        , bankKiller('LumiStripperBankKiller', BankTypes=self.getProp('NanoBanks'),  DefaultIsKill=True )
                                        ] )
                            ]
@@ -826,11 +829,11 @@ class HltConf(LHCbConfigurableUser):
         import GaudiKernel.ProcessJobOptions
         GaudiKernel.ProcessJobOptions.PrintOff()
         import HltConf.HltInit  # make sure ANN numbers are assigned...
-        
+
         self.confType()
         self.endSequence()
         self.configureRoutingBits()
 
         #appendPostConfigAction( self.postConfigAction )
         GaudiKernel.Configurable.postConfigActions.insert( 0,  self.postConfigAction )
-        
+
