@@ -39,6 +39,7 @@ DecayTree* SF_DtoV1P0_V1toV2P1_V2toP2P3::_exampleDecay=0;
 DecayTree* SF_DtoAP0_AtoVP1_VtoP2P3::_exampleDecay=0;
 DecayTree* SF_DtoAP0_AtoVP1Dwave_VtoP2P3::_exampleDecayD=0;
 
+DecayTree* SF_DtoVP0_VtoP1P2P3::_exampleDecay=0;
 
 // ============================================================
 
@@ -1052,6 +1053,89 @@ void SF_DtoAP0_AtoVP1Dwave_VtoP2P3::printYourself(ostream& os) const{
      << "\n      like this:" << endl;
   this->printParsing(os);
 }
+
+//=========================================================
+// SF_DtoVP0_VtoP1P2P3
+
+bool SF_DtoVP0_VtoP1P2P3::parseTree(){
+  //  bool debugThis=false;
+  if(fsPS.size() < 4) fsPS.reserve(4);
+  for(int i=0; i< theDecay().nDgtr(); i++){
+    const_counted_ptr<AssociatedDecayTree> dgtr= theDecay().getDgtrTreePtr(i);
+    if     (dgtr->getVal().SVPAT() == "P" &&   dgtr->isFinalState()) fsPS[0] = dgtr;
+    else if(dgtr->getVal().SVPAT() == "V" && ! dgtr->isFinalState()) V = dgtr;
+  }
+  if(0==V || 0==fsPS[0]){
+    cout << "ERROR in SF_DtoVP0_VtoP1P2P3::parseTree"
+	 << " Didn't find V or P0 " << V.get() << ", " << fsPS[0].get() << endl;
+    return false;
+  }
+  if(V->nDgtr() != 3){
+    cout << "ERROR in SF_DtoVP0_VtoP1P2P3::parseTree"
+	 << " V should have 3 daughters, but it says it has "
+	 << V->nDgtr() << "."
+	 << endl;
+    return false;
+  }
+  fsPS[1] = V->getDgtrTreePtr(0);
+  fsPS[2] = V->getDgtrTreePtr(1);
+  fsPS[3] = V->getDgtrTreePtr(2);
+  //normalOrder(fsPS[1], fsPS[2], fsPS[3]); // doesn't matter anyway
+
+  // this->printYourself();
+  return true;
+}
+
+const DecayTree& SF_DtoVP0_VtoP1P2P3::getExampleDecay(){
+  if(0==_exampleDecay){
+    _exampleDecay = new DecayTree(421);
+    // remark: addDgtr always returns a pointer to the
+    // last daughter that was added, thus allowing these
+    // chains:
+    _exampleDecay->addDgtr(310, 223)->addDgtr(211, -211, 111); // V
+  }
+  return *_exampleDecay; // this example is not necessarily physical.
+}
+
+const DecayTree& SF_DtoVP0_VtoP1P2P3::exampleDecay(){
+  return getExampleDecay();
+}
+
+double SF_DtoVP0_VtoP1P2P3::getVal(){
+  const bool debugThis = false;
+
+  if( debugThis ){
+    std::cout << name() << std::endl;
+      //<< "generated with " << _onShell << std::endl;
+    std::cout << p(0) << std::endl;
+    std::cout << p(1) << std::endl;
+    std::cout << p(2) << std::endl;
+    std::cout << p(3) << std::endl;
+  }
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) parseTree();
+
+  // NB: Off-shell makes no difference here
+  const TLorentzVector pP0 = p(0);
+  const TLorentzVector pP1 = p(1);
+  const TLorentzVector pP2 = p(2);
+  const TLorentzVector pP3 = p(3);
+
+  const double units = GeV*GeV*GeV*GeV;
+
+  return LeviCivita(pP0, pP1, pP2, pP3)/units;
+}
+
+void SF_DtoVP0_VtoP1P2P3::printYourself(ostream& os) const{
+  //  bool debugThis = false;
+
+  if(! ( fsPS[0] && fsPS[1] && fsPS[2] && fsPS[3]) ) return;
+  os << "spin factor SF_DtoVP0_VtoP1P2P3"
+     << "\n\t return: LeviCivita(pP0, pP1, pP2, pP3)/ / GeV^4"
+     << "\n\t    parsed tree " << theDecay().oneLiner()
+     << "\n      like this:" << endl;
+  this->printParsing(os);
+}
+
 //=========================================================
 //
 //

@@ -456,9 +456,47 @@ public:
 
 // ==========================================
 
+/**
+   SF_DtoVP0_VtoP1P2P3
+   <V P0 |A| D> = P0^a epsV*_a
+   <P1 P2 P3 |A| V> = i epsV_b P1_c P2_d P3_e eps^bcde
+   i is by convention
+   SF = i P0^a [epsV*_a epsV_b] P1_c P2_d P3_e eps^bcde
+*/
+class SF_DtoVP0_VtoP1P2P3 : public SpinFactor{
+ protected:
+  static DecayTree* _exampleDecay;
+  MINT::const_counted_ptr<AssociatedDecayTree> V;// *P1, *P2, *P3, *P4;
+
+  virtual bool parseTree();
+
+ public:
+  virtual void printYourself(std::ostream& os=std::cout) const;
+  SF_DtoVP0_VtoP1P2P3( IDalitzEventAccess* events,
+		       const DecayTree& theDecay )
+    : SpinFactor(events, theDecay, 4)
+    , V(0)
+    {
+      if( ! parseTree()){
+	throw "error in parseTree in constructor of SF_DtoVS_VtoP0P1_StoP2P3";
+      }
+      //      printYourself();
+    }
+
+  virtual ~SF_DtoVP0_VtoP1P2P3(){}
+  virtual double getVal();
+
+  static const DecayTree& getExampleDecay();
+  virtual const DecayTree& exampleDecay();
+  virtual std::string name() const{
+    return "SpinFactor4:SF_DtoVP0_VtoP1P2P3(" 
+      + theDecay().oneLiner() + ")";
+  }
+};
 
 // ==========================================
 
+// ==========================================
 // -----------------------------------------------
 
 

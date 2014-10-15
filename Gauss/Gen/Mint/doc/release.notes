@@ -6,6 +6,9 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+! 2014-10-15 - Jeremy
+ - Added spin factor for wKs added
+
 !=========================== Mint v3r1 2014-09-02 ============================
 ! 2014-07-24 - Jeremy
  - Minor bug fixes
