@@ -4,7 +4,6 @@
 
 #include <cassert>
 
-using namespace std;
 using Gaudi::Math::MD5;
 
 unsigned char unhex(unsigned char C) {
@@ -26,7 +25,7 @@ unsigned int unhex(const std::string& val) {
 
 void
 ConfigTreeNodeAlias::invalidate(const std::string& reason) {
-    if (!reason.empty()) cerr << reason << endl;
+    if (!reason.empty()) std::cerr << reason << std::endl;
     m_ref = digest_type::createInvalid();
     m_alias = std::string();
 }
@@ -64,8 +63,8 @@ ConfigTreeNodeAlias::ConfigTreeNodeAlias(const digest_type& ref, const alias_typ
 }
 
 std::string ConfigTreeNodeAlias::alias_type::major() const {
-    string::size_type i = m_alias.find('/');
-    assert(i!=string::npos);
+    std::string::size_type i = m_alias.find('/');
+    assert(i!=std::string::npos);
     return m_alias.substr(0,i);
 }
 
@@ -82,11 +81,11 @@ std::istream& ConfigTreeNodeAlias::alias_type::read(std::istream& os) {
     return os >> m_alias;
 }
 
-istream& ConfigTreeNodeAlias::read(istream& is) {
+std::istream& ConfigTreeNodeAlias::read(std::istream& is) {
     static boost::regex ref("^Ref: ([a-fA-F0-9]{32})$"),
                         alias("^Alias: (.*)$");
-    while (istream::traits_type::not_eof( is.peek()) ) {
-        string s; getline(is,s);
+    while (std::istream::traits_type::not_eof( is.peek()) ) {
+        std::string s; getline(is,s);
         boost::smatch what;
         if (boost::regex_match(s,what,ref))   m_ref   = digest_type::createFromStringRep(what[1]);
         if (boost::regex_match(s,what,alias)) m_alias = what[1];
@@ -96,9 +95,9 @@ istream& ConfigTreeNodeAlias::read(istream& is) {
     return is;
 }
 
-ostream& ConfigTreeNodeAlias::print(ostream& os) const {
+std::ostream& ConfigTreeNodeAlias::print(std::ostream& os) const {
     return os << "Ref: "   << ref() << "\n"
-              << "Alias: " << alias().str()  << endl;
+              << "Alias: " << alias().str()  << std::endl;
 }
 
 std::ostream& operator<<(std::ostream& os, const ConfigTreeNodeAlias& x) { return x.print(os); }

@@ -34,29 +34,29 @@ void read_custom(std::istream& is, ptree& top) {
                         nodeend("^\\]$");
     std::string s;
     boost::smatch what;
-    ptree& nodes = top.put_child(ptree::path_type("Nodes"),ptree());
+    ptree& nodes = top.put_child(ptree::path_type("Nodes"),ptree{});
     while (std::istream::traits_type::not_eof( is.peek()) ) {
         getline(is,s);
-        if (s.empty()) break;
+        if (s.empty()) continue;
         if (parsing_nodes)  {
             if (boost::regex_match(s,what,nodeend) ) { 
                 parsing_nodes = false;
             } else if (boost::regex_match(s,what,node) ) { 
-                nodes.push_back(ptree::value_type(std::string(),ptree(what[1].str())));
+                nodes.push_back(std::make_pair(std::string{},ptree{what[1].str()}));
             } else {
                 std::cerr << "ConfigTreeNode: read_custom: parsing error while looking for nodes!!! : [" << s << "]" << std::endl;
-                top = ptree() ; return;
+                top = ptree{} ; return;
             }
         } else {
             if (boost::regex_match(s,what,leaf) ) {
-                top.put(ptree::path_type("Leaf"), what[1].str() );
+                top.put("Leaf", what[1].str() );
             } else if (boost::regex_match(s,what,nodestart) ) {
                 parsing_nodes = true;
             } else if (boost::regex_match(s,what,label) ) {
-                top.put(ptree::path_type("Label"),what[1].str());
+                top.put("Label",what[1].str());
             } else {
                 std::cerr << "ConfigTreeNode: read_custom: parsing error!!! : [" << s << "]" << std::endl;
-                top = ptree() ; return;
+                top = ptree{} ; return;
             }
         }
     }
@@ -66,7 +66,7 @@ struct MD5Translator {
     typedef std::string                  internal_type;
     typedef ConfigTreeNode::digest_type  external_type;
     boost::optional<external_type> get_value( internal_type const & v) 
-    {  return external_type::createFromStringRep(v); }
+    { return external_type::createFromStringRep(v); }
     boost::optional<internal_type> put_value( external_type const & v) 
     { return v.str(); }
 };
@@ -95,11 +95,13 @@ std::istream& ConfigTreeNode::read(std::istream& is) {
         m_leaf = digest_type::createInvalid();
         m_digest = digest_type::createInvalid();
     } else {
-        m_label = top.get<std::string>("Label"); // add default: empty string (most nodes have no label)
-        m_leaf =  top.get<digest_type>("Leaf");  // add default: digest_type::createInvalid() (top level has no leaf)
-        m_nodes.clear();
-        const ptree& nodes = top.get_child("Nodes");
-        for (ptree::const_iterator i=nodes.begin(); i!=nodes.end();++i) m_nodes.push_back( i->second.get_value<ConfigTreeNode::digest_type>() );
+        m_label = top.get<std::string>("Label",std::string()); // add default: empty string (most nodes have no label)
+        m_leaf  = top.get<digest_type>("Leaf",digest_type::createInvalid());  // add default: digest_type::createInvalid() (top level has no leaf)
+        const ptree& nodes = top.get_child("Nodes", ptree{});
+        m_nodes.clear(); m_nodes.reserve( nodes.size() );
+        std::transform( std::begin(nodes), std::end(nodes), 
+                        std::back_inserter(m_nodes),
+                        []( const ptree::value_type& i ) { return i.second.get_value<ConfigTreeNode::digest_type>() ; } );
     }
     return is;
 }
@@ -120,7 +122,23 @@ std::string ConfigTreeNode::str() const {
 }
 
 std::ostream& ConfigTreeNode::print(std::ostream& os) const {
-    return os << str() << std::endl;
+    return os << str();
+}
+
+// for now, do not make this the default....
+std::ostream& ConfigTreeNode::print_json(std::ostream& os) const {
+    // note: advantage of json (or xml): in case of hash collision, can add an optional extra field...
+    // ...but that only works if the json representation is used to compute the digest!!!
+    ptree top;
+    if (!label().empty()) top.put("Label",label());
+    if (leaf().valid())   top.put("Leaf",leaf().str());
+    if (!nodes().empty()) {
+        std::transform( std::begin(nodes()), std::end(nodes()),
+                        std::back_inserter(top.put_child("Nodes",ptree{})),
+                        []( const NodeRef& i ) { return std::make_pair(std::string(),ptree{ i.str() }); }  );
+    }
+    write_json(os,top,false);
+    return os;
 }
 
 std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os); }

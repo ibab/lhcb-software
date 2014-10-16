@@ -12,8 +12,9 @@ void PropertyConfig::initProperties(const IProperty& obj) {
     const auto& items = obj.getProperties();
     std::for_each( std::begin(items), std::end(items), [&]( const Property *i ) {
         // FIXME: check for duplicates!!!
-        // FIXME: remove the erasing of all newlines when switching to json or xml...
+        // FIXME: remove the erasing of all newlines when switching print to json or xml...
         m_properties.emplace_back(i->name(),boost::algorithm::erase_all_copy(i->toString(), "\n"));
+        // m_properties.emplace_back(i->name(),i->toString()); 
         // verify that toString / fromString are each others inverse...
         // WARNING: this does not guarantee that we don't loose information -- toString may be lossy!!!!
         std::unique_ptr<Property> clone( i->clone() );
@@ -71,11 +72,11 @@ void read_custom(std::istream& is, ptree& top) {
                         topitem("^(Name|Type|Kind): (.*)$");
     boost::smatch what;
     std::string s;
-    ptree& props = top.put_child("Properties",ptree());
+    ptree& props = top.put_child("Properties",ptree{});
     while (std::istream::traits_type::not_eof( is.peek()) ) {
         getline(is,s);
-        if (s.empty()) break;
-        if (parsing_properties)  {
+        if (s.empty()) continue;
+        if (parsing_properties) {
             if (boost::regex_match(s,what,property) ) {
                 // props.put(what[1].str(),what[2].str());
                 // use add instead of put as Gaudi allows multiple properties with 
@@ -92,7 +93,9 @@ void read_custom(std::istream& is, ptree& top) {
             } else if (boost::regex_match(s,what,propstart) ) { 
                 assert(props.empty());
                 parsing_properties = true;
-            } else { std::cerr << "parsing error!!! : [" << s << "]" << std::endl; }
+            } else { 
+                std::cerr << "parsing error!!! : [" << s << "]" << std::endl; 
+            }
         }
     }
 }
@@ -123,6 +126,7 @@ std::istream& PropertyConfig::read(std::istream& is) {
 std::string PropertyConfig::str() const {
     // this is the 'original' canonical representation that MUST be used to compute the hash....
     // (unless we 'convert' & 're-index' the already written data to any new format)
+    // as a result, do NOT change the result of this function!!!
     std::string out; out.reserve(128);
     out +=  "Name: "; out += name(); out += '\n';
     out +=  "Kind: "; out += kind(); out += '\n';
@@ -137,10 +141,10 @@ std::string PropertyConfig::str() const {
 }
 
 std::ostream& PropertyConfig::print(std::ostream& os) const {
-    return os << str() << std::endl;
+    return os << str();
 }
 
-// for now, do not make this the default....
+// REMINDER: when switching 'print' to json, remove the erasing of all newlines in initProperties
 std::ostream& PropertyConfig::print_json(std::ostream& os) const {
     // note: advantage of json (or xml): in case of hash collision, can add an optional extra field...
     // but that only works if the json representation is used to compute the digest!!!
@@ -148,10 +152,10 @@ std::ostream& PropertyConfig::print_json(std::ostream& os) const {
     top.put("Name",name());
     top.put("Kind",kind());
     top.put("Type",type());
-    ptree& props = top.put_child("Properties",ptree());
-    std::for_each( std::begin(m_properties), std::end(m_properties),
-                   [&props]( const Prop& i ) { props.put(i.first,i.second); } );
-    write_json(os,top);
+    std::transform( std::begin(properties()), std::end(properties()),
+                    std::back_inserter(top.put_child("Properties",ptree{})),
+                    []( const Prop& i ) { return std::make_pair(i.first,ptree{i.second}); } );
+    write_json(os,top,false);
     return os;
 }
 

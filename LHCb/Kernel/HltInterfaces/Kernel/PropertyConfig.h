@@ -3,7 +3,6 @@
 #include <string>
 #include <vector>
 #include <iostream>
-#include "boost/optional.hpp"
 #include "boost/operators.hpp"
 #include "GaudiKernel/System.h"
 #include "GaudiKernel/INamedInterface.h"
@@ -76,7 +75,6 @@ public:
     template <typename T>
     PropertyConfig copyAndModify(T begin, T end) const { PropertyConfig ret(*this); while (begin!=end) ret=ret.copyAndModify(*begin++); return ret;}
 
-    std::ostream& print_json(std::ostream& os) const;
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
 
@@ -84,6 +82,7 @@ public:
 
 private:
     std::string str() const;
+    std::ostream& print_json(std::ostream& os) const;
 
     Properties   m_properties;
     std::string  m_type,m_name,m_kind;

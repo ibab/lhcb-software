@@ -82,6 +82,8 @@ public:
 
 private:
     std::string str() const;
+    std::ostream& print_json(std::ostream& os) const;
+
     NodeRefs    m_nodes;
     LeafRef     m_leaf;
     std::string m_label;
