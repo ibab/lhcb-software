@@ -1,6 +1,8 @@
 2014-10-16 Ben Couturier  <Ben.Couturier@cern.ch>
 
-        * python/LbLegacy/install_project.py: LBCORE-644 Make sue the GENSER tar file is extracted in teh correct location
+        * cmt/requirements: release of version v6r1
+        * python/LbLegacy/install_project.py:  release of LbScripts version v8r1
+        * python/LbLegacy/install_project.py: LBCORE-644 Make sure the GENSER tar file is extracted in the correct location
 
 2014-06-30  Marco Clemencic <Marco.Clemencic@cern.ch>
 
