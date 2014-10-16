@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-10-16 - Marco Clemencic
+ - Fixed issue with Python dictionary and ROOT 6.02.01 (autoparsing on enums not implemented)
+
 ! 2014-08-25 - Pieter David
  - Updated definition of Velo phi hits vector size variable, and added IRelatedInfoTool for it
  - Include MNF in JetID variables

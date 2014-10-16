@@ -3,6 +3,10 @@ Common definitions of a list of PF/jet functions to make the configuration more 
 """
 from GaudiPython.Bindings import loaddict
 loaddict("JetAccessoriesDict")
+# FIXME: (MCl) workaround for ROOT issue with autoparse of enums.
+import cppyy
+if not hasattr(cppyy.gbl.LHCb, 'ParticleFlowType'):
+    cppyy.gbl.gROOT.ProcessLine('#include "Kernel/JetEnums.h"')
 from LoKiCore.decorators import LHCb
 from LoKiCore.math import max
 from LoKiPhys.decorators import INFO
