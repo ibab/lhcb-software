@@ -1,5 +1,5 @@
 # =============================================================================
-# @file Hlt2InclusiveHlt1PhiLines.py
+# @file Hlt2InclusivePhiRun2Lines.py
 # @author Matthew Kenzie (matthew.william.kenzie@cern.ch)
 # based on Magnus Lieng (magnus.lieng@cern.ch)
 #          Kim Vervink (Kim.Vervink@cern.ch)
@@ -17,7 +17,7 @@ and Kim Vervink.
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
-class Hlt2InclusiveHlt1PhiLinesConf(HltLinesConfigurableUser) :
+class Hlt2InclusivePhiRun2LinesConf(HltLinesConfigurableUser) :
     __slots__ = {  'KaonPT'             : 800      # MeV
                   ,'KaonIPS'            : 6        # dimensionless
                   ,'TrackChi2DOF'       : 5        # dimensionless
@@ -33,14 +33,14 @@ class Hlt2InclusiveHlt1PhiLinesConf(HltLinesConfigurableUser) :
                   # TOS
                   ,'TisTosParticleTaggerSpecs': { "Hlt1IncPhi.*Decision%TOS":0 }
                   # Pre-/Post-scales
-                  ,'Prescale'           : {'Hlt2IncHlt1Phi'           : 1.0
-                                          ,'Hlt2IncHlt1PhiSidebands'  : 0.1
+                  ,'Prescale'           : {'Hlt2IncPhiRun2'           : 1.0
+                                          ,'Hlt2IncPhiRun2Sidebands'  : 0.1
                                           }
-                  ,'Postscale'          : {'Hlt2IncHlt1Phi'           : 1.0
-                                          ,'Hlt2IncHlt1PhiSidebands'  : 1.0
+                  ,'Postscale'          : {'Hlt2IncPhiRun2'           : 1.0
+                                          ,'Hlt2IncPhiRun2Sidebands'  : 1.0
                                           }
-                  ,'HltANNSvcID'        : {'IncHlt1Phi'           : 50004
-                                          ,'IncHlt1PhiSidebands'  : 50005
+                  ,'HltANNSvcID'        : {'IncPhiRun2'           : 50004
+                                          ,'IncPhiRun2Sidebands'  : 50005
                                           }
                   }
 
@@ -54,28 +54,28 @@ class Hlt2InclusiveHlt1PhiLinesConf(HltLinesConfigurableUser) :
         ############################################################################
         #    Filter Kaons
         ############################################################################
-        kaonsRich = self.__filterTracks('IncHlt1PhiKaonsRich', [BiKalmanFittedRichKaons], ['(PIDK>%(KaonRichPID)s)'])
+        kaonsRich = self.__filterTracks('IncPhiRun2KaonsRich', [BiKalmanFittedRichKaons], ['(PIDK>%(KaonRichPID)s)'])
 
         ############################################################################
         #    Create wide mass Phi combination
         ############################################################################
-        widePhiRich = self.__combine('IncHlt1PhiWideRich', [kaonsRich])
+        widePhiRich = self.__combine('IncPhiRun2WideRich', [kaonsRich])
 
         ############################################################################
         #    TOS
         ############################################################################
-        widePhiRichTOS = self.__filterHlt1TOS('IncHlt1PhiWideRichTOS', widePhiRich)
+        widePhiRichTOS = self.__filterHlt1TOS('IncPhiRun2WideRichTOS', widePhiRich)
 
         ############################################################################
         #    Add tight mass cuts
         ############################################################################
-        tightPhiRich = self.__tightenMass('IncHlt1PhiTightRich', [widePhiRichTOS])
+        tightPhiRich = self.__tightenMass('IncPhiRun2TightRich', [widePhiRichTOS])
 
         ############################################################################
         #    Make lines
         ############################################################################
-        incPhiLine = self.__makeLine('IncHlt1Phi', algos=[tightPhiRich])
-        incPhiSBLine = self.__makeLine('IncHlt1PhiSidebands', algos=[widePhiRichTOS])
+        incPhiLine = self.__makeLine('IncPhiRun2', algos=[tightPhiRich])
+        incPhiSBLine = self.__makeLine('IncPhiRun2Sidebands', algos=[widePhiRichTOS])
 
     def __makeLine(self, name, algos):
         # Prepend GEC to the algo list
@@ -168,7 +168,7 @@ class Hlt2InclusiveHlt1PhiLinesConf(HltLinesConfigurableUser) :
             filtCode = "CONTAINS('"+tracks.outputSelection()+"') < %(GEC_NTRACK_MAX)s" % self.getProps()
         # }
 
-        KillTooManyTracksAlg = VoidFilter('Hlt2IncHlt1PhiKillTooManyTracksAlg', Code=filtCode)
+        KillTooManyTracksAlg = VoidFilter('Hlt2IncPhiRun2KillTooManyTracksAlg', Code=filtCode)
         Hlt2CharmKillTooManyInTrk = bindMembers(None, [tracks, KillTooManyTracksAlg])
         return Hlt2CharmKillTooManyInTrk
 
