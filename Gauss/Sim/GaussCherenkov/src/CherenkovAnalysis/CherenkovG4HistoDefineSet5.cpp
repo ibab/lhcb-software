@@ -72,9 +72,18 @@ void CherenkovG4HistoDefineSet5::bookCherenkovG4HistogramsSet5()
  m_hXYHitLocationRich1Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"361",
                                              title,1000,-900.0,900.0,1000,-900.0,900.0);
 
+  title="XY Location of Rich1 Gas MaPMT hits on PMT Plane";
+ m_hXYHitLocationRich1GasA=CurHistoSvc->book(m_RichG4HistoPathSet5+"3361",
+                                             title,1000,-900.0,900.0,1000,-900.0,900.0);
+
  title="XY Location of Rich1 Gas PMT hits on PMT Plane with binary readout";
 
  m_hXYHitLocationRich1GasNoDuplicate=CurHistoSvc->book(m_RichG4HistoPathSet5+"362",
+                                             title,1000,-900.0,900.0,1000,-900.0,900.0);
+
+ title="XY Location of Rich1 Gas MaPMT hits on PMT Plane with binary readout";
+
+ m_hXYHitLocationRich1GasNoDuplicateA=CurHistoSvc->book(m_RichG4HistoPathSet5+"3362",
                                              title,1000,-900.0,900.0,1000,-900.0,900.0);
 
   title="XY Location of Rich1 Gas PMT hits on PMT Lens Plane";

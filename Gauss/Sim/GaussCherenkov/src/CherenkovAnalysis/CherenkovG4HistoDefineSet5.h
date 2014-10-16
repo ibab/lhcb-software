@@ -37,11 +37,13 @@ private:
   IHistogram1D*        m_NumTotHitRich2NoScintAll;
   
   IHistogram2D*        m_hXYHitLocationRich1Gas;
+  IHistogram2D*        m_hXYHitLocationRich1GasA;
   IHistogram2D*        m_hXYHitLocationLensRich1Gas;
   IHistogram2D*        m_hXYHitLocationRich2Gas;
   IHistogram2D*        m_hXYHitLocationNoScintRich2Gas;
 
   IHistogram2D*        m_hXYHitLocationRich1GasNoDuplicate;
+  IHistogram2D*        m_hXYHitLocationRich1GasNoDuplicateA;
   IHistogram2D*        m_hXYHitLocationRich2GasNoDuplicate;
 
   IHistogram1D*   m_hPmtOccpRich1;

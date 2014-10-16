@@ -5,6 +5,9 @@
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
 
+2014-10-15 - Sajan Easo
+ - Minor change in the histogram filling for Rich1 occupancy histogram during analysis
+
 !===================== GaussCherenkov v4r4 2014-10-08 ========================
 ! 2014-10-07 - Sajan Easo
  - Minor modifications to the Cherenkov analysis in booking and filling 
