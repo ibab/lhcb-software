@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- New functionality
+  . Add support for LDST
+
 - Changes to references to reflect changes since v47r1
   . Change to hit classes to facilitate exploitation of hit-level parallelism in
     chi^2 fits (PrKernel, TfKernel, PrPixel)
@@ -13,9 +16,14 @@ Purpose: LHCb reconstruction program
   . New calorimeter calibration in cond-20141007 (DDDB)
   . use new SIMDChi2Fit framework in PatSeeding (PatAlgorithm)
 
+- Bug fixes
+  . Properly propagate OutputLevel to GlobalRecoChecks configurable (was not
+    happening due to typo in Configuration.py)
+
 - Changes to QMTests
   . In BrunelExclusions.py: future proof upgrade tests against change in FTDet
     initialisation printout. Can be removed once we are on LHCb v38r3 stack
+  . brunel.sim08 test now outputs LDST format
 
 </PRE><H1><A NAME=v47r1>2014-09-15 Brunel v47r1</A></H1><PRE>
 This version uses projects LHCb v38r1, Lbcom v16r0p1,

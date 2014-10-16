@@ -551,7 +551,7 @@ class Brunel(LHCbConfigurableUser):
         Set up output stream
         """
         
-        if dstType in [ "XDST", "DST", "SDST" ]:
+        if dstType in [ "XDST", "DST", "SDST", "LDST" ]:
             writerName = "DstWriter"
             packType  = self.getProp( "PackType" )
 
@@ -578,7 +578,7 @@ class Brunel(LHCbConfigurableUser):
                 # Allow multiple files open at once (SIM,DST,DIGI etc.)
                 IODataManager().AgeLimit += 1
 
-            if dstType in ["SDST","DST","XDST"] and packType not in ["MDF"]:
+            if dstType in ["SDST","DST","XDST","LDST"] and packType not in ["MDF"]:
                 jseq=GaudiSequencer("RawEventSplitSeq")
                 #################################
                 # Split the Raw Event for the DST
@@ -828,14 +828,14 @@ class Brunel(LHCbConfigurableUser):
 
             if "PROTO" in checkSeq :
                 from Configurables import GaudiSequencer
-                self.setOtherProps(GlobalRecoChecks(),["OutputType"])
+                self.setOtherProps(GlobalRecoChecks(),["OutputLevel"])
                 exSeq = GaudiSequencer("ExpertProtoMoni")
                 GaudiSequencer("CheckPROTOSeq").Members += [exSeq]
                 GlobalRecoChecks().Sequencer = exSeq
                 
 
     def _isReprocessing(self, inputType):
-        return inputType in [ "XDST", "DST", "SDST" ]
+        return inputType in [ "XDST", "DST", "SDST", "LDST" ]
 
     def _configureDBSnapshot(self):
         """

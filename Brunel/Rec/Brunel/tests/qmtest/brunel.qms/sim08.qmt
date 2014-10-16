@@ -15,6 +15,7 @@ from Brunel.Configuration import *
 Brunel().Monitors = ["SC","FPE"]
 Brunel().WithMC=True
 Brunel().InputType = "DIGI"
+Brunel().OutputType = "LDST"
 Brunel().DataType="2012"</text></argument>
   <argument name="reference"><text>../refs/sim08.ref</text></argument>
   <argument name="validator"><text>
