@@ -1,3 +1,7 @@
+2014-10-16  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbRelease/CMTNativeTools.py: Fixed type in log statement
+
 2014-10-12  Ben Couturier <Ben.Couturier@cern.ch>
 
 	Added command to prepare GENSER tarball from LCG RPMs

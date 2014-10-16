@@ -47,7 +47,7 @@ def get_macro_value(cmtdir, macro, extratags):
     if cmtdir != None:
         os.chdir(cmtdir)
     cmd = ["cmt", extratags, "show", "macro_value", macro]
-    __log__.debug("get_macro_value - Running: ", " ".join(cmd))
+    __log__.debug("get_macro_value - Running: " + " ".join(cmd))
     # Invoking popen to run the command, result is on stdout first line
     p = Popen(" ".join(cmd), stdout=PIPE, stderr=PIPE, shell=True)
     line = p.stdout.readline()[:-1]
