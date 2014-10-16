@@ -1,3 +1,7 @@
+2014-10-12  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r1
+
 2014-10-16  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbRelease/CMTNativeTools.py: Fixed type in log statement
