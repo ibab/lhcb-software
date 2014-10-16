@@ -1,8 +1,11 @@
 !------------------------------------------------------------------------------
 !Package: RecConf
-!Package Coordinator: Rob Lambert
+!Package Coordinator: Marco Cattaneo
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
+
+! 2014-10-16 - Marco Cattaneo
+ - Remove obsolete RDST special case
 
 !========================= RecConf v2r18 2014-09-08 =========================
 ! 2014-07-24 - Marco Cattaneo

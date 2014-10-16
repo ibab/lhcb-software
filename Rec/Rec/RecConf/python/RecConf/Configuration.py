@@ -49,7 +49,7 @@ class RecSysConf(LHCbConfigurableUser):
        ,"Detectors"    : ['Velo','TT','IT','OT','Rich','Tr','Calo','Muon','L0']
        ,"Histograms"   : "OfflineFull" # Type of histograms
        ,"Context"      : "Offline"     # The context within which to run the reco sequences
-       ,"OutputType"   : ""            # some sequences are different for RDST
+       ,"OutputType"   : ""            # DST type, not used for now, propagated to TrackSys
        ,"DataType"     : ""            # Type of data, propagated from application
        ,"OutputLevel"  : INFO          # The printout level to use
        ,"Simulation"   : False         # Simulated data
@@ -98,12 +98,6 @@ class RecSysConf(LHCbConfigurableUser):
                 from PatPV import PVConf
                 PVConf.StandardPV().configureAlg()
             GaudiSequencer("RecoVertexSeq").Members += [ pvAlg ];
-            if self.getProp( "OutputType" ).upper() == "RDST":
-                # Velo tracks not copied to Rec/Track/Best for RDST 
-                from Configurables import PVOfflineTool
-                pvAlg.addTool( PVOfflineTool() )
-                pvAlg.PVOfflineTool.InputTracks = [ "Rec/Track/Best",
-                                                    "Rec/Track/PreparedVelo" ]
             trackV0Finder = TrackV0Finder()
             GaudiSequencer("RecoVertexSeq").Members += [ trackV0Finder ]
 
@@ -411,8 +405,6 @@ class RecMoniConf(LHCbConfigurableUser):
             seq.Members += [ ChargedProtoParticleMoni("ChargedProtoPMoni"),
                              ANNGlobalPID__ChargedProtoANNPIDMoni("ChargedProtoANNPIDMoni") ]
             if self.expertHistos() and not self.getProp("CheckEnabled") :
-                # next line does not work, as OutputType is not a slot of RecMoniConf
-                #self.setOtherProps(GlobalRecoChecks(),["OutputType"]) 
                 exSeq = GaudiSequencer("ExpertProtoMoni")
                 seq.Members += [exSeq]
                 GlobalRecoChecks().Sequencer = exSeq
