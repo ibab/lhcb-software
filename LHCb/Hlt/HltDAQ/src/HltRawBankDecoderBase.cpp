@@ -21,9 +21,6 @@ HltRawBankDecoderBase::HltRawBankDecoderBase( const std::string& name, ISvcLocat
   declareProperty("SourceID", m_sourceID= HltRawBankDecoderBase::kSourceID_Dummy );  
 }
 
-HltRawBankDecoderBase::~HltRawBankDecoderBase() 
-{}
-
 StatusCode HltRawBankDecoderBase::initialize() 
 {
     StatusCode sc = Decoder::AlgBase::initialize(); // must be executed first

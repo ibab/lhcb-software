@@ -1,7 +1,6 @@
 // $Id: HltRoutingBitsFilter.cpp,v 1.5 2010-04-07 16:59:08 jpalac Exp $
 // Include files 
 #include <vector>
-#include "boost/assign/list_of.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -15,9 +14,9 @@
 class HltRoutingBitsFilter : public Decoder::AlgBase {
 public: 
   HltRoutingBitsFilter( const std::string& name, ISvcLocator* pSvcLocator );
-  virtual ~HltRoutingBitsFilter( ); ///< Destructor
-  virtual StatusCode initialize();    ///< Algorithm initialisation
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  ~HltRoutingBitsFilter() override = default; ///< Destructor
+  StatusCode initialize() override;    ///< Algorithm initialisation
+  StatusCode execute   () override;    ///< Algorithm execution
 private:
   std::vector<unsigned int> m_r,m_v;
   
@@ -51,11 +50,6 @@ HltRoutingBitsFilter::HltRoutingBitsFilter( const std::string& name,
   
 
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltRoutingBitsFilter::~HltRoutingBitsFilter() {
-} 
 
 //=============================================================================
 // Initialisation

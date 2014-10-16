@@ -15,7 +15,7 @@
 class HltRawBankDecoderBase : public Decoder::AlgBase {
 public:
     HltRawBankDecoderBase( const std::string& name, ISvcLocator* pSvcLocator);
-    ~HltRawBankDecoderBase() override;
+    ~HltRawBankDecoderBase() override = default;
     StatusCode initialize() override;
 
     std::vector<const LHCb::RawBank*> selectRawBanks( LHCb::RawBank::BankType ) const;

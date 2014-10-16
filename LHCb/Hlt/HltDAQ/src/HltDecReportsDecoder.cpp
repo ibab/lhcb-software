@@ -70,8 +70,6 @@ HltDecReportsDecoder::HltDecReportsDecoder( const std::string& name,
   declareProperty("OutputHltDecReportsLocation",
                   m_outputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);
 }
-HltDecReportsDecoder::~HltDecReportsDecoder( )  
-{}
 //=============================================================================
 // Main execution
 //=============================================================================

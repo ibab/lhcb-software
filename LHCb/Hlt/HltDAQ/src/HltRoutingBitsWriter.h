@@ -25,10 +25,10 @@ public:
   /// Standard constructor
   HltRoutingBitsWriter( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltRoutingBitsWriter( ); ///< Destructor
+  ~HltRoutingBitsWriter( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 private:
   StatusCode decode();
 

@@ -42,10 +42,6 @@ HltDecReportsWriter::HltDecReportsWriter( const std::string& name,
     m_sourceID= kSourceID_Dummy );  
 
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltDecReportsWriter::~HltDecReportsWriter() {} 
 
 //=============================================================================
 // Initialization

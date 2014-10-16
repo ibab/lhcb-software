@@ -26,15 +26,13 @@ public:
   /// Standard constructor
   HltRawDataMonitor( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltRawDataMonitor( ); ///< Destructor
+  ~HltRawDataMonitor( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
+  StatusCode finalize  () override;    ///< Algorithm finalization
 
-  static float floatFromInt(unsigned int i);
-  
-protected:
+private:
 
   /// location of input
   std::string m_inputRawEventLocation;
@@ -70,17 +68,17 @@ private:
 
   // lots of different sorts of histograms are declared here
   // call/book histograms here
-  AIDA::IHistogram1D*                                                         m_bankSize;
-  AIDA::IHistogram1D*                                                         m_hitSize;
-  AIDA::IHistogram1D*                                                         m_objtypSize;
-  AIDA::IHistogram1D*                                                         m_substrSize;
-  AIDA::IHistogram1D*                                                         m_stdinfoSize;
-  AIDA::IHistogram1D*                                                         m_extinfoSize;
+  AIDA::IHistogram1D*                                                         m_bankSize = 0;
+  AIDA::IHistogram1D*                                                         m_hitSize = 0;
+  AIDA::IHistogram1D*                                                         m_objtypSize = 0;
+  AIDA::IHistogram1D*                                                         m_substrSize = 0;
+  AIDA::IHistogram1D*                                                         m_stdinfoSize = 0;
+  AIDA::IHistogram1D*                                                         m_extinfoSize = 0;
 
   std::vector<std::pair<std::string, AIDA::IHistogram1D*> >                   m_hltSelNameList;
   std::vector< HltSortedSelName >                                             m_hltRankedSelName;
 
-  unsigned int                                                                m_event;
+  unsigned int                                                                m_event = 0;
 
 };
 #endif // HLTRAWDATAMONITOR_H

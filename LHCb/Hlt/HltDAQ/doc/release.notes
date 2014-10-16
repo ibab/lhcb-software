@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-10-16 - Gerhard Raven
+ - replace 'virtual' qualification on member functions of derived classes with 'override'
+ - when classes have a trivial d'tor, replace explicit implementation with '=default'
+
 !========================= HltDAQ v4r8 2014-09-30 =========================
 
 ! 2014-09-26 - Alex Shires

@@ -37,10 +37,10 @@ public:
   /// Standard constructor
   HltVertexReportsWriter( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltVertexReportsWriter( ); ///< Destructor
+  ~HltVertexReportsWriter( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 private:
 

@@ -19,7 +19,7 @@ public:
   /// Standard constructor
   HltDecReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
 
-  ~HltDecReportsDecoder() override ; ///< Destructor
+  ~HltDecReportsDecoder() override = default ; ///< Destructor
   StatusCode execute() override;    ///< Algorithm execution
 
 private:

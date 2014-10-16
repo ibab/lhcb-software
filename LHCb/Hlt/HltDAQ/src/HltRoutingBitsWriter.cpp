@@ -125,12 +125,6 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   declareProperty("UpdateExistingRawBank",m_updateBank = false);
 
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltRoutingBitsWriter::~HltRoutingBitsWriter() {
-} 
-
 
 //=============================================================================
 // update handlers

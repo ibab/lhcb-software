@@ -56,10 +56,6 @@ HltVertexReportsWriter::HltVertexReportsWriter( const std::string& name,
   m_hltANNSvc = 0;
 
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltVertexReportsWriter::~HltVertexReportsWriter() {} 
 
 //=============================================================================
 // Initialization

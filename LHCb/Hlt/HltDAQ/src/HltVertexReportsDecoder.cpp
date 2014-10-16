@@ -41,11 +41,6 @@ HltVertexReportsDecoder::HltVertexReportsDecoder( const std::string& name,
   declareProperty("OutputHltVertexReportsLocation",
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltVertexReportsDecoder::~HltVertexReportsDecoder() {} 
-
 
 //=============================================================================
 // Main execution

@@ -53,24 +53,12 @@ HltRawDataMonitor::HltRawDataMonitor( const std::string& name,
   // <0 never 0=at finalize >0 event frequency
   declareProperty("DiagnosticsFrequency",  m_diagnosticsFrequency = 0);
 
-  m_bankSize        =     0;
-  m_hitSize         =     0;
-  m_objtypSize      =     0;
-  m_substrSize      =     0;
-  m_stdinfoSize     =     0;
-  m_extinfoSize     =     0;
-  m_event           =     0;
-
   declareProperty("SourceID",
 		  m_sourceID= HltSelReportsWriter::kSourceID_Hlt );  
 
 
 }
 
-//=============================================================================
-// Destructor
-//=============================================================================
-HltRawDataMonitor::~HltRawDataMonitor() {} 
 
 //=============================================================================
 // Initialization
@@ -86,13 +74,12 @@ StatusCode HltRawDataMonitor::initialize() {
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
 
-
-  m_bankSize                 = book(100, "Size of HltSelReports Raw Bank (kB)", 0., 5., 500); 
-  m_hitSize                  = book(200, "Size of hits sub-bank in HltSelReports (kB)", 0., 5., 500);
-  m_objtypSize               = book(300, "Size of object-type sub-bank in HltSelReports (kB)", 0., 5., 500);
-  m_substrSize               = book(400, "Size of substructure sub-bank in HltSelReports (kB)", 0., 5., 500);
-  m_stdinfoSize              = book(500, "Size of Standard-Info sub-bank in HltSelReports (kB)", 0., 5., 500);
-  m_extinfoSize              = book(600, "Size of Extra-Info sub-bank in HltSelreports (kB)", 0., 5., 500);
+  m_bankSize    = book(100, "Size of HltSelReports Raw Bank (kB)", 0., 5., 500); 
+  m_hitSize     = book(200, "Size of hits sub-bank in HltSelReports (kB)", 0., 5., 500);
+  m_objtypSize  = book(300, "Size of object-type sub-bank in HltSelReports (kB)", 0., 5., 500);
+  m_substrSize  = book(400, "Size of substructure sub-bank in HltSelReports (kB)", 0., 5., 500);
+  m_stdinfoSize = book(500, "Size of Standard-Info sub-bank in HltSelReports (kB)", 0., 5., 500);
+  m_extinfoSize = book(600, "Size of Extra-Info sub-bank in HltSelreports (kB)", 0., 5., 500);
 
   return StatusCode::SUCCESS;
 }

@@ -46,12 +46,6 @@ HltTrackReportsWriter::HltTrackReportsWriter( const std::string& name,
     declareProperty( "OutputRawEventLocation",
                      m_outputRawEventLocation = LHCb::RawEventLocation::Default );
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltTrackReportsWriter::~HltTrackReportsWriter()
-{
-}
 
 //=============================================================================
 // Initialization
