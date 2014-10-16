@@ -3,6 +3,10 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+! 2014-10-16 - Marco Cattaneo
+ - Add LDST to DstConf. New simulation DST type, same as DST but with Boole
+   linkers added (links from digits to MCParticles)
+
 !========================= GaudiConf v19r5 2014-10-14 =========================
 ! 2014-09-29 - Chris Jones
  - Add FMDST to list of known file extensions in IOHelper.

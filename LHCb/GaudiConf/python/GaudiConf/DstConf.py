@@ -39,7 +39,7 @@ class DstConf(LHCbConfigurableUser):
          }
 
     _propertyDocDct = {
-        'DstType'         : """ Type of dst, can be ['DST','XDST','MDST'] """
+        'DstType'         : """ Type of dst, can be ['DST','XDST','MDST', 'LDST' ] """
        ,'SimType'         : """ Type of simulation output, can be ['None','Minimal','Full'] """
        ,'EnableUnpack'    : """ List of DST container types to be set up for on demand unpacking. See KnownUnpackingTypes """
        ,'EnablePackingChecks' : """ Flag to turn on the running of various unpacking checks, to test the quality of the data packing """
@@ -62,7 +62,7 @@ class DstConf(LHCbConfigurableUser):
         ]
 
     KnownSimTypes       = ['None','Minimal','Full']
-    KnownDstTypes       = ['NONE','DST','XDST','SDST','MDST']
+    KnownDstTypes       = ['NONE','DST','XDST','SDST','MDST', 'LDST']
     KnownPackTypes      = ['NONE','TES','MDF']
     KnownUnpackingTypes = ["Reconstruction","Stripping","Tracking"]
 
@@ -189,6 +189,7 @@ class DstConf(LHCbConfigurableUser):
                         # Add the MCHits (from Gauss) and links to them (from Boole)
                         SimConf().addSubDetSimInfo(writer)
                         DigiConf().addMCHitLinks(writer)
+                    if dType in ["XDST", "LDST"]:
                         # Links from Digits to MCParticles
                         DigiConf().addMCParticleLinks(writer)
 
