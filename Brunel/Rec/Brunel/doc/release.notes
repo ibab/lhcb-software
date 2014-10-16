@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v47r2>2014-09-17 Brunel v47r2</A></H1><PRE>
+This version uses projects LHCb v38r2, Lbcom v16r1, Rec v17r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - New functionality
   . Add support for LDST
 
