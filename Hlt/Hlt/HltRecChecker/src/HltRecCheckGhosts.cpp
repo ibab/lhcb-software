@@ -4,7 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
-#include "boost/foreach.hpp"
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
 #include "HltBase/HltSelection.h"
@@ -148,13 +147,13 @@ StatusCode HltRecCheckGhosts::execute() {
   Tuple m_ghostTuple = nTuple("GhostTuple");
 
   if (msgLevel(MSG::DEBUG)) debug() << "Printing out the tracks in input container" << endmsg;
-  BOOST_FOREACH( const LHCb::Track* tT, *tracks) {
+  for( const LHCb::Track* tT: *tracks) {
     verbose() << tT << endmsg;
   }
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to loop over the selected tracks" << endmsg;
 
-  BOOST_FOREACH( const LHCb::Track* ghostTrack, *tracks) {
+  for( const LHCb::Track* ghostTrack: *tracks) {
 
     LHCb::GhostTrackInfo ghostInfoLong;    
 
