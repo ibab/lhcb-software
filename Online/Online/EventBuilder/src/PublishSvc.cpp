@@ -144,8 +144,10 @@ void PublishSvc::updateItem(const std::string &name)
 }
 void PublishSvc::updateAll()
 {
+  PublishSvc::ITEM *itm;
   for (ItemMap::iterator i = m_items.begin();i!=m_items.end();i++)
   {
-    i->second->m_srvc->updateService();
+    itm = i->second;
+    updateItem(itm->item_name);
   }
 }
