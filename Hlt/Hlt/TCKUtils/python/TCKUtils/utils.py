@@ -1,6 +1,7 @@
 import GaudiPython
-from Gaudi.Configuration import*
-from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigZipFileAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigTreeEditor, PropertyConfigSvc
+from Gaudi.Configuration import *
+from Configurables import ConfigStackAccessSvc, ConfigDBAccessSvc, ConfigZipFileAccessSvc, ConfigTarFileAccessSvc, ConfigFileAccessSvc, ConfigCDBAccessSvc
+from Configurables import ConfigTreeEditor, PropertyConfigSvc
 
 # pick the default config access svc
 from Configurables import ConfigTarFileAccessSvc as ConfigAccessSvc
