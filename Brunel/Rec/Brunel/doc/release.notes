@@ -13,6 +13,10 @@ Purpose: LHCb reconstruction program
   . New calorimeter calibration in cond-20141007 (DDDB)
   . use new SIMDChi2Fit framework in PatSeeding (PatAlgorithm)
 
+- Changes to QMTests
+  . In BrunelExclusions.py: future proof upgrade tests against change in FTDet
+    initialisation printout. Can be removed once we are on LHCb v38r3 stack
+
 </PRE><H1><A NAME=v47r1>2014-09-15 Brunel v47r1</A></H1><PRE>
 This version uses projects LHCb v38r1, Lbcom v16r0p1,
  Rec v17r1 and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
