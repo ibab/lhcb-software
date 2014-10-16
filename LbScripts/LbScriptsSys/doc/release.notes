@@ -1,3 +1,63 @@
+2014-10-16 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r1
+
+	LbConfiguration
+	* lb-run: fixed issue with malformed variables when using SetupProject compatibility
+	* lb-run: added --list option
+	* lb-dev: minor improvement to messages
+	* lb-dev: use shared toolchain.cmake from LbUtils
+	* SetupProject: case insensitive handling of version 'HEAD' (LHCBSCRIPTS-82)
+	* python/LbConfiguration/Package.py: Added package Gen/PGunsData (LBCORE-542)
+
+	LbRelease
+	Added command to prepare GENSER tarball from LCG RPMs
+	* python/LbRelease/LbYum
+	* python/LbRelease/LbYum/DependencyManager.py
+	* python/LbRelease/LbYum/LCGConfig.py
+	* python/LbRelease/LbYum/__init__.py
+	* python/LbRelease/LbYum/LbInstall.py
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGYumInstaller.py
+	* python/LbRelease/LCGRpmExtractor.py
+	* scripts/mkMCGentarFromRPM
+
+	* scripts/mkLCGCMTTarFromRPM: Fixed to ignore packages taken from
+	/usr like uuid
+
+	LBCORE-591: Added read-only interface to the SOftConfDB to be 
+	exported by the XMLRPC server.
+	* python/LbRelease/SoftConfDB/ROInterface.py
+
+	* LbRelease.LHCbDoc: fixed LBCORE-593
+	* getpack: use shared toolchain.cmake from LbUtils when checking out projects
+
+	LBCORE-572: Add option to disable SVN check when loading Packages
+	* python/LbRelease/SoftConfDB/DatapkgImporter.py
+	* python/LbRelease/SoftConfDB/LbSdbImportDatapkgFromInstallArea.py
+
+	LBCORE-570: Adding suport for data packages in Software Configuration DB
+	* scripts/lb-sdb-adddatapkg
+	* scripts/lb-sdb-importinstallara-datapkg
+	* python/LbRelease/SoftConfDB/LbSdbImportDatapkgFromInstallArea.py
+	* python/LbRelease/SoftConfDB/DatapkgImporter.py
+	* python/LbRelease/SoftConfDB/LbSdbQuery.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
+	* python/LbRelease/LCGRpmExtractor.py: Fix for release of LCG 69
+
+	LbLegacy
+	* python/LbLegacy/install_project.py:  release of LbScripts version v8r1
+	* python/LbLegacy/install_project.py: LBCORE-644 Make sure the GENSER tar file is extracted 
+	in the correct location
+	* python/LbLegacy/vol_for_releases.py: minor clean-up/refactoring
+
+
+	LbUtils
+	* cmake: updated CMake support modules
+	* scripts: fixed compiler wrapper for clang and added links for gcc 4.8.1 and clang 3.4
+	* data/toolchain.cmake: added generic (shared) toolchain file for CMake projects
+
 2014-06-24 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r0p1
