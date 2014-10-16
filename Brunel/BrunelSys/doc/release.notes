@@ -4,7 +4,40 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
 
-</PRE><H1><A NAME=v47r1>2014-09-12 Brunel v47r1</A></H1><PRE>
+</PRE><H1><A NAME=v47r2>2014-10-17 Brunel v47r2</A></H1><PRE>
+This version uses projects:
+ LCG_69 (ROOT 5.34.21), Gaudi v25r4, LHCb v38r2, Lbcom v16r1, Rec v17r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality
+  . Add support for LDST (Brunel, GaudiConf v19r5
+
+- New physics tuning
+  . New calorimeter calibration in cond-20141007 (DDDB v1r73)
+
+- Performance improvements
+  . Change to hit classes to facilitate exploitation of hit-level parallelism in
+    chi^2 fits (PrKernel v1r5, TfKernel v2r27, PrPixel v1r10)
+  . Introduce SIMDChi2Fit, a fully customisable chi^2 track fit that can exploit
+    the parallelism inherent in simultaneously working on several hits using 
+    autovectorisation in selected bits of code. Now used in PatSeeding. Does not
+    change performance but opens door to future optimisations
+    (TfKernel v2r27, PatAlgorithms v4r26)
+  . Many optimisation improvements to PatForward (PatAlgorithms v4r26)
+  . Take advantage of C++11 in OTHitCreator -- according to callgrind, this
+    results in a 10% relative CPU gain (TfTools v1r19)
+
+- Bug fixes
+  . Properly propagate OutputLevel to GlobalRecoChecks configurable (was not
+    happening due to typo in Configuration.py)
+
+- Changes to QMTests
+  . In BrunelExclusions.py: future proof upgrade tests against change in FTDet
+    initialisation printout. Can be removed once we are on LHCb v38r3 stack
+  . brunel.sim08 test now outputs LDST format
+
+
+</PRE><H1><A NAME=v47r1>2014-09-30 Brunel v47r1</A></H1><PRE>
 This version uses projects:
  LCG 69root6 (ROOT 6.00/01), Gaudi v25r3, LHCb v38r1, Lbcom v16r0p1, Rec v17r1
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
@@ -38,6 +71,8 @@ This version uses projects:
   . Several improvements to PrDownstream (PrAlgorithms v1r14)
   . NeutralProtoPAlg : Change default value to +1 for IsPhoton when variable is
     not evaluated (i.e. pt<2GeV hence not merged) (GlobalReco v6r49)
+  . Configuration.py : decrease MergedPi0Pt threshold from 2 GeV to 1.5 GeV
+    (CaloReco v5r21p1)
 
 - Performance improvements
   . Vectorization of PrPixelTrack::fit and PrPixelTrack::covariance, conversion
@@ -56,6 +91,8 @@ This version uses projects:
   . Make TrackVelodEdxCharge capable of running on tracks without measurements
     (TrackTools v5r4)
   . Fix untested StatusCode in LbAppInit.cpp (LHCbKernel v15r4)
+  . CaloMergedPi0 : fix bug that affect sub-seed definition in some
+    configurations (CaloReco v5r21p1)
 
 - Changes to QMTests
   . Added repro2012reco14skiptracking, tests Brunel().SkipTracking functionality
