@@ -21,10 +21,10 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '140624'
+script_version = '141016'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v8r0p1"
+lbscripts_version = "v8r1"
 compat_version = None
 line_size = 120
 #-----------------------------------------------------------------------------------
@@ -1556,19 +1556,34 @@ def getProjectTar(tar_list, already_present_list=None):
         if not isInstalled(fname) or overwrite_mode :
             log.debug(fname)
             if tar_list[fname] == "source":
+                getFile(url_dist + 'source/', fname)
                 if fname.find('LCGCMT') != -1 or fname.find('LCGGrid') != -1 or fname.find('LCGGanga') != -1:
                     checkWriteAccess(os.path.join(this_lcg_dir, '..'))
                     os.chdir(os.path.join(this_lcg_dir, '..'))
                     soft_type = "LCG"
                 elif fname.find('GENSER') != -1:
-                    checkWriteAccess(this_lcg_dir)
-                    os.chdir(this_lcg_dir)
+                    # Special case for GENSER. "Classic" tars are to be extracted in
+                    # ${SITEROOT}/lcg/external, whereas new style installs contain
+                    # the top directory which is "releases" anyway, as specified by LCG
+                    # Unfortunately, we have no way to know, except by opening the tar
+                    # and checking whether the top dir is "releases" or not.
+                    # We need to more to the RPM install ASAP
+                    # BC 2014/10/15
+                    hasTopDir = tarContainsTopDir(os.path.join(this_targz_dir, fname))
+                    if hasTopDir:
+                        log.warning("GENSER tar has top dir")
+                        topdir = os.path.join(this_lcg_dir, '..')
+                        checkWriteAccess(topdir)
+                        os.chdir(topdir)
+                    else:
+                        checkWriteAccess(this_lcg_dir)
+                        os.chdir(this_lcg_dir)
                     soft_type = "LCG"
                 else:
                     checkWriteAccess(this_contrib_dir)
                     os.chdir(this_contrib_dir)
                     soft_type = "Contrib"
-                getFile(url_dist + 'source/', fname)
+                
             elif tar_list[fname] == "system":
                 log.info("Obsolete package %s will not be installed. The Compat project is replacing it" % fname)
                 continue
@@ -2795,6 +2810,28 @@ def checkMySiteRoot():
             os.environ["VO_LHCB_SW_DIR"] = mysite_parent
         else :
             log.debug("Impossible to set VO_LHCB_SW_DIR")
+
+def tarContainsTopDir(tarName):
+    """ Util function to see  if a tar file contains the release directory """
+    log = logging.getLogger()
+    import tarfile
+    retval = False
+    try:
+        tar = tarfile.open(tarName, "r")
+        m = tar.next()
+        if m != None:
+            topDirs = [ "external", "app", "releases" ]
+            for d in topDirs:
+                if m.name.startswith(d):
+                    log.debug("Tarfile name %s starts with %s" % (m.name, d))
+                    retval = True
+                    break
+        tar.close()
+    except:
+        pass
+    log.debug("Checkin if tar %s has topdir: %s" % (tarName, retval))
+    return retval
+    
 
 #---------------------------------------------------------------------
 def main():
