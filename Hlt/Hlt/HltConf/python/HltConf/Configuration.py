@@ -296,15 +296,8 @@ class HltConf(LHCbConfigurableUser):
                       , 51 : "HLT_PASS('Hlt1LumiMidBeamCrossingDecision')"
                       , 54 : "HLT_PASS_RE('Hlt1.*Muon.*Decision')"
                       , 55 : "HLT_PASS_RE('Hlt1Track.*Decision')"
-                      , 53 : "HLT_PASS_RE('Hlt1TrackAllL0VeloTT.*Decision')"
-                      , 52 : "HLT_PASS_RE('Hlt1TrackAllL0VeloTTForw.*Decision')"
-                      , 56 : "HLT_PASS_RE('Hlt1TrackAllL0.*Decision')"
-                      , 60 : "HLT_PASS_RE('Hlt1TrackAllL0Block.*Decision')"
-                      , 57 : "HLT_PASS_RE('Hlt1TrackMuon.*Decision')"
-                      , 58 : "HLT_PASS_RE('Hlt1TrackPhoton.*Decision')"
                       , 59 : "HLT_PASS_RE('Hlt1.*DisplVertex.*Decision')"
-                      , 61 : "HLT_PASS_RE('Hlt1IncPhi.*Decision')"
-                      , 62 : "HLT_PASS_RE('Hlt1IncCharm.*Decision')"
+                      , 53 : "HLT_PASS_RE('Hlt1IncCharm.*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
@@ -335,7 +328,6 @@ class HltConf(LHCbConfigurableUser):
                       , 91 : "HLT_PASS_RE('Hlt2.*Charm.*_hhX.*Decision')"
                       , 92 : "HLT_PASS_RE('Hlt2.*Charm.*_Baryon.*hhX.*Decision')"
                       , 93 : "HLT_PASS_RE('Hlt2.*Charm.*_Lepton.*hhX.*Decision')"
-                      , 94 : "HLT_PASS_RE('Hlt2.*IncHlt1Phi.*Decision')"
                          }
         HltRoutingBitsWriter('Hlt1RoutingBitsWriter').RoutingBits = routingBits
         HltRoutingBitsWriter('Hlt2RoutingBitsWriter').RoutingBits = routingBits
