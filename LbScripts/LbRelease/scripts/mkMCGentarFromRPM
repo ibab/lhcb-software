@@ -185,16 +185,6 @@ class BuildMCGentarScript(Script):
             self.baseOutputFilename = GENSER_vers
         return self.baseOutputFilename
 
-
-    def listPackagesForGenerator(rpmName, installer):
-        '''
-        Extract the list of packages neee for a specific generator
-        '''
-        
-
-
-
-
         
     def install(self, project, version, cmtconfig, installer):
         '''
@@ -225,12 +215,12 @@ class BuildMCGentarScript(Script):
             
             rpmName = "LCG_%s_%s_%s_%s" % (lcgVer, pkgName,  v.replace('-', '_'),
                                                cmtconfig.replace('-', '_'))
-            self.log.warning("Adding RPM: %s" % rpmName)
-
 
             linkPackage = installer.findRpm(rpmName)
             req = [ r for r in  linkPackage.requires if pkgName in r.name ]
             mainPackage = installer.findRpm(req[0].name)
+            self.log.warning("Adding RPM: %s" % rpmName)
+            self.log.warning("Adding RPM: %s" % req[0].name)
             allrpms.append(rpmName)
             allrpms.append(req[0].name)
 
@@ -238,8 +228,10 @@ class BuildMCGentarScript(Script):
         self.log.warning("Now performing the actual install")
         packageErrors = []
         for rpm in allrpms:
-            installer.install(rpm, nodeps=True)
-            #packageErrors.append(rpm)
+            try:
+                installer.install(rpm, nodeps=True)
+            except:
+                packageErrors.append(rpm)
 
         if len(packageErrors) > 0:
             self.log.error("Errors installing the following packages:")
