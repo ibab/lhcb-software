@@ -1,8 +1,11 @@
 <PRE>
 Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
-
 Purpose: LHCb Digitization program
+
+- Changes to QMTests
+  . In BooleExclusions.py: future proof upgrade tests against change in FTDet
+    initialisation printout. Can be removed once we are on LHCb v38r3 stack
 
 </PRE><H1><A NAME=v29r0>2014-07-15 Boole v29r0</A></H1><PRE>
 
