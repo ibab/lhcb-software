@@ -4,8 +4,6 @@
 #include "Event/ODIN.h"
 #include "Event/HltDecReports.h"
 
-#include "boost/function.hpp"
-
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/StringKey.h"
 #include "GaudiKernel/HistoDef.h"
@@ -39,7 +37,12 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     void handle( const Incident& );
 
     /// update the condition
-    StatusCode updateCondition();
+    StatusCode updateCondition_velo();
+    StatusCode updateCondition_magnet();
+    StatusCode updateCondition_rich1();
+    StatusCode updateCondition_rich2();
+    StatusCode updateCondition_lhcfillingscheme();
+    StatusCode updateCondition_lumipars();
 
   private:
     size_t rawEvtLength( const LHCb::RawEvent* evt );
@@ -87,7 +90,7 @@ class HltGlobalMonitor : public HltBaseAlg, virtual public IIncidentListener
     AIDA::IHistogram1D* m_hlt1Alley = nullptr;
     AIDA::IHistogram1D* m_hlt2Alley = nullptr;
 
-    AIDA::IProfile1D* m_hltVirtTime = nullptr;
+    AIDA::IProfile1D* m_hltVirtMem = nullptr;
     AIDA::IHistogram1D* m_hltTime = nullptr;
     AIDA::IProfile1D* m_hltEventsTime = nullptr;
     AIDA::IHistogram1D* m_tasks = nullptr;

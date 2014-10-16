@@ -4,8 +4,6 @@
 #include "Event/L0DUReport.h"
 #include "Event/ODIN.h"
 
-#include "boost/function.hpp" 
-
 #include "GaudiKernel/StringKey.h"
 #include "HltBase/HltBaseAlg.h"
 

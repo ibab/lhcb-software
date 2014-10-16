@@ -259,9 +259,9 @@ StatusCode HltGlobalMonitor::initialize()
         }
     }
 
-    m_hltVirtTime = bookProfile1D( "Virtual memory", 0, m_timeSize,
+    m_hltVirtMem = bookProfile1D( "Virtual memory", 0, m_timeSize,
                                    int( m_timeSize / m_timeInterval + 0.5 ) );
-    setAxisLabels( m_hltVirtTime, "time since start of run [min]", "memory[MB]" );
+    setAxisLabels( m_hltVirtMem, "time since start of run [min]", "memory[MB]" );
 
     m_hltEventsTime = bookProfile1D( "average time per event", 0, m_timeSize,
                                      int( m_timeSize / m_timeInterval + 0.5 ) );
@@ -386,34 +386,34 @@ StatusCode HltGlobalMonitor::initialize()
     // Monitor vertex positions
     std::string veloCondition = "/dd/Conditions/Online/Velo/MotionSystem";
     registerCondition<HltGlobalMonitor>( veloCondition, m_veloCondition,
-                                         &HltGlobalMonitor::updateCondition );
+                                         &HltGlobalMonitor::updateCondition_velo );
 
     // Monitor magnet polarity
     std::string magnetCondition = "/dd/Conditions/Online/LHCb/Magnet/Set";
     registerCondition<HltGlobalMonitor>( magnetCondition, m_magnetCondition,
-                                         &HltGlobalMonitor::updateCondition );
+                                         &HltGlobalMonitor::updateCondition_magnet );
 
     // Monitor rich1
     std::string rich1Condition = "/dd/Conditions/Online/Rich1/R1HltGasParameters";
     registerCondition<HltGlobalMonitor>( rich1Condition, m_rich1Condition,
-                                         &HltGlobalMonitor::updateCondition );
+                                         &HltGlobalMonitor::updateCondition_rich1 );
 
     // Monitor rich2
     std::string rich2Condition = "/dd/Conditions/Online/Rich2/R2HltGasParameters";
     registerCondition<HltGlobalMonitor>( rich2Condition, m_rich2Condition,
-                                         &HltGlobalMonitor::updateCondition );
+                                         &HltGlobalMonitor::updateCondition_rich2 );
 
     // Monitor lhc
     std::string lhcfillingschemeCondition =
         "/dd/Conditions/Online/LHCb/LHCFillingScheme";
     registerCondition<HltGlobalMonitor>( lhcfillingschemeCondition,
                                          m_lhcfillingschemeCondition,
-                                         &HltGlobalMonitor::updateCondition );
+                                         &HltGlobalMonitor::updateCondition_lhcfillingscheme );
 
     // Monitor lumipars
     std::string lumiparsCondition = "/dd/Conditions/Online/LHCb/Lumi/LumiSettings";
     registerCondition<HltGlobalMonitor>( lumiparsCondition, m_lumiparsCondition,
-                                         &HltGlobalMonitor::updateCondition );
+                                         &HltGlobalMonitor::updateCondition_lumipars );
     /*
     // Monitor runinfo
     std::string runinfoCondition = "/dd/Conditions/Online/LHCb/Runinfo";
@@ -496,47 +496,49 @@ void HltGlobalMonitor::handle( const Incident& incident )
 }
 
 //==============================================================================
-StatusCode HltGlobalMonitor::updateCondition()
+StatusCode HltGlobalMonitor::updateCondition_velo()
 {
-    const double xRC = m_veloCondition->paramAsDouble( "ResolPosRC" );
-    const double xLA = m_veloCondition->paramAsDouble( "ResolPosLA" );
-    const double Y = m_veloCondition->paramAsDouble( "ResolPosY" );
-    // std::cout<<" updating xla "<<xLA<< " m_xLA "<<m_xLA<<std::endl;
-    m_xRC = xRC;
-    m_xLA = xLA;
-    m_Y = Y;
+    m_xRC = m_veloCondition->paramAsDouble( "ResolPosRC" );
+    m_xLA = m_veloCondition->paramAsDouble( "ResolPosLA" );
+    m_Y   = m_veloCondition->paramAsDouble( "ResolPosY" );
 
-    m_beamSpotX = ( xRC + xLA ) / 2;
-    m_beamSpotY = Y;
+    m_beamSpotX = ( m_xRC + m_xLA ) / 2;
+    m_beamSpotY = m_Y;
+    return StatusCode::SUCCESS;
+}
 
-    const double magnetCurrent = m_magnetCondition->paramAsDouble( "Current" );
-    m_magnetCurrent = magnetCurrent;
-    const int magnetPolarity = m_magnetCondition->paramAsInt( "Polarity" );
-    m_magnetPolarity = (double)magnetPolarity;
-    const std::string magnetState = m_magnetCondition->paramAsString( "State" );
+StatusCode HltGlobalMonitor::updateCondition_magnet()
+{
+    m_magnetCurrent =  m_magnetCondition->paramAsDouble( "Current" );
+    m_magnetPolarity =  m_magnetCondition->paramAsInt( "Polarity" );
+    auto magnetState = m_magnetCondition->paramAsString( "State" );
     m_magnetState = 0.;
     if ( magnetState.compare( "OFF" ) ) m_magnetState = 0.;
     if ( magnetState.compare( "UP" ) ) m_magnetState = 1.;
     if ( magnetState.compare( "DOWN" ) ) m_magnetState = -1.;
+    return StatusCode::SUCCESS;
+}
 
-    const double rich1Temperature = m_rich1Condition->paramAsDouble( "Temperature" );
-    m_rich1Temperature = rich1Temperature;
-    const double rich1Pressure = m_rich1Condition->paramAsDouble( "Pressure" );
-    m_rich1Presssure = rich1Pressure;
-    const double rich2Temperature = m_rich2Condition->paramAsDouble( "Temperature" );
-    m_rich2Temperature = rich2Temperature;
-    const double rich2Pressure = m_rich2Condition->paramAsDouble( "Pressure" );
-    m_rich2Presssure = rich2Pressure;
-
-    const int lhcNCollidingBunches =
-        m_lhcfillingschemeCondition->paramAsInt( "NCollidingBunches" );
-    m_lhcNCollidingBunches = lhcNCollidingBunches;
-
-    const std::vector<double> lumipars =
-        m_lumiparsCondition->paramAsDoubleVect( "LumiPars" );
-    // m_lumiparvalues.clear();
-    m_lumiparvalues = lumipars;
-
+StatusCode HltGlobalMonitor::updateCondition_rich1()
+{
+    m_rich1Temperature =  m_rich1Condition->paramAsDouble( "Temperature" );
+    m_rich1Presssure =  m_rich1Condition->paramAsDouble( "Pressure" );
+    return StatusCode::SUCCESS;
+}
+StatusCode HltGlobalMonitor::updateCondition_rich2()
+{
+    m_rich2Temperature =  m_rich2Condition->paramAsDouble( "Temperature" );
+    m_rich2Presssure =  m_rich2Condition->paramAsDouble( "Pressure" );
+    return StatusCode::SUCCESS;
+}
+StatusCode HltGlobalMonitor::updateCondition_lhcfillingscheme()
+{
+    m_lhcNCollidingBunches = m_lhcfillingschemeCondition->paramAsInt( "NCollidingBunches" );
+    return StatusCode::SUCCESS;
+}
+StatusCode HltGlobalMonitor::updateCondition_lumipars()
+{
+    m_lumiparvalues = m_lumiparsCondition->paramAsDoubleVect( "LumiPars" );
     return StatusCode::SUCCESS;
 }
 
@@ -546,7 +548,7 @@ void HltGlobalMonitor::monitorODIN( const LHCb::ODIN* odin,
                                     const LHCb::HltDecReports* hlt2 )
 {
     if ( !odin ) return;
-    unsigned long long gpstime = odin->gpsTime();
+    auto gpstime = odin->gpsTime();
     if ( msgLevel( MSG::DEBUG ) ) debug() << "gps time" << gpstime << endmsg;
     m_gpstimesec =
         int( gpstime / 1000000 - 904262401 ); //@TODO: is this still OK with ODIN v6?
@@ -555,7 +557,7 @@ void HltGlobalMonitor::monitorODIN( const LHCb::ODIN* odin,
     fill( m_odin, odin->triggerType(), 1. );
 
     // now check HLT decisions for rejected events after Hlt
-    const LHCb::HltDecReport* report = hlt1 ? hlt1->decReport( m_hlt1Decision ) : nullptr;
+    const auto* report = hlt1 ? hlt1->decReport( m_hlt1Decision ) : nullptr;
     if ( report && report->decision() ) fill( m_odinHLT1, odin->triggerType(), 1. );
 
     report = hlt2 ? hlt2->decReport( m_hlt2Decision ) : nullptr;
@@ -619,8 +621,8 @@ void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
 void HltGlobalMonitor::monitorVertices()
 {
     typedef LHCb::RecVertex::Container Vertices;
-    for ( const LocationMap::value_type& entry : m_vertexLocations ) {
-        Vertices* vertices = getIfExists<Vertices>( entry.second );
+    for ( const auto& entry : m_vertexLocations ) {
+        auto* vertices = getIfExists<Vertices>( entry.second );
         if ( !vertices ) continue;
         for ( auto&& histo : m_vertexHistos[entry.first] ) {
             for ( auto&& vx : *vertices ) {
@@ -652,9 +654,12 @@ void HltGlobalMonitor::monitorResolverpositions()
     m_lhcnbofbunches->fill( when, m_lhcNCollidingBunches );
 
     m_lumipars->reset();
-    for ( int i = 0; i < m_lumipars->axis().bins(); i++ ) {
-        // std::cout<<" value "<<i<<" = " << m_lumiparvalues[i] <<std::endl;
-        m_lumipars->fill( i, m_lumiparvalues[i] );
+    if (m_lumiparvalues.size()!=m_lumipars->axis().bins()) {
+        error() << "have " << m_lumiparvalues.size() << " lumipars, expecting " << m_lumipars->axis().bins() << endmsg;
+    } else {
+        for ( int i = 0; i < m_lumipars->axis().bins(); i++ ) {
+            m_lumipars->fill( i, m_lumiparvalues[i] );
+        }
     }
 }
 
@@ -667,8 +672,8 @@ void HltGlobalMonitor::monitorTrends()
         double( System::currentTime( System::microSec ) - m_startEvent );
     fill( m_hltTime, log10( elapsedTime ) - 3, 1.0 ); // convert to log(time/ms)
 
-    double t = elapsedTime / 1000; // convert to ms
-    double when = m_currentTime / 60;
+    auto t = elapsedTime / 1000; // convert to ms
+    auto when = m_currentTime / 60;
 
     m_hltEventsTime->fill( when, t );
 
@@ -680,10 +685,10 @@ void HltGlobalMonitor::monitorTrends()
     // monitor CPU time vs # of PVs, # of RZVelo tracks, ...
     for ( histopair& i : m_CPUcorrelations ) i( t );
 
-    int i = m_hltVirtTime->axis().coordToIndex( when );
-    if ( m_hltVirtTime->binEntries( i ) == 0 ) {
+    auto i = m_hltVirtMem->axis().coordToIndex( when );
+    if ( m_hltVirtMem->binEntries( i ) == 0 ) {
         m_virtmem = virtualMemory( System::MByte, System::Memory );
-        m_hltVirtTime->fill( when, double( m_virtmem ) );
+        m_hltVirtMem->fill( when, double( m_virtmem ) );
     }
     // histogram the # of tasks vs. time...
     i = m_tasks->axis().coordToIndex( when );
@@ -695,7 +700,7 @@ size_t HltGlobalMonitor::rawEvtLength( const LHCb::RawEvent* evt )
 {
     size_t len = 0;
     RawEvent* raw = const_cast<RawEvent*>( evt );
-    for ( size_t i = RawBank::L0Calo; i < RawBank::LastType; ++i ) {
+    for ( int i = 0; i < RawBank::LastType; ++i ) {
         len += rawEvtLength( raw->banks( RawBank::BankType( i ) ) );
     }
     return len;
