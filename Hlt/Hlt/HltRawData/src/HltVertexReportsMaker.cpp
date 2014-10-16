@@ -3,11 +3,12 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
-#include "boost/foreach.hpp"
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
+static const Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
+static const Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
 
 namespace Gaudi { 
     class StringKey;
@@ -104,10 +105,10 @@ StatusCode HltVertexReportsMaker::initialize() {
  // get string-to-int selection ID map
   typedef std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> map_t;
   map_t selectionNameToIntMap;
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt1SelectionID"))) ) {
+  for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(Hlt1SelectionID) ) {
       selectionNameToIntMap.insert( p );
   }
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt2SelectionID"))) ) {
+  for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(Hlt2SelectionID) ) {
       selectionNameToIntMap.insert( p );
   }
 
@@ -214,7 +215,7 @@ StatusCode HltVertexReportsMaker::execute() {
   put( outputSummary, m_outputHltVertexReportsLocation );
 
   // loop over selections
-  BOOST_FOREACH( const Hlt::Selection* is, m_selections) {
+  for( const Hlt::Selection* is: m_selections) {
      // prevent duplicate selections
      if( outputSummary->hasSelectionName( is->id().str() ) )continue;
 
@@ -232,8 +233,7 @@ StatusCode HltVertexReportsMaker::execute() {
    }
  
    // now try TES location
-   typedef std::pair<std::string,std::string> pair_t;
-   BOOST_FOREACH(const pair_t& p, m_tesSelections ) 
+   for(const auto& p: m_tesSelections ) 
    {
      LHCb::RecVertices* pvs = getIfExists<LHCb::RecVertices>(p.second);
      if (NULL==pvs) continue;

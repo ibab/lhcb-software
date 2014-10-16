@@ -3,8 +3,6 @@
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
 #include "boost/format.hpp"
-#include "boost/foreach.hpp"
-#include "boost/lexical_cast.hpp"
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
@@ -31,6 +29,8 @@
 // local
 #include "HltSelReportsMaker.h"
 
+static const  Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
+static const  Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
 
 
 using namespace LHCb;
@@ -160,10 +160,10 @@ StatusCode HltSelReportsMaker::initialize() {
  // get string-to-int selection ID map
   typedef std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> map_t;
   map_t selectionNameToIntMap;
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt1SelectionID"))) ) {
+  for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(Hlt1SelectionID) ) {
       selectionNameToIntMap.insert( p );
   }
-  BOOST_FOREACH( const IANNSvc::minor_value_type& p, m_hltANNSvc->items(Gaudi::StringKey(std::string("Hlt2SelectionID"))) ) {
+  for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(Hlt2SelectionID) ) {
       selectionNameToIntMap.insert( p );
   }
  
@@ -332,7 +332,7 @@ StatusCode HltSelReportsMaker::execute() {
         && !rank<Particle>    (candidate, rnk)
         && !rank<CaloCluster> (candidate, rnk) )
          Warning( " Unsupported data type among candidates, CLID= " 
-                  + boost::lexical_cast<std::string>(sel->classID()) + " - skip selection ID=" 
+                  + std::to_string(sel->classID()) + " - skip selection ID=" 
                           +selName,StatusCode::SUCCESS, 2 );
 
      sortedSelections.push_back( std::make_pair(rnk, *is ));
