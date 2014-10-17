@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-10-17 - Manuel Tobias Schiller
+ - BloomFilter: trivial change to avoid compiler error at -O0 (no visible
+   changes in client code)
+
 !========================= LHCbMath v3r51 2014-10-15 =========================
 ! 2014-10-15 - Vanya Belyaev
  - Types.py
