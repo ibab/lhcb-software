@@ -40,7 +40,8 @@ StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
     sc = StatusCode::FAILURE ;
   } else {
     m_version = v-1 ;
-    boost::filesystem::path origin(onlinefilename(m_version)) ;
+    m_filename = onlinefilename(m_version) ;
+    boost::filesystem::path origin(m_filename) ;
     boost::filesystem::path target(alignfilename()) ;
     boost::filesystem::path aligndir(aligndirname());
     boost::filesystem::create_directories(aligndir);
@@ -55,13 +56,14 @@ StatusCode AlignOnlineXMLCopier::copyFromOnlineArea()
   return sc ;
 }
 
-StatusCode AlignOnlineXMLCopier::copyToOnlineArea() const
+StatusCode AlignOnlineXMLCopier::copyToOnlineArea()
 {
   StatusCode sc= StatusCode::SUCCESS ;
   boost::filesystem::path origin(alignfilename()) ;
   if( boost::filesystem::exists(origin) &&
       boost::filesystem::last_write_time(origin) > m_time ) {
-    boost::filesystem::path target(onlinefilename(m_version+1)) ;
+    m_newfilename = onlinefilename(m_version+1) ;
+    boost::filesystem::path target(m_newfilename) ;
     printf("++++++++++++++++++++++++++++ AlignOnlineXMLCopier: copying %s to %s\n",origin.c_str(),target.c_str());
     boost::filesystem::copy( origin, target ) ;
     if( !boost::filesystem::exists(target) ) {
@@ -77,7 +79,7 @@ namespace {
   bool filesAreIdentical( const std::string& filename1, const std::string& filename2, size_t numlinestoskip )
   {
     bool identical = false ;
-    
+
     std::ifstream file1(filename1.c_str()) ;
     std::ifstream file2(filename2.c_str()) ;
     if( file1 && file2 ) {
@@ -86,7 +88,7 @@ namespace {
       const headerlength = 5 ;
       size_t numlines(0) ;
       identical = true ;
-      
+
       std::string line1,line2;
       while(!file1.eof() && identical) {
 	getline(file1,line1) ;
