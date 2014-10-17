@@ -1,15 +1,20 @@
 package MooreSys
-version           v23r1
+version           v23r1p1
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v23r1      Hlt
+use  Moore               v23r1p1    Hlt
 use  IndependenceTests   v1r9       Hlt
 use  HltMonitor          v1r4	    Hlt   # Diego Martinez
 use  L0App               v2r3       L0    # 
+
+# TEMP FOR PATCH VERSION
+use  HltConf             v12r2      Hlt
+use  HltSettings         v6r7       Hlt
+use  Hlt1Lines           v7r6       Hlt
 
 # Declare this as a container package
 apply_pattern container_package

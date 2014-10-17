@@ -3,6 +3,10 @@ Package     : MooreSys
 Package Coordinator : S. Benson
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v23r1p1>2014-10-17 MooreSys v23r1p1</A></H1><PRE>
+
+Patch version to pick up new Hlt1 line for calibrations.
+
 </PRE><H1><A NAME=v23r1>2014-9-29 MooreSys v23r1</A></H1><PRE>
 
 For HLT commissioning week at the beginning of October.
