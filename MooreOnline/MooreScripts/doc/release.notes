@@ -4,6 +4,8 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+!========================= MooreScripts v1r6 2014-10-17 =========================
+
 ! 2014-10-07 - Gerhard Raven
  - propagate the mapping between conditions and xml files
 ! 2014-10-08 - Eric van Herwijnen
