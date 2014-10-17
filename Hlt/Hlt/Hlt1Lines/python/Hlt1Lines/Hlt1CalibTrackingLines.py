@@ -112,6 +112,6 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
     Hlt1Line ( 'CalibTracking'
           , prescale = self.prescale
           , postscale = self.postscale
-          , L0DU = "L0_DECISION_PHYSICS"
+          , L0DU = "L0_ALL"
           , algos = self.hlt1CalibTrackingLine_Streamer( "CalibTracking", self.getProps() )
           )
