@@ -9,9 +9,10 @@ from GaudiKernel.SystemOfUnits import *
 
 B2DMuNuX = {
     'BUILDERTYPE' : 'B2DMuNuXAllLinesConf',
-    'CONFIG' :  {
+    'CONFIG' : {
         ##### global settings
-        "prescales"     : {"b2DsPi_PhiPi_fakes":0.1}
+        "prescales"     : {"b2DsPi_PhiPi_fakes":0.1,
+                           "b2D0eX":1.0}
         ,"GEC_nLongTrk" : 250 # adimensional
         ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0} 
         ,"HLT_FILTER"   : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision')"
@@ -24,6 +25,7 @@ B2DMuNuX = {
         ,"KaonPIDK"      : -5.0  # adimensiional
         ,"PionPIDK"      : 20.0  # adimensiional
         ,"MuonPIDmu"     : 0.0   # adimensiional
+        ,"ElectronPIDe"  : 0.0   # adimensiional
         ,"MuonIPCHI2"    : 4.00  # adimensiional
         ,"MuonPT"        : 800.0 # MeV
         ,"HadronPT"      : 250.0 # MeV

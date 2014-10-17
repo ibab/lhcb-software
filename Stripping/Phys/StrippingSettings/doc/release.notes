@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-17 - Mika Vesterinen
+ - Update to the semileptonic dictionaries to add one B->Denu line.
+
 ! 2014-10-17 - Stefano Perazzini
  - Updated stripping21(r1) dbases
 
