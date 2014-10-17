@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-17 - Stefano Perazzini
+ - Updated stripping21(r1) dbases
+
 ! 2014-10-14 - Pablo Ruiz Valls (RD)
  - Updated Bd2eeKstarLines dictionaries with relinfotools (21 & 21r1)
 
