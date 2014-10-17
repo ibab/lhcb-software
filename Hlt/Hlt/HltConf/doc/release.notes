@@ -6,6 +6,7 @@
 
 ! 2014-10-17 - Sean Benson
  - Freed RB 54 and 55.
+ - Renamed RB 53 to Hlt1CalibTracking*Decision
 
 !========================= HltConf v12r1 2014-09-29 =========================
 
