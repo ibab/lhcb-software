@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-10-17 - Manuel Tobias Schiller
+ - PatSeedingTool: modernise some of the code somewhat; no functional changes,
+   no changes in performance or timing
+
 !========================= PatAlgorithms v4r36 2014-10-14 =======================
 ! 2014-10-08 - Manuel Tobias Schiller
  - use the new SIMDChi2Fit framework for the seeding; efficiencies and ghost

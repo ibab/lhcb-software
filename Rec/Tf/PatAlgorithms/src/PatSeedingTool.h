@@ -9,11 +9,12 @@
 #include <algorithm>
 
 // from Gaudi
+#include "GaudiKernel/extends.h"
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiAlg/ISequencerTimerTool.h"
 
-#include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"
+#include "TrackInterfaces/IPatSeedingTool.h"
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 
@@ -31,9 +32,6 @@
 namespace LHCb {
   class State;
 }
-
-static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
-
 
 /** @class PatSeedingTool PatSeedingTool.h
  *
@@ -63,27 +61,24 @@ static const InterfaceID IID_PatSeedingTool ( "PatSeedingTool", 1, 0 );
  *          job options
  */
 
-class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
-  virtual public ITracksFromTrack
+class PatSeedingTool :
+  public extends2<GaudiTool, IPatSeedingTool, ITracksFromTrack>
 {
   public:
     typedef Tf::TStationHitManager<PatForwardHit>::HitRange HitRange;
 
-    // Return the interface ID
-    static const InterfaceID& interfaceID() { return IID_PatSeedingTool; }
-
     /// Standard constructor
-    PatSeedingTool( const std::string& type,
+    PatSeedingTool(const std::string& type,
 	const std::string& name,
 	const IInterface* parent);
 
     /// destructor
-    virtual ~PatSeedingTool( );
+    virtual ~PatSeedingTool() override = default;
 
     /// initialize the tool for subsequent use
-    virtual StatusCode initialize();
+    virtual StatusCode initialize() override;
     /// finalize the tool
-    virtual StatusCode finalize();
+    virtual StatusCode finalize() override;
 
     /** search for tracks in T stations using state from given tracks as seed,
      * thus restricting track search to tiny region of interest
@@ -191,7 +186,13 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 	double maxUsedFraction) const;
 
   private:
-    ILHCbMagnetSvc*  m_magFieldSvc;
+    ILHCbMagnetSvc* m_magFieldSvc;
+    /// Tool to provide hits
+    Tf::TStationHitManager<PatForwardHit>* m_tHitManager;
+    PatSeedTool* m_seedTool;
+    ISequencerTimerTool* m_timer;
+    ITrackMomentumEstimate *m_momentumTool;
+
     std::string      m_inputTracksName;
 
     double m_zMagnet;
@@ -231,14 +232,10 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     double m_maxChi2Hit;
     double m_zForYMatch;
 
-    Tf::TStationHitManager <PatForwardHit> *  m_tHitManager;    ///< Tool to provide hits
-
-    PatSeedTool*       m_seedTool;
 
     double m_maxImpact;
 
     bool m_measureTime;
-    ISequencerTimerTool* m_timer;
     int m_timeInit;
     int m_timeReuseTracks;
     int m_timePerRegion;
@@ -286,7 +283,6 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
 
     // use tool for momentum parametrisation
     std::string m_momentumToolName;
-    ITrackMomentumEstimate *m_momentumTool;
 
     // cuts on fraction of used hits during final selection (per stage)
     double m_maxUsedFractPerRegion;

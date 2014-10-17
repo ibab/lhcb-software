@@ -34,10 +34,11 @@ DECLARE_TOOL_FACTORY( PatSeedingTool )
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-PatSeedingTool::PatSeedingTool(  const std::string& type,
-                                 const std::string& name,
-                                 const IInterface* parent)
-  : GaudiTool ( type, name , parent ), m_online(false)
+PatSeedingTool::PatSeedingTool(const std::string& type,
+    const std::string& name, const IInterface* parent)
+  : base_class(type, name , parent),
+  m_magFieldSvc(nullptr), m_tHitManager(nullptr), m_seedTool(nullptr),
+  m_timer(nullptr), m_momentumTool(nullptr), m_online(false)
 {
 
   declareInterface<IPatSeedingTool>(this);
@@ -185,21 +186,19 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
 
   declareProperty( "ActivateHltPropertyHack", m_activateHLTPropertyHack = true ); 
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-PatSeedingTool::~PatSeedingTool() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode PatSeedingTool::initialize() {
+StatusCode PatSeedingTool::initialize()
+{
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
+  m_magFieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
   m_tHitManager = tool<Tf::TStationHitManager<PatForwardHit> >("PatTStationHitManager");
-
-  m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
+  m_seedTool = tool<PatSeedTool>("PatSeedTool");
+  m_momentumTool = tool<ITrackMomentumEstimate>(m_momentumToolName);
 
   m_online = false;
   if (context() == "HLT" || context() == "Hlt") {
@@ -263,8 +262,6 @@ StatusCode PatSeedingTool::initialize() {
     debug() << buf << endmsg << "end of HLT property hack handling" << endmsg;
   }
 
-  m_seedTool = tool<PatSeedTool>( "PatSeedTool" );
-  m_momentumTool = tool<ITrackMomentumEstimate>( m_momentumToolName );
 
   //== Max impact: first term is due to arrow ->curvature by / (mm)^2 then momentum to impact at z=0
   //== second term is decay of Ks: 210 MeV Pt, 2000 mm decay distance.
@@ -312,10 +309,15 @@ StatusCode PatSeedingTool::initialize() {
   return StatusCode::SUCCESS;
 }
 
-StatusCode PatSeedingTool::finalize() {
+StatusCode PatSeedingTool::finalize()
+{
+  // if we don't implement finalize, our local timers (m_measureTime == true)
+  // will get printed without providing a clear picture of what algorithm the
+  // printout belongs to (without finalize() implemented here, printout is
+  // triggered in some base class at a time when the algorithm name is no
+  // longer available)
   if (m_measureTime) {
     info() << name() << " finalizing now..." << endmsg;
-
   }
   return GaudiTool::finalize();
 }
