@@ -7,7 +7,7 @@ from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticle
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions
+from StandardParticles import StdLoosePions, StdLooseMuons, StdLooseKaons, StdLooseProtons, StdNoPIDsPions, StdLooseElectrons
 
 __all__ = ('B2DMuNuXAllLinesConf',
            'makeb2DMuX',
@@ -19,7 +19,8 @@ __all__ = ('B2DMuNuXAllLinesConf',
 
 confdict = {
     ##### global settings
-    "prescales"     : {"b2DsPi_PhiPi_fakes":0.1}
+    "prescales"     : {"b2DsPi_PhiPi_fakes":0.1,
+                       "b2D0eX":1.0}
     ,"GEC_nLongTrk" : 250 # adimensional
     ,"TTSpecs"      : {'Hlt1.*Track.*Decision%TOS':0,'Hlt2Topo(2|3|4)Body.*Decision%TOS':0,'Hlt2.*SingleMuon.*Decision%TOS':0,"Hlt2Global%TIS":0} 
     ,"HLT_FILTER"   : "HLT_PASS_RE('Hlt2.*SingleMuon.*Decision') | HLT_PASS_RE('Hlt2Topo(2|3|4)Body.*Decision')"
@@ -32,6 +33,7 @@ confdict = {
     ,"KaonPIDK"      : -5.0  # adimensiional
     ,"PionPIDK"      : 20.0  # adimensiional
     ,"MuonPIDmu"     : 0.0   # adimensiional
+    ,"ElectronPIDe"  : 0.0   # adimensiional
     ,"MuonIPCHI2"    : 4.00  # adimensiional
     ,"MuonPT"        : 800.0 # MeV
     ,"HadronPT"      : 250.0 # MeV
@@ -82,6 +84,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
         ,"D_AMassWin"    
         ,"D_VCHI2DOF"    
         ,"MuonPIDmu"         
+        ,"ElectronPIDe"         
         ,"B_DIRA"         
         ,"BVCHI2DOF"     
         ,"B_D_DZ"
@@ -123,6 +126,10 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                  Algorithm=FilterDesktop(Code=self.MuonTrackCuts + " & (PIDmu > %(MuonPIDmu)s)" % config), 
                                  RequiredSelections = [StdLooseMuons])
         
+        self.selelectron = Selection("efor"+name,
+                                     Algorithm=FilterDesktop(Code=self.MuonTrackCuts + " & (PIDe > %(ElectronPIDe)s)" % config), 
+                                     RequiredSelections = [StdLooseElectrons])
+        
         self.selPionFakes = Selection( "FakeMufor" + name,
                                        Algorithm = FilterDesktop(Code = self.MuonTrackCuts + " & (INMUON) & (PIDmu < %(MuonPIDmu)s)" % config),  
                                        RequiredSelections = [StdLoosePions])
@@ -160,6 +167,17 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                          ['[D0 -> K- pi+]cc'],
                                          D02HH_CONFIG,
                                          [self.selKaon, self.selPion],self.selmuon)
+
+        
+        D02HH_CONFIG_Ele = D02HH_CONFIG.copy()
+        D02HH_CONFIG_Ele["ExtraElectronCuts"] = "(PT>1.2*GeV) & (MIPCHI2DV(PRIMARY)> 9.0)" % config 
+        D02HH_CONFIG_Ele["B_D_DZ"] = 0.0
+        self.b2D0eXLine = makeb2DMuXNEW(name,
+                                        'b2D0eX',
+                                        ['[B- -> D0 e-]cc'],
+                                        ['[D0 -> K- pi+]cc'],
+                                        D02HH_CONFIG_Ele,
+                                        [self.selKaon, self.selPion],self.selelectron)
         
         self.b2D0MuXKKLine = makeb2DMuXNEW(name,
                                            'b2D0MuXKK',
@@ -176,6 +194,7 @@ class B2DMuNuXAllLinesConf(LineBuilder) :
                                              [self.selPion],self.selmuon)
         
         self.registerLine(self.b2D0MuXLine)        
+        self.registerLine(self.b2D0eXLine)        
         self.registerLine(self.b2D0MuXKKLine)        
         self.registerLine(self.b2D0MuXpipiLine)        
                 
@@ -295,9 +314,10 @@ def makeb2DMuXNEW(module_name,
                   CONFIG,
                   CHARM_DAUGHTERS,
                   MUON):
-    
+
     DEFAULT_GECs = { "Code":"( recSummaryTrack(LHCb.RecSummary.nLongTracks, TrLONG) < %(GEC_nLongTrk)s )" %CONFIG,
                      "Preambulo": ["from LoKiTracks.decorators import *"]}
+    
     DEFAULT_HLT = CONFIG["HLT_FILTER"]
     
     CHARM_DaugCuts = {}
@@ -334,6 +354,8 @@ def makeb2DMuXNEW(module_name,
     B_DaugCuts = {}
     if "ExtraMuonCuts" in CONFIG.keys():
         B_DaugCuts = {"mu+":CONFIG["ExtraMuonCuts"]}
+    if "ExtraElectronCuts" in CONFIG.keys():
+        B_DaugCuts = {"e+":CONFIG["ExtraElectronCuts"]}
     _B = CombineParticles(DecayDescriptors = BDecays,
                           DaughtersCuts = B_DaugCuts,
                           CombinationCut = B_combinationCut,
