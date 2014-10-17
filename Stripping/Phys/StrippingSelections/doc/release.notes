@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-17 - Mika Vesterinen
+ - Added D0enu line to B2DMuNuX module
+
 ! 2014-10-14 - Jason Andrews
  - Explicitly require OfflineVertexFitter in StrippingBu2rho0rhoPlus.py lines
 
