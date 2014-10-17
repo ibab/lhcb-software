@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-10-17 - Sean Benson
+ - Changed name of IncCharm -> CalibTracking
+
 ! 2014-09-30 - Michael Kolpin
  - added TrackEffLines settings file for testing of tracking efficiency lines
 

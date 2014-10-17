@@ -53,7 +53,7 @@ class Hlt1_IncLinesOnly( object ):
         """
 
         from Hlt1Lines.Hlt1PhiLines            import Hlt1PhiLinesConf
-        from Hlt1Lines.Hlt1CharmLines          import Hlt1CharmLinesConf
+        from Hlt1Lines.Hlt1CalibTrackingLines          import Hlt1CalibTrackingLinesConf
 
         thresholds = {  Hlt1PhiLinesConf :    {   'TrackPT'            : 800     # MeV
                                                   ,'TrackP'             : 4000    # MeV
@@ -65,13 +65,15 @@ class Hlt1_IncLinesOnly( object ):
                                                   ,'TrNTHits'           : 16.
                                                   ,'ValidateTT'         : False
                                                 }
-                       , Hlt1CharmLinesConf :   {  'TrackPT'           : 500     # MeV
+                       , Hlt1CalibTrackingLinesConf :   {  'TrackPT'           : 500     # MeV
                                                   ,'TrackP'            : 2000    # MeV
                                                   ,'TrackChi2DOF'      : 5       # dimensionless
                                                   ,'D0MassWin'         : 100      # MeV
                                                   ,'D0DOCA'            : 0.2     # mm
                                                   ,'D0VCHI2'           : 20      # dimensionless
+                                                  ,'D0PT'              : 2000    # MeV
                                                   ,'Velo_Qcut'         : 3       # dimensionless
+                                                  ,'TrNTHits'          : 16
                                                   ,'ValidateTT'        : False
                                                 }
                      }
@@ -82,7 +84,7 @@ class Hlt1_IncLinesOnly( object ):
         """
         Returns a list of active lines
         """
-        lines = ['Hlt1IncPhi','Hlt1IncCharm']
+        lines = ['Hlt1IncPhi','Hlt1CalibTracking']
 
         return lines
 
