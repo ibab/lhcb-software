@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v4r5 2014-10-17 =========================
 ! 2014-10-17 - Chris Jones
  - Add missing dictionary entries for packed related info classes.
 
