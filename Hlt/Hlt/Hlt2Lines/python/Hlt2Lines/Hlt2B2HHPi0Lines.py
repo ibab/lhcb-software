@@ -73,7 +73,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
                                  } 
             , CombinationCut = "(AMAXDOCA('LoKi::DistanceCalculator')<%(MaxDOCA)s *mm)& (AALLSAMEBPV) & (AMINCHILD(MINTREE('pi+'==ABSID,TRCHI2DOF))<%(MaxMinTrackChi2Ndof)s)" % self.getProps()
             , MotherCut      = "(VFASPF(VCHI2)<%(BMaxVtxChi2)s) & (BPVVDCHI2>%(BMinVVDChi2)s)" % self.getProps()
-            , ParticleCombiners = {'' : 'TrgVertexFitter'}
+            #, ParticleCombiners = {'' : 'TrgVertexFitter'}
             , Inputs = [ BiKalmanFittedPions ] )
 
        ###########################################################################
@@ -86,7 +86,7 @@ class Hlt2B2HHPi0LinesConf(HltLinesConfigurableUser) :
             } 
             , CombinationCut = "(in_range(%(BMinAM_M)s *MeV, AM, %(BMaxAM_M)s *MeV))" % self.getProps()
             , MotherCut      = "(in_range(%(BMinM_M)s *MeV, M, %(BMaxM_M)s *MeV)) & (PT>%(BMinPT_M)s *MeV) & (BPVIPCHI2()<%(BMaxIPChi2_M)s) & (BPVDIRA>%(BMinDIRA_M)s)" % self.getProps()
-            , ParticleCombiners = {'' : 'TrgVertexFitter'}
+            #, ParticleCombiners = {'' : 'TrgVertexFitter'}
             , Inputs = [ Hlt2Rho4HHPi0, MergedPi0s ])
         
         ############################################################################

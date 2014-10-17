@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2014-10-17 - Regis Lefevre
+ - Update Hlt2B2HHPi0Lines.py (get rid of TrgVertexFitter)
+
 ! 2014-09-30 - Michael Kolpin
  - corrected variable names of tracking efficiency lines in 
    Hlt2InclusiveMuonLines
