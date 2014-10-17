@@ -241,21 +241,26 @@ StatusCode PackParticlesAndVertices::execute()
     LHCb::PackedRelatedInfoRelations * pPartIds = new LHCb::PackedRelatedInfoRelations();
     put( pPartIds, m_inputStream + LHCb::PackedRelatedInfoLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
-      debug() << "=== Process Particle2RelatedInfo Relation containers :" << endmsg;
+      debug() << "Found " << names.size() << " RelatedInfo containers : " 
+              << names << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
+    pPartIds->containers().reserve( names.size() );
     for ( const auto& name : names )
     {
       Part2InfoRelations * partIds = get<Part2InfoRelations>( name );
       if ( m_deleteInput ) toBeDeleted.push_back( partIds );
-      if ( partIds->relations().empty() ) continue;
       if ( msgLevel( MSG::DEBUG ) )
-        debug() << format( "%4d Particle2RelatedInfo in ", partIds->relations().size() )
-                << name << endmsg;
-      packAP2RelatedInfoRelationContainer( partIds, *pPartIds, name  );
+        debug() << " -> Processing " << name 
+                << " with " << partIds->relations().size() << " relations" << endmsg;
+      if ( partIds->relations().empty() ) continue;
+      packAP2RelatedInfoRelationContainer( partIds, *pPartIds, name );
     }
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "Stored " << pPartIds->relations().size()
-              << " packed Particle2RelatedInfo" << endmsg;
+              << " packed Particle2RelatedInfo in "
+              << pPartIds->containers().size() << " containers."
+              << " Total info pairs = " << pPartIds->info().size()
+              << endmsg;
   }
 
   //==============================================================================

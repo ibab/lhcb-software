@@ -30,4 +30,10 @@
 #include "Event/PackedFlavourTag.h"
 #include "Event/PackedPartToRelatedInfoRelation.h"
 
+namespace 
+{
+  LHCb::PackedRelatedInfoRelations::PackedRelatedInfo i1;
+  LHCb::PackedRelatedInfoRelations::InfoVector        i2;
+}
+
 #endif // DICT_PACKEDEVENTDICT_H

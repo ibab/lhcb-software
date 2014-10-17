@@ -182,7 +182,8 @@ StatusCode UnpackParticlesAndVertices::execute()
     }
     if ( msgLevel(MSG::DEBUG) )
     {
-      debug() << "Retrieved " << nbPart << " ProtoParticles in " << nbPartContainer << " containers" << endmsg;
+      debug() << "Retrieved " << nbPart << " ProtoParticles in " << nbPartContainer << " containers" 
+              << endmsg;
     }
     counter("# Unpacked ProtoParticles") += nbPart;
   }
@@ -206,7 +207,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         if ( linkID != prevLink )
         {
           prevLink = linkID;
-          const std::string & containerName = pparts->linkMgr()->link( linkID )->path() + m_postFix;
+          const std::string & containerName = pparts->linkMgr()->link(linkID)->path() + m_postFix;
           // Check to see if container alrady exists. If it does, unpacking has already been run this
           // event so quit
           if ( exist<LHCb::Particles>(containerName) )

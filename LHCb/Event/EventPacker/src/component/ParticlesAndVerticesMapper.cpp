@@ -20,7 +20,7 @@ ParticlesAndVerticesMapper( const std::string& type,
   declareProperty( "UnpackerType",
                    m_unpackerType = "UnpackParticlesAndVertices" );
   declareProperty( "UnpackerOutputLevel", m_unpackersOutputLevel = -1 );
-  setProperty( "OutputLevel", 1 );
+  //setProperty( "OutputLevel", 1 );
 }
 
 // ============================================================================

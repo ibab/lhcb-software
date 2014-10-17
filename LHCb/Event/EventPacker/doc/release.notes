@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2014-10-17 - Chris Jones
+ - Add missing dictionary entries for packed related info classes.
+
 !========================= EventPacker v4r4 2014-09-08 =========================
 ! 2014-09-08 - Chris Jones
  - Add an option ClearRegistry to various packers to control if the address
