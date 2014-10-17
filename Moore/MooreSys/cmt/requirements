@@ -6,7 +6,7 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v23r1p1    Hlt
+use  Moore               v23r1      Hlt
 use  IndependenceTests   v1r9       Hlt
 use  HltMonitor          v1r4	    Hlt   # Diego Martinez
 use  L0App               v2r3       L0    # 
