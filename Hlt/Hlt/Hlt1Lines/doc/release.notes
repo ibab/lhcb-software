@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-10-17 - Sean Benson
+ - Renamed IncCharm -> CalibTracking
+
 !========================= Hlt1Lines v7r5 2014-09-29 =========================
 
 ! 2014-09-29 - Sebastian Neubert

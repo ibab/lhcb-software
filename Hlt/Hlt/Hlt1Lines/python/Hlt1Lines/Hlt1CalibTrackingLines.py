@@ -1,12 +1,12 @@
 # =============================================================================
 ## @@file
-#  Configuration of Charm Lines
-#  Get two tracks near the phi mass
+#  Configuration of CalibTracking Lines
+#  Get two tracks near the D0 mass
 #  @@author Matthew Kenzie matthew.william.kenzie@cern.ch
 #  @@date 2012-07-28
 # =============================================================================
 """
- script to configure Charm trigger lines
+ script to configure CalibTracking trigger lines
 """
 # =============================================================================
 __author__  = "Matthew Kenzie matthew.william.kenzie@cern.ch"
@@ -14,7 +14,7 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 0.01 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-class Hlt1CharmLinesConf( HltLinesConfigurableUser ) :
+class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
   __slots__ = {  'TrackPT'           : 500     # MeV
                 ,'TrackP'            : 2000    # MeV
                 ,'TrackChi2DOF'      : 5       # dimensionless
@@ -27,7 +27,7 @@ class Hlt1CharmLinesConf( HltLinesConfigurableUser ) :
                 ,'ValidateTT'        : False
       }
 
-  def hlt1CharmLine_Preambulo( self, props ):
+  def hlt1CalibTrackingLine_Preambulo( self, props ):
 
     from HltTracking.Hlt1TrackUpgradeConf import ( TrackCandidates, pET, FitTrack, PEstiForward)
     from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
@@ -51,7 +51,7 @@ class Hlt1CharmLinesConf( HltLinesConfigurableUser ) :
 
     return preambulo
 
-  def hlt1CharmLine_Streamer( self, name, props ) :
+  def hlt1CalibTrackingLine_Streamer( self, name, props ) :
     from Configurables import LoKi__HltUnit as HltUnit
     props['name'] = name
     props['forward'] = 'PEstiForward'
@@ -95,23 +95,23 @@ class Hlt1CharmLinesConf( HltLinesConfigurableUser ) :
     from Configurables import LoKi__HltUnit as HltUnit
     from HltTracking.HltPVs import PV3D
 
-    hlt1CharmLine_Unit = HltUnit(
+    hlt1CalibTrackingLine_Unit = HltUnit(
         'Hlt1'+name+'Unit',
         #OutputLevel = 1,
         Monitor = True,
-        Preambulo = self.hlt1CharmLine_Preambulo( props ),
+        Preambulo = self.hlt1CalibTrackingLine_Preambulo( props ),
         Code = lineCode
         )
 
-    return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1CharmLine_Unit ]
+    return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1CalibTrackingLine_Unit ]
 
   def __apply_configuration__(self) :
 
     from HltLine.HltLine import Hlt1Line
 
-    Hlt1Line ( 'IncCharm'
+    Hlt1Line ( 'CalibTracking'
           , prescale = self.prescale
           , postscale = self.postscale
           , L0DU = "L0_DECISION_PHYSICS"
-          , algos = self.hlt1CharmLine_Streamer( "IncCharm", self.getProps() )
+          , algos = self.hlt1CalibTrackingLine_Streamer( "CalibTracking", self.getProps() )
           )
