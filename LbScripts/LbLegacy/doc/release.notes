@@ -1,3 +1,7 @@
+2014-10-17  Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * scripts/mkLCGCMTtar: LBCORE-646 Allow to take packages from external AND from releases (for LHCbDirac) 
+
 2014-10-16 Ben Couturier  <Ben.Couturier@cern.ch>
 
         * cmt/requirements: release of version v6r1
