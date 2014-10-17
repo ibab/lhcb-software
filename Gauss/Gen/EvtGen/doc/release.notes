@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-10-17 - T Blake
+ - Added new EvtRareLbToLll model based on arXiv:1108.6129
+ - Added EvtRareLbToLllWC.{cpp,hh} for Wilson coefficient calculation
+ - Added EvtRareLbToLllFF.{cpp,hh} for FF parameterisation
+
 ! 2014-10-14 - Michal Kreps
  - Update Lb2Lll decay model to correctly compare IDs of particles to allow
    use of aliases. 
