@@ -4,6 +4,8 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+!========================= MooreOnlineConf v1r5 2014-10-17 =========================
+
 ! 2014-10-07 - Gerhard Raven
  - remove now redundant ParitionName
 
