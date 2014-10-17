@@ -1,5 +1,5 @@
 package LHCbSys
-version           v38r2p1
+version           v38r2
 
 branches doc cmt tests
 
@@ -48,7 +48,7 @@ use DAQEvent              v9r17   Event   # Marco Cattaneo, Markus Frank
 use DigiEvent             v4r2    Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v5r6    Event   # Iven Belyaev
 use EventBase             v3r1    Event   # Marco Cattaneo, Gloria Corti
-use EventPacker           v4r4    Event   # Chris Jones
+use EventPacker           v4r5    Event   # Chris Jones
 use EventSys              v26r1   Event   # Marco Cattaneo
 use FSREvent              v1r1    Event   # ??
 use FTEvent               v1r6    Event   # Eric Cogneras

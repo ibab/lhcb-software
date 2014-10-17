@@ -5,11 +5,6 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v38r2p1>2014-10-17 LHCbSys v38r2p1</A></H1><PRE>
-This version uses Gaudi v25r5 and LCG_70root6 with ROOT 6.02.01.
-
-Identical to v38r2 but build against LCG_70root6 with ROOT 6.02.01
-
 </PRE><H1><A NAME=v38r2>2014-10-17 LHCbSys v38r2</A></H1><PRE>
 This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
 
@@ -20,7 +15,7 @@ This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
     Kernel/LHCbKernel v15r5, Kernel/LHCbMath v3r51, Kernel/PartProp v1r19,
     Kernel/XMLSummaryKernel v1r12, Phys/LoKiGen v10r18, Phys/LoKiHlt v3r16,
     Phys/LoKiMC v10r14, Phys/LoKiNumbers v10r7, Tools/CondDBUI v3r31,
-    GaudiConf v19r5
+    GaudiConf v19r5, Event/EventPacker v4r5
 
 - In DAQ/DAQSys v8r5
   . New TrackReports Decoder locations - only affecting the HLT internally
@@ -46,6 +41,9 @@ This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
 - In Det/RichDet v16r25
   . Update RichSmartID search in DeRichSystem to avoid type mis-matches caused by
     updates to RichSmartID.
+
+- In Event/EventPacker v4r5
+  . Add missing dictionary entries for packed related info classes
 
 - In Event/SwimmingEvent v1r6
   . Move the various helper functions to be static members of a Swimming::Helpers
