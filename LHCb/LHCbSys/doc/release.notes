@@ -5,12 +5,12 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v38r2p1>2014-10-16 LHCbSys v38r2p1</A></H1><PRE>
+</PRE><H1><A NAME=v38r2p1>2014-10-17 LHCbSys v38r2p1</A></H1><PRE>
 This version uses Gaudi v25r5 and LCG_70root6 with ROOT 6.02.01.
 
 Identical to v38r2 but build against LCG_70root6 with ROOT 6.02.01
 
-</PRE><H1><A NAME=v38r2>2014-10-15 LHCbSys v38r2</A></H1><PRE>
+</PRE><H1><A NAME=v38r2>2014-10-17 LHCbSys v38r2</A></H1><PRE>
 This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
 
 - Packages modified: DAQ/DAQSys v8r5, Det/CaloDet v10r20, Det/DDDB v1r73,
@@ -60,6 +60,9 @@ This version uses Gaudi v25r4 and LCG_69 with ROOT 5.34.21.
 
 - In GaudiConf v19r5
   . Add FMDST to list of known file extensions in IOHelper
+  . Add LDST to DstConf. New simulation DST type, same as DST but with Boole
+    linkers added (links from digits to MCParticles)
+
 
 - In Hlt/HltDAQ v4r8
   . Added recvertex chi2 to summary objects
