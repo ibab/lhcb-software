@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r7 2014-10-17 =========================
+
 ! 2014-10-17 - Sean Benson
  - Changed name of IncCharm -> CalibTracking
 
