@@ -3,6 +3,12 @@ Package     : MooreOnlineSys
 Package Coordinator : S. Benson
 Purpose     : Running and testing Moore in the online environment
 
+</PRE><H1><A NAME=v23r1p1>2014-10-17 MooreOnlineSys v23r1p1</A></H1><PRE>
+
+Depends on Moore v23r1p1 and Online v5r11.
+
+Patch to pick up routing bit changes and calibration Hlt1 line.
+
 </PRE><H1><A NAME=v23r1>2014-09-29 MooreOnlineSys v23r1</A></H1><PRE>
 
 Depends on Moore v23r1 and Online v5r11.
