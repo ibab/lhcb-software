@@ -51,7 +51,7 @@ namespace LHCb
   static const CLID CLID_PackedRelatedInfoRelations = 1584; // Tell Marco !!
 
   /// Namespace for locations in TDS
-  namespace PackedPackedRelatedInfoLocation
+  namespace PackedRelatedInfoLocation
   {
     static const std::string& User = "pPhys/User/PartToRelatedInfoRelations";
     static const std::string& InStream = "/pPhys/PartToRelatedInfoRelations";
@@ -167,7 +167,7 @@ namespace LHCb
     typedef LHCb::RelatedInfoMap               TO;
     typedef LHCb::Relation1D<FROM,TO>        DataVector;
     typedef LHCb::PackedRelatedInfoRelations PackedDataVector;
-    static const std::string& packedLocation()   { return LHCb::PackedPackedRelatedInfoLocation::User; }
+    static const std::string& packedLocation()   { return LHCb::PackedRelatedInfoLocation::User; }
     static const std::string  unpackedLocation() { return "/Event/Phys/User/PartToRelatedInfoRelations"; }
 
   private:

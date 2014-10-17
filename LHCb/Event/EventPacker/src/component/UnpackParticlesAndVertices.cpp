@@ -56,7 +56,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         if ( linkID != prevLink )
         {
           prevLink = linkID;
-          const std::string & containerName = ptracks->linkMgr()->link( linkID )->path() + m_postFix;
+          const std::string & containerName = ptracks->linkMgr()->link(linkID)->path() + m_postFix;
           // Check to see if container already exists. If it does, unpacking has already been run this
           // event so quit
           if ( exist<LHCb::Tracks>(containerName) )
@@ -106,7 +106,7 @@ StatusCode UnpackParticlesAndVertices::execute()
         if ( linkID != prevLink )
         {
           prevLink = linkID;
-          const std::string & containerName = ppids->linkMgr()->link( linkID )->path() + m_postFix;
+          const std::string & containerName = ppids->linkMgr()->link(linkID)->path() + m_postFix;
           // Check to see if container already exists. If it does, unpacking has already been run this
           // event so quit
           if ( exist<LHCb::Tracks>(containerName) )
@@ -397,7 +397,7 @@ StatusCode UnpackParticlesAndVertices::execute()
     unsigned int nbRelContainer(0), nbRel(0);
 
     // Location of the packed data
-    const std::string location = m_inputStream + LHCb::PackedPackedRelatedInfoLocation::InStream;
+    const std::string location = m_inputStream + LHCb::PackedRelatedInfoLocation::InStream;
 
     // do we have any packed data
     LHCb::PackedRelatedInfoRelations * prels = getIfExists<LHCb::PackedRelatedInfoRelations>(location);

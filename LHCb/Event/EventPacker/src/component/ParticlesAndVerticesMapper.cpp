@@ -20,7 +20,7 @@ ParticlesAndVerticesMapper( const std::string& type,
   declareProperty( "UnpackerType",
                    m_unpackerType = "UnpackParticlesAndVertices" );
   declareProperty( "UnpackerOutputLevel", m_unpackersOutputLevel = -1 );
-  //setProperty( "OutputLevel", 1 );
+  setProperty( "OutputLevel", 1 );
 }
 
 // ============================================================================
@@ -260,7 +260,7 @@ void ParticlesAndVerticesMapper::updateNodeTypeMap( const std::string & path )
     // Load the packed RelatedInfo relations
     {
       LHCb::PackedRelatedInfoRelations* pRelInfos =
-        getIfExists<LHCb::PackedRelatedInfoRelations>(evtSvc(),streamR+LHCb::PackedPackedRelatedInfoLocation::InStream);
+        getIfExists<LHCb::PackedRelatedInfoRelations>(evtSvc(),streamR+LHCb::PackedRelatedInfoLocation::InStream);
       if ( NULL != pRelInfos )
       {
         for ( const auto& cont : pRelInfos->containers() )

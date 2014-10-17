@@ -239,7 +239,7 @@ StatusCode PackParticlesAndVertices::execute()
   if ( !names.empty() )
   {
     LHCb::PackedRelatedInfoRelations * pPartIds = new LHCb::PackedRelatedInfoRelations();
-    put( pPartIds, m_inputStream + LHCb::PackedPackedRelatedInfoLocation::InStream );
+    put( pPartIds, m_inputStream + LHCb::PackedRelatedInfoLocation::InStream );
     if ( msgLevel( MSG::DEBUG ) )
       debug() << "=== Process Particle2RelatedInfo Relation containers :" << endmsg;
     toBeDeleted.reserve( names.size() + toBeDeleted.size() );
