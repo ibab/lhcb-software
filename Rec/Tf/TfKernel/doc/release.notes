@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2014-10-17 - Manuel Tobias Schiller
+ - SIMDChi2Fit.h: fix warning about extra semicolon
+
 !========================= TfKernel v2r27 2014-10-14 =========================
 ! 2014-10-08 - Manuel Tobias Schiller
  - include new header SIMDChi2Fit.h, a fully customisable chi^2 track fit for
