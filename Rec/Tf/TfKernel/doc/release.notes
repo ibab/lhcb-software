@@ -5,6 +5,15 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-10-17 - Manuel Tobias Schiller
+ - Tf::TStationHitManager: replace the ToolHandle instances by ordinary
+   pointers to the interfaces implemented by the tools; this change should not
+   cause any user visible changes (no regressions in efficiencies, ghost rates
+   nor timing). Main reason for this change is that gcc 4.9.1 has some issue
+   with ToolHandles which can lead to unpredictable undefined symbols in some
+   object files of client code (this even depends on compiler optimisation
+   flags!) which subsequently lead to link errors
+
+! 2014-10-17 - Manuel Tobias Schiller
  - SIMDChi2Fit.h: fix warning about extra semicolon
 
 !========================= TfKernel v2r27 2014-10-14 =========================

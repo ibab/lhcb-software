@@ -20,7 +20,6 @@
 #include "boost/iterator/transform_iterator.hpp"
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "GaudiKernel/ToolHandle.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
@@ -378,10 +377,10 @@ namespace Tf
   protected:
 
     /// The underlying OT hit creator
-    inline const Tf::IOTHitCreator * otHitCreator() const { return &*m_othitcreator; }
+    inline const Tf::IOTHitCreator * otHitCreator() const { return m_othitcreator; }
 
     /// The underlying IT hit creator
-    inline const Tf::IITHitCreator * itHitCreator() const { return &*m_ithitcreator; }
+    inline const Tf::IITHitCreator * itHitCreator() const { return m_ithitcreator; }
 
   protected:
 
@@ -494,10 +493,10 @@ namespace Tf
                        const OTRegionID region) const;
 
     /// The underlying OT hit creator
-    ToolHandle<Tf::IOTHitCreator> m_othitcreator ;
+    Tf::IOTHitCreator* m_othitcreator ;
 
     /// The underlying IT hit creator
-    ToolHandle<Tf::IITHitCreator> m_ithitcreator ;
+    Tf::IITHitCreator* m_ithitcreator ;
 
     /// The OT hit cleaner
     Tf::IOTHitCleaner * m_otCleaner;
@@ -528,8 +527,7 @@ namespace Tf
                                                const std::string& name,
                                                const IInterface* parent) :
     GaudiTool (type, name, parent),
-    m_othitcreator { "Tf::OTHitCreator/OTHitCreator" },
-    m_ithitcreator { "Tf::STHitCreator<Tf::IT>/ITHitCreator" },
+    m_othitcreator(nullptr), m_ithitcreator(nullptr),
     m_otCleaner    { nullptr },
     m_itCleaner    { nullptr },
     m_hits         { 16384 } // initial capacity of container...
@@ -549,9 +547,10 @@ namespace Tf
     incSvc()->addListener(this, IncidentType::BeginEvent);
 
     // load our hit creators
-    sc = ( m_othitcreator.retrieve() &&
-           m_ithitcreator.retrieve() );
-    if ( sc.isFailure() ) return sc;
+
+    m_othitcreator = tool<IOTHitCreator>("Tf::OTHitCreator", "OTHitCreator");
+    m_ithitcreator = tool<IITHitCreator>("Tf::STHitCreator<Tf::IT>", "ITHitCreator");
+    if (!m_othitcreator || !m_ithitcreator) return StatusCode::FAILURE;
 
     // load private hit cleaners, if needed
     if ( cleanOTHits() ) m_otCleaner = this->tool<Tf::IOTHitCleaner>("Tf::OTHitCleaner","OTHitCleaner",this);
