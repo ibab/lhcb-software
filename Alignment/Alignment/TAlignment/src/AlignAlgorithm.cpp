@@ -309,8 +309,8 @@ StatusCode AlignAlgorithm::execute() {
   if( selectedtracks.size() != nonoverlappingtracks.size() ) {
     static int count(0) ;
     if(++count<20)
-      warning() << "Rejected " << selectedtracks.size() - nonoverlappingtracks.size() << " out of "
-		<< selectedtracks.size() << " tracks because of overlaps." << endreq ;
+      info() << "Rejected " << selectedtracks.size() - nonoverlappingtracks.size() << " out of "
+	     << selectedtracks.size() << " tracks because of overlaps." << endreq ;
   }
   selectedtracks = nonoverlappingtracks ;
 
@@ -814,9 +814,6 @@ bool AlignAlgorithm::testNodes( const LHCb::Track& track ) const
 	success = false ;
       }
       if( node->errResidual2() < 1e-3 * node->errMeasure2() ) {
-	std::stringstream str ;
-	str << "Found node with negligible weight: " << track.type() << " " << node->measurement().type() ;
-	Warning(str.str(),StatusCode::FAILURE,1).ignore() ;
 	debug() << "Found node with negligible weight: " << track.type() << " "
 		<< node->measurement().type() << " " << node->errResidual2() << " " << node->errMeasure2() << endreq ;
 	success = false ;
