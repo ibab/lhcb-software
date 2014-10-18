@@ -1,5 +1,40 @@
 #include "AlignOnlineXMLCopier.h"
 #include <boost/filesystem.hpp>
+#include <fstream>
+
+namespace {
+  // check that two files are identical. numlinestoskip is the number
+  // of lines in the header, which is ignored from the comparison
+  bool filesAreIdentical( const char* filename1, const char* filename2, size_t numlinestoskip )
+  {
+    bool identical = false ;
+    
+    std::ifstream file1(filename1) ;
+    std::ifstream file2(filename2) ;
+    if( file1 && file2 ) {
+    
+      // compare every line, but skip the header
+      size_t numlines(0) ;
+      identical = true ;
+      bool ready = false ;
+      std::string line1,line2;
+      while(identical && !ready) {
+	getline(file1,line1) ;
+	getline(file2,line2) ;
+	// flag ready when both files are finished
+	ready = file1.eof() && file2.eof() ;
+	if(!ready) {
+	  identical = 
+	    // flag false if we have reached the end of one of the two files
+	    !file1.eof() && !file2.eof() 
+	    // flag false if lines differ
+	    && (++numlines <= numlinestoskip || line1==line2) ;
+	}
+      }
+    }
+    return identical ;
+  }
+}
 
 AlignOnlineXMLCopier::AlignOnlineXMLCopier( const std::string& onlinedir,
 					    const std::string& aligndir,
@@ -62,46 +97,22 @@ StatusCode AlignOnlineXMLCopier::copyToOnlineArea()
   boost::filesystem::path origin(alignfilename()) ;
   if( boost::filesystem::exists(origin) &&
       boost::filesystem::last_write_time(origin) > m_time ) {
-    m_newfilename = onlinefilename(m_version+1) ;
-    boost::filesystem::path target(m_newfilename) ;
-    printf("++++++++++++++++++++++++++++ AlignOnlineXMLCopier: copying %s to %s\n",origin.c_str(),target.c_str());
-    boost::filesystem::copy( origin, target ) ;
-    if( !boost::filesystem::exists(target) ) {
-      sc = StatusCode::FAILURE ;
+    // first check that the new file is not identical to the old one
+    static size_t headersize = 5 ;
+    if( !filesAreIdentical( origin.c_str(), onlinefilename(m_version).c_str(), headersize ) ) {
+      // update the version number
+      m_version += 1 ;
+      boost::filesystem::path target(onlinefilename(m_version)) ;
+      printf("++++++++++++++++++++++++++++ AlignOnlineXMLCopier: copying %s to %s\n",origin.c_str(),target.c_str());
+      boost::filesystem::copy( origin, target ) ;
+      if( !boost::filesystem::exists(target) ) {
+	sc = StatusCode::FAILURE ;
+	m_version -= 1 ;
+      } 
     }
+    m_newfilename = onlinefilename(m_version) ;
   }
   return sc ;
 }
 
 
-#ifdef LATER
-namespace {
-  bool filesAreIdentical( const std::string& filename1, const std::string& filename2, size_t numlinestoskip )
-  {
-    bool identical = false ;
-
-    std::ifstream file1(filename1.c_str()) ;
-    std::ifstream file2(filename2.c_str()) ;
-    if( file1 && file2 ) {
-
-      // compare every line, but skip the header
-      const headerlength = 5 ;
-      size_t numlines(0) ;
-      identical = true ;
-
-      std::string line1,line2;
-      while(!file1.eof() && identical) {
-	getline(file1,line1) ;
-	getline(file2,line2) ;
-	if(!file1.eof()) {
-	  if( ++numlines > numlinestoskip ) {
-	    identical = identical && line1 == line2 ;
-	  }
-	}
-      }
-    }
-    return identical ;
-  }
-}
-
-#endif

@@ -13,14 +13,14 @@ public:
 			const std::string& aligndir,
 			const std::string& condname ) ;
   StatusCode copyFromOnlineArea() ;
-  StatusCode copyToOnlineArea();
+  StatusCode copyToOnlineArea() ;
 
   std::string alignfilename() const ;
   std::string aligndirname() const ;
   FileVersion version() const { return m_version ; }
   std::string onlinefilename() const { return onlinefilename(m_version) ; }
   std::string copybackfilename() const {return m_newfilename;}
-  std::string condition () {return m_condname;}
+  std::string condition () const {return m_condname;}
 private:
   std::string onlinefilename( FileVersion v ) const ;
 
