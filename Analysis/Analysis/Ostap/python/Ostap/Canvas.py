@@ -1,9 +1,9 @@
-#!/usr/bin/env ipython 
+#!/usr/bin/env python 
 # -*- coding: utf-8 -*-
 # =============================================================================
-# $Id$ 
+# $Id: Canvas$ 
 # =============================================================================
-## @file OstapBender.py
+## @file Canvas.py
 #  
 #     .oooooo.                .                        
 #    d8P'  `Y8b             .o8                        
@@ -15,8 +15,7 @@
 #                                            888       
 #                                           o888o      
 #                                                    
-#  Simple interactive analysis environment to provide access to zillions
-#  useful decorators for ROOT (and not only ROOT) objects&classes  
+#  Simple helper module to get ROOT TCanvas
 # 
 #  This file is a part of 
 #  <a href="http://cern.ch/lhcb-comp/Analysis/Bender/index.html">Bender project</a>
@@ -35,12 +34,11 @@
 #  @date   2012-02-15
 #  @author Vanya BELYAEV Ivan.Belyaevitep.ru
 #
-#                    $Revision$
-#  Last modification $Date$
-#                 by $Author$
+#                    $Revision: 175248 $
+#  Last modification $Date: 2014-07-19 15:56:55 +0200 (Sat, 19 Jul 2014) $
+#                 by $Author: ibelyaev $
 # =============================================================================
-""" Simple interactive PyRoot-based analysis environment
-to provide access to zillions useful decorators for ROOT (and not only ROOT) objects&classes
+""" Simple helper module to get ROOT TCanvas
     
     This file is a part of BENDER project:
 
@@ -59,69 +57,67 @@ of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
-__date__    = "2012-09-10"
-__version__ = '$Revision$'
+__date__    = "2014-10-19"
+__version__ = '$Revision: 175248 $'
+__all__     = ( 'getCanvas' , )
 # =============================================================================
-import ROOT, os, sys
+import ROOT
 # =============================================================================
 # logging 
 # =============================================================================
 from AnalysisPython.Logger import getLogger
-logger = getLogger ( 'Ostap Bender' )
+logger    = getLogger ( 'Ostap Canvas' )
 # =============================================================================
-import Ostap.Line
-logger.info ( "Welcome to Ostap\n" + Ostap.Line.line )
-logger.info ( __doc__ )
+_canvases = {} 
 # =============================================================================
-## 1) load LHCb-style file
-# =============================================================================
-import Ostap.LHCbStyle 
-# =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info ( "Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
-# =============================================================================
-# The Heart 
-# =============================================================================
-import Ostap.Canvas 
-logger.debug ( "Create the default canvas" )
-canvas    = Ostap.Canvas.getCanvas ()
+## get the canvas
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-10-19
+def getCanvas ( name   = 'glCanvas' ,   ## canvas name 
+                title  = 'Ostap'    ,   ## cnavas title
+                width  = 1000       ,   ## canvas width
+                height = 800        ) : ## canvas height 
+    """
+    Get create canvas/create new canvas
     
-## load zillions of decorations for ROOT-objects 
-import Ostap.PyRoUts   as PyRoUts     ## NB: the most important line!
-import Ostap.ZipShelve as DBASE        
-# =============================================================================
-if ROOT.gROOT.IsBatch() :
-    ROOT.gROOT.SetBatch ( False )
-    logger.info("Set 'IsBatch' to be %s " % ROOT.gROOT.IsBatch () )
+    >>> cnv = getCanvas ( 'glnewCanvas' , width = 1200 , height = 1000 )
+    """
+    cnv   = _canvases.get ( name , None )
+    if not cnv :
+        ## create new canvas 
+        cnv  = ROOT.TCanvas ( 'glCanvas', 'Ostap' , width , height )
+        ## adjust newly created canvas
+        ## @see http://root.cern.ch/root/html/TCanvas.html#TCanvas:TCanvas@4
+        if not ROOT.gROOT.IsBatch() :
+            dw = width  - cnv.GetWw()
+            dh = height - cnv.GetWh()
+            cnv.SetWindowSize ( width + dw , height + dh )
+            
+        ## 
+        _canvases [ name ] = cnv
+        
+    return cnv
 
 # =============================================================================
-## minor decoration for default shelve module 
-from Ostap.shelve_ext import shelve 
+## get all known canvases 
+def getCanvases () :
+    """ Get all known canvases """ 
+    return _canvases.keys() 
 
-# =============================================================================
-## import useful context managers
-from Ostap.Utils import *
-
-# ============================================================================= 
-## prepend the path 
-if '.' not in sys.path :
-    logger.debug('Prepend sys.path with $PWD')
-    sys.path = ['.'] + sys.path 
-
-# =============================================================================
-cpp = PyRoUts.cpp
-VE  = PyRoUts.VE
 # =============================================================================
 if '__main__' == __name__ :
     
-    logger.info ( 80*'*' ) 
-    logger.info ( ' Author  : %s' %  __author__  ) 
-    logger.info ( ' Version : %s' %  __version__ ) 
-    logger.info ( ' Date    : %s' %  __date__    )
+    from Ostap.Line import line 
+    logger.info ( __file__ + '\n' + line  )
+    logger.info ( 80*'*' )
+    logger.info ( __doc__  )
+    logger.info ( 80*'*' )
+    logger.info ( ' Author  : %s' %         __author__    ) 
+    logger.info ( ' Version : %s' %         __version__   ) 
+    logger.info ( ' Date    : %s' %         __date__      )
+    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
     logger.info ( 80*'*' ) 
 
 # =============================================================================
 # The END 
 # =============================================================================
-

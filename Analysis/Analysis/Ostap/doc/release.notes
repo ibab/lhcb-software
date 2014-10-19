@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-10-19 - Vanya Belyaev
+ - small reshuffling of modules 
+
 ! 2014-10-08 - Vanya Belyaev
  - extend a bit "draw" method for PDF-class, allowing to ignore dataset 
    and visualize only the function 
