@@ -232,7 +232,7 @@ IJetMaker::Jets LoKi::SeedConeJetMaker::JetCone( const  double &Rmax,
     if(ptot.Pt() < m_ptmin) continue;
     //save the particles involved as the daugther of the jet
     StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
-    if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;
+    if ( sc.isFailure()) Warning ( "Error from momentum combiner, skip", sc, 0 ).ignore() ;
 
     pJet.setMomentum        ( Gaudi::LorentzVector ( ptot )  ) ;
     pJetVec.push_back( pJet.clone() );
@@ -332,7 +332,7 @@ IJetMaker::Jets LoKi::SeedConeJetMaker::JetConePurged( const  double &Rmax,
     if(ptot.Pt() < m_ptmin) continue;
     //save the particles involved as the daugther of the jet
     StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
-    if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;
+    if ( sc.isFailure()) Warning ( "Error from momentum combiner, skip", sc, 0 ).ignore() ;
 
     pJet.setMomentum        ( Gaudi::LorentzVector ( ptot )  ) ;
     pJetVec.push_back( pJet.clone() );

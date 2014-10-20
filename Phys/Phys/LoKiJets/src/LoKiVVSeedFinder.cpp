@@ -435,7 +435,7 @@ StatusCode LoKi::VVSeedFinder::makeJets
           pSeed2.setEndVertex (  vtx.clone() ) ;
           //save the trks as the daugthers
           //remove
-          if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;
+          if ( sc.isFailure() ) Warning ( "Error from momentum combiner, skip", sc, 0 ).ignore() ;
           Seeds.push_back(pSeed2.clone());
           //remove lp to test another part
 
@@ -507,7 +507,7 @@ StatusCode LoKi::VVSeedFinder::makeJets
       StatusCode sc = m_combiner->combine ( daughters , pSeed , vSeed ) ;
       //save the trks as the daugthers
       pSeed.setEndVertex ( vtx.clone() ) ;
-      if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;
+      if ( sc.isFailure()) Warning ( "Error from momentum combiner, skip", sc, 0 ).ignore() ;
       Seeds.push_back(pSeed.clone());
 
 
@@ -667,7 +667,7 @@ IJetMaker::Jets LoKi::VVSeedFinder::JetCone( const  double &Rmax,
 
 
     StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
-    if ( sc.isFailure())   Error ( "Error from momentum combiner, skip" , sc ) ;
+    if ( sc.isFailure()) Warning ( "Error from momentum combiner, skip", sc, 0 ).ignore() ;
 
 
     pJet.setMomentum        ( Gaudi::LorentzVector ( ptot )  ) ;

@@ -358,7 +358,7 @@ StatusCode LoKi::FastJetWithAreaMaker::makeJets
     StatusCode sc = m_combiner -> combine ( daughters , pJet , vJet ) ;
     if ( sc.isFailure() )
     {
-      Error ( "Error from momentum combiner, skip" , sc ) ;
+      Warning ( "Error from momentum combiner, skip", sc, 0 ).ignore() ;
       continue ;
     }
     // redefine the momentum
