@@ -66,9 +66,8 @@
  *  @date 2006-03-26
  */
 // ============================================================================
-class MomentumCombiner
-  : public virtual IParticleCombiner
-  , public                 GaudiTool
+class MomentumCombiner : public virtual IParticleCombiner
+                       , public                 GaudiTool
 {
   /// friend factory for instantiation
   friend class ToolFactory<MomentumCombiner> ;
@@ -80,7 +79,7 @@ public:
     if ( sc.isFailure() ) { return sc ; }
     if ( !m_transporterName.empty() )
     { m_transporter = tool<IParticleTransporter> ( m_transporterName , this ) ; }
-    if ( 0 == m_transporter )
+    if ( NULL == m_transporter )
     { _Warning(" Only 4-momenta sum will be used (no ParticleTransporter specified)").ignore() ; }
     //
     return StatusCode::SUCCESS ;
@@ -108,10 +107,9 @@ public:
     LHCb::Vertex&                       vertex    ) const ;
 protected:
   /// standard constructor from type, name and the parent
-  MomentumCombiner
-  ( const std::string& type   ,
-    const std::string& name   ,
-    const IInterface*  parent )
+  MomentumCombiner( const std::string& type   ,
+                    const std::string& name   ,
+                    const IInterface*  parent )
     : GaudiTool ( type , name , parent )
     , m_transporterName ()
     , m_transporter     ( NULL )
@@ -220,7 +218,10 @@ StatusCode MomentumCombiner::combine
       // extrapolate it to new position
       const double zNew = mother.referencePoint().z() ;
       StatusCode sc = m_transporter->transport ( p , zNew , m_tmp ) ;
-      if ( sc.isFailure() ) { _Warning ("Unable to transport the particle!", sc ).ignore() ;  }
+      if ( sc.isFailure() ) 
+      {
+        _Warning ("Unable to transport the particle!", sc ).ignore() ;  
+      }
       else
       {
         // use the properly transported particle
@@ -241,7 +242,7 @@ StatusCode MomentumCombiner::combine
   mother.setMeasuredMass   ( mass ) ;
   // transsform vector
   Gaudi::Vector4 vct
-    ( - momentum.Px () , - momentum.Py () , - momentum.Pz () , momentum.E  () ) ;
+    ( -momentum.Px() , -momentum.Py() , -momentum.Pz() , momentum.E() ) ;
   vct /= ( fabs(mass)>0 ? mass : 1e-30 ) ;
   //
   double massErr2 = ROOT::Math::Similarity ( covariance , vct ) ;
