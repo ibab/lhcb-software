@@ -1,9 +1,9 @@
 #ifndef SPLITJETS_H 
 #define SPLITJETS_H 1
 
-// Include files 
- // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+// Include files
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 // from DaVinci.
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/DaVinciAlgorithm.h"
@@ -11,34 +11,34 @@
 #include "LoKi/Geometry.h"
 
 /** @class SplitJets SplitJets.h
- *  
+ *
  *
  *  @author Victor Coco
  *  @date   2013-05-22
  */
 class SplitJets : public DaVinciAlgorithm {
-public: 
+public:
   /// Standard constructor
   SplitJets( const std::string& name, ISvcLocator* pSvcLocator );
-  
+
   virtual ~SplitJets( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 private:
-    // proposed jet ID
-    int    m_jetID     ; ///< proposed jet ID
-    // proposed pseudo jet ID
-    int    m_pseudoJetID    ; ///< proposed pseudo jet ID
-    // jet input location
-    std::string    m_inputLocation   ; ///< jet input location
-    // combiner
-    std::string                m_combinerName ;
-    const IParticleCombiner* m_combiner ; ///< combiner to be used
+  // proposed jet ID
+  int    m_jetID     ; ///< proposed jet ID
+  // proposed pseudo jet ID
+  int    m_pseudoJetID    ; ///< proposed pseudo jet ID
+  // jet input location
+  std::string    m_inputLocation   ; ///< jet input location
+  // combiner
+  std::string                m_combinerName ;
+  const IParticleCombiner* m_combiner ; ///< combiner to be used
   //re set the extrainfo keys of the jet and its corrected momentum
-    bool  m_reSetMomentumAndKeys;
- 
+  bool  m_reSetMomentumAndKeys;
+
 };
 #endif // SPLITJETS_H
 
@@ -57,34 +57,34 @@ DECLARE_ALGORITHM_FACTORY( SplitJets )
 //=============================================================================
 SplitJets::SplitJets( const std::string& name,
                       ISvcLocator* pSvcLocator)
-  : DaVinciAlgorithm ( name , pSvcLocator )
-      , m_jetID        ( 24  )
-      , m_pseudoJetID  ( 421  )
-      , m_combiner     ( 0   )
-      , m_reSetMomentumAndKeys  (true)
-    {
-      declareProperty
-        ( "JetID"          ,
-          m_jetID          ,
-          "Particle ID for the Jet") ;
-      declareProperty
-        ( "PseudoJetID"          ,
-          m_pseudoJetID        ,
-          "Particle ID for the PseudoJet") ;
-      declareProperty
-        ( "reSetMomentumAndKeys"          ,
-	  m_reSetMomentumAndKeys  ,
-          "re set the extrainfo keys of the jet and its corrected momentum") ;
+: DaVinciAlgorithm ( name , pSvcLocator )
+  , m_jetID        ( 24  )
+  , m_pseudoJetID  ( 421  )
+  , m_combiner     ( 0   )
+  , m_reSetMomentumAndKeys  (true)
+{
+  declareProperty
+    ( "JetID"          ,
+      m_jetID          ,
+      "Particle ID for the Jet") ;
+  declareProperty
+    ( "PseudoJetID"          ,
+      m_pseudoJetID        ,
+      "Particle ID for the PseudoJet") ;
+  declareProperty
+    ( "reSetMomentumAndKeys"          ,
+      m_reSetMomentumAndKeys  ,
+      "re set the extrainfo keys of the jet and its corrected momentum") ;
 }
 //=============================================================================
 // Destructor
 //=============================================================================
-SplitJets::~SplitJets() {} 
+SplitJets::~SplitJets() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode SplitJets::initialize() 
+StatusCode SplitJets::initialize()
 {
   const StatusCode sc = DaVinciAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -109,11 +109,11 @@ StatusCode SplitJets::execute() {
 
   for (LHCb::Particle::Range::iterator ip = jets.begin();ip != jets.end() ; ip++){
     const LHCb::Particle * p = (*ip);
-    
+
     LHCb::Particle::ConstVector jetDaughters = p->daughtersVector ();
     LHCb::Particle::ConstVector newDaugs;
     const LHCb::Particle* theB;
-    const LHCb::VertexBase * pv =	bestVertex (p) ;
+    const LHCb::VertexBase * pv = bestVertex (p) ;
 
 
     for ( LHCb::Particle::ConstVector::const_iterator idaug = jetDaughters.begin() ; jetDaughters.end() != idaug ; ++idaug )
@@ -121,7 +121,7 @@ StatusCode SplitJets::execute() {
       if ((*idaug)->particleID().hasBottom())theB = (*idaug);
       else newDaugs.push_back ( (*idaug) ) ;
     }
-    
+
 
 
     if ( newDaugs.empty() )
@@ -136,10 +136,10 @@ StatusCode SplitJets::execute() {
     StatusCode sc = m_combiner->combine ( newDaugs ,  pPseudoJet, vPseudoJet ) ;
     if ( sc.isFailure() )
     {
-      Error ( "Error from momentum combiner, skip" , sc ) ;
+      Warning ( "Error from momentum combiner, skip", sc, 0 ) ;
       continue ;
     }
-    
+
     int tempID =  m_pseudoJetID;
     if(theB->particleID().pid() < 0)
       tempID = -m_pseudoJetID;
@@ -153,11 +153,11 @@ StatusCode SplitJets::execute() {
     vPseudoJet.setNDoF(pv->nDoF());
     vPseudoJet.setOutgoingParticles(pPseudoJet.daughters());
     pPseudoJet.setEndVertex(vPseudoJet.clone());
-    
+
     LHCb::Particle* pseudoJet = pPseudoJet.clone();
     this->relate ( pseudoJet , pv );
-    
-    
+
+
     // Create the new jet
     LHCb::Particle::ConstVector finalJetDaughters;
     finalJetDaughters.push_back(theB);
@@ -170,10 +170,7 @@ StatusCode SplitJets::execute() {
     sc = m_combiner->combine ( finalJetDaughters ,  pJet, vJet ) ;
     if ( sc.isFailure() )
     {
-
-
-
-      Error ( "Error from momentum combiner, skip" , sc ) ;
+      Warning ( "Error from momentum combiner, skip", sc, 0 ) ;
       continue ;
     }
 
@@ -197,14 +194,14 @@ StatusCode SplitJets::execute() {
     if(m_reSetMomentumAndKeys){
       pJet.setMomentum(p->momentum());
       for(int i = 0; i < 10000; i++)
-	if(p->hasInfo(i))
-	  pJet.addInfo(i,p->info(i,-999.0));      
+        if(p->hasInfo(i))
+          pJet.addInfo(i,p->info(i,-999.0));
     }
 
     LHCb::Particle* ppJet = pJet.clone();
     this->relate ( ppJet , pv );
 
-    this->markTree( ppJet ); 
+    this->markTree( ppJet );
 
   }
 

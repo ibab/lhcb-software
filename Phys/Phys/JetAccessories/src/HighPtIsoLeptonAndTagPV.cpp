@@ -394,15 +394,12 @@ LHCb::Particle HighPtIsoLeptonAndTagPV::JetCone(
 
   if ( daughters.empty() )
   {
-    Warning("Empty list of of daughter particles, skip it") ;
-
+    Warning("Empty list of of daughter particles, skip it").ignore() ;
   }
-
-
 
   StatusCode sc = m_combiner->combine ( daughters , pJet , vJet ) ;
   if ( sc.isFailure() )    {
-    Error ( "Error from momentum combiner, skip" , sc ) ;
+    Warning ( "Error from momentum combiner, skip" , sc, 0 ) ;
 
   }
 

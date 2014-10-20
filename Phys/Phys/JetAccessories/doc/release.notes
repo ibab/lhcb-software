@@ -4,6 +4,10 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-10-20 - Chris Jones
+ - General downgrading of various Error and Warning message, to sanitise a bit
+   things for running in production, the Stripping.
+
 !========================= JetAccessories v3r7 2014-09-30 =========================
 
 ! 2014-08-28 - Pieter David
