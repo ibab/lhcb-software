@@ -281,7 +281,7 @@ StatusCode DaVinci::ParticleTransporter::transportChargedBasic
   //
   sc = m_particle2state -> state2Particle ( state , transported ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Error from Particle2State ", sc ) ; }
+  { return Warning ( "Error from Particle2State ", sc ) ; }
   //
   return sc ;
 }
@@ -305,7 +305,7 @@ StatusCode DaVinci::ParticleTransporter::transportElectron
   LHCb::State state ;
   StatusCode sc = m_particle2state -> particle2State ( *particle , state ) ;
   if ( sc.isFailure() ) 
-  { return Error ("Error from Particle2State", sc ) ; }
+  { return Warning ("Error from Particle2State", sc ) ; }
   //
   if ( LHCb::Track::Long  == track -> type () || 
        LHCb::Track::Velo  == track -> type () || 
@@ -325,11 +325,11 @@ StatusCode DaVinci::ParticleTransporter::transportElectron
   else // extrapolator2 
   { sc = m_extrapolator2 -> propagate ( state , znew , particle->particleID() ) ; } 
   //
-  if ( sc.isFailure() ) { return Error ("Error TrackExtrapolator", sc ) ; }
+  if ( sc.isFailure() ) { return Warning ("Error TrackExtrapolator", sc ) ; }
   //
   sc = m_particle2state -> state2Particle ( state , transported ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Error from Particle2State ", sc ) ; }
+  { return Warning ( "Error from Particle2State ", sc ) ; }
   //
   return sc ;
 }

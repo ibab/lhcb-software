@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
 
+! 2014-10-20 - Chris Jones
+ - Downgrade some Errors to Warnings in ParticleTransporter.
+
 !========================= DaVinciTransporter v3r11 2013-06-13 =========================
 
 ! 2013-06-10 - Vanya Belyaev
