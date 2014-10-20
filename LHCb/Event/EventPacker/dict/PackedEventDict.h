@@ -32,8 +32,11 @@
 
 namespace 
 {
-  LHCb::PackedRelatedInfoRelations::PackedRelatedInfo i1;
-  LHCb::PackedRelatedInfoRelations::InfoVector        i2;
+  struct _Instantiations 
+  {
+    LHCb::PackedRelatedInfoRelations::PackedRelatedInfo i1;
+    LHCb::PackedRelatedInfoRelations::InfoVector        i2;
+  };
 }
 
 #endif // DICT_PACKEDEVENTDICT_H

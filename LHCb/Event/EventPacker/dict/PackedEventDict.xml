@@ -112,7 +112,8 @@
   <class name="LHCb::PackedCaloClusters" id="00000605-0000-0000-0000-000000000000" />
 
   <class name="LHCb::PackedRelatedInfoMap" />
-  <class name="LHCb::PackedRelatedInfoRelations::PackedRelatedInfo" />
+  <!-- This is created already in PhysEvent -->
+  <!--class name="LHCb::PackedRelatedInfoRelations::PackedRelatedInfo" /-->
   <class name="LHCb::PackedRelatedInfoRelations::InfoVector" />
   <class name="LHCb::PackedRelatedInfoRelations::RelationVector" />
   <class name="LHCb::PackedRelatedInfoRelations" id="00000630-0000-0000-0000-000000000000" />
