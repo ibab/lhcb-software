@@ -80,7 +80,7 @@ StatusCode TupleToolParticleReFit::fill( const Particle* mother
 {
 
   std::string prefix=fullName(head);
-  if (m_extraName=="") prefix  =prefix +  "_OVrefit";
+  if (m_extraName=="") prefix = prefix +  "_OVrefit";
 
   Assert( m_timefitter && m_vtxfitter  && P,
           "Should not happen, you are inside TupleToolParticleReFit.cpp" );
