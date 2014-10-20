@@ -11,8 +11,8 @@
 <argument name="validator"><text>
 findReferenceBlock("""
 BTaggingChecker                            INFO =======================================================
-BTaggingChecker                            INFO  Summary: EXCLUSIVE TAGGING PERFORMANCE
-BTaggingChecker                            INFO  Category            EFF.          Etag         Wrong TF      r       w
+BTaggingChecker                            INFO  Summary: EXCLUSIVE TAGGING PERFORMANCE 
+BTaggingChecker                            INFO  Category            EFF.          Etag         Wrong TF      r       w       
 BTaggingChecker                            INFO        1  Category       1.2+-1.2       29+-2.4       40+-4.9      59      39
 BTaggingChecker                            INFO        2  Category      0.77+-0.92       11+-1.7       37+-7.8      24      14
 BTaggingChecker                            INFO        3  Category       1.8+-1.2      3.8+-1       15+-10      11       2
@@ -27,7 +27,6 @@ BTaggingChecker                            INFO  **     SS pion      1.4+-1.2   
 BTaggingChecker                            INFO  **    VertexCh      3.9+-1.9       17+-2       26+-5.7      43      15
 BTaggingChecker                            INFO  ** OS nnetkaon      3.7+-1.9       27+-2.4       32+-4.8      63      29
 BTaggingChecker                            INFO  ** SS nnetkaon     0.87+-0.99       28+-2.4       59+-5      40      57
-BTaggingChecker                            INFO  **    OS Charm        2+-0.76        2+-0.76        0+-0       7       0
 BTaggingChecker                            INFO  **   SS Proton     0.18+-0.46       23+-2.3       46+-5.6      43      36
 BTaggingChecker                            INFO ---------------------------------------------------------
 BTaggingChecker                            INFO Tagging efficiency =     48 +/- 2.7 %
