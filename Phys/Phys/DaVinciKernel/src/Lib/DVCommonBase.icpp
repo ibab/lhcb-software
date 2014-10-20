@@ -1079,7 +1079,7 @@ DVCommonBase<PBASE>::calculateRelatedPV(const LHCb::Particle* p) const
       else
       {
         delete reFittedPV;
-        this->Error("PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
+        this->Warning( "PV re-fit failed", StatusCode::FAILURE, 1 ).ignore() ;
       }
     }
     if ( reFittedPVs.empty() )

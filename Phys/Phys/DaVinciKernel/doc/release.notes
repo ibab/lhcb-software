@@ -4,6 +4,9 @@
 ! Responsible : DV Maintainer
 !============================================================================
 
+! 2014-10-20 - Chris Jones
+ - Downgrade an Error message to Warning for when a PV refit fails.
+
 ! 2014-10-14 - Chris Jones
  - Make the LoKi vertex fitter and propertime fitter the defaults.
 
