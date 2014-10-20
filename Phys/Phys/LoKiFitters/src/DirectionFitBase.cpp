@@ -136,7 +136,7 @@ StatusCode LoKi::DirectionFitBase::iterate
       ( *primary , *good , momentum , decvertex , primvertex , m_fitter ) ;
     if ( sc.isFailure() ) 
     {
-      Warning ( "Error from LoKi::Fitters::ctau_step,reset" , sc ) ;
+      Warning ( "Error from LoKi::Fitters::ctau_step,reset", sc, 2 ) ;
       counter ( "#reset" ) += 1 ;
       // reset  to the initial expansion point and reiterate 
       momentum   = good     -> momentum       () ;

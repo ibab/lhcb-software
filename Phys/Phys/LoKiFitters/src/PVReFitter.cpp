@@ -602,7 +602,8 @@ StatusCode LoKi::PVReFitter::_remove_
   //
   // - too many tracks to remove 
   if ( removed.size () +  5  > pv.tracks().size() ) 
-  { return _Error("Less then five tracks in vertex remains!") ; }
+  { return _Warning( "Less then five tracks in vertex remains",
+                     StatusCode::FAILURE, 3 ) ; }
   // 
   // - too many tracks to remove
   if ( removed.size () + 10  > pv.tracks().size() ) 
@@ -638,7 +639,7 @@ StatusCode LoKi::PVReFitter::_remove_
       LoKi::KalmanFilter::load ( s , m_entries.back() , -1*weight ) ;
     if ( sc.isFailure() ) 
     {
-      _Error ( "Error from KalmanFilter::load, skip" , sc ) ;
+      _Warning ( "Error from KalmanFilter::load, skip", sc, 0 ) ;
       m_entries.pop_back() ; 
     }
   }
@@ -648,7 +649,8 @@ StatusCode LoKi::PVReFitter::_remove_
   // 1) prepare the gain-matrix for PV 
   int ifail = 0 ;
   const Gaudi::SymMatrix3x3 ci = pv.covMatrix().Inverse( ifail );
-  if ( 0 != ifail ) { return _Error ( "Non-invertible covarinace matrix!") ; }
+  if ( 0 != ifail ) { return _Warning( "Non-invertible covarinace matrix!",
+                                       StatusCode::FAILURE, 0 ) ; }
   //
   // 2) make (multi-step) of Kalman filter 
   const StatusCode sc = LoKi::KalmanFilter::step ( m_entries     , 
@@ -656,7 +658,7 @@ StatusCode LoKi::PVReFitter::_remove_
                                                    ci            ,
                                                    0             ) ;
   if ( sc.isFailure() ) 
-  { return _Error("Error from KalmanFilter::step" , sc ) ; }   // RETURN 
+  { return _Warning("Error from KalmanFilter::step", sc, 0 ) ; }   // RETURN 
   //
   // 3) finally update the vertex
   for ( LHCb::Track::ConstVector::const_iterator it = removed.begin() ; 
@@ -716,7 +718,7 @@ unsigned int LoKi::PVReFitter::_load_
     StatusCode sc = LoKi::KalmanFilter::load ( s , m_entries.back()  ) ;
     if ( sc.isFailure() ) 
     {
-      _Warning ( "Unable to load data, skip the track" , sc ) ;
+      _Warning ( "Unable to load data, skip the track", sc, 0 ) ;
       m_entries.pop_back() ;                   
       continue ;                                                // CONTINUE 
     }
@@ -752,7 +754,7 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
   const TRACKS& tracks = pv.tracks() ;
   //
   if      ( 2 > tracks.size () ) 
-  { return _Error ( "Not enough     tracks in vertex!" ) ; }
+  { return _Warning ( "Not enough     tracks in vertex!" ) ; }
   else if ( 5 > tracks.size () ) 
   { _Warning      ( "Less than five tracks in vertex!" ).ignore() ; }
   //
@@ -768,9 +770,10 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
     // load the data around the seed point 
     const unsigned int nTracks = _load_ ( pv , x , iIter , &ci ) ;
     if      ( 2 > nTracks ) 
-    { return _Error ( "Not enough of  good tracks in vertex!" ) ; }  // RETURN
+    { return _Warning ( "Not enough good tracks in the vertex!" ) ; }  // RETURN
     else if ( 5 > nTracks ) 
-    { _Warning      ( "Less than five good tracks in vertex!" ).ignore() ; }
+    { _Warning        ( "Less than five good tracks in vertex!", 
+                        StatusCode::SUCCESS, 0 ).ignore() ; }
     //
     // make Kalman-Filter step 
     //
@@ -801,7 +804,8 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
     //
   } // iterations 
   //
-  if ( iIter >= m_maxIter ) { _Warning ( "No convergency has been reached" ) ; }
+  if ( iIter >= m_maxIter ) { _Warning ( "No convergency has been reached",
+                                         StatusCode::SUCCESS, 0 ) ; }
   //
   const TrEntry& last = m_entries.back() ;
   //
@@ -815,11 +819,11 @@ StatusCode LoKi::PVReFitter::_reFit_ ( LHCb::RecVertex& pv ) const
   pv.setCovMatrix  ( last.m_c  ) ;
   //
   // fill tracks & weights 
-  pv.clearTracks  () ;
+  pv.clearTracks() ;
   for ( TrEntries::const_iterator ie = m_entries.begin () ; m_entries.end() != ie ; ++ie )
   {
     const LHCb::Track* track = ie->m_track ;
-    if ( 0 == track ) { continue ; }
+    if ( NULL == track ) { continue ; }
     pv.addToTracks ( track , ie->m_weight )  ;
     counter ("track-weight")  += ie->m_weight ;
   }

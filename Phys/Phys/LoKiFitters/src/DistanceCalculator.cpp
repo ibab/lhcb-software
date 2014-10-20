@@ -254,7 +254,7 @@ namespace LoKi
       if ( v1 == v2 ) 
       {
         dist = 0 ;
-        return _Warning("distance(v,v): the same vertex",StatusCode::SUCCESS ) ;  
+        return _Warning( "distance(v,v): the same vertex",StatusCode::SUCCESS,0 ) ;  
         
       }
       // make the real calculations
@@ -281,7 +281,7 @@ namespace LoKi
       {
         dist = 0 ;
         chi2 = 0 ;
-        return _Warning("distance(v,v): the same vertex",StatusCode::SUCCESS ) ;  
+        return _Warning("distance(v,v): the same vertex",StatusCode::SUCCESS,0);  
         
       }
       // make the real calculations 
@@ -366,7 +366,7 @@ namespace LoKi
       if ( p1 == p2 ) 
       {
         dist = 0 ;
-        return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS ) ;  
+        return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS,0);  
         
       }
       // make the real calculations 
@@ -396,7 +396,7 @@ namespace LoKi
       {
         dist = 0 ;
         chi2 = 0 ;
-        return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS ) ;  
+        return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS,0);  
         
       }
       // make the real calculations 
@@ -598,7 +598,7 @@ namespace LoKi
       if ( track1 == track2 ) 
       {
         doca = 0 ;
-        return _Warning("distance(t,t): the same track",StatusCode::SUCCESS ) ;
+        return _Warning("distance(t,t): the same track",StatusCode::SUCCESS,0);
       }
       //
       return _distance ( *track1 , *track2 , doca ) ;
@@ -623,7 +623,7 @@ namespace LoKi
       {
         doca = 0 ;
         chi2 = 0 ;
-        return _Warning("distance(t,t): the same track",StatusCode::SUCCESS ) ;
+        return _Warning("distance(t,t): the same track",StatusCode::SUCCESS,0);
       }
       //
       return _distance ( *track1 , *track2 , doca , &chi2 ) ;
@@ -952,7 +952,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         vertex.position() + impact   ,   // new Z 
         m_particle1                  ) ; // the result
     if ( sc.isFailure() ) 
-    { _Warning ( "Error from ParticleTransporter(ip_1), ignore" , sc ) ; }
+    { _Warning ( "Error from ParticleTransporter(ip_1), ignore", sc, 0 ) ; }
     else 
     { good = &m_particle1 ; } // the properly transported particle 
     
@@ -967,7 +967,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
-  { _Warning ( "There is no convergency-I", NoConvergency ) ; }
+  { _Warning ( "There is no convergency-I", NoConvergency, 0 ) ; }
   
   // evaluate chi2 (if needed) 
   if ( 0 != chi2 ) 
@@ -983,22 +983,23 @@ StatusCode LoKi::DistanceCalculator::_distance
           vertex.position() + impact   ,   // new Z 
           m_particle1                  ) ; // the result 
       if ( sc.isFailure() ) 
-      { _Warning ( "Error from ParticleTransporter(chi2_1), ignore" , sc ) ; }
+      { _Warning ( "Error from ParticleTransporter(chi2_1), ignore", sc, 0 ) ; }
       else 
       { good = &m_particle1 ; } // the properly transported particle    
     }
     // prepare the Kalman Filter machinery 
     StatusCode sc = LoKi::KalmanFilter::load ( *good , m_entry ) ;
     if ( sc.isFailure() ) 
-    { return _Warning("distance(I): KalmanFilter::load failed", sc ) ; }
+    { return _Warning("distance(I): KalmanFilter::load failed", sc, 0 ) ; }
     // get the "the previus" Kalman Filter estimate == vertex
     Gaudi::SymMatrix3x3 ci = vertex.covMatrix() ; // the gain matrix 
     if ( !ci.Invert() ) 
-    { return _Warning ( "distance(I): unable to calculate the gain matrix" ) ; }
+    { return _Warning ( "distance(I): unable to calculate the gain matrix", 
+                        StatusCode::FAILURE, 0 ) ; }
     // make one step of Kalman filter 
     sc = LoKi::KalmanFilter::step ( m_entry , vertex.position() , ci , 0 ) ;
     if ( sc.isFailure() ) 
-    { return _Warning ( "distance(I): error from Kalman Filter step" , sc ) ; }
+    { return _Warning ( "distance(I): error from Kalman Filter step", sc, 0 ) ; }
     // get the chi2 
     *chi2 = m_entry.m_chi2 ;
     // ========================================================================
@@ -1072,7 +1073,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point + impact   ,   // new Z 
         m_particle1      ) ; // the result 
     if ( sc.isFailure() ) 
-    { _Warning ( "Error from ParticleTransporter(ip_2), ignore" , sc ) ; }
+    { _Warning ( "Error from ParticleTransporter(ip_2), ignore", sc, 0 ) ; }
     else 
     { good = &m_particle1 ; } // the properly transported particle 
     
@@ -1090,7 +1091,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   
   // check for  the convergency
   if ( deltaZ >= m_deltaZ )
-  { _Warning ( "There is no convergency-II", NoConvergency ) ; }
+  { _Warning ( "There is no convergency-II", NoConvergency, 0 ) ; }
   
   // evaluate the chi2 (if needed) 
   if ( 0 != chi2 ) 
@@ -1105,7 +1106,7 @@ StatusCode LoKi::DistanceCalculator::_distance
           point + impact               ,   // new Z 
           m_particle1                  ) ; // the result 
       if ( sc.isFailure() ) 
-      { _Warning ( "Error from ParticleTransporter(chi2_2), ignore" , sc ) ; }
+      { _Warning ( "Error from ParticleTransporter(chi2_2), ignore", sc, 0 ) ; }
       else 
       { good = &m_particle1 ; } // the properly transported particle 
     }
@@ -1137,7 +1138,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   {
     dist = 0 ;
     if ( 0 != chi2 ) { *chi2 = 0 ; }
-    return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS ) ;  
+    return _Warning("distance(p,p): the same particle",StatusCode::SUCCESS,0);  
   }
   //
   if ( allow )
@@ -1224,7 +1225,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point1      ,    // where to transport 
         m_particle1 )  ; // destination 
     if ( sc.isFailure() ) 
-    { _Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
+    { _Warning ( "distance(III):Error from ParticleTransporter, ignore", sc, 0 ) ; }
     else { good1 = &m_particle1 ; } // the properly transported particles:
     //
     // transport the second particle into new positions:
@@ -1234,7 +1235,7 @@ StatusCode LoKi::DistanceCalculator::_distance
         point2      ,    // where to transport 
         m_particle2 )  ; // destination 
     if ( sc.isFailure() ) 
-    { _Warning ( "distance(III):Error from ParticleTransporter, ignore" , sc ) ; }
+    { _Warning ( "distance(III):Error from ParticleTransporter, ignore", sc, 0 ) ; }
     else { good2 = &m_particle2 ; } // the properly transported particles:
     //
     // make new (improved) evaluation of the distance:
@@ -1253,7 +1254,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   // check for  the convergency
   //
   if ( dz >= m_deltaZ )
-  { _Warning ( "There is no convergency-III", NoConvergency ) ; }  
+  { _Warning ( "There is no convergency-III", NoConvergency, 0 ) ; }  
   //
   // evaluate the distance 
   //
@@ -1326,7 +1327,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   sc = LoKi::Fitters::path0 ( primary , *good , decay , path ) ;
   if ( sc.isFailure() ) 
   {
-    _Warning ( "distance(IV):Error code from LoKi::Fitters::path0" , sc ) ;
+    _Warning ( "distance(IV):Error code from LoKi::Fitters::path0", sc, 0 ) ;
     path = 0 ;
   }
   
@@ -1348,7 +1349,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     if ( sc.isFailure() ) 
     {
       // reset  to the initial expansion point and reiterate 
-      _Warning ( "distance(IV): error from path_step" , sc ) ;
+      _Warning ( "distance(IV): error from path_step", sc, 0 ) ;
       momentum   = good     -> momentum       () ;
       decvertex  = good     -> referencePoint () ;
       primvertex = primary  .  position       () ;
@@ -1372,7 +1373,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     }  
   }
   
-  _Warning ( "There is no convergency-IV" , NoConvergency ) ;
+  _Warning ( "There is no convergency-IV" , NoConvergency, 0 ) ;
   // get the error in "path" 
   error = ::sqrt ( m_fitter.m_Vvar ) ;
   //
@@ -1484,7 +1485,7 @@ StatusCode LoKi::DistanceCalculator::_distance
     // transport the state 
     StatusCode sc = stateAtZ ( m_state1 , track , vZ + impact.Z() ) ;    
     if ( sc.isFailure() )
-    { _Warning ("distance(VI): can't get the proper state(1)" , sc ) ; }
+    { _Warning ("distance(VI): can't get the proper state(1)", sc ) ; }
     //
     // get the distance 
     i_distance ( m_state1 , vertex , impact ) ;
@@ -1495,7 +1496,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   }
   // check for  the convergency
   if ( dz >= m_deltaZ )
-  { _Warning ( "There is no convergency-VI", NoConvergency ) ; }
+  { _Warning ( "There is no convergency-VI", NoConvergency, 0 ) ; }
   //
   //
   // evaluate chi2 (if needed) 
@@ -1543,7 +1544,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   {
     doca = 0 ;
     if ( 0 != chi2 ) { *chi2 = 0 ; }
-    return _Warning("distance(t,t): the same track",StatusCode::SUCCESS ) ;  
+    return _Warning("distance(t,t): the same track",StatusCode::SUCCESS,0 ) ;  
   }
   //
   Gaudi::XYZPoint point1 ;
@@ -1588,7 +1589,7 @@ StatusCode LoKi::DistanceCalculator::_distance
   }
   // check for  the convergency
   if ( dz >= m_deltaZ )
-  { _Warning ( "There is no convergency-V", NoConvergency ) ; }
+  { _Warning ( "There is no convergency-V", NoConvergency, 0 ) ; }
   // 
   // evaluate the distance 
   doca = ( point1 - point2 ) . R () ;

@@ -124,49 +124,15 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    inline StatusCode _Warning
+    StatusCode _Warning
     ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode( StatusCode::FAILURE , true ) ) const 
-    {
-      code.setChecked () ;
-      //
-      if   ( errorsPrint() && m_printMyAlg  ) { getMyAlg      () ; }
-      else                                    { m_myAlg.clear () ; }
-      //
-      if       ( m_printMyAlg && errorsPrint() )  
-      { return Warning ( msg + m_myAlg , code , m_prints ) ; }
-      else if  ( errorsPrint() )  
-      { return Warning ( msg           , code , m_prints ) ; }
-      //
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      { warning () 
-          << "'"       << msg  << "' " << m_myAlg   
-          << " Code =" << code << endmsg ; }
-      //
-      return code ;
-    }
+      const StatusCode&  code   = StatusCode( StatusCode::FAILURE, true ),
+      const unsigned int prints = 2 ) const;
     // ========================================================================
-    inline StatusCode _Error 
+    StatusCode _Error 
     ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode ( StatusCode::FAILURE , true ) ) const 
-    {
-      code.setChecked () ;
-      //
-      if   ( errorsPrint() && m_printMyAlg  ) { getMyAlg      () ; }
-      else                                    { m_myAlg.clear () ; }
-      //      
-      if       ( m_printMyAlg && errorsPrint() )  
-      { return Error   ( msg + m_myAlg , code , m_prints ) ; }
-      else if  ( errorsPrint() )  
-      { return Error   ( msg           , code , m_prints ) ; }
-      //
-      if ( msgLevel ( MSG::DEBUG ) ) 
-      { error ()
-          << "'"       << msg  << "' " << m_myAlg   
-          << " Code =" << code << endmsg ; }
-      //
-      return code ;
-    }
+      const StatusCode&  code   = StatusCode( StatusCode::FAILURE, true ),
+      const unsigned int prints = 2 ) const;
     // ========================================================================
     const std::string& myAlg() const { return m_myAlg ; }
     // ========================================================================

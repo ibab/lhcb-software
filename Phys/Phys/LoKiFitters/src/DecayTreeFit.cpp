@@ -441,7 +441,7 @@ namespace LoKi
       // no action if not yet initialized 
       if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
       // 
-      MsgStream& log = info() ;
+      MsgStream& log = debug() ;
       log << "New Track extrapolator to be used '" << m_extrapolatorName <<  "'" ;
       const IAlgTool* e = extrapolator() ;
       if ( 0 != e ) { log  << " : " << e->type() << "/" << e->name() ;} 
@@ -526,7 +526,7 @@ StatusCode LoKi::DecayTreeFit::initialize ()          // initialize the tool
   if ( sc.isFailure() ) { return sc ; }                  // RETURN 
   //
   { //
-    MsgStream& log = info() ;
+    MsgStream& log = debug() ;
     log << "Track extrapolator to be used '" << m_extrapolatorName << "'" ;
     const IAlgTool* e = extrapolator() ;
     if ( 0 != e ) { log  << " : " << e->type() << "/" << e->name() ;} 
@@ -606,7 +606,7 @@ StatusCode LoKi::DecayTreeFit::fit                     // fit the decay tree
   if ( Fitter::Success != status ) 
   { 
     m_fitter.reset () ;
-    return Error ( "Error from fitter, status" , 110 + status ) ; 
+    return Warning ( "Fitter failed status" , 110 + status, 1 ) ; 
   }
   //
   return StatusCode::SUCCESS ;
@@ -633,8 +633,8 @@ LoKi::DecayTreeFit::fitted ( const LHCb::Particle* p ) const
   Fitter::FitStatus status = m_fitter->status() ;
   if ( Fitter::Success != status ) 
   {
-    Error ( "fitted: fit is not successfull , return NULL" , 
-            120 + status ).ignore()  ;
+    Warning ( "fitted: fit is not successfull , return NULL" , 
+              120 + status, 1 ).ignore()  ;
     m_fitter.reset() ;
     return 0 ;                                                    // RETURN 
   }
@@ -673,7 +673,7 @@ LoKi::DecayTreeFit::fittedTree () const
   //
   if ( 0 == m_fitter.get() ) 
   {
-    Warning("fitted: fit is not performed yet, return empty tree ") ;
+    Warning("fitted: fit is not performed yet, return empty tree") ;
     return LHCb::DecayTree() ;                                      // RETURN 
   }
   //
@@ -713,7 +713,8 @@ double LoKi::DecayTreeFit::chi2 ( ) const
   //
   if ( 0 == m_fitter.get() ) 
   {
-    Warning ( "chi2: fit is not performed yet, return InvalidChi2" ) ;
+    Warning ( "chi2: fit is not performed yet, return InvalidChi2",
+              StatusCode::FAILURE, 2 ) ;
     return LoKi::Constants::InvalidChi2 ;                             // RETURN 
   }
   //
@@ -721,7 +722,7 @@ double LoKi::DecayTreeFit::chi2 ( ) const
   if ( Fitter::Success != status ) 
   {
     Warning ( "chi2: fit is not successfull, return InvalidChi2" , 
-              120 + status ) ;
+              120 + status, 2 ) ;
     m_fitter.reset() ; 
     return LoKi::Constants::InvalidChi2 ;                             // RETURN 
   }
@@ -753,15 +754,15 @@ unsigned int LoKi::DecayTreeFit::nDoF ( ) const
   //
   if ( 0 == m_fitter.get() ) 
   {
-    Warning ( "nDoF: fit is not performed yet, return 0" ) ;
+    Warning ( "nDoF: fit is not performed yet, return 0", 
+              StatusCode::FAILURE, 2 ) ;
     return 0 ;                                                       // RETURN 
   }
   //
   Fitter::FitStatus status = m_fitter->status () ;
   if ( Fitter::Success != status ) 
   {
-    Warning ( "nDoF: fit is notsucessfull, return 0 " , 
-              120 + status ) ;
+    Warning ( "nDoF: fit is not sucessfull, return 0 ", 120 + status, 2 ) ;
     m_fitter.reset() ; 
     return 0 ;                                                        // RETURN 
   }
@@ -833,13 +834,13 @@ StatusCode LoKi::DecayTreeFit::reFit ( LHCb::Particle& particle ) const
 {
   StatusCode sc = fit ( &particle ) ;
   if ( sc.isFailure() )
-  { return Error ("reFit: error form fit", sc ) ; }
+  { return Warning ("reFit: Error from fit", sc, 2 ) ; }
   //
   if ( 0 == m_fitter.get() ) { return Error ("reFit: invalid fitter") ; }
   //
   Fitter::FitStatus status = m_fitter->status() ;
   if ( Fitter::Success != status ) 
-  { return Error ( "reFit: invalid fit status " , 120 + status ) ; }
+  { return Error ( "reFit: invalid fit status" , 120 + status, 2 ) ; }
   //
   // the actual refit 
   if ( !m_fitter->updateCand ( particle ) ) 
@@ -856,8 +857,7 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints1 ()    // decode constraints
   //
   if ( m_constraints.empty() ) 
   {
-    MsgStream& log = debug() ;
-    log << " No Mass-Constraints will be applied " << endreq ;
+    debug() << " No Mass-Constraints will be applied " << endreq ;
     return StatusCode::SUCCESS ;
   }
   ///
@@ -869,13 +869,12 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints1 ()    // decode constraints
         m_constraints.end() != ic ; ++ic ) 
   {
     const LHCb::ParticleProperty* pp = ppsvc->find ( *ic ) ;
-    if ( 0 == pp ) { return Error ( "Unable to find particle '" + (*ic) + "'") ; }
+    if ( 0 == pp ) { return Error("Unable to find particle '" + (*ic) + "'") ; }
     pids.insert ( LHCb::ParticleID ( pp->pid().abspid() ) ) ;
   }
   //
   m_global_pids.insert ( m_global_pids.end() , pids.begin() , pids.end() ) ;
   //
-  MsgStream& log = info() ;
   std::set<std::string> parts ;
   for ( PIDs::const_iterator ipid = m_global_pids.begin() ;
         m_global_pids.end() != ipid ; ++ipid ) 
@@ -884,8 +883,8 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints1 ()    // decode constraints
     if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
   }
   //
-  log << " Mass Constraints will be applied for : " <<
-    Gaudi::Utils::toString ( parts ) << endreq ;
+  info() << " Mass Constraints will be applied for : "
+         << Gaudi::Utils::toString ( parts ) << endreq ;
   //
   release ( ppsvc ) ;
   //
@@ -900,8 +899,7 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints2 ()    // decode constraints
   //
   if ( m_masses.empty() ) 
   {
-    MsgStream& log = debug() ;
-    log << " No Mass-Constraints will be applied " << endreq ;
+    debug() << " No Mass-Constraints will be applied " << endreq ;
     return StatusCode::SUCCESS ;
   }
   ///
@@ -916,7 +914,6 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints2 ()    // decode constraints
     m_global_mass [ pp->particleID() ] = im->second ;
   }
   //
-  MsgStream& log = info() ;
   std::set<std::string> parts ;
   //
   for ( MASS::const_iterator imas = m_global_mass.begin() ;
@@ -926,8 +923,8 @@ StatusCode LoKi::DecayTreeFit::decodeConstraints2 ()    // decode constraints
     if ( 0 != pp ) { parts.insert ( pp->particle () ) ; }
   }
   //
-  log << " Mass Constraints will be applied for : " <<
-    Gaudi::Utils::toString ( parts ) << endreq ;
+  info() << " Mass Constraints will be applied for : " 
+         << Gaudi::Utils::toString ( parts ) << endreq ;
   //
   release ( ppsvc ) ;
   //

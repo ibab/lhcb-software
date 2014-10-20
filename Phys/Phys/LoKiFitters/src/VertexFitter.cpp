@@ -114,7 +114,7 @@ StatusCode LoKi::VertexFitter::_load
   if ( !LoKi::KalmanFilter::okForVertex ( m_entries ) &&
        ( !m_use_rho_like_branch || 
          !LoKi::KalmanFilter::rhoPlusLike ( m_entries ) ) )
-  { return _Error( "Input set could not be verticized"  , InvalidData ) ; }
+  { return _Error( "Input set could not be vertexed"  , InvalidData ) ; }
   //
   return StatusCode::SUCCESS ;
 } 
@@ -261,11 +261,11 @@ StatusCode LoKi::VertexFitter::_iterate
       if ( abs ( d2 ) < std::min ( m_DistanceChi2  , 0.01 ) || s_equal ( d2 , 0 ) ) 
       {
         d2 = 0 ; 
-        _Warning ( "_iterate: small negative chi2 detected, adjusted" , sc ) ; 
+        _Warning ( "_iterate: small negative chi2 detected, adjusted" , sc, 0 ) ; 
       }
       else 
       { 
-        _Warning ( "_iterate: large negative chi2 detected, ignore"   , sc ) ; 
+        _Warning ( "_iterate: large negative chi2 detected, ignore"   , sc, 0 ) ; 
       }
     }
     //
@@ -283,13 +283,13 @@ StatusCode LoKi::VertexFitter::_iterate
       sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
       if ( sc.isFailure() ) 
       { 
-        _Warning ( "_iterate(): problem with smoother", sc ) ; 
+        _Warning ( "_iterate(): problem with smoother", sc, 0 ) ; 
         continue ; // CONTINUE: continue iterations in case smoother fails 
       }
       //
       sc = LoKi::KalmanFilter::evalCov ( m_entries ) ;
       if ( sc.isFailure() ) 
-      { _Warning ( "_iterate(): problems with covariances" , sc ) ; }
+      { _Warning ( "_iterate(): problems with covariances", sc, 0 ) ; }
       // 
       counter ( "#iterations" ) += iIter ;
       //
@@ -297,7 +297,7 @@ StatusCode LoKi::VertexFitter::_iterate
     } 
   } // end of iterations
   //
-  return _Warning ( "No convergency has been reached" , NoConvergency ) ; // RETURN 
+  return _Warning( "No convergency has been reached", NoConvergency, 0 ) ; // RETURN 
 } 
 // ============================================================================
 // make a seed 
@@ -436,7 +436,7 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
   //
   ++counter("Seed:case(4)") ;
   //
-  return _Warning("No proper seed is found" , StatusCode::SUCCESS  ) ;
+  return _Warning( "No proper seed is found", StatusCode::SUCCESS, 0  ) ;
 }
 // ============================================================================
 // The vertex fitting method without creation of a Particle
@@ -448,14 +448,14 @@ StatusCode LoKi::VertexFitter::fit
   // load the data 
   StatusCode sc = _load ( daughters ) ;
   if ( sc.isFailure() ) 
-  { return _Error ( "fit(): failure from _load() ", sc ) ; }      // RETURN 
+  { return _Error ( "fit(): failure from _load() ", sc, 0 ) ; }      // RETURN 
   sc = _seed ( &vertex ) ; 
   if ( sc.isFailure() ) 
-  { _Warning  ( "fit(): failure from _seed()"     , sc ) ; }
+  { _Warning  ( "fit(): failure from _seed()"     , sc, 0 ) ; }
   // make "m_nIterMax" iterations 
   sc = _iterate ( m_nIterMaxI , m_seed ) ;
-  if ( sc.isFailure() ) 
-  { return _Error ( "fit(): failure from _iterate()"  , sc ) ; } // RETURN 
+  if ( sc.isFailure() ) { return sc; }
+  //{ return _Warning ( "fit(): failure from _iterate()", sc, 0 ) ; } // RETURN 
   
   // get the data from filter 
   const Entry&               entry = m_entries.back() ;
@@ -473,11 +473,11 @@ StatusCode LoKi::VertexFitter::fit
     if ( abs ( chi2 ) < std::min ( m_DistanceChi2 , 0.01 ) || s_equal ( chi2 , 0 ) ) 
     {
       chi2 = 0 ; 
-      _Warning ( "fit(): small negative chi2 detected, adjusted" , sc ) ; 
+      _Warning ( "fit(): small negative chi2 detected, adjusted" , sc, 0 ) ; 
     }
     else 
     { 
-      _Warning ( "fit(): large negative chi2 detected, ignore"   , sc ) ; 
+      _Warning ( "fit(): large negative chi2 detected, ignore"   , sc, 0 ) ; 
     }
   }
   //
@@ -494,7 +494,8 @@ StatusCode LoKi::VertexFitter::fit
   // keep for future tracing
   m_vertex = &vertex ;
   if ( !seedOK ( vertex.position() ) ) 
-  { _Warning ( "fit(): Vertex is outside of fiducial volume " ) ; }
+  { _Warning( "fit(): Vertex is outside of fiducial volume", 
+              StatusCode::SUCCESS, 0 ) ; }
   //
   return sc ;
 } 
@@ -510,11 +511,11 @@ StatusCode LoKi::VertexFitter::fit
   //
   // play a bit with extra-info
   if ( particle.hasInfo ( LHCb::Particle::Chi2OfVertexConstrainedFit ) ) 
-  { particle.eraseInfo ( LHCb::Particle::Chi2OfVertexConstrainedFit )  ; }
+  {  particle.eraseInfo ( LHCb::Particle::Chi2OfVertexConstrainedFit ) ; }
   
   // make a vertex fit 
   StatusCode sc = fit ( vertex , daughters ) ;
-  if ( sc.isFailure() ) { return _Error ( "fit(): failure from fit", sc ) ; }
+  if ( sc.isFailure() ) { return _Warning ( "fit(): failure from fit", sc, 0 ) ; }
   // links:
   
   particle.clearDaughters() ;
@@ -574,18 +575,21 @@ StatusCode LoKi::VertexFitter::fit
     if      ( mmerr  > -0.1 * Gaudi::Units::MeV ||  s_equal ( mmerr , 0 ) ) 
     {
       mmerr = Gaudi::Units::MeV ;
-      _Warning ( "fit(): measured mass error is a bit    non-positive, adjust to 1 MeV" ) ; 
+      _Warning ( "fit(): measured mass error is a bit    non-positive, adjust to 1 MeV", 
+                 StatusCode::SUCCESS, 0 ) ; 
     }
     else if ( mmerr  > -1.0 * Gaudi::Units::MeV ) 
     {
       mmerr = Gaudi::Units::MeV ;
-      _Warning ( "fit(): measured mass error is slightly non-positive, adjust to 1 MeV" ) ; 
+      _Warning ( "fit(): measured mass error is slightly non-positive, adjust to 1 MeV",
+                 StatusCode::SUCCESS, 0 ) ; 
     }
     else
     {
       counter ("bad mass error") += mmerr ;
       mmerr = Gaudi::Units::MeV ;
-      _Warning ( "fit(): measured mass error is non-positive, adjust to 1 MeV  " ) ; 
+      _Warning ( "fit(): measured mass error is non-positive, adjust to 1 MeV",
+                 StatusCode::SUCCESS, 0 ) ; 
     }    
   }  
   //
@@ -595,18 +599,21 @@ StatusCode LoKi::VertexFitter::fit
     if      ( mmass  > -0.1 * Gaudi::Units::MeV ||  s_equal ( mmerr , 0 ) ) 
     {
       mmass = Gaudi::Units::MeV ;
-      _Warning ( "fit(): measured mass is a bit    non-positive , adjust to 1 MeV" ) ; 
+      _Warning ( "fit(): measured mass is a bit    non-positive , adjust to 1 MeV",
+                 StatusCode::SUCCESS, 0 ) ; 
     }
     else if ( mmass  > -0.5 * mmerr ) 
     {
       mmass = Gaudi::Units::MeV ;
-      _Warning ( "fit(): measured mass is slightly non-positive , adjust to 1 MeV" ) ; 
+      _Warning ( "fit(): measured mass is slightly non-positive , adjust to 1 MeV",
+                 StatusCode::SUCCESS, 0 ) ; 
     }
     else 
     {
       counter ("bad mass ") += mmass ;
       mmass = Gaudi::Units::MeV ;
-      _Warning ( "fit(): measured mass is non-positive , adjust to 1 MeV" ) ; 
+      _Warning ( "fit(): measured mass is non-positive , adjust to 1 MeV",
+                 StatusCode::SUCCESS, 0 ) ; 
     }    
   }
   //
@@ -650,24 +657,24 @@ StatusCode LoKi::VertexFitter::add
                   vertex.outgoingParticles().begin () , 
                   vertex.outgoingParticles().end   () ) ;
     if ( sc.isFailure() ) 
-    { return _Error ( "add: error from 'fit'", sc ) ; }
+    { return _Warning ( "add: error from 'fit'", sc ) ; }
   }
   StatusCode sc = _add ( particle , vertex.position() ) ;
-  if ( sc.isFailure() ) { _Warning ("add(): failure from _add" , sc ) ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _add" , sc, 0 ) ; }
   //
   Entry& entry    =   m_entries.back()   ;
   const Entry& e0 = *(m_entries.end()-2) ;
   // make one Kalman step using the previos parameters as estimate
   sc = LoKi::KalmanFilter::step  ( entry , e0.m_x , e0.m_ci , e0.m_chi2) ;
-  if ( sc.isFailure() ) { _Warning ("add(): failure from _step" , sc ) ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _step" , sc, 0 ) ; }
   // smooth it!
   sc = LoKi::KalmanFilter::smooth ( m_entries ) ;
-  if ( sc.isFailure() ) { _Warning ("add(): failure from _smooth" , sc ) ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _smooth", sc, 0 ) ; }
   // make few more full iterations 
   m_seedci = entry.m_ci ;
   Gaudi::Math::scale ( m_seedci , s_scale2 ) ;
   sc = _iterate ( m_nIterMaxII , entry.m_x ) ;
-  if ( sc.isFailure() ) { _Warning ("add(): failure from _iterate" , sc ) ; }
+  if ( sc.isFailure() ) { _Warning ("add(): failure from _iterate" , sc, 0 ) ; }
   //
   const Gaudi::Vector3&      x     = entry.m_x         ;
   const Gaudi::SymMatrix3x3& c     = entry.m_c         ;
@@ -683,7 +690,7 @@ StatusCode LoKi::VertexFitter::add
   m_vertex = &vertex ;
   // check for positions
   if ( !seedOK ( vertex.position() ) ) 
-  { _Warning ( "fit():Vertex is outside of fiducial volume " , sc ) ; }
+  { _Warning ( "fit():Vertex is outside of fiducial volume", sc, 0 ) ; }
   //
   return StatusCode::SUCCESS ;
 } 
@@ -708,7 +715,7 @@ StatusCode LoKi::VertexFitter::remove
                   vertex.outgoingParticles().begin() , 
                   vertex.outgoingParticles().end  () ) ;
     if ( sc.isFailure() ) 
-    { return _Error ( "remove: error from 'fit'", sc ) ;  }           // RETURN 
+    { return _Warning ( "remove: error from 'fit'", sc ) ;  }           // RETURN 
   }
   // remove the particle from the vertex 
   vertex.removeFromOutgoingParticles ( particle ) ;
@@ -913,8 +920,8 @@ StatusCode LoKi::VertexFitter::initialize()
   if ( m_transport_tolerance < 0.1 * Gaudi::Units::micrometer ) 
   {
     m_transport_tolerance = 0.1 * Gaudi::Units::micrometer ;
-    info () << "Redefine 'TransportTolerance' property to " <<
-      m_transport_tolerance << endmsg ;
+    info () << "Redefine 'TransportTolerance' property to " 
+            << m_transport_tolerance << endmsg ;
   }
   //
   if ( !m_massage.empty() && std::string::npos == m_transporterName.find("DaVinci::") ) 
