@@ -5,6 +5,9 @@
 !                                               ---> Stefania Vecchi(2013--now)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+! 2014-10-20 - Stefania Vecchi
+ - disable OSCharm taggers by default. Add configuration names "Stripping21" and
+   "Stripping21_MC" in Tunings.py to set all the properties accordingly
 
 ! 2014-10-13 - Jack Wimberley
  - Fix other compilation warnings due to two commits ago
