@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-10-20 - Sean Benson
+ - Added PhotonDaughtersInLHCb tool, to make sure photon daughters of the B
+ are in the acceptance.
+
 ! 2014-10-08 - Xabier Cid Vidal
  - Add InvariantMassQQMCJets tool, to apply gen cuts in the invariant mass of dijets
 
