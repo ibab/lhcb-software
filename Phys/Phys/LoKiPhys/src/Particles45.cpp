@@ -76,7 +76,7 @@ LoKi::Particles::RelatedInfo::operator ()
     SmartDataPtr<IMAP> data ( ds , m_location ) ;
     if ( !data ) 
     {
-      Error( "No table at location " + m_location ) ;
+      Warning( "No table at location " + m_location ) ;
       return -2000 ;
     } 
     m_table = data ;

@@ -99,7 +99,7 @@ LoKi::Particles::LifeTime::lifeTime
     m_fitter -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc, 0 ).ignore() ;
+    Warning ( "Error from IlifetimeFitter::fit, return InvalidTime", sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidTime ;  // RETURN 
   }
   /** apply embedded chi2-cut! 
@@ -135,7 +135,7 @@ LoKi::Particles::LifeTime::lifeTimeChi2
     tool() -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return -InvalidChi2" , sc ) ;
+    Warning ( "Error from IlifetimeFitter::fit, return -InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   //
@@ -171,7 +171,7 @@ LoKi::Particles::LifeTime::lifeTimeSignedChi2
     fitter() -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc, 0 ).ignore() ;
+    Warning ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   // apply embedded chi2-cut! 
@@ -211,7 +211,7 @@ LoKi::Particles::LifeTime::lifeTimeFitChi2
     fitter () -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc, 0 ).ignore() ;
+    Warning ( "Error from IlifetimeFitter::fit, return InvalidChi2" , sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidChi2 ;                         // RETURN 
   }
   //
@@ -244,7 +244,7 @@ LoKi::Particles::LifeTime::lifeTimeError
     fitter () -> fit ( *vertex() , *p , i_time , i_error , i_chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc, 0 ).ignore() ;
+    Warning ( "Error from IlifetimeFitter::fit, return InvalidTime" , sc, 0 ).ignore() ;
     return LoKi::Constants::InvalidTime ;                             // RETURN 
   }
   //

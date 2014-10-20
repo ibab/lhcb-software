@@ -49,7 +49,7 @@ LoKi::Particles::TrackChi2::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'InvalidChi2'" ) ;
+    Error ( "Argument is invalid! return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;               // RETURN 
   }
   //
@@ -57,7 +57,7 @@ LoKi::Particles::TrackChi2::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return 'InvalidChi2'" ) ;
+    Warning ( "Track    is invalid! return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;               // RETURN 
   }
   //
@@ -79,7 +79,7 @@ LoKi::Particles::TrackChi2PerDoF::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'InvalidChi2'" ) ;
+    Error ( "Argument is invalid! return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;               // RETURN 
   }
   //
@@ -87,7 +87,7 @@ LoKi::Particles::TrackChi2PerDoF::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return 'InvalidChi2'" ) ;
+    Warning ( "Track    is invalid! return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;               // RETURN 
   }
   //
@@ -122,7 +122,7 @@ LoKi::Particles::TrackHasState::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return false " ) ;
+    Error ( "Argument is invalid! return false " ) ;
     return false ;                                         // RETURN 
   }
   //
@@ -130,7 +130,7 @@ LoKi::Particles::TrackHasState::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return false " ) ;
+    Warning ( "Track    is invalid! return false " ) ;
     return false ;                                          // RETURN 
   }
   //
@@ -178,7 +178,7 @@ LoKi::Particles::TrackType::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return -1000 " ) ;
+    Error ( "Argument is invalid! return -1000 " ) ;
     return -1000 ;                                      // RETURN 
   }
   //
@@ -186,7 +186,7 @@ LoKi::Particles::TrackType::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return -1000 " ) ;
+    Warning ( "Track    is invalid! return -1000 " ) ;
     return -1000 ;                                     // RETURN 
   }
   //
@@ -208,7 +208,7 @@ LoKi::Particles::TrackHistory::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return -1000 " ) ;
+    Error ( "Argument is invalid! return -1000 " ) ;
     return -1000 ;                                      // RETURN 
   }
   //
@@ -216,7 +216,7 @@ LoKi::Particles::TrackHistory::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return -1000 " ) ;
+    Warning ( "Track    is invalid! return -1000 " ) ;
     return -1000 ;                                     // RETURN 
   }
   //
@@ -238,7 +238,7 @@ LoKi::Particles::TrackHistoryFit::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return -1000 " ) ;
+    Error ( "Argument is invalid! return -1000 " ) ;
     return -1000 ;                                      // RETURN 
   }
   //
@@ -246,7 +246,7 @@ LoKi::Particles::TrackHistoryFit::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return -1000 " ) ;
+    Warning ( "Track    is invalid! return -1000 " ) ;
     return -1000 ;                                     // RETURN 
   }
   //
@@ -268,7 +268,7 @@ LoKi::Particles::TrackStatus::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return -1000 " ) ;
+    Error ( "Argument is invalid! return -1000 " ) ;
     return -1000 ;                                      // RETURN 
   }
   //
@@ -276,7 +276,7 @@ LoKi::Particles::TrackStatus::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return -1000 " ) ;
+    Warning ( "Track    is invalid! return -1000 " ) ;
     return -1000 ;                                     // RETURN 
   }
   //
@@ -297,7 +297,7 @@ LoKi::Particles::TrackChi2Prob::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'InvalidConfLevel'" ) ;
+    Error ( "Argument is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel;                    // RETURN 
   }
   // get the track:
@@ -305,7 +305,7 @@ LoKi::Particles::TrackChi2Prob::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return 'InvalidConfLevel'" ) ;
+    Warning ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
   }
   //
@@ -333,7 +333,7 @@ LoKi::Particles::GhostProbability::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'InvalidConfLevel'" ) ;
+    Error ( "Argument is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel;                    // RETURN 
   }
   // get the track:
@@ -341,7 +341,7 @@ LoKi::Particles::GhostProbability::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return 'InvalidConfLevel'" ) ;
+    Warning ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
   }
   //
@@ -366,7 +366,7 @@ LoKi::Particles::TrackLikelihood::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'InvalidConfLevel'" ) ;
+    Error ( "Argument is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel;                    // RETURN 
   }
   // get the track:
@@ -374,7 +374,7 @@ LoKi::Particles::TrackLikelihood::operator()
   //
   if ( 0 == track ) 
   {
-    Error ( " Track    is invalid! return 'InvalidConfLevel'" ) ;
+    Warning ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
   }
   //

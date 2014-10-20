@@ -89,13 +89,13 @@ LoKi::Particles::HasProtos::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'false' " ) ;
+    Error ( "Argument is invalid! return 'false' " ) ;
     return false ;                                              
   }
   //
   if ( empty() ) 
   {
-    Warning ( " Empty list of protoparticles is specified! return 'false' " ) ;
+    Warning ( "Empty list of protoparticles is specified! return 'false' " ) ;
     return false ;
   }
   //
@@ -107,13 +107,13 @@ bool LoKi::Particles::HasProtos::inList ( const LHCb::Particle* p ) const
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'false' " ) ;
+    Error ( "Argument is invalid! return 'false' " ) ;
     return false ;                                              
   }
   //
   if ( empty() ) 
   {
-    Warning ( " Empty list of protoparticles is specified! return 'false' " ) ;
+    Warning ( "Empty list of protoparticles is specified! return 'false' " ) ;
     return false ;
   }
   //
@@ -125,13 +125,13 @@ bool LoKi::Particles::HasProtos::inTree ( const LHCb::Particle* p ) const
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'false' " ) ;
+    Error ( "Argument is invalid! return 'false' " ) ;
     return false ;                                              
   }
   //
   if ( empty() ) 
   {
-    Warning ( " Empty list of protoparticles is specified! return 'false' " ) ;
+    Warning ( "Empty list of protoparticles is specified! return 'false' " ) ;
     return false ;
   }
   //
@@ -203,12 +203,12 @@ LoKi::Particles::HasProtosInTree::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'false' " ) ;
+    Error ( "Argument is invalid! return 'false' " ) ;
     return false ;                                              
   }
   if ( empty() ) 
   {
-    Warning ( " Empty list of protoparticles is specified! return 'false' " ) ;
+    Warning ( "Empty list of protoparticles is specified! return 'false' " ) ;
     return false ;
   }
   // scan the tree 

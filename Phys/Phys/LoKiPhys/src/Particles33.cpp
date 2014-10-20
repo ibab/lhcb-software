@@ -199,12 +199,12 @@ LoKi::Particles::PolarizationAngle::operator()
   
   if ( sc.isFailure() )
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'" , sc ) ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'" , sc ) ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 2 != vct.size() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'" , sc ) ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'" , sc ) ;
     return LoKi::Constants::InvalidAngle ;
   }
   //
@@ -375,14 +375,14 @@ StatusCode LoKi::Particles::SinChi::getComponents
   StatusCode sc1 = getComponents12  ( p , vct ) ;
   if ( sc1.isFailure() ) 
   {
-    Error ( "Unable to pickup 12-components" , sc1 ) ;
+    Warning ( "Unable to pickup 12-components" , sc1 ) ;
     return sc1 ;
   }
   //
   StatusCode sc2 = getComponents34  ( p , vct ) ;
   if ( sc2.isFailure() ) 
   {
-    Error ( "Unable to pickup 34-components" , sc2 ) ;
+    Warning ( "Unable to pickup 34-components" , sc2 ) ;
     return sc2 ;
   }
   return StatusCode::SUCCESS ;
@@ -417,12 +417,12 @@ LoKi::Particles::SinChi::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 4 != daughters.size() ) 
   {
-    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   // finally evaluate the angle chi: 
@@ -548,12 +548,12 @@ LoKi::Particles::CosChi::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 4 != daughters.size() ) 
   {
-    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   // finally evaluate the angle chi: 
@@ -679,12 +679,12 @@ LoKi::Particles::AngleChi::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 4 != daughters.size() ) 
   {
-    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   // finally evaluate the angle chi: 
@@ -814,12 +814,12 @@ LoKi::Particles::CosThetaTr::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 4 != daughters.size() ) 
   {
-    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   // finally evaluate the cos(theta_tr)
@@ -947,12 +947,12 @@ LoKi::Particles::SinPhiTr::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 4 != daughters.size() ) 
   {
-    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   // finally evaluate the sin(phi_tr)
@@ -1078,12 +1078,12 @@ LoKi::Particles::CosPhiTr::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 4 != daughters.size() ) 
   {
-    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   // finally evaluate the cos(phi_tr)
@@ -1209,12 +1209,12 @@ LoKi::Particles::AnglePhiTr::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (1), return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   if ( 4 != daughters.size() ) 
   {
-    Error ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
+    Warning ("Unable to get proper decay components (2) , return 'InvalidAngle'") ;
     return LoKi::Constants::InvalidAngle ;
   }
   // finally evaluate the phi_tr

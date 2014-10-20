@@ -59,14 +59,14 @@ LoKi::Particles::DecayAngle::operator()
 {
   if ( 0 == p ) 
   { 
-    Error ( " Argument is invalid, return 'InvalidAngle' " ) ;
+    Error ( "Argument is invalid, return 'InvalidAngle' " ) ;
     return LoKi::Constants::InvalidAngle ;                        // RETURN 
   }               
   // get the gaughter particle
   const LHCb::Particle* child = LoKi::Child::child ( p , m_child ) ;
   if ( 0 == child ) 
   { 
-    Error ( " 'Child' is invalid, return 'InvalidAngle' " ) ;
+    Error ( "'Child' is invalid, return 'InvalidAngle' " ) ;
     return LoKi::Constants::InvalidAngle;                         // RETURN 
   }               
   const LoKi::LorentzVector& mv = p     -> momentum() ;
@@ -139,4 +139,3 @@ LoKi::Particles::ArmenterosPodolanski::operator()
 // ============================================================================
 // The END 
 // ============================================================================
-

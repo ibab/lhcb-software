@@ -505,7 +505,7 @@ LoKi::Particles::ChildPredicate::operator()
   const LHCb::Particle* c = m_child.child ( p ) ;
   if ( 0 == c ) 
   {
-    Error (" child LHCb::Particle* points to NULL, return 'false'") ;
+    Error ("Child LHCb::Particle* points to NULL, return 'false'") ;
     return false ;
   }
   //

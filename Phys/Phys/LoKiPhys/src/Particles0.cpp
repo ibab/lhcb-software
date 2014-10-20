@@ -107,13 +107,13 @@ LoKi::Particles::Key::operator()
 {
   if ( 0 == p ) 
   {
-    Error(" Argument is invalid! return " + 
+    Error("Argument is invalid! return " + 
           Gaudi::Utils::toString ( m_bad )  ) ;
     return m_bad ;
   }
   if ( !p->hasKey() ) 
   {
-    Error(" Key is not set! return " + 
+    Error("Key is not set! return " + 
           Gaudi::Utils::toString ( m_nokey ) ) ;
     return m_nokey ;
   }
@@ -146,7 +146,7 @@ LoKi::Particles::InTES::operator()
 {
   if ( 0 == p ) 
   {
-    Error(" Argument is invalid! return false" ) ;
+    Error("Argument is invalid! return false" ) ;
     return false ;                                              // RETURN 
   }
   //
@@ -192,7 +192,7 @@ LoKi::Particles::Identifier::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'InvalidID'" ) ;
+    Error ( "Invalid Particle, return 'InvalidID'" ) ;
     return LoKi::Constants::InvalidID ;
   } ;
   return p->particleID().pid() ;
@@ -212,7 +212,7 @@ LoKi::Particles::AbsIdentifier::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'InvalidID'" ) ;
+    Error ( "Invalid Particle, return 'InvalidID'" ) ;
     return LoKi::Constants::InvalidID ;
   } ;
   return p->particleID().abspid() ;
@@ -232,7 +232,7 @@ LoKi::Particles::Charge::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return -1000" ) ;
+    Error ( "Invalid Particle, return -1000" ) ;
     return -1000 ;
   } 
   return charge ( p );
@@ -251,7 +251,7 @@ LoKi::Particles::SumCharge::sumCharge
 ( LoKi::Particles::Charge::argument p ) const 
 {
   if ( 0 == p ) 
-  { Error ( " Invalid Particle, return -1000" ) ; return -1000 ; } ; // RETURN 
+  { Error ( "Invalid Particle, return -1000" ) ; return -1000 ; } ; // RETURN 
   // basic ? 
   if ( p->isBasicParticle() ) { return charge ( p ) ; }              // RETURN 
   // 
@@ -285,7 +285,7 @@ LoKi::Particles::Momentum::operator()
   ( LoKi::Particles::Momentum::argument p ) const 
 {
   if( 0 != p ) { return p -> p () ; }                        // RETURN 
-  Error ( " Invalid Particle, return 'InvalidMomentum'" ) ;
+  Error ( "Invalid Particle, return 'InvalidMomentum'" ) ;
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -302,7 +302,7 @@ LoKi::Particles::Momentum2::operator()
 {
   if( 0 != p ) 
   { return p -> momentum().P2() ; }                 // RETURN 
-  Error ( " Invalid Particle, return 'InvalidMomentum'" ) ;
+  Error ( "Invalid Particle, return 'InvalidMomentum'" ) ;
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -319,7 +319,7 @@ LoKi::Particles::Energy::operator()
   ( LoKi::Particles::Energy::argument p ) const 
 {
   if( 0 != p ) { return p -> momentum () .E ()  ; }          // RETURN 
-  Error(" Invalid Particle, return 'InvalidEnergy'");
+  Error("Invalid Particle, return 'InvalidEnergy'");
   return LoKi::Constants::InvalidEnergy;                     // RETURN 
 }
 // ============================================================================
@@ -336,7 +336,7 @@ LoKi::Particles::TransverseMomentum::operator()
   ( LoKi::Particles::TransverseMomentum::argument p ) const 
 {
   if ( 0 != p ) { return p -> momentum().Pt() ; }            // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomentum'");
+  Error("Invalid Particle, return 'InvalidMomentum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -353,7 +353,7 @@ LoKi::Particles::MomentumX::operator()
   ( LoKi::Particles::MomentumX::argument p ) const 
 {
   if ( 0 != p ) { return p -> momentum () . Px () ; }         // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomentum'");
+  Error("Invalid Particle, return 'InvalidMomentum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -370,7 +370,7 @@ LoKi::Particles::MomentumY::operator()
   ( LoKi::Particles::MomentumY::argument p ) const 
 {
   if( 0 != p ) { return p -> momentum () . py () ; }         // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomentum'");
+  Error("Invalid Particle, return 'InvalidMomentum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -387,7 +387,7 @@ LoKi::Particles::MomentumZ::operator()
   ( LoKi::Particles::MomentumZ::argument p ) const 
 {
   if ( 0 != p ) { return p -> momentum () . Pz () ; }         // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomentum'");
+  Error("Invalid Particle, return 'InvalidMomentum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -404,7 +404,7 @@ LoKi::Particles::PseudoRapidity::operator()
   ( LoKi::Particles::PseudoRapidity::argument p ) const
 {
   if( 0 != p ) { return eta ( p ) ; }                        // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomenum'");
+  Error("Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -448,7 +448,7 @@ LoKi::Particles::Rapidity::operator()
   ( LoKi::Particles::Rapidity::argument p ) const
 {
   if( 0 != p ) { return y ( p ) ; }                        // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomenum'");
+  Error("Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -461,7 +461,7 @@ LoKi::Particles::Rapidity0::operator()
   ( LoKi::Particles::Rapidity0::argument p ) const
 {
   if ( 0 != p ) { return y0 ( p ) ; }                        // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomenum'");
+  Error("Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -473,7 +473,7 @@ LoKi::Particles::Phi::operator()
   ( LoKi::Particles::Phi::argument p ) const
 {
   if( 0 != p ) { return phi ( p ) ; }    // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomenum'");
+  Error("Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -482,7 +482,7 @@ LoKi::Particles::Theta::operator()
   ( LoKi::Particles::Theta::argument p ) const
 {
   if( 0 != p ) { return p -> momentum () . Theta () ; }    // RETURN 
-  Error(" Invalid Particle, return 'InvalidMomenum'");
+  Error("Invalid Particle, return 'InvalidMomenum'");
   return LoKi::Constants::InvalidMomentum;                   // RETURN 
 }
 // ============================================================================
@@ -499,7 +499,7 @@ LoKi::Particles::Mass::operator()
   ( LoKi::Particles::Mass::argument p ) const 
 {
   if ( 0 != p ) { return mass ( p )  ; }     // RETURN 
-  Error(" Invalid Particle, return 'InvalidMass'");
+  Error("Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
 // ============================================================================
@@ -512,7 +512,7 @@ LoKi::Particles::MeasuredMass::operator()
   ( LoKi::Particles::MeasuredMass::argument p ) const 
 {
   if( 0 != p ) { return measuredMass  ( p ) ; }         // RETURN 
-  Error(" Invalid Particle, return 'InvalidMass'");
+  Error("Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
 // ============================================================================
@@ -608,7 +608,7 @@ double LoKi::Particles::InvariantMass::operator()
 {
   if ( 0 == mother   ) 
   { 
-    Error(" 'Mother' is invalid, return 'InvalidMass' ");
+    Error("'Mother' is invalid, return 'InvalidMass'");
     return LoKi::Constants::InvalidMass;                         // RETURN 
   }
   // the special case 
@@ -626,7 +626,7 @@ double LoKi::Particles::InvariantMass::operator()
       LoKi::Child::child ( mother , *index ) ;
     if ( 0 == daughter ) 
     { 
-      Error (" 'Daughter' is invalid, return 'InvalidMass'");
+      Error ("'Daughter' is invalid, return 'InvalidMass'");
       return LoKi::Constants::InvalidMass;                     // RETURN
     }               
     mom += daughter->momentum();
@@ -705,7 +705,7 @@ LoKi::Particles::DeltaMass::operator()
   ( LoKi::Particles::DeltaMass::argument p ) const
 {
   if ( 0 != p ) { return ( mass ( p ) - m_mass ) ; }    // RETURN 
-  Error (" Invalid Particle, return 'InvalidMass'");
+  Error ("Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
 // ============================================================================
@@ -732,7 +732,7 @@ LoKi::Particles::AbsDeltaMass::operator()
   ( LoKi::Particles::AbsDeltaMass::argument p ) const
 {
   if ( 0 != p ) { return ::fabs ( mass ( p ) - m0 () ) ; }    // RETURN 
-  Error (" Invalid Particle, return 'InvalidMass'");
+  Error ("Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
 // ============================================================================
@@ -741,7 +741,7 @@ LoKi::Particles::DeltaMeasuredMass::operator()
   ( LoKi::Particles::DeltaMeasuredMass::argument p ) const 
 {
   if ( 0 != p ) { return ( measuredMass ( p ) - m0 ()  ) ; }        // RETURN 
-  Error ( " Invalid Particle, return 'InvalidMass'");
+  Error ( "Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                   // RETURN 
 }
 // ============================================================================
@@ -778,7 +778,7 @@ LoKi::Particles::AbsDeltaMeasuredMass::operator()
   ( LoKi::Particles::AbsDeltaMeasuredMass::argument p ) const 
 {
   if ( 0 != p ) { return ::fabs( measuredMass ( p ) - m0 () ) ; } // RETURN 
-  Error(" Invalid Particle, return 'InvalidMass'");
+  Error("Invalid Particle, return 'InvalidMass'");
   return LoKi::Constants::InvalidMass;                      // RETURN 
 }
 // ============================================================================
@@ -794,12 +794,12 @@ LoKi::Particles::DeltaMeasuredMassChi2::operator()
 {
   if ( 0 == p              )
   {
-    Error(" Invalid Particle, return 'InvalidMass'");
+    Error("Invalid Particle, return 'InvalidMass'");
     return LoKi::Constants::InvalidMass ;                       // RETURN
   }
   if( 0 == p -> measuredMassErr() ) 
   {
-    Error(" Invalid MassError, return 'InvalidMass'");
+    Error("Invalid MassError, return 'InvalidMass'");
     return LoKi::Constants::InvalidMass ;                       // RETURN
   }
   //
@@ -824,7 +824,7 @@ LoKi::Particles::DeltaMassChi2::operator()
 {
   if ( 0 == p              )
   {
-    Error(" Invalid Particle, return 'InvalidChi2'");
+    Error("Invalid Particle, return 'InvalidChi2'");
     return LoKi::Constants::InvalidChi2 ;                       // RETURN
   }
   return LoKi::Kinematics::chi2mass 
@@ -846,7 +846,7 @@ LoKi::Particles::ConfidenceLevel::operator()
   ( LoKi::Particles::ConfidenceLevel::argument p ) const 
 {
   if ( 0 != p ) { return p -> confLevel () ; }              // RETURN 
-  Error ( " Invalid Particle, return '-1000'" ) ;
+  Error ( "Invalid Particle, return '-1000'" ) ;
   return -1000 ;                                           // RETURN 
 }
 // ============================================================================
@@ -864,7 +864,7 @@ LoKi::Particles::Weight::operator()
   ( LoKi::Particles::Weight::argument p ) const 
 {
   if ( 0 != p ) { return p -> weight () ; }              // RETURN 
-  Error ( " Invalid Particle, return '-1000'" ) ;
+  Error ( "Invalid Particle, return '-1000'" ) ;
   return -1000 ;                                           // RETURN 
 }
 // ============================================================================
@@ -882,7 +882,7 @@ LoKi::Particles::IsBasic::operator()
   ( LoKi::Particles::IsBasic::argument p ) const 
 {
   if ( 0 != p ) { return p -> isBasicParticle () ; }      // RETURN 
-  Error ( " Invalid Particle, return 'false'" ) ;
+  Error ( "Invalid Particle, return 'false'" ) ;
   return false;                                           // RETURN 
 }
 // ============================================================================
@@ -900,7 +900,7 @@ LoKi::Particles::NumberOfDaughters::operator()
   ( LoKi::Particles::NumberOfDaughters::argument p ) const 
 {
   if ( 0 != p ) { return p -> daughters().size() ; }   // RETURN 
-  Error ( " Invalid Particle, return 0" ) ;
+  Error ( "Invalid Particle, return 0" ) ;
   return 0 ;                                           // RETURN 
 }
 // ============================================================================
@@ -918,7 +918,7 @@ LoKi::Particles::HasProto::operator()
   ( LoKi::Particles::HasProto::argument p ) const 
 {
   if ( 0 != p ) { return ( 0 != p ->proto() ) ; }         // RETURN 
-  Error ( " Invalid Particle, return false" ) ;
+  Error ( "Invalid Particle, return false" ) ;
   return false ;                                           // RETURN 
 }
 // ============================================================================
@@ -936,7 +936,7 @@ LoKi::Particles::HasVertex::operator()
   ( LoKi::Particles::HasVertex::argument p ) const 
 {
   if ( 0 != p ) { return ( 0 != p ->endVertex() ) ; }     // RETURN 
-  Error ( " Invalid Particle, return false" ) ;
+  Error ( "Invalid Particle, return false" ) ;
   return false ;                                           // RETURN 
 }
 // ============================================================================
@@ -951,7 +951,7 @@ LoKi::Particles::HasTrack::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return false" ) ;
+    Error ( "Invalid Particle, return false" ) ;
     return false ;                                                // RETURN
   }
   // get protoparticle 

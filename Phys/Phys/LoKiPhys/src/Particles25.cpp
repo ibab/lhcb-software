@@ -101,7 +101,7 @@ LoKi::Particles::MaxCosineDirectionAngleWithSource::operator()
          LoKi::Helpers::PMFA<LoKi::Particles::CosineDirectionAngle>
          ( this , &LoKi::Particles::CosineDirectionAngle::dira ) , p , result ) ) 
   {
-    Error ( "Invalid _Max_vertex evaluation; return -5000 ") ;
+    Warning ( "Invalid _Max_vertex evaluation; return -5000" ) ;
     return -5000 ;    
   }
   // 
@@ -170,7 +170,7 @@ LoKi::Particles::MaxCosineDirectionAngleDV::operator()
          LoKi::Helpers::PMFA<LoKi::Particles::CosineDirectionAngle>
          ( this , &LoKi::Particles::CosineDirectionAngle::dira ) , p , result ) ) 
   {
-    Error ( "Invalid _Max_vertex evaluation; return -5000 ") ;
+    Warning ( "Invalid _Max_vertex evaluation; return -5000" ) ;
     return -5000 ;    
   }
   //

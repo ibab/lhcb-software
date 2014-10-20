@@ -83,13 +83,13 @@ bool LoKi::Particles::IsAParticle::inList
   //
   if ( 0 == p ) 
   {
-    Error    ( " Argument is invalid! return 'false' " );
+    Error    ( "Argument is invalid! return 'false'" );
     return false ;
   }
   //
   if ( empty() ) 
   {
-    Warning  ( " Empty list of particles is specified! return 'false' " );
+    Warning  ( "Empty list of particles is specified! return 'false'" );
     return false ;
   }
   // look for the particle 
@@ -101,12 +101,12 @@ bool LoKi::Particles::IsAParticle::inTree
 {
   if ( 0 == p ) 
   {
-    Error    ( " Argument is invalid! return 'false' " );
+    Error    ( "Argument is invalid! return 'false'" );
     return false ;
   }
   if ( empty() ) 
   {
-    Warning  ( " Empty list of particles is specified! return 'false' " );
+    Warning  ( "Empty list of particles is specified! return 'false'" );
     return false ;
   }
   //
@@ -201,12 +201,12 @@ LoKi::Particles::IsAParticleFromTree::operator()
 {
   if ( 0 == p ) 
   {
-    Error    ( " Argument is invalid! return 'false' " );
+    Error    ( "Argument is invalid! return 'false'" );
     return false ;                                             // RETURN 
   }
   if ( empty() ) 
   {
-    Warning  ( " Empty list of particles is specified! return 'false' " );
+    Warning  ( "Empty list of particles is specified! return 'false'" );
     return false ;                                             // RETURN 
   }
   // find the particle by scanning of the decay trees of the other particles 

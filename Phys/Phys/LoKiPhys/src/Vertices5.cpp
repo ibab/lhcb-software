@@ -78,7 +78,7 @@ LoKi::Vertices::MinVertexDistanceWithSource::minvdsource
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
     keep2.addObjects ( primaries.begin() , primaries.end () ) ;
-    if ( empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
+    if ( empty() ) { Warning ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;
   }
@@ -243,7 +243,7 @@ LoKi::Vertices::MinVertexChi2DistanceWithSource::minvdchi2source
     LHCb::VertexBase::ConstVector primaries = m_source() ;
     // fill the functor with primary vertices:
     keep2.addObjects ( primaries.begin() , primaries.end () ) ;
-    if ( empty() ) { Error ( "Empty list of vertices is loaded!" ) ; }
+    if ( empty() ) { Warning ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;
   }

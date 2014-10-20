@@ -67,7 +67,7 @@ LoKi::Particles::ProtoHasInfo::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
   // 
@@ -116,7 +116,7 @@ LoKi::Particles::ProtoInfo::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return " + 
+    Error ( "Argument is invalid! return " + 
             Gaudi::Utils::toString ( m_bad ) ) ;
     return m_bad ;                                          // RETURN 
   }  
@@ -125,7 +125,7 @@ LoKi::Particles::ProtoInfo::operator()
   //
   if ( 0 == pp ) 
   {
-    Error ( " ProtoParticle is invalid! return " + 
+    Error ( "ProtoParticle is invalid! return " + 
             Gaudi::Utils::toString ( m_bad ) ) ;
     return m_bad ;                                          // RETURN 
   }  
@@ -151,7 +151,7 @@ LoKi::Particles::ProtoHasRichPID::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
   // 
@@ -159,7 +159,7 @@ LoKi::Particles::ProtoHasRichPID::operator()
   //
   if ( 0 == pp ) 
   {
-    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    Warning ( "Invalid ProtoParticle, return 'false'" ) ;
     return false ;                                   // RETURN 
   }
   //
@@ -181,7 +181,7 @@ LoKi::Particles::ProtoHasMuonPID::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
   // 
@@ -189,7 +189,7 @@ LoKi::Particles::ProtoHasMuonPID::operator()
   //
   if ( 0 == pp ) 
   {
-    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    Warning ( "Invalid ProtoParticle, return 'false'" ) ;
     return false ;                                   // RETURN 
   }
   //
@@ -211,7 +211,7 @@ LoKi::Particles::ProtoHasCaloHypos::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
   // 
@@ -219,7 +219,7 @@ LoKi::Particles::ProtoHasCaloHypos::operator()
   //
   if ( 0 == pp ) 
   {
-    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    Warning ( "Invalid ProtoParticle, return 'false'" ) ;
     return false ;                                   // RETURN 
   }
   //
@@ -239,7 +239,7 @@ LoKi::Particles::IsMuon::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
   //
@@ -247,7 +247,7 @@ LoKi::Particles::IsMuon::operator()
   //
   if ( 0 == pid ) 
   {
-    Error ( " Invalid MuonPID, return 'false'" ) ;
+    Warning ( "Invalid MuonPID, return 'false'", StatusCode::SUCCESS, 0 ) ;
     return false ;                                   // RETURN 
   }
   //
@@ -295,7 +295,7 @@ LoKi::Particles::IsMuonLoose::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                     // RETURN 
   }
   //
@@ -303,7 +303,7 @@ LoKi::Particles::IsMuonLoose::operator()
   //
   if ( 0 == pid ) 
   {
-    Error ( " Invalid MuonPID, return 'false'" ) ;
+    Warning ( "Invalid MuonPID, return 'false'", StatusCode::SUCCESS, 0 ) ;
     return false ;                                       // RETURN 
   }
   //
@@ -338,7 +338,7 @@ LoKi::Particles::InMuonAcceptance::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                     // RETURN 
   }
   //
@@ -346,7 +346,7 @@ LoKi::Particles::InMuonAcceptance::operator()
   //
   if ( 0 == pid ) 
   {
-    Error ( " Invalid MuonPID, return 'false'" ) ;
+    Warning ( "Invalid MuonPID, return 'false'", StatusCode::SUCCESS, 0 ) ;
     return false ;                                       // RETURN 
   }
   //
@@ -374,14 +374,14 @@ LoKi::Particles::TrackHasInfo::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'false'" ) ;
+    Error ( "Invalid Particle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
   // 
   const LHCb::ProtoParticle* pp = p->proto() ;
   if ( 0 == pp ) 
   {
-    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    Warning ( "Invalid ProtoParticle, return 'false'" ) ;
     return false ;                                    // RETURN 
   }
   //
@@ -422,7 +422,7 @@ LoKi::Particles::TrackInfo::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return " + 
+    Error ( "Argument is invalid! return " + 
             Gaudi::Utils::toString ( m_bad ) ) ;
     return m_bad ;                                          // RETURN 
   }  
@@ -430,16 +430,16 @@ LoKi::Particles::TrackInfo::operator()
   const LHCb::ProtoParticle* pp = p->proto() ;
   if ( 0 == pp ) 
   {
-    Error ( " ProtoParticle is invalid! return " + 
-            Gaudi::Utils::toString ( m_bad ) ) ;
+    Warning ( "ProtoParticle is invalid! return " + 
+              Gaudi::Utils::toString ( m_bad ) ) ;
     return m_bad ;                                          // RETURN 
   }
   //
   const LHCb::Track* track = pp->track() ;
   if ( 0 == track ) 
   {
-    Error ( " Track is invalid! return " + 
-            Gaudi::Utils::toString ( m_bad ) ) ;
+    Warning ( "Track is invalid! return " + 
+              Gaudi::Utils::toString ( m_bad ) ) ;
     return m_bad ;                                          // RETURN 
   }  
   //
@@ -472,14 +472,14 @@ LoKi::Particles::NShared::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, return -100000 " ) ;
+    Error ( "LHCb::Particle* points to NULL, return -100000" ) ;
     return -100000 ;                                                   // RETURN    
   }
   //
   const LHCb::ProtoParticle* proto = p->proto () ;
   if ( 0 == proto ) 
   {
-    Error ( "LHCb::ProtoParticle* points to NULL, return -10000 " ) ;
+    Warning ( "LHCb::ProtoParticle* points to NULL, return -10000" ) ;
     return -10000 ;                                                   // RETURN    
   }
   //
@@ -489,7 +489,8 @@ LoKi::Particles::NShared::operator()
   const LHCb::MuonPID* muon = proto->muonPID() ;
   if ( 0 == muon ) 
   {
-    Error ( "LHCb::MuonPID* points to NULL, return -100 " ) ;
+    Warning ( "LHCb::MuonPID* points to NULL, return -100",
+              StatusCode::SUCCESS, 0 ) ;
     return -100 ;                                                   // RETURN    
   }
   //

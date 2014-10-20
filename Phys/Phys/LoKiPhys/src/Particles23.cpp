@@ -322,7 +322,7 @@ LoKi::Particles::WrongMass::wmass
   StatusCode sc = check ( p ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from check(), return InvalidMass" , sc ) ;
+    Warning ( "Error from check(), return InvalidMass" , sc ) ;
     return LoKi::Constants::InvalidMass ;
   }
   //
@@ -389,7 +389,7 @@ LoKi::Particles::WrongMass::wmass
     }
     else 
     {
-      Error ( "Unable to transport daughter particle, use non-extrapolated" , sc ) ;
+      Warning ( "Unable to transport daughter particle, use non-extrapolated" , sc ) ;
       sum += LoKi::Kinematics::wrongMass ( dau->momentum() , newmass ) ;
     }
     
@@ -499,7 +499,7 @@ LoKi::Particles::DeltaWrongMass::dwmass
   StatusCode sc = check ( p ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from check(), return InvalidMass" , sc ) ;
+    Warning ( "Error from check(), return InvalidMass" , sc ) ;
     return LoKi::Constants::InvalidMass ;
   }
   return dwmass ( p->daughters () ) ;
@@ -565,7 +565,7 @@ LoKi::Particles::AbsDeltaWrongMass::adwmass
   StatusCode sc = check ( p ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from check(), return InvalidMass" , sc ) ;
+    Warning ( "Error from check(), return InvalidMass" , sc ) ;
     return LoKi::Constants::InvalidMass ;
   }
   return adwmass ( p->daughters () ) ;

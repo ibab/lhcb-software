@@ -59,7 +59,7 @@ StatusCode LoKi::Particles::ReFit::reFit ( LHCb::Particle* p ) const
   Assert ( !(!fitter()) , "IParticleReFitter is invalid!" ) ;
   //
   StatusCode sc = fitter()->reFit( *p ) ;
-  if ( sc.isFailure() ) { return Error( "Error from IParticleReFitter", sc ) ; }
+  if ( sc.isFailure() ) { return Warning( "Error from IParticleReFitter", sc ) ; }
   return sc ;
 }
 // ============================================================================
@@ -164,7 +164,7 @@ StatusCode LoKi::Particles::MassFit::fit
   Assert ( 0 != p       , "Argument is invaild!" ) ;
   Assert ( !(!fitter()) , "IMassFit is invalid!" ) ;
   StatusCode sc = fitter()->fit ( *p ) ;
-  if ( sc.isFailure() ) { return Error ( "Error (1) from IMassFit", sc ) ; }
+  if ( sc.isFailure() ) { return Warning ( "Error (1) from IMassFit", sc ) ; }
   return sc ;
 }
 // ============================================================================
@@ -176,7 +176,7 @@ StatusCode LoKi::Particles::MassFit::fit
 {
   Assert ( !(!fitter()) , "IMassFit is invalid!" ) ;
   StatusCode sc = fitter()->fit ( p , mass ) ;
-  if ( sc.isFailure() ) { return Error ( "Error (2) from IMassFit", sc ) ; }
+  if ( sc.isFailure() ) { return Warning ( "Error (2) from IMassFit", sc ) ; }
   return sc ;
 }
 // ============================================================================

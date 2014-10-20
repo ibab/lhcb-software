@@ -227,7 +227,7 @@ LoKi::Particles::MinImpParWithSource::operator()
     // fill the functor with primary vertices:
     keep2.addObjects ( primaries.begin() , primaries.end () ) ;
     if ( empty() ) 
-    { Error ( "Empty list of vertices is loaded!" ) ; }
+    { Warning ( "Empty list of vertices is loaded!" ) ; }
     // update the event:
     setEvent () ;
   }

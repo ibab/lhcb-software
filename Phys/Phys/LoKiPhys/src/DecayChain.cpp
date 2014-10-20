@@ -93,7 +93,7 @@ std::string LoKi::DecayChain::print_
   //
   if ( 0 == p )
   {
-    Error ( " LHCb::Particle::Container* points to NULL" ) ;
+    Error ( "LHCb::Particle::Container* points to NULL" ) ;
     return "" ; 
   }
   //
@@ -121,7 +121,7 @@ std::string LoKi::DecayChain::print_
   //
   if ( 0 == p )
   {
-    Error ( " LHCb::Particle::Selection* points to NULL" ) ;
+    Error ( "LHCb::Particle::Selection* points to NULL" ) ;
     return "" ; 
   }
   //

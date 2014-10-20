@@ -285,7 +285,7 @@ LoKi::Particles::DOCAMax::operator()
   const SmartRefVector<LHCb::Particle>& daugs = p->daughters() ;
   if ( daugs.empty() ) 
   {
-    Error ("Empty list of daughetrs, return 'InvalidDistance'") ;
+    Warning ("Empty list of daughetrs, return 'InvalidDistance'") ;
     return LoKi::Constants::InvalidDistance ;
   }
   
@@ -340,7 +340,7 @@ LoKi::Particles::DOCAChi2Max::operator()
   const SmartRefVector<LHCb::Particle>& daugs = p->daughters() ;
   if ( daugs.empty() ) 
   {
-    Error ("Empty list of daughetrs, return 'InvalidChi2'") ;
+    Warning ("Empty list of daughetrs, return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2 ;
   }
   

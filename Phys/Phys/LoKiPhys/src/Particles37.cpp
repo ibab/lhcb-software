@@ -75,14 +75,14 @@ LoKi::Particles::DecayLengthSignificance::dls
 {
   if( 0 == p ) 
   {
-    Error ( " Invalid Particle, return 'InvalidDistance'");
+    Error ( "Invalid Particle, return 'InvalidDistance'");
     return LoKi::Constants::InvalidDistance;
   }
   
   // Get a pointer to the vertex we hold
   const LHCb::VertexBase* v = vertex();
   if( 0 == v ) {
-    Error( " Invalid Vertex, return 'InvalidDistance'" );
+    Warning( "Invalid Vertex, return 'InvalidDistance'" );
     return LoKi::Constants::InvalidDistance;
   }
   
@@ -119,7 +119,7 @@ LoKi::Particles::DecayLengthSignificance::dls
    int OK = W.Invert() ;
    if( !OK ) 
    { 
-     Error( "Error inverting the updated covariance matrix." );
+     Warning( "Error inverting the updated covariance matrix." );
    }
    
    // Calculate the required numbers.
@@ -162,7 +162,7 @@ LoKi::Particles::DecayLengthSignificanceDV::operator()
 {
    if( 0 == p ) 
    {
-     Error( " Invalid Particle, return 'InvalidDistance'");
+     Error( "Invalid Particle, return 'InvalidDistance'");
      return LoKi::Constants::InvalidDistance;
    }
    
@@ -170,7 +170,7 @@ LoKi::Particles::DecayLengthSignificanceDV::operator()
    const LHCb::VertexBase* pv = bestVertex( p );
    if( 0 == pv ) 
    {
-     Error( " Invalid Primary Vertex for Particle, return 'InvalidDistance'");
+     Warning( "Invalid Primary Vertex for Particle, return 'InvalidDistance'");
      return LoKi::Constants::InvalidDistance;
    }
    
@@ -216,10 +216,10 @@ LoKi::Particles::PathDistance::operator()
   double error    = LoKi::Constants::InvalidDistance ;
   double chi2     = LoKi::Constants::InvalidChi2     ;
   //
-  StatusCode sc = path ( p , distance , error , chi2 ) ;
+  const StatusCode sc = path ( p , distance , error , chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return 'InvalidDistance'" , sc ) ;
+    Warning ( "Error from path, return 'InvalidDistance'", sc, 0 ) ;
     return LoKi::Constants::InvalidDistance ;
   }
   //
@@ -227,7 +227,7 @@ LoKi::Particles::PathDistance::operator()
        LoKi::Constants::InvalidDistance == error    || 0 >= error || 
        LoKi::Constants::InvalidChi2     == chi2     || 0 >  chi2  ) 
   { 
-    Error ( "Invalid values from path, return 'InvalidDistance'" ) ;
+    Warning ( "Invalid values from path, return 'InvalidDistance'" ) ;
     return LoKi::Constants::InvalidDistance ;
   }
   //
@@ -281,7 +281,7 @@ LoKi::Particles::PathDistanceChi2::operator()
   StatusCode sc = path ( p , distance , error , chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return InvalidChi2" , sc ) ;
+    Warning ( "Error from path, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -289,7 +289,7 @@ LoKi::Particles::PathDistanceChi2::operator()
        LoKi::Constants::InvalidDistance == error    || 0 >= error || 
        LoKi::Constants::InvalidChi2     == chi2     || 0 >  chi2  ) 
   { 
-    Error ( "Invalid values from path, return 'InvalidChi2'" ) ;
+    Warning ( "Invalid values from path, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -343,7 +343,7 @@ LoKi::Particles::PathDistanceSignificance::operator()
   StatusCode sc = path ( p , distance , error , chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return InvalidChi2" , sc ) ;
+    Warning ( "Error from path, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -351,7 +351,7 @@ LoKi::Particles::PathDistanceSignificance::operator()
        LoKi::Constants::InvalidDistance == error    || 0 >= error || 
        LoKi::Constants::InvalidChi2     == chi2     || 0 >  chi2  ) 
   { 
-    Error ( "Invalid values from path, return 'InvalidChi2'" ) ;
+    Warning ( "Invalid values from path, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -451,14 +451,14 @@ LoKi::Particles::ProjectedDistanceSignificance::operator()
   //
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return InvalidChi2" , sc ) ;
+    Warning ( "Error from path, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
   if ( LoKi::Constants::InvalidDistance == distance || 
        LoKi::Constants::InvalidDistance == error    || 0 >= error ) 
   { 
-    Error ( "Invalid values from path, return 'InvalidChi2'" ) ;
+    Warning ( "Invalid values from path, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -511,7 +511,7 @@ LoKi::Particles::PathDistanceWithBestPV::operator()
   const LHCb::VertexBase* pv = bestVertex ( p ) ;
   if ( 0 == pv ) 
   {
-    Error ( "End-vertex points to NULL, return 'InvalidDistance'" ) ;
+    Warning ( "End-vertex points to NULL, return 'InvalidDistance'" ) ;
     return LoKi::Constants::InvalidDistance ;                    // RETURN 
   }
   //
@@ -524,7 +524,7 @@ LoKi::Particles::PathDistanceWithBestPV::operator()
   StatusCode sc = path ( p , distance , error , chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return InvalidDistance" , sc ) ;
+    Warning ( "Error from path, return InvalidDistance" , sc ) ;
     return LoKi::Constants::InvalidDistance ;
   }
   //
@@ -532,7 +532,7 @@ LoKi::Particles::PathDistanceWithBestPV::operator()
        LoKi::Constants::InvalidDistance == error    || 0 >= error ||
        LoKi::Constants::InvalidChi2     == chi2     || 0 > chi2    ) 
   { 
-    Error ( "Invalid values from path, return InvalidDistance" ) ;
+    Warning ( "Invalid values from path, return InvalidDistance" ) ;
     return LoKi::Constants::InvalidDistance ;
   }
   //
@@ -591,7 +591,7 @@ LoKi::Particles::PathDistanceChi2WithBestPV::operator()
   const LHCb::VertexBase* pv = bestVertex ( p ) ;
   if ( 0 == pv ) 
   {
-    Error ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
+    Warning ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;                    // RETURN 
   }
   //
@@ -604,7 +604,7 @@ LoKi::Particles::PathDistanceChi2WithBestPV::operator()
   StatusCode sc = path ( p , distance , error , chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return InvalidChi2" , sc ) ;
+    Warning ( "Error from path, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -612,7 +612,7 @@ LoKi::Particles::PathDistanceChi2WithBestPV::operator()
        LoKi::Constants::InvalidDistance == error    || 0 > error || 
        LoKi::Constants::InvalidChi2     == chi2     || 0 > chi2  ) 
   { 
-    Error ( "Invalid values from path, return InvalidChi2" ) ;
+    Warning ( "Invalid values from path, return InvalidChi2" ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -673,7 +673,7 @@ LoKi::Particles::PathDistanceSignificanceWithBestPV::operator()
   const LHCb::VertexBase* pv = bestVertex ( p ) ;
   if ( 0 == pv ) 
   {
-    Error ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
+    Warning ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;                    // RETURN 
   }
   //
@@ -741,7 +741,7 @@ LoKi::Particles::ProjectedDistanceWithBestPV::operator()
   const LHCb::VertexBase* pv = bestVertex ( p ) ;
   if ( 0 == pv ) 
   {
-    Error ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
+    Warning ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;                    // RETURN 
   }
   //
@@ -757,7 +757,7 @@ LoKi::Particles::ProjectedDistanceWithBestPV::operator()
   StatusCode sc = path ( p , distance , error , chi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return InvalidChi2" , sc ) ;
+    Warning ( "Error from path, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -765,7 +765,7 @@ LoKi::Particles::ProjectedDistanceWithBestPV::operator()
        LoKi::Constants::InvalidDistance == error    || 0 > error || 
        LoKi::Constants::InvalidChi2     == chi2     || 0 > chi2  ) 
   { 
-    Error ( "Invalid values from path, return InvalidChi2" ) ;
+    Warning ( "Invalid values from path, return InvalidChi2" ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -827,9 +827,9 @@ LoKi::Particles::ProjectedDistanceSignificanceWithBestPV::operator()
   Assert ( 0 != tool() , "No valid IDistanceCalculator is found" ) ;
   // get the best vertex from desktop and use it 
   const LHCb::VertexBase* pv = bestVertex ( p ) ;
-  if ( 0 == pv ) 
+  if ( NULL == pv ) 
   {
-    Error ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
+    Warning ( "End-vertex points to NULL, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;                    // RETURN 
   }
   //
@@ -838,18 +838,18 @@ LoKi::Particles::ProjectedDistanceSignificanceWithBestPV::operator()
   double distance = LoKi::Constants::InvalidDistance ;
   double error    = LoKi::Constants::InvalidDistance ;
   //
-  StatusCode sc = projected ( p , distance , error ) ;
+  const StatusCode sc = projected ( p , distance , error ) ;
   //
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from path, return InvalidChi2" , sc ) ;
+    Warning ( "Error from path, return InvalidChi2", sc ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
   if ( LoKi::Constants::InvalidDistance == distance || 
        LoKi::Constants::InvalidDistance == error    || 0 >= error ) 
   { 
-    Error ( "Invalid values from path, return 'InvalidChi2'" ) ;
+    Warning ( "Invalid values from path, return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   //
@@ -868,8 +868,6 @@ LoKi::Particles::ProjectedDistanceSignificanceWithBestPV::fillStream
   //
   return s ;
 }
-
-
 
 
 // ============================================================================

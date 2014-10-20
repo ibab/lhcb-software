@@ -75,7 +75,7 @@ LoKi::Particles::ClosestApproach::distance_
   //
   if ( 0 == tool     ()   ) 
   { 
-    Error ( " Tool      is invalid, return 'InvalidDistance' " ) ;
+    Error ( "Tool      is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ; 
   }
   //
@@ -85,7 +85,7 @@ LoKi::Particles::ClosestApproach::distance_
   //
   if ( sc.isFailure ()  ) 
   { 
-    Error ( " Error from IDistanceCalculator, return 'InvalidDistance' ", sc ) ;
+    Warning ( "Error from IDistanceCalculator, return 'InvalidDistance' ", sc, 3 ) ;
     return  LoKi::Constants::InvalidDistance ; 
   }
   //
@@ -122,7 +122,7 @@ LoKi::Particles::ClosestApproach::chi2_
   //
   if ( sc.isFailure ()  ) 
   { 
-    Error ( " IDistanceCalculator::distance Failed, return 'InvalidChi2' ", sc ) ;
+    Warning ( "IDistanceCalculator::distance Failed, return 'InvalidChi2' ", sc, 3 ) ;
     return  LoKi::Constants::InvalidChi2 ; 
   }
   //
@@ -200,7 +200,7 @@ LoKi::Particles::MinClosestApproach::distance
 { 
   if ( 0 == p             ) 
   { 
-    Error ( " Argument  is invalid, return 'InvalidDistance' " ) ;
+    Error ( "Argument  is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ; 
   }
   //
@@ -211,7 +211,7 @@ LoKi::Particles::MinClosestApproach::distance
          LoKi::Helpers::PMFA2<LoKi::Particles::ClosestApproach>
          ( &m_fun , &LoKi::Particles::ClosestApproach::distance) , p , result ) )  
   {
-    Error ( " Invalid evaluation, return 'InvalidDistance' " ) ;
+    Error ( "Invalid evaluation, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ;    
   }
   //
@@ -224,7 +224,7 @@ LoKi::Particles::MinClosestApproach::chi2
 { 
   if ( 0 == p             ) 
   { 
-    Error ( " Argument  is invalid, return 'InvalidChi2' " ) ;
+    Error ( "Argument  is invalid, return 'InvalidChi2' " ) ;
     return  LoKi::Constants::InvalidChi2 ; 
   }
   //
@@ -235,7 +235,7 @@ LoKi::Particles::MinClosestApproach::chi2
          LoKi::Helpers::PMFA2<LoKi::Particles::ClosestApproach>
          ( &m_fun , &LoKi::Particles::ClosestApproach::chi2) , p , result ) )
   {
-    Error ( " Invalid evaluation, return 'InvalidChi2' " ) ;
+    Error ( "Invalid evaluation, return 'InvalidChi2' " ) ;
     return  LoKi::Constants::InvalidChi2;    
   }
   //

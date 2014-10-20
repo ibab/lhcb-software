@@ -114,12 +114,12 @@ LoKi::Particles::HasTracksInTreeFromPV::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( " Argument is invalid! return 'false' " ) ;
+    Error ( "Argument is invalid! return 'false'" ) ;
     return false ;                                              
   }
   if ( empty() ) 
   {
-    Warning ( " Empty list of tracks is specified! return 'false' " ) ;
+    Warning ( "Empty list of tracks is specified! return 'false'" ) ;
     return false ;
   }
   // scan the decay tree 

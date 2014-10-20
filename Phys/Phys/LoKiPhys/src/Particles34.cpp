@@ -116,7 +116,7 @@ StatusCode LoKi::Particles::DaughterParticleCTau::fit
   //
   StatusCode sc = m_fitter -> fit ( *v , *c , ltime , ltimeerr , ltimefitchi2 ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "Error from ILifetimeFitter::fit" , sc ) ; }
+  { return Warning ( "Error from ILifetimeFitter::fit", sc, 3 ) ; }
   //
   ctau         = ltime    * Gaudi::Units::c_light ;
   ctauerr      = ltimeerr * Gaudi::Units::c_light ;
@@ -137,7 +137,7 @@ double LoKi::Particles::DaughterParticleCTau::ctau
   StatusCode sc = fit ( p , _ctau , _ctauerr , _ctaufitchi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from fit, return InvalidDistance" , sc ) ;
+    Warning ( "Error from fit, return InvalidDistance", sc, 3 ) ;
     return LoKi::Constants::InvalidDistance ;
   }
   return  _ctau ;
@@ -155,7 +155,7 @@ double LoKi::Particles::DaughterParticleCTau::ctauErr
   StatusCode sc = fit ( p , _ctau , _ctauerr , _ctaufitchi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from fit, return InvalidDistance" , sc ) ;
+    Warning ( "Error from fit, return InvalidDistance", sc, 3 ) ;
     return LoKi::Constants::InvalidDistance ;
   }
   return  _ctauerr ;
@@ -173,7 +173,7 @@ double LoKi::Particles::DaughterParticleCTau::ctauFitChi2
   StatusCode sc = fit ( p , _ctau , _ctauerr , _ctaufitchi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from fit, return InvalidChi2" , sc ) ;
+    Warning ( "Error from fit, return InvalidChi2", sc, 3 ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   return  _ctaufitchi2  ;
@@ -191,7 +191,7 @@ double LoKi::Particles::DaughterParticleCTau::ctauSignificance
   StatusCode sc = fit ( p , _ctau , _ctauerr , _ctaufitchi2 ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from fit, return NegativeInfinity" , sc ) ;
+    Warning ( "Error from fit, return NegativeInfinity", sc, 3 ) ;
     return LoKi::Constants::NegativeInfinity ;
   }
   return  _ctau / _ctauerr ;

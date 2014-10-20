@@ -65,7 +65,7 @@ LoKi::Vertices::VertexDistance::distance
 {
   if ( !valid() ) { Warning("VertexHiolder base is invalid!") ; }
   if ( 0 != v ) {  return ( v->position() - this->position()).R() ; } //RETURN 
-  Error ( " Invalid Vertex, return 'InvalidDistance'") ;
+  Error ( "Invalid Vertex, return 'InvalidDistance'") ;
   return LoKi::Constants::InvalidDistance ;      // RETURN 
 }
 // ============================================================================
@@ -75,7 +75,7 @@ LoKi::Vertices::VertexDeltaZ::deltaZ
 {
   if ( 0 == v ) 
   {
-    Error ( " Invalid Vertex, return 'InvalidDistance'") ;
+    Error ( "Invalid Vertex, return 'InvalidDistance'") ;
     return LoKi::Constants::InvalidDistance ;      // RETURN 
   }
   if ( !valid() ) 
@@ -92,7 +92,7 @@ LoKi::Vertices::VertexAbsDeltaZ::absDeltaZ
 {
   if ( 0 == v ) 
   {
-    Error ( " Invalid Vertex, return 'InvalidDistance'") ;
+    Error ( "Invalid Vertex, return 'InvalidDistance'") ;
     return LoKi::Constants::InvalidDistance ;      // RETURN 
   }
   if ( !valid() ) 
@@ -113,7 +113,7 @@ LoKi::Vertices::VertexSignedDistance::signedDistance
     return 
       v->position().Z() < position().Z() ? ( -1 * dist ) : dist ;
   }
-  Error ( " Invalid Vertex, return 'InvalidDistance'") ;
+  Error ( "Invalid Vertex, return 'InvalidDistance'") ;
   return LoKi::Constants::InvalidDistance ;      // RETURN 
 }
 // ============================================================================
@@ -123,12 +123,12 @@ LoKi::Vertices::VertexDistance::chi2
 {
   if     ( 0 == v    ) 
   {
-    Error ( " Invalid Vertex, return 'InvalidChi2'") ;
+    Error ( "Invalid Vertex, return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2;         // RETURN 
   }
   else if ( !valid() ) 
   {
-    Error ( " Invalid Status, return 'InvalidChi2'") ;
+    Error ( "Invalid Status, return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2;         // RETURN 
   }
   
@@ -153,8 +153,8 @@ LoKi::Vertices::VertexDistance::chi2
   } ;
   //
   if ( sc.isFailure() ) 
-  { Error ( "Evaluation is invalid, return " + 
-            Gaudi::Utils::toString ( _chi2 ) , sc, 0 ) ; }
+  { Warning ( "Evaluation is invalid, return " + 
+              Gaudi::Utils::toString ( _chi2 ) , sc, 0 ) ; }
   //
   return _chi2 ;
 }
@@ -197,7 +197,7 @@ LoKi::Vertices::MinVertexDistance::minvd
 {
   if     ( 0 == v    ) 
   {
-    Error ( " Invalid Vertex, return 'InvalidDistance'") ;
+    Error ( "Invalid Vertex, return 'InvalidDistance'") ;
     return LoKi::Constants::InvalidDistance;                     // RETURN 
   }
   
@@ -222,7 +222,7 @@ LoKi::Vertices::MinVertexDistance::minvdchi2
 {
   if     ( 0 == v    ) 
   {
-    Error ( " Invalid Vertex, return 'InvalidChi2'") ;
+    Error ( "Invalid Vertex, return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2;                     // RETURN 
   }
   

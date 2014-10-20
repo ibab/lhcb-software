@@ -129,7 +129,7 @@ double LoKi::Particles::ImpPar::ip ( LoKi::Particles::ImpPar::argument p ) const
   //
   if ( sc.isFailure() ) 
   {
-    Error("Error from IDistanceCalculator; return 'InvalidDistance'" , sc ) ;
+    Warning( "Error from IDistanceCalculator; return 'InvalidDistance'", sc, 3 ) ;
     return LoKi::Constants::InvalidDistance ;                // RETURN 
   }
   //
@@ -169,7 +169,7 @@ double LoKi::Particles::ImpPar::ipchi2 ( LoKi::Particles::ImpPar::argument p ) c
   //
   if ( sc.isFailure() ) 
   {
-    Error("IDistanceCalculator::distance failed; return 'InvalidChi2'" , sc ) ;
+    Warning("IDistanceCalculator::distance failed; return 'InvalidChi2'", sc, 3 ) ;
     return LoKi::Constants::InvalidChi2 ;                // RETURN 
   }
   //
@@ -216,7 +216,7 @@ StatusCode LoKi::Particles::ImpPar::path
   }
   //
   if ( sc.isFailure() ) 
-  { return Error ( "IDistanceCalculator::pathDistance failed" , sc ) ; }
+  { return Warning ( "IDistanceCalculator::pathDistance failed", sc, 3 ) ; }
   //
   return sc ;
 }
@@ -255,7 +255,7 @@ double LoKi::Particles::ImpPar::projected
   //
   if ( sc.isFailure() ) 
   {
-    Error("Error from IDistanceCalculator; return 'InvalidDistance'" , sc ) ;
+    Warning("Error from IDistanceCalculator; return 'InvalidDistance'", sc, 3 ) ;
     return LoKi::Constants::InvalidDistance ;                // RETURN 
   }
   //
@@ -298,7 +298,7 @@ StatusCode LoKi::Particles::ImpPar::projected
   }
   //
   if ( sc.isFailure() ) 
-  { return Error("IDistanceCalculator::distance failed" , sc ) ; }
+  { return Warning("IDistanceCalculator::distance failed", sc, 3 ) ; }
   //
   return sc ;
 }  
@@ -441,9 +441,9 @@ LoKi::Particles::MinImpPar::mipchi2
     return LoKi::Constants::InvalidChi2 ;
   }
   //
-  if ( empty () ) 
+  if ( empty() ) 
   {
-    Error ( " Empty list of vertices, return 'InvalidChi2'") ;
+    Warning ( " Empty list of vertices, return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2 ;    
   }
   //
@@ -454,7 +454,7 @@ LoKi::Particles::MinImpPar::mipchi2
          ( this , &LoKi::Particles::ImpPar::ipchi2 ) , 
          p , result ) ) 
   {
-    Error ( "Invalid evaluation; return 'InvalidChi2'") ;
+    Warning ( "Invalid evaluation; return 'InvalidChi2'") ;
     return LoKi::Constants::InvalidChi2;    
   }
   //

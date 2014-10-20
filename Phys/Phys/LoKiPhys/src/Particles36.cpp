@@ -202,7 +202,7 @@ LoKi::Particles::DecayTreeFitterFun::operator()
   //
   if ( 0 == p ) 
   {
-    Warning ( "LHCb::Particle* points to NULL, return 'bad'" ) ;
+    Error ( "LHCb::Particle* points to NULL, return 'bad'" ) ;
     return m_bad ;
   }
   //
@@ -222,7 +222,7 @@ LoKi::Particles::DecayTreeFitterFun::operator()
   StatusCode sc = _fitter->fit ( p , vertex ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IDecayTreeFit" , sc ) ;
+    Warning ( "Error from IDecayTreeFit" , sc ) ;
     return m_bad ;
   }
   //
@@ -395,7 +395,7 @@ LoKi::Particles::DecayTreeFitterCut::operator()
   //
   if ( 0 == p ) 
   {
-    Warning ( "LHCb::Particle* points to NULL, return false" ) ;
+    Error ( "LHCb::Particle* points to NULL, return false" ) ;
     return false ;
   }
   //
@@ -415,7 +415,7 @@ LoKi::Particles::DecayTreeFitterCut::operator()
   StatusCode sc = _fitter->fit ( p , vertex ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IDecayTreeFit" , sc ) ;
+    Warning ( "Error from IDecayTreeFit", sc, 3 ) ;
     return false ;
   }
   //
@@ -615,7 +615,7 @@ LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const
   const LHCb::Particle* c = child( p ) ;
   if ( c == 0 ) 
   {
-    Error ( "Unable to select the proper child particle ") ;
+    Warning ( "Unable to select the proper child particle ") ;
     return 0 ;                                                       // RETURN 
   }
   //
@@ -635,7 +635,7 @@ LoKi::Particles::ChildCTau::params ( const LHCb::Particle* p ) const
   StatusCode sc = _fitter->fit ( p , vertex ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IDecayTreeFit" , sc ) ;
+    Warning ( "Error from IDecayTreeFit" , sc ) ;
     return 0 ;                                                       // RETURN
   }
   //
@@ -1126,7 +1126,7 @@ double LoKi::Particles::DecayTreeFitChi2::chi2 ( const LHCb::Particle* p ) const
   StatusCode sc = _fitter->fit ( p , vertex ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IDecayTreeFit, return InvalidChi2" , sc ) ;
+    Warning ( "Error from IDecayTreeFit, return InvalidChi2" , sc ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   // get chi2 
@@ -1162,7 +1162,7 @@ unsigned int LoKi::Particles::DecayTreeFitChi2::nDoF
   StatusCode sc = _fitter->fit ( p , vertex ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IDecayTreeFit, return 0 " , sc ) ;
+    Warning ( "Error from IDecayTreeFit, return 0 " , sc, 3 ) ;
     return 0  ;
   }
   // get nDoF 
@@ -1198,7 +1198,7 @@ double LoKi::Particles::DecayTreeFitChi2::chi2PerDoF
   StatusCode sc = _fitter->fit ( p , vertex ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "Error from IDecayTreeFit, return InvalidChi2" , sc ) ;
+    Warning ( "Error from IDecayTreeFit, return InvalidChi2", sc, 3 ) ;
     return LoKi::Constants::InvalidChi2 ;
   }
   /// get chi2 
@@ -1249,7 +1249,7 @@ double LoKi::Particles::DecayTreeFitChi2::prob
   StatusCode sc = _fitter->fit ( p , vertex ) ;
   if ( sc.isFailure() ) 
   {
-    Error ( "prob: Error from IDecayTreeFit, return NegativeInfinity" , sc ) ;
+    Warning ( "prob: Error from IDecayTreeFit, return NegativeInfinity" , sc, 3 ) ;
     return LoKi::Constants::NegativeInfinity ;                        // RETURN 
   }
   /// get chi2 
@@ -1259,12 +1259,12 @@ double LoKi::Particles::DecayTreeFitChi2::prob
   ///
   if ( 0 == _nDoF ) 
   { 
-    Error ( "prob: invalid nDoF, return NegativeInfinity") ;
+    Warning ("prob: invalid nDoF, return NegativeInfinity") ;
     return LoKi::Constants::NegativeInfinity ;                        // RETURN 
   }
   if ( 0  > _chi2 ) 
   { 
-    Error ( "prob: invalid chi2, return NegativeInfiinty") ;
+    Warning ( "prob: invalid chi2, return NegativeInfiinty") ;
     return LoKi::Constants::NegativeInfinity ;                        // RETURN 
   }
   // use GSL

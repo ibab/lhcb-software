@@ -44,7 +44,7 @@ LoKi::Particles::TimeDistance::time
 { 
   if( 0 == p      ) 
   { 
-    Error ( " Argument is invalid, return 'InvalidDistance' " ) ;
+    Error ( "Argument is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ; 
   }
   // 1) evaluate the distance 
@@ -55,12 +55,12 @@ LoKi::Particles::TimeDistance::time
   const double mom      = p->momentum().P() ;
   if ( 0 >= mass ) 
   { 
-    Error ( " Mass is invalid, return 'InvalidDistance' " ) ;  
+    Warning ( "Mass is invalid, return 'InvalidDistance' " ) ;  
     return  LoKi::Constants::InvalidDistance ;              // RETURN 
   }  
   if ( 0 >= mom  ) 
   { 
-    Error ( " |Momentum| is invalid, return 'InvalidDistance' " ) ;
+    Warning ( "|Momentum| is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ;              // RETURN 
   }  
   const double betagamma   = mom / mass ;
@@ -76,7 +76,7 @@ LoKi::Particles::TimeSignedDistance::time
 { 
   if( 0 == p      ) 
   { 
-    Error ( " Argument is invalid, return 'InvalidDistance' " ) ;
+    Error ( "Argument is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ; 
   }
   // 1) evaluate the distance 
@@ -87,12 +87,12 @@ LoKi::Particles::TimeSignedDistance::time
   const double mom      = p->momentum().P() ;
   if ( 0 >= mass ) 
   { 
-    Error ( " Mass is invalid, return 'InvalidDistance' " ) ;  
+    Warning ( "Mass is invalid, return 'InvalidDistance' " ) ;  
     return  LoKi::Constants::InvalidDistance ;              // RETURN 
   }  
   if ( 0 >= mom  ) 
   { 
-    Error ( " |Momentum| is invalid, return 'InvalidDistance' " ) ;
+    Warning ( "|Momentum| is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ;              // RETURN 
   }  
   const double betagamma   = mom / mass ;
@@ -108,7 +108,7 @@ LoKi::Particles::TimeDotDistance::time
 { 
   if( 0 == p      ) 
   { 
-    Error ( " Argument is invalid, return 'InvalidDistance' " ) ;
+    Error ( "Argument is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ; 
   }
   // 1) evaluate the distance 
@@ -119,12 +119,12 @@ LoKi::Particles::TimeDotDistance::time
   const double mom      = p->momentum().P() ;
   if ( 0 >= mass ) 
   { 
-    Error ( " Mass is invalid, return 'InvalidDistance' " ) ;  
+    Warning ( "Mass is invalid, return 'InvalidDistance' " ) ;  
     return  LoKi::Constants::InvalidDistance ;              // RETURN 
   }  
   if ( 0 >= mom  ) 
   { 
-    Error ( " |Momentum| is invalid, return 'InvalidDistance' " ) ;
+    Warning ( "|Momentum| is invalid, return 'InvalidDistance' " ) ;
     return  LoKi::Constants::InvalidDistance ;              // RETURN 
   }  
   const double betagamma   = mom / mass ;
@@ -173,14 +173,14 @@ LoKi::Particles::LifetimeDistance::operator()
 {
   if( 0 == p      ) 
   { 
-    Error ( " Argument is invalid, return  InvalidDistance " ) ;
+    Error ( "Argument is invalid, return  InvalidDistance " ) ;
     return  LoKi::Constants::InvalidDistance ;                     // RETURN 
   }
   // get "end vertex"
   const LHCb::VertexBase* end = p -> endVertex() ;
   if ( 0 == end ) 
   {
-    Error ( " EndVertex is invalid, return  InvalidDistance " ) ;
+    Error ( "EndVertex is invalid, return  InvalidDistance " ) ;
     return  LoKi::Constants::InvalidDistance ;                     // RETURN 
   }
   // check the production vertex 
@@ -192,7 +192,7 @@ LoKi::Particles::LifetimeDistance::operator()
   if ( _vertex == type() ) { vD += vertex() -> covMatrix() ; }
   if ( !vD.Invert() ) 
   {
-    Error ( "Failure in the matrix inversion, return InvalidDistance") ;
+    Warning ( "Failure in the matrix inversion, return InvalidDistance") ;
     return  LoKi::Constants::InvalidDistance ;                     // RETURN
   }
   // matrix E:   vec(p)/m:
