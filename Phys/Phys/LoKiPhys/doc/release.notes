@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-10-20 - Chris Jones
+ - Add VDT dependency to CMake file.
+
 ! 2014-10-15 - Chris Jones
  - Add protection to TransverseMomentumRel::mCorrDir against badily defined
    Lorentz vectors that result in a negative M^2.

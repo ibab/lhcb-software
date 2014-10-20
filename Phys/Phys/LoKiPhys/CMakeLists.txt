@@ -10,14 +10,16 @@ gaudi_depends_on_subdirs(Event/PhysEvent
                          Phys/LoKiNumbers
                          Phys/LoKiUtils)
 
+find_package(VDT)
+
 gaudi_add_library(LoKiPhysLib
                   src/*.cpp
                   PUBLIC_HEADERS LoKi
-                  LINK_LIBRARIES PhysEvent DaVinciInterfacesLib KalmanFilter LoKiCoreLib LoKiUtils)
+                  LINK_LIBRARIES VDT PhysEvent DaVinciInterfacesLib KalmanFilter LoKiCoreLib LoKiUtils)
 
 gaudi_add_module(LoKiPhys
                  src/Components/*.cpp
-                 LINK_LIBRARIES PhysEvent DaVinciInterfacesLib KalmanFilter LoKiCoreLib LoKiUtils LoKiPhysLib)
+                 LINK_LIBRARIES VDT PhysEvent DaVinciInterfacesLib KalmanFilter LoKiCoreLib LoKiUtils LoKiPhysLib)
 
 gaudi_add_dictionary(LoKiPhys
                      dict/LoKiPhysDict.h
@@ -32,6 +34,5 @@ if(GAUDI_BUILD_TESTS)
 endif()
 
 gaudi_install_python_modules()
-
 
 gaudi_add_test(QMTest QMTEST)
