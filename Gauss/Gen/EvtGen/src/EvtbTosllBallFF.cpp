@@ -381,7 +381,7 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
 	 (-1.049 / (1. - (t/39.52)));
        t1 = (1.303 / (1. - (t/(5.32*5.32)))) + 
 	 (-0.954 / (1 - (t/38.28)));
-       t2 = 0.349 / (1. - (t/37.21));
+       t2 = 0.348 / (1. - (t/37.21));//0.349 caused a pole in T3 for q2 -> 0. 0.348 has correct behaviour
        double t3tilde = (0.027 / (1. - (t/45.56))) + 
 	 (0.321 / (1. - (t/45.56)) / (1. - (t/45.56)));
        t3 = 0.0;

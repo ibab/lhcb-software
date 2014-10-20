@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-10-20 - C Langenbruch
+ - Fix for the form factors of the Bs->phill modes in EvtbTosllBallFF.cc.  
+   T3 showed a non-physical pole at very low q2 which significantly affected the electron mode.
+
 ! 2014-10-17 - T Blake
  - Added new EvtRareLbToLll model based on arXiv:1108.6129
  - Added EvtRareLbToLllWC.{cpp,hh} for Wilson coefficient calculation
