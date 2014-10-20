@@ -262,7 +262,7 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
     }
 
     if( caloOK == false )
-      Error( "No Calo info found: TisTos of photons and pi0s will be defunct", StatusCode::SUCCESS, 1 ).setChecked();
+      Warning( "No Calo info found: TisTos of photons and pi0s will be defunct", StatusCode::SUCCESS, 1 ).setChecked();
 
   }
 
@@ -281,7 +281,7 @@ std::vector<LHCb::LHCbID> ParticleTisTos::protoParticleHits(const ProtoParticle 
           hits.insert(hits.end(),mu->lhcbIDs().begin(),mu->lhcbIDs().end());
           if ( msgLevel(MSG::VERBOSE) ) verbose() << " protoParticleHits fs muon hits inserted " << endmsg;
         } else {
-          Error( "No Muon Tracks found: TisTos of muon triggers may be defunct", StatusCode::SUCCESS, 1 ).setChecked();
+          Warning( "No Muon Tracks found: TisTos of muon triggers may be defunct", StatusCode::SUCCESS, 1 ).setChecked();
         }
       }
     }
@@ -340,8 +340,8 @@ bool ParticleTisTos::addToSignal( const LHCb::Particle & particle )
       //deb info() << particle << endmsg;
       if( addToSignal(*pp) )sigModified=true;
     } else {
-      Error("Particle passed as signal has no daughters and ProtoParticle is not accessible; TisTossing is not possible",
-            StatusCode::SUCCESS, 10 ).setChecked();
+      Warning("Particle passed as signal has no daughters and ProtoParticle is not accessible; TisTossing is not possible",
+              StatusCode::SUCCESS, 3 ).setChecked();
     }
   }
   if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToSignal with Particle EXIT " << endmsg;

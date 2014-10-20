@@ -3,6 +3,9 @@
 ! Purpose     : TisTosTobbing of the trigger 
 ! =============================================================================
 
+! 2014-10-20 - Chris Jones
+ - Downgrade some Errors to Warnings in ParticleTisTos.
+
 !========================= TisTosTobbing v8r1 2014-09-30 =========================
 
 ! 2014-08-20 - Gerhard Raven
