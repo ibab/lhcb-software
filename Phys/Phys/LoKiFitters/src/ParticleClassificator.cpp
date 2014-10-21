@@ -57,7 +57,7 @@ LoKi::ParticleClassificator::ParticleClassificator
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent )
-  : GaudiTool ( type , name , parent )
+  : MessagingBase ( type , name , parent )
     /// particle classification:
   , m_ppSvc               (  0      )
   , m_longLived           (         )
@@ -69,18 +69,13 @@ LoKi::ParticleClassificator::ParticleClassificator
     //
   , m_dd_gammaC  (" gamma -> e+ e- ")
   , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) ] ")
-    // number of prints
-  , m_prints               ( 2     )
-    ///
+    //
   , m_unclassified   ()
   , m_gamma_like     ()
   , m_gammaC_like    ()
   , m_digamma_like   ()
   , m_mergedPi0_like ()
-    ///
-  , m_myAlg          ()
-  , m_printMyAlg     ( true )
-    ///
+    //
 {
   // ==========================================================================
   declareProperty
@@ -91,20 +86,6 @@ LoKi::ParticleClassificator::ParticleClassificator
     ( "DiGammaDecays"     ,
       m_dd_digamma        ,
       "The di-gamma-decays"       ) ;
-  declareProperty
-    ( "MaxPrints"         ,
-      m_prints            ,
-      "Maximal number of prints " ) ;
-  declareProperty
-    ( "PrintMyAlg"      ,
-      m_printMyAlg      ,
-      "Print the name of ``associated'' algorithm" ) ;
-  // ==========================================================================
-  if ( 0 != parent )
-  {
-    SmartIF<IAlgorithm> alg ( const_cast<IInterface*> ( parent ) ) ;
-    if ( alg.isValid() ) { m_myAlg = alg->name() ; }
-  }
   // ==========================================================================
 }
 // ============================================================================
@@ -117,14 +98,8 @@ LoKi::ParticleClassificator::~ParticleClassificator(){}
 StatusCode LoKi::ParticleClassificator::initialize ()
 {
   /// initialize the base
-  StatusCode sc = GaudiTool::initialize () ;
+  StatusCode sc = MessagingBase::initialize () ;
   if ( sc.isFailure() ) { return sc ; }                              // RETURN
-  //
-  if ( 0 != parent()  )
-  {
-    SmartIF<IAlgorithm> alg ( const_cast<IInterface*> ( parent() ) ) ;
-    if ( alg.isValid() ) { m_myAlg = alg->name() ; }
-  }
   //
   svc<IService>( "LoKiSvc" , true ) ;
   //
@@ -189,12 +164,6 @@ StatusCode LoKi::ParticleClassificator::initialize ()
     m_digammaLike = Decays::Trees::Any_<const LHCb::Particle*>() ;
     m_digammaLike = Decays::Trees::Not_<const LHCb::Particle*>( m_digammaLike ) ;
     Warning ( "The special treatment of DiGamma is disabled" , ok ) ;
-  }
-  //
-  if ( msgLevel ( MSG::DEBUG ) &&  0 == m_prints )
-  {
-    m_prints = 10 ;
-    warning () << "Redefine 'MaxPrints' property to " << m_prints << endmsg ;
   }
   //
   return StatusCode::SUCCESS ;
@@ -269,7 +238,7 @@ StatusCode LoKi::ParticleClassificator::finalize()
   m_gammaCLike   = Decays::Trees::Invalid_<const LHCb::Particle*>() ;
   m_digammaLike  = Decays::Trees::Invalid_<const LHCb::Particle*>() ;
   //
-  return GaudiTool::finalize () ;
+  return MessagingBase::finalize () ;
 }
 // ============================================================================
 // get the particle type
@@ -333,7 +302,7 @@ std::size_t LoKi::ParticleClassificator::nForVertex
   for ( ; first != last ; ++first )
   {
     const LHCb::Particle* p = *first ;
-    if ( 0 == p ) { continue ; }
+    if ( NULL == p ) { continue ; }
     //
     LoKi::KalmanFilter::ParticleType pType = particleType ( p ) ;
     //
@@ -358,74 +327,6 @@ bool LoKi::ParticleClassificator::goodForVertex
 {
   /// two or more long-lived particles are required for vertex
   return 2 <= nForVertex ( parts.begin() , parts.end() ) ;
-}
-// ============================================================================
-// get the correct algorithm context
-// ============================================================================
-bool LoKi::ParticleClassificator::getMyAlg () const
-{
-  m_myAlg = "" ;
-  //
-  const IAlgContextSvc* asvc =  contextSvc () ;
-  if ( 0 == asvc    ) { return false ; }
-  //
-  const IAlgorithm* current = asvc->currentAlg() ;
-  if ( 0 == current ) { return false ; }
-  //
-  m_myAlg = " [" + current->name() + "]" ;
-  //
-  return true ;
-  // ============================================================================
-}
-// ========================================================================
-// Warning message
-// ========================================================================
-StatusCode 
-LoKi::ParticleClassificator::_Warning( const std::string& msg,
-                                       const StatusCode&  code,
-                                       const unsigned int prints ) const
-{
-  code.setChecked () ;
-  //
-  if   ( errorsPrint() && m_printMyAlg  ) { getMyAlg      () ; }
-  else                                    { m_myAlg.clear () ; }
-  //
-  if       ( m_printMyAlg && errorsPrint() )
-  { return Warning ( msg + m_myAlg , code , std::min(prints,m_prints) ) ; }
-  else if  ( errorsPrint() )
-  { return Warning ( msg           , code , std::min(prints,m_prints) ) ; }
-  //
-  if ( msgLevel ( MSG::DEBUG ) )
-  { warning ()
-      << "'"       << msg  << "' " << m_myAlg
-      << " Code =" << code << endmsg ; }
-  //
-  return code ;
-}
-// ========================================================================
-// Error message
-// ========================================================================
-StatusCode 
-LoKi::ParticleClassificator::_Error( const std::string& msg,
-                                     const StatusCode&  code,
-                                     const unsigned int prints ) const
-{
-  code.setChecked () ;
-  //
-  if   ( errorsPrint() && m_printMyAlg  ) { getMyAlg      () ; }
-  else                                    { m_myAlg.clear () ; }
-  //
-  if       ( m_printMyAlg && errorsPrint() )
-  { return Error   ( msg + m_myAlg , code , std::min(prints,m_prints) ) ; }
-  else if  ( errorsPrint() )
-  { return Error   ( msg           , code , std::min(prints,m_prints) ) ; }
-  //
-  if ( msgLevel ( MSG::DEBUG ) )
-  { error ()
-      << "'"       << msg  << "' " << m_myAlg
-      << " Code =" << code << endmsg ; }
-  //
-  return code ;
 }
 // ============================================================================
 // The END

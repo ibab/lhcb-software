@@ -5,9 +5,9 @@
 // ============================================================================
 // Include files
 // ============================================================================
-// GaudiAlg
+// Local
 // ============================================================================
-#include "GaudiAlg/GaudiTool.h" 
+#include "MessagingBase.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
@@ -222,7 +222,7 @@ namespace LoKi
    *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
    *  @date   2008-02-17
    */
-  class DirectionFitBase : public GaudiTool
+  class DirectionFitBase : public MessagingBase
   {
   public:
     // ========================================================================
@@ -245,10 +245,10 @@ namespace LoKi
     /// the standard initialization of the tool 
     virtual StatusCode initialize() 
     {
-      StatusCode sc = GaudiTool::initialize() ;
+      const StatusCode sc = MessagingBase::initialize() ;
       if ( sc.isFailure() ) { return sc ; }
       svc<IService>( "LoKiSvc" , true ) ;
-      return StatusCode::SUCCESS ;
+      return sc ;
     }
     // ========================================================================
   protected:

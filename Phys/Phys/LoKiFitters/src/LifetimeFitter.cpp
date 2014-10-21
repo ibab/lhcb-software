@@ -153,19 +153,19 @@ StatusCode LoKi::LifetimeFitter::fit
   double&                 chi2     ) const 
 {
   const LHCb::VertexBase* decay = particle.endVertex() ;
-  if ( 0 == decay ) 
+  if ( NULL == decay ) 
   {
     lifetime = -1.e+10 * Gaudi::Units::nanosecond ;
     error    = -1.e+10 * Gaudi::Units::nanosecond ;
     chi2     = -1.e+10 ;
-    return Error ( "No valid end-vertex is found"  , NoEndVertex ) ;  
+    return _Error ( "No valid end-vertex is found"  , NoEndVertex ) ;  
   }
   
   // make the actual iterations 
-  StatusCode sc = fitConst_ 
+  const StatusCode sc = fitConst_ 
     ( &primary  , &particle , decay , lifetime , error , chi2 ) ;  
   if ( sc.isFailure() ) 
-  { return Error ( "The error from LoKi::DirectionFitBase" , sc, 0 ) ;  }
+  { return _Warning ( "Error from LoKi::DirectionFitBase" , sc, 0 ) ;  }
   
   // convert c*tau into time 
   lifetime /= Gaudi::Units::c_light ;
@@ -179,6 +179,3 @@ DECLARE_NAMESPACE_TOOL_FACTORY( LoKi , LifetimeFitter )
 // ============================================================================
 // The END 
 // ============================================================================
-
-
-    

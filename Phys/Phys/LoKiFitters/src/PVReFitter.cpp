@@ -15,9 +15,9 @@
 #include "GaudiKernel/BoostArrayAsProperty.h"
 #include "GaudiKernel/IAlgorithm.h"
 // ============================================================================
-// GaudiAlg
+// Local
 // ============================================================================
-#include "GaudiAlg/GaudiTool.h"
+#include "MessagingBase.h"
 // ============================================================================
 // DaVinciInterfaces 
 // ============================================================================
@@ -128,7 +128,7 @@ namespace LoKi
    *                 by $Author$
    */
   // ==========================================================================
-  class PVReFitter : public extends1<GaudiTool,IPVReFitter> 
+  class PVReFitter : public extends1<MessagingBase,IPVReFitter> 
   {
     // ========================================================================
     /// the friend factory for instantiation 
@@ -292,38 +292,6 @@ namespace LoKi
       return weight * weight ;
     }
     // ========================================================================
-  private:
-    // ============================================================================
-    // get the correct algorithm context 
-    // ============================================================================
-    std::string getMyAlg() const 
-    {
-      std::string myAlg = "" ;
-      if ( m_printMyAlg )
-      {
-        const IAlgContextSvc * asvc =  contextSvc();
-        const IAlgorithm *  current = ( asvc ? asvc->currentAlg() : NULL );
-        if ( current ) { myAlg = " [" + current->name() + "]" ; }
-      }
-      return myAlg ;
-    }
-    // ========================================================================
-    inline StatusCode _Warning
-    ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode::FAILURE,
-      const size_t mx = 10 ) const 
-    {
-      return Warning ( msg + getMyAlg(), code, mx );
-    }
-    // ========================================================================
-    inline StatusCode _Error 
-    ( const std::string& msg                                             , 
-      const StatusCode&  code = StatusCode::FAILURE,
-      const size_t mx = 10 ) const 
-    {
-      return Error ( msg + getMyAlg(), code, mx );
-    }
-    // ========================================================================
   private: // properties 
     // ========================================================================
     /// the name of        track state provider tool 
@@ -367,10 +335,6 @@ namespace LoKi
     mutable TrEntry     m_entry   ;
     mutable LHCb::State m_state   ;
     // ========================================================================
-  private:
-    // ========================================================================
-    /// Option to include alg name in printout
-    bool                m_printMyAlg  ; 
     // ========================================================================
   }; //                                           end of class LoKi::PVReFitter 
   // ==========================================================================
@@ -465,11 +429,6 @@ LoKi::PVReFitter::PVReFitter
       m_delta_chi2            , 
       "Delta-chi2     as convergency criterion"    ) ;
   //
-  declareProperty 
-    ( "PrintMyAlg"        , 
-      m_printMyAlg = true , 
-      "Print the name of ``associated'' algorithm" ) ;
-  //
 // ==========================================================================
 }
 // ============================================================================
@@ -482,7 +441,7 @@ LoKi::PVReFitter::~PVReFitter () {}
 StatusCode LoKi::PVReFitter::initialize ()               // initialize the tool
 {
   //
-  StatusCode sc = GaudiTool::initialize () ;
+  StatusCode sc = MessagingBase::initialize () ;
   if ( sc.isFailure() ) { return sc ; }                  // RETURN
   //
   m_stateProvider        = 0 ;
@@ -515,7 +474,7 @@ StatusCode LoKi::PVReFitter::finalize ()               // finalize the tool
   m_extrapolator         = 0 ; 
   m_veloExtrapolator     = 0 ;
   //
-  return GaudiTool::finalize () ;
+  return MessagingBase::finalize () ;
 }
 // ============================================================================
 namespace  // local anonymous namespace to keep local functions 

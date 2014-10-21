@@ -10,9 +10,9 @@
 #include <algorithm>
 #include <set>
 // ============================================================================
-// GaudiAlg
+// Local
 // ============================================================================
-#include "GaudiAlg/GaudiTool.h"
+#include "MessagingBase.h"
 // ============================================================================
 // Event 
 // ============================================================================
@@ -61,7 +61,7 @@ namespace LoKi
    *  Last modification $Date$
    *                 by $Author$
    */
-  class ParticleClassificator : public GaudiTool 
+  class ParticleClassificator : public MessagingBase
   {
     // ========================================================================
   public:
@@ -122,20 +122,6 @@ namespace LoKi
     /// assignement operator is disabled 
     ParticleClassificator& operator=( const ParticleClassificator& ); // disabled 
     // ========================================================================
-  protected:
-    // ========================================================================
-    StatusCode _Warning
-    ( const std::string& msg                                             , 
-      const StatusCode&  code   = StatusCode( StatusCode::FAILURE, true ),
-      const unsigned int prints = 2 ) const;
-    // ========================================================================
-    StatusCode _Error 
-    ( const std::string& msg                                             , 
-      const StatusCode&  code   = StatusCode( StatusCode::FAILURE, true ),
-      const unsigned int prints = 2 ) const;
-    // ========================================================================
-    const std::string& myAlg() const { return m_myAlg ; }
-    // ========================================================================
   private:
     // ========================================================================
     template <class PARTICLE>
@@ -164,8 +150,6 @@ namespace LoKi
     std::string m_dd_gammaC  ;  //   decay descriptor for gammaC-like particles
     /// decay descriptor for di-gamma-like particles:
     std::string m_dd_digamma ;  // decay descriptor for di-gamma-like particles
-    /// # of prints 
-    unsigned int m_prints ;                                      // # of prints 
     // ========================================================================
   private:
     // ========================================================================
@@ -175,12 +159,6 @@ namespace LoKi
     mutable std::set<LHCb::ParticleID>        m_gammaC_like    ;
     mutable std::set<LHCb::ParticleID>        m_digamma_like   ;
     mutable std::set<LHCb::ParticleID>        m_mergedPi0_like ;
-    // ========================================================================
-  private:
-    // ========================================================================
-    /// get the actual algorithm name context 
-    mutable std::string m_myAlg       ;
-    bool                m_printMyAlg  ;
     // ========================================================================
   };
   // ==========================================================================

@@ -45,7 +45,7 @@ LoKi::DirectionFitBase::DirectionFitBase
 ( const std::string& type   , 
   const std::string& name   , 
   const IInterface*  parent ) 
-  : GaudiTool ( type , name , parent ) 
+  : MessagingBase ( type , name , parent ) 
   // iterations&convergency:
   , m_max_iter   ( 20    ) 
   , m_delta_chi2 ( 0.001 ) 
@@ -53,7 +53,7 @@ LoKi::DirectionFitBase::DirectionFitBase
   // The name of particle transpoter tool 
   , m_transporterName ( "ParticleTransporter:PUBLIC" )
   // The tarnsported tool itself 
-  , m_transporter ( 0 ) // The transporter tool itself 
+  , m_transporter ( NULL ) // The transporter tool itself 
                        
 {
   //
@@ -65,7 +65,7 @@ LoKi::DirectionFitBase::DirectionFitBase
     ( "DeltaCTau"    , m_delta_ctau , "Delta c*tau (convergency criterion)" ) ; 
   // 
   declareProperty 
-    ( "Transporter"      , m_transporterName     , 
+    ( "Transporter"  , m_transporterName , 
       "The Particle Transporter tool to be used" );
 } 
 // ============================================================================
@@ -81,12 +81,12 @@ double LoKi::DirectionFitBase::ctau0
   const LHCb::Particle&   particle , 
   const LHCb::VertexBase& decay    ) const 
 {
-  double ctau ;
+  double ctau(0) ;
   // (re)use the existing function:
-  StatusCode sc = LoKi::Fitters::ctau0 ( primary  , particle , decay , ctau ) ;
+  const StatusCode sc = LoKi::Fitters::ctau0 ( primary  , particle , decay , ctau ) ;
   if ( sc.isFailure() ) 
   {
-    Warning ( "The error from LoKi::Fitters::ctau0, return 0", sc ) ;
+    _Warning ( "Error from LoKi::Fitters::ctau0, return 0", sc ) ;
     return 0 ;
   }
   return ctau ;
@@ -108,7 +108,7 @@ StatusCode LoKi::DirectionFitBase::iterate
   // propagate the particle into its own decay vertex 
   StatusCode sc = transport ( particle , decvertex , m_particle ) ;
   if ( sc.isFailure() ) 
-  { return Error ( "The error from IParticleTransporter" , sc ) ; }
+  { return _Warning ( "Error from IParticleTransporter" , sc ) ; }
   
   const LHCb::Particle* good = &m_particle ;  // the properly transported particle
 
@@ -136,7 +136,7 @@ StatusCode LoKi::DirectionFitBase::iterate
       ( *primary , *good , momentum , decvertex , primvertex , m_fitter ) ;
     if ( sc.isFailure() ) 
     {
-      Warning ( "Error from LoKi::Fitters::ctau_step,reset", sc, 2 ) ;
+      _Warning ( "Error from LoKi::Fitters::ctau_step,reset", sc, 2 ) ;
       counter ( "#reset" ) += 1 ;
       // reset  to the initial expansion point and reiterate 
       momentum   = good     -> momentum       () ;
@@ -165,7 +165,7 @@ StatusCode LoKi::DirectionFitBase::iterate
   //
   counter ( "chi2" ) += chi2 ;
   counter ( "ctau" ) += ctau ;
-  return Error ( "There is no convergency" , NoConvergency, 0 ) ;
+  return _Warning ( "There is no convergency" , NoConvergency, 0 ) ;
 }
 // ============================================================================
 // make the real fit 
@@ -195,7 +195,7 @@ StatusCode LoKi::DirectionFitBase::fitConst_
       error      , 
       chi2       ) ;
   
-  if ( sc.isFailure () ) { return Error ("fit_: the error from iterate" , sc, 0 ) ; }
+  if ( sc.isFailure () ) { return _Warning ("fit_: the error from iterate" , sc, 0 ) ; }
   
   return StatusCode::SUCCESS ;
 }
@@ -228,7 +228,7 @@ StatusCode LoKi::DirectionFitBase::fit_
       chi2       ) ;
   
   if ( sc.isFailure () ) 
-  { return Error ( "fit_: Input data are not modified" , sc ) ; }
+  { return _Warning ( "fit_: Input data are not modified" , sc ) ; }
   
   // start to modify the input values 
   

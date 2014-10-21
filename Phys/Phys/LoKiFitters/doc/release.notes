@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-10-21 - Chris Jones
+ - Move custom _Warning and _Error methods into a new shared base class,
+   MessagingBase, to allow reuse across all components.
+
 ! 2014-10-20 - Chris Jones
  - General downgrading of various Error and Warning message, to sanitise a bit
    things for running in production, the Stripping.
