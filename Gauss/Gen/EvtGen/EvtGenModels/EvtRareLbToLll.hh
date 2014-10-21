@@ -14,7 +14,7 @@
 #include "EvtGenBase/EvtDecayAmp.hh"
 #include "EvtGenBase/EvtAmp.hh"
 
-#include "EvtGenModels/EvtRareLbToLllFF.hh"
+#include "EvtGenModels/EvtRareLbToLllFFBase.hh"
 #include "EvtGenModels/EvtRareLbToLllWC.hh"
 
 class EvtRareLbToLll : public  EvtDecayAmp {
@@ -58,7 +58,7 @@ private:
 
   
   
-  EvtRareLbToLllFF* ffmodel_;
+  EvtRareLbToLllFFBase* ffmodel_;
   EvtRareLbToLllWC* wcmodel_;
   
 };

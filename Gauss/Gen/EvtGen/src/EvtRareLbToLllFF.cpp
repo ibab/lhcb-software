@@ -75,31 +75,8 @@ void EvtRareLbToLllFF::FormFactorDependence::param( const double a0,
   ap_ = ap;
 }
 
-
-EvtRareLbToLllFF::FormFactors::FormFactors() {
-  areZero();
-}
-
-
-void EvtRareLbToLllFF::FormFactors::areZero()
-{
-  for ( unsigned int i = 0; i < 4; ++i )
-  {
-    F_[i]  = 0;
-    G_[i]  = 0;
-    FT_[i] = 0;
-    GT_[i] = 0;
-  }
-}
-
-
-EvtRareLbToLllFF::EvtRareLbToLllFF() : 
-  natural_( "Lambda0",
-            "anti-Lambda0",
-            "Lambda(1520)0",
-            "anti-Lambda(1520)0" ,
-            "Lambda(1600)0",
-            "anti-Lambda(1600)0" )  {} ;
+EvtRareLbToLllFF::EvtRareLbToLllFF() : EvtRareLbToLllFFBase()  
+  {};
 
 
 void EvtRareLbToLllFF::init()
@@ -142,6 +119,8 @@ void EvtRareLbToLllFF::init()
   FFMap_[ EvtPDL::getId("anti-Lambda0").getId() ]       = L1115;
   FFMap_[ EvtPDL::getId("Lambda(1520)0").getId() ]      = L1520;
   FFMap_[ EvtPDL::getId("anti-Lambda(1520)0").getId() ] = L1520;
+
+  report(INFO,"EvtGen") << " EvtRareLbToLll is using form factors from arXiv:1108.6129 " << std::endl;
 };
 
 //=============================================================================
@@ -174,24 +153,6 @@ double EvtRareLbToLllFF::func( const double p, EvtRareLbToLllFF::FormFactorDepen
   const double psq = p*p;
 
   return ( dep.a0_ + dep.a2_*psq + dep.a4_*psq*psq )*exp( -(3.*mq*mq*psq)/(2.*mtilde*mtilde*asq ) );
-}
-
-double EvtRareLbToLllFF::calculateVdotV( EvtParticle* parent, EvtParticle* lambda ) const 
-{
-  EvtVector4R p4parent;
-  p4parent.set( parent->mass(), 0 , 0 , 0 );
-  
-  EvtVector4R p4lambda = lambda->getP4();
-  
-  double M  = lambda->mass();
-  double MB = parent->mass();
-  
-  return p4parent.dot( p4lambda )/(MB*M);
-}
-
-bool EvtRareLbToLllFF::isNatural( EvtParticle* lambda ) 
-{
-  return natural_.contains( lambda->getId() );
 }
 
 

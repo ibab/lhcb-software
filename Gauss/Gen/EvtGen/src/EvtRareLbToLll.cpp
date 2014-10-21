@@ -25,6 +25,8 @@
  
 #include <stdlib.h>
 #include "EvtGenModels/EvtRareLbToLll.hh"
+#include "EvtGenModels/EvtRareLbToLllFF.hh"
+#include "EvtGenModels/EvtRareLbToLllFFGutsche.hh"
 
 
 #include "EvtGenBase/EvtComplex.hh"
@@ -57,7 +59,7 @@ EvtDecayBase* EvtRareLbToLll::clone(){
 }
 
 void EvtRareLbToLll::init(){
-  // checkNArg(1);
+  checkNArg(1);
   
   // check that there are 3 daughteres
   checkNDaug(3);
@@ -75,8 +77,12 @@ void EvtRareLbToLll::init(){
   checkSpinDaughter(1,EvtSpinType::DIRAC);
   checkSpinDaughter(2,EvtSpinType::DIRAC);
 
-
-  ffmodel_  = new EvtRareLbToLllFF();
+  std::string model = getArgStr(0);
+  if ( model == "Gutsche" ) {
+    ffmodel_ = new EvtRareLbToLllFFGutsche();
+  } else {
+    ffmodel_  = new EvtRareLbToLllFF();
+  }
   wcmodel_  = new EvtRareLbToLllWC();
 
   ffmodel_->init();

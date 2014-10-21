@@ -12,11 +12,12 @@
 
 #include "EvtGenBase/EvtParticle.hh"
 #include "EvtGenBase/EvtIdSet.hh"
+#include "EvtGenModels/EvtRareLbToLllFFBase.hh"
 
 #include <string>
 #include <map> 
 
-class EvtRareLbToLllFF {
+class EvtRareLbToLllFF : public EvtRareLbToLllFFBase{
 
 public: 
   
@@ -82,22 +83,6 @@ public:
     EvtRareLbToLllFF::FormFactorDependence H6;
   };
 
-  class FormFactors 
-  {
-  public: 
-    FormFactors() ;
-    
-    virtual ~FormFactors() {} ;
-    
-    void areZero() ;
-
-    double  F_[4];
-    double  G_[4];
-    double FT_[4];
-    double GT_[4];    
-  };
-  
-    
 
   /// Standard constructor
   EvtRareLbToLllFF( ); 
@@ -108,9 +93,8 @@ public:
   
   void getFF( EvtParticle* parent, 
               EvtParticle* lambda, 
-              EvtRareLbToLllFF::FormFactors& FF );
+              EvtRareLbToLllFFBase::FormFactors& FF );
 
-  bool isNatural( EvtParticle* lambda ) ;
 
 protected:
   
@@ -120,8 +104,6 @@ private:
   
   std::map< int, EvtRareLbToLllFF::FormFactorSet* > FFMap_;
   
-  double calculateVdotV( EvtParticle* parent, EvtParticle* lambda ) const ;
-
   void DiracFF( EvtParticle* parent, 
                 EvtParticle* lambda, 
                 EvtRareLbToLllFF::FormFactorSet& FFset, 
@@ -133,7 +115,6 @@ private:
                           EvtRareLbToLllFF::FormFactors&   FF );
 
   
-  EvtIdSet natural_;
 };
 
 #endif // EVTRARELBTOLLLFF_HH
