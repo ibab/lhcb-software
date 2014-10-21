@@ -57,7 +57,7 @@ LoKi::Particles::TrackChi2::operator()
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return 'InvalidChi2'" ) ;
+    Error ( "Track    is invalid! return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;               // RETURN 
   }
   //
@@ -87,7 +87,7 @@ LoKi::Particles::TrackChi2PerDoF::operator()
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return 'InvalidChi2'" ) ;
+    Error ( "Track    is invalid! return 'InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;               // RETURN 
   }
   //
@@ -122,7 +122,7 @@ LoKi::Particles::TrackHasState::operator()
   //
   if ( 0 == p ) 
   {
-    Error ( "Argument is invalid! return false " ) ;
+    Error ( "Argument is invalid! return false" ) ;
     return false ;                                         // RETURN 
   }
   //
@@ -130,7 +130,7 @@ LoKi::Particles::TrackHasState::operator()
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return false " ) ;
+    Error ( "Track    is invalid! return false" ) ;
     return false ;                                          // RETURN 
   }
   //
@@ -176,18 +176,20 @@ LoKi::Particles::TrackType::operator()
   ( LoKi::Particles::TrackType::argument p ) const 
 {
   //
+  const int errVal = -1000;
+  //
   if ( 0 == p ) 
   {
-    Error ( "Argument is invalid! return -1000 " ) ;
-    return -1000 ;                                      // RETURN 
+    Error ( "Argument is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                      // RETURN 
   }
   //
   const LHCb::Track* track = m_track ( p ) ;
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return -1000 " ) ;
-    return -1000 ;                                     // RETURN 
+    Error ( "Track    is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                     // RETURN 
   }
   //
   return track->type() ;                 // RETURN 
@@ -206,18 +208,20 @@ LoKi::Particles::TrackHistory::operator()
   ( LoKi::Particles::TrackHistory::argument p ) const 
 {
   //
+  const int errVal = -1000;
+  //
   if ( 0 == p ) 
   {
-    Error ( "Argument is invalid! return -1000 " ) ;
-    return -1000 ;                                      // RETURN 
+    Error ( "Argument is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                      // RETURN 
   }
   //
   const LHCb::Track* track = m_track ( p ) ;
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return -1000 " ) ;
-    return -1000 ;                                     // RETURN 
+    Error ( "Track    is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                      // RETURN 
   }
   //
   return track->history() ;                 // RETURN 
@@ -236,18 +240,20 @@ LoKi::Particles::TrackHistoryFit::operator()
   ( LoKi::Particles::TrackHistoryFit::argument p ) const 
 {
   //
+  const int errVal = -1000;
+  //
   if ( 0 == p ) 
   {
-    Error ( "Argument is invalid! return -1000 " ) ;
-    return -1000 ;                                      // RETURN 
+    Error ( "Argument is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                        // RETURN 
   }
   //
   const LHCb::Track* track = m_track ( p ) ;
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return -1000 " ) ;
-    return -1000 ;                                     // RETURN 
+    Error ( "Track    is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                        // RETURN 
   }
   //
   return track->fitHistory() ;                 // RETURN 
@@ -266,18 +272,20 @@ LoKi::Particles::TrackStatus::operator()
   ( LoKi::Particles::TrackStatus::argument p ) const 
 {
   //
+  const int errVal = -1000;
+  //
   if ( 0 == p ) 
   {
-    Error ( "Argument is invalid! return -1000 " ) ;
-    return -1000 ;                                      // RETURN 
+    Error ( "Argument is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                      // RETURN 
   }
   //
   const LHCb::Track* track = m_track ( p ) ;
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return -1000 " ) ;
-    return -1000 ;                                     // RETURN 
+    Error ( "Track    is invalid! return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                      // RETURN 
   }
   //
   return track->fitStatus() ;                 // RETURN 
@@ -305,7 +313,7 @@ LoKi::Particles::TrackChi2Prob::operator()
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
+    Error ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
   }
   //
@@ -341,7 +349,7 @@ LoKi::Particles::GhostProbability::operator()
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
+    Error ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
   }
   //
@@ -374,7 +382,7 @@ LoKi::Particles::TrackLikelihood::operator()
   //
   if ( 0 == track ) 
   {
-    Warning ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
+    Error ( "Track    is invalid! return 'InvalidConfLevel'" ) ;
     return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
   }
   //

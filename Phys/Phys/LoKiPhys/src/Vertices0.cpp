@@ -66,7 +66,7 @@ LoKi::Vertices::IsPrimary::operator()
 {
   if ( 0 == v )
   {
-    Warning ( "Invalid VertexBase, return 'false'" ) ;
+    Error ( "Invalid VertexBase, return 'false'" ) ;
     return false ;                   // RETURN
   }
   if ( v -> isPrimary() ) { return true  ; }              // RETURN
@@ -96,8 +96,9 @@ LoKi::Vertices::Technique::operator()
   //
   if ( 0 != vertex ) { return vertex -> technique() ; }      // RETURN
   //
-  Warning ( "Invalid Vertex, return -1000" ) ;
-  return -1000 ;                   // RETURN
+  const int errVal = -1000;
+  Error ( "Invalid Vertex, return "+Gaudi::Utils::toString(errVal) ) ;
+  return errVal ;                   // RETURN
 }
 // ============================================================================
 std::ostream&
@@ -114,7 +115,7 @@ LoKi::Vertices::VertexChi2::operator()
   ( LoKi::Vertices::VertexChi2::argument v ) const
 {
   if ( 0 != v ) { return chi2 ( *v ) ; }                    // RETURN
-  Warning ( "Invalid Vertex, return 'InvalidChi2'" ) ;
+  Error ( "Invalid Vertex, return 'InvalidChi2'" ) ;
   return LoKi::Constants::InvalidChi2 ;                      // RETURN
 }
 
@@ -133,7 +134,7 @@ LoKi::Vertices::VertexChi2PerDoF::operator()
   ( LoKi::Vertices::VertexChi2PerDoF::argument v ) const
 {
   if ( 0 != v ) { return chi2PerDoF ( *v ) ; }                    // RETURN
-  Warning ( "Invalid Vertex, return 'InvalidChi2'" ) ;
+  Error ( "Invalid Vertex, return 'InvalidChi2'" ) ;
   return LoKi::Constants::InvalidChi2 ;                      // RETURN
 }
 // ============================================================================
@@ -152,8 +153,9 @@ LoKi::Vertices::VertexDoF::operator()
 {
   if ( 0 == v )
   {
-    Warning ( "Invalid Vertex, return -1000" ) ;
-    return -1000 ;                                             // RETURN
+    const int errVal = -1000;
+    Error ( "Invalid Vertex, return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                             // RETURN
   }
   //
   return std::max( v->nDoF() , 1 ) ;
@@ -173,7 +175,7 @@ LoKi::Vertices::PositionX::operator()
   ( LoKi::Vertices::PositionX::argument v ) const
 {
   if ( 0 != v ) { return v ->  position () .X() ; }         // RETURN
-  Warning ( "Invalid Vertex, return 'InvalidDistance'" ) ;
+  Error ( "Invalid Vertex, return 'InvalidDistance'" ) ;
   return LoKi::Constants::InvalidDistance;                   // RETURN
 }
 // ============================================================================
@@ -190,8 +192,8 @@ LoKi::Vertices::PositionY::result_type
 LoKi::Vertices::PositionY::operator()
   ( LoKi::Vertices::PositionY::argument v ) const
 {
-  if ( 0 != v ) { return v ->  position () . Y () ; }         // RETURN
-  Warning ( "Invalid Vertex, return 'InvalidDistance'" ) ;
+  if ( v ) { return v -> position () . Y () ; }         // RETURN
+  Error ( "Invalid Vertex, return 'InvalidDistance'" ) ;
   return LoKi::Constants::InvalidDistance;                   // RETURN
 }
 // ============================================================================
@@ -208,8 +210,8 @@ LoKi::Vertices::PositionZ::result_type
 LoKi::Vertices::PositionZ::operator()
   ( LoKi::Vertices::PositionZ::argument v ) const
 {
-  if ( 0 != v ) { return v ->  position () . Z () ; }         // RETURN
-  Warning ( "Invalid Vertex, return 'InvalidDistance'" ) ;
+  if ( v ) { return v -> position () . Z () ; }         // RETURN
+  Error ( "Invalid Vertex, return 'InvalidDistance'" ) ;
   return LoKi::Constants::InvalidDistance;                   // RETURN
 }
 // ============================================================================
@@ -228,9 +230,10 @@ LoKi::Vertices::NumberOfOutgoing::operator()
 {
   const LHCb::Vertex* vertex = base2vertex ( v ) ;
   //
-  if ( 0 != vertex ) { return vertex ->outgoingParticles().size() ; }   // RETURN
-  Warning ( "Invalid Vertex, return '0'" ) ;
-  return 0 ;                                                  // RETURN
+  if ( vertex ) { return vertex -> outgoingParticles().size() ; }   // RETURN
+  const int errVal = 0;
+  Error ( "Invalid Vertex, return "+Gaudi::Utils::toString(errVal) ) ;
+  return errVal ;                                                  // RETURN
 }
 // ============================================================================
 std::ostream&
@@ -261,7 +264,7 @@ LoKi::Vertices::HasInfo::operator()
   ( LoKi::Vertices::HasInfo::argument v ) const
 {
   if ( 0 != v ) { return v -> hasInfo( m_info ) ; }      // RETURN
-  Warning ( "Invalid Vertex, return 'false'" ) ;
+  Error ( "Invalid Vertex, return 'false'" ) ;
   return false;                                           // RETURN
 }
 // ============================================================================
@@ -308,8 +311,8 @@ LoKi::Vertices::Info::result_type
 LoKi::Vertices::Info::operator()
   ( LoKi::Vertices::Info::argument v ) const
 {
-  if ( 0 != v ) { return v -> info( m_key , m_def ) ; }      // RETURN
-  Warning ( "Invalid Vertex, return "
+  if ( v ) { return v -> info( m_key , m_def ) ; }      // RETURN
+  Error ( "Invalid Vertex, return "
             + Gaudi::Utils::toString ( m_bad )  ) ;
   return m_bad;                                              // RETURN
 }
@@ -333,18 +336,16 @@ LoKi::Vertices::NumberOfTracks::operator()
 {
   const LHCb::RecVertex* rv = base2rec ( v ) ;
   //
-  if ( 0 == rv )
+  if ( NULL == rv )
   {
-    Warning ( "Invalid (Rec)Vertex, return '0'" ) ;
-    return 0 ;                                           // RETURN
+    const int errVal = 0;
+    Error ( "Invalid (Rec)Vertex, return "+Gaudi::Utils::toString(errVal) ) ;
+    return errVal ;                                 // RETURN
   }
   //
-  const unsigned int n1 = rv -> tracks  () . size () ;
-  if ( 0 != n1 ) { return n1 ; }
-  const unsigned int n2 = rv -> weights () . size () ;
-  if ( 0 != n2 ) { return n2 ; }
-  //
-  return  0.5 * ( 3 + rv->nDoF() ) ;
+  return ( ! rv->tracks() .empty() ? rv->tracks(). size() :
+           ! rv->weights().empty() ? rv->weights().size() :
+           0.5 * ( 3 + rv->nDoF() ) );
 }
 // ============================================================================
 std::ostream&
@@ -366,9 +367,9 @@ LoKi::Vertices::Chi2Prob::result_type
 LoKi::Vertices::Chi2Prob::operator()
   ( LoKi::Vertices::Chi2Prob::argument v ) const
 {
-  if ( 0 == v )
+  if ( NULL == v )
   {
-    Warning ( "Invalid Vertex, return 'LoKi::Constants::InvalidChi2'" ) ;
+    Error ( "Invalid Vertex, return 'LoKi::Constants::InvalidChi2'" ) ;
     return LoKi::Constants::InvalidChi2 ;                    // RETURN
   }
   //
@@ -396,13 +397,13 @@ LoKi::Vertices::IsVertex::result_type
 LoKi::Vertices::IsVertex::operator()
   ( LoKi::Vertices::IsVertex::argument v ) const
 {
-  if ( 0 == v )
+  if ( NULL == v )
   {
     Warning ( "LHCb::VertexBase points to NULL, return 'false'" ) ;
     return false ;                                         // RETURN
   }
   //
-  return 0 != dynamic_cast<const LHCb::Vertex*>( v ) ;
+  return NULL != dynamic_cast<const LHCb::Vertex*>( v ) ;
 }
 // ============================================================================
 std::ostream& LoKi::Vertices::IsVertex::fillStream ( std::ostream& s ) const
@@ -417,13 +418,13 @@ LoKi::Vertices::IsRecVertex::result_type
 LoKi::Vertices::IsRecVertex::operator()
   ( LoKi::Vertices::IsRecVertex::argument v ) const
 {
-  if ( 0 == v )
+  if ( NULL == v )
   {
     Warning ( "LHCb::VertexBase points to NULL, return 'false'" ) ;
     return false ;                                         // RETURN
   }
   //
-  return 0 != dynamic_cast<const LHCb::RecVertex*>( v ) ;
+  return NULL != dynamic_cast<const LHCb::RecVertex*>( v ) ;
 }
 // ============================================================================
 std::ostream& LoKi::Vertices::IsRecVertex::fillStream ( std::ostream& s ) const
@@ -442,8 +443,8 @@ LoKi::Vertices::Cov2::Cov2
   ,  m_i ( std::max ( i , j ) )
   ,  m_j ( std::min ( i , j ) )
 {
-  Assert ( m_i < 3 , "Invalid matrix index " ) ;
-  Assert ( m_j < 3 , "Invalid matrix index " ) ;
+  Assert ( m_i < 3 , "Invalid matrix index" ) ;
+  Assert ( m_j < 3 , "Invalid matrix index" ) ;
 }
 // ============================================================================
 // MANDATORY: virtual destructor
@@ -462,9 +463,9 @@ LoKi::Vertices::Cov2::result_type
 LoKi::Vertices::Cov2::operator()
   ( LoKi::Vertices::Cov2::argument v ) const
 {
-  if ( 0 == v )
+  if ( NULL == v )
   {
-    Warning ( "Invalid Vertex, return 'InvalidDistance'" ) ;
+    Error ( "Invalid Vertex, return 'InvalidDistance'" ) ;
     return LoKi::Constants::InvalidChi2 ;                    // RETURN
   }
   //
