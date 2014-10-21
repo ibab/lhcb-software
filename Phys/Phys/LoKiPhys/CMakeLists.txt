@@ -15,10 +15,12 @@ find_package(VDT)
 gaudi_add_library(LoKiPhysLib
                   src/*.cpp
                   PUBLIC_HEADERS LoKi
+                  INCLUDE_DIRS VDT
                   LINK_LIBRARIES VDT PhysEvent DaVinciInterfacesLib KalmanFilter LoKiCoreLib LoKiUtils)
 
 gaudi_add_module(LoKiPhys
                  src/Components/*.cpp
+                 INCLUDE_DIRS VDT
                  LINK_LIBRARIES VDT PhysEvent DaVinciInterfacesLib KalmanFilter LoKiCoreLib LoKiUtils LoKiPhysLib)
 
 gaudi_add_dictionary(LoKiPhys

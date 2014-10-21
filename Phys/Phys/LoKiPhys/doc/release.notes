@@ -5,6 +5,9 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-10-21 - Chris Jones
+ - Add VDT to INCLUDE_DIRS in CMake...
+
 ! 2014-10-20 - Chris Jones
  - General downgrading of various Error and Warning message, to sanitise a bit
    things for running in production, the Stripping.
