@@ -47,7 +47,7 @@ def filterPi0s(which,inputs,config):
     return filterSelection('Pi0'+which+'Inputs',code,inputs)
 
 def topoInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
-    return "(TRCHI2DOF<2.5) & (PT > 500*MeV) & (P > 5000*MeV)"
+    return "HASTRACK & (TRCHI2DOF<2.5) & (PT > 500*MeV) & (P > 5000*MeV)"
 
 def topoKSInputsCuts(): # Don't need IP chi2 cut b/c is in 1st filter
     return "(PT > 500*MeV) & (P > 5000*MeV) & (BPVVDCHI2 > 1000)"
@@ -65,7 +65,7 @@ def hasTopoChildren():
            +topoKSInputsCuts() +")) > 1"
 
 def has1TrackChild():
-    return "INTREE(ISBASIC & (P>10000*MeV) & (PT>1700*MeV) & (TRCHI2DOF<2.5) "\
+    return "INTREE(HASTRACK & (P>10000*MeV) & (PT>1700*MeV) & (TRCHI2DOF<2.5) "\
            "& (MIPCHI2DV(PRIMARY)>16) & (MIPDV(PRIMARY)>0.1*mm))"
 
 def makeTOSFilter(name,specs):
