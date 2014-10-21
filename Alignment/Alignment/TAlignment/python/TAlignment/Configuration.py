@@ -313,13 +313,15 @@ class TAlignment( LHCbConfigurableUser ):
         ## The main sequence
         mainSeq = self.getProp("Sequencer")
         mainSeq.MeasureTime = True
-        #ApplicationMgr().TopAlg.append( mainSeq )
 
-        # Different sequencers depending on whether we use pat or not
+        # Add the sequence that creates input to the alignment (e.g. trackselections)
         mainSeq.Members.append( self.inputSeq(    self.getProp( "OutputLevel" ) ) )
-        mainSeq.Members.append( self.monitorSeq() )
+        # Add the accumulator
         mainSeq.Members.append( self.alignmentSeq( self.getProp( "OutputLevel" ) ) )
-        if self.getProp( "NumIterations" ) > 1 :
-            mainSeq.Members.append( self.postMonitorSeq() )
+        # Add the monitoring
+        if not self.getProp("OnlineMode"):
+            mainSeq.Members.append( self.monitorSeq() )
+            if self.getProp( "NumIterations" ) > 1 :
+                mainSeq.Members.append( self.postMonitorSeq() )
 
 
