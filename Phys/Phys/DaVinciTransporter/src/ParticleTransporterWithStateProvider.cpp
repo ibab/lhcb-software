@@ -211,7 +211,7 @@ StatusCode DaVinci::ParticleTransporter::transport
 {
   //
   if ( 0 == particle ) 
-  { return Error("Invalid particle, impossible to tarnsport") ; }
+  { return Error("Invalid particle, impossible to transport") ; }
   //
   if ( particle != &transported ) { transported = *particle ; }
   //
@@ -277,11 +277,11 @@ StatusCode DaVinci::ParticleTransporter::transportChargedBasic
   LHCb::State state ;
   StatusCode sc = m_stateprovider -> state ( state , *track , znew );
   if ( sc.isFailure() ) 
-  { return Error ("Error from StateProvider::state ", sc ) ; }
+  { return Warning ("Error from StateProvider::state", sc, 3 ) ; }
   //
   sc = m_particle2state -> state2Particle ( state , transported ) ;
   if ( sc.isFailure() ) 
-  { return Warning ( "Error from Particle2State ", sc ) ; }
+  { return Warning ( "Error from Particle2State", sc, 3 ) ; }
   //
   return sc ;
 }
@@ -305,7 +305,7 @@ StatusCode DaVinci::ParticleTransporter::transportElectron
   LHCb::State state ;
   StatusCode sc = m_particle2state -> particle2State ( *particle , state ) ;
   if ( sc.isFailure() ) 
-  { return Warning ("Error from Particle2State", sc ) ; }
+  { return Warning ("Error from Particle2State", sc, 3 ) ; }
   //
   if ( LHCb::Track::Long  == track -> type () || 
        LHCb::Track::Velo  == track -> type () || 
@@ -316,7 +316,7 @@ StatusCode DaVinci::ParticleTransporter::transportElectron
     sc = m_extrapolator1 -> propagate ( state , znew , particle->particleID() ) ;
     if ( sc.isFailure() && 0 != m_extrapolator2 ) 
     { 
-      Warning("Failure from extrapolator-1, try the extrapolator-2" , sc ) ; 
+      Warning( "Failure from extrapolator-1, try the extrapolator-2", sc, 0 ) ; 
       m_particle2state -> particle2State ( *particle , state ) ;
       // the second try: use more complicated extrapolator 
       sc = m_extrapolator2 -> propagate ( state , znew , particle->particleID() ) ;
@@ -325,11 +325,11 @@ StatusCode DaVinci::ParticleTransporter::transportElectron
   else // extrapolator2 
   { sc = m_extrapolator2 -> propagate ( state , znew , particle->particleID() ) ; } 
   //
-  if ( sc.isFailure() ) { return Warning ("Error TrackExtrapolator", sc ) ; }
+  if ( sc.isFailure() ) { return Warning ("Error TrackExtrapolator", sc, 3 ) ; }
   //
   sc = m_particle2state -> state2Particle ( state , transported ) ;
   if ( sc.isFailure() ) 
-  { return Warning ( "Error from Particle2State ", sc ) ; }
+  { return Warning ( "Error from Particle2State", sc, 3 ) ; }
   //
   return sc ;
 }

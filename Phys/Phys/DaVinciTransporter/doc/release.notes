@@ -4,7 +4,8 @@
 !==============================================================================
 
 ! 2014-10-20 - Chris Jones
- - Downgrade some Errors to Warnings in ParticleTransporter.
+ - Downgrade some Errors to Warnings in ParticleTransporter and
+   ParticleTransporterWithStateProvider.
 
 !========================= DaVinciTransporter v3r11 2013-06-13 =========================
 
