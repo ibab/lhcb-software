@@ -119,6 +119,9 @@ class TrendPlotRegion(PlotRegion):
         # rad -> mrad
         if self.var.startswith("R"):
             parValues = list( 1000.*p for p in parValues )
+        # apply *after* rad->mrad so that the cutoff is 0.1 micron/micro rad
+        if "Velo" in self.getFullName():
+            parValues = list( round(p,4) for p in parValues )
 
         if not "solid_capstyle" in drawOptions:
             drawOptions["solid_capstyle"] = "butt"
@@ -185,6 +188,10 @@ class DiffPlotRegion(PlotRegion):
         # rad -> mrad
         if self.var.startswith("R"):
             parValue = 1000.*parValue
+        # precision cutoff for Velo
+        # apply *after* rad->mrad so that the cutoff is 0.1 micron/micro rad
+        if "Velo" in self.getFullName():
+            parValue = round(parValue,4)
 
         if draw == "P":
             self.labels.append(label)
@@ -330,6 +337,9 @@ class ROOTTrendRegion(ROOTRegion):
         # rad -> mrad
         if self.var.startswith("R"):
             parValues = list( 1000.*p for p in parValues )
+        # apply *after* rad->mrad so that the cutoff is 0.1 micron/micro rad
+        if "Velo" in self.getFullName():
+            parValues = list( round(p,4) for p in parValues )
 
         if not len(parValues) == sum(1 for p in self.periods if p.status.needAlignment):
             logging.error("Too few parameter values, check!!")
@@ -368,6 +378,8 @@ class ROOTTrendRegion(ROOTRegion):
 
             mg = ROOT.TMultiGraph()
             for status, entries in entriesPerStatus.iteritems():
+                if len(entries) == 0:
+                    continue
                 beginTimes, endTimes, values = tuple(np.array(x) for x in zip(*entries))
                 mnTime = min(mnTime, min(beginTimes)) if mnTime is not None else min(beginTimes)
                 mxTime = max(mxTime, max(endTimes)) if mxTime is not None else max(endTimes)
@@ -405,6 +417,9 @@ class ROOTDiffRegion(ROOTRegion):
         # rad -> mrad
         if self.var.startswith("R"):
             parValue = 1000.*parValue
+        # apply *after* rad->mrad so that the cutoff is 0.1 micron/micro rad
+        if "Velo" in self.getFullName():
+            parValue = round(parValue,4)
 
         self._x += 1.
         self.labels.append(label if label is not None else str(self._x))
