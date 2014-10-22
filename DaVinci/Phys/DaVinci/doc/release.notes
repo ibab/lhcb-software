@@ -8,6 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2014-10-22 - Chris Jones
+ - Make DaVinci aware of the new LDST file types. Treated like DST.
+
 ! 2014-09-06 - Chris Jones
  - Add a new prependToMainSequence method to DaVinci() Configurable.
  - Allow uDST tuning for MC.

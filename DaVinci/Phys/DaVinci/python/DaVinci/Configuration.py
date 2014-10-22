@@ -32,7 +32,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "DQFLAGStag"         : ""              # Tag for DQFLAGS. Default as set in DDDBConf for DataType
         # Input
         , "Input"              : []              # Input data. Can also be passed as a second option file.
-        , "InputType"          : "DST"           # 'DST', 'DIGI', 'RDST', 'MDST' or 'XDST'. Nothing means the input type is compatible with being a DST. 
+        , "InputType"          : "DST"           # 'DST', 'DIGI', 'RDST', 'MDST', 'XDST' or 'LDST'. Nothing means the input type is compatible with being a DST. 
         , 'EnableUnpack'       : None            # Explicitly enable/disable unpacking for input data (if specified) 
         # Output
         , "HistogramFile"      : ""              # Name of output Histogram file (set to "" to get no output) 
@@ -66,7 +66,7 @@ class DaVinci(LHCbConfigurableUser) :
         , "CondDBtag"          : """ Tag for CondDB. Default as set in DDDBConf for DataType """
         , "DQFLAGStag"         : """ Tag for DQFLAGS. Default as set in DDDBConf for DataType """
         , "Input"              : """ Input data. Can also be passed as a second option file. """
-        , "InputType"          : """ 'DST', 'DIGI', 'RDST', 'MDST' or 'XDST'. Nothing means the input type is compatible with being a DST.  """
+        , "InputType"          : """ 'DST', 'DIGI', 'RDST', 'MDST', 'XDST' or 'LDST'. Nothing means the input type is compatible with being a DST.  """
         , 'EnableUnpack'       : """Explicitly enable/disable unpacking for input data (if specified) """
         , "HistogramFile"      : """ Write name of output Histogram file """
         , "TupleFile"          : """ Write name of output Tuple file """
@@ -128,7 +128,7 @@ class DaVinci(LHCbConfigurableUser) :
         if dataType not in self.__known_datatypes__ :
             raise TypeError( "Invalid DataType '%s'" %dataType )
         inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "RDST", "MDST", "SDST", "XDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "RDST", "MDST", "SDST", "XDST", "LDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
         if ( dataType in [ "MC09" ] ):
             if not self.getProp("Simulation"):
