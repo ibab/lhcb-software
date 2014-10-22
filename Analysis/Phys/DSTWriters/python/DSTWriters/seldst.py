@@ -30,4 +30,4 @@ def selDSTElements() :
              ]
 
 def selDSTStreamConf() :
-    return OutputStreamConf(streamType = InputCopyStream)
+    return OutputStreamConf( streamType = InputCopyStream )

@@ -60,7 +60,8 @@ def stripDSTStreamConf( pack = True,
                         vetoItems = [ ], 
                         stripPrefix = 'Strip',
                         selectiveRawEvent = True,
-                        killTESAddressHistory = True ) :
+                        killTESAddressHistory = True,
+                        fileExtension = '.dst' ) :
     
     phys = 'Phys'
     if pack : phys = 'pPhys'
@@ -86,6 +87,7 @@ def stripDSTStreamConf( pack = True,
         
     return OutputStreamConf( streamType = InputCopyStream,
                              extraItems = eItems,
+                             fileExtension = fileExtension,
                              vetoItems  = localVetoItems,
                              selectiveRawEvent = selectiveRawEvent,
                              killTESAddressHistory = killTESAddressHistory )
