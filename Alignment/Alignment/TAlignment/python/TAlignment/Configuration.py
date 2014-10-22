@@ -58,7 +58,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "OutputDataFile"               : ""
         , "DatasetName"                  : "Unknown"
         , "OnlineMode"                   : False
-        , "OnlineAlignDir"               : '/group/online/AligWork/running'
+        , "OnlineAligWorkDir"            : "/group/online/AligWork/running"
         }
 
     def __apply_configuration__(self):
@@ -213,7 +213,7 @@ class TAlignment( LHCbConfigurableUser ):
         handle.topElement = self.getProp( subdet + 'TopLevelElement' )
         handle.precision = self.getProp( "Precision" )
         handle.depths = depths
-        handle.outputFile = self.getProp('OnlineAlignDir') + '/' + subdet + '/' +subdet+condname + '.xml'
+        handle.outputFile = self.getProp('OnlineAligWorkDir') + '/' + subdet + '/' +subdet+condname + '.xml'
         handle.author = getpass.getuser()
         handle.desc = self.getProp('DatasetName')
         alg.XmlWriters.append("WriteAlignmentConditionsTool/" + name)
@@ -292,7 +292,7 @@ class TAlignment( LHCbConfigurableUser ):
             xmlwriter = WriteMultiAlignmentConditionsTool("WriteMultiAlignmentConditionsTool")
             if self.getProp( "OnlineMode" ) :
                 self.addOnlineXmlWriters(xmlwriter)
-                updatetool.LogFile = self.getProp('OnlineAlignDir') + '/' + self.getProp( 'LogFile' )
+                updatetool.LogFile = self.getProp('OnlineAligWorkDir') + '/' + self.getProp( 'LogFile' )
             else :
                 self.addXmlWriters(xmlwriter)
             print '=================== OnlineMode = ', self.getProp( "OnlineMode" ) 
