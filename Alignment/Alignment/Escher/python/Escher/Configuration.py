@@ -11,7 +11,7 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             ProcessPhase, GaudiSequencer, DstConf, TAlignment,
                             VeloAlignment, DecodeRawEvent,
-                            CountingPrescaler, RecMoniConf )
+                            CountingPrescaler, RecMoniConf, CondDB )
 
 ## @class Escher
 #  Configurable for Escher application
@@ -19,10 +19,12 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 #  @date   15/08/2008
 class Escher(LHCbConfigurableUser):
 
-    ## Possible used Configurables
-    #__used_configurables__ = [ TAlignment, VeloAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
+    ##list of ConfigurableUser classes this one is going to query in the apply_configuration method 
+    __queried_configurables__ = [ ]
 
-    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, LHCbApp, DstConf, TAlignment, DecodeRawEvent ]
+    ##list of ConfigurableUser classes this one is going to modify in the apply_configuration method. 
+    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, LHCbApp, DstConf, TAlignment, DecodeRawEvent, CondDB ]
+    
     ## Default main sequences for real and simulated data
     DefaultSequence = [ #CountingPrescaler("EscherPrescaler")
                         #,
@@ -68,9 +70,11 @@ class Escher(LHCbConfigurableUser):
        , "UseFileStager"        : False
        , "ExpertTracking"       : [ "simplifiedGeometry"]
        , "HltFilterCode"        : None # Loki filter on Hlt decision
-       ,"UseDBSnapshot" : False
-       ,"PartitionName" : "LHCb"
-       ,"DBSnapshotDirectory" : "/group/online/hlt/conditions"
+       , "OnlineMode"           : False
+       , "UseDBSnapshot"        : False
+       , "PartitionName"        : "LHCb"
+       , "DBSnapshotDirectory"  : "/group/online/hlt/conditions"
+       , "OnlineAligWorkDir"    : "/group/online/AligWork/running"
         }
 
     def defineGeometry(self):
@@ -173,6 +177,7 @@ class Escher(LHCbConfigurableUser):
         TrackSys().ExpertTracking = self.getProp("ExpertTracking")
 
         ta = TAlignment()
+        self.setOtherProps(ta, ["DatasetName","OnlineMode","OnlineAligWorkDir"])
         ta.Sequencer = alignSeq
         if  self.getProp("Millepede") :
             log.info("Using Millepede type alignment!")
@@ -336,16 +341,31 @@ class Escher(LHCbConfigurableUser):
         cdb = CondDB()
         cdb.Tags = tag
         cdb.setProp('IgnoreHeartBeat', True)
-        cdb.setProp('EnableRunChangeHandler', False) # otherwise it will overwrite our configuration!
         self.setOtherProps( cdb, [ 'UseDBSnapshot',
                                    'DBSnapshotDirectory',
                                    'PartitionName' ])
 
-        #path = self.getProp('DBSnapshotDirectory') + "/.."*4 + "/group/online/AligWork/current/"
-        path = "/group/online/AligWork/running/"
+        # So, here is the problem: we don't want to run the risk that
+        # the CondDB() configurable (which configures /after/ us)
+        # overwrites our conditions. Yet, we don't want to miss the
+        # default conditions (e.g. velo stepper motor, magnetic field)
+        # either. if we add our conditions to its
+        # RunChangeHandlerConditions list, then we a) need to fix the
+        # path and b) don't know what happens for conditions that
+        # appear twice, because we don't control the ordering of the
+        # list. So, the hack is:
+        # - don't set 'EnableRunChangeHandler'
+        # - copy what is hidden behind that flag in CondDB()._configureDBSnapshot
+        # - do the test of the RunChangeHandler configuration ourselves:
+        cdb.setProp('EnableRunChangeHandler', False)
         from Configurables import RunChangeHandlerSvc
         rch = RunChangeHandlerSvc()
         ApplicationMgr().ExtSvc.append(rch)
+        baseloc = self.getProp( "DBSnapshotDirectory" )
+        rch.Conditions = dict( (c,'/'.join([baseloc,f])) for f,cs in cdb.getProp("RunChangeHandlerConditions").iteritems() for c in cs )
+        
+        #path = self.getProp('DBSnapshotDirectory') + "/.."*4 + "/group/online/AligWork/current/"
+        path = self.getProp("OnlineAligWorkDir") + "/"
         conditionmap = {
             path + 'Velo/VeloGlobal.xml'  : [
                 'Conditions/Alignment/Velo/VeloSystem',
@@ -382,8 +402,8 @@ class Escher(LHCbConfigurableUser):
                      + [ 'Conditions/Alignment/TT/TT%sLayerR%dModule%d%s' % (l,r,m,w) for w in ['T','B'] for l in ['aX','aU']           for r in [1,3]      for m in range(4,6)]
         }
 
-        rch.Conditions = dict( (c,f) for f,cs in conditionmap.iteritems() for c in cs )
-#         print rch
+        # add to the existing map
+        rch.Conditions = dict(rch.Conditions.items() +  dict( (c,f) for f,cs in conditionmap.iteritems() for c in cs ).items() )
 
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
@@ -402,16 +422,16 @@ class Escher(LHCbConfigurableUser):
         RecSysConf().RecoSequence = self.getProp("RecoSequence")
 
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
-        self.setOtherProps(RecMoniConf(),["Context","DataType"])
-        RecMoniConf().MoniSequence = self.getProp("MoniSequence")
-        self.setOtherProps(TAlignment(),["DatasetName"])
-
-        # database hacking for online
-        if self.getProp('UseDBSnapshot') : self.configureDBSnapshot()
-
+        if not self.getProp("OnlineMode"):
+            self.setOtherProps(RecMoniConf(),["Context","DataType"])
+            RecMoniConf().MoniSequence = self.getProp("MoniSequence")
+        
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
+
+        # database hacking for online.
+        if self.getProp('UseDBSnapshot') : self.configureDBSnapshot()
 
         # Use TimingAuditor for timing, suppress printout from SequencerTimerTool
         from Configurables import (ApplicationMgr,AuditorSvc,SequencerTimerTool)
@@ -424,7 +444,8 @@ class Escher(LHCbConfigurableUser):
         log.info( LHCbApp() )
         log.info( RecSysConf() )
         log.info( TrackSys() )
-        log.info( RecMoniConf() )
+        if not self.getProp("OnlineMode"):
+            log.info( RecMoniConf() )
         log.info( TAlignment() )
         log.info( DstConf() )
         GaudiKernel.ProcessJobOptions.PrintOff()
