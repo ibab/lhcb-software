@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-10-22 - Jaap Panman
+- check for *DST types rather than explicit DST names in LumiAlgs config
+
 !========================= LumiAlgs v9r4 2014-07-14 =========================
 ! 2014-06-24 - Marco Clemencic
  - Fixed CMake configuration.

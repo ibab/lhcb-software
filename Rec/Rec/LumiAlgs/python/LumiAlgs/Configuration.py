@@ -35,7 +35,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     __slots__ = {
         "Context"       : "Offline"  # The context within which to run
        ,"DataType"      : "2012"     # Data type, can be ['DC06','2008','MC09','2009','2010', '2011', ... , '2015']
-       ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']. Different sequencer made.
+       ,"InputType"     : "MDF"      # Data type, can be ['MDF','*DST','ETC','DIGI']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
        ,"MergeFSR"      : False      # merge FSRs into one container (incompatible with Integrate)
        ,"SetFSRStatus"  : ""         # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
@@ -50,7 +50,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
     _propertyDocDct = {
         "Context"       : """ The context within which to run """
         ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009','2010', ..., '2015']"
-       ,"InputType"     : "Input Data type, can be ['MDF','DST','RDST', 'SDST', 'MDST','ETC','DIGI']"
+       ,"InputType"     : "Input Data type, can be ['MDF','*DST','ETC','DIGI']"
        ,"ForceFullSequence" : "False, re-write the FSR independent of the InputType"
        ,"MergeFSR"      : "False, merge the FSRs into one container"
        ,"SetFSRStatus"  : "overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']"
@@ -78,6 +78,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         from Configurables import LoKi__ODINFilter  as ODINFilter
         # Create sub-sequences according to BXTypes
         crossings = self.getProp("BXTypes")
+        dsttype = ('---' + self.getProp('InputType'))[-3:] == 'DST'
         BXMembers = []
         from DAQSys.Decoders import DecoderDB
         HltLumiSummaryDecoder=DecoderDB["HltLumiSummaryDecoder"]
@@ -88,7 +89,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
             ddb=HltLumiSummaryDecoder.clone('HltLumiSummaryDecoder/LumiDecode'+i)
             #ddb.Active=True
             #don't think this will work, all decoders would be writing to the same location? What if a bunch is of two types?
-            if self.getProp('InputType') == 'DST':
+            # this is OK, the bunchtypes are exclusive
+            if dsttype:
                     ddb.overrideOutputs('LumiSummaries')
             decoder=ddb.setup()
             seqMembers.append( decoder )
@@ -149,7 +151,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                              ModeOR = False,
                                              ShortCircuit = True
                                              ))
-            if self.getProp('InputType') == 'DST':
+            if dsttype:
                     accounting.InputDataContainer='LumiSummaries'
         
         return BXMembers
@@ -166,6 +168,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         from Configurables import LoKi__ODINFilter  as ODINFilter
         # Create sub-sequences according to BXTypes
         crossings = self.getProp("BXTypes")
+        dsttype = ('---' + self.getProp('InputType'))[-3:] == 'DST'
         BXMembers = []
         from DAQSys.Decoders import DecoderDB
         HltLumiSummaryDecoder=DecoderDB["HltLumiSummaryDecoder"]
@@ -176,7 +179,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
             ddb=HltLumiSummaryDecoder.clone('HltLumiSummaryDecoder/LumiDecode'+i)
             #ddb.Active=True
             #don't think this will work, all decoders would be writing to the same location? What if a bunch is of two types?
-            if self.getProp('InputType') == 'DST':
+            # this is OK, the bunchtypes are exclusive
+            if dsttype:
                     ddb.overrideOutputs('LumiSummaries')
             decoder=ddb.setup()
             seqMembers.append( decoder )
@@ -197,7 +201,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                              ModeOR = False,
                                              ShortCircuit = True
                                              ))
-            if self.getProp('InputType') == 'DST':
+            if dsttype:
                     accounting.InputDataContainer='LumiSummaries'
                     methodfilter.InputDataContainer='LumiSummaries'
         
@@ -268,8 +272,9 @@ class LumiAlgsConf(LHCbConfigurableUser):
         context = self.getProp("Context")
         
         # Check input data type
+        dsttype = ('---' + self.getProp('InputType'))[-3:] == 'DST'
         inputType = self.getProp("InputType")
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST", "SDST" ]:
+        if (not dsttype) and (inputType not in [ "MDF", "DIGI", "ETC"]):
             raise RuntimeError("ERROR : Unknown input type " + str(inputType))
         
         forced=self.getProp("ForceFullSequence")
