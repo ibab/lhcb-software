@@ -8,25 +8,26 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
+
 Print_3000_3087                                             SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/SelJpsi_3000_3087"                      |        14 |         15 |     1.0714 |    0.25754 |      1.0000 |      2.0000 |
- | "# input particles"                             |        14 |         15 |     1.0714 |    0.25754 |      1.0000 |      2.0000 |
+ | "# Phys/SelJpsi_3000_3087"                      |        14 |         14 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |        14 |         14 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
  |*"#accept"                                       |        14 |         14 |(  100.000 +- 7.14286  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Stream1")
 findReferenceBlock("""
 Print_3088_3100                                             SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/SelJpsi_3088_3100"                      |        12 |         12 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "# input particles"                             |        12 |         12 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- |*"#accept"                                       |        12 |         12 |(  100.000 +- 8.33333  )%|   -------   |   -------   |
+ | "# Phys/SelJpsi_3088_3100"                      |        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ | "# input particles"                             |        13 |         13 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#accept"                                       |        13 |         13 |(  100.000 +- 7.69231  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Stream2")
 findReferenceBlock("""
 Print_3100_4000                                             SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Phys/SelJpsi_3100_4000"                      |         6 |          6 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- | "# input particles"                             |         6 |          6 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
- |*"#accept"                                       |         6 |          6 |(  100.000 +- 16.6667  )%|   -------   |   -------   |
+ | "# Phys/SelJpsi_3100_4000"                      |         5 |          6 |     1.2000 |    0.40000 |      1.0000 |      2.0000 |
+ | "# input particles"                             |         5 |          6 |     1.2000 |    0.40000 |      1.0000 |      2.0000 |
+ |*"#accept"                                       |         5 |          5 |(  100.000 +- 20.0000  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Stream3")
 </text></argument>
 </extension>

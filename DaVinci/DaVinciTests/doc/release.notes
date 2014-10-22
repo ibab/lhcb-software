@@ -3,10 +3,17 @@
 ! Responsible : DaVinci Coordinator
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
+
+! 2014-10-22 - Chris Jones
+ - Update Stripping reference logs.
+ - Update io test_write_dst test reference blocks.
+
 ! 2014-10-20 - Stefania Vecchi
  - Update tagging references (disabled Charm Tagger for Stripping 21)
+
 ! 2014-09-30 - Stefania Vecchi
  - Update tagging references (changed Charm Tagger)
+
 ! 2014-08-11 - Stefano Perazzini
  - Corrected DataType in 
    tests/options/CommonParticles/DVTestStandardIntermediate.py
