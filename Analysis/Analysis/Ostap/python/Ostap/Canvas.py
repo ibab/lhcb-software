@@ -59,7 +59,7 @@ of Dr.O.Callot et al.:
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@itep.ru'
 __date__    = "2014-10-19"
 __version__ = '$Revision: 175248 $'
-__all__     = ( 'getCanvas' , )
+__all__     = ( 'getCanvas' , 'getCanvases' )
 # =============================================================================
 import ROOT
 # =============================================================================

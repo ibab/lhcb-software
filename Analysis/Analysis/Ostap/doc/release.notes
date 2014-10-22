@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-10-22 - Vanya Belyaev
+ - FitBkgModels.py: fix typo
+
 ! 2014-10-19 - Vanya Belyaev
  - small reshuffling of modules 
 

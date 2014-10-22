@@ -253,7 +253,7 @@ class PSLeft_pdf(PDF) :
         if self.left.getMin() >= self.mass.getMax() :
             logger.error('PSLeft_pdf(%s): invalid setting!' % name )
             
-        self.pdf  = cpp.Analysis.Models.PhaseSpaceLEft (
+        self.pdf  = cpp.Analysis.Models.PhaseSpaceLeft (
             'psl_%s'             % name ,
             'PhaseSpaceLeft(%s)' % name ,
             self.mass ,
