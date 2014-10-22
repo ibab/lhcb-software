@@ -5,18 +5,13 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-</PRE><H1><A NAME=v17r2p1>2014-10-16 RecSys v17r2p1</A></H1><PRE>
-This version uses Gaudi v25r4p1, LHCb v38r2p1 and Lbcom v16r1p1 (and ROOT 6.02.01)
-
-Identical to v17r2 but built against LCG_70root6 with ROOT 6.02.01
-
-</PRE><H1><A NAME=v17r2>2014-10-15 RecSys v17r2</A></H1><PRE>
+</PRE><H1><A NAME=v17r2>2014-10-22 RecSys v17r2</A></H1><PRE>
 This version uses Gaudi v25r4, LHCb v38r2 and Lbcom v16r1 (and ROOT v5.43.21)
 
 - Packages modified: Muon/MuonTrackRec v3r12, Pr/PrKernel v1r5,
     Pr/PrMCTools v2r4p1, Pr/PrPixel v1r10, Rec/GlobalReco v6r51,
-    Tf/PatAlgorithms v4r36, Tf/TfKernel v2r27, Tf/TfTools v1r19,
-    Tr/TrackMCTools v3r10p1, Tr/TrackUtils v1r56
+    Rec/LumiAlgs v9r5, Tf/PatAlgorithms v4r36, Tf/TfKernel v2r27,
+    Tf/TfTools v1r19, Tr/TrackMCTools v3r10p1, Tr/TrackUtils v1r56
 
 - In Muon/MuonTrackRec v3r12
   . MuonCombRec: Make tools public, protect debug statements, some 
@@ -37,6 +32,9 @@ This version uses Gaudi v25r4, LHCb v38r2 and Lbcom v16r1 (and ROOT v5.43.21)
   . Add some additional debug messages.
   . Adaption for recent ROOT version and minor modifications to plotting 
     PID-curves.
+
+- In Rec/LumiAlgs v9r5
+  . Check for *DST types rather than explicit DST names in LumiAlgs config
 
 - In Tf/PatAlgorithms v4r36
   . Use the new SIMDChi2Fit framework for the seeding; efficiencies and ghost

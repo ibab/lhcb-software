@@ -1,5 +1,5 @@
 package RecSys
-version           v17r2p1
+version           v17r2
 
 branches cmt doc tests
 
@@ -37,7 +37,7 @@ use PrVeloUT             v2r2    Pr   # Jianchun Wang
 # Non sub-detector specific components
 use ChargedProtoANNPID   v2r7    Rec  # Chris Jones
 use GlobalReco           v6r51   Rec  # Chris Jones, Olivier Deschamps
-use LumiAlgs             v9r4    Rec  # Jaap Panman
+use LumiAlgs             v9r5    Rec  # Jaap Panman
 use RecAlgs              v3r2    Rec  # Marco Cattaneo
 use RecConf              v2r18   Rec  # Marco Cattaneo
 use RecInterfaces        v1r3    Rec  # Chris Jones
