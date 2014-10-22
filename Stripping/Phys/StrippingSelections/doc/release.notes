@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-22 - James Mccarthy
+ - Changed order of particles in decay descriptors for Nbody tool in StrippingB2XEta.py 
+
 ! 2014-10-17 - Mika Vesterinen
  - Added D0enu line to B2DMuNuX module
 

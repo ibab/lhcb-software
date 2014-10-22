@@ -574,18 +574,17 @@ class B2XEtaConf(LineBuilder) :
         _allCuts = _PTCut+'&'+_vtxCut
         _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
-        _combCut12Doca="ACHI2DOCA(2,3)<%s"                     % config['eta_DOCA']
+        _combCut12Doca="ACHI2DOCA(1,2)<%s"                     % config['eta_DOCA']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_vtxChi2']
         _combCut12=_combCut12Doca
         
         #_eta3Pi=CombineParticles("eta3Pi",
         _eta3Pi=DaVinci__N3BodyDecays("eta3Pi",
-                                      DecayDescriptor = "eta -> pi0 pi+ pi-",
+                                      DecayDescriptor = "eta -> pi+ pi- pi0",
                                       Combination12Cut = _combCut12,
                                       CombinationCut=_combCuts,
                                       MotherCut=_allCuts,
-                                      DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts},
-                                      ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                      DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts})
         
         self.selEta3Pi = Selection(name, Algorithm=_eta3Pi, RequiredSelections=[self.daughters])
         
@@ -603,18 +602,17 @@ class B2XEtaConf(LineBuilder) :
         _allCuts = _PTCut+'&'+_vtxCut
         _trackCuts = _track_PT+'&'+_track_Chi2+'&'+_track_GPCut+'&'+_track_PIDCut
         _combCuts=_massCut+'&'+_docaCut
-        _combCut12Doca="ACHI2DOCA(2,3)<%s"                     % config['eta_prime_DOCA']
+        _combCut12Doca="ACHI2DOCA(1,2)<%s"                     % config['eta_prime_DOCA']
         _combCut12Vtx="(VFASPF(VCHI2/VDOF)<%s)"            % config['eta_prime_vtxChi2']
         _combCut12=_combCut12Doca
         
         #_etap=CombineParticles("etap",
         _etap=DaVinci__N3BodyDecays("etap",
-                              DecayDescriptors = ["eta_prime -> gamma pi+ pi-", "eta_prime -> eta pi+ pi-"],
+                              DecayDescriptors = ["eta_prime -> pi+ pi- gamma", "eta_prime -> pi+ pi- eta"],
                               Combination12Cut = _combCut12,
                               CombinationCut=_combCuts,
                               MotherCut=_allCuts,
-                              DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts},
-                              ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                              DaughtersCuts = { "pi+" : _trackCuts, "pi-" : _trackCuts})
         
         self.selEtap = Selection(name, Algorithm=_etap, RequiredSelections=[self.daughters])
         
@@ -634,8 +632,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "B0 -> KS0 eta_prime",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
-                                       ReFitPVs = self.refitPVs,
-                                       ParticleCombiners = {'' : "LoKi::VertexFitter" }     )
+                                       ReFitPVs = self.refitPVs )
         self.selB2KSLLetap = Selection( name, Algorithm=_b2etapksLL, RequiredSelections=[self.selKS2LL, self.selEtap])
 
     def makeB2KSDDetap( self, name, config):
@@ -654,8 +651,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "B0 -> KS0 eta_prime",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
-                                       ReFitPVs = self.refitPVs,
-                                       ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                       ReFitPVs = self.refitPVs )
         self.selB2KSDDetap = Selection( name, Algorithm=_b2etapksDD, RequiredSelections=[self.selKS2DD, self.selEtap])
 
 
@@ -672,8 +668,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "B0 -> KS0 eta",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
-                                        ReFitPVs = self.refitPVs,
-                                        ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+                                        ReFitPVs = self.refitPVs )
         self.selB2KSLLetaGG = Selection( name, Algorithm=_b2etaGGksLL, RequiredSelections=[self.selKS2LL, self.selEtaGG])
         
     def makeB2KSDDetaGG( self, name, config):
@@ -689,8 +684,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "B0 -> KS0 eta",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
-                                        ReFitPVs = self.refitPVs,
-                                        ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                        ReFitPVs = self.refitPVs )
         self.selB2KSDDetaGG = Selection( name, Algorithm=_b2etaGGksDD, RequiredSelections=[self.selKS2DD, self.selEtaGG])
         
     def makeB2KSLLeta3Pi( self, name, config):
@@ -709,8 +703,7 @@ class B2XEtaConf(LineBuilder) :
                                       DecayDescriptor = "B0 -> KS0 eta",
                                       CombinationCut = _combCuts,
                                       MotherCut = _allCuts,
-                                      ReFitPVs = self.refitPVs,
-                                      ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+                                      ReFitPVs = self.refitPVs )
         self.selB2KSLLeta3Pi = Selection( name, Algorithm=_b2etaksLL, RequiredSelections=[self.selKS2LL, self.selEta3Pi])
         
     def makeB2KSDDeta3Pi( self, name, config):
@@ -729,8 +722,7 @@ class B2XEtaConf(LineBuilder) :
                                          DecayDescriptor = "B0 -> KS0 eta",
                                          CombinationCut = _combCuts,
                                          MotherCut = _allCuts,
-                                         ReFitPVs = self.refitPVs,
-                                         ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                         ReFitPVs = self.refitPVs )
         self.selB2KSDDeta3Pi = Selection( name, Algorithm=_b2eta3PiksDD, RequiredSelections=[self.selKS2DD, self.selEta3Pi])       
         
     
@@ -750,8 +742,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "[Lambda_b0 -> Lambda0 eta_prime]cc",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
-                                       ReFitPVs = self.refitPVs,
-                                       ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                       ReFitPVs = self.refitPVs )
         self.selLb2LLLetap = Selection( name, Algorithm=_Lb2etapLLL, RequiredSelections=[self.selL2LL, self.selEtap])
         
     def makeLb2LDDetap( self, name, config):
@@ -769,8 +760,7 @@ class B2XEtaConf(LineBuilder) :
         _Lb2etapLDD = CombineParticles("Lb2etapLDD",
                                        DecayDescriptor = "[Lambda_b0 -> Lambda0 eta_prime]cc",
                                        CombinationCut = _combCuts,
-                                       MotherCut = _allCuts,
-                                       ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+                                       MotherCut = _allCuts )
         self.selLb2LDDetap = Selection( name, Algorithm=_Lb2etapLDD, RequiredSelections=[self.selL2DD, self.selEtap])
 
     def makeLb2LLLetaGG( self, name, config):
@@ -786,8 +776,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
-                                        ReFitPVs = self.refitPVs,
-                                        ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+                                        ReFitPVs = self.refitPVs )
         self.selLb2LLLetaGG = Selection( name, Algorithm=_Lb2etaGGLLL, RequiredSelections=[self.selL2LL, self.selEtaGG])
         
     def makeLb2LDDetaGG( self, name, config):
@@ -803,8 +792,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
-                                        ReFitPVs = self.refitPVs,
-                                        ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                        ReFitPVs = self.refitPVs )
         self.selLb2LDDetaGG = Selection( name, Algorithm=_Lb2etaGGLDD, RequiredSelections=[self.selL2DD, self.selEtaGG])
         
     def makeLb2LLLeta3Pi( self, name, config):
@@ -823,8 +811,7 @@ class B2XEtaConf(LineBuilder) :
                                          DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                          CombinationCut = _combCuts,
                                          MotherCut = _allCuts,
-                                         ReFitPVs = self.refitPVs,
-                                         ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+                                         ReFitPVs = self.refitPVs )
         self.selLb2LLLeta3Pi = Selection( name, Algorithm=_Lb2eta3PiLLL, RequiredSelections=[self.selL2LL, self.selEta3Pi])
         
     def makeLb2LDDeta3Pi( self, name, config):
@@ -843,8 +830,7 @@ class B2XEtaConf(LineBuilder) :
                                          DecayDescriptor = "[Lambda_b0 -> Lambda0 eta]cc",
                                          CombinationCut = _combCuts,
                                          MotherCut = _allCuts,
-                                         ReFitPVs = self.refitPVs,
-                                         ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                         ReFitPVs = self.refitPVs )
         self.selLb2LDDeta3Pi = Selection( name, Algorithm=_Lb2eta3PiLDD, RequiredSelections=[self.selL2DD, self.selEta3Pi])
 
 
@@ -863,8 +849,7 @@ class B2XEtaConf(LineBuilder) :
                                       DecayDescriptor = "[B0 ->  K*(892)0 eta_prime]cc",
                                       CombinationCut = _combCuts,
                                       MotherCut = _allCuts,
-                                      ReFitPVs = self.refitPVs,
-                                      ParticleCombiners = {'' : "LoKi::VertexFitter" }     )
+                                      ReFitPVs = self.refitPVs )
         self.selB2etapKst = Selection( name, Algorithm=_b2etapKst, RequiredSelections=[self.selKstar, self.selEtap])
         
     def makeB2KstetaGG(self, name, config):
@@ -879,8 +864,7 @@ class B2XEtaConf(LineBuilder) :
                                        DecayDescriptor = "[B0 -> K*(892)0 eta]cc",
                                        CombinationCut = _combCuts,
                                        MotherCut = _allCuts,
-                                       ReFitPVs = self.refitPVs,
-                                       ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                       ReFitPVs = self.refitPVs )
         self.selB2etaGGKst = Selection( name, Algorithm=_b2etaGGKst, RequiredSelections=[self.selKstar, self.selEtaGG])
         
     def makeB2Ksteta3Pi(self, name, config):
@@ -898,8 +882,7 @@ class B2XEtaConf(LineBuilder) :
                                         DecayDescriptor = "[B0 -> K*(892)0 eta]cc",
                                         CombinationCut = _combCuts,
                                         MotherCut = _allCuts,
-                                        ReFitPVs = self.refitPVs,
-                                        ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+                                        ReFitPVs = self.refitPVs )
         self.selB2eta3PiKst = Selection( name, Algorithm=_b2eta3PiKst, RequiredSelections=[self.selKstar, self.selEta3Pi])
         
     def makeLb2pKetap(self, name, config):
@@ -921,8 +904,7 @@ class B2XEtaConf(LineBuilder) :
                                            Combination12Cut = _combCut12,
                                            CombinationCut = _combCuts,
                                            MotherCut = _allCuts,
-                                           ReFitPVs = self.refitPVs,
-                                           ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                           ReFitPVs = self.refitPVs )
         self.selLb2pKetap = Selection( name, Algorithm=_Lb2pKetap, RequiredSelections=[self.selProtons, self.selKaons, self.selEtap])
         
     def makeLb2pKetaGG(self, name, config):
@@ -939,8 +921,7 @@ class B2XEtaConf(LineBuilder) :
                                             Combination12Cut = _combCut12,
                                             CombinationCut = _combCuts,
                                             MotherCut = _allCuts,
-                                            ReFitPVs = self.refitPVs,
-                                            ParticleCombiners = {'' : "LoKi::VertexFitter" } )
+                                            ReFitPVs = self.refitPVs )
         self.selLb2pKetaGG = Selection( name, Algorithm=_Lb2pKetaGG, RequiredSelections=[self.selProtons, self.selKaons, self.selEtaGG])
         
     def makeLb2pKeta3Pi(self, name, config):
@@ -962,6 +943,5 @@ class B2XEtaConf(LineBuilder) :
                                              Combination12Cut = _combCut12,
                                              CombinationCut = _combCuts,
                                              MotherCut = _allCuts,
-                                             ReFitPVs = self.refitPVs,
-                                             ParticleCombiners = {'' : "LoKi::VertexFitter" })
+                                             ReFitPVs = self.refitPVs )
         self.selLb2pKeta3Pi = Selection( name, Algorithm=_Lb2pKeta3Pi, RequiredSelections=[self.selProtons, self.selKaons, self.selEta3Pi])
