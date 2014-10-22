@@ -23,5 +23,5 @@ gaudi_add_unit_test(utesttmva src/applications/utesttmva.cxx
                     LINK_LIBRARIES ROOT MVADictToolsLib LoKiArrayFunctorsLib
                     TYPE Boost)
 
-# gaudi_install_python_modules()
+gaudi_install_python_modules()
 gaudi_add_test(QMTest QMTEST)

@@ -4,6 +4,9 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-10-22 - Marco Clemencic
+ - Uncommented installation of Python modules in CMake.
+
 !========================= MVADictTools v1r6 2014-09-30 =========================
 
 ! 2014-09-24 - Marco Clemencic
