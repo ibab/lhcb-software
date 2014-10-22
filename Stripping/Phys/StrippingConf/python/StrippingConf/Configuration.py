@@ -53,14 +53,13 @@ class StrippingConf ( object ) :
         self.MaxCandidates = MaxCandidates
         self.MaxCombinations = MaxCombinations
 
-
         ## To be uncommented to limit combinatorics for StandardParticles
-        #if self.MaxCandidates != None or self.MaxCombinations != None:
-        #    self.limitCombForStdParticles()
+        if self.MaxCandidates != None or self.MaxCombinations != None:
+            self.limitCombForStdParticles()
 
         ## Forces the limits on all configurables that implement the option...
-        #if self.MaxCandidates != None or self.MaxCombinations != None:
-        #    self.checkAllForCombLimit()
+        if self.MaxCandidates != None or self.MaxCombinations != None:
+            self.checkAllForCombLimit()
 
         self.checkFlavourTagging(Streams)
         if self._GlobalFlavourTagging:
@@ -282,6 +281,14 @@ class StrippingConf ( object ) :
                     conf.MaxCombinations = self.MaxCombinations
 
                 if self.MaxCandidates != None or self.MaxCombinations != None :
+                    conf.StopIncidentType = 'ExceedsCombinatoricsLimit'
+                    
+            elif ( hasattr(type(conf),'MaxParticles') and
+                   hasattr(type(conf),'StopIncidentType') ) :
+
+                if self.MaxCandidates != None and not conf.isPropertySet("MaxParticles") :
+                    log.warning( "Forcing MaxParticles settings for " + conf.name() )
+                    conf.MaxParticles = self.MaxCandidates
                     conf.StopIncidentType = 'ExceedsCombinatoricsLimit'
 
 
