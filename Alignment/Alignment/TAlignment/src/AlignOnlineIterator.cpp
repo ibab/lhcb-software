@@ -171,6 +171,14 @@ StatusCode AlignOnlineIterator::i_run()
   // only called once
 
   int runnr = 0;
+  IDetDataSvc* detDataSvc(0);
+  sc = service("DetectorDataSvc", detDataSvc, false);
+  if (sc.isFailure())
+  {
+    error() << "Could not retrieve DetectorDataSvc" << endmsg;
+    return sc;
+  }
+  IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
   while (m_iteration < m_maxIteration)
   {
     m_parent->waitRunOnce();
@@ -187,15 +195,7 @@ StatusCode AlignOnlineIterator::i_run()
     // FIXME: fire incident in the run changehandler to read the xml:
     // otherwise it will just use the geometry from the snapshot
     // Don't know if we need all of this ... Need to think.
-    IDetDataSvc* detDataSvc(0);
-    sc = service("DetectorDataSvc", detDataSvc, false);
-    if (sc.isFailure())
-    {
-      error() << "Could not retrieve DetectorDataSvc" << endmsg;
-      return sc;
-    }
     detDataSvc->setEventTime(equations.lastTime());
-    IIncidentSvc* incSvc = svc<IIncidentSvc>("IncidentSvc");
     incSvc->fireIncident(RunChangeIncident(name(), runnr));
 
     // Now call the update tool
@@ -252,7 +252,14 @@ StatusCode AlignOnlineIterator::i_run()
   }
   else
   {
-    warning() << "Alignment failed or didn't change." << endmsg;
+    if (sc.isSuccess())
+    {
+      warning() << "Alignment didn't change." << endmsg;
+    }
+    else
+    {
+      warning() << "Alignment procedure failed." << endmsg;
+    }
     for (auto i : m_xmlcopiers)
     {
       info() << "Condition: " << i->condition() << " Filename: "
