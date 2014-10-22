@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
 
+! 2014-10-22 - Chris Jones
+ - Promote messages about NULL CALO Cluster SmartRefs to Error level.
+
 ! 2014-09-05 - Chris
  - Fix a problem that caused unneccesary cloning of PVs on DST streams.
 

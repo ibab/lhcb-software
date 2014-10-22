@@ -159,7 +159,7 @@ LHCb::CaloHypo* CaloHypoCloner::clone(const LHCb::CaloHypo* hypo)
           std::ostringstream mess;
           mess << "CaloHypo in '" << tesLocation(hypo)
                << "' has null cluster SmartRef -> skipping";
-          Warning( mess.str(), StatusCode::SUCCESS ).ignore();
+          Error( mess.str() ).ignore();
         }
       }
       clone->setClusters(clonedClusters);
