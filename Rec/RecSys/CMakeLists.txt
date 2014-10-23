@@ -56,7 +56,6 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Tf/TfKernel
                          Tf/TfTools
                          Tf/TrackMatching
-                         Tf/TrackSeeding
                          Tf/TrackSys
                          Tf/TsaAlgorithms
                          Tf/TsaKernel
