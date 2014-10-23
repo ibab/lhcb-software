@@ -5,6 +5,7 @@
 <argument name="timeout"><integer>1800</integer></argument>
 <argument name="args"><set>
   <text>-T</text>
+  <text>$DAVINCITESTSROOT/tests/options/EnableCaloReprocessing.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DV-Stripping20r1p3-Stripping.py</text>
   <text>$APPCONFIGOPTS/DaVinci/DataType-2011.py</text> 
   <text>$PRCONFIGOPTS/DaVinci/Stripping/Collision11-3.5TeV-Reco14-FULLDST.py</text> 

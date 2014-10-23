@@ -4,6 +4,10 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-10-23 - Chris Jones
+ - Enable on-demand reprocessing of the CALO in the Stripping20rXpY tests.
+ - Update the reference logs accordingly.
+
 ! 2014-10-22 - Chris Jones
  - Update Stripping reference logs.
  - Update io test_write_dst test reference blocks.
