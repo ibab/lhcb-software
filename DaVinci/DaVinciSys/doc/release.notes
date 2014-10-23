@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+! 2014-10-23 - Chris Jones
+ - Update reference list of configurables.
+
 </PRE><H1><A NAME=v36r0>2014-07-28 DaVinci v36r0</A></H1><PRE>
 
 New development release based on the LHCb v38r0 stack.
