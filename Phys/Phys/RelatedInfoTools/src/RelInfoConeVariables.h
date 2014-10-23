@@ -75,7 +75,7 @@ private:
 
   /// Calculate properties of your remaining tracks inside the cone
   std::pair< std::vector<double>, int> ConeP(const LHCb::Particle *part,
-                                             const LHCb::Tracks* tracks,
+                                             const std::vector<const LHCb::Track*> *tracks,
                                              const double rcut);
 
   /// Check if your track belongs to your decay or not
@@ -85,6 +85,7 @@ private:
 
   double m_coneAngle;
   int m_trackType;
+  std::string m_tracksLocation; 
   std::vector<std::string> m_variables;
   std::vector<short int> m_keys; 
 
@@ -105,6 +106,8 @@ private:
   std::vector<const LHCb::Particle*> m_decayParticles;
   
   LHCb::RelatedInfoMap m_map;
+
+  std::vector<const LHCb::Track*> m_tracksStorage;
 
 };
 

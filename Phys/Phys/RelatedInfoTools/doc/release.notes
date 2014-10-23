@@ -4,6 +4,15 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-10-23 - Anton Poluektov 
+ - Added RelInfoVertexIsolationDetached tool, which implements the same algorithm as 
+   the old TupleToolVtxIsoln (before it moved to use VertexIsolation from ExtraInfoTools). 
+   The treatment of decays with secondary detached vertices should be more correct. 
+
+ - Added the parameter "TracksLocation" for RelInfoConeVariables. 
+   By default (""), all best tracks from the event are used, but it can be set to e.g.
+   "/Event/Phys/StdNoPIDsPions" to use only detached tracks for cones. 
+
 ! 2014-10-23 - Albert Puig
  - Small bugfix in RelInfoVertexIsolation to take into account fits with chi2 == -1
 

@@ -26,7 +26,8 @@ DECLARE_TOOL_FACTORY( RelInfoConeVariables )
 RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent)
-: GaudiTool ( type, name , parent )
+: GaudiTool ( type, name , parent ), 
+  m_tracksLocation("")
 {
   declareInterface<IRelatedInfoTool>(this);
   declareProperty( "ConeAngle", m_coneAngle = 1.0,
@@ -35,6 +36,8 @@ RelInfoConeVariables::RelInfoConeVariables( const std::string& type,
                    "Set the type of tracks which are considered inside the cone (default = 3)");
   declareProperty( "Variables", m_variables,
                    "List of variables to store (store all if empty)");
+  declareProperty( "TracksLocation", m_tracksLocation, 
+                   "Location for tracks to create the cone (use all best tracks by default)"); 
 }
 
 //=============================================================================
@@ -101,6 +104,7 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
 
   // -- Clear the vector with the particles in the specific decay
   m_decayParticles.clear();
+  m_tracksStorage.clear(); 
 
   // -- Add the mother (prefix of the decay chain) to the vector
   if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
@@ -109,12 +113,35 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
   // -- Save all particles that belong to the given decay in the vector m_decayParticles
   saveDecayParticles( top );
 
-  // -- Get all tracks in the event
-  LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(LHCb::TrackLocation::Default);
-  if ( !tracks || tracks->empty() )
-  {
-    if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
-    return StatusCode::FAILURE;
+  if (m_tracksLocation.size() == 0) {
+    // -- Get all tracks in the event
+    LHCb::Tracks* tracks = getIfExists<LHCb::Tracks>(LHCb::TrackLocation::Default);
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Will use tracks from " << LHCb::TrackLocation::Default << endmsg;
+    if ( !tracks || tracks->empty() )
+    {
+      if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve tracks. Skipping" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    for ( const LHCb::Track * track : *tracks ) {
+      m_tracksStorage.push_back( track ); 
+    }
+  } else {
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Will use tracks from " << m_tracksLocation << endmsg;
+
+    LHCb::Particle::Range parts = get<LHCb::Particle::Range>(m_tracksLocation + "/Particles");
+    if (parts.empty() ) {
+      if ( msgLevel(MSG::WARNING) ) warning() << "Could not retrieve particles. Skipping" << endmsg;
+      return StatusCode::FAILURE;
+    }
+
+    for(const LHCb::Particle * part : parts ) {
+      const LHCb::ProtoParticle* proto = part->proto();
+      if(proto)
+      {
+        const LHCb::Track* track = proto->track();
+        m_tracksStorage.push_back( track ); 
+      }
+    }
   }
 
   bool test = true;
@@ -125,7 +152,7 @@ StatusCode RelInfoConeVariables::calculateRelatedInfo( const LHCb::Particle *top
     if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with conesize " << m_coneAngle << endmsg;
 
     // -- Retrieve momentum information of tracks in the cone
-    std::pair<std::vector<double>,int> myPair = ConeP(part, tracks, m_coneAngle);
+    std::pair<std::vector<double>,int> myPair = ConeP(part, &m_tracksStorage, m_coneAngle);
     const std::vector<double> & myVector = myPair.first;
 
     const double conePx = myVector[0];
@@ -237,7 +264,7 @@ void RelInfoConeVariables::saveDecayParticles( const LHCb::Particle *top)
 //=============================================================================
 std::pair< std::vector<double>, int>
 RelInfoConeVariables::ConeP(const LHCb::Particle *part,
-                            const LHCb::Tracks* tracks,
+                            const std::vector<const LHCb::Track*> *tracks,
                             const double rcut)
 {
 
@@ -248,8 +275,10 @@ RelInfoConeVariables::ConeP(const LHCb::Particle *part,
   double sumPz = 0.0;
   int counter = 0;
 
-  for ( const LHCb::Track * track : *tracks )
+  for ( std::vector<const LHCb::Track*>::const_iterator itrack = tracks->begin(); itrack != tracks->end(); itrack++ )
+//  for ( const LHCb::Track * track : *tracks )
   {
+    const LHCb::Track* track = *itrack; 
 
     // -- Check if the track belongs to the decay itself
     bool isInDecay = isTrackInDecay(track);
