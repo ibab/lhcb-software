@@ -27,6 +27,7 @@
 #include "EvtGenModels/EvtRareLbToLll.hh"
 #include "EvtGenModels/EvtRareLbToLllFF.hh"
 #include "EvtGenModels/EvtRareLbToLllFFGutsche.hh"
+#include "EvtGenModels/EvtRareLbToLllFFlQCD.hh"
 
 
 #include "EvtGenBase/EvtComplex.hh"
@@ -80,8 +81,14 @@ void EvtRareLbToLll::init(){
   std::string model = getArgStr(0);
   if ( model == "Gutsche" ) {
     ffmodel_ = new EvtRareLbToLllFFGutsche();
-  } else {
-    ffmodel_  = new EvtRareLbToLllFF();
+  } else if ( model == "LQCD" ) {
+    ffmodel_ = new EvtRareLbToLllFFlQCD();
+  } else if ( model == "MR" ) {
+    ffmodel_ = new EvtRareLbToLllFF();
+  }
+  else {
+    report(INFO ,"EvtGen") << "  Unknown form-factor model, valid options are MR, LQCD, Gutsche." << std::endl;
+    ::abort();
   }
   wcmodel_  = new EvtRareLbToLllWC();
 

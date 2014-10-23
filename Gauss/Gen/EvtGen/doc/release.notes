@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-10-23 - Michal Kreps
+  - Implement form factors from LQCD (1212.4827) for Lb --> L transitions.
+
 ! 2014-10-21 - Michal Kreps
   - Restructure EvtRareLbToLllFF to allow form factors from different
     predictions to be implemented.
