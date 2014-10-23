@@ -207,6 +207,67 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
   double shat2=shat*shat;
 
   if (
+      // B_s decay form factors
+      parent == EvtPDL::getId(std::string("B_s0")) ||
+      parent == EvtPDL::getId(std::string("anti-B_s0")) 
+     )
+ {    
+  if (
+      // B_s --> K* form factors
+      daught == EvtPDL::getId(std::string("K*0")) ||
+      daught == EvtPDL::getId(std::string("anti-K*0")) 
+     )
+ {
+  
+  if (model == 6) {
+    // Ball-Zwicky LCSR '05 (mb = 4.8)
+    a1 = 0.231 / (1. - (t/32.94));
+    a2 = (-0.011 / (1. - (t/40.14))) + 
+      (0.192 / (1. - (t/40.14))/(1. - (t/40.14)));
+    a0 = (2.813 / (1. - (t/(5.37*5.37)))) + 
+      (-2.509 / (1. - (t/31.58)));
+    v = (2.351 / (1. - (t/(5.42*5.42)))) + 
+      (-2.039 / (1. - (t/33.10)));
+    t1 = (2.047 / (1. - (t/(5.42*5.42)))) + 
+      (-1.787 / (1 - (t/32.83)));
+    t2 = 0.260 / (1. - (t/33.01));
+    double t3tilde = (0.043 / (1. - (t/39.38))) + 
+      (0.217 / (1. - (t/39.38)) / (1. - (t/39.38)));
+    t3 = 0.0;
+    if (fabs(t) > 1e-10) {
+      t3 = (m*m - md*md)*(t3tilde - t2)/t;
+     }
+    }
+   } 
+  
+   
+  else if (
+           // B_s --> phi form factors
+           daught == EvtPDL::getId(std::string("phi"))
+	   ) 
+  {
+   if(model == 6){
+     // Ball-Zwicky LCSR '05 (mb = 4.8)
+     a1 = 0.308 / (1. - (t/36.54));
+     a2 = (-0.054 / (1. - (t/48.94))) + 
+       (0.288 / (1. - (t/48.94)) / (1. - (t/48.94)));
+     a0 = (3.310 / (1. - (t/(5.28*5.28)))) + 
+       (-2.835 / (1. - (t/31.57)));
+     v = (1.484 / (1. - (t/(5.32*5.32)))) + 
+       (-1.049 / (1. - (t/39.52)));
+     t1 = (1.303 / (1. - (t/(5.32*5.32)))) + 
+       (-0.954 / (1 - (t/38.28)));
+     t2 = 0.348 / (1. - (t/37.21));//0.349 caused a pole in T3 for q2 -> 0. 0.348 has correct behaviour
+     double t3tilde = (0.027 / (1. - (t/45.56))) + 
+       (0.321 / (1. - (t/45.56)) / (1. - (t/45.56)));
+     t3 = 0.0;
+     if (fabs(t) > 1e-10) {
+      t3 = (m*m - md*md)*(t3tilde - t2)/t;
+     }
+    }
+   }
+  }
+  else if (
       daught == EvtPDL::getId(std::string("K*+")) ||
       daught == EvtPDL::getId(std::string("K*-")) ||
       daught == EvtPDL::getId(std::string("K*0")) ||
@@ -297,7 +358,31 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
       t3 = (m*m - md*md)*(t3tilde - t2)/t;
     }
   }
- }
+  if (model == 8) {
+    // Khodjamirian et al. LCSR '10
+    double taup = ( 5.280 + 0.892 ) * ( 5.280 + 0.892 );
+    double taum = ( 5.280 - 0.892 ) * ( 5.280 - 0.892 );
+    double tau0 = taup - ( sqrt( taup - taum ) * sqrt ( taup ) );
+    double z = ( sqrt ( taup - t ) - sqrt ( taup - tau0 ) ) / 
+     ( sqrt ( taup - t ) + sqrt ( taup - tau0 ) );
+    double z0 = ( sqrt ( taup ) - sqrt ( taup - tau0 ) ) /
+     ( sqrt ( taup ) + sqrt ( taup -tau0 ) );
+    a1 = ( 0.25 / ( 1 - ( t/(5.829*5.829))))*(1
+     + 0.34 * ( z - z0 + 0.5 * ((z*z) - (z0*z0))));
+    a2 = ( 0.23 / ( 1 - ( t/(5.829*5.829))))*(1
+     + (-0.85) * ( z - z0 + 0.5 * ((z*z) - (z0*z0))));
+    a0 = ( 0.29 / ( 1 - ( t/(5.366*5.366))))*(1
+     + (-18.2) * ( z - z0 + 0.5 * ((z*z) - (z0*z0))));
+    v = ( 0.36 / ( 1 - ( t/(5.412*5.412))))*(1
+     + (-4.8) * ( z - z0 + 0.5 * ((z*z) - (z0*z0))));
+    t1 = ( 0.31 / ( 1 - ( t/(5.412*5.412))))*(1
+     + (-4.6) * ( z - z0 + 0.5 * ((z*z) - (z0*z0))));
+    t2 = ( 0.31 / ( 1 - ( t/(5.829*5.829))))*(1
+     + (-3.2) * ( z - z0 + 0.5 * ((z*z) - (z0*z0))));
+    t3 = ( 0.22 / ( 1 - ( t/(5.829*5.829))))*(1
+     + (-10.3) * ( z - z0 + 0.5 * ((z*z) - (z0*z0))));
+  }
+}
  else if (daught == EvtPDL::getId(std::string("rho+")) ||
 	  daught == EvtPDL::getId(std::string("rho-")) ||
 	  daught == EvtPDL::getId(std::string("rho0")) 
@@ -361,29 +446,6 @@ void EvtbTosllBallFF::getVectorFF(EvtId parent, EvtId daught,
        t2 = 0.242 / (1. - (t/37.95));
        double t3tilde = (0.023 / (1. - (t/40.87))) + 
 	 (0.220 / (1. - (t/40.87)) / (1. - (t/40.87)));
-       t3 = 0.0;
-       if (fabs(t) > 1e-10) {
-	 t3 = (m*m - md*md)*(t3tilde - t2)/t;
-       }
-     }
-    }
-  else if (daught == EvtPDL::getId(std::string("phi"))
-	   ) 
-    {
-     if(model == 6){
-       // Ball-Zwicky LCSR '05 (mb = 4.8)
-       a1 = 0.308 / (1. - (t/36.54));
-       a2 = (-0.054 / (1. - (t/48.94))) + 
-	 (0.288 / (1. - (t/48.94)) / (1. - (t/48.94)));
-       a0 = (3.310 / (1. - (t/(5.28*5.28)))) + 
-	 (-2.835 / (1. - (t/31.57)));
-       v = (1.484 / (1. - (t/(5.32*5.32)))) + 
-	 (-1.049 / (1. - (t/39.52)));
-       t1 = (1.303 / (1. - (t/(5.32*5.32)))) + 
-	 (-0.954 / (1 - (t/38.28)));
-       t2 = 0.348 / (1. - (t/37.21));//0.349 caused a pole in T3 for q2 -> 0. 0.348 has correct behaviour
-       double t3tilde = (0.027 / (1. - (t/45.56))) + 
-	 (0.321 / (1. - (t/45.56)) / (1. - (t/45.56)));
        t3 = 0.0;
        if (fabs(t) > 1e-10) {
 	 t3 = (m*m - md*md)*(t3tilde - t2)/t;
