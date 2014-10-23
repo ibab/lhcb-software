@@ -74,7 +74,6 @@ use TrackUtils           v*  Tr   # Eduardo Rodrigues
 
 # Tf packages: Track Pattern Recognition
 use TfTools              v*  Tf   # Stephanie Hansmann-Menzemer
-use TrackSeeding         v*  Tf   # Eduardo Rodrigues, Henk Jan Bulten
 
 # Primary Vertex Finder
 use PatPV                v*  Tr   # Mariusz Witek

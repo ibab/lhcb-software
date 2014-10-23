@@ -38,7 +38,6 @@ gaudi_depends_on_subdirs(Calo/CaloMoniDst
                          Tf/PatVeloTT
                          Tf/TfTools
                          Tf/TrackMatching
-                         Tf/TrackSeeding
                          Tf/TrackSys
                          Tf/TsaAlgorithms
                          Tr/PatChecker
