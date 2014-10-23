@@ -49,6 +49,7 @@ import StrippingB2Psi2SX
 import StrippingB2Psi2SXMuMu
 
 import StrippingBs2JpsieePhi
+import StrippingBd2JpsieeKS
 import StrippingB2CharmlessQuasi2Body
 import StrippingBs2PhiPhi
 import StrippingBs2Kst0Kst0
