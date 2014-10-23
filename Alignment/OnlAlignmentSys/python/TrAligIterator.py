@@ -48,6 +48,8 @@ def patchEscher(true_online_version):
   from TAlignment.VertexSelections import configuredPVSelection
   from Configurables import GaudiSequencer
   escher = EscherCommon(true_online_version)
+#   TAlignment().OnlineIterator = True
+  TAlignment().NumIterations = 10
   print escher
   return escher
 
