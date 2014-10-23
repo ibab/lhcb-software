@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-23 - Carlos Vazquez Sierra
+ - B2CC dictionaries modified.
+
 ! 2014-10-18 - Stefano Perazzini
  - Updated dbases for stripping21(r1)
 

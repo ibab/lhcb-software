@@ -393,3 +393,29 @@ Bs2EtacPhiBDT = {
     'WGs'         : [ 'B2CC' ]
     }
 
+######################################################################
+## StrippingBetaSBd2JpsieeKSPrescaledLine (MDST.DST)
+## StrippingBetaSBd2JpsieeKSDetachedLine (MDST.DST)
+## -------------------------------------------------------------------
+## Lines defined in StrippingBd2JpsieeKS.py
+## Author: Ramon Niet
+######################################################################
+
+BetaSBd2JpsieeKS = {
+    'BUILDERTYPE' : 'Bd2JpsieeKSConf',
+    'CONFIG'      : { 'BPVLTIME'              :     0.2   # ps
+                    , 'ElectronPT'            :   500.    # MeV
+                    , 'ElectronPID'           :     0.    # adimensional
+                    , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
+                    , 'JpsiVertexCHI2pDOF'    :    15.    # adimensional
+                    , 'JpsiMassMin'           :  2500.    # MeV
+                    , 'JpsiMassMax'           :  3300.    # MeV
+                    , 'BdVertexCHI2pDOF'      :    10.    # adimensional
+                    , 'BdMassMin'             :  4500.    # MeV
+                    , 'BdMassMax'             :  6000.    # MeV
+                    , 'Prescale'              :     0.1   # adimensional
+                    },
+    'STREAMS'     : [ 'Radiative' ],
+    'WGs'         : [ 'B2CC' ]
+    }
+
