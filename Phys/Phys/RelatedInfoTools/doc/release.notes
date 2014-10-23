@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-10-23 - Albert Puig
+ - Small bugfix in RelInfoVertexIsolation to take into account fits with chi2 == -1
+
 ! 2014-10-13 - Anton Poluektov 
  - Small modification of AddRelatedInfo: do not count element of InfoLocations list 
    if the map returned by the tool is empty. 

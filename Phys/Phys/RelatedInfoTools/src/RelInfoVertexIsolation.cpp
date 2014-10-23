@@ -68,15 +68,15 @@ StatusCode RelInfoVertexIsolation::initialize()
 
   m_keys.clear();
 
-  if ( m_variables.empty() ) 
+  if ( m_variables.empty() )
   {
 
     if ( msgLevel(MSG::DEBUG) ) debug() << "List of variables empty, adding all" << endmsg;
-    m_keys.push_back( RelatedInfoNamed::VTXISONUMVTX ); 
-    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2ONETRACK ); 
-    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2MASSONETRACK ); 
-    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2TWOTRACK ); 
-    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK ); 
+    m_keys.push_back( RelatedInfoNamed::VTXISONUMVTX );
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2ONETRACK );
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2MASSONETRACK );
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2TWOTRACK );
+    m_keys.push_back( RelatedInfoNamed::VTXISODCHI2MASSTWOTRACK );
 
   } else {
 
@@ -123,7 +123,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   // -- Clear the vector with the particles in the specific decay
   m_particlesToVertex.clear();
   // -- Add the mother (prefix of the decay chain) to the vector
-  if ( msgLevel(MSG::DEBUG) ) 
+  if ( msgLevel(MSG::DEBUG) )
     debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
   //  m_particlesToVertex.push_back( top );
   // -- Save all basic particles that belong to the mother vertex in the vector m_particlesToVertex
@@ -242,7 +242,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
 //=============================================================================
 //bool  RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
 //                                     LHCb::Particle::ConstVector &extraParticles )
-RelInfoVertexIsolation::IsolationResult 
+RelInfoVertexIsolation::IsolationResult
 RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
                                       LHCb::Particle::ConstVector &extraParticles )
 {
@@ -269,13 +269,16 @@ RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
       // Check again
       if ( 0 == vtxWithExtraTrack.chi2() ) continue;
 
-      const double deltaChi2 = vtxWithExtraTrack.chi2() - originalVtxChi2 ;
+      const double newChi2 = vtxWithExtraTrack.chi2() ;
+      // A chi2 of -1 means that the fit was not good, so isolation is good
+      if ( newChi2 < 0.0 ) continue ;
+      const double deltaChi2 = newChi2 - originalVtxChi2 ;
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
-                << " chi2 = " << vtxWithExtraTrack.chi2() << endmsg ;
+                << " chi2 = " << newChi2 << endmsg ;
       // Get values
       if ( (m_chi2 > 0.0) && (vtxWithExtraTrack.chi2() < m_chi2) ) nCompatibleChi2++ ;
-      if ( (smallestChi2) < 0 || (smallestChi2 > vtxWithExtraTrack.chi2()) ) smallestChi2 = vtxWithExtraTrack.chi2() ;
+      if ( (smallestChi2) < 0 || (smallestChi2 > newChi2) ) smallestChi2 = newChi2 ;
       if ( (smallestDeltaChi2 < 0) || (smallestDeltaChi2 > deltaChi2) )
       {
         smallestDeltaChi2 = deltaChi2 ;
@@ -314,7 +317,7 @@ void RelInfoVertexIsolation::findDaughters2Vertex( const LHCb::Particle *top )
   }
 }
 
-LHCb::RelatedInfoMap* RelInfoVertexIsolation::getInfo(void) 
+LHCb::RelatedInfoMap* RelInfoVertexIsolation::getInfo(void)
 {
   return &m_map;
 }
