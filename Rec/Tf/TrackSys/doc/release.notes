@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-10-23 - Michel De Cian
+ - Remove 'TrackSeeding' from cmt/requirements and CMakeLists.txt
+
 !========================= TrackSys v9r2 2014-09-08 =========================
 ! 2014-09-05 - Marco Cattaneo
  - Use standard tracking sequence also for 2010 data. Previously was using
