@@ -68,7 +68,7 @@ LoKi::ParticleClassificator::ParticleClassificator
   , m_mergedPi0Like       ( "pi0"   )
     //
   , m_dd_gammaC  (" gamma -> e+ e- ")
-  , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) ] ")
+  , m_dd_digamma (" [ ( pi0 -> <gamma> <gamma> ) , ( eta -> <gamma> <gamma> ) , <pi0> ] ")
     //
   , m_unclassified   ()
   , m_gamma_like     ()

@@ -5,6 +5,10 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+! 2014-10-23 - Vanya Belyaev
+ - ParticleClassificator:  
+     add merged (=="stable") pi0 into list of "di-gamma-like" particles 
+
 ! 2014-10-21 - Chris Jones
  - Move custom _Warning and _Error methods into a new shared base class,
    MessagingBase, to allow reuse across all components.
