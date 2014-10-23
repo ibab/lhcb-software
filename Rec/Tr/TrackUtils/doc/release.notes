@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-10-23 - Michel De Cian
+ - Remove 'TrackSeeding' from 'TrackFromDST' and 'TTrackFromLong'
+
 !========================= TrackUtils v1r56 2014-10-01 =========================
 
 ! 2014-09-13 - Sebastian Neubert

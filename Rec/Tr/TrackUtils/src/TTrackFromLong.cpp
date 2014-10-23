@@ -53,7 +53,7 @@ Track* TTrackFromLong::convert(const Track* aTrack) const{
   
   Track* tSeed = new Track();
   tSeed->setType( LHCb::Track::Ttrack );
-  tSeed->setHistory( LHCb::Track::TrackSeeding);
+  tSeed->setHistory( LHCb::Track::PatSeeding);
 
   const State& lastState =  aTrack->closestState(9000.*mm);
 
