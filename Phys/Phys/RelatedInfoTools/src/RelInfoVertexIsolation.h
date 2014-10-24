@@ -86,7 +86,8 @@ private:
   double m_smallestDeltaChi2MassTwoTracks ;
 
   /// Find all the signal particles to vertex
-  void findDaughters2Vertex( const LHCb::Particle* );
+  void findSignalFinalState( const LHCb::Particle* );
+  LHCb::Particle::ConstVector m_signalFinalState ;
   LHCb::Particle::ConstVector m_particlesToVertex ;
 
   // Config and vertexing
@@ -114,7 +115,7 @@ public:
   };
 
   // Isolation calculation
-  RelInfoVertexIsolation::IsolationResult getIsolation( const double, 
+  RelInfoVertexIsolation::IsolationResult getIsolation( const double,
                                                         LHCb::Particle::ConstVector& ) ;
 
 };

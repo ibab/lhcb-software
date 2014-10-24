@@ -4,6 +4,10 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-10-24 - Albert Puig
+ - Fixed RelInfoVertexIsolation to behave correctly in the case of secondary dettached
+   vertices.
+
 ! 2014-10-23 - Anton Poluektov 
  - Added RelInfoVertexIsolationDetached tool, which implements the same algorithm as 
    the old TupleToolVtxIsoln (before it moved to use VertexIsolation from ExtraInfoTools). 

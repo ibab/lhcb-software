@@ -105,29 +105,30 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
 
-  // Check the particle
-  if ( top->isBasicParticle() || isPureNeutralCalo(top) )
+  // Get the vertex
+  const LHCb::Vertex* vtx = ( part->isBasicParticle() || isPureNeutralCalo(part) ?
+                              top->endVertex() : part->endVertex() );
+  if ( msgLevel(MSG::DEBUG) )
   {
-    return Error("Cannot calculate isolation for basic or calorimetric particles!") ;
+    debug() << "vertex for P, ID " << part->particleID().pid()
+            << " = " << vtx << " at " << vtx->position() << endmsg;
   }
 
-  // Check the vertex of the particle
-  const LHCb::Vertex* vtx = top->endVertex() ;
   if ( !vtx )
   {
     return Error("Can't retrieve the vertex!") ;
   }
   const double originalVtxChi2 = vtx->chi2() ;
 
-  // Put all basic particles we are considering in m_particlesToVertex
   // -- Clear the vector with the particles in the specific decay
-  m_particlesToVertex.clear();
+  m_signalFinalState.clear();
   // -- Add the mother (prefix of the decay chain) to the vector
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
-  //  m_particlesToVertex.push_back( top );
-  // -- Save all basic particles that belong to the mother vertex in the vector m_particlesToVertex
-  findDaughters2Vertex( top );
+  // -- Save all basic particles that belong to the mother vertex in the vector m_signalFinalState
+  part->isBasicParticle() ? findSignalFinalState( top ) : findSignalFinalState( part );
+
+  if (msgLevel(MSG::DEBUG)) debug() << "Final states size= " <<  m_signalFinalState.size()  << endreq;
 
   // -- Get vector of particles excluding the signal
   LHCb::Particle::ConstVector partsToCheck ;
@@ -137,7 +138,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
     LHCb::Particle::Range particles = getIfExists<LHCb::Particle::Range>(location+"/Particles") ;
     if (msgLevel(MSG::DEBUG))
       debug() << "Got " << particles.size() << " particles from " << location << endreq ;
-    if ( particles.empty() ) { continue; }
+    if ( particles.empty() ) continue ;
 
     // Loop over the particles and take the ones we can use for vertexing
     for ( const auto* particle : particles )
@@ -152,17 +153,27 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
             iSignal != iSignalEnd;
             ++iSignal )
       {
-        if ( (*iSignal)->proto() == particle->proto() ) { isSignal = true ; break ; }
+        const LHCb::ProtoParticle* pSignal = (*iSignal)->proto() ;
+        if ( pSignal && (pSignal == particle->proto() ) )
+        {
+            isSignal = true ;
+            break ;
+        }
       }
       if ( isSignal ) continue ;
+
       // Check for duplicated particles
       bool isAlreadyIn = false ;
       for ( const auto* savedParticle : partsToCheck )
       {
-        if ( savedParticle->proto() == particle->proto() ) { isAlreadyIn = true ; break ; }
+        const LHCb::ProtoParticle* pSaved = savedParticle->proto() ;
+        if ( pSaved && ( pSaved == particle->proto() ) )
+        {
+            isAlreadyIn = true ;
+            break ;
+        }
       }
-      if ( isAlreadyIn ) continue ;
-      partsToCheck.push_back( particle ) ;
+      if ( !isAlreadyIn ) partsToCheck.push_back( particle ) ;
     }
   }
   if ( msgLevel(MSG::DEBUG) )
@@ -174,6 +185,10 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
     return Warning( "Found an invalid particle" );
   }
   if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling isolation variables" << endmsg;
+
+  // Choose particles to vertex
+  if ( part->isBasicParticle() ) m_particlesToVertex.push_back(part) ;
+  else                           m_particlesToVertex = part->daughtersVector() ;
 
   IsolationResult isolationOneTrack = getIsolation(originalVtxChi2, partsToCheck) ;
   IsolationResult isolationTwoTracks ;
@@ -255,29 +270,31 @@ RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
   {
     LHCb::Vertex vtxWithExtraTrack ;
     // Temporarily add the extra track to the partcles to vertex vector
-    m_particlesToVertex.push_back(extraPart) ;
+                    m_particlesToVertex.push_back(extraPart) ;
     // Fit
-    const StatusCode sc = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
+                    const StatusCode sc = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
     // Remove the extra track
-    m_particlesToVertex.pop_back() ;
+                m_particlesToVertex.pop_back() ;
     if ( !sc )
     {
       if ( msgLevel(MSG::DEBUG) ) debug() << "Failed to fit vertex" << endmsg ;
     }
     else
     {
-      // Check again
-      if ( 0 == vtxWithExtraTrack.chi2() ) continue;
-
+      // Compute the relevant variables
       const double newChi2 = vtxWithExtraTrack.chi2() ;
-      // A chi2 of -1 means that the fit was not good, so isolation is good
-      if ( newChi2 < 0.0 ) continue ;
       const double deltaChi2 = newChi2 - originalVtxChi2 ;
+
+      // A chi2 of -1 means that the fit was not good,
+      // so the particle was not compatible.
+      if ( 0 <= newChi2 ) continue;
+
+      // Here we found a reasonably compatible particle
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
                 << " chi2 = " << newChi2 << endmsg ;
-      // Get values
-      if ( (m_chi2 > 0.0) && (vtxWithExtraTrack.chi2() < m_chi2) ) nCompatibleChi2++ ;
+      // Get values of deltas, n particles, etc.
+      if ( (m_chi2 > 0.0) && (newChi2 < m_chi2) ) nCompatibleChi2++ ;
       if ( (smallestChi2) < 0 || (smallestChi2 > newChi2) ) smallestChi2 = newChi2 ;
       if ( (smallestDeltaChi2 < 0) || (smallestDeltaChi2 > deltaChi2) )
       {
@@ -297,23 +314,15 @@ RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
 //=============================================================================
 // Get (recursively) the particles to vertex in the decay chain
 //=============================================================================
-void RelInfoVertexIsolation::findDaughters2Vertex( const LHCb::Particle *top )
+void RelInfoVertexIsolation::findSignalFinalState( const LHCb::Particle *particle )
 {
-  // -- Fill all the daugthers in m_particlesToVertex
-  for ( const auto* dau : top->daughtersVector() )
+  // -- Fill all the daugthers in m_signalFinalState
+  for ( const auto* dau : particle->daughtersVector() )
   {
-    // -- If the particle is stable, save it in the vector, or...
-    if( dau->isBasicParticle() )
-    {
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
-      if ( dau->proto() && !isPureNeutralCalo(dau) ) m_particlesToVertex.push_back( dau );
-    }
-    else
-    { // -- if it is not stable, call the function recursively
-      //   m_particlesToVertex.push_back( (*idau) );
-      if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << dau->particleID().pid() << endmsg;
-      findDaughters2Vertex( dau );
-    }
+    // Recurse (will not do anything for basic particles)
+    findSignalFinalState( dau );
+    // -- If the particle has proto and is not a photon, add to the list of final states
+    if ( dau->proto() && !isPureNeutralCalo(dau) ) m_signalFinalState.push_back( dau );
   }
 }
 
