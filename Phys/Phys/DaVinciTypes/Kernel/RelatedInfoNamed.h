@@ -239,10 +239,12 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       ZVISOTAUM=BSTAUTAUTAUISOBDTFIRSTVALUETAUP + 40,
       ZVISO=BSTAUTAUTAUISOBDTFIRSTVALUETAUP + 41,
      
-      BSTAUTAUCDFISO = BSTAUTAUTAUISOBDTFIRSTVALUETAUP + 42 
+      BSTAUTAUCDFISO = BSTAUTAUTAUISOBDTFIRSTVALUETAUP + 42, 
 
-
-
+      VTXISODETNOPARTWITHINDCHI2WDW = BSTAUTAUCDFISO + 1, 
+      VTXISODETNOPARTWITHINCHI2WDW  = BSTAUTAUCDFISO + 2, 
+      VTXISODETSMALLESTCHI2         = BSTAUTAUCDFISO + 3,
+      VTXISODETSMALLESTDELTACHI2    = BSTAUTAUCDFISO + 4
 
     };
 
@@ -454,6 +456,10 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
       case RelatedInfoNamed::ZVISOTAUP : return "ZVISOTAUP"; 
       case RelatedInfoNamed::ZVISOTAUM : return "ZVISOTAUM"; 
 
+      case RelatedInfoNamed::VTXISODETNOPARTWITHINDCHI2WDW : return "VTXISODETNOPARTWITHINDCHI2WDW"; 
+      case RelatedInfoNamed::VTXISODETNOPARTWITHINCHI2WDW  : return "VTXISODETNOPARTWITHINCHI2WDW"; 
+      case RelatedInfoNamed::VTXISODETSMALLESTCHI2         : return "VTXISODETSMALLESTCHI2"; 
+      case RelatedInfoNamed::VTXISODETSMALLESTDELTACHI2    : return "VTXISODETSMALLESTDELTACHI2"; 
 
         default : return "UNKNOWN"; 
       }
@@ -461,7 +467,7 @@ class RelatedInfoNamed : public LHCb::RelatedInfoMap {
     
     static short int indexByName(std::string name) {
       short i;
-      for (i=0; i<=RelatedInfoNamed::BSTAUTAUCDFISO; i++) {
+      for (i=0; i<=RelatedInfoNamed::VTXISODETSMALLESTDELTACHI2; i++) {
 
         if ( name.compare(nameByIndex(i) ) == 0 ) return i; 
       }

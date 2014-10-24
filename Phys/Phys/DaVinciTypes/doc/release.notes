@@ -5,7 +5,8 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
-
+! 2014-10-24 - Anton Poluektov 
+ - New variables for RelInfoVertexIsolationDetached
 
 ! 2014-10-07 - Alessandro Mordà
  - Added new variables for Bs->tautau selection
