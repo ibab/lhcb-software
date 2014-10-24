@@ -4,6 +4,11 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussTools v19r2p1 2014-10-27 =======================
+! 2014-10-24 - Gloria Corti
+ - Set macro for loading genConf library from Install area so that it can be
+   used with new RPM installation by packages needing the genConf library
+
 !======================== GaussTools v19r2 2014-10-08 ========================
 ! 2014-10-07 - Luca Pescatore
  - GaussTargetMultiplicity.cpp modified adding new properties to store 
