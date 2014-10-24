@@ -45,7 +45,6 @@ RelInfoVertexIsolation::~RelInfoVertexIsolation() {}
 //=============================================================================
 StatusCode RelInfoVertexIsolation::initialize()
 {
-  if ( msgLevel(MSG::DEBUG) ) debug() << "++ Hello, you are using the new tool" << endmsg;
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
@@ -129,8 +128,6 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   // -- Save all basic particles that belong to the mother vertex in the vector m_signalFinalState
   part->isBasicParticle() ? findSignalFinalState( top ) : findSignalFinalState( part );
 
-  if (msgLevel(MSG::DEBUG)) debug() << "Final states size= " <<  m_signalFinalState.size()  << endreq;
-
   // -- Get vector of particles excluding the signal
   LHCb::Particle::ConstVector partsToCheck ;
   for ( const auto& location : m_inputParticles )
@@ -150,15 +147,15 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
       if ( isPureNeutralCalo(particle) ) continue ;
       // Check that the proto of the particle does not match the signal
       bool isSignal = false ;
-      for ( auto iSignal = m_particlesToVertex.begin(), iSignalEnd = m_particlesToVertex.end();
+      for ( auto iSignal = m_signalFinalState.begin(), iSignalEnd = m_signalFinalState.end();
             iSignal != iSignalEnd;
             ++iSignal )
       {
         const LHCb::ProtoParticle* pSignal = (*iSignal)->proto() ;
         if ( pSignal && (pSignal == particle->proto() ) )
         {
-            isSignal = true ;
-            break ;
+          isSignal = true ;
+          break ;
         }
       }
       if ( isSignal ) continue ;
@@ -170,8 +167,8 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
         const LHCb::ProtoParticle* pSaved = savedParticle->proto() ;
         if ( pSaved && ( pSaved == particle->proto() ) )
         {
-            isAlreadyIn = true ;
-            break ;
+          isAlreadyIn = true ;
+          break ;
         }
       }
       if ( !isAlreadyIn ) partsToCheck.push_back( particle ) ;
@@ -190,6 +187,8 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   // Choose particles to vertex
   if ( part->isBasicParticle() ) m_particlesToVertex.push_back(part) ;
   else                           m_particlesToVertex = part->daughtersVector() ;
+
+  if (msgLevel(MSG::DEBUG)) debug() << "Particles to vertex = " <<  m_particlesToVertex.size()  << endreq;
 
   IsolationResult isolationOneTrack = getIsolation(originalVtxChi2, partsToCheck) ;
   IsolationResult isolationTwoTracks ;
@@ -286,16 +285,12 @@ RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
       const double deltaChi2 = newChi2 - originalVtxChi2 ;
 
       // Here we found a reasonably compatible particle
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
-                << " chi2 = " << newChi2 << endmsg ;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
+                  << " chi2 = " << newChi2 << endmsg ;
       // A chi2 of -1 means that the fit was not good,
       // so the particle was not compatible.
       if ( newChi2 <= 0 ) continue;
-
-      if ( msgLevel(MSG::DEBUG) )
-        debug() << "I'm here with Delta chi2 = " << deltaChi2
-                << "old = " << smallestDeltaChi2 << endmsg ;
 
       // Get values of deltas, n particles, etc.
       if ( (m_chi2 > 0.0) && (newChi2 < m_chi2) ) nCompatibleChi2++ ;
