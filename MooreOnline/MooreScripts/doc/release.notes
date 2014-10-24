@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-10-24 - Gerhard Raven
+ - do not set obsolete MooreOnline().PartitionName
+
 !========================= MooreScripts v1r6 2014-10-17 =========================
 
 ! 2014-10-07 - Gerhard Raven

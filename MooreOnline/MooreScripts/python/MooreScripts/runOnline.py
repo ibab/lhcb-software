@@ -54,7 +54,6 @@ def start(**kwargs) :
     #default is OK moore.UseDBSnapshot = True
     #default is OK moore.IgnoreDBHeartBeat = True
     mooreOnline.EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough', 'Commissioning_OTCosmics'] )
-    mooreOnline.PartitionName = OnlineEnv.PartitionName
     
     ## is this still needed??? YES -- the run_XYZ.xml files are not generated for FEST...
     if OnlineEnv.PartitionName == 'FEST' : mooreOnline.EnableRunChangeHandler = False
