@@ -45,6 +45,7 @@ RelInfoVertexIsolation::~RelInfoVertexIsolation() {}
 //=============================================================================
 StatusCode RelInfoVertexIsolation::initialize()
 {
+  if ( msgLevel(MSG::DEBUG) ) debug() << "++ Hello, you are using the new tool" << endmsg;
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
 
@@ -103,7 +104,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
                                                          const LHCb::Particle *part )
 {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill now" << endmsg;
 
   // Get the vertex
   const LHCb::Vertex* vtx = ( part->isBasicParticle() || isPureNeutralCalo(part) ?
@@ -115,13 +116,13 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   }
 
   if ( !vtx )
-  {
     return Error("Can't retrieve the vertex!") ;
-  }
+
   const double originalVtxChi2 = vtx->chi2() ;
 
   // -- Clear the vector with the particles in the specific decay
   m_signalFinalState.clear();
+  m_particlesToVertex.clear();
   // -- Add the mother (prefix of the decay chain) to the vector
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
@@ -245,7 +246,6 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
     }
     debug() << "  Inserting key = " << key << ", value = " << value << " into map" << endreq;
     m_map.insert( std::make_pair( key, value) );
-
   }
 
   // We're done!
@@ -270,11 +270,11 @@ RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
   {
     LHCb::Vertex vtxWithExtraTrack ;
     // Temporarily add the extra track to the partcles to vertex vector
-                    m_particlesToVertex.push_back(extraPart) ;
+    m_particlesToVertex.push_back(extraPart) ;
     // Fit
-                    const StatusCode sc = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
+    const StatusCode sc = m_pVertexFit->fit(vtxWithExtraTrack, m_particlesToVertex) ;
     // Remove the extra track
-                m_particlesToVertex.pop_back() ;
+    m_particlesToVertex.pop_back() ;
     if ( !sc )
     {
       if ( msgLevel(MSG::DEBUG) ) debug() << "Failed to fit vertex" << endmsg ;
@@ -285,14 +285,18 @@ RelInfoVertexIsolation::getIsolation( const double originalVtxChi2,
       const double newChi2 = vtxWithExtraTrack.chi2() ;
       const double deltaChi2 = newChi2 - originalVtxChi2 ;
 
-      // A chi2 of -1 means that the fit was not good,
-      // so the particle was not compatible.
-      if ( 0 <= newChi2 ) continue;
-
       // Here we found a reasonably compatible particle
       if ( msgLevel(MSG::DEBUG) )
         debug() << "Fitted vertex adding track has Delta chi2 = " << deltaChi2
                 << " chi2 = " << newChi2 << endmsg ;
+      // A chi2 of -1 means that the fit was not good,
+      // so the particle was not compatible.
+      if ( newChi2 <= 0 ) continue;
+
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "I'm here with Delta chi2 = " << deltaChi2
+                << "old = " << smallestDeltaChi2 << endmsg ;
+
       // Get values of deltas, n particles, etc.
       if ( (m_chi2 > 0.0) && (newChi2 < m_chi2) ) nCompatibleChi2++ ;
       if ( (smallestChi2) < 0 || (smallestChi2 > newChi2) ) smallestChi2 = newChi2 ;
