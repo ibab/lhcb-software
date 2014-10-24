@@ -165,6 +165,8 @@ StatusCode AddVeloEventShapeS21::initialize()
 
 StatusCode AddVeloEventShapeS21::calculateRelatedInfo( const LHCb::Particle* /* top */, const LHCb::Particle* /* part */ )
 {
+  m_map.clear();
+
   const LHCb::VeloLiteCluster::VeloLiteClusters* clusters = get<LHCb::VeloLiteCluster::VeloLiteClusters>(LHCb::VeloLiteClusterLocation::Default);
   if (clusters == 0) {
     Error("Could not find velo clusters at "+LHCb::VeloLiteClusterLocation::Default);

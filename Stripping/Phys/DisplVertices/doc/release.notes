@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-10-24 - Pieter David
+ - Bug fix: forgot to clear the RelatedInfo map
+
 ! 2014-10-16 - Marco Clemencic
  - Fixed issue with Python dictionary and ROOT 6.02.01 (autoparsing on enums not implemented)
 
