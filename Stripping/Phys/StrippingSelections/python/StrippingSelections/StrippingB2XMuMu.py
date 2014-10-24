@@ -10,14 +10,16 @@ Stripping selection for nearly all electroweak penguin analyses. Includes same-s
 """
 
 from Gaudi.Configuration import *
+from LHCbKernel.Configuration import *  #check if needed
+
+
 from GaudiConfUtils.ConfigurableGenerators import  CombineParticles, FilterDesktop
 
 from PhysSelPython.Wrappers import Selection, AutomaticData, MergedSelection
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
-from LHCbKernel.Configuration import *  #check if needed
-from Configurables import SubstitutePID
-from Configurables import SubPIDMMFilter
+
+from Configurables import SubstitutePID,  SubPIDMMFilter
 
 
 #################
@@ -26,8 +28,11 @@ from Configurables import SubPIDMMFilter
 #
 #################
 
-
-defaultConfig = {
+default_config = {
+    'NAME'       : 'B2XMuMu',
+    'BUILDERTYE' : 'B2XMuMuConf',
+    'CONFIG'     :
+    {
     'RelatedInfoTools'      : [
         {"Type" : "RelInfoConeVariables"
       , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM','CONEPT','CONEP','CONEPASYM','CONEDELTAETA','CONEDELTAPHI']
@@ -148,8 +153,10 @@ defaultConfig = {
                               "B0 -> J/psi(1S) K_1(1400)0"
                              ]
 
-      }
-
+    },
+    'WGs'     : [ 'RD' ],
+    'STREAMS' : ['Leptonic'] 
+    }
 
 #################
 #
@@ -157,7 +164,6 @@ defaultConfig = {
 #
 #################
 
-defaultName = "B2XMuMu"
 
 
 class B2XMuMuConf(LineBuilder) :
@@ -290,7 +296,6 @@ class B2XMuMuConf(LineBuilder) :
         
 
         self.TrackCuts = "(TRGHP < %(Track_GhostProb)s)" %config
-        #self.TrackCuts = "(TRCHI2DOF < %(Track_CHI2nDOF)s)" %config
         
         self.HadronCuts = "(MIPCHI2DV(PRIMARY) > %(Hadron_MinIPCHI2)s) & (HASRICH)" %config
         
@@ -298,8 +303,6 @@ class B2XMuMuConf(LineBuilder) :
         self.PionCut = self.TrackCuts + " & " + self.HadronCuts
         
         self.MuonCut = self.TrackCuts + " & (MIPCHI2DV(PRIMARY) > %(Muon_MinIPCHI2)s) & (PIDmu> %(MuonPID)s)" %config
-
-        #self.KstarFilterCut  = self.KstarCut + " & (INTREE(ABSID=='K+') & " + self.KaonCut + ") & (INTREE(ABSID=='pi+') & " + self.PionCut + ")"
 
         self.Dimuon = self.__Dimuon__(config)
 
@@ -330,8 +333,8 @@ class B2XMuMuConf(LineBuilder) :
         self.K10 = self.__K10__(self.Kshort,self.Pions,config)
 
         self.AvailableDaughters = {
-            'K*(892)0'      : [ self.Kstar ] ,
             'rho(770)0'     : [ self.Rho   ] ,
+            'K*(892)0'      : [ self.Kstar ] ,
             'phi(1020)'     : [ self.Phi   ] ,
             'f_2(1950)'     : [ self.F2    ] ,
             'KS0'           : [ self.Kshort] ,
@@ -616,7 +619,7 @@ class B2XMuMuConf(LineBuilder) :
         _kstar2kpizero.MotherCut = "(ADMASS('K*(892)+') < %(KstarplusWINDOW)s *MeV)" % conf
 
         _kstarConf = _kstar2kpizero.configurable("Combine_"+self.name+"_KPi0")
-        _kstarConf.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
+        _kstarConf.ParticleCombiners.update ( { '' : 'LoKi::VertexFitter' } )
                                                  
         _selKSTAR2KPIZERO = Selection( "Selection_"+self.name+"_Kstar2kpizero",
                                        Algorithm = _kstarConf,
@@ -634,7 +637,7 @@ class B2XMuMuConf(LineBuilder) :
         _rho2pipizero.MotherCut = "(ADMASS('rho(770)+') < %(KstarplusWINDOW)s *MeV)" % conf
 
         _rhoConf = _rho2pipizero.configurable("Combine_"+self.name+"_PiPi0")
-        _rhoConf.ParticleCombiners.update ( { '' : 'MomentumCombiner' } )
+        _rhoConf.ParticleCombiners.update ( { '' : 'LoKi::VertexFitter' } )
                                                  
         _selRHO2PIPIZERO = Selection( "Selection_"+self.name+"_rho2pipizero",
                                        Algorithm = _rhoConf,
@@ -739,60 +742,120 @@ class B2XMuMuConf(LineBuilder) :
         return _selKSTAR2KSPI
 
 
+    ## def __TwoBodySwaps__(self, Rho, conf):
+    ##     """
+    ##     Make a phi through substitution 
+    ##     """      
+    ##     decayZ = [ ['pi+','pi-'], [ 'K+', 'K-'] ,['p+','p~-'] , ['K+' , 'pi-'], ['pi+' , 'K-'], ['p+', 'K-'] , ['K+', 'p~-'] ]
+    ##     decayP = [ ['pi+','pi+'], [ 'K+', 'K+'] ,['p+','p+']  , ['K+' , 'pi+'], ['pi+' , 'K+'], ['p+', 'K+'] , ['K+', 'p+']  ]
+    ##     decayM = [ ['pi-','pi-'], [ 'K-', 'K-'] ,['p~-','p~-'], ['K-' , 'pi-'], ['pi-' , 'K-'], ['p~-', 'K-'], ['K-', 'p~-'] ]
+
+    ## phi = [ [ 'phi(1020) -> K+ K-' ], [ 'phi(1020) -> K+ K+' ], [ 'phi(1020) -> K+ K+' ] ]
+    
+    ## decays = [ ] 
+    
+    
+    ##     subMMZAlg = SubPIDMMFilter(self.name+"_PhiSubMMZ_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi-')", MinMM=0, MaxMM=6050, PIDs = decayZ )
+
+    ##     subMMPAlg = SubPIDMMFilter(self.name+"_PhiSubMMP_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi+')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K+', 'K+'] ]  )     
+
+    ##     subMMMAlg = SubPIDMMFilter(self.name+"_PhiSubMMM_Alg", Code= "DECTREE('rho(770)0 -> pi- pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K-', 'K-'] ]  )   
+
+    ##     phiSubMMZSel = Selection( self.name+"_PhiSubMMZ_Sel", Algorithm = phiSubMMZAlg, RequiredSelections = [ Rho ] )
+
+    ##     phiSubMMPSel = Selection( self.name+"_PhiSubMMP_Sel", Algorithm = phiSubMMPAlg, RequiredSelections = [ Rho ] )
+        
+    ##     phiSubMMMSel = Selection( self.name+"_PhiSubMMM_Sel", Algorithm = phiSubMMMAlg, RequiredSelections = [ Rho ] )
+
+    ##     phiMerge = MergedSelection( self.name+"_PhiMerge", RequiredSelections = [ phiSubMMZSel, phiSubMMPSel, phiSubMMMSel ] ) 
+        
+    ##     phiSubAlg = SubstitutePID( self.name+"_PhiSub_Alg", 
+    ##                                Code = "(DECTREE('rho(770)0 -> K+ K-')) | (DECTREE('rho(770)0 -> K+ K+')) | (DECTREE('rho(770)0 -> K- K-'))",
+    ##                                MaxChi2PerDoF = -666 )
+
+        ## phiSubAlg.Substitutions = {
+        ##     'rho(770)0 -> K+ K-' : 'phi(1020)' ,
+        ##     'rho(770)0 -> K+ K+' : 'phi(1020)' ,
+        ##     'rho(770)0 -> K- K-' : 'phi(1020)'
+        ##     }
+        
+        ## phiSubSel =  Selection( self.name+"_PhiSub_Sel", Algorithm = phiSubAlg, RequiredSelections = [ phiMerge ] )
+
     def __Phi__(self, Rho, conf):
         """
-        Make a phi
+        Make a phi through substitution 
         """      
-        phiChangeAlg1 = SubstitutePID( self.name+"phiChangeAlg",
-                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
-                                     Substitutions = { ' X0 -> ^X+ X- ' : 'K+' ,
-                                                       ' X0 -> X+ ^X- ' : 'K-' ,
-                                                       ' X0 -> X+ X- ' : 'phi(1020)',
-                                                       ' X0 -> ^X+ X+ ' : 'K+',
-                                                       ' X0 -> X+ ^X+ ' : 'K+',
-                                                       ' X0 -> X+ X+ ' : 'phi(1020)',
-                                                       ' X0 -> ^X- X- ' : 'K-',
-                                                       ' X0 -> X- ^X- ' : 'K-',
-                                                       ' X0 -> X- X- ' : 'phi(1020)' }, 
-                                     MaxParticles = 20000,
-                                     MaxChi2PerDoF = -666 )
 
-        phiDescr1 =  Selection( self.name+"_Phi_SubPIDAlg",
-                                Algorithm = phiChangeAlg1,
-                                RequiredSelections = [Rho])
-    
-        pick = Selection(self.name+"_Phi_PickDecay",
-                     Algorithm = FilterDesktop( Code = "(DECTREE('phi(1020) -> K+ K-')) | (DECTREE('phi(1020) -> K+ K+')) | (DECTREE('phi(1020) -> K- K-'))" ),
-                     RequiredSelections = [phiDescr1])
-    
-        return pick
+        phiSubMMZAlg = SubPIDMMFilter(self.name+"_PhiSubMMZ_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K+', 'K-'] ]  )
+
+        phiSubMMPAlg = SubPIDMMFilter(self.name+"_PhiSubMMP_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi+')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K+', 'K+'] ]  )     
+
+        phiSubMMMAlg = SubPIDMMFilter(self.name+"_PhiSubMMM_Alg", Code= "DECTREE('rho(770)0 -> pi- pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K-', 'K-'] ]  )   
+
+        phiSubMMZSel = Selection( self.name+"_PhiSubMMZ_Sel", Algorithm = phiSubMMZAlg, RequiredSelections = [ Rho ] )
+
+        phiSubMMPSel = Selection( self.name+"_PhiSubMMP_Sel", Algorithm = phiSubMMPAlg, RequiredSelections = [ Rho ] )
+        
+        phiSubMMMSel = Selection( self.name+"_PhiSubMMM_Sel", Algorithm = phiSubMMMAlg, RequiredSelections = [ Rho ] )
+
+        phiMerge = MergedSelection( self.name+"_PhiMerge", RequiredSelections = [ phiSubMMZSel, phiSubMMPSel, phiSubMMMSel ] ) 
+        
+        phiSubAlg = SubstitutePID( self.name+"_PhiSub_Alg", Code = "ALL",  MaxChi2PerDoF = -666 )
+
+        #(DECTREE('rho(770)0 -> K+ K-')) | (DECTREE('rho(770)0 -> K+ K+')) | (DECTREE('rho(770)0 -> K- K-'))",
+        
+        phiSubAlg.Substitutions = {
+            'rho(770)0 -> K+ K-' : 'phi(1020)' ,
+            'rho(770)0 -> K+ K+' : 'phi(1020)' ,
+            'rho(770)0 -> K- K-' : 'phi(1020)'
+            }
+        
+        phiSubSel =  Selection( self.name+"_PhiSub_Sel", Algorithm = phiSubAlg, RequiredSelections = [ phiMerge ] )
+
+        phiFilterAlg = FilterDesktop( Code = "(ABSID=='phi(1020)')" )
+
+        phiFilterSel = Selection( self.name + "_PhiFilter", Algorithm = phiFilterAlg, RequiredSelections = [ phiSubSel ] )
+        
+        return phiFilterSel
 
     
     def __F2__(self, Rho, conf):
         """
         Make a f_2(1950) -> p pbar
-        """      
-        f2ChangeAlg1 = SubstitutePID( self.name+"f2ChangeAlg",
-                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
-                                     Substitutions = { ' X0 -> ^X+ X- ' : 'p+' ,
-                                                       ' X0 -> X+ ^X- ' : 'p~-' ,
-                                                       ' X0 -> X+ X- ' : 'f_2(1950)',
-                                                       ' X0 -> ^X+ X+ ' : 'p+',
-                                                       ' X0 -> X+ ^X+ ' : 'p+',
-                                                       ' X0 -> X+ X+ ' : 'f_2(1950)',
-                                                       ' X0 -> ^X- X- ' : 'p~-',
-                                                       ' X0 -> X- ^X- ' : 'p~-',
-                                                       ' X0 -> X- X- ' : 'f_2(1950)' }, 
-                                     MaxParticles = 20000,
-                                     MaxChi2PerDoF = -666 )
-        f2Descr1 =  Selection( self.name+"_F2_SubPIDAlg",
-                                Algorithm = f2ChangeAlg1,
-                                RequiredSelections = [Rho])    
-        pick = Selection(self.name+"_F2_PickDecay",
-                         Algorithm = FilterDesktop( Code = "(DECTREE('f_2(1950) -> p+ p~-')) | (DECTREE('f_2(1950) -> p+ p+')) | (DECTREE('f_2(1950) -> p~- p~-'))" ),
-                         RequiredSelections = [f2Descr1])    
-        return pick
+        """
+        f2SubMMZAlg = SubPIDMMFilter(self.name+"_F2SubMMZ_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'p+', 'p~-'] ]  )
 
+        f2SubMMPAlg = SubPIDMMFilter(self.name+"_F2SubMMP_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi+')", MinMM=0, MaxMM=6050, PIDs = [ [ 'p+', 'p+'] ]  )     
+
+        f2SubMMMAlg = SubPIDMMFilter(self.name+"_F2SubMMM_Alg", Code= "DECTREE('rho(770)0 -> pi- pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'p~-', 'p~-'] ]  )   
+
+        f2SubMMZSel = Selection( self.name+"_F2SubMMZ_Sel", Algorithm = f2SubMMZAlg, RequiredSelections = [ Rho ] )
+
+        f2SubMMPSel = Selection( self.name+"_F2SubMMP_Sel", Algorithm = f2SubMMPAlg, RequiredSelections = [ Rho ] )
+        
+        f2SubMMMSel = Selection( self.name+"_F2SubMMM_Sel", Algorithm = f2SubMMMAlg, RequiredSelections = [ Rho ] )
+        
+        f2Merge    = MergedSelection( self.name+"_F2Merge", RequiredSelections = [ f2SubMMZSel, f2SubMMPSel, f2SubMMMSel ] ) 
+
+        f2SubAlg = SubstitutePID( self.name+"_F2Sub_Alg", 
+                                   Code = "ALL" , #(DECTREE('rho(770)0 -> p+ p~-')) | (DECTREE('rho(770)0 -> p+ p+')) | (DECTREE('rho(770)0 -> p~- p~-'))",
+                                   MaxChi2PerDoF = -666 )
+        
+        f2SubAlg.Substitutions = {
+            'rho(770)0 -> p+ p~-' : 'f_2(1950)' ,
+            'rho(770)0 -> p+ p+'   : 'f_2(1950)' ,
+            'rho(770)0 -> p~- p~-' : 'f_2(1950)'
+            }
+
+        f2SubSel =  Selection( self.name+"_F2Sub_Sel", Algorithm = f2SubAlg, RequiredSelections = [ f2Merge ] )
+
+        f2FilterAlg = FilterDesktop( Code = "(ABSID=='f_2(1950)')" )
+        
+        f2FilterSel = Selection( self.name + "_F2Filter", Algorithm = f2FilterAlg, RequiredSelections = [ f2SubSel ] )
+        
+        return f2FilterSel
+    
+    
     def __Rho__(self, Pions, conf):
         """
         Make a rho
@@ -815,43 +878,42 @@ class B2XMuMuConf(LineBuilder) :
     def __Kstar__(self, Rho, conf):
         """
         Make a kstar
-        """      
-        kstarChangeAlg1 = SubstitutePID( self.name+"kstarChangeAlg1",
-                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
-                                     Substitutions = { ' X0 -> ^X+ X- ' : 'K+' ,
-                                                       ' X0 -> X+ X- ' : 'K*(892)0',
-                                                       ' X0 -> ^X+ X+ ' : 'K+',
-                                                       ' X0 -> X+ X+ ' : 'K*(892)0',
-                                                       ' X0 -> ^X- X- ' : 'K-',
-                                                       ' X0 -> X- X- ' : 'K*(892)~0' },
-                                     MaxParticles = 20000,
-                                     MaxChi2PerDoF = -666 )
+        """
+                
+        kstarSubMMZAlg = SubPIDMMFilter(self.name+"_KstarSubMMZ_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K+', 'pi-'], ['pi+', 'K-' ] ])
+        
+        kstarSubMMPAlg = SubPIDMMFilter(self.name+"_KstarSubMMP_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi+')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K+', 'pi+'], ['pi+', 'K+' ] ])     
 
-        kstarChangeAlg2 = SubstitutePID( self.name+"kstarChangeAlg2",
-                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
-                                     Substitutions = { ' X0 -> X+ ^X- ' : 'K-' ,
-                                                       ' X0 -> X+ X- ' : 'K*(892)~0',
-                                                       ' X0 -> X+ ^X+ ' : 'K+',
-                                                       ' X0 -> X+ X+ ' : 'K*(892)0',
-                                                       ' X0 -> X- ^X- ' : 'K-',
-                                                       ' X0 -> X- X- ' : 'K*(892)~0' },
-                                     MaxParticles = 20000,
-                                     MaxChi2PerDoF = -666 )
+        kstarSubMMMAlg = SubPIDMMFilter(self.name+"_KstarSubMMM_Alg", Code= "DECTREE('rho(770)0 -> pi- pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K-', 'pi-'], ['pi-', 'K-' ] ]) 
 
-        ksDescr1 =  Selection( self.name+"_Kstar_SubPIDAlg1",
-                                Algorithm = kstarChangeAlg1,
-                                RequiredSelections = [Rho])
-    
-        ksDescr2 =  Selection( self.name+"_Kstar_SubPIDAlg2",
-                                Algorithm = kstarChangeAlg2,
-                                RequiredSelections = [Rho])
-    
-        pick = Selection(self.name+"_Kstar_PickDecay",
-                     Algorithm = FilterDesktop( Code = "(DECTREE('K*(892)0 -> K+ pi-')) | (DECTREE('K*(892)~0 -> K- pi+')) | (DECTREE('K*(892)0 -> K+ pi+')) | (DECTREE('K*(892)~0 -> K- pi-'))" ),
-                     RequiredSelections = [ksDescr1, ksDescr2])
-    
-        return pick
+        kstarSubMMZSel = Selection( self.name+"_KstarSubMMZ_Sel", Algorithm = kstarSubMMZAlg, RequiredSelections = [ Rho ] )
 
+        kstarSubMMPSel = Selection( self.name+"_KstarSubMMP_Sel", Algorithm = kstarSubMMPAlg, RequiredSelections = [ Rho ] )
+        
+        kstarSubMMMSel = Selection( self.name+"_KstarSubMMM_Sel", Algorithm = kstarSubMMMAlg, RequiredSelections = [ Rho ] )
+        
+        kstarMerge     = MergedSelection( self.name+"_KstarMerge", RequiredSelections = [ kstarSubMMZSel, kstarSubMMPSel, kstarSubMMMSel ] )
+
+        kstarSubAlg    = SubstitutePID( self.name+"_KstarSub_Alg", Code = "ALL", MaxChi2PerDoF = -666 )
+
+        #kstarSubAlg.Code = "ALL" #(DECTREE('rho(770)0 -> K+ pi-')) | (DECTREE('rho(770)0 -> K- pi+')) | (DECTREE('rho(770)0 -> K+ pi+')) | (DECTREE('rho(770)0 -> K- pi-'))" 
+        
+        kstarSubAlg.Substitutions = {
+            'rho(770)0 -> K+ pi-' : 'K*(892)0',
+            'rho(770)0 -> K+ pi+' : 'K*(892)0',
+            'rho(770)0 -> pi+ K-' : 'K*(892)~0',
+            'rho(770)0 -> K- pi-' : 'K*(892)~0'
+            }
+        
+        
+        kstarSubSel =  Selection( self.name+"_KstarSub_Sel", Algorithm = kstarSubAlg, RequiredSelections = [ kstarMerge ] )
+
+        kstarFilterAlg = FilterDesktop( Code = "(ABSID=='K*(892)0')" )
+        
+        kstarFilterSel = Selection( self.name + "_KstarFilter", Algorithm = kstarFilterAlg, RequiredSelections = [ kstarSubSel ] )
+        
+        return kstarFilterSel
+       
 
     def __A1__(self, Pions, conf): 
         """
@@ -949,61 +1011,48 @@ class B2XMuMuConf(LineBuilder) :
         return pick
 
         
-#        _k102kspipi = CombineParticles()
-#        _k102kspipi.DecayDescriptor = "[K_1(1270)0 -> KS0 pi- pi+]cc"
-#        _k102kspipi.CombinationCut = self.__A1CombCut__(conf)
-#        _k102kspipi.MotherCut = self.__A1Cut__(conf)
-#        _selK102KSPIPI = Selection( "Selection_"+self.name+"_K102kspipi",
-#                                    Algorithm = _k102kspipi,
-#                                    RequiredSelections = [ Kshort, Pions ] )
-#        return _selK102KSPIPI
 
 
     def __Lambdastar__(self, Rho, conf):
         """
         Make a Lambdastar
-        """      
-        lstarChangeAlg1 = SubstitutePID( self.name+"lstarChangeAlg1",
-                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
-                                     Substitutions = { ' X0 -> ^X+ X- ' : 'p+' ,
-                                                       ' X0 -> X+ ^X- ' : 'K-' ,
-                                                       ' X0 -> X+ X- ' : 'Lambda(1520)0',
-                                                       ' X0 -> ^X+ X+ ' : 'p+',
-                                                       ' X0 -> X+ ^X+ ' : 'K+',
-                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0',
-                                                       ' X0 -> ^X- X- ' : 'p~-',
-                                                       ' X0 -> X- ^X- ' : 'K-',
-                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0' }, 
-                                     MaxParticles = 20000,
-                                     MaxChi2PerDoF = -666 )
+        """
+        lambdastarSubMMZAlg = SubPIDMMFilter(self.name+"_LambdastarSubMMZ_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'p+', 'K-'], ['K+', 'p~-' ] ])
+        
+        lambdastarSubMMPAlg = SubPIDMMFilter(self.name+"_LambdastarSubMMP_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi+')", MinMM=0, MaxMM=6050, PIDs = [ [ 'p+', 'K+'], ['K+', 'p+' ] ])     
 
-        lstarChangeAlg2 = SubstitutePID( self.name+"lstarChangeAlg2",
-                                     Code = "(DECTREE('X0 -> X+ X-')) | (DECTREE('X0 -> X+ X+')) | (DECTREE('X0 -> X- X-')) ",
-                                     Substitutions = { ' X0 -> X+ ^X- ' : 'p~-' ,
-                                                       ' X0 -> ^X+ X- ' : 'K+' ,
-                                                       ' X0 -> X+ X- ' : 'Lambda(1520)~0',
-                                                       ' X0 -> ^X+ X+ ' : 'K+',
-                                                       ' X0 -> X+ ^X+ ' : 'p+',
-                                                       ' X0 -> X+ X+ ' : 'Lambda(1520)0',
-                                                       ' X0 -> ^X- X- ' : 'K-',
-                                                       ' X0 -> X- ^X- ' : 'p~-',
-                                                       ' X0 -> X- X- ' : 'Lambda(1520)~0' }, 
-                                     MaxParticles = 20000,
-                                     MaxChi2PerDoF = -666 )
+        lambdastarSubMMMAlg = SubPIDMMFilter(self.name+"_LambdastarSubMMM_Alg", Code= "DECTREE('rho(770)0 -> pi- pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'p~-', 'K-'], ['K-', 'p~-' ] ]) 
 
-        lsDescr1 =  Selection( self.name+"_Lambdastar_SubPIDAlg1",
-                                Algorithm = lstarChangeAlg1,
-                                RequiredSelections = [Rho])
+        lambdastarSubMMZSel = Selection( self.name+"_LambdastarSubMMZ_Sel", Algorithm = lambdastarSubMMZAlg, RequiredSelections = [ Rho ] )
+
+        lambdastarSubMMPSel = Selection( self.name+"_LambdastarSubMMP_Sel", Algorithm = lambdastarSubMMPAlg, RequiredSelections = [ Rho ] )
+        
+        lambdastarSubMMMSel = Selection( self.name+"_LambdastarSubMMM_Sel", Algorithm = lambdastarSubMMMAlg, RequiredSelections = [ Rho ] )
+        
+        lambdastarMerge     = MergedSelection( self.name+"_LambdastarMerge", RequiredSelections = [ lambdastarSubMMZSel, lambdastarSubMMPSel, lambdastarSubMMMSel ] )
+
+        lambdastarSubAlg    = SubstitutePID( self.name+"_LambdastarSub_Alg", Code = "ALL", MaxChi2PerDoF = -666 )
+
+        #lambdastarSubAlg.Code = "ALL"
+        
+        #(DECTREE('rho(770)0 -> p+ K-')) | (DECTREE('rho(770)0 -> K+ p~-')) | (DECTREE('rho(770)0 -> p+ K+')) | (DECTREE('rho(770)0 -> p~- K-'))" 
+        
+        lambdastarSubAlg.Substitutions = {
+            'rho(770)0 -> p+ K-' : 'Lambda(1520)0',
+            'rho(770)0 -> p+ K+' : 'Lambda(1520)0',
+            'rho(770)0 -> p~- K-' : 'Lambda(1520)~0',
+            'rho(770)0 -> K+ p~-' : 'Lambda(1520)~0'
+            }
+        
+        
+        lambdastarSubSel =  Selection( self.name+"_LambdastarSub_Sel", Algorithm = lambdastarSubAlg, RequiredSelections = [ lambdastarMerge ] )
+
+        lambdastarFilterAlg = FilterDesktop( Code = "(ABSID=='Lambda(1520)0')" )
+          
+        lambdastarFilterSel = Selection( self.name + "_LambdastarFilter", Algorithm = lambdastarFilterAlg, RequiredSelections = [ lambdastarSubSel ] )
+        
+        return lambdastarFilterSel    
     
-        lsDescr2 =  Selection( self.name+"_Lambdastar_SubPIDAlg2",
-                                Algorithm = lstarChangeAlg2,
-                                RequiredSelections = [Rho])
-    
-        pick = Selection(self.name+"_Lambdastar_PickDecay",
-                     Algorithm = FilterDesktop( Code = "(DECTREE('Lambda(1520)0 -> p+ K-')) | (DECTREE('Lambda(1520)~0 -> p~- K+')) | (DECTREE('Lambda(1520)0 -> p+ K+')) | (DECTREE('Lambda(1520)~0 -> p~- K-'))" ),
-                     RequiredSelections = [lsDescr1, lsDescr2])
-    
-        return pick
 
     def __Dplus__(self, conf):
         """
