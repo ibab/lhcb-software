@@ -5,9 +5,9 @@ __date__ = '2011/03/01'
 Bs->JpsieePhi stripping selection
 
 Exports the following stripping lines
-- BetaSBs2JpsieePhiLine
-- BetaSBs2JpsieePhiDetachedLine
-- BetaSBs2JpsieePhiFromTracksLine
+- BetaSBs2JpsieePhiLine           - Line _without_ Bs lifetime cut, prescaled by 0.1
+- BetaSBs2JpsieePhiDetachedLine   - Line _with_ Bs lifetime cut based on StdLooseDielectron
+- BetaSBs2JpsieePhiFromTracksLine - Line _with_ Bs lifetime cut based on DielectronMaker
 '''
 
 __all__ = (
@@ -19,6 +19,7 @@ default_config = {
     'NAME'              : 'BetaSBs2JpsieePhi',
     'BUILDERTYPE'       : 'Bs2JpsieePhiConf',
     'CONFIG'    : {
+        # BetaSBs2JpsieePhiDetachedLine and BetaSBs2JpsieePhiFromTracksLine
           'ElectronPTLoose'            :   500.    # MeV
         , 'ElectronPIDLoose'           :     0.    # adimensional
         , 'ElectronTrackCHI2pDOFLoose' :     5.    # adimensional
@@ -35,7 +36,7 @@ default_config = {
         , 'BsMassMaxLoose'             :  6000.    # MeV
         , 'LifetimeCut'                : " & (BPVLTIME()>0.3*ps)"
         , 'PrescaleLoose'              :     1.    # adamenssional
-
+        # BetaSBs2JpsieePhiLine
         , 'ElectronPT'            :   500.    # MeV
         , 'ElectronPID'           :     0.    # adimensional
         , 'ElectronTrackCHI2pDOF' :     5.    # adimensional
@@ -59,7 +60,7 @@ default_config = {
     }
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -128,7 +129,8 @@ class Bs2JpsieePhiConf(LineBuilder):
 
     def _Bs2JpsieePhiLine( self, dielectron, name, config ) :
 
-        _jpsi = FilterDesktop(Code = "   (MM > %(JpsiMassMin)s *MeV)" \
+        _jpsi = FilterDesktop("FilterJpsi2eeFor"+name,
+                              Code = "   (MM > %(JpsiMassMin)s *MeV)" \
                                      " & (MM < %(JpsiMassMax)s *MeV)" \
                                      " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPID)s )" \
                                      " & (MINTREE('e+'==ABSID,PT) > %(ElectronPT)s *MeV)" \
@@ -140,7 +142,8 @@ class Bs2JpsieePhiConf(LineBuilder):
                          RequiredSelections = [dielectron])
 
         _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
-        _phi = FilterDesktop(Code = "   (PT > %(PhiPT)s *MeV)" \
+        _phi = FilterDesktop("FilterPhi2KKFor"+name,
+                             Code = "   (PT > %(PhiPT)s *MeV)" \
                                     " & (MINTREE('K+'==ABSID,PIDK-PIDpi) > %(KaonPID)s )" \
                                     " & (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOF)s)" \
                                     " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOF)s)" \
@@ -153,7 +156,8 @@ class Bs2JpsieePhiConf(LineBuilder):
 
         CC = "(AM > %(BsMassMin)s *MeV) & (AM < %(BsMassMax)s *MeV)" % config
         MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOF)s) & (BPVDIRA > %(BsDIRA)s)" % config
-        _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+        _Bs = CombineParticles("CombineBsFor"+name,
+                               DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC ,
                                MotherCut = MC,
                                ReFitPVs = False
@@ -173,7 +177,8 @@ class Bs2JpsieePhiConf(LineBuilder):
 
     def _Bs2JpsieePhiDetachedLine( self, dielectron, name, config ) :
         
-        _jpsi = FilterDesktop(Code = "   (MM > %(JpsiMassMinLoose)s *MeV)" \
+        _jpsi = FilterDesktop("FilterJpsi2eeFor"+name,
+                              Code = "   (MM > %(JpsiMassMinLoose)s *MeV)" \
                                      " & (MM < %(JpsiMassMaxLoose)s *MeV)" \
                                      " & (MINTREE('e+'==ABSID,PIDe-PIDpi) > %(ElectronPIDLoose)s )" \
                                      " & (MINTREE('e+'==ABSID,PT) > %(ElectronPTLoose)s *MeV)" \
@@ -185,7 +190,8 @@ class Bs2JpsieePhiConf(LineBuilder):
                          RequiredSelections = [dielectron])
     
         _stdPhi = DataOnDemand(Location="Phys/StdLoosePhi2KK/Particles")
-        _phi = FilterDesktop(Code = "   (PT > %(PhiPTLoose)s *MeV)" \
+        _phi = FilterDesktop("FilterPhi2KKFor"+name,
+                             Code = "   (PT > %(PhiPTLoose)s *MeV)" \
                                     " & (MAXTREE('K+'==ABSID,TRCHI2DOF) < %(KaonTrackCHI2pDOFLoose)s)" \
                                     " & (VFASPF(VCHI2/VDOF) < %(PhiVertexCHI2pDOFLoose)s)" \
                                     " & (MM > %(PhiMassMinLoose)s *MeV)" \
@@ -197,7 +203,8 @@ class Bs2JpsieePhiConf(LineBuilder):
 
         CC = "(AM > %(BsMassMinLoose)s *MeV) & (AM < %(BsMassMaxLoose)s *MeV)" % config
         MC = "(VFASPF(VCHI2/VDOF) < %(BsVertexCHI2pDOFLoose)s)" % config
-        _Bs = CombineParticles(DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
+        _Bs = CombineParticles("CombineBsFor"+name,
+                               DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                                CombinationCut = CC , 
                                MotherCut = MC + config['LifetimeCut'],
                                ReFitPVs = True

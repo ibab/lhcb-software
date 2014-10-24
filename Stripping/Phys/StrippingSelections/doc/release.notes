@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-24 - Konrad Klimaszewski
+ - Updated StrippingBs2JpsieePhi.py
+   - Instances of FilterDesktop and CombineParticles now will have unique names.
+
 ! 2014-10-23 - Carlos Vazquez Sierra
  - Added StrippingBd2JpsieeKS lines
 
