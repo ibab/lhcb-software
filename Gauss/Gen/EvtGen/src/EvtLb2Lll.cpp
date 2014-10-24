@@ -259,25 +259,28 @@ void EvtLb2Lll::initProbMax(){
       if(i==0) pstar = 0;
       else     pstar = sqrt(q2-(m1+m2)*(m1+m2))*sqrt(q2-(m1-m2)*(m1-m2))/2/sqrt(q2);
       boost.set(M0-elambda,0,0,+sqrt(elambda*elambda-mL*mL));
-      p4lambda.set(elambda,0,0,-sqrt(elambda*elambda-mL*mL));
+      if ( i != 100 ) {
+        p4lambda.set(elambda,0,0,-sqrt(elambda*elambda-mL*mL));
+      } else {
+        p4lambda.set(mL,0,0,0); 
+      }
       for(j=0;j<=45;j++){
         theta = j*EvtConst::pi/45;
         p4lep1.set(sqrt(pstar*pstar+m1*m1),0,+pstar*sin(theta),+pstar*cos(theta));
         p4lep2.set(sqrt(pstar*pstar+m2*m2),0,-pstar*sin(theta),-pstar*cos(theta));
-	//std::cout << "p1: " << p4lep1 << " p2: " << p4lep2 << " pstar: " << pstar << std::endl;
-	p4lep1 = boostTo(p4lep1,boost);
-	p4lep2 = boostTo(p4lep1,boost);
-	lambda -> init(getDaug(0),p4lambda);
-	lep1   -> init(getDaug(1),p4lep1  );
-	lep2   -> init(getDaug(2),p4lep2  );
-	calcAmp(&amp,parent);
-	prob = rho.normalizedProb(amp.getSpinDensity());
+        if ( i != 100 ) // At maximal q2 we are already in correct frame as Lambda and W/Zvirtual are at rest
+        {
+          p4lep1 = boostTo(p4lep1,boost);
+          p4lep2 = boostTo(p4lep2,boost);
+        }
+        calcAmp(&amp,parent);
+        prob = rho.normalizedProb(amp.getSpinDensity());
 	//std::cout << "q2:  " << q2 << " \t theta:  " << theta << " \t prob:  " << prob << std::endl;
 	//std::cout << "p1: " << p4lep1 << " p2: " << p4lep2 << " q2-q2min: " << q2-(m1+m2)*(m1+m2) << std::endl;
-	if(prob>m_maxProbability){
-	  report(INFO,"EvtGen") << "  - probability " << prob << " found at q2 = " << q2 << " (" << 100*(q2-q2min)/(q2max-q2min) << " %) and theta = " << theta*180/EvtConst::pi << std::endl;
-	  m_maxProbability=prob;
-	}
+       if(prob>m_maxProbability){
+         report(INFO,"EvtGen") << "  - probability " << prob << " found at q2 = " << q2 << " (" << 100*(q2-q2min)/(q2max-q2min) << " %) and theta = " << theta*180/EvtConst::pi << std::endl;
+         m_maxProbability=prob;
+        }
       }
       //::abort();
     }

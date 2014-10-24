@@ -56,7 +56,7 @@ protected:
 
 private:
 
-  
+  double m_maxProbability; 
   
   EvtRareLbToLllFFBase* ffmodel_;
   EvtRareLbToLllWC* wcmodel_;

@@ -35,12 +35,13 @@
 #include "EvtGenBase/EvtVector4R.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
 #include "EvtGenBase/EvtDiracSpinor.hh"
+#include "EvtGenBase/EvtDiracParticle.hh"
 #include "EvtGenBase/EvtRaritaSchwinger.hh"
 #include "EvtGenBase/EvtSpinDensity.hh"
 #include "EvtGenBase/EvtPDL.hh"
 
 
-EvtRareLbToLll::EvtRareLbToLll() : ffmodel_( 0 ), wcmodel_( 0 ) {} ;
+EvtRareLbToLll::EvtRareLbToLll() : m_maxProbability( 0 ), ffmodel_( 0 ), wcmodel_( 0 ) {} ;
 
 EvtRareLbToLll::~EvtRareLbToLll() {
   if ( wcmodel_ ) delete wcmodel_;
@@ -97,14 +98,93 @@ void EvtRareLbToLll::init(){
   return;
 }
 
-
 void EvtRareLbToLll::initProbMax(){
-  double prob = 20E3;
-  // Should be updated to calculate this correctly 
 
-  setProbMax(prob);
+  report(INFO,"EvtGen") << " EvtRareLbToLll is finding maximum probability ... " << std::endl;
+
+  m_maxProbability=0;
+
+  if(m_maxProbability==0){
+
+    EvtDiracParticle *parent = new EvtDiracParticle;
+    parent->noLifeTime();
+    parent->init(getParentId(),EvtVector4R(EvtPDL::getMass(getParentId()),0,0,0));
+    parent->setDiagonalSpinDensity();
+
+    EvtAmp amp;
+    EvtId daughters[3] = {getDaug(0),getDaug(1),getDaug(2)};
+    amp.init(getParentId(),3,daughters);
+    parent->makeDaughters(3,daughters);
+    EvtParticle *lambda = parent->getDaug(0);
+    EvtParticle *lep1   = parent->getDaug(1);
+    EvtParticle *lep2   = parent->getDaug(2);
+    lambda -> noLifeTime();
+    lep1   -> noLifeTime();
+    lep2   -> noLifeTime();
+
+    EvtSpinDensity rho;
+    rho.setDiag(parent->getSpinStates());
+
+    double M0 = EvtPDL::getMass(getParentId());
+    double mL = EvtPDL::getMass(getDaug(0));
+    double m1 = EvtPDL::getMass(getDaug(1));
+    double m2 = EvtPDL::getMass(getDaug(2));
+
+    double q2,pstar,elambda,theta;
+    double q2min = (m1+m2)*(m1+m2);
+    double q2max = (M0-mL)*(M0-mL);
+
+    EvtVector4R p4lambda,p4lep1,p4lep2,boost;
+
+    report(INFO,"EvtGen") << " EvtRareLbToLll is probing whole phase space ..." << std::endl;
+
+    int i,j;
+    double prob=0;
+    for(i=0;i<=100;i++){
+      q2 = q2min+i*(q2max-q2min)/100.;
+      elambda = (M0*M0+mL*mL-q2)/2/M0;
+      if(i==0) pstar = 0;
+      else     pstar = sqrt(q2-(m1+m2)*(m1+m2))*sqrt(q2-(m1-m2)*(m1-m2))/2/sqrt(q2);
+      boost.set(M0-elambda,0,0,+sqrt(elambda*elambda-mL*mL));
+      if ( i != 100 ) {
+        p4lambda.set(elambda,0,0,-sqrt(elambda*elambda-mL*mL));
+      } else {
+        p4lambda.set(mL,0,0,0); 
+      }
+      for(j=0;j<=45;j++){
+        theta = j*EvtConst::pi/45;
+        p4lep1.set(sqrt(pstar*pstar+m1*m1),0,+pstar*sin(theta),+pstar*cos(theta));
+        p4lep2.set(sqrt(pstar*pstar+m2*m2),0,-pstar*sin(theta),-pstar*cos(theta));
+	//std::cout << "p1: " << p4lep1 << " p2: " << p4lep2 << " pstar: " << pstar << std::endl;
+        if ( i != 100 ) // At maximal q2 we are already in correct frame as Lambda and W/Zvirtual are at rest
+        {
+          p4lep1 = boostTo(p4lep1,boost);
+          p4lep2 = boostTo(p4lep2,boost);
+        }
+        lambda -> init(getDaug(0),p4lambda);
+        lep1   -> init(getDaug(1),p4lep1  );
+        lep2   -> init(getDaug(2),p4lep2  );
+        calcAmp(amp,parent);
+        prob = rho.normalizedProb(amp.getSpinDensity());
+        //std::cout << "q2:  " << q2 << " \t theta:  " << theta << " \t prob:  " << prob << std::endl;
+        //std::cout << "p1: " << p4lep1 << " p2: " << p4lep2 << " q2-q2min: " << q2-(m1+m2)*(m1+m2) << std::endl;
+        if(prob>m_maxProbability){
+          report(INFO,"EvtGen") << "  - probability " << prob << " found at q2 = " << q2 << " (" << 100*(q2-q2min)/(q2max-q2min) << " %) and theta = " << theta*180/EvtConst::pi << std::endl;
+          m_maxProbability=prob;
+        }
+      }
+      //::abort();
+    }
+
+    //m_poleSize = 0.04*q2min;
+    m_maxProbability *= 1.2;
+    delete parent;
+  }
+
+  setProbMax(m_maxProbability);
+  report(INFO,"EvtGen") << " EvtRareLbToLll set up maximum probability to " << m_maxProbability << std::endl;
+
 }
-
 
 
 void EvtRareLbToLll::decay( EvtParticle *parent ){
@@ -286,11 +366,13 @@ void  EvtRareLbToLll::calcAmp( EvtAmp& amp, EvtParticle *parent ){
   {
     report( ERROR,"EvtGen" ) << " EvtRareLbToLll expects DIRAC or RARITASWINGER daughter " << std::endl;
   }
-  
-  // EvtSpinDensity rho = amp.getSpinDensity();
-  // double prob = parent->getSpinDensityForward().normalizedProb(rho);
-  // std::cout << "Prob = " << prob << std::endl;
-
+/*  
+   EvtSpinDensity rho = amp.getSpinDensity();
+   double prob = parent->getSpinDensityForward().normalizedProb(rho);
+   if ( prob > m_maxProbability ) {
+     std::cout << "qsq = "<<qsq<<" Prob = " << prob << std::endl;
+   }
+*/
   return;
 }
 

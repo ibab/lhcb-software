@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-10-24 - Michal Kreps
+  - Implement calculation of maximum probability to EvtRareLbToLll model
+  - Fix calculation of maximum probability in EvtLb2Lll model
+
 ! 2014-10-23 - Andrew Crocombe
   - Implement Bs --> K* form factors from Ball-Zwicky
   - z-parametrization for form factors from 1006.4945.
