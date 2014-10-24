@@ -80,7 +80,7 @@ def ncpu (  events ) :
 #  @endcode
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-12-01
-def makeVar ( var , name , comment , fix  , *args ) :
+def makeVar ( var , name , comment , fix = None , *args ) :
     """
     Make/modify  the variable:
     
@@ -93,10 +93,14 @@ def makeVar ( var , name , comment , fix  , *args ) :
     
     """
     #
+    # var = ( value )
+    # var = ( min , max )
+    # var = ( value , min , max ) 
     if   isinstance   ( var , tuple ) :
-        var = ROOT.RooRealVar ( name , comment , var[0] , var[1] ) 
-        
-    if   isinstance   ( var , ( float , int , long ) ) :
+        var = ROOT.RooRealVar ( name , comment , *var )
+
+    # var = value 
+    if isinstance   ( var , ( float , int , long ) ) :
         if   not    args  : var = ROOT.RooRealVar ( name , comment , var             )
         elif 2==len(args) : var = ROOT.RooRealVar ( name , comment , var , *args     )
         elif 3==len(args) : var = ROOT.RooRealVar ( name , comment , var , *args[1:] )

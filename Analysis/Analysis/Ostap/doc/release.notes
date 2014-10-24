@@ -8,6 +8,11 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-10-24 - Vanya Belyaev
+ - FitBasic.py
+   makeVar: minor improvement 
+
+
 ! 2014-10-22 - Vanya Belyaev
  - FitBkgModels.py: fix typo
 
