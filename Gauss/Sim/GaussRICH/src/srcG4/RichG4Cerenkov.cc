@@ -321,8 +321,10 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 
     }else {
       // for adding background to RICH2
+      // adding protection against infinite loops.
+        unsigned long long nLoops(0);
+        const unsigned long long maxLoops(1e7);      
 		  do {
-
 			  rand = G4UniformRand();	
 			  sampledEnergy = Pmin + rand * dp; 
 			  sampledRI = Rindex->Value(sampledEnergy);
@@ -333,8 +335,20 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 			  sin2Theta = (1.0 - cosTheta)*(1.0 + cosTheta);
 			  rand = G4UniformRand();	
 
-		  } while (rand*aR2Rnd_maxSin2 > sin2Theta);
+		  } while ( (rand*aR2Rnd_maxSin2 > sin2Theta)  && (++nLoops < maxLoops)  );
       // end adding background to RICH2
+      if ( nLoops >= maxLoops ){
+        // keep the theta values to physically allowed values when max loop is reached.
+        if( cosTheta  > 1.0) { 
+          cosTheta=1.0;
+          sin2Theta=0.0;
+         }
+        
+        G4cout << "RichG4Cerenkov Random hits : WARNING - Maximum # loops " << maxLoops
+               << " reached ..." << "Costheta sin2theta "<<cosTheta<<"  "<< sin2Theta<<G4endl;
+      }
+      
+
     }
     
     

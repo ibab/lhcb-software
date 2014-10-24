@@ -4,6 +4,8 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+2014-10-24  - Sajan Easo, Chris Jones
+ - Protection added against infinite loops in RichG4Cherenkov when creating randonm hits
 !========================= GaussRICH v14r2 2014-07-28 ========================
 ! 2014-07-21 - Sajan Easo
  - Added the option to have random hits in RICH2. By default this option is 
