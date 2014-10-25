@@ -3,6 +3,10 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2014-10-25 - Gerhard Raven
+ - trim trailing zeros in longname tar header
+ - simplify iteration over tar file content in utility
+
 ! 2014-10-14 - Gerhard Raven
  - utility: fix key prefix in .tar to .cdb conversion, add re-formatting during
    conversion, add option to create manifest from .tar, improve dump formatting

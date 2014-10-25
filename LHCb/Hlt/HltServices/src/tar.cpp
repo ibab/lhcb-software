@@ -6,6 +6,7 @@
 #include "boost/iostreams/slice.hpp"
 #include "boost/iostreams/operations.hpp"
 #include "boost/iostreams/seek.hpp"
+#include "boost/algorithm/string/trim.hpp"
 
 namespace
 {
@@ -157,6 +158,8 @@ bool interpretHeader(std::fstream& file,  ConfigTarFileAccessSvc_details::posix_
         if ( !interpretHeader( file, header, info ) ) return false;
         // so we overwrite the truncated one with the long one...
         info.name = fname.str();
+        // removing trailing zero(s)
+        boost::trim_right_if(info.name,[](const char& c) { return c==0; });
     }
     info.uid    = getOctal( header.uid, sizeof(header.uid) );
     info.mtime  = getOctal( header.mtime, sizeof(header.mtime) );

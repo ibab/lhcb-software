@@ -61,14 +61,12 @@ inline bool isZero( const struct ConfigTarFileAccessSvc_details::posix_header& h
 
 struct Info
 {
-    Info() : size( 0 ), offset( 0 ), compressed( false ), mtime(0),uid(0)
-    { }
     std::string name;
-    size_t size;
-    size_t offset;
-    bool compressed;
-    time_t mtime;
-    uid_t uid;
+    size_t size = 0;
+    size_t offset = 0;
+    bool compressed = false;
+    time_t mtime = 0;
+    uid_t uid  =0;
 };
 
 bool interpretHeader(std::fstream& file, ConfigTarFileAccessSvc_details::posix_header& header, struct Info& info ) ;

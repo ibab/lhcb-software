@@ -196,24 +196,34 @@ public:
             }
             return info;
         }
+        void next() {
+            if (!m_file) return;
+            auto info = read_info();  // read current header, and position at the end of it...
+            if (!m_file) return;
+            size_t skip = info.size;
+            size_t padding = skip % 512;
+            if ( padding != 0 ) skip += 512 - padding;
+            m_pos = m_file->tellg(); // read_info put us at the end of the CURRENT header
+            m_pos += skip;           // m_pos now points at the start of the NEXT header...
+        }
+        bool is_current_valid() {
+            auto info = read_info();
+            return m_file && !info.name.empty() && info.name.back()!='/';
+        }
+        void skip_invalid() {
+            while (m_file && !is_current_valid()) next();
+        }
     public:
         iterator( ) : m_file{ nullptr }, m_pos{0}  { }
-        iterator( std::fstream* file, std::streamoff pos = 0 ) : m_file{file}, m_pos{pos} 
-        { }
+        iterator( std::fstream* file, std::streamoff pos = 0 ) : m_file{file}, m_pos{pos} { 
+            skip_invalid();
+        }
 
         record operator*() { // Not quite canonical -- ideally should be record&... and const
             return { m_file, read_info() };
         }
         iterator& operator++() { 
-            if (!m_file) return *this;
-            auto info = read_info(); // filepointer is at the end of the current header...
-            if (!m_file) return *this;
-            size_t skip = info.size;
-            size_t padding = skip % 512;
-            if ( padding != 0 ) skip += 512 - padding;
-            m_pos = m_file->tellg();
-            m_pos += skip; 
-            read_info(); // check if at end of file...
+            next(); skip_invalid();
             return *this; 
         }
 
@@ -444,7 +454,7 @@ void extract_records(TAR& db) {
     }
 }
 
-// TODO: add option to 'repack' the content of ConfigTreeNode and PropertyConfig... (read into T and then stream again)
+// TODO: add option to 'repack' the content of ConfigTreeNode and PropertyConfig... 
 void convert_records( TAR& in, const std::string& oname ) {
     int ofd = open( oname.c_str(), 
                     O_RDWR  | O_CREAT | O_EXCL,
@@ -455,8 +465,6 @@ void convert_records( TAR& in, const std::string& oname ) {
 
     for ( auto record : in ) {
         auto key = record.key();
-        if ( key.back() == '\0' ) key = key.substr(0, key.size()-1);
-        if ( key.back() == '/' ) { /* std::cout << "got " << key << " in loop " << std::endl;*/  continue;}
         if (key.compare(0,16,"ConfigTreeNodes/")==0)  key.replace(0,18, "TN" ) ;
         if (key.compare(0,16,"PropertyConfigs/")==0)  key.replace(0,18 ,"PC");
         if (key.compare(0,8,"Aliases/")==0)           key.replace(0,7,"AL");
