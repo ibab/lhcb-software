@@ -17,11 +17,13 @@
 #include "boost/iostreams/stream.hpp"
 #include "boost/iostreams/copy.hpp"
 #include "boost/algorithm/string/split.hpp"
+#include "boost/algorithm/string/join.hpp"
 #include "boost/algorithm/string/classification.hpp"
 #include "boost/program_options.hpp"
 #include "boost/filesystem.hpp"
 #include "boost/filesystem/fstream.hpp"
 #include "boost/algorithm/string/predicate.hpp"
+#include "boost/io/detail/quoted_manip.hpp"
 
 #include "Kernel/ConfigTreeNode.h"
 #include "Kernel/PropertyConfig.h"
@@ -31,6 +33,46 @@ template <typename T> std::string convert(const std::string& s) {
     std::ostringstream out;
     T t; in >> t; out << t;
     return out.str();
+}
+
+constexpr struct to_json_t {
+    std::string operator()(const std::string& s) const;
+    using r2t_t = std::map<std::string,std::string>;
+    std::string operator()(const std::tuple<std::string,r2t_t,std::string>& e) const;
+
+    template <typename K, typename V> std::string operator()(const std::pair<K,V>& p) const ;
+    template <typename V> std::string operator()(const std::map<std::string,V>& m) const ;
+} to_json;
+
+std::string to_json_t::operator()(const std::string& s) const {
+    // avoid converting items which already have been converted...
+    auto check = [](const char& f, const char& b, const std::string& x) { 
+         return x.front()==f && x.back()==b;  
+    };
+    if (s.size()>1&&( check('"','"',s)|| check('{','}',s) || check('[',']',s) ) ) return s;
+    // TODO: replace with C++14 std::quoted
+    std::ostringstream out;
+    out << boost::io::quoted(s);
+    return out.str();
+}
+
+template<typename K, typename V>
+std::string to_json_t::operator()(const std::pair<K,V>& p) const {
+    return to_json(p.first)+":"+to_json(p.second);
+}
+
+template <typename V>
+std::string to_json_t::operator()(const std::map<std::string,V>& m) const {
+    std::vector<std::string> buf;
+    std::transform( std::begin(m), std::end(m), std::back_inserter(buf), to_json );
+    return std::string("{") + boost::algorithm::join(buf,",") + "}";
+}
+
+std::string to_json_t::operator()(const std::tuple<std::string,to_json_t::r2t_t,std::string>& e) const {
+    using map_t = std::map<std::string,std::string>;
+    return to_json( map_t{ { "TCK", std::get<0>(e) },
+                           { "Release2Type", to_json( std::get<1>(e) ) },
+                           { "label",  std::get<2>(e) } } );
 }
 
 #include "../src/cdb.h"
@@ -365,7 +407,7 @@ public:
 
 
 template <typename DB>
-void dump_manifest(DB& db) {
+std::multiset< manifest_entry > create_manifest(DB& db) {
     std::multiset< manifest_entry > manifest;
 
     // first: get TCK -> id map, and invert.
@@ -396,8 +438,29 @@ void dump_manifest(DB& db) {
         }
         manifest.emplace( record.topLevel(), tck, comment );
     }
+    return manifest;
+}
+
+void dump_manifest( const std::multiset< manifest_entry > & manifest) {
     std::copy( std::begin(manifest), std::end(manifest),
                std::ostream_iterator<manifest_entry>(std::cout,"\n") );
+}
+
+void dump_manifest_as_json( const std::multiset< manifest_entry > & manifest) {
+    // build the equivalent to the old-style python _dict used in createTCKManifest:
+    // id ->  TCK, { release -> type }, label
+    using r2t_t  = std::map< std::string, std::string >;
+    using dict_t = std::map< std::string, std::tuple<std::string,r2t_t,std::string> >;
+    dict_t dict;
+    std::for_each( std::begin(manifest), std::end(manifest), [&dict](const manifest_entry& e) {
+        auto i = dict.find( e.id );
+        if ( i != std::end( dict ) ) {
+            std::get<1>(i->second).emplace( e.release, e.type ) ;
+        } else {
+            dict.emplace( e.id, std::make_tuple( e.tck, r2t_t{{ e.release, e.type }} , e.comment ));
+        }
+    } );
+    std::cout << to_json(dict) << std::endl;
 }
 
 template <typename DB>
@@ -493,9 +556,19 @@ void convert_records( TAR& in, const std::string& oname ) {
 
 namespace po = boost::program_options;
 
+template <typename DB>
+void dispatch(const po::variables_map& vm, DB& db) {
+        if (vm.count("list-manifest"))   dump_manifest( create_manifest(db));
+        if (vm.count("list-manifest-as-json")) dump_manifest_as_json( create_manifest(db));
+        if (vm.count("list-keys"))       dump_keys(db);
+        if (vm.count("list-records"))    dump_records(db);
+        if (vm.count("extract-records")) extract_records(db);
+}
+
 int main(int argc, char* argv[]) {
     po::options_description desc("Allowed options");
     desc.add_options() ("list-manifest", "dump manifest ")
+                       ("list-manifest-as-json", "dump manifest in json format ")
                        ("list-keys", "list keys")
                        ("list-records", "list keys and records")
                        ("extract-records", "extract records")
@@ -509,26 +582,18 @@ int main(int argc, char* argv[]) {
     po::notify(vm);
 
     std::string fname = vm["input-file"].as<std::string>();
-    std::cout << "opening " << fname << std::endl;
+    std::cerr << "opening " << fname << std::endl;
     
     if (boost::algorithm::ends_with(fname,".cdb")) {
         CDB db(fname) ;
         if (!db.ok()) return 1;
+        dispatch(vm,db);
 
-        if (vm.count("list-manifest"))   dump_manifest(db);
-        if (vm.count("list-keys"))       dump_keys(db);
-        if (vm.count("list-records"))    dump_records(db);
-        if (vm.count("extract-records")) extract_records(db);
     }
     if (boost::algorithm::ends_with(fname,".tar")) {
         TAR db(fname) ;
         if (!db.ok()) return 1;
-
-
-        if (vm.count("list-manifest"))   dump_manifest(db);
-        if (vm.count("list-keys"))       dump_keys(db);
-        if (vm.count("list-records"))    dump_records(db);
-        if (vm.count("extract-records")) extract_records(db);
+        dispatch(vm,db);
         if (vm.count("convert-to-cdb"))  convert_records(db, fname.substr(0,fname.size()-3)+"cdb" );
     }
 

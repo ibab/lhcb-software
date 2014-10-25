@@ -8,6 +8,7 @@
  - simplify iteration over tar file content in utility
  - fix missing label on generated manifest from tar file
  - in utility, find the label in a format agnostic way
+ - enable JSON output of manifest in utility
 
 ! 2014-10-14 - Gerhard Raven
  - utility: fix key prefix in .tar to .cdb conversion, add re-formatting during
