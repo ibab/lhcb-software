@@ -209,7 +209,7 @@ StatusCode AlignOnlineIterator::i_run()
 
     // write the xml
     debug() << "writing xml files" << endreq;
-    sc = m_xmlwriter->write();
+    sc = m_xmlwriter->write("run" + std::to_string(runnr) ) ;
     if (!sc.isSuccess())
     {
       error() << "Error writing xml files" << endreq;
