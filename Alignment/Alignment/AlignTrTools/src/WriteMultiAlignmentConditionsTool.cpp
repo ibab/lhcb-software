@@ -26,6 +26,9 @@ public:
   // Everything configured via options
   StatusCode write() const ;
 
+  // write with given version
+  StatusCode write( const std::string& version ) const ;
+
 private:
 
   std::vector<std::string>          m_xmlWriterNames ;
@@ -91,5 +94,15 @@ StatusCode WriteMultiAlignmentConditionsTool::write() const
   // write conditions for each writer
   for( auto i: m_xmlWriters )
     if (i->write() == StatusCode::FAILURE) return StatusCode::FAILURE ;
+  return StatusCode::SUCCESS ;
+}
+
+
+ // version, description and author as arguments
+StatusCode WriteMultiAlignmentConditionsTool::write( const std::string& version ) const 
+{
+  for( auto i: m_xmlWriters )
+    if (i->write(version) == StatusCode::FAILURE) 
+      return StatusCode::FAILURE ;
   return StatusCode::SUCCESS ;
 }

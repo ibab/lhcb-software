@@ -26,7 +26,10 @@ public:
 
   // Everything configured via options
   StatusCode write() const ;
-  
+ 
+  // Everything configured via options
+  StatusCode write(std::string& version) const ;
+ 
   // Everything configured via arguments
   StatusCode write( const std::string& filename,
 		    const std::string& topelement,
@@ -57,7 +60,7 @@ private:
 
   std::string m_author;
   std::string m_desc;
-  std::string m_tag;
+  std::string m_version;
   bool m_removePivot ;
 
 } ;
@@ -108,7 +111,7 @@ WriteAlignmentConditionsTool::WriteAlignmentConditionsTool( const std::string& t
   declareProperty("depths", m_depths );
   declareProperty("precision", m_precision = 16u);
   declareProperty("author", m_author = "Joe Bloggs");
-  declareProperty("tag", m_tag = "Unknown");
+  declareProperty("version", m_version = "Unknown");
   declareProperty("desc", m_desc = "blahblah");
   declareProperty("RemovePivotPoint", m_removePivot = true ) ;
 }
@@ -182,9 +185,13 @@ void WriteAlignmentConditionsTool::createDirectory( const std::string& dirname )
 
 StatusCode WriteAlignmentConditionsTool::write() const
 {
-  return write(m_outputFileName,m_topElement,m_depths,m_tag,m_author) ;
+  return write(m_outputFileName,m_topElement,m_depths,m_version,m_author,m_desc) ;
 }
 
+StatusCode WriteAlignmentConditionsTool::write(const std::string& version) const
+{
+  return write(m_outputFileName,m_topElement,m_depths,version,m_author,m_desc) ;
+}
 
  // Everything configured via arguments
 StatusCode WriteAlignmentConditionsTool::write( const std::string& filename,
