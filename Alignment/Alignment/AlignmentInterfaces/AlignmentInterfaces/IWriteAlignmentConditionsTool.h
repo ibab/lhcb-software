@@ -30,5 +30,6 @@ public:
 
   virtual StatusCode write() const = 0 ;
   
+  virtual StatusCode write( const std::string& versiontag ) const = 0 ;
 };
 #endif

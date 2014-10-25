@@ -6,4 +6,5 @@
   <class name    = "ITAConfigTool" />
   <class name    = "IMillepede" />
   <class name    = "ICentipede" />
+  <class name    = "IWriteAlignmentConditionsTool" />
 </lcgdict>
