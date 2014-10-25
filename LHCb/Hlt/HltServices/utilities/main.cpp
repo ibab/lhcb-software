@@ -371,7 +371,7 @@ void dump_manifest(DB& db) {
     // first: get TCK -> id map, and invert.
     // needed so that we can make immutable manifest_entries later...
     std::map< std::string , std::string > tck;     // id -> TCK
-    for ( auto record : db )  { // TODO: allow loop with predicate on key...
+    for ( auto record : db ) { // TODO: allow loop with predicate on key...
         if (!record.isTCK() ) continue;
         auto key = record.key() ; 
         tck.emplace( record.value() , record.TCK());
@@ -384,10 +384,12 @@ void dump_manifest(DB& db) {
         std::string comment;
         auto i = db.findTreeNode( key.substr(key.rfind("/")+1) );
         if ( i != std::end(db) ) {
-            auto value = (*i).value();
-            if (value.compare(0,6,"Label:")==0) {
-                   auto x = value.find('\n',6);
-                   comment = value.substr(6, x!=std::string::npos ? x-6 : x );
+            std::istringstream in( (*i).value() );
+            ConfigTreeNode ctn; in >> ctn;
+            comment = ctn.label();
+            if (comment.empty()) {
+                std::cerr << "could not locate Label part of " << std::endl;  
+                std::cerr << (*i).value() << std::endl;
             }
         } else {
             std::cerr << "WARNING: could not locate treenode " <<  key.substr(key.rfind("/")+1) << " for key "  << key << std::endl;
