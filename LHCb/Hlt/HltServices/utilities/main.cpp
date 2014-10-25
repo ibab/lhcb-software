@@ -246,7 +246,7 @@ public:
     }
 
     iterator findTreeNode(const std::string& hash) {
-        return find( std::string("ConfigTreeNodes/")+hash );
+        return find( std::string("ConfigTreeNodes/")+hash.substr(0,2)+"/"+hash );
     }
 
     void index() {
@@ -389,6 +389,8 @@ void dump_manifest(DB& db) {
                    auto x = value.find('\n',6);
                    comment = value.substr(6, x!=std::string::npos ? x-6 : x );
             }
+        } else {
+            std::cerr << "WARNING: could not locate treenode " <<  key.substr(key.rfind("/")+1) << " for key "  << key << std::endl;
         }
         manifest.emplace( record.topLevel(), tck, comment );
     }

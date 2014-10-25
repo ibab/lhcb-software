@@ -6,6 +6,7 @@
 ! 2014-10-25 - Gerhard Raven
  - trim trailing zeros in longname tar header
  - simplify iteration over tar file content in utility
+ - fix missing label on generated manifest from tar file
 
 ! 2014-10-14 - Gerhard Raven
  - utility: fix key prefix in .tar to .cdb conversion, add re-formatting during
