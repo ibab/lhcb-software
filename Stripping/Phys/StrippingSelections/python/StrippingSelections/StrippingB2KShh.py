@@ -202,15 +202,18 @@ class B2KShhConf(LineBuilder) :
                           
 
         relinfo = [ { "Type" : "RelInfoConeVariables" 
-                    , "ConeAngle" : config['ConeAngle'] 
+                    , "ConeAngle" : config['ConeAngle']
+                    , "TracksLocation" : "/Event/Phys/StdNoPIDsPions"
                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM'] 
                     , "Location"  : 'P2ConeVar' },
                     { "Type" : "RelInfoConeVariables"
                     , "ConeAngle" : 1.0
+                    , "TracksLocation" : "/Event/Phys/StdNoPIDsPions"
                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
                     , "Location"  : 'P2ConeVar10' },
                     { "Type" : "RelInfoConeVariables"
                     , "ConeAngle" : 1.7
+                    , "TracksLocation" : "/Event/Phys/StdNoPIDsPions"
                     , "Variables" : ['CONEANGLE', 'CONEMULT', 'CONEPTASYM']
                     , "Location"  : 'P2ConeVar17' },
                     { "Type"      : "RelInfoVertexIsolation"
@@ -267,13 +270,13 @@ class B2KShhConf(LineBuilder) :
                     _mvaVars[ks_type][year][sign] = {
                          "B_PT"                                                        : "PT"
                         ,"B_ETA"                                                       : "ETA"
-                        ,"log10(B_IPCHI2_OWNPV)"                                       : "log10(MIPCHI2DV(PRIMARY))"
+                        ,"log10(B_IPCHI2_OWNPV)"                                       : "log10(BPVIPCHI2())"
                         ,"log10(B_VDCHI2_OWNPV)"                                       : "log10(BPVVDCHI2)"
-                        ,"B_DIRA_OWNPV!=1.0?log10(1.0-TMath::Abs(B_DIRA_OWNPV)):-10.0" : "log10(1-BPVDIRA)"
+                        ,"B_DIRA_OWNPV!=1.0?log10(1.0-TMath::Abs(B_DIRA_OWNPV)):-10.0" : "(log10(1-BPVDIRA) if (BPVDIRA != 1.0) else -10.0)"
                         ,"log10(B_ENDVERTEX_CHI2)"                                     : "log10(VFASPF(VCHI2))"
                         ,"log10(B_SMALLDELTACHI2)"                                     : "log10(RELINFO('/Event/Phys/"+_linename+"/VtxIsolationVar', 'VTXISODCHI2ONETRACK', -1.1))"
                         ,"B_PTASYM_1_5"                                                : "RELINFO('/Event/Phys/"+_linename+"/P2ConeVar', 'CONEPTASYM', -1.1)"
-                        ,"log10(h1_IPCHI2_OWNPV+h2_IPCHI2_OWNPV)"                      : "log10(SUMTREE(MIPCHI2DV(PRIMARY),((ABSID=='pi+') | (ABSID=='pi-')),0.0))"
+                        ,"log10(h1_IPCHI2_OWNPV+h2_IPCHI2_OWNPV)"                      : "log10(CHILD(BPVIPCHI2(),1) + CHILD(BPVIPCHI2(),2))"
                     }
                     if ks_type == 'LL' :
                         _mvaVars[ks_type][year][sign]['KS_VDCHI2'] = 'log10(CHILD(BPVVDCHI2,3))'
