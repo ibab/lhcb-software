@@ -4,6 +4,9 @@
 ! Purpose     : Related Info Tools
 !-----------------------------------------------------------------------------
 
+! 2014-10-26 - Albert Puig
+ - Removed the possibility of running RelInfoVertexIsolation on tracks or photons.
+
 ! 2014-10-24 - Albert Puig
  - Fixed RelInfoVertexIsolation to behave correctly in the case of secondary dettached
    vertices.

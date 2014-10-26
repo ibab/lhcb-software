@@ -103,11 +103,18 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
                                                          const LHCb::Particle *part )
 {
 
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill now" << endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Fill" << endmsg;
+
+  // Let's not allow the tool to be run on basic particles or photons
+  if ( part->isBasicParticle() || isPureNeutralCalo(part) )
+  {
+    if ( msgLevel(MSG::DEBUG) ) debug() << "Trying to fill isolation for basic particle. Exiting..." << endmsg;
+    m_map.clear();
+    return StatusCode::SUCCESS;
+  }
 
   // Get the vertex
-  const LHCb::Vertex* vtx = ( part->isBasicParticle() || isPureNeutralCalo(part) ?
-                              top->endVertex() : part->endVertex() );
+  const LHCb::Vertex* vtx = part->endVertex() ;
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "vertex for P, ID " << part->particleID().pid()
@@ -126,7 +133,7 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Filling particle with ID " << top->particleID().pid() << endmsg;
   // -- Save all basic particles that belong to the mother vertex in the vector m_signalFinalState
-  part->isBasicParticle() ? findSignalFinalState( top ) : findSignalFinalState( part );
+  findSignalFinalState( part );
 
   // -- Get vector of particles excluding the signal
   LHCb::Particle::ConstVector partsToCheck ;
@@ -184,9 +191,8 @@ StatusCode RelInfoVertexIsolation::calculateRelatedInfo( const LHCb::Particle *t
   }
   if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling isolation variables" << endmsg;
 
-  // Choose particles to vertex
-  if ( part->isBasicParticle() ) m_particlesToVertex.push_back(part) ;
-  else                           m_particlesToVertex = part->daughtersVector() ;
+  // Get particles to vertex
+  m_particlesToVertex = part->daughtersVector() ;
 
   if (msgLevel(MSG::DEBUG)) debug() << "Particles to vertex = " <<  m_particlesToVertex.size()  << endreq;
 
