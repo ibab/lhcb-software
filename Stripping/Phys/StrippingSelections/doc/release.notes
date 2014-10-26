@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-10-26 - Jan Maratas
+ - Updated StrippingXb2p2hOrXb2p3h.py :
+  - Added 'TracksLocation' for RelInfoConeVariables tool to pick
+    'Phys/StdNoPIDsPions' as container rather than 'Rec/Track/Best'.
+
+! 2014-10-26 - Jan Maratas
  - Updated StrippingB2KShh.py :
   - Added 'TracksLocation' for RelInfoConeVariables tool to pick
     'Phys/StdNoPIDsPions' as container rather than 'Rec/Track/Best'.
