@@ -187,8 +187,11 @@ class StrippingBs2gammagammaConf(LineBuilder):
 				, DaughtersCuts  = {'gamma' : BsGG_DC_double}
 				, CombinationCut = BsGG_CC_double
 				, MotherCut      = BsGG_MC_double)
-
-		Bs2gammagamma_double = Selection(
+                from Configurables import OfflineVertexFitter
+                _Bs2gammagamma_double.addTool(OfflineVertexFitter)
+                _Bs2gammagamma_double.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+		
+                Bs2gammagamma_double = Selection(
 				name+"_double",
 				Algorithm = _Bs2gammagamma_double,
 				RequiredSelections = [self.convPhotons_LL,self.convPhotons_DD])

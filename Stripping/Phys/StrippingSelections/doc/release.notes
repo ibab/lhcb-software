@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-26 - Sean Benson
+ - Save track level cone info for Stripping{Bs2PhiPhi,B2FourKHigh,Bs2KKhh,Bs2Q2B}.
+ - Use OVF in gamma gamma double line.
 
 ! 2014-10-24 - T Blake
  - Updated PID swapping of B2XMuMu and changed MomentumCombiner to 
