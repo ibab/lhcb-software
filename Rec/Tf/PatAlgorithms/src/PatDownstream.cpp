@@ -209,6 +209,13 @@ StatusCode PatDownstream::execute() {
   LHCb::Tracks* finalTracks = new LHCb::Tracks();
   finalTracks->reserve(100);
   put( finalTracks, m_outputLocation);
+
+  const double magScaleFactor = m_magFieldSvc->signedRelativeCurrent() ;
+    
+  if( std::abs(magScaleFactor) > 1e-6 ){
+    m_magnetOff = false;
+  } else m_magnetOff = true;
+
   //==========================================================================
   // Main loop on tracks
   //==========================================================================
@@ -220,11 +227,6 @@ StatusCode PatDownstream::execute() {
 
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
 
-    const double magScaleFactor = m_magFieldSvc->signedRelativeCurrent() ;
-    
-    if( std::abs(magScaleFactor) > 1e-6 ){
-        m_magnetOff = false;
-    } else m_magnetOff = true;
     PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor*(-1) );
 
     //Y. Xie: get rid of particles from beampipe 
