@@ -158,7 +158,8 @@ if ( top->isBasicParticle() || top!=top_bis)
   }
 
   LHCb::Particle::ConstVector Daughters = m_descend->descendants(top,1);
-if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
+  if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<" : "<<Daughters.size()<<endmsg;
+//  Int_t flag(0);
 
   LHCb::Particle::ConstVector::const_iterator i_daug; 
   for ( i_daug = Daughters.begin(); i_daug != Daughters.end(); i_daug++){
@@ -174,23 +175,79 @@ if ( msgLevel(MSG::DEBUG) ) debug()<<"Number of ID "<<top->particleID().pid()<<"
         else
           {
             if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
-            //  calcBDTValue( part, tracks, PV, SV ) ;
+              calcBDTValue( part, tracks, PV, SV ) ;
             //  if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
-            if(part->charge()>0)
+
+	        bool P_charge = true;
+        	bool flag_OS = true;
+	        bool flag_tau_mu = false;
+	        for (LHCb::Particle::ConstVector::const_iterator i_daug_2 = Daughters.begin(); i_daug_2 != Daughters.end() ; i_daug_2++){
+	        const LHCb::Particle* part2 = *i_daug_2;
+		if (i_daug_2 !=i_daug ){
+	        if((part->charge())*(part2->charge())>0) flag_OS=false;
+	        if((part2->p())>(part->p())) P_charge = false; 
+		if((part->isBasicParticle())||(part2->isBasicParticle())) flag_tau_mu=true;
+	        }
+		}
+
+
+        	if((flag_OS==true)||(flag_tau_mu==true)){
+	        if(part->charge()>0){ 
+		m_bdt1_TauP=m_bdt1;
+                m_bdt2_TauP=m_bdt2;
+                m_bdt3_TauP=m_bdt3;
+		}
+		if(part->charge()<0){ 
+		m_bdt1_TauM=m_bdt1;
+                m_bdt2_TauM=m_bdt2;
+                m_bdt3_TauM=m_bdt3;
+		}
+		}else if(flag_OS==false){// i.e. it's same sign
+		if(P_charge){ 
+		m_bdt1_TauP=m_bdt1;
+                m_bdt2_TauP=m_bdt2;
+                m_bdt3_TauP=m_bdt3;
+		}
+		if(!P_charge){ 
+		m_bdt1_TauM=m_bdt1;
+                m_bdt2_TauM=m_bdt2;
+                m_bdt3_TauM=m_bdt3;
+		}
+		}
+
+
+
+/*
+
+
+            if(part->charge()>0&&(flag==0||flag==2))
               {
-                calcBDTValue( part, tracks, PV, SV ) ;
+                                if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+                m_bdt1_TauP=m_bdt1;
+                m_bdt2_TauP=m_bdt2;
+                m_bdt3_TauP=m_bdt3;
+                flag=1;
+              }else if(part->charge()>0&&flag==1)
+              {
+                                if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+                m_bdt1_TauM=m_bdt1;
+                m_bdt2_TauM=m_bdt2;
+                m_bdt3_TauM=m_bdt3;
+              }else if(part->charge()<0&&(flag==0||flag==1))
+              {
+                                if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
+                m_bdt1_TauM=m_bdt1;
+                m_bdt2_TauM=m_bdt2;
+                m_bdt3_TauM=m_bdt3;
+                flag=2;
+              }else if(part->charge()<0&&flag==2)
+              {
                 if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
                 m_bdt1_TauP=m_bdt1;
                 m_bdt2_TauP=m_bdt2;
                 m_bdt3_TauP=m_bdt3;
-              }else if(part->charge()<0)
-              {
-                calcBDTValue( part, tracks, PV, SV ) ;
-                if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
-                m_bdt1_TauM=m_bdt1;
-                m_bdt2_TauM=m_bdt2;
-                m_bdt3_TauM=m_bdt3;
               }
+		*/
           }
       }
   }
