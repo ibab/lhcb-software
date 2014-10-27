@@ -60,9 +60,6 @@ private:
 
    bool m_setQOverP;
 
-   float m_scaleXFoI;
-   float m_scaleYFoI;
-
    // Tools
    Hlt1MuonHitManager* m_hitManager;
 

@@ -61,8 +61,6 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
 
    declareProperty( "SetQOverP", m_setQOverP = false );
 
-   declareProperty( "ScaleXFoI", m_scaleXFoI = 0. );
-   declareProperty( "ScaleYFoI", m_scaleYFoI = 0. );
 }
 
 //=============================================================================
@@ -171,9 +169,9 @@ void MatchVeloMuon::i_findSeeds( const Candidate& veloSeed,
     double dz = ( zStation - zMagnet ) / veloSeed.cosTy();
     // double sign = ( veloSeed.tx() > 0) - ( veloSeed.tx() < 0 );
     double tanMin = ( veloSeed.tx() - dSlope ) / ( 1 + veloSeed.tx() * dSlope );
-    double xMin = ( 1 - m_scaleXFoI ) * (xMagnet + dz * tanMin - m_xWindow);
+    double xMin = xMagnet + dz * tanMin - m_xWindow;
     double tanMax = ( veloSeed.tx() + dSlope ) / ( 1 - veloSeed.tx() * dSlope );
-    double xMax = ( 1 + m_scaleXFoI ) * (xMagnet + dz * tanMax + m_xWindow);
+    double xMax = xMagnet + dz * tanMax + m_xWindow;
     
     // Calculate window in y
     double yMuon = 0., yRange = 0;

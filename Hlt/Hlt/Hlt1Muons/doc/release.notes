@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-10-27 - Vasileios Syropoulos
+ - remove unnecessary xFoI scaling in MatchVeloMuon.
+
+! 2014-10-27 - Vasileios Syropoulos
  - add IMatchVeloMuon interface to MatchVeloMuon.
 
 ! 2014-10-10 - Gerhard Raven, Roel Aaij
