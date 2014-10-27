@@ -96,7 +96,7 @@ class HHBuilder(object):
                               DecayDescriptors=decays)
         if pi0:
             cp = cp.configurable(name+'Beauty2CharmCombiner')
-            cp.ParticleCombiners.update({'':'MomentumCombiner'})
+            #cp.ParticleCombiners.update({'':'MomentumCombiner'})
         return Selection(name+'Beauty2Charm',Algorithm=cp,
                          RequiredSelections=inputs)
 

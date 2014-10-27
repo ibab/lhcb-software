@@ -603,7 +603,7 @@ class DstarBuilder(object):
                                MotherCut        = momCuts  ,
                                DecayDescriptors = decays    )
         cp = cp.configurable( name + 'Beauty2CharmCombiner' )
-        cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
+        #cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
         return Selection( 'Dstar02D0' + name + 'Beauty2Charm',
                           Algorithm          = cp            ,
                           RequiredSelections = inputs         )
@@ -626,7 +626,7 @@ class DstarBuilder(object):
                                DecayDescriptors = decays          )
 
         cp = cp.configurable( name + 'Beauty2CharmCombiner' )
-        cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
+        #cp.ParticleCombiners.update( { '' : 'MomentumCombiner' } )
 
         return [ Selection( 'Dstar02D0' + name + 'Beauty2Charm'        ,
                             Algorithm          = cp                    ,

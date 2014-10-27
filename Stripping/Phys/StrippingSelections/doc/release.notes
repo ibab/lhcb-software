@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-27 - Stefano Perazzini
+ - Removed MomentumCombiner from Beauty2Charm_DBuilder.py and 
+   Beauty2Charm_HHBuilder.py
+
 ! 2014-10-26 - Jan Maratas
  - Updated StrippingXb2p2hOrXb2p3h.py :
   - Added 'TracksLocation' for RelInfoConeVariables tool to pick
