@@ -62,11 +62,12 @@ default_config = {
     
     # A1 cuts
     , 'A1_Comb_MassLow'  :    0.0
-    , 'A1_Comb_MassHigh' : 6050.0
+    , 'A1_Comb_MassHigh' : 5550.0
     , 'A1_MassLow'       :    0.0
-    , 'A1_MassHigh'      : 6000.0
+    , 'A1_MassHigh'      : 5500.0
     , 'A1_MinIPCHI2'     :    4.0
     , 'A1_FlightChi2'    :   25.0
+    , 'A1_VtxChi2'       :   10.0
     , 'A1_Dau_MaxIPCHI2' :    9.0
     # From Bd2KstarMuMu line 
     ,'UseNoPIDsHadrons'          : True,
@@ -102,9 +103,10 @@ default_config = {
 
     #K1->OmegaK cuts
     'K12OmegaK_MassLow'   :   300, #MeV
-    'K12OmegaK_MassHigh'  :  2500, #MeV
+    'K12OmegaK_MassHigh'  :  2100, #MeV
     'K12OmegaK_CombMassLow'   :   400, #MeV
-    'K12OmegaK_CombMassHigh'  :  2400, #MeV
+    'K12OmegaK_CombMassHigh'  :  2000, #MeV
+    'K12OmegaK_VtxChi2'   : 10 ,
     
     # JPsi (dimu) cuts
     'Dimu_FlightChi2'     :   9.0,
@@ -192,7 +194,9 @@ class B2XMuMuConf(LineBuilder) :
         , 'A1_MassHigh'
         , 'A1_MinIPCHI2'
         , 'A1_FlightChi2'
-        , 'A1_Dau_MaxIPCHI2',
+        , 'A1_VtxChi2'  
+          , 'A1_Dau_MaxIPCHI2',
+          
         # Keys taken over from Bd2KstarMuMu line
         # Need to make sure there is no overlap with already existing ones
         'UseNoPIDsHadrons',
@@ -231,6 +235,7 @@ class B2XMuMuConf(LineBuilder) :
         'K12OmegaK_MassHigh',
         'K12OmegaK_CombMassLow',
         'K12OmegaK_CombMassHigh',
+        'K12OmegaK_VtxChi2',
 
         # JPsi (dimu) cuts
         'Dimu_FlightChi2',
@@ -484,6 +489,7 @@ class B2XMuMuConf(LineBuilder) :
         """
         _A1Cut = "(M > %(A1_MassLow)s * MeV) &"\
         "(M < %(A1_MassHigh)s * MeV) & "\
+        "(VFASPF(VCHI2PDOF) < %(A1_VtxChi2)s) & "\
         "(BPVVDCHI2 > %(A1_FlightChi2)s) & "\
         "(MIPCHI2DV(PRIMARY) > %(A1_MinIPCHI2)s) " %conf 
         return _A1Cut
@@ -675,12 +681,10 @@ class B2XMuMuConf(LineBuilder) :
         _k12omegak = CombineParticles()
         _k12omegak.DecayDescriptor = "[K_1(1400)+ -> K+ omega(782)]cc"
         _k12omegak.CombinationCut = "(AM > %(K12OmegaK_MassLow)s * MeV) & (AM < %(K12OmegaK_MassHigh)s * MeV)" %conf
-        _k12omegak.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV)" %conf
+        _k12omegak.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV) & (VFASPF(VCHI2PDOF) < %(K12OmegaK_VtxChi2)s)" %conf
         
-        _k12omegakConf = _k12omegak.configurable("Combine_"+self.name+"_OmegaK")
-        _k12omegakConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
-
-                            
+        #_k12omegakConf = _k12omegak.configurable("Combine_"+self.name+"_OmegaK")
+        #_k12omegakConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )                   
         
         _selK12OMEGAK = Selection( "Selection_"+self.name+"_k12omegak",
                                      Algorithm = _k12omegak,
@@ -695,10 +699,12 @@ class B2XMuMuConf(LineBuilder) :
         _k12omegaks = CombineParticles()
         _k12omegaks.DecayDescriptor = "K_1(1400)0 -> KS0 omega(782)"
         _k12omegaks.CombinationCut = "(AM > %(K12OmegaK_MassLow)s * MeV) & (AM < %(K12OmegaK_MassHigh)s * MeV)" %conf
-        _k12omegaks.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & (M < %(K12OmegaK_CombMassHigh)s * MeV)" %conf
+        _k12omegaks.MotherCut = "(M > %(K12OmegaK_CombMassLow)s * MeV) & " \
+                                "(M < %(K12OmegaK_CombMassHigh)s * MeV) & " \
+                                "(VFASPF(VCHI2PDOF) < %(K12OmegaK_VtxChi2)s)" %conf
 
-        _k12omegaksConf = _k12omegaks.configurable("Combine_"+self.name+"_OmegaKs")
-        _k12omegaksConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
+        #_k12omegaksConf = _k12omegaks.configurable("Combine_"+self.name+"_OmegaKs")
+        #_k12omegaksConf.ParticleCombiners.update ( { '' : 'OfflineVertexFitter:PUBLIC' } )
                 
         _selK12OMEGAKS = Selection( "Selection_"+self.name+"_k12omegaks",
                                      Algorithm = _k12omegaks,
@@ -740,46 +746,7 @@ class B2XMuMuConf(LineBuilder) :
                                      Algorithm = _kstar2kspi,
                                      RequiredSelections = [ Kshort, Pions ] )
         return _selKSTAR2KSPI
-
-
-    ## def __TwoBodySwaps__(self, Rho, conf):
-    ##     """
-    ##     Make a phi through substitution 
-    ##     """      
-    ##     decayZ = [ ['pi+','pi-'], [ 'K+', 'K-'] ,['p+','p~-'] , ['K+' , 'pi-'], ['pi+' , 'K-'], ['p+', 'K-'] , ['K+', 'p~-'] ]
-    ##     decayP = [ ['pi+','pi+'], [ 'K+', 'K+'] ,['p+','p+']  , ['K+' , 'pi+'], ['pi+' , 'K+'], ['p+', 'K+'] , ['K+', 'p+']  ]
-    ##     decayM = [ ['pi-','pi-'], [ 'K-', 'K-'] ,['p~-','p~-'], ['K-' , 'pi-'], ['pi-' , 'K-'], ['p~-', 'K-'], ['K-', 'p~-'] ]
-
-    ## phi = [ [ 'phi(1020) -> K+ K-' ], [ 'phi(1020) -> K+ K+' ], [ 'phi(1020) -> K+ K+' ] ]
     
-    ## decays = [ ] 
-    
-    
-    ##     subMMZAlg = SubPIDMMFilter(self.name+"_PhiSubMMZ_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi-')", MinMM=0, MaxMM=6050, PIDs = decayZ )
-
-    ##     subMMPAlg = SubPIDMMFilter(self.name+"_PhiSubMMP_Alg", Code= "DECTREE('rho(770)0 -> pi+ pi+')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K+', 'K+'] ]  )     
-
-    ##     subMMMAlg = SubPIDMMFilter(self.name+"_PhiSubMMM_Alg", Code= "DECTREE('rho(770)0 -> pi- pi-')", MinMM=0, MaxMM=6050, PIDs = [ [ 'K-', 'K-'] ]  )   
-
-    ##     phiSubMMZSel = Selection( self.name+"_PhiSubMMZ_Sel", Algorithm = phiSubMMZAlg, RequiredSelections = [ Rho ] )
-
-    ##     phiSubMMPSel = Selection( self.name+"_PhiSubMMP_Sel", Algorithm = phiSubMMPAlg, RequiredSelections = [ Rho ] )
-        
-    ##     phiSubMMMSel = Selection( self.name+"_PhiSubMMM_Sel", Algorithm = phiSubMMMAlg, RequiredSelections = [ Rho ] )
-
-    ##     phiMerge = MergedSelection( self.name+"_PhiMerge", RequiredSelections = [ phiSubMMZSel, phiSubMMPSel, phiSubMMMSel ] ) 
-        
-    ##     phiSubAlg = SubstitutePID( self.name+"_PhiSub_Alg", 
-    ##                                Code = "(DECTREE('rho(770)0 -> K+ K-')) | (DECTREE('rho(770)0 -> K+ K+')) | (DECTREE('rho(770)0 -> K- K-'))",
-    ##                                MaxChi2PerDoF = -666 )
-
-        ## phiSubAlg.Substitutions = {
-        ##     'rho(770)0 -> K+ K-' : 'phi(1020)' ,
-        ##     'rho(770)0 -> K+ K+' : 'phi(1020)' ,
-        ##     'rho(770)0 -> K- K-' : 'phi(1020)'
-        ##     }
-        
-        ## phiSubSel =  Selection( self.name+"_PhiSub_Sel", Algorithm = phiSubAlg, RequiredSelections = [ phiMerge ] )
 
     def __Phi__(self, Rho, conf):
         """
@@ -926,15 +893,11 @@ class B2XMuMuConf(LineBuilder) :
         _a12pipipi.CombinationCut = self.__A1CombCut__(conf)
         _a12pipipi.MotherCut = self.__A1Cut__(conf)
 
-        _sel_a1 = Selection( "Selection_"+self.name+"_a1",
-                                     Algorithm=_a12pipipi,
-                                     RequiredSelections=[Pions] )
+        selA1 = Selection( "Selection_"+self.name+"_a1",
+                           Algorithm=_a12pipipi,
+                           RequiredSelections=[Pions] )
         
-        pick = Selection(self.name+"_A1_PickDecay",
-                     Algorithm = FilterDesktop( Code = "(DECTREE('a_1(1260)+ -> pi+ pi+ pi-')) | (DECTREE('a_1(1260)- -> pi+ pi- pi-'))" ),
-                     RequiredSelections = [_sel_a1])
-
-        return pick
+        return selA1 
 
     def __K1__(self, A1, conf): 
         """
@@ -943,17 +906,17 @@ class B2XMuMuConf(LineBuilder) :
         """      
         #replace head with K_1(1270)
         _a1k1_SubPID = SubstitutePID(self.name+"_a1k1_SubPID", Code="(DECTREE('a_1(1260)+ -> pi+ pi+ pi-')) | (DECTREE('a_1(1260)- -> pi- pi- pi+'))",
-                                     Substitutions={'a_1(1260)+ -> pi+ pi+ pi-' : 'K_1(1270)+', 'a_1(1260)- -> pi- pi- pi+' : 'K_1(1270)-'}, MaxParticles=20000, MaxChi2PerDoF=-666)
+                                     Substitutions={'a_1(1260)+ -> pi+ pi+ pi-' : 'K_1(1270)+', 'a_1(1260)- -> pi- pi- pi+' : 'K_1(1270)-'}, MaxChi2PerDoF=-666)
         _sel_k1 =  Selection(self.name+"_a1k1_SubPIDAlg",
                              Algorithm = _a1k1_SubPID, RequiredSelections = [A1])
         #replace daughters for K_1(1270)+, order is important for this tool
         _a1k1_SubPIDp = SubPIDMMFilter(self.name+"_a1k1_SubPIDp", Code="DECTREE('K_1(1270)+ -> pi+ pi+ pi-')",
-                                       MinMM=0, MaxMM=6050, PIDs = [['K+','pi+','pi-'], ['pi+','K+','pi-']] ) 
+                                       MinMM=0, MaxMM=conf['A1_Comb_MassHigh'], PIDs = [['K+','pi+','pi-'], ['pi+','K+','pi-']] ) 
         _sel_k1p =  Selection(self.name+"_a1k1_SubPIDAlgp",
                               Algorithm = _a1k1_SubPIDp, RequiredSelections = [_sel_k1])
         #replace daughters for K_1(1270)-
         _a1k1_SubPIDm = SubPIDMMFilter(self.name+"_a1k1_SubPIDm", Code="DECTREE('K_1(1270)- -> pi- pi- pi+')",
-                                       MinMM=0, MaxMM=6050, PIDs = [['K-','pi-','pi+'], ['pi-','K-','pi+']] ) 
+                                       MinMM=0, MaxMM=conf['A1_Comb_MassHigh'], PIDs = [['K-','pi-','pi+'], ['pi-','K-','pi+']] ) 
         _sel_k1m =  Selection(self.name+"_a1k1_SubPIDAlgm",
                               Algorithm = _a1k1_SubPIDm, RequiredSelections = [_sel_k1])
 
@@ -970,17 +933,17 @@ class B2XMuMuConf(LineBuilder) :
         """      
         #replace head with K_2(1770)
         _a1k2_SubPID = SubstitutePID(self.name+"_a1k2_SubPID", Code="(DECTREE('a_1(1260)+ -> pi+ pi+ pi-')) | (DECTREE('a_1(1260)- -> pi- pi- pi+'))",
-                                      Substitutions={'a_1(1260)+ -> pi+ pi+ pi-' : 'K_2(1770)+', 'a_1(1260)- -> pi- pi- pi+' : 'K_2(1770)-'}, MaxParticles=20000, MaxChi2PerDoF=-666)
+                                      Substitutions={'a_1(1260)+ -> pi+ pi+ pi-' : 'K_2(1770)+', 'a_1(1260)- -> pi- pi- pi+' : 'K_2(1770)-'}, MaxChi2PerDoF=-666)
         _sel_k2 =  Selection(self.name+"_a1k2_SubPIDAlg",
                              Algorithm = _a1k2_SubPID, RequiredSelections = [A1])
         #replace daughters for K_2(1770)+, order is important for this tool
         _a1k2_SubPIDp = SubPIDMMFilter(self.name+"_a1k2_SubPIDp", Code="DECTREE('K_2(1770)+ -> pi+ pi+ pi-')",
-                                       MinMM=0, MaxMM=6050, PIDs = [['K+','K+','K-']] )        
+                                       MinMM=0, MaxMM=conf['A1_Comb_MassHigh'], PIDs = [['K+','K+','K-']] )        
         _sel_k2p =  Selection(self.name+"_a1k2_SubPIDAlgp",
                               Algorithm = _a1k2_SubPIDp, RequiredSelections = [_sel_k2])
         #replace daughters for K_2(1770)-
         _a1k2_SubPIDm = SubPIDMMFilter(self.name+"_a1k2_SubPIDm", Code="DECTREE('K_2(1770)- -> pi- pi- pi+')",
-                                       MinMM=0, MaxMM=6050, PIDs = [['K-','K-','K+']] )        
+                                       MinMM=0, MaxMM=conf['A1_Comb_MassHigh'], PIDs = [['K-','K-','K+']] )        
         _sel_k2m =  Selection(self.name+"_a1k2_SubPIDAlgm",
                               Algorithm = _a1k2_SubPIDm, RequiredSelections = [_sel_k2])
 
