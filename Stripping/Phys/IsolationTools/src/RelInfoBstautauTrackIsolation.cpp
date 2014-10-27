@@ -168,6 +168,7 @@ StatusCode RelInfoBstautauTrackIsolation::calculateRelatedInfo( const LHCb::Part
     m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
   }
 
+// Int_t flag(0);
 
 
   for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){//
@@ -178,7 +179,25 @@ StatusCode RelInfoBstautauTrackIsolation::calculateRelatedInfo( const LHCb::Part
     else{
       LHCb::Particle::ConstVector Daughters_2 = m_descend->descendants(Part);
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "number of PID "<<Part->particleID().pid()<<"'s daughters : "<<Daughters_2.size()<<endmsg;//
+
+
+  		bool P_charge = true;
+        	bool flag_OS = true;
+	        bool flag_tau_mu = false;
+	        for (SmartRefVector< LHCb::Particle >::const_iterator idaug2 = daughters.begin(); idaug2 != daughters.end() ; idaug2++){
+	        const LHCb::Particle* Part2 = *idaug2;
+		if (idaug2 != idau ){
+	        if((Part->charge())*(Part2->charge())>0) flag_OS=false;
+	        if((Part2->p())>(Part->p())) P_charge = false; 
+		if((Part->isBasicParticle())||(Part2->isBasicParticle())) flag_tau_mu=true;
+	        }
+	        }
+
+
+
+
       LHCb::Particle::ConstVector::const_iterator i_daug;
+//Int_t flag2(0);
       for(i_daug = Daughters_2.begin(); i_daug!=Daughters_2.end();++i_daug){
           const LHCb::Particle* part = *i_daug;
           if(! part ) {
@@ -217,146 +236,104 @@ StatusCode RelInfoBstautauTrackIsolation::calculateRelatedInfo( const LHCb::Part
 
             if ( msgLevel(MSG::DEBUG) ) debug()  << "after \"calcBDTValue\" "  << endmsg ;
 
-            const LHCb::Particle* part2 = NULL;
-            LHCb::Particle::ConstVector::const_iterator i_daug_2;
-            for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
-              const LHCb::Particle* part_2 = *(i_daug_2);
-              if((i_daug_2!=i_daug)&&(part_2->charge()== part->charge())) part2= *(i_daug_2);//
-              
-            }
-            
-            
-          
-         
-            if(Part->charge()>0)
-              {
-                if ( msgLevel(MSG::VERBOSE) ) verbose() << "Part ID "<<Part->particleID().pid()<<endmsg;//
-                
-                if (part->charge()<0)
-                  {
-                    if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
-                    m_bdt1_TauP_piM = m_bdt1;
-                  
-                  }else {
-                  if(part->p() >= part2->p())
-                    { 
-                      if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
-                      m_bdt1_TauP_piP1 = m_bdt1;
-                       }else
-                    {
-                      m_bdt1_TauP_piP2 = m_bdt1;
-                     }
-                }
-                
-              }else
-              {
-                if ( msgLevel(MSG::VERBOSE) ) verbose() << "Part ID "<<Part->particleID().pid()<<endmsg;//
-
-                if (part->charge()>0)
-                  {
-                    if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
-                 
-                    m_bdt1_TauM_piP = m_bdt1;
-                     }else {
-                    
-                     
-                     if(part->p() >= part2->p())
-                     { 
-                     m_bdt1_TauM_piM1 = m_bdt1;
-                      }else
-                     {
-                     m_bdt1_TauM_piM2 = m_bdt1;
-                     }
-                }
-                
+                // const LHCb::Particle* part2 = NULL;
+ 	const LHCb::Particle* part_2;
+	    LHCb::Particle::ConstVector::const_iterator i_daug_2;
+	bool flag_p=true;
+	bool flag_p_max=true;
+	bool flag_p_min=true;
+        if(Part->charge()==1||Part->charge()==-1){
+              for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
+                part_2 = *(i_daug_2);
+                if((i_daug_2!=i_daug)&&(part_2->charge()== part->charge())&&(part->p()<part_2->p())) flag_p=false;// part2= *(i_daug_2);//
               }
+        }else if (Part->charge()==3||Part->charge()==-3){
+        for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end() ;i_daug_2++ ){//
+	part_2 = *(i_daug_2);
+	if(i_daug_2!=i_daug){
+	flag_p_max=flag_p_max&&(part->p()>part_2->p());
+        flag_p_min=flag_p_min&&(part->p()<=part_2->p());
+		}
+	      }
+        }
+            if(flag_OS==true||flag_tau_mu==true){
+		if(Part->charge()==1||Part->charge()==-1){
+			if(Part->charge()==1){
+				if(part->charge()<0){
+				m_bdt1_TauP_piM=m_bdt1;
+				}else if(flag_p){
+				m_bdt1_TauP_piP1=m_bdt1;
+				}else{
+				m_bdt1_TauP_piP2=m_bdt1;
+				     }
+				}else if(Part->charge()==-1){
+					if(part->charge()>0){
+				m_bdt1_TauM_piP=m_bdt1;
+				                }else if(flag_p){
+				m_bdt1_TauM_piM1=m_bdt1;
+				                }else{
+				m_bdt1_TauM_piM2=m_bdt1;
+				                }
+			   }
+			}else if(Part->charge()==3||Part->charge()==-3){
+				if(Part->charge()==3){
+					if(flag_p_max==true){
+				m_bdt1_TauP_piP1=m_bdt1;
+				       }else if(flag_p_max==false&&flag_p_min==false){
+				m_bdt1_TauP_piP2=m_bdt1;
+				}else if (flag_p_min==true){
+				m_bdt1_TauP_piM=m_bdt1;
+				}
+				}else if (Part->charge()==-3){
+					if(flag_p_max==true){
+				m_bdt1_TauM_piM1=m_bdt1;
+				}else if(flag_p_max==false&&flag_p_min==false){
+				m_bdt1_TauM_piM2=m_bdt1;
+				}else if (flag_p_min==true){
+				m_bdt1_TauM_piP=m_bdt1;
+				}
+				}
+
+			}//if(Part->charge()==3||Part->charge()==-3)
+
+		}else if (flag_OS==false){//(flag_OS==true||flag_tau_mu==true)
+			if(P_charge==true){
+				if((part->charge()*Part->charge())<0){
+				m_bdt1_TauP_piM=m_bdt1;
+				}else if(flag_p){
+				m_bdt1_TauP_piP1=m_bdt1;
+				}else{
+				m_bdt1_TauP_piP2=m_bdt1;
+				}
+				}else if(P_charge==false){
+				if((part->charge()*Part->charge())<0){
+				m_bdt1_TauM_piP=m_bdt1;
+				}else if(flag_p){
+				m_bdt1_TauM_piM1=m_bdt1;
+				}else{
+				m_bdt1_TauM_piM2=m_bdt1;
+				}
+			   }
+
+		}           
+            
+       
+
+
+
+
+
+
+
+    
+  
           }
       }
     }
   }
   
 
-  /*
-
-  const LHCb::Particle* mother  = NULL;
-
-  const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
-
-  // -- Fill all the daugthers in m_decayParticles
-  for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
-
-    const SmartRefVector< LHCb::Particle > & daughters2 = (*idau)->daughters();
-
-    // -- Fill all the daugthers in m_decayParticles
-    for( SmartRefVector< LHCb::Particle >::const_iterator idau2 = daughters2.begin() ; idau2 != daughters2.end() ; ++idau2){
-      const LHCb::ProtoParticle* proto = (*idau2)->proto();
-      if(proto){
-        const LHCb::Track* myTrack = proto->track();
-
-        if(myTrack){
-
-          if(myTrack == part->proto()->track()) mother=(*idau);
-        }
-      }
-    }
-  }
-
-  if (mother==NULL)
-  {
-    if ( msgLevel(MSG::WARNING) ) Warning(  "Mother of part not found. Skipping" );
-    return StatusCode::FAILURE;
-  }
-
-
-  bool test = true;
-
-  //set PV and SV of the mother
-  //
-
-  const LHCb::VertexBase* PV = m_dva->bestVertex(top);
-  const LHCb::VertexBase *SV = mother->endVertex();
-
-  if(exist<LHCb::RecVertex::Container>(m_PVInputLocation)){
-    m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
-  }
-
-  if( part )
-  {
-
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
-
-    // -- process -- iterate over tracks
-    //
-  debug()<<" '*ciao*' "<<endmsg;
-
-    calcValue( part, tracks, PV, SV ) ;
-    if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << endmsg ;
-   debug()<<" *ciao** after \"calcValue\" "<<endmsg;
  
-    //
-    //store
-    m_map.clear();
-
-    std::vector<short int>::const_iterator ikey;
-    for (ikey = m_keys.begin(); ikey != m_keys.end(); ikey++) {
-
-      float value = 0;
-      switch (*ikey) {
-      case RelatedInfoNamed::BSTAUTAUTRKISOFIRSTVALUE : value = m_bdt1; break;
-      }
-      if (msgLevel(MSG::DEBUG)) debug() << "  Inserting key = " << *ikey << ", value = " << value << " into map" << endreq;
-
-      m_map.insert( std::make_pair( *ikey, value) );
-    }
-
-  }
-
-  else
-  {
-    if ( msgLevel(MSG::WARNING) ) Warning( "The particle in question is not valid" );
-    return StatusCode::FAILURE;
-  }
-*/
 
 
 
