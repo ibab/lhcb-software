@@ -60,6 +60,9 @@ private:
 
    bool m_setQOverP;
 
+   float m_scaleXFoI;
+   float m_scaleYFoI;
+
    // Tools
    Hlt1MuonHitManager* m_hitManager;
 
@@ -71,13 +74,13 @@ private:
    std::vector<Candidate> m_seeds;
 
    // Helper methods
-   void findSeeds( const Candidate& seed, const unsigned int seedStation );
+   void i_findSeeds( const Candidate& seed, const unsigned int seedStation );
 
-   void addHits( Candidate& seed );
+   void i_addHits( Candidate& seed );
 
-   void fitCandidate( Candidate& seed ) const;
+   void i_fitCandidate( Candidate& seed ) const;
 
-   void clean();
+   void i_clean();
 
    inline double dtx( const double p ) const
    {
@@ -93,6 +96,15 @@ private:
       return m_seeds;
    }
 
+
+    // Interface methods
+    void findSeeds( const Candidate& seed, const unsigned int seedStation ) override;
+
+    void addHits( Candidate& seed ) override;
+
+    void fitCandidate( Candidate& seed ) const override;
+
+    void clean() override;
 
 };
 #endif // MATCHVELOMUON_H

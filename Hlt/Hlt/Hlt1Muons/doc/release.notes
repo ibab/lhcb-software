@@ -3,6 +3,10 @@
 ! Responsible : Roel Aaij
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
+
+! 2014-10-27 - Vasileios Syropoulos
+ - add IMatchVeloMuon interface to MatchVeloMuon.
+
 ! 2014-10-10 - Gerhard Raven, Roel Aaij
  - add missing declareInterface<ITracksFromTrack> to MatchVeloMuon 
 
