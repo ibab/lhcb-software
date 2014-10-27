@@ -286,43 +286,43 @@ StatusCode RelInfoBstautauZVisoBDT::calculateRelatedInfo( const LHCb::Particle* 
     }
     else if(part)
     {
-
-    
-     
-        StatusCode scInTracks =  Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
-        StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
-        StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
-        StatusCode scZViso    =  ZViso();
-        if ( msgLevel(MSG::DEBUG) ) debug()<<"ZVisoBDT_value : "<<m_ZViso<<endmsg;
-        if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	
-
-        Float_t P_charge = 0.0;
-        bool flag_OS = true;
-        bool flag_tau_mu = false;
-        for (LHCb::Particle::ConstVector::const_iterator i_daug_2 = Daughters.begin(); i_daug_2 != Daughters.end() ; i_daug_2++){
+      StatusCode scInTracks =  Initialize_tracksVF_ZVtop(); //initialize all the tracks that will be used for VF and ZVtop. Then we call the VFiso and the ZVtop algorithm
+      StatusCode scIsoTopo  =  IsoTopo2Body(part);//, prefix, tuple);
+      StatusCode scGMPiso   =  GMPiso(part);//, prefix, tuple);
+      StatusCode scZViso    =  ZViso();
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"ZVisoBDT_value : "<<m_ZViso<<endmsg;
+      if((!scIsoTopo)||(!scInTracks)||(!scGMPiso)||(!scZViso)) {return StatusCode::FAILURE;}	
+      
+      Float_t P_charge = 0.0;
+      bool flag_OS = true;
+      bool flag_tau_mu = false;
+      for (LHCb::Particle::ConstVector::const_iterator i_daug_2 = Daughters.begin(); i_daug_2 != Daughters.end() ; i_daug_2++){
         const LHCb::Particle* part2 = *i_daug_2;
-	if(i_daug_2 !=i_daug){
+        if(i_daug_2 !=i_daug){
 	        if((part->charge())*(part2->charge())>0) flag_OS=false;
         	/*if((part2->p())>(part->p()))*/ P_charge = (part->p())-(part2->p());// false; 
-		if((part->isBasicParticle())||(part2->isBasicParticle())) flag_tau_mu=true;
+          if((part->isBasicParticle())||(part2->isBasicParticle())) flag_tau_mu=true;
         	if ( msgLevel(MSG::DEBUG) ) debug()<<"part2->p() : "<<part->p()<<"   ,    part2->p() : "<<part2->p()<<endmsg;
-	}
         }
-        if ( msgLevel(MSG::DEBUG) ) debug()<<"P_charge : "<<P_charge <<"   ,   flag_OS : "<<flag_OS<<"   ,    flag_tau_mu : "<<flag_tau_mu<<endmsg;
-
-        if((flag_OS==true)||(flag_tau_mu==true)){
-        if(part->charge()>0){m_ZViso_TauP=m_ZViso;}
-	if(part->charge()<0){m_ZViso_TauM=m_ZViso;}
-	}else if(flag_OS==false){// i.e. it's same sign
-	if(P_charge>0){m_ZViso_TauP=m_ZViso;}
-	else if(P_charge<0){m_ZViso_TauM=m_ZViso;}
-	}
-
-
-
       }
+      
+      if ( msgLevel(MSG::DEBUG) ) debug()<<"P_charge : "<<P_charge <<"   ,   flag_OS : "<<flag_OS<<"   ,    flag_tau_mu : "<<flag_tau_mu<<endmsg;
+      
+      if((flag_OS==true)||(flag_tau_mu==true)){
+        if(part->charge()>0){m_ZViso_TauP=m_ZViso;}
+        if(part->charge()<0){m_ZViso_TauM=m_ZViso;}
+      }else if(flag_OS==false){// i.e. it's same sign
+        if(P_charge>0){m_ZViso_TauP=m_ZViso;}
+        else if(P_charge<0){m_ZViso_TauM=m_ZViso;}
+      }
+
+      
+      
     }
   }
+
+  
+
 
 
 
