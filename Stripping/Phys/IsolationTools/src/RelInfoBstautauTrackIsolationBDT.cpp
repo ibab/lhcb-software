@@ -175,7 +175,7 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
     m_vertices = get<LHCb::RecVertex::Container>(m_PVInputLocation);
   }
 
-
+ // Int_t flag(0);
 
   for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){//
     const LHCb::Particle* Part = *idau;
@@ -185,7 +185,27 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
     else{
       LHCb::Particle::ConstVector Daughters_2 = m_descend->descendants(Part);
       if ( msgLevel(MSG::VERBOSE) ) verbose() << "number of PID "<<Part->particleID().pid()<<"'s daughters : "<<Daughters_2.size()<<endmsg;//
+//qui vanno messi  vari flag sul SS dei tau
+
+               bool P_charge = true;
+        	bool flag_OS = true;
+	        bool flag_tau_mu = false;
+	        for (SmartRefVector< LHCb::Particle >::const_iterator idaug2 = daughters.begin(); idaug2 != daughters.end() ; idaug2++){
+	        const LHCb::Particle* Part2 = *idaug2;
+		if (idaug2 != idau ){
+	        if((Part->charge())*(Part2->charge())>0) flag_OS=false;
+	        if((Part2->p())>(Part->p())) P_charge = false; 
+		if((Part->isBasicParticle())||(Part2->isBasicParticle())) flag_tau_mu=true;
+	        }
+	        }
+
+
+
+
+
+
       LHCb::Particle::ConstVector::const_iterator i_daug;
+//Int_t flag2(0);
       for(i_daug = Daughters_2.begin(); i_daug!=Daughters_2.end();++i_daug){
           const LHCb::Particle* part = *i_daug;
           if(! part ) {
@@ -215,83 +235,137 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
                 return StatusCode::FAILURE;
               }
             
-          
+            
             const LHCb::VertexBase *SV = mother->endVertex();
             
             if ( msgLevel(MSG::VERBOSE) ) verbose() << "Filling variables with particle " << part << endmsg;
             calcBDTValue( part, tracks, PV, SV ) ;
             if ( msgLevel(MSG::DEBUG) ) debug() << m_bdt1 << '\t'  << m_bdt2 << '\t' << m_bdt3 << endmsg ;
-
+            
             if ( msgLevel(MSG::DEBUG) ) debug()  << "after \"calcBDTValue\" "  << endmsg ;
-
-            const LHCb::Particle* part2 = NULL;
-            LHCb::Particle::ConstVector::const_iterator i_daug_2;
-            for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
-              const LHCb::Particle* part_2 = *(i_daug_2);
-              if((i_daug_2!=i_daug)&&(part_2->charge()== part->charge())) part2= *(i_daug_2);//
-              
-            }
             
-            
-          
-         
-            if(Part->charge()>0)
-              {
-                if ( msgLevel(MSG::VERBOSE) ) verbose() << "Part ID "<<Part->particleID().pid()<<endmsg;//
-                
-                if (part->charge()<0)
-                  {
-                    if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
-                    m_bdt1_TauP_piM = m_bdt1;
-                    m_bdt2_TauP_piM = m_bdt2;
-                    m_bdt3_TauP_piM = m_bdt3;
-                  }else {
-                  if(part->p() >= part2->p())
-                    { 
-                      if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
-                      m_bdt1_TauP_piP1 = m_bdt1;
-                      m_bdt2_TauP_piP1 = m_bdt2;
-                      m_bdt3_TauP_piP1 = m_bdt3;
-                    }else
-                    {
-                      m_bdt1_TauP_piP2 = m_bdt1;
-                      m_bdt2_TauP_piP2 = m_bdt2;
-                      m_bdt3_TauP_piP2 = m_bdt3;
-                    }
-                }
-                
-              }else
-              {
-                if ( msgLevel(MSG::VERBOSE) ) verbose() << "Part ID "<<Part->particleID().pid()<<endmsg;//
-
-                if (part->charge()>0)
-                  {
-                    if ( msgLevel(MSG::VERBOSE) ) verbose() << "part ID "<<part->particleID().pid()<<endmsg;//
-                 
-                    m_bdt1_TauM_piP = m_bdt1;
-                    m_bdt2_TauM_piP = m_bdt2;
-                    m_bdt3_TauM_piP = m_bdt3;
-                  }else {
-                    
-                     
-                     if(part->p() >= part2->p())
-                     { 
-                     m_bdt1_TauM_piM1 = m_bdt1;
-                     m_bdt2_TauM_piM1 = m_bdt2;
-                     m_bdt3_TauM_piM1 = m_bdt3;
-                     }else
-                     {
-                     m_bdt1_TauM_piM2 = m_bdt1;
-                     m_bdt2_TauM_piM2 = m_bdt2;
-                     m_bdt3_TauM_piM2 = m_bdt3;
-                     }
-                     }
-                          
+           // const LHCb::Particle* part2 = NULL;
+ 	const LHCb::Particle* part_2;
+	    LHCb::Particle::ConstVector::const_iterator i_daug_2;
+	bool flag_p=true;
+	bool flag_p_max=true;
+	bool flag_p_min=true;
+        if(Part->charge()==1||Part->charge()==-1){
+              for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end();++i_daug_2 ){//
+                part_2 = *(i_daug_2);
+                if((i_daug_2!=i_daug)&&(part_2->charge()== part->charge())&&(part->p()<part_2->p())) flag_p=false;// part2= *(i_daug_2);//
               }
+        }else if (Part->charge()==3||Part->charge()==-3){
+        for(i_daug_2=Daughters_2.begin(); i_daug_2!=Daughters_2.end()  ;i_daug_2++ ){//
+	part_2 = *(i_daug_2);
+	if(i_daug_2!=i_daug){
+	flag_p_max=flag_p_max&&(part->p()>part_2->p());
+        flag_p_min=flag_p_min&&(part->p()<=part_2->p());
+		}
+	      }
+        }
+            if(flag_OS==true||flag_tau_mu==true){
+		if(Part->charge()==1||Part->charge()==-1){
+			if(Part->charge()==1){
+				if(part->charge()<0){
+				m_bdt1_TauP_piM=m_bdt1;
+				m_bdt2_TauP_piM=m_bdt2;
+				m_bdt3_TauP_piM=m_bdt3;
+					}else if(flag_p){
+				m_bdt1_TauP_piP1=m_bdt1;
+				m_bdt2_TauP_piP1=m_bdt2;
+				m_bdt3_TauP_piP1=m_bdt3;
+						}else{
+				m_bdt1_TauP_piP2=m_bdt1;
+				m_bdt2_TauP_piP2=m_bdt2;
+				m_bdt3_TauP_piP2=m_bdt3;
+			   }
+				}else if(Part->charge()==-1){
+					if(part->charge()>0){
+				m_bdt1_TauM_piP=m_bdt1;
+				m_bdt2_TauM_piP=m_bdt2;
+				m_bdt3_TauM_piP=m_bdt3;
+					}else if(flag_p){
+				m_bdt1_TauM_piM1=m_bdt1;
+				m_bdt2_TauM_piM1=m_bdt2;
+				m_bdt3_TauM_piM1=m_bdt3;
+						}else{
+				m_bdt1_TauM_piM2=m_bdt1;
+				m_bdt2_TauM_piM2=m_bdt2;
+				m_bdt3_TauM_piM2=m_bdt3;
+				}
+			   }
+			}else if(Part->charge()==3||Part->charge()==-3){
+				if(Part->charge()==3){
+					if(flag_p_max==true){
+				m_bdt1_TauP_piP1=m_bdt1;
+				m_bdt2_TauP_piP1=m_bdt2;
+				m_bdt3_TauP_piP1=m_bdt3;
+    					}else if(flag_p_max==false&&flag_p_min==false){
+				m_bdt1_TauP_piP2=m_bdt1;
+				m_bdt2_TauP_piP2=m_bdt2;
+				m_bdt3_TauP_piP2=m_bdt3;
+					}else if (flag_p_min==true){
+				m_bdt1_TauP_piM=m_bdt1;
+				m_bdt2_TauP_piM=m_bdt2;
+				m_bdt3_TauP_piM=m_bdt3;
+					}
+				}else if (Part->charge()==-3){
+					if(flag_p_max==true){
+				m_bdt1_TauM_piM1=m_bdt1;
+				m_bdt2_TauM_piM1=m_bdt2;
+				m_bdt3_TauM_piM1=m_bdt3;
+				}else if(flag_p_max==false&&flag_p_min==false){
+				m_bdt1_TauM_piM2=m_bdt1;
+				m_bdt2_TauM_piM2=m_bdt2;
+				m_bdt3_TauM_piM2=m_bdt3;
+				}else if (flag_p_min==true){
+				m_bdt1_TauM_piP=m_bdt1;
+				m_bdt2_TauM_piP=m_bdt2;
+				m_bdt3_TauM_piP=m_bdt3;
+				}
+				}
+
+			}//if(Part->charge()==3||Part->charge()==-3)
+
+		}else if (flag_OS==false){//(flag_OS==true||flag_tau_mu==true)
+			if(P_charge==true){
+				if((part->charge()*Part->charge())<0){
+				m_bdt1_TauP_piM=m_bdt1;
+				m_bdt2_TauP_piM=m_bdt2;
+				m_bdt3_TauP_piM=m_bdt3;
+					}else if(flag_p){
+				m_bdt1_TauP_piP1=m_bdt1;
+				m_bdt2_TauP_piP1=m_bdt2;
+				m_bdt3_TauP_piP1=m_bdt3;
+						}else{
+				m_bdt1_TauP_piP2=m_bdt1;
+				m_bdt2_TauP_piP2=m_bdt2;
+				m_bdt3_TauP_piP2=m_bdt3;
+			   }
+				}else if(P_charge==false){
+					if((part->charge()*Part->charge())<0){
+				m_bdt1_TauM_piP=m_bdt1;
+				m_bdt2_TauM_piP=m_bdt2;
+				m_bdt3_TauM_piP=m_bdt3;
+					}else if(flag_p){
+				m_bdt1_TauM_piM1=m_bdt1;
+				m_bdt2_TauM_piM1=m_bdt2;
+				m_bdt3_TauM_piM1=m_bdt3;
+						}else{
+				m_bdt1_TauM_piM2=m_bdt1;
+				m_bdt2_TauM_piM2=m_bdt2;
+				m_bdt3_TauM_piM2=m_bdt3;
+				}
+			   }
+
+		}           
+            
+        
             
             
             
-          
+            
           }
       }
     }
@@ -299,18 +373,18 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
   
   
   
-
-
-
-
-
-
-
-
-
-
-
-
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
   m_map.clear();
   
@@ -341,16 +415,9 @@ StatusCode RelInfoBstautauTrackIsolationBDT::calculateRelatedInfo( const LHCb::P
     case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUETAUMPIM2 : value = m_bdt1_TauM_piM2 ; break;//
     case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUETAUMPIM2 : value = m_bdt2_TauM_piM2 ; break;//
     case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUETAUMPIM2 : value = m_bdt3_TauM_piM2 ; break;//
-
-
-
-
-
-
-
-
-
-
+      
+      
+      
       //   case RelatedInfoNamed::BSTAUTAUTRKISOBDTFIRSTVALUE : value = m_bdt1; break;
       //   case RelatedInfoNamed::BSTAUTAUTRKISOBDTSECONDVALUE : value = m_bdt2; break;
       //   case RelatedInfoNamed::BSTAUTAUTRKISOBDTTHIRDVALUE : value = m_bdt3; break;
@@ -379,13 +446,13 @@ std::string RelInfoBstautauTrackIsolationBDT::infoPath(void) {
 //=============================================================================
 void RelInfoBstautauTrackIsolationBDT::saveDecayParticles( const LHCb::Particle *top)
 {
-
+  
   // -- Get the daughters of the top particle
   const SmartRefVector< LHCb::Particle > & daughters = top->daughters();
-
+  
   // -- Fill all the daugthers in m_decayParticles
   for( SmartRefVector< LHCb::Particle >::const_iterator idau = daughters.begin() ; idau != daughters.end() ; ++idau){
-
+    
     // -- If the particle is stable, save it in the vector, or...
     if( (*idau)->isBasicParticle() ){
       if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
@@ -396,26 +463,26 @@ void RelInfoBstautauTrackIsolationBDT::saveDecayParticles( const LHCb::Particle 
       if ( msgLevel(MSG::DEBUG) ) debug() << "Filling particle with ID " << (*idau)->particleID().pid() << endmsg;
       saveDecayParticles( (*idau) );
     }
-
+    
   }
-
+  
 }
 
 //=============================================================================
 // Check if the track is already in the decay
 //=============================================================================
 bool RelInfoBstautauTrackIsolationBDT::isTrackInDecay(const LHCb::Track* track){
-
+  
   bool isInDecay = false;
-
+  
   for(  std::vector<const LHCb::Particle*>::iterator it = m_decayParticles.begin() ; it != m_decayParticles.end() ; ++it ){
-
+    
     const LHCb::ProtoParticle* proto = (*it)->proto();
     if(proto){
       const LHCb::Track* myTrack = proto->track();
-
+      
       if(myTrack){
-
+        
         if(myTrack == track){
           if ( msgLevel(MSG::DEBUG) ) debug() << "Track is in decay, skipping it" << endmsg;
           isInDecay = true;
@@ -448,36 +515,36 @@ bool RelInfoBstautauTrackIsolationBDT::calcBDTValue( const LHCb::Particle * part
   double svDistGeometric(0) ;
   int isolation11(0);
   double isolation1(0.);
-
+  
   LHCb::Particles::const_iterator tr_it, tr_it_end( tracks->end() ) ;
   for ( tr_it = tracks->begin() ; tr_it != tr_it_end ; ++tr_it )
-  {
-    const LHCb::Track * track = (* tr_it)->proto()->track() ;
-    //pointer comparison
-    //        if ( track == part->proto()->track() ) continue ;
-    if (isTrackInDecay(track)) continue ;
-
-    Gaudi::XYZVector trackMomentum = track->momentum();
-    Gaudi::XYZPoint trackPosition = track->position();
-    //exception handling?
-    Gaudi::XYZVector partMomentum = part->proto()->track()->momentum();
-    Gaudi::XYZPoint partPosition = part->proto()->track()->position();
-
-    // -- BDT takes seven variables
-    //
-    angle         = enclosedAngle(trackMomentum, partMomentum);
-    Gaudi::XYZPoint perpFoot_track, perpFoot_daughter;
-    Gaudi::XYZPoint vertex_mu_track;
-    bool failed = false;
-    // Get Mu + Track "vertex"
-    getPerpFeet(  trackPosition, trackMomentum, partPosition, partMomentum,
-                  perpFoot_track, perpFoot_daughter, vertex_mu_track, failed);
-    if(failed && msgLevel(MSG::DEBUG) ) debug() << "Vertex calculation ( perpendicular feet ) failed: denom == 0!" << endmsg;
-    // FC
-    fc = calcFC(  trackMomentum, partMomentum, vertex_mu_track, PV);
-    if(fc==-1 && msgLevel(MSG::DEBUG) ) debug() << "FC calculation failed: fc_denom == 0!" << endmsg;
-    // DOCA
-    StatusCode sc_doca  = m_dist->distance(track,part->proto()->track(),doca);
+    {
+      const LHCb::Track * track = (* tr_it)->proto()->track() ;
+      //pointer comparison
+      //        if ( track == part->proto()->track() ) continue ;
+      if (isTrackInDecay(track)) continue ;
+      
+      Gaudi::XYZVector trackMomentum = track->momentum();
+      Gaudi::XYZPoint trackPosition = track->position();
+      //exception handling?
+      Gaudi::XYZVector partMomentum = part->proto()->track()->momentum();
+      Gaudi::XYZPoint partPosition = part->proto()->track()->position();
+      
+      // -- BDT takes seven variables
+      //
+      angle         = enclosedAngle(trackMomentum, partMomentum);
+      Gaudi::XYZPoint perpFoot_track, perpFoot_daughter;
+      Gaudi::XYZPoint vertex_mu_track;
+      bool failed = false;
+      // Get Mu + Track "vertex"
+      getPerpFeet(  trackPosition, trackMomentum, partPosition, partMomentum,
+                    perpFoot_track, perpFoot_daughter, vertex_mu_track, failed);
+      if(failed && msgLevel(MSG::DEBUG) ) debug() << "Vertex calculation ( perpendicular feet ) failed: denom == 0!" << endmsg;
+      // FC
+      fc = calcFC(  trackMomentum, partMomentum, vertex_mu_track, PV);
+      if(fc==-1 && msgLevel(MSG::DEBUG) ) debug() << "FC calculation failed: fc_denom == 0!" << endmsg;
+      // DOCA
+      StatusCode sc_doca  = m_dist->distance(track,part->proto()->track(),doca);
     if(!sc_doca)  return StatusCode(sc_doca);
     double pvDist,pvDistChi2 ;
     StatusCode sc_pv    = m_dist->distance(PV, vertex_mu_track, pvDist, pvDistChi2);
