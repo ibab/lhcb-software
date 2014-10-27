@@ -152,13 +152,6 @@ namespace LoKi
     // Should be true for a FullEventCut
     bool m_particleTypes;
     
-    // Cut to find out if a particle comes from a b quark. 
-    // Do not require hadron, since evt gen will not be applied
-    LoKi::Types::GCut m_cut_from_b = ( LoKi::Cuts::GNINTREE( LoKi::Cuts::GBEAUTY , HepMC::ancestors) > 0 );
-
-    //Cut to define particles with no descendants, as input for the jets
-    LoKi::Types::GCut m_no_daughters = ( LoKi::Cuts::GNINTREE( LoKi::Cuts::GVALID , HepMC::descendants) == 0 );
-    
     /// the actual LoKi code 
     LoKi::Types::GCutVal   m_cutval ;  // the actual code 
     // =========================================================================

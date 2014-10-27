@@ -4,6 +4,10 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-10-27 - Xabier Cid Vidal
+  - Correct problem in LoKi for InvariantMassQQMCJets tool, that was breaking the nightlies for Gauss v45
+
+
 ! 2014-10-20 - Sean Benson
  - Added PhotonDaughtersInLHCb tool, to make sure photon daughters of the B
  are in the acceptance.

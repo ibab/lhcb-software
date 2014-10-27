@@ -268,8 +268,14 @@ std::vector<fastjet::PseudoJet> LoKi::InvariantMassQQMCJets::buildMCJets(const H
   // input container of "particles"
   std::vector<fastjet::PseudoJet> inputs ;
 
-  // create cut (save only stable particles)
+  // create cuts
   LoKi::Types::GCut cut = LoKi::Cuts::GVALID ;
+  
+  //Cut to define particles with no descendants, as input for the jets
+  LoKi::Types::GCut m_no_daughters = m_no_daughters = ( LoKi::Cuts::GNINTREE( LoKi::Cuts::GVALID , HepMC::descendants) == 0 );
+  // Cut to find out if a particle comes from a b quark. 
+  LoKi::Types::GCut m_cut_from_b = ( LoKi::Cuts::GNINTREE( LoKi::Cuts::GBEAUTY , HepMC::ancestors) > 0 );
+
   // Give some default values to the types if not defined. 
   // This will be default false, since we are dealing with events before evtGen, 
   // so can not constraint ourselves to LHCb stable particles
@@ -287,7 +293,7 @@ std::vector<fastjet::PseudoJet> LoKi::InvariantMassQQMCJets::buildMCJets(const H
     cut = (m_no_daughters && cut);
   }
   else cut = m_no_daughters;
-  
+
   bool is_from_b = false;
   int my_check_counter1 = 0;
   int my_check_counter2 = 0;
