@@ -127,7 +127,7 @@ def _ras_getitem_ ( self , aname ) :
 
 # =============================================================================
 ## check the presence of variable in set 
-def _ras_contains_ ( self , ename ) :
+def _ras_contains_ ( self , aname ) :
     """
     Check the presence of variable in set 
     """
@@ -169,11 +169,43 @@ def _rds_getitem_ ( self , i ) :
         return self.get ( i )
     raise IndexError 
 
+# =============================================================================
+## Get variables in form of RooArgList 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-03-31
+def _rds_vlist_ ( self ) :
+    """
+    Get variables in form of RooArgList 
+    """
+    vlst     = ROOT.RooArgList()
+    vset     = dataset.get()
+    for v in vset : vlst.add ( v )
+    #
+    return vlst
+
+# =============================================================================
+## check the presence of variable with given name in dataset 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date   2013-03-31
+def _rds_contains_ ( self , aname ) :
+    """
+    Check the presence of variable in dataset
+    
+    >>> if 'mass' in dataset : print 'ok!'
+    """
+    vset = self.get()
+    return aname in vset 
+
 ## some decoration over RooDataSet 
 ROOT.RooDataSet . __len__       = lambda s   : s.numEntries()
 ROOT.RooDataSet . __iter__      = _rds_iter_ 
 ROOT.RooDataSet . __getitem__   = _rds_getitem_ 
 ROOT.RooDataSet . __nonzero__   = lambda s   : 0 != len ( s ) 
+ROOT.RooDataSet . __contains__  = _rds_contains_
+ROOT.RooDataSet . varlist       = _rds_vlist_
+ROOT.RooDataSet . varlst        = _rds_vlist_
+ROOT.RooDataSet . vlist         = _rds_vlist_
+ROOT.RooDataSet . vlst          = _rds_vlist_
         
 # =============================================================================
 ## ``easy'' print of RooFitResult
@@ -971,6 +1003,26 @@ ROOT.RooDataSet.__getattr__ = _ds_getattr_
 ROOT.RooDataHist.__repr__   = _ds_print_
 ROOT.RooDataHist.__len__    = lambda s : s.numEntries() 
 
+# =============================================================================
+## add variable to dataset 
+def _rds_addVar_ ( dataset , vname , formula ) : 
+    """
+    Add/calculate variable to RooDataSet
+
+    >>> dataset.addVar ( 'ratio' , 'pt/pz' )
+    
+    """
+    vlst     = ROOT.RooArgList()
+    vset     = dataset.get()
+    for   v     in vset : vlst.add ( v )
+    #
+    vcol     = ROOT.RooFormulaVar ( vname , formula , formula , vlst )
+    dataset.addColumn ( vcol )
+    #
+    return dataset 
+
+## 
+ROOT.RooDataSet.addVar = _rds_addVar_
 
 # =============================================================================
 ## make weighted data set form unweighted dataset
@@ -983,7 +1035,7 @@ ROOT.RooDataHist.__len__    = lambda s : s.numEntries()
 #  @param cuts     optional cuts to be applied 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date   2013-07-06
-def _rds_makeWeighted_ ( dataset , wvarname , varset = None , cuts = '' ) :
+def _rds_makeWeighted_ ( dataset , wvarname , varset = None , cuts = '' , vname = '' ) :
     """
     make weighted data set form unweighted dataset
     
@@ -994,17 +1046,35 @@ def _rds_makeWeighted_ ( dataset , wvarname , varset = None , cuts = '' ) :
     if dataset.isWeighted () : 
         logger.warning ("Dataset '%s/%s' is already weighted!" % ( dataset.GetName  () ,
                                                                    dataset.GetTitle () ) ) 
+
+    ##
+    formula =  0 <= wvarname.find ( '(' ) and wvarname.find( '(' ) < wvarname.find ( ')' )
+    formula = formula or 0 <  wvarname.find ( '*' ) 
+    formula = formula or 0 <  wvarname.find ( '/' )     
+    formula = formula or 0 <= wvarname.find ( '+' ) 
+    formula = formula or 0 <= wvarname.find ( '-' )     
+    formula = formula or 0 <  wvarname.find ( '&' )     
+    formula = formula or 0 <  wvarname.find ( '|' )     
+
+    if formula :
+        wname    = 'W' or vname 
+        while wname in dataset : wname += 'W'
+        dataset.addVar ( wname , wvarname ) 
+        wvarname = wname  
         
-    #
+    if not varset :
+        varset = dataset.get()  
+   
     from Ostap.PyRoUts import dsID
     ## make weighted dataset 
-    return ROOT.RooDataSet ( dsID()                   ,
-                             dataset.GetTitle()       ,
-                             dataset                  ,
-                             varset or dataset.get()  , 
-                             cuts                     ,
-                             wvarname                 )
+    return ROOT.RooDataSet ( dsID()             ,
+                             dataset.GetTitle() ,
+                             dataset            ,
+                             varset             , 
+                             cuts               ,
+                             wvarname           )
 
+## 
 ROOT.RooDataSet.makeWeighted = _rds_makeWeighted_
 
 
