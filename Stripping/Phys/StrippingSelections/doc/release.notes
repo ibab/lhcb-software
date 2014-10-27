@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-27 - Roberta Cardinale (for Yury Shcheglov)
+ - Updated StrippingXic2HHH with the correct cone variables
+
 ! 2014-10-27 - Thomas Blake
  - Updated K1 lines in B2XMuMu to avoid Max candidate issues.
 
