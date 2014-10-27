@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-27 - Thomas Blake
+ - Updated disctionaries for RD WG (XMuMu changes to a1/K1/K2 lines).
+
 ! 2014-10-27 - Stefano Perazzini
  - Updated dbases for Stripping21(r1)
 

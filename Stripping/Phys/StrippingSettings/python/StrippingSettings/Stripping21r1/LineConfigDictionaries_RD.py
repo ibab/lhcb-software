@@ -50,13 +50,14 @@ B2XMuMu = {
           , 'LongLivedPT'        : 0.0         #  MeV , used to be 500.0 MeV
           , 'LongLivedTau'        : 2          #  ps
 
-          # A1 cuts
+           # A1 cuts
           , 'A1_Comb_MassLow'  :    0.0
-          , 'A1_Comb_MassHigh' : 6050.0
+          , 'A1_Comb_MassHigh' : 5550.0
           , 'A1_MassLow'       :    0.0
-          , 'A1_MassHigh'      : 6000.0
+          , 'A1_MassHigh'      : 5500.0
           , 'A1_MinIPCHI2'     :    4.0
           , 'A1_FlightChi2'    :   25.0
+          , 'A1_VtxChi2'       :   10.0
           , 'A1_Dau_MaxIPCHI2' :    9.0
           # From Bd2KstarMuMu line
           ,'UseNoPIDsHadrons'          : True,
@@ -91,9 +92,11 @@ B2XMuMu = {
 
           #K1->OmegaK cuts
           'K12OmegaK_MassLow'   :   300, #MeV
-          'K12OmegaK_MassHigh'  :  2500, #MeV
+          'K12OmegaK_MassHigh'  :  2100, #MeV
           'K12OmegaK_CombMassLow'   :   400, #MeV
-          'K12OmegaK_CombMassHigh'  :  2400, #MeV
+          'K12OmegaK_CombMassHigh'  :  2000, #MeV
+          'K12OmegaK_VtxChi2'   : 10 ,
+          
 
           #JPsi (dimu) cuts
           'Dimu_FlightChi2'     :   9.0,
