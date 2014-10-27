@@ -189,7 +189,8 @@ class StrippingBs2gammagammaConf(LineBuilder):
 				, MotherCut      = BsGG_MC_double)
                 from Configurables import OfflineVertexFitter
                 _Bs2gammagamma_double.addTool(OfflineVertexFitter)
-                _Bs2gammagamma_double.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+                #_Bs2gammagamma_double.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+                _Bs2gammagamma_double.ParticleCombiners.update( { "" : "OfflineVertexFitter"} )
 		
                 Bs2gammagamma_double = Selection(
 				name+"_double",

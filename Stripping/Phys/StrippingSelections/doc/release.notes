@@ -5,6 +5,10 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-10-27 - Stefano Perazzini
+ - Explicitly set the ParticleCombiners in StrippingBs2gammagamma 
+   "double" lines
+
+! 2014-10-27 - Stefano Perazzini
  - Removed MomentumCombiner from Beauty2Charm_DBuilder.py and 
    Beauty2Charm_HHBuilder.py
 
