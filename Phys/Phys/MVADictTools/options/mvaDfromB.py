@@ -71,8 +71,8 @@ def get_preambulo():
     preambulo = [
         'fitVeloChi2 = TINFO(LHCb.Track.FitVeloChi2,-1)',
         'fitVeloNdof = TINFO(LHCb.Track.FitVeloNDoF,-1)',
-        'fitTChi2 = TINFO(LHCb.Track.FitTNDoF,-1)',
-        'fitTNdof = TINFO(LHCb.Track.FitTChi2,-1)',
+        'fitTChi2 = TINFO(LHCb.Track.FitTChi2,-1)',
+        'fitTNdof = TINFO(LHCb.Track.FitTNDoF,-1)',
     ]
     return preambulo
 

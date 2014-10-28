@@ -4,6 +4,10 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+! 2014-10-28 - Sam Hall
+ - Corrected mistake in options/mvaDFromB example
+ - Lines 74/75
+
 ! 2014-10-22 - Marco Clemencic
  - Uncommented installation of Python modules in CMake.
 
@@ -40,7 +44,7 @@
  - Add a workaround to the requirements file to fix missing GSL symbols
    during linking.
  - Add explicit usage for LoKiArrayFunctors and DaVinciInterfaces.
-   Needed to make sure compilation is done in the correct order when all 
+   Needed to make sure compilation is done in the correct order when all
    packages are in the same project (such as for branch releases).
 
 ! 2014-01-20 - Marco Clemencic
