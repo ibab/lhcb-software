@@ -54,7 +54,6 @@ from Configurables import TrackEventFitter, TrackMasterFitter
 from Configurables import TrackKalmanFilter, TrackMasterExtrapolator
 #from TrackFitter.ConfiguredFitters import ConfiguredFastFitter
 #from Configurables import TrackCloneFinder
-from Configurables import DecodeVeloRawBuffer
 
 from SelPy.utils import ( UniquelyNamedObject,
                           ClonableObject,
@@ -356,8 +355,7 @@ def trackingPreFilter(name, prefilter):
 
    #TODO: apparently FastVelo is now (april 2012) run with fixes in the production which don't neccessarily apply to the stripping...
    alg = GaudiSequencer("VeloMuonTrackingFor"+name,
-                         Members = [ DecodeVeloRawBuffer(name+"VeloDecoding",DecodeToVeloLiteClusters=True,DecodeToVeloClusters=True),
-			         FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/Track/Velo"),
+                         Members = [ FastVeloTracking(name+"FastVelo",OutputTracksName="Rec/Track/Velo"),
 				 preve, 
 				 StandaloneMuonRec(name+"MuonStandalone"), VeloMuonBuilder1])
 
