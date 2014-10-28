@@ -179,7 +179,7 @@ class StrippingLb2L0GammaConf(LineBuilder):
         lambda_b_cnv_combine = CombineParticles("Lambdab_Conv_Combine")
         lambda_b_cnv_combine.DecayDescriptor = "[Lambda_b0 -> Lambda0 gamma]cc"
         lambda_b_cnv_combine.DaughtersCuts = {'Lambda0': 'ALL', 'gamma': 'ALL'}
-        lambda_b_combine.ParticleCombiners = {"": "OfflineVertexFitter:PUBLIC"}
+        lambda_b_cnv_combine.ParticleCombiners = {"": "OfflineVertexFitter:PUBLIC"}
         lambda_b_cnv_combine.CombinationCut = "(ADAMASS('Lambda_b0') < 1.5*%(Lambdab_MassWindow)s*MeV)" % config
         lambda_b_cnv_combine.MotherCut = """(HASVERTEX) & (VFASPF(VCHI2/VDOF)<%(Lambdab_VtxChi2_Max)s) &
                                             (PT > %(Lambdab_Pt_Min)s*MeV) &

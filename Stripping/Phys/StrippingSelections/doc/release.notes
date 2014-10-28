@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-28 Pablo Ruiz Valls
+  - Typo fix in Lb2L0Gamma converted line
+
 ! 2014-10-28 Roberta Cardinale
 	- Small fix to StrippingXic2HHH
 
