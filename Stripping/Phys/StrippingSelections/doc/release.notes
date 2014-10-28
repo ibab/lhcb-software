@@ -5,6 +5,9 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-10-28 Roberta Cardinale
+	- Small fix to StrippingXic2HHH
+
+! 2014-10-28 Roberta Cardinale
  - OfflineVertexFitter for StrippingChiCJPsiGammaConv
  - Fix to cone variables for StrippingXic2HHH
 
