@@ -40,7 +40,7 @@ config =  {
     }
 
 from Gaudi.Configuration import *
-from GaudiConfUtils.ConfigurableGenerators import FilterDesktop, CombineParticles
+from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 from PhysSelPython.Wrappers import Selection, DataOnDemand
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingUtils.Utils import LineBuilder
@@ -210,7 +210,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
         
         MuMuCut = "(MM > %(MuMuMinMass)s *GeV) & (MM < %(MuMuMaxMass)s *GeV) & (VFASPF(VCHI2PDOF)< %(MuMuVCHI2PDOF)s) & (PT > %(MuMuPT)s *GeV)" % locals()
         
-        _MuMu = FilterDesktop( Code = MuonCut + " & " + MuMuCut  )
+        _MuMu = FilterDesktop( name+"FilterChiCMuMu", Code = MuonCut + " & " + MuMuCut  )
         
         return Selection( name + "_SelMuMu",
                           Algorithm = _MuMu,
@@ -232,7 +232,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
         EleCut = " (MINTREE('e+'==ABSID,PIDe)> %(eDLLe)s)" % locals()
         GammaCut = " (MM < %(GammaEEMass)s *MeV) & ( PT > %(GammaEEPt)s *MeV) " % locals()
 
-        _Gamma = FilterDesktop( Code = EleCut + " & " + GammaCut  )
+        _Gamma = FilterDesktop( name+"FilterChiCGamma", Code = EleCut + " & " + GammaCut  )
         
         return Selection( name + "_SelGamma",
                           Algorithm = _Gamma,
@@ -253,7 +253,7 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
         EleCut = " (MINTREE('e+'==ABSID,PIDe)> %(eDLLe)s)" % locals()
         GammaCut = " (MM < %(GammaEEMass)s) & ( PT > %(GammaEEPt)s) " % locals()
 
-        _Gamma = FilterDesktop( Code = EleCut + " & " + GammaCut  )
+        _Gamma = FilterDesktop( name="FilterChiCSymGamma", Code = EleCut + " & " + GammaCut  )
         
         return Selection( name + "_SelSymGamma",
                           Algorithm = _Gamma,
@@ -270,11 +270,13 @@ class StrippingChiCJPsiGammaConvConf(LineBuilder):
 
         combCut   = "(AM > %(mMinChiCRaw)s *GeV) & (AM < %(mMaxChiCRaw)s*GeV)"  % locals()
         motherCut = "(MM > %(mMinChiCFit)s *GeV) & (MM < %(mMaxChiCFit)s*GeV)"  % locals()
-
-        ChiC                  = CombineParticles(DecayDescriptor  = "chi_c1(1P) -> J/psi(1S) gamma",
-                                                 CombinationCut   = combCut ,
-                                                 MotherCut        = motherCut)
-
+        
+        ChiC                  = CombineParticles("ChiC"+name)
+        ChiC.DecayDescriptor  = "chi_c1(1P) -> J/psi(1S) gamma"
+        ChiC.CombinationCut   = combCut
+        ChiC.MotherCut        = motherCut
+        ChiC.ParticleCombiners.update( { "" : "OfflineVertexFitter"}  )
+        
         ChiCSel = Selection(name+"_ChiCSel", Algorithm = ChiC, RequiredSelections = [inputSelJPsi, inputSelGamma])
 
         return ChiCSel

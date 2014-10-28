@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-10-28 Roberta Cardinale
+ - OfflineVertexFitter for StrippingChiCJPsiGammaConv
+ - Fix to cone variables for StrippingXic2HHH
+
 ! 2014-10-28 Pablo Ruiz Valls
  - forced OVF in converted photon lines.
 

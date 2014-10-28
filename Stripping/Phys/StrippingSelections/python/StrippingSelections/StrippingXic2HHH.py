@@ -77,7 +77,10 @@ class StrippingXic2HHHConf(LineBuilder):
                           RelatedInfoTools = None ) : # RelatedInfoTools to be included  
 
 
-        if (prescale > 0) and (postscale > 0) : 
+        if (prescale > 0) and (postscale > 0) :
+            for info in RelatedInfoTools:
+                info["TopSelection"]=selection
+            print RelatedInfoTools
             line = StrippingLine( name,
                                   prescale        = prescale,
                                   ODIN            = ODIN,
