@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-10-28 - Gloria Corti
+ - Modifiy options for 2011 and 2012 to pick up the same dbase tags as in
+   production
+ - Introduce new options for 2015
+
 !========================== Gauss v48r0 2014-10-08 ===========================
 ! 2014-10-08 - Gloria Corti
  - Change major version to reflect changes in generators
