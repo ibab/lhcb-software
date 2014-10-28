@@ -1030,6 +1030,7 @@ class IOExtension(object):
                        'SIM'   : '',
                        'DST'   : '',
                        'XDST'  : '',
+                       'LDST'  : '',
                        'MDST'  : '',
                        'FMDST'  : '',
                        'SDST'  : 'Warning',
