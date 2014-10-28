@@ -9,6 +9,15 @@
 #
 # =========================================================================
 #
-#export LD_LIBRARY_PATH=/home/beat/cmtuser/myOnline/InstallArea/${CMTCONFIG}/lib:$LD_LIBRARY_PATH
-
-exec -a ${UTGID} ${Class1_task} -opts=../options/${TASK_TYPE}.opts
+act=${RUN_TYPE}
+if [ "$act" = "FullTracker" ]; then
+  . /group/online/dataflow/cmtuser/Alignment/OnlAlignmentSys/cmt/setup.x86_64-slc6-gcc48-dbg.vars
+  cd ${FARMCONFIGROOT}/job
+  export PYTHONPATH=${ONLALIGNMENTSYSROOT}/python:$PYTHONPATH
+  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; importOptions('${ONLALIGNMENTSYSROOT}/python/TrAligIterator.py');"
+elif [ "$act" = "RichMirror" ]; then
+  . /group/online/dataflow/cmtuser/Panoptes/OnlPanoptesSys/cmt/setup.x86_64-slc6-gcc48-dbg.vars
+  cd ${FARMCONFIGROOT}/job
+  export PYTHONPATH=${ONLPANOPTESSYSROOT}/python:$PYTHONPATH
+  exec -a ${UTGID} ${Class1_task} libGaudiOnline.so OnlineTask -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts -opt=command="import Gaudi,GaudiKernel.ProcessJobOptions; from Gaudi.Configuration import importOptions; GaudiKernel.ProcessJobOptions.printing_level=999; importOptions('${ONLPANOPTESSYSROOT}/python/MirrorIterator.py');"
+fi

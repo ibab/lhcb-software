@@ -3,11 +3,10 @@
 #include "$INFO_OPTIONS"
 
 ApplicationMgr.ExtSvc               += {
-					"MonitorSvc",
-          "IncidentSvc"
+          "IncidentSvc",
                                        };
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
-ApplicationMgr.Runable               = "LHCb::AlignDrv/aaa";
+ApplicationMgr.Runable               = "LHCb::AlignDrv/AlignDrv";
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 1;  // 1 of running as daemon
@@ -19,10 +18,10 @@ HistogramPersistencySvc.Warnings   = false;
 
 MonitorSvc.CounterUpdateInterval   = -1;
 
-aaa.PartitionName     = @OnlineEnv.PartitionName;
-aaa.FitterClass       = "LHCb::Fitter";
-aaa.FitterName        = "bbb";
-aaa.bbb.ParamFileName     = "/home/beat/aligparams.dat";
-aaa.bbb.CounterNames      = {"/Chi2"};
-aaa.bbb.CounterDNS        = "mona08";
-aaa.bbb.CounterTask       = "LHCbA_AligWrk_00";
+AlignDrv.PartitionName     = @OnlineEnv.PartitionName;
+AlignDrv.FitterClass       = "AlignOnlineIterator";
+AlignDrv.FitterName        = "AlIterator";
+AlignDrv.AlIterator.PartitionName     = @OnlineEnv.PartitionName;
+AlignDrv.AlIterator.ASDDir      = "/group/online/alignment/EscherOut";
+AlignDrv.AlIterator.ASDFilePattern        = "_Escher.out";
+AlignDrv.AlIterator.OutputLevel      =2;
