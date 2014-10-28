@@ -577,17 +577,17 @@ class Beauty2XGammaConf(LineBuilder) :
         
 
         B2XG3piCNVName = self.name + "3pi_wCNV_"
-        self.RadiativeB2XG3piCNV = makeB2B2XG3piGamma ( B2XG3piCNVName,
-                                                        triTrkList=self.TriTrackListVanya,
-                                                        photons=self.ConvPhoton,
-                                                        MinPTCut = config['B2XGBMinPT'],
-                                                        MinMassCut = config['B2XGBMinM3pi'],
-                                                        MaxMassCut = config['B2XGBMaxM'],
-                                                        MaxCorrMCut = config['B2XGBMaxCorrM'],
-                                                        VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
-                                                        MinSumPtCut = config['B2XGBSumPtMin'],
-                                                        MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
-                                                        VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
+        self.RadiativeB2XG3piCNV = makeB2B2XG3piGammaCNV ( B2XG3piCNVName,
+                                                           triTrkList=self.TriTrackListVanya,
+                                                           photons=self.ConvPhoton,
+                                                           MinPTCut = config['B2XGBMinPT'],
+                                                           MinMassCut = config['B2XGBMinM3pi'],
+                                                           MaxMassCut = config['B2XGBMaxM'],
+                                                           MaxCorrMCut = config['B2XGBMaxCorrM'],
+                                                           VtxChi2DOFCut = config['B2XGBVtxChi2DOF'],
+                                                           MinSumPtCut = config['B2XGBSumPtMin'],
+                                                           MinBPVDIRACut = config['B2XGBMinBPVDIRA'],
+                                                           VtxMaxIPChi2Cut = config['B2XGBVtxMaxIPChi2'])
 
         self.B2XG3piCNVLine = StrippingLine( B2XG3piCNVName+"Line",
                                              prescale = config['B2XG3piCNVPrescale'],
@@ -1424,7 +1424,9 @@ def makeB2B2XG2piGammaCNV( name,
 
     _combineB2B2XG2pi = CombineParticles( DecayDescriptor="B0 -> rho(770)0 gamma",
                                           MotherCut = _B2B2XG2piPostVertexCuts,
-                                          CombinationCut = _B2B2XG2piPreVertexCuts )
+                                          CombinationCut = _B2B2XG2piPreVertexCuts,
+                                          ParticleCombiners = {"": "OfflineVertexFitter:PUBLIC"}
+                                           )
 
     return Selection(name,
                      Algorithm = _combineB2B2XG2pi,
@@ -1495,6 +1497,38 @@ def makeB2B2XG3piGamma( name,
                      Algorithm = _combineB2B2XG3pi,
                      RequiredSelections = [ triTrkList, photons ] )
 
+def makeB2B2XG3piGammaCNV( name,
+                           triTrkList,
+                           photons,
+                           MinPTCut,
+                           MinMassCut,
+                           MaxMassCut,
+                           MaxCorrMCut,
+                           VtxChi2DOFCut,
+                           MinSumPtCut,
+                           MinBPVDIRACut,
+                           VtxMaxIPChi2Cut) :
+    """
+    Charmless B2XG to 3pi selection with missing mass
+    """
+    
+    _B2B2XG3piPreVertexCuts = "in_range( %(MinMassCut)s ,AM, %(MaxMassCut)s )" %locals()
+    _B2B2XG3piPreVertexCuts += " & (ASUM(PT) > %(MinSumPtCut)s )"%locals()
+    # ,( (ID=='K_1(1270)+') | (ID=='gamma')),0.0)) > %(MinSumPtCut)s )"%locals()
+    
+    _B2B2XG3piPostVertexCuts = "(HASVERTEX) & (VFASPF(VCHI2/VDOF) < %(VtxChi2DOFCut)s ) " %locals()
+    _B2B2XG3piPostVertexCuts += " & (BPVIPCHI2() < %(VtxMaxIPChi2Cut)s )" %locals()
+    _B2B2XG3piPostVertexCuts += " & (BPVDIRA > %(MinBPVDIRACut)s)"%locals()
+    
+    _combineB2B2XG3pi = CombineParticles( DecayDescriptor="[B+ -> K_1(1270)+ gamma]cc",
+                                          MotherCut = _B2B2XG3piPostVertexCuts,
+                                          CombinationCut = _B2B2XG3piPreVertexCuts,
+                                          ParticleCombiners = {"": "OfflineVertexFitter:PUBLIC"}
+                                          )
+    
+    return Selection(name,
+                     Algorithm = _combineB2B2XG3pi,
+                     RequiredSelections = [ triTrkList, photons ] )
 
 def makeB2B2XG2piKsGamma( name,
                           triTrkList,
