@@ -37,7 +37,8 @@ class CommonParticlesArchiveConf ( object ) :
         # To Do - Find a way to have only one version of this dict.
         duplicate_strippings = { "Stripping20r1p1" : "Stripping20r0p1",
                                  "Stripping20r1p2" : "Stripping20r0p2",
-                                 "Stripping20r1p3" : "Stripping20r0p3" }
+                                 "Stripping20r1p3" : "Stripping20r0p3",
+				 "Stripping21r1"   : "Stripping21" }
         stripName = stripping.capitalize()
         if stripName in duplicate_strippings.keys() :
             stripName = duplicate_strippings[stripName]
