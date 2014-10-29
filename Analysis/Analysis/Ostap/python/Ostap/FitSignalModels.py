@@ -1067,16 +1067,16 @@ class Flatte_pdf(MASS) :
     """
     Flatte function to describe dipion system near dikaon threshold
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn       = None  ,
-                   mx       = None  ,
-                   mass     = None  ,
-                   m0_980   = None  ,    ## mass  of f0(980) resonance
-                   m0g1     = 165   ,    ## m0(f0(980))*gamma_1
-                   g2og1    = 4.21  ,    ## gamma2/gamma1 
-                   mKaon    = 493.7 ,    ## kaon mass 
-                   mPion    = 139.6 ) :  ## pion mass 
+    def __init__ ( self              ,
+                   name              ,
+                   mn       = None   ,
+                   mx       = None   ,
+                   mass     = None   ,
+                   m0_980   = None   ,    ## mass  of f0(980) resonance
+                   m0g1     = 165000 ,    ## m0(f0(980))*gamma_1 
+                   g2og1    = 4.21   ,    ## gamma2/gamma1 
+                   mKaon    = 493.7  ,    ## kaon mass 
+                   mPion    = 139.6  ) :  ## pion mass 
         
         #
         ## initialize the base
@@ -1142,27 +1142,25 @@ class Flatte2_pdf(Flatte_pdf) :
     """
     Flatte function to describe dipion system near dikaon threshold
     """
-    def __init__ ( self             ,
-                   name             ,
-                   mn       = None  ,
-                   mx       = None  ,
-                   mass     = None  ,
-                   m0_980   = None  ,    ## mass  of f0(980) resonance
-                   m0g1     = 165   ,    ## m0(f0(980))*gamma_1
-                   g2og1    = 4.21  ,    ## gamma2/gamma1 
-                   mKaon    = 493.7 ,    ## kaon mass 
-                   mPion    = 139.6 ) :  ## pion mass 
-
+    def __init__ ( self              ,
+                   name              ,
+                   mn       = None   ,
+                   mx       = None   ,
+                   mass     = None   ,
+                   m0_980   = None   ,    ## mass  of f0(980) resonance
+                   m0g1     = 165000 ,    ## m0(f0(980))*gamma_1
+                   g2og1    = 4.21   ,    ## gamma2/gamma1 
+                   mKaon    = 493.7  ,    ## kaon mass 
+                   mPion    = 139.6  ) :  ## pion mass
         
         #
         ## initialize the base
         # 
         Flatte_pdf.__init__  ( self , name , mn , mx ,
-                               fixMass  ,
-                               fixM0G1  ,
-                               fixG2oG1 ,
                                mass     ,
-                               m0_980   , m0g1 , g2og1 ,
+                               m0_980   ,
+                               m0g1     ,
+                               g2og1    , 
                                mKaon    , mPion )
         
         #
