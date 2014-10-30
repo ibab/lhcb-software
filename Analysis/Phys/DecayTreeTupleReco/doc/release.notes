@@ -4,6 +4,11 @@
 ! Purpose     : Reconstruction related tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleReco v1r4p1 2014-10-30 =========================
+
+! 2014-10-30 - Chris Jones
+ - Fix an ifdef typo
+
 !========================= DecayTreeTupleReco v1r4 2013-12-18 =========================
 
 ! 2013-11-05 - Francesco Dettori
