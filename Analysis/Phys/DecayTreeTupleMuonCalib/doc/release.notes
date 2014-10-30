@@ -4,12 +4,15 @@
 ! Purpose     : tuple tools for Muon PID calibration
 !-----------------------------------------------------------------------------
 
-!========================= DecayTreeTupleMuonCalib v1r2p1 2013-06-13 =========================
+!========================= DecayTreeTupleMuonCalib v1r3 2014-10-30 =========================
+
 ! 2014-08-28 - Ricardo Vazquez Gomez
  - All hits stored only for particle lab2 in the lab frame. 
 
 ! 2014-08-27 - Ricardo Vazquez Gomez
  - Add the possibility to store all the hits of the muon system. 
+
+!========================= DecayTreeTupleMuonCalib v1r2p1 2013-06-13 =========================
 
 ! 2013-05-17 - Chris Jones
  - Fix clang warning for variable self-assignment
