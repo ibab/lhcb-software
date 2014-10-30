@@ -5,6 +5,8 @@
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiFitters v4r12 2014-10-30 =========================
+
 ! 2014-10-23 - Vanya Belyaev
  - ParticleClassificator:  
      add merged (=="stable") pi0 into list of "di-gamma-like" particles 
