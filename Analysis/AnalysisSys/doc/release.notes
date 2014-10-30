@@ -3,6 +3,93 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v13r1>2014-10-30 Analysis v13r1</A></H1><PRE>
+Production release, built against Phys v19r2.
+
+- Packages Added :-
+   TeslaTools, DaVinciAngleCalculators
+
+- Packages Removed :-
+   PyPAW
+
+- Packages Updated :-
+   Ostap, MicroDSTBase, MicroDSTTools, AnalysisPython, DSTWriters,
+   DaVinciMCTools, DaVinciTrackScaling, DecayTreeTuple,
+   DecayTreeTupleMuonCalib, DecayTreeTupleReco, FlavourTaggingChecker,
+   LoKiAlgoMC, LoKiPhysMC
+
+In Ostap :
+ . Numerous updates. See package release notes.
+
+In AnalysisPython :
+ . Numerous updates. See package release notes.
+
+In MicroDSTBase :
+ . Fix a problem that caused unneccesary cloning of PVs on DST streams.
+ . Add a new option to the RelationsFromParticleLocationsFromClonerAlg base class
+   'UseRelationsCLID'. If True (default False) will seach the TES for objects,
+   at the same level as the Particles, that have the correct CLID for the 
+   relations type being cloned (based on the template instance). Anything that
+   matches is added to the list to be cloned.
+   Updated the 'RelationsBaseName' option to allow for "", which signifies no
+   location.
+
+In MicroDSTTools :
+ . Promote messages about NULL CALO Cluster SmartRefs to Error level.
+ . Fix a problem that caused unneccesary cloning of PVs on DST streams.
+
+In DSTWriters :
+ . Extend the stripDSTStreamConf(...) method with an additional argument that
+   allows the DST file extension to be set.
+ . Run a specific instance of AddressKillerAlg for each writer sequence.
+   Fixes a problem with some ancestor knowledge remaining on DSTs.
+ . Fix a problem that caused unneccesary cloning of PVs on DST streams.
+ . Add support for packing of custom MuonPID locations.
+ . Add instance of AddressKillerAlg to DST Writer sequences to remove knowledge
+   of ancestor TES locations from Stripping (u)DSTs.
+ . Update Flavour Tag cloning to prevent unneccesary cloning of some Reco
+   information.
+ . Remove the need to explicitly set the RelatedInfo names in the
+   microdstelements. Instead use the new ability of the relations cloner to
+   dynamically search the TES for objects of the correct type (based on CLID)
+   and clone them.
+
+In DaVinciAngleCalculators :
+ . Import MC AngleCalculators from Phys/DaVinciMCTools.
+ . Import DaVinciP2VVAngles.{h,cpp} from Phys/DaVinciKernel.
+ . First version. Angle Calculators exported from DaVinciTools.
+
+In DaVinciMCTools :
+ . Move AngleCalculator tools to new Phys/DaVinciAngleCalculators package.
+
+In DecayTreeTuple :
+ . TupleToolBremInfo : Fix issue in case of  non converted photon in the decay
+ . TupleToolBremInfo : add DiElectron brem info for gamma->ee
+ . TupleToolSubMass  : fix problem in decay sorting for some rare configuration
+ . Update TupleToolPropertime and TupleToolParticleReFit to access vertex 
+   fitters and propertime fitters via the IDVAlgorithm interface, instead
+   of defining their own types.
+
+In FlavourTaggingChecker :
+ . Full support for new Charm Tagger.
+ . Deleted ununsed charm tagger lines.
+ . Added proton variables, other vars needed for new BDTs.
+
+In LoKiPhysMC :
+ . Explicitly initialise LoKi::AuxFunBase() base class in 
+   LoKi::PhysMCParticles::MCMatcherBase copy constructor.
+ . Fix a problem with copy of "non-strandard" MCMatcher objects 
+   many thanks to Igor Babushkin! 
+ . 1) Fix a typo in mcMatch
+   2) Extend MCMatchers to allow picking MC-particles from non-standard locations 
+      (thanks to Igor Babuschkin).
+
+In TeslaTools :
+ . Added helper functions to restore truth matching in XDSTs
+ . Added report checker tool.
+ . Tool used to provide safety net if choose new reports but DST has old reports.
+ . Improved ability to choose a lower amount of information when more is available.
+
 ! 2014-09-15 - Sean Benson
  - First import TeslaTools
 
