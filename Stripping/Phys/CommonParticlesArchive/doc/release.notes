@@ -4,6 +4,8 @@
 ! Purpose     : Archive of CommonParticle releases
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticlesArchive v1r2 2014-10-30 =========================
+
 ! 2014-10-29 - Andrea Contu
  - Modified StdLooseDalitzPi0.py in S21(r1) following change in CommonParticles
 
