@@ -5,11 +5,6 @@
 // std
 #include <memory>
 
-// boost
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/construct.hpp"
-#include "boost/ref.hpp"
-#include "boost/regex.hpp"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -17,9 +12,6 @@
 // from HltBase
 
 using namespace std;
-using namespace boost;
-
-// C++11 from our own twiki page...
 
 namespace
 {
@@ -40,7 +32,7 @@ class ConfigTree
     class Visitor
     {
       public:
-        virtual ~Visitor() {};
+        virtual ~Visitor() = default;
         virtual void pre( const ConfigTree& )
         {
             ;
@@ -289,7 +281,7 @@ DECLARE_TOOL_FACTORY( ConfigTreeEditor )
 //=============================================================================
 ConfigTreeEditor::ConfigTreeEditor( string type, string name,
                                     const IInterface* parent )
-    : GaudiTool( std::move( type ), std::move( name ), parent )
+    : base_class( std::move( type ), std::move( name ), parent )
     , m_propertyConfigSvc{nullptr}
     , m_configAccessSvc{nullptr}
 {
@@ -298,12 +290,6 @@ ConfigTreeEditor::ConfigTreeEditor( string type, string name,
                      s_configAccessSvc = "ConfigTarFileAccessSvc" );
     declareProperty( "PropertyConfigSvc",
                      s_propertyConfigSvc = "PropertyConfigSvc" );
-}
-//=============================================================================
-// Destructor
-//=============================================================================
-ConfigTreeEditor::~ConfigTreeEditor()
-{
 }
 
 //=============================================================================
@@ -379,7 +365,7 @@ ConfigTreeEditor::updateAndWrite( const ConfigTreeNode::digest_type& in,
             Assert( c != string::npos );
             auto key = j.substr( 0, c );
             auto value = j.substr( c + 1, string::npos );
-            return  std::make_pair( i.first, std::make_pair( key, value ));
+            return std::make_pair( i.first, std::make_pair( key, value ));
         });
     }
     return updateAndWrite( in, mm, label );

@@ -18,7 +18,7 @@ class IGenericTool;
  *  @author Gerhard Raven
  *  @date   2010-05-12
  */
-class MooreInitSvc : public virtual extends1<Service, IIncidentListener>
+class MooreInitSvc : public extends1<Service, IIncidentListener>
 {
 
   public:

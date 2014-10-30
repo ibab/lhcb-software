@@ -39,7 +39,7 @@ StatusCode MooreInitSvc::initialize()
     StatusCode sc = m_odinTool.retrieve();
     if ( !sc.isSuccess() ) return sc;
 
-    IIncidentSvc* svc( 0 );
+    IIncidentSvc* svc{ nullptr };
     if ( !service( "IncidentSvc", svc ).isSuccess() ) return StatusCode::FAILURE;
     // register with beginRun.... make sure this is called
     // 'early' before eg. the rate limiters calls the rndm svc...

@@ -19,32 +19,32 @@
  *  @author Gerhard Raven
  *  @date   2008-02-21
  */
-class ConfigTreeEditor : public GaudiTool, virtual public IConfigTreeEditor
+class ConfigTreeEditor : public extends1<GaudiTool, IConfigTreeEditor>
 {
   public:
     ConfigTreeEditor( std::string type, std::string name, const IInterface* parent );
-    ~ConfigTreeEditor();
+    ~ConfigTreeEditor() override = default;
 
-    StatusCode initialize();
+    StatusCode initialize() override;
 
     // multimap of 'component' -> 'key','value'
     ConfigTreeNode::digest_type
     updateAndWrite( const ConfigTreeNode::digest_type& in,
                     const std::multimap<
                         std::string, std::pair<std::string, std::string>>& updates,
-                    const std::string& label ) const;
+                    const std::string& label ) const override;
 
     ConfigTreeNode::digest_type
     updateAndWrite( const ConfigTreeNode::digest_type& in,
                     const std::vector<std::string>& updates,
-                    const std::string& label ) const;
+                    const std::string& label ) const override;
 
+  private:
     ConfigTreeNode::digest_type
     updateAndWrite( const ConfigTreeNode::digest_type& in,
                     const std::map<std::string, std::vector<std::string>>& updates,
                     const std::string& label ) const;
 
-  private:
     std::string s_propertyConfigSvc, s_configAccessSvc;
     IPropertyConfigSvc* m_propertyConfigSvc;
     IConfigAccessSvc* m_configAccessSvc;

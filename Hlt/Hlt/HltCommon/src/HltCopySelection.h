@@ -16,13 +16,11 @@ template <typename T>
 class HltCopySelection : public HltAlgorithm
 {
   public:
-    /// Standard constructor
     HltCopySelection( const std::string& name, ISvcLocator* pSvcLocator );
+    ~HltCopySelection() override = default;
 
-    virtual ~HltCopySelection(); ///< Destructor
-
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
 
   private:
     Hlt::SelectionContainer<T, T> m_selection;

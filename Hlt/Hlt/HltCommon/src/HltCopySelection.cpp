@@ -39,13 +39,6 @@ HltCopySelection<T>::HltCopySelection( const std::string& name,
 {
     m_selection.declareProperties();
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-template <typename T>
-HltCopySelection<T>::~HltCopySelection()
-{
-}
 
 //=============================================================================
 // Initialization
@@ -53,7 +46,6 @@ HltCopySelection<T>::~HltCopySelection()
 template <typename T>
 StatusCode HltCopySelection<T>::initialize()
 {
-
     StatusCode sc = HltAlgorithm::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
     m_selection.retrieveSelections();

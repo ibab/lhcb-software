@@ -12,7 +12,6 @@
 #include "Kernel/IReferenceRate.h"
 #include "DetDesc/Condition.h"
 #include "LoKi/IHltFactory.h"
-#include "boost/algorithm/string/join.hpp"
 
 class HltReferenceRateSvc : public Service,
                             virtual public IReferenceRate,
@@ -21,7 +20,7 @@ class HltReferenceRateSvc : public Service,
 {
   public:
     HltReferenceRateSvc( const std::string& name, ISvcLocator* pSvcLocator );
-    virtual ~HltReferenceRateSvc();
+    ~HltReferenceRateSvc() override = default;
 
     /** Query interfaces (\see{IInterface})
         @param riid       ID of Interface to be retrieved
@@ -102,10 +101,6 @@ StatusCode HltReferenceRateSvc::queryInterface( const InterfaceID& riid,
         return StatusCode::SUCCESS;
     }
     return Service::queryInterface( riid, ppvUnknown );
-}
-
-HltReferenceRateSvc::~HltReferenceRateSvc()
-{
 }
 
 HltReferenceRateSvc::HltReferenceRateSvc( const std::string& name,

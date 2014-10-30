@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2014-10-16 - Gerhard Raven
+ - replace trivial d'tor with '=default'
+ - remove unneeded include statements
+ - replace the 'virtual' specification on derived class member functions with 'override'
 
 !========================= HltCommon v10r2 2014-08-16 =========================
 
