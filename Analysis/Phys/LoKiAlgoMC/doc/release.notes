@@ -5,6 +5,8 @@
 ! Purpose     : MC-analogue for the basic LoKi algorithm 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiAlgoMC v9r6p1 2014-10-30 =========================
+
 ! 2014-07-29 - Vanya Belyaev
  - AlgoMC.cpp: fix counters 
 
