@@ -45,11 +45,6 @@ constexpr struct to_json_t {
 } to_json;
 
 std::string to_json_t::operator()(const std::string& s) const {
-    // avoid converting items which already have been converted...
-    auto check = [](const char& f, const char& b, const std::string& x) { 
-         return x.front()==f && x.back()==b;  
-    };
-    if (s.size()>1&&( check('"','"',s)|| check('{','}',s) || check('[',']',s) ) ) return s;
     // TODO: replace with C++14 std::quoted
     std::ostringstream out;
     out << boost::io::quoted(s);
@@ -65,14 +60,14 @@ template <typename V>
 std::string to_json_t::operator()(const std::map<std::string,V>& m) const {
     std::vector<std::string> buf;
     std::transform( std::begin(m), std::end(m), std::back_inserter(buf), to_json );
-    return std::string("{") + boost::algorithm::join(buf,",") + "}";
+    return std::string{"{"} + boost::algorithm::join(buf,",") + "}";
 }
 
 std::string to_json_t::operator()(const std::tuple<std::string,to_json_t::r2t_t,std::string>& e) const {
-    using map_t = std::map<std::string,std::string>;
-    return to_json( map_t{ { "TCK", std::get<0>(e) },
-                           { "Release2Type", to_json( std::get<1>(e) ) },
-                           { "label",  std::get<2>(e) } } );
+    return std::string{"{"}+to_json(std::make_pair("TCK",std::get<0>(e)))
+                     + "," +to_json(std::make_pair("Release2Type",std::get<1>(e)))
+                     + "," +to_json(std::make_pair("label",std::get<2>(e)))
+                     + "}";
 }
 
 #include "../src/cdb.h"
@@ -129,7 +124,7 @@ std::vector<unsigned char> make_cdb_record( std::string str, uid_t uid, std::tim
 
 struct manifest_entry {
     template <typename TCKS > 
-    manifest_entry( std::string toplevel, const TCKS& tcks, std::string com) 
+    manifest_entry(const std::string& toplevel, const TCKS& tcks, std::string com) 
     {
         std::vector<std::string> tokens;
         boost::algorithm::split(tokens,toplevel,boost::algorithm::is_any_of("/"));
@@ -139,13 +134,9 @@ struct manifest_entry {
         id = tokens[2];
         auto itck = tcks.find(id);
         tck = (itck!=std::end(tcks)) ? itck->second : "<NONE>" ;
-        comment = com;
+        comment = std::move(com);
     }
-    std::string release;
-    std::string type;
-    std::string tck;
-    std::string id;
-    std::string comment;
+    std::string release,type,tck,id,comment;
 
     bool operator<(const manifest_entry& rhs) const {
         // can we get MOORE_v9r1 prior to MOORE_v10r1 ???
@@ -165,11 +156,11 @@ std::ostream& operator<<(std::ostream& os, const manifest_entry& e) {
 
 
 std::string format_time(std::time_t t) {
-            // gcc4.8 doesn't have std::put_time???
-            static char mbstr[100];
-            mbstr[0]=0;
-            std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&t));
-            return { mbstr };
+    // gcc4.8 doesn't have std::put_time???
+    static char mbstr[100];
+    mbstr[0]=0;
+    std::strftime(mbstr, sizeof(mbstr), "%A %c", std::localtime(&t));
+    return { mbstr };
 }
 
 class TAR {
@@ -303,7 +294,7 @@ class CDB {
     mutable struct cdb m_db;
 public:
     CDB( const std::string& fname ) {
-        int fd = open( fname.c_str(), O_RDONLY );
+        auto fd = open( fname.c_str(), O_RDONLY );
         if (cdb_init( &m_db, fd ) < 0) cdb_fileno(&m_db)=-1;
     }
     ~CDB() {
@@ -328,12 +319,12 @@ public:
             return  *(static_cast<const unsigned char*>(m_vpos)+1);
         }
         uid_t uid() const {
-            const unsigned char *base = static_cast<const unsigned char*>(m_vpos);
+            auto base = static_cast<const unsigned char*>(m_vpos);
             auto f = [=](unsigned int i, unsigned int j) { return  uid_t( base[i] ) <<j; };
             return  f(4,0) | f(5,8) | f(6,16) | f(7,24) ;
         }
         std::time_t time() const {
-            const unsigned char *base = static_cast<const unsigned char*>(m_vpos);
+            auto base = static_cast<const unsigned char*>(m_vpos);
             auto f = [=](unsigned int i, unsigned int j) { return  std::time_t( base[i] ) <<j; };
             return  f(8,0) | f(9,8) | f(10,16) | f(11,24) ;
         }
@@ -341,20 +332,19 @@ public:
             io::stream<io::array_source> buffer(static_cast<const char*>(m_vpos)+12,m_vlen-12);
             io::filtering_istream s;
             switch ( flags() & 0x3  ) {
-                    case 0 : break ; // do nothing...
-                    case 2 : s.push(io::bzip2_decompressor()); break;
-                    case 3 : { io::zlib_params params; params.noheader = true;
-                               s.push(io::zlib_decompressor(params)); } break;
-                    default : 
-                            std::cerr << "unknown compression flag" << std::endl;
-                            return 0;
+                case 0 : break ; // do nothing...
+                case 2 : s.push(io::bzip2_decompressor()); break;
+                case 3 : { io::zlib_params params; params.noheader = true;
+                           s.push(io::zlib_decompressor(params)); } break;
+                default : 
+                         std::cerr << "unknown compression flag" << std::endl;
+                         return 0;
             }
             s.push(buffer);
             std::string value;
             std::copy(std::istreambuf_iterator<char>(s), std::istreambuf_iterator<char>(), std::back_inserter(value));
             return value;
         }
-
         bool isTCK() { return key().compare(0,7,"AL/TCK/")==0; }
         bool isTopLevel() { return key().compare(0,12,"AL/TOPLEVEL/")==0; }
         std::string TCK() { return isTCK() ? key().substr(7) : std::string{} ; }
@@ -558,11 +548,11 @@ namespace po = boost::program_options;
 
 template <typename DB>
 void dispatch(const po::variables_map& vm, DB& db) {
-        if (vm.count("list-manifest"))   dump_manifest( create_manifest(db));
-        if (vm.count("list-manifest-as-json")) dump_manifest_as_json( create_manifest(db));
-        if (vm.count("list-keys"))       dump_keys(db);
-        if (vm.count("list-records"))    dump_records(db);
-        if (vm.count("extract-records")) extract_records(db);
+    if (vm.count("list-manifest"))   dump_manifest( create_manifest(db));
+    if (vm.count("list-manifest-as-json")) dump_manifest_as_json( create_manifest(db));
+    if (vm.count("list-keys"))       dump_keys(db);
+    if (vm.count("list-records"))    dump_records(db);
+    if (vm.count("extract-records")) extract_records(db);
 }
 
 int main(int argc, char* argv[]) {
@@ -573,7 +563,7 @@ int main(int argc, char* argv[]) {
                        ("list-records", "list keys and records")
                        ("extract-records", "extract records")
                        ("convert-to-cdb", "convert to cdb")
-                       ("input-file",  po::value<std::string>()->default_value(std::string("config.cdb")),"input file");
+                       ("input-file",  po::value<std::string>()->default_value("config.cdb"),"input file");
     po::positional_options_description p;
     p.add("input-file", -1);
 
@@ -596,6 +586,5 @@ int main(int argc, char* argv[]) {
         dispatch(vm,db);
         if (vm.count("convert-to-cdb"))  convert_records(db, fname.substr(0,fname.size()-3)+"cdb" );
     }
-
     return 0;
 }

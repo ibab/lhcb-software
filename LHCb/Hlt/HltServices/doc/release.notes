@@ -3,6 +3,9 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+! 2014-10-30 - Gerhard Raven
+ - cleanup
+
 ! 2014-10-25 - Gerhard Raven
  - trim trailing zeros in longname tar header
  - simplify iteration over tar file content in utility

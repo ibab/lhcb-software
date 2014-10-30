@@ -121,7 +121,6 @@ class CDB
 
         int fd = open( m_fname.c_str(), O_RDONLY );
 
-        cout << " open( " << m_fname << " ): fd = " << fd << endl;
         // if not exist, forget about copying...
 
         if ( cdb_init( &m_icdb, fd ) < 0 ) cdb_fileno( &m_icdb ) = -1;
@@ -145,12 +144,12 @@ class CDB
 
             int ofd = open( m_oname.c_str(), O_RDWR | O_CREAT | O_EXCL,
                             S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH );
-            cout << " opened new database " << m_oname << ", fd = " << ofd << endl;
+            std::cerr << " opened new database " << m_oname << ", fd = " << ofd << std::endl;
             if ( ofd < 0 ) m_error = true;
             cdb_make_start( &m_ocdb, ofd );
 
             if ( fd >= 0 && ofd >= 0 ) {
-                cout << "copying original database entries" << endl;
+                std::cerr << "copying original database entries" << std::endl;
                 // copy everything into a 'shadow' database -- basically, a (k,v)
                 // vector
                 // which preserves insertion order, augmented with a map for fast
@@ -176,7 +175,7 @@ class CDB
                         m_error = true;
                     }
                 }
-                std::cout << "copied " << nrec << " records " << std::endl;
+                std::cerr << "copied " << nrec << " records " << std::endl;
             }
         }
     }
@@ -190,10 +189,10 @@ class CDB
             cdb_make_finish( &m_ocdb );
             close( fd );
             if ( !m_error ) {
-                cout << "renaming " << m_oname << ", to " << m_fname << endl;
+                std::cerr << "renaming " << m_oname << ", to " << m_fname << endl;
                 fs::rename( m_oname, m_fname );
             } else {
-                cout << "encountered an error; leaving original " << m_fname
+                std::cerr << "encountered an error; leaving original " << m_fname
                      << " untouchted, removing temporary " << m_oname << endl;
                 fs::remove( m_oname );
             }
@@ -268,8 +267,6 @@ class CDB
     vector<string> files( const SELECTOR& selector ) const
     {
         vector<string> _keys;
-
-        std::cout << "fetching keys; fd = " << cdb_fileno( &m_icdb ) << std::endl;
         if ( cdb_fileno( &m_icdb ) >= 0 ) {
             unsigned cpos;
             cdb_seqinit( &cpos, &m_icdb );
