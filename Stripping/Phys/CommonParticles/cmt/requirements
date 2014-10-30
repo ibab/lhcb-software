@@ -6,21 +6,21 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           CommonParticles
-version           v8r18
+version           v8r19
 
 #============================================================================
-# Structure, i.e. directories to process. 
+# Structure, i.e. directories to process.
 #============================================================================
-branches          cmt doc python 
+branches          cmt doc python
 
-use GaudiPolicy v* 
+use GaudiPolicy v*
 
 use TrackTools  v* Tr
 
-apply_pattern install_python_modules 
+apply_pattern install_python_modules
 
 #============================================================================
-# Used packages. 
+# Used packages.
 #============================================================================
 use DaVinciKernel   v*   Phys
 #============================================================================

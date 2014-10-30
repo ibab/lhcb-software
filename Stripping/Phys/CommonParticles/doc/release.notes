@@ -8,6 +8,8 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================= CommonParticles v8r19 2014-10-30 =========================
+
 ! 2014-10-30 - Stefano Perazzini
  - Fixed test_inputlocations_consistency.py addint "/Particles" to the Inputs
    of StdLooseDalitzPi0
@@ -27,7 +29,7 @@
  - Add LambdaLD to StdLooseLambda
 
 ! 2014-08-13 - Chris Jones
- - Fix a bug that prevented StdLooseDiElectron being used as a 
+ - Fix a bug that prevented StdLooseDiElectron being used as a
    Standard Particle.
 
 ! 2014-08-08 - Chris Jones
@@ -78,12 +80,12 @@
 
 ! 2013-03-27 - Vanya Belyaev
 
- - fixed StdV0FromBrunel 
-   (thanks to Philippe Ghez) 
+ - fixed StdV0FromBrunel
+   (thanks to Philippe Ghez)
 
 !========================= CommonParticles v8r12 2012-12-20 =========================
 
-! 2012-12-04 - Donal Hill 
+! 2012-12-04 - Donal Hill
  - Changes to common particles StdLooseDetachedTauNonPhys.py and StdLooseDetachedTau.py
 
 !========================= CommonParticles v8r11 2012-11-30 =========================
@@ -97,12 +99,12 @@
   + Add some missing imports
 
 ! 2012-11-07 - Olivier Deschamps for Edwige Tournefier
- - improve diElectron vertexing for DD configuration (new settings comes with 
+ - improve diElectron vertexing for DD configuration (new settings comes with
    updated DiElectronMaker)
 
 !========================= CommonParticles v8r10 2012-09-01 =========================
 
-! 2012-09-01 - Anton Poluektov 
+! 2012-09-01 - Anton Poluektov
  - fix test_inputlocations_consistency
 
 ! 2012-08-30 - Olivier Deschamps
@@ -113,7 +115,7 @@
  - Removed lines related to StdVeryLooseKs from StandardV0.py
 
 ! 2012-08-23 - Thomas Blake
- - Added StandardTau and StandardDipion to StandardIntermediate 
+ - Added StandardTau and StandardDipion to StandardIntermediate
 
 !========================= CommonParticles v8r9 2012-06-28 =========================
 
@@ -125,19 +127,19 @@
                         called `StdDiElectronFromTracks'
 
 ! 2012-06-12 - Olivier Deschamps for Edwige Tournefier
-  - add StdAllTightSymGammaConversion.py : combinatorial gamma->ee from 
+  - add StdAllTightSymGammaConversion.py : combinatorial gamma->ee from
     symmetrized e pT
 
 ! 2012-06-12 - Olivier Deschamps
-  - StdAllLoose(Tight)GammaConversion.py : produce gamma->ee particle 
+  - StdAllLoose(Tight)GammaConversion.py : produce gamma->ee particle
     (based on DiElectronMaker)
 
 ! 2012-05-14 - Olivier Deschamps
- - StdVeryLooseAllPhotons.py:  photons with pT threshold down to 100 MeV 
+ - StdVeryLooseAllPhotons.py:  photons with pT threshold down to 100 MeV
    (for new BremStrahlung recovery)
 
 ! 2012-06-8 - P. Koppenburg
-  - New StdKsFromV0 that make Ks particles from the V0 Brunel objects. 
+  - New StdKsFromV0 that make Ks particles from the V0 Brunel objects.
 
 !========================= CommonParticles v8r8 2012-04-27 =========================
 
@@ -151,13 +153,13 @@
 
  - StdLooseResolvedPi0.py:
 
-       add "wide" pi0->gamma gamma 
+       add "wide" pi0->gamma gamma
 
 ! 2012-02-19 - Vanya Belyaev
 
  - StdLooseResolvedEta.py:
 
-       add "wide" eta->gamma gamma 
+       add "wide" eta->gamma gamma
 
 !========================= CommonParticles v8r6 2012-02-10 =========================
 ! 2012-02-03 - Jibo He
@@ -165,17 +167,17 @@
 
 ! 2012-02-01 - Jibo He
  - StdDetachedKstar
-   Renamed as StdLooseDetachedKpi, to better reflect what's inside. 
+   Renamed as StdLooseDetachedKpi, to better reflect what's inside.
 
 ! 2012-01-31 - Jibo He
  - StdVeryLooseDetachedKstar
-   Commented out daughters cuts to save a little bit CPU, 
+   Commented out daughters cuts to save a little bit CPU,
    because tighter cuts IPCHI2>4 already applied on StdLoose{Kaons,Pions}
  - StdDetachedKstar
    New KSTAR particle with mass up to 2.2 GeV.
 
 ! 2012-01-31 - Jibo He
- - Added StdLooseDetachedDiElectron, with cuts of PT>200 MeV, IPS>1 on both electrons, 
+ - Added StdLooseDetachedDiElectron, with cuts of PT>200 MeV, IPS>1 on both electrons,
    and M(ee)>20 MeV.
 
 ! 2012-01-27 - Chris Jones
@@ -195,17 +197,17 @@
 
 !========================= CommonParticles v8r5 2011-09-15 =========================
 ! 2011-09-14 - Ulrich Kerzel
-- Add NoBremNoPIDs*Electrons for all types: Track as electron, no PID requirement, 
+- Add NoBremNoPIDs*Electrons for all types: Track as electron, no PID requirement,
   no Bremsstrahlung correction
 
 ! 2011-08-27 - Susan Haines
- - Added StdVeryLooseKs.py, LL and DD Kshorts.  LL using StdAllNoPIDsPions for 
-   daughters (no default pT cut).  Added for use in StrippingBu2D0h_D02KShh_NoPID 
+ - Added StdVeryLooseKs.py, LL and DD Kshorts.  LL using StdAllNoPIDsPions for
+   daughters (no default pT cut).  Added for use in StrippingBu2D0h_D02KShh_NoPID
    and WS lines.
  - Added StdVeryLooseKs to StandardV0.py
-	
+
 ! 2011-08-26 Carla Gobel & Sandra Amato
- - Added StdTightDplus.py to be used in KKPos stripping line and included in 
+ - Added StdTightDplus.py to be used in KKPos stripping line and included in
    StandardDplus.py
 
 ! 2011-08-25 - Greig Cowan
@@ -213,10 +215,10 @@
 
 ! 2011-08-19 - Jibo He
  - StdLooseDiElectron
-  . Added PT>500 MeV for electron to speed up. 
+  . Added PT>500 MeV for electron to speed up.
 
 !2011-08-19 Hamish Gordon
- - Add CommonParticles for D(s)->KKK and Ds->K+K+pi-, with Oxford/Rio stripping 
+ - Add CommonParticles for D(s)->KKK and Ds->K+K+pi-, with Oxford/Rio stripping
    selection to keep the timing down
 
 !========================= CommonParticles v8r4 2011-08-04 =========================
@@ -224,7 +226,7 @@
  - Add in ADOCACHI2 to all two body decays, add EOL native everywhere
 
 ! 2011-08-03 - Rob Lambert
- - Rolf added back in the ADOCACHI2 cuts to Ks and lambda, it improves the timing 
+ - Rolf added back in the ADOCACHI2 cuts to Ks and lambda, it improves the timing
    by a lot.
 
 !========================= CommonParticles v8r3 2011-07-22 =========================
