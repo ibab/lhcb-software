@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r12 2014-10-30 =========================
+
 ! 2014-10-30 - Stefano Perazzini
  - Removed test_dumplicated_outputLocation_in_single_stream_raises_Exception
    in order to cope with Bs2MuMu lines written in multiple streams
@@ -12,23 +14,23 @@
 ! 2014-10-14 - Chris Jones
  - Add a new method to StrippingConf that implements a check where all
    know configurables are searched, to see if they implement the 'MacCandidate'
-   limits, and if they do applies the given settings. 
+   limits, and if they do applies the given settings.
    Usage is currently disabled by default.
 
 ! 2014-10-09 - Stefano Perazzini
- - Added a function in StrippingConf to limit combinatorics 
+ - Added a function in StrippingConf to limit combinatorics
    in StandardParticles
 
 ! 2014-10-08 - Stefano Perazzini
- - Added the configuration of MaxCandidates and MaxCombinations for any 
+ - Added the configuration of MaxCandidates and MaxCombinations for any
    configurable in a StrippingLine
 
-! 2014-10-06 - Anton Poluektov 
+! 2014-10-06 - Anton Poluektov
  - Fix StrippingLine to raise an exception if both 'Location' and 'Locations'
    are defined in RelatedInfoTools
 
-! 2014-10-06 - Anton Poluektov 
- - Modify StrippingLine to use the updated AddRelatedInfo interface 
+! 2014-10-06 - Anton Poluektov
+ - Modify StrippingLine to use the updated AddRelatedInfo interface
    (which takes the list of RelatedInfo locations in "InfoLocations" map)
 
 ! 2014-10-05 - Stefano Perazzini
@@ -46,9 +48,9 @@
  - Modified how Flavour Tagging is handled in StrippingStream and StrippingConf
    Flavour tagging is checked forcedly disabled (is enabled) for lines going to full DST streams
 
-! 2014-09-11 - Anton Poluektov 
+! 2014-09-11 - Anton Poluektov
  - Fix bug in StrippingLine with RelatedInfoFilter
-   (which was added after every single entry of RelatedInfoTool 
+   (which was added after every single entry of RelatedInfoTool
     instead of once in the end of the line sequence)
 
 ! 2014-09-11 - Stefano Perazzini
@@ -61,7 +63,7 @@
 
 ! 2014-09-05 - Stefano Perazzini
  - Removed exception in checkUniqueOutputLocations function of StrippingConf.
-   A warning has been introduced instead of the exception. This to allow a 
+   A warning has been introduced instead of the exception. This to allow a
    stripping line to belong to multiple streams.
 
 ! 2014-09-04 - Stefano Perazzini
@@ -73,13 +75,13 @@
 ! 2014-09-01 - Stefano Perazzini
  - Added checkPVRefit function to StrippingStream
 
-! 2014-08-30 - Anton Poluektov 
- - Fixes in RelatedInfo option of StrippingLine 
+! 2014-08-30 - Anton Poluektov
+ - Fixes in RelatedInfo option of StrippingLine
 
-! 2014-08-28 - Anton Poluektov 
+! 2014-08-28 - Anton Poluektov
  - ... and the same for HLT option
 
-! 2014-08-26 - Anton Poluektov 
+! 2014-08-26 - Anton Poluektov
  - Allow L0DU option to be configured with Preambulo
    L0DU=('Code', 'Preambulo')
 
@@ -90,11 +92,11 @@
  - Allow ODIN option to be configured with Preambulo
    ODIN=('Code', 'Preambulo')
 
-! 2014-08-19 - Anton Poluektov 
- - Add an option 'RelatedInfoFilter' to the StrippingLine constructor. 
-   RelatedInfoFilter is added to the end of StrippingLine sequencer, after RelatedInfo 
+! 2014-08-19 - Anton Poluektov
+ - Add an option 'RelatedInfoFilter' to the StrippingLine constructor.
+   RelatedInfoFilter is added to the end of StrippingLine sequencer, after RelatedInfo
    is calculated. It can be a FilterDesktop or other configurable which uses
-   RelatedInfo variables to further filter the candidates. 
+   RelatedInfo variables to further filter the candidates.
 
 !========================= StrippingConf v4r11 2014-07-28 =========================
 
