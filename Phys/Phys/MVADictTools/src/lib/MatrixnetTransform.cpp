@@ -1,6 +1,7 @@
 #include "MVADictTools/MatrixnetTransform.h"
 
 #include <fstream>
+#include <alloca.h>
 #include <math.h>
 
 // it works - don't touch it!
@@ -91,7 +92,7 @@ double yabs_mx_apply(char const *fml, float const *fp) {
   array(unsigned int, bf_counts, fml);
   array(float, bfs, fml);
 
-  unsigned int vars[bfs_count];
+  unsigned int *vars = (unsigned int*)alloca(bfs_count * sizeof(unsigned int));
   unsigned int *vp = vars;
 
   while(bf_counts_count--) {
