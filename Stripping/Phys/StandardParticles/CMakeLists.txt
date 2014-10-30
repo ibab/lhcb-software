@@ -1,7 +1,7 @@
 ################################################################################
 # Package: StandardParticles
 ################################################################################
-gaudi_subdir(StandardParticles v2r2)
+gaudi_subdir(StandardParticles v2r3)
 
 gaudi_depends_on_subdirs(Phys/CommonParticles)
 
