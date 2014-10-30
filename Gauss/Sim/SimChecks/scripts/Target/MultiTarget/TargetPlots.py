@@ -64,7 +64,11 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 		pdgRatios_pi = [ 1.22, 1.13, 1.10, 1.05, 1.03 ]
 		pdgRatios_K  = [ 1.61, 1.32, 1.23, 1.10, 1.07 ]
 
-		#ratiotxt = open(outputPath+"/ratio_inAl.txt")
+		if(find(finalPlot,"RATIO") > -1) :
+			ratiotxt = open(outputPath+"/ratio_inAl.txt","w")
+		else :
+			ratiotxt = open(outputPath+"/asym_inAl.txt","w")
+
 		#ratiotxt.write(  "\\begin{tabular}{| c | c | c |} \n" )
 		#ratiotxt.write( "$p$ (GeV) & LHEP & BERT \\\\ \\hline \n" )
 
@@ -75,11 +79,11 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 		for pg in range(0, len(pguns)-1, 2) :
 		
-			#ratiotxt.write( "\\multicolumn{2}{c}{ratio " + pguns[pg+1].GetLatex("$") + "/"  << pguns[pg].GetLatex("$") + "} \\\\ \\hline \n" )
+			ratiotxt.write( "\\multicolumn{2}{c}{ratio " + str(dict._all_pguns[pguns[pg+1]].GetLatex("$")) + "/" + str(dict._all_pguns[pguns[pg]].GetLatex("$")) + "} \\\\ \\hline \n" )
 			nm = 0
 			for m in models :
 			
-				#ratiotxt.write( "\\multicolumn{2}{c}{ratio " + models[m] + "} \\\\ \\hline" )
+				ratiotxt.write( "\\multicolumn{2}{c}{ratio " + m + "} \\\\ \\hline" )
 
 				varexp = "h_"+str(pg)+m
 				select = "model == " + str(ord(m[0])) + " && material == " + str(ord(materials[0][0])) + " && pGun == " + str(dict._all_pguns[pguns[pg]].GetPDG())
@@ -132,7 +136,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				erry = []
 				for ee in range(0,entries) : 
 
-					#ratiotxt << energies[ee]
+					ratiotxt.write( str(x[ee]) )
 					if(find(finalPlot,"RATIO")>-1) :
 						y.append(y2[ee] / y1[ee])
 					else :
@@ -141,10 +145,9 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					totErr2 = TMath.Power(erry1[ee]/y1[ee],2) + TMath.Power(erry2[ee]/y2[ee],2)
 					erry.append(y[ee] * TMath.Sqrt(totErr2))
 
-					#ratiotxt << fixed << setprecision(2) << " & $" << y[ee]  << " \\pm " << erry[ee] << "\\\\" << endl
+					ratiotxt.write(' & $ {:4.2} \\pm {:4.2} $ \\\\ \n'.format(y[ee],erry[ee]) )
 
 				gr = TGraphErrors(entries,array('d',x),array('d',y),array('d',errx),array('d',erry))
-
 				gr.SetMarkerColor(1+pg/2)
 				gr.SetMarkerStyle(20+nm)
 
@@ -401,16 +404,35 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 if __name__ == "__main__" :
 
-	plots = [ "ASYM_INEL", "RATIO_TOTAL" ,"MULTI" ]
-	models = ["QGSP_BERT","FTFP_BERT"]
-	thicks = [1]
-	materials = ["Al"]
-	energies = [1,5,10,100]
-	pguns = ["p","pbar"]
+	###### Possible types of plots are :
+	##          INEL:                                   inelastic cross section
+	##          EL:                                     elastic cross section
+	##          TOTAL:                                  total cross section
+	##          MULTI:                                  total multiplicity 
+	##          MULTI_PLUS(MINUS / NCH / NCH_NOGAMMA):  multiplicity of positive (negative, neutral, neutral but no gammas) secondary particles produced
+	##          PERC_PLUS(MINUS / NCH / NCH_NOGAMMA):   percentage of positive (negative, neutral, neutral but no gammas) secondary particles produced
+	##
+	##		For each of the plots above you can have them is form of a ratio of particles (the consecutive ones in the "pguns" array, see below)
+	##      or as asymmetries adding RATIO or ASYM to the plot type. e.g. RATIO_TOTAL or RATIO_MULTI_NCH or ASYM_INEL, etc
+
+	plots = [ "RATIO_TOTAL" ]
+	
+	### N.B.: Options need to have been generated with Targets_RunAll.py!
+	### In your output directory a file options.txt has been created where the options you generated are listed.
+
+	models = ["QGSP_BERT","FTFP_BERT"]  # any you generated, by default "QGSP_BERT","FTFP_BERT"
+	thicks = [1] #1,5,10
+	materials = ["Al"] ### Al,Si,Be
+	energies = [1,5,10,100] # any you generated, by default 1,5,10,100
+	pguns = ["p","pbar","Kplus","Kminus","Piplus","Piminus"] # "p","pbar","Kplus","Kminus","Piplus","Piminus"
 	path = "TargetOutput"
 
 	file = TFile(path+"/TargetsPlots.root")
 	dataTree = file.Get("summaryTree")
 	
 	for p in plots :
-		Plot( dataTree, "thickness", p, path, models , pguns , materials , 2 , 1, True )
+		tp.Plot( dataTree, "energy", p, path, models , pguns , materials , 2 , 1, True )
+
+
+
+

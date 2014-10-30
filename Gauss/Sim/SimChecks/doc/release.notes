@@ -6,6 +6,10 @@
 
 
 !========================== SimChecks v1r3 2014-10-08 ========================
+
+! 2014-10-30 - Luca Pescatore
+ - Improved readability for Target and Radlength tools output
+
 ! 2014-10-07 - Luca Pescatore
  - Scripts for post-job analysis for the RadLength and Target tools have been
    converted from c++ to python. All scripts are updated to reflect the new 

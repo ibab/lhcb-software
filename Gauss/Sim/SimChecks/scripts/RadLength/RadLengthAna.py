@@ -11,27 +11,12 @@
 from Gaudi.Configuration import *
 from Gauss.Configuration import *
 from Configurables import CondDB, LHCbApp, CondDBAccessSvc
-
-# Define the new tags
-#base_tag = "dddb-20130503"
-#cond_base_tag = "HEAD"
-
-# Set the default tags
-#LHCbApp(DDDBtag = base_tag, CondDBtag = cond_base_tag)
-
-
-
 from Configurables import DDDBConf
 
 #DDDBConf(DbRoot = "myDDDB/lhcb.xml")
 LHCbApp().DDDBtag   = "dddb-20130929-1"
 LHCbApp().CondDBtag = "sim-20130522-1-vc-md100"
-CondDB.LocalTags = {"DDDB" : ["radlength-20141003","radlength-20140908","radlength-20141003"]  }
-#from Configurables import CondDB
-#conddb = CondDB()
-#conddb.addLayer(dbFile = "$PWD/db_test/DDDB_Addon.db", dbName = "DDDB")
-
-
+CondDB.LocalTags = {"DDDB" : ["radlength-20141010", "radlength-20141003","radlength-20140908"] }
 
 
 from Configurables import Gauss

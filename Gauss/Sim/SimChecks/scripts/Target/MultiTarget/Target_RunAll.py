@@ -19,8 +19,8 @@ path=os.environ['PWD']+'/TargetOutput' # where you want your output (absolute or
 
 models=['QGSP_BERT','FTFP_BERT']#any present in the version of Gauss you are using es. 'FTFP_BERT','LHEP'
 energies=[1,2,5,10,50,100]#any
-materialsTodo=['Al','Be','Si'] # 'Al' 'Be' 'Si'
-thicks=[1,5]  #in mm 1, 5, 10 (only)
+materialsTodo=['Al'] # 'Al' 'Be' 'Si'
+thicks=[1]  #in mm 1, 5, 10 (only)
 particlesTodo=['p','pbar','Piminus', 'Piplus','Kminus', 'Kplus'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
 
 
@@ -46,7 +46,8 @@ def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,th
     opt_file.write('\n\n#Set "print" to 1 if you want to print histograms with PDG ID od daughters, 0 if not (all histograms are saved in rootfiles anyway)')
     opt_file.write('\n\nprint: 0')
 
-    opt_file.write('\n\n#Set the models to use\nN.B.:No more than 2 models per analysis if you put more the rest will be ignored')
+    opt_file.write("\n\n#############################################################      GENERATED OPTIONS      ##########################################")	
+    opt_file.write('\n\n#Set the models to use\n#N.B.:No more than 2 models per analysis if you put more the rest will be ignored')
     opt_file.write('\n\nModels: ')
     for model in models:
        opt_file.write( model + " ")
@@ -88,7 +89,7 @@ if not os.path.exists(path):
 
 createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,thicks)
 
-
+sys.exit()
 #Starting jobs submission
 
 log = open('logfile','w')
@@ -146,10 +147,8 @@ for model in models:
                sub = subprocess.call(['sed', '-i', command, inputfile])
                command = 's|projEng = .*|projEng = '+str(energy)+'|'
                sub = subprocess.call(['sed', '-i', command, inputfile])
-			   #command = 's|histoFile = \'Multi.*|histoFile = \'Multi_' + particle + '_in' + material + '\'|'
-               #sub = subprocess.call(['sed', '-i', command, inputfile])
-	            
-               #sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+			        
+               sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
 
 
          dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
@@ -164,7 +163,7 @@ for model in models:
 
 output = path+"/TargetOutput.root"
 command = 'find '+path+'/*/*/* -name *.root | xargs hadd -f ' + output
-#os.system(command)
+os.system(command)
 
 p = Plotter(path+"/", path+"/", models, particlesTodo, energies, materialsTodo, thicks)
 

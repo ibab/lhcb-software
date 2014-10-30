@@ -11,7 +11,7 @@ GaussGen.FirstEventNumber = 1
 GaussGen.RunNumber        = 1082
 
 #--Number of events
-nEvts=1000
+nEvts=50000
 LHCbApp().EvtMax = nEvts
 
 Gauss().OutputType = 'NONE'

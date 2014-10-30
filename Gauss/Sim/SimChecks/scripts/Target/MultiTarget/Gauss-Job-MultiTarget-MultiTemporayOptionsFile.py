@@ -20,8 +20,8 @@ from Configurables import LHCbApp
 from Configurables import DDDBConf
 
 physList = 'FTFP_BERT'
-targetThick = 5
-targetMat = 'Si'
+targetThick = 1
+targetMat = 'Al'
 projEng = 100
 projID = 321
 target = 'Target_'+str(targetThick)+'mm'+targetMat
@@ -115,7 +115,7 @@ Gauss().Histograms = 'NONE'
 #OutputStream("GaussTape").Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 # --- Save ntuple with hadronic cross section information
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Kplus_inSi.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Kplus_inAl.root' TYP='ROOT' OPT='NEW'"]
 
 importOptions ("TargetMaterialGunMultiTargetLocalTemporary.py")
 
