@@ -4,9 +4,10 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTuple v4r11 2014-10-30 =========================
+
 ! 2014-10-03 - Olivier Deschamps
  - TupleToolBremInfo : Fix issue in case of  non converted photon in the decay
-
 
 ! 2014-10-02 - Olivier Deschamps
  - TupleToolBremInfo : add DiElectron brem info for gamma->ee
