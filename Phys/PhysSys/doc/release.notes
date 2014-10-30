@@ -3,6 +3,94 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v19r2>2014-10-30 Phys v19r2</A></H1><PRE>
+Production release, based on Rec v17r2, LHCb v38r2 and Gaudi v25r4.
+
+- Packages Updated :
+   DaVinciKernel, DaVinciTransporter, DaVinciTypes, FlavourTagging,
+   JetAccessories, LoKiArrayFunctors, LoKiFitters, LoKiJets, LoKiPhys,
+   MVADictTools, ParticleMaker, RelatedInfoTools, Swimming, 
+   TisTosTobbing, VertexFit
+
+In DaVinciKernel :
+ . Downgrade an Error message to Warning for when a PV refit fails.
+ . Make the LoKi vertex fitter and propertime fitter the defaults.
+
+In DaVinciTransporter :
+ . Downgrade some Errors to Warnings in ParticleTransporter and
+   ParticleTransporterWithStateProvider.
+
+In DaVinciTypes :
+ . New variables for RelInfoVertexIsolationDetached
+ . Added new variables for Bs->tautau selection
+ . Add new variables to RelatedInfoNamed for Fatima Soomro
+
+In FlavourTagging :
+ . Disable OSCharm taggers by default. Add configuration names "Stripping21" and
+   "Stripping21_MC" in Tunings.py to set all the properties accordingly
+ . New CharmTagger framework, w/ mistag estimated from BDTs instead of NN
+ . Deleted obsolete CharmTagger BDT/NN algorithms
+
+In JetAccessories :
+ . General downgrading of various Error and Warning message, to sanitise a bit
+   things for running in production, the Stripping.
+
+In LoKiArrayFunctors :
+ . Demote warning for non-empty tool stack to Debug level.
+
+In LoKiFitters :
+ . ParticleClassificator: Add merged (=="stable") pi0 into list of 
+                          "di-gamma-like" particles.
+ . Move custom _Warning and _Error methods into a new shared base class,
+   MessagingBase, to allow reuse across all components.
+ . General downgrading of various Error and Warning message, to sanitise a bit
+   things for running in production, the Stripping.
+
+In LoKiJets :
+ . General downgrading of various Error and Warning message, to sanitise a bit
+   things for running in production, the Stripping.
+
+In LoKiPhys :
+ . General downgrading of various Error and Warning message, to sanitise a bit
+   things for running in production, the Stripping.
+ . Add protection to TransverseMomentumRel::mCorrDir against badily defined
+   Lorentz vectors that result in a negative M^2.
+ . Use VDT library for fast sin and cos calculations in TransverseMomentumRel
+   constructor from theta and phi values.
+
+In RelatedInfoTools :
+ . Removed the possibility of running RelInfoVertexIsolation on tracks or photons.
+ . Fixed RelInfoVertexIsolation to behave correctly in the case of secondary dettached
+   vertices.
+ . Added RelInfoVertexIsolationDetached tool, which implements the same algorithm as 
+   the old TupleToolVtxIsoln (before it moved to use VertexIsolation from ExtraInfoTools). 
+   The treatment of decays with secondary detached vertices should be more correct. 
+ . Added the parameter "TracksLocation" for RelInfoConeVariables. 
+   By default (""), all best tracks from the event are used, but it can be set to e.g.
+   "/Event/Phys/StdNoPIDsPions" to use only detached tracks for cones. 
+ . Small bugfix in RelInfoVertexIsolation to take into account fits with chi2 == -1
+ . Small modification of AddRelatedInfo: do not count element of InfoLocations list 
+   if the map returned by the tool is empty. 
+ . Modify behaviour of AddRelatedInfo: 
+    * Instead of ParticleLocation:RelatedInfoLocation map for InfoLocations property, 
+      it takes the map ParticleLocation:vector<RelatedInfoLocations>, where each element 
+      of the vector corresponds to the unique particle from ParticleLocation in the 
+      decay tree (e.g. for Bs->MuMu need to specify two RelatedInfoLocations, 
+      tau->mu+mu-mu- - tree)
+    * RelatedInfo is related from the B candidate rather than from daughter particle.
+
+In Swimming :
+ . Fixes to work with changes in Event/SwimmingEvent to support ROOT6 (use of
+   Swimming::Helpers).
+
+In TisTosTobbing :
+ . Downgrade some Errors to Warnings in ParticleTisTos.
+
+In VertexFit :
+ . Add depreciation warnings to OfflineVertexFitter and PropertimeFitter
+ . Add algorithm context names to Warnings and Errors from OfflineVertexFitter
+   and MomentumCombiner.
+
 </PRE><H1><A NAME=v19r1>2014-09-30 Phys v19r1</A></H1><PRE>
 Development release, based on Rec v17r1, LHCb v38r1 and Gaudi v25r3.
 

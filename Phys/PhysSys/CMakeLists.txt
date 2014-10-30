@@ -1,7 +1,7 @@
 ################################################################################
 # Package: PhysSys
 ################################################################################
-gaudi_subdir(PhysSys v19r1)
+gaudi_subdir(PhysSys v19r2)
 
 gaudi_depends_on_subdirs(Kernel/SelectionLine
                          Phys/BBDecTreeTool
