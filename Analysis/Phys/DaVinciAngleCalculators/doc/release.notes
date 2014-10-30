@@ -4,6 +4,8 @@
 ! Purpose     : Angle Calculators
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciAngleCalculators v1r0 2014-10-30 =========================
+
 ! 2014-08-11 - Chris Jones
  - Import MC AngleCalculators from Phys/DaVinciMCTools.
  - Import DaVinciP2VVAngles.{h,cpp} from Phys/DaVinciKernel.
