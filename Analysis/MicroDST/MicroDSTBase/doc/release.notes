@@ -6,6 +6,8 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
+!========================= MicroDSTBase v3r5 2014-10-30 =========================
+
 ! 2014-09-05 - Chris
  - Fix a problem that caused unneccesary cloning of PVs on DST streams.
 
@@ -16,7 +18,7 @@
    relations type being cloned (based on the template instance). Anything that
    matches is added to the list to be cloned.
    Updated the 'RelationsBaseName' option to allow for "", which signifies no
-    location.
+   location.
 
 !========================= MicroDSTBase v3r4 2014-06-13 =========================
 
