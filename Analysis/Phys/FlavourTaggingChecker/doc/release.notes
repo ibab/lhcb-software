@@ -5,6 +5,8 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTaggingChecker v7r6 2014-10-30 =========================
+
 ! 2014-10-07 - Jack Wimberley
  - Full support for new Charm Tagger
  - Fixed compiler warnings
