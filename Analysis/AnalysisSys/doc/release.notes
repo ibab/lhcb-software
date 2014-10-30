@@ -3,6 +3,9 @@ Package     : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v13r1p1>2014-10-30 Analysis v13r1p1</A></H1><PRE>
+Development release, built against Phys v19r2p1.
+
 </PRE><H1><A NAME=v13r1>2014-10-30 Analysis v13r1</A></H1><PRE>
 Production release, built against Phys v19r2.
 
