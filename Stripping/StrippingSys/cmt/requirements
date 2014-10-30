@@ -1,28 +1,28 @@
 package  StrippingSys
-version  v9r0
+version  v9r1
 
 branches doc cmt tests
 
 ####################################################################
 # Framework
-use  CommonParticles             v8r18    Phys   # Patrick Koppenburg, WGs
-use  CommonParticlesArchive      v1r0     Phys   # Stripping coordinators
-use  StandardParticles           v2r2     Phys   # Juan Palacios
+use  CommonParticles             v8r19    Phys   # Patrick Koppenburg, WGs
+use  CommonParticlesArchive      v1r2     Phys   # Stripping coordinators
+use  StandardParticles           v2r3     Phys   # Juan Palacios
 
 ####################################################################
 # Internal Packages
-use  DisplVertices 		 v7r18	  Phys	 # Neal Gauvin
+use  DisplVertices 		 v7r19	  Phys	 # Neal Gauvin
 use  MvaPreSelB2DH               v1r6     Phys   # Sajan Easo
 use  IncTopoVert                 v1r4     Phys   # Mathieu Perrin-Terrin
-use  IsolationTools              v1r0     Phys   # Alex Shires
+use  IsolationTools              v1r1     Phys   # Alex Shires
 
 ####################################################################
 # Stripping packages
 use  StrippingAlgs               v1r13    Phys   # Anton Poluektov
-use  StrippingArchive            v1r23    Phys   # Stripping coordinators
-use  StrippingConf               v4r11    Phys   # Anton Poluektov
+use  StrippingArchive            v1r24    Phys   # Stripping coordinators
+use  StrippingConf               v4r12    Phys   # Anton Poluektov
 use  StrippingNeuroBayes         v1r9     Phys   # Ulrich Kerzel
-use  StrippingSelections         v3r36    Phys   # Stripping coordinators
+use  StrippingSelections         v3r37    Phys   # Stripping coordinators
 use  StrippingSettings           v2r31    Phys   # Stripping coordinators
 use  StrippingTCK                v1r4     Phys   # Anton Poluektov
 use  StrippingUtils              v1r9     Phys   # Juan Palacios

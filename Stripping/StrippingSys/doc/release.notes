@@ -3,6 +3,94 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r1 2014-10-30 =========================
+
+* Phys/CommonParticles v8r19
+ - Fixed test_inputlocations_consistency.py addint "/Particles" to the Inputs
+   of StdLooseDalitzPi0
+  - move to Loki::VertexFitter in DiElectron making
+ - Rename StdLooseDetachedTau3pi to StdTightDetachedTau3pi and restore previous
+   version of the loose selection
+ - Add StdJetsR07 to StandardJets
+ - Add LambdaLD to StdLooseLambda
+ - Fix a bug that prevented StdLooseDiElectron being used as a
+   Standard Particle.
+ - Add StdLooseDiElectron to StandardBasicNeutral module.
+
+* Phys/CommonParticlesArchive v1r2
+ - Added archive for S21(r1)
+
+* Phys/StandardParticles v2r3
+ - Added locations as global variable in __init__.py in order to retrieve
+   all the algorithms used for StandardParticles
+ - Add StandardIntermediate to list of standard particles.
+
+* Phys/DisplVertices               v7r19
+ - Bug fix: forgot to clear the RelatedInfo map
+ - Fixed issue with Python dictionary and ROOT 6.02.01 (autoparsing on enums not implemented)
+ - Updated definition of Velo phi hits vector size variable, and added IRelatedInfoTool for it
+ - Include MNF in JetID variables
+ - Add option to cut on DOCA for vertex and jet tracks
+
+* Phys/IsolationTools              v1r1
+ - updated default xml file of RelInfoTrackIsolationBDT.cpp to new syntax.
+ - Added RelInfoBs2MuMuZVisoBDT to compute ZVtop based isolation to BsMuMu lines
+ - update to TrackIsolationBDT for Matteo
+ - Adding RelInfoBs2MuMuIsolations
+ - add HltEvent to the requirements
+ - new evalutaion of "b"-ness of jet in RelInfoJetsVariables
+ - Upgrade TrackIsolation to use particles
+ - UpgradeTrackIsolation
+ - Bs2tautau
+
+* Phys/StrippingArchive            v1r24
+ - prepared for Stripping21(r1)
+
+* Phys/StrippingConf               v4r12
+ - Removed test_dumplicated_outputLocation_in_single_stream_raises_Exception
+   in order to cope with Bs2MuMu lines written in multiple streams
+   IMPORTANT: to be fixed in the future.
+ - Add a new method to StrippingConf that implements a check where all
+   know configurables are searched, to see if they implement the 'MacCandidate'
+   limits, and if they do applies the given settings.
+   Usage is currently disabled by default.
+ - Added a function in StrippingConf to limit combinatorics
+   in StandardParticles
+ - Added the configuration of MaxCandidates and MaxCombinations for any
+   configurable in a StrippingLine
+ - Fix StrippingLine to raise an exception if both 'Location' and 'Locations'
+   are defined in RelatedInfoTools
+ - Modify StrippingLine to use the updated AddRelatedInfo interface
+   (which takes the list of RelatedInfo locations in "InfoLocations" map)
+ - Added attribute GlobalFlavourTagging (default=True) to StrippingConf class.
+   If the value is True the flavour tagging will be run using a unique instance
+   of BTagging, otherwise a per-line instantiation will be done.
+ - Modified how Flavour Tagging is handled in StrippingStream and StrippingConf
+   Flavour tagging is checked forcedly disabled (is enabled) for lines going to full DST streams
+ - Added attribute Verbose to StrippingConf. If Verbose == True it executes
+   the checks checkRawEventRequests, checkMDSTFlag, checkFlavourTagging
+ - Added a fix that remove lines with prescale <= 0 during the initialization
+   of a StrippingStream
+ - Removed exception in checkUniqueOutputLocations function of StrippingConf.
+   A warning has been introduced instead of the exception. This to allow a
+   stripping line to belong to multiple streams.
+   IMPORTANT: To be fixed in the future
+ - Added checkPVRefit function to StrippingStream
+ - Allow L0DU option to be configured with Preambulo
+   L0DU=('Code', 'Preambulo')
+ - Allow ODIN option to be configured with Preambulo
+   ODIN=('Code', 'Preambulo')
+ - Add an option 'RelatedInfoFilter' to the StrippingLine constructor.
+   RelatedInfoFilter is added to the end of StrippingLine sequencer, after RelatedInfo
+   is calculated. It can be a FilterDesktop or other configurable which uses
+   RelatedInfo variables to further filter the candidates.
+
+* Phys/StrippingSelections         v3r37
+ - Prepared for Stripping21(r1)
+
+* Phys/StrippingSettings           v2r31
+ - Prepared for Stripping21(r1)
+
 !========================= StrippingSys v9r0 2014-07-28 =========================
 
 * Phys/StrippingUtils v1r9
