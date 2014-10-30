@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r17 2014-10-30 =========================
+
 ! 2014-10-22 - Chris Jones
  - Extend the stripDSTStreamConf(...) method with an additional argument that
    allows the DST file extension to be set.
