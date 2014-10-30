@@ -5,6 +5,8 @@
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiPhysMC v9r7 2014-10-30 =========================
+
 ! 2014-09-23 - Chris Jones
  - Explicitly initialise LoKi::AuxFunBase() base class in 
    LoKi::PhysMCParticles::MCMatcherBase copy constructor.
