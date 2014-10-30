@@ -5,6 +5,8 @@
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTypes v2r9 2014-10-30 =========================
+
 ! 2014-10-24 - Anton Poluektov 
  - New variables for RelInfoVertexIsolationDetached
 
