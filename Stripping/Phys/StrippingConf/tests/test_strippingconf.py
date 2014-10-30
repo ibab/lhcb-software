@@ -10,7 +10,7 @@ from StrippingConf.Configuration import StrippingLine, StrippingStream, Strippin
 
 from Configurables import FilterDesktop
 
-
+"""
 def test_dumplicated_outputLocation_in_single_stream_raises_Exception() :
 
     filterX = FilterDesktop('FilterX')
@@ -28,7 +28,7 @@ def test_dumplicated_outputLocation_in_single_stream_raises_Exception() :
     stream = StrippingStream('TestStream', Lines = [lineX0, lineX1, lineY0, lineY1])
 
     raises( Exception, StrippingConf, Streams = [stream] )
-
+"""
 
 def test_dumplicated_outputLocation_in_different_streams_raises_Exception() :
 

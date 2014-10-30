@@ -4,6 +4,11 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-10-30 - Stefano Perazzini
+ - Removed test_dumplicated_outputLocation_in_single_stream_raises_Exception
+   in order to cope with Bs2MuMu lines written in multiple streams
+   IMPORTANT: to be fixed in the future.
+
 ! 2014-10-14 - Chris Jones
  - Add a new method to StrippingConf that implements a check where all
    know configurables are searched, to see if they implement the 'MacCandidate'
