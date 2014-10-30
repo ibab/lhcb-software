@@ -6,7 +6,7 @@ branches doc cmt
 #===================================================================
 
 use  DaVinciInterfaces          v2r23    Phys    # Current DV Maintainer
-use  DaVinciTypes               v2r8     Phys    # Current DV Maintainer
+use  DaVinciTypes               v2r9     Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r0    Phys    # Current DV Maintainer
 use  SelectionLine              v1r1     Kernel  # Gerhard Raven
