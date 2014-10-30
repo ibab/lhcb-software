@@ -16,7 +16,7 @@ Production release, built against Phys v19r2.
    Ostap, MicroDSTBase, MicroDSTTools, AnalysisPython, DSTWriters,
    DaVinciMCTools, DaVinciTrackScaling, DecayTreeTuple,
    DecayTreeTupleMuonCalib, DecayTreeTupleReco, FlavourTaggingChecker,
-   LoKiAlgoMC, LoKiPhysMC
+   LoKiAlgoMC, LoKiPhysMC, JetAccessoriesMC
 
 In Ostap :
  . Numerous updates. See package release notes.
