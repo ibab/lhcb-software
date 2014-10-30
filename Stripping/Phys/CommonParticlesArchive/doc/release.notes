@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-10-29 - Andrea Contu
+ - Modified StdLooseDalitzPi0.py in S21(r1) following change in CommonParticles
+
+! 2014-10-29 - Andrea Contu
  - Added archive for S21(r1)
 
 

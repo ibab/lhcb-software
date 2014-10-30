@@ -26,7 +26,7 @@ from Configurables import CombineParticles
 
 ## create the algorithm  : pi0 -> gg(ee) (1 conversion)
 pi02gee =  CombineParticles( "StdLoosePi02gee", DecayDescriptor = 'pi0 -> gamma gamma' )
-pi02gee.Inputs = ["Phys/StdLooseAllPhotons/Particles","Phys/StdAllLooseGammaLL","Phys/StdAllLooseGammaDD"]
+pi02gee.Inputs = ["Phys/StdLooseAllPhotons/Particles","Phys/StdAllLooseGammaLL/Particles","Phys/StdAllLooseGammaDD/Particles"]
 pi02gee.ParticleCombiners.update( {"" : "ParticleAdder"} )
 pi02gee.Preambulo += ["cnv = switch(INTES('StdLooseAllPhotons',False),1,0)"]
 pi02gee.MotherCut = " (MM  < 170*MeV) & (MM  > 90*MeV) & (1 == CHILD(1,cnv)+CHILD(2,cnv) )" 
@@ -35,7 +35,7 @@ StdLoosePi02gee=pi02gee
 
 ## create the algorithm :  pi0 -> g(ee)g(ee)  (2 conversions)
 pi024e =  CombineParticles( "StdLoosePi024e", DecayDescriptor = 'pi0 -> gamma gamma' )
-pi024e.Inputs = ["Phys/StdAllLooseGammaLL","Phys/StdAllLooseGammaDD"]
+pi024e.Inputs = ["Phys/StdAllLooseGammaLL","Phys/StdAllLooseGammaDD/Particles"]
 pi024e.ParticleCombiners.update( {"" : "ParticleAdder"} )
 #pi024e.ParticleCombiners.update( {"" : "LoKi::VertexFitter"} )
 pi024e.MotherCut = " (MM  < 170*MeV) & (MM  > 90*MeV)"
@@ -45,7 +45,7 @@ StdLoosePi024e=pi024e
 ## create the algorithm :  pi0 -> gee (Dalitz decay)  - note : also contains Long-Long contribution to 1  conversion gg(ee) 
 from CommonParticles.StdLooseDiElectron    import *
 pi0Dalitz =  CombineParticles( "StdLooseDalitzPi0", DecayDescriptor = 'pi0 -> gamma gamma' )
-pi0Dalitz.Inputs = ["Phys/StdLooseAllPhotons/Particles","Phys/StdDiElectronGamma"]
+pi0Dalitz.Inputs = ["Phys/StdLooseAllPhotons/Particles","Phys/StdDiElectronGamma/Particles"]
 #pi0Dalitz.ParticleCombiners.update( {"" : "ParticleAdder"} )
 pi0Dalitz.ParticleCombiners.update( {"" : "LoKi::VertexFitter"} )
 pi0Dalitz.Preambulo += ["cnv = switch(INTES('StdLooseAllPhotons',False),1,0)"]
