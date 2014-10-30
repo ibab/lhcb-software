@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r32 2014-10-30 =========================
+
 ! 2014-10-29 - Andrea Contu
  - Updated dbases for Stripping21(r1)
 
@@ -32,7 +34,7 @@
  - Updated Bd2eeKstarLines dictionaries with relinfotools (21 & 21r1)
 
 ! 2014-10-12 - Stefano Perazzini
- - Corrected dictionaries for StrippingBu2rho0rhoPlus.py 
+ - Corrected dictionaries for StrippingBu2rho0rhoPlus.py
 
 ! 2014-10-07 - Stefano Perazzini
  - Slightly modified the dictionaries for Bu2Kpi0.
@@ -66,14 +68,14 @@
  - Updated s21 and s21r1 dictionaries: prescaled tuned up.
 
 ! 2014-09-16 - Wenbin Qian
- - Add more lines 
+ - Add more lines
 
 ! 2014-09-16 - Carlos Vazquez Sierra (B2CC)
  - Updated s21 and s21r1 dictionaries: moved StrippingBetaSBs2JpsiPhiDetachedLine to Dimuon stream.
 
 ! 2014-09-12 - Roberta Cardinale
  - Update to XicHHH
- - Deleted Strippingbetac2phip from stripping21 
+ - Deleted Strippingbetac2phip from stripping21
 
 ! 2014-09-12 - Andrea Contu
   - Update to Semileptonic and new dbase for s21(r1)
@@ -82,7 +84,7 @@
 	- Updated dictionaries of Bc2Ds1Gamma
 
 ! 2014-09-11 - Lucio Anderlini (BandQ)
-  - Updated dictionaries for PromptCharm to include line 
+  - Updated dictionaries for PromptCharm to include line
     StrippingOmegaCstarForPromptCharm
   - Updated dictionaries of XicHHH to speed it up
 
