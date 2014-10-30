@@ -1,7 +1,7 @@
 ################################################################################
 # Package:   Ostap
 ################################################################################
-gaudi_subdir(Ostap v1r2)
+gaudi_subdir(Ostap v1r3)
 
 gaudi_depends_on_subdirs(Phys/AnalysisPython
                          Analysis/PyAna)

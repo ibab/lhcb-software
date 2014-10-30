@@ -8,6 +8,8 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+!========================= Ostap v1r3 2014-10-30 =========================
+
 ! 2014-10-29 - Vanya Belyaev
  - fix Flatte2_pdf 
 
@@ -17,7 +19,6 @@
 ! 2014-10-24 - Vanya Belyaev
  - FitBasic.py
    makeVar: minor improvement 
-
 
 ! 2014-10-22 - Vanya Belyaev
  - FitBkgModels.py: fix typo
@@ -35,7 +36,6 @@
 ! 2014-09-23 - Vanya Belyaev
  - Kisa.py  - new module with the first attempt for multiprocessing for Ostap  
    
-
 ! 2014-09-19 - Vanya Belyaev
  - RooFitDeco.py  
    minor fix 
@@ -45,7 +45,6 @@
  - allow also 
 
    >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = (1,2) ) ## draw results
-
 
 ! 2014-09-18 - Vanya Belyaev
  - 2D-fits: add possibility to visualize fit projections using Cut/Projection ranges 

@@ -8,7 +8,7 @@
 #                by $Author:$
 # =============================================================================
 package       Ostap
-version       v1r2p1
+version       v1r3
 
 # =========== structure =======================================================
 branches      cmt doc python scripts tests
