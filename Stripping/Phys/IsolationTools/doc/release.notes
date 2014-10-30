@@ -3,23 +3,23 @@
 ! Responsible : Alex Shires
 !============================================================================
 
-! 2014-10-13 - Anton Poluektov 
+!========================= IsolationTools v1r1 2014-10-30 =========================
+
+! 2014-10-13 - Anton Poluektov
  - Modify Bs2MuMuTrackIsolation not to produce warning when applied to combined particles
 
 ! 2014-10-07 - Alessandro Mordà
 - Modified all the RelInfoBstautau* tools (exept the RelInfoBstautauCDFiso*) to solve issues related to the RecursionLevel
 
-
-
 ! 2014-09-24 - Ricardo Vazquez Gomez
- - changed doca to log_doca in RelInfoTrackIsolationBDT.cpp 
+ - changed doca to log_doca in RelInfoTrackIsolationBDT.cpp
 
 ! 2014-09-23 - Alex Shires
  - changed RelInfoTrackIsolationBDT to use logipchi2any for options 1 and 2
 
 ! 2014-09-23 - Ricardo Vazquez Gomez
  - updated default xml file of RelInfoTrackIsolationBDT.cpp to new syntax.
- - add more verbosity to RelInfoTrackIsolationBDT.cpp 
+ - add more verbosity to RelInfoTrackIsolationBDT.cpp
 
 ! 2014-09-15 Alex Shires
  - change some lists into Ranges
@@ -38,7 +38,7 @@
  - removed IsolationInfo again, correctly
 
 ! 2014-09-05 - Stefano Perazzini
- - Reintroduced IsolationInfo.h as its absence was preventing the 
+ - Reintroduced IsolationInfo.h as its absence was preventing the
    compilation of the package
 
 ! 2014-09-04 - Alex Shires
@@ -46,7 +46,7 @@
  - renamed BDTs, removed IsolationInfo.h
 
 ! 2014-09-01 - Fatima Soomro
- - Adding RelInfoBs2MuMuIsolations 
+ - Adding RelInfoBs2MuMuIsolations
 
 ! 2014-08-31 - Cedric Potterat
  - fixed CMakeLists
