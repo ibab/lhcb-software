@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r37 2014-10-30 =========================
+
 ! 2014-10-28 Roberta Cardinale
 	- Reverted back to the previous version for cone variables for StrippingXic2HHH
 
@@ -30,11 +32,11 @@
  - Updated K1 lines in B2XMuMu to avoid Max candidate issues.
 
 ! 2014-10-27 - Stefano Perazzini
- - Explicitly set the ParticleCombiners in StrippingBs2gammagamma 
+ - Explicitly set the ParticleCombiners in StrippingBs2gammagamma
    "double" lines
 
 ! 2014-10-27 - Stefano Perazzini
- - Removed MomentumCombiner from Beauty2Charm_DBuilder.py and 
+ - Removed MomentumCombiner from Beauty2Charm_DBuilder.py and
    Beauty2Charm_HHBuilder.py
 
 ! 2014-10-26 - Jan Maratas
@@ -52,7 +54,7 @@
  - Use OVF in gamma gamma double line.
 
 ! 2014-10-24 - T Blake
- - Updated PID swapping of B2XMuMu and changed MomentumCombiner to 
+ - Updated PID swapping of B2XMuMu and changed MomentumCombiner to
  	 LoKi::VertexFitter for K+ pi0 and pi+ pi0 combinations.
 
 
@@ -65,7 +67,7 @@
 
 
 ! 2014-10-22 - James Mccarthy
- - Changed order of particles in decay descriptors for Nbody tool in StrippingB2XEta.py 
+ - Changed order of particles in decay descriptors for Nbody tool in StrippingB2XEta.py
 
 ! 2014-10-17 - Mika Vesterinen
  - Added D0enu line to B2DMuNuX module
@@ -77,7 +79,7 @@
  - Added isolation tools to all lines in Bs2MuMuLines
 
 ! 2014-10-14 - Jibo He
- - Enabled isolation for Bd->eeKstarBDT lines 
+ - Enabled isolation for Bd->eeKstarBDT lines
 
 ! 2014-10-10 - Stefano Perazzini
  - Changed instances of OfflineVertexFitter with OfflineVertexFitter:PUBLIC
@@ -152,7 +154,7 @@ changed output locations for the IsolationTools variables
   - Document change to StrippingDitau.py. Nice python.
 
 ! 2014-09-22 - Jibo He
-  - Added Bs->eta_c (Ks K Pi) phi lines 
+  - Added Bs->eta_c (Ks K Pi) phi lines
 
 ! 2014-09-19 - Ronan Wallace
   - Fix to StrippingLowMult.py (duplicate inputs in combine particles).
@@ -172,15 +174,15 @@ changed output locations for the IsolationTools variables
   - Updated test utility tests/TestB2CCLines.py for B2CC.
 
 ! 2014-09-16 - Wenbin Qian
-   Add more lines with D->k3pi 
- 
+   Add more lines with D->k3pi
+
 ! 2014-09-16 - Carlos Vazquez Sierra
   - Updated some lines in StrippingB2JpsiXforBeta_s.py:
     + StrippingBetaSBd2JpsiPi0DetachedLine/PrescaledLine updated.
     + StrippingBetaSBs2JpsiPhiDetachedLine moved to Dimuon stream (FullDST).
 
 ! 2014-09-15 -Marianna Fontana (on behalf of Markward Britsch)
-  - Modified BPVLTISIGNCHI2('PropertimeFitter/properTime:PUBLIC') in BPVLTISIGNCHI2() 
+  - Modified BPVLTISIGNCHI2('PropertimeFitter/properTime:PUBLIC') in BPVLTISIGNCHI2()
 
 ! 2014-09-12 -Wenbin Qian
   fix duplicated inputs
@@ -202,15 +204,15 @@ changed output locations for the IsolationTools variables
 
 ! 2014-09-11 - Vanya Belyaev
 
- - StrippingPromptCharm 
-   Extend the line Omega_c*- > Xi_c+ K- to accept also Lambda_C+ K- combinations 
-   and enlarge the mass window 
+ - StrippingPromptCharm
+   Extend the line Omega_c*- > Xi_c+ K- to accept also Lambda_C+ K- combinations
+   and enlarge the mass window
 
 ! 2014-09-11 - Andrea Contu
  - Fix to StrippingB2MuMuMuMuLines.py
 
 ! 2014-09-11 - Vanya Belyaev
- - StrippingPromptCharm 
+ - StrippingPromptCharm
    add new line for Omega_c*- > Xi_c+ K- for Marco Pappagallo
 
 ! 2014-09-11 - Alexander Baranov
@@ -225,7 +227,7 @@ changed output locations for the IsolationTools variables
    to bring down the retention and CPU.
 
 ! 2014-09-10 - John Beddow
- - Added B2PPSameSignLine to B2TwoBaryons.py 
+ - Added B2PPSameSignLine to B2TwoBaryons.py
 
 ! 2014-09-09 - Carlos Vazquez Sierra
  - Updated StrippingB2Psi2SXMuMu.py and StrippingB2Psi2SX.py
@@ -238,8 +240,8 @@ changed output locations for the IsolationTools variables
  - Removed reference to PropertimeFitter in StrippingB2HHBDT.py and
    StrippingHb2Charged2Body.py
 
-! 2014-09-05 - Anton Poluektov 
- - Updated Beauty2Charm to include combinations B0->[D+K+pi-pi-]cc, lines 
+! 2014-09-05 - Anton Poluektov
+ - Updated Beauty2Charm to include combinations B0->[D+K+pi-pi-]cc, lines
      StrippingB02DKPiPiSSD2HHHPIDBeauty2CharmLine
      StrippingB02DKPiPiSSWSD2HHHPIDBeauty2CharmLine
 
@@ -250,7 +252,7 @@ changed output locations for the IsolationTools variables
  - Minor fix to StrippingRareStrange
 
 ! 2014-09-05 -  Konstantinos A. Petridis
- - Modified StrippingB2XMuMu.py such that it 
+ - Modified StrippingB2XMuMu.py such that it
    now goes into mdst.dst
 
 ! 2014-09-04 -  Rafael Coutinho
@@ -845,7 +847,6 @@ changed output locations for the IsolationTools variables
 
 ! 2014-07-29 - Mika Vesterinen
  - Added new module, StrippingTrackEffD0ToK3Pi
-
 
 !========================= StrippingSelections v3r36 2014-07-28 =========================
 
