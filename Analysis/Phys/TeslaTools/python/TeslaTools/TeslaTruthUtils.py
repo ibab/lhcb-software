@@ -20,7 +20,7 @@ def getRelLoc(prefix):
     return relloc
 
 def associateSequence(prefix,debug):
-    from Gaudi.Configuration import * 
+    from Gaudi.Configuration import GaudiSequencer 
     from Configurables import TrackAssociator, ChargedPP2MC
     base = "/Event/"
     protos = prefix + "/Protos"
@@ -42,7 +42,6 @@ def associateSequence(prefix,debug):
     return seq
 
 def makeTruth(input,rel,toollist):
-    from Gaudi.Configuration import * 
     from Configurables import TupleToolMCTruth, DaVinciSmartAssociator, P2MCPFromProtoP
     from Configurables import MCMatchObjP2MCRelator, TupleToolMCBackgroundInfo, BackgroundCategory
     MCTruth = TupleToolMCTruth() 

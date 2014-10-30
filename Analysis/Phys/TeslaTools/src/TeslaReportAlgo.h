@@ -52,7 +52,7 @@ public:
         inline bool is_last(Iter iter, const Cont& cont)
         {
           return (iter != cont.end()) && (next(iter) == cont.end());
-        };
+        }
 
 protected:
 
