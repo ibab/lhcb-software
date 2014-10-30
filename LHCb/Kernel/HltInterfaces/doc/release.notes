@@ -2,6 +2,9 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+! 2014-10-30 - Gerhard Raven
+ - TCK: replace do-it-yourself unhex with std::stoul, make operator<< inline
+
 ! 2014-10-14 - Gerhard Raven
  - streamline use of boost::ptree
 
