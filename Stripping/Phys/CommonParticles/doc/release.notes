@@ -8,7 +8,9 @@
 !
 !-----------------------------------------------------------------------------
 
-
+! 2014-10-30 - Stefano Perazzini
+ - Fixed test_inputlocations_consistency.py addint "/Particles" to the Inputs
+   of StdLooseDalitzPi0
 
 ! 2014-09-22 - Olivier Deschamps
   - move to Loki::VertexFitter in DiElectron making
