@@ -106,16 +106,13 @@ std::istream& ConfigTreeNode::read(std::istream& is) {
     return is;
 }
 
-// when switching to JSON (or XML) make Label and nodes optional (saves space!)
-// ditto for Leaf: top level nodes have no leaf. (value if not present: MD5::createInvalid)
-// NOTE: when switching, make sure that digest continues to use this representation...
 std::string ConfigTreeNode::str() const {
-    std::string out; out.reserve(128);
+    std::string out; out.reserve( 58+label().size()+34*nodes().size() );
     out +=  "Label: "; out += label();       out+= '\n';
     out +=  "Leaf: ";  out += leaf().str();  out+= '\n';
     out +=  "Nodes: [\n";
     std::for_each( std::begin(nodes()), std::end(nodes()), [&out]( const NodeRef& i ) {
-         out +=  " "; out +=  i.str() ; out += '\n';
+         out += ' '; out +=  i.str() ; out += '\n';
     } );
     out +=  "]\n";
     return out;

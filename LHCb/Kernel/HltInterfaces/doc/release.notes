@@ -9,6 +9,7 @@
     newlines when making string rep, use std::copy_if instead of boost to do so,
     add one more check (neccessady, but unfortunately not sufficient) on string
     rep of property
+ - PropertyConfig: allocate string of right length for string rep.
 
 ! 2014-10-14 - Gerhard Raven
  - streamline use of boost::ptree
