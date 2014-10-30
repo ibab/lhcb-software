@@ -1,7 +1,7 @@
 ################################################################################
 # Package: DisplVertices
 ################################################################################
-gaudi_subdir(DisplVertices v7r18)
+gaudi_subdir(DisplVertices v7r19)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Event/HltEvent
