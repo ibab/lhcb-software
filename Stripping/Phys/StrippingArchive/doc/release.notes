@@ -4,13 +4,13 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r24 2014-10-30 =========================
+
 ! 2014-10-30 - Andrea Contu
  - Update test reference
 
-
 ! 2014-10-28 - Andrea Contu
  - Added Stripping21 and 21r1
-
 
 ! 2014-08-11 - Stefano Perazzini
  - Extended timeout for instantiate-all-strip.qmt
