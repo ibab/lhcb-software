@@ -5,6 +5,8 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v3r4 2014-10-30 =========================
+
 ! 2014-10-07 - Olli Lupton
  - Fixes to work with changes in Event/SwimmingEvent to support ROOT6 (use of
    Swimming::Helpers).
