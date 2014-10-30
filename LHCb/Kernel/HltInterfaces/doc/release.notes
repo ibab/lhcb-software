@@ -10,6 +10,8 @@
     add one more check (neccessady, but unfortunately not sufficient) on string
     rep of property
  - PropertyConfig: allocate string of right length for string rep.
+ - ConfigTreeNodeAlias: inline operators<< and operator>>, replace do-it-yourself
+   unhex with std:stoul
 
 ! 2014-10-14 - Gerhard Raven
  - streamline use of boost::ptree

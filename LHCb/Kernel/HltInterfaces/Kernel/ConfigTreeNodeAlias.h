@@ -6,8 +6,6 @@
 #include <iostream>
 #include "boost/format.hpp"
 
-
-
 class ConfigTreeNodeAlias {
 public:
     typedef ConfigTreeNode::digest_type  digest_type;
@@ -64,9 +62,9 @@ private:
     alias_type      m_alias;
 };
 
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNodeAlias& x);
-std::istream& operator>>(std::istream& is, ConfigTreeNodeAlias& x);
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNodeAlias::alias_type& x);
-std::istream& operator>>(std::ostream& os, ConfigTreeNodeAlias::alias_type& x);
+inline std::ostream& operator<<(std::ostream& os, const ConfigTreeNodeAlias& x) { return x.print(os); }
+inline std::istream& operator>>(std::istream& is, ConfigTreeNodeAlias& x) { return x.read(is); }
+inline std::ostream& operator<<(std::ostream& os, const ConfigTreeNodeAlias::alias_type& x) { return x.print(os); }
+inline std::istream& operator>>(std::istream& is, ConfigTreeNodeAlias::alias_type& x) { return x.read(is); }
 
 #endif

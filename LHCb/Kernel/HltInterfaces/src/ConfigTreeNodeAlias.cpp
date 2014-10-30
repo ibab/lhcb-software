@@ -6,25 +6,7 @@
 
 using Gaudi::Math::MD5;
 
-unsigned char unhex(unsigned char C) {
-    unsigned char c=tolower(C);
-    boost::uint8_t x = ( c >= '0' && c <= '9' ? c-'0' :
-                       ( c >= 'a' && c <='f'  ? 10+(c-'a') : 255 ) );
-    if ( x&0xF0 ) {  /* whoah: C is not in [0-9a-fA-F] */ }
-    return x;
-}
-
-unsigned int unhex(const std::string& val) {
-    assert( val.substr(0,2)=="0x" );
-    assert( val.size()==10 );
-    unsigned int i = 0;
-    const char *x = val.c_str()+2;
-    while (*x) i = ( i<<4 | unhex(*x++) );
-    return i;
-}
-
-void
-ConfigTreeNodeAlias::invalidate(const std::string& reason) {
+void ConfigTreeNodeAlias::invalidate(const std::string& reason) {
     if (!reason.empty()) std::cerr << reason << std::endl;
     m_ref = digest_type::createInvalid();
     m_alias = std::string();
@@ -42,7 +24,7 @@ ConfigTreeNodeAlias::ConfigTreeNodeAlias(const digest_type& ref, const alias_typ
             return;
         }
         //  and if most significant bit is set, lower 16 must be zero and vice versa
-        unsigned int tck = unhex(what[1]);
+        unsigned int tck = std::stoul(what[1],nullptr,0);
         if (  (tck & 0x80000000) != 0 ? ((tck&0xFFFF)!=0) : ((tck&0xFFFF)==0) ){
            invalidate("the requested TCK does not match the rules..");
            return;
@@ -99,9 +81,3 @@ std::ostream& ConfigTreeNodeAlias::print(std::ostream& os) const {
     return os << "Ref: "   << ref() << "\n"
               << "Alias: " << alias().str()  << std::endl;
 }
-
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNodeAlias& x) { return x.print(os); }
-std::istream& operator>>(std::istream& is, ConfigTreeNodeAlias& x) { return x.read(is); }
-
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNodeAlias::alias_type& x) { return x.print(os); }
-std::istream& operator>>(std::istream& is, ConfigTreeNodeAlias::alias_type& x) { return x.read(is); }
