@@ -4,6 +4,11 @@
 !------------------------------------------------------------------------------
 ! 2014-10-30 - Gerhard Raven
  - TCK: replace do-it-yourself unhex with std::stoul, make operator<< inline
+ - ConfigTreeNode, PropertyConfig: make operator<< and operator>> inline
+ - ConfigTreeNode: allocate string of right length for string rep, only strip
+    newlines when making string rep, use std::copy_if instead of boost to do so,
+    add one more check (neccessady, but unfortunately not sufficient) on string
+    rep of property
 
 ! 2014-10-14 - Gerhard Raven
  - streamline use of boost::ptree

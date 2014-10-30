@@ -9,10 +9,6 @@
 #include "GaudiKernel/IProperty.h"
 #include "LHCbMath/MD5.h"
 
-class PropertyConfig; 
-std::ostream& operator<<(std::ostream& os, const PropertyConfig& x);
-std::istream& operator>>(std::istream& is, PropertyConfig& x);
-
 class PropertyConfig : public boost::equality_comparable<PropertyConfig> {
 public:
     typedef Gaudi::Math::MD5 digest_type;
@@ -90,4 +86,7 @@ private:
     void updateCache() const;
     void initProperties( const IProperty& obj );
 };
+
+inline std::ostream& operator<<(std::ostream& os, const PropertyConfig& x) { return x.print(os);}
+inline std::istream& operator>>(std::istream& is, PropertyConfig& x) { return x.read(is); }
 #endif

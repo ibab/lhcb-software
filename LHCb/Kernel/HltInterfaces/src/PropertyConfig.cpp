@@ -1,20 +1,14 @@
 #include <cstdlib>
 #include <memory>
 #include "Kernel/PropertyConfig.h"
-#include "boost/regex.hpp"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IProperty.h"
-#include <boost/algorithm/string/erase.hpp>
-
-using namespace boost;
 
 void PropertyConfig::initProperties(const IProperty& obj) {
     const auto& items = obj.getProperties();
     std::for_each( std::begin(items), std::end(items), [&]( const Property *i ) {
         // FIXME: check for duplicates!!!
-        // FIXME: remove the erasing of all newlines when switching print to json or xml...
-        m_properties.emplace_back(i->name(),boost::algorithm::erase_all_copy(i->toString(), "\n"));
-        // m_properties.emplace_back(i->name(),i->toString()); 
+        m_properties.emplace_back(i->name(),i->toString()); 
         // verify that toString / fromString are each others inverse...
         // WARNING: this does not guarantee that we don't loose information -- toString may be lossy!!!!
         std::unique_ptr<Property> clone( i->clone() );
@@ -24,6 +18,15 @@ void PropertyConfig::initProperties(const IProperty& obj) {
             ::abort(); // this is REALLY bad, and we should die, die, die!!!
                        // as we won't realize this until we read back later, so we
                        // really have to make sure this is never written in the first place
+        }
+        if ( clone->toString() != m_properties.back().second ) {
+            std::cerr << " Property::fromString, followed by Property::toString does not give the same result:\n"
+                      << "\'" <<  clone->toString() << "\' vs. \n\'" << m_properties.back().second << "\'"
+                      << std::endl;
+            // this is still no guarantee everything is OK, as it checks that checks that toString is a projection operator. 
+            // The initial toString may be lossy, and this 'just' checks that the subsequent toString doesn't loose anything 
+            // more than the initial one...
+            ::abort();
         }
     } );
     m_digest = digest_type::createInvalid();
@@ -58,9 +61,10 @@ PropertyConfig PropertyConfig::copyAndModify(const std::string& keyAndValue) con
     return copyAndModify(keyAndValue.substr(0,c),keyAndValue.substr(c+1,std::string::npos));
 }
 
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/json_parser.hpp>
-#include <boost/property_tree/xml_parser.hpp>
+#include "boost/property_tree/ptree.hpp"
+#include "boost/property_tree/json_parser.hpp"
+#include "boost/property_tree/xml_parser.hpp"
+#include "boost/regex.hpp"
 
 using boost::property_tree::ptree;
 namespace {
@@ -127,14 +131,25 @@ std::string PropertyConfig::str() const {
     // this is the 'original' canonical representation that MUST be used to compute the hash....
     // (unless we 'convert' & 're-index' the already written data to any new format)
     // as a result, do NOT change the result of this function!!!
-    std::string out; out.reserve(128);
+    std::string out; 
+    out.reserve(std::accumulate( std::begin(properties()), std::end(properties()),
+                                 name().size()+kind().size()+type().size()+37,
+                                 [](int s, const Prop& i) { 
+                        return s+5+i.first.size()+i.second.size(); 
+    } ) ) ;
     out +=  "Name: "; out += name(); out += '\n';
     out +=  "Kind: "; out += kind(); out += '\n';
     out +=  "Type: "; out += type(); out += '\n';
     out +=  "Properties: [\n";
     std::for_each( std::begin(properties()), std::end(properties()), [&out]( const Prop& i ) {
         out +=  " '"; out+= i.first ; out += "':"; 
-        out += boost::algorithm::erase_all_copy(i.second, "\n"); out += '\n';
+        // remove all newlines... as we use newline as a record seperator (and yes, this
+        // should have been escaped instead... didn't think of that when I originally wrote 
+        // it...)
+        std::copy_if( std::begin(i.second), std::end(i.second), 
+                      std::back_inserter(out), 
+                      [](const char x) { return x!='\n'; } );
+        out += '\n';
     } );
     out += "]\n" ;
     return out;
@@ -144,10 +159,11 @@ std::ostream& PropertyConfig::print(std::ostream& os) const {
     return os << str();
 }
 
-// REMINDER: when switching 'print' to json, remove the erasing of all newlines in initProperties
 std::ostream& PropertyConfig::print_json(std::ostream& os) const {
     // note: advantage of json (or xml): in case of hash collision, can add an optional extra field...
-    // but that only works if the json representation is used to compute the digest!!!
+    // but that only works if the json representation is used to compute the digest -- which isn't the
+    // case!!! (not impossible, but requires a very carefull, non-trivial re-persisting of the already 
+    // persistent config data...)
     ptree top;
     top.put("Name",name());
     top.put("Kind",kind());
@@ -158,6 +174,3 @@ std::ostream& PropertyConfig::print_json(std::ostream& os) const {
     write_json(os,top,false);
     return os;
 }
-
-std::ostream& operator<<(std::ostream& os, const PropertyConfig& x) { return x.print(os);}
-std::istream& operator>>(std::istream& is, PropertyConfig& x) { return x.read(is); }

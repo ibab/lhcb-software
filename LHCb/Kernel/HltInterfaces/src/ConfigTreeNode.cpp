@@ -34,7 +34,7 @@ void read_custom(std::istream& is, ptree& top) {
                         nodeend("^\\]$");
     std::string s;
     boost::smatch what;
-    ptree& nodes = top.put_child(ptree::path_type("Nodes"),ptree{});
+    auto& nodes = top.put_child(ptree::path_type("Nodes"),ptree{});
     while (std::istream::traits_type::not_eof( is.peek()) ) {
         getline(is,s);
         if (s.empty()) continue;
@@ -97,7 +97,7 @@ std::istream& ConfigTreeNode::read(std::istream& is) {
     } else {
         m_label = top.get<std::string>("Label",std::string()); // add default: empty string (most nodes have no label)
         m_leaf  = top.get<digest_type>("Leaf",digest_type::createInvalid());  // add default: digest_type::createInvalid() (top level has no leaf)
-        const ptree& nodes = top.get_child("Nodes", ptree{});
+        const auto& nodes = top.get_child("Nodes", ptree{});
         m_nodes.clear(); m_nodes.reserve( nodes.size() );
         std::transform( std::begin(nodes), std::end(nodes), 
                         std::back_inserter(m_nodes),
@@ -140,6 +140,3 @@ std::ostream& ConfigTreeNode::print_json(std::ostream& os) const {
     write_json(os,top,false);
     return os;
 }
-
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os); }
-std::istream& operator>>(std::istream& is, ConfigTreeNode& x)       { return x.read(is); }

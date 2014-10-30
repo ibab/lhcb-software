@@ -7,11 +7,6 @@
 #include "boost/optional.hpp"
 #include "boost/operators.hpp"
 
-class ConfigTreeNode;
-
-std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x);
-std::istream& operator>>(std::istream& is, ConfigTreeNode& x);
-
 class ConfigTreeNode : public boost::equality_comparable<ConfigTreeNode> {
 public:
     // this class represent an adjacency view layout of the configuration tree...
@@ -91,5 +86,7 @@ private:
     mutable digest_type m_digest;
 };
 
+inline std::ostream& operator<<(std::ostream& os, const ConfigTreeNode& x) { return x.print(os); }
+inline std::istream& operator>>(std::istream& is, ConfigTreeNode& x)       { return x.read(is); }
 
 #endif
