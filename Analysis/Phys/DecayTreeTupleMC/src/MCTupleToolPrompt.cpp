@@ -82,12 +82,21 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::MCParticle*
       mcParentKey=mcp_parent->key();
 
       lclPprop = m_ppSvc->find( mcp_parent->particleID() );
-      lcl_lifetime = lclPprop->lifetime();
 
-      if(msgLevel(MSG::DEBUG))
+      // Some particle IDs are not known to the ppSvc
+      // Log a warning if that's the case and assign a large negative lifetime
+      if (lclPprop)
       {
-        debug() << "Particle: " << lclPprop->evtGenName()
-                << "  lifetime: " << lcl_lifetime << endmsg;
+        lcl_lifetime = lclPprop->lifetime();
+        if(msgLevel(MSG::DEBUG))
+        {
+          debug() << "Particle: " << lclPprop->evtGenName()
+                  << "  lifetime: " << lcl_lifetime << endmsg;
+        }
+      } else {
+        warning() << "Particle ID '" << mcp_parent->particleID()
+                  << "' not found in particle property service" << endmsg;
+        lcl_lifetime = -999.0;
       }
 
       if ( lcl_lifetime > m_maxLifetime*Gaudi::Units::ns )
