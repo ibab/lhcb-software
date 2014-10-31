@@ -67,6 +67,8 @@ void EvtRareLbToLllFFlQCD::getFF( EvtParticle* parent,
   
   double m1 = parent->getP4().mass();
   double m2 = lambda->getP4().mass();
+  EvtVector4R p4parent;
+  p4parent.set( parent->mass(), 0 , 0 , 0 );
   double q2 = ( parent->getP4() - lambda->getP4() ).mass2();
   double vdotvp = calculateVdotV(parent, lambda);
   double shat = (m1*m1+m2*m2-q2)/2./m1-m2;

@@ -33,7 +33,7 @@ void EvtRareLbToLllFFGutsche::init()
   fVconsts[1][0] = 0.043;
   fVconsts[1][1] = 2.411;
   fVconsts[1][2] = 1.531;
-  fVconsts[2][0] = 0.003;
+  fVconsts[2][0] = -0.003;
   fVconsts[2][1] = 2.815;
   fVconsts[2][2] = 2.041;
 
@@ -90,7 +90,9 @@ void EvtRareLbToLllFFGutsche::getFF( EvtParticle* parent,
   
   double m1 = parent->getP4().mass();
   double m2 = lambda->getP4().mass();
-  double q2 = ( parent->getP4() - lambda->getP4() ).mass2();
+  EvtVector4R p4parent;
+  p4parent.set( parent->mass(), 0 , 0 , 0 );
+  double q2 = ( p4parent - lambda->getP4() ).mass2();
   double m21 = m2/m1;
   double vdotvp = calculateVdotV(parent, lambda);
   double shat = q2/m1/m1;
@@ -107,12 +109,25 @@ void EvtRareLbToLllFFGutsche::getFF( EvtParticle* parent,
   double fTA[2];
   for (int i=0;i<=1;++i) {
     fTV[i] = formFactorParametrization(shat, fTVconsts[i][0], fTVconsts[i][1],
-                                      fVconsts[i][2]);
+                                      fTVconsts[i][2]);
     fTA[i] = formFactorParametrization(shat, fTAconsts[i][0], fTAconsts[i][1],
-                                      fAconsts[i][2]);
+                                      fTAconsts[i][2]);
   }
 
+/*
+  std::cout<<"fV0 "<<shat<<" "<<fV[0]<<std::endl;
+  std::cout<<"fV1 "<<shat<<" "<<fV[1]<<std::endl;
+  std::cout<<"fV2 "<<shat<<" "<<fV[2]<<std::endl;
+  std::cout<<"fA0 "<<shat<<" "<<fA[0]<<std::endl;
+  std::cout<<"fA1 "<<shat<<" "<<fA[1]<<std::endl;
+  std::cout<<"fA2 "<<shat<<" "<<fA[2]<<std::endl;
+  std::cout<<"fTV0 "<<shat<<" "<<fTV[0]<<std::endl;
+  std::cout<<"fTV1 "<<shat<<" "<<fTV[1]<<std::endl;
+  std::cout<<"fTA0 "<<shat<<" "<<fTA[0]<<std::endl;
+  std::cout<<"fTA1 "<<shat<<" "<<fTA[1]<<std::endl;
+*/
   // Both v^2==v'^2==1 by definition
+
   FF.F_[0] = fV[0] + fV[1]*( 1 + m21 );
   FF.F_[1] = fV[2] - fV[1];
   FF.F_[2] = -m21*( fV[1] + fV[2] );
@@ -121,14 +136,28 @@ void EvtRareLbToLllFFGutsche::getFF( EvtParticle* parent,
   FF.G_[1] = fA[2] - fA[1];
   FF.G_[2] = -m21*( fA[1] + fA[2] );
 
+
   FF.FT_[0] = fTV[1]*( m1 + m2) + fTV[0]*( -2*vdotvp*m2 + m1 + m2*m21 );
-  FF.FT_[1] = fTV[0] * m2 - m1 * ( fTV[0] + fTV[1] );
-  FF.FT_[2] = -fTV[0] * m2 * m21 + m2 * ( fTV[0] - fTV[1] );
+  FF.FT_[1] = -fTV[0] * m2 + m1 * ( fTV[0] + fTV[1] );
+  FF.FT_[2] = -m2*(fTV[0] * ( m21 -1 ) + fTV[1] );
 
   FF.GT_[0] = -fTA[1]*( m1 - m2) + fTA[0]*( -2*vdotvp*m2 + m1 + m2*m21 );
-  FF.GT_[1] = fTA[0] * m2 + m1 * ( fTA[0] - fTA[1] );
+  FF.GT_[1] = fTA[1] * m1 - fTA[0] * ( m1 + m2 );
   FF.GT_[2] = -fTA[0] * m2 * m21 - m2 * ( fTA[0] + fTA[1] );
-
+/*
+  std::cout<<"F0: "<<q2<<" "<<FF.F_[0]<<std::endl;
+  std::cout<<"F1: "<<q2<<" "<<FF.F_[1]<<std::endl;
+  std::cout<<"F2: "<<q2<<" "<<FF.F_[2]<<std::endl;
+  std::cout<<"G0: "<<q2<<" "<<FF.G_[0]<<std::endl;
+  std::cout<<"G1: "<<q2<<" "<<FF.G_[1]<<std::endl;
+  std::cout<<"G2: "<<q2<<" "<<FF.G_[2]<<std::endl;
+  std::cout<<"FT0: "<<q2<<" "<<FF.FT_[0]<<std::endl;
+  std::cout<<"FT1: "<<q2<<" "<<FF.FT_[1]<<std::endl;
+  std::cout<<"FT2: "<<q2<<" "<<FF.FT_[2]<<std::endl;
+  std::cout<<"GT0: "<<q2<<" "<<FF.GT_[0]<<std::endl;
+  std::cout<<"GT1: "<<q2<<" "<<FF.GT_[1]<<std::endl;
+  std::cout<<"GT2: "<<q2<<" "<<FF.GT_[2]<<std::endl;
+*/
   return ;
 }
 
