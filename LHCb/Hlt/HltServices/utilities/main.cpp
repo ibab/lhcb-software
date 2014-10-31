@@ -51,14 +51,14 @@ std::string to_json_t::operator()(const std::string& s) const {
     return out.str();
 }
 
-template<typename K, typename V>
+template <typename K, typename V>
 std::string to_json_t::operator()(const std::pair<K,V>& p) const {
     return to_json(p.first)+":"+to_json(p.second);
 }
 
 template <typename V>
 std::string to_json_t::operator()(const std::map<std::string,V>& m) const {
-    std::vector<std::string> buf;
+    std::vector<std::string> buf; buf.reserve( m.size() );
     std::transform( std::begin(m), std::end(m), std::back_inserter(buf), to_json );
     return std::string{"{"} + boost::algorithm::join(buf,",") + "}";
 }
