@@ -66,6 +66,7 @@ public:
         return false;
     }
 };
+
 template <typename S> intersects<S> intersects_( const S& s ) { return {s}; }
 
 //=============================================================================
@@ -128,7 +129,6 @@ HltSelReportsWriter::HltSelReportsWriter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
     : GaudiAlgorithm ( name , pSvcLocator ),  m_hltANNSvc{ nullptr }
 {
-
   declareProperty("InputHltSelReportsLocation",
     m_inputHltSelReportsLocation= LHCb::HltSelReportsLocation::Default);  
   declareProperty("OutputRawEventLocation",
@@ -305,8 +305,7 @@ StatusCode HltSelReportsWriter::execute() {
           // push floats as ints (allows for possible compression in future versions)
           union IntFloat { unsigned int mInt; float mFloat; };
           IntFloat a; a.mFloat = i.second;
-          unsigned int intFloat = a.mInt;
-          stdInfo.push_back( intFloat );
+          stdInfo.push_back( a.mInt);
         }
 
       } else if(saveExtraInfo) {
@@ -340,7 +339,8 @@ StatusCode HltSelReportsWriter::execute() {
       sHitType=1;
       unsigned int iSeqID(0);
       for( const auto&  hitset :  lhcbidSequences) {
-        if ( std::binary_search( std::begin(hos->lhcbIDs()), std::end(hos->lhcbIDs()),  LHCbID{hitset.front()} )) svect.push_back( iSeqID );
+        if ( std::binary_search( std::begin(hos->lhcbIDs()), std::end(hos->lhcbIDs()), 
+                                 LHCbID{hitset.front()} ) ) svect.push_back( iSeqID );
         ++iSeqID;
       }
     }
@@ -389,13 +389,11 @@ StatusCode HltSelReportsWriter::execute() {
 
   // delete any previously inserted sel reports with the same major sourceID
   const auto& hltselreportsRawBanks = rawEvent->banks( RawBank::HltSelReports );
-  for( const auto&  b : hltselreportsRawBanks ) {
-    unsigned int sourceID = kSourceID_Hlt;
-    if( b->version() > 1 ) sourceID = b->sourceID() >> kSourceID_BitShift;
+  for ( const auto&  b : hltselreportsRawBanks ) {
+    auto sourceID = b->version()>1 ? ( b->sourceID() >> kSourceID_BitShift ) : kSourceID_Hlt;
     if( m_sourceID != sourceID ) continue;
-
     rawEvent->removeBank(b);
-    if ( msgLevel(MSG::VERBOSE) ) verbose() << " Deleted previosuly inserted HltSelReports bank " << endmsg;
+    warning() << " Deleted previously inserted HltSelReports bank " << endmsg;
   }
 
   // RawBank is limited in size to 65535 bytes i.e. 16383 words; be conservative cut it off at a smaller limit.

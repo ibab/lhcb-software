@@ -21,10 +21,7 @@
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( HltDecReportsWriter )
 
-
 using namespace LHCb;
-
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -33,31 +30,28 @@ HltDecReportsWriter::HltDecReportsWriter( const std::string& name,
                                           ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-
   declareProperty("InputHltDecReportsLocation",
     m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
   declareProperty("OutputRawEventLocation",
     m_outputRawEventLocation= LHCb::RawEventLocation::Default);  
   declareProperty("SourceID",
     m_sourceID= kSourceID_Dummy );  
-
 }
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode HltDecReportsWriter::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+StatusCode HltDecReportsWriter::initialize()
+{
+  auto sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
-
 
   if( m_sourceID > kSourceID_Max ){
     m_sourceID = m_sourceID & kSourceID_Max;
     return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
   }
-
 
   return StatusCode::SUCCESS;
 }
@@ -65,67 +59,50 @@ StatusCode HltDecReportsWriter::initialize() {
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode HltDecReportsWriter::execute() {
-
+StatusCode HltDecReportsWriter::execute()
+{
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get input
-  if( !exist<HltDecReports>(m_inputHltDecReportsLocation) ){    
-    return Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 20 );
-  }  
-  const HltDecReports* inputSummary = get<HltDecReports>(m_inputHltDecReportsLocation);
-
-  // get output
-  if( !exist<RawEvent>(m_outputRawEventLocation) ){    
-    return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
-  }  
-  RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
-
-
+  const auto inputSummary = getIfExists<HltDecReports>(m_inputHltDecReportsLocation);
+  if (!inputSummary) {
+      return Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 20 );
+  }
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " Input: ";  
-    for( HltDecReports::Container::const_iterator iRep=inputSummary->begin();
-         iRep!=inputSummary->end();++iRep){
-      const unsigned int decRep = iRep->second.decReport();
-      verbose() << HltDecReport(decRep).intDecisionID() << "-" << HltDecReport(decRep).decision() << " ";
+    for( const auto& rep : *inputSummary) { 
+      auto decRep = HltDecReport{rep.second.decReport()};
+      verbose() << decRep.intDecisionID() << "-" << decRep.decision() << " ";
     }
     verbose() << endmsg;
   }
-  
+
+  // get output
+  auto rawEvent = getIfExists<RawEvent>(m_outputRawEventLocation);
+  if( !rawEvent) {
+    return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
+  }  
+  // delete any previously inserted dec reports
+  for( const auto& b : rawEvent->banks( RawBank::HltDecReports ) ) {
+    auto sourceID =  b->version() > 1 ? ( b->sourceID() >> kSourceID_BitShift ) : kSourceID_Hlt;
+    if( m_sourceID != sourceID )continue;
+    rawEvent->removeBank(b);
+    warning() << " Deleted previously inserted HltDecReports bank " << endmsg;
+  }
 
   // compose the bank body
-  std::vector<unsigned int> bankBody;
+  std::vector<unsigned int> bankBody; bankBody.reserve( inputSummary->size() + 2);
   bankBody.push_back( inputSummary->configuredTCK() );
   bankBody.push_back( inputSummary->taskID() );
-
-  for( HltDecReports::Container::const_iterator iRep=inputSummary->begin();
-       iRep!=inputSummary->end();++iRep){
-    const unsigned int decRep = iRep->second.decReport();
-    //    if( decRep & 0x0000FFFFL ){  // only non-empty reports go into Raw Bank!      
-      bankBody.push_back( decRep );
-    // }
-  }  
+  std::transform( std::begin(*inputSummary), std::end(*inputSummary), 
+                  std::back_inserter(bankBody),
+                  [](HltDecReports::Container::const_reference r ) { return r.second.decReport(); } );
 
   // order according to the values, essentially orders by intDecisionID 
   // this is important since it will put "*Global" reports at the beginning of the bank
   // NOTE: we must skip the first two words (configuredTCK, taskID)
-  if( !bankBody.empty() ) std::sort( bankBody.begin()+2, bankBody.end(), std::less<unsigned int>() );
+  std::sort( std::next( std::begin(bankBody), 2), std::end(bankBody), std::less<unsigned int>() );
 
-  // delete any previously inserted dec reports
-  const std::vector<RawBank*> hltdecreportsRawBanks = rawEvent->banks( RawBank::HltDecReports );
-  for( std::vector<RawBank*>::const_iterator b=hltdecreportsRawBanks.begin();
-       b!=hltdecreportsRawBanks.end(); ++b){
-    unsigned int sourceID=kSourceID_Hlt;
-    if( (*b)->version() > 1 ){
-      sourceID = (*b)->sourceID() >> kSourceID_BitShift;
-    }
-    if( m_sourceID != sourceID )continue;
-
-    rawEvent->removeBank(*b);
-    if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltDecReports bank " << endmsg;
-    }    
-  }
-  
   // shift bits in sourceID for the same convention as in HltSelReports
   rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltDecReports, kVersionNumber, bankBody );
 
@@ -133,15 +110,14 @@ StatusCode HltDecReportsWriter::execute() {
     verbose() << " Output:  ";  
     verbose() << " VersionNumber= " << kVersionNumber;  
     verbose() << " SourceID= " << m_sourceID;
-    std::vector<unsigned int>::const_iterator i=bankBody.begin();
+    auto i=std::begin(bankBody);
     verbose() << " configuredTCK = " << *i++ << " " ;
     verbose() << " taskID = " << *i++ << " " ;
-    for( ; i!=bankBody.end();++i) {
-      verbose() << HltDecReport(*i).intDecisionID() << "-" << HltDecReport(*i).decision() << " ";
+    for( ; i!=std::end(bankBody);++i) {
+      auto rep = HltDecReport{*i};
+      verbose() << rep.intDecisionID() << "-" << rep.decision() << " ";
     }
     verbose() << endmsg;
   }
-
   return StatusCode::SUCCESS;
 }
-

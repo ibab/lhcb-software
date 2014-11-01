@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+! 2014-11-02 - Gerhard Raven
+ - added extra checking & diagnostics. 
+ - generic C++ code cleanup.
 
 ! 2014-10-16 - Gerhard Raven
  - replace 'virtual' qualification on member functions of derived classes with 'override'

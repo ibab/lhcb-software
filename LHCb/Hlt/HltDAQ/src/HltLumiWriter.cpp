@@ -25,12 +25,10 @@ DECLARE_ALGORITHM_FACTORY( HltLumiWriter )
     : GaudiAlgorithm ( name , pSvcLocator ),
       m_totDataSize(0),
       m_nbEvents(0),
-      m_bankType(LHCb::RawBank::HltLumiSummary),
-      m_inputRawEventLocation("")
+      m_bankType(LHCb::RawBank::HltLumiSummary)
 {
-  declareProperty( "InputBank", m_inputBank = LHCb::HltLumiSummaryLocation::Default );
+  declareProperty("InputBank", m_inputBank = LHCb::HltLumiSummaryLocation::Default );
   declareProperty("RawEventLocation",m_inputRawEventLocation );
-
 }
 
 //=============================================================================
@@ -48,11 +46,10 @@ StatusCode HltLumiWriter::initialize() {
   m_bankType  = LHCb::RawBank::HltLumiSummary;
 
   m_rawEventLocations.clear();
-  if( m_inputRawEventLocation != "" )m_rawEventLocations.push_back(m_inputRawEventLocation);
+  if( !m_inputRawEventLocation.empty() ) m_rawEventLocations.push_back(m_inputRawEventLocation);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
   m_rawEventLocations.push_back(LHCb::RawEventLocation::Trigger);
-
   return StatusCode::SUCCESS;
 }
 
@@ -71,23 +68,15 @@ StatusCode HltLumiWriter::execute() {
   int totDataSize = 0;
 
   LHCb::RawEvent* rawEvent = nullptr;
-  auto iLoc = m_rawEventLocations.begin();
-  for ( ; iLoc != m_rawEventLocations.end() ; ++iLoc ) {
+  for (const auto& loc : m_rawEventLocations) {
     //    try RootInTES independent path first
-    if (exist<LHCb::RawEvent>(*iLoc, false)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc, false);
-      break;
-    }
+    rawEvent = getIfExists<LHCb::RawEvent>(loc, false);
+    if (rawEvent) break;
     //   now try RootInTES dependent path
-    if (exist<LHCb::RawEvent>(*iLoc)) {
-      rawEvent = get<LHCb::RawEvent>(*iLoc);
-      break;
-    }
+    rawEvent = getIfExists<LHCb::RawEvent>(loc);
+    if (rawEvent) break;
   }
- if( ! rawEvent ){
-    return Error(" No RawEvent found at any location.");
-  }  
-
+ if( !rawEvent ) return Error(" No RawEvent found at any location.");
 
   // set source, type, version
   rawEvent->addBank( 0, m_bankType, 0, m_bank );
@@ -97,21 +86,18 @@ StatusCode HltLumiWriter::execute() {
   m_nbEvents++;
 
   if ( msgLevel( MSG::DEBUG ) ) {
-    debug() << "Bank size: ";
-    debug() << format( "%4d ", m_bank.size() )
-            << "Total Data bank size " << totDataSize << endreq;
+    debug() << "Bank size: " << format( "%4d ", m_bank.size() )
+            << "Total Data bank size " << totDataSize << endmsg;
   }
 
   if ( MSG::VERBOSE >= msgLevel() ) {
-    verbose() << "DATA bank : " << endreq;
+    verbose() << "DATA bank : " << endmsg;
     int kl = 0;
-
-    for (auto  itW = m_bank.begin(); m_bank.end() != itW; itW++ ){
-      verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
-      kl++;
-      if ( 0 == kl%4 ) verbose() << endreq;
+    for (const auto& w : m_bank ) { 
+      verbose() << format ( " %8x %11d   ", w, w);
+      if ( ++kl%4 == 0 ) verbose() << endmsg;
     }
-    verbose() << endreq ;
+    verbose() << endmsg ;
   }
 
   return StatusCode::SUCCESS;
@@ -122,9 +108,9 @@ StatusCode HltLumiWriter::execute() {
 //=============================================================================
 StatusCode HltLumiWriter::finalize() {
 
-  if ( 0 < m_nbEvents ) {
+  if ( m_nbEvents > 0 ) {
     m_totDataSize /= m_nbEvents;
-    info() << "Average event size : " << format( "%7.1f words", m_totDataSize )
+    info() << format( "Average event size : %7.1f words", m_totDataSize )
            << endreq;
   }
   return GaudiAlgorithm::finalize();  // must be called after all other actions
@@ -135,12 +121,11 @@ StatusCode HltLumiWriter::finalize() {
 //=========================================================================
 void HltLumiWriter::fillDataBankShort ( ) {
 
-  if (!exist<LHCb::HltLumiSummary>(m_inputBank) ){
+  LHCb::HltLumiSummary* HltLumiSummary = getIfExists<LHCb::HltLumiSummary>(m_inputBank);
+  if (!HltLumiSummary) {
     debug() << m_inputBank << " not found" << endmsg ;
     return;
   }
-
-  LHCb::HltLumiSummary* HltLumiSummary = get<LHCb::HltLumiSummary>(m_inputBank);
   debug() << m_inputBank << " found" << endmsg ;
 
   // handle overflow

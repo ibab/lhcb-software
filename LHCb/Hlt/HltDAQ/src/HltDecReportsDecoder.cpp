@@ -5,8 +5,6 @@
 #include "Event/HltDecReport.h"
 #include "Event/HltDecReports.h"
 
-
-
 // local
 #include "HltDecReportsDecoder.h"
 #include "HltDecReportsWriter.h"
@@ -113,11 +111,11 @@ StatusCode HltDecReportsDecoder::execute() {
   int err=0;
   switch ( hltdecreportsRawBank->version() ) {
     case 0 : err+=this->decodeHDR<v0_v1>( content, hltdecreportsRawBank->end<unsigned int>(), 
-                                     *outputSummary, tbl );
+                                          *outputSummary, tbl );
         break;
     case 1 :
     case 2 : err+=this->decodeHDR<vx_vx>( content, hltdecreportsRawBank->end<unsigned int>(), 
-                                     *outputSummary, tbl );
+                                          *outputSummary, tbl );
         break;
     default : Error(
 " HltDecReports RawBank version # is larger then the known ones.... cannot decode, use newer version. " ,StatusCode::FAILURE ).ignore();
@@ -138,18 +136,16 @@ int HltDecReportsDecoder::decodeHDR(I i, I end,  HltDecReports& output, const Ta
 {
    int ret = 0;
    HDRConverter converter;
-   while (i != end ) {
+   while ( i != end ) {
     HltDecReport dec(  converter.convert(*i++)  );
-    int id=dec.intDecisionID();
-    auto isel  = table.find( id );
+    auto isel = table.find( dec.intDecisionID() );
     if ( isel == std::end(table) ) { // oops missing.
-      std::ostringstream mess;
-      mess << " No string key found for trigger decision in storage id = " << id;
-      Error(mess.str(), StatusCode::FAILURE, 50 ).ignore();
+      Error( std::string{ " No string key found for trigger decision in storage id = "} + std::to_string(dec.intDecisionID()),
+             StatusCode::FAILURE, 50 ).ignore();
       ++ret;
     } else if (!!isel->second){  // has a non-zero string -- insert!!
         // debug() << " adding " << id << " as " << isel->second << endmsg;
-        if( !output.insert( isel->second, dec ).isSuccess() ) {
+        if ( !output.insert( isel->second, dec ).isSuccess() ) {
           Error(" Duplicate decision report in storage "+std::string(isel->second), StatusCode::FAILURE, 20 ).ignore();
           ++ret;
         }

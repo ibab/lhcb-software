@@ -18,16 +18,12 @@
 
 class HltSelReportsDecoder : public HltRawBankDecoderBase {
 public: 
-
-  enum HeaderIDs { kVersionNumber=2 };
-
   /// Standard constructor
   HltSelReportsDecoder( const std::string& name, ISvcLocator* pSvcLocator );
-
   StatusCode execute   () override;    ///< Algorithm execution
 
 private:
-
+  enum HeaderIDs { kVersionNumber=2 };
   /// location of output
   StringProperty m_outputHltSelReportsLocation;
 

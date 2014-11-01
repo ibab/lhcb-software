@@ -12,6 +12,7 @@
 using namespace LHCb;
 
 namespace {
+
 const Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
 const Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
 float floatFromInt(unsigned int i)
@@ -45,16 +46,12 @@ HltVertexReportsWriter::HltVertexReportsWriter( const std::string& name,
                                                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-
   declareProperty("InputHltVertexReportsLocation",
     m_inputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
   declareProperty("OutputRawEventLocation",
     m_outputRawEventLocation= LHCb::RawEventLocation::Default);
   declareProperty("SourceID",
     m_sourceID= kSourceID_Dummy );  
-
-  m_hltANNSvc = 0;
-
 }
 
 //=============================================================================
@@ -73,11 +70,8 @@ StatusCode HltVertexReportsWriter::initialize() {
     return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
   }
 
-
   return StatusCode::SUCCESS;
 }
-
-
 
 //=============================================================================
 // Main execution
@@ -87,17 +81,17 @@ StatusCode HltVertexReportsWriter::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // get input hlt vertex reports
-  if( !exist<HltVertexReports>(m_inputHltVertexReportsLocation) ){    
+  HltVertexReports* inputSummary = getIfExists<HltVertexReports>(m_inputHltVertexReportsLocation);
+  if( !inputSummary) {
     return Warning( " No HltVertexReports at " + m_inputHltVertexReportsLocation.value(),
                     StatusCode::SUCCESS, 20 );
   }  
-  HltVertexReports* inputSummary = get<HltVertexReports>(m_inputHltVertexReportsLocation);
 
  // get output
-  if( !exist<RawEvent>(m_outputRawEventLocation) ){    
+  RawEvent* rawEvent = getIfExists<RawEvent>(m_outputRawEventLocation);
+  if( !rawEvent ) {
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(),StatusCode::SUCCESS, 20 );
   }  
-  RawEvent* rawEvent = get<RawEvent>(m_outputRawEventLocation);
 
   // get string-to-int selection ID map
   auto selectionNameToIntMap = m_hltANNSvc->item_map(Hlt1SelectionID); // new style
@@ -117,57 +111,48 @@ StatusCode HltVertexReportsWriter::execute() {
        Error(" selectionName=" +s.first+ " from HltVertexReports not found in HltANNSvc. Skipped. ", StatusCode::SUCCESS, 20 ); 
        continue;
      }
-     int intSelID = si->second;
 
      ++hltVertexReportsRawBank[0];
 
-     unsigned int size = s.second.size();
-     size = std::min( size, 65535u );
+     hltVertexReportsRawBank.reserve( hltVertexReportsRawBank.size() + 1 + s.second.size()*11 );
+     auto out = std::back_inserter( hltVertexReportsRawBank );
+
      // first word for each selection contains number of vertices (low short) and selection ID (high short)
-     hltVertexReportsRawBank.push_back(  (unsigned int)( size | (intSelID << 16) ) );
+     *out++ =  (unsigned int)( std::min( s.second.size(), 65535ul ) | (si->second << 16) ) ;
      
      for(const auto& vtx : s.second ) { 
        // now push vertex info
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx->position().x() ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx->position().y() ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx->position().z() ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( vtx->chi2() ) );
-       hltVertexReportsRawBank.push_back( std::max( vtx->nDoF(), 0 ) ); 
-       const Gaudi::SymMatrix3x3 & cov = vtx->covMatrix();
-       hltVertexReportsRawBank.push_back( doubleToInt( cov[0][0] ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( cov[1][1] ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( cov[2][2] ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( cov[0][1] ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( cov[0][2] ) );
-       hltVertexReportsRawBank.push_back( doubleToInt( cov[1][2] ) );
-      
+       *out++ = doubleToInt( vtx->position().x() );
+       *out++ = doubleToInt( vtx->position().y() );
+       *out++ = doubleToInt( vtx->position().z() );
+       *out++ = doubleToInt( vtx->chi2() );
+       *out++ = std::max( vtx->nDoF(), 0 ); 
+       const auto& cov = vtx->covMatrix();
+       *out++ = doubleToInt( cov[0][0] );
+       *out++ = doubleToInt( cov[1][1] );
+       *out++ = doubleToInt( cov[2][2] );
+       *out++ = doubleToInt( cov[0][1] );
+       *out++ = doubleToInt( cov[0][2] );
+       *out++ = doubleToInt( cov[1][2] );
      }
   }
 
   // delete any previously inserted vtx reports
-  const std::vector<RawBank*> hltvtxreportsRawBanks = rawEvent->banks( RawBank::HltVertexReports );
-  for( const auto&  b : hltvtxreportsRawBanks ) {
-    unsigned int sourceID=kSourceID_Hlt;
-    if( b->version() > 1 ) sourceID = b->sourceID() >> kSourceID_BitShift;
+  for( const auto&  b : rawEvent->banks( RawBank::HltVertexReports ) ) {
+    auto sourceID =  b->version() > 1 ? ( b->sourceID() >> kSourceID_BitShift ) : kSourceID_Hlt;
     if( m_sourceID != sourceID ) continue;
-
     rawEvent->removeBank(b);
-    if ( msgLevel(MSG::VERBOSE) ){ verbose() << " Deleted previosuly inserted HltVertexReports bank " << endmsg;
-    }
+    warning() << " Deleted previously inserted HltVertexReports bank " << endmsg;
   }
 
   // shift bits in sourceID for the same convention as in HltSelReports
   rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltVertexReports, kVersionNumber, hltVertexReportsRawBank );
   
   if ( msgLevel(MSG::VERBOSE) ){
-
     verbose() << " ======= HltVertexReports RawBank size= " << hltVertexReportsRawBank.size() << endmsg;
-
     verbose() << " VersionNumber= " << kVersionNumber;  
     verbose() << " SourceID= " << m_sourceID;
-
     verbose() << " number of selections stored = " << hltVertexReportsRawBank[0] << endmsg;
-    
     unsigned int iWord = 1;
     for(unsigned int i=0; i!=hltVertexReportsRawBank[0]; ++i){
       unsigned int n = hltVertexReportsRawBank[iWord] & 0xFFFFL;
@@ -195,4 +180,3 @@ StatusCode HltVertexReportsWriter::execute() {
   }
   return StatusCode::SUCCESS;
 }
-

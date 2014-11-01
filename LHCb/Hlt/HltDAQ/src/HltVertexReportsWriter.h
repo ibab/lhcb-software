@@ -43,8 +43,6 @@ public:
   StatusCode execute   () override;    ///< Algorithm execution
 
 private:
-
-
   // ----------------------- data members 
 
   /// location of input
@@ -57,9 +55,7 @@ private:
   UnsignedIntegerProperty m_sourceID;
 
   /// HltANNSvc for making selection names to int selection ID
-  IANNSvc* m_hltANNSvc;  
-
-
+  IANNSvc* m_hltANNSvc = nullptr;  
 };
 
 #endif // HLTVERTEXREPORTSWRITER_H
