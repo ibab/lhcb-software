@@ -259,7 +259,7 @@ class StrippingLine(object):
         self._checkPV   = checkPV
         self._HDRLocation = HDRLocation
         self._EnableFlavourTagging = EnableFlavourTagging
-        
+
         if callable(postscale) : postscale = postscale( self.name() )
         self._postscale = postscale
         self._algos     = algos
@@ -421,14 +421,6 @@ class StrippingLine(object):
             if isinstance   ( self._HLT , dict )  :
     		mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , **self._HLT)  } )
 
-	# Add flavour tagging tool to the end of line sequence if needed
-	if self._EnableFlavourTagging : 
-	    if not self.outputLocation() or self.outputLocation == "" : 
-                raise AttributeError, "Line %s does not have output, cannot do flavour tagging" % self.name()
-	    from Configurables import BTagging
-	    btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] ) 
-	    self._members.append(btag)
-
 	# Add extra info tools if needed
 	if self.ExtraInfoTools : 
 	    from Configurables import AddExtraInfo
@@ -461,8 +453,54 @@ class StrippingLine(object):
        	    extraInfoAlg.Tools = toolNames
 	    self._members.append(extraInfoAlg)
 
-	# Add related info tools if needed
+	if self.RelatedInfoTools != None : 
+	    self.addRelatedInfo()
+	    if self.RelatedInfoFilter : 
+		self._members.append( self.RelatedInfoFilter )
+		oldOutput = self.outputLocation()
+		self._outputloc = "Phys/" + self.RelatedInfoFilter.name() + "/Particles"
+	        log.debug( 'Redefined OutputLocation for line '+ self.name()+ ' from '+ oldOutput+ ' to '+ self._outputloc )
+		self.addRelatedInfo()
+
+	# Add flavour tagging tool to the end of line sequence if needed
+	if self._EnableFlavourTagging : 
+	    if not self.outputLocation() or self.outputLocation() == "" : 
+                raise AttributeError, "Line %s does not have output, cannot do flavour tagging" % self.name()
+	    from Configurables import BTagging
+	    btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] ) 
+	    self._members.append(btag)
+
+        if self._members : 
+            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })
+            
+        print self._members
+            
+        mdict.update( { 'HltDecReportsLocation' : self.fullHDRLocation } )
+        if (self.outputLocation()) : 
+    	    mdict.update( { 'OutputLocation' : self.outputLocation() } )
+        
+        __mdict = deepcopy ( mdict ) 
+        from Configurables import StrippingAlg
+        self._configurable = StrippingAlg ( self.name() , **__mdict )
+
+        # put upper limit on combinatorics
+        if self.MaxCandidates == "Override" : self.MaxCandidates = None
+        if self.MaxCombinations == "Override" : self.MaxCombinations = None
+        limitCombinatorics( self._configurable, 
+                            MaxCandidates = self.MaxCandidates, 
+                            MaxCombinations = self.MaxCombinations ) 
+
+        log.debug(' created StrippingAlg configurable for' +  self._name)
+        log.debug( self._configurable )
+
+        return self._configurable
+
+    # Add related info tools if needed
+    def addRelatedInfo( self ) : 
+
 	if self.RelatedInfoTools : 
+            
+            log.debug( "Add RelatedInfo tools for output location "+ self.outputLocation() )
             
             toolNum = 0
             for itool in self.RelatedInfoTools : 
@@ -470,7 +508,8 @@ class StrippingLine(object):
         	toolNum += 1
 
 		from Configurables import AddRelatedInfo
-		relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, self.name() ) )
+		output_basename = self.outputLocation().split("/")[-2]
+		relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, output_basename ) )
 		if 'TopSelection' in itool.keys() : # and 'Locations' in itool.keys() : 
     		    relatedInfoAlg.Inputs = self.selectionsToLocations( [ itool['TopSelection'] ] ) 
     		else : 
@@ -521,31 +560,7 @@ class StrippingLine(object):
 
 		self._members.append(relatedInfoAlg)
 		
-	    if self.RelatedInfoFilter : 
-		self._members.append( self.RelatedInfoFilter )
 
-        if self._members : 
-            mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })
-            
-        mdict.update( { 'HltDecReportsLocation' : self.fullHDRLocation } )
-        if (self.outputLocation()) : 
-    	    mdict.update( { 'OutputLocation' : self.outputLocation() } )
-        
-        __mdict = deepcopy ( mdict ) 
-        from Configurables import StrippingAlg
-        self._configurable = StrippingAlg ( self.name() , **__mdict )
-
-        # put upper limit on combinatorics
-        if self.MaxCandidates == "Override" : self.MaxCandidates = None
-        if self.MaxCombinations == "Override" : self.MaxCombinations = None
-        limitCombinatorics( self._configurable, 
-                            MaxCandidates = self.MaxCandidates, 
-                            MaxCombinations = self.MaxCombinations ) 
-
-        log.debug(' created StrippingAlg configurable for' +  self._name)
-        log.debug( self._configurable )
-
-        return self._configurable
 
     def filterMembers( self ) : 
 	_members = GaudiSequencer( filterName ( self.subname(), 'Stripping' ) ).Members

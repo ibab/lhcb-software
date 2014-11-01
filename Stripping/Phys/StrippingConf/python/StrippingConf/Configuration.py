@@ -62,18 +62,26 @@ class StrippingConf ( object ) :
             self.checkAllForCombLimit()
 
         self.checkFlavourTagging(Streams)
+
+	linesForFT = []
         if self._GlobalFlavourTagging:
           for stream in Streams:
             for line in stream.lines:
               if line._EnableFlavourTagging: 
                 line._EnableFlavourTagging = False
-                self._taggingLocations += [ line.outputLocation().replace("/Particles","") ]
-
-        if self._GlobalFlavourTagging and self._taggingLocations != []:
-            self.appendFlavourTagging()
+                linesForFT += [ line ]
 
         for stream in Streams :
             self.appendStream(stream)
+
+	# Global FT locations have to be filled after appending streams, 
+	# because outputLocations of lines can be redefined
+        if self._GlobalFlavourTagging:
+          for line in linesForFT:
+            self._taggingLocations += [ line.outputLocation().replace("/Particles","") ]
+
+        if self._GlobalFlavourTagging and self._taggingLocations != []:
+            self.appendFlavourTagging()
 
 	self.checkAppendedLines()
 	self.checkUniqueOutputLocations()
