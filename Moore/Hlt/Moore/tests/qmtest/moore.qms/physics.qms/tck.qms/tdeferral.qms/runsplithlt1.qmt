@@ -23,6 +23,7 @@
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/default-threshold.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
+    <text>../options/Input_Default.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
     <text>from Configurables import Moore; Moore().RemoveInputHltRawBanks = True; Moore().UseTCK=True; Moore().InitialTCK='0x00e10046';  Moore().CheckOdin=False; Moore().outputFile = 'hlt1_reqhlt1_tck.raw'; Moore().EnableTimer="tck.deferral.hlt1only.csv";</text>

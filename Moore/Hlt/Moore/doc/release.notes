@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-11-03 Sean Benson
+ - Make TCK tests use 1200 2012 events + new test for decoders
+
 !========================= Moore v23r1 2014-09-29 =========================
 
 ! 2014-09-24 Sean Benson

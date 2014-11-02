@@ -24,7 +24,7 @@
     <text>../options/Moore_Hlt2Only.py</text>
     <text>../options/Moore-LocalTCKData.py</text>
     <text>--option</text>
-    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00e20046';  Moore().CheckOdin=False; from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); Moore().inputFiles = [ 'hlt1_reqhlt1_tck.raw' ]; Moore().EnableTimer="tck.deferral.hlt2after1.csv"; </text>
+    <text>from Configurables import Moore; Moore().UseTCK=True; Moore().InitialTCK='0x00e20046';  Moore().CheckOdin=False; from GaudiConf import IOHelper; IOHelper().inputFiles([],clear=True); Moore().inputFiles = [ 'hlt1_reqhlt1_tck.raw' ]; Moore().outputFile = "hlt2_splitTCK.raw"; Moore().EnableTimer="tck.deferral.hlt2after1.csv"; </text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
