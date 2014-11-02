@@ -4,12 +4,12 @@
 // ============================================================================
 #include <cmath>
 #include <vector>
+#include <deque>
 #include <iterator>
+#include <utility>
 // ============================================================================
 // Boost
 // ============================================================================
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/construct.hpp"
 // ============================================================================
 // AIDA
 // ============================================================================
@@ -48,10 +48,6 @@ using namespace HistogramUtilities;
 #include "Kernel/SelectionLine.h"
 // ============================================================================
 
-namespace 
-{
-  static const double timeHistoLowBound = -3;  
-}
 
 //TODO: this  adds C++14 'make_unique'... remove once we move to C++14...
 template<typename T, typename ...Args>
@@ -60,6 +56,53 @@ std::unique_ptr<T> make_unique( Args&& ...args )
         return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
 }
 
+namespace 
+{
+  static const double timeHistoLowBound = -3;  
+
+  bool isDefault(const std::string& s) { return s.empty(); } // empty is not constexpr???
+  constexpr bool isDefault(double x) { return x == 0; }
+
+  class populate_JobOptionsSvc_t {
+    std::vector<std::unique_ptr<Property>> m_props;
+    IJobOptionsSvc* m_jos;
+    std::string m_name;
+
+    template <typename T> void process(T&& t) {
+        if (!isDefault(t.second)) m_props.push_back( make_unique< SimpleProperty<typename T::second_type>> ( std::move(t.first), std::move(t.second) ) );
+    }
+    template <typename T, typename... Args> void process(T&& t, Args&&... args) {
+        process(std::forward<T>(t)); process(std::forward<Args>(args)...);
+    }
+    void check_veto() { // avoid changing properties expliclty present in the JOS...
+        const auto* props = m_jos->getProperties(m_name);
+        if (!props) return;
+        for (const auto& i : *props ) {
+            auto j = std::find_if( std::begin(m_props), std::end(m_props), [&i](const std::unique_ptr<Property>& prop) { 
+                return prop->name() == i->name(); 
+            } );
+            if (j==std::end(m_props)) continue;
+            m_props.erase( j );
+            if (m_props.empty()) return; // done!
+        }
+    }
+
+  public:
+    template <typename... Args>
+    populate_JobOptionsSvc_t( std::string name, IJobOptionsSvc* jos, Args&&... args ) : m_jos{jos},m_name{ std::move(name) }   {
+        process(std::forward<Args>(args)...);
+        if (!m_props.empty()) check_veto();
+        std::for_each( std::begin(m_props), std::end(m_props), [&](const std::unique_ptr<Property>& i ) {
+            m_jos->addPropertyToCatalogue( m_name, *i ).ignore();
+        } );
+    }
+    ~populate_JobOptionsSvc_t() {
+        std::for_each( std::begin(m_props), std::end(m_props), [&](const std::unique_ptr<Property>& i ) {
+            m_jos->removePropertyFromCatalogue( m_name, i->name() ).ignore();
+        } );
+    }
+  };
+}
 
 
 //-----------------------------------------------------------------------------
@@ -468,75 +511,20 @@ void Selection::Line::handle( const Incident& )
 Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname) 
 {
   ListItem name(algname);
-  IAlgorithm* myIAlg(0);
-  Algorithm *myAlg(0);
-  //== Check wether the specified algorithm already exists. If not, create it
-  StatusCode result = m_algMgr->getAlgorithm( name.name(), myIAlg );
-  if ( result.isSuccess() ) 
-  {
+  IAlgorithm* myIAlg{nullptr};
+  Algorithm *myAlg{nullptr};
+  //= Check wether the specified algorithm already exists. 
+  if ( m_algMgr->getAlgorithm( name.name(), myIAlg ).isSuccess() ) {
     myAlg = dynamic_cast<Algorithm*>(myIAlg);
     subAlgorithms()->push_back(myAlg) ;
     return myAlg;
   }
-  bool addedContext = false;  //= Have we added the context ?
-  bool addedRootInTES = false;  //= Have we added the rootInTES ?
-  bool addedGlobalTimeOffset = false;  //= Have we added the globalTimeOffset ?
-
-  //== Set the Context if not in the jobOptions list
-  if ( ""  != context() ||
-       ""  != rootInTES() ||
-       0.0 != globalTimeOffset() )
-  {
-    bool foundContext = false;
-    bool foundRootInTES = false;
-    bool foundGlobalTimeOffset = false;
-    const std::vector<const Property*>* properties = m_jos->getProperties( name.name() );
-    if ( properties ) 
-    {
-      // Iterate over the list to set the options
-      for ( std::vector<const Property*>::const_iterator itProp = properties->begin();
-            itProp != properties->end(); ++itProp )   
-      {
-        if (!foundContext) foundContext = ( "Context" == (*itProp)->name() ) ;
-        if (!foundRootInTES) foundRootInTES = ( "RootInTES" == (*itProp)->name() ) ;
-        if (!foundGlobalTimeOffset) foundGlobalTimeOffset = ( "GlobalTimeOffset" == (*itProp)->name() );
-      }
-    }
-    if ( !foundContext && "" != context() ) 
-    {
-      m_jos->addPropertyToCatalogue( name.name(), StringProperty( "Context", context() ) ).ignore();
-      addedContext = true;
-    }
-    if ( !foundRootInTES && "" != rootInTES() ) 
-    {
-      m_jos->addPropertyToCatalogue( name.name(), StringProperty( "RootInTES", rootInTES() ) ).ignore();
-      addedRootInTES = true;
-    }
-    if ( !foundGlobalTimeOffset && 0.0 != globalTimeOffset() ) 
-    {
-      m_jos->addPropertyToCatalogue( name.name(), DoubleProperty( "GlobalTimeOffset", globalTimeOffset() ) ).ignore();
-      addedGlobalTimeOffset = true;
-    }
-  }
-
-  result = createSubAlgorithm( name.type(), name.name(), myAlg );
-  if (result.isFailure()) { return 0; }
-
-  //== Remove the property, in case this is not a GaudiAlgorithm...
-  // TODO: weird: we add it, and if we added it, we remove it again???
-  if ( addedContext ) 
-  {
-    m_jos->removePropertyFromCatalogue( name.name(), "Context" ).ignore();
-  }
-  if ( addedRootInTES ) 
-  {
-    m_jos->removePropertyFromCatalogue( name.name(), "RootInTES" ).ignore();
-  }
-  if ( addedGlobalTimeOffset ) 
-  {
-    m_jos->removePropertyFromCatalogue( name.name(), "GlobalTimeOffset" ).ignore();
-  }
-  
-  return myAlg;
+  // It doesn't. Create it, and while doing so, ensure some magic properties are propagated...
+  populate_JobOptionsSvc_t populate{ name.name(), m_jos,
+       std::make_pair( "Context",          context() ),
+       std::make_pair( "RootInTES",        rootInTES() ),
+       std::make_pair( "GlobalTimeOffset", globalTimeOffset() )
+  };
+  return createSubAlgorithm( name.type(), name.name(), myAlg ).isSuccess() ? myAlg : nullptr;
 }
 //=============================================================================
