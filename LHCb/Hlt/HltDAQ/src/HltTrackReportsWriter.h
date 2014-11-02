@@ -57,7 +57,7 @@ private:
   void convert(const std::string& location, unsigned sourceID, LHCb::RawEvent* rawEvent) const ;
 
   /// mapping of input TES location to output bank header source ID
-  std::map<std::string,unsigned int> m_map;
+  std::map<std::string,int> m_map;
 
   /// location of output
   StringProperty m_outputRawEventLocation;

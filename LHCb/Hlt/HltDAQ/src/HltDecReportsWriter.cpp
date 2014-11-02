@@ -48,9 +48,8 @@ StatusCode HltDecReportsWriter::initialize()
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  if( m_sourceID > kSourceID_Max ){
-    m_sourceID = m_sourceID & kSourceID_Max;
-    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
+  if( m_sourceID > kSourceID_Max || m_sourceID<0){
+    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE );
   }
 
   return StatusCode::SUCCESS;
@@ -87,7 +86,7 @@ StatusCode HltDecReportsWriter::execute()
     auto sourceID =  b->version() > 1 ? ( b->sourceID() >> kSourceID_BitShift ) : kSourceID_Hlt;
     if( m_sourceID != sourceID )continue;
     rawEvent->removeBank(b);
-    warning() << " Deleted previously inserted HltDecReports bank " << endmsg;
+    Warning( " Deleted previously inserted HltDecReports bank " , StatusCode::SUCCESS, 20).ignore();
   }
 
   // compose the bank body

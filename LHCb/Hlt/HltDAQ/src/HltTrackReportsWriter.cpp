@@ -58,8 +58,8 @@ StatusCode HltTrackReportsWriter::initialize()
     if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
 
     // Check validity of source IDs: max is 7, must be unique...
-    if ( std::any_of( std::begin(m_map), std::end(m_map), [](const std::pair<std::string,unsigned>& entry ) {
-            return entry.second > kSourceID_Max;
+    if ( std::any_of( std::begin(m_map), std::end(m_map), [](const std::pair<std::string,int>& entry ) {
+            return entry.second > kSourceID_Max || entry.second<0;
     }) ) {
         return Error( "Illegal SourceID specified; maximal allowed value is 7",
                       StatusCode::FAILURE );

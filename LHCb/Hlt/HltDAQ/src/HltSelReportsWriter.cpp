@@ -143,9 +143,8 @@ StatusCode HltSelReportsWriter::initialize() {
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
 
-  if( m_sourceID > kSourceID_Max ){
-    m_sourceID = m_sourceID & kSourceID_Max;
-    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
+  if( m_sourceID > kSourceID_Max || m_sourceID<0 ){
+    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE );
   }
   return StatusCode::SUCCESS;
 }
@@ -166,10 +165,10 @@ StatusCode HltSelReportsWriter::execute() {
 
   // protection against too many objectSummaries to store
   if( objectSummaries->size() > 0xFFFFL ){
-    std::ostringstream mess;
-    mess << "Too many HltObjectSummaries to store " << objectSummaries->size()
-         << " HltSelReports RawBank cannot be created ";
-    return Error( mess.str(), StatusCode::SUCCESS, 50 );
+    return Error( std::string{ "Too many HltObjectSummaries to store " }
+                + std::to_string(objectSummaries->size())
+                + " HltSelReports RawBank cannot be created ",
+                  StatusCode::SUCCESS, 50 );
   }
 
   // get output
@@ -200,10 +199,10 @@ StatusCode HltSelReportsWriter::execute() {
       [](unsigned int n, LhcbidSequences::const_reference s) { return n += s.size(); });
 
   if( lhcbidSequences.size()/2 + 1 + nHits >  0xFFFFL  ){
-    std::ostringstream mess;
-    mess << "Too many hits or hit-sequences to store hits=" << nHits << " seq=" << lhcbidSequences.size()
-         << " HltSelReports RawBank cannot be created ";
-    return Error( mess.str(), StatusCode::SUCCESS, 50 );
+    return Error( std::string{ "Too many hits or hit-sequences to store hits=" }
+                + std::to_string(nHits) +  " seq=" + std::to_string( lhcbidSequences.size())
+                + " HltSelReports RawBank cannot be created ",
+                  StatusCode::SUCCESS, 50 );
   }
 
   HltSelRepRBHits hitsSubBank;
@@ -252,20 +251,20 @@ StatusCode HltSelReportsWriter::execute() {
   }
   bool saveExtraInfo = extraInfoSubBank.initialize( sortedHosPtrs.size(), nExtraInfo );
   if( !saveExtraInfo ){
-        std::ostringstream mess;
-        mess << "ExtraInfoSubBank too large to store nObj=" << sortedHosPtrs.size()
-             << " nInfo=" << nExtraInfo << " No Extra Info will be saved!";
-        Error( mess.str(), StatusCode::SUCCESS, 50 );
+        Error( std::string{ "ExtraInfoSubBank too large to store nObj=" } 
+             + std::to_string( sortedHosPtrs.size() )
+             + " nInfo=" + std::to_string(nExtraInfo) + " No Extra Info will be saved!",
+               StatusCode::SUCCESS, 50 );
         if( !extraInfoSubBank.initialize( sortedHosPtrs.size(), 0 ) ){
           Error( "Cannot save even empty ExtraInfoSubBank  - expect a fatal error", StatusCode::SUCCESS, 50 );
         }
   }
   bool saveStdInfo = stdInfoSubBank.initialize( sortedHosPtrs.size(), nStdInfo );
   if( !saveStdInfo ){
-        std::ostringstream mess;
-        mess << "StdInfoSubBank too large to store nObj=" << sortedHosPtrs.size()
-             << " nInfo=" << nStdInfo << " No Std Info will be saved!";
-        Error( mess.str(), StatusCode::SUCCESS, 50 );
+        Error( std::string{ "StdInfoSubBank too large to store nObj=" }
+             + std::to_string( sortedHosPtrs.size()) 
+             + " nInfo=" + std::to_string(nStdInfo) + " No Std Info will be saved!",
+               StatusCode::SUCCESS, 50 );
         // save only selection IDs
         nStdInfo = std::accumulate( std::begin(sortedHosPtrs), std::end(sortedHosPtrs),
                                     0 , [](int n, const HltObjectSummary* hos) {
@@ -310,9 +309,8 @@ StatusCode HltSelReportsWriter::execute() {
           extraInfo.emplace_back(  j->second, i.second );
         } else {
           // this is very unexpected but shouldn't be fatal
-          std::ostringstream mess;
-          mess << "Int key for string info key=" << i.first << " not found ";
-          Error( mess.str(), StatusCode::SUCCESS, 50 );
+          Error( std::string{ "Int key for string info key=" } +  i.first + " not found ",
+                 StatusCode::SUCCESS, 50 );
         }
       }
     }

@@ -50,7 +50,7 @@ private:
   StringProperty m_outputRawEventLocation;
 
   /// SourceID to insert in the bank header (0-7)
-  UnsignedIntegerProperty m_sourceID;
+  IntegerProperty m_sourceID;
   
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc = nullptr;

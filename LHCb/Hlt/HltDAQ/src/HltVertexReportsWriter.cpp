@@ -65,9 +65,8 @@ StatusCode HltVertexReportsWriter::initialize() {
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
 
-  if( m_sourceID > kSourceID_Max ){
-    m_sourceID = m_sourceID & kSourceID_Max;
-    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
+  if( m_sourceID > kSourceID_Max || m_sourceID < 0 ){
+    return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE );
   }
 
   return StatusCode::SUCCESS;

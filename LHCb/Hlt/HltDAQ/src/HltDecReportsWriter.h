@@ -51,7 +51,7 @@ private:
   StringProperty m_outputRawEventLocation;
 
   /// SourceID to insert in the bank header
-  UnsignedIntegerProperty m_sourceID;
+  IntegerProperty m_sourceID;
 
 };
 #endif // HLTDECREPORTSWRITER_H

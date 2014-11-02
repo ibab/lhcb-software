@@ -143,37 +143,33 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = hltSelReportsBank.integrityCode();
   if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelReportsRawBank fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelReportsRawBank fails integrity check with code "}
+         + std::to_string(ic) +  " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
+           StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = hitsSubBank.integrityCode();
   if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBHits fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{" HltSelRepRBHits fails integrity check with code " }
+         + std::to_string(ic) + " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
+           StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = objTypSubBank.integrityCode();
   if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBObjTyp fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelRepRBObjTyp fails integrity check with code " }
+         + std::to_string(ic) + " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
+           StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
   ic = substrSubBank.integrityCode();
   if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBSubstr fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelRepRBSubstr fails integrity check with code " }
+         + std::to_string(ic) +  " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
+           StatusCode::SUCCESS, 100 );
     errors=true;
   }
   if( nObj != substrSubBank.numberOfObj() ){
@@ -187,10 +183,9 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = stdInfoSubBank.integrityCode();
   if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBStdInfo fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelRepRBStdInfo fails integrity check with code " }
+         + std::to_string(ic ) +  " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
+           StatusCode::SUCCESS, 100 );
     errors=true;
   }
   if( nObj != stdInfoSubBank.numberOfObj() ){
@@ -204,10 +199,9 @@ StatusCode HltSelReportsDecoder::execute() {
 
   ic = extraInfoSubBank.integrityCode();
   if( ic ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBExtraInfo fails integrity check with code " 
-         << ic << " " << HltSelRepRBEnums::IntegrityCodesToString(ic) ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelRepRBExtraInfo fails integrity check with code " }
+         + std::to_string(ic) + " " + HltSelRepRBEnums::IntegrityCodesToString(ic),
+           StatusCode::SUCCESS, 100 );
     exInfOn=false; // the only non-fatal info corruption
   }
   if( nObj != extraInfoSubBank.numberOfObj() ){
@@ -222,18 +216,14 @@ StatusCode HltSelReportsDecoder::execute() {
   }
 
   if ( msgLevel(MSG::VERBOSE) ){
-
     // print created bank and subbanks inside
     verbose() << hltSelReportsBank << endmsg;
-    
     verbose() << HltSelRepRBHits( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kHitsID ) ) << endmsg;
     verbose() << HltSelRepRBObjTyp( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kObjTypID ) ) << endmsg;
     verbose() << HltSelRepRBSubstr( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kSubstrID ) ) << endmsg;
     verbose() << HltSelRepRBStdInfo( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kStdInfoID ) ) << endmsg;
     verbose() << HltSelRepRBExtraInfo( hltSelReportsBank.subBankFromID( HltSelRepRBEnums::kExtraInfoID ) ) << endmsg;
-
   } 
-
 
   if( errors ){
     hltSelReportsBank.deleteBank();
@@ -427,7 +417,6 @@ StatusCode HltSelReportsDecoder::execute() {
   for( unsigned int iObj=0; iObj!= nObj; ++iObj){
     
     HltObjectSummary* & hos = objects[iObj];
-    
     HltSelRepRBSubstr::Substr sub=substrSubBank.next();
 
     if( sub.first ){

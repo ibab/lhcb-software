@@ -71,10 +71,10 @@ StatusCode HltVertexReportsDecoder::execute() {
   }
   const unsigned int bankVersionNumber = hltvertexreportsRawBank->version();  
   if( bankVersionNumber > kVersionNumber ){
-    std::ostringstream mess;
-    mess <<  " HltVertexReports Raw Bank version number " << bankVersionNumber
-         << " higher than the one of the decoder " << int(kVersionNumber);
-    Warning( mess.str(),  StatusCode::SUCCESS, 20 ).ignore();
+    Warning( std::string{ " HltVertexReports Raw Bank version number " }
+           + std::to_string( bankVersionNumber) 
+           + " higher than the one of the decoder " + std::to_string(kVersionNumber),
+             StatusCode::SUCCESS, 20 ).ignore();
   }
 
   const auto& tbl = id2string( tck() ); 
@@ -89,8 +89,8 @@ StatusCode HltVertexReportsDecoder::execute() {
 
     auto  value = tbl.find( intSelID ); 
     if (value == std::end(tbl)) {
-      std::ostringstream mess; mess <<  " did not find name for id = " << intSelID << "; skipping this selection";
-      Error(mess.str(), StatusCode::SUCCESS, 50 );
+      Error( std::string{ " did not find name for id = "} + std::to_string(intSelID) + "; skipping this selection",
+            StatusCode::SUCCESS, 50 );
       i += nVert * ( bankVersionNumber == 0 ? 5 : 11 ); // would have been nice to have a size / vtx in the bank...
       continue;
     }
@@ -102,7 +102,7 @@ StatusCode HltVertexReportsDecoder::execute() {
 
     // create output container for vertices and put it on TES
     VertexBase::Container* verticesOutput = new VertexBase::Container();
-    put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + std::string(value->second)  );
+    put( verticesOutput, m_outputHltVertexReportsLocation.value() + "/" + value->second.str()  );
 
     SmartRefVector<VertexBase> pVtxs;
 
@@ -111,7 +111,7 @@ StatusCode HltVertexReportsDecoder::execute() {
       double x = doubleFromInt( *i++ );
       double y = doubleFromInt( *i++ );
       double z = doubleFromInt( *i++ );
-      pVtx->setPosition( Gaudi::XYZPoint( x,y,z ) );
+      pVtx->setPosition( { x,y,z } );
       pVtx->setChi2( doubleFromInt( *i++ ) );
       pVtx->setNDoF( *i++ ) ; 
       if( bankVersionNumber>0 ){          
@@ -126,7 +126,7 @@ StatusCode HltVertexReportsDecoder::execute() {
       }
 
       verticesOutput->insert(pVtx);
-      pVtxs.push_back( SmartRef<VertexBase>( pVtx ) );
+      pVtxs.emplace_back( pVtx );
     }
 
     // insert selection into the container

@@ -48,14 +48,17 @@ HltRawBankDecoderBase::selectRawBanks( LHCb::RawBank::BankType reqType ) const
   const auto& rawbanks = rawEvent->banks( reqType );
   if( rawbanks.empty() ) return {};
 
+  auto has_sourceID = [](int id) {
+      return [id](const LHCb::RawBank* bank) {
+            return id == ( bank->sourceID() >> HltRawBankDecoderBase::kSourceID_BitShift );
+      };
+  };
+
   // TODO: do we need a reqType dependent version check ???
   std::vector<const LHCb::RawBank*> mybanks; mybanks.reserve( rawbanks.size() );
   std::copy_if( std::begin(rawbanks), std::end(rawbanks), 
-                std::back_inserter(mybanks),
-                [=](const LHCb::RawBank* bank) {
-    unsigned int sourceID = bank->sourceID() >> HltRawBankDecoderBase::kSourceID_BitShift;
-    return sourceID == m_sourceID; 
-  } );
+                std::back_inserter(mybanks), 
+                has_sourceID(m_sourceID) );
 
   // first pass didn't find the requested bank -- try to find 'unsplit' bank 
   // if we find something here, we will 'partially' decode it downstream
@@ -63,11 +66,8 @@ HltRawBankDecoderBase::selectRawBanks( LHCb::RawBank::BankType reqType ) const
   if (mybanks.empty() && ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt1 ||
                            m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt2 ) ) {
       std::copy_if( std::begin(rawbanks), std::end(rawbanks), 
-                    std::back_inserter(mybanks),
-                    [](const LHCb::RawBank* bank) {
-        unsigned int sourceID = bank->sourceID() >> HltRawBankDecoderBase::kSourceID_BitShift;
-        return sourceID == HltRawBankDecoderBase::kSourceID_Hlt; 
-      } );
+                    std::back_inserter(mybanks), 
+                    has_sourceID(HltRawBankDecoderBase::kSourceID_Hlt) );
   }
   return mybanks;
 }
@@ -107,15 +107,15 @@ HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
                tbl.insert( { item.first, { item.second , decode  } } ); // TODO: check for clashes...
            }
     };
-    bool doHlt1 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt1 || m_sourceID == 0);
-    bool doHlt2 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt2 || m_sourceID == 0);
+    bool decode_hlt1 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt1 || m_sourceID == 0);
+    bool decode_hlt2 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt2 || m_sourceID == 0);
     if (tck==0) {
-       warning() << "TCK in rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
-       append0(Hlt1SelectionID,doHlt1);
-       append0(Hlt2SelectionID,doHlt2);
+       warning() << "TCK obtained from rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
+       append0(Hlt1SelectionID,decode_hlt1);
+       append0(Hlt2SelectionID,decode_hlt2);
     } else {
-       append1(Hlt1SelectionID,doHlt1);
-       append1(Hlt2SelectionID,doHlt2);
+       append1(Hlt1SelectionID,decode_hlt1);
+       append1(Hlt2SelectionID,decode_hlt2);
     } 
     auto res = m_idTable.insert( tck, tbl );
     assert(res.second);
