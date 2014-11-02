@@ -132,10 +132,11 @@ StatusCode HltSelReportsDecoder::execute() {
   unsigned int nObj = objTypSubBank.numberOfObj();
 
   if( bankSize < hltSelReportsBank.size() ){
-    std::ostringstream mess;
-    mess   << " HltSelReportsRawBank internally reported size " << hltSelReportsBank.size()
-           << " less than bank size delivered by RawEvent " << bankSize;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelReportsRawBank internally reported size " } 
+         + std::to_string( hltSelReportsBank.size() )
+         + " less than bank size delivered by RawEvent " 
+         + std::to_string(bankSize),
+         StatusCode::SUCCESS, 100 );
     errors=true;
 
   } else {
@@ -176,11 +177,11 @@ StatusCode HltSelReportsDecoder::execute() {
     errors=true;
   }
   if( nObj != substrSubBank.numberOfObj() ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBSubstr has number of objects " 
-         << substrSubBank.numberOfObj()
-         << " which is different than HltSelRepRBObjTyp " << nObj ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelRepRBSubstr has number of objects "  }
+         + std::to_string(substrSubBank.numberOfObj())
+         + " which is different than HltSelRepRBObjTyp " 
+         + std::to_string(nObj),
+           StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
@@ -193,11 +194,11 @@ StatusCode HltSelReportsDecoder::execute() {
     errors=true;
   }
   if( nObj != stdInfoSubBank.numberOfObj() ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBStdInfo has number of objects " 
-         << stdInfoSubBank.numberOfObj()
-         << " which is different than HltSelRepRBObjTyp " << nObj ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{ " HltSelRepRBStdInfo has number of objects " }
+         + std::to_string( stdInfoSubBank.numberOfObj() )
+         + " which is different than HltSelRepRBObjTyp " 
+         + std::to_string( nObj ),
+           StatusCode::SUCCESS, 100 );
     errors=true;
   }
 
@@ -210,11 +211,11 @@ StatusCode HltSelReportsDecoder::execute() {
     exInfOn=false; // the only non-fatal info corruption
   }
   if( nObj != extraInfoSubBank.numberOfObj() ){
-    std::ostringstream mess;
-    mess << " HltSelRepRBExtraInfo has number of objects " 
-         << extraInfoSubBank.numberOfObj()
-         << " which is different than HltSelRepRBObjTyp " << nObj ;
-    Error( mess.str(), StatusCode::SUCCESS, 100 );
+    Error( std::string{  " HltSelRepRBExtraInfo has number of objects " }
+         + std::to_string( extraInfoSubBank.numberOfObj() )
+         + " which is different than HltSelRepRBObjTyp " 
+         + std::to_string( nObj ),
+           StatusCode::SUCCESS, 100 );
     exInfOn=false;
   }
 
@@ -291,16 +292,12 @@ StatusCode HltSelReportsDecoder::execute() {
             }
         
          } else {
-
-
-            std::ostringstream mess;
-            mess  << " wrong number of StdInfo on Track " << stdInfo.size();
-            Warning(mess.str(),StatusCode::SUCCESS, 20 );
-            for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
-                i!=stdInfo.end(); ++i){
-              std::stringstream ss;
-              ss << "z#Track.unknown" << int(i-stdInfo.begin() );
-              infoPersistent.insert( ss.str(), floatFromInt(*i) );        
+            Warning( std::string{ " wrong number of StdInfo on Track "} + std::to_string( stdInfo.size() ),
+                    StatusCode::SUCCESS, 20 );
+            int e = 0;
+            for(const auto& i : stdInfo ) { 
+              infoPersistent.insert( std::string{ "z#Track.unknown" } + std::to_string(e++),
+                                     floatFromInt(i) );        
             }      
           }
         }
@@ -316,15 +313,12 @@ StatusCode HltSelReportsDecoder::execute() {
                 infoPersistent.insert( "3#RecVertex.chi2", floatFromInt(stdInfo[3]) ); 
             }
           } else {
-            
-            std::ostringstream mess;
-            mess  << " wrong number of StdInfo on RecVertex " << stdInfo.size();
-            Warning(mess.str(),StatusCode::SUCCESS, 20 );
-            for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
-                i!=stdInfo.end(); ++i){
-              std::stringstream ss;
-              ss << "z#RecVertex.unknown" << int(i-stdInfo.begin() );
-              infoPersistent.insert( ss.str(), floatFromInt(*i) );        
+            Warning( std::string{  " wrong number of StdInfo on RecVertex " } + std::to_string( stdInfo.size() ),
+                    StatusCode::SUCCESS, 20 );
+            int e = 0;
+            for(const auto& i : stdInfo ) {
+              infoPersistent.insert( std::string{ "z#RecVertex.unknown" } + std::to_string( e++ ),
+                                     floatFromInt(i) );        
             }      
             
           }
@@ -345,40 +339,33 @@ StatusCode HltSelReportsDecoder::execute() {
             
           } else {
 
-            std::ostringstream mess;
-            mess  << " wrong number of StdInfo on Particle " << stdInfo.size();
-            Warning(mess.str(),StatusCode::SUCCESS, 20 );
-            for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
-                i!=stdInfo.end(); ++i){
-              std::stringstream ss;
-              ss << "z#Particle.unknown" << int(i-stdInfo.begin() );
-              infoPersistent.insert( ss.str(), floatFromInt(*i) );        
-            }      
+            Warning( std::string{ " wrong number of StdInfo on Particle " } + std::to_string(stdInfo.size()),
+                     StatusCode::SUCCESS, 20 );
+            int e = 0;
+            for( const auto& i : stdInfo ) {
+              infoPersistent.insert( std::string{ "z#Particle.unknown" } + std::to_string(e++),
+                                     floatFromInt(i) );
+            }
             
           }
         }
         break;
       case LHCb::CLID_CaloCluster:
         {      
-          
           if( stdInfo.size()>=4 ){    
- 
             infoPersistent.insert( "0#CaloCluster.e", floatFromInt(stdInfo[0]) );
             infoPersistent.insert( "1#CaloCluster.position.x", floatFromInt(stdInfo[1]) );
             infoPersistent.insert( "2#CaloCluster.position.y", floatFromInt(stdInfo[2]) );
             infoPersistent.insert( "3#CaloCluster.position.z", floatFromInt(stdInfo[3]) );
           } else {
 
-            std::ostringstream mess;
-            mess  << " wrong number of StdInfo on CaloCluster " << stdInfo.size();
-            Warning(mess.str(),StatusCode::SUCCESS, 20 );
-            for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
-                i!=stdInfo.end(); ++i){
-              std::stringstream ss;
-              ss << "z#CaloCluster.unknown" << int(i-stdInfo.begin() );
-              infoPersistent.insert( ss.str(), floatFromInt(*i) );        
-            }      
-            
+            Warning( std::string{ " wrong number of StdInfo on CaloCluster " } + std::to_string(stdInfo.size()),
+                    StatusCode::SUCCESS, 20 );
+            int e = 0;
+            for(const auto& i : stdInfo ) { 
+              infoPersistent.insert( std::string{ "z#CaloCluster.unknown" } + std::to_string(e++),
+                                     floatFromInt(i) );        
+            }
           }
         }
         break;
@@ -389,17 +376,15 @@ StatusCode HltSelReportsDecoder::execute() {
             int id = (int)(  floatFromInt(stdInfo[1])+0.1 );            
             auto iselName = idmap.find(id);
             if (iselName == std::end(idmap)) {
-              std::ostringstream mess;
-              mess << " Did not find string key for PV-selection-ID in trigger selection in storage id=" << id;
-              Error( mess.str(),  StatusCode::SUCCESS, 10 ); 
+              Error( std::string{  " Did not find string key for PV-selection-ID in trigger selection in storage id=" } + std::to_string(id),
+                     StatusCode::SUCCESS, 10 ); 
               infoPersistent.insert( "10#Unknown" , floatFromInt(id) );        
             } else 
-              infoPersistent.insert( "10#" + std::string(iselName->second), floatFromInt(stdInfo[1]) );        
+              infoPersistent.insert( "10#" + iselName->second.str(), floatFromInt(stdInfo[1]) );
             }
             for( unsigned int ipvkeys=2; ipvkeys< stdInfo.size(); ++ipvkeys ){
-              std::stringstream ss;
-              ss << "11#" << boost::format("%1$=08X") % (ipvkeys-2) ;
-              infoPersistent.insert( ss.str(), floatFromInt( stdInfo[ipvkeys] ) );        
+              infoPersistent.insert( std::string{ "11#" }+ boost::str(boost::format("%1$=08X") % (ipvkeys-2)),
+                                     floatFromInt( stdInfo[ipvkeys] ) );        
             }
 
         }
@@ -407,14 +392,12 @@ StatusCode HltSelReportsDecoder::execute() {
       default:
         { 
 
-          std::ostringstream mess;
-          mess << " StdInfo on unsupported class type " << hos->summarizedObjectCLID();
-          Warning( mess.str(),  StatusCode::SUCCESS, 20 );
-          for(HltSelRepRBStdInfo::StdInfo::const_iterator i=stdInfo.begin();
-              i!=stdInfo.end(); ++i){
-            std::stringstream ss;
-            ss << "z#Unknown.unknown" << int(i-stdInfo.begin() );
-            infoPersistent.insert( ss.str(), floatFromInt(*i) );        
+          Warning( std::string{ " StdInfo on unsupported class type "}+ std::to_string(hos->summarizedObjectCLID()),
+                   StatusCode::SUCCESS, 20 );
+          int e = 0;
+          for (const auto& i : stdInfo) { 
+            infoPersistent.insert( std::string { "z#Unknown.unknown" } + std::to_string( e++ ),
+                                   floatFromInt(i) );        
           }      
         }    
       }
@@ -424,16 +407,13 @@ StatusCode HltSelReportsDecoder::execute() {
     if( exInfOn ){
       HltSelRepRBExtraInfo::ExtraInfo extraInfo = extraInfoSubBank.next();
       for(  const auto &i : extraInfo ) {
-        // convert int to string
         auto infos = infomap.find( i.first );
         if ( infos!=std::end(infomap) ) {
           infoPersistent.insert( infos->second, i.second );
         } else {
-          std::ostringstream mess;
-          mess << " String key for Extra Info item in storage not found id=" << i.first;
-          Warning( mess.str(), StatusCode::SUCCESS, 20 );
+          Warning( std::string{ " String key for Extra Info item in storage not found id=" } + std::to_string(i.first),
+                   StatusCode::SUCCESS, 20 );
         }
-
       }
     }
     hos->setNumericalInfo( infoPersistent );
@@ -454,22 +434,17 @@ StatusCode HltSelReportsDecoder::execute() {
       // hits
       unsigned int nSeq = hitsSubBank.numberOfSeq();
       std::vector< LHCb::LHCbID > hits;
-      for( HltSelRepRBSubstr::Substrv::const_iterator i=sub.second.begin();i!=sub.second.end();++i){
-        unsigned int iSeq=*i;
+      for( const auto& iSeq : sub.second ) {
         if( iSeq<nSeq ){
           std::vector< LHCb::LHCbID > hitseq = hitsSubBank.sequence( iSeq );
           //   for bank version zero, first hit in the first sequence was corrupted ------
           //                   for odd number of sequences saved - omit this hit
-          if( iSeq==0 ){
-            if( hltselreportsRawBank0->version()==0 ){
-              if( nSeq%2 == 1 ){
+          if( iSeq==0 && hltselreportsRawBank0->version()==0 && nSeq%2 == 1 ){
                 hitseq.erase( hitseq.begin() );
-              }
-            }
           }
           // ------------------------- end fix --------------------------------------------
           if( hitseq.size() ){            
-            hits.insert( hits.end(), hitseq.begin(), hitseq.end() );
+            hits.insert( std::end(hits), std::begin(hitseq), std::end(hitseq) );
           }          
         } else {
           Error(  "Hit sequence index out of range", StatusCode::SUCCESS, 10 );
@@ -480,8 +455,7 @@ StatusCode HltSelReportsDecoder::execute() {
     } else {
       // pointers
       SmartRefVector<LHCb::HltObjectSummary> thisSubstructure; 
-      for( HltSelRepRBSubstr::Substrv::const_iterator i=sub.second.begin();i!=sub.second.end();++i){
-        unsigned int jObj=*i;     
+      for( const auto& jObj : sub.second ) { 
         if( jObj<nObj ){
           thisSubstructure.push_back( &(*(objects[jObj])) );
         } else {
@@ -531,12 +505,11 @@ StatusCode HltSelReportsDecoder::execute() {
       if( outputSummary->insert(selName->second,selSumOut) == StatusCode::FAILURE ){
         Error( "  Failed to add Hlt selection name " 
                + std::string(selName->second)
-                + " to its container ", StatusCode::SUCCESS, 10 );
+               + " to its container ", StatusCode::SUCCESS, 10 );
       }
     } else {    
-      std::ostringstream mess;
-      mess << " Did not find string key for trigger selection in storage";
-      Error( mess.str(),  StatusCode::SUCCESS, 50 ); 
+      Error( " Did not find string key for trigger selection in storage",
+             StatusCode::SUCCESS, 50 ); 
     }
 
   }
@@ -561,7 +534,6 @@ StatusCode HltSelReportsDecoder::execute() {
       verbose() << *pHos << endmsg;    
     }
   }
-
   return StatusCode::SUCCESS;
 }
 

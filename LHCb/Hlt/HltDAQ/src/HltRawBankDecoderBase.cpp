@@ -76,7 +76,7 @@ unsigned int
 HltRawBankDecoderBase::tck() const {
 
     auto banks = selectRawBanks( LHCb::RawBank::HltDecReports );
-    if ( banks.empty() ) { 
+    if ( banks.empty() ) {
         warning() << "could not locate valid HltDecReports raw bank with source id " << m_sourceID << endmsg;
         return 0u;
     }

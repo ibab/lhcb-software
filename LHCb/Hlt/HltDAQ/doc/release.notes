@@ -3,6 +3,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+! 2014-11-03 - Gerhard Raven
+ - HltSelReportsDecoder: avoid stringstream, prefer range-based for
+
 ! 2014-11-02 - Gerhard Raven
  - added extra checking & diagnostics. 
  - generic C++ code cleanup.

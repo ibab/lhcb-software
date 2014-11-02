@@ -28,7 +28,8 @@ public:
             : m_key{ std::move(key) }, m_decode{ decode } 
         {}
         operator const Gaudi::StringKey& () const { return m_key; }
-        operator const std::string&() const { return m_key.str(); }
+        const std::string& str() const { return m_key.str(); }
+        operator const std::string&() const { return str(); }
         bool operator!() const { return !m_decode; }
     };
 

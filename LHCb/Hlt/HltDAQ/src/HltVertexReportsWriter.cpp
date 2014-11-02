@@ -1,7 +1,7 @@
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/RawEvent.h"
 #include "Event/HltVertexReports.h"
@@ -47,7 +47,7 @@ HltVertexReportsWriter::HltVertexReportsWriter( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty("InputHltVertexReportsLocation",
-    m_inputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
+    m_inputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);
   declareProperty("OutputRawEventLocation",
     m_outputRawEventLocation= LHCb::RawEventLocation::Default);
   declareProperty("SourceID",
@@ -100,15 +100,15 @@ StatusCode HltVertexReportsWriter::execute() {
   std::vector< unsigned int > hltVertexReportsRawBank;
   // first word will count number of vertex selections saved
   hltVertexReportsRawBank.push_back(0);
-  
+
   // loop over vertex selections given in the input list
-  for( const auto& s : *inputSummary) { 
+  for( const auto& s : *inputSummary) {
 
      // save selection ---------------------------
      // find int selection id
      auto si = selectionNameToIntMap.find( s.first );
      if( si==std::end(selectionNameToIntMap) ) {
-       Error(" selectionName=" +s.first+ " from HltVertexReports not found in HltANNSvc. Skipped. ", StatusCode::SUCCESS, 20 ); 
+       Error(" selectionName=" +s.first+ " from HltVertexReports not found in HltANNSvc. Skipped. ", StatusCode::SUCCESS, 20 );
        continue;
      }
 
@@ -144,10 +144,8 @@ StatusCode HltVertexReportsWriter::execute() {
     rawEvent->removeBank(b);
     warning() << " Deleted previously inserted HltVertexReports bank " << endmsg;
   }
-
   // shift bits in sourceID for the same convention as in HltSelReports
   rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltVertexReports, kVersionNumber, hltVertexReportsRawBank );
-  
   if ( msgLevel(MSG::VERBOSE) ){
     verbose() << " ======= HltVertexReports RawBank size= " << hltVertexReportsRawBank.size() << endmsg;
     verbose() << " VersionNumber= " << kVersionNumber;  
@@ -156,16 +154,16 @@ StatusCode HltVertexReportsWriter::execute() {
     unsigned int iWord = 1;
     for(unsigned int i=0; i!=hltVertexReportsRawBank[0]; ++i){
       unsigned int n = hltVertexReportsRawBank[iWord] & 0xFFFFL;
-      verbose() << " selection id " << (unsigned int)( hltVertexReportsRawBank[iWord] >> 16 ) 
+      verbose() << " selection id " << (unsigned int)( hltVertexReportsRawBank[iWord] >> 16 )
                 << " number of vertices " << n << endmsg;
-      ++iWord;      
+      ++iWord;
       for( unsigned int j=0; j!=n; ++j ){
-        verbose() << " " << j 
+        verbose() << " " << j
                   << " x " << floatFromInt( hltVertexReportsRawBank[iWord] )
                   << " y " << floatFromInt( hltVertexReportsRawBank[iWord+1] )
                   << " z " << floatFromInt( hltVertexReportsRawBank[iWord+2] )
                   << " chi2 " << floatFromInt( hltVertexReportsRawBank[iWord+3] )
-                  << " nDoF " << hltVertexReportsRawBank[iWord+4] 
+                  << " nDoF " << hltVertexReportsRawBank[iWord+4]
                   << " cov(x,x) " << floatFromInt( hltVertexReportsRawBank[iWord+5] )
                   << " cov(y,y) " << floatFromInt( hltVertexReportsRawBank[iWord+6] )
                   << " cov(z,z) " << floatFromInt( hltVertexReportsRawBank[iWord+7] )
@@ -174,7 +172,7 @@ StatusCode HltVertexReportsWriter::execute() {
                   << " cov(y,z) " << floatFromInt( hltVertexReportsRawBank[iWord+10] )
                   << endmsg;
         iWord += 11;
-  
+
       }
     }
   }

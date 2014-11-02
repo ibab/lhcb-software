@@ -1,8 +1,8 @@
 // $Id: HltDecReportsWriter.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
-// Include files 
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 
 #include "Event/HltDecReports.h"
 #include "Event/RawEvent.h"
@@ -31,11 +31,11 @@ HltDecReportsWriter::HltDecReportsWriter( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty("InputHltDecReportsLocation",
-    m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
+    m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);
   declareProperty("OutputRawEventLocation",
-    m_outputRawEventLocation= LHCb::RawEventLocation::Default);  
+    m_outputRawEventLocation= LHCb::RawEventLocation::Default);
   declareProperty("SourceID",
-    m_sourceID= kSourceID_Dummy );  
+    m_sourceID= kSourceID_Dummy );
 }
 
 //=============================================================================
@@ -69,8 +69,8 @@ StatusCode HltDecReportsWriter::execute()
       return Warning( " No HltDecReports at " + m_inputHltDecReportsLocation.value(), StatusCode::SUCCESS, 20 );
   }
   if ( msgLevel(MSG::VERBOSE) ){
-    verbose() << " Input: ";  
-    for( const auto& rep : *inputSummary) { 
+    verbose() << " Input: ";
+    for( const auto& rep : *inputSummary) {
       auto decRep = HltDecReport{rep.second.decReport()};
       verbose() << decRep.intDecisionID() << "-" << decRep.decision() << " ";
     }
@@ -81,7 +81,7 @@ StatusCode HltDecReportsWriter::execute()
   auto rawEvent = getIfExists<RawEvent>(m_outputRawEventLocation);
   if( !rawEvent) {
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(), StatusCode::SUCCESS, 20 );
-  }  
+  }
   // delete any previously inserted dec reports
   for( const auto& b : rawEvent->banks( RawBank::HltDecReports ) ) {
     auto sourceID =  b->version() > 1 ? ( b->sourceID() >> kSourceID_BitShift ) : kSourceID_Hlt;
@@ -94,11 +94,11 @@ StatusCode HltDecReportsWriter::execute()
   std::vector<unsigned int> bankBody; bankBody.reserve( inputSummary->size() + 2);
   bankBody.push_back( inputSummary->configuredTCK() );
   bankBody.push_back( inputSummary->taskID() );
-  std::transform( std::begin(*inputSummary), std::end(*inputSummary), 
+  std::transform( std::begin(*inputSummary), std::end(*inputSummary),
                   std::back_inserter(bankBody),
                   [](HltDecReports::Container::const_reference r ) { return r.second.decReport(); } );
 
-  // order according to the values, essentially orders by intDecisionID 
+  // order according to the values, essentially orders by intDecisionID
   // this is important since it will put "*Global" reports at the beginning of the bank
   // NOTE: we must skip the first two words (configuredTCK, taskID)
   std::sort( std::next( std::begin(bankBody), 2), std::end(bankBody), std::less<unsigned int>() );
@@ -107,8 +107,8 @@ StatusCode HltDecReportsWriter::execute()
   rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltDecReports, kVersionNumber, bankBody );
 
   if ( msgLevel(MSG::VERBOSE) ){
-    verbose() << " Output:  ";  
-    verbose() << " VersionNumber= " << kVersionNumber;  
+    verbose() << " Output:  ";
+    verbose() << " VersionNumber= " << kVersionNumber;
     verbose() << " SourceID= " << m_sourceID;
     auto i=std::begin(bankBody);
     verbose() << " configuredTCK = " << *i++ << " " ;
