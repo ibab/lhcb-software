@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-10-02 - Gerhard Raven
+ - do NOT catch exceptions thrown by sub algorithms  
 
 !========================= SelectionLine v1r1 2014-05-16 =========================
 

@@ -108,13 +108,8 @@ Selection::Line::Stage::execute(ISequencerTimerTool* timertool)
   if (  algorithm()->isExecuted() ) return StatusCode::SUCCESS;
   // TODO: bind timer at init time
   if ( timertool ) timertool->start( timer() );
-  StatusCode result = StatusCode::FAILURE;
-  try
-  {
-    result = algorithm()->sysExecute();
-    algorithm()->setExecuted( true );
-  }
-  catch ( ... ) { }
+  StatusCode result = algorithm()->sysExecute();
+  algorithm()->setExecuted( true );
   if ( timertool ) timertool->stop( timer() );
   return result;
 }
