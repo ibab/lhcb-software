@@ -7,6 +7,7 @@
 ! 2014-10-02 - Gerhard Raven
  - do NOT catch exceptions thrown by subalgorithms  
  - streamline creation of subalgorithms
+ - C++11 cleanup
 
 !========================= SelectionLine v1r1 2014-05-16 =========================
 

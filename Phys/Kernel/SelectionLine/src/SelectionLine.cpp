@@ -160,50 +160,36 @@ Selection::Line::Stage::execute(ISequencerTimerTool* timertool)
 Selection::Line::SubAlgos
 Selection::Line::retrieveSubAlgorithms() const
 {
-  typedef std::list<std::pair<const Algorithm*,unsigned> > SubAlgoList;
-  SubAlgoList subAlgo;
-  subAlgo.push_back( std::make_pair(this,0) );
-  SubAlgoList::iterator i = subAlgo.begin();
-  while ( i != subAlgo.end() )
+  std::deque<std::pair<const Algorithm*,unsigned> > subAlgo;
+  subAlgo.emplace_back( this,0 );
+  for (auto i = std::begin(subAlgo);  i != std::end(subAlgo); ++i ) 
   {
-    std::vector<Algorithm*> * subs = i->first->subAlgorithms();
-    if ( !subs->empty() )
-    {
-      const unsigned int depth = i->second+1;
-      SubAlgoList::iterator j = i;
-      ++j;
-      for ( std::vector<Algorithm*>::const_iterator k = subs->begin();
-            k != subs->end(); ++k )
-      {
-        subAlgo.insert( j, std::make_pair( *k, depth ) );
-      }
+    auto* subs = i->first->subAlgorithms();
+    if ( !subs->empty() ) {
+      auto depth = i->second+1;
+      auto j = std::next(i);
+      for ( const auto& k : *subs ) subAlgo.insert( j, { k, depth } );
     }
-    ++i;
   }
   subAlgo.pop_front(); // remove ourselves...
 
   if ( msgLevel(MSG::DEBUG) )
   {
     debug() << "Dumping sub algorithms :" << endmsg;
-    for ( SubAlgoList::const_iterator ii = subAlgo.begin();
-          ii != subAlgo.end(); ++ii )
+    for ( const auto& ii : subAlgo )
     {
-      debug() << std::string( 3 + (3*ii->second) , ' ' ) 
-              << ii->first->name() << endmsg;
+      debug() << std::string( 3 + 3*ii.second , ' ' ) << ii.first->name() << endmsg;
     }
   }
 
   // transform map such that it has algo, # of sub(sub(sub()))algorithms
-
   SubAlgos table;
-  for ( SubAlgoList::const_iterator ii = subAlgo.begin(); 
-        ii != subAlgo.end(); ++ii )
+  for ( auto ii = std::begin(subAlgo); ii != std::end(subAlgo); ++ii )
   {
-    SubAlgoList::const_iterator j = ii; ++j;
+    auto j = std::next(ii);
     while ( j != subAlgo.end() && j->second > ii->second ) ++j;
-    table.push_back( std::make_pair( ii->first, std::distance(ii,j) ) );
+    table.emplace_back(  ii->first, std::distance(ii,j) );
   }
-
   return table;
 }
 
@@ -212,7 +198,7 @@ IANNSvc& Selection::Line::annSvc() const
   if ( !m_hltANNSvc ) 
   {
     const StatusCode sc = serviceLocator()->service(s_ANNSvc, m_hltANNSvc);
-    Assert( sc.isSuccess() && m_hltANNSvc != 0, " no ANNSvc??");
+    Assert( sc.isSuccess() && m_hltANNSvc, " no ANNSvc??");
   }
   return *m_hltANNSvc;
 }
@@ -223,17 +209,17 @@ IANNSvc& Selection::Line::annSvc() const
 Selection::Line::Line( const std::string& name,
                        ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
-  , m_timerTool( 0 )
-  , m_jos(0)
-  , m_algMgr(0)
-  , m_errorHisto(0)
-  , m_timeHisto(0)
-  , m_stepHisto(0)
-  , m_candHisto(0)
-  , m_hltANNSvc(0)
-  , m_acceptCounter(0)
-  , m_errorCounter(0)
-  , m_slowCounter(0)
+  , m_timerTool{ nullptr }
+  , m_jos{ nullptr }
+  , m_algMgr{ nullptr }
+  , m_errorHisto{ nullptr }
+  , m_timeHisto{ nullptr }
+  , m_stepHisto{ nullptr }
+  , m_candHisto{ nullptr }
+  , m_hltANNSvc{ nullptr }
+  , m_acceptCounter{ nullptr }
+  , m_errorCounter{ nullptr }
+  , m_slowCounter{ nullptr }
   , m_timer(0)
   , m_nAcceptOnError(0)
 {
@@ -332,12 +318,11 @@ StatusCode Selection::Line::initialize()
   // Remove common part of the name for easier label reading (assumes name is suff. descriptive)
   std::vector<std::string> stepLabels;
   const std::string common = name();
-  for ( SubAlgos::const_iterator i = m_subAlgo.begin(); i != m_subAlgo.end(); ++i )
-  {
-    std::string stepname = i->first->name();
+  for ( const auto& i :  m_subAlgo ) {
+    std::string stepname = i.first->name();
     const std::string::size_type j = stepname.find(common);
     if (j!=std::string::npos) stepname.erase(j,common.size());
-    stepLabels.push_back( stepname );
+    stepLabels.push_back( std::move(stepname) );
   }
   if ( !setBinLabels( m_stepHisto, stepLabels ) ) 
   {
@@ -398,16 +383,13 @@ StatusCode Selection::Line::execute()
   bool accept = !m_stages.empty(); // make sure an empty line always rejects events...
   m_caughtIncident = false; // only interested in incidents during stages->execute...
 
-  for  ( unsigned i = 0; i < m_stages.size(); ++i ) 
-  {
+  for  ( unsigned i = 0; i < m_stages.size(); ++i ) {
     result = m_stages[i]->execute();
-    if (m_caughtIncident) 
-    {
+    if (m_caughtIncident) {
       report.setErrorBits(report.errorBits() | 0x02);
       m_caughtIncident = false;
     }
-    if (result.isFailure())
-    {
+    if (result.isFailure()) {
       report.setErrorBits(report.errorBits() | 0x01);
       break;
     }
@@ -425,11 +407,10 @@ StatusCode Selection::Line::execute()
 
   // did not(yet) accept, but something bad happened...
   if ( !accept && report.errorBits() != 0 && 
-       ( m_nAcceptOnError < m_maxAcceptOnError || m_maxAcceptOnError<0) )
-  {
+       ( m_nAcceptOnError < m_maxAcceptOnError || m_maxAcceptOnError<0) ) {
     accept =  ( m_acceptOnError    && ( (report.errorBits()&0x01)!=0) )
-      || ( m_acceptOnIncident && ( (report.errorBits()&0x02)!=0) )
-      || ( m_acceptIfSlow     && ( (report.errorBits()&0x04)!=0) );
+           || ( m_acceptOnIncident && ( (report.errorBits()&0x02)!=0) )
+           || ( m_acceptIfSlow     && ( (report.errorBits()&0x04)!=0) );
     if (accept) ++m_nAcceptOnError;
   }
 
@@ -449,15 +430,11 @@ StatusCode Selection::Line::execute()
 
   fill( m_errorHisto, report.errorBits(), 1.0);
   // make stair plot
-  SubAlgos::iterator last = m_subAlgo.begin();
-  while ( last != m_subAlgo.end() ) 
-  {
-    if (last->first->filterPassed()) 
-    {
+  auto last = m_subAlgo.begin();
+  while ( last != m_subAlgo.end() ) {
+    if (last->first->filterPassed()) {
       last+=last->second;
-    }
-    else
-    {
+    } else {
       if (last->second==1) break; // don't have subalgos, so this is where we stopped
       ++last; // descend into subalgorithms, figure out which one failed.....
       // Note: what to do if subalgos pass, but parent failed??  (yes, this is possible!)
@@ -468,9 +445,8 @@ StatusCode Selection::Line::execute()
   }
   fill( m_stepHisto, std::distance(m_subAlgo.begin(),last), 1.0);
   
-  for ( SubAlgos::iterator i = m_subAlgo.begin(); i != last; ++i )
-  {
-    fill(m_candHisto,std::distance(m_subAlgo.begin(),i),numberOfCandidates(i->first),1.0);
+  for ( SubAlgos::iterator i = std::begin(m_subAlgo); i != last; ++i ) {
+    fill(m_candHisto,std::distance( std::begin(m_subAlgo),i),numberOfCandidates(i->first),1.0);
   }
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 
@@ -479,11 +455,8 @@ StatusCode Selection::Line::execute()
 
 std::vector< const Algorithm* > Selection::Line::algorithms() const 
 {
-  std::vector< const Algorithm* > subs;
-  for( SubAlgos::const_iterator i = m_subAlgo.begin(); i != m_subAlgo.end(); ++i )
-  {
-    subs.push_back(i->first);
-  }
+  std::vector< const Algorithm* > subs; subs.reserve( m_subAlgo.size() );
+  for( const auto& i : m_subAlgo ) subs.push_back(i.first);
   return subs;
 }
 
