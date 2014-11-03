@@ -274,12 +274,12 @@ class B2KShhConf(LineBuilder) :
                         ,"log10(B_VDCHI2_OWNPV)"                                       : "log10(BPVVDCHI2)"
                         ,"B_DIRA_OWNPV!=1.0?log10(1.0-TMath::Abs(B_DIRA_OWNPV)):-10.0" : "(log10(1-BPVDIRA) if (BPVDIRA != 1.0) else -10.0)"
                         ,"log10(B_ENDVERTEX_CHI2)"                                     : "log10(VFASPF(VCHI2))"
-                        ,"log10(B_SMALLDELTACHI2)"                                     : "log10(RELINFO('/Event/Phys/"+_linename+"/VtxIsolationVar', 'VTXISODCHI2ONETRACK', -1.1))"
+                        ,"log10(B_SMALLESTDELTACHI2)"                                  : "log10(RELINFO('/Event/Phys/"+_linename+"/VtxIsolationVar', 'VTXISODCHI2ONETRACK', -1.1))"
                         ,"B_PTASYM_1_5"                                                : "RELINFO('/Event/Phys/"+_linename+"/P2ConeVar', 'CONEPTASYM', -1.1)"
                         ,"log10(h1_IPCHI2_OWNPV+h2_IPCHI2_OWNPV)"                      : "log10(CHILD(BPVIPCHI2(),1) + CHILD(BPVIPCHI2(),2))"
                     }
                     if ks_type == 'LL' :
-                        _mvaVars[ks_type][year][sign]['KS_VDCHI2'] = 'log10(CHILD(BPVVDCHI2,3))'
+                        _mvaVars[ks_type][year][sign]['log10(KS_VDCHI2_OWNPV)'] = 'log10(CHILD(BPVVDCHI2,3))'
 
                     # Configuration of the MVA tool
                     addTMVAclassifierValue(Component = _mvaFilter[ks_type][year][sign], XMLFile = _weightfile1[ks_type][year], Variables = _mvaVars[ks_type][year][sign], ToolName = 'MVA1Response_%s_%s_%s' % (ks_type,year,sign) )
