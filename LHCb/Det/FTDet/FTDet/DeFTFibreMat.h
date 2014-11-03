@@ -5,6 +5,10 @@
 // DetDesc
 #include "DetDesc/DetectorElement.h"
 #include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/SolidBox.h"
+#include "DetDesc/LogVolBase.h"  //DBL: those 2 includes are mandatory
+#include "DetDesc/PVolume.h"     //DBL
+
 
 // Kernel
 #include "Kernel/FTChannelID.h"
@@ -152,9 +156,9 @@ public:
    *  @param fibre lengh for the mean y-value of the hit (from entry to exit point)
    *  @param relative position of the hit in the fibre wrt the SiPm position
    */
-    StatusCode hitPositionInFibre(const LHCb::MCHit*  fthit,
-                                  double& meanfibrefullLengh,
-                                  double& fibreLenghFrac)const;
+  StatusCode hitPositionInFibre(const LHCb::MCHit*  fthit,
+                                double& meanfibrefullLengh,
+                                double& fibreLenghFrac)const;
 
   //
   bool isBottom() const { return m_mat; }
@@ -179,6 +183,9 @@ public:
   /// Get the u-coordinate of the cell center
   double cellUCoordinate(const LHCb::FTChannelID& channel) const;
 
+  /// Get the fibremat local coordinate of the cell center
+  double cellLocalX(const LHCb::FTChannelID& channel) const;
+
   /// Accessor to the minimal x-position of the layer area covered with fibres
   double layerMinX() const { return m_layerMinX; }
 
@@ -198,28 +205,49 @@ public:
   double layerMaxZ() const { return m_layerMaxZ; }
 
 
-  /// Accessor to the minimal x-position of the fibreMat area covered with fibres
-  double fibreMatMinX() const { return m_fibreMatMinX; }
+  /// Accessor to the minimal x-position of the fibreMat area
+  double fibreMatMinX() const { return m_fibreMatGlobalRT.X(); }
 
-  /// Accessor to the maximal x-position of the fibreMat area covered with fibres
-  double fibreMatMaxX() const { return m_fibreMatMaxX; }
+  /// Accessor to the maximal x-position of the fibreMat area
+  double fibreMatMaxX() const { return m_fibreMatGlobalLT.X(); }
 
-  /// Accessor to the minimal y-position of the fibreMat area covered with fibres
-  double fibreMatMinY() const { return m_fibreMatMinY; }
+  /// Accessor to the minimal y-position of the fibreMat area
+  double fibreMatMinY() const { return m_fibreMatGlobalRT.Y(); }
 
-  /// Accessor to the maximal y-position of the fibreMat area covered with fibres
-  double fibreMatMaxY() const { return m_fibreMatMaxY; }
+  /// Accessor to the maximal y-position of the fibreMat area
+  double fibreMatMaxY() const { return m_fibreMatGlobalRB.Y(); }
 
-  /// Accessor to the minimal z-position of the fibreMat
-  double fibreMatMinZ() const { return m_fibreMatMinZ; }
+  /// Accessor to the minimal z-position of the fibreMat area
+  double fibreMatMinZ() const { return fibreMatGlobalCenter().Z()-m_fibreMatHalfSizeZ; }
 
-  /// Accessor to the maximal z-position of the fibreMat
-  double fibreMatMaxZ() const { return m_fibreMatMaxZ; }
+  /// Accessor to the maximal z-position of the fibreMat area
+  double fibreMatMaxZ() const { return fibreMatGlobalCenter().Z()+m_fibreMatHalfSizeZ; }
+
+
+  /// Accessor to the GLOBAL frame position of fibreMat local frame origin
+  Gaudi::XYZPoint fibreMatGlobalCenter() const { return m_fibreMatGlobalCenter; }
+
+  /// Accessor to the GLOBAL frame position of (local) Right Top fibreMat active area corner
+  Gaudi::XYZPoint fibreMatGlobalRT() const { return m_fibreMatGlobalRT; }
+  
+  /// Accessor to the GLOBAL frame position of (local) Left Top fibreMat active area corner
+  Gaudi::XYZPoint fibreMatGlobalLT() const { return m_fibreMatGlobalLT; }
+  
+  /// Accessor to the GLOBAL frame position of(local)  Right Bottom fibreMat active area corner
+  Gaudi::XYZPoint fibreMatGlobalRB() const { return m_fibreMatGlobalRB; }
+
+  /// Accessor to the GLOBAL frame position of(local)  Left Bottom fibreMat active area corner
+  Gaudi::XYZPoint fibreMatGlobalLB() const { return m_fibreMatGlobalLB; }
+
+  /// Accessor to the fibre end y-position in local frame (top/bottom related)
+  double fibreMatSipmY() const { return m_fibreMatSipmY; }
+
+
 
   /// Accessor to the z-position of the layer center
-  double layerCenterZ() const { return m_layerPosZ; }
+  double layerCenterZ() const { return m_fibreMatGlobalCenter.Z(); }
 
-  /// Accessor to the layer beam-pipe radius
+  /// Accessor to the layer beam-pipe radius (v2 geometry)
   double layerInnerHoleRadius() const { return m_innerHoleRadius; }
 
   /// Get the FTChannelID of the cell located on the left of the given cell
@@ -227,6 +255,7 @@ public:
 
   /// Get the FTChannelID of the cell located on the right of the given cell
   LHCb::FTChannelID nextChannelRight(const LHCb::FTChannelID& channel) const;
+
 
   /** Create a DetectorSegment (straight line representing an FT cell)
    *  from an FTChannelID and fractional position within the relevant cell
@@ -385,32 +414,26 @@ private: // private data members
   double m_layerHalfSizeX, m_layerHalfSizeY, m_layerHalfSizeZ;
   double m_innerHoleRadius;
   double m_fibreMatinnerHoleSize;
-
-  double m_layerPosZ;           ///< center of the fibremat in z   
- 
-  double m_fibreMatMinX, m_fibreMatMaxX;
-  double m_fibreMatMinY, m_fibreMatMaxY;
-  double m_fibreMatMinZ, m_fibreMatMaxZ;
+  
   double m_fibreMatHalfSizeX, m_fibreMatHalfSizeY, m_fibreMatHalfSizeZ;
 
   /// SiPM and cell sizes
   unsigned int m_sipmNChannels; ///< number of channels per sipm
+  double m_fibreMatSipmY;    ///end fibre position in local frame (depends on top/bottom mats)
   double m_cellSizeX;
   double m_sipmSizeX;
+  
   /// Gaps
   double m_sipmEdgeSizeX, m_moduleEdgeSizeX; ///< x-gap between the active area and the outer edge
                                              ///of a sipm and same for module
-  double  m_moduleGapH, m_moduleGapV;
-  double m_gapXLayerHalves;     ///< half x-gap between left and right detector halves
+  double m_moduleGapH;
 
   /// Parameters derived from the above values
   double m_sipmPitchX;          /// = m_sipmSizeX + 2*m_gapXsipmEdge
   unsigned int m_nSipmPerQuarter;  /// = int(m_layerHalfSizeX/m_sipmPitchX)
-  double m_gapXLayerOuterEdge;  /// = m_layerHalfSizeX - m_nSipmPerQuarter*m_sipmPitchX
 
   //variables for sipm geometrical distribution at the level of fibremats rather than at the level of layers
   unsigned int m_nSipmPerModule;
-  double m_SipmGapInModule;
 
   /// Use a single MsgStream instance (created in initialize)
   MsgStream* m_msg;
@@ -420,11 +443,50 @@ private: // private data members
   MsgStream& error()   const { return *m_msg << MSG::ERROR; }
   MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
   
-  int m_quarter;       //DBL
+  int m_quarter;
   int m_relativemodule;
-  double m_fibreMatPosZ;   
-  std::string  m_DeFTLocaton;
-  int m_FTGeomVersion_reference;
+  //Fibremat global frame center and corners (Right,Left,Top,Bottom)
+  Gaudi::XYZPoint m_fibreMatGlobalCenter;   ///Origin of local fibremat frame in global frame
+  Gaudi::XYZPoint m_fibreMatGlobalRT;       ///Right Top (local) corner of fibremat global coordinates
+  Gaudi::XYZPoint m_fibreMatGlobalLT;       ///Left Top (local) corner of fibremat global coordinates
+  Gaudi::XYZPoint m_fibreMatGlobalRB;       ///Right Bottom (local) corner of fibremat global coordinates
+  Gaudi::XYZPoint m_fibreMatGlobalLB;       ///Left Bottom (local) corner of fibremat global coordinates   
+
+  std::string  m_DeFTLocation;
+  unsigned int m_FTGeomversion;   ///Geometry version
+  unsigned int m_FTGeomVersion_reference;
+  double m_sipmOriginX;       ///X origin of sipms frame in fibremat
+  double m_sipmPitchXsigned;
+   
+  //FibreModules
+  double m_FibreModuleHalfSizeX;   ///FibreModule X half size
+  double m_FibreModuleHalfSizeY;   ///FibreModule Y half size
+  double m_FibreModuleHalfSizeZ;   ///FibreModule Z half size
+  
+  //holes
+  Gaudi::XYZPoint m_posHole;   ///Hole position
+  double m_HoleShiftXSt;   ///X Hole shiftin local frame
+  double m_HoleShiftYSt;   ///Y Hole shiftin local frame
+  double m_halfHole1X;    ///Hole in local frame X, section 1
+  double m_halfHole2X;    ///Hole in local frame X, section 2
+  double m_halfHole3X;    ///Hole in local frame X, section 3
+  double m_halfHole4X;    ///Hole in local frame X, section 4
+  double m_halfHole1Y;    ///Hole in local frame Y, section 1, T station dependent
+  double m_halfHole2Y;    ///Hole in local frame Y, section 2, T station dependent
+  double m_halfHole3Y;    ///Hole in local frame Y, section 3, T station dependent
+  double m_halfHole4Y;    ///Hole in local frame Y, section 4, T station dependent
+
+  //other flags
+  bool m_RightHoleAxesXZInversion;
+  
+  /** find solidbase for PVolume of given detector element */
+  StatusCode findSolidBase(IDetectorElement *det, const std::string& pvolname, const SolidBase* &solidbase);
+ 
+  /**Beam Hole acceptance, depending on geometry versions. Returns also maximum fibre length */
+  bool inBeamHole(const Gaudi::XYZPoint& hitGlobal, const Gaudi::XYZPoint& hitLocal, double& fibrelengthMax) const;
+
+  //temporary workaround for Right Hole (module 11) axes inversion
+  void doRHAxesInversion(Gaudi::XYZPoint& xyzLocal) const;
   
 };
 

@@ -3,6 +3,14 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2014-11-03 - Luigi Del Buono
+ - Introduce 1st version of code compatible with geometry v4 (only v42 for now)
+ - use new modified database with more user parameters
+ - special temporary patch to compensate for axes inversion in Right Hole fibermats
+ - changes in "CreateDetSegment" to return ymin and ymax of fibermat (in global frame)
+ - some changes also in v2 to avoid using hard coded numbers
+ - NOTA BENE : this tag is not completely tested yet
+
 ! 2014-10-14 - Sajan Easo
   - Made some cleanup in DeFTDetector for adapting to different geometry versions
   - Made minor modifications to DeFTFibreMat in order to process version 40 of the
