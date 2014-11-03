@@ -51,8 +51,6 @@ StatusCode MCTupleToolPrompt::fill( const LHCb::MCParticle*
 {
   const std::string prefix = fullName(head);
 
-  Assert (mcp, "No MCParticle found" );
-
   bool test=true;
 
   int longLivedPid=0;
