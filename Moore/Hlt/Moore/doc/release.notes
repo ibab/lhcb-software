@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-11-04 - Sean Benson
+ - Make sure for split running, HltConfigSvc knows to only create DecReps for that level
+ - and does both when Hlt1 and 2 are being run together.
+
 ! 2014-11-04 Sean Benson
  - Decoder test picks up the right config.tar location
 

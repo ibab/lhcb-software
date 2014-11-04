@@ -726,9 +726,6 @@ class Moore(LHCbConfigurableUser):
                     , 'HltL0GlobalMonitor/.*'              : { 'Hlt2DecReports' : { '^.*$' : ''    } }
             }
             Funcs._mergeTransform(trans)
-            from Configurables import HltConfigSvc
-            from DAQSys.Decoders import DecoderDB
-            HltConfigSvc().HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
 
         def hlt2_only_tck() :
             ### remove all algorithms starting with Hlt1
@@ -741,13 +738,18 @@ class Moore(LHCbConfigurableUser):
                     , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
             }
             Funcs._mergeTransform(trans)
-            from Configurables import HltConfigSvc
-            from DAQSys.Decoders import DecoderDB
-            HltConfigSvc().HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
-                    
+        
+        # Tell the HltConfigSvc that we will only be running 
+        # one level of the HLT
+        from Configurables import HltConfigSvc
+        from DAQSys.Decoders import DecoderDB
+        split=self.getProp("Split")
+        if split == "Hlt1":
+            HltConfigSvc().HltDecReportsLocations = [ DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0] ]
+        if split == "Hlt2":
+            HltConfigSvc().HltDecReportsLocations = [ DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0] ]
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
-        split=self.getProp("Split")
         if split not in ["","Hlt1","Hlt2"]:
             raise ValueError("Invalid option for Moore().Split: '%s'"% self.getProp("Split") )
         if useTCK :
