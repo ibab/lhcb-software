@@ -397,6 +397,16 @@ StatusCode Selection::Line::execute()
     if ( !accept ) break;
     report.setExecutionStage( i+1 );
   }
+  // Is the line a Turbo line?
+  // If so inform the HltDecReports
+  std::string lineName = m_decision.substr(4, m_decision.size()-12);
+  std::stringstream turboAlgName; turboAlgName << "TurboMIAB" << lineName;
+  IAlgorithm* myIAlg(0);
+  StatusCode Turbo = m_algMgr->getAlgorithm( turboAlgName.str(), myIAlg );
+  if ( myIAlg!=0 ){
+    report.setExecutionStage( 254 );
+  }
+
   // plot the wall clock time spent..
   const double elapsedTime = double(System::currentTime( System::microSec) - startClock);
   // protect against 0 and convert nanosec --> to millisec

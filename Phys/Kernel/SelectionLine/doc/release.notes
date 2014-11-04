@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2014-11-04 - Sean Benson
+ - Check for Turbo signature, if found set executionStage to 254.
+
 ! 2014-10-02 - Gerhard Raven
  - do NOT catch exceptions thrown by subalgorithms  
  - streamline creation of subalgorithms
