@@ -3,6 +3,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
+
+! 2014-11-04 - Sean Benson
+ - Major update: Additional decoding for turbo level reports.
+
 ! 2014-11-03 - Gerhard Raven
  - HltSelReportsDecoder: avoid stringstream, prefer range-based for
 
