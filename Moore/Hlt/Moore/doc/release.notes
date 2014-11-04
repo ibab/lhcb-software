@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-11-04 Sean Benson
+ - Decoder test picks up the right config.tar location
+
 ! 2014-11-04 Gerhard Raven
  - tell HltConfigSvc to generate the intial HltDecReports in the right TES 
    location

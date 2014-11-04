@@ -6,7 +6,7 @@
   </argument>
   <argument name="args"><set>
     <text>--option</text>
-    <text>from Gaudi.Configuration import *; from Configurables import ApplicationMgr; from DAQSys.Decoders import DecoderDB as ddb; from DAQSys.DecoderClass import decodersForBank; seq = GaudiSequencer("seqDecode"); seq.Members +=[d.setup() for d in decodersForBank(ddb,"HltDecReports")]; ApplicationMgr().TopAlg=[ seq ]; from Configurables import ConfigTarFileAccessSvc; ConfigTarFileAccessSvc().File='./config.tar'; from GaudiConf import IOExtension; IOExtension().inputFiles(['hlt2_splitTCK.raw']); from Configurables import LHCbApp; LHCbApp();</text>
+    <text>from Gaudi.Configuration import *; from Configurables import ApplicationMgr; from DAQSys.Decoders import DecoderDB as ddb; from DAQSys.DecoderClass import decodersForBank; seq = GaudiSequencer("seqDecode"); seq.Members +=[d.setup() for d in decodersForBank(ddb,"HltDecReports")]; ApplicationMgr().TopAlg=[ seq ]; from Configurables import ConfigTarFileAccessSvc; ConfigTarFileAccessSvc().File='../../../../InstallArea/$CMTCONFIG/config.tar'; from GaudiConf import IOExtension; IOExtension().inputFiles(['hlt2_splitTCK.raw']); from Configurables import LHCbApp; LHCbApp();</text>
   </set></argument>
   <argument name="unsupported_platforms"><set><text>win.*</text></set></argument>
   <argument name="validator"><text>
