@@ -3,6 +3,8 @@
 // Include files 
 #include "boost/algorithm/string/replace.hpp"
 #include "boost/format.hpp"
+#include "boost/foreach.hpp"
+#include "boost/lexical_cast.hpp"
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
@@ -19,6 +21,9 @@
 
 #include "Event/RecVertex.h"
 #include "Event/Particle.h"
+#include "Event/Vertex.h"
+#include "Event/RichPID.h"
+#include "Event/MuonPID.h"
 #include "Event/HltStage.h"
 #include "Event/HltCandidate.h"
 
@@ -31,7 +36,6 @@
 
 static const  Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
 static const  Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
-
 
 using namespace LHCb;
 
@@ -65,6 +69,7 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   , m_regSvc(0)
   , m_inspectionSvc(0)
   , m_intPVSelID(0)
+  , m_Turbo(false)
   , m_presentInfoLevelTrack(kMaxInfoLevel)
   , m_presentInfoLevelRecVertex(kMaxInfoLevel)
   , m_presentInfoLevelParticle(kMaxInfoLevel)
@@ -77,7 +82,6 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   declareProperty("MuonIDSuffix", m_muonIDSuffix = "");
   declareProperty("InputHltDecReportsLocation",
     m_inputHltDecReportsLocation= LHCb::HltDecReportsLocation::Default);  
-
 
   declareProperty("DebugEventPeriod",m_debugPeriod = 0 );
 
@@ -238,6 +242,7 @@ StatusCode HltSelReportsMaker::execute() {
   
   const HltDecReports* decReports(0);
   // get input
+  //decReports = getIfExists<HltDecReports>(m_inputHltDecReportsLocation.value());
   decReports = getIfExists<HltDecReports>(m_inputHltDecReportsLocation);
   if( NULL == decReports )
   {  
@@ -315,13 +320,12 @@ StatusCode HltSelReportsMaker::execute() {
      if( !candidate )continue;
        
 #ifdef DEBUGCODE
-        if ( msgLevel(MSG::VERBOSE) ){
+     if ( msgLevel(MSG::VERBOSE) ){
           verbose() << "Selection " << selName <<  " has candidates " << endmsg;
-        } 
+     } 
 #endif
 
-    // save selection ---------------------------
- 
+     // save selection ---------------------------
      setPresentInfoLevel( selName );
 
      // classify according to first candidate
@@ -332,7 +336,7 @@ StatusCode HltSelReportsMaker::execute() {
         && !rank<Particle>    (candidate, rnk)
         && !rank<CaloCluster> (candidate, rnk) )
          Warning( " Unsupported data type among candidates, CLID= " 
-                  + std::to_string(sel->classID()) + " - skip selection ID=" 
+             + std::to_string(sel->classID()) + " - skip selection ID="     
                           +selName,StatusCode::SUCCESS, 2 );
 
      sortedSelections.push_back( std::make_pair(rnk, *is ));
@@ -344,9 +348,9 @@ StatusCode HltSelReportsMaker::execute() {
 
 #ifdef DEBUGCODE
   if (msgLevel(MSG::VERBOSE)) {
-  for( std::vector<RankedSelection>::const_iterator is=sortedSelections.begin(); is!=sortedSelections.end(); ++is ){
+    for( std::vector<RankedSelection>::const_iterator is=sortedSelections.begin(); is!=sortedSelections.end(); ++is ){
       verbose() << is-sortedSelections.begin() << " Selection " << is->second.id << " rank " << is->first << endmsg;
-  }
+    }
   }
 #endif
 
@@ -363,15 +367,19 @@ StatusCode HltSelReportsMaker::execute() {
          continue;        
      }
 
+     unsigned int turbo_signature = 0;
      if( ( !m_debugMode && m_SuppressPostscale ) ||  ( m_debugMode && m_SuppressPostscaleDebug ) ){
      // must also check its decision in HltDecReports since it might have been killed by postscale
        if( decReports ){
          const HltDecReport* decReport = decReports->decReport(selName);
          if( decReport ){
+           turbo_signature = decReport->executionStage();
            if( !(decReport->decision()) )continue;
          }
        }
      }
+     // Check if the Hlt line has been marked for Turbo level output
+     if(turbo_signature == 254) m_Turbo = true;
 
      
      const Hlt::Selection* sel = is->second.selection;
@@ -470,7 +478,7 @@ StatusCode HltSelReportsMaker::execute() {
        hos = store<LHCb::Track>(*ic);
        if (hos==0) hos = store<LHCb::RecVertex>(*ic);
        if (hos==0) {
-           hos = store<LHCb::Particle>(*ic);
+         hos = store<LHCb::Particle>(*ic);
            if (hos!=0) {//TODO: move into store_<Particle> ??? Oops, this shares info amongst candidates...
                         //      that bit needs to be moved out of this loop, and 'bound' into the relevant store_...
              if( kStandardInfoLevel &  m_presentInfoLevelSelection & m_presentInfoLevel ){ 
@@ -609,7 +617,7 @@ StatusCode HltSelReportsMaker::execute() {
                +" to its container ",StatusCode::SUCCESS, 10 );
 
      }    
-     
+    m_Turbo = false; 
   }
   
   // -------------------------------------------------------------------------------------
@@ -627,7 +635,7 @@ StatusCode HltSelReportsMaker::execute() {
   // create global selections ------------------------------------------------------------
   // -------------------------------------------------------------------------------------
   if( !outputSummary->hasSelectionName("Hlt1Global") ){
-
+    
      HltObjectSummary selSumOut;    
      selSumOut.setSummarizedObjectCLID( 1 ); // use special CLID for selection summaries (lowest number for sorting to the end)
      
@@ -996,9 +1004,108 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::CaloCluster
   HltObjectSummary* hos = new HltObjectSummary();
   hos->setSummarizedObjectCLID( object->clID() );
   hos->setSummarizedObject(object);
+  HltObjectSummary::Info theseInfo = infoToSave( hos );
+  hos->setNumericalInfo( theseInfo );
   
   std::vector<LHCbID> clusterSeed; clusterSeed.push_back(object->seed());  
   hos->setLhcbIDs( clusterSeed );
+
+  m_objectSummaries->push_back(hos);
+  return hos;  
+}
+
+// -------------------------------------------
+// store Vertex in HltObjectSummary store
+// -------------------------------------------
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Vertex* object)
+{
+  if( !object )return (HltObjectSummary*)(0);  
+  for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
+       ppHos!=m_objectSummaries->end();++ppHos){
+    const HltObjectSummary* pHos(*ppHos);    
+    if( pHos->summarizedObjectCLID() == object->clID() ){
+      if( pHos->summarizedObject() == object ){
+        return pHos;
+      }
+    }
+  }  
+  HltObjectSummary* hos = new HltObjectSummary();
+  hos->setSummarizedObjectCLID( object->clID() );
+  hos->setSummarizedObject(object);
+  HltObjectSummary::Info theseInfo = infoToSave( hos );
+  hos->setNumericalInfo( theseInfo );
+ 
+  m_objectSummaries->push_back(hos);
+  return hos;  
+}
+// -------------------------------------------
+// store ProtoParticle in HltObjectSummary store
+// -------------------------------------------
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::ProtoParticle* object)
+{
+  if( !object )return (HltObjectSummary*)(0);  
+  for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
+       ppHos!=m_objectSummaries->end();++ppHos){
+    const HltObjectSummary* pHos(*ppHos);    
+    if( pHos->summarizedObjectCLID() == object->clID() ){
+      if( pHos->summarizedObject() == object ){
+        return pHos;
+      }
+    }
+  }  
+  HltObjectSummary* hos = new HltObjectSummary();
+  hos->setSummarizedObjectCLID( object->clID() );
+  hos->setSummarizedObject(object);
+  HltObjectSummary::Info theseInfo = infoToSave( hos );
+  hos->setNumericalInfo( theseInfo );
+
+  m_objectSummaries->push_back(hos);
+  return hos;  
+}
+// -------------------------------------------
+// store RichPID in HltObjectSummary store
+// -------------------------------------------
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::RichPID* object)
+{
+  if( !object )return (HltObjectSummary*)(0);  
+  for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
+       ppHos!=m_objectSummaries->end();++ppHos){
+    const HltObjectSummary* pHos(*ppHos);    
+    if( pHos->summarizedObjectCLID() == object->clID() ){
+      if( pHos->summarizedObject() == object ){
+        return pHos;
+      }
+    }
+  }
+  HltObjectSummary* hos = new HltObjectSummary();
+  hos->setSummarizedObjectCLID( object->clID() );
+  hos->setSummarizedObject(object);
+  HltObjectSummary::Info theseInfo = infoToSave( hos );
+  hos->setNumericalInfo( theseInfo );
+
+  m_objectSummaries->push_back(hos);
+  return hos;  
+}
+// -------------------------------------------
+// store MuonPID in HltObjectSummary store
+// -------------------------------------------
+const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::MuonPID* object)
+{
+  if( !object )return (HltObjectSummary*)(0);  
+  for( HltObjectSummarys::const_iterator ppHos=m_objectSummaries->begin();
+       ppHos!=m_objectSummaries->end();++ppHos){
+    const HltObjectSummary* pHos(*ppHos);    
+    if( pHos->summarizedObjectCLID() == object->clID() ){
+      if( pHos->summarizedObject() == object ){
+        return pHos;
+      }
+    }
+  }  
+  HltObjectSummary* hos = new HltObjectSummary();
+  hos->setSummarizedObjectCLID( object->clID() );
+  hos->setSummarizedObject(object);
+  HltObjectSummary::Info theseInfo = infoToSave( hos );
+  hos->setNumericalInfo( theseInfo );
 
   m_objectSummaries->push_back(hos);
   return hos;  
@@ -1030,11 +1137,15 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
 
   std::vector<const LHCb::Particle*> daughters = object->daughtersVector();
   if( daughters.size() >0 ){    
+    debug() << "Adding non-basic particle" << endmsg;
     for( std::vector<const LHCb::Particle*>::const_iterator p = daughters.begin(); 
          p!=daughters.end(); ++p){
       hos->addToSubstructure( store_( *p ) );
     }
+    // If the particle is not basic, then add the vertex to the substructure after the daughters
+    if(m_Turbo==true) hos->addToSubstructure( store_( object->endVertex() ) ); // SB add
   } else {
+    debug() << "Adding basic particle" << endmsg;
     // particles with no daughters have substructure via ProtoParticle 
     // we don't save Protoparticles, only things they lead to
     const ProtoParticle* pp = object->proto();
@@ -1055,7 +1166,10 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle* o
       const Track* track=pp->track();
       if( track ){
         // charged track particle
-        hos->addToSubstructure( store_( track ) );
+        hos->addToSubstructure( store_( track ) ); debug() << "requesting track store" << endmsg;
+        if(m_Turbo==true) hos->addToSubstructure( store_( pp ) );  debug() << "requesting proto-particle store" << endmsg;// SB add
+        if(m_Turbo==true && pp->richPID() ) hos->addToSubstructure( store_( pp->richPID() ) );  debug() << "requesting RichPID store" << endmsg;// SB add
+        if(m_Turbo==true && pp->muonPID() ) hos->addToSubstructure( store_( pp->muonPID() ) );  debug() << "requesting MuonPID store" << endmsg;// SB add
         // if muon add muon stub too        
         const LHCb::MuonPID* muid = pp->muonPID();
         if( muid!=0 && object->particleID().abspid()==13 ){
@@ -1159,15 +1273,86 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
       if( kStandardInfoLevel &  m_presentInfoLevelTrack & m_presentInfoLevel ){ 
         if( candi->nStates() ){
           const State & firstState = candi->firstState();
-          infoPersistent.insert( "0#Track.firstState.z", float( firstState.z() ) );
-          infoPersistent.insert( "1#Track.firstState.x", float( firstState.x() ) );
-          infoPersistent.insert( "2#Track.firstState.y", float( firstState.y() ) );
-          infoPersistent.insert( "3#Track.firstState.tx", float( firstState.tx() ) );
-          infoPersistent.insert( "4#Track.firstState.ty", float( firstState.ty() ) );
-          infoPersistent.insert( "5#Track.firstState.qOverP", float( firstState.qOverP() ) );
-          infoPersistent.insert( "6#Track.chi2PerDoF", float( candi->chi2PerDoF() ) );
-          infoPersistent.insert( "7#Track.nDoF", float( candi->nDoF() ) );
+          const State* lastState = candi->states().back();
+          infoPersistent.insert( "0#Track.firstState.z", float( firstState.z() ) ); debug() << "0#Track.firstState.z = " << float( firstState.z() ) << endmsg;
+          infoPersistent.insert( "1#Track.firstState.x", float( firstState.x() ) ); debug() << "1#Track.firstState.x = " << float( firstState.x() ) << endmsg;
+          infoPersistent.insert( "2#Track.firstState.y", float( firstState.y() ) ); debug() << "2#Track.firstState.y = " << float( firstState.y() ) << endmsg;
+          infoPersistent.insert( "3#Track.firstState.tx", float( firstState.tx() ) ); debug() << "3#Track.firstState.tx = " << float( firstState.tx() ) << endmsg;
+          infoPersistent.insert( "4#Track.firstState.ty", float( firstState.ty() ) ); debug() << "4#Track.firstState.ty = " << float( firstState.ty() ) << endmsg; 
+          infoPersistent.insert( "5#Track.firstState.qOverP", float( firstState.qOverP() ) ); debug() << "5#Track.firstState.qOverP = " << float( firstState.qOverP() ) << endmsg;
+          infoPersistent.insert( "6#Track.chi2PerDoF", float( candi->chi2PerDoF() ) ); debug() << "6#Track.chi2PerDoF = " << float( candi->chi2PerDoF() ) << endmsg;
+          infoPersistent.insert( "7#Track.nDoF", float( candi->nDoF() ) ); debug() << "7#Track.nDoF = " << float( candi->nDoF() ) << endmsg;
+          // SB additions
+          if(m_Turbo==true){
+            infoPersistent.insert( "8#Track.Likelihood", float( candi->likelihood() ) ); debug() << "8#Track.Likelihood = " << float( candi->likelihood() ) << endmsg;
+            infoPersistent.insert( "9#Track.GhostProb", float( candi->ghostProbability() ) ); debug() << "9#Track.GhostProb = " << float( candi->ghostProbability() ) << endmsg;
+            infoPersistent.insert( "10#Track.flags", float( candi->flags() ) ); debug() << "10#Track.flags = " << float( candi->flags() ) << endmsg;
+            infoPersistent.insert( "11#Track.lastState.z", float( lastState->z() ) ); debug() << "11#Track.lastState.z = " << float( lastState->z() ) << endmsg;
+            infoPersistent.insert( "12#Track.lastState.x", float( lastState->x() ) ); debug() << "12#Track.lastState.x = " << float( lastState->x() ) << endmsg;
+            infoPersistent.insert( "13#Track.lastState.y", float( lastState->y() ) ); debug() << "13#Track.lastState.y = " << float( lastState->y() ) << endmsg;
+            infoPersistent.insert( "14#Track.lastState.tx", float( lastState->tx() ) ); debug() << "14#Track.lastState.tx = " << float( lastState->tx() ) << endmsg;
+            infoPersistent.insert( "15#Track.lastState.ty", float( lastState->ty() ) ); debug() << "15#Track.lastState.ty = " << float( lastState->ty() ) << endmsg;
+            infoPersistent.insert( "16#Track.lastState.qOverP", float( lastState->qOverP() ) ); debug() << "16#Track.lastState.qOverP = " << float( lastState->qOverP() ) << endmsg;
+          }
         }
+      }    
+    }    
+    break;
+  case LHCb::CLID_RichPID: // SB add RichPID
+    {      
+      const RichPID* candi = dynamic_cast<const RichPID*>(hos->summarizedObject());
+      if( !candi )return infoPersistent; 
+      if( kStandardInfoLevel & m_presentInfoLevel ){ 
+          infoPersistent.insert( "0#Rich.pidResultCode", float( candi->pidResultCode() ) );
+          infoPersistent.insert( "1#Rich.DLLe", float( candi->particleDeltaLL( Rich::ParticleIDType::Electron ) ) );
+          infoPersistent.insert( "2#Rich.DLLmu", float( candi->particleDeltaLL( Rich::ParticleIDType::Muon ) ) );
+          infoPersistent.insert( "3#Rich.DLLpi", float( candi->particleDeltaLL( Rich::ParticleIDType::Pion ) ) );
+          infoPersistent.insert( "4#Rich.DLLK", float( candi->particleDeltaLL( Rich::ParticleIDType::Kaon ) ) ); debug() << "4#Rich.DLLK = " << float( candi->particleDeltaLL( Rich::ParticleIDType::Kaon ) ) << endmsg;
+          infoPersistent.insert( "5#Rich.DLLp", float( candi->particleDeltaLL( Rich::ParticleIDType::Proton ) ) );
+      }    
+    }    
+    break;
+  case LHCb::CLID_MuonPID: // SB add MuonPID
+    {      
+      const MuonPID* candi = dynamic_cast<const MuonPID*>(hos->summarizedObject());
+      if( !candi )return infoPersistent; 
+      if( kStandardInfoLevel & m_presentInfoLevel ){ 
+          infoPersistent.insert( "0#Muon.MuonLLMu", float( candi->MuonLLMu() ) ); debug() << "0#Muon.MuonLLMu = " << float( candi->MuonLLMu() ) << endmsg;
+          infoPersistent.insert( "1#Muon.MuonLLBg", float( candi->MuonLLBg() ) );
+          infoPersistent.insert( "2#Muon.NShared", float( candi->nShared() ) );
+          infoPersistent.insert( "3#Muon.Status", float( candi->Status() ) );
+          infoPersistent.insert( "4#Muon.IsMuon", float( candi->IsMuon() ) );
+          infoPersistent.insert( "5#Muon.IsMuonLoose", float( candi->IsMuonLoose() ) );
+          infoPersistent.insert( "6#Muon.IsMuonTight", float( candi->IsMuonTight() ) );
+      }    
+    }    
+    break;
+  case LHCb::CLID_ProtoParticle: // SB add ProtoParticle
+    {      
+      const ProtoParticle* candi = dynamic_cast<const ProtoParticle*>(hos->summarizedObject());
+      if( !candi )return infoPersistent; 
+      if( kStandardInfoLevel & m_presentInfoLevel ){ 
+          infoPersistent.insert( "0#Proto.extraInfo.IsPhoton", float( candi->info( 381, -1000 ) ) ); debug() << "0#Proto.extraInfo.IsPhoton = " << float( candi->info( 381, -1000 ) ) << endmsg;
+      }    
+    }    
+    break;
+  case LHCb::CLID_Vertex: // SB add Vertex
+    {      
+      const Vertex* candi = dynamic_cast<const Vertex*>(hos->summarizedObject());
+      if( !candi )return infoPersistent; 
+      if( kStandardInfoLevel & m_presentInfoLevel ){ 
+          infoPersistent.insert( "0#Vertex.chi2", float( candi->chi2() ) ); debug() << "0#Vertex.chi2 = " << float( candi->chi2() ) << endmsg;
+          infoPersistent.insert( "1#Vertex.ndf", float( candi->nDoF() ) );
+          infoPersistent.insert( "2#Vertex.position.x", float( candi->position().x() ) );
+          infoPersistent.insert( "3#Vertex.position.y", float( candi->position().y() ) );
+          infoPersistent.insert( "4#Vertex.position.z", float( candi->position().z() ) );
+          infoPersistent.insert( "5#Vertex.technique", float( candi->technique() ) );
+          infoPersistent.insert( "6#Vertex.cov00", float( candi->covMatrix()(0,0) ) );
+          infoPersistent.insert( "7#Vertex.cov11", float( candi->covMatrix()(1,1) ) );
+          infoPersistent.insert( "8#Vertex.cov22", float( candi->covMatrix()(2,2) ) );
+          infoPersistent.insert( "9#Vertex.cov10", float( candi->covMatrix()(1,0) ) );
+          infoPersistent.insert( "10#Vertex.cov20", float( candi->covMatrix()(2,0) ) );
+          infoPersistent.insert( "11#Vertex.cov21", float( candi->covMatrix()(2,1) ) );
       }    
     }    
     break;
@@ -1220,6 +1405,39 @@ HltObjectSummary::Info HltSelReportsMaker::infoToSave( const HltObjectSummary* h
         double p = candi->p();
         if( p < 1E-9 )p=1E-9;        // Note: p is _not_ signed for a Particle. Charge is part of pid...
         infoPersistent.insert( "7#Particle.1/p", float( 1.0/p ) );
+        // SB additions
+        if(m_Turbo==true){
+          infoPersistent.insert( "8#Particle.conflevel", float( candi->confLevel() ) );
+          infoPersistent.insert( "9#Particle.massErr", float( candi->measuredMassErr() ) );
+          infoPersistent.insert( "10#Particle.momCov00", float( candi->momCovMatrix()(0,0) ) );
+          infoPersistent.insert( "11#Particle.momCov11", float( candi->momCovMatrix()(1,1) ) );
+          infoPersistent.insert( "12#Particle.momCov22", float( candi->momCovMatrix()(2,2) ) );
+          infoPersistent.insert( "13#Particle.momCov33", float( candi->momCovMatrix()(3,3) ) );
+          infoPersistent.insert( "14#Particle.momCov10", float( candi->momCovMatrix()(1,0) ) );
+          infoPersistent.insert( "15#Particle.momCov20", float( candi->momCovMatrix()(2,0) ) );
+          infoPersistent.insert( "16#Particle.momCov21", float( candi->momCovMatrix()(2,1) ) );
+          infoPersistent.insert( "17#Particle.momCov30", float( candi->momCovMatrix()(3,0) ) );
+          infoPersistent.insert( "18#Particle.momCov31", float( candi->momCovMatrix()(3,1) ) );
+          infoPersistent.insert( "19#Particle.momCov32", float( candi->momCovMatrix()(3,2) ) );
+          infoPersistent.insert( "20#Particle.posmomCov00", float( candi->posMomCovMatrix()(0,0) ) );
+          infoPersistent.insert( "21#Particle.posmomCov11", float( candi->posMomCovMatrix()(1,1) ) );
+          infoPersistent.insert( "22#Particle.posmomCov22", float( candi->posMomCovMatrix()(2,2) ) );
+          infoPersistent.insert( "23#Particle.posmomCov10", float( candi->posMomCovMatrix()(1,0) ) );
+          infoPersistent.insert( "24#Particle.posmomCov01", float( candi->posMomCovMatrix()(0,1) ) );
+          infoPersistent.insert( "25#Particle.posmomCov20", float( candi->posMomCovMatrix()(2,0) ) );
+          infoPersistent.insert( "26#Particle.posmomCov02", float( candi->posMomCovMatrix()(0,2) ) );
+          infoPersistent.insert( "27#Particle.posmomCov21", float( candi->posMomCovMatrix()(2,1) ) );
+          infoPersistent.insert( "28#Particle.posmomCov12", float( candi->posMomCovMatrix()(1,2) ) );
+          infoPersistent.insert( "29#Particle.posmomCov30", float( candi->posMomCovMatrix()(3,0) ) );
+          infoPersistent.insert( "30#Particle.posmomCov31", float( candi->posMomCovMatrix()(3,1) ) );
+          infoPersistent.insert( "31#Particle.posmomCov32", float( candi->posMomCovMatrix()(3,2) ) );
+          infoPersistent.insert( "32#Particle.posCov00", float( candi->posCovMatrix()(0,0) ) );
+          infoPersistent.insert( "33#Particle.posCov11", float( candi->posCovMatrix()(1,1) ) );
+          infoPersistent.insert( "34#Particle.posCov22", float( candi->posCovMatrix()(2,2) ) );
+          infoPersistent.insert( "35#Particle.posCov10", float( candi->posCovMatrix()(1,0) ) );
+          infoPersistent.insert( "36#Particle.posCov20", float( candi->posCovMatrix()(2,0) ) );
+          infoPersistent.insert( "37#Particle.posCov21", float( candi->posCovMatrix()(2,1) ) );
+        }
       }      
     }
     break;
@@ -1248,6 +1466,46 @@ int HltSelReportsMaker::rank_(const LHCb::Track* object) const
   hos.setSummarizedObjectCLID( object->clID() );
   hos.setSummarizedObject(object);  
   int rank=100*rankLHCbIDs( object->lhcbIDs() ) +  infoToSave( &hos ).size();
+  return rank;
+}
+
+int HltSelReportsMaker::rank_(const LHCb::RichPID* object) const
+{
+  if( !object )return 0;
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
+  int rank=10000 +  infoToSave( &hos ).size();
+  return rank;
+}
+
+int HltSelReportsMaker::rank_(const LHCb::MuonPID* object) const
+{
+  if( !object )return 0;
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
+  int rank=10000 +  infoToSave( &hos ).size();
+  return rank;
+}
+
+int HltSelReportsMaker::rank_(const LHCb::ProtoParticle* object) const
+{
+  if( !object )return 0;
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
+  int rank=10000 +  infoToSave( &hos ).size();
+  return rank;
+}
+
+int HltSelReportsMaker::rank_(const LHCb::Vertex* object) const
+{
+  if( !object )return 0;
+  HltObjectSummary hos;
+  hos.setSummarizedObjectCLID( object->clID() );
+  hos.setSummarizedObject(object);  
+  int rank=10000 +  infoToSave( &hos ).size();
   return rank;
 }
 

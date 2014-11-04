@@ -4,6 +4,10 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2014-11-04 - Sean Benson
+ - Major change: Turbo level reports for the lines that have the flag set.
+
 ! 2014-10-16 - Gerhard Raven
  - replace boost FOR_EACH with range-based for loop
  - replace boost::lexical_cast with std::to_string

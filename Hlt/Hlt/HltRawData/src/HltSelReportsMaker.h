@@ -10,6 +10,7 @@
 #include "Event/HltObjectSummary.h"
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
+//#include "Event/PackedTrack.h"
 
 
 #include "Kernel/IANNSvc.h"
@@ -67,8 +68,16 @@ private:
   const LHCb::HltObjectSummary* store_(const LHCb::Track* object);
   /// store RecVertex in HltObjectSummary store
   const LHCb::HltObjectSummary* store_(const LHCb::RecVertex* object);
+  /// store Vertex in HltObjectSummary store
+  const LHCb::HltObjectSummary* store_(const LHCb::Vertex* object);
+  /// store RichPID in HltObjectSummary store
+  const LHCb::HltObjectSummary* store_(const LHCb::RichPID* object);
+  /// store MuonPID in HltObjectSummary store
+  const LHCb::HltObjectSummary* store_(const LHCb::MuonPID* object);
   /// store Particle in HltObjectSummary store
   const LHCb::HltObjectSummary* store_(const LHCb::Particle* object);
+  /// store ProtoParticle in HltObjectSummary store
+  const LHCb::HltObjectSummary* store_(const LHCb::ProtoParticle* object);
   /// store CaloCluster in HltObjectSummary store
   const LHCb::HltObjectSummary* store_(const LHCb::CaloCluster* object);
 
@@ -84,6 +93,14 @@ private:
   int rank_(const LHCb::Track* object) const;
   /// rank RecVertex 
   int rank_(const LHCb::RecVertex* object) const;
+  /// rank Vertex 
+  int rank_(const LHCb::Vertex* object) const;
+  /// rank ProtoParticle 
+  int rank_(const LHCb::ProtoParticle* object) const;
+  /// rank RichPID 
+  int rank_(const LHCb::RichPID* object) const;
+  /// rank MuonPID 
+  int rank_(const LHCb::MuonPID* object) const;
   /// rank Particle 
   int rank_(const LHCb::Particle* object) const;
   /// rank CaloCluster 
@@ -160,6 +177,9 @@ private:
   /// cache last PV selection name
   std::string m_lastPVSelectionName;
   int m_intPVSelID;
+
+  /// Do we want extended reports for Turbo stream
+  bool m_Turbo;
 
   /// Present output mode (false=normal true=debug)
   bool m_debugMode;
