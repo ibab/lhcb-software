@@ -70,7 +70,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableBeetleSyncMonitor"        : False
                 , "EnableHltDecReports"            : True
                 , "EnableHltSelReports"            : True
-                , "EnableHltVtxReports"            : False
+                , "EnableHltVtxReports"            : True
                 , "EnableHltTrkReports"            : True
                 , "EnableHltRoutingBits"           : True
                 , "EnableLumiEventWriting"         : True
@@ -763,10 +763,8 @@ class HltConf(LHCbConfigurableUser):
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc
                                                                                                         ,'SourceID' : 1 } )
                          )
-        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
-                                                                                                        'Hlt2DecReportsLocation' : hlt2_decrep_loc,
-                                                                                                        'UpdateExistingRawBank'  : True} )
-                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'InputHltDecReportsLocation' : hlt2_decrep_loc } )
+        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc, 'Hlt2DecReportsLocation' : hlt2_decrep_loc, 'UpdateExistingRawBank'  : True} ) 
+                , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  {'SourceID' : 2, 'InputHltDecReportsLocation' : hlt2_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
                                                                                                            OutputHltSelReportsLocation = hlt2_selrep_loc,
                                                                                                            **sel_rep_opts  ) )
