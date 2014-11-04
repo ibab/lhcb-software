@@ -46,7 +46,7 @@ private:
 
    typedef std::map<TCK,std::string> TCKMap_t;
 
-  std::string                  m_outputContainerName;  ///< location of HltDecReports in which to record configured TCK
+  std::vector<std::string>     m_outputContainerName;  ///< location of HltDecReports in which to record configured TCK
   std::string                  m_prefetchDir;     ///< which set of configurations 
                                                   ///< to search for same types as initial TCK
                                                   ///< and to prefetch...

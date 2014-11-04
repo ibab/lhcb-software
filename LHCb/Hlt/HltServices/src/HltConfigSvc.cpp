@@ -58,7 +58,7 @@ HltConfigSvc::HltConfigSvc( const string& name, ISvcLocator* pSvcLocator)
   declareProperty("prefetchDir", m_prefetchDir);
   declareProperty("checkOdin", m_checkOdin = true);
   declareProperty("maskL0TCK", m_maskL0TCK = false);
-  declareProperty( "HltDecReportsLocation", m_outputContainerName = std::string("/Event/")+LHCb::HltDecReportsLocation::Default );
+  declareProperty( "HltDecReportsLocations", m_outputContainerName = {"/Event/Hlt1/DecReports","/Event/Hlt2/DecReports"} );
 }
 
 void HltConfigSvc::updateMap(Property&) {
@@ -274,10 +274,13 @@ void HltConfigSvc::checkOdin() {
 }
 
 void HltConfigSvc::createHltDecReports() {
+  for(std::vector<std::string>::iterator it = m_outputContainerName.begin(); 
+      it != m_outputContainerName.end(); it++){
     std::unique_ptr<LHCb::HltDecReports> hdr( new LHCb::HltDecReports() );
     hdr->setConfiguredTCK(m_configuredTCK.uint());
     hdr->setTaskID(m_id);
-    m_evtSvc->registerObject(m_outputContainerName,hdr.release());
+    m_evtSvc->registerObject(*it,hdr.release());
+  }
 }
 
 void HltConfigSvc::handle(const Incident& /*incident*/) {

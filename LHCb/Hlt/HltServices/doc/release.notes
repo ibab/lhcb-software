@@ -3,6 +3,10 @@
 ! Responsible : Rob Lambert, Gerhard Raven
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
+
+! 2014-11-04 - Sean Benson
+ - HltConfigSvc can now create multiple dec report locations at the same time.
+
 ! 2014-10-30 - Gerhard Raven
  - cleanup
 
