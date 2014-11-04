@@ -158,9 +158,9 @@ StatusCode CaloElectronMatch::match
     st = CaloTrackTool::state ( *trObj , LHCb::State::ECalShowerMax ) ;
     if ( 0 == st ) 
     {
-      // StatusCode sc = propagate ( *trObj , m_showerMax  , _state() ) ;
-      _state() = trObj->closestState( m_showerMax ) ; 
-      StatusCode sc = propagate ( _state(), caloObj->z()) ;
+      StatusCode sc = propagate ( *trObj , m_showerMax  , _state() ) ;
+      // _state() = trObj->closestState( m_showerMax ) ; 
+      // StatusCode sc = propagate ( _state(), caloObj->z()) ;
       if ( sc.isFailure() ) 
       {
         m_tBad = trObj ;
@@ -171,12 +171,12 @@ StatusCode CaloElectronMatch::match
       st = CaloTrackTool::state ( *trObj , LHCb::State::ECalShowerMax ) ;
     }
     // check the validity of the state 
-    /// if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) ) ) 
-    if ( 1 * Gaudi::Units::mm < ::fabs( caloObj->z() - st->position().z() ) )  // let's decrease z-tolerance here to 1 mm
+    if ( tolerance() < ::fabs( m_plane.Distance ( st->position() ) ) ) 
+    // if ( 1 * Gaudi::Units::mm < ::fabs( caloObj->z() - st->position().z() ) )  // let's decrease z-tolerance here to 1 mm
     {
       _state() = *st ;
-      /// StatusCode sc = propagate ( _state() , m_plane ) ;
-      StatusCode sc = propagate ( _state() , caloObj->z() ) ;
+      StatusCode sc = propagate ( _state() , m_plane ) ;
+      // StatusCode sc = propagate ( _state() , caloObj->z() ) ;
       if ( sc.isFailure() ) 
       { 
         m_tBad = trObj ;
