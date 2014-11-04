@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-11-04 Gerhard Raven
+ - tell HltConfigSvc to generate the intial HltDecReports in the right TES 
+   location
+
 ! 2014-11-03 Sean Benson
  - Make TCK tests use 1200 2012 events + new test for decoders
 

@@ -726,6 +726,9 @@ class Moore(LHCbConfigurableUser):
                     , 'HltL0GlobalMonitor/.*'              : { 'Hlt2DecReports' : { '^.*$' : ''    } }
             }
             Funcs._mergeTransform(trans)
+            from Configurables import HltConfigSvc
+            from DAQSys.Decoders import DecoderDB
+            HltConfigSvc().HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0]
 
         def hlt2_only_tck() :
             ### remove all algorithms starting with Hlt1
@@ -738,6 +741,9 @@ class Moore(LHCbConfigurableUser):
                     , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
             }
             Funcs._mergeTransform(trans)
+            from Configurables import HltConfigSvc
+            from DAQSys.Decoders import DecoderDB
+            HltConfigSvc().HltDecReportsLocation = DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0]
                     
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
@@ -761,7 +767,7 @@ class Moore(LHCbConfigurableUser):
                                 raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
         
         if split is 'Hlt2' and False:
-            # TODO/FIXME: do not hardwire these here...
+            # TODO/FIXME: do not hardwire these here... -- goes in MooreScripts for online running...
             # TODO/FIXME: pick up the right online_....xml file
             from Configurables import CondDB
             CondDB().RunChangeHandlerConditions +=  [ "Conditions/Rich1/Environment"
