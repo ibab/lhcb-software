@@ -1406,6 +1406,7 @@ class Hlt2Line(object):
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
                    priority  = None ,   # hint for ordering lines
+                   Turbo     = False,   # is the line intended for the Turbo stream
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1417,6 +1418,7 @@ class Hlt2Line(object):
         - 'L0DU'      : the list of L0Channels names for L0Filter
         - 'HLT'       : the list of HLT selections for HLTFilter
         - 'algos'     : the list of actual members 
+        - 'Turbo'     : flag for Turbo stream 
         - 'postscale' : the postscale factor
         
         """
@@ -1432,6 +1434,11 @@ class Hlt2Line(object):
             #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
             HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV)(?!MB).*Decision')"
 
+        # If turbo flag is set add TurboMIAB to let DecReports know we want extended reports
+        if Turbo == True:
+            from Configurables import TurboMIAB
+            miab = TurboMIAB('TurboMIAB'+name)
+            algos = [miab] + algos
 
         if VoidFilter == None : # distguish between None and "" -- if we write 'if not VoidFilter' then "" would get overruled...
             code = self.getDefaultVoidFilter()
@@ -1444,6 +1451,7 @@ class Hlt2Line(object):
         HLT   = deepcopy ( HLT   )
         VoidFilter = deepcopy ( VoidFilter )
         algos = deepcopy ( algos )
+        Turbo = deepcopy ( Turbo )
         args  = deepcopy ( args  )
         
         # 2) save all parameters (needed for the proper cloning)
@@ -1456,6 +1464,7 @@ class Hlt2Line(object):
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
+        self._Turbo     = Turbo
         self._VoidFilter       = VoidFilter
         self._algos     = algos
         self._args      = args
@@ -1643,6 +1652,7 @@ class Hlt2Line(object):
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
+        __Turbo      = deepcopy ( args.get ( 'Turbo' , self._Turbo  ) ) 
         __priority   = deepcopy ( args.get ( 'priority ' , self._priority  ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
         __args       = deepcopy ( self._args  ) 
@@ -1675,6 +1685,7 @@ class Hlt2Line(object):
                           HLT       = __HLT        ,
                           postscale = __postscale  ,
                           priority  = __priority   ,
+                          Turbo     = __Turbo   ,
                           algos     = __algos      , **__args )
     
 #
