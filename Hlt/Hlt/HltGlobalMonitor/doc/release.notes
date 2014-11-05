@@ -4,6 +4,9 @@
 !Package Coordinator : Eric van Herwijnen 
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+
+!========================= HltGlobalMonitor v4r4 2014-11-05 =========================
+
 ! 2014-10-16 - Gerhard Raven
  - split HltGlobalMonitor::updateCondition into several functions, one per condition
 
