@@ -251,6 +251,7 @@ def netSelector(input=None,type=None,event_type=2):
 def end_config_normal(print_config=True):
   import sys, traceback
   import GaudiPython
+  import sys
   try:
     gaudi = GaudiPython.AppMgr()
     patchExitHandler()
