@@ -3,6 +3,8 @@
 ! package manager: M.Cattaneo
 !------------------------------------------------------------------------------
 
+!========================= GaudiConf v19r6 2014-11-05 =========================
+
 ! 2014-10-28 - Sebastian Neubert
  - Add LDST to list of known file extensions in IOHelper.
 
