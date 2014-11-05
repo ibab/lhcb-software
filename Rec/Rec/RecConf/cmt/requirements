@@ -53,7 +53,6 @@ use RichHPDImageAnalysis v*  Rich # Thomas Blake, Chris Jones
 use PatAlgorithms        v*  Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v*  Tf   # David Hutchcroft
 use PatVeloTT            v*  Tf   # Mariusz Witek
-use TrackMatching        v*  Tf   # Eduardo Rodrigues
 use TrackSys             v*  Tf   # Stephanie Hansmann-Menzemer 
 use TsaAlgorithms        v*  Tf   # Matt Needham
 

@@ -4,6 +4,9 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2014-11-05 - Michel De Cian
+ - Remove 'TrackMatching' from cmt/requirements and CMakeLists.txt
+
 ! 2014-10-23 - Michel De Cian
  - Remove 'TrackSeeding' from cmt/requirements and CMakeLists.txt
 
