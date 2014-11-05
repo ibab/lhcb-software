@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+!========================= HltSettings v6r8 2014-11-05 =========================
+
 ! 2014-11-04 - Sean Benson
  - TurboTest settings file - for quicker physics line processing.
 
