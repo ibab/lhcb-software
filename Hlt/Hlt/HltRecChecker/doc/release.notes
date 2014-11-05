@@ -4,6 +4,8 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+!========================= HltRecChecker v3r2 2014-11-05 =========================
+
 ! 2014-10-16 - Gerhard Raven
  - replace BOOST_FOREACH with range-based for loop
 

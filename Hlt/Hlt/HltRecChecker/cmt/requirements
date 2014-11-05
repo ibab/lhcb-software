@@ -3,7 +3,7 @@
 # Maintainer : Jose Angel Hernando Morata 
 #============================================================================
 package           HltRecChecker
-version           v3r1
+version           v3r2
 
 # Structure
 #============================================================================

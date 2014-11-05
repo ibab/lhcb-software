@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltRecChecker
 ################################################################################
-gaudi_subdir(HltRecChecker v3r1)
+gaudi_subdir(HltRecChecker v3r2)
 
 gaudi_depends_on_subdirs(Event/LinkerEvent
                          Event/MCEvent
