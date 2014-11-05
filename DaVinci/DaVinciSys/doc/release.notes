@@ -3,6 +3,11 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r2>2014-11-05 DaVinci v36r2</A></H1><PRE>
+
+Development release. Identical to v36r1 but built against the
+LHCB v38r2p1 ROOT 6.02.01 stack.
+
 </PRE><H1><A NAME=v36r1>2014-11-05 DaVinci v36r1</A></H1><PRE>
 
 Production release for Stripping 21. Built against ROOT5 stack.
