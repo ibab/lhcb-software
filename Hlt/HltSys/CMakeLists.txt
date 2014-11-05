@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltSys
 ################################################################################
-gaudi_subdir(HltSys v23r1)
+gaudi_subdir(HltSys v23r2)
 
 gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/Hlt1Muons
@@ -23,11 +23,12 @@ gaudi_depends_on_subdirs(Hlt/Hlt1Lines
                          Hlt/HltTisTosTobbing
                          Hlt/HltTracking
                          Hlt/TCKUtils
-                         DAQ/DAQSys #TEMP
-                         Det/DetCond #TEMP
                          Hlt/HltDAQ #TEMP
                          Hlt/HltServices #TEMP
-                         Tr/TrackUtils #TEMP
+                         Hlt/HltInterfaces #TEMP
+                         Phys/DaVinciTools #TEMP
+                         Kernel/SelectionLine #TEMP
+                         GaudiConf #TEMP
                          Phys/LoKiTrigger)
 
 

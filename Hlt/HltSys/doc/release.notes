@@ -5,6 +5,21 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v23r1>2014-11-05 HltSys v23r2</A></H1><PRE>
+
+Release on stack v38r2. Depends on Phys v19r2.
+
+Main changes:
+   Turbo stream flag supported,
+   Root6 enhancements uncluding xrootd patch,
+   Fixes to DecReports and vertex reports,
+   Various C++ enhancements,
+   Tag and probe infrastructure in the Hlt,
+   MatchVeloMuon bug fixes.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r2
+
 </PRE><H1><A NAME=v23r1>2014-09-29 HltSys v23r1</A></H1><PRE>
 
 For HLT commissioning week at the beginning of October.
