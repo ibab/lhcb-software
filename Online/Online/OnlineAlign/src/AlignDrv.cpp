@@ -72,6 +72,9 @@ StatusCode AlignDrv::initialize()
 //  }
   service("ToolSvc",m_ToolSvc,true);
   sc = m_ToolSvc->retrieveTool(m_FitterClass,m_FitterName,m_fitter,this,true);
+  if ( !sc.isSuccess() )  {
+    return error("Failed to retriev Fitter Tool: "+m_FitterName+" of Class "+m_FitterClass);
+  }
 
 //  m_fitter = new Fitter(this);
   m_incidentSvc->addListener(this,"DAQ_PAUSE");
