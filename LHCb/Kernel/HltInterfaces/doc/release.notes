@@ -2,6 +2,9 @@
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+!========================= HltInterfaces v5r3 2014-11-05 =========================
+
 ! 2014-10-30 - Gerhard Raven
  - TCK: replace do-it-yourself unhex with std::stoul, make operator<< inline
  - ConfigTreeNode, PropertyConfig: make operator<< and operator>> inline
