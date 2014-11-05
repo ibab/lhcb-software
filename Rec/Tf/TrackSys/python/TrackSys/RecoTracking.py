@@ -138,6 +138,11 @@ def RecoTracking(exclude=[]):
    
    # Is this standard sequence?
    stdSeq = "fastSequence" not in TrackSys().getProp("ExpertTracking")
+
+   # TrackMatching not supported anymore, raise error
+   if "Match" in trackAlgs:
+      raise RuntimeError("TrackMatching not supported anymore. If you think this is wrong, report to lhcb-brunel-managers@cern.ch")
+
    
    ## Forward pattern
    if "Forward" in trackAlgs :
@@ -181,31 +186,33 @@ def RecoTracking(exclude=[]):
          
    if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
       tracklists += ["Rec/Track/Seed"]
-      if "Match" in trackAlgs :
+      # TrackMatching not supported anymore, comment for the moment in case anything breaks
+      #if "Match" in trackAlgs :
          # Fit now
-         track.DetectorList += [ "SeedFit" ]
+         #track.DetectorList += [ "SeedFit" ]
          ## Seed fit initialization
-         from Configurables import TrackStateInitAlg, TrackStateInitTool
-         initSeedFit = TrackStateInitAlg("InitSeedFit",
-                                         TrackLocation = "Rec/Track/Seed")
-         GaudiSequencer("TrackSeedFitSeq").Members += [initSeedFit]
-         if "FastVelo" in trackAlgs :
-            initSeedFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
+         #from Configurables import TrackStateInitAlg, TrackStateInitTool
+         #initSeedFit = TrackStateInitAlg("InitSeedFit",
+         #                                TrackLocation = "Rec/Track/Seed")
+         #GaudiSequencer("TrackSeedFitSeq").Members += [initSeedFit]
+         #if "FastVelo" in trackAlgs :
+         #   initSeedFit.StateInitTool.VeloFitterName = "FastVeloFitLHCbIDs"
          # Use small ErrorQoP fitter, needed for Match
-         GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
-            
+         #GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
+         
+   # TrackMatching not supported anymore, comment for the moment in case anything breaks 
    ## Match
-   if "Match" in trackAlgs and "PatMatch" in trackAlgs :
-      raise RuntimeError("Cannot run both TrackMatching and PatMatch at once")
-   if "Match" in trackAlgs :
-      track.DetectorList += [ "MatchPat" ]
-      from Configurables import TrackMatchVeloSeed
-      GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
-      from TrackMatching import TrackMatchConf
-      TrackMatchConf.MatchingConf().configureAlg()      
-      TrackMatchVeloSeed("TrackMatch").LikCut = -99999.
-      if TrackSys().timing() :
-         TrackMatchVeloSeed("TrackMatch").TimingMeasurement = True;
+   #if "Match" in trackAlgs and "PatMatch" in trackAlgs :
+   #   raise RuntimeError("Cannot run both TrackMatching and PatMatch at once")
+   #if "Match" in trackAlgs :
+   #   track.DetectorList += [ "MatchPat" ]
+   #   from Configurables import TrackMatchVeloSeed
+   #   GaudiSequencer("TrackMatchPatSeq").Members += [ TrackMatchVeloSeed("TrackMatch") ]
+   #   from TrackMatching import TrackMatchConf
+   #   TrackMatchConf.MatchingConf().configureAlg()      
+   #   TrackMatchVeloSeed("TrackMatch").LikCut = -99999.
+   #   if TrackSys().timing() :
+   #      TrackMatchVeloSeed("TrackMatch").TimingMeasurement = True;
 
    if "PatMatch" in trackAlgs :
       track.DetectorList += [ "MatchPat" ]

@@ -8,7 +8,6 @@ gaudi_depends_on_subdirs(Event/TrackEvent
                          Tf/PatAlgorithms
                          Tf/PatVelo
                          Tf/PatVeloTT
-                         Tf/TrackMatching
                          Tf/TsaAlgorithms
                          Tf/TsaKernel
                          Tr/TrackAssociators
