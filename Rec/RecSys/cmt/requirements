@@ -71,7 +71,6 @@ use PatVelo              v3r31   Tf   # David Hutchcroft
 use PatVeloTT            v4r2    Tf   # Mariusz Witek
 use TfKernel             v2r27   Tf   # Stephanie Hansmann-Menzemer
 use TfTools              v1r19   Tf   # Stephanie Hansmann-Menzemer
-use TrackMatching        v2r35p3 Tf   # Michel De Cian
 use TrackSys             v9r2    Tf   # Michel De Cian
 use TsaAlgorithms        v3r28   Tf   # Matt Needham
 use TsaKernel            v3r7    Tf   # Matt Needham
