@@ -3,6 +3,56 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r1>2014-11-05 DaVinci v36r1</A></H1><PRE>
+
+Production release for Stripping 21. Built against ROOT5 stack.
+
+Executive summary of notable changes :-
+
+Stripping :
+ . Contains support for Stripping 20 and 20r1. 
+   See Stripping release notes for full details.
+
+Core DaVinci :
+ . Make the LoKi vertex fitter and propertime fitter the defaults.
+ . Add depreciation warnings to OfflineVertexFitter and PropertimeFitter.
+
+Common Particles :
+ . Add StandardIntermediate to list of standard particles.
+
+Flavour Tagging :
+ . Disable OSCharm taggers by default. Add configuration names "Stripping21" and
+   "Stripping21_MC" in Tunings.py to set all the properties accordingly
+ . New CharmTagger framework, w/ mistag estimated from BDTs instead of NN
+ . Deleted obsolete CharmTagger BDT/NN algorithms
+
+LoKi :
+ . Add protection to TransverseMomentumRel::mCorrDir against badily defined
+   Lorentz vectors that result in a negative M^2.
+ . Fix a problem with copy of "non-strandard" MCMatcher objects.
+
+RelatedInfo Tools :
+ . Improved support for Stripping 21. See PhysSys release notes for details.
+
+DST and uDST support :
+ . Fix a problem that caused unneccesary cloning of PVs on DST streams.
+ . Improved support for savinf RelatedInfo data from stripping lines.
+ . Extend the stripDSTStreamConf(...) method with an additional argument that
+   allows the DST file extension to be set.
+ . Add instance of AddressKillerAlg to DST Writer sequences to remove knowledge
+   of ancestor TES locations from Stripping (u)DSTs.
+
+DecayTreeTuple :
+ . TupleToolBremInfo : Fix issue in case of non converted photon in the decay
+ . TupleToolBremInfo : Add DiElectron brem info for gamma->ee
+ . TupleToolSubMass  : Fix problem in decay sorting for some rare configuration
+ . Update TupleToolPropertime and TupleToolParticleReFit to access vertex 
+   fitters and propertime fitters via the IDVAlgorithm interface, instead
+   of defining their own types.
+
+Tesla :
+ . Includes first version of Tesla application and tools.
+
 ! 2014-10-23 - Chris Jones
  - Update reference list of configurables.
 
