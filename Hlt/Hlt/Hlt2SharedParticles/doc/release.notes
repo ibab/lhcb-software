@@ -5,6 +5,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r2 2014-11-05 =========================
+
 ! 2014-09-30 - Michael Kolpin
  - removed hardcoding of locations used in TagAndProbeParticles to use definitons from 
    HltTracking.HltTrackNames instead
