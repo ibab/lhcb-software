@@ -726,7 +726,6 @@ void displayBuff(char *buf, int size) {
  */
 StatusCode MEPInjector::getEvent(int nbEv) {
     static MsgStream msgLog(msgSvc(), name());
-    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     Requirement r;
     int pp[TWOMB];

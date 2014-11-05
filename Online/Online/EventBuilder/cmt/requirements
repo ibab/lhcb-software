@@ -21,5 +21,6 @@ library EventBuilder *.cpp -import=AIDA  -import=DIM -import=DAQEvent -import=MD
 macro_append EventBuilder_shlibflags ' $(MDFlib_linkopts) -lrt'
 apply_pattern component_library library=EventBuilder
 apply_pattern generate_componentlist library=EventBuilder
+private
 apply_pattern genconfig_add_preload library=$(library_prefix)MDF.$(shlibsuffix)
-
+end_private
