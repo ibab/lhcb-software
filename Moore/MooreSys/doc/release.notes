@@ -3,6 +3,23 @@ Package     : MooreSys
 Package Coordinator : S. Benson
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v23r2>2014-11-05 MooreSys v23r2</A></H1><PRE>
+
+Release on stack v38r2. Depends on Moore v23r2.
+
+Main changes:
+   Turbo stream flag supported,
+   Root6 enhancements uncluding xrootd patch,
+   Fixes to DecReports and vertex reports,
+   Various C++ enhancements,
+   Tag and probe infrastructure in the Hlt,
+   MatchVeloMuon bug fixes.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r2
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Moore&version=v23r2
+
 </PRE><H1><A NAME=v23r1p1>2014-10-17 MooreSys v23r1p1</A></H1><PRE>
 
 Patch version to pick up new Hlt1 line for calibrations.
