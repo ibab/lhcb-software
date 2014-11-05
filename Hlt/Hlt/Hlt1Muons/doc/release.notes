@@ -4,6 +4,8 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Muons v1r10 2014-11-05 =========================
+
 ! 2014-10-27 - Vasileios Syropoulos
  - remove unnecessary xFoI scaling in MatchVeloMuon.
 
