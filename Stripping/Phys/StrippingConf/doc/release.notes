@@ -4,14 +4,14 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
-! 2014-01-11 - Anton Poluektov 
- - Fixed bug with implementation of RelatedInfoFilter. 
-   Previously the unfiltered candidates were stored to ntuple. 
-   Now the outputLocation of the line with RelatedInfoFilter 
-   is redefined in such a way that the filtered candidates are 
-   taken. 
+!========================= StrippingConf v4r12 2014-11-05 =========================
 
-!========================= StrippingConf v4r12 2014-10-30 =========================
+! 2014-01-11 - Anton Poluektov
+ - Fixed bug with implementation of RelatedInfoFilter.
+   Previously the unfiltered candidates were stored to ntuple.
+   Now the outputLocation of the line with RelatedInfoFilter
+   is redefined in such a way that the filtered candidates are
+   taken.
 
 ! 2014-10-30 - Stefano Perazzini
  - Removed test_dumplicated_outputLocation_in_single_stream_raises_Exception
