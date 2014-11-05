@@ -6,8 +6,11 @@
 
 !========================= StrippingSelections v3r37 2014-10-30 =========================
 
+! 2014-11-05 Stefano Perazzini
+ - Hotfix to StrippingB2KShh.py
+
 ! 2014-10-28 Roberta Cardinale
-	- Reverted back to the previous version for cone variables for StrippingXic2HHH
+ - Reverted back to the previous version for cone variables for StrippingXic2HHH
 
 ! 2014-10-28 Pablo Ruiz Valls
   - Typo fix in Lb2L0Gamma converted line
