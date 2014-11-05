@@ -4,6 +4,8 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= HltL0Conf v4r2 2014-11-05 =========================
+
 ! 2014-10-08- Gerhard Raven
  - add inclusion of ValidDataObject now that TfKernel/THitManager which
    eventually included it is no longer included upstream
