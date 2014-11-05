@@ -38,9 +38,9 @@ Injector.AutoMode = false;
 Injector.HLTIPAddrTo = "192.168.197.129"; //Still used in Automode
 
 Injector.ARPME = false;
-
+Injector.OutputLevel = 6;
 Injector.BufferNames = @OnlineEnv.Injector_Readers;
-
+Injector.Debug = true;
 Injector.TFCMask=4294967295;
 Injector.TapeMask=0;
 Injector.OdinEthInterface = 1;
