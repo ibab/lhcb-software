@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltServices
 ################################################################################
-gaudi_subdir(HltServices v2r4)
+gaudi_subdir(HltServices v2r5)
 
 gaudi_depends_on_subdirs(Det/DetCond
                          Det/DetDesc

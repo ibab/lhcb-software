@@ -4,6 +4,8 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+!========================= HltServices v2r5 2014-11-05 =========================
+
 ! 2014-11-04 - Sean Benson
  - HltConfigSvc can now create multiple dec report locations at the same time.
 
