@@ -126,7 +126,6 @@ StatusCode DeFTTestAlg::execute() {
      tuple->column("HitOut_X", pOut.X());
      tuple->column("HitOut_Y", pOut.Y());
      tuple->column("HitOut_Z", pOut.Z());
-    
 
       // Make DeFT checks
       if ( msgLevel(MSG::DEBUG) ) debug() << "\n\n\n**************************\nMC Hit " << (*aHit)->index() << "\n"
@@ -205,24 +204,26 @@ StatusCode DeFTTestAlg::execute() {
           tuple->column("dsymax",tmpDetSeg.yMax());
 	} 
 
+        //Center
+        tuple->column("CenterGx",pFibreMat->fibreMatGlobalCenter().X());
+        tuple->column("CenterGy",pFibreMat->fibreMatGlobalCenter().Y());
+        tuple->column("CenterGz",pFibreMat->fibreMatGlobalCenter().Z());
         //Corners
         tuple->column("CornerGRTx",pFibreMat->fibreMatGlobalRT().X());
         tuple->column("CornerGRTy",pFibreMat->fibreMatGlobalRT().Y());
         tuple->column("CornerGRTz",pFibreMat->fibreMatGlobalRT().Z());
-        tuple->column("dxyRTB",sqrt(pow((pFibreMat->fibreMatGlobalRT().X()-pFibreMat->fibreMatGlobalRB().X()),2)+
-                                    pow((pFibreMat->fibreMatGlobalRT().Y()-pFibreMat->fibreMatGlobalRB().Y()),2)));
-        tuple->column("drRTB",(pFibreMat->fibreMatGlobalRT()-pFibreMat->fibreMatGlobalRB()).R());
-        tuple->column("drTRL",(pFibreMat->fibreMatGlobalRT()-pFibreMat->fibreMatGlobalLT()).R());
-        tuple->column("scRT",(pFibreMat->fibreMatGlobalRT()-pFibreMat->fibreMatGlobalRB()).Dot(pFibreMat->fibreMatGlobalRT()-pFibreMat->fibreMatGlobalLT()));
-        tuple->column("CenterGx",pFibreMat->fibreMatGlobalCenter().X());
-        tuple->column("CenterGy",pFibreMat->fibreMatGlobalCenter().Y());
-        tuple->column("CenterGz",pFibreMat->fibreMatGlobalCenter().Z());
-        
+         
         //test frame orientation
         Gaudi::XYZPoint testFrame=pFibreMat->geometry()->toGlobal( Gaudi::XYZPoint(100,100,0) );
         tuple->column("testFramex",testFrame.X());
         tuple->column("testFramey",testFrame.Y());
         tuple->column("testFramez",testFrame.Z());
+        
+        //Fibre length max
+        double FibreLengthMax=pFibreMat->FibreLengh(pFibreMat->geometry()->toLocal((*aHit)->entry()),
+                                                    pFibreMat->geometry()->toLocal((*aHit)->exit()));
+        tuple->column("FiberLmax", FibreLengthMax);
+
       }
 
       // ok, write tuple row

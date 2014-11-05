@@ -45,19 +45,25 @@ typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line;
 //=============================================================================
 DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   DetectorElement ( name ),
-  m_FibreMatID(0),
-  m_layerID(0),
   // Layer stereo angle
   m_angle(0.0),
   m_tanAngle(0.0),
   m_cosAngle(0.0),
   m_dzDy(0.0),
-  // fibremat identifiers 
+  //ChannelID info
+  m_FibreMatID(0),
+  m_layerID(0),
   m_mat( 0 ),
   m_module( 0 ),
   m_layer( 0 ),
+  m_quarter(0),       
+  m_relativemodule(0),
   m_holey( false ),
-  // Layer dimensions
+  //fibremat dimension
+  m_fibreMatHalfSizeX(0.),
+  m_fibreMatHalfSizeY(0.),
+  m_fibreMatHalfSizeZ(0.),
+  //Layer dimensions
   m_layerMinX(0.),
   m_layerMaxX(0.),
   m_layerMinY(0.),
@@ -68,18 +74,11 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   m_layerHalfSizeY(0.),
   m_layerHalfSizeZ(0.),
   m_innerHoleRadius(0.),
-  // fibremat dimension
-  m_fibreMatHalfSizeX(0.),
-  m_fibreMatHalfSizeY(0.),
-  m_fibreMatHalfSizeZ(0.),
-  // sipm params
+  //Sipm info
   m_sipmPitchX(0.),
   m_nSipmPerModule(0),
-  m_msg(NULL),
   
   //-----params causing "private part" problem in FTDet
-  m_quarter(0),       
-  m_relativemodule(0),
   //Hole geometry
   m_posHole(0,0,0),          //Hole position
   m_HoleShiftXSt(0.),
@@ -91,11 +90,14 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   m_halfHole1Y(0.),   //Hole in Y, 4 sections,
   m_halfHole2Y(0.),   //T station dependent
   m_halfHole3Y(0.),
-  m_halfHole4Y(0.)
-{
-  m_DeFTLocation= "/dd/Structure/LHCb/AfterMagnetRegion/T/FT";
-  m_FTGeomVersion_reference=20;
+  m_halfHole4Y(0.),
   
+  //Auxiliary stuff
+  m_msg(NULL)
+{
+  m_DeFTLocation = "/dd/Structure/LHCb/AfterMagnetRegion/T/FT";
+  m_FTGeomVersion_reference = 20;
+  m_BadChannelLayerFlag = 15;
 }
 
 //=============================================================================
@@ -267,7 +269,7 @@ StatusCode DeFTFibreMat::initialize(){
     }
         
     //sipm or fibre end y position (local frame)
-    if(m_mat) m_fibreMatSipmY = -m_fibreMatHalfSizeY;
+    if(m_mat) m_fibreMatSipmY = -m_fibreMatHalfSizeY;   //bottom
     else m_fibreMatSipmY = m_fibreMatHalfSizeY;
 
     //Hole(s)
@@ -459,6 +461,10 @@ StatusCode DeFTFibreMat::initialize(){
   //debuf stuff
   if( m_msg->level() <= MSG::DEBUG) {
     debug() << "FT geometry parameters:"
+    << "\n\tm_layer: " << m_layer
+    << "\n\tm_module: " << m_module
+    << "\n\tm_quarter: " << m_quarter
+    << "\n\tm_mat: " << m_mat
     << "\n\tm_angle: " << m_angle
     << "\n\tm_dzdy: " << m_dzDy
     << "\n\tfibreModule size X: " << 2*m_FibreModuleHalfSizeX
@@ -671,7 +677,7 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
   //hole treatment and fibrelength
   double fibrelengthMax(2*m_fibreMatHalfSizeY);
   if( m_holey ){
-    if(inBeamHole(enPGlobal,enPLocal, fibrelengthMax) || inBeamHole(exPGlobal,exPLocal, fibrelengthMax)) {
+    if(inBeamHole(enPLocal, fibrelengthMax) || inBeamHole(exPLocal, fibrelengthMax)) {
       if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits: entry or exit points are inside "
           << "the beam pipe hole" << endmsg;
       return StatusCode::FAILURE;
@@ -876,10 +882,9 @@ StatusCode DeFTFibreMat::hitPositionInFibre(const LHCb::MCHit  *fthit,
     doRHAxesInversion(exPLocal);
   }
   
-  //meanfibreMaxLength = FibreLengh(enP,exP);    //DBL
   double enfibrefullLength,exfibrefullLength;
-  inBeamHole(fthit->entry(), enPLocal, enfibrefullLength);
-  inBeamHole(fthit->exit(), exPLocal, exfibrefullLength);
+  inBeamHole(enPLocal, enfibrefullLength);
+  inBeamHole(exPLocal, exfibrefullLength);
   meanfibreMaxLength=(enfibrefullLength+exfibrefullLength)/2.;
   
   double meanY= (enPLocal.y()+exPLocal.y())/2;
@@ -1021,8 +1026,9 @@ FTChannelID DeFTFibreMat::createChannel(unsigned int hitLayer,
   /// Create and push_back the corresponding FT pair
   if ( netCellID > (m_sipmNChannels-1) ) {
     if( m_msg->level() <= MSG::DEBUG) debug() << "Gross cellID " << grossCellID << " corresponds to insensitive cell."
-                                     << " Creating invalid FT channel (the signature is: layer=15)." << endmsg;
-    channel = FTChannelID( 15, 0, 0, 0, 0 );
+                       << " Creating invalid FT channel (the signature is: layer=" << m_BadChannelLayerFlag << ")."
+                       << endmsg;
+    channel = FTChannelID( m_BadChannelLayerFlag, 0, 0, 0, 0 );
   }
   else {
     channel = FTChannelID( hitLayer, module, mat, sipmID, netCellID );
@@ -1031,6 +1037,9 @@ FTChannelID DeFTFibreMat::createChannel(unsigned int hitLayer,
 }
 
 
+//========================================================================-===========
+// gross cell id (count inactive cells) to net cell id (discard them in the numbering)
+//====================================================================================
 unsigned int DeFTFibreMat::netCellID(const unsigned int grossID) const {
   unsigned int netID=999; // any number above m_sipmNChannels
   if      ( grossID >  0 && grossID <  65 ) netID = grossID-1;
@@ -1038,6 +1047,9 @@ unsigned int DeFTFibreMat::netCellID(const unsigned int grossID) const {
   return netID;
 }
 
+//========================================================================
+// net cell id (inactive cells not counted) to gross cell id (count them)
+//========================================================================
 unsigned int DeFTFibreMat::grossCellID(const unsigned int netID) const {
   unsigned int grossID=999; // any number above m_sipmNChannels
   if      ( netID <  64 ) grossID = netID+1;
@@ -1059,7 +1071,7 @@ double DeFTFibreMat::cellUCoordinate(const FTChannelID& channel) const {
   double uCoord;
 
   // check if it is a valid channel or one that corresponds to non-sensitive cell
-  if ( channel.layer() == 15u ) {
+  if ( channel.layer() == m_BadChannelLayerFlag ) {
     if( m_msg->level() <= MSG::DEBUG) debug() << "Function cellUCoordinate: cannot determine uCoord for "
                                       << " non-valid channel " << channel << endmsg;
     uCoord = 99999.;
@@ -1096,7 +1108,7 @@ double DeFTFibreMat::cellLocalX(const FTChannelID& channel) const {
   double lCoordX;
 
   // check if it is a valid channel or one that corresponds to non-sensitive cell
-  if ( channel.layer() == 15u ) {
+  if ( channel.layer() == m_BadChannelLayerFlag ) {
     if( m_msg->level() <= MSG::DEBUG) debug() << "Function cellLocalCoordinate: cannot determine local Coord for "
                                               << " non-valid channel " << channel << endmsg;
     lCoordX = 99999.;
@@ -1142,8 +1154,8 @@ void DeFTFibreMat::cellIDCoordinates( const double  Xlocal,
     }
     else break;								  
   }
-  if( lsipm > 15 ) {
-    error() << "In function cellIDCoordinates: SipmID must be between 0 and 15" << endmsg;
+  if( lsipm > m_BadChannelLayerFlag ) {
+    error() << "In function cellIDCoordinates: SipmID must be between 0 and " << m_BadChannelLayerFlag << endmsg;
     error() << " local X: " << Xlocal  << " local sipm: " << lsipm << endmsg;
   }
   else {
@@ -1366,13 +1378,14 @@ void DeFTFibreMat::beamPipeYCoord(const double xcoord,
 
 //=============================================================================
 // Function to determine lengh of the fibre as a function of its location 
-// to take into account the hole in the middle of the layer
+// to take into account the hole in the middle of the layer (local frame)
 // KEPT for BACKCOMPATIBILITY (replaced by "inBeamHole")
 //=============================================================================
 double DeFTFibreMat::FibreLengh(const Gaudi::XYZPoint&  lpEntry,
                                 const Gaudi::XYZPoint&  lpExit) const{
-  double fibrefullLength;                             
-  inBeamHole(lpEntry, lpExit, fibrefullLength);
+  double fibrefullLength; 
+  const Gaudi::XYZPoint lpMean((lpEntry.X()+lpExit.X())/2, (lpEntry.Y()+lpExit.Y())/2, (lpEntry.Z()+lpExit.Z())/2);                 
+  inBeamHole(lpMean, fibrefullLength);
   return fibrefullLength;
 }
 
@@ -1428,40 +1441,54 @@ StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string&
 //Beam Hole acceptance, depending on geometry versions. Also returns maximum
 //fiber length at the input point
 //=============================================================================
-bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint& hitGlobal,
-                              const Gaudi::XYZPoint& hitLocal,
+bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint& hitLocal,
                               double& fibrelengthMax) const {
-    bool inHole(false);
-    if (m_FTGeomversion <= m_FTGeomVersion_reference) {    //geom v20
-      double YFibreHole;
-      beamPipeYCoord(hitLocal.X(), hitLocal.Y(), YFibreHole);   //may be bugged: local or global ?
-      //get (maximum) fibre length
-      fibrelengthMax=2.*m_fibreMatHalfSizeY - std::abs(YFibreHole)/m_cosAngle;   //Y=0 when no intersection
-      //test hit y position
-      if((std::pow(hitGlobal.x(),2) + std::pow(hitGlobal.y(),2)) < std::pow(m_innerHoleRadius,2)) inHole=true;
+    bool inHole;
+    if(m_holey) {
+      if (m_FTGeomversion <= m_FTGeomVersion_reference) {    //geom v20
+        double YFibreHole;
+        beamPipeYCoord(hitLocal.X(), hitLocal.Y(), YFibreHole);   //may be bugged: local or global ?
+        //get (maximum) fibre length
+        fibrelengthMax=2.*m_fibreMatHalfSizeY - std::abs(YFibreHole)/m_cosAngle;   //Y=0 when no intersection
+        //test hit y position
+        Gaudi::XYZPoint hitGlobal=this->geometry()->toGlobal(hitLocal);
+        if((std::pow(hitGlobal.x(),2) + std::pow(hitGlobal.y(),2)) < std::pow(m_innerHoleRadius,2)) inHole=true;
+
+        if( m_msg->level() <= MSG::DEBUG) {
+          debug() << "inBeamHole geom v2:" << " hitLocal: " << hitLocal << "in: " << inHole << " fibrelengthMax: "
+                  << fibrelengthMax << endmsg;
+        }
+      }
+      else if (m_FTGeomversion > m_FTGeomVersion_reference) {   //geom v4x
+        double dxHit=std::abs(hitLocal.X()-m_posHole.X());        //absolute dx to hole center
+        //Hole size for each sub-box
+        double dyHole;
+        if(dxHit<m_halfHole1X) dyHole=m_halfHole1Y;
+        else if(dxHit<m_halfHole2X && dxHit>=m_halfHole1X) dyHole=m_halfHole2Y;
+        else if(dxHit<m_halfHole3X && dxHit>=m_halfHole2X) dyHole=m_halfHole3Y;
+        else if(dxHit<m_halfHole4X && dxHit>=m_halfHole3X) dyHole=m_halfHole4Y;
+        else dyHole=0;
+        //get (maximum) fibre length
+        if(std::abs(m_fibreMatHalfSizeY-std::abs(m_posHole.Y())) < dyHole) {
+          fibrelengthMax=m_fibreMatHalfSizeY+std::abs(m_posHole.Y())-dyHole;
+        }
+        else fibrelengthMax=2*m_fibreMatHalfSizeY;
+        //test hit y position
+        if(std::abs(hitLocal.Y()-m_posHole.Y())<dyHole) inHole=true;
+
+        if( m_msg->level() <= MSG::DEBUG) {
+          debug() << "inBeamHole geom v4:" << " m_posHole: " << m_posHole <<  " dyHole: " << dyHole
+                  <<" hitLocal: " << hitLocal << "in: " << inHole << " fibrelengthMax: "
+                  << fibrelengthMax << endmsg;
+        }
+      }
+      else {   //no clear geometry
+        fatal() << "Can't find geometry to define beam hole: v"<<m_FTGeomversion<< endmsg;
+      }
     }
-    else if (m_FTGeomversion > m_FTGeomVersion_reference) {   //geom v4x
-      double hitX=std::abs(hitLocal.X()-m_sipmOriginX);      //work in sipm frame (translation + direction)
-      //Hole size for each sub-box
-      double dyHole;
-      if(hitX<m_halfHole1X) dyHole=m_halfHole1Y;
-      else if(hitX<m_halfHole2X && hitX>=m_halfHole1X) dyHole=m_halfHole2Y;
-      else if(hitX<m_halfHole3X && hitX>=m_halfHole2X) dyHole=m_halfHole3Y;
-      else if(hitX<m_halfHole4X && hitX>=m_halfHole3X) dyHole=m_halfHole4Y;
-      else dyHole=0;
-      //get (maximum) fibre length
-      if(std::abs(m_fibreMatHalfSizeY-std::abs(m_posHole.Y())) < dyHole) fibrelengthMax=2*m_fibreMatHalfSizeY-dyHole;
-      else fibrelengthMax=2*m_fibreMatHalfSizeY;
-      //test hit y position
-      if(std::abs(hitLocal.Y()-m_posHole.Y())<dyHole) inHole=true;
-    }
-    else {   //no clear geometry
-      fatal() << "Can't find geometry to define beam hole: v"<<m_FTGeomversion<< endmsg;
-    }
-    
-    if( m_msg->level() <= MSG::DEBUG) {
-      debug() << "inBeamHole " << " hitLocal: " << hitLocal << "in: " << inHole << " fibrelengthMax: "
-              << fibrelengthMax << endmsg;
+    else {   //not a hole fibremat
+      fibrelengthMax=2*m_fibreMatHalfSizeY;
+      inHole=false;
     }
     
     return inHole;

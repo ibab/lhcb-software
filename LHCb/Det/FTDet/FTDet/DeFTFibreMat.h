@@ -17,6 +17,7 @@
 // from Event
 #include "Event/MCHit.h"
 
+
 /** @class Deftfibremat DeFTFibreMat.h "FTDet/DeFTFibreMat.h"
  *
  *  This is the detector element class of the Fibre Tracker (FT) fibremat.
@@ -390,61 +391,35 @@ private: // private member functions
   double FibreLengh(const Gaudi::XYZPoint&  lpEntry,
                     const Gaudi::XYZPoint&  lpExit) const;
 
+
 private: // private data members
 
-  //?? Some of these params to go into the xml DDDB?
+
+  ///Detector info
+  std::string  m_DeFTLocation;
+  unsigned int m_FTGeomversion;   ///Geometry version
+  unsigned int m_FTGeomVersion_reference;
+  unsigned int m_BadChannelLayerFlag;  ///used for flagging problematich channels (layer=15)
   
-  unsigned int m_FibreMatID;
-  unsigned int m_layerID;
+  ///general geometry info 
   double m_angle;               ///< stereo angle of the layer
   double m_tanAngle;            ///< tangent of stereo angle
   double m_cosAngle;            ///< cos of stereo angle
   double m_dzDy;                ///< layer slope in the y-z plane
+  bool m_RightHoleAxesXZInversion;   ///flag for temporary Right Holes axes inversion (v4)
 
+  ///ChannelID info and related
+  unsigned int m_FibreMatID;
+  unsigned int m_layerID;
   int m_mat;
   int m_module;
   int m_layer;
-  bool m_holey;
-
-
-  /// Layer dimensions
-  double m_layerMinX, m_layerMaxX;
-  double m_layerMinY, m_layerMaxY;
-  double m_layerMinZ, m_layerMaxZ;
-  double m_layerHalfSizeX, m_layerHalfSizeY, m_layerHalfSizeZ;
-  double m_innerHoleRadius;
-  double m_fibreMatinnerHoleSize;
-  
-  double m_fibreMatHalfSizeX, m_fibreMatHalfSizeY, m_fibreMatHalfSizeZ;
-
-  /// SiPM and cell sizes
-  unsigned int m_sipmNChannels; ///< number of channels per sipm
-  double m_fibreMatSipmY;    ///end fibre position in local frame (depends on top/bottom mats)
-  double m_cellSizeX;
-  double m_sipmSizeX;
-  
-  /// Gaps
-  double m_sipmEdgeSizeX, m_moduleEdgeSizeX; ///< x-gap between the active area and the outer edge
-                                             ///of a sipm and same for module
-  double m_moduleGapH;
-
-  /// Parameters derived from the above values
-  double m_sipmPitchX;          /// = m_sipmSizeX + 2*m_gapXsipmEdge
-  unsigned int m_nSipmPerQuarter;  /// = int(m_layerHalfSizeX/m_sipmPitchX)
-
-  //variables for sipm geometrical distribution at the level of fibremats rather than at the level of layers
-  unsigned int m_nSipmPerModule;
-
-  /// Use a single MsgStream instance (created in initialize)
-  MsgStream* m_msg;
-  /// Print functions
-  MsgStream& debug()   const { return *m_msg << MSG::DEBUG; }
-  MsgStream& info()    const { return *m_msg << MSG::INFO; }
-  MsgStream& error()   const { return *m_msg << MSG::ERROR; }
-  MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
-  
   int m_quarter;
   int m_relativemodule;
+  bool m_holey;
+
+  ///Fibremat info
+  double m_fibreMatHalfSizeX, m_fibreMatHalfSizeY, m_fibreMatHalfSizeZ;
   //Fibremat global frame center and corners (Right,Left,Top,Bottom)
   Gaudi::XYZPoint m_fibreMatGlobalCenter;   ///Origin of local fibremat frame in global frame
   Gaudi::XYZPoint m_fibreMatGlobalRT;       ///Right Top (local) corner of fibremat global coordinates
@@ -452,18 +427,40 @@ private: // private data members
   Gaudi::XYZPoint m_fibreMatGlobalRB;       ///Right Bottom (local) corner of fibremat global coordinates
   Gaudi::XYZPoint m_fibreMatGlobalLB;       ///Left Bottom (local) corner of fibremat global coordinates   
 
-  std::string  m_DeFTLocation;
-  unsigned int m_FTGeomversion;   ///Geometry version
-  unsigned int m_FTGeomVersion_reference;
-  double m_sipmOriginX;       ///X origin of sipms frame in fibremat
-  double m_sipmPitchXsigned;
-   
-  //FibreModules
+  ///FibreModules info
   double m_FibreModuleHalfSizeX;   ///FibreModule X half size
   double m_FibreModuleHalfSizeY;   ///FibreModule Y half size
   double m_FibreModuleHalfSizeZ;   ///FibreModule Z half size
   
-  //holes
+  ///Layer info
+  double m_layerMinX, m_layerMaxX;
+  double m_layerMinY, m_layerMaxY;
+  double m_layerMinZ, m_layerMaxZ;
+  double m_layerHalfSizeX, m_layerHalfSizeY, m_layerHalfSizeZ;
+  double m_innerHoleRadius;     ///for v2 and before
+  
+  
+  ///Gaps
+  double m_sipmEdgeSizeX, m_moduleEdgeSizeX; ///< x-gap between the active area and the outer edge
+                                             ///of a sipm and same for module
+  double m_moduleGapH;
+
+
+  ///SiPM and cell sizes
+  unsigned int m_sipmNChannels; ///< number of channels per sipm
+  double m_cellSizeX;
+  double m_sipmSizeX;
+  /// Parameters derived from the above values
+  double m_sipmPitchX;             /// X size of full sipm with gaps
+  unsigned int m_nSipmPerQuarter;  
+  //variables for sipm at fibremat level
+  unsigned int m_nSipmPerModule;
+  double m_fibreMatSipmY;    ///end fibre position in local frame (depends on top/bottom mats)
+  double m_sipmOriginX;       ///X origin of sipms frame in fibremat
+  double m_sipmPitchXsigned;
+
+
+  /// Holes
   Gaudi::XYZPoint m_posHole;   ///Hole position
   double m_HoleShiftXSt;   ///X Hole shiftin local frame
   double m_HoleShiftYSt;   ///Y Hole shiftin local frame
@@ -476,16 +473,23 @@ private: // private data members
   double m_halfHole3Y;    ///Hole in local frame Y, section 3, T station dependent
   double m_halfHole4Y;    ///Hole in local frame Y, section 4, T station dependent
 
-  //other flags
-  bool m_RightHoleAxesXZInversion;
   
-  /** find solidbase for PVolume of given detector element */
+  ///---Auxiliary routines
+  /// Use a single MsgStream instance (created in initialize)
+  MsgStream* m_msg;
+  /// Print functions
+  MsgStream& debug()   const { return *m_msg << MSG::DEBUG; }
+  MsgStream& info()    const { return *m_msg << MSG::INFO; }
+  MsgStream& error()   const { return *m_msg << MSG::ERROR; }
+  MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
+
+  /// find solidbase for PVolume of given detector element */
   StatusCode findSolidBase(IDetectorElement *det, const std::string& pvolname, const SolidBase* &solidbase);
  
-  /**Beam Hole acceptance, depending on geometry versions. Returns also maximum fibre length */
-  bool inBeamHole(const Gaudi::XYZPoint& hitGlobal, const Gaudi::XYZPoint& hitLocal, double& fibrelengthMax) const;
+  ///Beam Hole acceptance, depending on geometry versions. Returns also maximum fibre length */
+  bool inBeamHole(const Gaudi::XYZPoint& hitLocal, double& fibrelengthMax) const;
 
-  //temporary workaround for Right Hole (module 11) axes inversion
+  ///temporary workaround for Right Hole (module 11) axes inversion
   void doRHAxesInversion(Gaudi::XYZPoint& xyzLocal) const;
   
 };
@@ -494,4 +498,4 @@ private: // private data members
 //   end of class
 // -----------------------------------------------------------------------------
 
-#endif // DEFTLAYER_H
+#endif // DEFTFIBREMAT_H

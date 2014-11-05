@@ -3,6 +3,11 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+
+! 2014-11-05 - Luigi Del Buono
+ - correct a bug in hit fibre length computation, should affect both v2 and v4 geometry
+ - some tests to complete still
+
 ! 2014-11-03 - Luigi Del Buono
  - Introduce 1st version of code compatible with geometry v4 (only v42 for now)
  - use new modified database with more user parameters
