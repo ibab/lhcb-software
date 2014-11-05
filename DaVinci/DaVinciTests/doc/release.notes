@@ -4,8 +4,11 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+!========================= DaVinciTests v2r27 2014-11-05 =========================
+
 ! 2014-10-30 - Andrea Contu
- - Fixed references in stripping and commonparticles to account for cheange introduced in S21(r1)
+ - Fixed references in stripping and commonparticles to account for change
+   introduced in S21(r1).
 
 ! 2014-10-23 - Chris Jones
  - Enable on-demand reprocessing of the CALO in the Stripping20rXpY tests.
