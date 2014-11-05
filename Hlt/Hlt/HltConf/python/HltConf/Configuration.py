@@ -343,7 +343,7 @@ class HltConf(LHCbConfigurableUser):
         # and, last but not least, tell the writer what it should write..
 
 ##################################################################################
-    def configureVertexPersistence(self,lines) :
+    def configureVertexPersistence(self,lines,name) :
         """
         persistify vertices
         """
@@ -355,10 +355,10 @@ class HltConf(LHCbConfigurableUser):
         for i in hlt1Lines() :
              if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
         vertices = [ i for i in vertices if i in selections ]
-        HltVertexReportsMaker().VertexSelections = vertices
+        HltVertexReportsMaker(name).VertexSelections = vertices
         #Can't do this any longer, need replacing with a smart way to get the vertex locations
         #HltVertexReportsMaker().Context = "HLT"
-        HltVertexReportsMaker().PVLocation=__onlinePV__()["PV3D"]
+        HltVertexReportsMaker(name).PVLocation=__onlinePV__()["PV3D"]
         ## do not write out the candidates for the vertices we store
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
@@ -657,7 +657,7 @@ class HltConf(LHCbConfigurableUser):
                 i.configurable().FlagAsSlowThreshold = self.getProp('SlowHlt2Threshold')
 
         self.configureHltMonitoring(lines1, lines2)
-        self.configureVertexPersistence( [ i.name() for i in lines1 ] ) # TODO: add lines2...
+        self.configureVertexPersistence( [ i.name() for i in lines1 ], "Hlt1VtxReportsMaker" ) # TODO: add lines2...
         self.configureANNSelections()
 
         if self.getProp("Verbose") : print Sequence('Hlt')
@@ -760,7 +760,7 @@ class HltConf(LHCbConfigurableUser):
                          , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1, 'InputHltSelReportsLocation': hlt1_selrep_loc } )
                          , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {})
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt_vtxrep_loc } )
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReportsWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc
                                                                                                         ,'SourceID' : 1 } )
                          )
         _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc, 'Hlt2DecReportsLocation' : hlt2_decrep_loc, 'UpdateExistingRawBank'  : True} ) 
