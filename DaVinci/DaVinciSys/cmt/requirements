@@ -9,10 +9,6 @@ use  DaVinciTests    v2r27
 use  KaliCalo        v4r16    Phys   # Olivier Deschamps
 use  Tesla           v1r0     Phys   # Sean Benson
 
-# Temporary packages ...
-# Remember to remove from CMake file as well ...
-use  CaloPIDs        v5r20    Calo
-
 # Declare this as a container package
 apply_pattern container_package
 
