@@ -31,8 +31,8 @@ use HltServices         v2r5    Hlt
 use HltInterfaces       v5r3    Kernel
 use GaudiConf           v19r6
 #
-DaVinciTools            v24r1   Phys
-SelectionLine           v1r2    Kernel
+use DaVinciTools        v24r1   Phys
+use SelectionLine       v1r2    Kernel
 
 # Declare this as a container package
 apply_pattern container_package
