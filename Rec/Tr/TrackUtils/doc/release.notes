@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-11-05 - Michel De Cian
+ - Remove 'TrackMatching' from 'TrackFromDST'
+
 ! 2014-10-23 - Michel De Cian
  - Remove 'TrackSeeding' from 'TrackFromDST' and 'TTrackFromLong'
 
