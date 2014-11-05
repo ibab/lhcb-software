@@ -8,7 +8,7 @@ use Hlt1Muons           v1r10   Hlt   # Christoph Langenbruch
 use Hlt2Lines           v9r4    Hlt   # Vava Gligorov, Johannes Albrecht, Gerhard Raven
 use Hlt2SharedParticles v7r2    Hlt   # Vava Gligorov
 use HltBase             v15r3   Hlt   # Gerhard Raven
-use HltBeamGasAlley     v4r2    Hlt   # Rosen Matev
+use HltBeamGasAlley     v4r1    Hlt   # Rosen Matev
 use HltCommon           v10r3   Hlt   # Gerhard Raven
 use HltConf             v12r3   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r3    Hlt   # Stephan Nies
