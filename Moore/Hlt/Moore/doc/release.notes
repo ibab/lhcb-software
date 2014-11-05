@@ -4,6 +4,8 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+!========================= Moore v23r2 2014-11-05 =========================
+
 ! 2014-11-04 - Sean Benson
  - Make sure for split running, HltConfigSvc knows to only create DecReps for that level
  - and does both when Hlt1 and 2 are being run together.
