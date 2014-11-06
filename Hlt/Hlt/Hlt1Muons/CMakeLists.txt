@@ -13,5 +13,9 @@ gaudi_add_module(Hlt1Muons
                  INCLUDE_DIRS Tr/TrackInterfaces
                  LINK_LIBRARIES MuonDetLib TrackEvent GaudiAlgLib)
 
+gaudi_add_dictionary(Hlt1MuonsDict dict/Hlt1MuonsDict.h dict/Hlt1MuonsDict.xml
+                     LINK_LIBRARIES MuonDetLib TrackEvent GaudiAlgLib)
+
+gaudi_install_headers(Hlt1Muons)
 
 gaudi_add_test(QMTest QMTEST)
