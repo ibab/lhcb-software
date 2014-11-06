@@ -19,5 +19,6 @@ gaudi_add_module(DisplVertices
                                 LoKiTracksLib LoKiArrayFunctorsLib TrackKernel
                                 HltEvent)
 
+gaudi_install_headers(Kernel)
 gaudi_install_python_modules()
 

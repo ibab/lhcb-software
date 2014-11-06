@@ -5,6 +5,9 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-11-06 - Marco Clemencic
+ - Fixed CMake configuration (install headers).
+
 !========================= DisplVertices v7r19 2014-10-30 =========================
 
 ! 2014-10-24 - Pieter David
