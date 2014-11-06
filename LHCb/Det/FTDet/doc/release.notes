@@ -3,6 +3,9 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2014-11-06 - Luigi Del Buono
+ - correct a bug in "fibreMatMinY" and "fibreMatMaxY": the max and the min were inverted
+   (thenks to R. Quagliani for spotting this)
 
 ! 2014-11-05 - Luigi Del Buono
  - correct a bug in hit fibre length computation, should affect both v2 and v4 geometry

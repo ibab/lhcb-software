@@ -212,6 +212,13 @@ StatusCode DeFTTestAlg::execute() {
         tuple->column("CornerGRTx",pFibreMat->fibreMatGlobalRT().X());
         tuple->column("CornerGRTy",pFibreMat->fibreMatGlobalRT().Y());
         tuple->column("CornerGRTz",pFibreMat->fibreMatGlobalRT().Z());
+        //min max
+        tuple->column("fmGminx",pFibreMat->fibreMatMinX());
+        tuple->column("fmGmaxx",pFibreMat->fibreMatMaxX());
+        tuple->column("fmGminy",pFibreMat->fibreMatMinY());
+        tuple->column("fmGmaxy",pFibreMat->fibreMatMaxY());
+        tuple->column("fmGminz",pFibreMat->fibreMatMinZ());
+        tuple->column("fmGmaxz",pFibreMat->fibreMatMaxZ());
          
         //test frame orientation
         Gaudi::XYZPoint testFrame=pFibreMat->geometry()->toGlobal( Gaudi::XYZPoint(100,100,0) );

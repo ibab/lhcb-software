@@ -213,10 +213,10 @@ public:
   double fibreMatMaxX() const { return m_fibreMatGlobalLT.X(); }
 
   /// Accessor to the minimal y-position of the fibreMat area
-  double fibreMatMinY() const { return m_fibreMatGlobalRT.Y(); }
+  double fibreMatMinY() const { return m_fibreMatGlobalRB.Y(); }
 
   /// Accessor to the maximal y-position of the fibreMat area
-  double fibreMatMaxY() const { return m_fibreMatGlobalRB.Y(); }
+  double fibreMatMaxY() const { return m_fibreMatGlobalRT.Y(); }
 
   /// Accessor to the minimal z-position of the fibreMat area
   double fibreMatMinZ() const { return fibreMatGlobalCenter().Z()-m_fibreMatHalfSizeZ; }
