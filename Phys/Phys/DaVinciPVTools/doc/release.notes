@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-06 - Marco Clemencic
+ - Updated CMake configuration (installation of Python modules).
+
 !========================= DaVinciPVTools v1r0 2014-09-30 =========================
 
 ! 2014-08-05 - Chris Jones
