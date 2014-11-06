@@ -28,6 +28,7 @@ TeslaReportAlgo::TeslaReportAlgo( const std::string& name,
   declareProperty( "TriggerLine" ,          m_inputName    = "Hlt2CharmHadD02HH_D02KK" );
   declareProperty( "OutputPrefix" ,         m_OutputPref   = "Tesla" );
   declareProperty( "ReportVersion" ,        m_ReportVersion= 2 );
+  declareProperty( "PreSplit" ,             m_PreSplit= false );
   declareProperty( "PV" ,                   m_PV = "Online" );
 }
 
@@ -67,16 +68,24 @@ StatusCode TeslaReportAlgo::execute()
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   // First thing's first, let's check the reports against the
   // requested version
+  int init_ReportVersion = m_ReportVersion;
   bool toolow=false;
   std::stringstream HltLoc;
   HltLoc << m_inputName << "Decision";
-  int versionNum = m_check->VersionTopLevel( HltLoc.str() );
+  //
+  std::string RepLoc = "Hlt2/SelReports";
+  if(m_PreSplit == true) RepLoc = LHCb::HltSelReportsLocation::Default;
+  std::string VertRepLoc = "Hlt1/VertexReports";
+  if(m_PreSplit == true) VertRepLoc = LHCb::HltVertexReportsLocation::Default;
+  //
+  int versionNum = m_check->VersionTopLevel( HltLoc.str(), RepLoc );
   
   debug() << "VersionNum = " << versionNum << endmsg;
 
   if( versionNum != 99 ){
     if( versionNum != m_ReportVersion ) {
       warning() << "Requested version number does not equal checker response" << endmsg;
+      debug() << "versionNum = " << versionNum << ", m_ReportVersion = " << m_ReportVersion << endmsg;
       if( versionNum < m_ReportVersion ) {
         m_ReportVersion = versionNum;
         warning() << "For your own safety, I will give you less information than requested, please check report generation" << endmsg;
@@ -140,8 +149,8 @@ StatusCode TeslaReportAlgo::execute()
   const LHCb::HltVertexReports::HltVertexReport* vtxRep;
 
   // Vertex reports
-  if ( exist<LHCb::HltVertexReports>( LHCb::HltVertexReportsLocation::Default ) ) { // exist --> get content
-    vtxReports = get<LHCb::HltVertexReports>( LHCb::HltVertexReportsLocation::Default );
+  if ( exist<LHCb::HltVertexReports>( VertRepLoc.c_str() ) ) { // exist --> get content
+    vtxReports = get<LHCb::HltVertexReports>( VertRepLoc.c_str() );
     vtxRep = vtxReports->vertexReport("PV3D");
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> vnames = vtxReports->selectionNames();
@@ -162,13 +171,16 @@ StatusCode TeslaReportAlgo::execute()
     }
   } else{
     warning() << "Vertex reports do not exist!!!" << endmsg;
+    //
+    // Needed to overcome situation of missing reports for some events
+    m_ReportVersion = init_ReportVersion;
     return StatusCode::SUCCESS;
     //return StatusCode::RECOVERABLE;
   }
 
   // Selection reports
-  if ( exist<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default ) ) { // exist --> get content
-    selReports = get<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default );
+  if ( exist<LHCb::HltSelReports>( RepLoc.c_str() ) ) { // exist --> get content
+    selReports = get<LHCb::HltSelReports>( RepLoc.c_str() );
     if ( msgLevel(MSG::DEBUG) ){
       std::vector<std::string> selnames = selReports->selectionNames();
       debug() << "Available reports:" << endmsg;
@@ -178,6 +190,9 @@ StatusCode TeslaReportAlgo::execute()
     }
   } else{
     warning() << "Sel. reports do not exist!!!" << endmsg;
+    //
+    // Needed to overcome situation of missing reports for some events
+    m_ReportVersion = init_ReportVersion;
     return StatusCode::SUCCESS;
     //return StatusCode::RECOVERABLE;
   }

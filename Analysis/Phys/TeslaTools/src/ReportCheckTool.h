@@ -41,7 +41,7 @@ class ReportCheckTool : public GaudiTool, virtual public IReportCheck
   
     //===========================================================================
     /// Check version of the reports from an HltSelReports object.
-    int VersionTopLevel(string); 
+    int VersionTopLevel(string,string); 
 
   protected:
   

@@ -37,15 +37,15 @@ ReportCheckTool::ReportCheckTool( const std::string& type,
 //===========================================================================
 /// ReportCheckTool::VersionTopLevel finds report version from HltSelReports.
 //===========================================================================
-int ReportCheckTool::VersionTopLevel(string trigger)
+int ReportCheckTool::VersionTopLevel(string trigger,string RepLoc)
 {
   if (msgLevel(MSG::DEBUG)) debug() << "SelReports version check requested" << endmsg;
   
   int vnum = 99;
 
   const LHCb::HltSelReports* selReports;
-  if ( exist<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default ) ) {
-    selReports = get<LHCb::HltSelReports>( LHCb::HltSelReportsLocation::Default );
+  if ( exist<LHCb::HltSelReports>( RepLoc.c_str() ) ) {
+    selReports = get<LHCb::HltSelReports>( RepLoc.c_str() );
   }
   else{
     warning() << "Sel. reports do not exist!!!" << endmsg;
@@ -69,13 +69,18 @@ int ReportCheckTool::VersionTopLevel(string trigger)
 
       for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) {
         string key = *it;
-        if( version_map_particle.find( key )->second == 2 ) vnum = 2;
-        else if( version_map_particle.find( key )->second == 1 ) vnum = 1;
+        if( version_map_particle.find( key )->second == 1 ) vnum = 1;
       }
+      for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) {
+        string key = *it;
+        if( version_map_particle.find( key )->second == 2 ) vnum = 2;
+      }
+      debug() << "ReportCheckTool finds verision " << vnum << endmsg;
       if(vnum==99){
         warning() << "Please check how HltSelReports were created" << endmsg;
         return 0;
       }
+      return vnum;
     }
     else if( Obj->summarizedObjectCLID() == LHCb::Track::classID() ){
       
@@ -83,13 +88,18 @@ int ReportCheckTool::VersionTopLevel(string trigger)
       
       for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) {
         string key = *it;
-        if( version_map_track.find( key )->second == 2 ) vnum = 2;
-        else if( version_map_track.find( key )->second == 1 ) vnum = 1;
+        if( version_map_track.find( key )->second == 1 ) vnum = 1;
       }
+      for(std::vector<std::string>::iterator it = vec_keys.begin(); it!=vec_keys.end(); it++) {
+        string key = *it;
+        if( version_map_track.find( key )->second == 2 ) vnum = 2;
+      }
+      debug() << "ReportCheckTool finds verision " << vnum << endmsg;
       if(vnum==99){
         warning() << "Please check how HltSelReports were created" << endmsg;
         return 0;
       }
+      return vnum;
     }
   }
   return vnum;

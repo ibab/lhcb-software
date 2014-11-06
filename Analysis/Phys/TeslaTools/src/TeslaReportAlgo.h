@@ -59,6 +59,7 @@ protected:
 private:
 	std::string m_inputName;
 	std::string m_PV;
+	bool m_PreSplit;
 	std::string m_OutputPref;
 	int m_ReportVersion; // 1=OldSelReports, 2=Extended (GaudiMap)
         IDistanceCalculator *   m_dist;
