@@ -1,8 +1,13 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/TMVASelections
-! Responsible : Stripping coordinators 
+! Responsible : Stripping coordinators
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
+
+!========================= TMVASelections v1r7 2014-11-08 =========================
+
+ - 2014-09-12 - Chris Jones
+  - LoKi__FastJetMaker -> LoKi::FastJetMaker
 
 !========================= TMVASelections v1r7 2014-01-22 =========================
 
@@ -13,19 +18,19 @@
  - Fixed CMake configuration.
 
 ! 2013-12-19 - Jibo He
- - src/Bc2JpsiHBDTSelection 
+ - src/Bc2JpsiHBDTSelection
   . Changed to use IPS w.r.t. its own PV
- 
+
 ! 2013-12-18 - Jibo He
  - src/Bc2JpsiHBDTSelection
   . Added BDT for Bc->JpsiH
  - cmt/requirements
-  . Enabled DecayTreeFitter 
+  . Enabled DecayTreeFitter
 
 !========================= TMVASelections v1r6 2013-04-05 =========================
 
 ! 2013-03-29 - Stefano Perazzini
- - Introduced B2KShhBDTSelection.cpp and B2KShhBDTSelection.h for new BDT based 
+ - Introduced B2KShhBDTSelection.cpp and B2KShhBDTSelection.h for new BDT based
    stripping lines
 
 ! 2013-02-28 - Chris Jones
