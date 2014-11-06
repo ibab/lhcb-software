@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-11-06 - Michel De Cian
+ - Replace "Match" with "PatMatch" for old sequence of PatReco algorithms in Configuration.py
+
 ! 2014-11-05 - Michel De Cian
  - Remove 'TrackMatching' from cmt/requirements, CMakeLists.txt and RecoTracking.py. A runtime error is raised if it is set as a track type.
 

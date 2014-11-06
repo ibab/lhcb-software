@@ -44,7 +44,8 @@ class TrackSys(LHCbConfigurableUser):
                                   "fastSequence", "timing", "disableOTTimeWindow"]
 
     ## Default track pattern recognition algorithms to run in 2010
-    DefaultPatRecAlgorithms_old    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
+    #DefaultPatRecAlgorithms_old    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
+    DefaultPatRecAlgorithms_old    = ["Velo","Forward","TsaSeed","PatMatch","Downstream","VeloTT"]
     ## Default global cuts before 2011
     DefaultGlobalCuts_old      = {}
     ## Default track pattern recognition algorithms to run in 2011
@@ -68,7 +69,7 @@ class TrackSys(LHCbConfigurableUser):
       if self.getProp( "ForceNewSeq" ) and self.getProp( "ForceOldSeq" ) :
          raise RuntimeError("Cannot force both old and new tracking sequence at once")
 
-      if self.getProp( "ForceNewSeq" ) :
+     if self.getProp( "ForceNewSeq" ) :
          self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
 
       if self.getProp( "ForceOldSeq" ):
@@ -81,7 +82,7 @@ class TrackSys(LHCbConfigurableUser):
     
       if "cosmics" not in self.getProp("SpecialData"):
           # Defaults changes starting in 2011
-          if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") or "Upgrade" == self.getProp("DataType") :
+          if "MC09" == self.getProp("DataType") or "2008" == self.getProp("DataType") or "2009" == self.getProp("DataType") :
               defaultPatRecAlgorithms = self.DefaultPatRecAlgorithms_old
               defaultGlobalCuts       = self.DefaultGlobalCuts_old
           else:
