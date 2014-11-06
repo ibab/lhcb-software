@@ -30,6 +30,7 @@ class Tesla(LHCbConfigurableUser):
           , 'RecombineRAW'	: True		# Do we need the RAW event recombined
           , 'OutputPrefix'	: 'Tesla'	# Output prefix on TES
           , 'PV'	        : "Online"      # Associate to the PV chosen by the HLT or the offline one
+          , 'PreSplit'	        : False         # Are you looking at a time before the HLT was split?
           , 'ReportVersion'	: 2	        # Do we have the normal or extendedselection reports
           , 'TriggerLine'	: "Hlt2IncPhi"  # Which trigger line
           }
@@ -49,6 +50,7 @@ class Tesla(LHCbConfigurableUser):
         , 'RecombineRAW'  	: 'Recombine raw event'
         , 'OuputPrefix'  	: 'Output prefix on TES'
         , 'PV'     	        : 'Associate to the PV chosen by the HLT or the offline one'
+        , 'PreSplit'     	: 'Are you looking at a time before the HLT was split?'
         , 'ReportVersion'     	: '1: Normal HLT reports, 2: New extended reports'
         , 'TriggerLine'     	: 'Which trigger line to process'
         }
@@ -102,6 +104,7 @@ class Tesla(LHCbConfigurableUser):
                 trig1.OutputPrefix=self.getProp('OutputPrefix')
                 trig1.ReportVersion=self.getProp('ReportVersion')
                 trig1.PV=self.getProp('PV')
+                trig1.PreSplit=self.getProp('PreSplit')
                 trig1.TriggerLine=self.getProp('TriggerLine')
                 trig1.OutputLevel=self.getProp('OutputLevel')
                 seq=GaudiSequencer('TeslaReportAlgoSeq')
