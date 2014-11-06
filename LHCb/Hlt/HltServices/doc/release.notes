@@ -4,6 +4,9 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2014-11-06 - Marco Clemencic
+ - Added creation of hlttck_cdb_listkeys.exe to the CMake configuration.
+
 !========================= HltServices v2r5 2014-11-05 =========================
 
 ! 2014-11-04 - Sean Benson
