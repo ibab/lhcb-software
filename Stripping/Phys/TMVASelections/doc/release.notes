@@ -4,7 +4,7 @@
 ! Purpose     : To accommodate all TMVA based selections used in stripping
 !-----------------------------------------------------------------------------
 
-!========================= TMVASelections v1r7 2014-11-08 =========================
+!========================= TMVASelections v1r8 2014-11-08 =========================
 
  - 2014-09-12 - Chris Jones
   - LoKi__FastJetMaker -> LoKi::FastJetMaker
