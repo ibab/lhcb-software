@@ -15,10 +15,9 @@ gaudi_add_library(Swimming
                   PUBLIC_HEADERS Swimming
                   LINK_LIBRARIES GaudiKernel LHCbKernel TisTosTobbingLib)
 
-gaudi_add_library(SwimmingComponent
-                  src/Component/*.cpp
-                  NO_PUBLIC_HEADERS
-                  LINK_LIBRARIES GaudiKernel LHCbKernel TisTosTobbingLib)
+gaudi_add_module(SwimmingComponent
+                 src/Component/*.cpp
+                 LINK_LIBRARIES GaudiKernel LHCbKernel TisTosTobbingLib)
 
 gaudi_add_dictionary(Swimming
                      dict/functions.h
