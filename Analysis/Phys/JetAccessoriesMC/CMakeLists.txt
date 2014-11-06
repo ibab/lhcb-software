@@ -16,5 +16,6 @@ gaudi_add_module(JetAccessoriesMC
                  INCLUDE_DIRS FastJet
                  LINK_LIBRARIES FastJet LHCbMathLib LoKiAlgoMCLib LoKiGenMCLib LoKiPhysMCLib)
 
+gaudi_install_headers(Kernel)
 gaudi_install_python_modules()
 

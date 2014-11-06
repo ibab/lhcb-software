@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-11-06 - Marco Clemencic
+ - Fixed CMake configuration (install headers).
+
 !========================= JetAccessoriesMC v2r6 2014-10-30 =========================
 
 ! 2014-10-30 - Chris Jones
