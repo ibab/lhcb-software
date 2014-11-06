@@ -4,9 +4,9 @@
 # StrippingLine
 #
 
-__all__ = ( 
-	    'StrippingLine', 
-	    'strippingLines' 
+__all__ = (
+	    'StrippingLine',
+	    'strippingLines'
 	  )
 
 import re
@@ -70,25 +70,25 @@ def decisionName   ( line, level = 'Stripping'  ) :
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
 
 # Own slots of StrippingLine
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN', 'L0DU', 'HLT' , 'algos' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN', 'L0DU', 'HLT' , 'algos' )
 
 
 _stripping_lines__ = []
 
 # =============================================================================
-## Add the created line into the local storage of created Hlt1Lines 
+## Add the created line into the local storage of created Hlt1Lines
 def _add_to_stripping_lines_( line ) :
     """
-    Add the line into the local storage of created Hlt1Lines 
+    Add the line into the local storage of created Hlt1Lines
     """
 
-    for i in _stripping_lines__ : 
-	if i.name() == line.name() : 
+    for i in _stripping_lines__ :
+	if i.name() == line.name() :
 	    raise ValueError,"Created StrippingLine with duplicate name %s" % line.name()
-    
-    _stripping_lines__.append ( line ) 
 
-    
+    _stripping_lines__.append ( line )
+
+
 def strippingLines () :
     return tuple(_stripping_lines__)
 
@@ -99,13 +99,13 @@ class bindMembers (object) :
     """
     __slots__ = ('_members', '_outputloc', '_selection')
 
-    def outputLocation( self ) : 
+    def outputLocation( self ) :
         return self._outputloc
 
     def selection( self ) :
         return self._selection
 
-    def members( self ) :         
+    def members( self ) :
         # remove (downstream) duplicates
         members = []
         for m in self._members :
@@ -113,15 +113,15 @@ class bindMembers (object) :
         return members
 
     def _getOutputLocation (self, alg) :
-        if type(alg) is GaudiSequencer : 
-    	    for i in alg.Members : 
+        if type(alg) is GaudiSequencer :
+    	    for i in alg.Members :
     		self._getOutputLocation( i )
         elif hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
                 self._outputloc = "Phys/"+alg.OutputSelection
         elif hasattr ( type(alg) , 'OutputLocation' ) :
             if hasattr ( alg , 'OutputLocation' ) :
-                self._outputloc = alg.OutputLocation 
+                self._outputloc = alg.OutputLocation
         else :
 #            self._outputsel = None
 #            self._outputloc = None
@@ -152,17 +152,17 @@ class bindMembers (object) :
     def _handle_Selection(self, line, alg) :
         sel = alg.clone(name=line)
         self._handleSelectionType( line, sel )
-        
+
     def _handle_PassThroughSelection(self, line, alg) :
         if alg.outputLocation() != '' :
             from PhysSelPython.Wrappers import MergedSelection
-            alg = MergedSelection(line, RequiredSelections = [alg])       
+            alg = MergedSelection(line, RequiredSelections = [alg])
             self._handleSelectionType( line, alg )
 
     def _handle_VoidEventSelection(self, line, alg) :
         if alg.outputLocation() != '' :
             from PhysSelPython.Wrappers import MergedSelection
-            alg = MergedSelection(line, RequiredSelections = [alg])       
+            alg = MergedSelection(line, RequiredSelections = [alg])
             self._handleSelectionType( line, alg )
 
     def _handle_AutomaticData(self, line, alg) :
@@ -173,7 +173,7 @@ class bindMembers (object) :
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
         self._members  += alg.members()
-        # sometimes, we want to ignore this... 
+        # sometimes, we want to ignore this...
         # add a flag to allow to skip this (when set to None?)
         if alg.outputLocation() : self._outputloc = alg.outputLocation()
 
@@ -188,7 +188,7 @@ class bindMembers (object) :
                 self._handle_Configurable(line, alg)
             else :
                 x = '_handle_' + type(alg).__name__
-            
+
                 handle = getattr(self, x if hasattr(self, x) else '_default_handler_')
                 handle(line,alg)
 
@@ -222,7 +222,7 @@ class StrippingLine(object):
                                                  # Only used is ExtraInfoDaughters are given, otherwise is 0
 
                    RelatedInfoTools = None,      # Configuration of ExtraInfo tools, as a list of dictionaries (or None)
-                   RelatedInfoFilter = None,     # Optional filter which can use RelatedInfo, added to the line sequence 
+                   RelatedInfoFilter = None,     # Optional filter which can use RelatedInfo, added to the line sequence
                                                  # after RelatedInfoTools
 
                    RequiredRawEvents = None,     # Possible list of RawEvent banks required by this line
@@ -251,7 +251,7 @@ class StrippingLine(object):
         self._name      = name
         if callable(prescale) : prescale = prescale( self.name() )
         self._prescale  = prescale
-        
+
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
@@ -274,7 +274,7 @@ class StrippingLine(object):
 
         self.RelatedInfoTools = RelatedInfoTools
         self.RelatedInfoFilter = RelatedInfoFilter
-        
+
         self._initialSelection = selection
 
         validRawBanks = ["Trigger","Muon","Calo","Rich","Velo","Tracker"] # hard coded list, should really come from elsewhere....
@@ -290,34 +290,34 @@ class StrippingLine(object):
 
         self._appended  = False
 
-        #start to contruct the sequence        
+        #start to contruct the sequence
 
         self._members = []
 
         self._selection = None
-        
+
         self.fullHDRLocation = None
-        
+
         # if needed, check Primary Vertex before running all algos
-        
+
         from Configurables import CheckPV
         if checkPV == True:
     	    check = CheckPV("checkPVmin1");
     	    check.MinPVs = 1;
     	    self._members.insert(0, check);
-    	elif isinstance(checkPV, int) : 
+    	elif isinstance(checkPV, int) :
     	    check = CheckPV("checkPVmin%d" % checkPV)
     	    check.MinPVs = checkPV
     	    self._members.insert(0, check);
-    	elif isinstance(checkPV, tuple) : 
-    	    if len(checkPV) == 2 : 
+    	elif isinstance(checkPV, tuple) :
+    	    if len(checkPV) == 2 :
     		check = CheckPV("checkPVmin%dmax%d" % checkPV)
     		check.MinPVs = checkPV[0]
     		check.MaxPVs = checkPV[1]
     		self._members.insert(0, check);
     	    else :
     		raise TypeError, "Wrong checkPV tuple length %d, should be 2" % len(checkPV)
-    	elif checkPV != False : 
+    	elif checkPV != False :
     	    raise TypeError, "Wrong checkPV argument type '%s'" % type(checkPV).__name__
 
         # if needed, apply filter before running all algos
@@ -329,11 +329,11 @@ class StrippingLine(object):
                 fltr = VOIDFilter  ( voidentryName  ( line ) , Code = FILTER[0] , Preambulo = FILTER[1] )
                 self._members.insert ( 0 , fltr )
             elif isinstance ( FILTER , dict     ) :
-                fltr = VOIDFilter  ( voidentryName  ( line ) , **FILTER ) 
+                fltr = VOIDFilter  ( voidentryName  ( line ) , **FILTER )
                 self._members.insert ( 0 , fltr )
             else :
     		raise TypeError, "Wrong FILTER attribute: %s " % FILTER
-            
+
         # bind members to line
         _boundMembers    = bindMembers( line, algos )
         self._members   += _boundMembers.members()
@@ -341,58 +341,58 @@ class StrippingLine(object):
         self._selection = _boundMembers.selection()
 
         # register into the local storage of all created Lines
-        _add_to_stripping_lines_( self ) 
+        _add_to_stripping_lines_( self )
 
     def selection(self) :
         return self._selection
-        
+
     def declareAppended( self ) :
-	self._appended = True 
-	
-    def isAppended( self ) : 
+	self._appended = True
+
+    def isAppended( self ) :
 	return self._appended
 
-    def selectionsToLocations(self, selList) : 
+    def selectionsToLocations(self, selList) :
 	locList = []
-    	for sel in selList : 
-    	    if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' : 
+    	for sel in selList :
+    	    if type(sel).__name__ == 'Selection' or type(sel).__name__ == 'MergedSelection' :
 		# Need to check if the selection is the top selection
-		# In that case use line's output location because the 
+		# In that case use line's output location because the
 		# name of the top algoritm is redefined by the framework
-    		if sel == self._initialSelection : 
+    		if sel == self._initialSelection :
     		    fullPath = "/Event/" + self.outputLocation()
     		else :
         	    fullPath = "/Event/" + sel.outputLocation()
         	locList += [ fullPath ]
 #                print "Added outputlocation %s to ExtraInfo in line %s" % (fullPath, self.name() )
-    	    else : 
+    	    else :
         	raise AttributeError, "Storing ExtraInfo is not supported for selection of type '%s' (in line %s)" % \
         	      (type(sel).__name__, self.name() )
         return locList
 
-    def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) : 
-        
-        if self._HDRLocation == None : 
+    def createConfigurable( self, TESPrefix = "Strip", HDRLocation = 'Phys/DecReports' ) :
+
+        if self._HDRLocation == None :
     	    self.fullHDRLocation = TESPrefix + "/" + HDRLocation
-    	else : 
+    	else :
     	    self.fullHDRLocation = self._HDRLocation
-        
+
         # check for forbidden attributes
         args    = self._args
 
-        mdict = {} 
+        mdict = {}
         for key in args :
             if key in _protected_ :
                 raise AttributeError, "The attribute'%s' is protected for %s"%(key,self.type())
-            mdict[key] = args[key] 
+            mdict[key] = args[key]
 
         line = self.subname()
-        
+
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
         #       and change them -- and not having the scaler would be problem in that case...
         mdict.update( { 'Prescale'     : Scaler(     prescalerName ( line,'Stripping' ) , AcceptFraction = self._prescale  )
-                      , 'Postscale'    : Scaler(    postscalerName ( line,'Stripping' ) , AcceptFraction = self._postscale ) 
+                      , 'Postscale'    : Scaler(    postscalerName ( line,'Stripping' ) , AcceptFraction = self._postscale )
                       } )
 
         if self._ODIN :
@@ -405,7 +405,7 @@ class StrippingLine(object):
             else :
     		raise TypeError, "Wrong ODIN attribute: %s " % self._ODIN
 
-        if self._L0DU   : 
+        if self._L0DU   :
             if isinstance   ( self._L0DU , str   ) :
     		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , Code = self._L0DU   )  } )
             if isinstance   ( self._L0DU , ( tuple, list) ) and 2 == len ( self._L0DU ) :
@@ -413,7 +413,7 @@ class StrippingLine(object):
             if isinstance   ( self._L0DU , dict )  :
     		mdict.update( { 'L0DU'    : L0Filter   ( l0entryName   ( line ) , **self._L0DU)  } )
 
-        if self._HLT    : 
+        if self._HLT    :
             if isinstance   ( self._HLT , str   ) :
         	mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , Code = self._HLT    ) } )
             if isinstance   ( self._HLT , ( tuple, list) ) and 2 == len ( self._HLT ) :
@@ -422,23 +422,23 @@ class StrippingLine(object):
     		mdict.update( { 'HLT'     : HDRFilter  ( hltentryName  ( line ) , **self._HLT)  } )
 
 	# Add extra info tools if needed
-	if self.ExtraInfoTools : 
+	if self.ExtraInfoTools :
 	    from Configurables import AddExtraInfo
 	    extraInfoAlg = AddExtraInfo('ExtraInfo_' + self.name())
-	    if self.ExtraInfoSelections : 
+	    if self.ExtraInfoSelections :
     		extraInfoAlg.Inputs = self.selectionsToLocations( self.ExtraInfoSelections )
-    	    else : 
+    	    else :
     		extraInfoAlg.Inputs = [ self.outputLocation() ]
-            if self.ExtraInfoDaughters : 
+            if self.ExtraInfoDaughters :
         	extraInfoAlg.MaxLevel = self.ExtraInfoRecursionLevel
     		extraInfoAlg.DaughterLocations = self.selectionsToLocations( self.ExtraInfoDaughters )
-            else : 
+            else :
         	extraInfoAlg.MaxLevel = 0
-        		
+
             toolNames = []
             toolNum = 0
-            
-            for itool in self.ExtraInfoTools : 
+
+            for itool in self.ExtraInfoTools :
         	toolNum += 1
         	toolType = itool["Type"]
         	toolName = "Tool%d" % toolNum
@@ -446,16 +446,16 @@ class StrippingLine(object):
         	toolClass = getattr( module, toolType )
         	extraInfoAlg.addTool( toolClass, toolName )
         	toolInstance = getattr( extraInfoAlg, toolName )
-        	for property,value in itool.iteritems() : 
+        	for property,value in itool.iteritems() :
         	    if property == "Type" : continue
         	    setattr( toolInstance, property, value)
         	toolNames += [ toolType + '/' + toolName ]
        	    extraInfoAlg.Tools = toolNames
 	    self._members.append(extraInfoAlg)
 
-	if self.RelatedInfoTools != None : 
+	if self.RelatedInfoTools != None :
 	    self.addRelatedInfo()
-	    if self.RelatedInfoFilter : 
+	    if self.RelatedInfoFilter :
 		self._members.append( self.RelatedInfoFilter )
 		oldOutput = self.outputLocation()
 		self._outputloc = "Phys/" + self.RelatedInfoFilter.name() + "/Particles"
@@ -463,32 +463,32 @@ class StrippingLine(object):
 		self.addRelatedInfo()
 
 	# Add flavour tagging tool to the end of line sequence if needed
-	if self._EnableFlavourTagging : 
-	    if not self.outputLocation() or self.outputLocation() == "" : 
+	if self._EnableFlavourTagging :
+	    if not self.outputLocation() or self.outputLocation() == "" :
                 raise AttributeError, "Line %s does not have output, cannot do flavour tagging" % self.name()
 	    from Configurables import BTagging
-	    btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] ) 
+	    btag = BTagging("BTag_"+self.name(), Inputs = [ self.outputLocation() ] )
 	    self._members.append(btag)
 
-        if self._members : 
+        if self._members :
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = self._members, OutputLevel = WARNING ) })
-            
-        print self._members
-            
+
+        #print self._members
+
         mdict.update( { 'HltDecReportsLocation' : self.fullHDRLocation } )
-        if (self.outputLocation()) : 
+        if (self.outputLocation()) :
     	    mdict.update( { 'OutputLocation' : self.outputLocation() } )
-        
-        __mdict = deepcopy ( mdict ) 
+
+        __mdict = deepcopy ( mdict )
         from Configurables import StrippingAlg
         self._configurable = StrippingAlg ( self.name() , **__mdict )
 
         # put upper limit on combinatorics
         if self.MaxCandidates == "Override" : self.MaxCandidates = None
         if self.MaxCombinations == "Override" : self.MaxCombinations = None
-        limitCombinatorics( self._configurable, 
-                            MaxCandidates = self.MaxCandidates, 
-                            MaxCombinations = self.MaxCombinations ) 
+        limitCombinatorics( self._configurable,
+                            MaxCandidates = self.MaxCandidates,
+                            MaxCombinations = self.MaxCombinations )
 
         log.debug(' created StrippingAlg configurable for' +  self._name)
         log.debug( self._configurable )
@@ -496,47 +496,47 @@ class StrippingLine(object):
         return self._configurable
 
     # Add related info tools if needed
-    def addRelatedInfo( self ) : 
+    def addRelatedInfo( self ) :
 
-	if self.RelatedInfoTools : 
-            
+	if self.RelatedInfoTools :
+
             log.debug( "Add RelatedInfo tools for output location "+ self.outputLocation() )
-            
+
             toolNum = 0
-            for itool in self.RelatedInfoTools : 
+            for itool in self.RelatedInfoTools :
 
         	toolNum += 1
 
 		from Configurables import AddRelatedInfo
 		output_basename = self.outputLocation().split("/")[-2]
 		relatedInfoAlg = AddRelatedInfo('RelatedInfo%d_%s' % ( toolNum, output_basename ) )
-		if 'TopSelection' in itool.keys() : # and 'Locations' in itool.keys() : 
-    		    relatedInfoAlg.Inputs = self.selectionsToLocations( [ itool['TopSelection'] ] ) 
-    		else : 
+		if 'TopSelection' in itool.keys() : # and 'Locations' in itool.keys() :
+    		    relatedInfoAlg.Inputs = self.selectionsToLocations( [ itool['TopSelection'] ] )
+    		else :
     		    relatedInfoAlg.Inputs = [ "/Event/" + self.outputLocation() ]
 
-        	if 'Locations' in itool.keys() : 
+        	if 'Locations' in itool.keys() :
         	    if 'Location' in itool.keys() :
         		raise Exception('Both "Location" and "Locations" are defined in %s RelatedInfo dictionary, use either of them.' %  self.name() )
-        	    if 'RecursionLevel' in itool.keys() : 
+        	    if 'RecursionLevel' in itool.keys() :
         		relatedInfoAlg.MaxLevel = itool['RecursionLevel']
-        	    else : 
+        	    else :
         		relatedInfoAlg.MaxLevel = 1
         	    infoLocations = {}
-        	    for k,v in itool['Locations'].iteritems() : 
-			if not isinstance(v, list) : 
+        	    for k,v in itool['Locations'].iteritems() :
+			if not isinstance(v, list) :
 			    v = [ v ]
-    			if type(k).__name__ in  [ 'Selection', 'MergedSelection', 'AutomaticData', 'DataOnDemand' ] : 
+    			if type(k).__name__ in  [ 'Selection', 'MergedSelection', 'AutomaticData', 'DataOnDemand' ] :
 
 			    # Need to check if the selection is the top selection
-			    # In that case use line's output location because the 
+			    # In that case use line's output location because the
 			    # name of the top algoritm is redefined by the framework
-    			    if k == self._initialSelection : 
+    			    if k == self._initialSelection :
     				fullPath = "/Event/" + self.outputLocation()
     			    else :
         			fullPath = "/Event/" + k.outputLocation()
         		    infoLocations[fullPath] = v
-            	        else : 
+            	        else :
             	    	    if not k.startswith('/Event') : k = '/Event/' + k
             	    	    if not k.endswith('/Particles') : k += '/Particles'
             	    	    infoLocations[k] = v
@@ -544,7 +544,7 @@ class StrippingLine(object):
         	elif 'Location' in itool.keys() :
         	    relatedInfoAlg.MaxLevel = 0
         	    relatedInfoAlg.InfoLocations = { relatedInfoAlg.Inputs[0] : [ itool['Location'] ] }
-        	else : 
+        	else :
         	    raise Exception('\n "Location" or "Locations" is not defined in RelatedInfo dictionary')
         	toolType = itool["Type"]
         	toolName = "Tool%d" % toolNum
@@ -552,44 +552,44 @@ class StrippingLine(object):
         	toolClass = getattr( module, toolType )
         	relatedInfoAlg.addTool( toolClass, toolName )
         	toolInstance = getattr( relatedInfoAlg, toolName )
-        	for property,value in itool.iteritems() : 
+        	for property,value in itool.iteritems() :
         	    if property in ["Type", "Location", "Locations", "RecursionLevel", "TopSelection" ] : continue
         	    setattr( toolInstance, property, value)
 
        		relatedInfoAlg.Tool = toolType + '/' + toolName
 
 		self._members.append(relatedInfoAlg)
-		
 
 
-    def filterMembers( self ) : 
+
+    def filterMembers( self ) :
 	_members = GaudiSequencer( filterName ( self.subname(), 'Stripping' ) ).Members
-	
-	while True : 
+
+	while True :
 	    _foundSequencer = False
 	    _flattenedMembers = []
-	    for i in _members : 
-		if GaudiSequencer is type(i) : 
+	    for i in _members :
+		if GaudiSequencer is type(i) :
 		    _flattenedMembers += i.Members
 		    _foundSequencer = True
-		else : 
+		else :
 		    _flattenedMembers += [ i ]
 	    _members = _flattenedMembers
 	    if not _foundSequencer : break
 
 	log.debug( "FilterMembers for line %s : " % self.name() )
 	log.debug( _members )
-	    
+
 	return _members
 
     def subname   ( self ) :
-        """ 'Sub-name' of the Stripping line  """ 
+        """ 'Sub-name' of the Stripping line  """
         return            self._name
-    ## Full name of Stripping line 
+    ## Full name of Stripping line
     def name      ( self ) :
         """ Full name of Stripping Line """
         return 'Stripping%s' % self._name
-    ## the actual type of Stripping Line 
+    ## the actual type of Stripping Line
     def type      ( self ) :
         """ The actual type of StrippingLine Line """
         return StrippingLine
@@ -597,10 +597,10 @@ class StrippingLine(object):
     ## Get the underlying 'Configurable'
     #  probably it is the most important method except the constructor
     #
-    #  @code 
+    #  @code
     #  >>> line = Hlt2Line ( .... )
-    #  >>> conf = line.configurable() 
-    #  @endcode    
+    #  >>> conf = line.configurable()
+    #  @endcode
     def configurable ( self ) :
         return self._configurable
 
@@ -613,7 +613,7 @@ class StrippingLine(object):
 
         >>> line = ...
         >>> selection = line.outputLocation()
-        
+
         """
 #        if not self._outputloc :
 #            raise AttributeError, "The line %s does not define valid output " % self.subname()
@@ -625,12 +625,12 @@ class StrippingLine(object):
     def clone ( self , name , **args ) :
         """
         Clone the line
-        
+
         A new StrippingLine is created with new name, all property/attrributes maps
         are updated accordingly.
-        
+
         """
-        # add some python magic to allow reasonable definition of the deepcopy 
+        # add some python magic to allow reasonable definition of the deepcopy
         # of a member function bound to an object instance.
         # see http://bugs.python.org/issue1515 for more info...
         # This should be fixed in python 2.6, so at some point this hack
@@ -646,38 +646,38 @@ class StrippingLine(object):
         args = deepcopy ( args )
 
         ## 2) classify arguments:
-        _own   = {} # own arguments 
+        _own   = {} # own arguments
         _seq   = {} # arguments for sequencer
         _other = {} # the rest (probably reconfiguration of members)
         for key in args :
             if    key in GaudiSequencer.__slots__ : _seq   [key] = args[key]
-            elif  key in  _myslots_               : _own   [key] = args[key] 
+            elif  key in  _myslots_               : _own   [key] = args[key]
             else                                  : _other [key] = args[key]
 
-        # Explictly copy all major structural parameters 
+        # Explictly copy all major structural parameters
         __name       = deepcopy ( name        )
-        __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) ) 
-        __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
-        __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
-        __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
-        __FILTER     = deepcopy ( args.get ( 'FILTER'    , self._FILTER    ) )        
-        __checkPV    = deepcopy ( args.get ( 'checkPV'   , self._checkPV   ) )        
-        __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
+        __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) )
+        __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )
+        __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )
+        __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )
+        __FILTER     = deepcopy ( args.get ( 'FILTER'    , self._FILTER    ) )
+        __checkPV    = deepcopy ( args.get ( 'checkPV'   , self._checkPV   ) )
+        __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) )
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
-        __args       = deepcopy ( self._args  ) 
+        __args       = deepcopy ( self._args  )
 
         # restore the original deepcopy behaviour...
         if origMethod :
-            copy._deepcopy_dispatch[types.MethodType] = origMethod 
+            copy._deepcopy_dispatch[types.MethodType] = origMethod
         else :
             del copy._deepcopy_dispatch[types.MethodType]
 
-        # unknown parameters/arguments 
+        # unknown parameters/arguments
         if _other :
-            raise AttributeError, 'Invalid attributes are detected: %s'%_other 
+            raise AttributeError, 'Invalid attributes are detected: %s'%_other
 
         # get all "OLD" arguments
-        # and update them with all arguments, understandable by Sequencer 
+        # and update them with all arguments, understandable by Sequencer
         __args.update ( _seq   )
 
         return StrippingLine ( name      = __name       ,
@@ -688,18 +688,18 @@ class StrippingLine(object):
                                FILTER    = __FILTER     ,
                                checkPV   = __checkPV    ,
                                postscale = __postscale  ,
-                               algos     = __algos      , 
+                               algos     = __algos      ,
                                **__args )
 
-def limitCombinatorics( configurable, 
-                        MaxCandidates, 
-                        MaxCombinations, 
+def limitCombinatorics( configurable,
+                        MaxCandidates,
+                        MaxCombinations,
                         incidentName = 'ExceedsCombinatoricsLimit' ) :
     val = False
     from Configurables import CombineParticles, StrippingAlg
     from Configurables import SubPIDMMFilter, SubstitutePID
     if hasattr( configurable, 'Members' ) :
-        for i in getattr( configurable, 'Members' ) : 
+        for i in getattr( configurable, 'Members' ) :
             # order is important to avoid shortcircuit from skipping call to limitCombinatorics!
             val = limitCombinatorics( i, MaxCandidates, MaxCombinations, incidentName ) or val
         return val
@@ -711,20 +711,20 @@ def limitCombinatorics( configurable,
         if val : configurable.IncidentsToBeFlagged += [ incidentName ]
         return val
     elif type(configurable) == CombineParticles :
-        if MaxCandidates != None : 
+        if MaxCandidates != None :
             configurable.StopAtMaxCandidates = True
             configurable.MaxCandidates       = MaxCandidates
-        if MaxCombinations != None : 
+        if MaxCombinations != None :
             configurable.StopAtMaxCombinations = True
             configurable.MaxCombinations       = MaxCombinations
-        if MaxCandidates != None or MaxCombinations != None : 
+        if MaxCandidates != None or MaxCombinations != None :
             configurable.StopIncidentType    = incidentName
             return True
         else :
             return False
     elif type(configurable) == SubPIDMMFilter or \
              type(configurable) == SubstitutePID:
-	if MaxCandidates != None: 
+	if MaxCandidates != None:
     	    configurable.MaxParticles        = MaxCandidates
     	    configurable.StopIncidentType    = incidentName
     	    return True
@@ -753,7 +753,7 @@ def limitCombinatorics( configurable,
             return True
         else :
             return False
-    else: 
+    else:
         #log.warning('Not able to set MaxCandidates and MaxCombinations to algorithm '+str(type(configurable))+'/'+configurable.name())
         return False
 
