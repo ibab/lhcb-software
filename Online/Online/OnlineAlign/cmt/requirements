@@ -3,7 +3,7 @@
 # Maintainer : beat
 # ============================================================================
 package    OnlineAlign
-version    v0r1
+version    v0r2
 # ============================================================================
 # Structure, i.e. directories to process.
 # ============================================================================
@@ -27,3 +27,5 @@ library OnlineAlign  *.cpp
 # ============================================================================
 apply_pattern component_library library=OnlineAlign
 apply_pattern install_python_modules
+#macro_append ROOT_linkopts ' -lHist' WIN32 " libHist.lib "
+macro_append ROOT_linkopts " -lMinuit"
