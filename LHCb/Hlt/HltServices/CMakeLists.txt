@@ -20,4 +20,6 @@ gaudi_add_module(HltServices
                  INCLUDE_DIRS Boost AIDA
                  LINK_LIBRARIES Boost DetCondLib DetDescLib DAQEventLib HltEvent GaudiAlgLib GaudiKernel HltInterfaces LoKiHltLib)
 
-gaudi_add_executable(hlttck_cdb_listkeys  utilities/main.cpp src/cdb.cpp src/tar.cpp)
+gaudi_add_executable(hlttck_cdb_listkeys  utilities/main.cpp src/cdb.cpp src/tar.cpp
+                     INCLUDE_DIRS Boost
+                     LINK_LIBRARIES GaudiKernel Boost HltInterfaces)

@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-11-06 - Marco Clemencic
+ - Fixed CMake configuration.
+
+! 2014-11-06 - Marco Clemencic
  - Added creation of hlttck_cdb_listkeys.exe to the CMake configuration.
 
 !========================= HltServices v2r5 2014-11-05 =========================
