@@ -21,14 +21,23 @@ MBM::Manager::Manager() : m_bm(0), bm_id(0), bm_all(0) {
   bm_id = (char*)::getenv("BM_ID");
   if(!bm_id) bm_id = "0";
   m_bm = new ServerBMID_t();
+  m_unmap = true;
+}
+
+/// Constructor taking already mapped buffers
+MBM::Manager::Manager(ServerBMID bm) : m_bm(bm), bm_all(0) {
+  ctrl_mod[0] = buff_mod[0] = 0;
+  setup(m_bm->bm_name);
+  m_unmap = false;
 }
 
 /// Default destructor 
 MBM::Manager::~Manager()  {
-  if ( m_bm ) {
+  if ( m_bm && m_unmap ) {
     ::mbmsrv_unmap_memory(m_bm);
     delete m_bm;
   }
+  m_bm = 0;
 }
 
 /// Setup manager
@@ -56,17 +65,17 @@ void MBM::Manager::getOptions(int argc, char** argv)    {
 
 /// Map BM memory sections
 int MBM::Manager::mapSections()  {
-  return ::mbmsrv_map_memory(bm_id, m_bm);
+  return m_unmap ? ::mbmsrv_map_memory(bm_id, m_bm) : MBM_NORMAL;
 }
 
 /// Map BM monitoring memory sections
 int MBM::Manager::mapMonitorSections()  {
-  return ::mbmsrv_map_mon_memory(bm_id, m_bm);
+  return m_unmap ? ::mbmsrv_map_mon_memory(bm_id, m_bm) : MBM_NORMAL;
 }
 
 /// Unmap BM memory sections
 int MBM::Manager::unmapSections()  {
-  return ::mbmsrv_unmap_memory(m_bm);
+  return m_unmap ? ::mbmsrv_unmap_memory(m_bm) : MBM_NORMAL;
 }
 
 /// Release the server's BMID and give ownership to the caller

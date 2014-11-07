@@ -37,6 +37,8 @@ enum MBM_FrequencyTypes  {
 };
 
 typedef int (*RTL_ast_t)(void*);
+struct ServerBMID_t;
+typedef ServerBMID_t* ServerBMID;
 
 #ifdef MBM_IMPLEMENTATION
 struct BMDESCRIPT;
@@ -44,16 +46,13 @@ struct CONTROL;
 struct USER;
 struct EVENT;
 struct BufferMemory;
-struct ServerBMID_t;
 typedef BMDESCRIPT* BMID;
-typedef ServerBMID_t* ServerBMID;
 #else
 typedef void* BMID;
 typedef void* USER;
 typedef void* CONTROL;
 typedef void* EVENT;
 typedef void  BufferMemory;
-typedef void* ServerBMID;
 #endif
 
 #define MBM_INV_DESC   ((BMID)-1)

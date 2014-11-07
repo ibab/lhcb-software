@@ -1,3 +1,10 @@
+// $Id: ISuspendable.h,v 1.2 2007-12-06 14:39:34 frankb Exp $
+//====================================================================
+//
+//  Package    : OnlineBase
+//  Author     : M.Frank
+//====================================================================
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/ISuspendable.h,v 1.2 2007-12-06 14:39:34 frankb Exp $
 #ifndef _MBM_MANAGER_H
 #define _MBM_MANAGER_H
 
@@ -10,8 +17,8 @@ typedef struct ServerBMID_t* ServerBMID;
  */
 namespace MBM {
 
-  /* @class MBM::Manager  Manager.h  MBM/Manager.h
-   *
+  /// Basic class to access buffer manager information for monitoring purposes.
+  /*
    * @author  M.Frank
    * @version 1.0
    * @date    10/01/2006
@@ -27,6 +34,8 @@ namespace MBM {
     const   char* bm_id;
     /// Global section handle to buffer inventory
     lib_rtl_gbl_t bm_all;
+    /// Flag to prevent unmapping shared buffers
+    bool          m_unmap;
   private:
     /// A copy constructor cannot be provided
     Manager(const Manager& c);
@@ -35,6 +44,8 @@ namespace MBM {
   public:
     /// Default constructor
     Manager();
+    /// Constructor taking already mapped buffers
+    Manager(ServerBMID bm);
     /// Default destructor 
     virtual ~Manager();
     /// Access the server's BMID
