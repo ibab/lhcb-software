@@ -13,7 +13,7 @@ apply_pattern linker_library library=GaudiUPI
 # ==================== Component libraries ==================================
 library GaudiUPIComp  ../components/*.cpp
 apply_pattern component_library library=GaudiUPIComp
-apply_pattern generate_rootmap library=GaudiUPIComp
+apply_pattern generate_componentlist library=GaudiUPIComp
 macro_append GaudiUPIComp_dependencies  " GaudiUPI "
 #
 # ==================== private use only =====================================
