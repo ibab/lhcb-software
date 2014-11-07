@@ -25,8 +25,11 @@
 
 #define mtcp_inline_syscall(name, num_args, args...) INLINE_SYSCALL(name, num_args, args)
 
-#define mtcp_sys_rt_sigaction(args...)   mtcp_inline_syscall(rt_sigaction,4,args)
-#define mtcp_sys_sigaction(sig,nact,oact) mtcp_sys_rt_sigaction(sig,nact,oact,NSIG/8)
+#define mtcp_sys_mlock(args...)            mtcp_inline_syscall(mlock,2,args)
+#define mtcp_sys_munlock(args...)          mtcp_inline_syscall(munlock,2,args)
+#define mtcp_sys_nanosleep(args...)        mtcp_inline_syscall(nanosleep,1,args)
+#define mtcp_sys_rt_sigaction(args...)     mtcp_inline_syscall(rt_sigaction,4,args)
+#define mtcp_sys_sigaction(sig,nact,oact)  mtcp_sys_rt_sigaction(sig,nact,oact,NSIG/8)
 
 #define mtcp_sys_truncate(args...)         mtcp_inline_syscall(truncate,2,args)
 #define mtcp_sys_ftruncate(args...)        mtcp_inline_syscall(ftruncate,2,args)

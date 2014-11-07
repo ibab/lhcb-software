@@ -257,13 +257,16 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_memory_scan(AreaHandler* han
         ::sscanf(low,"%lx",&a.low);
         ::sscanf(high,"%lx",&a.high);
         ::sscanf(off,"%lx",&a.offset);
-        a.size = a.high - a.low;
+        a.size  = a.high - a.low;
 	m_memcpy(a.prot,prot,sizeof(int));
         if ( !file[0] ) {
           unsigned long brk = (unsigned long)mtcp_sys_brk(0);
           if ( brk >= a.low && brk <= a.high ) file = "[heap]";
         }
         a.name_len = m_strcpy(a.name,file);
+	a.istmp = m_intcheck(a.name,"/tmp/") == 0 ? 0 : 'y';
+	a.isdel = m_strfind(a.name,"(deleted)") == 0 ? 0 : 'y';
+	a.hasData = 0;
         long sc = (*handler->f_handle)(handler,count,a);
         if ( sc > 0 ) count++;
       }

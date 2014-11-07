@@ -199,19 +199,62 @@ HIDDEN(size_t) m_fcopy(int to_fd, int from_fd, size_t len) {
 }
 
 HIDDEN(size_t) m_fskip(int fd, size_t len) {
-  long c, rem=len%sizeof(c);
-  for(size_t i=0, n=len/sizeof(c); i<n;++i)
-    mtcp_sys_read(fd,&c,sizeof(c));
+  long rc, tot=0, c[8], rem=len%sizeof(c);
+  for(size_t i=0, n=len/sizeof(c); i<n;++i)   {
+    rc = mtcp_sys_read(fd,c,sizeof(c));
+    if ( rc >= 0 ) tot += rc;
+    if ( rc < 0 )   {
+      mtcp_output(MTCP_ERROR,"fd:%d, FAILED to fskip data. "
+		  "rc=%d errno=%d\n",fd,rc,rc,mtcp_sys_errno);
+    }
+  }
   if ( 0 != rem ) {
     char p;
-    for(size_t i=0, n=rem; i<n;++i)
-      mtcp_sys_read(fd,&p,sizeof(p));
+    for(size_t i=0, n=rem; i<n;++i)  {
+      rc = mtcp_sys_read(fd,&p,sizeof(p));
+      if ( rc >= 0 ) tot += rc;
+      if ( rc < 0 )   {
+	mtcp_output(MTCP_ERROR,"fd:%d, FAILED to fskip data. "
+		    "rc=%d errno=%d\n",fd,rc,rc,mtcp_sys_errno);
+      }
+    }
   }
   return len;
 }
 
 HIDDEN(size_t) m_fread(int fd, void* t, size_t len) {
-  return mtcp_sys_read(fd,t,len);
+  char*  p = (char*)t;
+  //size_t l = len;
+  char*  s = p;
+  //char*  e = s + l;
+  int err = 0;
+  mtcp_sys_errno = 0;
+  while(len > 0)  {
+    long rc = mtcp_sys_read(fd,p,len);
+    if ( rc < 0 )   {
+#if 0
+      mtcp_output(MTCP_ERROR,"fd:%d, **************************************** FAILED to fread data to %p at %p "
+		  "after %d bytes todo:%d bytes rc=%d errno=%d\n",
+		  fd,s,p,long(p-s),len,rc,mtcp_sys_errno);
+#endif
+      if ( ++err < 3 )  {
+	long lsleep = 10000000;
+	mtcp_sys_nanosleep(lsleep);
+	//mtcp_sys_brk(e);
+	continue;
+      }
+      else {
+	m_fskip(fd,len);
+	return p - s;
+	//while(1) mtcp_sys_nanosleep(1000000);
+      }
+      break;
+    }
+    len -= rc;
+    err = 0;
+    p += rc;
+  }
+  return p - s;
 }
 
 HIDDEN(size_t) m_writeset(int fd, unsigned char pattern, size_t siz) {

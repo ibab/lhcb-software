@@ -320,6 +320,7 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process
   if ( fd>0 ) {
     int in = 0;
     int numArea = 0;
+    long bytes_sections = 0;
     in += readMarker(fd,MEMMAP_BEGIN_MARKER);
     in += readInt(fd,&numArea);
     Area a;
@@ -327,12 +328,16 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_process_fread_memory(Process
     for(int i=0; i<numArea; ++i) {
       long rc = checkpointing_area_fread(&a,fd,checkpointing_process_fmap_memory,(const AreaHandler*)0);
       if ( rc<0 ) {
-        mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d] %s\n",i,a.name);
+	off_t offset = mtcp_sys_lseek(fd,0,SEEK_CUR);
+        mtcp_output(MTCP_FATAL,"restore: Failed to restored area [%d of %d] %s file offset:%p errno:%d\n",
+		    i,numArea,a.name,offset,mtcp_sys_errno);
       }
+      bytes_sections += (a.high-a.low);
       in += rc;
     }
     in += readMarker(fd,MEMMAP_END_MARKER);
-    mtcp_output(MTCP_INFO,"fd:%d, restore: Read %ld bytes of mmap area data for %d areas\n",fd,in,numArea);
+    mtcp_output(MTCP_INFO,"fd:%d, restore: Read %ld bytes of mmap data for %d areas "
+		"with a total of %d [%p] bytes\n",fd,in,numArea,bytes_sections,bytes_sections);
     return in;
   }
   mtcp_output(MTCP_ERROR,"fd:%d, restore: Failed to read memory dump!\n",fd);
@@ -443,7 +448,7 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_read(Area* a, const voi
   in += m_memcpy(&l,in,sizeof(l));
   in += map ? (*map)(handler,*a,in,l) : l;
   in += checkMarker(in,MEMAREA_END_MARKER);
-  checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");
+  //checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");
   return addr_diff(in,addr);  
 }
 
@@ -476,9 +481,10 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_fread(Area* a,int fd, l
     }
     a->name_len = m_strlen(a->name);
   }
-  in += map ? (*map)(handler,*a,fd,l) : l;
+  long mapped_read = map ? (*map)(handler,*a,fd,l) : l;
+  in += mapped_read;
   in += readMarker(fd,MEMAREA_END_MARKER);
-  checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");
+  //checkpointing_area_print(a,MTCP_DEBUG,"Read memory area:");
   return in;
 }
 
@@ -549,8 +555,9 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int f
   }
 
   int  fd = 0;
-  int  map_prot = prot|MAP_FIXED;
-  bool copy_data = true;
+  int  file_flags = 0;            // see how to open it based on the access required
+  int  map_prot   = prot|MAP_FIXED;
+  bool copy_data  = true;
   //mtcp_output(MTCP_DEBUG,"restore: mmap file %s -- %s [%s] \n",
   //            nam,a.name,flags & MAP_ANONYMOUS ? "anaon" : "non-anaon");
 
@@ -566,29 +573,49 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int f
      * want to ever write the file.					     
      */
     if ( nam[0] == '/' ) { /* If not null string, not [stack] or [vdso] */
+      bool istmp = m_strncmp(nam,"/tmp/",5)==0;
       fd = mtcp_sys_open(nam,O_RDONLY,0);
-      if (fd < 0) fd = 0;
+      if ( istmp && fd < 0 )   {
+	for(size_t i=0; i<sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0]);++i) {
+	  SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[i];
+	  if ( tmp.fd > 0 && tmp.name[0] && 0==m_strncmp(a.name,tmp.name,m_strlen(tmp.name) )) {
+	    fd = tmp.fd;
+	    close_file = 0;
+	    mtcp_output(MTCP_INFO,"restore: Re-bind[1] %s to %s with fd=%d\n",a.name,tmp.name,fd);
+	    break;
+	  }
+	}
+      }
+      if (fd < 0 ) fd = 0;
       else flags ^= MAP_ANONYMOUS;
+      //if ( fd ) copy_data = false;
     }
     // We though need write access to the memory in order to fill it.
     map_prot |= PROT_WRITE;
   }
   else {  // Case of shared memory: NOT MAP_ANONYMOUS:
-    int file_flags = 0;            // see how to open it based on the access required
+    file_flags = 0;            // see how to open it based on the access required
     if ( (prot & (PROT_READ|PROT_EXEC) ) != 0            )  file_flags = O_RDONLY;
     if ( (prot & (PROT_WRITE|PROT_READ)) == (PROT_WRITE) )  file_flags = O_WRONLY;
     if ( (prot & (PROT_WRITE|PROT_READ)) == (PROT_WRITE|PROT_READ) ) file_flags = O_RDWR;
 
     fd = mtcp_sys_open(nam,file_flags,0);  // open it
-    if ( fd < 0 )  {    // Fatal: backing file doesn't exist:
+    if ( fd < 0 )  {
+      // Fatal: backing file doesn't exist: Check if it is in the list of temporaries...
+      char *p, *tmp_ptr, *ptr = m_chrfind((char*)nam,' ');
+      if ( ptr && m_strncmp(ptr," (deleted)",10) == 0) *ptr = 0;
+      for(p=ptr=(char*)nam;*p;++p) if(*p=='/')ptr=p;
+      size_t nam_len = m_strlen(ptr);
       for(size_t i=0; i<sizeof(chkpt_sys.tmpFiles)/sizeof(chkpt_sys.tmpFiles[0]);++i) {
         SysInfo::TmpFile& tmp = chkpt_sys.tmpFiles[i];
-        if ( tmp.fd > 0 ) {
-        }
-        if ( tmp.fd > 0 && tmp.name[0] && 0==m_strncmp(a.name,tmp.name,m_strlen(tmp.name) )) {
+	for(p=tmp_ptr=tmp.name;*p;++p) if(*p=='/')tmp_ptr=p;
+	size_t tmp_len = m_strlen(tmp_ptr);
+	mtcp_output(MTCP_INFO,"restore: try to match file %s [%s] with %s\n",nam,ptr,tmp_ptr);
+	if ( tmp_len == 0 || tmp_len != nam_len ) continue;
+        if ( tmp.fd > 0 && tmp.name[0] && 0==m_strncmp(ptr,tmp_ptr,tmp_len) ) {
           fd = tmp.fd;
           close_file = 0;
-          mtcp_output(MTCP_INFO,"restore: Re-bind %s to %s with fd=%d\n",a.name,tmp.name,fd);
+          mtcp_output(MTCP_INFO,"restore: Re-bind[2] %s to %s with fd=%d\n",a.name,tmp.name,fd);
           break;
         }
       }
@@ -596,12 +623,14 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int f
         mtcp_output(MTCP_FATAL,"restore: error %d opening mmap file %s\n",mtcp_sys_errno, nam);
       }
     }
-    copy_data = (file_flags == O_WRONLY || file_flags == O_RDWR) && (prot & PROT_WRITE);
+    //if ( a.prot[1] != 'w' || file_flags == O_RDONLY ) copy_data = false;
+    //else 
+      copy_data = (file_flags == O_WRONLY || file_flags == O_RDWR) && (prot & PROT_WRITE);
   }
 
-  mtcp_output(MTCP_DEBUG,"restore %sanon.%p-%p [%d,%d] %c%c%c%c o:%p fd:%d %s [%s] %s\n",
+  mtcp_output(MTCP_DEBUG,"restore %sanon.%p-%p [%d,%d] %c%c%c%c o:%p fd:%d mprot:$%X %s [%s] %s\n",
               (flags & MAP_ANONYMOUS) ? "non-" : "    ",addr,a.high,size,data_len,
-              a.prot[0],a.prot[1],a.prot[2],a.prot[3],fd==0 ? 0 : offset, fd, nam,
+              a.prot[0],a.prot[1],a.prot[2],a.prot[3],fd==0 ? 0 : offset, fd, map_prot, nam,
               data_len>0 ? "Move data" : "Skip data",
               flags & MAP_SHARED ? "Shared" : "");
   // Create the memory area. This mmap automatically unmaps old memory.
@@ -612,16 +641,39 @@ STATIC(long) CHECKPOINTING_NAMESPACE::checkpointing_area_map(const Area& a,int f
     mtcp_output(MTCP_FATAL,"restore: error %d mapping 0x%X bytes offset%d at %p ->%p\n",
                 err,size,offset,addr,data);
   }
-  // This mmapfile after prev. mmap is okay; use same args again. Posix says prev. map will be munmapped.
+  // This mmap-file after previous mmap is okay; use same args again. 
+  // Posix says previous map will be munmap'ped.
+  size_t read_len = 0;
+  const char* kind = "None";
   if ( data_len > 0 )   {
     if ( copy_data ) {
-      (fd_in > 0) ? m_fread(fd_in,addr,size) : m_memcpy(addr,in,size),in+=size;
+      if (fd_in > 0)   {
+	read_len = m_fread(fd_in,addr,size);
+	kind = "fread";
+      }
+      else   {
+	read_len = m_memcpy(addr,in,size);
+	kind = "memcpy";
+	in += size;
+      }
       if ( fd < 0 ) checkpointing_print_stack("from_file"); // ie. never!
     }
     else if ( fd_in > 0 ) {
-      m_fskip(fd_in,size);
+      read_len = m_fskip(fd_in,size);
+      kind = "fskip";
+    }
+    if ( read_len != size )   {
+      mtcp_output(MTCP_ERROR,"restore %sanon.%p-%p [%d,%d] %c%c%c%c o:%p fd:%d mprot:$%X %s [%s] %s\n",
+		  (flags & MAP_ANONYMOUS) ? "non-" : "    ",addr,a.high,size,data_len,
+		  a.prot[0],a.prot[1],a.prot[2],a.prot[3],fd==0 ? 0 : offset, fd, map_prot, nam,
+		  data_len>0 ? "Move data" : "Skip data",
+		  flags & MAP_SHARED ? "Shared" : "");
+      mtcp_output(MTCP_ERROR, "restore: ********************* "
+		  "Inconsistent data length %s (%s): %d bytes read. "
+		  "Should be:%d bytes\n", nam, kind, read_len, size);
     }
   }
+
   if ( !(prot & PROT_WRITE) && (map_prot&PROT_WRITE) ) {
     if (mtcp_sys_mprotect (addr,size,prot) < 0) {
       int err = mtcp_sys_errno;

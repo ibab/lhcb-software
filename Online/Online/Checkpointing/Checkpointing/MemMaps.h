@@ -29,6 +29,12 @@ namespace CHECKPOINTING_NAMESPACE {
     int     name_len;
     /// File protection bytes
     char    prot[4];
+    /// Is the area connected to temporary? 0<->y
+    char    istmp;
+    /// Is the area connected to a deleted file? 0<->y
+    char    isdel;
+    char    hasData;
+    char    _spare;
     /// Low address of the memory map
     unsigned long low;
     /// High address of the memory map

@@ -80,14 +80,19 @@ long Area::write(int fd, bool write_nulls)    const {
     long   bytes = 0;
     int    flg = mapFlags();
     size_t len = sizeof(Area)-sizeof(name)+name_len+1;
-
+#ifdef DEBUG_SAVING
+    {
+      off_t offset = mtcp_sys_lseek(fd,0,SEEK_CUR);
+      mtcp_output(MTCP_INFO,"Memory area START: offset:%p data: %d bytes size:%d bytes \"%s\"\n",offset,bytes,high-low,name);
+    }
+#endif
     bytes += writeMarker(fd,MEMAREA_BEGIN_MARKER);
     bytes += m_writemem(fd,this,len);
     // This may be optimized:
     // We normally only need:
     // if (flg & MAP_ANONYMOUS || flg & MAP_SHARED)
     len = checkpointing_area_datalength(this);
-    if ( !write_nulls && 0 == (len=checkpointing_area_datalength(this)) ) {
+    if ( !write_nulls && 0 == len ) {
       // Only write NULL-size marker
       bytes += writeInt(fd,0);
       checkpointing_area_print(this,MTCP_DEBUG,"EMPTY memory area:");
@@ -127,14 +132,21 @@ long Area::write(int fd, bool write_nulls)    const {
           }
           //bytes += m_writemem(fd,(void*)low,size);
         }
-        else 
-        {
+        else  {
           bytes += m_writemem(fd,(void*)low,size);
         }
         checkpointing_area_print(this,MTCP_DEBUG,"Wrote memory area:");
       }
     }
     bytes += writeMarker(fd,MEMAREA_END_MARKER);
+#ifdef DEBUG_SAVING
+    {
+      off_t offset = mtcp_sys_lseek(fd,0,SEEK_CUR);
+      mtcp_output(MTCP_INFO,"Memory area   END: offset:%p data: %d bytes "
+		  "size:%d high-low:%d bytes \"%s\"\n",
+		  offset,bytes,size,high-low,name);
+    }
+#endif
     return bytes;
   }
 }

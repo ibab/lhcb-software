@@ -156,6 +156,7 @@ STATIC(void) CHECKPOINTING_NAMESPACE::checkpointing_sys_aquire(SysInfo* sys) {
   ::getrlimit(RLIMIT_STACK, &lim);
   sys->stackLimitCurr = lim.rlim_cur;
   sys->stackLimitHard = lim.rlim_max;
+  sys->envp = environ;
 
   // Check heap
   void* next_break = mtcp_sys_brk(sys->saved_break);
