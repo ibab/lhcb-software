@@ -96,6 +96,9 @@ namespace LHCb    {
     /// Connect when ???
     const std::string& connectWhen()  const    {   return m_connectWhen;    }
 
+    /// Create proper buffer name depending on partitioning
+    std::string bufferName(const std::string& nam)  const;
+
     /// Internal initialization
     virtual StatusCode i_init();
     

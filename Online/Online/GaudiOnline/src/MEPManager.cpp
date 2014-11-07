@@ -93,17 +93,23 @@ StatusCode MEPManager::initializeBuffers()  {
   return StatusCode::SUCCESS;
 }
 
-/// Connect to optional MBM buffer
-StatusCode MEPManager::connectBuffer(const string& nam)  {
-  char txt[32];
+/// Create proper buffer name depending on partitioning
+std::string MEPManager::bufferName(const std::string& nam)  const   {
   string bm_name = nam;
   if ( m_partitionBuffers ) {
+    char txt[64];
     bm_name += "_";
     if ( m_partitionName.empty() )
       bm_name += _itoa(m_partitionID,txt,16);
     else
       bm_name += m_partitionName;
   }
+  return bm_name;
+}
+
+/// Connect to optional MBM buffer
+StatusCode MEPManager::connectBuffer(const string& nam)  {
+  string bm_name = bufferName(nam);
   if( m_buffMap.find(bm_name) == m_buffMap.end() ) {
     BMID bmid = ::mbm_include(bm_name.c_str(),m_procName.c_str(),m_partitionID);
     if ( bmid == MBM_INV_DESC )  {
@@ -202,19 +208,9 @@ StatusCode MEPManager::cancel()  {
 MBM::Producer* MEPManager::createProducer(const string& buffer,const string& instance) {
   map<string,BMID>::iterator i=m_buffMap.find(buffer);
   if ( i == m_buffMap.end() ) {
-    string bm_name = buffer;
-    bm_name += "_";
-    if ( m_partitionName.empty() ) {
-      char txt[32];
-      bm_name += _itoa(m_partitionID,txt,16);
-      i=m_buffMap.find(buffer);
-    }
-    else  {
-      bm_name += m_partitionName;
-      i=m_buffMap.find(buffer);
-    }
+    string bm_name = bufferName(buffer);
+    i = m_buffMap.find(bm_name);
   }
-
   if ( i != m_buffMap.end() ) {
     BMID bmid = (*i).second;
     return new MBM::Producer(bmid,instance,partitionID());
@@ -226,19 +222,9 @@ MBM::Producer* MEPManager::createProducer(const string& buffer,const string& ins
 MBM::Consumer* MEPManager::createConsumer(const string& buffer,const string& instance) {
   map<string,BMID>::iterator i=m_buffMap.find(buffer);
   if ( i == m_buffMap.end() ) {
-    string bm_name = buffer;
-    bm_name += "_";
-    if ( m_partitionName.empty() ) {
-      char txt[32];
-      bm_name += _itoa(m_partitionID,txt,16);
-      i=m_buffMap.find(buffer);
-    }
-    else  {
-      bm_name += m_partitionName;
-      i=m_buffMap.find(buffer);
-    }
+    string bm_name = bufferName(buffer);
+    i = m_buffMap.find(bm_name);
   }
-
   if ( i != m_buffMap.end() ) {
     BMID bmid = (*i).second;
     return new MBM::Consumer(bmid,instance,partitionID());

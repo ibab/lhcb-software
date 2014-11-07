@@ -2,7 +2,7 @@
 ApplicationMgr.SvcOptMapping         = { "LHCb::FILEEvtSelector/EventSelector" };
 Runable.MEPManager                   = "";
 ApplicationMgr.TopAlg               += { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
-ApplicationMgr.EvtMax                = 5;
+ApplicationMgr.EvtMax                = 5000;
 Dump.CheckData                       = 0;
 Dump.DumpData                        = 1;
 Dump.FullDump                        = 1;
@@ -10,11 +10,12 @@ Dump.OutputLevel                     = 4;
 Dump.Debug                           = 0;
 
 StoreExplorerAlg.Load                = 1;
-StoreExplorerAlg.PrintFreq           = 0.0001;
+StoreExplorerAlg.PrintFreq           = 0.002;
 
 EventSelector.Input                  = "mepData_0.dat";
 EventSelector.Input                  = "$HOME/data/data.mdf";
 EventSelector.Input                  = "data/mdfData_1.dat";
-EventSelector.Input                  = "data/Run_137312_0000000002.raw";
+EventSelector.Input                  = "data";
 EventSelector.Decode = false;
 EventSelector.OutputLevel = 1;
+//EventSelector.AllowedRuns = {"146124"};

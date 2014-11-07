@@ -63,6 +63,8 @@ namespace LHCb
     std::string              m_brokenHostsFile;
     /// Property: List of runs to be processed (as strings!)
     std::vector<std::string> m_allowedRuns;
+    /// Property: Maximum number of seconds to wait for consumers (default: 20 seconds)
+    int                      m_maxConsWait;
 
     /// Monitoring quantity: Number of events processed
     int                      m_evtCount;
@@ -116,6 +118,7 @@ namespace LHCb
 #include "GaudiKernel/IIncidentSvc.h"
 //#include "GaudiOnline/HltBufferedIOReader.h"
 #include "GaudiOnline/MEPManager.h"
+#include "MBM/BufferInfo.h"
 #include "MDF/MEPEvent.h"
 #include "MDF/MDFHeader.h"
 #include "RTL/rtl.h"
@@ -170,6 +173,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   declareProperty("FilePrefix",  m_filePrefix      = "Run_");
   declareProperty("BrokenHosts", m_brokenHostsFile = "");
   declareProperty("DeleteFiles", m_deleteFiles     = true);
+  declareProperty("ConsumerWait",m_maxConsWait     = 20);
   declareProperty("AllowedRuns", m_allowedRuns);
   m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
@@ -387,14 +391,38 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
   }
 }
 
+static bool check_consumers(const MBM::BufferInfo& info, int pid, int evtyp)   {
+  return info.num_consumers_partid_evtype(pid,evtyp) != 0;
+}
+static bool check_consumers_partid(const MBM::BufferInfo& info, int pid)   {
+  return info.num_consumers_partid(pid) != 0;
+}
+
 /// IRunable implementation : Run the class implementation
 StatusCode HltBufferedIOReader::i_run()  {
   const RawBank* bank = (RawBank*)this;
+  int cons_wait;
   int file_handle = 0;
+  int partid = m_mepMgr->partitionID();
   bool files_processed = false;
   bool m_goto_paused = true;
+  std::string bm_name = m_mepMgr->bufferName(m_buffer);
+  MBM::BufferInfo mbmInfo;
+  
+
   m_receiveEvts = true;
-  ::lib_rtl_sleep(10000);
+
+  /// Before we start, we need to check if there are consumers present:
+  mbmInfo.attach(bm_name.c_str());
+
+  for(cons_wait = m_maxConsWait; !check_consumers_partid(mbmInfo,partid) && --cons_wait>=0; )
+    ::lib_rtl_sleep(1000);
+
+  if ( cons_wait <= 0 )   {
+    incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
+    return error("No consumers present to consume event. ERROR & Return!");
+  }
+  
   while (1)  {
     files_processed = scanFiles() == 0;
     if ( m_goto_paused && files_processed )   {
@@ -428,6 +456,7 @@ StatusCode HltBufferedIOReader::i_run()  {
       }
       if ( file_handle != 0 )  {
         int size_buf[3];
+	off_t file_position = ::lseek(file_handle, 0, SEEK_CUR);
         int status = ::file_read(file_handle, (char*)size_buf, sizeof(size_buf));
         if (status <= 0)   {
           ::close(file_handle);
@@ -500,8 +529,25 @@ StatusCode HltBufferedIOReader::i_run()  {
 	    continue;
 	  }
 	  if (status == MBM_NORMAL)  {
+	    // Check if there are consumers pending before declaring the event.
+	    // This should be a rare case, since there ARE (were?) consumers.
+	    // Though: In this case the event is really lost!
+	    // But what can I do...
+	    for(cons_wait = m_maxConsWait; !check_consumers(mbmInfo,partid,dsc.type) && --cons_wait>=0; )
+	      ::lib_rtl_sleep(1000);
+
+	    if ( cons_wait <= 0 )  {
+	      error("No consumers present to consume event. Safe rest of file and finish."
+		    " Skipping rest of file: "+m_current);
+	      m_receiveEvts = false;
+	      ::lseek(file_handle, file_position, SEEK_SET);
+	      safeRestOfFile(file_handle);
+	      /// Go to state PAUSED, all the work is done
+	      incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
+	      return StatusCode::FAILURE;
+	    }
 	    //cout << "Event length:" << dsc.len << endl;
-	    dsc.mask[0] = m_mepMgr->partitionID();
+	    dsc.mask[0] = partid;
 	    dsc.mask[1] = ~0x0;
 	    dsc.mask[2] = ~0x0;
 	    dsc.mask[3] = ~0x0;
