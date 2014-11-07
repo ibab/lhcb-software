@@ -1,0 +1,394 @@
+// $Id: PrTTCounter.cpp,v 1.4 2007-07-19 08:55:54 jonrob Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiAlg/IHistoTool.h"
+
+
+// local
+#include "PrTTCounter.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : PatTTCounter
+//
+// 2006-06-28 : Olivier Callot
+//-----------------------------------------------------------------------------
+
+// Declaration of the Tool Factory
+DECLARE_TOOL_FACTORY( PrTTCounter )
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+PrTTCounter::PrTTCounter( const std::string& type,
+                            const std::string& name,
+                            const IInterface* parent )
+  : GaudiTool ( type, name , parent )
+{
+  declareInterface<IPrTTCounter>(this);
+  m_link      = NULL;
+  m_invTable = NULL;
+  m_writeHistos = -1;
+  m_eta25cut = false;
+  m_extrapolator= NULL;
+  //m_idealStateCreator= NULL;
+  m_triggerNumbers = false;
+  m_writeXYEffHistos = false;
+  //m_printparticlekey = false;
+  m_nbGhost   = 0.;
+  m_nbGhostHit = 0.;
+  m_totTrack   = 0;
+  declareProperty( "TitleSize", m_titleSize = 30 );
+
+  std::string title(name);
+  while(title.find(".") < title.size()){
+   title = title.substr( title.find(".")+1);
+  }
+  m_title = title;
+}
+//=============================================================================
+// Destructor
+//=============================================================================
+PrTTCounter::~PrTTCounter() {} 
+
+//=========================================================================
+//  
+//=========================================================================
+StatusCode PrTTCounter::finalize ( ) {
+  if ( NULL != m_link ) delete m_link;
+  return GaudiTool::finalize();
+}
+
+//=========================================================================
+//  Add a selection for the container monitoring
+//=========================================================================
+void PrTTCounter::addSelection ( std::string name, bool writeHisto ) {
+   if ( name.size() > m_titleSize ) {
+    name = name.substr( m_titleSize );
+  }
+  m_name.push_back( name );
+  m_writeHisto.push_back(writeHisto);
+  m_nbTrack.push_back( 0. );
+  m_mcHits.push_back( 0. );
+  m_foundOK.push_back( 0. );
+  m_wrong.push_back( 0. );
+
+  m_nbTrack3.push_back( 0. );
+  m_mcHits3.push_back( 0. );
+  m_foundOK3.push_back( 0. );
+  m_wrong3.push_back( 0. );  
+}
+//=========================================================================
+//  Event initialisation, get the linker table.
+//=========================================================================
+void PrTTCounter::initEvent (const IHistoTool* htool = NULL) {
+  m_validData = false;
+
+  if ( !exist<LHCb::Tracks>( m_container ) ) 
+  {
+     if( msgLevel(MSG::DEBUG) ) debug() << "Track container '" << m_container << "' does not exist" <<endmsg;
+    return;
+    }
+
+  if ( NULL == m_link ) m_link = new TrackAsct( evtSvc(), m_container );
+  m_invTable  = m_link->inverse();
+  if ( NULL == m_invTable || NULL == m_link->direct() ) 
+  { 
+    Warning( "Problem with MC associations for " + m_container );
+    return; 
+  }
+  m_validData = true;
+
+  m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
+  //m_idealStateCreator = tool<IIdealStateCreator>("IdealStateCreator", "IdealStateCreator", this);
+
+  // Process the ghost tracks
+  LHCb::Tracks* tracks = get<LHCb::Tracks>( m_container );
+  for ( LHCb::Tracks::const_iterator itT = tracks->begin(); tracks->end() != itT; ++itT ) 
+  {
+    const LHCb::Track* tr = (*itT);
+    LHCb::State state;
+    StatusCode sc = m_extrapolator->propagate( *tr, 9000, state );
+    if(!sc) continue;
+    // -- Protect against nonphysical states
+    if( isnan( state.x() ) || isnan( state.y() ) ) continue;
+    if ( m_link->direct()->relations( tr ).empty() ) {
+      double nbInTT = 0;
+      for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
+            tr->lhcbIDs().end() != itId; ++itId ) {
+        if ( (*itId).isST() ) {
+          if (  (*itId).isTT() || (*itId).isUT() ) nbInTT += 1.;
+        }
+      }
+      m_nbGhost += 1.;
+      if(htool && m_writeHistos>0 ){
+         htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Ghosts","Eta_Ghosts",0.,7.,50);
+        if((*itT)->type() != LHCb::Track::Velo ){
+          htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Ghosts","Phi_Ghosts",-3.142,3.142,25);
+          htool->plot1D((*itT)->pt(),m_title+"/Pt_Ghosts","Pt_Ghosts",0.,10000.,50);
+          htool->plot1D((*itT)->p(),m_title+"/P_Ghosts","P_Ghosts",0.,100000.,50);
+       }
+       if(m_writeXYEffHistos){
+	  htool->plot2D( state.x(),state.y() ,m_title+"/XYEff_Ghosts", "XYEff_Ghosts",-3000,3000.,-3000.,3000.0,100,100);
+       }
+       }
+      m_nbGhostHit += nbInTT;
+    }
+    if(htool && m_writeHistos>0 ){
+       htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Total","Eta_Total",0.,7.,50);
+      if((*itT)->type() != LHCb::Track::Velo ){
+        htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Total","Phi_Total",-3.142,3.142,25);
+        htool->plot1D((*itT)->pt(),m_title+"/Pt_Total","Pt_Total",0.,10000.,50);
+        htool->plot1D((*itT)->p(),m_title+"/P_Total","P_Total",0.,100000.,50);
+      }
+      if(m_writeXYEffHistos){
+	 htool->plot2D( state.x(),state.y() ,m_title+"/XYEff_Total", "XYEff_Total",-3000,3000.,-3000.,3000.0,100,100);
+      }
+    }
+    m_totTrack++;
+    if(m_triggerNumbers && ((*itT)->type() != LHCb::Track::Velo) && (*itT)->p() > 3000. && (*itT)->pt() > 500.){
+      if ( m_link->direct()->relations( tr ).empty() ){
+	// m_totGhostTrigger++;
+        if(htool && m_writeHistos>0 ){
+          htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Ghosts_P>3GeV_Pt>0.5GeV","Eta_Ghosts_P>3GeV_Pt>0.5GeV",0.,7.,50);
+          htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Ghosts_P>3GeV_Pt>0.5GeV","Phi_Ghosts_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
+          htool->plot1D((*itT)->pt(),m_title+"/Pt_Ghosts_P>3GeV_Pt>0.5GeV","Pt_Ghosts_P>3GeV_Pt>0.5GeV",0.,10000.,50);
+          htool->plot1D((*itT)->p(),m_title+"/P_Ghosts_P>3GeV_Pt>0.5GeV","P_Ghosts_P>3GeV_Pt>0.5GeV",0.,100000.,50);
+	  if(m_writeXYEffHistos){
+	 htool->plot2D( state.x(),state.y() ,m_title+"/XYEff_Ghosts_P>3GeV_Pt>0.5GeV", "XYEff_Ghosts_P>3GeV_Pt>0.5GeV",-3000,3000.,-3000.,3000.0,100,100);
+	  }
+	}
+      }
+      if(htool && m_writeHistos>0 ){
+        htool->plot1D((*itT)->pseudoRapidity(),m_title+"/Eta_Total_P>3GeV_Pt>0.5GeV","Eta_Total_P>3GeV_Pt>0.5GeV",0.,7.,50);
+        htool->plot1D((*itT)->momentum().Phi(),m_title+"/Phi_Total_P>3GeV_Pt>0.5GeV","Phi_Total_P>3GeV_Pt>0.5GeV",-3.142,3.142,25);
+        htool->plot1D((*itT)->pt(),m_title+"/Pt_Total_P>3GeV_Pt>0.5GeV","Pt_Total_P>3GeV_Pt>0.5GeV",0.,10000.,50);
+        htool->plot1D((*itT)->p(),m_title+"/P_Total_P>3GeV_Pt>0.5GeV","P_Total_P>3GeV_Pt>0.5GeV",0.,100000.,50);	
+      if(m_writeXYEffHistos){
+	 htool->plot2D( state.x(),state.y() ,m_title+"/XYEff__Total_P>3GeV_Pt>0.5GeV", "XYEff_Total_P>3GeV_Pt>0.5GeV",-3000,3000.,-3000.,3000.0,100,100);
+      }
+    }
+    }
+  }//end track loop
+}//end initialize event
+
+//=========================================================================
+//  Increment the counter for a given MC track, according to flags.
+//=========================================================================
+int PrTTCounter::countAndPlot(const IHistoTool* htool, const LHCb::MCParticle* part, std::vector<bool> flags, 
+                          std::vector<LHCb::LHCbID>& ids ) {
+  if ( !m_validData ) return  -1;
+
+  if ( flags.size() > m_name.size() ) {
+     Warning("Flag size mismatch").ignore();
+    if( msgLevel(MSG::DEBUG) )
+      debug() << "... Flag size " << flags.size() << " >  "
+              << m_name.size() << " declared selections" << endmsg;
+       return  -1 ;
+  }
+
+  InvRange trackList = m_invTable->relations( part );
+  int key = -1;
+  unsigned int nbTrack =0;
+  unsigned int maxRecHits = 0.;
+
+  std::vector<LHCb::LHCbID> ttIds;
+  
+  for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin();
+          ids.end() != itId; ++itId ) {
+    if ( (*itId).isST() ) {
+      if ( (*itId).stID().isTT() || (*itId).stID().isUT() ) ttIds.push_back( *itId );
+    }
+  }
+
+  if( msgLevel(MSG::VERBOSE) )
+    verbose() << "MCPart " << part->key() << " has " << ttIds.size() << " TT measurements "
+            <<endmsg;
+
+  std::vector<bool> shallIPlotTheHistograms( flags.size(), false);
+
+  for ( unsigned int kk = 0; flags.size() > kk; ++kk ) {
+    if ( flags[kk] ) {
+      for ( InvIterator it = trackList.begin(); trackList.end() != it; ++it ) {
+        const LHCb::Track* tr = it->to();
+	key = it->to()->key();
+        unsigned int nbOK = 0;
+        unsigned int nbWrong = 0;
+	
+        
+        for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
+              tr->lhcbIDs().end() != itId; ++itId ) {
+          if ( (*itId).isST() ) {
+            if (  (*itId).stID().isTT() || (*itId).stID().isUT() ) {
+              LHCb::LHCbID t = (*itId);
+	      bool found = false;
+              for ( std::vector<LHCb::LHCbID>::const_iterator itMc = ttIds.begin();
+                    ttIds.end() != itMc; ++itMc ) {
+                if ( t == (*itMc) ) found = true;
+              }
+              if ( found ) {
+		shallIPlotTheHistograms[kk] = true;
+                nbOK++;
+              } else {
+                nbWrong++;
+              } 
+            }
+          }
+        }
+	nbTrack ++;
+        m_nbTrack[kk] += 1.;
+        m_mcHits[kk]  += ttIds.size();
+        m_foundOK[kk] += nbOK;
+        m_wrong[kk]   += nbWrong;
+        if ( 2 < ttIds.size() ) {
+          m_nbTrack3[kk] += 1.;
+          m_mcHits3[kk]  += ttIds.size();
+          m_foundOK3[kk] += nbOK;
+          m_wrong3[kk]   += nbWrong;
+        }
+	 if ( 0 < nbTrack ) {
+            maxRecHits = std::max(maxRecHits,nbOK);
+                     }
+      }
+    }
+  }
+
+  const LHCb::MCParticle* mother = part;
+   while(mother->mother() != NULL)mother = mother->mother();
+   double PVz = mother->originVertex()->position().Z();
+   double mcq = part->particleID().threeCharge() > 0 ? 1. : -1.;
+
+  double PVx = part->originVertex()->position().X();
+  double PVy = part->originVertex()->position().Y();
+  double slopex = (part->momentum().Px())/(part->momentum().Pz());
+  double slopey = (part->momentum().Py())/(part->momentum().Pz());
+  double q_over_p = (mcq/3)/(part->momentum().P());
+  LHCb::State state;
+  state.setState(PVx,PVy, PVz, slopex, slopey, q_over_p);
+
+  StatusCode sc = m_extrapolator->propagate(state,9000);
+  //m_idealStateCreator->createState( part, 9000, state );
+
+  for( unsigned int k = 0; flags.size() > k; ++k ) {
+    if(!sc) continue;
+      // -- Protect against nonphysical states
+    if( isnan( state.x() ) || isnan( state.y() ) ) continue;
+    if(!htool)break;
+    if(m_writeHistos<(m_writeHisto[k]?1:2))continue;
+    if ( !flags[k] ) continue;
+    htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_reconstructible",m_name[k]+"_Eta_reconstructible",0.,7.,50);
+    htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_reconstructible",m_name[k]+"_Phi_reconstructible",-3.142,3.142,25);
+    htool->plot1D(part->momentum().Pt(),m_title+"/"+m_name[k]+"_Pt_reconstructible",m_name[k]+"_Pt_reconstructible",0.,10000.,50);
+    htool->plot1D(part->momentum().P(),m_title+"/"+m_name[k]+"_P_reconstructible",m_name[k]+"_P_reconstructible",0.,100000.,50);
+    if(m_writeHistos>1){
+       htool->plot1D(nbTrack,m_title+"/"+m_name[k]+"_expectedHits_reconstructible",m_name[k]+"_expectedHits_reconstructible",-0.5,20.5,21);
+      htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_reconstructible",m_name[k]+"_EtaPhi_reconstructible",0.,7.,-3.241,3.142,20,20);
+      if(m_writeXYEffHistos){
+	    htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYEff_reconstructible", "XYEff_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
+       }
+      if(mcq>0){
+        htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_pos_reconstructible",m_name[k]+"_Eta_pos_reconstructible",0.,7.,50);
+        htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_pos_reconstructible",m_name[k]+"_Phi_pos_reconstructible",-3.142,3.142,25);
+        htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_pos_reconstructible",m_name[k]+"_EtaPhi_pos_reconstructible",0.,7.,-3.241,3.142,20,20);
+	if(m_writeXYEffHistos){
+	    htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYEff_pos_reconstructible", "XYEff_pos_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
+	}
+      }else{
+        htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_neg_reconstructible",m_name[k]+"_Eta_neg_reconstructible",0.,7.,50);
+        htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_neg_reconstructible",m_name[k]+"_Phi_neg_reconstructible",-3.142,3.142,25);
+        htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_neg_reconstructible",m_name[k]+"_EtaPhi_neg_reconstructible",0.,7.,-3.241,3.142,20,20);
+	if(m_writeXYEffHistos){
+	    htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYEff_neg_reconstructible", "XYEff_neg_reconstructible",-3000,3000.,-3000.,3000.0,100,100);
+       }
+      }
+    }
+    if( !shallIPlotTheHistograms[k] ) continue;
+    //if ( !found ) continue; 
+    htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_reconstructed",m_name[k]+"_Eta_reconstructed",0.,7.,50);
+    htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_reconstructed",m_name[k]+"_Phi_reconstructed",-3.142,3.142,25);
+    htool->plot1D(part->momentum().Pt(),m_title+"/"+m_name[k]+"_Pt_reconstructed",m_name[k]+"_Pt_reconstructed",0.,10000.,50);
+    htool->plot1D(part->momentum().P(),m_title+"/"+m_name[k]+"_P_reconstructed",m_name[k]+"_P_reconstructed",0.,100000.,50);
+    //
+    //htool->plot1D(pmeas,m_title+"/"+m_name[k]+"_P_reconstructedmeasured",m_name[k]+"_P_reconstructedmeasured",0.,100000.,50);
+    //htool->plot1D(ptmeas,m_title+"/"+m_name[k]+"_Pt_reconstructedmeasured",m_name[k]+"_Pt_reconstructedmeasured",0.,10000.,50);
+    //htool->plot1D(etameas,m_title+"/"+m_name[k]+"_Eta_reconstructedmeasured",m_name[k]+"_Eta_reconstructedmeasured",0.,7.,50);
+    //htool->plot1D(phimeas,m_title+"/"+m_name[k]+"_Phi_reconstructedmeasured",m_name[k]+"_Phi_reconstructedmeasured",-3.142,3.142,25);
+ 
+
+    if(m_writeHistos>1){
+      htool->plot1D(nbTrack,m_title+"/"+m_name[k]+"_expectedHits_reconstructed",m_name[k]+"_expectedHits_reconstructed",-0.5,20.5,21);
+      htool->plot1D(maxRecHits,m_title+"/"+m_name[k]+"_reconstructedHits",m_name[k]+"_reconstructedHits",-0.5,20.5,21);
+      htool->plot1D(maxRecHits/nbTrack,m_title+"/"+m_name[k]+"_HitEff",m_name[k]+"_HitEff",0.0,1.1,50);
+      htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_reconstructed",m_name[k]+"_EtaPhi_reconstructed",0.,7.,-3.241,3.142,20,20);
+      if(m_writeXYEffHistos){
+	    htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYEff_reconstructed", "XYEff_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
+      }
+
+      if(mcq>0){
+        htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_pos_reconstructed",m_name[k]+"_Eta_pos_reconstructed",0.,7.,50);
+        htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_pos_reconstructed",m_name[k]+"_Phi_pos_reconstructed",-3.142,3.142,25);
+        htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_pos_reconstructed",m_name[k]+"_EtaPhi_pos_reconstructed",0.,7.,-3.241,3.142,20,20);
+	if(m_writeXYEffHistos){
+	    htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYEff_pos_reconstructed", "XYEff_pos_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
+	}
+      }else{
+        htool->plot1D(part->momentum().Eta(),m_title+"/"+m_name[k]+"_Eta_neg_reconstructed",m_name[k]+"_Eta_neg_reconstructed",0.,7.,50);
+        htool->plot1D(part->momentum().Phi(),m_title+"/"+m_name[k]+"_Phi_neg_reconstructed",m_name[k]+"_Phi_neg_reconstructed",-3.142,3.142,25);
+        htool->plot2D(part->momentum().Eta(),part->momentum().Phi(),m_title+"/"+m_name[k]+"_EtaPhi_neg_reconstructed",m_name[k]+"_EtaPhi_neg_reconstructed",0.,7.,-3.241,3.142,20,20);
+	if(m_writeXYEffHistos){
+	    htool->plot2D( state.x(),state.y() ,m_title+"/"+m_name[k]+"XYEff_neg_reconstructed", "XYEff_neg_reconstructed",-3000,3000.,-3000.,3000.0,100,100);
+	}
+      }
+    }
+  }
+  return key;
+}
+
+//=========================================================================
+//  Print at the end the statistics
+//=========================================================================
+void PrTTCounter::printStatistics ( ) {
+  if ( m_totTrack == 0 ) return;
+   m_title.resize( m_titleSize, ' ' );
+
+  info() << "++++ TT Efficiency for " << m_container << " ++++  ";
+  if ( 0 != m_nbGhost ) {
+    double bad = m_nbGhostHit / m_nbGhost;
+    info() << "\33[1;36m" << format( "%6.0f ghost, %5.2f TT per track", m_nbGhost, bad );
+  }
+  info() << "\33[0m" << endmsg;
+  
+  for ( unsigned int kk = 0; m_name.size() > kk; ++kk ) {
+    if ( 0.5 > m_nbTrack[kk] ) continue;
+    double eff = 0.;
+    double bad = 0.;
+    double meanHits = 0.;
+    if ( 0.5 < m_nbTrack[kk] ) {
+      meanHits = m_mcHits[kk]  / m_nbTrack[kk];
+      eff      = m_foundOK[kk] / m_nbTrack[kk];
+      bad      = m_wrong[kk]   / m_nbTrack[kk];
+    }
+
+    double eff3 = 0.;
+    double bad3 = 0.;
+    double meanHits3 = 0.;
+    if ( 0.5 < m_nbTrack3[kk] ) {
+      meanHits3 = m_mcHits3[kk]  / m_nbTrack3[kk];
+      eff3      = m_foundOK3[kk] / m_nbTrack3[kk];
+      bad3      = m_wrong3[kk]   / m_nbTrack3[kk];
+    }
+    
+    std::string nameformat = m_name[kk];
+    std::string blank ( m_titleSize-nameformat.size(), ' ');
+    nameformat = blank + nameformat;
+    info() << "  " << nameformat //m_name[kk]
+           << format( " :%6.0f tr %5.2f mcTT, OK%5.2f wrong%5.2f",
+                      m_nbTrack[kk], meanHits, eff, bad);
+    info() << format( " %6.0f tr>3TT %5.2f mcTT, OK%5.2f wrong %5.2f",
+                      m_nbTrack3[kk], meanHits3, eff3, bad3) << endmsg;
+  }
+}
+
+//=============================================================================

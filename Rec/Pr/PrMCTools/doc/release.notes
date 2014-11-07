@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-11-07 - Svende Braun
+- Add PrTTCounter, PrChecker2 and PrCounter2 for efficiency studies, add LokiMC to requirements file. Temporary solution only.
+
 !========================= PrMCTools v2r4p1 2014-10-14 =========================
 ! 2014-09-18 - Michel De Cian
 - Add some more doxygen comments to PrPlotFTHits.

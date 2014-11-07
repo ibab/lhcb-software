@@ -19,6 +19,7 @@ use   LinkerEvent       v*   Event
 use   PrKernel          v*   Pr
 use   VPDet             v*   Det
 use   TrackInterfaces   v*   Tr
+use   LoKiMC            v*   Phys
 
 include_path      none
 #=====================================================================
