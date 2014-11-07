@@ -28,6 +28,8 @@ namespace MEPRxSys {
   int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname, 
 		bool mepreq, std::string &errmsg);
   int rx_select(int sockfd, int msec);
+  int open_sock2(int ipproto, int rxbufsiz, int netdev, std::string ifname, 
+		bool mepreq, std::string &errmsg);
   int recv_msg(int sockfd, void *buf, int len,  int flags);
   int recv_msg(int sockfd, void *buf, int len,  int flags, u_int64_t *whentsc,
 	       u_int64_t *when, std::string &errmsg);

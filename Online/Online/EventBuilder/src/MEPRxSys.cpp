@@ -38,6 +38,7 @@
 #include <arpa/inet.h>
 #include <sys/time.h>
 #include <sys/poll.h>
+#include <net/if.h>
 #endif // ifndef _WIN32
 // Like the Windows and Unix syscalls
 // *all* functions return 0 on success and > 0 on a failure
@@ -226,6 +227,68 @@ int open_sock(int ipproto, int rxbufsiz, int netdev, std::string ifname,
             errmsg = "bind";
             goto shut_out;
         }
+    }
+    if (mepreq) {
+        int val;
+        val = MEP_REQ_TTL;
+        if (setsockopt(retSockFd, SOL_IP, IP_TTL, (const char *) &val, sizeof(int))) {
+            errmsg = "setsockopt SOL_IP TTL";
+            goto shut_out;
+        }
+    }
+    return retSockFd;
+shut_out:
+    shutdown(retSockFd, SHUT_RD);
+drop_out:
+    return -1;
+}
+
+int open_sock2(int ipproto, int rxbufsiz, int netdev, std::string ifname,
+              bool mepreq, std::string &errmsg)
+{
+    int retSockFd = -1;
+    char netdev_name[IFNAMSIZ];
+    int fd;
+    int on = 1;
+    if ((fd = open("/proc/raw_cap_hack", O_RDONLY)) != -1) {
+        ioctl(fd, 0, 0);
+        close(fd);
+    } // if we can't open the raw_cap_hack we have to be root
+    u_int32_t myaddr = inet_addr(ifname.c_str());
+    struct in_addr addr;
+    addr.s_addr = myaddr;
+    struct sockaddr_in saddr = {AF_INET, 0, addr,{0,}};
+    if ((retSockFd = socket(AF_INET, SOCK_RAW, ipproto)) < 0) {
+        errmsg = "socket";
+        goto drop_out;
+    }
+    if (setsockopt(retSockFd, SOL_SOCKET, SO_RCVBUF, (const char *)
+                   &rxbufsiz, sizeof(rxbufsiz))) {
+        errmsg = "setsockopt SO_RCVBUF";
+        goto shut_out;
+    }
+    if (setsockopt(retSockFd, SOL_SOCKET, SO_TIMESTAMP,
+                   &on, sizeof(on))) {
+        errmsg = "setsockopt SO_TIMESTAMP";
+        goto shut_out;
+    }
+    if (!ifname.empty()) {
+        ::snprintf(netdev_name, sizeof(netdev_name), ifname.c_str(), netdev);
+        errmsg = netdev_name;
+        errmsg = "Binding to " + errmsg;
+        if (setsockopt(retSockFd, SOL_SOCKET, SO_BINDTODEVICE, (void *) netdev_name,
+                       IFNAMSIZ)) {
+            errmsg = "setsockopt SO_BINDTODEVICE";
+            goto shut_out;
+        }
+    } else {
+        if (bind(retSockFd, (const struct sockaddr *) &saddr, sizeof(saddr))) {
+            errmsg = "bind";
+            goto shut_out;
+        }
+        char blob[16];
+        ::sprintf(blob, "%8x", myaddr);
+        errmsg = "Setup direct binding " + std::string(blob);
     }
     if (mepreq) {
         int val;

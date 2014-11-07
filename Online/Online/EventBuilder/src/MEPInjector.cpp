@@ -447,8 +447,8 @@ if (!sc.isSuccess()) {
     else {
     	// Open the raw socket for IP header management
         if ((m_ToHLTSock =  MEPRxSys::open_sock_arb_source(m_MEPProto, m_MEPBufSize, errmsg)) < 0)    {
-	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	  return StatusCode::FAILURE;
+	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	        return StatusCode::FAILURE;
         }
     }
 
@@ -456,58 +456,52 @@ if (!sc.isSuccess()) {
     m_OdinTell1ID = -1;
 
     if (!m_AutoMode) {
-
     	// Opens sockets to the Online TFC and HLT nodes
         void *memory = extendBuffer(&m_OdinData, m_OdinBufSize);
         m_OdinMEP = new(memory) MEPEvent(0);
-
         if (m_OdinMEP == NULL) {
             ERRMSG(msgLog, "Odin MEP Buffer Allocation failed");
             return StatusCode::FAILURE;
         }
-
         msgLog << MSG::DEBUG << WHERE << "IP to send to HLT : "<<m_HLTIfIPAddr << " interface : "<<m_HLTEthInterface << endmsg;
         msgLog << MSG::DEBUG << WHERE << "IP to send to odin : "<<m_OdinIfIPAddr << " interface : "<<m_OdinEthInterface << endmsg;
 
-	if ((m_FromOdinSock = MEPRxSys::open_sock(m_MEPProto, m_OdinBufSize * m_PackingFactor, m_OdinEthInterface, m_OdinIfIPAddr, false, errmsg)) < 0) {
-	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	  return StatusCode::FAILURE;
-	}
+	      if ((m_FromOdinSock = MEPRxSys::open_sock2(m_MEPProto, m_OdinBufSize * m_PackingFactor, m_OdinEthInterface, 
+          "eth1", false, errmsg)) < 0) {
+	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	        return StatusCode::FAILURE;
+	      }
+        msgLog << MSG::DEBUG << "open_sock2 FromOdinSock " << errmsg << endmsg;
 
-        if ((m_FromHLTSock = MEPRxSys::open_sock(m_MEPReqProto,
+        if ((m_FromHLTSock = MEPRxSys::open_sock2(m_MEPReqProto,
                                               m_MEPReqBufSize,
-					      m_HLTEthInterface, m_HLTIfIPAddr,
+				                    	      m_HLTEthInterface, "eth1",
                                               true, errmsg)) < 0) {
-	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	  return StatusCode::FAILURE;
+	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	        return StatusCode::FAILURE;
         }
-
         if ((m_ToOdinSock = MEPRxSys::open_sock(m_MEPReqProto,
                                               m_MEPReqBufSize,
                                               m_OdinEthInterface, m_OdinIfIPAddr,
                                               true, errmsg)) < 0) {
-	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	  return StatusCode::FAILURE;
+	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	        return StatusCode::FAILURE;
         }
-
         // Initializes IPC tools
         if(sem_init(&m_OdinCount, 0, 0) == -1) {
             ERRMSG(msgLog, "Failed to initialize semaphore");
             perror("sem_init");
             return StatusCode::FAILURE;
         }
-
         if(sem_init(&m_MEPReqCount, 0, 0) == -1) {
             ERRMSG(msgLog, "Failed to initialize semaphore");
             perror("sem_init");
             return StatusCode::FAILURE;
         }
-
-
-	if (pthread_mutex_init(&m_SyncMainOdin, NULL)) {
+	      if (pthread_mutex_init(&m_SyncMainOdin, NULL)) {
             ERRMSG(msgLog, "Failed to initialize mutex");
             return StatusCode::FAILURE;
-	}
+	      }
         if (pthread_mutex_init(&m_SyncReqOdin, NULL)) {
             ERRMSG(msgLog, "Failed to initialize mutex");
             return StatusCode::FAILURE;
