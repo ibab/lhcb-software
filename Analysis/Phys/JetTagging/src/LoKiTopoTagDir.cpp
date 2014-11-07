@@ -98,6 +98,7 @@ bool LoKi::TopoTagDir::calculateJetProperty
   double maxTopoSumPt = 0;
   double maxTopoAlpha = -1;
   double maxTopoP = -1;
+  double maxTopoPtFractionInJet = -1;
 
   double maxTopoPTBDT = -1;
   double maxTopoPTR = -1;
@@ -117,6 +118,7 @@ bool LoKi::TopoTagDir::calculateJetProperty
   double maxTopoPTSumPt = 0;
   double maxTopoPTAlpha = -1;
   double maxTopoPTP = -1;
+  double maxTopoPTPtFractionInJet = -1;
 
 
   double sumTopo = 0;
@@ -149,11 +151,19 @@ bool LoKi::TopoTagDir::calculateJetProperty
   }
   
 
+
+
+  std::vector<const LHCb::Particle*>  jetDaus = extractDaugthers(jet);
+  
+
+
+
+
   LHCb::Particle::Range::iterator itopo;
 
   if(locseed){
 
-    //   std::cout<<"topo size" << topos.size() << std::endl;
+//       std::cout<<"topo size" << topos.size() << std::endl;
 
     //    const LHCb::VertexBase* JetOriVtx = m_dva->bestVertex ( jet );
 
@@ -161,6 +171,10 @@ bool LoKi::TopoTagDir::calculateJetProperty
       
 
       //      std::cout<<"helllllo cedric2"<<std::endl;
+
+
+
+
 
       LHCb::Track::ConstVector tracks;
       LHCb::Particle::ConstVector parts;
@@ -197,6 +211,38 @@ bool LoKi::TopoTagDir::calculateJetProperty
       //  double distance = std::sqrt(deltaRFunction((mypartS)));
       if (distance < 0.5){
 	
+
+
+
+	std::vector<const LHCb::Particle*>  topoDaus = extractDaugthers(mypartS);
+	
+	double EnergyFractionDenom   = 0;
+	double EnergyFraction = 0;
+	
+	for(int i_topo = 0; i_topo < (int) topoDaus.size();  i_topo++){
+	  
+	  if (topoDaus[i_topo]->proto() == NULL ) continue;
+	  const LHCb::Track* topoTrack = topoDaus[i_topo]->proto()->track();
+	  if (topoTrack == NULL ) continue;
+	  
+	  EnergyFractionDenom+=topoTrack->pt();
+
+	  for(int i_jet = 0; i_jet < (int) jetDaus.size();  i_jet++){
+	    
+	    
+	    if (jetDaus[i_jet]->proto() == NULL ) continue;
+	    const    LHCb::Track* jetTrack = jetDaus[i_jet]->proto()->track();
+	    if (jetTrack == NULL ) continue;
+	    
+	    if(topoTrack->key() == jetTrack->key()){
+	      EnergyFraction+=topoTrack->pt();
+	      break;
+	    }
+
+	  }
+	}
+	EnergyFraction /= EnergyFractionDenom;
+
 	Gaudi::XYZVector B2 =  mypartS->momentum().Vect();
 	
 
@@ -222,7 +268,7 @@ bool LoKi::TopoTagDir::calculateJetProperty
 
 
 
-
+	if(EnergyFraction >= maxTopoPTPtFractionInJet){
 	if(mypartS->pt() > maxTopoPTPt){
 
 	  double  SumPt = 0;
@@ -301,9 +347,14 @@ bool LoKi::TopoTagDir::calculateJetProperty
 	  maxTopoPTSumPt = SumPt;
 	  maxTopoPTAlpha = B.theta();
 	  maxTopoPTP = mypartS->momentum().P();
+	  maxTopoPTPtFractionInJet= EnergyFraction;
 
 	}
+	}
 
+
+
+	if(EnergyFraction >= maxTopoPtFractionInJet){
 
 	if(topoVal > maxTopoBDT){
 
@@ -380,7 +431,8 @@ bool LoKi::TopoTagDir::calculateJetProperty
 	  maxTopoSumPt = SumPt;
 	  maxTopoAlpha = B.theta();
 	  maxTopoP = mypartS->momentum().P();
-
+	  maxTopoPtFractionInJet= EnergyFraction;
+	}
 	}
 
 	sumTopo+=topoVal;
@@ -412,6 +464,7 @@ bool LoKi::TopoTagDir::calculateJetProperty
   jetWeight["maxTopoPTSumPt"]=maxTopoPTSumPt;
   jetWeight["maxTopoPTAlpha"]=maxTopoPTAlpha;
   jetWeight["maxTopoPTP"]=maxTopoPTP;
+  jetWeight["maxTopoPTPtFractionInJet"]=maxTopoPTPtFractionInJet;
 
   jetWeight["maxTopoBDT"]=maxTopoBDT;
   jetWeight["maxTopoPtRel"]=maxTopoPtRel;
@@ -431,6 +484,7 @@ bool LoKi::TopoTagDir::calculateJetProperty
   jetWeight["maxTopoSumPt"]=maxTopoSumPt;
   jetWeight["maxTopoAlpha"]=maxTopoAlpha;
   jetWeight["maxTopoP"]=maxTopoP;
+  jetWeight["maxTopoPtFractionInJet"]=maxTopoPtFractionInJet;
 
 
   double tag_global = 0;
@@ -463,4 +517,25 @@ void  LoKi::TopoTagDir::heavyVChi2Dof(const LHCb::Particle *p, double &chi2, int
   chi2 += p->endVertex()->chi2();
   dof += p->endVertex()->nDoF();
   for(int i = 0; i < size; i++) heavyVChi2Dof(daughters[i],chi2,dof);
+}
+
+
+// ============================================================================
+std::vector<const LHCb::Particle*> LoKi::TopoTagDir::extractDaugthers(const LHCb::Particle *p){
+  std::vector<const LHCb::Particle*> tmp;
+  LHCb::Particle::ConstVector daughters = p->daughtersVector();
+  int size = daughters.size();
+  if(size == 0 || p->endVertex() == 0) return tmp;
+  for(int i = 0; i < size; i++){
+    std::vector<const LHCb::Particle*> tmp2 = extractDaugthers(daughters[i]);
+    if(tmp2.size() == 0){
+      tmp.push_back(daughters[i]);
+    }else{
+      for(int j = 0; j < (int) tmp2.size(); j++){
+	tmp.push_back(tmp2[j]);
+      }
+    }
+  }
+  
+  return tmp;
 }

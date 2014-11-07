@@ -24,7 +24,7 @@ class PseudoTopoCandidatesConf:
         self.name = _name
         self.config = {
             "ALL" : { # Cuts made on all charged input particles in all lines (excpt. upstream)
-                'TRCHI2DOF_MAX' : 3,
+                'TRCHI2DOF_MAX' : 5,
                 'PT_MIN'        : '100*MeV',
                 'P_MIN'         : '1000*MeV',
                 'MIPCHI2DV_MIN' : 4, 
@@ -69,7 +69,7 @@ class PseudoTopoCandidatesConf:
         return self.filterSelection(tag+'Inputs',code,inputs)
    
     def topoInputsCuts(self): # Don't need IP chi2 cut b/c is in 1st filter
-        return "(TRCHI2DOF<2.5) & (PT > 500*MeV) & (P > 5000*MeV)"
+        return "(TRCHI2DOF<5) & (PT > 500*MeV) & (P > 5000*MeV)"
    
     def topoInputs(self,tag,inputs):
         '''Selects tracks that could have been used by the Topo.'''
@@ -90,12 +90,12 @@ class PseudoTopoCandidatesConf:
                   "B0 -> Delta0 Lambda0","B0 -> Delta0 Lambda~0"],
                  ["B0 -> K*(892)0  gamma"]
                  ]
-        comboCuts = "(AM < 7000*MeV) & "
+        comboCuts = "(AM < 10000*MeV) & "
         if sumptcut > 0:
             comboCuts += '(ASUM(SUMTREE(PT,(ISBASIC),0.0)) > %d*MeV) & ' % sumptcut
         comboCuts += '(AALLSAMEBPV |(AMINCHILD(MIPCHI2DV(PRIMARY)) > 16))'
-        comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < 0.2*mm)"
-        momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > 100)"
+#        comboCuts += " & (AMAXDOCA('LoKi::DistanceCalculator') < 0.2*mm)"
+        momCuts = "(BPVDIRA > 0) & (BPVVDCHI2 > 100) & (VFASPF(VCHI2/VDOF)<10)"
         cp = CombineParticles(DecayDescriptors=decay[n-2],
                               CombinationCut=comboCuts,
                               MotherCut=momCuts)
@@ -103,23 +103,21 @@ class PseudoTopoCandidatesConf:
        
     def topoNforN(self,n,inputs,addsumpt):
         pid = "('K+'==ABSID)"
-        minPtSum = 3000
-        if n > 2: minPtSum = 4000
-        if n > 4: minPtSum = 2000
+        minPtSum = 2000
         minPtSum += addsumpt
         cuts = '(SUMTREE(PT,%s,0.0) > %d*MeV)' % (pid,minPtSum)
         cuts += "&(INTREE(ISBASIC & (MIPCHI2DV(PRIMARY)>16) "\
             " & (PT > 1500*MeV)))"
-        cuts += '& (MINTREE(HASTRACK & %s,TRCHI2DOF) < 2)' % pid
+#        cuts += '& (MINTREE(HASTRACK & %s,TRCHI2DOF) < 2)' % pid
         cuts += "& (NINTREE(('KS0'==ID)|('Lambda0'==ABSID)) <= 2)" 
         return self.filterSelection('Topo%dfor%dSel'%(n,n),cuts,[inputs]) 
    
     def topo2for3(self,all2):
         return self.filterSelection('Topo2for3Sel',
-                               '(M < 6000*MeV) & (VFASPF(VCHI2) < 10)',[all2])
+                               '(M < 10000*MeV)',[all2])
    
     def topo3for4(self,all3):
-        return self.filterSelection('Topo3for4Sel','(M < 6000*MeV)',[all3]) 
+        return self.filterSelection('Topo3for4Sel','(M < 10000*MeV)',[all3]) 
    
     def topoBDT(self,n,inputs, V0s = True, rad = False):
         PIDs =['K+','KS0','Lambda0','Lambda~0']
@@ -160,13 +158,13 @@ class PseudoTopoCandidatesConf:
         topo3_bdt = self.topoBDT(3,topo3)
         topo3_bdt = self.topoSubPID('Topo3Body',topo3_bdt)
         filt3 = self.topo3for4(all3)
-        all4 = self.makeTopoAllNBody(4,[inputs,filt3],4000+addsumpt)
+        all4 = self.makeTopoAllNBody(4,[inputs,filt3],addsumpt)
         topo4 = self.topoNforN(4,all4,addsumpt)
         topo4_bdt = self.topoBDT(4,topo4)
         topo4_bdt = self.topoSubPID('Topo4Body',topo4_bdt)
-        allrad = self.makeTopoAllNBody(5,[ self.Photons ,filt2])
-        topoRad = self.topoNforN(5,allrad,addsumpt)
-        topoRad_bdt = self.topoBDT(3,topoRad, rad=True)
-        topoRad_bdt = self.topoSubPID('TopoRadBody',topoRad_bdt)
-        return MergedSelection(self.name,[topo2_bdt,topo3_bdt,topo4_bdt,topoRad_bdt])#[topo2,topo3,topo4]
+        #allrad = self.makeTopoAllNBody(5,[ self.Photons ,filt2])
+        #topoRad = self.topoNforN(5,allrad,addsumpt)
+        #topoRad_bdt = self.topoBDT(3,topoRad, rad=True)
+        #topoRad_bdt = self.topoSubPID('TopoRadBody',topoRad_bdt)
+        return MergedSelection(self.name,[topo2_bdt,topo3_bdt,topo4_bdt])#[topo2,topo3,topo4]
 

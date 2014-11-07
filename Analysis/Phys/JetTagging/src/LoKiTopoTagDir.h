@@ -98,7 +98,7 @@ namespace LoKi
   private:
 
     void heavyVChi2Dof(const LHCb::Particle *p, double &chi2, int &dof);
-
+    std::vector<const LHCb::Particle*> extractDaugthers(const LHCb::Particle *p);
   
 
   public:
