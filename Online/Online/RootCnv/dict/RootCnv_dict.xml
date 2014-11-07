@@ -14,5 +14,6 @@
   <class name="std::vector<pool::Token*>"/>
   <class name="PoolDbLinkManager"/>
   <class name="PoolDbTokenWrap"/>
-  <class name="PoolDbNTupleDescriptor"/>
+
+  <!-- class name="PoolDbNTupleDescriptor"/ -->
 </lcgdict>
