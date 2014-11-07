@@ -3,33 +3,15 @@
 #include <vector>
 #include <algorithm>
 #include <utility>
+#include <memory>
 
 // from Gaudi
 #include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/StringKey.h"
-static const Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
-static const Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
-
-namespace Gaudi { 
-    class StringKey;
-    namespace Utils {
-        std::ostream& toStream ( const std::vector<Gaudi::StringKey>& key , 
-                                 std::ostream&             s   ) 
-        {
-              s << "[ " ;
-              for (std::vector<Gaudi::StringKey>::const_iterator i=key.begin();i!=key.end();++i)  {
-                  if (i!=key.begin()) s << ", ";
-                  toStream(*i,s); 
-              }
-              s << " ]";
-              return s;
-        }
-} 
-}
-
-
-
+#include "GaudiKernel/ToStream.h"
 #include "GaudiKernel/AlgFactory.h" 
+
+
 
 #include "Event/RecVertex.h"
 
@@ -40,14 +22,15 @@ namespace Gaudi {
 
 using namespace LHCb;
 
-namespace {
-    class matchByName : public std::unary_function<bool,const Hlt::Selection*> {
+static const Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
+static const Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
 
+namespace {
+    class matchByName { 
+        std::string m_name;
     public:
         matchByName(const std::string& name) : m_name(name) { }
         bool operator()(const Hlt::Selection* x) const { return x->id().str() == m_name; }
-    private:
-        std::string m_name;
     };
 }
 
@@ -67,24 +50,18 @@ DECLARE_ALGORITHM_FACTORY( HltVertexReportsMaker )
 HltVertexReportsMaker::HltVertexReportsMaker( const std::string& name,
                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_hltANNSvc(0) 
-  , m_hltSvc(0)
-  , m_regSvc(0)
-  , m_inspectionSvc(0)
-  , m_PVLocation(LHCb::RecVertexLocation::Primary)
+  , m_hltANNSvc{nullptr} 
+  , m_hltSvc{nullptr}
+  , m_regSvc{nullptr}
+  , m_inspectionSvc{nullptr}
+  , m_PVLocation{LHCb::RecVertexLocation::Primary}
 {
-
   declareProperty("OutputHltVertexReportsLocation",
     m_outputHltVertexReportsLocation= LHCb::HltVertexReportsLocation::Default);  
 
   declareProperty("VertexSelections", m_vertexSelections);
   declareProperty("PVLocation", m_PVLocation);
-
 }
-//=============================================================================
-// Destructor
-//=============================================================================
-HltVertexReportsMaker::~HltVertexReportsMaker() {} 
 
 //=============================================================================
 // Initialization
@@ -103,8 +80,7 @@ StatusCode HltVertexReportsMaker::initialize() {
   m_selections.clear();  
 
  // get string-to-int selection ID map
-  typedef std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> map_t;
-  map_t selectionNameToIntMap;
+  std::map<IANNSvc::minor_key_type,IANNSvc::minor_mapped_type> selectionNameToIntMap;
   for( const IANNSvc::minor_value_type& p: m_hltANNSvc->items(Hlt1SelectionID) ) {
       selectionNameToIntMap.insert( p );
   }
@@ -113,23 +89,21 @@ StatusCode HltVertexReportsMaker::initialize() {
   }
 
   // loop over selections given in the input list
-  Hlt::IRegister::Lock lock(m_regSvc,this);
-  for( std::vector<std::string>::const_iterator is=m_vertexSelections.begin();
-       is!=m_vertexSelections.end();++is){
-     Gaudi::StringKey key(*is);
+  Hlt::IRegister::Lock lock{m_regSvc,this};
+  for( const auto& s : m_vertexSelections ) {
+     Gaudi::StringKey key{s};
      // find int selection id (to make sure it is saveable)
-     map_t::const_iterator im = selectionNameToIntMap.find( key );
-     if (im == selectionNameToIntMap.end() ) {
+     if ( selectionNameToIntMap.find( key ) == std::end(selectionNameToIntMap) ) {
        Warning( " selectionName="+key.str()+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 20 );
        continue;
      } 
      lock->registerInput(key,this);
-     const Hlt::Selection *s = m_hltSvc->selection(key,this);
-     if (s==0) {
-       Warning( " selectionName="+key.str()+ " not present in Hlt::IDataSvc. Skipped. ",StatusCode::SUCCESS, 20 );
-       continue;
+     const Hlt::Selection *sel = m_hltSvc->selection(key,this);
+     if (sel) {
+        m_selections.push_back(sel);
+      } else {
+        Warning( " selectionName="+key.str()+ " not present in Hlt::IDataSvc. Skipped. ",StatusCode::SUCCESS, 20 );
      }
-     m_selections.push_back(s);
   }
   
   //replaced OnOfflineTool with simple property
@@ -138,13 +112,12 @@ StatusCode HltVertexReportsMaker::initialize() {
                               ? m_PVLocation.substr(found+1)
                               : m_PVLocation;
   // int selection id
-  map_t::const_iterator im = selectionNameToIntMap.find( pvSelectionName );
-  if (im == selectionNameToIntMap.end() ) {
+  if (selectionNameToIntMap.find( pvSelectionName ) == std::end(selectionNameToIntMap) ) {
      Warning( " selectionName="+pvSelectionName+ " not found in HltANNSvc. Skipped. ",StatusCode::SUCCESS, 10 );
   } else {
     // check we don't already have this one from the datasvc...
-    if (std::find_if( m_selections.begin(), m_selections.end(), matchByName(pvSelectionName) ) == m_selections.end() ) {
-        m_tesSelections.push_back(std::make_pair(pvSelectionName,m_PVLocation));
+    if ( std::none_of( std::begin(m_selections), std::end(m_selections), matchByName(pvSelectionName) )  ) {
+        m_tesSelections.emplace_back(pvSelectionName,m_PVLocation);
     } else {
         debug() << " got " << pvSelectionName << " also from datasvc ... using the one from the datasvc" << endmsg;
     }
@@ -158,8 +131,6 @@ StatusCode HltVertexReportsMaker::saveCandidates(const std::string& selName,
                                                  ITER ic, ITER end,
                                                  LHCb::HltVertexReports* outputSummary) const 
 {
-     // save selection ---------------------------
-     SmartRefVector<VertexBase> pVtxs;
     
      // create output container for vertices and put it on TES
      VertexBase::Container* verticesOutput = new VertexBase::Container();
@@ -167,40 +138,37 @@ StatusCode HltVertexReportsMaker::saveCandidates(const std::string& selName,
 
      while ( ic!=end ) {
        const VertexBase* vbase = dynamic_cast<const VertexBase*>(*ic);
-       if( vbase == 0 ) { 
+       if( !vbase ) { 
            Warning( " dynamic cast failed for ="+selName+". Skipped. ",StatusCode::SUCCESS, 10 );
            continue;
        }
        // need to clone it to put into its new container, also use precision of the storage banks
-       VertexBase* pVtx = new VertexBase();
-       Gaudi::XYZPoint position( double(float(vbase->position().x())),
-                                 double(float(vbase->position().y())),
-                                 double(float(vbase->position().z())) );       
-       pVtx->setPosition( position );
-       pVtx->setChi2( double(float(vbase->chi2())) );
+       std::unique_ptr<VertexBase> pVtx { new VertexBase() };
+       pVtx->setPosition( {  float(vbase->position().x()),
+                             float(vbase->position().y()),
+                             float(vbase->position().z()) } );       
+       pVtx->setChi2( float(vbase->chi2()) );
        pVtx->setNDoF( (vbase->nDoF()>0)?vbase->nDoF():0 );       
        // now also save covariance matrix 2009/11/26
        const Gaudi::SymMatrix3x3 & ocov = vbase->covMatrix();       
        Gaudi::SymMatrix3x3 cov;
-       cov[0][0] = double(float(ocov[0][0]));
-       cov[1][1] = double(float(ocov[1][1]));
-       cov[2][2] = double(float(ocov[2][2]));
-       cov[0][1] = double(float(ocov[0][1]));
-       cov[0][2] = double(float(ocov[0][2]));
-       cov[1][2] = double(float(ocov[1][2]));    
+       cov[0][0] = float(ocov[0][0]);
+       cov[1][1] = float(ocov[1][1]);
+       cov[2][2] = float(ocov[2][2]);
+       cov[0][1] = float(ocov[0][1]);
+       cov[0][2] = float(ocov[0][2]);
+       cov[1][2] = float(ocov[1][2]);    
        pVtx->setCovMatrix(cov);       
-       verticesOutput->insert(pVtx);
-       pVtxs.push_back( SmartRef<VertexBase>( pVtx ) );
+       verticesOutput->insert(pVtx.release());
        ++ic;
      }
 
      // insert selection into the container
-     if( outputSummary->insert(selName,pVtxs).isFailure() ) {
-      return Warning(" Failed to add Hlt vertex selection name " + selName
-                     + " to its container ",StatusCode::SUCCESS, 10 );
-    } else {
-        return StatusCode::SUCCESS;
-    }
+     // save selection ---------------------------
+     return outputSummary->insert(selName, { std::begin(*verticesOutput), 
+                                             std::end(*verticesOutput)  }).isSuccess() ? StatusCode::SUCCESS 
+                                                            : Warning(" Failed to add Hlt vertex selection name " + selName
+                                                                    + " to its container ",StatusCode::SUCCESS, 10 );
 }
 
 //=============================================================================
@@ -248,4 +216,3 @@ StatusCode HltVertexReportsMaker::execute() {
 
   return StatusCode::SUCCESS;
 }
-

@@ -4,6 +4,8 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2014-11-07 - Gerhard Raven
+ - C++11 cleanup
 
 !========================= HltRawData v5r0 2014-11-05 =========================
 

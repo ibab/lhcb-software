@@ -61,55 +61,59 @@ public:
 private:
 
   /// for producing numerical info to be saved on the object
-  LHCb::HltObjectSummary::Info infoToSave( const LHCb::HltObjectSummary* hos ) const;
+  LHCb::HltObjectSummary::Info infoToSave( const LHCb::HltObjectSummary& hos ) const;
   
 
   /// store Track in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::Track* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::Track& object);
   /// store RecVertex in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::RecVertex* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::RecVertex& object);
   /// store Vertex in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::Vertex* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::Vertex& object);
   /// store RichPID in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::RichPID* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::RichPID& object);
   /// store MuonPID in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::MuonPID* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::MuonPID& object);
   /// store Particle in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::Particle* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::Particle& object);
   /// store ProtoParticle in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::ProtoParticle* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::ProtoParticle& object);
   /// store CaloCluster in HltObjectSummary store
-  const LHCb::HltObjectSummary* store_(const LHCb::CaloCluster* object);
+  const LHCb::HltObjectSummary* store_(const LHCb::CaloCluster& object);
 
   template <typename T> const LHCb::HltObjectSummary* store(const ContainedObject* obj) {
-      const T* t = dynamic_cast<const T*>(obj);
-      if (t==0) return 0;
-      return store_(t);
+      auto t = dynamic_cast<const T*>(obj);
+      if (!t) return nullptr;
+      auto i = std::find_if( std::begin(*m_objectSummaries), std::end(*m_objectSummaries),
+                             [&t]( const LHCb::HltObjectSummary* hos ) { 
+            return hos->summarizedObjectCLID() == t->clID() && hos->summarizedObject() == t ; 
+      });
+      return i!=std::end(*m_objectSummaries) ? *i : store_(*t);
   }
   
 
 
   /// rank Track for selection rank
-  int rank_(const LHCb::Track* object) const;
+  int rank_(const LHCb::Track& object) const;
   /// rank RecVertex 
-  int rank_(const LHCb::RecVertex* object) const;
+  int rank_(const LHCb::RecVertex& object) const;
   /// rank Vertex 
-  int rank_(const LHCb::Vertex* object) const;
+  int rank_(const LHCb::Vertex& object) const;
   /// rank ProtoParticle 
-  int rank_(const LHCb::ProtoParticle* object) const;
+  int rank_(const LHCb::ProtoParticle& object) const;
   /// rank RichPID 
-  int rank_(const LHCb::RichPID* object) const;
+  int rank_(const LHCb::RichPID& object) const;
   /// rank MuonPID 
-  int rank_(const LHCb::MuonPID* object) const;
+  int rank_(const LHCb::MuonPID& object) const;
   /// rank Particle 
-  int rank_(const LHCb::Particle* object) const;
+  int rank_(const LHCb::Particle& object) const;
   /// rank CaloCluster 
-  int rank_(const LHCb::CaloCluster* object) const;
+  int rank_(const LHCb::CaloCluster& object) const;
 
   template <typename T> bool rank(const ContainedObject* obj, int& rnk) {
       const T* c = dynamic_cast<const T*>(obj);
       bool ret = (c!=0);
-      if (ret) rnk = rank_(c);
+      if (ret) rnk = rank_(*c);
       return ret;
   }
   

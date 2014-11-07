@@ -27,16 +27,14 @@ public:
   /// Standard constructor
   HltVertexReportsMaker( const std::string& name, ISvcLocator* pSvcLocator );
 
-  virtual ~HltVertexReportsMaker( ); ///< Destructor
+  ~HltVertexReportsMaker( ) override = default; ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
+  StatusCode initialize() override;    ///< Algorithm initialization
+  StatusCode execute   () override;    ///< Algorithm execution
 
 private:
   template <typename ITER>
   StatusCode saveCandidates(const std::string& selName, ITER begin, ITER end, LHCb::HltVertexReports* output) const ;
-
-
 
   // ----------------------- data members 
 
@@ -54,7 +52,6 @@ private:
 
   /// location of vertices
   std::string  m_PVLocation;
-  
 
   std::vector<const Hlt::Selection*> m_selections;
   std::vector<std::pair<std::string,std::string> >           m_tesSelections;
