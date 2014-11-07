@@ -4,6 +4,9 @@
 ! Purpose     : Basic tools for Pattern for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-11-07 - Svende Braun
+- Add IPrTTCounter and modified IPrCounter for efficiency studies. Temporary solution only.
+
 !========================= PrKernel v1r5 2014-10-14 =========================
 ! 2014-09-22 - Manuel Tobias Schiller
  - save 1/error in hit class instead of 1/error^2; this should facilitate

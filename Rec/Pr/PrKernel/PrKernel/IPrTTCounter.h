@@ -1,5 +1,5 @@
-#ifndef PRKERNEL_IPRCOUNTER_H 
-#define PRKERNEL_IPRCOUNTER_H 1
+#ifndef PRKERNEL_IPRTTCOUNTER_H 
+#define PRKERNEL_IPRTTCOUNTER_H 1
 
 // Include files
 // from STL
@@ -18,7 +18,7 @@ namespace LHCb{
 class IHistoTool;
 
 
-static const InterfaceID IID_IPrCounter ( "IPrCounter", 1, 0 );
+static const InterfaceID IID_IPrTTCounter ( "IPrTTCounter", 1, 0 );
 
 /** @class IPrCounter IPrCounter.h PrKernel/IPrCounter.h
  *  
@@ -26,32 +26,31 @@ static const InterfaceID IID_IPrCounter ( "IPrCounter", 1, 0 );
  *  @author Michel De Cian & Paolo Gandini & Thomas Nikodem
  *  @date   2013-12-13
  */
-class IPrCounter : virtual public IAlgTool {
+class IPrTTCounter : virtual public IAlgTool {
 public: 
 
   // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IPrCounter; }
+  static const InterfaceID& interfaceID() { return IID_IPrTTCounter; }
   
   virtual StatusCode finalize() = 0;  
   
-  virtual void initEvent(const IHistoTool* htool = NULL, const int nPV = 0) = 0;
+  virtual void initEvent(const IHistoTool* htool = NULL) = 0;
 
   virtual int  countAndPlot(const IHistoTool* htool,
                             const LHCb::MCParticle* part, 
                             std::vector<bool> flags,
-                            std::vector<LHCb::LHCbID>& ids, 
-                            const int nPV) = 0;
+                            std::vector<LHCb::LHCbID>& ids ) = 0;
 
   virtual void addSelection ( std::string name, bool writeHisto ) = 0;
 
   void setContainer( std::string name )  { m_container = name; };
   void setWriteHistos(int write){ m_writeHistos = write; };
   void setUseEta25Cut(bool cut){ m_eta25cut = cut;};
-  void setUsewriteXYEffHistos(bool hist){ m_writeXYEffHistos = hist;};
-  void printparticlekey(bool key){m_printparticlekey = key;};
+  //void printparticlekey(bool key){m_printparticlekey = key;};
+  void setUsewriteXYEffHistos(bool hist){m_writeXYEffHistos = hist;};
   void setTriggerNumbers(bool numbers){ m_triggerNumbers = numbers;};
-  void setSelectId( int data )   { m_selectId = data; };
-  void setTrackType( LHCb::Track::Types type)  { m_trackType = type; };
+
+ 
 
   //virtual void setUse3MCLayerCut( bool cut) = 0;
     
@@ -63,18 +62,15 @@ protected:
   int          m_writeHistos;
   bool         m_eta25cut;
   bool         m_writeXYEffHistos;
-  bool         m_printparticlekey;
+  // bool         m_printparticlekey;
   bool         m_triggerNumbers;
-  int          m_selectId;
   std::string  m_container;
 
-
-  LHCb::Track::Types m_trackType;
 
 private:
 
 
 
 };
-#endif // PRKERNEL_IPRCOUNTER_H
+#endif // PRKERNEL_IPRTTCOUNTER_H
 
