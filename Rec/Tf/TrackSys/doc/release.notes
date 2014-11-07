@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-11-07 - Marco Clemencic
+ - Fixed intentation error in Configuration.py
+
 ! 2014-11-06 - Michel De Cian
  - Replace "Match" with "PatMatch" for old sequence of PatReco algorithms in Configuration.py
 

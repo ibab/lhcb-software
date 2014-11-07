@@ -69,7 +69,7 @@ class TrackSys(LHCbConfigurableUser):
       if self.getProp( "ForceNewSeq" ) and self.getProp( "ForceOldSeq" ) :
          raise RuntimeError("Cannot force both old and new tracking sequence at once")
 
-     if self.getProp( "ForceNewSeq" ) :
+      if self.getProp( "ForceNewSeq" ) :
          self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
 
       if self.getProp( "ForceOldSeq" ):
