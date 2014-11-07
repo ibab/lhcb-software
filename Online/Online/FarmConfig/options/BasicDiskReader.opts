@@ -10,7 +10,7 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 //
 EventLoopMgr.Wait                    = 1;
 //
-Runable.DeleteFiles                  =  true;
+Runable.DeleteFiles                  = true;
 Runable.Directory                    = "/localdisk/overflow";
 Runable.AllowedRuns                  = @OnlineEnv.DeferredRuns;
 Runable.BrokenHosts                  = "/group/online/dataflow/brokendisks";

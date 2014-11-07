@@ -3,6 +3,7 @@
 // $Id: MEPInjector.opts,v 1.14 2009-09-16 06:40:28 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
+OnlineEnv.OutputLevel  = 1;
 ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.EvtSel                = "NONE";
 ApplicationMgr.Dlls                  = { "MDF", "GaudiOnline", "Gaucho"};
@@ -11,17 +12,19 @@ ApplicationMgr.Runable               = "LHCb::MEPInjector/Injector";
 ApplicationMgr.SvcOptMapping =  { "LHCb::OnlineRunable/EmptyEventLoop" , "LHCb::MEPInjector/Injector" };
 ApplicationMgr.ExtSvc                = { "IncidentSvc"  };
 ApplicationMgr.ExtSvc		     += { "MonitorSvc" };
-ApplicationMgr.OutputLevel = 5;
-Injector.OutputLevel = 5;
-MessageSvc.OutputLevel= 5;
+ApplicationMgr.OutputLevel = 1;
+Injector.OutputLevel = 1;
+MessageSvc.OutputLevel= 1;
 
 ///////////////////////////////////////////////////////////////////////////////
 //                               My options                                  //
 ///////////////////////////////////////////////////////////////////////////////
 Injector.HLTNodes = @OnlineEnv.Injector_Nodes;
 Injector.Tell1Boards =@OnlineEnv.Tell1Boards;
-Injector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
-Injector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
+//Injector.HLTIf =  "";   //inj01-d1
+//Injector.OdinIf = "";  //inj01-d2
+//Injector.HLTIf = @OnlineEnv.Injector_farmIF_Name;   //inj01-d1
+//Injector.OdinIf = @OnlineEnv.Injector_odinIF_Name;  //inj01-d2
 Injector.OdinIPAddr = @OnlineEnv.Injector_ODIN_REQ_Name;     //tfcodinxx-d1
 //OnlineEnv.Injector_ODIN_REQ_IP not used because computed from the first one
 //OnlineEnv.Injector_odinIF_IP not used for same reason
@@ -38,7 +41,7 @@ Injector.AutoMode = false;
 Injector.HLTIPAddrTo = "192.168.197.129"; //Still used in Automode
 
 Injector.ARPME = false;
-Injector.OutputLevel = 6;
+Injector.OutputLevel = 1;
 Injector.BufferNames = @OnlineEnv.Injector_Readers;
 Injector.Debug = true;
 Injector.TFCMask=4294967295;
