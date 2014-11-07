@@ -18,18 +18,21 @@
     <class pattern="SCR::*"/>
     <function pattern="scrc_*"/>
     <function pattern="scrcc_*"/>
-    <function pattern="SCR::*"/>
 
     <function pattern="wtc_*"/>
 
     <function pattern="amsc_*"/>
 
-    <function pattern="DataTransfer::_*"/>
     <class pattern="DataTransfer::_*"/>
     <class name="Event"/>
     <class name="Interactor"/>
     <class name="CPP::PyInteractor"/>
 <!--
+    <function pattern="DataTransfer::_*"/>
+    <function pattern="SCR::*"/>
+    <function pattern="MBM::*"/>
+    <class pattern="bm_iterator*"/>
+
     <class name="IOPortManager"/>
     <class name="NetworkChannel"/>
     <class name="NetworkConnection"/>
@@ -37,11 +40,11 @@
     <class name="TcpConnection"/>
     <class name="UdpNetworkChannel"/>
     <class name="UdpConnection"/>
+
+
 -->
-    <function pattern="MBM::*"/>
     <class pattern="MBM::*"/>
     <function pattern="mbm_*"/>
-    <class pattern="bm_iterator*"/>
     <class name="REQ"/>
     <class name="BUFFERS"/>
     <class name="BUFFERS::BUFF"/>
