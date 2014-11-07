@@ -31,7 +31,7 @@ use EventBuilder        v0r3     Online
 use FarmConfig          v0r8     Online
 use FarmMonitor         v2r13    Online
 use Gaucho              v7r35    Online
-use GauchoAppl          v1r16    Online
+use GauchoAppl          v1r17    Online
 use GaudiCheckpointing  v0r18    Online
 use GaudiOnline         v2r73    Online
 use GaudiOnlineTests    v1r4     Online
@@ -42,7 +42,7 @@ use HistDBPython        v1r8     Online
 use InsertDB            v1r10    Online
 use MBMDump             v1r16    Online
 use OMAlib              v4r4     Online
-use OnlineAlign         v0r1     Online
+use OnlineAlign         v0r2     Online
 use OnlineBase          v1r23    Online
 use OnlineHistDB        v8r1     Online
 use OnlineKernel        v2r15    Online
