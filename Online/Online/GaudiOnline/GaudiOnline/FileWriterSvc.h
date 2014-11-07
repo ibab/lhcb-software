@@ -145,7 +145,7 @@ namespace LHCb
     ///File Prefix String. Filename wil be m_FilePrefix + Runnumber + _Sequence+.MEP
     std::string m_FilePrefixEvt;
     ///Limit on the filesize in MB=1024*1024 Bytes
-    unsigned long m_maxevts;
+    long m_maxevts;
     long m_numev;
     long m_numwr;
     float m_evfrac;

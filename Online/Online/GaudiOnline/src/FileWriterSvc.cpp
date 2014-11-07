@@ -231,7 +231,7 @@ StatusCode FileWriterSvc::run(const EventDesc& e, unsigned int runnr)
       }
     }
     if (!matchRequirements(e)) return StatusCode::SUCCESS;
-    if (m_numev >= m_maxevts) return StatusCode::SUCCESS;
+    if (m_numev >= m_maxevts && m_maxevts>0 ) return StatusCode::SUCCESS;
     m_numev++;
     double f=float(rand());
     f = f/RAND_MAX;
