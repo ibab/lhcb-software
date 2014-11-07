@@ -1,6 +1,6 @@
 // $Id: $
-#ifndef PRCOUNTER_H
-#define PRCOUNTER_H 1
+#ifndef PRCOUNTER2_H
+#define PRCOUNTER2_H 1
 
 // Include files
 // from Gaudi
