@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-11-08 - Michel De Cian
+- Fix CMakeLists to include LoKiMCLib
+
 ! 2014-11-07 - Svende Braun
 - Add PrTTCounter, PrChecker2 and PrCounter2 for efficiency studies, add LokiMC to requirements file. Temporary solution only.
 

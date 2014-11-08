@@ -14,5 +14,5 @@ gaudi_depends_on_subdirs(Det/VPDet
 gaudi_add_module(PrMCTools
                  src/*.cpp
                  INCLUDE_DIRS Event/FTEvent
-                 LINK_LIBRARIES LinkerEvent MCEvent GaudiAlgLib PrKernel VPDetLib)
+                 LINK_LIBRARIES LinkerEvent MCEvent GaudiAlgLib PrKernel VPDetLib LoKiMCLib)
 
