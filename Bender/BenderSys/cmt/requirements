@@ -22,7 +22,7 @@
 #
 # =============================================================================
 package       BenderSys
-version       v25r1
+version       v25r2
 author        Vanya BELYAEV
 
 ## # =========== TEMPORARY! ======================================================
@@ -30,7 +30,7 @@ author        Vanya BELYAEV
 ## use           PyPAW          v2r0    Analysis
 
 # =========== Bender Application itself =======================================
-use           Bender         v25r1   Phys 
+use           Bender         v25r2   Phys 
   
 # =========== Bender-based tools and scripts ==================================
 use           BenderTools    v25r1   Phys 
