@@ -22,18 +22,18 @@
 #
 # =============================================================================
 package       BenderSys
-version       v24r2p1
+version       v25r1
 author        Vanya BELYAEV
 
-# =========== TEMPORARY! ======================================================
-use           Ostap          v1r2    Analysis
-use           PyPAW          v2r0    Analysis
+## # =========== TEMPORARY! ======================================================
+## use           Ostap          v1r2    Analysis
+## use           PyPAW          v2r0    Analysis
 
 # =========== Bender Application itself =======================================
-use           Bender         v25r0   Phys 
+use           Bender         v25r1   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v25r0   Phys 
+use           BenderTools    v25r1   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
 use           BenderExample  v20r0   Ex
