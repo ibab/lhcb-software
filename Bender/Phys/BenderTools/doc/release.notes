@@ -5,6 +5,10 @@
 ! Purpose     : collection of Bender-based scripts 
 ! -----------------------------------------------------------------------------
 
+! ==================== Phys/BenderTools v25r1     2014-11-09 ==================
+
+! 2014-11-09 - Vanya Belyaev
+
 ! 2014-09-09 - Vanya Belyaev
  - improve a bit dst-explorer 
 
