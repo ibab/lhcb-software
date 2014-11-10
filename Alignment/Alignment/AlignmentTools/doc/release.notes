@@ -3,6 +3,8 @@ Package : AlignmentTools
 Package Coordinator : Sebastien Viret
 Purpose : provides a c++ translation of Volker Blobel's Millepede algorithm.
 
+!========================= AlignmentTools v3r3 2014-11-10 =========================
+
 ! 2014-11-07 - Marco Clemencic
  - Removed obsolete useless file.
 
