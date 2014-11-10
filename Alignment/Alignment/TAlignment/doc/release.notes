@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+! 2014-11-10 - Maurizio Martinelli
+ - removed the classes used to interface with online environment. 
+ 	 They will be found in AlignmentOnline/AlignOnline  
+
 ! 2014-10-06 - Maurizio Martinelli
  - modified AlignAlgorithm to rely on a tool for managing xml writers
 

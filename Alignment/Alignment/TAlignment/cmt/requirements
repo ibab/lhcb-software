@@ -34,8 +34,8 @@ use     LHCbKernel              v*      Kernel
 use     LHCbMath                v*      Kernel
 use     LoKiCore        	v*      Phys
 use     LinkerEvent		v*	Event
-use     OnlineKernel            v*      Online
-use     OnlineAlign		v*      Online
+#use     OnlineKernel            v*      Online
+#use     OnlineAlign		v*      Online
 use     Boost            	v*	LCG_Interfaces -no_auto_imports
 #============================================================================
 # Component library building rule
