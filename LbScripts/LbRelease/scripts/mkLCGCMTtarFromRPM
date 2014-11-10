@@ -87,6 +87,9 @@ class BuildLCGTarScript(Script):
             self.version   = args[1]
             self.cmtconfig = args[2]
 
+        # Setting the CMTCONFIG to the requested one
+        os.environ['CMTCONFIG'] = self.cmtconfig
+
         # preparing the actual RPM install area
         log.warning("Repackaging %s %s for CMTCONFIG %s" % (self.project, self.version, self.cmtconfig))
         installer = LCGRpmExtractor.LCGRpmInstaller(opts.siteroot)
@@ -200,7 +203,10 @@ class BuildLCGTarScript(Script):
             self.log.warning("Adding RPM: %s" % rpmName)
             allrpms.append(rpmName)
 
+        
+
         # Now performing the install
+        print "ALL RPMS:", allrpms
         self.log.warning("Now performing the actual install")
         packageErrors = []
         for rpm in allrpms:
