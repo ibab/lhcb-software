@@ -4,6 +4,9 @@
 ! Purpose     : QMTests for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2014-11-10 - Chris Jones
+ - Add QM tests for Stripping 21 and 21r1.
+
 !========================= DaVinciTests v2r27 2014-11-05 =========================
 
 ! 2014-10-30 - Andrea Contu
