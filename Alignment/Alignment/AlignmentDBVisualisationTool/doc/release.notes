@@ -3,6 +3,8 @@
 ! package manager: Pieter David
 !------------------------------------------------------------------------------
 
+!========================= AlignmentDBVisualisationTool v1r3 2014-11-10 =========================
+
 ! 2014-10-21 - Jason Andrews
  - added precision cutoff for Velo parameter values in region classes
  - allowed zero MagOff entries in ROOTTrendRegion
