@@ -3,6 +3,8 @@ Package : AlignmentInterfaces
 Package Coordinator : Johan Blouw
 Purpose :  Collection of interfaces needed for the T-station alignment
 
+!========================= AlignmentInterfaces v3r5 2014-08-23 =========================
+
 ! 2014-10-25 - Wouter Hulsbergen
  - added IWriteAlignmentConditionsTool to dict
  - added method IWriteAlignmentConditionsTool::write(tag)

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: AlignmentInterfaces
 ################################################################################
-gaudi_subdir(AlignmentInterfaces v3r4)
+gaudi_subdir(AlignmentInterfaces v3r5)
 
 gaudi_depends_on_subdirs(Alignment/AlignKernel
                          GaudiKernel)
