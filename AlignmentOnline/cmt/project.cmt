@@ -1,0 +1,8 @@
+project ALIGNMENTONLINE
+
+# Add one or more lines for the project dependencies, dependency on LHCB_v36r0 given as an example
+use ALIGNMENT ALIGNMENT_v10r1
+use ONLINE ONLINE_v5r13
+
+build_strategy with_installarea
+setup_strategy root
