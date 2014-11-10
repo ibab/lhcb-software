@@ -1,0 +1,72 @@
+#============================================================================
+# Created    : 2014-10-11
+# Maintainer : Maurizio Martinelli
+#============================================================================
+package AlignOnline
+version v1r0
+
+#============================================================================
+# Structure, i.e. directories to process.
+#============================================================================
+
+branches src cmt doc options
+include_path none
+
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use     AlignKernel         v*  Alignment
+use 	AlignmentInterfaces	v*	Alignment
+use   	GaudiAlg          	v*
+use     GaudiKernel         v*
+use     OnlineKernel        v*  Online
+use     OnlineAlign         v*  Online
+
+#use 	GSL               	v*	LCG_Interfaces
+#use	    CLHEP           	v*	LCG_Interfaces
+#use     AlignSolvTools          v*      Alignment
+#use 	AlignTrTools		v*	Alignment
+#use     AlignEvent              v*      Alignment
+#use   	RecEvent          	v*      Event
+#use 	TrackEvent		v*	Event
+#use 	TrackFitEvent		v*	Tr
+#use   	TrackInterfaces   	v*      Tr
+#use   	TrackKernel	   	v*      Tr
+#use 	STDet			v*	Det
+#use     MuonDet                 v*      Det
+#use     LHCbKernel              v*      Kernel
+#use     LHCbMath                v*      Kernel
+#use     LoKiCore        	v*      Phys
+#use     LinkerEvent		v*	Event
+#use     Boost            	v*	LCG_Interfaces -no_auto_imports
+#============================================================================
+# Component library building rule
+#============================================================================
+library         AlignOnline      ../src/*.cpp -import=AIDA
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library      library=AlignOnline
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                       \
+                dictionary=TAlignment                                   \
+                headerfiles=$(TALIGNMENTROOT)/dict/TAlignmentDict.h     \
+                selectionfile=$(TALIGNMENTROOT)/dict/TAlignmentDict.xml \
+                options="-U__MINGW32__" \
+                imports="Python -import=GaudiPython"
+
+
+
+# Declare this as a container package
+apply_pattern container_package
+
+# Allow the generation of QMTest summary
+apply_pattern QMTestSummarize
+
+# run QMTests
+apply_pattern QMTest
+
+#============================================================================
+# Install the configurable
+#apply_pattern install_python_modules
