@@ -3,6 +3,8 @@ Package	:	Alignment/TAlignment
 Package Coordinator	: Wouter Hulsbergen
 Purpose	: collection of alignment algorithms
 
+!========================= TAlignment v6r2 2014-11-10 =========================
+
 ! 2014-11-10 - Maurizio Martinelli
  - removed the classes used to interface with online environment. 
  	 They will be found in AlignmentOnline/AlignOnline  
