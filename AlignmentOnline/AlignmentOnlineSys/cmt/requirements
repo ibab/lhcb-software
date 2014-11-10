@@ -1,0 +1,23 @@
+package AlignmentOnlineSys
+version v10r1
+
+branches cmt doc tests
+ 
+#=======================================================
+# LHCb Alignment Online packages
+#=======================================================
+
+# use  AlignOnline  v1r0
+
+# Declare this as a container package
+apply_pattern container_package
+
+# Allow the generation of QMTest summary 
+apply_pattern QMTestSummarize
+
+# run QMTests
+apply_pattern QMTest
+
+#============================================================================
+# Install the configurable
+#apply_pattern install_python_modules
