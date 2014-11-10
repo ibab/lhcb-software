@@ -38,7 +38,7 @@ GaudiTool ( type, name, parent )
   declareProperty( "CombineTaggersName",      m_CombineTaggersName = "CombineTaggersProbability" );
   declareProperty( "TaggerLocation",          m_taggerLocation = "Phys/TaggingParticles" );
   declareProperty( "CombineWithNNetTagger",   m_CombineWithNNetTagger = false );
-  declareProperty( "CombineWithCharmTagger",  m_CombineWithCharmTagger = false );
+  declareProperty( "CombineWithCharmTagger",  m_CombineWithCharmTagger = true );
 
   //choose active taggers
   declareProperty( "EnableMuonTagger",        m_EnableMuon    = true );
@@ -346,7 +346,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
                             RecVertex& RefitRecVert)
 {
 
-
+  bool hasRefitFailed = false;
   RecVertex::ConstVector PileUpVtx(0); //will contain all the other primary vtx's
   if( RecVert )
   {                                      //PV was given by the user
@@ -357,7 +357,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
       const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
-      if(!sc) { Error("ReFitter fails!").ignore(); } // Should we stop the execution?
+      if (!sc) { Error("ReFitter fails!").ignore(); hasRefitFailed = true; } // Should we stop the execution?
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -381,7 +381,7 @@ BTaggingTool::choosePrimary(const Particle* AXB,
       RecVertex newPV(*RecVert);
       Particle newPart(*AXB);
       const StatusCode sc = m_pvReFitter->remove(&newPart, &newPV);
-      if(!sc) { Error("ReFitter fails!").ignore(); } // Should we stop the execution?
+      if(!sc) { Error("ReFitter fails!").ignore(); hasRefitFailed = true; } // Should we stop the execution?
       if( msgLevel(MSG::DEBUG) ) debug()<<" Refitted PV "<<endreq;
       RefitRecVert = newPV;
     }
@@ -505,7 +505,9 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 
   //UseReFitPV means that it will use the refitted pV for the ip calculation
   //of taggers and SV building. Do not move this line above PileUpVtx building
-  if( m_UseReFitPV ) RecVert = (&RefitRecVert);
+  //  hasRefitFailed = false;
+  if( m_UseReFitPV and (not hasRefitFailed)) RecVert = (&RefitRecVert);
+  if( m_UseReFitPV and hasRefitFailed) RecVert = NULL;
 
   if( ! RecVert )
   {

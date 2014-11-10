@@ -411,7 +411,7 @@ CharmMode TaggingUtils::getCharmDecayMode(const LHCb::Particle* cand, int candTy
     if (cand->particleID().abspid() == d0_pid) {
       
       switch (numDaus) {
-      
+        
       case 2:
         if (daus[0]->particleID().abspid() == k_pid and
             daus[1]->particleID().abspid() == pi_pid)

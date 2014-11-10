@@ -170,6 +170,8 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
 {
 
   Tagger tcharm;
+  if (not RecVert)
+    return tcharm;
 
   std::vector< CharmParticle > charmcands;
 
@@ -290,6 +292,9 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
                               const LHCb::Particle& signalB, const RecVertex* RecVert, const int type)
 {
 
+  if (not RecVert)
+    return 0;
+
   for( std::vector<std::string>::const_iterator ilist = locations.begin(); ilist != locations.end(); ++ilist) {
     if (exist<Particle::Range>(*ilist)){
       LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
@@ -361,6 +366,13 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         const double fd = fVD(cand);
         const double fdchi2 = fVDCHI2(cand);
 
+        // CUTS
+        if (fdchi2 <= 25)
+          continue;
+        
+        if (bpvdira <= 0.998)
+          continue;
+
         // Get info from daughters
         Fun fCTAU = CTAU(cand->endVertex());
 
@@ -375,6 +387,9 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
         double kaonId = 0.0, kaonPT = 0.0, kaonNNp = 1.0, kaonNNk = 1.0, kaonIppvchi2 = -1.0, kaonIpMinchi2 = -1.0;
         double pionId = 0.0, pionPT = 0.0, pionNNp = 1.0, pionNNk = 1.0, pionIppvchi2 = -1.0, pionIpMinchi2 = -1.0;
         double elecNNe = 1.0, elecPT = 0.0, muonNNmu = 1.0, muonPT = 0.0;
+        double elecIpMinchi2 = -1.0, muonIpMinchi2 = -1.0;
+        
+        bool cut = false;
     
         // double ksCtau = 0.0, lambdaCtau = 0.0;
         // double ksMass = 0.0, lambdaMass = 0.0;
@@ -402,6 +417,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
           }
             
           // LOOP OVER THIS DAUGHTER OR SUBDAUGHTERS
+        
           for (std::vector<const Particle*>::const_iterator iidau = sublist.begin(); iidau != sublist.end(); ++iidau) {
         
             const Particle* daucand = *iidau;
@@ -509,6 +525,7 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
               if (daucand->proto()){
                 elecNNe = daucand->proto()->info(ProtoParticle::ProbNNe, -1.0);
                 elecPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
+                elecIpMinchi2 = ipChi2Min(daucand);
               }
             }
         
@@ -518,14 +535,30 @@ int TaggerCharmTool::addCands(std::vector< CharmParticle >& cands, const std::ve
               if (daucand->proto()) {
                 muonNNmu = daucand->proto()->info(ProtoParticle::ProbNNmu, -1.0);
                 muonPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
+                muonIpMinchi2 = ipChi2Min(daucand);
               }
             }
           }
         }
     
+        if (mode == CharmMode::Dz2kpipipi)
+          if (kaonIppvchi2 < 6 or pionIppvchi2 < 6)
+            cut = true;
+        if (mode == CharmMode::Dz2kpiX)
+          if (kaonIpMinchi2 < 10 or pionIpMinchi2 < 10)
+            cut = true;
+        if (mode == CharmMode::Dz2keX)
+          if (kaonIpMinchi2 < 10 or elecIpMinchi2 < 10)
+            cut = true;
+        if (mode == CharmMode::Dz2kmuX)
+          if (kaonIpMinchi2 < 10 or muonIpMinchi2 < 10)
+            cut = true;
+
+        if (cut)
+          continue;
 
         ///////////////
-        // FILL INFO //
+        // Fill INFO //
         ///////////////
 
         int flavour = 0;
