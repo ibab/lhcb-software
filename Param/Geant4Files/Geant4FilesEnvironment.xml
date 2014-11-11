@@ -3,12 +3,12 @@
   <env:set variable="GEANT4FILESROOT">${.}</env:set>
   <env:set variable="G4DATA">${GEANT4FILESROOT}/data</env:set>
   <env:set variable="G4LEVELGAMMADATA">${G4DATA}/PhotonEvaporation2.2</env:set>
-  <env:set variable="G4RADIOACTIVEDATA">${G4DATA}/RadioactiveDecay3.4</env:set>
-  <env:set variable="G4LEDATA">${G4DATA}/G4EMLOW6.23</env:set>
-  <env:set variable="G4NEUTRONHPDATA">${G4DATA}/G4NDL4.0</env:set>
+  <env:set variable="G4RADIOACTIVEDATA">${G4DATA}/RadioactiveDecay3.d</env:set>
+  <env:set variable="G4LEDATA">${G4DATA}/G4EMLOW6.32</env:set>
+  <env:set variable="G4NEUTRONHPDATA">${G4DATA}/G4NDL4.2</env:set>
   <env:set variable="G4ABLADATA">${G4DATA}/G4ABLA3.0</env:set>
   <env:set variable="G4REALSURFACEDATA">${G4DATA}/RealSurface1.0</env:set>
-  <env:set variable="G4NEUTRONXSDATA">${G4DATA}/G4NEUTRONXS1.1</env:set>
+  <env:set variable="G4NEUTRONXSDATA">${G4DATA}/G4NEUTRONXS1.2</env:set>
   <env:set variable="G4PIIDATA">${G4DATA}/G4PII1.3</env:set>
   <env:set variable="G4ELASTICDATA">${G4DATA}/G4ELASTIC1.1</env:set>
 </env:config>

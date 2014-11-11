@@ -4,8 +4,21 @@
 ! Purpose     : Hold link to Geant4 data files
 !-----------------------------------------------------------------------------
 
+! 2014-11-11 - Timothy Williams
+ - 
+ G4EMLOW(6.23->6.32)
+   . G4NDL(4.0->4.2)
+   . PhotonEvaporation(2.1->2.2)
+   . RadioactiveDecay(3.4->3.6)
+   . G4NEUTRONXS (1.1->1.2)
+   . G4PII (1.2->1.3)
+
+Updated links in data directory to locations of new data files
+
+
 ! 2013-08-27 - Marco Clemencic
- - Added environment XML file needed for CMake configuration.
+	- Added environment XML file needed for CMake configuration.
+
 
 !======================== Geant4Files v95r0 2012-08-20 =======================
 
