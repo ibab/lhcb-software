@@ -17,11 +17,12 @@ include_path none
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use     AlignKernel         v*  Alignment
-use 	AlignmentInterfaces	v*	Alignment
-use   	GaudiAlg          	v*
+use 	AlignmentInterfaces v*	Alignment
+use   	GaudiAlg            v*
 use     GaudiKernel         v*
 use     OnlineKernel        v*  Online
 use     OnlineAlign         v*  Online
+use     Boost               v*	LCG_Interfaces -no_auto_imports
 
 #use 	GSL               	v*	LCG_Interfaces
 #use	    CLHEP           	v*	LCG_Interfaces
@@ -49,12 +50,12 @@ library         AlignOnline      ../src/*.cpp -import=AIDA
 #============================================================================
 apply_pattern    component_library      library=AlignOnline
 # =============== LCG Dictionaries ============================================
-apply_pattern reflex_dictionary                                       \
-                dictionary=TAlignment                                   \
-                headerfiles=$(TALIGNMENTROOT)/dict/TAlignmentDict.h     \
-                selectionfile=$(TALIGNMENTROOT)/dict/TAlignmentDict.xml \
-                options="-U__MINGW32__" \
-                imports="Python -import=GaudiPython"
+#apply_pattern reflex_dictionary                                       \
+#                dictionary=AlignOnline                                   \
+#                headerfiles=$(ALIGNONLINEROOT)/dict/AlignOnlineDict.h     \
+#                selectionfile=$(ALIGNONLINEROOT)/dict/AlignOnlineDict.xml \
+#                options="-U__MINGW32__" \
+#                imports="Python -import=GaudiPython"
 
 
 
