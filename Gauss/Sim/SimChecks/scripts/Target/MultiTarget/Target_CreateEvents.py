@@ -82,93 +82,93 @@ Zplane = {'Al': {1: '200*mm', 5: '400*mm', 10: '600*mm'}, 'Be': {1: '800*mm', 5:
 Zorig = {'Al': {1: '100*mm', 5: '300*mm', 10: '500*mm'}, 'Be': {1: '700*mm', 5: '900*mm', 10: '1100*mm'}, 'Si': {1: '1300*mm', 5: '1500*mm', '10': '1700*mm'}}
 
 
-#Creating option file for analysis with all the options available
+def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) :
 
-if not os.path.exists(path):
-   os.makedirs(path)
+	#Creating option file for analysis with all the options available
 
-createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,thicks)
+	if not os.path.exists(path):
+		os.makedirs(path)
 
-sys.exit()
-#Starting jobs submission
+	createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,thicks)
 
-log = open('logfile','w')
+	#Starting jobs submission
 
-for model in models:
+	log = open('logfile','w')
 
-   if not os.path.exists(path+"/"+model):
-      os.makedirs(path+"/"+model)
-   
-   log.write('  ----------------------  Using ' + model+'\n')
+	for model in models:
 
-   for energy in energies:
+		if not os.path.exists(path+"/"+model):
+			os.makedirs(path+"/"+model)
+		
+	log.write('  ----------------------  Using ' + model+'\n')
+
+	for energy in energies:
       
-      if not os.path.exists(path+"/"+model+"/E"+str(energy)+"GeV"):
-         os.makedirs(path+"/"+model+"/E"+str(energy)+"GeV")
+		if not os.path.exists(path+"/"+model+"/E"+str(energy)+"GeV"):
+			os.makedirs(path+"/"+model+"/E"+str(energy)+"GeV")
 
-      log.write('  -----------------  ' + str(energy) +'GeV\n')
+		log.write('  -----------------  ' + str(energy) +'GeV\n')
 
-      for thick in thicks:
+		for thick in thicks:
+			
+			if not os.path.exists(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm"):
+				os.makedirs(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm")
          
-         if not os.path.exists(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm"):
-            os.makedirs(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm")
-         
-         log.write('  ------------  ' + str(thick)+'mm\n')
- 
-         for material in materialsTodo:
+		 	log.write('  ------------  ' + str(thick)+'mm\n')
 
-            log.write('  -------  ' + material+'\n')
+			for material in materialsTodo:
+				
+				log.write('  -------  ' + material+'\n')
+				
+				for particle in particlesTodo:
+					
+					log.write('  --  ' + particle+'\n')
+					log.flush()
+					
+					inputfile = "TargetMaterialGunMultiTargetLocalTemporary.py"
+					command = 's/PdgCode.*/PdgCode = ' + particles[particle] + '/'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|MaterialEval.ModP = .*|MaterialEval.ModP = ' + str(energy) + ' * GeV|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|ParticleGun.MaterialEval.ZPlane =.*|ParticleGun.MaterialEval.ZPlane = ' + Zplane[material][thick] + '|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|ParticleGun.MaterialEval.Zorig =.*|ParticleGun.MaterialEval.Zorig = ' + Zorig[material][thick] + '|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					
+					inputfile = "Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py"
+					command = 's/Multi.*.root/Multi_' + particle + '_in' + material + '.root/'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|physList = .*|physList = \''+model+'\'|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|targetThick = .*|targetThick = '+str(thick)+'|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|targetMat = .*|targetMat = \''+material+'\'|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|projID = .*|projID = '+particles[particle]+'|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					command = 's|projEng = .*|projEng = '+str(energy)+'|'
+					sub = subprocess.call(['sed', '-i', command, inputfile])
+					
+					sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+					
+			dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
+			sourcedir = os.environ['PWD']
+			source = os.listdir(sourcedir)
+			
+			for file in source:
+				if file.endswith(".root"):
+					if os.path.exists(dest+'/'+file):
+						os.remove(dest+'/'+file)
+						shutil.move(file,dest)
 
-            for particle in particlesTodo:
+	output = path+"/TargetOutput.root"
+	command = 'find '+path+'/*/*/* -name *.root | xargs hadd -f ' + output
+	os.system(command)
 
-               log.write('  --  ' + particle+'\n')
-               log.flush()
+	p = Plotter(path+"/", path+"/", models, particlesTodo, energies, materialsTodo, thicks)
 
-               inputfile = "TargetMaterialGunMultiTargetLocalTemporary.py"
-               command = 's/PdgCode.*/PdgCode = ' + particles[particle] + '/'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|MaterialEval.ModP = .*|MaterialEval.ModP = ' + str(energy) + ' * GeV|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|ParticleGun.MaterialEval.ZPlane =.*|ParticleGun.MaterialEval.ZPlane = ' + Zplane[material][thick] + '|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|ParticleGun.MaterialEval.Zorig =.*|ParticleGun.MaterialEval.Zorig = ' + Zorig[material][thick] + '|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-
-               inputfile = "Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py"
-               command = 's/Multi.*.root/Multi_' + particle + '_in' + material + '.root/'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|physList = .*|physList = \''+model+'\'|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|targetThick = .*|targetThick = '+str(thick)+'|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|targetMat = .*|targetMat = \''+material+'\'|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|projID = .*|projID = '+particles[particle]+'|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-               command = 's|projEng = .*|projEng = '+str(energy)+'|'
-               sub = subprocess.call(['sed', '-i', command, inputfile])
-			        
-               sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
-
-
-         dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
-         sourcedir = os.environ['PWD']
-         source = os.listdir(sourcedir)
-   
-         for file in source:
-            if file.endswith(".root"):
-               if os.path.exists(dest+'/'+file):
-                  os.remove(dest+'/'+file)
-               shutil.move(file,dest)
-
-output = path+"/TargetOutput.root"
-command = 'find '+path+'/*/*/* -name *.root | xargs hadd -f ' + output
-os.system(command)
-
-p = Plotter(path+"/", path+"/", models, particlesTodo, energies, materialsTodo, thicks)
-
-log.write('----------------   END  ------------------')
-log.close()
+	log.write('----------------   END  ------------------')
+	log.close()
 
 
 

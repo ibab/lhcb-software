@@ -7,6 +7,11 @@
 
 !========================== SimChecks v1r3 2014-10-08 ========================
 
+! 2014-11-12 - Luca Pescatore
+- Added new python option files for the Targets Tools.
+These allow to create definite sets of events without need to change any option:
+1mm Al, 1mm all materials, all thicknesses Al, all thicknesses and materials.
+
 ! 2014-10-30 - Luca Pescatore
  - Improved readability for Target and Radlength tools output
 

@@ -1,7 +1,7 @@
 from ROOT import *
 import os 
 
-name = { 1 : "Velo        ", 2: "Rich1       ", 3 : "Magnet      ", 4 : "OT1         ", 5 : "OT2         ", 6 : "OT3         ", 7 : "Rich2       ", 8 : "Detached muon", 9 : "Ecal        ", 10 : "Hcal        ", 11 : "Muon        "}
+name = { 1 : "Velo", 2: "Rich1", 3 : "Magnet", 4 : "OT1", 5 : "OT2", 6 : "OT3", 7 : "Rich2", 8 : "Detached muon", 9 : "Ecal", 10 : "Hcal", 11 : "Muon"}
 
 def makePlots(fileName = "Rad_merged.root", path = "plots/", type = "rad") :
 
@@ -51,7 +51,7 @@ def makePlots(fileName = "Rad_merged.root", path = "plots/", type = "rad") :
 		#c.Print(namefile)
 		cumul.SetPoint(p,i,h1.GetMean())
 		cumul.SetPointError(p,0,h1.GetMeanError())
-		txtfile.write( name[i] +  "\t& " + '{:5.4f} \\pm {:5.4f}'.format(h1.GetMean(),h1.GetMeanError()) + " \t \\\\ \n" )
+		txtfile.write( '{0:13}'.format(name[i]) +  "\t& " + '{:5.4f} \\pm {:5.4f}'.format(h1.GetMean(),h1.GetMeanError()) + " \t \\\\ \n" )
 
 		namehisto = "Z_" + type +"_ID"+str(i)
 		var = "Zpos>>" + namehisto
@@ -160,11 +160,20 @@ if __name__ == "__main__":
 	outpath = "plots/"
 	type = "rad"
 
-	if(len(sys.argv) > 1) :
-		fileName = sys.argv[1]
-	if(len(sys.argv) > 2) :
-		type = sys.argv[2]
-	if(len(sys.argv) > 3) :
-		outpath = sys.argv[3]
-
+	args = 0
+	for ag in sys.argv :
+		if(ag=="-inter") :
+			type = "inter"
+			args+=1
+		if(ag=="-f") :
+			args += 2
+			if(os.path.isfile(sys.argv[args])) :
+				fileName = sys.argv[args]
+			else :
+				print "File", sys.argv[args], "not found!"
+				sys.exit()
+		if(ag=="-p") :
+			args += 2
+			outpath = sys.argv[args]
+	
 	makePlots(fileName,outpath,type)
