@@ -48,7 +48,7 @@ ROMethods =['listProjects',
             'checkUnused' ]
 
 
-confDB = SoftConfDB()
+confDB = SoftConfDB(dbConnectStr="http://localhost:7474/db/data")
 initModule(__name__, SoftConfDB, confDB, ROMethods)
 
 
