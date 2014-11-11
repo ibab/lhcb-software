@@ -20,6 +20,7 @@ Created on Mar 25, 2014
 
 import os
 import re
+import sys
 import logging
 from string import Template
 from subprocess import Popen, PIPE
@@ -302,8 +303,8 @@ def get_native_versions(native_version, binary):
                 print "get_native_version - %s home is %s, IGNORING package from system" % (pak, value)
                 del packages_versions[pak]
             else:
-                print "get_native_version - %s home is %s, not in external or app/releases, ABORTING" % (pak, value)
-                sys.exit(1)
+                print "get_native_version - %s home is %s, not in external or app/releases, WARNING WARNING WARNING" % (pak, value)
+                #sys.exit(1)
         else:
             # Adding the pakType to the attribute of the package in the map
             l = packages_versions[pak]
