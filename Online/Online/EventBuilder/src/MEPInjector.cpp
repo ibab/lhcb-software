@@ -447,8 +447,8 @@ if (!sc.isSuccess()) {
     else {
     	// Open the raw socket for IP header management
         if ((m_ToHLTSock =  MEPRxSys::open_sock_arb_source(m_MEPProto, m_MEPBufSize, errmsg)) < 0)    {
-	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	        return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
         }
     }
 
@@ -456,52 +456,58 @@ if (!sc.isSuccess()) {
     m_OdinTell1ID = -1;
 
     if (!m_AutoMode) {
+
     	// Opens sockets to the Online TFC and HLT nodes
         void *memory = extendBuffer(&m_OdinData, m_OdinBufSize);
         m_OdinMEP = new(memory) MEPEvent(0);
+
         if (m_OdinMEP == NULL) {
             ERRMSG(msgLog, "Odin MEP Buffer Allocation failed");
             return StatusCode::FAILURE;
         }
+
         msgLog << MSG::DEBUG << WHERE << "IP to send to HLT : "<<m_HLTIfIPAddr << " interface : "<<m_HLTEthInterface << endmsg;
         msgLog << MSG::DEBUG << WHERE << "IP to send to odin : "<<m_OdinIfIPAddr << " interface : "<<m_OdinEthInterface << endmsg;
 
-	      if ((m_FromOdinSock = MEPRxSys::open_sock2(m_MEPProto, m_OdinBufSize * m_PackingFactor, m_OdinEthInterface, 
-          "eth1", false, errmsg)) < 0) {
-	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	        return StatusCode::FAILURE;
-	      }
-        msgLog << MSG::DEBUG << "open_sock2 FromOdinSock " << errmsg << endmsg;
+	if ((m_FromOdinSock = MEPRxSys::open_sock(m_MEPProto, m_OdinBufSize * m_PackingFactor, m_OdinEthInterface, m_OdinIfIPAddr, false, errmsg)) < 0) {
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
+	}
 
-        if ((m_FromHLTSock = MEPRxSys::open_sock2(m_MEPReqProto,
+        if ((m_FromHLTSock = MEPRxSys::open_sock(m_MEPReqProto,
                                               m_MEPReqBufSize,
-				                    	      m_HLTEthInterface, "eth1",
+					      m_HLTEthInterface, m_HLTIfIPAddr,
                                               true, errmsg)) < 0) {
-	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	        return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
         }
+
         if ((m_ToOdinSock = MEPRxSys::open_sock(m_MEPReqProto,
                                               m_MEPReqBufSize,
                                               m_OdinEthInterface, m_OdinIfIPAddr,
                                               true, errmsg)) < 0) {
-	        ERRMSG(msgLog, "Failed to open socket:" << errmsg);
-	        return StatusCode::FAILURE;
+	  ERRMSG(msgLog, "Failed to open socket:" << errmsg);
+	  return StatusCode::FAILURE;
         }
+
         // Initializes IPC tools
         if(sem_init(&m_OdinCount, 0, 0) == -1) {
             ERRMSG(msgLog, "Failed to initialize semaphore");
             perror("sem_init");
             return StatusCode::FAILURE;
         }
+
         if(sem_init(&m_MEPReqCount, 0, 0) == -1) {
             ERRMSG(msgLog, "Failed to initialize semaphore");
             perror("sem_init");
             return StatusCode::FAILURE;
         }
-	      if (pthread_mutex_init(&m_SyncMainOdin, NULL)) {
+
+
+	if (pthread_mutex_init(&m_SyncMainOdin, NULL)) {
             ERRMSG(msgLog, "Failed to initialize mutex");
             return StatusCode::FAILURE;
-	      }
+	}
         if (pthread_mutex_init(&m_SyncReqOdin, NULL)) {
             ERRMSG(msgLog, "Failed to initialize mutex");
             return StatusCode::FAILURE;
@@ -720,6 +726,7 @@ void displayBuff(char *buf, int size) {
  */
 StatusCode MEPInjector::getEvent(int nbEv) {
     static MsgStream msgLog(msgSvc(), name());
+    msgLog << MSG::DEBUG << WHERE << endmsg;
 
     Requirement r;
     int pp[TWOMB];
@@ -731,7 +738,10 @@ StatusCode MEPInjector::getEvent(int nbEv) {
     OnlineRunInfo *ori = ( OnlineRunInfo *) (ccur+IPHDRSZ+MEPHDRSZ+nbEv*(ODFRAGSZ) + FRAGHDRSZ + BKHDRSZ);
 
     int eventActual = 0;
-    do {
+#if 0   
+    do 
+#endif
+    {
         if(m_EventBuffers.size() < 1) {
             msgLog << MSG::ERROR << WHERE << "No input to get event from ..." << endmsg;
             return StatusCode::FAILURE;
@@ -756,10 +766,9 @@ StatusCode MEPInjector::getEvent(int nbEv) {
             if(ite == m_EventBuffers.end()) {
                 msgLog << MSG::WARNING << "Trigger not implemented: "<< ori->triggerType << ", buffer name: " << bufname << ", using first buffer as default."<< endmsg;
                 bmid = m_EventBuffers.begin()->second;
-            }
-            else
+            } else {
                 bmid = ite->second;
-
+            }
 /*
             switch(ori->triggerType) {
 
@@ -798,14 +807,18 @@ StatusCode MEPInjector::getEvent(int nbEv) {
         }
 
         // Checks if the buffer is not empty before to try to get an event from it
-        if(mbm_events_in_buffer(bmid, &eventActual) != MBM_NORMAL) {
-            msgLog << MSG::WARNING << WHERE << "Error checking number of event in buffer of trigger type: " << ori->triggerType << endmsg;
+#if 0
+        if (mbm_events_in_buffer(bmid, &eventActual) != MBM_NORMAL) {
+            msgLog << MSG::WARNING << WHERE << "Error checking number of event in buffer of trigger type: " 
+              << ori->triggerType << endmsg;
             MEPRxSys::microsleep(1000);
         }
-    }
-    while(eventActual <= 0 && m_InjState == RUNNING);
-
-    if(m_InjState != RUNNING) {
+#endif 
+    }   
+#if 0    
+    while (eventActual <= 0 && m_InjState == RUNNING); // do 
+#endif    
+    if (m_InjState != RUNNING) {
         msgLog << MSG::INFO << WHERE << "End of injection : mbm_get_event cancelled" << endmsg;
         return StatusCode::RECOVERABLE;
     }
@@ -1968,7 +1981,7 @@ StatusCode MEPInjector::sendMEPReq(MEPReq * req) {
  */
 StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen) {
     static MsgStream msgLog(msgSvc(), name());
-    msgLog << MSG::DEBUG << WHERE << endmsg;
+    //msgLog << MSG::DEBUG << WHERE << endmsg;
 
     int n = MEPRxSys::rx_poll(m_FromOdinSock, m_TimeOut);
 
@@ -1977,17 +1990,14 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen) {
         // which checks boolean which asks for end of injection
         return StatusCode::RECOVERABLE;
     }
-
     // Reception with IP header
     int len =MEPRxSys::recv_msg(m_FromOdinSock, bufMEP,  m_OdinBufSize, 0);
     if (len < 0) {
-	if (!MEPRxSys::rx_would_block()) {
-	    ERRMSG(msgLog, " recvmsg");
-            return StatusCode::FAILURE;
-        }
+	    if (!MEPRxSys::rx_would_block()) {
+	      ERRMSG(msgLog, " recvmsg");
+        return StatusCode::FAILURE;
+      }
     }
-
-
     RTL::IPHeader * iphdr = (RTL::IPHeader *) (bufMEP);
 
     //Source address = 192.169.5.X + 32 (where OdinIPAdress for MEP Requests is 192.169.5.X)
@@ -2009,10 +2019,7 @@ StatusCode MEPInjector::receiveOdinMEP(char *bufMEP, int *retLen) {
     }
     prevL0ID = mephdr->m_l0ID;
     prevPF = mephdr->m_nEvt;
-
-
     *retLen = len;
-
     return StatusCode::SUCCESS;
 }
 
@@ -2555,10 +2562,9 @@ StatusCode MEPInjector::finalize() {
 StatusCode MEPInjector::run() {
     static MsgStream msgLog(msgSvc(), name());
     m_IncidentSvc->addListener(this, "DAQ_CANCEL", 0, true, true);
-
-/*
-    while(m_InjState != RUNNING){
-        switch(m_InjState) {
+#if 0
+    while (m_InjState != RUNNING) {
+        switch( m_InjState) {
         case STOPPED:
         case NOT_READY:
             msgLog << MSG::DEBUG << WHERE << "Exiting from reading loop" << endmsg;
@@ -2569,13 +2575,11 @@ StatusCode MEPInjector::run() {
         default: continue;
         }
     }
-*/
-
+#endif
     StatusCode sc = StatusCode::SUCCESS;
-
     msgLog << MSG::ALWAYS << __PRETTY_FUNCTION__ << endmsg;
 
-    if(!m_AutoMode) {
+    if (!m_AutoMode) {
         bzero((void *) &m_InjReq, MEP_REQ_LEN);
         m_InjReq.nmep = m_InitialCredits;
         sc = sendMEPReq(&m_InjReq);
@@ -2583,14 +2587,14 @@ StatusCode MEPInjector::run() {
             ERRMSG(msgLog, " MEP Request Send");
             return sc;
         }
-
         m_InjReq.nmep = 1;
     }
 
     m_InjState = RUNNING;
 
     sc = StatusCode::SUCCESS;
-    while(sc.isSuccess() && m_InjState == RUNNING && (!m_LocalTest || (m_LocalTest && m_TestLimit > m_TotEvtsSent))) {
+    while (sc.isSuccess() && m_InjState == RUNNING && (!m_LocalTest || (
+            m_LocalTest && m_TestLimit > m_TotEvtsSent))) {
          sc = injectorProcessing();
     }
 /*
@@ -2601,7 +2605,6 @@ StatusCode MEPInjector::run() {
     }
 */
     msgLog << MSG::INFO << WHERE << "End of injection : End of run" << endmsg;
-
     return StatusCode::SUCCESS;
 }
 
