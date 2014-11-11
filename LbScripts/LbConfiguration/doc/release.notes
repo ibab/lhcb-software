@@ -1,3 +1,7 @@
+2014-11-11  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r1p1
+
 2014-11-10  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Project.py: Added project AlignmentOnline (LBCORE-661)
