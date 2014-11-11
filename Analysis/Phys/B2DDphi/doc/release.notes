@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : Phys/B2DDphi
+! Responsible : Maurizio Martinelli
+! Purpose     : Analysis of the B->DDphi final states
+!-----------------------------------------------------------------------------
+
+! 2014-11-11 - Maurizio Martinelli
+ - initial import of the package
