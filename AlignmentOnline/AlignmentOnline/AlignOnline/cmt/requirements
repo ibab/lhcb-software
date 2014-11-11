@@ -25,23 +25,6 @@ use     OnlineAlign         v*  Online
 use     Boost               v*	LCG_Interfaces -no_auto_imports
 use 	DetDesc		    v*	Det
 
-#use 	GSL               	v*	LCG_Interfaces
-#use	    CLHEP           	v*	LCG_Interfaces
-#use     AlignSolvTools          v*      Alignment
-#use 	AlignTrTools		v*	Alignment
-#use     AlignEvent              v*      Alignment
-#use   	RecEvent          	v*      Event
-#use 	TrackEvent		v*	Event
-#use 	TrackFitEvent		v*	Tr
-#use   	TrackInterfaces   	v*      Tr
-#use   	TrackKernel	   	v*      Tr
-#use 	STDet			v*	Det
-#use     MuonDet                 v*      Det
-#use     LHCbKernel              v*      Kernel
-#use     LHCbMath                v*      Kernel
-#use     LoKiCore        	v*      Phys
-#use     LinkerEvent		v*	Event
-#use     Boost            	v*	LCG_Interfaces -no_auto_imports
 #============================================================================
 # Component library building rule
 #============================================================================
@@ -72,3 +55,8 @@ apply_pattern QMTest
 #============================================================================
 # Install the configurable
 #apply_pattern install_python_modules
+
+
+private
+macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "
+end_private
