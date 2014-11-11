@@ -23,6 +23,7 @@ use     GaudiKernel         v*
 use     OnlineKernel        v*  Online
 use     OnlineAlign         v*  Online
 use     Boost               v*	LCG_Interfaces -no_auto_imports
+use 	DetDesc		    v*	Det
 
 #use 	GSL               	v*	LCG_Interfaces
 #use	    CLHEP           	v*	LCG_Interfaces

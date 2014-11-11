@@ -4,6 +4,9 @@ Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
  2014-11-11 - Maurizio Martinelli
+ - modified requirements to add DetDesc dependency (RunChangeHandler)
+
+ 2014-11-11 - Maurizio Martinelli
  - modified requirements to remove dictionary generation
 
  2014-11-11 - Maurizio Martinelli
