@@ -190,7 +190,7 @@ class BuildLCGTarScript(Script):
         allrpms = []
         for k, v in externalsDict.items():
             # Ignore packages from the system for the moment
-            if v[3].startswith("/usr"):
+            if v[3] != None and v[3].startswith("/usr"):
                 continue
             # Exception for expat to unblock things for the moment
             if k == "Expat":
