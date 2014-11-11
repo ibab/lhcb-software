@@ -1,6 +1,7 @@
 2014-11-11  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* python/LbRelease/SoftConfDB/ROInterface.py: CHanged default server URL.
+	* python/LbRelease/SoftConfDB/ROInterface.py: Changed default server URL.
+
 2014-11-10  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* scripts/mkLCGCMTTarFromRPM: LBCORE-662: Allow to build -dbg package 
