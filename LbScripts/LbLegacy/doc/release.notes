@@ -1,3 +1,8 @@
+2014-11-11 Ben Couturier  <Ben.Couturier@cern.ch>
+
+        * cmt/requirements: release of version v6r1p1
+        * python/LbLegacy/install_project.py:  release of LbScripts version v8r1p1
+
 2014-10-17  Ben Couturier  <Ben.Couturier@cern.ch>
 
         * scripts/mkLCGCMTtar: LBCORE-646 Allow to take packages from external AND from releases (for LHCbDirac) 
