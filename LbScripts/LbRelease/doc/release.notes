@@ -1,5 +1,6 @@
 2014-11-11  Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v5r1p1
 	* python/LbRelease/SoftConfDB/ROInterface.py: Changed default server URL.
 
 2014-11-10  Ben Couturier <Ben.Couturier@cern.ch>
