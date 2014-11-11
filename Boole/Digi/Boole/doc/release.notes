@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Changes to QMTests
+  . Revert BooleExclusions.py change of v29r1
+  . Follow FTDet v4 compatibility changes
+
 </PRE><H1><A NAME=v29r1p1>2014-11-07 Boole v29r1p1</A></H1><PRE>
 This version uses projects:
  LCG_70root6 (ROOT 6.02.01), Gaudi v25r5, LHCb v38r2p1, Lbcom v16r1p1
