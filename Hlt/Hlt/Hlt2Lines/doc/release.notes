@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2014-09-30 - Michael Kolpin
+ - Additional cuts for tracking eff. lines in Hlt2InclusiveMuonLines
+
 !========================= Hlt2Lines v9r4 2014-11-05 =========================
 
 ! 2014-10-17 - Regis Lefevre

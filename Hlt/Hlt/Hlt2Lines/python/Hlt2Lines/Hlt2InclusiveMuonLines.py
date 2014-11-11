@@ -59,14 +59,20 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'MuTrackNoIPDoca'    : 0.100      # mm
                   ,'MuTrackNoIPMass'    : 2900       # MeV
 		  # Muon TT cuts
-                  ,'MuonTTTagPt'                :   0 #MeV
-                  ,'MuonTTLongMuonPID'          :   2 #dimensionless
-                  ,'MuonTTLongPt'               :1300 #MeV
-                  ,'MuonTTJPsiPt'               :1000 #MeV
-                  ,'MuonTTMassWindow'           : 500 #MeV
+                  ,'MuonTTProbeP'              :    0 #MeV
+                  ,'MuonTTProbePt'             :    0 #MeV
+                  ,'MuonTTLongMuonPID'         :    2 #dimensionless
+                  ,'MuonTTLongP'               :10000 #MeV
+                  ,'MuonTTLongPt'              : 1300 #MeV
+                  ,'MuonTTLongTrChi2'          :    5 #dimensionless
+                  ,'MuonTTJPsiP'               : 1000 #MeV
+                  ,'MuonTTJPsiPt'              : 1000 #MeV
+                  ,'MuonTTJPsiMaxIP'           :    1 #mm
+                  ,'MuonTTJPsiVtxChi2'         :    5 #dimensionless
+                  ,'MuonTTMassWindow'          :  500 #MeV
 		  # VeloMuon cuts
-                  ,'VeloTagPt'                    :   0 #MeV
-		  ,'VeloTagTrchi2'		  :   5 #dimensionless
+                  ,'VeloProbePt'                  :   0 #MeV
+		  ,'VeloProbeTrChi2'		  :   5 #dimensionless
                   ,'VeloLongMuonPID'              :   1 #dimensionless
                   ,'VeloLongPt'                   :   0 #MeV
                   ,'VeloLongP'                    :7000 #MeV
@@ -75,14 +81,16 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'VeloJPsiPt'                   : 500 #MeV
 		  ,'VeloVertchi2'		  :   2 #dimensionless
 		  # DownstreamMuon cuts
-                  ,'DownstreamTagPt'                    : 200 #MeV
-                  ,'DownstreamTagP'                     :2000 #MeV
-		  ,'DownstreamTagTrchi2'	        :  10 #dimensionless
-                  ,'DownstreamLongPt'                   : 200 #MeV
-                  ,'DownstreamLongP'                    :2000 #MeV
+                  ,'DownstreamProbePt'                  : 200 #MeV
+                  ,'DownstreamProbeP'                   :3000 #MeV
+		  ,'DownstreamProbeTrchi2'	        :  10 #dimensionless
+                  ,'DownstreamLongPt'                   : 700 #MeV
+                  ,'DownstreamLongP'                    :5000 #MeV
 		  ,'DownstreamLongTrchi2'		:  10 #dimensionless
+                  ,'DownstreamLongMuonPID'	        :   2 #dimensionless
+                  ,'DownstreamLongMinIP'	        : 0.5 #mm
                   ,'DownstreamJPsiDOCA'                 :   5 #mm
-                  ,'DownstreamMassWindow'               : 500 #MeV
+                  ,'DownstreamMassWindow'               : 200 #MeV
                   ,'DownstreamJPsiPt'                   :   0 #MeV
 		  ,'DownstreamVertchi2'			:  25 #dimensionless
                   }
@@ -314,13 +322,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
 
         filterPlus1 = Hlt2Member( FilterDesktop
-                                , "filterPlus1"
-                                , Code = "(Q > 0) & (PT>%(MuonTTLongPt)s*MeV) & (PIDmu >-%(MuonTTLongMuonPID)s)"%self.getProps()
+                                , "filterPlus"
+                                , Code = "(Q > 0) & (PT>%(MuonTTLongPt)s*MeV) & (P>%(MuonTTLongP)s*MeV) & (TRCHI2DOF<%(MuonTTLongTrChi2)s) & (PIDmu >-%(MuonTTLongMuonPID)s)"%self.getProps()
                                 , Inputs  = [ BiKalmanFittedMuons ]
                                 )
 
         TOSTagMuonsFilter1 = Hlt2Member( TisTosParticleTagger
-                                         ,"TOSTagMuonsFilter1"
+                                         ,"TOSTagMuonsFilter"
                                          ,TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
                                          ,Inputs = [ filterPlus1 ]
                                          ,NoRegex=True
@@ -331,18 +339,18 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                          )
 
         filterMinus1 = Hlt2Member( FilterDesktop
-                                 , "filterMinus1"
-                                 , Code = "(Q < 0) & (PT>%(MuonTTTagPt)s*MeV)"%self.getProps()
+                                 , "filterMinus"
+                                 , Code = "(Q < 0) & (PT>%(MuonTTProbePt)s*MeV) & (P>%(MuonTTProbeP)s*MeV)"%self.getProps()
                                  , Inputs  = [ TagMuonTTMuons ]
                                  , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
                                  )
                              
 
         JPsiCombine1 = Hlt2Member( CombineParticles
-                                , 'JPsiCombine1'
+                                , 'JPsiCombine'
                                 , Inputs = [ TOSTagMuonsFilter1, filterMinus1 ]
                                 , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
-                                , MotherCut =  "(PT>%(MuonTTJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(MuonTTMassWindow)s*MeV)"%self.getProps()
+                                , MotherCut =  "(PT>%(MuonTTJPsiPt)s*MeV) & (P>%(MuonTTJPsiP)s*MeV) & (MIPDV(PRIMARY)<%(MuonTTJPsiMaxIP)s) & (VFASPF(VCHI2/VDOF)<%(MuonTTJPsiVtxChi2)s) & (ADMASS('J/psi(1S)')<%(MuonTTMassWindow)s*MeV)"%self.getProps()
                                 , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
                                 )
 
@@ -358,13 +366,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 	###################### positive tag track, negative long track ###########################
 
         filterMinus2 = Hlt2Member( FilterDesktop
-                                , "filterMinus2"
-                                , Code = "(Q < 0) & (PT>%(MuonTTLongPt)s*MeV) & (PIDmu >-%(MuonTTLongMuonPID)s)"%self.getProps()
+                                , "filterMinus"
+                                , Code = "(Q < 0) & (PT>%(MuonTTLongPt)s*MeV) & (P>%(MuonTTLongP)s*MeV) & (TRCHI2DOF<%(MuonTTLongTrChi2)s) & (PIDmu >-%(MuonTTLongMuonPID)s)"%self.getProps()
                                 , Inputs  = [ BiKalmanFittedMuons ]
                                 )
 
         TOSTagMuonsFilter2 = Hlt2Member( TisTosParticleTagger
-                                         ,"TOSTagMuonsFilter2"
+                                         ,"TOSTagMuonsFilter"
                                          ,TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
                                          ,Inputs = [ filterMinus2 ]
                                          ,NoRegex=True
@@ -375,17 +383,17 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                          )
 
         filterPlus2 = Hlt2Member( FilterDesktop
-                                 , "filterPlus2"
-                                 , Code = "(Q > 0) & (PT>%(MuonTTTagPt)s*MeV)"%self.getProps()
+                                 , "filterPlus"
+                                 , Code = "(Q > 0) & (PT>%(MuonTTProbePt)s*MeV) & (P>%(MuonTTProbeP)s*MeV)"%self.getProps()
                                  , Inputs  = [ TagMuonTTMuons ]
                                  , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
                                  )
                              
         JPsiCombine2 = Hlt2Member( CombineParticles
-                      , 'JPsiCombine1'
+                      , 'JPsiCombine'
                       , Inputs = [ TOSTagMuonsFilter2, filterPlus2 ]
                       , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
-                      , MotherCut =  "(PT>%(MuonTTJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(MuonTTMassWindow)s*MeV)"%self.getProps()
+                      , MotherCut =  "(PT>%(MuonTTJPsiPt)s*MeV) & (P>%(MuonTTJPsiP)s*MeV) & (MIPDV(PRIMARY)<%(MuonTTJPsiMaxIP)s) & (VFASPF(VCHI2/VDOF)<%(MuonTTJPsiVtxChi2)s) & (ADMASS('J/psi(1S)')<%(MuonTTMassWindow)s*MeV)"%self.getProps()
                       , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
                       )
 
@@ -393,7 +401,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('TrackEffMuonTT2'
                       , prescale = self.prescale
                       , L0DU = "L0_CHANNEL('DiMuon')"
-                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, TagMuonTTMuons, filterMinus1, JPsiCombine1 ]
+                      , algos = [ BiKalmanFittedMuons, filterMinus2, TOSTagMuonsFilter2, TagMuonTTMuons, filterPlus2, JPsiCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT2Decision" : 50602 } )
@@ -406,13 +414,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
 
         filterVeloPlus1 = Hlt2Member( FilterDesktop
-                                , "filterVeloPlus1"
+                                , "filterPlus"
                                 , Code = "(Q > 0) & (TRCHI2DOF <%(VeloLongTrchi2)s) & (P>%(VeloLongP)s*MeV) & (PT>%(VeloLongPt)s*MeV) & (PIDmu >-%(VeloLongMuonPID)s)"%self.getProps()
                                 , Inputs  = [ BiKalmanFittedMuons ]
                                 )
 
         TOSTagVeloMuonsFilter1 = Hlt2Member( TisTosParticleTagger
-                                         ,"TOSTagVeloMuonsFilter1"
+                                         ,"TOSTagMuonsFilter"
 					 ,TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
                                          ,Inputs = [ filterVeloPlus1 ]
                                          ,NoRegex=True
@@ -423,14 +431,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                          )
 
         filterVeloMinus1 = Hlt2Member( FilterDesktop
-                                 , "filterVeloMinus1"
-                                 , Code = "(Q < 0) & (TRCHI2DOF <%(VeloTagTrchi2)s) & (PT>%(VeloTagPt)s*MeV)"%self.getProps()
+                                 , "filterMinus"
+                                 , Code = "(Q < 0) & (TRCHI2DOF <%(VeloProbeTrChi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
                                  , Inputs  = [ TagVeloMuons ]
                                  )
 
 
         JPsiVeloCombine1 = Hlt2Member( CombineParticles
-                                , 'JPsiVeloCombine1'
+                                , 'JPsiCombine'
                                 , Inputs = [ TOSTagVeloMuonsFilter1, filterVeloMinus1 ]
                                 , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
                                 , MotherCut =  "(VFASPF(VCHI2/VDOF)<%(VeloVertchi2)s) & (PT>%(VeloJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(VeloMassWindow)s*MeV)"%self.getProps()
@@ -449,13 +457,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 	################ positive tag track, negative long track ######################
 
         filterVeloMinus2 = Hlt2Member( FilterDesktop
-                                , "filterVeloMinus2"
-                                , Code = "(Q < 0) & (TRCHI2DOF <%(VeloLongTrchi2)s) & (P>%(VeloLongP)s*MeV) & (PT>%(VeloLongPt)s*MeV) & (PIDmu >-%(VeloLongMuonPID)s)"%self.getProps()
+                                , "filterMinus"
+                                , Code = "(Q < 0) & (TRCHI2DOF <%(VeloLongTrChi2)s) & (P>%(VeloLongP)s*MeV) & (PT>%(VeloLongPt)s*MeV) & (PIDmu >-%(VeloLongMuonPID)s)"%self.getProps()
                                 , Inputs  = [ BiKalmanFittedMuons ]
                                 )
 
         TOSTagVeloMuonsFilter2 = Hlt2Member( TisTosParticleTagger
-                                         ,"TOSTagVeloMuonsFilter2"
+                                         ,"TOSTagMuonsFilter"
 					 ,TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
                                          ,Inputs = [ filterVeloMinus2 ]
                                          ,NoRegex=True
@@ -466,14 +474,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                          )
 
         filterVeloPlus2 = Hlt2Member( FilterDesktop
-                                 , "filterVeloPlus2"
-                                 , Code = "(Q > 0) & (TRCHI2DOF <%(VeloTagTrchi2)s) & (PT>%(VeloTagPt)s*MeV)"%self.getProps()
+                                 , "filterPlus"
+                                 , Code = "(Q > 0) & (TRCHI2DOF <%(VeloProbeTrChi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
                                  , Inputs  = [ TagVeloMuons ]
                                  )
 
 
         JPsiVeloCombine2 = Hlt2Member( CombineParticles
-                                , 'JPsiVeloCombine2'
+                                , 'JPsiCombine'
                                 , Inputs = [ TOSTagVeloMuonsFilter2, filterVeloPlus2 ]
                                 , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
                                 , MotherCut =  "(VFASPF(VCHI2/VDOF)<%(VeloVertchi2)s) & (PT>%(VeloJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(VeloMassWindow)s*MeV)"%self.getProps()
@@ -496,13 +504,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 	############### positive long track, negative tag track #########################
 
         filterDownstreamPlus1 = Hlt2Member( FilterDesktop
-                                , "filterDownstreamPlus1"
-                                , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamLongTrchi2)s) & (P>%(DownstreamLongP)s*MeV) & (PT>%(DownstreamLongPt)s*MeV)"%self.getProps()
+                                , "filterPlus"
+                                , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamLongTrchi2)s) & (P>%(DownstreamLongP)s*MeV) & (PT>%(DownstreamLongPt)s*MeV) & (MIPDV(PRIMARY)>%(DownstreamLongMinIP)s)"%self.getProps()
                                 , Inputs  = [ BiKalmanFittedMuons ]
                                 )
 
         TOSTagDownstreamMuonsFilter1 = Hlt2Member( TisTosParticleTagger
-                                         ,"TOSTagDownstreamMuonsFilter1"
+                                         ,"TOSTagMuonsFilter"
                                          ,TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
                                          ,Inputs = [ filterDownstreamPlus1 ]
                                          ,NoRegex=True
@@ -513,14 +521,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                          )
 
         filterDownstreamMinus1 = Hlt2Member( FilterDesktop
-                                 , "filterDownstreamMinus1"
-                                 , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamTagTrchi2)s) & (PT>%(DownstreamTagPt)s*MeV) & (P>%(DownstreamTagP)s*MeV)"%self.getProps()
+                                 , "filterMinus"
+                                 , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV) & (PIDmu >-%(DownstreamLongMuonPID)s)"%self.getProps()
                                  , Inputs  = [ TagDownstreamMuons ]
                                  )
 
 
         JPsiDownstreamCombine1 = Hlt2Member( CombineParticles
-                                , 'JPsiDownstreamCombine1'
+                                , 'JPsiCombine'
                                 , Inputs = [ TOSTagDownstreamMuonsFilter1, filterDownstreamMinus1 ]
                                 , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
 				, CombinationCut = "(AMAXDOCA('') < %(DownstreamJPsiDOCA)s*mm)"%self.getProps()
@@ -540,13 +548,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 	################# positive tag track, negative long track ####################
 
         filterDownstreamMinus2 = Hlt2Member( FilterDesktop
-                                , "filterDownstreamMinus2"
-                                , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamLongTrchi2)s) & (P>%(DownstreamLongP)s*MeV) & (PT>%(DownstreamLongPt)s*MeV)"%self.getProps()
+                                , "filterMinus"
+                                , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamLongTrchi2)s) & (P>%(DownstreamLongP)s*MeV) & (PT>%(DownstreamLongPt)s*MeV) & (PIDmu >-%(DownstreamLongMuonPID)s) & (MIPDV(PRIMARY)>%(DownstreamLongMinIP)s)"%self.getProps()
                                 , Inputs  = [ BiKalmanFittedMuons ]
                                 )
 
         TOSTagDownstreamMuonsFilter2 = Hlt2Member( TisTosParticleTagger
-                                         ,"TOSTagDownstreamMuonsFilter2"
+                                         ,"TOSTagMuonsFilter"
                                          ,TisTosSpecs = { "Hlt1TrackMuonDecision%TOS":0 }
                                          ,Inputs = [ filterDownstreamMinus2 ]
                                          ,NoRegex=True
@@ -557,14 +565,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                          )
 
         filterDownstreamPlus2 = Hlt2Member( FilterDesktop
-                                 , "filterDownstreamPlus2"
-                                 , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamTagTrchi2)s) & (PT>%(DownstreamTagPt)s*MeV) & (P>%(DownstreamTagP)s*MeV)"%self.getProps()
+                                 , "filterPlus"
+                                 , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV)"%self.getProps()
                                  , Inputs  = [ TagDownstreamMuons ]
                                  )
 
 
         JPsiDownstreamCombine2 = Hlt2Member( CombineParticles
-                                , 'JPsiDownstreamCombine2'
+                                , 'JPsiCombine'
                                 , Inputs = [ TOSTagDownstreamMuonsFilter2, filterDownstreamPlus2 ]
                                 , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
 				, CombinationCut = "(AMAXDOCA('') < %(DownstreamJPsiDOCA)s*mm)"%self.getProps()
