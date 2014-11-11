@@ -1,3 +1,17 @@
+2014-11-11 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r1p1
+
+	LbConfiguration
+	* python/LbConfiguration/Project.py: Added project AlignmentOnline (LBCORE-661)
+
+	LbRelease
+	* python/LbRelease/SoftConfDB/ROInterface.py: Changed default server URL.
+	* scripts/mkLCGCMTTarFromRPM: LBCORE-662: Allow to build -dbg package for externals
+
+	LbLegacy
+	* scripts/mkLCGCMTtar: LBCORE-646 Allow to take packages from external AND from releases (for L
+
 2014-10-16 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r1
