@@ -62,12 +62,6 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
     >>  ( ( TrNVELOMISS < %(Velo_Qcut)s ) )
     >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nVelo' , LoKi.Monitoring.ContextSvc ) )
-    >>  pET
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass PatVeloTT', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nVeloTT', LoKi.Monitoring.ContextSvc ) )
-    >>  %(forward)s
-    >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
-    >>  tee  ( monitor( TC_SIZE    , 'nForward', LoKi.Monitoring.ContextSvc ) )
     >>  ( (TrTNORMIDC > %(TrNTHits)s ) & ( TrPT > %(TrackPT)s * MeV ) & ( TrP  > %(TrackP)s  * MeV ) )
     >>  tee  ( monitor( TC_SIZE > 0, '# pass Kaon P/PT', LoKi.Monitoring.ContextSvc ) )
     >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
