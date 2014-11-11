@@ -92,7 +92,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'DownstreamJPsiDOCA'                 :   5 #mm
                   ,'DownstreamMassWindow'               : 200 #MeV
                   ,'DownstreamJPsiPt'                   :   0 #MeV
-		  ,'DownstreamVertchi2'			:  25 #dimensionless
+		  ,'DownstreamVertchi2'			:   5 #dimensionless
                   }
     
     
