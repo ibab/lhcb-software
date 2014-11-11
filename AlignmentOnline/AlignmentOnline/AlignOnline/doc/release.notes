@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+ 2014-11-11 - Wouter Hulsbergen
+ - fixed missing references in use of auto in for loops
+
  2014-11-11 - Maurizio Martinelli
  - modified requirements to fix boost::filesystem compilation error
 
