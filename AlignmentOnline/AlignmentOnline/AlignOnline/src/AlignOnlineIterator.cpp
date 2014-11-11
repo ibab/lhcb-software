@@ -131,7 +131,7 @@ StatusCode AlignOnlineIterator::initialize()
   {
   { "Velo/VeloGlobal", "Velo/VeloModules", "TT/TTGlobal", "TT/TTModules",
       "IT/ITGlobal", "IT/ITModules", "OT/OTGlobal", "OT/OTModules" } };
-  for (auto i : condnames)
+  for (const auto& i : condnames)
   {
     std::string *s = new std::string("");
 //    s->reserve(1024);
@@ -150,12 +150,12 @@ StatusCode AlignOnlineIterator::initialize()
 StatusCode AlignOnlineIterator::finalize()
 {
   m_PubSvc->undeclarePubAll();
-  for (auto j : m_condmap)
+  for (auto& j : m_condmap)
   {
     delete j.second;
   }
   m_condmap.clear();
-  for (auto i : m_xmlcopiers)
+  for (auto& i : m_xmlcopiers)
   {
     delete (i);
   }
@@ -236,7 +236,7 @@ StatusCode AlignOnlineIterator::i_run()
   if (sc.isSuccess() && m_iteration > 1)
   {
     // after last update, if more than one iteration
-    for (auto i : m_xmlcopiers)
+    for (auto& i : m_xmlcopiers)
     {
       StatusCode thissc = i->copyToOnlineArea();
       info() << "Condition: " << i->condition() << " Filename: "
@@ -260,7 +260,7 @@ StatusCode AlignOnlineIterator::i_run()
     {
       warning() << "Alignment procedure failed." << endmsg;
     }
-    for (auto i : m_xmlcopiers)
+    for (auto& i : m_xmlcopiers)
     {
       info() << "Condition: " << i->condition() << " Filename: "
           << i->onlinefilename() << endmsg;
@@ -296,7 +296,7 @@ StatusCode AlignOnlineIterator::i_start()
 
 // 2. copy the files from the online area. if this doesn't work,
 // dump the current database.
-  for (auto i : m_xmlcopiers)
+  for (auto& i : m_xmlcopiers)
   {
     StatusCode thissc = i->copyFromOnlineArea();
     if (!thissc.isSuccess())
