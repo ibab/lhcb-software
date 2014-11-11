@@ -166,9 +166,10 @@ StatusCode HltGlobalMonitor::initialize()
     // the order and the names for the bins are
     // configured in HLTConf/Configuration.py
 
-    if (!m_DecToGroup1.empty()) {
+   
+    if (!m_Hlt1DecReportsLocation.empty()  && !m_DecToGroup1.empty()) {
         std::vector<std::string> hlt1AlleyLabels;
-        for ( auto& i : m_DecToGroup1 ) hlt1AlleyLabels.push_back( i.first );
+        for ( const auto& i : m_DecToGroup1 ) hlt1AlleyLabels.push_back( i.first );
         m_hlt1Alley = book1D( "Hlt1 Alleys", "Hlt1 Alleys", -0.5,
                               hlt1AlleyLabels.size() - 0.5, hlt1AlleyLabels.size() );
         if ( !setBinLabels( m_hlt1Alley, hlt1AlleyLabels ) ) {
@@ -183,12 +184,38 @@ StatusCode HltGlobalMonitor::initialize()
             error() << "failed to set binlables on Hlt1Alleys Correlation hist"
                     << endmsg;
         }
+
+        /*One Histogram for each alley*/
+        for ( const auto& i : m_DecToGroup1 ) {
+            std::string alleyName = std::string( "Hlt1 " ) + i.first + " Lines";
+            m_hlt1Alleys.push_back( book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
+            m_hlt1AlleyRates.push_back( &counter( alleyName ) );
+            declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hlt1AlleyRates.back(),
+                         alleyName );
+            std::vector<std::string> labels;
+            for ( const std::string& s : i.second ) {
+                std::string label = s;
+                for ( const auto& strip : std::array<std::string,3>{
+                         {  "Decision"  // and of course 'Decision'...
+                         ,  "Hlt1"     // just strip 'Hlt1'
+                         , i.first    } }    // finally try to remove alley prefix
+                      ) {
+                    if ( label != strip ) boost::algorithm::erase_all( label, strip );
+                }
+                labels.push_back( label );
+                m_hlt1Line2AlleyBin[s] = {m_hlt1Alleys.size() - 1, labels.size() - 1};
+            }
+            if ( !setBinLabels( m_hlt1Alleys.back(), labels ) ) {
+                error() << "failed to set binlables on Hlt1 " << i.first << " Alley hist"
+                        << endmsg;
+            }
+        }
+
     }
 
-
-    if (!m_DecToGroup2.empty()) {
+    if (!m_Hlt2DecReportsLocation.empty()  && !m_DecToGroup2.empty()) {
         std::vector<std::string> hlt2AlleyLabels;
-        for ( auto& i : m_DecToGroup2 ) hlt2AlleyLabels.push_back( i.first );
+        for ( const auto& i : m_DecToGroup2 ) hlt2AlleyLabels.push_back( i.first );
 
         m_hlt2Alley = book1D( "Hlt2 Alleys", "Hlt2 Alleys", -0.5,
                               hlt2AlleyLabels.size() - 0.5, hlt2AlleyLabels.size() );
@@ -204,60 +231,35 @@ StatusCode HltGlobalMonitor::initialize()
             error() << "failed to set binlables on Hlt2Alleys Correlation hist"
                     << endmsg;
         }
+
+        // for hlt2
+        for ( const auto& i : m_DecToGroup2 ) {
+            std::string alleyName = std::string( "Hlt2 " ) + i.first + " Lines";
+            m_hlt2Alleys.push_back(
+                book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
+            m_hlt2AlleyRates.push_back( &counter( alleyName ) );
+            declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hlt2AlleyRates.back(),
+                         alleyName );
+            std::vector<std::string> labels;
+            for ( std::string s : i.second ) {
+                std::string label = s;
+                for ( const auto& strip : std::array<std::string,3>{
+                         { "Decision" // always remove 'Decision'...
+                         , "Hlt2"     // and Hlt2
+                         , i.first }}    // finally try to remove alley prefix
+                      ) {
+                    if ( label != strip ) boost::algorithm::erase_all( label, strip );
+                }
+                labels.push_back( label );
+                m_hlt2Line2AlleyBin[s] = {m_hlt2Alleys.size() - 1, labels.size() - 1};
+            }
+            if ( !setBinLabels( m_hlt2Alleys.back(), labels ) ) {
+                error() << "failed to set binlables on Hlt2 " << i.first << " Alley hist"
+                        << endmsg;
+            }
+        }
     }
 
-    /*One Histogram for each alley*/
-    for ( auto& i : m_DecToGroup1 ) {
-        std::string alleyName = std::string( "Hlt1 " ) + i.first + " Lines";
-        m_hlt1Alleys.push_back( book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
-        m_hlt1AlleyRates.push_back( &counter( alleyName ) );
-        declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hlt1AlleyRates.back(),
-                     alleyName );
-        std::vector<std::string> labels;
-        for ( const std::string& s : i.second ) {
-            std::string label = s;
-            for ( const auto& strip : std::array<std::string,3>{
-                     {  "Decision"  // and of course 'Decision'...
-                     ,  "Hlt1"     // just strip 'Hlt1'
-                     , i.first    } }    // finally try to remove alley prefix
-                  ) {
-                if ( label != strip ) boost::algorithm::erase_all( label, strip );
-            }
-            labels.push_back( label );
-            m_hlt1Line2AlleyBin[s] = {m_hlt1Alleys.size() - 1, labels.size() - 1};
-        }
-        if ( !setBinLabels( m_hlt1Alleys.back(), labels ) ) {
-            error() << "failed to set binlables on Hlt1 " << i.first << " Alley hist"
-                    << endmsg;
-        }
-    }
-
-    // for hlt2
-    for ( auto& i : m_DecToGroup2 ) {
-        std::string alleyName = std::string( "Hlt2 " ) + i.first + " Lines";
-        m_hlt2Alleys.push_back(
-            book1D( alleyName, -0.5, i.second.size() - 0.5, i.second.size() ) );
-        m_hlt2AlleyRates.push_back( &counter( alleyName ) );
-        declareInfo( "COUNTER_TO_RATE[" + alleyName + "]", *m_hlt2AlleyRates.back(),
-                     alleyName );
-        std::vector<std::string> labels;
-        for ( std::string s : i.second ) {
-            std::string label = s;
-            for ( const auto& strip : std::array<std::string,3>{
-                     { "Decision" // always remove 'Decision'...
-                     , "Hlt2"     // and Hlt2
-                     , i.first }}    // finally try to remove alley prefix
-                  ) {
-                if ( label != strip ) boost::algorithm::erase_all( label, strip );
-            }
-            labels.push_back( label );
-            m_hlt2Line2AlleyBin[s] = {m_hlt2Alleys.size() - 1, labels.size() - 1};
-        }
-        if ( !setBinLabels( m_hlt2Alleys.back(), labels ) ) {
-            error() << "failed to set binlables on Hlt2 " << i.first << " Alley hist"
-                    << endmsg;
-        }
-    }
 
     m_hltVirtMem = bookProfile1D( "Virtual memory", 0, m_timeSize,
                                    int( m_timeSize / m_timeInterval + 0.5 ) );
@@ -447,10 +449,9 @@ StatusCode HltGlobalMonitor::initialize()
     for ( const LocationMap::value_type& loc : m_vertexLocations ) {
         const std::string& name = loc.first;
         for ( double e : {1., 10.} ) {
-            std::stringstream s;
-            s << name << "_Beamspot_" << e;
-            auto histo = book2D( s.str().c_str(), -e, e, 100, -e, e, 100 );
-            HistoMap::iterator it = m_vertexHistos.find( name );
+            std::string s{  name +  "_Beamspot_" + std::to_string(e) };
+            auto histo = book2D( s.c_str(), -e, e, 100, -e, e, 100 );
+            auto it = m_vertexHistos.find( name );
             if ( it == m_vertexHistos.end() ) {
                 m_vertexHistos[name] = HistoVector( 1, histo );
             } else {
@@ -562,7 +563,6 @@ void HltGlobalMonitor::monitorODIN( const LHCb::ODIN* odin,
 
     report = hlt2 ? hlt2->decReport( m_hlt2Decision ) : nullptr;
     if ( report && report->decision() ) fill( m_odinHLT2, odin->triggerType(), 1. );
-
 }
 
 //==============================================================================
@@ -571,7 +571,6 @@ void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
                                    const LHCb::HltDecReports* hlt2 )
 {
     // filling the histograms for the alleys instead of the lines
-
     if (hlt1)  {
         std::vector<unsigned> nAcc1Alley( m_hlt1Alleys.size(), 0u );
         for ( auto& i : *hlt1 ) {
@@ -620,9 +619,8 @@ void HltGlobalMonitor::monitorHLT( const LHCb::ODIN* /*odin*/,
 //==============================================================================
 void HltGlobalMonitor::monitorVertices()
 {
-    typedef LHCb::RecVertex::Container Vertices;
     for ( const auto& entry : m_vertexLocations ) {
-        auto* vertices = getIfExists<Vertices>( entry.second );
+        auto* vertices = getIfExists<LHCb::RecVertex::Container>( entry.second );
         if ( !vertices ) continue;
         for ( auto&& histo : m_vertexHistos[entry.first] ) {
             for ( auto&& vx : *vertices ) {
@@ -668,7 +666,7 @@ void HltGlobalMonitor::monitorResolverpositions()
 void HltGlobalMonitor::monitorTrends()
 {
 
-    double elapsedTime =
+    auto elapsedTime =
         double( System::currentTime( System::microSec ) - m_startEvent );
     fill( m_hltTime, log10( elapsedTime ) - 3, 1.0 ); // convert to log(time/ms)
 
@@ -678,7 +676,7 @@ void HltGlobalMonitor::monitorTrends()
     m_hltEventsTime->fill( when, t );
 
     // monitor CPU time vs evt size
-    RawEvent* evt = getIfExists<LHCb::RawEvent>( m_rawEventLocation );
+    auto* evt = getIfExists<LHCb::RawEvent>( m_rawEventLocation );
     size_t evtSize = evt ? rawEvtLength( evt ) : 0;
     m_hltTimeVsEvtSize->fill( evtSize, t );
 

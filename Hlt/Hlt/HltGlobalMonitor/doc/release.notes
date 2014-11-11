@@ -4,6 +4,9 @@
 !Package Coordinator : Eric van Herwijnen 
 !Purpose     : LHCb HLT Global Monitoring
 ! -----------------------------------------------------------------------------
+! 2014-11-11 - Gerhard Raven
+ - insure that just setting Hlt{1,2}DecRerports to an empty string
+   is enough for the split transform
 
 !========================= HltGlobalMonitor v4r4 2014-11-05 =========================
 
