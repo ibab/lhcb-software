@@ -140,7 +140,7 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 						command = 's|projEng = .*|projEng = '+str(energy)+'|'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
 					
-						#sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+						sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
 					
 			dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
 			sourcedir = os.environ['PWD']
@@ -154,7 +154,7 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 
 	output = path+"/TargetOutput.root"
 	command = 'find '+path+'/*/*/* -name *.root | xargs hadd -f ' + output
-	#os.system(command)
+	os.system(command)
 
 	p = Plotter(path+"/", path+"/", models, particlesTodo, energies, materialsTodo, thicks)
 
