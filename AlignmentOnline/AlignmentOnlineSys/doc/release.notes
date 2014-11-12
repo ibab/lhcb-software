@@ -8,4 +8,4 @@ First release of the Online wrapper project for Alignment. AlignmentOnline has t
 
 It's a project which can be used in the nightlies to test that running Alignment works in the online environment. It can also hold online-specific code. All the online-specific parts of Alignment fall into this project.
 
-Only package so far: AlignOnline to hold the relevant interface code.
+Only package so far: AlignOnline v1r0 to hold the relevant interface code.

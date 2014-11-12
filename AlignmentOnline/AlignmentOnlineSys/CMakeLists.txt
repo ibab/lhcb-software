@@ -1,22 +1,9 @@
 ################################################################################
-# Package: AlignmentSys
+# Package: AlignmentOnlineSys
 ################################################################################
-gaudi_subdir(AlignmentSys v10r0)
+gaudi_subdir(AlignmentOnlineSys v10r1)
 
-gaudi_depends_on_subdirs(Alignment/AlignEvent
-                         Alignment/AlignKernel
-                         Alignment/AlignSolvTools
-                         Alignment/AlignTrTools
-                         Alignment/AlignmentDBVisualisationTool
-                         Alignment/AlignmentInterfaces
-                         Alignment/AlignmentTools
-                         Alignment/Escher
-                         Alignment/MisAligner
-                         Alignment/TAlignment
-                         Alignment/VeloAlignment
-                         Calibration/OTCalibration
-                         Phys/CommonParticles
-                         Tr/TrackUtils)
+gaudi_depends_on_subdirs(AlignmentOnline/AlignOnline)
 
 gaudi_install_python_modules()
 

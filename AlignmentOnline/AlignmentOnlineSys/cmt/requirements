@@ -7,7 +7,7 @@ branches cmt doc tests
 # LHCb Alignment Online packages
 #=======================================================
 
-# use  AlignOnline  v1r0
+use  AlignOnline v1r0
 
 # Declare this as a container package
 apply_pattern container_package
@@ -20,4 +20,4 @@ apply_pattern QMTest
 
 #============================================================================
 # Install the configurable
-#apply_pattern install_python_modules
+apply_pattern install_python_modules
