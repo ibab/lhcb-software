@@ -890,43 +890,57 @@ B2XTau = {
          'B2DPi_SameSign_LinePrescale'            : 0.5,
          'B2DPi_SameSign_LinePostscale'           : 1,
          'RelatedInfoTools'      : [
-                { "Type" : "RelInfoBstautauMuonIsolationBDT"
-                  ,"RecursionLevel" : 1
-                  , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
-                  , "Location"  : "BSTAUTAUVARIABLES"
-                  },
-                { "Type" : "RelInfoBstautauMuonIsolation"
-                  ,"RecursionLevel" : 1
-                  , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
-                  , "Location"  : "BSTAUTAUVARIABLES"
-                      },
-                { "Type" : "RelInfoBstautauTauIsolationBDT"
-                  ,"RecursionLevel" : 1
-                  , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUE', 'BSTAUTAUTAUISOBDTSECONDVALUE','BSTAUTAUTAUISOBDTTHIRDVALUE']
-                  , "Location"  : "BSTAUTAUVARIABLES"
-                      },
-                { "Type" : "RelInfoBstautauTauIsolation"
-                  ,"RecursionLevel" : 1
-                  , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUE', 'BSTAUTAUTAUISOSECONDVALUE']
-                  , "Location"  : "BSTAUTAUVARIABLES"
-                      },
-                { "Type" : "RelInfoBstautauTrackIsolationBDT"
-                  ,"RecursionLevel" : 2
-                  , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUE', 'BSTAUTAUTRACKISOBDTSECONDVALUE','BSTAUTAUTRACKISOBDTTHIRDVALUE']
-                  , "Location"  : "BSTAUTAUVARIABLES"
-                      },
-                { "Type" : "RelInfoBstautauTrackIsolation"
-                  ,"RecursionLevel" : 2
-                  , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUE', 'BSTAUTAUTRACKISOSECONDVALUE']
-                  , "Location"  : "BSTAUTAUVARIABLES"
-                      },
-                { "Type" : "RelInfoBstautauCDFIso"
-                  ,"RecursionLevel" : 0
-#                  , "Variables" : ['BSTAUTAUCDFISO']
-                  , "Location"  : "BSTAUTAUVARIABLES"
-                      }
-                ]
-        },
+              { "Type" : "RelInfoBstautauMuonIsolationBDT"
+                ,"RecursionLevel" : 0
+                , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
+                , "Location"  : "MuonIsolationBDT"  
+                },
+              #2
+              { "Type" : "RelInfoBstautauMuonIsolation"
+                ,"RecursionLevel" : 0
+                , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
+                , "Location"  : "MuonIsolation"  
+                },
+              #3
+              { "Type" : "RelInfoBstautauTauIsolationBDT"
+                ,"RecursionLevel" : 0
+                , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUETAUP', 'BSTAUTAUTAUISOBDTSECONDVALUETAUP','BSTAUTAUTAUISOBDTTHIRDVALUETAUP','BSTAUTAUTAUISOBDTFIRSTVALUETAUM', 'BSTAUTAUTAUISOBDTSECONDVALUETAUM','BSTAUTAUTAUISOBDTTHIRDVALUETAUM']
+                , "Location"  : "TauIsolationBDT"  
+                },
+              #4
+              { "Type" : "RelInfoBstautauTauIsolation"
+                ,"RecursionLevel" : 0
+                , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUETAUP', 'BSTAUTAUTAUISOSECONDVALUETAUP','BSTAUTAUTAUISOFIRSTVALUETAUM', 'BSTAUTAUTAUISOSECONDVALUETAUM']
+                , "Location"  : "TauIsolation"  
+                },
+              #5
+              
+              { "Type" : "RelInfoBstautauTrackIsolationBDT" 
+                ,"RecursionLevel" : 0
+                , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIM','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIM','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP1', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIP','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIP','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM1','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM2']
+                , "Location"  : "TrackIsolationBDT"  
+                },
+              
+              #6
+              { "Type" : "RelInfoBstautauTrackIsolation" 
+                ,"RecursionLevel" : 0
+                , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOFIRSTVALUETAUPPIP1','BSTAUTAUTRACKISOFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOFIRSTVALUETAUMPIM1', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIM2']
+                , "Location"  : "TrackIsolation"  
+                },
+              #7
+              { "Type" : "RelInfoBstautauCDFIso" 
+                ,"RecursionLevel" : 0
+                #, "Variables" : ['BSTAUTAUCDFISO']
+                , "Location"  : "CDFIso"  
+                },
+              #8
+              { "Type" : "RelInfoBstautauZVisoBDT" 
+                ,"RecursionLevel" : 0
+                , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
+                , "Location"  : "ZVisoBDT"
+                }
+              ]
+         },
     'STREAMS' : ['Bhadron']
     }
 
@@ -991,42 +1005,47 @@ B2XTauZVTOP = {
          'B_TAUPI_2NDMINIPS'             :  '20',  # dimensionless
          'HltFilter'               : "HLT_PASS_RE('Hlt2(Topo2BodyBBDT|Topo3BodyBBDT|Topo4BodyBBDT).*Decision')",
          'RelatedInfoTools'      : [
-              { "Type" : "RelInfoBstautauMuonIsolationBDT"
-                ,"RecursionLevel" : 1
-                , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
-                , "Location"  : "BSTAUTAUVARIABLES"
-                },
-              { "Type" : "RelInfoBstautauMuonIsolation"
-                ,"RecursionLevel" : 1
-                , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
-                , "Location"  : "BSTAUTAUVARIABLES"
-                },
-              { "Type" : "RelInfoBstautauTauIsolationBDT"
-                ,"RecursionLevel" : 1
-                , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUE', 'BSTAUTAUTAUISOBDTSECONDVALUE','BSTAUTAUTAUISOBDTTHIRDVALUE']
-                , "Location"  : "BSTAUTAUVARIABLES"
-                },
-              { "Type" : "RelInfoBstautauTauIsolation"
-                ,"RecursionLevel" : 1
-                , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUE', 'BSTAUTAUTAUISOSECONDVALUE']
-                , "Location"  : "BSTAUTAUVARIABLES"
-                },
-              { "Type" : "RelInfoBstautauTrackIsolationBDT"
-                ,"RecursionLevel" : 2
-                , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUE', 'BSTAUTAUTRACKISOBDTSECONDVALUE','BSTAUTAUTRACKISOBDTTHIRDVALUE']
-                , "Location"  : "BSTAUTAUVARIABLES"
-                },
-              { "Type" : "RelInfoBstautauTrackIsolation"
-                ,"RecursionLevel" : 2
-                , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUE', 'BSTAUTAUTRACKISOSECONDVALUE']
-                , "Location"  : "BSTAUTAUVARIABLES"
-                },
-              { "Type" : "RelInfoBstautauCDFIso"
-                ,"RecursionLevel" : 0
-                ##, "Variables" : ['BSTAUTAUCDFISO']
-                , "Location"  : "BSTAUTAUVARIABLES"
-                }
-              ],
+             { "Type" : "RelInfoBstautauMuonIsolationBDT"
+               ,"RecursionLevel" : 0
+               , "Variables" : ['BSTAUTAUMUONISOBDTFIRSTVALUE', 'BSTAUTAUMUONISOBDTSECONDVALUE','BSTAUTAUMUONISOBDTTHIRDVALUE']
+               , "Location"  : "MuonIsolationBDT"  
+               },
+             { "Type" : "RelInfoBstautauMuonIsolation"
+               ,"RecursionLevel" : 0
+               , "Variables" : ['BSTAUTAUMUONISOFIRSTVALUE', 'BSTAUTAUMUONISOSECONDVALUE']
+               , "Location"  : "MuonIsolation"  
+               },
+             { "Type" : "RelInfoBstautauTauIsolationBDT"
+               ,"RecursionLevel" : 0
+               , "Variables" : ['BSTAUTAUTAUISOBDTFIRSTVALUETAUP', 'BSTAUTAUTAUISOBDTSECONDVALUETAUP','BSTAUTAUTAUISOBDTTHIRDVALUETAUP','BSTAUTAUTAUISOBDTFIRSTVALUETAUM', 'BSTAUTAUTAUISOBDTSECONDVALUETAUM','BSTAUTAUTAUISOBDTTHIRDVALUETAUM']
+               , "Location"  : "TauIsolationBDT"  
+               },
+             { "Type" : "RelInfoBstautauTauIsolation"
+               ,"RecursionLevel" : 0
+               , "Variables" : ['BSTAUTAUTAUISOFIRSTVALUETAUP', 'BSTAUTAUTAUISOSECONDVALUETAUP','BSTAUTAUTAUISOFIRSTVALUETAUM', 'BSTAUTAUTAUISOSECONDVALUETAUM']
+               , "Location"  : "TauIsolation"  
+               },
+             { "Type" : "RelInfoBstautauTrackIsolationBDT" 
+               ,"RecursionLevel" : 0
+               , "Variables" : ['BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIM','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIM','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP1', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUPPIP2','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIP','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIP','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM1','BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM1','BSTAUTAUTRACKISOBDTFIRSTVALUETAUMPIM2', 'BSTAUTAUTRACKISOBDTSECONDVALUETAUMPIM2','BSTAUTAUTRACKISOBDTTHIRDVALUETAUMPIM2']
+               , "Location"  : "TrackIsolationBDT"  
+               },
+             { "Type" : "RelInfoBstautauTrackIsolation" 
+               ,"RecursionLevel" : 0
+               , "Variables" : ['BSTAUTAUTRACKISOFIRSTVALUETAUPPIM', 'BSTAUTAUTRACKISOFIRSTVALUETAUPPIP1','BSTAUTAUTRACKISOFIRSTVALUETAUPPIP2', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIP','BSTAUTAUTRACKISOFIRSTVALUETAUMPIM1', 'BSTAUTAUTRACKISOFIRSTVALUETAUMPIM2']
+               , "Location"  : "TrackIsolation"  
+               },
+             { "Type" : "RelInfoBstautauCDFIso" 
+               ,"RecursionLevel" : 0
+               #, "Variables" : ['BSTAUTAUCDFISO']
+               , "Location"  : "CDFIso"  
+               },
+             { "Type" : "RelInfoBstautauZVisoBDT" 
+               ,"RecursionLevel" : 0
+               , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
+               , "Location"  : "ZVisoBDT"
+               }
+             ]
          },
     'STREAMS' : ['Bhadron']
     }
