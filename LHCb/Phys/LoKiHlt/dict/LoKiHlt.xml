@@ -3,7 +3,7 @@
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
-     * dictionaries for Phys/LoKiNumbers package
+     * dictionaries for Phys/LoKiHlt package
      * @author Vanya BELYAEV ibelyaev@physics.syr.edu
      * @date 2007-12-01
      * ========================================================================
@@ -67,9 +67,7 @@
 
   <class name=            "LoKi::Interface<IAlgorithm>"   />
   <class name="std::vector<LoKi::Interface<IAlgorithm> >" />
-  
-  <enum name="LHCb::L0DUDecision::Type" />
-  
+    
   <class    name = "LoKi::Numbers::EvtNum"   /> 
   <class    name = "LoKi::Numbers::EvtNumList">
     <field  name = "m_list" transient="true" />

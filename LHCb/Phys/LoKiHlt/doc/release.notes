@@ -4,6 +4,10 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-11-12 - Marco Cattaneo
+ - Remove duplicate dictionary for enum LHCb::L0DUDecision::Type, 
+   already in L0Event
+
 !========================= LoKiHlt v3r16 2014-10-14 =========================
 ! 2014-10-01 - Pieter David
  - LoKi::Hybrid::EvtTupleTool: get HltDecReports from the location in the HLT_Location property
