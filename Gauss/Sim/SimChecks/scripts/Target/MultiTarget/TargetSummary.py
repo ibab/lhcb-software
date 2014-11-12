@@ -341,119 +341,123 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 	in_chminus_perc = TH1D("in_chminus_perc","Multi of negatively charged inelastic daughters", 50, 0, 1)
 
 
-	#ntracks = nt.GetEntries()
-	select = "PhysicsList == " + str(mod) + " && TargetMaterial == " + str(mat) + " && ProjectilePdgID == " + str(pgun)
+	select = "CreatorProcessType == -2 && PhysicsList == " + str(mod) + " && TargetMaterial == " + str(mat) + " && ProjectilePdgID == " + str(pgun)
 	select += " && TargetThickness == " + str(Dx) + " && ProjectileEnergy == " + str(eng) 
+	#print select
 	varexp = "elist"
 	nt.SetEntryList(0)
 	nt.Draw(">>"+varexp,select,"entrylist")
 	list = gDirectory.Get(varexp)
 	ntracks = list.GetN()
 	nt.SetEntryList(list)
-
+	
 	countel = 0
 	countinel = 0
-	totP = 0
-
+	countdecay = 0
+	totP = ntracks
+	totInside = 0
+	
 	for i in range(0,ntracks) :
 		
-		nt.GetEntry(i)
+		nt.GetEntry(list.GetEntry(i))
 
-		if( vars.cptype==-2 ) :
+		in_daughters = 0
+		el_daughters = 0
+		in_nchDaughters = 0
+		in_dauGamma = 0
+		in_nchDaughters_nogamma = 0
+		in_chPlusDaughters = 0
+		in_chMinusDaughters = 0
+		el_chDaughters = 0
 		
-			totP+=1
+		
+		for nd in range(0,vars.ndau) :    #Loop on daughters
+		
+			end_z.Fill(vars.endz)
+			if (vars.isinside[nd]==0) :
+				continue
 
-			in_daughters = 0
-			el_daughters = 0
-			in_nchDaughters = 0
-			in_dauGamma = 0
-			in_nchDaughters_nogamma = 0
-			in_chPlusDaughters = 0
-			in_chMinusDaughters = 0
-			el_chDaughters = 0
-
-			for nd in range(0,vars.ndau) :    #Loop on daughters
+			totInside += 1
+			end_z_inside.Fill(vars.endz)
+				
+			if (vars.epstype[nd] == 111) :  #Elastic interaction
 			
-				end_z.Fill(vars.endz)
-				if (vars.isinside[nd]==0) :
-					continue
-				end_z_inside.Fill(vars.endz)
+				el_daughters+=1 
+				end_proc.Fill(1)
+				if(vars.daucharge[nd] == 0) :
+					el_chDaughters+=1
 				
-				if (vars.epstype[nd] == 111) :  #Elastic interaction
-				
-					el_daughters+=1 
-					if(vars.daucharge[nd] == 0) :
-						el_chDaughters+=1
-					end_proc.Fill(1)
-				
-				elif (vars.epstype[nd] == 121) : #Inelastic interaction
-				
-					in_daughters+=1
-					if(vars.daucharge[nd] == 0) :
-						in_nchDaughters+=1 
-						if(vars.daupdg[nd]!=22) :
-							in_nchDaughters_nogamma+=1
-					elif(vars.daucharge[nd] > 0) :
-						in_chPlusDaughters+=1
-					elif(vars.daucharge[nd] < 0) :
-						in_chMinusDaughters+=1
-					end_proc.Fill(2)
+			elif (vars.epstype[nd] == 121) : #Inelastic interaction
+			
+				in_daughters+=1
+				end_proc.Fill(2)
+				if(vars.daucharge[nd] == 0) :
+					in_nchDaughters+=1 
+					if(vars.daupdg[nd]!=22) :
+						in_nchDaughters_nogamma+=1
+				elif(vars.daucharge[nd] > 0) :
+					in_chPlusDaughters+=1
+				elif(vars.daucharge[nd] < 0) :
+					in_chMinusDaughters+=1
 
-					if(vars.daupdg[nd]>1000000000) : #Is heavy nucleus?
-					
-						pdg_dau_high.Fill(vars.daupdg[nd]-1000000000)
-						dau_high_kine.Fill(vars.daukine[nd])
-					
-					else :
-					
-						pdg_dau.Fill(vars.daupdg[nd])
-						dau_kine.Fill(vars.daukine[nd])
-						if( vars.daupdg[nd]==22 ) :
-							dau_gammas_kine.Fill(vars.daukine[nd])	
-						if( vars.daupdg[nd]==22 ) :
-							dau_gammas_kine.Fill(vars.daukine[nd])
-						if(vars.daupdg[nd]==2212) :
-							pdg_dau_named.Fill(0)
-						elif(vars.daupdg[nd]==-2212) :
-							pdg_dau_named.Fill(1)
-						elif(vars.daupdg[nd]==2112) :
-							pdg_dau_named.Fill(2)
-						elif(vars.daupdg[nd]==321) :
-							pdg_dau_named.Fill(3)
-						elif(vars.daupdg[nd]==-321) :
-							pdg_dau_named.Fill(4)
-						elif(vars.daupdg[nd]==211) :
-							pdg_dau_named.Fill(5)
-						elif(vars.daupdg[nd]==-211) :
-							pdg_dau_named.Fill(6)
-						elif(vars.daupdg[nd]==111) :
-							pdg_dau_named.Fill(7)
-						elif(vars.daupdg[nd]==221) :
-							pdg_dau_named.Fill(8)
-						elif(vars.daupdg[nd]==3122) :
-							pdg_dau_named.Fill(9)
-						elif(vars.daupdg[nd]==310) :
-							pdg_dau_named.Fill(10)
-						elif(vars.daupdg[nd]==22) :
-							pdg_dau_named.Fill(11)
-							in_dauGamma+=1
-						else :
-							pdg_dau_named.Fill(12)
-					
-				elif(vars.epstype[nd]==201) :
-					end_proc.Fill(3)
+
+				if(vars.daupdg[nd]>1000000000) : #Is heavy nucleus?
+				
+					pdg_dau_high.Fill(vars.daupdg[nd]-1000000000)
+					dau_high_kine.Fill(vars.daukine[nd])
 				
 				else :
-					end_proc.Fill(0)
-
+				
+					pdg_dau.Fill(vars.daupdg[nd])
+					dau_kine.Fill(vars.daukine[nd])
+					if( vars.daupdg[nd]==22 ) :
+						dau_gammas_kine.Fill(vars.daukine[nd])	
+					if( vars.daupdg[nd]==22 ) :
+						dau_gammas_kine.Fill(vars.daukine[nd])
+					if(vars.daupdg[nd]==2212) :
+						pdg_dau_named.Fill(0)
+					elif(vars.daupdg[nd]==-2212) :
+						pdg_dau_named.Fill(1)
+					elif(vars.daupdg[nd]==2112) :
+						pdg_dau_named.Fill(2)
+					elif(vars.daupdg[nd]==321) :
+						pdg_dau_named.Fill(3)
+					elif(vars.daupdg[nd]==-321) :
+						pdg_dau_named.Fill(4)
+					elif(vars.daupdg[nd]==211) :
+						pdg_dau_named.Fill(5)
+					elif(vars.daupdg[nd]==-211) :
+						pdg_dau_named.Fill(6)
+					elif(vars.daupdg[nd]==111) :
+						pdg_dau_named.Fill(7)
+					elif(vars.daupdg[nd]==221) :
+						pdg_dau_named.Fill(8)
+					elif(vars.daupdg[nd]==3122) :
+						pdg_dau_named.Fill(9)
+					elif(vars.daupdg[nd]==310) :
+						pdg_dau_named.Fill(10)
+					elif(vars.daupdg[nd]==22) :
+						pdg_dau_named.Fill(11)
+						in_dauGamma+=1
+					else :
+						pdg_dau_named.Fill(12)
+				
+			elif(vars.epstype[nd]==201) :   #decays
+				end_proc.Fill(3)
+				countdecay+=1
+	
+			else :
+				end_proc.Fill(0)
 				p_endsubproc.Fill(vars.epstype[nd])
-			
-
-			if(el_daughters > 0) :
-				el_dau_mult.Fill(el_daughters)
-				countel+=1
+		
+		if(el_daughters > 0) :
+			el_dau_mult.Fill(el_daughters)
+			countel+=1
 			if(el_chDaughters > 0) :
 				el_chdau_mult.Fill(el_chDaughters)
+		
+		if(in_daughters > 0) :
+		
 			if(in_nchDaughters > 0) :
 				in_nchdau_mult.Fill(in_nchDaughters)
 			if(in_dauGamma>0) :
@@ -464,30 +468,28 @@ def doMultiHistos(nt, curdir, mod, mat, Dx, pgun, eng) :
 				in_chplusdau_mult.Fill(in_chPlusDaughters)
 			if(in_chMinusDaughters > 0) :
 				in_chminusdau_mult.Fill(in_chMinusDaughters)
-			if(in_daughters > 0) :
-			
-				countinel+=1
-				in_dau_mult.Fill(in_daughters)
+		
+			countinel+=1
+			in_dau_mult.Fill(in_daughters)
 
-				avg_nChPerc += in_nchDaughters / in_daughters
-				avg_ChPlusPerc += in_chPlusDaughters / in_daughters
-				avg_ChMinusPerc += in_chMinusDaughters / in_daughters
+			avg_nChPerc += in_nchDaughters / in_daughters
+			avg_ChPlusPerc += in_chPlusDaughters / in_daughters
+			avg_ChMinusPerc += in_chMinusDaughters / in_daughters
 
-				in_nch_perc.Fill(in_nchDaughters / in_daughters)
-				in_chplus_perc.Fill(in_chPlusDaughters / in_daughters)
-				in_chminus_perc.Fill(in_chMinusDaughters / in_daughters)
+			in_nch_perc.Fill(in_nchDaughters / in_daughters)
+			in_chplus_perc.Fill(in_chPlusDaughters / in_daughters)
+			in_chminus_perc.Fill(in_chMinusDaughters / in_daughters)
 				
-	Xsecinel = countinel*1e0/totP
-	Xsecel = countel*1e0/totP
-	XsecinelErr = TMath.Sqrt(Xsecinel*(1-Xsecinel)/totP)
-	XsecelErr = TMath.Sqrt(Xsecel*(1-Xsecel)/totP)
+	Xsecinel = countinel/float(totP)
+	Xsecel = countel/float(totP)
+	XsecinelErr = TMath.Sqrt(Xsecinel*(1-Xsecinel)/float(totP))
+	XsecelErr = TMath.Sqrt(Xsecel*(1-Xsecel)/float(totP))
 	multi = in_dau_mult.GetMean()
-	multi_err = in_dau_mult.GetRMS()/TMath.Sqrt(in_dau_mult.GetEntries())
-	print "Tot particles = ", totP
-	getcontext().prec = 2 
-	print "Pint inel = ", Xsecinel,  " +/- ", XsecinelErr
-	print "Pint el = ", Xsecel, " +/- ", XsecelErr
-	print "< Multi > = ", multi, " +/- ", multi_err
+	multi_err = in_dau_mult.GetMeanError()
+	print "Tot projectiles = ", totP
+	print "Pint inel = ", '{0:4.5f}'.format(Xsecinel),"+/-", '{0:4.5f}'.format(XsecinelErr)
+	print "Pint el = ", '{0:4.5f}'.format(Xsecel),"+/-",'{0:4.5f}'.format(XsecelErr)
+	print "< Multi > = ", '{0:3.1f}'.format(multi),"+/-",'{0:3.1f}'.format(multi_err)
 
 		
 	result = [totP, Xsecinel, XsecinelErr, Xsecel, XsecelErr, multi, multi_err,

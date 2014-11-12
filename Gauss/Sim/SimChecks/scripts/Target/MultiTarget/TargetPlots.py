@@ -13,6 +13,12 @@ def ScalarProd(ncomp, v, c) :
 
 	return res
 
+vardef = { "TOTAL": "xsec", "INEL" : "inel_xsec", "EL" : "el_xsec",
+		"MULTI_NCH" : "multiNCh", "MULTI_NCH_NOGAMMA" : "multiNCh_nogamma",
+		"PERC_NCH" : "percNCh", "PERC_MINUS" : "percMinus", "PERC_PLUS" : "percPlus",
+		"MULTI_GAMMA" : "multi_gamma", "MULTI" : "multi" }
+
+colors = [1,2,4,5,3,6,8,9,38,12,18,41]
 
 def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materials = [], E0 = -1 , Dx = -1, plotData = False) :
 	
@@ -21,27 +27,8 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 	leg = TLegend(0.10,0.1,0.9,0.9)
 	leg.SetTextSize(0.05);
 
-	var = ""
-	if(find(finalPlot,"MULTI") > -1) :
-		var = "multi"
-	elif(find(finalPlot,"TOTAL") > -1) :
-		var = "xsec"
-	elif(find(finalPlot,"INEL")> -1) :
-		var = "inel_xsec"
-	elif(find(finalPlot,"EL")> -1) :
-		var = "el_xsec"
-	elif(find(finalPlot,"MULTI_NCH")> -1) :
-		var = "multiNCh"
-	elif(find(finalPlot,"MULTI_NCH_NOGAMMA")> -1) :
-		var = "multiNCh_nogamma"
-	elif(find(finalPlot,"PERC_NCH")> -1) :
-		var = "percNCh"
-	elif(find(finalPlot,"PERC_MINUS")> -1) :
-		var = "percMinus"
-	elif(find(finalPlot,"PERC_PLUS")> -1) :
-		var = "percPlus"
-	elif(find(finalPlot,"MULTI_GAMMA")> -1) :
-		var = "multi_gamma"
+	fPlot = finalPlot.replace("RATIO_","").replace("ASYM_","")
+	var = vardef[fPlot]
 
 	if(find(finalPlot,"RATIO") > -1 or find(finalPlot,"ASYM") > -1) :
 
@@ -60,15 +47,15 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 			titleMultigr = "Asymmetry of inelastic  cross sections" + mystr
 
 		pdgenergies  = [ 1, 5, 10, 50, 100 ]
-		pdgRatios_p  = [ 1./1.67, 1./1.42, 1./1.31, 1./1.14, 1./1.10 ]
-		pdgRatios_pi = [ 1./1.22, 1./1.13, 1./1.10, 1./1.05, 1./1.03 ]
-		pdgRatios_K  = [ 1./1.61, 1./1.32, 1./1.23, 1./1.10, 1./1.07 ]
+		pdgRatios_p  = [ 1.67, 1.42, 1.31, 1.14, 1.10 ]
+		pdgRatios_pi = [ 1.22, 1.13, 1.10, 1.05, 1.03 ]
+		pdgRatios_K  = [ 1.61, 1.32, 1.23, 1.10, 1.07 ]
 
-		if(find(finalPlot,"RATIO") > -1) :
-			ratiotxt = open(outputPath+"/ratio_inAl.txt","w")
+		if(xvar=="energy") : 
+			ratiotxt = open(outputPath+"/"+finalPlot+"_in"+str(Dx)+".txt","w")
 		else :
-			ratiotxt = open(outputPath+"/asym_inAl.txt","w")
-
+			ratiotxt = open(outputPath+"/"+finalPlot+"_for"+str(E0)+"GeV.txt","w")
+	
 		
 		grs = []
 		
@@ -78,7 +65,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 			nm = 0
 			for m in models :
 			
-				ratiotxt.write( "\\multicolumn{2}{c}{ratio " + m + "} \\\\ \\hline" )
+				ratiotxt.write( "\\multicolumn{2}{c}{ " + m + "} \\\\ \\hline \n" )
 
 				varexp = "h_"+str(pg)+m
 				select = "model == " + str(ord(m[0])) + " && material == " + str(ord(materials[0][0])) + " && pGun == " + str(dict._all_pguns[pguns[pg]].GetPDG())
@@ -92,7 +79,13 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				list = gDirectory.Get(varexp)
 				entries = list.GetN()
 				dataTree.SetEntryList(list)
-				dataTree.Draw(xvar+":"+var+":"+var+"_err")
+				
+				if(finalPlot == "MULTI" or finalPlot == "TOTAL" or finalPlot == "INEL" or finalPlot == "EL") :
+					dataTree.Draw(xvar+":"+var+":"+var+"_err","","colz")	
+					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
+				else :
+					dataTree.Draw(xvar+":"+var)
+					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2())
 
 				errx = array( 'd' , [0.] * entries )
 				ty1 = dataTree.GetV2()
@@ -101,7 +94,8 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				erry1=[]
 				for i in range(0,entries) :
 					y1.append(ty1[i])
-					erry1.append(terry1[i])
+					if len(terry1) < 1e4:
+						erry1.append(terry1[i])
 									
 				varexp = "h_"+str(pg+1)+m
 				select = "model == " + str(ord(m[0])) + " && material == " + str(ord(materials[0][0])) + " && pGun == " + str(dict._all_pguns[pguns[pg+1]].GetPDG())
@@ -114,7 +108,13 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				dataTree.Draw(">>"+varexp,select, "entrylist")
 				list2 = gDirectory.Get(varexp)
 				dataTree.SetEntryList(list2)
-				dataTree.Draw(xvar+":"+var+":"+var+"_err")
+				
+				if(finalPlot == "MULTI" or finalPlot == "TOTAL" or finalPlot == "INEL" or finalPlot == "EL") :
+					dataTree.Draw(xvar+":"+var+":"+var+"_err")	
+					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
+				else :
+					dataTree.Draw(xvar+":"+var)
+					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2())
 
 				tx = dataTree.GetV1() 
 				ty2 = dataTree.GetV2() 
@@ -124,7 +124,8 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				erry2=[]
 				for i in range(0,entries) :
 					y2.append(ty2[i])
-					erry2.append(terry2[i])
+					if len(terry2) < 1e4 :
+						erry2.append(terry2[i])
 					x.append(tx[i])
 
 				y = []
@@ -137,13 +138,20 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					else :
 						y.append(100*TMath.Abs(y1[ee] - y2[ee])/(2. - y1[ee] - y2[ee]))
 
-					totErr2 = TMath.Power(erry1[ee]/y1[ee],2) + TMath.Power(erry2[ee]/y2[ee],2)
-					erry.append(y[ee] * TMath.Sqrt(totErr2))
+					if(len(erry) > 0) :
+						totErr2 = TMath.Power(erry1[ee]/y1[ee],2) + TMath.Power(erry2[ee]/y2[ee],2)
+						erry.append(y[ee] * TMath.Sqrt(totErr2))
+						ratiotxt.write(' & $ {:4.2} \\pm {:4.2} $ \\\\ \n'.format(y[ee],erry[ee]) )
+					else :
+						ratiotxt.write(' & $ {:4.2} $ \\\\ \n'.format(y[ee]) )
+						
 
-					ratiotxt.write(' & $ {:4.2} \\pm {:4.2} $ \\\\ \n'.format(y[ee],erry[ee]) )
+				if(len(erry) > 1) :
+					gr = TGraphErrors(entries,array('d',x),array('d',y),array('d',errx),array('d',erry))
+				else :
+					gr = TGraphErrors(entries,array('d',x),array('d',y))
 
-				gr = TGraphErrors(entries,array('d',x),array('d',y),array('d',errx),array('d',erry))
-				gr.SetMarkerColor(1+pg/2)
+				gr.SetMarkerColor(colors[pg/2-1])
 				gr.SetMarkerStyle(20+nm)
 
 				label = dict._all_pguns[pguns[pg+1]].GetLatex("LEG") + " / " + dict._all_pguns[pguns[pg]].GetLatex("LEG")
@@ -163,7 +171,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 					if grPDG :
 						if(len(pguns)>2) :
-							grPDG.SetMarkerColor(1+pg/2)
+							grPDG.SetMarkerColor(colors[pg/2-1])
 						else :
 							grPDG.SetMarkerColor(4)
 						grPDG.SetMarkerStyle(34)
@@ -177,8 +185,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 			#ratiotxt << "\\hline" << endl
 		
-		#ratiotxt << "\\end{tabular}" << endl
-
+		
 		c = TCanvas()
 		leg_pad = TPad("leg_pad","",0.73,0,1.,1.)
 		gr_pad = TPad("gr_pad","",0.03,0,0.8,1.)
@@ -194,7 +201,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 			gg.SetTitle(titleMultigr)
 			if(finalPlot.find("RATIO") > -1) :
 				gg.GetYaxis().SetTitle("Ratio")
-				gg.GetYaxis().SetRangeUser(0,2.)
+				gg.GetYaxis().SetRangeUser(0,3.)
 			else :
 				gg.GetYaxis().SetTitle("Asym (%)")
 	
@@ -349,22 +356,25 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					dataTree.SetEntryList(list)
 
 					dataTree.SetEstimate(entries)
+					errx = array( 'd' , [0.] * entries )
+					gr = 0
+				
 					if(finalPlot == "MULTI" or finalPlot == "TOTAL" or finalPlot == "INEL" or finalPlot == "EL") :
 						dataTree.Draw(xvar+":"+var+":"+var+"_err","","colz")	
+						gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
 					else :
-						dataTree.Draw("energy:"+var)
-
-					errx = array( 'd' , [0.] * entries )	
-					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
-
-					gr.SetMarkerColor(1+n2)
-					if(n0==0) :
-						gr.SetMarkerStyle(20+n0)
+						dataTree.Draw(xvar+":"+var)
+						gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2())
+					
+					if(nh%2==0) :
+						gr.SetMarkerColor(colors[int(nh/2.-1)])
+						gr.SetMarkerStyle(int(24+nh/2.-1))
 					else :
-						gr.SetMarkerStyle(24+n0)
+						gr.SetMarkerColor(colors[int(nh/2.)])
+						gr.SetMarkerStyle(int(20+nh/2.))
 
-					if(n0==0) :
-						gr.SetMarkerSize(1.1)
+					gr.SetMarkerSize(1.1)
+					
 					n2+=1
 
 					label = dict._all_pguns[pg].GetLatex("LEG") + " in " + material
@@ -427,13 +437,13 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 			if(finalPlot == "TOTAL") :
 				gg.GetYaxis().SetTitle("P^{tot}_{int} = N^{inel+el}/N^{gen}")
-				gg.GetYaxis().SetRangeUser(0.002,0.007)
+				gg.GetYaxis().SetRangeUser(0.001,0.01)
 			elif(finalPlot == "INEL") :
-				gg.GetYaxis().SetRangeUser(0.001,0.007)
+				gg.GetYaxis().SetRangeUser(0.001,0.01)
 				gg.GetYaxis().SetTitle("P^{inel}_{int} = N^{inel}/N^{gen}")
 			elif(finalPlot == "EL") :
 				gg.GetYaxis().SetTitle("P^{el}_{int} = N^{el}/N^{gen}")
-				gg.GetYaxis().SetRangeUser(0.0003,0.0025)
+				gg.GetYaxis().SetRangeUser(0.00001,0.0025)
 			elif(find(finalPlot,"MULTI") > -1) :
 				gg.GetYaxis().SetTitle("< Multi >")
 				gg.GetYaxis().SetRangeUser(0.,100.)
@@ -471,7 +481,7 @@ if __name__ == "__main__" :
 	##		For each of the plots above you can have them is form of a ratio of particles (the consecutive ones in the "pguns" array, see below)
 	##      or as asymmetries adding RATIO or ASYM to the plot type. e.g. RATIO_TOTAL or RATIO_MULTI_NCH or ASYM_INEL, etc
 
-	plots = [ "RATIO_TOTAL", "RATIO_INEL", "TOTAL", "INEL", "EL", "MULTI"]#, "MULTI_NCH", "MULTI_NCH_NOGAMMA" ]
+	plots = [ "RATIO_TOTAL", "INEL", "TOTAL", "EL", "MULTI", "MULTI_NCH", "MULTI_NCH_NOGAMMA", "MULTI_PLUS", "PERC_PLUS" ]
 
 	### N.B.: Options need to have been generated with Targets_RunAll.py!
 	### In your output directory a file options.txt has been created where the options you generated are listed.

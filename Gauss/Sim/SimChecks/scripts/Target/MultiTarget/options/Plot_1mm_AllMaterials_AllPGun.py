@@ -5,7 +5,7 @@ from ROOT import *
 sys.path.append(os.environ["PWD"].replace("/options",""))
 from TargetPlots import Plot
 
-plots = [ "RATIO_TOTAL", "RATIO_INEL", "TOTAL", "INEL", "EL", "MULTI"]#, "MULTI_NCH", "MULTI_NCH_NOGAMMA" ]
+plots = [ "RATIO_TOTAL", "RATIO_INEL", "TOTAL", "INEL", "EL", "MULTI", "MULTI_NCH", "MULTI_GAMMA" ]
 
 models = ["QGSP_BERT","FTFP_BERT"]  # any you generated, by default "QGSP_BERT","FTFP_BERT"
 thicks = [1] #1,5,10
