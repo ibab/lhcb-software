@@ -19,6 +19,7 @@ include_path none
 use     AlignKernel         v*  Alignment
 use 	AlignmentInterfaces v*	Alignment
 use   	GaudiAlg            v*
+use    GaudiConf          v*         -no_auto_imports
 use     GaudiKernel         v*
 use     OnlineKernel        v*  Online
 use     OnlineAlign         v*  Online
