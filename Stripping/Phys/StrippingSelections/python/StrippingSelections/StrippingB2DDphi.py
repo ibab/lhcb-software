@@ -155,15 +155,15 @@ class B2DDphiConf(LineBuilder):
 
         # Create B candidates
         self.selB = {}
-        BCandidateHelper = {'D0D0': {'decayDescriptor': "[B_s0 -> K+ K- D0 D~0]cc",
+        BCandidateHelper = {'D0D0': {'decayDescriptor': "B_s0 -> K+ K- D0 D~0",
                                      'selections': ['D0']},
                             'DstDp': {'decayDescriptor': "[B_s0 -> K+ K- D*(2010)+ D-]cc",
                                      'selections': ['Dst', 'Dp']},
-                            'DD': {'decayDescriptor': "[B_s0 -> K+ K- D+ D-]cc",
+                            'DD': {'decayDescriptor': "B_s0 -> K+ K- D+ D-",
                                      'selections': ['Dp']},
-                            'DsDs': {'decayDescriptor': "[B_s0 -> K+ K- D_s+ D_s-]cc",
+                            'DsDs': {'decayDescriptor': "B_s0 -> K+ K- D_s+ D_s-",
                                      'selections': ['Ds']},
-                            'DstDst': {'decayDescriptor': "[B_s0 -> K+ K- D*(2010)+ D*(2010)-]cc",
+                            'DstDst': {'decayDescriptor': "B_s0 -> K+ K- D*(2010)+ D*(2010)-",
                                      'selections': ['Dst']} }
         for name, args in BCandidateHelper.iteritems():
             self.selB.update({name: self.makeBs2DDPhi('B2'+name+'Phi'+ moduleName,
