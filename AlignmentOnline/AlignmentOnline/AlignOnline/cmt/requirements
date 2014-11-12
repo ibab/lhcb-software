@@ -19,7 +19,7 @@ include_path none
 use     AlignKernel         v*  Alignment
 use 	AlignmentInterfaces v*	Alignment
 use   	GaudiAlg            v*
-use    GaudiConf          v*         -no_auto_imports
+use     GaudiConf           v*  -no_auto_imports
 use     GaudiKernel         v*
 use     OnlineKernel        v*  Online
 use     OnlineAlign         v*  Online
@@ -56,8 +56,7 @@ apply_pattern QMTest
 
 #============================================================================
 # Install the configurable
-#apply_pattern install_python_modules
-
+apply_pattern install_python_modules
 
 private
 macro_append Boost_linkopts " $(Boost_linkopts_system) $(Boost_linkopts_filesystem) "

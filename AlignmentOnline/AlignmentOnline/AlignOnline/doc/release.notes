@@ -3,6 +3,9 @@ Package: AlignOnline
 Package Coordinator: Maurizio Martinelli
 Purpose: Code for running and testing Alignment in the online environment
 
+ 2014-11-12 - Maurizio Martinelli
+ - added building of python objects to requirements
+
  2014-11-11 - Wouter Hulsbergen
  - fixed missing references in use of auto in for loops
 
@@ -18,5 +21,5 @@ Purpose: Code for running and testing Alignment in the online environment
  2014-11-11 - Maurizio Martinelli
  - Removed some temporary files
 
-</PRE><H1><A NAME=v1r0>2014-11-10 AlignOnline v1r0</A></H1><PRE>
- - M. Martinelli, first release
+</PRE><H1><A NAME=v0r9>2014-11-10 AlignOnline v0r9</A></H1><PRE>
+ - M. Martinelli, first commit of the package
