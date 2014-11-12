@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r37 2014-10-30 =========================
 
+! 2014-11-12 - Jason Andrews
+ - Modification of RelInfoVertexIsolation configuration in StrippingBu2rho0rhoPlus lines
+
 ! 2014-11-05 Stefano Perazzini
  - Hotfix to StrippingB2KShh.py
 
