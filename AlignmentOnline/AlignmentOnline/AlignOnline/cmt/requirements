@@ -9,7 +9,7 @@ version v1r0
 # Structure, i.e. directories to process.
 #============================================================================
 
-branches src cmt doc options
+branches src cmt doc options python
 include_path none
 
 #============================================================================
