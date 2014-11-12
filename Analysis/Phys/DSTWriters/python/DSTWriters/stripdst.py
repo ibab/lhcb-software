@@ -59,7 +59,7 @@ def stripDSTElements(pack=True, stripPrefix = 'Strip' ) :
 def stripDSTStreamConf( pack = True,
                         vetoItems = [ ], 
                         stripPrefix = 'Strip',
-                        selectiveRawEvent = True,
+                        selectiveRawEvent = False,
                         killTESAddressHistory = True,
                         fileExtension = '.dst' ) :
     

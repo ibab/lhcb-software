@@ -84,7 +84,7 @@ def stripMicroDSTElements( pack=True              ,
 
 def stripMicroDSTStreamConf( pack = True,
                              isMC = False,
-                             selectiveRawEvent = True,
+                             selectiveRawEvent = False,
                              killTESAddressHistory = True ) :
     eItems = [ '/Event/Rec/Header#1',
                '/Event/Rec/Status#1',

@@ -4,6 +4,15 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! 2014-11-12 - Chris Jones
+ - Add a try/catch block to the selective raw event handling code, to provide
+   a better message when suppotr is enabled in situations where it is not
+   fully supported (i.e. when StrippingStreams are not used).
+ - make selectiveRawEvent = False the default, which means DST writers used in
+   private user jobs will work as before. Will not impact on S21 options in
+   AppConfig, as there support is explicitly enabled, the defaults are not 
+   relied upon.
+
 !========================= DSTWriters v4r17 2014-10-30 =========================
 
 ! 2014-10-22 - Chris Jones

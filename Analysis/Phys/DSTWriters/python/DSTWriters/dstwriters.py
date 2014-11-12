@@ -56,12 +56,15 @@ class DSTWriterSelectionSequence(object) :
 
         # Extract Raw Events to keep for this stream, line by line.
         if outputStreamConfiguration.selectiveRawEvent :
-            rawEvents = selSequence.getRequiredRawEvents()
-            rawEvPropName = 'AlgDependentItemList'
-            if hasattr(writer,rawEvPropName) :
-                writer.setProp(rawEvPropName,rawEvents)
-            else:
-                print "WARNING : Output Writer", writer.name(), "does not have property", rawEvPropName
+            try :
+                rawEvents = selSequence.getRequiredRawEvents()
+                rawEvPropName = 'AlgDependentItemList'
+                if hasattr(writer,rawEvPropName) :
+                    writer.setProp( rawEvPropName, rawEvents )
+                else:
+                    print "WARNING : Output Writer", writer.name(), "does not have property", rawEvPropName
+            except :
+                raise Exception( "Sequence '" + selSequence.name() + "' does not have support for selective raw event saving. **NO** Raw Event banks will be saved. To save them, set selectiveRawEvent=False in your SelDSTWriter stream Configuration." )
 
         # Collects the data available on the input file, for subsequent DST streams.
         # Must be run once per event, before *any* TES address killing.
