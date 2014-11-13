@@ -126,6 +126,7 @@ FSM::ErrCond Slave::iamDead()  {
 /// Callback, when transition was executed successfully
 FSM::ErrCond Slave::transitionDone(const State* state)  {
   m_alive  = true;
+  m_rule   = 0;
   m_state  = state;
   m_meta   = SLAVE_ALIVE;
   m_status = SLAVE_FINISHED;
@@ -137,6 +138,7 @@ FSM::ErrCond Slave::transitionDone(const State* state)  {
 /// Callback, when the slave invoked a transition himself
 FSM::ErrCond Slave::transitionSlave(const State* state)  {
   if ( state )  {
+    m_rule  = 0;
     m_alive = true;
     m_state = state;
     m_meta  = SLAVE_ALIVE;
@@ -152,7 +154,7 @@ FSM::ErrCond Slave::transitionSlave(const State* state)  {
 FSM::ErrCond Slave::transitionFailed()  {
   m_meta   = SLAVE_FAILED;
   m_status = SLAVE_FAILED;
-  m_state  = m_rule ? m_rule->currState() : 0;
+  m_state  = m_rule ? m_rule->currState() : m_state;
   return notifyMachine(SLAVE_FAILED);
 }
 
@@ -287,10 +289,13 @@ void Slave::handleState(const string& msg)  {
     lib_rtl_sleep(10); // Put in some code to set breakpoint for debugging
   }
 
-  if ( starting )
+  if ( starting )   {
     iamHere();
-  else if ( state && state->isFailure() )
+  }
+  else if ( state && state->isFailure() )   {
+    m_state = state;
     transitionFailed();
+  }
   else if ( transition )
     transitionDone(state);
   else if ( state )

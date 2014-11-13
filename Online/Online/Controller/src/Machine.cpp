@@ -213,7 +213,7 @@ bool Machine::evaluateWhens()  {
     const Machine::States states = slaveStates();
     state_names << "Slave states:";
     for(Slaves::const_iterator is=m_slaves.begin(); is!=m_slaves.end(); ++is)
-      state_names << (*is)->name() << "@" << (*is)->c_state() << "  ";
+      state_names << (*is)->name() << ":" << (*is)->c_state() << "  ";
 
     display(INFO,c_name(),"Machine Idle:%s EvaluateWhen: Check %d when clauses.",
 	    isIdle() ? " YES " : " NO ",int(whens.size()));
