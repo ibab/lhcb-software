@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-11-12 - Alex Shires
+ - updating electron lines to use TrackCandidates - to be tested! adding bug fix to ElectronPlusTrack
+
 !========================= Hlt1Lines v7r6 2014-10-17 =========================
 
 ! 2014-10-17 - Sean Benson
