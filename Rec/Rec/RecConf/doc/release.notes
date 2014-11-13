@@ -4,6 +4,10 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+! 2014-11-13 - Marco Cattaneo
+ - Remove "upgrade" from KnownSpecialData (obsolete, use the DataType instead)
+   and from pre 2010 treatment of primary vertex
+
 ! 2014-11-05 - Michel De Cian
  - Remove 'TrackMatching' from cmt/requirements and CMakeLists.txt
 

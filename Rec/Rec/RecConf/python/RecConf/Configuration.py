@@ -39,8 +39,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = ["Decoding"] + DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO","SUMMARY"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas",
-                         "microBiasTrigger","upgrade", "pA" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas", "microBiasTrigger", "pA" ]
 
     ## Steering options
     __slots__ = {
@@ -93,7 +92,7 @@ class RecSysConf(LHCbConfigurableUser):
                 from PatPV import PVConf
                 PVConf.LoosePV().configureAlg()
             elif ( not ( self.getProp("Simulation") and
-                         self.getProp("DataType") in ["2008","2009","2010","MC09","Upgrade"] ) ):
+                         self.getProp("DataType") in ["2008","2009","2010","MC09"] ) ):
                 # Deafult setting uses beam spot constraint from DB, available from 2011. Prior to 2011 stability of beam spot is not certain
                 from PatPV import PVConf
                 PVConf.StandardPV().configureAlg()
