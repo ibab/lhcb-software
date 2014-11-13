@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-11-13 - Stefano Perazzini
+ - Corrected a typo controlling the maximum number of combinations for 
+   StdParticles
+
 ! 2014-11-13 - Chris Jones
  - Downgrade some warnings messages (that where not really warnings) to debug
    level messages.

@@ -259,7 +259,7 @@ class StrippingConf ( object ) :
                     alg.MaxCandidates = self.MaxCandidates
                 if self.MaxCombinations != None:
                     alg.StopAtMaxCombinations = True
-                    alg.MaxCombinations = self.MaxCandidates
+                    alg.MaxCombinations = self.MaxCombinations
                 if self.MaxCandidates != None or self.MaxCombinations != None :
                     alg.StopIncidentType = incidentName
                 ## comment to be removed once performed some more test
