@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2013-11-13 - Alex Shires
+ - Fix duplicate candidate problems in B2MuMuMuMu lines
+
 !========================= StrippingSelections v3r37 2014-10-30 =========================
 
 ! 2014-11-13 - Mika Vesterinen
