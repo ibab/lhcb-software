@@ -6,6 +6,9 @@
 
 !========================= StrippingSettings v2r32 2014-10-30 =========================
 
+! 2014-11-13 - Mika Vesterinen
+ - Add missing b2D0eX line in semileptonic dicts for S21(r1)
+
 ! 2014-10-29 - Andrea Contu
  - Updated dbases for Stripping21(r1)
 

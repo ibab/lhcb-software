@@ -56,6 +56,7 @@ B2DMuNuX = {
     'STREAMS' : {
         'Semileptonic' : [
             'Strippingb2D0MuXB2DMuNuXLine',
+            'Strippingb2D0eXB2DMuNuXLine',
             'Strippingb2DpMuXB2DMuNuXLine',
             'Strippingb2DsMuXB2DMuNuXLine',
             'Strippingb2DsKStarKMuXB2DMuNuXLine',
