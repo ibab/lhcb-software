@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2014-11-13 - Michel De Cian
+ - Remove two virtual functions in IAddTTClusterTool, as AddTTClusterTool is not in Rec anymore and they are not needed.
+
 !========================= TrackInterfaces v4r26 2013-12-10 =========================
 ! 2013-12-05 - Thomas Bird
  - Added IVPExpectation, which is a new interface to VP Expectation class 
