@@ -19,10 +19,10 @@ namespace LHCb  {
 
   /** Class definition of EventRunable.
     *
-    * This is the online extension of the runnable of the application manager.
-    * The runable handles the actual run() implementation of the
-    * ApplicationMgr object.
-    * This implementation just calls ApplicationMgr::nextEvent(...).
+    *  This is the online extension of the runnable of the application manager.
+    *  The runable handles the actual run() implementation of the
+    *  ApplicationMgr object.
+    *  This implementation just calls ApplicationMgr::nextEvent(...).
     *
     *  @author Markus Frank
     *  @version 1.0
@@ -38,14 +38,15 @@ namespace LHCb  {
     std::string       m_mepMgrName;
     /// Property: Timeout incident name
     std::string       m_tmoIncident;
-    /// Flag indicating that MBM event retrieval is active
-    bool              m_receiveEvts;
-    /// Number of events to be processed
-    int               m_evtMax;
-    /// Property: Number of consecutive processing errors to stop
+    /// Property: Number of consecutive processing errors to stop (default: -1)
     int               m_nerrStop;
-    /// Property: Force exit after event timeout
+    /// Property: Force exit after event timeout (default: 0)
     int               m_forceTMOExit;
+    /// Property: Number of milliseconds to wait until processing of the current event finished.
+    int               m_waitForEventFinished;
+    /// Property: Number of events to be processed in one nextEvent() call (default: 1)
+    int               m_evtMax;
+
     /// Counter to consecutive processing errors
     int               m_nerr;
     /// Monitoring quantity: Number of events processed
@@ -54,6 +55,10 @@ namespace LHCb  {
     bool	      m_errorFired;	 
     /// Flag that indicates that a timeout occurred
     bool	      m_eventTMO;
+    /// Flag indicating that MBM event retrieval is active
+    bool              m_receiveEvts;
+    /// Flag indicating that an event is currently being processed
+    bool              m_processingEvt;
 
   public:
     /// Standard Constructor

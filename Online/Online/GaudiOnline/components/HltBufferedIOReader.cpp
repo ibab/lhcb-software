@@ -239,6 +239,7 @@ StatusCode HltBufferedIOReader::initialize()   {
     return error("Fatal error: Failed to create MBM producer object.");
   }
   incidentSvc()->addListener(this, "DAQ_CANCEL");
+  incidentSvc()->addListener(this, "DAQ_STOP_TRIGGER");
   declareInfo("EvtCount", m_evtCount = 0, "Number of events processed");
   ::lib_rtl_lock(m_lock);
   m_files.clear();
@@ -299,6 +300,12 @@ void HltBufferedIOReader::handle(const Incident& inc)
     ::lib_rtl_unlock(m_lock);
   }
   else if (inc.type() == "DAQ_ENABLE")  {
+    m_receiveEvts = true;
+  }
+  else if (inc.type() == "DAQ_STOP_TRIGGER")  {
+    m_receiveEvts = false;
+  }
+  else if (inc.type() == "DAQ_START_TRIGGER")  {
     m_receiveEvts = true;
   }
 }
@@ -369,7 +376,7 @@ int HltBufferedIOReader::openFile()   {
 
 /// Save remainder of currently read file
 void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
-  if (file_handle)  {
+  if (m_deleteFiles && file_handle)  {
     char buffer[10 * 1024];
     info("Saving rest of file[%d]: %s",file_handle,m_current.c_str());
     int cnt = 0, ret, fd = ::open(m_current.c_str(), O_CREAT | O_BINARY | O_WRONLY, 0777);
@@ -385,10 +392,12 @@ void HltBufferedIOReader::safeRestOfFile(int file_handle)     {
     }
     info("Wrote %d bytes to file:%s fd:%d",cnt,m_current.c_str(),fd);
     ::close(fd);
+  }
+  if ( file_handle )  {
     ::close(file_handle);
-    m_current = "";
     file_handle = 0;
   }
+  m_current = "";
 }
 
 static bool check_consumers(const MBM::BufferInfo& info, int pid, int evtyp)   {
@@ -397,12 +406,17 @@ static bool check_consumers(const MBM::BufferInfo& info, int pid, int evtyp)   {
 static bool check_consumers_partid(const MBM::BufferInfo& info, int pid)   {
   return info.num_consumers_partid(pid) != 0;
 }
+static void waitForPendingEvents(const MBM::BufferInfo& info, int seconds=100)    {
+  while(info.num_events() > 0 && --seconds >= 0 )
+    ::lib_rtl_sleep(1000);
+}
 
 /// IRunable implementation : Run the class implementation
 StatusCode HltBufferedIOReader::i_run()  {
   const RawBank* bank = (RawBank*)this;
   int cons_wait;
   int file_handle = 0;
+  int event_number = 0;
   int partid = m_mepMgr->partitionID();
   bool files_processed = false;
   bool m_goto_paused = true;
@@ -426,6 +440,8 @@ StatusCode HltBufferedIOReader::i_run()  {
   while (1)  {
     files_processed = scanFiles() == 0;
     if ( m_goto_paused && files_processed )   {
+      /// Before actually declaring PAUSED, we wait until no events are pending anymore.
+      waitForPendingEvents(mbmInfo);
       /// Go to state PAUSED, all the work is done
       incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
     }
@@ -434,6 +450,10 @@ StatusCode HltBufferedIOReader::i_run()  {
       ::lib_rtl_lock(m_lock);
     }
     if ( !m_receiveEvts )    {
+      if ( file_handle )  {
+	safeRestOfFile(file_handle);
+	file_handle = 0;
+      }
       info("Quitting...");
       break;
     }
@@ -453,6 +473,7 @@ StatusCode HltBufferedIOReader::i_run()  {
             break;
           }
         }
+	event_number = 0;
       }
       if ( file_handle != 0 )  {
         int size_buf[3];
@@ -469,12 +490,13 @@ StatusCode HltBufferedIOReader::i_run()  {
 	int  buf_size = evt_size + (is_mdf ? bank->hdrSize() : sizeof(MEPEVENT) + sizeof(int));
         // Careful here: sizeof(int) MUST match me->sizeOf() !
         // The problem is that we do not (yet) have a valid data pointer!
+	++event_number;
         try   {
           status = m_producer->spaceRearm(buf_size);
         }
         catch (const exception& e)        {
-          error("Exception while reading Input files (spaceRearm): "+string(e.what())+
-		" Skipping rest of file: "+m_current);
+          error("Exception while reading Input files (spaceRearm): %s Event:%d. "
+		"Skipping rest of file: %s", e.what(),event_number,m_current.c_str());
           ::close(file_handle);
           file_handle = 0;
           m_current = "";
@@ -537,11 +559,15 @@ StatusCode HltBufferedIOReader::i_run()  {
 	      ::lib_rtl_sleep(1000);
 
 	    if ( cons_wait <= 0 )  {
-	      error("No consumers present to consume event. Safe rest of file and finish."
-		    " Skipping rest of file: "+m_current);
+	      error("No consumers (partition:%d event type:%d) present to consume event %d",
+		    partid,dsc.type,event_number);
+	      error("Safe rest of file and finish. Skipping rest of file: %s",m_current.c_str());
 	      m_receiveEvts = false;
 	      ::lseek(file_handle, file_position, SEEK_SET);
 	      safeRestOfFile(file_handle);
+	      file_handle = 0;
+	      /// Before actually declaring PAUSED, we wait until no events are pending anymore.
+	      waitForPendingEvents(mbmInfo);
 	      /// Go to state PAUSED, all the work is done
 	      incidentSvc()->fireIncident(Incident(name(),"DAQ_ERROR"));
 	      return StatusCode::FAILURE;
@@ -565,9 +591,12 @@ StatusCode HltBufferedIOReader::i_run()  {
       }
     }
     safeRestOfFile(file_handle);
+    file_handle = 0;
     // Bad file: Cannot read input (m_evtCount==0)
     m_evtCount = 0;
   }
+  /// Before actually declaring PAUSED, we wait until no events are pending anymore.
+  waitForPendingEvents(mbmInfo);
   return StatusCode::SUCCESS;
 }
 

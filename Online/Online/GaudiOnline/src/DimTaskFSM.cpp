@@ -99,6 +99,16 @@ namespace  {
         m_target->declareState(Target::ST_ERROR);
         return;
       }
+      else if ( cmd == "stop_trigger" )   {
+	std::string* value = new std::string("DAQ_STOP_TRIGGER");
+        IOCSENSOR.send(m_target, DimTaskFSM::FIRE_INCIDENT, value);
+        return;
+      }
+      else if ( cmd == "start_trigger" )   {
+	std::string* value = new std::string("DAQ_START_TRIGGER");
+        IOCSENSOR.send(m_target, DimTaskFSM::FIRE_INCIDENT, value);
+        return;
+      }
       else if ( cmd == "!state" )  {
 	std::string old_state = m_target->stateName();
 	m_target->clearState();

@@ -315,6 +315,9 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
       if ( !sc.isSuccess() && m_gotoPause )   {
 	incidentSvc()->fireIncident(Incident(name(),"DAQ_PAUSE"));
       }
+      else if ( sc.isSuccess() )  {
+	incidentSvc()->fireIncident(Incident(name(),"DAQ_PROCESS_EVENT"));
+      }
       return sc;
     }
   }

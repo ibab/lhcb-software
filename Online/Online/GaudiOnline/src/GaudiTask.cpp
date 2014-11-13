@@ -250,6 +250,10 @@ void GaudiTask::handle(const Incident& inc)    {
   else if ( inc.type() == "DAQ_CONTINUE" )  {
     if ( !m_ignoreIncident ) continueProcessing();
   }
+  else if ( inc.type() == "DAQ_START_TRIGGER" )  {
+  }
+  else if ( inc.type() == "DAQ_STOP_TRIGGER" )  {
+  }
 }
 
 /// Fire an incident from network interrupt
@@ -403,6 +407,8 @@ int GaudiTask::initApplication()  {
 	    m_incidentSvc->addListener(this,"DAQ_FATAL");
 	    m_incidentSvc->addListener(this,"DAQ_PAUSE");
 	    m_incidentSvc->addListener(this,"DAQ_CONTINUE");
+	    m_incidentSvc->addListener(this,"DAQ_STOP_TRIGGER");
+	    m_incidentSvc->addListener(this,"DAQ_START_TRIGGER");
 	    m_incidentSvc->fireIncident(incident);
 	    return 1;
 	  }

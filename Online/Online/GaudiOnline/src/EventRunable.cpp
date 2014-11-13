@@ -13,13 +13,15 @@ using namespace std;
 /// Standard Constructor
 EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
-  m_receiveEvts(false), m_nerr(0), m_evtCount(0), m_errorFired(false), m_eventTMO(false)
+  m_nerr(0), m_evtCount(0), m_errorFired(false), m_eventTMO(false),
+  m_receiveEvts(false), m_processingEvt(false)
 {
-  declareProperty("EvtMax",         m_evtMax=1);
-  declareProperty("NumErrorToStop", m_nerrStop=-1);
-  declareProperty("MEPManager",     m_mepMgrName="LHCb::MEPManager/MEPManager");
-  declareProperty("TimeoutIncident",m_tmoIncident="DAQ_TIMEOUT");
-  declareProperty("ForceTMOExit",   m_forceTMOExit = 0);
+  declareProperty("EvtMax",               m_evtMax=1);
+  declareProperty("NumErrorToStop",       m_nerrStop=-1);
+  declareProperty("MEPManager",           m_mepMgrName="LHCb::MEPManager/MEPManager");
+  declareProperty("TimeoutIncident",      m_tmoIncident="DAQ_TIMEOUT");
+  declareProperty("ForceTMOExit",         m_forceTMOExit = 0);
+  declareProperty("WaitForEventFinished", m_waitForEventFinished = 1000);
 }
 
 /// Standard Destructor
@@ -53,6 +55,7 @@ StatusCode EventRunable::initialize()   {
   }
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   incidentSvc()->addListener(this,"DAQ_ERROR");
+  incidentSvc()->addListener(this,"DAQ_PROCESS_EVENT");
   incidentSvc()->addListener(this,m_tmoIncident);
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
   return sc;
@@ -67,7 +70,11 @@ StatusCode EventRunable::finalize()     {
 
 /// Incident handler implemenentation: Inform that a new incident has occured
 void EventRunable::handle(const Incident& inc)    {
-  info("Got incident:"+inc.source()+" of type "+inc.type());
+  if ( inc.type() == "DAQ_PROCESS_EVENT" )  {
+    m_processingEvt = true;
+    return;
+  }
+  info("Got incident:"+inc.source()+" of type "+inc.type());  
   if ( inc.type() == "DAQ_CANCEL" )  {
     m_receiveEvts = false;
     if ( !m_mepMgrName.empty() )  {
@@ -76,6 +83,12 @@ void EventRunable::handle(const Incident& inc)    {
               " -- Internal error:"+m_mepMgrName+" is not assigned.");
       }
       else {
+	int cnt = 0;
+	// We need here a small wait loop until the event finished processing....
+	while(m_processingEvt && ++cnt<=m_waitForEventFinished)
+	  ::lib_rtl_sleep(1);
+	if ( cnt>0 ) info("CANCEL: Waited %d msec until "
+			  "current event got processed.",cnt*10);
         m_mepMgr->cancel();
       }
     }
@@ -117,6 +130,7 @@ StatusCode EventRunable::run()   {
       DataObject* pObj = 0;
       m_eventTMO = false;
       StatusCode sc = StatusCode::SUCCESS;
+      m_processingEvt = false;
       try  {
 	incidentSvc()->fireIncident(Incident(name(),"DAQ_BEGIN_EVENT"));
 	sc = ui->nextEvent(m_evtMax);
@@ -129,6 +143,7 @@ StatusCode EventRunable::run()   {
 	sc = m_eventTMO ? StatusCode::SUCCESS : StatusCode::FAILURE;
 	info("Caught unknown exception in main eventy loop.");
       }
+      m_processingEvt = false;
       incidentSvc()->fireIncident(Incident(name(),"DAQ_END_EVENT"));
       if ( sc.isSuccess() )  {
         m_evtCount++;
