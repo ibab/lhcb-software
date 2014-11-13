@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2014-11-13 - Michel De Cian
+ - New implementation of the search for compatible hits in PatAddTTCoord. Faster, but efficiency performance should be stable.
+
 ! 2014-10-27 - Marco Cattaneo
  - PatDownstream: avoid interrogating the MagneticFieldSvc at every track to get
    the signedRelativeCurrent, once per event is enough!

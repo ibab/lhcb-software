@@ -60,6 +60,14 @@ StatusCode PatAddTTCoord::initialize ( ) {
 
   m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
 
+  incSvc()->addListener(this, IncidentType::BeginEvent);
+  m_newEvent = true;
+
+  PatTTHits dummy;
+  m_hitsLayers = { dummy, dummy, dummy, dummy};
+  
+  m_invMajAxProj2 = 1/(m_majAxProj*m_majAxProj);
+
   return StatusCode::SUCCESS;
 }
 
@@ -104,9 +112,6 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track){
   return StatusCode::SUCCESS;
 
 }
-
-
-
 //=========================================================================
 //  Return the TT hits
 //=========================================================================
@@ -129,6 +134,8 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "--- Entering addTTClusters ---" << endmsg;
 
+  if(m_newEvent) initEvent();
+
   // -- Get the container with all the hits compatible with the tack
   selectHits(selected, state, p);
 
@@ -141,8 +148,8 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
   }
 
   // -- Loop over all hits and make "groups" of hits to form a candidate
-
-  for ( PatTTHits::iterator itBeg = selected.begin(); itBeg+2 < selected.end(); ++itBeg ) {
+  PatTTHits::const_iterator end = selected.end();
+  for ( PatTTHits::iterator itBeg = selected.begin(); itBeg+2 < end; ++itBeg ) {
     double firstProj = (*itBeg)->projection();
     goodTT.clear();
     int nbPlane = 0;
@@ -153,8 +160,12 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
     // -- If |firstProj| > m_majAxProj, the sqrt is ill defined
     double maxProj = firstProj;
     if(fabs(firstProj) < m_majAxProj){
-      maxProj =  firstProj + sqrt( m_minAxProj * m_minAxProj * (1 - firstProj*firstProj/( m_majAxProj * m_majAxProj )));
+      // -- m_invMajAxProj2 = 1/(m_majAxProj*m_majAxProj), but it's faster like this
+      maxProj =  firstProj + sqrt( m_minAxProj * m_minAxProj * (1 - firstProj*firstProj * m_invMajAxProj2 ));
     }
+    
+    // -- This means that there would be less than 3 hits, which does not work, so we can skip this right away
+    if( (*(itBeg+2))->projection() > maxProj ) continue;
 
     // -- Make "group" of hits which are within a certain distance to the first hit of the group
     while ( itEnd != selected.end() ) {
@@ -184,9 +195,7 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
 
     double dist = 0;
     chi2 = 1.e20;
-    PatTTHits::iterator worst;
-
-
+    
     calculateChi2(goodTT, chi2, bestChi2, dist, p );
 
     // -- If this group has a better chi2 than all the others
@@ -215,47 +224,71 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
 void PatAddTTCoord::selectHits(PatTTHits& selected, const LHCb::State& state, const double p){
 
   // -- Define the tolerance parameters
-  double yTol = m_yTolSlope / p ;
-  double xTol = m_xTol + m_xTolSlope / p;
+  const double yTol = m_yTolSlope / p ;
+  const double xTol = m_xTol + m_xTolSlope / p;
   selected.clear();
+
+  // -- Define the parameter that describes the bending
+  const double bendParam = m_ttParam * state.qOverP()* -1 * m_magFieldSvc->signedRelativeCurrent() ;
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "State z " << state.z() << " x " << state.x() 
             << " y " << state.y() << " tx " << state.tx() << " ty " 
             << state.ty() << " p " << p << endmsg;
 
-  Tf::TTStationHitManager<PatTTHit>::HitRange hits = m_ttHitManager->hits();
+  const double stateX = state.x();
+  const double stateZ = state.z();
+  const double stateTy = state.ty();
+  const double stateY = state.y();
+  const double stateTx = state.tx();
+  
+  for(int iLayer = 0; iLayer < 4; ++iLayer){
+  
+    const double zLayer = m_hitsLayers[iLayer].front()->z();
+    const double yPredLay = stateY + ( zLayer -stateZ ) * stateTy;
+    const double xPredLay = stateX + ( zLayer -stateZ ) * stateTx + bendParam * ( zLayer - m_zTTField );
+    const double dxDy = m_hitsLayers[iLayer].front()->hit()->dxDy();
+    
+    // -- this should sort of take the stereo angle and some tolerance into account.
+    const double lowerBoundX = xPredLay - xTol - dxDy*yPredLay - 2.0;
+    
+    PatTTHits::iterator itHit = std::lower_bound( m_hitsLayers[iLayer].begin(), 
+                                                  m_hitsLayers[iLayer].end(), 
+                                                  lowerBoundX, 
+                                                  Tf::compByX_LB< PatTTHit >() );
+    
+    for( ; itHit != m_hitsLayers[iLayer].end(); ++itHit){
+   
+      PatTTHit* hit = *itHit;
+      
+      const double yPred = stateY + ( hit->z() -stateZ ) * stateTy;
+      
+      if( !hit->hit()->isYCompatible(yPred, yTol)) continue;
 
-  // -- Loop over all the TT hits, get all TT hits whose projection is compatible with the track
-  for ( PatTTHits::const_iterator itTT = hits.begin(); hits.end() != itTT; ++itTT ) {
-    PatTTHit* tt = *itTT;
-
-    double z = tt->z();
-    double yPred = state.y() + ( z - state.z() ) * state.ty();
-
-    // -- Check if hit is compatible in y with the track
-    if( !tt->hit()->isYCompatible( yPred, yTol) ) continue ;
-
-    double tyTr = state.ty();
-    updateTTHitForTrack( tt, state.y()-state.z()*state.ty(), tyTr );
-
-    double magScaleFactor = -1 * m_magFieldSvc->signedRelativeCurrent();
-
-    // -- Extrapolate the state to the acutal position of the hit, using a two staight line segments and a kink
-    double xPred = state.x() + ( z-state.z() ) * state.tx() + m_ttParam * magScaleFactor*state.qOverP() * ( z - m_zTTField );
-
-    if ( fabs( xPred - tt->x() ) < xTol ) {
-
-      // -- Calculate the projection, which takes possible multiple scattering into account
-      double projDist = ( xPred - tt->x() ) * ( m_zTTProj - m_zMSPoint ) / ( z - m_zMSPoint );
-      tt->setProjection( projDist );
-      selected.push_back( tt );
+      // -- only do this if it's a stereo layer
+      if( iLayer == 1 || iLayer == 2){
+        updateTTHitForTrack( hit, stateY-stateZ*stateTy, stateTy );
+      }
+      
+      const double xPred = stateX + ( hit->z()-stateZ ) * stateTx + bendParam * ( hit->z() - m_zTTField );
+      if( hit->x() > xPred + xTol ) break;
+      if( hit->x() < xPred - xTol ) continue;
+      
+      const double projDist = ( xPred - hit->x() ) * ( m_zTTProj - m_zMSPoint ) / ( hit->z() - m_zMSPoint );
+      hit->setProjection( projDist );
+      selected.push_back( hit );
     }
-  }
+    
+    // -- would not have hits in 3 layers like this
+    if( iLayer == 2 && selected.empty() ) break;
 
+  }
+  
+  // -- No need to sort if we anyway don't have enough hits
+  if( selected.size() < 3 ) return;
 
   std::sort( selected.begin(), selected.end(), Tf::increasingByProjection<PatTTHit>() );
-
+  
 }
 //=========================================================================
 // Calculate Chi2
@@ -367,7 +400,7 @@ void PatAddTTCoord::calculateChi2(PatTTHits& goodTT, double& chi2, const double&
 
 
     // -- Increase the sanity check counter
-    counter++;
+    ++counter;
   }
 
 
@@ -394,4 +427,49 @@ void PatAddTTCoord::printInfo(const PatTTHits& goodTT, double dist, double chi2,
            << endmsg;
   }
 
+}
+
+
+//=============================================================================
+// -- Check if new event has occurred. If yes, set flag
+// -- Note: The actions of initEvent cannot be executed here,
+// -- as this handle runs before decoding the clusters
+//=============================================================================
+void PatAddTTCoord::handle ( const Incident& incident ) {
+  
+  if ( IncidentType::BeginEvent == incident.type() ) m_newEvent = true;
+  
+}
+ 
+//=============================================================================
+// -- Init event: Get the new hits and sort them
+//=============================================================================
+void PatAddTTCoord::initEvent () {
+ 
+  m_ttHitManager->prepareHits();
+  
+  
+  m_hitsLayers[0].clear();
+  m_hitsLayers[1].clear();
+  m_hitsLayers[2].clear();
+  m_hitsLayers[3].clear();
+
+  Tf::TTStationHitManager<PatTTHit>::HitRange range = m_ttHitManager->hits(0,0);
+  m_hitsLayers[0].insert(m_hitsLayers[0].end(), range.begin(), range.end() );
+  range = m_ttHitManager->hits(0,1);
+  m_hitsLayers[1].insert(m_hitsLayers[1].end(), range.begin(), range.end() );
+  range = m_ttHitManager->hits(1,0);
+  m_hitsLayers[2].insert(m_hitsLayers[2].end(), range.begin(), range.end() );
+  range = m_ttHitManager->hits(1,1);
+  m_hitsLayers[3].insert(m_hitsLayers[3].end(), range.begin(), range.end() );
+
+  for(int i = 0; i < 4; ++i){
+    std::sort(m_hitsLayers[i].begin(), m_hitsLayers[i].end(), [](const PatTTHit* lhs, const PatTTHit* rhs){
+        return lhs->hit()->xAtYEq0() < rhs->hit()->xAtYEq0();
+      });
+  }
+  
+  m_newEvent = false;
+  
+  
 }

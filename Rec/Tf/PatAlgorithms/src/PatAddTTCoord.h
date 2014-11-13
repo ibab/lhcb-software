@@ -1,4 +1,4 @@
-// $Id: PatAddTTCoord.h,v 1.5 2010-04-15 11:42:44 decianm Exp $
+// $Id: PatAddTTCoordF.h,v 1.5 2010-04-15 11:42:44 decianm Exp $
 #ifndef PATADDTTCOORD_H
 #define PATADDTTCOORD_H 1
 
@@ -12,12 +12,13 @@
 #include "PatKernel/PatTTHit.h"
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "TfKernel/TTStationHitManager.h"
-
+#include "GaudiKernel/IIncidentListener.h"
 
 
   /** @class PatAddTTCoord PatAddTTCoord.h
    *
-   * \brief  Adds TT clusters to tracks, see note LHCb-INT-2010-20
+   * \brief  Adds TT clusters to tracks, see note LHCb-INT-2010-20 for the basic principle
+   *
    *
    * Parameters:
    * - ZTTField: Z-Position of the kink for the state extrapolation
@@ -36,11 +37,11 @@
    *  
    *  @author Olivier Callot
    *  @author Michel De Cian (added method and code restructured)
-   *  @date   2012-04-19 
+   *  @date   2014-11-13 
    *  
    */
 
-class PatAddTTCoord : public GaudiTool, virtual public IAddTTClusterTool {
+class PatAddTTCoord : public GaudiTool, virtual public IAddTTClusterTool, public IIncidentListener {
 public:
     /// Standard constructor
   PatAddTTCoord( const std::string& type,
@@ -53,27 +54,25 @@ public:
 
   /// Add TT clusters to matched tracks
   virtual StatusCode addTTClusters( LHCb::Track& track);
+  
+  /// Return TT clusters without adding them
   virtual StatusCode returnTTClusters( LHCb::State& state, PatTTHits& ttHits, double& finalChi2, double p = 0 );
 
-  virtual StatusCode addTTClusters( LHCb::Track& /*track*/, 
-                                    std::vector<LHCb::STCluster*>& /*ttClusters*/,
-                                    std::vector<double>& /*ttChi2s*/ ) { return StatusCode::SUCCESS;};
   
-
-  virtual double distanceToStrip( const LHCb::Track& /*track*/, 
-                                  const LHCb::STCluster& /*ttCluster*/ ) {return 0.;};
+  void handle ( const Incident& incident );
   
   
-    
- 
-
-private:
+ private:
 
   void selectHits(PatTTHits& selected, const LHCb::State& state, const double p);
   void calculateChi2(PatTTHits& goodTT,  double& chi2, const double& bestChi2, double& finalDist, const double& p );
   void printInfo(const PatTTHits& goodTT, double dist, double chi2, const LHCb::State& state);
+  void initEvent();
   
-
+  std::array<PatTTHits, 4> m_hitsLayers;
+  bool m_newEvent;
+  double m_invMajAxProj2;
+  
   Tf::TTStationHitManager<PatTTHit> * m_ttHitManager;
   double m_ttParam;
   double m_zTTField;
@@ -91,7 +90,7 @@ private:
   std::string m_extrapolatorName;
   
   ILHCbMagnetSvc*     m_magFieldSvc; 
-
+  
 };
 
 #endif // PATADDTTCOORD_H
