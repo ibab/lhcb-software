@@ -472,10 +472,10 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
         ##########################################################################
         
         self.CombD0ToHH_SEED = CombineParticles("CombD0ToHH_SEED_for"+name,
-                                                DecayDescriptors = ["[K*(892)0 -> pi+ pi-]cc",
-                                                                    "[K*(892)0 -> K+ K-]cc",
-                                                                    "[K*(892)0 -> K- pi+]cc",
-                                                                    "[K*(892)0 -> K+ K-]cc"],
+                                                DecayDescriptors = ["K*(892)0 -> pi+ pi-",
+                                                                    "K*(892)0 -> K+ K-",
+                                                                    "K*(892)0 -> K- pi+",
+                                                                    "K*(892)0 -> K+ pi-"]
                                                 CombinationCut = "(ACHILD(PT,1)+ACHILD(PT,2) > 1500*MeV)"\
                                                     "& (AM < 2000*MeV)"\
                                                     "& (AM - ACHILD(M,1)-ACHILD(M,2) > 50*MeV)"\

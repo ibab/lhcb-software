@@ -6,6 +6,9 @@
 
 !========================= StrippingSelections v3r37 2014-10-30 =========================
 
+! 2014-11-13 - Mika Vesterinen
+ - Fix some candidate duplication in TrackEffD0ToK3pi and CharmFromBSemi
+
 ! 2014-11-12 - Jason Andrews
  - Modification of RelInfoVertexIsolation configuration in StrippingBu2rho0rhoPlus lines
 

@@ -1,6 +1,6 @@
 __author__ = ['Mika Vesterinen']
-__date__ = '23/07/2010'
-__version__ = '$Revision: 4.0 $'
+__date__ = '23/07/2014'
+__version__ = '$Revision: 5.0 $'
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
@@ -100,28 +100,27 @@ class TrackEffD0ToK3PiAllLinesConf(LineBuilder) :
         ##################### MAKE THE LINES #############
         
         self.MissingPion4BodyLine = self.MakeLine("%sMissingPion4Body"%self.name,
-                                             ['[K*(892)+ -> K- pi+ pi+]cc','[K*(892)+ -> K- pi+ pi-]cc','[K*(892)+ -> K- pi- pi-]cc',
-                                              '[K*(892)+ -> K+ pi+ pi+]cc','[K*(892)+ -> K- pi+ pi-]cc','[K*(892)+ -> K- pi- pi-]cc'],
-                                             [SelLongKaons,SelLongPions],
-                                             ['[D0 -> K*(892)+ pi+]cc','[D~0 -> K*(892)- pi+]cc'],
-                                             ["[D*(2010)+ -> D0 pi+]cc"],
-                                             ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'],
-                                             self.VeloPions)
+                                                  ['[K*(892)+ -> K- pi+ pi+]cc','[K*(892)+ -> K- pi+ pi-]cc','[K*(892)+ -> K- pi- pi-]cc'],## RS-A, RS-B , SS
+                                                  [SelLongKaons,SelLongPions],
+                                                  ['[D0 -> K*(892)+ pi+]cc','[D0 -> K*(892)+ pi-]cc'], ## allow both probe charges
+                                                  ["[D*(2010)+ -> D0 pi+]cc","[D*(2010)+ -> D~0 pi+]cc"], ## add also wrong sign
+                                                  ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'], ## allow also wrong sign StdAllNoPIDs "pions"
+                                                  self.VeloPions)
 
         self.MissingKaon4BodyLine = self.MakeLine("%sMissingKaon4Body"%self.name,
-                                                  ['[K*(892)+ -> pi- pi+ pi+]cc','[K*(892)+ -> pi- pi- pi+]cc','[K*(892)+ -> pi- pi- pi-]cc','[K*(892)+ -> pi+ pi+ pi+]cc'],
+                                                  ['[K*(892)+ -> pi+ pi+ pi-]cc','[K*(892)+ -> pi+ pi+ pi+]cc'],## RS, SS
                                                   [SelLongPions],
-                                                  ['[D0 -> K*(892)+ K+]cc','[D~0 -> K*(892)- K+]cc'],
-                                                  ["[D*(2010)+ -> D0 pi+]cc"],
-                                                  ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'],
+                                                  ['[D0 -> K*(892)+ K+]cc','[D0 -> K*(892)+ K-]cc'], ## allow both probe charges
+                                                  ["[D*(2010)+ -> D0 pi+]cc","[D*(2010)+ -> D~0 pi+]cc"], ## add also wrong sign
+                                                  ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'], ## allow also wrong sign StdAllNoPIDs "pions"
                                                   self.VeloKaons)
         
         self.MissingProtonLine = self.MakeLine("%sMissingProton"%self.name,
-                                               ['[K*(892)+ -> K- pi+]cc','[K*(892)+ -> K+ pi-]cc','[K*(892)+ -> K+ pi+]cc','[K*(892)+ -> K- pi-]cc'],
+                                               ['[K*(892)+ -> K- pi+]cc','[K*(892)+ -> K- pi-]cc'], ## RS, SS
                                                [SelLongKaons, SelLongPions],
-                                               ['[Lambda_c+ -> K*(892)+ p+]cc','[Lambda_c~- -> K*(892)- p+]cc'],
-                                               ['[Sigma_c0 -> Lambda_c+ pi+]cc','[Sigma_c0 -> Lambda_c+ pi-]cc'],
-                                               ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'],
+                                               ['[Lambda_c+ -> K*(892)+ p+]cc','[Lambda_c+ -> K*(892)+ p~-]cc'],## both probe charges
+                                               ['[Sigma_c0 -> Lambda_c+ pi+]cc','[Sigma_c0 -> Lambda_c+ pi-]cc'], ## Allows Sigma_c0 and Sigma_c++
+                                               ['[K*_0(1430)0 -> K*(892)+ pi-]cc','[K*_0(1430)0 -> K*(892)+ pi+]cc'], ## allow also wrong sign StdAllNoPIDs "pions"
                                                self.VeloProtons)
 
         if config["VeloLineForTiming"] == True:
