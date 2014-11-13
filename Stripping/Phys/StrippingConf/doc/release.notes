@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-11-13 - Chris Jones
+ - Downgrade some warnings messages (that where not really warnings) to debug
+   level messages.
+
 !========================= StrippingConf v4r12 2014-11-05 =========================
 
 ! 2014-01-11 - Anton Poluektov

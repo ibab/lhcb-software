@@ -279,12 +279,12 @@ class StrippingConf ( object ) :
                  hasattr(type(conf),'MaxCombinations') ):
 
                 if self.MaxCandidates != None and not conf.isPropertySet("MaxCandidates") :
-                    log.warning( "Forcing MaxCandidate settings for " + conf.name() )
+                    log.debug( "Forcing MaxCandidate settings for " + conf.name() )
                     conf.StopAtMaxCandidates = True
                     conf.MaxCandidates = self.MaxCandidates
                     
                 if self.MaxCombinations != None and not conf.isPropertySet("MaxCombinations") :
-                    log.warning( "Forcing MaxCombinations settings for " + conf.name() )
+                    log.debug( "Forcing MaxCombinations settings for " + conf.name() )
                     conf.StopAtMaxCombinations = True
                     conf.MaxCombinations = self.MaxCombinations
 
@@ -295,7 +295,7 @@ class StrippingConf ( object ) :
                    hasattr(type(conf),'StopIncidentType') ) :
 
                 if self.MaxCandidates != None and not conf.isPropertySet("MaxParticles") :
-                    log.warning( "Forcing MaxParticles settings for " + conf.name() )
+                    log.debug( "Forcing MaxParticles settings for " + conf.name() )
                     conf.MaxParticles = self.MaxCandidates
                     conf.StopIncidentType = 'ExceedsCombinatoricsLimit'
 

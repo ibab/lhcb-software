@@ -217,20 +217,20 @@ class StrippingStream ( object ) :
     def checkRawEventRequests(self) :
         for line in self.lines : 
             if line.RequiredRawEvents != None :
-                log.warning("Stream='"+self.name()+"' Line='"+line.name()+
-                            "' Requests RawEvents "+str(line.RequiredRawEvents))
+                log.debug("Stream='"+self.name()+"' Line='"+line.name()+
+                          "' Requests RawEvents "+str(line.RequiredRawEvents))
 
     def checkMDSTFlag(self) :
         for line in self.lines :
             if line.MDSTFlag :
-                log.warning("Stream='"+self.name()+"' Line='"+line.name()+
-                            "' Requests to go to MDST.DST")
+                log.debug("Stream='"+self.name()+"' Line='"+line.name()+
+                          "' Requests to go to MDST.DST")
 
     def checkFlavourTagging(self,disableFT=False,verbose=False) :
         for line in self.lines :
             if line._EnableFlavourTagging :
-                if verbose: log.warning("Stream='"+self.name()+"' Line='"+line.name()+
-                            "' Requests to run FlavourTagging")
+                if verbose : log.debug("Stream='"+self.name()+"' Line='"+line.name()+
+                                         "' Requests to run FlavourTagging")
                 if disableFT:
                     line._EnableFlavourTagging = False
                     log.warning("Stream='"+self.name()+"' Line='"+line.name()+"' Requests Flavor Tagging but is not assigned to a micro-dst stream, Flavour Tagging has been disabled")
