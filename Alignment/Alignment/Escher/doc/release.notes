@@ -4,7 +4,10 @@ Package Coordinator : Johan Blouw and Rob Lambert
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+ - added tool xml writer to gaudipar.py (required due to change from alg to tool)
+
 </PRE><H1><A NAME=v5r2>2014-11-10 Escher v5r2</A></H1><PRE>
+ - a few updates committed and not commented
 
 </PRE><H1><A NAME=v5r1>2014-08-23 Escher v5r1</A></H1><PRE>
 
