@@ -4,6 +4,11 @@
 ! Purpose     : Pattern reconstruction for the upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-14-11 -  Renato Quagliani
+  - In PrFTHitManager the zone geometry setting has been changed to reflect 
+    the modifications in FTDet in createDetSegment.
+
+
 !========================= PrAlgorithms v1r14 2014-09-08 ========================
 ! 2014-07-29 - Georg Krocker
   - Removed unused Kalman Fitter tool in PrDownstream.h
