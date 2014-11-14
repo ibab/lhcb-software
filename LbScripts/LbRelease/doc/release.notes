@@ -1,6 +1,10 @@
+2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* LbRelease.LHCbDoc: ignore ill formatted versions
+
 2014-11-14  Ben Couturier <Ben.Couturier@cern.ch>
 
-	LBCORE-666: Fixed to imported projects without dependencies and 
+	LBCORE-666: Fixed to imported projects without dependencies and
 	imporved log.
 	* python/LbRelease/SoftConfDB/LbSdbImportFromSVN.py
 	* python/LbRelease/SoftConfDB/AppImporter.py
@@ -13,7 +17,7 @@
 
 2014-11-10  Ben Couturier <Ben.Couturier@cern.ch>
 
-	* scripts/mkLCGCMTTarFromRPM: LBCORE-662: Allow to build -dbg package 
+	* scripts/mkLCGCMTTarFromRPM: LBCORE-662: Allow to build -dbg package
 
 2014-10-12  Ben Couturier <Ben.Couturier@cern.ch>
 
@@ -43,7 +47,7 @@
 
 2014-10-01  Ben Couturier <Ben.Couturier@cern.ch>
 
-	LBCORE-591: Added read-only interface to the SOftConfDB to be 
+	LBCORE-591: Added read-only interface to the SOftConfDB to be
 	exported by the XMLRPC server.
 	* python/LbRelease/SoftConfDB/ROInterface.py
 

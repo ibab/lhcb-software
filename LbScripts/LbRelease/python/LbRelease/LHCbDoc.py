@@ -1284,9 +1284,10 @@ def getLatestVersions(versions):
     """
     from LbConfiguration.Version import CoreVersion
     projects = {} # dictionary with a list of versions per project
-    for p, v in [ (p.lower(),      # ensure we use the uppercase name
+    for p, v in [ (p.lower(),      # ensure we use the lowercase name
                    CoreVersion(v)) # Sortable class to wrap a version string
-                  for p, v in versions ]:
+                  for p, v in versions
+                  if CoreVersion.version_style.match(v) ]:
         try:
             projects[p].append(v)
         except:
