@@ -253,15 +253,18 @@ class SP2(EnvConfig.Script):
 
         # handle the extra data packages
         for pkg_name, pkg_vers in map(decodePkg, self.opts.use):
-            xml_name = pkg_name.replace('/', '_') + 'Environment.xml'
+            xml_name = pkg_name.replace('/', '_') + '.xenv'
             xml_path = os.path.join(findDataPackage(pkg_name, pkg_vers),
                                     xml_name)
+            if not os.path.exists(xml_path):
+                # fall back on the old conventional name
+                xml_path = xml_path[:-5] + 'Environment.xml'
             # FIXME: EnvConfig has got problems with unicode filenames
             self.opts.actions.insert(0, ('loadXML', (str(xml_path),)))
 
         # instruct the script to load the projects environment XML
         for p, _ in projects:
-            self.opts.actions.insert(0, ('loadXML', (p + 'Environment.xml',)))
+            self.opts.actions.insert(0, ('loadXML', (p + '.xenv',)))
 
         super(SP2, self)._makeEnv()
 
