@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2014-11-14 - Michel De Cian
+ - Remove 'TrackMatchChecker', as 'TrackMatching' was put in 'obsolete' (the code can be found under 'Tr/TrackingScripts' if still needed privately)
+
 !========================= TrackCheckers v4r20 2014-02-19 ======================
 ! 2014-01-23 - Michel De Cian
  -  Fix behaviour of flag 'fromB' and 'fromCharm" in TrackCheckerBase and TrackIPResolutionCheckerNT to only include B baryons and mesons, and not particles from string fragmentation of b and c quarks
