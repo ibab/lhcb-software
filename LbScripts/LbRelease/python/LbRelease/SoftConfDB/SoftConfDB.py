@@ -311,6 +311,14 @@ class SoftConfDB(object):
             tmp = "%s:%-15s <- (%s)" % (r._id, r.type + "(I)", props)
             print tmp
 
+    def nodesHaveRelationship(self, parent, child, type):
+        """ Check if the nodes have a directed parent to child node of given type"""
+        outrels = parent.get_relationships(neo4j.Direction.OUTGOING)
+        for r in outrels:
+            if r.end_node._id == child._id and r.type == type:
+                return True
+        return False
+
     def listActive(self):
         ''' List the active project/versions '''
         query = 'start n=node:Lbadmin(Type="STATUS") match n-[:ACTIVE]->m return distinct m.project, m.version'

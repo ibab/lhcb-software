@@ -1,3 +1,11 @@
+2014-11-14  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-666: Fixed to imported projects without dependencies and 
+	imporved log.
+	* python/LbRelease/SoftConfDB/LbSdbImportFromSVN.py
+	* python/LbRelease/SoftConfDB/AppImporter.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
 2014-11-11  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r1p1

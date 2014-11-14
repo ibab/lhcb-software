@@ -42,29 +42,9 @@ class AppImporter:
         self.log = logging.getLogger()
         self.installArea = None
 
-    def recurseDependencies(self, project, version, alreadyDone = []):
-        """ Recursively traverse all dependencies.
-        Dependencies are looked up from SVN using the getDependencyMethod.
-        A complete list of tuples (project, version) is returned"""
-        self.log.warning("Traversing Deps for %s %s" % (project, version))
-        self.log.debug(alreadyDone)
-        deps = self.processDependencies(project, version)
-        alreadyDone.append((project, version))
-        ndeps = deps
-        for d in deps:
-            if not d in alreadyDone:
-                tmpDeps = self.recurseDependencies(d[0], d[1], alreadyDone)
-                for td in tmpDeps:
-                    if not td in alreadyDone:
-                        alreadyDone.append(td)
-                    if not td in ndeps:
-                        ndeps.append(td)
-        return ndeps
-
-    def processDependencies(self, p, v):
+    def processProjectVersion(self, p, v, alreadyDone = [], recreate=False):
         """ Get the dependencies for a single project """
         # Cleanup the project name and version and get the SVN URL
-        self.log.warning("getDeps %s %s" % (p, v))
         (proj,ver)=importerTranslateProject(p,v)
         tagpath = ""
 
@@ -83,8 +63,58 @@ class AppImporter:
             #if not tagpath.endswith("cmt"):
             #    tagpath += "/cmt"
             projcmt=getProjectCmt(tagpath).strip()
-            self.log.warn(tagpath)
+            self.log.debug("Project tag SVN path:" + tagpath)
         deps = []
+
+        # Formatting the project name/version
+        corver = ver
+        if proj in ver:
+            corver = ver.replace(proj + "_", "")
+        proj = proj.upper()
+
+        # Looking for the project version in the DB
+        tmp = self.mConfDB.findVersion(proj, ver)
+        rev = getPathLastRev(tagpath)
+        createNode = False
+        node_parent = None
+
+        # First checking if the node is there with the correct revision
+        if len(tmp) != 0:
+            node = tmp[0][0]
+            node_parent = node
+            noderev = node["Rev"]
+            if noderev != None:
+                self.log.warning("Project %s %s already exists with revision %s (path rev: %s)" % (proj,
+                                                                                                   ver,
+                                                                                                   noderev,
+                                                                                                   rev))
+                if rev != noderev and recreate:
+                    self.log.warning("Mismatch in revisions for %s %s, recreating" % (proj, ver))
+                    self.log.warning("WARNING was a retag of  %s %s done? you may need to call "
+                                     " lb-sdb-deletepv <proj> <ver> and reimport if "
+                                     " it is the case " % (proj, ver))
+                    
+                    try:
+                        self.mConfDB.deletePV(proj, corver)
+                    except Exception, e:
+                        self.log.error(e)
+                    createNode = True
+                                 
+                                     
+            else:
+                self.log.warning("Project %s %s already exists without revision" % (proj,ver))
+
+        #If the node does not exist just create it...
+        else:
+            createNode = True 
+
+        if createNode:
+            self.log.warning("Creating project %s %s revision in SVN: %s" % (proj, ver, rev))
+            node_parent = self.mConfDB.getOrCreatePV(proj, corver)
+            node_parent["Rev"] = rev
+           
+                
+        self.log.warning("Now checking dependencies for %s %s" % (p, v))
         for l in projcmt.splitlines():
             m = re.match("\s*use\s+(\w+)\s+([\w\*]+)", l)
             if m != None:
@@ -93,18 +123,8 @@ class AppImporter:
                 deps.append((dp, dv))
 
         if len(deps) == 0:
-            return deps
-
-        # Creating the parent project in the DB
-        corver = ver
-        if proj in ver:
-            corver = ver.replace(proj + "_", "")
-        proj = proj.upper()
-        
-        self.log.warning("Creating project %s %s" % (proj, ver))
-        node_parent = self.mConfDB.getOrCreatePV(proj, corver)
-        rev = getPathLastRev(tagpath)
-        node_parent["Rev"] = rev
+            self.log.warning("No dependencies found for %s %s" % (p, v))
+            return node_parent
 
         # Now creating the dependencies
         for (dp, dv) in deps:
@@ -112,10 +132,16 @@ class AppImporter:
                 dv = dv.replace(dp + "_", "")
             dp = dp.upper()
             self.log.warning("Find project %s %s" % (dp, dv))
-            node_child = self.mConfDB.getOrCreatePV(dp, dv)
-            self.log.warning("Adding dependency (%s, %s)-[:REQUIRES]->(%s, %s)" % (proj, ver, dp, dv))
-            self.mConfDB.addRequires(node_parent, node_child)
-        return deps
+            node_child = self.processProjectVersion(dp, dv, alreadyDone, recreate)
+
+            # Now checking if the links exist                
+            if self.mConfDB.nodesHaveRelationship(node_parent, node_child, "REQUIRES"):
+                self.log.warning("Pre-existing dependency (%s, %s)-[:REQUIRES]->(%s, %s)" % (proj, ver, dp, dv))
+            else:
+                self.log.warning("Adding dependency (%s, %s)-[:REQUIRES]->(%s, %s)" % (proj, ver, dp, dv))
+                self.mConfDB.addRequires(node_parent, node_child)
+                
+        return node_parent
 
     def getGangaProjectCMT(self, gangaVersion):
         """ Reads the Project.cmt file for Ganga """
