@@ -25,7 +25,7 @@ def main():
     Script to generate a local development project.
     '''
     from optparse import OptionParser
-    from options import addSearchPath, addOutputLevel, addPlatform
+    from options import addSearchPath, addOutputLevel, addPlatform, addListing
     from lookup import findProject, MissingProjectError
 
     parser = OptionParser(usage='%prog [options] Project version')
@@ -33,6 +33,7 @@ def main():
     addSearchPath(parser)
     addOutputLevel(parser)
     addPlatform(parser)
+    addListing(parser)
 
     parser.add_option('--name', action='store',
                       help='Name of the local project [default: "<proj>Dev_<vers>"].')
@@ -52,6 +53,14 @@ def main():
         parser.error('wrong number of arguments')
 
     project = FixProjectCase(project)
+
+    # FIXME: we need to handle common options like --list in a single place
+    if opts.list:
+        from lookup import listVersions
+        for entry in listVersions(project, opts.platform):
+            print '%s in %s' % entry
+        import sys
+        sys.exit(0)
 
     if not opts.name:
         opts.name = '{project}Dev_{version}'.format(project=project, version=version)
