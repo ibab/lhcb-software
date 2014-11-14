@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: cd08bdf77f0859a2a31a6dac677909be40c73564
+# Commit Id: bee210375485db5593887663e6cd066bb1dbcafc
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -233,10 +233,10 @@ macro(gaudi_project project version)
   # ensure the directory exists (this is not a standard CMake variable)
   file(MAKE_DIRECTORY ${CMAKE_CONFIG_OUTPUT_DIRECTORY})
 
-  set(env_xml ${CMAKE_CONFIG_OUTPUT_DIRECTORY}/${project}BuildEnvironment.xml
+  set(env_xml ${CMAKE_CONFIG_OUTPUT_DIRECTORY}/${project}-build.xenv
       CACHE STRING "path to the XML file for the environment to be used in building and testing")
 
-  set(env_release_xml ${CMAKE_CONFIG_OUTPUT_DIRECTORY}/${project}Environment.xml
+  set(env_release_xml ${CMAKE_CONFIG_OUTPUT_DIRECTORY}/${project}.xenv
       CACHE STRING "path to the XML file for the environment to be used once the project is installed")
 
   mark_as_advanced(CMAKE_RUNTIME_OUTPUT_DIRECTORY CMAKE_LIBRARY_OUTPUT_DIRECTORY
@@ -304,11 +304,11 @@ macro(gaudi_project project version)
   # (python scripts are located as such but run through python)
   set(binary_paths ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_SOURCE_DIR}/GaudiPolicy/scripts ${CMAKE_SOURCE_DIR}/GaudiKernel/scripts ${CMAKE_SOURCE_DIR}/Gaudi/scripts ${binary_paths})
 
-  find_program(env_cmd env.py HINTS ${binary_paths})
+  find_program(env_cmd xenv HINTS ${binary_paths})
   set(env_cmd ${PYTHON_EXECUTABLE} ${env_cmd})
 
-  find_program(merge_cmd merge_files.py HINTS ${binary_paths})
-  set(merge_cmd ${PYTHON_EXECUTABLE} ${merge_cmd} --no-stamp)
+  find_program(default_merge_cmd merge_files.py HINTS ${binary_paths})
+  set(default_merge_cmd ${PYTHON_EXECUTABLE} ${default_merge_cmd} --no-stamp)
 
   find_program(versheader_cmd createProjVersHeader.py HINTS ${binary_paths})
   if(versheader_cmd)
@@ -352,14 +352,14 @@ macro(gaudi_project project version)
     set(genwindef_cmd ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/genwindef.exe)
   endif()
 
-  mark_as_advanced(env_cmd merge_cmd versheader_cmd genconfuser_cmd
+  mark_as_advanced(env_cmd default_merge_cmd versheader_cmd genconfuser_cmd
                    zippythondir_cmd gaudirun_cmd)
 
   #--- Project Installations------------------------------------------------------------------------
   install(DIRECTORY cmake/ DESTINATION cmake
                            FILES_MATCHING PATTERN "*.cmake"
                            PATTERN ".svn" EXCLUDE)
-  install(PROGRAMS cmake/env.py DESTINATION scripts OPTIONAL)
+  install(PROGRAMS cmake/xenv DESTINATION scripts OPTIONAL)
   install(DIRECTORY cmake/EnvConfig DESTINATION scripts
           FILES_MATCHING PATTERN "*.py" PATTERN "*.conf")
 
@@ -875,7 +875,8 @@ endfunction()
 #
 #  <prefix>/<name>/<version>
 #
-# with a file called <name>Environment.xml inside.
+# with a file called <name>.xenv inside (or <name>Environment.xml for backward
+# compatibility).
 #
 # <name> can contain '/'s, but they are replaced by '_'s when looking for the
 # XML file.
@@ -910,7 +911,7 @@ function(gaudi_find_data_package name)
     endif()
     # At this point, ARGN contains only the suffixes, if any.
 
-    string(REPLACE / _ envname ${name}Environment.xml)
+    string(REPLACE / _ envname ${name})
 
     set(candidate_version)
     set(candidate_path)
@@ -920,8 +921,11 @@ function(gaudi_find_data_package name)
         if(IS_DIRECTORY ${prefix}/${suffix}/${name})
           #message(STATUS "gaudi_find_data_package: scanning ${prefix}/${suffix}/${name}")
           # Look for env files with the matching version.
-          file(GLOB envfiles RELATIVE ${prefix}/${suffix}/${name} ${prefix}/${suffix}/${name}/${version}/${envname})
+          file(GLOB envfiles RELATIVE ${prefix}/${suffix}/${name}
+               ${prefix}/${suffix}/${name}/${version}/${envname}.xenv
+               ${prefix}/${suffix}/${name}/${version}/${envname}Environment.xml)
           # Translate the list of env files into the list of available versions
+          # (directories)
           set(versions)
           foreach(f ${envfiles})
             get_filename_component(f ${f} PATH)
@@ -942,7 +946,13 @@ function(gaudi_find_data_package name)
     if(candidate_version)
       set(${name}_FOUND TRUE CACHE INTERNAL "")
       set(${name}_DIR ${candidate_path} CACHE PATH "Location of ${name}")
-      mark_as_advanced(${name}_FOUND ${name}_DIR)
+      if(EXISTS ${candidate_path}/${envname}.xenv)
+        set(candidate_env ${candidate_path}/${envname}.xenv)
+      else()
+        set(candidate_env ${candidate_path}/${envname}Environment.xml)
+      endif()
+      set(${name}_XENV ${candidate_env} CACHE PATH "${name} environment file")
+      mark_as_advanced(${name}_FOUND ${name}_DIR ${name}_XENV)
       message(STATUS "Found ${name} ${candidate_version}: ${${name}_DIR}")
     else()
       message(FATAL_ERROR "Cannot find ${name} ${version}")
@@ -983,8 +993,7 @@ macro(_gaudi_handle_data_packages)
       message(STATUS "Using ${_data_package}: ${${_data_package}_DIR}")
     endif()
     if(${_data_package}_FOUND)
-      string(REPLACE / _ _data_pkg_env ${_data_package}Environment.xml)
-      set(project_environment ${project_environment} INCLUDE ${${_data_package}_DIR}/${_data_pkg_env})
+      set(project_environment ${project_environment} INCLUDE ${${_data_package}_XENV})
     endif()
   endwhile()
 endmacro()
@@ -1373,15 +1382,21 @@ macro(gaudi_global_target_append global_target local_target)
 endmacro()
 
 #-------------------------------------------------------------------------------
-# gaudi_global_target_get_info(global_target local_targets_var files_var)
+# gaudi_global_target_get_info(global_target local_targets_var files_var cmd_var)
 # (macro)
 #
 # Put the information to configure the global target 'global_target' in the
-# two variables local_targets_var and files_var.
+# two variables local_targets_var, files_var and cmd_var.
 #-------------------------------------------------------------------------------
-macro(gaudi_global_target_get_info global_target local_targets_var files_var)
+macro(gaudi_global_target_get_info global_target local_targets_var files_var cmd_var)
   get_property(${files_var} GLOBAL PROPERTY ${global_target}_SOURCES)
   get_property(${local_targets_var} GLOBAL PROPERTY ${global_target}_DEPENDS)
+  get_property(cmd_is_set GLOBAL PROPERTY ${global_target}_COMMAND SET)
+  if(cmd_is_set)
+    get_property(${cmd_var} GLOBAL PROPERTY ${global_target}_COMMAND)
+  else()
+    set(${cmd_var})
+  endif()
 endmacro()
 
 
@@ -1402,12 +1417,15 @@ endfunction()
 # from the packages (declared with gaudi_merge_files_append).
 #-------------------------------------------------------------------------------
 function(gaudi_merge_files merge_tgt dest filename)
-  gaudi_global_target_get_info(Merged${merge_tgt} deps parts)
+  gaudi_global_target_get_info(Merged${merge_tgt} deps parts cmd)
+  if(NOT cmd)
+    set(cmd ${default_merge_cmd})
+  endif()
   if(parts)
     # create the targets
     set(output ${CMAKE_BINARY_DIR}/${dest}/${filename})
     add_custom_command(OUTPUT ${output}
-                       COMMAND ${merge_cmd} ${parts} ${output}
+                       COMMAND ${cmd} ${parts} ${output}
                        DEPENDS ${parts})
     add_custom_target(Merged${merge_tgt} ALL DEPENDS ${output})
     # prepare the high level dependencies
@@ -1415,13 +1433,13 @@ function(gaudi_merge_files merge_tgt dest filename)
 
     # target to generate a partial merged file
     add_custom_command(OUTPUT ${output}_force
-                       COMMAND ${merge_cmd} --ignore-missing ${parts} ${output})
+                       COMMAND ${cmd} --ignore-missing ${parts} ${output})
     add_custom_target(Merged${merge_tgt}_force DEPENDS ${output}_force)
     # ensure that we merge what we have before installing if the output was not
     # produced
     install(CODE "if(NOT EXISTS ${output})
                   message(WARNING \"creating partial ${output}\")
-                  execute_process(COMMAND ${merge_cmd} --ignore-missing ${parts} ${output})
+                  execute_process(COMMAND ${cmd} --ignore-missing ${parts} ${output})
                   endif()")
 
     # install rule for the merged DB
@@ -1515,7 +1533,7 @@ function(gaudi_generate_configurables library)
     else()
       get_filename_component(genconf_dir ${genconf_cmd} PATH)
       get_filename_component(genconf_dir ${genconf_dir} PATH)
-      file(GLOB genconf_env "${genconf_dir}/*Environment.xml")
+      file(GLOB genconf_env "${genconf_dir}/*.xenv")
       #message(STATUS "... running genconf --help ...")
       execute_process(COMMAND ${env_cmd} --xml ${genconf_env}
                               ${genconf_cmd} --help
@@ -2416,7 +2434,8 @@ macro(gaudi_install_cmake_modules)
             PATTERN "*.cmake"
             PATTERN "CVS" EXCLUDE
             PATTERN ".svn" EXCLUDE)
-  set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH} PARENT_SCOPE)
+  set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
+  set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} PARENT_SCOPE)
   set_property(DIRECTORY PROPERTY GAUDI_EXPORTED_CMAKE ON)
 endmacro()
 
@@ -2705,7 +2724,7 @@ function(gaudi_generate_env_conf filename)
     set(data "${data}  <env:search_path>${${other_project}_DIR}</env:search_path>\n")
   endforeach()
   foreach(other_project ${used_gaudi_projects})
-    set(data "${data}  <env:include>${other_project}Environment.xml</env:include>\n")
+    set(data "${data}  <env:include>${other_project}.xenv</env:include>\n")
   endforeach()
 
   set(commands ${ARGN})

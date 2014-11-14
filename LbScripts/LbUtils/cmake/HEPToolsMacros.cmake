@@ -252,49 +252,66 @@ endfunction()
 
 ################################################################################
 # Define variables and location of the compiler.
+macro(lcg_set_compiler flavor)
+  if(NOT lcg_compiler_set)
+    if(NOT ${flavor} STREQUAL "NATIVE")
+      set(version ${ARGV1})
+      if(${flavor} MATCHES "^gcc|GNU$")
+        set(compiler_root ${LCG_external}/gcc/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})
+        set(c_compiler_names lcg-gcc-${version})
+        set(cxx_compiler_names lcg-g++-${version})
+        set(fortran_compiler_names lcg-gfortran-${version})
+      elseif(${flavor} STREQUAL "icc")
+        # Note: icc must be in the path already because of the licensing
+        set(compiler_root)
+        set(c_compiler_names lcg-icc-${version} icc)
+        set(cxx_compiler_names lcg-icpc-${version} icpc)
+        set(fortran_compiler_names lcg-ifort-${version} ifort)
+      elseif(${flavor} STREQUAL "clang")
+        set(compiler_root ${LCG_external}/llvm/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})
+        set(c_compiler_names lcg-clang-${version} clang)
+        set(cxx_compiler_names lcg-clang++-${version} clang++)
+        # FIXME: clang does not come with a Fortran compiler
+        set(fortran_compiler_names lcg-gfortran-4.8.1)
+      else()
+        message(FATAL_ERROR "Uknown compiler flavor ${flavor}.")
+      endif()
+      #message(STATUS "LCG_compiler(${ARGV}) -> '${c_compiler_names}' '${cxx_compiler_names}' '${fortran_compiler_names}' ${compiler_root}")
+      find_program(CMAKE_C_COMPILER
+                   NAMES ${c_compiler_names}
+                   PATHS ${compiler_root}/bin
+         DOC "C compiler")
+      find_program(CMAKE_CXX_COMPILER
+                   NAMES ${cxx_compiler_names}
+                   PATHS ${compiler_root}/bin
+         DOC "C++ compiler")
+      find_program(CMAKE_Fortran_COMPILER
+                   NAMES ${fortran_compiler_names}
+                   PATHS ${compiler_root}/bin
+         DOC "Fortran compiler")
+      #message(STATUS "LCG_compiler(${ARGV}) -> ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER} ${CMAKE_Fortran_COMPILER}")  
+    endif()
+    set(lcg_compiler_set "${ARGV}")
+  else()
+    if(NOT "${lcg_compiler_set}" STREQUAL "${ARGV}")
+      message(WARNING "Attempt to change the compiler from ${lcg_compiler_set} to ${ARGV}")
+    endif()
+  endif()
+endmacro()
+
+################################################################################
+# Define variables and location of the compiler.
 macro(_lcg_compiler id flavor version)
   #message(STATUS "LCG_compiler(${ARGV})")
-  if(${id} STREQUAL ${LCG_COMP}${LCG_COMPVERS} AND NOT LCG_USE_NATIVE_COMPILER)
-    if(${flavor} STREQUAL "gcc")
-      set(compiler_root ${LCG_external}/${flavor}/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})
-      set(c_compiler_names lcg-gcc-${version})
-      set(cxx_compiler_names lcg-g++-${version})
-      set(fortran_compiler_names lcg-gfortran-${version})
-    elseif(${flavor} STREQUAL "icc")
-      # Note: icc must be in the path already because of the licensing
-      set(compiler_root)
-      set(c_compiler_names lcg-icc-${version} icc)
-      set(cxx_compiler_names lcg-icpc-${version} icpc)
-      set(fortran_compiler_names lcg-ifort-${version} ifort)
-    elseif(${flavor} STREQUAL "clang")
-      set(compiler_root ${LCG_external}/llvm/${version}/${LCG_HOST_ARCH}-${LCG_HOST_OS}${LCG_HOST_OSVERS})
-      set(c_compiler_names lcg-clang-${version} clang)
-      set(cxx_compiler_names lcg-clang++-${version} clang++)
-      # FIXME: clang does not come with a Fortran compiler
-      set(fortran_compiler_names lcg-gfortran-4.8.1)
-    else()
-      message(FATAL_ERROR "Uknown compiler flavor ${flavor}.")
-    endif()
-    #message(STATUS "LCG_compiler(${ARGV}) -> '${c_compiler_names}' '${cxx_compiler_names}' '${fortran_compiler_names}' ${compiler_root}")
-    find_program(CMAKE_C_COMPILER
-                 NAMES ${c_compiler_names}
-                 PATHS ${compiler_root}/bin
-		 DOC "C compiler")
-    find_program(CMAKE_CXX_COMPILER
-                 NAMES ${cxx_compiler_names}
-                 PATHS ${compiler_root}/bin
-		 DOC "C++ compiler")
-    find_program(CMAKE_Fortran_COMPILER
-                 NAMES ${fortran_compiler_names}
-                 PATHS ${compiler_root}/bin
-		 DOC "Fortran compiler")
-    #message(STATUS "LCG_compiler(${ARGV}) -> ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER} ${CMAKE_Fortran_COMPILER}")
+  if(${id} STREQUAL ${LCG_COMP}${LCG_COMPVERS})
+    lcg_set_compiler(${flavor} ${version})
   endif()
 endmacro()
 
 ################################################################################
 # Enable the correct compiler.
-macro(lcg_define_compiler)
+macro(lcg_common_compilers_definitions)
+  if(NOT lcg_compiler_set)
     _lcg_compiler(gcc43 gcc 4.3.6)
     _lcg_compiler(gcc46 gcc 4.6.3)
     _lcg_compiler(gcc47 gcc 4.7.2)
@@ -305,7 +322,7 @@ macro(lcg_define_compiler)
     _lcg_compiler(clang33 clang 3.3)
     _lcg_compiler(clang34 clang 3.4)
     _lcg_compiler(clang35 clang 3.5)
-    _lcg_compiler(gccmax gcc 4.8.1)
+  endif()
 endmacro()
 
 ################################################################################

@@ -18,7 +18,9 @@ macro(init_search_path)
     file(TO_CMAKE_PATH "$ENV{CMTPROJECTPATH}" _cmt_pp)
     file(TO_CMAKE_PATH "$ENV{CMAKE_PREFIX_PATH}" _cmake_pp)
     set(CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH} ${_cmake_pp} ${_cmt_pp})
-    list(REMOVE_DUPLICATES CMAKE_PREFIX_PATH)
+    if(CMAKE_PREFIX_PATH)
+        list(REMOVE_DUPLICATES CMAKE_PREFIX_PATH)
+    endif()
     print_var(CMAKE_PREFIX_PATH)
 
     # Preset the CMAKE_MODULE_PATH from the environment, if not already defined.

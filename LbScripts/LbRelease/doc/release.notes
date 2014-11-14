@@ -1,5 +1,9 @@
 2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* data/DataPkgEnvs: renamed *Environment.xml to *.xenv
+
+2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* LbRelease.LHCbDoc: ignore ill formatted versions
 
 2014-11-14  Ben Couturier <Ben.Couturier@cern.ch>

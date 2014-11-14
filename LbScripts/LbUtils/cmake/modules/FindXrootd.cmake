@@ -12,8 +12,8 @@
 
 
 # Enforce a minimal list if none is explicitly requested
-if(NOT XROOTD_FIND_COMPONENTS)
-  set(XROOTD_FIND_COMPONENTS Utils)
+if(NOT Xrootd_FIND_COMPONENTS)
+  set(Xrootd_FIND_COMPONENTS Utils)
 endif()
 
 find_path(XROOTD_INCLUDE_DIR xrootd/XrdVersion.hh)
@@ -21,7 +21,7 @@ set(XROOTD_INCLUDE_DIRS ${XROOTD_INCLUDE_DIR})
 
 set(XROOTD_LIBRARY_DIRS)
 
-foreach(component ${XROOTD_FIND_COMPONENTS})
+foreach(component ${Xrootd_FIND_COMPONENTS})
   find_library(XROOTD_${component}_LIBRARY NAMES Xrd${component} PATH_SUFFIXES lib64)
   if (XROOTD_${component}_LIBRARY)
     set(XROOTD_${component}_FOUND 1)

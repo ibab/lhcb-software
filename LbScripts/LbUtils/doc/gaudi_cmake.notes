@@ -1,3 +1,91 @@
+! 2014-11-14 - Marco Clemencic (6f5c9bd)
+
+ - use the extension .xenv instead of Environment.xml
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7572
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-11-11 - Marco Clemencic (f7792bf)
+
+ - fixed GAUDI-972: allow different merge commands for different targets
+
+   It is now possible to specify a command to merge files via the pattern 
+   gaudi_merge_files, via the global property Merged<tgt>_COMMAND.
+
+   For example:
+
+     set_property(GLOBAL PROPERTY MergedConfDB_COMMAND another_merge)
+    gaudi_merge_files(ConfDB lib ${CMAKE_PROJECT_NAME}.confdb)
+
+   Caveat: the merge command must accept the option --ignore-missing and the
+   output files should be the last argument on the command line.
+
+
+! 2014-11-11 - Marco Clemencic (2de3f13)
+
+ - do not enforce python2.6 in xenv
+
+   
+
+! 2014-11-11 - Marco Clemencic (76f2625)
+
+ - fixed GAUDI-989: renamed env.py to xenv
+
+   
+
+! 2014-11-11 - Marco Clemencic (4ec3d2d)
+
+ - GAUDI-988: allow passing env vars through the call to env.py
+
+   
+
+! 2014-11-07 - Marco Clemencic (e80729b)
+
+ - Fixed mistake in commit 7c62d98f.
+
+   
+
+! 2014-11-06 - David Quarrie (27c96e1)
+
+ - Fixed a problem in FindXrootd.cmake
+
+   The variable used to find the required components was wrong.
+
+! 2014-11-04 - Marco Clemencic (48a64a8)
+
+ - modified the selection of C++ standard and use c++14(1y) with gcc 4.9 (CMake only)
+
+   To choose the version of the C++ standard to use, one has to set the cache
+   variable "GAUDI_CXX_STANDARD".
+
+
+! 2014-11-02 - Marco Clemencic (7c62d98)
+
+ - handle compiler declaration in LCG_externals_*.txt
+
+   
+
+! 2014-11-02 - Marco Clemencic (4584ac1)
+
+ - minor fix to handle empty search path
+
+   
+
+! 2014-10-15 - Marco Clemencic (20b4882)
+
+ - fixed minor issue in gaudi_install_cmake_modules
+
+   It was not possible to use the exported CMake modules within the subdir.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7562
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2014-09-29 - Marco Clemencic (cd08bdf)
 
  - fixed detection of ROOT version (allow '-rc#' suffix)

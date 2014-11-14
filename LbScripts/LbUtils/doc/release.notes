@@ -1,3 +1,7 @@
+2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* cmake: updated CMake support modules
+
 2014-10-16  Ben Couturier  <ben.couturier@cern.ch>
 
 	* cmt/requirements: Release of v4r1

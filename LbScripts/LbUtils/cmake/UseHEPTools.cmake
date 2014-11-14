@@ -51,23 +51,25 @@ macro(use_heptools heptools_version)
       endforeach()
     endif()
 
-    # This information should be found in ${LCG_TOOLCHAIN_INFO}
-    if (BINARY_TAG MATCHES "ubuntu")
-      set(LCG_USE_NATIVE_COMPILER TRUE)
-    endif()
-
-    # Enable the right compiler (needs LCG_external)
-    lcg_define_compiler()
-
     foreach(_info_file ${LCG_TOOLCHAIN_INFO} ${LCG_TOOLCHAIN_INFOS})
        file(STRINGS ${_info_file} _lcg_infos)
        foreach(_l ${_lcg_infos})
-         if(NOT _l MATCHES "^(PLATFORM|VERSION):")
-           string(REGEX REPLACE "; *" ";" _l "${_l}")
-           lcg_set_external(${_l})
+         if(_l MATCHES "^COMPILER:")
+           string(REPLACE "COMPILER:" "" _l "${_l}")
+           string(STRIP _l "${_l}")
+           string(REGEX REPLACE " +" ";" _l "${_l}")
+           lcg_set_compiler(${_l})
+         else()
+           if(NOT _l MATCHES "^(PLATFORM|VERSION|COMPILER):")
+             string(REGEX REPLACE "; *" ";" _l "${_l}")
+             lcg_set_external(${_l})
+           endif()
          endif()
        endforeach()
     endforeach()
+
+    # Enable the right compiler (needs LCG_external)
+    lcg_common_compilers_definitions()
 
     lcg_prepare_paths()
 

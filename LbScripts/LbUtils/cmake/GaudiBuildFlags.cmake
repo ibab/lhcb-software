@@ -1,9 +1,12 @@
 # Special defaults
 if (LCG_COMPVERS VERSION_LESS "47")
-  set(GAUDI_CPP11_DEFAULT OFF)
+  set(GAUDI_CXX_STANDARD_DEFAULT "c++98")
+elseif(LCG_COMPVERS VERSION_LESS "49")
+  # C++11 is enable by default on 4.7 <= gcc < 4.9
+  set(GAUDI_CXX_STANDARD_DEFAULT "c++11")
 else()
-  # C++11 is enable by default on gcc >= 4.7
-  set(GAUDI_CPP11_DEFAULT ON)
+  # C++14(1y) is enable by default on gcc >= 4.9
+  set(GAUDI_CXX_STANDARD_DEFAULT "c++1y")
 endif()
 
 #--- Gaudi Build Options -------------------------------------------------------
@@ -35,10 +38,12 @@ option(GAUDI_CMT_RELEASE
        "use CMT deafult release flags instead of the CMake ones"
        ON)
 
-option(GAUDI_CPP11
-       "enable C++11 compilation"
-       ${GAUDI_CPP11_DEFAULT})
+if(DEFINED GAUDI_CPP11)
+  message(WARNING "GAUDI_CPP11 is an obsolete option, use GAUDI_CXX_STANDARD=c++11 instead")
+endif()
 
+set(GAUDI_CXX_STANDARD "${GAUDI_CXX_STANDARD_DEFAULT}"
+    CACHE STRING "Version of the C++ standard to be used.")
 
 #--- Compilation Flags ---------------------------------------------------------
 if(NOT GAUDI_FLAGS_SET)
@@ -197,17 +202,18 @@ if ((GAUDI_V21 OR G21_HIDE_SYMBOLS) AND (LCG_COMP STREQUAL gcc AND LCG_COMPVERS 
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fvisibility=hidden -fvisibility-inlines-hidden")
 endif()
 
-if (GAUDI_CPP11)
-  if (LCG_COMPVERS VERSION_LESS "47")
-    # gcc 4.6 only understands c++0x
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
-  else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
-  endif()
-else()
+# handle options to choose the  version of the C++ standard
+string(TOLOWER "${GAUDI_CXX_STANDARD}" GAUDI_CXX_STANDARD)
+if(GAUDI_CXX_STANDARD STREQUAL "ansi")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -ansi")
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=${GAUDI_CXX_STANDARD}")
+  if(NOT GAUDI_CXX_STANDARD STREQUAL "c++98")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -std=c11")
+  else()
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -ansi")
+  endif()
 endif()
 
 if(NOT GAUDI_V21)

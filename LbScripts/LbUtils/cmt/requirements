@@ -27,7 +27,7 @@ document install_python LbUtils_EnvConfig_python source=cmake/EnvConfig offset=E
 #apply_pattern install_custom_python_modules source=cmake/cmt2cmake offset=cmt2cmake
 document install_python LbUtils_CMT2CMake_python source=cmake/cmt2cmake offset=LbUtils/cmt2cmake
 
-action install_env_script "$(install_command) ../cmake/env.py $(CMTINSTALLAREA)/scripts"
+action install_env_script "$(install_command) ../cmake/xenv $(CMTINSTALLAREA)/scripts"
 macro_append constituents " install_env_script"
 macro_remove cmt_actions_constituents "install_env_script"
 

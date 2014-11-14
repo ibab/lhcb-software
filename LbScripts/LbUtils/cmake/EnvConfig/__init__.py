@@ -2,9 +2,12 @@ __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 import os
 import sys
+
 assert sys.version_info >= (2, 6), "Python 2.6 required"
 
 import logging
+
+from string import Template
 
 __all__ = []
 
@@ -210,12 +213,25 @@ class Script(object):
             for nv in sorted(self.env.items()):
                 print template % nv
 
+    def expandEnvVars(self, iterable):
+        '''
+        Return a copy of iterable where all the elements have the environment
+        variables expanded.
+
+        >>> s = Script([])
+        >>> s.env = {'A': '1', 'B': 'test'}
+        >>> s.expandEnvVars(['$A', '${B}-$A', '$DUMMY-$A', '$$B'])
+        ['1', 'test-1', '$DUMMY-1', '$B']
+        '''
+        return [Template(elem).safe_substitute(self.env) for elem in iterable]
+
     def runCmd(self):
         '''
         Execute a command in the modified environment and return the exit code.
         '''
         from subprocess import Popen
-        return Popen(self.cmd, env=self.env).wait()
+        cmd = self.expandEnvVars(self.cmd)
+        return Popen(cmd, env=self.env).wait()
 
     def main(self):
         '''
