@@ -1,3 +1,7 @@
+2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev, lb-run: removed explicit use of Python 2.6 in the scripts (it's still a requirement)
+
 2014-11-11  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r1p1
