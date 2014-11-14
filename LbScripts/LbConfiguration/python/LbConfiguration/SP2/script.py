@@ -21,7 +21,7 @@ from version import isValidVersion, expandVersionAlias
 from LbConfiguration.SetupProject import FixProjectCase
 from LbConfiguration.SP2.lookup import findDataPackage
 
-auto_override_projects = [('Compat', 'latest')]
+auto_override_projects = [('Compat', 'prod')]
 
 def decodePkg(s):
     '''
