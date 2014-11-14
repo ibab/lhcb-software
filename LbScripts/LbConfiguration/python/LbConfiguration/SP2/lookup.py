@@ -106,11 +106,11 @@ def listVersions(name, platform):
     for p in path:
         files = set(os.listdir(p))
         # the plain project name is taken into account as 'latest' version
-        if 'latest' not in found_versions and name in files:
+        if 'prod' not in found_versions and name in files:
             fullpath = os.path.join(p, name)
             if os.path.isdir(os.path.join(fullpath, bindir)):
-                found_versions.add('latest')
-                yield ('latest', fullpath)
+                found_versions.add('prod')
+                yield ('prod', fullpath)
 
         # versions like 'Project_vXrY'
         for entry in sorted([(filename[prefixlen:], os.path.join(p, filename))

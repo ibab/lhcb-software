@@ -189,7 +189,7 @@ class SP2(EnvConfig.Script):
         if self.cmd and isValidVersion(self.project, self.cmd[0]):
             self.version = self.cmd.pop(0)
         else:
-            self.version = 'latest'
+            self.version = 'prod'
 
     def _makeEnv(self):
         # FIXME: when we drop Python 2.4, this should become 'from . import path'
@@ -201,6 +201,7 @@ class SP2(EnvConfig.Script):
         if self.opts.user_area and not self.opts.no_user_area:
             path.insert(0, self.opts.user_area)
 
+        # FIXME: we need to handle common options like --list in a single place
         if self.opts.list:
             from lookup import listVersions
             for entry in listVersions(self.project, self.opts.platform):
@@ -213,14 +214,16 @@ class SP2(EnvConfig.Script):
             self.opts.overriding_projects.extend(('LHCbGrid', 'latest'))
         if self.opts.auto_override:
             explicit = set([p[0] for p in self.opts.overriding_projects])
-            projects.extend([p for p in auto_override_projects if p[0] not in explicit])
+            projects.extend([p for p in auto_override_projects
+                               if p[0] not in explicit])
         projects.extend(self.opts.overriding_projects)
         projects.append((self.project, self.version))
         projects.extend(self.opts.runtime_projects)
 
         # Check if the main project needs a special search path
         self.log.debug('check if we need extra search path')
-        extra_path = projectExtraPath(findProject(self.project, self.version, self.opts.platform))
+        extra_path = projectExtraPath(findProject(self.project, self.version,
+                                                  self.opts.platform))
         if extra_path:
             self.log.debug('the project requires an extra search path')
             # we add the extra search path between the command line entries and the default
@@ -242,12 +245,17 @@ class SP2(EnvConfig.Script):
         # extend the prompt variable (bash, sh)
         if self.cmd and os.path.basename(self.cmd[0]) in ('bash', 'sh'):
             prompt = os.environ.get('PS1', r'\W \$ ')
-            self.opts.actions.append(('set', ('PS1', r'[{0} {1}] {2}'.format(self.project, self.version, prompt))))
+            self.opts.actions.append(('set',
+                                      ('PS1',
+                                       r'[{0} {1}] {2}'.format(self.project,
+                                                               self.version,
+                                                               prompt))))
 
         # handle the extra data packages
         for pkg_name, pkg_vers in map(decodePkg, self.opts.use):
             xml_name = pkg_name.replace('/', '_') + 'Environment.xml'
-            xml_path = os.path.join(findDataPackage(pkg_name, pkg_vers), xml_name)
+            xml_path = os.path.join(findDataPackage(pkg_name, pkg_vers),
+                                    xml_name)
             # FIXME: EnvConfig has got problems with unicode filenames
             self.opts.actions.insert(0, ('loadXML', (str(xml_path),)))
 

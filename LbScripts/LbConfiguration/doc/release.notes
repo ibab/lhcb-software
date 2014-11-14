@@ -1,5 +1,9 @@
 2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-run: use 'prod' as default version instead of 'latest'
+
+2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-dev: added the --list option
 
 2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
