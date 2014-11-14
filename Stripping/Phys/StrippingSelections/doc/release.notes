@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-11-14 - Andrea Contu
+ - Fix typo in CharmFromBSemi
+
 ! 2013-11-13 - Alex Shires
  - Fix duplicate candidate problems in B2MuMuMuMu lines
 

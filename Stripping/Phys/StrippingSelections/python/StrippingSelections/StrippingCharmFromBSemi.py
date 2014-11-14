@@ -475,7 +475,7 @@ class CharmFromBSemiAllLinesConf(LineBuilder) :
                                                 DecayDescriptors = ["K*(892)0 -> pi+ pi-",
                                                                     "K*(892)0 -> K+ K-",
                                                                     "K*(892)0 -> K- pi+",
-                                                                    "K*(892)0 -> K+ pi-"]
+                                                                    "K*(892)0 -> K+ pi-"],
                                                 CombinationCut = "(ACHILD(PT,1)+ACHILD(PT,2) > 1500*MeV)"\
                                                     "& (AM < 2000*MeV)"\
                                                     "& (AM - ACHILD(M,1)-ACHILD(M,2) > 50*MeV)"\
