@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-11-14 - Andrea Contu
+ - Moved Charm XSec lines to muDST and updated dbase for S21(r1)
+
 !========================= StrippingSettings v2r32 2014-10-30 =========================
 
 ! 2014-11-13 - Mika Vesterinen

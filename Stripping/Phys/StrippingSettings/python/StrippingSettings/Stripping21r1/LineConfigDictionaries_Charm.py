@@ -1404,13 +1404,13 @@ D02K3PiForXSec = {
                   , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
                   #, 'HltFilter'                 : None
                   #
-                  , 'PrescaleD02K3Pi'             :  0.01
-                  , 'PrescaleDstar2D0Pi_D02K3Pi'  :  0.01
+                  , 'PrescaleD02K3Pi'             :  0.3
+                  , 'PrescaleDstar2D0Pi_D02K3Pi'  :  0.3
                   , 'PostscaleD02K3Pi'            :  1.0
                   , 'PostscaleDstar2D0Pi_D02K3Pi' :  1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmCompleteEvent' ] 
+    'STREAMS' : [ 'Charm' ] 
     }
 
 # Xsec: D0 -> K- pi+ (geometrical selection)
@@ -1434,7 +1434,7 @@ D02KPiGeoForm = {
 
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'CharmCompleteEvent' ] 
+    'STREAMS' : [ 'Charm' ] 
     }
 
 # Xsec: D*+ -> D0 pi+, D0 -> K- pi+
@@ -1455,13 +1455,13 @@ Dstar2D0Pi_D02KPiForXSec = {
                   , 'Dstar_MDiff_MAX'           : 155.0 * MeV
                   , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
                   #
-                  , 'PrescaleD02HH'             :   1.0
-                  , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
+                  , 'PrescaleD02HH'             :   0.1
+                  , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
                   , 'PostscaleD02HH'            :   1.0
                   , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WGs' : ['Charm'],
-    'STREAMS' : [ 'CharmCompleteEvent' ] 
+    'STREAMS' : [ 'Charm' ] 
     }
 
 # Xsec: Lc+ -> p K- pi+
@@ -1485,17 +1485,17 @@ Lambdac2PKPiForXSec = {
                    , 'Lambdac_PVDispCut'        : "((BPVVDCHI2 > 4.0)|(BPVLTIME() > 0.075 * picosecond))"
                    , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
                    #, 'HltFilter'                :  None
-                   , 'PrescaleLambdac2PKPi'     :    0.1
+                   , 'PrescaleLambdac2PKPi'     :    1.0
                    , 'PostscaleLambdac2PKPi'    :    1.0
-                   , 'PrescaleLambdac2PKK'      :    0.1
-                   , 'PostscaleLambdac2PKK'     :    1.0
+                   , 'PrescaleLambdac2PKK'      :   -1.0
+                   , 'PostscaleLambdac2PKK'     :   -1.0
                    , 'PrescaleLambdac2PPiPi'    :   -1.0
                    , 'PostscaleLambdac2PPiPi'   :   -1.0
                    , 'PrescaleLambdac2PPiKWS'   :   -1.0
                    , 'PostscaleLambdac2PPiKWS'  :   -1.0
     },
     'WGs'          : ['Charm'],
-    'STREAMS'      : [ 'CharmCompleteEvent' ] 
+    'STREAMS'      : [ 'Charm' ] 
     }
 
 # Xsec: D(s)+ -> phi pi+
@@ -1515,11 +1515,11 @@ D2PhiPiForXSec = {
                   , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
                   #, 'HltFilter'                 : None
                   #
-                  , 'PrescaleD2PhiPi'           :    0.01
+                  , 'PrescaleD2PhiPi'           :    1.0
                   , 'PostscaleD2PhiPi'          :    1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmCompleteEvent' ] 
+    'STREAMS' : [ 'Charm' ] 
     }
 
 ## Xsec: D(s)+ -> h+ h- h+
@@ -1542,8 +1542,8 @@ D2HHHForXSec = {
                   , 'D_PVDispCut'               : "((BPVVDCHI2 > 16.0)|(BPVLTIME() > 0.150 * picosecond))"
                   , 'HltFilter'                 : "HLT_PASS_RE('Hlt1MB.*')"
                   #, 'HltFilter'                 : None
-                  , 'PrescaleD2KPP'             :    0.01
-                  , 'PrescaleD2KKP'             :    0.01
+                  , 'PrescaleD2KPP'             :    1.0
+                  , 'PrescaleD2KKP'             :    1.0
                   , 'PrescaleD2KKK'             :   -1.0
                   , 'PrescaleD2PPP'             :   -1.0
                   , 'PrescaleD2KPPDCS'          :   -1.0
@@ -1554,7 +1554,7 @@ D2HHHForXSec = {
                   , 'PostscaleD2KPPDCS'         :   -1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmCompleteEvent' ] 
+    'STREAMS' : [ 'Charm' ] 
     }
 
 # Xsec: D0 -> h+ h-
@@ -1575,13 +1575,13 @@ D02HHForXSec = {
                   , 'HltFilter'          : "HLT_PASS_RE('Hlt1MB.*')"
                   #, 'HltFilter'          : none
                   #
-                  , 'PrescaleD02HH'             :   0.1
-                  , 'PrescaleDstar2D0Pi_D02HH'  :   0.1
+                  , 'PrescaleD02HH'             :   1.0
+                  , 'PrescaleDstar2D0Pi_D02HH'  :   1.0
                   , 'PostscaleD02HH'            :   1.0
                   , 'PostscaleDstar2D0Pi_D02HH' :   1.0
     },
     'WGs' : [ 'Charm' ],
-    'STREAMS' : [ 'CharmCompleteEvent' ] 
+    'STREAMS' : [ 'Charm' ] 
     }
 
 
