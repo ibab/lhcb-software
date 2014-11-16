@@ -110,9 +110,6 @@ void CherenkovG4HistoFillSet2:: FillRichG4HistoSet2( const G4Event* anEvent,
   SmartDataPtr<IHistogram1D>hNumTotHitNoRadiator(CurrentHistoSvc,
                                                "RICHG4HISTOSET2/197");
 
-  SmartDataPtr<IHistogram2D>hXYHitLocationRich1Gas(CurrentHistoSvc,"RICHG4HISTOSET2/361");
-  SmartDataPtr<IHistogram2D>hXYHitLocationRich2Gas(CurrentHistoSvc,"RICHG4HISTOSET2/381");
-  
   RichG4RadiatorMaterialIdValues* aRMIdValues= 
             RichG4RadiatorMaterialIdValues::RichG4RadiatorMaterialIdValuesInstance();
 

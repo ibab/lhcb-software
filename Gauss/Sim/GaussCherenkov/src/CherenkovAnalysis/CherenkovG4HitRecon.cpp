@@ -172,10 +172,10 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
           
           // end test print
 
-          if(aHitInPixelGap == 1   ) {
+          //  if(aHitInPixelGap == 1   ) {
             
-            OccpSelectThisHit=false;
-          }
+          //  OccpSelectThisHit=false;
+          //  }
 
            CherenkovG4Counters* aCherenkovG4Counters = CherenkovG4Counters::getInstance();
            aCherenkovG4Counters-> bumpRichPmtOccp(aPmtNum);
@@ -184,8 +184,9 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
 	         if(  aRichDetNum == 1 ) { aPmtNum -= aNumPmtInRich[0] ;  }
            //       G4int aRadiatornum= aHit->GetRadiatorNumber();
           
-           int irichsector =ihcol;
-           if(ihcol > 3 ) irichsector = ihcol -2;
+            int irichsector =ihcol;
+            if(ihcol > 3 ) irichsector = ihcol -2;
+
 
            
            //  const G4ThreeVector & LocalPhcathCoord = aHit -> GetLocalPEOriginPos();

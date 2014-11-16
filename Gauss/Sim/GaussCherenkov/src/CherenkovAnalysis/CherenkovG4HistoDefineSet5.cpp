@@ -67,29 +67,27 @@ void CherenkovG4HistoDefineSet5::bookCherenkovG4HistogramsSet5()
 
   title="XY Location of Rich1 Gas PMT hits on PMT Plane";
 
-  //  m_hXYHitLocationRich1Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"361",
-  //                                           title,1000,-1200.0,1200.0,1000,-1200.0,1200.0);
  m_hXYHitLocationRich1Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"361",
                                              title,1000,-900.0,900.0,1000,-900.0,900.0);
 
-  title="XY Location of Rich1 Gas MaPMT hits on PMT Plane";
- m_hXYHitLocationRich1GasA=CurHistoSvc->book(m_RichG4HistoPathSet5+"3361",
-                                             title,1000,-900.0,900.0,1000,-900.0,900.0);
+ //  title="XY Location of Rich1 Gas MaPMT hits on PMT Plane";
+ // m_hXYHitLocationRich1GasA=CurHistoSvc->book(m_RichG4HistoPathSet5+"3361",
+ //                                            title,1000,-900.0,900.0,1000,-900.0,900.0);
 
- title="XY Location of Rich1 Gas PMT hits on PMT Plane with binary readout";
+  title="XY Location of Rich1 Gas PMT hits on PMT Plane with binary readout";
 
- m_hXYHitLocationRich1GasNoDuplicate=CurHistoSvc->book(m_RichG4HistoPathSet5+"362",
-                                             title,1000,-900.0,900.0,1000,-900.0,900.0);
+  m_hXYHitLocationRich1GasNoDuplicate=CurHistoSvc->book(m_RichG4HistoPathSet5+"362",
+                                              title,1000,-900.0,900.0,1000,-900.0,900.0);
 
- title="XY Location of Rich1 Gas MaPMT hits on PMT Plane with binary readout";
+ // title="XY Location of Rich1 Gas MaPMT hits on PMT Plane with binary readout";
 
- m_hXYHitLocationRich1GasNoDuplicateA=CurHistoSvc->book(m_RichG4HistoPathSet5+"3362",
-                                             title,1000,-900.0,900.0,1000,-900.0,900.0);
+ // m_hXYHitLocationRich1GasNoDuplicateA=CurHistoSvc->book(m_RichG4HistoPathSet5+"3362",
+ //                                            title,1000,-900.0,900.0,1000,-900.0,900.0);
 
-  title="XY Location of Rich1 Gas PMT hits on PMT Lens Plane";
+ //  title="XY Location of Rich1 Gas PMT hits on PMT Lens Plane";
 
-  m_hXYHitLocationLensRich1Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"391",
-                                             title,1000,-900.0,900.0,1000,-900.0,900.0);
+ //  m_hXYHitLocationLensRich1Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"391",
+ //                                            title,1000,-900.0,900.0,1000,-900.0,900.0);
 
 
   title="XY Location of Rich2 Gas PMT hits on PMT Plane";
@@ -108,20 +106,20 @@ void CherenkovG4HistoDefineSet5::bookCherenkovG4HistogramsSet5()
   m_hXYHitLocationNoScintRich2Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"382",
                                                     title, 1000, -900.0, 900.0, 1000, -900.0, 900.0);
 
-  title="XY Location of Rich1 Gas PMT hits on PMT Plane from PMT QW ";
+  //  title="XY Location of Rich1 Gas PMT hits on PMT Plane from PMT QW ";
 
-  m_hXYHitLocationPMTQWRich1Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"395",
-                                                  title, 1000, -900.0, 900.0, 1000, -900.0, 900.0);
+  //  m_hXYHitLocationPMTQWRich1Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"395",
+  //                                                title, 1000, -900.0, 900.0, 1000, -900.0, 900.0);
 
-  title="XY Location of Rich2 Gas PMT hits on PMT Plane from PMT QW ";
+  //  title="XY Location of Rich2 Gas PMT hits on PMT Plane from PMT QW ";
 
-  m_hXYHitLocationPMTQWRich2Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"393",
-                                                  title, 1000, -900.0, 900.0, 1000, -900.0, 900.0);
+  //  m_hXYHitLocationPMTQWRich2Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"393",
+  //                                                title, 1000, -900.0, 900.0, 1000, -900.0, 900.0);
   
-  title="XY Location of Rich2 Gas PMT hits on PMT Plane from CF4 ";
+  // title="XY Location of Rich2 Gas PMT hits on PMT Plane from CF4 ";
 
-  m_hXYHitLocationCF4Rich2Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"394",
-                                                title, 1000, -900.0, 900.0, 1000, -900.0, 900.0);
+  //  m_hXYHitLocationCF4Rich2Gas=CurHistoSvc->book(m_RichG4HistoPathSet5+"394",
+  //                                              title, 1000, -900.0, 900.0, 1000, -900.0, 900.0);
 
   title="Occupancy in Rich1 Pmts";
   
@@ -145,40 +143,40 @@ void CherenkovG4HistoDefineSet5::bookCherenkovG4HistogramsSet5()
   m_hPmtOccpNoScintRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"386",
                                         title, 6400,0.0,3200.0);
   
-  title="Occupancy in Rich1 Pmts from Gas QW";
-  m_hPmtOccpGasQWRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"402",
-                                        title, 6000,0.0,3000.0);
-  title="Occupancy in Rich1 Pmts from PMT QW";
-  m_hPmtOccpPmtQWRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"404",
-                                        title, 6000,0.0,3000.0);
+  //  title="Occupancy in Rich1 Pmts from Gas QW";
+  //  m_hPmtOccpGasQWRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"402",
+  //                                       title, 6000,0.0,3000.0);
+  // title="Occupancy in Rich1 Pmts from PMT QW";
+  //  m_hPmtOccpPmtQWRich1 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"404",
+  //                                      title, 6000,0.0,3000.0);
 
-  title="Occupancy in Rich2 Pmts from Gas QW";
-  m_hPmtOccpGasQWRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"407",
-                                        title, 6400,0.0,3200.0);
-  title="Occupancy in Rich2 Pmts from PMT QW";
-  m_hPmtOccpPmtQWRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"408",
-                                        title, 6400,0.0,3200.0);
+  //  title="Occupancy in Rich2 Pmts from Gas QW";
+  // m_hPmtOccpGasQWRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"407",
+  //                                      title, 6400,0.0,3200.0);
+  //  title="Occupancy in Rich2 Pmts from PMT QW";
+  // m_hPmtOccpPmtQWRich2 =   CurHistoSvc->book(m_RichG4HistoPathSet5+"408",
+  //                                      title, 6400,0.0,3200.0);
 
-  title="XY Location of Rich1 Gas PMT hits on Mirror1 ";
+  // title="XY Location of Rich1 Gas PMT hits on Mirror1 ";
     
-  m_XYHitLocationRich1GasMirror1 = CurHistoSvc->book(m_RichG4HistoPathSet5+"366",title,
-                                                     1000, -1000.0, 1000.0, 1000,-1000.0, 1000.0);
+  //  m_XYHitLocationRich1GasMirror1 = CurHistoSvc->book(m_RichG4HistoPathSet5+"366",title,
+  //                                                    1000, -1000.0, 1000.0, 1000,-1000.0, 1000.0);
  
-  title="XY Location of Rich1 Gas PMT hits on Mirror2 ";
+  //  title="XY Location of Rich1 Gas PMT hits on Mirror2 ";
   
-  m_XYHitLocationRich1GasMirror2 = CurHistoSvc->book(m_RichG4HistoPathSet5+"368",title,
-                                                     1200, -1200.0, 1200.0,1200,-1200.0, 1200.0);
+  //  m_XYHitLocationRich1GasMirror2 = CurHistoSvc->book(m_RichG4HistoPathSet5+"368",title,
+  //                                                     1200, -1200.0, 1200.0,1200,-1200.0, 1200.0);
 
   
-  title="XY Location of Rich2 Gas PMT hits on Mirror1 ";
+  //  title="XY Location of Rich2 Gas PMT hits on Mirror1 ";
     
-  m_XYHitLocationRich1GasMirror1 = CurHistoSvc->book(m_RichG4HistoPathSet5+"466",title,
-                                                     1000, -2000.0, 2000.0, 1000,-2000.0, 2000.0);
+  //  m_XYHitLocationRich1GasMirror1 = CurHistoSvc->book(m_RichG4HistoPathSet5+"466",title,
+  //                                                   1000, -2000.0, 2000.0, 1000,-2000.0, 2000.0);
  
-  title="XY Location of Rich2 Gas PMT hits on Mirror2 ";
+  // title="XY Location of Rich2 Gas PMT hits on Mirror2 ";
     
-  m_XYHitLocationRich1GasMirror2 = CurHistoSvc->book(m_RichG4HistoPathSet5+"468",title,
-                                                     1250, -2500.0, 2500.0, 1200,-1200.0, 1200.0);
+  //  m_XYHitLocationRich1GasMirror2 = CurHistoSvc->book(m_RichG4HistoPathSet5+"468",title,
+  //                                                   1250, -2500.0, 2500.0, 1200,-1200.0, 1200.0);
  
  
 }

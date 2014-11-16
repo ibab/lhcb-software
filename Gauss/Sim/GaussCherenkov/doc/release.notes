@@ -4,8 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
-
-2014-10-15 - Sajan Easo
+!2014-11-16 -Sajan Easo
+ -Further modifications to histogram filling for Rich1 occupancy
+!2014-10-15 - Sajan Easo
  - Minor change in the histogram filling for Rich1 occupancy histogram during analysis
 
 !===================== GaussCherenkov v4r4 2014-10-08 ========================
