@@ -8,7 +8,7 @@ find_package(GaudiProject)
 # Declare project name and version
 gaudi_project(Alignment v10r1
               USE Phys v19r2p1
-              USE Online v5r13
+                  Online v5r13
               DATA AppConfig
                    FieldMap
                    ParamFiles)
