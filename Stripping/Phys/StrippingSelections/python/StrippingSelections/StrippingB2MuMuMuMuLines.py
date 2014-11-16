@@ -328,7 +328,7 @@ def makeJpsi(self,name,inputSel):
     Jpsi->mu+ mu- selection
     """
     JpsiMuMu = CombineParticles("Combine"+name)
-    JpsiMuMu.DecayDescriptor='[J/psi(1S) -> mu+ mu-]'
+    JpsiMuMu.DecayDescriptor='J/psi(1S) -> mu+ mu-'
     JpsiMuMu.CombinationCut ="(ADAMASS('J/psi(1S)') < 200*MeV)"\
         "& (AMAXDOCA('')<0.3*mm)"
     JpsiMuMu.MotherCut = "(ADMASS('J/psi(1S)') < 200*MeV)"\
@@ -345,7 +345,7 @@ def makeJpsiWide(self,name,inputSel):
     Jpsi->mu+ mu- selection not in Jpsi mass interval
     """
     JpsiMuMu = CombineParticles("Combine"+name)
-    JpsiMuMu.DecayDescriptor='[J/psi(1S) -> mu+ mu-]'
+    JpsiMuMu.DecayDescriptor='J/psi(1S) -> mu+ mu-'
     # JpsiMuMu.CombinationCut ="(ADAMASS('J/psi(1S)') > 200*MeV)"\
     #     "& (AMAXDOCA('')<0.3*mm)"
     JpsiMuMu.CombinationCut = "(AMAXDOCA('')<0.3*mm)"
@@ -362,7 +362,7 @@ def makePhi(self,name,inputSel):
     phi->K+ K- selection
     """
     Phimumu = CombineParticles("Combine"+name)
-    Phimumu.DecayDescriptor = '[phi(1020) -> K+ K-]'
+    Phimumu.DecayDescriptor = 'phi(1020) -> K+ K-'
     Phimumu.CombinationCut = "(ADAMASS('phi(1020)')<200*MeV)"\
         "& (AMAXDOCA('')<0.3*mm)"
     Phimumu.MotherCut = "(ADMASS('phi(1020)') < 200*MeV)"\
@@ -396,7 +396,7 @@ def makeB2JpsiPhimumu(self,name,inputSel):
     """
 
     B2JpsiPhimumu = CombineParticles("Combine"+name)
-    B2JpsiPhimumu.DecayDescriptor =  "[B_s0 -> J/psi(1S) phi(1020) mu+ mu-]"
+    B2JpsiPhimumu.DecayDescriptor =  "B_s0 -> J/psi(1S) phi(1020) mu+ mu-"
     B2JpsiPhimumu.DaughtersCuts = { "mu+" : self.BDaughtersCuts }
     B2JpsiPhimumu.CombinationCut =  "(ADAMASS('B_s0')<1000*MeV)"\
         "& (AMAXDOCA('')<0.3*mm)"

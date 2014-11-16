@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+" 2014-11-16 - Andrea Contu
+ - Fix Beauty2Charm_Lb2XBuilder.py and StrippingB2MuMuMuMuLines.py decay descriptors
+
 ! 2014-11-14 - Andrea Contu
  - Fix typo in CharmFromBSemi
 
