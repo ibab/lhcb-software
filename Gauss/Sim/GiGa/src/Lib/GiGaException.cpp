@@ -22,7 +22,7 @@
 // ============================================================================
 GiGaException::GiGaException( const std::string & message ,          
 			      const StatusCode  & sc      )          
-  : GaudiException( message , "*GiGaException*" , sc ) {};                    
+  : GaudiException( message , "*GiGaException*" , sc ) {}                    
 
 // ============================================================================
 /// constructor
@@ -30,18 +30,18 @@ GiGaException::GiGaException( const std::string & message ,
 GiGaException::GiGaException( const std::string   & message   ,
 			      const GaudiException& Exception ,
 			      const StatusCode    & sc        )   
-  : GaudiException( message , "*GiGaException*"   , sc , Exception ) {};        
+  : GaudiException( message , "*GiGaException*"   , sc , Exception ) {}
 
 // ============================================================================
 /// destructor  
 // ============================================================================
-GiGaException::~GiGaException() throw(){};                       
+GiGaException::~GiGaException() throw(){}
 
 // ============================================================================
 /// clone (virtual constructor)
 // ============================================================================
 GaudiException* GiGaException::clone() const                                  
-{ return  new GiGaException(*this); };                        
+{ return  new GiGaException(*this); }
 
 // ============================================================================
 

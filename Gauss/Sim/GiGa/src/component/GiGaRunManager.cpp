@@ -40,7 +40,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaRunManager );
+DECLARE_TOOL_FACTORY( GiGaRunManager )
 
 // Namespace for debugging
 namespace GiGaRunManagerLocal
@@ -51,7 +51,7 @@ namespace GiGaRunManagerLocal
    */
   static GiGaUtil::InstanceCounter<GiGaRunManager> s_Counter ;
 #endif   
-};
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -108,7 +108,7 @@ GiGaRunManager::GiGaRunManager( const std::string& type,
 #ifdef GIGA_DEBUG
   GiGaRunManagerLocal::s_Counter.increment () ;
 #endif 
-};
+}
 
 //=============================================================================
 // Destructor
@@ -144,7 +144,7 @@ GiGaRunManager::~GiGaRunManager()
     GiGaRunManagerLocal::s_Counter.decrement () ;
 #endif
 
-};
+}
 
 //=============================================================================
 // Retrieve the processed event 
@@ -170,7 +170,7 @@ StatusCode GiGaRunManager::retrieveTheEvent( const G4Event*& event )
   ///
   return Print("Geant4 Event is retrieved with success" , 
                StatusCode::SUCCESS                      , MSG::VERBOSE );
-};
+}
 
 
 //=============================================================================
@@ -231,7 +231,7 @@ StatusCode GiGaRunManager::processTheEvent()
   ///
   return Print("Geant4 Event is processed successfully" , 
                StatusCode::SUCCESS                      , MSG::VERBOSE ) ;
-};
+}
 
 
 // ============================================================================
@@ -294,7 +294,7 @@ StatusCode GiGaRunManager::prepareTheEvent( G4PrimaryVertex * vertex )
   ///
   return Print("Geant4 Event preparation is succesfull" , 
                StatusCode::SUCCESS                      , MSG::VERBOSE );
-}; 
+}
 
 // ============================================================================
 /** initialize the Geant4 Run
@@ -349,7 +349,7 @@ StatusCode  GiGaRunManager::initializeRun()
   ///
   return Print("Geant4 Run is initialized  successfully" , 
                StatusCode::SUCCESS                       , MSG::VERBOSE );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -406,7 +406,7 @@ StatusCode GiGaRunManager::initializeKernel()
   ///
   return Print("Geant4 Kernel is initialized  successfully" , 
                StatusCode::SUCCESS                          , MSG::VERBOSE );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -427,7 +427,4 @@ StatusCode GiGaRunManager::finalizeRunManager()
   ///
   return Print("Geant4 Run  is finalized  successfully" , 
                StatusCode::SUCCESS                      , MSG::VERBOSE );
-};
-
-
-
+}

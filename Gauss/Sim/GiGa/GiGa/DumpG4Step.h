@@ -48,7 +48,7 @@ namespace GiGaUtil
   ( const G4Step* step   = 0         ,
     std::ostream& stream = std::cout ) ;
 
-};
+}
 
 
 // ============================================================================

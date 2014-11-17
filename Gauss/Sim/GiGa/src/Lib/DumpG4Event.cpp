@@ -142,9 +142,9 @@ namespace GiGaUtil
     }
     
     return stream ;
-  };
+  }
 
-}; // end of namespace GiGaUtil
+} // end of namespace GiGaUtil
 
 
 

@@ -65,26 +65,26 @@
  */
 
 // ===========================================================================
-IGiGaEventAction          :: ~IGiGaEventAction          ()   {} ;
-IGiGaFieldMgr             :: ~IGiGaFieldMgr             ()   {} ;
-IGiGaGeoSrc               :: ~IGiGaGeoSrc               ()   {} ;
-IGiGaInterface            :: ~IGiGaInterface            ()   {} ;
-IGiGaMagField             :: ~IGiGaMagField             ()   {} ;
-IGiGaPhysConstructor      :: ~IGiGaPhysConstructor      ()   {} ;
-IGiGaPhysicsConstructor   :: ~IGiGaPhysicsConstructor   ()   {} ;
-IGiGaPhysicsList          :: ~IGiGaPhysicsList          ()   {} ;
-IGiGaPhysList             :: ~IGiGaPhysList             ()   {} ;
-IGiGaRunAction            :: ~IGiGaRunAction            ()   {} ;
-IGiGaRunManager           :: ~IGiGaRunManager           ()   {} ;
-IGiGaSensDet              :: ~IGiGaSensDet              ()   {} ;
-IGiGaSetUpSvc             :: ~IGiGaSetUpSvc             ()   {} ;
-IGiGaStackAction          :: ~IGiGaStackAction          ()   {} ;
-IGiGaStepAction           :: ~IGiGaStepAction           ()   {} ;
-IGiGaSvc                  :: ~IGiGaSvc                  ()   {} ;
-IGiGaTool                 :: ~IGiGaTool                 ()   {} ;
-IGiGaTrackAction          :: ~IGiGaTrackAction          ()   {} ;
-IGiGaUIsession            :: ~IGiGaUIsession            ()   {} ;
-IGiGaVisManager           :: ~IGiGaVisManager           ()   {} ;
+IGiGaEventAction          :: ~IGiGaEventAction          ()   {}
+IGiGaFieldMgr             :: ~IGiGaFieldMgr             ()   {}
+IGiGaGeoSrc               :: ~IGiGaGeoSrc               ()   {}
+IGiGaInterface            :: ~IGiGaInterface            ()   {}
+IGiGaMagField             :: ~IGiGaMagField             ()   {}
+IGiGaPhysConstructor      :: ~IGiGaPhysConstructor      ()   {}
+IGiGaPhysicsConstructor   :: ~IGiGaPhysicsConstructor   ()   {}
+IGiGaPhysicsList          :: ~IGiGaPhysicsList          ()   {}
+IGiGaPhysList             :: ~IGiGaPhysList             ()   {}
+IGiGaRunAction            :: ~IGiGaRunAction            ()   {}
+IGiGaRunManager           :: ~IGiGaRunManager           ()   {}
+IGiGaSensDet              :: ~IGiGaSensDet              ()   {}
+IGiGaSetUpSvc             :: ~IGiGaSetUpSvc             ()   {}
+IGiGaStackAction          :: ~IGiGaStackAction          ()   {}
+IGiGaStepAction           :: ~IGiGaStepAction           ()   {}
+IGiGaSvc                  :: ~IGiGaSvc                  ()   {}
+IGiGaTool                 :: ~IGiGaTool                 ()   {}
+IGiGaTrackAction          :: ~IGiGaTrackAction          ()   {}
+IGiGaUIsession            :: ~IGiGaUIsession            ()   {}
+IGiGaVisManager           :: ~IGiGaVisManager           ()   {}
 // ===========================================================================
 
 
@@ -154,7 +154,7 @@ const InterfaceID& IGiGaVisManager            :: interfaceID ()
 
 // ===========================================================================
 IGiGaSensDet::IGiGaSensDet ()
-  : G4VSensitiveDetector( "NotYetDefined" ){} ;
+  : G4VSensitiveDetector( "NotYetDefined" ){}
 // ===========================================================================
 
 IGiGaRunManager* IGiGaRunManager::s_manager = 0 ;
@@ -167,7 +167,7 @@ StatusCode       IGiGaRunManager::destroy()
   if( 0 != mgr ) { delete mgr ; }
   IGiGaRunManager::setInstance( (IGiGaRunManager*)0 );
   return StatusCode::SUCCESS ;
-};
+}
 
 // ===========================================================================
 // The END

@@ -77,7 +77,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4VUserDetectorConstruction   * obj )
     { Exception( "operator<<(G4VUserDetectorConstruction*)"        ) ; }
   ///
   return *this;
-};
+}
 
 // ============================================================================
 /** set new world wolume 
@@ -108,7 +108,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4VPhysicalVolume             * obj )
     { Exception( "operator<<(G4VPhysicalVolume*)"         ) ; }
   ///
   return *this;
-}; 
+}
 
 // ============================================================================
 /** set new generator 
@@ -140,7 +140,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4VUserPrimaryGeneratorAction * obj )
     { Exception( "operator<<(G4VUserPrimaryGenerator*)"         ) ; }
   ///
   return *this;
-}; 
+}
 
 // ============================================================================
 /** set new physics list 
@@ -173,7 +173,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4VUserPhysicsList            * obj )
     { Exception( "operator<<(G4VUserPhysicsList*)"         ) ; }
   ///
   return *this;
-}; 
+}
 
 // ============================================================================
 /** set new run action 
@@ -206,7 +206,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4UserRunAction               * obj )
     { Exception( "operator<<(G4UserRunAction*)"         ) ; }
   ///
   return *this;
-}; 
+}
 
 // ============================================================================
 /** set new event action 
@@ -239,7 +239,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4UserEventAction             * obj )
     { Exception( "operator<<(G4UserEventAction*)"         ) ; }
   ///
   return *this;
-}; 
+}
 
 // ============================================================================
 /** set new stacking action 
@@ -270,7 +270,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4UserStackingAction          * obj )
     { Exception( "operator<<(G4UserStackingAction*)"         ) ; }
   ///
   return *this;
-};
+}
 
     
 // ============================================================================
@@ -302,7 +302,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4UserTrackingAction          * obj )
     { Exception( "operator<<(G4UserTrackingAction*)"         ) ; }
   ///
   return *this;
-};
+}
 
 // ============================================================================
 /** set new stepping  action 
@@ -333,7 +333,7 @@ IGiGaSetUpSvc& GiGa::operator << ( G4UserSteppingAction          * obj )
     { Exception( "operator<<(G4UserSteppingAction*)"         ) ; }
   ///
   return *this;
-};
+}
 
 // ============================================================================
 /** set detector constructon module 
@@ -354,7 +354,7 @@ StatusCode GiGa::setConstruction ( G4VUserDetectorConstruction   * obj )
     { Exception( "setConstruction()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new world wolume 
@@ -375,7 +375,7 @@ StatusCode GiGa::setDetector     ( G4VPhysicalVolume             * obj )
     { Exception( "setDetector()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new generator 
@@ -396,7 +396,7 @@ StatusCode GiGa::setGenerator    ( G4VUserPrimaryGeneratorAction * obj )
     { Exception( "setGenerator()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new physics list 
@@ -417,7 +417,7 @@ StatusCode GiGa::setPhysics      ( G4VUserPhysicsList            * obj )
     { Exception( "setPhysics()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new run action 
@@ -438,7 +438,7 @@ StatusCode GiGa::setRunAction    ( G4UserRunAction               * obj )
     { Exception( "setRunAction()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new event action 
@@ -459,7 +459,7 @@ StatusCode GiGa::setEvtAction    ( G4UserEventAction             * obj )
     { Exception( "setEvtAction()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new stacking action 
@@ -480,7 +480,7 @@ StatusCode GiGa::setStacking     ( G4UserStackingAction          * obj )
     { Exception( "setStacking()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new tracking  action 
@@ -501,7 +501,7 @@ StatusCode GiGa::setTracking     ( G4UserTrackingAction          * obj )
     { Exception( "setTracking()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** set new stepping  action 
@@ -522,7 +522,7 @@ StatusCode GiGa::setStepping     ( G4UserSteppingAction          * obj )
     { Exception( "setStepping()"         ) ; }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 // The END 

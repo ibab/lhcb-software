@@ -53,7 +53,7 @@ GiGaSensDetBase::~GiGaSensDetBase()
 #ifdef GIGA_DEBUG
   GiGaSensDetBaseLocal::s_Counter.decrement();
 #endif 
-};
+}
 
 //=============================================================================
 // initialize the sensitive detector (Gaudi)
@@ -121,7 +121,7 @@ StatusCode GiGaSensDetBase::initialize()
   ///
   return Print("GiGaSensDetBase initialized successfully" ,
                StatusCode::SUCCESS                        , MSG::VERBOSE ) ;
-}; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -135,7 +135,7 @@ StatusCode GiGaSensDetBase::finalize()
         StatusCode::SUCCESS            , MSG::VERBOSE ) ;
   ///
   return GiGaBase::finalize();  
-};
+}
 // ============================================================================
 
 unsigned long GiGaSensDetBase::release()
@@ -147,7 +147,7 @@ unsigned long GiGaSensDetBase::release()
   }
   this -> GaudiTool::~GaudiTool() ;
   return 0 ;
-};
+}
 
 // ============================================================================
 bool GiGaSensDetBase::processStep( G4Step* step,

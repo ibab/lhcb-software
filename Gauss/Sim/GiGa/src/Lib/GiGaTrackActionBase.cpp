@@ -42,7 +42,7 @@ GiGaTrackActionBase::GiGaTrackActionBase
 // ============================================================================
 // destructor
 // ============================================================================
-GiGaTrackActionBase::~GiGaTrackActionBase() {};
+GiGaTrackActionBase::~GiGaTrackActionBase() {}
 // ============================================================================
 
 // ============================================================================
@@ -54,7 +54,9 @@ GiGaTrackActionBase::~GiGaTrackActionBase() {};
  */
 // ============================================================================
 StatusCode GiGaTrackActionBase::initialize() 
-{ return GiGaBase::initialize() ; }; 
+{ 
+  return GiGaBase::initialize() ; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -66,17 +68,17 @@ StatusCode GiGaTrackActionBase::initialize()
  */
 // ============================================================================
 StatusCode GiGaTrackActionBase::finalize() 
-{ return GiGaBase::finalize() ; } ;
+{ 
+return GiGaBase::finalize() ; 
+}
 
 // ============================================================================
 // ============================================================================
-void GiGaTrackActionBase::PreUserTrackingAction  ( const G4Track* /* track */ ) 
-{};
+void GiGaTrackActionBase::PreUserTrackingAction( const G4Track* /*track*/ ) {}
 
 // ============================================================================
 // ============================================================================
-void GiGaTrackActionBase::PostUserTrackingAction ( const G4Track* /* track */ ) 
-{};
+void GiGaTrackActionBase::PostUserTrackingAction( const G4Track* /*track*/ ) {}
 
 // ============================================================================
 // The END 

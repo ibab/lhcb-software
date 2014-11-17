@@ -32,7 +32,7 @@ namespace GiGaMagFieldBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaMagFieldBase> s_Counter ;
 #endif   
-};
+}
 
 
 // ============================================================================
@@ -55,7 +55,7 @@ GiGaMagFieldBase::GiGaMagFieldBase
 #ifdef GIGA_DEBUG
   GiGaMagFieldBaseLocal::s_Counter.increment () ;
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -66,7 +66,7 @@ GiGaMagFieldBase::~GiGaMagFieldBase()
 #ifdef GIGA_DEBUG
   GiGaMagFieldBaseLocal::s_Counter.decrement () ;
 #endif
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -94,7 +94,7 @@ StatusCode GiGaMagFieldBase::initialize ()
   //
   return Print("GiGaMagFieldBase initialized successfully" ,
                StatusCode::SUCCESS                         , MSG::VERBOSE ) ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -110,7 +110,7 @@ StatusCode GiGaMagFieldBase::finalize   ()
   if( 0 != mfSvc() ) { mfSvc() -> release() ; m_mfSvc = 0 ; }
   // finalize the base class 
   return GiGaFieldMgrBase::finalize   (); 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -125,7 +125,7 @@ G4MagneticField*        GiGaMagFieldBase::field    () const
   const G4MagneticField* mag = this ;
   m_self = const_cast<G4MagneticField*> ( mag );
   return m_self ;
-};
+}
 // ============================================================================
 
 

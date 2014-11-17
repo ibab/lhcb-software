@@ -62,7 +62,7 @@ namespace GiGaUtil
       obj ? 
       std::string( System::typeinfoName( typeid(*obj) ) ) : 
       std::string( "'UNKNOWN_type'" );
-  };
+  }
   
   /** @class Delete 
    * 
@@ -84,7 +84,7 @@ namespace GiGaUtil
     { 
       if( 0 != obj ) { delete obj ; obj = 0 ; }
       return obj ;
-    };
+    }
   };
   
   /** @class Eraser
@@ -124,7 +124,7 @@ namespace GiGaUtil
   { 
     if( 0 != obj ) { delete obj ; obj = 0 ; }
     return obj ;
-  };
+  }
 
   /** @struct FastCast
    *  Helpful utility to perfrom a fast cast 
@@ -177,7 +177,7 @@ namespace GiGaUtil
     };
   };
   
-}; ///< end of namespace 
+} ///< end of namespace 
 
 #endif ///< GIGA_GIGAUTIL_H
 

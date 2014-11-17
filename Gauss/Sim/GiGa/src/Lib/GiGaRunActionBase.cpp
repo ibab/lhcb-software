@@ -29,7 +29,7 @@ namespace GiGaRunActionBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaRunActionBase> s_Counter ;
 #endif   
-};
+}
 
 // ============================================================================
 /** standard constructor
@@ -50,7 +50,7 @@ GiGaRunActionBase::GiGaRunActionBase
 #ifdef GIGA_DEBUG
   GiGaRunActionBaseLocal::s_Counter.increment () ;
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -61,7 +61,7 @@ GiGaRunActionBase::~GiGaRunActionBase()
 #ifdef GIGA_DEBUG
   GiGaRunActionBaseLocal::s_Counter.decrement () ;
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -80,7 +80,7 @@ StatusCode GiGaRunActionBase::initialize  ()
   ///
   return Print("GiGaRunActionBase initialized successfully" ,
                StatusCode::SUCCESS                          , MSG::VERBOSE );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -97,7 +97,7 @@ StatusCode GiGaRunActionBase::finalize  ()
         StatusCode::SUCCESS              , MSG::VERBOSE ) ;
   ///
   return GiGaBase::finalize(); 
-};
+}
 // ============================================================================
 
 // ============================================================================

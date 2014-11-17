@@ -39,7 +39,7 @@ namespace GiGaTrajectoryPointLocal
   static GiGaUtil::InstanceCounter<GiGaTrajectoryPoint> s_Counter ;
 #endif 
   // ==========================================================================
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -54,7 +54,7 @@ GiGaTrajectoryPoint::GiGaTrajectoryPoint()
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.increment();
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -76,7 +76,7 @@ GiGaTrajectoryPoint::GiGaTrajectoryPoint
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.increment();
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -98,7 +98,7 @@ GiGaTrajectoryPoint::GiGaTrajectoryPoint
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.increment();
 #endif 
-};
+}
 // ============================================================================
   
 // ============================================================================
@@ -118,7 +118,7 @@ GiGaTrajectoryPoint::GiGaTrajectoryPoint
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.increment();
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -142,7 +142,7 @@ GiGaTrajectoryPoint::GiGaTrajectoryPoint
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.increment();
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -166,7 +166,7 @@ GiGaTrajectoryPoint::GiGaTrajectoryPoint
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.increment();
 #endif 
-};
+}
 // ============================================================================
     
 
@@ -185,7 +185,7 @@ GiGaTrajectoryPoint::GiGaTrajectoryPoint
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.increment();
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -196,7 +196,7 @@ GiGaTrajectoryPoint::~GiGaTrajectoryPoint()
 #ifdef GIGA_DEBUG
   GiGaTrajectoryPointLocal::s_Counter.decrement();
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -205,14 +205,18 @@ GiGaTrajectoryPoint::~GiGaTrajectoryPoint()
  */
 // ============================================================================
 GiGaTrajectoryPoint* GiGaTrajectoryPoint::clone      () const 
-{ return new GiGaTrajectoryPoint( *this ); }
+{ 
+  return new GiGaTrajectoryPoint( *this ); 
+}
 // ============================================================================
 
 // ============================================================================
 /// overloaded new 
 // ============================================================================
 void* GiGaTrajectoryPoint::operator new(size_t)
-{ return (void *) GiGaTrajectoryPointLocal::s_Allocator.MallocSingle(); };
+{ 
+  return (void *) GiGaTrajectoryPointLocal::s_Allocator.MallocSingle(); 
+}
 
 // ============================================================================
 /// overloaded delete 
@@ -221,7 +225,7 @@ void GiGaTrajectoryPoint::operator delete(void *point )
 { 
   GiGaTrajectoryPointLocal::s_Allocator.FreeSingle
     ( (GiGaTrajectoryPoint*) point ); 
-};
+}
 // ============================================================================
 
 // ============================================================================

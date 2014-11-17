@@ -563,7 +563,7 @@ private:
            "' is retrieved from IToolSvc " , MSG::DEBUG  , sc ) ;
     // return located tool 
     return Tool ;
-  };
+  }
   
   /** the useful method for location of tools.
    *  @see IToolSvc
@@ -612,7 +612,7 @@ private:
            "' is retrieved from IToolSvc " , MSG::DEBUG , sc ) ;
     // return located tool 
     return Tool ;
-  };
+  }
   
   
 private:
@@ -674,7 +674,7 @@ inline StatusCode  GiGa::Assert
 {  
   StatusCode status = StatusCode::SUCCESS ;
   return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
-};
+}
 
 // ============================================================================
 /** assertion 
@@ -690,7 +690,7 @@ inline StatusCode  GiGa::Assert
 { 
   StatusCode status = StatusCode::SUCCESS ;
   return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
-};
+}
 
 
 #endif  ///<  GIGA_GIGASVC_H

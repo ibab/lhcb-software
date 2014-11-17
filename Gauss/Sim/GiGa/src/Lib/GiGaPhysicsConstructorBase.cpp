@@ -26,7 +26,7 @@ namespace GiGaPhysicsConstructorBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaPhysicsConstructorBase> s_Counter ;
 #endif   
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -50,7 +50,7 @@ GiGaPhysicsConstructorBase::GiGaPhysicsConstructorBase
   GiGaPhysicsConstructorBaseLocal::s_Counter.increment () ;
 #endif
   //
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -63,7 +63,7 @@ GiGaPhysicsConstructorBase::~GiGaPhysicsConstructorBase()
   GiGaPhysicsConstructorBaseLocal::s_Counter.decrement () ;
 #endif
   //
-};
+}
 // ============================================================================
 
 // ============================================================================

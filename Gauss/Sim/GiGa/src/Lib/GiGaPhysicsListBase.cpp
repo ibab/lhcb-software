@@ -32,7 +32,7 @@ namespace GiGaPhysicsListBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaPhysicsListBase> s_Counter ;
 #endif   
-};
+}
 // ============================================================================
 
 
@@ -65,7 +65,7 @@ GiGaPhysicsListBase::GiGaPhysicsListBase
   GiGaPhysicsListBaseLocal::s_Counter.increment () ;
 #endif
   //
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -78,7 +78,7 @@ GiGaPhysicsListBase::~GiGaPhysicsListBase()
   GiGaPhysicsListBaseLocal::s_Counter.decrement () ;
 #endif
   //
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -110,7 +110,7 @@ StatusCode   GiGaPhysicsListBase::initialize     ()
       << " \tPositron   : \t" << cutForPositron    () / mm << " mm" << endreq;
   //
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -121,7 +121,9 @@ StatusCode   GiGaPhysicsListBase::initialize     ()
  *  @return status code 
  */
 // ============================================================================
-StatusCode   GiGaPhysicsListBase::finalize () { return GiGaBase::finalize () ; }
+StatusCode   GiGaPhysicsListBase::finalize () { 
+  return GiGaBase::finalize () ; 
+}
 // ============================================================================
 
 // ============================================================================

@@ -55,7 +55,7 @@ IGiGaSvc&   GiGa::operator <<         ( G4PrimaryVertex * vertex   )
   ///
   return *this; 
   ///
-}; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -74,7 +74,7 @@ IGiGaSvc& GiGa::operator >> ( const G4Event*         & event        )
   StatusCode sc = retrieveTheEvent( event ) ; 
   Assert( sc.isSuccess(), "operator>>(G4Event*)" , sc );   
   return *this;
-}; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -95,7 +95,7 @@ IGiGaSvc& GiGa::operator >> ( G4HCofThisEvent*       & collections  )
   collections = ( 0 != event )  ? event->GetHCofThisEvent() : 0 ; 
   ///
   return *this;   
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -122,7 +122,7 @@ IGiGaSvc& GiGa::operator >> ( GiGaHitsByID& collection   )
     { collection.setHits( collections->GetHC( collection.id() ) ) ; }
   ///
   return *this ;  
-}; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -150,7 +150,7 @@ IGiGaSvc& GiGa::operator >> ( GiGaHitsByName & collection   )
   collection.setHits( col.hits() )  ;
   ///
   return *this ;  
-}; 
+}
 // ============================================================================
 
 // ============================================================================
@@ -171,7 +171,7 @@ IGiGaSvc& GiGa::operator >> ( G4TrajectoryContainer* & trajectories )
   trajectories = ( 0 != event ) ? event->GetTrajectoryContainer() : 0 ; 
   /// 
   return *this ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -192,7 +192,7 @@ StatusCode  GiGa::addPrimaryKinematics( G4PrimaryVertex  * vertex   )
   ___GIGA_CATCH_PRINT_AND_RETURN___(name(),std::string("addVtx"),msgSvc(),chronoSvc(),sc ) ; 
   ///
   return StatusCode::SUCCESS;  
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -213,7 +213,7 @@ StatusCode GiGa::retrieveEvent  ( const G4Event*          & event )
   ___GIGA_CATCH_PRINT_AND_RETURN___(name(),std::string("getEvt"),msgSvc(),chronoSvc(),sc ) ; 
   ///
   return StatusCode::SUCCESS ;  
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -234,7 +234,7 @@ StatusCode GiGa::retrieveHitCollections  ( G4HCofThisEvent* & collections  )
   ___GIGA_CATCH_PRINT_AND_RETURN___(name(),std::string("getHits"),msgSvc(),chronoSvc(),sc); 
   ///
   return StatusCode::SUCCESS; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -255,7 +255,7 @@ StatusCode GiGa::retrieveHitCollection  ( GiGaHitsByID & collection   )
   ___GIGA_CATCH_PRINT_AND_RETURN___(name(),std::string("getHits"),msgSvc(),chronoSvc(),sc); 
   ///
   return StatusCode::SUCCESS; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -276,7 +276,7 @@ StatusCode GiGa::retrieveHitCollection  ( GiGaHitsByName & collection   )
   ___GIGA_CATCH_PRINT_AND_RETURN___(name(),std::string("getHits"),msgSvc(),chronoSvc(),sc); 
   ///
   return StatusCode::SUCCESS; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -299,7 +299,7 @@ StatusCode GiGa::retrieveTrajectories( G4TrajectoryContainer*& trajectories)
   ___GIGA_CATCH_PRINT_AND_RETURN___(name(),std::string("getTrjs"),msgSvc(),chronoSvc(),sc); 
   ///
   return StatusCode::SUCCESS; 
-};
+}
 // ============================================================================
 
 // ============================================================================

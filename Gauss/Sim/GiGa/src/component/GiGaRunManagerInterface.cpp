@@ -64,7 +64,7 @@ StatusCode GiGaRunManager::initialize ()
   ///
   return Print("GiGaRunManager initialized successfully" , 
                StatusCode::SUCCESS                       , MSG::VERBOSE );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -84,7 +84,7 @@ StatusCode GiGaRunManager::finalize   ()
   m_runTools.clear();
   // 
   return GiGaBase::finalize();
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -119,7 +119,7 @@ StatusCode GiGaRunManager::declare( G4VUserPrimaryGeneratorAction  * obj )
     { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 
 // ============================================================================
 /** declare the Geant4 Detector Construction Action
@@ -155,7 +155,7 @@ StatusCode GiGaRunManager::declare( G4VUserDetectorConstruction    * obj )
     { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -183,7 +183,7 @@ StatusCode GiGaRunManager::declare( G4VPhysicalVolume              * obj )
     { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -218,7 +218,7 @@ StatusCode GiGaRunManager::declare( G4VUserPhysicsList             * obj )
     { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -251,7 +251,7 @@ StatusCode GiGaRunManager::declare( IGiGaGeoSrc                    * obj )
     { G4StateManager::GetStateManager()->SetNewState(G4State_PreInit); } 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -275,7 +275,7 @@ StatusCode GiGaRunManager::declare( G4UserRunAction                * obj )
   ///
   G4RunManager::SetUserAction( obj ); 
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -300,7 +300,7 @@ StatusCode GiGaRunManager::declare( G4UserEventAction              * obj )
   G4RunManager::SetUserAction( obj ); 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -325,7 +325,7 @@ StatusCode GiGaRunManager::declare( G4UserStackingAction           * obj )
   G4RunManager::SetUserAction( obj ); 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -350,7 +350,7 @@ StatusCode GiGaRunManager::declare( G4UserSteppingAction           * obj )
   G4RunManager::SetUserAction( obj ); 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -375,7 +375,7 @@ StatusCode GiGaRunManager::declare( G4UserTrackingAction           * obj )
   G4RunManager::SetUserAction( obj ); 
   ///
   return StatusCode::SUCCESS ; 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -400,7 +400,7 @@ StatusCode GiGaRunManager::declare( G4UIsession                    * obj     )
   ///
   return StatusCode::SUCCESS;
   ///
-};
+}
 // ============================================================================
 
 // ============================================================================

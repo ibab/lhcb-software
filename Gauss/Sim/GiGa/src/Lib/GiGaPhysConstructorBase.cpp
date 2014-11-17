@@ -30,7 +30,7 @@ namespace GiGaPhysConstructorBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaPhysConstructorBase> s_Counter ;
 #endif   
-};
+}
 
 // ============================================================================
 /** standard constructor
@@ -52,7 +52,7 @@ GiGaPhysConstructorBase::GiGaPhysConstructorBase
 #ifdef GIGA_DEBUG
   GiGaPhysConstructorBaseLocal::s_Counter.increment () ;
 #endif
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -63,7 +63,7 @@ GiGaPhysConstructorBase::~GiGaPhysConstructorBase()
 #ifdef GIGA_DEBUG
   GiGaPhysConstructorBaseLocal::s_Counter.decrement () ;
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -87,7 +87,7 @@ StatusCode GiGaPhysConstructorBase::initialize ()
   //
   return Print("GiGaPhysConstructorBase initialized succesfully" ,
                StatusCode::SUCCESS                        , MSG::VERBOSE );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -104,7 +104,7 @@ StatusCode GiGaPhysConstructorBase::finalize   ()
         StatusCode::SUCCESS             , MSG::VERBOSE );
   // finalze the base class 
   return GiGaPhysicsConstructorBase::finalize   (); 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -125,7 +125,7 @@ G4VPhysicsConstructor* GiGaPhysConstructorBase::physicsConstructor ()  const
   if( 0 == m_self ) 
     { Error("physicsConstructor(): invalid G4VPhysicsConstructor!") ; }
   return m_self ;
-};
+}
 // ============================================================================
 
 unsigned long GiGaPhysConstructorBase::release()
@@ -137,7 +137,7 @@ unsigned long GiGaPhysConstructorBase::release()
   }
   this -> GaudiTool::~GaudiTool() ;
   return 0 ;
-};
+}
 
 // ============================================================================
 // The END 

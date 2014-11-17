@@ -46,7 +46,7 @@ void GiGaRunManager::BeamOn( int         /* n_event   */ ,
     { Exception( "BeamOn()", Excp ); }
   catch( ... ) 
     { Exception( "BeamOn()"       ); }
-};
+}
 
 // ============================================================================
 // Initialize the geometry
@@ -80,7 +80,7 @@ void GiGaRunManager::InitializeGeometry()
   ///  
   DefineWorldVolume( root ) ; 
   G4RunManager::geometryInitialized = true;
-};
+}
 
 // ============================================================================
 // Initialize 
@@ -101,7 +101,7 @@ void GiGaRunManager::Initialize()
   catch( ... ) 
     { Exception( "GiGaRunManager::Initialize()"       ); }
   ///
-};
+}
 
 // ============================================================================
 // The End 

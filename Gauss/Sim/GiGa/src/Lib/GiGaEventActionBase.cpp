@@ -25,7 +25,7 @@ namespace GiGaEventActionBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaEventActionBase> s_Counter ;
 #endif   
-};
+}
 
 // ============================================================================
 /** standard  constructor
@@ -46,7 +46,7 @@ GiGaEventActionBase::GiGaEventActionBase
 #ifdef GIGA_DEBUG
   GiGaEventActionBaseLocal::s_Counter.increment () ;
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -57,7 +57,7 @@ GiGaEventActionBase::~GiGaEventActionBase()
 #ifdef GIGA_DEBUG
   GiGaEventActionBaseLocal::s_Counter.decrement () ;
 #endif 
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -77,7 +77,7 @@ StatusCode GiGaEventActionBase::initialize ()
   ///
   return Print("GiGaEventActionBase initialized succesfully" ,
                StatusCode::SUCCESS                           , MSG::VERBOSE );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -94,7 +94,7 @@ StatusCode GiGaEventActionBase::finalize   ()
         StatusCode::SUCCESS                , MSG::VERBOSE );
   // finalze the base class 
   return GiGaBase::finalize   (); 
-};
+}
 // ============================================================================
 
 // ============================================================================

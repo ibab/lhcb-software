@@ -202,7 +202,7 @@ inline GiGaTrajectory* gigaTrajectory( G4VTrajectory* g4 )
 {
   GiGaUtil::FastCast<G4VTrajectory,GiGaTrajectory> cast ;
   return cast( g4  );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -218,7 +218,7 @@ inline const GiGaTrajectory* gigaTrajectory( const G4VTrajectory* g4 )
 {
   GiGaUtil::FastCast<const G4VTrajectory,const GiGaTrajectory> cast ;
   return cast( g4  );
-};
+}
 // ============================================================================
 
 

@@ -253,9 +253,9 @@ namespace GiGaUtil
     stream << std::flush ;
 
     return stream ;
-  };
+  }
 
-};
+}
 
 // ============================================================================
 // The END 

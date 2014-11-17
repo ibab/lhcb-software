@@ -202,7 +202,7 @@ inline GiGaTrajectoryPoint* gigaTrajectoryPoint( G4TrajectoryPoint* g4 )
 {
   GiGaUtil::FastCast<G4TrajectoryPoint,GiGaTrajectoryPoint> cast ;
   return cast( g4 );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -218,7 +218,7 @@ inline GiGaTrajectoryPoint* gigaTrajectoryPoint( G4VTrajectoryPoint* g4 )
 {
   GiGaUtil::FastCast<G4VTrajectoryPoint,GiGaTrajectoryPoint> cast ;
   return cast( g4 );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -235,7 +235,7 @@ inline const GiGaTrajectoryPoint* gigaTrajectoryPoint
 {
   GiGaUtil::FastCast<const G4TrajectoryPoint,const GiGaTrajectoryPoint> cast ;
   return cast( g4 );
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -252,7 +252,7 @@ inline const GiGaTrajectoryPoint* gigaTrajectoryPoint
 {
   GiGaUtil::FastCast<const G4VTrajectoryPoint,const GiGaTrajectoryPoint> cast ;
   return cast( g4 );
-};
+}
 // ============================================================================
 
 

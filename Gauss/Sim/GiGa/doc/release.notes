@@ -6,6 +6,13 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+! 2014-11-17 - Gloria Corti
+ - Removed many ";" causing warnings. Almost all files had them.
+ - Removed redefinition of finite and isnan in GiGaTrajectiory.cpp causing
+   compilation errors. Since the code was there for a WIN32 compatibility 
+   remove it completely and replace the calls to the defined function directly
+   with the "C" function.
+
 !========================= GiGa v21r0 2014-02-02 ============================
 ! 2013-12-20 - Marco Clemencic
  - Removed obsolete file (not working with Gaudi >= v25).
