@@ -1,3 +1,7 @@
+2014-11-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* getpack: to not overwrite the toolchain of Geant4 (as it was already the case for Gaudi and Urania)
+
 2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/DataPkgEnvs: renamed *Environment.xml to *.xenv
