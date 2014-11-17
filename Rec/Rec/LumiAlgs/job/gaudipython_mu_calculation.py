@@ -22,7 +22,8 @@ DaVinci().Lumi = True # integrate the luminosity FSRs and print/store the result
 
 DaVinci().DataType = "2012"
 DaVinci().DDDBtag = 'dddb-20130929-1'
-DaVinci().CondDBtag = 'cond-20140425'
+DaVinci().CondDBtag = 'cond-20141002'
+DaVinci().DQFLAGStag = 'dq-20140822'
 
 ApplicationMgr().AppName = 'LumiTool'
 ApplicationMgr().OutputLevel = INFO
@@ -111,7 +112,7 @@ class myAnalysisAlgo(GaudiAlgo) :
                     if tool.muCounter(i,k) <= 50: continue # these are not useful for mu
                     norm = tool.muCounterNorm(i,k)
                     value = 0 if norm == 0 else tool.muCounterValue(i,k)/norm
-                    store[text]['filedata'][-1]['counters'][tool.muCounterName(i,k)] = {'key':k, 'norm':norm, 'value':value}
+                    store[text]['filedata'][-1]['counters'][tool.muCounterName(i,k)] = {'key':tool.muCounter(i,k), 'norm':norm, 'value':value}
                     print '      ', tool.muCounter(i,k), tool.muCounterName(i,k), norm, value, 
                 print
 
