@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-11-17 - Chris Jones
- - Add data/12Events_Strippng21Reco14_SlowEvents.dst that contains 12 events
+ - Add data/12Events_Stripping21Reco14_SlowEvents.dst that contains 12 events
    that caused significant CPU issues in Stripping21.
 
 !========================= QMTestFiles v1r1 2013-11-26 =========================
