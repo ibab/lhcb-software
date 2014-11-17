@@ -138,7 +138,7 @@ private:
 
   /// location of HLT muon-track-stubs
   std::string m_muonIDSuffix; 
-  StringProperty m_HltMuonTracksLocation;
+  std::string m_HltMuonTracksLocation;
   /// pointer to container of the HLT muon-track-stubs
   LHCb::Tracks* m_HLTmuonTracks;
 
