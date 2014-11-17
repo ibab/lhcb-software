@@ -7,7 +7,9 @@ gaudi_depends_on_subdirs(GaudiKernel
                          Online/UPI
                          Online/DIM)
 
-gaudi_install_headers(GaudiUPI)
+gaudi_add_library(GaudiUPI src/*.cpp
+                  PUBLIC_HEADERS GaudiUPI
+                  LINK_LIBRARIES GaudiKernel dim UPI)
 
-gaudi_add_module(GaudiUPI src/*.cpp
-                 LINK_LIBRARIES GaudiKernel dim UPI)
+gaudi_add_module(GaudiUPIComp components/*.cpp
+                 LINK_LIBRARIES GaudiUPI)
