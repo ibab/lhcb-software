@@ -74,11 +74,11 @@ class DsToPhiPiConf(RichConfigurableUser) :
             Ds2piPhi = CombineParticles(Ds2piPhiName)
             Ds2piPhi.DecayDescriptor = "[D_s+ -> pi+ phi(1020)]cc"
             Ds2piPhi.addTool( OfflineVertexFitter )
-            Ds2piPhi.VertexFitters.update( { "" : "OfflineVertexFitter"} )
+            Ds2piPhi.ParticleCombiners.update( { "" : "OfflineVertexFitter" } )
             Ds2piPhi.OfflineVertexFitter.useResonanceVertex = True
             Ds2piPhi.CombinationCut = "(ADAMASS('D_s+')<75*MeV)"
             Ds2piPhi.MotherCut = "(ADMASS('D_s+')<50*MeV) & (BPVDIRA>0.9999) & (BPVVDCHI2>85) & (MIPDV(PRIMARY)<0.1) &  (VFASPF(VCHI2) < 10)"
-            Ds2piPhi.DaughtersCuts = {"pi+"        :       "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
+            Ds2piPhi.DaughtersCuts = {"pi+" : "(PT>300*MeV) & (P>2*GeV) & (MIPDV(PRIMARY) >0.1) & (BPVIPCHI2() > 20)"}
             self.setOptions(Ds2piPhi)
             Ds2piPhiSel = Selection( Ds2piPhiName+'Sel',
                                      Algorithm = Ds2piPhi,
