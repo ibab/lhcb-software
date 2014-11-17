@@ -4,6 +4,10 @@
 ! Purpose     : Small data files used as input to QMTests
 !-----------------------------------------------------------------------------
 
+! 2014-11-17 - Chris Jones
+ - Add data/12Events_Strippng21Reco14_SlowEvents.dst that contains 12 events
+   that caused significant CPU issues in Stripping21.
+
 !========================= QMTestFiles v1r1 2013-11-26 =========================
 ! 2013-11-26 - Marco Cattaneo
  - Add data/136237_10ev_bug_svn164539.dst: 10 events from 2013 pA run 136237,
