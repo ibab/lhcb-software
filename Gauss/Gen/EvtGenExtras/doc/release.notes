@@ -4,6 +4,10 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2014-11-17 - Gloria Corti
+ - Fix compilation errors with --pedantic for missing std:: in front of
+   {i,o}fstream
+   
 !======================= EvtGenExtras v3r10 2013-12-02 =======================
 ! 2013-11-27 - William Sutcliffe
  - Fix in EvtLb2BaryonlnuFF for warning message.

@@ -246,13 +246,13 @@ void EvtDTohhhh::init(){
 	std::vector<std::string>::iterator it;
 	for (it = Directories.begin(); it != Directories.end(); it++)
 	{
-		ifstream inp;
-		ofstream out;
+    std::ifstream inp;
+    std::ofstream out;
 
     InputTextFile = *it + modelFile;
 
 		// Check if file exists by attempting to open it
-		inp.open(InputTextFile.c_str(), ifstream::in);
+		inp.open(InputTextFile.c_str(), std::ifstream::in);
 		inp.close();
 
 		// If it does not exist look in next directory
