@@ -21,10 +21,10 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from tempfile import mkdtemp
 
-script_version = '141111'
+script_version = '141118'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v8r1p1"
+lbscripts_version = "v8r2"
 compat_version = None
 line_size = 120
 #-----------------------------------------------------------------------------------
