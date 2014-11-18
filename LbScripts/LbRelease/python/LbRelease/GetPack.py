@@ -1013,10 +1013,8 @@ class GetPack(Script):
         # create a project Makefile for the checked out project (if not present)
         createProjectMakefile(os.path.join(proj[2], "Makefile"))
         if os.path.exists(os.path.join(proj[2], "CMakeLists.txt")):
-            # not that we overwrite projects usually have obsolete versions
-            overwrite_toolchain = self.project_name not in ('Gaudi', 'Urania', 'Geant4')
-            createToolchainFile(os.path.join(proj[2], 'toolchain.cmake'),
-                                overwrite=overwrite_toolchain)
+            # note that an existing toolchain will not be overwritten
+            createToolchainFile(os.path.join(proj[2], 'toolchain.cmake'))
         if self.options.recursive:
             # get the conatiner package too, etc.
             try:
