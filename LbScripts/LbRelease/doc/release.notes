@@ -1,5 +1,6 @@
 2014-11-18  Ben Couturier <Ben.Couturier@cern.ch>
 
+	* cmt/requirements: release of version v5r2
 	LBCORE-670: Fixed packager to work with LHCbDirac
 	* scripts/mkLCGCMTtarFromRPM
 	* python/LbRelease/LbYum/DependencyManager.py
