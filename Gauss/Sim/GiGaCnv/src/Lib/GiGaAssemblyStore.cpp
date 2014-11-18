@@ -33,7 +33,7 @@ GiGaAssemblyStore* GiGaAssemblyStore::store()
 {
   static GiGaAssemblyStore worldStore;
   return &worldStore ;
-};
+}
 
 // ============================================================================
 /** constructor
@@ -41,13 +41,15 @@ GiGaAssemblyStore* GiGaAssemblyStore::store()
 // ============================================================================
 GiGaAssemblyStore::GiGaAssemblyStore() 
   : m_assemblies()
-{};
+{}
 
 // ============================================================================
 /** destructor
  */
 // ============================================================================
-GiGaAssemblyStore::~GiGaAssemblyStore() { clear() ; };
+GiGaAssemblyStore::~GiGaAssemblyStore() { 
+  clear(); 
+}
 
 //=============================================================================
 /** get the assembly by name 
@@ -63,7 +65,7 @@ GiGaAssembly*  GiGaAssemblyStore::assembly
     { if( 0 != *a && (*a)->name() == Name ) { return *a ; } }
   ///
   return 0 ;
-};
+}
 
 // ============================================================================
 /** add assembly to the store 
@@ -77,7 +79,7 @@ StatusCode GiGaAssemblyStore::addAssembly
   if( 0 == a ) { return StatusCode::FAILURE ; }
   m_assemblies.push_back( a ) ;
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 /** remove assembly from the store 
@@ -94,7 +96,7 @@ StatusCode GiGaAssemblyStore::removeAssembly ( GiGaAssembly* a )
   if( m_assemblies.end() != it ) { m_assemblies.erase( it ) ; }
   //
   return StatusCode::SUCCESS;  
-};
+}
 
 // ============================================================================
 /** clear the store
@@ -111,7 +113,7 @@ StatusCode GiGaAssemblyStore::clear()
       if( 0 != a ) { delete a  ; }
     }
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 // The End 

@@ -47,7 +47,7 @@ G4LogicalVolume* GiGaVolumeUtils::findLVolume ( const std::string& Name )
     { if( Name == (*ivol)->GetName() ) { return *ivol ; } }    ///< RETURN !!!
   /// not found ?  
   return (G4LogicalVolume*) 0 ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -69,7 +69,7 @@ G4VPhysicalVolume* GiGaVolumeUtils::findPVolume ( const std::string& Name )
     { if( Name == (*ivol)->GetName() ) { return *ivol ; } }     ///< RETURN !!!
   /// not found ?
   return (G4VPhysicalVolume*) 0 ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -84,7 +84,7 @@ GiGaAssembly*    GiGaVolumeUtils::findLAssembly ( const std::string& Name )
   /// get the store instance 
   GiGaAssemblyStore* store = GiGaAssemblyStore::store();
   return 0 != store ? store->assembly( Name ) : (GiGaAssembly*) 0 ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -99,7 +99,7 @@ G4Region*          GiGaVolumeUtils::findRegion    ( const std::string& Name )
   G4RegionStore* store = G4RegionStore::GetInstance();
   if ( 0 == store ) { return 0 ; }
   return  store->GetRegion( Name) ;
-};
+}
 // ============================================================================
 
 

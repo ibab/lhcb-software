@@ -70,7 +70,7 @@
 // ============================================================================
 
 // Declaration of the Service Factory
-DECLARE_SERVICE_FACTORY( GiGaGeo );
+DECLARE_SERVICE_FACTORY( GiGaGeo )
 
 
 //=============================================================================
@@ -110,7 +110,7 @@ GiGaGeo::GiGaGeo( const std::string& serviceName,
 
   declareProperty( "GdmlReaders", m_gdmlReaderNames );
 
-};
+}
 
 //=============================================================================
 // Retrieve the pointer for G4 materials from G4MaterialTable,
@@ -147,7 +147,7 @@ G4Material* GiGaGeo::material( const std::string& Name ) {
   Error("Failed to find G4Material with name '" + Name + "'" );
 
   return 0;     
-};
+}
 
 //=============================================================================
 // Retrieve the pointer for G4 materials from G4MaterialTable,
@@ -158,7 +158,7 @@ G4Material* GiGaGeo::g4Material( const std::string& Name ) {
   Warning(" g4Material() is the obsolete method, use material()!");
   return material( Name );
 
-};
+}
 
 //=============================================================================
 // Retrive the pointer to converter volumes/assemblies
@@ -205,7 +205,7 @@ GiGaVolume GiGaGeo::volume( const std::string& Name ) {
   Error("Failed to find GiGaVolume with name '" + Name + "'");
   ///
   return GiGaVolume();
-};
+}
 
 
 //=============================================================================
@@ -217,7 +217,7 @@ G4LogicalVolume* GiGaGeo::g4LVolume( const std::string& Name )
   Warning(" g4LVolume() is the obsolete method, use volume()!");
   const GiGaVolume vol = volume( Name ) ;
   return vol.valid() ? vol.volume() : (G4LogicalVolume*) 0 ;
-};
+}
 
 
 //=============================================================================
@@ -345,7 +345,7 @@ G4VSolid*    GiGaGeo::solid ( const ISolid*      Sd     )
          "/" + Sd -> name ()         ) ;
   ///
   return 0;
-};
+}
 
 
 //=============================================================================
@@ -355,7 +355,7 @@ G4VSolid*    GiGaGeo::g4Solid( const ISolid* Sd )
 {
   Warning(" g4Solid() is the obsolete method, use solid()!");
   return solid( Sd ) ;
-};
+}
 
 //=============================================================================
 // convert (DetDesc) boolean solid into (Geant4) G4 solid object
@@ -444,7 +444,7 @@ G4VSolid*  GiGaGeo::g4BoolSolid( const SolidBoolean* Sd )
   g4total->SetName( Sd->name() ) ;
   ///
   return g4total;
-};
+}
 
 
 //=============================================================================
@@ -479,7 +479,7 @@ StatusCode GiGaGeo::initialize()
            << " GDMLReader tools" << endmsg; 
   }
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // standard service finalization method 
@@ -552,7 +552,7 @@ StatusCode GiGaGeo::finalize()
   
   // finalize the base class 
   return GiGaCnvSvcBase::finalize(); 
-};
+}
 
 //=============================================================================
 // Retrieve the pointer to top-level "world" volume,
@@ -632,7 +632,7 @@ G4VPhysicalVolume* GiGaGeo::world ()
   else { Warning("world():: Magnetic Field is not requested to be loaded "); }
   ///
   return m_worldPV ; 
-}; 
+}
 
 //=============================================================================
 // Retrieve the pointer to top-level "world" volume,
@@ -642,7 +642,7 @@ G4VPhysicalVolume* GiGaGeo::G4WorldPV()
 {  
   Warning(" G4WorldPV() is the obsolete method, use world()!");
   return world() ;  
-};
+}
 
 
 //=============================================================================
@@ -665,7 +665,7 @@ StatusCode GiGaGeo::createRep
                    + object->registry()->identifier() + "'" );}
   ///
   return cnv->createRep( object , address );
-};
+}
 
 //=============================================================================
 // Resolve the references of the converted object.
@@ -688,7 +688,7 @@ StatusCode GiGaGeo::fillRepRefs
                    + object->registry()->identifier() + "'" );}
   ///
   return cnv->fillRepRefs( address , object );
-};
+}
 
 
 //=============================================================================
@@ -710,7 +710,7 @@ StatusCode GiGaGeo::updateRep
                    + object->registry()->identifier() + "'" );}
   ///
   return cnv->updateRep( address , object );
-};
+}
 
 
 //=============================================================================
@@ -733,7 +733,7 @@ StatusCode GiGaGeo::updateRepRefs
                    + object->registry()->identifier() + "'" );}
   ///
   return cnv->updateRepRefs( address , object );
-};
+}
 
 
 //=============================================================================
@@ -765,7 +765,7 @@ StatusCode GiGaGeo::queryInterface( const InterfaceID& iid , void** ppI )
   ///
   return StatusCode::SUCCESS;  
   ///
-};
+}
 
 
 //=============================================================================
@@ -792,7 +792,7 @@ StatusCode   GiGaGeo::sensitive
   m_SDs.push_back( det );
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================
@@ -804,7 +804,7 @@ StatusCode GiGaGeo::sensDet
 {
   Warning(" sensDet() is the obsolete method, use sensitive()!");
   return sensitive( TypeNick , SD ) ;  
-};
+}
 
 //=============================================================================
 // Instantiate the Magnetic Field Object 
@@ -825,7 +825,7 @@ StatusCode   GiGaGeo::magnetic
   ///
   return StatusCode::SUCCESS;
   ///
-};
+}
 
 //=============================================================================
 // Instantiate the Magnetic Field Object 
@@ -850,7 +850,7 @@ StatusCode   GiGaGeo::fieldMgr
   ///
   return StatusCode::SUCCESS;
   ///
-};
+}
 
 
 //=============================================================================
@@ -862,7 +862,7 @@ StatusCode GiGaGeo::magField
 {
   Warning(" magField() is the obsolete method, use fieldMgr()!");
   return magnetic( TypeNick , MF ) ;  
-};
+}
 
 
 //=============================================================================
@@ -896,7 +896,7 @@ G4LogicalVolume* GiGaGeo::createG4LV
     }
   ///
   return G4LV ;
-};
+}
 
 
 

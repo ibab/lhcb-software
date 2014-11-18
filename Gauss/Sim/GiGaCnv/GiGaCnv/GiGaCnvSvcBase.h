@@ -218,7 +218,7 @@ protected:
            "' ] "                         ,
            MSG::VERBOSE   ,     StatusCode::SUCCESS  ) ;
     return aux ;
-  };
+  }
 
   /** the useful method for location of tools.
    *  for empty "name" delegates to another method
@@ -260,7 +260,7 @@ protected:
            "' is retrieved from IToolSvc " , MSG::DEBUG  , sc ) ;
     // return located tool
     return Tool ;
-  };
+  }
 
   /** the useful method for location of tools.
    *  @see IToolSvc
@@ -309,7 +309,7 @@ protected:
            "' is retrieved from IToolSvc " , MSG::DEBUG , sc ) ;
     // return located tool
     return Tool ;
-  };
+  }
 
   /** helpful method for error count and printout
    *  @param msg message to be printed
@@ -458,7 +458,7 @@ inline StatusCode  GiGaCnvSvcBase::Assert
 {
   StatusCode status = StatusCode::SUCCESS ;
   return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -475,7 +475,7 @@ inline StatusCode  GiGaCnvSvcBase::Assert
 {
   StatusCode status = StatusCode::SUCCESS ;
   return (assertion) ? status : Exception( msg , MSG::FATAL , sc ) ;
-};
+}
 // ============================================================================
 
 // ============================================================================

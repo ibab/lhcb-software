@@ -61,7 +61,7 @@ namespace GiGaVolumeUtils
    */
   G4Region*          findRegion    ( const std::string& Name );
 
-};
+}
 
 // ============================================================================
 // End

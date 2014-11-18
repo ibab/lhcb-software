@@ -32,7 +32,7 @@ namespace GiGaAssemblyLocal
    */
   static GiGaUtil::InstanceCounter<GiGaAssembly> s_Counter;
 #endif 
-};
+}
 
 
 // ============================================================================
@@ -47,7 +47,7 @@ GiGaAssembly::GiGaAssembly( const std::string& Name )
 #ifdef GIGA_DEBUG
   GiGaAssemblyLocal::s_Counter.increment();
 #endif
-};
+}
 
 // ============================================================================
 /** copy constructor 
@@ -62,7 +62,7 @@ GiGaAssembly::GiGaAssembly( const GiGaAssembly& right )
 #ifdef GIGA_DEBUG
   GiGaAssemblyLocal::s_Counter.increment();
 #endif
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -76,7 +76,7 @@ GiGaAssembly::~GiGaAssembly()
 #ifdef GIGA_DEBUG
   GiGaAssemblyLocal::s_Counter.decrement () ;
 #endif
-};
+}
 
 // ============================================================================
 /** add "volume" to the assembly. 
@@ -111,7 +111,7 @@ StatusCode  GiGaAssembly::addVolume( const GiGaVolumePair&  value ,
     }
   ///
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 // End 

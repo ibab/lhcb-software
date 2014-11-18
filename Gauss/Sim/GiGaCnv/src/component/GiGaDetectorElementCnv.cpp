@@ -40,7 +40,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Converter Factory
-DECLARE_CONVERTER_FACTORY( GiGaDetectorElementCnv );
+DECLARE_CONVERTER_FACTORY( GiGaDetectorElementCnv )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -61,14 +61,16 @@ GiGaDetectorElementCnv::~GiGaDetectorElementCnv(){}
 //=============================================================================
 // Class ID
 //=============================================================================
-const CLID&         GiGaDetectorElementCnv::classID     () 
-{ return CLID_DetectorElement ; }
+const CLID&         GiGaDetectorElementCnv::classID() { 
+  return CLID_DetectorElement ; 
+}
 
 //=============================================================================
 // StorageType 
 //=============================================================================
-unsigned char GiGaDetectorElementCnv::storageType () 
-{ return GiGaGeom_StorageType ; } 
+unsigned char GiGaDetectorElementCnv::storageType () { 
+  return GiGaGeom_StorageType ; 
+} 
 
 //=============================================================================
 // create the representation

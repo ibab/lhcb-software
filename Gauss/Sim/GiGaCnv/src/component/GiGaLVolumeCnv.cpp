@@ -41,7 +41,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the converter Factory
-DECLARE_CONVERTER_FACTORY( GiGaLVolumeCnv );
+DECLARE_CONVERTER_FACTORY( GiGaLVolumeCnv )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -52,12 +52,12 @@ GiGaLVolumeCnv::GiGaLVolumeCnv( ISvcLocator* Locator )
 {
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
   setConverterName              ( "GiGaLVCnv"              ) ; 
-}; 
+}
 
 //=============================================================================
 // Destructor
 //=============================================================================
-GiGaLVolumeCnv::~GiGaLVolumeCnv(){};
+GiGaLVolumeCnv::~GiGaLVolumeCnv(){}
 
 //=============================================================================
 // Class ID
@@ -69,8 +69,9 @@ const CLID& GiGaLVolumeCnv::classID() {
 //=============================================================================
 // StorageType
 //=============================================================================
-unsigned char GiGaLVolumeCnv::storageType () 
-{ return GiGaGeom_StorageType ; } 
+unsigned char GiGaLVolumeCnv::storageType () { 
+  return GiGaGeom_StorageType ; 
+} 
 
 //=============================================================================
 // Create the representation
@@ -107,7 +108,7 @@ StatusCode GiGaLVolumeCnv::createRep( DataObject* Object,
 
   return updateRep( Object , Address ) ; 
 
-}; 
+}
 
 //=============================================================================
 // Update the representation
@@ -229,7 +230,7 @@ StatusCode GiGaLVolumeCnv::updateRep( DataObject* Object,
   // If it gets here it means there was a problem !
   return Error("UpdateRep:: failure in conversion of " + lv->name() );
 
-};
+}
 
 //=============================================================================
 // Provide matrix transformation of physical volume taking into account

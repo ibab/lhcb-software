@@ -54,7 +54,7 @@ inline StatusCode AddTabulatedProperty
   delete [] vy ;
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 
 /** @function AddTabulatedProperties AddTabnulatedProperties.h 
@@ -85,7 +85,7 @@ inline StatusCode AddTabulatedProperties
     }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 // The End 

@@ -28,10 +28,10 @@
  */
 
 // ============================================================================
-IGiGaCnvSvc       ::   ~IGiGaCnvSvc        ()  {} ;
-IGiGaGeomCnvSvc   ::   ~IGiGaGeomCnvSvc    ()  {} ;
-IGiGaHitsCnvSvc   ::   ~IGiGaHitsCnvSvc    ()  {} ;
-IGiGaKineCnvSvc   ::   ~IGiGaKineCnvSvc    ()  {} ;
+IGiGaCnvSvc       ::   ~IGiGaCnvSvc        ()  {}
+IGiGaGeomCnvSvc   ::   ~IGiGaGeomCnvSvc    ()  {}
+IGiGaHitsCnvSvc   ::   ~IGiGaHitsCnvSvc    ()  {}
+IGiGaKineCnvSvc   ::   ~IGiGaKineCnvSvc    ()  {}
 // ============================================================================
 
 // ============================================================================

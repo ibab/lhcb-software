@@ -45,7 +45,7 @@ namespace GiGaCnvSvcBaseLocal
    */
   static GiGaUtil::InstanceCounter<GiGaCnvSvcBase> s_Counter ;
 #endif   
-};
+}
 
 //=============================================================================
 // standard constructor
@@ -78,7 +78,7 @@ GiGaCnvSvcBase::GiGaCnvSvcBase( const std::string&   ServiceName       ,
 #ifdef GIGA_DEBUG
   GiGaCnvSvcBaseLocal::s_Counter.increment () ;
 #endif
-};
+}
 
 //=============================================================================
 // virtual destructor 
@@ -88,7 +88,7 @@ GiGaCnvSvcBase::~GiGaCnvSvcBase()
 #ifdef GIGA_DEBUG
   GiGaCnvSvcBaseLocal::s_Counter.decrement () ;
 #endif  
-};
+}
 
 //=============================================================================
 // service initialization 
@@ -217,7 +217,7 @@ StatusCode GiGaCnvSvcBase::initialize()
   return Print("GiGaCnvSvcBase initialized successfully" , 
                MSG::VERBOSE , StatusCode::SUCCESS ) ;
   ///
-};
+}
 
 
 // ============================================================================
@@ -281,7 +281,7 @@ StatusCode GiGaCnvSvcBase::finalize()
   m_exceptions  .clear();
   ///
   return ConversionSvc::finalize() ;
-};
+}
 
 // ============================================================================
 /** Retrieve the interface
@@ -315,7 +315,7 @@ StatusCode GiGaCnvSvcBase::queryInterface( const InterfaceID& iid , void** ppI )
   addRef();
   ///
   return StatusCode::SUCCESS;  
-};
+}
 
 // ============================================================================
 /** declare the object 
@@ -327,14 +327,14 @@ StatusCode GiGaCnvSvcBase::declareObject( const GiGaLeaf& leaf )
 {
   m_leaves.push_back( leaf );
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 /** handle the incident
  *  @param reference to incident 
  */
 // ============================================================================
-void GiGaCnvSvcBase::handle ( const Incident& /* inc */ ) {};
+void GiGaCnvSvcBase::handle ( const Incident& /* inc */ ) {}
 // ============================================================================
 
 // ============================================================================
@@ -352,7 +352,7 @@ StatusCode GiGaCnvSvcBase::Error
   // increase counter of errrors 
   m_errors [ Message ] += 1 ;
   return  Print( Message , MSG::ERROR  , Status  ) ; 
-};  
+}
 
 // ============================================================================
 /** print warning message and return status code
@@ -369,7 +369,7 @@ StatusCode GiGaCnvSvcBase::Warning
   // increase counter of errrors 
   m_warnings [ Message ] += 1 ;
   return  Print( Message , MSG::WARNING , Status ) ; 
-};
+}
 
 // ============================================================================
 /** print the  message and return status code
@@ -387,7 +387,7 @@ StatusCode GiGaCnvSvcBase::Print
   MsgStream log( msgSvc() , name() ); 
   log << level << Message << endreq   ; 
   return  Status; 
-};
+}
 
 // ============================================================================
 /** re-throw the exception 
@@ -409,7 +409,7 @@ StatusCode GiGaCnvSvcBase::Exception
   m_exceptions [ Message ] += 1 ;
   throw GiGaException( name() + "::" + Message , Excp , Status );
   return  Status;
-};
+}
 
 // ============================================================================
 /** re-throw the exception 
@@ -432,7 +432,7 @@ StatusCode GiGaCnvSvcBase::Exception
   throw GiGaException( name() + "::" + Message + " (" + 
                        Excp.what() + ")", Status );
   return  Status;
-};
+}
 
 // ============================================================================
 /** throw the exception 
@@ -452,7 +452,7 @@ StatusCode GiGaCnvSvcBase::Exception
   m_exceptions [ Message ] += 1 ;
   throw GiGaException( name() + "::" + Message , Status );
   return  Status;
-};
+}
 
 // ============================================================================
 /** register all declared leaves 
@@ -489,10 +489,10 @@ StatusCode GiGaCnvSvcBase::registerGiGaLeaves()
       Print( " The leaf '" + leaf->path()     + 
              "' is registered successfully "  , 
              MSG::DEBUG , StatusCode::SUCCESS ) ;
-    };
+    }
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 /** Create a Generic address using explicit arguments to 

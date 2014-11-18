@@ -32,7 +32,7 @@
 /** factory business
  */
 // ============================================================================
-DECLARE_CONVERTER_FACTORY( GiGaLAssemblyCnv );
+DECLARE_CONVERTER_FACTORY( GiGaLAssemblyCnv )
 
 // ============================================================================
 /** standard constructor 
@@ -45,13 +45,13 @@ GiGaLAssemblyCnv::GiGaLAssemblyCnv( ISvcLocator* Locator )
 {
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
   setConverterName              ( "GiGaLACnv"              ) ; 
-}; 
+} 
 
 // ============================================================================
 /** destructor
  */
 // ============================================================================
-GiGaLAssemblyCnv::~GiGaLAssemblyCnv(){}; 
+GiGaLAssemblyCnv::~GiGaLAssemblyCnv(){}
 
 // ============================================================================
 /** Class ID
@@ -103,7 +103,7 @@ StatusCode GiGaLAssemblyCnv::createRep
     { return Error(" createRep::Error address is not created"       ) ; }
   ///
   return updateRep( object , address );
-};
+}
   
 // ============================================================================
 /** update the representation
@@ -155,7 +155,7 @@ StatusCode GiGaLAssemblyCnv::updateRep
   ///
   return StatusCode::SUCCESS ;
   ///
-};
+}
 
 // ============================================================================
 // The End 

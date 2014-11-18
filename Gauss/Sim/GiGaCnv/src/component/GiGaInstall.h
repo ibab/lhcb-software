@@ -100,10 +100,8 @@ namespace GiGaInstall
     G4LogicalVolume*      mother ,
     MsgStream&            msg    ) ;
 
-}; ///< end of namespace GiGaInstall
+} ///< end of namespace GiGaInstall
 
-// ============================================================================
-// The End
-// ============================================================================
+
 #endif // GIGACNV_GIGAINSTALL_H
 // ============================================================================

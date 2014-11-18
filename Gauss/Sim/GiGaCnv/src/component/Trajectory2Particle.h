@@ -77,7 +77,7 @@ namespace GiGaCnvFunctors
     LHCb::IParticlePropertySvc*       m_ppSvc ; ///< particle property service
     
   };
-};
+}
 
 // ============================================================================
 #endif ///< GIGACNV_TRAJECTORY2PARTICLE_H

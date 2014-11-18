@@ -34,7 +34,7 @@
 /** Factory stuff 
  */
 // ============================================================================
-DECLARE_CONVERTER_FACTORY( GiGaCatalogCnv );
+DECLARE_CONVERTER_FACTORY( GiGaCatalogCnv )
 
 // ============================================================================
 /** Standard Constructor
@@ -46,39 +46,46 @@ GiGaCatalogCnv::GiGaCatalogCnv( ISvcLocator* Locator )
 {
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
   setConverterName              ( "GiGaDirCnv"             ) ;
-}; 
+}
 
 // ============================================================================
 /** destructor, virtual and protected 
  */ 
 // ============================================================================
-GiGaCatalogCnv::~GiGaCatalogCnv(){}; 
+GiGaCatalogCnv::~GiGaCatalogCnv(){}
 
 // ============================================================================
 // Class ID
 // ============================================================================
-const CLID&  GiGaCatalogCnv::classID () { return DataObject::classID() ; }
+const CLID&  GiGaCatalogCnv::classID () { 
+  return DataObject::classID() ; 
+}
 
 // ============================================================================
 // StorageType
 // ============================================================================
 //const unsigned char GiGaCatalogCnv::storageType () 
-long GiGaCatalogCnv::storageType () 
-{ return GiGaGeom_StorageType; } 
+long GiGaCatalogCnv::storageType (){ 
+  return GiGaGeom_StorageType; 
+} 
 
 //=============================================================================
 /** initialize the converter 
  *  @return status code
  */
 //=============================================================================
-StatusCode GiGaCatalogCnv::initialize() { return GiGaCnvBase::initialize() ; }
+StatusCode GiGaCatalogCnv::initialize() { 
+  return GiGaCnvBase::initialize() ; 
+}
 
 //=============================================================================
 /** finalize  the converter 
  *  @return status code
  */
 //=============================================================================
-StatusCode GiGaCatalogCnv::finalize  () { return GiGaCnvBase::finalize  () ; }
+StatusCode GiGaCatalogCnv::finalize  () { 
+  return GiGaCnvBase::finalize  () ; 
+}
 
 // ============================================================================
 /** create the representation of the Object 
@@ -111,7 +118,7 @@ StatusCode GiGaCatalogCnv::createRep
   ///
   return updateRep( Object , Address ) ;
   ///
-};
+}
 
 // ============================================================================
 /** update the representation of Object 

@@ -39,7 +39,7 @@ GiGaLeaf::GiGaLeaf( const std::string& path  ,
   , m_ipars ( ipars )
 {      
     if(m_pars.size()==1) { m_pars.push_back(""); };
-};
+}
 
 // ============================================================================
 /** destructor
@@ -49,7 +49,7 @@ GiGaLeaf::~GiGaLeaf()
 {
   m_pars  .clear() ;
   m_ipars .clear() ;
-};
+}
 
 // ============================================================================
 // End 

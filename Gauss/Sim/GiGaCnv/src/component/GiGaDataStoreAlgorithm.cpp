@@ -42,7 +42,7 @@
 /** Declaration of the Algorithm Factory
  */
 // ============================================================================
-DECLARE_ALGORITHM_FACTORY( GiGaDataStoreAlgorithm );
+DECLARE_ALGORITHM_FACTORY( GiGaDataStoreAlgorithm )
 
 
 // ============================================================================
@@ -61,14 +61,14 @@ GiGaDataStoreAlgorithm::GiGaDataStoreAlgorithm
   m_names.push_back( IGiGaCnvSvcLocation::Kine );
   m_names.push_back( IGiGaCnvSvcLocation::Hits );
   declareProperty( "ConversionServices" , m_names );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor
 // ============================================================================
-GiGaDataStoreAlgorithm::~GiGaDataStoreAlgorithm() {};
-// ============================================================================
+GiGaDataStoreAlgorithm::~GiGaDataStoreAlgorithm() {}
+
 
 // ============================================================================
 /** standard inititialization method 
@@ -90,8 +90,8 @@ StatusCode GiGaDataStoreAlgorithm::initialize()
   };
   ///
   return StatusCode::SUCCESS;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** standard execution method 
@@ -110,8 +110,7 @@ StatusCode GiGaDataStoreAlgorithm::execute()
     { return Error ( " Could not register GiGa leaves!", sc ) ; } 
   }
   return StatusCode::SUCCESS;
-};
-// ============================================================================
+}
 
 
 

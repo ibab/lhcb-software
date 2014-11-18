@@ -90,7 +90,7 @@ namespace GiGaCnvBaseLocal {
    */
   static Counter s_FinalizeCounter ( " Initialize/Finalize (mis)balance " ) ;
 
-};
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -125,7 +125,7 @@ GiGaCnvBase::GiGaCnvBase
 {
   GiGaCnvBaseLocal::s_Counter.increment () ;
   GiGaCnvBaseLocal::s_InstanceCounter.increment ( m_local ) ;
-};
+}
 
 //=============================================================================
 // Destructor 
@@ -134,7 +134,7 @@ GiGaCnvBase::~GiGaCnvBase()
 {
   GiGaCnvBaseLocal::s_Counter.decrement () ;
   GiGaCnvBaseLocal::s_InstanceCounter.decrement ( m_local ) ;
-};
+}
 
 //=============================================================================
 // (re)-throw exception and print error message 
@@ -150,7 +150,7 @@ StatusCode GiGaCnvBase::Exception
   m_exceptions [ Message ] += 1 ;
   throw GiGaException( name() + "::" + Message , Excp , Status );
   return  Status;
-};
+}
 
 //=============================================================================
 // (re)-throw exception and print error message 
@@ -167,7 +167,7 @@ StatusCode GiGaCnvBase::Exception
   throw GiGaException( name() + "::" + Message + " (" + 
                        Excp.what() + ")", Status );
   return  Status;
-};
+}
 
 //=============================================================================
 // throw exception and print error message 
@@ -182,7 +182,7 @@ StatusCode GiGaCnvBase::Exception
   m_exceptions [ Message ] += 1 ;
   throw GiGaException( name() + "::" + Message , Status );
   return  Status;
-};
+}
 
 //=============================================================================
 // print and return the error
@@ -194,7 +194,7 @@ StatusCode GiGaCnvBase::Error
 {  
   // increase local counter of errors  
   return ( ++m_errors[msg] < mx ) ? Print( msg , st , MSG::ERROR ) : st ;
-};  
+}  
 
 //=============================================================================
 // print warning message and return status code
@@ -206,7 +206,7 @@ StatusCode GiGaCnvBase::Warning
 {
   // increase local counter of errors  
   return ( ++m_warnings[msg] < mx ) ? Print( msg , st , MSG::WARNING ) : st ;
-};
+}
 
 //=============================================================================
 // print the  message and return status code
@@ -219,7 +219,7 @@ StatusCode GiGaCnvBase::Print
   MsgStream log( msgSvc() , name() ); 
   log << level << Message << endreq   ; 
   return  Status; 
-};
+}
 
 //=============================================================================
 // initialization
@@ -310,7 +310,7 @@ StatusCode GiGaCnvBase::initialize ()
   GiGaCnvBaseLocal::s_FinalizeCounter.increment ( m_local ) ;
   
   return StatusCode::SUCCESS ; 
-};
+}
 
 //=============================================================================
 // finalization 
@@ -379,7 +379,7 @@ StatusCode GiGaCnvBase::finalize ()
   //
   return Converter::finalize() ; 
   ///
-};
+}
 
 //=============================================================================
 // declare the object to conversion service 
@@ -388,17 +388,6 @@ StatusCode GiGaCnvBase::declareObject( const GiGaLeaf& leaf )
 { 
   m_leaves.push_back( leaf );
   return StatusCode::SUCCESS; 
-};
+}
 
 //=============================================================================
-
-
-
-
-
-
-
-
-
-
-

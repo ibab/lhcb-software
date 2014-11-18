@@ -35,7 +35,7 @@
 
 namespace LHCb {
   class MCParticle ;
-};
+}
 
 /** @class GiGaPrimaryParticleInformation
  *  
@@ -139,8 +139,8 @@ gigaPrimaryParticleInformation
     GiGaPrimaryParticleInformation    
     >                                 cast;
   return cast( info );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** simple function for safe/fast casting
@@ -160,12 +160,12 @@ gigaPrimaryParticleInformation
     const GiGaPrimaryParticleInformation
     >                                         cast;
   return cast( info );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 
 // ============================================================================
 #endif // GIGACNV_GIGAPRIMARYPARTICLEINFORMATION_H
-// ============================================================================
+
 

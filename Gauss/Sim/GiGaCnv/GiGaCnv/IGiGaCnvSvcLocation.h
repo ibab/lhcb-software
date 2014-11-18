@@ -22,7 +22,7 @@ namespace IGiGaCnvSvcLocation
   const std::string Geo      ( "GiGaGeo"         ) ;
   const std::string Kine     ( "GiGaKine"        ) ;  
   const std::string Hits     ( "GiGaHits"        ) ;
-};
+}
 
 // ============================================================================
 // The END 

@@ -20,7 +20,7 @@
 #include "AddTabulatedProperties.h"
 #include "GiGaMixtureCnv.h" 
 
-DECLARE_CONVERTER_FACTORY( GiGaMixtureCnv );
+DECLARE_CONVERTER_FACTORY( GiGaMixtureCnv )
 
 /// constructor 
 GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator ) 
@@ -29,7 +29,7 @@ GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator )
 {
   setNameOfGiGaConversionService( IGiGaCnvSvcLocation::Geo ) ; 
   setConverterName              ( "GiGaMixtureCnv"         ) ;
-};
+}
 
 /// destructor 
 GiGaMixtureCnv::~GiGaMixtureCnv(){}; 
@@ -68,7 +68,7 @@ StatusCode GiGaMixtureCnv::createRep
   ///
   return updateRep( object , address ) ; 
   /// 
-}; 
+}
 
 StatusCode GiGaMixtureCnv::updateRep
 ( DataObject*         object  , 
@@ -165,7 +165,7 @@ StatusCode GiGaMixtureCnv::updateRep
   ///
   return StatusCode::SUCCESS; 
   /// 
-}; 
+};
 
 
 

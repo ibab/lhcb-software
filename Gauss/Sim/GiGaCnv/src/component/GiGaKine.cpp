@@ -28,7 +28,7 @@
 // ============================================================================
 /// service factory 
 // ============================================================================
-DECLARE_SERVICE_FACTORY( GiGaKine );
+DECLARE_SERVICE_FACTORY( GiGaKine )
 
 // ============================================================================
 /** standard constructor
@@ -50,12 +50,12 @@ GiGaKine::GiGaKine( const std::string&   ServiceName          ,
   ///
   declareProperty("ParticlePropertyService" , m_ppSvcName );
   ///
-};
+}
 
 // ============================================================================
 /// virtual destructor
 // ============================================================================
-GiGaKine::~GiGaKine(){};
+GiGaKine::~GiGaKine(){}
 
 // ============================================================================
 /** initialization 
@@ -75,7 +75,7 @@ StatusCode GiGaKine::initialize()
     { return Error("IParticlePropertySvc* points to NULL!");}
   ///
   return StatusCode::SUCCESS;
-};  
+} 
 
 // ============================================================================
 /** finalization 
@@ -90,7 +90,7 @@ StatusCode GiGaKine::finalize()
   if( 0 != ppSvc() ) { ppSvc()->release() ; m_ppSvc = 0 ; }
   ///
   return GiGaCnvSvcBase::finalize(); 
-};  
+}  
 
 // ============================================================================
 /** query the interface
@@ -123,7 +123,7 @@ StatusCode GiGaKine::queryInterface( const InterfaceID& ID ,
   addRef();
   ///
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 

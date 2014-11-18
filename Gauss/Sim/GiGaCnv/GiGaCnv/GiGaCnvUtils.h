@@ -68,7 +68,7 @@ namespace  GiGaCnvUtils
     registry->setAddress( address ) ;
     /// fill references 
     return cnvsvc->fillRepRefs( registry->address() , object );
-  };
+  }
   
   /** @function createReps 
    * 
@@ -112,7 +112,7 @@ namespace  GiGaCnvUtils
       }
     /// 
     return StatusCode::SUCCESS ;
-  };
+  }
 
   /** @function parent
    *  
@@ -133,7 +133,7 @@ namespace  GiGaCnvUtils
     IRegistry* reg = 0 ;
     StatusCode sc = manager->objectParent( registry , reg );
     return sc.isSuccess() ? reg : (IRegistry*) 0 ;
-  };
+  }
   
   /** @function parent
    *  
@@ -154,7 +154,7 @@ namespace  GiGaCnvUtils
       ( 0 == registry ) ? (IRegistry*) 0 :
       ( 0 == provider ) ? (IRegistry*) 0 :
       parent( registry , SmartIF<IDataManagerSvc>( provider ) );
-  };
+  }
   
   /** @function parent
    *  
@@ -171,9 +171,9 @@ namespace  GiGaCnvUtils
     return 
       ( 0 == registry ) ? (IRegistry*) 0 : 
       parent( registry  , registry->dataSvc() ) ;  
-  };
+  }
   
-}; /// end of namespace GiGaCnvUtils
+} /// end of namespace GiGaCnvUtils
 
 // ============================================================================
 // End 
