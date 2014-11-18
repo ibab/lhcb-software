@@ -21,30 +21,30 @@
 //=============================================================================
 
 EvtRareLbToLllFF::FormFactorDependence::FormFactorDependence()  : 
-  a0_( 0 ) , a2_( 0 ), a4_( 0 ), al_( 0 ), ap_( 0 ) {} ;
+  a0_( 0 ) , a2_( 0 ), a4_( 0 ), al_( 0 ), ap_( 0 ) {} 
 
 EvtRareLbToLllFF::FormFactorDependence::FormFactorDependence( const double al, 
                                                              const double ap ) :
-  a0_( 0 ) , a2_( 0 ), a4_( 0 ), al_( al ), ap_( ap ) {} ;
+  a0_( 0 ) , a2_( 0 ), a4_( 0 ), al_( al ), ap_( ap ) {} 
 
 EvtRareLbToLllFF::FormFactorDependence::FormFactorDependence( const double a0, 
                                                              const double a2, 
                                                              const double a4, 
                                                              const double al, 
                                                              const double ap ) : 
-  a0_( a0 ) , a2_( a2 ), a4_( a4 ), al_( al ), ap_( ap ) {} ;
+  a0_( a0 ) , a2_( a2 ), a4_( a4 ), al_( al ), ap_( ap ) {} 
 
  EvtRareLbToLllFF::FormFactorDependence::FormFactorDependence( const  EvtRareLbToLllFF::FormFactorDependence& other ) : 
-   a0_( other.a0_ ), a2_( other.a2_ ), a4_( other.a4_ ), al_( other.al_ ), ap_( other.ap_ ){} ;
+   a0_( other.a0_ ), a2_( other.a2_ ), a4_( other.a4_ ), al_( other.al_ ), ap_( other.ap_ ){} 
 
 
 EvtRareLbToLllFF::FormFactorDependence* EvtRareLbToLllFF::FormFactorDependence::clone() const {
   return new  EvtRareLbToLllFF::FormFactorDependence( a0_, a2_, a4_, al_, ap_ );
 }
 
-EvtRareLbToLllFF::FormFactorSet::FormFactorSet(){};
+EvtRareLbToLllFF::FormFactorSet::FormFactorSet(){}
 
-EvtRareLbToLllFF::FormFactorSet::~FormFactorSet(){};
+EvtRareLbToLllFF::FormFactorSet::~FormFactorSet(){}
 
 EvtRareLbToLllFF::FormFactorSet::FormFactorSet( const EvtRareLbToLllFF::FormFactorSet& other ) : 
   F1( other.F1 ), F2( other.F2 ), 
@@ -53,7 +53,7 @@ EvtRareLbToLllFF::FormFactorSet::FormFactorSet( const EvtRareLbToLllFF::FormFact
   G3( other.G3 ), G4( other.G4 ),
   H1( other.H1 ), H2( other.H2 ), 
   H3( other.H3 ), H4( other.H4 ), 
-  H5( other.H5 ), H6( other.H6 ) {};
+  H5( other.H5 ), H6( other.H6 ) {}
 
 void EvtRareLbToLllFF::FormFactorDependence::param( const double al, 
                                                    const double ap )
@@ -76,7 +76,7 @@ void EvtRareLbToLllFF::FormFactorDependence::param( const double a0,
 }
 
 EvtRareLbToLllFF::EvtRareLbToLllFF() : EvtRareLbToLllFFBase()  
-  {};
+  {}
 
 
 void EvtRareLbToLllFF::init()
@@ -121,7 +121,7 @@ void EvtRareLbToLllFF::init()
   FFMap_[ EvtPDL::getId("anti-Lambda(1520)0").getId() ] = L1520;
 
   report(INFO,"EvtGen") << " EvtRareLbToLll is using form factors from arXiv:1108.6129 " << std::endl;
-};
+}
 
 //=============================================================================
 // Destructor
@@ -137,7 +137,7 @@ EvtRareLbToLllFF::~EvtRareLbToLllFF() {
   }
   
   FFMap_.clear();
-};
+}
 
 //=============================================================================
 

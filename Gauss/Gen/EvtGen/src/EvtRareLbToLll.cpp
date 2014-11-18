@@ -41,7 +41,7 @@
 #include "EvtGenBase/EvtPDL.hh"
 
 
-EvtRareLbToLll::EvtRareLbToLll() : m_maxProbability( 0 ), ffmodel_( 0 ), wcmodel_( 0 ) {} ;
+EvtRareLbToLll::EvtRareLbToLll() : m_maxProbability( 0 ), ffmodel_( 0 ), wcmodel_( 0 ) {} 
 
 EvtRareLbToLll::~EvtRareLbToLll() {
   if ( wcmodel_ ) delete wcmodel_;

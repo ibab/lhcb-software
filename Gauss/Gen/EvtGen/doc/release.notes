@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-18 - Michal Kreps
+  - Removing semicolons from wrong places to clear warnings when compiled
+    with -pedantic option.
+
 ! 2014-10-31 - Michal Kreps
   - Fix calculation of q2 in FF models for Lb --> L transition.
   - Fix some typos in calculations of FF from Gutsche et al. (1301.3737).

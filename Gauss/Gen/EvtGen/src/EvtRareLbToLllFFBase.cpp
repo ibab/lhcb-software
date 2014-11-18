@@ -24,7 +24,7 @@ EvtRareLbToLllFFBase::EvtRareLbToLllFFBase() :
             "Lambda(1520)0",
             "anti-Lambda(1520)0" ,
             "Lambda(1600)0",
-            "anti-Lambda(1600)0" )  {} ;
+            "anti-Lambda(1600)0" )  {} 
 
 bool EvtRareLbToLllFFBase::isNatural( EvtParticle* lambda ) 
 {

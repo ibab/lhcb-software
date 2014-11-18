@@ -24,7 +24,7 @@
 
 
 EvtRareLbToLllFFlQCD::EvtRareLbToLllFFlQCD() : EvtRareLbToLllFFBase()  
-  {};
+  {}
 
 
 void EvtRareLbToLllFFlQCD::init()
@@ -45,7 +45,7 @@ void EvtRareLbToLllFFlQCD::init()
   csigma = 1-alphaS/EvtConst::pi*(4./3+5./3*log(mu/mb));
 
   report(INFO,"EvtGen") << " EvtRareLbToLll is using form factors from arXiv:1212.4827 " << std::endl;
-};
+}
 
 //=============================================================================
 // Destructor
@@ -53,7 +53,7 @@ void EvtRareLbToLllFFlQCD::init()
 
 EvtRareLbToLllFFlQCD::~EvtRareLbToLllFFlQCD() {
   
-};
+}
 
 //=============================================================================
 

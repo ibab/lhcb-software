@@ -22,7 +22,7 @@
 
 
 EvtRareLbToLllFFGutsche::EvtRareLbToLllFFGutsche() : EvtRareLbToLllFFBase()  
-  {};
+  {}
 
 
 void EvtRareLbToLllFFGutsche::init()
@@ -68,7 +68,7 @@ void EvtRareLbToLllFFGutsche::init()
   fTAconsts[2][2] = 0;
 
   report(INFO,"EvtGen") << " EvtRareLbToLll is using form factors from arXiv:1301.3737 " << std::endl;
-};
+}
 
 //=============================================================================
 // Destructor
@@ -76,7 +76,7 @@ void EvtRareLbToLllFFGutsche::init()
 
 EvtRareLbToLllFFGutsche::~EvtRareLbToLllFFGutsche() {
   
-};
+}
 
 //=============================================================================
 
@@ -138,11 +138,11 @@ void EvtRareLbToLllFFGutsche::getFF( EvtParticle* parent,
 
 
   FF.FT_[0] = fTV[1]*( m1 + m2) + fTV[0]*( -2*vdotvp*m2 + m1 + m2*m21 );
-  FF.FT_[1] = -fTV[0] * m2 + m1 * ( fTV[0] + fTV[1] );
-  FF.FT_[2] = -m2*(fTV[0] * ( m21 -1 ) + fTV[1] );
+  FF.FT_[1] = +fTV[0] * ( m2 - m1 )  - fTV[1] * m1;
+  FF.FT_[2] = m2 * ( fTV[0] - fTV[1] ) - fTV[0] * m21 * m2 ;
 
   FF.GT_[0] = -fTA[1]*( m1 - m2) + fTA[0]*( -2*vdotvp*m2 + m1 + m2*m21 );
-  FF.GT_[1] = fTA[1] * m1 - fTA[0] * ( m1 + m2 );
+  FF.GT_[1] = -fTA[1] * m1 + fTA[0] * ( m1 + m2 );
   FF.GT_[2] = -fTA[0] * m2 * m21 - m2 * ( fTA[0] + fTA[1] );
 /*
   std::cout<<"F0: "<<q2<<" "<<FF.F_[0]<<std::endl;
@@ -158,6 +158,7 @@ void EvtRareLbToLllFFGutsche::getFF( EvtParticle* parent,
   std::cout<<"GT1: "<<q2<<" "<<FF.GT_[1]<<std::endl;
   std::cout<<"GT2: "<<q2<<" "<<FF.GT_[2]<<std::endl;
 */
+
   return ;
 }
 
