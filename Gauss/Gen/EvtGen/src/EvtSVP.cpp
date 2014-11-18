@@ -100,5 +100,5 @@ void EvtSVP::init(){
 
 void EvtSVP::initProbMax() {
     setProbMax(1.2);
-};
+}
 

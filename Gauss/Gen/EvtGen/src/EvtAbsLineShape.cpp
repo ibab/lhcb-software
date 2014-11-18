@@ -133,7 +133,7 @@ double EvtAbsLineShape::getRandMass(EvtId *parId, int /* nDaug */, EvtId * /*dau
   
   return ( _mass + ((_width/2.0)*tan(EvtRandom::Flat(ymin,ymax))));
   //  return EvtRandom::Flat(_massMin,_massMax);
-};
+}
 
 double EvtAbsLineShape::getMassProb(double mass, double massPar, int nDaug, double *massDau) {
 

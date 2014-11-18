@@ -33,7 +33,7 @@ namespace EvtGenFunctions {
   EvtTensor4C directProd(const EvtVector4R& c1,const EvtVector4R& c2);
   EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4C& c2); 
   EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4R& c2);
-};
+}
 
 class EvtTensor4C {
   friend EvtTensor4C EvtGenFunctions::directProd(const EvtVector4R& c1,const EvtVector4R& c2);

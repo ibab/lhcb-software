@@ -72,7 +72,7 @@ namespace EvtCyclic3 {
   char* append(const char* str, EvtCyclic3::Index i);
   char* append(const char* str, EvtCyclic3::Pair i);
 
-};
+}
 
 //where should these go?
 //ostream& operator<<(ostream&, EvtCyclic3::Index);

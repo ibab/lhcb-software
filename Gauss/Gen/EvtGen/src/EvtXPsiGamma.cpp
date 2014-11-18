@@ -204,6 +204,6 @@ void EvtXPsiGamma::initProbMax() {
   if(_ID0 == EvtPDL::getId("gamma") )  setProbMax(2.400);
   else if(_ID0 == EvtPDL::getId("omega") )  setProbMax(16.);
   else if(_ID0 == EvtPDL::getId("rho0") )  setProbMax(70.);
-};
+}
 
 

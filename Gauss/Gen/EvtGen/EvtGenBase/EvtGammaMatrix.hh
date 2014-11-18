@@ -33,7 +33,7 @@ namespace EvtGenFunctions {
   // slash or Feynman slash a 4-vector
   EvtGammaMatrix slash( const EvtVector4C& p ) ;
   EvtGammaMatrix slash( const EvtVector4R& p ) ;
-};
+}
 
 class EvtGammaMatrix {
 

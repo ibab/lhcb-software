@@ -116,12 +116,12 @@ void EvtBcToNPi::init(){
 
 double EvtBcToNPi::_ee(double M, double m1, double m2) {
         return (M*M+m1*m1-m2*m2)/(2*M);
-};
+}
 
 double EvtBcToNPi::_pp(double M, double m1, double m2) {
         double __ee=_ee(M,m1,m2);
         return sqrt(__ee*__ee-m1*m1);
-};
+}
 
 
 void EvtBcToNPi::initProbMax(){

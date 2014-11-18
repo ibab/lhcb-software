@@ -171,7 +171,7 @@ bool EvtDalitzPoint::isValid() const
       inside = true;
   
   return inside;
-};
+}
 
 double EvtDalitzPoint::bigM() const
 {

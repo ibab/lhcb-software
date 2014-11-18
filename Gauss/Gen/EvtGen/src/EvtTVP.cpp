@@ -112,5 +112,5 @@ void EvtTVP::init(){
 
 void EvtTVP::initProbMax() {
   setProbMax(1.);
-};
+}
 

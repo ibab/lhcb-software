@@ -96,5 +96,5 @@ void EvtBcVMuNu::initProbMax() {
   	    cout<<"EvtBcVMuNu: Not realized yet"<<endl;
   	    ::abort();
   	  };
-};
+}
 

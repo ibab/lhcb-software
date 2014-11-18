@@ -36,7 +36,7 @@ namespace EvtGenFunctions {
   EvtTensor3C directProd(const EvtVector3C& c1,const EvtVector3C& c2); 
   EvtTensor3C directProd(const EvtVector3C& c1,const EvtVector3R& c2); 
   EvtTensor3C directProd(const EvtVector3R& c1,const EvtVector3R& c2);
-};
+}
 
 class EvtTensor3C {
   friend EvtTensor3C operator*(
