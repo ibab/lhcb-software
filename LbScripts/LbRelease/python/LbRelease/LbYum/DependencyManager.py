@@ -32,7 +32,7 @@ SLBYUMCONF = "lbyum.conf"
 
 # List of packages to ignore for our case
 IGNORED_PACKAGES = ["rpmlib(CompressedFileNames)", "/bin/sh", "rpmlib(PayloadFilesHavePrefix)",
-                    "rpmlib(PartialHardlinkSets)", "DBASE_Gen_DecFiles"]
+                    "rpmlib(PartialHardlinkSets)"]
 
 __RCSID__ = "$Id$"
 
@@ -173,7 +173,7 @@ class VersionedObject(object):
     ###############################################################################
     def __str__(self):
         """ Display function for the package instance """
-        return "%s: %s(%s.%s-%s)" % (self.__class__.__name__, self.flags, self.name, self.version, self.release)
+        return "%s(%s.%s-%s)" % (self.flags, self.name, self.version, self.release)
 
     def __repr__(self):
         return self.__str__()
@@ -235,12 +235,11 @@ class Package(VersionedObject): #IGNORE:R0902
         """ Returns the URL to download the file """
         return self.repository.repourl + "/" + self.location
 
-#    def __eq__(self, other):
-#        if other == None:
-#            return False
-#        return self.name == other.name \
-#               and self.version == other.version# \
-               #and self.release == other.release
+    def __eq__(self, other):
+        if other == None:
+            return False
+        return self.name == other.name \
+               and self.version == other.version
     
     def __hash__(self):
         return hash((self.name, self.version, self.group, self.arch))
@@ -738,9 +737,8 @@ class RepositorySQLiteBackend(object):
         if len(found) > 0:
             req = Requires(name, version, release)
             matching = [p for p in found if req.provideMatches(p)]
-            matching = sorted(matching)
             if len(matching) > 0:
-                package = sorted(matching)[-1]
+                package = matching[-1]
         return package
 
     def getAllPackages(self, nameMatch=None):

@@ -309,7 +309,7 @@ def get_native_versions(native_version, binary):
             # Adding the pakType to the attribute of the package in the map
             l = packages_versions[pak]
             l.append(pakType)
-            print "get_native_version - Including %s package %s\t%s" % (pakType, pak, l[0])
+            print "get_native_version - Including %s package %s\t%s\t%s" % (pakType, pak, l[0], value)
 
     if binary.startswith("i686"):
         for pak in packages_versions.keys() :

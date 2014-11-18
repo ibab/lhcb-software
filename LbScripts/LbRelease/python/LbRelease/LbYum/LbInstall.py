@@ -135,9 +135,6 @@ class InstallArea(object): # IGNORE:R0902
         # Setting the main repository URL
         self.repourl = config.repourl
         
-        # prefix for the RPMs
-        self.rpmprefix = config.configInst.getPrefix()
-
         # Making sure the db is initialized
         self.dbpath = os.path.join(self.siteroot, SVAR, SLIB, SRPM)
         self._initRPMDB()
@@ -272,7 +269,7 @@ class InstallArea(object): # IGNORE:R0902
 
         rpmcmd = "rpm --dbpath %s " % self.dbpath
         if not query_mode and install_mode :
-            rpmcmd += " --prefix %s " % self.siteroot
+            rpmcmd += self.config.configInst.getRelocateCommand(self.siteroot)
         rpmcmd += " ".join(args)
 
         self.log.info("RPM command:")
@@ -510,6 +507,10 @@ class InstallArea(object): # IGNORE:R0902
         # happens sometimes with yum...
         finstalllist = self._filterUrlsAlreadyInstalled(installlist)
 
+        self.log.info("Found %d RPMs to install:" % len(finstalllist))
+        rpmNames = set([p.rpmName() for p in finstalllist])
+        self.log.info(" ".join(rpmNames))
+
         # Check how many RPMs should be installed
         # if non left, just log and exit
         if len(finstalllist) == 0:
@@ -522,6 +523,8 @@ class InstallArea(object): # IGNORE:R0902
         # And installing
         self._installfiles(files, self.tmpdir, forceInstall, update, nodeps)
 
+        # And removing installed files
+        #XXX
     # Generators for the YumConfigurations
     ##########################################################################
     @classmethod

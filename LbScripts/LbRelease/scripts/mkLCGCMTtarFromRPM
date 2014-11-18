@@ -20,7 +20,8 @@ Created on Mar 25, 2014
 
 from LbUtils.Script import Script
 from LbConfiguration.Version import ParseSvnVersion
-from LbRelease import LCGRpmExtractor
+from LbRelease import LCGYumInstaller
+#from LbRelease import LCGRpmExtractor
 from LbRelease import CMTNativeTools 
 from LbLegacy.install_project import calculateMD5
 
@@ -70,6 +71,25 @@ class BuildLCGTarScript(Script):
                           action = "store_true",
                           default = False,
                           help = "Restrict to the packages explicitely mentioned in the project")
+        parser.add_option("--limit-rpm-deps",
+                          dest = "limit_rpm_deps",
+                          action = "store_true",
+                          default = False,
+                          help = "Restrict to the RPMs explicitely mentioned, not their dependencies"
+                          "Except in the case of LCG_XX RPMs that only contain links."
+                          "In that case the package they depend on is installed as well.")
+        parser.add_option("-y", "--siteroot-not-empty",
+                          dest = "ackSiterootNotEmpty",
+                          action = "store_true",
+                          default = False,
+                          help = "Acknowledge the fact that there are files in the installation dir already")
+        parser.add_option("--cache-cmtresult",
+                          dest = "cmtrescache",
+                          default = None,
+                          help = "Cache the CMT result result to a file, or reuse a previously exsiting cache")
+
+
+
 
     def main(self):
         log = logging.getLogger()
@@ -79,7 +99,7 @@ class BuildLCGTarScript(Script):
         version = None
         self.externalsDict = None
         self.baseOutputFilename = None
-        if len(args) < 2 :
+        if len(args) < 3 :
             log.error("Not enough arguments")
             sys.exit(1)
         else :
@@ -92,11 +112,17 @@ class BuildLCGTarScript(Script):
 
         # preparing the actual RPM install area
         log.warning("Repackaging %s %s for CMTCONFIG %s" % (self.project, self.version, self.cmtconfig))
-        installer = LCGRpmExtractor.LCGRpmInstaller(opts.siteroot)
+        installer = LCGYumInstaller.LCGYumInstaller(opts.siteroot)
+        #installer = LCGRpmExtractor.LCGRpmInstaller(opts.siteroot)
+        
+        # CHeck whether there is an install already
+        if not installer.isAreaEmpty() and not opts.ackSiterootNotEmpty:
+            log.error("The install area %s already contains files, please remove them of force installation with -y" % installer._siteroot)
+            sys.exit(1)
 
         # performing the installation if requested
         if opts.noinstall == False:
-            self.install(self.project, self.version, self.cmtconfig, installer)
+            self.install(self.project, self.version, self.cmtconfig, installer, opts.limit_rpm_deps)
 
         # Now preparing the tar file
         output_dir = None
@@ -160,12 +186,27 @@ class BuildLCGTarScript(Script):
         '''
         Gets the list of all externals needed
         '''
+        self.log.warning("Loading list of externals")
+        # Cache the externals dictionary for the version...
+        if self.options.cmtrescache != None:
+            if os.path.exists(self.options.cmtrescache):
+                # If the cache exists just use it
+                import pickle
+                self.log.warning("Loading list of externals from file: %s" % self.options.cmtrescache)
+                (self.lcgVer, self.externalsDict) = pickle.load(open(self.options.cmtrescache, "rb" ))
+                return (self.lcgVer, self.externalsDict)
+    
         if self.externalsDict == None:
+            self.log.warning("Loading list of externals from CMT")
             (lcgVerTmp, externalsDict) = CMTNativeTools.get_native_versions(self.project.upper() + "_" + self.version,
                                                                             self.cmtconfig)
             self.lcgVer = lcgVerTmp.split("_", 1)[1]
             self.externalsDict = externalsDict
-
+            if self.options.cmtrescache != None:
+                # Save the results to the cache
+                import pickle
+                self.log.warning("Saving list of externals to cache: %s" %  self.options.cmtrescache)
+                pickle.dump((self.lcgVer, self.externalsDict), open(self.options.cmtrescache, "wb" ) )
         return (self.lcgVer, self.externalsDict)
 
 
@@ -178,8 +219,57 @@ class BuildLCGTarScript(Script):
                                                           self.cmtconfig, self.getExternalsDict()[1])
             self.baseOutputFilename = filename
         return self.baseOutputFilename
+
+
+    def _getExtRPMName(self, extName, extItems, lcgVer):
+        '''
+        Prepare the Ext line for a specific external
+        '''
+        # Extend list if incomplete (that unfortunately happens)
+        extItems += [None] * (4 - len(extItems))
+        extVer      = extItems[0]
+        extVerNoLCG = extItems[1]
+        cmtcfgopt   = extItems[2]
+        extpath     = extItems[3]
+
+        # Exceptions for various packages
+        nameExceptions = { "Expat":"expat",
+                           "lfc":"LFC",
+                           "fts":"FTS",
+                           "dpm":"DPM",
+                           "Frontier_Client":"frontier_client",
+                           "fts3":"FTS3",
+                           "lcgdmcommon":"lcg_dm_common",
+                           "lcgutils":"dm_util" }
+
+        altName = nameExceptions.get(extName, None)
+        if altName != None:
+            extName = altName
+            
+        #if extName == "Expat":
+        #    extName = "expat"
+
+        # LCGCMT is outside of LCG anyway, we deal with it in a special way
+        if extName == "LCGCMT":
+            return  "%s_%s" % (extName, extVer.replace('-', '_'))
+
+        rpmname = None
+        # Now we need to deal with LCG and non LCG externals...
+        if  "LCG_%s" % lcgVer in extpath:
+            # We have a LCG external !
+            rpmname = "LCG_%s_%s_%s_%s" % (lcgVer,
+                                           extName,
+                                           extVer.replace('-', '_'),
+                                           cmtcfgopt.replace('-', '_'))
+        else:
+            # We have an old type external
+            rpmname = "%s_%s_%s" % (extName,
+                                    extVer.replace('-', '_'),
+                                    cmtcfgopt.replace('-', '_'))
+        return rpmname
+            
         
-    def install(self, project, version, cmtconfig, installer):
+    def install(self, project, version, cmtconfig, installer, limit_rpm_deps):
         '''
         Perform the installation of the needed packages in the install area
         '''
@@ -188,34 +278,63 @@ class BuildLCGTarScript(Script):
         
         # Now prepare the list of RPMs based on the externals found
         allrpms = []
+        missing = []
         for k, v in externalsDict.items():
             # Ignore packages from the system for the moment
-            if v[3] != None and v[3].startswith("/usr"):
+            v += [None] * (4 - len(v))
+            if len(v) > 3 and v[3] != None and v[3].startswith("/usr"):
+                self.log.warning("%s is from the system, IGNORING" % k)
                 continue
-            # Exception for expat to unblock things for the moment
-            if k == "Expat":
-                k = "expat"
-            if k == "LCGCMT":
-                rpmName = "%s_%s" % (k, v[0].replace('-', '_'))
-            else:
-                rpmName = "LCG_%s_%s_%s_%s" % (lcgVer, k,  v[0].replace('-', '_'),
-                                               v[2].replace('-', '_'))
-            self.log.warning("Adding RPM: %s" % rpmName)
-            allrpms.append(rpmName)
 
-        
+            rpmName = self._getExtRPMName(k,v, lcgVer)
+            # Now looking for the RPMs
+            try:
+                linkPackage = installer.findRpm(rpmName)
+                if linkPackage != None:
+                    self.log.warning("Adding package RPM: %s" % linkPackage.name)
+                    allrpms.append(linkPackage.name)
 
+                    if linkPackage.name.startswith("LCG_%s" % lcgVer):
+                        req = [ r for r in  linkPackage.requires if k in r.name ]
+                        if len(req) > 0:
+                            self.log.warning("Link package - Looking for dependency: %s" % req[0].name)
+                            mainPackage = installer.findRpm(req[0].name)
+                            if mainPackage != None:
+                                self.log.warning("Adding RPM: %s" % mainPackage.name)
+                                allrpms.append(mainPackage.name)
+                            else:
+                                self.log.warning("Missing RPM: %s" % req[0].name)
+                                missing.append((req[0].name, req[0].name, ""))
+                else:
+                    self.log.warning("Missing RPM: %s" % rpmName)
+                    missing.append((k, rpmName, v[3]))
+                    
+            except Exception, e:
+                print e
+                self.log.warning("Exception looking for RPMs %s " %k)
+ 
         # Now performing the install
-        print "ALL RPMS:", allrpms
+        self.log.warning("Done looking for RPMs")
+        for k in missing:
+            self.log.warning("> Missing RPM for: " + str(k))
+
+        if len(missing) > 0:
+            sys.exit(1)
+            
         self.log.warning("Now performing the actual install")
+        self.log.warning("RPM list:" + " ".join(allrpms))
         packageErrors = []
         for rpm in allrpms:
-            (out, err, rcode) = installer.run(["install", rpm])
-            print out
-            if err != None:
-                print err
-            if rcode != 0:
+            try:
+                installer.install(rpm, nodeps=limit_rpm_deps)
+            except:
                 packageErrors.append(rpm)
+            #(out, err, rcode) = installer.run(["install", rpm])
+            #print out
+            #if err != None:
+            #    print err
+            #if rcode != 0:
+            #    packageErrors.append(rpm)
 
         if len(packageErrors) > 0:
             self.log.error("Errors installing the following packages:")

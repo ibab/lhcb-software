@@ -25,7 +25,7 @@ from LbRelease.LbYum.LbInstall import LbInstallConfig, InstallArea
 from LbRelease.LbYum.LCGConfig import Config
 
 INSTALLERNAME = "lcg_install.sh"
-RELEASEDIRNAME = "releases"
+LCGDIRNAME = "lcg"
 PACKAGE_EXCLUSION_LIST = ['etc', 'lib', 'tmp',  'usr',  'var', INSTALLERNAME ]
 
 class LCGYumInstaller(object):
@@ -38,7 +38,8 @@ class LCGYumInstaller(object):
         '''
         self.log  = logging.getLogger(__name__)
         self._siterootBase = os.path.abspath(siteroot)
-        self._siteroot = os.path.join(self._siterootBase, RELEASEDIRNAME)
+        self._siteroot = self._siterootBase
+        self._lcgDir = os.path.join(self._siterootBase, LCGDIRNAME)
         self._config = LbInstallConfig("LCGConfig")
         self._config.configInst = Config()            
         self._config.siteroot = self._siteroot
@@ -90,7 +91,7 @@ class LCGYumInstaller(object):
                 
         # Now comparing the requested files with the files on disk...
         # First the topdir....
-        topdirfiles = set(os.listdir(RELEASEDIRNAME)) - set(subdirs.keys())
+        topdirfiles = set(os.listdir(LCGDIRNAME)) - set(subdirs.keys())
         unpackaged = topdirfiles - topdirfilesrequested
         missing = topdirfilesrequested - topdirfiles
         if len(unpackaged) > 0:
@@ -102,7 +103,7 @@ class LCGYumInstaller(object):
             
         # Now doing the same on subdirs
         for k, v in subdirs.items():
-            files = set(os.listdir(os.path.join(RELEASEDIRNAME, k)))
+            files = set(os.listdir(os.path.join(LCGDIRNAME, k)))
             requested = set(v)
             unpackaged = files - requested
             missing = requested - files
@@ -121,8 +122,8 @@ class LCGYumInstaller(object):
         Create the tar file of the install area
         '''
         # Checking which files to package
-        os.chdir(self._siterootBase)
-        allfiles = os.listdir(RELEASEDIRNAME)
+        os.chdir(self._lcgDir)
+        allfiles = os.listdir(self._lcgDir)
         packfiles = allfiles
         if packageList != None:
             packfiles = packageList
@@ -137,7 +138,7 @@ class LCGYumInstaller(object):
         str += ' --exclude "*.rpm" '
         for f in actuallist:
             if f not in PACKAGE_EXCLUSION_LIST:
-                str += ' %s ' % os.path.join(RELEASEDIRNAME, f)
+                str += ' %s ' % f
 
         self.log.warning("In directory: %s" % self._siterootBase)
         self.log.warning("Running command: %s" % str)
