@@ -55,21 +55,21 @@ function(_internal_find_projects projects_var tools_var config_file)
     # Warning: this regular expression implies that 'gaudi_project' is not on the
     # first line of the file (but it is needed to ensure that it is not commented out)
     string(REGEX MATCH "[\r\n][ \t]*(gaudi_project|athena_project)[ \t]*\\(([^)]+)\\)" match ${config_file_data})
-	set(match ${CMAKE_MATCH_2})
-	if(NOT match)
-	    message(FATAL_ERROR "${config_file} does not contain gaudi_project or athena_project")
-	endif()
-	#message(STATUS "find_used_projects: match -> ${match}")
-	# (replace space-type chars with spaces)
-	string(REGEX REPLACE "[ \t\r\n]+" " " args "${match}")
-	separate_arguments(args)
-	CMAKE_PARSE_ARGUMENTS(PROJECT "" "" "USE;TOOLS;DATA" ${args})
+    set(match ${CMAKE_MATCH_2})
+    if(NOT match)
+        message(FATAL_ERROR "${config_file} does not contain gaudi_project or athena_project")
+    endif()
+    #message(STATUS "find_used_projects: match -> ${match}")
+    # (replace space-type chars with spaces)
+    string(REGEX REPLACE "[ \t\r\n]+" " " args "${match}")
+    separate_arguments(args)
+    CMAKE_PARSE_ARGUMENTS(PROJECT "" "" "USE;TOOLS;DATA" ${args})
 
-	# get the project name and add it to the list of used projects
-	list(GET PROJECT_UNPARSED_ARGUMENTS 0 proj_name)
-	string(TOUPPER ${proj_name} proj_name)
-	print_var(proj_name)
-	set(projects ${proj_name} ${${projects_var}})
+    # get the project name and add it to the list of used projects
+    list(GET PROJECT_UNPARSED_ARGUMENTS 0 proj_name)
+    string(TOUPPER ${proj_name} proj_name)
+    print_var(proj_name)
+    set(projects ${proj_name} ${${projects_var}})
 
     # define cache variables for this project
     if(NOT ${proj_name}_CONFIG_FILE)
@@ -79,48 +79,48 @@ function(_internal_find_projects projects_var tools_var config_file)
 
     # first we look for the tools we want (higher priority)
     print_var(PROJECT_TOOLS)
-	while(PROJECT_TOOLS)
-	    # PROJECT_TOOLS format is "<tool> <vers1> <tool> <vers2>..."
-	    # we extract two entries per iteration
+    while(PROJECT_TOOLS)
+        # PROJECT_TOOLS format is "<tool> <vers1> <tool> <vers2>..."
+        # we extract two entries per iteration
         list(GET PROJECT_TOOLS 0 name)
-       	list(GET PROJECT_TOOLS 1 version)
-       	list(REMOVE_AT PROJECT_TOOLS 0 1)
-       	# look for the directory of the tool
-       	find_file(${name}_DIR
-       	          NAMES ${name}/${version}/${BINARY_TAG}
-       	                ${name}/${version})
+           list(GET PROJECT_TOOLS 1 version)
+           list(REMOVE_AT PROJECT_TOOLS 0 1)
+           # look for the directory of the tool
+           find_file(${name}_DIR
+                     NAMES ${name}/${version}/${BINARY_TAG}
+                           ${name}/${version})
         if(${name}_DIR)
             set(tools ${name} ${tools})
         else()
             message(FATAL_ERROR "Cannot find tool ${name} ${version}")
         endif()
-	endwhile()
+    endwhile()
 
     # first we look for the used projects
     print_var(PROJECT_USE)
-	while(PROJECT_USE)
-	    # PROJECT_USE format is "<proj1> <vers1> <proj2> <vers2>..."
-	    # we extract two entries per iteration
+    while(PROJECT_USE)
+        # PROJECT_USE format is "<proj1> <vers1> <proj2> <vers2>..."
+        # we extract two entries per iteration
         list(GET PROJECT_USE 0 name)
-       	list(GET PROJECT_USE 1 version)
-       	list(REMOVE_AT PROJECT_USE 0 1)
-       	string(TOUPPER ${name} name_upper)
-       	# look for the configuration file of the project
-       	find_file(${name_upper}_CONFIG_FILE NAMES CMakeLists.txt
-       	          PATH_SUFFIXES ${name}/${version}
-       	                        ${name_upper}/${name_upper}_${version}
-       	                        ${name}_${version}
-       	                        ${name})
+           list(GET PROJECT_USE 1 version)
+           list(REMOVE_AT PROJECT_USE 0 1)
+           string(TOUPPER ${name} name_upper)
+           # look for the configuration file of the project
+           find_file(${name_upper}_CONFIG_FILE NAMES CMakeLists.txt
+                     PATH_SUFFIXES ${name}/${version}
+                                   ${name_upper}/${name_upper}_${version}
+                                   ${name}_${version}
+                                   ${name})
         # recursion
         if(${name_upper}_CONFIG_FILE)
             _internal_find_projects(projects tools
                                     ${${name_upper}_CONFIG_FILE} ${name_upper})
         endif()
-	endwhile()
+    endwhile()
 
     # propagate the full list of projects and tools to the caller
-	set(${projects_var} ${projects} PARENT_SCOPE)
-	set(${tools_var} ${tools} PARENT_SCOPE)
+    set(${projects_var} ${projects} PARENT_SCOPE)
+    set(${tools_var} ${tools} PARENT_SCOPE)
 endfunction()
 
 ## Look for used projects

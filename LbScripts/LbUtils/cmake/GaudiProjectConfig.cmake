@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: bee210375485db5593887663e6cd066bb1dbcafc
+# Commit Id: 2b2248bf4060da6c213c373ff1e061b1cffa1a34
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -623,7 +623,7 @@ __path__ = [d for d in [os.path.join(d, '${pypack}') for d in sys.path if d]
       PREPEND PYTHONPATH ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}
       PREPEND PYTHONPATH ${CMAKE_BINARY_DIR}/python)
   if(GAUDI_ATLAS)
-	set(project_build_environment ${project_build_environment}
+    set(project_build_environment ${project_build_environment}
         PREPEND JOBOPTSEARCHPATH ${CMAKE_BINARY_DIR}/jobOptions
         PREPEND ROOTMAPSEARCHPATH ${CMAKE_BINARY_DIR}/rootmap
         PREPEND DATAPATH ${CMAKE_BINARY_DIR}/share
@@ -1888,14 +1888,14 @@ function(gaudi_add_library library)
   endif()
 
   if(WIN32)
-	add_library( ${library}-arc STATIC EXCLUDE_FROM_ALL ${srcs})
+    add_library( ${library}-arc STATIC EXCLUDE_FROM_ALL ${srcs})
     set_target_properties(${library}-arc PROPERTIES COMPILE_DEFINITIONS GAUDI_LINKER_LIBRARY)
     add_custom_command(
       OUTPUT ${library}.def
-	  COMMAND ${genwindef_cmd} -o ${library}.def -l ${library} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${library}-arc.lib
-	  DEPENDS ${library}-arc genwindef)
-	#---Needed to create a dummy source file to please Windows IDE builds with the manifest
-	file( WRITE ${CMAKE_CURRENT_BINARY_DIR}/${library}.cpp "// empty file\n" )
+      COMMAND ${genwindef_cmd} -o ${library}.def -l ${library} ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/${library}-arc.lib
+      DEPENDS ${library}-arc genwindef)
+    #---Needed to create a dummy source file to please Windows IDE builds with the manifest
+    file( WRITE ${CMAKE_CURRENT_BINARY_DIR}/${library}.cpp "// empty file\n" )
     add_library( ${library} SHARED ${library}.cpp ${library}.def)
     target_link_libraries(${library} ${library}-arc ${ARG_LINK_LIBRARIES})
     set_target_properties(${library} PROPERTIES LINK_INTERFACE_LIBRARIES "${ARG_LINK_LIBRARIES}" )

@@ -339,15 +339,15 @@ macro(LCG_compiler id flavor version)
     find_program(CMAKE_C_COMPILER
                  NAMES ${c_compiler_names}
                  PATHS ${compiler_root}/bin
-		 DOC "C compiler")
+                 DOC "C compiler")
     find_program(CMAKE_CXX_COMPILER
                  NAMES ${cxx_compiler_names}
                  PATHS ${compiler_root}/bin
-		 DOC "C++ compiler")
+                 DOC "C++ compiler")
     find_program(CMAKE_Fortran_COMPILER
                  NAMES ${fortran_compiler_names}
                  PATHS ${compiler_root}/bin
-		 DOC "Fortran compiler")
+                 DOC "Fortran compiler")
     #message(STATUS "LCG_compiler(${ARGV}) -> ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER} ${CMAKE_Fortran_COMPILER}")
   endif()
 endmacro()
