@@ -193,6 +193,25 @@ def VeloCandidates( lineName ):
                 ( [ m.getFullName() for m in bm.members() ], selection )
 
 # ==============================================================================
+# VeloTT candidates
+# ==============================================================================
+from Configurables import Hlt__Track2Candidate
+import HltLine.HltDecodeRaw 
+from HltReco import recoVeloTT
+from HltLine.HltLine import bindMembers
+def VeloTTCandidates( lineName ):
+    selection = 'VeloTTCandidates%s' % lineName
+    tracks = Hlt__Track2Candidate (
+        'VeloTT2Candidates%s' % lineName,
+        Code            = "~TrBACKWARD"    , ## skip backward tracks 
+        InputSelection  = recoVeloTT.outputSelection(),
+        OutputSelection = selection,
+        )
+    bm = bindMembers ( None , [ recoVelo(), recoVeloTT, tracks ] )
+    return "VeloTTCandidates = execute( %s ) * SELECTION( '%s' )" % \
+                ( [ m.getFullName() for m in bm.members() ], selection )
+
+# ==============================================================================
 # Track candidates
 # ==============================================================================
 from Configurables import Hlt__Track2Candidate
