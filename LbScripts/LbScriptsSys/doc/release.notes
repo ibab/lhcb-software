@@ -1,3 +1,36 @@
+2014-11-18 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r2
+
+	LbConfiguration
+	* lb-run: use the extension .xenv instead of Environment.xml
+	* lb-run: changed default version of Compat to 'prod'
+	* lb-run: use 'prod' as default version instead of 'latest'
+	* lb-dev: added the --list option
+	* lb-dev, lb-run: removed explicit use of Python 2.6 in the scripts (it's still a requirement)
+
+	LbRelease
+	LBCORE-670: Fixed packager to work with LHCbDirac
+	* scripts/mkLCGCMTtarFromRPM
+	* python/LbRelease/LbYum/DependencyManager.py
+	* python/LbRelease/LbYum/LbInstall.py
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGYumInstaller.py
+
+	* getpack: do not overwrite existing toolchain.cmake files
+	* getpack: do not overwrite the toolchain of Geant4 (as it was already the case for Gaudi and Urania)
+	* data/DataPkgEnvs: renamed *Environment.xml to *.xenv
+	* LbRelease.LHCbDoc: ignore ill formatted versions
+
+	LBCORE-666: Fixed to imported projects without dependencies and
+	improved log.
+	* python/LbRelease/SoftConfDB/LbSdbImportFromSVN.py
+	* python/LbRelease/SoftConfDB/AppImporter.py
+	* python/LbRelease/SoftConfDB/SoftConfDB.py
+
+	LbUtils
+	* cmake: updated CMake support modules
+
 2014-11-11 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r1p1
@@ -10,7 +43,7 @@
 	* scripts/mkLCGCMTTarFromRPM: LBCORE-662: Allow to build -dbg package for externals
 
 	LbLegacy
-	* scripts/mkLCGCMTtar: LBCORE-646 Allow to take packages from external AND from releases (for L
+	* scripts/mkLCGCMTtar: LBCORE-646 Allow to take packages from external AND from releases.
 
 2014-10-16 Ben Couturier <Ben.Couturier@cern.ch>
 
