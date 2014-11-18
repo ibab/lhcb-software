@@ -49,15 +49,19 @@
 // ============================================================================
 Particle2Definition::Particle2Definition( LHCb::IParticlePropertySvc* Svc ) 
   : m_ppSvc( Svc )
-{ if( 0 != ppSvc() ) { ppSvc()->addRef() ; } };
-// ============================================================================
+{ 
+  if( 0 != ppSvc() ) { ppSvc()->addRef() ; } 
+}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
 Particle2Definition::~Particle2Definition()
-{ if( 0 != ppSvc() ){ ppSvc()->release() ; m_ppSvc = 0 ; } };
-// ============================================================================
+{ 
+  if( 0 != ppSvc() ){ ppSvc()->release() ; m_ppSvc = 0 ; } 
+}
+
 
 // ============================================================================
 /** copy constructor
@@ -66,8 +70,10 @@ Particle2Definition::~Particle2Definition()
 // ============================================================================
 Particle2Definition::Particle2Definition( const Particle2Definition& right )
   : m_ppSvc( right.ppSvc() )
-{ if( 0 != ppSvc() ) { ppSvc()->addRef() ; } };
-// ============================================================================
+{ 
+  if( 0 != ppSvc() ) { ppSvc()->addRef() ; } 
+}
+
 
 // ============================================================================
 /** get the Geant4 particle definition from MCParticle object
@@ -109,7 +115,7 @@ Particle2Definition::operator()
     }
   ///
   return pDef;
-};
+}
 
 // ============================================================================
 // The End 

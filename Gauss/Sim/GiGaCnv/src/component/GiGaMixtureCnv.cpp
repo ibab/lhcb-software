@@ -32,7 +32,7 @@ GiGaMixtureCnv::GiGaMixtureCnv( ISvcLocator* Locator )
 }
 
 /// destructor 
-GiGaMixtureCnv::~GiGaMixtureCnv(){}; 
+GiGaMixtureCnv::~GiGaMixtureCnv(){}
 /// Class ID
 const CLID&  GiGaMixtureCnv::classID            () 
 { return Mixture::classID() ; }
@@ -165,19 +165,7 @@ StatusCode GiGaMixtureCnv::updateRep
   ///
   return StatusCode::SUCCESS; 
   /// 
-};
-
-
-
-
-
-
-
-
-
-
-
-
+}
 
 
 

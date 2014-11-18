@@ -96,7 +96,7 @@ StatusCode GiGaInstall::installVolume
   ///
   return StatusCode::SUCCESS ;
   ///
-};
+}
 
 // ============================================================================
 /** @function installVolume 
@@ -166,7 +166,7 @@ StatusCode GiGaInstall::installVolume
     } 
   ///
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 /** @function installVolume
@@ -226,7 +226,7 @@ StatusCode GiGaInstall::installVolume
       << " GiGaInstall::installVolume3:: fatal error! " << endmsg ;
   ///
   return StatusCode::FAILURE ;
-};
+}
 
 // ============================================================================
 // The End 

@@ -44,12 +44,12 @@
 // ============================================================================
 Vertex2Vertex::Vertex2Vertex( LHCb::IParticlePropertySvc* Svc ) 
   : m_p2p ( Svc )
-{};
+{}
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-Vertex2Vertex::~Vertex2Vertex(){};
+Vertex2Vertex::~Vertex2Vertex(){}
 
 // ============================================================================
 /** perform the conversion of  MCVertex object into 
@@ -86,7 +86,7 @@ G4PrimaryVertex* Vertex2Vertex::operator() ( const LHCb::MCVertex* vertex ) cons
   if( 0 == Vertex->GetNumberOfParticle() ) { delete Vertex ; Vertex = 0 ; }
   ///
   return Vertex ;
-};
+}
 
 // ============================================================================
 // The END 

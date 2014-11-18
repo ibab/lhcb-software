@@ -155,7 +155,7 @@ StatusCode GiGaCatalogCnv::updateRep
     { return Error("Coud not create the representation of the leaves!",sc);}
   ///
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 // The End 
