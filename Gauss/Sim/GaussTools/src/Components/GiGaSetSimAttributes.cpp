@@ -6,8 +6,6 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 
-// GiGa
-//#include "GiGa/GiGaMACROs.h"
 // SimSvc 
 #include "SimSvc/ISimulationSvc.h"
 // Geant4 
@@ -29,7 +27,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaSetSimAttributes );
+DECLARE_TOOL_FACTORY( GiGaSetSimAttributes )
 
 // ============================================================================
 /** standard constructor
@@ -52,14 +50,14 @@ GiGaSetSimAttributes::GiGaSetSimAttributes
 {
   declareProperty ( "SimulationService" , m_simSvcName ) ;
   declareProperty ( "Overwrite"         , m_overwrite  ) ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaSetSimAttributes::~GiGaSetSimAttributes(){};
-// ============================================================================
+GiGaSetSimAttributes::~GiGaSetSimAttributes(){}
+
 
 // ============================================================================
 /** initialize the object 
@@ -84,8 +82,8 @@ StatusCode   GiGaSetSimAttributes::initialize  ()
     { return Error("ISimulationSvc('"+m_simSvcName+"') is NULL " ) ; }
   
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** finalize the object  
@@ -100,8 +98,8 @@ StatusCode   GiGaSetSimAttributes::finalize    ()
 {
   if( 0 != m_simSvc ) { m_simSvc -> release () ; m_simSvc = 0 ; }
   return GiGaToolBase::finalize ();
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** find g4 volume by name 
@@ -128,8 +126,8 @@ G4LogicalVolume* GiGaSetSimAttributes::g4volume
     }
   Error ( "g4volume('" + address + "'): volume is not found!" ) ;
   return 0 ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** the only one method, perform the erasure of Field Manager 
@@ -215,8 +213,8 @@ StatusCode GiGaSetSimAttributes::process ( const std::string& vol ) const
     { return Error(" process('" + vol + "'): error from setUserLimits",sc);}
   
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
+
 
 
 // ============================================================================
@@ -294,9 +292,8 @@ StatusCode GiGaSetSimAttributes::setUserLimits
   
   
   return StatusCode::SUCCESS ;
-};
+}
 
-// ============================================================================
 
 // ============================================================================
 // The END 

@@ -59,8 +59,8 @@ gaussTrajectory (       G4VTrajectory* g4 )
 {
   GiGaUtil::FastCast<G4VTrajectory,GaussTrajectory> cast ;
   return cast( g4 );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** @fn gaussTrajectory
@@ -76,8 +76,8 @@ gaussTrajectory ( const G4VTrajectory* g4 )
 {
   GiGaUtil::FastCast<const G4VTrajectory,const GaussTrajectory> cast ;
   return cast( g4 );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** @fn gaussTrajectory
@@ -93,8 +93,8 @@ gaussTrajectory (       GiGaTrajectory* g4 )
 {
   GiGaUtil::FastCast<GiGaTrajectory,GaussTrajectory> cast ;
   return cast( g4 );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** @fn gaussTrajectory
@@ -110,14 +110,14 @@ gaussTrajectory ( const GiGaTrajectory* g4 )
 {
   GiGaUtil::FastCast<const GiGaTrajectory,const GaussTrajectory> cast ;
   return cast( g4 );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 
 // ============================================================================
 #endif  ///< GaussTools_GaussTrajectory_H
-// ============================================================================
+
 
 
 

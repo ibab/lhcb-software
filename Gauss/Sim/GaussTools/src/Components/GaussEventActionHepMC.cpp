@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GaussEventActionHepMC );
+DECLARE_TOOL_FACTORY( GaussEventActionHepMC )
 
 //=============================================================================
 // Standard constructor, initializes variables

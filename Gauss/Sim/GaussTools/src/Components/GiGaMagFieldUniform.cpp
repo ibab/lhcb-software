@@ -6,8 +6,6 @@
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa
-//#include "GiGa/GiGaMACROs.h"
 
 // local 
 #include "GiGaMagFieldUniform.h"
@@ -20,7 +18,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaMagFieldUniform );
+DECLARE_TOOL_FACTORY( GiGaMagFieldUniform )
 
 // ============================================================================
 /** standard constructor 
@@ -44,14 +42,14 @@ GiGaMagFieldUniform::GiGaMagFieldUniform
   declareProperty("Bx" , m_Bx );
   declareProperty("By" , m_By );
   declareProperty("Bz" , m_Bz );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaMagFieldUniform::~GiGaMagFieldUniform(){};
-// ============================================================================
+GiGaMagFieldUniform::~GiGaMagFieldUniform(){}
+
 
 // ============================================================================
 /** get the field value 
@@ -68,8 +66,8 @@ void GiGaMagFieldUniform::GetFieldValue
   *(B+1) = (double) m_By ;
   *(B+2) = (double) m_Bz ;
   *(B+2) = (double) m_Bz ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

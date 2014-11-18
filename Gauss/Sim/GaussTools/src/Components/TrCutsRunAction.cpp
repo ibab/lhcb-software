@@ -4,8 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa 
-//#include "GiGa/GiGaMACROs.h"
 
 // G4
 #include "G4ParticleTable.hh"
@@ -33,7 +31,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TrCutsRunAction );
+DECLARE_TOOL_FACTORY( TrCutsRunAction )
 
 // ============================================================================
 /** standard constructor 
@@ -97,15 +95,13 @@ TrCutsRunAction::TrCutsRunAction
   declareProperty( "WorldName", m_world = "Universe", 
                    "Name of the world volume" );
   
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-TrCutsRunAction::~TrCutsRunAction()
-{
-};
+TrCutsRunAction::~TrCutsRunAction() {}
 
 // ============================================================================
 /** performe the action at the begin of each run 
@@ -227,8 +223,8 @@ void TrCutsRunAction::BeginOfRunAction( const G4Run* run )
     
   }
   
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** performe the action at the end of each run 
@@ -242,8 +238,8 @@ void TrCutsRunAction::EndOfRunAction( const G4Run* run )
     Warning("EndOfRunAction:: G4Run* points to NULL!"); 
   }
 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The End

@@ -9,8 +9,7 @@
 ///
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/MsgStream.h"
-/// GiGa 
-//#include "GiGa/GiGaMACROs.h"
+
 //GaussTools
 #include "GaussTools/GaussTrackInformation.h"
 /// local
@@ -26,7 +25,7 @@
 // ============================================================================
 /// Factory
 // ============================================================================
-DECLARE_TOOL_FACTORY( GaussStepAction );
+DECLARE_TOOL_FACTORY( GaussStepAction )
 // ============================================================================
 
 // ============================================================================
@@ -50,14 +49,14 @@ GaussStepAction::GaussStepAction
 {
   declareProperty ("StoreHitPoints", m_storeHitPoints);  
   declareProperty ("MaxOptPhotonSteps", m_maxoptsteps);
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor
 // ============================================================================
-GaussStepAction::~GaussStepAction(){};
-// ============================================================================
+GaussStepAction::~GaussStepAction(){}
+
 
 // ============================================================================
 /** stepping action
@@ -97,8 +96,8 @@ void GaussStepAction::UserSteppingAction ( const G4Step* step )
         }
       return;
     }
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

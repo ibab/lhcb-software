@@ -4,8 +4,6 @@
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa 
-//#include "GiGa/GiGaMACROs.h"
 /// G4 
 #include "G4UImanager.hh"
 /// Local 
@@ -22,7 +20,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaRunActionCommand );
+DECLARE_TOOL_FACTORY( GiGaRunActionCommand )
 
 // ============================================================================
 /** standard constructor 
@@ -44,8 +42,8 @@ GiGaRunActionCommand::GiGaRunActionCommand
 {  
   declareProperty("BeginOfRunCommands", m_beginCmds );
   declareProperty("EndOfRunCommands"  , m_endCmds   );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
@@ -54,7 +52,7 @@ GiGaRunActionCommand::~GiGaRunActionCommand()
 {
   m_beginCmds .clear();
   m_endCmds   .clear();
-};
+}
 
 // ============================================================================
 /** performe the action at the begin of each run 
@@ -79,8 +77,8 @@ void GiGaRunActionCommand::BeginOfRunAction( const G4Run* run )
           ui->ApplyCommand( *iCmd ); 
         }
     }
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** performe the action at the end of each run 
@@ -105,8 +103,8 @@ void GiGaRunActionCommand::EndOfRunAction( const G4Run* run )
           ui->ApplyCommand( *iCmd ); 
         }
     }  
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The End

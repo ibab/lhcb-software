@@ -30,7 +30,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GaussTrackActionFinal );
+DECLARE_TOOL_FACTORY( GaussTrackActionFinal )
 
 // ============================================================================
 /** standard constructor 
@@ -54,8 +54,8 @@ GaussTrackActionFinal::GaussTrackActionFinal
 {
   declareProperty ( "StoreMarked"   , m_storeMarked    ) ;
   declareProperty ( "StoreWithHits" , m_storeWithHits  ) ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// Destructor
@@ -83,8 +83,8 @@ void GaussTrackActionFinal::PreUserTrackingAction
   if( 0 == info ) 
   { Error ( "Pre...: GaussTrackInformation* points to NULL" ) ; }
 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** perform action 
@@ -142,7 +142,6 @@ void GaussTrackActionFinal::PostUserTrackingAction
   }
   
 }
-// ============================================================================
 
 
 // ============================================================================

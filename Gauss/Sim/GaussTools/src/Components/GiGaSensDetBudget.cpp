@@ -28,7 +28,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaSensDetBudget );
+DECLARE_TOOL_FACTORY( GiGaSensDetBudget )
 
 
 // ============================================================================
@@ -57,15 +57,15 @@ GiGaSensDetBudget::GiGaSensDetBudget
   declareProperty( "Logical"  , m_lvolume  );
   declareProperty( "Physical" , m_pvolume  );
   declareProperty( "Material" , m_material );
-};
-// ============================================================================
+}
+
 
 
 // ============================================================================
 // destructor 
 // ============================================================================
-GiGaSensDetBudget::~GiGaSensDetBudget() {} ;
-// ============================================================================
+GiGaSensDetBudget::~GiGaSensDetBudget() {} 
+
 
 // ============================================================================
 /** process the hit
@@ -104,7 +104,8 @@ bool GiGaSensDetBudget::ProcessHits
   if( m_material ) { m_budgetM[ MT->GetName() ] += length / radlen ; }
   
   return false ;
-};
+  
+}
 // ============================================================================
 
 
@@ -116,7 +117,7 @@ namespace Local
     static char buf[64];
     return std::string( buf , buf + sprintf( buf , format , value ) ) ;
   }
-};
+}
 
 
 // ============================================================================
@@ -218,8 +219,8 @@ StatusCode GiGaSensDetBudget::finalize   ()
   m_budgetM.clear () ;
   // finalize the base class 
   return GiGaSensDetBase::finalize ();
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

@@ -25,7 +25,7 @@
 // ============================================================================
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GiGaInputStream );
+DECLARE_ALGORITHM_FACTORY( GiGaInputStream )
 
 // ============================================================================
 // Standard constructor, initializes variables
@@ -33,12 +33,12 @@ DECLARE_ALGORITHM_FACTORY( GiGaInputStream );
 GiGaInputStream::GiGaInputStream( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GiGaStream ( name , pSvcLocator ) 
-{};
+{}
 
 // ============================================================================
 // Destructor
 // ============================================================================
-GiGaInputStream::~GiGaInputStream() {}; 
+GiGaInputStream::~GiGaInputStream() {}
 
 
 // ============================================================================
@@ -98,7 +98,7 @@ StatusCode GiGaInputStream::execute()
   ///
   return status; 
   ///
-}; 
+};
 
 // ============================================================================
 // The End 

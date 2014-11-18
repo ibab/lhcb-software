@@ -5,9 +5,6 @@
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
 
-// GiGa 
-//#include "GiGa/GiGaMACROs.h"
-
 // G4 
 #include "G4UImanager.hh"
 
@@ -25,7 +22,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaEventActionCommand );
+DECLARE_TOOL_FACTORY( GiGaEventActionCommand )
 
 // ============================================================================
 /** standard constructor 
@@ -46,8 +43,8 @@ GiGaEventActionCommand::GiGaEventActionCommand
 {  
   declareProperty("BeginOfEventCommands", m_beginCmds );
   declareProperty("EndOfEventCommands"  , m_endCmds   );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
@@ -56,7 +53,7 @@ GiGaEventActionCommand::~GiGaEventActionCommand()
 {
   m_beginCmds .clear();
   m_endCmds   .clear();
-};
+}
 
 // ============================================================================
 /** performe the action at the begin of each event 
@@ -82,8 +79,8 @@ void GiGaEventActionCommand::BeginOfEventAction( const G4Event* event )
         }
     }
   ///
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** performe the action at the end of each event 
@@ -109,8 +106,8 @@ void GiGaEventActionCommand::EndOfEventAction( const G4Event* event )
         }
     }  
   ///
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

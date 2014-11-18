@@ -23,7 +23,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaMagFieldGlobal );
+DECLARE_TOOL_FACTORY( GiGaMagFieldGlobal )
 
 // ============================================================================
 /** standard constructor 
@@ -41,14 +41,14 @@ GiGaMagFieldGlobal::GiGaMagFieldGlobal
   const IInterface*  parent )
   : GiGaMagFieldBase( type , name , parent  ) 
   , m_field() 
-{};
-// ============================================================================
+{}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaMagFieldGlobal::~GiGaMagFieldGlobal(){};
-// ============================================================================
+GiGaMagFieldGlobal::~GiGaMagFieldGlobal(){}
+
 
 // ============================================================================
 /** initialization of the object
@@ -71,8 +71,8 @@ StatusCode GiGaMagFieldGlobal::initialize()
   //
   return Print("Initialized succesfully" , 
                StatusCode::SUCCESS       , MSG::VERBOSE ) ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** get the field value 
@@ -116,8 +116,8 @@ void GiGaMagFieldGlobal::GetFieldValue
   *(B+1) = m_field.y();
   *(B+2) = m_field.z();
   ///
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

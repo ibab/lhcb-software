@@ -26,8 +26,8 @@ namespace GaussTrajectoryLocal
    */
   static GiGaUtil::InstanceCounter<GaussTrajectory> s_Counter;
 #endif 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// constructor 
@@ -38,8 +38,8 @@ GaussTrajectory::GaussTrajectory ( )
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
 #endif 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// constructor 
@@ -50,7 +50,7 @@ GaussTrajectory::GaussTrajectory   ( const G4Track* aTrack )
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
 #endif
-};
+}
 
 // ============================================================================
 /// constructor 
@@ -61,7 +61,7 @@ GaussTrajectory::GaussTrajectory ( const GiGaTrajectory & right )
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
 #endif
-};
+}
 
 // ============================================================================
 /// constructor 
@@ -72,13 +72,14 @@ GaussTrajectory::GaussTrajectory ( const GaussTrajectory & right )
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.increment();
 #endif
-};
+}
 
 // ============================================================================
 /// clone 
 // ============================================================================
-GiGaTrajectory* GaussTrajectory::clone() const 
-{ return new GaussTrajectory( *this ); }
+GiGaTrajectory* GaussTrajectory::clone() const { 
+  return new GaussTrajectory( *this ); 
+}
 
 
 // ============================================================================
@@ -89,20 +90,22 @@ GaussTrajectory::~GaussTrajectory()
 #ifdef GIGA_DEBUG
   GaussTrajectoryLocal::s_Counter.decrement();
 #endif
-};
+}
 
 // ============================================================================
 /// new 
 // ============================================================================
-void* GaussTrajectory::operator new(size_t)
-{ return (void*) GaussTrajectoryLocal::s_Allocator.MallocSingle() ; } ;
+void* GaussTrajectory::operator new(size_t) { 
+  return (void*) GaussTrajectoryLocal::s_Allocator.MallocSingle() ; 
+} 
 
 // ============================================================================
 /// delete 
 // ============================================================================
 void  GaussTrajectory::operator delete ( void* aTrajectory )
 { GaussTrajectoryLocal::
-  s_Allocator.FreeSingle( (GaussTrajectory*) aTrajectory ) ; } ;
+  s_Allocator.FreeSingle( (GaussTrajectory*) aTrajectory ) ; 
+}
 
 // ============================================================================
 /// append the step 
@@ -133,23 +136,10 @@ void GaussTrajectory::AppendStep      ( const G4Step*  step )
     appendStep( step ) ;
     ginf -> setAppendStep( false ) ;
   }
-};
-// ============================================================================
+}
+
 
 
 // ============================================================================
 // The END 
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-

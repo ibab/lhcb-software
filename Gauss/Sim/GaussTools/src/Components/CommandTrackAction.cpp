@@ -4,8 +4,6 @@
 /// GaudiKernel
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/PropertyMgr.h"
-/// GiGa 
-//#include "GiGa/GiGaMACROs.h"
 /// local
 #include "CommandTrackAction.h"
 ///
@@ -20,9 +18,8 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-DECLARE_TOOL_FACTORY( CommandTrackAction );
+DECLARE_TOOL_FACTORY( CommandTrackAction )
 
-// ============================================================================
 
 // ============================================================================
 /** standard constructor 
@@ -48,16 +45,14 @@ CommandTrackAction::CommandTrackAction
   declareProperty("TrackIDs", m_trackIDs );
   declareProperty("PreCommand", m_precommand);  
   declareProperty("PostCommand", m_postcommand);
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-CommandTrackAction::~CommandTrackAction()
-{
-};
-// ============================================================================
+CommandTrackAction::~CommandTrackAction() {}
+
 
 // ============================================================================
 /** initialize the track action  
@@ -80,8 +75,8 @@ StatusCode CommandTrackAction::initialize ()
   m_test = false;
   return Print("Initialized successfully" , 
                StatusCode::SUCCESS        , MSG::VERBOSE);
-} ;
-// ============================================================================
+}
+
 
 // ============================================================================
 /** finalize the action object 
@@ -96,8 +91,8 @@ StatusCode CommandTrackAction::finalize   ()
 { 
   // finilize the base 
   return GiGaTrackActionBase::finalize() ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /**  perform action 
@@ -132,7 +127,7 @@ void CommandTrackAction::PreUserTrackingAction ( const G4Track* track )
     }
   }
   
-};
+}
 
 // ============================================================================
 /**  perform action 
@@ -152,9 +147,9 @@ void CommandTrackAction::PostUserTrackingAction ( const G4Track* )
     }
   }
   
-}; 
-// ============================================================================
+}
 
+// ============================================================================
 void CommandTrackAction::printInfo(const G4Track* track, bool tkInfo) {
   
   if ( tkInfo ) {

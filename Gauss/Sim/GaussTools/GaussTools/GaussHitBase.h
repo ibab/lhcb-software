@@ -48,7 +48,7 @@ inline GaussHitBase* gaussHit( G4VHit* g4 )
 {
   GiGaUtil::FastCast<G4VHit,GaussHitBase> cast ;
   return cast( g4 );  
-};
+}
 // ============================================================================
 
 

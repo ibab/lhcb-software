@@ -44,8 +44,7 @@ GaussTrajectory* createGaussTrajectory ( const G4Track* track )
   // set oscillation flag 
   OscillationFlag( track , trajectory ) ;
   return trajectory ;
-};
-// ============================================================================
+}
 
 
 // ============================================================================

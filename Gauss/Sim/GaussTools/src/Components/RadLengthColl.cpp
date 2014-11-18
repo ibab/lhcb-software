@@ -57,19 +57,19 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( RadLengthColl );
+DECLARE_TOOL_FACTORY( RadLengthColl )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 RadLengthColl::RadLengthColl( const std::string& name, const std::string& type, const IInterface*  parent )
-	:GiGaStepActionBase( name , type, parent ){};
+	: GiGaStepActionBase( name , type, parent ){}
 
 
 //=============================================================================
 // Destructor
 //=============================================================================
-RadLengthColl::~RadLengthColl() {};
+RadLengthColl::~RadLengthColl() {}
 
 
 //=============================================================================
@@ -150,7 +150,7 @@ StatusCode RadLengthColl::initialize()  {
 
 	info() << "==> Initialize successful" << endmsg;
 	return StatusCode::SUCCESS;
-};
+}
 
 
 //=============================================================================
@@ -300,7 +300,7 @@ void RadLengthColl::UserSteppingAction ( const G4Step* theStep )
 	}
 
 	return;
-};
+}
 
 
 
@@ -314,7 +314,7 @@ StatusCode RadLengthColl::finalize() {
 
 	debug() << "==> Finalize" << endmsg;
 	return GiGaStepActionBase::finalize();
-};
+}
 
 
 

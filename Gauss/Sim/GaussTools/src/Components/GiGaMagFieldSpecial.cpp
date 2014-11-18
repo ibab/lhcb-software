@@ -39,12 +39,12 @@ GiGaMagFieldSpecial::GiGaMagFieldSpecial(const std::string& type,
   declareProperty("QuadGrad", m_QuadGrad);
   declareProperty("LHCbFieldMax",
                   m_LHCbFieldMax = 1.06476 * Gaudi::Units::tesla);
-};
+}
 
 // ============================================================================
 // destructor
 // ============================================================================
-GiGaMagFieldSpecial::~GiGaMagFieldSpecial() {};
+GiGaMagFieldSpecial::~GiGaMagFieldSpecial() {}
 
 // ============================================================================
 /** get the field value
@@ -105,4 +105,4 @@ void GiGaMagFieldSpecial::GetFieldValue(const double partvec[4],
             << partvec[2] << "), returning (" << B[0] << "," << B[1] << ","
             << B[2] << ")" << endmsg;
   }
-};
+}

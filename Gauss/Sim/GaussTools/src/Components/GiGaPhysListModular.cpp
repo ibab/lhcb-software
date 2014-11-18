@@ -32,7 +32,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaPhysListModular );
+DECLARE_TOOL_FACTORY( GiGaPhysListModular )
 
 // ============================================================================
 /** standard constructor 
@@ -54,8 +54,8 @@ GiGaPhysListModular::GiGaPhysListModular
 {
   declareProperty( "PhysicsConstructors"  , m_physconstr);
   declareProperty( "DumpCutsTable", m_dumpCutsTable);
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
@@ -63,8 +63,8 @@ GiGaPhysListModular::GiGaPhysListModular
 GiGaPhysListModular::~GiGaPhysListModular()
 {
   m_physconstr.clear();
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 StatusCode GiGaPhysListModular::initialize() 
@@ -99,7 +99,7 @@ StatusCode GiGaPhysListModular::initialize()
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 // ============================================================================
 StatusCode GiGaPhysListModular::finalize () 
@@ -109,7 +109,7 @@ StatusCode GiGaPhysListModular::finalize ()
   physicsVector -> clear() ;
 
   return GiGaPhysListBase::finalize  ();
-};
+}
 
 
 // ============================================================================
@@ -136,7 +136,7 @@ void GiGaPhysListModular::SetCuts()
       << cutForPositron    () / mm << " mm " << endreq ;
   
   if (m_dumpCutsTable) { DumpCutValuesTable(); }
-};
+}
   
 
 // ============================================================================

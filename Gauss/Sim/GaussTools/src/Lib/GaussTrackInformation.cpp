@@ -51,8 +51,8 @@ namespace GaussTrackInformationLocal
   static GiGaUtil::InstanceCounter<GaussTrackInformation> s_Counter ;
 #endif
   // ==========================================================================
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// default (empty) constructor 
@@ -69,8 +69,8 @@ GaussTrackInformation::GaussTrackInformation()
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.increment() ;
 #endif
-};
-// ============================================================================
+}
+
 
 
 // ============================================================================
@@ -90,8 +90,8 @@ GaussTrackInformation:: GaussTrackInformation
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.increment() ;
 #endif
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// clone (virtual constructor)
@@ -110,14 +110,14 @@ GaussTrackInformation::~GaussTrackInformation()
 #ifdef GIGA_DEBUG
   GaussTrackInformationLocal::s_Counter.decrement() ;
 #endif
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// operator new 
 // ============================================================================
 void* GaussTrackInformation::operator new    ( size_t )
-{ return (void*) GaussTrackInformationLocal::s_Allocator.MallocSingle(); };
+{ return (void*) GaussTrackInformationLocal::s_Allocator.MallocSingle(); }
 // ============================================================================
 
 // ============================================================================
@@ -127,8 +127,8 @@ void GaussTrackInformation::operator delete ( void*  info  )
 { 
   GaussTrackInformationLocal::s_Allocator.FreeSingle
     ( (GaussTrackInformation*) info ); 
-};
-//=============================================================================
+}
+
 
 // ============================================================================
 // The END 

@@ -156,7 +156,7 @@ private:
   DetTrackInfo* m_detInfo;
   
 };
-// ===========================================================================
+
 
 // ===========================================================================
 /** @fn  gaussTrackInformation
@@ -171,8 +171,8 @@ gaussTrackInformation ( G4VUserTrackInformation* g4 )
 {
   GiGaUtil::FastCast<G4VUserTrackInformation,GaussTrackInformation> cast;
   return cast( g4 );
-};
-// ============================================================================
+}
+
 
 // ===========================================================================
 /** @fn  gaussTrackInformation
@@ -188,9 +188,8 @@ gaussTrackInformation ( const G4VUserTrackInformation* g4 )
   GiGaUtil::FastCast< 
     const G4VUserTrackInformation,const GaussTrackInformation> cast;
   return cast( g4 );
-};
-// ============================================================================
+}
 
 // ============================================================================
 #endif   ///<  GIGA_GaussTrackInformation_H 
-// ============================================================================
+

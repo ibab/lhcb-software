@@ -11,8 +11,6 @@
 #include "G4Polyline.hh"
 #include "G4Colour.hh"
 #include "G4VisAttributes.hh"
-// GiGa 
-//#include "GiGa/GiGaMACROs.h"
 
 // local
 #include "GiGaStepActionDraw.h"
@@ -23,7 +21,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaStepActionDraw );
+DECLARE_TOOL_FACTORY( GiGaStepActionDraw )
 
 // ============================================================================
 /** standard constructor 
@@ -39,14 +37,14 @@ GiGaStepActionDraw::GiGaStepActionDraw
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-  : GiGaStepActionBase ( type , name , parent ) {};
-// ============================================================================
+  : GiGaStepActionBase ( type , name , parent ) {}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaStepActionDraw::~GiGaStepActionDraw(){};
-// ============================================================================
+GiGaStepActionDraw::~GiGaStepActionDraw(){}
+
 
 // ============================================================================
 /** the "main" method
@@ -79,8 +77,8 @@ void GiGaStepActionDraw::UserSteppingAction( const G4Step* step )
       ///
     }  
   ///
-};
-///
+}
+
 
 // ============================================================================
 // The END 

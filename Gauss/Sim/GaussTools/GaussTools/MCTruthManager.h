@@ -9,7 +9,7 @@
 
 namespace LHCb {
   class MCParticle ;
-};
+}
 
 /** @class MCTruthManager MCTruthManager.h Components/MCTruthManager.h
  *  

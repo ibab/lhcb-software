@@ -11,7 +11,6 @@
 
 /// GiGa
 #include "GiGa/IGiGaSvc.h"
-//#include "GiGa/GiGaMACROs.h"
 #include "GiGa/GiGaUtil.h"
 
 /// Local 
@@ -26,7 +25,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaStepActionSequence );
+DECLARE_TOOL_FACTORY( GiGaStepActionSequence )
 
 // ============================================================================
 /** standard constructor 
@@ -45,8 +44,10 @@ GiGaStepActionSequence::GiGaStepActionSequence
   : GiGaStepActionBase( type , name , parent )
   , m_members    () // empty default vector! 
   , m_actions    ()
-{ declareProperty("Members" , m_members ); };
-// ============================================================================
+{ 
+declareProperty("Members" , m_members ); 
+}
+
 
 // ============================================================================
 /// destructor 
@@ -55,8 +56,8 @@ GiGaStepActionSequence::~GiGaStepActionSequence()
 {
   m_actions.clear();
   m_members.clear();
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** initialize the object
@@ -88,8 +89,8 @@ StatusCode GiGaStepActionSequence::initialize()
   //
   return Print("Iinitialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE);
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** perform the stepping action
@@ -105,8 +106,8 @@ void GiGaStepActionSequence::UserSteppingAction ( const G4Step* step )
       IGiGaStepAction*  action = *iaction ;
       if( 0 != action ) { action->UserSteppingAction( step ) ; }
     }
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

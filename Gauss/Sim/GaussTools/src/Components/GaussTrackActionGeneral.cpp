@@ -12,9 +12,6 @@
 #include "G4VProcess.hh"
 #include "G4ProcessType.hh"
 
-// GiGa
-//#include "GiGa/GiGaMACROs.h"
-
 // GaussTools 
 #include "GaussTools/GaussTrajectory.h"
 #include "GaussTools/GaussTrackInformation.h"
@@ -30,7 +27,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GaussTrackActionGeneral );
+DECLARE_TOOL_FACTORY( GaussTrackActionGeneral )
 
 // ============================================================================
 /** standard constructor 
@@ -58,14 +55,14 @@ GaussTrackActionGeneral::GaussTrackActionGeneral
   declareProperty ( "StorePrimaries" , m_storePrimaries ) ;
   declareProperty ( "StorePreDecays" , m_storePreDecays ) ;
   declareProperty ( "StoreDecays"    , m_storeDecays    ) ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// Destructor
 // ============================================================================
 GaussTrackActionGeneral::~GaussTrackActionGeneral() {}
-// ============================================================================
+
 
 // ============================================================================
 /** perform action 
@@ -116,8 +113,8 @@ void GaussTrackActionGeneral::PreUserTrackingAction  ( const G4Track* track )
   // update 
   if ( store ) { mark (info ) ; }
   
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** perform action 
@@ -127,7 +124,7 @@ void GaussTrackActionGeneral::PreUserTrackingAction  ( const G4Track* track )
 // ============================================================================
 void GaussTrackActionGeneral::PostUserTrackingAction  
 ( const G4Track* /* track */  ) {}
-// ============================================================================
+
 
 // ============================================================================
 // The END 

@@ -15,7 +15,6 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/PropertyMgr.h"
 /// GiGa 
-//#include "GiGa/GiGaMACROs.h"
 #include "GiGaCnv/GiGaPrimaryParticleInformation.h"
 // GaussTools
 #include "GaussTools/GaussTrajectory.h"
@@ -35,8 +34,8 @@
 // ============================================================================
 /// factory business 
 // ============================================================================
-DECLARE_TOOL_FACTORY( GaussPostTrackAction );
-// ============================================================================
+DECLARE_TOOL_FACTORY( GaussPostTrackAction )
+
 
 // ============================================================================
 /** standard constructor 
@@ -116,8 +115,8 @@ GaussPostTrackAction::GaussPostTrackAction
   declareProperty( "RejectRICHPhotoelectrons", m_rejectRICHphe );
   declareProperty( "RejectOpticalPhotons"   , m_rejectOptPhot );
 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
@@ -129,8 +128,8 @@ GaussPostTrackAction::~GaussPostTrackAction()
   m_childStoredTypes.clear() ; 
   m_childStoredTypesNames.clear() ; 
 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** initialize the track action  
@@ -199,8 +198,8 @@ StatusCode GaussPostTrackAction::initialize ()
   ///
   return Print("Initialized successfully" , 
                StatusCode::SUCCESS        , MSG::VERBOSE);
-} ;
-// ============================================================================
+}
+
 
 // ============================================================================
 /** finalize the action object 
@@ -219,8 +218,8 @@ StatusCode GaussPostTrackAction::finalize   ()
   m_childStoredTypesNames.clear() ; 
   // finilize the base 
   return GiGaTrackActionBase::finalize() ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /**  perform action 
@@ -258,7 +257,7 @@ void GaussPostTrackAction::PreUserTrackingAction ( const G4Track* track )
     ti->setToBeStored( true ); 
   }
   //
-};
+}
 
 // ============================================================================
 /**  perform action 
@@ -529,7 +528,8 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
       if( 0 != traj ) { delete traj ; } 
       trackMgr()->SetTrajectory( 0 ) ;
     }
-}; 
+}
+
 // ============================================================================
 // Fill Track User information from Primary Info from Generator part
 // (oscillation, signal barcode, HepMC Event link, etc...

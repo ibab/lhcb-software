@@ -41,7 +41,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GaussTrackActionHepMC );
+DECLARE_TOOL_FACTORY( GaussTrackActionHepMC )
 
 // ============================================================================
 /** standard constructor 
@@ -89,14 +89,14 @@ GaussTrackActionHepMC::GaussTrackActionHepMC
   std::sort ( m_hadronicProcesses.begin () ,
               m_hadronicProcesses.end   () ) ;
   
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GaussTrackActionHepMC::~GaussTrackActionHepMC() {};
-// ============================================================================
+GaussTrackActionHepMC::~GaussTrackActionHepMC() {}
+
 
 // ============================================================================
 /** initialise the action object 
@@ -113,7 +113,7 @@ StatusCode GaussTrackActionHepMC::initialize ()
 
   return Print("Iinitialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE );
-};
+}
 
 // ============================================================================
 // finalize
@@ -163,8 +163,8 @@ void GaussTrackActionHepMC::PreUserTrackingAction  ( const G4Track* track )
 //    }
 //  }
 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** perform the post-action
@@ -266,7 +266,7 @@ void GaussTrackActionHepMC::PostUserTrackingAction  ( const G4Track* track )
 //     }     
 //   }
   
-};
+}
 
 // ============================================================================
 // processID

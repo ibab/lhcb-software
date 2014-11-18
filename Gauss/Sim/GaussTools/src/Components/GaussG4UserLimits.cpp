@@ -141,4 +141,4 @@ bool operator== ( const GaussG4UserLimits& ul1 ,
   if (  ul1.fUserLimitSet  !=  ul2.fUserLimitSet  ) { return false ; }
   if (  ul1.fType          !=  ul2.fType          ) { return false ; }
   return true ;
-};
+}

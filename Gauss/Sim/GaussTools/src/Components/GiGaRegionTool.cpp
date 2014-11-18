@@ -8,8 +8,6 @@
 #include "G4Region.hh"
 #include "G4LogicalVolume.hh"
 #include "G4ProductionCuts.hh"
-// GiGa
-//#include "GiGa/GiGaMACROs.h"
 
 /// GiGaCnv 
 #include "GiGaCnv/GiGaVolumeUtils.h"
@@ -29,7 +27,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaRegionTool );
+DECLARE_TOOL_FACTORY( GiGaRegionTool )
 
 // ============================================================================
 /** standard constructor
@@ -64,8 +62,8 @@ GiGaRegionTool::GiGaRegionTool
   declareProperty ( "CutForPositron" , m_positron   ) ;
   //
   declareProperty ( "Overwrite"      , m_overwrite  ) ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** the only one method
@@ -128,8 +126,8 @@ StatusCode GiGaRegionTool::process ( const std::string& /* region */ ) const
   region -> SetProductionCuts ( cuts ) ;
   
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

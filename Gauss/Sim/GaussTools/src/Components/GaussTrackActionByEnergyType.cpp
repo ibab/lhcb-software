@@ -13,8 +13,6 @@
 #include "G4ParticleDefinition.hh"
 #include "G4ParticleTable.hh"
 
-// GiGa
-//#include "GiGa/GiGaMACROs.h"
 
 // GaussTools 
 #include "GaussTools/GaussTrajectory.h"
@@ -33,8 +31,8 @@
 
 // ============================================================================
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GaussTrackActionByEnergyType );
-// ============================================================================
+DECLARE_TOOL_FACTORY( GaussTrackActionByEnergyType )
+
 
 // ============================================================================
 /** standard constructor 
@@ -60,14 +58,14 @@ GaussTrackActionByEnergyType::GaussTrackActionByEnergyType
   declareProperty ( "OwnTypes"    , m_ownNames  ) ;
   declareProperty ( "Threshold"   , m_threshold ) ;
   declareProperty ( "RejectRICHPhotoelectrons", m_rejectRICHphe );
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// Destructor
 // ============================================================================
 GaussTrackActionByEnergyType::~GaussTrackActionByEnergyType() {}
-// ============================================================================
+
 
 // ============================================================================
 /** initialize the track action  
@@ -108,8 +106,8 @@ StatusCode GaussTrackActionByEnergyType::initialize ()
   std::sort ( m_ownTypes   .begin () , m_ownTypes   .end () );
   
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** perform action 
@@ -161,8 +159,8 @@ void GaussTrackActionByEnergyType::PreUserTrackingAction
   if ( storeOwn( track ) ) { mark( info ) ; } 
 
   
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** perform action 
@@ -172,7 +170,7 @@ void GaussTrackActionByEnergyType::PreUserTrackingAction
 // ============================================================================
 void GaussTrackActionByEnergyType::PostUserTrackingAction  
 ( const G4Track* /* track */ ) {}
-// ============================================================================
+
 
 // ============================================================================
 // The END 

@@ -41,7 +41,7 @@
 /** destructor 
  */
 // ============================================================================
-GiGaStream::~GiGaStream(){};
+GiGaStream::~GiGaStream(){}
 
 // ============================================================================
 /// constructor
@@ -71,7 +71,7 @@ GiGaStream::GiGaStream( const std::string& StreamName     ,
   declareProperty( "DataProviderSvcName" , m_nameOfDataSvc  ) ;
   declareProperty( "StreamItems"         , m_namesOfItems   ) ;   
   ///
-};
+}
 
 // ============================================================================
 // initialize method 
@@ -135,7 +135,7 @@ StatusCode GiGaStream::initialize()
   ///
   return StatusCode::SUCCESS; 
   ///
-};
+}
 
 // ============================================================================
 /** Load objects pointed by Item  and put it into Selector 
@@ -175,7 +175,7 @@ StatusCode GiGaStream::LoadObject( const DataStoreItem& item     ,
   ///
   return StatusCode::SUCCESS; 
   ///
-}; 
+}
 
 // ============================================================================
 /** Load objects pointed by Item  and put it into Selector 
@@ -227,7 +227,7 @@ StatusCode GiGaStream::LoadObject( const IRegistry*     registry ,
   ///
   return StatusCode::SUCCESS;
   ///
-};
+}
 
 // ============================================================================
 /** Miscellaneous function to simplify the typing 
@@ -241,7 +241,7 @@ StatusCode GiGaStream::Error( const std::string& message ,
   MsgStream msg( msgSvc() , name() ); 
   msg <<  MSG::ERROR  <<  message  <<  endmsg; 
   return status;  
-};  
+}
 
 // ============================================================================
 /** standard finalization method 
@@ -263,7 +263,7 @@ StatusCode GiGaStream::finalize()
   ///
   return StatusCode::SUCCESS;
   ///
-};
+}
 
 // ============================================================================
 /** perform the printout of properties
@@ -293,21 +293,3 @@ long GiGaStream::printProps ( ) const
 // ============================================================================
 // The End 
 // ============================================================================
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

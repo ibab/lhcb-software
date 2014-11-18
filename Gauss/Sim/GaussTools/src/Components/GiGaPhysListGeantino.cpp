@@ -19,7 +19,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaPhysListGeantino );
+DECLARE_TOOL_FACTORY( GiGaPhysListGeantino )
       
 // ============================================================================
 /** standard constructor 
@@ -36,14 +36,14 @@ GiGaPhysListGeantino::GiGaPhysListGeantino
   const std::string& name   ,
   const IInterface*  parent )
   : GiGaPhysListBase( type , name , parent )
-{};
-// ============================================================================
+{}
+
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaPhysListGeantino::~GiGaPhysListGeantino() {};
-// ============================================================================
+GiGaPhysListGeantino::~GiGaPhysListGeantino() {}
+
 
 // ============================================================================
 // ============================================================================
@@ -55,7 +55,7 @@ void GiGaPhysListGeantino::ConstructParticle()
   // created in the program. 
 
   G4Geantino::GeantinoDefinition();
-};
+}
 
 // ============================================================================
 // ============================================================================
@@ -79,7 +79,7 @@ void GiGaPhysListGeantino::SetCuts()
 
   // Retrieve verbose level
   SetVerboseLevel(temp);  
-};
+}
 
 // ============================================================================
 // The END 
