@@ -28,7 +28,24 @@ class Config:
             yplf.close()
 
 
-    def getPrefix(self):
-        """ Returns the prefix in this case """
-        return "/opt/lhcb"
+        lbrepourl = "http://lhcbproject.web.cern.ch/lhcbproject/dist/rpm"
+        reposdpath = installArea.yumreposd
+        yumrepolhcbext = os.path.join(reposdpath, "lhcbext.repo")
+        lhcbsurlext = "/".join([lbrepourl, "lcg"])
+
+        if not os.path.exists(yumrepolhcbext):
+            yplf = open(yumrepolhcbext, 'w')
+            yplf.write(installArea._getYumRepo("lhcbext", lhcbsurlext))
+            yplf.close()
+
+    def getRelocateCommand(self, siteroot):
+        """ Returns relocate command to be passed to RPM for the repositories """
+        rpmcmd  = " --relocate %s=%s " % ('/opt/lcg/external', os.path.join(siteroot, 'lcg', 'external'))
+        rpmcmd += " --relocate %s=%s " % ('/opt/lcg', os.path.join(siteroot, 'lcg', 'releases'))
+        rpmcmd += " --badreloc "
+        return rpmcmd
+
+
+    
+    
 
