@@ -163,7 +163,7 @@ EvtVector4C EvtBcVHad::_hardCurr(EvtParticle *root_particle) {
 	    ::abort();
     };  
     return hardCur;
-};
+}
 
 //======================================================
 void EvtBcVHad::decay( EvtParticle *root_particle ) {

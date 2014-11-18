@@ -169,12 +169,12 @@ private:
 template<class TT>
 const DataBlock<TT> operator+(const DataBlock<TT>& first, const DataBlock<TT>& second){
 	return DataBlock<TT>(first) += second;
-};
+}
 
 template<class TT>
 const DataBlock<TT> operator*(const double& c, const DataBlock<TT>& block){
 	return DataBlock<TT>(block) *= c;
-};
+}
 
 template<class T>
 class SignedPair{

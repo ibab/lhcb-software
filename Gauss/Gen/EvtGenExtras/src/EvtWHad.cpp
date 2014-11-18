@@ -69,7 +69,7 @@ EvtVector4C EvtWHad::WCurrent_KKP(EvtVector4R pKplus, EvtVector4R pKminus, EvtVe
   vec = ten.cont2(vec);
   return vec;
 
-};
+}
 
 
 // hadronic current W+ -> K+ pi+ pi-
@@ -118,7 +118,7 @@ EvtVector4C EvtWHad::WCurrent_KPP(EvtVector4R pKplus, EvtVector4R pPiPlus, EvtVe
   curr = ten.cont2(curr);
 
   return curr;
-};
+}
 
 
 // a1 -> pi+ pi+ pi- BW

@@ -256,7 +256,7 @@ double Integrate::integralFunction2(double u, void* p) {
 		result = imag(cResult);
 	}
 	return result;
-};
+}
 
 EvtComplex Integrate::get_t(const int& a, const SignedPair<double>& xi,
 		const SignedPair<EvtComplex>& C1) const {
@@ -355,11 +355,11 @@ SignedPair<EvtComplex> IntegrateRight::getC1(const EvtComplex& /*_F_2_7*/,
 	const EvtComplex result2 = CF_factor*(part2 + (MB/(2*constants::mb))*part3);
 	return SignedPair<EvtComplex>(std::make_pair(result1, result2));
 }
-;
+
 
 EvtComplex IntegrateRight::getT(const int& sign, const int a, const double& u) const{
 	DataBlock<EvtComplex> kT0 = ((qcd::alpha_s(C_mb3->getScaleValue(), 5)/(4
 			*constants::Pi))*constants::CF*getT1(u));
 	return kT0(sign, a);
 }
-;
+

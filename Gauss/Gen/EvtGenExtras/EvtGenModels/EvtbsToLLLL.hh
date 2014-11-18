@@ -43,7 +43,7 @@ public:
   virtual void decay(EvtParticle *p);
 
 private:
-  Evtbs2llGammaFF       *_mntffmodel;;
+  Evtbs2llGammaFF       *_mntffmodel;
   EvtbsToLLLLAmp        *_calcamp;
   EvtbTosllWilsCoeffNLO *_wilscoeff;
 };
