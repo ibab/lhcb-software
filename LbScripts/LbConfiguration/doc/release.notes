@@ -1,3 +1,7 @@
+2014-11-18  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r2
+
 2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-run: use the extension .xenv instead of Environment.xml
