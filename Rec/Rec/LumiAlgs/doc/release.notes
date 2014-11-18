@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2014-11-18 - Jaap Panman
+- update unittests (and example jobs) to use latest database tag
+
 ! 2014-11-17 - Jaap Panman
 - small correction in jobs/gaudipython_mu_calculation.py
 

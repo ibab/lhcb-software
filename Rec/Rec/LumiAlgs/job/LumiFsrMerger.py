@@ -14,7 +14,7 @@ from Configurables import LHCbApp
 
 LHCbApp().XMLSummary = 'summary.xml'
 #-- set explicit CondDB tag
-LHCbApp().CondDBtag = 'cond-20130710'
+LHCbApp().CondDBtag = 'cond-20141002'
 
 #--- determine application to run
 from LumiAlgs.LumiMergeFSRConf import LumiMergeFSRConf

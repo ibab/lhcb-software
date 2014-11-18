@@ -15,7 +15,7 @@ from Configurables import CondDB
 # CondDB().LocalTags["LHCBCOND"] = ["lumi-20101026"]
 
 #-- set explicit CondDB tag
-LHCbApp().CondDBtag = 'cond-20130710'
+LHCbApp().CondDBtag = 'cond-20141002'
 
 #--- determine application to run
 from Configurables import LumiAlgsConf, LumiCheckCondDB, GetLumiParameters
