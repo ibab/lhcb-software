@@ -14,9 +14,7 @@ Runable.Wait                         = 1;  // 1 of running as daemon
 MessageSvc.fifoPath                  = "$LOGFIFO";
 MessageSvc.OutputLevel               = 5; //@OnlineEnv.OutputLevel;
 
-MessageSvc.LoggerOnly              = false;  // Set to false for stdout
 HistogramPersistencySvc.Warnings   = false;
-
 MonitorSvc.CounterUpdateInterval   = -1;
 
 aaa.PartitionName     = @OnlineEnv.PartitionName;

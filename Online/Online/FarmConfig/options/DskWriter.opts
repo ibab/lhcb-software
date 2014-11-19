@@ -25,7 +25,6 @@ LHCbFileWriter_Overflow.Requirements         = {
 LHCbFileWriter_Overflow.MEPFilePrefix         = "/localdisk/overflow/NewRun_";
 LHCbFileWriter_Overflow.EvtFilePrefix         = "/localdisk/hlt1/Run_";
 MessageSvc.fifoPath              = "$LOGFIFO";
-MessageSvc.LoggerOnly            = 1;
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
 MonitorSvc.CounterUpdateInterval = 5;
 HistogramPersistencySvc.Warnings = 0;

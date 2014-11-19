@@ -29,7 +29,6 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
 
 MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.LoggerOnly                = true;  // Set to false for stdout
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
@@ -95,7 +94,6 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
 
 MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.LoggerOnly                = true;  // Set to false for stdout
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
@@ -170,7 +168,6 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
 
 MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.LoggerOnly                = true;  // Set to false for stdout
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;
@@ -237,7 +234,6 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 3;  // 1 of running as daemon (Class1 task)
 
 MessageSvc.fifoPath                  = "$LOGFIFO";
-MessageSvc.LoggerOnly                = true;  // Set to false for stdout
 MessageSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 MonitorSvc.OutputLevel               = @OnlineEnv.OutputLevel;
 HistogramPersistencySvc.Warnings     = false;

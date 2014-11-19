@@ -2,7 +2,7 @@
 export UTGID=${1};
 . /group/online/dataflow/scripts/preamble.sh
 #
-exec -a ${UTGID}  ${GAUDIONLINEROOT}/${CMTCONFIG}/Gaudi.exe \
+exec -a ${UTGID} GaudiOnlineExe.exe \
     libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc \
     -tasktype=LHCb::Class1Task \
     -main=${GAUDIONLINEROOT}/options/Main.opts \

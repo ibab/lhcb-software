@@ -20,11 +20,11 @@ def configureForRunning():
   COND   = Online.CondDBTag
   App    = Online.HLTType
   Mode   = Online.MooreStartupMode
-  Mapping= os.path.basename(Online.ConditionsMapping)
 
   if Online.MooreVersion == "":
     checkpoint_reloc = sep+Online.HltArchitecture+sep+Online.OnlineVersion+sep+Online.HLTType
   else:
+    Mapping= os.path.basename(Online.ConditionsMapping)
     app_name = os.environ['TASK_TYPE']
     checkpoint_reloc = sep+'Moore'+sep+Online.MooreOnlineVersion+sep+\
                        Online.HLTType+sep+Online.CondDBTag+sep+Online.DDDBTag+sep+\
@@ -75,7 +75,7 @@ def configureForRunning():
   if Mode > 1:
     print 'export CHECKPOINT_DIR='+os.path.dirname(checkpoint_path)+';'
     print 'export CHECKPOINT_FILE='+checkpoint_path+';'
-    print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
+    print 'RESTORE_CMD="exec -a ${UTGID} restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
     if not os.environ.has_key('TEST_CHECKPOINT'):
       print 'echo "[INFO] Copy checkpoint:'+checkpoint_path+'";'
       print 'bash '+checkpoint_dir+'/cmds/copy_torrent '+checkpoint_reloc+';'
@@ -127,6 +127,7 @@ def doIt():
   try:
     mode = os.environ['MOORESTARTUP_MODE']
     print 'export CHECKPOINTING_BIN=${CHECKPOINTINGROOT}/${CMTCONFIG};'
+    print 'export CHECKPOINTING_BIN=${CHECKPOINTINGROOT}/../../InstallArea/${CMTCONFIG}/lib;'
     if os.environ.has_key('TEST_CHECKPOINT'):
       configureForTest()
     elif os.environ.has_key('CREATE_CHECKPOINT'):

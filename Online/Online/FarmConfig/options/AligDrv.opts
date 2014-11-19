@@ -2,9 +2,7 @@
 //==============================================================
 #include "$INFO_OPTIONS"
 
-ApplicationMgr.ExtSvc               += {
-          "IncidentSvc",
-                                       };
+ApplicationMgr.ExtSvc               += {"IncidentSvc" };
 ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::AlignDrv/AlignDrv";
 ApplicationMgr.HistogramPersistency  = "NONE";
@@ -12,8 +10,6 @@ ApplicationMgr.EvtSel                = "NONE";
 Runable.Wait                         = 1;  // 1 of running as daemon
 MessageSvc.fifoPath                  = "$LOGFIFO";
 MessageSvc.OutputLevel               = 5; //@OnlineEnv.OutputLevel;
-
-MessageSvc.LoggerOnly              = false;  // Set to false for stdout
 HistogramPersistencySvc.Warnings   = false;
 
 MonitorSvc.CounterUpdateInterval   = -1;

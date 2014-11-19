@@ -19,7 +19,6 @@ MEPManager.Buffers                   = @OnlineEnv.AlignWriter_Buffers;
 //
 WrManager.Input                     = @OnlineEnv.AlignWriter_Input;
 MessageSvc.fifoPath              = "$LOGFIFO";
-MessageSvc.LoggerOnly            = 1;
 MessageSvc.OutputLevel           = @OnlineEnv.OutputLevel;
 MonitorSvc.CounterUpdateInterval = 5;
 HistogramPersistencySvc.Warnings = 0;
@@ -27,8 +26,8 @@ HistogramPersistencySvc.Warnings = 0;
 LHCbFileWriter_D0.SizeLimit                 = 1000;
 LHCbFileWriter_D0.PrintFreq                 = 1.0;
 LHCbFileWriter_D0.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"EvType=1;TriggerMask=0xffffffff,0x0,0x00200000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
+"EvType=1;TriggerMask=0xffffffff,0x0,0x00200000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 LHCbFileWriter_D0.MEPFilePrefix         = "/localdisk/overflow/D0_Run_";
 LHCbFileWriter_D0.EvtFilePrefix         = "/localdisk/overflow/D0_Run_";
