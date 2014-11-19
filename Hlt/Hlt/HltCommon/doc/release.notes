@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2014-11-19 - Gerhard Raven
+ - remove HltCommon_dll
+
 !========================= HltCommon v10r3 2014-11-05 =========================
 
 ! 2014-10-16 - Gerhard Raven
