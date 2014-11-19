@@ -3,6 +3,9 @@
 ! Purpose: Creates dictionaries for the use of Linker relations in Python
 !------------------------------------------------------------------------------
 
+! 2014-11-19 - Roel Aaij
+ - Fix use of anonymous namespace in instantiations for dictionary.
+
 !========================= LinkerInstances v4r0 2014-02-17 ======================
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL linkers
