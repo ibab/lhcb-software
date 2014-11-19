@@ -158,7 +158,7 @@ StatusCode HltSelReportsWriter::execute() {
 
   // get inputs
   const std::string objectsLocation = m_inputHltSelReportsLocation.value() + "/Candidates" ;
-  const HltObjectSummary::Container* objectSummaries = getIfExists<HltObjectSummary::Container>( objectsLocation );
+  const auto* objectSummaries = getIfExists<HltObjectSummary::Container>( objectsLocation );
   if ( !objectSummaries ) {
     return Warning( " No HltSelReports objects at " + objectsLocation, StatusCode::SUCCESS, 20 );
   }
@@ -196,7 +196,7 @@ StatusCode HltSelReportsWriter::execute() {
 
   auto nHits = std::accumulate(
       std::begin(lhcbidSequences), std::end(lhcbidSequences), 0u,
-      [](unsigned int n, LhcbidSequences::const_reference s) { return n += s.size(); });
+      [](unsigned int n, LhcbidSequences::const_reference s) { return n+s.size(); });
 
   if( lhcbidSequences.size()/2 + 1 + nHits >  0xFFFFL  ){
     return Error( std::string{ "Too many hits or hit-sequences to store hits=" }

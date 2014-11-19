@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-11-19 - Gerhard Raven
+ - avoid std::stringstream
+
 !========================= HltDAQ v4r9 2014-11-05 =========================
 
 ! 2014-11-04 - Sean Benson

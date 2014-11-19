@@ -90,17 +90,17 @@ StatusCode HltDecReportsWriter::execute()
   }
 
   // compose the bank body
-  std::vector<unsigned int> bankBody; bankBody.reserve( inputSummary->size() + 2);
+  std::vector<unsigned int> bankBody; bankBody.reserve( inputSummary->size() + 2 );
   bankBody.push_back( inputSummary->configuredTCK() );
   bankBody.push_back( inputSummary->taskID() );
   std::transform( std::begin(*inputSummary), std::end(*inputSummary),
                   std::back_inserter(bankBody),
-                  [](HltDecReports::Container::const_reference r ) { return r.second.decReport(); } );
+                  [](HltDecReports::Container::const_reference r) { return r.second.decReport(); } );
 
   // order according to the values, essentially orders by intDecisionID
   // this is important since it will put "*Global" reports at the beginning of the bank
   // NOTE: we must skip the first two words (configuredTCK, taskID)
-  std::sort( std::next( std::begin(bankBody), 2), std::end(bankBody), std::less<unsigned int>() );
+  std::sort( std::next( std::begin(bankBody), 2), std::end(bankBody) );
 
   // shift bits in sourceID for the same convention as in HltSelReports
   rawEvent->addBank(  int(m_sourceID<<kSourceID_BitShift), RawBank::HltDecReports, kVersionNumber, bankBody );
