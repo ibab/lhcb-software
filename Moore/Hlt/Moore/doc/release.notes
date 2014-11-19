@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-11-19 Gerhard Raven
+ - simplify split config 
+
 !========================= Moore v23r2 2014-11-05 =========================
 
 ! 2014-11-04 - Sean Benson

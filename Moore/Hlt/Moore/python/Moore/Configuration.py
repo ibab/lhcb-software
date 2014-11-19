@@ -721,8 +721,7 @@ class Moore(LHCbConfigurableUser):
             trans = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt2[^']*'" : "" } } 
                     , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
                     , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
-                    , 'HltGlobalMonitor/.*'                : { 'DecToGroupHlt2' : { '^.*$' : '{ }' }, 
-                                                               'Hlt2DecReports' : { '^.*$' : ''    } }
+                    , 'HltGlobalMonitor/.*'                : { 'Hlt2DecReports' : { '^.*$' : ''    } }
                     , 'HltL0GlobalMonitor/.*'              : { 'Hlt2DecReports' : { '^.*$' : ''    } }
             }
             Funcs._mergeTransform(trans)
@@ -739,25 +738,22 @@ class Moore(LHCbConfigurableUser):
             }
             Funcs._mergeTransform(trans)
         
-        # Tell the HltConfigSvc that we will only be running 
-        # one level of the HLT
-        from Configurables import HltConfigSvc
-        from DAQSys.Decoders import DecoderDB
-        split=self.getProp("Split")
-        if split == "Hlt1":
-            HltConfigSvc().HltDecReportsLocations = [ DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].listOutputs()[0] ]
-        if split == "Hlt2":
-            HltConfigSvc().HltDecReportsLocations = [ DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].listOutputs()[0] ]
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
         if split not in ["","Hlt1","Hlt2"]:
             raise ValueError("Invalid option for Moore().Split: '%s'"% self.getProp("Split") )
-        if useTCK :
+
+        split=self.getProp("Split")
+        if useTCK and split:
             splitter = { 'Hlt1'     : hlt1_only_tck 
                        , 'Hlt2'     : hlt2_only_tck
-                       , ''         : False }
             action = splitter[ split ]
-            if action : action()
+            # Tell the HltConfigSvc that we will only be running 
+            # one level of the HLT
+            from Configurables import HltConfigSvc
+            from DAQSys.Decoders import DecoderDB
+            # make sure the HltConfigSvc (if used) puts the TCK it used in the relevant HltDecReports
+            HltConfigSvc().HltDecReportsLocations = [ DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % split].listOutputs()[0] ]
         
         #check/set WriterRequires, not really needed since now the content of Hlt1/2 is modified in the HltDecisionSequence
         if self.isPropertySet('WriterRequires'):
@@ -768,15 +764,6 @@ class Moore(LHCbConfigurableUser):
                             if len([w for w in self.getProp("WriterRequires") if fail in w]):
                                 raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
         
-        if split is 'Hlt2' and False:
-            # TODO/FIXME: do not hardwire these here... -- goes in MooreScripts for online running...
-            # TODO/FIXME: pick up the right online_....xml file
-            from Configurables import CondDB
-            CondDB().RunChangeHandlerConditions +=  [ "Conditions/Rich1/Environment"
-                                                    , "Conditions/Rich1/Alignment"
-                                                    , "Conditions/Rich2/Alignment"
-                                                    , "Conditions/Rich2/Environment" ]
-            print "Hlt2 -- using following RunChangeHandlerConditions: " , CondDB().RunChangeHandlerConditions
 
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
