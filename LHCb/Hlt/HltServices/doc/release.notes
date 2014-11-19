@@ -4,6 +4,9 @@
 ! Purpose     : HLT-specific services not needed for decoding
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Gerhard Raven
+ - C++11 cleanup
+
 ! 2014-11-06 - Marco Clemencic
  - Fixed CMake configuration.
 

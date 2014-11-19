@@ -50,8 +50,8 @@ class HltGenConfig : public GaudiAlgorithm, public IToolSvc::Observer
     StatusCode generateConfig() const;
 
     ConfigTreeNode::digest_type generateConfig( const INamedInterface& obj ) const;
-    template <typename COMP, typename I, typename R, typename INS>
-    StatusCode getDependencies( I begin, I end, R resolver, INS inserter ) const;
+    template <typename I, typename INS, typename R>
+    StatusCode getDependencies( I begin, I end, INS inserter , R resolver) const;
 
     // keep track of whom uses which tools
     std::multimap<std::string, const IAlgTool*>  m_toolmap;

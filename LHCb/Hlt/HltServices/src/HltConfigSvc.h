@@ -33,6 +33,7 @@ public:
 
   ~HltConfigSvc( ) override = default; ///< Destructor
   StatusCode initialize() override;    ///< Service initialization
+  StatusCode start() override;    ///< Service initialization
   StatusCode finalize() override;      ///< Service finalization
   void handle(const Incident&) override;
 
