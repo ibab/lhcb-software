@@ -7,6 +7,9 @@
 
 !========================== SimChecks v1r3 2014-10-08 ========================
 
+! 2014-11-19 - Luca Pescatore
+- Partial parallelization of the Targets tool to speed up the events generation
+
 ! 2014-11-12 - Luca Pescatore
 - Fixed bug that cause the plotter to not separate data of different particle guns.
 

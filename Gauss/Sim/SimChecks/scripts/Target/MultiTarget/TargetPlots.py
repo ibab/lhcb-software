@@ -18,7 +18,7 @@ vardef = { "TOTAL": "xsec", "INEL" : "inel_xsec", "EL" : "el_xsec",
 		"PERC_NCH" : "percNCh", "PERC_MINUS" : "percMinus", "PERC_PLUS" : "percPlus",
 		"MULTI_GAMMA" : "multi_gamma", "MULTI" : "multi" }
 
-colors = [1,2,4,5,3,6,8,9,38,12,18,41]
+colors = [1,2,4,6,8,9,38,12,18,41,5,3,20,21,22,23,24,25,27,28,29,30,31,32,33,34,35]
 
 def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materials = [], E0 = -1 , Dx = -1, plotData = False) :
 	
@@ -79,22 +79,24 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				list = gDirectory.Get(varexp)
 				entries = list.GetN()
 				dataTree.SetEntryList(list)
+				errx = array( 'd' , [0.] * entries )
 				
-				if(finalPlot == "MULTI" or finalPlot == "TOTAL" or finalPlot == "INEL" or finalPlot == "EL") :
+				has_error = (find(finalPlot,"MULTI") > -1 or find(finalPlot,"TOTAL")>-1 or find(finalPlot,"INEL")>-1 or find(finalPlot,"EL")>-1)
+				
+				if(has_error) :
 					dataTree.Draw(xvar+":"+var+":"+var+"_err","","colz")	
 					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
 				else :
 					dataTree.Draw(xvar+":"+var)
 					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2())
 
-				errx = array( 'd' , [0.] * entries )
 				ty1 = dataTree.GetV2()
 				terry1 = dataTree.GetV3()
 				y1=[]
 				erry1=[]
 				for i in range(0,entries) :
 					y1.append(ty1[i])
-					if len(terry1) < 1e4:
+					if has_error :
 						erry1.append(terry1[i])
 									
 				varexp = "h_"+str(pg+1)+m
@@ -108,9 +110,9 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				dataTree.Draw(">>"+varexp,select, "entrylist")
 				list2 = gDirectory.Get(varexp)
 				dataTree.SetEntryList(list2)
-				
-				if(finalPlot == "MULTI" or finalPlot == "TOTAL" or finalPlot == "INEL" or finalPlot == "EL") :
-					dataTree.Draw(xvar+":"+var+":"+var+"_err")	
+
+				if(has_error) :
+					dataTree.Draw(xvar+":"+var+":"+var+"_err")
 					gr = TGraphErrors(entries,dataTree.GetV1(),dataTree.GetV2(),errx,dataTree.GetV3())
 				else :
 					dataTree.Draw(xvar+":"+var)
@@ -118,13 +120,13 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 				tx = dataTree.GetV1() 
 				ty2 = dataTree.GetV2() 
-				terry2 = dataTree.GetV3() 
+				terry2 = dataTree.GetV3()
 				x = []
 				y2=[]
 				erry2=[]
 				for i in range(0,entries) :
 					y2.append(ty2[i])
-					if len(terry2) < 1e4 :
+					if has_error :
 						erry2.append(terry2[i])
 					x.append(tx[i])
 
@@ -138,7 +140,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					else :
 						y.append(100*TMath.Abs(y1[ee] - y2[ee])/(2. - y1[ee] - y2[ee]))
 
-					if(len(erry) > 0) :
+					if(len(erry1) > 0) :
 						totErr2 = TMath.Power(erry1[ee]/y1[ee],2) + TMath.Power(erry2[ee]/y2[ee],2)
 						erry.append(y[ee] * TMath.Sqrt(totErr2))
 						ratiotxt.write(' & $ {:4.2} \\pm {:4.2} $ \\\\ \n'.format(y[ee],erry[ee]) )
@@ -151,7 +153,7 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 				else :
 					gr = TGraphErrors(entries,array('d',x),array('d',y))
 
-				gr.SetMarkerColor(colors[pg/2-1])
+				gr.SetMarkerColor(colors[pg/2])
 				gr.SetMarkerStyle(20+nm)
 
 				label = dict._all_pguns[pguns[pg+1]].GetLatex("LEG") + " / " + dict._all_pguns[pguns[pg]].GetLatex("LEG")
@@ -171,10 +173,10 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 					if grPDG :
 						if(len(pguns)>2) :
-							grPDG.SetMarkerColor(colors[pg/2-1])
+							grPDG.SetMarkerColor(colors[pg/2])
 						else :
 							grPDG.SetMarkerColor(4)
-						grPDG.SetMarkerStyle(34)
+						grPDG.SetMarkerStyle(28)
 						grPDG.SetMarkerSize(1.2)
 						if nm == len(models)-1 :
 							grs.append(grPDG)
@@ -304,28 +306,22 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 
 		COMPAS_p_gr = TGraphErrors(6,array('d', COMPAS_p_x ), array('d', COMPAS_p_y ), array('d', [0.]*6 ), array('d', COMPAS_p_yErr))
 		COMPAS_pbar_gr = TGraphErrors(6, array('d', COMPAS_pbar_x), array('d', COMPAS_pbar_y), array ('d', [0.]*6 ), array('d', COMPAS_pbar_yErr) )
-		COMPAS_p_gr.SetMarkerColor(4)
 		COMPAS_p_gr.SetMarkerStyle(29)
 		COMPAS_p_gr.SetMarkerSize(1.1)
-		COMPAS_pbar_gr.SetMarkerColor(4)
 		COMPAS_pbar_gr.SetMarkerStyle(30)
 		COMPAS_pbar_gr.SetMarkerSize(1.2)
 
 		COMPASTot_p_gr = TGraphErrors(4, array('d', COMPASTot_p_x), array('d', COMPASTot_p_y), array('d', [0.]*4 ), array('d', COMPASTot_p_yErr))
 		COMPASTot_pbar_gr = TGraphErrors(2, array('d', COMPASTot_pbar_x), array('d', COMPASTot_pbar_y), array('d', [0.]*2 ), array('d', COMPASTot_pbar_yErr))
-		COMPASTot_p_gr.SetMarkerColor(4)
 		COMPASTot_p_gr.SetMarkerStyle(29)
 		COMPASTot_p_gr.SetMarkerSize(1.1)
-		COMPASTot_pbar_gr.SetMarkerColor(4)
 		COMPASTot_pbar_gr.SetMarkerStyle(30)
 		COMPASTot_pbar_gr.SetMarkerSize(1.2)
 
 		COMPAS_inBe_p_gr = TGraphErrors(6, array('d', COMPAS_inBe_p_x), array('d', COMPAS_inBe_p_y), array('d', [0.]*6 ), array('d', COMPAS_inBe_p_yErr))
 		COMPAS_inBe_pbar_gr = TGraphErrors(5, array('d', COMPAS_inBe_pbar_x), array('d', COMPAS_inBe_pbar_y), array('d', [0.]*5 ), array('d', COMPAS_inBe_pbar_yErr))
-		COMPAS_inBe_p_gr.SetMarkerColor(4)
 		COMPAS_inBe_p_gr.SetMarkerStyle(29)
 		COMPAS_inBe_p_gr.SetMarkerSize(1.1)
-		COMPAS_inBe_pbar_gr.SetMarkerColor(4)
 		COMPAS_inBe_pbar_gr.SetMarkerStyle(30)
 		COMPAS_inBe_pbar_gr.SetMarkerSize(1.2)
 		
@@ -387,23 +383,29 @@ def Plot( dataTree, xvar, finalPlot, outputPath, models = [], pguns = [], materi
 					if plotData and n0 == len(models)-1 and materials[0] == "Al" :
 						if find(finalPlot,"TOTAL")>-1 :
 							if dict._all_pguns[pg].GetName()=="p":
+								COMPASTot_p_gr.SetMarkerColor(colors[int(nh/2.-1)])
 								grs.append(COMPASTot_p_gr)
 								leg.AddEntry(COMPASTot_p_gr,"COMPAS p total in Al","P")
 							elif dict._all_pguns[pg].GetName()=="pbar":
+								COMPASTot_pbar_gr.SetMarkerColor(colors[int(nh/2.-1)])
 								grs.append(COMPASTot_pbar_gr)
 								leg.AddEntry(COMPASTot_pbar_gr,"COMPAS #bar{p} total in Al","P")
 						elif find(finalPlot,"INEL")>-1 :
 							if dict._all_pguns[pg].GetName()=="p":
+								COMPAS_p_gr.SetMarkerColor(colors[int(nh/2.-1)])
 								grs.append(COMPAS_p_gr)
 								leg.AddEntry(COMPAS_p_gr,"COMPAS p inel in Al","P")
 							elif dict._all_pguns[pg].GetName()=="pbar":
+								COMPAS_pbar_gr.SetMarkerColor(colors[int(nh/2.-1)])
 								grs.append(COMPAS_pbar_gr)
 								leg.AddEntry(COMPAS_pbar_gr,"COMPAS #bar{p} inel in Al","P")
 					elif plotData and n0 == len(models)-1 and materials[0] == "Be" and find(finalPlot,"INEL")>-1 :
 						if dict._all_pguns[pg].GetName()=="p":
+							COMPAS_inBe_p_gr.SetMarkerColor(colors[int(nh/2.-1)])
 							grs.append(COMPAS_inBe_p_gr)
 							leg.AddEntry(COMPAS_inBe_p_gr,"COMPAS p inel in Be","P")
 						elif dict._all_pguns[pg].GetName()=="pbar":
+							COMPAS_inBe_pbar_gr.SetMarkerColor(colors[int(nh/2.-1)])
 							grs.append(COMPAS_inBe_pbar_gr)
 							leg.AddEntry(COMPAS_inBe_pbar_gr,"COMPAS #bar{p} inel in Be","P")
 

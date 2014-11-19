@@ -13,6 +13,8 @@ import shutil
 import fileinput
 import string
 import subprocess
+import time
+from multiprocessing import Pool
 from TargetSummary import *
 
 
@@ -65,6 +67,10 @@ def createTemplateOptionFile(path,models,particlesTodo,energies,materialsTodo,th
 
     opt_file.close()
 
+
+def submit():
+
+	sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
     
 
 
@@ -111,11 +117,16 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 				
 					log.write('  -------  ' + material+'\n')
 					
+					jobs = []
+					pool = Pool()
+
 					for particle in particlesTodo:
 					
 						log.write('  --  ' + particle+'\n')
 						log.flush()
-					
+				
+						time.sleep(2)
+						
 						inputfile = "TargetMaterialGunMultiTargetLocalTemporary.py"
 						command = 's/PdgCode.*/PdgCode = ' + particles[particle] + '/'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
@@ -139,9 +150,13 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 						sub = subprocess.call(['sed', '-i', command, inputfile])
 						command = 's|projEng = .*|projEng = '+str(energy)+'|'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
+
+						jobs.append(pool.apply_async(submit))
+						#sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
 					
-						sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
-					
+					for j in jobs :
+						answer = j.get()
+
 			dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
 			sourcedir = os.environ['PWD']
 			source = os.listdir(sourcedir)

@@ -13,7 +13,7 @@ models=['FTFP_BERT']#any present in the version of Gauss you are using es. 'FTFP
 energies=[1,2,5,10,50,100]#any
 materials=['Al','Be','Si'] # 'Al' 'Be' 'Si'
 thicks=[1]  #in mm 1, 5, 10 (only)
-pguns=['p','pbar','Piminus', 'Piplus','Kminus', 'Kplus'] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
+pguns=["p","pbar","Kplus","Kminus","Piplus","Piminus"] # Available: 'Piminus' 'Piplus' 'Kminus' 'Kplus' 'p' 'pbar'
 
 RunTargetJobs(path, models, pguns, energies, materials, thicks)
 
