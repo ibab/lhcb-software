@@ -36,12 +36,12 @@ class LumiHistoCollector : public HltBaseAlg
 
   private:
     // analyse histos
-    virtual StatusCode analyse();
-    virtual void storeTrend( std::string varname, double lumiValue );
-    virtual StatusCode printHistoList();
-    virtual bool printHistoLeaf( IHistogramSvc*, SmartIF<IDataManagerSvc> mgr,
+    StatusCode analyse();
+    void storeTrend( std::string varname, double lumiValue );
+    StatusCode printHistoList();
+    bool printHistoLeaf( IHistogramSvc*, SmartIF<IDataManagerSvc> mgr,
                                  IRegistry* pObj );
-    virtual void setupStore();
+    void setupStore();
     // to set interval
     ulonglong gpsTime();
     bool gpsTimeInterval();

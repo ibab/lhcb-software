@@ -58,12 +58,10 @@ StatusCode HltLumiOdinReader::execute()
     }
 
     if ( msgLevel( MSG::DEBUG ) ) {
-        std::stringstream bxType( "" );
-        bxType << (LHCb::ODIN::BXTypes)odin->bunchCrossingType();
-        std::stringstream trType( "" );
-        trType << (LHCb::ODIN::TriggerType)odin->triggerType();
-        debug() << " Trigger Type : " << trType.str() << " BXType : " << bxType.str()
-                << endmsg;
+        std::ostringstream m;
+        m << " Trigger Type : " << (LHCb::ODIN::TriggerType)odin->triggerType() 
+          << " BXType : " <<  (LHCb::ODIN::BXTypes)odin->bunchCrossingType();
+        debug() << m.str() << endmsg;
     }
     m_selection.output()->setDecision( true );
 

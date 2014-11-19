@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Gerhard Raven
+ - cleanup...
+
 !========================= HltLuminosity v4r2 2014-11-05 =========================
 
 

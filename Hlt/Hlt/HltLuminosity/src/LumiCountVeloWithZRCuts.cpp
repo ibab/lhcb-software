@@ -10,7 +10,8 @@
 #include "LumiCountVeloWithZRCuts.h"
 #include "boost/format.hpp"
 
-using namespace LHCb;
+// hack to avoid typing some things twice
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
 
 // composition implements, given f and g, their composition  f( g(x1), x2, x3, .. )
 template< class F, class G > struct Composition {
@@ -21,10 +22,8 @@ template< class F, class G > struct Composition {
     constexpr Composition( _F&& f, _G&& g ) : f( std::forward<_F>(f) ), g( std::forward<_G>(g) ) { }
 
     template< class X, class ...Y >
-    decltype( f( g(std::declval<X>()), std::declval<Y>()... ) )
-    operator() ( X&& x, Y&& ...y ) {
-        return f( g(std::forward<X>(x)), std::forward<Y>(y)... );
-    }
+    auto operator() ( X&& x, Y&& ...y ) const
+    AUTO_RETURN( f( g(std::forward<X>(x)), std::forward<Y>(y)... ) )
 };
 
 template< class F, class G >
@@ -62,75 +61,64 @@ StatusCode LumiCountVeloWithZRCuts::initialize()
     StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
     if ( sc.isFailure() ) return sc; // error printed already by GaudiAlgorithm
 
-    if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Initialize" << endmsg;
-    if ( msgLevel( MSG::DEBUG ) )
-        debug() << "TrackCounterName: "
-                << boost::format( "%20s" ) % m_TrackCounterName << " "
-                << "VertexCounterName: "
-                << boost::format( "%20s" ) % m_VertexCounterName << " "
-                << "TrackInputSelection: "
-                << boost::format( "%20s" ) % m_TrackInputSelectionName << " "
-                << "VertexInputSelection: "
-                << boost::format( "%20s" ) % m_VertexInputSelectionName << " "
-                << "OutputContainer: "
-                << boost::format( "%20s" ) % m_OutputContainerName << " "
-                << "AbsZCut: " << boost::format( "%20g" ) % m_AbsZCut << " "
-                << "RCut: " << boost::format( "%20g" ) % m_RCut << endmsg;
-    m_TrackCounter = LHCb::LumiCounters::counterKeyToType( m_TrackCounterName );
+    if ( msgLevel( MSG::DEBUG ) ) {
+        auto fmt_s = boost::format("%20s");
+        auto fmt_g = boost::format("%20g");
+        debug() << "==> Initialize\n"
+                << "TrackCounterName: " << fmt_s % m_TrackCounterName 
+                << " VertexCounterName: " << fmt_s % m_VertexCounterName 
+                << " TrackInputSelection: " << fmt_s % m_TrackInputSelectionName 
+                << " VertexInputSelection: " << fmt_s % m_VertexInputSelectionName 
+                << " OutputContainer: " << fmt_s % m_OutputContainerName 
+                << " AbsZCut: " << fmt_g % m_AbsZCut 
+                << " RCut: " << fmt_g % m_RCut << endmsg;
+    }
+    m_TrackCounter  = LHCb::LumiCounters::counterKeyToType( m_TrackCounterName );
     m_VertexCounter = LHCb::LumiCounters::counterKeyToType( m_VertexCounterName );
 
     if ( m_TrackCounter == LHCb::LumiCounters::Unknown ) {
-        info() << "LumiCounter not found with name: " << m_TrackCounterName
-               << endmsg;
-    } else {
-        if ( msgLevel( MSG::DEBUG ) )
-            debug() << m_TrackCounterName << " value: " << m_TrackCounter << endmsg;
+        info() << "LumiCounter not found with name: " << m_TrackCounterName << endmsg;
+    } else if ( msgLevel( MSG::DEBUG ) ) {
+        debug() << m_TrackCounterName << " value: " << m_TrackCounter << endmsg;
     }
     if ( m_VertexCounter == LHCb::LumiCounters::Unknown ) {
         info() << "LumiCounter not found with name: " << m_VertexCounterName
                << endmsg;
-    } else {
-        if ( msgLevel( MSG::DEBUG ) )
-            debug() << m_VertexCounterName << " value: " << m_VertexCounter
-                    << endmsg;
+    } else if ( msgLevel( MSG::DEBUG ) ) {
+        debug() << m_VertexCounterName << " value: " << m_VertexCounter
+                << endmsg;
     }
     return StatusCode::SUCCESS;
 }
 
 //=============================================================================
-constexpr struct  position_ {
-    template <typename T> Gaudi::XYZPoint operator()(const T* t) const { return  t->position(); }
-} position {} ;
+constexpr struct  position_t {
+    template <typename T> 
+    Gaudi::XYZPoint operator()(const T* t) const 
+    { return  t->position(); }
+} position {};
 
 //=============================================================================
 StatusCode LumiCountVeloWithZRCuts::execute()
 {
+    static const auto predicate = compose( [&](const Gaudi::XYZPoint& p) { return fiducial(p); } // point -> bool
+                                         , position     // object -> point
+                                         ); 
+
     if ( msgLevel( MSG::DEBUG ) ) debug() << "==> Execute" << endmsg;
 
-    LHCb::HltLumiSummary* sums =
-        getOrCreate<HltLumiSummary, HltLumiSummary>( m_OutputContainerName );
+    auto* sums =
+        getOrCreate<LHCb::HltLumiSummary, LHCb::HltLumiSummary>( m_OutputContainerName );
     setFilterPassed( true );
 
-    auto predicate = compose( std::bind(&LumiCountVeloWithZRCuts::fiducial, this, std::placeholders::_1) // point -> bool
-                            , position     // object -> point
-                            ); 
-
-    LHCb::Tracks* trCands = getIfExists<LHCb::Tracks>( m_TrackInputSelectionName );
-    int nTr = trCands ? std::count_if( std::begin( *trCands ), std::end( *trCands ), predicate )
-                      : -1;
-    sums->addInfo( m_TrackCounter, nTr ); // add track  counter
-
-    LHCb::RecVertices* vxCands =
-        getIfExists<LHCb::RecVertices>( m_VertexInputSelectionName );
-    int nVx = vxCands ? std::count_if( std::begin( *vxCands ), std::end( *vxCands ), predicate )
-                      : -1;
-    sums->addInfo( m_VertexCounter, nVx ); // add vertex counter
+    sums->addInfo( m_TrackCounter,  count_if<LHCb::Tracks>(m_TrackInputSelectionName, std::cref(predicate) )); // add track  counter
+    sums->addInfo( m_VertexCounter, count_if<LHCb::RecVertices>(m_VertexInputSelectionName, std::cref(predicate) )); // add vertex counter
 
     if ( msgLevel( MSG::DEBUG ) ) {
-        debug() << "There are " << nTr << " VELO tracks   inside abs(z)<"
+        debug() << "There are " << sums->info(m_TrackCounter,-1) << " VELO tracks   inside abs(z)<"
                 << m_AbsZCut << " and R<" << m_RCut << " in "
                 << m_TrackInputSelectionName << endmsg;
-        debug() << "There are " << nVx << " VELO vertices inside abs(z)<"
+        debug() << "There are " << sums->info(m_VertexCounter,-1) << " VELO vertices inside abs(z)<"
                 << m_AbsZCut << " and R<" << m_RCut << " in "
                 << m_VertexInputSelectionName << endmsg;
     }

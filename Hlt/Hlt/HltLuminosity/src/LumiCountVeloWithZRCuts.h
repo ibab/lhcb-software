@@ -28,9 +28,15 @@ class LumiCountVeloWithZRCuts : public GaudiAlgorithm
     double m_AbsZCut, m_RCut;
     int m_TrackCounter, m_VertexCounter;
 
-    bool fiducial(const Gaudi::XYZPoint&  p) const {
+    inline bool fiducial(const Gaudi::XYZPoint&  p) const {
          return std::fabs( p.z() )   < m_AbsZCut &&
                            p.Perp2() < m_RCut * m_RCut;
+    }
+
+    template <typename T, typename P> int count_if(const std::string& loc, P predicate) const {
+        auto* c = getIfExists<T>( loc );
+        return c ? std::count_if( std::begin( *c ), std::end( *c ), predicate )
+                 : -1;
     }
 };
 #endif

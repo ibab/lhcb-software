@@ -42,15 +42,13 @@ StatusCode LumiPutResult::initialize() {
 
     // first count number of valid keys
     m_size = 0;
-    for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; iKey++ ) {
+    for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; ++iKey ) {
         if ( iKey != LHCb::LumiCounters::Unknown ) ++m_size;
     }
 
     // get arrays
-    m_means.reset(
-        new double[m_size] ); // create a fixed location for DIM to look at
-    m_thresholds.reset(
-        new double[m_size] ); // create a fixed location for DIM to look at
+    m_means.reset( new double[m_size] ); // create a fixed location for DIM to look at
+    m_thresholds.reset( new double[m_size] ); // create a fixed location for DIM to look at
     m_infoKeys.reset( new unsigned int[m_size] ); // corresponding key in the info
 
     int i = 0;
@@ -94,9 +92,7 @@ StatusCode LumiPutResult::execute() {
                         << m_thresholds[i] << endmsg;
         }
     }
-
     setFilterPassed( true );
-
     return StatusCode::SUCCESS;
 }
 
@@ -107,7 +103,7 @@ StatusCode LumiPutResult::finalize() {
 
     IMonitorSvc *mS = monitorSvc().get();
     if ( mS ) {
-        for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; iKey++ ) {
+        for ( int iKey = 0; iKey != LHCb::LumiCounters::LastGlobal; ++iKey ) {
             if ( iKey == LHCb::LumiCounters::Unknown ) continue;
             // undeclare all possible counters
             std::string name = LHCb::LumiCounters::counterKeyToString( iKey );

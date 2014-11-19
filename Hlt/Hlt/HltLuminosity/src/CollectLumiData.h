@@ -27,8 +27,8 @@ class CollectLumiData : public GaudiAlgorithm
 
     ~CollectLumiData() override = default; ///< Destructor
 
-    virtual StatusCode initialize(); ///< Algorithm initialization
-    virtual StatusCode execute();    ///< Algorithm execution
+    StatusCode initialize() override; ///< Algorithm initialization
+    StatusCode execute() override;    ///< Algorithm execution
 
   private:
     std::string m_RZVeloContainerName;
