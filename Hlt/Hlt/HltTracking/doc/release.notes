@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-11-18 - Alex Shires
+ - added DecodeVELO to VeloTTCandidates
+
 ! 2014-11-18 - Sebastian Neubert
  - added VeloTTCandidates
 
