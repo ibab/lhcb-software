@@ -98,7 +98,7 @@ inline double matchIDsFraction( const LHCb::Track& tref, const LHCb::Track& trac
 
 inline bool matchIDs( const LHCb::Track& treference, const LHCb::Track& track )
 {
-    return ( matchIDsFraction( treference, track ) > 0.70 );
+    return matchIDsFraction( treference, track ) > 0.70;
 }
 
 inline double closestDistanceMod( const LHCb::Track& track1,

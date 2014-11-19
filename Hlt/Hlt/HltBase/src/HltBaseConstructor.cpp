@@ -1,3 +1,4 @@
+#include <stdexcept>
 #include "HltBase/HltBase.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiAlg/GaudiHistoTool.h"
@@ -12,18 +13,20 @@ HltBase<GaudiHistoAlg>::HltBase( std::string name, ISvcLocator* pSvcLocator )
 template <>
 HltBase<GaudiHistoAlg>::HltBase( std::string type, std::string name,
                                  const IInterface* parent )
-    : GaudiHistoAlg( "ERROR", 0 )
+    : GaudiHistoAlg( "ERROR", nullptr )
 {
     fatal() << " invalid tool constructor " << type << " name " << name
             << " interface" << parent << endmsg;
+    throw std::logic_error{"Invalide tool constructor"};
 }
 
 template <>
 HltBase<GaudiHistoTool>::HltBase( std::string name, ISvcLocator* pSvcLocator )
-    : GaudiHistoTool( "ERROR", "ERROR", 0 )
+    : GaudiHistoTool( "ERROR", "ERROR", nullptr )
 {
     fatal() << " invalid algoritm constructor : name " << name << " svclocator "
             << pSvcLocator << endmsg;
+    throw std::logic_error{"Invalide tool constructor"};
 }
 
 template <>

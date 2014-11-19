@@ -32,7 +32,7 @@ const CLID CLID_Candidate = 7561;
 /** @var e_EMPTY
  *  the empty string
  */
-const Hlt::NamedEntry s_EMPTY{std::string{}};
+static const Hlt::NamedEntry s_EMPTY{};
 // ==========================================================================
 }
 
@@ -54,9 +54,9 @@ Hlt::Candidate::~Candidate()
 // ============================================================================
 void Hlt::Candidate::removeFromStages( const Hlt::Stage* value )
 {
-    auto iter =
-        std::remove( m_stages.begin(), m_stages.end(), SmartRef<Hlt::Stage>{value} );
-    m_stages.erase( iter, m_stages.end() );
+    m_stages.erase( std::remove( std::begin(m_stages), std::end(m_stages), 
+                                 SmartRef<Hlt::Stage>{value} ),
+                    std::end(m_stages) );
 }
 // ===========================================================================
 // Update  Reference to the stages
@@ -95,7 +95,7 @@ void Hlt::Candidate::addToWorkers( const INamedInterface* worker )
 // ===========================================================================
 bool Hlt::Candidate::hasStage( const Hlt::Stage* stage ) const
 {
-    return stage && m_stages.end() != std::find( m_stages.begin(), m_stages.end(),
+    return stage && m_stages.end() != std::find( std::begin(m_stages), std::end(m_stages),
                                                  SmartRef<Hlt::Stage>( stage ) );
 }
 // ============================================================================
@@ -105,10 +105,10 @@ std::ostream& Hlt::Candidate::fillStream( std::ostream& s ) const
 {
     s << "Hlt::Candidate/" << (const void*)this << " : ";
     //
-    Gaudi::Utils::toStream( m_stages.begin(), m_stages.end(), s, "\n\tStages: [ ",
-                            "] ", " ,\n\t\t  " );
-    Gaudi::Utils::toStream( m_workers.begin(), m_workers.end(), s, "\n\tWorkers: [",
-                            "]", "," );
+    Gaudi::Utils::toStream( std::begin(m_stages), std::end(m_stages), s, 
+                            "\n\tStages: [ ", "] ", " ,\n\t\t  " );
+    Gaudi::Utils::toStream( std::begin(m_workers), std::end(m_workers), s,
+                            "\n\tWorkers: [", "]", "," );
     return s << std::endl;
 }
 // ============================================================================

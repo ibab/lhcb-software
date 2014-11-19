@@ -73,7 +73,7 @@ const Hlt::Stage::History&
 Hlt::Stage::Lock::addToHistory( const Hlt::Stage::History& history )
 {
     History& _history = m_stage->m_history;
-    _history.insert( _history.end(), history.begin(), history.end() );
+    _history.insert( std::end(_history), std::begin(history), std::end(history) );
     return m_stage->history();
 }
 // ============================================================================
@@ -86,14 +86,14 @@ void Hlt::Stage::_checkLock() const
 }
 // ============================================================================
 struct getContainedObjectPtr_ : boost::static_visitor<const ContainedObject*> {
-    result_type operator()(boost::blank) const { return 0; }
+    result_type operator()(boost::blank) const { return nullptr; }
     template <typename T> 
     result_type operator()(const T& operand) const { return operand.target();  }
 };
 
 const ContainedObject* Hlt::Stage::_get() const
 {
-    return boost::apply_visitor( getContainedObjectPtr_() , m_object );
+    return boost::apply_visitor( getContainedObjectPtr_{} , m_object );
 }
 // ============================================================================
 void Hlt::Stage::_lock( const INamedInterface* locker )

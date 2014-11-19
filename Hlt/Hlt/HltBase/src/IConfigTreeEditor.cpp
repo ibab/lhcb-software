@@ -1,4 +1,3 @@
-
 #include "HltBase/IConfigTreeEditor.h"
 
 /// Return the interface ID

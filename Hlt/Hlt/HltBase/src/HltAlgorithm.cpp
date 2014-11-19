@@ -304,7 +304,7 @@ StatusCode HltAlgorithm::registerTESInput( const Gaudi::StringKey& key ) const
         return Error( "Unable to register INPUT TES location '" + key.str() + "'",
                       sc );
     }
-    auto ifind = std::find( m_tes.begin(), m_tes.end(), key );
+    auto ifind = std::find( std::begin(m_tes), std::end(m_tes), key );
     if ( m_tes.end() == ifind ) m_tes.push_back( key );
     return StatusCode::SUCCESS;
 }
@@ -313,7 +313,7 @@ const DataObject* HltAlgorithm::tes( const Hlt::IUnit::Client& /* client  */,
                                      const Hlt::IUnit::Key& location ) const
 {
     // check the location
-    auto ifind = std::find( m_tes.begin(), m_tes.end(), location );
+    auto ifind = std::find( std::begin(m_tes), std::end(m_tes), location );
     //
     Assert( m_tes.end() != ifind, "tes: anuthorized access to TES -data" );
     return hltSvc()->tes( this, location );

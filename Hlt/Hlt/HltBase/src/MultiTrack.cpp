@@ -75,17 +75,18 @@ void Hlt::MultiTrack::addToTracks( const LHCb::Track* track )
 // ============================================================================
 void Hlt::MultiTrack::removeFromTracks( const LHCb::Track* track )
 {
-    auto it = std::remove( m_tracks.begin(), m_tracks.end(),
-                           SmartRef<LHCb::Track>{track} );
-    m_tracks.erase( it, m_tracks.end() );
+    m_tracks.erase( std::remove( std::begin(m_tracks), std::end(m_tracks),
+                                 SmartRef<LHCb::Track>{track} ),
+                    std::end(m_tracks) );
 }
 // ============================================================================
 // Has track ?
 // ============================================================================
 bool Hlt::MultiTrack::hasTrack( const LHCb::Track* track ) const
 {
-    return track && m_tracks.end() != std::find( m_tracks.begin(), m_tracks.end(),
-                                                 SmartRef<LHCb::Track>{track} );
+    return track && 
+           std::end(m_tracks) != std::find( std::begin(m_tracks), std::end(m_tracks),
+                                            SmartRef<LHCb::Track>{track} );
 }
 // ============================================================================
 

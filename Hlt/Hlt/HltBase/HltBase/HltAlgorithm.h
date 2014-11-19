@@ -34,14 +34,14 @@ class HltAlgorithm : public HltBaseAlg, virtual public Hlt::IUnit
                   bool requireInputsToBeValid = true );
 
     // Standard destructor
-    virtual ~HltAlgorithm() = default;
+    ~HltAlgorithm() override = default;
 
     // driver of the initialize()
-    virtual StatusCode sysInitialize();
-    virtual StatusCode sysFinalize();
+    StatusCode sysInitialize() override;
+    StatusCode sysFinalize() override;
 
     // restart algorithm
-    virtual StatusCode restart();
+    StatusCode restart() override;
 
     StatusCode queryInterface( const InterfaceID& iid, void** ppvi );
 

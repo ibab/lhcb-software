@@ -181,8 +181,8 @@ template <class TYPE>
 const TYPE* Hlt::IUnit::tesData( const Hlt::IUnit::Client& client,
                                  const Hlt::IUnit::Key& location ) const
 {
-    const DataObject* obj = this->tes( client, location );
-    return obj ? dynamic_cast<const TYPE*>( obj ) : 0;
+    const auto* obj = this->tes( client, location );
+    return obj ? dynamic_cast<const TYPE*>( obj ) : nullptr;
 }
 #endif
 // ============================================================================

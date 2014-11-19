@@ -2,6 +2,7 @@
 #define NAMEDENTRY_H
 
 #include <iosfwd>
+#include <ostream>
 #include <string>
 #include <utility>
 #include "GaudiKernel/INamedInterface.h"
@@ -20,7 +21,7 @@ class NamedEntry
     NamedEntry( const INamedInterface& arg ) : m_entry( &arg, std::string() )
     {
     }
-    NamedEntry( std::string arg ) : m_entry( 0, arg )
+    NamedEntry( std::string arg = std::string{} ) : m_entry( 0, arg )
     {
     }
     // : m_entry{ nullptr, std::move(arg) } {} // wait unil gccxml is retired...
@@ -63,7 +64,10 @@ class NamedEntry
     }
 };
 
-std::ostream& operator<<( std::ostream& os, const NamedEntry& e );
+inline std::ostream& operator<<( std::ostream& os, const NamedEntry& e ) {
+    return os << e.str();
+}
+
 }
 
 #endif

@@ -14,29 +14,29 @@
 // 2006-06-15 : Jose Angel Hernando Morata
 //-----------------------------------------------------------------------------
 
-template <class EBASE>
-void HltBase<EBASE>::hltBaseConstructor() {
-  EBASE::declareProperty("HistoDescriptor", m_histoDescriptor);
+template <class BASE>
+void HltBase<BASE>::hltBaseConstructor() {
+  BASE::declareProperty("HistoDescriptor", m_histoDescriptor);
   m_hltANNSvc = nullptr;
   m_regSvc =nullptr;
   m_hltSvc =nullptr;
 
 }
 
-template <class EBASE>
-HltBase<EBASE>::~HltBase() {} 
+template <class BASE>
+HltBase<BASE>::~HltBase() {} 
 
-template <class EBASE>
-StatusCode HltBase<EBASE>::initialize() {  
-  EBASE::debug() << "==> Initialize -- calling " <<System::typeinfoName( typeid(EBASE) ) <<  "::initialize"<< endmsg;
-  StatusCode sc = EBASE::initialize(); 
+template <class BASE>
+StatusCode HltBase<BASE>::initialize() {  
+  BASE::debug() << "==> Initialize -- calling " <<System::typeinfoName( typeid(BASE) ) <<  "::initialize"<< endmsg;
+  StatusCode sc = BASE::initialize(); 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  if (EBASE::produceHistos()) {
+  if (BASE::produceHistos()) {
       const std::map<std::string, Gaudi::Histo1DDef>& hdes = m_histoDescriptor.value();
       for (auto&  i : hdes) {
-          EBASE::book(i.second);
-          EBASE::debug() << " booking histogram from descriptor " 
+          BASE::book(i.second);
+          BASE::debug() << " booking histogram from descriptor " 
                          << i.second << endmsg;
       }
   }
@@ -45,90 +45,94 @@ StatusCode HltBase<EBASE>::initialize() {
 
 
 
-template <class EBASE>
-AIDA::IHistogram1D* HltBase<EBASE>::initializeHisto(const std::string& title,
+template <class BASE>
+AIDA::IHistogram1D* HltBase<BASE>::initializeHisto(const std::string& title,
                                             double x0, double xf, int nbins) {
   AIDA::IHistogram1D* histo = 0;
-  if (!EBASE::produceHistos()) return histo;
+  if (!BASE::produceHistos()) return histo;
 
   const auto& values = m_histoDescriptor.value();
   auto i = values.find(title);
   Gaudi::Histo1DDef hd = (i!=values.end()) ? i->second 
                                            : Gaudi::Histo1DDef{title,x0,xf,nbins};
-  EBASE::debug() << " booking histogram  " << hd << endmsg;
-  return EBASE::book(hd);
+  BASE::debug() << " booking histogram  " << hd << endmsg;
+  return BASE::book(hd);
 }
 
 // ============================================================================
 // accessor to Hlt Registration Service 
 // ============================================================================
-template <class EBASE>
-Hlt::IRegister* HltBase<EBASE>::regSvc() const 
+template <class BASE>
+Hlt::IRegister* HltBase<BASE>::regSvc() const 
 {
-  if ( !m_regSvc ) m_regSvc = EBASE::template svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
+  if ( !m_regSvc ) m_regSvc = BASE::template svc<Hlt::IRegister> ( "Hlt::Service" , true ) ;
   return m_regSvc ;
 }
 // ============================================================================
 // accessor to Hlt Data Service 
 // ============================================================================
-template <class EBASE>
-Hlt::IData* HltBase<EBASE>::hltSvc() const 
+template <class BASE>
+Hlt::IData* HltBase<BASE>::hltSvc() const 
 {
-  if ( !m_hltSvc ) m_hltSvc = EBASE::template svc<Hlt::IData> ( "Hlt::Service" , true ) ;
+  if ( !m_hltSvc ) m_hltSvc = BASE::template svc<Hlt::IData> ( "Hlt::Service" , true ) ;
   return m_hltSvc ;
 }
 
-template <class EBASE>
-IANNSvc& HltBase<EBASE>::annSvc() const {
-  if ( !m_hltANNSvc ) m_hltANNSvc = EBASE::template svc<IANNSvc>("HltANNSvc",true);
+template <class BASE>
+IANNSvc& HltBase<BASE>::annSvc() const {
+  if ( !m_hltANNSvc ) m_hltANNSvc = BASE::template svc<IANNSvc>("HltANNSvc",true);
   return *m_hltANNSvc;
 }
 
 
-template <class EBASE>
-int HltBase<EBASE>::hltInfoID(const std::string& infoname) 
+template <class BASE>
+int HltBase<BASE>::hltInfoID(const std::string& infoname) 
 {
-  auto  i =  annSvc().value(Gaudi::StringKey(std::string{"InfoID"}),infoname);
+  static const Gaudi::StringKey InfoID{"InfoID"};
+  auto  i =  annSvc().value(InfoID,infoname);
   if (i) return i->second;
-  EBASE::info()<<"request for unknown Info id for name: "<<infoname <<endmsg;
+  BASE::info()<<"request for unknown Info id for name: "<<infoname <<endmsg;
   return 0;
 }
 
-template <class EBASE>
-std::string HltBase<EBASE>::hltInfoName(int id) 
+template <class BASE>
+std::string HltBase<BASE>::hltInfoName(int id) 
 {
-  auto  i =  annSvc().value(Gaudi::StringKey(std::string{"InfoID"}),id);
+  static const Gaudi::StringKey InfoID{"InfoID"};
+  auto  i =  annSvc().value(InfoID,id);
   if(i) return i->first;
-  EBASE::info()<<"request for unknown Info name for id: "<<id << endmsg;
+  BASE::info()<<"request for unknown Info name for id: "<<id << endmsg;
   return "UNKNOWN";
 }
 
-template <class EBASE>
-void HltBase<EBASE>::printInfo(const std::string& title,
+template <class BASE>
+void HltBase<BASE>::printInfo(const std::string& title,
                                const LHCb::Track& track) {
-  EBASE::info() << title << " track  " << track.key() 
-                << " slopes " << track.slopes()  
-                << " pt " << track.pt() 
-                << " q/p " << track.firstState().qOverP()
-                << " ids " << track.lhcbIDs().size() 
-                << " states " << track.states().size()
-                << endmsg;
+  BASE::info() << title 
+               << " track  " << track.key() 
+               << " slopes " << track.slopes()  
+               << " pt " << track.pt() 
+               << " q/p " << track.firstState().qOverP()
+               << " ids " << track.lhcbIDs().size() 
+               << " states " << track.states().size()
+               << endmsg;
   printInfo(title+" Info: ",track.extraInfo());
 }
 
-template <class EBASE>
-void HltBase<EBASE>::printInfo(const std::string& title,
+template <class BASE>
+void HltBase<BASE>::printInfo(const std::string& title,
                              const LHCb::RecVertex& vertex) {
-  EBASE::info() << title << " vertex  " << vertex.key() << " position " 
+  BASE::info() << title << " vertex  " << vertex.key() << " position " 
                << vertex.position()  << endmsg;
   printInfo(title+" Info: ",vertex.extraInfo());
   printInfo(title,vertex.tracks());
 }
 
-template<class EBASE>
-void HltBase<EBASE>::printInfo(const std::string& title,
-                               const GaudiUtils::VectorMap<int,double>& vmap) {
-  EBASE::info() << title;
-  for (auto& i : vmap ) EBASE::info() << hltInfoName(i.first) << " = " << i.second << "; \t";
-  EBASE::info() << endmsg;
+template<class BASE>
+void HltBase<BASE>::printInfo(const std::string& title,
+                              const GaudiUtils::VectorMap<int,double>& vmap)
+{
+  BASE::info() << title;
+  for (auto& i : vmap ) BASE::info() << hltInfoName(i.first) << " = " << i.second << "; \t";
+  BASE::info() << endmsg;
 }
