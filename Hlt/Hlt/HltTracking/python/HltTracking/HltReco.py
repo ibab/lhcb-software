@@ -245,7 +245,7 @@ HltTracking = bindMembers(None, bm_members).setOutputSelection( recoForward.Outp
 
 vt_members = DecodeVELO.members()
 vt_members += [ recoVelo() ]
-vt_members = DecodeTT.members()
+vt_members += DecodeTT.members()
 vt_members += [ recoVeloTT ]
 VeloTTTracking = bindMembers(None, vt_members).setOutputSelection( recoVeloTT.OutputTracksName ) 
 
