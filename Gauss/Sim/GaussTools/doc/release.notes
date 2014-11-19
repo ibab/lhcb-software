@@ -4,6 +4,9 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 ! 2014-11-18 - Gloria Corti
  - Removed many ";" causing warnings. Almost all files had them.
 

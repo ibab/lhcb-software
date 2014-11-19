@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GiGaCnv
 ################################################################################
-gaudi_subdir(GiGaCnv v20r2)
+gaudi_subdir(GiGaCnv v21r1)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/GenEvent

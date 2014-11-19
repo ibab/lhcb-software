@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GiGaVisUI
 ################################################################################
-gaudi_subdir(GiGaVisUI v5r2)
+gaudi_subdir(GiGaVisUI v6r0p1)
 
 gaudi_depends_on_subdirs(Sim/GiGa
                          Vis/VisSvc

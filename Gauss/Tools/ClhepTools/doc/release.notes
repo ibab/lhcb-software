@@ -7,6 +7,9 @@
 !               these aren't defined.
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !============================ ClhepTools v2r1p2 ===============================
 ! 2013-09-23 - Marco Clemencic
  - Added CMake configuration file.

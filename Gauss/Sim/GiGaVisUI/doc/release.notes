@@ -5,6 +5,9 @@
 ! Purpose     : GiGa vi1sualisation and UI 
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !======================== GiGaVisUI v6r0p1 2014-08-21 ========================
 ! 2014-07-14 - Gloria Corti
  - Put dependency from G4UIbasic since it was removed from G4UIGAG that was

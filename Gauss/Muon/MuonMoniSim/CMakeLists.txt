@@ -1,7 +1,7 @@
 ################################################################################
 # Package: MuonMoniSim
 ################################################################################
-gaudi_subdir(MuonMoniSim v2r6)
+gaudi_subdir(MuonMoniSim v3r0)
 
 gaudi_depends_on_subdirs(Det/MuonDet
                          Event/MCEvent

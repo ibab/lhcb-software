@@ -1,7 +1,7 @@
 ################################################################################
 # Package: VeloGauss
 ################################################################################
-gaudi_subdir(VeloGauss v2r4)
+gaudi_subdir(VeloGauss v3r0)
 
 gaudi_depends_on_subdirs(Det/VeloDet
                          Event/MCEvent

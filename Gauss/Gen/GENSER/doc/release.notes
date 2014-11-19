@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 ! 2014-09-30 - Gloria Corti
  - Replace use of lhapdf with phapdf6
 

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 ! 2014-11-18 - Michal Kreps
   - Removing semicolons from wrong places to clear warnings when compiled
     with -pedantic option.

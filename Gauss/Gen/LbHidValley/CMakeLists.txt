@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbHidValley
 ################################################################################
-gaudi_subdir(LbHidValley v3r2)
+gaudi_subdir(LbHidValley v4r0)
 
 gaudi_depends_on_subdirs(Gen/GENSER
                          Gen/LbPythia

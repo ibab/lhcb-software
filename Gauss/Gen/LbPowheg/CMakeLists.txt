@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbPowheg
 ################################################################################
-gaudi_subdir(LbPowheg v1r0p1)
+gaudi_subdir(LbPowheg v1r0p3)
 
 gaudi_depends_on_subdirs(Gen/Generators
                          Gen/LbPythia)

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BcVegPy
 ################################################################################
-gaudi_subdir(BcVegPy v3r1)
+gaudi_subdir(BcVegPy v3r2)
 
 gaudi_depends_on_subdirs(Gen/GENSER)
 

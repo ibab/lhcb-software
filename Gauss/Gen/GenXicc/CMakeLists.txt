@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GenXicc
 ################################################################################
-gaudi_subdir(GenXicc v2r0)
+gaudi_subdir(GenXicc v2r1)
 
 gaudi_depends_on_subdirs(Gen/GENSER)
 

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussAlgs
 ################################################################################
-gaudi_subdir(GaussAlgs v7r0)
+gaudi_subdir(GaussAlgs v8r0)
 
 gaudi_depends_on_subdirs(Kernel/LHCbKernel
                          Sim/GaussTools)

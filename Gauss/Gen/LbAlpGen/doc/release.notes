@@ -5,6 +5,9 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !========================== LbAlpGen v4r0 2014-08-21 ==========================
 ! 2014-01-13 - Gloria Corti
  - Redefine macro alpgen_author_dir to be compatible with new structure of 

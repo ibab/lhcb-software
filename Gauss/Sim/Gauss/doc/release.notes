@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 ! 2014-10-28 - Gloria Corti
  - Modifiy options for 2011 and 2012 to pick up the same dbase tags as in
    production

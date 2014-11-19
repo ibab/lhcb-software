@@ -4,6 +4,9 @@
 ! Purpose     : Implementation of the powheg-box in Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !========================= LbPowheg v1r0p3 2014-01-23 ========================
 ! 2013-12-18 - Marcin Kucharczyk
  - Add Powheg.py file

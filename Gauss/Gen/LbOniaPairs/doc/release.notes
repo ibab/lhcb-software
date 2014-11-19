@@ -6,6 +6,9 @@ nk! $Id:$
 ! Purpose     : Generator for onia pairs production 
 ! -----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !======================== LbOniaPairs v2r1 2014-08-01 =========================
 ! 2014-06-24 - Gloria Corti
  - Fix OniaPairs.py options that were missing import of OniaPairsProduction 

@@ -2,6 +2,9 @@
 ! Package     : Gen/BcVegPy
 ! Responsible : 
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 ! 2014-10-13 - Jibo He
  - Added 13 TeV as it is supported now
    . src/bcvegpy_upinit.f

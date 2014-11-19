@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BlsMoniSim
 ################################################################################
-gaudi_subdir(BlsMoniSim v1r1)
+gaudi_subdir(BlsMoniSim v2r0)
 
 gaudi_depends_on_subdirs(Event/MCEvent
                          GaudiAlg)

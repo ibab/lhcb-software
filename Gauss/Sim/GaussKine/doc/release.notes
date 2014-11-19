@@ -4,6 +4,9 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !========================= GaussKine v6r4 2014-10-07 =========================
 ! 2014-08-25 - Philip Ilten
  - GenerationToSimulation.{h,cpp}: cleaned code and added functionality to

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussPhysics
 ################################################################################
-gaudi_subdir(GaussPhysics v10r0)
+gaudi_subdir(GaussPhysics v11r1)
 
 gaudi_depends_on_subdirs(Sim/GaussTools)
 

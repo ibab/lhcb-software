@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbHerwigpp
 ################################################################################
-gaudi_subdir(LbHerwigpp v2r0)
+gaudi_subdir(LbHerwigpp v3r0)
 
 gaudi_depends_on_subdirs(Gen/Generators)
 

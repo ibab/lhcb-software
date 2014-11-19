@@ -1,6 +1,9 @@
 ! Package     : Gen/GenXicc
 ! Responsible : F. Zhang
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !========================= GenXicc v2r1 2014-06-23 ===========================
 ! 2014-02-11 - Liang Zhong
  - Modify parameter.F to enable to configure the mass of Xicc baryon

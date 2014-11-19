@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussMonitor
 ################################################################################
-gaudi_subdir(GaussMonitor v7r0)
+gaudi_subdir(GaussMonitor v8r1)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          Kernel/MCInterfaces

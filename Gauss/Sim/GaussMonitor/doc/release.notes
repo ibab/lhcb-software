@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !======================= GaussMonitor v8r1 2014-07-03 ========================
 ! 2014-06-11 - James Mccarthy
  - Added options file to run timing monitor code in options/MonitorTiming.py

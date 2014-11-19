@@ -1,7 +1,7 @@
 ################################################################################
 # Package: EvtGenExtras
 ################################################################################
-gaudi_subdir(EvtGenExtras v3r8)
+gaudi_subdir(EvtGenExtras v3r11)
 
 gaudi_depends_on_subdirs(Gen/EvtGen
                          Gen/Mint)

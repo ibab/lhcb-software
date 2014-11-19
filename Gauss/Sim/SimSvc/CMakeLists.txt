@@ -1,7 +1,7 @@
 ################################################################################
 # Package: SimSvc
 ################################################################################
-gaudi_subdir(SimSvc v5r2)
+gaudi_subdir(SimSvc v6r0)
 
 gaudi_depends_on_subdirs(Det/DetDescCnv)
 

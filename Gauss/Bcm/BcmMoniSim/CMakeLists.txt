@@ -1,7 +1,7 @@
 ################################################################################
 # Package: BcmMoniSim
 ################################################################################
-gaudi_subdir(BcmMoniSim v1r2)
+gaudi_subdir(BcmMoniSim v2r0)
 
 gaudi_depends_on_subdirs(Det/BcmDet
                          Event/MCEvent

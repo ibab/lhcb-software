@@ -2,6 +2,9 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !========================= LbGenXicc v4r0 2014-06-20 =========================
 ! 2014-06-18 - Gloria Corti
  - Moved QQqBaryons header to Kernel/MCInterfaces package since needed by 

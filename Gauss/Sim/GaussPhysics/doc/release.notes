@@ -4,6 +4,9 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !====================== GaussPhysics v11r1 2014-07-03 ========================
 ! 2014-02-10 - Liang Zhong
  - Add classes for Xi_cc++ and anti-Xi_cc--, and include them in

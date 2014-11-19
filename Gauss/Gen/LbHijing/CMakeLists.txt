@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbHijing
 ################################################################################
-gaudi_subdir(LbHijing v9r0)
+gaudi_subdir(LbHijing v10r0)
 
 gaudi_depends_on_subdirs(Gen/GENSER
                          Gen/LbPythia)

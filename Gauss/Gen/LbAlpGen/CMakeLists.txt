@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbAlpGen
 ################################################################################
-gaudi_subdir(LbAlpGen v3r0p1)
+gaudi_subdir(LbAlpGen v4r0)
 
 gaudi_depends_on_subdirs(Gen/LbPythia)
 
@@ -74,6 +74,7 @@ gaudi_add_module(LbAlpGentop
                  LINK_LIBRARIES LbPythiaLib LbAlpGenLibRead LbAlpGenLibzbb
                                 LbAlpGenLib4q LbAlpGenLibwqq LbAlpGenLibtop)
 
+#when alpgen pdf files will be copied to $LHAPDFSETSROOT directory, use instead:
+#gaudi_env(SET ALPGENPDFPATH \${LHAPDFSETSROOT}/alpgen)
 gaudi_env(SET ALPGENPDFPATH \${ALPGEN_AUTHOR_DIR}/alplib/pdfdat
           SET LBALPGENOPTS \${LBALPGENROOT}/options)
-

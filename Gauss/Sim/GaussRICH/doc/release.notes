@@ -4,6 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 !======================== GaussRICH v14r2p1 2014-10-28 =======================
 ! 2014-10-24  - Sajan Easo, Chris Jones
  - Protection added against infinite loops in RichG4Cherenkov when creating

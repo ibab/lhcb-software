@@ -4,6 +4,9 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Marco Clemencic
+ - Updated CMake configuration
+
 ! 2014-11-17 - Gloria Corti
  - Removed many ";" causing warnings. Almost all files had them.
 
