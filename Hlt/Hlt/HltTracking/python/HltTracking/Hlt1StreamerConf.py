@@ -59,7 +59,7 @@ __all__ = (
 # =============================================================================
 
 
-from HltTracking.HltTrackNames import Hlt1TrackLoc, Hlt1TrackRoot
+from HltTracking.Hlt1TrackNames import Hlt1TrackLoc, Hlt1TrackRoot
 
 from LoKiCore.basic import LoKi, LHCb 
 # =============================================================================

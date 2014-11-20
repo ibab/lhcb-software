@@ -4,11 +4,11 @@ __author__  = "V. Gligorov vladimir.gligorov@cern.ch"
 ########################################################################
 # Globals
 ########################################################################
-HltGlobalEventPrefix			= ""
+from HltTracking.Hlt1TrackNames import HltGlobalEventPrefix
 ########################################################################
 # These "globals" define that Tracks go into .../Track/... and
 # protoparticles into .../ProtoP/...
-HltGlobalTrackLocation 			= "Track"
+from HltTracking.Hlt1TrackNames import HltGlobalTrackLocation
 HltGlobalProtoPLocation			= "ProtoP"
 #
 ########################################################################
@@ -21,8 +21,7 @@ HltGlobalProtoPLocation			= "ProtoP"
 # location; this just defines that tracks and protoparticles go into
 # some_prefix_you_choose/Track/... and some_refix_you_choose/ProtoP/... 
 #
-def _baseTrackLocation(prefix,tracks) :
-    return prefix + "/" + HltGlobalTrackLocation + "/" + tracks 
+from HltTracking.Hlt1TrackNames import _baseTrackLocation
 #
 def _baseProtoPLocation(prefix,protos) :
     return prefix + "/" + HltGlobalProtoPLocation + "/" + protos
@@ -34,10 +33,8 @@ def _baseProtoPLocation(prefix,protos) :
 # _trackLocation and _protosLocation)
 #
 HltSharedTracksPrefix 		= HltGlobalEventPrefix + "Hlt"
-Hlt1TracksPrefix 			= HltGlobalEventPrefix + "Hlt1"
 Hlt2TracksPrefix 			= HltGlobalEventPrefix + "Hlt2"
 
-Hlt1TrackRoot               = Hlt1TracksPrefix + "/" + HltGlobalTrackLocation
 Hlt2TrackRoot               = Hlt2TracksPrefix + "/" + HltGlobalTrackLocation
 HltSharedTrackRoot          = HltSharedTracksPrefix + "/" + HltGlobalTrackLocation
 
@@ -45,36 +42,17 @@ HltSharedTrackRoot          = HltSharedTracksPrefix + "/" + HltGlobalTrackLocati
 # names of track types (these go into the tracks field of _trackLocation 
 # and _protosLocation)
 #
-
-
 HltSharedRZVeloTracksName               = "RZVelo"
 
-TrackName = { "Velo"         : "Velo"          # full Velo recoonstruction
-              ,"VeloTTHPT"   : "VeloTTHPT"     # VeloTT for high pt and p thresholds (HLT1-like)
-              ,"VeloTTComp"  : "VeloTTComp"    # VeloTT complement (HLT2 relaxed pt & p cuts) 
-              ,"VeloTT"      : "VeloTT"        # Full VeloTT (HLT2)
-              ,"ForwardHPT"  : "ForwardHPT"    # Forward for high pt and p thresholds (HLT1-like)
-              ,"ForwardComp" : "ForwardComp"   # Forward complement
-              ,"ForwardCompLPT"  : "ForwardCompLPT"    # low PT complement (aka secondLoop)
-              ,"Forward"     : "Forward"       # Full Forward
-              ,"Seeding"     : "Seeding"       # Seeding
-              ,"ForwardSecondLoop" : "ForwardSecondLoop"
-              ,"Match"       : "Match"
-              ,"Long"        : "Long"
-              ,"Downstream"  : "SeedTT"
-              ,"MuonTT"      : "MuonTT"		#tag track for tracking efficiency from Muon and TT hits
-              ,"VeloMuon"    : "VeloMuon"	#tag track for tracking efficiency from Velo and Muon hits
-              ,"FullDownstream"  : "FullDownstream"	#tag track for tracking efficiency, needs full downstream reco.
-              }    
-
+from HltTracking.Hlt1TrackNames import TrackName
 # The prefix says where this track has been produced
-Hlt1TrackLoc = { name : _baseTrackLocation(Hlt1TracksPrefix,loc) for name,loc in TrackName.iteritems() }
 Hlt2TrackLoc = { name : _baseTrackLocation(Hlt2TracksPrefix,loc) for name,loc in TrackName.iteritems() }
 HltSharedTrackLoc = { name : _baseTrackLocation(HltSharedTracksPrefix,loc) for name,loc in TrackName.iteritems() }
 
 # check if the Decoders are writing to the correct locations
 from DAQSys.Decoders import DecoderDB
 DecoderLocations = DecoderDB["HltTrackReportsDecoder"].listOutputs()
+from HltTracking.Hlt1TrackNames import Hlt1TrackLoc
 for loc in DecoderLocations :
     if not loc in Hlt1TrackLoc.values() + HltSharedTrackLoc.values()  : 
         print "TrackReports location: " + loc + " not found in track locations. Go synchronize HltTrackNames.py and HltDAQ."
@@ -177,6 +155,8 @@ HltDefaultTrackCuts = {"Chi2Cut" : [0.,MaxChi2] }
 HltCaloProtosSuffix			= "WithCaloID"
 HltMuonProtosSuffix			= "WithMuonID"
 HltRichProtosSuffix			= "WithRichID"
+
+from HltTracking.Hlt1TrackNames import Hlt1TracksPrefix, Hlt1TrackRoot
 
 #
 __all__ = (	
