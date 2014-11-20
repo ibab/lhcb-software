@@ -690,16 +690,16 @@ class BloomFilter
 	 */
 	template<class IT>
 	inline void insert(IT begin, IT end)
-	{ std::for_each(begin, end, this->insert); }
+	{ std::for_each(begin, end, [&] (const T& val) { insert(val); }); }
 	
 	/** @brief insert the contents of a container or range
 	 *
 	 * @param r	range or container for use in range-based for
 	 */
 	template<class RC>
-	inline void insert(typename std::enable_if<
+	inline typename std::enable_if<
 		std::is_convertible<decltype(*std::begin(RC())),
-		const T&>::value ,RC&&>::type r)
+		const T&>::value, void>::type insert(const RC& r)
 	{ insert(std::begin(r), std::end(r)); }
 
 	/** @brief construct set from contents of a container or range
@@ -709,7 +709,7 @@ class BloomFilter
 	template<class RC>
 	inline BloomFilter(typename std::enable_if<
 		std::is_convertible<decltype(*std::begin(RC())),
-		const T&>::value, RC&&>::type r)
+		const T&>::value, const RC&&>::type r)
 	{ insert(std::forward<RC>(r)); }
 
 	/** @brief construct set from elements between iterators begin and end

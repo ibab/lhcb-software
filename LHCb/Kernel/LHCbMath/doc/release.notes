@@ -6,6 +6,10 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Manuel Tobias Schiller
+ - BloomFilter: make various overloads a bit more specific, so compilers don't
+   run into trouble
+
 ! 2014-10-17 - Manuel Tobias Schiller
  - BloomFilter: trivial change to avoid compiler error at -O0 (no visible
    changes in client code)
