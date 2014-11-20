@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Gloria Corti
+ - Use of lhapdf 6 is now as a version of lhapdf and not a separate package
+ - Use newer versions of herig++ and thepeg as they are the only one in 
+   LCG_70
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

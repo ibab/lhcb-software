@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v15r0
+version v16r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,15 +16,15 @@ use GaudiPolicy  v*
 
 #-- LHAPDF
 #============================================================================
-macro lhapdf6_native_version "6.1.4"
-use lhapdf6     v* LCG_GeneratorsInterfaces
+macro lhapdf_native_version "6.1.4"
+use lhapdf     v* LCG_GeneratorsInterfaces
 use LHAPDFSets v*
 
 #-- Herwig++ and ThePeg
 # Set native versions of required software.
 #============================================================================
-macro herwigpp_native_version "2.7.0a"
-macro thepeg_native_version   "1.9.0a"
+macro herwigpp_native_version "2.7.1"
+macro thepeg_native_version   "1.9.2p1"
 
 
 #-- AlpGen
