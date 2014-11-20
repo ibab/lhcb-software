@@ -5,6 +5,10 @@
 !               of events with exotic displaced vertices
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Manuel Tobias Schiller
+ - after checking with Wouter, I adapted the code to work with the new
+   implementation of the TrackCloneData class from Tr/TrKernel
+
 ! 2014-11-06 - Marco Clemencic
  - Fixed CMake configuration (install headers).
 
@@ -202,10 +206,10 @@ SaveTuple : save the SPD multiplicity applied in the hadron and electron trigger
 !========================== DisplVertices v7r2 2010-12-20 ====================
 
 ! 2010-12-16 - Neal Gauvin
-	SaveTuple : save also the reconstructed charge.
+   SaveTuple : save also the reconstructed charge.
 
 ! 2010-12-16 - Neal Gauvin
-	Retrieve Hlt global decision from routing bits instead of HltDecReport.
+   Retrieve Hlt global decision from routing bits instead of HltDecReport.
 
 ! 2010-12-13 - Neal Gauvin
  - Added ClearifrunNumberChange parameter in CalibrateIP : reset all statistics if runNumber has changed.
@@ -267,7 +271,7 @@ SaveTuple : save the SPD multiplicity applied in the hadron and electron trigger
  - The DisplVertices package is being moved from project Analysis to Stripping
    ( task #17349 ). MC-dependent code has been put in the newly created
    DisplVerticesMC packages. In more details :
-	 * SaveParticlesFrom : moved to Phys/DisplVerticesMC
+    * SaveParticlesFrom : moved to Phys/DisplVerticesMC
    * DisplVertices : MC-dependent code moved to Phys/DisplVerticesMC under
                      the name MCDisplVertices.
    The physics remains unaffected.
@@ -391,7 +395,7 @@ SaveTuple : save the SPD multiplicity applied in the hadron and electron trigger
 
 ! 2010-02-08 - Neal Gauvin
  - cmt/requirements
-	. Add all necessary requirements to compile
+   . Add all necessary requirements to compile
 
 !==================== Phys/DisplVertices v6r0p1 2010-02-02 =====================
 
