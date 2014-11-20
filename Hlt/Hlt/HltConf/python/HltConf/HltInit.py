@@ -230,7 +230,8 @@ HltANNSvc().Hlt1SelectionID = {
     'VeloCandidatesElectronTrack'           : 10135,
     'CaloCandidatesElectronTrack'           : 10136,
     'VeloCandidatesTrackElectron'           : 10137,
-    'CaloCandidatesTrackElectron'           : 10138
+    'CaloCandidatesTrackElectron'           : 10138,
+    'TrackCandidatesSingleElectronNoIP'     : 10139
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2
