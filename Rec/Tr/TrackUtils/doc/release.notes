@@ -4,6 +4,15 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Manuel Tobias Schiller
+ - rewrite TrackBestTrackCreator to take advantage of the Bloom filters in
+   TrackCloneData from TrKernel; also modernise and clarify the code somewhat
+   (C++11, consistent use of generic algorithms where possible)
+   note: the patch will look like a rewrite, but the algorithm is actually
+   the same as before, and the output will match to 100% to what was done
+   before, but takes about 6% less time to execute because of the Bloom filter
+   related improvement
+
 ! 2014-11-05 - Michel De Cian
  - Remove 'TrackMatching' from 'TrackFromDST'
 
