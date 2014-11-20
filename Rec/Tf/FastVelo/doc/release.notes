@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - David Hutchcroft
+ - Added a rejection for too many tracks using the same phi clusters
+
 !========================= FastVelo v1r16 2014-03-18 =========================
 ! 2014-02-14 - David Hutchcroft
  - Fixed rare FPE in phi cluster weights

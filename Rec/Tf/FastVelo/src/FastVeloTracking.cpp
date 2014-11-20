@@ -71,6 +71,8 @@ FastVeloTracking::FastVeloTracking( const std::string& name,
 
   declareProperty( "MaxTrackClusterFrac",m_maxTrackClusterFrac = 0.25 );
   declareProperty( "MaxMergeManyTracks",m_maxMergeManyTracks=0.1);
+  declareProperty( "MaxPhiReuseLimit",m_PhiReuseLimit=4.0);
+
 
   // Parameters for debugging
   declareProperty( "DebugToolName"     , m_debugToolName  = ""        );
@@ -221,6 +223,9 @@ StatusCode FastVeloTracking::execute() {
 
   if ( m_doTiming ) m_timerTool->start( m_timeFinal );
   mergeSpaceClones();  // Cleanup tracks with different R, same phis...
+
+  // Add a test to phi segments of tracks to remove when reuse is too high
+  phiReuseKill();
 
   // Add a test on ratio of tracks to clusters to instigate second level of merging
   beamSplashSpaceMerge();
@@ -530,6 +535,42 @@ void FastVeloTracking::mergeSpaceClones( ) {
     }
   }
 }
+
+//=========================================================================
+// Remove tracks with phi clusters used too many times
+//=========================================================================
+void FastVeloTracking::phiReuseKill( ){
+  if ( m_debug ) {
+    debug() << "phiReuseKill " << m_spaceTracks .size() 
+	    << " tracks " << endmsg;
+  }
+  if ( m_spaceTracks.size() < 2 ) return;
+  for ( auto &track : m_spaceTracks ) {
+    if ( track.backward() ) continue;
+    if ( !track.isValid() ) continue;
+    double nPhiUsed = 0;
+    for ( auto &hit : track.phiHits() ) {
+      nPhiUsed += hit->nbUsed();
+    }
+    if ( m_debug ) {
+      debug() << "Track with (" <<nPhiUsed<<"/"<<track.phiHits().size()
+		<< ") = " << (nPhiUsed/track.phiHits().size())
+		<< " reuse of phi clusters" << endmsg;
+    }
+    if( (nPhiUsed/track.phiHits().size()) > m_PhiReuseLimit ){      
+      track.setValid(false);
+      for ( auto &hit : track.phiHits() ) {
+	hit->clearUsed();
+      }
+      if ( m_debug ) {
+	debug() << "Killed track with (" <<nPhiUsed<<"/"<<track.phiHits().size()
+		<< ") = " << (nPhiUsed/track.phiHits().size())
+		<< " reuse of phi clusters" << endmsg;
+      }
+    }  
+  }  
+}
+
 
 //=========================================================================
 //  In the case of beam splashes where nTrack > nClus*maxFrac do second level of merging

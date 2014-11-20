@@ -54,6 +54,9 @@ public:
 
   void mergeClones( FastVeloTracks& tracks );
 
+  ///  Remove tracks with phi clusters used too many times on average
+  void phiReuseKill( ); 
+
   //== Debugging methods
 
   bool matchKey( const FastVeloHit* hit ) {
@@ -119,6 +122,8 @@ private:
 
   double m_maxTrackClusterFrac; ///< fraction of tracks allowed per cluster (check for splash events)
   double m_maxMergeManyTracks; ///< fraction of clusters to remove clone in splash event
+
+  double m_PhiReuseLimit; ///< if on average phi clusters used more than this kill the track
 
   //== Debugging controls
   std::string      m_debugToolName;
