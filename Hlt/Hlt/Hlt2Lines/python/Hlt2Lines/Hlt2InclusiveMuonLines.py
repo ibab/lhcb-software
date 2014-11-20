@@ -458,7 +458,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         filterVeloMinus2 = Hlt2Member( FilterDesktop
                                 , "filterMinus"
-                                , Code = "(Q < 0) & (TRCHI2DOF <%(VeloLongTrChi2)s) & (P>%(VeloLongP)s*MeV) & (PT>%(VeloLongPt)s*MeV) & (PIDmu >-%(VeloLongMuonPID)s)"%self.getProps()
+                                , Code = "(Q < 0) & (TRCHI2DOF <%(VeloLongTrchi2)s) & (P>%(VeloLongP)s*MeV) & (PT>%(VeloLongPt)s*MeV) & (PIDmu >-%(VeloLongMuonPID)s)"%self.getProps()
                                 , Inputs  = [ BiKalmanFittedMuons ]
                                 )
 
