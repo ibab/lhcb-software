@@ -10,6 +10,12 @@
 #  @see LoKi::FilterAlg
 #  @see LoKi::Hlt1::UpgradeConf
 #
+#  This file instantiates a number of configuration objects used when Hlt1
+#  streamers are built, using GaudiPython bindings. The file is therefore as
+#  bare as possible and any additional imports should be carefully considered to
+#  prevent additional python modules being pulled in by the embedded python
+#  interpreter at run time.
+#
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date 2008-12-10
 #
