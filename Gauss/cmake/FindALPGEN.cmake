@@ -36,7 +36,7 @@ endif()
 
 find_file(ALPGEN_AUTHOR_DIR alpgen-author
           HINTS ${ALPGEN_LIBRARY_DIRS}
-          PATH_SUFFIXES ../../share)
+          PATH_SUFFIXES share ../../share)
 mark_as_advanced(ALPGEN_AUTHOR_DIR)
 set(ALPGEN_INCLUDE_DIRS ${ALPGEN_AUTHOR_DIR} ${ALPGEN_AUTHOR_DIR}/alplib)
 

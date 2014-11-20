@@ -3,6 +3,9 @@
 ! Responsible : 
 
 ! 2014-11-19 - Marco Clemencic
+ - Fixed CMake configuration.
+
+! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
 ! 2014-10-13 - Jibo He

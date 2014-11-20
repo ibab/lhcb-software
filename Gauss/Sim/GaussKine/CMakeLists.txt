@@ -10,5 +10,5 @@ gaudi_depends_on_subdirs(Event/GenEvent
 
 gaudi_add_module(GaussKine
                  src/*.cpp
-                 LINK_LIBRARIES GenEvent MCEvent GaussToolsLib)
+                 LINK_LIBRARIES GenEvent MCEvent GaussToolsLib LoKiGenLib)
 

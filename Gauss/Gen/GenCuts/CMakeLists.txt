@@ -11,6 +11,6 @@ find_package(FastJet)
 
 gaudi_add_module(GenCuts
                  src/*.cpp
-                 INCLUDE_DIRS Kernel/MCInterfaces
+                 INCLUDE_DIRS Kernel/MCInterfaces FastJet
                  LINK_LIBRARIES GaudiAlgLib LoKiGenLib FastJet)
 
