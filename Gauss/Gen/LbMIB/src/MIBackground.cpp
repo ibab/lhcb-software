@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
  
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MIBackground );
+DECLARE_ALGORITHM_FACTORY( MIBackground )
  
  
 //===========================================================================

@@ -23,7 +23,7 @@ public:
   /// Standard constructor
   MIBackground(const std::string& name, ISvcLocator* pSvcLocator);
 
-  virtual ~MIBackground();; ///< Destructor
+  virtual ~MIBackground(); ///< Destructor
  
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbMIB
 ################################################################################
-gaudi_subdir(LbMIB v7r0p1)
+gaudi_subdir(LbMIB v7r0p2)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          GaudiAlg

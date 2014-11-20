@@ -31,7 +31,7 @@
 //-----------------------------------------------------------------------------
  
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TimeCorrSource );
+DECLARE_TOOL_FACTORY( TimeCorrSource )
  
  
 //===========================================================================
