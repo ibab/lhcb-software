@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           GaussMonitor
-version           v8r1
+version           v8r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -20,6 +20,9 @@ use   GenEvent        v*      Event
 use   MCInterfaces    v*      Kernel
 use   LoKiGen         v*      Phys 
 use   LoKiMC          v*      Phys 
+
+use   VeloDet         v*      Det
+
 
 include_path      none
 #============================================================================
