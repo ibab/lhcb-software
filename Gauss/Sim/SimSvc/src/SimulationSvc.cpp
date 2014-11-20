@@ -19,7 +19,7 @@
 // -----------------------------------------------------------------------
 
 // Declaration of the Service Factory
-DECLARE_SERVICE_FACTORY( SimulationSvc );
+DECLARE_SERVICE_FACTORY( SimulationSvc )
 
 
 
