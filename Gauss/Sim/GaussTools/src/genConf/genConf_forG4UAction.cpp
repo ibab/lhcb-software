@@ -38,3 +38,6 @@ namespace
   
   GenConfForG4UAction genConfG4UAction;
 }
+// Override the standard destructor provided by Geant4, because it undoes the special
+// initialization of GenConfForG4UAction::GenConfForG4UAction().
+G4VUserPhysicsList::~G4VUserPhysicsList() {}

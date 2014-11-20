@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-11-19 - Marco Clemencic
+ - Fixed a (new?) problem with GaussToolsGenConfHelperLib.
+
+! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
 ! 2014-11-18 - Gloria Corti
