@@ -169,7 +169,9 @@ void EvtRareLbToLll::initProbMax(){
         //std::cout << "q2:  " << q2 << " \t theta:  " << theta << " \t prob:  " << prob << std::endl;
         //std::cout << "p1: " << p4lep1 << " p2: " << p4lep2 << " q2-q2min: " << q2-(m1+m2)*(m1+m2) << std::endl;
         if(prob>m_maxProbability){
-          report(INFO,"EvtGen") << "  - probability " << prob << " found at q2 = " << q2 << " (" << 100*(q2-q2min)/(q2max-q2min) << " %) and theta = " << theta*180/EvtConst::pi << std::endl;
+          report(INFO,"EvtGen") << "  - probability " << prob 
+                                << " found at q2 = " << q2 << " (" << 100*(q2-q2min)/(q2max-q2min) 
+                                << " %) and theta = " << theta*180/EvtConst::pi << std::endl;
           m_maxProbability=prob;
         }
       }
@@ -202,7 +204,7 @@ bool EvtRareLbToLll::isParticle( EvtParticle *parent ) const
 
 
 void  EvtRareLbToLll::calcAmp( EvtAmp& amp, EvtParticle *parent ){
-  // parent->setDiagonalSpinDensity();
+  //parent->setDiagonalSpinDensity();
 
   EvtParticle* lambda = parent->getDaug(0);
 
@@ -272,11 +274,22 @@ void  EvtRareLbToLll::calcAmp( EvtAmp& amp, EvtParticle *parent ){
   
   // Eq. 48 + 49
   for ( unsigned int i = 0; i < 4; ++i ) {
-    AC[i] = -2.*mb*C7eff*FF.FT_[i]/qsq + parity*C9eff*FF.F_[i];
-    BC[i] = -2.*mb*C7eff*FF.GT_[i]/qsq - parity*C9eff*FF.G_[i];
-    DC[i] =  parity*C10eff*FF.F_[i];
-    EC[i] = -parity*C10eff*FF.G_[i];
+    if ( parity > 0 )
+    {
+      AC[i] = -2.*mb*C7eff*FF.FT_[i]/qsq + parity*C9eff*FF.F_[i];
+      BC[i] = -2.*mb*C7eff*FF.GT_[i]/qsq - parity*C9eff*FF.G_[i];
+      DC[i] =  C10eff*FF.F_[i];
+      EC[i] = -C10eff*FF.G_[i];
+    }
+    else 
+    {
+      AC[i] = -2.*mb*C7eff*FF.GT_[i]/qsq - C9eff*FF.G_[i];
+      BC[i] = -2.*mb*C7eff*FF.FT_[i]/qsq + C9eff*FF.F_[i];
+      DC[i] = -C10eff*FF.G_[i];
+      EC[i] =  C10eff*FF.F_[i];
+    } 
   }
+  
 
   // handle particle -> antiparticle in Hadronic currents
   const double cv = ( isparticle > 0 ) ? 1.0 : -1.0*parity;
@@ -366,13 +379,7 @@ void  EvtRareLbToLll::calcAmp( EvtAmp& amp, EvtParticle *parent ){
   {
     report( ERROR,"EvtGen" ) << " EvtRareLbToLll expects DIRAC or RARITASWINGER daughter " << std::endl;
   }
-/*  
-   EvtSpinDensity rho = amp.getSpinDensity();
-   double prob = parent->getSpinDensityForward().normalizedProb(rho);
-   if ( prob > m_maxProbability ) {
-     std::cout << "qsq = "<<qsq<<" Prob = " << prob << std::endl;
-   }
-*/
+  
   return;
 }
 

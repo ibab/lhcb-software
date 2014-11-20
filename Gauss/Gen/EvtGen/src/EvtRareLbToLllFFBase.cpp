@@ -41,6 +41,17 @@ double EvtRareLbToLllFFBase::calculateVdotV( EvtParticle* parent, EvtParticle* l
   double M  = lambda->mass();
   double MB = parent->mass();
   
-  return p4parent.dot( p4lambda )/(MB*M);
+  return p4parent.cont( p4lambda )/(MB*M);
+
+  // return E_Lambda/M_Lambda
 }
 
+double EvtRareLbToLllFFBase::calculateVdotV( EvtParticle* parent, EvtParticle* lambda, const double qsq ) const 
+{
+  double M  = lambda->mass();
+  double MB = parent->mass();
+  
+  double E  = (MB*MB - M*M - qsq)/(2.*MB);
+  
+  return E/M;
+}
