@@ -276,6 +276,7 @@ StatusCode AdderSvc::start()
     m_SaveTimer->setRootDir(m_SaveRootDir);
     m_SaveTimer->setTaskName(m_SaverTaskName);
     m_SaveTimer->setEOR(false);
+    m_SaveTimer->setSaveSetService();
     m_SaveTimer->Start();
   }
 
@@ -306,6 +307,7 @@ StatusCode AdderSvc::start()
     m_EoRSaver->setRootDir(m_SaveRootDir);
     m_EoRSaver->setTaskName(m_SaverTaskName);
     m_EoRSaver->setEOR(true);
+    m_EoRSaver->setSaveSetService(m_SaveTimer->getSaveSetService());
     m_EoRadder->SetCycleFn(EORSaver,(void*)m_EoRSaver);
   }
   m_started = true;

@@ -29,6 +29,7 @@ SaveTimer::SaveTimer(MonAdder *add, int period) : GenTimer((void*)add,period*100
 
 SaveTimer::~SaveTimer( )
 {
+  deletePtr(m_filenamesvc);
 }
 void SaveTimer::timerHandler ( void )
 {
@@ -64,6 +65,16 @@ void SaveTimer::timerHandler ( void )
 //{
 //  GenTimer::Stop();
 //}
+void SaveTimer::setSaveSetService()
+{
+
+  m_infoFileStatus = "SAVESETLOCATION/......................................................";
+  std::string infoName = m_partname+"/"+m_taskname+"/SAVESETLOCATION";
+  if (m_filenamesvc == 0)
+  {
+    m_filenamesvc = new DimService(infoName.c_str(),(char*)m_infoFileStatus.c_str());
+  }
+}
 void SaveTimer::SavetoFile(void *buff)
 {
   SerialHeader *hd = (SerialHeader *)buff;
