@@ -27,7 +27,7 @@ class Hlt1MuonStation final
     Hlt1MuonStation( DeMuonDetector* det, int station,
                      std::vector<double> regions );
 
-    ~Hlt1MuonStation(); ///< Destructor
+    virtual ~Hlt1MuonStation() {} ///< Destructor
 
     enum { nRegionsY = 7u };
 
@@ -66,8 +66,6 @@ class Hlt1MuonStation final
 
     inline double dy() const { return 2 * m_ymax / nRegionsY; }
     inline double ymin() const { return -m_ymax; }
-
-    void clearHits();
 
     const std::vector<double>  m_xboundaries;
     Hlt1MuonHits  m_hits; 

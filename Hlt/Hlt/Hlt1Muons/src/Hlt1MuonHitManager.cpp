@@ -76,9 +76,6 @@ void Hlt1MuonHitManager::handle( const Incident& incident )
 {
     if ( IncidentType::BeginEvent != incident.type() ) return;
 
-    for ( unsigned int station = 0; station < m_stations.size(); ++station ) {
-        if ( m_prepared[station] ) m_stations[station].clearHits();
-    }
     m_prepared.reset();
     m_loaded = false;
     std::for_each( std::begin(m_coords), std::end(m_coords), 

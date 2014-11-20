@@ -42,12 +42,6 @@ Hlt1MuonStation::Hlt1MuonStation( DeMuonDetector* det, int station,
 }
 
 //=============================================================================
-Hlt1MuonStation::~Hlt1MuonStation()
-{
-    clearHits();
-}
-
-//=============================================================================
 Hlt1MuonHitRange Hlt1MuonStation::hits( double xmin, unsigned int region ) const
 {
     auto first = std::find_if( m_index[region], m_index[region+1],
@@ -78,12 +72,6 @@ Hlt1MuonHitRange Hlt1MuonStation::hits( unsigned int region ) const
 }
 
 //=============================================================================
-void Hlt1MuonStation::clearHits()
-{
-    m_hits.clear();
-}
-
-//=============================================================================
 void Hlt1MuonStation::setHits( Hlt1MuonHits&& hts )
 {
     m_hits = std::move(hts);
@@ -109,5 +97,5 @@ void Hlt1MuonStation::setHits( Hlt1MuonHits&& hts )
         assert( *id == imax ); // no invalid hits in y...
     }
     assert( *id == std::end(m_hits) );
-    assert( std::distance( std::begin(m_index), id ) == m_index.size() );
+    assert( uint(std::distance( std::begin(m_index), id )) == uint(m_index.size() - 1) );
 }

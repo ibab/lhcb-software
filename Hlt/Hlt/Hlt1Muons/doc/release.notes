@@ -6,6 +6,8 @@
 
 ! 2014-11-20 - Roel Aaij
  - Fix IMatchVeloMuon interface inheritance.
+ - Fix off by one bug in assert.
+ - Remove unneeded clearHits.
 
 ! 2014-11-06 - Marco Clemencic
  - Fixed CMake configuration.
