@@ -260,6 +260,12 @@ public:
     return m_photDetConf;
   }
 
+  /// The version of RichSystem
+  inline int systemVersion() const
+  {
+    return m_version;
+  }
+
 private: // methods
 
   /// Update methods for PD mappings
@@ -375,6 +381,9 @@ private: // data
   /// Location of RICH Numbering schemes in Conditions DB
   std::map<Rich::DetectorType, std::string> m_detNumConds;
 
+  /// Location of inactive PDs in Conditions DB
+  std::map<Rich::DetectorType, std::string> m_inactivePDConds;
+
   /// Logical to hardware L1 ID map
   typedef GaudiUtils::HashMap< const Rich::DAQ::Level1LogicalID, Rich::DAQ::Level1HardwareID > L1LogToHard;
   GaudiUtils::HashMap<const Rich::DetectorType,L1LogToHard> m_l1LogToHard;
@@ -385,6 +394,9 @@ private: // data
 
   /// First L1 Copy Number
   unsigned int m_firstL1CopyN;
+
+  /// version number
+  int m_version;
 
 };
 

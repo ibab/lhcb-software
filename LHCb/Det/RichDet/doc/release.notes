@@ -4,6 +4,14 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2014-11-19 - Antonis Papanestis
+ - Changes to DeRichSystem in order to move the DetectorNumbers 
+   condition from CondDB to ONLINE. The conditions has been split with the
+   inactive HPDs in a new condition. The changes work with any version of 
+   DDDB, however, a new DDDB version would need the correct ONLINE
+ - Added method systemVersion() (there is already a version() in detector
+   elements that is always empty)
+
 !========================= RichDet v16r25 2014-10-14 =========================
 ! 2014-10-01 - Chris Jones
  - Update RichSmartID search in DeRichSystem to avoid type mis-matches

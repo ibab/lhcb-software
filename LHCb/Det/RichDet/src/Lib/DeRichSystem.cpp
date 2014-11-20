@@ -38,7 +38,8 @@ const CLID CLID_DERichSystem = 12005;  // User defined
 DeRichSystem::DeRichSystem( const std::string & name )
   : DeRichBase     ( name            ),
     m_photDetConf  ( Rich::HPDConfig ), // assume HPD by default
-    m_firstL1CopyN ( 0               )
+    m_firstL1CopyN ( 0               ),
+    m_version      ( 0               )  // default version 0
 {
   m_deRich[Rich::Rich1] = NULL;
   m_deRich[Rich::Rich2] = NULL;
@@ -65,26 +66,39 @@ StatusCode DeRichSystem::initialize()
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Initialize " << name() << endmsg;
 
+  // get the version number
+  if ( exists("systemVersion") )
+    m_version = param<int>("systemVersion");
+  debug() << "System version:" << systemVersion() << endmsg;
+
   // get rich detectors
   std::vector<std::string> deRichLocs = getDeRichLocations();
 
   // get condition names for detector numbers
-  std::vector<std::string> condNames;
+  std::vector<std::string> detCondNames;
   if ( exists("DetectorNumbersConditions") )
   {
-    condNames = paramVect<std::string>("DetectorNumbersConditions");
+    detCondNames = paramVect<std::string>("DetectorNumbersConditions");
   }
   else
   {
-    condNames.push_back("Rich1DetectorNumbers");
-    condNames.push_back("Rich2DetectorNumbers");
+    detCondNames.push_back("Rich1DetectorNumbers");
+    detCondNames.push_back("Rich2DetectorNumbers");
   }
 
   // check if the numbers match.
-  if ( deRichLocs.size() != condNames.size() )
+  if ( 0 != detCondNames.size()%deRichLocs.size() )
   {
     error() << "Number of rich detector does not match detector number conditions" << endmsg;
     return StatusCode::FAILURE;
+  }
+
+  // for version 1 there are separate conditions for inactive PDs
+  std::vector<std::string> inactiveCondNames;
+  if ( systemVersion() == 1 )
+  {
+    inactiveCondNames.push_back("Rich1InactivePDs");
+    inactiveCondNames.push_back("Rich2InactivePDs");
   }
 
   // loop over detectors and conditions to set things up
@@ -100,11 +114,21 @@ StatusCode DeRichSystem::initialize()
     // m_deRich[deR->rich()] = deR;
     // m_detNumConds[deR->rich()] = condNames[i];
 
-    m_detNumConds[(Rich::DetectorType)i] = condNames[i];
+    m_detNumConds[(Rich::DetectorType)i] = detCondNames[i];
 
     updMgrSvc()->registerCondition( this,
-                                    condition(condNames[i]).path(),
+                                    condition(detCondNames[i]).path(),
                                     &DeRichSystem::buildPDMappings );
+    debug() << "Registered:" << condition(detCondNames[i]).path() << endmsg;
+
+    if ( systemVersion() == 1)
+    {
+      m_inactivePDConds[(Rich::DetectorType)i] = inactiveCondNames[i];
+      updMgrSvc()->registerCondition( this,
+                                      condition(inactiveCondNames[i]).path(),
+                                      &DeRichSystem::buildPDMappings );
+      debug() << "Registered:" << condition(inactiveCondNames[i]).path() << endmsg;
+    }
   }
 
   // Run first update
@@ -268,6 +292,10 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
     debug() << "Loading Conditions from " <<  m_detNumConds[rich] << endmsg;
   const SmartRef<Condition> numbers = condition(m_detNumConds[rich]);
 
+  SmartRef<Condition> inactives;
+  if ( systemVersion() == 1 )
+    inactives = condition(m_inactivePDConds[rich]);
+
   // local typedefs for vector from Conditions
   typedef std::vector<int> CondData;
   typedef std::vector<std::string> L1Mapping;
@@ -313,12 +341,15 @@ StatusCode DeRichSystem::fillMaps( const Rich::DetectorType rich )
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Condition " << str_InactivePDListInSmartIDs
               << " exists = " << inactivePDListInSmartIDs << endmsg;
-  if ( inactivePDListInSmartIDs )
+  if ( inactivePDListInSmartIDs || systemVersion() == 1 )
   {
     // smartIDs
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Inactive PDs are taken from the smartID list" << endmsg;
-    const CondData& inactsHuman = numbers->paramVect<int>(str_InactivePDListInSmartIDs);
+    const CondData& inactsHuman = ( systemVersion() == 1 ) ?
+      inactives->paramVect<int>(str_InactivePDListInSmartIDs) :
+      numbers->paramVect<int>(str_InactivePDListInSmartIDs);
+
     inacts.reserve(inactsHuman.size());
     for ( CondData::const_iterator inpd = inactsHuman.begin();
           inpd != inactsHuman.end(); ++inpd )
