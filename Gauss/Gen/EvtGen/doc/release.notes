@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Michal Kreps
+  - Final fix to FF model for Lb --> L transition from Gutsche et al.
+    (1301.3737).
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
