@@ -4,6 +4,18 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Manuel Tobias Schiller
+ - rewrite TrackCloneData class:
+   * use Bloom filter to quickly check for non-overlapping tracks (use old
+     method to determine size of overlap if overlap might be non-emptr); this
+     option will give exactly the same result as previous code in all cases
+     (default)
+   * option to do the entire overlap calculation with size estimate of Bloom
+     filter class - slightly faster, but will cause permille level differences
+     (selectable with template argument, but not default)
+   * template argumentument to allow choice between owning the contained pointer
+     to the underlying track (default) or not owning it
+
 !========================= TrackKernel v2r0 2014-02-19 =========================
 ! 2014-01-13 - Marco Cattaneo
  - Remove support for VL
