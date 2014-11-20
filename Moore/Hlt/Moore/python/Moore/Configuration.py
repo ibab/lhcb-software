@@ -746,7 +746,7 @@ class Moore(LHCbConfigurableUser):
         split=self.getProp("Split")
         if useTCK and split:
             splitter = { 'Hlt1'     : hlt1_only_tck 
-                       , 'Hlt2'     : hlt2_only_tck
+                       , 'Hlt2'     : hlt2_only_tck }
             action = splitter[ split ]
             # Tell the HltConfigSvc that we will only be running 
             # one level of the HLT
