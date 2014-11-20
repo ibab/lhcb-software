@@ -17,7 +17,7 @@ class Candidate;
  *  @author 
  *  @date   2014-06-04
  */
-class GAUDI_API IMatchVeloMuon : virtual public ITracksFromTrack {
+class GAUDI_API IMatchVeloMuon : virtual public extend_interfaces1<ITracksFromTrack> {
 public: 
    // interface ID
    DeclareInterfaceID( IMatchVeloMuon, 2, 0 );

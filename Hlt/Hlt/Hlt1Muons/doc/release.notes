@@ -4,6 +4,9 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Roel Aaij
+ - Fix IMatchVeloMuon interface inheritance.
+
 ! 2014-11-06 - Marco Clemencic
  - Fixed CMake configuration.
 
