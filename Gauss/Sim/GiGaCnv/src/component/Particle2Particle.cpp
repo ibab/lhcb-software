@@ -52,12 +52,12 @@
 // ============================================================================
 Particle2Particle::Particle2Particle( LHCb::IParticlePropertySvc* Svc )
   : m_p2d( Svc )
-{};
+{}
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-Particle2Particle::~Particle2Particle(){};
+Particle2Particle::~Particle2Particle(){}
 
 // ============================================================================
 /** convert MCParticle object into G4Primary particle object
@@ -120,7 +120,7 @@ Particle2Particle::operator()
   ///
   return Particle;
 
-};
+}
 
 // ============================================================================
 // The END 
