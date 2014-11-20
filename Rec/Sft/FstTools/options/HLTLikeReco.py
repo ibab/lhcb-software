@@ -21,10 +21,21 @@ Brunel().InputType = "DIGI"
 Brunel().WithMC = True
 Brunel().PrintFreq = 100
 Brunel().Simulation = True
-Brunel().EvtMax = 10000
+Brunel().EvtMax = 1000
 Brunel().CondDBtag = 'sim-20131023-vc-md100' # use the mu100 for MagUp data
 Brunel().DDDBtag = 'dddb-20130929-1'
-Brunel().DatasetName = "hlt-offline-all_velo_LHCbID"
+
+unused_hits_only = True
+skip_used_velo = True
+
+base_name = "hlt-plus-offline-%s-velo-tracks-%s-hits-addTTInFwd2"
+dataset_name = base_name%("unused" if skip_used_velo else "all",
+                          "unused" if unused_hits_only else "all")
+
+print "Unused hits only:", unused_hits_only
+print "Skip used Velo seeds:", skip_used_velo
+
+Brunel().DatasetName = dataset_name
 
 MessageSvc().Format = '% F%50W%S%7W%R%T %0W%M'
 
@@ -32,8 +43,15 @@ staged = StagedRecoConf()
 # Include the offline PatForward in the "Best"
 # container, remove OfflienFwd if you do not
 # care for it
-staged.AddToBest = ["Fwd1", "Fwd2", "OfflineFwd", "Match"]
+#staged.AddToBest = ["Fwd1", "Fwd2", "OfflineFwd", "Match"]
 #staged.AddToBest = ["GhostBustedFwd", "OfflineFwd", "Match"]
+# hlt1
+staged.AddToBest = ["GhostBustedFwd", "Match", "Downstream"]
+# hlt2
+staged.AddToBest = ["GhostBustedFwd", "OfflineFwd", "Match"]#, "Downstream"]
+staged.SkipUsedVeloSeeds = skip_used_velo
+staged.UnUsedHitsOnly = unused_hits_only
+staged.VeloTTMinPT = 50
 
 # sim://MC/Dev/Beam6500GeV-RunII-MagDown-Nu1.5-25ns-Pythia8/Sim08e/30000000 ( minbias )/XDIGI
 #

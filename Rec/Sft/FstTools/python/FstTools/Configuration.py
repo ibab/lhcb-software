@@ -441,6 +441,10 @@ class StagedRecoConf(LHCbConfigurableUser):
                  "Fwd1MinPT": 500, #MeV
                  # pT threshold of second Forward tracking
                  "Fwd2MinPT": 200, #MeV
+                 # skip already extended Velo seeds for the offline forward
+                 "SkipUsedVeloSeeds": True,
+                 # use only so far unused hits in the offline forward
+                 "UnUsedHitsOnly": True,
                  }
     
     def applyConf(self):
@@ -483,7 +487,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         veloTT.fitTracks = False
 
         veloTT_tool = PatVeloTTHybridTool("PatVeloTTHybridTool")
-        veloTT_tool.minMomentum = 2000
+        veloTT_tool.minMomentum = self.getProp("VeloTTMinPT")*10#2000
         veloTT_tool.minPT = self.getProp("VeloTTMinPT")
         veloTT_tool.maxPseudoChi2 = 1280
         veloTT_tool.PrintVariables = True
@@ -541,7 +545,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         
         fwd_hlt2.addTool(PatForwardTool)
         fwd_hlt2_tool = fwd_hlt2.PatForwardTool
-        #fwd_hlt2_tool.AddTTClusterName = "PatAddTTCoord"
+        fwd_hlt2_tool.AddTTClusterName = "PatAddTTCoord"
         fwd_hlt2_tool.SecondLoop = True
         fwd_hlt2_tool.MinPt = self.getProp("Fwd2MinPT")
         # Skip seeds we marked as used in HLT1
@@ -586,6 +590,7 @@ class StagedRecoConf(LHCbConfigurableUser):
         max_chi2.MaxChi2Cut = 5
         recycle_ghosts.Selector = max_chi2
         fst_seq.Members += [fast_fit, recycle_ghosts]
+
         
         # Seeding
         seeding = PatSeeding("FstSeeding")
@@ -613,6 +618,20 @@ class StagedRecoConf(LHCbConfigurableUser):
 
         fst_seq.Members += [seeding, matching]
 
+        
+        # Downstream tracking
+        downstream = PatDownstream("FstDownstream")
+        downstream.InputLocation = seeding.getProp("OutputTracksName")
+        downstream.ForwardLocation = merge_fwd.getProp("OutputLocation")
+        downstream.MatchLocation = matching.getProp("MatchOutput")
+        downstream.OutputLocation = self.getProp("RootInTES") + "Track/Downstream"
+        downstream.RemoveUsed = False
+        downstream.RemoveAll = True
+        downstream.MinMomentum = 0
+        downstream.MinPt = 0
+
+        fst_seq.Members += [downstream]
+
 
         # Hyperloop, third loop, or running the forward tracking
         # as is done offline. This could be the first step of the
@@ -628,21 +647,26 @@ class StagedRecoConf(LHCbConfigurableUser):
         offline_fwd.DeltaNumberInTT = 1E8
         offline_fwd.MaxNVelo = 1E8
 
-        # With this enabled we achieve lower ghostrate but also lose 1% efficiency
-        #offline_fwd.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
-        #offline_fwd.UsedLHCbIDToolName = "TrackUsedLHCbID"
-        ##offline_fwd.TrackUsedLHCbID.inputContainers = [merge_fwd.getProp("OutputLocation")]
-        #offline_fwd.TrackUsedLHCbID.inputContainers = [recycle_ghosts.getProp("outputLocation"),
-        #                                               #matching.getProp("MatchOutput")
-        #                                               ]
-        #offline_fwd.TrackUsedLHCbID.selectorNames = ['ForwardSelector']
+        # With this enabled we achieve lower ghostrate but also lose efficiency
+        if self.getProp("UnUsedHitsOnly"):
+            offline_fwd.addTool(TrackUsedLHCbID, name='TrackUsedLHCbID')
+            offline_fwd.UsedLHCbIDToolName = "TrackUsedLHCbID"
+            #offline_fwd.TrackUsedLHCbID.inputContainers = [merge_fwd.getProp("OutputLocation")]
+            offline_fwd.TrackUsedLHCbID.inputContainers = [recycle_ghosts.getProp("outputLocation"),
+                                                           #matching.getProp("MatchOutput"),
+                                                           #seeding.getProp("OutputTracksName"),
+                                                           #downstream.getProp("OutputLocation"),
+                                                           ]
+            offline_fwd.TrackUsedLHCbID.selectorNames = ['ForwardSelector']
         
         offline_fwd.addTool(PatForwardTool)
         offline_fwd_tool = offline_fwd.PatForwardTool
         offline_fwd_tool.SecondLoop = True
         #offline_fwd_tool.MinPt = 70#self.getProp("Fwd2MinPT")
-        # Skip seeds we marked as used in HLT1
-        #offline_fwd_tool.SkipUsedSeeds = True
+        # Skip seeds we marked as used in HLT
+        offline_fwd_tool.SkipUsedSeeds = self.getProp("SkipUsedVeloSeeds")
+        offline_fwd_tool.AddTTClusterName = "PatAddTTCoord"
+        #offline_fwd_tool.addTool(PatFwdTool("PatFwdTool"))
 
         fst_seq.Members += [offline_fwd]
 
@@ -664,6 +688,8 @@ class StagedRecoConf(LHCbConfigurableUser):
             merge_to_best.append(recycle_ghosts.getProp("outputLocation"))
         if "Match" in self.getProp("AddToBest"):
             merge_to_best.append(matching.getProp("MatchOutput"))
+        if "Downstream" in self.getProp("AddToBest"):
+            merge_to_best.append(downstream.getProp("OutputLocation"))
         
         clone_killer.TracksInContainers = merge_to_best
         clone_killer.TracksOutContainer = self.getProp("RootInTES") + "Track/UnfittedBest"
@@ -682,14 +708,19 @@ class StagedRecoConf(LHCbConfigurableUser):
         fast_fit.TracksInContainer = clone_killer.getProp("TracksOutContainer")
         fast_fit.TracksOutContainer = self.getProp("RootInTES") + "Track/FittedBest"
         fast_fit.addTool(TrackMasterFitter, name='Fitter')
-        fitter = ConfiguredHltFitter(getattr(fast_fit, 'Fitter'))
-        #fitter = ConfiguredMasterFitter(getattr(fast_fit, 'Fitter'),
-        #                                FieldOff=False,
-        #                                SimplifiedGeometry=False,
-        #                                NoDriftTimes=False,
-        #                                KalmanSmoother=False,
-        #                                ApplyMaterialCorrections=True,
-        #                                )
+        #fitter = ConfiguredHltFitter(getattr(fast_fit, 'Fitter'))
+        fitter = ConfiguredMasterFitter(getattr(fast_fit, 'Fitter'),
+                                        FieldOff=None,
+                                        SimplifiedGeometry=False,
+                                        LiteClusters=True,
+                                        NoDriftTimes=False,
+                                        KalmanSmoother=False,
+                                        ApplyMaterialCorrections=True,
+                                        )
+        from Configurables import StateDetailedBetheBlochEnergyCorrectionTool
+        state = StateDetailedBetheBlochEnergyCorrectionTool
+        fitter.MaterialLocator.addTool(state("GeneralDedxTool"))
+        fitter.MaterialLocator.GeneralDedxTool.EnergyLossFactor = 0.76
 
         fst_seq.Members += [fast_fit]
         
@@ -703,17 +734,3 @@ class StagedRecoConf(LHCbConfigurableUser):
         ghost_killer.Selector = max_chi2
         
         fst_seq.Members += [ghost_killer]
-
-        
-        # Downstream tracking
-        downstream = PatDownstream("FstDownstream")
-        downstream.InputLocation = seeding.getProp("OutputTracksName")
-        downstream.ForwardLocation = merge_fwd.getProp("OutputLocation")
-        downstream.MatchLocation = matching.getProp("MatchOutput")
-        downstream.OutputLocation = self.getProp("RootInTES") + "Track/Downstream"
-        downstream.RemoveUsed = False
-        downstream.RemoveAll = True
-        downstream.MinMomentum = 0
-        downstream.MinPt = 0
-
-        fst_seq.Members += [downstream]
