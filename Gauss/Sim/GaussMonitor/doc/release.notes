@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Peter Griffith
+- Committed two new tools for the study of EM physics in the Velo;
+  BremVeloCheck (tool) and EMGaussMoni (algorithm)
+
+
 ! 2014-11-20 - Gloria Corti
  - Introduce dependency to VeloDet for code to be committed for dE/dx and 
    Brem in thin silicon layers
