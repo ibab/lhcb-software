@@ -752,24 +752,30 @@ class HltConf(LHCbConfigurableUser):
         ###             downstream, but eg. for MC they may be kept...
         ### So maybe the routingbits should be written in the end sequence instead, but then the code must take into
         ### account that Hlt2 missing on Hlt1 rejected events is not an error...
-        _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,'Hlt2DecReportsLocation' : '',  } )
-                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1, 'InputHltDecReportsLocation' : hlt1_decrep_loc } )
+        _hlt1postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter,   'Hlt1RoutingBitsWriter', {'Hlt1DecReportsLocation': hlt1_decrep_loc,
+                                                                                                         'Hlt2DecReportsLocation' : '',  } )
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,    'Hlt1DecReportsWriter',  {'SourceID' : 1, 
+                                                                                                         'InputHltDecReportsLocation' : hlt1_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,     'Hlt1SelReportsMaker',   dict( InputHltDecReportsLocation = hlt1_decrep_loc
                                                                                                             , OutputHltSelReportsLocation = hlt1_selrep_loc
                                                                                                             , **sel_rep_opts )  )
-                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1, 'InputHltSelReportsLocation': hlt1_selrep_loc } )
+                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,    'Hlt1SelReportsWriter',  {'SourceID' : 1, 
+                                                                                                         'InputHltSelReportsLocation': hlt1_selrep_loc } )
                          , ( "EnableHltTrkReports"  ,  HltTrackReportsWriter,  'Hlt1TrkReportsWriter',  {})
                          , ( "EnableHltVtxReports"  ,  HltVertexReportsMaker,  'Hlt1VtxReportsMaker',   {'OutputHltVertexReportsLocation' : hlt_vtxrep_loc } )
-                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReportsWriter',  {'InputHltVertexReportsLocation': hlt_vtxrep_loc
-                                                                                                        ,'SourceID' : 1 } )
+                         , ( "EnableHltVtxReports"  ,  HltVertexReportsWriter, 'Hlt1VtxReporteWriter',  { 'SourceID' : 1, 
+                                                                                                          'InputHltVertexReportsLocation': hlt_vtxrep_loc } )
                          )
-        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc, 'Hlt2DecReportsLocation' : hlt2_decrep_loc, 'UpdateExistingRawBank'  : True} ) 
-                , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  {'SourceID' : 2, 'InputHltDecReportsLocation' : hlt2_decrep_loc } )
+        _hlt2postamble = ( ( "EnableHltRoutingBits" ,  HltRoutingBitsWriter, 'Hlt2RoutingBitsWriter', { 'Hlt1DecReportsLocation' : hlt1_decrep_loc,
+                                                                                                        'Hlt2DecReportsLocation' : hlt2_decrep_loc,
+                                                                                                        'UpdateExistingRawBank'  : True} ) 
+                         , ( "EnableHltDecReports"  ,  HltDecReportsWriter,  'Hlt2DecReportsWriter',  { 'SourceID': 2, 
+                                                                                                        'InputHltDecReportsLocation' : hlt2_decrep_loc } )
                          , ( "EnableHltSelReports"  ,  HltSelReportsMaker,   'Hlt2SelReportsMaker',  dict( InputHltDecReportsLocation = hlt2_decrep_loc,
                                                                                                            OutputHltSelReportsLocation = hlt2_selrep_loc,
                                                                                                            **sel_rep_opts  ) )
-                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter', { 'InputHltSelReportsLocation': hlt2_selrep_loc,
-                                                                                                       'SourceID' : 2 } )
+                         , ( "EnableHltSelReports"  ,  HltSelReportsWriter,  'Hlt2SelReportsWriter',  { 'SourceID' : 2,
+                                                                                                        'InputHltSelReportsLocation': hlt2_selrep_loc } )
                          )
 
         # make sure we only instantiate members which are used...

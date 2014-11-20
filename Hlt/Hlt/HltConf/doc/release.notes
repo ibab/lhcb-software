@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+! 2014-11-20 - Gerhard Raven
+ - add missing TrackCandidatesSingleElectronNoIP
 
 !========================= HltConf v12r3 2014-11-05 =========================
 
