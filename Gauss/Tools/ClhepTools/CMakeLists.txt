@@ -1,7 +1,7 @@
 ################################################################################
 # Package: ClhepTools
 ################################################################################
-gaudi_subdir(ClhepTools v2r1p2)
+gaudi_subdir(ClhepTools v2r1p3)
 
 gaudi_depends_on_subdirs(GaudiKernel)
 

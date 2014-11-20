@@ -46,7 +46,7 @@ namespace LHCb {
   }
   
 
-};
+}
 
 
 #endif // CLHEPTOOLS_MATHCORE2CLHEP_H

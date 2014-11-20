@@ -7,6 +7,9 @@
 !               these aren't defined.
 !-----------------------------------------------------------------------------
 
+! 2014-11-20 - Gloria Corti
+ - Fixes for warning when compiling with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
