@@ -13,7 +13,7 @@ class Commissioning_PassThrough :
         self.StripEndSequence = ['']
 
     def HltType(self) :
-        return 'PassThrough'
+        return 'Hlt_PassThrough'
 
     def L0TCK(self) :
         return None

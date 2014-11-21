@@ -4,6 +4,10 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+
+! 2014-11-21 - Eric van Herwijnen
+ - Change HltType to Hlt_PassThrough for Commissioning_PassThrough to avoid
+ conflicts with online
 !========================= HltSettings v6r8 2014-11-05 =========================
 
 ! 2014-11-04 - Sean Benson
