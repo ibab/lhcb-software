@@ -44,6 +44,13 @@ class Centipede : public Millepede, virtual public ICentipede {
   
   int  SpmInvGlobal(double v[][mgl], double b[], const int n); //MD
   int  SpmInv(double v[][mlocal], double b[], int n);//MD
+
+  using Millepede::InitMille;
+  using Millepede::EquLoc;
+  using Millepede::ZerLoc;
+  using Millepede::FitLoc;
+  using Millepede::MakeGlobalFit;
+  using Millepede::ConstF;
   
   virtual StatusCode InitMille( int nglo, 
                                 int nloc, 
