@@ -1,23 +1,20 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.5)
-
-#---------------------------------------------------------------
-# Load macros and functions for Gaudi-based projects
-find_package(GaudiProject)
-#---------------------------------------------------------------
-
-# Declare project name and version
+################################################################################
+# Package: AlignOnline
+################################################################################
 gaudi_subdir(AlignOnline v1r0)
 
-gaudi_add_module(AlignOnline
-                src/*.cpp)
-#                INCLUDE_DIRS CLHEP GSL AIDA Alignment/AlignmentInterfaces Tr/TrackInterfaces
-#                LINK_LIBRARIES CLHEP GSL AlignEvent AlignKernel MuonDetLib STDetLib LinkerEvent PhysEvent RecEvent TrackEvent GaudiAlgLib GaudiKernel LHCbKernel LHCbMathLib LoKiCoreLib TrackFitEvent TrackKernel)
+gaudi_depends_on_subdirs(Alignment/AlignKernel
+                         Det/DetDesc
+                         Online/OnlineKernel)
 
-gaudi_add_dictionary(AlignOnline
-                    dict/AlignOnlineDict.h
-                    dict/AlignOnlineDict.xml
-#INCLUDE_DIRS CLHEP GSL PythonLibs Alignment/AlignmentInterfaces Tr/TrackInterfaces
-#LINK_LIBRARIES CLHEP GSL PythonLibs GaudiPythonLib AlignEvent AlignKernel MuonDetLib STDetLib LinkerEvent PhysEvent RecEvent TrackEvent GaudiAlgLib GaudiKernel LHCbKernel LHCbMathLib LoKiCoreLib TrackFitEvent TrackKernel
-                    OPTIONS "-U__MINGW32__")
+# This is a special trick to handle the non standard headers'
+# locations in Online.
+find_path(RTL_include_dir RTL/rtl.h
+          PATH_SUFFIXES ../include/OnlineBase)
+
+gaudi_add_module(AlignOnline
+                 src/*.cpp
+                 INCLUDE_DIRS ${RTL_include_dir}
+                 LINK_LIBRARIES AlignKernel DetDescLib OnlineKernel)
 
 gaudi_install_python_modules()
