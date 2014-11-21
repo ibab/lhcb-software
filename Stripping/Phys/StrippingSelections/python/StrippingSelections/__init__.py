@@ -5,6 +5,8 @@ All line builders available via function lineBuilders().
 
 __author__ = 'Juan Palacios palacios@physik.uzh.ch'
 
+import StrippingBadEvents
+
 import StrippingBc2Ds1Gamma
 
 # Gamma from trees
