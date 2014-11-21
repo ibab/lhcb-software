@@ -26,3 +26,12 @@ MiniBias = {
     }
 
 
+BadEvents = {
+    'BUILDERTYPE'       :       'BadEventsConf',
+    'CONFIG'   :{"GEC"       : "((TrSOURCE('/Event/Rec/Track/Best', TrLONG) >> (sum(TrPT,TrP<1000000))>1000000))"
+                  ,"prescale": 1.0
+                  ,"postscale": 1.0
+                  },
+    'WGs' : [ 'ALL' ],
+    'STREAMS' : [ 'MiniBias' ]
+}

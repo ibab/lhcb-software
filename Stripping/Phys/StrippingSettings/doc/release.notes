@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-11-21 - Andrea Contu
+ - Added StrippingBadEvents to MiniBias stream
+
 ! 2014-11-14 - Andrea Contu
  - Moved Charm XSec lines to muDST and updated dbase for S21(r1)
 
