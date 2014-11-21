@@ -41,6 +41,8 @@ MatchVeloMuon::MatchVeloMuon( const std::string& type, const std::string& name,
    , m_fieldSvc{nullptr}
    , m_magnetHit{nullptr}
 {
+   declareInterface<ITracksFromTrack>( this ); 
+
    declareProperty( "XWindow", m_xWindow = 300 );
    declareProperty( "YWindow", m_yWindow = 300 );
 
