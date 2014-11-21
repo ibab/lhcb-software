@@ -29,6 +29,12 @@ class ICentipede : virtual public IMillepede {
   //  virtual StatusCode initialize() = 0;
   //virtual StatusCode finalize() = 0;
   
+  using IMillepede::InitMille;
+  using IMillepede::EquLoc;
+  using IMillepede::ZerLoc;
+  using IMillepede::FitLoc;
+  using IMillepede::MakeGlobalFit;
+  using IMillepede::ConstF;
 
   virtual StatusCode InitMille (
                                 int nglo,
