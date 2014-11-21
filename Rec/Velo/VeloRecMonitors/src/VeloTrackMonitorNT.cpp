@@ -1516,11 +1516,11 @@ const LHCb::MCHit* Velo::VeloTrackMonitorNT::getAssocMCHit(const LHCb::VeloClust
   //
   Range range=m_asctTable->relations(clus);
   
-//   if(range.begin()==range.end()){
-//     if( msgLevel(MSG::DEBUG) )  
-//       debug()<< " No MCHits associated " <<endmsg;
-//     return ( 0 );
-//   }
+  if(range.begin()==range.end()){
+    if( msgLevel(MSG::DEBUG) )  
+      debug()<< " No MCHits associated " <<endmsg;
+    return ( 0 );
+  }
   const MCHit* aHit=(range.begin())->to();
 
   return ( aHit );

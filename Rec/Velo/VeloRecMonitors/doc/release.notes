@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+
+! 2014-11-21 - Silvia Borghi
+ - Fix the check in case of no MC hit association in VeloTrackMonitorNT
+
 !========================= VeloRecMonitors v2r29 2014-07-14 =====================
 ! 2014-06-30 - David Hutchcroft
  - Fix divide by 0 FPE in VeloTrackMonitorNT
