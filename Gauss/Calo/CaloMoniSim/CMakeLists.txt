@@ -1,7 +1,7 @@
 ################################################################################
 # Package: CaloMoniSim
 ################################################################################
-gaudi_subdir(CaloMoniSim v5r0)
+gaudi_subdir(CaloMoniSim v5r0p1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Event/MCEvent)

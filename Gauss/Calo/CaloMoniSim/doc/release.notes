@@ -5,6 +5,9 @@
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
+! 2014-11-21 - Gloria Corti
+ - Fix compilation warning with --pedantic on
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

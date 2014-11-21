@@ -38,7 +38,7 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCCaloMonitor );
+DECLARE_ALGORITHM_FACTORY( MCCaloMonitor )
 
 
 //=============================================================================
@@ -76,7 +76,7 @@ MCCaloMonitor::MCCaloMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCCaloMonitor::~MCCaloMonitor() {};
+MCCaloMonitor::~MCCaloMonitor() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -135,7 +135,7 @@ StatusCode MCCaloMonitor::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -237,7 +237,7 @@ StatusCode MCCaloMonitor::execute() {
   plot1D(hits_CounterBC3,144,m_hName44,0,1000,100,1.);
   plot1D(hits_CounterBC4,145,m_hName45,0,1000,100,1.);
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
@@ -248,7 +248,6 @@ StatusCode MCCaloMonitor::finalize() {
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
 
-//=============================================================================
 
 // ============================================================================
 // The END
