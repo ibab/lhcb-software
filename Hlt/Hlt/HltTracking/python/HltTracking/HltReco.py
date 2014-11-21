@@ -190,7 +190,7 @@ from Configurables import PatVeloTTHybrid, PatVeloTTHybridTool
 recoVeloTT = PatVeloTTHybrid( 'PatVeloTTHlt', 
                         InputTracksName = HltSharedTrackLoc["Velo"],
                         OutputTracksName = Hlt1TrackLoc["VeloTTHPT"],
-                        fitTracks=False)
+                        fitTracks=False )
 recoVeloTT.addTool(PatVeloTTHybridTool, name="PatVeloTTTool")
 recoVeloTT.PatVeloTTTool.getProperties().update(CommonVeloTTOptions)
 recoVeloTT.PatVeloTTTool.StatPrint = True
@@ -208,7 +208,6 @@ recoForward.PatForwardTool.getProperties().update(ForwardTrackingOptions_MomEsti
 recoForward.PatForwardTool.MinMomentum = 3000
 recoForward.PatForwardTool.MinPt = 500
 recoForward.PatForwardTool.StatPrint = True
- 
 
 ##### Hlt selections
 from Configurables import Hlt__TrackFilter as HltTrackFilter
@@ -227,8 +226,6 @@ from Configurables import DecodeVeloRawBuffer, Hlt2Conf
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #This is the part which is shared between Hlt1 and Hlt2
-
-
 MinimalVelo = bindMembers( None, [DecodeVELO, recoVelo(OutputLocation=HltSharedTrackLoc["Velo"] ) ] ).setOutputSelection( HltSharedTrackLoc["Velo"] )
 RevivedVelo = bindMembers(None, [DecodeVELO, DecodeTRACK]).setOutputSelection( HltSharedTrackLoc["Velo"] )
 RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ DecodeTRACK ]).setOutputSelection( Hlt1TrackLoc["Forward"] )
@@ -238,16 +235,15 @@ RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ De
 bm_members =  DecodeVELO.members() + [recoVelo()]
 bm_members += DecodeTT.members() + [recoVeloTT] 
 bm_members += DecodeIT.members() + [recoForward]
-
+#HltTracking = bindMembers(None, bm_members).setOutputSelection( recoVeloTT.OutputTracksName )
 HltTracking = bindMembers(None, bm_members).setOutputSelection( recoForward.OutputTracksName )
 
 #VeloTT tracking
-
-vt_members = DecodeVELO.members()
-vt_members += [ recoVelo() ]
-vt_members += DecodeTT.members()
-vt_members += [ recoVeloTT ]
+vt_members = DecodeVELO.members() + [ recoVelo() ]
+vt_members += DecodeTT.members()  + [ recoVeloTT ]
+#vt_members += DecodeIT.members() + [recoForward]
 VeloTTTracking = bindMembers(None, vt_members).setOutputSelection( recoVeloTT.OutputTracksName ) 
+#VeloTTTracking = bindMembers(None, vt_members).setOutputSelection( recoForward.OutputTracksName ) 
 
 # ==============================================================================
 # Hlt1Seeding, used by MicroBias

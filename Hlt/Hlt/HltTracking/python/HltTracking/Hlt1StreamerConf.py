@@ -137,7 +137,7 @@ FitTrack = LoKi.Hlt1.UpgradeConf (
 FitVeloTTTrack = LoKi.Hlt1.UpgradeConf (
     "HltTrackFit/VeloTTFit"      ,                     ##               "Tool" 
     Hlt1TrackRoot + "FitVeloTTTrack"  ,                ##          "TESOutput"
-    LHCb.Track.Long              ,                     ##          "TrackType"
+    LHCb.Track.Upstream          ,                     ##          "TrackType"
     True                         ,                     ##              "Owner"
     True                         ,                     ##        "TransferIDs"
     True                         ,                     ##   "TransferAncestor"

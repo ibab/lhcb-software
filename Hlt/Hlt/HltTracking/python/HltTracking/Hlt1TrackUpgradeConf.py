@@ -198,7 +198,6 @@ def VeloCandidates( lineName ):
 from Configurables import Hlt__Track2Candidate
 import HltLine.HltDecodeRaw 
 from HltReco import VeloTTTracking
-from HltReco import recoVeloTT
 from HltLine.HltLine import bindMembers
 def VeloTTCandidates( lineName ):
     selection = 'VeloTTCandidates%s' % lineName
@@ -207,6 +206,7 @@ def VeloTTCandidates( lineName ):
         Code            = "~TrBACKWARD"    , ## skip backward tracks 
         InputSelection  = VeloTTTracking.outputSelection(),
         OutputSelection = selection,
+        OutputLevel = 2,
         )
     bm = bindMembers ( None , [ VeloTTTracking, tracks ] )
     return "VeloTTCandidates = execute( %s ) * SELECTION( '%s' )" % \
@@ -226,6 +226,7 @@ def TrackCandidates( lineName ):
         Code            = "~TrBACKWARD"    , ## skip backward tracks 
         InputSelection  = HltTracking.outputSelection(),
         OutputSelection = selection,
+        OutputLevel = 2,
         )
     bm = bindMembers ( None , [ HltTracking, tracks ] )
     return "TrackCandidates = execute( %s ) * SELECTION( '%s' )" % \
