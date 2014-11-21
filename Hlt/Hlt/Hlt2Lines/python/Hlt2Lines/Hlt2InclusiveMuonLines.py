@@ -309,14 +309,14 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         # ---------------------Michael Kolpin, michael.kolpin@cern.ch--------------------------------
         #############################################################################################
 
-	# Import tag track muons #
-	from Hlt2SharedParticles.TagAndProbeParticles import TagMuonTTMuons, TagVeloMuons, TagDownstreamMuons
+	    # Import tag track muons #
+        from Hlt2SharedParticles.TagAndProbeParticles import TagMuonTTMuons, TagVeloMuons, TagDownstreamMuons
 
         #--------------Muon+TT track combination lines------------------------------------------------
 
-	# Create two triggerlines to distunguish positive-charge long and negative tag-track and vice versa
+	    # Create two triggerlines to distunguish positive-charge long and negative tag-track and vice versa
 
-	# Positive long track / negative tag-track
+	    # Positive long track / negative tag-track
 
         from HltLine.Hlt2Monitoring import Hlt2Monitor,Hlt2MonitorMinMax
 

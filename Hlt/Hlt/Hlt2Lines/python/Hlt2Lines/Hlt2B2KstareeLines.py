@@ -88,23 +88,23 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
 
 
     def __apply_configuration__(self) :
-	self.__makeHlt2B2KstareeRobustAndFittedLines()
-	self.__makeHlt2B2KstareeFittedLines()
+        self.__makeHlt2B2KstareeRobustAndFittedLines()
+        self.__makeHlt2B2KstareeFittedLines()
 	
         
     def __makeHlt2B2KstareeRobustAndFittedLines(self):
     
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
         from HltTracking.HltPVs import PV3D
-	from Configurables import HltANNSvc
+        from Configurables import HltANNSvc
         from Configurables import CombineParticles, FilterDesktop
-	from Hlt2SharedParticles.BasicParticles import Electrons, NoCutsKaons, NoCutsPions      
-	from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
+        from Hlt2SharedParticles.BasicParticles import Electrons, NoCutsKaons, NoCutsPions      
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
         
-	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedDecision"       : 55320 } )
-  	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedSignalDecision" : 55321 } )
-	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedLargeBMassWindowDecision"       : 55330 } )
-  	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedLargeBMassWindowSignalDecision" : 55331 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedDecision"       : 55320 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedSignalDecision" : 55321 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedLargeBMassWindowDecision"       : 55330 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeRobustAndFittedLargeBMassWindowSignalDecision" : 55331 } )
 
 
         """
@@ -122,10 +122,10 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
             Hlt1Req= None
             
 	
-	##########################
+        ##########################
 	
-	#make the dielectron
-	LowPtDiElectron=Hlt2Member( CombineParticles
+        #make the dielectron
+        LowPtDiElectron=Hlt2Member( CombineParticles
                                     , "LowPtDiElectron"
                                     , DecayDescriptor = "J/psi(1S) -> e+ e-"
                                     , Inputs = [Electrons]
@@ -135,8 +135,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                     , UseP2PVRelations = False
                                     )	
 
-	#Make fitted dielectron
-	FittedDiElectron=Hlt2Member( CombineParticles
+        #Make fitted dielectron
+        FittedDiElectron=Hlt2Member( CombineParticles
                                      , "FittedDiElectron"
                                      , DecayDescriptor = "J/psi(1S) -> e+ e-"
                                      , Inputs = [BiKalmanFittedElectrons]
@@ -144,8 +144,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                      , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (in_range( %(eeMinMass)s, MM, %(eeMaxMass)s))" % self.getProps()
                                      )
 	
-	#Make Kstar
-	Kstar=Hlt2Member( CombineParticles
+        #Make Kstar
+        Kstar=Hlt2Member( CombineParticles
                           , "Kstar"
                           , DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
                           , Inputs = [NoCutsKaons, NoCutsPions]
@@ -156,8 +156,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                           )	
 	
 	
-	#Make fitted Kstar
-	FittedKstar=Hlt2Member( CombineParticles
+        #Make fitted Kstar
+        FittedKstar=Hlt2Member( CombineParticles
                                 , "FittedKstar"
                                 , DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
                                 , Inputs = [BiKalmanFittedKaons, BiKalmanFittedPions]
@@ -168,8 +168,8 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                 )	
 	
 	
-	#make the Bd
-	CombineB=Hlt2Member( CombineParticles
+        #make the Bd
+        CombineB=Hlt2Member( CombineParticles
                              , "CombineB"
                              , DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
                              , CombinationCut = "(ADAMASS('B0')< %(BLargeMassWindow)s *MeV)" % self.getProps()
@@ -190,13 +190,13 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                                                                  FittedKstar,
                                                                                  CombineB  ] )
 	
-	##########################
-	#define the line
-	line=Hlt2Line('B2KstareeRobustAndFittedLargeBMassWindow'
-	              , prescale = self.prescale
+        ##########################
+        #define the line
+        line=Hlt2Line('B2KstareeRobustAndFittedLargeBMassWindow'
+                      , prescale = self.prescale
                       , L0DU = L0Req
                       , HLT  = Hlt1Req
-		      , algos = [ PV3D('Hlt2'),
+                      , algos = [ PV3D('Hlt2'),
                                   Electrons,
                                   LowPtDiElectron,
                                   BiKalmanFittedElectrons,
@@ -208,12 +208,12 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                   BiKalmanFittedPions,
                                   FittedKstar,
                                   CombineB ] 
-                  , postscale = self.postscale
-                  )
+                      , postscale = self.postscale
+                      )
 
         #----------------------------
         # Filtering signal
-	#----------------------------
+        #----------------------------
         SignalEEMassCut = "(INTREE( (ID=='J/psi(1S)') & (MM<%(Signal_eeMaxMass)s*MeV)))" % self.getProps()
         
         FilterSignal  = Hlt2Member( FilterDesktop # type
@@ -232,7 +232,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
         
         #----------------------------
         # Filtering B mass window
-	#----------------------------
+        #----------------------------
         SmallBMassWindowCut = "(ADMASS('B0')<%(BMassWindow)s*MeV)" % self.getProps()
         
         FilterB = Hlt2Member( FilterDesktop
@@ -251,7 +251,7 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
             
         #----------------------------
         # Filtering signal & B mass window
-	#----------------------------        
+        #----------------------------        
         FilterSignalAndB  = Hlt2Member( FilterDesktop # type
                                         , "FilterSignalAndB" 
                                         , Code =  SmallBMassWindowCut + ' & ' + SignalEEMassCut 
@@ -266,21 +266,21 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                    , postscale = self.postscale )
         
 	
-	##########################
+        ##########################
 		
         
     def __makeHlt2B2KstareeFittedLines(self):
 
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
         from HltTracking.HltPVs import PV3D
-	from Configurables import HltANNSvc
+        from Configurables import HltANNSvc
         from Configurables import CombineParticles, FilterDesktop
-	from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
+        from Hlt2SharedParticles.TrackFittedBasicParticles import BiKalmanFittedElectrons, BiKalmanFittedKaons, BiKalmanFittedPions
 
-	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedDecision"        : 55300 } )  
-	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedSignalDecision"  : 55301 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedDecision"        : 55300 } )  
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedSignalDecision"  : 55301 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedLargeBMassWindowDecision"        : 55310 } )  
-	HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedLargeBMassWindowSignalDecision"  : 55311 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2KstareeFittedLargeBMassWindowSignalDecision"  : 55311 } )
 
         """
         #------------------------
@@ -297,37 +297,37 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
             Hlt1Req= None
             
 	
-	##########################
+        ##########################
 
-	#Make fitted dielectron
-	FittedDiElectron=Hlt2Member( CombineParticles
-                                     , "FittedDiElectron"
-                                     , DecayDescriptor = "J/psi(1S) -> e+ e-"
-                                     , Inputs = [BiKalmanFittedElectrons]
-                                     , DaughtersCuts = {"e+" : "(PT> %(ElectronPT)s *MeV) & (PIDe>%(ElectronPIDe)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s)" % self.getProps()}
-                                     , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (in_range(%(eeMinMass)s, MM, %(eeMaxMass)s))" % self.getProps()
-                                     )
+        #Make fitted dielectron
+        FittedDiElectron=Hlt2Member( CombineParticles
+                                   , "FittedDiElectron"
+                                   , DecayDescriptor = "J/psi(1S) -> e+ e-"
+                                   , Inputs = [BiKalmanFittedElectrons]
+                                   , DaughtersCuts = {"e+" : "(PT> %(ElectronPT)s *MeV) & (PIDe>%(ElectronPIDe)s) & (BPVIPCHI2() > %(ElectronIPCHI2)s) & (TRCHI2DOF < %(ElectronTrackCHI2pNDOF)s)" % self.getProps()}
+                                   , MotherCut = "(VFASPF(VCHI2PDOF)< %(eeVertexCHI2)s) & (in_range(%(eeMinMass)s, MM, %(eeMaxMass)s))" % self.getProps()
+                                   )
         
-	#Make fitted Kstar
-	FittedKstar=Hlt2Member( CombineParticles
-                                , "FittedKstar"
-                                , DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
-                                , Inputs = [BiKalmanFittedKaons, BiKalmanFittedPions]
-                                , DaughtersCuts = {"K+" : "(PT> %(KaonPT)s *MeV) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s)" % self.getProps()
-                                                  ,"pi-": "(PT> %(PionPT)s *MeV) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s)" % self.getProps()}
-                                , CombinationCut =  "(ADAMASS('K*(892)0')< %(KstarMassWindow)s *MeV)" % self.getProps()
-                                , MotherCut = "(VFASPF(VCHI2PDOF)< %(KstarVertexCHI2)s) &  (BPVIPCHI2()> %(KstarIPCHI2)s )" % self.getProps()
-                                )	
+        #Make fitted Kstar
+        FittedKstar=Hlt2Member( CombineParticles
+                              , "FittedKstar"
+                              , DecayDescriptor = "[K*(892)0 -> K+ pi-]cc" 
+                              , Inputs = [BiKalmanFittedKaons, BiKalmanFittedPions]
+                              , DaughtersCuts = {"K+" : "(PT> %(KaonPT)s *MeV) & (BPVIPCHI2()> %(KaonIPCHI2)s ) & (TRCHI2DOF < %(KaonTrackCHI2pNDOF)s)" % self.getProps()
+                                                ,"pi-": "(PT> %(PionPT)s *MeV) & (BPVIPCHI2()> %(PionIPCHI2)s ) & (TRCHI2DOF < %(PionTrackCHI2pNDOF)s)" % self.getProps()}
+                              , CombinationCut =  "(ADAMASS('K*(892)0')< %(KstarMassWindow)s *MeV)" % self.getProps()
+                              , MotherCut = "(VFASPF(VCHI2PDOF)< %(KstarVertexCHI2)s) &  (BPVIPCHI2()> %(KstarIPCHI2)s )" % self.getProps()
+                              )	
 	
 		
-	#make the Bd
-	CombineB=Hlt2Member( CombineParticles
-				  , "CombineB"
-				  , DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
-                                  , CombinationCut = "(ADAMASS('B0')< %(BLargeMassWindow)s *MeV)" % self.getProps()
-                                  , MotherCut = "(VFASPF(VCHI2PDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm)" % self.getProps()
-				  , Inputs = [FittedDiElectron, FittedKstar]
-	)
+        #make the Bd
+        CombineB=Hlt2Member( CombineParticles
+                           , "CombineB"
+                           , DecayDescriptor = "[B0 -> K*(892)0 J/psi(1S)]cc"
+                           , CombinationCut = "(ADAMASS('B0')< %(BLargeMassWindow)s *MeV)" % self.getProps()
+                           , MotherCut = "(VFASPF(VCHI2PDOF)< %(BVertexCHI2)s) & (BPVIPCHI2()< %(BIPCHI2)s ) & (BPVDIRA> %(BDIRA)s ) & (BPVIP()< %(BIP)s *mm)" % self.getProps()
+                           , Inputs = [FittedDiElectron, FittedKstar]
+	                       )
 
         B2KstareeFittedAll = bindMembers('B2KstareeFitted', [ PV3D('Hlt2'),
                                                               BiKalmanFittedElectrons,
@@ -338,69 +338,69 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                                                               CombineB ] )
                                          
 	
-	##########################
-	#define the line
-	line=Hlt2Line('B2KstareeFittedLargeBMassWindow'
-                      , L0DU = L0Req
-                      , HLT  = Hlt1Req
-	              , prescale = self.prescale
-		      , algos = [ PV3D('Hlt2'),
-                                  BiKalmanFittedElectrons,
-                                  FittedDiElectron,
-                                  BiKalmanFittedKaons,
-                                  BiKalmanFittedPions,
-                                  FittedKstar,
-                                  CombineB ] 
-                 , postscale = self.postscale
- 	             )
+        ##########################
+        #define the line
+        line=Hlt2Line('B2KstareeFittedLargeBMassWindow'
+                     , L0DU = L0Req
+                     , HLT  = Hlt1Req
+                     , prescale = self.prescale
+                     , algos = [ PV3D('Hlt2'),
+                                 BiKalmanFittedElectrons,
+                                 FittedDiElectron,
+                                 BiKalmanFittedKaons,
+                                 BiKalmanFittedPions,
+                                 FittedKstar,
+                                 CombineB ] 
+                     , postscale = self.postscale
+                     )
         
 
         #----------------------------
         # Filtering signal
-	#----------------------------
+        #----------------------------
         SignalEEMassCut = "(INTREE( (ID=='J/psi(1S)') & (MM<%(Signal_eeMaxMass)s*MeV)))" % self.getProps()
         
         FilterSignal  = Hlt2Member( FilterDesktop # type
-                                    , "FilterSignal" 
-                                    , Code = SignalEEMassCut 
-                                    , Inputs = [ B2KstareeFittedAll ]
-                                    )
+                                  , "FilterSignal" 
+                                  , Code = SignalEEMassCut 
+                                  , Inputs = [ B2KstareeFittedAll ]
+                                  )
         
         line.clone('B2KstareeFittedLargeBMassWindowSignal'
-                   , prescale = self.prescale
-                   , L0DU = L0Req
-                   , HLT  = Hlt1Req
-                   , algos = [ B2KstareeFittedAll, FilterSignal ]
-                   , postscale = self.postscale )
+                  , prescale = self.prescale
+                  , L0DU = L0Req
+                  , HLT  = Hlt1Req
+                  , algos = [ B2KstareeFittedAll, FilterSignal ]
+                  , postscale = self.postscale )
 
         
         #----------------------------
         # Filtering B mass window
-	#----------------------------
+        #----------------------------
         SmallBMassWindowCut = "(ADMASS('B0')<%(BMassWindow)s*MeV)" % self.getProps()
         
         FilterB = Hlt2Member( FilterDesktop
-                              , "FilterB"
-                              , Code = SmallBMassWindowCut
-                              , Inputs = [ B2KstareeFittedAll ]
-                              )
+                            , "FilterB"
+                            , Code = SmallBMassWindowCut
+                            , Inputs = [ B2KstareeFittedAll ]
+                            )
 
         line.clone( 'B2KstareeFitted'
-                    , prescale = self.prescale
-                    , L0DU = L0Req
-                    , HLT  = Hlt1Req 
-                    , algos = [ B2KstareeFittedAll, FilterB ]
-                    , postscale = self.postscale )
+                  , prescale = self.prescale
+                  , L0DU = L0Req
+                  , HLT  = Hlt1Req 
+                  , algos = [ B2KstareeFittedAll, FilterB ]
+                  , postscale = self.postscale )
 
             
         #----------------------------
         # Filtering signal & B mass window
-	#----------------------------        
+        #----------------------------        
         FilterSignalAndB  = Hlt2Member( FilterDesktop # type
-                                        , "FilterSignalAndB" 
-                                        , Code =  SmallBMassWindowCut + ' & ' + SignalEEMassCut 
-                                        , Inputs = [ B2KstareeFittedAll ]
-                                        )
+                                      , "FilterSignalAndB" 
+                                      , Code =  SmallBMassWindowCut + ' & ' + SignalEEMassCut 
+                                      , Inputs = [ B2KstareeFittedAll ]
+                                      )
 
         line.clone('B2KstareeFittedSignal'
                    , prescale = self.prescale
@@ -409,6 +409,4 @@ class Hlt2B2KstareeLinesConf(HltLinesConfigurableUser) :
                    , algos = [ B2KstareeFittedAll, FilterSignalAndB ]
                    , postscale = self.postscale )
 	
-	##########################  
-
-    
+        ##########################  

@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2014-11-21 - Gerhard Raven
+ - fix python indentation so that it passes 'python -mtabnanny'
+
 ! 2014-11-20 - Gerhard Raven
  - fix typo
 

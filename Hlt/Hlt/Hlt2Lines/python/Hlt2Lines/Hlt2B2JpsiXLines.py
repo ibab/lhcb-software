@@ -184,17 +184,17 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                  }
     
     def __apply_configuration__(self) :
-	self.__makeHlt2Bs2JpsiPhiPrescaledAndDetachedLines()
+        self.__makeHlt2Bs2JpsiPhiPrescaledAndDetachedLines()
         self.__makeHlt2Bs2JpsiPhiLines()
         self.__makeHlt2Bs2JpsieePhiLines()
         self.__makeHlt2TFBs2JpsieePhiLines()
         self.__makeHlt2Bd2JpsiKstarLines()
         self.__makeHlt2Bu2JpsiKLines()
-    	self.__makeHlt2Bd2JpsiMuMuKsLLBiasedLines()
-    	self.__makeHlt2Bd2JpsiMuMuKsLLUnbiasedLines()
-    	self.__makeHlt2Bd2JpsiMuMuKsDDBiasedLines()
-    	self.__makeHlt2Bd2JpsiMuMuKsDDUnbiasedLines()	
-	self.__makeHlt2B2JpsiX_MuMuLines()
+        self.__makeHlt2Bd2JpsiMuMuKsLLBiasedLines()
+        self.__makeHlt2Bd2JpsiMuMuKsLLUnbiasedLines()
+        self.__makeHlt2Bd2JpsiMuMuKsDDBiasedLines()
+        self.__makeHlt2Bd2JpsiMuMuKsDDUnbiasedLines()	
+        self.__makeHlt2B2JpsiX_MuMuLines()
         self.__makeHlt2Bc2JpsiMuXLines()
         self.__makeHlt2Bc2JpsiHLines()
         self.__makeHlt2Bc2JpsiHPrescaledAndDetachedLines()
@@ -216,7 +216,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
-	from HltTracking.HltPVs import PV3D
+        from HltTracking.HltPVs import PV3D
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiPrescaledDecision" : 50375 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDetachedDecision" : 50376 } )
@@ -619,11 +619,11 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
     def __makeHlt2Bd2JpsiMuMuKsLLBiasedLines(self):
         '''
-	@author S Amato
-	@author C Gobel
-	@author F Rodrigues
-	'''
-	from HltLine.HltLine import Hlt2Line, Hlt2Member
+            @author S Amato
+            @author C Gobel
+            @author F Rodrigues
+    	'''
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
         from HltTracking.HltPVs import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
