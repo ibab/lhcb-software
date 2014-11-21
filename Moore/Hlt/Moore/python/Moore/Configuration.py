@@ -738,12 +738,11 @@ class Moore(LHCbConfigurableUser):
             }
             Funcs._mergeTransform(trans)
         
+        split=self.getProp("Split")
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
         if split not in ["","Hlt1","Hlt2"]:
             raise ValueError("Invalid option for Moore().Split: '%s'"% self.getProp("Split") )
-
-        split=self.getProp("Split")
         if useTCK and split:
             splitter = { 'Hlt1'     : hlt1_only_tck 
                        , 'Hlt2'     : hlt2_only_tck }
@@ -756,13 +755,11 @@ class Moore(LHCbConfigurableUser):
             HltConfigSvc().HltDecReportsLocations = [ DecoderDB["HltDecReportsDecoder/%sDecReportsDecoder" % split].listOutputs()[0] ]
         
         #check/set WriterRequires, not really needed since now the content of Hlt1/2 is modified in the HltDecisionSequence
-        if self.isPropertySet('WriterRequires'):
-            if len(self.getProp('Split')):
-                if len(self.getProp('WriterRequires')):
-                    for check,fail in [("Hlt1","Hlt2"),("Hlt2","Hlt1")]:
-                        if self.getProp('Split')==check:
-                            if len([w for w in self.getProp("WriterRequires") if fail in w]):
-                                raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
+        if self.isPropertySet('WriterRequires') and len(self.getProp('WriterRequires')) and len(split):
+            for check,fail in [("Hlt1","Hlt2"),("Hlt2","Hlt1")]:
+                if split==check:
+                    if len([w for w in self.getProp("WriterRequires") if fail in w]):
+                        raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
         
 
     def _setIfNotSet(self,prop,value) :
