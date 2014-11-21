@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-21 - Marco Clemencic
+ - Fixed CNake configuration.
+
 ! 2014-11-20 - Peter Griffith
 - Committed two new tools for the study of EM physics in the Velo;
   BremVeloCheck (tool) and EMGaussMoni (algorithm)
