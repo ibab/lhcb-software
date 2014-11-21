@@ -67,10 +67,10 @@ void EvtRareLbToLllFFlQCD::getFF( EvtParticle* parent,
   
   double m1 = parent->getP4().mass();
   double m2 = lambda->getP4().mass();
+  double m21=m2/m1;
   EvtVector4R p4parent;
   p4parent.set( parent->mass(), 0 , 0 , 0 );
   double q2 = ( parent->getP4() - lambda->getP4() ).mass2();
-  double vdotvp = calculateVdotV(parent, lambda);
   double shat = (m1*m1+m2*m2-q2)/2./m1-m2;
 
   double fLQCD[2];
@@ -87,13 +87,13 @@ void EvtRareLbToLllFFlQCD::getFF( EvtParticle* parent,
   FF.G_[1] = -cv*fLQCD[0]+(2*cgamma+cv)*fLQCD[1];
   FF.G_[2] = 0;
 
-  FF.FT_[0] = -csigma*( (m1+m2)*fLQCD[0]+(2*m2*vdotvp+m2-m1)*fLQCD[1] );
+  FF.FT_[0] = -csigma*( (m1+m2)*fLQCD[0]-(m21*m2-q2/m1+m2)*fLQCD[1] );
   FF.FT_[1] = csigma*( 2*m2*fLQCD[1] + m1*(fLQCD[0]-fLQCD[1]) );
   FF.FT_[2] = csigma*(fLQCD[0]+fLQCD[1])*m2;
 
-  FF.GT_[0] = csigma*( -(m1+m2)*fLQCD[0]+(-m2*-m2*vdotvp+m1)*fLQCD[1] ); 
-  FF.GT_[1] = csigma*( 2*m2*fLQCD[1] + m1*(fLQCD[0]-fLQCD[1]) ); 
-  FF.GT_[2] = csigma*(fLQCD[0]+fLQCD[1])*m2;
+  FF.GT_[0] = csigma*( (m1-m2)*fLQCD[0]+(m2*(1-m21)+q2/m1)*fLQCD[1] ); 
+  FF.GT_[1] = csigma*( 2*m2*fLQCD[1] + m1*(fLQCD[0]+fLQCD[1]) ); 
+  FF.GT_[2] = csigma*(fLQCD[0]-fLQCD[1])*m2;
 
   return ;
 }

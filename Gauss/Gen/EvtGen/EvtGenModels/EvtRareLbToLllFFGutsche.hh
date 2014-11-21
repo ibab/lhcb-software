@@ -44,6 +44,8 @@ private:
   double fTVconsts[3][3];
   double fTAconsts[3][3];
   
+  static EvtIdSet fParents;
+  static EvtIdSet fDaughters;
 };
 
 #endif // EVTRARELBTOLLLFF_HH

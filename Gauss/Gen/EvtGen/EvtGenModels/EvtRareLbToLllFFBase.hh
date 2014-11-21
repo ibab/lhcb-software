@@ -49,6 +49,7 @@ public:
 protected:
 
   double calculateVdotV( EvtParticle* parent, EvtParticle* lambda ) const ;
+  double calculateVdotV(EvtParticle*, EvtParticle*, double qsq) const;
 
   EvtIdSet natural_;
 
