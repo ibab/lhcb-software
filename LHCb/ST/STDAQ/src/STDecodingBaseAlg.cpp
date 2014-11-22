@@ -58,7 +58,7 @@ m_bankTypeString(""){
  declareProperty("recoverMode", m_recoverMode = true);
  
  declareProperty( "rawEventLocation",  m_rawEventLocation = "", 
-                  "OBSOLETE. Use RawEventLocations instead" );
+                  "DEPRECATED. Use RawEventLocations instead" );
  declareProperty( "RawEventLocations", m_rawEventLocations={LHCb::RawEventLocation::Other,LHCb::RawEventLocation::Default},
                   "List of possible locations of the RawEvent object in the"
                   " transient store. By default it is LHCb::RawEventLocation::Other,"
@@ -81,30 +81,30 @@ StatusCode STDecodingBaseAlg::initialize() {
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> initialize " << endmsg;
 
   if (! m_rawEventLocation.empty()) {
-    warning() << "The rawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+    warning() << "Use of the rawEventLocation property is deprecated, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.clear();
+    m_rawEventLocations.push_back( m_rawEventLocation );
   }
 
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
+  // if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+  //     == m_rawEventLocations.end()) {
+  //   // append the defaults to the search path
+  //   m_rawEventLocations.push_back(LHCb::RawEventLocation::Other);
+  //   m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  // }
 
-  // Initialise the RawEvent locations
-  bool usingDefaultLocation = true;
-  //if (!m_rawEventLocation.empty()) usingDefaultLocation=false;
-  if (m_rawEventLocations.size()>2 || m_rawEventLocations.empty()) usingDefaultLocation=false;
-  if (m_rawEventLocations.size()>0 
-      && m_rawEventLocations[0]!=LHCb::RawEventLocation::Other 
-      && m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) usingDefaultLocation=false;
+  // // Initialise the RawEvent locations
+  // bool usingDefaultLocation = true;
+  // //if (!m_rawEventLocation.empty()) usingDefaultLocation=false;
+  // if (m_rawEventLocations.size()>2 || m_rawEventLocations.empty()) usingDefaultLocation=false;
+  // if (m_rawEventLocations.size()>0 
+  //     && m_rawEventLocations[0]!=LHCb::RawEventLocation::Other 
+  //     && m_rawEventLocations[0]!=LHCb::RawEventLocation::Default) usingDefaultLocation=false;
   
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
-  }
+  // if (!usingDefaultLocation) {
+  //   info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  // }
 
-  // Assume that is a spillover location is wanted, it has been requested as first location!
   std::string spill = toSpill(m_rawEventLocations[0]);
   m_spillOffset = spillOffset(spill); 
    
