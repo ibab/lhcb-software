@@ -8,9 +8,13 @@ Stripping selections for BadEvents.
 
 # Begin StrippingBadEvents.py
 
-config_params = { "GEC"       : "((TrSOURCE('/Event/Rec/Track/Best', TrLONG) >> (sum(TrPT,TrP<1000000))>1000000))"
-                  ,"prescale": 1.0
-                  ,"postscale": 1.0}
+config_params = { "GEC"       : "((TrSOURCE('/Event/Rec/Track/Best', TrLONG)"\
+                                " >> (sum(TrPT,TrP<1 * TeV))>1 * TeV))",
+                  "Preambulo" : ["from LoKiTracks.decorators import *" ,
+                                 "from LoKiCore.functions    import * ",
+                                 "from GaudiKernel.SystemOfUnits import *"],
+                  "prescale": 1.0,
+                  "postscale": 1.0}
 
 __all__ = ('BadEventsConf' )
 
@@ -32,8 +36,8 @@ class BadEventsConf(LineBuilder) :
     def __init__(self, name, config):
       LineBuilder.__init__(self, name, config)
       
-      _filter={'Code': config['GEC'], 'Preambulo' : [ "from LoKiTracks.decorators import *",
-                                      'from LoKiCore.functions    import *' ] }
+      _filter={'Code': config['GEC'], 
+               'Preambulo' : config['Preambulo'] }
                                       
       line = StrippingLine(name
                            ,FILTER = _filter

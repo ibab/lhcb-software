@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-11-22 - Stefano Perazzini
+ - Slight modification to StrippingBadEvents
+
 ! 2014-11-20 - Andrea Contu
  - Added StrippingBadEvents
 
