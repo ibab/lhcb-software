@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2014-11-22 - Antonis Papanestis
+ - Protected debug output with 
+     if ( msgLevel(MSG::DEBUG) )
+
 ! 2014-11-19 - Antonis Papanestis
  - Changes to DeRichSystem in order to move the DetectorNumbers 
    condition from CondDB to ONLINE. The conditions has been split with the

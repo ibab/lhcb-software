@@ -69,7 +69,8 @@ StatusCode DeRichSystem::initialize()
   // get the version number
   if ( exists("systemVersion") )
     m_version = param<int>("systemVersion");
-  debug() << "System version:" << systemVersion() << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "System version:" << systemVersion() << endmsg;
 
   // get rich detectors
   std::vector<std::string> deRichLocs = getDeRichLocations();
@@ -119,7 +120,8 @@ StatusCode DeRichSystem::initialize()
     updMgrSvc()->registerCondition( this,
                                     condition(detCondNames[i]).path(),
                                     &DeRichSystem::buildPDMappings );
-    debug() << "Registered:" << condition(detCondNames[i]).path() << endmsg;
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "Registered:" << condition(detCondNames[i]).path() << endmsg;
 
     if ( systemVersion() == 1)
     {
@@ -127,7 +129,8 @@ StatusCode DeRichSystem::initialize()
       updMgrSvc()->registerCondition( this,
                                       condition(inactiveCondNames[i]).path(),
                                       &DeRichSystem::buildPDMappings );
-      debug() << "Registered:" << condition(inactiveCondNames[i]).path() << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "Registered:" << condition(inactiveCondNames[i]).path() << endmsg;
     }
   }
 
