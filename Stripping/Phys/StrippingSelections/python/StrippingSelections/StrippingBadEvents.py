@@ -29,6 +29,7 @@ class BadEventsConf(LineBuilder) :
 
     __configuration_keys__ = ( 
         "GEC",
+        "Preambulo",
         "prescale" ,
         "postscale",
        )
