@@ -932,13 +932,13 @@ B2XTau = {
                 ,"RecursionLevel" : 0
                 #, "Variables" : ['BSTAUTAUCDFISO']
                 , "Location"  : "CDFIso"  
-                },
+                }#,
               #8
-              { "Type" : "RelInfoBstautauZVisoBDT" 
-                ,"RecursionLevel" : 0
-                , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
-                , "Location"  : "ZVisoBDT"
-                }
+              #{ "Type" : "RelInfoBstautauZVisoBDT" 
+              #  ,"RecursionLevel" : 0
+              #  , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
+              #  , "Location"  : "ZVisoBDT"
+              #  }
               ]
          },
     'STREAMS' : ['Bhadron']
@@ -1039,12 +1039,12 @@ B2XTauZVTOP = {
                ,"RecursionLevel" : 0
                #, "Variables" : ['BSTAUTAUCDFISO']
                , "Location"  : "CDFIso"  
-               },
-             { "Type" : "RelInfoBstautauZVisoBDT" 
-               ,"RecursionLevel" : 0
-               , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
-               , "Location"  : "ZVisoBDT"
-               }
+               }#,
+             #{ "Type" : "RelInfoBstautauZVisoBDT" 
+             #  ,"RecursionLevel" : 0
+             #  , "Variables" : ['ZVISOTAUP','ZVISOTAUM']
+             #  , "Location"  : "ZVisoBDT"
+             #  }
              ]
          },
     'STREAMS' : ['Bhadron']

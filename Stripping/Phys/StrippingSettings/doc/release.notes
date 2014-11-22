@@ -4,6 +4,14 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-11-22 - Stefano Perazzini
+ - Slight modification to MiniBias settings for Stripping21(r1)
+ - Moved (Pseudo)DoubleTopo line of B2OC from BhadronCompleteEvent to 
+   EW stream
+ - Removed RelInfoBstautauZVisoBDT from config of B2XTau and B2XTauZVTOP for 
+   Stripping21(r1)
+ - Updated dbases for stripping21(r1)
+
 ! 2014-11-21 - Andrea Contu
  - Added StrippingBadEvents to MiniBias stream
 

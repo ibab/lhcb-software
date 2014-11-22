@@ -19,7 +19,7 @@ MiniBias = {
                  "L0AnyRLLine_Rate"    : 1,
                  "L0AnyRLLine_Limiter" : "Hlt1L0AnyRateLimitedPostScaler",
                  "L0AnyPSLine_RE"      : "(HLT_PASS_RE('Hlt1L0Any.*Decision'))",
-                 "L0AnyPSLine_PS"      : 0.1, 
+                 "L0AnyPSLine_PS"      : 0.01, 
                   }, 
     'WGs' : [ 'ALL' ],
     'STREAMS' : [ 'MiniBias' ]
@@ -27,11 +27,14 @@ MiniBias = {
 
 
 BadEvents = {
-    'BUILDERTYPE'       :       'BadEventsConf',
-    'CONFIG'   :{"GEC"       : "((TrSOURCE('/Event/Rec/Track/Best', TrLONG) >> (sum(TrPT,TrP<1000000))>1000000))"
-                  ,"prescale": 1.0
-                  ,"postscale": 1.0
-                  },  
-    'WGs' : [ 'ALL' ],
-    'STREAMS' : [ 'MiniBias' ]
+    'BUILDERTYPE' : 'BadEventsConf',
+    'CONFIG'      : { "GEC"       : "((TrSOURCE('/Event/Rec/Track/Best', TrLONG)"\
+                                    " >> (sum(TrPT,TrP<1 * TeV))>1 * TeV))",
+                      "Preambulo" : ["from LoKiTracks.decorators import *" ,
+                                     "from LoKiCore.functions    import * ",
+                                     "from GaudiKernel.SystemOfUnits import *"],
+                      "prescale": 1.0,
+                      "postscale": 1.0 },
+    'WGs'         : [ 'ALL' ],
+    'STREAMS'     : [ 'MiniBias' ]
 }
