@@ -216,11 +216,16 @@ class StrippingConf ( object ) :
         if stream.TESPrefix == None : 
 	    stream.TESPrefix = self._tesPrefix
 	stream.HDRLocation = self._hdrLocation
-        if stream.BadEventSelection == "Override" : 
-            stream.BadEventSelection = self.BadEventSelection
+        if stream.BadEventSelection == "Override" :
+            if stream.name() in self.BadEventSelection.keys(): 
+              stream.BadEventSelection = self.BadEventSelection[stream.name()]
+            else:
+              stream.BadEventSelection = self.BadEventSelection['default']
+            log.info(self._name+ " setting BadEventSelection for stream "+ stream.name())
+
         if stream.AcceptBadEvents == None : 
             stream.AcceptBadEvents = self.AcceptBadEvents
-            
+ 
         if stream.MaxCandidates == "Override" : 
     	    stream.MaxCandidates = self.MaxCandidates
         if stream.MaxCombinations == "Override" : 

@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-11-22 - Stefano Perazzini
+ - Modified StrippingConf class in order to accept different BadEventSelection
+   on a stream-basis
+
 ! 2014-11-13 - Stefano Perazzini
  - Corrected a typo controlling the maximum number of combinations for 
    StdParticles
