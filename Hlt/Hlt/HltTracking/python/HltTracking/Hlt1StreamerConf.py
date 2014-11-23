@@ -52,6 +52,7 @@ __all__ = (
     'LooseForward'        , ## the 'track-upgrade'-configuration for Forward
     'pET'        , ## the 'track-upgrade'-configuration for VeloTT for a momentum estimation to feed the forward algorithm
     'FitTrack'       , ## the 'track-upgrade'-configuration for FitTrack
+    'FitVeloTTTrack'       , ## the 'track-upgrade'-configuration for a Velo-TT track
     'VeloOnlyFitTrack',## the 'track-upgrade'-configuration for a Velo-only (straight line) track fit
     'MatchVeloMuon'  , ## the 'track-upgrade'-configuration for MatchVeloMuon
     'IsMuon'  , ## the 'track-upgrade'-configuration for IsMuo

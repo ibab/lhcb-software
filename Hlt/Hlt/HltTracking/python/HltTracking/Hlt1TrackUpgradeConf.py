@@ -144,14 +144,14 @@ pET           = "pET           = ( execute(decodeTT) * TC_UPGRADE_TR ( '', HltTr
 # =============================================================================
 ConfiguredFastKalman( parent = None, name = to_name( Conf.FitTrack ) )
 ## String for users
-FitTrack      = "FitTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
+FitTrack      = "FitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
 
 # =============================================================================
 ## Hlt trackfit upgrade configuration
 # =============================================================================
 ConfiguredFastKalman( parent = None, name = to_name( Conf.FitVeloTTTrack ) )
 ## String for users
-FitVeloTTTrack      = "FitVeloTTTrack      = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitVeloTTTrack )"
+FitVeloTTTrack      = "FitVeloTTTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitVeloTTTrack )"
 
 # =============================================================================
 ## Hlt Velo-only trackfit upgrade configuration
@@ -206,7 +206,7 @@ def VeloTTCandidates( lineName ):
         Code            = "~TrBACKWARD"    , ## skip backward tracks 
         InputSelection  = VeloTTTracking.outputSelection(),
         OutputSelection = selection,
-        OutputLevel = 2,
+        #OutputLevel = 1,
         )
     bm = bindMembers ( None , [ VeloTTTracking, tracks ] )
     return "VeloTTCandidates = execute( %s ) * SELECTION( '%s' )" % \
@@ -226,7 +226,7 @@ def TrackCandidates( lineName ):
         Code            = "~TrBACKWARD"    , ## skip backward tracks 
         InputSelection  = HltTracking.outputSelection(),
         OutputSelection = selection,
-        OutputLevel = 2,
+        #OutputLevel = 1,
         )
     bm = bindMembers ( None , [ HltTracking, tracks ] )
     return "TrackCandidates = execute( %s ) * SELECTION( '%s' )" % \

@@ -235,15 +235,12 @@ RevivedForward = bindMembers(None,DecodeTT.members() + DecodeIT.members() + [ De
 bm_members =  DecodeVELO.members() + [recoVelo()]
 bm_members += DecodeTT.members() + [recoVeloTT] 
 bm_members += DecodeIT.members() + [recoForward]
-#HltTracking = bindMembers(None, bm_members).setOutputSelection( recoVeloTT.OutputTracksName )
 HltTracking = bindMembers(None, bm_members).setOutputSelection( recoForward.OutputTracksName )
 
 #VeloTT tracking
 vt_members = DecodeVELO.members() + [ recoVelo() ]
 vt_members += DecodeTT.members()  + [ recoVeloTT ]
-#vt_members += DecodeIT.members() + [recoForward]
 VeloTTTracking = bindMembers(None, vt_members).setOutputSelection( recoVeloTT.OutputTracksName ) 
-#VeloTTTracking = bindMembers(None, vt_members).setOutputSelection( recoForward.OutputTracksName ) 
 
 # ==============================================================================
 # Hlt1Seeding, used by MicroBias
