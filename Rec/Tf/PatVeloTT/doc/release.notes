@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-24 - Sebastian Neubert
+ - PatVeloTTHybrid uses Ranges now. It can operate on both track containers 
+   and track selections
+
 ! 2014-11-18 - Espen Eie Bowen
  - Optimised PatVeloTTHybridTool for low momentum tracks
 

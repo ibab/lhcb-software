@@ -88,7 +88,7 @@ StatusCode PatVeloTTHybrid::execute() {
   outputTracks->reserve(200);
   put(outputTracks, m_outputTracksName);
 
-  LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
+  LHCb::Track::Range inputTracks   = get<LHCb::Track::Range>( m_inputTracksName ); 
   if( !inputTracks ){
     warning() << " Input Tracks container: " <<  m_inputTracksName << " is invalid! Skipping" << endmsg;
     return StatusCode::SUCCESS;
@@ -97,7 +97,9 @@ StatusCode PatVeloTTHybrid::execute() {
   std::vector<LHCb::Track*> tmpTracks;
   tmpTracks.reserve(5);
   
-  for(const LHCb::Track* veloTr: *inputTracks){
+  counter("#seeds") += inputTracks.size();
+
+  for(const LHCb::Track* veloTr: inputTracks){
     
     m_veloTTTool->tracksFromTrack(*veloTr, tmpTracks).ignore();
     
@@ -132,6 +134,8 @@ StatusCode PatVeloTTHybrid::execute() {
     }
   }
   
+
+  counter("#tracks") += outputTracks->size();
   if ( m_doTiming ) m_timerTool->stop( m_veloTTTime );
   
   return StatusCode::SUCCESS;
