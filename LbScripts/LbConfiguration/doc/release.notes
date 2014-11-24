@@ -1,5 +1,10 @@
 2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-dev: use "user area" for lookup only
+	the local project is created in the current directory (or --dest-dir)
+
+2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-dev: improved final "get started" message
 
 2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>

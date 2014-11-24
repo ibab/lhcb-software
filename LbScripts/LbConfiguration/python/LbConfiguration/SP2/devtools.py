@@ -28,7 +28,7 @@ def main():
     from options import addSearchPath, addOutputLevel, addPlatform, addListing
     from lookup import findProject, MissingProjectError
 
-    parser = OptionParser(usage='%prog [options] Project version')
+    parser = OptionParser(usage='%prog [options] Project [version]')
 
     addSearchPath(parser)
     addOutputLevel(parser)
@@ -38,14 +38,23 @@ def main():
     parser.add_option('--name', action='store',
                       help='Name of the local project [default: "<proj>Dev_<vers>"].')
 
+    parser.add_option('--dest-dir', action='store',
+                      help='Where to create the local project '
+                           '[default: %default].')
+
     # Note: the profile is not used in the script class, but in the wrapper
     #       it is added to the parser to appear in the help and for checking
     parser.add_option('--profile', action='store_true',
                       help='Print some profile informations about the execution.')
 
+    parser.set_defaults(dest_dir=os.curdir)
+
     opts, args = parser.parse_args()
 
     logging.basicConfig(level=opts.log_level)
+
+    if len(args) == 1:
+        args.append('prod')
 
     try:
         project, version = args
@@ -53,6 +62,9 @@ def main():
         parser.error('wrong number of arguments')
 
     project = FixProjectCase(project)
+
+    if opts.user_area and not opts.no_user_area:
+        LbConfiguration.SP2.path.insert(0, opts.user_area)
 
     # FIXME: we need to handle common options like --list in a single place
     if opts.list:
@@ -68,11 +80,7 @@ def main():
     else:
         local_project, local_version = opts.name, 'HEAD'
 
-    devProjectDir = os.path.join(opts.user_area, opts.name)
-
-    # Check options
-    if not opts.user_area:
-        parser.error('user area not defined (environment variable User_release_area or option --user-area)')
+    devProjectDir = os.path.join(opts.dest_dir, opts.name)
 
     if os.path.exists(devProjectDir):
         parser.error('directory "%s" already exist' % devProjectDir)
@@ -94,9 +102,9 @@ def main():
         logging.warning('%s %s does not seem a CMake project', project, version)
 
     # Create the dev project
-    if not os.path.exists(opts.user_area):
-        logging.debug('creating user release area directory "%s"', opts.user_area)
-        os.makedirs(opts.user_area)
+    if not os.path.exists(opts.dest_dir):
+        logging.debug('creating destination directory "%s"', opts.dest_dir)
+        os.makedirs(opts.dest_dir)
 
     logging.debug('creating directory "%s"', devProjectDir)
     os.makedirs(devProjectDir)
@@ -185,4 +193,4 @@ You can customize the configuration by editing the file 'CMakeLists.txt'
                                                   'source build_env.csh')
 
     msg = use_cmake and finalMessageCMake or finalMessageCMT
-    print msg.format(opts.name, opts.user_area, devProjectDir)
+    print msg.format(opts.name, opts.dest_dir, devProjectDir)
