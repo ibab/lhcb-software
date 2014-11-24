@@ -1,5 +1,19 @@
 #!/bin/sh
 
-. lb-sdb-env.sh
-python ${LBRELEASEROOT}/python/LbRelease/SoftConfDB/LbSdbQuery.py $@
-lb-sdb-clearenv.sh
+# First checking if we run in readonly mode
+# In this case no need to get the credentials...
+
+runreadonly=`echo $@ | grep -c '\-\-readonly'`
+if [ $runreadonly -eq 1 ]; then
+    # In this case we setup the env but no need to call the SSO
+    . SetupProject.sh --silent Tools --use Ariadne
+    if [ "$SetupProjectStatus" != 0 ] ; then
+        echo "ERROR: Cannot prepare the environment to use Ariadne."
+        exit 1
+    fi
+    python ${LBRELEASEROOT}/python/LbRelease/SoftConfDB/LbSdbQuery.py $@
+else
+    . lb-sdb-env.sh
+    python ${LBRELEASEROOT}/python/LbRelease/SoftConfDB/LbSdbQuery.py $@
+    lb-sdb-clearenv.sh
+fi

@@ -24,6 +24,12 @@ class LbSdbQuery(Script):
                           default = False,
                           action = "store_true",
                           help = "JSON output format")
+        parser.add_option("--readonly",
+                          dest = "readonly",
+                          default = False,
+                          action = "store_true",
+                          help = "Use the read only interface to Neo4j (for methods available)")
+        
 
     def main(self):
         """ Main method for bootstrap and parsing the options.
@@ -42,7 +48,12 @@ class LbSdbQuery(Script):
             sys.exit(1)
 
         # Initializing the ConfDB interface
-        self.mConfDB = SoftConfDB()
+        if opts.readonly:
+            from SoftConfDBRO import SoftConfDBRO
+            self.mConfDB = SoftConfDBRO()
+        else:
+            self.mConfDB = SoftConfDB()
+            
         if opts.log_level == 'DEBUG':
             self.mConfDB.log.setLevel(logging.DEBUG)
         else:
@@ -92,12 +103,12 @@ class LbSdbQuery(Script):
     def cmdlistReleases(self, args):
         ''' List the projects known by the SoftConfDB '''
         for p in sorted(self.mConfDB.listReleaseReqs()):
-            print "%s\t%s" % p
+            print "%s\t%s" % tuple(p)
 
     def cmdlistCMake(self, args):
         ''' List the projects built with CMake '''
         for p in sorted(self.mConfDB.listCMakeBuiltProjects()):
-            print "%s\t%s" % p
+            print "%s\t%s" % tuple(p)
 
 
     def _sanitizeProjectName(sel, pname):
@@ -152,7 +163,7 @@ class LbSdbQuery(Script):
     def cmdCheckUnused(self, args):
         ''' List used projects '''
         for p in sorted(self.mConfDB.checkUnused(args[0])):
-            print "%s %s" % p
+            print "%s %s" % tuple(p)
 
     def cmdlistVersions(self, args):
         ''' List the number of versions known for a given project '''
@@ -277,7 +288,7 @@ class LbSdbQuery(Script):
             sys.exit(1)
 
         for p in self.mConfDB.listDependencies(pname, pversion):
-            print "%s\t%s" %  p
+            print "%s\t%s" %  tuple(p)
 
     def cmdlistReferences(self, args):
         ''' List the project/versions that depend on this project '''
@@ -293,7 +304,7 @@ class LbSdbQuery(Script):
             sys.exit(1)
 
         for p in self.mConfDB.listReferences(pname, pversion):
-            print "%s\t%s" %  p
+            print "%s\t%s" %  tuple(p)
 
 
     def cmdlistActiveReferences(self, args):
@@ -310,7 +321,7 @@ class LbSdbQuery(Script):
             sys.exit(1)
 
         for p in self.mConfDB.listActiveReferences(pname, pversion):
-            print "%s\t%s" %  p
+            print "%s\t%s" %  tuple(p)
 
 
     # Method that looks for a method name in the object passed
