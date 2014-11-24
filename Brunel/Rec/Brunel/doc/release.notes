@@ -14,6 +14,8 @@ Purpose: LHCb reconstruction program
   . New implementation of the search for compatible hits in PatAddTTCoord
     (PatAlgotrithms)
   . Follow FTDet changes
+  . Fix bug introduced in decoding that prevented the proper decoding of TAE
+    event (STDAQ)
 
 </PRE><H1><A NAME=v47r2p1>2014-09-17 Brunel v47r2p1</A></H1><PRE>
 This version uses projects LHCb v38r2p1, Lbcom v16r1p1, Rec v17r2p1
