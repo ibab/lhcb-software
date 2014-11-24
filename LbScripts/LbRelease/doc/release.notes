@@ -1,3 +1,8 @@
+2013-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	LBCORE-528: check that the checkout directory is a project before checking out packages
+	* getpack
+
 2013-11-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/DataPkgEnvs: added environment for Gen/PGunsData/v1r0

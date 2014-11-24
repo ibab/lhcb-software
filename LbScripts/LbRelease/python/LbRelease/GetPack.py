@@ -1225,7 +1225,27 @@ class GetPack(Script):
             elif self.options.project:
                 self.getproject()
             else:
-                self.getpack()
+                # check if the current directory looks like a project directory
+                # (LBCORE-528)
+                from os.path import exists, join
+
+                def askConfirmation():
+                    'Helper function to ask for configmation'
+                    sys.stdout.write('WARNING: %s does not look like a project.\n'
+                                     'Do you really want to check out here? (y/[n]) '%
+                                     os.getcwd())
+                    ans = sys.stdin.readline().strip()
+                    return ans.lower().startswith('y')
+
+                if (self.options.batch or
+                    (exists('CMakeLists.txt') and exists('toolchain.cmake')) or
+                    exists(join('cmt', 'project.cmt')) or
+                    askConfirmation()):
+                    # we can continue
+                    self.getpack()
+                else:
+                    raise Quit()
+
         except Skip:
             print "Stopped!"
             self.retval = 1
