@@ -28,7 +28,7 @@ public:
 
 
   /** initialize */
-  StatusCode initialize();
+  virtual StatusCode initialize();
 
  
   /**
@@ -54,7 +54,7 @@ public:
   *  @param aTrack to link
   *  @return bool true if a ghost
   */
-  virtual bool isGhost(const LHCb::Track& aTrack) const;
+  bool isGhost(const LHCb::Track& aTrack) const;
 
   /**
    *  Check this is a ghost .
@@ -76,7 +76,7 @@ public:
                LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
   /** specific information */
-  StatusCode specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
+  virtual StatusCode specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
 
   /** specific information */
   virtual StatusCode specific(LHCbIDs::const_iterator& start, 

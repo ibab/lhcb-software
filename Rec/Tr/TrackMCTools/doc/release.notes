@@ -4,6 +4,11 @@
 ! Purpose     : package for tracking tools accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-11-24 - Paul Seyfert
+ - Add wrapper for ghost track classification tools to decide on a track-by-track
+   base which implementation to use
+   
+
 !========================= TrackMCTools v3r10p1 2014-10-14 ======================
 ! 2014-10-03 - Marco Cattaneo
  - Add missing PhysEvent dependency in CMakeLists.txt (introduced by previous change)
