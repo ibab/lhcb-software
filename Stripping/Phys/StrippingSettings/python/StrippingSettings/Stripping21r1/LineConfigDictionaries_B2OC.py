@@ -397,11 +397,9 @@ Beauty2Charm = {
     'GECNTrkMax'   : 500
   }, 
   'STREAMS' : {
-    'EW' : [
-    'StrippingDoubleTopoLine',
-    'StrippingPseudoDoubleTopoLine'
-    ], 
     'BhadronCompleteEvent' : [
+    'StrippingDoubleTopoLine',
+    'StrippingPseudoDoubleTopoLine',
     'StrippingD02HHTopoTOSLine',
     'StrippingB02DKPiPiD2HHHPIDBeauty2CharmLine',
     'StrippingB02DPiPiPiD2HHHPIDBeauty2CharmLine',

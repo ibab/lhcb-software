@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-11-24 - Stefano Perazzini
+ - Moved back (Pseudo)DoubleTopo lines to BhadronCompleteEvent stream
+
 ! 2014-11-22 - Stefano Perazzini
  - Slight modification to MiniBias settings for Stripping21(r1)
  - Moved (Pseudo)DoubleTopo line of B2OC from BhadronCompleteEvent to 
