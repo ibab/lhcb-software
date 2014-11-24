@@ -1172,7 +1172,7 @@ class SetupProject(object):
                 # day = days[datetime.date.today().weekday()]
             # Locate the requested slot in the know nightlies directories
             nightly_bases = [self.environment.get("LHCBNIGHTLIES", "/afs/cern.ch/lhcb/software/nightlies"),
-                             os.path.normpath(os.path.join(self.environment.get("LCG_release_area", "/afs/cern.ch/sw/lcg/app/releases"), os.pardir, "nightlies"))]
+                             self.environment.get('LCG_nightlies_area', '/afs/cern.ch/sw/lcg/app/nightlies')]
             slot_dir = None
             for nightly_base in nightly_bases:
                 slot_dir = os.path.join(nightly_base, slot)

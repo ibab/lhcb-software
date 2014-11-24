@@ -1,5 +1,9 @@
 2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* LbLogin.py: added the definition of LCG_nightlies_area
+
+2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* lb-dev, lb-run: made optional the 'lhcb-' prefix of nightly slots
 
 2014-11-18  Ben Couturier <Ben.Couturier@cern.ch>

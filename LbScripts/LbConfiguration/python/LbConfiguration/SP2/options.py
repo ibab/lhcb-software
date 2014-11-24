@@ -91,7 +91,7 @@ def addSearchPath(parser):
 
         # Locate the requested slot in the know nightlies directories
         nightly_bases = [os.environ.get('LHCBNIGHTLIES', '/afs/cern.ch/lhcb/software/nightlies'),
-                         os.path.normpath(os.path.join(os.environ.get('LCG_release_area', '/afs/cern.ch/sw/lcg/app/releases'), os.pardir, 'nightlies'))]
+                         os.environ.get('LCG_nightlies_area', '/afs/cern.ch/sw/lcg/app/nightlies')]
 
         slot_dir = None
         for nightly_base, slot_id in [(nightly_base, slot_id)

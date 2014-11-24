@@ -607,6 +607,7 @@ class LbLoginScript(SourceScript):
                 ev["LCG_release_area"] = os.pathsep.join([os.path.join(ev["SITEROOT"], "sw", "lcg", "releases"),
                                                           os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases")])
                 ev["LCG_external_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "external")
+                ev["LCG_nightlies_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "nightlies")
                 ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software")
                 ev["LHCBRELEASES"] = os.path.join(ev["SOFTWARE"], "releases")
                 ev["GAUDISOFT"] = os.path.join(ev["SITEROOT"], "sw", "Gaudi", "releases")
