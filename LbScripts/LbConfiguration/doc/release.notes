@@ -1,5 +1,9 @@
 2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	* lb-dev: improved final "get started" message
+
+2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	* LbLogin.py: added the definition of LCG_nightlies_area
 
 2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
