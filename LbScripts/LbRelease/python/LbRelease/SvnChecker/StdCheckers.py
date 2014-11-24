@@ -4,12 +4,14 @@ Common and generic checker implementations.
 
 Created on Nov 24, 2010
 '''
+from tempfile import mkstemp
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
 from Core import Checker, PathChecker, Not, Failure
 import re
 import logging
 import sys
+import os
 import codecs
 from StringIO import StringIO
 
@@ -517,7 +519,7 @@ class ValidPythonEncoding(PathChecker):
     def __call__(self, txn, path):
         if txn.change_kind(path) == 'D':
             return (True, "No check on deleted files")
-        self.log.debug("check %s", path)
+        self.log.debug("check %s encoding", path)
         try:
             data = txn.file_contents(path)
             checkEncoding(StringIO(data))
@@ -532,3 +534,38 @@ class ValidPythonEncoding(PathChecker):
                    "Probably you forgot the line '# -*- coding: utf-8 -*-'",
                    "(see http://www.python.org/dev/peps/pep-0263/)"]
             return (False, '\n'.join(msg))
+
+class ValidPythonTabs(PathChecker):
+    """
+    Check that there are no problems with tabs in Python sources.
+
+    See https://its.cern.ch/jira/browse/LBCORE-675
+    """
+    def __call__(self, txn, path):
+        if txn.change_kind(path) == 'D':
+            return (True, "No check on deleted files")
+        self.log.debug("check %s for tabs", path)
+        name = None
+        try:
+            import tabnanny
+            data = txn.file_contents(path)
+            (fd, name) = mkstemp('.py')
+            f = os.fdopen(fd, 'w')
+            f.write(data)
+            f.close()
+            sys.stdout, sys.stderr = StringIO(), StringIO()
+            tabnanny.check(name)
+            out, err = sys.stdout.getvalue(), sys.stderr.getvalue()
+            if out or err:
+                report = err
+                if out:
+                    report += 'Wrong use of tabs: ' + out
+                result = (False, report.replace(name, path))
+            else:
+                result = (True, "Valid Python tabs in '%s'" % path)
+        finally:
+            # clean up
+            sys.stdout, sys.stderr = sys.__stdout__, sys.__stderr__
+            if name and os.path.exists(name):
+                os.remove(name)
+        return result

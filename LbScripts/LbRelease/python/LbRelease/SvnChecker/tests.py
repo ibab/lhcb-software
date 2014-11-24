@@ -14,7 +14,8 @@ from Core import Failure, Success, Not, Rephrase
 from StdCheckers import AllowedUsers
 from StdCheckers import AllPaths, PackageTag, ProjectTag, TagRemoval
 from StdCheckers import MovePackage
-from StdCheckers import TagIntermediateDirs, ValidXml, ValidPythonEncoding
+from StdCheckers import TagIntermediateDirs, ValidXml
+from StdCheckers import ValidPythonEncoding, ValidPythonTabs
 
 import logging
 import sys
@@ -159,8 +160,8 @@ class Test(unittest.TestCase):
                                   files = {"/path/to/xml/data.txt": "text"}), True)
                  ]
 
-    py_files = [
-                 (FakeTransaction({"/path/to/xml/good_ascii.py": ('M', (-1, None), 'file')},
+    py_files_enc = [
+                (FakeTransaction({"/path/to/xml/good_ascii.py": ('M', (-1, None), 'file')},
                                   files = {"/path/to/xml/good_ascii.py": """
 print 'hello world'
 """}), True),
@@ -174,8 +175,29 @@ print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
 """
 print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
 """}), False),
-                 (FakeTransaction({"/path/to/xml/removed.py": ('D', (-1, None), 'file')},
+                (FakeTransaction({"/path/to/xml/removed.py": ('D', (-1, None), 'file')},
                                   files = {}), True),
+                 ]
+
+    py_files_tab = [
+                (FakeTransaction({"/path/to/xml/good_tabs.py": ('M', (-1, None), 'file')},
+                                  files = {"/path/to/xml/good_tabs.py": """
+if True:
+    print 'hello world'
+    pass
+"""}), True),
+                (FakeTransaction({"/path/to/xml/bad_tabs.py": ('M', (-1, None), 'file')},
+                                  files = {"/path/to/xml/bad_tabs.py": """
+if True:
+    print 'hello world'
+\tpass
+"""}), False),
+                (FakeTransaction({"/path/to/xml/bad_indent.py": ('M', (-1, None), 'file')},
+                                  files = {"/path/to/xml/bad_indent.py": """
+if True:
+    print 'hello world'
+   pass
+"""}), False),
                  ]
 
     move_package = [
@@ -425,7 +447,12 @@ print u'\xe4\xbd\xa0\xe5\xa5\xbd\xe4\xb8\x96\xe7\x95\x8c'
 
     def test_040_valid_py_encoding(self):
         checker = AllPaths(ValidPythonEncoding(), r".*\.py$")
-        for txn, result in self.py_files:
+        for txn, result in self.py_files_enc:
+            self.assertCheckTxn(txn, checker, result)
+
+    def test_041_valid_py_tabs(self):
+        checker = AllPaths(ValidPythonTabs(), r".*\.py$")
+        for txn, result in self.py_files_tab:
             self.assertCheckTxn(txn, checker, result)
 
     def test_050_duplicated_packages(self):

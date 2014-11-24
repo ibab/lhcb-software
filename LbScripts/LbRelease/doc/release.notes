@@ -1,5 +1,9 @@
 2013-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
+	LBCORE-675: added svn commit hook that enforces unambiguous python indentatation
+
+2013-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
 	LBCORE-528: check that the checkout directory is a project before checking out packages
 	* getpack
 
