@@ -2,7 +2,7 @@
 # Option file to run hadronic cross section checks with multiple targets.
 # For moreusage informations: https://twiki.cern.ch/twiki/bin/view/LHCb/TargetStudy
 # 
-# Last modified: Luca Pescatore, 8/02/2014
+# Last modified: Luca Pescatore, 24/11/2014
 ##############################################################################
 
 
@@ -14,7 +14,7 @@ import fileinput
 import string
 import subprocess
 import time
-from multiprocessing import Pool
+import multiprocessing as mp
 from TargetSummary import *
 
 
@@ -90,7 +90,7 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 
 	#Starting jobs submission
 
-	log = open('logfile','w')
+	log = open('progress.log','w')
 
 	for model in models:
 
@@ -111,15 +111,13 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 				if not os.path.exists(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm"):
 					os.makedirs(path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm")
          
-			 	log.write('  ------------  ' + str(thick)+'mm\n')
+				log.write('  ------------  ' + str(thick)+'mm\n')
 
 				for material in materialsTodo:
 				
 					log.write('  -------  ' + material+'\n')
 					
 					jobs = []
-					pool = Pool()
-
 					for particle in particlesTodo:
 					
 						log.write('  --  ' + particle+'\n')
@@ -151,22 +149,25 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 						command = 's|projEng = .*|projEng = '+str(energy)+'|'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
 
-						jobs.append(pool.apply_async(submit))
+						process = mp.Process(target=submit)
+						process.start()
+						jobs.append(process)
 						#sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
 					
 					for j in jobs :
-						answer = j.get()
-
-			dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
-			sourcedir = os.environ['PWD']
-			source = os.listdir(sourcedir)
+						j.join()
+					
+				dest = path+"/"+model+"/E"+str(energy)+"GeV/T"+str(thick)+"mm/"
+				sourcedir = os.environ['PWD']
+				source = os.listdir(sourcedir)
 			
-			for file in source:
-				if file.endswith(".root"):
-					if os.path.exists(dest+'/'+file):
-						os.remove(dest+'/'+file)
+				for file in source:
+					print file
+					if file.endswith(".root"):
+						if os.path.exists(dest+"/"+file) :
+							os.remove(dest+"/"+file)
 						shutil.move(file,dest)
-
+						
 	output = path+"/TargetOutput.root"
 	command = 'find '+path+'/*/*/* -name *.root | xargs hadd -f ' + output
 	os.system(command)

@@ -44,7 +44,7 @@ ParticleGun.addTool(FlatNParticles, name="FlatNParticles")
 ParticleGun.NumberOfParticlesTool = "FlatNParticles"
 ParticleGun.FlatNParticles.MinNParticles = 1
 ParticleGun.FlatNParticles.MaxNParticles = 1
-ParticleGun.MaterialEval.PdgCode = 321
+ParticleGun.MaterialEval.PdgCode = -211
 
 # The vertex of each particle gun is produced in a single point of given
 # coordinates. Default is 0.0*mm for all. 

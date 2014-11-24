@@ -23,7 +23,7 @@ physList = 'FTFP_BERT'
 targetThick = 1
 targetMat = 'Al'
 projEng = 100
-projID = 321
+projID = -211
 target = 'Target_'+str(targetThick)+'mm'+targetMat
 
 from Configurables import CondDB
@@ -115,7 +115,7 @@ Gauss().Histograms = 'NONE'
 #OutputStream("GaussTape").Output = "DATAFILE='PFN:%s.sim' TYP='POOL_ROOTTREE' OPT='RECREATE'"%idFile
 # --- Save ntuple with hadronic cross section information
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
-NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Kplus_inAl.root' TYP='ROOT' OPT='NEW'"]
+NTupleSvc().Output = ["FILE1 DATAFILE='Multi_Piminus_inAl.root' TYP='ROOT' OPT='NEW'"]
 
 importOptions ("TargetMaterialGunMultiTargetLocalTemporary.py")
 

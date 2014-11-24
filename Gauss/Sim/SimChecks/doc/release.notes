@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-24 - Luca Pescatore
+- Bug fix in Target_CreateEvents.py (was due to parallelisation)
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
