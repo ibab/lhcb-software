@@ -407,6 +407,9 @@ private: // private data members
   double m_cosAngle;            ///< cos of stereo angle
   double m_dzDy;                ///< layer slope in the y-z plane
   bool m_RightHoleAxesXZInversion;   ///flag for temporary Right Holes axes inversion (v4)
+  double m_Ztolerance;     ///tolerances used in testing some spatial limits
+  double m_dZtolerance;      ///
+  double m_ARtolerance;  //machine arithmetic toerance
 
   ///ChannelID info and related
   unsigned int m_FibreMatID;
@@ -474,7 +477,7 @@ private: // private data members
   double m_halfHole4Y;    ///Hole in local frame Y, section 4, T station dependent
 
   
-  ///---Auxiliary routines
+  ///---Auxiliary stuff
   /// Use a single MsgStream instance (created in initialize)
   MsgStream* m_msg;
   /// Print functions
@@ -482,16 +485,24 @@ private: // private data members
   MsgStream& info()    const { return *m_msg << MSG::INFO; }
   MsgStream& error()   const { return *m_msg << MSG::ERROR; }
   MsgStream& fatal()   const { return *m_msg << MSG::FATAL; }
-
-  /// find solidbase for PVolume of given detector element */
-  StatusCode findSolidBase(IDetectorElement *det, const std::string& pvolname, const SolidBase* &solidbase);
  
   ///Beam Hole acceptance, depending on geometry versions. Returns also maximum fibre length */
-  bool inBeamHole(const Gaudi::XYZPoint& hitLocal, double& fibrelengthMax) const;
+  bool inBeamHole(const Gaudi::XYZPoint hitLocal, double& fibrelengthMax) const;
+ 
+  /// find solidbase for PVolume of given detector element */
+  StatusCode findSolidBase(IDetectorElement *det, const std::string& pvolname, const SolidBase* &solidbase);
 
   ///temporary workaround for Right Hole (module 11) axes inversion
   void doRHAxesInversion(Gaudi::XYZPoint& xyzLocal) const;
   
+  //check if point is in active area (local frame)
+  bool inActiveArea(const Gaudi::XYZPoint& xyzLocal, double tolerance=0) const;
+  
+  //Validate acceptance and other things for MC hit, find sipm info for entry and exit hit
+  StatusCode CalculateSipmInfo(const Gaudi::XYZPoint enPLocal, const Gaudi::XYZPoint exPLocal,
+                               unsigned int &enPSipmID, unsigned int &enPCellID, double &enPFraction,
+                               unsigned int &exPSipmID, unsigned int &exPCellID, double &exPFraction) const;
+    
 };
 
 // -----------------------------------------------------------------------------

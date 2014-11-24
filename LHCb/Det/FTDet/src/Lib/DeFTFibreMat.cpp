@@ -98,6 +98,10 @@ DeFTFibreMat::DeFTFibreMat( const std::string& name ) :
   m_DeFTLocation = "/dd/Structure/LHCb/AfterMagnetRegion/T/FT";
   m_FTGeomVersion_reference = 20;
   m_BadChannelLayerFlag = 15;
+  //tolerances settings (beware : sensitive stuff)
+  m_Ztolerance=0.001;     //multiplicative: more or less arbitrary for now
+  m_dZtolerance=0.007;     //additive: also arbitrary
+  m_ARtolerance=1e-4;      //machine (Geant ?) arithmetic tolerance
 }
 
 //=============================================================================
@@ -244,8 +248,9 @@ StatusCode DeFTFibreMat::initialize(){
   //-----------geometry v4x
   if (m_FTGeomversion > m_FTGeomVersion_reference) {
     //other flags
-    if(m_module==11) m_RightHoleAxesXZInversion=true;    //invert Right Hole XZ axes if v4 geometry (temporary)
-    else m_RightHoleAxesXZInversion=false;
+    ///if(m_module==11) m_RightHoleAxesXZInversion=true;    //invert Right Hole XZ axes if v4 geometry (temporary)
+    ///else m_RightHoleAxesXZInversion=false;
+    m_RightHoleAxesXZInversion=false;   ///DBL, back to normal for this
     
     //FibreMat size and position 
     m_fibreMatHalfSizeX = 0.5*this->params()->param<double>("FTFibreMatSizeXSt");
@@ -276,6 +281,8 @@ StatusCode DeFTFibreMat::initialize(){
     if( m_holey ) {   //fibremat with holes
       //Hole position (local frame): same for all sub-boxes
       m_HoleShiftXSt=this->params()->param<double>("HoleShiftXSt");
+      if(m_RightHoleAxesXZInversion) m_HoleShiftXSt = -m_HoleShiftXSt;
+      
       m_HoleShiftYSt=this->params()->param<double>("HoleShiftYSt");
       m_posHole.SetXYZ(m_HoleShiftXSt, m_HoleShiftYSt, m_fibreMatGlobalCenter.z());
       
@@ -289,7 +296,7 @@ StatusCode DeFTFibreMat::initialize(){
       m_halfHole3Y=this->params()->param<double>("Hole3Y")/2;
       m_halfHole4Y=this->params()->param<double>("Hole4Y")/2;
     }
- }
+  }
 
 
 
@@ -409,6 +416,7 @@ StatusCode DeFTFibreMat::initialize(){
       }
     }
  
+    //all geometries
     //fibreModule dimensions (in local frame)
     m_FibreModuleHalfSizeX = FTFibreModuleSizeX/2;
     m_FibreModuleHalfSizeY = FTFibreModuleSizeY/2.;
@@ -614,111 +622,42 @@ StatusCode DeFTFibreMat::calculateMeanChannel(const LHCb::MCHit  *fthit,
 }
 
 
-//=============================================================================
+//======================================================================================
 // Function to determine the mean SiPM channel (ChannelID + fraction) associated
 // to the track between entry and exit point.
 // @param fthit : hit from Geant4
 // @param ChanAndFrac : std::pair (ChannelID + fraction) associated to the mean channel
-//=============================================================================
+// November 2014: return Status modified to add a severity code (in the line string...)
+// to get some info on rejection reason
+//======================================================================================
 StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
                                        VectFTPairs&        vectChanAndFracPos) const
 {
-  if( m_relativemodule == 99 ){
-    if( m_msg->level() <= MSG::DEBUG) debug() << "FibreMat not found" << endmsg;
-    return StatusCode::FAILURE;
-  }
-    
+      
   // get hit position in global and local coordinate systems and perform checks.
   Gaudi::XYZPoint enPLocal  = this -> geometry() -> toLocal( fthit -> entry() );
   Gaudi::XYZPoint exPLocal  = this -> geometry() -> toLocal( fthit -> exit()  );
-  Gaudi::XYZPoint enPGlobal = fthit -> entry() ;
-  Gaudi::XYZPoint exPGlobal = fthit -> exit()  ;
-
   //temporary workaround for Right Hole (module 11, v4 geometry) axes inversion
   if(m_RightHoleAxesXZInversion) {
     doRHAxesInversion(enPLocal);
     doRHAxesInversion(exPLocal);
   }
-  
-  //test if entry and exit are in the same fibremat
-  double pLocalSepX = exPLocal.X() - enPLocal.X(); double pGlobalSepX =  exPGlobal.X() - enPGlobal.X();
-  double pLocalSepY = exPLocal.Y() - enPLocal.Y(); double pGlobalSepY =  exPGlobal.Y() - enPGlobal.Y();
-  double pLocalSepZ = exPLocal.Z() - enPLocal.Z(); double pGlobalSepZ =  exPGlobal.Z() - enPGlobal.Z();
-  double pLocalSep  = sqrt( pLocalSepX*pLocalSepX   + pLocalSepY*pLocalSepY   +  pLocalSepZ*pLocalSepZ );
-  double pGlobalSep = sqrt( pGlobalSepX*pGlobalSepX + pGlobalSepY*pGlobalSepY + pGlobalSepZ*pGlobalSepZ );
   if( m_msg->level() <= MSG::DEBUG){
-    debug() << "Entry Point in Global / Local: " << enPGlobal << enPLocal << endmsg;
-    debug() << "Exit  Point in Global / Local: " << exPGlobal << exPLocal << endmsg;
-  }
-  if( std::abs( pLocalSep - pGlobalSep ) > 1.e-2 ){
-    if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits: local and global entry and exit point distances "
-       << "differ more than 10 microns. Likely entry and exit points in different fibremats" << endmsg;
-    return StatusCode::FAILURE;
+    debug() << "Entry Point in Local frame: " << enPLocal << endmsg;
+    debug() << "Exit  Point in Local frame: " << exPLocal << endmsg;
   }
 
-
-  //test if entry and exit are not too close in z
-  if ( std::abs( pLocalSepZ ) < 1.e-2 ) {
-    if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits because z-distance "
-       << "between entry and exit points is less than 10 microns." << endmsg;
-    return StatusCode::FAILURE;
-  }
-  
-  //test if entry and exit are inside fibremat global acceptance
-  if( std::abs( enPLocal.X() ) > m_fibreMatHalfSizeX ||
-      std::abs( enPLocal.Y() ) > m_fibreMatHalfSizeY || 
-      std::abs( exPLocal.X() ) > m_fibreMatHalfSizeX ||
-      std::abs( exPLocal.Y() ) > m_fibreMatHalfSizeY
-      ){
-    if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits: entry or exit points out of fibremat sensitive region" << endmsg;
-    return StatusCode::FAILURE;
-  }
-  
-  //hole treatment and fibrelength
-  double fibrelengthMax(2*m_fibreMatHalfSizeY);
-  if( m_holey ){
-    if(inBeamHole(enPLocal, fibrelengthMax) || inBeamHole(exPLocal, fibrelengthMax)) {
-      if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits: entry or exit points are inside "
-          << "the beam pipe hole" << endmsg;
-      return StatusCode::FAILURE;
-    }
-  }
-
-  ///information of the hit
-  unsigned int hitLayer = this->layer();
-  if( m_msg->level() <= MSG::DEBUG) debug() << "LayerID = "<< hitLayer
-                                    << ", Module = "       << m_module
-                                    << ", Isbottom = "     << m_mat
-                                    << ", quarter = "      << m_quarter
-                                    << ", Stereo angle = " << this->angle() << endmsg;
-  
-
-
-  ///////////////////////////////////////////////////////
-  /// Get cell coordinates of the entry and exit points
-  ///////////////////////////////////////////////////////
-
-  if( m_msg->level() <= MSG::DEBUG) debug() << "Local Coordinates of enP and exP: "
-                                            << enPLocal.X() << ", " << exPLocal.X() << endmsg;
-
-  unsigned int enPSipmID, enPCellID;
-  unsigned int exPSipmID, exPCellID;
-  double enPFraction, exPFraction;
-  FTChannelID channel;
-  
-  cellIDCoordinates( enPLocal.X(), m_quarter, enPSipmID, enPCellID, enPFraction );
-  cellIDCoordinates( exPLocal.X(), m_quarter, exPSipmID, exPCellID, exPFraction );
-
-  if ( (enPSipmID > m_nSipmPerModule) || (exPSipmID > m_nSipmPerModule) ) {
-    if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits(...) because entry "
-                                      << "or exit points are outside acceptance (we get too large sipmID)" << endmsg;
-    return StatusCode::FAILURE;
-  }
+  //test hit validity and get sipm info
+  unsigned int enPSipmID, enPCellID; double enPFraction;
+  unsigned int exPSipmID, exPCellID; double exPFraction;
+  StatusCode sc = CalculateSipmInfo(enPLocal, exPLocal, enPSipmID, enPCellID, enPFraction, exPSipmID, exPCellID, exPFraction);
+  if (sc.isFailure()) return sc;
   
 
   ///////////////////////////////////////////////////////
   /// Create pairs of FT channels and fractional position
   ///////////////////////////////////////////////////////
+  FTChannelID channel;
 
   /// Case where entry and exit points are in the same cell
   if ( (enPSipmID==exPSipmID) && (enPCellID==exPCellID) ) {
@@ -728,7 +667,7 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
     if( m_msg->level() <= MSG::DEBUG) debug() << "Average fract dist to cell center: " << frac << endmsg;
 
     /// Create and push-back the pair (FTChannelID, fraction)
-    channel = createChannel( hitLayer, m_module, m_mat, enPSipmID, enPCellID );
+    channel = createChannel( layer(), m_module, m_mat, enPSipmID, enPCellID );
     vectChanAndFracPos.push_back( std::make_pair(channel, frac) );
 
   } //end single cell
@@ -768,7 +707,6 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
     /// Calculate the fractional position of the particle path center inside
     /// each traversed cell. Create and push_back the relevant FT pairs
     //////////////////////////////////////////////////////////////////
-    StatusCode sc;
     Gaudi::XYZPoint pIntersect(0.,0.,0.);
     double fracP1, fracP2;
 
@@ -779,7 +717,7 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
     if ( sc.isFailure() ) {
       if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits(...), because of unsuccessful "
                                         << "call to cellCrossingPoint(EntryPoint)" << endmsg;
-      return sc;
+      return StatusCode(sc, IssueSeverity(IssueSeverity::NIL, -6, "") );
     }
     
     fracP1 = enPFraction;
@@ -791,7 +729,7 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
     }
 
     /// Create and push-back the pair (FTChannelID, fraction)
-    channel = createChannel( hitLayer, m_module, m_mat, enPSipmID, enPCellID );
+    channel = createChannel( layer(), m_module, m_mat, enPSipmID, enPCellID );
     vectChanAndFracPos.push_back( std::make_pair(channel, fracPosFirstCell) );
     
     /// The middle cells
@@ -807,7 +745,7 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
       cellIDCoordinates( midCellCenterU, m_quarter, midCellSipmID, midCellID, midCellFraction );
 
       /// Create and push-back the pair (FTChannelID, fraction)
-      channel = createChannel( hitLayer, m_module, m_mat, midCellSipmID, midCellID );
+      channel = createChannel( layer(), m_module, m_mat, midCellSipmID, midCellID );
       vectChanAndFracPos.push_back( std::make_pair(channel, midCellFraction) );
     }// end loop over mid cells
     
@@ -818,7 +756,7 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
     if ( sc.isFailure() ) {
       if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits(...), because of unsuccessful "
                                         << "call to cellCrossingPoint(ExitPoint)" << endmsg;
-      return sc;
+      return StatusCode(sc, IssueSeverity(IssueSeverity::NIL, -7, "") );
     }
 
     fracP1 = exPFraction;
@@ -831,10 +769,11 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
     }
     
     /// Create and push-back the pair (FTChannelID, fraction)
-    channel = createChannel( hitLayer, m_module, m_mat, exPSipmID, exPCellID );
+    channel = createChannel( layer(), m_module, m_mat, exPSipmID, exPCellID );
     vectChanAndFracPos.push_back( std::make_pair(channel, fracPosLastCell) );
   }//end more than 1 hit cells
   
+
   
   if( m_msg->level() <= MSG::DEBUG) debug() << "Finished creating FTPairs\n" << endmsg;
   
@@ -857,8 +796,12 @@ StatusCode DeFTFibreMat::calculateHits(const LHCb::MCHit  *fthit,
     tmpDetSeg = createDetSegment( itPair->first, itPair->second );
   }
 
-  return StatusCode::SUCCESS;
+  return StatusCode(StatusCode::SUCCESS, IssueSeverity(IssueSeverity::NIL, 1, "") );
 }
+
+
+
+
 
 
 //=============================================================================
@@ -894,6 +837,10 @@ StatusCode DeFTFibreMat::hitPositionInFibre(const LHCb::MCHit  *fthit,
 
   return StatusCode::SUCCESS;
 }
+
+
+
+
 
 
 //=============================================================================
@@ -1168,13 +1115,14 @@ void DeFTFibreMat::cellIDCoordinates( const double  Xlocal,
   if( m_msg->level() <= MSG::DEBUG) debug() << "quarter, sipmID, sipmREdgeX = "
                                     << quarter << ", "<< sipmID << ", " << sipmREdgeX << endmsg;
   
-  /// Get cellID inside the SiPM
+  /// Get cellID inside the SiPM with some tolerance
   double distSipmREdge = Xlocal - sipmREdgeX;
-  if ( distSipmREdge < 0 ) {
-    error() << "In function cellIDCoordinates: got negative distance between "
-            << " the hit and the sipmEdge. Must be non-negative for points outside dead regions" << endmsg;
+  if ( distSipmREdge < -m_ARtolerance ) {
+    error() << "In function cellIDCoordinates: negative distance ("<<distSipmREdge<<")"
+            << " between the hit and the sipmEdge (tolerance: "<<m_ARtolerance<<")"<<endmsg;
     error() << Xlocal << " " << sipmREdgeX << endmsg;
   }
+  else if ((distSipmREdge>-m_ARtolerance) && (distSipmREdge<0)) distSipmREdge=0;
 
 
   //cell edge, extreme (dead) channels 0 and 130, fractionnal distance
@@ -1194,10 +1142,11 @@ void DeFTFibreMat::cellIDCoordinates( const double  Xlocal,
   }
   else {
     double distActiveArea = Xlocal - (sipmREdgeX + m_sipmEdgeSizeX);
-    if ( distActiveArea < 0 ) {
-      error() << "In function cellIDCoordinates: got negative distance between "
-              << " the hit and the first sensitive cell. Must be non-negative!)" << endmsg;
+    if ( distActiveArea < -m_ARtolerance ) {
+      error() << "In function cellIDCoordinates: got negative distance ("<<distActiveArea<<") between "
+              << " the hit and the first sensitive cell (tolerance: "<<m_ARtolerance<<")"<<endmsg;
     }
+    else if ((distActiveArea>-m_ARtolerance) && (distActiveArea<0)) distActiveArea=0;
     cellID = (unsigned int) (1 + distActiveArea/m_cellSizeX);     // >=1 by construction
     cellREdgeX = (sipmREdgeX + m_sipmEdgeSizeX) + (cellID-1)*m_cellSizeX;
     fracDistCellCenter = (Xlocal - (cellREdgeX + m_cellSizeX/2)) / m_cellSizeX;
@@ -1294,7 +1243,7 @@ DetectorSegment DeFTFibreMat::createDetSegment(const FTChannelID& channel,
   if( m_msg->level() <= MSG::DEBUG) debug() << "layer: " << channel.layer() << " quarter:" << m_quarter << " Z:"
                                             << m_fibreMatGlobalCenter.Z() << " Z0:" << hitZ0 
                                             << " Ymin,max:" << hitGlobalMinY << " " << hitGlobalMaxY << endmsg;
-  
+ 
   return DetectorSegment( hitX0, hitZ0, -m_tanAngle, m_dzDy, hitGlobalMinY, hitGlobalMaxY );   
 }
 
@@ -1437,15 +1386,17 @@ StatusCode DeFTFibreMat::findSolidBase(IDetectorElement *det, const std::string&
 
 
 
+
 //=============================================================================
 //Beam Hole acceptance, depending on geometry versions. Also returns maximum
 //fiber length at the input point
 //=============================================================================
-bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint& hitLocal,
+bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint hitLocal,
                               double& fibrelengthMax) const {
+    
     bool inHole;
     if(m_holey) {
-      if (m_FTGeomversion <= m_FTGeomVersion_reference) {    //geom v20
+      if (m_FTGeomversion <= m_FTGeomVersion_reference) { //geom v20
         double YFibreHole;
         beamPipeYCoord(hitLocal.X(), hitLocal.Y(), YFibreHole);   //may be bugged: local or global ?
         //get (maximum) fibre length
@@ -1453,13 +1404,14 @@ bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint& hitLocal,
         //test hit y position
         Gaudi::XYZPoint hitGlobal=this->geometry()->toGlobal(hitLocal);
         if((std::pow(hitGlobal.x(),2) + std::pow(hitGlobal.y(),2)) < std::pow(m_innerHoleRadius,2)) inHole=true;
-
+        else inHole=false;
+        
         if( m_msg->level() <= MSG::DEBUG) {
           debug() << "inBeamHole geom v2:" << " hitLocal: " << hitLocal << "in: " << inHole << " fibrelengthMax: "
                   << fibrelengthMax << endmsg;
         }
       }
-      else if (m_FTGeomversion > m_FTGeomVersion_reference) {   //geom v4x
+      else if (m_FTGeomversion > m_FTGeomVersion_reference) { //geom v4x
         double dxHit=std::abs(hitLocal.X()-m_posHole.X());        //absolute dx to hole center
         //Hole size for each sub-box
         double dyHole;
@@ -1468,6 +1420,7 @@ bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint& hitLocal,
         else if(dxHit<m_halfHole3X && dxHit>=m_halfHole2X) dyHole=m_halfHole3Y;
         else if(dxHit<m_halfHole4X && dxHit>=m_halfHole3X) dyHole=m_halfHole4Y;
         else dyHole=0;
+                
         //get (maximum) fibre length
         if(std::abs(m_fibreMatHalfSizeY-std::abs(m_posHole.Y())) < dyHole) {
           fibrelengthMax=m_fibreMatHalfSizeY+std::abs(m_posHole.Y())-dyHole;
@@ -1475,6 +1428,7 @@ bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint& hitLocal,
         else fibrelengthMax=2*m_fibreMatHalfSizeY;
         //test hit y position
         if(std::abs(hitLocal.Y()-m_posHole.Y())<dyHole) inHole=true;
+        else inHole=false;
 
         if( m_msg->level() <= MSG::DEBUG) {
           debug() << "inBeamHole geom v4:" << " m_posHole: " << m_posHole <<  " dyHole: " << dyHole
@@ -1499,5 +1453,83 @@ bool DeFTFibreMat::inBeamHole(const Gaudi::XYZPoint& hitLocal,
 //temporary workaround for Right Hole (module 11) axes inversion (not to be done for v2 geometry)
 void DeFTFibreMat::doRHAxesInversion(Gaudi::XYZPoint& xyzLocal) const {
   xyzLocal.SetXYZ(-xyzLocal.X(), xyzLocal.Y(), -xyzLocal.Z());
+}
+
+//=============================================================================
+//check if point is in active area (local frame), optional tolerance on z
+// (z is along the beam for crossing tracks)
+// Some arithmetic or Geant tolerance on x y z
+// used mainly for logical ORs of spatial limits tests
+//=============================================================================
+bool DeFTFibreMat::inActiveArea(const Gaudi::XYZPoint& xyzLocal, double ztolerance) const {
+  
+  if( std::abs(xyzLocal.X()) <= m_fibreMatHalfSizeX+m_ARtolerance &&
+      std::abs(xyzLocal.Y()) <= m_fibreMatHalfSizeY+m_ARtolerance &&
+      std::abs(xyzLocal.Z()) <= (m_fibreMatHalfSizeZ+m_ARtolerance)*(1+ztolerance)
+    ) return true;
+  else return false;
+}
+
+
+//=============================================================================
+// test if MC passes some validity and acceptance tests
+//=============================================================================
+StatusCode DeFTFibreMat::CalculateSipmInfo(const Gaudi::XYZPoint enPLocal, const Gaudi::XYZPoint exPLocal,
+                                           unsigned int &enPSipmID, unsigned int &enPCellID, double &enPFraction,
+                                           unsigned int &exPSipmID, unsigned int &exPCellID, double &exPFraction) const {
+
+  if( m_relativemodule == 99 ){
+    if( m_msg->level() <= MSG::DEBUG) debug() << "FibreMat not found" << endmsg;
+    return StatusCode(StatusCode::FAILURE, IssueSeverity(IssueSeverity::NIL, -1, "") );
+  }
+
+  //test if entry and exit are in the same fibremat
+  if( !(inActiveArea(enPLocal, m_Ztolerance) && inActiveArea(exPLocal, m_Ztolerance)) ) { //Geant 4 problem
+    if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits: entry and exit points in different fibremats" << endmsg;
+    return StatusCode(StatusCode::FAILURE, IssueSeverity(IssueSeverity::NIL, -2, "") );
+  }
+
+  //test if entry and exit are not too close in z
+  double pLocalSepZ = exPLocal.Z() - enPLocal.Z();
+  if ( std::abs( pLocalSepZ ) < 2*m_fibreMatHalfSizeZ*m_dZtolerance ) {
+    if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits because z-distance "
+       << "between entry and exit points is less than 10 microns." << endmsg;
+    return StatusCode(StatusCode::FAILURE, IssueSeverity(IssueSeverity::NIL, -3, "") );
+  }
+    
+  //hole treatment and fibrelength
+  double fibrelengthMax(2*m_fibreMatHalfSizeY);
+  if( m_holey ){
+    if(inBeamHole(enPLocal, fibrelengthMax) || inBeamHole(exPLocal, fibrelengthMax)) { 
+      if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits: entry or exit points are inside "
+          << "the beam pipe hole" << endmsg;
+      return StatusCode(StatusCode::FAILURE, IssueSeverity(IssueSeverity::NIL, -4, "") );
+    }
+  }
+
+  ///information of the hit
+  if( m_msg->level() <= MSG::DEBUG) debug() << "LayerID = "<< this->layer()
+                                    << ", Module = "       << m_module
+                                    << ", Isbottom = "     << m_mat
+                                    << ", quarter = "      << m_quarter
+                                    << ", Stereo angle = " << this->angle() << endmsg;
+  
+
+  ///////////////////////////////////////////////////////
+  /// Get cell coordinates of the entry and exit points
+  ///////////////////////////////////////////////////////
+
+  if( m_msg->level() <= MSG::DEBUG) debug() << "Local Coordinates of enP and exP: "
+                                            << enPLocal.X() << ", " << exPLocal.X() << endmsg;
+
+  cellIDCoordinates( enPLocal.X(), m_quarter, enPSipmID, enPCellID, enPFraction );
+  cellIDCoordinates( exPLocal.X(), m_quarter, exPSipmID, exPCellID, exPFraction );
+  if ( (enPSipmID >= m_nSipmPerModule) || (exPSipmID >= m_nSipmPerModule) ) {   ///DBL: change for from > to >=
+    if( m_msg->level() <= MSG::DEBUG) debug() << "Aborting calculateHits(...) because entry "
+                                      << "or exit points are outside acceptance (we get too large sipmID)" << endmsg;
+    return StatusCode(StatusCode::FAILURE, IssueSeverity(IssueSeverity::NIL, -5, "") );
+  }
+
+  return StatusCode(StatusCode::SUCCESS, IssueSeverity(IssueSeverity::NIL, 1, "") );
 }
 

@@ -3,6 +3,21 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2014-11-24 - Luigi Del Buono
+ - go back to ClassID=8604 for "DeFTLayer" class (was 8603, bilayer class changed too)
+ - split "CalculateHits" : the part validating the Mc hit and computes
+  sipm id, etc. has been put in "CalculateSipmInfo" (request from J. Wishahi)
+ - The hit validation in "CalculateHits" has changed (now in "CalculateSipmInfo")
+   some useless parts are removed, introduction of tolerances for Geant4/Arithmetic inaccuracy
+   while testing if a Hit in inside a Volume.
+ - "CalculateHits" and "CalculateSipmInfo" now return a StatusCode with a severity info code
+  which flags the hit rejection cause (if any). See the test Alg in "src/components" dir to
+  see how it works. 
+ - Also, correction of a bug in "CalculateHits" (which was never happening in fact...)
+ - Inactivate the patch curing the RightHoleAxes inversion, since O.Gruenberg changed the DB
+   to alleviate this problem (DB not public yet).
+ - Some changes in "DeFTTestAlg"
+
 ! 2014-11-06 - Luigi Del Buono
  - correct a bug in "fibreMatMinY" and "fibreMatMaxY": the max and the min were inverted
    (thenks to R. Quagliani for spotting this)

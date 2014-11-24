@@ -169,40 +169,29 @@ StatusCode DeFTTestAlg::execute() {
       lVolName = (pFibreMat ? pFibreMat->geometry()->lvolumeName() : "");
       if ( msgLevel(MSG::DEBUG) ) debug() << "Found FibreMat  : " << lVolName << endmsg;
 
-      if ( pFibreMat != 0 ) {
-        std::vector< std::pair<LHCb::FTChannelID, double> > vectChanAndFrac;
-        pFibreMat->calculateHits(*aHit, vectChanAndFrac);
-	tuple->column("NFTchannels",vectChanAndFrac.size());
-        if ( msgLevel(MSG::DEBUG) ) {
-          debug() << "Test of function calculateHits:\n" << endmsg;
-          debug() << "Size of the vector of FT pairs after the call of"
-                  << " function calculateHits and yes I am using this file: " << vectChanAndFrac.size() << endmsg;
-        }
 
-	for (VectFTPairs::iterator itPair = vectChanAndFrac.begin(); itPair != vectChanAndFrac.end(); ++itPair) { 
-	  if ( msgLevel(MSG::DEBUG) ) debug() << "AND THE LAYER IS...... " <<  (itPair->first).layer() << endmsg;
-	  tuple->column("layer", (itPair->first).layer());
-	  tuple->column("mat",(itPair->first).mat());
-	  tuple->column("module",(itPair->first).module());
-	  tuple->column("fibermat_id",pFibreMat->FibreMatID());
-	  tuple->column("fibermat_layer",pFibreMat->layer());
-	  tuple->column("fibermat_angle",pFibreMat->angle());
-	  tuple->column("fibermat_module",pFibreMat->module());
-	  tuple->column("sipm",(itPair->first).sipmId());
-	  tuple->column("cell",(itPair->first).sipmCell());
-	  tuple->column("channel",(itPair->first).channelID());
-	  tuple->column("energy",itPair->second);
-	  double xChan = -90000000.;
-	  xChan = pFibreMat->cellUCoordinate(itPair->first);
-	  tuple->column("Chan_X", xChan); 
-	  tuple->column("dChan_X", xChan-pMid.X());
-          //detector segment
-          DetectorSegment tmpDetSeg = pFibreMat->createDetSegment( itPair->first, itPair->second );
-          tuple->column("dsxmin",tmpDetSeg.xMin());
-          tuple->column("dsxmax",tmpDetSeg.xMax());
-          tuple->column("dsymin",tmpDetSeg.yMin());
-          tuple->column("dsymax",tmpDetSeg.yMax());
-	} 
+      if ( pFibreMat != 0 ) {
+        tuple->column("cfibrestat",1);   //keep status
+        
+        //hit local coordinates
+        Gaudi::XYZPoint pInloc = pFibreMat->geometry()->toLocal((*aHit)->entry());
+        Gaudi::XYZPoint pMidloc = pFibreMat->geometry()->toLocal((*aHit)->midPoint());
+        Gaudi::XYZPoint pOutloc = pFibreMat->geometry()->toLocal((*aHit)->exit());
+        tuple->column("HitIn_XL", pInloc.X());
+        tuple->column("HitIn_YL", pInloc.Y());
+        tuple->column("HitIn_ZL", pInloc.Z());
+        tuple->column("Hit_XL", pMidloc.X()); 
+        tuple->column("Hit_YL", pMidloc.Y()); 
+        tuple->column("Hit_ZL", pMidloc.Z()); 
+        tuple->column("HitOut_XL", pOutloc.X());
+        tuple->column("HitOut_YL", pOutloc.Y());
+        tuple->column("HitOut_ZL", pOutloc.Z());
+ 
+        //Fibermat info
+ 	tuple->column("fibermat_id",pFibreMat->FibreMatID());
+	tuple->column("fibermat_layer",pFibreMat->layer());
+	tuple->column("fibermat_angle",pFibreMat->angle());
+	tuple->column("fibermat_module",pFibreMat->module());
 
         //Center
         tuple->column("CenterGx",pFibreMat->fibreMatGlobalCenter().X());
@@ -219,24 +208,80 @@ StatusCode DeFTTestAlg::execute() {
         tuple->column("fmGmaxy",pFibreMat->fibreMatMaxY());
         tuple->column("fmGminz",pFibreMat->fibreMatMinZ());
         tuple->column("fmGmaxz",pFibreMat->fibreMatMaxZ());
-         
+        
         //test frame orientation
         Gaudi::XYZPoint testFrame=pFibreMat->geometry()->toGlobal( Gaudi::XYZPoint(100,100,0) );
         tuple->column("testFramex",testFrame.X());
         tuple->column("testFramey",testFrame.Y());
         tuple->column("testFramez",testFrame.Z());
-        
+         
         //Fibre length max
         double FibreLengthMax=pFibreMat->FibreLengh(pFibreMat->geometry()->toLocal((*aHit)->entry()),
                                                     pFibreMat->geometry()->toLocal((*aHit)->exit()));
         tuple->column("FiberLmax", FibreLengthMax);
-
+  
+   
+        //get the hits in fibremat
+        std::vector< std::pair<LHCb::FTChannelID, double> > vectChanAndFrac;
+        StatusCode sc = pFibreMat->calculateHits(*aHit, vectChanAndFrac);
+        if (sc.isFailure()) {
+          std::string org=sc.severity().getOrigin();    //get string with severity code...
+          tuple->column("chitstat",atoi(org.substr(1).c_str()));
+          tuple->column("NFTchannels", -1);
+          tuple->column("dsxmin",(float)0.);
+          tuple->column("dsxmax",(float)0.);
+          tuple->column("dsymin",(float)0.);
+          tuple->column("dsymax",(float)0.);
+          tuple->column("layer", 15u);
+          tuple->column("mat", -1);
+	  tuple->column("module",15u);
+	  tuple->column("sipm", 0u);
+	  tuple->column("cell", 0u);
+	  tuple->column("channel",0u);
+	  tuple->column("energy",0.);
+	  tuple->column("Chan_X", 0.); 
+	  tuple->column("dChan_X", 0.);
+        }
+	else {
+          std::string org=sc.severity().getOrigin();    //get string with severity code...
+          tuple->column("chitstat", atoi(org.substr(1).c_str()));
+          tuple->column("NFTchannels",(int)vectChanAndFrac.size());
+          //detector segment partial test
+          if(vectChanAndFrac.size()>0) {
+            DetectorSegment tmpDetSeg = pFibreMat->createDetSegment( vectChanAndFrac.begin()->first,
+                                                                     vectChanAndFrac.begin()->second );
+            tuple->column("dsxmin",tmpDetSeg.xMin());
+            tuple->column("dsxmax",tmpDetSeg.xMax());
+            tuple->column("dsymin",tmpDetSeg.yMin());
+            tuple->column("dsymax",tmpDetSeg.yMax());
+          }
+       
+          //loop on pairs: to be adapted to farray or something
+          for (VectFTPairs::iterator itPair = vectChanAndFrac.begin(); itPair != vectChanAndFrac.end(); ++itPair) { 
+            tuple->column("layer", (itPair->first).layer());
+            tuple->column("mat",(int)(itPair->first).mat());
+	    tuple->column("module",(itPair->first).module());
+	    tuple->column("sipm",(itPair->first).sipmId());
+	    tuple->column("cell",(itPair->first).sipmCell());
+	    tuple->column("channel",(itPair->first).channelID());
+	    tuple->column("energy",itPair->second);
+	    double xChan = pFibreMat->cellUCoordinate(itPair->first);
+	    tuple->column("Chan_X", xChan); 
+	    tuple->column("dChan_X", xChan-pMid.X());
+	  }
+          if ( msgLevel(MSG::DEBUG) ) {
+            debug() << "Test of function calculateHits:\n" << endmsg;
+            debug() << "Size of vector of FT pairs after call to calculateHits: " << vectChanAndFrac.size() << endmsg;
+          }
+        }
+      }
+      else {
+        tuple->column("cfibrestat",-1);
       }
 
       // ok, write tuple row
       StatusCode status = tuple->write(); 
       if( status.isFailure() ) return Error( "Cannot fill ntuple" ); 
-
 
     }// end loop over hits
   }// end if( m_deFT != 0 )
