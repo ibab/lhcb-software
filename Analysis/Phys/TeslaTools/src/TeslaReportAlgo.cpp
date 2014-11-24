@@ -647,7 +647,8 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             track->setLhcbIDs( ObjBasic->lhcbIDs() );
           }
           track->setChi2PerDoF( TrackChi2PerDoF );
-          proto->setTrack( track );
+          const LHCb::Track* test1 = proto->track();
+          if( !test1 ) proto->setTrack( track );
           debug() << "Track details added" << endmsg; 
           break;
         } 

@@ -4,6 +4,8 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2014-10-10 - Sean Benson
+ - Stop muon stub overwriting track
 
 ! 2014-10-10 - Sean Benson
  - Make TeslaTools split aware
