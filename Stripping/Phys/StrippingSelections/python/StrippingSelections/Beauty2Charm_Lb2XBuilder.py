@@ -774,11 +774,11 @@ class Lb2XBuilder(object):
         #pions = self.pions
         kaons = self.kaons
         decays = {'Xib2LcDsK': ["[Xi_b- -> Lambda_c+ D- K-]cc"]}
-        inputs = {'Xib2LcDsK': self.lc_pid+self.d.hhh_pid+kaons}
+        inputs = {'Xib2LcDsK': self.lc_pid+self.ds+kaons}
         rs = makeB2XSels(decays,'Lc2PKPiDs2KKPi',inputs,self.config)
         self.lines.append(ProtoLine(rs,1.0))
         decays = {'Xib2LcDsKWS': ["[Xi_b- -> Lambda_c+ D+ K-]cc"]}
-        inputs = {'Xib2LcDsKWS': self.lc_pid+self.d.hhh_pid+kaons}
+        inputs = {'Xib2LcDsKWS': self.lc_pid+self.ds+kaons}
         ws = makeB2XSels(decays,'Lc2PKPiDs2KKPi',inputs,self.config)
         self.lines.append(ProtoLine(ws,0.1))
 
@@ -787,11 +787,11 @@ class Lb2XBuilder(object):
         pions = self.pions
         kaons = self.kaons
         decays = {'Xib02LcDsKPi': ["[Xi_b0 -> Lambda_c+ D- K- pi+]cc"]}
-        inputs = {'Xib02LcDsKPi': self.lc_pid+self.d.hhh_pid+kaons+pions}
+        inputs = {'Xib02LcDsKPi': self.lc_pid+self.ds+kaons+pions}
         rs = makeB2XSels(decays,'Lc2PKPiDs2KKPi',inputs,self.config)
         self.lines.append(ProtoLine(rs,1.0))
         decays = {'Xib02LcDsKPiWS': ["[Xi_b0 -> Lambda_c+ D- K+ pi+]cc"]}
-        inputs = {'Xib02LcDsKPiWS': self.lc_pid+self.d.hhh_pid+kaons+pions}
+        inputs = {'Xib02LcDsKPiWS': self.lc_pid+self.ds+kaons+pions}
         ws = makeB2XSels(decays,'Lc2PKPiDs2KKPi',inputs,self.config)
         self.lines.append(ProtoLine(ws,0.1))
 
