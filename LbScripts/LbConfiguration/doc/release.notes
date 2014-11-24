@@ -1,8 +1,12 @@
+2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev, lb-run: made optional the 'lhcb-' prefix of nightly slots
+
 2014-11-18  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r2
 	* python/LbConfiguration/SetupProject.py: LBCORE-673: Extend regexp that matches LCG version
-	so that 70root6 be listed when using the --list option. 
+	so that 70root6 be listed when using the --list option.
 
 2014-11-14  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

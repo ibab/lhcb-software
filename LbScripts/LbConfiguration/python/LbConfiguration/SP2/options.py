@@ -94,11 +94,15 @@ def addSearchPath(parser):
                          os.path.normpath(os.path.join(os.environ.get('LCG_release_area', '/afs/cern.ch/sw/lcg/app/releases'), os.pardir, 'nightlies'))]
 
         slot_dir = None
-        for nightly_base in nightly_bases:
-            slot_dir = os.path.join(nightly_base, slot)
+        for nightly_base, slot_id in [(nightly_base, slot_id)
+                                      for slot_id in (slot, 'lhcb-' + slot)
+                                      for nightly_base in nightly_bases]:
+            slot_dir = os.path.join(nightly_base, slot_id)
             if os.path.isdir(slot_dir): break # exit from the loop as soon as the slot is found
         else:
             raise OptionValueError('Cannot find slot %s in %s. Check the values of the option %s' % (slot, nightly_bases, opt_str))
+        # set slot to the actual slot name
+        slot = slot_id
 
         path = os.path.join(slot_dir, day)
         if not os.path.isdir(path):
