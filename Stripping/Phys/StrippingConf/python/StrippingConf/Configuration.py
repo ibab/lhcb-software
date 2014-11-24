@@ -63,7 +63,7 @@ class StrippingConf ( object ) :
 
         self.checkFlavourTagging(Streams)
 
-	linesForFT = []
+        linesForFT = []
         if self._GlobalFlavourTagging:
           for stream in Streams:
             for line in stream.lines:
@@ -83,15 +83,15 @@ class StrippingConf ( object ) :
         if self._GlobalFlavourTagging and self._taggingLocations != []:
             self.appendFlavourTagging()
 
-	self.checkAppendedLines()
-	self.checkUniqueOutputLocations()
+        self.checkAppendedLines()
+        self.checkUniqueOutputLocations()
 
         if self._verbose:
           self.checkRawEventRequests()
           self.checkMDSTFlag()
         
-	from Gaudi.Configuration import appendPostConfigAction
-	appendPostConfigAction ( defaultToolConfigCheck )
+        from Gaudi.Configuration import appendPostConfigAction
+        appendPostConfigAction ( defaultToolConfigCheck )
 
     def checkRawEventRequests(self) :
         for stream in self.activeStreams() : stream.checkRawEventRequests()
@@ -109,38 +109,38 @@ class StrippingConf ( object ) :
         """
         Check if all declared lines are appended to streams
         """
-	allAppended = True
-	from StrippingLine import strippingLines
-	for line in strippingLines() : 
-	    if not line.isAppended() : 
-		log.warning("Line " + line.name() + " is declared but not appended to any stream")
-		allAppended = False
+        allAppended = True
+        from StrippingLine import strippingLines
+        for line in strippingLines() : 
+            if not line.isAppended() : 
+                log.warning("Line " + line.name() + " is declared but not appended to any stream")
+                allAppended = False
 	
-	if allAppended : 
-	    log.info("All declared lines are appended to streams")
+        if allAppended : 
+            log.info("All declared lines are appended to streams")
 
     def checkUniqueOutputLocations (self) : 
         """
         Check if the output locations of all active lines are unique
         """
-	import sys
-	locations = {}
-	for stream in self.activeStreams() :
-	    for line in stream.lines :
+        import sys
+        locations = {}
+        for stream in self.activeStreams() :
+            for line in stream.lines :
                 location = line.outputLocation()
                 if location and location != '' :
                     if location not in locations.keys() : 
                         locations[location] = [ line.name() ]
                     else : 
                         locations[location] += [ line.name() ]
-	locationsUnique = True
+        locationsUnique = True
         message = ''
-	for loc, names in locations.iteritems() : 
-	    if len(names) > 1 :
-		message += "\tLines "+str(names)+" share the same output location '"+loc+"'\n"
-		#sys.stderr.write(message)
-		locationsUnique = False
-	if not locationsUnique : 
+        for loc, names in locations.iteritems() : 
+            if len(names) > 1 :
+                message += "\tLines "+str(names)+" share the same output location '"+loc+"'\n"
+                #sys.stderr.write(message)
+                locationsUnique = False
+        if not locationsUnique : 
             #raise Exception('\n' + message)
             log.warning('\n' + message)
 
@@ -214,16 +214,18 @@ class StrippingConf ( object ) :
         log.info(self._name+ " appending stream "+ stream.name())
         
         if stream.TESPrefix == None : 
-	    stream.TESPrefix = self._tesPrefix
-	stream.HDRLocation = self._hdrLocation
+            stream.TESPrefix = self._tesPrefix
+        stream.HDRLocation = self._hdrLocation
         if stream.BadEventSelection == "Override" :
-            if stream.name() in self.BadEventSelection.keys(): 
-              stream.BadEventSelection = self.BadEventSelection[stream.name()]
+            if isinstance(self.BadEventSelection,dict):
+              if stream.name() in self.BadEventSelection.keys():
+                stream.BadEventSelection = self.BadEventSelection[stream.name()]
+              else:
+                stream.BadEventSelection = self.BadEventSelection['default']
+              log.info(self._name+ " setting BadEventSelection for stream "+ stream.name())
             else:
-              stream.BadEventSelection = self.BadEventSelection['default']
-            log.info(self._name+ " setting BadEventSelection for stream "+ stream.name())
-
-        if stream.AcceptBadEvents == None : 
+              stream.BadEventSelection = self.BadEventSelection
+        if stream.AcceptBadEvents == None :
             stream.AcceptBadEvents = self.AcceptBadEvents
  
         if stream.MaxCandidates == "Override" : 
@@ -231,8 +233,8 @@ class StrippingConf ( object ) :
         if stream.MaxCombinations == "Override" : 
     	    stream.MaxCombinations = self.MaxCombinations
         
-	stream.createConfigurables()
-	self._streams.append(stream)
+        stream.createConfigurables()
+        self._streams.append(stream)
         self._appendSequencer(stream)
 
     def appendFlavourTagging(self) :
@@ -244,13 +246,13 @@ class StrippingConf ( object ) :
         self._streamSequencers.append(stream.sequence())
 
     def decReportLocations(self) : 
-	locs = []
-	for stream in self._streams : 
-	    for line in stream.lines : 
-		loc = line.decReportLocation()
-		if loc != None and loc not in locs : locs.append(loc)
+        locs = []
+        for stream in self._streams : 
+            for line in stream.lines : 
+                loc = line.decReportLocation()
+                if loc != None and loc not in locs : locs.append(loc)
 
-	return locs
+        return locs
 
     def limitCombForStdParticles(self,incidentName = 'ExceedsCombinatoricsLimit'):
         from StandardParticles import locations as stdLoc
@@ -443,10 +445,10 @@ def __enroll__ ( self       ,   ## the object
             if hasattr(self,i) : line += __enroll__( getattr(self,i), level + 1, lst )
 
     if type(self) is StrippingConf : 
-	lines = 0
-	for i in self.activeStreams() : 
-	    lines += len(i.sequence().Members)
-	line += "Summary: " + len(self.sequence().Members) + " streams, " + lines + " lines\n"
+        lines = 0
+        for i in self.activeStreams() : 
+            lines += len(i.sequence().Members)
+        line += "Summary: " + len(self.sequence().Members) + " streams, " + lines + " lines\n"
 
     return line
 
@@ -459,16 +461,16 @@ def defaultToolConfigCheck () :
         if conf.name().find('ToolSvc.')>=0 : 
             difference = []
             if isinstance(type(conf).__slots__,dict) : 
-	        for k,v in type(conf).__slots__.iteritems() : 
+                for k,v in type(conf).__slots__.iteritems() : 
                     if hasattr(conf, k) : 
                         val = getattr(conf,k)
-			if val not in allConfigurables.values() : 
-			    if v != val : 
-				difference.append( (k, v, val ) )
+                        if val not in allConfigurables.values() : 
+                            if v != val : 
+                                difference.append( (k, v, val ) )
             if len(difference) > 0 : 
                 log.warning( 'tool %s has non-default configuration! Attributes that differ:' % conf.name() )
-		for d in difference : 
-		    log.warning( '    %s = %s (default = %s)' % ( d[0], str(d[2]), str(d[1]) ) )
+                for d in difference : 
+                    log.warning( '    %s = %s (default = %s)' % ( d[0], str(d[2]), str(d[1]) ) )
 
 
 for conf in [ StrippingAlg, StrippingStream, StrippingConf] :

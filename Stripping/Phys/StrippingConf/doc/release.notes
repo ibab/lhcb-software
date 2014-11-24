@@ -4,6 +4,9 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2014-11-24 - Stefano Perazzini
+ - Bug fix in setting of BadEventSelection
+
 ! 2014-11-22 - Stefano Perazzini
  - Modified StrippingConf class in order to accept different BadEventSelection
    on a stream-basis
