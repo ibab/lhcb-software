@@ -159,7 +159,7 @@ TS_HISTORY_SUB  = LoKi.Stages.HistorySub
 TS_HISTORY_RE   = LoKi.Stages.HistoryRegex
 
 ## @see LoKi::Cuts::TS_HASCACHE
-TS_HASCACHE     = LoKi.Stages.HasCache 
+TS_HASCACHE     = LoKi.Stages.HasCache
 
 ## @see LoKi::Cuts::TS_CACHE_DOUBLE
 TS_CACHE_DOUBLE = LoKi.Stages.Cache1
@@ -221,17 +221,25 @@ TC_MATCHFLTR2 = LoKi.Hlt1.FilterMatch2
 TC_MATCHCANDS = LoKi.Hlt1.MatchTracks
 
 # =============================================================================
-## vertex making 
+## vertex making
 # =============================================================================
 
-## @see LoKi::Cuts::TC_VXMAKE 
+## @see LoKi::Cuts::TC_VXMAKE
 TC_VXMAKE      = LoKi.Hlt1.VxMaker
-## @see LoKi::Cuts::TC_VXMAKE2 
+## @see LoKi::Cuts::TC_VXMAKE2
 TC_VXMAKE2     = LoKi.Hlt1.VxMaker2
-## @see LoKi::Cuts::TC_VXMAKE3 
+## @see LoKi::Cuts::TC_VXMAKE3
 TC_VXMAKE3     = LoKi.Hlt1.VxMaker3
-## @see LoKi::Cuts::TC_VXMAKE4 
+## @see LoKi::Cuts::TC_VXMAKE4
 TC_VXMAKE4     = LoKi.Hlt1.VxMaker4
+
+# =============================================================================
+## particle making
+# =============================================================================
+## @see LoKi::Cuts::TC_TOPARTICLES
+TC_TOPARTICLES = LoKi.Hlt1.ToParticles
+## @see LoKi::Cuts::TC_HLT1COMBINER
+TC_HLT1COMBINER = LoKi.Hlt1.Hlt1Combiner
 
 # =============================================================================
 ## di-tracks makers
@@ -257,25 +265,25 @@ TrackFunction       = LoKi.Hlt1.TrackFunction
 TrFUN               = LoKi.Tracks.TrFunction
 
 # ============================================================================
-## Track functions 
+## Track functions
 # ============================================================================
 
-## @see LoKi::Cuts::TrDPMU_ 
+## @see LoKi::Cuts::TrDPMU_
 TrDPMU_             = LoKi.Tracks.MuonDeltaP
 ## @see LoKi::Cuts::TrDPMU
-TrDPMU              = LoKi.Tracks.MuonDeltaP() 
-## @see LoKi::Cuts::Tr_HLTMIP 
+TrDPMU              = LoKi.Tracks.MuonDeltaP()
+## @see LoKi::Cuts::Tr_HLTMIP
 Tr_HLTMIP           = LoKi.Tracks.Hlt1TrackMinIp
-## @see LoKi::Cuts::Tr_HLTMIPCHI2  
+## @see LoKi::Cuts::Tr_HLTMIPCHI2
 Tr_HLTMIPCHI2       = LoKi.Tracks.Hlt1TrackMinIpChi2
 
 
 # ============================================================================
-## Vertex functions 
+## Vertex functions
 # ============================================================================
-## @see LoKi::Cuts::RV_MAXDOCA 
+## @see LoKi::Cuts::RV_MAXDOCA
 RV_MAXDOCA       = LoKi.RecVertices.MaxDOCA
-## @see LoKi::Cuts::RV_MAXDOCACHI2 
+## @see LoKi::Cuts::RV_MAXDOCACHI2
 RV_MAXDOCACHI2   = LoKi.RecVertices.MaxDOCAChi2
 ## @see LoKi::Cuts::RV_DOCACUT
 RV_DOCACUT       = LoKi.RecVertices.DOCACut

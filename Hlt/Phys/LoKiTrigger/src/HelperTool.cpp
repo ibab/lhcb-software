@@ -86,6 +86,22 @@ LHCb::RecVertex::Container* LoKi::Hlt1::HelperTool::_createRecVertices() const
     return alg()->getOrCreate<OBJECTS, OBJECTS>( "Rec/Vertex/Hlt1_Vertices" );
 }
 // ============================================================================
+// get the stored protoparticles
+// ============================================================================
+LHCb::ProtoParticle::Container* LoKi::Hlt1::HelperTool::_createProtoParticles() const
+{
+    typedef LHCb::ProtoParticle::Container OBJECTS;
+    return alg()->getOrCreate<OBJECTS, OBJECTS>( "Hlt1/ProtoP/TightForward/Charged" ); // THIS NEEDS TO BE ADAPTED FOR e.g. TightForward/LooseForward ...
+}
+// ============================================================================
+// get the stored particles
+// ============================================================================
+LHCb::Particle::Container* LoKi::Hlt1::HelperTool::_createParticles( const std::string& location ) const
+{
+    typedef LHCb::Particle::Container OBJECTS;
+    return alg()->getOrCreate<OBJECTS, OBJECTS>( "Hlt1/TightForward" + location + "/Particles" ); // THIS NEEDS TO BE ADAPTED for e.g. TightForward / LooseForward ...
+}
+// ============================================================================
 // create the tool
 // ============================================================================
 LoKi::Hlt1::HelperTool::HelperTool( const int /* dummy */ )
@@ -97,6 +113,8 @@ LoKi::Hlt1::HelperTool::HelperTool( const int /* dummy */ )
     , m_hlt_multitracks{nullptr}
     , m_hlt_tracks{nullptr}
     , m_hlt_recvertices{nullptr}
+    , m_hlt_protoparticles( nullptr )
+    , m_hlt_particles( nullptr )
     //
     , m_myname()
 {
@@ -132,6 +150,8 @@ LoKi::Hlt1::HelperTool::HelperTool( const LoKi::Hlt1::HelperTool& right )
     , m_hlt_multitracks( nullptr )
     , m_hlt_tracks( nullptr )
     , m_hlt_recvertices( nullptr )
+    , m_hlt_protoparticles( nullptr )
+    , m_hlt_particles( nullptr )
     //
     , m_myname()
 {
@@ -154,6 +174,8 @@ LoKi::Hlt1::HelperTool::~HelperTool()
     m_hlt_multitracks = nullptr;
     m_hlt_tracks = nullptr;
     m_hlt_recvertices = nullptr;
+    m_hlt_protoparticles = nullptr;
+    m_hlt_particles = nullptr;
     //
     m_alg = nullptr;
 }
@@ -170,8 +192,10 @@ void LoKi::Hlt1::HelperTool::handle( const Incident& /* incident */ )
     m_hlt_multitracks = nullptr;
     m_hlt_tracks = nullptr;
     m_hlt_recvertices = nullptr;
+    m_hlt_protoparticles = nullptr;
+    m_hlt_particles = nullptr;
 }
 
 // ============================================================================
-// The EN D
+// The END
 // ============================================================================

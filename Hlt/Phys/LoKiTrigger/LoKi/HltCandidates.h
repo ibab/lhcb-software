@@ -79,7 +79,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class GAUDI_API NStages 
+    class GAUDI_API NStages
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
     public:
@@ -135,7 +135,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class GAUDI_API StageFun 
+    class GAUDI_API StageFun
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
     public:
@@ -178,7 +178,7 @@ namespace LoKi
      *  @author Vanya Belyaev Ivan.BElyaev@nikhef.nl
      *  @date 2010-08-01
      */
-    class GAUDI_API StageCut 
+    class GAUDI_API StageCut
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
     {
     public:
@@ -222,7 +222,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-21
      */
-    class GAUDI_API SlotFun 
+    class GAUDI_API SlotFun
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Function
     {
       // ======================================================================
@@ -231,7 +231,7 @@ namespace LoKi
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
-       *  @param bad  the bad value 
+       *  @param bad  the bad value
        *  @see Hlt::Candidate::get
        */
       SlotFun
@@ -247,6 +247,15 @@ namespace LoKi
       ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun ,
         const int     slot = 0 ,
         const double  bad  = 0 ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+      SlotFun
+      ( const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun ,
+        const int    slot = 0 ,
+        const double bad  = 0 ) ;
       /** constructor
        *  @param fun the function
        *  @param slot the slot:
@@ -315,7 +324,7 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@cern.ch
      *  @date 2010-11-21
      */
-    class GAUDI_API SlotCut 
+    class GAUDI_API SlotCut
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate
     {
       // ======================================================================
@@ -369,6 +378,16 @@ namespace LoKi
        *     - posiitve value corresponds to step-back in history
        */
       SlotCut
+      ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut ,
+        const int slot  =  0 ) ;
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *     - 0 corresponds to current stage ,
+       *     - negative value corresponds to initiator stage
+       *     - positive value corresponds to step-back in history
+       */
+      SlotCut
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut ,
         const int slot  = 0 ) ;
       /** constructor
@@ -376,7 +395,7 @@ namespace LoKi
        *  @param slot the slot:
        *     - 0 corresponds to current stage ,
        *     - negative value corresponds to initiator stage
-       *     - positive value corresponds to step-back in history
+       *     - posiitve value corresponds to step-back in history
        */
       SlotCut
       ( const LoKi::BasicFunctors<const LHCb::Track*>::CutVal& cut ,
@@ -456,6 +475,14 @@ namespace LoKi
        *  @see Hlt::Candidate::get
        */
     	SlotFilter
+      ( const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut,
+    		const int slot =  0 );
+      /** constructor
+       *  @param fun the predicate
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotFilter
       ( const LoKi::BasicFunctors<const Hlt::Stage*>::Predicate& cut,
         const int slot =  0 );
       /// constructor
@@ -487,7 +514,7 @@ namespace LoKi
      *  @author Alexander MAZUROV alexander.mazurov@gmail.com
      *  @date 2010-11-21
      */
-    class GAUDI_API SlotMap 
+    class GAUDI_API SlotMap
       : public LoKi::BasicFunctors<const Hlt::Candidate*>::Map
     {
     public:
@@ -508,6 +535,15 @@ namespace LoKi
        */
     	SlotMap
       ( const LoKi::BasicFunctors<const LHCb::VertexBase*>::Function& fun,
+    		const int    slot =  0 ,
+        const double bad  =  0 ) ;
+      /** constructor
+       *  @param fun the function
+       *  @param slot the slot:
+       *  @see Hlt::Candidate::get
+       */
+    	SlotMap
+      ( const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun,
     		const int    slot =  0 ,
         const double bad  =  0 ) ;
       /** constructor
@@ -550,9 +586,9 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-  } //                                        end of namespace LoKi::Candidates 
+  } //                                        end of namespace LoKi::Candidates
   // ==========================================================================
-} //                                                      end of namespace LoKi 
+} //                                                      end of namespace LoKi
 // ============================================================================
 //                                                                      The END
 // ============================================================================
