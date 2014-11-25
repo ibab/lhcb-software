@@ -4,6 +4,9 @@
 ! Purpose       : Monitoring for the muon system for simulated data
 !-----------------------------------------------------------------------------
 
+! 2014-11-25 - Gloria Corti
+ - Fixes for compilation warnings with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

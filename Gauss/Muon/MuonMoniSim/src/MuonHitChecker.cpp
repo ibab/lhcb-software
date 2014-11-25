@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algortihm Factory
-DECLARE_ALGORITHM_FACTORY( MuonHitChecker );
+DECLARE_ALGORITHM_FACTORY( MuonHitChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -38,7 +38,7 @@ MuonHitChecker::MuonHitChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MuonHitChecker::~MuonHitChecker() {}; 
+MuonHitChecker::~MuonHitChecker() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -60,7 +60,7 @@ StatusCode MuonHitChecker::initialize() {
   }
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -234,8 +234,7 @@ StatusCode MuonHitChecker::execute() {
    
 
   return StatusCode::SUCCESS;
-};
-
+}
 //=============================================================================
 //  Finalize
 //=============================================================================
