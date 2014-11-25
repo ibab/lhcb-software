@@ -1,0 +1,154 @@
+
+#################################################
+#		 EM physics study and validation		#
+#		with EMGaussMoni and BremVeloCheck		#
+#												#
+#	      CONFIGURATION, RUN AND ANALYSIS		#
+#                      MANUAL					#
+#		     Peter Griffith 21.11.14			#
+#################################################
+
+=====================
+	DESCRIPTION
+=====================
+
+This package runs and analyzes the output from a photon emission analyzing tool BremVeloCheck, and the energy deposition monitoring algorithm EMGaussMoni to check and validate the simulation of electromagnetic physics in Gauss.
+
+Both validators load just the velo or (in future) the velo pixel to look specifically at the electromagnetic interactions in the silicon. They can be run individually or simulataneously in the same job.
+
+This front-end package in SimChecks contains the following scripts:
+
+===============
+	SCRIPTS
+===============
+run_EMstudies.py
+----------------
+The job submission and/or output analysis is run with this:
+[python run_Emstudies.py]
+
+EMstudy_config.py
+-----------------
+Configuration is done here and should be the only file that will need to be edited to change the run config. The options are explained in the next section
+
+EMstudy_opts.py
+---------------
+Configures the geometry and BremVeloCheck tool if needed
+
+Gauss-Job-EMstudy.py
+--------------------
+Configures Gauss, the job output and the EmGaussMoni algorithm if needed
+
+EMstudy_PGun.py
+---------------
+Configures the particle gun with velo acceptance and specified energy/particle
+
+analysis.py
+-----------
+This module is called by run_Emstudies.py and will produce the required outputs in the output and plots folders if the doAnalysis flag is set in the config file.
+
+theoretical.py, landau*.C
+-------------------------
+These files are used in the analysis of the job outputs. Linear interpolation is used to estimate the FWHM of the energy deposition distributions, and a parabolic fit to the peak to deduce the MPV.
+
+
+======================
+ CONFIGURING THE JOBS
+======================
+
+Edit the EMstudy_config.py to configure the jobs. The congifurables are:
+
+testType
+--------
+Specifies whether to run both validators or either one individually
+
+veloType
+--------
+Specifies the type of velo to load. Currently only the option for r/phi velo
+
+pgunID
+------
+The PDG ID of the particle to use. The antiparticle is also included for any particle specified
+
+pgunE
+-----
+The energy of the particle in GeV
+
+emPL
+----
+A string specifying the GEANT4 EM physics list to use, e.g 'NoCuts'
+
+nEvts
+-----
+The number of particle gun events to generate
+
+dRays
+-----
+Boolean to turn delta rays on or off
+
+eScan_list
+----------
+If pgunE is set to 'scan' instead of an energy value, multiple jobs are submitted in sequence, iterating over the enegies specified in this list.
+
+plScan_list
+-----------
+If emPL is set to 'scan' instead of a physics list, multiple jobs are submitted in sequence, iterating over the EMPL's specified in this list.
+
+eScan_list
+----------
+If pgunID is set to 'scan' instead of an PDG particle ID, multiple jobs are submitted in sequence, iterating over the particles specified in this list.
+
+saveSim
+-------
+A boolean to switch on or off the saving of the .sim files for each production. This may be useful to be able to run EMGaussMoni offline in GaussRead mode instead of re-running the entire production
+
+runGenerator
+------------
+This specifies whether to not to actually submit the jobs to Gauss. This can be turned off if the desired raw Gauss root file outputs already exist and only post-production analysis of these outputs is required. 
+WARNING: The variables that can be scanned; energy, particle ID and physics list, are done so by run_EMstudies.py replacing the value in EMstudy_config.py with each iteration. This means any variable set to 'scan' in the config file will be set to the last value in the scanning list once all jobs are completed, and if the scan is to be repeated the value must be chaged back to scan in the configuration file before rerunning run_EMstudies.py
+
+doAnalysis
+----------
+If True, the Gauss output files are analysed and presentable results saved in the plots folder. If both runGenerator and doAnalysis are true, the requested number of Gauss jobs will be run, and then their outputs analysed once they have finished. The analysis stage uses the same configuration (energy, particle, physics list etc) as the Gauss jobs and will scan over ID, energy and EMPL's in the same way if specified. 
+
+
+
+=======================
+	Analysis output
+=======================
+
+The output files follow this convention:
+
+<job identifier>+<energy>+<particle ID>+physics list> for single energies
+
+or
+<job identifier>+<particle ID>+physics list> for results based on an energy scan (dE/dx studies)
+
+For example, the output for the most probable energy deposition value for electrons using the EmNoCuts physics list would be "plots/MPV_11_NoCuts.pdf"
+
+
+The validator specific outputs are:
+
+BremVeloCheck
+-------------
+The analysis procedure will produce two plots and two numbers in the plots folder: A histogram of the number of photons per track, the energy distribution of emitted photons, the mean photon energy and the mean number of photons per track.
+
+
+EMGaussMoni
+-----------
+Two plots and a table will be produced for each output; the most probable value (MPV) and the full width at half maximum (FWHM) of the distributions from the scanning over the specified energy range, plus the tables corresponding to the data points in these plots. 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

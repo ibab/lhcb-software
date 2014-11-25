@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-11-25 - Peter Griffith
+ - Added analysis package and options files for EM physics validator tools
+
 ! 2014-11-25 - Luca Pescatore
 - Put parallelisation as an option. Off by default. 
   Also default physics lists used changed from FTFP_BERT to FTFP_BERT and QGSP_BERT
