@@ -57,7 +57,8 @@ StatusCode Rich::Rec::GlobalPID::CommonBase<PBASE>::initialize()
 
   // PID types
   m_pidTypes = m_richPartProp->particleTypes();
-  this->debug() << "Particle types considered                 = " << m_pidTypes << endmsg;
+  if( this->msgLevel(MSG::DEBUG) )
+    this->debug() << "Particle types considered                 = " << m_pidTypes << endmsg;
 
   return sc;
 }
