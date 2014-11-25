@@ -61,7 +61,8 @@ class MiniBiasConf(LineBuilder) :
       self.L0AnyLinePrescaled = StrippingLine("Hlt1L0AnyPrescaled"
                                               , HLT = config["L0AnyPSLine_RE"]
                                               , checkPV = False
-                                              , prescale = config["L0AnyPSLine_PS"] )
+                                              , prescale = config["L0AnyPSLine_PS"]
+                                              , RequiredRawEvents = ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"])
       self.registerLine( self.L0AnyLinePrescaled )
 
     def _makeLine(self,name,RE,limiter,rate,UseConditionDB=False):
@@ -76,7 +77,8 @@ class MiniBiasConf(LineBuilder) :
       line = StrippingLine(name
                            , HLT =  RE
                            , checkPV = False
-                           , algos = [ orl ] )
+                           , algos = [ orl ] 
+                           , RequiredRawEvents = ["Trigger", "Muon", "Calo", "Rich", "Velo", "Tracker"])
 
       self.registerLine( line )
       return line

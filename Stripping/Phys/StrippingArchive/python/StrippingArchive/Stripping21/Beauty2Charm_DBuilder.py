@@ -610,12 +610,12 @@ class DstarBuilder(object):
 
     # Jordi: make the list of selections of D*0 -> D0 pi0 with given selection of D and pi0 type.
     def _makeDstar02D0Pi0( self, name, pi0type, d2x ):
-        decays = [ "[D*(2007)0 -> D0 pi0]cc" ]
+        decays = [ "D*(2007)0 -> D0 pi0" ]
         return [ self._makeDstar02D0X0( name + 'Pi0' + pi0type, decays, d2x + self.pi0[ pi0type ] ) ]
 
     # Jordi: make the list of selections of D*0 -> D0 gamma with given selection of D.
     def _makeDstar02D0Gamma( self, name, d2x ):
-        decays = [ "[D*(2007)0 -> D0 gamma]cc" ]
+        decays = [ "D*(2007)0 -> D0 gamma" ]
         # return [ self._makeDstar02D0X0( name + 'Gamma', decays, d2x + [ self.photons ] ) ]
 
         combinationCuts = "(AALL)"

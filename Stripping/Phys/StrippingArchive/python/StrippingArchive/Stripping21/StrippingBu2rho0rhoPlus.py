@@ -494,5 +494,5 @@ def relInfoToolList( mother, daughters, prefix = '' ):
              relInfoCVDict( angle = 1.00,
                             selections = [ mother ] + daughters,
                             recursion = 1),
-             relInfoVtxDict( selections = [ mother ], recursion = 0 )
+             relInfoVtxDict( selections = [ mother ] + daughters, recursion = 1 )
              ]
