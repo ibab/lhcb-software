@@ -5,7 +5,7 @@ Purpose: LHCb Digitization program
 
 - Changes to QMTests
   . Revert BooleExclusions.py change of v29r1
-  . Follow FTDet v4 compatibility changes
+  . Follow FTDet v4 compatibility changes and other FTDet improvements
 
 </PRE><H1><A NAME=v29r1p1>2014-11-07 Boole v29r1p1</A></H1><PRE>
 This version uses projects:
