@@ -5,6 +5,7 @@
 // GaudiKernel
 // ============================================================================
 #include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/IIncidentSvc.h"
 // ============================================================================
 // LoKi
 // ============================================================================
@@ -52,6 +53,19 @@ LoKi::HltUnit::HltUnit
     ( "Monitor" ,
       m_monitor ,
       "Flag to switch on the simple embedded monitoring" ) ;
+  declareProperty
+    ( "PVSelection" ,
+      m_pvSelection = "NoPVs" ,
+      "Hlt PV selection." ) ;
+  declareProperty
+    ( "Tools",
+      m_toolNames = std::map<std::string, std::string> {
+      { "DistanceCalculator", "LoKi::DistanceCalculator:PUBLIC" },
+      { "LifetimeFitter", "LoKi::LifetimeFitter:PUBLIC" },
+      { "VertexFitter", "LoKi::VertexFitter:PUBLIC" },
+      { "ParticleCombiner", "LoKi::VertexFitter:PUBLIC" },
+      { "RelatedPVFinder",  "GenericParticle2PVRelator<_p2PVWithIPChi2, OfflineDistanceCalculatorName>/P2PVWithIPChi2:PUBLIC"}},
+      "Types/Names of tools" ) ;
   // set the code string
   StatusCode sc = setProperty ( "Code" , "FNONE" ) ;
   Assert ( sc.isSuccess () , "Unable (re)set property 'Code'"    , sc ) ;
@@ -162,15 +176,6 @@ const Hlt::Selection* LoKi::HltUnit::selection ( const Key& key ) const
 // ============================================================================
 StatusCode LoKi::HltUnit::decode()
 {
-  // ==========================================================================
-  // ensure the validity of Hlt registration service
-  Assert ( regSvc() , "Hlt::IRegister is not available" ) ;
-  // ==========================================================================
-  /// lock the context
-  Gaudi::Utils::AlgContext lock1 { this     , contextSvc() } ;
-  /// lock Hlt Register Service
-  Hlt::IRegister::Lock     lock2 { regSvc() , this         } ;
-  /// decode & initialize the functors
   StatusCode sc = defineCode () ;
   Assert ( sc.isSuccess() , "Unable to defineCode for functor!" ) ;
   // =========================================================================
@@ -224,7 +229,19 @@ StatusCode LoKi::HltUnit::queryInterface
   {
     *ppvi = static_cast<Hlt::IUnit*>( this ) ;
     addRef() ;
-    return StatusCode::SUCCESS ;                                      // RETURN
+    return StatusCode::SUCCESS ; // RETURN
+  } 
+  else if ( IIncidentListener::interfaceID() == iid )
+  {
+    *ppvi = static_cast<IIncidentListener*>( this ) ;
+    addRef() ;
+    return StatusCode::SUCCESS ; // RETURN
+  }
+  else if ( IDVAlgorithm::interfaceID() == iid )
+  {
+    *ppvi = static_cast<IDVAlgorithm*>( this ) ;
+    addRef() ;
+    return StatusCode::SUCCESS ; // RETURN
   }
   else if ( Hlt::IRegister ::interfaceID() == iid )
   { return regSvc() -> queryInterface ( iid , ppvi ) ; }              // RETURN
@@ -247,6 +264,31 @@ StatusCode LoKi::HltUnit::queryInterface
   if ( sc.isSuccess () ) { return sc ; }                              // RETURN
   // come back to the base
   return Algorithm::queryInterface ( iid , ppvi ) ;
+}
+// ============================================================================
+// initialize the algorithm
+// ============================================================================
+StatusCode LoKi::HltUnit::initialize ()
+{
+  // ==========================================================================
+  // ensure the validity of Hlt registration service
+  Assert ( regSvc() , "Hlt::IRegister is not available" ) ;
+  // ==========================================================================
+  /// lock Hlt Register Service
+  Hlt::IRegister::Lock     lock2 { regSvc() , this         } ;
+  /// decode & initialize the functors
+  StatusCode sc = LoKi::FilterAlg::initialize();
+  if ( !sc.isSuccess() ) return sc;
+  // We have a dummy that is equal to the default in case no PVs are needed
+  auto noPVs = Gaudi::StringKey( "NoPVs" ) ;
+  if ( m_pvSelection != noPVs ) {
+    declareInput( m_pvSelection, LoKi::AuxFunBase() ) ;
+  }
+  // register with the incident service
+  SmartIF<IIncidentSvc> incSvc;
+  incSvc = serviceLocator()->service( "IncidentSvc" );
+  incSvc->addListener( this, IncidentType::BeginEvent );
+  return sc;
 }
 // ============================================================================
 // execute the algorithm
@@ -339,6 +381,32 @@ StatusCode LoKi::HltUnit::registerTESInput
   //
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+void LoKi::HltUnit::handle ( const Incident& )
+{
+  m_p2PVMap.clear();
+}
+// ============================================================================
+const LHCb::RecVertex::Range LoKi::HltUnit::primaryVertices () const
+{
+  auto sel = selection( m_pvSelection, LoKi::AuxFunBase() );
+  auto vertices = sel->down_cast<LHCb::RecVertex>();
+  return LHCb::RecVertex::Range(vertices->begin(), vertices->end());
+}
+// ============================================================================
+const LHCb::VertexBase* LoKi::HltUnit::bestVertex 
+( const LHCb::Particle* particle ) const
+{
+  auto it = m_p2PVMap.find( particle );
+  if ( it != m_p2PVMap.end() ) return it->second;
+  //
+  auto relatedFinder = relatedPVFinder();
+  LHCb::RecVertex::Range pvs = primaryVertices();
+  auto bestPV = relatedFinder->relatedPV( particle, pvs );
+  m_p2PVMap[particle] = bestPV;
+  return bestPV;
+}
+
 // ============================================================================
 void LoKi::HltUnit::updateParams ( Property& /* p */ ) // update the factory 
 {

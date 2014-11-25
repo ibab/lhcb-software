@@ -9,10 +9,20 @@
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/VectorMap.h"
+#include "GaudiKernel/HashMap.h"
+#include "GaudiKernel/IIncidentListener.h"
 // ============================================================================
 // HltBase 
 // ============================================================================
 #include "Kernel/IANNSvc.h"
+// ============================================================================
+// DaVinci Interfaces
+// ============================================================================
+#include "Kernel/IDVAlgorithm.h"
+#include "Kernel/IVertexFit.h"
+#include "Kernel/ILifetimeFitter.h"
+#include "Kernel/IDistanceCalculator.h"
+#include "Kernel/IRelatedPVFinder.h"
 // ============================================================================
 // LoKi 
 // ============================================================================
@@ -25,6 +35,10 @@
 #include "HltBase/IHltData.h"
 #include "HltBase/IHltInspector.h"
 // ============================================================================
+// Event
+// ============================================================================
+#include "Event/Particle.h"
+#include "Event/RecVertex.h"
 namespace LoKi 
 {
   // ==========================================================================
@@ -35,8 +49,10 @@ namespace LoKi
    *  @date   2008-11-10
    */
   class HltUnit 
-    : public LoKi::FilterAlg
-    , public virtual Hlt::IUnit
+    : public LoKi::FilterAlg,
+      virtual public Hlt::IUnit,
+      virtual public IIncidentListener,
+      virtual public IDVAlgorithm
   {
     // ========================================================================
     // the friend factory for instantiation 
@@ -45,7 +61,7 @@ namespace LoKi
   public:                                                          // Algorithm 
     // ========================================================================
     /// initialize the algorithm
-    // virtual StatusCode initialize () ;
+    virtual StatusCode initialize () override;
     // ========================================================================
     /// execute the algorithm
     StatusCode execute    () override;
@@ -149,6 +165,61 @@ namespace LoKi
     StatusCode queryInterface 
     (const InterfaceID& iid, void** ppvi ) override;
     // ========================================================================
+  public:
+    // ==========================================================================
+    /// get the distance calculator tool
+    virtual const IDistanceCalculator* 
+    distanceCalculator    ( const std::string& nickname = "DistanceCalculator" ) const override
+    { return getTool<IDistanceCalculator>( nickname ); }
+    /// get lifetime fitter tool 
+    virtual const ILifetimeFitter* 
+    lifetimeFitter        ( const std::string& nickname = "LifetimeFitter" ) const override
+    { return getTool<ILifetimeFitter>( nickname ); }
+    /// get the vertex fitter tool 
+    virtual const IVertexFit* 
+    vertexFitter          ( const std::string& nickname = "VertexFitter" ) const override
+    { return getTool<IVertexFit>( nickname ); }
+    /// get particle re-fitter tool
+    virtual const IParticleReFitter* 
+    particleReFitter      ( const std::string& ) const override { return 0; }
+    /// get particle filter tool
+    virtual const IParticleFilter* 
+    particleFilter        ( const std::string& ) const override { return 0; }
+    /// Accessor for decay-tree fitter 
+    virtual       IDecayTreeFit*
+    decayTreeFitter       ( const std::string& ) const override { return 0; }
+    /// Accessor for ParticleCombiner tool
+    virtual const IParticleCombiner* 
+    particleCombiner      ( const std::string& nickname = "ParticleCombiner" ) const override
+    { return getTool<IParticleCombiner>( nickname ); }
+    /// Accessor for mass-fitter tool
+    virtual const IMassFit* 
+    massFitter            ( const std::string& ) const override { return 0; }
+    /// Accessor for direction-fitter tool
+    virtual const IDirectionFit* 
+    directionFitter       ( const std::string& ) const override { return 0; }
+    /// Accessor for primary vertex re-fitter tool
+    virtual const IPVReFitter* 
+    primaryVertexReFitter ( const std::string& ) const override { return 0; }
+    /// Access the Flavour tagging tool
+    virtual IBTaggingTool* flavourTagging() const override { return 0; }
+    // ==========================================================================
+  public: // Incidents
+    void handle( const Incident& incident ) override;
+  public: // data 
+    // ==========================================================================
+    /// Return a container of local LHCb::Particle*
+    virtual const LHCb::Particle::Range  
+    particles       () const override { return LHCb::Particle::Range(); }  
+    /// Return a container of LHCb::RecVertex*, containing primary vertices.
+    virtual const LHCb::RecVertex::Range 
+    primaryVertices () const override;
+    /// Return the best primary vertex for a given LHCb::Particle.
+    virtual const LHCb::VertexBase*      
+    bestVertex      ( const LHCb::Particle* ) const override;
+    /// Return gaudi algorithm
+    virtual const GaudiAlgorithm* gaudiAlg ( ) const override { return this; }
+    // ==========================================================================
   protected:
     // ========================================================================
     /// monitor the selections? 
@@ -222,11 +293,48 @@ namespace LoKi
     /// LoKi service 
     mutable LoKi::Interface<LoKi::ILoKiSvc> m_lokiSvc ;   // major LoKi service 
     // ========================================================================
+  private: // tool helper
+    // ========================================================================
+    typedef std::map<std::string, std::string> ToolMap;
+    typedef std::map<std::string, IAlgTool*> Tools;
+    typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> P2PVMap;
+    // ========================================================================
+    template <class ToolInterface> 
+    const ToolInterface* getTool( const std::string& nickname ) const {
+      auto it_tool = m_tools.find(nickname);
+      if ( it_tool != m_tools.end() ) {
+        return dynamic_cast<const ToolInterface*>(it_tool->second);
+      }
+      auto it_nick = m_toolNames.find(nickname);
+      if ( it_nick == m_toolNames.end() ) {
+        this->Exception(std::string("No entry in Tools property for nickname ")
+                        + nickname + std::string("."));
+      }
+      auto tool = this->template tool<ToolInterface>(it_nick->second, this);
+      if ( !tool ) {
+        this->Exception(std::string("Could not retrieve tool of type ")
+                        + it_nick->second + std::string("."));
+      }
+      m_tools[nickname] = tool;
+      return tool;
+    }
+    // ========================================================================
+    const IRelatedPVFinder* relatedPVFinder( const std::string& nickname = "RelatedPVFinder" ) const
+    { return getTool<IRelatedPVFinder>( nickname ); }
   private: 
     // ========================================================================
     /// the flag to switch on-of monitoring 
     bool                 m_monitor ;     // the flag to switch on-of monitoring 
     // ========================================================================
+    Gaudi::StringKey     m_pvSelection ; // HLT PV selection
+    // ========================================================================
+    ToolMap  m_toolNames ; // HLT PV selection
+    // ========================================================================
+    // Actual tools
+    mutable Tools m_tools ;
+    // ========================================================================
+    // P2PV table
+    mutable P2PVMap m_p2PVMap ;
   private:
     // ========================================================================
     /// container of keys 

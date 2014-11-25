@@ -14,6 +14,7 @@ use               TrackEvent        v*    Event
 use               L0Event           v*    Event
 use               TrackInterfaces   v*    Tr
 use               DaVinciKernel     v*    Phys
+use               DaVinciInterfaces v*    Phys
 use               LoKiCore          v*    Phys
 use               LoKiNumbers       v*    Phys
 use               LoKiTracks        v*    Phys
