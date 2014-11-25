@@ -3,6 +3,24 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
+!========================= StrippingSys v9r2 2014-11-25 =========================
+
+* Phys/StrippingSelections v3r38
+
+* Phys/StrippingArchive v1r25
+ - Updated to new StrippingSelections for Stripping21(r1)
+
+* Phys/StrippingSettings v2r33
+
+* StrippingConf v4r13
+ - Modified StrippingConf class in order to accept different BadEventSelection
+   on a stream-basis
+ - Corrected a typo controlling the maximum number of combinations for
+   StdParticles
+ - Downgrade some warnings messages (that where not really warnings) to debug
+   level messages.
+
+
 !========================= StrippingSys v9r1 2014-10-30 =========================
 
 * Phys/CommonParticles v8r19
