@@ -46,8 +46,9 @@ StatusCode HPDPixelClusterSuppressionTool::initialize()
   // sanity checks
   if ( m_maxPixClusterSize > m_minHPDocc ) m_minHPDocc = m_maxPixClusterSize;
 
-  debug() << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << endmsg
-          << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endmsg;
+  if( msgLevel(MSG::DEBUG) )
+    debug() << "  Max HPD pixel cluster size            = " << m_maxPixClusterSize << std::endl
+            << "  Min HPD occupancy for clustering      = " << m_minHPDocc << endmsg;
 
   return sc;
 }

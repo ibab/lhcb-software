@@ -40,10 +40,11 @@ StatusCode HPDPixelClusteringTool::initialize()
   const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
-  debug() << "Using nearest neighbour pixel clustering tool" << endmsg
-          << " -> Minimum cluster size        = " << m_minClusSize << endmsg
-          << " -> Maximum cluster size        = " << m_maxClusSize << endmsg
-          << " -> Allow diagonals in clusters = " << m_allowDiags << endmsg;
+  if( msgLevel(MSG::DEBUG) )
+    debug() << "Using nearest neighbour pixel clustering tool" << std::endl
+            << " -> Minimum cluster size        = " << m_minClusSize << std::endl
+            << " -> Maximum cluster size        = " << m_maxClusSize << std::endl
+            << " -> Allow diagonals in clusters = " << m_allowDiags << endmsg;
 
   return sc;
 }

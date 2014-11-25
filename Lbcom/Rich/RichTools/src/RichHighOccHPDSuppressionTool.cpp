@@ -48,8 +48,9 @@ StatusCode HighOccHPDSuppressionTool::initialize()
   m_richSys = getDet<DeRichSystem>( DeRichLocations::RichSystem );
 
   // summary printout of options
-  debug() << "  Occupancy scale factor                = " << m_scale << endmsg
-          << "  Absolute max HPD occupancy            = " << m_overallMax << endmsg;
+  if( msgLevel(MSG::DEBUG) )
+    debug() << "  Occupancy scale factor                = " << m_scale << std::endl
+            << "  Absolute max HPD occupancy            = " << m_overallMax << endmsg;
 
   // return
   return sc;

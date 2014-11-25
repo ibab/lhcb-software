@@ -77,18 +77,20 @@ StatusCode HPDOccupancyTool::initialize()
   sc = initOccMap();
 
   // summary printout of options
-  debug() << m_whichRICH << " pixel suppression options :-" << endmsg
-          << "  Occupancy memory                      = " << m_memory << endmsg;
-  if ( m_useRunAv )
-  {
-    debug() << "  Will use running average HPD occupancies" << endmsg;
-  }
-  else
-  {
-    debug() << "  Will use fixed average HPD occupancies" << endmsg;
+  if( msgLevel(MSG::DEBUG) ) {
+    debug() << m_whichRICH << " pixel suppression options :-" << std::endl
+            << "  Occupancy memory                      = " << m_memory << endmsg;
+    if ( m_useRunAv )
+    {
+      debug() << "  Will use running average HPD occupancies" << endmsg;
+    }
+    else
+    {
+      debug() << "  Will use fixed average HPD occupancies" << endmsg;
+    }
   }
 
-  // return
+// return
   return sc;
 }
 
@@ -141,7 +143,7 @@ StatusCode HPDOccupancyTool::umsUpdateRICH2()
 
 StatusCode HPDOccupancyTool::initOccMap( const Rich::DetectorType rich )
 {
-  if ( msgLevel(MSG::DEBUG) )
+  if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Update triggered for " << rich
               << " HPD average occupancies" << endmsg;
 

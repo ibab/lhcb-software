@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2014-11-25 - Marco Cattaneo
+ - Fix unprotected debugs
+
 !========================= RichTools v2r44 2014-10-14 =========================
 ! 2014-09-29 - Gerhard Raven
  - on readback of conditions, explicitly catch the case where SmartID have been 
