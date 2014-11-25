@@ -4,6 +4,8 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingConf v4r13 2014-11-25 =========================
+
 ! 2014-11-24 - Stefano Perazzini
  - Bug fix in setting of BadEventSelection
 
@@ -12,7 +14,7 @@
    on a stream-basis
 
 ! 2014-11-13 - Stefano Perazzini
- - Corrected a typo controlling the maximum number of combinations for 
+ - Corrected a typo controlling the maximum number of combinations for
    StdParticles
 
 ! 2014-11-13 - Chris Jones
