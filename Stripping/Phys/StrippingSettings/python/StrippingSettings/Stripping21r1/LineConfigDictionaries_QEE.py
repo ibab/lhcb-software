@@ -387,7 +387,7 @@ InclbJets = {
 WmuAKTJets = {
     'BUILDERTYPE'  : 'WmuAKTJetsConf',
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'BhadronCompleteEvent' ],
+    'STREAMS' : [ 'EW' ],
     'CONFIG':{'WmuAKTJets_Prescale'    : 1.0,
               'WmuAKTJets_Postscale'   : 1.0,
               'min_mu_pT'              : 10., # GeV/c
@@ -400,7 +400,7 @@ WmuAKTJets = {
 WeAKTJets = {
     'BUILDERTYPE'  : 'WeAKTJetsConf',
     'WGs' : [ 'QEE' ],
-    'STREAMS' : [ 'BhadronCompleteEvent' ],
+    'STREAMS' : [ 'EW' ],
     'CONFIG':{'WeAKTJets_Prescale'    : 1.0,
               'WeAKTJets_Postscale'   : 1.0,
               'min_e_pT'              : 10., #GeV/c

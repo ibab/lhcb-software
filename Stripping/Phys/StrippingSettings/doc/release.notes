@@ -4,6 +4,9 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2014-11-25 - Andrea Contu
+ - Moved WeAKTJets and WmuAKTJets to the EW stream and update dictionaries
+
 ! 2014-11-24 - Stefano Perazzini
  - Moved back (Pseudo)DoubleTopo lines to BhadronCompleteEvent stream
 
