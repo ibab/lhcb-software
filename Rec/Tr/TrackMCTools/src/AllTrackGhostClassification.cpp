@@ -69,7 +69,7 @@ bool AllTrackGhostClassification::isGhost(LHCbIDs::const_iterator& start,
   return TrackGhostClassificationBase::isGhost(start,stop);
 }
 
-
+/*
 StatusCode AllTrackGhostClassification::specific(const LHCb::Track& aTrack,
                                        LHCb::GhostTrackInfo& tinfo) const{
   if (Track::Long == aTrack.type()) {
@@ -96,6 +96,7 @@ StatusCode AllTrackGhostClassification::specific(const LHCb::Track& aTrack,
     debug() << aTrack << endmsg;
   return sc;
 }
+*/
 
 StatusCode AllTrackGhostClassification::specific(LHCbIDs::const_iterator& start, 
                                        LHCbIDs::const_iterator& stop, 

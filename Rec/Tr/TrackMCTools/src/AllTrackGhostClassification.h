@@ -47,7 +47,7 @@ public:
   StatusCode specific(LHCbIDs::const_iterator& start, 
                 LHCbIDs::const_iterator& stop, LHCb::GhostTrackInfo& tinfo) const;
 
-  StatusCode specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
+  //StatusCode specific(const LHCb::Track& aTrack, LHCb::GhostTrackInfo& tinfo) const;
 
   ITrackGhostClassification* m_downstreamGhostClassification;
   ITrackGhostClassification* m_longGhostClassification;
