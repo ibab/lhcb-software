@@ -4,6 +4,8 @@
 ! Purpose     : Configuration of the stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSettings v2r33 2014-11-25 =========================
+
 ! 2014-11-25 - Andrea Contu
  - Moved WeAKTJets and WmuAKTJets to the EW stream and update dictionaries
 
@@ -12,9 +14,9 @@
 
 ! 2014-11-22 - Stefano Perazzini
  - Slight modification to MiniBias settings for Stripping21(r1)
- - Moved (Pseudo)DoubleTopo line of B2OC from BhadronCompleteEvent to 
+ - Moved (Pseudo)DoubleTopo line of B2OC from BhadronCompleteEvent to
    EW stream
- - Removed RelInfoBstautauZVisoBDT from config of B2XTau and B2XTauZVTOP for 
+ - Removed RelInfoBstautauZVisoBDT from config of B2XTau and B2XTauZVTOP for
    Stripping21(r1)
  - Updated dbases for stripping21(r1)
 
