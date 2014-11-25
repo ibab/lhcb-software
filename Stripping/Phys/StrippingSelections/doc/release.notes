@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingSelections v3r38 2014-11-25 =========================
+
 ! 2014-11-25 - Andrea Contu
  - Fix weird tabulation in Beauty2Charm_B2DXBuilder.py which was preventing svn commits
 
