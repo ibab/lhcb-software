@@ -4,6 +4,11 @@
 ! Purpose     : Archiving stripping selections
 ! -----------------------------------------------------------------------------
 
+!========================= StrippingArchive v1r25 2014-11-25 =========================
+
+! 2014-11-25 - Stefano Perazzini
+ - Updated to new StrippingSelections
+
 ! 2014-11-25 - Andrea Contu
  - Stripping21 up to date with StrippingSelections rev 180660
 
