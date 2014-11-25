@@ -26,6 +26,9 @@
 // =============================================================================
 #include "Event/Track.h"
 #include "Event/RecVertex.h"
+#include "Event/Particle.h"
+#include "Event/ProtoParticle.h"
+#include "Event/Vertex.h"
 // =============================================================================
 // L0Event
 // =============================================================================
@@ -56,17 +59,17 @@
 namespace Hlt_Stage_details {
 template <typename T> struct is_ : boost::static_visitor<bool> {
     bool operator()( const SmartRef<T>& ) const { return true; }
-    template <typename Any> 
+    template <typename Any>
     bool operator()( const Any&         ) const { return false; }
 };
 template <typename T> struct get_ : boost::static_visitor<T*> {
     T* operator()( SmartRef<T>& ref ) const { return ref.target(); }
-    template <typename Any> 
+    template <typename Any>
     T* operator()( Any&             ) const { return NULL; }
 };
 template <typename T> struct getc_ : boost::static_visitor<const T*> {
     const T* operator()( const SmartRef<T>& ref ) const { return ref.target(); }
-    template <typename Any> 
+    template <typename Any>
     const T* operator()( const Any&             ) const { return NULL; }
 };
 }
@@ -104,10 +107,10 @@ class GAUDI_API Stage : public ContainedObject
     friend class Hlt::Candidate;
     // ========================================================================
   public:
-    Stage() 
-#ifdef __GCCXML__ 
+    Stage()
+#ifdef __GCCXML__
         ;
-#else 
+#else
         : m_locker{nullptr}  {}
 #endif
 
@@ -120,9 +123,12 @@ class GAUDI_API Stage : public ContainedObject
         L0Calo = 2,
         L0DiMuon = 3,
         HltTrack = 4,
-        HltVertex = 5,
+        HltRecVertex = 5,
         HltMultiTrack = 6,
-        HltStage = 7
+        HltParticle = 7,
+        HltProtoParticle = 8,
+        HltVertex = 9,
+        HltStage = 10
     };
     // ========================================================================
   public:
@@ -224,20 +230,20 @@ class GAUDI_API Stage : public ContainedObject
      *  @endcode
      */
     template <typename T> const T* get() const
-    { return boost::apply_visitor( Hlt_Stage_details::getc_<T>(), m_object); } 
+    { return boost::apply_visitor( Hlt_Stage_details::getc_<T>(), m_object); }
 
     /** Get a wrapped object (non-const)
      *  @code
      *  LHCb::Track* track = stage->get<LHCb::Track>();
-     *  if (!track) { 
+     *  if (!track) {
      *     ... stage was not a track...
-     *  } else { 
+     *  } else {
      *     ... do something with track
      *  }
      *  @endcode
      */
     template <typename T> T* get()
-    { _checkLock(); return boost::apply_visitor( Hlt_Stage_details::get_<T>(), m_object); } 
+    { _checkLock(); return boost::apply_visitor( Hlt_Stage_details::get_<T>(), m_object); }
     /** Set a wrapped object
      *   @code
      *  Hlt::Stage* stage = ...;
@@ -405,7 +411,10 @@ class GAUDI_API Stage : public ContainedObject
                   , SmartRef<LHCb::Track>             // 4
                   , SmartRef<LHCb::RecVertex>         // 5
                   , SmartRef<Hlt::MultiTrack>         // 6
-                  , SmartRef<Hlt::Stage> >  m_object; // 7
+                  , SmartRef<LHCb::Particle>          // 7
+                  , SmartRef<LHCb::ProtoParticle>     // 8
+                  , SmartRef<LHCb::Vertex>            // 9
+                  , SmartRef<Hlt::Stage> >  m_object; // 10
     /// cache
     Cache m_cache; // cache
     /// history
@@ -565,11 +574,12 @@ inline std::string Stage::info<std::string>( const KeyType& key,
 // ==========================================================================
 template void Hlt::Stage::set(const LHCb::L0MuonCandidate*) ;
 template void Hlt::Stage::set(const LHCb::L0CaloCandidate*) ;
-template void Hlt::Stage::set(const  Hlt::L0DiMuonCandidate*) ;
+template void Hlt::Stage::set(const Hlt::L0DiMuonCandidate*) ;
 template void Hlt::Stage::set(const LHCb::Track*) ;
 template void Hlt::Stage::set(const LHCb::RecVertex*) ;
-template void Hlt::Stage::set(const  Hlt::MultiTrack*) ;
-template void Hlt::Stage::set(const  Hlt::Stage*) ;
+template void Hlt::Stage::set(const Hlt::MultiTrack*) ;
+template void Hlt::Stage::set(const LHCb::Particle*) ;
+template void Hlt::Stage::set(const Hlt::Stage*) ;
 
 // ==========================================================================
 /// output operatoor

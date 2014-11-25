@@ -87,7 +87,7 @@ void Hlt::Stage::_checkLock() const
 // ============================================================================
 struct getContainedObjectPtr_ : boost::static_visitor<const ContainedObject*> {
     result_type operator()(boost::blank) const { return nullptr; }
-    template <typename T> 
+    template <typename T>
     result_type operator()(const T& operand) const { return operand.target();  }
 };
 
@@ -131,6 +131,12 @@ std::ostream& Hlt::Stage::fillStream( std::ostream& s ) const
         s << "Track/" << (void*)get<LHCb::Track>();
     } else if ( is<LHCb::RecVertex>() ) {
         s << "RecVertex/" << (void*)get<LHCb::RecVertex>();
+    } else if ( is<LHCb::Particle>() ){
+        s << "Particle/" << (void*)get<LHCb::Particle>();
+    } else if ( is<LHCb::Particle>() ){
+        s << "ProtoParticle/" << (void*)get<LHCb::ProtoParticle>();
+    } else if ( is<LHCb::Particle>() ){
+        s << "Vertex/" << (void*)get<LHCb::Vertex>();
     } else if ( is<LHCb::L0CaloCandidate>() ) {
         s << "L0CaloCandidate/" << (void*)get<LHCb::L0CaloCandidate>();
     } else if ( is<LHCb::L0MuonCandidate>() ) {

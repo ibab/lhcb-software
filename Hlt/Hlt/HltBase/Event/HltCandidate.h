@@ -189,11 +189,11 @@ class GAUDI_API Candidate : public ContainedObject
     */
   private :
   /** get the stage from the Hlt Candidate -- public version is 'get<Stage>
-   *  @param slot the slot to be used for data extraction 
-   *     - 0 corresponds to the current stage , 
-   *     - negative value corresponds to initiator stage 
+   *  @param slot the slot to be used for data extraction
+   *     - 0 corresponds to the current stage ,
+   *     - negative value corresponds to initiator stage
    *     - positive value corresponds to step-back in history
-   *  @return the stage 
+   *  @return the stage
    */
     const Hlt::Stage* stage( int slot ) const {
         return ( slot == 0 ) ? currentStage()      // current
@@ -205,21 +205,21 @@ class GAUDI_API Candidate : public ContainedObject
   // ===========================================================================
   /** get the underlying object from the stage.
    *  any type support by the stage can be 'got'.
-   * 
-   *  @param slot the slot to be used for data extraction 
-   *     - 0 corresponds to the current stage , 
-   *     - negative value corresponds to initiator stage 
+   *
+   *  @param slot the slot to be used for data extraction
+   *     - 0 corresponds to the current stage ,
+   *     - negative value corresponds to initiator stage
    *     - positive value corresponds to step-back in history
    *  @return the track
    */
-      template <typename T> const T* get( int slot = 0 ) const 
+      template <typename T> const T* get( int slot = 0 ) const
 #ifdef __GCCXML__
           ;
 #else
       {
         const Hlt::Stage* _stage = this->stage( slot ) ;
-        return std::is_same<typename std::remove_cv<T>::type,Hlt::Stage>::value ? (const T*)_stage 
-             : ( _stage ? _stage->get<T>() : 0 );                // RETURN 
+        return std::is_same<typename std::remove_cv<T>::type,Hlt::Stage>::value ? (const T*)_stage
+             : ( _stage ? _stage->get<T>() : 0 );                // RETURN
       }
 #endif
     // ========================================================================
@@ -394,6 +394,27 @@ template <>
 struct CandidateType2Id<LHCb::RecVertex>
 {
     enum {
+        value = Hlt::Stage::HltRecVertex
+    };
+};
+template <>
+struct CandidateType2Id<LHCb::Particle>
+{
+    enum {
+        value = Hlt::Stage::HltParticle
+    };
+};
+template <>
+struct CandidateType2Id<LHCb::ProtoParticle>
+{
+    enum {
+        value = Hlt::Stage::HltProtoParticle
+    };
+};
+template <>
+struct CandidateType2Id<LHCb::Vertex>
+{
+    enum {
         value = Hlt::Stage::HltVertex
     };
 };
@@ -444,6 +465,26 @@ template <>
 struct CandidateId2Type<Hlt::Stage::HltMultiTrack>
 {
     typedef Hlt::MultiTrack Type;
+};
+template <>
+struct CandidateId2Type<Hlt::Stage::HltRecVertex>
+{
+    typedef LHCb::RecVertex Type;
+};
+template <>
+struct CandidateId2Type<Hlt::Stage::HltParticle>
+{
+    typedef LHCb::Particle Type;
+};
+template <>
+struct CandidateId2Type<Hlt::Stage::HltProtoParticle>
+{
+    typedef LHCb::ProtoParticle Type;
+};
+template <>
+struct CandidateId2Type<Hlt::Stage::HltVertex>
+{
+    typedef LHCb::Vertex Type;
 };
 template <>
 struct CandidateId2Type<Hlt::Stage::HltStage>
