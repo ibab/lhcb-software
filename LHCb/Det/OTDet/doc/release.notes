@@ -2,6 +2,9 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2014-11-25 - Wouter Hulsbergen
+ - Changes in implementation of monolayer alignment
+
 !========================= OTDet v8r12 2014-05-12 =========================
 ! 2014-04-02 - Manuel Tobias Schiller
  - Reimplement the tanh approximation in WalkRelation; the new version is both

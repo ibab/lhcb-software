@@ -180,6 +180,12 @@ public:
    */
   bool monoLayerB(const unsigned int aStraw) const;
 
+  /** return the monolayer for a straw (0 or 1)
+   * @param aStraw the straw to check
+   * @return unsigned char
+   */
+  unsigned char mono(const unsigned int aStraw) const;
+
   /** @return the straw to the left of a given straw */
   unsigned int nextLeftStraw(const unsigned int aStraw) const;
 
@@ -372,6 +378,15 @@ public:
   /// return pitch of straws in one mono layer
   double xPitch() const { return m_xPitch ; }
 
+  /** Set parameters for mono layer alignment **/
+  StatusCode setMonoAlignment( double dx, double ddxdy ) ;
+
+  /** Get parameters for mono layer alignment **/
+  double getMonoDx() const { return m_monoDx[0]-m_monoDx[1] ; }
+  
+  /** Get parameters for mono layer alignment **/
+  double getMonoDdxdy() const { return m_monoDdxdy[0]-m_monoDdxdy[1] ; }
+
   /// Private member methods
 private:
 
@@ -462,13 +477,13 @@ private :
   bool m_yInverted;                             ///< swap y min and y max
   std::pair<double,double> m_range[2];          ///< range -> wire length
   std::auto_ptr<LHCb::Trajectory> m_midTraj[2]; ///< traj of middle of module
-  Gaudi::XYZVector m_dir;                       ///< points to readout
+  Gaudi::XYZVector m_dir[2];                    ///< points to readout
   Gaudi::Plane3D m_plane;                       ///< plane through center of module
   Gaudi::Plane3D m_entryPlane;                  ///< entry plane
   Gaudi::Plane3D m_exitPlane;                   ///< exit plane
   Gaudi::XYZPoint m_centerModule;               ///< center of module
-  double m_dxdy ;                               ///< dx/dy along straw
-  double m_dzdy ;                               ///< dx/dz along straw
+  double m_dxdy[2] ;                            ///< dx/dy along straw
+  double m_dzdy[2] ;                            ///< dx/dz along straw
   double m_dy[2] ;                              ///< difference in y coordinates of straw end points
   Gaudi::XYZVector m_dp0di ;                    ///< vector with change in straw position in units of pitch
   Gaudi::XYZPoint  m_p0[2] ;                    ///< position of first straw
@@ -478,8 +493,7 @@ private :
   double m_propagationVelocity ;                ///< propagation velocity
   double m_propagationVelocityY ;               ///< propagation velocity in y-direction (cached for speed)
   double m_halfXPitch;                          ///< Half of the pitch in x (needed for staggering)
-  double m_monoAXZero;                          ///< offset of staggering in first monolayer
-  double m_monoBXZero;                          ///< offset of staggering in second monolayer
+  double m_monoXZero[2];                        ///< offset of staggering in each monolayer
   // Calibration and status CONDDB stuff
   std::string           m_calibrationName;      ///< Name of calibration condition
   SmartRef< Condition > m_calibration;          ///< Calibration condition
@@ -488,6 +502,8 @@ private :
   unsigned char m_strawStatus[MAXNUMCHAN] ;     ///< vector of channel statuses
 private:
   OTDet::WalkRelation m_walkrelation ;          ///< walk-relation
+  double m_monoDx[2];
+  double m_monoDdxdy[2];
 public:
   /**
    * Set the walk-relation for all straws in this module.
@@ -501,10 +517,6 @@ public:
 
   double propagationTime(const LHCb::OTChannelID& channel, double arclen) const;
   double propagationTimeFromY(const LHCb::OTChannelID& channel, double globalY) const;
-private:
-  double m_monoDx[2];
-  double m_monoDdxdy[2];
-  Gaudi::XYZVector m_monoDir[2];
 };
 
 // -----------------------------------------------------------------------------
@@ -586,6 +598,10 @@ inline bool DeOTModule::monoLayerB(const unsigned int aStraw) const {
   return (aStraw > m_nStraws);
 }
 
+inline unsigned char DeOTModule::mono(const unsigned int aStraw) const {
+  return (aStraw-1)/m_nStraws ;
+}
+
 inline unsigned int DeOTModule::nextLeftStraw(const unsigned int aStraw) const {
   return (aStraw <= 1u || aStraw == m_nStraws+1u) ? 0u : aStraw-1u;
 }
@@ -661,16 +677,17 @@ inline Gaudi::XYZPoint DeOTModule::globalPoint(const double x,
 
 /// This gives you the x position of the wire
 inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
-  unsigned int tmpStraw = (!monoLayerB(aStraw)?aStraw-1u:aStraw-m_nStraws-1u);
+  // why is this so terribly complicated?
+  unsigned int tmpStraw = (aStraw-1u)%m_nStraws ;
+  unsigned int mono = this->mono(aStraw) ;
   //double uLeftStraw = (!monoLayerB(aStraw)?(-(0.5*m_nStraws-0.25)+0.5)
   //                     :-(0.5*m_nStraws-0.25))*m_xPitch;
-  double uLeftStraw = ( !monoLayerB( aStraw ) ? double( m_nStraws ) + m_monoAXZero :
-                        double( m_nStraws ) + m_monoBXZero )*-m_halfXPitch;
-  return uLeftStraw + tmpStraw * m_xPitch + m_monoDx[(!monoLayerB(aStraw) ? 0 : 1)];
+  double uLeftStraw = (double( m_nStraws ) + m_monoXZero[mono])*-m_halfXPitch;
+  return uLeftStraw + tmpStraw * m_xPitch + m_monoDx[mono] ;
 }
 
 inline double DeOTModule::localZOfStraw(const unsigned int aStraw) const {
-  return (monoLayerA(aStraw) ? -0.5: 0.5)*m_zPitch;
+  return ( mono(aStraw) - 0.5 )*m_zPitch;
 }
 
 inline double DeOTModule::distanceAlongWire(const double xHit,
@@ -682,8 +699,8 @@ inline double DeOTModule::distanceAlongWire(const double xHit,
 
 inline Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int aStraw) const {
   /// get the global coordinate of the middle of the channel
-  unsigned int mono = (monoLayerA(aStraw)?0u:1u);
-  return m_midTraj[mono]->position(localUOfStraw(aStraw));
+  //FIXME: if this is used in pattern reco, we should make a real effort to make it faster
+  return m_midTraj[mono(aStraw)]->position(localUOfStraw(aStraw));
 }
 
 inline Gaudi::XYZPoint DeOTModule::centerOfModule() const {
@@ -748,14 +765,14 @@ inline void DeOTModule::trajectory(unsigned int aStraw,
 				   double& xAtYEq0, double& zAtYEq0,
 				   double& ybegin, double& yend) const
 {
-  unsigned int mono     = monoLayerA(aStraw) ? 0u : 1u ;
-  unsigned int tmpstraw = mono==0u ? aStraw-1u : aStraw - m_nStraws -1u ;
-  dxdy    = m_dxdy ;
-  dzdy    = m_dzdy ;
+  unsigned int mono = this->mono(aStraw) ;
+  unsigned int tmpstraw = (aStraw - 1)%m_nStraws ;
+  dxdy    = m_dxdy[mono] ;
+  dzdy    = m_dzdy[mono] ;
   ybegin  = m_p0[mono].y() + tmpstraw * m_dp0di.y() ;
   yend    = ybegin + m_dy[mono] ;
-  xAtYEq0 = m_p0[mono].x() + tmpstraw * m_dp0di.x() - ybegin * m_dxdy ;
-  zAtYEq0 = m_p0[mono].z() + tmpstraw * m_dp0di.z() - ybegin * m_dzdy ;
+  xAtYEq0 = m_p0[mono].x() + tmpstraw * m_dp0di.x() - ybegin * dxdy ;
+  zAtYEq0 = m_p0[mono].z() + tmpstraw * m_dp0di.z() - ybegin * dzdy ;
 }
 
 inline double DeOTModule::driftRadius( double drifttime ) const {

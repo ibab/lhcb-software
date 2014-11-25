@@ -61,21 +61,20 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_yMaxLocal(0.0),
   m_xInverted(false),
   m_yInverted(false),
-  m_dxdy(0.0),
-  m_dzdy(0.0),
+  m_dxdy{0.0,0.0},
+  m_dzdy{0.0,0.0},
   m_propagationVelocity(0.0),
   m_propagationVelocityY(0.0),
   m_halfXPitch(0.0),
-  m_monoAXZero(0.0),
-  m_monoBXZero(0.0),
+  m_monoXZero{0.0,0.0},
   m_calibrationName( "Calibration" ),
   m_calibration(),
   m_statusName( "Status" ),
-  m_status()
+  m_status(),
+  m_monoDx{0.0,0.0},
+  m_monoDdxdy{0.0,0.0}
 {
   /// Constructor
-  m_monoDx[0] = m_monoDx[1] = 0;
-  m_monoDdxdy[0] = m_monoDdxdy[1] = 0;
 }
 
 
@@ -109,8 +108,8 @@ StatusCode DeOTModule::initialize() {
   m_xPitch     = ot->params()->param<double>("strawPitchX");
   m_halfXPitch = 0.5*m_xPitch;
   m_zPitch = ot->params()->param<double>("strawPitchZ");
-  m_monoAXZero = ot->params()->param<double>("firstMonoOffset");
-  m_monoBXZero = ot->params()->param<double>("secondMonoOffset");
+  m_monoXZero[0] = ot->params()->param<double>("firstMonoOffset");
+  m_monoXZero[1] = ot->params()->param<double>("secondMonoOffset");
   m_cellRadius = ot->params()->param<double>("cellRadius");
   m_inefficientRegion = ot->params()->param<double>("inefficientRegion");
   m_sensThickness = ot->params()->param<double>("sensThickness");
@@ -376,8 +375,8 @@ void DeOTModule::monoLayerIntersection(int monolayer,
   Gaudi::XYZVector dX = aPoint - m_p0[monolayer] ;
 
   // the is the most efficient I could come up with
-  double trackCrossWireX =   (ty*m_dzdy -      1) ;
-  double trackCrossWireY = - (tx*m_dzdy - m_dxdy) ;
+  double trackCrossWireX =   (ty*m_dzdy[monolayer] -      1) ;
+  double trackCrossWireY = - (tx*m_dzdy[monolayer] - m_dxdy[monolayer]) ;
 
   double a = trackCrossWireX * ( dX.x() - tx * dX.z() ) ;
   double b = trackCrossWireY * ( dX.y() - ty * dX.z() ) ;
@@ -425,8 +424,16 @@ StatusCode DeOTModule::cacheInfo() {
   if (bottomModule()) std::swap(yUpper, yLower);
   Gaudi::XYZPoint g1 = globalPoint(0.0, yLower, 0.0);
   Gaudi::XYZPoint g2 = globalPoint(0.0, yUpper, 0.0);
-  m_dir = g2 - g1;
-  m_dir = m_dir.Unit();
+  Gaudi::XYZVector dir = (g2 - g1).Unit() ;
+  
+  /// Fix directions for monolayer shifts. Best to do this also in the
+  /// local frame, but we'll assume deviations are small.
+  for( unsigned char mono=0; mono<2; ++mono) {
+    double y0 = (yUpper + yLower)/2 ;
+    Gaudi::XYZPoint monog1 = globalPoint((yLower-y0)*m_monoDdxdy[mono], yLower, 0.0);
+    Gaudi::XYZPoint monog2 = globalPoint((yUpper-y0)*m_monoDdxdy[mono], yUpper, 0.0);
+    m_dir[mono] = Gaudi::XYZVector(monog2-monog1).Unit();
+  }
 
   /// trajs of middle of monolayers
   Gaudi::XYZPoint g3[2];
@@ -465,28 +472,30 @@ StatusCode DeOTModule::cacheInfo() {
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_sensThickness));
   m_centerModule = globalPoint(0.,0.,0.);
 
-  // I'll extract these from trajectories, although that's a bit
-  // nonsense, of course.
-  m_dxdy = m_dir.x()/m_dir.y() ;
-  m_dzdy = m_dir.z()/m_dir.y() ;
+  // These are the trajectories as used by the pattern reco. We
+  // extract these from the track fit trajectories: That may seem
+  // nonsense, but it is most fool proof. Do this such that it also
+  // works for piecewise trajectories.
   m_dp0di = (g4[0]-g3[0]).unit() * m_xPitch ;
   for( int imono=0; imono<2; ++imono) {
     std::auto_ptr<Trajectory> traj = trajectoryFirstWire(imono) ;
     Gaudi::XYZPoint p0 = traj->position(traj->beginRange()) ;
     Gaudi::XYZPoint p1 = traj->position(traj->endRange()) ;
-    m_dy[imono] = p1.y() - p0.y() ;
+    Gaudi::XYZVector dp = p1 - p0 ;
+    m_dy[imono] = dp.y() ;
     m_p0[imono] = p0 ;
+    m_dxdy[imono] = dp.x()/dp.y() ;
+    m_dzdy[imono] = dp.z()/dp.y() ;
   }
+  
+  // propagation velocity along y-direction (includes correction for readout side)
+  m_propagationVelocityY = m_propagationVelocity * dir.y() ;
 
   // Update the stereo angle. We correct by 'pi' if necessary.
-  Gaudi::XYZVector dir = m_dir ;
   if(dir.y()<0) dir *= -1 ;
   m_angle = atan2(-dir.x(),dir.y()) ;
   m_cosAngle    = cos( m_angle ) ;
   m_sinAngle    = sin( m_angle ) ;
-
-  // propagation velocity along y-direction (includes correction for readout side)
-  m_propagationVelocityY = m_propagationVelocity * m_dir.y() ;
 
   // the t0 will be defined such that
   //
@@ -510,9 +519,6 @@ StatusCode DeOTModule::cacheInfo() {
   /// Only call this one if the calibration condition doesn't exist
   /// Call it after all the trajectory stuff and after we've set some default tofs
   if ( !hasCondition( m_calibrationName ) ) fallbackDefaults();
-
-  m_monoDir[0] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[0], m_dir.y(), m_dir.z()).Unit();
-  m_monoDir[1] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[1], m_dir.y(), m_dir.z()).Unit();
 
   return StatusCode::SUCCESS;
 }
@@ -558,23 +564,17 @@ StatusCode DeOTModule::calibrationCallback() {
 
     m_monoDx[0] = m_monoDx[1] = 0;
     m_monoDdxdy[0] = m_monoDdxdy[1] = 0;
-    if(m_calibration->exists("AlignmentMono"))
-    {
-      const std::vector<double>& alignmentMono = m_calibration->param< std::vector<double> >("AlignmentMono");
-      if(alignmentMono.size() == 4)
-      {
-        m_monoDx[0] = alignmentMono[0];
-        m_monoDx[1] = alignmentMono[1];
-        m_monoDdxdy[0] = alignmentMono[2] * 0.001;
-        m_monoDdxdy[1] = alignmentMono[3] * 0.001;
+    if(m_calibration->exists("MonoAlignment")) {
+      const std::vector<double>& pars = m_calibration->param< std::vector<double> >("MonoAlignment");
+      if(pars.size() == 2) {
+        m_monoDx[0]    =  pars[0]/2 ;
+        m_monoDx[1]    = -pars[0]/2;
+        m_monoDdxdy[0] = pars[1]/2 ;
+        m_monoDdxdy[1] = -pars[1]/2;
+      } else {
+        msg << MSG::ERROR << "There should be 2 mono alignment parameters: " << pars.size() << " provided" << endmsg;
       }
-      else
-      {
-        msg << MSG::ERROR << "There should be 4 mono alignment parameters: " << alignmentMono.size() << " provided" << endmsg;
-      }
-    }
-    m_monoDir[0] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[0], m_dir.y(), m_dir.z()).Unit();
-    m_monoDir[1] = Gaudi::XYZVector(m_dir.x() + m_monoDdxdy[1], m_dir.y(), m_dir.z()).Unit();
+    } 
 
     // how we set the straw t0 depends on the size of the vector.  we
     // allow that the calibration sets either every connected channel,
@@ -595,6 +595,9 @@ StatusCode DeOTModule::calibrationCallback() {
     msg << MSG::ERROR << "Failed to update calibration conditions for " << this->name() << "!" << endmsg;
     return StatusCode::FAILURE;
   }
+
+  // we need to propagate the info from the change in wire direction
+  cacheInfo() ;
 
   return StatusCode::SUCCESS;
 }
@@ -631,16 +634,14 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) c
   /// Default is 0 -> straw 1
   double lUwire = (monolayer == 1 ? localUOfStraw(m_nStraws+1) : localUOfStraw(1) );
   Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire);
-  if(m_monoDdxdy[monolayer] != 0) return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_monoDir[monolayer], m_range[monolayer], true));
-  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir, m_range[monolayer], true));
+  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir[monolayer], m_range[monolayer], true));
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
   /// Default is 1 -> straw 64(s3)/128
   double lUwire = (monolayer == 0 ? localUOfStraw(m_nStraws) : localUOfStraw(2*m_nStraws) );
   Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire);
-  if(m_monoDdxdy[monolayer] != 0) return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_monoDir[monolayer], m_range[monolayer], true));
-  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir, m_range[monolayer], true));
+  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir[monolayer], m_range[monolayer], true)) ;
 }
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
@@ -653,13 +654,9 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
   }
 
   unsigned int aStraw = aChan.straw();
-
-  unsigned int mono = (monoLayerA(aStraw)?0u:1u);
-
+  unsigned int mono = this->mono(aStraw) ;
   Gaudi::XYZPoint posWire = m_midTraj[mono]->position( localUOfStraw(aStraw) );
-
-  if(m_monoDdxdy[mono] != 0) return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_monoDir[mono], m_range[mono],true));
-  return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir, m_range[mono],true));
+  return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir[mono], m_range[mono],true));
 }
 
 StatusCode DeOTModule::setStrawStatus( const std::vector< int >& flags )
@@ -827,6 +824,19 @@ StatusCode DeOTModule::setWalkRelation(const OTDet::WalkRelation& walkRelation) 
   return StatusCode::SUCCESS;
 }
 
+StatusCode DeOTModule::setMonoAlignment(double dx, double ddxdy)
+{
+  // Do this via the update service such that the condition is created.
+  std::vector<double> pars{ dx, ddxdy } ;
+  if(m_calibration->exists("MonoAlignment")) m_calibration->param< std::vector<double> >("MonoAlignment") = pars;
+  else m_calibration->addParam("MonoAlignment",pars, "Monolayer alignment parameters");
+
+  updMgrSvc()->invalidate( m_calibration.target() );
+  StatusCode sc = updMgrSvc()->update( this );
+
+  return sc ;
+}
+
 double DeOTModule::propagationTime(const LHCb::OTChannelID& channel, double arclen) const
 {
   double dist2readout = trajectory(channel)->endRange() - arclen;
@@ -836,7 +846,8 @@ double DeOTModule::propagationTime(const LHCb::OTChannelID& channel, double arcl
 
 double DeOTModule::propagationTimeFromY(const LHCb::OTChannelID& channel, double globalY) const
 {
-  double dist2readout = (trajectory(channel)->endPoint().y() - globalY) / m_dir.y();
+  //FIXME: isn't there a quicker way to do this, without the trajectory?
+  double dist2readout = (trajectory(channel)->endPoint().y() - globalY) / m_dir[mono(channel)].y() ;
   double dist2strawend = wireLength(channel) - dist2readout;
   return dist2readout / propagationVelocity() + walkRelation().walk(dist2strawend);
 }
