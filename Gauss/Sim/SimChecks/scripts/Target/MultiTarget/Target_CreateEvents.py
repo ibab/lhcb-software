@@ -79,7 +79,7 @@ Zplane = {'Al': {1: '200*mm', 5: '400*mm', 10: '600*mm'}, 'Be': {1: '800*mm', 5:
 Zorig = {'Al': {1: '100*mm', 5: '300*mm', 10: '500*mm'}, 'Be': {1: '700*mm', 5: '900*mm', 10: '1100*mm'}, 'Si': {1: '1300*mm', 5: '1500*mm', '10': '1700*mm'}}
 
 
-def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) :
+def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks,parallel = False) :
 
 	#Creating option file for analysis with all the options available
 
@@ -149,10 +149,12 @@ def RunTargetJobs(path, models, particlesTodo, energies, materialsTodo, thicks) 
 						command = 's|projEng = .*|projEng = '+str(energy)+'|'
 						sub = subprocess.call(['sed', '-i', command, inputfile])
 
-						process = mp.Process(target=submit)
-						process.start()
-						jobs.append(process)
-						#sub = subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
+						if parallel :
+							process = mp.Process(target=submit)
+							process.start()
+							jobs.append(process)
+						else :
+							subprocess.call(['gaudirun.py', 'Gauss-Job-MultiTarget-MultiTemporayOptionsFile.py' ])
 					
 					for j in jobs :
 						j.join()
