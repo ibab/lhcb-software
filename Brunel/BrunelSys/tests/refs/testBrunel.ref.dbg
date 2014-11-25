@@ -1,5 +1,5 @@
-# --> Including file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
-# <-- End of file '/nightlies/jenkins/workspace/nightly-slot-test-project-platform@4/build/BRUNEL/BRUNEL_HEAD/BrunelSys/tests/options/testBrunel.py'
+# --> Including file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
+# <-- End of file '/afs/cern.ch/work/c/cattanem/private/cmtuser/Brunel_HEAD/BrunelSys/tests/options/testBrunel.py'
 # applying configuration of Brunel
 # /***** User Brunel/Brunel **************************************************************************
 # |-DatasetName         = 'Brunel'
@@ -103,8 +103,8 @@
 # WARNING: Using default tag dq-20140822 for partition DQFLAGS
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v47r1
-                                          running on lbbuild04.cern.ch on Mon Oct 13 07:11:28 2014
+                                                   Welcome to Brunel version v47r2p1
+                                          running on lxplus0180.cern.ch on Tue Nov 25 11:23:45 2014
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -113,7 +113,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.46 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
@@ -702,7 +702,7 @@ ToolSvc.L0DUCon...   INFO --------------- TCK = 0x10000------------------
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.46 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.33 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO --------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1082,71 +1082,66 @@ ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
 Listing sources of Unprotected and Unseen messages
-==============================================================================
- Message Source                                         |   Level |    Count
---------------------------------------------------------+---------+-----------
- ANNGPIDDownstreamElectron                              |   DEBUG |        3
- ANNGPIDDownstreamGhost                                 |   DEBUG |        3
- ANNGPIDDownstreamKaon                                  |   DEBUG |        3
- ANNGPIDDownstreamMuon                                  |   DEBUG |        3
- ANNGPIDDownstreamPion                                  |   DEBUG |        3
- ANNGPIDDownstreamProton                                |   DEBUG |        3
- ANNGPIDLongElectron                                    |   DEBUG |        3
- ANNGPIDLongGhost                                       |   DEBUG |        3
- ANNGPIDLongKaon                                        |   DEBUG |        3
- ANNGPIDLongMuon                                        |   DEBUG |        3
- ANNGPIDLongPion                                        |   DEBUG |        3
- ANNGPIDLongProton                                      |   DEBUG |        3
- ANNGPIDUpstreamElectron                                |   DEBUG |        3
- ANNGPIDUpstreamGhost                                   |   DEBUG |        3
- ANNGPIDUpstreamKaon                                    |   DEBUG |        3
- ANNGPIDUpstreamMuon                                    |   DEBUG |        3
- ANNGPIDUpstreamPion                                    |   DEBUG |        3
- ANNGPIDUpstreamProton                                  |   DEBUG |        3
- ChargedProtoANNPIDMoni                                 |   DEBUG |        1
- DecodeRawRichOffline                                   |   DEBUG |        1
- FileRecordCnvSvc                                       | VERBOSE |       16
- FileRecordCnvSvc                                       |   DEBUG |        4
- ONLINE                                                 | VERBOSE |        9
- OfflineENNFinderR1GasBottom                            |   DEBUG |        1
- OfflineENNFinderR1GasTop                               |   DEBUG |        1
- OfflineENNFinderR2GasLeft                              |   DEBUG |        1
- OfflineENNFinderR2GasRight                             |   DEBUG |        1
- RiCKResLong                                            |   DEBUG |        1
- RiCKResLong.RichStereoFitter                           |   DEBUG |        1
- RichAlignMoniR1Gas                                     |   DEBUG |        2
- RichAlignMoniR2Gas                                     |   DEBUG |        2
- RichHPDIFBMoni.RichHPDPixelClusterFinder               |   DEBUG |        1
- RichOfflineGPIDDigSel                                  |   DEBUG |        1
- RichOfflineGPIDFin                                     |   DEBUG |        1
- RichOfflineGPIDInit                                    |   DEBUG |        2
- RichOfflineGPIDLLIt0                                   |   DEBUG |        1
- RichOfflineGPIDLLIt0.GPIDLikelihoodTool                |   DEBUG |        1
- RichOfflineGPIDLLIt1                                   |   DEBUG |        1
- RichOfflineGPIDLLIt1.GPIDLikelihoodTool                |   DEBUG |        1
- RichOfflineGPIDTrSel                                   |   DEBUG |        2
- RichRecPixelQC                                         |   DEBUG |        2
- RootCnvSvc                                             |   DEBUG |        3
- RootHistSvc                                            |   DEBUG |        1
- TimingAuditor.TIMER                                    |   DEBUG |        1
- ToolSvc.Offline_GPIDTrackCreator                       |   DEBUG |        1
- ToolSvc.Offline_RichCherenkovAngle                     |   DEBUG |        4
- ToolSvc.Offline_RichCherenkovResolution                |   DEBUG |        1
- ToolSvc.Offline_RichExpectedTrackSignal                |   DEBUG |        5
- ToolSvc.Offline_RichGeomEff                            |   DEBUG |        1
- ToolSvc.Offline_RichMassHypoRings                      |   DEBUG |        1
- ToolSvc.Offline_RichParticleProperties                 |   DEBUG |        2
- ToolSvc.Offline_RichPhotonCreator                      |   DEBUG |        1
- ToolSvc.Offline_RichPhotonCreator.PhotonParams         |   DEBUG |        1
- ToolSvc.Offline_RichPhotonCreator.Predictor            |   DEBUG |        1
- ToolSvc.Offline_RichPixelCreator                       |   DEBUG |        1
- ToolSvc.Offline_RichPixelCreator.PixelClusteringRich1  |   DEBUG |        1
- ToolSvc.Offline_RichPixelCreator.PixelClusteringRich2  |   DEBUG |        1
- ToolSvc.Offline_RichPixelCreator.PixelSuppressRich1    |   DEBUG |        3
- ToolSvc.Offline_RichPixelCreator.PixelSuppressRich2    |   DEBUG |        3
- ToolSvc.Offline_RichRayTracing                         |   DEBUG |        2
- ToolSvc.Offline_RichRecGeometry                        |   DEBUG |        2
- ToolSvc.Offline_RichTrackCreator.TrSegMaker            |   DEBUG |        1
- ToolSvc.SequencerTimerTool                             |   DEBUG |        1
- ToolSvc.SequencerTimerTool                             |    INFO |        4
-==============================================================================
+=======================================================================
+ Message Source                                  |   Level |    Count
+-------------------------------------------------+---------+-----------
+ ANNGPIDDownstreamElectron                       |   DEBUG |        3
+ ANNGPIDDownstreamGhost                          |   DEBUG |        3
+ ANNGPIDDownstreamKaon                           |   DEBUG |        3
+ ANNGPIDDownstreamMuon                           |   DEBUG |        3
+ ANNGPIDDownstreamPion                           |   DEBUG |        3
+ ANNGPIDDownstreamProton                         |   DEBUG |        3
+ ANNGPIDLongElectron                             |   DEBUG |        3
+ ANNGPIDLongGhost                                |   DEBUG |        3
+ ANNGPIDLongKaon                                 |   DEBUG |        3
+ ANNGPIDLongMuon                                 |   DEBUG |        3
+ ANNGPIDLongPion                                 |   DEBUG |        3
+ ANNGPIDLongProton                               |   DEBUG |        3
+ ANNGPIDUpstreamElectron                         |   DEBUG |        3
+ ANNGPIDUpstreamGhost                            |   DEBUG |        3
+ ANNGPIDUpstreamKaon                             |   DEBUG |        3
+ ANNGPIDUpstreamMuon                             |   DEBUG |        3
+ ANNGPIDUpstreamPion                             |   DEBUG |        3
+ ANNGPIDUpstreamProton                           |   DEBUG |        3
+ ChargedProtoANNPIDMoni                          |   DEBUG |        1
+ DecodeRawRichOffline                            |   DEBUG |        1
+ FileRecordCnvSvc                                | VERBOSE |       16
+ FileRecordCnvSvc                                |   DEBUG |        4
+ ONLINE                                          | VERBOSE |        9
+ OfflineENNFinderR1GasBottom                     |   DEBUG |        1
+ OfflineENNFinderR1GasTop                        |   DEBUG |        1
+ OfflineENNFinderR2GasLeft                       |   DEBUG |        1
+ OfflineENNFinderR2GasRight                      |   DEBUG |        1
+ RiCKResLong                                     |   DEBUG |        1
+ RiCKResLong.RichStereoFitter                    |   DEBUG |        1
+ RichAlignMoniR1Gas                              |   DEBUG |        2
+ RichAlignMoniR2Gas                              |   DEBUG |        2
+ RichOfflineGPIDDigSel                           |   DEBUG |        1
+ RichOfflineGPIDFin                              |   DEBUG |        1
+ RichOfflineGPIDInit                             |   DEBUG |        2
+ RichOfflineGPIDLLIt0                            |   DEBUG |        1
+ RichOfflineGPIDLLIt0.GPIDLikelihoodTool         |   DEBUG |        1
+ RichOfflineGPIDLLIt1                            |   DEBUG |        1
+ RichOfflineGPIDLLIt1.GPIDLikelihoodTool         |   DEBUG |        1
+ RichOfflineGPIDTrSel                            |   DEBUG |        2
+ RichRecPixelQC                                  |   DEBUG |        2
+ RootCnvSvc                                      |   DEBUG |        3
+ RootHistSvc                                     |   DEBUG |        1
+ TimingAuditor.TIMER                             |   DEBUG |        1
+ ToolSvc.Offline_GPIDTrackCreator                |   DEBUG |        1
+ ToolSvc.Offline_RichCherenkovAngle              |   DEBUG |        4
+ ToolSvc.Offline_RichCherenkovResolution         |   DEBUG |        1
+ ToolSvc.Offline_RichExpectedTrackSignal         |   DEBUG |        5
+ ToolSvc.Offline_RichGeomEff                     |   DEBUG |        1
+ ToolSvc.Offline_RichMassHypoRings               |   DEBUG |        1
+ ToolSvc.Offline_RichParticleProperties          |   DEBUG |        2
+ ToolSvc.Offline_RichPhotonCreator               |   DEBUG |        1
+ ToolSvc.Offline_RichPhotonCreator.PhotonParams  |   DEBUG |        1
+ ToolSvc.Offline_RichPhotonCreator.Predictor     |   DEBUG |        1
+ ToolSvc.Offline_RichPixelCreator                |   DEBUG |        1
+ ToolSvc.Offline_RichRayTracing                  |   DEBUG |        2
+ ToolSvc.Offline_RichRecGeometry                 |   DEBUG |        2
+ ToolSvc.Offline_RichTrackCreator.TrSegMaker     |   DEBUG |        1
+ ToolSvc.SequencerTimerTool                      |   DEBUG |        1
+ ToolSvc.SequencerTimerTool                      |    INFO |        4
+=======================================================================
