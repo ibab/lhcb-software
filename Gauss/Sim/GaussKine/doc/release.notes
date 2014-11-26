@@ -4,6 +4,9 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+! 2014-11-26 - Gloria Corti
+ - Fix warning when compiling with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Fixed CMake configuration.
 

@@ -23,7 +23,7 @@ namespace HepMC {
   class GenEvent ;
   class GenParticle ;
   class GenVertex ;
-};
+}
 
 /** @class GenerationToSimulation GenerationToSimulation.h
  *  Algorithm to transmit particles from the generation phase

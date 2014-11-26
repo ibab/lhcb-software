@@ -15,11 +15,11 @@ class IGiGaKineCnvSvc ;
 namespace HepMC {
   class GenParticle ;
   class GenVertex ;
-};
+}
 namespace LHCb {
   class IParticlePropertySvc ;
   class MCHeader ;
-};
+}
 
 /** @class SimulationToMCTruth SimulationToMCTruth.h 
  *

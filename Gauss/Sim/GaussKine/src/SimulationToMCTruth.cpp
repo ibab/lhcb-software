@@ -41,7 +41,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( SimulationToMCTruth );
+DECLARE_ALGORITHM_FACTORY( SimulationToMCTruth )
 
 
 //=============================================================================
@@ -71,7 +71,7 @@ SimulationToMCTruth::SimulationToMCTruth(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-SimulationToMCTruth::~SimulationToMCTruth(){};
+SimulationToMCTruth::~SimulationToMCTruth(){}
 
 //=============================================================================
 // Initialization

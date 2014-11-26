@@ -35,7 +35,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory.
-DECLARE_ALGORITHM_FACTORY(GenerationToSimulation);
+DECLARE_ALGORITHM_FACTORY(GenerationToSimulation)
 
 //=============================================================================
 // Standard constructor, declares properties.
@@ -75,7 +75,7 @@ GenerationToSimulation::GenerationToSimulation(const std::string& name,
 //=============================================================================
 // Destructor, does nothing.
 //=============================================================================
-GenerationToSimulation::~GenerationToSimulation() {}; 
+GenerationToSimulation::~GenerationToSimulation() {}
 
 //=============================================================================
 // Initialization.
