@@ -30,7 +30,7 @@ gaudi_add_dictionary(LoKiTrigger
                      dict/LoKiTriggerDict.h
                      dict/LoKiTrigger.xml
                      INCLUDE_DIRS Tr/TrackInterfaces
-                     LINK_LIBRARIES DetDescLib L0Event TrackEvent HltBase KalmanFilter DaVinciKernelLib LoKiCoreLib LoKiTracksLib LoKiTriggerLib)
+                     LINK_LIBRARIES DetDescLib L0Event TrackEvent HltBase KalmanFilter DaVinciKernelLib LoKiCoreLib LoKiTracksLib LoKiTriggerLib
                      OPTIONS " -U__MINGW32__ ")
 
 gaudi_install_python_modules()

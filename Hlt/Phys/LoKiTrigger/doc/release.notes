@@ -4,6 +4,9 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-11-26 - Marco Clemencic
+ - Fixed CMake configuration.
+
 ! 2014-11-25 - Roel Aaij
  - HltUnit inherits from IDVAlgorithm to allow more particle functors to be used
    in HLT1. Most methods return NULL pointers, but the ones that we needed are 
