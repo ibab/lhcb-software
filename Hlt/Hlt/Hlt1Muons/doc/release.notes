@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-11-20 - Vasileios Syropoulos
+ - Fix bad commit. Missing ; in MatchVeloMuon.cpp line: 174
+
+! 2014-11-20 - Vasileios Syropoulos
  - Fix small bug in MatchVeloMuon:
    accidentally reintroduced bug that was fixed before (2014-10-08 - Roel Aaij).
 
