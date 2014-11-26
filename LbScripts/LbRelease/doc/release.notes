@@ -1,3 +1,9 @@
+2014-11-26  Ben Couturier <Ben.Couturier@cern.ch>
+	LBCORE-679: Automatically add projects for release when 
+	importing them.
+	* python/LbRelease/SoftConfDB/LbSdbImportFromSVN.py
+	* python/LbRelease/SoftConfDB/AppImporter.py
+
 2013-11-24  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	LBCORE-675: added svn commit hook that enforces unambiguous python indentatation

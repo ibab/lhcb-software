@@ -36,11 +36,12 @@ class AppImporter:
     """ Main scripts class for looking up dependencies.
     It inherits from """
 
-    def __init__(self):
+    def __init__(self, autorelease = True):
         # Creating the SoftConfDB Object
         self.mConfDB = SoftConfDB()
         self.log = logging.getLogger()
         self.installArea = None
+        self.mAutorelease = autorelease
 
     def processProjectVersion(self, p, v, alreadyDone = [], recreate=False):
         """ Get the dependencies for a single project """
@@ -112,6 +113,10 @@ class AppImporter:
             self.log.warning("Creating project %s %s revision in SVN: %s" % (proj, ver, rev))
             node_parent = self.mConfDB.getOrCreatePV(proj, corver)
             node_parent["Rev"] = rev
+            # If releasing is needed!
+            if self.mAutorelease:
+                self.log.warning("Requesting release of %s %s" % (proj, corver))
+                self.mConfDB.setReleaseFlag(proj, corver)
            
                 
         self.log.warning("Now checking dependencies for %s %s" % (p, v))
