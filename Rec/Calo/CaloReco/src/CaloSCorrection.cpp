@@ -425,7 +425,9 @@ void CaloSCorrection::calcSCorrection( double  xBar, double  yBar, double &xCor,
     // calculation of the analytic derivatives:
     // NB: printouts comparing analytic calculations with numeric derivatives which are commented-out below
     // are useful for debugging in case of changes in the correction function code
-    debug() << "---------- analytic derivatives of individual S-correction functions ---------------" << endmsg;
+    if ( UNLIKELY(msgLevel( MSG::DEBUG)) )
+      debug() << "---------- analytic derivatives of individual S-correction functions ---------------" << endmsg;
+
     double DshapeX = getCorrectionDerivative(CaloCorrection::shapeX , cellID , Asx0 , 1. );
     double DshapeY = getCorrectionDerivative(CaloCorrection::shapeY , cellID , Asy0 , 1. );
 

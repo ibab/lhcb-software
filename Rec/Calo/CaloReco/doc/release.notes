@@ -4,6 +4,9 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+! 2014-11-26 - Marco Cattaneo
+ - Fix unprotected debug in CaloSCorrection.cpp
+
 !========================= CaloReco v5r21p1 2014-09-28 =========================
 ! 2014-09-28
   - CaloMergedPi0 : fix bug that affect sub-seed definition in some configuration
