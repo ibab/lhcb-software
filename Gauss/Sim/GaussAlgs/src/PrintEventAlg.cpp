@@ -35,7 +35,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( PrintEventAlg );
+DECLARE_ALGORITHM_FACTORY( PrintEventAlg )
 
 
 //=============================================================================

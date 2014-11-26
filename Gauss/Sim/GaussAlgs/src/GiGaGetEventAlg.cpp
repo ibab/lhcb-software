@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GiGaGetEventAlg );
+DECLARE_ALGORITHM_FACTORY( GiGaGetEventAlg )
 
 
 //=============================================================================
@@ -38,7 +38,7 @@ GiGaGetEventAlg::GiGaGetEventAlg(const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GiGaGetEventAlg::~GiGaGetEventAlg(){};
+GiGaGetEventAlg::~GiGaGetEventAlg(){}
 
 //=============================================================================
 // Main execution

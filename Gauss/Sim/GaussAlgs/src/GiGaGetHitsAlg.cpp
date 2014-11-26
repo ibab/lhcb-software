@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GiGaGetHitsAlg );
+DECLARE_ALGORITHM_FACTORY( GiGaGetHitsAlg )
 
 
 //=============================================================================
@@ -65,7 +65,7 @@ GiGaGetHitsAlg::GiGaGetHitsAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GiGaGetHitsAlg::~GiGaGetHitsAlg() {};
+GiGaGetHitsAlg::~GiGaGetHitsAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -78,7 +78,7 @@ StatusCode GiGaGetHitsAlg::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -128,7 +128,7 @@ StatusCode GiGaGetHitsAlg::execute() {
 
   return StatusCode::SUCCESS;
 
-};
+}
 
 //=============================================================================
 //  Finalize

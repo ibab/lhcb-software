@@ -23,7 +23,7 @@ class G4Event;
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GiGaFlushAlgorithm );
+DECLARE_ALGORITHM_FACTORY( GiGaFlushAlgorithm )
 
 //=============================================================================
 // Standard constructor, initializes variables

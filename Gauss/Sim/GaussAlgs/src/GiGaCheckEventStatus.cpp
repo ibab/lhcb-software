@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GiGaCheckEventStatus );
+DECLARE_ALGORITHM_FACTORY( GiGaCheckEventStatus )
 
 
 //=============================================================================
@@ -38,7 +38,7 @@ GiGaCheckEventStatus::GiGaCheckEventStatus( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GiGaCheckEventStatus::~GiGaCheckEventStatus() {}; 
+GiGaCheckEventStatus::~GiGaCheckEventStatus() {}
 
 //=============================================================================
 // Initialization
