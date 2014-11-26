@@ -41,6 +41,14 @@ public:
   virtual bool isGhost(LHCbIDs::const_iterator& start, 
                        LHCbIDs::const_iterator& stop) const;
 
+  /**
+  *  Check this is a ghost .
+  *  @param aTrack to link
+  *  @return bool true if a ghost
+  */
+  virtual bool isGhost(const LHCb::Track& aTrack) const;
+
+
 
  private:
 
@@ -59,6 +67,14 @@ public:
 
 };
 
+// Dummy override to avoid "-Woverloaded-virtual" warnings
+// would certainly be more elegant to pick the right m_XYZGhostClassification here
+// based on aTrack.type() but I don't want to double implement this distinguishing
+// for both interfaces of isGhost (same for specific)
+inline bool AllTrackGhostClassification::isGhost(const LHCb::Track& aTrack) const 
+{
+  return TrackGhostClassificationBase::isGhost(aTrack);
+}
 
 
 #endif
