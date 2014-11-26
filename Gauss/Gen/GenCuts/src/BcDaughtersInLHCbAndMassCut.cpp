@@ -27,7 +27,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( BcDaughtersInLHCbAndMassCut );
+DECLARE_TOOL_FACTORY( BcDaughtersInLHCbAndMassCut )
 
 
 //=============================================================================

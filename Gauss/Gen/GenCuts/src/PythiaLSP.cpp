@@ -21,7 +21,7 @@ using namespace std ;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( PythiaLSP );
+DECLARE_TOOL_FACTORY( PythiaLSP )
 
 //=============================================================================
 // Standard constructor, initializes variables

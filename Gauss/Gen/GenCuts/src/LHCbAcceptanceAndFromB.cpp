@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( LHCbAcceptanceAndFromB );
+DECLARE_TOOL_FACTORY( LHCbAcceptanceAndFromB )
 
 //=============================================================================
 // Standard constructor, initializes variables

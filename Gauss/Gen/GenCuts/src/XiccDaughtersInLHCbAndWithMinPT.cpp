@@ -26,7 +26,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( XiccDaughtersInLHCbAndWithMinPT );
+DECLARE_TOOL_FACTORY( XiccDaughtersInLHCbAndWithMinPT )
 
 
 //=============================================================================

@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( DMuCascadeInAcc );
+DECLARE_TOOL_FACTORY( DMuCascadeInAcc )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( DaughtersInLHCbAndFromB );
+DECLARE_TOOL_FACTORY( DaughtersInLHCbAndFromB )
 
 //=============================================================================
 // Standard constructor, initializes variables

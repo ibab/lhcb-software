@@ -18,7 +18,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY(LeptonInAcceptance );
+DECLARE_TOOL_FACTORY(LeptonInAcceptance )
 
 // Function to test if particle is a lepton
 bool isLepton( const HepMC::GenParticle * p ) {

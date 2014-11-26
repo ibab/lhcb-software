@@ -21,7 +21,7 @@ using namespace std ;
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( ParticlesInAcceptance );
+DECLARE_TOOL_FACTORY( ParticlesInAcceptance )
 
 //=============================================================================
 // Standard constructor, initializes variables

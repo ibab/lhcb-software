@@ -21,7 +21,7 @@
 
 
 
-DECLARE_TOOL_FACTORY(JpsiLeptonInAcceptance);
+DECLARE_TOOL_FACTORY(JpsiLeptonInAcceptance)
 
 
 //=============================================================================

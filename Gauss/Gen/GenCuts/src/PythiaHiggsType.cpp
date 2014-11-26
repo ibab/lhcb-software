@@ -23,7 +23,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( PythiaHiggsType ) ;
+DECLARE_TOOL_FACTORY( PythiaHiggsType )
 
 
 //=============================================================================

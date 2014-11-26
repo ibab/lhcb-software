@@ -24,7 +24,7 @@ bool isHiggs( const HepMC::GenParticle * p ) {
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( PythiaHiggs );
+DECLARE_TOOL_FACTORY( PythiaHiggs )
 
 
 //=============================================================================

@@ -4,6 +4,9 @@
 ! Purpose     : cut tools for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-26 - Gloria Corti
+ - Fix warning when compiling with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Fixed CMake configuration.
 
@@ -11,15 +14,17 @@
  - Updated CMake configuration
 
 ! 2014-10-27 - Xabier Cid Vidal
-  - Correct problem in LoKi for InvariantMassQQMCJets tool, that was breaking the nightlies for Gauss v45
+ - Correct problem in LoKi for InvariantMassQQMCJets tool, that was breaking
+   the nightlies for Gauss v45
 
 
 ! 2014-10-20 - Sean Benson
  - Added PhotonDaughtersInLHCb tool, to make sure photon daughters of the B
- are in the acceptance.
+   are in the acceptance.
 
 ! 2014-10-08 - Xabier Cid Vidal
- - Add InvariantMassQQMCJets tool, to apply gen cuts in the invariant mass of dijets
+ - Add InvariantMassQQMCJets tool, to apply gen cuts in the invariant mass of
+   dijets
 
 !========================== GenCuts v3r9 2014-06-18 ========================== 
 ! 2014-06-19 - Gloria Corti

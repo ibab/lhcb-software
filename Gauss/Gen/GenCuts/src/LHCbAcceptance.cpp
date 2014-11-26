@@ -19,7 +19,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( LHCbAcceptance );
+DECLARE_TOOL_FACTORY( LHCbAcceptance )
 
 
 //=============================================================================

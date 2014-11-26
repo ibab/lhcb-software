@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GenCuts
 ################################################################################
-gaudi_subdir(GenCuts v3r9)
+gaudi_subdir(GenCuts v3r10)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Kernel/MCInterfaces

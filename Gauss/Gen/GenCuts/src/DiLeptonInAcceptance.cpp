@@ -20,7 +20,7 @@
 
 
 
-DECLARE_TOOL_FACTORY( DiLeptonInAcceptance );
+DECLARE_TOOL_FACTORY( DiLeptonInAcceptance )
 
 
 //=============================================================================

@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( SignalIsFromBDecay );
+DECLARE_TOOL_FACTORY( SignalIsFromBDecay )
 
 //=============================================================================
 // Standard constructor, initializes variables
