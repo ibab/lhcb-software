@@ -166,7 +166,7 @@ void MatchVeloMuon::i_findSeeds( const Candidate& veloSeed,
 
     // Use sum rule for tan and approximate tan( dSlope ) with dSlope to
     // calculate window in x
-    double dz = ( zStation - zMagnet ) / veloSeed.cosTy();
+    double dz = ( zStation - zMagnet )
     // double sign = ( veloSeed.tx() > 0) - ( veloSeed.tx() < 0 );
     double tanMin = ( veloSeed.tx() - dSlope ) / ( 1 + veloSeed.tx() * dSlope );
     double xMin = xMagnet + dz * tanMin - m_xWindow;
