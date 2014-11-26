@@ -41,7 +41,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaUIsession );
+DECLARE_TOOL_FACTORY( GiGaUIsession )
 
 // ============================================================================
 /** standard constructor 
@@ -75,14 +75,14 @@ GiGaUIsession::GiGaUIsession
   declareInterface <IGiGaUIsession> (this);
   /// declare the property
   declareProperty( "Sessions" , m_sessions ); 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// destructor (virtual and protected)
 // ============================================================================
-GiGaUIsession::~GiGaUIsession() {};
-// ============================================================================
+GiGaUIsession::~GiGaUIsession() {}
+
 
 // ============================================================================
 /** initialization method 
@@ -134,7 +134,7 @@ StatusCode GiGaUIsession::initialize  ()
   if( 0 == m_session ) { Warning("UI session is not created!"); }
   
   return StatusCode::SUCCESS ;
-};
+}
 
 // ============================================================================
 /** get the pointer to G4 user interface
@@ -146,8 +146,8 @@ G4UIsession* GiGaUIsession::session () const
 {
   if( 0 == m_session ){ Warning("G4UISession* points to NULL!") ; }
   return m_session ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

@@ -27,7 +27,7 @@
  */
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GiGaSetVisAttributes );
+DECLARE_TOOL_FACTORY( GiGaSetVisAttributes )
 
 // ============================================================================
 /** standard constructor
@@ -48,15 +48,14 @@ GiGaSetVisAttributes::GiGaSetVisAttributes
   , m_visSvc       ( 0                    ) 
 {
   declareProperty ( "VisualizationService" , m_visSvcName ) ;
-};
-// ============================================================================
+}
 
 
 // ============================================================================
 /// destructor 
 // ============================================================================
-GiGaSetVisAttributes::~GiGaSetVisAttributes(){};
-// ============================================================================
+GiGaSetVisAttributes::~GiGaSetVisAttributes(){}
+
 
 // ============================================================================
 /** initialize the object 
@@ -84,8 +83,8 @@ StatusCode   GiGaSetVisAttributes::initialize  ()
     { return Error("IVisualizationSvc('"+m_visSvcName+"') is NULL " ) ; }
   
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** finalize the object  
@@ -100,8 +99,8 @@ StatusCode   GiGaSetVisAttributes::finalize    ()
 {
   if( 0 != m_visSvc ) { m_visSvc -> release () ; m_visSvc = 0 ; }
   return GiGaToolBase::finalize ();
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** get ILVolume by its address
@@ -115,7 +114,7 @@ const ILVolume* GiGaSetVisAttributes::volume
     { Error("volume('"+address+"'): detSvc() is NULL"); return 0 ; } 
   SmartDataPtr<ILVolume> logvol( detSvc() , address ) ;
   return logvol ;
-};
+}
 
 // ============================================================================
 /** find g4 volume by name 
@@ -142,8 +141,8 @@ G4LogicalVolume* GiGaSetVisAttributes::g4volume
   }
   Error ( "g4volume('" + address + "'): volume is not found!" ) ;
   return 0 ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** the only one method, perform the erasure of Field Manager 
@@ -230,7 +229,7 @@ StatusCode GiGaSetVisAttributes::process ( const std::string& vol ) const
     }
   
   return StatusCode::SUCCESS ;
-};
+}
 
 
 // ============================================================================

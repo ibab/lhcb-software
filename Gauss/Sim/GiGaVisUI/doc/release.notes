@@ -5,6 +5,9 @@
 ! Purpose     : GiGa vi1sualisation and UI 
 !-----------------------------------------------------------------------------
 
+! 2014-11-26 - Gloria Corti
+ - Fix warning when compiling with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
