@@ -4,6 +4,8 @@
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+!========================= DSTWriters v4r18 2014-11-26 =========================
+
 ! 2014-11-12 - Chris Jones
  - Add a try/catch block to the selective raw event handling code, to provide
    a better message when support is enabled in situations where it is not
