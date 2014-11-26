@@ -5,6 +5,9 @@
 ! Purpose     : Histograming for the BCM stations
 !----------------------------------------------------------------------------
 
+! 2014-11-26 - Gloria Corti
+ - fixes for warning when compiling with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

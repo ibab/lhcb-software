@@ -9,7 +9,7 @@
 // local
 #include "BcmHitChecker.h"
 
-DECLARE_ALGORITHM_FACTORY( BcmHitChecker );
+DECLARE_ALGORITHM_FACTORY( BcmHitChecker )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -29,7 +29,7 @@ BcmHitChecker::BcmHitChecker( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-BcmHitChecker::~BcmHitChecker() {};
+BcmHitChecker::~BcmHitChecker() {}
 
 //=============================================================================
 // Initialization
@@ -43,7 +43,7 @@ StatusCode BcmHitChecker::initialize() {
   m_bcmDet=( getDet<DeBcm>( m_bcmDetLocation ) );
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -56,7 +56,7 @@ StatusCode BcmHitChecker::execute() {
   bcmHitMonitor();
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
