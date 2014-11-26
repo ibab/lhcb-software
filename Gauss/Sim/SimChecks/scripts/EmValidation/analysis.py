@@ -24,6 +24,7 @@ def betagam(energy, particle):
 
 	return energy/mass
 
+#draw settings for different particles and lists
 def plotSet(particle,plist):
 	if (particle == 11):
 		pname = "electrons "+plist
@@ -44,15 +45,32 @@ def plotSet(particle,plist):
 			'colour':	colour
 		 	}
 
+#draws and saved multigraph canvas for dedx analysis
+def addCanvas(type,mGraph,particles,plist):
 
-
-
-
+	#string of paricles being displayed on multigraph
+	partStrings = map(str,particles)
+	particleRange = '-'.join(partStrings)
+	
+	c1 = TCanvas()
+	c1.SetLogx()
+	c1.SetGrid()
+	c1.cd(0)
+	
+	mGraph.Draw("ALCP")
+	
+	c1.BuildLegend()
+	c1.SaveAs("plots/"+type+"_"+particleRange+"_"+str(plist)+".pdf")
+	c1.Close()
+		
+#BremVeloCheck output analysis
 def bremAnalysis(particles, plists, energies,opts):
+	
 	for particle in particles:
 		for plist in plists:
 			for energy in energies:
-				
+
+				#extracting histograms from job output
 				histospath = 'emstudy_'+str(plist)+'_'+str(particle)+'_'+str(energy)+'_'+str(opts['veloType'])+'_'+str(opts['testType'])+'-histos.root'
 				fBrem = TFile(histospath)
 				fBrem.cd("photon energy")
@@ -65,11 +83,9 @@ def bremAnalysis(particles, plists, energies,opts):
 				nphotonplot = plot2.Clone("nphotonplot")
 				nphotonplot.SetDirectory(0)
 				fBrem.Close()
-
+				#Drawing/Saving histograms and mean values	
 				photonEplot.Draw()
 				nphotonplot.Draw()
-				
-			
 				c1 = TCanvas()
 				c2 = TCanvas()
 
@@ -89,7 +105,6 @@ def bremAnalysis(particles, plists, energies,opts):
 				ROOT.gPad.Update()
 				nptn = nphotonplot.GetMean()
 
-
 				c1.SaveAs("plots/photonE_"+str(energy)+"_"+str(particle)+"_"+str(plist)+".pdf")
 				c2.SaveAs("plots/nphotons_"+str(energy)+"_"+str(particle)+"_"+str(plist)+".pdf")
 				f=open("plots/photonEn_"+str(energy)+"_"+str(particle)+"_"+str(plist)+".txt",'w')
@@ -98,11 +113,14 @@ def bremAnalysis(particles, plists, energies,opts):
 				f.close()
 
 
-
+#EmGaussMoni output analysis
 def dedxAnalysis(particles, plists, energies,opts):
+	
+	#processing Bethe Bloch calculator and landau analysis scripts
 	gROOT.ProcessLine('.L landauGenn.C')
 	gROOT.ProcessLine('.L landau4new.C')
 
+	#creating theoretical distributions
 	mpv_theo_array = array('d')
 	fwhm_theo_array = array('d')
 	bg_theo_array = array('d')
@@ -122,10 +140,12 @@ def dedxAnalysis(particles, plists, energies,opts):
 	FWHMtheograph.SetLineColor(kMagenta )
 	FWHMtheograph.SetTitle("theoretical")
 
-
+	
 	for plist in plists:
 		MPV_list = []
 		FWHM_list = []
+		
+		#looping over particles and drawing all particles on same graph for each physics list
 		for particle in particles:
 
 			histosFiles =[]
@@ -134,13 +154,15 @@ def dedxAnalysis(particles, plists, energies,opts):
 			for pgunE in energies:
 				histosPath = 'emstudy_'+str(plist)+'_'+str(particle)+'_'+str(pgunE)+'_'+str(opts['veloType'])+'_'+str(opts['testType'])+'-histos.root'
 				histosFiles += [histosPath]
-
+			
+			#estimating MPV and FWHM data values and printing to file
 			textfile_new="output/landau_"+str(particle)+"_"+str(plist)+"_output.txt"
 			textfile="output/landau_output.txt"
 			if os.path.exists(textfile):
 				print "Removing old version  of ", textfile
 				os.remove(textfile)
 
+			
 			for histosFile in histosFiles:
 				hfile=hfiledir+histosFile
 				print "opening file", hfile
@@ -161,29 +183,32 @@ def dedxAnalysis(particles, plists, energies,opts):
 			listMPV = []
 			listFWHM = []
 
+			#reading in data and plotting graphs for each particle
 			infile = open(textfile_new)
-			
 			for line in infile:
+
 				line = line.strip('\n').split()
 				listMPV.append(float(line[0]))
 				listFWHM.append(float(line[1]))
 
+			#converting to arrays to use with TGraph
 			mpv_array = array('d')
 			fwhm_array = array('d')
 			bg_array = array('d')
-
 			bg_array.fromlist(betagam_values)
 			mpv_array.fromlist(listMPV)
 			fwhm_array.fromlist(listFWHM)
 			
+
 			print bg_array
 			print mpv_array
 			print fwhm_array
 			
+			#Producing graphs
 			MPVgraph = TGraph(len(energies),bg_array,mpv_array )	
 			FWHMgraph = TGraph(len(energies),bg_array,fwhm_array )	
 			
-
+			#Setting visual options
 			colour = plotSet(particle,plist)['colour']
 			name = plotSet(particle,plist)['pname']
 
@@ -192,39 +217,20 @@ def dedxAnalysis(particles, plists, energies,opts):
 			MPVgraph.SetTitle(name)
 			MPVgraph.SetMarkerStyle( 29 )
 			MPVgraph.SetFillStyle(0)
-
 			FWHMgraph.SetMarkerColor(colour )
 			FWHMgraph.SetLineColor(colour )
 			FWHMgraph.SetTitle(name)
 			FWHMgraph.SetMarkerColor( 4 )
 			FWHMgraph.SetMarkerStyle( 29 )
 			FWHMgraph.SetFillStyle(0)
-
-#			mgMPV = TMultiGraph()
-#			mgMPV.Add(MPVgraph,'cp')
-#			mgMPV.Add(MPVtheograph,'cp')
-#			mgFWHM = TMultiGraph()
-#			mgFWHM.Add(FWHMgraph,'cp')
-#			mgFWHM.Add(FWHMtheograph,'cp')
-
-#			c1 = TCanvas()
-#			c1.SetLogx()
-#			c2 = TCanvas()
-#			c2.SetLogx()
-
-#			c1.cd()
-#			c1.SetGrid()
-#			mgMPV.Draw("ALCP")
-#			c2.cd()
-#			c2.SetGrid()
-#			mgFWHM.Draw("ALCP");
-
-#			c1.SaveAs("plots/MPV_"+str(particle)+"_"+str(plist)+".pdf")
-#			c2.SaveAs("plots/FWHM_"+str(particle)+"_"+str(plist)+".pdf")
-
+			
+			#appending graphs to lists of  all particle cases, for individual physics lists
 			MPV_list+=[MPVgraph]
 			FWHM_list+=[FWHMgraph]
-		
+	
+			#end of particle loop
+
+		#creating multigraph for superimpose all particles for individual physics lists	
 		mgMPV_full = TMultiGraph()
 		mgFWHM_full = TMultiGraph()
 		
@@ -236,27 +242,8 @@ def dedxAnalysis(particles, plists, energies,opts):
 	
 		mgMPV_full.Add(MPVtheograph,'cp')
 		mgFWHM_full.Add(FWHMtheograph,'cp')
-	
-		c3 = TCanvas()
-		c3.SetLogx()
-		c3.SetGrid()
-		c3.cd()
-		mgMPV_full.Draw("ALCP")
-		c3.BuildLegend()
 		
-		c4 = TCanvas()
-		c4.SetLogx()
-		c4.SetGrid()
-		c4.cd()
-		mgFWHM_full.Draw("ALCP");
-		c4.BuildLegend()
-
-
-
-		
-		partStrings = map(str,particles)
-		particleRange = '-'.join(partStrings)
-		
-		c3.SaveAs("plots/MPV_"+particleRange+"_"+str(plist)+".pdf")
-		c4.SaveAs("plots/FWHM_"+particleRange+"_"+str(plist)+".pdf")
+		#configuring and printing canvases and graphs
+		addCanvas("MPV",mgMPV_full,particles,plist)
+		addCanvas("FWHM",mgFWHM_full,particles,plist)
 

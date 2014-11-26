@@ -22,7 +22,7 @@ def config():
 	veloType = 'velo' # for r/phi velo. 
 
 #Peter Griffith 21.11.14: EMGaussMoni is being updated to work with VP.
-#Currently job will not crash, but will not produce required dEdx output
+#Currently job will not crAsh, but will not produce required dEdx output
 
 ############################################## 
 # Set particle gun and simulation options	 #
@@ -35,10 +35,11 @@ def config():
 	pgunE = 'scan'
 						# energy of particles if running a single job
 	emPL = 'scan'
+
 						# specify G4 EM physics lists to use in simulation
 						# [NoCuts, Opt1, Opt2, Opt3, LHCb]
 
-	nEvts = 50		# number of particles to generate
+	nEvts = 50000		# number of particles to generate
 	dRays = False		# choose whether to simulate delta rays
 	
 
@@ -49,7 +50,8 @@ def config():
 # and the corresponding list is used instead       #
 ####################################################
 	eScan_list=[0.1, 0.2, 0.4, 1., 5., 10., 16.8, 50., 100., 120., 168.]
-	plScan_list = ['NoCuts','Opt1','Opt2','Opt3','LHCb']
+#	plScan_list = ['NoCuts','Opt1','Opt2','Opt3','LHCb']
+	plScan_list = ['Opt1','Opt2']
 	partScan_list = [11,13,211]
 
 ########################
@@ -59,8 +61,8 @@ def config():
 							# EmGaussMoni can be be run on it in GaussRead mode using
 							# emMoni_GaussRead.py
 
-	runGenerator = True		# if true, the jobs will be submitted to generate the histos files
-	doAnalysis = False		# if true, the outputs will be analysed to produce plots and numbers
+	runGenerator = False		# if true, the jobs will be submitted to generate the histos files
+	doAnalysis = True			# if true, the outputs will be analysed to produce plots and numbers
 
 
 	return {

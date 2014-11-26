@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+
+! 2014-11-26 - Peter Griffith
+ - Cleaned up and improved readability of analysis.py in EmValidation scripts 
+
 ! 2014-11-25 - Peter Griffith
  - Added analysis package and options files for EM physics validator tools
 
