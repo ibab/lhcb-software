@@ -16,7 +16,7 @@
  *
  */
 
-DECLARE_TOOL_FACTORY(GDMLReader);
+DECLARE_TOOL_FACTORY(GDMLReader)
 
 //=============================================================================
 /// Constructor

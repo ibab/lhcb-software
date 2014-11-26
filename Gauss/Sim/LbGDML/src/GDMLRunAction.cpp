@@ -10,7 +10,7 @@
 #include "G4TransportationManager.hh"
 #include "G4GDMLParser.hh"
 
-DECLARE_TOOL_FACTORY(GDMLRunAction);
+DECLARE_TOOL_FACTORY(GDMLRunAction)
 
 // ============================================================================
 /** standard constructor 
@@ -31,7 +31,7 @@ GDMLRunAction::GDMLRunAction(const std::string& type,
   declareProperty("Schema", m_schema = "$GDML_base/src/GDMLSchema/gdml.xsd");
   declareProperty("Output", m_outfile = "LHCb.gdml");
 
-};
+}
 
 // ============================================================================
 /// Action performed at the begin of each run

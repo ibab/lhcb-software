@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbGDML
 ################################################################################
-gaudi_subdir(LbGDML v1r0p1)
+gaudi_subdir(LbGDML v1r0p2)
 
 gaudi_depends_on_subdirs(GaudiAlg
                          Sim/GaussTools)
