@@ -597,9 +597,7 @@ StatusCode DeOTModule::calibrationCallback() {
   }
 
   // we need to propagate the info from the change in wire direction
-  cacheInfo() ;
-
-  return StatusCode::SUCCESS;
+  return cacheInfo() ;
 }
 
 StatusCode DeOTModule::statusCallback() {
