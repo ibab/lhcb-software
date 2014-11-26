@@ -3,6 +3,9 @@
 ! Responsible : P. Koppenburg, C. Jones
 !----------------------------------------------------------------------------
 
+! 2014-11-26 - Marco Clemencic
+ - Reverted work around for spurious entries in the rootmap files.
+
 !========================= PhysEvent v11r27 2014-09-08 =========================
 ! 2014-09-04 - Chris Jones
  - Include the TES location (when appropriate) in the fillStream printout
@@ -13,7 +16,7 @@
    compilation.
 
 ! 2014-08-03 - Chris Jones
- - Some minor improvements to RelatedInfoMap, including an operator 
+ - Some minor improvements to RelatedInfoMap, including an operator
    ostream << implementation.
 
 !========================= PhysEvent v11r26 2014-07-14 ========================

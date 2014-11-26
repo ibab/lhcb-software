@@ -41,10 +41,6 @@ apply_pattern      linker_library    library=LoKiGenLib
 apply_pattern      component_library library=LoKiGen
 apply_pattern      QMTest
 
-# work around for a problem with ROOT 6 rootmap files
-private
-  macro merge_rootmap_cmd "python $(LHCbKernel_root)/cmt/merge_files.py --exclude-re '^header LoKi/DecayFinder'"
-end_private
 # ====================================================================
 # The END
 # ====================================================================

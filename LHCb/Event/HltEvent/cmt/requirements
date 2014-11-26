@@ -35,8 +35,3 @@ apply_pattern god_dictionary files=../xml/*.xml
 #=====================================================================
 library       HltEvent        *.cpp
 apply_pattern linker_library  library=HltEvent
-
-# work around for a problem with ROOT 6 rootmap files
-private
-  macro merge_rootmap_cmd "python $(LHCbKernel_root)/cmt/merge_files.py --exclude-re '^header .*VectorMap'"
-end_private

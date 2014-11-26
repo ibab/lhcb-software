@@ -44,8 +44,3 @@ apply_pattern god_dictionary files=../xml/*.xml
 # Disable some compiler warnings in the automatically generated dict code
 macro_append LumiEventDict_cppflags "" \
                          target-icc " -wd191"
-
-# work around for a problem with ROOT 6 rootmap files
-private
-  macro merge_rootmap_cmd "python $(LHCbKernel_root)/cmt/merge_files.py --exclude-re '^header .*VectorMap'"
-end_private

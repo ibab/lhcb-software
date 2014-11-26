@@ -13,6 +13,9 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+! 2014-11-26 - Marco Clemencic
+ - Reverted work around for spurious entries in the rootmap files.
+
 !========================= LoKiGen v10r18 2014-10-14 =========================
 ! 2014-09-17 - Marco Clemencic
  - Fixed genreflex warnings (ROOT 6).

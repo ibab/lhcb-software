@@ -43,8 +43,3 @@ apply_pattern linker_library library=PhysEvent
 private
 # Patch for gccxml bug with assert statement on Windows
 macro_append use_obj2dict_gccxmlflags "" WIN32 " -D __CINT__ "
-
-# work around for a problem with ROOT 6 rootmap files
-private
-  macro merge_rootmap_cmd "python $(LHCbKernel_root)/cmt/merge_files.py --exclude-re '^header .*VectorMap' --exclude-re '^header .*SharedObjects'"
-end_private
