@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( VeloGaussMoni );
+DECLARE_ALGORITHM_FACTORY( VeloGaussMoni )
 
 
 //=============================================================================
@@ -59,7 +59,7 @@ VeloGaussMoni::VeloGaussMoni( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-VeloGaussMoni::~VeloGaussMoni() {}; 
+VeloGaussMoni::~VeloGaussMoni() {}
 
 //=============================================================================
 // Initialization
@@ -74,7 +74,7 @@ StatusCode VeloGaussMoni::initialize() {
   setHistoTopDir("Velo/");
   //
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -91,7 +91,7 @@ StatusCode VeloGaussMoni::execute() {
   checkTests();
   //
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
