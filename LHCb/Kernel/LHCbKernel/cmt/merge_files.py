@@ -164,6 +164,8 @@ if __name__ == "__main__":
 
     (options, args) = parser.parse_args()
 
+    print "WARNING: do not use this version of merge_files.py (%s)" % sys.argv[0]
+
     # ensure consistency...
     options.doMerge = not options.unMerge
 

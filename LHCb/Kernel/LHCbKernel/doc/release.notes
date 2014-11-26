@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-11-26 - Marco Clemencic
+ - Print a warning when using the patched merge_files.py, so that we can detect
+   where the work-around is enabled.
+
 !========================= LHCbKernel v15r5 2014-10-14 =========================
 ! 2014-10-01 - Chris Jones
  - Add some more operators and constructors ...
@@ -18,8 +22,8 @@
 
 !========================= LHCbKernel v15r4 2014-09-08 =========================
 ! 2014-09-08 - Gerhard Raven
- - CircleTraj: replace pow(..,double(1)/3) with std::cbrt as the reason for not 
-   using cbrt is now irrelevant (and cbrt is three times faster -- which saves 
+ - CircleTraj: replace pow(..,double(1)/3) with std::cbrt as the reason for not
+   using cbrt is now irrelevant (and cbrt is three times faster -- which saves
    O(1K) CHF in the HLT farm )
 
 !========================= LHCbKernel v15r3 2014-07-14 ========================
