@@ -98,7 +98,7 @@ StatusCode GiGaInputStream::execute()
   ///
   return status; 
   ///
-};
+}
 
 // ============================================================================
 // The End 
