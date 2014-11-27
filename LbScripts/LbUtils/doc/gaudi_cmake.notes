@@ -1,3 +1,61 @@
+! 2014-11-27 - Marco Clemencic (b848218)
+
+ - added the list of heptools dependencies in manifest.xml (CMake)
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7584
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-11-27 - Marco Clemencic (13652dc)
+
+ - fixed the value of <ext>_config_version in case of overrides
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7583
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-11-20 - Marco Clemencic (23aa046)
+
+ - fixed a bug in the dependencies of the call to genconf
+
+   It was introduced in the merge of f0727394 and 9ff33f29.
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7580
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-11-19 - Marco Clemencic (32e1bd1)
+
+ - GAUDI-977 Added target to "precompile" the project xenv file
+
+   The special target is included in the target "post-install".
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7578
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
+! 2014-11-19 - Marco Clemencic (d68206e)
+
+ - added spacial targets unsafe-install and post-install
+
+   - unsafe-install: allow installation on failed builds
+   - post-install: used to collect targets that must be run after the 
+   installation
+
+   From: Marco Clemencic <marco.clemencic@cern.ch>
+
+    git-svn-id: svn+ssh://svn.cern.ch/reps/gaudi/Gaudi/trunk@7576
+   53ecefc3-a64d-0410-9bdf-b8581fa3287e
+
+
 ! 2014-11-18 - Marco Clemencic (3010bb5)
 
  - replaced tabs with spaces

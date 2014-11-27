@@ -289,7 +289,7 @@ macro(lcg_set_compiler flavor)
                    NAMES ${fortran_compiler_names}
                    PATHS ${compiler_root}/bin
          DOC "Fortran compiler")
-      #message(STATUS "LCG_compiler(${ARGV}) -> ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER} ${CMAKE_Fortran_COMPILER}")  
+      #message(STATUS "LCG_compiler(${ARGV}) -> ${CMAKE_C_COMPILER} ${CMAKE_CXX_COMPILER} ${CMAKE_Fortran_COMPILER}")
     endif()
     set(lcg_compiler_set "${ARGV}")
   else()
@@ -326,9 +326,9 @@ macro(lcg_common_compilers_definitions)
 endmacro()
 
 ################################################################################
-# Enable the correct compiler.
+# Define variables for an LCG external.
 macro(lcg_set_external name hash version dir)
-    set(${name}_config_version ${version} CACHE STRING "Version of ${name}")
+    set(${name}_config_version ${version} CACHE STRING "Version of ${name}" FORCE)
     mark_as_advanced(${name}_config_version)
     set(${name}_native_version ${${name}_config_version})
     if(NOT IS_ABSOLUTE ${dir})
@@ -447,7 +447,7 @@ macro(lcg_prepare_paths)
   endforeach()
 
   # AIDA is special
-  list(APPEND LCG_INCLUDE_PATH ${LCG_external}/${AIDA_directory_name}/${AIDA_native_version}/share/src/cpp)
+  list(APPEND LCG_INCLUDE_PATH ${LCG_external}/${AIDA_directory_name}/${AIDA_config_version}/share/src/cpp)
 
   set(CMAKE_PREFIX_PATH ${LCG_PREFIX_PATH} ${CMAKE_PREFIX_PATH})
   set(CMAKE_INCLUDE_PATH ${LCG_INCLUDE_PATH} ${CMAKE_INCLUDE_PATH})

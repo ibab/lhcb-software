@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: 2b2248bf4060da6c213c373ff1e061b1cffa1a34
+# Commit Id: b8482188ec975b50f2ae4f350b5ba526396b55d5
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -246,6 +246,12 @@ macro(gaudi_project project version)
     enable_testing()
   endif()
 
+  #--- Allow installation on failed builds
+  add_custom_target(unsafe-install
+                    COMMAND ${CMAKE_COMMAND} -P ${CMAKE_BINARY_DIR}/cmake_install.cmake)
+  #--- Special target to group actions that must be run after the installation
+  add_custom_target(post-install)
+
   #--- Find subdirectories
   message(STATUS "Looking for local directories...")
   # Locate packages
@@ -454,6 +460,7 @@ macro(gaudi_project project version)
     # still need a fake python.zip target, expected by the nightly builds.
     add_custom_target(python.zip)
   endif()
+  add_dependencies(post-install python.zip)
 
   #--- Prepare environment configuration
   message(STATUS "Preparing environment configuration:")
@@ -650,6 +657,12 @@ __path__ = [d for d in [os.path.join(d, '${pypack}') for d in sys.path if d]
          "${_env_cmd_line} --xml ${env_xml} %1 %2 %3 %4 %5 %6 %7 %8 %9\n")
   endif() # ignore other systems
 
+  # "precompile" project XML env after installation
+  get_filename_component(installed_env_release_xml "${env_release_xml}" NAME)
+  set(installed_env_release_xml "${CMAKE_INSTALL_PREFIX}/${installed_env_release_xml}")
+  add_custom_target(precompile-project-xenv
+                    COMMAND ${env_cmd} --xml "${installed_env_release_xml}" true)
+  add_dependencies(post-install precompile-project-xenv)
 
   #--- Special target to print the summary of QMTest runs.
   if(GAUDI_BUILD_TESTS)
@@ -1499,9 +1512,9 @@ function(gaudi_generate_configurables library)
   endif()
 
   if(NOT GaudiCoreSvcIsImported) # it's a local target
-    set(deps GaudiCoreSvc genconf)
+    set(conf_depends ${conf_depends} GaudiCoreSvc genconf)
   else()
-    set(deps genconf)
+    set(conf_depends ${conf_depends} genconf)
   endif()
 
   if(ARG_USER_MODULE)
@@ -1567,7 +1580,7 @@ function(gaudi_generate_configurables library)
               ${genconf_cmd} ${library_preload} -o ${outdir} -p ${package}
                 ${genconf_opts}
                 -i ${library}
-    DEPENDS ${library} ${deps})
+    DEPENDS ${conf_depends})
   add_custom_target(${library}Conf ALL DEPENDS ${outdir}/${library}.confdb)
   # Add the target to the target that groups all of them for the package.
   if(NOT TARGET ${package}ConfAll)
@@ -2994,6 +3007,49 @@ function(gaudi_generate_project_manifest filename project version)
     # platform specifications
     set(data "${data}    <binary_tag>${BINARY_TAG}</binary_tag>\n")
     set(data "${data}    <lcg_system>${LCG_SYSTEM}</lcg_system>\n")
+    # look for packages provided by heptools
+    # - compile a list of the paths required at runtime
+    #message(STATUS "project_environment -> ${project_environment}")
+    set(required_paths)
+    foreach(path ${project_environment})
+      #message(STATUS "maybe path -> ${path}")
+      if(EXISTS "${path}")
+        get_filename_component(path "${path}" REALPATH)
+        #message(STATUS "path -> ${path}")
+        set(required_paths ${required_paths} ${path})
+      endif()
+    endforeach()
+    if(required_paths)
+      list(REMOVE_DUPLICATES required_paths)
+    endif()
+    #message(STATUS "required_paths -> ${required_paths}")
+    # - check if the "<ext>_home" directory of each external is used
+    set(used_externals)
+    foreach(ext ${LCG_projects} ${LCG_externals})
+      #message(STATUS "checking use of ${ext}")
+      foreach(h ${${ext}_home})
+        get_filename_component(h "${h}" REALPATH)
+        #message(STATUS "  dir ${h}")
+        foreach(path ${required_paths})
+          if(path MATCHES "^${h}")
+            #message(STATUS "  found in ${ext}")
+            set(used_externals ${used_externals} ${ext})
+            break()
+          endif()
+        endforeach()
+      endforeach()
+    endforeach()
+    # set(used_externals Python ROOT Qt)
+    # - add the packages list to the data
+    if(used_externals)
+      list(REMOVE_DUPLICATES used_externals)
+      list(SORT used_externals)
+      set(data "${data}    <packages>\n")
+      foreach(ext ${used_externals})
+        set(data "${data}      <package name=\"${ext}\" version=\"${${ext}_config_version}\" />\n")
+      endforeach()
+      set(data "${data}    </packages>\n")
+    endif()
     set(data "${data}  </heptools>\n")
   endif()
 
