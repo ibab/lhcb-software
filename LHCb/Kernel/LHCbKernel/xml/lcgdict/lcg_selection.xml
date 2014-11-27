@@ -14,6 +14,9 @@
   <class name="std::vector<std::pair<double,LHCb::CaloCellID> >"/>
   <class name="std::pair<LHCb::MuonTileID,int>"/>
   <class name="std::vector<std::pair<LHCb::MuonTileID,int> >"/>
+  <class name="std::vector<LHCb::HCCellID>"/>
+  <class name="std::pair<LHCb::HCCellID,int>"/>
+  <class name="std::vector<std::pair<LHCb::HCCellID,int> >"/>
   <class name="LHCb::Trajectory"/>
   <class name="LHCb::AlignTraj"/>
   <class name="LHCb::CircleTraj"/>

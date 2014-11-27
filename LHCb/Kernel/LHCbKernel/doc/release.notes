@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+! 2014-11-27 - Victor Coco
+ - Added HCCellID class for the Herschel channels and related declarations.
+
 ! 2014-11-26 - Marco Clemencic
  - Print a warning when using the patched merge_files.py, so that we can detect
    where the work-around is enabled.

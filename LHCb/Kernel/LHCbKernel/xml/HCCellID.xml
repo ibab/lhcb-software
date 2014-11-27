@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+
+<gdd>
+  <package name = 'LHCbKernel'>
+    <class name = 'HCCellID' 
+           author = 'Victor Coco' 
+           desc = 'This class identifies a single PMT in the HC'
+           virtual = 'FALSE'>
+
+      <constructor argList = 'unsigned int side, unsigned int station , unsigned int quadrant'
+                   desc = 'Constructor with side, station, quadrant'>
+        <code>
+  m_cellID = (side &lt;&lt; sideBits) | (station &lt;&lt; stationBits) | quadrant ;
+        </code>
+      </constructor>
+
+      <constructor argList = 'int id' initList = 'm_cellID(id)'
+                   desc = 'Constructor with cellID'>
+      </constructor>
+
+      <copyconstructor/>
+
+      <method type = '' name = 'operator unsigned int' const = 'TRUE' 
+              desc = 'Cast'>
+        <code>return m_cellID;</code>
+      </method> 
+
+      <method type = "std::ostream&amp;" name = "fillStream" virtual = "FALSE" const = "TRUE"
+              desc = "Special serializer to ASCII stream" >
+        <arg name = "s" type = "std::ostream" inout = "BOTH"/> 
+      </method> 
+
+      <attribute type = 'bitfield' name = 'cellID' desc = 'HC Cell ID'>
+        <bitfield name = 'quadrant'    length =  '2' desc = 'quadrant number'/>
+        <bitfield name = 'station'    length =  '2' desc = 'station number'/>
+        <bitfield name = 'side'   length =  '1' desc = 'side'/>
+      </attribute>
+
+    </class>
+  </package>
+</gdd>

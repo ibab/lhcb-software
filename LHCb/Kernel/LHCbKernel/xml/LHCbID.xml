@@ -17,13 +17,14 @@
        <import name="Kernel/MuonTileID"/>
        <import name="Kernel/VPChannelID"/>
        <import name="Kernel/FTChannelID"/>
+       <import name="Kernel/HCCellID"/>
 
        &StlVector;
 
        <enum
           desc   = "types of sub-detector channel ID"
           name   = "channelIDype"
-          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VP, FT=10, UT"
+          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VP, FT=10, UT , HC"
           access = 'PUBLIC'
        />
 
@@ -413,6 +414,34 @@
          </code>
        </method>
 
+       <constructor 
+         desc  = "Constructor from HCCellID, HC standing for Herschel" >
+          <arg const="TRUE" name="cellID" type="HCCellID" />
+          <code>
+  m_lhcbID = (HC &lt;&lt; detectorTypeBits) + cellID;
+          </code>
+       </constructor>
+
+       <method
+         type  = "bool"
+         name  = "isHC"
+         const = 'TRUE'
+         desc  = "return true if this is a HC identifier">
+         <code>
+  return (HC == detectorType());
+         </code>
+       </method>
+
+       <method
+         type  = "LHCb::HCCellID"
+         name  = "hcID"
+         const = 'TRUE'
+         desc  = "return the HCCellID">
+	 <code>
+  return ( isHC() ? LHCb::HCCellID(m_lhcbID &amp; IDMask) : LHCb::HCCellID(0xF0000000));
+         </code>
+       </method>
+
        <method
          type  = "bool"
          name  = "checkDetectorType"
@@ -438,6 +467,7 @@
   if (isCalo())    return m_lhcbID &amp; IDMask;
   if (isMuon())    return m_lhcbID &amp; IDMask;
   if (isFT())      return ftID().channelID();
+  if (isHC())      return hcID().cellID();
   return 0;
         </code>
       </method>
