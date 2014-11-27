@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2014-11-27 - Victor Coco
+ - Added HCDigit to store the Herschel PMT adcs
+
 !========================= DigiEvent v4r2 2014-05-12 =========================
 ! 2014-04-01 - Heinrich Schindler 
  - Remove VPLiteCluster.

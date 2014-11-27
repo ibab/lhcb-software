@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd" > 
+<gdd>
+  <package name = "DigiEvent">
+    <class name = "HCDigit"
+           id = "13001"
+           author = "Victor Coco"
+           desc = "This class represents a Herschel PMT measurement">
+    <location name = "Default" place = "Raw/HC/Digits"/>
+    <import name = "vector" std = "TRUE"/>
+    <import name = "Kernel/HCCellID"/>
+    <template name = "KeyedObjectDict" t1 = "LHCb::HCCellID"/>
+    <base name = "KeyedObject&lt;LHCb::HCCellID&gt;"/>
+    &KeyedContainer;
+
+    <constructor desc = "Constructor"
+                 argList = 'int adc'
+                 initList = 'm_adc(adc)'>
+    </constructor>
+    <constructor desc = "Copy constructor"
+                 initList = "KeyedObject&lt;LHCb::HCCellID&gt;(),
+                             m_adc(digit.m_adc)">
+
+      <arg const = 'TRUE' name = "digit" type = "LHCb::HCDigit"/>
+    </constructor>
+
+    <method type = "LHCb::HCDigit*" name = "clone" const = 'TRUE' access = "PUBLIC" 
+            desc = "Clone method">
+      <code>
+        return new LHCb::HCDigit(*this);
+      </code>
+    </method>
+
+    <attribute name = "adc" type = "int" desc = "PMT adc"/>
+
+    <method type = "LHCb::HCCellID" name = "cellID" const = 'TRUE' 
+            desc = "Return the digit cellID = key">
+      <code>return key();</code>
+    </method>
+
+    <method type = "std::ostream&amp;" name = "fillStream" const = 'TRUE' virtual = "FALSE"
+            desc = "Print the digit key = cellID">
+      <arg type = "std::ostream" name = "s"/>
+      <code>
+        s &lt;&lt; "{HCDigit's key: " &lt;&lt; (int) key() &lt;&lt; "}";
+        return s;
+      </code>
+    </method>
+
+    </class>
+  </package>
+</gdd>
