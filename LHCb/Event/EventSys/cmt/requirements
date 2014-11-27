@@ -35,7 +35,4 @@ copy_relax_rootmap dict=HepMC
 copy_relax_rootmap dict=STL
 copy_relax_rootmap dict=Math
 
-# work around for a problem with ROOT 6 rootmap files
-macro merge_rootmap_cmd "python $(LHCbKernel_root)/cmt/merge_files.py --exclude-re '^class pair<((const )?int|double|long|string),(double|int)>'"
-
 end_private
