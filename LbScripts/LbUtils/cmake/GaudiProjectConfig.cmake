@@ -3,7 +3,7 @@
 #
 # Authors: Pere Mato, Marco Clemencic
 #
-# Commit Id: b8482188ec975b50f2ae4f350b5ba526396b55d5
+# Commit Id: 2670462f59237228cf20d50ef22b8437e1cfd0c1
 
 cmake_minimum_required(VERSION 2.8.5)
 
@@ -3031,7 +3031,8 @@ function(gaudi_generate_project_manifest filename project version)
         get_filename_component(h "${h}" REALPATH)
         #message(STATUS "  dir ${h}")
         foreach(path ${required_paths})
-          if(path MATCHES "^${h}")
+          string(FIND "${path}" "${h}" hpos)
+          if(hpos EQUAL 0)
             #message(STATUS "  found in ${ext}")
             set(used_externals ${used_externals} ${ext})
             break()
