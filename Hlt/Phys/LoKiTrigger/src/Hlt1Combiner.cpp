@@ -240,7 +240,7 @@ LoKi::Hlt1::Hlt1Combiner::operator()
         if ( ! m_cut ( mother ) ) { continue ; }
 
         //std::cout << "====================================================================================" << std::endl;
-        std::cout << " CREATED PARTICLE: mass = " << mother->measuredMass() << std::endl;
+        //std::cout << " CREATED PARTICLE: mass = " << mother->measuredMass() << std::endl;
         //mother->fillStream(std::cout);
         //std::cout << std::endl;
         //std::cout << "====================================================================================" << std::endl;
