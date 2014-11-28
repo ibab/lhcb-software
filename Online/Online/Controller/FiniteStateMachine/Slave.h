@@ -85,6 +85,9 @@ namespace FiniteStateMachine {
     bool              m_internal;
     /// Flag to store if slave is alive
     bool              m_alive;
+    /// Flag to see if the slave has answered to a request
+    bool              m_answered;
+
   public:
     /** Class Constructor
      *
@@ -107,7 +110,8 @@ namespace FiniteStateMachine {
     SlaveState statusState() const                        {  return m_status;               }
     /// Access meta state as string
     const char* statusName() const;
-
+    /// Check if the slave answered to the current request
+    bool answered()  const                                {  return m_answered;             }
     /// Check if the task is alive
     bool isAlive() const                                  {  return m_alive;                }
     /// Check if the slave is limbo

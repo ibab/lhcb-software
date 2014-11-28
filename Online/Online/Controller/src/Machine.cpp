@@ -180,6 +180,11 @@ void Machine::handleIoc(const Event& event)   {
       evaluateWhens();
     }
     break;
+  case 0xFEEDBABE:
+      display(WARNING,c_name(),"Machine ****TEST**** in meta state:%s - evaluate WHENs. Idle:%s",
+	      currentMetaName(), isIdle() ? "Yes" : "No");
+      evaluateWhens();
+      break;
   case Machine::MACH_EXEC_ACT:
   case Machine::MACH_OUTACTION:
   default:
@@ -366,9 +371,9 @@ ErrCond Machine::checkSlaves()   {
     CheckStateSlave check = for_each(sl.begin(),sl.end(),CheckStateSlave(tr));
     size_t bad = check.fail+check.dead;
     size_t count = check.count+bad;
-    display(DEBUG,c_name(),"Executing '%s'. Count:%d Fail:%d Dead:%d Size:%d",
-	    tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()));
-
+    display(DEBUG,c_name(),"Executing '%s'. Count:%d Fail:%d Dead:%d Other:%d Answered:%d Size:%d",
+	    tr->c_name(), int(check.count), int(check.fail), int(check.dead),
+	    int(check.other), int(check.answered), int(sl.size()));
     if ( tr->killActive() && check.dead < sl.size() )   {
       display(DEBUG,c_name(),"WAIT_ACTION '%s'. Count:%d Fail:%d Dead:%d Size:%d KillActive:%s",
 	      tr->c_name(), int(check.count), int(check.fail), int(check.dead),int(sl.size()),
@@ -407,6 +412,12 @@ ErrCond Machine::checkSlaves()   {
     }
     else if ( check.fail>0 ) 
       return FSM::FAIL;
+    else if ( check.answered == sl.size() && check.count+check.other == sl.size() )  {
+      // This may only happen, if a slave changes state again before the transition finished.
+      // In this event we have to cancel the transition and work down the slave state change.
+      goIdle();
+      return ret_success(this,Slave::SLAVE_TRANSITION);
+    }
     return FSM::FAIL;
   }
   return FSM::TRANNOTFOUND;

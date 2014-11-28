@@ -50,7 +50,7 @@ static const char* _metaStateName(int meta)   {
 Slave::Slave(const Type *typ, const string& nam, Machine* machine, bool internal)
   : TypedObject(typ,nam), m_timerID(0,0), m_tmo(5), 
     m_meta(SLAVE_LIMBO), m_status(SLAVE_LIMBO), m_machine(machine), m_state(0), 
-    m_rule(0), m_internal(internal), m_alive(false)
+    m_rule(0), m_internal(internal), m_alive(false), m_answered(false)
 {
   m_state = type()->initialState();
 }
@@ -169,6 +169,7 @@ FSM::ErrCond Slave::apply(const Rule* rule)  {
     display(INFO,c_name(),"%s sending '%s' to move from %s to %s. Rule:%s",
 	    m_machine->c_name(),tr->c_name(),State::c_name(m_state),State::c_name(tr->to()),
 	    Rule::c_name(m_rule));
+    m_answered = false;
     if ( isInternal() ) {
       return send(SLAVE_FINISHED,tr->to());
     }
@@ -288,6 +289,7 @@ void Slave::handleState(const string& msg)  {
   if ( state && state->isFailure() ) {
     lib_rtl_sleep(10); // Put in some code to set breakpoint for debugging
   }
+  m_answered = true;
 
   if ( starting )   {
     iamHere();

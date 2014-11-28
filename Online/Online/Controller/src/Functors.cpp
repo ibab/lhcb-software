@@ -114,8 +114,14 @@ void CheckStateSlave::operator()(const Slave* s)   {
   const Type*  slType  = s->type();
   const Rule*  slRule  = s->rule();
   const Transition::Rules& r = object->rules();
+  //const Slave::SlaveState slStatus = s->statusState();
+  const Slave::SlaveState slCurrent = s->currentState();
 
-  if ( s->currentState() == Slave::SLAVE_FAILED ) { 
+  if ( s->answered() )  {
+    ++answered;  // We want to know if the buster has answered and is alive
+  }
+  //
+  if ( slCurrent == Slave::SLAVE_FAILED ) { 
     ++fail;  // Must be first check: Slave may have failed on start while limbo....
   }
   else if ( s->isLimbo() ) { 
@@ -124,7 +130,7 @@ void CheckStateSlave::operator()(const Slave* s)   {
   else if ( s->isInternal() ) {
     ++count;
   }
-  else if ( s->currentState() == Slave::SLAVE_EXECUTING ) { 
+  else if ( slCurrent == Slave::SLAVE_EXECUTING ) { 
     // Nothing to do: Slave has not yet answered
   }
   else if ( slRule && slState && slRule->targetState() == slState )  {
@@ -140,18 +146,24 @@ void CheckStateSlave::operator()(const Slave* s)   {
     // Nothing to do: Slave has not yet answered
   }
   else   {  // Check if all rules for this type are fulfilled
+    int diff = 0;
     for(Transition::Rules::const_iterator i=r.begin(); i != r.end(); ++i)  {
       const Rule* rule = (*i);
       if ( rule->type() == slType )  {
 	if      ( slRule  == rule && slState == object->to() && slState==rule->targetState() ) {
-	  ++count;  // Slave fulfills state criteria
+	  ++diff;  // Slave fulfills state criteria
 	  break;
 	}
 	else if ( slState == rule->targetState() ) {
-	  ++count;  // Slave fulfills state criteria
+	  ++diff;  // Slave fulfills state criteria
 	  break;
 	}
       }
+    }
+    count += diff;
+    // Collect also slaves who got into a state, where they should have never gotten into
+    if ( 0 == diff && s->answered() )   {
+      ++other;
     }
   }
 }

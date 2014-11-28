@@ -165,6 +165,11 @@ static Type* defineDAQType(DaqType daqType = DAQ_NORMAL)    {
   pause->adoptRule(ParentOfType(daq).move(running, paused));
   pause->adoptRule(pause);
 
+  /// Ready     -> Paused
+  pause          = daq->addTransition("pause",     ready,     paused);
+  pause->adoptRule(ParentOfType(daq).move(ready, paused));
+  pause->adoptRule(pause);
+
   /// Paused    -> Running for children in state paused
   Tr*  cont      = daq->addTransition("continue",  paused,      running);
   cont->addPredicate(AllChildrenOfType(daq).inState(paused, ready, running));

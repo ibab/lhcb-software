@@ -51,6 +51,7 @@ namespace FiniteStateMachine {
     /// Standard constructor
     ActionCounter(const T* o) : Functor<const T*>(o), count(0), fail(0), dead(0) {}
   };
+  
 
   template <class T> struct FsmCheck : Functor<T> {
     /// Base class type
@@ -122,8 +123,10 @@ namespace FiniteStateMachine {
   };
 
   struct CheckStateSlave : public ActionCounter<Transition>  {
+    size_t answered;
+    size_t other;
     /// Standard constructor
-    CheckStateSlave(const Transition* t) : ActionCounter<Transition>(t) {}
+  CheckStateSlave(const Transition* t) : ActionCounter<Transition>(t), answered(0), other(0) {}
     /// Operator invoked for each slave being analyzed
     void operator()(const Slave* s);
   };
