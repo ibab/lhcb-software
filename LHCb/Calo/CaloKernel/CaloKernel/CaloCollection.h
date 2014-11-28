@@ -161,12 +161,12 @@ private:
 template <class T1,class T2,class T3,class T4>
 inline std::ostream& 
 operator <<( std::ostream& os , const CaloCollection<T1,T2,T3,T4>& cc ) 
-{ return cc.fillStream ( os ) ; };
+{ return cc.fillStream ( os ) ; }
 // ============================================================================
 template <class T1,class T2,class T3,class T4>
 inline std::ostream& 
 operator <<( std::ostream& os , const CaloCollection<T1,T2,T3,T4>* cc ) 
-{ return ( ( 0 == cc ) ? os << " CaloCollection* points to NULL!" : os << *cc); };
+{ return ( ( 0 == cc ) ? os << " CaloCollection* points to NULL!" : os << *cc); }
 // ============================================================================
 
 // ============================================================================
