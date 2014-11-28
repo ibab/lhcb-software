@@ -19,7 +19,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( FlatNParticles );
+DECLARE_TOOL_FACTORY( FlatNParticles )
 
 //=============================================================================
 // Standard constructor, initializes variables

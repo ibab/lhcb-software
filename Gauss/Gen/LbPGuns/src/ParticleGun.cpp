@@ -40,7 +40,7 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( ParticleGun );
+DECLARE_ALGORITHM_FACTORY( ParticleGun )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -97,7 +97,7 @@ ParticleGun::ParticleGun( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ParticleGun::~ParticleGun() {};
+ParticleGun::~ParticleGun() {}
 
 //=============================================================================
 // Initialisation. Check parameters

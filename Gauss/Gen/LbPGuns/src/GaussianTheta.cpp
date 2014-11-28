@@ -23,7 +23,7 @@
 // 2008-05-18: Patrick Robbe, rewrite in tool format particle gun algorithm
 //==========================================================================
 
-DECLARE_TOOL_FACTORY( GaussianTheta );
+DECLARE_TOOL_FACTORY( GaussianTheta )
 
 //==========================================================================
 // Constructor

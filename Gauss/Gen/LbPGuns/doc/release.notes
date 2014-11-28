@@ -4,8 +4,14 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+! 2014-11-28 - Gloria Corti
+ - Try to fix warnings when compiling with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
+
+! 2014-11-04 - Gloria Corti
+ - Move to Generators package smearing vertex tools
 
 ! 2014-10-13 - Angelo Di Canto
  - Modified MomentumSpectrum to improve logic and accept also pt-eta (TH2D)

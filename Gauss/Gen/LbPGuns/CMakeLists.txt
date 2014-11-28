@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbPGuns
 ################################################################################
-gaudi_subdir(LbPGuns v5r0)
+gaudi_subdir(LbPGuns v6r0)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/GenEvent

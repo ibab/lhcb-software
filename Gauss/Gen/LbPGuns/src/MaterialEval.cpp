@@ -24,7 +24,7 @@
 //-----------------------------------------------------------------------------
  
 // Declaration of the tool Factory
-DECLARE_TOOL_FACTORY( MaterialEval );
+DECLARE_TOOL_FACTORY( MaterialEval )
 
 //============================================================================
 // Constructor

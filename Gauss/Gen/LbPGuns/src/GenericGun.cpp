@@ -21,7 +21,7 @@
 // 2008-05-18: Patrick Robbe, rewrite in tool format particle gun algorithm
 //==========================================================================
 
-DECLARE_TOOL_FACTORY( GenericGun );
+DECLARE_TOOL_FACTORY( GenericGun )
 
 //==========================================================================
 // Constructor

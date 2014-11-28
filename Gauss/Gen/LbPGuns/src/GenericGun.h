@@ -12,7 +12,7 @@
 
 namespace SPGGenMode {
   enum Mode { FixedMode = 1, GaussMode , FlatMode } ;
-};
+}
 
 /** @class GenericGun GenericGun.h "GenericGun.h"
  *

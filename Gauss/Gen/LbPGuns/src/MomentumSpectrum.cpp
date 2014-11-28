@@ -22,7 +22,7 @@
 // 2014-01-03: Dan Johnson (adapted from Michel De Cian)
 //===========================================================================
 
-DECLARE_TOOL_FACTORY( MomentumSpectrum );
+DECLARE_TOOL_FACTORY( MomentumSpectrum )
 
 //===========================================================================
 // Constructor

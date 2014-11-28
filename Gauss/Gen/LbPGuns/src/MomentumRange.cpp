@@ -20,7 +20,7 @@
 // 2008-05-18: Patrick Robbe adaptation to tool structure
 //===========================================================================
 
-DECLARE_TOOL_FACTORY( MomentumRange );
+DECLARE_TOOL_FACTORY( MomentumRange )
 
 //===========================================================================
 // Constructor

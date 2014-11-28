@@ -60,7 +60,7 @@
 // From DetDesc
 #include "DetDesc/SolidBox.h"
 
-DECLARE_TOOL_FACTORY( OTCosmic );
+DECLARE_TOOL_FACTORY( OTCosmic )
 
 //--------------------------------------------------------------------------
 OTCosmic::OTCosmic( const std::string& type , 
