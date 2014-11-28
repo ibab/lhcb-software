@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2014-11-28 - Marco Clemencic
+ - Reverted work around for spurious entries in the rootmap files.
+
 ! 2014-10-17 - Manuel Tobias Schiller
  - Tf::TStationHitManager: replace the ToolHandle instances by ordinary
    pointers to the interfaces implemented by the tools; this change should not

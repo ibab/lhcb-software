@@ -35,8 +35,3 @@ apply_pattern reflex_dictionary                                      \
               headerfiles=$(TFKERNELROOT)/dict/TfKernelDict.h        \
               selectionfile=$(TFKERNELROOT)/dict/TfKernelDict.xml    \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
-
-# work around for a problem with ROOT 6 rootmap files
-private
-  macro merge_rootmap_cmd "python $(LHCbKernel_root)/cmt/merge_files.py --exclude-re '^header .*Kernel/Range'"
-end_private
