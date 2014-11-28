@@ -30,7 +30,7 @@ class IBeamTool ;
 
 namespace GenMode {
   enum Mode { GaussMode=1, FlatMode };
-};  
+} 
 
 class JetProduction : public GaudiTool, virtual public IProductionTool {
 

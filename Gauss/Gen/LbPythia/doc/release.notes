@@ -4,6 +4,9 @@
 ! Purpose     : Package for Pythia 6 in Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-11-28 - Gloria Corti
+ - Try to fix fix warnings when compiling with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

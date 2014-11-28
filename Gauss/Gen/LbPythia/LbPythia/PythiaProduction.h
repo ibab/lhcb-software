@@ -17,7 +17,7 @@
 class IBeamTool ;
 namespace LHCb {
   class ParticleProperty ;
-} ;
+}
 
 /** @class PythiaProduction PythiaProduction.h 
  *  

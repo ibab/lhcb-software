@@ -214,13 +214,13 @@ PythiaProduction::PythiaProduction( const std::string& type,
   m_defaultSettings.push_back( "pydat1 parj 17 0.0815" ) ;
   m_defaultSettings.push_back( "pydat1 mstj 26 0" ) ;
   m_defaultSettings.push_back( "pydat1 parj 33 0.4" ) ;
-} ;
+} 
 
 
 //=============================================================================
 // Destructor 
 //=============================================================================
-PythiaProduction::~PythiaProduction( ) { ; }
+PythiaProduction::~PythiaProduction( ) { }
 
 //=============================================================================
 // Initialize method
@@ -1170,7 +1170,7 @@ StatusCode PythiaProduction::hadronize( HepMC::GenEvent * theEvent ,
   }
 
   return toHepMC ( theEvent , theCollision ) ;  
-} ;
+} 
 
 
 //=============================================================================
@@ -1442,8 +1442,7 @@ StatusCode PythiaProduction::toHepMC
   hardProcessInfo( theCollision ) ;
   
   return StatusCode::SUCCESS ;
-} ;
-// ============================================================================
+}
 
 
 // ============================================================================

@@ -30,7 +30,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( JetProduction );
+DECLARE_TOOL_FACTORY( JetProduction )
 
 
 //=============================================================================
@@ -148,7 +148,7 @@ JetProduction::JetProduction( const std::string& type,
   m_defaultSettings.push_back( "pydat1 parj 17 0.090" ) ;
   m_defaultSettings.push_back( "pydat1 mstj 26 0" ) ;
   m_defaultSettings.push_back( "pydat1 parj 33 0.4" ) ;
-} ;
+}
 
 
 //=============================================================================
@@ -753,7 +753,7 @@ StatusCode JetProduction::hadronize( HepMC::GenEvent * theEvent ,
   }
 
   return toHepMC ( theEvent , theCollision ) ;  
-} ;
+}
 
 
 //=============================================================================
@@ -1038,7 +1038,7 @@ IRndmGenSvc* JetProduction::randSvc() const {
     m_RGS = svc<IRndmGenSvc> ( "RndmGenSvc", true );
   }
   return m_RGS;
-};
+}
 
 
 // ============================================================================
