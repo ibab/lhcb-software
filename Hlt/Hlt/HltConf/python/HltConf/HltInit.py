@@ -123,7 +123,7 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1TrackForwardPassThroughDecision" : 1013,
     "Hlt1TrackForwardPassThroughLooseDecision" : 1014,
     "Hlt1IncPhiDecision"                    : 1016,
-    "Hlt1IncCharmDecision"                  : 1017,
+    "Hlt1CalibTrackingDecision"             : 1017,
 
     # PH
     "Hlt1PhotonDecision"                    :  300,
