@@ -49,8 +49,8 @@ namespace CaloHitLocal
   static GiGaUtil::InstanceCounter<CaloHit> s_Counter   ;
 #endif 
   // ==========================================================================
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** standard  constructor 
@@ -64,8 +64,8 @@ CaloHit::CaloHit( const LHCb::CaloCellID& cell )
 #ifdef GIGA_DEBUG
   CaloHitLocal::s_Counter.increment () ;
 #endif  
-} ; 
-// ============================================================================
+}
+
 
 // ============================================================================
 /** copy constructor 
@@ -82,14 +82,17 @@ CaloHit::CaloHit( const CaloHit& right )
 #ifdef GIGA_DEBUG
   CaloHitLocal::s_Counter.increment () ;
 #endif  
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// clone menthod  
 // ============================================================================
-CaloHit* CaloHit::clone() const { return new CaloHit( *this ); };
-// ============================================================================
+CaloHit* CaloHit::clone() const 
+{ 
+  return new CaloHit( *this ); 
+}
+
 
 // ============================================================================
 /// destructor
@@ -108,8 +111,8 @@ CaloHit::~CaloHit()
 #ifdef GIGA_DEBUG
   CaloHitLocal::s_Counter.decrement () ;
 #endif
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// overloaded 'new' oerator 
@@ -119,15 +122,17 @@ void* CaloHit::operator new(size_t)
   void *hit  ;
   hit = (void *) CaloHitLocal::s_Allocator.MallocSingle () ;
   return hit ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// overloaded 'delete' oerator 
 // ============================================================================
 void CaloHit::operator delete( void *hit )
-{ CaloHitLocal::s_Allocator.FreeSingle( (CaloHit*) hit ); };
-// ============================================================================
+{ 
+  CaloHitLocal::s_Allocator.FreeSingle( (CaloHit*) hit ); 
+}
+
 
 // ============================================================================
 // The End 

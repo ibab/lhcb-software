@@ -409,7 +409,8 @@ inline LHCb::CaloCellID CaloSensDet::cell ( const G4StepPoint* point ) const
   m_table.insert ( Table::value_type( path , par-> cellID() ) ) ; 
   //
   return par->cellID() ;
-};
+}
+
 // ============================================================================
 /** evaluate the correction for Birk's law 
  *  @param charge   the charge of the particle 
@@ -430,7 +431,8 @@ inline double  CaloSensDet::birkCorrection
   const double alpha = dEdX/ density ;
   
   return 1.0 / ( 1.0 + C1 * alpha + C2 * alpha * alpha ) ;
-};
+}
+
 // ============================================================================
 /** evaluate the correction for Birk's law 
  *  @param charge   the charge of the particle 
@@ -447,7 +449,8 @@ inline double  CaloSensDet::birkCorrection
   if ( 0 == material ) 
   { Error("birkCorrection(): invalid material " ) ; return 1. ; } // RETURN
   return birkCorrection( charge , dEdX , material->GetDensity() ) ;
-};
+}
+
 // ============================================================================
 /** Birk's correction for given particle with given kinetic energy 
  *  for the given material
@@ -476,7 +479,8 @@ inline double CaloSensDet::birkCorrection
     ( charge , 
       dEdX   , 
       material->GetMaterial()->GetDensity() ) ;
-} ;
+}
+
 // ============================================================================
 // Birk's Law
 // ============================================================================
@@ -505,7 +509,7 @@ inline double CaloSensDet::birkCorrection ( const G4Step* step ) const
     ( track->GetDefinition         () , 
       track->GetKineticEnergy      () , 
       track->GetMaterialCutsCouple () ) ;
-};
+}
 // ============================================================================
 
 

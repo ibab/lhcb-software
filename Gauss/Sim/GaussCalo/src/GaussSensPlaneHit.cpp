@@ -54,8 +54,8 @@ namespace GaussSensPlaneHitLocal
   static GiGaUtil::InstanceCounter<GaussSensPlaneHit> s_Counter   ;
 #endif 
   // ==========================================================================
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** Standard constructor
@@ -80,7 +80,7 @@ GaussSensPlaneHit::GaussSensPlaneHit
   GaussSensPlaneHitLocal::s_Counter.increment () ;
 #endif  
   // ==========================================================================
-} ; 
+} 
 
 // ============================================================================
 /// destructor 
@@ -92,7 +92,7 @@ GaussSensPlaneHit::~GaussSensPlaneHit()
   GaussSensPlaneHitLocal::s_Counter.decrement () ;
 #endif  
   // ==========================================================================
-} ;
+}
 
 // ============================================================================
 /** copy constructor 
@@ -111,8 +111,8 @@ GaussSensPlaneHit::GaussSensPlaneHit
   GaussSensPlaneHitLocal::s_Counter.increment () ;
 #endif  
   // ==========================================================================
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// overloaded 'new' oerator 
@@ -122,15 +122,15 @@ void* GaussSensPlaneHit::operator new(size_t)
   void *hit  ;
   hit = (void *) GaussSensPlaneHitLocal::s_Allocator.MallocSingle () ;
   return hit ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /// overloaded 'delete' oerator 
 // ============================================================================
 void GaussSensPlaneHit::operator delete( void *hit )
-{ GaussSensPlaneHitLocal::s_Allocator.FreeSingle( (GaussSensPlaneHit*) hit ); };
-// ============================================================================
+{ GaussSensPlaneHitLocal::s_Allocator.FreeSingle( (GaussSensPlaneHit*) hit ); }
+
 
 // ============================================================================
 // The END 

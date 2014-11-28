@@ -209,7 +209,7 @@ inline CaloHitsCollection* caloHits( G4VHitsCollection* g4 )
 {
   GiGaUtil::FastCast<G4VHitsCollection,CaloHitsCollection> cast ;
   return cast( g4 );  
-};
+}
 
 // ============================================================================
 /** @fn  caloHit
@@ -224,8 +224,7 @@ inline CaloHit* caloHit( G4VHit* g4 )
 {
   GiGaUtil::FastCast<G4VHit,CaloHit> cast ;
   return cast( g4 );  
-};
-// ============================================================================
+}
 
 
 // ============================================================================

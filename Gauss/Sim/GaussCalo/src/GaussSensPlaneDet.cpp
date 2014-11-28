@@ -58,7 +58,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( GaussSensPlaneDet );
+DECLARE_TOOL_FACTORY( GaussSensPlaneDet )
 
 
 // ============================================================================
@@ -108,8 +108,8 @@ GaussSensPlaneDet::GaussSensPlaneDet
   declareProperty ( "CutForMuon"           , m_cutForMuon     ) ;
   declareProperty ( "CutForCharged"        , m_cutForCharged  ) ;
   declareProperty ( "CutForNeutral"        , m_cutForNeutral  ) ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** standard initialization (Gaudi) 
@@ -132,8 +132,7 @@ StatusCode GaussSensPlaneDet::initialize   ()
   collectionName.insert ( m_collectionName );
   ///
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
 
 
 // ============================================================================
@@ -160,8 +159,7 @@ StatusCode GaussSensPlaneDet::finalize    ()
     }
   // finalize the base class 
   return GiGaSensDetBase::finalize();
-};
-// ============================================================================
+}
 
 
 // ============================================================================
@@ -187,8 +185,8 @@ void GaussSensPlaneDet::Initialize( G4HCofThisEvent* HCE )
          "' for SensDet='"                 + m_collection->GetSDname () + 
          "'" , StatusCode::SUCCESS , MSG::VERBOSE                       ) ;
   //
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** method from G4 
@@ -222,8 +220,8 @@ void GaussSensPlaneDet::EndOfEvent( G4HCofThisEvent* /* HCE */ )
   MsgStream log ( msgSvc() , name() ) ;
   log << MSG::DEBUG << 
     format ( " #GaussSensPlaneHits=%4d ", nhits ) << endreq ; 
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** process the hit
@@ -294,7 +292,7 @@ bool GaussSensPlaneDet::ProcessHits( G4Step* step                      ,
   if( trackID == sTrackID ) { info->addToHits( hit ) ; }
   
   return true ;
-};
+}
 
 // ============================================================================
 // The END 

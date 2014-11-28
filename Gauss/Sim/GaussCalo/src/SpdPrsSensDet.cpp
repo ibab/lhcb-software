@@ -60,7 +60,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( SpdPrsSensDet );
+DECLARE_TOOL_FACTORY( SpdPrsSensDet )
 
 // ============================================================================
 /** standard constructor 
@@ -89,6 +89,7 @@ SpdPrsSensDet::SpdPrsSensDet
   declareProperty ( "IntegrationDelays" ,  m_sDelays ) ;
   declareProperty ( "FracMin"           ,  m_fracMin ) ;
 }
+
 // ============================================================================
 /** standard initialization (Gaudi) 
  *  @see GiGaSensDetBase
@@ -99,7 +100,10 @@ SpdPrsSensDet::SpdPrsSensDet
  */
 // ============================================================================
 StatusCode SpdPrsSensDet::initialize   ()
-{ return CaloSensDet::initialize(); } ;
+{ 
+  return CaloSensDet::initialize(); 
+}
+
 // ============================================================================
 /** standard finalization (Gaudi) 
  *  @see GiGaSensDetBase
@@ -114,7 +118,8 @@ StatusCode SpdPrsSensDet::finalize    ()
   m_sDelays.clear () ;
   // finalize the base class 
   return CaloSensDet::finalize();
-} ;
+} 
+
 // ============================================================================
 /** fill the hit with the concrete information about the energy and the time.
  *  The function is to be called from ProcessHits method.

@@ -195,7 +195,7 @@ inline double EcalSensDet::localNonUniformity
   }
   
   return correction ;
-};
+}
 
 // ============================================================================
 // The END 

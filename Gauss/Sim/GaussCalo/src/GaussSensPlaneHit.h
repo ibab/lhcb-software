@@ -118,8 +118,8 @@ gaussSensPlaneHitHit ( G4VHit* g4 )
 {
   GiGaUtil::FastCast<G4VHit,GaussSensPlaneHit> cast ;
   return cast( g4 );  
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** @fn  gaussSensPlaneHit
@@ -135,8 +135,8 @@ gaussSensPlaneHitHit ( GaussHitBase* g4 )
 {
   GiGaUtil::FastCast<GaussHitBase,GaussSensPlaneHit> cast ;
   return cast( g4 );  
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 /** @fn  caloHits
@@ -152,8 +152,7 @@ gaussSensPlaneHits ( G4VHitsCollection* g4 )
 {
   GiGaUtil::FastCast<G4VHitsCollection,GaussSensPlaneHitsCollection> cast ;
   return cast( g4 );  
-};
-// ============================================================================
+}
 
 
 // ============================================================================

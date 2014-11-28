@@ -57,7 +57,7 @@
 // ============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( HcalSensDet );
+DECLARE_TOOL_FACTORY( HcalSensDet )
 
 // ============================================================================
 /** standard constructor 
@@ -75,7 +75,8 @@ HcalSensDet::HcalSensDet
   const IInterface*  parent ) 
   : G4VSensitiveDetector( name  )
   , EHCalSensDet        ( type , name , parent ) 
-{};
+{}
+
 // ============================================================================
 /** fill the hit with the concrete information about the energy and the time.
  *  The function is to be called from ProcessHits method.
@@ -135,8 +136,8 @@ StatusCode    HcalSensDet::fillHitInfo
     }
   
   return StatusCode::SUCCESS ;
-};
-// ============================================================================
+}
+
 
 // ============================================================================
 // The END 

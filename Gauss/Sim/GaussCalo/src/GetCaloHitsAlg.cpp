@@ -28,7 +28,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GetCaloHitsAlg );
+DECLARE_ALGORITHM_FACTORY( GetCaloHitsAlg )
 
 
 //=============================================================================
@@ -51,7 +51,7 @@ GetCaloHitsAlg::GetCaloHitsAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GetCaloHitsAlg::~GetCaloHitsAlg() {}; 
+GetCaloHitsAlg::~GetCaloHitsAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters

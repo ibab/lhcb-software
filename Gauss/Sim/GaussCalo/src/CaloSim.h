@@ -32,7 +32,7 @@ namespace CaloSim
 {
   // cell id for CaloSim package 
   typedef  std::vector<const G4VPhysicalVolume*> Path ;
-};
+}
 
 
 // ============================================================================

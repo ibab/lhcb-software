@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussCalo
 ################################################################################
-gaudi_subdir(GaussCalo v10r0)
+gaudi_subdir(GaussCalo v10r0p1)
 
 gaudi_depends_on_subdirs(Det/CaloDet
                          Det/CaloDetXmlCnv

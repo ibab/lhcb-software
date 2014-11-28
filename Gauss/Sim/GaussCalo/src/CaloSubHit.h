@@ -232,7 +232,7 @@ inline CaloSubHit* caloSubHit( G4VHit* g4 )
 {
   GiGaUtil::FastCast<G4VHit,CaloSubHit> cast ;
   return cast( g4 );  
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -248,7 +248,7 @@ inline CaloSubHit* caloSubHit( GaussHitBase* g4 )
 {
   GiGaUtil::FastCast<GaussHitBase,CaloSubHit> cast ;
   return cast( g4 );  
-};
+}
 // ============================================================================
 
 // ============================================================================
