@@ -1,21 +1,43 @@
 package MooreSys
-version           v23r2
+version v14r8p3
 branches doc cmt
 
 #=======================================================
 # Don't forget the applications
 #=======================================================
 
-use  Moore               v23r2      Hlt
-use  IndependenceTests   v1r9       Hlt
-use  HltMonitor          v1r4	    Hlt   # Diego Martinez
-use  L0App               v2r3       L0    # 
+use  Moore               v14r8p4     Hlt
+
+# Bug fixes on top of LHCb v34r3 release stack
+use  RichDet             v16r11      Det
+use  DetCond             v12r26      Det
+use  RootCnv             v1r18       Online
+use  L0Base              v2r2        L0
+use  L0DU                v10r25p1    L0
+use  GaudiConf           v17r4p1
+use  DAQUtils            v1r7p1      DAQ
+use  RawEventCompat      v1r2        DAQ
+use  EventPacker         v2r16p1     Event
+use  PackedFlavTagEvent  v1r0        Event
+use  CondDBEntityResolver  v5r6      Tools
+
+#Swimming
+use Swimming             v3r4        Phys
+use SwimmingEvent        v1r6        Event
+
+# Hlt
+use  HltSettings         v5r55       Hlt
+use  IndependenceTests   v1r3p1      Hlt
+
 
 # Declare this as a container package
 apply_pattern container_package
 
-# Allow the generation of QMTests
-apply_pattern QMTest
-
 # Allow the generation of QMTest summary
 apply_pattern QMTestSummarize
+
+macro_remove cmt_actions_constituents 'runMakeOptions'
+macro_remove cmt_actions_constituents 'WriteOptions'
+# dummy to avoid warnings...
+tag ONLINE_OVERRULE_MOORE_SETUP
+macro Moore_Dummy_ "" ONLINE_OVERRULE_MOORE_SETUP ""
