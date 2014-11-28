@@ -43,12 +43,12 @@ LoKi::HltUnit::HltUnit
   //
   , m_cut { LoKi::BasicFunctors<void>::BooleanConstant{ false } }
 //
-  ,  m_params     () 
-  ,  m_params_old () 
+  ,  m_params     ()
+  ,  m_params_old ()
   //
 {
   // ==========================================================================
-  // declare own property 
+  // declare own property
   declareProperty
     ( "Monitor" ,
       m_monitor ,
@@ -62,6 +62,7 @@ LoKi::HltUnit::HltUnit
       m_toolNames = std::map<std::string, std::string> {
       { "DistanceCalculator", "LoKi::DistanceCalculator:PUBLIC" },
       { "LifetimeFitter", "LoKi::LifetimeFitter:PUBLIC" },
+      { "LoKi::LifetimeFitter/lifetime:PUBLIC", "LoKi::LifetimeFitter/lifetime:PUBLIC"},
       { "VertexFitter", "LoKi::VertexFitter:PUBLIC" },
       { "ParticleCombiner", "LoKi::VertexFitter:PUBLIC" },
       { "RelatedPVFinder",  "GenericParticle2PVRelator<_p2PVWithIPChi2, OfflineDistanceCalculatorName>/P2PVWithIPChi2:PUBLIC"}},
@@ -80,17 +81,17 @@ LoKi::HltUnit::HltUnit
                                  , "from LoKiCore.functions     import *" } );
   Assert ( sc.isSuccess () , "Unable (re)set property 'Preambulo'" , sc ) ;
   // ==========================================================================
-  declareProperty( "Params" , 
-                   m_params , 
-                   "Parameters accessingle via PARAM-constructions" ) 
-    -> declareUpdateHandler ( &LoKi::HltUnit::updateParams  , this ) ;                 
+  declareProperty( "Params" ,
+                   m_params ,
+                   "Parameters accessingle via PARAM-constructions" )
+    -> declareUpdateHandler ( &LoKi::HltUnit::updateParams  , this ) ;
 }
 // ============================================================================
 // virtual & protected destructor
 // ============================================================================
 LoKi::HltUnit::~HltUnit(){       // virtual & protected destructor
     for ( auto& i : m_out ) delete i.second;
-}            
+}
 // ============================================================================
 /* register the selection
  *  @param selection the selection to be registered
@@ -112,7 +113,7 @@ StatusCode LoKi::HltUnit::registerOutput
   //
   // register as "output" selection
   //FIXME:TODO: VectorMap does not support 'move' insertion...
-  // so we cannot have a VectorMap<..., std::unique_ptr<...>> 
+  // so we cannot have a VectorMap<..., std::unique_ptr<...>>
   auto id = selection->id();
   m_out.insert ( id , selection.release() ) ;
   //
@@ -179,7 +180,7 @@ StatusCode LoKi::HltUnit::decode()
   StatusCode sc = defineCode () ;
   Assert ( sc.isSuccess() , "Unable to defineCode for functor!" ) ;
   // =========================================================================
-  return StatusCode::SUCCESS ; 
+  return StatusCode::SUCCESS ;
 }
 // ============================================================================
 /*  define the code
@@ -194,7 +195,7 @@ StatusCode LoKi::HltUnit::defineCode ()
   StatusCode sc = i_decode<LoKi::Hybrid::ICoreFactory> ( m_cut ) ;
   Assert ( sc.isSuccess() , "Unable to decode the functor!" ) ;
   // =========================================================================
-  return StatusCode::SUCCESS ; 
+  return StatusCode::SUCCESS ;
 }
 // ============================================================================
 /*  define the stream
@@ -230,7 +231,7 @@ StatusCode LoKi::HltUnit::queryInterface
     *ppvi = static_cast<Hlt::IUnit*>( this ) ;
     addRef() ;
     return StatusCode::SUCCESS ; // RETURN
-  } 
+  }
   else if ( IIncidentListener::interfaceID() == iid )
   {
     *ppvi = static_cast<IIncidentListener*>( this ) ;
@@ -253,11 +254,11 @@ StatusCode LoKi::HltUnit::queryInterface
   { return annSvc() -> queryInterface ( iid , ppvi ) ; }              // RETURN
   else if ( LoKi::ILoKiSvc ::interfaceID() == iid )
   { return lokiSvc() -> queryInterface( iid , ppvi ) ; }              // RETURN
-  // check the basic interfaces 
+  // check the basic interfaces
   StatusCode sc = Algorithm::queryInterface ( iid , ppvi ) ;
   if ( sc.isSuccess () ) { return sc ; }                              // RETURN
   // check the Hlt Service
-  sc = hltSvc  () -> queryInterface ( iid , ppvi ) ;                 
+  sc = hltSvc  () -> queryInterface ( iid , ppvi ) ;
   if ( sc.isSuccess () ) { return sc ; }                              // RETURN
   // check the LoKi Service
   sc = lokiSvc () -> queryInterface ( iid , ppvi ) ;
@@ -299,13 +300,13 @@ StatusCode LoKi::HltUnit::execute ()
   Gaudi::Utils::AlgContext lock { this , contextSvc() } ;
   ///
   Assert ( !updateRequired() , "Update is not possible for Hlt!" ) ;
- 
+
   /// MANDATORY: clear all "out" selections
   for ( auto& out : m_out ) { out.second->clean() ; }
- 
+
   /// OPTIONAL: Some decorative monitoring
   std::map<Gaudi::StringKey,size_t>  map ;
- 
+
   // get the status of all selections
   if ( monitor() )
   {
@@ -324,13 +325,13 @@ StatusCode LoKi::HltUnit::execute ()
 
   for ( auto& out : m_out )
   { out.second->setDecision( !out.second->empty() ) ; }
- 
+
   /// Monitor output selections  (*ALWAYS*)
   for ( const auto& out : m_out )
   { counter ( "# " + out.first.str() ) += out.second->size() ; }
- 
+
   // DECORATION? monitoring
-  if ( monitor() ) // the output selections are *ALWAYS* monitored  
+  if ( monitor() ) // the output selections are *ALWAYS* monitored
   {
     /** do somehting here */
   }
@@ -394,7 +395,7 @@ const LHCb::RecVertex::Range LoKi::HltUnit::primaryVertices () const
   return LHCb::RecVertex::Range(vertices->begin(), vertices->end());
 }
 // ============================================================================
-const LHCb::VertexBase* LoKi::HltUnit::bestVertex 
+const LHCb::VertexBase* LoKi::HltUnit::bestVertex
 ( const LHCb::Particle* particle ) const
 {
   auto it = m_p2PVMap.find( particle );
@@ -408,20 +409,20 @@ const LHCb::VertexBase* LoKi::HltUnit::bestVertex
 }
 
 // ============================================================================
-void LoKi::HltUnit::updateParams ( Property& /* p */ ) // update the factory 
+void LoKi::HltUnit::updateParams ( Property& /* p */ ) // update the factory
 {
-  // no action if not yet initialized 
-  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) 
+  // no action if not yet initialized
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() )
   {
-    /// silently redefine "old" parameters 
-    m_params_old = m_params ; // silently redefine "old" parameters 
+    /// silently redefine "old" parameters
+    m_params_old = m_params ; // silently redefine "old" parameters
     return ;                                                         // RETURN
   }
   //
-  // check if different from "old" value 
+  // check if different from "old" value
   //
   MsgStream& log = warning ();
-  if ( m_params_old != m_params && log.isActive () ) 
+  if ( m_params_old != m_params && log.isActive () )
   {
     log << "Parameters are redefined:" ;
     log << "\n NEW:" ;  Gaudi::Utils::toStream ( m_params     , log.stream() ) ;

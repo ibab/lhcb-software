@@ -91,15 +91,15 @@ LHCb::RecVertex::Container* LoKi::Hlt1::HelperTool::_createRecVertices() const
 LHCb::ProtoParticle::Container* LoKi::Hlt1::HelperTool::_createProtoParticles() const
 {
     typedef LHCb::ProtoParticle::Container OBJECTS;
-    return alg()->getOrCreate<OBJECTS, OBJECTS>( "Hlt1/ProtoP/TightForward/Charged" ); // THIS NEEDS TO BE ADAPTED FOR e.g. TightForward/LooseForward ...
+    return alg()->getOrCreate<OBJECTS, OBJECTS>( Hlt::ProtoParticleLocation::Default );
 }
 // ============================================================================
 // get the stored particles
 // ============================================================================
-LHCb::Particle::Container* LoKi::Hlt1::HelperTool::_createParticles( const std::string& location ) const
+LHCb::Particle::Container* LoKi::Hlt1::HelperTool::_createParticles() const
 {
     typedef LHCb::Particle::Container OBJECTS;
-    return alg()->getOrCreate<OBJECTS, OBJECTS>( "Hlt1/TightForward" + location + "/Particles" ); // THIS NEEDS TO BE ADAPTED for e.g. TightForward / LooseForward ...
+    return alg()->getOrCreate<OBJECTS, OBJECTS>( Hlt::ParticleLocation::Default );
 }
 // ============================================================================
 // create the tool

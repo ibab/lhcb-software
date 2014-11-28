@@ -15,6 +15,8 @@
 // ============================================================================
 #include "Event/Track.h"
 #include "Event/HltCandidate.h"
+#include "Event/HltProtoParticle.h"
+#include "Event/HltParticle.h"
 // ============================================================================
 // TrackInterfaces
 // ============================================================================
@@ -135,14 +137,6 @@ namespace LoKi
         return m_hlt_tracks ;
       }
       // ======================================================================
-      // ======================================================================
-      /// get the stored particles
-      inline LHCb::Particle::Container* storedParticles
-      ( const std::string& location ) const
-      {
-        if ( ! m_hlt_particles ) { m_hlt_particles = _createParticles ( location ) ; }
-        return m_hlt_particles ;
-      }
     protected:
       // ======================================================================
       /// get new candidate
@@ -176,9 +170,9 @@ namespace LoKi
         return _create<LHCb::ProtoParticle> ( m_hlt_protoparticles ) ;
       }
       /// get new particle
-      inline LHCb::Particle* newParticle ( const std::string& location ) const
+      inline LHCb::Particle* newParticle () const
       {
-        if ( !m_hlt_particles ) { m_hlt_particles = _createParticles ( location ) ; }
+        if ( !m_hlt_particles ) { m_hlt_particles = _createParticles () ; }
         return _create<LHCb::Particle> ( m_hlt_particles ) ;
       }
       // ======================================================================
@@ -213,8 +207,7 @@ namespace LoKi
       /// get the storage for proto-particles
       LHCb::ProtoParticle::Container* _createProtoParticles () const ;
       /// get the storage for particles
-      LHCb::Particle::Container* _createParticles
-      ( const std::string& location ) const ;
+      LHCb::Particle::Container* _createParticles () const ;
       // ======================================================================
     private:
       // ======================================================================

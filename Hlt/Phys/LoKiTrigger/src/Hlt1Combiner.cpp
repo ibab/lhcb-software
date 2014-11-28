@@ -1,15 +1,28 @@
+// $Id: Hlt1Combiner.cpp 180655 2014-11-25 10:38:48Z mkenzie $
+// ============================================================================
+// Include files
+// ============================================================================
 #ifdef __INTEL_COMPILER
 #pragma warning(disable:1572) // non-pointer conversion ... may lose significant bits
 #pragma warning(push)
 #endif
-
+// ============================================================================
+// HltBase
+// ============================================================================
 #include "HltBase/HltUtils.h"
-
+// ============================================================================
+// GaudiAlg
+// ============================================================================
 #include "GaudiAlg/GaudiAlgorithm.h"
+// ============================================================================
+// Kernel
+// ============================================================================
 #include "Kernel/IParticleCombiner.h"
 #include "Kernel/DaVinciAlgorithm.h"
 #include "Kernel/IDecodeSimpleDecayString.h"
-
+// ============================================================================
+// LoKi
+// ============================================================================
 #include "LoKi/Hlt1Combiner.h"
 #include "LoKi/ToParticles.h"
 #include "LoKi/Hlt1.h"
@@ -17,11 +30,33 @@
 #include "LoKi/ParticleProperties.h"
 #include "LoKi/CompareParticles.h"
 #include  "LTTools.h"
-
+// ============================================================================
 #ifdef __INTEL_COMPILER
 #pragma warning(pop)
 #endif
-
+// ============================================================================
+/** @file
+ *
+ *  Implementation file for class LoKi::Hlt1::Hlt1Combiner
+ *  This file is part of LoKi project:
+ *   ``C++ ToolKit for Smart and Friendly Physics Analysis''
+ *
+ *  The package has been designed with the kind help from
+ *  Galina PAKHLOVA and Sergey BARSUK.  Many bright ideas,
+ *  contributions and advices from G.Raven, J.van Tilburg,
+ *  A.Golutvin, P.Koppenburg have been used in the design.
+ *
+ *  @author Matthew KENZIE matthew.kenzie@cern.ch
+ *  @date   2014-11-27
+ *
+ *                    $Revision: 180655 $
+ *  Last Modification $Date: 2014-11-25 11:38:48 +0100 (Tue, 25 Nov 2014) $
+ *                 by $Author: mkenzie $
+ */
+// ============================================================================
+//   constructor from decay string, output location, two Sources for daughters,
+//   combination cut and mother cut
+// ============================================================================
 LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
 ( std::string                                                decay      ,
   std::string                                                output     ,
@@ -40,7 +75,10 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
 {
   setup();
 }
-
+// ============================================================================
+//   constructor from decay string, output location, two Sources for daughters,
+//   combination cut and mother cut
+// ============================================================================
 LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
 ( std::string                                                decay      ,
   std::string                                                output     ,
@@ -59,7 +97,9 @@ LoKi::Hlt1::Hlt1Combiner::Hlt1Combiner
 {
   setup();
 }
-
+// ============================================================================
+// setup function (common call from constructors)
+// ============================================================================
 StatusCode LoKi::Hlt1::Hlt1Combiner::setup()
 {
   // get required tools
@@ -75,12 +115,18 @@ StatusCode LoKi::Hlt1::Hlt1Combiner::setup()
 
   return StatusCode::SUCCESS ;
 }
-
+// ============================================================================
+// virtual destructor
+// ============================================================================
 LoKi::Hlt1::Hlt1Combiner::~Hlt1Combiner () {}
-
+// ============================================================================
+// clone method ("virtual constructor")
+// ============================================================================
 LoKi::Hlt1::Hlt1Combiner* LoKi::Hlt1::Hlt1Combiner::clone() const
 { return new LoKi::Hlt1::Hlt1Combiner { *this } ; }
-
+// ============================================================================
+// getState helper function
+// ============================================================================
 const LHCb::State*
 LoKi::Hlt1::Hlt1Combiner::getState
   ( const LHCb::Track* &track ) const
@@ -95,7 +141,9 @@ LoKi::Hlt1::Hlt1Combiner::getState
 
   return state;
 }
-
+// ============================================================================
+// the only one important method
+// ============================================================================
 LoKi::Hlt1::Hlt1Combiner::result_type
 LoKi::Hlt1::Hlt1Combiner::operator()
   ( /* LoKi::Hlt1::Hlt1Combiner::argument a */ ) const
@@ -123,7 +171,7 @@ LoKi::Hlt1::Hlt1Combiner::operator()
   const IParticleCombiner* combiner = pc() ;
   const LoKi::Particles::PidCompare compare = LoKi::Particles::PidCompare () ;
 
-  std::cout << " == STARTING TO FILL DAUGHTERS HERE ! == " << std::endl;
+  //std::cout << " == STARTING TO FILL DAUGHTERS HERE ! == " << std::endl;
 
   // get the daughters
   Selected daughters;
@@ -151,19 +199,19 @@ LoKi::Hlt1::Hlt1Combiner::operator()
     daughters.add ( LoKi::Particles::nameFromPID(particle2->particleID()) , particle2 ) ;
   }
 
-  std::cout << " == STARTING COMBINATION LOOPS HERE ! == " << std::endl;
+  //std::cout << " == STARTING COMBINATION LOOPS HERE ! == " << std::endl;
 
   // loop over all decays
   for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin(); idecay != m_decays.end(); idecay++)
   {
 
-    std::cout << "In decay loop for decay: "; idecay->fillStream(std::cout); std::cout << std::endl;
+    //std::cout << "In decay loop for decay: "; idecay->fillStream(std::cout); std::cout << std::endl;
 
     Combiner loop ;
     const Decays::Decay::Items& dec_items = idecay->children() ;
     for ( Decays::Decay::Items::const_iterator child = dec_items.begin() ; child != dec_items.end(); child++)
     {
-      std::cout << "In child loop: "; child->fillStream(std::cout); std::cout << std::endl;
+      //std::cout << "In child loop: "; child->fillStream(std::cout); std::cout << std::endl;
       loop.add( daughters ( child->name() ) ) ;
     }
 
@@ -177,19 +225,23 @@ LoKi::Hlt1::Hlt1Combiner::operator()
         loop.current ( combination.begin() ) ;
 
         // apply comb cuts
-        if ( ! m_acut ( combination ) ) { continue ; }
+        if ( ! m_acut.fun ( combination ) ) { continue ; }
 
         LHCb::Vertex     vertex ;
-        LHCb::Particle   *mother = newParticle( location() );
+        LHCb::Particle   *mother = newParticle();
         mother->setParticleID( idecay->mother().pid() );
+
+        // should we lock Particle->PrimaryVertex here as in CombineParticles?
+
+        // do combination
         combiner -> combine ( combination , *mother , vertex ) ;
 
         // apply mother cuts
         if ( ! m_cut ( mother ) ) { continue ; }
 
         //std::cout << "====================================================================================" << std::endl;
-        //std::cout << " CREATED PARTICLE: " << std::endl;
-        //mother.fillStream(std::cout);
+        std::cout << " CREATED PARTICLE: mass = " << mother->measuredMass() << std::endl;
+        //mother->fillStream(std::cout);
         //std::cout << std::endl;
         //std::cout << "====================================================================================" << std::endl;
 
@@ -204,157 +256,22 @@ LoKi::Hlt1::Hlt1Combiner::operator()
         Hlt::Stage::Lock lock { stage, alg() } ;
         stage->set( mother ) ;
         output.push_back ( candidate ) ;
-    } // loop over combinations
-  } // loop over decays
+        // ====================================================================
+      } //                                         end loop over combinations
+    // ========================================================================
+    } //                                           end of loop over decays
+  // ==========================================================================
+  // register the selection in Hlt Data Service
   return !m_sink ? output : m_sink ( output ) ;
+  // ==========================================================================
 }
-
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
 std::ostream& LoKi::Hlt1::Hlt1Combiner::fillStream ( std::ostream& s ) const
 {
   return
     s << "TC_HLT1COMBINER("
       << "'" << location () << "')" ;
 }
-
-  /*
-  std::cout << " NOW WE COMMENCE THE COMBINATIONS" << std::endl;
-  // loop over all decays
-  for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin(); idecay != m_decays.end(); idecay++){
-
-    const LoKi::Particles::PidCompare compare = LoKi::Particles::PidCompare () ;
-
-    Combiner loop ;
-    const Decays::Decay::Items& dec_items = idecay->children() ;
-    for ( Decays::Decay::Items::const_iterator child = dec_items.begin() ; child != dec_items.end(); child++)
-    {
-      loop.add( daughters ( child->name() ) ) ;
-    }
-
-    // now do actual loop of combinations
-    for ( ; loop.valid() ; loop.next() )
-    {
-        if ( !loop.unique( compare ) ) { continue ; }
-
-        // get current combination
-        LHCb::Particle::ConstVector combination ( loop.dim() );
-        loop.current ( combination.begin() ) ;
-
-        LHCb::Vertex     vertex ;
-        LHCb::Particle   mother ( idecay->mother().pid() ) ;
-        combiner -> combine ( combination , mother , vertex ) ;
-
-        // newCandiate() ....
-        std::cout << " CREATED PARTICLE: " << std::endl;
-        mother.fillStream(std::cout);
-        // apply cuts
-        //
-
-        // store candidates
-        // start new candidate
-        //
-        Hlt::Candidate *candidate = newCandidate();
-        candidate->addToWorkers ( alg() ) ;
-        // add new stage
-        Hlt::Stage* stage = newStage () ;
-        candidate->addToStages( stage ) ;
-        Hlt::Stage::Lock lock { stage, alg() } ;
-        stage->set( &mother ) ;
-        //
-        */
-        /*
-        {
-          //
-          // 1. "regular" stage : particle
-          //
-          /// get new stage
-          Hlt::Stage*     stage   = newStage () ;
-          candidate -> addToStages ( stage ) ;
-          /// lock new stage:
-          Hlt::Stage::Lock lock { stage , alg() } ;
-          // lock.addToHistory ( myName()         ) ;
-          stage    -> set ( &mother ) ;
-        }
-        //
-        {
-          // 2. "regular stage: vertex
-          //
-          // get new stage
-          Hlt::Stage*     stage   = newStage () ;
-          candidate -> addToStages ( stage ) ;
-          /// lock new stage:
-          Hlt::Stage::Lock lock { stage , alg() } ;
-          // lock.addToHistory ( myName()         ) ;
-          stage    -> set ( &vertex ) ;
-        }
-        */
-
-        // add new candidate to the output:
-
-
-/// TESTING STUFF:
-/*
-  for ( std::vector<Decays::Decay>::const_iterator idecay = m_decays.begin(); idecay != m_decays.end(); idecay++){
-    const Decays::Decay::Items& dec_items = idecay->children() ;
-    for ( Decays::Decay::Items::const_iterator child = dec_items.begin() ; child != dec_items.end(); child++)
-    {
-      //const LHCb::Particle::ConstVector particles;
-      if ( child->name() == "K+"  || child->name() == "K-" )  { tes_location = "Kaons"; }
-      if ( child->name() == "pi+" || child->name() == "pi-" ) { tes_location = "Pions"; }
-      if ( child->name() == "mu+" || child->name() == "mu-" ) { tes_location = "Muons"; }
-
-      // loop over candidates to get appropriate input candidates
-      for ( auto icand1 = arg1->begin(); icand1 != arg1->end(); icand1 ++)
-      {
-
-        const Hlt::Candidate* cand1 = *icand1 ;
-        if ( !cand1 ) { continue ; }
-        // track
-        const LHCb::Track* track = cand1->get<LHCb::Track> () ;
-        if ( !track ) { continue ; }
-        // proto
-        LHCb::ProtoParticle* proto = newProtoParticle();
-        if ( !proto ) { continue ; }
-        proto->setTrack(track);
-        // particle
-        LHCb::Particle* particle = newParticle( tes_location );
-        if ( !particle ) { continue ; }
-        particle->setProto(proto);
-        // state
-        const LHCb::State* state = getState( track );
-        if ( !state ) { continue ; }
-        // fill particle from state
-        const StatusCode sc = p2s()->state2Particle( *state, *particle ) ;
-        if ( sc.isFailure() ) { continue ; }
-
-        // set PID
-        particle->setParticleID( child->pid() );
-
-        std::cout << "Used particle: " << std::endl;
-        particle->fillStream(std::cout);
-        std::cout << std::endl;
-
-        // add to daughters
-        daughters.add( child->name(), particle );
-
-        std::cout << "Added to daughters" << std::endl;
-        //particles.push_back(particle);
-      }
-      //daughters.add( child->name(), particles );
-    }
-  }
-
-  std::cout << " SHOULD HAVE FILLED DAUGHTERS BY NOW " << std::endl;
-
-  // loop decays to figure out daughters
-  // CAN INCORPORATE CUTS WITH THIS KIND OF THING:
-  // loop cuts to filter particles
-  //for ( MyCuts::const_iterator idau = m_cuts.begin(); idau != m_cuts.end(); idau++ )
-  //{
-  //  daughters.add
-  //    ( idau->m_name      ,
-  //      particles.begin() ,
-  //      particles.end()   ,
-  //      LoKi::Particles::Identifier() == idau->m_pid && idau->m_cut.func() ) ;
-  //}
-
- */
+// ============================================================================
