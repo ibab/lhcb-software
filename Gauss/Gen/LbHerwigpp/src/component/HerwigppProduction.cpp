@@ -51,7 +51,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of tool factory.
-DECLARE_TOOL_FACTORY(HerwigppProduction);
+DECLARE_TOOL_FACTORY(HerwigppProduction)
 
 
 //=============================================================================
