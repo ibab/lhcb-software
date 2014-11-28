@@ -1,3 +1,7 @@
+2014-11-28  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* python/LbConfiguration/Project.py: Added project Lovell (LBCORE-681)
+
 2014-11-21  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-dev: use "user area" for lookup only

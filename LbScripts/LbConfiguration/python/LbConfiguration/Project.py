@@ -22,7 +22,7 @@ project_names = [ "Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                   "Curie", "Vetra", "VetraTB", "Compat", "VanDerMeer", "Ganga",
                   "LHCbDirac", "Integration", "Erasmus", "Feicim",
                   "Stripping", "LHCbExternals", "Urania", "VMDirac", "LHCbVMDirac", "Noether", "Tesla",
-                  "MooreOnline", "BeautyDirac", "Kepler", "AlignmentOnline" ]
+                  "MooreOnline", "BeautyDirac", "Kepler", "AlignmentOnline", "Lovell" ]
 
 afs_volume_short_names = { "Gaudi"      : "GA",
                            "LHCb"       : "LH",
@@ -67,7 +67,8 @@ afs_volume_short_names = { "Gaudi"      : "GA",
                            "MooreOnline": "ML",
                            "BeautyDirac": "BD",
                            "Kepler": "KE",
-                           "AlignmentOnline"  : "AO"
+                           "AlignmentOnline"  : "AO",
+                           "Lovell" : "LL"
                            }
 
 # ------------------------------------------------------------------------------------
@@ -617,3 +618,5 @@ Kepler.setAFSVolumeName("KPL")#IGNORE:E0602
 # AlignmentOnline
 AlignmentOnline.setAFSVolumeName("ALIGNON")#IGNORE:E0602
 
+# Lovell
+Lovell.setAFSVolumeName("LOVL")#IGNORE:E0602
