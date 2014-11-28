@@ -184,7 +184,7 @@ private:
 // =====================================================================
 /// Declaration of the Tool Factory
 // =====================================================================
-DECLARE_TOOL_FACTORY( ReadHepMCAsciiFile );
+DECLARE_TOOL_FACTORY( ReadHepMCAsciiFile )
 // =====================================================================
 /** Generate a primary interaction. 
  *  The generated event contains all what happens up to the decay of
@@ -215,8 +215,7 @@ StatusCode ReadHepMCAsciiFile::generateEvent
                               Gaudi::Units::mm / Gaudi::Units::c_light ) ; }
   //
   return StatusCode::SUCCESS ;
-} ;
-// ===================================================================
+} 
 
 
 // =====================================================================

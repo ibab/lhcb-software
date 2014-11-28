@@ -246,6 +246,6 @@ namespace GenCounters {
                              DHadronCounter & theanticHadC , 
                              unsigned int & thebbCounter , 
                              unsigned int & theccCounter ) ;
-};
+}
 
 #endif // GENERATORS_GENCOUNTERS_H

@@ -37,7 +37,7 @@
 
 // Declaration of the Algorithm Factory
 
-DECLARE_ALGORITHM_FACTORY( Generation );
+DECLARE_ALGORITHM_FACTORY( Generation )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -106,7 +106,7 @@ Generation::Generation( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-Generation::~Generation() {}; 
+Generation::~Generation() {}
 
 //=============================================================================
 // Initialisation. Check parameters

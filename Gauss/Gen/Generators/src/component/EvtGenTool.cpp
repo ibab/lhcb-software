@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( EvtGenTool );
+DECLARE_TOOL_FACTORY( EvtGenTool )
 
 //=============================================================================
 // Standard constructor, initializes variables

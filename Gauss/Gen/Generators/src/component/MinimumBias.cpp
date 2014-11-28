@@ -20,7 +20,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( MinimumBias );
+DECLARE_TOOL_FACTORY( MinimumBias )
 
 
 //=============================================================================

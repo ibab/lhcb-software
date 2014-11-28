@@ -58,7 +58,7 @@
 //-----------------------------------------------------------------------------
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( EvtGenDecay );
+DECLARE_TOOL_FACTORY( EvtGenDecay )
 
 //=============================================================================
 // Standard constructor, initializes variables

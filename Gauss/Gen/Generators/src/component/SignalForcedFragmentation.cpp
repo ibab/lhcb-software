@@ -30,7 +30,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( SignalForcedFragmentation );
+DECLARE_TOOL_FACTORY( SignalForcedFragmentation )
 
 
 //=============================================================================

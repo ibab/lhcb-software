@@ -25,7 +25,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( Inclusive );
+DECLARE_TOOL_FACTORY( Inclusive )
 
 //=============================================================================
 // Standard constructor, initializes variables

@@ -9,7 +9,7 @@
 namespace HepMC {
   class GenVertex ;
   class GenParticle ;
-} ;
+}
 
 /** @class SaveSignalBInformation SaveSignalBInformation.h
  *  

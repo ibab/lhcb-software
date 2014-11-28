@@ -1,7 +1,7 @@
 ################################################################################
 # Package: Generators
 ################################################################################
-gaudi_subdir(Generators v14r6)
+gaudi_subdir(Generators v14r6p1)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          GaudiAlg

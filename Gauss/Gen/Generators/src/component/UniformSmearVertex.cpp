@@ -22,7 +22,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( UniformSmearVertex );
+DECLARE_TOOL_FACTORY( UniformSmearVertex )
 
 
 //=============================================================================

@@ -18,7 +18,7 @@
 
 // Declaration of the tool factory
 
-DECLARE_TOOL_FACTORY( StandAloneDecayTool );
+DECLARE_TOOL_FACTORY( StandAloneDecayTool )
 
 //=============================================================================
 // const constructor, initializes variables
@@ -32,7 +32,7 @@ StandAloneDecayTool::StandAloneDecayTool( const std::string& type ,
 //=============================================================================
 // Destructor
 //=============================================================================
-StandAloneDecayTool::~StandAloneDecayTool() {;} 
+StandAloneDecayTool::~StandAloneDecayTool() {} 
 
 //=============================================================================
 // Initialization

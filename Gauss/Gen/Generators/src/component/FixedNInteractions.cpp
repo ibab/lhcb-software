@@ -19,7 +19,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( FixedNInteractions );
+DECLARE_TOOL_FACTORY( FixedNInteractions )
 
 
 //=============================================================================
@@ -36,7 +36,7 @@ FixedNInteractions::FixedNInteractions( const std::string& type,
 //=============================================================================
 // Destructor 
 //=============================================================================
-FixedNInteractions::~FixedNInteractions( ) { ; }
+FixedNInteractions::~FixedNInteractions( ) { }
 
 //=============================================================================
 // Initialize method
@@ -62,5 +62,5 @@ unsigned int FixedNInteractions::numberOfPileUp( ) {
 //=============================================================================
 // Print the specific pile up counters
 //=============================================================================
-void FixedNInteractions::printPileUpCounters( ) { } ;
+void FixedNInteractions::printPileUpCounters( ) { }
 

@@ -20,7 +20,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( FlatSmearVertex );
+DECLARE_TOOL_FACTORY( FlatSmearVertex )
 
 
 //=============================================================================

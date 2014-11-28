@@ -123,7 +123,7 @@ private:
 } ;
 // ===========================================================================
 /// Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( WriteHepMCAsciiFile );
+DECLARE_ALGORITHM_FACTORY( WriteHepMCAsciiFile )
 // ===========================================================================
 /// Execut the algorithm
 StatusCode WriteHepMCAsciiFile::execute    () 
@@ -159,7 +159,7 @@ StatusCode WriteHepMCAsciiFile::execute    ()
   }
   //
   return StatusCode::SUCCESS ;
-} ;
+}
 // ===========================================================================
 
 // ===========================================================================

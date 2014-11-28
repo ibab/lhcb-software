@@ -19,7 +19,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( RepeatDecay );
+DECLARE_TOOL_FACTORY( RepeatDecay )
 
 //=======================================================
 // Standard constructor, initializes variables
