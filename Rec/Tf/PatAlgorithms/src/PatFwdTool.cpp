@@ -25,10 +25,13 @@
 //
 //-----------------------------------------------------------------------------
 
+// For convenient trailing-return-types in C++11:
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
+
 constexpr struct proj_distance_t {
-       template <typename Iter> 
-       auto operator()(Iter&& f, Iter&& l) const -> decltype( (*f)->projection() )  //TODO: use C++14 auto return deduction
-       { return (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() ; }
+       template <typename Range> 
+       auto operator()(const Range& range) const //TODO: use C++14 auto return deduction instead
+       AUTO_RETURN( range.back()->projection() - range.front()->projection() )
 } proj_distance {};
 
 class inRegion {
@@ -80,7 +83,7 @@ std::pair<Iterator,Iterator> find_first_and_last(Iterator begin, Iterator end, P
     if ( first == end ) return { first, end };
     auto rbegin = std::reverse_iterator<Iterator>(std::next(first));
     auto second = std::find_if( std::reverse_iterator<Iterator>(end), rbegin, pred );
-    return { first, second == rbegin ? end : std::prev(second.base()) };
+    return { first, second == rbegin ? first : second.base() };
 }
 
 template < typename Iterator, 
@@ -91,11 +94,13 @@ Result
 max_projected_element( Iterator first, Iterator last, Projection proj, Result init, Predicate pred ) 
 {
     for ( ; first!=last ; ++first) {
-        if ( !pred(*first) ) continue;
-        auto x = proj(*first);
-        if ( x<init.second ) continue;
-        init.first = first;
-        init.second = x;
+        if ( pred(*first) ) {
+            auto x = proj(*first);
+            if ( init.second < x ) {
+                init.first = first;
+                init.second = x;
+            }
+        }
     }
     return init;
 }
@@ -174,7 +179,7 @@ public:
 };
 
 
-// find the consequitive range between itBeg and last which has at least bestPlanes planes, and has the smallest lenght
+// find the consequitive range between begin and end which has at least bestPlanes planes, and has the smallest lenght
 template <typename Iter>
 boost::iterator_range<Iter> 
 find_shortest_range(Iter begin, Iter end, int bestPlanes ) 
@@ -182,43 +187,27 @@ find_shortest_range(Iter begin, Iter end, int bestPlanes )
   // assert( std::distance(begin,end) >= bestPlanes );
   // assert( std::is_sorted( begin, end, []( x,y ) { return x->projection()<y->projection() } ) );
 
-  auto current = std::next(begin, bestPlanes);
+  auto range = boost::make_iterator_range(begin,std::next(begin, bestPlanes));
   //== get enough planes fired
-  PatFwdPlaneCounter planeCount1( begin, current );
-  current = planeCount1.addHitsUntilEnough( current, end, bestPlanes );
+  PatFwdPlaneCounter planeCount1( std::begin(range), std::end(range) );
+  range.advance_end( std::distance( std::end(range), planeCount1.addHitsUntilEnough( std::end(range), end, bestPlanes )));
   if ( planeCount1.nbDifferent() < bestPlanes ) return {end,end};
 
-  auto minDist = proj_distance(begin,current) ;
-#if 0
-  if ( UNLIKELY(isDebug) ) {
-    debug() << format( "        range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
-                       minDist, (*begin)->projection(), (*std::prev(current))->projection(), bestPlanes )
-            << endmsg;
-  }
-#endif
   //== Better range ? Remove first, try to complete, measure spread...
-  auto bestRange = boost::make_iterator_range(begin,current);
-  while ( current != end &&  planeCount1.nbDifferent() >= bestPlanes ) {
-    planeCount1.removeHit( *begin );
-    ++begin;
-    current = planeCount1.addHitsUntilEnough( current, end, bestPlanes );
+  auto minDist = proj_distance(range);
+  auto bestRange = range;
+  while ( std::end(range) != end &&  planeCount1.nbDifferent() >= bestPlanes ) {
+    planeCount1.removeHit( range.front() ); range.advance_begin(1);
+    range.advance_end( std::distance( std::end(range), planeCount1.addHitsUntilEnough( std::end(range), end, bestPlanes ) ) );
     if ( planeCount1.nbDifferent() >= bestPlanes ) {
-      auto dist = proj_distance( begin, current ) ;
+      auto dist = proj_distance( range ) ;
       if ( dist < minDist ) {
         minDist = dist;
-        bestRange = boost::make_iterator_range(begin,current);
+        bestRange  = range;
         bestPlanes = std::max( bestPlanes, planeCount1.nbDifferent() );
-#if 0
-        if ( isDebug ) {
-          debug() << format( " better range minDist %7.2f from %8.3f to %8.3f bestPlanes %2d",
-                             minDist, (*begin)->projection(), (*(current-1))->projection(), bestPlanes )
-                  << endmsg;
-        }
-#endif
       }
     }
   }
-  //== OK, itBest is the start...
   return bestRange;
 }
 
@@ -247,10 +236,11 @@ void select_hits_in_best_region_only(Iter begin, Iter end)
    
     auto predicate = inRegion{maxRegion};
     auto hits = find_first_and_last( begin, end, predicate );
-    if ( hits.second == end ) continue; // should never happen, if nbInRegion is at least nPlanes, which is > 1 -- provided the way PatFwdRegionCounter counts regions is the same, which it isn't
+    auto range = boost::make_iterator_range(hits.first, hits.second);
+    if ( range.empty() ) continue; // should never happen, if nbInRegion is at least nPlanes, which is > 1 -- provided the way PatFwdRegionCounter counts regions is the same, which it isn't
 
-    auto mySpread = (*hits.second)->projection() - (*hits.first)->projection();
-    if ( mySpread < spread && count_planes( hits.first, std::next(hits.second), predicate ) == nPlanes ) {
+    auto mySpread = proj_distance(range);
+    if ( mySpread < spread && count_planes( std::begin(range), std::end(range), predicate ) == nPlanes ) {
       spread = mySpread;
       bestRegion = maxRegion;
     }

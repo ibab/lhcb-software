@@ -3,11 +3,13 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
-! 2014-11-30 - Gerhard Raven
- - move the data members of PatFwdTrackCandidate to the 'top' of the class
-   so that one can use 'auto' (trailing) return speficitation
- - improve PatFwdTrackCandidate memory layout: move 'cold' pointer towards 
-   the 'back'
+! 2014-11-29 - Gerhard Raven
+ - PatFwdTrackCanddiate: 
+     o move data members to the 'top' of the class so that one can use 'auto' 
+       (trailing) return specifitation
+     o improve PatFwdTrackCandidate memory layout: move 'cold' pointer towards 
+       the 'back'
+ - PatFwdTool: better use of ranges
 
 ! 2014-11-29 - Michel De Cian
  - Fix in PatDownstream such that hits in at least three layers are required for a track.
