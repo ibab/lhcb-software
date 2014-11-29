@@ -23,18 +23,22 @@
 //
 // 2005-10-04 : Olivier Callot
 //-----------------------------------------------------------------------------
-
-static const unsigned int nSta = Tf::RegionID::OTIndex::kNStations;
-static const unsigned int nLay = Tf::RegionID::OTIndex::kNLayers;
-static const unsigned int nReg = Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions;
-static const unsigned int nOTReg = Tf::RegionID::OTIndex::kNRegions;
-static const unsigned int nITReg = Tf::RegionID::ITIndex::kNRegions;
-
-static const  auto isOT= [](unsigned region) { return region < nOTReg; };
-
 DECLARE_TOOL_FACTORY( PatForwardTool )
 
-constexpr struct sortQuality {
+// For convenient trailing-return-types in C++11:
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
+
+constexpr struct proj_distance_t {
+       template <typename Range> 
+       auto operator()(const Range& range) const //TODO: use C++14 auto return deduction instead
+       AUTO_RETURN( range.back()->projection() - range.front()->projection() )
+
+       template <typename Iter>
+       auto operator()(Iter&& f, Iter&& l) const //TODO: use C++14 auto return deduction instead
+       AUTO_RETURN( (*std::prev(std::forward<Iter>(l)))->projection() - (*std::forward<Iter>(f))->projection() )
+} proj_distance {};
+
+constexpr struct sortQuality_t {
   bool operator()( const PatFwdTrackCandidate& first,
                    const PatFwdTrackCandidate& second )
   {
@@ -47,7 +51,7 @@ constexpr struct sortQuality {
     }
     return sortDecision;
   }
-} sortQuality_{};
+} sortQuality{};
 
 struct MaxSpread {
     double spread;
@@ -76,12 +80,12 @@ int nbDifferent( const Container& c) {
 }
 
 template <typename Iter>
-class RangeFinder {
+class RangeGenerator {
     Iter m_last;
     int m_minPlanes;
     Iter next(Iter current) const { return std::next( std::move(current), m_minPlanes-1 ); }
 public:
-    RangeFinder( int minPlanes, Iter last ) :  m_last{ std::move(last) }, m_minPlanes{minPlanes} { }
+    RangeGenerator( int minPlanes, Iter last ) :  m_last{ std::move(last) }, m_minPlanes{minPlanes} { }
     template <typename Iterator> bool operator()(Iterator&& first, Iterator&& last) const { return std::distance(std::forward<Iterator>(first),std::forward<Iterator>(last)) > m_minPlanes-1; }
     template <typename Iterator> bool operator()(Iterator&& first ) const { return std::distance(std::forward<Iterator>(first),m_last) > m_minPlanes-1; }
 
@@ -117,10 +121,10 @@ public:
         //   long as the spread and minPlanes conditions are met.
         auto j = mid;
         auto i = first;
-        while ( std::distance(i,mid) != (m_minPlanes-1)  && j != m_last ) {
+        while ( std::distance(i,mid) != (m_minPlanes-1) && j != m_last ) {
           counter.removeHit(*i);
           ++i;
-          for (; j!=m_last && predicate(*i,*j) ; ++j ) counter.addHit(*j); // TODO: first find, then addHits with a range...
+          j = counter.addHitsWhile( j, m_last, [&](reference k) { return predicate(*i,k); } );
           if ( enough_planes() ) mid = j;
         }
         return { first, mid };
@@ -128,11 +132,93 @@ public:
 };
 
 template <typename Iterator>
-RangeFinder<typename std::decay<Iterator>::type>
-make_RangeFinder( int nPlanes, Iterator&& last)
+RangeGenerator<typename std::decay<Iterator>::type>
+make_RangeGenerator( int nPlanes, Iterator&& last)
 {
     return { nPlanes, std::forward<Iterator>(last) };
 }
+
+template <typename Range>
+struct  BestRangeSelector {
+    std::tuple<Range,double,int> operator()(std::tuple<Range,double,int> prev, Range&& r) { 
+      if (!r.empty()) {
+        auto cnt = nbDifferent(r);
+        if ( cnt >= std::get<2>(prev) ) {
+          auto delta = proj_distance(r);
+          if ( cnt > std::get<2>(prev) || delta < std::get<1>(prev) ) {
+            return { std::forward<Range>(r), delta, cnt };
+          }
+        }
+      }
+      return prev;
+    }
+};
+
+
+template <typename Range>
+class  BestRangeFinder {
+    Range m_range;
+    double m_size;
+    int m_nbDifferent;
+public:
+    BestRangeFinder(Range&& r, int n, double s) : 
+        m_range( std::forward<Range>(r) ), 
+        m_size(s), 
+        m_nbDifferent(n) {}
+
+    const Range& range() const { return m_range; }
+
+    void update(const Range& r) { 
+        if (r.empty()) return;
+        auto cnt = nbDifferent(r);
+        if ( cnt >= m_nbDifferent ) {
+          auto delta = proj_distance(r);
+          if ( cnt > m_nbDifferent || delta < m_size ) {
+            m_nbDifferent = cnt;
+            m_size = delta;
+            m_range = r;
+          }
+        }
+    }
+};
+
+template <typename Range>
+BestRangeFinder<Range> make_BestRangeFinder(Range&& r, int n, double s) {
+    return { std::forward<Range>(r), n, s};
+}
+
+constexpr unsigned int nReg() { return  Tf::RegionID::OTIndex::kNRegions + Tf::RegionID::ITIndex::kNRegions; }
+
+template <bool stereo>
+struct regions {
+    class iterator {
+        friend class regions;
+        unsigned m_index;
+        iterator( unsigned i ) : m_index{i} {}
+    public:
+        const iterator& operator*() const { return *this; } 
+        iterator& operator++() { ++m_index; return *this; }
+
+        unsigned region() const { return m_index%nReg(); }
+        static_assert(Tf::RegionID::ITIndex::kNLayers == 4, "expecting exactly four IT layers" );
+        static_assert(Tf::RegionID::OTIndex::kNLayers == 4, "expecting exactly four OT layers" );
+        unsigned layer() const { return stereo ? ( 1+ (m_index/nReg())%2  )  // {1,2} -- stereo only...
+                                               : ( 3*((m_index/nReg())%2) ); // X layers only: {0,3} // base 0, stride 3, extent between 3 and 5
+                               }
+        unsigned station() const { return m_index/(2*nReg()); }
+        bool isOT() const { return region() < Tf::RegionID::OTIndex::kNRegions; }
+
+        friend bool operator!=(const iterator& lhs, const iterator& rhs) {
+            return lhs.m_index != rhs.m_index;
+        }
+    };
+    constexpr iterator begin() const { return { 0 }; }
+    constexpr iterator end()   const { return { Tf::RegionID::OTIndex::kNStations*Tf::RegionID::OTIndex::kNLayers*nReg()/2 }; }
+};
+
+static const auto stereo_regions = regions<true>{};
+static const auto      x_regions = regions<false>{};
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -257,7 +343,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
   if(m_Preselection && seed.pt() < m_PreselectionPT && 0 != track.qOverP()) return StatusCode::SUCCESS;
 
   bool isDebug = msgLevel( MSG::DEBUG );
-  if ( isDebug ) {
+  if ( UNLIKELY(isDebug) ) {
     debug() << format( "**** Velo track %3d  x%8.2f  y%8.2f  tx%9.5f  ty%9.5f q/p = %8.6f",
                        seed.key(), track.xStraight( m_zAfterVelo ),
                        track.yStraight( m_zAfterVelo ),
@@ -312,7 +398,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     }
   }
 
-  if ( isDebug ) {
+  if ( UNLIKELY(isDebug) ) {
     debug() << "************ List of X candidates , N = " << xCandidates.size() << endmsg;
     unsigned nCand=0;
     for ( const auto& itL : xCandidates ) {
@@ -335,13 +421,14 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   for ( PatFwdTrackCandidate& temp :  xCandidates ) { //TODO: make this one big 'remove_if'?
 
-    for ( auto *hit : temp.coords() ) hit->setIgnored( false);  // restore normal flag.
+    std::for_each( std::begin( temp.coords() ), std::end( temp.coords() ),
+                   [](PatForwardHit* h) { h->setIgnored(false); } );// restore normal flag.
     temp.setSelectedCoords( );
 
     auto qOverP = computeQOverP(temp);  // in 1/GeV
     if ( !fillStereoList( temp, computeStereoTol(qOverP) ) ) continue; // Get the stereo coordinates
 
-    if ( isDebug )  debugFwdHits( temp );
+    if ( UNLIKELY(isDebug) )  debugFwdHits( temp );
     temp.setSelectedCoords( );
 
     //== Fit and reject if not good enough
@@ -349,7 +436,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     temp.cleanCoords();
     m_fwdTool->chi2PerDoF( temp );  //== compute and store Chi2PerDoF
-    if ( isDebug ) {
+    if ( UNLIKELY(isDebug) ) {
       debug() << "  ... fit OK  chi2 " << temp.chi2PerDoF() << " nDoF " << temp.nDoF()
               << " dist at center " << m_fwdTool->distAtMagnetCenter( temp )
               << endmsg;
@@ -366,14 +453,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     PatFwdPlaneCounter fullCount( std::begin(temp), std::end(temp) );
     int nbY = fullCount.nbStereo();
     if ( nbY < 4 ) {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-        debug() << "Not enough Y planes : " << nbY << endmsg;
+      if( UNLIKELY( isDebug ) ) debug() << "Not enough Y planes : " << nbY << endmsg;
       continue;
     }
 
     if ( m_maxDeltaY + m_maxDeltaYSlope * qOverP *qOverP < fabs(  m_fwdTool->changeInY( temp ) ))  {
-      if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
-        debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
+      if( UNLIKELY( isDebug ) ) debug() << "  --- Too big change in Y : " <<  m_fwdTool->changeInY( temp ) << endmsg;
       continue;
     }
 
@@ -411,7 +496,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
   // added for Tr/NNTools -- sort all candidates with respect to PatQuality
   if( this->nnSwitch()){
-    std::stable_sort( std::begin(goodCandidates), std::end(goodCandidates), sortQuality_);
+    std::stable_sort( std::begin(goodCandidates), std::end(goodCandidates), sortQuality);
     // loop over all candidates
     for( auto& all : goodCandidates ) {
 	  all.setCand1stQuality(all.quality());
@@ -436,14 +521,12 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     auto last = std::remove_if( std::begin(goodCandidates), std::end(goodCandidates),
                                 [=](const PatFwdTrackCandidate& t) { return nbDifferent(t) < minPlanes; } );
     // remove worst quality
-    // TODO: could fold this accumulate into the lambda above by capturing bestQuality by reference
     auto bestQuality = std::accumulate( std::begin(goodCandidates), last, 1000.,
                                   [](double m, const PatFwdTrackCandidate& t) { return std::min(m,t.quality()); } );
     bestQuality += 1.0;
     last = std::remove_if( std::begin(goodCandidates), last,
                            [=](const PatFwdTrackCandidate& t) { return t.quality()  >= bestQuality; }  );
     // remove if sensibly less OT
-    // TODO: could fold this accumulate into the lambda above by capturing maxOT by reference
     auto maxOT = std::accumulate( std::begin(goodCandidates), last, 0,
                                   [](int m, const PatFwdTrackCandidate& t) { return std::max(m,nbT(t)); } );
     maxOT = std::min(24,maxOT)-3;
@@ -456,7 +539,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     goodCandidates.erase(last,std::end(goodCandidates));
   }
 
-  if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+  if( UNLIKELY( isDebug ) )
     debug() << "Storing " << goodCandidates.size() << " good tracks " << endmsg;
   //=== Store tracks...
   for (const auto&  cand : goodCandidates ) {
@@ -468,7 +551,6 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     fwTra->setHistory( LHCb::Track::PatForward );
 
     //== Add a new state in the T stations ...
-
     auto qOverP = m_fwdTool->qOverP( cand );
     // set q/p in all of the existing states
     std::for_each( std::begin( fwTra->states() ), std::end( fwTra->states() ),
@@ -484,7 +566,6 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
     cov(3,3) = m_stateErrorTY2;
     auto errQOverP = m_stateErrorP*qOverP;
     cov(4,4) = errQOverP * errQOverP;
-
 
     for ( const auto& z : m_fwdTool->zOutputs() ) {
       auto  dz = z - m_fwdTool->zReference();
@@ -515,8 +596,7 @@ StatusCode PatForwardTool::tracksFromTrack( const LHCb::Track& seed,
 
     if ( m_addTTClusterTool ) {
       StatusCode sc = m_addTTClusterTool->addTTClusters( *fwTra );
-      if (sc.isFailure())
-        if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
+      if ( UNLIKELY(sc.isFailure()) && UNLIKELY( isDebug ) )
           debug()<<" Failure in adding TT clusters to track"<<endmsg;
     }
   }
@@ -551,7 +631,7 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
   auto not_ignored_and_y_compatible = [yCompat](double yRegion) {
         return [yRegion,yCompat](const PatForwardHit* hit) {
                               return !hit->hit()->ignore() &&  
-                                     hit->hit()->isYCompatible( yRegion, yCompat );
+                                      hit->hit()->isYCompatible( yRegion, yCompat );
         };
   };
 
@@ -579,41 +659,34 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
   };
 
 
-  static_assert(nLay == 4, "expecting exactly four layers" );
-  const unsigned nr = nSta*2*nReg;
-  for (unsigned index = 0; index!= nr ; ++index ) {
-    // TODO: package index, and its three 'indices' into a small class a-la std::array_view's index
-    auto region = index%nReg;
-    auto lay    = 3*((index/nReg)%2);  // X layers only: {0,3} // base 0, stride 3, extent between 3 and 5
-    auto sta    = index/(2*nReg);
-
-    const auto* regionB = m_tHitManager->region(sta,lay,region);
+  for ( const auto& region : x_regions ) { 
+    const auto* regionB = m_tHitManager->region(region.station(),region.layer(),region.region());
     auto z = regionB->z();
     auto yRegion = track.yStraight( z );
     if (!regionB->isYCompatible( yRegion, yCompat )) continue;
 
+    // TODO: yRegion * regionB->sinT() should contribute to the central value, not the width...
     auto xRange = symmetricRange( track.xStraight(z),
                                   interval.xKick( z ) + fabs( yRegion * regionB->sinT() ) + 20. );
-
-    auto hitRange =  m_tHitManager->hitsInXRange(xRange.min(), xRange.max(), sta, lay, region);
-
+    auto hitRange = m_tHitManager->hitsInXRange(xRange.min(), xRange.max(),
+                                                region.station(), region.layer(), region.region());
     // grow capacity so that things don't move around afterwards...
     m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
     auto first = std::end(m_xHitsAtReference);
     std::copy_if( std::begin(hitRange), std::end(hitRange), 
                   std::back_inserter(m_xHitsAtReference), 
                   not_ignored_and_y_compatible( yRegion ) );
-    auto last = isOT(region) ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
-                             : updateITHitsForTrack( first, std::end(m_xHitsAtReference) ) ;
+    auto last = region.isOT() ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
+                              : updateITHitsForTrack( first, std::end(m_xHitsAtReference) );
     m_fwdTool->setXAtReferencePlane( track, first, last );
     last = std::remove_if( first, last, outside_interval ) ;  // we should be partitioned wrt. outside_interval here... can we utilize that??
     m_xHitsAtReference.erase( last, std::end(m_xHitsAtReference) );
     // make sure we are ordered by the right criterium -- until now, things
     // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
     // so this sort is actually needed (not always though...), for both IT and OT...
-    std::sort( first, last , Tf::increasingByProjection<PatForwardHit>() );
-    std::inplace_merge(std::begin(m_xHitsAtReference),first,last, 
-                       Tf::increasingByProjection<PatForwardHit>() );
+    std::sort( first, last, Tf::increasingByProjection<PatForwardHit>() );
+    std::inplace_merge( std::begin(m_xHitsAtReference),first,last, 
+                        Tf::increasingByProjection<PatForwardHit>() );
   }
   return { std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) };
 }
@@ -643,29 +716,23 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
     return ok;
   };
 
-  static_assert(nLay == 4, "expecting exactly four layers" );
-  const unsigned nr = nSta*2*nReg;
-  for (unsigned index = 0 ; index != nr; ++index ) {
-    auto region = index%nReg;
-    auto lay = 1 + (index/nReg)%2; // {1,2} -- stereo only
-    auto sta = index/(2*nReg);
-
-    const auto* regionB = m_tHitManager->region(sta,lay,region);
+  for ( const auto& region : stereo_regions ) {
+    const auto* regionB = m_tHitManager->region(region.station(),region.layer(),region.region());
     auto dz = regionB->z() - m_fwdTool->zReference();
     auto yRegion = track.y( dz );
     if (!regionB->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
 
     auto xPred   = track.x( dz );
-    //== Correct for stereo
+    //== Correct for stereo -- TODO/FIXME: this is very loose if the stereo angle * yRegion is positive...
     auto xHitMin = xPred - ( fabs( yRegion * regionB->sinT() ) + 40. + tol );
 
-    bool ot = isOT(region); 
+    auto ot = region.isOT();
     //== Project in Y, in fact in X but oriented, such that a displacement in Y is a
     //== displacement also in this projectio.
-    bool  flipSign = std::signbit( regionB->sinT() );
+    bool flipSign = std::signbit( regionB->sinT() );
     auto minProj = tol + int(ot) * 1.5;
 
-    for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, sta, lay, region) ) {
+    for ( auto* hit : m_tHitManager->hitsWithMinX(xHitMin, region.station(), region.layer(), region.region()) ) {
       if (hit->hit()->ignore() || !hit->hit()->isYCompatible( yRegion, m_yCompatibleTol ) ) continue;
       hit->setIgnored( false );
       bool ok = ot ? updateOTHit(hit) : updateITHit(hit);
@@ -698,43 +765,27 @@ bool PatForwardTool::fillStereoList ( PatFwdTrackCandidate& track, double tol ) 
   }
 
   //== Select a coherent group
-  auto bestList = boost::make_iterator_range(std::end(temp),std::end(temp));
-  int inbDifferent = 0;
-  double size = 1000.;
+
+  auto bestRangeFinder = make_BestRangeFinder(boost::make_iterator_range(std::end(temp),std::end(temp)), 0, 1000. );
+
   int minYPlanes = 4;
 
-  auto itP = std::begin(temp);
-  auto sentinel = make_RangeFinder(minYPlanes, std::end(temp));
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { this->allowedStereoSpread(hit) }; };
+  auto iter = std::begin(temp);
+  auto sentinel = make_RangeGenerator(minYPlanes, std::end(temp));
 
-  bool isVerbose = msgLevel(MSG::VERBOSE);
-  while ( sentinel( itP ) ) {
-    auto range = sentinel.next_range( itP, make_predicate(*itP) );
-    if ( !range.empty() ) {
-
-        if( UNLIKELY( isVerbose ) ) {
-          verbose() << format( "Found Y group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                               range.front()->projection(), range.back()->projection(),
-                               range.size(), nbDifferent(range),
-                               allowedStereoSpread(*itP) )
-                    << endmsg;
-        }
-        //== We have the first list. The best one ????
-        auto cnt = nbDifferent(range);
-        if ( cnt >= inbDifferent ) {
-          auto delta = range.back()->projection() - range.front()->projection();
-          if ( cnt > inbDifferent || delta < size ) {
-            inbDifferent =  cnt;
-            size = delta;
-            bestList = range;
-            //break; /// Keep first one !
-          }
-        }
-    }
-    itP = std::end(range);
+  while ( sentinel( iter ) ) {
+    auto range = sentinel.next_range( iter, make_predicate(*iter) );
+    iter = std::end(range);
+    bestRangeFinder.update( std::move(range) );
   }
+  auto bestList = bestRangeFinder.range();
 
-  if ( bestList.size() < minYPlanes ) return false;
+  // assert( bestList.size() >= minYPlanes );
+  if ( bestList.size() < minYPlanes ) {
+      // error() << " this should never happen! " << endmsg;
+      return false;
+  }
 
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
     debug() << "...Selected " << bestList.size() << " hits from "
@@ -787,30 +838,20 @@ void PatForwardTool::buildXCandidatesList ( PatFwdTrackCandidate& track ) const{
   auto rng = fillXList( track ) ;
 
   auto iter = std::begin(rng);
-  auto sentinel = make_RangeFinder( m_minXPlanes, std::end(rng) );
+  auto sentinel = make_RangeGenerator( m_minXPlanes, std::end(rng) );
   auto xExtrap = track.xStraight( m_fwdTool->zReference() );
   auto make_predicate = [=]( const PatFwdHit* hit ) -> MaxSpread { return { allowedXSpread(hit,xExtrap) }; };
-  bool isVerbose = msgLevel(MSG::VERBOSE);
   while ( sentinel( iter ) ) {
     auto predicate = make_predicate(*iter);
-    auto range = sentinel.next_range( iter, predicate );
-    if (!range.empty()) {
-        if( UNLIKELY( isVerbose ) ) {
-          verbose() << format( "Found X group from %9.2f to %9.2f with %2d entries and %2d planes, spread %9.2f",
-                               range.front()->projection(),range.back()->projection(),
-                               range.size(), nbDifferent(range),
-                               predicate.spread)
-                    << endmsg;
-        }
-        //== Protect against too dirty area.
-        if ( range.size()  <  m_maxXCandidateSize ) {
-          //== Merge the lists, if the first new point is close to the last one...
-          if (!m_candidates.empty() && predicate(m_candidates.back().coords().back(), range.front() )) {
-            m_candidates.back().addCoords( std::begin(range), std::end(range));
-          } else {
-            m_candidates.emplace_back( track.track(), std::begin(range), std::end(range) );
-          }
-        }
+    auto range = sentinel.next_range( iter, std::cref(predicate) );
+    if (!range.empty() && range.size()  <  m_maxXCandidateSize ) {
+      //== Protect against too dirty area.
+      //== Merge the lists, if the first new point is close to the last one...
+      if (!m_candidates.empty() && predicate(m_candidates.back().coords().back(), range.front() )) {
+        m_candidates.back().addCoords( std::begin(range), std::end(range));
+      } else {
+        m_candidates.emplace_back( track.track(), std::begin(range), std::end(range) );
+      }
     }
     iter = std::end(range);
   }

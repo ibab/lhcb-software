@@ -10,6 +10,8 @@
      o improve PatFwdTrackCandidate memory layout: move 'cold' pointer towards 
        the 'back'
  - PatFwdTool: better use of ranges
+ - PatFwdPlaneCounter: add addHitwWhile
+ - PatForwardTool: cleanup
 
 ! 2014-11-29 - Michel De Cian
  - Fix in PatDownstream such that hits in at least three layers are required for a track.

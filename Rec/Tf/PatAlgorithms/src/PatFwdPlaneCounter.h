@@ -93,6 +93,20 @@ class PatFwdPlaneCounter_ final : private Predicate
         return current;
     }
 
+    template <typename Iterator, typename Pred>
+    Iterator addHitsWhile( Iterator current, Iterator end, Pred predicate )
+    {
+        for ( ; current != end && predicate(*current); ++current )  addHit( *current );
+        return current;
+    }
+
+    template <typename Iterator>
+    Iterator addHits( Iterator current, Iterator end )
+    {
+        for ( ; current != end ; ++current ) addHit( *current );
+        return current;
+    }
+
     /// remove a hit
     template <class Hit>
     int removeHit( const Hit* hit )
