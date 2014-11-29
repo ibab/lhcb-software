@@ -211,10 +211,11 @@ StatusCode PatDownstream::execute() {
   put( finalTracks, m_outputLocation);
 
   const double magScaleFactor = m_magFieldSvc->signedRelativeCurrent() ;
-    
+  
   if( std::abs(magScaleFactor) > 1e-6 ){
     m_magnetOff = false;
   } else m_magnetOff = true;
+  
 
   //==========================================================================
   // Main loop on tracks
@@ -224,11 +225,12 @@ StatusCode PatDownstream::execute() {
   for ( LHCb::Tracks::const_iterator itT = myInTracks.begin();
         myInTracks.end() != itT; ++itT ) {
     LHCb::Track* tr = (*itT);
-
+    
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
-
+    
+    
     PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor*(-1) );
-
+    
     //Y. Xie: get rid of particles from beampipe 
     const double xAtTT = track.xAtZ( m_zTTa );
     const double yAtTT = track.yAtZ( m_zTTa );
@@ -240,7 +242,7 @@ StatusCode PatDownstream::execute() {
     if ( m_printing ) {
       for ( PatTTHits::const_iterator itH = ttCoords.begin(); ttCoords.end() != itH; ++itH ){
         PatTTHit* hit = (*itH);
-	if (hit->hit()->ignore()) continue;
+        if (hit->hit()->ignore()) continue;
         const double yTrack = track.yAtZ( 0. );
         const double tyTr   = track.slopeY();
         updateTTHitForTrack( hit, yTrack, tyTr );
@@ -254,7 +256,7 @@ StatusCode PatDownstream::execute() {
              << endmsg;
       info() << format( " Y slope %8.6f computed %8.6f", track.state()->ty(), track.slopeY() ) 
              << endmsg;
-
+      
       if ( m_debugTool ) m_debugTool->debugTTClusterOnTrack( tr, ttCoords.begin(), ttCoords.end() );      
     }
     
@@ -264,12 +266,12 @@ StatusCode PatDownstream::execute() {
       if ( !m_magnetOff ) continue;
       //continue;
     }
-
+    
     // Get hits in TT around a first track estimate
     getPreSelection( track );
-
+    
     PatTTHits::const_iterator itH;
-
+    
     int nbOK = 0;
     PatDownTrack bestTrack( track );
     PatTTHits MatchingXHits;
@@ -288,22 +290,22 @@ StatusCode PatDownstream::execute() {
         double meanZ = myHit->z();
         double posX  = myHit->x( );
         int myPlane  = myHit->planeCode();
-
+        
         track.startNewCandidate();
-
+        
         // Create track estimate with one x hit
         double slopeX = (track.xMagnet() - posX + track.sagitta( meanZ)) / (track.zMagnet() - meanZ);
         track.setSlopeX( slopeX );
-
+        
         if ( m_printing ) {
-            const double tolMatch = (std::abs(track.state()->p() / m_tolMomentum) < 1. / (m_maxWindow - m_tolX)) ?
-                m_maxWindow : (m_tolX + m_tolMomentum / track.state()->p());
-            info() << endmsg 
+          const double tolMatch = (std::abs(track.state()->p() / m_tolMomentum) < 1. / (m_maxWindow - m_tolX)) ?
+            m_maxWindow : (m_tolX + m_tolMomentum / track.state()->p());
+          info() << endmsg 
                  << format( "... start plane %1d x%8.2f z%8.1f slope%8.2f tolMatch%7.3f",
                             myPlane, posX, meanZ, 1000. * slopeX, tolMatch )
                  << endmsg;
         }        
-
+        
         // Fit x projection
         findMatchingHits( MatchingXHits, track, myPlane );
         fitXProjection( MatchingXHits, track, myHit );
@@ -315,7 +317,7 @@ StatusCode PatDownstream::execute() {
           continue;
         }
         fitAndRemove( track );
-
+        
         // Check if candidate is better than the old one
         if ( !acceptCandidate( track, bestTrack, maxPoints, minChisq ) ) continue;
         
@@ -324,12 +326,12 @@ StatusCode PatDownstream::execute() {
         nbOK++;
       }
     }
-
+    
     //== Debug the track.
     if ( 0 == nbOK ) {
       if ( m_printing ) {
         info() << format( "Track %3d P=%7.2f GeV --- discarded, not enough planes",
-                             tr->key(),  .001*track.moment() ) << endmsg;
+                          tr->key(),  .001*track.moment() ) << endmsg;
       }
     } else {
       
@@ -339,16 +341,17 @@ StatusCode PatDownstream::execute() {
       // add hits in x layers in overlap regions of TT
       addOverlapRegions( track );     
       
+      
       //=== Store the track
       storeTrack( track, finalTracks, tr );
-
+      
     }
   }
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "Found " << finalTracks->size() << " tracks." << endmsg;
-
+  
   if ( m_doTiming ) m_timerTool->stop( m_downTime );
-   
+  
   
   return StatusCode::SUCCESS;
 }
@@ -357,9 +360,9 @@ StatusCode PatDownstream::execute() {
 //  Finalize
 //=============================================================================
 StatusCode PatDownstream::finalize() {
-
+  
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << "==> Finalize" << endmsg;
-
+  
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
@@ -461,7 +464,7 @@ void PatDownstream::getPreSelection( PatDownTrack& track ) {
   if (std::abs(track.moment()) >  1e-6)  
       xPredTol = m_xPredTol / fabs( track.moment() ) + m_xPredTol2;  // P dependance + overal tol.
   double yTol = xPredTol;
-
+  
   m_xHits.clear();
   m_uvHits.clear();
   
@@ -521,7 +524,7 @@ void PatDownstream::getPreSelection( PatDownTrack& track ) {
 //  Fit and remove the worst hit, as long as over tolerance
 //=========================================================================
 void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
-
+  
   if ( 2 > track.hits().size() ) return;  // no fit if single point !
   
   bool again;
@@ -540,6 +543,10 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     rhs[2] = 0.;
     int nbUV = 0;
 
+    std::array<int,4> differentPlanes = {0, 0, 0, 0 };
+    unsigned int nDoF = 0;
+    
+
     for(PatTTHit* hit: track.hits()) {
       double yTrack = track.yAtZ( 0. );
       double tyTr   = track.slopeY();
@@ -557,6 +564,10 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       rhs[0] += w * dist;
       rhs[1] += w * dist * dz;
       rhs[2] += w * dist * t ;
+    
+      // -- check how many different layers have fired
+      if ( 0 == differentPlanes[hit->planeCode()]++ ) ++nDoF;
+
       if ( hit->hit()->lhcbID().stID().layer() != 
            hit->hit()->lhcbID().stID().station() ) nbUV++;
       if ( m_printing ) {
@@ -570,24 +581,24 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     if (0 != nbUV) {
       CholeskyDecomp<double, 3> decomp(mat);
       if (!decomp) {
-	track.setChisq(1e42);
-	return;
+        track.setChisq(1e42);
+        return;
       } else {
-	decomp.Solve(rhs);
+        decomp.Solve(rhs);
       }
     } else {
       CholeskyDecomp<double, 2> decomp(mat);
       if (!decomp) {
-	track.setChisq(1e42);
-	return;
+        track.setChisq(1e42);
+        return;
       } else {
-	decomp.Solve(rhs);
+        decomp.Solve(rhs);
       }
       rhs[2] = 0.;
     }
-
+    
     const double dx = rhs[0], dsl = rhs[1], dy = rhs[2];
-
+    
     if ( m_printing ) {
       info() << format( "  dx %7.3f dsl %7.6f dy %7.3f, displY %7.2f", 
                         dx, dsl, dy, track.displY() ) << endmsg;
@@ -599,31 +610,39 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
     //== Remove worst hit and retry, if too far.
 
     double chisq = track.initialChisq();
-
+    
     double maxDist = -1.;
     PatTTHits::iterator worst;
     for (PatTTHits::iterator itH = track.hits().begin();
          itH != track.hits().end(); itH++){
+      
       PatTTHit* hit = *itH;
       double yTrack = track.yAtZ( 0. );
       double tyTr   = track.slopeY();
       updateTTHitForTrack( hit, yTrack, tyTr );
       double dist = track.distance( hit );
+      
+      // --
       if ( m_printing ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );
         if ( m_debugTool ) m_debugTool->debugTTCluster( info(), hit );
         info() << endmsg;
       }
+      // --
+      
       chisq += dist * dist * hit->hit()->weight();
-      if ( maxDist < fabs(dist) ) {
+      // -- only flag this hit as removable if it is not alone in a plane or there are 4 planes that fired
+      if ( maxDist < fabs(dist) &&  (1 < differentPlanes[hit->planeCode()] || nDoF == track.hits().size() ) ) {
         maxDist = fabs( dist );
         worst = itH;
       }
     }
+    
     if ( 2 < track.hits().size() ) chisq /= (track.hits().size() - 2 );
     track.setChisq( chisq );
-
+    
+    
     if ( 5. * m_maxDistance > maxDist && 0 < nbUV ) {
       // remove if Y is incompatible
       for (PatTTHits::iterator itH = track.hits().begin();
@@ -631,11 +650,13 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
         PatTTHit* hit = *itH;
         double yTrack = track.yAtZ( hit->z() );
         if ( yTrack > hit->hit()->yMin() && yTrack < hit->hit()->yMax() ) continue;
+
         if ( m_printing ) {
           info() << "   remove Y incompatible hit measure = " << hit->x() 
               << " : y " << yTrack << " min " << hit->hit()->yMin()
               << " max " << hit->hit()->yMax() << endmsg;
         }
+        
         track.hits().erase( itH );
         maxDist = 0.;  // avoid deleting worst, may be already gone...
         if ( 2 < track.hits().size() ) again = true;
@@ -643,16 +664,17 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       }
       if ( again ) continue;
     }
+    
 
-    if ( m_maxDistance < maxDist ) {
+    if ( m_maxDistance < maxDist && track.hits().size() > 3) {
+      
       track.hits().erase( worst );
-      if ( 2 < track.hits().size() ) {
-        again = true;
-        if ( m_printing ) info() << "   remove worst and retry" << endmsg;
-        continue;
-      }
+      again = true;
+      if ( m_printing ) info() << "   remove worst and retry" << endmsg;
+      
     } 
     
+
     if ( m_printing ) {
       info() << format( "  ---> chi2 %7.2f maxDist %7.3f tol %7.3f", chisq, maxDist, m_maxDistance ) << endmsg;
     }    
@@ -674,8 +696,7 @@ void PatDownstream::findMatchingHits( PatTTHits& MatchingXHits, PatDownTrack& tr
       if ( adist < tol ) MatchingXHits.push_back( hit );
     }
   }
-  std::sort( MatchingXHits.begin(), MatchingXHits.end(),
-	  Tf::increasingByZ<PatTTHit>() );
+  std::sort( MatchingXHits.begin(), MatchingXHits.end(), Tf::increasingByZ<PatTTHit>() );
 }
 
 
@@ -741,10 +762,23 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   int nbHigh = 0;
   int nbUsed = 0;
 
+  // Counter to check how many planes have fired
+  std::array<int,4> differentPlanes = { 0, 0, 0, 0 };
+  unsigned int nDoF = 0;
+  
   for(PatTTHit* hit: track.hits()) {
     if ( hit->hit()->sthit()->cluster().highThreshold() ) ++nbHigh;
     if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatDownstream )  ) ++nbUsed;
+     // -- check how many different layers have fired
+    if ( 0 == differentPlanes[hit->planeCode()]++ ) ++nDoF;
+    
   }
+
+  if( nDoF < 3 ){
+    if ( m_printing ) always() << " === not enough planes involved" << endmsg;
+    return false;
+  }
+
   if ( 2 > nbHigh ) {
     if ( m_printing ) info() << " === not enough high threshold points" << endmsg;
     return false;
@@ -914,15 +948,16 @@ void PatDownstream::fitXProjection( PatTTHits& xHits, PatDownTrack& track, PatTT
 
 //=============================================================================
 // This is needed for tracks which have more than one x hit in one layer
-//============================================================================= 
-
+//=============================================================================
 void PatDownstream::addOverlapRegions( PatDownTrack& track ){
   bool hitAdded = false;
+
   for( PatTTHit* hit: m_xHits ) {
     if ( hit->hit()->testStatus( Tf::HitBase::UsedByPatDownstream )) continue;
     if ( m_maxDistance > std::abs( track.distance( hit ) ) ) {
       double yTrack = track.yAtZ( hit->z() );
       if ( yTrack < hit->hit()->yMin() || yTrack > hit->hit()->yMax() ) continue;
+
       track.hits().push_back( hit );
       hitAdded = true;
     }

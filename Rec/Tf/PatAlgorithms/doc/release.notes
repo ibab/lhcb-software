@@ -9,6 +9,9 @@
  - improve PatFwdTrackCandidate memory layout: move 'cold' pointer towards 
    the 'back'
 
+! 2014-11-29 - Michel De Cian
+ - Fix in PatDownstream such that hits in at least three layers are required for a track.
+
 ! 2014-11-13 - Michel De Cian
  - New implementation of the search for compatible hits in PatAddTTCoord. Faster, but efficiency performance should be stable.
 
