@@ -17,11 +17,24 @@
  *  @date   2007-08-20 Update for A-Team framework
  */
 
+// For convenient trailing-return-types in C++11:
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
+
 class PatFwdTrackCandidate final {
+  PatFwdHits m_coords;
+  std::array<double,6> m_state; // x0,y0,z0, tx,ty, Q/P
+  std::array<double,6> m_params{ { 0., 0., 0., 0., 0., 0. } };
+  double m_quality{ 0. };
+  std::array<double, 2> m_candquality{ { 0., 0. } };
+  std::array<int, 2> m_nb{ { 0, 0 } }; // IT, OT
+  std::pair<double, int> m_chi2PerDof{ 0., 0 };
+  const LHCb::Track *m_track{ nullptr };
+  bool m_fitted{ false };
+
 public:
   template <typename C>
   PatFwdTrackCandidate(const LHCb::Track *tr, C&& coords)
-      : m_track{ tr }, m_coords{ std::forward<C>(coords) } {
+      : m_coords{ std::forward<C>(coords) }, m_track{ tr }  {
     const LHCb::State *state = m_track->stateAt(LHCb::State::EndVelo);
     assert(state != nullptr);
     m_state = { { state->x(),  state->y(), state->z(), 
@@ -58,8 +71,10 @@ public:
   }
 
   const LHCb::Track *track() const { return m_track; }
-  template <typename T> T xStraight(T z) const { return m_state[0] + m_state[3] * (z - m_state[2]); }
-  template <typename T> T yStraight(T z) const { return m_state[1] + m_state[4] * (z - m_state[2]); }
+  template <typename T> auto xStraight(T z) const 
+  AUTO_RETURN( m_state[0] + m_state[3] * (z - m_state[2]) )
+  template <typename T> auto yStraight(T z) const 
+  AUTO_RETURN( m_state[1] + m_state[4] * (z - m_state[2]) )
   double qOverP() const { return m_state[5]; }
 
   double slX() const { return m_state[3]; }
@@ -69,21 +84,19 @@ public:
 
   double sinTrack() const { return sqrt(1. - 1. / (1. + slX2() + slY2())); }
 
-  PatFwdHits::const_iterator coordBegin() const { return m_coords.begin(); }
-  PatFwdHits::const_iterator coordEnd() const { return m_coords.end(); }
+  PatFwdHits::const_iterator coordBegin() const { return std::begin(m_coords); }
+  PatFwdHits::const_iterator coordEnd() const { return std::end(m_coords); }
 
-  PatFwdHits::iterator coordBegin() { return m_coords.begin(); }
-  PatFwdHits::iterator coordEnd() { return m_coords.end(); }
+  PatFwdHits::iterator coordBegin() { return std::begin(m_coords); }
+  PatFwdHits::iterator coordEnd() { return std::end(m_coords); }
 
-  PatFwdHits::iterator begin() { return m_coords.begin(); }
-  PatFwdHits::iterator end() { return m_coords.end(); }
+  PatFwdHits::iterator begin() { return std::begin(m_coords); }
+  PatFwdHits::iterator end() { return std::end(m_coords); }
 
-  PatFwdHits::const_iterator begin() const { return m_coords.begin(); }
-  PatFwdHits::const_iterator end() const { return m_coords.end(); }
+  PatFwdHits::const_iterator begin() const { return std::begin(m_coords); }
+  PatFwdHits::const_iterator end() const { return std::end(m_coords); }
 
-  PatFwdHits::const_reverse_iterator crbegin() const {
-    return m_coords.crbegin();
-  }
+  PatFwdHits::const_reverse_iterator crbegin() const { return m_coords.crbegin(); }
   PatFwdHits::const_reverse_iterator crend() const { return m_coords.crend(); }
 
   void addCoord(PatFwdHit *coord) { m_coords.push_back(coord); }
@@ -116,18 +129,19 @@ public:
     m_params[5] += dby;
   }
 
-  template <typename T> T x(T dz) const {
-    return m_params[0] + dz * (m_params[1] + dz * (m_params[2] + dz * m_params[3]));
-  }
-  template <typename T> T y(T dz) const { return m_params[4] + dz * m_params[5]; }
+  template <typename T> auto x(T dz) const 
+  AUTO_RETURN( m_params[0] + dz * (m_params[1] + dz * (m_params[2] + dz * m_params[3])) )
 
-  template <typename T> T xSlope(T dz) const {
-    return m_params[1] + dz * (2 * m_params[2] + 3 * dz * m_params[3]);
-  }
+  template <typename T> auto y(T dz) const 
+  AUTO_RETURN(  m_params[4] + dz * m_params[5] )
+
+  template <typename T> auto xSlope(T dz) const 
+  AUTO_RETURN( m_params[1] + dz * (2 * m_params[2] + 3 * dz * m_params[3]) )
 
   double ySlope(double) const { return m_params[5]; }
 
-  template <typename T> T xMagnet(T dz) const { return m_params[0] + dz * m_params[1]; }
+  template <typename T> auto  xMagnet(T dz) const 
+  AUTO_RETURN( m_params[0] + dz * m_params[1] )
 
   double cosAfter() const { return 1. / sqrt(1. + m_params[1] * m_params[1]); }
 
@@ -156,8 +170,8 @@ public:
 
   double bx() const { return m_params[1]; }
 
-  PatFwdTrackCandidate& setNbIT(int nb) { m_nb[0] = nb; return *this;}
-  PatFwdTrackCandidate& setNbOT(int nb) { m_nb[1] = nb; return *this;}
+  PatFwdTrackCandidate& setNbIT(int nb) { m_nb[0] = nb; return *this; }
+  PatFwdTrackCandidate& setNbOT(int nb) { m_nb[1] = nb; return *this; }
 
   int nbIT() const { return m_nb[0]; }
   int nbOT() const { return m_nb[1]; }
@@ -174,18 +188,5 @@ public:
   double cand1stquality() const { return m_candquality[0]; }
   double cand2ndquality() const { return m_candquality[1]; }
 
-private:
-  const LHCb::Track *m_track;
-  std::array<double,6> m_state; // x0,y0,z0, tx,ty, Q/P
-
-  PatFwdHits m_coords;
-
-  std::array<double, 6> m_params{ { 0., 0., 0., 0., 0., 0. } };
-
-  double m_quality{ 0. };
-  std::array<double, 2> m_candquality{ { 0., 0. } };
-  std::array<int, 2> m_nb{ { 0, 0 } }; // IT, OT
-  std::pair<double, int> m_chi2PerDof{ 0., 0 };
-  bool m_fitted{ false };
 };
 #endif // PATFWDTRACKCANDIDATE_H
