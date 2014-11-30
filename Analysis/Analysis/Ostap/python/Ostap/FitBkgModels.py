@@ -24,6 +24,10 @@ __all__     = (
     'PSPol_pdf'   , ## A phase space  function, modulated by positive polynomial
     'PolyPos_pdf' , ## A positive polynomial
     ##
+    'PSpline_pdf' , ## positive                spline 
+    'ISpline_pdf' , ## positive non-decreasing spline 
+    'DSpline_pdf' , ## positive non-increasing spline 
+    ##
     'PS2_pdf'     , ## 2-body phase space (no parameters)
     'PSLeft_pdf'  , ## Low  edge of N-body phase space 
     'PSRight_pdf' , ## High edge of L-body phase space from N-body decays  
@@ -191,6 +195,204 @@ class PolyPos_pdf(PDF) :
             self.mass.getMin()   ,
             self.mass.getMax()   ) 
         
+
+# =============================================================================
+## @class  PSpline_pdf
+#  The special spline for non-negative function
+#  Actually it is a sum of M-splines with non-negative coefficients 
+#  \f$ f(x) = \sum_i \alpha_i * M_i^k(x) \f$,
+#  with constraints  \f$  \sum_i \alpha_i=1\f$ and \f$ 0 \le \alpha_i\f$.
+#  @see Analysis::Models::PositiveSpline 
+#  @see Gaudi::Math::PositiveSpline 
+#  @see http://en.wikipedia.org/wiki/M-spline
+#  @see http://en.wikipedia.org/wiki/B-spline
+#  The constrains are implemented as N-sphere
+#  @see Gaudi::Math::NSphere
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class PSpline_pdf(PDF) :
+    """
+    A positive spline, a composion of M-splines with non-negative coefficients
+
+    >>> mass   = ... ## the variable
+    >>> order  = 3   ## spline order
+    
+    ## create uniform spline 
+    >>> inner  = 3   ## number of inner knots between min and max 
+    >>> spline = Gaudi.Math.PositiveSpline( mass.xmin() , mass.xmax() , inner , order )
+
+    ## create non-uniform spline with
+    >>> knots = std.vector('double)()
+    >>> knots.push_back ( mass.xmin() )
+    >>> knots.push_back ( mass.xmax() )
+    >>> knots.push_back ( ... )
+    >>> spline = Gaudi.Math.PositiveSpline( knots , order )
+
+    >>> bkg = PSpline_pdf ( 'Spline' , mass , spline ) 
+    
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   mass             ,   ## the variable
+                   spline           ) : ## the spline object Gaudi::Math::PositiveSpline
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.spline = spline 
+        self.mass   = mass 
+        
+        # 
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList ()
+        for i in range ( 1 , spline.npars() + 1 ) :
+            #
+            phi_i = makeVar   ( None ,
+                                'phi%d_%s'      % ( i , name ) ,
+                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
+            self.phis.append  ( phi_i )
+            self.phi_list.add ( phi_i )
+            #
+            
+        self.pdf  = cpp.Analysis.Models.PositiveSpline (
+            'ps_%s'              % name ,
+            'PositiveSpline(%s)' % name ,
+            self.mass            ,
+            self.spline          , 
+            self.phi_list        )
+
+# =============================================================================
+## @class  ISpline_pdf
+#  The special spline for non-negative non-decreasing function
+#  It is a sum of I-splines with non-negative coefficients 
+#  \f$ f(x) = \sum_i \alpha_i * I_i^k(x) \f$,
+#  that is equivalent to the reparameterized sum of B-splines 
+#  \f$ f(x) = \sum_i \alpha^{\prime}_i * B_i^k(x) \f$,
+#  with constraints  \f$ 0 \le \alpha^{\prime}_i \le \alpha^{\prime}_{i+1}\f$.
+#  @see Analysis::Models::IncreasingSpline 
+#  @see Gaudi::Math::IncreasingSpline 
+#  @see http://en.wikipedia.org/wiki/I-spline
+#  @see http://en.wikipedia.org/wiki/M-spline
+#  @see http://en.wikipedia.org/wiki/B-spline
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class ISpline_pdf(PDF) :
+    """
+    A positive on-decreasing spline, a composion of I-splines with non-negative coefficients
+
+    >>> mass   = ... ## the variable
+    >>> order  = 3   ## spline order
+    
+    ## create uniform spline 
+    >>> inner  = 3   ## number of inner knots between min and max 
+    >>> spline = Gaudi.Math.IncreasingSpline( mass.xmin() , mass.xmax() , inner , order )
+
+    ## create non-uniform spline with
+    >>> knots = std.vector('double)()
+    >>> knots.push_back ( mass.xmin() )
+    >>> knots.push_back ( mass.xmax() )
+    >>> knots.push_back ( ... )
+    >>> spline = Gaudi.Math.IncreasingSpline( knots , order )
+
+    >>> bkg = ISpline_pdf ( 'Spline' , mass , spline ) 
+    
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   mass             ,   ## the variable
+                   spline           ) : ## the spline object Gaudi::Math::IncreasingSpline
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.spline = spline 
+        self.mass   = mass 
+        
+        # 
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList ()
+        for i in range ( 1 , spline.npars() + 1 ) :
+            #
+            phi_i = makeVar   ( None ,
+                                'phi%d_%s'      % ( i , name ) ,
+                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
+            self.phis.append  ( phi_i )
+            self.phi_list.add ( phi_i )
+            #
+            
+        self.pdf  = cpp.Analysis.Models.IncreasingSpline (
+            'is_%s'              % name ,
+            'IncreasingSpline(%s)' % name ,
+            self.mass            ,
+            self.spline          , 
+            self.phi_list        )
+
+# =============================================================================
+## @class  DSpline_pdf
+#  The special spline for non-negative non-increasing function, 
+#  implemented as sum of B-splines 
+#  \f$ f(x) = \sum_i \alpha_i * B_i^k(x) \f$
+#  with constraints
+#  \f$ \alpha^{\prime}_i \ge \alpha^{\prime}_{i+1} \ge 0 \f$.
+#  @see Analysis::Models::DecreasingSpline 
+#  @see Gaudi::Math::DecreasingSpline 
+#  @see http://en.wikipedia.org/wiki/I-spline
+#  @see http://en.wikipedia.org/wiki/M-spline
+#  @see http://en.wikipedia.org/wiki/B-spline
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2011-07-25
+class DSpline_pdf(PDF) :
+    """
+    A positive non-increasing spline as special composition of B-splines
+
+    >>> mass   = ... ## the variable
+    >>> order  = 3   ## spline order
+    
+    ## create uniform spline 
+    >>> inner  = 3   ## number of inner knots between min and max 
+    >>> spline = Gaudi.Math.DecreasingSpline( mass.xmin() , mass.xmax() , inner , order )
+
+    ## create non-uniform spline with
+    >>> knots = std.vector('double)()
+    >>> knots.push_back ( mass.xmin() )
+    >>> knots.push_back ( mass.xmax() )
+    >>> knots.push_back ( ... )
+    >>> spline = Gaudi.Math.DecreasingSpline( knots , order )
+    
+    >>> bkg = ISpline_pdf ( 'Spline' , mass , spline ) 
+    
+    """
+    ## constructor
+    def __init__ ( self             ,
+                   name             ,   ## the name 
+                   mass             ,   ## the variable
+                   spline           ) : ## the spline object Gaudi::Math::DecreasingSpline
+        #
+        PDF.__init__ ( self , name )
+        #
+        self.spline = spline 
+        self.mass   = mass 
+        
+        # 
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList ()
+        for i in range ( 1 , spline.npars() + 1 ) :
+            #
+            phi_i = makeVar   ( None ,
+                                'phi%d_%s'      % ( i , name ) ,
+                                '#phi_{%d}(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
+            self.phis.append  ( phi_i )
+            self.phi_list.add ( phi_i )
+            #
+            
+        self.pdf  = cpp.Analysis.Models.DecreasingSpline (
+            'is_%s'                % name ,
+            'DecreasingSpline(%s)' % name ,
+            self.mass                     ,
+            self.spline                   , 
+            self.phi_list                 )
+
+
 # =============================================================================
 ## @class  PS2_pdf
 #  Primitive 2-body phase space function 

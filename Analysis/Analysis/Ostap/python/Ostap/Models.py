@@ -51,9 +51,9 @@ def _tf1_ ( self , *args ) :
     key = funID ()
     #
     wo  = _WO_ ( self )
-    # 
-    fun = ROOT.TF1 ( funID() , wo , *args )
-    fun.SetNpx ( 500  ) 
+    #
+    fun = ROOT.TF1 ( key , wo , *args )
+    fun.SetNpx ( 500 ) 
     #
     _wrappers_ [ key ] = wo,fun 
     #
@@ -119,7 +119,13 @@ for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Log10GammaDist         ,
                Gaudi.Math.LogGamma               ,
                Gaudi.Math.BetaPrime              ,
-               Gaudi.Math.Landau 
+               Gaudi.Math.Landau                 ,
+               #
+               Gaudi.Math.BSpline                , 
+               Gaudi.Math.PositiveSpline         ,
+               Gaudi.Math.IncreasingSpline       ,
+               Gaudi.Math.DecreasingSpline       ,
+               #
                ) :
     model . tf1 = _tf1_ 
 

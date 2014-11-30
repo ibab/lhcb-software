@@ -445,6 +445,9 @@ ROOT.RooRealVar   . __float__ = lambda s : s.getVal()
 ## print it in more suitable form 
 ROOT.RooRealVar   . __repr__  = lambda s : "'%s' : %s " % ( s.GetName() , s.ve() )
 
+ROOT.RooRealVar   . xmin      = lambda s : s.getMin()
+ROOT.RooRealVar   . xmax      = lambda s : s.getMax()
+ROOT.RooRealVar   . minmax    = lambda s : (s.xmin(),s.xmax()) 
 
 # =============================================================================
 ## Prepare ``soft'' gaussian constraint for the given variable

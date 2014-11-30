@@ -55,21 +55,21 @@ if not os.path.exists( testdatadb ) :
         v = -20*math.log(v)
         hdata.Fill(v)
         
-        #
-        ## prepare MC-dataset: use Gamma-distribution 
-        #
-        x        = ROOT.RooRealVar( 'x' , 'variable'   ,    0 , 100 )
-        ## book very simple data set
-        import Ostap.FitModels as     Models 
-        m_gamma0 = Models.GammaDist_pdf('GD0'  , x )
-        mean     =  35.0
-        variance =  30**2 
-        m_gamma0.k    .setVal( mean**2 /variance )
-        m_gamma0.theta.setVal( variance/mean     )
-        varset4  = ROOT.RooArgSet  ( x )
-        dataset4 = m_gamma0.pdf.generate ( varset4 , 200000 )
-        mctree   = dataset4.store().tree()
-
+    #
+    ## prepare MC-dataset: use Gamma-distribution 
+    #
+    x        = ROOT.RooRealVar( 'x' , 'variable'   ,    0 , 100 )
+    ## book very simple data set
+    import Ostap.FitModels as     Models 
+    m_gamma0 = Models.GammaDist_pdf('GD0'  , x )
+    mean     =  35.0
+    variance =  30**2 
+    m_gamma0.k    .setVal( mean**2 /variance )
+    m_gamma0.theta.setVal( variance/mean     )
+    varset4  = ROOT.RooArgSet  ( x )
+    dataset4 = m_gamma0.pdf.generate ( varset4 , 200000 )
+    mctree   = dataset4.store().tree()
+    
     ## store DATA in DBASE 
     logger.info ( 'Test data will be stored in DBASE "%s"' % testdatadb  )   
     db = ZipShelve.open( testdatadb , 'c' )

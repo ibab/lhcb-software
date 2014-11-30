@@ -29,6 +29,9 @@ __all__     = (
     'ExpoPSPol2D_pdf' , ## Exponential times  phase space times positive 2D-polynomial
     'ExpoPol2D_pdf'   , ## Product of exponents times positive 2D-polynomial
     'ExpoPol2Dsym_pdf', ## Symmetric version of above
+    ##
+    'Spline2D_pdf'    , ## 2D generic   positive spline 
+    'Spline2Dsym_pdf' , ## 2D symmetric positive spline 
     )
 # =============================================================================
 import ROOT, math
@@ -432,7 +435,7 @@ class ExpoPol2D_pdf(object) :
 #  @date 2013-01-10
 class ExpoPol2Dsym_pdf(object) :
     """
-    Symmetric produict of two exponentials and the positive polynom in 2D 
+    Symmetric product of two exponentials and the positive polynom in 2D 
     """
     def __init__ ( self             ,
                    name             ,
@@ -502,6 +505,105 @@ class ExpoPol2Dsym_pdf(object) :
 
 
 # =============================================================================
+## @class Spline2D_pdf
+#  positive spline in 2D:
+#  \f$  f(x,y) = \sum^{i=n}_{i=0}\sum{j=k}_{j=0} a^2_{\ij} M^n_i(x) M^k_j(y) \f$,
+#  where \f$ B^n_i(x)\f$ denotes the M-splines  
+#  @see Analysis::Models::Spline2D
+#  @see Gaudi::Math::Spline2D
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2013-01-10
+class Spline2D_pdf(object) :
+    """
+    Positive spline in 2D
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   x                ,   ##  the first  dimension  
+                   y                ,   ##  the second dimension
+                   spline           ) : ## the spline: Gaudi.Math.Spline2D 
+        
+        self.x     = x
+        self.y     = y
+        
+        self.m1 = x ## ditto 
+        self.m2 = y ## ditto 
+        
+        self.spline = spline
+
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList() 
+        
+        for i in range ( 1 , self.spline.npars() + 1 ) :
+            
+            phi_i = makeVar   ( None ,
+                                'phi_s2d_%d_%s'    % ( i , name ) ,
+                                '#phi(S2D)_%d(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
+            self.phis.append  ( phi_i )
+            self.phi_list.add ( phi_i )
+            
+        #
+        ## finally build PDF 
+        #
+        self.pdf = cpp.Analysis.Models.Spline2D (
+            's2Dp_%s'      % name ,
+            'Spline2D(%s)' % name ,
+            self.x        ,
+            self.y        ,
+            self.spline   ,
+            self.phi_list )
+
+# =============================================================================
+## @class Spline2Dsym_pdf
+#  symmetric positive spline in 2D:
+#  \f$  f(x,y) = \sum^{i=n}_{i=0}\sum{j=k}_{j=0} a^2_{\ij} M^n_i(x) M^k_j(y) \f$,
+#  where \f$ B^n_i(x)\f$ denotes the M-splines  
+#  @see Analysis::Models::Spline2DSym
+#  @see Gaudi::Math::Spline2DSym
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2013-01-10
+class Spline2Dsym_pdf(object) :
+    """
+    Symmetric positive spline in 2D
+    """
+    def __init__ ( self             ,
+                   name             ,
+                   x                ,   ##  the first  dimension  
+                   y                ,   ##  the second dimension
+                   spline           ) : ## the spline: Gaudi.Math.Spline2DSym 
+        
+        self.x     = x
+        self.y     = y
+        
+        self.m1 = x ## ditto 
+        self.m2 = y ## ditto 
+        
+        self.spline = spline
+
+        self.phis     = []
+        self.phi_list = ROOT.RooArgList() 
+        
+        for i in range ( 1 , self.spline.npars() + 1 ) :
+            
+            phi_i = makeVar   ( None ,
+                                'phi_s2d_%d_%s'    % ( i , name ) ,
+                                '#phi(S2D)_%d(%s)' % ( i , name ) ,  None , 0 , -6.5 , 6.5 )
+            self.phis.append  ( phi_i )
+            self.phi_list.add ( phi_i )
+            
+        #
+        ## finally build PDF 
+        #
+        self.pdf = cpp.Analysis.Models.Spline2DSym (
+            's2Dp_%s'         % name ,
+            'Spline2DSym(%s)' % name ,
+            self.x        ,
+            self.y        ,
+            self.spline   ,
+            self.phi_list )
+
+
+# =============================================================================
 # some tiny decoration of underlying classes 
 # =============================================================================
 _rv = ROOT.gROOT.GetVersionInt() // 10000
@@ -510,13 +612,13 @@ def _2d_get_pars_ ( self ) :
     Get parameters of underlying positive Berstein polynomial
     """
     if   hasattr ( self , 'pdf'      ) :
-        return _2d_get_pars_ ( self.pdf        )        
+        return _2d_get_pars_ ( self.pdf         )        
     elif hasattr ( self , 'function' ) :
-        return _2d_get_pars_ ( self.function() )
+        return _2d_get_pars_ ( self.function () )
     elif hasattr ( self , 'positive' ) :
-        return _2d_get_pars_ ( self.positive() )
-    elif hasattr ( self , 'polynom' ) :
-        return _2d_get_pars_ ( self.polynom () )
+        return _2d_get_pars_ ( self.positive () )
+    elif hasattr ( self , 'polynom'  ) :
+        return _2d_get_pars_ ( self. polynom () )
     elif hasattr ( self , 'bernstein' ) :
         b = self.bernstein()
         m = ROOT.TMatrix ( b.nX() + 1 , b.nY() + 1 )
@@ -529,6 +631,9 @@ def _2d_get_pars_ ( self ) :
         return m 
         
     return ROOT.TMatrix()
+
+
+
 
 for t in ( PolyPos2D_pdf    ,
            PolyPos2Dsym_pdf ,

@@ -33,61 +33,92 @@ else                       : logger = getLogger( __name__ )
 # =============================================================================
 logger.debug ( 'Some parameterization utilities for Histo objects')
 # =============================================================================
-## @class BernsteinFIT
-#  simple function to fit/represent the histogram with sum of bernstein polynominals
+## @class H_fit
+#  simple function to fit/represent the histogram with bernstein/spline
+#  expansion 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-09
-class BernsteinFIT(object) :
+class H_fit(object) :
     """
-    Simple function to fit/represent the histogram with sum of bernstein polynominals
+    Simple function to fit/represent the histogram with sum of
+    bernstein/b-spline functions 
     """
-    def __init__ ( self , bp ) :
-        self.bernstein = bp
-
-    def npars    ( self ) : return self.bernstein.npars () 
-    def pars     ( self ) : return self.bernstein.pars  ()
-
+    def __init__ ( self ,  hfit ) :
+        self._hfit = hfit
+        from Ostap.PyRoUts import funID
+        self.fun = ROOT.TF1 ( funID() , self , hfit.xmin() , hfit.xmax() , hfit.npars() )
+    #
+    def npars    ( self ) : return self._hfit.npars () 
+    def pars     ( self ) : return self._hfit.pars  ()
+    #
+    def draw     ( self , *args ) : return sef.fun.Draw( *args ) 
+    def Draw     ( self , *args ) : return sef.fun.Draw( *args )
+    
+    def fit      ( self , h , opts = 'S' , *args ) : return h.Fit( self.fun , opts , *args ) 
+    def Fit      ( self , h , opts = 'S' , *args ) : return h.Fit( self.fun , opts , *args ) 
+    #   
     ## the major method 
     def __call__ ( self , x , pars = [] ) :
         
         if pars :
-            np = self.bernstein.npars() 
+            np = self._hfit.npars() 
             for i in range ( 0 , np ) :    
-                self.bernstein.setPar ( i , pars[i] )
+                self._hfit.setPar ( i , pars[i] )
                 
-        return self.bernstein( x[0] )
+        return self._hfit( x[0] )
+
+BernsteinFIT = H_fit
+BSplineFIT   = H_fit
 
 # =============================================================================
-## @class PositiveFIT
-#  simple function to fit/represent the histogram with sum
-#  of positive bernstein polynominals
+## @class H_nfit
+#  simple function to fit/represent the histogram with normalized
+#  functions, in particular:
+#  - positive bernstein polynomial,
+#  - positive B-spline expansion 
+#  - positive increasing B-spline expansion 
+#  - positive decreasing B-spline expansion 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2014-05-09
-class PositiveFIT(object) :
+class H_Nfit (object) :
     """
     Simple function to fit/represent the histogram with sum of bernstein positive polynominals
     """
-    def __init__ ( self , bp ) :
-        self.positive = bp
-
-    def npars    ( self ) : return self.positive.npars () + 1  ## NB: normalization!  
-    def pars     ( self ) : return self.positive.pars  ()
+    def __init__ ( self , hfit ) :
+        self._hfit = hfit
+        from Ostap.PyRoUts import funID
+        self.fun   = ROOT.TF1 ( funID() , self , hfit.xmin() , hfit.xmax() , hfit.npars() + 1  )
+        self.fun.SetParameter ( 0 , 1 )
+        
+    def npars    ( self ) : return self._hfit.npars () + 1  ## NB: normalization!  
+    def pars     ( self ) : return self._hfit.pars  ()
+    
+    def draw     ( self , *args ) : return sef.fun.Draw( *args ) 
+    def Draw     ( self , *args ) : return sef.fun.Draw( *args )
+    
+    def fit      ( self , h , opts = 'S' , *args ) : return h.Fit( self.fun , opts , *args ) 
+    def Fit      ( self , h , opts = 'S' , *args ) : return h.Fit( self.fun , opts , *args ) 
 
     ## the major method 
     def __call__ ( self , x , pars = [] ) :
 
-        norm = 1 
+        norm = 1.0
+        
         if pars :
 
             norm = pars[0]
             
-            np   = self.positive.npars() 
+            np   = self._hfit.npars() 
             for i in range ( 0 , np ) :    
-                self.positive.setPar ( i , pars[i+1] )
+                self._hfit.setPar ( i , pars[i+1] )
                 
-        return norm * self._bp( x[0] )
-        
+        return norm * self._hfit( x[0] )
     
+PositiveFIT         = H_Nfit
+PositiveSplineFIT   = H_Nfit
+IncreasingSplineFIT = H_Nfit
+DecreasingSplineFIT = H_Nfit
+
 # =============================================================================
 ## represent 1D-histo as Bernstein polynomial
 def _h1_bernstein_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
@@ -126,17 +157,50 @@ def _h1_bernstein_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
         b.setPar ( i , v )
 
 
-    bfit  = BernsteinFIT( b )
-    from Ostap.PyRoUts import funID
+    bfit  = BernsteinFIT( b )    
+    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
     
-    fun   = ROOT.TF1 ( funID() , bfit , mn , mx , bfit.npars() )
-    fun.SetNpx( max ( 100 , 3 * h1.bins() ) )  
+    bfit.histo     = self
+    bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
-    return fun,bfit,fun.Fit(h1,opts)
+    return bfit.fun,bfit,bfit.fitresult 
 
 # =============================================================================
-## represent 1D-histo as POSITIVE Bernstein polynomial
-def _h1_positive_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
+## represent 1D-histo as B-spline
+def _h1_bspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+    """
+    Represent histo as B-spline polynomial
+    
+    >>> h = ... # the historgam
+    >>> b1 = h.bSpline ( order = 3 , innerknots = 3  )
+    >>> b2 = h.bSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    
+    
+    """
+    mn,mx = h1.xminmax ()
+    #
+    from Ostap.PyRoUts import funID
+    if isinstance ( knots , ( int , long ) ) :
+        b = cpp.Gaudi.Math.BSpline ( mn , mx , knots , order )
+    else :
+        _knots = cpp.std.vector('double') ()
+        _knots.push_back ( mn ) 
+        _knots.push_back ( mx ) 
+        for k in knots : _knots.push_back( k )
+        b = cpp.Gaudi.Math.BSpline ( _knots , order )
+
+    bfit  = BSplineFIT( b )
+    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
+    
+    bfit.histo     = h1 
+    bfit.fitresult = bfit.fun.Fit(h1,opts) 
+    
+    return bfit.fun,bfit,bfit.fitresult 
+
+
+# =============================================================================
+## represent 1D-histo as POSITIVE spline polynomial
+def _h1_positive_ ( h1 , N , opts = 'SQ0I' ) :
     """
     Represent histo as Positive Bernstein polynomial
     
@@ -150,22 +214,155 @@ def _h1_positive_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
 
     bfit  = PositiveFIT( b )
 
-    from Ostap.PyRoUts import funID
+    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
+    bfit.fun.SetParameter ( 0 , h1.accumulate().value() / h1.bins() )
     
-    fun   = ROOT.TF1 ( funID() , bfit , mn , mx , bfit.npars() )
+    bfit.histo     = h1
+    bfit.fitresult = bfit.fun.Fit(h1,opts) 
+    
+    return fun,bfit,bfit.fitresult 
 
-    fun.SetParameter ( 0 , h1.accumulate().value() / h1.bins() )
-    fun.SetNpx( max ( 100 , 3 * h1.bins() ) )  
+# =============================================================================
+## represent 1D-histo as positive B-spline
+def _h1_pspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+    """
+    Represent histo as positive B-spline 
     
-    return fun,bfit,fun.Fit(h1,opts)
+    >>> h = ... # the historgam
+    >>> b1 = h.pSpline ( order = 3 , innerknots = 3  )
+    >>> b2 = h.pSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    
+    """
+    mn,mx = h1.xminmax ()
+    #
+    from Ostap.PyRoUts import funID
+    if isinstance ( knots , ( int , long ) ) :
+        b = cpp.Gaudi.Math.PositiveSpline ( mn , mx , knots , order )
+    else :
+        _knots = cpp.std.vector('double') ()
+        _knots.push_back ( mn ) 
+        _knots.push_back ( mx ) 
+        for k in knots : _knots.push_back( k )
+        b = cpp.Gaudi.Math.BSpline ( _knots , order )
+
+
+    bfit  = PositiveSplineFIT( b )
+    
+    bfit.fun.SetParameter ( 0 , h1.accumulate().value() / h1.bins() )
+    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
+    
+    bfit.histo     = h1
+    bfit.fitresult = bfit.fun.Fit(h1,opts) 
+    
+    return bfit.fun,bfit,bfit.fitresult 
+
+
+# =============================================================================
+## represent 1D-histo as positive increasing spline
+def _h1_ispline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+    """
+    Represent histo as positive increasing spline 
+    
+    >>> h = ... # the historgam
+    >>> b1 = h.iSpline ( order = 3 , innerknots = 3  )
+    >>> b2 = h.iSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    
+    """
+    mn,mx = h1.xminmax ()
+    #
+    from Ostap.PyRoUts import funID
+    if isinstance ( knots , ( int , long ) ) :
+        b = cpp.Gaudi.Math.IncreasingSpline ( mn , mx , knots , order )
+    else :
+        _knots = cpp.std.vector('double') ()
+        _knots.push_back ( mn ) 
+        _knots.push_back ( mx ) 
+        for k in knots : _knots.push_back( k )
+        b = cpp.Gaudi.Math.IncreasingSpline ( _knots , order )
+
+    bfit  = IncreasingSplineFIT( b )
+    bfit.fun.SetParameter ( 0   , h1[h1.bins()]   )
+    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
+    
+    bfit.histo     = h1
+    bfit.fitresult = bfit.fun.Fit(h1,opts) 
+    
+    return bfit.fun,bfit,bfit.fitresult 
+
+
+# =============================================================================
+## represent 1D-histo as positive decreasing spline
+def _h1_dspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
+    """
+    Represent histo as positive decreasing spline 
+    
+    >>> h = ... # the historgam
+    >>> b1 = h.dSpline ( order = 3 , innerknots = 3  )
+    >>> b2 = h.dSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    
+    """
+    mn,mx = h1.xminmax ()
+    #
+    from Ostap.PyRoUts import funID
+    if isinstance ( knots , ( int , long ) ) :
+        b = cpp.Gaudi.Math.DecreasingSpline ( mn , mx , knots , order )
+    else :
+        _knots = cpp.std.vector('double') ()
+        _knots.push_back ( mn ) 
+        _knots.push_back ( mx ) 
+        for k in knots : _knots.push_back( k )
+        b = cpp.Gaudi.Math.DecreasingSpline ( _knots , order )
+
+    bfit  = IncreasingSplineFIT( b )
+    bfit.fun.SetParameter ( 0 , h1[1]             )
+    bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
+    
+    bfit.histo     = h1
+    bfit.fitresult = bfit.fun.Fit(h1,opts) 
+    
+    return bfit.fun,bfit,bfit.fitresult 
 
 
 for t in ( ROOT.TH1D , ROOT.TH1F ) :
     t.bernstein  = _h1_bernstein_
     t.positive   = _h1_positive_
-    
-# =============================================================================
+    t.bSpline    = _h1_bspline_
+    t.pSpline    = _h1_pspline_
+    t.iSpline    = _h1_ispline_
+    t.dSpline    = _h1_dspline_
 
+    
+## create function object 
+def  _funobj0_ ( self ) :
+    """
+    """
+    if hasattr ( self , '_bfit' ) : return self._bfit
+    self._bfit = H_fit( self )
+    return self._bfit
+
+## create function object 
+def  _funobjN_ ( self ) :
+    """
+    """
+    if hasattr ( self , '_bfit' ) : return self._bfit
+    self._bfit = H_Nfit( self )
+    return self._bfit
+
+## draw spline object
+def _sp_draw_   ( self , opts = '' ) :
+    """
+    Draw spline object 
+    """
+    bf = self.funobj () 
+    return bf.fun.Draw( opts ) 
+
+    
+cpp.Gaudi.Math.Bernstein        .funobj = _funobj0_
+cpp.Gaudi.Math.BSpline          .funobj = _funobj0_
+cpp.Gaudi.Math.Positive         .funobj = _funobjN_
+cpp.Gaudi.Math.PositiveSpline   .funobj = _funobjN_
+cpp.Gaudi.Math.IncreasingSpline .funobj = _funobjN_
+cpp.Gaudi.Math.DecreasingSpline .funobj = _funobjN_
 
 # =============================================================================
 ## helper class to wrap 1D-histogram as function 

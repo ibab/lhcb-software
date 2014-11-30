@@ -366,6 +366,25 @@ else :
     for phi in m_ps.phis : 
         print  "\tPoly3ps:     phi=  %s " % phi.ve() 
 
+
+# =============================================================================
+logger.info ("Test positive spline: order 3 with 5 inner knots ")
+# =============================================================================
+s3   = cpp.Gaudi.Math.PositiveSpline( x.xmin() , x.xmax() , 5 , 3 )
+m_s3 = Models.PSpline_pdf ( 'S3' , x , s3 )
+
+with rooSilent() : 
+    result,f  = m_s3.fitTo ( dataset2 )  
+    result,f  = m_s3.fitTo ( dataset2 )  
+    
+if 0 != result.status() or 3 != result.covQual() :
+    logger.warning('Fit is not perfect MIGRAD=%d QUAL=%d ' % ( result.status() , result.covQual()  ) )
+    print result
+else :
+    for phi in m_s3.phis : 
+        print  "\tSpline3:     phi=  %s " % phi.ve() 
+
+
 # =============================================================================
 # The END 
 # =============================================================================
