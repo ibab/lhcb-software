@@ -8,6 +8,9 @@
  - Re-insert magic call to action().
 
 ! 2014-11-19 Gerhard Raven
+ - fix & simplify split config more
+
+! 2014-11-19 Gerhard Raven
  - simplify split config 
 
 !========================= Moore v23r2 2014-11-05 =========================

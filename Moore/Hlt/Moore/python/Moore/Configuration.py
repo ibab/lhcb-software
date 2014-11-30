@@ -713,40 +713,32 @@ class Moore(LHCbConfigurableUser):
             LHCbApp().setProp("Persistency","MDF")
     
     def _split(self, useTCK ): 
-
-        def hlt1_only_tck() :
-            # remove items starting with Hlt2
-            # enable track reports writers
-            # remove lumi stripper...
-            trans = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt2[^']*'" : "" } } 
-                    , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
-                    , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
-                    , 'HltGlobalMonitor/.*'                : { 'Hlt2DecReports' : { '^.*$' : ''    } }
-                    , 'HltL0GlobalMonitor/.*'              : { 'Hlt2DecReports' : { '^.*$' : ''    } }
-            }
-            Funcs._mergeTransform(trans)
-
-        def hlt2_only_tck() :
-            ### remove all algorithms starting with Hlt1
-            ### TODO: remove/disable the 'producers'
-            ### enable various reports decoders
-            ### TODO: if running 'independent' somehow replace track decoder with velo reco ...
-            trans = { 'GaudiSequencer/HltDecisionSequence$' : { 'Members' : { "'[^/]*/Hlt1[^']*'[^,]*," : ""  } }
-                    , 'HltTrackReportsDecoder/.*' : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } } 
-                    , 'HltSelReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
-                    , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
-            }
-            Funcs._mergeTransform(trans)
-        
         split=self.getProp("Split")
         # rather nasty way of doing this.. but it is 'hidden' 
         # if you're reading this: don't expect this to remain like this!!!
-        if split not in ["","Hlt1","Hlt2"]:
-            raise ValueError("Invalid option for Moore().Split: '%s'"% self.getProp("Split") )
+        if split not in [ "", "Hlt1", "Hlt2" ]:
+            raise ValueError("Invalid option for Moore().Split: '%s'"% split )
         if useTCK and split:
-            splitter = { 'Hlt1'     : hlt1_only_tck 
-                       , 'Hlt2'     : hlt2_only_tck }
-            action = splitter[ split ]
+            trans = dict()
+            # Hlt1 transform: remove items starting with Hlt2
+            #                 enable track reports writers
+            #                 remove lumi stripper...
+            trans['Hlt1'] = { 'GaudiSequencer/HltDecisionSequence' : { 'Members' : { ",[^']*'[^/]*/Hlt2[^']*'" : "" } } 
+                            , 'HltTrackReportsWriter/.*'           : { 'Enable'  : { "^.*$" : 'True' } }
+                            , 'GaudiSequencer/HltEndSequence'      : { 'Members' : { ", 'GaudiSequencer/LumiStripper'": "" } }
+                            , 'HltGlobalMonitor/.*'                : { 'Hlt2DecReports' : { '^.*$' : ''    } }
+                            , 'HltL0GlobalMonitor/.*'              : { 'Hlt2DecReports' : { '^.*$' : ''    } }
+            }
+            ### Hlt2 transform: remove all algorithms starting with Hlt1
+            ###                 enable various reports decoders
+            ###                 TODO: remove/disable the 'producers'
+            ###                 TODO: if running 'independent' somehow replace track decoder with velo reco ...
+            trans['Hlt2'] = { 'GaudiSequencer/HltDecisionSequence$' : { 'Members' : { "'[^/]*/Hlt1[^']*'[^,]*," : ""  } }
+                            , 'HltTrackReportsDecoder/.*' : { 'Enable' : { '^.*$' : '%s' % ( not MooreExpert().getProp("Hlt2Independent") ) } } 
+                            , 'HltSelReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
+                            , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
+            }
+            Funcs._mergeTransform(trans[split])
             if action : action()
             # Tell the HltConfigSvc that we will only be running 
             # one level of the HLT
@@ -761,7 +753,7 @@ class Moore(LHCbConfigurableUser):
                 if split==check:
                     if len([w for w in self.getProp("WriterRequires") if fail in w]):
                         raise ValueError("You have set WriterRequires to something, but that thing cannot be guaranteed to be there in the split scenario! We are splitting into: "+self.getProp('Split')+" and you have asked for: "+self.getProp('WriterRequires').__str__())
-        
+
 
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
