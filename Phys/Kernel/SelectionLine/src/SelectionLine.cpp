@@ -7,6 +7,7 @@
 #include <deque>
 #include <iterator>
 #include <utility>
+#include <chrono>
 // ============================================================================
 // Boost
 // ============================================================================
@@ -236,6 +237,7 @@ Selection::Line::Line( const std::string& name,
   declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = false );
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );
+  declareProperty( "Turbo"                , m_turbo          = false );
   declareProperty( "AcceptOnError"        , m_acceptOnError  = true );
   declareProperty( "AcceptOnIncident"     , m_acceptOnIncident = true );
   declareProperty( "AcceptIfSlow"         , m_acceptIfSlow   = false );
@@ -345,6 +347,15 @@ StatusCode Selection::Line::initialize()
 
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
+  // Is the line a Turbo line?
+  // If so inform the HltDecReports
+  IAlgorithm* myIAlg{nullptr};
+  auto isTurbo = m_algMgr->getAlgorithm( std::string{"TurboMIAB"} +m_decision.substr(4, m_decision.size()-12), myIAlg );
+  if ( m_turbo != isTurbo.isSuccess() ) {
+      std::string msg = std::string{ "Line is " } + (m_turbo?" ":"not " ) + "flagged as turbo, but TurboMIAB"+name()+" is " + (myIAlg?" ":"not") +" present";
+      error() << msg << endmsg;
+      return Error( msg, StatusCode::FAILURE);
+  }
   return status;
 }
 
@@ -355,7 +366,7 @@ StatusCode Selection::Line::initialize()
 //=============================================================================
 StatusCode Selection::Line::execute() 
 {
-  const longlong startClock = System::currentTime( System::microSec );
+  auto startClock = std::chrono::high_resolution_clock::now();
 
   /// lock the context
   Gaudi::Utils::AlgContext lock1 ( this , contextSvc() ) ;
@@ -397,23 +408,17 @@ StatusCode Selection::Line::execute()
     if ( !accept ) break;
     report.setExecutionStage( i+1 );
   }
-  // Is the line a Turbo line?
-  // If so inform the HltDecReports
-  std::string lineName = m_decision.substr(4, m_decision.size()-12);
-  std::stringstream turboAlgName; turboAlgName << "TurboMIAB" << lineName;
-  IAlgorithm* myIAlg(0);
-  StatusCode Turbo = m_algMgr->getAlgorithm( turboAlgName.str(), myIAlg );
-  if ( myIAlg!=0 ){
-    report.setExecutionStage( 254 );
-  }
+  // Is the line a Turbo line? If so, inform the HltDecReports
+  if ( m_turbo ) report.setExecutionStage( 254 ); // TODO: if (m_turbo) report.setExecutionStage( 0x80 | report.executionStage() );
 
   // plot the wall clock time spent..
-  const double elapsedTime = double(System::currentTime( System::microSec) - startClock);
-  // protect against 0 and convert nanosec --> to millisec
-  const double logElapsedTimeMS = elapsedTime > 0 ? log10(elapsedTime)-3 : timeHistoLowBound;
+  using ms = std::chrono::duration<double, std::chrono::milliseconds::period>;
+  auto elapsedTime = std::chrono::duration_cast<ms>(std::chrono::high_resolution_clock::now() - startClock);
+  // protect against 0 
+  const double logElapsedTimeMS = elapsedTime.count() > 0 ? log10(elapsedTime.count()) : timeHistoLowBound;
   
-  fill( m_timeHisto, logElapsedTimeMS ,1.0); // converted to millisec
-  if (elapsedTime>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
+  fill( m_timeHisto, logElapsedTimeMS ,1.0);
+  if (elapsedTime.count()>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
 
   // did not(yet) accept, but something bad happened...
   if ( !accept && report.errorBits() != 0 && 

@@ -125,16 +125,9 @@ namespace Selection {
                    postscaled =      7 ,
                    nStages = postscaled };
       const std::string& transition( const stage &s) const {
-            static std::vector<std::string> s_map;
-            if (s_map.empty()) {
-                s_map.push_back("Prescale");
-                s_map.push_back("ODIN");
-                s_map.push_back("L0DU");
-                s_map.push_back("HLT");
-                s_map.push_back("Filter0");
-                s_map.push_back("Filter1");
-                s_map.push_back("Postscale");
-            }
+            static const std::vector<std::string> s_map = { 
+                {"Prescale"}, {"ODIN"}, {"L0DU"}, {"HLT"},
+                {"Filter0"}, {"Filter1"}, {"Postscale"} } ;
             return s_map[s];
       };
       
@@ -147,9 +140,9 @@ namespace Selection {
       Algorithm* getSubAlgorithm(const std::string& name);
 
       
-      /** Private copy, assignment operator. This is not allowed **/
-      Line( const Line& a );
-      Line& operator=( const Line& a );
+      /** copy, assignment is not allowed **/
+      Line( const Line& a ) = delete;
+      Line& operator=( const Line& a ) = delete;
       
       
       std::array< std::unique_ptr<Stage>,nStages> m_stages; ///< List of algorithms to process.
@@ -176,6 +169,7 @@ namespace Selection {
       bool m_acceptOnIncident;               ///< Forces accept if incident
       bool m_acceptIfSlow;                   ///< Forces accept if event is slow
       bool m_caughtIncident;                 
+      bool m_turbo;                          ///< Line is a 'turbo' line -- flag this in decreport
       int  m_timer;                          ///< Timer number for the sequencer
       int  m_maxAcceptOnError;               ///< quota to avoid runaway accepts in case of persistent errors..
       int  m_nAcceptOnError;
