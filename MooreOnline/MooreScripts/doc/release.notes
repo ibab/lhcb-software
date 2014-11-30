@@ -4,6 +4,10 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-11-30 - Roel Aaij
+ - Add script to run offline Moore in an online-like way with the buffer manager
+   etc.
+
 !========================= MooreScripts v1r7 2014-11-07 =========================
 
 ! 2014-10-24 - Gerhard Raven
