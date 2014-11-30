@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 ! 2014-11-30 - Gerhard Raven
  - set Turbo property of SelectionLine
+ - remove unneeded insertion of TurboMIAB algorithm
 
 !========================= HltLine v7r5 2014-11-05 =========================
 

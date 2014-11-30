@@ -1434,12 +1434,6 @@ class Hlt2Line(object):
             #  and please note the trailing 'Decision' which is there to skip Hlt1Global!
             HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV)(?!MB).*Decision')"
 
-        # If turbo flag is set add TurboMIAB to let DecReports know we want extended reports
-        if Turbo :
-            from Configurables import TurboMIAB
-            miab = TurboMIAB('TurboMIAB'+name)
-            algos = [miab] + algos
-
         if VoidFilter == None : # distguish between None and "" -- if we write 'if not VoidFilter' then "" would get overruled...
             code = self.getDefaultVoidFilter()
             if code : VoidFilter = code
