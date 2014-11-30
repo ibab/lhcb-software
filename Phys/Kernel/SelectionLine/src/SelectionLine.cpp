@@ -347,15 +347,6 @@ StatusCode Selection::Line::initialize()
 
   if ( m_measureTime ) m_timerTool->decreaseIndent();
 
-  // Is the line a Turbo line?
-  // If so inform the HltDecReports
-  IAlgorithm* myIAlg{nullptr};
-  auto isTurbo = m_algMgr->getAlgorithm( std::string{"TurboMIAB"} +m_decision.substr(4, m_decision.size()-12), myIAlg );
-  if ( m_turbo != isTurbo.isSuccess() ) {
-      std::string msg = std::string{ "Line is " } + (m_turbo?" ":"not " ) + "flagged as turbo, but TurboMIAB"+name()+" is " + (myIAlg?" ":"not") +" present";
-      error() << msg << endmsg;
-      return Error( msg, StatusCode::FAILURE);
-  }
   return status;
 }
 

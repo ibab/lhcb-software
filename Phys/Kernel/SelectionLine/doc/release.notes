@@ -7,6 +7,7 @@
 ! 2014-11-30 - Gerhard Raven
  - make Turbo a dedicated property, check for consistency with configured algorithms
  - use std::chrono instead of Gaudi time functions for timing measurments
+ - remove unneeded check on TurboMIAB dummy algorithm
 
 !========================= SelectionLine v1r2 2014-11-05 =========================
 
