@@ -739,7 +739,6 @@ class Moore(LHCbConfigurableUser):
                             , 'HltDecReportsDecoder/.*'   : { 'Enable' : { '^.*$' : 'True' } }
             }
             Funcs._mergeTransform(trans[split])
-            if action : action()
             # Tell the HltConfigSvc that we will only be running 
             # one level of the HLT
             from Configurables import HltConfigSvc
