@@ -1,6 +1,6 @@
-
 // Include files
 #include <cmath>
+#include <algorithm>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -212,8 +212,9 @@ struct regions {
             return lhs.m_index != rhs.m_index;
         }
     };
+    constexpr unsigned size()  const { return Tf::RegionID::OTIndex::kNStations*Tf::RegionID::OTIndex::kNLayers*nReg()/2; }
     constexpr iterator begin() const { return { 0 }; }
-    constexpr iterator end()   const { return { Tf::RegionID::OTIndex::kNStations*Tf::RegionID::OTIndex::kNLayers*nReg()/2 }; }
+    constexpr iterator end()   const { return { size() }; }
 };
 
 static const auto stereo_regions = regions<true>{};
@@ -624,7 +625,6 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     debug() << "Search X coordinates, xMin " << interval.xMin()
             << " xMax " << interval.xMax() << endmsg;
   }
-  auto outside_interval = [&](const PatForwardHit* hit) { return interval.outside(hit->projection()); } ;
   auto not_selected = [](const PatForwardHit* hit) { return !hit->isSelected(); };
 
   auto yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
@@ -658,18 +658,18 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
         return last;
   };
 
-
   for ( const auto& region : x_regions ) { 
     const auto* regionB = m_tHitManager->region(region.station(),region.layer(),region.region());
     auto z = regionB->z();
     auto yRegion = track.yStraight( z );
     if (!regionB->isYCompatible( yRegion, yCompat )) continue;
-
     // TODO: yRegion * regionB->sinT() should contribute to the central value, not the width...
     auto xRange = symmetricRange( track.xStraight(z),
                                   interval.xKick( z ) + fabs( yRegion * regionB->sinT() ) + 20. );
     auto hitRange = m_tHitManager->hitsInXRange(xRange.min(), xRange.max(),
                                                 region.station(), region.layer(), region.region());
+    // break loop here, store (hitRange,yRegion,region.isOT()) ???
+
     // grow capacity so that things don't move around afterwards...
     m_xHitsAtReference.reserve( m_xHitsAtReference.size() + hitRange.size() );
     auto first = std::end(m_xHitsAtReference);
@@ -678,9 +678,8 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
                   not_ignored_and_y_compatible( yRegion ) );
     auto last = region.isOT() ? updateOTHitsForTrack( first, std::end(m_xHitsAtReference) )
                               : updateITHitsForTrack( first, std::end(m_xHitsAtReference) );
-    m_fwdTool->setXAtReferencePlane( track, first, last );
-    last = std::remove_if( first, last, outside_interval ) ;  // we should be partitioned wrt. outside_interval here... can we utilize that??
     m_xHitsAtReference.erase( last, std::end(m_xHitsAtReference) );
+    m_fwdTool->setXAtReferencePlane( track, first, last );
     // make sure we are ordered by the right criterium -- until now, things
     // are ordered by xAtYEq0, which isn't quite the same as by xAtReferencePlane...
     // so this sort is actually needed (not always though...), for both IT and OT...
@@ -688,7 +687,9 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     std::inplace_merge( std::begin(m_xHitsAtReference),first,last, 
                         Tf::increasingByProjection<PatForwardHit>() );
   }
-  return { std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) };
+  // select the subrange of m_xHitsAtReference which is within the interval...
+  return interval.inside( boost::make_iterator_range( std::begin(m_xHitsAtReference), std::end(m_xHitsAtReference) ), 
+                          [](const PatForwardHit* h) { return h->projection(); } );
 }
 
 //=========================================================================

@@ -67,6 +67,15 @@ private:
       double xMax() const { return m_xmax; }
       bool inside(double x) const { return m_xmin <= x && x < m_xmax; }
       bool outside(double x) const { return x < m_xmin || m_xmax <= x ; }
+      template <typename Range, typename Projection> 
+      Range inside(const Range& r, Projection p) const {
+            // TODO: linear search from the edges is probably faster given the typical input...
+            auto f = std::partition_point( std::begin(r), std::end(r),
+                                           [&]( const typename Range::value_type& i ) { return p(i)<m_xmin; } );
+            auto l = std::partition_point( f, std::end(r),
+                                           [&]( const typename Range::value_type& i ) { return p(i)<m_xmax; } );
+            return { f, l };
+      }
   };
 
   template <typename T> T dSlope_kick( T pt, T sinTrack ) const {

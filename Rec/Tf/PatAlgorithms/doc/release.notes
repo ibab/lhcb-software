@@ -4,6 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 ! 2014-11-29 - Gerhard Raven
+ - PatForwardTool: small speedup in fillXList
+
+! 2014-11-29 - Gerhard Raven
  - PatFwdTrackCanddiate: 
      o move data members to the 'top' of the class so that one can use 'auto' 
        (trailing) return specifitation
