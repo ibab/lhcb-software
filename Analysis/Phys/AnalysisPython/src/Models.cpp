@@ -3452,8 +3452,387 @@ Double_t Analysis::Models::PolyPositive::analyticalIntegral
 // ============================================================================
 
 
+
 // ============================================================================
-// generic polinomial
+// positive spline 
+// ============================================================================
+/*  constructor with the spline 
+ *  @param name  the name 
+ *  @param title the  title
+ *  @param x     the  variable 
+ *  @param spine the spline  
+ *  @param phis  vector of parameters 
+ */
+// ============================================================================
+Analysis::Models::PositiveSpline::PositiveSpline 
+( const char*                        name, 
+  const char*                        title     ,
+  RooAbsReal&                        x         ,
+  const Gaudi::Math::PositiveSpline& spline    ,   // the spline 
+  RooArgList&                        phis      )   // parameters
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_phis     ( "phi"     , "Coefficients" , this     )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline   ( spline ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_phis.createIterator() ;
+  setPars () ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::PositiveSpline::PositiveSpline
+( const Analysis::Models::PositiveSpline&  right ,      
+  const char*                            name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline ( right.m_spline ) 
+{
+  m_iterator = m_phis.createIterator () ;
+  setPars () ;
+}
+
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::PositiveSpline::~PositiveSpline() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::PositiveSpline*
+Analysis::Models::PositiveSpline::clone( const char* name ) const 
+{ return new Analysis::Models::PositiveSpline(*this,name) ; }
+// ============================================================================
+void Analysis::Models::PositiveSpline::setPars () const 
+{
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_spline.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::PositiveSpline::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_spline ( m_x ) ; 
+}
+// ============================================================================
+Int_t Analysis::Models::PositiveSpline::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::PositiveSpline::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_spline.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+
+
+
+// ============================================================================
+// increasing spline 
+// ============================================================================
+/** constructor with the spline 
+ *  @param name  the name 
+ *  @param title the  title
+ *  @param x     the  variable 
+ *  @param spine the spline  
+ *  @param phis  vector of parameters 
+ */
+// ============================================================================
+Analysis::Models::IncreasingSpline::IncreasingSpline 
+( const char*                          name, 
+  const char*                          title     ,
+  RooAbsReal&                          x         ,
+  const Gaudi::Math::IncreasingSpline& spline    ,   // the spline 
+  RooArgList&                          phis      )   // parameters
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_phis     ( "phi"     , "Coefficients" , this     )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline   ( spline ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_phis.createIterator() ;
+  setPars () ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::IncreasingSpline::IncreasingSpline 
+( const Analysis::Models::IncreasingSpline&  right ,      
+  const char*                                name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline ( right.m_spline ) 
+{
+  m_iterator = m_phis.createIterator () ;
+  setPars () ;
+}
+
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::IncreasingSpline::~IncreasingSpline() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::IncreasingSpline*
+Analysis::Models::IncreasingSpline::clone( const char* name ) const 
+{ return new Analysis::Models::IncreasingSpline(*this,name) ; }
+// ============================================================================
+void Analysis::Models::IncreasingSpline::setPars () const 
+{
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_spline.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::IncreasingSpline::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_spline ( m_x ) ; 
+}
+// ============================================================================
+Int_t Analysis::Models::IncreasingSpline::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::IncreasingSpline::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_spline.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+// ============================================================================
+// decreasing spline 
+// ============================================================================
+/** constructor with the spline 
+ *  @param name  the name 
+ *  @param title the  title
+ *  @param x     the  variable 
+ *  @param spine the spline  
+ *  @param phis  vector of parameters 
+ */
+// ============================================================================
+Analysis::Models::DecreasingSpline::DecreasingSpline 
+( const char*                          name, 
+  const char*                          title     ,
+  RooAbsReal&                          x         ,
+  const Gaudi::Math::DecreasingSpline& spline    ,   // the spline 
+  RooArgList&                          phis      )   // parameters
+  : RooAbsPdf ( name , title ) 
+  , m_x        ( "x"       , "Observable"   , this , x ) 
+  , m_phis     ( "phi"     , "Coefficients" , this     )
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline   ( spline ) 
+{
+  //
+  TIterator* tmp  = phis.createIterator() ;
+  RooAbsArg* coef = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+  }
+  delete tmp ;
+  //
+  m_iterator = m_phis.createIterator() ;
+  setPars () ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::DecreasingSpline::DecreasingSpline 
+( const Analysis::Models::DecreasingSpline&  right ,      
+  const char*                                name  ) 
+  : RooAbsPdf ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+    //
+  , m_iterator ( 0 ) 
+    //
+  , m_spline ( right.m_spline ) 
+{
+  m_iterator = m_phis.createIterator () ;
+  setPars () ;
+}
+
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::DecreasingSpline::~DecreasingSpline() { delete m_iterator ; }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::DecreasingSpline*
+Analysis::Models::DecreasingSpline::clone( const char* name ) const 
+{ return new Analysis::Models::DecreasingSpline(*this,name) ; }
+// ============================================================================
+void Analysis::Models::DecreasingSpline::setPars () const 
+{
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  std::vector<double> sin2phi ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phi   = r->getVal ( nset ) ;
+    //
+    m_spline.setPar ( k  , phi ) ;
+    //
+    ++k ;
+  }
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::DecreasingSpline::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_spline ( m_x ) ; 
+}
+// ============================================================================
+Int_t Analysis::Models::DecreasingSpline::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if ( matchArgs ( allVars , analVars , m_x ) ) { return 1 ; }
+  return 0 ;
+}
+// ============================================================================
+Double_t Analysis::Models::DecreasingSpline::analyticalIntegral 
+( Int_t       code      , 
+  const char* rangeName ) const 
+{
+  assert ( code == 1 ) ;
+  if ( 1 != code ) {}
+  //
+  setPars () ;
+  //
+  return m_spline.integral ( m_x.min(rangeName) , m_x.max(rangeName) ) ;
+}
+// ============================================================================
+
+
+
+// ============================================================================
+// generic polinomial times exponent 
 // ============================================================================
 Analysis::Models::ExpoPositive::ExpoPositive
 ( const char*          name      , 
@@ -5590,6 +5969,280 @@ Double_t Analysis::Models::Expo2DPolSym::analyticalIntegral
     2 == code ? m_function.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
     3 == code ? m_function.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
 }
+// ============================================================================
+
+
+
+
+
+
+
+// ============================================================================
+// generic 2D-spline
+// ============================================================================
+Analysis::Models::Spline2D::Spline2D
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  const Gaudi::Math::Spline2D& spline, 
+  RooArgList&          phis      ) 
+  : RooAbsPdf  ( name , title ) 
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+    //
+  , m_spline   ( spline ) 
+{
+  //
+  TIterator*   tmp  = phis.createIterator() ;
+  RooAbsArg*   coef = 0 ;
+  unsigned int num  = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_spline.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_spline.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::Spline2D"         , 
+                           StatusCode::FAILURE          ) ; }
+  
+  //
+  m_iterator = m_phis.createIterator() ;
+  setPars () ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::Spline2D::Spline2D
+( const Analysis::Models::Spline2D&  right ,      
+  const char*                              name  ) 
+  : RooAbsPdf  ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+//
+  , m_iterator ( 0 ) 
+//
+  , m_spline   ( right.m_spline ) 
+{
+  m_iterator = m_phis.createIterator () ;
+  setPars () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Spline2D::~Spline2D() 
+{ if ( 0 != m_iterator ) { delete m_iterator ; } }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Spline2D*
+Analysis::Models::Spline2D::clone( const char* name ) const 
+{ return new Analysis::Models::Spline2D(*this,name) ; }
+// ============================================================================
+void Analysis::Models::Spline2D::setPars () const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_spline.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Spline2D::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_spline ( m_x , m_y ) ; 
+}
+// ============================================================================
+Int_t Analysis::Models::Spline2D::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
+  return 0 ;
+}
+//_____________________________________________________________________________
+Double_t Analysis::Models::Spline2D::analyticalIntegral 
+( Int_t       code       , 
+  const char* rangeName  ) const 
+{
+  //
+  assert ( 1 == code || 2 == code || 3 == code ) ;
+  //
+  setPars () ;
+  //
+  return 
+    1 == code ? m_spline.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                             m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_spline.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_spline.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
+}
+
+// ============================================================================
+// generic 2D symmetric spline
+// ============================================================================
+Analysis::Models::Spline2DSym::Spline2DSym
+( const char*          name      , 
+  const char*          title     ,
+  RooRealVar&          x         ,
+  RooRealVar&          y         ,
+  const Gaudi::Math::Spline2DSym& spline, 
+  RooArgList&          phis      ) 
+  : RooAbsPdf  ( name , title ) 
+  , m_x        ( "x"       , "Observable-X" , this , x ) 
+  , m_y        ( "y"       , "Observable-Y" , this , y ) 
+  , m_phis     ( "phis"    , "Coefficients" , this     )
+//
+  , m_iterator ( 0 ) 
+    //
+  , m_spline   ( spline ) 
+{
+  //
+  TIterator*   tmp  = phis.createIterator() ;
+  RooAbsArg*   coef = 0 ;
+  unsigned int num  = 0 ;
+  while ( ( coef = (RooAbsArg*) tmp->Next() ) && num < m_spline.npars() )
+  {
+    RooAbsReal* r = dynamic_cast<RooAbsReal*> ( coef ) ;
+    if ( 0 == r ) { continue ; }
+    m_phis.add ( *coef ) ;
+    ++num ;  
+  }
+  delete tmp ;
+  //
+  if ( num != m_spline.npars() ) 
+  { throw GaudiException ( "Invalid size of parameters vector", 
+                           "Analysis::Spline2DSym"      , 
+                           StatusCode::FAILURE          ) ; }
+  
+  //
+  m_iterator = m_phis.createIterator() ;
+  setPars () ;
+}
+// ============================================================================
+// copy constructor
+// ============================================================================
+Analysis::Models::Spline2DSym::Spline2DSym
+( const Analysis::Models::Spline2DSym&  right ,      
+  const char*                              name  ) 
+  : RooAbsPdf  ( right , name ) 
+//
+  , m_x        ( "x"      , this , right.m_x     ) 
+  , m_y        ( "y"      , this , right.m_y     ) 
+  , m_phis     ( "phis"   , this , right.m_phis  ) 
+//
+  , m_iterator ( 0 ) 
+//
+  , m_spline   ( right.m_spline ) 
+{
+  m_iterator = m_phis.createIterator () ;
+  setPars () ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+Analysis::Models::Spline2DSym::~Spline2DSym() 
+{ if ( 0 != m_iterator ) { delete m_iterator ; } }
+// ============================================================================
+// clone 
+// ============================================================================
+Analysis::Models::Spline2DSym*
+Analysis::Models::Spline2DSym::clone( const char* name ) const 
+{ return new Analysis::Models::Spline2DSym(*this,name) ; }
+// ============================================================================
+void Analysis::Models::Spline2DSym::setPars () const 
+{
+  //
+  m_iterator->Reset () ;
+  //
+  RooAbsArg*       phi   = 0 ;
+  const RooArgSet* nset  = m_phis.nset() ;
+  //
+  unsigned short k = 0 ;
+  while ( ( phi = (RooAbsArg*) m_iterator->Next() ) )
+  {
+    const RooAbsReal* r = dynamic_cast<RooAbsReal*> ( phi ) ;
+    if ( 0 == r ) { continue ; }
+    //
+    const double phiv   = r->getVal ( nset ) ;
+    //
+    m_spline.setPar ( k  , phiv ) ;
+    //
+    ++k ;
+  }
+  //
+}
+// ============================================================================
+// the actual evaluation of function 
+// ============================================================================
+Double_t Analysis::Models::Spline2DSym::evaluate() const 
+{
+  //
+  setPars () ;
+  //
+  return m_spline ( m_x , m_y ) ; 
+}
+// ============================================================================
+Int_t Analysis::Models::Spline2DSym::getAnalyticalIntegral
+( RooArgSet&     allVars      , 
+  RooArgSet&     analVars     ,
+  const char* /* rangename */ ) const 
+{
+  if      ( matchArgs ( allVars , analVars , m_x , m_y ) ) { return 1 ; }
+  else if ( matchArgs ( allVars , analVars , m_x       ) ) { return 2 ; }
+  else if ( matchArgs ( allVars , analVars       , m_y ) ) { return 3 ; }
+  //
+  return 0 ;
+}
+//_____________________________________________________________________________
+Double_t Analysis::Models::Spline2DSym::analyticalIntegral 
+( Int_t       code       , 
+  const char* rangeName  ) const 
+{
+  //
+  assert ( 1 == code || 2 == code || 3 == code ) ;
+  //
+  setPars () ;
+  //
+  return 
+    1 == code ? m_spline.integral   (        m_x.min(rangeName) , m_x.max(rangeName) , 
+                                             m_y.min(rangeName) , m_y.max(rangeName) ) : 
+    2 == code ? m_spline.integrateX ( m_y  , m_x.min(rangeName) , m_x.max(rangeName) ) : 
+    3 == code ? m_spline.integrateY ( m_x  , m_y.min(rangeName) , m_y.max(rangeName) ) : 0.0 ;  
+}
+
 // ============================================================================
 // The END 
 // ============================================================================

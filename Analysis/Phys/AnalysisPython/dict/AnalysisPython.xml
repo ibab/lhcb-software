@@ -50,6 +50,9 @@
   <class name = "Analysis::Models::BW23L"             />
   <class name = "Analysis::Models::PolyPositive"      />
   <class name = "Analysis::Models::ExpoPositive"      />
+  <class name = "Analysis::Models::PositiveSpline"    />
+  <class name = "Analysis::Models::IncreasingSpline"  />
+  <class name = "Analysis::Models::DecreasingSpline"  />
 
   <class name = "Analysis::Models::Poly2DPositive"    />
   <class name = "Analysis::Models::Poly2DSymPositive" />
@@ -58,6 +61,8 @@
   <class name = "Analysis::Models::ExpoPS2DPol"       />
   <class name = "Analysis::Models::Expo2DPol"         />
   <class name = "Analysis::Models::Expo2DPolSym"      />
+  <class name = "Analysis::Models::Spline2D"          />
+  <class name = "Analysis::Models::Spline2DSym"       />
 
   <class name = "Analysis::Models::StudentT"           />
   <class name = "Analysis::Models::BifurcatedStudentT" />

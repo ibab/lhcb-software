@@ -8,6 +8,7 @@
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/Functions.h"
+#include "LHCbMath/BSpline.h"
 // ============================================================================
 // ROOT 
 // ============================================================================
@@ -3331,6 +3332,248 @@ namespace Analysis
     // ========================================================================
 
     // ========================================================================
+    // 1D-splines 
+    // ========================================================================
+
+    // ========================================================================
+    /** @class PositiveSpline
+     *  The special spline for non-negative function
+     *  Actually it is a sum of M-splines with non-negative coefficients 
+     *  \f$ f(x) = \sum_i \alpha_i * M_i^k(x) \f$,
+     *  with constraints  \f$  \sum_i \alpha_i=1\f$ 
+     *  and \f$ 0 \le \alpha_i\f$.
+     *  @see http://en.wikipedia.org/wiki/M-spline
+     *  @see http://en.wikipedia.org/wiki/B-spline
+     *  @see Gaudi::Math::PositiveSpline
+     */
+    class GAUDI_API  PositiveSpline : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::PositiveSpline, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor with the spline 
+       *  @param name  the name 
+       *  @param title the  title
+       *  @param x     the  variable 
+       *  @param spine the spline  
+       *  @param phis  vector of parameters 
+       */
+      PositiveSpline 
+        ( const char*                        name, 
+          const char*                        title     ,
+          RooAbsReal&                        x         ,
+          const Gaudi::Math::PositiveSpline& spline    ,   // the spline 
+          RooArgList&                        phis      ) ; // parameters
+      /// copy
+      PositiveSpline
+        ( const PositiveSpline& right     , 
+          const char*           name = 0  ) ;
+      /// destructor 
+      virtual ~PositiveSpline() ;
+      /// clone 
+      virtual  PositiveSpline* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::PositiveSpline& function() const { return m_spline ; }
+      const Gaudi::Math::PositiveSpline& spline  () const { return m_spline ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::PositiveSpline m_spline ;            // the function 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class IncreasingSpline
+     *  The special spline for non-negative non-decreasing function
+     *  @see http://en.wikipedia.org/wiki/I-spline
+     *  @see http://en.wikipedia.org/wiki/M-spline
+     *  @see http://en.wikipedia.org/wiki/B-spline
+     *  @see Gaudi::Math::PositiveSpline
+     */
+    class GAUDI_API  IncreasingSpline : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::IncreasingSpline, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor with the spline 
+       *  @param name  the name 
+       *  @param title the  title
+       *  @param x     the  variable 
+       *  @param spine the spline  
+       *  @param phis  vector of parameters 
+       */
+      IncreasingSpline 
+        ( const char*                          name, 
+          const char*                          title     ,
+          RooAbsReal&                          x         ,
+          const Gaudi::Math::IncreasingSpline& spline    ,   // the spline 
+          RooArgList&                          phis      ) ; // parameters
+      /// copy
+      IncreasingSpline
+        ( const IncreasingSpline& right     , 
+          const char*           name = 0  ) ;
+      /// destructor 
+      virtual ~IncreasingSpline() ;
+      /// clone 
+      virtual  IncreasingSpline* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::IncreasingSpline& function() const { return m_spline ; }
+      const Gaudi::Math::IncreasingSpline& spline  () const { return m_spline ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::IncreasingSpline m_spline ;          // the function 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class DecreasingSpline
+     *  The special spline for non-negative non-increasing function
+     *  @see http://en.wikipedia.org/wiki/I-spline
+     *  @see http://en.wikipedia.org/wiki/M-spline
+     *  @see http://en.wikipedia.org/wiki/B-spline
+     *  @see Gaudi::Math::PositiveSpline
+     */
+    class GAUDI_API  DecreasingSpline : public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::DecreasingSpline, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /** constructor with the spline 
+       *  @param name  the name 
+       *  @param title the  title
+       *  @param x     the  variable 
+       *  @param spine the spline  
+       *  @param phis  vector of parameters 
+       */
+      DecreasingSpline 
+        ( const char*                          name, 
+          const char*                          title     ,
+          RooAbsReal&                          x         ,
+          const Gaudi::Math::DecreasingSpline& spline    ,   // the spline 
+          RooArgList&                          phis      ) ; // parameters
+      /// copy
+      DecreasingSpline
+        ( const DecreasingSpline& right     , 
+          const char*           name = 0  ) ;
+      /// destructor 
+      virtual ~DecreasingSpline() ;
+      /// clone 
+      virtual  DecreasingSpline* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::DecreasingSpline& function() const { return m_spline ; }
+      const Gaudi::Math::DecreasingSpline& spline  () const { return m_spline ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::DecreasingSpline m_spline ;          // the function 
+      // ======================================================================
+    };
+  
+    // ========================================================================
     // 2D non-factorizable models  
     // ========================================================================
 
@@ -3907,6 +4150,152 @@ namespace Analysis
       // ======================================================================
       /// the actual functions()
       mutable Gaudi::Math::Expo2DPolSym m_function ;           // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Spline2D
+     *  Positive 2D-spline 
+     *  @see Gaudi::Math::Spline2D
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2011-05-25
+     */
+    class GAUDI_API Spline2D: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Spline2D, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// linear 
+      Spline2D
+        ( const char*                  name      , 
+          const char*                  title     ,
+          RooRealVar&                  x         ,
+          RooRealVar&                  y         ,
+          const Gaudi::Math::Spline2D& spline    ,
+          RooArgList&                  phis      ) ; 
+      /// copy
+      Spline2D
+        ( const Spline2D&      right     , 
+          const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~Spline2D() ;
+      /// clone 
+      virtual  Spline2D* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Spline2D& function() const { return m_spline ; }
+      const Gaudi::Math::Spline2D& spline  () const { return m_spline ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooRealProxy m_y    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Spline2D m_spline ;                 // the function 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class Spline2DSym
+     *  Positive symmetric 2D-spline 
+     *  @see Gaudi::Math::Spline2DSym
+     *  @author Vanya BELYAEV  Ivan.Belyaev@itep.ru
+     *  @date 2011-05-25
+     */
+    class GAUDI_API Spline2DSym: public RooAbsPdf 
+    {
+      // ======================================================================
+    public :
+      // ======================================================================
+      ClassDef(Analysis::Models::Spline2DSym, 1) ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// linear 
+      Spline2DSym
+        ( const char*                     name      , 
+          const char*                     title     ,
+          RooRealVar&                     x         ,
+          RooRealVar&                     y         ,
+          const Gaudi::Math::Spline2DSym& spline    ,
+          RooArgList&                     phis      ) ; 
+      /// copy
+      Spline2DSym
+        ( const Spline2DSym&   right     , 
+          const char*          name = 0  ) ;
+      /// destructor 
+      virtual ~Spline2DSym() ;
+      /// clone 
+      virtual  Spline2DSym* clone ( const char* name ) const ; 
+      // ======================================================================
+    public:
+      // ======================================================================
+      // the actual evaluation of function 
+      virtual Double_t evaluate() const ;
+      // ======================================================================
+    public:  // integrals 
+      // ======================================================================
+      virtual Int_t    getAnalyticalIntegral
+        ( RooArgSet&     allVars      , 
+          RooArgSet&     analVars     ,
+          const char* /* rangename */ ) const ;
+      virtual Double_t analyticalIntegral 
+        ( Int_t          code         , 
+          const char*    rangeName    ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// set all parameters 
+      void setPars () const ; // set all parameters 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// access to underlying function 
+      const Gaudi::Math::Spline2DSym& function() const { return m_spline ; }
+      const Gaudi::Math::Spline2DSym& spline  () const { return m_spline ; }
+      // ======================================================================
+    protected :
+      // ======================================================================
+      RooRealProxy m_x    ;
+      RooRealProxy m_y    ;
+      RooListProxy m_phis ;
+      // ======================================================================
+      TIterator* m_iterator;  //! do not persist
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function 
+      mutable Gaudi::Math::Spline2DSym m_spline ;               // the function 
       // ======================================================================
     } ;
     // ========================================================================
