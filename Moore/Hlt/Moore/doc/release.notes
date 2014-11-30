@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-11-29 Sean Benson
+ - Re-insert magic call to action().
+
 ! 2014-11-19 Gerhard Raven
  - simplify split config 
 

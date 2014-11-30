@@ -747,6 +747,7 @@ class Moore(LHCbConfigurableUser):
             splitter = { 'Hlt1'     : hlt1_only_tck 
                        , 'Hlt2'     : hlt2_only_tck }
             action = splitter[ split ]
+            if action : action()
             # Tell the HltConfigSvc that we will only be running 
             # one level of the HLT
             from Configurables import HltConfigSvc
