@@ -61,6 +61,31 @@ Gaudi::Math::NSphere::NSphere
   //
 }
 // ============================================================================
+Gaudi::Math::NSphere::NSphere 
+( const std::vector<double>& phases , 
+  const bool                 rotated ) 
+  : m_rotated ( rotated ) 
+  , m_delta   ( phases.size () , 0 ) 
+  , m_phases  ( phases ) 
+  , m_sin_phi ( phases.size () , 0 ) 
+  , m_cos_phi ( phases.size () , 1 ) 
+{ 
+  // ==============================
+  // calculate the bias (if needed) 
+  if  ( m_rotated )                       // ROTATE SPHERE 
+  {
+    for ( unsigned short  i = 0 ; i < m_phases.size() ; ++i )
+    {
+      const double ni    = m_phases.size () - i ;
+      m_delta   [i]      = std::atan2 ( std::sqrt ( ni ) , 1.0L ) ;      
+      const double phase = m_phases [i] + m_delta[i] ;
+      m_sin_phi [i]      = std::sin   ( phase ) ;
+      m_cos_phi [i]      = std::cos   ( phase ) ;      
+    }
+  }
+  //
+}
+// ============================================================================
 // destructor 
 // ============================================================================
 Gaudi::Math::NSphere::~NSphere() {}

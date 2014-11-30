@@ -20,9 +20,8 @@ namespace Gaudi
   {
     // ==========================================================================
     /** @class NSphere NSphere.h LHCbMath/NSphere.h
-     *  
-     *
-     *  @author Vanya Belyaev
+     *  "N-sphere" of parameters 
+     *  @author Vanya Belyaev  Ivan.Belyaev@itep.ru
      *  @date   2014-01-21
      */
     class GAUDI_API NSphere 
@@ -33,8 +32,15 @@ namespace Gaudi
        *  @param nPhases  dimensionality of N-sphere 
        *  @param bias     use the rotated sphere? 
        */
-      NSphere ( const unsigned short nPhases        ,
+      NSphere ( const unsigned short nPhases = 1    ,
                 const bool           rotated = true ) ;
+      // =======================================================================
+      /** Standard constructor
+       *  @param nPhases  dimensionality of N-sphere 
+       *  @param bias     use the rotated sphere? 
+       */
+      NSphere ( const std::vector<double>& phases         ,
+                const bool                 rotated = true ) ;
       
       /// desctructor 
       ~NSphere() ; 
@@ -77,6 +83,8 @@ namespace Gaudi
       const std::vector<double>& sines   () const { return m_sin_phi ; }
       // get all cosines 
       const std::vector<double>& cosines () const { return m_cos_phi ; }
+      // get all deltas 
+      const std::vector<double>& delta   () const { return m_delta   ; }
       // ======================================================================
     public:
       // ======================================================================

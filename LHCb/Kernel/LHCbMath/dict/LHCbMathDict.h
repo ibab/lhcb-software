@@ -31,6 +31,7 @@
 #include "LHCbMath/Spline.h"
 #include "LHCbMath/NSphere.h"
 #include "LHCbMath/WStatEntity.h"
+#include "LHCbMath/BSpline.h"
 // ============================================================================
 /** @file LHCbMathDict.h
  *

@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-11-30 - Vanya Belyaev
+ - add varios Splines (B,I,M,..)
+
 ! 2014-11-20 - Manuel Tobias Schiller
  - BloomFilter: make various overloads a bit more specific, so compilers don't
    run into trouble

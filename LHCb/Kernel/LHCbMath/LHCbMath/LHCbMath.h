@@ -352,8 +352,9 @@ using namespace std;
       inline bool operator() ( const std::vector<double>& v1 , 
                                const std::vector<double>& v2 ) const
       {
-        return v1.size() == v2.size() && 
-          std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ;
+        return ( &v1 == &v2 ) || 
+          ( v1.size() == v2.size() &&
+            std::equal ( v1.begin () , v1.end () , v2.begin () , m_cmp ) ) ;
       }      
       /// comparison:
       inline bool operator() ( const std::vector<double>& v1 , 
@@ -407,7 +408,7 @@ using namespace std;
     // ========================================================================
     /** specialisation for vectors 
      *  @see Gaudi::Math::Zero
-     *  @see Gaudi::Math::EqualTo
+     *  @see Gaudi::Math::Equal_To
      *  @see Gaudi::Math::Lomont<float>
      */
     template < class TYPE>
@@ -425,6 +426,26 @@ using namespace std;
       // ======================================================================
       // comparison criteria for elements 
       NotZero<TYPE> m_nz ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @struct  NumLess 
+     *  useful structure for sorting  
+     *  @see Gaudi::Math::Equal_To
+     */
+    template <class TYPE>
+    struct NumLess :  public std::binary_function<TYPE,TYPE,bool>
+    {
+      // ======================================================================
+      inline bool operator () ( const TYPE& o1 , const TYPE& o2 ) const 
+      { return m_less ( o1 , o2 ) && !m_equal ( o1 , o2 ) ; }
+      // ======================================================================      
+    private:
+      // ======================================================================
+      /// comparion criteria for objects 
+      std::less<TYPE>            m_less  ; // comparion criteria for objects
+      /// equality criteria for  objects  
+      LHCb::Math::Equal_To<TYPE> m_equal ; // equality criteria for objects  
       // ======================================================================
     } ;
     // ========================================================================

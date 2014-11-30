@@ -85,6 +85,10 @@
   <class name    = "Gaudi::Math::ExpoPS2DPol"      />
   <class name    = "Gaudi::Math::Expo2DPol"        />
   <class name    = "Gaudi::Math::Expo2DPolSym"     />
+
+  <class name    = "Gaudi::Math::Spline2D"         />
+  <class name    = "Gaudi::Math::Spline2DSym"      />
+
   <class name    = "Gaudi::Math::GammaDist"        />
   <class name    = "Gaudi::Math::LogGammaDist"     />
   <class name    = "Gaudi::Math::Log10GammaDist"   />
@@ -103,8 +107,12 @@
   <class name    = "Gaudi::Math::Spline"           >
     <field name  = "m_spline" transient = "true"/>      
   </class>
-  <class name    = "Gaudi::Math::SplineErrors"    />
-  <class name    = "Gaudi::Math::Interp2D"        />
+  <class name    = "Gaudi::Math::SplineErrors"     />
+  <class name    = "Gaudi::Math::Interp2D"         />
+  <class name    = "Gaudi::Math::BSpline"          />
+  <class name    = "Gaudi::Math::PositiveSpline"   />
+  <class name    = "Gaudi::Math::IncreasingSpline" />
+  <class name    = "Gaudi::Math::DecreasingSpline" />
 
   <class name    = "Gaudi::Math::Linear"       />
   <class name    = "Gaudi::Math::LinearErr"    />
