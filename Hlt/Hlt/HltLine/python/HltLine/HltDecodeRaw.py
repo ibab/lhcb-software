@@ -34,8 +34,8 @@ DecodeL0DU       = __convert( 'L0DU' )
 DecodeVELO       = __convertName("DecodeVeloRawBuffer/createVeloLiteClusters")
 #... ^^ only do the VeloLite clusters, all that's needed for Moore
 DecodeTRACK      =   bindMembers(None, [DecoderDB["HltTrackReportsDecoder"].setup()])
-DecodeTT         = __convert( 'TT' )
-DecodeIT         = __convert( 'IT' )
+DecodeTT         = __convert( 'TT' ) # TODO/FIXME: this decodes 'full' clusters, not the lite ones...
+DecodeIT         = __convert( 'IT' ) # TODO/FIXME: this decodes 'full' clusters, not the lite ones...
 DecodeOT         = __convert( 'OT' )
 DecodeMUON       = __convert( 'Muon' )
 DecodeRICH       = __convert( 'Rich' )

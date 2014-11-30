@@ -1435,7 +1435,7 @@ class Hlt2Line(object):
             HLT = "HLT_PASS_RE('Hlt1(?!Lumi)(?!Velo)(?!NoPV)(?!MB).*Decision')"
 
         # If turbo flag is set add TurboMIAB to let DecReports know we want extended reports
-        if Turbo == True:
+        if Turbo :
             from Configurables import TurboMIAB
             miab = TurboMIAB('TurboMIAB'+name)
             algos = [miab] + algos
@@ -1497,6 +1497,7 @@ class Hlt2Line(object):
                     , Prescale     = _createScalar( prescalerName(line,'Hlt2'), self._prescale)
                     , Postscale    = _createScalar( postscalerName(line,'Hlt2'),self._postscale)
                     , HltDecReportsLocation = decoder.listOutputs()[0]
+                    , Turbo = self._Turbo
                     )
         if self._ODIN : mdict.update( ODIN = ODINFilter ( odinentryName( line,'Hlt2' ) , Code = self._ODIN ) )
         if self._L0DU : 
@@ -1508,7 +1509,7 @@ class Hlt2Line(object):
         ## This is OK, as long as it only pertains to Hlt1 results...
         if self._HLT  : 
             # TODO: insert Hlt1 decreports decoding... -- but this should ONLY be done in the split scenario!!!!
-            #  so we need to make it optional...
+            #  so we need to make it optional... 
             #  Note: do it the 'other way around': always insert, and, if NOT split, globally remove the decoder ;-)
             # TODO  Note Note: we always insert, and then we can (unconditionally!) set the 'VetoObjects' property
             #  so that it won't execute when the target TES location already exists...

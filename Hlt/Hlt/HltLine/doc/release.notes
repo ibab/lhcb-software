@@ -4,6 +4,8 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-11-30 - Gerhard Raven
+ - set Turbo property of SelectionLine
 
 !========================= HltLine v7r5 2014-11-05 =========================
 
