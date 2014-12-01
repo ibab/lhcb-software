@@ -1,3 +1,7 @@
+2014-12-01  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v5r2p1
+
 2014-11-26  Ben Couturier <Ben.Couturier@cern.ch>
 	LBCORE-679: Automatically add projects for release when 
 	importing them.
