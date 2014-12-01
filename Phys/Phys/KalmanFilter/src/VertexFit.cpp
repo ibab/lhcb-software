@@ -90,6 +90,18 @@ namespace
     }
   }
   // ==========================================================================
+  /** inversion of symmetric positively defined matrices
+   *  1) try fast method based on Cholesky's decomposiion 
+   *  2) in case of failure, swith to the regular inversion           
+   */
+  template <class MATRIX>
+  inline int inverse ( const MATRIX& what , MATRIX& result )
+  {
+    int ifail = 0 ;     result = what.InverseChol ( ifail ) ;
+    if ( 0 != ifail ) { result = what.Inverse     ( ifail ) ; }
+    return ifail ;  
+  }
+  // ==========================================================================
   /** make Z-projection of the particle 
    *  see the documentation for namespace DaVinciTransporter
    *  projectAndTransport for deltaZ = 0 
@@ -184,9 +196,9 @@ namespace
       cixy ( 0 , 0 ) = _pmcov ( 0, 0 ) ;
       cixy ( 0 , 1 ) = _pmcov ( 0, 1 ) ;
       cixy ( 1 , 1 ) = _pmcov ( 1, 1 ) ;
-      if ( !cixy.Invert() )  
-      { return StatusCode 
-          ( LoKi::KalmanFilter::ErrorInMatrixInversion1 , true ) ; }  // RETURN 
+      // Invert matrix: use Cholesky's decomposition, is fails, use regular inversion 
+      if ( !cixy.InvertChol() && !cixy.Invert () )
+      { return StatusCode ( LoKi::KalmanFilter::ErrorInMatrixInversion1 , true ) ; }  // RETURN
       //
       // The most tricky part I
       entry.m_vxi ( 0 , 0 ) = cixy ( 0 , 0 ) ;
@@ -197,8 +209,8 @@ namespace
       const Gaudi::LorentzVector& mom = entry.m_p.momentum() ;
       const Gaudi::Vector2 slopes ( mom.Px() / mom.Pz() , mom.Py() / mom.Pz() ) ;
       const Gaudi::Vector2 cslope ( cixy * slopes )  ;
-      entry.m_vxi ( 0 , 2 ) = -1 * cslope ( 0 ) ;
-      entry.m_vxi ( 1 , 2 ) = -1 * cslope ( 1 ) ;
+      entry.m_vxi ( 0 , 2 ) = - cslope ( 0 ) ;
+      entry.m_vxi ( 1 , 2 ) = - cslope ( 1 ) ;
       entry.m_vxi ( 2 , 2 ) = ROOT::Math::Similarity ( slopes , cixy ) ;
       //
       // REDEFINE THE PARTICLE TYPE 
@@ -209,14 +221,15 @@ namespace
     {
       // the regular particle:
       entry.m_vxi = _pmcov ;
-      if ( !entry.m_vxi.Invert() )
+      // 1) invert using Cholesky decomposition, switch to regular inversion if fails 
+      if ( !entry.m_vxi.InvertChol() && !entry.m_vxi.Invert() )
       {
         /// remove singularities 
         entry.m_vxi = _pmcov ;
         _smooth ( entry.m_vxi ) ;
-        if ( !entry.m_vxi.Invert() )
-        { return StatusCode 
-            ( LoKi::KalmanFilter::ErrorInMatrixInversion2 , true ) ; } // RETURN
+        // 1) invert again using Cholesky decomposition 
+        if ( !entry.m_vxi.InvertChol() && !entry.m_vxi.Invert() ) 
+        { return StatusCode ( LoKi::KalmanFilter::ErrorInMatrixInversion2 , true ) ; } // RETURN 
       }
       //
     }
@@ -377,17 +390,13 @@ StatusCode LoKi::KalmanFilter::stepRho
     seed += it->m_vxi * it -> m_parx ;
   }
   //
-  int ifail =  0  ;
-  Gaudi::SymMatrix3x3  c = ci.Inverse ( ifail ) ;
-  //
-  if ( 0 != ifail ) 
+  Gaudi::SymMatrix3x3   c ;
+  if ( 0 != inverse ( ci , c ) ) 
   { 
     // try to recover using "soft" constraints 
     _smooth ( ci ) ;
     //
-    ifail =  0  ; 
-    c = ci.Inverse ( ifail ) ;
-    if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+    if ( 0 !=  inverse ( ci , c ) ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
   }
   //
   Gaudi::Vector3 x = c * seed ; 
@@ -426,21 +435,13 @@ StatusCode LoKi::KalmanFilter::step
     entry.m_ci   = ci   ;
     entry.m_chi2 = chi2 ;
     //
-    // OK ! 
-    int ifail = 0 ;
     /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-    entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
-    /// try to recover it by "soft" constraint to the photon  
-    if ( 0 != ifail ) 
+    if ( 0 != inverse ( entry.m_ci , entry.m_c ) ) 
     {
       // try to recover it by "soft" constraint to the photon  
-      entry.m_ci = ci ;
       _smooth ( entry.m_ci ) ;
-      // invert it : 
-      ifail = 0 ;
-      entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
-      //
-      if ( 0 != ifail ) 
+      // invert it , start from Cholesky'decomposition  
+      if ( 0 != inverse ( entry.m_ci , entry.m_c ) )
       { return StatusCode ( ErrorInMatrixInversion3 , true ) ; } // RETURN 
     }
     //
@@ -451,11 +452,8 @@ StatusCode LoKi::KalmanFilter::step
   /// \f$ C^{-1}_k=C^{-1}_{k-1}+A^TG_kA =  C^{-1}_{k-1}+ V^{-1}_{k} \f$
   entry.m_ci = ci + entry.m_vxi  ; 
   //
-  // OK ! 
-  int ifail = 0 ;
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  entry.m_c  = entry.m_ci.Inverse( ifail ) ; 
-  if ( 0 != ifail ) 
+  if ( 0 != inverse ( entry.m_ci , entry.m_c ) ) 
   { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   // OK ! 
   /// \f$\vec{x}_k\f$
@@ -502,9 +500,8 @@ StatusCode LoKi::KalmanFilter::step
   entry2.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  int ifail = 0 ;
-  entry1.m_c  = entry1.m_ci.Inverse( ifail ) ; 
-  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  if ( 0 != inverse ( entry1.m_ci , entry1.m_c ) ) 
+  { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   
   /// \f$\vec{x}_k\f$
@@ -568,9 +565,8 @@ StatusCode LoKi::KalmanFilter::step
   entry3.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  int ifail = 0 ;
-  entry1.m_c  = entry1.m_ci.Inverse( ifail ) ; 
-  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  if ( 0 != inverse (  entry1.m_ci , entry1.m_c ) ) 
+  { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   entry3.m_c  = entry1.m_c ;
   
@@ -651,9 +647,8 @@ StatusCode LoKi::KalmanFilter::step
   entry4.m_ci = entry1.m_ci ;
   //
   /// \f$ C_k = \left( C^{-1}_{k} \right)^{-1}\f$ 
-  int ifail = 0 ;
-  entry1.m_c  = entry1.m_ci.Inverse( ifail ) ; 
-  if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
+  if ( 0 != inverse ( entry1.m_ci , entry1.m_c ) ) 
+  { return StatusCode ( ErrorInMatrixInversion3 , true ) ; }
   entry2.m_c  = entry1.m_c ;
   entry3.m_c  = entry1.m_c ;
   entry4.m_c  = entry1.m_c ;
@@ -799,16 +794,14 @@ StatusCode LoKi::KalmanFilter::seed
   }
   //
   int ifail =  0  ;
-  Gaudi::SymMatrix3x3  c = ci.Inverse ( ifail ) ;
-  //
-  if ( 0 != ifail ) 
+  Gaudi::SymMatrix3x3  c ; 
+  if ( 0 != inverse ( ci , c ) ) 
   { 
     // try to recover using "soft" constraints 
     _smooth ( ci ) ;
     //
-    ifail =  0  ; 
-    c = ci.Inverse ( ifail ) ;
-    if ( 0 != ifail ) { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
+    if ( 0 != inverse ( ci , c ) )
+    { return StatusCode ( ErrorInMatrixInversion4 , true ) ; } 
   }
   //
   x = c * seed ; 

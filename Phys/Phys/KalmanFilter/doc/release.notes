@@ -5,6 +5,11 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+! 2014-12-01 - Vanya Belyaev
+ - VertexFit.cpp 
+   replace all matrix inversions by faster method, 
+   based on Cholesky's decomposition
+
 !========================= KalmanFilter v1r7 2014-04-02 =========================
 
 ! 2014-03-16 - Vanya Belyaev
