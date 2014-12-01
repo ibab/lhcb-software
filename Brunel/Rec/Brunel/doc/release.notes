@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes to references in order to reflect changes for upgrade
+  . Reference changed: brunel.upgrade-baseline,-baseline-25ns,-baseline-ut
+
 - Changes to QMTests
   . Do not set InitialTime="Now" in 2012 tests
   . Add test brunel.2012-bigevents, placeholder for test on events that
