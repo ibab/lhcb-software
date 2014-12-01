@@ -1,3 +1,29 @@
+2014-12-01 Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r2p1
+
+	LbConfiguration
+	* python/LbConfiguration/Project.py: Added project Lovell (LBCORE-681)
+	* lb-dev: use "user area" for lookup only
+	the local project is created in the current directory (or --dest-dir)
+	* lb-dev: improved final "get started" message
+	* LbLogin.py: added the definition of LCG_nightlies_area
+	* lb-dev, lb-run: made optional the 'lhcb-' prefix of nightly slots
+
+	LbRelease
+	LBCORE-679: Automatically add projects for release when 
+	importing them.
+	* python/LbRelease/SoftConfDB/LbSdbImportFromSVN.py
+	* python/LbRelease/SoftConfDB/AppImporter.py
+	LBCORE-675: added svn commit hook that enforces unambiguous python indentatation
+	LBCORE-528: check that the checkout directory is a project before checking out packages
+	* getpack
+	* data/DataPkgEnvs: added environment for Gen/PGunsData/v1r0
+
+	LbUtils
+ * cmake: updated CMake support modules
+
+
 2014-11-18 Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v8r2
