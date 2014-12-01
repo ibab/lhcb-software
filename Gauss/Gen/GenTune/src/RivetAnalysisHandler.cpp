@@ -49,7 +49,7 @@
 using namespace std;
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( RivetAnalysisHandler );
+DECLARE_ALGORITHM_FACTORY( RivetAnalysisHandler )
 
 // Initializing static members
 const char* const RivetAnalysisHandler::_statDescriptors[] = {
