@@ -107,7 +107,7 @@ StatusCode FTRawBankDecoder::execute() {
           int fraction = ( (*pt) >> FTRawBank::fractionShift ) & FTRawBank::fractionMaximum;
           int cell     = ( (*pt) >> FTRawBank::cellShift     ) & FTRawBank::cellMaximum;
           int sipmId   = ( (*pt) >> FTRawBank::sipmIdShift   ) & FTRawBank::sipmIdMaximum;
-          int cSize    = ( (*pt) >> FTRawBank::sizeShift     ) & FTRawBank::sizeMaximum;
+          int cSize    = 1+(( (*pt) >> FTRawBank::sizeShift     ) & FTRawBank::sizeMaximum); // add 1 to make sure to keep clusters with size 1,2,3 and 4 using 2 bits to encode the cluster size in the data format
           int charge   = ( (*pt) >> FTRawBank::chargeShift   ) & FTRawBank::chargeMaximum;
           if ( msgLevel( MSG::VERBOSE ) ) {
             verbose() << format(  "  cell %4d sipmId %3d frac %3d charge %5d size %3d code %4.4x",

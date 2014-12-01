@@ -4,6 +4,11 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
+
+! 2014-01-12 - Renato Quagliani
+  - In FTRawBankEncoder cluster size reduced of one unit, and in FTRawBankDecoder increased of 1 in order to keep
+    clusters with size 1,2,3 and 4 using 2 bits to encode the cluster size in the data format.
+
 !========================= FTDAQ v1r6p1 2014-06-10 =========================
 ! 2014-05-14 - Marco Cattaneo
  - Remove unnecessary include "Event/VeloLiteCluster.h"

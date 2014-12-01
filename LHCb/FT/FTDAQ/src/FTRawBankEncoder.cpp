@@ -94,7 +94,7 @@ StatusCode FTRawBankEncoder::execute() {
       int frac = int( (*itC)->fraction() * (FTRawBank::fractionMaximum+1) );
       int cell = id.sipmCell();
       int sipmId = 0;
-      int cSize = (*itC)->size();
+      int cSize = (*itC)->size() -1; //remove 1 to make sure to keep clusters with size 1,2,3 and 4 using 2 bits to encode the cluster size in the data format
       int charg = (*itC)->charge() / 16; // one MIP should be around 32 (6 bits ADC) -> coded as 2.
       if ( 0 > frac   || FTRawBank::fractionMaximum < frac  ) frac   = FTRawBank::fractionMaximum;
       if ( 0 > cell   || FTRawBank::cellMaximum     < cell  ) cell   = FTRawBank::cellMaximum;
