@@ -1,3 +1,7 @@
+2014-12-01  Ben Couturier <Ben.Couturier@cern.ch>
+
+	* cmt/requirements: release of version v8r2p1
+
 2014-11-28  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* python/LbConfiguration/Project.py: Added project Lovell (LBCORE-681)
