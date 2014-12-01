@@ -71,13 +71,13 @@ inline TrackerHitsCollection* trackerHits( G4VHitsCollection* g4 )
 {
   GiGaUtil::FastCast<G4VHitsCollection, TrackerHitsCollection> cast ;
   return cast( g4 );  
-};
+}
 
 inline TrackerHit* trackerHit( G4VHit* g4 )
 {
   GiGaUtil::FastCast<G4VHit,TrackerHit> cast ;
   return cast( g4 );  
-};
+}
 // ============================================================================
 
 #endif

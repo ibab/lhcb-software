@@ -28,7 +28,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Factory
-DECLARE_TOOL_FACTORY( GiGaSensDetTracker );
+DECLARE_TOOL_FACTORY( GiGaSensDetTracker )
 
 
 //=============================================================================

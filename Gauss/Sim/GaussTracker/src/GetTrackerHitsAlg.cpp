@@ -31,7 +31,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GetTrackerHitsAlg );
+DECLARE_ALGORITHM_FACTORY( GetTrackerHitsAlg )
 
 
 //=============================================================================
@@ -62,7 +62,7 @@ GetTrackerHitsAlg::GetTrackerHitsAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GetTrackerHitsAlg::~GetTrackerHitsAlg() {}; 
+GetTrackerHitsAlg::~GetTrackerHitsAlg() {}
 
 //=============================================================================
 // Initialization
@@ -107,7 +107,7 @@ StatusCode GetTrackerHitsAlg::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -179,7 +179,7 @@ StatusCode GetTrackerHitsAlg::execute() {
 
   return StatusCode::SUCCESS;
   
-};
+}
 
 //=============================================================================
 //  Finalize

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussTracker
 ################################################################################
-gaudi_subdir(GaussTracker v7r0)
+gaudi_subdir(GaussTracker v7r0p1)
 
 gaudi_depends_on_subdirs(Sim/GaussTools)
 

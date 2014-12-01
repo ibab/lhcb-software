@@ -5,6 +5,9 @@
 !                    tracker like detectors (Velo, OT, IT, Muon)
 !-----------------------------------------------------------------------------
 
+! 2014-12-01 - Gloria Corti
+ - fix compilation warnings with --pedantic'
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
