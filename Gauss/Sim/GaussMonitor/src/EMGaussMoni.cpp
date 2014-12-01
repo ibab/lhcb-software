@@ -206,7 +206,7 @@ StatusCode EMGaussMoni::veloMCHitMonitor()
             const LHCb::MCParticle* mother = part->mother();
             const LHCb::MCVertex* vert = part->originVertex();
             if (mother && vert && vert->type() == LHCb::MCVertex::DeltaRay && mother == (*It)->mcParticle()){
-	      std::cout << "pick up delta ray " << (*It2)->mcParticle()->p() << std::endl;
+	//      std::cout << "pick up delta ray " << (*It2)->mcParticle()->p() << std::endl;
               plot((*It2)->energy()/Gaudi::Units::keV,10004, "delta en", 0., 500., 200);
               plot((*It2)->mcParticle()->p(),10005, "delta en", 0., 500., 200);
               dE += (*It2)->energy();

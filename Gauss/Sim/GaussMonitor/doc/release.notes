@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-12-01 Peter Griffith
+ - Cleaned up BremVeloCheck code, removed std::cout's.
+
 ! 2014-12-01 - Gloria Corti
  - Fix compilatin warning with --pedantic
  

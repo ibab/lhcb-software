@@ -83,9 +83,6 @@ BremVeloCheck::~BremVeloCheck() {}
 StatusCode BremVeloCheck::initialize () 
 {
 
-  std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
-	std::cout << "INITIALIZING BREMVELOCHECK"<<std::endl;
-	std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
 	// initialize the base 
 	StatusCode status = GiGaTrackActionBase::initialize() ;
 	if( status.isFailure() ) 
@@ -141,9 +138,6 @@ StatusCode BremVeloCheck::initialize ()
 	}
 	else info() << "no ntfile" << endmsg;
 
-	std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
-	std::cout<< "BREMVELOCHECK INITIALIZED"<<std::endl;
-	std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
 	///
 	return StatusCode::SUCCESS;
 }
@@ -244,10 +238,6 @@ void BremVeloCheck::PostUserTrackingAction ( const G4Track* track )
 				G4int drproctype = drproc->GetProcessType();
 
 				G4int drprocsubtype = drproc->GetProcessSubType();
-//				std::cout<<"================="<<std::endl;
-//				std::cout<<drproctype<<"\t"<<drprocsubtype<<std::endl;
-//				std::cout<<drproc->GetProcessName()<<std::endl;
-//				std::cout<<"================="<<std::endl;
 				
 				m_dptype[index]    = drproctype;
 				m_dpstype[index]   = drprocsubtype;
