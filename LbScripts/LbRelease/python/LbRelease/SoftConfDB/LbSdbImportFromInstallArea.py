@@ -69,7 +69,7 @@ class LbSdbImportFIA(Script):
         nbdays = int(opts.nbdays)
 
         # Creating the object to import dependencies
-        self.mAppImporter = AppImporter()
+        self.mAppImporter = AppImporter(autorelease=False)
         self.mAppImporter.installArea = self.installareapath
 
         if len(args) > 0 and len(args) < 1:
@@ -95,7 +95,7 @@ class LbSdbImportFIA(Script):
                 try:
                     self.log.warning("Adding %s %s" % (p,v))
                     # Actually import the data into the DB
-                    self.mAppImporter.recurseDependencies(p, v)
+                    self.mAppImporter.processProjectVersion(p, v)
                     iaproj = self.loadProject(p, v)
                     # Setting the project as active...
                     self.mAppImporter.mConfDB.setPVActive(p, v)
