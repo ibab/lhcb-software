@@ -68,6 +68,18 @@ namespace
                              0.5 * ( p1.Z () + p2.Z () ) ) ;
   }                                 
   // ==========================================================================
+  /** inversion of symmetric positively defined matrices
+   *  1) try fast method based on Cholesky's decomposiion 
+   *  2) in case of failure, swith to the regular inversion           
+   */
+  template <class MATRIX>
+  inline int inverse ( const MATRIX& what , MATRIX& result )
+  {
+    int ifail = 0 ;     result = what.InverseChol ( ifail ) ;
+    if ( 0 != ifail ) { result = what.Inverse     ( ifail ) ; }
+    return ifail ;  
+  }
+  // ==========================================================================
 } //                                                end of anonymous namesapace 
 // ============================================================================
 /*  make 2-prong vertex from two tracks 
@@ -309,8 +321,8 @@ StatusCode LoKi::FastVertex::distance
   StatusCode sc = LoKi::KalmanFilter::load ( s , entry ) ;
   if ( sc.isFailure() ) { return sc ; }                // RETURN 
   // get the "the previus" Kalman Filter estimate == vertex
-  Gaudi::SymMatrix3x3 ci = vertex->covMatrix() ; // the gain matrix 
-  if ( !ci.Invert()   ) { return StatusCode::FAILURE ; } // RETURN 
+  Gaudi::SymMatrix3x3 ci ; // the gain matrix 
+  if ( 0 != inverse ( vertex->covMatrix() , ci ) ) { return StatusCode::FAILURE ; } // RETURN 
   // make one step of Kalman filter 
   sc = LoKi::KalmanFilter::step ( entry , vertex->position() , ci , 0 ) ;
   if ( sc.isFailure() ) { return sc ; }                // RETURN 
@@ -372,8 +384,8 @@ bool LoKi::FastVertex::checkDistance
   StatusCode sc = LoKi::KalmanFilter::load ( s , entry ) ;
   if ( sc.isFailure() ) { return false ; }                         // RETURN 
   // get the "the previus" Kalman Filter estimate == vertex
-  Gaudi::SymMatrix3x3 ci = vertex->covMatrix() ; // the gain matrix 
-  if ( !ci.Invert()   ) { return false ; }                         // RETURN 
+  Gaudi::SymMatrix3x3 ci ;  // the gain matrix 
+  if ( 0 != inverse ( vertex->covMatrix() , ci ) ) { return false ; }
   // make one step of Kalman filter 
   sc = LoKi::KalmanFilter::step ( entry , vertex->position() , ci , 0 ) ;
   if ( sc.isFailure() ) { return false ; }                         // RETURN 

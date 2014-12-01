@@ -68,7 +68,7 @@ namespace
   const boost::array<double,3> s_ERROR2_i  = { { 
       1.0 / Gaudi::Math::pow ( 15.0 * Gaudi::Units::cm , 2 ) ,
       1.0 / Gaudi::Math::pow ( 15.0 * Gaudi::Units::cm , 2 ) ,
-      1.0 / Gaudi::Math::pow ( 30.0 * Gaudi::Units::cm , 2 ) } } ;
+      1.0 / Gaudi::Math::pow ( 50.0 * Gaudi::Units::cm , 2 ) } } ;
   // 
   const double s_ERROR = 30 * Gaudi::Units::cm ;
   // ==========================================================================

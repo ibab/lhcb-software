@@ -6,9 +6,11 @@
 ! -----------------------------------------------------------------------------
 
 ! 2014-12-01 - Vanya Belyaev
- - VertexFit.cpp 
+ - VertexFit, VertexFitWithTracks, FastVertex
    replace all matrix inversions by faster method, 
-   based on Cholesky's decomposition
+   based on Cholesky's decomposition.
+   Many thanks to Manuel
+
 
 !========================= KalmanFilter v1r7 2014-04-02 =========================
 
