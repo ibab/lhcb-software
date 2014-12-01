@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GeneratorAnalysis );
+DECLARE_ALGORITHM_FACTORY( GeneratorAnalysis )
 
 
 //=============================================================================
@@ -78,7 +78,7 @@ GeneratorAnalysis::GeneratorAnalysis( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GeneratorAnalysis::~GeneratorAnalysis() {}; 
+GeneratorAnalysis::~GeneratorAnalysis() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -104,7 +104,7 @@ StatusCode GeneratorAnalysis::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -327,7 +327,7 @@ StatusCode GeneratorAnalysis::execute() {
   m_nEvents++ ;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

@@ -173,7 +173,7 @@ StatusCode GaussMonitor::CheckLifeTimeHepMC::execute ()
 }
 // ============================================================================
 /// the factory:
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(GaussMonitor,CheckLifeTimeHepMC);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(GaussMonitor,CheckLifeTimeHepMC)
 // ============================================================================
 // The END 
 // ============================================================================

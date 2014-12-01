@@ -161,7 +161,7 @@ StatusCode GaussMonitor::CheckLifeTimeMC::execute ()
 }
 // ============================================================================
 /// the factory:
-DECLARE_NAMESPACE_ALGORITHM_FACTORY(GaussMonitor,CheckLifeTimeMC);
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(GaussMonitor,CheckLifeTimeMC)
 // ============================================================================
 // The END 
 // ============================================================================

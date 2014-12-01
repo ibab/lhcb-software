@@ -59,31 +59,32 @@
 
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( BremVeloCheck );
+DECLARE_TOOL_FACTORY( BremVeloCheck )
 
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 
-	BremVeloCheck::BremVeloCheck
+BremVeloCheck::BremVeloCheck
 ( const std::string& type   ,
   const std::string& name   ,
   const IInterface*  parent ) 
-: GiGaTrackActionBase( type , name , parent ){};
+: GiGaTrackActionBase( type , name , parent ){}
 
 
 //=============================================================================
 // Destructor
 //=============================================================================
-BremVeloCheck::~BremVeloCheck() {};
+BremVeloCheck::~BremVeloCheck() {}
 
 //=============================================================================
+// Initialize
 //=============================================================================
-
 StatusCode BremVeloCheck::initialize () 
 {
-	std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
-	std::cout<< "INITIALIZING BREMVELOCHECK"<<std::endl;
+
+  std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
+	std::cout << "INITIALIZING BREMVELOCHECK"<<std::endl;
 	std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
 	// initialize the base 
 	StatusCode status = GiGaTrackActionBase::initialize() ;
@@ -91,7 +92,7 @@ StatusCode BremVeloCheck::initialize ()
 	{ return Error("Could not intialize base class GiGaTrackActionBase!",
 			status ) ; }
 	///
-	info() << "********** Initialize BremVeloCheck tool **********"<<endmsg;
+	info() << "********** Initialize BremVeloCheck tool **********" << endmsg;
 
 	std::string filename = "/NTUPLES/FILE1";
 	NTupleFilePtr ntfile(ntupleSvc(), filename);
@@ -145,7 +146,7 @@ StatusCode BremVeloCheck::initialize ()
 	std::cout <<"::::::::::::::::::::::::::::::::::::::::::::::::::::::::"<<std::endl;
 	///
 	return StatusCode::SUCCESS;
-} ;
+}
 
 
 // ============================================================================
@@ -153,7 +154,7 @@ StatusCode BremVeloCheck::finalize   ()
 { 
   // finilize the base 
 	return GiGaTrackActionBase::finalize() ;
-};
+}
 // ============================================================================
 
 // ============================================================================
@@ -168,7 +169,7 @@ void BremVeloCheck::PreUserTrackingAction ( const G4Track* track )
 	if( 0 == track || 0 == trackMgr() )
 		return;
 
-};
+}
 
 // ============================================================================
 /**  perform action 

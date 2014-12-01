@@ -51,7 +51,7 @@
 // Declaration of the Tool Factory
 // ============================================================================
 
-DECLARE_TOOL_FACTORY( MonitorTiming );
+DECLARE_TOOL_FACTORY( MonitorTiming )
 
 // ============================================================================
 // Standard constructor, initialize variables
@@ -80,7 +80,7 @@ MonitorTiming::MonitorTiming( const std::string& type   ,
   stepTimer = new G4Timer;
 
   theSteppingManager = new G4SteppingManager;
-};
+}
 
 // ============================================================================
 /// destructor
@@ -90,7 +90,7 @@ MonitorTiming::~MonitorTiming()
   delete totalTimer;
   delete stepTimer;
   delete theSteppingManager;
-};
+}
 
 //=============================================================================
 // Initialization
@@ -122,7 +122,7 @@ StatusCode MonitorTiming::initialize()
   StatusCode status =  GiGaStepActionBase::initialize();
   return Print("Initialized successfully" , 
                StatusCode::SUCCESS         , MSG::VERBOSE);
-};	
+}
 
 StatusCode MonitorTiming::finalize()
 {
@@ -180,7 +180,7 @@ StatusCode MonitorTiming::finalize()
 	
   Print("Finalization" , StatusCode::SUCCESS , MSG::VERBOSE );
   return  GiGaStepActionBase::finalize();
-};
+}
 
 
 // ============================================================================
@@ -306,7 +306,7 @@ void MonitorTiming::UserSteppingAction ( const G4Step* theStep )
     cumulated_time_proc.push_back(stepTime);
   }
   stepTimer->Start();
-};
+}
 
 // ============================================================================
 // ============================================================================

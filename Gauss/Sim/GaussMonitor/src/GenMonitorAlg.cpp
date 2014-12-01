@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( GenMonitorAlg );
+DECLARE_ALGORITHM_FACTORY( GenMonitorAlg )
 
 
 //=============================================================================
@@ -53,7 +53,7 @@ GenMonitorAlg::GenMonitorAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-GenMonitorAlg::~GenMonitorAlg() {}; 
+GenMonitorAlg::~GenMonitorAlg() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -79,7 +79,7 @@ StatusCode GenMonitorAlg::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -207,7 +207,7 @@ StatusCode GenMonitorAlg::execute() {
           << nParticles << " particles" << endmsg;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

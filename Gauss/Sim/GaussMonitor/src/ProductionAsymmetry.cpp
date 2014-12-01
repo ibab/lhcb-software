@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ProductionAsymmetry );
+DECLARE_ALGORITHM_FACTORY( ProductionAsymmetry )
 
 
 //=============================================================================
@@ -53,7 +53,7 @@ ProductionAsymmetry::ProductionAsymmetry( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ProductionAsymmetry::~ProductionAsymmetry() {}; 
+ProductionAsymmetry::~ProductionAsymmetry() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -107,7 +107,7 @@ StatusCode ProductionAsymmetry::initialize() {
   
   return StatusCode::SUCCESS;
 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -191,7 +191,7 @@ StatusCode ProductionAsymmetry::execute() {
   m_nEvents++ ;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

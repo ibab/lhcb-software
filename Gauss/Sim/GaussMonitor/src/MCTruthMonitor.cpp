@@ -18,7 +18,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCTruthMonitor );
+DECLARE_ALGORITHM_FACTORY( MCTruthMonitor )
 
 
 //=============================================================================
@@ -37,7 +37,7 @@ MCTruthMonitor::MCTruthMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCTruthMonitor::~MCTruthMonitor() {}; 
+MCTruthMonitor::~MCTruthMonitor() {}
 
 //=============================================================================
 // Initialization
@@ -80,7 +80,7 @@ StatusCode MCTruthMonitor::initialize() {
   m_hNNuclei    = book(122, "Number of nuclei", 0., 50., 50);
 
   return StatusCode::SUCCESS;
-};
+}
  
 //=============================================================================
 // Main execution
@@ -159,7 +159,7 @@ StatusCode MCTruthMonitor::execute() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

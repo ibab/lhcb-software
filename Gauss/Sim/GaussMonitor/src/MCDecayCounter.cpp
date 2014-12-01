@@ -19,7 +19,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCDecayCounter );
+DECLARE_ALGORITHM_FACTORY( MCDecayCounter )
 
 
 //=============================================================================
@@ -37,7 +37,7 @@ MCDecayCounter::MCDecayCounter( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCDecayCounter::~MCDecayCounter() {}; 
+MCDecayCounter::~MCDecayCounter() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -53,7 +53,7 @@ StatusCode MCDecayCounter::initialize() {
   m_mcFinder = tool<IMCDecayFinder>( "MCDecayFinder", this );
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -84,7 +84,7 @@ StatusCode MCDecayCounter::execute() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

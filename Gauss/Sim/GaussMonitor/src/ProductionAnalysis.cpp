@@ -25,7 +25,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( ProductionAnalysis );
+DECLARE_ALGORITHM_FACTORY( ProductionAnalysis )
 
 
 //=============================================================================
@@ -54,7 +54,7 @@ ProductionAnalysis::ProductionAnalysis( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-ProductionAnalysis::~ProductionAnalysis() {}; 
+ProductionAnalysis::~ProductionAnalysis() {}
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -90,7 +90,7 @@ StatusCode ProductionAnalysis::initialize() {
   
   return StatusCode::SUCCESS;
 
-};
+}
 
 //=============================================================================
 // Main execution
@@ -172,7 +172,7 @@ StatusCode ProductionAnalysis::execute() {
   m_nEvents++ ;
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

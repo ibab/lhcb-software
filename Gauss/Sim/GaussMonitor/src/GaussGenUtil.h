@@ -22,6 +22,6 @@ namespace GaussGenUtil {
 
   double lifetime( const HepMC::GenParticle* );
   
-};
+}
 
 #endif // GAUSSGENUTIL_H

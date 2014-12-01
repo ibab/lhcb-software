@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( MCTruthFullMonitor );
+DECLARE_ALGORITHM_FACTORY( MCTruthFullMonitor )
 
 
 //=============================================================================
@@ -33,7 +33,7 @@ MCTruthFullMonitor::MCTruthFullMonitor( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCTruthFullMonitor::~MCTruthFullMonitor() {}; 
+MCTruthFullMonitor::~MCTruthFullMonitor() {} 
 
 //=============================================================================
 // Initialisation. Check parameters
@@ -79,7 +79,7 @@ StatusCode MCTruthFullMonitor::initialize() {
   }
   
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -126,7 +126,7 @@ StatusCode MCTruthFullMonitor::execute() {
 
     
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize

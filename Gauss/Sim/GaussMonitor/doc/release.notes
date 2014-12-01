@@ -4,6 +4,9 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-12-01 - Gloria Corti
+ - Fix compilatin warning with --pedantic
+ 
 ! 2014-11-21 - Marco Clemencic
  - Fixed CNake configuration.
 

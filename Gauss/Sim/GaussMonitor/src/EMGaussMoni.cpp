@@ -29,7 +29,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
-DECLARE_ALGORITHM_FACTORY( EMGaussMoni );
+DECLARE_ALGORITHM_FACTORY( EMGaussMoni )
 
 
 //=============================================================================
@@ -62,7 +62,7 @@ EMGaussMoni::EMGaussMoni( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-EMGaussMoni::~EMGaussMoni() {}; 
+EMGaussMoni::~EMGaussMoni() {}
 
 //=============================================================================
 // Initialization
@@ -85,7 +85,7 @@ StatusCode EMGaussMoni::initialize() {
   setHistoTopDir("EMGaussMoni");
   //
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -102,7 +102,7 @@ StatusCode EMGaussMoni::execute() {
   checkTests();
   //
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 //  Finalize
