@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-12-01 - Peter Griffith
+ - Improved output format of EmValidation. EmValidation now also  gives single 
+   FOM value derived from chi^2 calculations for comparison of EM physics lists
+   with reference data, i.e PL/Gauss version used in current productions. 
+   This can be used for automatic alarm to alert users in LHCbPR's scheduled checks.    
 
 ! 2014-11-26 - Peter Griffith
  - Cleaned up and improved readability of analysis.py in EmValidation scripts 
@@ -31,8 +36,8 @@
 
 ! 2014-11-11 - Luca Pescatore
 - Added new python option files for the Targets Tools.
-These allow to create definite sets of events without need to change any option:
-1mm Al, 1mm all materials, all thicknesses Al, all thicknesses and materials.
+  These allow to create definite sets of events without need to change any option:
+  1mm Al, 1mm all materials, all thicknesses Al, all thicknesses and materials.
 
 ! 2014-10-30 - Luca Pescatore
  - Improved readability for Target and Radlength tools output

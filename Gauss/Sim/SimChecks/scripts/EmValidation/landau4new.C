@@ -18,7 +18,7 @@ void landau4new(const TString& hfile="dummy.root")
 //Nigel Watson 20110914  TFile* aFile = new TFile("bugfix_Gauss-50K-mu-50GeV.root");
 //Nigel Watson 20110915  TFile* aFile = new TFile("Gauss-1000000ev-20110913-histos.root");
  TFile* aFile = new TFile(hfile);
- TH1F* fLandauHisto = (TH1F*)aFile->Get("/EMGaussMoniVeloGaussMoni/1003;1");
+ TH1F* fLandauHisto = (TH1F*)aFile->Get("/EMGaussMoniVeloGaussMoni/1002;1");
  //TH1F* fLandauHisto = (TH1F*)aFile->Get("/VeloGaussMoniVeloGaussMoni/1002;1");
  //TH1F* fLandauHisto = (TH1F*)aFile->Get("/VeloGaussMoniVeloGaussMoni/2002;1");
  fLandauHisto->Rebin(2);

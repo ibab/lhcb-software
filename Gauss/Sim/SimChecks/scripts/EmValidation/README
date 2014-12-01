@@ -44,7 +44,7 @@ Configures the particle gun with velo acceptance and specified energy/particle
 
 analysis.py
 -----------
-This module is called by run_Emstudies.py and will produce the required outputs in the output and plots folders if the doAnalysis flag is set in the config file.
+This module is called by run_Emstudies.py and will produce the required plots and numbers in the results folders if the doAnalysis flag is set in the config file.
 
 theoretical.py, landau*.C
 -------------------------

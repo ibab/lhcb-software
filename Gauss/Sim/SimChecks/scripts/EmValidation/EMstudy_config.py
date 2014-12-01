@@ -12,8 +12,8 @@ def config():
 # Choose whether to run Bremsstrahlung test, dE/dx test or both #
 #################################################################
 	#testType = 'brem'	# to run Brem tool only  
-	#testType ='dedx'	# to run dedx monitoring algorithm only
-	testType = 'dedx'	# to run both
+	testType ='dedx'	# to run dedx monitoring algorithm only
+	#testType = 'brem'	# to run both
 
 #####################################################
 # Choose whether to run on r/phi velo or velo pixel #
@@ -39,7 +39,7 @@ def config():
 						# specify G4 EM physics lists to use in simulation
 						# [NoCuts, Opt1, Opt2, Opt3, LHCb]
 
-	nEvts = 50000		# number of particles to generate
+	nEvts = 1000		# number of particles to generate
 	dRays = False		# choose whether to simulate delta rays
 	
 
@@ -50,8 +50,8 @@ def config():
 # and the corresponding list is used instead       #
 ####################################################
 	eScan_list=[0.1, 0.2, 0.4, 1., 5., 10., 16.8, 50., 100., 120., 168.]
-#	plScan_list = ['NoCuts','Opt1','Opt2','Opt3','LHCb']
-	plScan_list = ['Opt1','Opt2']
+	plScan_list = ['NoCuts','Opt1','Opt2','Opt3','LHCb']
+#	plScan_list = ['NoCuts']
 	partScan_list = [11,13,211]
 
 ########################
