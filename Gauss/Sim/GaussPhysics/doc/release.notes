@@ -4,6 +4,9 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+! 2014-12-01 - Gloria Corti
+ - Try to fix compilation warning with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
