@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-12-01 - Gerhard Raven
+ - improve SINK outputselection regex
+
 ! 2014-11-30 - Gerhard Raven
  - set Turbo property of SelectionLine
  - remove unneeded insertion of TurboMIAB algorithm

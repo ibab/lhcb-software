@@ -526,7 +526,7 @@ def _getOutput(alg) :
         for i in props :
             if hasattr ( type(alg) , i) and hasattr(alg,i) : return getattr(alg,i)
         if type(alg) is LoKi__HltUnit and hasattr( alg, 'Code' ) :
-            ex = r"SINK\( *'(\w+)' *\)"
+            ex = r"SINK\s*\(\s*'(\w+)'\s*\)"
             import re
             _outputsel = None
             for s in re.finditer(ex,getattr(alg,'Code')) :
@@ -641,7 +641,7 @@ class bindMembers (object) :
             if hasattr ( alg , 'MatchOutput' ) :
                 self._outputsel = alg.MatchOutput 
         elif type(alg) is LoKi__HltUnit and hasattr( alg, 'Code' ) :
-            ex = r"SINK\( *'(\w+)' *\)"
+            ex = r"SINK\s*\(\s*'(\w+)'\s*\)"
             import re
             for s in re.finditer(ex,getattr(alg,'Code')) :
                  self._outputsel =  s.group(1) 
@@ -1013,12 +1013,17 @@ class Hlt1Line(object):
                     self._outputSelections += [ _m.name() ]
                     _add_to_hlt1_output_selections_ ( _m.name         () )
             elif type(_m) is LoKi__HltUnit and hasattr( _m, 'Code') :
-                ex = r"SINK\( *'(\w+)' *\)"
+                ex = r"SINK\s*\(\s*'(\w+)'\s*\)"
                 import re
                 for s in re.finditer(ex,getattr(_m,'Code')) :
                         self._outputSelections +=  [ s.group(1) ]
                         _add_to_hlt1_output_selections_ ( s.group(1) )
 
+        if self._outputsel is None and self._outputSelections :
+            self._outputsel = self._outputSelections[-1]
+
+        if self._outputsel and self._outputSelections and self._outputsel != self._outputSelections[-1] :
+            log.warning(" Line '%s' has outputsel = '%s' and inconsistent selections = '%s' "%(line,self._outputsel,self._outputSelections ) )
 
         if self._outputsel is not None and self._outputsel!= decisionName( line ) and not line.startswith('Lumi') :
             log.warning( "Line '%s' has a final output selection named '%s' -- this does not match the rules, TISTOS will not work for this line"%(line,self._outputsel) )

@@ -143,6 +143,5 @@ std::pair<std::string, unsigned> Hlt::Line::SetupID()
                   << *major << endmsg;
         return { std::string{}, 0 };
     }
-
     return *key;
 }
