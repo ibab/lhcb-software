@@ -3,6 +3,9 @@
 ! Responsible : Patrick ROBBE
 !=============================================================================
 
+! 2014-12-01 - Gloria Corti
+ - Fixes for compilation warnings with --pedantic'
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

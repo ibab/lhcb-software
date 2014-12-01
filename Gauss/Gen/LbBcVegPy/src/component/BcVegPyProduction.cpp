@@ -24,7 +24,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( BcVegPyProduction );
+DECLARE_TOOL_FACTORY( BcVegPyProduction )
 
 
 //=============================================================================
