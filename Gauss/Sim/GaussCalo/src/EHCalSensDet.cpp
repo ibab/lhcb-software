@@ -64,7 +64,7 @@ EHCalSensDet::EHCalSensDet
   , m_slotWidth( 25 * ns ) 
 { 
   declareProperty( "SlotWidth" , m_slotWidth ) ; 
-};
+}
 
 //=============================================================================
 // The fractions of energy deposited in consequitive time-slots
@@ -101,4 +101,4 @@ StatusCode EHCalSensDet::timing
     { Warning("timing()::no time information is available!"); }
   
   return StatusCode::SUCCESS ;
-};
+}
