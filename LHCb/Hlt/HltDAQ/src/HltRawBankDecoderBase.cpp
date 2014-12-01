@@ -36,6 +36,14 @@ StatusCode HltRawBankDecoderBase::initialize()
     if ( m_sourceID > HltRawBankDecoderBase::kSourceID_Max ){
         return Error("Illegal SourceID specified; maximal allowed value is 7" , StatusCode::FAILURE, 50 );
     }
+    if ( m_sourceID == kSourceID_Dummy ) {
+        Warning("Hlt raw bank decoder " + name() + " is configured to decode both Hlt1 and Hlt2 into a single TES location;\n"
+                "This configuration is deprecated as it can NOT work for data taken with a 'split' Hlt configuration, i.e. 2015 data and beyond\n"
+                "Please reconfigure, and request seperate decoding of Hlt1 and Hlt2 instead.\n"
+                "And yes, this 'split' decoding will also work for data taken with an 'unsplit' Hlt configuration, eg. old data taken before 2015\n"
+                "NB: you may have to adapt your Hlt decision filtering accordingly!",
+                StatusCode::SUCCESS);
+    }
     return sc;
 }
     
@@ -107,8 +115,8 @@ HltRawBankDecoderBase::fetch_id2string(unsigned int tck) const
                tbl.insert( { item.first, { item.second , decode  } } ); // TODO: check for clashes...
            }
     };
-    bool decode_hlt1 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt1 || m_sourceID == 0);
-    bool decode_hlt2 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt2 || m_sourceID == 0);
+    bool decode_hlt1 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt1 || m_sourceID == HltRawBankDecoderBase::kSourceID_Dummy);
+    bool decode_hlt2 = ( m_sourceID == HltRawBankDecoderBase::kSourceID_Hlt2 || m_sourceID == HltRawBankDecoderBase::kSourceID_Dummy);
     if (tck==0) {
        warning() << "TCK obtained from rawbank seems to be 0 -- blindly ASSUMING that the current HltANNSvc somehow has the same configuration as when the input data was written. Proceed at your own risk, good luck..." << endmsg;
        append0(Hlt1SelectionID,decode_hlt1);
