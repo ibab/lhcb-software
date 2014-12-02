@@ -6540,7 +6540,7 @@ double Gaudi::Math::Bernstein::operator () ( const double x ) const
   // treat the trivial cases
   //
   if      ( m_pars.empty()                             ) { return 0 ; }
-  //  neeed for the proper interegration with an exponential 
+  //  neeed for the proper integration with an exponential 
   else if ( s_equal ( x , m_xmin )                     ) { return m_pars [0]    ; }
   else if ( s_equal ( x , m_xmax )                     ) { return m_pars.back() ; }
   else if ( x < m_xmin || x > m_xmax                   ) { return 0 ; }
@@ -6619,7 +6619,10 @@ double Gaudi::Math::Bernstein2D::operator () ( const double x ,
     { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
   }
   //
-  return result ;
+  const double scalex = ( m_nx + 1 ) / ( xmax() - xmin() ) ;
+  const double scaley = ( m_ny + 1 ) / ( ymax() - ymin() ) ;
+  //
+  return result * ( scalex * scaley ) ;
 }
 // ============================================================================
 double Gaudi::Math::Bernstein2D::integral 
@@ -6658,7 +6661,10 @@ double Gaudi::Math::Bernstein2D::integral
     //
   }
   //
-  return result ;
+  const double scalex = ( m_nx + 1 ) / ( xmax() - xmin() ) ;
+  const double scaley = ( m_ny + 1 ) / ( ymax() - ymin() ) ;
+  //
+  return result * ( scalex * scaley ) ;
 }
 // ============================================================================
 double Gaudi::Math::Bernstein2D::integrateX 
@@ -6690,7 +6696,10 @@ double Gaudi::Math::Bernstein2D::integrateX
     //
   }
   //
-  return result ;
+  const double scalex = ( m_nx + 1 ) / ( xmax() - xmin() ) ;
+  const double scaley = ( m_ny + 1 ) / ( ymax() - ymin() ) ;
+  //
+  return result * ( scalex * scaley ) ;
 }
 // ============================================================================
 double Gaudi::Math::Bernstein2D::integrateY 
@@ -6722,7 +6731,10 @@ double Gaudi::Math::Bernstein2D::integrateY
     //
   }
   //
-  return result ;
+  const double scalex = ( m_nx + 1 ) / ( xmax() - xmin() ) ;
+  const double scaley = ( m_ny + 1 ) / ( ymax() - ymin() ) ;
+  //
+  return result * ( scalex * scaley ) ;
 }
 // ============================================================================
 
@@ -6815,10 +6827,15 @@ double Gaudi::Math::Bernstein2DSym::operator ()
   for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
   {
     for  ( unsigned short iy = 0 ; iy <= m_n ; ++iy ) 
-    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
+    { 
+      result += ( ix == iy ) ? 
+        par ( ix , iy ) * fx[ix] * fy[iy]       : 
+        par ( ix , iy ) * fx[ix] * fy[iy] * 0.5 ;
+    }
   }
   //
-  return result ;
+  const double scale = ( m_n + 1 ) / ( xmax() - xmin() ) ;
+  return result * ( scale * scale ) ;
 }
 // ============================================================================
 double Gaudi::Math::Bernstein2DSym::integral 
@@ -6834,7 +6851,7 @@ double Gaudi::Math::Bernstein2DSym::integral
   else if ( ylow  < ymin () ) { return  integral ( xlow   , xhigh  , ymin() , yhigh  ) ; }
   else if ( yhigh > ymax () ) { return  integral ( xlow   , xhigh  , ylow   , ymax() ) ; }
   //
-  else if ( s_equal ( xlow , ylow ) || s_equal ( ylow , ylow ) ) { return 0 ; }
+  else if ( s_equal ( xlow , xhigh ) || s_equal ( ylow , yhigh ) ) { return 0 ; }
   //
   //
   std::vector<double> fy ( m_n + 1 , 0 ) ;
@@ -6849,42 +6866,21 @@ double Gaudi::Math::Bernstein2DSym::integral
   for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
   {
     for  ( unsigned short iy = 0 ; iy <= m_n ; ++iy ) 
-    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
+    { 
+      result += ( ix == iy ) ? 
+        par ( ix , iy ) * fx[ix] * fy[iy]       : 
+        par ( ix , iy ) * fx[ix] * fy[iy] * 0.5 ;
+    }
   }
   //
-  return result ;
+  const double scale = ( m_n + 1 ) / ( xmax() - xmin() ) ;
+  return result * ( scale * scale ) ;
 }
 // ============================================================================
 double Gaudi::Math::Bernstein2DSym::integrateX 
 ( const double y    ,  
   const double xlow , const double xhigh ) const 
-{
-  if      ( s_equal ( xlow , xhigh ) ) { return 0 ; }
-  else if ( xlow  > xhigh ) { return -1*integrateX ( y , xhigh , xlow ) ; }
-  else if ( xhigh <  xmin () || xlow >  xmax() ) { return 0 ; }
-  else if ( y     <  ymin () || y    >  ymax() ) { return 0 ; }
-  //
-  const double  x_low  = std::max ( xmin() , xlow  ) ;
-  const double  x_high = std::min ( xmax() , xhigh ) ;
-  if ( x_low >= x_high ) { return 0 ; }
-  //
-  std::vector<double> fy ( m_n + 1 , 0 ) ;
-  for ( unsigned short i = 0 ; i <= m_n ; ++i ) 
-  { fy[i] = m_b[i] ( y ) ; }
-  //
-  std::vector<double> fx ( m_n + 1 , 0 ) ;
-  for  ( unsigned short i = 0 ; i <= m_n ; ++i ) 
-  { fx[i] = m_b[i].integral ( x_low , x_high ) ; }
-  //
-  double       result = 0 ;
-  for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
-  {
-    for  ( unsigned short iy = 0 ; iy <= m_n ; ++iy ) 
-    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
-  }
-  //
-  return result ;
-}
+{ return integrateY ( y , xlow , xhigh ) ; }
 // ============================================================================
 double Gaudi::Math::Bernstein2DSym::integrateY
 ( const double x    ,
@@ -6892,7 +6888,7 @@ double Gaudi::Math::Bernstein2DSym::integrateY
 {
   //
   if      ( s_equal ( ylow  , yhigh ) ) { return 0 ; }
-  else if ( ylow  > yhigh ) { return -1*integrateY ( x , yhigh , ylow  ) ; }
+  else if ( ylow  > yhigh ) { return -integrateY ( x , yhigh , ylow  ) ; }
   else if ( x     <  xmin () || x    >  xmax() ) { return 0 ; }
   else if ( yhigh <  ymin () || ylow >  ymax() ) { return 0 ; }
   //
@@ -6912,10 +6908,15 @@ double Gaudi::Math::Bernstein2DSym::integrateY
   for  ( unsigned short ix = 0 ; ix <= m_n ; ++ix ) 
   {
     for  ( unsigned short iy = 0 ; iy <= m_n ; ++iy ) 
-    { result += par ( ix , iy ) * fx[ix] * fy[iy] ; }
+    { 
+      result += ( ix == iy ) ? 
+        par ( ix , iy ) * fx[ix] * fy[iy]       : 
+        par ( ix , iy ) * fx[ix] * fy[iy] * 0.5 ;
+    }
   }
   //
-  return result ;
+  const double scale = ( m_n + 1 ) / ( xmax() - xmin() ) ;
+  return result * ( scale * scale ) ;
 }
 // ============================================================================
 // set (k)-parameter
@@ -8998,40 +8999,7 @@ double Gaudi::Math::PS2DPolSym::integrateY
 double Gaudi::Math::PS2DPolSym::integrateX
 ( const double y                         , 
   const double xlow , const double xhigh ) const 
-{
-  //
-  if      ( s_equal ( xlow , xhigh ) ) { return 0 ; }
-  else if ( xlow  > xhigh ) { return -1*integrateX ( y , xhigh , xlow) ; }
-  if      ( xhigh <= m_positive.xmin () || xhigh <= m_ps. lowEdge () ) { return 0 ; }
-  else if ( xlow  >= m_positive.xmax () || xlow  >= m_ps.highEdge () ) { return 0 ; }
-  else if ( y     <= m_positive.ymin () || y     <= m_ps. lowEdge () ) { return 0 ; }
-  else if ( y     >= m_positive.ymax () || y     >= m_ps.highEdge () ) { return 0 ; }
-  //
-  const double  x_low  = std::max ( std::max ( m_ps. lowEdge() , m_positive.xmin() ) , xlow  ) ;
-  const double  x_high = std::min ( std::min ( m_ps.highEdge() , m_positive.xmax() ) , xhigh ) ;
-  if ( x_low >= x_high ) { return 0 ; }
-  //
-  const unsigned short n = m_positive.n () ;
-  //
-  const Gaudi::Math::Bernstein2DSym& b2d = m_positive.bernstein() ;
-  //
-  std::vector<double> fy ( n + 1 , 0 ) ;
-  for ( unsigned short i = 0 ; i <= n ; ++i ) 
-  { fy[i] =  m_ps ( y ) * b2d.basic( i ) ( y ) ; } 
-  //
-  std::vector<double> fx ( n + 1 , 0 ) ;
-  for  ( unsigned short i = 0 ; i <= n ; ++i ) 
-  { fx[i] = _integral_ ( m_ps , b2d.basic( i )  , x_low , x_high , m_workspace ) ; }
-  //
-  double result = 0 ;
-  for  ( unsigned short ix = 0 ; ix <= n ; ++ix ) 
-  {
-    for  ( unsigned short iy = 0 ; iy <= n ; ++iy ) 
-    { result += b2d.par ( ix , iy ) * fx[ix] * fy[iy] ; }
-  }  
-  //
-  return result ;
-}
+{ return integrateY ( y , xlow , xhigh ) ; }
 
 // ===========================================================================
 // constructor from the order
@@ -9533,42 +9501,7 @@ double Gaudi::Math::Expo2DPolSym::integrateY
 double Gaudi::Math::Expo2DPolSym::integrateX
 ( const double y    , 
   const double xlow , const double xhigh ) const 
-{
-  //
-  if      ( s_equal ( xlow , xhigh ) ) { return 0 ; }
-  else if ( xlow  > xhigh ) { return -1*integrateX ( y , xhigh , xlow ) ; }
-  //
-  if      ( xhigh <  m_positive.xmin () ) { return 0 ; }
-  else if ( xlow  >  m_positive.xmax () ) { return 0 ; }
-  else if ( y     <  m_positive.ymin () ) { return 0 ; }
-  else if ( y     >  m_positive.ymax () ) { return 0 ; }
-  //
-  const double  x_low  = std::max ( m_positive.xmin() , xlow  ) ; 
-  const double  x_high = std::min ( m_positive.xmax() , xhigh ) ;
-  if ( x_low >= x_high ) { return 0 ; }
-  //
-  const unsigned short nx  = m_positive.nX() ;
-  const unsigned short ny  = m_positive.nY() ;
-  //
-  const Bernstein2DSym&   b2d = m_positive.bernstein() ;
-  //
-  std::vector<double> fy ( ny + 1 , 0 ) ;
-  for ( unsigned short i = 0 ; i <= ny ; ++i ) 
-  { fy[i] = my_exp ( m_tau * y ) * b2d.basic ( i ) ( y )  ; }
-  //
-  std::vector<double> fx ( nx + 1 , 0 ) ;
-  for  ( unsigned short i = 0 ; i <= nx ; ++i )
-  { fx[i] = Gaudi::Math::Bernstein::integrate ( b2d.basic ( i ) , m_tau , x_low , x_high ) ; }
-  //
-  double result = 0 ;
-  for  ( unsigned short ix = 0 ; ix <= nx ; ++ix ) 
-  {
-    for  ( unsigned short iy = 0 ; iy <= ny ; ++iy ) 
-    { result += b2d.par ( ix , iy ) * fx[ix] * fy[iy] ; }
-  }
-  //
-  return result ;
-}
+{ return integrateY ( y , xlow , xhigh ) ; }
 // ============================================================================
 
 // ============================================================================

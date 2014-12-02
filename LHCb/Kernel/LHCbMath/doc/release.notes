@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2014-12-02 - Vanya Belyaev
+ - some improvement in the integration of 2D-polynomials 
+
 ! 2014-11-30 - Vanya Belyaev
  - add varios Splines (B,I,M,..)
 

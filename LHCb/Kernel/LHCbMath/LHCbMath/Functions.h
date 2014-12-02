@@ -4855,7 +4855,7 @@ namespace Gaudi
       ///  vectors of basic  Bernetin polynomials 
       typedef std::vector<Bernstein>  VB ;
       ///  vector  of basic  Bernetin polynomials 
-      VB m_b  ; //  vector  of basic  Bernetin polynomials 
+      VB m_b  ; //  vector  of basic  Bernstein polynomials 
       // ======================================================================
     } ;
     // ========================================================================

@@ -634,6 +634,21 @@ Gaudi::Math::PositiveSpline::PositiveSpline
   updateCoefficients() ;
 }
 // ============================================================================
+// constructor fomr the basic spline 
+// ============================================================================
+Gaudi::Math::PositiveSpline::PositiveSpline 
+( const Gaudi::Math::BSpline& spline ) 
+  : std::unary_function<double,double> ()
+  , m_bspline ( spline    ) 
+  , m_sphere  ( 1 , false ) 
+{
+  if ( m_bspline.npars() < 2 ) { throw GaudiException 
+      ( "Vector of knots is too short", "Gaudi::Math::PositiveSpline" , StatusCode(810) ) ; } 
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
+  //
+  updateCoefficients() ;
+}
+// ============================================================================
 // update coefficients  
 // ============================================================================
 bool Gaudi::Math::PositiveSpline::updateCoefficients  () 
@@ -729,6 +744,22 @@ Gaudi::Math::IncreasingSpline::IncreasingSpline
 {
   if ( m_bspline.npars() < 2 ) { throw GaudiException 
       ( "Vector of knots is too short", "Gaudi::Math::PositiveSpline" , StatusCode(810) ) ; } 
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
+  //
+  updateCoefficients() ;
+}
+// ============================================================================
+// constructor from the basic spline 
+// ============================================================================
+Gaudi::Math::IncreasingSpline::IncreasingSpline 
+( const Gaudi::Math::BSpline& spline ) 
+  : std::unary_function<double,double> ()
+  , m_bspline ( spline    ) 
+  , m_sphere  ( 1 , false ) 
+{
+  if ( m_bspline.npars() < 2 ) { throw GaudiException 
+      ( "Vector of knots is too short", 
+        "Gaudi::Math::IncreasingSpline" , StatusCode(810) ) ; } 
   m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   //
   updateCoefficients() ;
@@ -831,7 +862,24 @@ Gaudi::Math::DecreasingSpline::DecreasingSpline
   , m_sphere  ( 1 , false ) 
 {
   if ( m_bspline.npars() < 2 ) { throw GaudiException 
-      ( "Vector of knots is too short", "Gaudi::Math::DecreasingSpline" , StatusCode(810) ) ; } 
+      ( "Vector of knots is too short", 
+        "Gaudi::Math::DecreasingSpline" , StatusCode(810) ) ; } 
+  m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
+  //
+  updateCoefficients() ;
+}
+// ============================================================================
+// constructor from the basic spline 
+// ============================================================================
+Gaudi::Math::DecreasingSpline::DecreasingSpline 
+( const Gaudi::Math::BSpline& spline ) 
+  : std::unary_function<double,double> ()
+  , m_bspline ( spline    ) 
+  , m_sphere  ( 1 , false ) 
+{
+  if ( m_bspline.npars() < 2 ) { throw GaudiException 
+      ( "Vector of knots is too short", 
+        "Gaudi::Math::DecreasingSpline" , StatusCode(810) ) ; } 
   m_sphere = Gaudi::Math::NSphere( m_bspline.npars() - 1 , true ) ;  
   //
   updateCoefficients() ;
@@ -1435,8 +1483,8 @@ double Gaudi::Math::Spline2DSym::integrateY
     {
       const double ti  = knot ( m_spline.knots() , i                        ) ;
       const double tip = knot ( m_spline.knots() , i + m_spline.order() + 1 ) ;
-      resx /= ( tip - ti ) ; 
-      resy /= ( tip - ti ) ; 
+      if ( 0 < resx ) { resx /= ( tip - ti ) ; }
+      if ( 0 < resy ) { resy /= ( tip - ti ) ; }
     }
     //
     m_xcache[i] = resx ;
@@ -1457,7 +1505,9 @@ double Gaudi::Math::Spline2DSym::integrateY
       const double vy = m_ycache[iy] ;
       if ( s_zero ( vy ) ) { continue ; }     // CONTINUE 
       //
-      const unsigned k = ix * m_ycache.size () + iy ;
+      const unsigned int k = 
+        ( ix < iy ) ? ( iy * ( iy + 1 ) / 2 + ix ) : ( ix * ( ix + 1 ) / 2 + iy ) ;
+      //
       result += ( ix == iy ) ? 
         m_sphere.x2 ( k ) * vx * vy       : 
         m_sphere.x2 ( k ) * vx * vy * 0.5 ;
@@ -1476,69 +1526,7 @@ double Gaudi::Math::Spline2DSym::integrateY
 double Gaudi::Math::Spline2DSym::integrateX
 ( const double y    , 
   const double xlow , const double xhigh ) const 
-{
-  //
-  if      ( y < ymin() || y > ymax()           ) { return 0 ; }
-  else if ( xhigh <  xlow ) { return - integrateX ( y , xhigh , xlow ) ; }
-  else if ( s_equal ( xlow , xhigh )           ) { return 0 ; }
-  else if ( xhigh <= xmin() ||  xlow > xmax()  ) { return 0 ; }
-  else if ( xlow  <  xmin() ) { return integrateX ( y , xmin() , xhigh  ) ; }
-  else if ( xhigh >  xmax() ) { return integrateX ( y , xlow   , xmax() ) ; }
-  //
-  const double xarg =  
-    !s_equal ( xhigh , xmax ()) ? xhigh :
-    0 <= xmax ()                ? 
-    Gaudi::Math::next_double ( xmax() , -s_ulps ) :
-    Gaudi::Math::next_double ( xmax() ,  s_ulps ) ;
-  //
-  const double yarg =  
-    !s_equal ( y     , ymax ()) ? y     :
-    0 <= ymax ()                ? 
-    Gaudi::Math::next_double ( ymax() , -s_ulps ) :
-    Gaudi::Math::next_double ( ymax() ,  s_ulps ) ;
-  //
-  // fill x&y-caches 
-  for ( unsigned short i = 0 ; i < m_xcache.size() ; ++i )
-  {
-    m_spline.setPar ( i , 1.0 ) ;
-    //
-    double resx  = m_spline.integral ( xlow , xarg ) ;
-    double resy  = m_spline          (        yarg ) ;
-    if ( 0 < resx || 0 < resy ) 
-    {
-      const double ti  = knot ( m_spline.knots() , i                        ) ;
-      const double tip = knot ( m_spline.knots() , i + m_spline.order() + 1 ) ;
-      resx /= ( tip - ti ) ; 
-      resy /= ( tip - ti ) ; 
-    }
-    //
-    m_xcache[i] = resx ;
-    m_ycache[i] = resy ;
-    //
-    m_spline.setPar ( i , 0.0 ) ;
-  }
-  //
-  //
-  double         result = 0 ;
-  for ( unsigned short ix = 0 ; ix < m_xcache.size() ; ++ix ) 
-  {
-    const double vx   = m_xcache[ix] ;
-    if ( s_zero ( vx ) ) { continue ; }       // CONTINUE 
-    //
-    for ( unsigned short iy = 0 ; iy < m_ycache.size() ; ++iy ) 
-    {
-      const double vy = m_ycache[iy] ;
-      if ( s_zero ( vy ) ) { continue ; }     // CONTINUE 
-      //
-      const unsigned k = ix * m_ycache.size () + iy ;
-      result += ( ix == iy ) ? 
-        m_sphere.x2 ( k ) * vx * vy       : 
-        m_sphere.x2 ( k ) * vx * vy * 0.5 ;
-    }
-  }
-  //
-  return result * ( m_spline.order() + 1 ) * ( m_spline.order() + 1 ) ;
-}
+{ return integrateY ( y , xlow , xhigh ) ; }
 
 
 

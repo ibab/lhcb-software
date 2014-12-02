@@ -224,6 +224,8 @@ namespace Gaudi
                        const double         xmax   = 1 , 
                        const unsigned short inner  = 3 ,   // number of inner points 
                        const unsigned short order  = 3 ) ; 
+      /// constructor from the basic spline 
+      PositiveSpline ( const BSpline& spline ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -336,6 +338,8 @@ namespace Gaudi
                          const double         xmax   = 1 , 
                          const unsigned short inner  = 3 ,   // number of inner points 
                          const unsigned short order  = 3 ) ; 
+      /// constructor from the basic spline 
+      IncreasingSpline ( const BSpline& spline ) ;
       // ======================================================================
     public:
       // ======================================================================
@@ -448,6 +452,8 @@ namespace Gaudi
                          const double         xmax   = 1 , 
                          const unsigned short inner  = 3 ,   // number of inner points 
                          const unsigned short order  = 3 ) ; 
+      /// constructor from the basic spline 
+      DecreasingSpline ( const BSpline& spline ) ;
       // ======================================================================
     public:
       // ======================================================================
