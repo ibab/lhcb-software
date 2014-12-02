@@ -4,6 +4,10 @@
 ! Purpose     : Reconstruction interfaces
 !-----------------------------------------------------------------------------
 
+! 2014-12-02 - Chris Jones
+ - Update IChargedProtoANNPIDTool interface to include a status code in the
+   return value.
+
 !========================= RecInterfaces v1r3 2014-07-14 ========================
 ! 2014-06-27 - Chris Jones
  - Add a new tool interface that provides access to the ANNPID variables.

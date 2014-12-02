@@ -1,4 +1,5 @@
 <lcgdict>
  <class name = "ANNGlobalPID::IChargedProtoANNPIDTupleTool"  />
  <class name = "ANNGlobalPID::IChargedProtoANNPIDTool"       />
+ <class name = "ANNGlobalPID::IChargedProtoANNPIDTool::RetType" />
 </lcgdict>

@@ -32,33 +32,44 @@ namespace ANNGlobalPID
     /// Return the interface ID
     static const InterfaceID& interfaceID() { return IID_IChargedProtoANNPIDTool; }
 
+    /// The return type for the tool. Result with status code.
+    class RetType
+    {
+    public:
+      RetType( const bool   _s = false, 
+               const double _v = -2 ) : status(_s), value(_v) { }
+    public:
+      bool status;
+      double value;
+    };
+
   public:
 
-    /** Fill the tuple tool with information for the given ProtoParticle
+    /** Access the ANNPID value for a given ProtoParticle, tune and PID type
      *  @param proto Pointer to the ProtoParticle to fill into the tuple
      *  @param pid The PID to assume for this ProtoParticle
      *  @param annPIDTune The ANNPID tune to use
-     *  @return The ANNPID value
+     *  @return The ANNPID result (status code and value)
      */
-    virtual double annPID( const LHCb::ProtoParticle * proto,
-                           const LHCb::ParticleID& pid,
-                           const std::string& annPIDTune ) const = 0;
+    virtual RetType annPID( const LHCb::ProtoParticle * proto,
+                            const LHCb::ParticleID& pid,
+                            const std::string& annPIDTune ) const = 0;
 
-    /** Fill the tuple tool with information for the given Particle
+    /** Access the ANNPID value for a given ProtoParticle, tune and PID type
      *  @param part Pointer to the Particle to fill into the tuple
      *  @param pid The PID to assume for this ProtoParticle
      *  @param annPIDTune The ANNPID tune to use
-     *  @return The ANNPID value
+     *  @return The ANNPID result (status code and value)
      */
-    inline double annPID( const LHCb::Particle * part,
-                          const LHCb::ParticleID& pid,
-                          const std::string& annPIDTune ) const
+    inline RetType annPID( const LHCb::Particle * part,
+                           const LHCb::ParticleID& pid,
+                           const std::string& annPIDTune ) const
     {
       return ( part ? annPID(part->proto(),pid,annPIDTune) : -1 );
     }
-    
+
   };
-  
+
 }
 
 #endif // RECINTERFACES_ICHARGEDPROTOANNPIDTUPLETOOL_H
