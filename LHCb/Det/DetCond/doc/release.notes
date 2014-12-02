@@ -4,6 +4,10 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2014-12-02 - Liang Sun
+ - In Configuration.py: Adding option LatestGlobalTagByDataTypes to allow for multiple datatypes.
+ - In Configuration.py: Inclusion of DQFLAGS to assign the most recent tag for a given datatype
+
 !========================= DetCond v12r39 2014-10-14 =========================
 ! 2014-10-07 - Gerhard Raven
  - DetCond configurable: remove explicit paritition name and defer this to the

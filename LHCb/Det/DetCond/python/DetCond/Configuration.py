@@ -37,6 +37,7 @@ class CondDB(ConfigurableUser):
                   "IgnoreHeartBeat": False,
                   "HeartBeatCondition" : "/Conditions/Online/LHCb/Tick",
                   "LatestGlobalTagByDataType" : "",
+                  "LatestGlobalTagByDataTypes" : [],
                   "LatestLocalTagsByDataType": [],
                   "AllLocalTagsByDataType": [],
                   "UseLatestTags" : [],
@@ -69,6 +70,7 @@ class CondDB(ConfigurableUser):
                        'IgnoreHeartBeat' : """ Do not set the HeartBeatCondition for the Online partition """,
                        'HeartBeatCondition' : """ Location of the heart-beat condition in the database """,
                        'LatestGlobalTagByDataType' : """ Use latest CondDB global tag marked with the data type""",
+                       'LatestGlobalTagByDataTypes' : """ Use latest CondDB global tag marked with the data type, will override LatestGlobalTagByDataType if set""",
                        'LatestLocalTagsByDataType' : """ Use all latest CondDB local tags marked with the data type """,
                        'AllLocalTagsByDataType' : """ Use all CondDB local tags marked with the data type """,
                        'UseLatestTags' : """ List of the form [DataType, OnlyGlobalTags = False] to turn on the usage of the latest tags """,
@@ -198,7 +200,7 @@ class CondDB(ConfigurableUser):
         # Check if the latest tags should be set for simulation or not
         if not self.getProp("Simulation"):
 #            partitions = ["DDDB", "LHCBCOND", "CALIBOFF"]
-            partitions = ["DDDB", "LHCBCOND"]
+            partitions = ["DDDB", "LHCBCOND", "DQFLAGS"]
         else:
             partitions = ["DDDB", "SIMCOND"]
 
@@ -213,7 +215,10 @@ class CondDB(ConfigurableUser):
             for dt in DataTypes:
                 tags = last_gt_lts(partition, dt, rel_notes)
                 if not tags:
-                    raise RuntimeError("Cannot find tags for partition '%s',"
+                    # Allowing absence of valid tags for DQFLAGS
+                    if partition == 'DQFLAGS': continue
+                    else:
+                        raise RuntimeError("Cannot find tags for partition '%s',"
                                        " data type '%s'" % (partition, dt))
                 if not gt:
                     gt = tags[0]
@@ -365,14 +370,16 @@ class CondDB(ConfigurableUser):
 
         # Set the usage of the latest global/local tags
         old_latest_Tags_prop = self.getProp("UseLatestTags") # it is deprecated
-        latest_GTags_prop = self.getProp("LatestGlobalTagByDataType")
+        latest_GTags_prop = self.getProp("LatestGlobalTagByDataTypes")
+        if not latest_GTags_prop: # if property not set
+            latest_GTags_prop = self.getProp("LatestGlobalTagByDataType")
         latest_LTags_prop = self.getProp("LatestLocalTagsByDataType")
         all_LTags_prop = self.getProp("AllLocalTagsByDataType")
 
         if old_latest_Tags_prop:
             if latest_GTags_prop or latest_LTags_prop:
                 log.warning("The property 'UseLatestTags' is deprecated:"
-                            "'LatestGlobalTagByDataType' and 'LatestLocalTagsByDataType'"
+                            "'LatestGlobalTagByDataType(s)' and 'LatestLocalTagsByDataType'"
                             " will be used instead.")
             else:
                 latest_GTags_prop = old_latest_Tags_prop[0]
