@@ -4,6 +4,9 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2014-12-02 - Chris Jones
+ - Add new developmental PID tunings for Bs2MuMu.
+
 !========================= ChargedProtoANNPID v2r7 2014-07-14 ===================
 ! 2014-06-26 - Chris Jones
  - Add support for a new MC12TuneV3 network tune. 

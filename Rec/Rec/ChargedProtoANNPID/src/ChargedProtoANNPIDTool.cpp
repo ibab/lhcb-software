@@ -26,6 +26,8 @@ ChargedProtoANNPIDTool::ChargedProtoANNPIDTool( const std::string& type,
 {
   // interface
   declareInterface<IChargedProtoANNPIDTool>(this);
+  // JOs
+  declareProperty( "SuppressANNPrintout", m_suppressANNPrintout = true );
   // Turn off Tuple printing during finalize
   setProperty( "NTuplePrint", false );
 }
@@ -49,11 +51,12 @@ StatusCode ChargedProtoANNPIDTool::finalize()
 
 //=============================================================================
 
-double ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
-                                       const LHCb::ParticleID& pid,
-                                       const std::string& annPIDTune ) const
+IChargedProtoANNPIDTool::RetType
+ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
+                                const LHCb::ParticleID& pid,
+                                const std::string& annPIDTune ) const
 {
-  double annPID(-2);
+  IChargedProtoANNPIDTool::RetType annPID;
 
   // are we charged ....
   if ( proto && proto->track() ) 
@@ -75,10 +78,14 @@ double ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
     const NetConfig * ann = getANN( trackType, pidType, annPIDTune );
     
     // Get the value of the ANN PID
-    annPID = ( ann && ann->passCuts(proto) ? ann->netHelper()->getOutput(proto) : -1 );
+    if ( ann )
+    {
+      annPID.status = true;
+      annPID.value  = ( ann->passCuts(proto) ? ann->netHelper()->getOutput(proto) : -1 );
+    }
     
     if ( msgLevel(MSG::DEBUG) )
-      debug() << annPIDTune << " " << trackType << " " << pidType << " " << annPID 
+      debug() << annPIDTune << " " << trackType << " " << pidType << " " << annPID.value 
               << endmsg;
     
   }
@@ -103,11 +110,13 @@ ChargedProtoANNPIDTool::getANN( const std::string & trackType,
   // Need to create it
   if ( iANN == m_annNets.end() )
   {
-    m_annNets[key] = new NetConfig( trackType, pidType, netVersion, true, this );
+    m_annNets[key] = new NetConfig( trackType, pidType, netVersion,
+                                    m_suppressANNPrintout, this );
     if ( !m_annNets[key]->isOK() )
     {
       Warning( "Problem creating ANNPID network for " + 
                trackType + " " + pidType + " " + netVersion ).ignore();
+      delete m_annNets[key];
       m_annNets[key] = NULL;
     }
     return m_annNets[key];

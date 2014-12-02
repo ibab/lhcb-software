@@ -42,9 +42,10 @@ namespace ANNGlobalPID
   public:
 
     // Compute the ANNPID value
-    virtual double annPID( const LHCb::ProtoParticle * proto,
-                           const LHCb::ParticleID& pid,
-                           const std::string& annPIDTune ) const;
+    virtual IChargedProtoANNPIDTool::RetType 
+    annPID( const LHCb::ProtoParticle * proto,
+            const LHCb::ParticleID& pid,
+            const std::string& annPIDTune ) const;
 
   private:
 
@@ -60,6 +61,9 @@ namespace ANNGlobalPID
 
     /// Networks for a given ANNPID configuration
     mutable Networks m_annNets;
+
+    /// Suppress all printout from the ANN experts
+    bool m_suppressANNPrintout;
 
   };
 
