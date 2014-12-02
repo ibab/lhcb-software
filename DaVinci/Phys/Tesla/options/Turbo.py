@@ -1,3 +1,6 @@
+# SAMPLE FOR TUTORIAL: RunningTesla
+# FOR LATEST SCRIPT SEE Turbo_NewLine.py
+
 from Configurables import Tesla 
 from Gaudi.Configuration import *
 

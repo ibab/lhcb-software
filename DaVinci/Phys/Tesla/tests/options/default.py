@@ -10,9 +10,9 @@ DecodeRawEvent().DataOnDemand = True
 from Configurables import ConfigTarFileAccessSvc
 ConfigTarFileAccessSvc().File='../../options/config.tar'
 
-prefix = "Tesla"
+prefix = "Hlt2IncPhi"
 
-Tesla().TriggerLine = "Hlt2IncPhi"
+Tesla().TriggerLines = ["Hlt2IncPhi"]
 Tesla().ReportVersion = 2
 Tesla().OutputPrefix = prefix
 Tesla().OutputLevel = 4
