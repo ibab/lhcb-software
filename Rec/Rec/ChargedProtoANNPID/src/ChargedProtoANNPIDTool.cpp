@@ -30,6 +30,7 @@ ChargedProtoANNPIDTool::ChargedProtoANNPIDTool( const std::string& type,
   declareProperty( "SuppressANNPrintout", m_suppressANNPrintout = true );
   // Turn off Tuple printing during finalize
   setProperty( "NTuplePrint", false );
+  setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -85,9 +86,12 @@ ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
     }
     
     if ( msgLevel(MSG::DEBUG) )
-      debug() << annPIDTune << " " << trackType << " " << pidType << " " << annPID.value 
+    {
+      debug() << annPIDTune << " " << trackType << " " << pidType 
+              << " Status=" << annPID.status << " Value=" << annPID.value
               << endmsg;
-    
+    }
+
   }
   
   // return the value

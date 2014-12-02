@@ -73,6 +73,56 @@ namespace ANNGlobalPID
 #include "tmva/MC12TuneV3/GlobalPID_Ghost_Upstream_TMVA.class.C"
   }
 
+  // Test MVAs for Bs2MuMu
+
+  /** @namespace Bs2MuMuTuneBDTDev1 TMVAImpFactory.cpp
+   *
+   *  Namespace for C++ implementations of Bs2MuMuTuneBDTDev1 TMVA networks.
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2014-06-26
+   */
+  namespace Bs2MuMuTuneBDTDev1
+  {
+    //#include "tmva/Bs2MuMuTuneBDTDev1/GlobalPID_Muon_Long_TMVA.class.C"
+  }
+
+ /** @namespace Bs2MuMuTuneBDTDev2 TMVAImpFactory.cpp
+   *
+   *  Namespace for C++ implementations of Bs2MuMuTuneBDTDev2 TMVA networks.
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2014-06-26
+   */
+  namespace Bs2MuMuTuneBDTDev2
+  {
+    //#include "tmva/Bs2MuMuTuneBDTDev2/GlobalPID_Muon_Long_TMVA.class.C"
+  }
+
+  /** @namespace Bs2MuMuTuneMLPDev1 TMVAImpFactory.cpp
+   *
+   *  Namespace for C++ implementations of Bs2MuMuTuneMLPDev1 TMVA networks.
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2014-06-26
+   */
+  namespace Bs2MuMuTuneMLPDev1
+  {
+#include "tmva/Bs2MuMuTuneMLPDev1/GlobalPID_Muon_Long_TMVA.class.C"
+  }
+
+ /** @namespace Bs2MuMuTuneMLPDev2 TMVAImpFactory.cpp
+   *
+   *  Namespace for C++ implementations of Bs2MuMuTuneMLPDev2 TMVA networks.
+   *
+   *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
+   *  @date   2014-06-26
+   */
+  namespace Bs2MuMuTuneMLPDev2
+  {
+#include "tmva/Bs2MuMuTuneMLPDev2/GlobalPID_Muon_Long_TMVA.class.C"
+  }
+
   // Standard constructor
   TMVAImpFactory::TMVAImpFactory()
   {
@@ -125,6 +175,13 @@ namespace ANNGlobalPID
       add<MC12TuneV3::ReadKaon_Upstream_TMVA>       ( tune, "kaon",     "Upstream" );
       add<MC12TuneV3::ReadProton_Upstream_TMVA>     ( tune, "proton",   "Upstream" );
       add<MC12TuneV3::ReadGhost_Upstream_TMVA>      ( tune, "ghost",    "Upstream" );
+    }
+    // Bs2MuMu development networks
+    {
+      //add<Bs2MuMuTuneBDTDev1::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev1", "muon", "Long" );
+      //add<Bs2MuMuTuneBDTDev2::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev2", "muon", "Long" );
+      add<Bs2MuMuTuneMLPDev1::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneMLPDev1", "muon", "Long" );
+      add<Bs2MuMuTuneMLPDev2::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneMLPDev2", "muon", "Long" );
     }
   }
 
