@@ -4,6 +4,11 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-12-02 - Gerhard Raven
+ - change signature of numberOfCandidates so that we can avoid filling 'all zeros'
+   into TPRofile, which is not cheap. This change saves O(2%) of the CPU time in
+   the HLT! Note that Hlt::Line and SelectionAlg need to be updated coherently.
+
 ! 2014-11-30 - Gerhard Raven
  - make Turbo a dedicated property, check for consistency with configured algorithms
  - use std::chrono instead of Gaudi time functions for timing measurments

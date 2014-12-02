@@ -350,6 +350,13 @@ StatusCode Selection::Line::initialize()
   return status;
 }
 
+//=============================================================================
+int Selection::Line::numberOfCandidates(const Algorithm*) const
+{   
+    return -1;
+}
+
+
 //TODO: on a runchange, reset all counters like m_nAcceptOnError...
 
 //=============================================================================
@@ -426,6 +433,7 @@ StatusCode Selection::Line::execute()
   setExecuted( true );
 
   //TODO: allow insert at the beginning, and non-const access to update...
+  //TODO: allow a-priori complete report, only update 'our' entry here...
   reports->insert( key.first , report );
 
   // update monitoring
@@ -451,8 +459,9 @@ StatusCode Selection::Line::execute()
   }
   fill( m_stepHisto, std::distance(m_subAlgo.begin(),last), 1.0);
   
-  for ( SubAlgos::iterator i = std::begin(m_subAlgo); i != last; ++i ) {
-    fill(m_candHisto,std::distance( std::begin(m_subAlgo),i),numberOfCandidates(i->first),1.0);
+  for ( auto i = std::begin(m_subAlgo); i != last; ++i ) {
+    auto n = numberOfCandidates(i->first); // TODO: once this returns -1, avoid calling it again with the same argument...
+    if (!(n<0)) fill(m_candHisto,std::distance(std::begin(m_subAlgo),i),n,1.0);
   }
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 
@@ -462,7 +471,9 @@ StatusCode Selection::Line::execute()
 std::vector< const Algorithm* > Selection::Line::algorithms() const 
 {
   std::vector< const Algorithm* > subs; subs.reserve( m_subAlgo.size() );
-  for( const auto& i : m_subAlgo ) subs.push_back(i.first);
+  std::transform( std::begin(m_subAlgo), std::end(m_subAlgo), 
+                  std::back_inserter( subs ),
+                  [](const std::pair<const Algorithm*,unsigned>& i) { return i.first; } );
   return subs;
 }
 
@@ -473,7 +484,8 @@ void Selection::Line::resetExecuted ( )
 {
   Algorithm::resetExecuted();
   // algorithm doesn't call resetExecuted of subalgos! should it???
-  for ( auto& i : m_stages ) { i->resetExecuted(); }
+  std::for_each( std::begin(m_stages), std::end(m_stages), 
+                 [](std::unique_ptr<Stage>& i) { i->resetExecuted(); } );
 }
 
 //=========================================================================

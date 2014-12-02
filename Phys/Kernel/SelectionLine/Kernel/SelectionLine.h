@@ -48,10 +48,10 @@ namespace Selection {
       virtual std::pair<std::string,unsigned int> id() const = 0; 
       // @TODO/FIXME: for now, just use inheritance to force _some_
       //  implementation -- should be done smarter
-      // retrieve numberOfCandidates from subalgo 
-      virtual unsigned int numberOfCandidates(const Algorithm*) const = 0;
+      // retrieve numberOfCandidates from subalgo -- or -1 if not supported for the specified algorithm
+      virtual int numberOfCandidates(const Algorithm*) const;
       // retrieve numberOfCandidates from decision algo 
-      virtual unsigned int numberOfCandidates() const = 0;
+      virtual int numberOfCandidates() const = 0;
 
 
       class Stage {
