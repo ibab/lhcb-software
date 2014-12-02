@@ -385,16 +385,21 @@ class Brunel(LHCbConfigurableUser):
             """
             
             from DAQSys.Decoders import DecoderDB
-            HltDecReportsDecoder=DecoderDB["HltDecReportsDecoder"].setup()
+            Hlt1DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
+            Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
             from Configurables import LoKi__HDRFilter, AddToProcStatus
             # identifies events that are not of type Hlt1ErrorEvent or Hlt2ErrorEvent
-            filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision') & HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
-            hltErrorFilter = LoKi__HDRFilter('HltErrorFilter', Code = filterCode )   # the filter
+            hlt1filterCode = "HLT_PASS_RE('Hlt1(?!ErrorEvent).*Decision')"  # from Gerhard
+            hlt2filterCode = "HLT_PASS_RE('Hlt2(?!ErrorEvent).*Decision')"  # from Gerhard
+            hlt1ErrorFilter = LoKi__HDRFilter('Hlt1ErrorFilter', Code = hlt1filterCode, Location = Hlt1DecReportsDecoder.OutputHltDecReportsLocation )   # the filter
+            hlt2ErrorFilter = LoKi__HDRFilter('Hlt2ErrorFilter', Code = hlt2filterCode, Location = Hlt2DecReportsDecoder.OutputHltDecReportsLocation )   # the filter
             # Make a sequence that selects these events
             hltfilterSeq = GaudiSequencer( "HltFilterSeq" )
             if handleLumi: hltfilterSeq.Members = [ physFilter ]         # protect against lumi (that doesn't have decreports)
-            hltfilterSeq.Members += [ HltDecReportsDecoder,              # decode DecReports
-                                      hltErrorFilter ]                   # apply filter
+            hltfilterSeq.Members += [ Hlt1DecReportsDecoder,             # decode DecReports
+                                      hlt1ErrorFilter,                   # apply filter
+                                      Hlt2DecReportsDecoder,             # decode DecReports
+                                      hlt2ErrorFilter ]                  # apply filter
             # Sequence to be executed if hltErrorFilter is failing to set ProcStatus
             hlterrorSeq = GaudiSequencer("HltErrorSeq", ModeOR = True, ShortCircuit = True) # anti-logic
             addToProc = AddToProcStatus("HltErrorProc",Reason="HltError",Subsystem="Hlt")   # write a procstatus
