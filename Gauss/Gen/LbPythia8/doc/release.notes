@@ -4,9 +4,13 @@
 ! Purpose     : Integration package for Pythia 8 
 !-----------------------------------------------------------------------------
 
+! 2014-12-02 - Gloria Corti
+ - Trying to fix compilation warnings with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
+!======================== LbPythia8 v9r0 2014-10-08 ========================
 ! 2014-09-08 - Alex Grecu
  - correct access to codesHard hard process id vector in Pythia8::Pythia which 
    is now in Pythia8::Pythia.info Info object. Patched Pythia8Production.cpp. 

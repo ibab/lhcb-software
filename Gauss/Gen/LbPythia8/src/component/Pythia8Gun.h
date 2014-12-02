@@ -14,7 +14,7 @@
 
 namespace GenMode {
   enum Mode { GaussMode=1, FlatMode };
-};  
+}
 
 //=============================================================================
 // Header file for class: Pythia8Gun

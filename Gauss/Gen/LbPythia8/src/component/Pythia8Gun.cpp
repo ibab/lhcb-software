@@ -21,7 +21,7 @@
 //=============================================================================
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( Pythia8Gun );
+DECLARE_TOOL_FACTORY( Pythia8Gun )
 
 //=============================================================================
 // Standard constructor, initializes variables
