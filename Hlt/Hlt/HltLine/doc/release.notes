@@ -4,8 +4,10 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
 ! 2014-12-02 - Gerhard Raven
  - follow changes in Selection::Line to reduce the overhead
+ - stop decoding full cluster for IT,TT in addition to the lite clusters...
 
 ! 2014-12-01 - Gerhard Raven
  - improve SINK outputselection regex
