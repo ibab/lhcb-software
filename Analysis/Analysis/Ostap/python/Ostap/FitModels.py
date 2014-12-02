@@ -132,6 +132,9 @@ __all__ = (
     'PSRight_pdf'          , ## High edge of L-body phase space from N-body decays  
     'PSNL_pdf'             , ## L-body phase space from N-body decays  
     'PS23L_pdf'            , ## 2-body phase space from 3-body decays with orbital momenta
+    'PSpline_pdf'          , ## positive spline (B-spline)
+    'ISpline_pdf'          , ## positive non-decreasing spline 
+    'DSpline_pdf'          , ## positive non-increasing spline 
     #
     ## 2D non-factorazable models
     #
@@ -139,12 +142,16 @@ __all__ = (
     'PSPol2D_pdf'     , ## Product of phase spaces, modulated with 2D polynomial
     'ExpoPSPol2D_pdf' , ## Exponential times  phase space times positive 2D-polynomial
     'ExpoPol2D_pdf'   , ## Product of exponents times positive 2D-polynomial
+    'Spline2D_pdf'    , ## generic 2D positive spline 
     #
     ## 2D non-factorazable symmetric models
     #
     'PolyPos2Dsym_pdf', ## A positive symmetric polynomial in 2D
     'PSPol2Dsym_pdf'  , ## Symmetric product of phase spaces, modulated with 2D polynomial
     'ExpoPol2Dsym_pdf', ## Symmetric version of above
+    'Spline2Dsym_pdf' , ## Symmetric 2D positive spline 
+    #
+    # 2S
     ## helpers
     #
     'H1D_dset'             , ## convertor of 1D-histogram to dataset 
@@ -168,15 +175,16 @@ else                       : logger = getLogger ( __name__          )
 from Ostap.FitBasic          import *
 logger.debug ('Import signal     (peaking) models from FitSignalModels')
 from Ostap.FitSignalModels   import * 
-logger.debug ('Import background (smooth)  models from FitBkgModels')
+logger.debug ('Import background (smooth)  models from FitBkgModels'   )
 from Ostap.FitBkgModels      import * 
-logger.debug ('Import 2D background        models from Fit2DModels')
-from Ostap.Fit2DModels       import * 
-logger.debug ('Import specialized models from FitSpecificModels')
+logger.debug ('Import 2D background        models from Fit2DModels'    )
+from Ostap.Fit2DModels       import *  
+logger.debug ('Import specialized models from FitSpecificModels'       )
 from Ostap.FitSpecificModels import * 
-logger.debug ('Import ``other''   models from FitOtherModels')
+logger.debug ('Import ``other''   models from FitOtherModels'          )
 from Ostap.FitOtherModels    import *
 
+import Ostap.Models 
 # =============================================================================
 if '__main__' == __name__ :
     

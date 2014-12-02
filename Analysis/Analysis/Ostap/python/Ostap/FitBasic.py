@@ -26,6 +26,7 @@ __all__     = (
     'H2D_pdf'     , ## convertor of 1D-histo to RooDataPdf
     ##
     'PDF'         , ## useful base class for 1D-models
+    'PDF2'        , ## useful base class for 2D-models
     'MASS'        , ## useful base class to create "signal" PDFs for mass-fits
     'Fit1D'       , ## the model for 1D-fit: signal + background + optional components  
     'Fit2D'       , ## the model for 2D-fit: signal + background + optional components
@@ -153,6 +154,46 @@ class RangeVar(object) :
 
 
 # =============================================================================
+## "parse" common arguments for fit 
+def fitArgs ( name , dataset = None , *args , **kwargs ) :
+    
+    _args = []
+    for a in args :
+        if not isinstance ( a , ROOT.RooCmdArg ) :
+            logger.warning ( '%s unknown argument type %s, skip it ' % ( name , type ( a ) ) ) 
+            continue
+        _args.append ( a )
+        
+    ncpu_added = False 
+    for k,a in kwargs.iteritems() :
+        
+        if isinstance ( a , ROOT.RooCmdArg ) :
+            logger.debug   ( '%s add keyword argument %s' % ( self.name , k ) )  
+            _args.append ( a )
+        elif k.upper() in ( 'WEIGHTED'   ,
+                            'SUMW2'      ,
+                            'SUMW2ERROR' ) and isinstance ( a , bool ) and dataset.isWeighted() :
+            _args.append   (  ROOT.RooFit.SumW2Error( a ) )
+            logger.debug   ( '%s add keyword argument %s/%s' % ( name , k , a ) )                 
+        elif k.upper() in ( 'NCPU'       ,
+                            'NCPUS'      ,
+                            'NUMCPU'     ,
+                            'NUMCPUS'    ) and isinstance ( a , int ) and 1<= a : 
+            _args.append   (  ROOT.RooFit.NumCPU( a  ) ) 
+            logger.debug   ( '%s add keyword argument %s/%s' % ( name , k , a ) )
+            ncpu_added = True 
+        else : 
+            logger.warning ( '%s unknown/illegal keyword argument type %s/%s, skip it ' % ( name , k , type ( a ) ) )
+            continue            
+        
+    if not ncpu_added :
+        logger.debug  ( '%s: NCPU is added ' % name ) 
+        _args.append  (  ncpu ( len ( dataset ) ) )
+            
+    return tuple ( _args )
+            
+
+# =============================================================================
 ## @class PDF
 #  The helper base class for implementation of 1D-pdfs 
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
@@ -230,39 +271,10 @@ class PDF (object) :
             return self.fitHisto ( dataset , draw , silent , *args , **kwargs ) 
         #
         ## treat the arguments properly
-        # 
-        _args = []
-        for a in args :
-            if not isinstance ( a , ROOT.RooCmdArg ) :
-                logger.warning ( 'PDF(%s).fitTo, unknown argument type %s, skip it ' % ( self.name , type ( a ) ) ) 
-                continue
-            _args.append ( a )
-
-        ncpu_added = False 
-        for k,a in kwargs.iteritems() :
-            if isinstance ( a , ROOT.RooCmdArg ) :
-                logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s' % ( self.name , k ) )  
-                _args.append ( a )
-                continue
-            elif k.upper() in ( 'WEIGHTED' , 'SUMW2'  , 'SUMW2ERROR' )  and isinstance ( a , bool ) and dataset.isWeighted() :
-                _args.append   (  ROOT.RooFit.SumW2Error( a ) )
-                logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s/%s' % ( self.name , k , a ) )                 
-            elif k.upper() in ( 'NCPU' , 'NCPUS' , 'NUMCPU' , 'NUMCPUS' )  and isinstance ( a , int ) and 1<= a : 
-                _args.append   (  ROOT.RooFit.NumCPU( a  ) ) 
-                logger.debug   ( 'PDF(%s).fitTo, add keyword argument %s/%s' % ( self.name , k , a ) )
-                ncpu_added = True 
-            else : 
-                logger.warning ( 'PDF(%s).fitTo, unknown/illegal keyword argument type %s/%s, skip it ' % ( self.name , k , type ( a ) ) )
-                continue            
-
-
-        ##
-        if not ncpu_added :
-            logger.debug  ( 'PDF(%s).fitTo: NCPU is added ' % self.name ) 
-            _args.append  (  ncpu ( len ( dataset ) ) )
-            
-        _args = tuple ( _args )
-            
+        #
+        _args = fitArgs ( "PDF(%s).fitTo:" % self.name , dataset , *args , **kwargs )
+        
+        #
         if silent : from Ostap.Utils import RooSilent as Context
         else      : from Ostap.Utils import NoContext as Context
         
@@ -531,6 +543,235 @@ class MASS(PDF) :
                                "sigma_%s"   % name ,
                                "#sigma(%s)" % name , sigma , 0.01 * sigma_max , 0 , sigma_max )
         
+
+
+
+# =============================================================================
+## @class PDF2
+#  The helper base class for implementation of 2D-pdfs 
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-08-21
+class PDF2 (object) :
+    """
+    Useful helper base class for implementation of generic PDFs for 2D-fit
+    """
+    def __init__ ( self , name , xvar = None , yvar = None ) : 
+    
+        self.name         = name
+        self.x            = xvar 
+        self.y            = yvar 
+        self.m1           = xvar ## ditto
+        self.m2           = yvar ## ditto 
+            
+    ## make the actual fit (and optionally draw it!)
+    #  @code
+    #  r,f = model.fitTo ( dataset )
+    #  r,f = model.fitTo ( dataset , weighted = True )    
+    #  r,f = model.fitTo ( dataset , ncpu     = 10   )    
+    #  r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
+    #  @endcode 
+    def fitTo ( self , dataset , draw = False , nbins = 100 , silent = False , *args , **kwargs ) :
+        """
+        Perform the actual fit (and draw it)
+        >>> r,f = model.fitTo ( dataset )
+        >>> r,f = model.fitTo ( dataset , weighted = True )    
+        >>> r,f = model.fitTo ( dataset , ncpu     = 10   )    
+        >>> r,f = model.fitTo ( dataset , draw = True , nbins = 300 )    
+        """
+        if isinstance ( dataset , ROOT.TH1 ) :
+            return self.fitHisto ( dataset , draw , silent , *args , **kwargs ) 
+        #
+        ## treat the arguments properly
+        #
+        _args = fitArgs ( "PDF2(%s).fitTo:" % self.name , dataset , *args , **kwargs )
+        
+        #
+        if silent : from Ostap.Utils import RooSilent as Context
+        else      : from Ostap.Utils import NoContext as Context
+        
+        #
+        ## define silent context
+        #
+        context = Context ()         
+        with context :
+
+            result =  self.pdf.fitTo ( dataset             ,
+                                       ROOT.RooFit.Save () ,
+                                       *_args              )
+            
+            if hasattr ( self.pdf , 'setPars' ) : self.pdf.setPars() 
+
+        st = result.status()
+        if 0 != st and silent :
+            logger.warning ( 'PDF2(%s).fitTo: status is %s. Refit in non-silent regime ' % ( self.name , st  ) )    
+            return self.fitTo ( dataset , draw , nbins , False , *args , **kwargs )
+        
+        if 0 != st   : logger.warning ( 'PDF2(%s).fitTo: Fit status is %s ' % ( self.name , st   ) )
+        #
+        qual = result.covQual()
+        if   -1 == qual : logger.debug   ( 'PDF2(%s).fitTo: covQual    is unknown ' ) 
+        elif  3 != qual : logger.warning ( 'PDF2(%s).fitTo: covQual    is %s ' % ( self.name , qual ) ) 
+
+        if not draw :
+            return result, None 
+        
+        return result, self.draw ( dataset , nbins = nbins , silent = silent )
+
+    
+    ## draw the projection over 1st variable
+    #
+    #  @code
+    #  r,f = model.fitTo ( dataset ) ## fit dataset
+    #  fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
+    #
+    #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
+    #
+    #  model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
+    #  f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
+    #
+    #  @endcode 
+    def draw1 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
+        """
+        Draw the projection over 1st variable
+        
+        >>> r,f = model.fitTo ( dataset ) ## fit dataset
+        >>> fx  = model.draw1 ( dataset , nbins = 100 ) ## draw results
+        
+        >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
+
+        >>> model.m2.setRange ( 'QUQU2' , 2 , 3 ) 
+        >>> f1  = model.draw1 ( dataset , nbins = 100 , in_range = 'QUQU2') ## draw results
+        
+        """
+        if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
+            self.m2.setRange ( 'aux_rng2' , in_range[0] , in_range[1] )
+            in_range = 'aux_rng2' 
+        return self.draw ( self.m1 , dataset , nbins , 20     , silent , in_range         , *args )
+    
+    ## draw the projection over 2nd variable
+    #
+    #  @code
+    #  r,f = model.fitTo ( dataset ) ## fit dataset
+    #  fy  = model.draw2 ( dataset , nbins = 100 ) ## draw results
+    #
+    #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
+    #
+    #  model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
+    #  f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
+    #
+    #  @endcode 
+    def draw2 ( self , dataset = None , nbins = 100  , silent = True   , in_range = None  , *args ) :
+        """
+        Draw the projection over 2nd variable
+        
+        >>> r,f = model.fitTo ( dataset ) ## fit dataset
+        >>> fy  = model.draw2 ( dataset , nbins = 100 ) ## draw results
+        
+        >>> f2  = model.draw2 ( dataset , nbins = 100 , in_range = (2,3) ) ## draw results
+
+        >>> model.m1.setRange ( 'QUQU1' , 2 , 3 ) 
+        >>> f2  = model.draw2 ( dataset , nbins = 100 , in_range = 'QUQU1') ## draw results
+
+        """
+        if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
+            self.m1.setRange ( 'aux_rng1' , in_range[0] , in_range[1] )
+            in_range = 'aux_rng1' 
+        return self.draw ( self.m2 , dataset , nbins , 20     , silent , in_range         , *args ) 
+    
+    ## make 1D-plot
+    def draw ( self            ,
+               drawvar  = None ,
+               dataset  = None ,
+               nbins    = 100  ,
+               ybins    =  20  ,
+               silent   = True ,
+               in_range = None ,
+               *args           )  : 
+        """
+        Make 1D-plot:
+        """
+        
+        context = NoContext () 
+        if silent : context = RooSilent()
+        
+        if not dataset :
+            if hasattr ( self , 'dataset' ) : dataset = self.dataset 
+
+        with context :
+                
+            if not drawvar :
+                
+                _xbins = ROOT.RooFit.Binning ( nbins ) 
+                _ybins = ROOT.RooFit.Binning ( ybins ) 
+                _yvar  = ROOT.RooFit.YVar    ( self.m2 , _ybins )
+                _clst  = ROOT.RooLinkedList  ()
+                hdata  = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
+                hpdf   = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
+                hdata.SetTitle(';;;')
+                hpdf .SetTitle(';;;')
+                _lst   = ROOT.RooArgList ( self.m1 , self.m2 )  
+                if dataset : dataset.fillHistogram( hdata , _lst ) 
+                self.pdf.fillHistogram  ( hpdf , _lst )
+
+                hdata.lego ()
+                hpdf .Draw ( 'same surf')
+                
+                return hpdf , hdata 
+            
+            frame = drawvar.frame( nbins )
+            
+            if dataset :
+                if not in_range : dataset .plotOn ( frame ,                                     *args )
+                else            : dataset .plotOn ( frame , ROOT.RooFit.CutRange ( in_range ) , *args )
+
+            _args = args 
+            if in_range :
+                _args = list  (  args )
+                _args.append  ( ROOT.RooFit.ProjectionRange( in_range) )
+                _args = tuple ( _args ) 
+                
+            self.pdf .plotOn ( frame , ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
+            
+            frame.SetXTitle ( '' )
+            frame.SetYTitle ( '' )
+            frame.SetZTitle ( '' )
+            
+            frame.Draw()
+            
+            return frame
+
+    ## fit the 2D-histogram (and draw it)
+    #
+    #  @code
+    #
+    #  histo = ...
+    #  r,f = model.fitHisto ( histo )
+    #
+    #  @endcode
+    def fitHisto ( self , histo , draw = False , silent = False , *args ) :
+        """
+        Fit the histogram (and draw it)
+        
+        >>> histo = ...
+        >>> r,f = model.fitHisto ( histo , draw = True )
+        
+        """
+        context = NoContext () 
+        if silent : context = RooSilent() 
+        
+        ## convert it! 
+        with context : 
+            self.hdset = H2D_dset ( '',  histo , self.m1 , self.m2  )
+            self.hset  = self.hdset.dset
+            
+        ## fit it!!
+        return self.fitTo ( self.hset      ,
+                            draw           ,
+                            histo.nbinsx() ,
+                            histo.nbinsy() ,
+                            silent         , *args ) 
+    
+
 
 # =============================================================================
 ## simple convertor of 1D-histo to data set
@@ -1011,35 +1252,8 @@ class Fit2D (object) :
         """
         if isinstance ( dataset , ROOT.TH2 ) :
             return self.fitHisto ( dataset , draw , silent , *args ) 
-
-        _args = []
-        for a in args :
-            if not isinstance ( a , ROOT.RooCmdArg ) :
-                logger.warning ( 'Fit2D.fitTo, unknown argument type %s, skip it ' % type ( a ) ) 
-                continue
-            _args.append ( a )
-            
-        ncpu_added = False 
-        for k,a in kwargs.iteritems() :
-            if isinstance ( a , ROOT.RooCmdArg ) :
-                logger.debug   ( 'Fit2D.fitTo, add keyword argument %s' % k )  
-                _args.append ( a )
-                continue
-            elif k.upper() in  ( 'WEIGHTED' , 'SUMW2'  , 'SUMW2ERROR' )  and isinstance ( a , bool ) and dataset.isWeighted() :
-                _args.append   (  ROOT.RooFit.SumW2Error( a ) )
-                logger.debug   ( 'Fit2D.fitTo, add keyword argument %s/%s' % ( k , a ) )                 
-            elif k.upper() in  ( 'NCPU' , 'NCPUS' , 'NUMCPU' , 'NUMCPUS' )  and isinstance ( a , int ) and 1<= a : 
-                _args.append   (  ROOT.RooFit.NumCPU( a  ) ) 
-                logger.debug   ( 'Fit2D.fitTo, add keyword argument %s/%s' % ( k , a ) )
-                ncpu_added = True 
-            else : 
-                logger.warning ( 'Fit2D.fitTo, unknown/illegal keyword argument type %s/%s, skip it ' % ( self.name , k , type ( a ) ) )
-                continue              
-        ##
-        if not ncpu_added :
-            logger.debug  ( 'Fit2D.fitTo: NCPU is added ' ) 
-            _args.append  (  ncpu ( len ( dataset ) ) )
-        _args = tuple( _args )
+        
+        _args  = fitArgs ( 'Fit2D.fitTo:' , dataset , *args , **kwargs )
         
         result = self.pdf.fitTo ( dataset              , 
                                   ROOT.RooFit.Save ()  ,

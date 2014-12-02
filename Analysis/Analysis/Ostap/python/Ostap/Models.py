@@ -32,9 +32,12 @@ else                       : logger = getLogger ( __name__       )
 # =============================================================================
 _wrappers_ = {} 
 # =============================================================================
-class _WO_ (object)  :
+class _WO1_ (object)  :
     def __init__ ( self , o              ) :        self._o   =  o 
-    def __call__ ( self , x , pars  = [] ) : return self._o ( x [0] )
+    def __call__ ( self , x , pars  = [] ) : return self._o ( x [0]        )
+class _WO2_ (object)  :
+    def __init__ ( self , o              ) :        self._o   =  o 
+    def __call__ ( self , x , pars  = [] ) : return self._o ( x [0] , x[1] )
     
 # =============================================================================
 ## convert the model into TF1
@@ -50,10 +53,34 @@ def _tf1_ ( self , *args ) :
     """
     key = funID ()
     #
-    wo  = _WO_ ( self )
+    wo  = _WO1_ ( self )
     #
     fun = ROOT.TF1 ( key , wo , *args )
     fun.SetNpx ( 500 ) 
+    #
+    _wrappers_ [ key ] = wo,fun 
+    #
+    return fun 
+
+# =============================================================================
+## convert the model into TF2
+def _tf2_ ( self , *args ) :
+    """
+    Convert the function to TF2
+    
+    >>> obj = ...
+    
+    >>> fun = obj.tf2 ( 3.0 , 3.2 , 3.0 , 3.2 )
+    
+    >>> fun.Draw() 
+    """
+    key = funID ()
+    #
+    wo  = _WO2_ ( self )
+    #
+    fun = ROOT.TF2 ( key , wo , *args )
+    fun.SetNpx ( 100 ) 
+    fun.SetNpy ( 100 ) 
     #
     _wrappers_ [ key ] = wo,fun 
     #
@@ -73,6 +100,93 @@ def _amp_ ( self , x ) :
     #
     return complex( v.real () , v.imag () ) 
 
+Gaudi = cpp.Gaudi 
+
+Gaudi.Math.LASS        . amp = _amp_
+Gaudi.Math.LASS23L     . amp = _amp_
+Gaudi.Math.Bugg23L     . amp = _amp_
+Gaudi.Math.Flatte      . amp = _amp_
+Gaudi.Math.Flatte2     . amp = _amp_
+Gaudi.Math.Flatte23L   . amp = _amp_
+Gaudi.Math.BreitWigner . amp = _amp_
+
+# =============================================================================
+## make 1D-integration using SciPy
+#  @see http://www.scipy.org/
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-12-01
+def sp_integrate_1D ( func , xmin , xmax , *args , **kwargs ) :
+    """
+    Make 1D-integration using SciPy
+    
+    >>> func = ...
+    >>> print func.sp_integrate ( -10 , 10 )
+    
+    """
+    from scipy import integrate
+    ##
+    result = integrate.quad ( func , xmin , xmax , *args , **kwargs )
+    return result[0]
+
+# =============================================================================
+## make 2D-integration using SciPy
+#  @see http://www.scipy.org/
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-12-01
+def sp_integrate_2D ( func  ,
+                      xmin  , xmax ,
+                      ymin  , ymax , *args , **kwargs ) :
+    """
+    Make 2D-integration using SciPy
+
+    >>> func = ...  ## func ( x , y )
+    ##                            xmin , xmax , ymin , ymax 
+    >>> print func.sp_integrate ( -10  , 10   , -20  , 20   ) 
+    
+    Note different naming with respect to SciPy:
+    - SciPy first integrates over 2nd variable
+    """
+    from scipy import integrate
+    ##
+    result = integrate.dblquad ( func ,
+                                 ymin ,
+                                 ymax ,
+                                 lambda x : xmin ,
+                                 lambda x : xmax , 
+                                 *args , **kwargs )
+    return result[0]
+
+# =============================================================================
+## make 1D-integration using SciPy
+#  @see http://www.scipy.org/
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-12-01
+def sp_integrate_1D_ ( pdf , xmin , xmax , *args , **kwargs ) :
+    """
+    Make 1D integration over the PDF using SciPy
+    """
+    if hasattr ( pdf , 'setPars' ) : pdf.setPars() 
+    func = pdf.function()
+    return func.sp_integrate_1D ( xmin , xmax , *args , **kwargs ) 
+# =============================================================================
+## make 2D-integration using SciPy
+#  @see http://www.scipy.org/
+#  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+#  @date 2014-12-01
+def sp_integrate_2D_ ( pdf   ,
+                      xmin  , xmax ,
+                      ymin  , ymax , *args , **kwargs ) :
+    """    
+    Make 3D integration over the PDF using SciPy
+    """
+    if hasattr ( pdf , 'setPars' ) : pdf.setPars() 
+    func = pdf.function()
+    return func.sp_integrate_2D ( xmin , xmax , ymin , ymax , *args , **kwargs ) 
+
+
+# =============================================================================
+## decorate 1D-models/functions 
+# =============================================================================
 Gaudi = cpp.Gaudi 
 for model in ( Gaudi.Math.Chebyshev              ,
                Gaudi.Math.Legendre               ,
@@ -128,7 +242,95 @@ for model in ( Gaudi.Math.Chebyshev              ,
                #
                ) :
     model . tf1 = _tf1_ 
+    model.sp_integrate = sp_integrate_1D
+    
+# =============================================================================
+## decorate 2D-models/functions 
+# =============================================================================
+Gaudi = cpp.Gaudi 
+for model in ( Gaudi.Math.Spline2D      ,
+               Gaudi.Math.Spline2DSym   , 
+               Gaudi.Math.Bernstein2D   ,
+               Gaudi.Math.Positive2D    ,
+               Gaudi.Math.Positive2DSym ,
+               Gaudi.Math.PS2DPol       ,
+               Gaudi.Math.PS2DPolSym    ,
+               Gaudi.Math.ExpoPS2DPol   ,
+               Gaudi.Math.Expo2DPol     ,
+               Gaudi.Math.Expo2DPolSym  ) :
+    
+    model . tf2 = _tf2_ 
+    model.sp_integrate = sp_integrate_2D
 
+Analysis = cpp.Analysis
+for pdf in ( Analysis.Models.BreitWigner          , 
+             Analysis.Models.Rho0               ,
+             Analysis.Models.Kstar              ,
+             Analysis.Models.Phi                , 
+             Analysis.Models.Flatte             ,
+             Analysis.Models.Flatte2            ,  
+             Analysis.Models.Bukin              ,
+             Analysis.Models.PhaseSpace2        ,
+             Analysis.Models.PhaseSpaceNL       ,
+             Analysis.Models.PhaseSpace23L      ,
+             Analysis.Models.PhaseSpaceLeft     ,
+             Analysis.Models.PhaseSpaceRight    ,
+             Analysis.Models.PhaseSpacePol      ,
+             Analysis.Models.Needham            ,
+             Analysis.Models.CrystalBall        ,
+             Analysis.Models.CrystalBallRS      ,
+             Analysis.Models.CrystalBallDS      , 
+             Analysis.Models.Apolonios          ,
+             Analysis.Models.Apolonios2         , 
+             Analysis.Models.GramCharlierA      , 
+             Analysis.Models.Voigt              ,
+             Analysis.Models.LASS               ,
+             Analysis.Models.Bugg               ,
+             Analysis.Models.LASS23L            ,
+             Analysis.Models.Bugg23L            , 
+             Analysis.Models.BW23L              , 
+             Analysis.Models.PolyPositive       ,
+             Analysis.Models.ExpoPositive       ,
+             Analysis.Models.PositiveSpline     ,
+             Analysis.Models.IncreasingSpline   , 
+             Analysis.Models.DecreasingSpline   ,
+             
+             Analysis.Models.StudentT           ,
+             Analysis.Models.BifurcatedStudentT , 
+             Analysis.Models.GammaDist          , 
+             Analysis.Models.GenGammaDist       , 
+             Analysis.Models.Amoroso            ,
+             Analysis.Models.LogGammaDist       ,
+             Analysis.Models.Log10GammaDist     ,
+             Analysis.Models.LogGamma           ,
+             Analysis.Models.BetaPrime          ,
+             Analysis.Models.Landau             ,
+             Analysis.Models.SinhAsinh          , 
+             Analysis.Models.Argus              ,
+             Analysis.Models.BifurcatedGauss    ,
+             Analysis.Models.GenGaussV1         , 
+             Analysis.Models.GenGaussV2         , 
+             Analysis.Models.SkewGauss          ) :
+
+    pdf.sp_integrate = sp_integrate_1D_
+
+for pdf in ( Analysis.Models.Poly2DPositive     ,
+             Analysis.Models.Poly2DSymPositive  , 
+             Analysis.Models.PS2DPol            ,
+             Analysis.Models.PS2DPolSym         , 
+             Analysis.Models.ExpoPS2DPol        , 
+             Analysis.Models.Expo2DPol          ,
+             Analysis.Models.Expo2DPolSym       , 
+             Analysis.Models.Spline2D           ,
+             Analysis.Models.Spline2DSym        ) :
+    
+    pdf.sp_integrate = sp_integrate_2D_
+
+
+
+# =============================================================================
+## add complex amplitudes 
+# =============================================================================
 Gaudi.Math.LASS        . amp = _amp_
 Gaudi.Math.LASS23L     . amp = _amp_
 Gaudi.Math.Bugg23L     . amp = _amp_
@@ -136,7 +338,9 @@ Gaudi.Math.Flatte      . amp = _amp_
 Gaudi.Math.Flatte2     . amp = _amp_
 Gaudi.Math.Flatte23L   . amp = _amp_
 Gaudi.Math.BreitWigner . amp = _amp_
-
+    
+# =============================================================================
+    
 # =============================================================================
 if '__main__' == __name__ :
     

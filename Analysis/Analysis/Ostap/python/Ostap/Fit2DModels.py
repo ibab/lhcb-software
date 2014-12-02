@@ -36,7 +36,7 @@ __all__     = (
 # =============================================================================
 import ROOT, math
 from   Ostap.PyRoUts             import cpp, iszero  
-from   Ostap.FitBasic            import makeVar
+from   Ostap.FitBasic            import makeVar, PDF2 
 # =============================================================================
 from   AnalysisPython.Logger     import getLogger
 if '__main__' ==  __name__ : logger = getLogger ( 'Ostap.Fit2DModels' )
@@ -50,7 +50,7 @@ else                       : logger = getLogger ( __name__            )
 #  @see Gaudi::Math::Poly2DPositive
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class PolyPos2D_pdf(object) :
+class PolyPos2D_pdf(PDF2) :
     """
     Positive polynomial in 2D
     """
@@ -60,12 +60,8 @@ class PolyPos2D_pdf(object) :
                    y                ,   ##  the second dimension
                    nx = 2           ,   ##  polynomial degree in X 
                    ny = 2           ) : ##  polynomial degree in Y 
-        
-        self.x  = x
-        self.y  = y
-        
-        self.m1 = x ## ditto 
-        self.m2 = y ## ditto 
+
+        PDF2.__init__ ( self , name , x , y ) 
         
         self.phis     = []
         self.phi_list = ROOT.RooArgList() 
@@ -100,7 +96,7 @@ class PolyPos2D_pdf(object) :
 #  @see Gaudi::Math::Poly2DSymPositive
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class PolyPos2Dsym_pdf(object) :
+class PolyPos2Dsym_pdf(PDF2) :
     """
     Positive polynomial in 2D 
     """
@@ -116,11 +112,8 @@ class PolyPos2Dsym_pdf(object) :
         if x.getMax() != y.getMax() :
             logger.warning( 'PolyPos2Dsym: x&y have different high edges %s vs %s'
                             % ( x.getMax() , y.getMax() ) )
-        self.x  = x
-        self.y  = y
-        
-        self.m1 = x ## ditto 
-        self.m2 = y ## ditto 
+            
+        PDF2.__init__ ( self , name , x , y ) 
         
         self.phis     = []
         self.phi_list = ROOT.RooArgList() 
@@ -155,7 +148,7 @@ class PolyPos2Dsym_pdf(object) :
 #  @see Gaudi::Math::PS2DPol
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class PSPol2D_pdf(object) :
+class PSPol2D_pdf(PDF2) :
     """
     Product of phase space factors, modulated by the positive polynom in 2D 
     """
@@ -168,16 +161,11 @@ class PSPol2D_pdf(object) :
                    nx  = 2          ,   ##  polynomial degree in X 
                    ny  = 2          ) : ##  polynomial degree in Y 
         
-        self.x   = x
-        self.y   = y
-        
-        self.m1  = x ## ditto 
-        self.m2  = y ## ditto
+        PDF2.__init__ ( self , name , x , y ) 
 
         self.psx = psx  
         self.psy = psy
-            
-            
+                        
         self.phis     = []
         self.phi_list = ROOT.RooArgList() 
         
@@ -213,7 +201,7 @@ class PSPol2D_pdf(object) :
 #  @see Gaudi::Math::PS2DPolSym
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class PSPol2Dsym_pdf(object) :
+class PSPol2Dsym_pdf(PDF2) :
     """
     Symmetric Product of phase space factors, modulated by the positive polynom in 2D 
     """
@@ -232,11 +220,7 @@ class PSPol2Dsym_pdf(object) :
             logger.warning( 'PSPos2Dsym: x&y have different high edges %s vs %s'
                             % ( x.getMax() , y.getMax() ) )
                 
-        self.x   = x
-        self.y   = y
-        
-        self.m1  = x ## ditto 
-        self.m2  = y ## ditto
+        PDF2.__init__ ( self , name , x , y ) 
 
         self.ps  = ps
         self.psx = ps
@@ -274,7 +258,7 @@ class PSPol2Dsym_pdf(object) :
 #  @see Gaudi::Math::ExpoPS2DPol
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class ExpoPSPol2D_pdf(object) :
+class ExpoPSPol2D_pdf(PDF2) :
     """
     Exnponential times phase space, modulated by the positive polynom in 2D 
     """
@@ -287,8 +271,7 @@ class ExpoPSPol2D_pdf(object) :
                    ny  = 2          ,   ##  polynomial degree in Y 
                    tau = None       ) : ##  the exponent 
         
-        self.x   = x
-        self.y   = y
+        PDF2.__init__ ( self , name , x , y ) 
 
         #
         ## get tau
@@ -308,9 +291,6 @@ class ExpoPSPol2D_pdf(object) :
                               "tau(%s)" % name , tau , 0 , -taumax , taumax )
         #
         
-        self.m1  = x ## ditto 
-        self.m2  = y ## ditto
-
         self.psy = psy
                         
         self.phis     = []
@@ -348,7 +328,7 @@ class ExpoPSPol2D_pdf(object) :
 #  @see Gaudi::Math::Expo2DPol
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class ExpoPol2D_pdf(object) :
+class ExpoPol2D_pdf(PDF2) :
     """
     Exnponential times phase space, modulated by the positive polynom in 2D 
     """
@@ -361,8 +341,7 @@ class ExpoPol2D_pdf(object) :
                    taux = None      ,   ##  the exponent in X 
                    tauy = None      ) : ##  the exponent in Y
         
-        self.x   = x
-        self.y   = y
+        PDF2.__init__ ( self , name , x , y ) 
 
         #
         ## get tau_x
@@ -433,7 +412,7 @@ class ExpoPol2D_pdf(object) :
 #  @see Gaudi::Math::Expo2DPolSym
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class ExpoPol2Dsym_pdf(object) :
+class ExpoPol2Dsym_pdf(PDF2) :
     """
     Symmetric product of two exponentials and the positive polynom in 2D 
     """
@@ -452,11 +431,7 @@ class ExpoPol2Dsym_pdf(object) :
             logger.warning( 'PSPos2Dsym: x&y have different high edges %s vs %s'
                             % ( x.getMax() , y.getMax() ) )
                 
-        self.x   = x
-        self.y   = y
-        
-        self.m1  = x ## ditto
-        self.m2  = y ## ditto 
+        PDF2.__init__ ( self , name , x , y ) 
 
         #
         ## get tau
@@ -513,7 +488,7 @@ class ExpoPol2Dsym_pdf(object) :
 #  @see Gaudi::Math::Spline2D
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class Spline2D_pdf(object) :
+class Spline2D_pdf(PDF2) :
     """
     Positive spline in 2D
     """
@@ -522,12 +497,8 @@ class Spline2D_pdf(object) :
                    x                ,   ##  the first  dimension  
                    y                ,   ##  the second dimension
                    spline           ) : ## the spline: Gaudi.Math.Spline2D 
-        
-        self.x     = x
-        self.y     = y
-        
-        self.m1 = x ## ditto 
-        self.m2 = y ## ditto 
+
+        PDF2.__init__ ( self , name , x , y )
         
         self.spline = spline
 
@@ -562,7 +533,7 @@ class Spline2D_pdf(object) :
 #  @see Gaudi::Math::Spline2DSym
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
 #  @date 2013-01-10
-class Spline2Dsym_pdf(object) :
+class Spline2Dsym_pdf(PDF2) :
     """
     Symmetric positive spline in 2D
     """
@@ -571,12 +542,8 @@ class Spline2Dsym_pdf(object) :
                    x                ,   ##  the first  dimension  
                    y                ,   ##  the second dimension
                    spline           ) : ## the spline: Gaudi.Math.Spline2DSym 
-        
-        self.x     = x
-        self.y     = y
-        
-        self.m1 = x ## ditto 
-        self.m2 = y ## ditto 
+
+        PDF2.__init__ ( self , name , x , y )
         
         self.spline = spline
 
