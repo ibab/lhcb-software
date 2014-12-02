@@ -40,7 +40,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( AlpGenProduction4q );
+DECLARE_TOOL_FACTORY( AlpGenProduction4q )
 
 
 //=============================================================================

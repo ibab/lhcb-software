@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbAlpGen
 ################################################################################
-gaudi_subdir(LbAlpGen v4r0)
+gaudi_subdir(LbAlpGen v4r0p1)
 
 gaudi_depends_on_subdirs(Gen/LbPythia)
 
