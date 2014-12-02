@@ -84,7 +84,7 @@ namespace ANNGlobalPID
    */
   namespace Bs2MuMuTuneBDTDev1
   {
-    //#include "tmva/Bs2MuMuTuneBDTDev1/GlobalPID_Muon_Long_TMVA.class.C"
+#include "tmva/Bs2MuMuTuneBDTDev1/GlobalPID_Muon_Long_TMVA.class.C"
   }
 
  /** @namespace Bs2MuMuTuneBDTDev2 TMVAImpFactory.cpp
@@ -96,7 +96,7 @@ namespace ANNGlobalPID
    */
   namespace Bs2MuMuTuneBDTDev2
   {
-    //#include "tmva/Bs2MuMuTuneBDTDev2/GlobalPID_Muon_Long_TMVA.class.C"
+#include "tmva/Bs2MuMuTuneBDTDev2/GlobalPID_Muon_Long_TMVA.class.C"
   }
 
   /** @namespace Bs2MuMuTuneMLPDev1 TMVAImpFactory.cpp
@@ -178,8 +178,8 @@ namespace ANNGlobalPID
     }
     // Bs2MuMu development networks
     {
-      //add<Bs2MuMuTuneBDTDev1::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev1", "muon", "Long" );
-      //add<Bs2MuMuTuneBDTDev2::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev2", "muon", "Long" );
+      add<Bs2MuMuTuneBDTDev1::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev1", "muon", "Long" );
+      add<Bs2MuMuTuneBDTDev2::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev2", "muon", "Long" );
       add<Bs2MuMuTuneMLPDev1::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneMLPDev1", "muon", "Long" );
       add<Bs2MuMuTuneMLPDev2::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneMLPDev2", "muon", "Long" );
     }
