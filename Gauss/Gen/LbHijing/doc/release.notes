@@ -4,6 +4,9 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2014-12-02 - Gloria Corti
+ - Try to fix compilation warnings with --pedantic
+
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

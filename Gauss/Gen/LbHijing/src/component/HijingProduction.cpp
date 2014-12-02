@@ -28,7 +28,7 @@
 
 // Declaration of the Tool Factory
 
-DECLARE_TOOL_FACTORY( HijingProduction );
+DECLARE_TOOL_FACTORY( HijingProduction )
 
 
 //=============================================================================
