@@ -1,7 +1,7 @@
 ################################################################################
 # Package: LbOniaPairs
 ################################################################################
-gaudi_subdir(LbOniaPairs v2r1)
+gaudi_subdir(LbOniaPairs v2r1p1)
 
 gaudi_depends_on_subdirs(Gen/GENSER
                          Gen/LbPythia)
