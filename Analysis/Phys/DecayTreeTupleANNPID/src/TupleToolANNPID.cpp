@@ -16,7 +16,12 @@ TupleToolANNPID::TupleToolANNPID( const std::string& type,
     m_pidTool     ( NULL )
 {
   declareInterface<IParticleTupleTool>(this);
-  declareProperty( "ANNPIDTunes", m_pidTunes = {"MC12TuneV2","MC12TuneV3"} );
+  declareProperty( "ANNPIDTunes", m_pidTunes = 
+      {
+        "MC12TuneV2","MC12TuneV3"
+          //          "Bs2MuMuTuneBDTDev1"
+          } 
+                   );
 }
 
 //=============================================================================
@@ -51,19 +56,27 @@ StatusCode TupleToolANNPID::fill( const LHCb::Particle*
   // Loop over PID tunes
   for ( const auto& pidTune : m_pidTunes )
   {
-    // Fill the ANNPID variables
-    sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNe", 
-                              m_pidTool->annPID(P->proto(),LHCb::ParticleID(11),pidTune) );
-    sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNmu", 
-                              m_pidTool->annPID(P->proto(),LHCb::ParticleID(13),pidTune) );
-    sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNpi", 
-                              m_pidTool->annPID(P->proto(),LHCb::ParticleID(211),pidTune) );
-    sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNk", 
-                              m_pidTool->annPID(P->proto(),LHCb::ParticleID(321),pidTune) );
-    sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNp", 
-                              m_pidTool->annPID(P->proto(),LHCb::ParticleID(2212),pidTune) );
-    sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNghost", 
-                              m_pidTool->annPID(P->proto(),LHCb::ParticleID(0),pidTune) ); 
+    // Fill the ANNPID variables for those that are defined
+    ANNGlobalPID::IChargedProtoANNPIDTool::RetType res;
+
+    // Electrons
+    res = m_pidTool->annPID(P->proto(),LHCb::ParticleID(11),pidTune);
+    if ( res.status ) { sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNe", res.value ); }
+    // Muons
+    res = m_pidTool->annPID(P->proto(),LHCb::ParticleID(13),pidTune);
+    if ( res.status ) { sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNmu", res.value ); }
+    // Pions
+    res = m_pidTool->annPID(P->proto(),LHCb::ParticleID(211),pidTune);
+    if ( res.status ) { sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNpi", res.value ); }
+    // Kaons
+    res = m_pidTool->annPID(P->proto(),LHCb::ParticleID(321),pidTune);
+    if ( res.status ) { sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNk", res.value ); }
+    // Protons
+    res = m_pidTool->annPID(P->proto(),LHCb::ParticleID(2212),pidTune);
+    if ( res.status ) { sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNp", res.value ); }
+    // Ghosts
+    res = m_pidTool->annPID(P->proto(),LHCb::ParticleID(0),pidTune);
+    if ( res.status ) { sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNghost", res.value ); }
   }
   
   // return

@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DecayTreeTupleANNPID
 ! Responsible : Chris Jones
-! Purpose     : ABBPID training tuple tools.
+! Purpose     : ANNPID training tuple tools.
 !-----------------------------------------------------------------------------
+
+! 2014-12-02 - Chris Jones
+ - Add support for missing ANNPID networks, for instance when a tune only 
+   provides one mass hypothesis (e.g. Bs2MuMu).
 
 !========================= DecayTreeTupleANNPID v1r1 2014-07-25 =========================
 
