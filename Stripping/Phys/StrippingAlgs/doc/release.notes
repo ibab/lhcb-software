@@ -5,6 +5,10 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2014-12-02 - Gerhard Raven
+ - follow changes in Kernel/SelectionLine to speed up the code...
+
+
 !========================= StrippingAlgs v1r13 2014-07-28 =========================
 
 ! 2014-07-14 - Lucio Anderlini
