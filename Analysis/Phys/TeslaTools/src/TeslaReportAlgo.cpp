@@ -115,7 +115,8 @@ StatusCode TeslaReportAlgo::execute()
   //
   std::stringstream ss_PVLoc;
   //ss_PVLoc << m_OutputPref << "/PV3D";
-  ss_PVLoc << "Rec/Vertex/Primary";
+  //ss_PVLoc << "Rec/Vertex/Primary";
+  ss_PVLoc << m_OutputPref << "/Primary";
   //
   std::stringstream ss_P2PVLoc;
   ss_P2PVLoc << m_OutputPref << "/Particle2VertexRelations";
@@ -591,6 +592,21 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
         case LHCb::CLID_Track:
         {
           LHCb::HltObjectSummary::Info Track_info = ObjBasic->numericalInfo();
+          
+          // TODO: Stop the stub from being created in the first place.
+          // this is here to stop the track being overridden.
+          LHCb::Track* testTrack = new LHCb::Track();
+          testTrack->setFlags( (unsigned int)Track_info["10#Track.flags"] );
+          debug() << "***** TRACK TYPE TEST = " << testTrack->type() << endmsg;
+          if( testTrack->type() == LHCb::Track::Types::Muon ) {
+            delete testTrack;
+            break;
+          }
+          else{
+            delete testTrack;
+          }
+          //
+          
           // What keys are present:
           std::vector<std::string> vec_keys_tr = ObjBasic->numericalInfoKeys();
           debug() << "Available information (track)" << endmsg;
@@ -647,8 +663,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             track->setLhcbIDs( ObjBasic->lhcbIDs() );
           }
           track->setChi2PerDoF( TrackChi2PerDoF );
-          const LHCb::Track* test1 = proto->track();
-          if( !test1 ) proto->setTrack( track );
+          proto->setTrack( track );
           debug() << "Track details added" << endmsg; 
           break;
         } 
