@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-12-02 - Gerhard Raven
+ - follow changes in Selection::Line to reduce the overhead
+
 ! 2014-12-01 - Gerhard Raven
  - improve SINK outputselection regex
 

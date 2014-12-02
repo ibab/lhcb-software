@@ -19,11 +19,12 @@ class Line : public ::Selection::Line
 {
   public:
     Line( const std::string& name, ISvcLocator* pSvcLocator );
+    ~Line( ) override = default;
 
-    StatusCode initialize();
-    unsigned int numberOfCandidates() const;
-    unsigned int numberOfCandidates( const Algorithm* ) const;
-    std::pair<std::string, unsigned> id() const;
+    StatusCode initialize() override;
+    int numberOfCandidates() const override;
+    int numberOfCandidates( const Algorithm* ) const override;
+    std::pair<std::string, unsigned> id() const override;
 
   private:
     void SetupSelections();
@@ -93,15 +94,24 @@ Hlt::IInspector& Hlt::Line::inspectionSvc() const
     return *m_inspectionSvc;
 }
 
-unsigned int Hlt::Line::numberOfCandidates() const
+int Hlt::Line::numberOfCandidates() const
 {
-    return m_selection ? m_selection->size() : 0;
+    return m_selection ? m_selection->size() : -1;
 }
 
-unsigned int Hlt::Line::numberOfCandidates( const Algorithm* algorithm ) const
+#if 0
+std::function<unsigned int()> Hlt::Line::numberOfCandidatesFunctor( const Algorithm* algorithm ) const
 {
     auto i = m_selections.find( algorithm );
-    return i != m_selections.end() ? i->second->size() : 0;
+    if ( i != m_selections.end() ) return  [&](){ return i->second->size() ; }
+    return [](){ return -1 };
+}
+#endif
+
+int Hlt::Line::numberOfCandidates( const Algorithm* algorithm ) const
+{
+    auto i = m_selections.find( algorithm );
+    return i != m_selections.end() ? i->second->size() : -1;
 }
 
 void Hlt::Line::SetupSelections()
