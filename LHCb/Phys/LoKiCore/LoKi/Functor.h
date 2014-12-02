@@ -138,6 +138,16 @@ namespace LoKi
       m_fun = typeid ( Self ) == typeid ( right ) ? 
         right.m_fun -> clone () : right.clone() ;
     }
+#ifndef _GCCXML_
+    /// move constructor (avoid cloning)
+    FunctorFromFunctor ( FunctorFromFunctor&& right ) 
+      : LoKi::AuxFunBase          ( right ) 
+      , LoKi::Functor<TYPE,TYPE2> ( right ) 
+      , m_fun ( right.m_fun ) 
+    {
+      right.m_fun = 0 ;  // ATTENTION!
+    }
+#endif 
     /// MANDATORY: virtual destructor 
     virtual ~FunctorFromFunctor() { delete m_fun ; }
     // ========================================================================
@@ -354,6 +364,16 @@ namespace LoKi
       m_fun = typeid ( Self ) == typeid ( right ) ? 
         right.m_fun -> clone () : right.clone() ;
     }
+#ifndef _GCCXML_ 
+    /// move constructor (avoid cloning)
+    FunctorFromFunctor ( FunctorFromFunctor&& right ) 
+      : LoKi::AuxFunBase          ( right ) 
+      , LoKi::Functor<void,TYPE2> ( right ) 
+      , m_fun ( right.m_fun ) 
+    {
+      right.m_fun = 0 ; // ATTENTION!
+    }
+#endif 
     /// MANDATORY: virtual destructor 
     virtual ~FunctorFromFunctor() { delete m_fun ; }
     // ========================================================================
