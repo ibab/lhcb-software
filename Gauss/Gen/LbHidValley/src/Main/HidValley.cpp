@@ -157,8 +157,8 @@ int main(int argc, char* argv[] )
   
   // perform the actual work 
   return HidValley::HidVal ( iSeed , nEvents , oFile ) ;
-} ;
-// ============================================================================
+}
+
 
 // ============================================================================
 /// The END 

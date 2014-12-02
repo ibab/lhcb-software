@@ -63,12 +63,16 @@ extern "C"
 #define hvsetpar     hvsetpar_ 
 #define hvgetpar     hvgetpar_ 
 #endif
-} ;
+}
+
 // ============================================================================
 /// C++ interface for "main" fortran program HidVal
 // ============================================================================
 int HidValley::HidVal ( int seed , int events , const std::string& file ) 
-{ return hiddenvalley ( &seed, &events, file.c_str() , file.size() ) ; } ;
+{ 
+  return hiddenvalley ( &seed, &events, file.c_str() , file.size() ) ; 
+}
+
 // ============================================================================
 bool HidValley::setPar ( std::string n , double value )
 {
@@ -78,7 +82,8 @@ bool HidValley::setPar ( std::string n , double value )
   // jump into FORTRAN
   hvsetpar ( &value , n.c_str() , n.size() ) ;
   return _value == HidValley::getPar ( n ) ;
-} ;
+}
+
 // ============================================================================
 double HidValley::getPar ( std::string n ) 
 {
@@ -87,10 +92,12 @@ double HidValley::getPar ( std::string n )
   // jump into FORTRAN
   return hvgetpar ( n.c_str() , n.size() ) ;
 }
+
 // ============================================================================
 bool HidValley::hvEvent( int dummy ) 
-{ return 0 == hvevent (&dummy) ; } ;
-// ============================================================================
+{ 
+  return 0 == hvevent (&dummy) ; 
+}
 
 
 // ============================================================================
