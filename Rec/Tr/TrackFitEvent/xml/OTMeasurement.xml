@@ -137,8 +137,9 @@
 	const = 'TRUE'> 
 	<arg type='double' name='arclen' />
         <code>
-        double propTime = (trajectory().endRange() - arclen) / module().propagationVelocity();
-        double dist2strawend = arclen - trajectory().beginRange();
+        double dist2strawbegin = trajectory().arclength(arclen,trajectory().endRange()) ;
+        double dist2strawend   = trajectory().arclength(trajectory().beginRange(),arclen) ;
+        double propTime = dist2strawbegin/module().propagationVelocity() ;
         propTime += module().walkRelation().walk(dist2strawend);
         return calibratedTime() - deltaTimeOfFlight() - propTime ;
         </code>
