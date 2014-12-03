@@ -418,8 +418,9 @@ class Brunel(LHCbConfigurableUser):
         l0TrgSeq = GaudiSequencer("L0TriggerSeq")
         if self.getProp( "DataType" ) not in [ "2008", "2009" ]:
             from DAQSys.Decoders import DecoderDB
-            HltDecReportsDecoder=DecoderDB["HltDecReportsDecoder"].setup()
-            trgSeq.Members += [ HltDecReportsDecoder ]
+            Hlt1DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
+            Hlt2DecReportsDecoder=DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup()
+            trgSeq.Members += [ Hlt1DecReportsDecoder, Hlt2DecReportsDecoder ]
         trgSeq.Members += [ l0TrgSeq ]
         physicsSeq.Members += [ trgSeq ]
         L0Conf().L0Sequencer = l0TrgSeq
