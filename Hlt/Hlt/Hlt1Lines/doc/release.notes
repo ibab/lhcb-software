@@ -5,6 +5,9 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-12-03 - Sebastian Neubert
+ - added template for Central Exclusive Production lines
+
 ! 2014-11-12 - Alex Shires
  - updating electron lines to use TrackCandidates - to be tested! adding bug fix to ElectronPlusTrack
 
