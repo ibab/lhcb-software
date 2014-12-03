@@ -4,6 +4,9 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2014-12-03 - Roel Aaij
+ - Add configuration options to runOfflineOnline.py
+
 ! 2014-11-30 - Roel Aaij
  - Add script to run offline Moore in an online-like way with the buffer manager
    etc.
