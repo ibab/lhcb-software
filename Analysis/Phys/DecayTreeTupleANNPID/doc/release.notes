@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-12-02 - Chris Jones
+ - Add some Bs2MuMu tunings for testing.
+
+! 2014-12-02 - Chris Jones
  - Add support for missing ANNPID networks, for instance when a tune only 
    provides one mass hypothesis (e.g. Bs2MuMu).
 

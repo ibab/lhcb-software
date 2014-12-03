@@ -17,9 +17,9 @@ TupleToolANNPID::TupleToolANNPID( const std::string& type,
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "ANNPIDTunes", m_pidTunes = 
-      {
-        "MC12TuneV2","MC12TuneV3"
-          //          "Bs2MuMuTuneBDTDev1"
+      {   "MC12TuneV2","MC12TuneV3",
+          "Bs2MuMuTuneBDTDev1","Bs2MuMuTuneBDTDev2",
+          "Bs2MuMuTuneMLPDev1","Bs2MuMuTuneMLPDev2"
           } 
                    );
 }
@@ -34,6 +34,8 @@ StatusCode TupleToolANNPID::initialize()
   m_pidTool =
     tool<ANNGlobalPID::IChargedProtoANNPIDTool>( "ANNGlobalPID::ChargedProtoANNPIDTool",
                                                  "ChargedProtoANNPID" );
+
+  info() << "PID Tunes = " << m_pidTunes << endmsg;
 
   return sc;
 }
@@ -58,7 +60,6 @@ StatusCode TupleToolANNPID::fill( const LHCb::Particle*
   {
     // Fill the ANNPID variables for those that are defined
     ANNGlobalPID::IChargedProtoANNPIDTool::RetType res;
-
     // Electrons
     res = m_pidTool->annPID(P->proto(),LHCb::ParticleID(11),pidTune);
     if ( res.status ) { sc = sc && tuple->column( prefix+"_"+pidTune+"_ProbNNe", res.value ); }
