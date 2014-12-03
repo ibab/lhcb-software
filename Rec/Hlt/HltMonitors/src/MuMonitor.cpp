@@ -33,6 +33,7 @@ MuMonitor::MuMonitor( const std::string& name,
   , m_filter  ( LoKi::Constant<const LHCb::HltDecReports*,bool> ( true ) )
   , m_nBX(2808)
 {
+  declareProperty("HltDecReportsLocation",m_location = LHCb::HltDecReportsLocation::Default );
   declareProperty("HltRegex", m_pattern = "Hlt1.*NoBias.*Decision", 
                   "Expression to select HLT decision")->
     declareUpdateHandler ( &MuMonitor::handler_1 , this );
@@ -68,7 +69,7 @@ StatusCode MuMonitor::execute() {
 
   bool ok = ( "" == m_pattern ) ;
   if (!ok) {
-    const LHCb::HltDecReports *dec = get<const LHCb::HltDecReports> (  LHCb::HltDecReportsLocation::Default );
+    const LHCb::HltDecReports *dec = get<const LHCb::HltDecReports> (  m_location );
     ok = (m_filter)(dec);
     if (msgLevel(MSG::DEBUG)) debug() << "Passed Hlt Filter " << ok << endmsg ;
   }

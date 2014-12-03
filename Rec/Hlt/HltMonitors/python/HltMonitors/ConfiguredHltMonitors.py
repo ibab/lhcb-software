@@ -12,8 +12,10 @@ def ConfiguredHltMonitorSequence( Name = "HltMonitorSequence", HistoPrint = Fals
     seq = GaudiSequencer( Name )
     # We need the decreports
     from DAQSys.Decoders import DecoderDB
-    seq.Members.append( DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup() )
-    seq.Members.append( DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup() )
+    hlt1dec =  DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup() 
+    hlt2dec =  DecoderDB["HltDecReportsDecoder/Hlt2DecReportsDecoder"].setup() 
+    seq.Members.append( hlt1dec )
+    seq.Members.append( hlt2dec )
 
     # Rate Monitor
     rateMon = HltRateMonitor()
@@ -35,6 +37,7 @@ def ConfiguredHltMonitorSequence( Name = "HltMonitorSequence", HistoPrint = Fals
 
     # Mu Monitor 
     muMon = MuMonitor()
+    muMon.HltDecReportsLocation = hlt1dec.OutputHltDecReportsLocation 
     muMon.HistoPrint = HistoPrint
     seq.Members.append( muMon )
 

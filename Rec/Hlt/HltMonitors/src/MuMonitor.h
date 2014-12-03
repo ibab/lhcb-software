@@ -35,6 +35,7 @@ protected:
 private:
   void handler_1 ( Property& p );
   std::string m_pattern ; ///< HLT filter expression
+  std::string m_location; ///< Location of HltDecReports
   LoKi::Types::HLT_Cut m_filter ; ///< Loki filter
   unsigned int m_nBX  ;
   AIDA::IProfile1D* m_hMuVelo ;
