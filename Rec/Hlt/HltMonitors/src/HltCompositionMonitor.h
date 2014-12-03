@@ -6,7 +6,6 @@
 #include <map>
 
 // boost
-#include <boost/unordered_map.hpp>
 
 // from Gaudi
 #include "HltMonitorBase.h"
@@ -35,18 +34,16 @@ public:
    /// Standard constructor
    HltCompositionMonitor( const std::string& name, ISvcLocator* pSvcLocator );
 
-   virtual ~HltCompositionMonitor( ); ///< Destructor
+   ~HltCompositionMonitor( ) override = default; ///< Destructor
 
-   virtual StatusCode initialize();    ///< Algorithm initialization
-   virtual StatusCode execute   ();    ///< Algorithm execution
-   virtual StatusCode finalize  ();    ///< Algorithm finalization
+   StatusCode initialize() override;    ///< Algorithm initialization
+   StatusCode execute   () override;    ///< Algorithm execution
+   StatusCode finalize  () override;    ///< Algorithm finalization
 
 private:
 
-   std::string m_decReportsLocation;
-
-   typedef std::map< std::string, unsigned int > acceptMap_t;
-   acceptMap_t m_accepts;
+   std::vector<std::string> m_decReportsLocations;
+   std::map< std::string, unsigned int > m_accepts;
    
    void init( const LHCb::HltDecReports* decReports );
 

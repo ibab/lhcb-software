@@ -4,6 +4,7 @@
 
 // STL
 #include <vector>
+#include <algorithm>
 
 // boost
 #include <boost/regex.hpp>
@@ -51,8 +52,6 @@ HltRateMonitor::HltRateMonitor( const std::string& name,
    : HltMonitorBase ( name , pSvcLocator ), m_runParameters( 0 ),
      m_startOfRun( 0 ), m_runNumber( 0 ), m_disabled( false )
 {
-   declareProperty( "HltDecReportsLocation", m_decReportsLocation =
-                    HltDecReportsLocation::Default );
    declareProperty( "ODINLocation", m_ODINLocation =
                     ODINLocation::Default );
    declareProperty( "Regexes", m_regexes = std::vector<std::string>(1, "Hlt2Express.*Decision" ) );
@@ -112,14 +111,13 @@ StatusCode HltRateMonitor::execute() {
 
    if ( m_disabled && !m_forceEnable ) return StatusCode::SUCCESS;
 
-   const HltDecReports* decReports = 0;
-   try { 
-      decReports = get< HltDecReports >( m_decReportsLocation );
-   } catch ( const GaudiException& ) {
-      return StatusCode::SUCCESS;
-   }
+   auto decReports = hltDecReports();
+   if (decReports.empty())  return StatusCode::SUCCESS;
 
-   if ( !m_filledDecisions ) fillDecisions( decReports );
+   if ( !m_filledDecisions ) { 
+       std::for_each( std::begin(decReports), std::end(decReports),
+                      [&](const HltDecReports* r) { fillDecisions(r); } );
+   }
 
    const ODIN* odin = get< ODIN >( m_ODINLocation );
    if ( m_runNumber != odin->runNumber() ) {
@@ -154,8 +152,11 @@ StatusCode HltRateMonitor::execute() {
       unsigned int total = 0;
       for ( ; it != end; ++it ) {
          const string& decision = it->second;
-         const LHCb::HltDecReport* decReport = decReports->decReport( decision );
-         if ( decReport && decReport->decision() ) {
+         if (std::any_of( std::begin(decReports), std::end(decReports), 
+                    [&decision](const HltDecReports* r) { 
+                                const auto* decReport = r->decReport( decision );
+                                return ( decReport && decReport->decision() );
+                    } ) ) {
             ++total;
             string title = decision.substr( 0, decision.size() - 8 ) + "Rate";
             plot( time, title, 0., 9000, 9000 / m_secondsPerBin, weight );

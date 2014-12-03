@@ -3,6 +3,8 @@
 ! Responsible : Roel Aaij (roel.aaij@cern.ch)
 ! Purpose     : Offline Monitoring of Hlt rates and composition
 !-----------------------------------------------------------------------------
+! 2014-12-03 - Gerhard Raven
+ - migrate to split Hlt setup
 
 !========================= HltMonitors v1r6p1 2013-04-30 =========================
 ! 2013-04-09 - Marco Cattaneo

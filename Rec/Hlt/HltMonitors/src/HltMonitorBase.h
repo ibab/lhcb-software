@@ -4,7 +4,7 @@
 
 // Include files
 // Gaudi
-#include <GaudiAlg/GaudiHistoAlg.h>
+#include "GaudiAlg/GaudiHistoAlg.h"
 
 // boost
 #include <boost/multi_index_container.hpp>
@@ -34,6 +34,11 @@ public:
    virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
+
+   std::vector<const LHCb::HltDecReports*> hltDecReports() const;
+   std::vector< std::string > m_decReportsLocations;
+
+
 
    // Tags for the container.
    struct regexTag { };

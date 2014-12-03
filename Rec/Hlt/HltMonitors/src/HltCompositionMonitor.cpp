@@ -50,17 +50,9 @@ HltCompositionMonitor::HltCompositionMonitor(const std::string& name,
    : HltMonitorBase ( name , pSvcLocator )
 {
 
-   declareProperty( "HltDecReportsLocation", m_decReportsLocation =
-                    HltDecReportsLocation::Default );
    declareProperty( "Regexes", m_regexes = std::vector<std::string>(1, "Hlt2.*Decision" ) );
 
 }
-
-//=============================================================================
-HltCompositionMonitor::~HltCompositionMonitor()
-{
-
-} 
 
 //=============================================================================
 // Initialization
@@ -80,22 +72,22 @@ StatusCode HltCompositionMonitor::execute() {
 
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-   const HltDecReports* decReports = 0;
-   try { 
-      decReports = get< HltDecReports >( m_decReportsLocation );
-   } catch ( const GaudiException& ) {
-      return StatusCode::SUCCESS;
+   auto decReports = hltDecReports();
+   if (decReports.empty())  return StatusCode::SUCCESS;
+   if ( !m_filledDecisions ) { 
+       std::for_each( std::begin(decReports), std::end(decReports),
+                      [&](const HltDecReports* r) { init(r); } );
    }
-
-   if ( !m_filledDecisions ) init( decReports );
 
    // Loop over all decisions and increment any positive ones.
-   BOOST_FOREACH( const decMap_t::value_type& entry, m_decisions.get< decisionTag >() ) {
-      const string& decision = entry.second;
-      const LHCb::HltDecReport* decReport = decReports->decReport( decision );
-      if ( decReport && decReport->decision() ) m_accepts[ decision ] += 1;
+   for( const auto& entry : m_decisions.get< decisionTag >() ) {
+      const auto& decision = entry.second;
+      if (std::any_of( std::begin(decReports), std::end(decReports), 
+                       [&decision](const HltDecReports* r) { 
+                                   const auto* decReport = r->decReport( decision );
+                                   return ( decReport && decReport->decision() );
+                       } ) ) m_accepts[ decision ] += 1;
    }
-
    setFilterPassed( true );
    return StatusCode::SUCCESS;
 }
@@ -154,9 +146,8 @@ void HltCompositionMonitor::init( const HltDecReports* decReports ) {
 
    // Fill the decision container and prepare the m_accepts container.
    fillDecisions( decReports );
-   BOOST_FOREACH( const decMap_t::value_type& entry, m_decisions.get< decisionTag >() ) {
-      const string& decision = entry.second;
-      m_accepts.insert( make_pair( decision, 0 ) );
+   for( const auto& entry: m_decisions.get< decisionTag >() ) {
+      m_accepts.insert( { entry.second, 0 } );
    }
 
 }
