@@ -5,3 +5,5 @@ package           WebGLDisplay
 version           v0r1
 #============================================================================
 branches          cmt doc src web
+
+use JsonConverter
