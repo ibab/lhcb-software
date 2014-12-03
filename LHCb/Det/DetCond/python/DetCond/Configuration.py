@@ -224,7 +224,7 @@ class CondDB(ConfigurableUser):
                     gt = tags[0]
                 lts += tags[1]
 
-            if not OnlyLocalTags:
+            if not OnlyLocalTags and gt: # Only for partitions with available global tags
                 self.Tags[partition] = gt
             if not OnlyGlobalTags and lts:
                 if partition in self.LocalTags: self.LocalTags[partition] += lts
