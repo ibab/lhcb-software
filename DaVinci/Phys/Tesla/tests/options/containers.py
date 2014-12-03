@@ -15,7 +15,6 @@ prefix = "Hlt2IncPhi"
 
 Tesla().TriggerLines = ["Hlt2IncPhi"]
 Tesla().ReportVersion = 2
-Tesla().OutputPrefix = prefix
 Tesla().OutputLevel = 4
 Tesla().EvtMax = -1
 Tesla().PreSplit = True
@@ -31,8 +30,8 @@ from Configurables import LoKiSvc
 gaudi = GaudiPython.AppMgr()
 gaudi.initialize()
 
-gaudi.algorithm('TeslaReportAlgo').Enable = False
-gaudi.algorithm('Writer').Enable = False
+gaudi.algorithm("TeslaReportAlgo"+prefix).Enable = False
+gaudi.algorithm("Writer").Enable = False
 
 tes = gaudi.evtsvc()
 
@@ -69,7 +68,7 @@ while n<1000:
     gaudi.run(1) 
     #
     gaudi.executeEvent()
-    gaudi.algorithm("TeslaReportAlgo").execute()
+    gaudi.algorithm("TeslaReportAlgo"+prefix).execute()
 
     if not tes['/Event/DAQ/RawEvent']:
         print "End of file"

@@ -50,7 +50,7 @@ class Tesla(LHCbConfigurableUser):
             , 'PV'     	        : 'Associate to the PV chosen by the HLT or the offline one'
             , 'PreSplit'     	: 'Are you looking at a time before the HLT was split?'
             , 'ReportVersion'     	: '1: Normal HLT reports, 2: New extended reports'
-            , 'TriggerLine'     	: 'Which trigger line to process'
+            , 'TriggerLines'     	: 'Which trigger line to process'
             }
     def _safeSet(self,conf,param):
         for p in param:
