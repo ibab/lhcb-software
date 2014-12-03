@@ -55,6 +55,7 @@ static bool file_write(int file, const void* data, int len)   {
 
 /// Standard Constructor
 FileScanner::FileScanner()   {
+  m_filePrefix = "Run_";
   m_deleteFiles = false;
 }
 
@@ -110,7 +111,7 @@ size_t FileScanner::scanFiles()   {
     struct dirent *entry;
     bool take_all = (m_allowedRuns.size() > 0 && m_allowedRuns[0]=="*");
     while ((entry = ::readdir(dir)) != 0)    {
-      if ( 0 != ::strncmp(entry->d_name,"Run_",4) ) {
+      if ( 0 != ::strncmp(entry->d_name,m_filePrefix.c_str(),m_filePrefix.length()) ) {
 	continue;
       }
       else if ( !take_all )  {

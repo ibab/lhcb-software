@@ -3,7 +3,6 @@ ApplicationMgr.HistogramPersistency  = "NONE";
 ApplicationMgr.ExtSvc               += { "LHCb::MEPManager/MEPManager","LHCb::OnlineEvtSelector/EventSelector"};
 ApplicationMgr.TopAlg               += { "StoreExplorerAlg","LHCb::MEPTester/Tester" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-MessageSvc.LoggerOnly                = true;
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
 EventDataSvc.RootCLID                = 1;

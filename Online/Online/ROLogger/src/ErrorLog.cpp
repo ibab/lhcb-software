@@ -67,7 +67,9 @@ ErrorLog::ErrorLog(int argc, char** argv)
   else if ( strncasecmp(name.c_str(),"-re",3)==0 )
     name = "reco";
 
-  if ( facility.empty() && name == "LHCb2" ) facility = "hlt2";
+  if ( facility.empty() && name == "LHCb1" ) facility = "lhcb1";
+  else if ( facility.empty() && name == "LHCb2" ) facility = "lhcb2";
+  else if ( facility.empty() && name == "LHCbA" ) facility = "lhcba";
   else if ( facility.empty() ) facility = "gaudi";
 
   m_messageLog = new Logger(RTL::processName()+"_display");

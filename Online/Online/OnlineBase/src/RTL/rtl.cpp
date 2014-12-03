@@ -5,6 +5,7 @@
 #include <cerrno>
 #include <cstdarg>
 #include <cstring>
+#include <climits>
 #include <iostream>
 #include <fcntl.h>
 
@@ -274,7 +275,7 @@ vector<RTL::EXHDEF>& RTL::ExitHandler::exitHandlers() {
 }
 
 /// Access to error code from socket library
-int lib_rtl_socket_error()  {
+extern "C" int lib_rtl_socket_error()  {
 #ifdef _WIN32
   return ::WSAGetLastError();
 #else
@@ -282,7 +283,7 @@ int lib_rtl_socket_error()  {
 #endif
 }
 
-int lib_rtl_get_error()   {
+extern "C" int lib_rtl_get_error()   {
 #ifdef USE_PTHREADS
   return errno;
 #elif _WIN32
@@ -290,15 +291,15 @@ int lib_rtl_get_error()   {
 #endif
 }
 
-int lib_rtl_remove_rundown(lib_rtl_rundown_handler_t,void*)    {
+extern "C" int lib_rtl_remove_rundown(lib_rtl_rundown_handler_t,void*)    {
   return 1;
 }
 
-int lib_rtl_declare_rundown(lib_rtl_rundown_handler_t,void*)   {
+extern "C" int lib_rtl_declare_rundown(lib_rtl_rundown_handler_t,void*)   {
   return 1;
 }
 
-int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
+extern "C" int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
 #if defined(_WIN32) || defined(__linux)
   static bool first = true;
   if ( first )  {
@@ -314,7 +315,7 @@ int lib_rtl_declare_exit(int (*hdlr)(void*), void* param)  {
 #endif
 }
 
-int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
+extern "C" int lib_rtl_remove_exit(int (*hdlr)(void*), void* param) {
 #if defined(_WIN32) || defined(__linux)
   RTL::ExitHandler::iterator i=RTL::ExitHandler::exitHandlers().begin();
   RTL::ExitHandler::iterator j=RTL::ExitHandler::exitHandlers().end();
@@ -334,7 +335,7 @@ extern "C" void* lib_rtl_alloc_int_pointer_map()   {
   return new map<int,void*>;
 }
 
-int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
+extern "C" int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
 #if defined(_WIN32) || defined(__linux)
   if ( astadd )  {
     return (*astadd)(param);
@@ -343,7 +344,7 @@ int lib_rtl_run_ast (RTL_ast_t astadd, void* param, int)    {
   return 1;
 }
 
-int lib_rtl_pid()  {
+extern "C" int lib_rtl_pid()  {
   return getpid();
 }
 
@@ -385,11 +386,7 @@ int lib_rtl_signal_message(int action, const char* fmt, ...)  {
   return status;
 }
 
-int lib_rtl_signal_message(int,int,int) {
-  return 1;
-}
-
-int lib_rtl_start_debugger()    {
+extern "C" int lib_rtl_start_debugger()    {
 #ifdef _WIN32
   _asm int 3
 #else
@@ -402,11 +399,11 @@ int lib_rtl_start_debugger()    {
   return 1;
 }
 
-const char* lib_rtl_error_message(int status)  {
+extern "C" const char* lib_rtl_error_message(int status)  {
   return RTL::errorString(status);
 }
 
-int lib_rtl_default_return()  {
+extern "C" int lib_rtl_default_return()  {
 #if defined(_VMS) || defined(_WIN32)
   return 1;
 #elif defined(__linux) || defined(_OSK)
@@ -416,16 +413,16 @@ int lib_rtl_default_return()  {
 }
 
 /// Disable intercepts
-int lib_rtl_disable_intercept() {
+extern "C" int lib_rtl_disable_intercept() {
   return lib_rtl_default_return();
 }
 
 /// Enable intercpets
-int lib_rtl_enable_intercept()    {
+extern "C" int lib_rtl_enable_intercept()    {
   return lib_rtl_default_return();
 }
 
-int lib_rtl_get_process_name(char* process, size_t len)  {
+extern "C" int lib_rtl_get_process_name(char* process, size_t len)  {
   const char *tmp;
   char buff[32], buff2[64];
   size_t resultant_length = sizeof(buff2);
@@ -438,7 +435,7 @@ int lib_rtl_get_process_name(char* process, size_t len)  {
   return tmp ? strlen(tmp)+1>len ? 0 : 1 : 0;
 }
 
-int lib_rtl_get_node_name(char* node, size_t len)  {
+extern "C" int lib_rtl_get_node_name(char* node, size_t len)  {
   char n[64];
   const char *tmp = ::lib_rtl_getenv("NODE");
 #if defined(_WIN32)
@@ -452,7 +449,7 @@ int lib_rtl_get_node_name(char* node, size_t len)  {
   return 1;
 }
 
-int lib_rtl_get_datainterface_name(char* node, size_t len)  {
+extern "C" int lib_rtl_get_datainterface_name(char* node, size_t len)  {
   const char *tmp = ::lib_rtl_getenv("DATAINTERFACE");
   if ( !tmp )  {
     char n[64], nn[70];
@@ -482,7 +479,7 @@ int lib_rtl_get_datainterface_name(char* node, size_t len)  {
 }
 
 /// Printout redirection
-size_t lib_rtl_output(int level, const char* format, ...)   {
+extern "C" size_t lib_rtl_output(int level, const char* format, ...)   {
   size_t result;
   va_list args;
   va_start( args, format );
@@ -497,7 +494,7 @@ size_t lib_rtl_output(int level, const char* format, ...)   {
 }
 
 /// Printout redirection
-size_t lib_rtl_printf(const char* format, ...)   {
+extern "C" size_t lib_rtl_printf(const char* format, ...)   {
   size_t result;
   va_list args;
   va_start( args, format );
@@ -512,13 +509,13 @@ size_t lib_rtl_printf(const char* format, ...)   {
 }
 
 /// Install RTL printer 
-void lib_rtl_install_printer(size_t (*func)(void*, int, const char*, va_list args), void* param)  {
+extern "C" void lib_rtl_install_printer(size_t (*func)(void*, int, const char*, va_list args), void* param)  {
   RTL::s_rtl_printer = func;
   RTL::s_rtl_printer_arg = param;
 }
 
 /// Creates a pipe and executes a command.
-FILE* lib_rtl_pipe_open(const char* command, const char* mode) {
+extern "C" FILE* lib_rtl_pipe_open(const char* command, const char* mode) {
 #ifdef _WIN32
   return ::_popen(command, mode);
 #else
@@ -527,7 +524,7 @@ FILE* lib_rtl_pipe_open(const char* command, const char* mode) {
 }
 
 /// Waits for new command processor and closes stream on associated pipe.
-int lib_rtl_pipe_close(FILE* stream) {
+extern "C" int lib_rtl_pipe_close(FILE* stream) {
 #ifdef _WIN32
   return ::_pclose(stream);
 #else
@@ -541,7 +538,7 @@ const char* lib_rtl_getenv(const char* value) {
 }
 
 /// Access total/free disk space on file system (linux:statvfs call)
-int lib_rtl_diskspace(const char* name, 
+extern "C" int lib_rtl_diskspace(const char* name, 
 		      unsigned long long int* blk_size,
 		      unsigned long long int* total_blk,
 		      unsigned long long int* availible_blk)
@@ -570,7 +567,7 @@ int lib_rtl_diskspace(const char* name,
 
 /// access checks it is ok to read, write, execute the file *name
 /// mode is a bit-mask (1 read, 2 write, 4 execute, 8 file exists)
-int lib_rtl_access(const char *name, int mode)
+extern "C" int lib_rtl_access(const char *name, int mode)
 {
 #ifdef _WIN32
 // under windows AFAICS this requires using the security API so we just assume it's fine
@@ -588,12 +585,26 @@ int lib_rtl_access(const char *name, int mode)
 }
 
 /// POSIX/ISO compiant wrapper around unlink
-int lib_rtl_unlink(const char* fname) {
+extern "C" int lib_rtl_unlink(const char* fname) {
 #ifdef _WIN32
   return ::_unlink(fname);
 #else
   return ::unlink(fname);
 #endif
+}
+
+/// Read path associated to file name
+extern "C" int lib_rtl_readlink(const char* fname, char* path, size_t path_len)   {
+  if ( ::readlink(fname, path, path_len) != -1 )
+    return 1;
+  return 0;
+}
+
+/// Read path according from file descriptor
+extern "C" int lib_rtl_file_name(int fd, char* path, size_t path_len)   {
+  char buf[128];
+  ::snprintf(buf, sizeof(buf), "/proc/self/fd/%d", fd);
+  return lib_rtl_readlink(buf, path, path_len);
 }
 
 extern "C" int rtl_test_main(int /* argc */, char** /* argv */)  {
@@ -669,4 +680,17 @@ namespace RTL {
     }
     return s_nodeNameShort;
   }
+
+  std::string fileFromLink(const std::string& link)   {
+    char filePath[PATH_MAX];
+    int res = lib_rtl_readlink(link.c_str(),filePath,sizeof(PATH_MAX));
+    return lib_rtl_is_success(res) ? filePath : "";
+  }
+
+  std::string fileFromDescriptor(int fd)   {
+    char filePath[PATH_MAX];
+    int res = lib_rtl_file_name(fd,filePath,sizeof(filePath));
+    return lib_rtl_is_success(res) ? filePath : "";
+  }
+
 }

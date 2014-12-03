@@ -9,7 +9,6 @@ ApplicationMgr.SvcOptMapping += { "LHCb::MEPManager/MEPManager", "Gaudi::MultiFi
 //OnlineEnv.MonitorSvcType    = "MonitorSvc/MonitorSvc";
 //ApplicationMgr.ExtSvc   += { "MonitorSvc/MonitorSvc" };
 //ApplicationMgr.Dlls     += { "Gaucho" };
-//MessageSvc.LoggerOnly       = true;  // Set to false for stdout message service
 MessageSvc.OutputLevel              = 3;
 //HistogramPersistencySvc.Warnings = false;
 //EventLoopMgr.Warnings            = false;

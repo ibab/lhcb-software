@@ -13,4 +13,3 @@ MEPManager.PartitionName             = @OnlineEnv.PartitionName;
 MEPManager.Buffers                   = {"OUT"};
 MEPManager.PartitionBuffers          = true;
 MessageSvc.OutputLevel = 1;
-//MessageSvc.LoggerOnly = false;

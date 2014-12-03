@@ -35,6 +35,8 @@ namespace LHCb   {
   protected:
     /// Property: Data directory name
     std::string              m_directory;
+    /// Property: Required file prefix used to select files
+    std::string              m_filePrefix;
     /// Property: Path to the file containing broken nodes, where no reading should happen
     std::string              m_brokenHostsFile;
     /// Property: List of runs to be processed (as strings!)
@@ -43,6 +45,7 @@ namespace LHCb   {
     std::set<std::string>    m_files;
     /// Current file name
     std::string              m_current;
+    /// Error string message
     mutable std::string      m_comment;
 
     /// Flag to indicate if files should be deleted

@@ -24,6 +24,7 @@ class IIncidentSvc;
 namespace LHCb
 {
 
+  // Forward declarations
   class MEPManager;
 
   /** Class definition of HltBufferedIOReader.
@@ -65,7 +66,8 @@ namespace LHCb
     std::vector<std::string> m_allowedRuns;
     /// Property: Maximum number of seconds to wait for consumers (default: 20 seconds)
     int                      m_maxConsWait;
-
+    /// Property: Time for initial sleep before starting to process files (default: 10 sec)
+    int                      m_initialSleep;
     /// Monitoring quantity: Number of events processed
     int                      m_evtCount;
     /// Flag to indicate if files should be deleted
@@ -175,6 +177,7 @@ HltBufferedIOReader::HltBufferedIOReader(const string& nam, ISvcLocator* svcLoc)
   declareProperty("DeleteFiles", m_deleteFiles     = true);
   declareProperty("ConsumerWait",m_maxConsWait     = 20);
   declareProperty("AllowedRuns", m_allowedRuns);
+  declareProperty("InitialSleep",m_initialSleep    = 10);
   m_allowedRuns.push_back("*");
   ::lib_rtl_create_lock(0, &m_lock);
 }
@@ -424,6 +427,7 @@ StatusCode HltBufferedIOReader::i_run()  {
   MBM::BufferInfo mbmInfo;
   
 
+  if ( m_initialSleep > 0 ) ::lib_rtl_sleep(1000*m_initialSleep);
   m_receiveEvts = true;
 
   /// Before we start, we need to check if there are consumers present:

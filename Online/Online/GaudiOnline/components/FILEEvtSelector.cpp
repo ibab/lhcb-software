@@ -281,6 +281,7 @@ FILEEvtSelector::FILEEvtSelector(const string& nam, ISvcLocator* svc)
   m_decode = true;
   m_gotoPause = true;
   declareProperty("Directory",   m_directory = "/localdisk");
+  declareProperty("FilePrefix",  m_filePrefix = "Run_");
   declareProperty("BrokenHosts", m_brokenHostsFile = "");
   declareProperty("DeleteFiles", m_deleteFiles = false);
   declareProperty("AllowedRuns", m_allowedRuns);

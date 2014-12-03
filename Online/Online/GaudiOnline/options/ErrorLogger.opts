@@ -2,7 +2,6 @@
 MessageSvc.OutputLevel = 1;
 ApplicationMgr.ExtSvc                = { "LHCb::DimErrorLogger/Display"};
 MessageSvc.Format = "% F%56W%S%7W%R%T %0W%M";
-//MessageSvc.LoggerOnly                = true;
 Display.OutputLevel                  = 1;
 Display.OutputMessage                = false;
 Display.PrintService                 = false;

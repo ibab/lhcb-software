@@ -61,7 +61,7 @@ def configureForRunning():
     print 'unset CHECKPOINT_FILE;'
     print 'unset MOORESTARTUP_MODE;'
     # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
-    print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/libCheckpointing.so;'
+    print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/lib/libCheckpointing.so;'
   elif Mode==2:
     print 'export APP_STARTUP_OPTS=-restore;'
 
@@ -75,7 +75,7 @@ def configureForRunning():
   if Mode > 1:
     print 'export CHECKPOINT_DIR='+os.path.dirname(checkpoint_path)+';'
     print 'export CHECKPOINT_FILE='+checkpoint_path+';'
-    print 'RESTORE_CMD="exec -a ${UTGID} restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
+    print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/bin/restore.exe -p 4 -e -l ${CHECKPOINT_DIR} -i ${CHECKPOINT_FILE}";'
     if not os.environ.has_key('TEST_CHECKPOINT'):
       print 'echo "[INFO] Copy checkpoint:'+checkpoint_path+'";'
       print 'bash '+checkpoint_dir+'/cmds/copy_torrent '+checkpoint_reloc+';'
@@ -97,10 +97,10 @@ def configureForCheckpoint():
   print 'echo "[ERROR] == Running in checkkpoint PRODUCTION mode....";'
   print 'echo "[ERROR] == File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
   print 'echo "[ERROR] == Producing CHECKPOINT file......Please be patient.";'
-  print 'echo "[ERROR] == LD_PRELOAD=${CHECKPOINTING_BIN}/libCheckpointing.so";'
+  print 'echo "[ERROR] == LD_PRELOAD=${CHECKPOINTING_BIN}/lib/libCheckpointing.so";'
   print 'echo "[ERROR] =====================================================================================";'
   # Note: This is the VERY LAST statement. Afterwards the executable MUST run!
-  print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/libCheckpointing.so;'
+  print 'export LD_PRELOAD=${CHECKPOINTING_BIN}/lib/libCheckpointing.so;'
 
 #=========================================================================================
 def configureForTest():
@@ -109,7 +109,7 @@ def configureForTest():
   print 'export CHECKPOINT_DIR; export CHECKPOINT_FILE;'
   print 'export PYTHONPATH=${CHECKPOINT_DIR}:${PYTHONPATH};'
   print 'mkdir -p /dev/shm/checkpoint;'
-  print 'RESTORE_CMD="exec -a ${UTGID} ${CHECKPOINTING_BIN}/restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE}";'
+  print 'RESTORE_CMD="exec -a ${UTGID} restore.exe -p 4 -e -l /dev/shm/checkpoint -i ${CHECKPOINT_FILE}";'
   print 'echo "=====================================================================================";'
   print 'echo "== File:  ${CHECKPOINT_FILE} MBM setup:${MBM_SETUP_OPTIONS}";'
   print 'echo "== Command ${RESTORE_CMD}";'
@@ -127,7 +127,7 @@ def doIt():
   try:
     mode = os.environ['MOORESTARTUP_MODE']
     print 'export CHECKPOINTING_BIN=${CHECKPOINTINGROOT}/${CMTCONFIG};'
-    print 'export CHECKPOINTING_BIN=${CHECKPOINTINGROOT}/../../InstallArea/${CMTCONFIG}/lib;'
+    print 'export CHECKPOINTING_BIN=${CHECKPOINTINGROOT}/../../InstallArea/${CMTCONFIG};'
     if os.environ.has_key('TEST_CHECKPOINT'):
       configureForTest()
     elif os.environ.has_key('CREATE_CHECKPOINT'):

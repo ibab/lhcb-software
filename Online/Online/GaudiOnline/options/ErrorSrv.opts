@@ -3,7 +3,6 @@ ApplicationMgr.Dlls                  = { "GaudiOnline" };
 ApplicationMgr.ExtSvc                = {"LHCb::DimErrorLogger/ErrorServer"};
 MessageSvc.OutputLevel               = 2;  // Minimum is Error
 MessageSvc.Format = "% F%42W%S%7W%R%T %0W%M";
-MessageSvc.LoggerOnly                = true;
 ErrorServer.PrintService             = true;
 ErrorServer.AcceptVerboseMessages    = true;
 ErrorServer.AcceptDebugMessages      = true;

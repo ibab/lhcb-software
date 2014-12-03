@@ -69,7 +69,6 @@ def patchMessages():
     del Gaudi.allConfigurables['MessageSvc']
   msg = Configs.LHCb__FmcMessageSvc('MessageSvc')
   msg.fifoPath      = os.environ['LOGFIFO']
-  msg.LoggerOnly    = True
   msg.doPrintAlways = False
   msg.OutputLevel   = Online.OutputLevel
 

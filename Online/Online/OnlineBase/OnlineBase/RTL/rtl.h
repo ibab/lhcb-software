@@ -268,6 +268,12 @@ template <class T, class Q> static inline T* add_ptr(T* a, Q b)  {
   /// POSIX/ISO compiant wrapper around unlink
   int lib_rtl_unlink(__CXX_CONST char* fname);
 
+  /// Read path associated to file name
+  int lib_rtl_readlink(__CXX_CONST char* fname, char* path, size_t path_len);
+
+  /// Read path according from file descriptor
+  int lib_rtl_file_name(int fd, char* path, size_t path_len);
+
   /// Access total/free disk space on file system (linux:statvfs call)
   int lib_rtl_diskspace(__CXX_CONST char* name, unsigned long long int* blk_size,
 			unsigned long long int* total_blk,
@@ -293,6 +299,10 @@ namespace RTL  {
   lib_rtl_thread_map_t& waitEventThreads();
   lib_rtl_gbl_map_t&    allSections();
   lib_rtl_lock_map_t&   allLocks();
+  /// Read POSIX link
+  std::string fileFromLink(const std::string& link);
+  /// Access file name from file descriptor
+  std::string fileFromDescriptor(int fd);
 #endif
 
   template<class T> union func_cast   {

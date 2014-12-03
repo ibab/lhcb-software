@@ -70,13 +70,13 @@ namespace FiniteStateMachine   {
       /// Task command
       std::string command;
       /// Map of FMC startup arguments
-      Params fmcParams;
+      Params      fmcParams;
       /// Map of I/O parameters
-      Params ioParams;
+      Params      ioParams;
       /// Map of program arguments
-      Params args;
+      Params      args;
       /// Timeouts for this task type
-      Timeouts timeouts;
+      Timeouts    timeouts;
 
       /// Constructor
       Task();

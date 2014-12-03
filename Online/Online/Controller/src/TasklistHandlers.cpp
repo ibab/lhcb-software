@@ -11,9 +11,11 @@
 // Framework include files
 #include "Controller/TasklistHandlers.h"
 #include "XML/XMLTypes.h"
+#include "RTL/rtl.h"
 
 // C/C++ include files
 #include <iostream>
+#include "unistd.h"
 
 using namespace std;
 using namespace DD4hep;
@@ -134,15 +136,22 @@ void TasklistAnalyzer::Params::operator()(const xml_h& h)  {
   else if ( nam == "wd"                     ) fmc_par = "-w " + val;
   else if ( nam == "priority"               ) fmc_par = "-r " + val;
   else if ( nam == "nice"                   ) fmc_par = "-p " + val;
-  else if ( nam == "stderr" && val.empty()  ) fmc_par = "-e";
-  else if ( nam == "stdout" && val.empty()  ) fmc_par = "-o";
-  else if ( nam == "stderr"                 ) fmc_par = "-E " + val;
-  else if ( nam == "stdout"                 ) fmc_par = "-O " + val;
   else if ( nam == "affinity"               ) fmc_par = "-a " + val;
   else if ( nam == "daemon"                 ) fmc_par = "-d ";
   else if ( nam == "utgid"                  ) task->utgid = val;
   else if ( nam == "output"                 ) task->ioParams.push_back(make_pair(nam,val));
   else if ( nam == "input"                  ) task->ioParams.push_back(make_pair(nam,val));
+  else if ( nam == "stderr" || nam == "stdout" )  {
+    val = RTL::fileFromDescriptor(nam=="stdout" ? STDOUT_FILENO : STDERR_FILENO);
+    fmc_par = string((nam=="stdout") ? "-O " : " -E ") + val;
+    fmc_par += " -D LOGFIFO=" + val;
+  }
+#if 0
+  else if ( nam == "stderr" && val.empty()  ) fmc_par = "-e";
+  else if ( nam == "stdout" && val.empty()  ) fmc_par = "-o";
+  else if ( nam == "stderr"                 ) fmc_par = "-E " + val;
+  else if ( nam == "stdout"                 ) fmc_par = "-O " + val;
+#endif
 
   if ( !fmc_par.empty() )  {
     task->fmcParams.push_back(make_pair(nam,fmc_par));

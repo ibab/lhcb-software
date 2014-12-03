@@ -9,8 +9,8 @@ ApplicationMgr.EventLoop             = "LHCb::OnlineRunable/EmptyEventLoop";
 ApplicationMgr.Runable               = "LHCb::FileWriteMgr/WrManager";
 ApplicationMgr.ExtSvc               += { "IncidentSvc", "LHCb::MEPManager/MepManager"};
 ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/LHCbFileWriter_D0"};
-ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/LHCbFileWriter_VeLoMuons"};
-ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/LHCbFileWriter_Tracker"};
+//ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/LHCbFileWriter_VeLoMuons"};
+//ApplicationMgr.ExtSvc               += { "LHCb::FileWriterSvc/LHCbFileWriter_Tracker"};
 //
 MEPManager.PartitionBuffers          = @OnlineEnv.PartitionBuffers;
 MEPManager.PartitionName             = @OnlineEnv.PartitionName;
@@ -27,28 +27,28 @@ LHCbFileWriter_D0.SizeLimit                 = 1000;
 LHCbFileWriter_D0.PrintFreq                 = 1.0;
 LHCbFileWriter_D0.Requirements         = {
 "EvType=1;TriggerMask=0xffffffff,0x0,0x00200000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=1;TriggerMask=0xffffffff,0x0,0x00200000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+"EvType=2;TriggerMask=0xffffffff,0x0,0x00200000,0x0;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
 };
 LHCbFileWriter_D0.MEPFilePrefix         = "/localdisk/overflow/D0_Run_";
 LHCbFileWriter_D0.EvtFilePrefix         = "/localdisk/overflow/D0_Run_";
-LHCbFileWriter_D0.MaxEvents       = 10;
+LHCbFileWriter_D0.MaxEvents       = 1000;
 
-LHCbFileWriter_VeLoMuons.SizeLimit                 = 1000;
-LHCbFileWriter_VeLoMuons.PrintFreq                 = 1.0;
-LHCbFileWriter_VeLoMuons.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-};
-LHCbFileWriter_VeLoMuons.MEPFilePrefix         = "/localdisk/overflow/VeLo_Run_";
-LHCbFileWriter_VeLoMuons.EvtFilePrefix         = "/localdisk/overflow/VeLo_Run_";
-LHCbFileWriter_VeLoMuons.MaxEvents       = 25;
+//LHCbFileWriter_VeLoMuons.SizeLimit                 = 1000;
+//LHCbFileWriter_VeLoMuons.PrintFreq                 = 1.0;
+//LHCbFileWriter_VeLoMuons.Requirements         = {
+//"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
+//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+//};
+//LHCbFileWriter_VeLoMuons.MEPFilePrefix         = "/localdisk/overflow/VeLo_Run_";
+//LHCbFileWriter_VeLoMuons.EvtFilePrefix         = "/localdisk/overflow/VeLo_Run_";
+//LHCbFileWriter_VeLoMuons.MaxEvents       = 25;
 
-LHCbFileWriter_Tracker.SizeLimit                 = 1000;
-LHCbFileWriter_Tracker.PrintFreq                 = 1.0;
-LHCbFileWriter_Tracker.Requirements         = {
-"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
-"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
-};
-LHCbFileWriter_Tracker.MEPFilePrefix         = "/localdisk/overflow/Tracker_Run_";
-LHCbFileWriter_Tracker.EvtFilePrefix         = "/localdisk/overflow/Tracker_Run_";
-LHCbFileWriter_Tracker.MaxEvents       = 100;
+//LHCbFileWriter_Tracker.SizeLimit                 = 1000;
+//LHCbFileWriter_Tracker.PrintFreq                 = 1.0;
+//LHCbFileWriter_Tracker.Requirements         = {
+//"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0",
+//"EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=100.0"
+//};
+//LHCbFileWriter_Tracker.MEPFilePrefix         = "/localdisk/overflow/Tracker_Run_";
+//LHCbFileWriter_Tracker.EvtFilePrefix         = "/localdisk/overflow/Tracker_Run_";
+//LHCbFileWriter_Tracker.MaxEvents       = 100;

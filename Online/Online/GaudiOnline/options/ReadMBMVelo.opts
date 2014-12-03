@@ -4,7 +4,6 @@ ApplicationMgr.ExtSvc                = { "LHCb::MEPManager/MEPManager", "LHCb::O
 ApplicationMgr.DLLs                  = { "GaudiAlg" };
 ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";
-MessageSvc.LoggerOnly                = true;
 StoreExplorerAlg.Load                = 1;
 StoreExplorerAlg.PrintFreq           = 0.001;
 EventDataSvc.RootCLID                = 1;
