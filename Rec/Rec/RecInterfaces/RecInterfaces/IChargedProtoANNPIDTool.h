@@ -37,7 +37,7 @@ namespace ANNGlobalPID
     {
     public:
       RetType( const bool   _s = false, 
-               const double _v = -2 ) : status(_s), value(_v) { }
+               const double _v = -3 ) : status(_s), value(_v) { }
     public:
       bool status;
       double value;

@@ -4,6 +4,9 @@
 ! Purpose     : Reconstruction interfaces
 !-----------------------------------------------------------------------------
 
+! 2014-12-03 - Chris Jones
+ - Change default return value in IChargedProtoANNPIDTool to -3
+
 ! 2014-12-02 - Chris Jones
  - Update IChargedProtoANNPIDTool interface to include a status code in the
    return value.
