@@ -1,0 +1,29 @@
+package JsonConverter
+version v1r0
+
+#=====================================================================
+# Used packages.
+#=====================================================================
+use     PatKernel       v*      Tf
+use     TfKernel        v*      Tf
+use     TrackTools      v*      Tr
+use     STDet           v*      Det
+use     OTDet           v*      Det
+use     RecEvent        v*      Event
+use     TrackEvent      v*      Event
+use     OTDAQ           v*      OT
+use     PartProp        v*      Kernel
+use 	PRConfig        v*
+use     Brunel          v*      Rec
+use TrackInterfaces V*  Tr
+#=====================================================================
+# Component library building rule
+#=====================================================================
+library          JsonConverter    ../src/*.cpp
+#=====================================================================
+# define component library link options
+#=====================================================================
+apply_pattern    install_python_modules
+apply_pattern    component_library library=JsonConverter
+
+
