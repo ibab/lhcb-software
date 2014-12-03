@@ -315,15 +315,8 @@ TMVAReaderANN::getOutput( const LHCb::ProtoParticle * proto )
     }
   }
 
-  // get the output
-  double mvaOut = m_reader->EvaluateMVA("PID");
-
-  // Final sanity check
-  if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }
-  else if ( mvaOut < 0.0 ) { mvaOut = 0.0; }
-
-  // return
-  return mvaOut;
+  // get the output and return
+  return m_reader->EvaluateMVA("PID");
 }
 
 //=============================================================================
@@ -338,21 +331,14 @@ getOutput( const LHCb::ProtoParticle * proto )
   // Fill the array of network inputs
   {
     unsigned int i = 0;
-    for ( const auto * input : this->inputs() )
+    for ( const auto * input : this->inputs() ) 
     {
-      m_vars[i++] = input->value(proto);
+      m_vars[i++] = input->value(proto); 
     }
   }
 
-  // get the output
-  double mvaOut = m_reader->GetMvaValue(m_vars);
-
-  // Final sanity check
-  if      ( mvaOut > 1.0 ) { mvaOut = 1.0; }
-  else if ( mvaOut < 0.0 ) { mvaOut = 0.0; }
-
-  // return
-  return mvaOut;
+  // get the output and return
+  return m_reader->GetMvaValue(m_vars);
 }
 
 //=============================================================================
@@ -537,7 +523,8 @@ NetConfig( const std::string & tkType,
     if ( "TMVA" == annType )
     {
       // First see if we have a built in C++ implementation for this case
-      m_netHelper = new TMVAImpANN( netVersion, particleType(), trackType(),
+      m_netHelper = new TMVAImpANN( netVersion, 
+                                    particleType(), trackType(),
                                     inputs, parent );
       if ( !m_netHelper->isOK() )
       {

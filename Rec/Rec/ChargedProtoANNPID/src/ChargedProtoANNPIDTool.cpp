@@ -30,7 +30,7 @@ ChargedProtoANNPIDTool::ChargedProtoANNPIDTool( const std::string& type,
   declareProperty( "SuppressANNPrintout", m_suppressANNPrintout = true );
   // Turn off Tuple printing during finalize
   setProperty( "NTuplePrint", false );
-  setProperty( "OutputLevel", 1 );
+  //setProperty( "OutputLevel", 1 );
 }
 
 //=============================================================================
@@ -82,7 +82,7 @@ ChargedProtoANNPIDTool::annPID( const LHCb::ProtoParticle * proto,
     if ( ann )
     {
       annPID.status = true;
-      annPID.value  = ( ann->passCuts(proto) ? ann->netHelper()->getOutput(proto) : -1 );
+      annPID.value  = ( ann->passCuts(proto) ? ann->netHelper()->getOutput(proto) : -2 );
     }
     
     if ( msgLevel(MSG::DEBUG) )

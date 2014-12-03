@@ -38,6 +38,7 @@
 
 // TMVA
 #include "TMVA/Reader.h"
+#include "TMVA/IMethod.h"
 
 // TMVA Factory
 #include "TMVAImpFactory.h"
@@ -645,9 +646,7 @@ namespace ANNGlobalPID
       {
         unsigned int i = 0;
         for ( const std::string & input : inputs )
-        {
-          m_reader->AddVariable( input.c_str(), &(m_inArray[i++]) );
-        }
+        { m_reader->AddVariable( input.c_str(), &(m_inArray[i++]) ); }
         m_reader->BookMVA( "PID", paramFileName.c_str() );
         this->setOK(true);
       }

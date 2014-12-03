@@ -4,6 +4,14 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2014-12-03 - Chris Jones
+ - Remove the out of 0-1 bounds checks for TMVA networks. Not needed for MLP
+   MVAs, and breaks with BDTs which vary from -1 to 1 ...
+ - Check the 'error' return values from ChargedProtoANNPIDTool to
+    -3 : Invalid ProtoParticle or track
+    -2 : Failed pre-selection cuts.
+   Done in order to avoid using -1, as this is a valid BDT return value.
+
 ! 2014-12-02 - Chris Jones
  - Add new developmental PID tunings for Bs2MuMu.
 
