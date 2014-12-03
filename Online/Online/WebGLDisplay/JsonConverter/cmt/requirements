@@ -15,7 +15,8 @@ use     OTDAQ           v*      OT
 use     PartProp        v*      Kernel
 use 	PRConfig        v*
 use     Brunel          v*      Rec
-use TrackInterfaces V*  Tr
+use TrackInterfaces v*  Tr
+use DaVinciKernel   v* Phys
 #=====================================================================
 # Component library building rule
 #=====================================================================

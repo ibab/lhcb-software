@@ -22,7 +22,7 @@ DECLARE_ALGORITHM_FACTORY( JsonConverter )
 //=============================================================================
 JsonConverter::JsonConverter( const std::string& name,
                               ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
+  : DaVinciAlgorithm ( name , pSvcLocator )
 {
 
 }
@@ -35,7 +35,7 @@ JsonConverter::~JsonConverter() {}
 // Initialization
 //=============================================================================
 StatusCode JsonConverter::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = DaVinciAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
@@ -49,10 +49,8 @@ StatusCode JsonConverter::initialize() {
 StatusCode JsonConverter::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-
-  std::cout << "==================================> JsonConverter Execute"
-	<< std::endl;
-
+  std::cout << "=====> IN JSON CONVERTER" << std::endl;
+  setFilterPassed(true);  // Mandatory. Set to true if event is accepted.
   return StatusCode::SUCCESS;
 }
 
@@ -63,7 +61,7 @@ StatusCode JsonConverter::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return DaVinciAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=============================================================================
