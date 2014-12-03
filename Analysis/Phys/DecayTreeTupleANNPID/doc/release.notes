@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-12-02 - Chris Jones
- - Add some Bs2MuMu tunings for testing.
+ - Add some Bs2MuMu tunings for testing (disabled by default).
 
 ! 2014-12-02 - Chris Jones
  - Add support for missing ANNPID networks, for instance when a tune only 

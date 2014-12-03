@@ -17,9 +17,9 @@ TupleToolANNPID::TupleToolANNPID( const std::string& type,
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty( "ANNPIDTunes", m_pidTunes = 
-      {   "MC12TuneV2","MC12TuneV3",
-          "Bs2MuMuTuneBDTDev1","Bs2MuMuTuneBDTDev2",
-          "Bs2MuMuTuneMLPDev1","Bs2MuMuTuneMLPDev2"
+      {   "MC12TuneV2","MC12TuneV3"
+          //,"Bs2MuMuTuneBDTDev1","Bs2MuMuTuneBDTDev2"
+          //,"Bs2MuMuTuneMLPDev1","Bs2MuMuTuneMLPDev2"
           } 
                    );
 }
