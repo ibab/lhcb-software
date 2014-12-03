@@ -260,12 +260,19 @@ class RichRecQCConf(RichConfigurableUser):
         from Configurables import ( LoKi__HDRFilter,
                                     LoKi__L0Filter,
                                     GaudiSequencer )
-        return [ LoKi__L0Filter("RichL0Filter",
-                                Code='L0_DECISION_PHYSICS'),
+        from DAQSys.Decoders import DecoderDB 
+        from DAQSys.DecoderClass import decodersForBank
+        l0dec = [d.setup() for d in decodersForBank(DecoderDB,'L0DU')]
+        hltdec=DecoderDB["HltDecReportsDecoder/Hlt1DecReportsDecoder"].setup()
+
+        return l0dec+ [
+                 LoKi__L0Filter("RichL0Filter", Code='L0_DECISION_PHYSICS'),
+                 hltdec, 
                  LoKi__HDRFilter("RichHlt1Filter",
-                                 Code="HLT_PASS('Hlt1L0AnyDecision','Hlt1MBNoBiasDecision')"
+                                 Code="HLT_PASS('Hlt1L0AnyDecision','Hlt1MBNoBiasDecision')",
+                                 Location = hltdec.OutputHltDecReportsLocation
                                  )
-                 ]
+               ]
 
     ## Check a new sequence and add to main sequence
     def newSeq(self,sequence,name):
