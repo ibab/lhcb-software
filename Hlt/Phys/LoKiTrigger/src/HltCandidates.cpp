@@ -290,6 +290,22 @@ LoKi::Candidates::SlotCut::SlotCut(
  */
 // ============================================================================
 LoKi::Candidates::SlotCut::SlotCut(
+    const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut, 
+    const int slot )
+    : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
+    , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
+    , m_slot( slot )
+{}
+// ============================================================================
+/*  constructor
+ *  @param fun the predicate
+ *  @param slot the slot:
+ *     - 0 corresponds to current stage ,
+ *     - negative value corresponds to initiator stage
+ *     - positive value corresponds to step-back in history
+ */
+// ============================================================================
+LoKi::Candidates::SlotCut::SlotCut(
     const LoKi::BasicFunctors<const LHCb::Track*>::Predicate& cut, const int slot )
     : LoKi::BasicFunctors<const Hlt::Candidate*>::Predicate()
     , m_cut( LoKi::Stages::cut_( cut, s_FAKE ) )
@@ -391,7 +407,26 @@ std::ostream& LoKi::Candidates::SlotCut::fillStream( std::ostream& s ) const
  */
 // ============================================================================
 LoKi::Candidates::SlotFun::SlotFun(
-    const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun, const int slot,
+    const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun, 
+    const int    slot,
+    const double bad )
+    : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
+    , m_fun( LoKi::Stages::fun_( fun, bad ) )
+    , m_slot( slot )
+    , m_bad( bad )
+{}
+// ============================================================================
+/*  constructor
+ *  @param fun the function
+ *  @param slot the slot:
+ *     - 0 corresponds to current stage ,
+ *     - negative value corresponds to initiator stage
+ *     - positive value corresponds to step-back in history
+ */
+// ============================================================================
+LoKi::Candidates::SlotFun::SlotFun(
+    const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun, 
+    const int   slot ,
     const double bad )
     : LoKi::BasicFunctors<const Hlt::Candidate*>::Function()
     , m_fun( LoKi::Stages::fun_( fun, bad ) )
@@ -562,6 +597,21 @@ LoKi::Candidates::SlotFilter::SlotFilter(
  */
 // ============================================================================
 LoKi::Candidates::SlotFilter::SlotFilter(
+    const LoKi::BasicFunctors<const LHCb::Particle*>::Predicate& cut, 
+    const int slot )
+    : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
+    , m_cut( SlotCut( cut, slot ) )
+{}
+// ============================================================================
+/*  constructor
+ *  @param fun the predicate
+ *  @param slot the slot:
+ *     - 0 corresponds to current stage ,
+ *     - negative value corresponds to initiator stage
+ *     - positive value corresponds to step-back in history
+ */
+// ============================================================================
+LoKi::Candidates::SlotFilter::SlotFilter(
     const LoKi::BasicFunctors<const LHCb::VertexBase*>::Predicate& cut,
     const int slot )
     : LoKi::BasicFunctors<const Hlt::Candidate*>::Pipe()
@@ -627,6 +677,14 @@ std::ostream& LoKi::Candidates::SlotFilter::fillStream( std::ostream& s ) const
 // ============================================================================
 LoKi::Candidates::SlotMap::SlotMap(
     const LoKi::BasicFunctors<const LHCb::Track*>::Function& fun, const int slot,
+    const double bad )
+    : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
+{}
+// ============================================================================
+//  constructor
+// ============================================================================
+LoKi::Candidates::SlotMap::SlotMap(
+    const LoKi::BasicFunctors<const LHCb::Particle*>::Function& fun, const int slot,
     const double bad )
     : LoKi::BasicFunctors<const Hlt::Candidate*>::Map(), m_fun( fun, slot, bad )
 {}

@@ -58,7 +58,7 @@ namespace LoKi
     /** @class IsTrack
      *  trivial predicate to check if the stage is a track
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_TRACK 
+     *  @see LoKi::Cuts::TS_ISTRACK 
      *  @date 2010-08-01
      */
     class GAUDI_API IsTrack 
@@ -82,7 +82,7 @@ namespace LoKi
     /** @class IsL0Muon
      *  trivial predicate to check if the stage is a L0-muon stage 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_L0MUON 
+     *  @see LoKi::Cuts::TS_ISL0MUON 
      *  @date 2010-08-01
      */
     class GAUDI_API IsL0Muon : public IsTrack
@@ -105,7 +105,7 @@ namespace LoKi
     /** @class IsL0DiMuon
      *  trivial predicate to check if the stage is a L0-dimuon candidate 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_L0DIMUON 
+     *  @see LoKi::Cuts::TS_ISL0DIMUON 
      *  @date 2010-08-01
      */
     class GAUDI_API IsL0DiMuon : public IsL0Muon
@@ -128,7 +128,7 @@ namespace LoKi
     /** @class IsL0Calo
      *  trivial predicate to check if the stage is a L0-calo candidate 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_L0CALO
+     *  @see LoKi::Cuts::TS_ISL0CALO
      *  @date 2010-08-01
      */
     class GAUDI_API IsL0Calo : public IsL0DiMuon
@@ -151,7 +151,7 @@ namespace LoKi
     /** @class IsVertex
      *  trivial predicate to check if the stage is a RecVertex
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_VERTEX
+     *  @see LoKi::Cuts::TS_ISVERTEX
      *  @date 2010-08-01
      */
     class GAUDI_API IsVertex : public IsL0Calo
@@ -174,7 +174,7 @@ namespace LoKi
     /** @class IsMultiTrack
      *  trivial predicate to check if the stage is a Multitrack
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_MULTITRACK
+     *  @see LoKi::Cuts::TS_ISMULTITRACK
      *  @date 2010-08-01
      */
     class GAUDI_API IsMultiTrack : public IsVertex
@@ -194,10 +194,33 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
+    /** @class IsParticle
+     *  trivial predicate to check if the stage is a Particle
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @see LoKi::Cuts::TS_ISPARTICLE
+     *  @date 2014-12-03
+     */
+    class GAUDI_API IsParticle : public IsVertex
+    { 
+    public:
+      // ======================================================================
+      /// Default Constructor
+      IsParticle() { }
+      /// MANDATORY: virtual destructor 
+      virtual ~IsParticle () ;
+      /// MANDATORY: clone method ("virtual constructor") 
+      virtual  IsParticle* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual  result_type operator() ( argument a ) const ;
+      /// OPTIONAL: the ince printout 
+      virtual  std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    };
+    // ========================================================================
     /** @class IsStage
      *  trivial predicate to check if the stage is a Stage
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-     *  @see LoKi::Cuts::TS_STAGE
+     *  @see LoKi::Cuts::TS_ISSTAGE
      *  @date 2010-08-01
      */
     class GAUDI_API IsStage : public IsMultiTrack
@@ -804,7 +827,7 @@ namespace LoKi
 #pragma warning(push)
 #endif
     // ========================================================================
-    /** @var TS_TRACK 
+    /** @var TS_ISTRACK 
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::Track>
@@ -812,9 +835,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
-    const LoKi::Stages::IsTrack                                      TS_TRACK ;
+    const LoKi::Stages::IsTrack                                    TS_ISTRACK ;
     // ========================================================================
-    /** @var TS_L0MUON 
+    /** @var TS_ISL0MUON 
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::L0MuonCandidate>
@@ -822,18 +845,18 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
-    const LoKi::Stages::IsL0Muon                                    TS_L0MUON ;    
+    const LoKi::Stages::IsL0Muon                                  TS_LSL0MUON ;    
     // ========================================================================
-    /** @var TS_LDI0MUON 
+    /** @var TS_ISDI0MUON 
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<Hlt::L0DiMuonCandidate>
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
-    const LoKi::Stages::IsL0DiMuon                                TS_L0DIMUON ;    
+    const LoKi::Stages::IsL0DiMuon                              TS_ISL0DIMUON ;    
     // ========================================================================
-    /** @var TS_L0CALO
+    /** @var TS_ISL0CALO
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::L0CaloCandidate>
@@ -841,9 +864,9 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
-    const LoKi::Stages::IsL0Calo                                    TS_L0CALO ;
+    const LoKi::Stages::IsL0Calo                                  TS_ISL0CALO ;
     // ========================================================================
-    /** @var TS_VERTEX
+    /** @var TS_ISVERTEX
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<LHCb::RecVertex>
@@ -851,25 +874,34 @@ namespace LoKi
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
-    const LoKi::Stages::IsVertex                                    TS_VERTEX ;
+    const LoKi::Stages::IsVertex                                  TS_ISVERTEX ;
     // ========================================================================
-    /** @var TS_MULTITRACK
+    /** @var TS_ISMULTITRACK
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<Hlt::MultiTrack>
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
-    const LoKi::Stages::IsMultiTrack                            TS_MULTITRACK ;
+    const LoKi::Stages::IsMultiTrack                          TS_ISMULTITRACK ;
     // ========================================================================
-    /** @var TS_STAGE
+    /** @var TS_ISPARTICLE
+     *  trivial predicate to check the type of Hlt::Stage 
+     *  @see Hlt::Stage 
+     *  @see Hlt::Stage::is<LHCb::Particle>
+     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
+     *  @date 2014-12-03
+     */
+    const LoKi::Stages::IsParticle                              TS_ISPARTICLE ;
+    // ========================================================================
+    /** @var TS_ISSTAGE
      *  trivial predicate to check the type of Hlt::Stage 
      *  @see Hlt::Stage 
      *  @see Hlt::Stage::is<Hlt::Stage>
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2010-08-02
      */
-    const LoKi::Stages::IsStage                                      TS_STAGE ;
+    const LoKi::Stages::IsStage                                    TS_ISSTAGE ;
     // ========================================================================
     /** @var TS_TYPE
      *  trivial functor to check the type of Hlt::Stage 

@@ -4,6 +4,20 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+! 2014-12-03 - Vanya Belyaev
+ - add Particles into streamer functions
+  
+   update tests.py with following examples:  
+
+   ... >> TS_ISPARTICLE >> ...
+   ... >> ( PT > 1    ) >> ...
+   ... >> ( ID == 13  ) >> ...
+   ... >>  M  >> ...
+
+   and it works!
+
+
+
 ! 2014-11-26 - Marco Clemencic
  - Fixed CMake configuration.
 

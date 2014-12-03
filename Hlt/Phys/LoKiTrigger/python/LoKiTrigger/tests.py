@@ -55,10 +55,12 @@ if '__main__' == __name__ :
     print ' Date    : %s ' %   __date__
     print '*'*120
 
-    Hlt = LoKiCore.basic.cpp.Hlt
-    LoKi = LoKiCore.basic.cpp.LoKi
-    Hlt.Candidate.ConstVector = LoKiCore.basic.std.vector('const Hlt::Candidate*')
+    from LoKiCore.basic import cpp,std,LoKi  
+    Hlt.Candidate.ConstVector = std.vector('const Hlt::Candidate*')
 
+    Hlt.Candidate.ConstVector.__repr__ = lambda s : str ( [ str(i) for i in s ] )
+    Hlt.Candidate.ConstVector.__str__  = lambda s : str ( [ str(i) for i in s ] )
+    
     s = LHCb.State()
     s.setState ( 0.0 , 0.0 , 0.0 , 0.01 , 0.01 , 0.2 )
     t = LHCb.Track()
@@ -145,6 +147,67 @@ if '__main__' == __name__ :
     print ' use fun3 %s %s ' % ( fun3 , len ( cs >> fun3 ) )
 
 
+    #
+    ## particles : 
+    #
+    
+    pcs = Hlt.Candidate.ConstVector()
+
+    #
+    ## first particle
+    #
+    pc1 = Hlt.Candidate()
+
+    pp1 = LHCb.Particle( LHCb.ParticleID( 13 ) ) 
+    pp1.setMomentum ( Gaudi.LorentzVector( 100 , 100 , 100 , 500 ) ) 
+
+    ## create stage 
+    ps1 = Hlt.Stage()
+    pl1 = Hlt.Stage.Lock( ps1 , alg )
+    ps1.set ( pp1 )
+    
+    pc1.addToStages(ps1)
+
+    pcs.push_back( pc1 )
+
+    #
+    ## first particle
+    #
+    pc2 = Hlt.Candidate()
+
+    pp2 = LHCb.Particle( LHCb.ParticleID( 11 ) ) 
+    pp2.setMomentum ( Gaudi.LorentzVector( 100 , 0 , 0 , 5000 ) ) 
+    
+    ## create stage 
+    ps2 = Hlt.Stage()
+    pl2 = Hlt.Stage.Lock( ps2 , alg )
+    ps2.set ( pp2 )
+    
+    pc2.addToStages(ps2)
+
+    pcs.push_back( pc2 )
+
+    from LoKiPhys.decorators import PT, ID, M
+
+    
+    pfun1 = select(TC_ALL) >> TS_ISPARTICLE
+
+    pfun2 = select(TC_ALL) >> ( PT > 1   ) 
+
+    pfun3 = select(TC_ALL) >> ( ID == 13 ) 
+
+    pfun4 = select(TC_ALL) >> M
+    
+    res1 = pcs >> pfun1
+    res2 = pcs >> pfun2
+    res3 = pcs >> pfun3
+    res4 = pcs >> pfun4
+    
+    print 'pfun1, res1', pfun1 ,res1 
+    print 'pfun2, res2', pfun2 ,res2 
+    print 'pfun3, res3', pfun3 ,res3 
+    print 'pfun4, res4', pfun4 ,res4 
+    
 
 
 

@@ -59,7 +59,7 @@ LoKi::Stages::IsTrack::operator()
 // OPTIONAL: the ince printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsTrack::fillStream ( std::ostream& s ) const 
-{ return s << "TS_TRACK" ; }
+{ return s << "TS_ISTRACK" ; }
 
 
 // ============================================================================
@@ -86,7 +86,7 @@ LoKi::Stages::IsL0Muon::operator()
 // OPTIONAL: the ince printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsL0Muon::fillStream ( std::ostream& s ) const 
-{ return s << "TS_L0MUON" ; }
+{ return s << "TS_ISL0MUON" ; }
 
 
 // ============================================================================
@@ -113,7 +113,7 @@ LoKi::Stages::IsL0DiMuon::operator()
 // OPTIONAL: the ince printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsL0DiMuon::fillStream ( std::ostream& s ) const 
-{ return s << "TS_L0DIMUON" ; }
+{ return s << "TS_ISL0DIMUON" ; }
 
 
 // ============================================================================
@@ -140,7 +140,7 @@ LoKi::Stages::IsL0Calo::operator()
 // OPTIONAL: the ince printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsL0Calo::fillStream ( std::ostream& s ) const 
-{ return s << "TS_L0CALO" ; }
+{ return s << "TS_ISL0CALO" ; }
 // ============================================================================
 
 // ============================================================================
@@ -167,7 +167,7 @@ LoKi::Stages::IsVertex::operator()
 // OPTIONAL: the ince printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsVertex::fillStream ( std::ostream& s ) const 
-{ return s << "TS_VERTEX" ; }
+{ return s << "TS_ISVERTEX" ; }
 // ============================================================================
 
 
@@ -196,7 +196,34 @@ LoKi::Stages::IsMultiTrack::operator()
 // OPTIONAL: the ince printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsMultiTrack::fillStream ( std::ostream& s ) const 
-{ return s << "TS_MULTITRACK" ; }
+{ return s << "TS_ISMULTITRACK" ; }
+// ============================================================================
+
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::Stages::IsParticle::~IsParticle (){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Stages::IsParticle*
+LoKi::Stages::IsParticle::clone() const 
+{ return new LoKi::Stages::IsParticle(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Stages::IsParticle::result_type 
+LoKi::Stages::IsParticle::operator() 
+  ( LoKi::Stages::IsParticle::argument a ) const 
+{
+  if ( !a ) { Error ("Hlt::Stage points to NULL, return false " ) ; }
+  return a ? a->is<LHCb::Particle>() : false ;
+}
+// ============================================================================
+// OPTIONAL: the ince printout 
+// ============================================================================
+std::ostream& LoKi::Stages::IsParticle::fillStream ( std::ostream& s ) const 
+{ return s << "TS_ISPARTICLE" ; }
 // ============================================================================
 
 
@@ -224,7 +251,7 @@ LoKi::Stages::IsStage::operator()
 // OPTIONAL: the nice printout 
 // ============================================================================
 std::ostream& LoKi::Stages::IsStage::fillStream ( std::ostream& s ) const 
-{ return s << "TS_STRAGE" ; }
+{ return s << "TS_ISSTAGE" ; }
 // ============================================================================
 
 

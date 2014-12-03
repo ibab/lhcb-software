@@ -135,6 +135,8 @@ TS_ISL0CALO     = LoKi.Stages.IsL0Calo      ()
 TS_ISVERTEX     = LoKi.Stages.IsVertex      ()
 ## @see LoKi::Cuts::TS_ISMULTITRACK
 TS_ISMULTITRACK = LoKi.Stages.IsMultiTrack  ()
+## @see LoKi::Cuts::TS_ISPARTICLE
+TS_ISPARTICLE   = LoKi.Stages.IsParticle    ()
 ## @see LoKi::Cuts::TS_ISSTAGE
 TS_ISSTAGE      = LoKi.Stages.IsStage       ()
 
