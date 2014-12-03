@@ -562,7 +562,8 @@ class PDF2 (object) :
         self.y            = yvar 
         self.m1           = xvar ## ditto
         self.m2           = yvar ## ditto 
-            
+        self._splots      = []
+        
     ## make the actual fit (and optionally draw it!)
     #  @code
     #  r,f = model.fitTo ( dataset )
@@ -676,8 +677,36 @@ class PDF2 (object) :
         if in_range and isinstance ( in_range , tuple ) and 2 == len ( in_range ) :
             self.m1.setRange ( 'aux_rng1' , in_range[0] , in_range[1] )
             in_range = 'aux_rng1' 
-        return self.draw ( self.m2 , dataset , nbins , 20     , silent , in_range         , *args ) 
+        return self.draw ( self.m2 , dataset , nbins , 20     , silent , in_range         , *args )
+
+
+    ## draw as 2D-histograms 
+    def draw_H2D ( self           ,
+                   dataset = None ,  
+                   xbins   = 20   ,
+                   ybins   = 20   ) :
+        """
+        Mak/draw 2D-histograms 
+        """
+        
+        _xbins = ROOT.RooFit.Binning ( xbins ) 
+        _ybins = ROOT.RooFit.Binning ( ybins ) 
+        _yvar  = ROOT.RooFit.YVar    ( self.m2 , _ybins )
+        _clst  = ROOT.RooLinkedList  ()
+        hdata  = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
+        hpdf   = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
+        hdata.SetTitle(';;;')
+        hpdf .SetTitle(';;;')
+        _lst   = ROOT.RooArgList ( self.m1 , self.m2 )  
+        if dataset : dataset.fillHistogram( hdata , _lst ) 
+        self.pdf.fillHistogram  ( hpdf , _lst )
+        
+        hdata.lego ()
+        hpdf .Draw ( 'same surf')
+        
+        return hpdf , hdata 
     
+                    
     ## make 1D-plot
     def draw ( self            ,
                drawvar  = None ,
@@ -700,23 +729,7 @@ class PDF2 (object) :
         with context :
                 
             if not drawvar :
-                
-                _xbins = ROOT.RooFit.Binning ( nbins ) 
-                _ybins = ROOT.RooFit.Binning ( ybins ) 
-                _yvar  = ROOT.RooFit.YVar    ( self.m2 , _ybins )
-                _clst  = ROOT.RooLinkedList  ()
-                hdata  = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
-                hpdf   = self.pdf.createHistogram ( hID() , self.m1 , _xbins , _yvar )
-                hdata.SetTitle(';;;')
-                hpdf .SetTitle(';;;')
-                _lst   = ROOT.RooArgList ( self.m1 , self.m2 )  
-                if dataset : dataset.fillHistogram( hdata , _lst ) 
-                self.pdf.fillHistogram  ( hpdf , _lst )
-
-                hdata.lego ()
-                hpdf .Draw ( 'same surf')
-                
-                return hpdf , hdata 
+                return self.draw_H2D( dataset , nbins , ybins )
             
             frame = drawvar.frame( nbins )
             
@@ -772,6 +785,33 @@ class PDF2 (object) :
                             silent         , *args ) 
     
 
+    ## perform sPlot-analysis 
+    #  @code
+    #  r,f = model.fitTo ( dataset )
+    #  model.sPlot ( dataset ) 
+    #  @endcode 
+    def sPlot ( self , dataset ) : 
+        """
+        Make sPlot analysis
+
+        >>> r,f = model.fitTo ( dataset )
+        >>> model.sPlot ( dataset ) 
+        
+        """
+        if not hasattr ( self , 'alist2' ) :
+            logger.error ('PDF2(%s) has not attribute "alist2", no sPlot is possible' % self.name ) 
+            raise AttributeError('PDF2(%s) his not equipped for sPlot'                % self.name )
+        
+        splot = ROOT.RooStats.SPlot ( rootID( "sPlot_" ) ,
+                                      "sPlot"            ,
+                                      dataset            ,
+                                      self.pdf           ,
+                                      self.alist2        )
+        
+        self._splots += [ splot ]
+        
+        return splot 
+    
 
 # =============================================================================
 ## simple convertor of 1D-histo to data set

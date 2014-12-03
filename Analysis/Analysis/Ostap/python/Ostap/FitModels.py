@@ -98,6 +98,7 @@ __all__ = (
     #
     'Manca_pdf'   , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
     'Manca2_pdf'  , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    'MancaX_pdf'  , ## function for 2D-fit of [Y(1S),Y(2S),Y(3S)]+X
     #
     ## pdfs for "wide" peaks, to be used with care - phase space corrections are large!
     # 

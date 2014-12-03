@@ -34,6 +34,7 @@ __all__     = (
     #
     'Manca_pdf'  , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
     'Manca2_pdf' , ## Manca function to fit Y->mu mu spectrum  [Y(1S),Y(2S),Y(3S)]
+    'MancaX_pdf' , ## associative production of Y+X 
     #
     )
 # =============================================================================
@@ -47,7 +48,7 @@ else                       : logger = getLogger ( __name__     )
 # =============================================================================
 # Specializations of double-sided Crystal Ball function 
 # =============================================================================
-from   Ostap.FitBasic            import PDF
+from   Ostap.FitBasic            import PDF,PDF2 
 from   Ostap.FitSignalModels     import CB2_pdf
 # =============================================================================
 ## @class Bd_pdf
@@ -751,8 +752,249 @@ class Manca2_pdf (PDF) :
         self.backgrounds() . add ( self.background.pdf ) 
 
 
+# =============================================================================
+## Specific model for fitting of Y+X
+class MancaX_pdf(PDF2) :
+    """
+    The models for upsilon fit
+    """
+    def __init__ ( self         ,
+                   manca        , ## manca pdf, that defined 3 upsolon peaks  
+                   charm        , ## charm pdf
+                   power1 = 0   ,
+                   power2 = 0   ,
+                   powerA = 0   ,
+                   powerB = 0   ,
+                   suffix = ''  ) :
 
+        PDF2.__init__ ( self , 'MancaX' + suffix , manca.mass , charm.mass )  
+                        
+        self.suffix  = suffix
+        self.signal1 = manca  
+        self.signal2 = charm
+
+        #
+        ## pure signal components: 3 
+        #
+        from Ostap.FitBkgModels import Bkg_pdf 
+        RPP  = ROOT.RooProdPdf 
         
+        self.y1s_c   = RPP     ( 'Y1SC' + suffix , 'Y(1S)(x)Charm' , manca.y1s , charm.pdf )
+        self.y2s_c   = RPP     ( 'Y2SC' + suffix , 'Y(2S)(x)Charm' , manca.y2s , charm.pdf )
+        self.y3s_c   = RPP     ( 'Y3SC' + suffix , 'Y(3S)(x)Charm' , manca.y3s , charm.pdf )
+        
+        ## charm + background
+        self.b_Y     = Bkg_pdf ( 'BkgY' + suffix , power = power1   , mass = self.m1 )   
+        self.bs_pdf  = RPP     ( 'BC'   + suffix , 'B(2mu)(x)Charm' , self.b_Y.pdf , charm.pdf ) 
+        
+        ## Y + background
+        self.b_C     = Bkg_pdf ( 'BkgC' + suffix , power = power2   , mass = self.m2 )   
+        self.y1s_b   = RPP     ( 'Y1SB' + suffix , 'Y(1S)(x)Bkg'    , manca.y1s , self.b_C.pdf ) 
+        self.y2s_b   = RPP     ( 'Y2SB' + suffix , 'Y(2S)(x)Bkg'    , manca.y2s , self.b_C.pdf ) 
+        self.y3s_b   = RPP     ( 'Y3SB' + suffix , 'Y(3S)(x)Bkg'    , manca.y3s , self.b_C.pdf ) 
+        
+        ## background + background
+        self.b_A     = Bkg_pdf  ( 'BkgA' + suffix , power = powerA  , mass = self.m1 )   
+        self.b_B     = Bkg_pdf  ( 'BkgB' + suffix , power = powerB  , mass = self.m2 )   
+        #self.b_A = self.b_Y 
+        #self.b_B = self.b_C 
+        self.bb_pdf  = RPP ( 'BB'   + suffix , 'Bkg(x)Bkg'     , self.b_A.pdf , self.b_B.pdf ) 
+        
+        ## coefficients
+        from Ostap.FitBasic import makeVar 
+        self.s1s = makeVar ( None , 'NY1C' + suffix , 'N(Y1S+C)' + suffix , None , 200 , 0 , 1.e+5 )
+        self.s2s = makeVar ( None , 'NY2C' + suffix , 'N(Y2S+C)' + suffix , None , 100 , 0 , 1.e+4 )
+        self.s3s = makeVar ( None , 'NY3C' + suffix , 'N(Y3S+C)' + suffix , None ,  20 , 0 , 1.e+4 )
+        self.bs  = makeVar ( None , 'NBC'  + suffix , 'N(Bkg+C)' + suffix , None , 500 , 0 , 1.e+5 )
+        self.s1b = makeVar ( None , 'NY1B' + suffix , 'N(Y1S+B)' + suffix , None , 500 , 0 , 1.e+5 )
+        self.s2b = makeVar ( None , 'NY2B' + suffix , 'N(Y2S+B)' + suffix , None , 200 , 0 , 1.e+4 )
+        self.s3b = makeVar ( None , 'NY3B' + suffix , 'N(Y3S+B)' + suffix , None , 200 , 0 , 1.e+4 )
+        self.bb  = makeVar ( None , 'NBB'  + suffix , 'N(Bkg+B)' + suffix , None , 500 , 0 , 1.e+5 )
+
+        self.S1S_name = self.s1s.GetName()
+        self.S2S_name = self.s2s.GetName()
+        self.S3S_name = self.s3s.GetName()
+        self.S1B_name = self.s1b.GetName()
+        self.S2B_name = self.s2b.GetName()
+        self.S3B_name = self.s3b.GetName()
+        self.BS_name  = self.bs .GetName()
+        self.BB_name  = self.bb .GetName()
+        
+        self.alist1 = ROOT.RooArgList ( self.y1s_c  , self.y2s_c , self.y3s_c ,
+                                        self.bs_pdf ,
+                                        self.y1s_b  , self.y2s_b , self.y3s_b ,
+                                        self.bb_pdf )
+        self.alist2 = ROOT.RooArgList ( self.s1s    , self.s2s   , self.s3s   ,
+                                        self.bs     ,
+                                        self.s1b    , self.s2b   , self.s3b   ,
+                                        self.bb     )
+        #
+        ## build final PDF 
+        # 
+        self.pdf  = ROOT.RooAddPdf  ( "model2D"      + suffix ,
+                                      "Model2D(%s)"  % suffix ,
+                                      self.alist1 ,
+                                      self.alist2 )
+
+        self.name    = self.pdf.GetName()
+        
+    ## fit 
+    def fitTo ( self            ,
+                dataset         ,
+                draw   = False  ,
+                xbins  = 50     ,
+                ybins  = 50     ,
+                silent = False  , *args , **kwargs ) :
+        """
+        Perform the fit
+        """
+
+        from Ostap.FitBasic import fitArgs
+        
+        _args = fitArgs ("MancaX(%s):" % self.name , dataset , *args , **kwargs ) 
+              
+        if silent : from Ostap.Utils import RooSilent as Context
+        else      : from Ostap.Utils import NoContext as Context
+        
+        #
+        ## define silent context
+        #
+        context = Context ()         
+
+        with context : 
+            result = self.pdf.fitTo ( dataset                  , 
+                                      ROOT.RooFit.Save ()      ,
+                                      *_args                   )
+            
+        st   = result.status()
+        if 0 != st   : logger.warning('fit status is %s' % st   )
+        qual = result.covQual()
+        if 3 != qual : logger.warning('covQual    is %s' % qual )
+        
+        #
+        ## keep dataset (for drawing)
+        #
+        self.dataset = dataset
+        
+        if hasattr ( self , 'alist2' ) :
+            
+            nsum = VE()            
+            for i in self.alist2 :
+                nsum += i.as_VE() 
+                if i.getVal() > 0.9 * i.getMax() :
+                    logger.warning ( 'Variable %s == %s [close to maximum %s]'
+                                     % ( i.GetName() , i.getVal () , i.getMax () ) )
+                    
+            if not dataset.isWeighted() : 
+                nl = nsum.value() - 0.05 * nsum.error()
+                nr = nsum.value() + 0.05 * nsum.error()
+                if not nl <= len ( dataset ) <= nr :
+                    logger.error ( 'Fit is problematic:  sum %s != %s '
+                                   % ( nsum , len( dataset ) ) )  
+                    
+        nbins = xbins 
+        if not draw :
+            return result,None
+        
+        return result, self.draw ( None , dataset , nbins , ybins , silent , *args ) 
+
+    ## make 1D-plot 
+    def draw ( self            ,
+               drawvar  = None ,
+               dataset  = None ,
+               nbins    = 100  ,
+               ybins    =  20  ,
+               silent   = True ,
+               in_range = None ,
+               *args           )  : 
+        """
+        Make 1D-plot:
+        """    
+        
+        if not dataset :
+            if hasattr ( self , 'dataset' ) : dataset = self.dataset 
+            
+        if silent : from Ostap.Utils import RooSilent as Context
+        else      : from Ostap.Utils import NoContext as Context
+
+        context = Context () 
+        with context :
+                
+            if not drawvar :
+                return self.draw_H2D ( dataset , nbins , ybins )
+
+            
+            frame = drawvar.frame( nbins )
+            
+            if dataset :
+                if not in_range :
+                    dataset .plotOn ( frame ,                                     *args )
+                else            :
+                    dataset .plotOn ( frame , ROOT.RooFit.CutRange ( in_range ) , *args )
+
+            _args = args 
+            if in_range :
+                _args = list  (  args )
+                _args.append  ( ROOT.RooFit.ProjectionRange( in_range) )
+                _args = tuple ( _args ) 
+                
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.y1s_c.GetName() ) ,
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
+            
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.y2s_c.GetName() ) ,
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.y3s_c.GetName() ) ,
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
+
+            ## cross-components 
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.y1s_b.GetName() ) ,
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineStyle  ( 9              ) ,
+                               ROOT.RooFit.LineColor  ( ROOT.kBlue     ) , *_args )
+            
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.y2s_b.GetName() ) ,
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineStyle  ( 9              ) ,
+                               ROOT.RooFit.LineColor  ( ROOT.kBlue     ) , *_args )
+            
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.y3s_b.GetName() ) ,
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineStyle  ( 9              ) ,
+                               ROOT.RooFit.LineColor  ( ROOT.kBlue     ) , *_args )
+
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.bs_pdf.GetName() ) ,
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineStyle  ( 9              ) ,
+                               ROOT.RooFit.LineColor  ( 8 )              , *_args )            
+
+            ## pure background:
+            
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.Components ( self.bb_pdf.GetName() ) ,                           
+                               ROOT.RooFit.LineWidth  ( 1              ) ,
+                               ROOT.RooFit.LineStyle  ( ROOT.kDotted   ) ,
+                               ROOT.RooFit.LineColor  ( ROOT.kBlack    ) , *_args )
+            
+            ## altogether 
+            self.pdf .plotOn ( frame ,
+                               ROOT.RooFit.LineColor  ( ROOT.kRed      ) , *_args )
+            
+            frame.SetXTitle ( '' )
+            frame.SetYTitle ( '' )
+            frame.SetZTitle ( '' )
+            
+            frame.Draw()
+         
 
 # =============================================================================
 if '__main__' == __name__ :
