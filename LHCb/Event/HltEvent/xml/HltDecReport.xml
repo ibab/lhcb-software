@@ -427,6 +427,17 @@
         </code>
       </method>
 
+      <method
+        name='insert'
+        type='std::pair &lt; LHCb::HltDecReports::Container::const_iterator,bool &gt;'
+        argList='Container::const_iterator hint, Container::key_type key, Container::mapped_type mapped'
+        desc='insert HltDecReport for given decisionName'
+      >
+        <code>
+   return  m_decReports.insert(hint,key,mapped);
+        </code>
+      </method>
+
       <!-- readable printout -->
 
       <method
