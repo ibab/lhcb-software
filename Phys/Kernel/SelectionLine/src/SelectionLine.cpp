@@ -407,7 +407,7 @@ StatusCode Selection::Line::execute()
     report.setExecutionStage( i+1 );
   }
   // Is the line a Turbo line? If so, inform the HltDecReports
-  if ( m_turbo ) report.setExecutionStage( 254 ); // TODO: if (m_turbo) report.setExecutionStage( 0x80 | report.executionStage() );
+  if (m_turbo) report.setExecutionStage( 0x80 | report.executionStage() );
 
   // plot the wall clock time spent..
   using ms = std::chrono::duration<float, std::chrono::milliseconds::period>;
@@ -435,10 +435,10 @@ StatusCode Selection::Line::execute()
   //TODO: allow insert at the beginning, and non-const access to update...
   //TODO: allow a-priori complete report, only update 'our' entry here...
   if (UNLIKELY(m_insertion_hint<0)) {
-    auto h = reports->insert( { key.first , report } );
+    auto h = reports->insert( std::end(*reports),  key.first , report );
     m_insertion_hint = std::distance( std::begin(*reports),  h.first );
   } else {
-    reports->insert( std::next( std::begin(*reports), m_insertion_hint), { key.first , report } );
+    reports->insert( std::next( std::begin(*reports), m_insertion_hint ), key.first , report );
   }
 
   // update monitoring

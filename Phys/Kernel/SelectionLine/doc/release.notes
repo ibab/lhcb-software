@@ -7,6 +7,7 @@
 ! 2014-12-04 - Gerhard Raven
  - further reduce overhead; 
    note: Hlt::Line and SelectionAlg again need to be updated accordingly!
+ - flag turbo by setting bit 0x80 of executionstage
 
 ! 2014-12-02 - Gerhard Raven
  - change signature of numberOfCandidates so that we can avoid filling 'all zeros'
