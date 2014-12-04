@@ -4,9 +4,12 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+! 2014-12-04 - Gerhard Raven
+ - more cleanup
+ - update turbo signature: check bit 0x80 of exectution stage
 
 ! 2014-11-17 - Sebastian Neubert
-- Fix m_HltMuonTracksLocation to be a std::string
+ - Fix m_HltMuonTracksLocation to be a std::string
 
 ! 2014-11-07 - Gerhard Raven
  - C++11 cleanup
