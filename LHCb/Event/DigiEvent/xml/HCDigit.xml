@@ -7,7 +7,7 @@
            author = "Victor Coco"
            desc = "This class represents a Herschel PMT measurement">
     <location name = "Default" place = "Raw/HC/Digits"/>
-    <import name = "vector" std = "TRUE"/>
+    <location name = "L0" place = "Raw/HC/L0Digits"/>
     <import name = "Kernel/HCCellID"/>
     <template name = "KeyedObjectDict" t1 = "LHCb::HCCellID"/>
     <base name = "KeyedObject&lt;LHCb::HCCellID&gt;"/>
@@ -20,7 +20,6 @@
     <constructor desc = "Copy constructor"
                  initList = "KeyedObject&lt;LHCb::HCCellID&gt;(),
                              m_adc(digit.m_adc)">
-
       <arg const = 'TRUE' name = "digit" type = "LHCb::HCDigit"/>
     </constructor>
 
