@@ -14,11 +14,10 @@ std::ostream& LHCb::HltDecReports::fillStream(std::ostream& s) const
 {
   s << " HltDecReports : configuredTCK=" << m_configuredTCK 
     << " {\n" ;
-  for(Container::const_iterator i=m_decReports.begin();
-      i!=m_decReports.end(); ++i)
+  for(const auto& i : m_decReports )
   {
-    s << " decisionName :	" << i->first
-      << " HltDecReport :	" << i->second 
+    s << " decisionName :	" << i.first
+      << " HltDecReport :	" << i.second 
       << "\n";
   }
   s << " }" << std::endl;

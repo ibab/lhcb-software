@@ -4,6 +4,14 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2014-12-04 - Gerhard Raven
+ - HltDecReports: 
+    o define the 'Hlt1Default' and 'Hlt2Default' TES locations
+    o provide access to the 'reserve' and 'hinted insert' methods
+      of the underlying container
+ - some minor code cleanup
+
+
 ! 2014-11-26 - Marco Clemencic
  - Reverted work around for spurious entries in the rootmap files.
 

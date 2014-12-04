@@ -12,12 +12,11 @@
 
 std::ostream& LHCb::HltSelReports::fillStream(std::ostream& ss) const
 {
-  ss << " HltSelReports : { " << std::endl;
-  for(Container::const_iterator i=m_selReports.begin();
-      i!=m_selReports.end(); ++i){
-    ss << " selectionName : " << i->first
-       << " HltObjectSummary : " << i->second
-       << std::endl;
+  ss << " HltSelReports : { \n" ;
+  for(const auto& i : m_selReports) {
+    ss << " selectionName : " << i.first
+       << " HltObjectSummary : " << i.second
+       << '\n'; 
   }
   ss << " }" << std::endl;
   return ss;

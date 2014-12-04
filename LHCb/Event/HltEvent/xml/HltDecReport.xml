@@ -101,7 +101,7 @@
         desc='if numberOfCandidates in HltDecReport equals this then actual number might have been larger'
         >
         <code>
-  return (unsigned int)(numberOfCandidatesMask &gt;&gt; numberOfCandidatesBits);
+  return numberOfCandidatesMask &gt;&gt; numberOfCandidatesBits;
         </code>
       </method>
         
@@ -223,6 +223,8 @@
       id          = '7521' >
       
       <location name='Default'  place='Hlt/DecReports' />
+      <location name='Hlt1Default'  place='Hlt1/DecReports' />
+      <location name='Hlt2Default'  place='Hlt2/DecReports' />
       <location name='Emulated' place='Hlt/Emu/DecReports' />
 
       <base name='DataObject' />
@@ -236,6 +238,27 @@
         type   = 'GaudiUtils::VectorMap&lt; std::string, LHCb::HltDecReport &gt;'
         def    = 'Container'
         desc   = 'container of HltDecReport-s keyed by trigger decision name'
+        access = 'PUBLIC'
+      />
+
+      <typedef
+        type   = 'Container::const_iterator'
+        def    = 'const_iterator'
+        desc   = 'const iterator over of HltDecReport'
+        access = 'PUBLIC'
+      />
+
+      <typedef
+        type   = 'Container::const_reference'
+        def    = 'const_reference'
+        desc   = 'const reference to contained object'
+        access = 'PUBLIC'
+      />
+
+      <typedef
+        type   = 'Container::value_type'
+        def    = 'value_type'
+        desc   = 'type of contained object'
         access = 'PUBLIC'
       />
 
@@ -268,7 +291,7 @@
          const = 'TRUE' >
         <code>
     Container::const_iterator rep = m_decReports.find(decisionName);
-    if( rep==m_decReports.end() )return ((const LHCb::HltDecReport*)(0));
+    if( rep==m_decReports.end() )return 0;
     return &amp;(rep->second);
         </code>
       </method>
@@ -284,7 +307,7 @@
          const = 'TRUE'
        >
         <code>
-          return (m_decReports.find(decisionName)!=m_decReports.end());
+          return m_decReports.find(decisionName)!=m_decReports.end();
        </code>
       </method>
 
@@ -295,8 +318,13 @@
         const = 'TRUE' >
         <code>
     std::vector&lt;std::string&gt; names;
+    names.reserve( m_decReports.size() );
     Container::const_iterator it = m_decReports.begin();
     while ( it != m_decReports.end()) names.push_back((it++)->first);
+
+    //std::transform( std::begin( m_decReports ), std::end( m_decReports ), 
+    //                std::back_inserter( names ),
+    //                []( const_reference i ) { return i.first ; } );
     return names;
         </code>
       </method>
@@ -349,6 +377,20 @@
       </method>
       
 
+     <!-- reserve -->
+
+     <method
+        name='reserve'
+        type='void'
+        argList='Container::size_type num'
+        desc='reserve space for (at least) num elements'
+        const = 'FALSE' >
+        <code>
+     m_decReports.reserve(num);
+       </code>
+      </method>
+      
+
      <!-- insertor -->
 
       <method
@@ -358,8 +400,30 @@
         desc='insert HltDecReport for given decisionName, returns StatusCode::FAILURE if duplicate decision name'        
       >
         <code>
-   if( m_decReports.insert(decisionName,decReport).second )return StatusCode::SUCCESS;
-   return StatusCode::FAILURE;
+   return  m_decReports.insert(decisionName,decReport).second ? StatusCode::SUCCESS
+                                                              : StatusCode::FAILURE;
+        </code>
+      </method>
+
+      <method
+        name='insert'
+        type='std::pair &lt; LHCb::HltDecReports::Container::const_iterator,bool &gt;'
+        argList='Container::value_type value'
+        desc='insert HltDecReport for given decisionName'
+      >
+        <code>
+   return  m_decReports.insert(value);
+        </code>
+      </method>
+
+      <method
+        name='insert'
+        type='std::pair &lt; LHCb::HltDecReports::Container::const_iterator,bool &gt;'
+        argList='Container::const_iterator hint, Container::value_type value'
+        desc='insert HltDecReport for given decisionName'
+      >
+        <code>
+   return  m_decReports.insert(hint,value);
         </code>
       </method>
 
