@@ -26,7 +26,6 @@ class HEPMCJetMakerConf:
         self.CodeForMotherSelection = MotherCut
         self.CodeForBannedSelection = ToBanCut
         self.PtMin = PtMin
-        self.jetMakerTool =  'LoKi::FastJetMaker'
         self.jetMakerType =  jetname_dict[algtype]
         self.jetidnumber = jetidnumber
         self.MCParticleTypes = PartTypes
@@ -43,10 +42,10 @@ class HEPMCJetMakerConf:
         algo.OutputTable = self.OutputTable
         algo.SaveMCJetsFromMotherOnly = self.SaveMotherOnly
         algo.SimpleAcceptance = self.SimpleAcceptance
-        algo.JetMaker = self.jetMakerTool
-        algo.addTool ( LoKi__FastJetMaker )
-        algo.MCParticleTypes = self.MCParticleTypes
-        tool = getattr ( algo , 'LoKi__FastJetMaker' )
+        nametool = LoKi__FastJetMaker.__name__
+        algo.addTool(LoKi__FastJetMaker, name=nametool)
+        tool = getattr ( algo , nametool )
+        algo.JetMaker = tool.getTitleName()
         tool.Type = self.jetMakerType
         tool.RParameter = self.R
         tool.PtMin = self.PtMin
@@ -78,7 +77,6 @@ class MCJetMakerConf:
         self.CodeForMotherSelection = MotherCut
         self.CodeForBannedSelection = ToBanCut
         self.PtMin = PtMin
-        self.jetMakerTool =  'LoKi::FastJetMaker'
         self.jetMakerType =  jetname_dict[algtype]
         self.jetidnumber = jetidnumber
         self.SaveMotherOnly = SaveMotherOnly
@@ -96,9 +94,10 @@ class MCJetMakerConf:
         algo.OutputTableMC = self.OutputTableMC
         algo.SaveMCJetsFromMotherOnly = self.SaveMotherOnly
         algo.SimpleAcceptance = self.SimpleAcceptance
-        algo.JetMaker = self.jetMakerTool
-        algo.addTool ( LoKi__FastJetMaker )
-        tool = getattr ( algo , 'LoKi__FastJetMaker' )
+        nametool = LoKi__FastJetMaker.__name__
+        algo.addTool(LoKi__FastJetMaker, name=nametool)
+        tool = getattr ( algo , nametool )
+        algo.JetMaker = tool.getTitleName()
         tool.Type = self.jetMakerType
         tool.RParameter = self.R
         tool.PtMin = self.PtMin

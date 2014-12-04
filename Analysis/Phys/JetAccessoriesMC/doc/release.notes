@@ -4,6 +4,9 @@
 ! Purpose     : Jet finding MC accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-12-04 - Cédric Potterat
+ - Fixing the call to FastJetMaker in JetMaker_Config 
+
 ! 2014-11-06 - Marco Clemencic
  - Fixed CMake configuration (install headers).
 
