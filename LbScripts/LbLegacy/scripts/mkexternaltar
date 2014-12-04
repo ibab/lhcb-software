@@ -111,21 +111,32 @@ if ($package == "OpenScientist") then
   goto exec_end
 endif
 
+#if ($package == "osc_vis") then
+#  cd $CONTRIB
+#  set exclude = " --exclude examples --exclude templates " 
+#  tar zc ${exclude} -f $LHCBTAR/source/${package}_${version}_${binary}.tar.gz \
+#   ${package}/${version}/${binary}/bin \
+#   ${package}/${version}/${binary}/lib \
+#   ${package}/${version}/${binary}/Resources/OnX \
+#   ${package}/${version}/${binary}/Resources/CoinPython \
+#   ${package}/${version}/${binary}/Resources/expat \
+#   ${package}/${version}/${binary}/Resources/Slash \
+#   ${package}/${version}/${binary}/Resources/CoinGL \
+#   ${package}/${version}/${binary}/Resources/HEPVis \
+#   ${package}/${version}/${binary}/Resources/Lib
+#  goto exec_end
+#endif
+
 if ($package == "osc_vis") then
   cd $CONTRIB
   set exclude = " --exclude examples --exclude templates " 
   tar zc ${exclude} -f $LHCBTAR/source/${package}_${version}_${binary}.tar.gz \
    ${package}/${version}/${binary}/bin \
    ${package}/${version}/${binary}/lib \
-   ${package}/${version}/${binary}/Resources/OnX \
-   ${package}/${version}/${binary}/Resources/CoinPython \
-   ${package}/${version}/${binary}/Resources/expat \
-   ${package}/${version}/${binary}/Resources/Slash \
-   ${package}/${version}/${binary}/Resources/CoinGL \
-   ${package}/${version}/${binary}/Resources/HEPVis \
-   ${package}/${version}/${binary}/Resources/Lib
+   ${package}/${version}/${binary}/Resources
   goto exec_end
 endif
+
 
 #=======================================================================
 exec_end:
