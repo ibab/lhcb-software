@@ -26,13 +26,15 @@ class HCRawBankDecoder : public Decoder::AlgBase {
   virtual StatusCode execute();     ///< Algorithm execution
 
  private:
-  std::string m_digitLocation;
+  LHCb::HCDigits* m_digits;
+  LHCb::HCDigits* m_l0digits;
 
   bool m_skipTrigger;
   bool m_skipAdc;
 
   bool decodeV1(LHCb::RawBank* bank);
-  bool decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHCb::HCDigits& l0digits);
+  bool decodeV2(LHCb::RawBank* bank);
+  bool decodeErrorBank(LHCb::RawBank* bank);
 
 };
 

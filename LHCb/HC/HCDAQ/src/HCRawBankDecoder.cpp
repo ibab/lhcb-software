@@ -4,7 +4,9 @@
 // LHCb
 // Event/DAQEvent
 #include "Event/RawEvent.h"
+// Event/DigiEvent
 #include "Event/HCDigit.h"
+// Kernel/LHCbKernel
 #include "Kernel/HCCellID.h"
 
 // Local
@@ -17,7 +19,8 @@ DECLARE_ALGORITHM_FACTORY(HCRawBankDecoder)
 //=============================================================================
 HCRawBankDecoder::HCRawBankDecoder(const std::string& name,
                                    ISvcLocator* pSvcLocator)
-    : Decoder::AlgBase(name, pSvcLocator) {
+    : Decoder::AlgBase(name, pSvcLocator),
+      m_digits(NULL), m_l0digits(NULL) {
 
   // Initialize search path, and then call the base method.
   m_rawEventLocations = {LHCb::RawEventLocation::Other,
@@ -45,13 +48,12 @@ StatusCode HCRawBankDecoder::initialize() {
 //=============================================================================
 StatusCode HCRawBankDecoder::execute() {
 
-  // Create a container and pass its ownership to the TES.
-  LHCb::HCDigits* digits = new LHCb::HCDigits();
-   put(digits, "Raw/HC/Digits");
-  LHCb::HCDigits* l0digits = new LHCb::HCDigits();
-   put(l0digits, "Raw/HC/L0Digits");
+  // Create containers and pass their ownership to the TES.
+  m_digits = new LHCb::HCDigits();
+  put(m_digits, LHCb::HCDigitLocation::Default);
+  m_l0digits = new LHCb::HCDigits();
+  put(m_l0digits, LHCb::HCDigitLocation::L0);
     
-  
   // Retrieve the raw event.
   LHCb::RawEvent* rawEvent = findFirstRawEvent();
   if (NULL == rawEvent) {
@@ -59,7 +61,7 @@ StatusCode HCRawBankDecoder::execute() {
   }
 
   // Retrieve the HC raw banks.
-  const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HC);
+  auto banks = rawEvent->banks(LHCb::RawBank::HC);
   if (banks.empty()) {
     return Warning("Cannot find HC raw banks", StatusCode::SUCCESS);
   }
@@ -80,11 +82,27 @@ StatusCode HCRawBankDecoder::execute() {
     if (version == 1) {
       decodeV1(*it);
     } else if (version == 2) {
-      decodeV2(*it, *digits, *l0digits);
+      decodeV2(*it);
     } else {
       error() << "Unknown raw bank version (" << version << ")" << endmsg;
       return StatusCode::FAILURE;
     }
+  }
+
+  auto errorBanks = rawEvent->banks(LHCb::RawBank::EcalPackedError);
+  if (errorBanks.empty()) {
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << "No error banks in raw event." << endmsg;
+    }
+    return StatusCode::SUCCESS;
+  }
+  for (it = errorBanks.begin(); it != errorBanks.end(); ++it) {
+    // Make sure the bank is not corrupted.
+    if (LHCb::RawBank::MagicPattern != (*it)->magic()) {
+      error() << "Bad magic pattern in error bank" << endmsg;
+      continue;
+    }
+    decodeErrorBank(*it);
   }
   return StatusCode::SUCCESS;
 }
@@ -99,7 +117,7 @@ bool HCRawBankDecoder::decodeV1(LHCb::RawBank* bank) {
     const unsigned int word = bank->data()[i];
     const unsigned int channel = (word >> 16) & 0xFFFF;
     const unsigned int adc = word & 0xFFFF;
-    if (msgLevel(MSG::DEBUG)) {
+    if (msgLevel(MSG::VERBOSE)) {
       debug() << "Channel: " << channel << ", ADC: " << adc << endmsg;
     }
   }
@@ -109,7 +127,7 @@ bool HCRawBankDecoder::decodeV1(LHCb::RawBank* bank) {
 //=============================================================================
 // Decoding of raw bank version 2 (compressed format)
 //=============================================================================
-bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHCb::HCDigits& l0digits) {
+bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank) {
 
   uint32_t* data = bank->data();
   unsigned int nWords = bank->size() / sizeof(uint32_t);
@@ -131,7 +149,7 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHC
                 << format("ADC part: %03u bytes", lenAdc) << endmsg;
       const unsigned int ttype = (ctrl >> 1) & 0xF;
       const unsigned int chk = (ctrl >> 7) & 0x2;
-      verbose() << format("Triggger type: 0x%1x, ", ttype) 
+      verbose() << format("Trigger type: 0x%1x, ", ttype) 
                 << "control bits: " << chk << endmsg; 
     }
     const unsigned int generalError = ctrl & 0x1;
@@ -157,12 +175,14 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHC
       word = *data++;
       nWords -= 2;
       for (unsigned int i = 0; i < 32; ++i) {
-        const int read = pattern & (1 << i);
-        if (read == 0){
-
-	  LHCb::HCCellID cell( 0 , i % 8 , ( i - ( i % 8 ))/8);
-	  l0digits.insert(new LHCb::HCDigit(-5),cell);
-	  continue;}
+        const unsigned int station = i % 8;
+        const unsigned int quadrant = (i - station) / 8; 
+        LHCb::HCCellID cell(0, station, quadrant);
+        const uint32_t mask = 1 << i;
+        if ((pattern & mask) == 0) {
+          m_l0digits->insert(new LHCb::HCDigit(-5), cell);
+          continue;
+        }
         if (offset > 31) {
           // Next word.
           offset = 0;
@@ -175,16 +195,15 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHC
           verbose() << format("Channel: %06u ", i) 
                     << format("Trigger ADC: %06i", adc) << endmsg;
         }
-
-	LHCb::HCCellID cell( 0 , i % 8 , ( i - ( i % 8 ))/8);
-	l0digits.insert(new LHCb::HCDigit(adc),cell);
+	m_l0digits->insert(new LHCb::HCDigit(adc), cell);
       }
-    }
-    else{
-      
+    } else {
+      // Empty trigger block. 
       for (unsigned int i = 0; i < 32; ++i) {
-	LHCb::HCCellID cell( 0 , i % 8 , ( i - ( i % 8 ))/8);
-	l0digits.insert(new LHCb::HCDigit(-5),cell);
+        const unsigned int station = i % 8;
+        const unsigned int quadrant = (i - station) / 8; 
+	LHCb::HCCellID cell(0, station, quadrant);
+	m_l0digits->insert(new LHCb::HCDigit(-5), cell);
       }
     }
     if (m_skipAdc) {
@@ -206,7 +225,8 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHC
         word = *data++;
         --nWords;
       }
-      if (0 == (pattern & (1 << i))) {
+      const uint32_t mask = 1 << i;
+      if (0 == (pattern & mask)) {
         // Short (4 bit) coding
         adc = ((word >> offset) & 0xF) - 8;
         offset += 4;
@@ -226,8 +246,10 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHC
         }
         adc -= 256;
       }
-      LHCb::HCCellID cell( 0 , i % 8 , ( i - (i % 8 ))/8);
-      digits.insert(new LHCb::HCDigit(adc),cell);
+      const unsigned int station = i % 8;
+      const unsigned int quadrant = (i - station) / 8; 
+      LHCb::HCCellID cell(0, station, quadrant);
+      m_digits->insert(new LHCb::HCDigit(adc), cell);
       if (msgLevel(MSG::VERBOSE)) {
         verbose() << format("Channel: %06u ", i) 
                   << format("ADC: %06i", adc) << endmsg;
@@ -235,4 +257,68 @@ bool HCRawBankDecoder::decodeV2(LHCb::RawBank* bank, LHCb::HCDigits& digits, LHC
     }
   }
   return true;
+}
+
+//=============================================================================
+// Decoding of error raw banks
+//=============================================================================
+bool HCRawBankDecoder::decodeErrorBank(LHCb::RawBank* bank) {
+
+  uint32_t* data = bank->data();
+  const unsigned int nPP = 4;
+  for (unsigned int i = 0; i < nPP; ++i) {
+    const uint32_t evtrl = *data;
+    const uint32_t bcnt = evtrl & 0xFFF;
+    const uint32_t detid = (evtrl >> 12) & 0xF;
+    const uint32_t bankList = (evtrl >> 16) & 0xFF;
+    const uint32_t eventInfo = (evtrl >> 24) & 0xFF;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << std::string(60, '=') << endmsg;
+      verbose() << "PP FPGA " << i << endmsg;
+      verbose() << std::string(60, '=') << endmsg;
+      verbose() << "Bunch counter: " << bcnt << endmsg;
+      verbose() << format("Detector ID: 0x%x", detid) << endmsg;
+      verbose() << format("Bank list: 0x%x", bankList) << endmsg;
+      if (eventInfo != 0) {
+        verbose() << format("Event info: 0x%x", eventInfo) << endmsg;
+      }
+    }
+    ++data;
+    const uint32_t l0cnt = *data;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "L0 event counter: " << l0cnt << endmsg;
+    }
+    data += 3;
+    const unsigned int errorBankLength = (*data >> 16) & 0xFFFF;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Error bank length: " << errorBankLength << endmsg;
+    }
+    if (errorBankLength == 0) {
+      data += 2;
+      continue;
+    }
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Link  Sync Err  Link Err  Crate  Card   L0   BX" << endmsg;
+    }
+    for (unsigned int j = 0; j < 4; ++j) {
+      ++data;
+      const uint32_t word = *data;
+      const unsigned int febx = word & 0x3FF;
+      const unsigned int fel0 = (word >> 10) & 0x3FF;
+      const unsigned int card = (word >> 20) & 0xF;
+      const unsigned int crate = (word >> 24) & 0x1F;
+      const unsigned int errLink = (word >> 29) & 0x1;
+      const unsigned int errSync = (word >> 30) & 0x1;
+      if (msgLevel(MSG::VERBOSE)) {
+        verbose() << j 
+                  << "         " << errSync 
+                  << "         " << errLink << "      " 
+                  << format("%2u    %2u   %4u  %4u", crate, card, fel0, febx) 
+                  << endmsg; 
+      }
+    }
+    data += 2;
+  }
+  return true;
+
 }

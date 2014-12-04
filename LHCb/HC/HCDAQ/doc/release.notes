@@ -4,6 +4,9 @@
 ! Purpose     : Decoding of Herschel raw banks
 !-----------------------------------------------------------------------------
 
+! 2014-12-04 - Heinrich Schindler
+ - Add error bank decoding.
+
 ! 2014-11-27 - Heinrich Schindler
  - Revisited the code and added the L0 decoding (code from TED 2014)
 
