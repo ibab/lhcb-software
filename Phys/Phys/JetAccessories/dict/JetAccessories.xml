@@ -3,5 +3,6 @@
   <variable name="LHCb::ParticleFlowType::KEY" />
   <enum name="LHCb::JetIDInfo::JetIDInfos" />
   <enum name="LHCb::JECInfo::JECInfos" />
+  <enum name="LHCb::JetPileUpInfo::JetPileUpInfos" />
   <enum name="LHCb::JetEnergyFractionInfo::JetEnergyFractionInfos" />
 </lcgdict>

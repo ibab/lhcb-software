@@ -8,7 +8,7 @@ from Configurables import ( GaudiSequencer, LoKi__PFJetMaker, LoKi__FastJetMaker
 class JetMakerConf:
 
     def __init__(self, _name, Inputs = ['Phys/PFParticles/Particles'],
-#                 PFTypes = ['ChargedHadron','Muon','Electron','Photon','Pi0','HCALNeutrals','NeutralRecovery','V0','Charged0Momentum','ChargedInfMomentum','BadPhotonMatchingT','BadPhoton','IsolatedPhoton'],
+                 #PFTypes = ['ChargedHadron','Muon','Electron','Photon','Pi0','HCALNeutrals','NeutralRecovery','V0','Charged0Momentum','ChargedInfMomentum','BadPhotonMatchingT','BadPhoton','IsolatedPhoton'],
                  PFTypes = ['ChargedHadron','Muon','Electron','Photon','Pi0','HCALNeutrals','NeutralRecovery','V0','Charged0Momentum','BadPhoton','IsolatedPhoton'],
                  R = 0.5 ,
                  PtMin = 5000.,
@@ -20,7 +20,7 @@ class JetMakerConf:
                  pvassociationMinIPChi2 = True,
                  algtype="anti-kt",
                  listOfParticlesToBan=[]):
-        
+
         jetname_dict = {"kt":0,"Cambridge":1,"anti-kt":2}
         dictOfPFType = {'ChargedHadron':2,'Muon':3,'Electron':4,
                         'Photon':11,'Pi0':12,'MergedPi0':13,'ResolvedPi0':14,'HCALNeutrals':15,'NeutralRecovery':16,
@@ -33,7 +33,6 @@ class JetMakerConf:
         self.PtMin = PtMin
         self.JetEnergyCorrection = JetEnergyCorrection
         self.JetIDCut = JetIDCut
-        self.jetMakerTool =  'LoKi::FastJetMaker'
         self.jetMakerType =  jetname_dict[algtype]
         self.jetidnumber = jetidnumber
         self.OnlySaveWithB = onlySaveB
@@ -58,21 +57,22 @@ class JetMakerConf:
             if not alreadySet: hsvc.Input += [ "JEC14R07 DATAFILE='$PARAMFILESROOT/data/JetEnergyCorrections_Reco14_R07_v1.root' TYP='ROOT'" ]
         else:
             print "WARNING R parameter is not supported by any official JEC. Make sure you manually set your correct JEC file"
-            
-        
+
+
     def setupJetMaker(self):
         jetMakerName = self.name
         algo =  LoKi__PFJetMaker ( jetMakerName )
-        algo.JetMaker = self.jetMakerTool
         algo.Associate2Vertex = self.AssociateWithPV
-        algo.OnlySaveWithB = self.OnlySaveWithB 
+        algo.OnlySaveWithB = self.OnlySaveWithB
         algo.PVassociationMinIPChi2 = self.PVassociationMinIPChi2
-        algo.addTool ( LoKi__FastJetMaker )
+        nametool = LoKi__FastJetMaker.__name__
+        algo.addTool(LoKi__FastJetMaker, name=nametool)
+        tool = getattr ( algo , nametool )
+        algo.JetMaker = tool.getTitleName()
         algo.Inputs = self.Inputs
         algo.BanCandidates = self.BanCandidates
         algo.PFParticleTypes = self.PFParticleTypes
-        tool = getattr ( algo , 'LoKi__FastJetMaker' )
-        tool.Type = self.jetMakerType 
+        tool.Type = self.jetMakerType
         tool.RParameter = self.R
         tool.PtMin = self.PtMin
         tool.Recombination = 0
@@ -84,9 +84,9 @@ class JetMakerConf:
             elif self.R == 0.7  :
                 algo.HistoPath = 'JEC14R07/'
             else:
-                print "WARNING R parameter is not supported by any official JEC. Make sure you manually set your correct JEC file" 
+                print "WARNING R parameter is not supported by any official JEC. Make sure you manually set your correct JEC file"
         if self.JetIDCut :
             algo.ApplyJetID = True
-        
+
         ##self.JetSeq.Members+= [ algo  ]
         self.algorithms.append(algo)

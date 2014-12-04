@@ -4,6 +4,12 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+! 2014-12-04 - Cédric Potterat
+ - Fixing the call to FastJetMaker in JetMaker_Config 
+ - Adding post configuration for ParticleFlow_Config fixing MC settings
+ - Adding all extra info key in Kernel/JetEnums.h and changing PFJetMaker and dict ccordingly 
+ - Adding PileUp info in PFJetMaker as new extra info
+
 !========================= JetAccessories v3r8 2014-10-30 =========================
 
 ! 2014-10-20 - Chris Jones
