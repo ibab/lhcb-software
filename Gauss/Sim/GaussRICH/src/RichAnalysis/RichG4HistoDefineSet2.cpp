@@ -35,7 +35,7 @@ RichG4HistoDefineSet2::RichG4HistoDefineSet2() {
   
   
 }
-RichG4HistoDefineSet2::~RichG4HistoDefineSet2() { ; }
+RichG4HistoDefineSet2::~RichG4HistoDefineSet2() {  }
 
 void RichG4HistoDefineSet2::bookRichG4HistogramsSet2() {
 

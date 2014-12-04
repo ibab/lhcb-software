@@ -54,7 +54,7 @@ RichG4StepAnalysis5::RichG4StepAnalysis5
 //=============================================================================
 // Destructor
 //=============================================================================
-RichG4StepAnalysis5::~RichG4StepAnalysis5() {}; 
+RichG4StepAnalysis5::~RichG4StepAnalysis5() {} 
 
 //=============================================================================
 void RichG4StepAnalysis5::UserSteppingAction( const G4Step* aStep ) 

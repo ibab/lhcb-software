@@ -333,7 +333,7 @@ void  RichHpdProperties::setHpdMaximumQuantumEfficiency(){
   
 }
 
-RichHpdProperties::~RichHpdProperties() { ; }
+RichHpdProperties::~RichHpdProperties() {  }
 
 //////////////////////////////////////////////////////////////////////////
 void  RichHpdProperties::FillHpdQETablesAtInit( IDataProviderSvc* detSvc, 

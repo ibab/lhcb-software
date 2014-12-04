@@ -27,7 +27,7 @@ namespace RichG4SvcLocator
   IHistogramSvc*     RichG4HistoSvc();
 
   INTupleSvc *       RichG4NtupleSvc();
-};
+}
 
 #endif //GaussRICH_RichG4SvcLocator_H 
 

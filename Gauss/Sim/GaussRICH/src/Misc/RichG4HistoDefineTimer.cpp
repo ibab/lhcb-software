@@ -36,7 +36,7 @@ RichG4HistoDefineTimer::RichG4HistoDefineTimer(  ) {
 
 }
 RichG4HistoDefineTimer::~RichG4HistoDefineTimer( ) 
-{; }
+{ }
 void RichG4HistoDefineTimer::bookRichG4TimerHistograms() 
 {
   MsgStream RichG4Histolog(RichG4SvcLocator::RichG4MsgSvc(), 

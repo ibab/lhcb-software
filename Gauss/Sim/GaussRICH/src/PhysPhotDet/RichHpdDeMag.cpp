@@ -20,7 +20,7 @@ RichHpdDeMag::RichHpdDeMag(IDataProviderSvc* detSvc,
   }  
 }
 
-RichHpdDeMag::~RichHpdDeMag(){;}
+RichHpdDeMag::~RichHpdDeMag(){}
 
 std::vector<double> RichHpdDeMag::HpdDemagVect() const
 {

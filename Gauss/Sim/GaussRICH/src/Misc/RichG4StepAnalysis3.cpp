@@ -65,7 +65,7 @@ RichG4StepAnalysis3::RichG4StepAnalysis3
   m_RichG4AgelPhotonDirTolerence=0.005*rad;
 
 
-};
+}
 
 RichG4StepAnalysis3::~RichG4StepAnalysis3()
 {

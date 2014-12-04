@@ -54,7 +54,7 @@ RichG4StepAnalysis4::RichG4StepAnalysis4
   : GiGaStepActionBase ( type , name , parent ) {
 
 
-};
+}
 RichG4StepAnalysis4::~RichG4StepAnalysis4(  ) { }
 void RichG4StepAnalysis4::UserSteppingAction( const G4Step* aStep )
 {

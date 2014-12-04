@@ -18,7 +18,7 @@
 // namespace
 using namespace Rich::MC;
 
-DECLARE_ALGORITHM_FACTORY( MCRichHitToMCRichOpPhotAlg );
+DECLARE_ALGORITHM_FACTORY( MCRichHitToMCRichOpPhotAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,7 +37,7 @@ MCRichHitToMCRichOpPhotAlg::MCRichHitToMCRichOpPhotAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCRichHitToMCRichOpPhotAlg::~MCRichHitToMCRichOpPhotAlg() {};
+MCRichHitToMCRichOpPhotAlg::~MCRichHitToMCRichOpPhotAlg() {}
 
 //=============================================================================
 // Initialisation

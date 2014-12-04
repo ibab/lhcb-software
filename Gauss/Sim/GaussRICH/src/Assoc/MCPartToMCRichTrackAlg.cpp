@@ -18,7 +18,7 @@
 // namespace
 using namespace Rich::MC;
 
-DECLARE_ALGORITHM_FACTORY( MCPartToMCRichTrackAlg );
+DECLARE_ALGORITHM_FACTORY( MCPartToMCRichTrackAlg )
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -37,7 +37,7 @@ MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {};
+MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {}
 
 //=============================================================================
 // Main execution

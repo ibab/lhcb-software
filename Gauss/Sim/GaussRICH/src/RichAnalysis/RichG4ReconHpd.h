@@ -62,7 +62,7 @@ private:
 inline double RichG4ReconHpd::ConvertHpdSiliconZToHpdSystem(double aZcoord ) 
 {
  return  (aZcoord + m_HpdSiDetZLocation); 
-};
+}
 
 
 #endif // RICHANALYSIS_RICHG4RECONHPD_H

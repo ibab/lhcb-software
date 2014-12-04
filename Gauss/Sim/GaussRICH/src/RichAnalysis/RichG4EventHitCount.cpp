@@ -1593,7 +1593,7 @@ void RichG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int 
 
   //   G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
 
-};
+}
 
 void RichG4EventHitCount::RichG4CountSaturatedHitsFullAcc(const G4Event* anEvent,  int NumRichColl,
                                                    const std::vector<int> & RichG4CollectionID )

@@ -32,7 +32,7 @@ RichHpdPhotoElectricEffect::RichHpdPhotoElectricEffect(const GiGaBase *  /* giga
     //  G4cout << GetProcessName() << " is created " << G4endl;
 }
 
-RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() {; }
+RichHpdPhotoElectricEffect::~RichHpdPhotoElectricEffect() { }
 
 
 void RichHpdPhotoElectricEffect::setHpdPhElecParam() 

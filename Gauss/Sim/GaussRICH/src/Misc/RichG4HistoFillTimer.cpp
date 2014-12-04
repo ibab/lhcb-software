@@ -36,7 +36,7 @@ RichG4HistoFillTimer::RichG4HistoFillTimer(  ):m_timerRichEvent(0),
 
 }
 RichG4HistoFillTimer::~RichG4HistoFillTimer(  )
-{;}
+{ }
 void RichG4HistoFillTimer::RichG4BeginEventTimer() 
 {
   m_timerRichEvent->Start();

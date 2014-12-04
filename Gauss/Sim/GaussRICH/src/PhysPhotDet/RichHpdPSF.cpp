@@ -6,10 +6,10 @@ RichHpdPSF::RichHpdPSF()
     m_hpdPSFPhoEnergyVect(4),
     m_hpdPSFRadialPosVect(4),
     m_hitSmearValueVect(3)
- { ; }
+ {  }
 // the 4 above is just a dummy value.
 
-RichHpdPSF::~RichHpdPSF() { ; }
+RichHpdPSF::~RichHpdPSF() { }
 
 void RichHpdPSF::resetPSFVect() {
 

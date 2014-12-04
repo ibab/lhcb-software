@@ -24,7 +24,7 @@ RichPhotInfo::RichPhotInfo() :
   m_HpdQWPhotIncidentPosition(0),
   m_PmtLensPhotIncidentPosition(0),
   m_PhotonSourceInfo(0)
-   {; }
+   { }
 
-RichPhotInfo::~RichPhotInfo() {;}
+RichPhotInfo::~RichPhotInfo() {}
 

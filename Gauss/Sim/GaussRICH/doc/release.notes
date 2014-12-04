@@ -3,7 +3,8 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-
+! 2014-12-04 - Sajan Easo
+ - Fixes to avoid pedantic warnings during compilation. 
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 

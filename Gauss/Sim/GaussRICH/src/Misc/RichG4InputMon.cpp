@@ -25,7 +25,7 @@ RichG4InputMon::RichG4InputMon( ):m_FirstMonInstance(true)
 //=============================================================================
 // Destructor
 //=============================================================================
-RichG4InputMon::~RichG4InputMon() {}; 
+RichG4InputMon::~RichG4InputMon() {} 
 void RichG4InputMon::MonitorRich1GasRadiatorRefIndex() 
 {
   if(m_FirstMonInstance) {

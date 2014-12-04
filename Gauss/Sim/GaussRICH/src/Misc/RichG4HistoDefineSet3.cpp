@@ -33,7 +33,7 @@ RichG4HistoDefineSet3::RichG4HistoDefineSet3() {
   
   
 }
-RichG4HistoDefineSet3::~RichG4HistoDefineSet3() { ; }
+RichG4HistoDefineSet3::~RichG4HistoDefineSet3() {  }
 
 void RichG4HistoDefineSet3::bookRichG4HistogramsSet3() {
 

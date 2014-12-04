@@ -29,7 +29,7 @@ RichPEInfo::RichPEInfo() :
  m_PmtLensPhotIncidentPosition(0),
  m_HpdPeLocalOriginPosition(0),
  m_PhotonSourceInformation(0)
-{; }
+{ }
 
-RichPEInfo::~RichPEInfo() {;}
+RichPEInfo::~RichPEInfo() {}
 

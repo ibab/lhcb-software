@@ -91,7 +91,7 @@ RichHpdSiEnergyLoss::RichHpdSiEnergyLoss(const G4String& processName,
   //     G4cout<<GetProcessName() <<" is created "<<G4endl;
 
 }
-RichHpdSiEnergyLoss::~RichHpdSiEnergyLoss() {; }
+RichHpdSiEnergyLoss::~RichHpdSiEnergyLoss() { }
 
 void RichHpdSiEnergyLoss::InitializeHpdProcParam(){
 

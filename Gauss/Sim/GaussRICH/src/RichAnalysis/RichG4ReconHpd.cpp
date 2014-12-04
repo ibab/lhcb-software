@@ -252,11 +252,11 @@ RichG4ReconHpd::RichG4ReconHpd():
 
 
 
-};
+}
 
 RichG4ReconHpd::~RichG4ReconHpd()
 {
-};
+}
 
 Gaudi::XYZPoint RichG4ReconHpd::GetLocalPointWithQwCorr(const Gaudi::XYZPoint & aPhCathPoint  ){
      IMessageSvc*  msgSvc = RichG4SvcLocator::RichG4MsgSvc ();
@@ -473,7 +473,7 @@ RichG4ReconHpd::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   //                 <<rCathodeMaxRadius<<"   "<<m_HpdPhCathodeToSiDetMaxDist<<endreq;
   
     return Gaudi::XYZPoint(xph,yph, zPhInHpd);
-};
+}
 
 
 

@@ -27,7 +27,7 @@ RichHpdQE::RichHpdQE(const int hpdnum, const int richdetnum) :
   // m_PhotEnergyHpdPCRI(std::vector<double>(20)), 
  
 }
-RichHpdQE::~RichHpdQE() { ; }
+RichHpdQE::~RichHpdQE() {  }
 
 double RichHpdQE::getHpdPhotonWaveLengthFromBin(int curmbin)
 {
