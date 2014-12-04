@@ -165,7 +165,7 @@ Selection::Line::retrieveSubAlgorithms() const
   subAlgo.emplace_back( this,0 );
   for (auto i = std::begin(subAlgo);  i != std::end(subAlgo); ++i ) 
   {
-    auto* subs = i->first->subAlgorithms();
+    auto* subs = std::get<0>(*i)->subAlgorithms();
     if ( !subs->empty() ) {
       auto depth = i->second+1;
       auto j = std::next(i);
@@ -179,7 +179,7 @@ Selection::Line::retrieveSubAlgorithms() const
     debug() << "Dumping sub algorithms :" << endmsg;
     for ( const auto& ii : subAlgo )
     {
-      debug() << std::string( 3 + 3*ii.second , ' ' ) << ii.first->name() << endmsg;
+      debug() << std::string( 3 + 3*ii.second , ' ' ) << std::get<0>(ii)->name() << endmsg;
     }
   }
 
@@ -189,7 +189,7 @@ Selection::Line::retrieveSubAlgorithms() const
   {
     auto j = std::next(ii);
     while ( j != subAlgo.end() && j->second > ii->second ) ++j;
-    table.emplace_back(  ii->first, std::distance(ii,j) );
+    table.emplace_back(  std::get<0>(*ii), std::distance(ii,j), numberOfCandidates(std::get<0>(*ii)) );
   }
   return table;
 }
@@ -321,7 +321,7 @@ StatusCode Selection::Line::initialize()
   std::vector<std::string> stepLabels;
   const std::string common = name();
   for ( const auto& i :  m_subAlgo ) {
-    std::string stepname = i.first->name();
+    std::string stepname = std::get<0>(i)->name();
     const std::string::size_type j = stepname.find(common);
     if (j!=std::string::npos) stepname.erase(j,common.size());
     stepLabels.push_back( std::move(stepname) );
@@ -351,9 +351,9 @@ StatusCode Selection::Line::initialize()
 }
 
 //=============================================================================
-int Selection::Line::numberOfCandidates(const Algorithm*) const
+std::unique_ptr<std::function<unsigned()>> Selection::Line::numberOfCandidates(const Algorithm*) const
 {   
-    return -1;
+    return { nullptr };
 }
 
 
@@ -380,7 +380,7 @@ StatusCode Selection::Line::execute()
     return Error( "HltDecReports already contains report" );
   }
 
-  std::pair<std::string,unsigned> key = id();
+  const auto& key = id();
 
   //TODO: add c'tor with only ID
   LHCb::HltDecReport report( 0, 0, 0, key.second );
@@ -410,10 +410,10 @@ StatusCode Selection::Line::execute()
   if ( m_turbo ) report.setExecutionStage( 254 ); // TODO: if (m_turbo) report.setExecutionStage( 0x80 | report.executionStage() );
 
   // plot the wall clock time spent..
-  using ms = std::chrono::duration<double, std::chrono::milliseconds::period>;
+  using ms = std::chrono::duration<float, std::chrono::milliseconds::period>;
   auto elapsedTime = std::chrono::duration_cast<ms>(std::chrono::high_resolution_clock::now() - startClock);
   // protect against 0 
-  const double logElapsedTimeMS = elapsedTime.count() > 0 ? log10(elapsedTime.count()) : timeHistoLowBound;
+  const auto logElapsedTimeMS = elapsedTime.count() > 0 ? std::log10(elapsedTime.count()) : timeHistoLowBound;
   
   fill( m_timeHisto, logElapsedTimeMS ,1.0);
   if (elapsedTime.count()>m_slowThreshold) report.setErrorBits( report.errorBits() | 0x4 );
@@ -446,10 +446,10 @@ StatusCode Selection::Line::execute()
   // make stair plot
   auto last = m_subAlgo.begin();
   while ( last != m_subAlgo.end() ) {
-    if (last->first->filterPassed()) {
-      last+=last->second;
+    if (std::get<0>(*last)->filterPassed()) {
+      last+=std::get<1>(*last);
     } else {
-      if (last->second==1) break; // don't have subalgos, so this is where we stopped
+      if (std::get<1>(*last)==1) break; // don't have subalgos, so this is where we stopped
       ++last; // descend into subalgorithms, figure out which one failed.....
       // Note: what to do if subalgos pass, but parent failed??  (yes, this is possible!)
       // actually need to invert parent/daughters, such that if daughters OK,
@@ -460,8 +460,8 @@ StatusCode Selection::Line::execute()
   fill( m_stepHisto, std::distance(m_subAlgo.begin(),last), 1.0);
   
   for ( auto i = std::begin(m_subAlgo); i != last; ++i ) {
-    auto n = numberOfCandidates(i->first); // TODO: once this returns -1, avoid calling it again with the same argument...
-    if (!(n<0)) fill(m_candHisto,std::distance(std::begin(m_subAlgo),i),n,1.0);
+    const auto& fn_n = std::get<2>(*i);
+    if (fn_n) fill(m_candHisto,std::distance(std::begin(m_subAlgo),i),(*fn_n)(),1.0);
   }
   if ( m_measureTime ) m_timerTool->stop( m_timer );
 
@@ -473,7 +473,7 @@ std::vector< const Algorithm* > Selection::Line::algorithms() const
   std::vector< const Algorithm* > subs; subs.reserve( m_subAlgo.size() );
   std::transform( std::begin(m_subAlgo), std::end(m_subAlgo), 
                   std::back_inserter( subs ),
-                  [](const std::pair<const Algorithm*,unsigned>& i) { return i.first; } );
+                  [](SubAlgos::const_reference  i) { return std::get<0>(i); } );
   return subs;
 }
 

@@ -4,6 +4,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+! 2014-12-04 - Gerhard Raven
+ - further reduce overhead; 
+   note: Hlt::Line and SelectionAlg again need to be updated accordingly!
+
 ! 2014-12-02 - Gerhard Raven
  - change signature of numberOfCandidates so that we can avoid filling 'all zeros'
    into TPRofile, which is not cheap. This change saves O(2%) of the CPU time in

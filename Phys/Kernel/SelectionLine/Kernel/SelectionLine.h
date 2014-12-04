@@ -45,11 +45,9 @@ namespace Selection {
       void resetExecuted();         ///< Called before an event processing
 
       // id for this line -- return 0 if error
-      virtual std::pair<std::string,unsigned int> id() const = 0; 
-      // @TODO/FIXME: for now, just use inheritance to force _some_
-      //  implementation -- should be done smarter
-      // retrieve numberOfCandidates from subalgo -- or -1 if not supported for the specified algorithm
-      virtual int numberOfCandidates(const Algorithm*) const;
+      virtual const std::pair<std::string,unsigned int>& id() const = 0; 
+      // retrieve function which provides the numberOfCandidates for subalgo -- or nullptr if not supported
+      virtual std::unique_ptr<std::function<unsigned()>> numberOfCandidates(const Algorithm*) const;
       // retrieve numberOfCandidates from decision algo 
       virtual int numberOfCandidates() const = 0;
 
@@ -131,7 +129,9 @@ namespace Selection {
             return s_map[s];
       };
       
-      typedef std::vector<std::pair<const Algorithm*,unsigned> > SubAlgos;
+      typedef std::vector<std::tuple<const Algorithm*,
+                                     unsigned,
+                                     std::unique_ptr<std::function<unsigned()>>>> SubAlgos;
       SubAlgos retrieveSubAlgorithms() const;
 
       /** Decode a vector of string. */
