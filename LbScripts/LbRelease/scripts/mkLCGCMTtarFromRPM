@@ -70,7 +70,7 @@ class BuildLCGTarScript(Script):
                           dest = "explicit_deps",
                           action = "store_true",
                           default = False,
-                          help = "Restrict to the packages explicitely mentioned in the project")
+                          help = "Package only to the packages explicitely mentioned in the project")
         parser.add_option("--limit-rpm-deps",
                           dest = "limit_rpm_deps",
                           action = "store_true",
@@ -87,7 +87,11 @@ class BuildLCGTarScript(Script):
                           dest = "cmtrescache",
                           default = None,
                           help = "Cache the CMT result result to a file, or reuse a previously exsiting cache")
-
+        parser.add_option("--nonatives",
+                          dest = "nonatives",
+                          action = "store_true",
+                          default = False,
+                          help = "Just install the RPM for the named project and do not execute cmt show macros native")
 
 
 
@@ -113,6 +117,7 @@ class BuildLCGTarScript(Script):
         # preparing the actual RPM install area
         log.warning("Repackaging %s %s for CMTCONFIG %s" % (self.project, self.version, self.cmtconfig))
         installer = LCGYumInstaller.LCGYumInstaller(opts.siteroot)
+        self._installer = installer
         #installer = LCGRpmExtractor.LCGRpmInstaller(opts.siteroot)
         
         # CHeck whether there is an install already
@@ -122,7 +127,10 @@ class BuildLCGTarScript(Script):
 
         # performing the installation if requested
         if opts.noinstall == False:
-            self.install(self.project, self.version, self.cmtconfig, installer, opts.limit_rpm_deps)
+            if opts.nonatives:
+                self.installExplicitRPM(self.project, self.version, self.cmtconfig, installer, opts.limit_rpm_deps)
+            else:
+                self.install(self.project, self.version, self.cmtconfig, installer, opts.limit_rpm_deps)
 
         # Now preparing the tar file
         output_dir = None
@@ -138,8 +146,13 @@ class BuildLCGTarScript(Script):
             os.makedirs(htmldir)
         if not os.path.exists(sourcedir):
             os.makedirs(sourcedir)
-    
-        baseFilename = self.getOutputFilename()
+
+        baseFilename = None
+        if opts.nonatives:
+            baseFilename = self.getOutputFilenameFromRPM()
+        else:
+            baseFilename = self.getOutputFilenameFromCMT()
+            
         filename = "%s_%s" % (baseFilename, self.cmtconfig)
         log.warning("Output Base filename: %s" % filename)
 
@@ -147,14 +160,17 @@ class BuildLCGTarScript(Script):
         tarFilename = os.path.join(output_dir, "source", filename + ".tar.gz")
 
         # Preparing the tar file
-        (lcgVer, externalsDict) = self.getExternalsDict()
+        # See if we need to restrict the packages to install
         packageList = None
-        if opts.explicit_deps:
-            packageList = externalsDict.keys()
-            # Now adding the files in LCG_XX
-            for k in externalsDict.keys():
-                packageList.append(os.path.join("LCG_" + self.lcgVer,
-                                                k))
+        if not opts.nonatives:
+            (lcgVer, externalsDict) = self.getExternalsDict()
+            if opts.explicit_deps:
+                packageList = externalsDict.keys()
+                # Now adding the files in LCG_XX
+                for k in externalsDict.keys():
+                    packageList.append(os.path.join("LCG_" + self.lcgVer,
+                                                    k))
+                    
         installer.prepareLCGTar(tarFilename, packageList)
         self.createMD5File(tarFilename, "tar.gz")
         self.createHTMLFile(htmlFilename, baseFilename, self.cmtconfig)
@@ -210,14 +226,45 @@ class BuildLCGTarScript(Script):
         return (self.lcgVer, self.externalsDict)
 
 
-    def getOutputFilename(self):
+    def getOutputFilenameFromCMT(self):
         '''
         Derive the output filename from the project specified
-        '''
+        '''        
         if self.baseOutputFilename == None:
             filename = CMTNativeTools.get_output_filename(self.project.upper() + "_" + self.version,
                                                           self.cmtconfig, self.getExternalsDict()[1])
             self.baseOutputFilename = filename
+        return self.baseOutputFilename
+
+
+    def getOutputFilenameFromRPM(self):
+        '''
+        temporary method to find out how to name the package
+        '''
+        proj = self.project.upper()
+        ver = self.version
+        cmtconf = self.cmtconfig.replace("-", "_")
+        rpmname = "%s_%s_%s" % (proj, ver, cmtconf)
+
+
+        # Only suporting LHCbDIrac for the moment !
+        if proj != "LHCBDIRAC":
+            raise Exception("Packaging for %s not supported" % proj)
+
+        # Looking for the LHCBGRID dependency!
+        rpm = self._installer.findRpm(rpmname)
+        
+        if proj == "LHCBDIRAC":
+            base = "LCGGrid_"
+            lhcbgridreq = [ r for r in rpm.requires if r.name.startswith("LHCBGRID") ]
+            if len(lhcbgridreq) == 0:
+                raise Exception("It looks like this version of LHCBDIRAC does not depend on LHCBGRID."
+                                "Please check dependencies!")
+
+            self.log.debug("Found dependency to: "+ str(lhcbgridreq[0]))
+            gridver = lhcbgridreq[0].name.split("_")[1]
+            self.baseOutputFilename = base + gridver
+            
         return self.baseOutputFilename
 
 
@@ -267,7 +314,34 @@ class BuildLCGTarScript(Script):
                                     extVer.replace('-', '_'),
                                     cmtcfgopt.replace('-', '_'))
         return rpmname
+
+    def installExplicitRPM(self, project, version, cmtconfig, installer, limit_rpm_deps):
+        '''
+        Perform the installation of the needed packages in the install area
+        '''
+        allrpms = [ "%s_%s_%s" % (project.upper(), version, cmtconfig.replace("-", "_")) ]
             
+        self.log.warning("Now performing the actual install")
+        self.log.warning("RPM list:" + " ".join(allrpms))
+        packageErrors = []
+        for rpm in allrpms:
+            try:
+                installer.install(rpm, nodeps=limit_rpm_deps)
+            except:
+                packageErrors.append(rpm)
+
+        if len(packageErrors) > 0:
+            self.log.error("Errors installing the following packages:")
+            for p in packageErrors:
+                self.log.error(p)
+            if not self.options.force:
+                self.log.error("Some packages are missing -stopping installation")
+                self.log.error("Use --force option to continue nonetheless")
+                sys.exit(1)
+        else:
+                self.log.warning("All packaged installed successfully")
+
+
         
     def install(self, project, version, cmtconfig, installer, limit_rpm_deps):
         '''

@@ -1,3 +1,13 @@
+2014-12-04  Ben Couturier <Ben.Couturier@cern.ch>
+
+	LBCORE-686 : Added option --nonatives to mkLCGCMTtarFromRPM that installs the LHCbDirac RPM
+	and packages the lcg part of the install area instead of listing the dependencies with
+	"cmt show_macros native"
+	* python/LbRelease/LbYum/LHCbConfig.py
+	* python/LbRelease/CMTNativeTools.py
+	* python/LbRelease/LCGYumInstaller.py
+	* scripts/mkLCGCMTtarFromRPM
+
 2014-12-01  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* cmt/requirements: release of version v5r2p1

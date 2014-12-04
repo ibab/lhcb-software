@@ -22,7 +22,7 @@ import subprocess
 import stat
 
 from LbRelease.LbYum.LbInstall import LbInstallConfig, InstallArea
-from LbRelease.LbYum.LCGConfig import Config
+from LbRelease.LbYum.LHCbConfig import Config
 
 INSTALLERNAME = "lcg_install.sh"
 LCGDIRNAME = "lcg"
@@ -40,7 +40,7 @@ class LCGYumInstaller(object):
         self._siterootBase = os.path.abspath(siteroot)
         self._siteroot = self._siterootBase
         self._lcgDir = os.path.join(self._siterootBase, LCGDIRNAME)
-        self._config = LbInstallConfig("LCGConfig")
+        self._config = LbInstallConfig("LHCbConfig")
         self._config.configInst = Config()            
         self._config.siteroot = self._siteroot
         self._installArea = InstallArea(self._config)

@@ -93,6 +93,9 @@ def get_base_project(native_version):
         #print " * Native Version:", native_version
         relarea = find_project_in_cmtprojectpath(NAME, native_version)
         #os.chdir(os.path.join(os.environ[release_area],NAME,native_version,'cmt'))
+        if relarea == None:
+            raise Exception("Could not find project in release area")
+
         os.chdir(os.path.join(relarea,NAME,native_version,'cmt'))
     print "get_base_project %s %s %s %s %s" % (NAME, version, Name, NameSys, release_area)
     return NAME, version, Name, NameSys, release_area
@@ -227,6 +230,8 @@ def get_native_versions(native_version, binary):
     extra_packages_versions = {}
     
     NAME, version, Name, NameSys, release_area = get_base_project(native_version)
+    if release_area == None:
+        raise Exception("Could not fin project in release area")
     CMTPATH = get_cmtpath(native_version)
     lcgv = get_lcg_version(CMTPATH)
     relarea = find_project_in_cmtprojectpath(NAME, native_version)
@@ -327,6 +332,9 @@ def get_native_versions(native_version, binary):
 def get_output_filename(native_version, binary, packages_versions):
     here = os.getcwd()
     NAME, version, Name, NameSys, release_area = get_base_project(native_version)
+    if release_area == None:
+        raise Exception("Could not fin project in release area")
+
     os.chdir(here)
     plugins_flag = 0
     if plugins_flag == 0:
@@ -351,6 +359,7 @@ def get_output_filename(native_version, binary, packages_versions):
     else:
         filename = 'PLUGINS'
     return filename
+
 
 
 #----------------------------------------------------------------------------
