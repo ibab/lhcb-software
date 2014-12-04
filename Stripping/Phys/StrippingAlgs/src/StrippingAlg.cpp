@@ -13,13 +13,11 @@ public:
 
 private:
 
-  int numberOfCandidates() const;
-  std::pair<std::string,unsigned> id() const;
+  int numberOfCandidates() const override;
+  const std::pair<std::string,unsigned>& id() const override;
 
 private:
 
-  void SetupSelections();
-  std::pair<std::string,unsigned> SetupID();
   std::pair<std::string,unsigned> m_id;
   std::string m_outputLocation;
 
@@ -33,10 +31,8 @@ StrippingAlg::StrippingAlg( const std::string& name, ISvcLocator* pSvcLocator )
 
 StatusCode StrippingAlg::initialize()
 {
-  const StatusCode sc = Selection::Line::initialize();
+  StatusCode sc = Selection::Line::initialize();
   if ( sc.isFailure() ) return sc;
-
-  SetupSelections();
   m_id = std::make_pair(std::string(decisionName()), 1);
   return sc;
 }
@@ -54,9 +50,7 @@ int StrippingAlg::numberOfCandidates() const
 }
 
 
-void StrippingAlg::SetupSelections() { }
-
-std::pair<std::string,unsigned> StrippingAlg::id() const
+const std::pair<std::string,unsigned>& StrippingAlg::id() const
 {
   return m_id;
 }

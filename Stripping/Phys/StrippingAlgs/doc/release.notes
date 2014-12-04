@@ -5,6 +5,9 @@
 ! Purpose     : Stripping framework c++ component algorithms
 ! -----------------------------------------------------------------------------
 
+! 2014-12-04 - Gerhard Raven
+ - follow changes in Kernel/SelectionLine to speed up the code...
+
 ! 2014-12-02 - Gerhard Raven
  - follow changes in Kernel/SelectionLine to speed up the code...
 
