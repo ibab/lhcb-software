@@ -171,7 +171,7 @@ StatusCode DeFTTestAlg::execute() {
 
 
       if ( pFibreMat != 0 ) {
-        tuple->column("cfibrestat",1);   //keep status
+        tuple->column("cfibrestat",1.);   //keep status
         
         //hit local coordinates
         Gaudi::XYZPoint pInloc = pFibreMat->geometry()->toLocal((*aHit)->entry());
@@ -226,7 +226,7 @@ StatusCode DeFTTestAlg::execute() {
         StatusCode sc = pFibreMat->calculateHits(*aHit, vectChanAndFrac);
         if (sc.isFailure()) {
           std::string org=sc.severity().getOrigin();    //get string with severity code...
-          tuple->column("chitstat",atoi(org.substr(1).c_str()));
+          tuple->column("chitstat", (double)atoi(org.substr(1).c_str()));
           tuple->column("NFTchannels", -1);
           tuple->column("dsxmin",(float)0.);
           tuple->column("dsxmax",(float)0.);
@@ -239,12 +239,18 @@ StatusCode DeFTTestAlg::execute() {
 	  tuple->column("cell", 0u);
 	  tuple->column("channel",0u);
 	  tuple->column("energy",0.);
-	  tuple->column("Chan_X", 0.); 
-	  tuple->column("dChan_X", 0.);
-        }
+ 	  tuple->column("cellx", 0.); 
+	  tuple->column("dcellx", 0.);
+	  tuple->column("cellhitx", 0.); 
+	  tuple->column("dcellhitx", 0.);
+	  tuple->column("cellLocalx", 0.); 
+	  tuple->column("dcellLocalx", 0.);
+	  tuple->column("cellLocalhitx", 0.); 
+	  tuple->column("dcellLocalhitx", 0.);
+       }
 	else {
           std::string org=sc.severity().getOrigin();    //get string with severity code...
-          tuple->column("chitstat", atoi(org.substr(1).c_str()));
+          tuple->column("chitstat", (double)atoi(org.substr(1).c_str()));
           tuple->column("NFTchannels",(int)vectChanAndFrac.size());
           //detector segment partial test
           if(vectChanAndFrac.size()>0) {
@@ -257,7 +263,10 @@ StatusCode DeFTTestAlg::execute() {
           }
        
           //loop on pairs: to be adapted to farray or something
-          for (VectFTPairs::iterator itPair = vectChanAndFrac.begin(); itPair != vectChanAndFrac.end(); ++itPair) { 
+          ////for (VectFTPairs::iterator itPair = vectChanAndFrac.begin(); itPair != vectChanAndFrac.end(); ++itPair) {
+          if(vectChanAndFrac.size()>0) {
+            double cellSizeX=0.25;
+            VectFTPairs::iterator itPair = vectChanAndFrac.begin(); 
             tuple->column("layer", (itPair->first).layer());
             tuple->column("mat",(int)(itPair->first).mat());
 	    tuple->column("module",(itPair->first).module());
@@ -265,9 +274,24 @@ StatusCode DeFTTestAlg::execute() {
 	    tuple->column("cell",(itPair->first).sipmCell());
 	    tuple->column("channel",(itPair->first).channelID());
 	    tuple->column("energy",itPair->second);
-	    double xChan = pFibreMat->cellUCoordinate(itPair->first);
-	    tuple->column("Chan_X", xChan); 
-	    tuple->column("dChan_X", xChan-pMid.X());
+	    double cellx = pFibreMat->cellUCoordinate(itPair->first)/cos(pFibreMat->angle())
+                          - pIn.Y()*tan(pFibreMat->angle());
+	    tuple->column("cellx", cellx); 
+	    ///tuple->column("dcellx", cellx-pIn.X());
+ 	    tuple->column("dcellx", cellx-pMid.X());
+            double cellhitx=cellx+itPair->second*cellSizeX/cos(pFibreMat->angle());
+	    tuple->column("cellhitx", cellhitx); 
+	    ///tuple->column("dcellhitx", cellhitx-pIn.X());
+	    tuple->column("dcellhitx", cellhitx-pMid.X());
+	    double cellLocalx = pFibreMat->cellLocalX(itPair->first);
+	    tuple->column("cellLocalx", cellLocalx); 
+	    ///tuple->column("dcellLocalx", cellLocalx-pInloc.X());
+	    tuple->column("dcellLocalx", cellLocalx-pMidloc.X());
+            double cellLocalhitx=cellLocalx+itPair->second*cellSizeX;
+	    tuple->column("cellLocalhitx", cellLocalhitx); 
+            //zero when only 1 cell fraction used (not default) or when nftchannels==1, partly
+	    ///tuple->column("dcellLocalhitx", cellLocalhitx-pInloc.X());   
+	    tuple->column("dcellLocalhitx", cellLocalhitx-pMidloc.X()); 
 	  }
           if ( msgLevel(MSG::DEBUG) ) {
             debug() << "Test of function calculateHits:\n" << endmsg;
@@ -276,7 +300,7 @@ StatusCode DeFTTestAlg::execute() {
         }
       }
       else {
-        tuple->column("cfibrestat",-1);
+        tuple->column("cfibrestat",-1.);
       }
 
       // ok, write tuple row

@@ -3,6 +3,9 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+! 2014-12-04 - Luigi Del Buono
+ - change again "CreateDetSegment" to correct for a bug in the z0 computation (could explain at least
+ partly the efficiency problems), and also to make this routine less geometry version dependent.
 ! 2014-11-24 - Luigi Del Buono
  - go back to ClassID=8604 for "DeFTLayer" class (was 8603, bilayer class changed too)
  - split "CalculateHits" : the part validating the Mc hit and computes
