@@ -1,3 +1,4 @@
+#include <functional>
 #include "boost/algorithm/string/predicate.hpp"
 #include "Kernel/SelectionLine.h"
 #include "GaudiKernel/AlgFactory.h"
@@ -23,8 +24,8 @@ class Line : public ::Selection::Line
 
     StatusCode initialize() override;
     int numberOfCandidates() const override;
-    int numberOfCandidates( const Algorithm* ) const override;
-    std::pair<std::string, unsigned> id() const override;
+    std::unique_ptr<std::function<unsigned()>> numberOfCandidates( const Algorithm* ) const override;
+    const std::pair<std::string, unsigned>& id() const override;
 
   private:
     void SetupSelections();
@@ -39,6 +40,8 @@ class Line : public ::Selection::Line
     const Hlt::Selection* m_selection;
 
     std::pair<std::string, unsigned> m_id;
+    // TODO: instead of map, create one entry for each algorithm, and go by 'index'
+    //       unsupported algorithms get a nullptr to a selection instead of 'no entry'
     GaudiUtils::VectorMap<const Algorithm*, const Hlt::Selection*> m_selections;
 };
 
@@ -99,20 +102,13 @@ int Hlt::Line::numberOfCandidates() const
     return m_selection ? m_selection->size() : -1;
 }
 
-#if 0
-std::function<unsigned int()> Hlt::Line::numberOfCandidatesFunctor( const Algorithm* algorithm ) const
+std::unique_ptr<std::function<unsigned int()>> Hlt::Line::numberOfCandidates( const Algorithm* algorithm ) const
 {
     auto i = m_selections.find( algorithm );
-    if ( i != m_selections.end() ) return  [&](){ return i->second->size() ; }
-    return [](){ return -1 };
+    if ( i != m_selections.end() ) return  std::unique_ptr<std::function<unsigned int()>>{ new std::function<unsigned int()>{ [&](){ return i->second->size() ; } } } ;
+    return std::unique_ptr<std::function<unsigned int()>>{ nullptr };
 }
-#endif
 
-int Hlt::Line::numberOfCandidates( const Algorithm* algorithm ) const
-{
-    auto i = m_selections.find( algorithm );
-    return i != m_selections.end() ? i->second->size() : -1;
-}
 
 void Hlt::Line::SetupSelections()
 {
@@ -130,7 +126,7 @@ void Hlt::Line::SetupSelections()
     }
 }
 
-std::pair<std::string, unsigned> Hlt::Line::id() const
+const std::pair<std::string, unsigned>& Hlt::Line::id() const
 {
     return m_id;
 }
