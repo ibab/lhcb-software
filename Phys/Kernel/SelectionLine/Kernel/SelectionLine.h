@@ -174,6 +174,7 @@ namespace Selection {
       int  m_maxAcceptOnError;               ///< quota to avoid runaway accepts in case of persistent errors..
       int  m_nAcceptOnError;
       unsigned m_slowThreshold;
+      int m_insertion_hint = -1;
     };
 }
 #endif // Line_H

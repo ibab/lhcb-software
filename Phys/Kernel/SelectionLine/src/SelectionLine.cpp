@@ -434,7 +434,12 @@ StatusCode Selection::Line::execute()
 
   //TODO: allow insert at the beginning, and non-const access to update...
   //TODO: allow a-priori complete report, only update 'our' entry here...
-  reports->insert( key.first , report );
+  if (UNLIKELY(m_insertion_hint<0)) {
+    auto h = reports->insert( { key.first , report } );
+    m_insertion_hint = std::distance( std::begin(*reports),  h.first );
+  } else {
+    reports->insert( std::next( std::begin(*reports), m_insertion_hint), { key.first , report } );
+  }
 
   // update monitoring
   *m_acceptCounter += accept;
