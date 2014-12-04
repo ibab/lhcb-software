@@ -48,7 +48,7 @@ IDataProviderSvc* CkvG4SvcLocator::RichG4detSvc()
     }
   ///
   return a_detSvc ;
-};
+}
 
 IMessageSvc* CkvG4SvcLocator::RichG4MsgSvc ()
 {
@@ -78,7 +78,7 @@ IMessageSvc* CkvG4SvcLocator::RichG4MsgSvc ()
     }
   ///
   return a_msgSvc ;
-};
+}
 
 IHistogramSvc*   CkvG4SvcLocator::RichG4HistoSvc()
 {
@@ -108,7 +108,7 @@ IHistogramSvc*   CkvG4SvcLocator::RichG4HistoSvc()
     }
   ///
   return a_HistoSvc ;
-};
+}
 
 
 INTupleSvc*   CkvG4SvcLocator::RichG4NtupleSvc()
@@ -139,4 +139,4 @@ INTupleSvc*   CkvG4SvcLocator::RichG4NtupleSvc()
     }
   ///
   return a_NtupleSvc ;
-};
+}

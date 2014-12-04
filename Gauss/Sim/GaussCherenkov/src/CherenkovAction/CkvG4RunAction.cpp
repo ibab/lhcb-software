@@ -28,7 +28,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CkvG4RunAction );
+DECLARE_TOOL_FACTORY( CkvG4RunAction )
 
 
 //=============================================================================

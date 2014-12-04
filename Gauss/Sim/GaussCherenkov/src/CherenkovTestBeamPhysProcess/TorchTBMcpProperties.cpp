@@ -194,7 +194,7 @@ void TorchTBMcpProperties::InitializeTorchTBAnodeDetParam() {
 }
 
 
-TorchTBMcpProperties::~TorchTBMcpProperties() { ; }
+TorchTBMcpProperties::~TorchTBMcpProperties() {  }
 
 //////////////////////////////////////////////////////////////////////////
 void  TorchTBMcpProperties::FillTBMcpQETablesAtInit( IDataProviderSvc* detSvc, 

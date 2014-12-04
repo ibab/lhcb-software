@@ -62,7 +62,7 @@
 //
 // 2012-10-08 : Sajan Easo
 //----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(CherenkovStepAnalysis8);
+DECLARE_TOOL_FACTORY(CherenkovStepAnalysis8)
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -72,7 +72,7 @@ CherenkovStepAnalysis8::CherenkovStepAnalysis8(
   const IInterface*  parent 
  ) : GiGaStepActionBase ( type , name , parent ) {
   
-};
+}
 
 //=============================================================================
 // Destructor

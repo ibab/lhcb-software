@@ -8,7 +8,7 @@
 #include "TorchTBRunAction.h"
 #include "TorchTBG4DefineHistSet6.h"
 
-DECLARE_TOOL_FACTORY( TorchTBRunAction);
+DECLARE_TOOL_FACTORY( TorchTBRunAction)
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TorchTBRunAction

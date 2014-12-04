@@ -86,7 +86,7 @@ RichPmtSiEnergyLoss::RichPmtSiEnergyLoss(const G4String& processName,
   //   G4cout<<GetProcessName() <<" is created "<<G4endl;
 
 }
-RichPmtSiEnergyLoss::~RichPmtSiEnergyLoss() {; }
+RichPmtSiEnergyLoss::~RichPmtSiEnergyLoss() { }
 
 void RichPmtSiEnergyLoss::InitializePmtProcParam(){
 

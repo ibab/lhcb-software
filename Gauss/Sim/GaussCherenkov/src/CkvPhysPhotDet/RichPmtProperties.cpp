@@ -355,7 +355,7 @@ void  RichPmtProperties::setPmtMaximumQuantumEfficiency(){
   
 }
 
-RichPmtProperties::~RichPmtProperties() { ; }
+RichPmtProperties::~RichPmtProperties() {  }
 
 //////////////////////////////////////////////////////////////////////////
 void  RichPmtProperties::FillPmtQETablesAtInit( IDataProviderSvc* detSvc, 

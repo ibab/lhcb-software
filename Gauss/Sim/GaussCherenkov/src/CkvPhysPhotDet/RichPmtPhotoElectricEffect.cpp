@@ -44,7 +44,7 @@ RichPmtPhotoElectricEffect::RichPmtPhotoElectricEffect(const GiGaBase* /*gigabas
     //  G4cout << GetProcessName() << " is created " << G4endl;
 }
 
-RichPmtPhotoElectricEffect::~RichPmtPhotoElectricEffect() {; }
+RichPmtPhotoElectricEffect::~RichPmtPhotoElectricEffect() { }
 
 
 void RichPmtPhotoElectricEffect::setPmtPhElecParam() 

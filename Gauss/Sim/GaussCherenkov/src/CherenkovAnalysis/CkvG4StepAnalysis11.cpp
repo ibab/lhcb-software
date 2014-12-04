@@ -40,7 +40,7 @@
 
 
 
-DECLARE_TOOL_FACTORY(CkvG4StepAnalysis11);
+DECLARE_TOOL_FACTORY(CkvG4StepAnalysis11)
 
 
 

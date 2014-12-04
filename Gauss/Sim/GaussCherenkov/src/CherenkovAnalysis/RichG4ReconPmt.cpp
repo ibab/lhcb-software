@@ -114,11 +114,11 @@ RichG4ReconPmt::RichG4ReconPmt(){
 
 
 
-};
+}
 
 RichG4ReconPmt::~RichG4ReconPmt()
 {
-};
+}
 
 Gaudi::XYZPoint RichG4ReconPmt::ConvertLocalHitToPmtSystem(const Gaudi::XYZPoint & aLocalHit)
 {
@@ -144,7 +144,7 @@ RichG4ReconPmt::ReconHitOnPhCathFromLocalHitCoord ( const Gaudi::XYZPoint & aLoc
   double zph = m_PmtPhCathodeToAnodeMaxDist;
   double ZPhInPmt = ConvertPmtAnodeZToPmtSystem(zph);
     return Gaudi::XYZPoint(xph,yph, ZPhInPmt);
-};
+}
 
 
 

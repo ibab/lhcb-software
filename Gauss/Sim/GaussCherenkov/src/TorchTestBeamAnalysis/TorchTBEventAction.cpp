@@ -21,7 +21,7 @@
 #include "GaudiKernel/MsgStream.h"
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( TorchTBEventAction );
+DECLARE_TOOL_FACTORY( TorchTBEventAction )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TorchTBEventAction

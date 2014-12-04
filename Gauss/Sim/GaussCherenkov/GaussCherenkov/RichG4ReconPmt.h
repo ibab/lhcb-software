@@ -66,7 +66,7 @@ private:
 inline double RichG4ReconPmt::ConvertPmtAnodeZToPmtSystem(double aZcoord ) 
 {
  return  (aZcoord + m_PmtAnodeZLocation); 
-};
+}
 
 
 #endif // RICHANALYSIS_RICHG4RECONPMT_H

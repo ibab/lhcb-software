@@ -49,7 +49,7 @@
 //
 // 2012-06-10 : Sajan Easo
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(CherenkovStepAnalysis7);
+DECLARE_TOOL_FACTORY(CherenkovStepAnalysis7)
 
 //=============================================================================
 // Standard constructor, initializes variables

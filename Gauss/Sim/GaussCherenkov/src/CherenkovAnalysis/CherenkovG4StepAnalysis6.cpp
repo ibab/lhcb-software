@@ -40,7 +40,7 @@
 //
 // 2011-04-19 : Sajan Easo
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(CherenkovG4StepAnalysis6);
+DECLARE_TOOL_FACTORY(CherenkovG4StepAnalysis6)
 
 
 //=============================================================================

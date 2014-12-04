@@ -27,7 +27,7 @@ namespace CkvG4SvcLocator
   IHistogramSvc*     RichG4HistoSvc();
 
   INTupleSvc *       RichG4NtupleSvc();
-};
+}
 
 #endif //GaussCherenkov_CkvG4SvcLocator
 

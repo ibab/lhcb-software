@@ -50,6 +50,6 @@ void CkvG4HitCollName::setCollConfigWithMixedPmtSet(){
  
 }
 
-CkvG4HitCollName::~CkvG4HitCollName() {; }
+CkvG4HitCollName::~CkvG4HitCollName() { }
 
 

@@ -30,7 +30,7 @@
 // local
 #include "TorchTBBasicStepAnalysis.h"
 
-DECLARE_TOOL_FACTORY(TorchTBBasicStepAnalysis);
+DECLARE_TOOL_FACTORY(TorchTBBasicStepAnalysis)
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TorchTBBasicStepAnalysis

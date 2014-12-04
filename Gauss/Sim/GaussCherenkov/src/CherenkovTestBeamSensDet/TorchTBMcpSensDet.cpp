@@ -29,7 +29,7 @@
 
 // local
 #include "TorchTBMcpSensDet.h"
-DECLARE_TOOL_FACTORY( TorchTBMcpSensDet );
+DECLARE_TOOL_FACTORY( TorchTBMcpSensDet )
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TorchTBMcpSensDet

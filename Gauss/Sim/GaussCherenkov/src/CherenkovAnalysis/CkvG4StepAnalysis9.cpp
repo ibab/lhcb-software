@@ -43,7 +43,7 @@
 //
 // 2011-03-23 : Sajan Easo
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(CkvG4StepAnalysis9);
+DECLARE_TOOL_FACTORY(CkvG4StepAnalysis9)
 
 //=============================================================================
 // Standard constructor, initializes variables

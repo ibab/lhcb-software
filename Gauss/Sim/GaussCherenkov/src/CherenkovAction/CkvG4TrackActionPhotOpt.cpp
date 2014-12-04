@@ -47,7 +47,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CkvG4TrackActionPhotOpt );
+DECLARE_TOOL_FACTORY( CkvG4TrackActionPhotOpt )
 
 //=============================================================================
 // Standard constructor, initializes variables

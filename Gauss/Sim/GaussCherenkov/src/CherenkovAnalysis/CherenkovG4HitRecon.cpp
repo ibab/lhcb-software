@@ -154,7 +154,7 @@ void CherenkovG4HitRecon::RichG4GetOccupancies( const G4Event* anEvent,
           // G4int aPmtModuleNum =  aHit-> CurModuleNum();  //unused param
 
           G4int aRichDetNum = aHit->  GetCurRichDetNum();
-          G4int aHitInPixelGap = aHit->CurHitInPixelGap() ;
+          // G4int aHitInPixelGap = aHit->CurHitInPixelGap() ;
 
           G4int aPmtLensFlag= aHit->pdWithLens() ;
           

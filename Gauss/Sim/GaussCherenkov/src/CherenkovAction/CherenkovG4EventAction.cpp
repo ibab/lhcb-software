@@ -35,7 +35,7 @@
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
-DECLARE_TOOL_FACTORY( CherenkovG4EventAction );
+DECLARE_TOOL_FACTORY( CherenkovG4EventAction )
 
 
 //=============================================================================

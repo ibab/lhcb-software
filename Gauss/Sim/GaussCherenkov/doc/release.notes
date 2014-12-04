@@ -4,6 +4,9 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, 
 !               etc for RICH Upgrade
 !----------------------------------------------------------------------------- 
+! 2014-12-04 - Sajan Easo
+ - Fixes to avoid pedantic warnings during compilation.
+
 !2014-11-16 -Sajan Easo
  -Further modifications to histogram filling for Rich1 occupancy
 !2014-10-15 - Sajan Easo

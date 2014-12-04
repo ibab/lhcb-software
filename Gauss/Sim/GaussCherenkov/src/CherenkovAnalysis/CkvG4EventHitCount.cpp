@@ -1491,7 +1491,7 @@ void CkvG4EventHitCount::RichG4CountSaturatedHits(const G4Event* anEvent,  int N
 
   //   G4cout<<"End of   RichG4CountSaturatedHits " <<G4endl;
 
-};
+}
 
 
 

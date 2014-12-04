@@ -222,7 +222,7 @@ CkvG4GeomProp::CkvG4GeomProp(IDataProviderSvc* detSvc, IMessageSvc* msgSvc)
 //  {  }
 }
 
-CkvG4GeomProp::~CkvG4GeomProp() { ; }
+CkvG4GeomProp::~CkvG4GeomProp() {  }
 
 
 G4double CkvG4GeomProp::PixelXBoundaryValue(int PixelXNumber) {

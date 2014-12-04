@@ -40,7 +40,7 @@
 //
 // 2004-05-27 : Sajan EASO
 //-----------------------------------------------------------------------------
-DECLARE_TOOL_FACTORY(CkvG4StepAnalysis5);
+DECLARE_TOOL_FACTORY(CkvG4StepAnalysis5)
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -55,7 +55,7 @@ CkvG4StepAnalysis5::CkvG4StepAnalysis5
 //=============================================================================
 // Destructor
 //=============================================================================
-CkvG4StepAnalysis5::~CkvG4StepAnalysis5() {}; 
+CkvG4StepAnalysis5::~CkvG4StepAnalysis5() {}
 
 //=============================================================================
 void CkvG4StepAnalysis5::UserSteppingAction( const G4Step* aStep ) 
