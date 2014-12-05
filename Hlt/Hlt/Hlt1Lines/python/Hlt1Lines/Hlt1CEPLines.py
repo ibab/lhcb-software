@@ -30,7 +30,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
             Preambulo = self.CEP_preambulo(),
             Code = """
             VeloCandidates
-            >>  ( TC_SIZE <= %(CEP_MaxNVelo) )
+            >>  ( TC_SIZE <= %(CEP_MaxNVelo)s )
             >>  LooseForward
             >>  tee  ( monitor( TC_SIZE > 0, '# pass loose forward', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nLooseForward' , LoKi.Monitoring.ContextSvc ) )
