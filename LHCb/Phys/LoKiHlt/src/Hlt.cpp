@@ -32,10 +32,8 @@ LoKi::HLT::HasDecision::HasDecision
 ( const std::string& name1 , 
   const std::string& name2 ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
-  , m_names () 
+  , m_names { name1, name2 }
 {
-  m_names.push_back ( name1 ) ;
-  m_names.push_back ( name2 ) ;
 }
 // ============================================================================
 // constructor from the decision names 
@@ -45,11 +43,8 @@ LoKi::HLT::HasDecision::HasDecision
   const std::string& name2 ,
   const std::string& name3 ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
-  , m_names () 
+  , m_names { name1, name2, name3 }
 {
-  m_names.push_back ( name1 ) ;
-  m_names.push_back ( name2 ) ;
-  m_names.push_back ( name3 ) ;
 }
 // ============================================================================
 // constructor from the decision names 
@@ -60,12 +55,8 @@ LoKi::HLT::HasDecision::HasDecision
   const std::string& name3 , 
   const std::string& name4 ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
-  , m_names () 
+  , m_names { name1, name2, name3, name4 }
 {
-  m_names.push_back ( name1 ) ;
-  m_names.push_back ( name2 ) ;
-  m_names.push_back ( name3 ) ;
-  m_names.push_back ( name4 ) ;
 }
 // ============================================================================
 // constructor form the decision names ("OR") 
@@ -82,10 +73,10 @@ LoKi::HLT::HasDecision::result_type
 LoKi::HLT::HasDecision::operator() 
   ( LoKi::HLT::HasDecision::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
-  for ( Names::const_iterator iname = begin() ; end() != iname ; ++iname ) 
-  { if ( a -> hasDecisionName ( *iname ) ) { return true ; } } // RETURN
-  return false ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  return std::any_of( begin(), end(), [&](Names::const_reference n) {
+                      return a -> hasDecisionName ( n );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -131,16 +122,14 @@ LoKi::HLT::PassDecision::result_type
 LoKi::HLT::PassDecision::operator() 
   ( LoKi::HLT::PassDecision::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   //
-  typedef LHCb::HltDecReports::Container::const_iterator IT ;
-  IT _e = a -> decReports ().end   () ;
-  for ( Names::const_iterator iname = begin() ; end() != iname ; ++iname ) 
-  { 
-    IT found = a -> find ( *iname ) ;
-    if ( _e != found && found->second.decision () ) { return true ; }  // RETURN 
-  }
-  return false ;
+  auto  _e = std::end(a -> decReports ());
+  return std::any_of( begin(), end(),
+                      [&](Names::const_reference name) {
+    auto found = a -> find ( name ) ;
+    return  _e != found && found->second.decision (); 
+  } );
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -149,7 +138,7 @@ LoKi::HLT::Size::result_type
 LoKi::HLT::Size::operator() 
   ( LoKi::HLT::Size::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   return a -> size() ;
 }
 // ============================================================================
@@ -159,15 +148,12 @@ LoKi::HLT::NPass::result_type
 LoKi::HLT::NPass::operator() 
   ( LoKi::HLT::NPass::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   //
-  size_t nPass = 0  ;
-  typedef LHCb::HltDecReports::Container::const_iterator IT ;
-  IT _end = a -> end   () ;
-  for ( IT it = a -> begin () ; _end != it ; ++it ) 
-  { if ( it->second.decision() ) { ++nPass ; } }
-  //
-  return nPass ;
+  return std::count_if( std::begin(*a), std::end(*a),
+                      [](LHCb::HltDecReports::Container::const_reference i) {
+                            return i.second.decision();
+  } );
 }
 // ============================================================================
 // MANDATORY: the only one essential method 
@@ -176,14 +162,12 @@ LoKi::HLT::Decision::result_type
 LoKi::HLT::Decision::operator() 
   ( LoKi::HLT::Decision::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   //
-  typedef LHCb::HltDecReports::Container::const_iterator IT ;
-  IT _end = a -> end   () ;
-  for ( IT it = a -> begin () ; _end != it ; ++it ) 
-  { if ( it->second.decision() ) { return true ; } }  // RETURN
-  //
-  return false ;
+  return std::any_of( std::begin(*a), std::end(*a),
+                      [](LHCb::HltDecReports::Container::const_reference i) {
+                            return  i.second.decision() ;
+  }) ;
 }
 
 
@@ -202,10 +186,8 @@ LoKi::HLT::DecisionBut::DecisionBut
 ( const std::string& name1 , 
   const std::string& name2 ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
-  , m_special () 
+  , m_special { name1, name2 }
 {
-  m_special.push_back ( name1 ) ;
-  m_special.push_back ( name2 ) ;
 }
 // ============================================================================
 // constructor from three "special" decicions
@@ -215,11 +197,8 @@ LoKi::HLT::DecisionBut::DecisionBut
   const std::string& name2 , 
   const std::string& name3 ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
-  , m_special () 
+  , m_special { name1, name2, name3 }
 {
-  m_special.push_back ( name1 ) ;
-  m_special.push_back ( name2 ) ;
-  m_special.push_back ( name3 ) ;
 }
 // ============================================================================
 // constructor from four "special" decicions
@@ -230,12 +209,8 @@ LoKi::HLT::DecisionBut::DecisionBut
   const std::string& name3 ,
   const std::string& name4 ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Predicate () 
-  , m_special () 
+  , m_special{ name1, name2, name3, name4 }
 {
-  m_special.push_back ( name1 ) ;
-  m_special.push_back ( name2 ) ;
-  m_special.push_back ( name3 ) ;
-  m_special.push_back ( name4 ) ;
 }
 // ============================================================================
 // constructor from vector of "special" decicions
@@ -260,21 +235,20 @@ LoKi::HLT::DecisionBut::result_type
 LoKi::HLT::DecisionBut::operator() 
   ( LoKi::HLT::DecisionBut::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   //
-  typedef LHCb::HltDecReports::Container::const_iterator IT ;
-  IT _end = a -> end   () ;
   size_t nPositive = 0 ;
-  for ( IT it = a -> begin () ; _end != it ; ++it ) 
+  for ( const auto&  i: *a ) 
   {
     // the decision 
-    if (it->second.decision() == 0) { continue ; }              // CONTINUE
+    if (!i.second.decision()) { continue ; }              // CONTINUE
     ++nPositive ;
-    if ( nPositive > m_special.size () )     { return true ; }  // RETURN 
-    if ( m_special.end() == 
-         std::find ( m_special.begin () , 
-                     m_special.end   () , 
-                     it->first ) )           { return true ; }   // RETURN 
+    if ( nPositive > m_special.size ()  ||
+         m_special.end() == std::find ( m_special.begin () , 
+                                        m_special.end   () , 
+                                        i.first ) )  { 
+        return true ; 
+    } 
   }
   //
   return false ;
@@ -336,12 +310,12 @@ LoKi::HLT::HasDecisionSubString::result_type
 LoKi::HLT::HasDecisionSubString::operator() 
   ( LoKi::HLT::HasDecisionSubString::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // loop over all selecttions and match the names 
-  for ( LHCb::HltDecReports::Container::const_iterator isel = a->begin() ; 
-        a->end() != isel ; ++isel ) 
-  { if ( std::string::npos != isel->first.find( substr() ) ) { return true ; } }
-  return false ;
+  return std::any_of( std::begin(*a), std::end(*a),
+                      [&](LHCb::HltDecReports::Container::const_reference i) {
+            return i.first.find( substr() ) != std::string::npos ;
+  } );
 }
 // ============================================================================
 // printout 
@@ -376,15 +350,13 @@ LoKi::HLT::PassDecisionSubString::result_type
 LoKi::HLT::PassDecisionSubString::operator() 
   ( LoKi::HLT::PassDecisionSubString::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // loop over all selecttions and match the names 
-  for ( LHCb::HltDecReports::Container::const_iterator isel = a->begin() ; 
-        a->end() != isel ; ++isel ) 
-  { 
-    if ( isel->second.decision() && std::string::npos != isel->first.find( substr() ) ) 
-    { return true ; }
-  }
-  return false ;
+  return std::any_of( std::begin(*a), std::end(*a),
+                      [&](LHCb::HltDecReports::Container::const_reference i) {
+                return  i.second.decision() && 
+                        std::string::npos != i.first.find( substr() ) ;
+  });
 }
 // ============================================================================
 // printout 
@@ -463,14 +435,12 @@ LoKi::HLT::HasDecisionRegex::result_type
 LoKi::HLT::HasDecisionRegex::operator() 
   ( LoKi::HLT::HasDecisionRegex::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // loop over all selections and match the names 
-  boost::smatch match ;
-  for ( LHCb::HltDecReports::Container::const_iterator isel = a->begin() ; 
-        a->end() != isel ; ++isel ) 
-  { if ( boost::regex_match ( isel->first , expression() ) ) { return true ; } }
-  //
-  return false ;
+  return std::any_of(std::begin(*a),std::end(*a),
+                     [&](LHCb::HltDecReports::Container::const_reference i) {
+                        return boost::regex_match ( i.first , expression() );
+                     } );
 }
 // ============================================================================
 // printout 
@@ -478,8 +448,6 @@ LoKi::HLT::HasDecisionRegex::operator()
 std::ostream& 
 LoKi::HLT::HasDecisionRegex::fillStream ( std::ostream& s ) const 
 { return s << " HLT_HAS_RE('" << substr() << "') " ; }
-
-
 
 // ============================================================================
 // constructor 
@@ -505,15 +473,13 @@ LoKi::HLT::PassDecisionRegex::result_type
 LoKi::HLT::PassDecisionRegex::operator() 
   ( LoKi::HLT::PassDecisionRegex::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // loop over all selections and match the names 
-  for ( LHCb::HltDecReports::Container::const_iterator isel = a->begin() ; 
-        a->end() != isel ; ++isel ) 
-  { 
-    if ( isel->second.decision() && 
-         boost::regex_match ( isel->first , expression() ) ) { return true ; }
-  }
-  return false ;
+  return std::any_of( std::begin(*a), std::end(*a),
+                      [&](LHCb::HltDecReports::Container::const_reference i) {
+            return  i.second.decision() && 
+                    boost::regex_match ( i.first , expression() );
+  } );
 }
 // ============================================================================
 // printout 
@@ -548,15 +514,13 @@ LoKi::HLT::DecisionButRegex::result_type
 LoKi::HLT::DecisionButRegex::operator() 
   ( LoKi::HLT::DecisionButRegex::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // loop over all selections and match the names 
-  for ( LHCb::HltDecReports::Container::const_iterator isel = a->begin() ; 
-        a->end() != isel ; ++isel ) 
-  { 
-    if ( isel->second.decision() && 
-         boost::regex_match( isel->first , expression() ) ) { return true ; }
-  }
-  return false ;
+  return std::any_of( std::begin(*a), std::end(*a), 
+                      [&](LHCb::HltDecReports::Container::const_reference i) {
+      return i.second.decision() && 
+             !boost::regex_match( i.first , expression() )  ;
+  } );
 }
 // ============================================================================
 // printout 
@@ -595,16 +559,13 @@ LoKi::HLT::ErrorBits* LoKi::HLT::ErrorBits::clone () const
 LoKi::HLT::ErrorBits::result_type
 LoKi::HLT::ErrorBits::operator() ( LoKi::HLT::ErrorBits::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // find the selection by name 
-  LHCb::HltDecReports::Container::const_iterator isel = a->find ( m_key ) ;
-  if ( a->end() == isel ) 
-  {
-    Error ( "No decision has been found for '" + m_key.str() + "', return -1" ) ;
-    return -1 ;
-  }
+  auto isel = a->find ( m_key ) ;
+  if ( isel != std::end(*a) ) return isel->second.errorBits() ;
+  Error ( "No decision has been found for '" + m_key.str() + "', return -1" ) ;
+  return -1 ;
   //
-  return isel->second.errorBits() ;
 }
 // ============================================================================
 // OPTIONAL: nice printout 
@@ -644,17 +605,14 @@ LoKi::HLT::ExecutionStage::result_type
 LoKi::HLT::ExecutionStage::operator() 
   ( LoKi::HLT::ExecutionStage::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // find the selection by name 
-  LHCb::HltDecReports::Container::const_iterator isel = a->find ( channel()  ) ;
-  if ( a->end() == isel ) 
-  {
-    Error ( "No decision has been found for '" + 
+  auto isel = a->find ( channel()  ) ;
+  if ( isel != std::end(*a) ) return isel->second.executionStage () ;
+  Error ( "No decision has been found for '" + 
             channel().str() + "', return -1" ) ;
-    return -1 ;
-  }
+  return -1 ;
   //
-  return isel->second.executionStage () ;
 }
 // ============================================================================
 // OPTIONAL: nice printout 
@@ -691,17 +649,13 @@ LoKi::HLT::NumberOfCandidates* LoKi::HLT::NumberOfCandidates::clone () const
 LoKi::HLT::NumberOfCandidates::result_type
 LoKi::HLT::NumberOfCandidates::operator() ( LoKi::HLT::NumberOfCandidates::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // find the selection by name 
-  LHCb::HltDecReports::Container::const_iterator isel = a->find ( channel () ) ;
-  if ( a->end() == isel ) 
-  {
-    Error ( "No decision has been found for '" 
-            + channel().str() + "', return -1" ) ;
-    return -1 ;
-  }
-  //
-  return isel->second.numberOfCandidates () ;
+  auto isel = a->find ( channel () ) ;
+  if ( isel != std::end(*a)  ) return isel->second.numberOfCandidates () ;
+  Error ( "No decision has been found for '" 
+          + channel().str() + "', return -1" ) ;
+  return -1 ;
 }
 // ============================================================================
 // OPTIONAL: nice printout 
@@ -710,8 +664,6 @@ std::ostream&
 LoKi::HLT::NumberOfCandidates::fillStream ( std::ostream& s ) const 
 { return s << " HLT_NCANDIDATES('" + channel().str() + ") " ; }
 // ============================================================================
-
-
 
 // ============================================================================
 // constructor from the channel name 
@@ -745,18 +697,17 @@ LoKi::HLT::Saturated::result_type
 LoKi::HLT::Saturated::operator() 
   ( LoKi::HLT::Saturated::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // find the selection by name 
-  LHCb::HltDecReports::Container::const_iterator isel = a->find ( channel () ) ;
-  if ( a->end() == isel ) 
-  {
-    Error ( "No decision has been found for '" 
-            + channel().str() + "', return false" ) ;
-    return false ;
+  auto isel = a->find ( channel () ) ;
+  if ( isel != std::end(*a) )  {
+    return isel->second.numberOfCandidates () == 
+           LHCb::HltDecReport::saturatedNumberOfCandidates() ;
   }
+  Error ( "No decision has been found for '" 
+            + channel().str() + "', return false" ) ;
+  return false ;
   //
-  return isel->second.numberOfCandidates () == 
-    LHCb::HltDecReport::saturatedNumberOfCandidates() ;
 }
 // ============================================================================
 // OPTIONAL: nice printout 
@@ -794,11 +745,9 @@ LoKi::HLT::CountErrorBits::CountErrorBits
   const std::string& line2 , 
   const unsigned int mask  ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
-  , m_lines () 
+  , m_lines { line1, line2 }
   , m_mask  ( mask  )
 {
-  m_lines.push_back ( line1 ) ;
-  m_lines.push_back ( line2 ) ;  
 }  
 // ============================================================================
 // constructor from the lines & mask 
@@ -809,12 +758,9 @@ LoKi::HLT::CountErrorBits::CountErrorBits
   const std::string& line3 , 
   const unsigned int mask  ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
-  , m_lines () 
+  , m_lines { line1, line2, line3 }
   , m_mask  ( mask  )
 {
-  m_lines.push_back ( line1 ) ;
-  m_lines.push_back ( line2 ) ;  
-  m_lines.push_back ( line3 ) ;  
 }
 // ============================================================================
 // constructor from the lines & mask 
@@ -826,13 +772,9 @@ LoKi::HLT::CountErrorBits::CountErrorBits
   const std::string& line4 , 
   const unsigned int mask  ) 
   : LoKi::BasicFunctors<const LHCb::HltDecReports*>::Function () 
-  , m_lines () 
+  , m_lines { line1, line2, line3, line4 }
   , m_mask  ( mask  )
 {
-  m_lines.push_back ( line1 ) ; 
-  m_lines.push_back ( line2 ) ;  
-  m_lines.push_back ( line3 ) ;  
-  m_lines.push_back ( line4 ) ;  
 }
 // ============================================================================
 // MANDATORY: virtual desctructor 
@@ -851,17 +793,16 @@ LoKi::HLT::CountErrorBits::result_type
 LoKi::HLT::CountErrorBits::operator() 
   ( LoKi::HLT::CountErrorBits::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // loop over the lines 
-  size_t result = 0 ;
-  for ( std::vector<Gaudi::StringKey>::const_iterator iline = 
-          m_lines.begin() ; m_lines.end() != iline ; ++iline ) 
+  result_type result = 0 ;
+  for ( const auto& line : m_lines )
   {
     // find the selection by name 
-    LHCb::HltDecReports::Container::const_iterator isel = a->find ( *iline ) ;
-    if ( a->end() == isel ) 
+    auto isel = a->find ( line ) ;
+    if ( isel == std::end(*a) ) 
     {
-      Error ( "No decision found for '" + iline->str() + "'" ) ;
+      Error ( "No decision found for '" + line.str() + "'" ) ;
       continue ;
     }
     if ( isel->second.errorBits() & m_mask ) { ++result ; }
@@ -931,18 +872,13 @@ LoKi::HLT::CountErrorBitsRegex::result_type
 LoKi::HLT::CountErrorBitsRegex::operator() 
   ( LoKi::HLT::CountErrorBitsRegex::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   //
-  size_t result = 0 ;
-  boost::smatch match ;
-  for ( LHCb::HltDecReports::Container::const_iterator isel = a->begin() ; 
-        a->end() != isel ; ++isel ) 
-  { 
-    if ( boost::regex_match ( isel->first , expression() ) )
-    { if ( isel->second.errorBits() & m_mask ) { ++result ; } }
-  }
-  //
-  return result ;
+  return std::count_if( std::begin(*a), std::end(*a),
+                        [&](LHCb::HltDecReports::Container::const_reference i) {
+        return ( i.second.errorBits() & m_mask  ) &&
+               boost::regex_match( i.first , expression() );
+  });
 }
 // ============================================================================
 // OPTIONAL: nice printout 

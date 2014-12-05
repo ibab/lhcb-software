@@ -3,6 +3,11 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
+! 2014-12-05 - Gerhard Raven
+ - Hlt functors:
+    - use std:: algorithms whenever possible
+    - fix logic in DecisionButRegex
+    - speed up CountErrorBitsRegex by reversing the order of tests 
 
 ! 2014-11-12 - Marco Cattaneo
  - Remove duplicate dictionary for enum LHCb::L0DUDecision::Type, 
