@@ -587,6 +587,7 @@ StatusCode DiElectronMaker::combinepair(LHCb::Particle* ele1,
   mother.setReferencePoint(refPoint);
   mother.setMomentum(momentum);
   const double mass = momentum.M();
+  mother.setPosCovMatrix ( posCov );
   mother.setMomCovMatrix( covariance );
   mother.setPosMomCovMatrix( posMomcov );
   mother.setMeasuredMass( mass);
