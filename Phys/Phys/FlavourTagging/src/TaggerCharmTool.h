@@ -43,10 +43,8 @@ namespace CharmTaggerSpace {
     CharmMode index;
     bool hasP, hasK, hasPi, hasE, hasMu, hasDstar;
     double natMistag;
-    double cal_eta, cal_p0, cal_p1;
     CharmDecay (){}
-    CharmDecay (std::string s, int idx, bool h1, bool h2, bool h3, bool h4, bool h5, bool h6,
-                double nmt, double eta, double p0, double p1) : 
+    CharmDecay (std::string s, int idx, bool h1, bool h2, bool h3, bool h4, bool h5, bool h6, double nmt) :
       name(s),
       index(static_cast<CharmTaggerSpace::CharmMode>(idx)),
       hasP(h1),
@@ -55,11 +53,7 @@ namespace CharmTaggerSpace {
       hasE(h4),
       hasMu(h5),
       hasDstar(h6),
-      natMistag(nmt),
-      cal_eta(eta),
-      cal_p0(p0),
-      cal_p1(p1) {}
-    
+      natMistag(nmt) {}
   };
   
   typedef std::map < CharmTaggerSpace::CharmMode, CharmTaggerSpace::CharmDecay> CharmDecayMap;
@@ -130,6 +124,8 @@ public:
   virtual double getMvaVal(const CharmTaggerSpace::CharmParticle* cpart, const int nPV, const int multiplicity, const LHCb::Particle& signalB);
   
   virtual double getOmega(double bdtMistag, CharmTaggerSpace::CharmMode mode);  
+  virtual double calModeOmega(double bdtMistag, CharmTaggerSpace::CharmMode mode);  
+  virtual double calOmega(double bdtMistag);  
   
 private:
 

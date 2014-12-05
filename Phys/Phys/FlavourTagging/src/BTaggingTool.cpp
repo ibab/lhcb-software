@@ -29,6 +29,7 @@ GaudiTool ( type, name, parent )
 
   declareProperty( "ChoosePVCriterium",     m_ChoosePV    = "bestPV");
   declareProperty( "UseReFitPV",            m_UseReFitPV  = true );
+  declareProperty( "VetoFailedRefits",      m_VetoFailedRefits = false);
 
   //preselction of tagging candidates
   declareProperty( "IPPU_cut",              m_IPPU_cut    = 3.0 );
@@ -37,8 +38,8 @@ GaudiTool ( type, name, parent )
 
   declareProperty( "CombineTaggersName",      m_CombineTaggersName = "CombineTaggersProbability" );
   declareProperty( "TaggerLocation",          m_taggerLocation = "Phys/TaggingParticles" );
-  declareProperty( "CombineWithNNetTagger",   m_CombineWithNNetTagger = false );
-  declareProperty( "CombineWithCharmTagger",  m_CombineWithCharmTagger = true );
+  declareProperty( "CombineWithNNetTagger",   m_CombineWithNNetTagger = true );
+  declareProperty( "CombineWithCharmTagger",  m_CombineWithCharmTagger = false );
 
   //choose active taggers
   declareProperty( "EnableMuonTagger",        m_EnableMuon    = true );
@@ -505,7 +506,10 @@ BTaggingTool::choosePrimary(const Particle* AXB,
 
   //UseReFitPV means that it will use the refitted pV for the ip calculation
   //of taggers and SV building. Do not move this line above PileUpVtx building
-  //  hasRefitFailed = false;
+  if (not m_VetoFailedRefits) {
+    hasRefitFailed = false;
+  }
+  
   if( m_UseReFitPV and (not hasRefitFailed)) RecVert = (&RefitRecVert);
   if( m_UseReFitPV and hasRefitFailed) RecVert = NULL;
 

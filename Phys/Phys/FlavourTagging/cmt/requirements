@@ -33,7 +33,7 @@ end_private
 
 # Component library building rule
 #============================================================================
-library          FlavourTagging    ../src/*.cpp
+library          FlavourTagging    ../src/*.cpp ../src/TMVAClassification/mva_charmtagger_reco14/Histogram.cpp
 
 # define component library link options
 #============================================================================

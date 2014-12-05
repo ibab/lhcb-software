@@ -83,15 +83,14 @@ GaudiTool ( type, name, parent ),
   declareProperty( "Charm_Eta_Cal",          m_Eta_Cal_charm  = 0.0);
 
   // initialize decay map
-  //                                                                   Idx   P  K   Pi  E   Mu  D* Nat   Eta     P0      P1
-  decayMap[CharmMode::Dz2kpi]          = CharmDecay("D0_Kpi",	         0,    0, 1,	1,  0,	0,	0, 0.23, 0.3797, 0.3821, 0.9789);
-  decayMap[CharmMode::Dz2kpipipi]      = CharmDecay("D0_Kpipipi",	     1,    0, 1,	1,  0,	0,	0, 0.23, 0.3568, 0.3751, 0.8550);
-  decayMap[CharmMode::Dz2kpipiz]       = CharmDecay("D0_Kpipi0",       3,    0, 1,	1,  0,	0,	0, 0.23, 0.0,    0.0,    1.0);
-  decayMap[CharmMode::Dp2kpipi]        = CharmDecay("Dp_Kpipi",	       4,    0, 1,	1,  0,	0,	0, 0.19, 0.3866, 0.3957, 0.8864);
-  decayMap[CharmMode::Dz2kpiX]         = CharmDecay("D0_KpiX",         6,    0, 1,	1,  0,	0,	0, 0.23, 0.3946, 0.3998, 0.9511);
-  decayMap[CharmMode::Dz2keX]          = CharmDecay("D0_KeX",	         7,    0, 1,	0,  1,	0,	0, 0.23, 0.3511, 0.3838, 0.9048);
-  decayMap[CharmMode::Dz2kmuX]         = CharmDecay("D0_KmuX",         8,    0, 1,	0,  0,	1,	0, 0.23, 0.0,    0.0,    1.0);
-  decayMap[CharmMode::LambdaC2pkpi]    = CharmDecay("LambdaC_PKPi",   13,    1, 1,	1,  0,	0,	0, 0.00, 0.0,    0.0,    1.0);
+  decayMap[CharmMode::Dz2kpi]          = CharmDecay("D0_Kpi",	         0,    0, 1,	1,  0,	0,	0, 0.23);
+  decayMap[CharmMode::Dz2kpipipi]      = CharmDecay("D0_Kpipipi",	     1,    0, 1,	1,  0,	0,	0, 0.23);
+  decayMap[CharmMode::Dz2kpipiz]       = CharmDecay("D0_Kpipi0",       3,    0, 1,	1,  0,	0,	0, 0.23);
+  decayMap[CharmMode::Dp2kpipi]        = CharmDecay("Dp_Kpipi",	       4,    0, 1,	1,  0,	0,	0, 0.194);
+  decayMap[CharmMode::Dz2kpiX]         = CharmDecay("D0_KpiX",         6,    0, 1,	1,  0,	0,	0, 0.231);
+  decayMap[CharmMode::Dz2keX]          = CharmDecay("D0_KeX",	         7,    0, 1,	0,  1,	0,	0, 0.238);
+  decayMap[CharmMode::Dz2kmuX]         = CharmDecay("D0_KmuX",         8,    0, 1,	0,  0,	1,	0, 0.23);
+  decayMap[CharmMode::LambdaC2pkpi]    = CharmDecay("LambdaC_PKPi",   13,    1, 1,	1,  0,	0,	0, 0.00);
   
 }
 
@@ -213,15 +212,21 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
     double t_bdtOmega = -10;
 
     if (true) {
+      // std::cout << std::setw(12) << "BDT PURITY";      
+      // std::cout << std::setw(12) << "BDT MISTAG";      
+      // std::cout << std::setw(12) << "OMEGA";
+      // std::cout << std::setw(12) << "OMEGA CAL1";
+      // std::cout << std::setw(12) << "OMEGA CAL2";
+      // std::cout << std::endl;      
+
       t_bdtPurity = getMvaVal(axp, nPV, tagParticles.size(), *signalB);
       Float_t purMistag = 0.5*(1.0-t_bdtPurity);
       Float_t natMistag = decay.natMistag;
       t_bdtMistag = purMistag + natMistag - 2.0*purMistag*natMistag;
       t_bdtOmega = getOmega(t_bdtMistag,mode);
-
-      // Mode by mode calibration
-      t_bdtOmega = decay.cal_p0 + decay.cal_p1 * (t_bdtOmega - decay.cal_eta);
-      
+      t_bdtOmega = calModeOmega(t_bdtOmega,mode);
+      t_bdtOmega = calOmega(t_bdtOmega);
+       
       // Overall calibration
       t_bdtOmega = m_P0_Cal_charm + m_P1_Cal_charm * (t_bdtOmega - m_Eta_Cal_charm);
     }
@@ -258,7 +263,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
     }
   }
   
-  if(!thecharm) return tcharm;
+  if (!thecharm) return tcharm;
 
   // Calculate omega
   double omega = min_mistag;
@@ -274,6 +279,7 @@ Tagger TaggerCharmTool::tag( const Particle* signalB,
   int decision = thecharm->flavour > 0 ? +1: -1; // double flip, one for oppsite side, one for D from B
   decision *= sign;
   tcharm.setOmega(omega);
+  std::cout << "CHARM DECISION IS " << decision << " AFTER FLIPPING BY " << sign << std::endl;
   tcharm.setDecision(decision);
   tcharm.setType( Tagger::OS_Charm );
 
@@ -801,75 +807,202 @@ double TaggerCharmTool::getOmega(double mistag, CharmMode mode)
 
   double p0 = 0.0;
   double p1 = 0.0;
-  double p2 = 1.0;
+  double p2 = 0.0;
   double p3 = 0.0;
   double p4 = 0.0;
-  double p5 = 1.0;
 
   switch (mode) {
   case CharmMode::Dz2kpi:
-    p0 = 0.3689;
-    p1 = 0.3118;
-    p2 = 0.02822;
-    p3 = 0.3344;
-    p4 = 0.3904;
-    p5 = 0.06097;
+    p0 = 15.56;
+    p1 = 0.2822;
+    p2 = -0.4344;
+    p3 = 0.4672;
+    p4 = 0.1283;
     break;
   case CharmMode::Dz2kpipipi:
-    p0 = -0.8049;
-    p1 = 0.0;
-    p2 = 0.1814;
-    break;
-  case CharmMode::Dz2kpipiz:
-    p0 = -0.9212;
-    p1 = 0.4608;
-    p2 = 0.01278;
+    p0 = 8.188;
+    p1 = 0.4229;
+    p2 = -0.1241;
+    p3 = 0.4574;
+    p4 = 0.04627;
     break;
   case CharmMode::Dp2kpipi:
-    p0 = 0.2409;
-    p1 = 0.3868;
-    p2 = 0.06829;
+    p0 = 4.049;
+    p1 = 0.4852;
+    p2 = 0.02795;
+    p3 = 0.3739;
+    p4 = 0.02983;
     break;
   case CharmMode::Dz2kpiX:
-    p0 = -0.3519;
-    p1 = 1.0;
-    p2 = 1.147;
-    p3 = 0.4085;
-    p4 = 0.4785;
-    p5 = 0.02616;
+    p0 = 8.543;
+    p1 = 0.4674;
+    p2 = 0.09191;
+    p3 = 0.2903;
+    p4 = 0.04487;
     break;
   case CharmMode::Dz2keX:
-    p0 = -0.4702;
-    p1 = 0.3457;
-    p2 = 0.044;
-    p3 = -0.1537;
-    p4 = 0.4954;
-    p5 = 0.006842;
+    p0 = 8.883;
+    p1 = 0.4684;
+    p2 = 0.0;
+    p3 = 0.0;
+    p4 = 1.0;
     break;
   case CharmMode::Dz2kmuX:
+    p0 = 8.563;
+    p1 = 0.4325;
+    p2 = 0.0;
+    p3 = 0.0;
+    p4 = 1.0;
     break;
   case CharmMode::LambdaC2pkpi:
-    p0 = -1.181;
-    p1 = 0.3721;
-    p2 = 0.03328;
+    p0 = 13.96;
+    p1 = 0.4858;
+    p2 = 0.0;
+    p3 = 0.0;
+    p4 = 1.0;
     break;
   default:
+    return mistag;
     break;
   }
 
-  auto gauss = [] (double x, double mu, double sigma) {
+  auto logistic = [] (double x, double alpha, double x0) {
+    double z = alpha*(x-x0);
+    return 1.0/(1.0+exp(-1.0*z));
+  };
+  auto gauss = [] (double x, double N, double mu, double sigma) {
     double z = (x-mu)/sigma;
-    return exp(-0.5*z*z);
+    return N*exp(-0.5*z*z);
   };
 
   auto func = [&] (double x) {
-    double g1 = p0*gauss(x,p1,p2);
-    double g2 = p3*gauss(x,p4,p5);
-    return x + x*(1-x)*(g1 + g2);
+    double g1 = logistic(x,p0,p1);
+    double g2 = gauss(x,p2,p3,p4);
+    return g1 + g2;
   };
 
   double omegaBDT = func(mistag);
   return omegaBDT;
 
+}
+
+double TaggerCharmTool::calOmega(double mistag) {
+
+    double dil = 1.0-2.0*mistag;
+
+    double a = 0.23968;
+    double b = 0.5795;
+    double c = 0.0688;
+    double d = 0.9723;
+    double e = 0.2785;
+    double f = -0.0227;
+    double g = 1.4343;
+    double h = 0.7030;
+    double i = -0.1370;
+    double j = 0.0088;
+
+    double dp0 = 0.00090;
+    double dp1 = 0.02029;
+    double dp2 = -0.85148;
+    double dp3 = -0.05047;
+    double dp4 = 0.09456;
+
+    double linear = dil - a;
+    double quadratic = dil*dil - b*dil + c;
+    double cubic = dil*dil*dil - d*dil*dil + e*dil + f;
+    double quartic = dil*dil*dil*dil - g*dil*dil*dil + h*dil*dil + i*dil + j;
+
+    double correction = dp0 + dp1*linear + dp2*quadratic + dp3*cubic + dp4*quartic;
+    double newdil = dil + correction;
+    double newomega = 0.5*(1.0-newdil);
+    if (newomega < 0)
+      return 0.0;
+    else
+      return newomega;
+}
+
+double TaggerCharmTool::calModeOmega(double mistag, CharmMode mode) {
+
+  double dil = 1.0-2.0*mistag;
+
+  // BASIS
+  /* 1 */
+  /* x - a */
+  double a = 0.0;
+  /* x^2 - bx + c */
+  double b = 0.0;
+  double c = 0.0;
+
+  // PARAMETERS
+  double dp0 = 0.0;
+  double dp1 = 0.0;
+  double dp2 = 0.0;
+
+  switch (mode) {
+  case CharmMode::Dz2kpi:
+    a = 0.1697;
+    b = 0.5167;
+    c = 0.01968;
+    dp0 = -0.0051682;
+    dp1 = -0.024027;
+    dp2 = -0.028284;
+    break;
+  case CharmMode::Dz2kpipipi:
+    a = 0.1120;
+    b = 0.4167;
+    c = 0.02231;
+    dp0 = -0.019791;
+    dp1 = -0.16355;
+    dp2 = 0.85103;
+    break;
+  case CharmMode::Dp2kpipi:
+    a = 0.05059;
+    b = 0.2896;
+    c = 0.004125;
+    dp0 = -0.0025901;
+    dp1 = -0.10695;
+    dp2 = -0.49489;
+    break;
+  case CharmMode::Dz2kpiX:
+    a = 0.1174;
+    b = 0.3276;
+    c = 0.006452;
+    dp0 = 0.00027767;
+    dp1 = -0.056607;
+    dp2 = -0.10788;
+    break;
+  case CharmMode::Dz2keX:
+    a = 0.1226;
+    b = 0.4145;
+    c = 0.00868;
+    dp0 = -0.048486;
+    dp1 = -0.39406;
+    dp2 = 0.96648;
+    break;
+  case CharmMode::Dz2kmuX:
+    a = 0.1372;
+    b = 0.3840;
+    c = -0.01170;
+    dp0 = -0.14084;
+    dp1 = -0.24362;
+    dp2 = 0.48979;
+    break;
+  case CharmMode::LambdaC2pkpi:
+    return mistag; // not enough to calibrate
+    break;
+  default:
+    return mistag;
+    break;
+  }
+
+  double linear = dil - a;
+  double quadratic = dil*dil - b*dil + c;
+  double correction = dp0 + dp1*linear + dp2*quadratic;
+  double newdil = dil + correction;
+  double newomega = 0.5*(1.0-newdil);
+  if (newomega < 0)
+    return 0.0;
+  else
+    return newomega;
 }
 

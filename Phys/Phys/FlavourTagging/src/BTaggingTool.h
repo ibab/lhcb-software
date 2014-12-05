@@ -127,7 +127,7 @@ private:
   bool m_EnableProtonSS;
   bool m_EnableCharm;
   
-  bool m_UseReFitPV,  m_CombineWithNNetTagger, m_CombineWithCharmTagger;
+  bool m_UseReFitPV,  m_VetoFailedRefits, m_CombineWithNNetTagger, m_CombineWithCharmTagger;
   std::string m_personality;
 
   std::vector<LHCb::Particle*> m_extraInfoToClear; ///< Particles to clear extra info from
