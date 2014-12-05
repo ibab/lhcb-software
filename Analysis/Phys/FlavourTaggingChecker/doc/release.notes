@@ -5,6 +5,10 @@
 ! Twiki page  : https://twiki.cern.ch/twiki/bin/viewauth/LHCb/FlavourTagging
 !-----------------------------------------------------------------------------
 
+! 2014-12-05 - Jack Wimberley
+ - Fixed tagging metrics for charm tagger in BTaggingChecker
+ - Updated mode cuts for charm tagger in BTaggingAnalysis
+
 !========================= FlavourTaggingChecker v7r6 2014-10-30 =========================
 
 ! 2014-10-07 - Jack Wimberley

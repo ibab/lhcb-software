@@ -68,25 +68,18 @@ BTaggingAnalysis::BTaggingAnalysis(const std::string& name,
   std::vector<std::string> def_CharmTagLocations;
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPi/Particles");
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPiPi/Particles");
-  def_CharmTagLocations.push_back("Phys/Tag_StdD02KsPiPi/Particles");
   def_CharmTagLocations.push_back("Phys/Tag_StdD02KPiPi0/Particles");
   def_CharmTagLocations.push_back("Phys/Tag_StdDp2KPiPi/Particles");
-  def_CharmTagLocations.push_back("Phys/Tag_StdDp2KsPi/Particles");
   declareProperty( "CharmTagLocations", m_CharmTagLocations = def_CharmTagLocations);
 
   std::vector<std::string> def_CharmInclTagLocations;
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02KPipart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kepart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdD02Kmupart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2KPipart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kepart/Particles");
-  def_CharmInclTagLocations.push_back("Phys/Tag_StdDp2Kmupart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD2KPipart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD2Kepart/Particles");
+  def_CharmInclTagLocations.push_back("Phys/Tag_StdD2Kmupart/Particles");
   declareProperty( "CharmInclTagLocations", m_CharmInclTagLocations = def_CharmInclTagLocations);
 
   std::vector<std::string> def_CharmLambdaTagLocations;
   def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2PKPi/Particles");
-  def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2LambdaPi/Particles");
-  def_CharmLambdaTagLocations.push_back("Phys/Tag_StdLambdaC2PKs/Particles");
   declareProperty( "CharmLambdaTagLocations", m_CharmLambdaTagLocations = def_CharmLambdaTagLocations);
 
   declareProperty( "DebugGhostProb",          m_debugGhostProb   = false );
@@ -355,51 +348,55 @@ StatusCode BTaggingAnalysis::execute() {
   //------------------------------------------------------------------------------
   // fill reco charm info
 
-  // full reco cand
-  debug() << "Making D list" << endreq;
-  Particle::ConstVector charmCands;
-  for( std::vector<std::string>::const_iterator ilist = m_CharmTagLocations.begin() ;
-       ilist != m_CharmTagLocations.end(); ++ilist) {
-    if (exist<Particle::Range>(*ilist)){
-      LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
-      debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
-      // removing candidates with daughters in common with signal B
-      LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
-      charmCands.insert(charmCands.end(), purgedParts.begin(), purgedParts.end());
+  if (RecVert) 
+  {
+    
+    // full reco cand
+    debug() << "Making D list" << endreq;
+    Particle::ConstVector charmCands;
+    for( std::vector<std::string>::const_iterator ilist = m_CharmTagLocations.begin() ;
+         ilist != m_CharmTagLocations.end(); ++ilist) {
+      if (exist<Particle::Range>(*ilist)){
+        LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
+        debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+        // removing candidates with daughters in common with signal B
+        LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
+        charmCands.insert(charmCands.end(), purgedParts.begin(), purgedParts.end());
+      }
     }
+    
+    // partial reco cand
+    debug() << "Making D -> Incl list" << endreq;
+    Particle::ConstVector charmInclCands;
+    for( std::vector<std::string>::const_iterator ilist = m_CharmInclTagLocations.begin() ;
+         ilist != m_CharmInclTagLocations.end(); ++ilist) {
+      if (exist<Particle::Range>(*ilist)){
+        LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
+        debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+        // removing candidates with daughters in common with signal B
+        LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
+        charmInclCands.insert(charmInclCands.end(), purgedParts.begin(), purgedParts.end());
+      }
+    }
+    
+    // lambda full reco cand
+    debug() << "Making LambdaC list" << endreq;
+    Particle::ConstVector charmLambdaCands;
+    for( std::vector<std::string>::const_iterator ilist = m_CharmLambdaTagLocations.begin() ;
+         ilist != m_CharmLambdaTagLocations.end(); ++ilist) {
+      if (exist<Particle::Range>(*ilist)){
+        LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
+        debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
+        // removing candidates with daughters in common with signal B
+        LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
+        charmLambdaCands.insert(charmLambdaCands.end(), purgedParts.begin(), purgedParts.end());
+      }
+    }
+    
+    debug() << "Filling charm info" << endreq;
+    FillCharmInfo(tuple,charmCands,charmInclCands,charmLambdaCands,RecVert);//,AXBS);  
   }
   
-  // partial reco cand
-  debug() << "Making D -> Incl list" << endreq;
-  Particle::ConstVector charmInclCands;
-  for( std::vector<std::string>::const_iterator ilist = m_CharmInclTagLocations.begin() ;
-       ilist != m_CharmInclTagLocations.end(); ++ilist) {
-    if (exist<Particle::Range>(*ilist)){
-      LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
-      debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
-      // removing candidates with daughters in common with signal B
-      LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
-      charmInclCands.insert(charmInclCands.end(), purgedParts.begin(), purgedParts.end());
-    }
-  }
-  
-  // lambda full reco cand
-  debug() << "Making LambdaC list" << endreq;
-  Particle::ConstVector charmLambdaCands;
-  for( std::vector<std::string>::const_iterator ilist = m_CharmLambdaTagLocations.begin() ;
-       ilist != m_CharmLambdaTagLocations.end(); ++ilist) {
-    if (exist<Particle::Range>(*ilist)){
-      LHCb::Particle::Range partsin  = get<Particle::Range>(*ilist) ;
-      debug() << "Found "<<partsin.size()<<" charm cands for location "<<*ilist<<endreq;
-      // removing candidates with daughters in common with signal B
-      LHCb::Particle::ConstVector purgedParts = m_utilFT->purgeCands(partsin, *AXBS);
-      charmLambdaCands.insert(charmLambdaCands.end(), purgedParts.begin(), purgedParts.end());
-    }
-  }
-  
-  debug() << "Filling charm info" << endreq;
-  FillCharmInfo(tuple,charmCands,charmInclCands,charmLambdaCands,RecVert);//,AXBS);  
-
   //------------------------------------------------------------------------------
   //Fill Tagger info -------------------------------------------------------------
   //------------------------------------------------------------------------------
@@ -2088,6 +2085,13 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
     const float fd = fVD(cand);
     const float fdchi2 = fVDCHI2(cand);
 
+    // CUTS
+    if (fdchi2 <= 25)
+      continue;
+    
+    if (bpvdira <= 0.998)
+      continue;
+
     // Get info from daughters
     Fun fCTAU = CTAU(cand->endVertex());
 
@@ -2102,9 +2106,12 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
     float kaonId = 0.0, kaonPT = 0.0, kaonDLLp = 0.0, kaonDLLk = 0.0, kaonNNp = 1.0, kaonNNk = 1.0, kaonIppvchi2 = -1.0, kaonIpMinchi2 = -1.0;
     float pionId = 0.0, pionPT = 0.0, pionDLLp = 0.0, pionDLLk = 0.0, pionNNp = 1.0, pionNNk = 1.0, pionIppvchi2 = -1.0, pionIpMinchi2 = -1.0;
     float elecNNe = 1.0, elecPT = 0.0, muonNNmu = 1.0, muonPT = 0.0;
+    float elecIpMinchi2 = -1.0, muonIpMinchi2 = -1.0;
     
     float ksCtau = 0.0, lambdaCtau = 0.0;
     float ksMass = 0.0, lambdaMass = 0.0;
+
+    bool cut = false;
 
     const SmartRefVector<Particle>& daus = cand->daughters();
     int i = 0;
@@ -2230,13 +2237,14 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
             pionIpMinchi2 = std::min(pionIpMinchi2, IpMinchi2);
           }
         }
-        
+
         // ELECTRON
         if (daucand->particleID() == LoKi::Particles::_ppFromName("e+")->particleID() or
             daucand->particleID() == LoKi::Particles::_ppFromName("e-")->particleID()) {
           if (daucand->proto()){
             elecNNe = daucand->proto()->info(ProtoParticle::ProbNNe, -1.0);
             elecPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
+            elecIpMinchi2 = ipChi2Min(daucand);
           }
         }
         
@@ -2246,6 +2254,7 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
           if (daucand->proto()) {
             muonNNmu = daucand->proto()->info(ProtoParticle::ProbNNmu, -1.0);
             muonPT = daucand->proto()->info(ProtoParticle::TrackPt, -1.0);
+            muonIpMinchi2 = ipChi2Min(daucand);
           }
         }
         
@@ -2264,13 +2273,30 @@ StatusCode BTaggingAnalysis::AddCharmInfo(const Particle::ConstVector& cands,
       infoMap[j_str]->push_back(0);
     }
 
+    // CUTS
 
+    CharmTaggerSpace::CharmMode mode = m_utilFT->getCharmDecayMode(cand,type);
+    if (mode == CharmTaggerSpace::CharmMode::Dz2kpipipi)
+      if (kaonIppvchi2 < 6 or pionIppvchi2 < 6)
+        cut = true;
+    if (mode == CharmTaggerSpace::CharmMode::Dz2kpiX)
+      if (kaonIpMinchi2 < 10 or pionIpMinchi2 < 10)
+        cut = true;
+    if (mode == CharmTaggerSpace::CharmMode::Dz2keX)
+      if (kaonIpMinchi2 < 10 or elecIpMinchi2 < 10)
+        cut = true;
+    if (mode == CharmTaggerSpace::CharmMode::Dz2kmuX)
+      if (kaonIpMinchi2 < 10 or muonIpMinchi2 < 10)
+        cut = true;
+    
+    if (cut)
+      continue;
+  
     ///////////////
     // FILL INFO //
     ///////////////
 
     // Candidate
-    CharmTaggerSpace::CharmMode mode = m_utilFT->getCharmDecayMode(cand,type);
     int modeInt = static_cast<int>(mode);
     warning() << "MODE NUMBER IS " << modeInt << endreq;
     infoMap["mode"]->push_back(modeInt);

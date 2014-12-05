@@ -117,7 +117,11 @@ StatusCode BTaggingChecker::execute()
         case Tagger::VtxCharge  : (taggdec==truetag ? ++nrtag[6] : ++nwtag[6]); break;
         case Tagger::OS_nnetKaon: (taggdec==truetag ? ++nrtag[7] : ++nwtag[7]); break;
         case Tagger::SS_nnetKaon: (taggdec==truetag ? ++nrtag[8] : ++nwtag[8]); break;
-        case Tagger::OS_Charm   : (taggdec==truetag ? ++nrtag[9] : ++nwtag[7]); break;
+        case Tagger::OS_Charm   :
+          // std::cout << " CHECKER SAYS IT IS " << taggdec << std::endl;
+          // std::cout << "  IT IS REALLY " << truetag << std::endl;          
+          (taggdec==truetag ? ++nrtag[9] : ++nwtag[9]);
+          break;
         case Tagger::SS_Proton  : (taggdec==truetag ? ++nrtag[10]: ++nwtag[10]); break;
         }
       }
