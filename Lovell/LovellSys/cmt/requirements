@@ -1,0 +1,19 @@
+#============================================================================
+# VELO monitoring framework
+#
+# project manager J. Harrison
+#
+#============================================================================
+package LovellSys
+version v1r0
+#============================================================================
+
+branches cmt doc
+
+# Lovell core packages
+use Lovell			v1r0      # J Harrison
+use VeloAnalysisFramework 	v1r0      # M Gersabeck, A Pearce
+use VeloOfflineGUI 		v1r0      # M Gersabeck, A Pearce
+use VeloWebGUI		 	v1r0      # M Gersabeck, A Pearce
+
+#============================================================================
