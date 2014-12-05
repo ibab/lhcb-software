@@ -1,0 +1,4 @@
+project LOVELL
+
+build_strategy with_installarea
+setup_strategy root
