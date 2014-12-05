@@ -5,6 +5,10 @@
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
 
+! 2014-12-05 - Vanya Belyaev
+
+ - add helper functions for tis/tos/tps/tus 
+
 !========================= LoKiPhys v10r20 2014-10-30 =========================
 
 ! 2014-10-21 - Chris Jones

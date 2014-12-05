@@ -1042,14 +1042,61 @@ RELINFO    = LoKi.Particles.RelatedInfo
 TISTOSTOBDEC   = LoKi.Particles.TisTosTobDec
 ## @see TISTOSTOB
 TISTOSTOB      = LoKi.Particles.TisTosTobbing
-## @see TIS
+### @see TIS
 TIS            = LoKi.Particles.Tis 
-## @see TOS
+### @see TOS
 TOS            = LoKi.Particles.Tos
-## @see TPS
+### @see TPS
 TPS            = LoKi.Particles.Tps 
-## @see TUS
-TUS            = LoKi.Particles.Tus 
+### @see TUS
+TUS            = LoKi.Particles.Tus
+
+def   L0TIS ( lines ) : return TIS ( lines ,   'L0TriggerTisTos' )
+def   L0TOS ( lines ) : return TOS ( lines ,   'L0TriggerTisTos' )
+def   L0TPS ( lines ) : return TPS ( lines ,   'L0TriggerTisTos' )
+def   L0TUS ( lines ) : return TUS ( lines ,   'L0TriggerTisTos' )
+
+def Hlt1TIS ( lines ) : return TIS ( lines , 'Hlt1TriggerTisTos' )
+def Hlt1TOS ( lines ) : return TOS ( lines , 'Hlt1TriggerTisTos' )
+def Hlt1TPS ( lines ) : return TPS ( lines , 'Hlt1TriggerTisTos' )
+def Hlt1TUS ( lines ) : return TUS ( lines , 'Hlt1TriggerTisTos' )
+
+def Hlt2TIS ( lines ) : return TIS ( lines , 'Hlt2TriggerTisTos' )
+def Hlt2TOS ( lines ) : return TOS ( lines , 'Hlt2TriggerTisTos' )
+def Hlt2TPS ( lines ) : return TPS ( lines , 'Hlt2TriggerTisTos' )
+def Hlt2TUS ( lines ) : return TUS ( lines , 'Hlt2TriggerTisTos' )
+
+def tis ( lines ) :
+
+    if    0 <= lines.find ( 'L0'   ) : return   L0TIS ( lines )
+    elif  0 <= lines.find ( 'Hlt1' ) : return Hlt1TIS ( lines )
+    elif  0 <= lines.find ( 'Hlt2' ) : return Hlt2TIS ( lines )
+    
+    raise AttributeError("Invalid line configuration")
+
+def tos ( lines ) :
+
+    if    0 <= lines.find ( 'L0'   ) : return   L0TOS ( lines )
+    elif  0 <= lines.find ( 'Hlt1' ) : return Hlt1TOS ( lines )
+    elif  0 <= lines.find ( 'Hlt2' ) : return Hlt2TOS ( lines )
+    
+    raise AttributeError("Invalid line configuration")
+
+def tps ( lines ) :
+
+    if    0 <= lines.find ( 'L0'   ) : return   L0TPS ( lines )
+    elif  0 <= lines.find ( 'Hlt1' ) : return Hlt1TPS ( lines )
+    elif  0 <= lines.find ( 'Hlt2' ) : return Hlt2TPS ( lines )
+    
+    raise AttributeError("Invalid line configuration")
+
+def tus ( lines ) :
+
+    if    0 <= lines.find ( 'L0'   ) : return   L0TUS ( lines )
+    elif  0 <= lines.find ( 'Hlt1' ) : return Hlt1TUS ( lines )
+    elif  0 <= lines.find ( 'Hlt2' ) : return Hlt2TUS ( lines )
+    
+    raise AttributeError("Invalid line configuration")
 
 
 SOURCE         = LoKi.Particles.SourceTES
