@@ -4,6 +4,9 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 ! 2014-12-05 - Gerhard Raven
+ - L0 functors:
+    - use std:: algorithms whenever possible
+
  - Hlt functors:
     - use std:: algorithms whenever possible
     - fix logic in DecisionButRegex

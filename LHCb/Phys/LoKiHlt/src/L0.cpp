@@ -61,7 +61,7 @@ LoKi::L0::SumEt::result_type
 LoKi::L0::SumEt::operator() 
   ( LoKi::L0::SumEt::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a->sumEt ( m_bx ) ; 
 }
 
@@ -85,7 +85,7 @@ LoKi::L0::DataValue::result_type
 LoKi::L0::DataValue::operator() 
   ( LoKi::L0::DataValue::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a -> dataValue ( name () ) ; 
 }
 
@@ -108,7 +108,7 @@ LoKi::L0::DataDigit::result_type
 LoKi::L0::DataDigit::operator() 
   ( LoKi::L0::DataDigit::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a -> dataDigit ( name () ) ; 
 }
 
@@ -138,7 +138,7 @@ LoKi::L0::Decision::result_type
 LoKi::L0::Decision::operator() 
   ( LoKi::L0::Decision::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a -> decision ( m_mask ) ; 
 }
 // ============================================================================
@@ -181,7 +181,7 @@ LoKi::L0::SumDecision::result_type
 LoKi::L0::SumDecision::operator() 
   ( LoKi::L0::SumDecision::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a -> decisionFromSummary ( m_mask , m_bx ) ; 
 }
 // ============================================================================
@@ -209,7 +209,7 @@ LoKi::L0::ForceBit::result_type
 LoKi::L0::ForceBit::operator() 
   ( LoKi::L0::ForceBit::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a -> forceBit () ; 
 }
 // ============================================================================
@@ -219,7 +219,7 @@ LoKi::L0::Tck::result_type
 LoKi::L0::Tck::operator() 
   ( LoKi::L0::Tck::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a -> tck () ; 
 }
 // ============================================================================
@@ -229,7 +229,7 @@ LoKi::L0::TimingBit::result_type
 LoKi::L0::TimingBit::operator() 
   ( LoKi::L0::TimingBit::argument a ) const 
 { 
-  Assert ( 0 != a , "L0DUReport* point to NULL!" ) ;
+  Assert ( a , "L0DUReport* point to NULL!" ) ;
   return a -> timingTriggerBit  () ; 
 }
 // ============================================================================
@@ -259,7 +259,7 @@ LoKi::L0::ConditionValue::operator()
   ( LoKi::L0::ConditionValue::argument a ) const 
 {
   //
-  Assert ( 0 != a , "LHCb::L0DUReport* points to null" ) ;
+  Assert ( a , "LHCb::L0DUReport* points to null" ) ;
   //
   // update the system:
   if ( 0 == tckPrev() || tckPrev() != a->tck() ) 
@@ -267,37 +267,29 @@ LoKi::L0::ConditionValue::operator()
     clearChannels () ;
     // convert names into conditions 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
     const LHCb::L0DUElementaryCondition::Map& m = config->conditions() ;
-    for ( Names::const_iterator iname = names().begin() ; names().end() != iname ; ++iname )
+    for ( const auto& name : names() )
     {
-      LHCb::L0DUElementaryCondition::Map::const_iterator ifind = m.find (*iname) ;
+      auto ifind = m.find (name) ;
       if ( m.end() == ifind ) 
       {
-        Error ( "Non-existing condition '" + (*iname) + "' has been requested" );
+        Error ( "Non-existing condition '" + name + "' has been requested" );
         continue ;
       }
-      const LHCb::L0DUElementaryCondition* channel = ifind->second ;
-      Assert ( 0 != channel , "LHCb::L0DUElementaryCondition* points to NULL" ) ;
+      const auto* channel = ifind->second ;
+      Assert ( channel , "LHCb::L0DUElementaryCondition* points to NULL" ) ;
       addChannel ( channel -> id() ) ;
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( channels().empty() ) 
-  { 
-    //Error ( "empty list of channels, return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-  
   // loop over the defined channels 
-  for ( Channels::const_iterator ic = channels().begin() ; 
-        channels().end() != ic ; ++ic ) 
-  { if ( a -> conditionValue ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(channels()), std::end(channels()),
+                      [&](Channels::const_reference c) {
+                          return a->conditionValue( c, bx() );
+                      } );
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -380,37 +372,29 @@ LoKi::L0::ChannelDecision::operator()
     clearChannels () ;
     // convert names into channels 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
     const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( Names::const_iterator iname = names().begin() ; names().end() != iname ; ++iname )
+    for ( const auto& name : names() )
     {
-      LHCb::L0DUChannel::Map::const_iterator ifind = m.find (*iname) ;
+      auto ifind = m.find (name) ;
       if ( m.end() == ifind ) 
       {
-        Error ( "Non-existing channel '" + (*iname) + "' has been requested" );
+        Error ( "Non-existing channel '" + name + "' has been requested" );
         continue ;
       }
-      const LHCb::L0DUChannel* channel = ifind->second ;
-      Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
+      const auto* channel = ifind->second ;
+      Assert ( channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0) addChannel ( channel -> id() ) ;
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( channels().empty() ) 
-  { 
-    //Error ( "empty list of channels, return false" ) ;
-    return false ;                                                    // RETURN 
-  }
- 
   // loop over the defined channels 
-  for ( Channels::const_iterator ic = channels().begin() ; 
-        channels().end() != ic ; ++ic ) 
-  { if ( a -> channelDecision ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(channels()), std::end(channels()),
+                      [&](Channels::const_reference c) {
+            return a -> channelDecision ( c , bx() );
+  } );
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -459,36 +443,29 @@ LoKi::L0::ChannelPreDecision::operator()
     clearChannels () ;
     // convert names into channels 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
     const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( Names::const_iterator iname = names().begin() ; names().end() != iname ; ++iname )
+    for ( const auto& name : names() )
     {
-      LHCb::L0DUChannel::Map::const_iterator ifind = m.find (*iname) ;
+      LHCb::L0DUChannel::Map::const_iterator ifind = m.find (name) ;
       if ( m.end() == ifind ) 
       {
-        Error ( "Non-existing channel '" + (*iname) + "' has been requested" );
+        Error ( "Non-existing channel '" + name + "' has been requested" );
         continue ;
       }
-      const LHCb::L0DUChannel* channel = ifind->second ;
-      Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
+      const auto* channel = ifind->second ;
+      Assert ( channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0) addChannel ( channel -> id() ) ;
     }    
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( channels().empty() ) 
-  { 
-    //Error ( "empty list of channels, return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-  
   // loop over the defined channels 
-  for ( Channels::const_iterator ic = channels().begin() ; channels().end() != ic ; ++ic ) 
-  { if ( a -> channelPreDecision ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(channels()), std::end(channels()),
+                      [&](Channels::const_reference c) {
+        return a -> channelPreDecision ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -531,7 +508,7 @@ LoKi::L0::TriggerDecision::operator()
   ( LoKi::L0::TriggerDecision::argument a ) const 
 {
   //
-  Assert ( 0 != a , "LHCb::L0DUReport* points to null" ) ;
+  Assert ( a , "LHCb::L0DUReport* points to null" ) ;
   //
   // update the system:
   if ( 0 == tckPrev() || tckPrev() != a->tck() ) 
@@ -539,19 +516,18 @@ LoKi::L0::TriggerDecision::operator()
     clearChannels()  ;
     // CHECK THE EXISTENCE OF TRIGGERS 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
     const LHCb::L0DUTrigger::Map& m = config->triggers() ;
-    for ( Names::const_iterator iname = names().begin() ; 
-          names().end() != iname ; ++iname ) 
+    for ( const auto& name : names() )
     {
-      LHCb::L0DUTrigger::Map::const_iterator ifind = m.find ( *iname ) ;
+      LHCb::L0DUTrigger::Map::const_iterator ifind = m.find ( name ) ;
       if ( m.end() == ifind ) 
       {
-        Error ("Unknown trigger '" + (*iname) + "' has been requested") ;
+        Error ("Unknown trigger '" + name + "' has been requested") ;
         continue ;
       }
-      const LHCb::L0DUTrigger* trigger = ifind->second ;
-      Assert ( 0 != trigger , "LHCb::L0DUTrigger* points to NULL" ) ;
+      const auto* trigger = ifind->second ;
+      Assert ( trigger , "LHCb::L0DUTrigger* points to NULL" ) ;
       addChannel ( trigger -> id() ) ;
     }
     // store the tck of successful configuration 
@@ -559,10 +535,10 @@ LoKi::L0::TriggerDecision::operator()
   }
   
   // loop over the defined triggers 
-  for ( Names::const_iterator ic = names().begin()  ; names().end()!= ic ; ++ic ) 
-  { if ( a -> triggerDecisionByName ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(names()), std::end(names()),
+                      [&](Names::const_reference c) {
+     return  a -> triggerDecisionByName ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -597,7 +573,7 @@ LoKi::L0::ChannelDecisionSubString::operator()
   ( LoKi::L0::ChannelDecisionSubString::argument a ) const 
 {
   //
-  Assert ( 0 != a , "LHCb::L0DUReport* points to null" ) ;
+  Assert ( a , "LHCb::L0DUReport* points to null" ) ;
   //
   // update the system:
   if ( 0 == tckPrev() || tckPrev() != a->tck() ) 
@@ -606,36 +582,26 @@ LoKi::L0::ChannelDecisionSubString::operator()
     clearNames    () ;
     // convert names into channels 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
-    const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( LHCb::L0DUChannel::Map::const_iterator ic = m.begin() ; 
-          m.end() != ic ; ++ic )
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
+    for ( const auto& c : config->channels()  ) 
     {
-      if ( std::string::npos == ic->first.find ( substr() ) ) { continue ; }
-      const LHCb::L0DUChannel* channel = ic->second ;
-      Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
+      if ( std::string::npos == c.first.find ( substr() ) ) { continue ; }
+      const auto* channel = c.second ;
+      Assert ( channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0)  {
           addChannel ( channel -> id() ) ;
-          addName    ( ic->first       ) ;
+          addName    ( c.first       ) ;
       }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( channels().empty() ) 
-  { 
-    //Error ( "empty list of channels, return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-  
   // loop over the defined channels 
-  for ( Channels::const_iterator ic = channels().begin() ; 
-        channels().end() != ic ; ++ic ) 
-  { if ( a -> channelDecision ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(channels()), std::end(channels()),
+                      [&](Channels::const_reference c) {
+        return a -> channelDecision ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -671,36 +637,26 @@ LoKi::L0::ChannelDecisionRegex::operator()
     clearNames    () ;
     // convert names into channels 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
-    const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( LHCb::L0DUChannel::Map::const_iterator ic = m.begin() ; 
-          m.end() != ic ; ++ic )
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
+    for ( const auto& c : config->channels()  )
     {
-      if ( !boost::regex_match ( ic->first , expression() ) ) { continue ; }
-      const LHCb::L0DUChannel* channel = ic->second ;
-      Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
+      if ( !boost::regex_match ( c.first , expression() ) ) { continue ; }
+      const auto* channel = c.second ;
+      Assert ( channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0)  {
           addChannel ( channel -> id() ) ;
-          addName    ( ic->first       ) ;
+          addName    ( c.first       ) ;
       }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( channels().empty() ) 
-  { 
-    //Error ( "empty list of channels, return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-  
   // loop over the defined channels 
-  for ( Channels::const_iterator ic = channels().begin() ; 
-        channels().end() != ic ; ++ic ) 
-  { if ( a -> channelDecision ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(channels()), std::end(channels()),
+                      [&](Channels::const_reference c) {
+        return a -> channelDecision ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -738,34 +694,25 @@ LoKi::L0::ChannelPreDecisionSubString::operator()
     const LHCb::L0DUConfig* config = a->configuration() ;
     Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
     const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( LHCb::L0DUChannel::Map::const_iterator ic = m.begin() ; 
-          m.end() != ic ; ++ic )
+    for ( const auto& c : m ) 
     {
-      if ( std::string::npos == ic->first.find ( substr() ) ) { continue ; }
-      const LHCb::L0DUChannel* channel = ic->second ;
+      if ( std::string::npos == c.first.find ( substr() ) ) { continue ; }
+      const LHCb::L0DUChannel* channel = c.second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0)  {
           addChannel ( channel -> id() ) ;
-          addName    ( ic -> first     ) ;
+          addName    ( c. first     ) ;
       }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( channels().empty() ) 
-  { 
-    //Error ( "empty list of channels, return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-  
   // loop over the defined channels 
-  for ( Channels::const_iterator ic = channels().begin() ; 
-        channels().end() != ic ; ++ic ) 
-  { if ( a -> channelPreDecision ( *ic , bx() ) ) { return true ; } } // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(channels()), std::end(channels()),
+                      [&](Channels::const_reference c) {
+        return a -> channelPreDecision ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -790,7 +737,7 @@ LoKi::L0::ChannelPreDecisionRegex::operator()
   ( LoKi::L0::ChannelPreDecisionRegex::argument a ) const 
 {
   //
-  Assert ( 0 != a , "LHCb::L0DUReport* points to null" ) ;
+  Assert ( a , "LHCb::L0DUReport* points to null" ) ;
   //
   // update the system:
   if ( 0 == tckPrev() || tckPrev() != a->tck() ) 
@@ -800,35 +747,25 @@ LoKi::L0::ChannelPreDecisionRegex::operator()
     // convert names into channels 
     const LHCb::L0DUConfig* config = a->configuration() ;
     Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
-    const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( LHCb::L0DUChannel::Map::const_iterator ic = m.begin() ; 
-          m.end() != ic ; ++ic )
+    for ( const auto& c : config->channels() )
     {
-      if ( !boost::regex_match ( ic->first , expression() ) ) { continue ; }
-      const LHCb::L0DUChannel* channel = ic->second ;
+      if ( !boost::regex_match ( c.first , expression() ) ) { continue ; }
+      const LHCb::L0DUChannel* channel = c.second ;
       Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0)  {
           addChannel ( channel -> id() ) ;
-          addName    ( ic->first       ) ;
+          addName    ( c.first       ) ;
       }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( channels().empty() ) 
-  { 
-    //Error ( "empty list of channels, return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-  
   // loop over the defined channels 
-  for ( Channels::const_iterator ic = channels().begin() ; 
-        channels().end() != ic ; ++ic ) 
-  { if ( a -> channelPreDecision ( *ic , bx() ) ) { return true ; } } // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(channels()), std::end(channels()),
+                      [&](Channels::const_reference c) {
+        return a -> channelPreDecision ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -853,7 +790,7 @@ LoKi::L0::TriggerDecisionSubString::operator()
   ( LoKi::L0::TriggerDecisionSubString::argument a ) const 
 {
   //
-  Assert ( 0 != a , "LHCb::L0DUReport* points to null" ) ;
+  Assert ( a , "LHCb::L0DUReport* points to null" ) ;
   //
   // update the system:
   if ( 0 == tckPrev() || tckPrev() != a->tck() ) 
@@ -862,35 +799,26 @@ LoKi::L0::TriggerDecisionSubString::operator()
     clearNames    () ;
     // convert names into channels 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
-    const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( LHCb::L0DUChannel::Map::const_iterator ic = m.begin() ; 
-          m.end() != ic ; ++ic )
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
+    for ( const auto &c : config->channels() )
     {
-      if ( std::string::npos == ic->first.find ( substr() ) ) { continue ; }
-      const LHCb::L0DUChannel* channel = ic->second ;
-      Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
+      if ( std::string::npos == c.first.find ( substr() ) ) { continue ; }
+      const LHCb::L0DUChannel* channel = c.second ;
+      Assert ( channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0)  {
           addChannel ( channel -> id() ) ;
-          addName    ( ic -> first     ) ;
+          addName    ( c.first     ) ;
       }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( names().empty() ) 
-  { 
-    //Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-
   // loop over the defined triggers 
-  for ( Names::const_iterator ic = names().begin()  ; names().end()!= ic ; ++ic ) 
-  { if ( a -> triggerDecisionByName ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(names()), std::end(names()),
+                      [&](Names::const_reference c) {
+            return a -> triggerDecisionByName ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 
@@ -915,7 +843,7 @@ LoKi::L0::TriggerDecisionRegex::operator()
   ( LoKi::L0::TriggerDecisionRegex::argument a ) const 
 {
   //
-  Assert ( 0 != a , "LHCb::L0DUReport* points to null" ) ;
+  Assert ( a , "LHCb::L0DUReport* points to null" ) ;
   //
   // update the system:
   if ( 0 == tckPrev() || tckPrev() != a->tck() ) 
@@ -924,35 +852,26 @@ LoKi::L0::TriggerDecisionRegex::operator()
     clearNames    () ;
     // convert names into channels 
     const LHCb::L0DUConfig* config = a->configuration() ;
-    Assert ( 0 != config , "LHCb::L0DUConfig* points to NULL" );
-    const LHCb::L0DUChannel::Map& m = config->channels() ;
-    for ( LHCb::L0DUChannel::Map::const_iterator ic = m.begin() ; 
-          m.end() != ic ; ++ic )
+    Assert ( config , "LHCb::L0DUConfig* points to NULL" );
+    for ( const auto& c : config->channels() )
     {
-      if ( !boost::regex_match ( ic->first , expression()  ) )  { continue ; }
-      const LHCb::L0DUChannel* channel = ic->second ;
-      Assert ( 0 != channel , "LHCb::L0DUChannel* points to NULL" ) ;
+      if ( !boost::regex_match ( c.first , expression()  ) )  { continue ; }
+      const LHCb::L0DUChannel* channel = c.second ;
+      Assert ( channel , "LHCb::L0DUChannel* points to NULL" ) ;
       if (channel->decisionType()!=0)  {
         addChannel ( channel -> id() ) ;
-        addName    ( ic -> first     ) ;
+        addName    ( c.first     ) ;
       }
     }
     // store the tck of successful configuration 
     setTckPrev ( a -> tck () ) ;
   }
   
-  // sanity check:
-  if ( names().empty() ) 
-  { 
-    //Error ( "empty list of triggers for pattern '" + substr() + "', return false" ) ;
-    return false ;                                                    // RETURN 
-  }
-  
   // loop over the defined triggers 
-  for ( Names::const_iterator ic = names().begin()  ; names().end()!= ic ; ++ic ) 
-  { if ( a -> triggerDecisionByName ( *ic , bx() ) ) { return true ; } }    // REUTRN 
-  //
-  return false ;
+  return std::any_of( std::begin(names()), std::end(names()),
+                      [&](Names::const_reference c) {
+            return a -> triggerDecisionByName ( c , bx() );
+  });
 }
 // ============================================================================
 // OPTIONAL: the nice printout 

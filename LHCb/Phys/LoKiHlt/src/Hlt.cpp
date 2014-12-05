@@ -392,15 +392,12 @@ LoKi::HLT::DecisionButSubString::result_type
 LoKi::HLT::DecisionButSubString::operator() 
   ( LoKi::HLT::DecisionButSubString::argument a ) const 
 {
-  Assert ( 0 != a , "const LHCb::HltDecReports* points to NULL!" ) ;
+  Assert ( a , "const LHCb::HltDecReports* points to NULL!" ) ;
   // loop over all selections and match the names 
-  for ( LHCb::HltDecReports::Container::const_iterator isel = a->begin() ; 
-        a->end() != isel ; ++isel ) 
-  { 
-    if ( isel->second.decision() && std::string::npos == isel->first.find( substr() ) ) 
-    { return true ; }
-  }
-  return false ;
+  return std::any_of( std::begin(*a), std::end(*a),
+                      [&](LHCb::HltDecReports::Container::const_reference i) { 
+    return  i.second.decision() && std::string::npos == i.first.find( substr() );
+  } );
 }
 // ============================================================================
 // printout 

@@ -48,10 +48,8 @@ LoKi::HLT::RoutingBits::RoutingBits
   const unsigned short bit2 ) 
   : LoKi::Functor<void,bool>() 
   , m_fired   () 
-  , m_bits    () 
+  , m_bits    { bit1, bit2 }
 {
-  m_bits.push_back ( bit1 ) ;
-  m_bits.push_back ( bit2 ) ;
   std::sort ( m_fired.begin() , m_fired.end() ) ;  
 }
 // ============================================================================
@@ -63,11 +61,8 @@ LoKi::HLT::RoutingBits::RoutingBits
   const unsigned short bit3 ) 
   : LoKi::Functor<void,bool>() 
   , m_fired   () 
-  , m_bits    () 
+  , m_bits    { bit1, bit2, bit3 }
 {
-  m_bits.push_back ( bit1 ) ;
-  m_bits.push_back ( bit2 ) ;
-  m_bits.push_back ( bit3 ) ;
   std::sort ( m_fired.begin() , m_fired.end() ) ;  
 }
 // ============================================================================
@@ -80,12 +75,8 @@ LoKi::HLT::RoutingBits::RoutingBits
   const unsigned short bit4 ) 
   : LoKi::Functor<void,bool>() 
   , m_fired   () 
-  , m_bits    () 
+  , m_bits    { bit1, bit2, bit3, bit4 }
 {
-  m_bits.push_back ( bit1 ) ;
-  m_bits.push_back ( bit2 ) ;
-  m_bits.push_back ( bit3 ) ;
-  m_bits.push_back ( bit4 ) ;
   std::sort ( m_fired.begin() , m_fired.end() ) ;  
 }
 // ============================================================================
@@ -117,15 +108,10 @@ LoKi::HLT::RoutingBits::operator()
 {
   if ( !sameEvent() || 0 >= event() || m_fired.empty() ) { getFired() ; }
   //
-  for ( std::vector<unsigned int>::const_iterator ibit = m_bits.begin() ; 
-        m_bits.end() != ibit ; ++ibit ) 
-  {
-    const bool found = std::binary_search 
-      ( m_fired.begin() , m_fired.end  () , *ibit ) ; 
-    if ( found ) { return true ; } 
-  }
-  //
-  return false ;  
+  return std::any_of( std::begin(m_bits), std::end(m_bits),
+                      [&](const unsigned int& bit) {
+            return std::binary_search( m_fired.begin() , m_fired.end  () , bit ); 
+  });
 }
 // ============================================================================
 // get the fired bits 
@@ -175,8 +161,6 @@ std::ostream& LoKi::HLT::RoutingBits::fillStream ( std::ostream& s ) const
   return s << " ) " ; 
 }
 // ============================================================================
-
-
 
 
 // ============================================================================

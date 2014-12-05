@@ -117,7 +117,7 @@ LoKi::Numbers::EvtNumList::EvtNumList
   : m_list ( lst ) 
 {
   std::sort ( m_list.begin() , m_list.end() ) ;
-  evt_list::iterator i = std::unique( m_list.begin() , m_list.end() ) ;
+  auto i = std::unique( m_list.begin() , m_list.end() ) ;
   m_list.erase ( i ,  m_list.end() ) ;
 }
 // =============================================================================
@@ -165,12 +165,11 @@ LoKi::Numbers::EvtNumList::operator+
 // ============================================================================
 std::size_t LoKi::Numbers::EvtNumList::hash       () const 
 {
-  std::size_t seed = 0 ;
-  //
-  for ( iterator i = begin() ; end() != i ; ++i ) 
-  { boost::hash_combine ( seed , *i ) ; }
-  //
-  return seed ;
+  return std::accumulate( begin(), end(), std::size_t{0},
+                          [](std::size_t seed, const LoKi::Numbers::EvtNum& i ) {
+                              boost::hash_combine(seed,i);
+                              return seed;
+                          } );
 }
 // ==============================================================================
 std::ostream& LoKi::Numbers::EvtNumList::fillStream ( std::ostream& s ) const 
@@ -293,12 +292,11 @@ LoKi::Numbers::RunEvtList::RunEvtList
 // ============================================================================
 std::size_t LoKi::Numbers::RunEvtList::hash       () const 
 {
-  std::size_t seed = 0 ;
-  //
-  for ( iterator i = begin() ; end() != i ; ++i ) 
-  { boost::hash_combine ( seed , *i ) ; }
-  //
-  return seed ;
+  return std::accumulate( begin(), end(), std::size_t{0},
+                          [](std::size_t seed, const LoKi::Numbers::RunEvt&  i ) {
+                              boost::hash_combine(seed,i);
+                              return seed;
+                          } );
 }
 // ============================================================================
 std::ostream& LoKi::Numbers::RunEvtList::fillStream ( std::ostream& s ) const 
@@ -355,8 +353,7 @@ Gaudi::Parsers::parse
 ( LoKi::Numbers::RunEvtList& result, const std::string& input)
 {
   //
-  typedef std::vector<LoKi::Numbers::RunEvt> Events ;
-  Events events  ;
+  std::vector<LoKi::Numbers::RunEvt> events  ;
   StatusCode sc = parse_ ( events , input ) ;
   // 
   result = LoKi::Numbers::RunEvtList ( events );
