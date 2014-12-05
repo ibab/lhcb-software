@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+- Changes in references to reflect changes in FTDet
+  . Change in Det/FTDet "CreateDetSegment" to correct for a bug in the z0 computation, 
+    and also to make this routine less geometry version dependent. 
+
 - Changes in Configuration
   . Change to Hlt decoding and filtering to use 'split' TES locations
     and thus support 2015 real data (backward compatible for Run1 data)
