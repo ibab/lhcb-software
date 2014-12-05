@@ -176,6 +176,7 @@ connection string. 'destination' must be a connection string.""")
                 log.info("Warning: merge works only on folders that do not exist on the target")
                 PyCoolCopy(sourceDb).append(dest, selection)
             else:
+                # FIXME : https://sft.its.cern.ch/jira/browse/ROOT-5603
                 targetDb = CondDB(dest,create_new_db=True,readOnly=False).db
                 PyCoolCopy(sourceDb).copy(targetDb, selection)
             log.info("Copy completed.")

@@ -653,6 +653,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if d.append.isChecked():
                     copyTool.append(connStr, selectionList)
                 else:
+                    # FIXME : https://sft.its.cern.ch/jira/browse/ROOT-5603
                     targetDb = CondDB(connStr,create_new_db=True,readOnly=False).db                    
                     copyTool.copy(targetDb, selectionList)
             except:
