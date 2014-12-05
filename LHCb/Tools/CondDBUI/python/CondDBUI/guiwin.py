@@ -292,7 +292,8 @@ class myWindow(Qt.QMainWindow):
                     # reduce the verbosity of PyCoolCopy
                     PyCoolCopy.log.setLevel( PyCoolCopy.logging.WARNING )
                     if self.dialogSliceDB.do_copy:
-                        copyTool.copy(connectString, selectionList)
+                        targetDb = CondDB(connectString,create_new_db=True,readOnly=False).db
+                        copyTool.copy(targetDb, selectionList)
                     else:
                         copyTool.append(connectString, selectionList)
                 self.dialogSliceDB.reset()

@@ -2,6 +2,8 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+! 2014-12-05 - Liang Sun
+ - PyCoolCopy().copy would not support a connection string as its target db when the target db does not exist, now use an empty cool.IDatabase object
 
 !========================= CondDBUI v3r31 2014-10-14 =========================
 ! 2014-10-07 - Liang Sun

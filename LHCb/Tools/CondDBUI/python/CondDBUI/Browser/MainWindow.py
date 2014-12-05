@@ -653,7 +653,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 if d.append.isChecked():
                     copyTool.append(connStr, selectionList)
                 else:
-                    copyTool.copy(connStr, selectionList)
+                    targetDb = CondDB(connStr,create_new_db=True,readOnly=False).db                    
+                    copyTool.copy(targetDb, selectionList)
             except:
                 self.exceptionDialog()
 
