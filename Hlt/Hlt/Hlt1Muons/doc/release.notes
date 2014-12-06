@@ -4,10 +4,13 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
-! 2014-11-20 - Vasileios Syropoulos
+! 2014-12-06 - Vasileios Syropoulos
+ - Corrected release notes. Prepare package for tag collector
+
+! 2014-11-26 - Vasileios Syropoulos
  - Fix bad commit. Missing ; in MatchVeloMuon.cpp line: 174
 
-! 2014-11-20 - Vasileios Syropoulos
+! 2014-11-26 - Vasileios Syropoulos
  - Fix small bug in MatchVeloMuon:
    accidentally reintroduced bug that was fixed before (2014-10-08 - Roel Aaij).
 
