@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-12-06 - Vasileios Syropoulos
+ - Fix bad commit: (accidentally removed declareInterface<ITracksFromTrack> to MatchVeloMuon).
+
+! 2014-12-06 - Vasileios Syropoulos
  - Corrected release notes. Prepare package for tag collector
 
 ! 2014-11-26 - Vasileios Syropoulos
