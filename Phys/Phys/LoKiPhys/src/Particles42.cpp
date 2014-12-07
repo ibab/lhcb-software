@@ -43,11 +43,11 @@ LoKi::Particles::TisTosTobDec::TisTosTobDec
 {
   Assert ( !(!m_tistos) , "Invalid ITriggerTisTos tool!" );
   //
-  if ( std::string::npos != lines        .find("Hlt1") &&
-       std::string::npos != tistos.name().find("Hlt2") ) 
+  if ( std::string::npos != lines         .find("Hlt1") &&
+       std::string::npos != tistos->name().find("Hlt2") ) 
   { Error("Wrong TisTos tool is used!") ; }     
-  if ( std::string::npos != lines        .find("Hlt2") &&
-       std::string::npos != tistos.name().find("Hlt1") ) 
+  if ( std::string::npos != lines         .find("Hlt2") &&
+       std::string::npos != tistos->name().find("Hlt1") ) 
   { Error("Wrong TisTos tool is used!") ; }     
 }
 // ============================================================================
