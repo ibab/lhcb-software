@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2014-12-05
+# Maintainer : Jon Harrison
+#
+#============================================================================
+package 	VeloAnalysisFramework
+version 	v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches 	cmt doc src
+include_path 	none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+use ROOT        v*      LCG_Interfaces 
+#============================================================================
+# Component library building rule
+#============================================================================
+library		VeloAnalysisFramework  -import=ROOT  ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=VeloAnalysisFramework
+#Below needs to be modified as necessary
+macro_append ROOT_linkopts " -lHist -lMatrix -lGraf" WIN32 " libHist.lib libMatrix.lib libGraf.lib"
+apply_pattern install_python_modules
