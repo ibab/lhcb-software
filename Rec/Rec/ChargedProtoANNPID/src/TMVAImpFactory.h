@@ -47,6 +47,11 @@ namespace ANNGlobalPID
   class TMVAImpFactory
   {
 
+  public:
+
+    // vector of input names
+    typedef std::vector<std::string> InputNames;
+
   private:
 
     /** @class FactoryBase TMVAImpFactory.h
@@ -60,7 +65,7 @@ namespace ANNGlobalPID
     {
     public:
       /// Create an instance of the TMVA classifier for this factory
-      virtual IClassifierReader* create( std::vector<std::string> inputs ) = 0;
+      virtual IClassifierReader* create( const InputNames& inputs ) = 0;
       /// Destructor
       virtual ~FactoryBase() { }
     };
@@ -77,9 +82,10 @@ namespace ANNGlobalPID
     {
     public:
       /// Create an instance of the TMVA classifier for this factory
-      inline IClassifierReader* create( std::vector<std::string> inputs ) 
+      IClassifierReader* create( const InputNames& inputs ) 
       {
-        return new TMVATYPE(inputs); 
+        // const cast to work around annoying TMVA feature... should really take a const reference...
+        return new TMVATYPE( *(const_cast<InputNames*>(&inputs)) ); 
       }
       /// Destructor
       virtual ~TMVAFactory() { }
