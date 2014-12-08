@@ -16,6 +16,9 @@
     <script src="js/BinaryLoader.js"></script>
     <script src="js/stats.min.js"></script>
     <script src="js/dat.gui.min.js"></script>
+    <script src="js/Curve.js"></script>
+    <script src="js/SplineCurve3.js"></script>
+    <script src="js/CombinedCamera.js"></script>
 
     <script>
       var software = ! Detector.webgl;
@@ -24,15 +27,17 @@
       if (!software)
         scene.fog = new THREE.FogExp2( 0x000000, 0.01 );
 
+
       var ortho = false;
       var orthowidth = 20.0;
       var aspectratio = window.innerWidth/window.innerHeight;
+
       var camera;
       camera = new THREE.CombinedCamera( orthowidth, orthowidth/aspectratio, 75.0, 0.01, 1000, -10000.0, 10000.0);
-      //camera.position.set(-10,0,-5);
       camera.position.set(-7.5,7.5,2.5);
       camera.up.set( 0.0, 1.0, 0.0);
       camera.toPerspective();
+
 
       var renderer;
       //if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
@@ -40,6 +45,7 @@
         renderer = new THREE.WebGLRenderer( {preserveDrawingBuffer: true}); //  {antialias: true} { clearColor: 0x000000, clearAlpha: 1 } 
       else 
         renderer = new THREE.CanvasRenderer();
+
 
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
@@ -117,10 +123,12 @@
       var ecalmaterial = new THREE.MeshLambertMaterial({color: 0x0000ff, shading: THREE.FlatShading, wireframe: false, overdraw: false, doubleSided: true, transparent: false });
       var hcalmaterial = new THREE.MeshLambertMaterial({color: 0xff0000, shading: THREE.FlatShading, wireframe: false, overdraw: false, doubleSided: true, transparent: false });
       //wireframeLinewidth: 2, 
-      var pvmaterial = new THREE.MeshBasicMaterial( { color: 0xffffff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8 } );
-      var svmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8 } );
-      //var pimaterial = new THREE.LineBasicMaterial( { color: 0x5a5a5a, opacity: 1.0, linewidth: 2 } );
-      var pimaterial = new THREE.LineBasicMaterial( { color: 0xff7000, opacity: 1.0, linewidth: 2 } );
+      var pvmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8 } );
+      var fourprongmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8, visible: true } );
+      var threeprongmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8, visible: false} );
+      var twoprongmaterial = new THREE.MeshBasicMaterial( { color: 0xff00ff, shading: THREE.FlatShading, blending: THREE.AdditiveBlending, wireframe: false, overdraw: false, doubleSided: false, transparent: true, opacity: 0.8 , visible: false} );
+      var pimaterial = new THREE.LineBasicMaterial( { color: 0xff8000, opacity: 1.0, linewidth: 2 } );
+      //var pimaterial = new THREE.LineBasicMaterial( { color: 0xff7000, opacity: 1.0, linewidth: 2 } );
       var kmaterial = new THREE.LineBasicMaterial( { color: 0xff0000, opacity: 1.0, linewidth: 2 } );
       var pmaterial = new THREE.LineBasicMaterial( { color: 0xff00ff, opacity: 1.0, linewidth: 2 } );
       var mumaterial = new THREE.LineBasicMaterial( { color: 0x00ff00, opacity: 1.0, linewidth: 2 } );
@@ -128,15 +136,15 @@
       
       var vtrackmaterial = new THREE.LineBasicMaterial( { color: 0x303030, opacity: 1.0, linewidth: 2 } );
       
-      //var pvsvmaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 1.0e-3, gapSize: 0.33e-3, scale: 0.33e-4, linewidth: 2, transparent: true, opacity: 0.8 } );
-      var pvsvmaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2 } );
-      //var pvsvmaterial = new THREE.LineDashedMaterial( { color: 0xff00ff } );
+      var pvsvfourmaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: true } );
+      var pvsvthreematerial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
+      var pvsvtwomaterial = new THREE.LineDashedMaterial( { color: 0xff00ff, dashSize: 0.75e-3, gapSize: 0.5e-3, scale: 1.0, linewidth: 2, visible: false } );
 
       var detectoralpha = 0.04;
       //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
       //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.CustomBlending, blendEquation: THREE.MaxEquation, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
       //var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
-      var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, blendEquation: THREE.MaxEquation, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
+      var detectormaterial = new THREE.MeshLambertMaterial({color: 0xffffff, blending: THREE.AdditiveBlending, shading: THREE.FlatShading, wireframe: wiremode, overdraw: false, doubleSided: true, transparent: true, opacity: detectoralpha });
 
       var controls = new THREE.OrbitControls( camera, renderer.domElement );
       controls.target.set( 0.0, 0.0, 8.5);
@@ -247,19 +255,24 @@
         prev: function() { prevevent = true; },
         update: autoupdate,
         alpha: detectoralpha,
-        //picolor: "#ff8000",
-        picolor: "#5a5a5a",
+        picolor: "#ff8000",
+        //picolor: "#5a5a5a",
         kcolor: "#ff0000",
         pcolor: "#ff00ff",
         mucolor: "#00ff00",
         ecolor: "#0505ff",
-        width: 2.0
+        width: 2.0,
+        pvs: true,
+        vtracks: true,
+        fourprongs: true,
+        threeprongs: false,
+        twoprongs: false
       };
 
       var epublic = gui.add(params, "public").name("LHCb public page");       
-      epublic.domElement.parentNode.parentNode.style.backgroundPosition = "100px 50%";
-      epublic.domElement.parentNode.parentNode.style.backgroundImage = "url(logo20.png)";
-      epublic.domElement.parentNode.parentNode.style.backgroundRepeat = "no-repeat";
+      //epublic.domElement.parentNode.parentNode.style.backgroundPosition = "100px 50%";
+      //epublic.domElement.parentNode.parentNode.style.backgroundImage = "url(logo20.png)";
+      //epublic.domElement.parentNode.parentNode.style.backgroundRepeat = "no-repeat";
       var fev = gui.addFolder('Event navigation');
       var eupdate = fev.add(params, "update").name("Online mode").onChange( function() { autoupdate = params.update; } );
       var enext = fev.add(params, "next").name("Next event"); 
@@ -407,6 +420,12 @@
       var epcolor = fcolors.addColor(params, "pcolor").name("Protons").onChange( function() { pmaterial.color.setHex(params.pcolor.replace( '#','0x' )); } );
       var emucolor = fcolors.addColor(params, "mucolor").name("Muons").onChange( function() { mumaterial.color.setHex(params.mucolor.replace( '#','0x' )); } );
       var eecolor = fcolors.addColor(params, "ecolor").name("Electrons").onChange( function() { ematerial.color.setHex(params.ecolor.replace( '#','0x' )); } );
+      var epvs = fcolors.add(params, "pvs").name("Primary vertices").onChange( function() { pvmaterial.visible = params.pvs; } );
+      var evtracks = fcolors.add(params, "vtracks").name("Velo Tracks").onChange( function() { vtrackmaterial.visible = params.vtracks; } );
+      var efourprongs = fcolors.add(params, "fourprongs").name("Four prong decays").onChange( function() { fourprongmaterial.visible = params.fourprongs; pvsvfourmaterial.visible = params.fourprongs; } );
+      var ethreeprongs = fcolors.add(params, "threeprongs").name("Three prong decays").onChange( function() { threeprongmaterial.visible = params.threeprongs; pvsvthreematerial.visible = params.threeprongs; } );
+      var etwoprongs = fcolors.add(params, "twoprongs").name("Two prong decays").onChange( function() { twoprongmaterial.visible = params.twoprongs; pvsvtwomaterial.visible = params.twoprongs; } );
+
       ewidth.domElement.parentNode.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
       ealpha.domElement.parentNode.parentNode.parentNode.style.borderLeft = "3px solid #a0a0a0";
       //fcolors.open();
@@ -536,7 +555,7 @@
         camera.setSize(window.innerWidth, window.innerHeight);
 	camera.updateProjectionMatrix();      
         renderer.setSize( window.innerWidth, window.innerHeight );      
-        controls.handleResize();      
+        //controls.handleResize();      
       };
 
       function loadNames( name ) {
@@ -588,7 +607,8 @@
 		var sigma0 = factor*1.0e-3*Math.sqrt(pv.eval_0);
 		var sigma1 = factor*1.0e-3*Math.sqrt(pv.eval_1);
 		var sigma2 = factor*1.0e-3*Math.sqrt(pv.eval_2);
-                var mtot = new THREE.Matrix4(pv.evec_0x*sigma0, pv.evec_1x*sigma1, pv.evec_2x*sigma2, 1.0e-3*pv.pv_x,
+                //var mtot = new THREE.Matrix4
+		mtot.set(pv.evec_0x*sigma0, pv.evec_1x*sigma1, pv.evec_2x*sigma2, 1.0e-3*pv.pv_x,
 				             pv.evec_0y*sigma0, pv.evec_1y*sigma1, pv.evec_2y*sigma2, 1.0e-3*pv.pv_y,
 					     pv.evec_0z*sigma0, pv.evec_1z*sigma1, pv.evec_2z*sigma2, 1.0e-3*pv.pv_z,
 					     0.0, 0.0, 0.0, 1.0);
@@ -596,35 +616,88 @@
      	        pvgeometry.applyMatrix( mtot );
 		//alert("m: "+m.elements[0]+", "+m.elements[1]+", "+m.elements[2]+", "+m.elements[3]+", "+m.elements[4]+", "+m.elements[5]+", "+m.elements[6]+", "+m.elements[7]+", "+m.elements[8]+", "+m.elements[9]+", "+m.elements[10]+", "+m.elements[11]+", "+m.elements[12]+", "+m.elements[13]+", "+m.elements[14]+", "+m.elements[15]);				  
 	        allmeshes.push(new THREE.Mesh(pvgeometry, pvmaterial));
+						  //alert("PVS!");
               }
 
               //PARSE SVS
-              svs = parsedevent.SVS;
-	      for (i in svs)
+              //fourprongs = parsedevent.FOURPRONG;
+	      //console.log(parsedevent.FOURPRONG);
+              fourprongs = parsedevent.FOURPRONG;
+	      for (i in fourprongs)
               {
 		var svgeometry = new THREE.SphereGeometry( 1.0, 24, 24 );//assuming this is in m
-  	        var sv = svs[i];
+  	        var sv = fourprongs[i];
 		var mtot = new THREE.Matrix4();
 		var factor = 10.0;
 		var sigma0 = factor*1.0e-3*Math.sqrt(sv.eval_0);
 		var sigma1 = factor*1.0e-3*Math.sqrt(sv.eval_1);
 		var sigma2 = factor*1.0e-3*Math.sqrt(sv.eval_2);
-                var mtot = new THREE.Matrix4(sv.evec_0x*sigma0, sv.evec_1x*sigma1, sv.evec_2x*sigma2, 1.0e-3*sv.sv_x,
+		mtot.set(sv.evec_0x*sigma0, sv.evec_1x*sigma1, sv.evec_2x*sigma2, 1.0e-3*sv.sv_x,
 				             sv.evec_0y*sigma0, sv.evec_1y*sigma1, sv.evec_2y*sigma2, 1.0e-3*sv.sv_y,
 					     sv.evec_0z*sigma0, sv.evec_1z*sigma1, sv.evec_2z*sigma2, 1.0e-3*sv.sv_z,
 					     0.0, 0.0, 0.0, 1.0);
      	        svgeometry.applyMatrix( mtot );
-	        allmeshes.push(new THREE.Mesh(svgeometry, svmaterial));
+	        allmeshes.push(new THREE.Mesh(svgeometry, fourprongmaterial));
 		//adding line connecting SV with PV
 		var pvsvgeometry = new THREE.Geometry(); 
                 pvsvgeometry.vertices.push( new THREE.Vector3(1.0e-3*sv.pv_x, 1.0e-3*sv.pv_y, 1.0e-3*sv.pv_z) );
                 pvsvgeometry.vertices.push( new THREE.Vector3(1.0e-3*sv.sv_x, 1.0e-3*sv.sv_y, 1.0e-3*sv.sv_z) );
-
-                //pvsvgeometry.vertices.push( new THREE.Vector3(0.0, 0.0, -20.0) );
-                //pvsvgeometry.vertices.push( new THREE.Vector3(0.0, 0.0, +20.0) );
 		pvsvgeometry.computeLineDistances();
-		var pvsvline = new THREE.Line( pvsvgeometry, pvsvmaterial, THREE.LinePieces );
+		var pvsvline = new THREE.Line( pvsvgeometry, pvsvfourmaterial, THREE.LinePieces );
 		alllines.push(pvsvline);
+		//alert("CHECK");
+              }
+
+              threeprongs = parsedevent.THREEPRONG;
+	      for (i in threeprongs)
+              {
+		var svgeometry = new THREE.SphereGeometry( 1.0, 24, 24 );//assuming this is in m
+  	        var sv = threeprongs[i];
+		var mtot = new THREE.Matrix4();
+		var factor = 10.0;
+		var sigma0 = factor*1.0e-3*Math.sqrt(sv.eval_0);
+		var sigma1 = factor*1.0e-3*Math.sqrt(sv.eval_1);
+		var sigma2 = factor*1.0e-3*Math.sqrt(sv.eval_2);
+		mtot.set(sv.evec_0x*sigma0, sv.evec_1x*sigma1, sv.evec_2x*sigma2, 1.0e-3*sv.sv_x,
+				             sv.evec_0y*sigma0, sv.evec_1y*sigma1, sv.evec_2y*sigma2, 1.0e-3*sv.sv_y,
+					     sv.evec_0z*sigma0, sv.evec_1z*sigma1, sv.evec_2z*sigma2, 1.0e-3*sv.sv_z,
+					     0.0, 0.0, 0.0, 1.0);
+     	        svgeometry.applyMatrix( mtot );
+	        allmeshes.push(new THREE.Mesh(svgeometry, threeprongmaterial));
+		//adding line connecting SV with PV
+		var pvsvgeometry = new THREE.Geometry(); 
+                pvsvgeometry.vertices.push( new THREE.Vector3(1.0e-3*sv.pv_x, 1.0e-3*sv.pv_y, 1.0e-3*sv.pv_z) );
+                pvsvgeometry.vertices.push( new THREE.Vector3(1.0e-3*sv.sv_x, 1.0e-3*sv.sv_y, 1.0e-3*sv.sv_z) );
+		pvsvgeometry.computeLineDistances();
+		var pvsvline = new THREE.Line( pvsvgeometry, pvsvthreematerial, THREE.LinePieces );
+		alllines.push(pvsvline);
+		//alert("CHECK");
+              }
+
+              twoprongs = parsedevent.TWOPRONG;
+	      for (i in twoprongs)
+              {
+		var svgeometry = new THREE.SphereGeometry( 1.0, 24, 24 );//assuming this is in m
+  	        var sv = twoprongs[i];
+		var mtot = new THREE.Matrix4();
+		var factor = 10.0;
+		var sigma0 = factor*1.0e-3*Math.sqrt(sv.eval_0);
+		var sigma1 = factor*1.0e-3*Math.sqrt(sv.eval_1);
+		var sigma2 = factor*1.0e-3*Math.sqrt(sv.eval_2);
+		mtot.set(sv.evec_0x*sigma0, sv.evec_1x*sigma1, sv.evec_2x*sigma2, 1.0e-3*sv.sv_x,
+				             sv.evec_0y*sigma0, sv.evec_1y*sigma1, sv.evec_2y*sigma2, 1.0e-3*sv.sv_y,
+					     sv.evec_0z*sigma0, sv.evec_1z*sigma1, sv.evec_2z*sigma2, 1.0e-3*sv.sv_z,
+					     0.0, 0.0, 0.0, 1.0);
+     	        svgeometry.applyMatrix( mtot );
+	        allmeshes.push(new THREE.Mesh(svgeometry, twoprongmaterial));
+		//adding line connecting SV with PV
+		var pvsvgeometry = new THREE.Geometry(); 
+                pvsvgeometry.vertices.push( new THREE.Vector3(1.0e-3*sv.pv_x, 1.0e-3*sv.pv_y, 1.0e-3*sv.pv_z) );
+                pvsvgeometry.vertices.push( new THREE.Vector3(1.0e-3*sv.sv_x, 1.0e-3*sv.sv_y, 1.0e-3*sv.sv_z) );
+		pvsvgeometry.computeLineDistances();
+		var pvsvline = new THREE.Line( pvsvgeometry, pvsvtwomaterial, THREE.LinePieces );
+		alllines.push(pvsvline);
+		//alert("CHECK");
               }
               
 	      //PARSE OT
@@ -666,18 +739,71 @@
               ttline.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
               alllines.push(ttline);
 
+	      //PARSE VELO PHI
+	      velophihits = parsedevent.VELOPHI;
+	      var velophigeometry = new THREE.Geometry(); 
+              for (i in velophihits)
+              {
+                var ab = velophihits[i];
+                velophigeometry.vertices.push( new THREE.Vector3(ab[0], ab[1], ab[2]) );
+                velophigeometry.vertices.push( new THREE.Vector3(ab[3], ab[4], ab[5]) );
+	      }
+              var velophiline = new THREE.Line( velophigeometry, velomaterial, THREE.LinePieces );
+              velophiline.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
+              alllines.push(velophiline);
+
+	      //PARSE VELO PHI
+	      velorhits = parsedevent.VELOR;
+	      //var velorgeometry = new THREE.Geometry(); 
+              for (i in velorhits)
+              {
+                var ab = velorhits[i];
+		var a = new THREE.Vector3(ab[0], ab[1], ab[2]);
+		var b = new THREE.Vector3(ab[3], ab[4], ab[5]);
+		//var pivot = new THREE.Vector3(0.0, 0.0, ab[5]);
+		var r = Math.sqrt(a.x*a.x+a.y*a.y);
+		var phia = Math.atan2(a.y, a.x);
+		var phib = Math.atan2(b.y, b.x);
+		var dphi = phib-phia;
+		if (dphi > Math.PI)
+		  dphi = (2.0*Math.PI-dphi);
+		if (dphi < -Math.PI)
+		  dphi = (2.0*Math.PI+dphi);
+		//console.log(phia+";"+phib+";"+dphi);
+		var velorgeometry = new THREE.Geometry();
+		for (j = 0; j < 11; j++)
+		  velorgeometry.vertices.push(new THREE.Vector3(r*Math.cos(phia+dphi/10.0*j), r*Math.sin(phia+dphi/10.0*j), a.z));
+
+                //velorgeometry.vertices.push( new THREE.Vector3(ab[0], ab[1], ab[2]) );
+                //velorgeometry.vertices.push( new THREE.Vector3(ab[3], ab[4], ab[5]) );
+		var velorline = new THREE.Line( velorgeometry, velomaterial, THREE.LineStrip );
+		velorline.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
+		alllines.push(velorline);
+	      }
+
+/*
 	      //PARSE VELO
 	      velohits = parsedevent.VELO;
-	      var velogeometry = new THREE.Geometry(); 
               for (i in velohits)
               {
+		//just save two different types, r and phi sensors
                 var ab = velohits[i];
+		var velogeometry = new THREE.Geometry();
+		var a = new THREE.Vector3(ab[0], ab[1], ab[2]);
+		var b = new THREE.Vector3(ab[3], ab[4], ab[5]);
+		var pivot = new THREE.Vector3(0.0, 0.0, ab[5]);
+		
                 velogeometry.vertices.push( new THREE.Vector3(ab[0], ab[1], ab[2]) );
-                velogeometry.vertices.push( new THREE.Vector3(ab[3], ab[4], ab[5]) );
+                //velogeometry.vertices.push( new THREE.Vector3(ab[3], ab[4], ab[5]) );
+		var r = velogeometry.vertices[0].
+		var geometry = new THREE.Geometry();
+		for (j = 0; j < 10; j++)
+		  geometry.vertices.push(new THREE.Vector3())
 	      }
               var veloline = new THREE.Line( velogeometry, velomaterial, THREE.LinePieces );
               veloline.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
               alllines.push(veloline);
+*/
 
 	      //PARSE MUON
 	      muonboxes = parsedevent.MUON;			     
@@ -685,11 +811,13 @@
 	      for (i in muonboxes)
               {
 	        var mb = muonboxes[i];
-		var muongeometry = new THREE.CubeGeometry(2.0*mb[1], 2.0*mb[3], 2.0*mb[5]);
+		var muongeometry = new THREE.BoxGeometry(2.0*mb[1], 2.0*mb[3], 2.0*mb[5]);
 	        var muonmesh = new THREE.Mesh(muongeometry, muonmaterial); 
                 muonmesh.position.set(1.0e-3*mb[0], 1.0e-3*mb[2], 1.0e-3*mb[4]); 
                 muonmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
-                THREE.GeometryUtils.merge(mergedmuongeometry, muonmesh);
+                //THREE.GeometryUtils.merge(mergedmuongeometry, muonmesh);
+		muonmesh.updateMatrix();
+		mergedmuongeometry.merge(muonmesh.geometry, muonmesh.matrix);
 	      }
 	      allmeshes.push(new THREE.Mesh(mergedmuongeometry, muonmaterial));
 
@@ -700,11 +828,13 @@
               {
 	        var escale = 0.05; //20gev is 1m?
 	        var eb = ecalboxes[i];
-		var ecalgeometry = new THREE.CubeGeometry(eb[4], eb[4], eb[0]*escale);
+		var ecalgeometry = new THREE.BoxGeometry(eb[4], eb[4], eb[0]*escale);
 	        var ecalmesh = new THREE.Mesh(ecalgeometry, ecalmaterial); 
                 ecalmesh.position.set(1.0e-3*eb[1], 1.0e-3*eb[2], 1.0e-3*(eb[3]-0.5*eb[0]*escale)); 
                 ecalmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
-                THREE.GeometryUtils.merge(mergedecalgeometry, ecalmesh);
+                //THREE.GeometryUtils.merge(mergedecalgeometry, ecalmesh);
+		ecalmesh.updateMatrix();
+		mergedecalgeometry.merge(ecalmesh.geometry, ecalmesh.matrix);
 	      }
 	      allmeshes.push(new THREE.Mesh(mergedecalgeometry, ecalmaterial));
 
@@ -715,19 +845,19 @@
               {
 	        var escale = 0.05; //20gev is 1m?
 	        var hb = hcalboxes[i];
-		var hcalgeometry = new THREE.CubeGeometry(hb[4], hb[4], hb[0]*escale);
+		var hcalgeometry = new THREE.BoxGeometry(hb[4], hb[4], hb[0]*escale);
 	        var hcalmesh = new THREE.Mesh(hcalgeometry, hcalmaterial); 
                 hcalmesh.position.set(1.0e-3*hb[1], 1.0e-3*hb[2], 1.0e-3*(hb[3]+0.5*hb[0]*escale)); 
                 hcalmesh.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
-                THREE.GeometryUtils.merge(mergedhcalgeometry, hcalmesh);
+                //THREE.GeometryUtils.merge(mergedhcalgeometry, hcalmesh);
+		hcalmesh.updateMatrix();
+		mergedhcalgeometry.merge(hcalmesh.geometry, hcalmesh.matrix);
 	      }
 	      allmeshes.push(new THREE.Mesh(mergedhcalgeometry, hcalmaterial));
 
 	      //PARSE VELO TRACKS
-	/*
+	
 	      vtracks = parsedevent.VTRACKS;
-	      //alert("HELLO");
-	      //alert(vtracks.length);
               for (i in vtracks)
               {
                 var track = vtracks[i]; 
@@ -741,23 +871,26 @@
                 line.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
                 alllines.push(line);
               }
-	*/
+	
 	      //PARSE TRACKS
 	      particles = parsedevent.PARTICLES
               for (i in particles)
               {
-                var j = 0;
+                //var j = 0;
                 var track = particles[i]; 
                 var name = track.name;
                 if (name=="pi+" || name=="pi-" || name=="K+" || name=="K-" || name=="p+" || name=="p-" || name=="mu+" || name=="mu-" || name=="e+" || name=="e-")
-                {
-                  var geometry = new THREE.Geometry(); //this will be the new line
-                  for (j in track.track)
+                {						  
+                  var points = [];
+		  for (j in track.track)
                   {
                     var point = track.track[j];
-                    geometry.vertices.push( new THREE.Vector3(point[0], point[1], point[2]) );
-                    //alert("point " + point[0] + " "+ point[1] + " "+ point[2]);
+                    points.push( new THREE.Vector3(1.0e-3*point[0], 1.0e-3*point[1], 1.0e-3*point[2]) );//important to get these as float!
                   }
+		  var spline = new THREE.SplineCurve3(points);
+		  var geometry = new THREE.Geometry();
+		  geometry.vertices = spline.getPoints(200);//these are divisions over full length
+
 	          var line;
                   if (name=="pi+" || name=="pi-")
                     line = new THREE.Line( geometry, pimaterial, THREE.LineStrip );
@@ -773,8 +906,8 @@
                     line = new THREE.Line( geometry, pimaterial, THREE.LineStrip );
 
                   //var linematerial = new THREE.LineBasicMaterial( { color: color, opacity: 1.0, linewidth: 3 } );
-                  //var line = new THREE.Line( geometry, linematerial, THREE.LineStrip );
-                  line.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
+                  //var line = new THREE.Line( spline, linematerial, THREE.LineStrip );
+                  //line.scale.set(1.0e-3, 1.0e-3, 1.0e-3);
                   alllines.push(line);
                 }
               }
