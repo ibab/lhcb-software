@@ -4412,6 +4412,110 @@ ROOT.TH1D.asGraph3 = hToGraph3
 ROOT.TH1F.toGraph3 = hToGraph3
 ROOT.TH1D.toGraph3 = hToGraph3
 
+
+# =============================================================================
+## Convert the histogram to into "Laffery-Wyatt" graph
+#  See G.D. Lafferty and T.R. Wyatt,
+#  ``Where to stick your data points: The treatment of measurements within wide bins,''
+#  Nucl. Instrum. Meth. A355, 541 (1995).
+#  @param histo  the histogram
+#  @param func   the model
+#  @attention: the model can be any reasonable model.
+#  No need in multiplicative and additive terms:
+#  the affine transformations do not affect the result.
+#  e.g. following three graphs are equivalent: 
+#  @code
+#  >>> histo = ...
+#  >>> gr1   = histo.lw_graph ( lambda x :     math.exp(-x)    )
+#  >>> gr2   = histo.lw_graph ( lambda x : 100*math.exp(-x)    )
+#  >>> gr3   = histo.lw_graph ( lambda x : 100*math.exp(-x)-10 )
+#  @endcode 
+#  If no reasonable model is known, the splines can be used instead: 
+#  @code
+#  >>> histo  = 
+#  >>> spline = histo.(p,i,d)spline( .... )
+#  >>> graph  = histo.lw_graph ( spline[2] ) 
+#  @endcode 
+#  @see http://dx.doi.org/10.1016/0168-9002(94)01112-5
+#  @author  Vanya BELYAEV  Ivan.Belyaev@itep.ru
+#  @date    2014-12-08
+def _lw_graph_ ( histo , func ) :
+    """
+    Convert the histogram to into ``Laffery-Wyatt'' graph
+    See G.D. Lafferty and T.R. Wyatt,
+    ``Where to stick your data points: The treatment of measurements within wide bins,''
+    Nucl. Instrum. Meth. A355, 541 (1995).
+
+    >>> histo = ... ## the histogram
+    
+    ## the explicit model:
+    >>> graph  = histo.lw_graph ( lambda x : math.exp(-x) )
+    
+    ## use splines:
+    >>> spline = histo.(p,i,d)spline( .... ) 
+    >>> graph  = histo.lw_graph ( spline[2] )
+    
+    """
+    
+    #
+    ## book graph
+    #
+    graph = ROOT.TGraphAsymmErrors( len ( histo )  - 2 )
+    
+    
+    from scipy import integrate
+    from scipy import optimize 
+    
+    for item in histo.iteritems () :
+
+        ibin  = item[0]
+        x     = item[1]
+        y     = item[2]
+            
+        xmx   = x.value() + x.error()        
+        xmn   = x.value() - x.error()
+
+        #
+        ##  solve the equation f(x) = 1/dx*int(f,xmin,xmax)
+        #
+
+        ##  int(f,xmin,xmax)
+        fint  = integrate.quad ( lambda x : float ( func ( x ) ) ,
+                                 x.value() - x.error() ,
+                                 x.value() + x.error() )
+        
+        dx    = 2.0 * x.error()
+        
+        fx    = fint[0]/dx 
+        
+        fxmin = float ( func( xmn ) ) 
+        fxmax = float ( func( xmx ) ) 
+        
+        if ( fxmin - fx ) * ( fxmax - fx ) >= 0 :
+            logger.warning('Lafferty-Wyatt graph: no valid point is found!')
+            r0 = x.value()
+        else :
+            ##  solve the equation f(x) - 1/dx*int(f,xmin,xmax) = 0 
+            r0 = optimize.brentq ( lambda x : (float(func(x))-fx)  ,
+                                   xmn               ,
+                                   xmx               ,
+                                   xtol = 0.001 * dx ) 
+            
+        ## fill graph
+            
+        ip   = ibin - 1 ## different conventions for TGraph and  TH1 
+
+        xep  = xmx - r0
+        xen  =       r0 - xmn
+        
+        graph.SetPoint      ( ip , r0  ,  y.value()  )
+        graph.SetPointError ( ip , xen , xep , y.error() , y.error() )
+
+    return graph
+
+ROOT.TH1D.lw_graph = _lw_graph_
+ROOT.TH1F.lw_graph = _lw_graph_
+
 # =============================================================================
 ## get edges from the axis:
 #  @author Vanya BELYAEV Ivan.Belyaev@itep.ru

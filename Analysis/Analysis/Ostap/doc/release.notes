@@ -8,6 +8,9 @@
 !  by                $Author$
 ! -----------------------------------------------------------------------------
 
+! 2014-12-08 - Vanya Belyaev
+ - Add conversion of histograms into Lafferty-Wyatt graph
+
 ! 2014-12-02 - Vanya Belyaev
  - improvement for 2D-models 
 

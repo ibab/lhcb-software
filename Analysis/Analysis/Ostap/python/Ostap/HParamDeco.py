@@ -163,7 +163,7 @@ def _h1_bernstein_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
     bfit.histo     = self
     bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
-    return bfit.fun,bfit,bfit.fitresult 
+    return bfit.fun,bfit,b,bfit.fitresult 
 
 # =============================================================================
 ## represent 1D-histo as B-spline
@@ -195,7 +195,7 @@ def _h1_bspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     bfit.histo     = h1 
     bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
-    return bfit.fun,bfit,bfit.fitresult 
+    return bfit.fun,bfit,b,bfit.fitresult 
 
 
 # =============================================================================
@@ -220,7 +220,7 @@ def _h1_positive_ ( h1 , N , opts = 'SQ0I' ) :
     bfit.histo     = h1
     bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
-    return fun,bfit,bfit.fitresult 
+    return fun,bfit,b,bfit.fitresult 
 
 # =============================================================================
 ## represent 1D-histo as positive B-spline
@@ -229,8 +229,8 @@ def _h1_pspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     Represent histo as positive B-spline 
     
     >>> h = ... # the historgam
-    >>> b1 = h.pSpline ( order = 3 , innerknots = 3  )
-    >>> b2 = h.pSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    >>> b1 = h.pSpline ( order = 3 , knots = 3  )
+    >>> b2 = h.pSpline ( order = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
     
     """
     mn,mx = h1.xminmax ()
@@ -254,7 +254,7 @@ def _h1_pspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     bfit.histo     = h1
     bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
-    return bfit.fun,bfit,bfit.fitresult 
+    return bfit.fun,bfit,b,bfit.fitresult 
 
 
 # =============================================================================
@@ -264,8 +264,8 @@ def _h1_ispline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     Represent histo as positive increasing spline 
     
     >>> h = ... # the historgam
-    >>> b1 = h.iSpline ( order = 3 , innerknots = 3  )
-    >>> b2 = h.iSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    >>> b1 = h.iSpline ( order = 3 , knots = 3  )
+    >>> b2 = h.iSpline ( order = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
     
     """
     mn,mx = h1.xminmax ()
@@ -287,7 +287,7 @@ def _h1_ispline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     bfit.histo     = h1
     bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
-    return bfit.fun,bfit,bfit.fitresult 
+    return bfit.fun,bfit,b,bfit.fitresult 
 
 
 # =============================================================================
@@ -297,8 +297,8 @@ def _h1_dspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     Represent histo as positive decreasing spline 
     
     >>> h = ... # the historgam
-    >>> b1 = h.dSpline ( order = 3 , innerknots = 3  )
-    >>> b2 = h.dSpline ( order = 3 , innerknots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
+    >>> b1 = h.dSpline ( order = 3 , knots = 3  )
+    >>> b2 = h.dSpline ( order = 3 , knots = [ 0.1 , 0.2, 0.8, 0.9 ]  )
     
     """
     mn,mx = h1.xminmax ()
@@ -320,7 +320,7 @@ def _h1_dspline_ ( h1 , order = 3 , knots = 3 , opts = 'SQ0I' ) :
     bfit.histo     = h1
     bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
-    return bfit.fun,bfit,bfit.fitresult 
+    return bfit.fun,bfit,b,bfit.fitresult 
 
 
 for t in ( ROOT.TH1D , ROOT.TH1F ) :
