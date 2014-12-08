@@ -1,0 +1,27 @@
+#============================================================================
+# Created    : 2014-12-05
+# Maintainer : Jon Harrison
+#
+#============================================================================
+package 	VeloWebGUI
+version		v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches	cmt doc src
+include_path	none
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#============================================================================
+use VeloAnalysisFramework	v*
+#============================================================================
+# Component library building rule
+#============================================================================
+library		VeloWebGUI	../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=VeloWebGUI
+#Below needs to be modified as necessary
+apply_pattern install_python_modules
