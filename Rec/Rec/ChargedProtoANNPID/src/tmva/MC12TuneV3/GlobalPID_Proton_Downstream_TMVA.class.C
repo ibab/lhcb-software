@@ -125,7 +125,7 @@ class ReadProton_Downstream_TMVA : public IClassifierReader {
  public:
 
    // constructor
-   ReadProton_Downstream_TMVA( std::vector<std::string>& theInputVars ) 
+   ReadProton_Downstream_TMVA( const std::vector<std::string>& theInputVars ) 
       : IClassifierReader(),
         fClassName( "ReadProton_Downstream_TMVA" ),
         fNvars( 27 ),

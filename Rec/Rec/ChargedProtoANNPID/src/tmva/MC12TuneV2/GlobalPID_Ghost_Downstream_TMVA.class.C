@@ -131,7 +131,7 @@ class ReadGhost_Downstream_TMVA : public IClassifierReader {
 public:
 
   // constructor
-  ReadGhost_Downstream_TMVA( std::vector<std::string>& theInputVars )
+  ReadGhost_Downstream_TMVA( const std::vector<std::string>& theInputVars )
     : IClassifierReader(),
       fClassName( "ReadGhost_Downstream_TMVA" ),
       fNvars( 33 ),

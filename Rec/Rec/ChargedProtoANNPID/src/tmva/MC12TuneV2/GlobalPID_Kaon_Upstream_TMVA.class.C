@@ -120,7 +120,7 @@ class ReadKaon_Upstream_TMVA : public IClassifierReader {
 public:
 
   // constructor
-  ReadKaon_Upstream_TMVA( std::vector<std::string>& theInputVars )
+  ReadKaon_Upstream_TMVA( const std::vector<std::string>& theInputVars )
     : IClassifierReader(),
       fClassName( "ReadKaon_Upstream_TMVA" ),
       fNvars( 22 ),

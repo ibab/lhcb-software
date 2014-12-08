@@ -125,7 +125,7 @@ class ReadMuon_Long_TMVA : public IClassifierReader {
  public:
 
    // constructor
-   ReadMuon_Long_TMVA( std::vector<std::string>& theInputVars ) 
+   ReadMuon_Long_TMVA( const std::vector<std::string>& theInputVars ) 
       : IClassifierReader(),
         fClassName( "ReadMuon_Long_TMVA" ),
         fNvars( 27 ),

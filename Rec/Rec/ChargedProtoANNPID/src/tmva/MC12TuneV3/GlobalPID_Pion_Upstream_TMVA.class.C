@@ -118,7 +118,7 @@ class ReadPion_Upstream_TMVA : public IClassifierReader {
  public:
 
    // constructor
-   ReadPion_Upstream_TMVA( std::vector<std::string>& theInputVars ) 
+   ReadPion_Upstream_TMVA( const std::vector<std::string>& theInputVars ) 
       : IClassifierReader(),
         fClassName( "ReadPion_Upstream_TMVA" ),
         fNvars( 20 ),

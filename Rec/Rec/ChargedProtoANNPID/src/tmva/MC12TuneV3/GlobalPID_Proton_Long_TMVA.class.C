@@ -129,7 +129,7 @@ class ReadProton_Long_TMVA : public IClassifierReader {
  public:
 
    // constructor
-   ReadProton_Long_TMVA( std::vector<std::string>& theInputVars ) 
+   ReadProton_Long_TMVA( const std::vector<std::string>& theInputVars ) 
       : IClassifierReader(),
         fClassName( "ReadProton_Long_TMVA" ),
         fNvars( 31 ),

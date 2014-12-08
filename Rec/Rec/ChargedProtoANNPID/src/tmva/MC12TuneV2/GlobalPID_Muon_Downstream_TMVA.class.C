@@ -128,7 +128,7 @@ class ReadMuon_Downstream_TMVA : public IClassifierReader {
 public:
 
   // constructor
-  ReadMuon_Downstream_TMVA( std::vector<std::string>& theInputVars )
+  ReadMuon_Downstream_TMVA( const std::vector<std::string>& theInputVars )
     : IClassifierReader(),
       fClassName( "ReadMuon_Downstream_TMVA" ),
       fNvars( 30 ),

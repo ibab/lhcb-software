@@ -134,7 +134,7 @@ class ReadKaon_Long_TMVA : public IClassifierReader {
  public:
 
    // constructor
-   ReadKaon_Long_TMVA( std::vector<std::string>& theInputVars ) 
+   ReadKaon_Long_TMVA( const std::vector<std::string>& theInputVars ) 
       : IClassifierReader(),
         fClassName( "ReadKaon_Long_TMVA" ),
         fNvars( 36 ),

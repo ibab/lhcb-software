@@ -84,8 +84,7 @@ namespace ANNGlobalPID
       /// Create an instance of the TMVA classifier for this factory
       IClassifierReader* create( const InputNames& inputs ) 
       {
-        // const cast to work around annoying TMVA feature... should really take a const reference...
-        return new TMVATYPE( *(const_cast<InputNames*>(&inputs)) ); 
+        return new TMVATYPE( inputs ); 
       }
       /// Destructor
       virtual ~TMVAFactory() { }

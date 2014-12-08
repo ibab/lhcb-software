@@ -130,7 +130,7 @@ class ReadElectron_Downstream_TMVA : public IClassifierReader {
 public:
 
   // constructor
-  ReadElectron_Downstream_TMVA( std::vector<std::string>& theInputVars )
+  ReadElectron_Downstream_TMVA( const std::vector<std::string>& theInputVars )
     : IClassifierReader(),
       fClassName( "ReadElectron_Downstream_TMVA" ),
       fNvars( 32 ),

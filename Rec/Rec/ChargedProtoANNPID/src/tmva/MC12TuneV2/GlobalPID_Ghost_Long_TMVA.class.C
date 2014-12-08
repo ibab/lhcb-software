@@ -134,7 +134,7 @@ class ReadGhost_Long_TMVA : public IClassifierReader {
 public:
 
   // constructor
-  ReadGhost_Long_TMVA( std::vector<std::string>& theInputVars )
+  ReadGhost_Long_TMVA( const std::vector<std::string>& theInputVars )
     : IClassifierReader(),
       fClassName( "ReadGhost_Long_TMVA" ),
       fNvars( 36 ),

@@ -222,7 +222,7 @@ class ReadPion_Long_TMVA : public IClassifierReader {
  public:
 
    // constructor
-   ReadPion_Long_TMVA( std::vector<std::string>& theInputVars ) 
+   ReadPion_Long_TMVA( const std::vector<std::string>& theInputVars ) 
       : IClassifierReader(),
         fClassName( "ReadPion_Long_TMVA" ),
         fNvars( 36 ),

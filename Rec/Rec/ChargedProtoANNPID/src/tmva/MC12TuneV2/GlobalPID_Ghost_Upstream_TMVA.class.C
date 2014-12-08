@@ -120,7 +120,7 @@ class ReadGhost_Upstream_TMVA : public IClassifierReader {
 public:
 
   // constructor
-  ReadGhost_Upstream_TMVA( std::vector<std::string>& theInputVars )
+  ReadGhost_Upstream_TMVA( const std::vector<std::string>& theInputVars )
     : IClassifierReader(),
       fClassName( "ReadGhost_Upstream_TMVA" ),
       fNvars( 22 ),

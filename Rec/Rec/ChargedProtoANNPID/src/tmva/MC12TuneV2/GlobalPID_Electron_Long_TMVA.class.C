@@ -134,7 +134,7 @@ class ReadElectron_Long_TMVA : public IClassifierReader {
 public:
 
   // constructor
-  ReadElectron_Long_TMVA( std::vector<std::string>& theInputVars )
+  ReadElectron_Long_TMVA( const std::vector<std::string>& theInputVars )
     : IClassifierReader(),
       fClassName( "ReadElectron_Long_TMVA" ),
       fNvars( 36 ),
