@@ -5370,8 +5370,8 @@ def _h2_proj_ ( h2 , axis , *args ) :
     >>> hy = histo2.projY ()
     
     """
-    if   1 == axis : return self.ProjectionX ( hID () , *args ) 
-    elif 1 == axis : return self.ProjectionY ( hID () , *args )
+    if   1 == axis : return h2.ProjectionX ( hID () , *args ) 
+    elif 1 == axis : return h2.ProjectionY ( hID () , *args )
 
     raise TypeError, 'Illegal axis index %s' % axis 
 
