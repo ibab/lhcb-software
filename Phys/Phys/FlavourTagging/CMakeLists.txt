@@ -18,6 +18,7 @@ gaudi_install_headers(FlavourTagging)
 
 gaudi_add_module(FlavourTagging
                  src/*.cpp
+		 src/TMVAClassification/mva_charmtagger_reco14/Histogram.cpp
                  INCLUDE_DIRS Tr/TrackInterfaces
                  LINK_LIBRARIES CaloInterfaces PhysEvent GaudiPythonLib
                                 DaVinciKernelLib LoKiPhysLib ROOT)
