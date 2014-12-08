@@ -171,8 +171,6 @@ LoKi::Hlt1::Hlt1Combiner::operator()
   const IParticleCombiner* combiner = pc() ;
   const LoKi::Particles::PidCompare compare = LoKi::Particles::PidCompare () ;
 
-  //std::cout << " == STARTING TO FILL DAUGHTERS HERE ! == " << std::endl;
-
   // get the daughters
   Selected daughters;
   // loop over two selections and add daughters
@@ -183,6 +181,11 @@ LoKi::Hlt1::Hlt1Combiner::operator()
 
     const LHCb::Particle* particle1 = cand1->get<LHCb::Particle> () ;
     if ( !particle1 ) { continue ; }
+
+    //std::cout << "===================================== PARTICLE 1 ===================================" << std::endl;
+    //particle1->fillStream(std::cout);
+    //std::cout << std::endl;
+    //std::cout << "====================================================================================" << std::endl;
 
     daughters.add ( LoKi::Particles::nameFromPID(particle1->particleID()) , particle1 ) ;
   }
@@ -195,6 +198,11 @@ LoKi::Hlt1::Hlt1Combiner::operator()
 
     const LHCb::Particle* particle2 = cand2->get<LHCb::Particle> () ;
     if ( !particle2 ) { continue ; }
+
+    //std::cout << "===================================== PARTICLE 2 ===================================" << std::endl;
+    //particle2->fillStream(std::cout);
+    //std::cout << std::endl;
+    //std::cout << "====================================================================================" << std::endl;
 
     daughters.add ( LoKi::Particles::nameFromPID(particle2->particleID()) , particle2 ) ;
   }
@@ -227,27 +235,24 @@ LoKi::Hlt1::Hlt1Combiner::operator()
         // apply comb cuts
         if ( ! m_acut.fun ( combination ) ) { continue ; }
 
-        LHCb::Vertex     vertex ;
-        LHCb::Particle   *mother = newParticle();
+        LHCb::Vertex*     vertex = new LHCb::Vertex();
+        LHCb::Particle*   mother = new LHCb::Particle();
         mother->setParticleID( idecay->mother().pid() );
 
-        // should we lock Particle->PrimaryVertex here as in CombineParticles?
-
         // do combination
-        combiner -> combine ( combination , *mother , vertex ) ;
+        combiner -> combine ( combination , *mother , *vertex ) ;
 
         // apply mother cuts
-        if ( ! m_cut ( mother ) ) { continue ; }
+        if ( ! m_cut.fun ( mother ) ) {
+          delete vertex;
+          delete mother;
+          continue ;
+        }
 
-        //std::cout << "====================================================================================" << std::endl;
-        //std::cout << " CREATED PARTICLE: mass = " << mother->measuredMass() << std::endl;
-        //mother->fillStream(std::cout);
-        //std::cout << std::endl;
-        //std::cout << "====================================================================================" << std::endl;
+        // store in TES
+        _storeParticle( mother ) ;
 
-        //
-        // start new candidate
-        //
+        // add new candidate
         Hlt::Candidate *candidate = newCandidate();
         candidate->addToWorkers ( alg() ) ;
         // add new stage

@@ -191,6 +191,16 @@ namespace LoKi
         return 0 != v->parent() ;
       }
       // ======================================================================
+      inline bool _storeParticle ( const LHCb::Particle* p ) const
+      {
+        if ( !p               ) { return false ; }
+        if ( !m_hlt_particles ) { m_hlt_particles = _createParticles () ; }
+        if ( !m_hlt_particles ) { return false ; }
+        LHCb::Particle* _p = const_cast<LHCb::Particle*> ( p ) ;
+        _add_ ( _p , m_hlt_particles ) ;
+        return 1;
+      }
+      // ======================================================================
     private:
       // ======================================================================
       /// get the storage for tracks
