@@ -85,6 +85,8 @@ namespace ANNGlobalPID
   namespace Bs2MuMuTuneBDTDev1
   {
 #include "tmva/Bs2MuMuTuneBDTDev1/GlobalPID_Muon_Long_TMVA.class.C"
+#include "tmva/Bs2MuMuTuneBDTDev1/GlobalPID_Pion_Long_TMVA.class.C"
+#include "tmva/Bs2MuMuTuneBDTDev1/GlobalPID_Kaon_Long_TMVA.class.C"
   }
 
  /** @namespace Bs2MuMuTuneBDTDev2 TMVAImpFactory.cpp
@@ -109,6 +111,8 @@ namespace ANNGlobalPID
   namespace Bs2MuMuTuneMLPDev1
   {
 #include "tmva/Bs2MuMuTuneMLPDev1/GlobalPID_Muon_Long_TMVA.class.C"
+#include "tmva/Bs2MuMuTuneMLPDev1/GlobalPID_Pion_Long_TMVA.class.C"
+#include "tmva/Bs2MuMuTuneMLPDev1/GlobalPID_Kaon_Long_TMVA.class.C"
   }
 
  /** @namespace Bs2MuMuTuneMLPDev2 TMVAImpFactory.cpp
@@ -177,11 +181,29 @@ namespace ANNGlobalPID
       add<MC12TuneV3::ReadGhost_Upstream_TMVA>      ( tune, "ghost",    "Upstream" );
     }
     // Bs2MuMu development networks
+    // BDT - IsMuon as Input
     {
-      add<Bs2MuMuTuneBDTDev1::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev1", "muon", "Long" );
-      add<Bs2MuMuTuneBDTDev2::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneBDTDev2", "muon", "Long" );
-      add<Bs2MuMuTuneMLPDev1::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneMLPDev1", "muon", "Long" );
-      add<Bs2MuMuTuneMLPDev2::ReadMuon_Long_TMVA>   ( "Bs2MuMuTuneMLPDev2", "muon", "Long" );
+      const std::string tune = "Bs2MuMuTuneBDTDev1";
+      add<Bs2MuMuTuneBDTDev1::ReadMuon_Long_TMVA>   ( tune, "muon", "Long" );
+      add<Bs2MuMuTuneBDTDev1::ReadPion_Long_TMVA>   ( tune, "pion", "Long" );
+      add<Bs2MuMuTuneBDTDev1::ReadKaon_Long_TMVA>   ( tune, "kaon", "Long" );
+    }
+    // BDT - IsMuon as pre-sel
+    {
+      const std::string tune = "Bs2MuMuTuneBDTDev2";
+      add<Bs2MuMuTuneBDTDev2::ReadMuon_Long_TMVA>   ( tune, "muon", "Long" );
+    }
+    // MLP-CE - IsMuon as Input
+    {
+      const std::string tune = "Bs2MuMuTuneMLPDev1";
+      add<Bs2MuMuTuneMLPDev1::ReadMuon_Long_TMVA>   ( tune, "muon", "Long" );
+      add<Bs2MuMuTuneMLPDev1::ReadPion_Long_TMVA>   ( tune, "pion", "Long" );
+      add<Bs2MuMuTuneMLPDev1::ReadKaon_Long_TMVA>   ( tune, "kaon", "Long" );
+    }
+    // MLP-CE - IsMuon as pre-sel
+    {
+      const std::string tune = "Bs2MuMuTuneMLPDev2";
+      add<Bs2MuMuTuneMLPDev2::ReadMuon_Long_TMVA>   ( tune, "muon", "Long" );
     }
   }
 

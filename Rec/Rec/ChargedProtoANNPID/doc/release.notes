@@ -4,6 +4,10 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+! 2014-12-08 - Chris Jones
+ - Add Kaon and Pion networks for the MLP and BDT 'Dev1' (IsMuon as input)
+   Bs2MuMu development tunings.
+
 ! 2014-12-03 - Chris Jones
  - Remove the out of 0-1 bounds checks for TMVA networks. Not needed for MLP
    MVAs, and breaks with BDTs which vary from -1 to 1 ...
