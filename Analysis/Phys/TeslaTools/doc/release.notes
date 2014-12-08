@@ -4,7 +4,11 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
-! 2014-10-10 - Sean Benson
+! 2014-12-10 - Sean Benson
+ - Safer RICH casting
+ - Set Track
+
+! 2014-12-02 - Sean Benson
  - Actually stop muon stub overwriting track
  - New PV location
 

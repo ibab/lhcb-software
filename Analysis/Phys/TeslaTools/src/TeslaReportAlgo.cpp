@@ -701,14 +701,14 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             // unsigned int   m_pidResultCode
             // std::vector< float >   m_particleLLValues
             // SmartRef< LHCb::Track >  m_track (NOT INCLUDED)
-            const double pidResultCode = Rich_info["0#Rich.pidResultCode"];
-            const double DLLe = Rich_info["1#Rich.DLLe"];
-            const double DLLmu = Rich_info["2#Rich.DLLmu"];
-            const double DLLpi = Rich_info["3#Rich.DLLpi"];
-            const double DLLK = Rich_info["4#Rich.DLLK"];
-            const double DLLp = Rich_info["5#Rich.DLLp"];
+            const float pidResultCode = Rich_info["0#Rich.pidResultCode"];
+            const float DLLe = Rich_info["1#Rich.DLLe"];
+            const float DLLmu = Rich_info["2#Rich.DLLmu"];
+            const float DLLpi = Rich_info["3#Rich.DLLpi"];
+            const float DLLK = Rich_info["4#Rich.DLLK"];
+            const float DLLp = Rich_info["5#Rich.DLLp"];
             //
-            rich->setPidResultCode( (int)pidResultCode );
+            rich->setPidResultCode( (unsigned int)pidResultCode );
             rich->setParticleDeltaLL( Rich::ParticleIDType::Electron, DLLe );
             rich->setParticleDeltaLL( Rich::ParticleIDType::Muon, DLLmu );
             rich->setParticleDeltaLL( Rich::ParticleIDType::Pion, DLLpi );
@@ -716,6 +716,7 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
             rich->setParticleDeltaLL( Rich::ParticleIDType::Proton, DLLp );
             //
             proto->setRichPID( rich );
+            rich->setTrack( track );
             proto->addInfo(LHCb::ProtoParticle::CombDLLe,DLLe);
             proto->addInfo(LHCb::ProtoParticle::CombDLLmu,DLLmu);
             proto->addInfo(LHCb::ProtoParticle::CombDLLpi,DLLpi);
