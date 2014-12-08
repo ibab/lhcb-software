@@ -89,7 +89,7 @@ Pythia8Production::~Pythia8Production() {}
 //=============================================================================
 // Initialize the tool.
 //=============================================================================
-StatusCode Pythia8Production::initialize( ) {  
+StatusCode Pythia8Production::initialize() {  
 
   // Print the initialization banner.
   always() << "============================================================="
@@ -123,7 +123,12 @@ StatusCode Pythia8Production::initialize( ) {
   // Initialze the XML log file.
   m_xmlLogTool = tool<ICounterLogFile >("XmlCounterLogFile");
 
-  return initializeGenerator();
+  // Create the Pythia 8 generator.
+  std::string xmlpath("UNKNOWN" != System::getEnv("PYTHIA8XML") ?
+		      System::getEnv("PYTHIA8XML") : ""); 
+  m_pythia = new Pythia8::Pythia(xmlpath, m_showBanner); 
+  if (m_pythia) return StatusCode::SUCCESS;
+  else return StatusCode::FAILURE;
 }
 
 //=============================================================================
@@ -131,12 +136,7 @@ StatusCode Pythia8Production::initialize( ) {
 //=============================================================================
 StatusCode Pythia8Production::initializeGenerator() {
 
-  // Get the PYTHIA8XML path.
-  std::string xmlpath("UNKNOWN" != System::getEnv("PYTHIA8XML") ?
-		      System::getEnv("PYTHIA8XML") : ""); 
-
-  // Create the Pythia 8 generator.
-  m_pythia = new Pythia8::Pythia(xmlpath, m_showBanner);
+  // Initialize the external pointers.
   m_pythia->setRndmEnginePtr(m_randomEngine);
   m_pythia->setUserHooksPtr(m_hooks);
 
