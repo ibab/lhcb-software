@@ -1,6 +1,6 @@
 #============================================================================
 # Created    : 2014-12-05
-# Maintainer : Jon Harrison
+# Maintainer : Suvayu Ali and Lennaert Bel
 #
 #============================================================================
 package 	VeloAnalysisFramework
@@ -10,7 +10,7 @@ version 	v1r0
 # Structure, i.e. directories to process. 
 #============================================================================
 branches 	cmt doc src
-include_path 	none
+#include_path 	none
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #============================================================================
