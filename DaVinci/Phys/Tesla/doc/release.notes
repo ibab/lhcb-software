@@ -3,6 +3,10 @@ Package             : Tesla
 Package Coordinator : Sean Benson
 Purpose             : Turbo Stream Analysis
 
+! 2014-12-08 - Sean Benson
+ - Add Turbo_THRESHOLD.py to show example of running Tesla
+ on Moore output from ThresholdSettings.
+
 ! 2014-12-03 - Sean Benson
  - Fix unit tests.
 
