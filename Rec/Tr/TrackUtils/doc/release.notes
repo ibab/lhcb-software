@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-12-09 - Manuel Tobias Schiller
- - TrackEventCloneKiller: use the ancestor information to get rid of obvious
+ - TrackBestTrackCreator: use the ancestor information to get rid of obvious
    clones early in the process (as is done in TrackEventCloneKiller), this
    speeds up the algorithm by about 9%, and gets rid of a couple of
    problematic tracks in T and the Velo before they're fitted (without
