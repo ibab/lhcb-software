@@ -19,8 +19,10 @@ gaudiurl = str(getRepositories(protocol='anonymous')["gaudi"])
 gaudisvn = rcs.connect(gaudiurl)
 
 class LbSdbAddPlatform(Script):
-    """ Main scripts class for looking up dependencies.
-    It inherits from """
+    """ Script to add platforms to a project in the Software
+    Configuration DB. Use:
+    LbSdbAddPlatform project version platform
+    """
 
     def defineOpts(self):
         """ Script specific options """
