@@ -69,20 +69,6 @@ namespace {
     }
   }
 
-  void transportvector( const Gaudi::TrackMatrix& F,
-			const Gaudi::TrackVector& origin,
-			Gaudi::TrackVector& target)
-  {
-    bool isLine =  F(0,4)==0 ;
-    if( isLine ) {
-      target = origin ;
-      target(0) += F(0,2) * origin(2) ;
-      target(1) += F(1,3) * origin(3) ;
-    } else {
-      target = F * origin ;
-    }
-  }
-
   void inverttransport( const Gaudi::TrackMatrix& F,
 			Gaudi::TrackMatrix& Finv )
   {

@@ -4,8 +4,13 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+! 2014-12-09 - Marco Cattaneo
+ - FitNode.cpp: remove unused function ::transportVector to
+                silence gcc49 warning
+
 ! 2014-12-03 - Wouter Hulsbergen
- - small change to OTMeasurement to make sure it also works for trajectories other than LineTraj
+ - small change to OTMeasurement to make sure it also works for trajectories
+   other than LineTraj
 
 !========================= TrackFitEvent v6r3 2014-09-08 ========================
 ! 2014-08-20 - Wouter Hulsbergen
