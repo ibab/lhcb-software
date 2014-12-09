@@ -41,6 +41,8 @@
 #include "TrackInterfaces/ITrackStateInit.h"
 #include "TrackKernel/TrackCloneData.h"
 
+#include "remove_if_partitioned.h"
+
 namespace  {
   /// structure to save some data for each track
   class TrackData : public LHCb::TrackCloneData<>
@@ -56,51 +58,8 @@ namespace  {
       /// return q/p (or what it was at construction time)
       double qOverP() const { return m_qOverP; }
   };
-
-  /** remove elements if binary predicate is satisfied
-   *
-   * @author Manuel Schiller
-   * @date 2014-11-19
-   *
-   * @param begin	start of range of elements to be processed
-   * @param end		end of range of elements to be processed
-   * @param p		binary predicate to decide which elements to remove
-   *
-   * The binary predicate p takes the current element being tested as first
-   * argument, and an iterator pointing to the end of the range of elements
-   * already processed as second argument. The second argument thus partitions
-   * the range into the range of elements from begin to the second argument
-   * which is known to contain elements that will not be removed, and the rest.
-   *
-   * This facilitates removal of equivalent elements from a range, for example:
-   * @code
-   * class Foo;
-   * std::vector<Foo> v;
-   * // assume v contains elements sorted according to some quality criterion,
-   * // and Foo::equiv(const Foo&) allows to check for equivalence of some
-   * // sort; then the following will keep the highest quality unique elements
-   * auto newend = remove_if_partitioned(std::begin(v), std::end(v),
-   *     [&v] (const Foo& el, decltype(std::begin(v)) doneend)
-   *     { return doneend != std::find_if(std::begin(v), doneend,
-   *           [&el] (const Foo& el2) { return el.equiv(el2); });
-   *     });
-   * v.erase(newend, std::end(v));
-   * @endcode
-   */
-  template <class ForwardIterator, class BinaryPredicate>
-  ForwardIterator remove_if_partitioned(
-      ForwardIterator begin, ForwardIterator end,
-      BinaryPredicate p)
-  {
-    for (auto it = begin; end != it; ++it) {
-      if (p(*it, begin)) continue;
-      if (begin != it) *begin = std::move(*it);
-      ++begin;
-    }
-    return begin;
-  }
 }
-  
+ 
 /** @brief kill clones among tracks in input container and Kalman-fit survivors
  *
  * @author Wouter Hulsbergen
@@ -109,6 +68,8 @@ namespace  {
  * @author Manuel Schiller
  * @date 2014-11-18
  * - simplify, C++11 cleanups, use BloomFilter based TrackCloneData
+ * @date 2014-12-09
+ * - add code to use ancestor information on tracks to deal with obvious clones
  */
 class TrackBestTrackCreator : 
 #if DEBUGHISTOGRAMS
@@ -130,7 +91,6 @@ class TrackBestTrackCreator :
   private:
     ToolHandle<ITrackStateInit> m_stateinittool;
     ToolHandle<ITrackFitter> m_fitter;
-    bool m_debugLevel;
 
     // job options
     // -----------
@@ -138,8 +98,6 @@ class TrackBestTrackCreator :
     std::vector<std::string> m_tracksInContainers;
     // output Track container path
     std::string m_tracksOutContainer;
-    bool m_fitTracks;
-    bool m_initTrackStates;
     double m_maxOverlapFracVelo;
     double m_maxOverlapFracT;
     double m_maxOverlapFracTT;
@@ -149,6 +107,13 @@ class TrackBestTrackCreator :
     double m_maxChi2DoFVelo;
     double m_maxChi2DoFT;
     double m_maxChi2DoFMatchAndTT;
+    /// fit the tracks using the Kalman filter?
+    bool m_fitTracks;
+    /// initialise track states using m_stateinittool?
+    bool m_initTrackStates;
+    /// use ancestor information to identify obvious clones
+    bool m_useAncestorInfo;
+    bool m_debugLevel;
 
   protected:
     /// are tracks clones in VeloR and VeloPhi
@@ -175,32 +140,51 @@ class TrackBestTrackCreator :
      * goes through track containers, clones the tracks, pre-initialises the
      * Kalman filter fit with the TrackStateInitTool, creates a TrackData object
      * from it, and returns a the newly created object
+     * 
+     * if m_useAncestorInfo is set in the parent, it uses the ancestor field in
+     * the track class to flag a large class of obvious clones (e.g. the Velo
+     * and T station tracks that got promoted to long); this relies on
+     * algorithms properly recording ancestor information, but is highly
+     * effective in speeding things up when available
      */
-    struct TrackDataGen {
-      TrackBestTrackCreator& m_parent; ///< parent TrackBestTrackCreator instance
-      decltype(m_tracksInContainers.begin()) m_curcont; ///< next track container
-      LHCb::Track::Range m_currange; ///< tracks in current track container
-      decltype(m_currange.begin()) m_currangeit; ///< next track
+    class TrackDataGen {
+      private:
+	TrackBestTrackCreator& m_parent; ///< parent TrackBestTrackCreator instance
+	decltype(m_tracksInContainers.begin()) m_curcont; ///< next track container
+	LHCb::Track::Range m_currange; ///< tracks in current track container
+	decltype(m_currange.begin()) m_currangeit; ///< next track
 
-      /// exception to throw when all tracks have been consumed
-      class DataExhaustedException : public std::exception
-      {
-	private:
-	  const char* m_what;
-	public:
-	  DataExhaustedException(const char* what) :
-	    m_what(what) { }
-	  virtual const char* what() const noexcept { return m_what; }
-      };
+	/// mapping between original track and copy
+	typedef std::pair<const LHCb::Track*,
+		std::reference_wrapper<LHCb::Track> > CopyMapEntry;
+	/// record mapping between original track and copy we create
+	std::vector<CopyMapEntry> m_copymap;
+	/// record ancestors, so we can exclude them early
+	std::vector<const LHCb::Track*> m_ancestors;
 
-      /// constructor
-      TrackDataGen(TrackBestTrackCreator& parent) :
-	m_parent(parent), m_curcont(m_parent.m_tracksInContainers.begin()),
-	m_currange(), m_currangeit(m_currange.end())
-      { }
+      public:
+	/// exception to throw when all tracks have been consumed
+	class DataExhaustedException : public std::exception
+        {
+	  private:
+	    const char* m_what;
+	  public:
+	    DataExhaustedException(const char* what) :
+	      m_what(what) { }
+	    virtual const char* what() const noexcept { return m_what; }
+	};
 
-      /// call to get the next TrackData object
-      TrackData operator()();
+	/// constructor
+	TrackDataGen(TrackBestTrackCreator& parent, size_t nTracks = 0);
+
+	/** @brief destructo
+	 *
+	 * flags ancestors as clones if m_useAncestorInfo is set in parent
+	 */
+	~TrackDataGen();
+
+	/// call to get the next TrackData object
+	TrackData operator()();
     };
 };
 
@@ -212,17 +196,81 @@ class TrackBestTrackCreator :
 
 DECLARE_ALGORITHM_FACTORY( TrackBestTrackCreator )
 
+TrackBestTrackCreator::TrackDataGen::TrackDataGen(
+    TrackBestTrackCreator& parent, size_t nTracks) :
+  m_parent(parent), m_curcont(m_parent.m_tracksInContainers.begin()),
+  m_currange(), m_currangeit(m_currange.end())
+{
+  if (nTracks) {
+    m_copymap.reserve(nTracks);
+    // reserve a bit more space, since some tracks can have more than one
+    // ancestor
+    m_ancestors.reserve(2 * nTracks);
+  }
+}
+
+TrackBestTrackCreator::TrackDataGen::~TrackDataGen()
+{
+  if (!m_ancestors.empty()) {
+    // once all tracks have been cloned: flag clones based on ancestor
+    // information
+    //
+    // step 1: sort m_copymap for quick lookup
+    std::sort(std::begin(m_copymap), std::end(m_copymap),
+	[] (const CopyMapEntry& a, const CopyMapEntry& b)
+	{ return a.first < b.first; });
+    // step 2: sanitise list of ancestors (remove duplicates)
+    if (1 < m_ancestors.size()) {
+      std::sort(std::begin(m_ancestors), std::end(m_ancestors));
+      m_ancestors.erase(std::unique(
+	    std::begin(m_ancestors), std::end(m_ancestors)),
+	  std::end(m_ancestors));
+    }
+    // step 3: loop over ancestors, map them to their copy, and mark that copy
+    //         as clone
+    auto copymapbegin = std::begin(m_copymap);
+    for (auto anc: m_ancestors) {
+      // see if we know about this ancestor
+      auto it = std::lower_bound(copymapbegin, std::end(m_copymap), anc,
+	  [] (const CopyMapEntry& a, const LHCb::Track* tr)
+	  { return a.first < tr; });
+      // if so, mark it
+      if (m_copymap.end() != it && it->first == anc) {
+	LHCb::Track& tr(it->second);
+	tr.setFlag(LHCb::Track::Clone, true);
+	// since both m_ancestors and m_copymap are sorted by increasing
+	// address, we can improve lower_bound's running time by incrementally
+	// restricting the range to be searched
+	copymapbegin = it;
+      }
+    }
+  }
+}
+
 TrackData TrackBestTrackCreator::TrackDataGen::operator()()
 {
   while (true) {
     if (m_currangeit != m_currange.end()) {
-      // not at end of current container, so get next track, and clone it
-      std::unique_ptr<LHCb::Track> tr((*m_currangeit++)->clone());
+      // not at end of current container, so get next track
+      const LHCb::Track* oldtr = *m_currangeit++;
+      // clone track
+      std::unique_ptr<LHCb::Track> tr(oldtr->clone());
       // pre-initialise (if required)
       StatusCode sc(m_parent.m_initTrackStates ?
 	  m_parent.m_stateinittool->fit(*tr, true) : StatusCode::SUCCESS);
       // if successful, return new TrackData object
-      if (sc.isSuccess()) return TrackData(std::move(tr));
+      if (sc.isSuccess()) {
+	if (m_parent.m_useAncestorInfo) { // use ancestor information
+	  // save ancestors so we can mark them as clones later
+	  for (auto anc: oldtr->ancestors()) m_ancestors.push_back(anc);
+	  // save mapping between original track and its copy
+	  m_copymap.emplace_back(CopyMapEntry(
+		oldtr, std::reference_wrapper<LHCb::Track>(*tr)));
+	}
+	// keep a record where this track came from
+	tr->addToAncestors(oldtr);
+	return TrackData(std::move(tr));
+      }
       // report error in log file
       m_parent.Warning("TrackStateInitTool fit failed", sc, 0 ).ignore();
     } else {
@@ -274,6 +322,7 @@ TrackBestTrackCreator::TrackBestTrackCreator( const std::string& name,
   declareProperty( "MaxChi2DoFMatchTT", m_maxChi2DoFMatchAndTT = 999 );
   declareProperty( "MinLongLongDeltaQoP", m_minLongLongDeltaQoP = -1 );
   declareProperty( "MinLongDownstreamDeltaQoP", m_minLongDownstreamDeltaQoP = 5e-6 );
+  declareProperty("UseAncestorInfo", m_useAncestorInfo = true);
 }
 
 //=============================================================================
@@ -360,7 +409,7 @@ StatusCode TrackBestTrackCreator::execute()
   try {
     // generate the TrackData objects for the input tracks, initialising the
     // States for use in the Kalman filter on the way
-    TrackDataGen gen(*this);
+    TrackDataGen gen(*this, nTracks);
     std::generate_n(std::back_inserter(trackdatapool), nTracks, gen);
   } catch (const TrackDataGen::DataExhaustedException&) {
     // nothing to do - occasionally running out of tracks to convert is
@@ -371,6 +420,16 @@ StatusCode TrackBestTrackCreator::execute()
   // data is moved around)
   std::vector<std::reference_wrapper<TrackData> > alltracks(
       std::begin(trackdatapool), std::end(trackdatapool));
+
+  if (m_useAncestorInfo) {
+    // remove any known clones; these usually occur because they're flagged by
+    // the "generator" above
+    alltracks.erase(std::remove_if(
+	  std::begin(alltracks), std::end(alltracks),
+	  [] (const TrackData& t)
+	  { return t.track().checkFlag(LHCb::Track::Clone); }),
+	std::end(alltracks));
+  }
 
   // sort them by quality
   std::stable_sort(alltracks.begin(), alltracks.end(),

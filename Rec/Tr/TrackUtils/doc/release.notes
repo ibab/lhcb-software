@@ -5,6 +5,19 @@
 !-----------------------------------------------------------------------------
 
 ! 2014-12-09 - Manuel Tobias Schiller
+ - TrackEventCloneKiller: use the ancestor information to get rid of obvious
+   clones early in the process (as is done in TrackEventCloneKiller), this
+   speeds up the algorithm by about 9%, and gets rid of a couple of
+   problematic tracks in T and the Velo before they're fitted (without
+   adversely affecting performance - these tracks usually got killed by the
+   chi^2 cut inside TrackBestTrackCreator after the fit); the number of tracks
+   in the Best container stays unchanged; the new UseAncestorInfo property can
+   be used to restore the old behaviour if needed
+ - factor out the remove_if_partitioned algorithm from TrackEventCloneKiller
+   and TrackBestTrackCreator, and move it to its own header file; adapt
+   TrackEventCloneKiller and TrackBestTrackCreator accordingly   
+
+! 2014-12-09 - Manuel Tobias Schiller
  - TrackEventCloneKiller: rewrite internal logic so fewer comparisons are
    needed to determine if two tracks are clones, use Bloom filters for
    non-overlapping tracks, remove useless (and unused) StoreCloneTrack
