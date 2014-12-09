@@ -167,7 +167,7 @@ double VeloClusterPosition::meanResolution(const double& pitch) const
 //=========================================================================
 double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> fracPosLA()" <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " ==> fracPosLA()" <<endmsg;
   //
   double centre=0., sum=0., fractionalPos;
   int intDistance=0;
@@ -195,12 +195,12 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
   if(fractionalPos>0.9376) fractionalPos=0;
   //
   if(fabs(fractionalPos-cluster->interStripFraction())>0.5){
-    if( msgLevel(MSG::DEBUG) ) debug()<< " clu size: " << stripNumber
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " clu size: " << stripNumber
           << " strip adcs: " <<endmsg;
     for(int str=0; str<stripNumber; str++){
-      if( msgLevel(MSG::DEBUG) ) debug()<< " adc[ " << str << "] = " << (cluster->adcValue(str)) <<endmsg;
+      if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " adc[ " << str << "] = " << (cluster->adcValue(str)) <<endmsg;
     }
-    if( msgLevel(MSG::DEBUG) ) debug() << " frac pos tool: " << fractionalPos
+    if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << " frac pos tool: " << fractionalPos
            << " frac pos clu: " << cluster->interStripFraction() <<endmsg;
   }
   return  ( fractionalPos );
@@ -209,27 +209,32 @@ double VeloClusterPosition::fracPosLA(const LHCb::VeloCluster* cluster) const
 //=========================================================================
 double VeloClusterPosition::fracPosLA(const LHCb::VeloLiteCluster* cluster) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> fracPosLA() Lite Cluster" <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " ==> fracPosLA() Lite Cluster" <<endmsg;
   return  ( cluster->interStripFraction() );
 }
 
 //=========================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position(cluster) " <<endmsg;
-  return (position(cluster->channelID(),fracPosLA(cluster)));
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " ==> position(cluster) " <<endmsg;
+  toolInfo myInfo = position(cluster->channelID(),fracPosLA(cluster));
+  myInfo.clusterSize = cluster->size();
+  return myInfo;
 }
 
 //=========================================================================
 toolInfo VeloClusterPosition::position(const LHCb::VeloLiteCluster* cluster) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> position(liteCluster)  " <<endmsg;
-  return (position(cluster->channelID(),fracPosLA(cluster)));
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " ==> position(liteCluster)  " <<endmsg;
+  toolInfo myInfo = position(cluster->channelID(),fracPosLA(cluster));
+  myInfo.clusterSize = cluster->pseudoSize();
+  return myInfo;
 }
 
 toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChannel,
 				       const double &fractionalPos) const{
   toolInfo myInfo;
+  myInfo.clusterSize=0.; // set by wrapper functions calling this function
   // calculate fractional position in units of 'strip'
   double errorPos=0., pitch=0.;
   const DeVeloSensor* sens=m_veloDet->sensor(centreChannel.sensor());
@@ -238,7 +243,6 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChannel,
     myInfo.strip=LHCb::VeloChannelID(0);
     myInfo.fractionalPosition=0.;
     myInfo.fractionalError=0.;
-    myInfo.clusterSize=0.;
     return ( myInfo );
   }
   if(sens->isR()||sens->isPileUp()){
@@ -271,10 +275,11 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const Gaudi::XYZPoint& aGlobalPoint,
                                        const Direction& aDirection) const
 {
-  if( msgLevel(MSG::DEBUG) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << " ==> position(cluster, point, direction) " <<endmsg;
-  return position(cluster->channelID(),fracPosLA(cluster),
-		  aGlobalPoint,aDirection);
+  toolInfo myInfo = position(cluster->channelID(),fracPosLA(cluster), aGlobalPoint, aDirection);
+  myInfo.clusterSize = cluster->size();
+  return myInfo;
 }
 
 //============================================================================
@@ -282,10 +287,11 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloLiteCluster* cluster,
                                        const Gaudi::XYZPoint& aGlobalPoint,
                                        const Direction& aDirection) const
 {
-  if( msgLevel(MSG::DEBUG) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << " ==> position(litecluster, point, direction) " <<endmsg;
-  return position(cluster->channelID(),fracPosLA(cluster),
-		  aGlobalPoint,aDirection);
+  toolInfo myInfo = position(cluster->channelID(),fracPosLA(cluster), aGlobalPoint, aDirection);
+  myInfo.clusterSize = cluster->pseudoSize();
+  return myInfo;
 }
 
 //============================================================================
@@ -328,7 +334,7 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChan,
 double VeloClusterPosition::angleOfTrack(const Direction& localSlopes,
                                   Gaudi::XYZVector& parallel2Track) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug() << " ==> trackAngle() " <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << " ==> trackAngle() " <<endmsg;
   // vectors
   Gaudi::XYZVector perpPi1(1., 0., -(localSlopes.first));
   Gaudi::XYZVector perpPi2(0., 1., -(localSlopes.second));
@@ -350,7 +356,7 @@ double VeloClusterPosition::angleOfTrack(const Direction& localSlopes,
 double VeloClusterPosition::errorEstimate(const double projAngle,
                                           const double pitch) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug() << " ==> errorEstimate() " <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << " ==> errorEstimate() " <<endmsg;
   //
   double angle=projAngle;
   double error=0.;
@@ -383,7 +389,7 @@ double VeloClusterPosition::errorEstimate(const double projAngle,
 //============================================================================
 double VeloClusterPosition::projectedAngle() const
 {
-  if( msgLevel(MSG::DEBUG) ) debug() << " ==> projectedAngle() " << endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug() << " ==> projectedAngle() " << endmsg;
   //
   return ( m_projectedAngle/Gaudi::Units::degree );
 }
@@ -391,7 +397,7 @@ double VeloClusterPosition::projectedAngle() const
 toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
                                        const LHCb::StateVector& aState) const
 {
-  if( msgLevel(MSG::DEBUG) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug()<< " ==> position (cluster,VectorState) " <<endmsg;
   unsigned int sensorNumber=cluster->channelID().sensor();
   const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
@@ -402,13 +408,15 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloCluster* cluster,
   Direction aDirection;
   aDirection.first=aState.tx();
   aDirection.second=aState.ty();
-  return ( position(cluster->channelID(),fracPosLA(cluster), aPoint, aDirection) );
+  toolInfo myInfo = position(cluster->channelID(),fracPosLA(cluster), aPoint, aDirection);
+  myInfo.clusterSize = cluster->size();
+  return myInfo;
 }
 
 toolInfo VeloClusterPosition::position(const LHCb::VeloLiteCluster* cluster,
                                        const LHCb::StateVector& aState) const
 {
-  if( msgLevel(MSG::DEBUG) ) 
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug()<< " ==> position (LiteCluster,VectorState) " <<endmsg;
   unsigned int sensorNumber=cluster->channelID().sensor();
   const DeVeloSensor* sensor=m_veloDet->sensor(sensorNumber);
@@ -419,13 +427,15 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloLiteCluster* cluster,
   Direction aDirection;
   aDirection.first=aState.tx();
   aDirection.second=aState.ty();
-  return ( position(cluster->channelID(),fracPosLA(cluster), aPoint, aDirection) );
+  toolInfo myInfo = position(cluster->channelID(),fracPosLA(cluster), aPoint, aDirection);
+  myInfo.clusterSize = cluster->pseudoSize();
+  return myInfo;
 }
 
 //============================================================================
 GaudiMath::Interpolation::Type VeloClusterPosition::splineType() const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " splineType() " <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " splineType() " <<endmsg;
   //
   GaudiMath::Interpolation::Type aType;
   using namespace GaudiMath::Interpolation;
@@ -445,7 +455,7 @@ GaudiMath::Interpolation::Type VeloClusterPosition::splineType() const
 Pair VeloClusterPosition::projectedAngle(const DeVeloSensor* sensor,
                           const LHCb::VeloChannelID centreChan) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> projectedAngle(sensor) " <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " ==> projectedAngle(sensor) " <<endmsg;
   //-- returned pair consists of projected angle and local pitch
   //-- both values are needed to estimate error
   double projectedAngle=0., localPitch=0.;
@@ -530,7 +540,7 @@ Direction VeloClusterPosition::localTrackDirection(
           const Gaudi::XYZVector& gloTrackDir,
           const DeVeloSensor* sensor) const
 {
-  if( msgLevel(MSG::DEBUG) ) debug()<< " ==> localTrackDirection " <<endmsg;
+  if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) debug()<< " ==> localTrackDirection " <<endmsg;
   //-- translate global slopes into local
   using namespace std;
   Direction locTrackDir;
@@ -548,7 +558,7 @@ Direction VeloClusterPosition::localTrackDirection(
 //============================================================================
 StatusCode VeloClusterPosition::i_cacheConditions()
 {
-  if(msgLevel(MSG::DEBUG)) debug()<< " --> i_cacheCoditions() " <<endmsg;
+  if(UNLIKELY( msgLevel(MSG::DEBUG) )) debug()<< " --> i_cacheCoditions() " <<endmsg;
   
   // connect to the LHCBCOND/SIMCOND and fetch the error param conditions
   std::string condName=m_condPath+"/VeloErrorParam";
