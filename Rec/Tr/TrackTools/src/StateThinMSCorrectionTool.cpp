@@ -5,6 +5,7 @@
 
 // from GSL
 #include "gsl/gsl_math.h"
+#include "vdt/log.h"
 
 // from DetDesc
 #include "DetDesc/Material.h"
@@ -16,6 +17,12 @@
 #include "StateThinMSCorrectionTool.h"
 
 using namespace Gaudi::Units;
+
+namespace {
+// For convenient trailing-return-types in C++11:
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
+template <typename T> inline auto pow_2(T x) AUTO_RETURN( x*x )
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : StateThinMSCorrectionTool
@@ -50,24 +57,24 @@ void StateThinMSCorrectionTool::correctState( LHCb::State& state,
                                               LHCb::ParticleID  ) const
 {
   const double t          = wallThickness / material -> radiationLength();
-  const double norm2      = 1.0 + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty());
+  const double norm2      = 1.0 + pow_2(state.tx()) + pow_2(state.ty());
   double scatLength = 0.;
   if ( t > TrackParameters::lowTolerance ) {
     const double radThick = sqrt(norm2) * t;
-    scatLength = radThick*gsl_pow_2( TrackParameters::moliereFactor *
-                                     (1.+0.038*log(radThick)) );
+    scatLength = radThick*pow_2( TrackParameters::moliereFactor *
+                                 (1.+0.038*vdt::fast_log(radThick)) );
   }
 
   // protect 0 momentum
   const double p = GSL_MAX( state.p(), 1.0*MeV );
 
-  const double norm2cnoise = norm2 * m_msff2 * scatLength / gsl_pow_2(p);
+  const double norm2cnoise = norm2 * m_msff2 * scatLength / pow_2(p);
 
   // multiple scattering covariance matrix - initialized to 0
   Gaudi::TrackSymMatrix Q = Gaudi::TrackSymMatrix();
 
-  Q(2,2) = norm2cnoise * ( 1. + gsl_pow_2(state.tx()) );
-  Q(3,3) = norm2cnoise * ( 1. + gsl_pow_2(state.ty()) );
+  Q(2,2) = norm2cnoise * ( 1. + pow_2(state.tx()) );
+  Q(3,3) = norm2cnoise * ( 1. + pow_2(state.ty()) );
   Q(3,2) = norm2cnoise * state.tx() * state.ty();
 
   // update covariance matrix C = C + Q

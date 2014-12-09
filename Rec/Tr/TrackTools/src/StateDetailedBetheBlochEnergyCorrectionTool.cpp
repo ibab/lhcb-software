@@ -5,7 +5,10 @@
 #include "GaudiKernel/PhysicalConstants.h"
 
 // from GSL
+#include <cmath>
 #include "gsl/gsl_math.h"
+#include "vdt/exp.h"
+#include "vdt/log.h"
 
 // from DetDesc
 #include "DetDesc/Material.h"
@@ -17,6 +20,12 @@
 #include "StateDetailedBetheBlochEnergyCorrectionTool.h"
 
 using namespace Gaudi::Units;
+
+namespace {
+// For convenient trailing-return-types in C++11:
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
+template <typename T> inline auto pow_2(T x) AUTO_RETURN( x*x )
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : StateDetailedBetheBlochEnergyCorrectionTool
@@ -53,6 +62,7 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
   // apply correction - note for now only correct the state vector
   Gaudi::TrackVector& tX = state.stateVector();
 
+  //TODO:FIXME: cache ParticleProperty of to-be-expected pids...
   const LHCb::ParticleProperty* partProp = m_pp->find(pid);
   if( 0 == partProp ) return;
 
@@ -64,20 +74,20 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
 
   double me = Gaudi::Units::electron_mass_c2;
 
-  double x = log(eta*eta)/4.606;
+  double x = vdt::fast_log(eta*eta)/4.606;
   double rho = 0;
   
   if (x > material->X0()) {
       if (x < material->X1())
-        rho = 4.606*x-material->C() + material->a()*pow(material->X1()-x,material->m());
+        rho = 4.606*x-material->C() + material->a()*std::pow(material->X1()-x,material->m());
       else
         rho = 4.606*x-material->C();
   }
  
   double eLoss =  m_energyLossCorr*wallThickness
-     * sqrt( 1. + gsl_pow_2(state.tx()) + gsl_pow_2(state.ty()) )
+     * sqrt( 1. + pow_2(state.tx()) + pow_2(state.ty()) )
     * 30.71 * MeV*mm2/mole * material->Z() * material->density() / material->A()
-      *(log(2*me*eta*eta/material->I()) - beta2 - rho*0.5)/beta2;
+      *(vdt::fast_log(2*me*eta*eta/material->I()) - beta2 - rho*0.5)/beta2;
  
   
   eLoss = GSL_MIN( m_maxEnergyLoss, eLoss );

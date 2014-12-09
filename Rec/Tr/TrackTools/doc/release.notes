@@ -3,6 +3,8 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2014-12-09 - Gerhard Raven
+ - use vdt::fast_log to speed up hotspots
 
 ! 2014-12-09 - David Hutchcroft
  - Make sure the cluster size is always set in VeloClusterPosition

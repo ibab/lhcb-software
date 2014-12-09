@@ -5,6 +5,7 @@
 
 // from GSL
 #include "gsl/gsl_math.h"
+#include "vdt/log.h"
 
 // from DetDesc
 #include "DetDesc/Material.h"
@@ -17,6 +18,11 @@
 
 using namespace Gaudi::Units;
 
+namespace {
+// For convenient trailing-return-types in C++11:
+#define AUTO_RETURN(...) noexcept(noexcept(__VA_ARGS__)) -> decltype(__VA_ARGS__) {return (__VA_ARGS__);}
+template <typename T> inline auto pow_2(T x) AUTO_RETURN( x*x )
+}
 //-----------------------------------------------------------------------------
 // Implementation file for class : StateThickMSCorrectionTool
 //
@@ -48,15 +54,15 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
                                                bool upstream, 
                                                LHCb::ParticleID  ) const
 {
-  const double tx2        = gsl_pow_2( state.tx() );
-  const double ty2        = gsl_pow_2( state.ty() );
+  const double tx2        = pow_2( state.tx() );
+  const double ty2        = pow_2( state.ty() );
   const double norm2      = 1. + tx2 + ty2;
   double scatLength = 0.;
   double t          = wallThickness / material -> radiationLength();
   if ( t > TrackParameters::lowTolerance ) {
     double radThick = sqrt(norm2) * t;
-    scatLength = radThick * gsl_pow_2( TrackParameters::moliereFactor *
-                                       (1. + 0.038*log(radThick)) );
+    scatLength = radThick * pow_2( TrackParameters::moliereFactor *
+                                   (1. + 0.038*vdt::fast_log(radThick)) );
   }
 
   // protect zero momentum
@@ -73,7 +79,7 @@ void StateThickMSCorrectionTool::correctState( LHCb::State& state,
 
   Gaudi::TrackSymMatrix Q = Gaudi::TrackSymMatrix();
   
-  const double wallThickness2 = gsl_pow_2(wallThickness);
+  const double wallThickness2 = pow_2(wallThickness);
 
   Q(0,0) = covTxTx * wallThickness2 / 3.;
   Q(1,0) = covTxTy * wallThickness2 / 3.;
