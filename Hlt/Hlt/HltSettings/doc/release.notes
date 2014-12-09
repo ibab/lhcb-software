@@ -4,6 +4,8 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-12-09 - Sean Benson
+ - Add pass through Hlt lines to TurboTest
 
 ! 2014-11-21 - Eric van Herwijnen
  - Change HltType to Hlt_PassThrough for Commissioning_PassThrough to avoid

@@ -53,6 +53,7 @@ class TurboTest( object ):
         """
 
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
+        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0Tight_PT'         :  1700
                                                , 'AllL0Tight_P'          :  3000
@@ -90,10 +91,14 @@ class TurboTest( object ):
                                                , 'Photon_ValidateTT' : True
                                                , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
                                                                         'Hlt1TrackAllL0Tight'              : 1.0,
-                                                                        'Hlt1TrackForwardPassThrough'      : 0,
+                                                                        'Hlt1TrackForwardPassThrough'      : 0.000001,
                                                                         'Hlt1TrackForwardPassThroughLoose' : 0}
- 
-                                               } }
+                                               } 
+                       , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.000001 
+                                                                       , 'Hlt2Forward'      : 0.00001
+                                                                       , 'Hlt2DebugEvent'   : 0.000001  }
+                                               } 
+                       }
 
         from Hadrons_September2012 import Hadrons_September2012
         __update_conf__(thresholds,  Hadrons_September2012().Thresholds() )
@@ -104,7 +109,7 @@ class TurboTest( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = []
+        hlt2 = ['Hlt2PassThrough']
         
         from Hadrons_September2012 import Hadrons_September2012
         hlt2.extend( Hadrons_September2012().ActiveHlt2Lines() )
@@ -115,6 +120,6 @@ class TurboTest( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0' ]
+        lines =  [ 'Hlt1TrackAllL0','Hlt1TrackForwardPassThrough' ]
         
         return lines 
