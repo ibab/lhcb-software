@@ -35,6 +35,13 @@ const StandardPacker pac;
 void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBank )
 {
     auto out = std::back_inserter(rawBank);
+
+    auto nWords = std::accumulate( std::begin(tracks), std::end(tracks), rawBank.size(),
+                                   [](std::vector<unsigned int>::size_type s, const LHCb::Track* t) {
+        return s+3+t->nLHCbIDs()+t->states().size()*22;
+    });
+    rawBank.reserve(nWords);
+
     // std::cout << "Encoding "<<tracks->size()<<" tracks."<<std::endl;
     for ( const LHCb::Track* Tr : tracks ) {
         // write meta information
@@ -56,6 +63,7 @@ void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBan
         const std::vector<LHCb::State*>& states = Tr->states();
         // TODO: remove the states we're not interested in...
         *out++ =  states.size();
+
         // loop over states and encode locations, parameters and covs
         for ( const LHCb::State* state : states ) {
             // store the state location -- a bit of overkill to store this as 32 bit int...
@@ -97,6 +105,10 @@ void encodeTracks( const LHCb::Tracks& tracks, std::vector<unsigned int>& rawBan
                 *out++ = pac.fraction( state->covariance()( i, j ) / err[i] / err[j] );
             } 
         }//  end loop over states
+    }
+
+    if (nWords!=rawBank.size()) {
+        std::cout << "estimated size: " << nWords << " actual size: " << rawBank.size() << std::endl;
     }
 }
 

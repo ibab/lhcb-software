@@ -3,6 +3,7 @@
 #define HLTVERTEXREPORTSWRITER_H 1
 
 // Include files
+#include "boost/optional.hpp"
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 
@@ -43,6 +44,7 @@ public:
   StatusCode execute   () override;    ///< Algorithm execution
 
 private:
+  
   // ----------------------- data members 
 
   /// location of input
@@ -56,6 +58,7 @@ private:
 
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc = nullptr;  
+
 };
 
 #endif // HLTVERTEXREPORTSWRITER_H

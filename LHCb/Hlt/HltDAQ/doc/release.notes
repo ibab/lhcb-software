@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-12-09 - Gerhard Raven
+ - small speed-up of HltVertexReportsWriter and HltTrackingCoder
+
 ! 2014-12-01 - Gerhard Raven
  - add a big deprecation warning when decoding both Hlt1 and Hlt2 to 
    a single TES location

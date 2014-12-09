@@ -13,8 +13,6 @@ using namespace LHCb;
 
 namespace {
 
-const Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
-const Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
 float floatFromInt(unsigned int i)
 {
         union IntFloat { unsigned int mInt; float mFloat; };
@@ -28,6 +26,16 @@ unsigned int doubleToInt(double d)
         IntFloat a; a.mFloat = float(d);
         return a.mInt;
 }
+
+static const Gaudi::StringKey Hlt1SelectionID{"Hlt1SelectionID"};
+static const Gaudi::StringKey Hlt2SelectionID{"Hlt2SelectionID"};
+
+boost::optional<int> selectionNameToInt(const IANNSvc& ann, const std::string& name) 
+  {
+        auto r = ann.value(Hlt1SelectionID,name);
+        if (!r) r = ann.value(Hlt2SelectionID,name);
+        return r ? boost::optional<int>{ r->second } : boost::optional<int>{ } ;
+  }
 }
 
 //-----------------------------------------------------------------------------
@@ -92,10 +100,6 @@ StatusCode HltVertexReportsWriter::execute() {
     return Error(" No RawEvent at " + m_outputRawEventLocation.value(),StatusCode::SUCCESS, 20 );
   }  
 
-  // get string-to-int selection ID map
-  auto selectionNameToIntMap = m_hltANNSvc->item_map(Hlt1SelectionID); // new style
-  selectionNameToIntMap.merge( m_hltANNSvc->item_map(Hlt2SelectionID) );
-
   std::vector< unsigned int > hltVertexReportsRawBank;
   // first word will count number of vertex selections saved
   hltVertexReportsRawBank.push_back(0);
@@ -105,8 +109,8 @@ StatusCode HltVertexReportsWriter::execute() {
 
      // save selection ---------------------------
      // find int selection id
-     auto si = selectionNameToIntMap.find( s.first );
-     if( si==std::end(selectionNameToIntMap) ) {
+     auto si = selectionNameToInt(*m_hltANNSvc, s.first );
+     if( !si ) {
        Error(" selectionName=" +s.first+ " from HltVertexReports not found in HltANNSvc. Skipped. ", StatusCode::SUCCESS, 20 );
        continue;
      }
@@ -117,7 +121,7 @@ StatusCode HltVertexReportsWriter::execute() {
      auto out = std::back_inserter( hltVertexReportsRawBank );
 
      // first word for each selection contains number of vertices (low short) and selection ID (high short)
-     *out++ =  (unsigned int)( std::min( s.second.size(), 65535ul ) | (si->second << 16) ) ;
+     *out++ =  (unsigned int)( std::min( s.second.size(), 65535ul ) | (*si << 16) ) ;
      
      for(const auto& vtx : s.second ) { 
        // now push vertex info
