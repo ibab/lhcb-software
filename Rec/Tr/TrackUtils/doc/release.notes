@@ -4,6 +4,13 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-12-09 - Manuel Tobias Schiller
+ - TrackEventCloneKiller: rewrite internal logic so fewer comparisons are
+   needed to determine if two tracks are clones, use Bloom filters for
+   non-overlapping tracks, remove useless (and unused) StoreCloneTrack
+   property from algorithm; efficiency and ghost rate changes are at the
+   permille level, and the algorithm should be 7-15% faster now
+
 ! 2014-11-20 - Manuel Tobias Schiller
  - rewrite TrackBestTrackCreator to take advantage of the Bloom filters in
    TrackCloneData from TrKernel; also modernise and clarify the code somewhat

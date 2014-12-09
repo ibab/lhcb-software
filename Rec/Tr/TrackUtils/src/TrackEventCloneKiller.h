@@ -17,9 +17,14 @@
  *  @author Eduardo Rodrigues
  *  @date   2006-03-01
  *  Based on the clone killer algorithm of Rutger van der Eijk (2002-06-17)
- *  Update for speed and clone rate
+ *
  *  @author Adrian Perieanu
  *  @date   2008-05-05
+ *  Update for speed and clone rate
+ *
+ *  @author Manuel Schiller
+ *  @date   2014-12-08
+ *  further improve speed, use BloomFilter to recognise non-overlapping tracks
  */
 class TrackEventCloneKiller : public GaudiAlgorithm {
 public: 
@@ -36,7 +41,6 @@ protected:
   
 private:
   ToolHandle<ITrackCloneFinder> m_cloneFinder; ///< interface to clone finder tool
-  std::vector<LHCb::Track*> allTracks;
   
   bool m_debugLevel;
 
@@ -51,8 +55,6 @@ private:
   std::string m_tracksOutContainer;
   // list of track types not to be stored
   std::vector<int> m_ignoredTrackTypes;
-  // flags whether to store all tracks including clones
-  bool m_storeCloneTracks;
   // do not do a clone compare for tracks from a same container
   bool m_skipSameContainerTracks;
   bool m_compareInSameContainerForwardUpstream;
