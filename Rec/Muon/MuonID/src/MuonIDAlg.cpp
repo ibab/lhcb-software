@@ -12,8 +12,9 @@
 // local
 #include "MuonIDAlg.h"
 #include "TF1.h"
-#include <gsl/gsl_math.h>
+#include <cmath>
 #include "Math/ProbFuncMathCore.h"
+#include "vdt/exp.h"
 
 //boost
 #include <boost/assign/list_of.hpp>
@@ -1729,7 +1730,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist(LHCb::MuonPID * pMuid, const double& p
   // date:    13/10/09
   //=============================================================================
 
-  static const double atanh05 = gsl_atanh(0.5);
+  static const double atanh05 = std::atanh(0.5);
   
   pMuid->setMuonLLMu(-10000.);
   pMuid->setMuonLLBg(-10000.);
@@ -1804,7 +1805,7 @@ StatusCode MuonIDAlg::calcMuonLL_tanhdist_landau(LHCb::MuonPID * pMuid, const do
   // date:    16/02/2011
   //=============================================================================
 
-  static const double atanh05 = gsl_atanh(0.5);
+  static const double atanh05 = std::atanh(0.5);
 
   pMuid->setMuonLLMu(-10000.);
   pMuid->setMuonLLBg(-10000.);
@@ -2184,8 +2185,7 @@ StatusCode MuonIDAlg::setCoords(LHCb::MuonPID *pMuid){
 	  if (last_dx != dx || last_dy != dy)
 	    {
 	      //ideally want to call this only once per station, region
-	      foiXDim = m_foifactor*foiX( station, region, m_MomentumPre, dx);
-	      foiYDim = m_foifactor*foiY( station, region, m_MomentumPre, dy);
+	      std::tie(foiXDim,foiYDim) = foiXY( station, region, m_MomentumPre, m_foifactor*dx, m_foifactor*dy);
 	      last_dx = dx;
 	      last_dy = dy;
 	    }
@@ -2281,8 +2281,7 @@ StatusCode MuonIDAlg::get_closest(LHCb::MuonPID *pMuid, double *closest_x,
 
     int station = (*iCoord)->key().station();
     int region = (*iCoord)->key().region();
-    foiXDim = m_foifactor*foiX( station, region, m_MomentumPre, dx);
-    foiYDim = m_foifactor*foiY( station, region, m_MomentumPre, dy);
+    std::tie(foiXDim,foiYDim) = foiXY( station, region, m_MomentumPre, dx*m_foifactor, dy*m_foifactor);
 
     // only for M2-M3-M4-M5:
     if (station >= m_iM2 ) {  // JHL: station == 0 is OK in the case of no M1  12/Oct./2013
@@ -2788,35 +2787,27 @@ StatusCode MuonIDAlg::trackExtrapolate(const LHCb::Track *pTrack){
 // this is a simpler version of the parameterization:
 // foi = par0 + par2*exp(-par3*p)
 //=============================================================================
-double MuonIDAlg::foiX(const int &station, const int &region, const double &p,
-                       const double &dx){
+std::pair<double,double> MuonIDAlg::foiXY(const int &station, const int &region, const double &p,
+                                          const double &dx, const double& dy){
   int i  = station * m_NRegion + region;
   if (p < 1000000. ){
-    return ( m_xfoiParam1[ i ] +
-             m_xfoiParam2[ i ]*
-             exp(-m_xfoiParam3[ i ]*p/Gaudi::Units::GeV ) )*dx;
+    auto pGeV = p/Gaudi::Units::GeV;
+    std::array<double,2> pp = { -m_xfoiParam3[ i ]*pGeV , -m_yfoiParam3[ i ]*pGeV };
+    
+    return { ( m_xfoiParam1[ i ] +
+               m_xfoiParam2[ i ]*
+               vdt::fast_exp(pp[0]) ) *dx, 
+             ( m_yfoiParam1[ i ] +
+               m_yfoiParam2[ i ]*
+               vdt::fast_exp(pp[1]) )*dy };
+
   }else{
-    return m_xfoiParam1[ i ] * dx;
+    return { m_xfoiParam1[ i ] * dx,
+             m_yfoiParam1[ i ] * dy } ;
   }
 
   //in the future optimize this checking that 2*dx =m_padSizeX[station * m_NRegion + region]
   //then eliminates dx from function
-}
-
-//=============================================================================
-// return the FOI in y in a station and region for momentum (in MeV/c)
-//=============================================================================
-double MuonIDAlg::foiY(const int &station, const int &region, const double &p,
-                       const double &dy){
-  int i  = station * m_NRegion + region;
-  if ( p < 1000000. ){
-    return ( m_yfoiParam1[ i ] +
-             m_yfoiParam2[ i ]*
-             exp(-m_yfoiParam3[ i ]*p/Gaudi::Units::GeV ) )*dy;
-  }else{
-    return m_yfoiParam1[ i ] * dy;
-  }
-
 }
 
 //=============================================================================

@@ -98,10 +98,9 @@ private:
   // Calculates MuProb based on DeltaSx (slope difference)
   double calcMuProb(LHCb::MuonPID * pMuid);
 
-  /// return the FOI in x in a station and region for momentum (in MeV/c)
-  double foiX(const int &station, const int &region, const double &p, const double &dx);
-  /// return the FOI in y in a station and region for momentum (in MeV/c)
-  double foiY(const int &station, const int &region, const double &p, const double &dy);
+  /// return the FOI in (x,y) in a station and region for momentum (in MeV/c)
+  std::pair<double,double> foiXY(const int &station, const int &region, const double &p, 
+                                 const double &dx, const double &dy);
 
   /// clear track based local variables
   void resetTrackLocals();

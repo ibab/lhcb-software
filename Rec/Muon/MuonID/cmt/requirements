@@ -13,6 +13,7 @@ use TrackEvent         v* Event
 use MuonDet            v* Det
 use TrackInterfaces    v* Tr
 use ROOT               v* LCG_Interfaces
+use vdt                v* LCG_Interfaces
 
 
 # build a MuonID library
