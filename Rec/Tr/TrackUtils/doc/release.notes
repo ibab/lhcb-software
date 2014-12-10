@@ -4,6 +4,13 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-12-10 - Manuel Tobias Schiller
+ - TrackBestTrackCreator: fix a bug which killed too many Velo and T tracks
+   when using ancestor information by postponing the flagging of ancestor
+   tracks until the point in time when the track has been Kalman-fitted and it
+   is clear that it will survive; this change recovers those Velo and T
+   tracks, but the speedup drops to a more pedestrian 3.5%
+
 ! 2014-12-09 - Manuel Tobias Schiller
  - TrackBestTrackCreator: use the ancestor information to get rid of obvious
    clones early in the process (as is done in TrackEventCloneKiller), this

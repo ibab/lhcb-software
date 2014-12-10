@@ -49,6 +49,7 @@ namespace  {
   {
     private:
       double m_qOverP;
+      enum { Clone = 1 };
     public:
       /// constructor
       TrackData(std::unique_ptr<LHCb::Track>&& tr) : 
@@ -57,6 +58,8 @@ namespace  {
       { }
       /// return q/p (or what it was at construction time)
       double qOverP() const { return m_qOverP; }
+      bool cloneFlag() const { return userFlags() & Clone; }
+      void setCloneFlag() { setUserFlags(userFlags() | Clone); }
   };
 }
  
@@ -132,6 +135,10 @@ class TrackBestTrackCreator :
     /// check if tracks pointed to by their TrackData objects are clones
     bool areClones(const TrackData& it, const TrackData& jt);
 
+    /// mapping between original track and the index of its copy
+    typedef std::pair<const LHCb::Track*, size_t> CopyMapEntry;
+    typedef std::vector<CopyMapEntry> CopyMap;
+
     /** @brief "generator" for TrackData objects
      *
      * @author Manuel Schiller
@@ -154,13 +161,10 @@ class TrackBestTrackCreator :
 	LHCb::Track::Range m_currange; ///< tracks in current track container
 	decltype(m_currange.begin()) m_currangeit; ///< next track
 
-	/// mapping between original track and copy
-	typedef std::pair<const LHCb::Track*,
-		std::reference_wrapper<LHCb::Track> > CopyMapEntry;
-	/// record mapping between original track and copy we create
-	std::vector<CopyMapEntry> m_copymap;
-	/// record ancestors, so we can exclude them early
-	std::vector<const LHCb::Track*> m_ancestors;
+	/// keep track of number of tracks returned
+	size_t m_nrtracks;
+	/// keep record between original track and copies
+	CopyMap& m_copymap;
 
       public:
 	/// exception to throw when all tracks have been consumed
@@ -175,7 +179,7 @@ class TrackBestTrackCreator :
 	};
 
 	/// constructor
-	TrackDataGen(TrackBestTrackCreator& parent, size_t nTracks = 0);
+	TrackDataGen(TrackBestTrackCreator& parent, CopyMap& copymap);
 
 	/** @brief destructo
 	 *
@@ -197,53 +201,19 @@ class TrackBestTrackCreator :
 DECLARE_ALGORITHM_FACTORY( TrackBestTrackCreator )
 
 TrackBestTrackCreator::TrackDataGen::TrackDataGen(
-    TrackBestTrackCreator& parent, size_t nTracks) :
+    TrackBestTrackCreator& parent, CopyMap& copymap) :
   m_parent(parent), m_curcont(m_parent.m_tracksInContainers.begin()),
-  m_currange(), m_currangeit(m_currange.end())
-{
-  if (nTracks) {
-    m_copymap.reserve(nTracks);
-    // reserve a bit more space, since some tracks can have more than one
-    // ancestor
-    m_ancestors.reserve(2 * nTracks);
-  }
-}
+  m_currange(), m_currangeit(m_currange.end()),
+  m_nrtracks(0), m_copymap(copymap)
+{ }
 
 TrackBestTrackCreator::TrackDataGen::~TrackDataGen()
 {
-  if (!m_ancestors.empty()) {
-    // once all tracks have been cloned: flag clones based on ancestor
-    // information
-    //
-    // step 1: sort m_copymap for quick lookup
+  if (!m_copymap.empty()) {
+    // sort m_copymap for quick lookup
     std::sort(std::begin(m_copymap), std::end(m_copymap),
 	[] (const CopyMapEntry& a, const CopyMapEntry& b)
 	{ return a.first < b.first; });
-    // step 2: sanitise list of ancestors (remove duplicates)
-    if (1 < m_ancestors.size()) {
-      std::sort(std::begin(m_ancestors), std::end(m_ancestors));
-      m_ancestors.erase(std::unique(
-	    std::begin(m_ancestors), std::end(m_ancestors)),
-	  std::end(m_ancestors));
-    }
-    // step 3: loop over ancestors, map them to their copy, and mark that copy
-    //         as clone
-    auto copymapbegin = std::begin(m_copymap);
-    for (auto anc: m_ancestors) {
-      // see if we know about this ancestor
-      auto it = std::lower_bound(copymapbegin, std::end(m_copymap), anc,
-	  [] (const CopyMapEntry& a, const LHCb::Track* tr)
-	  { return a.first < tr; });
-      // if so, mark it
-      if (m_copymap.end() != it && it->first == anc) {
-	LHCb::Track& tr(it->second);
-	tr.setFlag(LHCb::Track::Clone, true);
-	// since both m_ancestors and m_copymap are sorted by increasing
-	// address, we can improve lower_bound's running time by incrementally
-	// restricting the range to be searched
-	copymapbegin = it;
-      }
-    }
   }
 }
 
@@ -260,13 +230,11 @@ TrackData TrackBestTrackCreator::TrackDataGen::operator()()
 	  m_parent.m_stateinittool->fit(*tr, true) : StatusCode::SUCCESS);
       // if successful, return new TrackData object
       if (sc.isSuccess()) {
-	if (m_parent.m_useAncestorInfo) { // use ancestor information
-	  // save ancestors so we can mark them as clones later
-	  for (auto anc: oldtr->ancestors()) m_ancestors.push_back(anc);
+	if (m_parent.m_useAncestorInfo) {
 	  // save mapping between original track and its copy
-	  m_copymap.emplace_back(CopyMapEntry(
-		oldtr, std::reference_wrapper<LHCb::Track>(*tr)));
+	  m_copymap.emplace_back(CopyMapEntry(oldtr, m_nrtracks));
 	}
+	++m_nrtracks;
 	// keep a record where this track came from
 	tr->addToAncestors(oldtr);
 	return TrackData(std::move(tr));
@@ -383,6 +351,7 @@ StatusCode TrackBestTrackCreator::finalize()
   
   m_stateinittool.release().ignore();
   m_fitter.release().ignore();
+
 #if DEBUGHISTOGRAMS
   return GaudiHistoAlg::finalize();
 #else
@@ -399,6 +368,8 @@ StatusCode TrackBestTrackCreator::execute()
 
   // create pool for TrackData objects for all input tracks 
   std::vector<TrackData> trackdatapool;
+  // keep a record of which track goes where
+  CopyMap copymap;
   // get total number of tracks
   size_t nTracks = std::accumulate(
       std::begin(m_tracksInContainers), std::end(m_tracksInContainers),
@@ -406,10 +377,11 @@ StatusCode TrackBestTrackCreator::execute()
       { return sz + get<LHCb::Track::Range>(loc).size(); });
   // reserve enough space so we don't have to reallocate
   trackdatapool.reserve(nTracks);
+  copymap.reserve(nTracks);
   try {
     // generate the TrackData objects for the input tracks, initialising the
     // States for use in the Kalman filter on the way
-    TrackDataGen gen(*this, nTracks);
+    TrackDataGen gen(*this, copymap);
     std::generate_n(std::back_inserter(trackdatapool), nTracks, gen);
   } catch (const TrackDataGen::DataExhaustedException&) {
     // nothing to do - occasionally running out of tracks to convert is
@@ -421,16 +393,6 @@ StatusCode TrackBestTrackCreator::execute()
   std::vector<std::reference_wrapper<TrackData> > alltracks(
       std::begin(trackdatapool), std::end(trackdatapool));
 
-  if (m_useAncestorInfo) {
-    // remove any known clones; these usually occur because they're flagged by
-    // the "generator" above
-    alltracks.erase(std::remove_if(
-	  std::begin(alltracks), std::end(alltracks),
-	  [] (const TrackData& t)
-	  { return t.track().checkFlag(LHCb::Track::Clone); }),
-	std::end(alltracks));
-  }
-
   // sort them by quality
   std::stable_sort(alltracks.begin(), alltracks.end(),
       [] (const TrackData& t1, const TrackData& t2) { return t1 < t2; });
@@ -439,9 +401,11 @@ StatusCode TrackBestTrackCreator::execute()
   auto selend = remove_if_partitioned(
 	  std::begin(alltracks), std::end(alltracks),
 	  // lambda function to find clones and unfittable tracks
-	  [this, &alltracks] (TrackData& tr1,
+	  [this, &alltracks, &copymap, &trackdatapool] (TrackData& tr1,
 	      const decltype(std::begin(alltracks))& selend)
 	  { 
+	    // check ancestor based clone flagging
+	    if (tr1.cloneFlag()) return true;
 	    // selected tracks will be in range from std::begin(alltracks) to
 	    // selend find first track tr2 in that range that is a clone of the
 	    // track we're considering (tr1)
@@ -451,7 +415,19 @@ StatusCode TrackBestTrackCreator::execute()
 	    // if tr1 is a clone of something we already selected, say so
 	    if (selend != firstclone) return true;
 	    // else try to fit, and see what happens
-	    return !fitAndSelect(tr1.track());
+	    const bool okay = fitAndSelect(tr1.track());
+	    if (okay && m_useAncestorInfo) {
+	      // track survives, so no Clone, proceed to mark ancestors
+	      for (const auto& anc: tr1.track().ancestors()) {
+		const auto it = std::lower_bound(
+		    copymap.begin(), copymap.end(), anc,
+		    [] (const CopyMapEntry& cme, const LHCb::Track* tr)
+		    { return cme.first < tr; });
+		if (copymap.end() == it || it->first != anc) continue;
+		trackdatapool[it->second].setCloneFlag();
+	      }
+	    }
+	    return !okay;
 	  });
   alltracks.erase(selend, std::end(alltracks));
   // create output container, and put selected tracks there
