@@ -355,7 +355,7 @@ class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
         odin = "(ODIN_BXTYP == LHCb.ODIN.BeamCrossing)"
 
         ### Algorithm to check for existing Velo tracks
-        from HltTracking.HltReco import MinimalVelo
+        from HltTracking.HltSharedTracking import MinimalVelo
         from Configurables import LoKi__VoidFilter as VoidFilter
         algCheckTracks = VoidFilter('Hlt1BeamGasCheckVeloTracks' , Code = "CONTAINS('%s') > 0" % MinimalVelo.outputSelection() )
 

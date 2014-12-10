@@ -29,8 +29,7 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
 
   def hlt1CalibTrackingLine_Preambulo( self, props ):
 
-    from HltTracking.Hlt1TrackUpgradeConf import ( TrackCandidates, pET, FitTrack, PEstiForward)
-    from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
+    from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
 
     props['LowKPimass']  = 1864.86 - props['D0MassWin'] # D0 mass hardcoded from PDG 2012 !
     props['HighKPimass'] = 1864.86 + props['D0MassWin'] # D0 mass hardcoded from PDG 2012 !
@@ -58,9 +57,6 @@ class Hlt1CalibTrackingLinesConf( HltLinesConfigurableUser ) :
   def hlt1CalibTrackingLine_Streamer( self, name, props ) :
     from Configurables import LoKi__HltUnit as HltUnit
     props['name'] = name
-    props['forward'] = 'PEstiForward'
-    if props['ValidateTT'] :
-        props['forward'] = "ValidateWithTT >>" + props['forward']
 
     TrackUnitLineCode = """
     TrackCandidates

@@ -12,28 +12,22 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
         , 'DiProton_VtxDOCA'    :     0.1    
         , 'DiProton_VtxChi2'    :     4.   # dimensionless
         , 'DiProton_JpsiPT'     :  6500.   # MeV 
-
-        , 'DiProton_TrNTHits'   :    15.  # From Track lines
-        , 'DiProton_VeloNHits'  :     9.   # From Track lines
-        , 'DiProton_VeloQcut'   :     3.   # From Track lines
           
         , 'DiProtonLowMult_SpdMult'    :    10.   # dimensionless, Spd Multiplicy cut 
         , 'DiProtonLowMult_PT'         :   500.   # MeV, same as LooseForward
         , 'DiProtonLowMult_P'          :  6000.   # MeV, same as LooseForward  
         , 'DiProtonLowMult_MassMin'    :  2800.   # MeV, after Vtx fit
         , 'DiProtonLowMult_VtxDOCA'    :     0.3    
-        , 'DiProtonLowMult_VtxChi2'    :    25.   # dimensionless
-          
+        , 'DiProtonLowMult_VtxChi2'    :    25.   # dimensionless          
           }
 
     
     def DiProton_preambulo( self ):
-        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
-                                                       TightForward)
+        from HltTracking.Hlt1Tracking import ( TrackCandidates )
+                                                       
 
         ## define some "common" preambulo 
-        Preambulo = [ VeloCandidates( "DiProton" ),                      
-                      TightForward,                      
+        Preambulo = [ TrackCandidates( "DiProton" ),                      
                       ## helpers
                       "VertexConf = LoKi.Hlt1.VxMakerConf( %(DiProton_VtxDOCA)s * mm, \
                                                            %(DiProton_VtxChi2)s )" % self.getProps(),
@@ -54,13 +48,11 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
 
 
     def DiProtonLowMult_preambulo( self ):
-        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
-                                                       LooseForward,
+        from HltTracking.Hlt1Tracking import ( TrackCandidates,
                                                        FitTrack )
         
         ## define some "common" preambulo 
-        Preambulo = [ VeloCandidates( "DiProtonLowMult" ),                      
-                      LooseForward,                      
+        Preambulo = [ TrackCandidates( "DiProtonLowMult" ),                      
                       FitTrack,                      
                       ## helpers
                       "VertexConf = LoKi.Hlt1.VxMakerConf( %(DiProtonLowMult_VtxDOCA)s * mm, \
@@ -78,16 +70,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             ##OutputLevel = 1 ,
             Preambulo = self.DiProton_preambulo(),
             Code = """
-            VeloCandidates
-            >>  ( ( TrIDC('isVelo') > %(DiProton_VeloNHits)s ) & ( TrNVELOMISS < %(DiProton_VeloQcut)s ) )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo Hits', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE    , 'nVeloHits' , LoKi.Monitoring.ContextSvc ) )
-            >>  TightForward
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass tight forward', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'nTightForward' , LoKi.Monitoring.ContextSvc ) )
-            >>  (TrTNORMIDC > %(DiProton_TrNTHits)s )
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass NHits', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'nNHits' , LoKi.Monitoring.ContextSvc ) )            
+            TrackCandidates
             >>  ( ( TrPT > %(DiProton_PT)s * MeV ) & ( TrP  > %(DiProton_P)s * MeV ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               
@@ -117,10 +100,7 @@ class Hlt1ProtonLinesConf( HltLinesConfigurableUser ):
             ##OutputLevel = 1 ,
             Preambulo = self.DiProtonLowMult_preambulo(),
             Code = """
-            VeloCandidates
-            >>  LooseForward
-            >>  tee  ( monitor( TC_SIZE > 0, '# pass loose forward', LoKi.Monitoring.ContextSvc ) )
-            >>  tee  ( monitor( TC_SIZE , 'nLooseForward' , LoKi.Monitoring.ContextSvc ) )
+            TrackCandidates
             >>  ( ( TrPT > %(DiProtonLowMult_PT)s * MeV ) & ( TrP  > %(DiProtonLowMult_P)s * MeV ) )
             >>  tee  ( monitor( TC_SIZE > 0, '# pass PT', LoKi.Monitoring.ContextSvc ) )
             >>  tee  ( monitor( TC_SIZE , 'nPT' , LoKi.Monitoring.ContextSvc ) )               

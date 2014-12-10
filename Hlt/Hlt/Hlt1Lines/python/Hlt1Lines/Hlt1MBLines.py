@@ -81,7 +81,7 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
         self.__create_nobias_line__()
         self.__create_charm_nobias_line__()
     
-        from HltTracking.HltReco import MinimalVelo , Hlt1Seeding
+        from HltTracking.HltSharedTracking import MinimalVelo , Hlt1Seeding
         ve = self.__create_microbias_line__('Velo',MinimalVelo )
         ve.clone( ve.name().lstrip('Hlt1') + 'RateLimited',  postscale = self.postscale, prescale = self.prescale )
         ts = self.__create_microbias_line__('TStation',Hlt1Seeding)
@@ -89,18 +89,19 @@ class Hlt1MBLinesConf(HltLinesConfigurableUser) :
 	
         from Configurables import LoKi__HltUnit as HltUnit
         from HltLine.HltLine import Hlt1Line
-        from HltTracking.Hlt1TrackUpgradeConf import VeloCandidates
+        from HltTracking.Hlt1Tracking import VeloCandidates
         properties={'MaxVeloTracks': self.getProp('MaxVeloTracks')}
-	name='MBMicroBiasLowMultVelo'
+        name='MBMicroBiasLowMultVelo'
         Hlt1Line ( name
-                 , prescale = self.prescale
-                 , postscale = self.postscale
-                 , ODIN = 'jbit( ODIN_EVTTYP,2)'
-                 , algos =  [ HltUnit( 'Hlt1'+name+'Unit',
-               			       Preambulo = [ VeloCandidates( name ) ],
-				       Code =  """
-				       VeloCandidates  >>  in_range(1, TC_SIZE, %(MaxVeloTracks)s ) 
-				       """  % properties
-                                     )
-			    ]
-                  )  
+                   , prescale = self.prescale
+                   , postscale = self.postscale
+                   , ODIN = 'jbit( ODIN_EVTTYP,2)'
+                   , algos =  [ HltUnit( 'Hlt1'+name+'Unit',
+                                         Preambulo = [ VeloCandidates( name ) ],
+                                         Code =  """
+                                         VeloCandidates  >>  in_range(1, TC_SIZE, %(MaxVeloTracks)s ) 
+                                         """  % properties
+                                         )
+                                ]
+                   )  
+        

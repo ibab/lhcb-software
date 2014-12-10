@@ -29,16 +29,12 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
 
   def hlt1PhiLine_Preambulo( self, props ):
 
-    from HltTracking.Hlt1TrackUpgradeConf import ( TrackCandidates, pET, FitTrack, PEstiForward)
-    from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
+    from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack)
 
     props['LowKKmass']  = 1019.455 - props['PhiMassWin'] # phi mass hardcoded from PDG 2012 !
     props['HighKKmass'] = 1019.455 + props['PhiMassWin'] # phi mass hardcoded from PDG 2012 !
 
     preambulo = [ TrackCandidates('TrackAllL0'),
-                  PEstiForward,
-                  pET,
-                  ValidateWithTT,
                   FitTrack,
                   "VertexConf = LoKi.Hlt1.VxMakerConf( %(PhiDOCA)f *mm, %(PhiVCHI2)f )"% props,
                   "MakePhi = TC_VXMAKE4( '', VertexConf )",
@@ -53,10 +49,7 @@ class Hlt1PhiLinesConf( HltLinesConfigurableUser ) :
   def hlt1PhiLine_Streamer( self, name, props ) :
     from Configurables import LoKi__HltUnit as HltUnit
     props['name'] = name
-    props['forward'] = 'PEstiForward'
-    if props['ValidateTT'] :
-        props['forward'] = "ValidateWithTT >>" + props['forward']
-
+    
     lineCode = """
     TrackCandidates
     >>  ( ( TrNVELOMISS < %(Velo_Qcut)s ) )

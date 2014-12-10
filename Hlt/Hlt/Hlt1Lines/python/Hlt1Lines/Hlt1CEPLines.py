@@ -13,7 +13,7 @@ class Hlt1CEPLinesConf( HltLinesConfigurableUser ):
 
     
     def CEP_preambulo( self ):
-        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates,
+        from HltTracking.Hlt1Tracking import ( VeloCandidates,
                                                        LooseForward )
         
         ## define some "common" preambulo 

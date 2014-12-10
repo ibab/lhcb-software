@@ -1,5 +1,5 @@
 def Hlt1GECStreamer( gec = 'Loose', accept = True ):
-    from HltTracking.HltReco import MaxOTHits
+    from HltTracking.HltRecoConf import MaxOTHits
     gecs = { 'Tight' : { 'MaxOTHits'   : MaxOTHits,
                          'MaxITHits'   :  3000,
                          'MaxVeloHits' :  3000,

@@ -66,7 +66,7 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
         return unit
 
     def vertexDisplVertex_trackPreambulo( self, properties ):
-        from HltTracking.Hlt1TrackUpgradeConf import VeloCandidates
+        from HltTracking.Hlt1Tracking import VeloCandidates
         return [ VeloCandidates( properties["name"] ) ]
 
     def vertexDisplVertex_vertexPreambulo( self, properties ):
@@ -84,7 +84,7 @@ class Hlt1DisplVertexLinesConf( HltLinesConfigurableUser ):
         return preambulo
 
     def vertexDisplVertex_preambulo( self, properties ):
-        from HltTracking.Hlt1TrackUpgradeConf import VeloCandidates
+        from HltTracking.Hlt1Tracking import VeloCandidates
         from HltTracking.Hlt1VertexUpgradeConf import ( LooseForward
                                                       , FitTracks
                                                       , VeloOnlyFitTracks

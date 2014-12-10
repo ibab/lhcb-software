@@ -81,7 +81,7 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
     #make into a function
     def getCaloUnit( self, properties ) :
         from Configurables import LoKi__HltUnit as HltUnit
-        from HltTracking.Hlt1TrackUpgradeConf import L0CaloCandidates
+        from HltTracking.Hlt1Tracking import L0CaloCandidates
         caloUnit = HltUnit(
             'Hlt1%(name)sL0CaloStreamer' % properties,
             Preambulo = [ L0CaloCandidates( properties[ 'name' ] ) ],
@@ -97,16 +97,13 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
         return caloUnit
 
     def singleElectron_preambulo( self, properties ):
-        from HltTracking.Hlt1TrackUpgradeConf import ( TrackCandidates,
-                                                       TightForward, FitTrack )
+        from HltTracking.Hlt1Tracking import ( TrackCandidates, FitTrack )
         from HltTracking.Hlt1TrackMatchConf import FilterVeloL0Calo
         from Configurables import Hlt__L0Calo2Candidate
 
         ## define the preambulo 
-        preambulo = [ #VeloCandidates( properties[ 'name' ] ),
-                      TrackCandidates( properties[ 'name' ] ),
+        preambulo = [ TrackCandidates( properties[ 'name' ] ),
                       FilterVeloL0Calo( properties[ 'CaloCandidates' ] ),
-                      TightForward,
                       FitTrack ]
         return preambulo
 
@@ -148,7 +145,7 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
         properties[ 'CaloCandidates' ] = 'TrackElectronCandidates'
 
         from Configurables import LoKi__HltUnit as HltUnit
-        from HltTracking.Hlt1TrackUpgradeConf import L0CaloCandidates
+        from HltTracking.Hlt1Tracking import L0CaloCandidates
         caloUnit = HltUnit(
             'Hlt1%(name)sL0CaloStreamer' % properties,
             Preambulo = [ L0CaloCandidates( properties[ 'name' ] ) ],
@@ -194,7 +191,7 @@ class Hlt1ElectronLinesConf( HltLinesConfigurableUser ):
 
 
     def singleElectronPlusTrack_preambulo( self, properties ) :
-        from HltTracking.Hlt1TrackUpgradeConf import LooseForward
+        from HltTracking.Hlt1Tracking import LooseForward
         from HltTracking.Hlt1TrackMatchConf import FilterVeloL0Calo
         from HltTracking.Hlt1TrackMatchConf import MatchVeloL0CaloCands
         ## define some "common" preambulo 

@@ -42,7 +42,7 @@ class Hlt1pALinesConf(HltLinesConfigurableUser):
              algos     = [ Hlt1GECUnit( 'Activity' ) ]
              )
         
-        from HltTracking.HltReco import MinimalVelo as microBiasVelo
+        from HltTracking.HltSharedTracking import MinimalVelo as microBiasVelo
         from HltLine.HltLine import Hlt1Member as Member
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO

@@ -28,65 +28,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
     #--------------------------------
     #
     # V. Gligorov
-    __slots__ = {       'AllL0Tight_PT'     : 1800.
-                    ,   'AllL0Tight_P'           : 10000.
-                    ,   'AllL0Tight_IP'          : 0.100
-                    ,   'AllL0Tight_IPChi2'      : 16.
-                    ,   'AllL0Tight_TrChi2'      : 3.
-                    ,   'AllL0Tight_TrNTHits'    : 16.
-                    ,   'AllL0Tight_Velo_NHits'  : 9.
-                    ,   'AllL0Tight_Velo_Qcut'   : 3.
-                    ,   'AllL0Tight_GEC'         : 'Loose'
-                    ,   'AllL0Tight_ValidateTT'  : False
-                    ,   'AllL0_PT'          : 1800.
-                    ,   'AllL0_P'           : 10000.
-                    ,   'AllL0_IP'          : 0.100
+    __slots__ = {   'AllL0_PT'          : 1250.
+                    ,   'AllL0_P'           : 3000.
                     ,   'AllL0_IPChi2'      : 16.
                     ,   'AllL0_TrChi2'      : 3.
-                    ,   'AllL0_TrNTHits'    : 16.
-                    ,   'AllL0_Velo_NHits'  : 9.
-                    ,   'AllL0_Velo_Qcut'   : 3.
                     ,   'AllL0_GEC'         : 'Loose'
-                    ,   'AllL0_ValidateTT'  : False
-                    ,   'AllL0Block_PT'          : 500.
-                    ,   'AllL0Block_P'           : 3000.
-                    ,   'AllL0Block_IP'          : 0.000
-                    ,   'AllL0Block_IPChi2'      : 16.
-                    ,   'AllL0Block_TrChi2'      : 3.
-                    ,   'AllL0VeloTT_Velo_NHits' : 9.
-                    ,   'AllL0VeloTT_Velo_Qcut'  : 3.
-                    ,   'AllL0VeloTT_IP'         : 0.100
-                    ,   'AllL0VeloTT_PT'          : 1800.
-                    ,   'AllL0VeloTT_P'           : 10000.
-                    ,   'AllL0VeloTT_IP'          : 0.100
-                    ,   'AllL0VeloTT_IPChi2'      : 16.
-                    ,   'AllL0VeloTT_TrChi2'      : 3.
-                    ,   'AllL0VeloTT_TrNTHits'    : 16.
-                    ,   'AllL0VeloTT_GEC'         : 'Loose'
-                    ,   'AllL0VeloTT_ValidateTT'  : False
-                    ,   'AllL0VeloTTForw_Velo_NHits' : 9.
-                    ,   'AllL0VeloTTForw_Velo_Qcut'  : 3.
-                    ,   'AllL0VeloTTForw_IP'         : 0.100
-                    ,   'AllL0VeloTTForw_PT'          : 1800.
-                    ,   'AllL0VeloTTForw_P'           : 10000.
-                    ,   'AllL0VeloTTForw_IP'          : 0.100
-                    ,   'AllL0VeloTTForw_IPChi2'      : 16.
-                    ,   'AllL0VeloTTForw_TrChi2'      : 3.
-                    ,   'AllL0VeloTTForw_TrNTHits'    : 16.
-                    ,   'AllL0VeloTTForw_GEC'         : 'Loose'
-                    ,   'AllL0VeloTTForw_ValidateTT'  : False
-                    ,   'AllL0LifetimeUnbiased_Velo_Qcut'  : 3.
-                    ,   'AllL0LifetimeUnbiased_Velo_NHits'  : 9. # not used
-                    ,   'AllL0LifetimeUnbiased_IP'         : 0.100
-                    ,   'AllL0LifetimeUnbiased_PT'          : 2500.
-                    ,   'AllL0LifetimeUnbiased_P'           : 10000.
-                    ,   'AllL0LifetimeUnbiased_TTPT'          : 2500.
-                    ,   'AllL0LifetimeUnbiased_TTP'           : 10000.
-                    ,   'AllL0LifetimeUnbiased_IPChi2'      : 16.
-                    ,   'AllL0LifetimeUnbiased_TrChi2'      : 3.
-                    ,   'AllL0LifetimeUnbiased_TrNTHits'    : 16.
-                    ,   'AllL0LifetimeUnbiased_GEC'         : 'Loose'
-                    ,   'AllL0LifetimeUnbiased_ValidateTT'  : False
                     ,   'Muon_PT'           : 800.
                     ,   'Muon_P'            : 8000.
                     ,   'Muon_IP'           : 0.100
@@ -100,15 +46,11 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
                     ,   'Muon_L0Channels'   : "Muon,DiMuon"
                     ,   'Photon_PT'         : 1200.
                     ,   'Photon_P'          : 10000.
-                    ,   'Photon_IP'         : 0.100
+                    ,   'Photon_IP'         : 0.000
                     ,   'Photon_IPChi2'     : 16.
                     ,   'Photon_TrChi2'     : 3.
-                    ,   'Photon_TrNTHits'   : 15.
-                    ,   'Photon_Velo_NHits' : 9.
-                    ,   'Photon_Velo_Qcut'  : 4. 
                     ,   'Photon_L0Channels' : "Photon,Electron"
                     ,   'Photon_GEC'        : 'Loose'
-                    ,   'Photon_ValidateTT' : False
                     ,   'Prescale'          : {'Hlt1TrackForwardPassThrough'      : 0,
                                                'Hlt1TrackForwardPassThroughLoose' : 0}
                 }
@@ -117,29 +59,23 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         ps = self.getProps()
         # get the list of options belonging to this prefix
         #myprops = dict( [ ( key, ps[key] 
-        
-        #lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2", 
+           #lp = set( ( "IP", "PT", "P", "TrChi2", "IPChi2", 
         #            "Velo_NHits", "Velo_Qcut", "TrNTHits", "GEC", 'ValidateTT' ) )
         return { key.replace(prefix+"_","") : ps[key] for key in ps if key.find(prefix)>=0} 
 
         #dict( [ ( key, ps[ prefix + "_" + key ] ) for key in lp ] )
 
     def hlt1Track_Preambulo( self, prefix ) :
-        from HltTracking.Hlt1TrackUpgradeConf import ( VeloCandidates, 
-                                                       LooseForward, TightForward, PEstiForward, pET,
-                                                       FitTrack, FitVeloTTTrack, MatchVeloMuon, IsMuon )
+        from HltTracking.Hlt1Tracking import ( VeloCandidates, LooseForward,
+                                               FitTrack, MatchVeloMuon, IsMuon )
         from HltTracking.Hlt1TrackFilterConf import (ValidateWithTT)
  
         Preambulo = [ VeloCandidates( prefix ),
-                      TightForward,
                       LooseForward,
-                      PEstiForward,
-                      pET,
                       ValidateWithTT,
                       MatchVeloMuon,
                       IsMuon ,
-                      FitTrack,
-                      FitVeloTTTrack,]
+                      FitTrack,]
         return Preambulo
 
     def do_timing( self, unit ):
@@ -158,157 +94,6 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         unit.Code = code
         return unit
 
-    #A new line containing only the PaVeloTT, no forward tracking
-    def hlt1TrackVeloTT_Streamer(self, name, props) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from Configurables import LoKi__HltUnit as HltUnit
-        props['name'] = name
-        lineCode = """
-        VeloCandidates
-        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
-        ( TrNVELOMISS < %(Velo_Qcut)s ) & \
-        ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
-        >>  pET
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass PatVeloTT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVeloTT', LoKi.Monitoring.ContextSvc) )
-        >> ( ( TrPT > %(PT)s * MeV ) & \
-        ( TrP  > %(P)s  * MeV ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitVeloTTTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
-        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-        >> SINK( 'Hlt1%(name)sDecision' )
-        >> ~TC_EMPTY
-        """ % props
-
-        hlt1TrackVeloTT_Unit = HltUnit(
-            'Hlt1'+name+'Unit',
-            Preambulo = self.hlt1Track_Preambulo( name ),
-            Code = lineCode
-            )       
-        from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackVeloTT_Unit ]
-    #enddef #hlt1TrackVeloTT_Streamer
-
-    def hlt1TrackVeloTTForw_Streamer( self, name, props ) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from Configurables import LoKi__HltUnit as HltUnit
-        props['name'] = name
-        props['forward'] = 'PEstiForward' 
-        if props['ValidateTT'] :
-            props['forward'] = "ValidateWithTT >>" + props['forward']  
-
-        lineCode = """ 
-        VeloCandidates
-        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
-        ( TrNVELOMISS < %(Velo_Qcut)s ) & \
-        ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
-        >>  pET
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass PatVeloTT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVeloTT', LoKi.Monitoring.ContextSvc) )
-        >>  %(forward)s 
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
-        >> ( (TrTNORMIDC > %(TrNTHits)s ) & \
-        ( TrPT > %(PT)s * MeV ) & \
-        ( TrP  > %(P)s  * MeV ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
-        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-        >> SINK( 'Hlt1%(name)sDecision' )
-        >> ~TC_EMPTY
-        """ % props
-
-        Preambulo = self.hlt1Track_Preambulo( name )
-        #Preambulo.append("hPPre = Gaudi.Histo1DDef('preP',0,10000)")
-        Preambulo.append("from LoKiCore.functions import *")
-        Preambulo.append("from LoKiPhys.decorators import *")
-        Preambulo.append("from GaudiPython.HistoUtils import book")              
-        Preambulo.append("histo = Gaudi.Histo1DDef('Pre VeloTT Pt', 0.0, 10000.0,100)")
-
-        hlt1TrackVeloTTForw_Unit = HltUnit(
-            'Hlt1'+name+'Unit',
-            ##OutputLevel = 1 ,
-            Preambulo = Preambulo,
-            Code = lineCode
-            )       
-        from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackVeloTTForw_Unit ]
-
-
-
-
-
-    #
-    def hlt1HighPTLifetimeUnbiased_Streamer( self, name, props ) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from Configurables import LoKi__HltUnit as HltUnit
-        props['name'] = name
-        props['forward'] = 'PEstiForward' 
-        if props['ValidateTT'] :
-            props['forward'] = "ValidateWithTT >>" + props['forward']  
-
-        lineCode = """ 
-        VeloCandidates
-        >> ( TrNVELOMISS < %(Velo_Qcut)s )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass NVeloMiss', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVelo' , LoKi.Monitoring.ContextSvc ) )
-        >>  pET
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass PatVeloTT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVeloTT', LoKi.Monitoring.ContextSvc) )
-        >>  ( ( TrPT > %(TTPT)s * MeV ) & \
-        ( TrP  > %(TTP)s  * MeV ) & \
-        ( TrP < 14000000.0 * MeV ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TT P/PT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nP TT' , LoKi.Monitoring.ContextSvc ) )
-        >>  %(forward)s 
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
-        >> ( (TrTNORMIDC > %(TrNTHits)s ) & \
-        ( TrPT > %(PT)s * MeV ) & \
-        ( TrP  > %(P)s  * MeV ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-        >> SINK( 'Hlt1%(name)sDecision' )
-        >> ~TC_EMPTY
-        """ % props
-
-        Preambulo = self.hlt1Track_Preambulo( name )
-        #Preambulo.append("hPPre = Gaudi.Histo1DDef('preP',0,10000)")
-        Preambulo.append("from LoKiCore.functions import *")
-        Preambulo.append("from LoKiPhys.decorators import *")
-        #Preambulo.append("from GaudiPython.HistoUtils import book")              
-        #Preambulo.append("histo = Gaudi.Histo1DDef('Pre VeloTT Pt', 0.0, 10000.0,100)")
-
-        hlt1HighPTLifetimeUnbiased_Unit = HltUnit(
-            'Hlt1'+name+'Unit',
-            ##OutputLevel = 1 ,
-            Preambulo = Preambulo,
-            Code = lineCode
-            )       
-        from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1HighPTLifetimeUnbiased_Unit ]
 
     # line using velo+veloTT+forwardUpgrade en'block 
     def hlt1TrackBlock_Streamer( self, name, props ) :
@@ -318,7 +103,7 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         
         lineCode = """ 
         TrackCandidates
-        >>  ( ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) & ( TrPT > %(PT)s * MeV ) & \
+        >>  ( ( TrPT > %(PT)s * MeV ) & \
         ( TrP  > %(P)s  * MeV ) )
         >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
         >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
@@ -332,89 +117,18 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
         >> SINK( 'Hlt1%(name)sDecision' )
         >> ~TC_EMPTY
         """ % props
-        from HltTracking.Hlt1TrackUpgradeConf import TrackCandidates
+        from HltTracking.Hlt1Tracking import TrackCandidates
         hlt1TrackBlock_Unit = HltUnit(
             'Hlt1'+name+'Unit',
-            OutputLevel = 1 ,
             Preambulo = self.hlt1Track_Preambulo( name ) + [TrackCandidates( name )],
             Code = lineCode
             )       
         from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackBlock_Unit ]
+        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), hlt1TrackBlock_Unit ]
      
     
 
-    def hlt1TrackNonMuon_Streamer( self, name, props ) :
-        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from Configurables import LoKi__HltUnit as HltUnit
-        props['name'] = name
-        props['forward'] = 'LooseForward' if name.find('Photon') > -1 else 'TightForward'
-        if props['ValidateTT'] :
-            props['forward'] = "ValidateWithTT >>" + props['forward']  
-
-        lineCode = """ 
-        VeloCandidates
-        >>  ( ( TrIDC('isVelo') > %(Velo_NHits)s ) & \
-        ( TrNVELOMISS < %(Velo_Qcut)s ) & \
-        ( Tr_HLTMIP ( 'PV3D' ) > %(IP)s * mm) ) 
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass VeloQ/IP', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVeloIP' , LoKi.Monitoring.ContextSvc ) )
-        >>  %(forward)s 
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
-        >> ( (TrTNORMIDC > %(TrNTHits)s ) & \
-        ( TrPT > %(PT)s * MeV ) & \
-        ( TrP  > %(P)s  * MeV ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass P/PT', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nP' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-        >>  ( ( TrCHI2PDOF < %(TrChi2)s ) & \
-        ( Tr_HLTMIPCHI2 ( 'PV3D' ) > %(IPChi2)s ) )
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackChi2/IPChi2', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nChi2' , LoKi.Monitoring.ContextSvc ) )
-        >> SINK( 'Hlt1%(name)sDecision' )
-        >> ~TC_EMPTY
-        """ % props
-        hlt1TrackNonMuon_Unit = HltUnit(
-            'Hlt1'+name+'Unit',
-            ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name ),
-            Code = lineCode
-            )       
-        from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( 'Loose' ), PV3D('Hlt1'), hlt1TrackNonMuon_Unit ]
-
-    def hlt1TrackForwardPassThrough_Streamer( self, name, props ) : 
-        from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
-        from Configurables import LoKi__HltUnit as HltUnit
-        props['name'] = name
-        props['forward'] = 'LooseForward' if name.find('Loose') > -1 else 'TightForward'
-        if props['ValidateTT'] :
-            props['forward'] = "ValidateWithTT >>" + props['forward']
-
-        lineCode = """ 
-        VeloCandidates
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass Velo', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nVelo' , LoKi.Monitoring.ContextSvc ) )
-        >>  %(forward)s 
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass Forward', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nForward' , LoKi.Monitoring.ContextSvc ) )
-        >>  FitTrack
-        >>  tee  ( monitor( TC_SIZE > 0, '# pass TrackFit', LoKi.Monitoring.ContextSvc ) )
-        >>  tee  ( monitor( TC_SIZE    , 'nFit' , LoKi.Monitoring.ContextSvc ) )
-        >> SINK( 'Hlt1%(name)sDecision' )
-        >> ~TC_EMPTY
-        """ % props
-        hlt1TrackForwardPassThrough_Unit = HltUnit(
-            'Hlt1'+name+'Unit',
-            ##OutputLevel = 1 ,
-            Preambulo = self.hlt1Track_Preambulo( name ),
-            Code = lineCode
-            )
-        from HltTracking.HltPVs import PV3D
-        return [ Hlt1GECUnit( props[ 'GEC' ] ), PV3D('Hlt1'), hlt1TrackForwardPassThrough_Unit ]
+ 
 
     def hlt1TrackMuon_Streamer(self, name, props ) :
         from Hlt1Lines.Hlt1GECs import Hlt1GECUnit
@@ -473,38 +187,8 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_DECISION_PHYSICS" 
-             , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0", self.localise_props( "AllL0" ) )
+             , algos = self.hlt1TrackBlock_Streamer( "TrackAllL0", self.localise_props( "AllL0" ) )
                )
-        Line ( 'TrackAllL0Block'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS" 
-             , algos = self.hlt1TrackBlock_Streamer( "TrackAllL0Block", self.localise_props( "AllL0Block" ) )
-               )
-        Line ( 'TrackAllL0VeloTT'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS"
-             , algos = self.hlt1TrackVeloTT_Streamer( "TrackAllL0VeloTT", self.localise_props( "AllL0VeloTT"))
-        )
-        Line ( 'TrackAllL0VeloTTForw'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS"
-             , algos = self.hlt1TrackVeloTTForw_Streamer( "TrackAllL0VeloTTForw", self.localise_props("AllL0VeloTTForw"))
-        )       
-        Line ( 'TrackAllL0LifetimeUnbiased'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS"
-             , algos = self.hlt1HighPTLifetimeUnbiased_Streamer( "TrackAllL0LifetimeUnbiased", self.localise_props("AllL0LifetimeUnbiased"))
-        )       
-        Line ( 'TrackAllL0Tight'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS" 
-             , algos = self.hlt1TrackNonMuon_Streamer( "TrackAllL0Tight", self.localise_props( "AllL0Tight" ) ) 
-               ) 
         Line ( 'TrackMuon'
              , prescale = self.prescale
              , postscale = self.postscale
@@ -515,21 +199,9 @@ class Hlt1TrackLinesConf( HltLinesConfigurableUser ) :
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "|".join( [ "L0_CHANNEL('%s')" % channel for channel in PhotonTrackL0Channels ] )
-             , algos = self.hlt1TrackNonMuon_Streamer( "TrackPhoton", self.localise_props( "Photon" ) )
+             , algos = self.hlt1TrackBlock_Streamer( "TrackPhoton", self.localise_props( "Photon" ) )
              )    
         # Pass through lines for forward reco in swimming
         # These are Prescaled to ZERO for running in the pit!!!
-        Line ( 'TrackForwardPassThrough'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS"
-             , algos = self.hlt1TrackForwardPassThrough_Streamer( "TrackForwardPassThrough", self.localise_props( "AllL0" ) )
-               ) 
-        Line ( 'TrackForwardPassThroughLoose'
-             , prescale = self.prescale
-             , postscale = self.postscale
-             , L0DU = "L0_DECISION_PHYSICS"
-             , algos = self.hlt1TrackForwardPassThrough_Streamer( "TrackForwardPassThroughLoose", self.localise_props( "AllL0" ) )
-               ) 
-
+        
 

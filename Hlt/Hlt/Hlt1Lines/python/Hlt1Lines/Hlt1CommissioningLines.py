@@ -81,7 +81,7 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
             , HLT = "HLT_COUNT_ERRORBITS_RE('^Hlt1.*',0xffff) > 0" # TODO: just want presence, so want HLT_ERRORBITS(0xffff) would be nice to have...
             , priority = 254
             )
-        from HltTracking.HltReco import MinimalVelo
+        from HltTracking.HltSharedTracking import MinimalVelo
         from HltLine.HltLine import Hlt1Member   as Member
         Line ( 'VeloClosingMicroBias'
                     , prescale = self.prescale

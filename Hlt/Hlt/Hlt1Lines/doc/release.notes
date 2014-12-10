@@ -5,8 +5,33 @@
 ! Purpose     : Definition and Configuration of Hlt1Lines
 !-----------------------------------------------------------------------------
 
+! 2014-12-10 - Sebastian Neubert
+ - reintegrate merge from branch taskLHCBPS-1296
+
+! 2014-12-10 - Sebastian Neubert
+ - GECStreamer uses HltRecoConf 
+ - renamed HltReco --> HltSharedTracking
+   renamed Hlt1TrackUpgradeConf --> Hlt1Tracking
+
 ! 2014-12-03 - Sebastian Neubert
  - added template for Central Exclusive Production lines
+
+! 2014-11-25 - Sebastian Neubert
+ - removed deprecated dependencies in all tracking lines
+
+! 2014-11-24 - Francesco Dettori
+ - Changing Hlt1MuonLines to use TrackCandidates 
+   VeloTT lines added as well.   Velo lines kept for comparison. 
+
+! 2014-11-20 - Jibo He
+ - Hlt1ProtonLines, modified to use EnBlock Reco, Velo nHits cuts removed 
+
+! 2014-11-07 - Sebastian Neubert
+ - Further cleaning up 1TrackLines
+
+! 2014-10-24 - Sebastian Neubert
+ - make EnBlock reconstruction the default in TrackAllL0
+ - clean up Tracking lines
 
 ! 2014-11-12 - Alex Shires
  - updating electron lines to use TrackCandidates - to be tested! adding bug fix to ElectronPlusTrack
