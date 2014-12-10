@@ -173,12 +173,12 @@ StatusCode PatForward::execute() {
 
   //== Prepare tracks
  
-  LHCb::Tracks* inputTracks   = get<LHCb::Tracks>( m_inputTracksName ); 
+  LHCb::Track::Range inputTracks   = get<LHCb::Track::Range>( m_inputTracksName ); 
 
   LHCb::Tracks* outputTracks  = 
     getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_outputTracksName);
 
-  if (inputTracks->size() > m_maxNVelo) {
+  if (inputTracks.size() > m_maxNVelo) {
     LHCb::ProcStatus* procStat =
       getOrCreate<LHCb::ProcStatus,LHCb::ProcStatus>(
 		 LHCb::ProcStatusLocation::Default);
@@ -230,7 +230,9 @@ StatusCode PatForward::execute() {
 
   int oriSize = outputTracks->size();
 
-  for ( LHCb::Track *seed: *inputTracks ) {
+  counter("#Seeds") += inputTracks.size();
+  
+  for ( const LHCb::Track *seed: inputTracks ) {
     if ( acceptTrack(*seed) ) {
       auto prevSize = outputTracks->size();
       m_forwardTool->forwardTrack(seed, outputTracks );
@@ -283,7 +285,7 @@ StatusCode PatForward::execute() {
   if ( dbg  || m_doTiming ) {
     double t = m_timerTool->stop( m_fwdTime );
     debug() << "=== In total, produced " <<  outputTracks->size() - oriSize  << " tracks from "
-            << inputTracks->size() << " Velo tracks in " << t << " ms"
+            << inputTracks.size() << " Velo tracks in " << t << " ms"
             << endmsg;
   }
 

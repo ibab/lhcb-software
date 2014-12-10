@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2014-12-10 - Sebastian Neubert
+ - PatForward uses Ranges now to access track selections as well as containers
+
 ! 2014-11-29 - Gerhard Raven
  - PatForwardTool: small speedup in fillXList
 
