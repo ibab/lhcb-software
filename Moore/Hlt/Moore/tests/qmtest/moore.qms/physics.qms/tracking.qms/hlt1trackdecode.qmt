@@ -14,11 +14,11 @@
   </set></argument>-->
   <argument name="validator"><text>
 block="""
-TrackreportsDec...SUCCESS Number of counters : 2
+TrackreportsDec...SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Hlt/Track/Velo"                                |      1178 |     125039 |     106.15 |     57.170 |      10.000 |      670.00 |
- | "Hlt1/Track/ForwardHPT"                         |      1178 |      11702 |     9.9338 |     6.0701 |      1.0000 |      52.000 |
- 
+ | "Hlt/Track/ForwardHPT"                          |       208 |       4060 |     19.519 |     10.891 |      3.0000 |      124.00 |
+ | "Hlt/Track/Velo"                                |       208 |      26660 |     128.17 |     64.102 |      27.000 |      641.00 |
+ | "Hlt/Track/VeloTTHPT"                           |       208 |      12477 |     59.986 |     32.148 |      10.000 |      350.00 |
 """
 findReferenceBlock(block, signature_offset = 0)
 </text></argument>

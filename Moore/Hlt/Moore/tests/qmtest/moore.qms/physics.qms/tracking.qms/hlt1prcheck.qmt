@@ -19,31 +19,44 @@
   </set></argument>--><!-- Remove prereqs because of spurious warnings, which are annoying.-->
   <argument name="validator"><text>
 prcheckerblock="""
-PrChecker.Forward                          INFO **** Forward                         12900 tracks including          1802 ghosts [14.0 %], Event average   9.4 % ****
-PrChecker.Forward                          INFO **** for P>3GeV,Pt>0.5GeV            12900 tracks including          1802 ghosts [14.0 %]  ****
-PrChecker.Forward                          INFO                             long :   10681 from    34877 [ 30.6 %]     18 clones [ 0.2 %], purity: 95.87 %, hitEff: 95.36 %
-PrChecker.Forward                          INFO                        long>5GeV :    9988 from    23818 [ 41.9 %]     18 clones [ 0.2 %], purity: 95.94 %, hitEff: 95.66 %
-PrChecker.Forward                          INFO                     long_strange :      96 from     1328 [  7.2 %]      0 clones [ 0.0 %], purity: 95.74 %, hitEff: 94.78 %
-PrChecker.Forward                          INFO                long_strange>5GeV :      85 from      659 [ 12.9 %]      0 clones [ 0.0 %], purity: 95.66 %, hitEff: 95.63 %
-PrChecker.Forward                          INFO                       long_fromB :    2130 from     4234 [ 50.3 %]      6 clones [ 0.3 %], purity: 96.22 %, hitEff: 95.77 %
-PrChecker.Forward                          INFO                  long_fromB>5GeV :    2073 from     3498 [ 59.3 %]      6 clones [ 0.3 %], purity: 96.25 %, hitEff: 95.92 %
-PrChecker.Forward                          INFO      long_fromB_P>3GeV_Pt>0.5GeV :    2121 from     3185 [ 66.6 %]      5 clones [ 0.2 %], purity: 96.22 %, hitEff: 95.78 %
-PrChecker.Forward                          INFO   UT_long_fromB_P>3GeV_Pt>0.5GeV :    2105 from     3057 [ 68.9 %]      5 clones [ 0.2 %], purity: 96.22 %, hitEff: 95.77 %
+PrChecker.Velo                             INFO **** Velo                            86330 tracks including          8765 ghosts [10.2 %], Event average   7.6 % ****
+PrChecker.Velo                             INFO **** for P>3GeV,Pt>0.5GeV                0 tracks including             0 ghosts [-nan %]  ****
+PrChecker.Velo                             INFO                             velo :   53842 from    57682 [ 93.3 %]    580 clones [ 1.1 %], purity: 99.16 %, hitEff: 95.55 %
+PrChecker.Velo                             INFO                             long :   33471 from    34877 [ 96.0 %]    234 clones [ 0.7 %], purity: 99.31 %, hitEff: 96.86 %
+PrChecker.Velo                             INFO                        long>5GeV :   23135 from    23818 [ 97.1 %]    115 clones [ 0.5 %], purity: 99.37 %, hitEff: 97.73 %
+PrChecker.Velo                             INFO                     long_strange :    1150 from     1328 [ 86.6 %]      9 clones [ 0.8 %], purity: 98.65 %, hitEff: 93.44 %
+PrChecker.Velo                             INFO                long_strange>5GeV :     594 from      659 [ 90.1 %]      1 clones [ 0.2 %], purity: 98.57 %, hitEff: 95.97 %
+PrChecker.Velo                             INFO                       long_fromB :    4118 from     4234 [ 97.3 %]     25 clones [ 0.6 %], purity: 99.39 %, hitEff: 97.36 %
+PrChecker.Velo                             INFO                  long_fromB>5GeV :    3416 from     3498 [ 97.7 %]     16 clones [ 0.5 %], purity: 99.44 %, hitEff: 97.90 %
+PrChecker.Velo                             INFO      long_fromB_P>3GeV_Pt>0.5GeV :    3106 from     3185 [ 97.5 %]     17 clones [ 0.5 %], purity: 99.47 %, hitEff: 97.90 %
+PrChecker.Velo                             INFO   UT_long_fromB_P>3GeV_Pt>0.5GeV :    2983 from     3057 [ 97.6 %]     17 clones [ 0.6 %], purity: 99.47 %, hitEff: 97.90 %
+PrChecker.Velo                             INFO 
+PrChecker.Forward                          INFO **** Forward                         18405 tracks including          3411 ghosts [18.5 %], Event average  12.2 % ****
+PrChecker.Forward                          INFO **** for P>3GeV,Pt>0.5GeV            18405 tracks including          3411 ghosts [18.5 %]  ****
+PrChecker.Forward                          INFO                             long :   14347 from    34877 [ 41.1 %]     32 clones [ 0.2 %], purity: 95.84 %, hitEff: 95.13 %
+PrChecker.Forward                          INFO                        long>5GeV :   13076 from    23818 [ 54.9 %]     31 clones [ 0.2 %], purity: 95.98 %, hitEff: 95.58 %
+PrChecker.Forward                          INFO                     long_strange :     236 from     1328 [ 17.8 %]      0 clones [ 0.0 %], purity: 95.35 %, hitEff: 94.66 %
+PrChecker.Forward                          INFO                long_strange>5GeV :     197 from      659 [ 29.9 %]      0 clones [ 0.0 %], purity: 95.32 %, hitEff: 95.32 %
+PrChecker.Forward                          INFO                       long_fromB :    2796 from     4234 [ 66.0 %]      8 clones [ 0.3 %], purity: 96.10 %, hitEff: 95.33 %
+PrChecker.Forward                          INFO                  long_fromB>5GeV :    2679 from     3498 [ 76.6 %]      8 clones [ 0.3 %], purity: 96.18 %, hitEff: 95.54 %
+PrChecker.Forward                          INFO      long_fromB_P>3GeV_Pt>0.5GeV :    2788 from     3185 [ 87.5 %]      7 clones [ 0.3 %], purity: 96.10 %, hitEff: 95.35 %
+PrChecker.Forward                          INFO   UT_long_fromB_P>3GeV_Pt>0.5GeV :    2713 from     3057 [ 88.7 %]      7 clones [ 0.3 %], purity: 96.06 %, hitEff: 95.27 %
 PrChecker.Forward                          INFO 
-PrChecker.Upstream                         INFO **** Upstream                        26848 tracks including          2504 ghosts [ 9.3 %], Event average   7.8 % ****
-PrChecker.Upstream                         INFO **** for P>3GeV,Pt>0.5GeV            15221 tracks including           888 ghosts [ 5.8 %]  ****
-PrChecker.Upstream                         INFO                             velo :   23700 from    57682 [ 41.1 %]     40 clones [ 0.2 %], purity: 99.39 %, hitEff: 91.69 %
-PrChecker.Upstream                         INFO                          velo+UT :   23068 from    47582 [ 48.5 %]     40 clones [ 0.2 %], purity: 99.41 %, hitEff: 93.89 %
-PrChecker.Upstream                         INFO                     velo+UT>5GeV :   17515 from    24929 [ 70.3 %]     28 clones [ 0.2 %], purity: 99.47 %, hitEff: 93.42 %
-PrChecker.Upstream                         INFO                     velo+notLong :    3807 from    22805 [ 16.7 %]      5 clones [ 0.1 %], purity: 99.32 %, hitEff: 87.19 %
-PrChecker.Upstream                         INFO                  velo+UT+notLong :    3536 from    15322 [ 23.1 %]      5 clones [ 0.1 %], purity: 99.34 %, hitEff: 93.37 %
-PrChecker.Upstream                         INFO             velo+UT+notLong>5GeV :    2333 from     3414 [ 68.3 %]      2 clones [ 0.1 %], purity: 99.45 %, hitEff: 92.72 %
-PrChecker.Upstream                         INFO                             long :   19893 from    34877 [ 57.0 %]     35 clones [ 0.2 %], purity: 99.41 %, hitEff: 92.54 %
-PrChecker.Upstream                         INFO                        long>5GeV :   15508 from    23818 [ 65.1 %]     26 clones [ 0.2 %], purity: 99.46 %, hitEff: 91.81 %
-PrChecker.Upstream                         INFO                       long_fromB :    2770 from     4234 [ 65.4 %]      4 clones [ 0.1 %], purity: 99.51 %, hitEff: 95.18 %
-PrChecker.Upstream                         INFO                  long_fromB>5GeV :    2479 from     3498 [ 70.9 %]      4 clones [ 0.2 %], purity: 99.53 %, hitEff: 95.14 %
-PrChecker.Upstream                         INFO      long_fromB_P>3GeV_Pt>0.5GeV :    2240 from     3185 [ 70.3 %]      3 clones [ 0.1 %], purity: 99.57 %, hitEff: 95.69 %
-PrChecker.Upstream                         INFO   UT+long_fromB_P>3GeV_Pt>0.5GeV :    2224 from     3057 [ 72.8 %]      3 clones [ 0.1 %], purity: 99.58 %, hitEff: 96.10 %
+PrChecker.Upstream                         INFO **** Upstream                        56234 tracks including         12321 ghosts [21.9 %], Event average  17.9 % ****
+PrChecker.Upstream                         INFO **** for P>3GeV,Pt>0.5GeV            20380 tracks including          2715 ghosts [13.3 %]  ****
+PrChecker.Upstream                         INFO                             velo :   41202 from    57682 [ 71.4 %]    186 clones [ 0.4 %], purity: 99.15 %, hitEff: 83.69 %
+PrChecker.Upstream                         INFO                          velo+UT :   37482 from    47582 [ 78.8 %]    183 clones [ 0.5 %], purity: 99.15 %, hitEff: 91.41 %
+PrChecker.Upstream                         INFO                     velo+UT>5GeV :   23047 from    24929 [ 92.5 %]     87 clones [ 0.4 %], purity: 99.37 %, hitEff: 91.27 %
+PrChecker.Upstream                         INFO                     velo+notLong :   10459 from    22805 [ 45.9 %]     54 clones [ 0.5 %], purity: 98.87 %, hitEff: 75.71 %
+PrChecker.Upstream                         INFO                  velo+UT+notLong :    8871 from    15322 [ 57.9 %]     52 clones [ 0.6 %], purity: 98.81 %, hitEff: 88.26 %
+PrChecker.Upstream                         INFO             velo+UT+notLong>5GeV :    3129 from     3414 [ 91.7 %]     14 clones [ 0.4 %], purity: 99.36 %, hitEff: 89.21 %
+PrChecker.Upstream                         INFO                             long :   30743 from    34877 [ 88.1 %]    132 clones [ 0.4 %], purity: 99.25 %, hitEff: 86.41 %
+PrChecker.Upstream                         INFO                        long>5GeV :   21915 from    23818 [ 92.0 %]     74 clones [ 0.3 %], purity: 99.36 %, hitEff: 83.64 %
+PrChecker.Upstream                         INFO                       long_fromB :    3899 from     4234 [ 92.1 %]     17 clones [ 0.4 %], purity: 99.39 %, hitEff: 92.08 %
+PrChecker.Upstream                         INFO                  long_fromB>5GeV :    3280 from     3498 [ 93.8 %]     12 clones [ 0.4 %], purity: 99.43 %, hitEff: 91.64 %
+PrChecker.Upstream                         INFO      long_fromB_P>3GeV_Pt>0.5GeV :    2988 from     3185 [ 93.8 %]     13 clones [ 0.4 %], purity: 99.45 %, hitEff: 93.44 %
+PrChecker.Upstream                         INFO   UT+long_fromB_P>3GeV_Pt>0.5GeV :    2903 from     3057 [ 95.0 %]     13 clones [ 0.4 %], purity: 99.50 %, hitEff: 95.56 %
+PrChecker.Upstream                         INFO 
 """
 findReferenceBlock(prcheckerblock, signature_offset = 0)
 </text></argument>

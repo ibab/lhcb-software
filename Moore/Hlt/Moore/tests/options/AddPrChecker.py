@@ -17,14 +17,14 @@ def myAction() :
                                 MCParticleSelector, PrLHCbID2MCParticle,
                                 UnpackMCParticle, UnpackMCVertex, DebugTrackingLosses )
 
-    from HltTracking.HltTrackNames import Hlt1TrackLoc, Hlt1TrackRoot
+    from HltTracking.HltTrackNames import  HltSharedTrackLoc, HltSharedTrackRoot
     
     from DAQSys.Decoders import DecoderDB
     from DAQSys.DecoderClass import decodersForBank
     
     decs=[]
 
-    decs=decs+decodersForBank(DecoderDB,"TT")
+    decs=decs+decodersForBank(DecoderDB,"TT","IT")
 
     DecSeq = GaudiSequencer("MyDecodingSeq")
     DecSeq.Members += [d.setup() for d in decs ]
@@ -41,14 +41,17 @@ def myAction() :
 
     #(N.B.: container base for velo tracks was renamed to Hlt1)
     # Figure out which HLT is run from HltConf
-    #PrChecker("PrChecker").VeloTracks = Hlt1TrackLoc["Velo"]
-    PrChecker("PrChecker").ForwardTracks = Hlt1TrackLoc["ForwardHPT"] #HltSharedForwardLocation
-    PrChecker("PrChecker").UpTracks = Hlt1TrackLoc["VeloTTHPT"];
+    PrChecker("PrChecker").VeloTracks = HltSharedTrackLoc["Velo"]
+    PrChecker("PrChecker").ForwardTracks = HltSharedTrackLoc["ForwardHPT"] #HltSharedForwardLocation
+    PrChecker("PrChecker").UpTracks = HltSharedTrackLoc["VeloTTHPT"];
 
     PrChecker("PrChecker").HistoPrint = True
     #PrChecker("PrChecker").OutputLevel = 1
 
-    PrTrackAssociator("AssocAll").RootOfContainers = Hlt1TrackRoot
+    PrTrackAssociator("AssocAll").RootOfContainers = HltSharedTrackRoot
+    #PrTrackAssociator("AssocAll").OutputLevel = 2
+    #PrTrackAssociator("AssocAll").SingleContainer = HltSharedTrackLoc["ForwardHPT"]
+    
     
     PatCheck.Members += [ PrTrackAssociator("AssocAll") ]
     PatCheck.Members += [ PrChecker("PrChecker") ]
@@ -57,6 +60,7 @@ def myAction() :
     EndMembers.insert(0,  DecSeq )
     EndMembers.insert(1,  PatCheck )
     #end of myAction
+
     
 from GaudiKernel.Configurable import appendPostConfigAction
 appendPostConfigAction( myAction )

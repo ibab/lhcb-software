@@ -22,7 +22,7 @@
   <argument name="args"><set>
     <text>../options/Moore_Hlt1And2.py</text>
     <text>../options/Input_Default.py</text>
-    <text>../options/default-threshold.py</text>
+    <text>../options/default-hlt1-threshold.py</text>
     <text>../options/Moore_Hlt1Only.py</text>
     <text>--option</text>
     <text>from Configurables import Moore; Moore().EnableTimer="deferral.hlt1only.csv"; Moore().RemoveInputHltRawBanks = True; Moore().OutputLevel = 3</text>

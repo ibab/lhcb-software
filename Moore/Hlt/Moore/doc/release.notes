@@ -4,6 +4,10 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-12-10 Sebastian Neubert
+ - updated tracking tests references for TrackAllL0 using upfront tracking
+ - change the default settings file to Commissioning_Physics_2015
+
 ! 2014-11-29 Sean Benson
  - Re-insert magic call to action().
 
@@ -28,6 +32,7 @@
 
 ! 2014-11-03 Sean Benson
  - Make TCK tests use 1200 2012 events + new test for decoders
+
 
 !========================= Moore v23r1 2014-09-29 =========================
 
