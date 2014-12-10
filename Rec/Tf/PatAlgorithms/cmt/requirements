@@ -23,7 +23,8 @@ use     RecEvent        v*      Event
 use     TrackEvent      v*      Event
 use     OTDAQ           v*      OT
 use     PartProp        v*      Kernel
-use TrackInterfaces V*  Tr
+use     TrackInterfaces v*      Tr
+use     vdt             v*      LCG_Interfaces
 #=====================================================================
 # Component library building rule
 #=====================================================================

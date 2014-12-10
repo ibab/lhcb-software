@@ -6,6 +6,7 @@
 
 // Include files
 #include "Event/Track.h"
+#include "vdt/sqrt.h"
 #include "PatKernel/PatForwardHit.h"
 
 /** @class PatFwdTrackCandidate PatFwdTrackCandidate.h
@@ -37,8 +38,8 @@ public:
       : m_coords{ std::forward<C>(coords) }, m_track{ tr }  {
     const LHCb::State *state = m_track->stateAt(LHCb::State::EndVelo);
     assert(state != nullptr);
-    m_state = { { state->x(),  state->y(), state->z(), 
-                  state->tx(), state->ty(), 
+    m_state = { { state->x(),  state->y(), state->z(),
+                  state->tx(), state->ty(),
                   state->qOverP() } };
   }
 
@@ -50,7 +51,7 @@ public:
   template <typename I>
   PatFwdTrackCandidate(const LHCb::Track *tr, I&& first, I&& last)
       : PatFwdTrackCandidate(
-            tr, PatFwdHits{ std::forward<I>(first), std::forward<I>(last) }) 
+            tr, PatFwdHits{ std::forward<I>(first), std::forward<I>(last) })
   { //TODO: partition m_coords by 'selected' 'not selected' 'ignored'
   }
 
@@ -71,9 +72,9 @@ public:
   }
 
   const LHCb::Track *track() const { return m_track; }
-  template <typename T> auto xStraight(T z) const 
+  template <typename T> auto xStraight(T z) const
   AUTO_RETURN( m_state[0] + m_state[3] * (z - m_state[2]) )
-  template <typename T> auto yStraight(T z) const 
+  template <typename T> auto yStraight(T z) const
   AUTO_RETURN( m_state[1] + m_state[4] * (z - m_state[2]) )
   double qOverP() const { return m_state[5]; }
 
@@ -110,7 +111,7 @@ public:
   const PatFwdHits &coords() const { return m_coords; }
   // PatFwdHits &coords() { return m_coords; }
 
-  PatFwdTrackCandidate& setParameters(double ax, double bx, double cx, double dx, 
+  PatFwdTrackCandidate& setParameters(double ax, double bx, double cx, double dx,
                                       double ay, double by) {
     m_params = {{ ax, bx, cx, dx, ay, by }};
     m_fitted = true;
@@ -129,21 +130,21 @@ public:
     m_params[5] += dby;
   }
 
-  template <typename T> auto x(T dz) const 
+  template <typename T> auto x(T dz) const
   AUTO_RETURN( m_params[0] + dz * (m_params[1] + dz * (m_params[2] + dz * m_params[3])) )
 
-  template <typename T> auto y(T dz) const 
+  template <typename T> auto y(T dz) const
   AUTO_RETURN(  m_params[4] + dz * m_params[5] )
 
-  template <typename T> auto xSlope(T dz) const 
+  template <typename T> auto xSlope(T dz) const
   AUTO_RETURN( m_params[1] + dz * (2 * m_params[2] + 3 * dz * m_params[3]) )
 
   double ySlope(double) const { return m_params[5]; }
 
-  template <typename T> auto  xMagnet(T dz) const 
+  template <typename T> auto  xMagnet(T dz) const
   AUTO_RETURN( m_params[0] + dz * m_params[1] )
 
-  double cosAfter() const { return 1. / sqrt(1. + m_params[1] * m_params[1]); }
+  double cosAfter() const { return vdt::fast_isqrt( 1. + m_params[1] * m_params[1] ) ; }
 
   double dSlope() const { return m_params[1] - m_state[3]; }
 

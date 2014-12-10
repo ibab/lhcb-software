@@ -430,7 +430,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   if ( track.setSelectedCoords() < minPlanes ) return false;
   PatFwdPlaneCounter maxPlanes( track.coordBegin(), track.coordEnd() );
   int bestPlanes = maxPlanes.nbDifferent();
-  if ( maxPlanes.nbDifferent() < minPlanes ) return false;
+  if ( bestPlanes < minPlanes ) return false;
 
   bool isDebug = msgLevel( MSG::DEBUG );
 
@@ -642,11 +642,14 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                             || hit->hit()->layer() == 3 );
   };
 
+  auto isOT = [](const PatFwdHit& hit) { return  hit.driftDistance()!=0.; };
+
   for ( unsigned int kk = 0 ; kk < 10  ; ++kk ) {
     auto curve = make_curve(track);
+    auto ca = 1.0/track.cosAfter();
     std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
       if (accept(hit)) curve.addPoint( hit->z()-m_zReference, 
-                                       distanceForFit(track, hit),
+                                       isOT(*hit) ? OTdistanceForFit(track,hit,ca) : ITdistanceForFit(track,hit),
                                        hit->hit()->weight() );
     } );
     if (!curve.solve()) return false;

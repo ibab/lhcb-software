@@ -220,6 +220,7 @@ struct regions {
 static const auto stereo_regions = regions<true>{};
 static const auto      x_regions = regions<false>{};
 
+static const  auto not_selected = [](const PatForwardHit* hit) { return !hit->isSelected(); };
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -625,7 +626,6 @@ PatForwardTool::fillXList ( PatFwdTrackCandidate& track ) const
     debug() << "Search X coordinates, xMin " << interval.xMin()
             << " xMax " << interval.xMax() << endmsg;
   }
-  auto not_selected = [](const PatForwardHit* hit) { return !hit->isSelected(); };
 
   auto yCompat = m_yCompatibleTol + 50 * fabs(track.slY());
   auto not_ignored_and_y_compatible = [yCompat](double yRegion) {

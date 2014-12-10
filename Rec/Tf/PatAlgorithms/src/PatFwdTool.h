@@ -109,20 +109,33 @@ public:
       }
   }
 
+  double ITdistanceForFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
+    return hit->x() - track.x( hit->z() - m_zReference );
+  }
+
+  double OTdistanceForFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit, double ca) const {
+    auto dist = ITdistanceForFit( track, hit) ; 
+    //OT : distance to a circle, drift time
+    auto dx = ca*hit->driftDistance();
+    // Take closest distance if rlAmb == 0
+    auto smallest = [](double a, double b) { return std::abs(a)<std::abs(b) ? a : b ; };
+    auto rlAmb = hit->rlAmb();
+    return rlAmb == 0 ? smallest( dist+dx, dist-dx ) : ( dist + rlAmb * dx );
+  }
+
   double distanceForFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
-    double dist =  distanceHitToTrack( track, hit );
+    auto dist =  distanceHitToTrack( track, hit );
     if ( hit->hit()->region() > Tf::RegionID::OTIndex::kMaxRegion )  return dist;
     return dist / track.cosAfter();
   }
 
   double distanceHitToTrack( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
-    double dz   = hit->z() - m_zReference;
-    double dist = hit->x() - track.x( dz );
+    auto dist = hit->x() - track.x( hit->z() - m_zReference );
     if ( hit->hit()->region() > Tf::RegionID::OTIndex::kMaxRegion ) return dist;
 
     //OT : distance to a circle, drift time
     dist *= track.cosAfter();
-    double dx = hit->driftDistance();
+    auto dx = hit->driftDistance();
     // Take closest distance if rlAmb == 0
     auto smallest = [](double a, double b) { return std::abs(a)<std::abs(b) ? a : b ; };
     auto rlAmb = hit->rlAmb();
