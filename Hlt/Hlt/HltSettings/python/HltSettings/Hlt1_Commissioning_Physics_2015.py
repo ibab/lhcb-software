@@ -18,14 +18,15 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class Hlt1_TrackingOnly( object ):
+class Hlt1_Commissioning_Physics_2015( object ):
     """
-    Settings for only running the tracking in the HLT
-
+    Settings for 2015 commissioning of physics lines
+    based on Hlt1_Physics_September2012
+    
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
-
-    @author S. Neubert, J. Albrecht, V. Gligorov
-    @date 2013-03-27
+    
+    @author J. Albrecht, V. Gligorov, S.Neubert
+    @date 2012-04-17
     """
     
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds', 'L0TCK' )
@@ -44,8 +45,8 @@ class Hlt1_TrackingOnly( object ):
         return '0x0044'
 
     def HltType(self) :
-        self.verifyType( Hlt1_TrackingOnly ) 
-        return          'Hlt1_TrackingOnly'
+        self.verifyType( Hlt1_Commissioning_Physics_2015 ) 
+        return          'Hlt1_Commissioning_Physics_2015'
     
     def Thresholds(self) :
         """
@@ -59,11 +60,7 @@ class Hlt1_TrackingOnly( object ):
         from Hlt1Lines.Hlt1MBLines             import Hlt1MBLinesConf
         from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
         from Hlt1Lines.Hlt1DisplVertexLines    import Hlt1DisplVertexLinesConf
-        from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
         from Hlt1Lines.Hlt1BeamGasLines        import Hlt1BeamGasLinesConf
-        from Hlt2Lines.Hlt2diphotonDiMuonLines import Hlt2diphotonDiMuonLinesConf
-        from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
-        from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
 
         thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'         :  1250
                                                , 'AllL0_P'          :  3000
@@ -72,22 +69,19 @@ class Hlt1_TrackingOnly( object ):
                                                , 'AllL0_GEC'        : 'Loose'
                                                , 'Muon_PT'       :  1000 
                                                , 'Muon_P'        :  3000 
-                                               , 'Muon_IP'       :     0.100
                                                , 'Muon_IPChi2'   :    16
                                                , 'Muon_TrChi2'   :     2.5  
                                                , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_ValidateTT' : False
                                                , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  3000
-                                               , 'Photon_IP'     :     0.100
                                                , 'Photon_IPChi2' :    16
                                                , 'Photon_TrChi2' :     2.0
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
-        #                                      , 'Photon_ValidateTT' : True
-                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, }
-                                                                        
+                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
+                                                                        'Hlt1TrackForwardPassThrough'      : 0,
+                                                                        'Hlt1TrackForwardPassThroughLoose' : 0}
  
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
@@ -177,59 +171,39 @@ class Hlt1_TrackingOnly( object ):
                        , Hlt1CommissioningLinesConf : { 'Postscale' : { 'Hlt1ErrorEvent'   : 'RATE(0.01)'
 
                                                                         } }
-                       , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
-                                                                       , 'Hlt2Forward'      : 0.00001
-                                                                       , 'Hlt2DebugEvent'   : 0.000001  }
-                                                        , 'Postscale' : { 'Hlt2ErrorEvent'   : 'RATE(0.01)' } }
                        # micro bias lines switched off for high mu physics running              
                        , Hlt1MBLinesConf :     { 'Prescale' : { 'Hlt1MBMicroBiasVelo'                : 0
                                                               , 'Hlt1MBMicroBiasTStation'            : 0
                                                               , 'Hlt1MBMicroBiasVeloRateLimited'     : 0
                                                               , 'Hlt1MBMicroBiasTStationRateLimited' : 0 }
-                                               , 'MaxNoBiasRate' : 1000000.
-                                               }
-                       , Hlt2diphotonDiMuonLinesConf : { 'Prescale' : { 'Hlt2LowMultHadron'     :  1.0 # for 0x0035, this is already done in L0
-                                                                      , 'Hlt2LowMultPhoton'     : 0.01
-                                                                      } } 
+                                                 , 'MaxNoBiasRate' : 1000000.
+                                                 }
+                       
 
-                       #, Hlt2InclusiveDiProtonLinesConf: { 'Prescale' : { 'Hlt2DiProton'           :       0.001
-                       #                                                   , 'Hlt2DiProtonLowMult'  :       0.001
-                       #                                               } } 
-
-                       , Hlt2DisplVerticesLinesConf : {  'Prescale' : 
-                                                            { 'Hlt2DisplVerticesHighMassSingle'               : 1
-                                                              , 'Hlt2DisplVerticesSingle'                     : 1
-                                                              , 'Hlt2DisplVerticesDouble'                     : 1
-                                                              , 'Hlt2DisplVerticesHighMassSingle'             : 1 
-                                                              , 'Hlt2DisplVerticesHighFDSingle'               : 1
-                                                              , 'Hlt2DisplVerticesSinglePostScaled'           : 1
-                                                              , 'Hlt2DisplVerticesSingleDown'                 : 1
-                                                              , 'Hlt2DisplVerticesDoublePostScaled'           : 1
-                                                              , 'Hlt2DisplVerticesSingleHighMassPostScaled'   : 1
-                                                              , 'Hlt2DisplVerticesSingleHighFDPostScaled'     : 1
-                                                              , 'Hlt2DisplVerticesSingleMVPostScaled'         : 1    }               
-                                                         }
-
-                                                         }
+                       }
         
-     
-
         return thresholds
                        
-    def ActiveHlt1Lines(self) :
-        """
-        Returns a list of active lines
-        """
-        #lines =  ['Hlt1TrackAllL0Block', ]
-        #lines = ['Hlt1TrackAllL0VeloTTForw',]
-        lines = ['Hlt1TrackAllL0',]
-        #lines =  [ 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton' ]
-       
-        return lines 
-
-
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
         return []
+       
+    def ActiveHlt1Lines(self) :
+        """
+        Returns a list of active lines
+        """
+        lines =  [ 'Hlt1TrackAllL0' 
+                  , 'Hlt1TrackMuon', 'Hlt1TrackPhoton'
+                  , 'Hlt1VertexDisplVertex'
+                  , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
+                  , 'Hlt1SingleElectronNoIP'
+                  , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                  , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
+                  , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
+        
+        #from Hlt1TechnicalLines import Hlt1TechnicalLines 
+        #lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
+        
+        return lines 

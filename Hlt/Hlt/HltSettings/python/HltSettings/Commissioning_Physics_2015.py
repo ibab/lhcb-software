@@ -18,14 +18,15 @@ def __update_conf__( current, extra ) :
                 cur[k] = v
             print 'result: %s' % cur[k]
 
-class Hlt1_TrackingOnly( object ):
+class Commissioning_Physics_2015( object ):
     """
-    Settings for only running the tracking in the HLT
+    Settings for Commissioning trigger 2015 
+    Derived from Physics_Septemeber2012.
 
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
-
+    
     @author S. Neubert, J. Albrecht, V. Gligorov
-    @date 2013-03-27
+    @date 2014-12-10
     """
     
     __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds', 'L0TCK' )
@@ -44,8 +45,8 @@ class Hlt1_TrackingOnly( object ):
         return '0x0044'
 
     def HltType(self) :
-        self.verifyType( Hlt1_TrackingOnly ) 
-        return          'Hlt1_TrackingOnly'
+        self.verifyType( Commissioning_Physics_2015 ) 
+        return          'Commissioning_Physics_2015'
     
     def Thresholds(self) :
         """
@@ -65,29 +66,26 @@ class Hlt1_TrackingOnly( object ):
         from Hlt2Lines.Hlt2InclusiveDiProtonLines import Hlt2InclusiveDiProtonLinesConf
         from Hlt2Lines.Hlt2DisplVerticesLines  import Hlt2DisplVerticesLinesConf
 
-        thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'         :  1250
+        thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'         :  12500
                                                , 'AllL0_P'          :  3000
                                                , 'AllL0_IPChi2'     :  16
                                                , 'AllL0_TrChi2'     :  2.0
                                                , 'AllL0_GEC'        : 'Loose'
                                                , 'Muon_PT'       :  1000 
                                                , 'Muon_P'        :  3000 
-                                               , 'Muon_IP'       :     0.100
                                                , 'Muon_IPChi2'   :    16
                                                , 'Muon_TrChi2'   :     2.5  
                                                , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_ValidateTT' : False
                                                , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  3000
-                                               , 'Photon_IP'     :     0.100
                                                , 'Photon_IPChi2' :    16
                                                , 'Photon_TrChi2' :     2.0
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
-        #                                      , 'Photon_ValidateTT' : True
-                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, }
-                                                                        
+                                               , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
+                                                                        'Hlt1TrackForwardPassThrough'      : 0,
+                                                                        'Hlt1TrackForwardPassThroughLoose' : 0}
  
                                                }
                      , Hlt1ElectronLinesConf : { 'SingleElectronNoIP_P'          : 20000
@@ -210,26 +208,82 @@ class Hlt1_TrackingOnly( object ):
                                                               , 'Hlt2DisplVerticesSingleMVPostScaled'         : 1    }               
                                                          }
 
-                                                         }
-        
-     
+                       }
+
+        from Express_Hlt2_draft2012 import Express_Hlt2_draft2012
+        __update_conf__(thresholds, Express_Hlt2_draft2012().Thresholds() )
+
+        from Muons_April2012 import Muons_April2012
+        __update_conf__(thresholds,  Muons_April2012().Thresholds() )
+
+        from Electrons_July2011 import Electrons_July2011
+        __update_conf__(thresholds,  Electrons_July2011().Thresholds() )
+
+        from Hadrons_September2012 import Hadrons_September2012
+        __update_conf__(thresholds,  Hadrons_September2012().Thresholds() )
+
+        from DV_draft2012 import DV_draft2012
+        __update_conf__(thresholds,  DV_draft2012().Thresholds() )
+
+        from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
+        __update_conf__(thresholds, CharmLeptonic_draft2012().Thresholds() )
 
         return thresholds
                        
-    def ActiveHlt1Lines(self) :
-        """
-        Returns a list of active lines
-        """
-        #lines =  ['Hlt1TrackAllL0Block', ]
-        #lines = ['Hlt1TrackAllL0VeloTTForw',]
-        lines = ['Hlt1TrackAllL0',]
-        #lines =  [ 'Hlt1TrackMuon', 'Hlt1TrackAllL0Tight', 'Hlt1TrackPhoton' ]
-       
-        return lines 
-
-
     def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
-        return []
+        hlt2 = ['Hlt2PassThrough','Hlt2Lumi','Hlt2DebugEvent','Hlt2Forward','Hlt2ErrorEvent','Hlt2Transparent',
+                'Hlt2diPhotonDiMuon',
+                'Hlt2LowMultMuon',
+                'Hlt2LowMultHadron',
+                'Hlt2LowMultPhoton',
+                'Hlt2LowMultElectron',
+                'Hlt2LowMultHadron_nofilter',
+                'Hlt2LowMultElectron_nofilter',
+                'Hlt2HighPtJets'
+                ]
+
+        from Express_Hlt2_draft2012 import Express_Hlt2_draft2012
+        hlt2.extend( Express_Hlt2_draft2012().ActiveHlt2Lines() )
+
+        from Muons_April2012 import Muons_April2012
+        hlt2.extend( Muons_April2012().ActiveHlt2Lines() )
+
+        from Electrons_July2011 import Electrons_July2011
+        hlt2.extend( Electrons_July2011().ActiveHlt2Lines() )
+
+        from Hadrons_September2012 import Hadrons_September2012
+        hlt2.extend( Hadrons_September2012().ActiveHlt2Lines() )
+       
+        from DV_draft2012 import DV_draft2012 
+        hlt2.extend( DV_draft2012().ActiveHlt2Lines() )
+
+        from CharmLeptonic_draft2012 import CharmLeptonic_draft2012
+        hlt2.extend( CharmLeptonic_draft2012().ActiveHlt2Lines() )
+
+        from CharmCEP_September2012 import CharmCEP_September2012
+        hlt2.extend( CharmCEP_September2012().ActiveHlt2Lines() )
+
+        from KshortMuMuPiPi_July2012 import KshortMuMuPiPi_July2012
+        hlt2.extend( KshortMuMuPiPi_July2012().ActiveHlt2Lines() )
+ 
+        return hlt2
+       
+    def ActiveHlt1Lines(self) :
+        """
+        Returns a list of active lines
+        """
+        lines =  [ 'Hlt1TrackAllL0', 'Hlt1TrackMuon',  'Hlt1TrackPhoton'
+                 , 'Hlt1VertexDisplVertex'
+                 , 'Hlt1SingleMuonNoIP', 'Hlt1SingleMuonHighPT'
+                 , 'Hlt1SingleElectronNoIP'
+                 , 'Hlt1DiMuonLowMass', 'Hlt1DiMuonHighMass'
+                 , 'Hlt1DiProtonLowMult', 'Hlt1DiProton'
+                 , 'Hlt1L0HighSumETJet','Hlt1HighPtJetsSinglePV']
+        
+        #from Hlt1TechnicalLines import Hlt1TechnicalLines 
+        #lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
+        
+        return lines 
