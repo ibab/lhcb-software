@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2014-12-10 - Sebastian Neubert
+ - tracking cleanup: removed superflous entries in ANNSvc
+
 ! 2014-11-20 - Gerhard Raven
  - add missing TrackCandidatesSingleElectronNoIP
 

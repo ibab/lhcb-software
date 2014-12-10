@@ -46,7 +46,7 @@ class Hlt1Conf(LHCbConfigurableUser):
 #      
    def __apply_configuration__(self):
       ## New event model
-      import HltTracking.Hlt1TrackUpgradeConf
+      import HltTracking.Hlt1Tracking
       from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
       factory = CoreFactory( "Hlt1Factory" )
       for m in [ "LoKiCore.decorators"    ,
