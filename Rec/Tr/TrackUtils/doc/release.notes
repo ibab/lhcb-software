@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2014-12-10 - Sebastian Neubert
+ - added counters to TrackListRefiner
+
 ! 2014-12-10 - Manuel Tobias Schiller
  - TrackBestTrackCreator: fix a bug which killed too many Velo and T tracks
    when using ancestor information by postponing the flagging of ancestor

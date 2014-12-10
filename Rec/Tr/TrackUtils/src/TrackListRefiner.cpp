@@ -90,13 +90,14 @@ StatusCode TrackListRefiner::execute()
   put( tracksout, m_outputLocation) ;
   
   // loop 
+  counter("#seeds")+=tracksin.size();
   for (LHCb::Track::Range::const_iterator itrack = tracksin.begin(); 
        itrack != tracksin.end(); ++itrack)  {
     bool accept = true ;
-    if ( !m_selector.empty() )
+    if ( !m_selector.empty() ) 
       accept = m_selector->accept( **itrack ) ;
     if( accept) tracksout->insert( *itrack ) ;
   }
-  
+  counter("#passed") += tracksout->size();
   return StatusCode::SUCCESS;
 }
