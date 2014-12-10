@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-12-10 - Christian Linn
+ - Added draft fot Early Measurements settings
+
 ! 2014-12-09 - Sean Benson
  - Add pass through Hlt lines to TurboTest
 
