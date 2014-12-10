@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-12-10 - Christian Linn
+ - added Turbo to list of slots
+
 ! 2014-12-04 - Gerhard Raven
  - follow changes in Selection::Line to reduce overhead
 
