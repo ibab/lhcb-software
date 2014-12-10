@@ -1,15 +1,8 @@
 # ========================================================================#
-# vertex-version of track upgrade strings defined in Hlt1TrackUpgradeConf #
+# vertex-version of track upgrade strings defined in Hlt1Tracking         #
 # for Hlt1 displaced vertex line
 # ========================================================================#
 
-import Hlt1TrackUpgradeConf
-
-def TightForward(allowFail=False):
-    if allowFail:
-        return "TightForward  = ( execute(decodeIT) * TC_UPGRADE_VX ( '', HltTracking.Hlt1StreamerConf.TightForward , True ) )"
-    else:
-        return "TightForward  = ( execute(decodeIT) * TC_UPGRADE_VX ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
 def LooseForward(allowFail=False):
     if allowFail:
         return "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_VX ( '', HltTracking.Hlt1StreamerConf.LooseForward , True ) )"

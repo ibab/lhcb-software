@@ -1106,8 +1106,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         """
         Velo track reconstruction for Hlt2
         """
-        #HltReco decides which Velo sequence is used 
-        from HltReco        import RevivedVelo, MinimalVelo
+        #HltSharedTracking decides which Velo sequence is used 
+        from HltSharedTracking        import RevivedVelo, MinimalVelo
         from Configurables  import Hlt2Conf
         from HltLine.HltLine    import bindMembers 
         
@@ -1115,12 +1115,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         # select which Velo sequence we want, depending on Hlt1TrackOption
         # Decode: Pick up the tracks from HLt1 decoded into Hlt1TrackLoc["Velo"] (default)
-        # Rerun:  Rerun the full minimal Velo 
+        # Rerun:  Rerun the full FastVelo 
                 
-        #veloOptions = { 'Decode' : RevivedVelo, 'Encode-Decode' : RevivedVelo, 'Rerun' : MinimalVelo, 'Copy' : MinimalVelo} 
         veloOptions = { 'Decode' : RevivedVelo, 'Rerun' : MinimalVelo }
         Velo = veloOptions[ Hlt2Conf().getProp("Hlt1TrackOption") ]
 
+        ## for debugging:
         #from Configurables import DumpTracks
         #veloDumper = DumpTracks('VeloDumper',TracksLocation = veloTracksOutputLocation )
         #veloDumper.StatPrint = True
@@ -1149,7 +1149,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         from Configurables    import PatForward, Hlt2Conf
         from Configurables      import PatForwardTool , DumpTracks
         from HltLine.HltLine    import bindMembers
-        from HltTracking.HltReco import MaxOTHits, RevivedForward
+        from HltTracking.HltSharedTracking import RevivedForward
+        from HltTracking.HltRecoConf import MaxOTHits
         #        from Hlt1Lines.HltConfigurePR import ConfiguredPR
         
         
@@ -1169,8 +1170,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         #JA: TODO: put something in like: if(early data):
         #recoForward.addTool(ConfiguredPR( "Forward" ))
 
-        #        PatForwardTool( MinMomentum = 1000., MinPt = 1000., AddTTClusterName = "" )
-        from HltTracking.HltReco import CommonForwardTrackingOptions
+        from HltTracking.HltRecoConf import CommonForwardTrackingOptions, HltRecoConf
+        
         recoForward.addTool(PatForwardTool, name='PatForwardTool')
         recoForward.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
         recoForward.PatForwardTool.SecondLoop = False
@@ -1179,8 +1180,8 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions["MinHits"]
         recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions["MinOTHits"]
         # HARDCODED PARAMETERS HERE
-        recoForward.PatForwardTool.MinMomentum = 3000
-        recoForward.PatForwardTool.MinPt = 300
+        recoForward.PatForwardTool.MinMomentum = HltRecoConf().getProp("Forward_LPT_MinP")
+        recoForward.PatForwardTool.MinPt = HltRecoConf().getProp("Forward_LPT_MinPt")
         # look for already used TStation hits if we are in resurrection mode
         Hlt1TrackOption = Hlt2Conf().getProp("Hlt1TrackOption")
         if Hlt1TrackOption in ['Decode','Encode-Decode'] :
@@ -1195,19 +1196,6 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoForward.PatForwardTool.StatPrint = True
         #recoForward.PatForwardTool.OutputLevel = DEBUG
      
-        if self.getProp("EarlyDataTracking") :
-            from HltTracking.HltReco import CommonForwardTrackingOptions_EarlyData 
-            # configure pattern reco with early data flags
-            # first forward algorithm
-            recoForward.PatForwardTool.MinXPlanes = CommonForwardTrackingOptions_EarlyData["MinXPlanes"]
-            recoForward.PatForwardTool.MinPlanes = CommonForwardTrackingOptions_EarlyData["MinPlanes"]
-            recoForward.PatForwardTool.MaxSpreadX = CommonForwardTrackingOptions_EarlyData["MaxSpreadX"]
-            recoForward.PatForwardTool.MaxSpreadY = CommonForwardTrackingOptions_EarlyData["MaxSpreadY"]
-            recoForward.PatForwardTool.MaxChi2 = CommonForwardTrackingOptions_EarlyData["MaxChi2"]
-            recoForward.PatForwardTool.MaxChi2Track = CommonForwardTrackingOptions_EarlyData["MaxChi2Track"]
-            recoForward.PatForwardTool.MinHits = CommonForwardTrackingOptions_EarlyData["MinHits"]
-            recoForward.PatForwardTool.MinOTHits = CommonForwardTrackingOptions_EarlyData["MinOTHits"]
-            
         # Add dumper for debugging if needed    
         #forwardDumper = DumpTracks('ForwardDumper',TracksLocation = forwardTrackOutputLocation )
         #forwardDecoDumper = DumpTracks('ForwardDecoDumper',TracksLocation = "Hlt2/Track/Forward" )
@@ -1249,7 +1237,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
 
         forwardTrackOutputLocation = Hlt2TrackLoc["ForwardCompLPT"]
 
-        from HltTracking.HltReco import MaxOTHits
+        from HltTracking.HltRecoConf import MaxOTHits
         recoForwardSecondLoop      = PatForward( self.getProp("Prefix")+'RecoForwardSecondLoop'
                                                 , InputTracksName  = self.__hlt2VeloTracking().outputSelection()
                                                 , maxOTHits = MaxOTHits
@@ -1260,7 +1248,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
         if self.getProp('Hlt2ForwardMaxVelo') > 0 :
             recoForwardSecondLoop.MaxNVelo = self.getProp('Hlt2ForwardMaxVelo')
 
-        from HltTracking.HltReco import CommonForwardTrackingOptions
+        from HltTracking.HltRecoConf import CommonForwardTrackingOptions
         recoForwardSecondLoop.addTool(PatForwardTool, name='PatForwardTool')
         recoForwardSecondLoop.PatForwardTool.AddTTClusterName = "PatAddTTCoord"
         recoForwardSecondLoop.PatForwardTool.SecondLoop     = True
@@ -1312,12 +1300,12 @@ class Hlt2Tracking(LHCbConfigurableUser):
         recoSeeding.PatSeedingTool.NDblOTHitsInXSearch = 2
         recoSeeding.PatSeedingTool.InputTracksName    = fwdtracks.outputSelection()
         recoSeeding.PatSeedingTool.MinMomentum = 3000 
-        from HltTracking.HltReco import MaxOTHits
+        from HltTracking.HltRecoConf import MaxOTHits
         recoSeeding.PatSeedingTool.MaxOTHits = MaxOTHits
  
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            from HltTracking.HltReco import CommonSeedingTrackingOptions_EarlyData
+            from HltTracking.HltRecoConf import CommonSeedingTrackingOptions_EarlyData
             recoSeeding.PatSeedingTool.OTNHitsLowThresh = CommonSeedingTrackingOptions_EarlyData["OTNHitsLowThresh"]
             recoSeeding.PatSeedingTool.MinTotalPlanes = CommonSeedingTrackingOptions_EarlyData["MinTotalPlanes"]
             recoSeeding.PatSeedingTool.MaxMisses = CommonSeedingTrackingOptions_EarlyData["MaxMisses"]
@@ -1399,7 +1387,7 @@ class Hlt2Tracking(LHCbConfigurableUser):
   
         if self.getProp("EarlyDataTracking") :
             # Do something special in case of early data
-            from HltTracking.HltReco import CommonDownstreamTrackingOptions_EarlyData 
+            from HltTracking.HltRecoConf import CommonDownstreamTrackingOptions_EarlyData 
             PatDownstream.xPredTol2     = CommonDownstreamTrackingOptions_EarlyData["xPredTol2"]
             PatDownstream.TolMatch      = CommonDownstreamTrackingOptions_EarlyData["TolMatch"]
             PatDownstream.TolUV         = CommonDownstreamTrackingOptions_EarlyData["TolUV"]

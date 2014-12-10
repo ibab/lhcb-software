@@ -4,6 +4,42 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-12-10 - Sebastian Neubert
+ - reintegrate merge from branch taskLHCBPS-1296
+
+! 2014-12-10 - Sebastian Neubert
+ - fixed forward configuration parameters
+ - fixed hlt2tracking to start using HltRecoConf
+ - renamed HltReco.py --> HltSharedTracking.py
+   renamed Hlt1TrackUpgradeConf.py --> Hlt1Tracking.py
+ - readded VeloOnlyFit
+ - removed import of Hlt1TrackUpgradeConf from Hlt1VertexUpgradeConf
+
+! 2014-12-08 - Sebastian Neubert
+ - moved configuration parameters from HltReco to HltRecoConf
+ - fixed how the properties of the tracking algorithms are updated from HltRecoConf
+ - removed using the foward offline configuration in HltReco
+ - In progress: Investigating Forward efficiency in HLT1
+
+! 2014-12-03 - Sebastian Neubert
+ - added forward pattern reco thresholds to HltRecoConf
+
+! 2014-11-25 - Sebastian Neubert
+ - removed deprecated tracking algorithms from streamer framework
+ - added veloFilter to the recoVeloTT sequence
+ - configuring PatForward from PatAlgConf 
+
+! 2014-11-24 - Sebastian Neubert 
+ - Added HltRecoConf - a configurable to collect all the tracking parameters 
+   that are not line-specific, in particular for the EnBlock tracking 
+ - Added cut on TrNVELOMISS as default to the Velo filter
+ - renamed HltTracking sequence --> HltHPTTracking  
+
+! 2014-11-20 - Sebastian Neubert
+ - Added a TrackListRefiner into the EnBlock tracking sequence to allow
+   the insertion of 2012-like IP and velo quality cuts
+   by default only (~TrBACKWARDS) is used
+
 ! 2014-11-23 - Alex Shires
 
 ! 2014-11-20 - Roel Aaij

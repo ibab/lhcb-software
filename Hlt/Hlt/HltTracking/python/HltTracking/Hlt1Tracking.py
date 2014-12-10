@@ -1,3 +1,9 @@
+# =============================================================================
+# Hlt1 specific tracking algorithms and streamer symbols
+# Note that the upfront tracking en'block is defined in HltSharedTracking
+# and made aavailable to Hlt1 through TrackCandidates (see end of this file)
+# ============================================================================
+
 from Gaudi import Configuration
 from Configurables import ( PatSeedingTool,
                             PatForwardTool,
@@ -11,13 +17,12 @@ from HltLine.HltLine import Hlt1Tool
 ## Configuration functions for convenience.
 # =============================================================================
 __all__ = ( 'MatchVeloL0Muon',
-            'TightForward',
             'LooseForward',
-            'pET',
             'FitTrack',
-            'VeloOnlyFitTrack',
             'MatchVeloMuon',
-            'VeloCandidates' )
+            'VeloCandidates',
+            'VeloTTCandidates',
+            'TrackCandidates')
             
 def ConfiguredPatSeeding( minPSeed = 3000):
     # Add the option to define a minimum PT/P 
@@ -26,17 +31,17 @@ def ConfiguredPatSeeding( minPSeed = 3000):
     return Hlt1Tool( PatSeedingTool, MinMomentum = minPSeed )
 
 from GaudiKernel.SystemOfUnits import MeV
-# NOTE THAT THESE DEFAULTS MIGHT BE OVERWRITTEN BELOW
-_minPt =  800 * MeV  #### MOVE TO 800 (used to be 500 )
-_minP  = 8000 * MeV #### MOVE TO 8000 (used to be 5000 )
-def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMomEst = False ) :
+
+# Use HltRecoConf Here!
+def ConfiguredForward( parent, name , minP , minPt , useMomEst = False ) :
     if name == None: name = PatForwardTool.__name__
-    from HltTracking.HltReco import CommonForwardTrackingOptions 
+    from HltTracking.HltRecoConf import CommonForwardTrackingOptions
+    from Configurables import HltRecoConf
     opts = CommonForwardTrackingOptions.copy()
     if useMomEst :
         opts.update( UseMomentumEstimate = True
                    , UseWrongSignWindow = True
-                   , WrongSignPT = 2000 * MeV
+                   , WrongSignPT = HltRecoConf.getProp("Forward_WrongSignPT")
                    , Preselection = useMomEst
                    )
     return Hlt1Tool( PatForwardTool
@@ -46,18 +51,6 @@ def ConfiguredForward( parent, name = None, minP = _minP, minPt = _minPt, useMom
                    , **opts 
                    ).createConfigurable( parent )
 
-def ConfiguredpET(parent, name = None, minP = _minP, minPT = _minPt) :
-    if name == None: name = PatVeloTTHybridTool.__name__
-    from HltTracking.HltReco import CommonpETOptions 
-    return Hlt1Tool( PatVeloTTHybridTool
-                     , name
-                     , minMomentum = minP
-                     , minPT = minPT
-                     , PassTracks = True
-                     , centralHoleSize = 33
-                     , PassHoleSize = 45
-                     , maxPseudoChi2 = CommonpETOptions["maxPseudoChi2"]
-                     ).createConfigurable( parent )
 
 def ConfiguredFastKalman( parent = None, name = None ) :
     if name == None: name = HltTrackFit.__name__
@@ -70,16 +63,6 @@ def ConfiguredFastKalman( parent = None, name = None ) :
     parent.addTool( TrackMasterFitter, name = 'Fit')
     from TrackFitter.ConfiguredFitters import ConfiguredHltFitter
     fitter = ConfiguredHltFitter( getattr(parent,'Fit') )
-
-def ConfiguredMatchVeloMuon( parent, name = None, minP = _minP ) :
-    if name == None: name = MatchVeloMuon.__name__
-    from HltTracking.HltReco import CommonMatchVeloMuonOptions
-    return Hlt1Tool( MatchVeloMuon
-                     , name
-                     ## Set this according to PatForward
-                     , MinMomentum = minP 
-                     , **CommonMatchVeloMuonOptions
-                     ).createConfigurable( parent )
 
 def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :
     if name == None: name = HltTrackFit.__name__ + "VeloOnly"
@@ -95,6 +78,17 @@ def ConfiguredFastVeloOnlyFit( parent = None, name = None ) :
     parent.FitterName = fitter.getFullName()
     #fitter.OutputLevel = 1
     fitter.AddDefaultReferenceNodes = True
+
+
+def ConfiguredMatchVeloMuon( parent, name , minP ) :
+    if name == None: name = MatchVeloMuon.__name__
+    from HltTracking.HltRecoConf import CommonMatchVeloMuonOptions
+    return Hlt1Tool( MatchVeloMuon
+                     , name
+                     ## Set this according to PatForward
+                     , MinMomentum = minP 
+                     , **CommonMatchVeloMuonOptions
+                     ).createConfigurable( parent )
 
 # =============================================================================
 ## Symbols for streamer users
@@ -129,29 +123,20 @@ from Gaudi.Configuration import ToolSvc
 ## Forward upgrade configuration
 # =============================================================================
 import Hlt1StreamerConf as Conf
+from Configurables import HltRecoConf
+ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 
+                   minP=HltRecoConf().getProp("Forward_LPT_MinP"),  
+                   minPt=HltRecoConf().getProp("Forward_LPT_MinPt"))
 
-ConfiguredForward( ToolSvc(), to_name( Conf.TightForward ), 3000 * MeV , 1250 * MeV )
-ConfiguredForward( ToolSvc(), to_name( Conf.LooseForward ), 3000 * MeV ,  500 * MeV)
-ConfiguredForward( ToolSvc(), to_name( Conf.PEstiForward ), 3000 * MeV ,  500 * MeV, useMomEst=True)
-ConfiguredpET( ToolSvc(), to_name( Conf.pET ), 2000 * MeV , 200  * MeV )
-## Strings for users
-TightForward  = "TightForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.TightForward  ) )"
+# string to use in line code
 LooseForward  = "LooseForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.LooseForward  ) )"
-PEstiForward  = "PEstiForward  = ( execute(decodeIT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.PEstiForward  ) )"
-pET           = "pET           = ( execute(decodeTT) * TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.pET           ) )"
+
 # =============================================================================
 ## Hlt trackfit upgrade configuration
 # =============================================================================
 ConfiguredFastKalman( parent = None, name = to_name( Conf.FitTrack ) )
 ## String for users
 FitTrack      = "FitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitTrack )"
-
-# =============================================================================
-## Hlt trackfit upgrade configuration
-# =============================================================================
-ConfiguredFastKalman( parent = None, name = to_name( Conf.FitVeloTTTrack ) )
-## String for users
-FitVeloTTTrack      = "FitVeloTTTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1StreamerConf.FitVeloTTTrack )"
 
 # =============================================================================
 ## Hlt Velo-only trackfit upgrade configuration
@@ -163,7 +148,8 @@ VeloOnlyFitTrack = "VeloOnlyFitTrack = TC_UPGRADE_TR ( '', HltTracking.Hlt1Strea
 # =============================================================================
 ## Match Velo to Muon hits
 # =============================================================================
-ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), minP = 6000 * MeV)
+ConfiguredMatchVeloMuon( ToolSvc(), to_name( Conf.MatchVeloMuon ), 
+                         minP = HltRecoConf().getProp("MatchVeloMuon_MinP") )
 ## Strings for users
 MatchVeloMuon = "MatchVeloMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.MatchVeloMuon ) )"
 
@@ -173,12 +159,18 @@ MatchVeloMuon = "MatchVeloMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltT
 ## Strings for users
 IsMuon = "IsMuon = ( execute(decodeMUON) * TC_UPGRADE_TR( '', HltTracking.Hlt1StreamerConf.IsMuon ) )"
 
+
+# ==============================================================================
+# The streamer sources making the output locations of the HltHPTTracking 
+# sequence available in the streamer framework :
+# ==============================================================================
+
 # ==============================================================================
 # Velo candidates
 # ==============================================================================
 from Configurables import Hlt__Track2Candidate
 import HltLine.HltDecodeRaw 
-from HltReco import MinimalVelo
+from HltSharedTracking import MinimalVelo
 from HltLine.HltLine import bindMembers
 def VeloCandidates( lineName ):
     selection = 'VeloCandidates%s' % lineName
@@ -197,13 +189,13 @@ def VeloCandidates( lineName ):
 # ==============================================================================
 from Configurables import Hlt__Track2Candidate
 import HltLine.HltDecodeRaw 
-from HltReco import VeloTTTracking
+from HltSharedTracking import VeloTTTracking
 from HltLine.HltLine import bindMembers
 def VeloTTCandidates( lineName ):
     selection = 'VeloTTCandidates%s' % lineName
     tracks = Hlt__Track2Candidate (
         'VeloTT2Candidates%s' % lineName,
-        Code            = "~TrBACKWARD"    , ## skip backward tracks 
+        Code="~TrBACKWARD",
         InputSelection  = VeloTTTracking.outputSelection(),
         OutputSelection = selection,
         #OutputLevel = 1,
@@ -217,18 +209,18 @@ def VeloTTCandidates( lineName ):
 # ==============================================================================
 from Configurables import Hlt__Track2Candidate
 import HltLine.HltDecodeRaw 
-from HltReco import HltTracking
+from HltSharedTracking import HltHPTTracking
 from HltLine.HltLine import bindMembers
 def TrackCandidates( lineName ):
     selection = 'TrackCandidates%s' % lineName
     tracks = Hlt__Track2Candidate (
         'Track2Candidates%s' % lineName,
-        Code            = "~TrBACKWARD"    , ## skip backward tracks 
-        InputSelection  = HltTracking.outputSelection(),
+        Code="~TrBACKWARD",
+        InputSelection  = HltHPTTracking.outputSelection(),
         OutputSelection = selection,
         #OutputLevel = 1,
         )
-    bm = bindMembers ( None , [ HltTracking, tracks ] )
+    bm = bindMembers ( None , [ HltHPTTracking, tracks ] )
     return "TrackCandidates = execute( %s ) * SELECTION( '%s' )" % \
                 ( [ m.getFullName() for m in bm.members() ], selection )
                 

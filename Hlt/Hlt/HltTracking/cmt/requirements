@@ -39,7 +39,7 @@ apply_pattern    component_library library=HltTracking
 
 # =============================================================================
 # ======= the patterns ========================================================
-# macro HltTrackingConfUserModules "HltTracking.Hlt2Tracking"
+macro HltTrackingConfUserModules "HltTracking.HltRecoConf"
 apply_pattern install_python_modules
 
 

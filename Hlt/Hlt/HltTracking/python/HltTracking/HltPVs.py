@@ -70,7 +70,7 @@ def PV3D(where):
     recoPV3D.OutputVerticesName = proto3DVertices
     
     
-    from HltReco import MinimalVelo
+    from HltSharedTracking import MinimalVelo
     velo = MinimalVelo
     name = "HltPV3D"
 

@@ -48,16 +48,11 @@ __version__ = "version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     ## upgrade 
-    'TightForward'        , ## the 'track-upgrade'-configuration for Forward
     'LooseForward'        , ## the 'track-upgrade'-configuration for Forward
-    'pET'        , ## the 'track-upgrade'-configuration for VeloTT for a momentum estimation to feed the forward algorithm
     'FitTrack'       , ## the 'track-upgrade'-configuration for FitTrack
-    'FitVeloTTTrack'       , ## the 'track-upgrade'-configuration for a Velo-TT track
     'VeloOnlyFitTrack',## the 'track-upgrade'-configuration for a Velo-only (straight line) track fit
     'MatchVeloMuon'  , ## the 'track-upgrade'-configuration for MatchVeloMuon
     'IsMuon'  , ## the 'track-upgrade'-configuration for IsMuo
-    ## match 
-    #'VeloT'          , ## the 'track-match'-configuration   for VeloT
     'VeloL0Muon'     , ## the 'track-match'-configuration   for VeloL0Muon
     ## bi-functions
     ## track functions
@@ -85,16 +80,6 @@ from LoKiCore.basic import LoKi, LHCb
 # =============================================================================
 #                                                      ##           "Old name" 
 # =============================================================================
-TightForward = LoKi.Hlt1.UpgradeConf  (
-    "PatForwardTool/TightForward",                 ##                   "Tool" 
-    Hlt1TrackLoc["ForwardHPT"]   ,                 ##              "TESOutput"
-    LHCb.Track.Long              ,                 ##              "TrackType"
-    True                         ,                 ##                  "Owner"
-    False                        ,                 ##            "TransferIDs"
-    False                        ,                 ##       "TransferAncestor"
-    True                         ,                 ##      "TransferExtraInfo"
-    True                         )                 ##              "OrderByPt
-# =============================================================================
 LooseForward = LoKi.Hlt1.UpgradeConf(
     "PatForwardTool/LooseForward",                 ##                   "Tool" 
     Hlt1TrackLoc["Forward"]      ,                 ##              "TESOutput"
@@ -105,40 +90,10 @@ LooseForward = LoKi.Hlt1.UpgradeConf(
     True                         ,                 ##      "TransferExtraInfo"
     True                         )                 ##              "OrderByPt
 # =============================================================================
-PEstiForward = LoKi.Hlt1.UpgradeConf(
-    "PatForwardTool/PestiForward",                 ##                   "Tool" 
-    Hlt1TrackLoc["ForwardHPT"]   ,                 ##              "TESOutput"
-    LHCb.Track.Long              ,                 ##              "TrackType"
-    True                         ,                 ##                  "Owner"
-    False                        ,                 ##            "TransferIDs"
-    False                        ,                 ##       "TransferAncestor"
-    False                         ,                 ##      "TransferExtraInfo"
-    True                         )                 ##              "OrderByPt
-# =============================================================================
-pET = LoKi.Hlt1.UpgradeConf(
-    "PatVeloTTHybridTool/pET",                 ##                   "Tool" 
-    Hlt1TrackLoc["VeloTTHPT"]    ,                 ##              "TESOutput"
-    LHCb.Track.Upstream          ,                 ##              "TrackType"
-    True                         ,                 ##                  "Owner"
-    False                        ,                 ##            "TransferIDs"
-    False                        ,                 ##       "TransferAncestor"
-    False                        ,                 ##      "TransferExtraInfo"
-    True                         )                 ##              "OrderByPt
-# =============================================================================
 FitTrack = LoKi.Hlt1.UpgradeConf (
     "HltTrackFit"                ,                     ##               "Tool" 
     Hlt1TrackRoot + "FitTrack"        ,                ##          "TESOutput"
     LHCb.Track.Long              ,                     ##          "TrackType"
-    True                         ,                     ##              "Owner"
-    True                         ,                     ##        "TransferIDs"
-    True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
-    True                         )                     ##          "OrderByPt"
-# =============================================================================
-FitVeloTTTrack = LoKi.Hlt1.UpgradeConf (
-    "HltTrackFit/VeloTTFit"      ,                     ##               "Tool" 
-    Hlt1TrackRoot + "FitVeloTTTrack"  ,                ##          "TESOutput"
-    LHCb.Track.Upstream          ,                     ##          "TrackType"
     True                         ,                     ##              "Owner"
     True                         ,                     ##        "TransferIDs"
     True                         ,                     ##   "TransferAncestor"
@@ -176,13 +131,8 @@ IsMuon = LoKi.Hlt1.UpgradeConf(
     True                         )                     ##          "OrderByPt"
 
 _trUpgrader = {}
-_trUpgrader[ 'TightForward' ] = TightForward
 _trUpgrader[ 'LooseForward' ] = LooseForward
-_trUpgrader[ 'PEstiForward' ] = PEstiForward
-_trUpgrader[ 'pET' ] = pET
 _trUpgrader[ 'FitTrack'     ] = FitTrack
-_trUpgrader[ 'FitVeloTTTrack'     ] = FitVeloTTTrack
-_trUpgrader[ 'VeloOnlyFitTrack'] = VeloOnlyFitTrack
 _trUpgrader[ 'MatchVeloMuon' ] = MatchVeloMuon
 _trUpgrader[ 'IsMuon' ] = IsMuon
 
@@ -200,17 +150,6 @@ _trUpgrader[ 'IsMuon' ] = IsMuon
 #      const bool               moveIDs  ,   //                 transfer IDs ? 
 #      const bool               moveAncs ,   //           transfer ancestors ? 
 #      const bool               moveInfo )   //          transfer Extra Info ? 
-# =============================================================================
-#                                                      ##           "Old name"
-# =============================================================================
-# Where is PatMatchTool configured???
-#VeloT = LoKi.Hlt1.MatchConf        (
-#    "PatMatchTool"                 ,                   ##               "Tool"
-#    Hlt1TrackRoot + "VeloT"             ,              ##          "TESOutput"
-#    LHCb.Track.Long                ,                   ##          "TrackType"
-#    True                           ,                   ##        "TransferIDs"
-#    True                           ,                   ##  "TransferAncestors"
-#    True                           )                   ##       "TransferInfo"
 # =============================================================================
 # Configuration for PID tools
 VeloL0Muon = LoKi.Hlt1.MatchConf   (
