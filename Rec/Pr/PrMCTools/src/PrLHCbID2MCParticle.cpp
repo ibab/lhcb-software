@@ -57,9 +57,9 @@ StatusCode PrLHCbID2MCParticle::initialize() {
   m_stClusterNames.push_back( LHCb::STClusterLocation::TTClusters );
   m_stClusterNames.push_back( LHCb::STClusterLocation::ITClusters );
   m_stClusterNames.push_back( LHCb::STClusterLocation::UTClusters );
-  m_stLiteClusterNames.push_back(  LHCb::STClusterLocation::TTClusters );
-  m_stLiteClusterNames.push_back(  LHCb::STClusterLocation::ITClusters );
-  m_stLiteClusterNames.push_back(  LHCb::STClusterLocation::UTClusters );
+  m_stLiteClusterNames.push_back(  LHCb::STLiteClusterLocation::TTClusters );
+  m_stLiteClusterNames.push_back(  LHCb::STLiteClusterLocation::ITClusters );
+  m_stLiteClusterNames.push_back(  LHCb::STLiteClusterLocation::UTClusters );
 
   return StatusCode::SUCCESS;
 }

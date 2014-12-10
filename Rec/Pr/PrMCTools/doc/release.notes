@@ -4,6 +4,9 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+! 2014-12-10 - Michel De Cian
+- Fix LiteCluster locations for STDetectors in PrLHCbID2MCParticle
+
 ! 2014-11-08 - Michel De Cian
 - Fix CMakeLists to include LoKiMCLib
 
