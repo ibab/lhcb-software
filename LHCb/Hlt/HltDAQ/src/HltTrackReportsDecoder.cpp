@@ -58,7 +58,9 @@ HltTrackReportsDecoder::HltTrackReportsDecoder( const std::string& name,
                            LHCb::RawEventLocation::Default};
     initRawEventSearch();
 
-    declareProperty( "Output2SourceId", m_map = { { "Hlt/Track/Velo", 1 }, { "Hlt1/Track/Forward", 3 }, { "Hlt1/Track/ForwardHPT", 4 } } );
+    declareProperty( "Output2SourceId", m_map = { { "Hlt/Track/Velo", 1 }, 
+                                                  { "Hlt/Track/VeloTTHPT", 2 }, 
+                                                  { "Hlt/Track/ForwardHPT", 4 } } );
 }
 
 //=============================================================================
@@ -140,7 +142,8 @@ StatusCode HltTrackReportsDecoder::execute()
     // TODO: add some counters to track how many tracks per source ID per event...
     for ( const auto & entry : m_map ) {
 
-        auto range = std::equal_range( std::begin( hltTrackReportsRawBanks ), std::end( hltTrackReportsRawBanks ), entry.second, cmp_sourceID );
+        auto range = std::equal_range( std::begin( hltTrackReportsRawBanks ), 
+                                       std::end( hltTrackReportsRawBanks ), entry.second, cmp_sourceID );
         // if there is a valid bank, create the output -- even if it is an empty bank...
         // (which results in an empty output ;-). If there is no bank, then do NOT
         // create the output...

@@ -4,6 +4,10 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2014-12-10 - Sebastian Neubert
+ - adjusted track locations to shared ones for the upfront tracking  
+ - write out VeloTT tracks from HltHPTTracking
+
 ! 2014-12-09 - Gerhard Raven
  - small speed-up of HltVertexReportsWriter and HltTrackingCoder
 
