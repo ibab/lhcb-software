@@ -323,7 +323,31 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonJPsiDecision":  50201 } )
         
-
+        #---------------------
+        '''
+        unbiased J/psi for Turbo stream 
+        '''
+        line.clone( 'DiMuonJPsiTurbo'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(ADMASS('J/psi(1S)')<%(UnbiasedJPsiMassWindow)s*MeV) "\
+                                 "& (PT>%(UnbiasedJPsiPt)s*MeV) "\
+                                 "& (MAXTREE('mu-'==ABSID,TRCHI2DOF) < %(TrChi2Tight)s )"\
+                                 "& (MINTREE('mu-'==ABSID,PT)>%(UnbiasedJPsiMuPt)s*MeV) "\
+                                 "& (VFASPF(VCHI2PDOF)<%(UnbiasedJPsiVertexChi2)s )"%  self.getProps()
+                                 , 'PreMonitor' : Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_in',nbins=25) 
+                                 , 'PostMonitor' :  
+                                 Hlt2Monitor( "M","M(#mu#mu)",3097,200,'M_out',nbins=25)
+                                 +" & "+Hlt2MonitorMinMax( "PT","PT(#mu#mu)",0,10000,'JPsiPT_out',nbins=100)
+                                 +" & "+Hlt2MonitorMinMax( "MINTREE('mu-'==ABSID,PT)","MINTREE(mu-==ABSID,PT)",0,10000,'MuPT_out',nbins=100)
+                                 +" & "+Hlt2MonitorMinMax( "VFASPF(VCHI2PDOF)","VFASPF(VCHI2PDOF)",0,25,'JPsiVeterxChi2_out',nbins=100)                           
+            
+                                 }
+                    , postscale = self.postscale
+		    , Turbo = True
+                              
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2DiMuonJPsiTurboDecision":  50212 } )
+        
 
         #--------------------------------------------
         '''

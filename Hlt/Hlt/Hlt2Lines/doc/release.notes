@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2014-12-10 - Christian Linn
+ - added Hlt2DiMuonJpsiTurbo line ( clone of Hlt2DiMuonJpsi with Turbo = true )
+
 ! 2014-11-21 - Gerhard Raven
  - fix python indentation so that it passes 'python -mtabnanny'
 
