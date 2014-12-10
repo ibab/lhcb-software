@@ -26,6 +26,7 @@
 
 // local
 #include "OTDet/DeOTModule.h"
+#include "OTDet/OTWireTraj.h"
 
 /** @file DeOTModule.cpp
  *
@@ -71,8 +72,7 @@ DeOTModule::DeOTModule(const std::string& name) :
   m_calibration(),
   m_statusName( "Status" ),
   m_status(),
-  m_monoDx{0.0,0.0},
-  m_monoDdxdy{0.0,0.0}
+  m_monoDx(1,0.0)
 {
   /// Constructor
 }
@@ -404,17 +404,11 @@ void DeOTModule::monoLayerIntersection(int monolayer,
   yfrac = eta / m_dy[monolayer] ;
   straw = u + 1 ;
 
-
 }
 
-void DeOTModule::clear() {
-  m_midTraj[0].reset();
-  m_midTraj[1].reset();
-}
 
-StatusCode DeOTModule::cacheInfo() {
-  clear();
-
+StatusCode DeOTModule::cacheInfo()
+{
   double xUpper = m_xMaxLocal;
   double xLower = m_xMinLocal;
   double yUpper = m_yMaxLocal;
@@ -426,15 +420,6 @@ StatusCode DeOTModule::cacheInfo() {
   Gaudi::XYZPoint g2 = globalPoint(0.0, yUpper, 0.0);
   Gaudi::XYZVector dir = (g2 - g1).Unit() ;
   
-  /// Fix directions for monolayer shifts. Best to do this also in the
-  /// local frame, but we'll assume deviations are small.
-  for( unsigned char mono=0; mono<2; ++mono) {
-    double y0 = (yUpper + yLower)/2 ;
-    Gaudi::XYZPoint monog1 = globalPoint((yLower-y0)*m_monoDdxdy[mono], yLower, 0.0);
-    Gaudi::XYZPoint monog2 = globalPoint((yUpper-y0)*m_monoDdxdy[mono], yUpper, 0.0);
-    m_dir[mono] = Gaudi::XYZVector(monog2-monog1).Unit();
-  }
-
   /// trajs of middle of monolayers
   Gaudi::XYZPoint g3[2];
   /// 0 -> first monolayer
@@ -446,28 +431,60 @@ StatusCode DeOTModule::cacheInfo() {
   g4[0] = globalPoint(xUpper, 0.0, -0.5*m_zPitch);
   /// second monolayer
   g4[1] = globalPoint(xUpper, 0.0, +0.5*m_zPitch);
-  /// first monolayer
-  m_midTraj[0].reset(new LineTraj(g3[0], g4[0]));
-  /// second monolayer
-  m_midTraj[1].reset(new LineTraj(g3[1], g4[1]));
 
-  /// range -> wire length
-  /// wire length = module length
-  /// first mono layer
-  m_range[0] = std::make_pair(m_yMinLocal, m_yMaxLocal);
-  /// second mono layer
-  m_range[1] = std::make_pair(m_yMinLocal, m_yMaxLocal);
-  // correct for inefficient regions in long modules
-  //if (longModule() && topModule()) m_range[0].first=m_yMinLocal+m_inefficientRegion;
-  //if (longModule() && bottomModule()) m_range[1].first=m_yMinLocal+m_inefficientRegion;
-  // correct for inefficient regions in long modules
-  // m_dir "corrects" for sign of min and max
-  if (longModule() && topModule()    )     m_range[m_layerID%2].first = m_yMinLocal + m_inefficientRegion;
-  if (longModule() && bottomModule() ) m_range[1 - m_layerID%2].first = m_yMinLocal + m_inefficientRegion;
+  // first remap parameters into a vector of length 2 (1 segment) or 6 (3 segments)
+  std::vector<double> monoDx ;
+  if( m_monoDx.size()==2 || m_monoDx.size()==6 ) {
+    monoDx = m_monoDx ;
+  } else if( m_monoDx.size()==0 ) {
+    monoDx.resize(2,0.0) ;
+  } else if( m_monoDx.size()==1 ) {
+    monoDx.resize(2,m_monoDx[0]) ;
+  } else if( m_monoDx.size()==4 ) {
+    const int parmap[] = {0,1,1,2,2,3} ;
+    for(int i=0; i<6; ++i) monoDx.push_back( m_monoDx[parmap[i]] ) ;
+  } else {
+    MsgStream msg( msgSvc(), name() );
+    msg << MSG::ERROR << "Cannot handle monolayeralignment vector of size: " << m_monoDx.size() << endreq ;
+    return StatusCode::FAILURE ;
+  }
+
+  // now create the OTWireTraj for the first wire in each
+  // monolayer. fill a vector with points. every two points represent
+  // a segment. we'll either have 2 or 6 points.
+  unsigned int nseg = monoDx.size()/2 ;
+  for( unsigned char mono=0; mono<2; ++mono) {
+    std::vector<Gaudi::XYZPoint> points ;
+    double y0 = m_yMinLocal ;
+    double y1 = m_yMaxLocal ;
+    // turn bottom modules around, because that's how trajectories need to be oriented
+    if(bottomModule()) std::swap(y0,y1) ;
+    // correct for inefficient region
+    if( longModule() ) {
+      if(      topModule() && m_layerID%2 == mono)
+	y0 += m_inefficientRegion;
+      else if( bottomModule() && 1 - m_layerID%2 == mono )
+	y0 -= m_inefficientRegion;
+    }
+    
+    double dy = (y1 - y0)/nseg ;
+    double x0 = (xLower+xUpper)/2 - m_halfXPitch * (double( m_nStraws ) + m_monoXZero[mono]) ;
+    double z0 = (mono-0.5)*m_zPitch ;
+    double monosign = mono==0? 1 : -1 ;
+    for(unsigned char iseg=0; iseg<nseg; ++iseg ) {
+      points.push_back( globalPoint( x0 + monosign*monoDx[2*iseg]/2,   y0+iseg*dy,     z0 ) ) ;
+      points.push_back( globalPoint( x0 + monosign*monoDx[2*iseg+1]/2, y0+(iseg+1)*dy, z0 ) ) ;
+    }
+    // to be improved ...
+    m_trajFirstWire[mono].reset() ;
+    if( points.size()==2 )
+      m_trajFirstWire[mono].reset( new LHCb::OTWireTrajImp<1>( points ) ) ;
+    else if(points.size()==6) 
+      m_trajFirstWire[mono].reset( new LHCb::OTWireTrajImp<3>( points ) ) ;  
+  }
 
   /// plane
   m_plane = Gaudi::Plane3D(g1, g2, g4[0] + 0.5*(g4[1]-g4[0]));
-
   m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_sensThickness));
   m_exitPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0., 0.5*m_sensThickness));
   m_centerModule = globalPoint(0.,0.,0.);
@@ -478,7 +495,7 @@ StatusCode DeOTModule::cacheInfo() {
   // works for piecewise trajectories.
   m_dp0di = (g4[0]-g3[0]).unit() * m_xPitch ;
   for( int imono=0; imono<2; ++imono) {
-    std::auto_ptr<Trajectory> traj = trajectoryFirstWire(imono) ;
+    const LHCb::Trajectory* traj = m_trajFirstWire[imono].get() ;
     Gaudi::XYZPoint p0 = traj->position(traj->beginRange()) ;
     Gaudi::XYZPoint p1 = traj->position(traj->endRange()) ;
     Gaudi::XYZVector dp = p1 - p0 ;
@@ -507,9 +524,7 @@ StatusCode DeOTModule::cacheInfo() {
   // The following just makes sense for MC, of course.
   std::fill( m_strawdefaulttof, m_strawdefaulttof + MAXNUMCHAN, 0 ) ;
   for(unsigned int istraw=1; istraw<=2*m_nStraws; ++istraw) {
-    OTChannelID id(stationID(),layerID(),quarterID(),moduleID(),istraw,0) ;
-    std::auto_ptr<Trajectory> traj = trajectory(id) ;
-    Gaudi::XYZPoint p0 = traj->position(0.5*(traj->beginRange()+traj->endRange())) ;
+    Gaudi::XYZPoint p0 = centerOfStraw(istraw) ;
     // to get same results as with old OTTimeCreator, use x-z plane only
     //double defaulttof = p0.r() / Gaudi::Units::c_light;
     double defaulttof = sqrt(p0.x()*p0.x() + p0.z()*p0.z()) / Gaudi::Units::c_light;
@@ -562,19 +577,11 @@ StatusCode DeOTModule::calibrationCallback() {
     }
     else m_walkrelation = OTDet::WalkRelation();
 
-    m_monoDx[0] = m_monoDx[1] = 0;
-    m_monoDdxdy[0] = m_monoDdxdy[1] = 0;
     if(m_calibration->exists("MonoAlignment")) {
-      const std::vector<double>& pars = m_calibration->param< std::vector<double> >("MonoAlignment");
-      if(pars.size() == 2) {
-        m_monoDx[0]    =  pars[0]/2 ;
-        m_monoDx[1]    = -pars[0]/2;
-        m_monoDdxdy[0] = pars[1]/2 ;
-        m_monoDdxdy[1] = -pars[1]/2;
-      } else {
-        msg << MSG::ERROR << "There should be 2 mono alignment parameters: " << pars.size() << " provided" << endmsg;
-      }
-    } 
+      m_monoDx = m_calibration->param< std::vector<double> >("MonoAlignment");
+      if(m_monoDx.size() != 1 && m_monoDx.size() != 2 && m_monoDx.size() != 4 && m_monoDx.size() != 6)
+        msg << MSG::ERROR << "There should be 1, 2, 4 or 6 mono alignment parameters: " << m_monoDx.size() << " provided" << endmsg;
+    }
 
     // how we set the straw t0 depends on the size of the vector.  we
     // allow that the calibration sets either every connected channel,
@@ -630,16 +637,14 @@ StatusCode DeOTModule::statusCallback() {
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
   /// Default is 0 -> straw 1
-  double lUwire = (monolayer == 1 ? localUOfStraw(m_nStraws+1) : localUOfStraw(1) );
-  Gaudi::XYZPoint firstWire = m_midTraj[monolayer]->position(lUwire);
-  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(firstWire, m_dir[monolayer], m_range[monolayer], true));
+  return std::auto_ptr<LHCb::Trajectory>( m_trajFirstWire[monolayer]->cloneOTWireTraj() ) ;
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryLastWire(int monolayer) const {
   /// Default is 1 -> straw 64(s3)/128
-  double lUwire = (monolayer == 0 ? localUOfStraw(m_nStraws) : localUOfStraw(2*m_nStraws) );
-  Gaudi::XYZPoint lastWire = m_midTraj[monolayer]->position(lUwire);
-  return std::auto_ptr<LHCb::Trajectory>(new LineTraj(lastWire, m_dir[monolayer], m_range[monolayer], true)) ;
+  LHCb::OTWireTraj* traj = m_trajFirstWire[monolayer]->cloneOTWireTraj() ;
+  traj->applyTranslation( (m_nStraws/2-1)*m_dp0di ) ;
+  return std::auto_ptr<LHCb::Trajectory>(traj) ;
 }
 
 /// Returns a Trajectory representing the wire identified by the LHCbID
@@ -653,8 +658,10 @@ std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectory(const OTChannelID& aChan,
 
   unsigned int aStraw = aChan.straw();
   unsigned int mono = this->mono(aStraw) ;
-  Gaudi::XYZPoint posWire = m_midTraj[mono]->position( localUOfStraw(aStraw) );
-  return std::auto_ptr<Trajectory>(new LineTraj(posWire, m_dir[mono], m_range[mono],true));
+  LHCb::OTWireTraj* traj = m_trajFirstWire[mono]->cloneOTWireTraj() ;
+  traj->applyTranslation( ((aStraw-1)%m_nStraws)*m_dp0di ) ;
+  
+  return std::auto_ptr<LHCb::Trajectory>(traj) ;
 }
 
 StatusCode DeOTModule::setStrawStatus( const std::vector< int >& flags )
@@ -822,10 +829,9 @@ StatusCode DeOTModule::setWalkRelation(const OTDet::WalkRelation& walkRelation) 
   return StatusCode::SUCCESS;
 }
 
-StatusCode DeOTModule::setMonoAlignment(double dx, double ddxdy)
+StatusCode DeOTModule::setMonoAlignment(const std::vector<double>& pars)
 {
   // Do this via the update service such that the condition is created.
-  std::vector<double> pars{ dx, ddxdy } ;
   if(m_calibration->exists("MonoAlignment")) m_calibration->param< std::vector<double> >("MonoAlignment") = pars;
   else m_calibration->addParam("MonoAlignment",pars, "Monolayer alignment parameters");
 
@@ -833,6 +839,11 @@ StatusCode DeOTModule::setMonoAlignment(double dx, double ddxdy)
   StatusCode sc = updMgrSvc()->update( this );
 
   return sc ;
+}
+
+void DeOTModule::getMonoAlignment(std::vector<double>& pars) const
+{
+  pars = m_monoDx ;
 }
 
 double DeOTModule::propagationTime(const LHCb::OTChannelID& channel, double arclen) const
@@ -844,8 +855,26 @@ double DeOTModule::propagationTime(const LHCb::OTChannelID& channel, double arcl
 
 double DeOTModule::propagationTimeFromY(const LHCb::OTChannelID& channel, double globalY) const
 {
-  //FIXME: isn't there a quicker way to do this, without the trajectory?
-  double dist2readout = (trajectory(channel)->endPoint().y() - globalY) / m_dir[mono(channel)].y() ;
-  double dist2strawend = wireLength(channel) - dist2readout;
+  const unsigned int aStraw = channel.straw() ;
+  const unsigned int mono = this->mono(aStraw) ;
+  unsigned int tmpstraw = (aStraw - 1)%m_nStraws ;
+  double ybegin  = m_p0[mono].y() + tmpstraw * m_dp0di.y() ;
+  double yend    = ybegin + m_dy[mono] ;
+  double dndy = std::sqrt( 1 + m_dxdy[mono]*m_dxdy[mono] + m_dzdy[mono]*m_dzdy[mono])  ;
+  int sign = yend > ybegin ? 1 : -1 ;
+  double dist2readout  = (yend - globalY) * dndy * sign ;
+  double dist2strawend = (globalY - ybegin) * dndy * sign ;
   return dist2readout / propagationVelocity() + walkRelation().walk(dist2strawend);
+}
+
+Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int aStraw) const {
+  /// get the global coordinate of the middle of the channel
+  // beginpoint of straw
+  unsigned int mono = this->mono(aStraw) ;
+  unsigned int tmpstraw = (aStraw - 1)%m_nStraws ;
+  Gaudi::XYZPoint pos = m_p0[mono] + tmpstraw * m_dp0di ;
+  // shift in y to center of straw
+  double dy = 0.5*m_dy[mono] ;
+  pos += Gaudi::XYZVector( dy * m_dxdy[mono], dy, dy * m_dzdy[mono] ) ;
+  return pos ;
 }

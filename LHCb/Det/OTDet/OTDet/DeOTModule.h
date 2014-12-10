@@ -20,6 +20,7 @@
 namespace LHCb
 {
   class Trajectory;
+  class OTWireTraj ;
 }
 
 /** @class DeOTModule DeOTModule.h "OTDet/DeOTModule.h"
@@ -379,22 +380,17 @@ public:
   double xPitch() const { return m_xPitch ; }
 
   /** Set parameters for mono layer alignment **/
-  StatusCode setMonoAlignment( double dx, double ddxdy ) ;
-
-  /** Get parameters for mono layer alignment **/
-  double getMonoDx() const { return m_monoDx[0]-m_monoDx[1] ; }
+  StatusCode setMonoAlignment( const std::vector<double>& pars ) ;
   
   /** Get parameters for mono layer alignment **/
-  double getMonoDdxdy() const { return m_monoDdxdy[0]-m_monoDdxdy[1] ; }
-
+  void getMonoAlignment( std::vector<double>& pars ) const ;
+  
   /// Private member methods
 private:
 
   /// Not allowed to copy
   DeOTModule(const DeOTModule&);
   DeOTModule& operator=(const DeOTModule&);
-
-  void clear();
 
   StatusCode cacheInfo();
 
@@ -475,17 +471,15 @@ private :
   double m_yMaxLocal;                           ///< local y max of module
   bool m_xInverted;                             ///< swap x min and x max
   bool m_yInverted;                             ///< swap y min and y max
-  std::pair<double,double> m_range[2];          ///< range -> wire length
-  std::auto_ptr<LHCb::Trajectory> m_midTraj[2]; ///< traj of middle of module
-  Gaudi::XYZVector m_dir[2];                    ///< points to readout
   Gaudi::Plane3D m_plane;                       ///< plane through center of module
   Gaudi::Plane3D m_entryPlane;                  ///< entry plane
   Gaudi::Plane3D m_exitPlane;                   ///< exit plane
   Gaudi::XYZPoint m_centerModule;               ///< center of module
+  std::auto_ptr<LHCb::OTWireTraj> m_trajFirstWire[2] ; ///< trajectory of first wire in monolayer
   double m_dxdy[2] ;                            ///< dx/dy along straw
   double m_dzdy[2] ;                            ///< dx/dz along straw
   double m_dy[2] ;                              ///< difference in y coordinates of straw end points
-  Gaudi::XYZVector m_dp0di ;                    ///< vector with change in straw position in units of pitch
+  Gaudi::XYZVector m_dp0di ;                    ///< vector with change in straw position per straw index
   Gaudi::XYZPoint  m_p0[2] ;                    ///< position of first straw
   double m_strawt0[MAXNUMCHAN] ;                ///< vector with t0 for every straw
   double m_strawdefaulttof[MAXNUMCHAN] ;        ///< vector with default tof correction for straw
@@ -502,8 +496,7 @@ private :
   unsigned char m_strawStatus[MAXNUMCHAN] ;     ///< vector of channel statuses
 private:
   OTDet::WalkRelation m_walkrelation ;          ///< walk-relation
-  double m_monoDx[2];
-  double m_monoDdxdy[2];
+  std::vector<double> m_monoDx ;
 public:
   /**
    * Set the walk-relation for all straws in this module.
@@ -683,7 +676,7 @@ inline double DeOTModule::localUOfStraw(const unsigned int aStraw) const {
   //double uLeftStraw = (!monoLayerB(aStraw)?(-(0.5*m_nStraws-0.25)+0.5)
   //                     :-(0.5*m_nStraws-0.25))*m_xPitch;
   double uLeftStraw = (double( m_nStraws ) + m_monoXZero[mono])*-m_halfXPitch;
-  return uLeftStraw + tmpStraw * m_xPitch + m_monoDx[mono] ;
+  return uLeftStraw + tmpStraw * m_xPitch ;
 }
 
 inline double DeOTModule::localZOfStraw(const unsigned int aStraw) const {
@@ -695,12 +688,6 @@ inline double DeOTModule::distanceAlongWire(const double xHit,
   // For the upper modules of the station the readout is above.
   return ((m_quarterID > 1u)?m_yMaxLocal-localPoint(xHit, yHit, 0).y()
 	  :m_yMaxLocal+localPoint(xHit, yHit, 0).y());
-}
-
-inline Gaudi::XYZPoint DeOTModule::centerOfStraw(const unsigned int aStraw) const {
-  /// get the global coordinate of the middle of the channel
-  //FIXME: if this is used in pattern reco, we should make a real effort to make it faster
-  return m_midTraj[mono(aStraw)]->position(localUOfStraw(aStraw));
 }
 
 inline Gaudi::XYZPoint DeOTModule::centerOfModule() const {

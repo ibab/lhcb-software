@@ -2,6 +2,9 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2014-12-10 - Wouter Hulsbergen
+ - Implemented trajectory in three parts for monolayer shifts
+
 ! 2014-11-25 - Wouter Hulsbergen
  - Changes in implementation of monolayer alignment
 
