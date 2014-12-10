@@ -28,24 +28,6 @@ using namespace LHCb;
 // actually acts as a using namespace TupleTool
 DECLARE_TOOL_FACTORY( TupleToolSwimmingInfo )
 
-class SortDaughters
-{
-  public:
-    SortDaughters() { }
-    bool operator()(const LHCb::Particle* c1, const LHCb::Particle* c2)
-    {
-      int p1 = c1->particleID().pid();
-      int p2 = c2->particleID().pid();
-      if(p1 == p2)
-      {
-        p1 = c1->key();
-        p2 = c2->key();
-      }
-      return p1 > p2;
-    }
-};
-
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -55,30 +37,98 @@ class SortDaughters
     : TupleToolBase ( type, name , parent )
 {
   declareInterface<IParticleTupleTool>(this);
-  declareProperty("ReportsLocation" , m_swimRelTableLoc  = "/Event/SwimmingMicroDST/SingleCandidate/P2TPRelations");
-  declareProperty("UseExtraLocation", m_useExtraLoc = false);
-  declareProperty("ExtraLocation", m_extraLoc = "");
-  declareProperty("ReportStage"     , m_swimRepsStage    = "Trigger");
+  declareProperty("RelationsLocation", m_swimRelTableLoc);
+  declareProperty("ReportStage"      , m_swimRepsStage    = "Trigger");
+}
+
+bool TupleToolSwimmingInfo::hasDescendant(const LHCb::Particle *mother, const LHCb::Particle *desc)
+{
+  if(!mother || !desc)
+  {
+    error() <<  "TupleToolSwimmingInfo::hasDescendant(" << mother << ", " << desc << ")" << endmsg;
+    return false;
+  }
+
+  LHCb::Particle::ConstVector daughters(mother->daughtersVector());
+  for(LHCb::Particle::ConstVector::iterator diter = daughters.begin(); diter != daughters.end(); diter++)
+  { 
+    const LHCb::Particle *daug(*diter);
+    if(daug == desc or hasDescendant(daug, desc))
+      return true;
+  }
+  return false;
+}
+
+bool TupleToolSwimmingInfo::getRelationsFromDescendant(P2TPRelation::Range &range, const P2TPRelation *relatePart, const LHCb::Particle* Phead, const LHCb::Particle *P)
+{
+  if(!relatePart || !Phead || !P)
+  {
+    error() << "TupleToolSwimmingInfo::getRelationsFromDescendant(range, " << relatePart << ", " << Phead << ", " << P << ")" << endmsg;
+    return false;
+  }
+
+  LHCb::Particle::ConstVector daughters(Phead->daughtersVector());
+  for(LHCb::Particle::ConstVector::iterator diter = daughters.begin(); diter != daughters.end(); diter++)
+  {
+    const LHCb::Particle *daug(*diter);
+    range = relatePart->relations(daug);
+    debug() << "Got range.size() = " << range.size() << endmsg;
+    if(range.size() == 1)
+    {
+      // This could be the swum B/D
+      if(hasDescendant(daug, P))
+      {
+        // It is the correct swum B/D
+        debug() << "getRelationsFromDescendant() found the correct B/D from " << relatePart->relations(P).size() << " choices" << endmsg;
+        debug() << "swum descendant is " << *daug << " which has " << *P << " as a descendant" << endmsg;
+        return true;
+      }
+      else
+      {
+        debug() << "Found particle " << daug << " with exactly one related swimming report, but it didn't have our track as a descentant" << endmsg;
+        if(daug)
+          debug() << *daug << endmsg;
+      }
+    }
+    else
+    {
+      // Recurse down before we move onto the next 'Phead' daughter.
+      if(getRelationsFromDescendant(range, relatePart, daug, P))
+      {
+        debug() << "Succeeded calling getRelationsFromDescendant(range, relatePart, " << daug << ", " << P << ")" << endmsg;
+        return true;
+      }
+    }
+  }
+
+  return false;
 }
 
 //=============================================================================
-StatusCode TupleToolSwimmingInfo::fill( const Particle*
+StatusCode TupleToolSwimmingInfo::fill( const Particle* Phead
                                         , const Particle* P
                                         , const std::string& head
                                         , Tuples::Tuple& tuple )
 {
-  const std::string prefix=fullName(head);
-  const unsigned int maxTurns = 1000;
+  const std::string prefix(fullName(head) + "_" + m_swimRepsStage);
+  const unsigned int maxTurns(1000);
 
-  std::vector<double> raw, dec, tau, ip;
+  typedef std::vector<double> doubleVec;
+  typedef std::set<std::string> stringSet;
   typedef std::map<std::string, std::vector<double> > MapType;
 
-  P2TPRelation* relatePart;
-  if (exist<P2TPRelation>(m_swimRelTableLoc) ) {
+  doubleVec raw, dec, tau, ip;
+  P2TPRelation *relatePart(NULL);
+  if(exist<P2TPRelation>(m_swimRelTableLoc))
+  {
     relatePart = get<P2TPRelation>(m_swimRelTableLoc);
-    debug() << "Found Particle2TurningPointsRelation at " << m_swimRelTableLoc << endmsg;
-  } else {
-    warning() << "Could not get Particle2TurningPointsRelation at " << m_swimRelTableLoc << endmsg;
+    debug() << "Found Particle2TurningPointRelations at " << m_swimRelTableLoc << endmsg;
+    if(!relatePart)
+      return Error("Retrieved NULL Particle2TurningPointRelations");
+  }
+  else
+  {
+    error() << "Couldn't get Particle2TurningPointRelations from " << m_swimRelTableLoc << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -86,12 +136,8 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
   // set some value for all of the branches.
   // It's not (/no longer) acceptable to just return some error code without tidying up when we find a candidate
   // which wasn't swum
+  stringSet decisions, infonames, extranames;
   P2TPRelation::Range allreports(relatePart->relations());
-  if(allreports.size() == 0)
-    return Error("P2TPRelations was empty");
-
-  typedef std::set<std::string> stringSet;
-  stringSet decisions, infonames;
   for(P2TPRelation::Range::const_iterator report_iter = allreports.begin(); report_iter != allreports.end(); report_iter++)
   {
     const SwimmingReport *report(report_iter->to());
@@ -100,118 +146,96 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
     {               
       BOOST_FOREACH(const std::string& name, tp.decisions())
       {
-        decisions.insert(name);
+        decisions.insert(name); // things like Hlt2CharmHadD02HHXDst_hhXDecision, /Event/Phys/StripBlah/Particles
       }
       BOOST_FOREACH(const std::string& name, tp.infoNames())
       {
-        infonames.insert(name);
+        infonames.insert(name); // things like trRec_VELO_OFF, trRec_HLT1
+      }
+      BOOST_FOREACH(const std::string &name, tp.extraNames())
+      {
+        extranames.insert(name); // things like 'mipchi2', 'fdchi2'
       }
     }
   }
 
+  if(decisions.empty())
+    return Error("Failed to populate decisions");
+
   // Now we should have the information to know what all of our branches are called
-  debug() << "Found decisions: ";
+  debug() << "Found decisions:";
   for(stringSet::const_iterator dec_iter = decisions.begin(); dec_iter != decisions.end(); dec_iter++)
-    debug() << *dec_iter << " ";
+    debug() << " " << *dec_iter;
   debug() << endmsg;
-  debug() << "Found infonames: ";
+  debug() << "Found infonames:";
   for(stringSet::const_iterator inf_iter = infonames.begin(); inf_iter != infonames.end(); inf_iter++)
-    debug() << *inf_iter << " ";
+    debug() << " " << *inf_iter;
+  debug() << endmsg;
+  debug() << "Found extranames:";
+  for(stringSet::const_iterator xtra_iter = extranames.begin(); xtra_iter != extranames.end(); xtra_iter++)
+    debug() << " " << *xtra_iter;
   debug() << endmsg;
 
-  if( P )
+  if(P)
   {
-    P2TPRelation::Range range;
-    const Particle *thisP = P;
-
-    if (m_useExtraLoc)
-    {
-      const Particles* extraPs = get<Particles>(m_extraLoc); 
-      if (!extraPs)
-        return Error("Could not get extra particles!");
-
-      // figure out which of the extra particles we have P2TPrelations for
-      for(Particles::const_iterator ep_iter = extraPs->begin(); ep_iter != extraPs->end(); ep_iter++)
-      {
-        const Particle *extraP(*ep_iter);
-        if(extraP)
-        {
-          range = relatePart->relations(extraP);
-          if(range.size() == 1)
-          {
-            debug() << "Found the right extraParticle" << endmsg;
-            thisP = extraP;
-            break;
-          }
-          else
-          {
-            debug() << "Trying next extraparticle... (relatePart->relations(extraP).size() was " << relatePart->relations(extraP).size() << ")" << endmsg;
-          }
-        }
-        else
-        {
-          return Error("Found a NULL particle in ExtraLocation");
-        }
-      }
-
-      if(!thisP)
-        return Error("None of the particles in ExtraLocation had associated turning points");
-      // Now thisP is the particle (e.g. D0) which was swum
-      // However it is not neccessarily the same pointer as P because
-      // they might be flavour tagged differently
-      // (e.g. combined with different soft pions to make D*+ candidates with different charged)
-      //
-      // We need to figure out if P and thisP are built from the same daughters or not
-      SmartRefVector<LHCb::Particle>
-        daughters_P(P->daughters()), // local copies to sort
-        daughters_thisP(thisP->daughters());
-
-      bool matchedReports = false;
-      if(daughters_P.size() == daughters_thisP.size()) // probably not needed...
-      {
-        std::stable_sort(daughters_P.begin(), daughters_P.end(), SortDaughters());
-        std::stable_sort(daughters_thisP.begin(), daughters_thisP.end(), SortDaughters());
-        if(daughters_P == daughters_thisP) // member-wise comparison
-          matchedReports = true;
-      }
-
-      if(matchedReports && thisP != P)
-        debug() << "Decided " << *thisP << " and " << *P << " match even though " << thisP << " != " << P << endmsg;
-
-      // if we have no match, then we can't sensibly fill swimming information and the 'range' variable just below will
-      // be empty
-      if(!matchedReports)
-        thisP = P; // don't leave thisP pointing at some random particle from the extra location
-      // if we have a match, we need to look up the turning points using thisP (in case it's not identical to P)
-    }
-
-    range = relatePart->relations(thisP);
-
-    // range.size() will be zero if we failed to find any associated TPs -- in this case we don't fill anything and nTP=0
-    // if matchedReports was true then range.size() > 0 and we will find the correct reports
+    P2TPRelation::Range range(relatePart->relations(P));
+    debug() << "Got range.size() = " << range.size() << endmsg;
+    // range.size() will be zero if we failed to find any associated TPs -- in this case we don't fill anything and nTP = 0.
+    // range.size() will be one if everything is simple and there is only one swum candidate 'P' could possibly be associated with
+    // range.size() will be larger if there are multiple swum candidates and 'P' is part of more than one of them.
+    LHCb::SwimmingReport *report(range.size() == 1 ? range.begin()->to() : NULL);
+    if(range.size() == 1 and !report)
+      return Error("Got NULL LHCb::SwimmingReport");
 
     if(range.size() > 1)
-      debug() << "Got range.size() > 1, not sure what to make of that" << endmsg;
+    {
+      // There can be multiple B/D candidates swum in one event. This means there will be multiple SwimmingReports.
+      // A particular B/D descendant track/particle may be part of more than one B/D candidate, and therefore we may
+      // find more than one related SwimmingReport in the relations table.
+      // In this case we need to find which SwimmingReport corresponds to the B/D candidate which we are currently
+      // processing.
+      // Start searching from 'Phead' downwards, until we find a particle with exactly one SwimmingReport and which
+      // has 'P' as a descendant.
+      debug() << "Phead = " << Phead << endmsg;
+      if(Phead)
+        debug() << "*Phead = " << *Phead << endmsg;
+      if(getRelationsFromDescendant(range, relatePart, Phead, P) && range.size() == 1)
+      {
+        debug() << "Successfully found relations despite range.size() initially being > 1" << endmsg;
+        report = range.begin()->to();
+      }
+      else
+      {
+        debug() << "About to fail, range.size() == " << range.size() << endmsg;
+        return Error("Failed to find the correct swimming report");
+      }
+    }
 
     bool test(true);
+    const std::string
+      triggerPrefix("Trigger"),
+      strippingPrefix("Stripping");
     if( !P->isBasicParticle() )
     {
       // Loop over turning points to fill decision names and insert vectors
-      MapType line_decisions;
+      MapType line_decisions, extra_info;
+
+      // If there is only one decision then the next part would just be duplicating ..._TP_DEC above.
+      bool doDecisions(decisions.size() > 1);
 
       // This is just setting up some structures rather than actually filling turning point values
       // Even if we didn't swim this event, we still need to fill in the right branches in the tree
       // This is why 'decisions' was populated earlier...
-      for(stringSet::const_iterator dec_iter = decisions.begin(); dec_iter != decisions.end(); dec_iter++)
-        line_decisions.insert(make_pair(*dec_iter, std::vector<double>()));
+      for(stringSet::const_iterator dec_iter = decisions.begin(); doDecisions && dec_iter != decisions.end(); dec_iter++)
+        line_decisions.insert(make_pair(*dec_iter, doubleVec()));
+      for(stringSet::const_iterator xtra_iter = extranames.begin(); xtra_iter != extranames.end(); xtra_iter++)
+        extra_info.insert(make_pair(*xtra_iter, doubleVec()));
      
-      if(range.size() == 1)
+      if(report)
       {
         // After all that, we do have swimming reports to associate with this event
-        LHCb::SwimmingReport* report = range.begin()->to();
-        if(!report)
-          return Error("Got NULL LHCb::SwimmingReport");
         const tPoints& turns = report->turningPoints(m_swimRepsStage);
+        debug() << "Retrieved " << turns.size() << " turning points" << endmsg;
         // Loop over turning points to fill vectors
         BOOST_FOREACH(const LHCb::TurningPoint& tp, turns)
         {
@@ -220,59 +244,71 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
           dec.push_back(tp.dec());
           tau.push_back(tp.tau());
           ip.push_back (tp.ip() );
-          // Decisions must not change between turning points
-          BOOST_FOREACH(MapType::value_type& entry, line_decisions)
+
+          if(doDecisions)
           {
-            if (!tp.dec())
+            // Decisions must not change between turning points
+            BOOST_FOREACH(MapType::value_type& entry, line_decisions)
             {
-             entry.second.push_back(false);
+              if (!tp.dec())
+              {
+                entry.second.push_back(false);
+              }
+              else
+              {
+                entry.second.push_back(tp.decision(entry.first));
+              }
             }
-            else
-            {
-              entry.second.push_back(tp.decision(entry.first));
-            }
+          }
+
+          BOOST_FOREACH(MapType::value_type& entry, extra_info)
+          {
+            entry.second.push_back(tp.extra(entry.first));
           }
         }
       }
 
       if(raw.size() > maxTurns)
-      {
         warning() << "Have " << raw.size() << " turning points, which is > maxTurns = " << maxTurns << endmsg;
-      }
 
       // Fill tuple from vectors
-      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_RAW", raw ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
-      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_DEC", dec ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
-      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_TAU", tau ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
-      test &= tuple->farray( prefix+"_"+m_swimRepsStage+"_TP_IP" , ip  ,prefix+"_"+m_swimRepsStage+"_nTP",maxTurns );
+      test &= tuple->farray( prefix+"_TP_RAW", raw ,prefix+"_nTP",maxTurns );
+      test &= tuple->farray( prefix+"_TP_DEC", dec ,prefix+"_nTP",maxTurns );
+      test &= tuple->farray( prefix+"_TP_TAU", tau ,prefix+"_nTP",maxTurns );
+      test &= tuple->farray( prefix+"_TP_IP" , ip  ,prefix+"_nTP",maxTurns );
       
-      // If there is only one decision then the next part would just be duplicating ..._TP_DEC above.
-      // This also makes D0->KSHH tuples have the same branches for D0 and D0bar, which is nice when you want to hadd them...
-      if(line_decisions.size() > 1)
+      if(doDecisions)
       {
+        debug() << "Populating line_decisions stuff" << endmsg;
         BOOST_FOREACH(const MapType::value_type& entry, line_decisions)
         {
           std::string branch(entry.first);
           boost::algorithm::replace_all(branch, "/", "_");
-          test &= tuple->farray(prefix + "_" + m_swimRepsStage + "_TP_DEC_" + branch, entry.second, prefix + "_" + m_swimRepsStage + "_nTP", maxTurns);
+          test &= tuple->farray(prefix + "_TP_DEC_" + branch, entry.second, prefix + "_nTP", maxTurns);
         }
       }
+
+      debug() << "Populating extra_info..." << endmsg;
+      BOOST_FOREACH(const MapType::value_type& entry, extra_info)
+      {
+        test &= tuple->farray(prefix + "_TP_" + entry.first, entry.second, prefix + "_nTP", maxTurns);
+      }
     }
-    else if (m_swimRepsStage == "Trigger")
+    else if (m_swimRepsStage.size() >= triggerPrefix.size() and m_swimRepsStage.substr(0, triggerPrefix.size()) == triggerPrefix)
     {
       //The each track part is only for the trigger
       // Loop over turning points to fill info names and insert vectors
       MapType track_infos;
 
-      for(stringSet::const_iterator infoname_iter = infonames.begin(); infoname_iter != infonames.end(); infoname_iter++)
-        track_infos.insert(make_pair(*infoname_iter, std::vector<double>()));
+      debug() << "Doing per-track trigger stuff" << endmsg;
 
-      if(range.size() == 1)
+      for(stringSet::const_iterator infoname_iter = infonames.begin(); infoname_iter != infonames.end(); infoname_iter++)
+        track_infos.insert(make_pair(*infoname_iter, doubleVec()));
+
+      if(report)
       {
-        LHCb::SwimmingReport* report = range.begin()->to();
-        if(!report)
-          return Error("Got NULL LHCb::SwimmingReport");
         const tPoints& turns = report->turningPoints(m_swimRepsStage);
+        debug() << "Got " << turns.size() << " per-track TPs..." << endmsg;
         BOOST_FOREACH(const LHCb::TurningPoint& tp, turns)
         {
           // Fill infos
@@ -281,7 +317,7 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
             if (!tp.dec()) {
               entry.second.push_back(false);
             } else {
-              entry.second.push_back(tp.participated(entry.first, *thisP));
+              entry.second.push_back(tp.participated(entry.first, *P));
             }
           }
         }
@@ -290,9 +326,11 @@ StatusCode TupleToolSwimmingInfo::fill( const Particle*
       // Fill tuple with infos
       BOOST_FOREACH(const MapType::value_type& entry, track_infos)
       {
-        test &= tuple->farray(prefix + "_"+m_swimRepsStage+"_TP_DEC_" + entry.first, entry.second,
-                              prefix + "_"+m_swimRepsStage+"_nTP", maxTurns);
+        test &= tuple->farray(prefix + "_TP_DEC_" + entry.first, entry.second,
+                              prefix + "_nTP", maxTurns);
       }
+
+      debug() << "Finished doing track stuff" << endmsg;
     }
   }
   return StatusCode::SUCCESS;

@@ -4,6 +4,16 @@
 ! Purpose     : Option-steered tuples. 
 !-----------------------------------------------------------------------------
 
+! 2014-12-10 - Olli Lupton
+ - More changes to TupleToolSwimmingInfo:
+  . Handle events where multiple candidates were swum. This is more complicated
+    because there is no longer a 1:1 mapping from tracks to swimming reports.
+  . Write the generic 'extra' information stored in TPs to the tuple.
+  . Remove properties 'ReportsLocation', 'UseExtraLocation' and 'ExtraLocation'.
+    Replace with 'RelationsLocation'. With the new multiple-candidate-aware
+    Phys/Swimming version then the 'ExtraLocation' hack is redundant.
+  . General cleaning up.
+
 !========================= DecayTreeTuple v4r11 2014-10-30 =========================
 
 ! 2014-10-03 - Olivier Deschamps

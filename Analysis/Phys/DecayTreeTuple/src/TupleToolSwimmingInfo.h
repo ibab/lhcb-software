@@ -9,6 +9,7 @@
 #include "Relations/Relations.h"
 #include "Event/SwimmingReport.h"
 #include "Event/TurningPoint.h"
+#include <vector>
 
 /** @class TupleToolSwimmingInfo TupleToolSwimmingInfo.h
  *
@@ -31,13 +32,16 @@ public:
                            , const std::string&, Tuples::Tuple& );
 
 private:
+  //typedef std::vector<std::string> stringVec;
+  //stringVec m_swimRelTableLocs;
   std::string m_swimRelTableLoc;
-  std::string m_swimRepsStage;  
-  bool m_useExtraLoc;
-  std::string m_extraLoc; 
-
+  std::string m_swimRepsStage;
+  //bool m_useExtraLoc;
+  //std::string m_extraLoc; 
   typedef LHCb::Relation2D<LHCb::Particle, LHCb::SwimmingReport> P2TPRelation;
+  typedef std::vector<LHCb::TurningPoint> tPoints;
 
-  typedef std::vector<LHCb::TurningPoint> tPoints; 
+  bool hasDescendant(const LHCb::Particle *mother, const LHCb::Particle *desc);
+  bool getRelationsFromDescendant(P2TPRelation::Range &range, const P2TPRelation *relateParts, const LHCb::Particle* Phead, const LHCb::Particle *P);
 };
 #endif // VVGRA_TUPLETOOLSWIMMINGINFO_H
