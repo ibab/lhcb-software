@@ -24,10 +24,16 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2IncMuTrackNoIP'            : 1.0
 				   ,'Hlt2TrackEffMuonTT1'      	    : 1.0
 				   ,'Hlt2TrackEffMuonTT2'      	    : 1.0
+				   ,'Hlt2TrackEffMuonTTLL1'    	    : 1.0
+				   ,'Hlt2TrackEffMuonTTLL2'    	    : 1.0
 				   ,'Hlt2TrackEffVeloMuon1'   	    : 1.0
 				   ,'Hlt2TrackEffVeloMuon2'   	    : 1.0
+				   ,'Hlt2TrackEffVeloMuonLL1'  	    : 1.0
+				   ,'Hlt2TrackEffVeloMuonLL2'  	    : 1.0
 				   ,'Hlt2TrackEffDownstream1'	    : 1.0
 				   ,'Hlt2TrackEffDownstream2'	    : 1.0
+				   ,'Hlt2TrackEffDownstreamLL1'	    : 1.0
+				   ,'Hlt2TrackEffDownstreamLL2'	    : 1.0
                                    }
                   
                   ,'SingleMuHLT1Filter'  :  "HLT_PASS_RE('Hlt1TrackMuonDecision')"
@@ -357,11 +363,38 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('TrackEffMuonTT1'
                       , prescale = self.prescale
-                      , L0DU = "L0_CHANNEL('DiMuon')"
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
                       , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, TagMuonTTMuons, filterMinus1, JPsiCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT1Decision" : 50601 } )
+
+	##################### respective line with two long tracks, needed for association #########################
+
+        filterMinusLL1 = Hlt2Member( FilterDesktop
+                                 , "filterMinus"
+                                 , Code = "(Q < 0) & (PT>%(MuonTTProbePt)s*MeV) & (P>%(MuonTTProbeP)s*MeV)"%self.getProps()
+                                 , Inputs  = [ BiKalmanFittedMuons ]
+                                 , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
+                                 )
+                             
+
+        JPsiCombineLL1 = Hlt2Member( CombineParticles
+                                , 'JPsiCombine'
+                                , Inputs = [ TOSTagMuonsFilter1, filterMinusLL1 ]
+                                , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
+                                , MotherCut =  "(PT>%(MuonTTJPsiPt)s*MeV) & (P>%(MuonTTJPsiP)s*MeV) & (MIPDV(PRIMARY)<%(MuonTTJPsiMaxIP)s) & (VFASPF(VCHI2/VDOF)<%(MuonTTJPsiVtxChi2)s) & (ADMASS('J/psi(1S)')<%(MuonTTMassWindow)s*MeV)"%self.getProps()
+                                , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
+                                )
+
+
+        line = Hlt2Line('TrackEffMuonTTLL1'
+                      , prescale = self.prescale
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
+                      , algos = [ BiKalmanFittedMuons, filterPlus1, TOSTagMuonsFilter1, filterMinusLL1, JPsiCombineLL1 ]
+                      , postscale = self.postscale
+                      )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTTLL1Decision" : 50611 } )
 
 	###################### positive tag track, negative long track ###########################
 
@@ -400,11 +433,37 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('TrackEffMuonTT2'
                       , prescale = self.prescale
-                      , L0DU = "L0_CHANNEL('DiMuon')"
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
                       , algos = [ BiKalmanFittedMuons, filterMinus2, TOSTagMuonsFilter2, TagMuonTTMuons, filterPlus2, JPsiCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTT2Decision" : 50602 } )
+
+	##################### respective line with two long tracks, needed for association #########################
+
+        filterPlusLL2 = Hlt2Member( FilterDesktop
+                                 , "filterPlus"
+                                 , Code = "(Q > 0) & (PT>%(MuonTTProbePt)s*MeV) & (P>%(MuonTTProbeP)s*MeV)"%self.getProps()
+                                 , Inputs  = [ BiKalmanFittedMuons ]
+                                 , PreMonitor = Hlt2MonitorMinMax ("TRCHI2DOF","M(#mu#mu)",0,10)
+                                 )
+                             
+        JPsiCombineLL2 = Hlt2Member( CombineParticles
+                      , 'JPsiCombine'
+                      , Inputs = [ TOSTagMuonsFilter2, filterPlusLL2 ]
+                      , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
+                      , MotherCut =  "(PT>%(MuonTTJPsiPt)s*MeV) & (P>%(MuonTTJPsiP)s*MeV) & (MIPDV(PRIMARY)<%(MuonTTJPsiMaxIP)s) & (VFASPF(VCHI2/VDOF)<%(MuonTTJPsiVtxChi2)s) & (ADMASS('J/psi(1S)')<%(MuonTTMassWindow)s*MeV)"%self.getProps()
+                      , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
+                      )
+
+
+        line = Hlt2Line('TrackEffMuonTTLL2'
+                      , prescale = self.prescale
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
+                      , algos = [ BiKalmanFittedMuons, filterMinus2, TOSTagMuonsFilter2, filterPlusLL2, JPsiCombineLL2 ]
+                      , postscale = self.postscale
+                      )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffMuonTTLL2Decision" : 50612 } )
 
 	########################### VeloMuon method #######################
 
@@ -448,11 +507,37 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('TrackEffVeloMuon1'
                       , prescale = self.prescale
-                      , L0DU = "L0_CHANNEL('DiMuon')"
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
                       , algos = [ BiKalmanFittedMuons, filterVeloPlus1, TOSTagVeloMuonsFilter1, TagVeloMuons, filterVeloMinus1, JPsiVeloCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuon1Decision" : 50603 } )
+
+	##################### respective line with two long tracks, needed for association #########################
+
+        filterVeloMinusLL1 = Hlt2Member( FilterDesktop
+                                 , "filterMinus"
+                                 , Code = "(Q < 0) & (TRCHI2DOF <%(VeloProbeTrChi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
+                                 , Inputs  = [ BiKalmanFittedMuons ]
+                                 )
+
+
+        JPsiVeloCombineLL1 = Hlt2Member( CombineParticles
+                                , 'JPsiCombine'
+                                , Inputs = [ TOSTagVeloMuonsFilter1, filterVeloMinusLL1 ]
+                                , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
+                                , MotherCut =  "(VFASPF(VCHI2/VDOF)<%(VeloVertchi2)s) & (PT>%(VeloJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(VeloMassWindow)s*MeV)"%self.getProps()
+                                , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
+                                )
+
+
+        line = Hlt2Line('TrackEffVeloMuonLL1'
+                      , prescale = self.prescale
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
+                      , algos = [ BiKalmanFittedMuons, filterVeloPlus1, TOSTagVeloMuonsFilter1, filterVeloMinusLL1, JPsiVeloCombineLL1 ]
+                      , postscale = self.postscale
+                      )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuonLL1Decision" : 50613 } )
 
 	################ positive tag track, negative long track ######################
 
@@ -491,11 +576,37 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('TrackEffVeloMuon2'
                       , prescale = self.prescale
-                      , L0DU = "L0_CHANNEL('DiMuon')"
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
                       , algos = [ BiKalmanFittedMuons, filterVeloMinus2, TOSTagVeloMuonsFilter2, TagVeloMuons, filterVeloPlus2, JPsiVeloCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuon2Decision" : 50604 } )
+
+	##################### respective line with two long tracks, needed for association #########################
+
+        filterVeloPlusLL2 = Hlt2Member( FilterDesktop
+                                 , "filterPlus"
+                                 , Code = "(Q > 0) & (TRCHI2DOF <%(VeloProbeTrChi2)s) & (PT>%(VeloProbePt)s*MeV)"%self.getProps()
+                                 , Inputs  = [ BiKalmanFittedMuons ]
+                                 )
+
+
+        JPsiVeloCombineLL2 = Hlt2Member( CombineParticles
+                                , 'JPsiCombine'
+                                , Inputs = [ TOSTagVeloMuonsFilter2, filterVeloPlusLL2 ]
+                                , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
+                                , MotherCut =  "(VFASPF(VCHI2/VDOF)<%(VeloVertchi2)s) & (PT>%(VeloJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(VeloMassWindow)s*MeV)"%self.getProps()
+                                , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
+                                )
+
+
+        line = Hlt2Line('TrackEffVeloMuonLL2'
+                      , prescale = self.prescale
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
+                      , algos = [ BiKalmanFittedMuons, filterVeloMinus2, TOSTagVeloMuonsFilter2, filterVeloPlusLL2, JPsiVeloCombineLL2 ]
+                      , postscale = self.postscale
+                      )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffVeloMuonLL2Decision" : 50614 } )
 
 	############## Downstream method #######################
 
@@ -539,11 +650,38 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('TrackEffDownstream1'
                       , prescale = self.prescale
-                      , L0DU = "L0_CHANNEL('DiMuon')"
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
                       , algos = [ BiKalmanFittedMuons, filterDownstreamPlus1, TOSTagDownstreamMuonsFilter1, TagDownstreamMuons, filterDownstreamMinus1, JPsiDownstreamCombine1 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstream1Decision" : 50605 } )
+
+	##################### respective line with two long tracks, needed for association #########################
+
+        filterDownstreamMinusLL1 = Hlt2Member( FilterDesktop
+                                 , "filterMinus"
+                                 , Code = "(Q < 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV) & (PIDmu >-%(DownstreamLongMuonPID)s)"%self.getProps()
+                                 , Inputs  = [ BiKalmanFittedMuons ]
+                                 )
+
+
+        JPsiDownstreamCombineLL1 = Hlt2Member( CombineParticles
+                                , 'JPsiCombine'
+                                , Inputs = [ TOSTagDownstreamMuonsFilter1, filterDownstreamMinusLL1 ]
+                                , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
+				, CombinationCut = "(AMAXDOCA('') < %(DownstreamJPsiDOCA)s*mm)"%self.getProps()
+                                , MotherCut =  "(VFASPF(VCHI2/VDOF)<%(DownstreamVertchi2)s) & (PT>%(DownstreamJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(DownstreamMassWindow)s*MeV)"%self.getProps()
+                                , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
+                                )
+
+
+        line = Hlt2Line('TrackEffDownstreamLL1'
+                      , prescale = self.prescale
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
+                      , algos = [ BiKalmanFittedMuons, filterDownstreamPlus1, TOSTagDownstreamMuonsFilter1, filterDownstreamMinusLL1, JPsiDownstreamCombineLL1 ]
+                      , postscale = self.postscale
+                      )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstreamLL1Decision" : 50615 } )
 
 	################# positive tag track, negative long track ####################
 
@@ -583,8 +721,35 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
 
         line = Hlt2Line('TrackEffDownstream2'
                       , prescale = self.prescale
-                      , L0DU = "L0_CHANNEL('DiMuon')"
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
                       , algos = [ BiKalmanFittedMuons, filterDownstreamMinus2, TOSTagDownstreamMuonsFilter2, TagDownstreamMuons, filterDownstreamPlus2, JPsiDownstreamCombine2 ]
                       , postscale = self.postscale
                       )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstream2Decision" : 50606 } )
+
+	##################### respective line with two long tracks, needed for association #########################
+
+        filterDownstreamPlusLL2 = Hlt2Member( FilterDesktop
+                                 , "filterPlus"
+                                 , Code = "(Q > 0) & (TRCHI2DOF <%(DownstreamProbeTrchi2)s) & (PT>%(DownstreamProbePt)s*MeV) & (P>%(DownstreamProbeP)s*MeV)"%self.getProps()
+                                 , Inputs  = [ BiKalmanFittedMuons ]
+                                 )
+
+
+        JPsiDownstreamCombineLL2 = Hlt2Member( CombineParticles
+                                , 'JPsiCombine'
+                                , Inputs = [ TOSTagDownstreamMuonsFilter2, filterDownstreamPlusLL2 ]
+                                , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
+				, CombinationCut = "(AMAXDOCA('') < %(DownstreamJPsiDOCA)s*mm)"%self.getProps()
+                                , MotherCut =  "(VFASPF(VCHI2/VDOF)<%(DownstreamVertchi2)s) & (PT>%(DownstreamJPsiPt)s*MeV) & (ADMASS('J/psi(1S)')<%(DownstreamMassWindow)s*MeV)"%self.getProps()
+                                , MotherMonitor = Hlt2MonitorMinMax ("M","M(#mu#mu)",2600,3600)
+                                )
+
+
+        line = Hlt2Line('TrackEffDownstreamLL2'
+                      , prescale = self.prescale
+                      , L0DU = "L0_CHANNEL('Muon') | L0_CHANNEL('DiMuon')"
+                      , algos = [ BiKalmanFittedMuons, filterDownstreamMinus2, TOSTagDownstreamMuonsFilter2, filterDownstreamPlusLL2, JPsiDownstreamCombineLL2 ]
+                      , postscale = self.postscale
+                      )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2TrackEffDownstreamLL2Decision" : 50616 } )

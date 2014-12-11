@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2014-12-11 - Michael Kolpin
+ - Added LL lines for tracking eff. association to Hlt2InclusiveMuonLines
+
 ! 2014-12-10 - Christian Linn
  - added Hlt2DiMuonJpsiTurbo line ( clone of Hlt2DiMuonJpsi with Turbo = true )
 
