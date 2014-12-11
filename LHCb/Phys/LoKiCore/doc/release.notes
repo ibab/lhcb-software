@@ -13,6 +13,7 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiCore v11r21 2014-12-11 =========================
 ! 2014-12-02 - Vanya Belyaev
  - FunctorFromFunctor 
    add move-constructor
