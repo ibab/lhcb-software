@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
 
+!========================= LHCbKernel v15r6 2014-12-11 =========================
 ! 2014-11-27 - Victor Coco
  - Added HCCellID class for the Herschel channels and related declarations.
 
