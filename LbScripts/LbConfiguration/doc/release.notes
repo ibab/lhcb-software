@@ -7,6 +7,8 @@
 	* lb-dev: common improvements
 		- added the file 'build.conf' to set build options (nightlies) for both
 		  CMT and CMake (removed build_env.*sh and nightly.cmake)
+		- use "Today" as default day for building against the nightlies
+		  (requires that the symlink "Today" is present and up-to-date)
 	* data/Makefile-cmt.mk: use the target 'test' to run the tests in CMT projects
 		(for consistecy with CMake)
 

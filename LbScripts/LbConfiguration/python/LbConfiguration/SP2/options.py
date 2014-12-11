@@ -74,9 +74,8 @@ def addSearchPath(parser):
 
     def nightly_option(_option, opt_str, _value, _parser):
         # List of abbreviations for weekdays
-        days = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
-        import datetime
-        day = days[datetime.date.today().weekday()]
+        days = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun', 'Today')
+        day = 'Today'
 
         parser.values.dev = True
         rargs = parser.rargs
