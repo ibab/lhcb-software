@@ -5,6 +5,177 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v38r3>2014-12-15 LHCbSys v38r3</A></H1><PRE>
+This version uses Gaudi v25r5 and LCG_71 with ROOT 5.34.24.
+
+- Packages modified: Calo/CaloKernel v6r5, Det/DetCond v12r40, Det/FTDet v2r8,
+    Det/OTDet v8r13, Det/RichDet v17r0, Event/DigiEvent v4r3,
+    Event/EventPacker v4r6, Event/EventSys v26r2, Event/HltEvent v9r5,
+    Event/LinkerInstances v4r1, Event/LumiEvent v3r8, Event/MicroDst v1r3,
+    Event/PhysEvent v11r28, FT/FTDAQ v1r7, GaudiConf v19r6, HC/HCDAQ v1r1,
+    Hlt/HltDAQ v4r10, Hlt/HltServices v2r6, Kernel/FSRAlgs v1r7,
+    Kernel/HltInterfaces v5r3, Kernel/LHCbKernel v15r6, Kernel/LHCbMath v3r52,
+    Phys/LoKiCore v11r21, Phys/LoKiGen v10r19, Phys/LoKiHlt v3r17,
+    Phys/LoKiMC v10r15, ST/STDAQ v4r5, Tools/CondDBUI v3r32
+
+- In Calo/CaloKernel v6r5
+  . Fix compilation warning with --pedantic in CaloCollection
+
+- In Det/DetCond v12r40
+  . Configuration.py: 
+    o Add option LatestGlobalTagByDataTypes to allow for multiple datatypes.
+    o Include of DQFLAGS to assign the most recent tag for a given datatype
+
+- In Det/FTDet v2r8
+  . Go back to ClassID=8604 for "DeFTLayer" class
+    (was 8603, bilayer class changed too)
+  . Split "CalculateHits" : the part validating the Mc hit and computes sipm id,
+    etc. has been put in "CalculateSipmInfo"
+  . The hit validation in "CalculateHits" has changed (now in "CalculateSipmInfo")
+    some useless parts are removed, introduction of tolerances for
+    Geant4/Arithmetic inaccuracy while testing if a Hit in inside a Volume.
+  . "CalculateHits" and "CalculateSipmInfo" now return a StatusCode with a
+    severity info code which flags the hit rejection cause (if any).
+  . Some changes in "DeFTTestAlg"
+  . Correct a bug in "fibreMatMinY" and "fibreMatMaxY": the max and the min were
+    inverted
+  . Correct a bug in hit fibre length computation, affects both v2 and v4 geometry
+  . Introduce 1st version of code compatible with geometry v4 (only v42 for now)
+  . Use new modified database with more user parameters
+  . Changes in "CreateDetSegment" to return ymin and ymax of fibermat
+    (in global frame)
+  . Some changes also in v2 to avoid using hard coded numbers
+  . Made some cleanup in DeFTDetector for adapting to different geometry versions
+  . Made minor modifications to DeFTFibreMat in order to process version 40 of the
+    FT geometry without a crash and to read user parameters from xml database. 
+
+- In Det/OTDet v8r13
+  . Implemented trajectory in three parts for monolayer shifts
+  . Changes in implementation of monolayer alignment
+
+- In Det/RichDet v17r0
+  . Changes to DeRichSystem in order to move the DetectorNumbers 
+    condition from CondDB to ONLINE. The conditions has been split with the
+    inactive HPDs in a new condition. The changes work with any version of 
+    DDDB, however, a new DDDB version would need the correct ONLINE
+  . Added method systemVersion() (there is already a version() in detector
+    elements that is always empty)
+
+- In Event/DigiEvent v4r3
+  . Added HCDigit to store the Herschel PMT adcs
+
+- In Event/EventPacker v4r6
+  . Remove dictionary for std::pair<short,float> as it is already produced
+    in the PhysEvent dictionary.
+
+- In Event/EventSys v26r2
+  . Updated CMake configuration after the fix to GAUDI-972 (in Gaudi).
+
+- In Event/HltEvent v9r5
+  . HltDecReports: 
+    o define the 'Hlt1Default' and 'Hlt2Default' TES locations
+    o provide access to the 'reserve' and 'hinted insert' methods
+      of the underlying container
+  . Some minor code cleanup
+
+- In Event/LinkerInstances v4r1
+  . Fix use of anonymous namespace in instantiations for dictionary.
+
+- In FT/FTDAQ v1r7
+  . In FTRawBankEncoder cluster size reduced of one unit, and in FTRawBankDecoder
+    increased of 1 in order to keep clusters with size 1,2,3 and 4 using 2 bits
+    to encode the cluster size in the data format.
+
+- In GaudiConf v19r6
+  . Add LDST to list of known file extensions in IOHelper.
+
+- In HC/HCDAQ v1r1
+  . Add error bank decoding.
+  . Revisited the code and added the L0 decoding (code from TED 2014)
+  . Adapt decoder to ECAL format.
+
+- In Hlt/HltDAQ v4r9,v4r10
+  . Adjusted track locations to shared ones for the upfront tracking  
+  . Write out VeloTT tracks from HltHPTTracking
+  . Small speed-up of HltVertexReportsWriter and HltTrackingCoder
+  . Add a big deprecation warning when decoding both Hlt1 and Hlt2 to 
+    a single TES location
+  . Avoid std::stringstream
+  . Major update: Additional decoding for turbo level reports.
+  . HltSelReportsDecoder: avoid stringstream, prefer range-based for
+  . Added extra checking & diagnostics. 
+  . Generic C++ code cleanup.
+  . Replace 'virtual' qualification on member functions of derived classes with
+    'override'
+  . When classes have a trivial d'tor, replace explicit implementation with
+    '=default'
+
+- In Hlt/HltServices v2r5,v2r6
+  . C++11 cleanup
+  . Added creation of hlttck_cdb_listkeys.exe to the CMake configuration.
+  . HltConfigSvc can now create multiple dec report locations at the same time.
+  . Trim trailing zeros in longname tar header
+  . Simplify iteration over tar file content in utility
+  . Fix missing label on generated manifest from tar file
+  . In utility, find the label in a format agnostic way
+  . Enable JSON output of manifest in utility
+  . Utility: fix key prefix in .tar to .cdb conversion, add re-formatting during
+    conversion, add option to create manifest from .tar, improve dump formatting
+
+- In Kernel/FSRAlgs v1r7
+  . Modified mergesmallfiles test to record the used memory also in case of
+    success.
+
+- In Kernel/HltInterfaces v5r3
+  . TCK: replace do-it-yourself unhex with std::stoul, make operator<< inline
+  . ConfigTreeNode, PropertyConfig: make operator<< and operator>> inline
+  . ConfigTreeNode: allocate string of right length for string rep, only strip
+    newlines when making string rep, use std::copy_if instead of boost to do so,
+    add one more check (neccessady, but unfortunately not sufficient) on string
+    rep of property
+  . PropertyConfig: allocate string of right length for string rep.
+  . ConfigTreeNodeAlias: inline operators<< and operator>>, replace do-it-yourself
+    unhex with std:stoul
+  . Streamline use of boost::ptree
+
+- In Kernel/LHCbKernel v15r6
+  . Added HCCellID class for the Herschel channels and related declarations.
+  . Print a warning when using the patched merge_files.py, so that we can detect
+    where the work-around is enabled.
+
+- In Kernel/LHCbMath v3r52
+  . Some improvement in the integration of 2D-polynomials 
+  . Add varios Splines (B,I,M,..)
+  . BloomFilter:
+    o make various overloads a bit more specific, so compilers don't
+      run into trouble
+    o trivial change to avoid compiler error at -O0 (no visible changes in
+      client code)
+
+- In Phys/LoKiCore v11r21
+  . FunctorFromFunctor: add move-constructor
+
+- In Phys/LoKiHlt v3r17
+  . L0 functors: use std:: algorithms whenever possible
+  . Hlt functors:
+    o use std:: algorithms whenever possible
+    o fix logic in DecisionButRegex
+    o speed up CountErrorBitsRegex by reversing the order of tests 
+ . Remove duplicate dictionary for enum LHCb::L0DUDecision::Type, already
+   in L0Event
+
+- In ST/STDAQ v4r5
+  . Fix bug introduced in decoding that prevented the proper decoding of TAE event
+
+- In Tools/CondDBUI v3r32
+  . PyCoolCopy().copy would not support a connection string as its target db when
+    the target db does not exist, now use an empty cool.IDatabase object
+
+- In Event/EventSys v26r2, Event/HltEvent v9r5, Event/LumiEvent v3r8,
+     Event/MicroDst v1r3, Event/PhysEvent v11r28, Phys/LoKiGen v10r19,
+     Phys/LoKiMC v10r15
+  . Reverted work around for spurious entries in the rootmap files.
+
 </PRE><H1><A NAME=v38r2p1>2014-10-17 LHCbSys v38r2p1</A></H1><PRE>
 This version uses Gaudi v25r5 and LCG_70root6 with ROOT 6.02.01.
 
