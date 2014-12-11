@@ -178,19 +178,15 @@ then
   > make QMTestSummary
   > make install
 
-You can customize the configuration by editing the file 'CMakeLists.txt'
+You can customize the configuration by editing the files 'CMakeLists.txt'
 (see http://cern.ch/gaudi/CMake for details).
 '''
 
     finalMessageCMT = finalMessage + '''
-  > . build_env.sh
   > make
   > cd MyPackage/cmt
   > cmt TestPackage
 '''
-    if 'csh' in os.environ.get('SHELL', 'sh'):
-        finalMessageCMT = finalMessageCMT.replace('. build_env.sh',
-                                                  'source build_env.csh')
 
     msg = use_cmake and finalMessageCMake or finalMessageCMT
     print msg.format(opts.name, opts.dest_dir, devProjectDir)

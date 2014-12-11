@@ -1,3 +1,9 @@
+2014-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev: automatically set the build time environment when calling make in generated CMT projects
+
+2014-12-04  Ben Couturier <Ben.Couturier@cern.ch>
+
 	* python/LbConfiguration/Project.py: Added project L0MuonTools (LBCORE-685)
 
 2014-12-01  Ben Couturier <Ben.Couturier@cern.ch>

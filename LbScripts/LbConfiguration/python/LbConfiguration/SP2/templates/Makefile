@@ -1,2 +1,10 @@
 USE_CMAKE=${use_cmake}
-include $${LBCONFIGURATIONROOT}/data/Makefile
+ifneq ($$(USE_CMAKE),)
+# CMake case
+include $$(LBUTILSROOT)/data/Makefile-cmake.mk
+else
+# CMT case
+all:
+%:
+	@. ./build_env.sh && $$(MAKE) -f $$(LBCONFIGURATIONROOT)/data/Makefile-cmt.mk $$*
+endif
