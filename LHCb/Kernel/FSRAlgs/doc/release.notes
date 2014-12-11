@@ -4,6 +4,7 @@
 ! Purpose     : Generic FSR manipulation and creation algorithms
 !-----------------------------------------------------------------------------
 
+!========================= FSRAlgs v1r7 2014-12-11 =========================
 ! 2014-11-20 - Marco Clemencic
  - Fixed mistake in the previous commit.
 
