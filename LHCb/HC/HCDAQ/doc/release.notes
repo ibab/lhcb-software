@@ -4,6 +4,7 @@
 ! Purpose     : Decoding of Herschel raw banks
 !-----------------------------------------------------------------------------
 
+!========================= HCDAQ v1r1 2014-12-11 =========================
 ! 2014-12-04 - Heinrich Schindler
  - Add error bank decoding.
 
