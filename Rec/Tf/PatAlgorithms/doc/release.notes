@@ -6,7 +6,7 @@
 
 ! 2014-12-11 - Gerhard Raven
  - PatFwdTrackConadidate: use vdt::fast_isqrt 
- - PatFwdTool: speed up distanceForFit
+ - PatFwdTool: speed up distanceForFit, simplify inline methods
 
 ! 2014-12-10 - Sebastian Neubert
  - PatForward uses Ranges now to access track selections as well as containers

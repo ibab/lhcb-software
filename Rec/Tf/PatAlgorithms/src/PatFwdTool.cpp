@@ -601,9 +601,10 @@ bool PatFwdTool::fitYProjection( PatFwdTrackCandidate& track,
 
     for ( unsigned int kk = 0; kk < 10; ++kk ) {
       PatFwdFitLine line;
+      auto ica = 1.0/track.cosAfter();
       std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
         if (accept(hit)) line.addPoint( hit->z() - m_zReference
-                                      , - distanceForFit( track, hit ) / hit->hit()->dxDy()
+                                      , distanceForYFit( track, hit, ica )
                                       , hit->hit()->weight() );
       } );
       if (!line.solve()) return false;
@@ -642,14 +643,13 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
                             || hit->hit()->layer() == 3 );
   };
 
-  auto isOT = [](const PatFwdHit& hit) { return  hit.driftDistance()!=0.; };
 
   for ( unsigned int kk = 0 ; kk < 10  ; ++kk ) {
     auto curve = make_curve(track);
-    auto ca = 1.0/track.cosAfter();
+    auto ica = 1.0/track.cosAfter();
     std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
       if (accept(hit)) curve.addPoint( hit->z()-m_zReference, 
-                                       isOT(*hit) ? OTdistanceForFit(track,hit,ca) : ITdistanceForFit(track,hit),
+                                       distanceForXFit(track,hit,ica),
                                        hit->hit()->weight() );
     } );
     if (!curve.solve()) return false;
