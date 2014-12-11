@@ -3,9 +3,12 @@
 ! Purpose     : Interface to the xml description
 ! Responsible : Diego Milanes
 !--------------------------------------------------------------------------
+
+!========================= FTDet v2r8 2014-12-11 =========================
 ! 2014-12-04 - Luigi Del Buono
  - change again "CreateDetSegment" to correct for a bug in the z0 computation (could explain at least
  partly the efficiency problems), and also to make this routine less geometry version dependent.
+
 ! 2014-11-24 - Luigi Del Buono
  - go back to ClassID=8604 for "DeFTLayer" class (was 8603, bilayer class changed too)
  - split "CalculateHits" : the part validating the Mc hit and computes
@@ -41,6 +44,7 @@
   - Made some cleanup in DeFTDetector for adapting to different geometry versions
   - Made minor modifications to DeFTFibreMat in order to process version 40 of the
     FT geometry without a crash and to read user parameters from xml database. 
+
 !========================= FTDet v2r7 2014-06-10 =========================
 ! 2014-05-17 - Michel De Cian
  - Reintroduce binary search in DeFTDetector.
