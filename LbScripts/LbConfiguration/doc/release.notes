@@ -3,6 +3,7 @@
 	* lb-dev: improvements to generated CMT projects:
 		- automatically set the build time environment when calling make
 		- declare the contanier package in project.cmt
+		- modified the 'run' script to work in CMT projects too
 	* data/Makefile-cmt.mk: use the target 'test' to run the tests in CMT projects
 		(for consistecy with CMake)
 

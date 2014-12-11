@@ -1,14 +1,26 @@
 #!/bin/sh
 
+USE_CMAKE=${use_cmake}
+
 if [ -z "$$CMTCONFIG" ] ; then
   echo "error: CMTCONFIG not defined"
   exit 1
 fi
 
-run_cmd=$$(dirname $$0)/build.$$CMTCONFIG/run
-if [ -e "$$run_cmd" ] ; then
-  exec $$run_cmd "$$@"
+if [ -n "$$USE_CMAKE" ] ; then
+  run_cmd=$$(dirname $$0)/build.$$CMTCONFIG/run
+  if [ -e "$$run_cmd" ] ; then
+    exec $$run_cmd "$$@"
+  else
+    echo "error: cannot find build.$$CMTCONFIG/run, did you build?"
+    exit 1
+  fi
 else
-  echo "error: cannot find build.$$CMTCONFIG/run, did you build?"
-  exit 1
+  . $$(dirname $$0)/build_env.sh
+  . SetupProject.sh --keep-CMTPROJECTPATH --user $$(cd $$(dirname $$0)/.. ; pwd) LHCbDev HEAD
+  if [ "$$SetupProjectStatus" = 0 ] ; then
+    [ "$$#" = 0 ] && (printenv | sort) || exec "$$@"
+  else
+    exit $$SetupProjectStatus
+  fi
 fi
