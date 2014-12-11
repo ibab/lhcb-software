@@ -6,6 +6,7 @@
 ! which are essentially independent from Detector and Event models
 !=====================================================================
 
+!========================= CaloKernel v6r5 2014-12-11 =========================
 ! 2014-11-28 - Gloria Corti
  - Try and fix compilation warning with --pedantic in CaloCollection
 
