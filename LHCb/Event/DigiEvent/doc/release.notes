@@ -4,6 +4,7 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================= DigiEvent v4r3 2014-12-11 =========================
 ! 2014-12-04 - Heinrich Schindler
  - Add location for L0 HCDigits.
 
