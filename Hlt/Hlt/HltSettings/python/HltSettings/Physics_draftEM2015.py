@@ -67,26 +67,11 @@ class Physics_draftEM2015( object ):
         
         from GaudiKernel.SystemOfUnits import MeV, GeV, mm
 
-        thresholds = { Hlt1TrackLinesConf :    { 'AllL0Tight_PT'         :  1700
-                                               , 'AllL0Tight_P'          :  3000
-                                               , 'AllL0Tight_IP'         :  0.100
-                                               , 'AllL0Tight_IPChi2'     :  16  
-                                               , 'AllL0Tight_TrChi2'     :  1.5 
-                                               , 'AllL0Tight_GEC'        : 'Loose'
-                                               , 'AllL0Tight_Velo_NHits' : 9   
-                                               , 'AllL0Tight_Velo_Qcut'  : 3   
-                                               , 'AllL0Tight_ValidateTT' : True 
-                                               , 'AllL0_PT'         :  1000  # 1600
+        thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'         :  1000  # 1600
                                                , 'AllL0_P'          :  3000  # 3000
-                                               , 'AllL0_IP'         :  0.05 # 0.1
                                                , 'AllL0_IPChi2'     :  4.0    # 16
                                                , 'AllL0_TrChi2'     :  5.0   # 2.0
                                                , 'AllL0_GEC'        : 'Loose'
-                                               , 'AllL0_Velo_NHits' : 0    # 9
-                                               , 'AllL0_Velo_Qcut'  : 999    # 3
-                                               , 'AllL0_TrNTHits'    : 0   #16
-                                               , 'AllL0_TrChi2'      : 5.
-                                               , 'AllL0_ValidateTT' : True # True
                                                , 'Muon_PT'       :  1000 
                                                , 'Muon_P'        :  3000 
                                                , 'Muon_IP'       :  0 #0.100
@@ -102,7 +87,6 @@ class Physics_draftEM2015( object ):
                                                , 'Photon_TrChi2' :     2.0
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
-                                               , 'Photon_ValidateTT' : True
                                                , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
                                                                         'Hlt1TrackAllL0Tight'              : 1.0,
                                                                         'Hlt1TrackForwardPassThrough'      : 0,
@@ -308,9 +292,22 @@ class Physics_draftEM2015( object ):
                  , 'Hlt1SingleMuonNoIP'
                  , 'Hlt1DiMuonLowMass'
                  , 'Hlt1DiMuonHighMass'
-	]
+                 , 'Hlt1BeamGasNoBeamBeam1', 'Hlt1BeamGasNoBeamBeam2'   # technical lines
+                 , 'Hlt1BeamGasBeam1', 'Hlt1BeamGasBeam2'
+                 , 'Hlt1BeamGasCrossingEnhancedBeam1', 'Hlt1BeamGasCrossingEnhancedBeam2'
+                 , 'Hlt1BeamGasCrossingForcedReco', 'Hlt1BeamGasCrossingForcedRecoFullZ'
+                 , 'Hlt1BeamGasCrossingParasitic', 'Hlt1BeamGasHighRhoVertices'
+                 , 'Hlt1NoPVPassThrough'
+                 , 'Hlt1CharmCalibrationNoBias'
+                 , 'Hlt1Lumi', 'Hlt1LumiMidBeamCrossing'
+                 , 'Hlt1L0Any','Hlt1L0AnyNoSPD'
+                 , 'Hlt1MBNoBias'
+                 , 'Hlt1ODINTechnical', 'Hlt1Tell1Error' , 'Hlt1ErrorEvent' # , 'Hlt1Incident' 
+                 , 'Hlt1MBMicroBiasVelo','Hlt1MBMicroBiasTStation'
+                 , 'Hlt1VeloClosingMicroBias'
+            ]
 
-        from Hlt1TechnicalLines import Hlt1TechnicalLines
-        lines.extend( Hlt1TechnicalLines().ActiveHlt1Lines() )
+
+
         
         return lines 
