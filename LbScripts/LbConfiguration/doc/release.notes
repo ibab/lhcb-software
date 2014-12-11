@@ -4,6 +4,9 @@
 		- automatically set the build time environment when calling make
 		- declare the contanier package in project.cmt
 		- modified the 'run' script to work in CMT projects too
+	* lb-dev: common improvements
+		- added the file 'build.conf' to set build options (nightlies) for both
+		  CMT and CMake (removed build_env.*sh and nightly.cmake)
 	* data/Makefile-cmt.mk: use the target 'test' to run the tests in CMT projects
 		(for consistecy with CMake)
 

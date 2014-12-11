@@ -124,13 +124,12 @@ def main():
     templateDir = os.path.join(os.path.dirname(__file__), 'templates')
     templates = ['CMakeLists.txt', 'toolchain.cmake', 'Makefile',
                  'searchPath.py', 'searchPath.cmake',
-                 'build_env.sh', 'build_env.csh', 'run']
+                 'build.conf', 'run']
     # generated files that need exec permissions
     execTemplates = set(['run'])
 
     if opts.nightly:
         data['slot'], data['day'] = opts.nightly
-        templates.append('nightly.cmake')
     else:
         data['slot'] = data['day'] = ''
 
