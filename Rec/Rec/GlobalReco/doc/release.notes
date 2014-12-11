@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2014-12-11 - Olivier Deschamps
+ - NeutralProtoPAlg : reduce verbosity
+
 !========================= GlobalReco v6r51 2014-10-14 =========================
 ! 2014-09-29 - Chris Jones
  - Add some additional debug messages.

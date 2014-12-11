@@ -73,7 +73,7 @@ StatusCode NeutralProtoPAlg::initialize(){
 
 double NeutralProtoPAlg::getMass(int cellCode ){
   if( !m_setMass ){
-    Warning("You should process MergedPi0 protoparticles first to speed up retrieval of photon 'mass'",StatusCode::SUCCESS).ignore();
+    Warning("You should process MergedPi0 protoparticles first to speed up retrieval of photon 'mass'",StatusCode::SUCCESS,1).ignore();
     // === storing masses
     m_setMass = true;
     using namespace LHCb::CaloHypoLocation;
