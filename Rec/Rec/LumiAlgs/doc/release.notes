@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of Lumi Summaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================= LumiAlgs v9r6 2014-12-11 =========================
 ! 2014-11-18 - Jaap Panman
 - update unittests (and example jobs) to use latest database tag
 
