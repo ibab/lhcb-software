@@ -3,4 +3,7 @@ project ${cmt_project}
 use ${PROJECT} ${PROJECT}_${version}
 
 build_strategy with_installarea
+setup_strategy root
 structure_strategy without_version_directory
+
+container ${local_project}Sys
