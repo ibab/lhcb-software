@@ -176,6 +176,9 @@ then
   > make
   > make test
   > make QMTestSummary
+
+and optionally
+
   > make install
 
 You can customize the configuration by editing the files 'CMakeLists.txt'
@@ -184,8 +187,7 @@ You can customize the configuration by editing the files 'CMakeLists.txt'
 
     finalMessageCMT = finalMessage + '''
   > make
-  > cd MyPackage/cmt
-  > cmt TestPackage
+  > make test
 '''
 
     msg = use_cmake and finalMessageCMake or finalMessageCMT

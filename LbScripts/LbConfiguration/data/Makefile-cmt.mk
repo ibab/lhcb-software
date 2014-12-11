@@ -54,11 +54,15 @@ project_homes_command := cmt show projects | sed 's/ *\([a-zA-Z0-9]\+\).*(in \([
 $(foreach var,$(shell $(project_homes_command)),$(eval export $(var)))
 
 # Target to run the tests
-tests: all
+test:
 ifeq ($(container),)
 	$(error Cannot run the tests because I do not know the name of the container package, specify it on the command line with "container=Package")
 endif
 	cmt -pack=$(container) TestProject
+
+# backward compatibiliy
+tests: all
+	$(MAKE) test
 
 ################################################################################
 # Generate doxygen documentation
