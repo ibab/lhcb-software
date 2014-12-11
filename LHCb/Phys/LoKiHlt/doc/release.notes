@@ -3,6 +3,8 @@
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
+
+!========================= LoKiHlt v3r17 2014-12-11 =========================
 ! 2014-12-05 - Gerhard Raven
  - L0 functors:
     - use std:: algorithms whenever possible
