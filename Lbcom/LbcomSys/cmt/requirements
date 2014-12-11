@@ -1,5 +1,5 @@
 package           LbcomSys
-version           v16r1p1
+version           v16r2
 
 branches doc cmt tests
 
@@ -31,7 +31,7 @@ use OTMonitor         v3r8     OT        # Francesco Dettori
 use RichAlgorithms    v1r7     Rich      # Chris Jones
 use RichMCMonitors    v1r10    Rich      # Chris Jones
 use RichMCTools       v3r18    Rich      # Chris Jones
-use RichTools         v2r44    Rich      # Chris Jones
+use RichTools         v2r45    Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r9     Si        # Matt Needham
