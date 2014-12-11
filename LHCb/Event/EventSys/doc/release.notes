@@ -2,6 +2,7 @@
 ! package manager: Marco Cattaneo
 !-------------------------------------------------------------------------
 
+!========================= EventSys v26r2 2014-12-11 =========================
 ! 2014-11-27 - Marco Clemencic
  - Reverted work around for spurious entries in the rootmap files.
 
