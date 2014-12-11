@@ -4,6 +4,7 @@
 ! Purpose     : Persistifiable classes mapping useful physics and reco types
 !-----------------------------------------------------------------------------
 
+!========================= MicroDst v1r3 2014-12-11 =========================
 ! 2014-11-26 - Marco Clemencic
  - Reverted work around for spurious entries in the rootmap files.
 
