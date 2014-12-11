@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!========================= EventPacker v4r6 2014-12-11 =========================
 ! 2014-10-20 - Chris Jones
  - Remove dictionary for std::pair<short,float> as it is already produced
    in the PhysEvent dictionary.
