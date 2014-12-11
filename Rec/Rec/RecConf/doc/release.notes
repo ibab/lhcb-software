@@ -4,6 +4,7 @@
 !Purpose: Configurables for LHCb reconstruction
 !------------------------------------------------------------------------------
 
+!========================= RecConf v2r19 2014-12-11 =========================
 ! 2014-11-13 - Marco Cattaneo
  - Remove "upgrade" from KnownSpecialData (obsolete, use the DataType instead)
    and from pre 2010 treatment of primary vertex
