@@ -4,6 +4,7 @@
 ! Purpose     : Charged ProtoParticle ANN PID
 !-----------------------------------------------------------------------------
 
+!========================= ChargedProtoANNPID v2r8 2014-12-11 =======================
 ! 2014-12-08 - Chris Jones
  - Add Kaon and Pion networks for the MLP and BDT 'Dev1' (IsMuon as input)
    Bs2MuMu development tunings.
