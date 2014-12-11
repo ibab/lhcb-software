@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!========================= TfKernel v2r28 2014-12-11 =========================
 ! 2014-11-28 - Marco Clemencic
  - Reverted work around for spurious entries in the rootmap files.
 
