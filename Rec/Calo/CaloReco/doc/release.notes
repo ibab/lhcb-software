@@ -4,6 +4,7 @@
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
+!========================= CaloReco v5r22 2014-12-11 =========================
 ! 2014-11-26 - Marco Cattaneo
  - Fix unprotected debug in CaloSCorrection.cpp
 
