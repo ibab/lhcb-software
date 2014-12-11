@@ -28,6 +28,7 @@ Purpose: LHCb reconstruction program
   . Changes to OT monolayer alignment (OTDet) 
   . Fix in PatDownstream such that hits in at least three layers are required
     (PatAlgorithms)
+  . use ancestor information in TrackBestTrackCreator (TrackUtils)
 
 </PRE><H1><A NAME=v47r2p1>2014-09-17 Brunel v47r2p1</A></H1><PRE>
 This version uses projects LHCb v38r2p1, Lbcom v16r1p1, Rec v17r2p1
