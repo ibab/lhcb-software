@@ -4,6 +4,7 @@
 ! Purpose     : MC tools for pattern recognition for the Upgrade
 !-----------------------------------------------------------------------------
 
+!========================= PrMCTools v2r5 2014-12-11 =========================
 ! 2014-12-10 - Michel De Cian
 - Fix LiteCluster locations for STDetectors in PrLHCbID2MCParticle
 
