@@ -3,6 +3,8 @@
 ! Responsible : Chris Jones
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
+
+!========================= RichRecQC v2r68 2014-12-11 =========================
 ! 2014-12-03 - Gerhard Raven
  - adapt to split HLT setup
 
