@@ -91,7 +91,7 @@ class B2DXBuilder(object):
         self._makeB2D0H('D2HHHHWS',self.d.hhhh_ws)
         self.lines[-1].pre = 0.1 # last line is WS D line
         self._makeB2D0H('D2HHHHUP',self.d.hhhh_up) # B+- -> D0(HHHH) H+-
-        self._makeB02D0HH('D2KPiPiPi',self.d.k3pi) # B0  -> D0(K3Pi)  H+ H-
+        self._makeB02D0HH('D2HHHH',self.d.hhhh) # B0  -> D0(K3Pi)  H+ H-
         self._makeB02D0HH('D2HHHHWS',self.d.hhhh_ws) # B0  -> D0(HHHH)WS  H+ H-
         self.lines[-2].pre = 0.1 # WS D line
         self._makeB02D0KS('D2K3Pi',self.d.k3pi,'DD') # B0  -> D0(K3Pi)  KS
@@ -112,8 +112,8 @@ class B2DXBuilder(object):
         self._makeB2D0H('D2KSPi0HHDDResolved',self.d.kspi0hh_dd_resolved)
         self._makeB2D0H('D2KSPi0HHDDMerged',self.d.kspi0hh_dd_merged)
         
-        self._makeB02D0HH('D2Pi0KPiResolved',self.d.pi0kpi_resolved)
-        self._makeB02D0HH('D2Pi0KPiMerged',self.d.pi0kpi_merged)
+        self._makeB02D0HH('D2Pi0HHResolved',self.d.pi0hh_resolved)
+        self._makeB02D0HH('D2Pi0HHMerged',self.d.pi0hh_merged)
         #self._makeB02D0KS('D2Pi0KPiResolved',self.d.pi0kpi_resolved,'DD')
         #self._makeB02D0KS('D2Pi0KPiMerged',self.d.pi0kpi_merged,'LL') 
         # B0 -> D+-(Pi0HHH) H-+  (resolved & merged) (+WS)
