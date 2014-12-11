@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================= PatVeloTT v4r3 2014-12-11 =========================
 ! 2014-11-24 - Sebastian Neubert
  - PatVeloTTHybrid uses Ranges now. It can operate on both track containers 
    and track selections
