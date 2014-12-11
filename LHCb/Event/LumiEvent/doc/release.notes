@@ -4,6 +4,7 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!========================= LumiEvent v3r8 2014-12-11 =========================
 ! 2014-11-26 - Marco Clemencic
  - Reverted work around for spurious entries in the rootmap files.
 
