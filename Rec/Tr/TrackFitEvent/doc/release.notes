@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================= TrackFitEvent v6r4 2014-12-11 =========================
 ! 2014-12-09 - Marco Cattaneo
  - FitNode.cpp: remove unused function ::transportVector to
                 silence gcc49 warning
