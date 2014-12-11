@@ -2,11 +2,15 @@
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! ====================================================================
+
+!========================= CondDBUI v3r32 2014-12-11 =========================
 ! 2014-12-05 - Liang Sun
- - The workaround for PyCoolCopy issue is now marked with FIXME. This is due to a current ROOT6 bug about handling expections in Python: https://sft.its.cern.ch/jira/browse/ROOT-5603 
+ - The workaround for PyCoolCopy issue is now marked with FIXME. This is due to a current ROOT6 bug 
+    about handling exceptions in Python: https://sft.its.cern.ch/jira/browse/ROOT-5603 
 
 ! 2014-12-05 - Liang Sun
- - PyCoolCopy().copy would not support a connection string as its target db when the target db does not exist, now use an empty cool.IDatabase object
+ - PyCoolCopy().copy would not support a connection string as its target db when the target db does not exist, 
+    now use an empty cool.IDatabase object
 
 !========================= CondDBUI v3r31 2014-10-14 =========================
 ! 2014-10-07 - Liang Sun
