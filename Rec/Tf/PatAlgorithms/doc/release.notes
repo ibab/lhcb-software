@@ -4,8 +4,9 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v4r37 2014-12-11 =========================
 ! 2014-12-11 - Gerhard Raven
- - PatFwdTrackConadidate: use vdt::fast_isqrt 
+ - PatFwdTrackCondidate: use vdt::fast_isqrt 
  - PatFwdTool: speed up distanceForFit, simplify inline methods
 
 ! 2014-12-10 - Sebastian Neubert
