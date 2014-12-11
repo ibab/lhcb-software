@@ -6,6 +6,11 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v16r2p1>2014-12-15 LbcomSys v16r2p1</A></H1><PRE>
+This version uses Gaudi v25r6p1 and LHCb v38r3p1 (and ROOT 6.02.02)
+
+Identical to v16r2 but built against LCG_71root6 with ROOT 6.02.02
+
 </PRE><H1><A NAME=v16r2>2014-12-15 LbcomSys v16r2</A></H1><PRE>
 This version uses Gaudi v25r6 and LHCb v38r3 (and ROOT 5.43.24)
 
