@@ -206,11 +206,10 @@ StatusCode Pythia8Production::finalize() {
   // Write the cross-sections to the XML log.
   vector<int> codes = m_pythia->info.codesHard();
   for (unsigned int code = 0; code < codes.size(); ++code)
-    if (m_pythia->info.nAccepted(codes[code]))
-      m_xmlLogTool->addCrossSection(m_pythia->info.nameProc(codes[code]), 
-				    codes[code],
-				    m_pythia->info.nAccepted(codes[code]),
-				    m_pythia->info.sigmaGen(codes[code]));
+    m_xmlLogTool->addCrossSection(m_pythia->info.nameProc(codes[code]), 
+				  codes[code],
+				  m_pythia->info.nAccepted(codes[code]),
+				  m_pythia->info.sigmaGen(codes[code]));
   
   // Clean up.
   if (m_pythiaBeamTool) delete m_pythiaBeamTool;
@@ -254,18 +253,19 @@ StatusCode Pythia8Production::toHepMC(HepMC::GenEvent* theEvent,
   for (HepMC::GenEvent::particle_iterator p = theEvent->particles_begin();
        p != theEvent->particles_end(); ++p) {
     int status = (*p)->status();
+    int pid    = (*p)->pdg_id();
     if (status > 3) {
-      if ((71 == status) || (72 == status)) 
+      if ((status == 71) || (status == 72) || 
+	  ((status == 62) && (abs(pid) >= 22) && (abs(pid) <= 37)))
         (*p)->set_status(LHCb::HepMCEvent::DecayedByProdGen);
       else
-        (*p)->set_status( LHCb::HepMCEvent::DocumentationParticle);
-    } else if (status!=LHCb::HepMCEvent::DecayedByProdGen
-               && status!=LHCb::HepMCEvent::StableInProdGen
-               && status!=LHCb::HepMCEvent::DocumentationParticle)
+        (*p)->set_status(LHCb::HepMCEvent::DocumentationParticle);
+    } else if (status != LHCb::HepMCEvent::DecayedByProdGen
+               && status != LHCb::HepMCEvent::StableInProdGen
+               && status != LHCb::HepMCEvent::DocumentationParticle)
       warning() << "Unknown status rule " << status << " for particle" 
-                << (*p)->pdg_id() << endmsg;
-    if (abs((*p)->pdg_id()) == 10221)
-      (*p)->set_pdg_id((*p)->pdg_id() > 0 ? 30221 : -30221);
+                << pid << endmsg;
+    if (abs(pid) == 10221) (*p)->set_pdg_id(pid > 0 ? 30221 : -30221);
   }
   
   // Convert to LHCb units.
