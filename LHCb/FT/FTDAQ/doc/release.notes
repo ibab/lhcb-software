@@ -4,7 +4,7 @@
 ! Purpose     : Code/Decode the FT raw data
 !-----------------------------------------------------------------------------
 
-
+!========================= FTDAQ v1r7 2014-12-11 =========================
 ! 2014-01-12 - Renato Quagliani
   - In FTRawBankEncoder cluster size reduced of one unit, and in FTRawBankDecoder increased of 1 in order to keep
     clusters with size 1,2,3 and 4 using 2 bits to encode the cluster size in the data format.
