@@ -6,7 +6,7 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v38r3>2014-12-15 LHCbSys v38r3</A></H1><PRE>
-This version uses Gaudi v25r5 and LCG_71 with ROOT 5.34.24.
+This version uses Gaudi v25r6 and LCG_71 with ROOT 5.34.24.
 
 - Packages modified: Calo/CaloKernel v6r5, Det/DetCond v12r40, Det/FTDet v2r8,
     Det/OTDet v8r13, Det/RichDet v17r0, Event/DigiEvent v4r3,
