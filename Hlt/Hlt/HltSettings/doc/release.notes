@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-12-11 - Michael Kolpin
+ - changed TrackEffLines.py to account for changes in Hlt1TrackLines
+
 ! 2014-12-11 - Christian Linn
  - modifications to Physics_draftEM2015.py to deal with changes in TrackAllL0
 
