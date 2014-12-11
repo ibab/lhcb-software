@@ -4,6 +4,7 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+!========================= DetCond v12r40 2014-12-11 =========================
 ! 2014-12-03 - Liang Sun
  - In Configuration.py: Fixing the cases without valid DQFLAGS tags
 
