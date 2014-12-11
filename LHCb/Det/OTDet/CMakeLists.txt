@@ -1,7 +1,7 @@
 ################################################################################
 # Package: OTDet
 ################################################################################
-gaudi_subdir(OTDet v8r12)
+gaudi_subdir(OTDet v8r13)
 
 gaudi_depends_on_subdirs(Det/DetDescCnv
                          Kernel/LHCbKernel
