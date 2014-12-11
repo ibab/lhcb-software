@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!========================= RichGlobalPID v3r22 2014-12-11 =========================
 ! 2014-11-25 - Marco Cattaneo
  - Fix an unprotected debug
 
