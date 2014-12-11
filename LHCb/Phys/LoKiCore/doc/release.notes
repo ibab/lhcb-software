@@ -14,8 +14,11 @@
 ! -----------------------------------------------------------------------------
 
 !========================= LoKiCore v11r21 2014-12-11 =========================
+! 2014-12-11 - Marco Clemencic
+ - Fixed the mane of the macro to hide code from gccxml.
+
 ! 2014-12-02 - Vanya Belyaev
- - FunctorFromFunctor 
+ - FunctorFromFunctor
    add move-constructor
 
 !========================= LoKiCore v11r20p1 2014-07-30 =========================
