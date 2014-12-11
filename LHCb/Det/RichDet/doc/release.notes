@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!========================= RichDet v17r0 2014-12-11 =========================
 ! 2014-11-22 - Antonis Papanestis
  - Protected debug output with 
      if ( msgLevel(MSG::DEBUG) )
