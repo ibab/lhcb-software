@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!========================= RichRecBase v4r18 2014-12-11 =========================
 ! 2014-11-19 - Marco Clemencic
  - Removed unused dictionary selection rules.
 
