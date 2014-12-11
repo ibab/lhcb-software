@@ -2,6 +2,8 @@
 ! Package     : MuonID
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
+
+!========================= MuonID v9r12 2014-12-11 =========================
 ! 2014-12-09 - Gerhard Raven
  - speed up MuonIDAlg by 30% by using a single function call for foiX and foiY,
    and using vdt::fast_exp
