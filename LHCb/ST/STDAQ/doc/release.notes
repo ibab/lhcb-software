@@ -4,6 +4,10 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!========================= STDAQ v4r5 2014-12-11 =========================
+! 2014-11-22 - Mark Tobin
+ - Fix bug introduced in decoding that prevented the proper decoding of TAE event
+
 !========================= STDAQ v4r4 2014-02-17 =========================
 ! 2014-02-14 - Rob Lambert
  - Suppress not-needed info print out in initialize for default configurations
