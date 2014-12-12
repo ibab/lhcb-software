@@ -5,7 +5,188 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
-- Packages removed: Tr/TrackMatching, Tr/TrackSeeding (both obsolete)
+</PRE><H1><A NAME=v17r3>2014-12-15 RecSys v17r3</A></H1><PRE>
+This version uses Gaudi v25r6, LHCb v38r3 and Lbcom v16r2 (and ROOT v5.43.24)
+
+- Packages removed:  Tr/TrackMatching, Tr/TrackSeeding (both obsolete)
+- Packages modified: Calo/CaloPIDs v5r20, Calo/CaloReco v5r22, 
+    Hlt/HltMonitors v1r7, Muon/MuonID v9r12, Pr/PrAlgorithms v1r15,
+    Pr/PrKernel v1r6, Pr/PrMCTools v2r5, Rec/ChargedProtoANNPID v2r8,
+    Rec/GlobalReco v6r52, Rec/LumiAlgs v9r6, Rec/RecConf v2r19,
+    Rec/RecInterfaces v1r4, Rich/RichGlobalPID v3r22, Rich/RichRecBase v4r18,
+    Rich/RichRecQC v2r68, Tf/FastVelo v1r17, Tf/PatAlgorithms v4r37,
+    Tf/PatVeloTT v4r3, Tf/TfKernel v2r28, Tf/TrackSys v9r3, 
+    Tr/TrackCheckers v4r21, Tr/TrackFitEvent v6r4, Tr/TrackInterfaces v4r27,
+    Tr/TrackKernel v2r1, Tr/TrackMCTools v3r11, Tr/TrackTools v5r5,
+    Tr/TrackUtils v1r57, Velo/VeloRecMonitors v2r30
+
+- In Calo/CaloPIDs v5r20
+  . CaloElectronMatch : change back to extrapolation to the ZShowerMax plane
+
+- In Calo/CaloReco v5r22
+  . Fix unprotected debug in CaloSCorrection.cpp
+
+- In Hlt/HltMonitors v1r7
+  . Migrate to split Hlt setup
+
+- In Muon/MuonID v9r12
+  . Added dependency on VDT
+  . Speed up MuonIDAlg by 30% by using a single function call for foiX and foiY,
+    and using vdt::fast_exp
+
+- In Pr/PrAlgorithms v1r15
+  . In PrFTHitManager the zone geometry setting has been changed to reflect 
+    the modifications in FTDet in createDetSegment.
+
+- In Pr/PrKernel v1r6
+  . Add IPrTTCounter and modified IPrCounter for efficiency studies.
+
+- In Pr/PrMCTools v2r5
+  . Fix LiteCluster locations for STDetectors in PrLHCbID2MCParticle
+  . Add LoKiMC dependency
+  . Add PrTTCounter, PrChecker2 and PrCounter2 for efficiency studies
+
+- In Rec/ChargedProtoANNPID v2r8
+  . Add Kaon and Pion networks for the MLP and BDT 'Dev1' (IsMuon as input)
+    Bs2MuMu development tunings.
+  . Remove the out of 0-1 bounds checks for TMVA networks. Not needed for MLP
+    MVAs, and breaks with BDTs which vary from -1 to 1 ...
+  . Check the 'error' return values from ChargedProtoANNPIDTool to
+    -3 : Invalid ProtoParticle or track
+    -2 : Failed pre-selection cuts.
+    Done in order to avoid using -1, as this is a valid BDT return value.
+  . Add new developmental PID tunings for Bs2MuMu.
+
+- In Rec/GlobalReco v6r52
+  . NeutralProtoPAlg : reduce verbosity
+
+- In Rec/LumiAlgs v9r5, v9r6
+  . Update unittests (and example jobs) to use latest database tag
+  . Small correction in jobs/gaudipython_mu_calculation.py
+  . Check for *DST types rather than explicit DST names in LumiAlgs config
+
+- In Rec/RecConf v2r19
+  . Remove "upgrade" from KnownSpecialData (obsolete, use the DataType instead)
+    and from pre 2010 treatment of primary vertex
+  . Remove 'TrackMatching' and 'TrackSeeding' from dependencies
+  . Remove obsolete RDST special case
+
+- In Rec/RecInterfaces v1r4
+  . Change default return value in IChargedProtoANNPIDTool to -3
+  . Update IChargedProtoANNPIDTool interface to include a status code in the
+    return value.
+
+- In Rich/RichGlobalPID v3r22
+  . Fix an unprotected debug
+
+- In Rich/RichRecBase v4r18
+  . Removed unused dictionary selection rules.
+
+- In Rich/RichRecQC v2r68
+  . Adapt to split HLT setup
+
+- In Tf/FastVelo v1r17
+  . Added a rejection for too many tracks using the same phi clusters
+
+ - In Tf/PatAlgorithms v4r37
+   . PatFwdTrackCondidate:
+     o use vdt::fast_isqrt 
+     o move data members to the 'top' of the class so that one can use 'auto'
+       (trailing) return specifitation
+     o improve PatFwdTrackCandidate memory layout: move 'cold' pointer towards
+       the 'back'
+   . PatFwdTool:
+     o speed up distanceForFit, simplify inline methods
+     o better use of ranges
+   . PatForward uses Ranges now to access track selections as well as containers
+   . PatForwardTool: small speedup in fillXList, cleanup
+   . PatFwdPlaneCounter: add addHitwWhile
+   . PatDownstream:
+     o fix such that hits in at least three layers are required for a track.
+     o avoid interrogating the MagneticFieldSvc at every track to get the
+       signedRelativeCurrent, once per event is enough!
+   . New implementation of the search for compatible hits in PatAddTTCoord.
+     Faster, but efficiency performance should be stable.
+   . PatSeedingTool: modernise some of the code somewhat; no functional changes,
+     no changes in performance or timing
+
+- In Tf/PatVeloTT v4r3
+  . PatVeloTTHybrid uses Ranges now. It can operate on both track containers 
+    and track selections
+  . Optimised PatVeloTTHybridTool for low momentum tracks
+
+- In Tf/TfKernel v2r28
+  . Reverted work around for spurious entries in the rootmap files.
+  . Tf::TStationHitManager: replace the ToolHandle instances by ordinary
+    pointers to the interfaces implemented by the tools.
+  . SIMDChi2Fit.h: fix warning about extra semicolon
+
+- In Tf/TrackSys v9r3
+  . Replace "Match" with "PatMatch" for old sequence of PatReco algorithms in
+    Configuration.py
+  . Remove 'TrackMatching' from RecoTracking.py. A runtime error is raised 
+    if it is set as a track type.
+  . Remove 'TrackMatching' and 'TrackSeeding' from dependencies
+
+- In Tr/TrackCheckers v4r21
+  . Remove 'TrackMatchChecker', as 'TrackMatching' was put in 'obsolete'
+
+- In Tr/TrackFitEvent v6r4
+  . FitNode.cpp: remove unused function ::transportVector to
+                 silence gcc49 warning
+  . Small change to OTMeasurement to make sure it also works for trajectories
+    other than LineTraj
+
+- In Tr/TrackInterfaces v4r27
+  . Remove two virtual functions in IAddTTClusterTool, as AddTTClusterTool is not
+    in Rec anymore and they are not needed.
+
+- In Tr/TrackKernel v2r1
+  . Rewrite TrackCloneData class:
+    o use Bloom filter to quickly check for non-overlapping tracks (use old
+      method to determine size of overlap if overlap might be non-emptr); this
+      option will give exactly the same result as previous code in all cases
+      (default)
+    o option to do the entire overlap calculation with size estimate of Bloom
+      filter class - slightly faster, but will cause permille level differences
+      (selectable with template argument, but not default)
+    o template argument to allow choice between owning the contained pointer
+      to the underlying track (default) or not owning it
+
+- In Tr/TrackMCTools v3r11
+  . Add wrapper for ghost track classification tools to decide on a
+    track-by-track base which implementation to use
+
+- In Tr/TrackTools v5r5
+  . Use vdt::fast_log to speed up hotspots
+  . Make sure the cluster size is always set in VeloClusterPosition
+
+- In Tr/TrackUtils v1r57
+  . Added counters to TrackListRefiner
+  . TrackBestTrackCreator: use the ancestor information to get rid of obvious
+    clones early in the process (as is done in TrackEventCloneKiller), this
+    speeds up the algorithm by about 3.5%, and gets rid of a couple of
+    problematic tracks in T and the Velo before they're fitted (without
+    adversely affecting performance - these tracks usually got killed by the
+    chi^2 cut inside TrackBestTrackCreator after the fit); the number of tracks
+    in the Best container stays unchanged; the new UseAncestorInfo property can
+    be used to restore the old behaviour if needed
+  . Factor out the remove_if_partitioned algorithm from TrackEventCloneKiller
+    and TrackBestTrackCreator, and move it to its own header file; adapt
+    TrackEventCloneKiller and TrackBestTrackCreator accordingly   
+  . TrackEventCloneKiller: rewrite internal logic so fewer comparisons are
+    needed to determine if two tracks are clones, use Bloom filters for
+    non-overlapping tracks, remove useless (and unused) StoreCloneTrack
+    property from algorithm; efficiency and ghost rate changes are at the
+    permille level, and the algorithm should be 7-15% faster now
+  . Rewrite TrackBestTrackCreator to take advantage of the Bloom filters in
+    TrackCloneData from TrKernel; also modernise and clarify the code somewhat
+    (C++11, consistent use of generic algorithms where possible)
+  . Remove 'TrackMatching' from 'TrackFromDST'
+  . Remove 'TrackSeeding' from 'TrackFromDST' and 'TTrackFromLong'
+
+- In Velo/VeloRecMonitors v2r30
+  . Fix the check in case of no MC hit association in VeloTrackMonitorNT
 
 </PRE><H1><A NAME=v17r2p1>2014-10-22 RecSys v17r2p1</A></H1><PRE>
 This version uses Gaudi v25r4p1, LHCb v38r2p1 and Lbcom v16r1p1 (and ROOT 6.02.01)
