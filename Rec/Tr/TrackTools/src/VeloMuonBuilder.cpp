@@ -59,7 +59,7 @@ StatusCode VeloMuonBuilder::initialize() {
 
   m_iPosTool=tool<IMuonFastPosTool>( "MuonFastPosTool" );
   m_linearextrapolator = tool<ITrackExtrapolator>( "TrackLinearExtrapolator" );
-  m_tracksFitter = tool<ITrackFitter>( "TrackMasterFitter");
+  m_tracksFitter = tool<ITrackFitter>( "TrackMasterFitter", this);
 
   ILHCbMagnetSvc* m_magFieldSvc = svc<ILHCbMagnetSvc>( "MagneticFieldSvc", true );
   m_fieldfactor = - (float)(m_magFieldSvc->signedRelativeCurrent());

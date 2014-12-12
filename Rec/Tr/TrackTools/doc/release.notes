@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2014-12-12 - Michael Kolpin
+ - changed TrackMasterFitter use of VeloMuonBuild to private
+
 !========================= TrackTools v5r5 2014-12-11 =========================
 ! 2014-12-09 - Gerhard Raven
  - use vdt::fast_log to speed up hotspots
