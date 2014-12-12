@@ -4,6 +4,9 @@
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2014-12-12 - Sebastian Neubert
+ - added TrackCandidateXXX Selection IDs for the new Muon lines into ANNSvc
+
 ! 2014-12-10 - Sebastian Neubert
  - tracking cleanup: removed superflous entries in ANNSvc
 

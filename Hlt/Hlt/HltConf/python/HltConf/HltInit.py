@@ -221,7 +221,16 @@ HltANNSvc().Hlt1SelectionID = {
     'CaloCandidatesElectronTrack'           : 10136,
     'VeloCandidatesTrackElectron'           : 10137,
     'CaloCandidatesTrackElectron'           : 10138,
-    'TrackCandidatesSingleElectronNoIP'     : 10139
+    'TrackCandidatesSingleElectronNoIP'     : 10139,
+    'TrackCandidatesDiMuonHighMass'         : 10140,
+    'TrackCandidatesDiMuonLowMass'          : 10141,
+    'TrackCandidatesDiProton'               : 10142,
+    'TrackCandidatesDiProtonLowMult'        : 10143,
+    'TrackCandidatesSingleMuonHighPT'       : 10144,
+    'TrackCandidatesSingleMuonNoIP'         : 10145,
+    'TrackCandidatesTrackPhoton'            : 10146,
+    
+    
     #
     # 11K - 20K : added automatically by configuration...
     # 50K+ : used by Hlt2
