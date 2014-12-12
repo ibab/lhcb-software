@@ -4,6 +4,9 @@
 ! Purpose     : LHCb HLT application
 !============================================
 
+! 2014-12-12 Sebastian Neubert
+ - small update to test reference for hlt1prcheck
+
 ! 2014-12-10 Sebastian Neubert
  - updated tracking tests references for TrackAllL0 using upfront tracking
  - change the default settings file to Commissioning_Physics_2015
