@@ -133,9 +133,9 @@ def main():
     else:
         data['slot'] = data['day'] = ''
 
-    # for backward compatibility, we create the CMT configuration
+    # for backward compatibility, we create the CMT configuration and env helpers
     if not use_cmake:
-        templates.append('cmt/project.cmt')
+        templates += ['cmt/project.cmt', 'build_env.sh', 'build_env.csh']
         os.makedirs(os.path.join(devProjectDir, 'cmt'))
 
     for templateName in templates:

@@ -1,6 +1,9 @@
 2014-12-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
-	* lb-dev: fixed a problem in the Makefile template
+	* lb-dev: fixes
+		- fixed a problem in the Makefile template
+		- resurrected build_env.*sh (needed if we want to use directly CMT as in 'run')
+		  but modified to use build.conf
 
 2014-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 

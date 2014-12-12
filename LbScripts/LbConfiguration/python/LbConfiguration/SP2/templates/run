@@ -16,7 +16,10 @@ if [ -n "$$USE_CMAKE" ] ; then
     exit 1
   fi
 else
-  . $$(dirname $$0)/build_env.sh
+  curdir=$$(pwd)
+  cd $$(dirname $$0)
+  . ./build_env.sh
+  cd $$curdir
   . SetupProject.sh --keep-CMTPROJECTPATH --user $$(cd $$(dirname $$0)/.. ; pwd) LHCbDev HEAD
   if [ "$$SetupProjectStatus" = 0 ] ; then
     [ "$$#" = 0 ] && (printenv | sort) || exec "$$@"
