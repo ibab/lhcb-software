@@ -89,8 +89,8 @@ StatusCode PatVeloTTHybrid::execute() {
   put(outputTracks, m_outputTracksName);
 
   LHCb::Track::Range inputTracks   = get<LHCb::Track::Range>( m_inputTracksName ); 
-  if( !inputTracks ){
-    warning() << " Input Tracks container: " <<  m_inputTracksName << " is invalid! Skipping" << endmsg;
+  if( inputTracks.size() == 0 ){
+    debug() << " Input Tracks container: " <<  m_inputTracksName << " is empty! Skipping" << endmsg;
     return StatusCode::SUCCESS;
   }
   

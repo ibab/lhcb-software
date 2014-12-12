@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2014-12-12 - Sebastian Neubert 
+ - adapt the check for an empty input to explicitely query the size of the Range
+   move the corresponding message-level from warning to debug 
+
 !========================= PatVeloTT v4r3 2014-12-11 =========================
 ! 2014-11-24 - Sebastian Neubert
  - PatVeloTTHybrid uses Ranges now. It can operate on both track containers 
