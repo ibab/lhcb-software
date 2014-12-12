@@ -1,11 +1,15 @@
 !-----------------------------------------------------------------------------
 ! Package     : EvtGenExtra
-! Responsible : Mark WHITEHEAD, Patrick ROBBE
+! Responsible : Michal Kreps, Tom Latham, John Back
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
+
+! 2014-11-18 - Michal Kreps
+  - Removing semicolons from wrong places to clear warnings when compiled
+    with -pedantic option.
 
 ! 2014-11-17 - Gloria Corti
  - Fix compilation errors with --pedantic for missing std:: in front of
