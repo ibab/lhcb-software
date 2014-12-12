@@ -3,7 +3,10 @@
 ! Responsible : Alessio Sarti, Helder Lopes
 !-----------------------------------------------------------------------------
 
-!========================= MuonID v9r12 2014-12-11 =========================
+!========================= MuonID v9r12 2014-12-12 =========================
+! 2014-12-12 - Marco Clemencic
+ - Added dependency on VDT in CMake configuration.
+
 ! 2014-12-09 - Gerhard Raven
  - speed up MuonIDAlg by 30% by using a single function call for foiX and foiY,
    and using vdt::fast_exp
@@ -27,10 +30,10 @@
    This optimisation should have no implications except for performance improvement.
 
 ! 2014-01-30 - J. Helder Lopes
- - Fixed problem with ROOT 6 (https://sft.its.cern.ch/jira/browse/ROOT-5985): 
-   For non-muon probability use ROOT::Math::landau_cdf. User function land()    
-   removed. For muon probability continue to use TF1 integral, but now only 
-   call it if DLL_flag == 1. 
+ - Fixed problem with ROOT 6 (https://sft.its.cern.ch/jira/browse/ROOT-5985):
+   For non-muon probability use ROOT::Math::landau_cdf. User function land()
+   removed. For muon probability continue to use TF1 integral, but now only
+   call it if DLL_flag == 1.
 
 ! 2014-01-29 - Marco Clemencic
  - Reiteration on the workaround for ROOT-5985 (the first attempt didn't work).
@@ -42,18 +45,18 @@
 
 !========================= MuonID v9r8 2013-12-10 =========================
 ! 2013-11-04 - J. Helder Lopes
- - Fixes comparison between signed and unsigned integer warning. Avoid repeated 
-   calculation of index station * m_NRegion + region. 
+ - Fixes comparison between signed and unsigned integer warning. Avoid repeated
+   calculation of index station * m_NRegion + region.
 
 ! 2013-10-28 - J. Helder Lopes
- - Fixes for the No M1 upgrade studies setup: a few bugs to correctly pick the 
-   station index and set FindQuality to false because Chi2MuIDTool is not yet 
-   fixed to no M1 case. 
+ - Fixes for the No M1 upgrade studies setup: a few bugs to correctly pick the
+   station index and set FindQuality to false because Chi2MuIDTool is not yet
+   fixed to no M1 case.
 
 !========================= MuonID v9r7 2013-10-01 =========================
 ! 2013-09-24 - Giovanni Passaleva
  - Muon/MuonID Chi2MuIDTool Fixed problem in addLHCbIDsToMuTrack when running
-   without M1 
+   without M1
 
 ! 2013-09-01 - Paul Szczypka
  - Correct some comment lines
@@ -177,15 +180,15 @@
  - Added 2010 and 2011 python files for chi2s, chi2b, gamoms, gaprobs, dists, distb algs
 
 ! 2011-02-17 - Helder Lopes
- - Implement muon probability tuned on 2010 data and using cumulative histograms 
+ - Implement muon probability tuned on 2010 data and using cumulative histograms
    of the hyperbolic tangent of the distances. NonMuon prob still from Landau fits.
-   This corresponds to DLL_Flag = 4 and is used with 2011 and 2010 data if configured 
+   This corresponds to DLL_Flag = 4 and is used with 2011 and 2010 data if configured
    from options.  DLL_Flag = 3 should not be used for 2011 and 2010 data anymore
-   The default continues to be DLL_Flag = 1 with parameters from the database. 
+   The default continues to be DLL_Flag = 1 with parameters from the database.
 
 !========================= MuonID v7r10 2011-02-02 =========================
-! 2011-02-01 - Erica Polycarpo 
- - remove lines which set options according to "earlyData" flag in the configurable 
+! 2011-02-01 - Erica Polycarpo
+ - remove lines which set options according to "earlyData" flag in the configurable
  - change default value of FOIfactor to 1.2 in the cpp
 
 !======================== MuonID v7r9p2 2010-09-24 ============================
@@ -198,8 +201,8 @@
 !======================== MuonID v7r9 2010-07-20 =============================
 ! 2010-07-19 - Chris Jones
  - Update the Muon PID algorithm to lazy load the PID tool for first time it
-   is really needed. Avoids loading it by default in DaVinci during 
-   initialization, since it triggers a lot of underlying tools to get 
+   is really needed. Avoids loading it by default in DaVinci during
+   initialization, since it triggers a lot of underlying tools to get
    configured which take some time and aren't needed.
 
 !======================== MuonID v7r8p2 2010-05-21 ===========================
@@ -241,15 +244,15 @@
 - Made MC09 the default configuration file.
 
 ! 2010-02-09 - Helder Lopes
-- New DLL_flag=3 method: The closest distance is mapped into [0,1] by 
-  hyperbolic tangent, filling histograms, with a conversion factor per 
-  region/momentum bin. Muon and NonMuon probabilities are read directly from 
-  the histograms, coded in options file as vectors of doubles (since the 
+- New DLL_flag=3 method: The closest distance is mapped into [0,1] by
+  hyperbolic tangent, filling histograms, with a conversion factor per
+  region/momentum bin. Muon and NonMuon probabilities are read directly from
+  the histograms, coded in options file as vectors of doubles (since the
   binning is known). No Landau fits are needed.
-  
+
 ! 2010-02-01 - Helder Lopes
  - Some global MuonID parameters and the ones for calculating the DLL with
- the default method DLL_flag=1 (DLLs from region/momentum binned distributions 
+ the default method DLL_flag=1 (DLLs from region/momentum binned distributions
  with Landau fits) to the Conditions database. MuonIDAlg code modified to
  use these informations when adequate.
 
@@ -284,8 +287,8 @@
  - Make sure trackfitters are (also) configured by standard ConfiguredMasterFitter
 
 ! 2009-11-06 - Chris Jones
- - Update MuonIDAlg to allow it to be run when the MuonPIDs and MuonTracks 
-   already exist in the TES. In this case the existing containers are cleared 
+ - Update MuonIDAlg to allow it to be run when the MuonPIDs and MuonTracks
+   already exist in the TES. In this case the existing containers are cleared
    and reused.
 
 !======================== MuonID v7r2p2 2009-10-20 ===========================
@@ -297,7 +300,7 @@
 
 ! 2009-10-01 - Marco Cattaneo
  - In ConfiguredMuonIDs.py, set DoF property of TrackKalmanFilter to 0, since
-   MuonID uses an external state as a constraint, worth '5 measurements'. 
+   MuonID uses an external state as a constraint, worth '5 measurements'.
    Fixes warning in Brunel about negative nDOF
 
 !======================== MuonID v7r2 2009-09-03 =====================
@@ -314,23 +317,23 @@
 
 ! 2009-07-24 - Xabier Cid Vidal, Erica Polycarpo
  - Protect debug messages to be printed only if OuputLevel=DEBUG
- - Change some Error/Warning messages to Rdebug messages 
+ - Change some Error/Warning messages to Rdebug messages
  - Change findTrackRegion to use region in M2 or M3 instead of M2 only
- - Remove Error message if findTrackRegion returns -1 
+ - Remove Error message if findTrackRegion returns -1
  - Skip Prob calculation only if no valid region in M2 AND M3
 
 ! 2009-07-14 - Wouter Hulsbergen
- - Adapted configurable to change in TrackMasterFitter properties 
+ - Adapted configurable to change in TrackMasterFitter properties
 
 !======================== MuonID v7r0 2009-07-14 =====================
 ! 2009-07-14 - Wouter Hulsbergen
  - Remove a debug printout in Chi2MuIDTool.cpp that was causing FPE on ia32
 
-! 2009-07-10 - Erica Polycarpo 
+! 2009-07-10 - Erica Polycarpo
  - Set FindQuality=False for DataType="2009" to disable Muon Track fit
 
 ! 2009-07-10 - Jose A. Hernando
- - The configurable can now configure a sequencer or an algorithm 
+ - The configurable can now configure a sequencer or an algorithm
 
 ! 2009-07-09 - Jose A. Hernando
  - Fix a small Window compilation warning
@@ -368,20 +371,20 @@
  - Add missing apply_pattern install_python_modules in requirements
  - In ConfiguredMuonIDs.py give "MuonIDSeq" name to the sequencer
 
-! 2009-06-20 - E. Polycarpo 
+! 2009-06-20 - E. Polycarpo
  - protect FOI from tracks with p>1TeV (keep only constant factor)
 
-! 2009-06-20 - G. Lanfranchi, S. Furcas. 
+! 2009-06-20 - G. Lanfranchi, S. Furcas.
  - Introduce new method calcMuonLL_dist to use the distance built with the
-   closest hit in order to make a hypothesis test for muons and  non-muons; 
+   closest hit in order to make a hypothesis test for muons and  non-muons;
    The distance distributions are binned in p-bins and muon detector regions;
    the integral of the distributions is used to evaluate the compatibility of a
-   given track with the muon (Probmu) /non-muon (Prob non-mu) hypotheses. 
+   given track with the muon (Probmu) /non-muon (Prob non-mu) hypotheses.
 
  - Introduce DLL_flag (to input the old DLL or the binned-integrated DLL to MuonPIDs)
              Parameters of the Landaus for Muons and non-Muons for the binned DLL.
 
-! 2009-06-20 - Xabier Cid Vidal, G. Lanfranchi, S. Furcas. 
+! 2009-06-20 - Xabier Cid Vidal, G. Lanfranchi, S. Furcas.
  - Introduce property Weight_flag to include arrival probability
      in IsMuon/IsMuonLoose and in Dist2
 
@@ -391,34 +394,34 @@
      . MuonPID info made also available in MuonTracks (PreSelMom, InAcceptance,
           IsMuon...)
      . New property FindQuality. Adds 'quality' info to tracks. This quality
-       can be chi2 from a fit with hits in FOI and a state from seed. 
+       can be chi2 from a fit with hits in FOI and a state from seed.
        chi2PernDOF is set in MuonTrack in the TES even if this track
        is not the result of the track fit
-     . New property AllMuonTracks. Build muonTracks with all info for all seeds 
-       even if they are not Muon Candidates.  
+     . New property AllMuonTracks. Build muonTracks with all info for all seeds
+       even if they are not Muon Candidates.
 
 - New set of tools, classes and algorithms for alternative MuonID analysis:
-     . Interpolator : class transforming a histogram into a continuous 
+     . Interpolator : class transforming a histogram into a continuous
                    function linearly interpolating between bins
-     . CLTool      : tool to return the CL of a variable from a given 
-		value and a set of histograms with its distributions 
-		in momentum bins.  
+     . CLTool      : tool to return the CL of a variable from a given
+		value and a set of histograms with its distributions
+		in momentum bins.
      . GetArrival  : tool to find out probability or CL of a seed to be
                 a muon according to the number of stations where it
                 has a hit and which are these.
      . IsMuonCandidateC : tool to find out if a seed is a MuonCandidate. Can be
                 set to IsMuon,IsMuonLoose...
-     . chi2MuIDTool: tool to provide alternative dll from chi2's CL and 
-		getarrival CL 
-     . distMuIDTool: tool to provide alternative dll from distance's CL 
+     . chi2MuIDTool: tool to provide alternative dll from chi2's CL and
+		getarrival CL
+     . distMuIDTool: tool to provide alternative dll from distance's CL
 		and getarrival CL
      . SmartMuonMeasProvider : class thought to find hits in MuonChambers from a
 		seed state once a window of n sigmas is open.
      . MakeMuonMeasurements  : algorithm to fill SmartMuonMeasProvider and put it
                 in TES
-		
-- New python Configurator (ConfiguredMuonIDs) module to configure tools and 
-	algorithms in package. MuonID.cpp(h) is renamed as MuonIDAlg.cpp(h) 
+
+- New python Configurator (ConfiguredMuonIDs) module to configure tools and
+	algorithms in package. MuonID.cpp(h) is renamed as MuonIDAlg.cpp(h)
 
 !======================== MuonID v6r3 2009-06-17 =====================
 ! 2009-06-15 - Wouter Hulsbergen
@@ -427,15 +430,15 @@
 
 !======================== MuonID v6r2 2009-03-06 =====================
 ! 2009-03-06 - Miriam Gandelman
- - Changed the FOIfactor to 1.2 to recover some efficiency (2009 settings) 
+ - Changed the FOIfactor to 1.2 to recover some efficiency (2009 settings)
 
 !======================== MuonID v6r1 2009-02-02 =====================
 ! 2009-02-02 - Miriam Gandelman
- - Change the extrapolation Z position to one that is saved to the DST 
+ - Change the extrapolation Z position to one that is saved to the DST
 
 !======================== MuonID v6r0 2009-01-12 =====================
 ! 2009-01-12 - Marco Cattaneo
- - Remove empty python ConfigurableUser, python options are sufficient 
+ - Remove empty python ConfigurableUser, python options are sufficient
 
 ! 2009-01-09 - Miriam Gandelman
  - options file replaced by python configurables
@@ -454,16 +457,16 @@
 ! 2007-05-07 - Miriam Gandelman, Erica Polycarpo
  - added a foi factor to enlarge the FOI if needed, default = 1.
 
-! 2007-04-27 - Jose Hernando, Miriam Gandelman, Erica Polycarpo 
- - add measurements to the MuonTrack 
+! 2007-04-27 - Jose Hernando, Miriam Gandelman, Erica Polycarpo
+ - add measurements to the MuonTrack
 
 !========================== MuonID v5r0 2007-04-20 ===================
-! 2007-04-19 - Erica Polycarpo 
- - make a Muon Track with the Muon hits LHCbIDs 
+! 2007-04-19 - Erica Polycarpo
+ - make a Muon Track with the Muon hits LHCbIDs
 
 !========================== MuonID v4r6 2007-03-20 ===================
 ! 2007-03-08 - Miriam Gandelman
- - fixed the number of Landau parameters for the muon 
+ - fixed the number of Landau parameters for the muon
  - changed the binning of the pion DLL to be the same as the muon
 
 !========================== MuonID v4r5 2007-03-02 ===================
@@ -483,7 +486,7 @@
 ! 2006-06-14 - Erica Polycarpo, Miriam Gandelman
  - Reduce info messages
  - Explicitly call the base class initialize() and finalize() methods
- - Fix potential memory leak 
+ - Fix potential memory leak
 
 ! 2006-05-30 - Erica Polycarpo
  - Better handling of errors
@@ -518,10 +521,10 @@
     . Remove acess to eventSvc. Use get and put instead.
 ! 2005-12-07 - P. Koppenburg for Erica Polycarpo
   - src/MuIDDLLTool.cpp
-    . new tool MuonIDDLLTool.cpp. It uses the average square distance of track 
+    . new tool MuonIDDLLTool.cpp. It uses the average square distance of track
       extrapolation to hits in the Muon stations to build the DLL
   - options/MuonIDDLLTool.opts
-    . has the values for the distributions tuned with DC04 data, as for the FOI 
+    . has the values for the distributions tuned with DC04 data, as for the FOI
       in v3r10
 !========================== MuonID v3r10 2005-12-07 ====================
 ! 2005-12-07 - P. Koppenburg for Erica Polycarpo
@@ -550,7 +553,7 @@
     . Make all private methods and members really private
   - src/MuonIDNSharedHitsTool.cpp
     . Initialize all member variables
-    . Use tool<> 
+    . Use tool<>
 
 ! 2005-09-30 - P. Koppenburg for Erica Polycarpo and Myriam Gandelman
   - MuonID/IMuonIDNSharedHitsTool.h
@@ -594,8 +597,8 @@
 ! 2003-05-28 - Gloria Corti
  - MuonID/IMuonIDDLLTool.h
    src/MuonIDDLLTool.h, MuonIDDLLTool.cpp
-   New tool for evaluating Delta Log Likelihood hypothesis for muon 
-   particle ID and interface. Code provied by Miriam Gandelman and 
+   New tool for evaluating Delta Log Likelihood hypothesis for muon
+   particle ID and interface. Code provied by Miriam Gandelman and
    Joao De Mello
  - src/MuonID_load.cpp add new tool
 
@@ -613,7 +616,7 @@
 
 !========================= MuonID v3r3 2002-10-21 =========================
 ! 2002-10-16 - David Hutchcroft
- - Added an options file MuonIDFOI-v249r1.opts to do Muon ID in a system with 
+ - Added an options file MuonIDFOI-v249r1.opts to do Muon ID in a system with
 	4 stations
 
 !========================= MuonID v3r2 2002-10-11 =========================
@@ -626,9 +629,9 @@
 
 !========================= MuonID v3r0 2002-08-05 =========================
 ! 2002-08-05 - David Hutchcroft
- - Changes to read the XML via MuonTools to get number of chambers and 
+ - Changes to read the XML via MuonTools to get number of chambers and
    size of pads.
- - Changes to options files to read the number of stations to check in p bins  
+ - Changes to options files to read the number of stations to check in p bins
 
 !========================= MuonID v2r0 2002-07-25 =========================
 ! 2002-07-19 - Marco Cattaneo
@@ -648,17 +651,17 @@
   refenced by MuonID objects
 
 ! 20020514 - David Hutchcroft
-  Modified requirements file to point at Event/MuonEvent not (now removed) 
+  Modified requirements file to point at Event/MuonEvent not (now removed)
   Event/MuonIdentification
   Removed spurious options files
 
 ! 20020510 - MuonID v1r0  David Hutchcroft
-  Major rewrite to switch from AXTK tracks and MURW muon hits to 
-  TrStoredTracKs and MuonCoords. Also the structure changed completely, 
-  it is no longer an algorithm calling a tool, calling a tool. The 
-  implementation is a simple algorithm (MuonIDFOI). Also to prevent CMT 
-  clashes with the MuonIdentifcation in Event package it was renamed 
-  Muon/MuonID.  
+  Major rewrite to switch from AXTK tracks and MURW muon hits to
+  TrStoredTracKs and MuonCoords. Also the structure changed completely,
+  it is no longer an algorithm calling a tool, calling a tool. The
+  implementation is a simple algorithm (MuonIDFOI). Also to prevent CMT
+  clashes with the MuonIdentifcation in Event package it was renamed
+  Muon/MuonID.
 
 
 ! 20020325 - MuonID v1
@@ -666,4 +669,4 @@
   The package builds MuonID objects as the output.
 
 ! ====================================================================
- 
+
