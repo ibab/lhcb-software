@@ -5,6 +5,11 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications.
 
+</PRE><H1><A NAME=v17r3p1>2014-12-15 RecSys v17r3p1</A></H1><PRE>
+This version uses Gaudi v25r6p1, LHCb v38r3p1 and Lbcom v16r2p1 (and ROOT 6.02.02)
+
+Identical to v17r2 but built against LCG_70root6 with ROOT 6.02.02
+
 </PRE><H1><A NAME=v17r3>2014-12-15 RecSys v17r3</A></H1><PRE>
 This version uses Gaudi v25r6, LHCb v38r3 and Lbcom v16r2 (and ROOT v5.43.24)
 
