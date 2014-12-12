@@ -1,3 +1,7 @@
+2014-12-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev: fixed a problem in the Makefile template
+
 2014-12-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-dev: improvements to generated CMT projects:

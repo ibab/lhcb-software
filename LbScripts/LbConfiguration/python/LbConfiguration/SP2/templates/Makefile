@@ -9,9 +9,9 @@ include $$(LBUTILSROOT)/data/Makefile-cmake.mk
 else
 ######### CMT case #########
 
-CMTPROJECTPATH = "${search_path_env}"
+CMTPROJECTPATH := ${search_path_env}
 ifneq ($$(nightly_slot),)
-  CMTPROJECTPATH = "$${LHCBNIGHTLIES}/$$(nightly_slot)/$$(nightly_day):$$(CMTPROJECTPATH)"
+  CMTPROJECTPATH := $${LHCBNIGHTLIES}/$$(nightly_slot)/$$(nightly_day):$$(CMTPROJECTPATH)
 endif
 
 all:
