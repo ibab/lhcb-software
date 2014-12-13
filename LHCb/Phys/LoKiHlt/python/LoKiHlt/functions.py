@@ -28,6 +28,8 @@ _o1  = 'const LHCb::ODIN*'
 _l0  = 'const LHCb::L0DUReport*'
 _hlt = 'const LHCb::HltDecReports*'
 
+# ensure that L0Event dictionary is loaded
+cpp.LHCb.L0DUConfig
 
 # =============================================================================
 ## "The main" types

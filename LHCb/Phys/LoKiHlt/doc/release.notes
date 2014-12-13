@@ -4,7 +4,11 @@
 ! Purpose     : collection of functors&factory for HLT
 ! -----------------------------------------------------------------------------
 
-!========================= LoKiHlt v3r17 2014-12-11 =========================
+!========================= LoKiHlt v3r17 2014-12-13 =========================
+! 2014-12-13 - Marco Clemencic
+ - Ensure that L0Event dictionary is loaded before trying to use
+   LHCb::L0DUDecision::Type in LoKiHlt.functions (required for ROOT 5).
+
 ! 2014-12-05 - Gerhard Raven
  - L0 functors:
     - use std:: algorithms whenever possible
