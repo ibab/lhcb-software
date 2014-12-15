@@ -1,5 +1,5 @@
 package PhysSys
-version v19r2p1
+version v19r3
 
 branches doc cmt
 
@@ -9,7 +9,7 @@ use  DaVinciInterfaces          v2r23    Phys    # Current DV Maintainer
 use  DaVinciTypes               v2r9     Phys    # Current DV Maintainer
 use  DaVinciUtils               v1r1p1   Phys    # Current DV Maintainer
 use  DaVinciKernel              v12r0    Phys    # Current DV Maintainer
-use  SelectionLine              v1r1     Kernel  # Gerhard Raven
+use  SelectionLine              v1r3     Kernel  # Gerhard Raven
 use  SelPy                      v4r2p2   Phys    # Juan Palacios
 use  PhysSelPython              v9r5     PhysSel # Juan Palacios
 
@@ -28,11 +28,11 @@ use  BBDecTreeTool              v1r6p2   Phys    # Mike Williams
 
 #===================================================================
 
-use  DaVinciTools       	v24r0    Phys    # ?
+use  DaVinciTools       	v24r2    Phys    # ?
 use  RelatedInfoTools           v1r1     Phys    # Anton Poluektov
 use  ExtraInfoTools             v1r0     Phys    # Anton Poluektov
 use  ParticleCombiners          v1r0     Phys    # ?
-use  DaVinciPVTools             v1r0     Phys    # ?
+use  DaVinciPVTools             v1r1     Phys    # ?
 use  DaVinciFilters             v1r0     Phys    # ?
 use  DaVinciDecayFinder         v1r0     Phys    # ?
 use  TopologicalTools           v1r0     Phys    # Mike Williams et. al.
@@ -49,7 +49,7 @@ use  LoKiPhys                   v10r20   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
 use  LoKiTracks                 v2r10p2  Phys    # Vanya Belyaev
-use  KalmanFilter               v1r7     Phys    # Vanya Belyaev
+use  KalmanFilter               v1r8     Phys    # Vanya Belyaev
 
 #===================================================================
 
@@ -57,7 +57,7 @@ use TisTosTobbing		v8r1p1   Phys	 # Tomasz Skwarnicki
 
 #===================================================================
 
-use Swimming                    v3r4     Phys    # Vava Gligorov, Roel Aaij
+use Swimming                    v3r5     Phys    # Vava Gligorov, Roel Aaij
 
 #===================================================================
 
@@ -65,7 +65,7 @@ use NeuroBayesTools             v1r2p3   Phys   # ???
 
 #===================================================================
 
-use FlavourTagging              v13r9    Phys   # Stefania Vecchi
+use FlavourTagging              v13r10   Phys   # Stefania Vecchi
 
 #===================================================================
 

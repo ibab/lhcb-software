@@ -3,6 +3,43 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v19r3>2014-12-15 Phys v19r3</A></H1><PRE>
+Production release, based on Gaudi v25r6, LHCb v38r3 and Rec v17r3.
+
+- Packages updated :
+   Kernel/SelectionLine v1r3,
+   DaVinciPVTools v1r1, DaVinciTools v24r2, FlavourTagging v13r10,
+   KalmanFilter v1r8, Swimming v3r5.
+
+- In Kernel/SelectionLine v1r3 :
+  . Further reduce overhead.
+  . Flag turbo by setting bit 0x80 of executionstage.
+  . Change signature of numberOfCandidates so that we can avoid filling 'all zeros'
+    into TPRofile, which is not cheap. This change saves O(2%) of the CPU time in the HLT!
+  . Make Turbo a dedicated property, check for consistency with configured algorithms.
+  . Use std::chrono instead of Gaudi time functions for timing measurements.
+  . Remove unneeded check on TurboMIAB dummy algorithm.
+
+- In DaVinciPVTools v1r1 :
+  . Updated CMake configuration (installation of Python modules).
+
+- In DaVinciTools v24r2 :
+  . Remove no longer required TurboMIAB algorithm.
+
+- In FlavourTagging v13r10 :
+  . Fix Charm tagger memory issues with Histogram class replacement for TH1F.
+  . Added configurable option for whether or not PV refit fails should be skipped.
+    - Added hard-coded mode-by-mode calibration.
+  . Fix charm reconstruction errors by skipping events where PV refit fails.
+
+- In KalmanFilter v1r8 :
+  . VertexFit, VertexFitWithTracks, FastVertex: replace all matrix inversions
+    by faster method based on Cholesky's decomposition.
+
+- In Swimming v3r5 :
+  . Fixed CMake configuration (SwimmingComponent should be a module,
+    not a library).
+
 </PRE><H1><A NAME=v19r2p1>2014-10-30 Phys v19r2p1</A></H1><PRE>
 Development release, based on Rec v17r2p1, LHCb v38r2p1 and Gaudi v25r5.
 
