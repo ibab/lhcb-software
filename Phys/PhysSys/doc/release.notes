@@ -3,6 +3,11 @@ Package             : PhysSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v19r3p1>2014-12-15 Phys v19r3p1</A></H1><PRE>
+Development release, based on Gaudi v25r6p1, LHCb v38r3p1 and Rec v17r3p1.
+
+Identical to Phys v19r3, rebuilt against the (ROOT6) LHCb v38r3p1 stack.
+
 </PRE><H1><A NAME=v19r3>2014-12-15 Phys v19r3</A></H1><PRE>
 Production release, based on Gaudi v25r6, LHCb v38r3 and Rec v17r3.
 
