@@ -4,6 +4,8 @@
 ! Purpose     : Jet finding accessories algorithm embedded into LHCb software
 ! -----------------------------------------------------------------------------
 
+!========================= JetAccessories v3r9 2014-12-15 =========================
+
 ! 2014-12-04 - Cédric Potterat
  - Fixing the call to FastJetMaker in JetMaker_Config 
  - Adding post configuration for ParticleFlow_Config fixing MC settings
