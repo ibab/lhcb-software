@@ -4,6 +4,8 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================= HltTracking v13r3 2014-12-15 =========================
+
 ! 2014-12-10 - Sebastian Neubert
  - reintegrate merge from branch taskLHCBPS-1296
 
