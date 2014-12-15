@@ -18,7 +18,7 @@ use  PhysSelPython              v9r5     PhysSel # Juan Palacios
 use  PhysConf                   v1r26    Phys    # Patrick Koppenburg
 use  ProtoParticleFilter        v1r7p2   Phys    # Current DV Maintainer
 use  DaVinciTransporter 	v3r12    Phys    # Juan Palacios
-use  ParticleMaker      	v6r11p1  Phys    # Current DV Maintainer
+use  ParticleMaker      	v6r12    Phys    # Current DV Maintainer
 use  VertexFit			v6r20    Phys    # Yuehong Xie
 use  LoKiFitters                v4r12    Phys    # Vanya Belyaev
 use  DecayTreeFitter            v1r18    Phys    # Wouter Hulsbergen
@@ -45,7 +45,7 @@ use  LoKiUtils                  v1r3p1   Phys    # Vanya Belyaev
 use  LoKiJets                   v6r12    Phys    # Vanya Belyaev, Victor Coco
 use  LoKiAlgo                   v9r8p5   Phys    # Vanya Belyaev
 use  LoKiArrayFunctors          v10r6    Phys    # Vanya Belyaev
-use  LoKiPhys                   v10r20   Phys    # Vanya Belyaev
+use  LoKiPhys                   v10r21   Phys    # Vanya Belyaev
 use  LoKiProtoParticles         v2r2     Phys    # Vanya Belyaev
 use  LoKi                       v9r0p1   Phys    # Vanya Belyaev
 use  LoKiTracks                 v2r10p2  Phys    # Vanya Belyaev
@@ -69,11 +69,11 @@ use FlavourTagging              v13r10   Phys   # Stefania Vecchi
 
 #===================================================================
 
-use JetAccessories              v3r8     Phys   # Victor Coco, Cedric Potterat
+use JetAccessories              v3r9     Phys   # Victor Coco, Cedric Potterat
 
 #===================================================================
 
-use MVADictTools                v1r7    Phys   # S.Neubert
+use MVADictTools                v1r8    Phys   # S.Neubert
 
 #===================================================================
 

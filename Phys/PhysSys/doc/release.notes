@@ -9,7 +9,8 @@ Production release, based on Gaudi v25r6, LHCb v38r3 and Rec v17r3.
 - Packages updated :
    Kernel/SelectionLine v1r3,
    DaVinciPVTools v1r1, DaVinciTools v24r2, FlavourTagging v13r10,
-   KalmanFilter v1r8, Swimming v3r5.
+   JetAccessories v3r9, KalmanFilter v1r8, LoKiPhys v10r21,
+   MVADictTools v1r8, ParticleMaker v6r12, Swimming v3r5.
 
 - In Kernel/SelectionLine v1r3 :
   . Further reduce overhead.
@@ -32,9 +33,24 @@ Production release, based on Gaudi v25r6, LHCb v38r3 and Rec v17r3.
     - Added hard-coded mode-by-mode calibration.
   . Fix charm reconstruction errors by skipping events where PV refit fails.
 
+- In JetAccessories v3r9 :
+  . Fixing the call to FastJetMaker in JetMaker_Config.
+  . Adding post configuration for ParticleFlow_Config fixing MC settings.
+  . Adding all extra info key in Kernel/JetEnums.h and changing PFJetMaker and dict accordingly.
+  . Adding PileUp info in PFJetMaker as new extra info.
+
 - In KalmanFilter v1r8 :
   . VertexFit, VertexFitWithTracks, FastVertex: replace all matrix inversions
     by faster method based on Cholesky's decomposition.
+
+- In LoKiPhys v10r21 :
+  . Add helper functions for tis/tos/tps/tus.
+
+- In MVADictTools v1r8 :
+  . Variable length array -> alloca in MatrixnetTransform.cpp.
+
+- In ParticleMaker v6r12 :
+  . DiElectronMaker: define PosCovMatrix of mother in combinepair.
 
 - In Swimming v3r5 :
   . Fixed CMake configuration (SwimmingComponent should be a module,
