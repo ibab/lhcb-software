@@ -6,6 +6,8 @@
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+!========================= FlavourTagging v13r10 2014-12-15 ========================
+
 ! 2014-12-05 - Jack Wimberley
 	- Fix Charm tagger memory issues with Histogram class replacement for TH1F
   - Added configurable option for whether or not PV refit fails should be skipped
