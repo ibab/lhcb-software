@@ -74,6 +74,13 @@ from PatAlgorithms import PatAlgConf
 from TrackFitter.ConfiguredFitters import ConfiguredFitDownstream, ConfiguredHltFitter
 from MuonID import ConfiguredMuonIDs
 from Configurables import FastVeloTracking, TrackPrepareVelo, DecodeVeloRawBuffer, DelegatingTrackSelector, VeloMuonBuilder, TrackEventFitter
+from Configurables import (MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_,
+                           MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_,
+                           MeasurementProviderT_MeasurementProviderTypes__TTLite_,
+                           MeasurementProviderT_MeasurementProviderTypes__ITLite_,
+                           MeasurementProviderT_MeasurementProviderTypes__UTLite_)
+#	Hlt2VeloMuonBuild.Fitter.MeasProvider.VeloRProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLiteR_()
+#	Hlt2VeloMuonBuild.Fitter.MeasProvider.VeloPhiProvider = MeasurementProviderT_MeasurementProviderTypes__VeloLitePhi_()
 #
 # MuonTT particles
 #######################################################################
@@ -105,6 +112,7 @@ Hlt2MuonTTTrack.PatAddTTCoord.MajAxProj = 25.0 # was 22.0
 Hlt2MuonTTTrack.addTool( TrackMasterFitter )
 Hlt2MuonTTTrack.TrackMasterFitter.OutputLevel = 6 
 Hlt2MuonTTTrack.TrackMasterFitter.MaterialLocator = "SimplifiedMaterialLocator"
+Hlt2MuonTTTrack.TrackMasterFitter.MeasProvider.TTProvider = MeasurementProviderT_MeasurementProviderTypes__TTLite_()
 Hlt2MuonTTTrack.addTool( TrackMasterExtrapolator )
 Hlt2MuonTTTrack.TrackMasterExtrapolator.MaterialLocator = "SimplifiedMaterialLocator"
 Hlt2MuonTTTrack.Output = Hlt2TrackRoot+HltBiDirectionalKalmanFitSuffix+"/"+TrackName["MuonTT"]
