@@ -4,6 +4,8 @@
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
 
+!========================= LoKiTrigger v15r4 2014-12-15 =========================
+
 ! 2014-12-03 - Vanya Belyaev
  - add Particles into streamer functions
   
