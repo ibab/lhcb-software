@@ -1,7 +1,15 @@
 <PRE>
 Package     : MooreSys
-Package Coordinator : S. Benson
+Package Coordinator : R. Aaij
 Purpose     : LHCb HLT application
+
+</PRE><H1><A NAME=v23r3>2014-12-15 MooreSys v23r3</A></H1><PRE>
+
+Release on stack v38r3. Depends on Moore v23r3.
+
+Main changes:
+    En'block used up front by default.
+    Split configuration simplified.
 
 </PRE><H1><A NAME=v23r2>2014-11-05 MooreSys v23r2</A></H1><PRE>
 
