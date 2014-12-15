@@ -3,6 +3,76 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+
+</PRE><H1><A NAME=v47r3>2014-12-15 Brunel v47r3</A></H1><PRE>
+This version uses projects:
+ LCG_71 (ROOT 5.34.24), Gaudi v25r6, LHCb v38r3, Lbcom v16r2, Rec v17r3
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- Changes in Configuration
+  . Change to Hlt decoding and filtering to use 'split' TES locations
+    and thus support 2015 real data (backward compatible for Run1 data)
+    (Brunel v47r3, HltEvent v9r5, HltDAQ v4r10, HltServices v3r6,
+     HltMonitors v1r7, RichRecQC v2r68)
+  . Remove "upgrade" from KnownSpecialData (obsolete, use the DataType instead)
+    and from pre 2010 treatment of primary vertex (RecConf v2r19)
+  . Replace remaining usage of 'Match' with 'PatMatch' in old configurations
+    and remove 'TrackMatching' and 'TrackSeeding' from dependencies
+    (RecConf v2r19, TrackSys v9r3, TrackCheckers v4r21, TrackUtils v1r57)
+  . Remove obsolete RDST special case (RecConf v2r19)
+
+- New functionality
+  . Add support for FT geometry v4 (FTDet v2r8, PrAlgorithms v1r15)
+  . Improve support for monolayer alignment (OTDet v8r13)
+  . Add support to move HPD DetectorNumbers to ONLINE (RichDet v17r0)
+
+- Persistency changes
+  . Support for cluster size in FT RawBank (FTDAQ v1r7)
+  . Support for Herschel RawBank decoding (HCDAQ v1r1, LHCbKernel v15r6)
+  . Support for Turbo stream decoding (HltDAQ v4r10)
+
+- New Physics Tuning
+  . CaloElectronMatch : change back to extrapolation to the ZShowerMax plane
+    (CaloPIDs v2r50)
+  . Added a rejection for too many tracks using the same phi clusters
+    Protects against Velo ghosts causing large combinatorics in Stripping21
+    (FastVelo v1r17)
+  . Change TrackEventCloneKiller and TrackBestTrackCreator to use the ancestor
+    information to get rid of obvious clones early in the process, use Bloom
+    filters to quickly check for non-overlapping tracks. Changes in efficiency
+    and ghost rate at per mille level, 3.5-15% speed improvements
+    (TrackKernel v2r1, TrackUtils v1r57)
+  . Fix in PatDownstream such that hits in at least three layers are required
+    (PatAlgorithms v4r37)
+
+- Performance improvements
+  . C++ optimisations (HltDAQ v4r10, HltServices v2r6, HltInterfaces v5r3
+      LoKiCore v11r21, LoKiHlt v3r17, PatAlgorithms v4r37, TrackUtils v1r57)
+  . Algorithm improvements in PatForward, PatDownstream, PatSeeding, PatVeloTT
+    (PatAlgorithms v4r37, PatVeloTT v4r3)
+  . Speed up MuonIDAlg by 30% by using a single function call for foiX and foiY,
+    and using vdt::fast_exp (MuonID v9r12)
+  . Use vdt::fast_log to speed up hotspots (TrackTools v5r5)
+
+- Bug fixes
+  . Fix in "fibreMatMinY" and "fibreMatMaxY": the max and the min were inverted
+    (FTDet v2r8)
+  . Fix in hit fibre length computation (FTDet v2r8)
+  . Fix bug introduced in decoding that prevented the proper decoding of TAE
+    event (STDAQ v4r5)
+  . Remove duplicate dictionary std::pair<short,float> (EventPacker v4r6)
+  . Remove duplicate dictionary enum LHCb::L0DUDecision::Type (LoKiHlt v3r17)
+  . Fix unprotected debugs (RichTools v2r45, CaloReco v5r22, RichGlobalPID v3r22)
+  . Fix uninitialised (and unused) cluster size in VeloClusterPosition
+    (TrackTools v5r5)
+  . Fix the check in case of no MC hit association in VeloTrackMonitorNT 
+    (VeloRecMonitors v2r30)
+
+- Changes to QMTests
+  . Do not set InitialTime="Now" in 2012 tests
+  . Add test brunel.2012-bigevents, test on events that had huge processing
+    times in Reco14/Stripping21 tests
+
 </PRE><H1><A NAME=v47r2p1>2014-10-17 Brunel v47r2p1</A></H1><PRE>
 This version uses projects:
  LCG_70root6 (ROOT 6.02.01), Gaudi v25r5, LHCb v38r2p1, Lbcom v16r1p1, 
@@ -14,7 +84,7 @@ This version uses projects:
  and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
 
 - New functionality
-  . Add support for LDST (Brunel, GaudiConf v19r5
+  . Add support for LDST (Brunel, GaudiConf v19r5)
 
 - New physics tuning
   . New calorimeter calibration in cond-20141007 (DDDB v1r73)
