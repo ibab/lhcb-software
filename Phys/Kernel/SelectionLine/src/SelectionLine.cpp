@@ -482,16 +482,6 @@ std::vector< const Algorithm* > Selection::Line::algorithms() const
   return subs;
 }
 
-//=========================================================================
-// reset the executed status of all members
-//=========================================================================
-void Selection::Line::resetExecuted ( ) 
-{
-  Algorithm::resetExecuted();
-  // algorithm doesn't call resetExecuted of subalgos! should it???
-  std::for_each( std::begin(m_stages), std::end(m_stages), 
-                 [](std::unique_ptr<Stage>& i) { i->resetExecuted(); } );
-}
 
 //=========================================================================
 // listen for incident during processing...

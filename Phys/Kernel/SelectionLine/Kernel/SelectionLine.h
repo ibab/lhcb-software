@@ -42,8 +42,6 @@ namespace Selection {
 
       void handle(const Incident&);
 
-      void resetExecuted();         ///< Called before an event processing
-
       // id for this line -- return 0 if error
       virtual const std::pair<std::string,unsigned int>& id() const = 0; 
       // retrieve function which provides the numberOfCandidates for subalgo -- or nullptr if not supported

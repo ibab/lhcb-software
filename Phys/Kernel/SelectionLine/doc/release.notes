@@ -5,6 +5,10 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-12-15 - Gerhard Raven
+ - remove Selection::Line::resetExecuted -- the event manager calls resetExecuted
+   of all algorithms, so no need to call it from here as well..
+    
 !========================= SelectionLine v1r3 2014-12-15 =========================
 
 ! 2014-12-04 - Gerhard Raven
