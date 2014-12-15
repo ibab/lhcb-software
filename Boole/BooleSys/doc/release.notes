@@ -3,6 +3,27 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v29r2>2014-12-15 Boole v29r2</A></H1><PRE>
+This version uses projects:
+ LCG_69 (ROOT 5.34.24), Gaudi v25r6, LHCb v38r3, Lbcom v16r2
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
+- New functionality
+  . Add support for FT geometry v4 (FTDet v2r8)
+  . Add support for Herschel Digits (DigiEvent v4r3, LHCbKernel v15r6)
+
+- Persistency changes
+  . Support for cluster size in FT RawBank (FTDAQ v1r7)
+
+- Bug fixes
+  . Fix in "fibreMatMinY" and "fibreMatMaxY": the max and the min were inverted
+    (FTDet v2r8)
+  . Fix in hit fibre length computation (FTDet v2r8)
+  . Remove duplicate dictionary std::pair<short,float> (EventPacker v4r6)
+
+- Changes to QMTests
+  . Revert BooleExclusions.py change of v29r1
+
 </PRE><H1><A NAME=v29r1p1>2014-11-07 Boole v29r1p1</A></H1><PRE>
 This version uses projects:
  LCG_70root6 (ROOT 6.02.01), Gaudi v25r5, LHCb v38r2p1, Lbcom v16r1p1
