@@ -5,6 +5,7 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/VectorMap.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/IStateCorrectionTool.h"
@@ -50,5 +51,6 @@ private:
   double m_energyLossCorr;      ///< tunable energy loss correction
   double m_maxEnergyLoss;       ///< maximum energy loss in dE/dx correction
   LHCb::IParticlePropertySvc* m_pp;   /// particle property service
+  mutable GaudiUtils::VectorMap<LHCb::ParticleID,double> m_pid2mass;
 };
 #endif // TRACKTOOLS_STATEDETAILEDBETHEBLOChENERGYCORRECTIONTOOL_H

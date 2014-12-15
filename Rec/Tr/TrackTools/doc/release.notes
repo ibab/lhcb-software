@@ -3,6 +3,9 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2014-12-15 - Gerhard Raven
+ - StateDetailedBetheBlochEnergyCorrectionTool: cache mass, rewrite math to
+   reduce the # of operations
 
 ! 2014-12-12 - Michael Kolpin
  - changed TrackMasterFitter use of VeloMuonBuild to private

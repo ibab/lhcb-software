@@ -58,45 +58,38 @@ void StateDetailedBetheBlochEnergyCorrectionTool::correctState( LHCb::State& sta
                                                               bool upstream, 
                                                               LHCb::ParticleID pid) const
 {
-  
-  // apply correction - note for now only correct the state vector
-  Gaudi::TrackVector& tX = state.stateVector();
-
-  //TODO:FIXME: cache ParticleProperty of to-be-expected pids...
-  const LHCb::ParticleProperty* partProp = m_pp->find(pid);
-  if( 0 == partProp ) return;
-
-  double mass = partProp->mass();
-  
-  double eta = 1/(tX[4]*mass);
-
-  double beta2 = (eta*eta)/(1.0+eta*eta);
-
-  double me = Gaudi::Units::electron_mass_c2;
-
-  double x = vdt::fast_log(eta*eta)/4.606;
-  double rho = 0;
-  
-  if (x > material->X0()) {
-      if (x < material->X1())
-        rho = 4.606*x-material->C() + material->a()*std::pow(material->X1()-x,material->m());
-      else
-        rho = 4.606*x-material->C();
+  // lookup  mass in our cache -- and add it if not already there...
+  auto imass = m_pid2mass.find(pid);
+  if ( UNLIKELY( imass == std::end(m_pid2mass) ) ) {
+    auto partProp = m_pp->find(pid);
+    imass = m_pid2mass.insert( pid, ( partProp ? partProp->mass() : 0. ) ).first;
   }
- 
-  double eLoss =  m_energyLossCorr*wallThickness
-     * sqrt( 1. + pow_2(state.tx()) + pow_2(state.ty()) )
-    * 30.71 * MeV*mm2/mole * material->Z() * material->density() / material->A()
-      *(vdt::fast_log(2*me*eta*eta/material->I()) - beta2 - rho*0.5)/beta2;
- 
-  
-  eLoss = GSL_MIN( m_maxEnergyLoss, eLoss );
-   if ( !upstream ) eLoss *= -1.;
-  
-  
-  if ( tX[4] > 0. ) tX[4] = 1. / ( 1./tX[4]+(eLoss) );
-  else              tX[4] = 1. / ( 1./tX[4]-(eLoss) );
 
+  auto mass = imass->second;
+  if (mass==0) return;
+
+  // apply correction - note: for now only correct the state vector
+  Gaudi::TrackVector& tX = state.stateVector();
+  
+  auto eta = 1/(tX[4]*mass);
+  auto beta2 = pow_2(eta)/(1.0+pow_2(eta));
+  auto x = vdt::fast_log(eta*eta)/4.606;
+  
+  double rho = 0.0;
+  if (x > material->X0()) {
+      rho = 4.606*x-material->C();
+      if (x < material->X1())
+        rho += material->a()*std::pow(material->X1()-x,material->m());
+  }
+  auto eLoss =  m_energyLossCorr*wallThickness
+     * std::sqrt( 1. + pow_2(state.tx()) + pow_2(state.ty()) )
+     * ( 30.71 * MeV*mm2/mole ) * material->Z() * material->density() / material->A()
+     * (vdt::fast_log(2*Gaudi::Units::electron_mass_c2*eta*eta/material->I()) - beta2 - rho*0.5)/beta2;
+ 
+  eLoss = GSL_MIN( m_maxEnergyLoss, eLoss );
+
+  if (upstream == (tX[4]<0)) eLoss = -eLoss;
+  tX[4] /=  ( 1.+eLoss*tX[4] );
 }
 
 //=============================================================================
