@@ -25,6 +25,9 @@
 //
 // 2004-01-07 : Alessio Sarti
 //-----------------------------------------------------------------------------
+namespace {
+static const Gaudi::XYZPoint origin{0,0,0};
+}
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -175,14 +178,10 @@ neighborChambers(float myX, float myY, int stat, int x_direction, int y_directio
 void MuonChamberLayout::returnChambers(int sta, float st_x, float st_y, int x_dir,
                                        int y_dir, std::vector<int>& regs, std::vector<int>& chs) const {
 
-  std::vector<int> myChambers;
-  myChambers = neighborChambers(st_x,st_y,sta,x_dir,y_dir);
-
   //Now get the chambers
-  std::vector<int>::iterator idTile;
   bool debug = false;
-  for(idTile = myChambers.begin(); idTile<myChambers.end(); idTile++){
-    const long int cTile = *idTile;
+  for(const auto&  idTile :neighborChambers(st_x,st_y,sta,x_dir,y_dir) ) {
+    const long int cTile = idTile;
     //Added protection against non existing chamber
     if(cTile>0) {
       int region = findRegion(cTile);
@@ -736,8 +735,9 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 	     +----+----+----+----+ (0,0)
 	  */
 
-          double myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
-          double myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
+          auto glob_orig = deChmb->geometry()->toGlobal(origin);
+          double myX = glob_orig.x();
+          double myY = glob_orig.y();
           gridPosition((float)myX,(float)myY,iS,idx,idy,reg);
 
           int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
@@ -1197,7 +1197,7 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
     Gaudi::XYZPoint crn(Dx,Dy,Dz);
     
     if(toGlob) {
-      Gaudi::XYZPoint pointInCh=gapLayer->toMother(Gaudi::XYZPoint(0,0,0));
+      Gaudi::XYZPoint pointInCh=gapLayer->toMother(origin);
       Gaudi::XYZPoint pointInGlobal=muChamber->geometry()->toGlobal(pointInCh);
       Gaudi::XYZPoint crnInCh=gapLayer->toMother(crn);
       x=pointInGlobal.x();
@@ -1308,8 +1308,7 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
   Gaudi::XYZPoint cnt(x,y,z);
   Gaudi::XYZPoint crn(x+Dx,y+Dy,z+Dz);
 
-  std::vector<LHCb::MuonTileID> mytiles;  mytiles.push_back(chamTile);
-  std::vector<DeMuonChamber*> myChs = createChambersFromTile(mytiles);
+  auto myChs = createChambersFromTile( { chamTile }); 
 
   //Correct XYZ and Deltas for local to Global transformation
   deltax = Dx;  deltay = Dy;  deltaz = Dz;
@@ -1318,9 +1317,10 @@ StatusCode MuonChamberLayout::getXYZPad(const LHCb::MuonTileID& tile,
     DeMuonChamber* muChamber = myChs.at(0);
     IGeometryInfo* cInfo = muChamber->geometry();
     //Those are not used in deltas computation
-    x = cInfo->toGlobal(cnt).x();
-    y = cInfo->toGlobal(cnt).y();
-    z = cInfo->toGlobal(cnt).z();
+    auto cnt_global = cInfo->toGlobal(cnt);
+    x = cnt_global.x();
+    y = cnt_global.y();
+    z = cnt_global.z();
 
     localToglobal(cInfo,cnt,crn,deltax,deltay,deltaz);
   }
@@ -1657,48 +1657,38 @@ void MuonChamberLayout::getTwelfthCornerIndex(const int& region,
 }
 
 
-void MuonChamberLayout::localToglobal(IGeometryInfo* gInfo,
-                                      Gaudi::XYZPoint cent, Gaudi::XYZPoint corn,
+void MuonChamberLayout::localToglobal(const IGeometryInfo* gInfo,
+                                      const Gaudi::XYZPoint& cent, const Gaudi::XYZPoint& corn,
                                       double &dx, double &dy, double &dz){
 
-  double GctrX(0.),GctrY(0.),GctrZ(0.),GcrnX(0.),GcrnY(0.),GcrnZ(0.);
+  auto cent_global = gInfo->toGlobal(cent);
+  auto corn_global = gInfo->toGlobal(corn);
 
-  GctrX = gInfo->toGlobal(cent).x();
-  GctrY = gInfo->toGlobal(cent).y();
-  GctrZ = gInfo->toGlobal(cent).z();
-
-  GcrnX = gInfo->toGlobal(corn).x();
-  GcrnY = gInfo->toGlobal(corn).y();
-  GcrnZ = gInfo->toGlobal(corn).z();
-
-  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) ) 
+  if( UNLIKELY( msgStream().level() <= MSG::DEBUG ) )  {
     msgStream() << MSG::DEBUG
-                << "Local to Global: gCtr:: "<<GctrX<<" "<<GctrY<<" "<<GctrZ
-                <<" ; gCrn:: "<<GcrnX<<" "<<GcrnY<<" "<<GcrnZ<<endmsg;
+                << "Local to Global: gCtr:: "<<cent_global.x()<<" "<<cent_global.y()<<" "<<cent_global.z()
+                <<" ; gCrn:: "<<corn_global.x()<<" "<<corn_global.y()<<" "<<corn_global.z()<<endmsg;
+  }
 
-  dx = fabs(GctrX - GcrnX);
-  dy = fabs(GctrY - GcrnY);
-  dz = fabs(GctrZ - GcrnZ);
-
-  return;
-
+  dx = fabs(cent_global.x() - corn_global.x());
+  dy = fabs(cent_global.y() - corn_global.y());
+  dz = fabs(cent_global.z() - corn_global.z());
 }
 
-std::vector<DeMuonChamber*> MuonChamberLayout::
-createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles){
+std::vector<DeMuonChamber*> 
+MuonChamberLayout::createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles){
 
-  std::vector<LHCb::MuonTileID>::iterator idTile;
   std::vector<DeMuonChamber*> myChambers;
   int station, region, chamb;
   bool debug = false;
   int MaxRegions[4] = {12,24,48,192};
   int encode(0), re(0);
 
-  for(idTile = mytiles.begin(); idTile<mytiles.end(); idTile++){
-    const long int cTile = *idTile;
-    station = idTile->station();
-    region = idTile->region();
-    chamb = getChamberNumber(*idTile);
+  for(const auto& idTile : mytiles ) {
+    const long int cTile = idTile;
+    station = idTile.station();
+    region = idTile.region();
+    chamb = getChamberNumber(idTile);
     //Added protection against non existing chamber
     if(cTile>0) {
       if(debug)
@@ -1708,11 +1698,9 @@ createChambersFromTile(std::vector<LHCb::MuonTileID> mytiles){
       encode = 276*station+chamb;
       if(region) {
         re = region;
-        while(re >= 1) {encode += MaxRegions[re-1]; re--;}
+        while(re >= 1) {encode += MaxRegions[re-1]; --re;}
       }
-
-      DeMuonChamber * myChmb = m_ChVec.at(encode);
-      myChambers.push_back(myChmb);
+      myChambers.push_back(m_ChVec.at(encode));
     }
   }
 

@@ -185,8 +185,8 @@ public:
                              int &xPos, int &yPos);
 
   
-  void localToglobal(IGeometryInfo* gInfo,
-		     Gaudi::XYZPoint cent, Gaudi::XYZPoint corn,
+  void localToglobal(const IGeometryInfo* gInfo,
+		     const Gaudi::XYZPoint& cent, const Gaudi::XYZPoint& corn,
 		     double &dx, double &dy, double &dz);
 
   ///get the chamber number (vector) from the MuonTile

@@ -2,9 +2,11 @@
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+! 2014-12-15 - Gerhard Raven
+ - reduce the number of local-to-global transformations
 
 !========================= MuonDet v9r16 2014-09-08 =========================
-! 2014-08-21 - Giovanni Passaleva
+! 2014-08-21 - Gerhard Raven
  - various CPU performance improvements
 
 !========================= MuonDet v9r15 2013-10-23 =========================
