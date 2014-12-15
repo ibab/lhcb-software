@@ -1,8 +1,10 @@
 !============================================
 ! Package     : MooreScripts
-! Package Coordinator : R. Lambert, G. Raven
+! Package Coordinator : R. Aaij, G. Raven
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
+
+!========================= MooreScripts v1r8 2014-12-15 =========================
 
 ! 2014-12-03 - Roel Aaij
  - Add configuration options to runOfflineOnline.py
