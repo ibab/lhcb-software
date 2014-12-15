@@ -5,6 +5,19 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger
 
+</PRE><H1><A NAME=v23r3>2014-12-15 HltSys v23r3</A></H1><PRE>
+
+Release on stack v38r3. Depends on Phys v19r3p1.
+
+Main changes:
+   Development in preparation for 2015 data taking.
+   Speed improvements.
+   HltTracking refactorisation.
+   En'block used by default in HLT1.
+
+For more details see:
+https://lhcb-tag-collector.web.cern.ch/lhcb-tag-collector/display.html?project=Hlt&version=v23r3
+
 </PRE><H1><A NAME=v23r2>2014-11-05 HltSys v23r2</A></H1><PRE>
 
 Release on stack v38r2. Depends on Phys v19r2.
