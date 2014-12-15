@@ -5,6 +5,8 @@
 !               for lifetime measurements 
 !-----------------------------------------------------------------------------
 
+!========================= Swimming v3r5 2014-12-15 =========================
+
 ! 2014-11-06 - Marco Clemencic
  - Fixed CMake configuration (SwimmingComponent should be a module and not a
    library).
