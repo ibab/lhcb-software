@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltBase
 ################################################################################
-gaudi_subdir(HltBase v15r3)
+gaudi_subdir(HltBase v15r4)
 
 gaudi_depends_on_subdirs(Det/DetDesc
                          Event/HltEvent
