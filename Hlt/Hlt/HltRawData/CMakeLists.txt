@@ -1,7 +1,7 @@
 ################################################################################
 # Package: HltRawData
 ################################################################################
-gaudi_subdir(HltRawData v5r0)
+gaudi_subdir(HltRawData v5r1)
 
 gaudi_depends_on_subdirs(Event/DAQEvent
                          Event/HltEvent
