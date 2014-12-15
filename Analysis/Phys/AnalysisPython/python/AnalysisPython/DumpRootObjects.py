@@ -83,7 +83,7 @@ def dumpToFile ( objects , fbase  = 'ROOT_Objects_%d_%s.root' ) :
 
 
 v1 = ROOT.RooRealVar('v1','',1)
-v2 = ROOT.RooRealVar('v1','',1)
+v2 = ROOT.RooRealVar('v2','',1)
 vars = ROOT.RooArgSet ( v1 , v2 ) 
 objects = [
     
@@ -110,7 +110,6 @@ objects = [
     ROOT.RooRealVar    () ,
     ROOT.RooArgSet     () ,
     ROOT.RooArgList    () ,
-    ROOT.RooFitResult  () ,
     v1 , v2 , vars ,
     ROOT.RooDataSet    ( 'ds', '', vars )
     ]

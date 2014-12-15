@@ -5,6 +5,9 @@
 !               GaudiPython analyses
 !-----------------------------------------------------------------------------
 
+! 2014-12-15 - Vanya Belyaev
+ - update dump-script 
+
 ! 2014-12-12 - Vanya Belyaev
  - add helper script to dump major types in ROOT-file
    it is needed for reading of old versions with old streamers 
