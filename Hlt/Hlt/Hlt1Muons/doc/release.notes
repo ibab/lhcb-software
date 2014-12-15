@@ -4,6 +4,8 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+!========================= Hlt1Muons v1r11 2014-12-15 =========================
+
 ! 2014-12-06 - Vasileios Syropoulos
  - Fix bad commit: (accidentally removed declareInterface<ITracksFromTrack> to MatchVeloMuon).
 
