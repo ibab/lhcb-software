@@ -4,6 +4,8 @@
 ! Purpose     : Generic MVA classifier backends for DictTransform
 !---------------------------------------------------------------------------
 
+!========================= MVADictTools v1r8 2014-12-15 =========================
+
 ! 2014-10-31 - Andrey Ustyuzhanin
  - variable length array -> alloca in MatrixnetTransform.cpp
 
