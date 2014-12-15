@@ -5,6 +5,8 @@
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================= Hlt2SharedParticles v7r3 2014-12-15 =========================
+
 ! 2014-12-15 - Michael Kolpin
  - Reconfigured MuonTTTrack fit to work with lite clusters in TagAndProbeParticles
 
