@@ -4,6 +4,8 @@
 ! Purpose     : Jet Tagging Package
 ! -----------------------------------------------------------------------------
 
+!========================= JetTagging v1r4 2014-12-15 =========================
+
 ! 2014-11-07 Murilo Rangel
  - Updated LoKiTopoTagDir and configuration
 
