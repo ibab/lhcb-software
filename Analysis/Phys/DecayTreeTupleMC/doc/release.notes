@@ -4,6 +4,11 @@
 ! Purpose     : MC tuple tools
 !-----------------------------------------------------------------------------
 
+!========================= DecayTreeTupleMC v1r5 2014-12-15 =========================
+
+! 2014-12-15 - Eduardo Rodrigues
+- Tagging new version with trivial but undocumented changes that happened 6 weeks ago
+
 !========================= DecayTreeTupleMC v1r4 2013-08-01 =========================
 
 ! 2013-07-05 - S. Blusk
