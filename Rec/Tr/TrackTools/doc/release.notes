@@ -3,6 +3,10 @@
 ! Responsible : 
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2014-12-15 - David Hutchcroft
+ - Another check that the cluster size is always set in VeloClusterPosition
+
 ! 2014-12-15 - Gerhard Raven
  - StateDetailedBetheBlochEnergyCorrectionTool: cache mass, rewrite math to
    reduce the # of operations

@@ -302,6 +302,7 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChan,
 {
   // this struct will be returned as output
   toolInfo anInfo;
+  anInfo.clusterSize=0.; // set in wrapper calling functions
   // get information about sensor form passed cluster
   const DeVeloSensor* sensor=m_veloDet->sensor(centreChan.sensor());
   if(sensor==0){
@@ -309,7 +310,6 @@ toolInfo VeloClusterPosition::position(const LHCb::VeloChannelID &centreChan,
     anInfo.strip=LHCb::VeloChannelID(0);
     anInfo.fractionalPosition=0.;
     anInfo.fractionalError=0.;
-    anInfo.clusterSize=0.;
     return ( anInfo );
   }
   // fill partially the toolInfo structure
