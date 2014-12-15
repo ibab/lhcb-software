@@ -30,20 +30,13 @@ private:
     // void set(bool b, unsigned mask) { if (b) m_flags |=  mask ; else m_flags &= ~mask ; } 
 public:
 
-  // Default constructor
-  PatForwardHit ( ) :
-    Tf::HitExtension<Tf::LineHit>(),
-    m_x{0},
-    m_z{0} {
-  };
-
     /// Constructor from an OT hit
   PatForwardHit ( const Tf::OTHit & otHit ) :
     Tf::HitExtension<Tf::LineHit>(otHit),
     m_x{otHit.xMid()},
     m_z{otHit.zMid()},
     m_driftDistance{otHit.driftDistance()},
-    m_flags{ 4 * otHit.station() + otHit.layer() } {
+    m_flags{ set( true, 0x8000u , 4 * otHit.station() + otHit.layer() ) } {
   };
 
   /// Constructor from an ST hit
@@ -59,6 +52,7 @@ public:
   double z()             const { return m_z; }
   double driftDistance() const { return m_driftDistance; }
   double projection()    const { return m_projection; }
+  bool isOT()            const { return   m_flags & 0x8000u; }
   int  rlAmb()           const { return ( m_flags & 0x4000u ) ? -1  :
                                         ( m_flags & 0x2000u ) ? +1  : 0 ; }
   bool hasPrevious()     const { return   m_flags & 0x1000u; }
@@ -67,6 +61,10 @@ public:
   bool isUsed()          const { return   m_flags & 0x0200u; }
   bool isSelected()      const { return   m_flags & 0x0100u; }
   int  planeCode()       const { return   m_flags & 0x00ffu; }
+  int  layer()           const { return   planeCode()%4; }
+  //the next is in the baseclass, chasing the 'basehit' pointer, but then it is also 'polluted' by a check for UT,TT...
+  bool isStereo()        const { int l = layer(); return (l==1 || l == 2); } // TODO: check whether a 'popcount(l)==1' would be faster...
+  bool isX()             const { int l = layer(); return (l==0 || l == 3); }
 
   // Setters
   void setRlAmb( int rl )                       { m_flags = set( rl!=0, 0x2000u, 
@@ -82,8 +80,8 @@ public:
   void setProjection( double proj )             { m_projection = proj; }
 
 private:
-  double  m_x;
-  double  m_z;
+  double   m_x = 0;
+  double   m_z = 0;
   double   m_driftDistance = 0;
   double   m_projection    = -999.;
   unsigned m_flags         = 0u;

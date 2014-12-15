@@ -3,6 +3,11 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2014-12-15 - Gerhard Raven
+ - PatForwardHit: 
+     o use the already present 'planeCode' to get the layer info, and 
+       'isStereo' -- this saves both a pointer dereference + if statement
+     o add a fast 'isOT' method to help avoid virtual function calls
 
 !========================= PatKernel v2r7 2014-07-14 =========================
 ! 2014-07-08 - Gerhard Raven
