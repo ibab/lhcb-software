@@ -1,7 +1,11 @@
 <PRE>
 Package     : MooreOnlineSys
-Package Coordinator : S. Benson
+Package Coordinator : R. Aaij
 Purpose     : Running and testing Moore in the online environment
+
+</PRE><H1><A NAME=v23r3>2014-12-15 MooreOnlineSys v23r2</A></H1><PRE>
+
+Depends on Moore v23r3 and Online v5r13.
 
 </PRE><H1><A NAME=v23r2>2014-11-7 MooreOnlineSys v23r2</A></H1><PRE>
 
