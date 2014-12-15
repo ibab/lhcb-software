@@ -345,14 +345,14 @@ PatFwdTool::xAtReferencePlane( const PatFwdTrackCandidate& track, double z_magne
       auto dSlope  = ( xHit - track.xStraight(zMagnet) ) / ( zHit - zMagnet ) - track.slX();
       auto dSl2    = dSlope * dSlope;
       zMagnet     += m_zMagnetParams[1] * dSl2;
-      auto dz      = 1.e-3 * ( zHit - m_zReference );
+      auto dz      = 1.e-3 * ( zHit - zReference() );
       auto dyCoef  = dSl2 * track.slY();
       auto dxdY    = double_v{ hits->hit()->dxDy()... };
       xHit        +=     dyCoef * ( m_yParams[0] + dz * m_yParams[1] ) * dxdY
                       - dz * dz * ( m_xParams[0] + dz * m_xParams[1] ) * dSlope ;
   }
   auto x = track.xStraight( zMagnet );
-  x     += ( xHit - x ) * ( m_zReference - zMagnet ) / ( zHit - zMagnet );
+  x     += ( xHit - x ) * ( zReference() - zMagnet ) / ( zHit - zMagnet );
   return scatter_array<double,sizeof...(Hits)>(x);
 }
 
@@ -385,20 +385,20 @@ double PatFwdTool::updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, co
     auto dSlope     = slopeAfter - track.slX();
     auto dSl2       = dSlope * dSlope;
     zMagnet          += m_zMagnetParams[1] * dSl2;
-    auto dz         = 1.e-3 * ( zHit - m_zReference );
+    auto dz         = 1.e-3 * ( zHit - zReference() );
     auto dyCoef     = dSl2 * track.slY();
     auto dy         = dyCoef * ( m_yParams[0] + dz * m_yParams[1] );
     auto dxCoef     = dz * dz * ( m_xParams[0] + m_xParams[1] * dz );
     xHit             += dy * hit->hit()->dxDy() - dxCoef * dSlope ;
     xMagnet           = track.xStraight( zMagnet );
     slopeAfter        = ( xHit - xMagnet ) / ( zHit - zMagnet );
-    auto x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
+    auto x          = xMagnet + ( zReference() - zMagnet ) * slopeAfter;
     
     track.setParameters( x,
-	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
+	  	   ( x - xMagnet ) / ( zReference() - zMagnet ),
 	  	   1.e-6 * m_xParams[0] * dSlope,
 	  	   1.e-9 * m_xParams[1] * dSlope,
-	  	   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
+	  	   track.yStraight( zReference() ) + dyCoef * m_yParams[0],
 	  	   track.slY() + dyCoef * m_yParams[1] );
   } else {
     
@@ -407,12 +407,12 @@ double PatFwdTool::updateTrackAndComputeZMagnet( PatFwdTrackCandidate& track, co
     auto dSlope     = 0.0;
     auto dyCoef     = 0.0;
     
-    auto x          = xMagnet + ( m_zReference - zMagnet ) * slopeAfter;
+    auto x          = xMagnet + ( zReference() - zMagnet ) * slopeAfter;
     track.setParameters( x, 
-	  	   ( x - xMagnet ) / ( m_zReference - zMagnet ),
+	  	   ( x - xMagnet ) / ( zReference() - zMagnet ),
 	  	   1.e-6 * m_xParams[0] * dSlope,
 	  	   1.e-9 * m_xParams[1] * dSlope,
-	  	   track.yStraight( m_zReference ) + dyCoef * m_yParams[0],
+	  	   track.yStraight( zReference() ) + dyCoef * m_yParams[0],
 	  	   track.slY() + dyCoef * m_yParams[1] );
   }
   return zMagnet;
@@ -464,7 +464,7 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
   int minHit = std::distance(itBeg,itEnd) / 2;
   m_zMagnet = updateTrackAndComputeZMagnet( track, track.coords()[minHit] ); // how to get this to the fitXProjection inside fitStereoCandidate????? Add it to the the track!!!
 
-  updateHitsForTrack( track, itBeg, itEnd, m_zReference );
+  updateHitsForTrack( track, itBeg, itEnd, zReference() );
   setRlDefault( track, itBeg, itEnd );
 
   bool   first = true;
@@ -528,7 +528,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
   if ( isDebug ) debug() << "+++ Stereo fit, planeCount " << planeCount.nbDifferent()
                          << " size " << track.coordEnd() - track.coordBegin() << endmsg;
 
-  updateHitsForTrack( track, track.coordBegin(), track.coordEnd(), m_zReference );
+  updateHitsForTrack( track, track.coordBegin(), track.coordEnd(), zReference() );
   setRlDefault( track, track.coordBegin(), track.coordEnd() );
 
   auto highestChi2 = 10*maxChi2;
@@ -548,7 +548,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 
     highestChi2 = 0;
     auto worst = std::end(track.coords());
-    auto predicate = [=](const PatFwdHit* hit) { return hit->isSelected() && ! ( ignoreX && (hit->hit()->layer()==0 || hit->hit()->layer()==3 ) ) ; };
+    auto predicate = [=](const PatFwdHit* hit) { return hit->isSelected() && ! ( ignoreX && hit->isX() ) ; };
     auto  chi2hit  = [&](const PatFwdHit* hit) { return chi2Hit(track,hit); };
     std::tie(worst,highestChi2) = max_projected_element( std::begin(track.coords()), std::end(track.coords()),
                                                          chi2hit, std::make_pair( worst, 0. ), predicate);
@@ -595,7 +595,7 @@ bool PatFwdTool::fitYProjection( PatFwdTrackCandidate& track,
                                  PatFwdHits::const_iterator itEnd ) const 
 {
     auto accept = [=](const PatFwdHit* hit) {
-      return !( !hit->isSelected()  || hit->hit()->layer() == 0 || hit->hit()->layer() == 3) ;
+      return hit->isSelected() && !hit->isX(); 
     };
     bool isDebug = msgLevel( MSG::DEBUG );
 
@@ -603,7 +603,7 @@ bool PatFwdTool::fitYProjection( PatFwdTrackCandidate& track,
       PatFwdFitLine line;
       auto ica = 1.0/track.cosAfter();
       std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
-        if (accept(hit)) line.addPoint( hit->z() - m_zReference
+        if (accept(hit)) line.addPoint( hit->z() - zReference()
                                       , distanceForYFit( track, hit, ica )
                                       , hit->hit()->weight() );
       } );
@@ -613,7 +613,7 @@ bool PatFwdTool::fitYProjection( PatFwdTrackCandidate& track,
       if( UNLIKELY( isDebug ) ) verbose() << "    day " << day << " dby " << dby << endmsg;
 
       track.updateParameters( 0., 0., 0., 0., day, dby );
-      updateHitsForTrack( track, track.coordBegin(), track.coordEnd(), m_zReference );
+      updateHitsForTrack( track, track.coordBegin(), track.coordEnd(), zReference() );
       if ( fabs( day ) < 0.05 && fabs( dby ) < 0.00005 ) break;
     }
     return true;
@@ -630,7 +630,7 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
   bool isDebug = msgLevel( MSG::DEBUG );
   auto errCenter = m_xMagnetTol + track.dSlope() * track.dSlope() * m_xMagnetTolSlope;
   auto weightCenter = 1./errCenter;
-  auto dz = m_zMagnet - m_zReference;
+  auto dz = m_zMagnet - zReference();
 
   using Curve = typename std::conditional<withoutBField, PatFwdFitLine, PatFwdFitParabola>::type;
   auto make_curve = [=](const PatFwdTrackCandidate& trk) -> Curve { 
@@ -638,9 +638,7 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
   };
 
   auto accept = [=](const PatFwdHit* hit) {
-      return hit->isSelected() && 
-             ( !onlyXPlanes || hit->hit()->layer() == 0 
-                            || hit->hit()->layer() == 3 );
+      return hit->isSelected() && ( !onlyXPlanes || hit->isX() ) ;
   };
 
 
@@ -648,7 +646,7 @@ bool PatFwdTool::fitXProjection_( PatFwdTrackCandidate& track,
     auto curve = make_curve(track);
     auto ica = 1.0/track.cosAfter();
     std::for_each( itBeg, itEnd, [&](const PatFwdHit* hit) {
-      if (accept(hit)) curve.addPoint( hit->z()-m_zReference, 
+      if (accept(hit)) curve.addPoint( hit->z()-zReference(), 
                                        distanceForXFit(track,hit,ica),
                                        hit->hit()->weight() );
     } );
@@ -691,7 +689,7 @@ double PatFwdTool::chi2PerDoF ( PatFwdTrackCandidate& track ) const {
     if ( !hit->isSelected() ) continue;
     totChi2 += chi2Hit( track, hit );
     nDof    += 1;
-    if ( !(hit->hit()->layer()==0 || hit->hit()->layer()==3) ) hasStereo = true;
+    if ( !hit->isX() ) hasStereo = true;
   }
   if ( hasStereo ) nDof -= 1;  // Linear fit, magnet center constraint
 

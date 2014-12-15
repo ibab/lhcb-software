@@ -116,19 +116,24 @@ public:
   }
 
   double distanceForXFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit, double ica) const {
-    auto dist = hit->x() - track.x( hit->z() - m_zReference );
-    return hit->driftDistance()!=0. ? driftResidual( hit->rlAmb(), dist, ica*hit->driftDistance() ) : dist;
+    auto dist = hit->x() - track.x( hit->z() - zReference() );
+    return hit->isOT() ? driftResidual( hit->rlAmb(), dist, ica*hit->driftDistance() ) : dist;
   }
 
   double distanceForYFit( const PatFwdTrackCandidate& track, const PatFwdHit* hit, double ica) const {
     auto dist =  distanceHitToTrack( track, hit );
-    if ( hit->hit()->region() <= Tf::RegionID::OTIndex::kMaxRegion ) dist *= ica ;
+    if ( hit->isOT() ) dist *= ica ;
     return - dist / hit->hit()->dxDy();
   }
 
+  double chi2Hit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
+    auto dist = distanceHitToTrack( track, hit );
+    return dist * dist * hit->hit()->weight();
+  }
+
   double distanceHitToTrack( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
-    auto dist = hit->x() - track.x( hit->z() - m_zReference );
-    return ( hit->hit()->region() > Tf::RegionID::OTIndex::kMaxRegion ) ?  dist : driftResidual( hit->rlAmb(), dist*track.cosAfter(), hit->driftDistance() );
+    auto dist = hit->x() - track.x( hit->z() - zReference() );
+    return hit->isOT() ? driftResidual( hit->rlAmb(), dist*track.cosAfter(), hit->driftDistance() ) : dist ;
   }
 
   double chi2Magnet( const PatFwdTrackCandidate& track) const {
@@ -138,13 +143,8 @@ public:
       return  dist * dist / errCenter;
   }
 
-  double chi2Hit( const PatFwdTrackCandidate& track, const PatFwdHit* hit) const {
-    auto dist = distanceHitToTrack( track, hit );
-    return dist * dist * hit->hit()->weight();
-  }
-
   double distAtMagnetCenter( const PatFwdTrackCandidate& track ) const {
-    auto dz = m_zMagnet - m_zReference;
+    auto dz = m_zMagnet - zReference();
     return track.xStraight( m_zMagnet ) - track.xMagnet( dz );
   }
 
@@ -154,7 +154,7 @@ public:
     bool hasChanged = false;
     for ( PatFwdHit* hit : track.coords() ) {
       if ( !hit->isSelected() ) continue;
-      if ( !hit->hit()->isYCompatible( track.y( hit->z() - m_zReference ), tol ) ) {
+      if ( !hit->hit()->isYCompatible( track.y( hit->z() - zReference() ), tol ) ) {
         hit->setSelected( false );
         hasChanged = true;
       }
@@ -166,7 +166,7 @@ public:
   }
 
   double changeInY(const  PatFwdTrackCandidate& track ) const {
-    double yOriginal = track.yStraight( m_zReference );
+    double yOriginal = track.yStraight( zReference() );
     if (LIKELY(!m_withoutBField))
       yOriginal += track.dSlope() * track.dSlope() * track.slY() * m_yParams[0];
     return yOriginal - track.y( 0. );
@@ -191,7 +191,7 @@ private:
   std::vector<double> m_xParams;
   std::vector<double> m_yParams;
   std::vector<double> m_momentumParams;
-  double m_zReference;
+  double m_zReference; // TODO: move this into PatFwdTrackCandidate, make all methods 'const'
   std::vector<double> m_zOutputs;
   double m_xMagnetTol;
   double m_xMagnetTolSlope;

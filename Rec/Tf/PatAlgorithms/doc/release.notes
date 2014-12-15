@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2014-12-15 - Gerhard Raven
+ - PatFwdTool: use new PatForwardHit methods to speed things up 
+   (note: relies on new PatKernel, and one must recompile TfKernel and TfTools 
+    as the methods rely on items set in an inline c'tor!)
 
 !========================= PatAlgorithms v4r37 2014-12-11 =========================
 ! 2014-12-11 - Gerhard Raven
