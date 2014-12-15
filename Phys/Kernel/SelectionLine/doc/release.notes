@@ -4,6 +4,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
+
+!========================= SelectionLine v1r3 2014-12-15 =========================
+
 ! 2014-12-04 - Gerhard Raven
  - further reduce overhead; 
    note: Hlt::Line and SelectionAlg again need to be updated accordingly!
