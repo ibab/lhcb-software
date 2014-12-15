@@ -5,6 +5,8 @@
 ! Purpose     : Kalman filter Utilities for Vertex fit 
 ! -----------------------------------------------------------------------------
 
+========================= KalmanFilter v1r8 2014-12-15 =========================
+
 ! 2014-12-01 - Vanya Belyaev
  - VertexFit, VertexFitWithTracks, FastVertex
    replace all matrix inversions by faster method, 
