@@ -6,6 +6,8 @@
 ! 2014-12-15 - Gerhard Raven
  - StateDetailedBetheBlochEnergyCorrectionTool: cache mass, rewrite math to
    reduce the # of operations
+ - OTMeasurementProvider: use std::transform instead of for loop, flag virtual
+   functions with 'override'
 
 ! 2014-12-12 - Michael Kolpin
  - changed TrackMasterFitter use of VeloMuonBuild to private

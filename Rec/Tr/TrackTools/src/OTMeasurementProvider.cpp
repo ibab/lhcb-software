@@ -29,25 +29,26 @@ public:
 			  const std::string& name,
 			  const IInterface* parent);
   
-  ~OTMeasurementProvider() {}
+  ~OTMeasurementProvider() override = default;
   
-  StatusCode initialize() ;
-  StatusCode finalize() ;
-  LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY=false ) const  ;
-  LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::ZTrajectory& refvector, bool localY=false) const ;
-  double nominalZ( const LHCb::LHCbID& id ) const ;
-  inline LHCb::OTMeasurement* otmeasurement( const LHCb::LHCbID& id ) const  ;
+  StatusCode initialize() override;
+  StatusCode finalize() override;
+  LHCb::Measurement* measurement( const LHCb::LHCbID& id, bool localY=false ) const  override;
+  LHCb::Measurement* measurement( const LHCb::LHCbID& id, const LHCb::ZTrajectory& refvector, bool localY=false) const override;
+  double nominalZ( const LHCb::LHCbID& id ) const override;
 
   void addToMeasurements( const std::vector<LHCb::LHCbID>& lhcbids,
                           std::vector<LHCb::Measurement*>& measurements,
-                          const LHCb::ZTrajectory& reftraj) const ;
+                          const LHCb::ZTrajectory& reftraj) const override;
 
-  StatusCode load( LHCb::Track&  ) const {
+  StatusCode load( LHCb::Track&  ) const override {
     info() << "sorry, MeasurementProviderBase::load not implemented" << endmsg ;
     return StatusCode::FAILURE ;
   }
 
 private:
+  inline LHCb::OTMeasurement* otmeasurement( const LHCb::LHCbID& id ) const  ;
+
   const DeOTDetector* m_det;
   ToolHandle<IOTRawBankDecoder> m_otdecoder ;
   bool m_applyTofCorrection ;
@@ -113,15 +114,13 @@ StatusCode OTMeasurementProvider::finalize()
 
 inline LHCb::OTMeasurement* OTMeasurementProvider::otmeasurement( const LHCb::LHCbID& id ) const
 {
-  LHCb::OTMeasurement* meas(0) ;
-  if( !id.isOT() ) {
+  if( UNLIKELY(!id.isOT()) ) {
     error() << "Not an OT measurement" << endmsg ;
-  } else {
-    LHCb::OTChannelID otid = id.otID() ;
-    const DeOTModule* module = m_det->findModule( otid ) ;
-    meas = new LHCb::OTMeasurement(m_otdecoder->time(otid),*module) ;
-  }
-  return meas ;
+    return nullptr;
+  } 
+  LHCb::OTChannelID otid = id.otID() ;
+  const DeOTModule* module = m_det->findModule( otid ) ;
+  return new LHCb::OTMeasurement(m_otdecoder->time(otid),*module) ;
 }
 
 LHCb::Measurement* OTMeasurementProvider::measurement( const LHCb::LHCbID& id, bool /*localY*/ ) const
@@ -146,16 +145,15 @@ LHCb::Measurement* OTMeasurementProvider::measurement( const LHCb::LHCbID& id,
       const double zmagnet  = m_magnetZTofCorrection ;
       // straight line length
       LHCb::StateVector refvector = reftraj.stateVector(meas->z()) ;
-      Gaudi::XYZPoint point = refvector.position() ;
-      double L0 = point.R() ;
+      auto point = refvector.position() ;
+      auto L0 = point.R() ;
       // Correction following the kick formula (to 2nd order in dtx)
-      double f = zmagnet/point.z() ;
-      double dtx = refvector.tx() - point.x()/point.z() ;
-      double dL = 0.5*(1-f)/f*dtx*dtx*L0 ;
+      auto f = zmagnet/point.z() ;
+      auto dtx = refvector.tx() - point.x()/point.z() ;
+      auto dL = 0.5*(1-f)/f*dtx*dtx*L0 ;
       // The kick correction is actually too long. Until we find something better, we simply scale with a factor derived in MC:
-      double L = L0 + m_tofCorrectionScale * dL ;
-      double tof = L / Gaudi::Units::c_light;
-      meas->setTimeOfFlight( tof ) ;
+      auto L = L0 + m_tofCorrectionScale * dL ;
+      meas->setTimeOfFlight( L / Gaudi::Units::c_light ) ;
     }
   }
   return meas ;
@@ -167,20 +165,19 @@ LHCb::Measurement* OTMeasurementProvider::measurement( const LHCb::LHCbID& id,
 
 double OTMeasurementProvider::nominalZ( const LHCb::LHCbID& id ) const
 {
-  double z(0) ;
   LHCb::OTChannelID otid = id.otID() ;
   const DeOTModule* module = m_det->findModule(otid) ;
-  if(module==0) error() << "Cannot find OT module for ID = " << otid << endmsg ;
-  else {
-    // It would be nice if there were a short cut ...
-    double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
-    module->trajectory(otid.straw(),dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
-    // This is the z-position of the 'non-readout' side.
-    // z = zAtYEq0 + ybegin * dzdy ;
-    // This is the z-position of the middle of the wire
-    z = zAtYEq0 + (ybegin+yend)/2 * dzdy ;
+  if(UNLIKELY(!module)) { 
+      error() << "Cannot find OT module for ID = " << otid << endmsg ;
+      return 0;
   }
-  return z ;
+  // It would be nice if there were a short cut ...
+  double dxdy, dzdy, xAtYEq0, zAtYEq0, ybegin, yend ;
+  module->trajectory(otid.straw(),dxdy,dzdy,xAtYEq0,zAtYEq0,ybegin,yend) ;
+  // This is the z-position of the 'non-readout' side.
+  // z = zAtYEq0 + ybegin * dzdy ;
+  // This is the z-position of the middle of the wire
+  return zAtYEq0 + (ybegin+yend)/2 * dzdy ;
 }
 
 //-----------------------------------------------------------------------------
@@ -191,8 +188,10 @@ void OTMeasurementProvider::addToMeasurements( const std::vector<LHCb::LHCbID>& 
                                                std::vector<LHCb::Measurement*>& measurements,
                                                const LHCb::ZTrajectory& reftraj) const
 {
-  for( std::vector<LHCb::LHCbID>::const_iterator id = lhcbids.begin() ;
-       id != lhcbids.end(); ++id)
-    measurements.push_back( measurement(*id,reftraj,false) ) ;
+  measurements.reserve( measurements.size() + lhcbids.size() );
+  std::transform( std::begin(lhcbids), std::end(lhcbids),
+                  std::back_inserter(measurements),
+                  [&](const LHCb::LHCbID& id) {
+                      return measurement(id,reftraj,false);
+                  } );
 }
-
