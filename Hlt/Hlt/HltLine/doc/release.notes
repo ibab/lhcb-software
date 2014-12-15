@@ -5,6 +5,8 @@
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================= HltLine v7r6 2014-12-15 =========================
+
 ! 2014-12-10 - Christian Linn
  - added Turbo to list of slots
 
