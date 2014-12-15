@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v47r3>2014-12-15 Brunel v47r3</A></H1><PRE>
+This version uses projects LHCb v38r3, Lbcom v16r2, Rec v17r3
+ and SQLDDDB v7r*, ParamFiles v8r*, FieldMap v5r*, AppConfig v3r*
+
 - Changes in references to reflect changes in FTDet
   . Change in Det/FTDet "CreateDetSegment" to correct for a bug in the z0 computation, 
     and also to make this routine less geometry version dependent. 
