@@ -1,0 +1,55 @@
+{% extends "examples/examples.html" %}
+{% block pageheader %} Table{% endblock %}
+{% block body %}
+<table class="table table-striped overview-table">
+  <colgroup>
+    <col width="5%" class="table-col-num">
+    <col width="14%">
+    <col width="10%">
+    <col width="10%">
+    <col width="8%">
+    <col width="8%">
+    <col width="8%">
+    <col width="8%">
+    <col width="29%">
+  </colgroup>
+  <thead>
+    <th>Run</th>
+    <th>Start time</th>
+    <th>DQ status</th>
+    <th>DQ score</th>
+    <th>NZS</th>
+    <th>Clusters</th>
+    <th>Tracks</th>
+    <th>Vertices</th>
+    <th>Comments</th>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1</td>
+      <td>01/01/2015 09:30</td>
+      <td><span class="label label-warning">Minor problems</span></td>
+      <td>74</td>
+      <td>60</td>
+      <td>60</td>
+      <td>80</td>
+      <td>96</td>
+      <td>Low DQ scores: Pedestals 40%, Noise 70%, FWHM 40%, Cluster size 75%, Track efficiencies 60%</td>
+    </tr>
+    {# Pad out the table with dummy data #}
+    {% for row in range(2, 10) %}
+    <tr>
+      <td>{{ row }}</td>
+      <td>01/01/2015 {{ 8 + row }}:30</td>
+      <td><span class="label label-success">OK</span></td>
+      <td>94</td>
+      <td>92</td>
+      <td>92</td>
+      <td>96</td>
+      <td>96</td>
+      <td>OK</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,29 @@
+<h1>R sensor</h1>
+<ul class="sensor-detail">
+  <li>
+    Sensor
+    <select>
+      <option>Select&hellip;</option>
+      {% for i in range(0, 42) %}
+        <option value="{{ i }}">{{ i }}</option>
+      {% endfor %}
+    </select>
+  </li>
+  <li>A side</li>
+  <li>VL01LB</li>
+  <li>−176<span class="unit">mm</span></li>
+  <li>TELL1??</li>
+</ul>
+
+<h1>Phi sensor</h1>
+<ul class="sensor-detail">
+  <li>
+    Sensor
+    <select>
+      <option>Select&hellip;</option>
+      {% for i in range(64, 106) %}
+        <option value="{{ i }}">{{ i }}</option>
+      {% endfor %}
+    </select>
+  </li>
+</ul>

@@ -1,0 +1,20 @@
+{#
+  Define a layout extending the two column one provided by jobmonitor.
+  We include our app-specific CSS and JS here, and add some navigation.
+#}
+{% extends "two_column_sidebar.html" %}
+{% block stylesheets %}
+  {{ stylesheet_tag('velo_monitor', blueprint='velo_monitor') }}
+{% endblock %}
+{% block navtopbar %}
+    {{ list_link_tag('velo_view', 'VELO view') }}
+    {{ list_link_tag('sensor_view', 'Sensor view') }}
+    {{ list_link_tag(url_for('run_view.run_view_builder'), 'Run view') }}
+    {{ list_link_tag('tell1_view', 'TELL1 view') }}
+    {{ list_link_tag('special_analyses', 'Special analyses') }}
+{% endblock %}
+{% block javascripts %}
+  {{ javascript_tag('lib/string-format', blueprint='velo_monitor') }}
+  {{ javascript_tag('velo_plotter', blueprint='velo_monitor') }}
+  {{ javascript_tag('velo_monitor', blueprint='velo_monitor') }}
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "examples/examples.html" %}
+{% block pageheader %}Tab 3{% endblock %}
+{% block body %}
+  <ul class="nav nav-tabs nav-justified">
+    {{ list_link_tag('examples/tabs/tab1', 'Tab 1') }}
+    {{ list_link_tag('examples/tabs/tab2', 'Tab 2') }}
+    {{ list_link_tag('examples/tabs/tab3', 'Tab 3') }}
+  </ul>
+  {% include "examples/_run_range_form.html" %}
+  <div class="histogram" data-file="histograms" data-histogram="histogram_0">
+  </div>
+{% endblock %}

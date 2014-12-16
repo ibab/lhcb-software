@@ -1,0 +1,88 @@
+{#
+  Define the basic run view layout, a two column sidebar with block
+  `run_view_body` available for children to override.
+  A run selector is appended to any child content, as including it in the
+  sidebar container will not allow the modal to show correctly, due to it
+  inheriting the sidebar's low z-index value.
+#}
+{% extends "velo_layout.html" %}
+{% block sidebar %}
+  <h1 class="run-number" id="run-number" data-run="{{ g.run }}">
+    <a href="#" data-toggle="modal" data-target="#run-selector">
+      Run #{{ g.run }}
+    </a>
+    <small class="pull-right">
+      <a href="http://lbrundb.cern.ch/rundb/run/{{ g.run }}/" target="_blank">
+        RunDB
+      </a>
+    </small>
+  </h1>
+  <ul class="nav nav-sidebar">
+    {% for page in g.pages %}
+    <li class="{{ "active" if g.page == page else "" }}">
+      <a href="{{ url_for('run_view.run_view_builder', run=g.run, page=page) }}">
+        {{ g.pages[page]['title'] }}
+      </a>
+    </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
+{% block body %}
+  {% block run_view_body %}{% endblock %}
+  {# Run select modal, shown when the 'Select' link is clicked #}
+  <div class="modal fade run-selector" id="run-selector" tabindex="-1" role="dialog" aria-labelledBy="run-selector-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="run-selector-label">Select a run</h4>
+        </div>
+        <div class="modal-body">
+          <p>Choose a recent run number from the list, or enter a run number.</p>
+          <p>The run currently being displayed is <strong>{{ g.run }}</strong>.</p>
+          <form action="{{ url_for('run_view.run_view_builder') }}" method="GET">
+            <div class="form-group">
+              <label for="nearby-runs" class="control-label">Nearby runs</label>
+              <select class="form-control" name="nearby-runs">
+                <optgroup label="Newer runs">
+                  {% for run in g.nearby_runs if run > g.run %}
+                    <option value="{{ run }}">{{ run}}</option>
+                  {% endfor %}
+                </optgroup>
+                <optgroup label="Displayed run">
+                  <option value="{{ g.run }}" selected>{{ g.run }}</option>
+                </optgroup>
+                <optgroup label="Older runs">
+                  {% for run in g.nearby_runs if run < g.run %}
+                    <option value="{{ run }}">{{ run }}</option>
+                  {% endfor %}
+                </optgroup>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="run" class="control-label">Run number</label>
+              <input type="text" class="form-control" name="run" list="runs" placeholder="Run number">
+            </div>
+            <!-- Hidden fields to pass the current page and sensor number -->
+            <input type="hidden" name="page" value="{{ g.page }}">
+            <input type="hidden" name="sensor" value="{{ g.sensor }}">
+            {# datalist for possible run numbers, used for autocompletion in the run selector form #}
+            {# TODO polyfill this, not supported by Safari and IE < 10 #}
+            <datalist id="runs">
+              {% for run in g.runs %}
+                <option value="{{ run }}">{{ run }}</option>
+              {% endfor %}
+            </datalist>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-primary">Change run</button>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

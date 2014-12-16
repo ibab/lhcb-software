@@ -1,0 +1,36 @@
+{% extends "velo_layout.html" %}
+{% block pageheader %}Sensor view{% endblock%}
+{% block sidebar %}
+  {% include "partials/_sensor_selection.html" %}
+{% endblock %}
+{% block body %}
+  <div class="messages"></div>
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.pedestal"></div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.common_mode"></div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.noise"></div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.hv_current"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.cluster_mpv"></div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.cluster_fwhm"></div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.cluster_size"></div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="histogram" data-job-name="sensor_view.occupancy"></div>
+    </div>
+  </div>
+{% endblock %}

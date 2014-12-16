@@ -1,0 +1,7 @@
+{% extends "examples/examples.html" %}
+{% block pageheader %}Single layout{% endblock %}
+{% block body %}
+  {% include "examples/_run_range_form.html" %}
+  <div class="histogram" data-file="histograms" data-histogram="histogram_0">
+  </div>
+{% endblock %}

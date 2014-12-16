@@ -1,0 +1,70 @@
+{% extends "examples/examples.html" %}
+{% block pageheader %}Grid layout{% endblock %}
+{% block body %}
+  {% include "examples/_run_range_form.html" %}
+  <div class="trend-indicators">
+    <div class="row">
+      <div class="col-sm-2">
+        <p><strong>Trend indicators</strong></p>
+      </div>
+      <div class="col-sm-10">
+        <form class="form" role="form">
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox">TELL1 parameter change
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox">Technical stop
+                </label>
+              </div>
+            </div>
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox">Alignment update
+                </label>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-4">
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox">Magnet polarity
+                </label>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <div class="col-sm-6 histogram" data-file="histograms.root" data-histogram="histogram_0">
+    </div>
+    <div class="col-sm-6 histogram" data-file="histograms" data-histogram="histogram_1">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm-6 histogram" data-file="histograms" data-histogram="histogram_2">
+    </div>
+    <div class="col-sm-6 histogram" data-file="histograms" data-histogram="histogram_3">
+    </div>
+  </div>
+  <div class="trends-vs-selector">
+    <div class="btn-group">
+      <button type="button" class="btn btn-default disabled" disabled>Trend vs.</button>
+      <button type="button" class="btn btn-primary">Run number</button>
+      <button type="button" class="btn btn-default">Time</button>
+      <button type="button" class="btn btn-default">Luminosity</button>
+      <button type="button" class="btn btn-default">Fluence</button>
+    </div>
+  </div>
+{% endblock %}

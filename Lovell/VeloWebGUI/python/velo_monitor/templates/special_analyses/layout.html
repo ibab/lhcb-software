@@ -1,0 +1,11 @@
+{% extends "velo_layout.html" %}
+{% block sidebar %}
+  <ul class="nav nav-sidebar">
+    {{ list_link_tag('special_analyses/iv_scans', 'IV scans') }}
+    {{ list_link_tag('special_analyses/it_scans', 'IT scans') }}
+    {{ list_link_tag('special_analyses/hv_scans', 'HV scans') }}
+    {{ list_link_tag('special_analyses/cce_scans', 'CCE scans') }}
+    {{ list_link_tag('special_analyses/ip_resolution', 'IP resolution') }}
+    {{ list_link_tag('special_analyses/pv_resolution', 'PV resolution') }}
+  </ul>
+{% endblock %}

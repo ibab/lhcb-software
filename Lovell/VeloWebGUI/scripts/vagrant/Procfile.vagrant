@@ -1,0 +1,3 @@
+web: uwsgi -s 127.0.0.1:8000 -w velo_monitor:wsgi --buffer-size=32000
+worker: python -m velo_monitor.worker
+redis: redis-server /usr/local/etc/redis.conf

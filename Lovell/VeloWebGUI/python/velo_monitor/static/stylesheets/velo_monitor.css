@@ -1,0 +1,75 @@
+/* @group Sidebar */
+sidebar h1 {
+  font-size: 1.2em;
+}
+
+sidebar .run-number {
+  margin: -20px -20px 0 -20px;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+sidebar .run-number:hover {
+  background: #eee;
+}
+
+sidebar .run-number > a {
+  color: #333;
+}
+
+sidebar .run-number small {
+  padding-top: 6px;
+}
+
+sidebar .sensor-detail {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* @endgroup Sidebar */
+
+/* Insert a thin space before units of measurement */
+.unit:before {
+  content: " ";
+}
+
+.run-view-pane h1 {
+  margin: 20px 0 10px 0;
+  text-align: center;
+  font-size: 1.2em;
+}
+
+/* Part of the $('.run-view-pane').children().hide() hack to get plots to
+ * be full-size when display: none */
+.run-view-pane, .plot {
+  width: 100%;
+}
+
+.run-view-pane .plot {
+  height: 400px;
+}
+
+.Histogram2D .tile,
+.zscale-box,
+.TextBox rect {
+  shape-rendering: crispEdges;
+}
+
+.zscale-box {
+  stroke: #000;
+}
+
+.velo-layout {
+  /* Center VELO layout buttons inside their container */
+  text-align: center;
+}
+
+.toggles {
+  margin-bottom: 20px;
+}
+
+/* Hint that the statistics boxes are draggable */
+.TextBox {
+  cursor: move;
+}

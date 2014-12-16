@@ -1,0 +1,142 @@
+{% extends "run_view/layout.html" %}
+{% block pageheader %}{{ g.page_data.title }}{% endblock %}
+{% block run_view_body %}
+  {# Show flash messages, for which we only have 'error' types, so show them red #}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      {% for message in messages %}
+        <div class="alert alert-danger">
+          {{ message }}
+          <button type="button" class="close" data-dismiss="alert">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {# One tab per histogram #}
+  <ul class="nav nav-tabs nav-justified" role="tablist">
+    {% for plot in g.page_data.plots %}
+      {# Sanitise plot.name in to a valid URL hash value, as valid ROOT key names can contain invalid URL hash characters #}
+      <li class="run-view-tab"><a href="#{{ plot.name | sanitise }}" role="tab" data-toggle="tab">{{ plot.short or plot.title }}</a></li>
+    {% endfor %}
+  </ul>
+  {# One pane per histogram #}
+  <div class="tab-content">
+    {% for plot in g.page_data.plots %}
+      <div class="tab-pane run-view-pane" id="{{ plot.name | sanitise }}">
+        <h1>{{ plot.title }}</h1>
+        <div class="plot"
+             data-name="{{ plot.name }}"
+             data-sensor-dependent="{{ plot.sensor_dependent }}"
+             data-sensor="{{ g.sensor }}"
+             {# If an options dict is present, we need to wrap in single quotes as JSON uses double #}
+             {% if 'options' in plot %}data-plot-options='{{ plot.options | tojson }}'{% endif %}>
+        </div>
+
+        {# Sensor selector template, only shown if a plot is sensor-dependent #}
+        {% if 'sensor_dependent' in plot and plot.sensor_dependent == True %}
+          <div class="row">
+          <div class="sensor-selector col-md-4 col-md-offset-4">
+            <form action="{{ url_for('run_view.run_view_builder') }}" method="GET">
+              <div class="input-group">
+                <div class="input-group-btn dropup">
+                  <button type="submit" class="btn btn-primary">Choose sensor</button>
+                  <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+                    <span class="caret"></span>
+                    <span class="sr-only">Toggle dropdown</span>
+                  </button>
+                  <ul class="dropdown-menu" role="menu">
+                    {# Compute what the opposite sensor to the current one is #}
+                    {% set corresponding_name = 'R' if g.sensor > 41 else 'Φ' %}
+                    {% set corresponding_num = g.sensor - 64 if g.sensor > 41 else g.sensor + 64 %}
+                    <li><a href="{{ url_for('run_view.run_view_builder', run=g.run, page=g.page, sensor=corresponding_num) }}">
+                      Corresponding {{ corresponding_name }} sensor (#<span id="corresponding-sensor">{{ corresponding_num }}</span>)
+                    </a></li>
+                    {# Show the VELO layout graphic when this anchor is clicked #}
+                    <li><a href="#" data-toggle="modal" data-target="#velo-layout">See VELO layout</a></li>
+                  </ul>
+                </div>
+                <input type="text" class="form-control" name="sensor" min="0" max="105" step="1" list="sensors" placeholder="Sensor number" value="{{ g.sensor }}">
+              </div>
+              <!-- Hidden fields to pass the current page and sensor number -->
+              <input type="hidden" name="run" value="{{ g.run }}">
+              <input type="hidden" name="page" value="{{ g.page }}">
+            </form>
+          </div>
+          </div>
+        {% endif %}
+      </div>
+    {% endfor %}
+  </div>
+
+  {# VELO layout modal, shown when the 'Show VELO layout' item is clicked #}
+  <div class="modal fade" id="velo-layout" tabindex="-1" role="dialog" aria-labelledBy="velo-layout-label" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal-title" id="velo-layout-label">VELO layout</h4>
+        </div>
+        <div class="modal-body">
+          <p>Click a sensor number in the diagram below to view plots for that sensor.</p>
+          <p>The current sensor is highlighted in green.</p>
+          <div class="row">
+            <div class="col-md-6 velo-layout">
+              <div class="btn-group-vertical">
+                <button type="button" class="btn btn-info" disabled>R</button>
+                {% for rsensor in range(0, 21) %}
+                  <button type="button" class="btn {{ 'btn-success active' if g.sensor == rsensor else 'btn-default' }}">{{ rsensor }}</button>
+                {% endfor %}
+                <button type="button" class="btn btn-default disabled">&hellip;</button>
+              </div>
+              <div class="btn-group-vertical">
+                <button type="button" class="btn btn-info" disabled>Φ</button>
+                {% for phisensor in range(64, 85) %}
+                  <button type="button" class="btn {{ 'btn-success active' if g.sensor == phisensor else 'btn-default' }}">{{ phisensor }}</button>
+                {% endfor %}
+                <button type="button" class="btn btn-default disabled">&hellip;</button>
+              </div>
+            </div>
+            <div class="col-md-6 velo-layout">
+              <div class="btn-group-vertical">
+                <button type="button" class="btn btn-info" disabled>R</button>
+                <button type="button" class="btn btn-default disabled">&hellip;</button>
+                {% for rsensor in range(21, 42) %}
+                  <button type="button" class="btn {{ 'btn-success active' if g.sensor == rsensor else 'btn-default' }}">{{ rsensor }}</button>
+                {% endfor %}
+              </div>
+              <div class="btn-group-vertical">
+                <button type="button" class="btn btn-info" disabled>Φ</button>
+                <button type="button" class="btn btn-default disabled">&hellip;</button>
+                {% for phisensor in range(85, 106) %}
+                  <button type="button" class="btn {{ 'btn-success active' if g.sensor == phisensor else 'btn-default' }}">{{ phisensor }}</button>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {# datalist for possible sensor numbers, used for autocompletion in the sensor selection form #}
+  {# Kept outside the plots loop else we'll have duplicate IDs #}
+  {# TODO polyfill this, not supported by Safari and IE < 10 #}
+  <datalist id="sensors">
+    {% for rsensor in range(0, 42) %}
+      <option value="{{ rsensor }}">R sensor</option>
+    {% endfor %}
+    {% for phisensor in range(64, 106) %}
+      <option value="{{ phisensor }}">Φ sensor</option>
+    {% endfor %}
+  </datalist>
+{% endblock %}

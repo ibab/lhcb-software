@@ -1,0 +1,11 @@
+{% extends "velo_view/layout.html" %}
+{% block pageheader %}Detailed trends{% endblock %}
+{% block body %}
+  <ul class="nav nav-tabs nav-justified">
+    {{ list_link_tag('velo_view/trends/nzs', 'NZS') }}
+    {{ list_link_tag('velo_view/trends/clusters', 'Clusters') }}
+    {{ list_link_tag('velo_view/trends/tracks', 'Tracks') }}
+    {{ list_link_tag('velo_view/trends/vertices', 'Vertices') }}
+  </ul>
+  {% include "partials/_run_range_form.html" %}
+{% endblock %}

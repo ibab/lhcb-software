@@ -1,0 +1,8 @@
+{% extends "velo_layout.html" %}
+{% block sidebar %}
+  <ul class="nav nav-sidebar">
+    {{ list_link_tag('velo_view/overview', 'Overview') }}
+    {{ list_link_tag('velo_view/trends', 'Trends') }}
+    {{ list_link_tag('velo_view/detailed_trends', 'Detailed trends') }}
+  </ul>
+{% endblock %}
