@@ -119,6 +119,9 @@ StatusCode IsMuonTool::tracksFromTrack( const LHCb::Track& track,
     if ( isMuon( track.p() ) ) {
         // Add found hits to track
         LHCb::Track* output = track.clone();
+        // clone copies all ancestors and extrainfo, which is not what we want in HLT
+        output->clearAncestors();
+        output->setExtraInfo(LHCb::Track::ExtraInfo());
         tracks.push_back( output );
         for ( const auto& hit : hits ) {
             output->addToLhcbIDs( LHCb::LHCbID{hit->tile()} );
