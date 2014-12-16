@@ -6,7 +6,7 @@ branches doc cmt tests
 # Don't forget the applications
 #=======================================================
 
-use  MooreScripts  v1r7
+use  MooreScripts  v1r8
 use  MooreOnlineConf  v1r5
 
 # Declare this as a container package
