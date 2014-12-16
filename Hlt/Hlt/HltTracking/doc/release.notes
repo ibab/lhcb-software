@@ -4,6 +4,9 @@
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+! 2014-12-16 - Roel Aaij
+ - Disable extraInfo transfer for IsMuon and LooseForward.
+
 !========================= HltTracking v13r3 2014-12-15 =========================
 
 ! 2014-12-10 - Sebastian Neubert

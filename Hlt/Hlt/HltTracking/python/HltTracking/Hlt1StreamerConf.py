@@ -87,7 +87,7 @@ LooseForward = LoKi.Hlt1.UpgradeConf(
     True                         ,                 ##                  "Owner"
     False                        ,                 ##            "TransferIDs"
     False                        ,                 ##       "TransferAncestor"
-    True                         ,                 ##      "TransferExtraInfo"
+    False                        ,                 ##      "TransferExtraInfo"
     True                         )                 ##              "OrderByPt
 # =============================================================================
 FitTrack = LoKi.Hlt1.UpgradeConf (
@@ -122,12 +122,12 @@ MatchVeloMuon = LoKi.Hlt1.UpgradeConf(
 # =============================================================================
 IsMuon = LoKi.Hlt1.UpgradeConf(
     "IsMuonTool"                 ,                     ##               "Tool" 
-    Hlt1TrackRoot + "IsMuon"          ,                ##          "TESOutput"
+    Hlt1TrackRoot + "IsMuon"     ,                     ##          "TESOutput"
     LHCb.Track.Long              ,                     ##          "TrackType"
     True                         ,                     ##              "Owner"
     False                        ,                     ##        "TransferIDs"
     True                         ,                     ##   "TransferAncestor"
-    True                         ,                     ##  "TransferExtraInfo"
+    False                        ,                     ##  "TransferExtraInfo"
     True                         )                     ##          "OrderByPt"
 
 _trUpgrader = {}
