@@ -4,6 +4,11 @@
 ! Purpose     : Algorithms for Hlt1 muon trigger
 !-----------------------------------------------------------------------------
 
+! 2014-12-16 - Roel Aaij
+ - Fix behaviour of IsMuonTool with respect to extraInfo and ancestors.
+   LHCb::Track::clone copies these from the seed, which is not what we want in
+   HLT1.
+
 !========================= Hlt1Muons v1r11 2014-12-15 =========================
 
 ! 2014-12-06 - Vasileios Syropoulos
