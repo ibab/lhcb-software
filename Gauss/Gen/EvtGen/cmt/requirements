@@ -1,9 +1,9 @@
 #============================================================================
 # Created    : 2007-10-31
-# Maintainer : Patrick Robbe, John Back
+# Maintainer : Michal Kreps, Tom Latham, John Back
 #============================================================================
 package     EvtGen
-version     v14r0
+version     v14r1
  
 # Structure, i.e. directories to process. 
 #============================================================================
