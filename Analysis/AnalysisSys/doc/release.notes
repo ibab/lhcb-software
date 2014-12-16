@@ -13,7 +13,7 @@ Production release, based on Gaudi v25r6, LHCb v38r3 and Phys v19r3.
    Phys/DecayTreeTuple v4r12, Phys/DSTWriters v4r18,
    Phys/FlavourTaggingChecker v7r7,
    Phys/JetAccessoriesMC v2r7, Phys/JetTagging v1r4,
-   Phys/TeslaTools v1r1.
+   Phys/TeslaTools v1r1, Rich/RichPIDQC v1r8.
 
 - In Analysis/Ostap v1r4 :
   . Add conversion of histograms into Lafferty-Wyatt graph.
@@ -58,6 +58,9 @@ Production release, based on Gaudi v25r6, LHCb v38r3 and Phys v19r3.
 
 - In Phys/TeslaTools v1r1 :
   . Numerous updates. See package release notes.
+
+- In Rich/RichPIDQC v1r8 :
+  . New tag for old commit to python/RichPIDQC/DsToPhiPi.py never actually released.
 
 </PRE><H1><A NAME=v13r1p1>2014-10-30 Analysis v13r1p1</A></H1><PRE>
 Development release, built against Phys v19r2p1.
