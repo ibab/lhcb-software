@@ -2,6 +2,7 @@
 ! Responsible : F. Zhang
 !=============================================================================
 
+!======================== LbGenXicc v4r0p1 2014-12-16 ========================
 ! 2014-11-28 - Gloria Corti
  - Try to fix warnings when compiling with --pedantic
 
