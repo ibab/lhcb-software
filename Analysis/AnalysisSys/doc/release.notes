@@ -1,7 +1,63 @@
 <PRE>
-Package     : AnalysisSys
+Package             : AnalysisSys
 Package Coordinator : Chris Jones
-Purpose     : LHCb analysis packages
+Purpose             : LHCb analysis packages
+
+</PRE><H1><A NAME=v13r2>2014-12-16 Analysis v13r2</A></H1><PRE>
+
+Production release, based on Gaudi v25r6, LHCb v38r3 and Phys v19r3.
+
+- Packages updated :
+   Analysis/Ostap v1r4, Phys/AnalysisPython v2r34,
+   Phys/DecayTreeTupleANNPID v1r2, Phys/DecayTreeTupleMC v1r5,
+   Phys/DecayTreeTuple v4r12, Phys/DSTWriters v4r18,
+   Phys/FlavourTaggingChecker v7r7,
+   Phys/JetAccessoriesMC v2r7, Phys/JetTagging v1r4,
+   Phys/TeslaTools v1r1.
+
+- In Analysis/Ostap v1r4 :
+  . Add conversion of histograms into Lafferty-Wyatt graph.
+  . Improvement for 2D-models.
+  . Add B-splines and Co.
+  . Fix tets for reweighting.
+
+- In Phys/AnalysisPython v2r34 :
+  . Numerous updates. See package release notes.
+
+- In Phys/DecayTreeTupleANNPID v1r2 :
+  . Add some Bs2MuMu tunings for testing (disabled by default).
+  . Add support for missing ANNPID networks, for instance when a tune only
+    provides one mass hypothesis (e.g. Bs2MuMu).
+
+- In Phys/DecayTreeTupleMC v1r5 :
+  . Tagging new version with trivial but undocumented changes that happened
+    6 weeks ago!
+
+- In Phys/DecayTreeTuple v4r12 :
+  . Numerous changes to TupleToolSwimmingInfo. See package release notes.
+
+- In Phys/DSTWriters v4r18 :
+  . Add a try/catch block to the selective raw event handling code, to provide
+    a better message when support is enabled in situations where it is not
+    fully supported (i.e. when StrippingStreams are not used).
+  . Make selectiveRawEvent = False the default, which means DST writers used in
+    private user jobs will work as before. Will not impact on S21 options in
+    AppConfig, as there support is explicitly enabled, the defaults are not 
+    relied upon.
+
+- In Phys/FlavourTaggingChecker v7r7 :
+  . Fixed tagging metrics for charm tagger in BTaggingChecker.
+  . Updated mode cuts for charm tagger in BTaggingAnalysis.
+
+- In Phys/JetAccessoriesMC v2r7 :
+  . Fixing the call to FastJetMaker in JetMaker_Config.
+  . Fixed CMake configuration (install headers).
+
+- In Phys/JetTagging v1r4 :
+  . Updated LoKiTopoTagDir and configuration.
+
+- In Phys/TeslaTools v1r1 :
+  . Numerous updates. See package release notes.
 
 </PRE><H1><A NAME=v13r1p1>2014-10-30 Analysis v13r1p1</A></H1><PRE>
 Development release, built against Phys v19r2p1.
