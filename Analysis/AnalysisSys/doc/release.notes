@@ -3,6 +3,11 @@ Package             : AnalysisSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb analysis packages
 
+</PRE><H1><A NAME=v13r2p1>2014-12-16 Analysis v13r2p1</A></H1><PRE>
+Development release, based on Gaudi v25r6p1, LHCb v38r3p1 and Phys v19r3p1.
+
+Identical to Analysis v13r2, rebuilt against the (ROOT6) LHCb v38r3p1 stack.
+
 </PRE><H1><A NAME=v13r2>2014-12-16 Analysis v13r2</A></H1><PRE>
 
 Production release, based on Gaudi v25r6, LHCb v38r3 and Phys v19r3.
