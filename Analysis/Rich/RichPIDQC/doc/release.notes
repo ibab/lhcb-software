@@ -5,6 +5,11 @@
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
 
+!========================= RichPIDQC v1r8 2014-12-16 ===========================
+
+! 2014-12-16 - Eduardo Rodrigues
+ - New tag for undocumented change to Rich/RichPIDQC/python/RichPIDQC/DsToPhiPi.py
+
 !========================= RichPIDQC v1r7p1 2012-11-30 =========================
 
 ! 2012-11-29 - Marco Clemencic
