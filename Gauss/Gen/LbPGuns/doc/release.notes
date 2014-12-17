@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
+!========================== LbPGuns v6r0 2014-12-17 ==========================
 ! 2014-11-28 - Gloria Corti
  - Try to fix warnings when compiling with --pedantic
 
