@@ -3,6 +3,10 @@ Package: AlignmentOnlineSys
 Package Coordinator: Maurizio Martinelli
 Purpose: Running and testing Alignment in the online environment
 
+
+! 2014-12-17 - Maurizio Martinelli
+ - Fixed QMtest reference
+
 </PRE><H1><A NAME=v10r0>2014-11-10 AlignmentOnlineSys v10r1</A></H1><PRE>
 First release of the Online wrapper project for Alignment. AlignmentOnline has the same version as the underlying Alignment version for simplicity/transparency.
 
