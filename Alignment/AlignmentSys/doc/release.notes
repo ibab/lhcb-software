@@ -1,10 +1,13 @@
 <PRE>
 Package: AlignmentSys
-Package Coordinator: Rob Lambert
+Package Coordinator: Maurizio Martinelli
 Purpose: LHCb Alignment packages.
          This project contains 2 different alignment algorithms
          used by the Gaudi application Escher to align the LHCb detector 
          components.
+
+! 2014-12-17 - Maurizio Martinelli
+ - Updated QMtest reference
 
 </PRE><H1><A NAME=v10r1>2014-11-10 AlignmentSys v10r1</A></H1><PRE>
 Depends on: Phys v19r2p1. For 2015 data.
