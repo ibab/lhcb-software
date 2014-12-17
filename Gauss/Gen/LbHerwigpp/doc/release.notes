@@ -4,6 +4,7 @@
 ! Purpose     : Adaptor package for Herwig++
 !-----------------------------------------------------------------------------
 
+!======================= LbHerwigpp v3r0p1 2014-12-17 ========================
 ! 2014-11-28 - Gloria Corti
  - Try to fix warnings when compiling with --pedantic
 
