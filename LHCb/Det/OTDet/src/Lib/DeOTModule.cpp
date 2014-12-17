@@ -496,13 +496,18 @@ StatusCode DeOTModule::cacheInfo()
   m_dp0di = (g4[0]-g3[0]).unit() * m_xPitch ;
   for( int imono=0; imono<2; ++imono) {
     const LHCb::Trajectory* traj = m_trajFirstWire[imono].get() ;
-    Gaudi::XYZPoint p0 = traj->position(traj->beginRange()) ;
-    Gaudi::XYZPoint p1 = traj->position(traj->endRange()) ;
-    Gaudi::XYZVector dp = p1 - p0 ;
-    m_dy[imono] = dp.y() ;
-    m_p0[imono] = p0 ;
+    // For the 3-segment pieces we use the midpoints of the first and last segment:
+    double mu1 = 5./6. * traj->beginRange() + 1./6. * traj->endRange() ;
+    double mu2 = 1./6. * traj->beginRange() + 5./6. * traj->endRange() ;
+    Gaudi::XYZPoint p1 = traj->position(mu1) ;
+    Gaudi::XYZPoint p2 = traj->position(mu2) ;
+    Gaudi::XYZVector dp = p2 - p1 ;
+    double ybegin = traj->position(traj->beginRange()).y() ;
+    double yend   = traj->position(traj->endRange()).y() ;
     m_dxdy[imono] = dp.x()/dp.y() ;
     m_dzdy[imono] = dp.z()/dp.y() ;
+    m_dy[imono] = yend - ybegin ;
+    m_p0[imono] = p1 + (ybegin - p1.y())/dp.y() * dp ;
   }
   
   // propagation velocity along y-direction (includes correction for readout side)
