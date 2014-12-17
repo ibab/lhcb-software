@@ -235,7 +235,7 @@ double DalitzMCIntegrator::getVal(){
   return _mean;
 }
 
-void DalitzMCIntegrator::doFinalStats(MINT::Minimiser*){};
+void DalitzMCIntegrator::doFinalStats(MINT::Minimiser*){}
 
 DalitzMCIntegrator::
 integrationWeight::integrationWeight(IDalitzEventList* list

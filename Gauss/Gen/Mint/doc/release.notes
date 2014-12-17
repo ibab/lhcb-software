@@ -6,12 +6,15 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
+2014-12-17 - Jeremy
+ - Fixed warnings produced by lcg-g++-4.8.1 -Wpedantic flag
+
 !=========================== Mint v3r2 2014-12-17 ============================
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
 
 ! 2014-10-15 - Jeremy
- - Added spin factor for wKs added
+ - Added spin factor for wKs
 
 !=========================== Mint v3r1 2014-09-02 ============================
 ! 2014-07-24 - Jeremy

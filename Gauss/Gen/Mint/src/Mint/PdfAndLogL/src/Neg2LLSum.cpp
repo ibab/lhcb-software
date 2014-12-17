@@ -79,18 +79,18 @@ void Neg2LLSum::beginFit(){
   for(unsigned int i=0; i < _likList.size(); i++){
     _likList[i]->beginFit();
   }
-};
+}
 void Neg2LLSum::parametersChanged(){
   for(unsigned int i=0; i < _likList.size(); i++){
     _likList[i]->parametersChanged();
   }
-};
+}
 
 void Neg2LLSum::endFit(){
   for(unsigned int i=0; i < _likList.size(); i++){
     _likList[i]->endFit();
   }
-};
+}
 
 
 double Neg2LLSum::getVal(){

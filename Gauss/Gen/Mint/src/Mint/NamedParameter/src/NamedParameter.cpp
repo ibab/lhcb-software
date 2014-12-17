@@ -71,7 +71,7 @@ void NamedParameter<std::string>::print(std::ostream& os) const{
       if(i != size()) os << "  ";
     }
   }
-};
+}
 
 template class NamedParameter<std::string>;
 //

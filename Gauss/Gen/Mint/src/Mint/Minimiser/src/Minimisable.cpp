@@ -26,7 +26,7 @@ MinuitParameterSet* Minimisable::getParSet(){
   }else{
     return MinuitParameterSet::getDefaultSet();
   }
-};
+}
 
 //
 
