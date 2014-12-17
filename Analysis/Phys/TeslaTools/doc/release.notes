@@ -4,6 +4,9 @@
 ! Responsible : Sean Benson
 !=============================================================================
 
+! 2014-12-17 - Sean Benson
+ - Fix to pos-mom covariance matrix.
+
 !========================= TeslaTools v1r1 2014-12-15 =========================
 
 ! 2014-12-10 - Sean Benson

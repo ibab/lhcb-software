@@ -509,12 +509,12 @@ void TeslaReportAlgo::fillParticleInfo(std::vector<ContainedObject*> vec_obj, co
     posmomCov30 = HLT_info["29#Particle.posmomCov30"];
     posmomCov31 = HLT_info["30#Particle.posmomCov31"];
     posmomCov32 = HLT_info["31#Particle.posmomCov32"];
-    posCov00 = HLT_info["32#Particle.posmomCov00"];
-    posCov11 = HLT_info["33#Particle.posmomCov11"];
-    posCov22 = HLT_info["34#Particle.posmomCov22"];
-    posCov10 = HLT_info["35#Particle.posmomCov10"];
-    posCov20 = HLT_info["36#Particle.posmomCov20"];
-    posCov21 = HLT_info["37#Particle.posmomCov21"];
+    posCov00 = HLT_info["32#Particle.posCov00"];
+    posCov11 = HLT_info["33#Particle.posCov11"];
+    posCov22 = HLT_info["34#Particle.posCov22"];
+    posCov10 = HLT_info["35#Particle.posCov10"];
+    posCov20 = HLT_info["36#Particle.posCov20"];
+    posCov21 = HLT_info["37#Particle.posCov21"];
   }
   //
   const double slopez = 1/sqrt(slopex*slopex + slopey*slopey + 1.0);
