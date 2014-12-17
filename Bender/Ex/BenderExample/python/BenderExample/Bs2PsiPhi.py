@@ -236,7 +236,7 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType    = '2010' ,
+        DataType    = '2012' ,
         Simulation  = True   ,
         HistogramFile = 'Bs2PsiPhi_Histos.root' , 
         TupleFile     = 'Bs2PsiPhi_Tuples.root' 
@@ -250,6 +250,8 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
 
     ## define input data 
     setData  ( datafiles , catalogs , castor )
+
+    daVinci.UserSequence  = [ 'PsiPhi'  ]
     
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -268,9 +270,6 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
         ## input particles :
         Inputs     = InputParticles
         )
-    
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    userSeq.Members += [ alg.name() ]
     
     return SUCCESS 
     

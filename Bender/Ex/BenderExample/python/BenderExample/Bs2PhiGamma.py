@@ -159,7 +159,7 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType      = '2010' ,
+        DataType      = '2012' ,
         Simulation    = True   ,
         HistogramFile = 'PhiGamma_Histos.root'  
         )
@@ -167,6 +167,8 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
     ## define the input data 
     setData ( datafiles , catalogs , castor ) 
     
+    daVinci.UserSequence  = [ 'Bs2PhiGamma']
+
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
     ##
@@ -185,9 +187,6 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
         'Phys/StdLooseAllPhotons/Particles'
         ]
         )
-        
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    userSeq.Members += [ alg.name() ]
     
     return SUCCESS 
 
@@ -205,7 +204,7 @@ if '__main__' == __name__ :
     print '*'*120  
     
     inputdata = [
-        "/lhcb/MC/MC10/ALLSTREAMS.DST/00009752/0000/00009752_00000%03d_1.allstreams.dst" % i for i in range(1,205) 
+        "/lhcb/MC/2012/ALLSTREAMS.DST/00029336/0000/00029336_00000%03d_1.allstreams.dst" % i for i in range(1,100) 
         ]
     
     configure ( inputdata , castor = True ) 

@@ -143,9 +143,8 @@ def configure ( datafiles  , catalogs = [] , castor = False ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType      = '2010'  , 
+        DataType      = '2012'  , 
         Simulation    = True    ,
-        Persistency   = 'ROOT'  ,
         HistogramFile = 'Bs2DsK_Histos.root' ,       
         Lumi          = False   
         )
@@ -153,8 +152,7 @@ def configure ( datafiles  , catalogs = [] , castor = False ) :
     from StandardParticles import ( StdTightPions   ,
                                     StdNoPIDsKaons  )
     
-    StdTightPions  = StdTightPions  . outputLocation ()
-    StdNoPIDsKaons = StdNoPIDsKaons . outputLocation ()
+    daVinci.UserSequence = [ 'Bs2DsK' ]
     
     ## define the input data 
     setData ( datafiles , catalogs , castor )
@@ -169,10 +167,11 @@ def configure ( datafiles  , catalogs = [] , castor = False ) :
         ## print histos 
         HistoPrint     = True , 
         ## define the input particles:
-        Inputs         = [ StdTightPions  , StdNoPIDsKaons ]
+        Inputs         = [ StdTightPions .outputLocation()  ,
+                           StdNoPIDsKaons.outputLocation()  ]
         )
     
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
+    
     userSeq.Members += [ alg.name() ]
     
     return SUCCESS 
@@ -191,14 +190,14 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00030232/0000/00030232_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 50 ) 
         ]
     
     configure( inputdata , castor = True ) 
 
 
     ## run the job
-    run ( 201 )
+    run ( 1000 )
     
 # =============================================================================
 # The END 
