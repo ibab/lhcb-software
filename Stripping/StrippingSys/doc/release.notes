@@ -3,9 +3,17 @@ Package     : StrippingSys
 Package Coordinator : l.carson@ed.ac.uk, Stefano.Perazzini@cern.ch
 Purpose     : LHCb stripping packages
 
-!========================= StrippingSys v9r3 2014-12-16 =========================
+!========================= StrippingSys v9r3 2014-12-17 =========================
 
-* Same as v9r2
+* Phys/StrippingSelections v3r39
+ - follow changes in Kernel/SelectionLine to speed up the code...
+
+* Phys/DisplVertices               v7r20
+ - after checking with Wouter, I adapted the code to work with the new
+   implementation of the TrackCloneData class from Tr/TrKernel
+ - Fixed CMake configuration (install headers).
+
+* Phys/StrippingAlgs v1r14
 
 !========================= StrippingSys v9r2p1 2014-11-25 =========================
 
