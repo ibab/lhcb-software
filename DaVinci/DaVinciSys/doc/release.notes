@@ -3,6 +3,13 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r3p1>2014-12-17 DaVinci v36r3p1</A></H1><PRE>
+
+Development release for 2015 data taking, based on Gaudi v25r6p1,
+LHCb v38r3p1, Lbcom v16r2p1, Phys v19r3p1, Analysis v13r2p1 and Stripping v9r3p1.
+
+Identical to DaVinci v36r3, rebuilt against the (ROOT6) LHCb v38r3p1 stack.
+
 </PRE><H1><A NAME=v36r3>2014-12-17 DaVinci v36r3</A></H1><PRE>
 
 First production release for 2015 data taking.
