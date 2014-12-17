@@ -1,7 +1,7 @@
 ################################################################################
 # Package: TeslaTools
 ################################################################################
-gaudi_subdir(TeslaTools v1r1)
+gaudi_subdir(TeslaTools v1r1p1)
 
 gaudi_depends_on_subdirs(Event/MicroDst
                          Kernel/LHCbAlgs
