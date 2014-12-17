@@ -4,7 +4,7 @@ version v36r3p1
 branches doc cmt
 
 # Packages
-use  DaVinci         v36r3    Phys
+use  DaVinci         v36r3p1  Phys
 use  DaVinciTests    v2r28
 use  KaliCalo        v4r16    Phys   # Olivier Deschamps
 use  Tesla           v1r1     Phys   # Sean Benson
