@@ -21,7 +21,7 @@
     <text>$ESCHEROPTS/Escher-AlignHltJpsi.py</text>
     <text>$ESCHEROPTS/COLLISION12-Tests.py</text>
   </set></argument>
-  <argument name="reference"><text>../refs/escherhltjpsi.ref</text></argument>
+  <argument name="reference"><text>$ESCHERROOT/tests/refs/escherhltjpsi.ref</text></argument>
   <argument name="validator"><text>
 from Escher.QMTest.EscherExclusions import preprocessor
 validateWithReference(preproc = preprocessor)

@@ -18,5 +18,5 @@
   <argument name="args"><set>
     <text>$ESCHERROOT/tests/options/testEscher-defaults.py</text>
   </set></argument>
-  <argument name="reference"><text>$ESCHERROOT/refs/testEscher-defaults.ref</text></argument>
+  <argument name="reference"><text>$ESCHERROOT/tests/refs/testEscher-defaults.ref</text></argument>
 </extension>
