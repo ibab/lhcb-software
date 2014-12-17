@@ -3,6 +3,34 @@ Package             : DaVinciSys
 Package Coordinator : Chris Jones
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v36r3>2014-12-17 DaVinci v36r3</A></H1><PRE>
+
+First production release for 2015 data taking.
+Based on Gaudi v25r6, LHCb v38r3, Lbcom v16r2, Phys v19r3, Analysis v13r2
+and Stripping v9r3.
+
+- Refer to the release notes of Phys, Analysis and Stripping for details
+  on updates to these dependency projects.
+
+- Packages updated :
+  DaVinciTests v2r28, Phys/DaVinci v36r3,  Phys/Tesla v1r1.
+
+- Packages added :
+  Patch Phys/TeslaTools v1r1p1 added only for this release,
+  for trigger needs (the package sits otherwise in the Analysis project).
+
+- In DaVinciTests v2r28 :
+  . QM tests added for Stripping 21 and 21r1.
+
+- In Phys/DaVinci v36r3 				 :
+  . DataType 2015 added to list of known DataTypes.
+
+- In Phys/Tesla v1r1 :
+  . Numerous updates. See package release notes.
+
+- In Phys/TeslaTools v1r1p1 :
+  . Fix to pos-mom covariance matrix.
+
 </PRE><H1><A NAME=v36r2>2014-11-05 DaVinci v36r2</A></H1><PRE>
 
 Development release. Identical to v36r1 but built against the
