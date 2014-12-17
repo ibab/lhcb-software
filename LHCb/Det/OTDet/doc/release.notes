@@ -2,6 +2,9 @@
 ! Responsible : Alexandr Kozlinskiy, Lucia Grillo
 !--------------------------------------------------------------------------
 
+! 2014-12-17 - Wouter Hulsbergen
+ - Modification of approximation of 3-segment wire for pattern reco
+
 !========================= OTDet v8r13 2014-12-11 =========================
 ! 2014-12-10 - Wouter Hulsbergen
  - Implemented trajectory in three parts for monolayer shifts
