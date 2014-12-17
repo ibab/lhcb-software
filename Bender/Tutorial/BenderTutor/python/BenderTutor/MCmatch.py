@@ -249,7 +249,7 @@ if __name__ == '__main__' :
     configure( inputdata , castor = True )
     
     ## event loop 
-    run(5000)
+    run(1000)
     
 # =============================================================================
 # The END

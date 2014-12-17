@@ -217,7 +217,7 @@ if __name__ == '__main__' :
     configure( inputdata , castor = True )
     
     ## event loop 
-    run(50000)
+    run(15000)
 
     gaudi = appMgr()
     alg   = gaudi.algorithm('MakeB')
