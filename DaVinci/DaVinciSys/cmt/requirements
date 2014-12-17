@@ -1,13 +1,16 @@
 package DaVinciSys
-version v36r2
+version v36r3
 
 branches doc cmt
 
 # Packages
-use  DaVinci         v36r2    Phys
+use  DaVinci         v36r3    Phys
 use  DaVinciTests    v2r27
 use  KaliCalo        v4r16    Phys   # Olivier Deschamps
-use  Tesla           v1r0     Phys   # Sean Benson
+use  Tesla           v1r1     Phys   # Sean Benson
+
+# Extra package just for this release, for trigger people!
+use  TeslaTools      v1r1p1   Phys   # Sean Benson
 
 # Declare this as a container package
 apply_pattern container_package
