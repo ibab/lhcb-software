@@ -1,14 +1,16 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/SimChecks
-! Responsible : Silvia Miglioranzi
+! Responsible : Peter Griffith, Luca Pescatore
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== SimChecks v1r4 2014-12-18 ========================
 ! 2014-12-01 - Peter Griffith
  - Improved output format of EmValidation. EmValidation now also  gives single 
    FOM value derived from chi^2 calculations for comparison of EM physics lists
    with reference data, i.e PL/Gauss version used in current productions. 
-   This can be used for automatic alarm to alert users in LHCbPR's scheduled checks.    
+   This can be used for automatic alarm to alert users in LHCbPR's scheduled 
+   checks.    
 
 ! 2014-11-26 - Peter Griffith
  - Cleaned up and improved readability of analysis.py in EmValidation scripts 
@@ -17,11 +19,12 @@
  - Added analysis package and options files for EM physics validator tools
 
 ! 2014-11-25 - Luca Pescatore
-- Put parallelisation as an option. Off by default. 
-  Also default physics lists used changed from FTFP_BERT to FTFP_BERT and QGSP_BERT
+ - Put parallelisation as an option. Off by default. 
+   Also default physics lists used changed from FTFP_BERT to FTFP_BERT 
+  and QGSP_BERT
 
 ! 2014-11-24 - Luca Pescatore
-- Bug fix in Target_CreateEvents.py (was due to parallelisation)
+ - Bug fix in Target_CreateEvents.py (was due to parallelisation)
 
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
