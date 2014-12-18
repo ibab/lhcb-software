@@ -4,6 +4,7 @@
 ! Purpose     : Interface to read/write GDML geometry
 !-----------------------------------------------------------------------------
 
+!======================== LbGDML v1r0p2 2014-12-18 ===========================
 ! 2014-11-26 - Gloria Corti
  - Fix warnings when compiling with --pedantic
 
