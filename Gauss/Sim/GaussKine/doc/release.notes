@@ -4,6 +4,7 @@
 ! Purpose     : Code to exchange kinematic information with Geant4
 !-----------------------------------------------------------------------------
 
+!======================== GaussKine v6r4p1 2014-12-18 ========================
 ! 2014-11-26 - Gloria Corti
  - Fix warning when compiling with --pedantic
 

@@ -1,7 +1,7 @@
 ################################################################################
 # Package: GaussKine
 ################################################################################
-gaudi_subdir(GaussKine v6r4)
+gaudi_subdir(GaussKine v6r4p1)
 
 gaudi_depends_on_subdirs(Event/GenEvent
                          Event/MCEvent
