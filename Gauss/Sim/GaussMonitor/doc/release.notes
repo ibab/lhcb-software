@@ -4,6 +4,7 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!======================= GaussMonitor v8r2 2014-12-18 ========================
 ! 2014-12-01 Peter Griffith
  - Cleaned up BremVeloCheck code, removed std::cout's.
 
