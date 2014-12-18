@@ -22,7 +22,7 @@
 #
 # =============================================================================
 package       BenderSys
-version       v25r2
+version       v25r3
 author        Vanya BELYAEV
 
 ## # =========== TEMPORARY! ======================================================
@@ -30,16 +30,16 @@ author        Vanya BELYAEV
 ## use           PyPAW          v2r0    Analysis
 
 # =========== Bender Application itself =======================================
-use           Bender         v25r2   Phys 
+use           Bender         v25r3   Phys 
   
 # =========== Bender-based tools and scripts ==================================
-use           BenderTools    v25r1   Phys 
+use           BenderTools    v25r3   Phys 
 
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v20r0   Ex
+use           BenderExample  v25r3   Ex
 
 # =========== Bender tutorial =================================================
-use           BenderTutor    v25r0   Tutorial
+use           BenderTutor    v25r3   Tutorial
 
 # =========== template of user module/script ==================================
 use           BenderUser     v20r0   Phys 
