@@ -131,7 +131,9 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
 
     from StandardParticles import StdTightKaons
     InputParticles = [ StdTightKaons.outputLocation() ]
-    
+
+    daVinci.UserAlgorithms = [ 'PhiMC' ]
+
     ## define the input data 
     setData ( datafiles , catalogs , castor ) 
     
@@ -150,8 +152,6 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
         Inputs         = InputParticles         ## input particles 
         )
     
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    userSeq.Members += [ alg.name() ] 
          
     return SUCCESS 
     

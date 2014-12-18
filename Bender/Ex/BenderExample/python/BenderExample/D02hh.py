@@ -128,7 +128,7 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType      = '2010' , 
+        DataType      = '2012' , 
         Simulation    = True   ,
         HistogramFile = 'D02hh_Histos.root' ,
         Lumi          = False 
@@ -139,6 +139,8 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
         StdNoPIDsKaons . outputLocation () ,
         StdNoPIDsPions . outputLocation () ,
         ]
+
+    daVinci.UserAlgorithms = [ 'D02hh' ]
 
     ## define the input data 
     setData ( datafiles , catalogs , castor )
@@ -160,9 +162,6 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
         ## input particles:
         Inputs     =  InputParticles 
         )
-    
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    userSeq.Members += [ alg.name() ]
        
     return SUCCESS 
     
@@ -176,12 +175,11 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
     ## configure the job:
     inputdata = [
-        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008581/0000/00008581_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00035770/0000/00035770_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 90 ) 
         ]
     
     configure( inputdata , castor = True ) 

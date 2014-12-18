@@ -463,7 +463,6 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
     daVinci = DaVinci (
         DataType      = '2010'  ,
         Simulation    = True    ,
-        Persistency   = 'ROOT'  ,
         HistogramFile = 'Angles_Histos.root' ,
         TupleFile     = 'Angles_Tuples.root' )
 

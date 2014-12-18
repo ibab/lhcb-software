@@ -152,7 +152,7 @@ def configure ( datafiles  , catalogs = [] , castor = False ) :
     from StandardParticles import ( StdTightPions   ,
                                     StdNoPIDsKaons  )
     
-    daVinci.UserSequence = [ 'Bs2DsK' ]
+    daVinci.UserAlgorithms = [ 'Bs2DsK' ]
     
     ## define the input data 
     setData ( datafiles , catalogs , castor )
@@ -170,10 +170,7 @@ def configure ( datafiles  , catalogs = [] , castor = False ) :
         Inputs         = [ StdTightPions .outputLocation()  ,
                            StdNoPIDsKaons.outputLocation()  ]
         )
-    
-    
-    userSeq.Members += [ alg.name() ]
-    
+        
     return SUCCESS 
 
 # =============================================================================

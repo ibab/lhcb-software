@@ -192,6 +192,8 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
         StdNoPIDsKaons . outputLocation ()
         ]
 
+    daVinci.UserAlgorithms = [ 'LV02Alg' ]
+
     ## define the input data 
     setData ( datafiles , catalogs , castor ) 
     
@@ -212,9 +214,6 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
         ## Input particles 
         Inputs     = InputParticles 
         )
-    
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    userSeq.Members += [ alg.name() ] 
    
     return SUCCESS 
 
@@ -233,10 +232,10 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata1 = [
-        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008506/0000/00008506_00000%03d_1.allstreams.dst' % i for i in range ( 2 , 29 ) 
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00030232/0000/00030232_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 50 ) 
         ]
     inputdata2 = [
-        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008566/0000/00008566_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 83 ) 
+        '/lhcb/MC/2012/ALLSTREAMS.DST/00025429/0000/00025429_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 83 ) 
         ]
     
     inputdata = []

@@ -251,7 +251,7 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
     ## define input data 
     setData  ( datafiles , catalogs , castor )
 
-    daVinci.UserSequence  = [ 'PsiPhi'  ]
+    daVinci.UserAlgorithms  = [ 'PsiPhi'  ]
     
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 

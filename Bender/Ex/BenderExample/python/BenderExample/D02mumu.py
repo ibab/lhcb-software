@@ -129,7 +129,7 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType      = '2010' ,
+        DataType      = '2011' ,
         Simulation    = True   ,
         HistogramFile = 'D02mumu_Histos.root' 
         ) 
@@ -141,6 +141,7 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
         StdLooseMuons  . outputLocation ()
         ]
 
+    daVinci.UserAlgorithms = [ 'D02mumu' ]
     ## define the input data 
     setData ( datafiles , catalogs , castor ) 
     
@@ -162,9 +163,6 @@ def configure ( datafiles , catalogs = [] , castor = False ) :
         Inputs     = InputParticles 
         )
     
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    userSeq.Members += [ alg.name() ]
-    
     return SUCCESS 
     
 # =============================================================================
@@ -182,7 +180,7 @@ if __name__ == '__main__' :
     
     ## configure the job:
     inputdata = [
-        '/lhcb/MC/MC10/ALLSTREAMS.DST/00008828/0000/00008828_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 45 ) 
+        '/lhcb/MC/MC11a/ALLSTREAMS.DST/00014791/0000/00014791_00000%03d_1.allstreams.dst' % i for i in range ( 1 , 45 ) 
         ]
     
     configure( inputdata , castor  = True )  

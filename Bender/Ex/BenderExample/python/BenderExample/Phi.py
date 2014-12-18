@@ -118,6 +118,8 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
 
     from StandardParticles import StdTightKaons
     InputParticles = [ StdTightKaons.outputLocation() ]
+
+    daVinci.UserAlgorithms = [ 'Phi'  ]
     
     ## define the input data 
     setData ( datafiles , catalogs , castor ) 
@@ -136,9 +138,6 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
         Inputs     = InputParticles          ## input particles    
         )
     
-    userSeq = gaudi.algorithm ('GaudiSequencer/DaVinciUserSequence',True)
-    userSeq.Members += [ alg.name() ] 
-     
     return SUCCESS 
     
 # =============================================================================
@@ -151,7 +150,6 @@ if __name__ == '__main__' :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
     ## configure the job:

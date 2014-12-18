@@ -167,7 +167,7 @@ def configure ( datafiles , catalogs  = [] , castor = False ) :
     ## define the input data 
     setData ( datafiles , catalogs , castor ) 
     
-    daVinci.UserSequence  = [ 'Bs2PhiGamma']
+    daVinci.UserAlgorithms  = [ 'Bs2PhiGamma']
 
     ##
     ## Dynamic Configuration: Jump into the wonderful world of GaudiPython 
@@ -200,7 +200,6 @@ if '__main__' == __name__ :
     print ' Author  : %s ' %   __author__    
     print ' Version : %s ' %   __version__
     print ' Date    : %s ' %   __date__
-    print ' dir(%s) : %s ' % ( __name__    , dir() )
     print '*'*120  
     
     inputdata = [
