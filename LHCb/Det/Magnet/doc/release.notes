@@ -6,6 +6,8 @@
 ! 2014-12-18 - Gerhard Raven
  - make the MagneticFieldReader code (at source level) independent of the
    internal storage type of the MagneticFieldGrid
+ - speed up the MagneticFieldGrid initialization by _not_ thrashing the
+   cache maximally...
 
 !========================= Magnet v7r7 2014-03-17 =========================
 ! 2014-03-07 - Chris Jones

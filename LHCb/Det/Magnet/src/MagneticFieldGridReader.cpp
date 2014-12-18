@@ -2,6 +2,7 @@
 #include "DetDesc/MagneticFieldGrid.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include <string>
 #include <fstream>
 
 //=============================================================================
@@ -125,9 +126,9 @@ void MagneticFieldGridReader::fillGridFromQuadrants( GridQuadrant* quadrants,
   grid.m_Nxyz[1] = 2*Nyquad - 1;
   grid.m_Nxyz[2] = Nzquad ;
   grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], {0,0,0} ) ;
-  for( size_t ix=0; ix<Nxquad; ++ix)
-    for( size_t iy=0; iy<Nyquad; ++iy)
-      for( size_t iz=0; iz<Nzquad; ++iz) {
+  for( size_t iz=0; iz<Nzquad; ++iz) 
+     for( size_t iy=0; iy<Nyquad; ++iy)
+        for( size_t ix=0; ix<Nxquad; ++ix) {
 	// 4th quadrant (negative x, negative y)
 	grid.m_Q[ grid.m_Nxyz[0] * ( grid.m_Nxyz[1]*iz + (Nyquad-iy-1) ) + (Nxquad-ix-1)] =
 	  quadrants[3].Q[Nxquad * ( Nyquad * iz + iy ) + ix ] ;
@@ -242,13 +243,12 @@ StatusCode MagneticFieldGridReader::readQuadrant( const std::string& filename,
       if ( token != NULL ) continue;
       
       // Field values are given in gauss in CDF file. Convert to CLHEP units
-      double fx = atof( sFx.c_str() ) * Gaudi::Units::gauss ;
-      double fy = atof( sFy.c_str() ) * Gaudi::Units::gauss ;
-      double fz = atof( sFz.c_str() ) * Gaudi::Units::gauss ;
+      double fx = std::stod( sFx ) * Gaudi::Units::gauss ;
+      double fy = std::stod( sFy ) * Gaudi::Units::gauss ;
+      double fz = std::stod( sFz ) * Gaudi::Units::gauss ;
       
-      // Add the magnetic field components of each point to
-      // sequentialy in a vector
-      quad.Q.push_back( Gaudi::XYZVector(fx,fy,fz) );
+      // Add the magnetic field components of each point
+      quad.Q.emplace_back( fx,fy,fz );
       
     }
     infile.close();
