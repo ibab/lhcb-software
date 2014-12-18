@@ -4,6 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!===================== GaussPhysics v11r1p1 2014-12-18 =======================
 ! 2014-12-01 - Gloria Corti
  - Try to fix compilation warning with --pedantic
 
