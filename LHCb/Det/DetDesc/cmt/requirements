@@ -31,3 +31,5 @@ apply_pattern     reflex_dictionary                                 \
 macro_append ROOT_linkopts " -lMathCore -lGenVector -lHist -lXMLIO " \
              WIN32 " libMathCore.lib libGenVector.lib libHist.lib libXMLIO.lib "
 
+# macro cppoptimized_s "-O3 -mavx -DNDEBUG -ftree-vectorize -fdump-tree-vect-details -ftree-vectorizer-verbose=1"
+

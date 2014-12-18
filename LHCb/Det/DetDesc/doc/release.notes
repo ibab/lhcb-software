@@ -2,6 +2,11 @@
 ! package DetDesc
 ! package manager : Marco Clemencic
 ! =====================================================================
+! 2014-12-18 - Gerhard Raven
+ - switch the internal representation of the magnetic field to single precision
+   (which has 24 bits of precision, i.e. about 1 part in 10^7) which is sufficient 
+   given that the numbers are read from files where the are in base 10, with
+   6 digits... This significantly reduces the memory (and cache) requirements
 
 !========================= DetDesc v18r34 2014-09-08 =========================
 ! 2014-01-22 - Marco Clemencic
