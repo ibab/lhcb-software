@@ -77,7 +77,7 @@ void MagneticFieldGridReader::fillConstantField( const Gaudi::XYZVector& field,
 {
   // make a grid that spans the entire world
   grid.m_Dxyz[0] = 2*Gaudi::Units::km ;
-  grid.m_Dxyz[1] = 2*Gaudi::Units::km  ;
+  grid.m_Dxyz[1] = 2*Gaudi::Units::km ;
   grid.m_Dxyz[2] = 2*Gaudi::Units::km ;
   grid.m_min_FL[0] = - Gaudi::Units::km ;
   grid.m_min_FL[1] = - Gaudi::Units::km ;
@@ -86,7 +86,7 @@ void MagneticFieldGridReader::fillConstantField( const Gaudi::XYZVector& field,
   grid.m_Nxyz[1] = 2;
   grid.m_Nxyz[2] = 2 ;
   grid.m_Q.clear() ;
-  grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], field ) ;
+  grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], decltype(grid.m_Q)::value_type{field} ) ;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////
@@ -124,7 +124,7 @@ void MagneticFieldGridReader::fillGridFromQuadrants( GridQuadrant* quadrants,
   grid.m_Nxyz[0] = 2*Nxquad - 1;
   grid.m_Nxyz[1] = 2*Nyquad - 1;
   grid.m_Nxyz[2] = Nzquad ;
-  grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], Gaudi::XYZVector(0,0,0) ) ;
+  grid.m_Q.resize(grid.m_Nxyz[0] * grid.m_Nxyz[1] * grid.m_Nxyz[2], {0,0,0} ) ;
   for( size_t ix=0; ix<Nxquad; ++ix)
     for( size_t iy=0; iy<Nyquad; ++iy)
       for( size_t iz=0; iz<Nzquad; ++iz) {

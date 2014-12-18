@@ -3,6 +3,9 @@
 ! Responsible : Adlene Hicheur, Marco Cattaneo
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+! 2014-12-18 - Gerhard Raven
+ - make the MagneticFieldReader code (at source level) independent of the
+   internal storage type of the MagneticFieldGrid
 
 !========================= Magnet v7r7 2014-03-17 =========================
 ! 2014-03-07 - Chris Jones
