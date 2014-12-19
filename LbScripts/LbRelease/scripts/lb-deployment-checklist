@@ -1,0 +1,364 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+'''
+Script to check the various steps of the deployment of a project.
+'''
+import os
+
+IS_CGI = 'HTTP_HOST' in os.environ
+if IS_CGI:
+    # we are in a CGI environment
+    import cgi
+    import cgitb
+    cgitb.enable()
+
+import sys
+import re
+import tempfile
+import shutil
+from os.path import join, exists
+from subprocess import check_output, PIPE
+
+all_checks = []
+def check(func):
+    '''
+    Small decorator to distinguish "check" functions from internal functions.
+    '''
+    if func in all_checks:
+        all_checks.remove(func)
+    all_checks.append(func)
+    return func
+
+
+# Global variables and constant
+rpm_platforms = []
+installed_platforms = []
+
+LHCBRELEASEAREA = '/afs/cern.ch/lhcb/software/releases'
+LHCBDOC = join(LHCBRELEASEAREA, 'DOC')
+CVMFSRELEASEAREA = '/cvmfs/lhcb.cern.ch/lib/lhcb'
+RPMRELEASEAREA = '/afs/cern.ch/lhcb/software/rpmrel'
+LHCBTAR = '/afs/cern.ch/lhcb/distribution'
+
+LBPKR = join(RPMRELEASEAREA, 'usr', 'bin', 'lbpkr')
+
+
+class TemporaryDir(object):
+    '''
+    Helper class to create a temporary directory and manage its lifetime.
+
+    An instance of this class can be used inside the 'with' statement and
+    returns the path to the temporary directory.
+    '''
+    def __init__(self, chdir=False, keep=False):
+        '''Constructor.'''
+        self.chdir = chdir
+        self.keep = keep
+        self.path = tempfile.mkdtemp()
+        self.old_dir = None
+    def join(self, *args):
+        '''
+        Equivalent to os.path.join(self.path, *args).
+        '''
+        return os.path.join(self.path, *args)
+    def __str__(self):
+        '''String representation (path to the temporary directory).'''
+        return self.path
+    def remove(self):
+        '''
+        Remove the temporary directory.
+        After a call to this method, the object is not usable anymore.
+        '''
+        if self.path: # allow multiple calls to the remove method
+            shutil.rmtree(self.path, ignore_errors=True)
+            self.path = None
+    def __enter__(self):
+        '''
+        Context Manager protocol 'enter' function.
+        '''
+        if self.chdir:
+            self.old_dir = os.getcwd()
+            os.chdir(self.path)
+        return self.path
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        '''
+        Context Manager protocol 'exit' function.
+        Remove the temporary directory and let the exceptions propagate.
+        '''
+        if self.old_dir:
+            os.chdir(self.old_dir)
+            self.old_dir = None
+        if not self.keep:
+            self.remove()
+        else:
+            print "WARNING: not removing temporary directory", self.path
+        return False
+
+
+@check
+def rpm_copied(project, version):
+    '''
+    You need to add the RPMs to the RPM repository.
+    See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#PublishRPMs
+    '''
+    rex = '%s_%s' % (project.upper(), version)
+    with TemporaryDir() as tmp:
+        out = check_output([LBPKR, 'list', '-siteroot', tmp, rex])
+    if 'shared' in out:
+        diff_rpm_count = 3
+    else:
+        diff_rpm_count = 2
+    out = [l for l in out.splitlines() if re.match(rex + '[-_]', l)]
+    global rpm_platforms
+    rpm_platforms = [m.group(1)
+                     for m in [re.match(rex + r'_(.*(?:opt|dbg))', l) for l in out]
+                     if m]
+    #print rpm_platforms
+    assert out
+    rpms, platforms = len(out), len(rpm_platforms)
+
+    assert rpms == (diff_rpm_count+platforms), \
+        'wrong rpm count: %d rpms, %d platforms' % (rpms, platforms)
+    return '%d rpms, %d platforms' % (rpms, platforms)
+
+
+def rel_dir(project=None, version=None):
+    '''
+    Helper function to get the release directory of a project.
+    '''
+    dirname = LHCBRELEASEAREA
+    if project is not None:
+        if version is not None:
+            dirname += '/{0}/{0}_{1}'.format(project.upper(), version)
+        else:
+            dirname += '/{0}'.format(project.upper())
+    return dirname
+
+
+def cvmfs_dir(project=None, version=None):
+    '''
+    Helper function to get the release directory of a project on CVMFS.
+    '''
+    dirname = CVMFSRELEASEAREA
+    if project is not None:
+        if version is not None:
+            dirname += '/{0}/{0}_{1}'.format(project.upper(), version)
+        else:
+            dirname += '/{0}'.format(project.upper())
+    return dirname
+
+
+def dist_dir(project):
+    '''
+    Helper function to get the directory of the tarballs of a project.
+    '''
+    return join(LHCBTAR, project.upper())
+
+
+@check
+def volume_created(project, version):
+    '''
+    You must create the volume on AFS with
+
+      lb-project-manage-volume -c <project> <version>
+    '''
+    vol_base = rel_dir()
+    vol = rel_dir(project, version)
+    def vol_id(path):
+        return check_output(['fs', 'lq', path]).splitlines()[-1].split()[0]
+    assert exists(vol), vol + ' missing'
+    assert (vol_id(vol) != vol_id(vol_base)), vol +' is not a volume'
+
+
+def installation(basedir):
+    '''
+    Common checks for installation on AFS and CVMFS.
+    '''
+    assert exists(join(basedir, 'cmt')) or exists(join(basedir, 'CMakeLists.txt')), \
+        'sources not installed'
+
+    installarea = join(basedir, 'InstallArea')
+    assert exists(installarea), 'no platform installed'
+    global installed_platforms
+    installed_platforms = [l.replace('-', '_')
+                           for l in os.listdir(installarea) if not l.startswith('.')]
+    missing = set(rpm_platforms) - set(installed_platforms)
+    assert not missing, '%d platforms not installed' % len(missing)
+
+    assert exists(join(basedir, '.glimpse_index')), 'index not installed'
+
+
+@check
+def afs_installation(project, version):
+    '''
+    You need to install on AFS.
+    See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#InstallOnAFS
+    '''
+    return installation(rel_dir(project, version))
+
+
+@check
+def volume_released(project, version):
+    '''
+    You make the release directory world readable:
+
+      lb-project-manage-volume -r <project> <version>
+
+    and lock it:
+
+      lb-project-manage-volume -l <project> <version>
+    '''
+    path = rel_dir(project, version)
+    acls = check_output(['fs', 'la', path])
+    assert 'system:anyuser rl' in acls, 'volume not public'
+    assert not exists(join(path, 'NOT_READY')), 'NOT_READY lock still present'
+    assert [l for l in acls.splitlines()
+            if 'system:administrators' not in l and 'w' not in l.split()[-1]], \
+           'volume still writeable'
+    quota, used = check_output(['fs', 'lq', path]).splitlines()[-1].split()[1:3]
+    assert quota == used, 'volume not shrinked'
+
+
+@check
+def web_updated(project, version):
+   '''
+   You need to create the web doc pages for the release:
+
+     $LHCBDOC/scripts/addrel.py <project> <version>
+   '''
+   assert exists(join(LHCBDOC, project.lower(), 'releases', version)), 'web doc missing'
+
+
+@check
+def tarballs(project, version):
+    '''
+    You need to generate the old-style distribution tarballs:
+
+      lb-deployment-oldtarballs <project> <version>
+
+    See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#OldTarballs
+    '''
+    alltars = os.listdir(dist_dir(project))
+    prefix = '{0}_{0}_{1}'.format(project.upper(), version)
+    rex = re.compile(prefix + r'(_.*)?\.tar\.gz')
+    tarfiles = [f for f in alltars if rex.match(f)]
+    tar_platforms = [m.group(1).replace('-', '_')
+                     for m in [re.match(prefix + r'_(.*(?:opt|dbg))', l) for l in tarfiles]
+                     if m]
+    assert (prefix + '.tar.gz') in tarfiles, 'missing shared tar (%s)' % (prefix + '.tar.gz')
+
+    global rpm_platforms
+    missing = set(rpm_platforms) - set(tar_platforms)
+    assert not missing, 'missing tarballs for %s' % ', '.join(missing)
+
+    md5sums = set([f.replace('.tar.gz', '.md5')])
+    missing = md5sums - set(alltars)
+    assert not missing, 'missing some md5 files'
+
+
+@check
+def soft_db(project, version):
+    '''
+    You need update the Software Database
+
+      lb-deployment-updatesdb <project> <version>
+
+    See https://twiki.cern.ch/twiki/bin/view/LHCb/ProjectRelease#UpdateSDB
+    '''
+    sdb_platforms = check_output(['lb-sdb-query', '--readonly', 'p', project, version], stderr=PIPE).replace('-', '_').splitlines()
+    #print set(sdb_platforms), set(rpm_platforms)
+    assert set(sdb_platforms) == set(rpm_platforms), 'platforms list not complete'
+    to_be_released = check_output(['lb-sdb-query', '--readonly', 'listReleases'], stderr=PIPE)
+    assert not re.search(r'%s\s+%s' % (project.upper(), version), to_be_released), \
+           'still flagged as "release pending"'
+
+
+@check
+def cvmfs_installation(project, version):
+    return installation(cvmfs_dir(project, version))
+
+
+@check
+def doxygen(project, version):
+    assert exists(join(LHCBDOC, '..', 'docs', project.lower(), version)), \
+        'doxygen doc not yet produced'
+
+
+def script_main():
+    '''
+    Script logic when the script is run on the command line.
+    '''
+    project, version = sys.argv[1:]
+
+    stdout = sys.stdout
+    for f in all_checks:
+        stdout.write(f.__name__ + ' ')
+        stdout.flush()
+        fmt = ('%%%ds\n' % (80 - (len(f.__name__) + 1)))
+        try:
+            message = f(project, version) or ''
+            message += ' [OK]'
+            stdout.write(fmt % message)
+            stdout.flush()
+        except AssertionError, exc:
+            #message = '%s [NOT OK]' % exc
+            #stdout.write(fmt % message)
+            stdout.write(fmt % '[NOT OK]')
+            stdout.write('%80s\n' % exc)
+            stdout.flush()
+            if f.__doc__:
+                print f.__doc__
+            sys.exit(1)
+
+
+def cgi_main():
+    '''
+    Script logic when the script is used as a CGI.
+    '''
+    # HTTP header
+    print 'Content-Type: text/html\n'
+    # HTML header
+    form = cgi.FieldStorage()
+    project = form['project'].value
+    version = form['version'].value
+
+    title = 'Deployment checklist for {0} {1}'.format(project, version)
+    print '''<html><head><title>{0}</title></head>
+    <style>
+    .success {{color:green}}
+    .failure {{color:red}}
+    .error-message {{font-style: italic;}}
+    .help-message {{white-space: pre-wrap;}}
+    </style>
+    <body><h1>{0}</h1><hr/>'''.format(title)
+
+    stdout = sys.stdout
+    for f in all_checks:
+        stdout.write('<p>' + f.__name__)
+        stdout.flush()
+        try:
+            message = f(project, version) or ''
+            message += ' <span class="success">[OK]</span></p>'
+            stdout.write(message)
+            stdout.flush()
+        except AssertionError, exc:
+            stdout.write(' <span class="failure">[NOT OK]</span></p>')
+            stdout.write('<div class="error-message">%s</div>' % exc)
+            stdout.flush()
+            if f.__doc__ and 'help' in form and form['help'].value.lower() == 'true':
+                doc = str(f.__doc__)
+                for url in re.findall(r'https?://[^\s<>"]+|www\.[^\s<>"]+', f.__doc__):
+                    doc = doc.replace(url, '<a href="{0}">{0}</a>'.format(url))
+                doc = doc.replace('<project>', project).replace('<version>', version)
+                print '<p class="help-message">{0}</p>'.format(doc)
+            break
+
+    # HTML trailer
+    print '</body></html>'
+
+
+if __name__ == '__main__':
+    if IS_CGI:
+        cgi_main()
+    else:
+        script_main()

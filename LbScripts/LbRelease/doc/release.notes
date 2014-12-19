@@ -1,3 +1,9 @@
+2014-12-19  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-deployment-checklist: script to check the status of a release
+	* lb-deployment-oldtarballs: script to create the old-style tarballs
+	* lb-deployment-updatesdb: script to update the sdb during the release
+
 2014-12-04  Ben Couturier <Ben.Couturier@cern.ch>
 
 	LBCORE-686 : Added option --nonatives to mkLCGCMTtarFromRPM that installs the LHCbDirac RPM
@@ -13,7 +19,7 @@
 	* cmt/requirements: release of version v5r2p1
 
 2014-11-26  Ben Couturier <Ben.Couturier@cern.ch>
-	LBCORE-679: Automatically add projects for release when 
+	LBCORE-679: Automatically add projects for release when
 	importing them.
 	* python/LbRelease/SoftConfDB/LbSdbImportFromSVN.py
 	* python/LbRelease/SoftConfDB/AppImporter.py

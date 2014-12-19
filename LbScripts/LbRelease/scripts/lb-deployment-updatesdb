@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Helper script to update the content of the Software Database during the
+# deployment of a project.
+#
+
+if [ $# -ne 2 ] ; then
+  echo 'Usage: $(basename $0) <project> <version>'
+fi
+
+project=$1
+version=$2
+
+for platform in `ls $LHCBRELEASES/${project^^}/${project^^}_${version}/InstallArea` ; do
+  lb-sdb-addplatform $project $version $platform
+done
+lb-sdb-release -r $project $version

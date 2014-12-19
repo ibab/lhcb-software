@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Helper script to create old-style tarballs during the deployment of a project.
+#
+
+if [ $# -ne 2 ] ; then
+  echo 'Usage: $(basename $0) <project> <version>'
+fi
+
+project=$1
+version=$2
+
+cd $LHCBRELEASES
+mkLHCbtar -p $project -v $version
+for platform in `ls $LHCBRELEASES/${project^^}/${project^^}_${version}/InstallArea` ; do
+  mkLHCbtar -p $project -v $version -b $platform
+done
