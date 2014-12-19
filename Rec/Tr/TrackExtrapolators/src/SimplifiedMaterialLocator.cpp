@@ -18,6 +18,13 @@
 #include "DetDesc/LVolume.h"
 #include "DetDesc/VolumeIntersectionIntervals.h"
 
+//TODO:FIXME: once we get to C++14, use std::make_unique instead...
+template<typename T, typename ...Args>
+std::unique_ptr<T> make_unique( Args&& ...args )
+{
+        return std::unique_ptr<T> ( new T( std::forward<Args>(args)... ) );
+}
+
 namespace MaterialLocatorUtils {
   
   class PVolumeWrapper
@@ -57,8 +64,9 @@ namespace MaterialLocatorUtils {
     bool m_hasdaughters ;
   } ;
 
-  unsigned int PVolumeWrapper::addintersections(const Gaudi::XYZPoint&  p,const Gaudi::XYZVector& v,
-						ILVolume::Intersections& intersections) const
+  unsigned int PVolumeWrapper::addintersections(const Gaudi::XYZPoint&  p,
+                                                const Gaudi::XYZVector& v,
+                                                ILVolume::Intersections& intersections) const
   {
     int rc(0) ;
     // do a quick z-overlap test. the intersectionTicks calls
@@ -74,10 +82,10 @@ namespace MaterialLocatorUtils {
       Gaudi::XYZPoint pprime = p ; 
       pprime.SetZ(p.z()-m_zcenter) ;
       if(m_hasdaughters) {
-	static ILVolume::Intersections own ;
-	own.clear() ;
-	rc = m_volume.lvolume()->intersectLine(pprime,v,own,0,1,0) ;
-	std::copy( own.begin(), own.end(),  std::back_inserter( intersections ) );
+        static ILVolume::Intersections own ;
+        own.clear() ;
+        rc = m_volume.lvolume()->intersectLine(pprime,v,own,0,1,0) ;
+        std::copy( std::begin(own), std::end(own),  std::back_inserter( intersections ) );
       } else {
 	// half the volumes don't have daughters. if they don't, we do
 	// this ourself because the intersectLine call above is just
@@ -107,8 +115,8 @@ namespace MaterialLocatorUtils {
 DECLARE_TOOL_FACTORY( SimplifiedMaterialLocator )
 
 SimplifiedMaterialLocator::SimplifiedMaterialLocator( const std::string& type,
-								const std::string& name,
-								const IInterface* parent )
+                                                      const std::string& name,
+                                                      const IInterface* parent )
   : MaterialLocatorBase(type, name, parent)
 { 
   declareInterface<IMaterialLocator>(this);
@@ -125,25 +133,23 @@ StatusCode SimplifiedMaterialLocator::initialize()
     DetDesc::Services* services = DetDesc::services();
     IDataProviderSvc*  detsvc  = services->detSvc();
     SmartDataPtr<const ILVolume> tgvol(detsvc,m_tgvolname) ;
-    if( 0== tgvol ) {
+    if( !tgvol ) {
       error() << "Did not find TrackfitGeometry volume " << m_tgvolname << endmsg ;
       sc = StatusCode::FAILURE ;
     } else {
       if( UNLIKELY( msgLevel(MSG::DEBUG) ) )
         debug() << "Found TrackfitGeometry volume with " << tgvol->pvolumes().size() << " daughters." << endmsg ;
-      for( ILVolume::PVolumes::const_iterator it = tgvol->pvBegin() ;
-	   it != tgvol->pvEnd() ; ++it) 
-	m_volumes.push_back( new MaterialLocatorUtils::PVolumeWrapper(**it) ) ;
+      m_volumes.reserve( std::distance( tgvol->pvBegin(), tgvol->pvEnd() ) );
+      std::transform( tgvol->pvBegin(), tgvol->pvEnd(),
+                      std::back_inserter(m_volumes),
+                      []( const IPVolume* i ) { return make_unique<MaterialLocatorUtils::PVolumeWrapper>(*i); } );
     }
-  } 
-  
+  }
   return sc;
 }
 
 StatusCode SimplifiedMaterialLocator::finalize()
 {  
-  for( VolumeContainer::const_iterator it = m_volumes.begin() ; 
-       it != m_volumes.end(); ++it) delete *it ;
   m_volumes.clear() ;
   return MaterialLocatorBase::finalize() ;
 }
@@ -153,13 +159,13 @@ inline bool compareFirstTick( const ILVolume::Intersection& lhs, const ILVolume:
   return lhs.first.first<rhs.first.first ;
 }
 
-size_t SimplifiedMaterialLocator::intersect( const Gaudi::XYZPoint& start, const Gaudi::XYZVector& vect, 
-					     ILVolume::Intersections& intersepts ) const 
+size_t SimplifiedMaterialLocator::intersect( const Gaudi::XYZPoint& start, 
+                                             const Gaudi::XYZVector& vect, 
+                                             ILVolume::Intersections& intersepts ) const 
 { 
   // for now, no navigation
   intersepts.clear();
-  for( VolumeContainer::const_iterator it = m_volumes.begin() ; 
-       it != m_volumes.end(); ++it) (*it)->addintersections(start,vect,intersepts) ;
-  std::sort( intersepts.begin(), intersepts.end(), compareFirstTick) ;
+  for( auto&  i : m_volumes ) i->addintersections(start,vect,intersepts) ;
+  std::sort( std::begin(intersepts), std::end(intersepts), compareFirstTick) ;
   return intersepts.size() ;
 }

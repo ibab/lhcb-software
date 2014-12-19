@@ -6,6 +6,7 @@
 ! 2014-12-19 - Gerhard Raven
  - TrackRungeKuttaExtrapolator use boost::optional (instead of new/delete)
    to keep the (optional) jacobian on the stack instead of the heap
+ - SimplifiedMaterialLocator: simplify memory management with std::unique_ptr
 
 !========================= TrackExtrapolators v2r34 2014-09-08 ====================
 ! 2014-09-03 - Wouter Hulsbergen

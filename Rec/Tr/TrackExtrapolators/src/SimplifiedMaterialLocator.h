@@ -45,7 +45,7 @@ public:
   
 private:
   std::string m_tgvolname ;   ///< path to the tracking geometry
-  typedef std::vector<MaterialLocatorUtils::PVolumeWrapper*> VolumeContainer ;
+  typedef std::vector<std::unique_ptr<MaterialLocatorUtils::PVolumeWrapper>> VolumeContainer ;
   VolumeContainer m_volumes ; ///< wrappers around geo volumes to speed things up
 };
 
