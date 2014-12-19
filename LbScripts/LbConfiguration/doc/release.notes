@@ -1,7 +1,11 @@
+2014-12-13  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* lb-dev: fixed a few problems
+
 2014-12-16  Ben Couturier <Ben.Couturier@cern.ch>
 
 	* Added gcc49 to the known compilers in Platform.py
- 
+
 2014-12-12  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* lb-dev: fixes
