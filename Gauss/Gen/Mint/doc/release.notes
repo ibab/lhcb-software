@@ -6,7 +6,8 @@
 !               Matt Coombes has task of implementing MINT into LHCb framework.
 !-----------------------------------------------------------------------------
 
-2014-12-17 - Jeremy
+!========================== Mint v3r2p1 2014-12-19 ===========================
+! 2014-12-17 - Jeremy
  - Fixed warnings produced by lcg-g++-4.8.1 -Wpedantic flag
 
 !=========================== Mint v3r2 2014-12-17 ============================
