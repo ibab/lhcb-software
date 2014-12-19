@@ -6,6 +6,8 @@ Purpose: LHCb reconstruction program
 - Changes to references to reflect changes since v47r3p1
   . Follow code optimisations (TrackTools, PatVeloTT, PatKernel, PatAlgorithms)
   . Follow change to 3 piece trajectory approximation in OT (OTDet)
+  . Follow switch of the internal representation of the magnetic field grid to
+    single precision (DetDesc, Magnet)
 
 </PRE><H1><A NAME=v47r3p1>2014-12-15 Brunel v47r3</A></H1><PRE>
 This version uses projects LHCb v38r3p1, Lbcom v16r2p1, Rec v17r3p1
