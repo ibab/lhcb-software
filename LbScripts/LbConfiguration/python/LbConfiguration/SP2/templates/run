@@ -20,7 +20,7 @@ else
   cd $$(dirname $$0)
   . ./build_env.sh
   cd $$curdir
-  . SetupProject.sh --keep-CMTPROJECTPATH --user $$(cd $$(dirname $$0)/.. ; pwd) LHCbDev HEAD
+  . SetupProject.sh --keep-CMTPROJECTPATH --user $$(cd $$(dirname $$0)/.. ; pwd) ${cmt_project}
   if [ "$$SetupProjectStatus" = 0 ] ; then
     [ "$$#" = 0 ] && (printenv | sort) || exec "$$@"
   else
