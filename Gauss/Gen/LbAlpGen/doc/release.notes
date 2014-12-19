@@ -5,9 +5,9 @@
 ! Purpose     : read ALPGEN-generated partonic level events 
 ! -----------------------------------------------------------------------------
 
+!========================= LbAlpGen v4r0p1 2014-12-19 =========================
 ! 2014-12-02 - Gloria Corti
  - Try to fix compilation warnings with --pedantic
-
 
 ! 2014-11-19 - Marco Clemencic
  - Updated CMake configuration
