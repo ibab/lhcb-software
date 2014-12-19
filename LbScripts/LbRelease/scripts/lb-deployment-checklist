@@ -307,7 +307,7 @@ def script_main():
             stdout.write('%80s\n' % exc)
             stdout.flush()
             if f.__doc__:
-                print f.__doc__
+                print f.__doc__.replace('<project>', project).replace('<version>', version)
             sys.exit(1)
 
 
