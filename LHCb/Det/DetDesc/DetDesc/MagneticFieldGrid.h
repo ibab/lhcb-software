@@ -3,6 +3,7 @@
 #define MAGFIELDGRID_H
 
 #include <vector>
+#include <array>
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
@@ -56,9 +57,9 @@ namespace LHCb
     double m_scaleFactor ;
     using vec = ROOT::Math::DisplacementVector3D<ROOT::Math::Cartesian3D<float>>;
     std::vector<vec> m_Q; ///< Field map
-    double m_Dxyz[3];              ///< Steps in x, y and z
-    size_t m_Nxyz[3];              ///< Number of steps in x, y and z
-    double m_min_FL[3];            ///< Offset in x, y and z 
+    std::array<double,3> m_min_FL;            ///< Offset in x, y and z 
+    std::array<double,3> m_Dxyz;              ///< Steps in x, y and z
+    std::array<int,3>    m_Nxyz;              ///< Number of steps in x, y and z
   };
 
 
