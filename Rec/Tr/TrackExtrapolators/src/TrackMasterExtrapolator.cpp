@@ -131,8 +131,8 @@ StatusCode TrackMasterExtrapolator::propagate( LHCb::State& state,
   // local object (rather than just create it with new) is all the
   // intermediate returns.
   TrackMatrix updateMatrix = TrackMatrix( ROOT::Math::SMatrixIdentity() );
-  TrackMatrix* upMat = NULL;
-  if( transMat != NULL ) {
+  TrackMatrix* upMat = nullptr;
+  if( transMat ) {
     *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     upMat = &updateMatrix ;
   }

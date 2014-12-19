@@ -329,7 +329,6 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
     return StatusCode::SUCCESS ;
   }
   
-  // std::unique_ptr<RKJacobian> jacobian{ transMat ? new RKJacobian() : nullptr } ;
   boost::optional<RKJacobian> jacobian; 
   if (transMat) jacobian = RKJacobian();
 
@@ -358,12 +357,11 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
       (*transMat)(0,0) = 1 ;
       (*transMat)(1,1) = 1 ;
       (*transMat)(4,4) = 1 ;
-      for( size_t irow=0; irow<4; ++irow)
-        for( size_t icol=0; icol<3; ++icol) 
+      for( int irow=0; irow<4; ++irow) {
+        for( int icol=0; icol<3; ++icol) 
           (*transMat)(irow,icol+2) = jacobian->matrix(irow,icol) ;
-      for( size_t irow=0; irow<4; ++irow)
         (*transMat)(irow,4) *= Gaudi::Units::c_light ;
-      
+      }
     }
   } else {
     std::stringstream str ;
@@ -451,10 +449,10 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
       // adapt the stepsize if necessary. the powers come from num.recipees.
       double stepfactor(1) ;
       if( errorOverTolerance > 1 ) { // decrease step size
-        stepfactor = std::max( m_minStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.25 ) ) ;
+        stepfactor = std::max( m_minStepScale, m_safetyFactor * std::pow( errorOverTolerance , -0.25 ) ) ;
       } else {                       // increase step size
         if( errorOverTolerance > 0 ) 
-          stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.20 ) ) ;
+          stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( errorOverTolerance , -0.20 ) ) ;
         else 
           stepfactor = m_maxStepScale ;
         ++stats.numincreasedstep ;
@@ -527,7 +525,7 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
   //  debug() << "z-component of input: " 
   //          << pin.z << " " << dz << endmsg ;
   RKTrackVector k[7] ;
-  size_t firststage(0) ;
+  int firststage(0) ;
   
   // previous step failed, reuse the first stage
   if( cache.laststep == cache.step ) {
@@ -545,11 +543,11 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
   }
   cache.laststep = cache.step ;
 
-  for( size_t m = firststage ; m <m_numStages ; ++m ) {
+  for( size_t m = firststage ; m!=m_numStages ; ++m ) {
     // evaluate the state
     cache.stage[m].state = pin ;
     for( size_t n=0; n<m; ++n) {
-      size_t index = m*(m-1)/2 + n ;
+      auto index = m*(m-1)/2 + n ;
       cache.stage[m].state.z          += m_a[index] * dz ;
       //cache.stage[m].state.parameters += m_a[index] * k[n] ;
       addVector4( cache.stage[m].state.parameters, m_a[index], k[n]) ;
@@ -568,7 +566,7 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
   
   // update state and error
   err(0) = err(1) = err(2) = err(3) = 0 ;
-  for( size_t m = 0 ; m<m_numStages; ++m ) {
+  for( size_t m = 0 ; m!=m_numStages; ++m ) {
     // this is the difference between the 4th and 5th order
     //err            += (m_b5[m] - m_b4[m] ) * k[m] ;
     addVector4(err, (m_b5[m] - m_b4[m]), k[m]) ;
@@ -593,7 +591,7 @@ void TrackRungeKuttaExtrapolator::evaluateRKStepJacobian( double dz,
     // evaluate the derivative
     jtmp = jacobian ;
     for( size_t n=0; n<m; ++n) {
-      size_t index = m*(m-1)/2 + n ;
+      auto index = m*(m-1)/2 + n ;
       //jtmp.matrix += m_a[index] * k[n] ;
       addMatrix43( jtmp.matrix, m_a[index],  k[n] ) ;
     }
@@ -731,7 +729,7 @@ TrackRungeKuttaExtrapolator::extrapolateNumericalJacobian( RKState& state,
       }
       assert(std::abs(state.z - astate.z) < TrackParameters::propagationTolerance ) ;
       
-      for(size_t row=0; row<4; ++row) 
+      for(int row=0; row<4; ++row) 
         jacobian.matrix(row,col) = (astate.parameters(row) - state.parameters(row)) / delta[col] ;
     }
   }
