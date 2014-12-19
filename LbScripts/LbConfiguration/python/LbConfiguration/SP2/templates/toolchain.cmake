@@ -2,9 +2,10 @@
 if(EXISTS $${CMAKE_CURRENT_SOURCE_DIR}/build.conf)
   file(STRINGS $${CMAKE_CURRENT_SOURCE_DIR}/build.conf build_conf)
   foreach(l $${build_conf})
-  if(l MATCHES "^ *([a-zA-Z_][a-zA-Z0-9_]*)=([^ ]*) *$$")
-    set($${CMAKE_MATCH_1} "$${CMAKE_MATCH_2}")
-  endif()
+    if(l MATCHES "^ *([a-zA-Z_][a-zA-Z0-9_]*)=([^ ]*) *$$")
+      set($${CMAKE_MATCH_1} "$${CMAKE_MATCH_2}")
+    endif()
+  endforeach()
 endif()
 
 if(nightly_slot)
