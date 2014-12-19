@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+! 2014-12-19 - Gerhard Raven
+ - TrackRungeKuttaExtrapolator use boost::optional (instead of new/delete)
+   to keep the (optional) jacobian on the stack instead of the heap
 
 !========================= TrackExtrapolators v2r34 2014-09-08 ====================
 ! 2014-09-03 - Wouter Hulsbergen

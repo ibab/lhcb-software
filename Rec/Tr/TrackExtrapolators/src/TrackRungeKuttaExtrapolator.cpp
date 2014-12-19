@@ -8,6 +8,7 @@
 #endif
 #include "GaudiKernel/PhysicalConstants.h"
 #include "GaudiKernel/ToolFactory.h"
+#include "boost/optional.hpp"
 #include <sstream>
 
 //
@@ -98,8 +99,8 @@ namespace {
   } ; 
 
   inline void addVector4( ROOT::Math::SVector<double,4>& lhs, 
-			  double a, 
-			  const ROOT::Math::SVector<double,4>& rhs)
+                          double a, 
+                          const ROOT::Math::SVector<double,4>& rhs)
   {
     // explicitely writes out m += a * n, because for some reason this is badly optimized on gcc 3.4
     lhs(0) += a * rhs(0) ;
@@ -109,8 +110,8 @@ namespace {
   }
 
   inline void assignVector4( ROOT::Math::SVector<double,4>& lhs, 
-			     double a, 
-			     const ROOT::Math::SVector<double,4>& rhs)
+                             double a, 
+                             const ROOT::Math::SVector<double,4>& rhs)
   {
     // explicitely writes out m = a * n, because for some reason this is badly optimized on gcc 3.4
     lhs(0) = a * rhs(0) ;
@@ -120,8 +121,8 @@ namespace {
   }
 
   inline void addMatrix43( ROOT::Math::SMatrix<double,4,3>& lhs, 
-			   double a, 
-			   const ROOT::Math::SMatrix<double,4,3>& rhs)
+                           double a, 
+                           const ROOT::Math::SMatrix<double,4,3>& rhs)
   {
     // explicitely writes out m += a * n, because for some reason this is badly optimized on gcc 3.4
     lhs(0,0) += a * rhs(0,0) ;
@@ -143,8 +144,8 @@ namespace {
   }
 
   inline void assignMatrix43( ROOT::Math::SMatrix<double,4,3>& lhs, 
-			      double a, 
-			      const ROOT::Math::SMatrix<double,4,3>& rhs)
+                              double a, 
+                              const ROOT::Math::SMatrix<double,4,3>& rhs)
   {
     // explicitely writes out m = a * n, because for some reason this is badly optimized on gcc 3.4
     lhs(0,0) = a * rhs(0,0) ;
@@ -171,40 +172,40 @@ namespace CashKarp {
   static double b5[6] = {37.0/378.0    , 0., 250.0/621.0,     125.0/594.0,     0.,            512.0/1771.0};
   static double b4[6] = {2825.0/27648.0, 0., 18575.0/48384.0, 13525.0/55296.0, 277.0/14336.0, 1.0/4.0};
   static double a[15] = {1.0/5.0, 
-			 3.0/40.0,       9.0/40.0, 
-			 3.0/10.0,      -9.0/10.0, 6.0/5.0,
-			 -11.0/54.0,     5.0/2.0, -70.0/27.0, 35.0/27.0,
-			 1631.0/55296.0, 175.0/512.0, 575.0/13824.0,44275.0/110592.0, 253.0/4096.0};
+                         3.0/40.0,       9.0/40.0, 
+                         3.0/10.0,      -9.0/10.0, 6.0/5.0,
+                         -11.0/54.0,     5.0/2.0, -70.0/27.0, 35.0/27.0,
+                         1631.0/55296.0, 175.0/512.0, 575.0/13824.0,44275.0/110592.0, 253.0/4096.0};
 }
 
 namespace DormandPrince { 
   static double a[21] = {1/5.,
-			 3/40.,         9/40.,
-			 44/45.,        -56/15.,        32/9.,
-			 19372/6561.,	-25360/2187., 	64448/6561., 	-212/729.,
-			 9017/3168., 	-355/33., 	46732/5247., 	49/176., 	-5103/18656.,
-			 35/384., 	0., 	500/1113., 	125/192., 	-2187/6784., 	11/84. } ;
+                         3/40.,          9/40.,
+                         44/45.,        -56/15.,      32/9.,
+                         19372/6561.,   -25360/2187., 64448/6561.,  -212/729.,
+                         9017/3168.,    -355/33.,     46732/5247.,  49/176.,    -5103/18656.,
+                         35/384.,        0.,          500/1113.,    125/192.,   -2187/6784.,   11/84. } ;
   // I think wikipedia swapped them here, but it doesn't seem to make much difference. I don't understand that.
-  static double b5[7] = {5179/57600., 	0., 	7571/16695., 	393/640., 	-92097/339200., 187/2100.,  1/40.} ;
-  static double b4[7] = {35/384., 	0., 	500/1113., 	125/192., 	-2187/6784., 	11/84.,     0.} ;
+  static double b5[7] = {5179/57600.,    0.,          7571/16695.,  393/640.,   -92097/339200., 187/2100.,  1/40.} ;
+  static double b4[7] = {35/384.,        0.,          500/1113.,    125/192.,   -2187/6784.,    11/84.,     0.} ;
 }
 
 namespace Fehlberg {
   static double a[15] = {1/4.,
-			 3/32., 	9/32.,
-			 1932/2197., 	-7200/2197., 	7296/2197.,
-			 439/216., 	-8.,     	3680/513., 	-845/4104.,
-			 -8/27., 	2., 	        -3544/2565., 	1859/4104., 	-11/40. } ;
-  static double b4[6] = {25/216., 	0., 	1408/2565., 	2197/4104., 	-1/5., 	   0. } ;
-  static double b5[6] = {16/135., 	0., 	6656/12825., 	28561/56430., 	-9/50.,    2/55. } ;
+                         3/32.,         9/32.,
+                         1932/2197.,         -7200/2197.,         7296/2197.,
+                         439/216.,         -8.,             3680/513.,         -845/4104.,
+                         -8/27.,         2.,                 -3544/2565.,         1859/4104.,         -11/40. } ;
+  static double b4[6] = {25/216.,         0.,         1408/2565.,         2197/4104.,         -1/5.,            0. } ;
+  static double b5[6] = {16/135.,         0.,         6656/12825.,         28561/56430.,         -9/50.,    2/55. } ;
 }
 
 namespace BogackiShampine {
   static double a[6] = {1/2.,
-			0.,   3/4.,
-			2/9., 1/3., 4/9. } ;
-  static double b2[4] = {7/24., 1/4., 	1/3., 	1/8.} ;
-  static double b3[4] = {2/9.,  1/3., 	4/9., 	0 } ;
+                        0.,   3/4.,
+                        2/9., 1/3., 4/9. } ;
+  static double b2[4] = {7/24., 1/4.,         1/3.,         1/8.} ;
+  static double b3[4] = {2/9.,  1/3.,         4/9.,         0 } ;
 }
 
 namespace HeunEuler {
@@ -225,8 +226,8 @@ TrackRungeKuttaExtrapolator::~TrackRungeKuttaExtrapolator()
 
 /// TrackRungeKuttaExtrapolator constructor.
 TrackRungeKuttaExtrapolator::TrackRungeKuttaExtrapolator(const std::string& type,
-							 const std::string& name,
-							 const IInterface* parent):
+                                                         const std::string& name,
+                                                         const IInterface* parent):
   TrackFieldExtrapolatorBase(type, name, parent)
 {
   declareInterface<ITrackExtrapolator>( this );
@@ -317,10 +318,10 @@ TrackRungeKuttaExtrapolator::initialize()
 // Transport matrix is calulated when transMat pointer is not NULL
 StatusCode 
 TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
-					double zin,
-					double zout,
-					Gaudi::TrackMatrix* transMat,
-					LHCb::ParticleID /*pid*/ ) const
+                                        double zin,
+                                        double zout,
+                                        Gaudi::TrackMatrix* transMat,
+                                        LHCb::ParticleID /*pid*/ ) const
 {
   // Bail out if already at destination
   if( std::abs(zin-zout) < TrackParameters::propagationTolerance ) { 
@@ -328,7 +329,9 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
     return StatusCode::SUCCESS ;
   }
   
-  RKJacobian* jacobian = transMat ? new RKJacobian() : 0 ;
+  // std::unique_ptr<RKJacobian> jacobian{ transMat ? new RKJacobian() : nullptr } ;
+  boost::optional<RKJacobian> jacobian; 
+  if (transMat) jacobian = RKJacobian();
 
   // translate the state to one we use in the runge kutta. note the factor c.
   RKState rkstate ;
@@ -342,7 +345,7 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
   StatusCode sc = StatusCode::SUCCESS ;
   RKErrorCode success = m_numericalJacobian && jacobian  
     ? extrapolateNumericalJacobian( rkstate, zout, *jacobian) 
-    : extrapolate( rkstate, zout, jacobian) ;
+    : extrapolate( rkstate, zout, jacobian.get_ptr() ) ;
   if( success == RKSuccess ) {
     // translate the state back
     state(0) = rkstate.x() ;
@@ -356,12 +359,11 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
       (*transMat)(1,1) = 1 ;
       (*transMat)(4,4) = 1 ;
       for( size_t irow=0; irow<4; ++irow)
-	for( size_t icol=0; icol<3; ++icol) 
-	  (*transMat)(irow,icol+2) = (*jacobian).matrix(irow,icol) ;
+        for( size_t icol=0; icol<3; ++icol) 
+          (*transMat)(irow,icol+2) = jacobian->matrix(irow,icol) ;
       for( size_t irow=0; irow<4; ++irow)
-	(*transMat)(irow,4) *= Gaudi::Units::c_light ;
+        (*transMat)(irow,4) *= Gaudi::Units::c_light ;
       
-      delete jacobian ;
     }
   } else {
     std::stringstream str ;
@@ -375,9 +377,9 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
 
 TrackRungeKuttaExtrapolator::RKErrorCode
 TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
-					  double zout,
-					  RKJacobian* jacobian,
-					  std::vector<double>* stepvector) const
+                                          double zout,
+                                          RKJacobian* jacobian,
+                                          std::vector<double>* stepvector) const
 {
   ++m_numcalls ;
   // initialize the jacobian
@@ -419,10 +421,10 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
     if( !success ) {
 
       if ( m_correctNumSteps ) {
-	double estimatedN = std::abs(totalStep) / absstep ;
-	toleranceX  = (m_toleranceX/estimatedN/m_sigma) ;
-	toleranceTx = toleranceX/std::abs(totalStep) ;
-	//(m_toleranceX/10000)/estimatedN/m_sigma ;
+        double estimatedN = std::abs(totalStep) / absstep ;
+        toleranceX  = (m_toleranceX/estimatedN/m_sigma) ;
+        toleranceTx = toleranceX/std::abs(totalStep) ;
+        //(m_toleranceX/10000)/estimatedN/m_sigma ;
       }
       
       // apply the acceptance criterion.
@@ -433,29 +435,29 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
       double errorOverTolerance = std::max( normdx, std::max( normdy, normdtx ) ) ;
       success = (errorOverTolerance <= m_sigma) ;
       //     std::cout << "step: " << rkcache.step << " " << success << " " 
-      // 		<< prevstate.z << " "
-      // 		<< state.z << " " << absstep << " "
-      // 		<< errorOverTolerance << std::endl ;
+      //                 << prevstate.z << " "
+      //                 << state.z << " " << absstep << " "
+      //                 << errorOverTolerance << std::endl ;
 
       // do some stepping monitoring, before adapting step size
       if(success) {
-	stats.sumstep += absstep ;
-	if(!laststep) stats.minstep = std::min( stats.minstep, absstep ) ;
-	stats.maxstep = std::max( stats.maxstep, absstep ) ;
+        stats.sumstep += absstep ;
+        if(!laststep) stats.minstep = std::min( stats.minstep, absstep ) ;
+        stats.maxstep = std::max( stats.maxstep, absstep ) ;
       } else {
-	++stats.numfailedstep ;
+        ++stats.numfailedstep ;
       }
       
       // adapt the stepsize if necessary. the powers come from num.recipees.
       double stepfactor(1) ;
       if( errorOverTolerance > 1 ) { // decrease step size
-	stepfactor = std::max( m_minStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.25 ) ) ;
+        stepfactor = std::max( m_minStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.25 ) ) ;
       } else {                       // increase step size
-	if( errorOverTolerance > 0 ) 
-	  stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.20 ) ) ;
-	else 
-	  stepfactor = m_maxStepScale ;
-	++stats.numincreasedstep ;
+        if( errorOverTolerance > 0 ) 
+          stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.20 ) ) ;
+        else 
+          stepfactor = m_maxStepScale ;
+        ++stats.numincreasedstep ;
       }
       absstep *= stepfactor ;
       
@@ -518,12 +520,12 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 
 
 void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
-						  RKState& pin,
-						  RKTrackVector& err,
-						  RKCache& cache) const 
+                                                  RKState& pin,
+                                                  RKTrackVector& err,
+                                                  RKCache& cache) const 
 {
   //  debug() << "z-component of input: " 
-  // 	 << pin.z << " " << dz << endmsg ;
+  //          << pin.z << " " << dz << endmsg ;
   RKTrackVector k[7] ;
   size_t firststage(0) ;
   
@@ -556,8 +558,8 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
     // evaluate the derivatives
     //std::cout << "stage " << m << " --> " << cache.stage[m].state.z << std::endl ;
     cache.stage[m].Bfield = fieldVector( Gaudi::XYZPoint(cache.stage[m].state.x(), 
-							 cache.stage[m].state.y(), 
-							 cache.stage[m].state.z ) ) ;
+                                                         cache.stage[m].state.y(), 
+                                                         cache.stage[m].state.z ) ) ;
     evaluateDerivatives( cache.stage[m].state, cache.stage[m].Bfield, cache.stage[m].derivative ) ;
     
     //k[m]   = dz * cache.stage[m].derivative.parameters ;
@@ -580,8 +582,8 @@ void TrackRungeKuttaExtrapolator::evaluateRKStep( double dz,
 
 
 void TrackRungeKuttaExtrapolator::evaluateRKStepJacobian( double dz,
-							  RKJacobian& jacobian,
-							  const RKCache& cache) const
+                                                          RKJacobian& jacobian,
+                                                          const RKCache& cache) const
 {
   // evaluate the jacobian. not that we never resue last stage
   // here. that's not entirely consistent (but who cares)
@@ -609,8 +611,8 @@ void TrackRungeKuttaExtrapolator::evaluateRKStepJacobian( double dz,
 
 void
 TrackRungeKuttaExtrapolator::evaluateDerivatives(const RKState& state,
-						 const FieldVector& field,
-						 RKState& deriv ) const
+                                                 const FieldVector& field,
+                                                 RKState& deriv ) const
 {
   double tx  = state.tx() ;
   double ty  = state.ty() ;
@@ -633,11 +635,11 @@ TrackRungeKuttaExtrapolator::evaluateDerivatives(const RKState& state,
 }
 
 
-void		 
+void                 
 TrackRungeKuttaExtrapolator::evaluateJacobianDerivatives( const RKState& state,
-							  const RKJacobian& jacobian,
-							  const FieldVector& field,
-							  RKJacobian& jacobianderiv ) const
+                                                          const RKJacobian& jacobian,
+                                                          const FieldVector& field,
+                                                          RKJacobian& jacobianderiv ) const
 {
   double Bx = field.x() ;
   double By = field.y() ;
@@ -682,16 +684,16 @@ TrackRungeKuttaExtrapolator::evaluateJacobianDerivatives( const RKState& state,
   jacobianderiv.dXdQoP0()  = jacobian.dTxdQoP0() ;
   jacobianderiv.dYdQoP0()  = jacobian.dTydQoP0() ;
   jacobianderiv.dTxdQoP0() = Ax + qop * (  jacobian.dTxdQoP0() * dAxdTx +
-					   jacobian.dTydQoP0() * dAxdTy ) ;
+                                           jacobian.dTydQoP0() * dAxdTy ) ;
   jacobianderiv.dTydQoP0() = Ay + qop * (  jacobian.dTxdQoP0() * dAydTx +
-					   jacobian.dTydQoP0() * dAydTy ) ;
+                                           jacobian.dTydQoP0() * dAydTy ) ;
   
 }
 
 TrackRungeKuttaExtrapolator::RKErrorCode
 TrackRungeKuttaExtrapolator::extrapolateNumericalJacobian( RKState& state,
-							   double zout,
-							   RKJacobian& jacobian) const
+                                                           double zout,
+                                                           RKJacobian& jacobian) const
 {
   // call the stanndard method but store the steps taken
   size_t cachednumstep(m_stats.numstep),cachednumfailedstep(m_stats.numfailedstep) ;
@@ -713,24 +715,24 @@ TrackRungeKuttaExtrapolator::extrapolateNumericalJacobian( RKState& state,
       RKCache cache ;
       RKTrackVector err ;
       for(size_t j=0; j<stepvector.size() ; ++j) {
-	evaluateRKStep( stepvector[j],astate,err,cache ) ; 
-	++cache.step ;
+        evaluateRKStep( stepvector[j],astate,err,cache ) ; 
+        ++cache.step ;
       }
       if( !(std::abs(state.z - astate.z) < TrackParameters::propagationTolerance ) ) {
-	std::cout << "problem in numerical integration. " << std::endl ;
-	std::cout << "zin: " << inputstate.z << " "
-		  << " zout: " << zout << " "
-		  << " state.z: " << state.z << " "
-		  << " dstate.z: " << astate.z << std::endl ;
-	std::cout << "num step: "
-		  << stepvector.size() << " "
-		  << m_stats.numstep - cachednumstep << " "
-		  << m_stats.numfailedstep - cachednumfailedstep << std::endl ;
+        std::cout << "problem in numerical integration. " << std::endl ;
+        std::cout << "zin: " << inputstate.z << " "
+                  << " zout: " << zout << " "
+                  << " state.z: " << state.z << " "
+                  << " dstate.z: " << astate.z << std::endl ;
+        std::cout << "num step: "
+                  << stepvector.size() << " "
+                  << m_stats.numstep - cachednumstep << " "
+                  << m_stats.numfailedstep - cachednumfailedstep << std::endl ;
       }
       assert(std::abs(state.z - astate.z) < TrackParameters::propagationTolerance ) ;
       
       for(size_t row=0; row<4; ++row) 
-	jacobian.matrix(row,col) = (astate.parameters(row) - state.parameters(row)) / delta[col] ;
+        jacobian.matrix(row,col) = (astate.parameters(row) - state.parameters(row)) / delta[col] ;
     }
   }
   return success ;

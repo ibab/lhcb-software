@@ -185,8 +185,8 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
   double norm = std::sqrt( norm2 );
 
   //calculate derivatives of Ax, Ay
-  double dAx_dTx = (Tx*m_ax/norm2) + norm*(Ty*m_B.x()-(2.*Tx*m_B.y())); 
-  double dAx_dTy = (Ty*m_ax/norm2) + norm*(Tx*m_B.x()+m_B.z());
+  double dAx_dTx = (Tx*m_ax/norm2) + norm*( Ty*m_B.x()-(2.*Tx*m_B.y())); 
+  double dAx_dTy = (Ty*m_ax/norm2) + norm*( Tx*m_B.x()+m_B.z());
   double dAy_dTx = (Tx*m_ay/norm2) + norm*(-Ty*m_B.y()-m_B.z());
   double dAy_dTy = (Ty*m_ay/norm2) + norm*(-Tx*m_B.y()+(2.*Ty*m_B.x()));
 
@@ -197,26 +197,26 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
   transMat(0,0) = 1 ;
   transMat(0,1) = 0 ; 
   transMat(0,2) = dz + 0.5 * dAx_dTx * fact*dz;
-  transMat(0,3) = 0.5 * dAx_dTy * fact*dz;
-  transMat(0,4) = 0.5 * m_ax * fac*dz;
+  transMat(0,3) =      0.5 * dAx_dTy * fact*dz;
+  transMat(0,4) =      0.5 * m_ax    * fac*dz;
   
   transMat(1,0) = 0 ;
   transMat(1,1) = 1 ;
-  transMat(1,2) = 0.5 * dAy_dTx * fact*dz;
+  transMat(1,2) =      0.5 * dAy_dTx * fact*dz;
   transMat(1,3) = dz + 0.5 * dAy_dTy * fact*dz;
-  transMat(1,4) = 0.5 * m_ay * fac*dz;
+  transMat(1,4) =      0.5 * m_ay    * fac*dz;
   
   transMat(2,0) = 0 ;
   transMat(2,1) = 0 ;
   transMat(2,2) = 1.0 + dAx_dTx * fact;
-  transMat(2,3) = dAx_dTy * fact;
-  transMat(2,4) = m_ax * fac;
+  transMat(2,3) =       dAx_dTy * fact;
+  transMat(2,4) =       m_ax    * fac;
   
   transMat(3,0) = 0 ;
   transMat(3,1) = 0 ;
-  transMat(3,2) = dAy_dTx * fact;
+  transMat(3,2) =       dAy_dTx * fact;
   transMat(3,3) = 1.0 + dAy_dTy * fact;
-  transMat(3,4) = m_ay * fac;
+  transMat(3,4) =       m_ay    * fac;
 
   transMat(4,0) = 0 ;
   transMat(4,1) = 0 ;

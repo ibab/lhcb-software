@@ -34,7 +34,7 @@ StatusCode TrackFieldExtrapolatorBase::initialize()
     
     m_fieldGrid = m_fieldSvc->fieldGrid() ;
     
-    if( m_fieldGrid == 0 )
+    if( !m_fieldGrid )
       sc = Error("Cannot retrieve field grid from magfieldvsc", StatusCode::FAILURE ) ;
     else {
       m_fieldFunction = m_useGridInterpolation ?
