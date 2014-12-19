@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2014-12-19 - Sean Benson
+ - changed TurboTest.py to account for changes in Hlt1TrackLines
+
 !========================= HltSettings v6r9 2014-12-15 =========================
 
 ! 2014-12-11 - Michael Kolpin

@@ -55,43 +55,25 @@ class TurboTest( object ):
         from Hlt1Lines.Hlt1TrackLines          import Hlt1TrackLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
-        thresholds = { Hlt1TrackLinesConf :    { 'AllL0Tight_PT'         :  1700
-                                               , 'AllL0Tight_P'          :  3000
-                                               , 'AllL0Tight_IP'         :  0.100
-                                               , 'AllL0Tight_IPChi2'     :  16  
-                                               , 'AllL0Tight_TrChi2'     :  1.5 
-                                               , 'AllL0Tight_GEC'        : 'Loose'
-                                               , 'AllL0Tight_Velo_NHits' : 9 
-                                               , 'AllL0Tight_Velo_Qcut'  : 3   
-                                               , 'AllL0Tight_ValidateTT' : True 
-                                               , 'AllL0_PT'         :  1600
+        thresholds = { Hlt1TrackLinesConf :    { 'AllL0_PT'         :  12500
                                                , 'AllL0_P'          :  3000
-                                               , 'AllL0_IP'         :  0.100
                                                , 'AllL0_IPChi2'     :  16
                                                , 'AllL0_TrChi2'     :  2.0
                                                , 'AllL0_GEC'        : 'Loose'
-                                               , 'AllL0_Velo_NHits' : 9 
-                                               , 'AllL0_Velo_Qcut'  : 3  
-                                               , 'AllL0_ValidateTT' : True 
                                                , 'Muon_PT'       :  1000 
                                                , 'Muon_P'        :  3000 
-                                               , 'Muon_IP'       :     0.100
                                                , 'Muon_IPChi2'   :    16
                                                , 'Muon_TrChi2'   :     2.5  
                                                , 'Muon_GEC'      : 'Loose'
-                                               , 'Muon_ValidateTT' : False
                                                , 'Muon_L0Channels' : 'Muon,DiMuon,MuonNoSPD,DiMuonNoSPD' 
                                                , 'Photon_PT'     :  1200
                                                , 'Photon_P'      :  3000
-                                               , 'Photon_IP'     :     0.100
                                                , 'Photon_IPChi2' :    16
                                                , 'Photon_TrChi2' :     2.0
                                                , 'Photon_L0Channels' : 'PhotonHi,ElectronHi' 
                                                , 'Photon_GEC'        : 'Loose'
-                                               , 'Photon_ValidateTT' : True
                                                , 'Prescale'          : {'Hlt1TrackAllL0'                   : 1.0, 
-                                                                        'Hlt1TrackAllL0Tight'              : 1.0,
-                                                                        'Hlt1TrackForwardPassThrough'      : 0.000001,
+                                                                        'Hlt1TrackForwardPassThrough'      : 0,
                                                                         'Hlt1TrackForwardPassThroughLoose' : 0}
                                                } 
                        , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 0.000001 
@@ -120,6 +102,6 @@ class TurboTest( object ):
         """
         Returns a list of active lines
         """
-        lines =  [ 'Hlt1TrackAllL0','Hlt1TrackForwardPassThrough' ]
+        lines =  [ 'Hlt1TrackAllL0','Hlt1Lumi' ]
         
         return lines 
