@@ -102,7 +102,7 @@ namespace LHCb
 	Range r = range() ;
 	double frac = N*(y - r.first) / (r.second - r.first) ;
 	int i = int(frac) ;
-	index = i<=0 ? 0 : (i>=N ? N-1 : i ) ;
+	index = i<=0 ? 0 : (i>=int(N) ? N-1 : i ) ;
 	localmu = frac - index ;
       }
         
@@ -193,7 +193,7 @@ namespace LHCb
     Range r = range() ;
     double frac = (y - r.first)/(r.second-r.first) ;
     int i = int(N*frac) ;
-    return i<=0 ? 0 : (i>=N ? N-1 : i ) ;
+    return i<=0 ? 0 : (i>=int(N) ? N-1 : i ) ;
   }
   
   template<>
