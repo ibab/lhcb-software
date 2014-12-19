@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================= LbAlpGen v4r0p1 2014-12-19 =========================
+! 2014-12-19 - Gloria Corti
+ - Temporarily remove options ofr lhapdf6
+
 ! 2014-12-02 - Gloria Corti
  - Try to fix compilation warnings with --pedantic
 
