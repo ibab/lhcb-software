@@ -19,27 +19,22 @@ namespace LHCb
 {
   
   MagneticFieldGrid::MagneticFieldGrid()
-    : m_scaleFactor(1) 
+    : m_scaleFactor(1),
+      m_min_FL{ {0.,0.,0.} },
+      m_Dxyz{ {0.,0.,0.} },
+      m_Nxyz{ {0,0,0} }
   {
-    m_Dxyz[0] = 0.0;
-    m_Dxyz[1] = 0.0;
-    m_Dxyz[2] = 0.0;
-    m_Nxyz[0] = 0;
-    m_Nxyz[1] = 0;
-    m_Nxyz[2] = 0;
-    m_min_FL[0] = 0.0;
-    m_min_FL[1] = 0.0;
-    m_min_FL[2] = 0.0;
   }
 
   
   MagneticFieldGrid::FieldVector
   MagneticFieldGrid::fieldVectorClosestPoint( const Gaudi::XYZPoint& r ) const 
   {
-    // round of till the nearest bin
-    auto i = int( (r.x() - m_min_FL[0])/m_Dxyz[0] + 0.5 ) ;
-    auto j = int( (r.y() - m_min_FL[1])/m_Dxyz[1] + 0.5 ) ;
-    auto k = int( (r.z() - m_min_FL[2])/m_Dxyz[2] + 0.5 ) ;
+    // round of till the nearest bin -- i,j,k are unsigned so we can do less
+    // comparisons, i.e. we can skip the comparison with 0...
+    unsigned i = int( (r.x() - m_min_FL[0])/m_Dxyz[0] + 0.5 ) ;
+    unsigned j = int( (r.y() - m_min_FL[1])/m_Dxyz[1] + 0.5 ) ;
+    unsigned k = int( (r.z() - m_min_FL[2])/m_Dxyz[2] + 0.5 ) ;
     // get the field
     FieldVector fvec(0,0,0) ;
     if( i < m_Nxyz[0] && j < m_Nxyz[1] && k < m_Nxyz[2] ) {
@@ -56,12 +51,9 @@ namespace LHCb
   {
     FieldGradient rc ;
 
-    double x = r.x() - m_min_FL[0] ;  
-    double y = r.y() - m_min_FL[1] ;
-    double z = r.z() - m_min_FL[2] ;
-    auto i = int( x/m_Dxyz[0] ) ;
-    auto j = int( y/m_Dxyz[1] ) ;
-    auto k = int( z/m_Dxyz[2] ) ;
+    double x = r.x() - m_min_FL[0] ; unsigned i = int( x/m_Dxyz[0] ) ;
+    double y = r.y() - m_min_FL[1] ; unsigned j = int( y/m_Dxyz[1] ) ;
+    double z = r.z() - m_min_FL[2] ; unsigned k = int( z/m_Dxyz[2] ) ;
 
     // true interpolation is too expensive, is it? let's start with this
     if( i < m_Nxyz[0]-1 && j < m_Nxyz[1]-1 && k < m_Nxyz[2]-1 ) {
@@ -87,9 +79,11 @@ namespace LHCb
     //  Interpolate the field on a cube
     vec bf{0,0,0} ;
 
-    double x = r.x() - m_min_FL[0] ; int i =  x/m_Dxyz[0] ;
-    double y = r.y() - m_min_FL[1] ; int j =  y/m_Dxyz[1] ;
-    double z = r.z() - m_min_FL[2] ; int k =  z/m_Dxyz[2] ;
+    // i,j,k are unsigned so we can skip the test whether 
+    // they are positive...
+    double x = r.x() - m_min_FL[0] ; unsigned i =  int(x/m_Dxyz[0]) ;
+    double y = r.y() - m_min_FL[1] ; unsigned j =  int(y/m_Dxyz[1]) ;
+    double z = r.z() - m_min_FL[2] ; unsigned k =  int(z/m_Dxyz[2]) ;
     
     if( i < m_Nxyz[0]-1 && j < m_Nxyz[1]-1 && k < m_Nxyz[2]-1 ) {
       

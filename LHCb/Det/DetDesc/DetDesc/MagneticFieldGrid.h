@@ -51,15 +51,12 @@ namespace LHCb
     void setScaleFactor( double s ) {  m_scaleFactor = s ; }
 
   private:
-    size_t bin( size_t ix, size_t iy, size_t iz) const { return m_Nxyz[0]*( m_Nxyz[1]*iz + iy ) + ix ; }
-    
-  private:
     double m_scaleFactor ;
     using vec = ROOT::Math::DisplacementVector3D<ROOT::Math::Cartesian3D<float>>;
     std::vector<vec> m_Q; ///< Field map
     std::array<double,3> m_min_FL;            ///< Offset in x, y and z 
     std::array<double,3> m_Dxyz;              ///< Steps in x, y and z
-    std::array<int,3>    m_Nxyz;              ///< Number of steps in x, y and z
+    std::array<unsigned,3> m_Nxyz;            ///< Number of steps in x, y and z
   };
 
 
