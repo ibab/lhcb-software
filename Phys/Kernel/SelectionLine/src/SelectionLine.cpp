@@ -169,7 +169,7 @@ Selection::Line::retrieveSubAlgorithms() const
     if ( !subs->empty() ) {
       auto depth = i->second+1;
       auto j = std::next(i);
-      for ( const auto& k : *subs ) subAlgo.insert( j, { k, depth } );
+      for ( const auto& k : *subs ) subAlgo.emplace( j, k, depth );
     }
   }
   subAlgo.pop_front(); // remove ourselves...
@@ -434,11 +434,17 @@ StatusCode Selection::Line::execute()
 
   //TODO: allow insert at the beginning, and non-const access to update...
   //TODO: allow a-priori complete report, only update 'our' entry here...
-  if (UNLIKELY(m_insertion_hint<0)) {
+  if (UNLIKELY(m_insertion_hint>reports->size())) {
     auto h = reports->insert( std::end(*reports),  key.first , report );
     m_insertion_hint = std::distance( std::begin(*reports),  h.first );
   } else {
-    reports->insert( std::next( std::begin(*reports), m_insertion_hint ), key.first , report );
+    auto h = reports->insert( std::next( std::begin(*reports), m_insertion_hint ), key.first , report );
+    size_t hint = std::distance(std::begin(*reports),h.first);
+    if (hint!=m_insertion_hint) {
+            warning() << " HltDecReports changed 'shape' -- expected to be at location " << m_insertion_hint
+                      << " but ended up at " << hint  << " updating hint..."<< endmsg;
+            m_insertion_hint = hint;
+    }
   }
 
   // update monitoring

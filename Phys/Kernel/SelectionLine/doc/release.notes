@@ -8,6 +8,9 @@
 ! 2014-12-21 - Gerhard Raven
  - in retrieveSubAlgorithms, switch back to std::list (instead of std::deque)
    to insure that iteratora are not invalidated during insert...
+ - unexpectedly (as least for me) the HltDecReports in the stripping change 'shape',
+   i.e. the number of lines which are processed varies (occasionally) from event
+   to event. Enhance the 'hinted' insertion to deal with this...
 
 ! 2014-12-15 - Gerhard Raven
  - remove Selection::Line::resetExecuted -- the event manager calls resetExecuted
