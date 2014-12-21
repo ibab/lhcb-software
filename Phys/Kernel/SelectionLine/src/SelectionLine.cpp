@@ -4,7 +4,7 @@
 // ============================================================================
 #include <cmath>
 #include <vector>
-#include <list>
+#include <forward_list>
 #include <iterator>
 #include <utility>
 #include <chrono>
@@ -161,32 +161,28 @@ Selection::Line::Stage::execute(ISequencerTimerTool* timertool)
 Selection::Line::SubAlgos
 Selection::Line::retrieveSubAlgorithms() const
 {
-  std::list<std::pair<const Algorithm*,unsigned> > subAlgo;
-  subAlgo.emplace_back( this,0 );
-  for (auto i = std::begin(subAlgo);  i != std::end(subAlgo); ++i ) 
-  {
-    auto* subs = std::get<0>(*i)->subAlgorithms();
-    if ( !subs->empty() ) {
-      auto depth = i->second+1;
-      auto j = std::next(i);
-      for ( const auto& k : *subs ) subAlgo.emplace( j, k, depth );
-    }
+  using list = std::forward_list<std::pair<const Algorithm*,unsigned>> ;
+  list subAlgo;  subAlgo.emplace_front( this, 0 );
+  for (auto i = std::begin(subAlgo);  i != std::end(subAlgo); ++i ) {
+    auto depth = i->second+1; 
+    auto subs = std::get<0>(*i)->subAlgorithms();
+    std::accumulate( std::begin(*subs), std::end(*subs), i, 
+                     [&](list::iterator j, const Algorithm* k ) { 
+        return subAlgo.emplace_after(j,k,depth); 
+    } );
   }
   subAlgo.pop_front(); // remove ourselves...
 
-  if ( msgLevel(MSG::DEBUG) )
-  {
+  if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Dumping sub algorithms :" << endmsg;
-    for ( const auto& ii : subAlgo )
-    {
+    for ( const auto& ii : subAlgo ) {
       debug() << std::string( 3 + 3*ii.second , ' ' ) << std::get<0>(ii)->name() << endmsg;
     }
   }
 
   // transform map such that it has algo, # of sub(sub(sub()))algorithms
   SubAlgos table;
-  for ( auto ii = std::begin(subAlgo); ii != std::end(subAlgo); ++ii )
-  {
+  for ( auto ii = std::begin(subAlgo); ii != std::end(subAlgo); ++ii ) {
     auto j = std::next(ii);
     while ( j != subAlgo.end() && j->second > ii->second ) ++j;
     table.emplace_back(  std::get<0>(*ii), std::distance(ii,j), numberOfCandidates(std::get<0>(*ii)) );
