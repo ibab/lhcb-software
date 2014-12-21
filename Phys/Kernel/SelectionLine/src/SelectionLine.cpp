@@ -4,7 +4,7 @@
 // ============================================================================
 #include <cmath>
 #include <vector>
-#include <deque>
+#include <list>
 #include <iterator>
 #include <utility>
 #include <chrono>
@@ -161,7 +161,7 @@ Selection::Line::Stage::execute(ISequencerTimerTool* timertool)
 Selection::Line::SubAlgos
 Selection::Line::retrieveSubAlgorithms() const
 {
-  std::deque<std::pair<const Algorithm*,unsigned> > subAlgo;
+  std::list<std::pair<const Algorithm*,unsigned> > subAlgo;
   subAlgo.emplace_back( this,0 );
   for (auto i = std::begin(subAlgo);  i != std::end(subAlgo); ++i ) 
   {
