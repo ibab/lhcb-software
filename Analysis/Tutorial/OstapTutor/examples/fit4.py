@@ -3,8 +3,8 @@
 # ============================================================================
 # $Id:$
 # ============================================================================
-## @file TestData1.py
-#  Helper dataset for Ostap tutorial
+## @file fit1.py
+#  Exmaple for simple fits 
 #  @author Vanya BELYAEV Ivan..Belyaev@itep.ru
 #  @date   2014-12-10
 #
@@ -13,10 +13,7 @@
 #                 by $Author:$
 # ============================================================================
 """
-Helper dataset for Ostap tutorial:
-  - gaussian J/psi-like signal
-  - flat background
-  
+Example fo simmple fit
 """
 # ============================================================================
 __version__ = "$Revision:$"
@@ -26,61 +23,50 @@ __all__     = (  'data' , 'm_psi' )
 # ============================================================================
 import ROOT, random
 from   Ostap.PyRoUts  import *
-import Ostap.ZipShelve as     DBASE 
 # ============================================================================
 # logging
 # ============================================================================
 from AnalysisPython.Logger import getLogger
 if __name__  in ( '__main__' , '__builtin__' ) :
-    logger = getLogger( 'OstapTutor.TestData1')
+    logger = getLogger( 'fit1')
 else : logger = getLogger( __name__ )
-logger.info ('Create 1D dataset for Ostap Tutorial ')
+logger.info ('Simple fit')
 # ============================================================================
 
-from OstapTutor.TestVars1 import m_psi
+## 1) import dataset and variable 
+from OstapTutor.TestData4 import m_psi, m_D0, data
+
+logger.info ( 'Data: %s' % data ) 
+
+
+## 2) create the model: signnal + background
 
 #
-## create data set
-# 
-varset = ROOT.RooArgSet  ( m_psi ) 
-data   = ROOT.RooDataSet ( dsID()  , 'Data set for Ostap tutorial' , varset  )
-
+## create model
 #
-## fill it!
-#
+import  Ostap.FitModels as Models
 
-N_signal      = 10000 
-N_background  =  1000  
+jpsi  = Models.Needham_pdf ( 'N' , mass = m_psi , mean = 3.096  , sigma = 0.013 )
+D0    = Models.Gauss_pdf   ( 'G' , mass = m_D0  , mean = 1.864  , sigma = 0.007 )
 
-random.seed(0)
+model = Models.Fit2D (
+    signal_1 = jpsi ,
+    signal_2 = D0   ,
+    power1   = 2    ,
+    power2   = 2    ,
+    powerA   = 2    ,
+    powerB   = 2    )
 
-s = VE(3.096, 0.013**2)
 
-for i in range(0,N_signal ):
-    m_psi.setVal  ( s.gauss() )
-    data.add ( varset )
 
-for i in range(0,N_background  ):
-    m_psi.setVal  ( random.uniform ( *m_psi.minmax() ) )  
-    data.add ( varset )
+r,f = model.fitTo  ( data , silence = True , ncpu = 8 ) 
+r,f = model.fitTo  ( data , ncpu = 8 , silence = True ) 
 
-print data  
-                   
-# ============================================================================
-if '__main__' == __name__ :
+model.draw1 ( data  , nbins = 50 )
 
-    import Ostap.Line
-    logger.info ( __file__ + '\n' + Ostap.Line.line )
-    logger.info ( 80*'*'   )
-    logger.info ( __doc__  )
-    logger.info ( 80*'*'   )
-    logger.info ( ' Author  : %s' %         __author__    )
-    logger.info ( ' Version : %s' %         __version__   )
-    logger.info ( ' Date    : %s' %         __date__      )
-    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
-    logger.info ( 80*'*' )
-    
+
+
+
 # ============================================================================
 # The END 
 # ============================================================================
-

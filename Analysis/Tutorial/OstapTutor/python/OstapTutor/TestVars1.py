@@ -13,16 +13,17 @@
 #                 by $Author:$
 # ============================================================================
 """
-Helper dataset for Ostap tutorial:
-  - gaussian J/psi-like signal
-  - flat background
-  
+Helper dataset for Ostap tutorial
 """
 # ============================================================================
 __version__ = "$Revision:$"
 __author__  = "Vanya BELYAEV  Ivan.Belyaev@itep.ru"
 __date__    = "2014-12-10"
-__all__     = (  'data' , 'm_psi' )
+__all__     = ( 'm_psi'  ,
+                'm_psi1' ,
+                'm_phi'  ,
+                'm_phi1' ,
+                'm_D0'   )
 # ============================================================================
 import ROOT, random
 from   Ostap.PyRoUts  import *
@@ -32,54 +33,22 @@ import Ostap.ZipShelve as     DBASE
 # ============================================================================
 from AnalysisPython.Logger import getLogger
 if __name__  in ( '__main__' , '__builtin__' ) :
-    logger = getLogger( 'OstapTutor.TestData1')
+    logger = getLogger( 'OstapTutor.TestVars1')
 else : logger = getLogger( __name__ )
-logger.info ('Create 1D dataset for Ostap Tutorial ')
+logger.info ('Create some varibales for Ostyap tutorial')
 # ============================================================================
 
-from OstapTutor.TestVars1 import m_psi
+# make simple test variable
+m_psi   = ROOT.RooRealVar ( 'mPsi'  , 'mass(mu+mu-)'  , 3.000  , 3.200 )
+m_psi1  = ROOT.RooRealVar ( 'mPsi1' , 'mass(mu+mu-)'  , 3.000  , 3.200 )
 
-#
-## create data set
-# 
-varset = ROOT.RooArgSet  ( m_psi ) 
-data   = ROOT.RooDataSet ( dsID()  , 'Data set for Ostap tutorial' , varset  )
+# make simple test variable
+m_phi  = ROOT.RooRealVar  ( 'mPhi'   , 'mass(K+K-)'    , 0.990  , 1.050 )
+m_phi1 = ROOT.RooRealVar  ( 'mPhi1'  , 'mass(K+K-)'    , 1.000  , 1.050 )
 
-#
-## fill it!
-#
+# make simple test variable
+m_D0   = ROOT.RooRealVar  ( 'mD0'   , 'mass(K-pi+)'    , 1.800  , 1.900 )
 
-N_signal      = 10000 
-N_background  =  1000  
-
-random.seed(0)
-
-s = VE(3.096, 0.013**2)
-
-for i in range(0,N_signal ):
-    m_psi.setVal  ( s.gauss() )
-    data.add ( varset )
-
-for i in range(0,N_background  ):
-    m_psi.setVal  ( random.uniform ( *m_psi.minmax() ) )  
-    data.add ( varset )
-
-print data  
-                   
-# ============================================================================
-if '__main__' == __name__ :
-
-    import Ostap.Line
-    logger.info ( __file__ + '\n' + Ostap.Line.line )
-    logger.info ( 80*'*'   )
-    logger.info ( __doc__  )
-    logger.info ( 80*'*'   )
-    logger.info ( ' Author  : %s' %         __author__    )
-    logger.info ( ' Version : %s' %         __version__   )
-    logger.info ( ' Date    : %s' %         __date__      )
-    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
-    logger.info ( 80*'*' )
-    
 # ============================================================================
 # The END 
 # ============================================================================

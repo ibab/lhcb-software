@@ -3,8 +3,8 @@
 # ============================================================================
 # $Id:$
 # ============================================================================
-## @file TestData1.py
-#  Helper dataset for Ostap tutorial
+## @file TestData2.py
+#  More realistic dataset for Ostap tutorial
 #  @author Vanya BELYAEV Ivan..Belyaev@itep.ru
 #  @date   2014-12-10
 #
@@ -14,8 +14,8 @@
 # ============================================================================
 """
 Helper dataset for Ostap tutorial:
-  - gaussian J/psi-like signal
-  - flat background
+  - J/psi-like signal
+  - exponential background
   
 """
 # ============================================================================
@@ -43,29 +43,28 @@ from OstapTutor.TestVars1 import m_psi
 ## create data set
 # 
 varset = ROOT.RooArgSet  ( m_psi ) 
-data   = ROOT.RooDataSet ( dsID()  , 'Data set for Ostap tutorial' , varset  )
+
 
 #
-## fill it!
+## create model
 #
+import  Ostap.FitModels as Models
 
-N_signal      = 10000 
-N_background  =  1000  
 
-random.seed(0)
+signal = Models.Needham_pdf ( 'N0' , mass = m_psi )
+bkg    = Models.Bkg_pdf     ( 'B0' , mass = m_psi )
+bkg.tau.setVal( -10.0 )
 
-s = VE(3.096, 0.013**2)
 
-for i in range(0,N_signal ):
-    m_psi.setVal  ( s.gauss() )
-    data.add ( varset )
+model = Models.Fit1D( signal     = signal ,
+                      background = bkg    ) 
 
-for i in range(0,N_background  ):
-    m_psi.setVal  ( random.uniform ( *m_psi.minmax() ) )  
-    data.add ( varset )
+model.s.setVal (  10000 )
+model.B.setVal (   5000 )
 
-print data  
-                   
+data   = model.pdf.generate ( varset , 15000 )
+
+
 # ============================================================================
 if '__main__' == __name__ :
 

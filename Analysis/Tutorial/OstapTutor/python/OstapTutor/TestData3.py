@@ -3,8 +3,8 @@
 # ============================================================================
 # $Id:$
 # ============================================================================
-## @file TestData1.py
-#  Helper dataset for Ostap tutorial
+## @file TestData3.py
+#  More realistic dataset for Ostap tutorial
 #  @author Vanya BELYAEV Ivan..Belyaev@itep.ru
 #  @date   2014-12-10
 #
@@ -14,8 +14,9 @@
 # ============================================================================
 """
 Helper dataset for Ostap tutorial:
-  - gaussian J/psi-like signal
-  - flat background
+  - Breit-Wigner
+  - Flatte2 
+  - phase-space background
   
 """
 # ============================================================================
@@ -37,50 +38,46 @@ else : logger = getLogger( __name__ )
 logger.info ('Create 1D dataset for Ostap Tutorial ')
 # ============================================================================
 
-from OstapTutor.TestVars1 import m_psi
+from OstapTutor.TestVars1 import m_phi
 
 #
 ## create data set
 # 
-varset = ROOT.RooArgSet  ( m_psi ) 
-data   = ROOT.RooDataSet ( dsID()  , 'Data set for Ostap tutorial' , varset  )
+varset = ROOT.RooArgSet  ( m_phi ) 
+
 
 #
-## fill it!
+## create model
 #
+import  Ostap.FitModels as Models
 
-N_signal      = 10000 
-N_background  =  1000  
 
-random.seed(0)
+mK  = 0.49369 
 
-s = VE(3.096, 0.013**2)
+bw = cpp.Gaudi.Math.Phi0 (  1.0195 , 0.0043 , mK  )
 
-for i in range(0,N_signal ):
-    m_psi.setVal  ( s.gauss() )
-    data.add ( varset )
+signal = Models.BreitWigner_pdf ( 'BW0' , bw , mass = m_phi ,
+                                  gamma       = 0.0043 ,
+                                  mean        = 1.0195 ,
+                                  convolution = 0.0015 )
 
-for i in range(0,N_background  ):
-    m_psi.setVal  ( random.uniform ( *m_psi.minmax() ) )  
-    data.add ( varset )
+bkg    = Models.PSLeft_pdf  ( 'PSL0' , mass = m_phi , N=2 , left = 2*mK )
 
-print data  
-                   
-# ============================================================================
-if '__main__' == __name__ :
+flatte = Models.Flatte2_pdf ( 'F20'           ,
+                              mass   = m_phi  ,
+                              m0_980 = 1.000  ,
+                              m0g1   = 0.165  , 
+                              mKaon  = mK     ,
+                              mPion  = 0.1396 )
+flatte.mean.fix(0.980)
+                
+model = Models.Fit1D( signal       =   signal   ,
+                      othersignals = [ flatte ] , 
+                      background   = bkg        ) 
 
-    import Ostap.Line
-    logger.info ( __file__ + '\n' + Ostap.Line.line )
-    logger.info ( 80*'*'   )
-    logger.info ( __doc__  )
-    logger.info ( 80*'*'   )
-    logger.info ( ' Author  : %s' %         __author__    )
-    logger.info ( ' Version : %s' %         __version__   )
-    logger.info ( ' Date    : %s' %         __date__      )
-    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
-    logger.info ( 80*'*' )
-    
-# ============================================================================
-# The END 
-# ============================================================================
+model.S  .fix (  10000 )
+model.B  .fix (   5000 )
+model.S_1.fix (   5000 )
+
+data   = model.pdf.generate ( varset , 20000 )
 

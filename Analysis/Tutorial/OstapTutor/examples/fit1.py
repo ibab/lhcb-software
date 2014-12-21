@@ -3,8 +3,8 @@
 # ============================================================================
 # $Id:$
 # ============================================================================
-## @file TestData1.py
-#  Helper dataset for Ostap tutorial
+## @file fit1.py
+#  Exmaple for simple fits 
 #  @author Vanya BELYAEV Ivan..Belyaev@itep.ru
 #  @date   2014-12-10
 #
@@ -13,10 +13,7 @@
 #                 by $Author:$
 # ============================================================================
 """
-Helper dataset for Ostap tutorial:
-  - gaussian J/psi-like signal
-  - flat background
-  
+Example fo simmple fit
 """
 # ============================================================================
 __version__ = "$Revision:$"
@@ -26,61 +23,54 @@ __all__     = (  'data' , 'm_psi' )
 # ============================================================================
 import ROOT, random
 from   Ostap.PyRoUts  import *
-import Ostap.ZipShelve as     DBASE 
 # ============================================================================
 # logging
 # ============================================================================
 from AnalysisPython.Logger import getLogger
 if __name__  in ( '__main__' , '__builtin__' ) :
-    logger = getLogger( 'OstapTutor.TestData1')
+    logger = getLogger( 'fit1')
 else : logger = getLogger( __name__ )
-logger.info ('Create 1D dataset for Ostap Tutorial ')
+logger.info ('Simple fit')
 # ============================================================================
 
-from OstapTutor.TestVars1 import m_psi
+## 1) import dataset and variable 
+from OstapTutor.TestData1 import m_psi, data
 
-#
-## create data set
-# 
-varset = ROOT.RooArgSet  ( m_psi ) 
-data   = ROOT.RooDataSet ( dsID()  , 'Data set for Ostap tutorial' , varset  )
+logger.info ( 'Data: %s' % data ) 
 
-#
-## fill it!
-#
 
-N_signal      = 10000 
-N_background  =  1000  
+## 2) create the model: signnal + background
 
-random.seed(0)
+import Ostap.FitModels as Models
 
-s = VE(3.096, 0.013**2)
+## 2a) create the  signal : gaussian  here  
 
-for i in range(0,N_signal ):
-    m_psi.setVal  ( s.gauss() )
-    data.add ( varset )
+signal = Models.Gauss_pdf ( 'Gauss'       ,
+                            mass  = m_psi , 
+                            sigma = 0.013 ,
+                            mean  = 3.096 )   
 
-for i in range(0,N_background  ):
-    m_psi.setVal  ( random.uniform ( *m_psi.minmax() ) )  
-    data.add ( varset )
 
-print data  
-                   
-# ============================================================================
-if '__main__' == __name__ :
+## 2b) create the  background : exponential times 1st order polymonial  
 
-    import Ostap.Line
-    logger.info ( __file__ + '\n' + Ostap.Line.line )
-    logger.info ( 80*'*'   )
-    logger.info ( __doc__  )
-    logger.info ( 80*'*'   )
-    logger.info ( ' Author  : %s' %         __author__    )
-    logger.info ( ' Version : %s' %         __version__   )
-    logger.info ( ' Date    : %s' %         __date__      )
-    logger.info ( ' Symbols : %s' %  list ( __all__     ) )
-    logger.info ( 80*'*' )
-    
+bkg   = Models.Bkg_pdf  ( 'B'  , mass = m_psi , power = 1 )
+
+
+##  2c) create the model
+
+model = Models.Fit1D ( signal     = signal ,
+                       background = bkg    )  
+
+
+## 3) try to fit:
+
+r,f = model.fitTo  ( data , silence = True , ncpu = 8 ) 
+
+signal .mean .release()
+signal .sigma.release()
+
+r,f = model.fitTo  ( data , ncpu = 8 , draw = True ) 
+
 # ============================================================================
 # The END 
 # ============================================================================
-
