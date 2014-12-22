@@ -4,6 +4,9 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2014-12-22 - Michel De Cian
+ - Add 'MatchFitParams' which produces the parameters for the matching (PatMatch).
+
 !========================= PatFitParams v4r2 2012-11-28 =========================
 ! 2012-11-26 - Marco Clemencic
  - Fixed build with C++11.
