@@ -23,7 +23,8 @@ __all__     = ( 'm_psi'  ,
                 'm_psi1' ,
                 'm_phi'  ,
                 'm_phi1' ,
-                'm_D0'   )
+                'm_D0'   ,
+                'm_ups'  )
 # ============================================================================
 import ROOT, random
 from   Ostap.PyRoUts  import *
@@ -47,7 +48,14 @@ m_phi  = ROOT.RooRealVar  ( 'mPhi'   , 'mass(K+K-)'    , 0.990  , 1.050 )
 m_phi1 = ROOT.RooRealVar  ( 'mPhi1'  , 'mass(K+K-)'    , 1.000  , 1.050 )
 
 # make simple test variable
-m_D0   = ROOT.RooRealVar  ( 'mD0'   , 'mass(K-pi+)'    , 1.800  , 1.900 )
+m_D0   = ROOT.RooRealVar  ( 'm_D0' , 'mass(K^{-}#pi^{+})'        , 1.82 , 1.92 )
+m_Dp   = ROOT.RooRealVar  ( 'm_Dp' , 'mass(K^{-}#pi^{+}#pi^{+})' , 1.82 , 1.91 )
+m_Ds   = ROOT.RooRealVar  ( 'm_Ds' , 'mass(K^{-}K^{+}#pi^{+})'   , 1.90 , 2.04 )
+m_Lc   = ROOT.RooRealVar  ( 'm_Lc' , 'mass(pK^{-}#pi^{+})'       , 2.24 , 2.33 )
+
+# make test variable
+m_ups  = ROOT.RooRealVar ( 'mY'     , 'mass(mu+mu-)'   , 9.0 , 11.0 ) 
+m_Y    = m_ups  ## ditto 
 
 # ============================================================================
 # The END 
