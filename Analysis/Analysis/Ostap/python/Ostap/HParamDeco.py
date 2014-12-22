@@ -160,7 +160,7 @@ def _h1_bernstein_ ( h1 , N , interpolate = True , opts = 'SQ0I' ) :
     bfit  = BernsteinFIT( b )    
     bfit.fun.SetNpx ( max ( 100 , 3 * h1.bins() ) )  
     
-    bfit.histo     = self
+    bfit.histo     = h1
     bfit.fitresult = bfit.fun.Fit(h1,opts) 
     
     return bfit.fun,bfit,b,bfit.fitresult 
