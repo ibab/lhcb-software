@@ -26,7 +26,8 @@ using ROOT::Math::CholeskyDecomp; // -- Maybe copy locally if not running at CER
 PatAddTTCoord::PatAddTTCoord( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_bendProtoParam(0.0)
 {
   declareInterface<IAddTTClusterTool>(this);
   declareProperty( "ZTTField"  , m_zTTField            =  1740. * Gaudi::Units::mm );
@@ -42,7 +43,7 @@ PatAddTTCoord::PatAddTTCoord( const std::string& type,
   declareProperty( "MajAxProj" , m_majAxProj           =  20.0  * Gaudi::Units::mm   );
   declareProperty( "MinAxProj" , m_minAxProj           =  2.0   * Gaudi::Units::mm   );
 
-  }
+}
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -212,7 +213,7 @@ StatusCode PatAddTTCoord::returnTTClusters( LHCb::State& state, PatTTHits& ttHit
 
   // -- Assign the final hit container and chi2 to the variables which are returned.
   ttHits = myTtCoords;
-  finalChi2 = chi2;
+  finalChi2 = bestChi2;
 
   return StatusCode::SUCCESS;
 }
@@ -229,8 +230,8 @@ void PatAddTTCoord::selectHits(PatTTHits& selected, const LHCb::State& state, co
   selected.clear();
 
   // -- Define the parameter that describes the bending
-  const double bendParam = m_ttParam * state.qOverP()* -1 * m_magFieldSvc->signedRelativeCurrent() ;
-
+  const double bendParam = m_bendProtoParam * state.qOverP();
+  
   if( UNLIKELY( msgLevel(MSG::DEBUG) ) ) 
     debug() << "State z " << state.z() << " x " << state.x() 
             << " y " << state.y() << " tx " << state.tx() << " ty " 
@@ -468,6 +469,9 @@ void PatAddTTCoord::initEvent () {
         return lhs->hit()->xAtYEq0() < rhs->hit()->xAtYEq0();
       });
   }
+
+  // -- This does not change between events
+  m_bendProtoParam = m_ttParam * -1 * m_magFieldSvc->signedRelativeCurrent() ;
   
   m_newEvent = false;
   

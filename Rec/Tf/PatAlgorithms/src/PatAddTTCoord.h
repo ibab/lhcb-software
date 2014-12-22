@@ -52,10 +52,17 @@ public:
   
   virtual StatusCode initialize();
 
-  /// Add TT clusters to matched tracks
+  /** @brief Add TT clusters to matched tracks. This calls returnTTClusters internally
+      @param track Track to add the TT hits to
+  */
   virtual StatusCode addTTClusters( LHCb::Track& track);
   
-  /// Return TT clusters without adding them
+  /** Return TT clusters without adding them.
+      @param state State closest to TT for extrapolation (normally Velo state)
+      @param ttHits Container to fill TT hits in
+      @param finalChi2 internal chi2 of the TT hit adding
+      @param p momentum estimate. If none given, the one from the state will be taken
+  */
   virtual StatusCode returnTTClusters( LHCb::State& state, PatTTHits& ttHits, double& finalChi2, double p = 0 );
 
   
@@ -69,6 +76,7 @@ public:
   void printInfo(const PatTTHits& goodTT, double dist, double chi2, const LHCb::State& state);
   void initEvent();
   
+  /// internal container to store hits in a sorted way
   std::array<PatTTHits, 4> m_hitsLayers;
   bool m_newEvent;
   double m_invMajAxProj2;
@@ -87,9 +95,10 @@ public:
   double m_xTolSlope;
   double m_majAxProj;
   double m_minAxProj;
-  std::string m_extrapolatorName;
   
   ILHCbMagnetSvc*     m_magFieldSvc; 
+  double m_bendProtoParam;
+  
   
 };
 

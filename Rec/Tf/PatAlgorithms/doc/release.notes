@@ -3,6 +3,11 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2014-12-22 - Michel De Cian
+ - Fix bug in PatAddTTCoord in 'returnTTClusters' which caused wrong chi2 to be returned. 
+ Calculate part of the bending parameter only once per event. Add some doxygen comments.
+
 ! 2014-12-15 - Gerhard Raven
  - PatFwdTool: use new PatForwardHit methods to speed things up 
    (note: relies on new PatKernel, and one must recompile TfKernel and TfTools 
