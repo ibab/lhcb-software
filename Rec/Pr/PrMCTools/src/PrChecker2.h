@@ -19,8 +19,8 @@
 #include "LoKi/Primitives.h"
 #include "LoKi/MCParticles.h"
 #include "MCInterfaces/IMCReconstructible.h"
-#include <tuple> 
-//#include <unordered_map>
+
+
 
 class IHistoTool ;
 
@@ -31,10 +31,45 @@ class IHistoTool ;
  *  Parameters:
  *   - Eta25Cut: Only consider particles with 2 < eta < 5? (default: false)
  *   - TriggerNumbers: Give numbers for p > 3GeV, pT > 500 MeV? (default: false)
- *   - UseElectrons: Take electrons into account in numbers? (default: false)
+ *     if selected long_fromB_P>3GeV_Pt>0.5GeV cut is added to each track container
+ *   - vetoElectrons: Take electrons into account in numbers? (default: true)
  * 
- *  @author Olivier Callot, Thomas Nikodem
- *  @date   2014-02-13
+ * 
+ * additional track location container can be added for PrCounter2 and PrTTCounter via:
+ *
+ * @code
+ *   from Configurables import PrChecker2
+ *   #to fix the LokiGendecorator problem
+ *   from Configurables import LoKi__Hybrid__MCTool
+ *   myFactory = LoKi__Hybrid__MCTool("MCHybridFactory")
+ *   myFactory.Modules = [ "LoKiMC.decorators" ]
+ *   PrChecker2("PrChecker2").addTool( myFactory )
+ *
+ *   PrChecker2("PrChecker2").NewTracks= "Rec/Track/Velo" 
+ *   PrChecker2("PrChecker2").WriteNewHistos = 2
+ *   PrChecker2("PrChecker2").SelectIdNewContainer = 1
+ *   PrChecker2("PrChecker2").MyNewCuts= {"fromBorD" : "BOrDMother", "B daughters": "fromB", "D daughters": "fromD" }
+ *  @endcode
+ *
+ *
+ *
+ *  Uses IHistoTool: for each container histograms are plotted if the following code segment is used. Default values are -1 (no histograms), can also be set to 2 for additional histograms (expectedHits, docaz, PVz, EtaP, EtaPhi, efficiency maps @z=9000mm XYZ9000 and @z=2485mm XYZ2485) 
+ * 
+ * @code
+ * PrChecker2("PrChecker2").Write(container)Histos = 1
+ * @endcode
+ *
+ * Configurable selection cuts for each container, can be changed via:
+ *
+ * @code
+ * PrChecker2("PrChecker2").MyForwardCuts = {"long" : "isLong", "B daughter": "fromB" }
+ * @endcode
+ *
+ * As a default selection cuts of old PrChecker are used. The following cuts are predefined: 
+ * is(Not)Long, is(Not)Velo, is(Not)Down, is(Not)Up, is(Not)TT, is(Not)Seed, fromB, fromD, BOrDMother, fromKsFromB, strange, is(Not)Electron, eta25, over5, trigger and  Loki syntax (LoKi::MCParticles) can be used for kinematical cuts: (MCPT> 2300), here () are essential.
+ * 
+ *  @author Olivier Callot, Thomas Nikodem, Svende Braun, Michel De Cian
+ *  @date   2014-12-22
  */
 
 class EffCounter {
@@ -82,6 +117,9 @@ class PrChecker2 : public GaudiHistoAlg {
   std::string m_seedTracks;
   std::string m_downTracks;
   std::string m_upTracks;
+  std::string m_bestTracks;
+  std::string m_newTracks;///< additional configurable track container for PrCounter2
+  std::string m_ttnewTracks;///< additional configurable track container for PrTTCounter
   
   IPrCounter* m_velo;
   IPrCounter* m_forward;
@@ -92,17 +130,18 @@ class PrChecker2 : public GaudiHistoAlg {
   IPrCounter* m_best;
   IPrCounter* m_bestLong;
   IPrCounter* m_bestDownstream;
+  IPrCounter* m_new;
 
   IPrTTCounter* m_ttForward;
   IPrTTCounter* m_ttMatch;
   IPrTTCounter* m_ttDownst;
+  IPrTTCounter* m_ttnew;
 
   //IPrCounter* m_utForward;
   //IPrCounter* m_utMatch;
   //IPrCounter* m_utbestLong;
   //IPrCounter* m_utDownst;
 
-  int  m_writetestHistos;  
   int  m_writeVeloHistos;      
   int  m_writeForwardHistos;   
   int  m_writeMatchHistos;     
@@ -112,22 +151,27 @@ class PrChecker2 : public GaudiHistoAlg {
   int  m_writeBestHistos;
   int  m_writeBestLongHistos;
   int  m_writeBestDownstreamHistos;
+  int  m_writeNewHistos; 
   int  m_writeUTHistos;
   int  m_writeTTForwardHistos;
   int  m_writeTTMatchHistos;
   int  m_writeTTDownstHistos;
-   
+  int  m_writeTTNewHistos;
+  
+  int m_selectIdNew;
+  int m_selectIdNewTT;
 
   bool m_eta25cut;             
   bool m_triggerNumbers;
-  bool m_writeXYEffHistos;
-  bool m_particlekeyforward;
-  bool m_useElectrons;
+  bool m_vetoElectrons;
  
  
   
 
   //convert strings to normal cuts ==> called m_otherCuts (without LoKi Hybrid factory)
+  /** @class isTrack PrChecker2.h
+  *  Predefined selection cuts: it converts strings to normal cuts, used by addOtherCuts
+  */
   class isTrack {
   
     enum recAs {
@@ -148,7 +192,8 @@ class PrChecker2 : public GaudiHistoAlg {
       fromD = 16,
       fromKsFromB = 17,
       isElectron = 18,
-      isNotElectron = 19
+      isNotElectron = 19,
+      BOrDMother = 20,
     };
 
     std::map< std::string, recAs> lookuptable = {{"isLong",isLong},
@@ -168,7 +213,8 @@ class PrChecker2 : public GaudiHistoAlg {
 						 {"fromD",fromD},
 						 {"fromKsFromB",fromKsFromB},
 						 {"isElectron",isElectron},
-						 {"isNotElectron",isNotElectron}};
+						 {"isNotElectron",isNotElectron},
+						 {"BOrDMother",BOrDMother}};
 
         
   public:
@@ -177,13 +223,15 @@ class PrChecker2 : public GaudiHistoAlg {
      
      };
     
-    bool operator()(LHCb::MCParticle* mcp, MCTrackInfo mcInfo) const { 
+    bool operator()(LHCb::MCParticle* mcp, MCTrackInfo mcInfo) const {
+      bool motherB       = false;
+      bool motherD       = false;
       if(m_kind == isLong) return mcInfo.hasVeloAndT( mcp );
       if(m_kind == isNotLong) return !mcInfo.hasVeloAndT( mcp );
       if(m_kind == isDown) return mcInfo.hasT( mcp ) &&  mcInfo.hasTT( mcp );
-      if(m_kind == isNotDown) return !mcInfo.hasT( mcp ) &&  !mcInfo.hasTT( mcp );
+      if(m_kind == isNotDown) return !(mcInfo.hasT( mcp ) &&  mcInfo.hasTT( mcp ));
       if(m_kind == isUp) return mcInfo.hasVelo( mcp ) &&  mcInfo.hasTT( mcp );
-      if(m_kind == isNotUp) return !mcInfo.hasVelo( mcp ) &&  !mcInfo.hasTT( mcp );
+      if(m_kind == isNotUp) return !(mcInfo.hasVelo( mcp ) &&  mcInfo.hasTT( mcp ));
       if(m_kind == isVelo) return mcInfo.hasVelo( mcp );
       if(m_kind == isNotVelo) return !mcInfo.hasVelo( mcp );
       if(m_kind == isSeed) return mcInfo.hasT( mcp );
@@ -192,8 +240,7 @@ class PrChecker2 : public GaudiHistoAlg {
       if(m_kind == isNotTT) return !mcInfo.hasTT( mcp );
       if(m_kind == isElectron) return abs( mcp->particleID().pid() ) == 11;
       if(m_kind == isNotElectron) return abs( mcp->particleID().pid() ) != 11;
-      //if(m_kind == eta25) return true;
-      
+            
       if ( 0 != mcp->originVertex() ) {
 	const LHCb::MCParticle* mother =  mcp->originVertex()->mother();
 	if ( 0 != mother ) {
@@ -228,13 +275,18 @@ class PrChecker2 : public GaudiHistoAlg {
 	}
 	while( 0 != mother ) {
 	  if ( mother->particleID().hasBottom() && 
-	       ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) ) if(m_kind == fromB) return true;
+	       ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) )   motherB = true;
 	  
 	  if ( mother->particleID().hasCharm() &&
-	       ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) ) if(m_kind == fromD) return true;
+	       ( mother->particleID().isMeson() ||  mother->particleID().isBaryon() ) )  motherD = true;
 	  
 	  mother = mother->originVertex()->mother();
+	 
 	}
+	if( m_kind == fromD && motherD == true)  return m_kind == fromD;
+	if( m_kind == fromB && motherB == true)  return m_kind == fromB;
+	
+	if(m_kind == BOrDMother && (motherD || motherB)  )  return m_kind == BOrDMother;
       }
       return false;
     }
@@ -244,7 +296,9 @@ class PrChecker2 : public GaudiHistoAlg {
   };
 
 
-
+ /** @class addOtherCuts PrChecker2.h
+ *  Class that adds selection cuts defined in isTrack to cuts
+ */
   class addOtherCuts{
   
   public:
@@ -265,7 +319,7 @@ class PrChecker2 : public GaudiHistoAlg {
     std::vector<isTrack> m_cuts;
     
   };
-
+  
   //maps for each track container with {cut name,selection cut}
   std::map <std::string,std::string> m_map_forward;
   std::map <std::string,std::string> m_map_velo;
@@ -274,20 +328,73 @@ class PrChecker2 : public GaudiHistoAlg {
   std::map <std::string,std::string> m_map_down;
   std::map <std::string,std::string> m_map_ttforward;
   std::map <std::string,std::string> m_map_ttdown;
-  std::map <std::string,std::string> m_map_new1;
-  std::map <std::string,std::string> m_map_new2;
-
+  std::map <std::string,std::string> m_map_new;
+  std::map <std::string,std::string> m_map_ttnew;
+ 
   //default cuts for each container, if not other ones are specified in run python file, those are taken
-  std::map <std::string,std::string> fillMyMap( std::string name ){
+  /** @brief Map filled  with default cuts for each container, first string is name of the cut, second one is cut (predefined from class isTrack or kinematical Loki Cuts)
+   */
+  std::map <std::string,std::string> DefaultCutMap( std::string name ){
     
-    std::map <std::string,std::string> map_velo = { {"velo" ,"isVelo & isNotElectron"},
-						    {"long","isLong & isNotElectron"},{"long>5GeV" ,"isLong & over5 & isNotElectron " }, {"long_strange" , "isLong & strange & isNotElectron" },{ "long_strange>5GeV","isLong & strange & over5 & isNotElectron" },{"long_fromB" ,"isLong & fromB & isNotElectron" },{"long_fromB>5GeV" , "isLong & fromB & over5 & isNotElectron" }};
-    std::map <std::string,std::string> map_forward = {{"long","isLong & isNotElectron"}, {"long>5GeV","isLong & over5 & isNotElectron " }, {"long_strange","isLong & strange & isNotElectron" },{"long_strange>5GeV","isLong & strange & over5 & isNotElectron" },{"long_fromB","isLong & fromB & isNotElectron" },{"long_fromB>5GeV","isLong & fromB & over5 & isNotElectron" }};
-    std::map <std::string,std::string> map_up = { {"velo" ,"isVelo & isNotElectron"},{"velo+UT" ,"isVelo & isTT & isNotElectron"},{"velo+UT>5GeV" , "isVelo & isTT & over5 & isNotElectron"},{"velo+notLong" ,"isNotLong & isVelo & isNotElectron "},{"velo+UT+notLong" ,"isNotLong & isVelo & isTT & isNotElectron"},{"velo+UT+notLong>5GeV" ,"isNotLong & isVelo & isTT & isNotElectron & over5 "},{"long" ,"isLong & isNotElectron"},{"long>5GeV" ,"isLong & over5 & isNotElectron "},{"long_fromB" ,"isLong & fromB & isNotElectron"},{"long_fromB>5GeV" , "isLong & fromB & over5 & isNotElectron"}};
-    std::map <std::string,std::string> map_ttrack = {{"hasT" ,"isSeed & isNotElectron"},{"long" ,"isLong & isNotElectron"},{"long>5GeV" ,"isLong & over5 & isNotElectron "},{ "long_fromB" ,"isLong & fromB & isNotElectron"},{"long_fromB>5GeV" , "isLong & fromB & over5 & isNotElectron"},{"UT+T_strange" , " strange & isDown & isNotElectron"},{"UT+T_strange>5GeV" , " strange & isDown & over5 & isNotElectron"},{"noVelo+UT+T_strange" , " strange & isDown & isNotVelo & isNotElectron"},{"noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo & isNotElectron"},{"UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) & isNotElectron"},{"UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD ) & isNotElectron"},{"noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) & isNotElectron"}};
-    std::map <std::string,std::string> map_down = {{"UT+T" ,"isDown & isNotElectron"},{"UT+T>5GeV" ,"isDown & over5 & isNotElectron"},{"UT+T_strange>5GeV" , " strange & isDown & over5 & isNotElectron"},{"UT+T_strange>5GeV" , " strange & isDown & over5 & isNotElectron"},{"noVelo+UT+T_strange" , " strange & isDown & isNotVelo & isNotElectron"},{"noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo & isNotElectron"},{"UT+T_fromB" , "isDown & fromB & isNotElectron"},{"UT+T_fromB>5GeV" , "isDown & fromB & over5 & isNotElectron"},{"noVelo+UT+T_fromB" , "isDown & fromB & isNotVelo & isNotElectron"},{"noVelo+UT+T_fromB>5GeV" , "isDown & fromB & over5 & isNotVelo & isNotElectron"},{"UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) & isNotElectron"},{"UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD ) & isNotElectron"},{"noVelo+UT+T_SfromDB" , " strange & isDown & isNotVelo & ( fromB | fromD ) & isNotElectron"},{"noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) & isNotElectron"}};
-    std::map <std::string,std::string> map_ttforward = {{ "long" ,"isLong & isNotElectron"},{"long>5GeV" ,"isLong & over5 & isNotElectron "}};
-    std::map <std::string,std::string> map_ttdown = {{"has seed" ,"isSeed & isNotElectron"},{"has seed +noVelo, T+TT" ,"isSeed & isNotVelo & isDown & isNotElectron"},{"down+strange" , " strange & isDown"},{"down+strange+>5GeV" , " strange & isDown & over5 "}, {"pi<-Ks<-B" , "fromKsFromB "},{"pi<-Ks<-B+> 5 GeV" , "fromKsFromB & over5 "}};
+    std::map <std::string,std::string> map_velo = { {"01_velo" ,"isVelo "},//use numbers for right order of cuts
+						    {"02_long","isLong "},
+						    {"03_long>5GeV" ,"isLong & over5  " }, 
+						    {"04_long_strange" , "isLong & strange " },
+						    {"05_long_strange>5GeV","isLong & strange & over5 " },
+						    {"06_long_fromB" ,"isLong & fromB " },
+						    {"07_long_fromB>5GeV" , "isLong & fromB & over5 " }};
+    std::map <std::string,std::string> map_forward = {{"01_long","isLong "}, 
+						      {"02_long>5GeV","isLong & over5 " }, 
+						      {"03_long_strange","isLong & strange " },
+						      {"04_long_strange>5GeV","isLong & strange & over5 " },
+						      {"05_long_fromB","isLong & fromB " },
+						      {"06_long_fromB>5GeV","isLong & fromB & over5 " }};
+    std::map <std::string,std::string> map_up = { {"01_velo" ,"isVelo "},
+						  {"02_velo+UT" ,"isVelo & isTT "},
+						  {"03_velo+UT>5GeV" , "isVelo & isTT & over5 "},
+						  {"04_velo+notLong" ,"isNotLong & isVelo  "},
+						  {"05_velo+UT+notLong" ,"isNotLong & isVelo & isTT "},
+						  {"06_velo+UT+notLong>5GeV" ,"isNotLong & isVelo & isTT & over5 "},
+						  {"07_long" ,"isLong "},
+						  {"08_long>5GeV" ,"isLong & over5  "},
+						  {"09_long_fromB" ,"isLong & fromB "},
+						  {"10_long_fromB>5GeV" , "isLong & fromB & over5 "}};
+    std::map <std::string,std::string> map_ttrack = {{"01_hasT" ,"isSeed "},
+						     {"02_long" ,"isLong "},
+						     {"03_long>5GeV" ,"isLong & over5 "},
+						     { "04_long_fromB" ,"isLong & fromB "},
+						     {"05_long_fromB>5GeV" , "isLong & fromB & over5 "},
+						     {"06_UT+T_strange" , " strange & isDown "},
+						     {"07_UT+T_strange>5GeV" , " strange & isDown & over5"},
+						     {"08_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
+						     {"09_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
+						     {"10_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
+						     {"11_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD )"},
+						     {"12_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "}};
+    std::map <std::string,std::string> map_down = {{"01_UT+T" ,"isDown "},
+						   {"02_UT+T>5GeV" ,"isDown & over5"},
+						   {"03_UT+T_strange" , " strange & isDown"},
+						   {"04_UT+T_strange>5GeV" , " strange & isDown & over5 "},
+						   {"05_noVelo+UT+T_strange" , " strange & isDown & isNotVelo"},
+						   {"06_noVelo+UT+T_strange>5GeV" , " strange & isDown & over5 & isNotVelo "},
+						   {"07_UT+T_fromB" , "isDown & fromB "},
+						   {"08_UT+T_fromB>5GeV" , "isDown & fromB & over5 "},
+						   {"09_noVelo+UT+T_fromB" , "isDown & fromB & isNotVelo"},
+						   {"10_noVelo+UT+T_fromB>5GeV" , "isDown & fromB & over5 & isNotVelo"},
+						   {"11_UT+T_SfromDB" , " strange & isDown & ( fromB | fromD ) "},
+						   {"12_UT+T_SfromDB>5GeV" , " strange & isDown & over5 & ( fromB | fromD ) "},
+						   {"13_noVelo+UT+T_SfromDB" , " strange & isDown & isNotVelo & ( fromB | fromD )"},
+						   {"14_noVelo+UT+T_SfromDB>5GeV" , " strange & isDown & isNotVelo & over5 & ( fromB | fromD ) "}};
+    std::map <std::string,std::string> map_new = {};
+    std::map <std::string,std::string> map_ttforward = {{ "01_long" ,"isLong "},
+							{"02_long>5GeV" ,"isLong & over5  "}};
+    std::map <std::string,std::string> map_ttdown = {{"01_has seed" ,"isSeed "},
+						     {"02_has seed +noVelo, T+TT" ,"isSeed & isNotVelo & isDown "},
+						     {"03_down+strange" , " strange & isDown"},
+						     {"04_down+strange+>5GeV" , " strange & isDown & over5 "}, 
+						     {"05_pi<-Ks<-B" , "fromKsFromB "},
+						     {"06_pi<-Ks<-B+> 5 GeV" , "fromKsFromB & over5 "}};
+    std::map <std::string,std::string> map_ttnew = {};
     std::map <std::string,std::string> empty_map = {{},{}};
 
     if( name == "Forward" ) return map_forward;
@@ -295,34 +402,37 @@ class PrChecker2 : public GaudiHistoAlg {
     if( name == "Upstream" ) return map_up;
     if( name == "Ttrack" ) return map_ttrack;
     if( name == "Downstream" ) return map_down;
+    if( name == "New" ) return map_new;
     if( name == "TTForward" ) return map_ttforward;
     if( name == "TTDownstream" ) return map_ttdown;
+    if( name == "TTNew" ) return map_ttnew;
    
     return empty_map;
 
   }
    
-
-  //make vector of second elements of maps --> needed as input for m_textcuts
-  std::vector<std::string> getMyCut( std::map <std::string,std::string> myThingy ){
+  /** @brief makes vector of second elements of DefaultCutMap --> needed as input for m_Cuts */
+  std::vector<std::string> getMyCut( std::map <std::string,std::string> myCutMap ){
     std::vector<std::string> dummy;
-    for( auto it : myThingy ){
+    for( auto it : myCutMap ){
       dummy.push_back(it.second);
     }
     return dummy;
   }
 
   
+
+
   //== Vector of the counters
-  std::vector<IPrCounter*> m_allCounters;
-  std::vector<IPrTTCounter*> m_allTTCounters;
+  std::vector<IPrCounter*> m_allCounters;///<Vector of PrCounter
+  std::vector<IPrTTCounter*> m_allTTCounters;///<Vector of PrTTCounter
   
   const IHistoTool* m_histoTool;
-  LoKi::IMCHybridFactory* m_factory;
+  LoKi::IMCHybridFactory* m_factory;///<needed to convert normal cuts into Loki cuts
   //maps for cuts
-  std::map< std::string, std::vector <std::string> >  m_textCuts;
-  std::map < std::string, std::vector < LoKi::Types::MCCut> > m_LoKiCuts;
-  std::map < std::string, std::vector <addOtherCuts> > m_otherCuts;
+  std::map< std::string, std::vector <std::string> >  m_Cuts;///<map of track container name and corresponding cuts
+  std::map < std::string, std::vector < LoKi::Types::MCCut> > m_LoKiCuts;///<converted map of Loki cuts, first component is name of track container
+  std::map < std::string, std::vector <addOtherCuts> > m_otherCuts;///<map of other cuts as predefined in isTrack, first component is name of track container 
 
 
 

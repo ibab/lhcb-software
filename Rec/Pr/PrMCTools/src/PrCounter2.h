@@ -1,6 +1,6 @@
 // $Id: $
-#ifndef PRCOUNTER2_H
-#define PRCOUNTER2_H 1
+#ifndef PRCOUNTER_H
+#define PRCOUNTER_H 1
 
 // Include files
 // from Gaudi
@@ -12,7 +12,7 @@
 #include "PrKernel/IPrCounter.h"
 //#include "MCInterfaces/IIdealStateCreator.h"
 #include "TrackInterfaces/ITrackExtrapolator.h"
-//#include "Event/State.h"
+
 
 /** @class PrCounter2 PrCounter2.h
  *  This is a counter for track efficiency measurement.
@@ -63,8 +63,8 @@ private:
   MyAsct*         m_link;
   const InvTable* m_invTable;
 
-   ITrackExtrapolator* m_extrapolator;
-   //IIdealStateCreator* m_idealStateCreator;
+  ITrackExtrapolator* m_extrapolator;
+  //IIdealStateCreator* m_idealStateCreator;
 
   std::string  m_title;
   unsigned int m_titleSize;
