@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2014-12-24 - Paul Seyfert
+ - Change GhostClassification tools in PatChecking.py
+
 !========================= TrackSys v9r3 2014-12-11 =========================
 ! 2014-11-07 - Marco Clemencic
  - Fixed intentation error in Configuration.py

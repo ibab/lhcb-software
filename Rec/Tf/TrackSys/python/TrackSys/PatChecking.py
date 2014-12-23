@@ -22,40 +22,48 @@ def PatChecking():
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocVeloRZ") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("VeloRZ") ]
       TrackAssociator("AssocVeloRZ").TracksInContainer     = "Rec/Track/RZVelo";
+      TrackEffChecker("VeloRZ").GhostClassification = "VeloRGhostClassification"
 
    if "Velo" in trackAlgs or "FastVelo" in trackAlgs:
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocVelo") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Velo") ]
       TrackAssociator("AssocVelo").TracksInContainer       = "Rec/Track/Velo";
+      TrackEffChecker("Velo").GhostClassification = "VeloGhostClassification"
       
    if "VeloTT" in trackAlgs :
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocVeloTT") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("VeloTT") ]
       TrackAssociator("AssocVeloTT").TracksInContainer     = "Rec/Track/VeloTT";
+      TrackEffChecker("Velo").GhostClassification = "UpstreamGhostClassification"
 
    if "Forward" in trackAlgs :
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocForward") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Forward") ]
       TrackAssociator("AssocForward").TracksInContainer    = "Rec/Track/Forward";
+      TrackEffChecker("Forward").GhostClassification = "LongGhostClassification"
       
    if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocTTrack") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("TTrack") ]
       TrackAssociator("AssocTTrack").TracksInContainer     = "Rec/Track/Seed";
+      TrackEffChecker("TTrack").GhostClassification = "TTrackGhostClassification"
 
    if "Match" in trackAlgs or "PatMatch" in trackAlgs :
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocMatch") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Match") ]
       TrackAssociator("AssocMatch").TracksInContainer      = "Rec/Track/Match";
+      TrackEffChecker("Match").GhostClassification = "LongGhostClassification"
        
    if "Downstream" in trackAlgs :
       GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocDownstream") ]
       GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Downstream") ]
       TrackAssociator("AssocDownstream").TracksInContainer = "Rec/Track/Downstream";
+      TrackEffChecker("Downstream").GhostClassification = "DownstreamGhostClassification"
    
    GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocBest") ]
    GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("BestTracks") ]   
    TrackAssociator("AssocBest").TracksInContainer       = "Rec/Track/Best";
+   TrackEffChecker("BestTracks").GhostClassification = "AllTrackGhostClassification"
 
    GaudiSequencer("CheckPatSeq").Members += [ DebugTrackingLosses() ]
    
