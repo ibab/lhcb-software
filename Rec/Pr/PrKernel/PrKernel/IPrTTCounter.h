@@ -20,11 +20,11 @@ class IHistoTool;
 
 static const InterfaceID IID_IPrTTCounter ( "IPrTTCounter", 1, 0 );
 
-/** @class IPrCounter IPrCounter.h PrKernel/IPrCounter.h
+/** @class IPrTTCounter IPrTTCounter.h PrKernel/IPrTTCounter.h
  *  
  *
- *  @author Michel De Cian & Paolo Gandini & Thomas Nikodem
- *  @date   2013-12-13
+ *  @author Michel De Cian & Paolo Gandini & Thomas Nikodem & Svende Braun
+ *  @date   2014-12-23
  */
 class IPrTTCounter : virtual public IAlgTool {
 public: 
@@ -46,8 +46,7 @@ public:
   void setContainer( std::string name )  { m_container = name; };
   void setWriteHistos(int write){ m_writeHistos = write; };
   void setUseEta25Cut(bool cut){ m_eta25cut = cut;};
-  //void printparticlekey(bool key){m_printparticlekey = key;};
-  void setUsewriteXYEffHistos(bool hist){m_writeXYEffHistos = hist;};
+  void setSelectId( int data )   { m_selectId = data; };
   void setTriggerNumbers(bool numbers){ m_triggerNumbers = numbers;};
 
  
@@ -61,9 +60,8 @@ protected:
 
   int          m_writeHistos;
   bool         m_eta25cut;
-  bool         m_writeXYEffHistos;
-  // bool         m_printparticlekey;
   bool         m_triggerNumbers;
+  int          m_selectId;
   std::string  m_container;
 
 

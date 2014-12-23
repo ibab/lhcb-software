@@ -47,8 +47,6 @@ public:
   void setContainer( std::string name )  { m_container = name; };
   void setWriteHistos(int write){ m_writeHistos = write; };
   void setUseEta25Cut(bool cut){ m_eta25cut = cut;};
-  void setUsewriteXYEffHistos(bool hist){ m_writeXYEffHistos = hist;};
-  void printparticlekey(bool key){m_printparticlekey = key;};
   void setTriggerNumbers(bool numbers){ m_triggerNumbers = numbers;};
   void setSelectId( int data )   { m_selectId = data; };
   void setTrackType( LHCb::Track::Types type)  { m_trackType = type; };
