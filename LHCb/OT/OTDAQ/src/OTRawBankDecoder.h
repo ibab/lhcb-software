@@ -100,11 +100,14 @@ private:
   
   std::pair<double,double> m_timewindow;    ///< ignore hits outside of this window, only if first < second; if not, use all
   double m_timePerBX;                       ///< Time Per BX
+  double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns (initialization uses m_countPerBx and m_timePerBx)
   int  m_countsPerBX;                       ///< Counts per BX
   int  m_numberOfBX;                        ///< Number of BX
   int  m_forcebankversion;                  ///< Overwrite bank version in bank header
-  double m_nsPerTdcCount ;                  ///< Conversion from tdc to ns (initialization uses m_countPerBx and m_timePerBx)
+  bool m_vetoOutOfTimeHitPairs;		    ///< veto out of time hit pairs?
   
+  friend class OTRawBankDecoderHelpers::Detector;
+  friend class OTRawBankDecoderHelpers::Module;
 };
 
 #endif // OTRAWBANKDECODER_H

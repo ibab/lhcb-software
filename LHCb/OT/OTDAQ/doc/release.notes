@@ -3,6 +3,21 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2014-12-24 - Manuel Tobias Schiller
+ - OTRawBankDecoder:
+   - add option to veto hit pairs in OT for which one hit falls outside the OT
+     readoutwindow. Hits outside the time window are discarded. If a hit pair
+     in neighbouring straws exists for which both hits are inside the window,
+     both hits survive. If one hit is inside and one outside the time window,
+     and both hits are either in early, or both are late in the readout
+     window, both hits are killed (if vetoing is activated).  In all other
+     cases, the hit inside the readout window survives. For now, the default
+     is to have this new option disabled.
+   - cosmetic change: rewrite the memory management inside the helper classes
+     so that one memory allocation is enough (instead of one per module),
+     modules are now packed in a consecutive stretch of RAM (which is likely
+     helping with caching)
+
 !========================= OTDAQ v7r17 2014-02-17 =========================
 ! 2014-02-13 - Rob Lambert
  - Adapt OT decoder tool to Decoder base classes, task #49078
