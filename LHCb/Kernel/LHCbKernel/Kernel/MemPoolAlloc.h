@@ -20,6 +20,7 @@
 #endif
 #endif
 #include "GaudiKernel/boost_allocator.h"
+#include <type_traits>
 
 namespace LHCb
 {
@@ -48,7 +49,10 @@ namespace LHCb
    */
   //-----------------------------------------------------------------------------
 
-  template <class T>
+  template <typename T, 
+            unsigned NextSize = 32,  // when needed, allocate size for 'NextSize' T's at once.
+            bool Mutex = true,       // do we need to protect access to the singleton with a mutex?
+            typename Allocator = boost::default_user_allocator_new_delete>
   class MemPoolAlloc
   {
 
@@ -65,41 +69,23 @@ namespace LHCb
     /// operator new
     inline static void* operator new ( size_t size )
     {
-      return ( sizeof(T) == size ?
-               boost::singleton_pool<T, sizeof(T)>::malloc() :
-               ::operator new ( size ) );
-    }
-
-    /// placement operator new
-    inline static void* operator new ( size_t size, void*& pObj )
-    {
-      return ::operator new ( size, pObj );
-    }
-
-    /// placement operator new
-    inline static void* operator new ( size_t size, T*& pObj )
-    {
-      return ::operator new ( size, pObj );
+      using pool = boost::singleton_pool<T, sizeof(T),
+                                         Allocator,
+                                         typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
+                                         NextSize>;
+      return ( sizeof(T) == size ?  pool::malloc() 
+                                 : ::operator new ( size ) );
     }
 
     /// Operator delete
     inline static void operator delete ( void* pObj )
     {
-      boost::singleton_pool<T, sizeof(T)>::is_from(pObj)
-        ? boost::singleton_pool<T, sizeof(T)>::free(pObj)
-        : ::operator delete ( pObj );
-    }
-
-    /// placement operator delete
-    inline static void operator delete ( void* p, void* pObj )
-    {
-      ::operator delete ( p, pObj );
-    }
-
-    /// placement operator delete
-    inline static void operator delete ( void* p, T* pObj )
-    {
-      ::operator delete ( p, pObj );
+      using pool = boost::singleton_pool<T, sizeof(T),
+                                         Allocator,
+                                         typename std::conditional<Mutex,boost::details::pool::default_mutex,boost::details::pool::null_mutex>::type,
+                                         NextSize>;
+      pool::is_from(pObj) ? pool::free(pObj) 
+                          : ::operator delete ( pObj );
     }
 
 #ifdef __INTEL_COMPILER // Re-enable ICC remark

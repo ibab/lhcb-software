@@ -3,6 +3,11 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------------
+! 2014-12-26 - Gerhard Raven
+ - MemPoolAlloc: remove pass-through placement new, add template parameters
+   which allow one to enable/disable the use of a mutex to 'protect' the singleton
+   managing the pool, and set the size of the underlying memory requests. Defaults
+   are such that the behavious is backwards compatible.
 
 !========================= LHCbKernel v15r6 2014-12-11 =========================
 ! 2014-12-11 - Victor Coco
