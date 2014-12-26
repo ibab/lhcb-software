@@ -37,17 +37,6 @@ Tf::Tsa::TStationHitManager::TStationHitManager( const std::string& type,
 //=============================================================================
 TStationHitManager::~TStationHitManager() {}
 
-//=============================================================================
-// Method that controls what happens when an extended hit is made from an OTHit
-//=============================================================================
-Tf::Tsa::SeedingHit *
-Tf::Tsa::TStationHitManager::createHit( const Tf::OTHit & othit ) const
-{
-   Tf::Tsa::SeedingHit * hit
-    = Tf::TStationHitManager<Tf::Tsa::SeedingHit>::createHit(othit);
-  // Matt, do whaver you want to your hit here ...
-  return hit;
-}
 
 //=============================================================================
 
