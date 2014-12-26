@@ -456,21 +456,6 @@ namespace Tf
      */
     virtual void prepareHits() const;
 
-  protected:
-
-    
-    /** Method that controls what happens when an extended hit is made from an OTHit.
-     *  virtual, to allow users to reimplement the method as they see fit
-     *  @param[in] othit Reference to the underlying OTHit to make an extended hit from
-     */
-    virtual Hit * createHit( const Tf::OTHit & othit ) const;
-
-    /** Method that controls what happens when an extended hit is made from an STHit.
-     *  virtual, to allow users to reimplement the method as they see fit
-     *  @param[in] sthit Reference to the underlying STHit to make an extended hit from
-     */
-    virtual Hit * createHit( const Tf::STHit & sthit ) const;
-
   private:
 
      /** Prepare all hits in the given IT region
@@ -579,18 +564,6 @@ namespace Tf
   }
 
   template<class Hit>
-  Hit * TStationHitManager<Hit>::createHit( const Tf::OTHit & othit ) const
-  {
-    return new Hit(othit);
-  }
-
-  template<class Hit>
-  Hit * TStationHitManager<Hit>::createHit( const Tf::STHit & sthit ) const
-  {
-    return new Hit(sthit);
-  }
-
-  template<class Hit>
   inline void TStationHitManager<Hit>::processRange( const Tf::OTHitRange & othits,
                                                      const TStationID sta,
                                                      const TLayerID   lay,
@@ -603,13 +576,13 @@ namespace Tf
       m_otCleaner->cleanHits( othits, selectedhits );
       
       // convert only those selected
-      auto fun = [&](Tf::OTHits::const_reference hit) { return this->createHit(*hit); };
+      auto fun = [&](Tf::OTHits::const_reference hit) { return new Hit(*hit); } ;
       auto b =  boost::make_transform_iterator(std::begin(selectedhits), std::cref(fun));
       auto e =  boost::make_transform_iterator(std::end(selectedhits), std::cref(fun));
       m_hits.insert( sta, lay, region, b, e );
     } else {
       // no cleaning, so just convert everything
-      auto fun = [&](Tf::OTHitRange::const_reference hit) { return this->createHit(*hit); };
+      auto fun = [&](Tf::OTHitRange::const_reference hit) { return new Hit(*hit); } ; 
       auto b =  boost::make_transform_iterator(std::begin(othits), std::cref(fun));
       auto e =  boost::make_transform_iterator(std::end(othits), std::cref(fun));
       m_hits.insert( sta, lay, region, b, e );
@@ -627,13 +600,13 @@ namespace Tf
       Tf::STHits selectedhits;
       m_itCleaner->cleanHits( sthits, selectedhits );
       // convert only those selected
-      auto fun = [&](Tf::STHits::const_reference hit) { return this->createHit(*hit); };
+      auto fun = [&](Tf::STHits::const_reference hit) { return new Hit(*hit); };
       auto b =  boost::make_transform_iterator(std::begin(selectedhits), std::cref(fun));
       auto e =  boost::make_transform_iterator(std::end(selectedhits),   std::cref(fun));
       m_hits.insert( sta, lay, region, b, e );
     } else {
       // no cleaning, so just convert everything
-      auto fun = [&](Tf::STHitRange::const_reference hit) { return this->createHit(*hit); };
+      auto fun = [&](Tf::STHitRange::const_reference hit) { return new Hit(*hit); };
       auto b   = boost::make_transform_iterator(std::begin(sthits), std::cref(fun));
       auto e   = boost::make_transform_iterator(std::end(sthits),   std::cref(fun));
       m_hits.insert( sta, lay, region, b, e );
