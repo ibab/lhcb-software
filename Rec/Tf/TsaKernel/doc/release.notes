@@ -3,6 +3,9 @@
 ! Responsible : Chris Jones
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2014-12-26 - Gerhard Raven
+ - remove unused virtual functions which allows hit customization after creation
+   of every single hit
 
 !========================= TsaKernel v3r7 2012-11-26 =========================
 ! 2012-11-20 - Marco Clemencic

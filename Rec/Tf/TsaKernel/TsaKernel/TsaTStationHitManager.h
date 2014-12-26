@@ -47,14 +47,6 @@ namespace Tf
 
       virtual ~TStationHitManager( ); ///< Destructor
 
-    protected:
-
-      using Tf::TStationHitManager<Tf::Tsa::SeedingHit>::createHit;
-      /** Create a new hit object from an OTHit
-       *  Re-implement here to allow custom Tsa specific things to be done
-       */
-      virtual Tf::Tsa::SeedingHit * createHit( const Tf::OTHit & othit ) const;
-
     };
 
   }
