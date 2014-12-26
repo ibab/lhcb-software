@@ -1,4 +1,3 @@
-
 //-----------------------------------------------------------------------------
 /** @file HitExtension.h
  *
@@ -14,8 +13,6 @@
 
 #ifndef TFKERNEL_HITEXTENSION_H 
 #define TFKERNEL_HITEXTENSION_H 1
-
-#include <stddef.h>
 
 namespace Tf
 {
@@ -40,9 +37,6 @@ namespace Tf
 
     /// Destructor
     ~HitExtension() { }
-
-    /// Access to the underlying common Hit object
-    inline const Hit* hit()        { return m_hit; }
 
     /// Access to the underlying common Hit object
     inline const Hit* hit() const  { return m_hit; }
