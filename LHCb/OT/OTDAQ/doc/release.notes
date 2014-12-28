@@ -3,6 +3,9 @@
 ! Package manager : A.Kozlinskiy
 !------------------------------------------------------------------------------
 
+! 2014-12-28 - Manuel Tobias Schiller
+ - OTRawBankDecoder: fix gcc 4.9 error
+
 ! 2014-12-24 - Manuel Tobias Schiller
  - OTRawBankDecoder:
    - add option to veto hit pairs in OT for which one hit falls outside the OT

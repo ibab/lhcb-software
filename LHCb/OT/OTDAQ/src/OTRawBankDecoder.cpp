@@ -93,6 +93,8 @@ namespace OTRawBankDecoderHelpers
     int m_bankversion;
     std::pair<unsigned short, unsigned short> m_idx;
     bool m_isdecoded;
+
+    friend class OTRawBankDecoderHelpers::Detector;
   };
 
   class Detector : public OTDAQ::IndexedModuleDataHolder<Module>
@@ -171,7 +173,7 @@ namespace OTRawBankDecoderHelpers
     const LHCb::RawEvent* m_event;
     LHCb::OTLiteTimeContainer m_ottimes;
 
-    friend class Module;
+    friend class OTRawBankDecoderHelpers::Module;
   };
   
   inline LHCb::OTLiteTimeRange Module::ottimes() const
