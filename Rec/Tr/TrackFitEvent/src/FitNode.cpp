@@ -61,11 +61,126 @@ namespace {
       target(2,1) += origin(3,2) * F(1,3);
       target(3,0) += origin(3,2) * F(0,2);
     } else {
+
       // The temporary is actually important here. SMatrix is not
       // computing A*B*C very optimally.
-      static ROOT::Math::SMatrix<double, 5,5> FC ;
-      FC = F*origin ;
-      ROOT::Math::AssignSym::Evaluate(target,FC*Transpose(F)) ;
+      // static ROOT::Math::SMatrix<double, 5,5> FC ;
+      // FC = F*origin ;
+      // ROOT::Math::AssignSym::Evaluate(target,FC*Transpose(F)) ;
+
+      // Just writing out the similarity transform seems to be fastest...
+      // It beats the above expression by a factor of 2, and is as fast
+      // as the version using the gcc vector below...
+
+      auto Fi = F.Array();
+      auto Ci = origin.Array();
+      auto Ti = target.Array();
+
+      auto _0 = Ci[ 0]*Fi[0]+Ci[ 1]*Fi[1]+Ci[ 3]*Fi[2]+Ci[ 6]*Fi[3]+Ci[10]*Fi[4];
+      auto _1 = Ci[ 1]*Fi[0]+Ci[ 2]*Fi[1]+Ci[ 4]*Fi[2]+Ci[ 7]*Fi[3]+Ci[11]*Fi[4];
+      auto _2 = Ci[ 3]*Fi[0]+Ci[ 4]*Fi[1]+Ci[ 5]*Fi[2]+Ci[ 8]*Fi[3]+Ci[12]*Fi[4];
+      auto _3 = Ci[ 6]*Fi[0]+Ci[ 7]*Fi[1]+Ci[ 8]*Fi[2]+Ci[ 9]*Fi[3]+Ci[13]*Fi[4];
+      auto _4 = Ci[10]*Fi[0]+Ci[11]*Fi[1]+Ci[12]*Fi[2]+Ci[13]*Fi[3]+Ci[14]*Fi[4];
+
+      Ti[ 0] = Fi[ 0]*_0 + Fi[ 1]*_1 + Fi[ 2]*_2 + Fi[ 3]*_3 + Fi[ 4]*_4;
+      Ti[ 1] = Fi[ 5]*_0 + Fi[ 6]*_1 + Fi[ 7]*_2 + Fi[ 8]*_3 + Fi[ 9]*_4;
+      Ti[ 3] = Fi[10]*_0 + Fi[11]*_1 + Fi[12]*_2 + Fi[13]*_3 + Fi[14]*_4;
+      Ti[ 6] = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
+      Ti[10] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4; 
+
+      _0 =  Ci[ 0]*Fi[5]+Ci[ 1]*Fi[6]+Ci[ 3]*Fi[7]+Ci[ 6]*Fi[8]+Ci[10]*Fi[9];
+      _1 =  Ci[ 1]*Fi[5]+Ci[ 2]*Fi[6]+Ci[ 4]*Fi[7]+Ci[ 7]*Fi[8]+Ci[11]*Fi[9];
+      _2 =  Ci[ 3]*Fi[5]+Ci[ 4]*Fi[6]+Ci[ 5]*Fi[7]+Ci[ 8]*Fi[8]+Ci[12]*Fi[9];
+      _3 =  Ci[ 6]*Fi[5]+Ci[ 7]*Fi[6]+Ci[ 8]*Fi[7]+Ci[ 9]*Fi[8]+Ci[13]*Fi[9];
+      _4 =  Ci[10]*Fi[5]+Ci[11]*Fi[6]+Ci[12]*Fi[7]+Ci[13]*Fi[8]+Ci[14]*Fi[9];
+
+      Ti[2]  = Fi[ 5]*_0 + Fi[ 6]*_1 + Fi[ 7]*_2 + Fi[ 8]*_3 + Fi[ 9]*_4;
+      Ti[4]  = Fi[10]*_0 + Fi[11]*_1 + Fi[12]*_2 + Fi[13]*_3 + Fi[14]*_4;
+      Ti[7]  = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
+      Ti[11] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
+
+      _0 = Ci[ 0]*Fi[10]+Ci[ 1]*Fi[11]+Ci[ 3]*Fi[12]+Ci[ 6]*Fi[13]+Ci[10]*Fi[14];
+      _1 = Ci[ 1]*Fi[10]+Ci[ 2]*Fi[11]+Ci[ 4]*Fi[12]+Ci[ 7]*Fi[13]+Ci[11]*Fi[14];
+      _2 = Ci[ 3]*Fi[10]+Ci[ 4]*Fi[11]+Ci[ 5]*Fi[12]+Ci[ 8]*Fi[13]+Ci[12]*Fi[14];
+      _3 = Ci[ 6]*Fi[10]+Ci[ 7]*Fi[11]+Ci[ 8]*Fi[12]+Ci[ 9]*Fi[13]+Ci[13]*Fi[14];
+      _4 = Ci[10]*Fi[10]+Ci[11]*Fi[11]+Ci[12]*Fi[12]+Ci[13]*Fi[13]+Ci[14]*Fi[14];
+
+      Ti[5]  = Fi[10]*_0 + Fi[11]*_1 + Fi[12]*_2 + Fi[13]*_3 + Fi[14]*_4;
+      Ti[8]  = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
+      Ti[12] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
+
+      _0 = Ci[ 0]*Fi[15]+Ci[ 1]*Fi[16]+Ci[ 3]*Fi[17]+Ci[ 6]*Fi[18]+Ci[10]*Fi[19];
+      _1 = Ci[ 1]*Fi[15]+Ci[ 2]*Fi[16]+Ci[ 4]*Fi[17]+Ci[ 7]*Fi[18]+Ci[11]*Fi[19];
+      _2 = Ci[ 3]*Fi[15]+Ci[ 4]*Fi[16]+Ci[ 5]*Fi[17]+Ci[ 8]*Fi[18]+Ci[12]*Fi[19];
+      _3 = Ci[ 6]*Fi[15]+Ci[ 7]*Fi[16]+Ci[ 8]*Fi[17]+Ci[ 9]*Fi[18]+Ci[13]*Fi[19];
+      _4 = Ci[10]*Fi[15]+Ci[11]*Fi[16]+Ci[12]*Fi[17]+Ci[13]*Fi[18]+Ci[14]*Fi[19];
+
+      Ti[9]  = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
+      Ti[13] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
+
+      _0 = Ci[ 0]*Fi[20]+Ci[1]*Fi[21]+Ci[3]*Fi[22]+Ci[6]*Fi[23]+Ci[10]*Fi[24];
+      _1 = Ci[ 1]*Fi[20]+Ci[2]*Fi[21]+Ci[4]*Fi[22]+Ci[7]*Fi[23]+Ci[11]*Fi[24];
+      _2 = Ci[ 3]*Fi[20]+Ci[4]*Fi[21]+Ci[5]*Fi[22]+Ci[8]*Fi[23]+Ci[12]*Fi[24];
+      _3 = Ci[ 6]*Fi[20]+Ci[7]*Fi[21]+Ci[8]*Fi[22]+Ci[9]*Fi[23]+Ci[13]*Fi[24];
+      _4 = Ci[10]*Fi[20]+Ci[11]*Fi[21]+Ci[12]*Fi[22]+Ci[13]*Fi[23]+Ci[14]*Fi[24];
+
+      Ti[14]= Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
+
+#if 0
+      // This is actually slightly slower than the completely written
+      // out version above...
+
+      auto Fi = F.Array();
+      auto Ci = origin.Array();
+      auto Ti = target.Array();
+
+      typedef double double_v __attribute__ ((vector_size( 4 * sizeof(double) )));
+
+      auto c0 = double_v{ Ci[0],Ci[1],Ci[3],Ci[6] };
+      auto c1 = double_v{ Ci[1],Ci[2],Ci[4],Ci[7] };
+      auto c2 = double_v{ Ci[3],Ci[4],Ci[5],Ci[8] };
+      auto c3 = double_v{ Ci[6],Ci[7],Ci[8],Ci[9] };
+      auto c4 = double_v{ Ci[10],Ci[11],Ci[12],Ci[13] };
+      auto c5 = Ci[14];
+
+      auto _f = [=](const double* f) { return c0   *f[0]+c1   *f[1]+c2   *f[2]+c3   *f[3]+c4*f[4]; };
+      auto _h = [=](const double* f) { return c4[0]*f[0]+c4[1]*f[1]+c4[2]*f[2]+c4[3]*f[3]+c5*f[4]; };
+
+      auto f1 = double_v{ Fi[5], Fi[10], Fi[15], Fi[20] };
+      auto f2 = double_v{ Fi[6], Fi[11], Fi[16], Fi[21] };
+      auto f3 = double_v{ Fi[7], Fi[12], Fi[17], Fi[22] };
+      auto f4 = double_v{ Fi[8], Fi[13], Fi[18], Fi[23] };
+      auto f5 = double_v{ Fi[9], Fi[14], Fi[19], Fi[24] };
+      auto _g = [=](double_v r0, double r1) { return f1*r0[0]+f2*r0[1]+f3*r0[2]+f4*r0[3]+f5*r1; };
+
+      auto r0 = _f(Fi+0);
+      auto r4 = _h(Fi+0);
+      Ti[ 0] = Fi[0]*r0[0] + Fi[1]*r0[1] + Fi[2]*r0[2] + Fi[3]*r0[3] + Fi[4]*r4;
+
+      auto r = _g(r0,r4);
+      Ti[ 1] = r[0];
+      Ti[ 3] = r[1];
+      Ti[ 6] = r[2];
+      Ti[10] = r[3]; 
+
+      r = _g(_f(Fi+5),_h(Fi+5));
+      Ti[ 2] = r[0];
+      Ti[ 4] = r[1];
+      Ti[ 7] = r[2];
+      Ti[11] = r[3];
+
+      r = _g(_f(Fi+10),_h(Fi+10));
+      Ti[ 5] = r[1];
+      Ti[ 8] = r[2];
+      Ti[12] = r[3];
+
+      r = _g(_f(Fi+15),_h(Fi+15));
+      Ti[ 9] = r[2];
+      Ti[13] = r[3];
+
+      r = _g(_f(Fi+20),_h(Fi+20));
+      Ti[14] = r[3];
+#endif
     }
   }
 
@@ -416,23 +531,24 @@ namespace LHCb {
 #else
       // The ugly code below makes the filter step about 20% faster
       // than SMatrix would do it.
-      double* Cp = &(C(0,0)) ;
-      double* Xp = &(X(0)) ;
-      const double* Hp = &(H(0,0)) ;
-      double CHTp[5] = {0,0,0,0,0} ;
-      CHTp[0] = Cp[ 0]*Hp[0] + Cp[ 1]*Hp[1] + Cp[ 3]*Hp[2] + Cp[ 6]*Hp[3] + Cp[10]*Hp[4] ;
-      CHTp[1] = Cp[ 1]*Hp[0] + Cp[ 2]*Hp[1] + Cp[ 4]*Hp[2] + Cp[ 7]*Hp[3] + Cp[11]*Hp[4] ;
-      CHTp[2] = Cp[ 3]*Hp[0] + Cp[ 4]*Hp[1] + Cp[ 5]*Hp[2] + Cp[ 8]*Hp[3] + Cp[12]*Hp[4] ;
-      CHTp[3] = Cp[ 6]*Hp[0] + Cp[ 7]*Hp[1] + Cp[ 8]*Hp[2] + Cp[ 9]*Hp[3] + Cp[13]*Hp[4] ;
-      CHTp[4] = Cp[10]*Hp[0] + Cp[11]*Hp[1] + Cp[12]*Hp[2] + Cp[13]*Hp[3] + Cp[14]*Hp[4] ;
+      double* Cp = C.Array();
+      const double* Hp = H.Array();
+      double CHTp[5] =  {
+       Cp[ 0]*Hp[0] + Cp[ 1]*Hp[1] + Cp[ 3]*Hp[2] + Cp[ 6]*Hp[3] + Cp[10]*Hp[4] ,
+       Cp[ 1]*Hp[0] + Cp[ 2]*Hp[1] + Cp[ 4]*Hp[2] + Cp[ 7]*Hp[3] + Cp[11]*Hp[4] ,
+       Cp[ 3]*Hp[0] + Cp[ 4]*Hp[1] + Cp[ 5]*Hp[2] + Cp[ 8]*Hp[3] + Cp[12]*Hp[4] ,
+       Cp[ 6]*Hp[0] + Cp[ 7]*Hp[1] + Cp[ 8]*Hp[2] + Cp[ 9]*Hp[3] + Cp[13]*Hp[4] ,
+       Cp[10]*Hp[0] + Cp[11]*Hp[1] + Cp[12]*Hp[2] + Cp[13]*Hp[3] + Cp[14]*Hp[4] 
+      };
       double errorRes2  = errorMeas2 +
-	Hp[0]*CHTp[0] + Hp[1]*CHTp[1] + Hp[2]*CHTp[2] + Hp[3]*CHTp[3] + Hp[4]*CHTp[4]  ;
+        Hp[0]*CHTp[0] + Hp[1]*CHTp[1] + Hp[2]*CHTp[2] + Hp[3]*CHTp[3] + Hp[4]*CHTp[4]  ;
 
       // update the state vector and cov matrix
+      double* Xp = X.Array();
       for(int i=0; i<5; ++i) {
-	Xp[i] += CHTp[i] / errorRes2 * res ;
-	for(int j=0; j<=i; ++j) 
-	  Cp[i*(i+1)/2+j] -= CHTp[i] * CHTp[j] / errorRes2;
+        Xp[i] += CHTp[i] / errorRes2 * res ;
+        for(int j=0; j<=i; ++j) 
+            Cp[i*(i+1)/2+j] -= CHTp[i] * CHTp[j] / errorRes2;
       }
 #endif  
     

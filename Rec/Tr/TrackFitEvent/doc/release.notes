@@ -3,6 +3,9 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+! 2014-12-29 - Gerhard Raven
+ - FitNode: speed up transport of covariance matrix by a factor of 2 by 
+   just spelling out the entire 5x5 similarity transform....
 
 !========================= TrackFitEvent v6r4 2014-12-11 =========================
 ! 2014-12-09 - Marco Cattaneo
