@@ -5,6 +5,9 @@
 ! Purpose     : Infrastructure for HLT and stripping 'lines'
 ! -----------------------------------------------------------------------------
 
+! 2014-12-29 - Gerhard Raven
+ - C++11 & C++14 cleanup
+
 ! 2014-12-21 - Gerhard Raven
  - in retrieveSubAlgorithms, switch back to std::list (instead of std::deque)
    to insure that iteratora are not invalidated during insert... and switch

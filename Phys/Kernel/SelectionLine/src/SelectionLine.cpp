@@ -49,16 +49,16 @@ using namespace HistogramUtilities;
 #include "Kernel/SelectionLine.h"
 // ============================================================================
 
-
-//TODO: this  adds C++14 'make_unique'... remove once we move to C++14...
-template<typename T, typename ...Args>
-std::unique_ptr<T> make_unique( Args&& ...args )
-{
-        return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
-}
-
 namespace 
 {
+
+  //TODO: this  adds C++14 'make_unique'... remove once we move to C++14...
+  template<typename T, typename ...Args>
+  std::unique_ptr<T> make_unique( Args&& ...args )
+  {
+          return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
+  }
+
   static const double timeHistoLowBound = -3;  
 
   bool isDefault(const std::string& s) { return s.empty(); } // empty is not constexpr???
@@ -70,7 +70,8 @@ namespace
     std::string m_name;
 
     template <typename T> void process(T&& t) {
-        if (!isDefault(t.second)) m_props.push_back( make_unique< SimpleProperty<typename T::second_type>> ( std::move(t.first), std::move(t.second) ) );
+        using prop_t = SimpleProperty<typename T::second_type>;
+        if (!isDefault(t.second)) m_props.push_back( make_unique<prop_t>( std::get<0>(t), std::get<1>(t) ) ) ; 
     }
     template <typename T, typename... Args> void process(T&& t, Args&&... args) {
         process(std::forward<T>(t)); process(std::forward<Args>(args)...);
@@ -175,17 +176,19 @@ Selection::Line::retrieveSubAlgorithms() const
 
   if ( msgLevel(MSG::DEBUG) ) {
     debug() << "Dumping sub algorithms :" << endmsg;
-    for ( const auto& ii : subAlgo ) {
-      debug() << std::string( 3 + 3*ii.second , ' ' ) << std::get<0>(ii)->name() << endmsg;
+    for ( const auto& i : subAlgo ) {
+      debug() << std::string( 3 + 3*i.second , ' ' ) << std::get<0>(i)->name() << endmsg;
     }
   }
 
   // transform map such that it has algo, # of sub(sub(sub()))algorithms
   SubAlgos table;
-  for ( auto ii = std::begin(subAlgo); ii != std::end(subAlgo); ++ii ) {
-    auto j = std::next(ii);
-    while ( j != subAlgo.end() && j->second > ii->second ) ++j;
-    table.emplace_back(  std::get<0>(*ii), std::distance(ii,j), numberOfCandidates(std::get<0>(*ii)) );
+  for ( auto i = std::begin(subAlgo); i != std::end(subAlgo); ++i ) {
+    auto j = std::find_if_not( std::next(i), std::end(subAlgo),
+                               [&](list::const_reference k) { 
+            return k.second > i->second; 
+    } );
+    table.emplace_back(  std::get<0>(*i), std::distance(i,j), numberOfCandidates(std::get<0>(*i)) );
   }
   return table;
 }
@@ -241,13 +244,6 @@ Selection::Line::Line( const std::string& name,
   declareProperty( "FlagAsSlowThreshold"  , m_slowThreshold  = 500000, "microseconds"  );
   declareProperty( "IncidentsToBeFlagged" , m_incidents);
 
-}
-
-//=============================================================================
-// Destructor
-//=============================================================================
-Selection::Line::~Line() 
-{
 }
 
 //=============================================================================

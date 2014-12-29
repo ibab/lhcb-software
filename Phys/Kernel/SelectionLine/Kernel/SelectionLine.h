@@ -35,12 +35,12 @@ namespace Selection {
       /// Standard constructor
       Line( const std::string& name, ISvcLocator* pSvcLocator );
       
-      virtual ~Line( ); ///< Destructor
+      ~Line() override = default; ///< Destructor
 
-      virtual StatusCode initialize();    ///< Algorithm initialization
-      virtual StatusCode execute   ();    ///< Algorithm execution
+      StatusCode initialize() override;    ///< Algorithm initialization
+      StatusCode execute   () override;    ///< Algorithm execution
 
-      void handle(const Incident&);
+      void handle(const Incident&) override;
 
       // id for this line -- return 0 if error
       virtual const std::pair<std::string,unsigned int>& id() const = 0; 
@@ -54,22 +54,13 @@ namespace Selection {
       public:
         Stage(Line& parent, const std::string& name)
         : m_parent(parent)
-        , m_timerTool(0) 
-        , m_algorithm(0)
-        , m_property(name, std::string())
-        , m_reverse(false)
-        , m_dirty(true)
-        , m_initialized(false)
+        , m_property(name, std::string{})
         {  m_property.declareUpdateHandler(&Stage::updateHandler,this); }
 
         Stage( Stage& rhs )
         : m_parent(rhs.m_parent)
         , m_timerTool(rhs.m_timerTool) 
-        , m_algorithm(0)
         , m_property( rhs.m_property )
-        , m_reverse(false)
-        , m_dirty(true)
-        , m_initialized(false)
         { m_property.declareUpdateHandler(&Stage::updateHandler,this); }
 
         ~Stage() { if (m_algorithm) m_algorithm->release();}; ///< Destructor
@@ -91,14 +82,14 @@ namespace Selection {
         void updateHandler(Property& prop);
 
         Line&    m_parent;
-        ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
-        Algorithm*  m_algorithm;   ///< Algorithm pointer
+        ISequencerTimerTool* m_timerTool = nullptr;      ///< Pointer to the timer tool
+        Algorithm*  m_algorithm = nullptr;   ///< Algorithm pointer
         
         StringProperty  m_property;
-        bool        m_reverse;     ///< Indicates that the flag has to be inverted
-        bool        m_dirty;
-        bool        m_initialized;
-        int         m_timer;       ///< Timer number fo rthis algorithm
+        bool        m_reverse = false;     ///< Indicates that the flag has to be inverted
+        bool        m_dirty = true;
+        bool        m_initialized = false;
+        int         m_timer;       ///< Timer number for this algorithm
       };
 
     protected:
@@ -143,7 +134,7 @@ namespace Selection {
       Line& operator=( const Line& a ) = delete;
       
       
-      std::array< std::unique_ptr<Stage>,nStages> m_stages; ///< List of algorithms to process.
+      std::array< std::unique_ptr<Stage>, nStages > m_stages; ///< List of algorithms to process.
       SubAlgos          m_subAlgo;        ///< list of subalgorithms and their sub-count
       ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
       IJobOptionsSvc* m_jos;                 ///< Pointer to job options service
