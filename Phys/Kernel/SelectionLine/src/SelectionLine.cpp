@@ -4,8 +4,10 @@
 // ============================================================================
 #include <cmath>
 #include <vector>
+#include <tuple>
 #include <forward_list>
 #include <iterator>
+#include <type_traits>
 #include <utility>
 #include <chrono>
 // ============================================================================
@@ -70,8 +72,13 @@ namespace
     std::string m_name;
 
     template <typename T> void process(T&& t) {
-        using prop_t = SimpleProperty<typename T::second_type>;
-        if (!isDefault(t.second)) m_props.push_back( make_unique<prop_t>( std::get<0>(t), std::get<1>(t) ) ) ; 
+        static_assert( std::tuple_size<T>::value == 2, "Expecting an std::tuple key-value pair" );
+        using type = typename std::decay<typename std::tuple_element<1,T>::type>::type;
+        //static_assert( std::is_same<type,double>::value || 
+        //               std::is_same<type,std::string>::value , 
+        //               "Expecting either double (GlobalTimeOffSet) or string (Context,RootInTES) as value type" );
+        using prop_t = SimpleProperty<type>;
+        if (!isDefault(std::get<1>(t))) m_props.push_back( make_unique<prop_t>( std::get<0>(t), std::get<1>(t) ) ) ; 
     }
     template <typename T, typename... Args> void process(T&& t, Args&&... args) {
         process(std::forward<T>(t)); process(std::forward<Args>(args)...);
@@ -505,9 +512,9 @@ Algorithm* Selection::Line::getSubAlgorithm(const std::string& algname)
   }
   // It doesn't. Create it, and while doing so, ensure some magic properties are propagated...
   populate_JobOptionsSvc_t populate{ name.name(), m_jos,
-       std::make_pair( "Context",          context() ),
-       std::make_pair( "RootInTES",        rootInTES() ),
-       std::make_pair( "GlobalTimeOffset", globalTimeOffset() )
+       std::forward_as_tuple( "Context",          context() ),
+       std::forward_as_tuple( "RootInTES",        rootInTES() ),
+       std::forward_as_tuple( "GlobalTimeOffset", globalTimeOffset() )
   };
   return createSubAlgorithm( name.type(), name.name(), myAlg ).isSuccess() ? myAlg : nullptr;
 }
