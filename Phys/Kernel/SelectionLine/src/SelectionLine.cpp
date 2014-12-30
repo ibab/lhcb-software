@@ -56,7 +56,7 @@ namespace
 
   //TODO: this  adds C++14 'make_unique'... remove once we move to C++14...
   template<typename T, typename ...Args>
-  std::unique_ptr<T> make_unique( Args&& ...args )
+  std::unique_ptr<T> my_make_unique( Args&& ...args )
   {
           return std::unique_ptr<T>( new T( std::forward<Args>(args)... ) );
   }
@@ -78,7 +78,7 @@ namespace
         //               std::is_same<type,std::string>::value , 
         //               "Expecting either double (GlobalTimeOffSet) or string (Context,RootInTES) as value type" );
         using prop_t = SimpleProperty<type>;
-        if (!isDefault(std::get<1>(t))) m_props.push_back( make_unique<prop_t>( std::get<0>(t), std::get<1>(t) ) ) ; 
+        if (!isDefault(std::get<1>(t))) m_props.push_back( my_make_unique<prop_t>( std::get<0>(t), std::get<1>(t) ) ) ; 
     }
     template <typename T, typename... Args> void process(T&& t, Args&&... args) {
         process(std::forward<T>(t)); process(std::forward<Args>(args)...);
@@ -232,7 +232,7 @@ Selection::Line::Line( const std::string& name,
 {
   for ( unsigned i = 0; i < m_stages.size(); ++i )
   {
-    m_stages[i] = make_unique<Stage>(*this, transition(stage(i)));
+    m_stages[i] = my_make_unique<Stage>(*this, transition(stage(i)));
     declareProperty( m_stages[i]->property().name() , m_stages[i]->property() );
   }
   declareProperty( "HltDecReportsLocation", 
