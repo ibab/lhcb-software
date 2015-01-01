@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-01-01 - Paul Seyfert
+ - track ghost probability for the upgrade
+
 ! 2014-12-15 - David Hutchcroft
  - Another check that the cluster size is always set in VeloClusterPosition
 
