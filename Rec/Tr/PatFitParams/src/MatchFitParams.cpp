@@ -81,6 +81,7 @@ StatusCode MatchFitParams::initialize() {
 // Main execution
 //=============================================================================
 StatusCode MatchFitParams::execute() {
+
   debug() << "==> Execute" << endmsg;
 
   m_nEvent++;
@@ -139,10 +140,6 @@ StatusCode MatchFitParams::execute() {
     double momentum = part->momentum().R();
     if ( m_minMomentum > momentum ) continue;
     if ( 11 == abs( part->particleID().pid() ) ) { continue; } // no electrons
-
-    if ( 0 > part->particleID().threeCharge() ) {
-      momentum = -1 * momentum;
-    }
 
     bool hasInteractionVertex = false;
 
@@ -349,14 +346,14 @@ StatusCode MatchFitParams::execute() {
     tTrack->column("dSlope2",dSlope*dSlope);
   
     // -- Need to write something to calculate the momentum Params
-    double charge = part->particleID().threeCharge()/3;
-    double qOverP = charge/momentum;
+    const double charge = part->particleID().threeCharge()/3;
+    const double qOverP = charge/momentum;
     
     // -- The magnet scale factor is hardcoded, as then one does not need to run the 
     // -- field service 
-    double proj = sqrt( ( 1. + bxv*bxv + byv*byv ) / ( 1. + bxv*bxv ) );
-    double coef = qOverP/(bxv - bx)*proj*m_magnetScaleFactor*Gaudi::Units::GeV;
-
+    const double proj = sqrt( ( 1. + bxv*bxv + byv*byv ) / ( 1. + bxv*bxv ) );
+    const double coef = (bxv - bx)/(proj*m_magnetScaleFactor*Gaudi::Units::GeV*qOverP);
+    
     m_momPar.setFun(0, 1.);
     m_momPar.setFun(1, bx*bx );
     m_momPar.setFun(2, bx*bx*bx*bx );
@@ -367,7 +364,8 @@ StatusCode MatchFitParams::execute() {
     double coefEst = m_momPar.sum();
     m_momPar.addEvent( coef - coefEst );
     
-
+    tTrack->write();
+    
 
   }
   

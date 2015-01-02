@@ -31,8 +31,8 @@
  *  - zMatchY: z-position of matching in Y.
  *  - RequireTTHits: Require presence of TT hits for the calculation
  *  - MagnetScaleFactor: The scale factor for the magnet. Can be obtained with the field service, but hardcoded here such that it can be run without. 
- *  Note the only as many paramters are used for the caluclation as are given as input, although internally more might be defined.
- *  The momentum paramters are not directly set in 'PatMatchTool', but in 'FastMomentumEstimate' 
+ *  Note that only as many paramters are used for the caluclation as are given as input, although internally more might be defined.
+ *  The momentum paramters are not directly set in 'PatMatchTool', but in 'FastMomentumEstimate', and only the cubic solution is calculated at the moment. 
  *  Nothing else from the Brunel sequence is needed when running this code, a possible way to run it would be:
  *
  *  @code
