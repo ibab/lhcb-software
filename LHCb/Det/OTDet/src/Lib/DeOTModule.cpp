@@ -37,6 +37,9 @@
 
 using namespace LHCb;
 
+const std::string DeOTModule::m_monoalignConditionName = "MonoAlignCond" ;
+const std::string DeOTModule::m_monoalignParametersName = "MonoAlignPars" ;
+
 DeOTModule::DeOTModule(const std::string& name) :
   DetectorElement(name),
   m_stationID(0u),
@@ -153,6 +156,9 @@ StatusCode DeOTModule::initialize() {
     } else {
       if( msg.level() <= MSG::VERBOSE )
         msg << MSG::VERBOSE << "Going to use DC06 defaults for RT-relation and T0s" << endmsg;
+    }
+    if( hasCondition( m_monoalignConditionName ) ) {
+      updMgrSvc()->registerCondition( this, condition( m_monoalignConditionName ).path(), &DeOTModule::monoalignCallback );
     }
     if( msg.level() <= MSG::VERBOSE )
       msg << MSG::VERBOSE << "Start first update of conditions" << endmsg;
@@ -432,7 +438,7 @@ StatusCode DeOTModule::cacheInfo()
   /// second monolayer
   g4[1] = globalPoint(xUpper, 0.0, +0.5*m_zPitch);
 
-  // first remap parameters into a vector of length 2 (1 segment) or 6 (3 segments)
+  // first remap mono alignment parameters into a vector of length 2 (1 segment) or 6 (3 segments)
   std::vector<double> monoDx ;
   if( m_monoDx.size()==2 || m_monoDx.size()==6 ) {
     monoDx = m_monoDx ;
@@ -452,9 +458,8 @@ StatusCode DeOTModule::cacheInfo()
   // now create the OTWireTraj for the first wire in each
   // monolayer. fill a vector with points. every two points represent
   // a segment. we'll either have 2 or 6 points.
-  unsigned int nseg = monoDx.size()/2 ;
   for( unsigned char mono=0; mono<2; ++mono) {
-    std::vector<Gaudi::XYZPoint> points ;
+    // nominal begin and end of wire
     double y0 = m_yMinLocal ;
     double y1 = m_yMaxLocal ;
     // turn bottom modules around, because that's how trajectories need to be oriented
@@ -467,22 +472,39 @@ StatusCode DeOTModule::cacheInfo()
 	y0 -= m_inefficientRegion;
     }
     
-    double dy = (y1 - y0)/nseg ;
-    double x0 = (xLower+xUpper)/2 - m_halfXPitch * (double( m_nStraws ) + m_monoXZero[mono]) ;
-    double z0 = (mono-0.5)*m_zPitch ;
-    double monosign = mono==0? 1 : -1 ;
-    for(unsigned char iseg=0; iseg<nseg; ++iseg ) {
-      points.push_back( globalPoint( x0 + monosign*monoDx[2*iseg]/2,   y0+iseg*dy,     z0 ) ) ;
-      points.push_back( globalPoint( x0 + monosign*monoDx[2*iseg+1]/2, y0+(iseg+1)*dy, z0 ) ) ;
-    }
-    // to be improved ...
-    m_trajFirstWire[mono].reset() ;
-    if( points.size()==2 )
-      m_trajFirstWire[mono].reset( new LHCb::OTWireTrajImp<1>( points ) ) ;
-    else if(points.size()==6) 
-      m_trajFirstWire[mono].reset( new LHCb::OTWireTrajImp<3>( points ) ) ;  
-  }
+    const double x0 = (xLower+xUpper)/2 - m_halfXPitch * (double( m_nStraws ) + m_monoXZero[mono]) ;
+    const double z0 = (mono-0.5)*m_zPitch ;
+    const double monosign = mono==0? 1 : -1 ;
+    
+    if( monoDx.size()==2 ) {
+      // this is easy
+      std::array<Gaudi::XYZPoint,2> points ;
+      points[0] = globalPoint( x0 + monosign*monoDx[0]/2, y0, z0 ) ;
+      points[1] = globalPoint( x0 + monosign*monoDx[1]/2, y1, z0 ) ;
+      m_trajFirstWire[mono].reset( new LHCb::OTWireTrajImp<1>( points, points.front().y(), points.back().y() ) ) ;
+    } else {
+      // we need the range in global coordinates. ignore the wire displacements for the range.
+      const double y0global = globalPoint( x0, y0, z0 ).y() ;
+      const double y1global = globalPoint( x0, y1, z0 ).y() ;
+      // now build the segments. need to get length and offset
+      // depending on module type. terribly hardcoded numbers,
+      // extracted with niels from drawings
 
+      // this is the actual length of the segment between the two wire locators
+      const double seglength = ( m_moduleID<8 ? 808 : 795 ) * Gaudi::Units::mm ;
+      // this corrects for the fact that this segment is not in the middle
+      const double segoffset = ( m_moduleID<8 ? 0 : (m_moduleID==8 ? -39.0 : -89.0 ) ) * Gaudi::Units::mm ;
+      const double segy0 = (-1.5*seglength+segoffset) * (bottomModule() ? -1 : +1) ;
+      const double segdy = seglength * (bottomModule() ? -1 : +1) ;
+      std::array<Gaudi::XYZPoint,6> points ;
+      for(unsigned char iseg=0; iseg<3; ++iseg ) {
+	points[2*iseg]   = globalPoint( x0 + monosign*monoDx[2*iseg]/2, segy0+iseg*segdy,z0) ;
+	points[2*iseg+1] = globalPoint( x0 + monosign*monoDx[2*iseg+1]/2, segy0+(iseg+1)*segdy, z0 ) ;
+      }
+      m_trajFirstWire[mono].reset( new LHCb::OTWireTrajImp<3>( points, y0global, y1global ) ) ;
+    }
+  }
+  
   /// plane
   m_plane = Gaudi::Plane3D(g1, g2, g4[0] + 0.5*(g4[1]-g4[0]));
   m_entryPlane = Gaudi::Plane3D(m_plane.Normal(), globalPoint(0.,0.,-0.5*m_sensThickness));
@@ -582,12 +604,6 @@ StatusCode DeOTModule::calibrationCallback() {
     }
     else m_walkrelation = OTDet::WalkRelation();
 
-    if(m_calibration->exists("MonoAlignment")) {
-      m_monoDx = m_calibration->param< std::vector<double> >("MonoAlignment");
-      if(m_monoDx.size() != 1 && m_monoDx.size() != 2 && m_monoDx.size() != 4 && m_monoDx.size() != 6)
-        msg << MSG::ERROR << "There should be 1, 2, 4 or 6 mono alignment parameters: " << m_monoDx.size() << " provided" << endmsg;
-    }
-
     // how we set the straw t0 depends on the size of the vector.  we
     // allow that the calibration sets either every connected channel,
     // or for all channels
@@ -608,8 +624,7 @@ StatusCode DeOTModule::calibrationCallback() {
     return StatusCode::FAILURE;
   }
 
-  // we need to propagate the info from the change in wire direction
-  return cacheInfo() ;
+  return StatusCode::SUCCESS;
 }
 
 StatusCode DeOTModule::statusCallback() {
@@ -638,6 +653,20 @@ StatusCode DeOTModule::statusCallback() {
   }
 
   return StatusCode::SUCCESS;
+}
+
+StatusCode DeOTModule::monoalignCallback() {
+  if( hasCondition(m_monoalignConditionName) ) {
+    SmartRef<Condition> monoaligncondition = condition( m_monoalignConditionName ) ;
+    if(monoaligncondition->exists(m_monoalignParametersName)) {
+      m_monoDx = monoalignCondition()->param< std::vector<double> >(m_monoalignParametersName);
+      if(m_monoDx.size() != 1 && m_monoDx.size() != 2 && m_monoDx.size() != 4 && m_monoDx.size() != 6) {
+	MsgStream msg( msgSvc(), name() );
+	msg << MSG::ERROR << "There should be 1, 2, 4 or 6 mono alignment parameters: " << m_monoDx.size() << " provided" << endmsg;
+      }
+    }
+  }
+  return cacheInfo() ;
 }
 
 std::auto_ptr<LHCb::Trajectory> DeOTModule::trajectoryFirstWire(int monolayer) const {
@@ -837,12 +866,13 @@ StatusCode DeOTModule::setWalkRelation(const OTDet::WalkRelation& walkRelation) 
 StatusCode DeOTModule::setMonoAlignment(const std::vector<double>& pars)
 {
   // Do this via the update service such that the condition is created.
-  if(m_calibration->exists("MonoAlignment")) m_calibration->param< std::vector<double> >("MonoAlignment") = pars;
-  else m_calibration->addParam("MonoAlignment",pars, "Monolayer alignment parameters");
-
-  updMgrSvc()->invalidate( m_calibration.target() );
+  SmartRef<Condition> monoaligncondition = condition( m_monoalignConditionName ) ;
+  if(monoaligncondition->exists(m_monoalignParametersName)) 
+    monoaligncondition->param< std::vector<double> >(m_monoalignParametersName) = pars;
+  else monoaligncondition->addParam(m_monoalignParametersName,pars, "Monolayer alignment parameters");
+  
+  updMgrSvc()->invalidate( monoaligncondition.target() );
   StatusCode sc = updMgrSvc()->update( this );
-
   return sc ;
 }
 

@@ -17,7 +17,7 @@ namespace LHCb
   {
   public:
     typedef unsigned int Index ;
-  OTWireTraj() : Trajectory(0,0) {}
+    OTWireTraj(const double beginyrange, const double endyrange) : Trajectory(beginyrange,endyrange) {}
     virtual void applyTranslation( const Vector& vec ) = 0 ;
     virtual OTWireTraj* cloneOTWireTraj() const = 0 ;
     virtual void indexAndMu(double y, unsigned int& index, double& localmu) const = 0 ;
@@ -42,6 +42,8 @@ namespace LHCb
 	  m_begin = begin ;
 	  m_dir = (end - begin) / (end.y()-begin.y() ) ;
 	}
+
+	const Point& begin() const { return m_begin ; }
 	
 	Point position( double mu ) const {
 	  return m_begin + (mu-m_begin.y()) * m_dir ;
@@ -65,20 +67,29 @@ namespace LHCb
 	}
       } ;
       
+      double yBegin() const { return m_segments.front().begin().y() ; }
+      
     private:
-      Segment m_segments[N] ; /// subsegments
-      double m_dndy ; /// normalization for arclength
+      std::array<Segment,N> m_segments ; /// subsegments
+      double m_deltay ; /// Length of 3 segments (not equal to range)
+      double m_dndy ;   /// normalization for arclength
     
     public:
-      /// Default constructor
-    OTWireTrajImp( const std::vector<Point>& points) 
-      : OTWireTraj()
+      /// Default constructor. The list of points must be even: each
+      /// specifies the begin and end of a section between two wire
+      /// locators. Effectively, all segments have the same length
+      /// (808mm). The range is specified independent of these points
+      /// because for short modules, the actual length of the wire is
+      /// not 3 times the space between the wire locators.
+
+
+    OTWireTrajImp( const std::array<Point,2*N>& points, const double beginyrange, const double endyrange) 
+      : OTWireTraj(beginyrange, endyrange)
 	{
-	  if( points.size() != 2*N ) throw std::exception() ;
 	  for( size_t i=0; i<N; ++i)
 	    m_segments[i] = Segment( points[2*i], points[2*i+1] ) ;
-	  setRange( points.front().y(), points.back().y()) ;
 	  Vector delta = points.back() - points.front() ;
+	  m_deltay = delta.y() ;
 	  m_dndy = delta.R() / delta.y() ;
 	}
       
@@ -97,10 +108,9 @@ namespace LHCb
 	setRange( r.first+vec.y(), r.second+vec.y() ) ;
       }
 
-      /// returns a mu in units of range, within a segment
+      /// returns a mu in units of range, within a segment. used in the calibration.
       void indexAndMu(double y, Index& index, double& localmu) const {
-	Range r = range() ;
-	double frac = N*(y - r.first) / (r.second - r.first) ;
+	double frac = N*(y - yBegin()) / m_deltay ;
 	int i = int(frac) ;
 	index = i<=0 ? 0 : (i>=int(N) ? N-1 : i ) ;
 	localmu = frac - index ;
@@ -190,8 +200,7 @@ namespace LHCb
 
   template<unsigned int N>
     OTWireTraj::Index OTWireTrajImp<N>::index( double y) const { 
-    Range r = range() ;
-    double frac = (y - r.first)/(r.second-r.first) ;
+    double frac = (y - yBegin())/m_deltay ;
     int i = int(N*frac) ;
     return i<=0 ? 0 : (i>=int(N) ? N-1 : i ) ;
   }

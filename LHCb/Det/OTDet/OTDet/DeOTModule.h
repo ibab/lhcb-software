@@ -376,6 +376,10 @@ public:
        they know what their doing. !! */
   const Condition* statusCondition() const;
 
+  /** @return pointer to mono alignment condition. !! Only for experts or people who think
+       they know what their doing. !! */
+  const Condition* monoalignCondition() const ;
+
   /// return pitch of straws in one mono layer
   double xPitch() const { return m_xPitch ; }
 
@@ -397,6 +401,8 @@ private:
   StatusCode calibrationCallback();
 
   StatusCode statusCallback();
+
+  StatusCode monoalignCallback();
 
   /** Only for backwards compatibility with DC06 */
   void fallbackDefaults();
@@ -497,6 +503,8 @@ private :
 private:
   OTDet::WalkRelation m_walkrelation ;          ///< walk-relation
   std::vector<double> m_monoDx ;
+  static const std::string m_monoalignConditionName ;
+  static const std::string m_monoalignParametersName ;
 public:
   /**
    * Set the walk-relation for all straws in this module.
@@ -820,6 +828,10 @@ inline const Condition* DeOTModule::calibrationCondition() const {
 
 inline const Condition* DeOTModule::statusCondition() const {
   return hasCondition( m_statusName ) ? m_status.target() : static_cast< const Condition* >( 0 );
+}
+
+inline const Condition* DeOTModule::monoalignCondition() const {
+  return hasCondition( m_monoalignConditionName ) ? condition( m_monoalignConditionName ).target() : 0 ;
 }
 
 inline const OTDet::WalkRelation& DeOTModule::walkRelation() const {
