@@ -18,35 +18,36 @@ namespace Math {
 // F: transformation, row-major
 // ti: output 5x5 matrix: F * origin * Transpose(F)
 
-double dot5_sse3(const double* __restrict f, __m128d  r0, __m128d  r1, double r2) __attribute__((always_inline)) ;
-
-inline double dot5_sse3(const double* __restrict f, __m128d  r0, __m128d  r1, double r2) {
-                auto r = r0*f[0]+r1*f[2];
-                return _mm_hadd_pd(r,r)[0]+r2*f[4];
+inline double dot5_sse3(const double* f, __m128d  r0, __m128d  r1, double r2) {
+    auto r = r0*f[0]+r1*f[2];
+    return _mm_hadd_pd(r,r)[0]+r2*f[4];
 }
+
+// reshuffle the origin matrix for SIMD use...
+struct alignas(16) sse_t {
+    __m128d r0,r10,r2,r12,r4,r14,r6,r16,r8,r18,r24;
+    sse_t(const double* d) :
+      r0  { d[ 0], d[ 1] }, r10 { d[ 3], d[ 6] },
+      r2  { d[ 1], d[ 2] }, r12 { d[ 4], d[ 7] },
+      r4  { d[ 3], d[ 4] }, r14 { d[ 5], d[ 8] },
+      r6  { d[ 6], d[ 7] }, r16 { d[ 8], d[ 9] },
+      r8  { d[10], d[11] }, r18 { d[12], d[13] }, r24 { d[14], 0. }
+    { };
+ inline __m128d  g0(const double* f ) const { 
+      return r0*f[0]  + r2*f[1] + r4*f[2] + r6*f[3] + r8*f[4] ;
+ }
+ inline __m128d  g2(const double* f ) const { 
+      return r10*f[0] + r12*f[1] + r14*f[2] + r16*f[3] + r18*f[4] ;
+ }
+ inline double g4(const double *f) const {
+     return dot5_sse3( f, r8, r18, r24[0] );
+ }
+};
 
 void similarity_5_5_sse3(const double* Ci, const double* Fi, double* ti)  {
       // std::cout << "using similarity_5_5_sse3" << std::endl;
       // reshuffle the origin matrix for SIMD use...
-      struct alignas(16) sse_t {
-          __m128d r0,r10,r2,r12,r4,r14,r6,r16,r8,r18,r24;
-          sse_t(const double* d) :
-            r0  { d[ 0], d[ 1] }, r10 { d[ 3], d[ 6] },
-            r2  { d[ 1], d[ 2] }, r12 { d[ 4], d[ 7] },
-            r4  { d[ 3], d[ 4] }, r14 { d[ 5], d[ 8] },
-            r6  { d[ 6], d[ 7] }, r16 { d[ 8], d[ 9] },
-            r8  { d[10], d[11] }, r18 { d[12], d[13] }, r24 { d[14], 0. }
-          { };
-       inline __m128d  g0(const double* __restrict f ) const  __attribute__((always_inline))  { 
-            return r0*f[0]  + r2*f[1] + r4*f[2] + r6*f[3] + r8*f[4] ;
-       }
-       inline __m128d  g2(const double* __restrict  f ) const __attribute__((always_inline)) { 
-            return r10*f[0] + r12*f[1] + r14*f[2] + r16*f[3] + r18*f[4] ;
-       }
-       inline double g4(const double *__restrict f) const __attribute__((always_inline))  {
-           return dot5_sse3( f, r8, r18, r24[0] );
-       }
-      } m { Ci };
+      sse_t m { Ci };
      
       auto _0 = m.g0(Fi);
       auto _2 = m.g2(Fi);
@@ -82,25 +83,7 @@ void similarity_5_5_sse3(const double* Ci, const double* Fi, double* ti)  {
 void similarity_5_7_sse3(const double* Ci, const double* Fi, double* Ti)  {
 
       // reshuffle the 5x5 symmetric Ci matrix for SIMD use...
-      struct alignas(16) sse_t {
-          __m128d r0,r10,r2,r12,r4,r14,r6,r16,r8,r18,r24;
-          sse_t(const double* d) :
-            r0  { d[ 0], d[ 1] }, r10 { d[ 3], d[ 6] },
-            r2  { d[ 1], d[ 2] }, r12 { d[ 4], d[ 7] },
-            r4  { d[ 3], d[ 4] }, r14 { d[ 5], d[ 8] },
-            r6  { d[ 6], d[ 7] }, r16 { d[ 8], d[ 9] },
-            r8  { d[10], d[11] }, r18 { d[12], d[13] }, r24 { d[14], 0. }
-          { };
-       inline __m128d  g0(const double* __restrict f ) const  __attribute__((always_inline))  { 
-            return r0*f[0]  + r2*f[1] + r4*f[2] + r6*f[3] + r8*f[4] ;
-       }
-       inline __m128d  g2(const double* __restrict  f ) const __attribute__((always_inline)) { 
-            return r10*f[0] + r12*f[1] + r14*f[2] + r16*f[3] + r18*f[4] ;
-       }
-       inline double g4(const double *__restrict f) const __attribute__((always_inline))  {
-           return dot5_sse3( f, r8, r18, r24[0] );
-       }
-      } m { Ci };
+      sse_t m { Ci };
      
       auto _0 = m.g0(Fi);
       auto _2 = m.g2(Fi);

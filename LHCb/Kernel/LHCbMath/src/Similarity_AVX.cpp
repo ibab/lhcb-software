@@ -42,9 +42,8 @@ __m256d dotproduct = _mm256_add_pd( swapped, blended );
  }
 
 #endif
-double dot5_avx(const double* __restrict f, __m256d  r0,  double r2) __attribute__((always_inline)) ;
 
-inline double dot5_avx(const double* __restrict f, __m256d  r0,  double r2) {
+inline double dot5_avx(const double* f, __m256d  r0,  double r2) {
         auto t = r0*_mm256_loadu_pd(f);
         t = _mm256_hadd_pd( t, t ); 
         return t[0]+t[2]+r2*f[4];
@@ -68,10 +67,10 @@ struct alignas(16) avx_5_t {
       //       by transposing the lower triangle???
     };
  // return a column of a rhs product with column-major f (aka. tranpose of row major f)
- inline __m256d  c0i(const double* __restrict f ) const  __attribute__((always_inline))  { 
+ inline __m256d  c0i(const double* f ) const  { 
       return c0*f[0]+c1*f[1]+c2*f[2]+c3*f[3]+c4*f[4];
  }
- inline double c4i(const double *__restrict f) const __attribute__((always_inline))  {
+ inline double c4i(const double *f) const  {
       return dot5_avx( f, c4, c44 );
  }
 };
@@ -115,6 +114,7 @@ void similarity_5_7_avx(const double* Ci, const double* Fi, double* Ti)  {
      
       auto _0 = m.c0i(Fi);
       auto _4 = m.c4i(Fi);
+      //TODO: switch to snippet above which computes 4 dot products at the same time....
       Ti[ 0] = dot5_avx(Fi   ,_0,_4);
       Ti[ 1] = dot5_avx(Fi+ 5,_0,_4);
       Ti[ 3] = dot5_avx(Fi+10,_0,_4);
