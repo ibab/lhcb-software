@@ -64,12 +64,12 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state,
   Gaudi::Math::JacobdP4dMom(state.stateVector().Sub<Gaudi::Vector3>(2),mass,dP4dMom);
 
   // now fill the total jacobia, but only nonzero elements
+  // TODO/FIXME: utilize the fact that the top 2 rows/columns are diagonal...
   ROOT::Math::SMatrix<double,7,5> Jacob ;
   Jacob(0,0) = Jacob(1,1) = 1 ; 
   Jacob.Place_at(dP4dMom,3,2) ;
 
-  const Gaudi::SymMatrix7x7 cov =
-    ROOT::Math::Similarity<double,7,5>( Jacob, state.covariance() );
+  const Gaudi::SymMatrix7x7 cov = ROOT::Math::Similarity( Jacob, state.covariance() );
 
   // CRJ : const casts used here to allow direct manipulation of the Particle matrices
   //       avoiding the need for local temporaries. Ugly but speeds up the HLT so close
@@ -163,8 +163,7 @@ StatusCode Particle2State::particle2State( const LHCb::Particle& part,
   Gaudi::Matrix5x5 Jacob;
   stateJacobian( part.charge(), part.momentum().Vect(), Jacob );
 
-  const Gaudi::SymMatrix5x5 cov =
-    ROOT::Math::Similarity<double,5,5>(Jacob, cov5DtmpSym);
+  const Gaudi::SymMatrix5x5 cov = ROOT::Math::Similarity(Jacob, cov5DtmpSym);
 
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Covariance after similarity \n" << cov << "\n"<< endmsg ;
