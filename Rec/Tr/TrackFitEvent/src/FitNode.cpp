@@ -125,62 +125,6 @@ namespace {
       _4 = Ci[10]*Fi[20]+Ci[11]*Fi[21]+Ci[12]*Fi[22]+Ci[13]*Fi[23]+Ci[14]*Fi[24];
 
       Ti[14]= Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
-
-#if 0
-      // This is actually slightly slower than the completely written
-      // out version above...
-
-      auto Fi = F.Array();
-      auto Ci = origin.Array();
-      auto Ti = target.Array();
-
-      typedef double double_v __attribute__ ((vector_size( 4 * sizeof(double) )));
-
-      auto c0 = double_v{ Ci[0],Ci[1],Ci[3],Ci[6] };
-      auto c1 = double_v{ Ci[1],Ci[2],Ci[4],Ci[7] };
-      auto c2 = double_v{ Ci[3],Ci[4],Ci[5],Ci[8] };
-      auto c3 = double_v{ Ci[6],Ci[7],Ci[8],Ci[9] };
-      auto c4 = double_v{ Ci[10],Ci[11],Ci[12],Ci[13] };
-      auto c5 = Ci[14];
-
-      auto _f = [=](const double* f) { return c0   *f[0]+c1   *f[1]+c2   *f[2]+c3   *f[3]+c4*f[4]; };
-      auto _h = [=](const double* f) { return c4[0]*f[0]+c4[1]*f[1]+c4[2]*f[2]+c4[3]*f[3]+c5*f[4]; };
-
-      auto f1 = double_v{ Fi[5], Fi[10], Fi[15], Fi[20] };
-      auto f2 = double_v{ Fi[6], Fi[11], Fi[16], Fi[21] };
-      auto f3 = double_v{ Fi[7], Fi[12], Fi[17], Fi[22] };
-      auto f4 = double_v{ Fi[8], Fi[13], Fi[18], Fi[23] };
-      auto f5 = double_v{ Fi[9], Fi[14], Fi[19], Fi[24] };
-      auto _g = [=](double_v r0, double r1) { return f1*r0[0]+f2*r0[1]+f3*r0[2]+f4*r0[3]+f5*r1; };
-
-      auto r0 = _f(Fi+0);
-      auto r4 = _h(Fi+0);
-      Ti[ 0] = Fi[0]*r0[0] + Fi[1]*r0[1] + Fi[2]*r0[2] + Fi[3]*r0[3] + Fi[4]*r4;
-
-      auto r = _g(r0,r4);
-      Ti[ 1] = r[0];
-      Ti[ 3] = r[1];
-      Ti[ 6] = r[2];
-      Ti[10] = r[3]; 
-
-      r = _g(_f(Fi+5),_h(Fi+5));
-      Ti[ 2] = r[0];
-      Ti[ 4] = r[1];
-      Ti[ 7] = r[2];
-      Ti[11] = r[3];
-
-      r = _g(_f(Fi+10),_h(Fi+10));
-      Ti[ 5] = r[1];
-      Ti[ 8] = r[2];
-      Ti[12] = r[3];
-
-      r = _g(_f(Fi+15),_h(Fi+15));
-      Ti[ 9] = r[2];
-      Ti[13] = r[3];
-
-      r = _g(_f(Fi+20),_h(Fi+20));
-      Ti[14] = r[3];
-#endif
     }
   }
 
