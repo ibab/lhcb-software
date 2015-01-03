@@ -5,13 +5,18 @@
 !               for geometry and matrix algebra
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
+! 2015-01-03 - Gerhard Raven
+ - qdd vectorized (5x5) -> (5x5) and (5x5) -> (7x7) symmetric matrix
+   similarity transforms -- these come in three flavours 'generic',
+   'SSE3' and 'AVX', and the relevant version is choosen dynamically
+   at runtime, on its first invocation.
 
 !========================= LHCbMath v3r52 2014-12-11 =========================
 ! 2014-12-02 - Vanya Belyaev
  - some improvement in the integration of 2D-polynomials 
 
 ! 2014-11-30 - Vanya Belyaev
- - add varios Splines (B,I,M,..)
+ - add various Splines (B,I,M,..)
 
 ! 2014-11-20 - Manuel Tobias Schiller
  - BloomFilter: make various overloads a bit more specific, so compilers don't

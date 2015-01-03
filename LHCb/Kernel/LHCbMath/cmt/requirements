@@ -81,6 +81,10 @@ macro_append LHCbMathDict_cppflags "" \
 macro        LHCbMath_use_linkopts $(use_linkopts)
 
 #=====================================================================
+macro_append Similarity_AVX_cppflags " -mavx -O3 " 
+macro_append Similarity_SSE3_cppflags " -msse3 -O3 " 
+
+#=====================================================================
 private
 # Note: libgslcblas is needed by libgsl, but the link is missing.
 macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
