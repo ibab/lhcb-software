@@ -1,4 +1,5 @@
-#include "Event/TrackTypes.h"
+#include "GaudiKernel/GenericMatrixTypes.h"
+#include "GaudiKernel/SymmetricMatrixTypes.h"
 
 namespace LHCb { namespace Math {
 
@@ -15,15 +16,15 @@ extern  similarity_t similarity_5_7;
 // to the correct implementation, and adapt the arguments so that only
 // 'POD types' are used...
 
-inline void Similarity( const Gaudi::TrackMatrix& F,
-                        const Gaudi::TrackSymMatrix& origin,
-                        Gaudi::TrackSymMatrix& target ) 
+inline void Similarity( const Gaudi::Matrix5x5& F,
+                        const Gaudi::SymMatrix5x5& origin,
+                        Gaudi::SymMatrix5x5& target ) 
 {
       return (*similarity_5_5)( origin.Array(), F.Array(), target.Array() );
 }
 
 inline void Similarity( const ROOT::Math::SMatrix<double,7,5>& F,
-                        const Gaudi::TrackSymMatrix& origin,
+                        const Gaudi::SymMatrix5x5& origin,
                         Gaudi::SymMatrix7x7& target ) 
 {
       return (*similarity_5_7)( origin.Array(), F.Array(), target.Array() );
