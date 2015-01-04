@@ -868,64 +868,81 @@ FastVeloHit* FastVeloTracking::closestUnusedHit( FastVeloHits& hits, double coor
 //=========================================================================
 void FastVeloTracking::makeLHCbTracks( LHCb::Tracks* outputTracks ) {
 
-  for ( FastVeloTracks::iterator itT = m_spaceTracks.begin(); m_spaceTracks.end() != itT; ++itT ) {
-    if ( (*itT).rHits().size() < 3 || (*itT).phiHits().size() < 3 ) (*itT).setValid( false );
-    if ( !(*itT).isValid() ) continue;
+  LHCb::Track::LHCbIDContainer ids;
+  LHCb::Track::StateContainer states; states.reserve(2);
+  for ( auto& track : m_spaceTracks ) {
+    if ( track.rHits().size() < 3 || track.phiHits().size() < 3 ) track.setValid( false );
+    if ( !track.isValid() ) continue;
     LHCb::Track *newTrack = new LHCb::Track();
     newTrack->setType( LHCb::Track::Velo );
     newTrack->setHistory( LHCb::Track::PatFastVelo );
     newTrack->setPatRecStatus( LHCb::Track::PatRecIDs );
-    if ( m_debug ) {
+    if ( UNLIKELY(m_debug) ) {
       info() << "=== Store track Nb " << outputTracks->size() << endmsg;
-      printCoords( (*itT).rHits(),   "Stored R   " );
-      printCoords( (*itT).phiHits(), "Stored Phi " );
+      printCoords( track.rHits(),   "Stored R   " );
+      printCoords( track.phiHits(), "Stored Phi " );
     }
     //== Add the number of found + missed R hits. Note that 'missed' is incomplete as we stop
     //== searching missed sensors after the maximum number of missed sensors has been reached.
     //== Multiply by 2 to mimic the previous implementation in Pat.
-    newTrack->addInfo( LHCb::Track::nPRVelo3DExpect, 2 * ( (*itT).nbRHits() + (*itT).nbMissedSensors() ) );
+    newTrack->addInfo( LHCb::Track::nPRVelo3DExpect, 2 * ( track.nbRHits() + track.nbMissedSensors() ) );
 
-    double zMin = 1.e9;
-    double zMax = -1.e9;
+    ids.clear(); ids.reserve( track.rHits().size() + track.phiHits().size() );
 
-    for ( FastVeloHits::iterator itR = (*itT).rHits().begin();
-          (*itT).rHits().end() != itR; ++itR ) {
-      newTrack->addToLhcbIDs( (*itR)->lhcbID() );
-      if ( (*itR)->z() > zMax ) zMax = (*itR)->z();
-      if ( (*itR)->z() < zMin ) zMin = (*itR)->z();
-    }
-    for ( FastVeloHits::iterator itP = (*itT).phiHits().begin();
-          (*itT).phiHits().end() != itP; ++itP ) {
-      newTrack->addToLhcbIDs( (*itP)->lhcbID() );
-      if ( (*itP)->z() > zMax ) zMax = (*itP)->z();
-      if ( (*itP)->z() < zMin ) zMin = (*itP)->z();
-    }
+    auto hit2lhcbid = [](const FastVeloHit* hit) { return hit->lhcbID(); };
+    std::transform( std::begin(track.rHits()), std::end(track.rHits()), 
+                    std::back_inserter(ids),
+                    std::cref(hit2lhcbid)
+    );
+    std::transform( std::begin(track.phiHits()), std::end(track.phiHits()), 
+                    std::back_inserter(ids),
+                    std::cref(hit2lhcbid)
+    );
+    newTrack->addToLhcbIDs( ids );
 
-    LHCb::State state;
+    auto update_z_minmax = [](std::pair<double,double> z, const FastVeloHit* hit) {
+            auto hz = hit->z();
+            if (hz > z.second) z.second=hz;
+            if (hz < z.first)  z.first = hz;
+            return z;
+    };
+    auto zMinMax = std::accumulate( std::begin(track.phiHits()), std::end(track.phiHits()), 
+                                    std::accumulate( std::begin(track.rHits()), std::end(track.rHits()), 
+                                                     std::make_pair(1.e9,-1.e9), 
+                                                     std::cref(update_z_minmax) ),
+                                    std::cref(update_z_minmax) );
+    double zMin = zMinMax.first;
+    double zMax = zMinMax.second;
+
 
     //== Define backward as z closest to beam downstream of hits
-    double zBeam = (*itT).zBeam();
+    auto zBeam = track.zBeam();
     bool backward = zBeam > zMax;
     newTrack->setFlag( LHCb::Track::Backward, backward );
 
+    states.clear();
     if ( m_stateAtBeam ) {
-      state.setLocation( LHCb::State::ClosestToBeam );
-      state.setState( (*itT).state( zBeam ) );
-      state.setCovariance( (*itT).covariance( zBeam ) );
-      newTrack->addToStates( state );
+      states.push_back( new LHCb::State() );
+      auto& state = states.back();
+      state->setLocation( LHCb::State::ClosestToBeam );
+      state->setState( track.state( zBeam ) );
+      state->setCovariance( track.covariance( zBeam ) );
     } else {
-      state.setLocation( LHCb::State::FirstMeasurement );
-      state.setState( (*itT).state( zMin ) );
-      state.setCovariance( (*itT).covariance( zMin ) );
-      newTrack->addToStates( state );
+      states.push_back( new LHCb::State() );
+      auto& state = states.back();
+      state->setLocation( LHCb::State::FirstMeasurement );
+      state->setState( track.state( zMin ) );
+      state->setCovariance( track.covariance( zMin ) );
     }
 
     if ( !backward ) {
-      state.setLocation( LHCb::State::EndVelo );
-      state.setState( (*itT).state( zMax ) );
-      state.setCovariance( (*itT).covariance( zMax ) );
-      newTrack->addToStates( state );
+      states.push_back( new LHCb::State() );
+      auto& state = states.back();
+      state->setLocation( LHCb::State::EndVelo );
+      state->setState( track.state( zMax ) );
+      state->setCovariance( track.covariance( zMax ) );
     }
+    newTrack->addToStates( states );
 
     outputTracks->insert( newTrack );
   }

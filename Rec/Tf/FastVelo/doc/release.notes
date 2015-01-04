@@ -4,6 +4,9 @@
 ! Purpose     : Fast tracking in the Velo
 !-----------------------------------------------------------------------------
 
+! 2015-01-04 - Gerhard Raven
+ - Faster conversion to LHCb::Track
+
 !========================= FastVelo v1r17 2014-12-11 =========================
 ! 2014-11-20 - David Hutchcroft
  - Added a rejection for too many tracks using the same phi clusters
