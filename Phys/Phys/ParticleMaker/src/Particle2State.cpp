@@ -8,6 +8,7 @@
 #include "GaudiKernel/GenericMatrixTypes.h"
 #include "LHCbMath/MatrixManip.h"
 #include "LHCbMath/MatrixTransforms.h"
+#include "LHCbMath/Similarity.h"
 
 // local
 #include "Particle2State.h"
@@ -68,8 +69,7 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state,
   ROOT::Math::SMatrix<double,7,5> Jacob ;
   Jacob(0,0) = Jacob(1,1) = 1 ; 
   Jacob.Place_at(dP4dMom,3,2) ;
-
-  const Gaudi::SymMatrix7x7 cov = ROOT::Math::Similarity( Jacob, state.covariance() );
+  const Gaudi::SymMatrix7x7 cov = LHCb::Math::Similarity( Jacob, state.covariance() );
 
   // CRJ : const casts used here to allow direct manipulation of the Particle matrices
   //       avoiding the need for local temporaries. Ugly but speeds up the HLT so close

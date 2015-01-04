@@ -19,6 +19,7 @@ use  RecEvent        v*     Event
 use  CaloUtils       v*     Calo
 use  CaloInterfaces  v*     Calo
 use  DaVinciTools    v*     Phys
+use  LHCbMath        v*     Kernel
 
 # Component library building rule
 #============================================================================

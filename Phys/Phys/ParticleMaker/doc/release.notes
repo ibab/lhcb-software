@@ -2,6 +2,9 @@
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, Olivier Deschamps
 !==============================================================================
+! 2015-01-04 : Gerhard Raven
+ - Particle2State: use vectorized similarity transform from LHCbMath -- which 
+   is (in this case) 4.8x faster...
 
 !!========================= ParticleMaker v6r12 2014-12-15 ========================
 
