@@ -24,8 +24,8 @@ gaudi_add_dictionary(LHCbMath
                      LINK_LIBRARIES Boost GSL ROOT GaudiKernel LHCbMathLib
                      OPTIONS "-U__MINGW32__")
 
-set_target_properties(Similarity_AVX PROPERTIES COMPILE_FLAGS " -mavx -O3 " )
-set_target_properties(Similarity_SSE3 PROPERTIES COMPILE_FLAGS " -msse3 -O3 " )
+set_property(SOURCE src/Similarity_AVX.cpp PROPERTY COMPILE_FLAGS " -mavx -O3 " )
+set_property(SOURCE src/Similarity_SSE3.cpp PROPERTY COMPILE_FLAGS " -msse3 -O3 " )
 
 if(GAUDI_BUILD_TESTS)
   gaudi_add_executable(TestPow
