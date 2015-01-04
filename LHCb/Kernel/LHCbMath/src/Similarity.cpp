@@ -12,23 +12,27 @@ extern void similarity_5_5_avx    (const double* Ci, const double* Fi, double* T
 void similarity_5_5_dispatch(const double* Ci, const double* Fi, double* ti) {
     // Get supported instruction set
     int level = instrset_detect();
-    // Set pointer to the appropriate version 
-    std::cout << "similarity_5_5_dispatch....  " ;
-    if (level >= 7) { // AVX supported
-        std::cout << "dispatching to AVX version" << std::endl;
-        similarity_5_5 = &similarity_5_5_avx; 
-    } else if ( level>=3 ) { 
-        std::cout << "dispatching to SSE3 version" << std::endl;
-        similarity_5_5 = &similarity_5_5_sse3; 
-    } else {  // Generic version
-        std::cout << "dispatching to generic version" << std::endl;
-        similarity_5_5 = &similarity_5_5_generic; 
+    // find pointer to the appropriate version 
+    auto vtbl = { std::make_pair( 7,similarity_5_5_avx ),
+                  std::make_pair( 3,similarity_5_5_sse3 ),
+                  std::make_pair( 0,similarity_5_5_generic ) };
+
+    auto i =  std::find_if( std::begin(vtbl), std::end(vtbl), 
+                       [&](decltype(vtbl)::const_reference j) {
+                           return level >= j.first;
+    });
+
+    if (i==std::end(vtbl)) {
+        throw "no similarity_5_5 implementation for instruction set level " + std::to_string(level);
     }
-    // Now call the chosen version
+
+    similarity_5_5 = i->second;
     (*similarity_5_5)(Ci,Fi,ti);
 }
 
 similarity_t similarity_5_5 = &similarity_5_5_dispatch;
+
+
 
 void similarity_5_7_generic(const double* Ci, const double* Fi, double* ti);
 extern void similarity_5_7_sse3   (const double* Ci, const double* Fi, double* ti);
@@ -37,19 +41,20 @@ extern void similarity_5_7_avx    (const double* Ci, const double* Fi, double* T
 void similarity_5_7_dispatch(const double* Ci, const double* Fi, double* ti) {
     // Get supported instruction set
     int level = instrset_detect();
-    // Set pointer to the appropriate version 
-    std::cout << "similarity_5_7_dispatch....  " ;
-    if (level >= 7) { // AVX supported
-        std::cout << "dispatching to AVX version" << std::endl;
-        similarity_5_7 = &similarity_5_7_avx; 
-    } else if ( level>=3 ) { 
-        std::cout << "dispatching to SSE3 version" << std::endl;
-        similarity_5_7 = &similarity_5_7_sse3; 
-    } else {  // Generic version
-        std::cout << "dispatching to generic version" << std::endl;
-        similarity_5_7 = &similarity_5_7_generic; 
+    // find pointer to the appropriate version 
+    auto vtbl = { std::make_pair( 7,similarity_5_7_avx ),
+                  std::make_pair( 3,similarity_5_7_sse3 ),
+                  std::make_pair( 0,similarity_5_7_generic ) };
+    auto i =  std::find_if( std::begin(vtbl), std::end(vtbl), 
+                       [&](decltype(vtbl)::const_reference j) {
+                           return level >= j.first;
+    });
+
+    if (i==std::end(vtbl)) {
+        throw "no similarity_5_7 implementation for instruction set level " + std::to_string(level);
     }
-    // Now call the chosen version
+
+    similarity_5_7 = i->second;
     (*similarity_5_7)(Ci,Fi,ti);
 }
 
@@ -65,6 +70,7 @@ similarity_t similarity_5_7 = &similarity_5_7_dispatch;
 // ti: output 5x5 matrix: F * origin * Transpose(F)
 
 void similarity_5_5_generic(const double* Ci, const double* Fi, double* ti)  {
+      if (Ci == ti ) throw "target and source overlap -- do not do that";
       // std::cout << "using similarity_5_5_generic" << std::endl;
       auto _0 = Ci[ 0]*Fi[0]+Ci[ 1]*Fi[1]+Ci[ 3]*Fi[2]+Ci[ 6]*Fi[3]+Ci[10]*Fi[4];
       auto _1 = Ci[ 1]*Fi[0]+Ci[ 2]*Fi[1]+Ci[ 4]*Fi[2]+Ci[ 7]*Fi[3]+Ci[11]*Fi[4];
@@ -108,6 +114,7 @@ void similarity_5_5_generic(const double* Ci, const double* Fi, double* ti)  {
       ti[14]= Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
 }
 void similarity_5_7_generic(const double* Ci, const double* Fi, double* ti)  {
+      if (Ci == ti ) throw "target and source overlap -- do not do that";
       // std::cout << "using similarity_5_7_generic" << std::endl;
       auto _0 = Ci[ 0]*Fi[0]+Ci[ 1]*Fi[1]+Ci[ 3]*Fi[2]+Ci[ 6]*Fi[3]+Ci[10]*Fi[4];
       auto _1 = Ci[ 1]*Fi[0]+Ci[ 2]*Fi[1]+Ci[ 4]*Fi[2]+Ci[ 7]*Fi[3]+Ci[11]*Fi[4];

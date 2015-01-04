@@ -4,11 +4,8 @@
 #include "LHCbMath/Similarity.h"
 #include <x86intrin.h>
 
-namespace LHCb {
-namespace Math {
 
-
-
+namespace {
 
 inline double dot5_avx(const double* f, __m256d  r0,  double r2) {
     auto t = r0*_mm256_loadu_pd(f);
@@ -49,7 +46,7 @@ struct alignas(16) avx_5_t {
          c2 { d[ 3],d[ 4],d[ 5],d[ 8] },
          c3 { d[ 6],d[ 7],d[ 8],d[ 9] },
          c4 { d[10],d[11],d[12],d[13] }, c44{ d[14] }
-    { // TODO: can we avoid reading the upper triangle in c0..c3,
+    { // TODO: can we avoid reading the upper triangle in c0..c2,
       //       fill it with eg. zero, and then 'permute' them
       //       by transposing the lower triangle???
     };
@@ -61,6 +58,12 @@ struct alignas(16) avx_5_t {
       return dot5_avx( f, c4, c44 );
  }
 };
+
+}
+
+
+namespace LHCb {
+namespace Math {
 
 void similarity_5_5_avx(const double* Ci, const double* Fi, double* Ti)  {
 
@@ -81,12 +84,14 @@ void similarity_5_5_avx(const double* Ci, const double* Fi, double* Ti)  {
       Ti[ 7] = r[2];
       Ti[11] = r[3];
       _0 = m.c0i(Fi+10); _4 = m.c4i(Fi+10);
-      Ti[ 5] = dot5_avx(Fi+10,_0,_4);
-      Ti[ 8] = dot5_avx(Fi+15,_0,_4);
+      auto s = dots2_5_avx(Fi+10,_0,_4);
+      Ti[ 5] = s[0];
+      Ti[ 8] = s[1];
       Ti[12] = dot5_avx(Fi+20,_0,_4);
       _0 = m.c0i(Fi+15); _4 = m.c4i(Fi+15);
-      Ti[ 9] = dot5_avx(Fi+15,_0,_4);
-      Ti[13] = dot5_avx(Fi+20,_0,_4);
+      s = dots2_5_avx(Fi+15,_0,_4);
+      Ti[ 9] = s[0];
+      Ti[13] = s[1];
       _0 = m.c0i(Fi+20); _4 = m.c4i(Fi+20);
       Ti[14] = dot5_avx(Fi+20,_0,_4);
 }

@@ -5,18 +5,7 @@
 
 #include <x86intrin.h>
 
-namespace LHCb {
-namespace Math {
-
-
-// origin: 5x5 input symmetric matrix, in row-major version,i.e.
-//  1
-//  2  3
-//  4  5  6
-//  7  8  9 10
-// 11 12 13 14 15
-// F: transformation, row-major
-// ti: output 5x5 matrix: F * origin * Transpose(F)
+namespace {
 
 inline double dot5_sse3(const double* f, __m128d  r0, __m128d  r1, double r2) {
     auto r = r0*f[0]+r1*f[2];
@@ -43,6 +32,21 @@ struct alignas(16) sse_t {
      return dot5_sse3( f, r8, r18, r24[0] );
  }
 };
+
+}
+
+namespace LHCb {
+namespace Math {
+
+
+// origin: 5x5 input symmetric matrix, in row-major version,i.e.
+//  1
+//  2  3
+//  4  5  6
+//  7  8  9 10
+// 11 12 13 14 15
+// F: transformation, row-major
+// ti: output 5x5 matrix: F * origin * Transpose(F)
 
 void similarity_5_5_sse3(const double* Ci, const double* Fi, double* ti)  {
       // std::cout << "using similarity_5_5_sse3" << std::endl;
