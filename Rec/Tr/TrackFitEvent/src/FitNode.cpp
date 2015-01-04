@@ -4,6 +4,7 @@
 // local
 #include "Event/FitNode.h"
 #include "Event/KalmanFitResult.h"
+#include "LHCbMath/Similarity.h"
 
 using namespace Gaudi;
 using namespace Gaudi::Math;
@@ -47,20 +48,11 @@ namespace {
   }
     
   void transportcovariance( const Gaudi::TrackMatrix& F,
-			    const Gaudi::TrackSymMatrix& origin,
-			    Gaudi::TrackSymMatrix& target)
+                            const Gaudi::TrackSymMatrix& origin,
+                            Gaudi::TrackSymMatrix& target)
   {
     bool isLine =  F(0,4)==0 ;
-    if( isLine ) {
-      target = origin ;
-      target(0,0) += 2 * origin(2,0) * F(0,2) + origin(2,2) * F(0,2) * F(0,2) ;
-      target(2,0) += origin(2,2) * F(0,2) ;
-      target(1,1) += 2 * origin(3,1) * F(1,3) + origin(3,3) * F(1,3) * F(1,3) ;
-      target(3,1) += origin(3,3) * F(1,3) ;
-      target(1,0) += origin(2,1) * F(0,2) + origin(3,0) * F(1,3) + origin(3,2) * F(0,2) * F(1,3) ;
-      target(2,1) += origin(3,2) * F(1,3);
-      target(3,0) += origin(3,2) * F(0,2);
-    } else {
+    if ( LIKELY( !isLine ) ) {
 
       // The temporary is actually important here. SMatrix is not
       // computing A*B*C very optimally.
@@ -68,63 +60,20 @@ namespace {
       // FC = F*origin ;
       // ROOT::Math::AssignSym::Evaluate(target,FC*Transpose(F)) ;
 
-      // Just writing out the similarity transform seems to be fastest...
-      // It beats the above expression by a factor of 2, and is as fast
-      // as the version using the gcc vector below...
+      // use vectorized similarity transform
+      LHCb::Math::Similarity(F,origin,target);
 
-      auto Fi = F.Array();
-      auto Ci = origin.Array();
-      auto Ti = target.Array();
+    } else {
 
-      auto _0 = Ci[ 0]*Fi[0]+Ci[ 1]*Fi[1]+Ci[ 3]*Fi[2]+Ci[ 6]*Fi[3]+Ci[10]*Fi[4];
-      auto _1 = Ci[ 1]*Fi[0]+Ci[ 2]*Fi[1]+Ci[ 4]*Fi[2]+Ci[ 7]*Fi[3]+Ci[11]*Fi[4];
-      auto _2 = Ci[ 3]*Fi[0]+Ci[ 4]*Fi[1]+Ci[ 5]*Fi[2]+Ci[ 8]*Fi[3]+Ci[12]*Fi[4];
-      auto _3 = Ci[ 6]*Fi[0]+Ci[ 7]*Fi[1]+Ci[ 8]*Fi[2]+Ci[ 9]*Fi[3]+Ci[13]*Fi[4];
-      auto _4 = Ci[10]*Fi[0]+Ci[11]*Fi[1]+Ci[12]*Fi[2]+Ci[13]*Fi[3]+Ci[14]*Fi[4];
+      target = origin;
+      target(0,0) += 2 * origin(2,0) * F(0,2) + origin(2,2) * F(0,2) * F(0,2);
+      target(2,0) += origin(2,2) * F(0,2) ;
+      target(1,1) += 2 * origin(3,1) * F(1,3) + origin(3,3) * F(1,3) * F(1,3);
+      target(3,1) += origin(3,3) * F(1,3);
+      target(1,0) += origin(2,1) * F(0,2) + origin(3,0) * F(1,3) + origin(3,2) * F(0,2) * F(1,3);
+      target(2,1) += origin(3,2) * F(1,3);
+      target(3,0) += origin(3,2) * F(0,2);
 
-      Ti[ 0] = Fi[ 0]*_0 + Fi[ 1]*_1 + Fi[ 2]*_2 + Fi[ 3]*_3 + Fi[ 4]*_4;
-      Ti[ 1] = Fi[ 5]*_0 + Fi[ 6]*_1 + Fi[ 7]*_2 + Fi[ 8]*_3 + Fi[ 9]*_4;
-      Ti[ 3] = Fi[10]*_0 + Fi[11]*_1 + Fi[12]*_2 + Fi[13]*_3 + Fi[14]*_4;
-      Ti[ 6] = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
-      Ti[10] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4; 
-
-      _0 =  Ci[ 0]*Fi[5]+Ci[ 1]*Fi[6]+Ci[ 3]*Fi[7]+Ci[ 6]*Fi[8]+Ci[10]*Fi[9];
-      _1 =  Ci[ 1]*Fi[5]+Ci[ 2]*Fi[6]+Ci[ 4]*Fi[7]+Ci[ 7]*Fi[8]+Ci[11]*Fi[9];
-      _2 =  Ci[ 3]*Fi[5]+Ci[ 4]*Fi[6]+Ci[ 5]*Fi[7]+Ci[ 8]*Fi[8]+Ci[12]*Fi[9];
-      _3 =  Ci[ 6]*Fi[5]+Ci[ 7]*Fi[6]+Ci[ 8]*Fi[7]+Ci[ 9]*Fi[8]+Ci[13]*Fi[9];
-      _4 =  Ci[10]*Fi[5]+Ci[11]*Fi[6]+Ci[12]*Fi[7]+Ci[13]*Fi[8]+Ci[14]*Fi[9];
-
-      Ti[2]  = Fi[ 5]*_0 + Fi[ 6]*_1 + Fi[ 7]*_2 + Fi[ 8]*_3 + Fi[ 9]*_4;
-      Ti[4]  = Fi[10]*_0 + Fi[11]*_1 + Fi[12]*_2 + Fi[13]*_3 + Fi[14]*_4;
-      Ti[7]  = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
-      Ti[11] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
-
-      _0 = Ci[ 0]*Fi[10]+Ci[ 1]*Fi[11]+Ci[ 3]*Fi[12]+Ci[ 6]*Fi[13]+Ci[10]*Fi[14];
-      _1 = Ci[ 1]*Fi[10]+Ci[ 2]*Fi[11]+Ci[ 4]*Fi[12]+Ci[ 7]*Fi[13]+Ci[11]*Fi[14];
-      _2 = Ci[ 3]*Fi[10]+Ci[ 4]*Fi[11]+Ci[ 5]*Fi[12]+Ci[ 8]*Fi[13]+Ci[12]*Fi[14];
-      _3 = Ci[ 6]*Fi[10]+Ci[ 7]*Fi[11]+Ci[ 8]*Fi[12]+Ci[ 9]*Fi[13]+Ci[13]*Fi[14];
-      _4 = Ci[10]*Fi[10]+Ci[11]*Fi[11]+Ci[12]*Fi[12]+Ci[13]*Fi[13]+Ci[14]*Fi[14];
-
-      Ti[5]  = Fi[10]*_0 + Fi[11]*_1 + Fi[12]*_2 + Fi[13]*_3 + Fi[14]*_4;
-      Ti[8]  = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
-      Ti[12] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
-
-      _0 = Ci[ 0]*Fi[15]+Ci[ 1]*Fi[16]+Ci[ 3]*Fi[17]+Ci[ 6]*Fi[18]+Ci[10]*Fi[19];
-      _1 = Ci[ 1]*Fi[15]+Ci[ 2]*Fi[16]+Ci[ 4]*Fi[17]+Ci[ 7]*Fi[18]+Ci[11]*Fi[19];
-      _2 = Ci[ 3]*Fi[15]+Ci[ 4]*Fi[16]+Ci[ 5]*Fi[17]+Ci[ 8]*Fi[18]+Ci[12]*Fi[19];
-      _3 = Ci[ 6]*Fi[15]+Ci[ 7]*Fi[16]+Ci[ 8]*Fi[17]+Ci[ 9]*Fi[18]+Ci[13]*Fi[19];
-      _4 = Ci[10]*Fi[15]+Ci[11]*Fi[16]+Ci[12]*Fi[17]+Ci[13]*Fi[18]+Ci[14]*Fi[19];
-
-      Ti[9]  = Fi[15]*_0 + Fi[16]*_1 + Fi[17]*_2 + Fi[18]*_3 + Fi[19]*_4;
-      Ti[13] = Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
-
-      _0 = Ci[ 0]*Fi[20]+Ci[1]*Fi[21]+Ci[3]*Fi[22]+Ci[6]*Fi[23]+Ci[10]*Fi[24];
-      _1 = Ci[ 1]*Fi[20]+Ci[2]*Fi[21]+Ci[4]*Fi[22]+Ci[7]*Fi[23]+Ci[11]*Fi[24];
-      _2 = Ci[ 3]*Fi[20]+Ci[4]*Fi[21]+Ci[5]*Fi[22]+Ci[8]*Fi[23]+Ci[12]*Fi[24];
-      _3 = Ci[ 6]*Fi[20]+Ci[7]*Fi[21]+Ci[8]*Fi[22]+Ci[9]*Fi[23]+Ci[13]*Fi[24];
-      _4 = Ci[10]*Fi[20]+Ci[11]*Fi[21]+Ci[12]*Fi[22]+Ci[13]*Fi[23]+Ci[14]*Fi[24];
-
-      Ti[14]= Fi[20]*_0 + Fi[21]*_1 + Fi[22]*_2 + Fi[23]*_3 + Fi[24]*_4;
     }
   }
 
@@ -620,42 +569,39 @@ namespace LHCb {
       bool nonZeroNoise = (Q(2,2)+Q(3,3)+Q(4,4))>0 ;
       if(nonZeroNoise) {
 	
-	// invert the covariance matrix
-	TrackSymMatrix invNextNodeC = nextNodeC;
-	if( !invNextNodeC.InvertChol() ) {
-	  KalmanFitResult* kfr = this->getParent();
-	  if (!kfr->inError())
-	    kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::MatrixInversion ) ;
-	}
+        // invert the covariance matrix
+        TrackSymMatrix invNextNodeC = nextNodeC;
+        if( !invNextNodeC.InvertChol() ) {
+            KalmanFitResult* kfr = this->getParent();
+            if (!kfr->inError())
+                kfr->setErrorFlag(KalmanFitResult::BiDirection,KalmanFitResult::Smooth ,KalmanFitResult::MatrixInversion ) ;
+        }
 	
-	// calculate gain matrix A. we can make this quicker by epxloiting that F is empty
-	A = thisNodeC * Transpose( F ) * invNextNodeC;
+        // calculate gain matrix A. we can make this quicker by epxloiting that F is empty
+        A = thisNodeC * Transpose( F ) * invNextNodeC;
 	
-	// smooth covariance  matrix
+        // smooth covariance  matrix
 #ifdef COMMONEXPRESSION
-	TrackSymMatrix covUpDate = 
-	  Similarity<double,TrackMatrix::kRows,TrackMatrix::kCols>
-	  (A ,  nextNodeSmoothedC - nextNodeC );
-	thisNodeC += covUpDate;
+        TrackSymMatrix covUpDate = Similarity(A ,  nextNodeSmoothedC - nextNodeC );
+        thisNodeC += covUpDate;
 #else
-	// The expression above is unstable since you effectively subtract
-	// matrices. I found an expression in which you only add things
-	// up. The expression is:
-	//   C = A ( SmoothedCnext + Q + Q  Finv^T Cfiltered Finv Q ) A^T  
-	// It is of course much slower ... but we don't care about that now.
-	TrackSymMatrix FCFinv = Similarity(F,thisNodeC) ; // is also nextNodeC - Q
-	FCFinv.InvertChol() ;
-	TrackSymMatrix QFCFQ = Similarity(Q,FCFinv) ;
-	TrackSymMatrix sum = nextNodeSmoothedC + Q + QFCFQ ;
-	thisNodeC = Similarity(A, sum ) ;
+        // The expression above is unstable since you effectively subtract
+        // matrices. I found an expression in which you only add things
+        // up. The expression is:
+        //   C = A ( SmoothedCnext + Q + Q  Finv^T Cfiltered Finv Q ) A^T  
+        // It is of course much slower ... but we don't care about that now.
+        TrackSymMatrix FCFinv = LHCb::Math::Similarity(F,thisNodeC) ; // is also nextNodeC - Q
+        FCFinv.InvertChol();
+        TrackSymMatrix sum = nextNodeSmoothedC + Q + LHCb::Math::Similarity(Q,FCFinv);
+        LHCb::Math::Similarity(A, sum, thisNodeC);
 #endif
       } else {
-	// if there is no noise, the gain matrix is just the inverse of
-	// the transport matrix
-	A = F ;
-	A.Invert() ;
-	// the update of the covariance matrix becomes a lot simpler
-	thisNodeC = Similarity( A, nextNodeSmoothedC ) ;
+        // if there is no noise, the gain matrix is just the inverse of
+        // the transport matrix
+        A = F ;
+        A.Invert() ;
+        // the update of the covariance matrix becomes a lot simpler
+        LHCb::Math::Similarity( A, nextNodeSmoothedC, thisNodeC ) ;
       }
       
       // smooth the state

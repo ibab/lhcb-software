@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+! 2015-01-04 - Gerhard Raven
+ - FitNode: speed up transport by a further factor of 2 by using vectorized
+   version of the similarity transforms from LHCbMath.
+
 ! 2014-12-29 - Gerhard Raven
  - FitNode: speed up transport of covariance matrix by a factor of 2 by 
    just spelling out the entire 5x5 similarity transform....
