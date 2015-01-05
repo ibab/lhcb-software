@@ -65,9 +65,14 @@ struct alignas(16) avx_5_t {
 namespace LHCb {
 namespace Math {
 
+void similarity_5_1_avx(const double* Ci, const double* Fi, double* Ti)  {
+      avx_5_t m { Ci };
+      *Ti= dot5_avx(Fi,m.c0i(Fi), m.c4i(Fi));
+}
+
 void similarity_5_5_avx(const double* Ci, const double* Fi, double* Ti)  {
 
-      // reshuffle the Ci matrix for SIMD use...
+      // reshuffle the symmetric, lower diagonal, row-major Ci matrix for SIMD use...
       avx_5_t m { Ci };
      
       auto _0 = m.c0i(Fi); auto _4 = m.c4i(Fi);

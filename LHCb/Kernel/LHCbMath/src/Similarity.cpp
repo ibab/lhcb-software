@@ -2,8 +2,38 @@
 #include "LHCbMath/Similarity.h"
 #include "instrset.h"
 
+
 namespace LHCb {
 namespace Math {
+
+void similarity_5_1_generic(const double* Ci, const double* Fi, double* ti);
+extern void similarity_5_1_sse3   (const double* Ci, const double* Fi, double* ti);
+extern void similarity_5_1_avx    (const double* Ci, const double* Fi, double* Ti);
+
+void similarity_5_1_dispatch(const double* Ci, const double* Fi, double* ti) {
+    // Get supported instruction set
+    int level = instrset_detect();
+    // find pointer to the appropriate version 
+    auto vtbl = { std::make_pair( 7,similarity_5_1_avx ),
+                  std::make_pair( 3,similarity_5_1_sse3 ),
+                  std::make_pair( 0,similarity_5_1_generic ) };
+
+    auto i =  std::find_if( std::begin(vtbl), std::end(vtbl), 
+                       [&](decltype(vtbl)::const_reference j) {
+                           return level >= j.first;
+    });
+
+    if (i==std::end(vtbl)) {
+        throw "no similarity_5_1 implementation for instruction set level " + std::to_string(level);
+    }
+
+    similarity_5_1 = i->second;
+    (*similarity_5_1)(Ci,Fi,ti);
+}
+similarity_t similarity_5_1 = &similarity_5_1_dispatch;
+
+
+
 
 void similarity_5_5_generic(const double* Ci, const double* Fi, double* ti);
 extern void similarity_5_5_sse3   (const double* Ci, const double* Fi, double* ti);
@@ -34,6 +64,8 @@ similarity_t similarity_5_5 = &similarity_5_5_dispatch;
 
 
 
+
+
 void similarity_5_7_generic(const double* Ci, const double* Fi, double* ti);
 extern void similarity_5_7_sse3   (const double* Ci, const double* Fi, double* ti);
 extern void similarity_5_7_avx    (const double* Ci, const double* Fi, double* Ti);
@@ -60,6 +92,12 @@ void similarity_5_7_dispatch(const double* Ci, const double* Fi, double* ti) {
 
 similarity_t similarity_5_7 = &similarity_5_7_dispatch;
 
+
+
+
+
+
+
 // origin: 5x5 input symmetric matrix, in row-major version,i.e.
 //  1
 //  2  3
@@ -68,6 +106,15 @@ similarity_t similarity_5_7 = &similarity_5_7_dispatch;
 // 11 12 13 14 15
 // F: transformation, row-major
 // ti: output 5x5 matrix: F * origin * Transpose(F)
+
+void similarity_5_1_generic(const double* Ci, const double* Fi, double* ti)  {
+      auto _0 = Ci[ 0]*Fi[0]+Ci[ 1]*Fi[1]+Ci[ 3]*Fi[2]+Ci[ 6]*Fi[3]+Ci[10]*Fi[4];
+      auto _1 = Ci[ 1]*Fi[0]+Ci[ 2]*Fi[1]+Ci[ 4]*Fi[2]+Ci[ 7]*Fi[3]+Ci[11]*Fi[4];
+      auto _2 = Ci[ 3]*Fi[0]+Ci[ 4]*Fi[1]+Ci[ 5]*Fi[2]+Ci[ 8]*Fi[3]+Ci[12]*Fi[4];
+      auto _3 = Ci[ 6]*Fi[0]+Ci[ 7]*Fi[1]+Ci[ 8]*Fi[2]+Ci[ 9]*Fi[3]+Ci[13]*Fi[4];
+      auto _4 = Ci[10]*Fi[0]+Ci[11]*Fi[1]+Ci[12]*Fi[2]+Ci[13]*Fi[3]+Ci[14]*Fi[4];
+      *ti = Fi[ 0]*_0 + Fi[ 1]*_1 + Fi[ 2]*_2 + Fi[ 3]*_3 + Fi[ 4]*_4;
+}
 
 void similarity_5_5_generic(const double* Ci, const double* Fi, double* ti)  {
       if (Ci == ti ) throw "target and source overlap -- do not do that";

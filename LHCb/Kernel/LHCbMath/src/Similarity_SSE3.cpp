@@ -8,8 +8,9 @@
 namespace {
 
 inline double dot5_sse3(const double* f, __m128d  r0, __m128d  r1, double r2) {
-    auto r = r0*f[0]+r1*f[2];
+    auto r = r0*_mm_loadu_pd(f) + r1*_mm_loadu_pd(f+2);
     return _mm_hadd_pd(r,r)[0]+r2*f[4];
+    // return f[0]*r0[0] + f[1]*r0[1] + f[2]*r1[0] + f[3]*r1[1] + f[4]*r2;
 }
 
 // reshuffle the origin matrix for SIMD use...
@@ -38,6 +39,10 @@ struct alignas(16) sse_t {
 namespace LHCb {
 namespace Math {
 
+void similarity_5_1_sse3(const double* Ci, const double* Fi, double* ti)  {
+      sse_t m { Ci };
+      *ti = dot5_sse3(Fi   ,m.g0(Fi),m.g2(Fi),m.g4(Fi));
+}
 
 // origin: 5x5 input symmetric matrix, in row-major version,i.e.
 //  1
