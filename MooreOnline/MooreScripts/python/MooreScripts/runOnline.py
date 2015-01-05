@@ -27,25 +27,21 @@ def start(**kwargs) :
     else :
        HltLevel = ''
     
-    
     moore = Moore()
-    
-    
+
     mooreOnline = MooreOnline()
-
     mooreOnline.HltLevel = HltLevel
-
     mooreOnline.RunOnline = True
 
     ### default database setup -- require an explit tag when running in the LHCb or FEST partitions...
     #not needed, moore.Simulation = False
-    moore.DDDBtag    = 'unknown-please-specify-in-PVSS-RunInfo' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
-    moore.CondDBtag  = 'unknown-please-specify-in-PVSS-RunInfo' if OnlineEnv.PartitionName in [ 'LHCb', 'FEST' ] else 'hlt-20100906'
+    moore.DDDBtag    = 'unknown-please-specify-in-PVSS-RunInfo'
+    moore.CondDBtag  = 'unknown-please-specify-in-PVSS-RunInfo'
 
     ### pick up requested DB tags
     import ConditionsMap
-    def fwdOnlineEnv(attr,cfg,attr2 = None) :
-        if hasattr(ConditionsMap,attr) and getattr(ConditionsMap,attr) : setattr(cfg,attr2 if attr2 else attr,getattr(ConditionsMap,attr))
+    def fwdOnlineEnv(attr, cfg, attr2 = None) :
+        setattr(cfg, attr2 if attr2 else attr, getattr(ConditionsMap, attr))
 
     fwdOnlineEnv( 'CondDBTag', moore, 'CondDBtag' )
     fwdOnlineEnv( 'DDDBTag',   moore, 'DDDBtag' )
@@ -89,11 +85,9 @@ def start(**kwargs) :
         if HltLevel == 'Hlt1' :
             print '#WARNING: Enabling run nr & GPS time hack'
             from Configurables import ApplicationMgr
-	    from MooreHacks.MooreHacksConf import HackRunNrAndGPSSvc
+            from MooreHacks.MooreHacksConf import HackRunNrAndGPSSvc
             ApplicationMgr().ExtSvc.append( HackRunNrAndGPSSvc() )
-
-	elif HltLevel == 'Hlt2' :     
+        elif HltLevel == 'Hlt2' :     
             mooreOnline.REQ1 = "EvType=2;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=100.0"
-
 
     OnlineEnv.end_config(False)

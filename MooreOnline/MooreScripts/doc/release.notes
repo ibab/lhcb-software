@@ -4,10 +4,14 @@
 ! Purpose     : Holding any scripts running Moore in the Online
 !============================================
 
+! 2015-01-05 - Roel Aaij
+ - Remove default database tags from runOnline.py and force presence of CondDB
+   and DDDTag in module ConditionsMap.
+
 !========================= MooreScripts v1r8 2014-12-15 =========================
 
 ! 2014-12-03 - Roel Aaij
- - Add configuration options to runOfflineOnline.py
+ - Add additional configuration options to runOfflineOnline.py.
 
 ! 2014-11-30 - Roel Aaij
  - Add script to run offline Moore in an online-like way with the buffer manager
