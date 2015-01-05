@@ -12,6 +12,8 @@
 #include <Event/Node.h>
 #include <Event/FitNode.h>
 
+#include <DetDesc/Condition.h>
+
 using namespace LHCb;
 
 #include <iostream>
@@ -74,6 +76,8 @@ OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocat
   declareProperty("HistDriftTimeVsDist", histDriftTimeVsDistOpts, "Options for drift time VS distance histograms (default r = [-5, 5]/200 and t = [-30, 70]/200)");
 
   declareProperty("HistResidual", histResidualOpts, "Options for residual histograms (default r = [-2.5, 2.5]/50)");
+  declareProperty("Simulation", simulation = false, " Is simulation or data (default false, so data)");
+  declareProperty("Apply_Calibration", Apply_Calibration = false, " Apply_Calibration - in xml (by now) or in DB (default false,)");
 
   // Check options - reset to default if wrong or missing
   #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
@@ -106,6 +110,8 @@ StatusCode OTModuleClbrMon::initialize()
   info() << "MinP: " << minP << " GeV" << endmsg;
   info() << "TrackType: " << trackType << endmsg;
   info() << "ReadXMLs: " << (readXMLs ? "True" : "False") << endmsg;
+  info() << "Simulation: " << (simulation ? "True" : "False") << endmsg;
+  info() << "Apply_Calibration: " << (Apply_Calibration ? "True" : "False") << endmsg;
   info() << "HistDriftTime: " <<
     "t = [" << histDriftTimeOpts[0] << ", " << histDriftTimeOpts[1] << "]/" << (int)histDriftTimeOpts[2] << endmsg;
   info() << "HistDriftTimeResidual: " <<
@@ -139,6 +145,19 @@ StatusCode OTModuleClbrMon::initialize()
     histModuleDriftTimeResidual23R[s][l][q][m] = book(histPath + "/" + "driftTimeResidual23R", "drift time residual (otis23 && dist > 0)",
       histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
 
+    //   std::cout << "book mY module histograms" << std::endl;
+
+    TString name_station [3]= {"station_0", "station_1", "station_2"};
+    TString name_layer [4]= {"layer_0", "layer_1", "layer_2", "layer_3"};
+    TString name_quarter [4]= {"quarter_0", "quarter_1", "quarter_2", "quarter_3"};
+    TString name_module [9]= {"module_0", "module_1", "module_2","module_3", "module_4", "module_5", "module_6", "module_7", "module_8"};
+
+    m_histModuleDriftTimeResidual[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual",200, -25, 25);
+
+    m_histModuleDriftTimeResidual01L[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual01L"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis01 && dist < 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual01R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual01R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis01 && dist > 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual23L[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual23L"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis23 && dist < 0)",200, -25, 25);
+    m_histModuleDriftTimeResidual23R[s][l][q][m] = new TH1D("m_histModuleDriftTimeResidual23R"+name_station[s]+name_layer[l]+name_quarter[q]+name_module[m], "my drift time residual (otis23 && dist > 0)",200, -25, 25);
     histModuleDriftTimeResidual[s][l][q][m] = book(histPath + "/" + "driftTimeResidual", "drift time residual",
       histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
 
@@ -201,6 +220,13 @@ StatusCode OTModuleClbrMon::initialize()
       histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
   }
 
+
+  //-- TMP Monitoring hists ..."                                                                                                                   
+           
+  hdt0 = new TH1D("hdt0", "hdt0", 432, 0, 432);
+  ht0 = new TH1D("ht0", "ht0", 432, 0, 432);
+  hdt0proj = new TH1D("hdt0proj", "hdt0proj", 100, -10, 10);
+
   histDriftTimeVsDist = book2D("driftTimeVsDist", "drift time vs distance",
     histDriftTimeVsDistOpts[0], histDriftTimeVsDistOpts[1], (int)histDriftTimeVsDistOpts[2],
     histDriftTimeVsDistOpts[3], histDriftTimeVsDistOpts[4], (int)histDriftTimeVsDistOpts[5]);
@@ -243,16 +269,21 @@ StatusCode OTModuleClbrMon::initialize()
   histResidualPullVsDist89Good = book2D("histResidualPullVsDist89Good", "distance residual pull (p> 10 GeV && M == 8-9)",
     0, 2.5, 100, -5, 5, 100);
 
-  if(readXMLs) statusCode = readCondXMLs();
+  //readCondDB();
+
+  double t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
+  if(readXMLs) statusCode = readCondXMLs(t0s);
+  else statusCode = readCondDB(t0s);
 
   return statusCode;
 }
 
 StatusCode OTModuleClbrMon::execute()
 {
+  double ts[3][4][4][9]; memset(ts, 0, sizeof(ts));
   if(readXMLs)
   {
-    readCondXMLs();
+    readCondXMLs(ts);
     readXMLs = false;
   }
 
@@ -360,6 +391,11 @@ StatusCode OTModuleClbrMon::execute()
         if(otis >= 2 && dist < 0) fill(histModuleDriftTimeResidual23L[s][l][q][m], timeResidual, 1.0);
         if(otis >= 2 && dist > 0) fill(histModuleDriftTimeResidual23R[s][l][q][m], timeResidual, 1.0);
 
+        if(otis <= 1 && dist < 0) m_histModuleDriftTimeResidual01L[s][l][q][m]->Fill(timeResidual);
+        if(otis <= 1 && dist > 0) m_histModuleDriftTimeResidual01R[s][l][q][m]->Fill(timeResidual);
+        if(otis >= 2 && dist < 0) m_histModuleDriftTimeResidual23L[s][l][q][m]->Fill(timeResidual);
+        if(otis >= 2 && dist > 0) m_histModuleDriftTimeResidual23R[s][l][q][m]->Fill(timeResidual);
+
         fill(histModuleDriftTimeResidual[s][l][q][m], timeResidual, 1.0);
         fill(histQuarterDriftTimeResidual[s][l][q], timeResidual, 1.0);
         fill(histLayerDriftTimeResidual[s][l], timeResidual, 1.0);
@@ -393,6 +429,7 @@ StatusCode OTModuleClbrMon::execute()
         if(clone->p() / 1000.0 > 10.0)
         {
           tuple->column("runNumber", odin->runNumber());
+	  tuple->column("eventNumber", (unsigned int)odin->eventNumber());
           tuple->column("gpsTime", gpsTime);
           tuple->column("eventTime",
             (eventTime.second(false) << 0) +
@@ -419,10 +456,250 @@ StatusCode OTModuleClbrMon::finalize()
   projector.release().ignore();
   decoder.release().ignore();
 
+  double mtoff[] = {
+    27.8546, 27.4911, 27.1707, 26.8945, 26.6638, 26.4802, 26.3445, 26.2568, 26.2233, 27.8478, 27.485, 27.1654, 26.89, 26.66,
+    26.4774, 26.3425, 26.2557, 26.2183, 27.8823, 27.5192, 27.1991, 26.9231, 26.6927, 26.5092, 26.3737, 26.2874, 26.2548,
+    27.8755, 27.5131, 27.1938, 26.9185, 26.6889, 26.5065, 26.3718, 26.2863, 26.2499, 28.1602, 27.7832, 27.4486, 27.1581,
+    26.9129, 26.7143, 26.5635, 26.4614, 26.4162, 27.9127, 27.5628, 27.2564, 26.9949, 26.7797, 26.6116, 26.4919, 26.4203,
+    26.3989, 27.948, 27.5975, 27.2905, 27.0285, 26.8123, 26.6437, 26.5232, 26.4515, 26.4309, 28.1797, 27.8039, 27.4705,
+    27.1812, 26.9373, 26.7396, 26.5899, 26.4906, 26.4385, 28.1285, 27.7806, 27.4759, 27.2155, 27.0011, 26.8335, 26.7139,
+    26.6417, 26.6204, 28.3566, 27.9829, 27.6521, 27.3642, 27.1219, 26.9257, 26.7768, 26.6765, 26.6236, 28.3941, 28.0204,
+    27.689, 27.401, 27.158, 26.9613, 26.8118, 26.712, 26.6684, 28.1465, 27.7992, 27.4958, 27.2364, 27.0229, 26.8563,
+    26.7376, 26.6672, 26.647, 28.4043, 28.0483, 27.734, 27.4635, 27.2378, 27.0581, 26.9255, 26.8403, 26.8076, 28.3955, 28.0395,
+    27.7263, 27.4561, 27.2312, 27.0519, 26.9199, 26.8352, 26.7985, 28.4319, 28.0763, 27.7624, 27.4921, 27.2668, 27.0873, 26.9548,
+    26.8708, 26.8392, 28.4231, 28.0676, 27.7548, 27.485, 27.2602, 27.0811, 26.9493, 26.8659, 26.8301, 29.9962, 29.659, 29.3618, 29.1064,
+    28.8936, 28.7243, 28.5992, 28.5184, 28.4874, 29.9957, 29.6592, 29.3627, 29.108, 28.8956, 28.727, 28.6025, 28.5224, 28.4876,
+    30.024, 29.6872, 29.3902, 29.1352, 28.9228, 28.7535, 28.6285, 28.549, 28.5191, 30.0232, 29.687, 29.3909, 29.1363, 28.9241,
+    28.756, 28.6316, 28.5528, 28.5193, 30.2936, 29.9432, 29.6332, 29.3643, 29.1376, 28.9543, 28.8152, 28.7213, 28.6795,
+    30.0696, 29.7449, 29.4606, 29.2186, 29.0199, 28.8649, 28.7544, 28.6883, 28.6682, 30.0984, 29.773, 29.489, 29.2466, 29.047,
+    28.8915, 28.7804, 28.7145, 28.6956, 30.3194, 29.9702, 29.6607, 29.3929, 29.1675, 28.9852, 28.847, 28.7554, 28.7074,
+    30.2737, 29.951, 29.6685, 29.4276, 29.2294, 29.0747, 28.9644, 28.8977, 28.8779, 30.49, 30.1432, 29.8357, 29.5695, 29.3452,
+    29.1639, 29.0265, 28.9342, 28.8854, 30.5228, 30.1758, 29.8683, 29.6012, 29.3766, 29.195, 29.0571, 28.9649, 28.925, 30.2967,
+    29.9749, 29.6931, 29.4533, 29.256, 29.1021, 28.9927, 28.9281, 28.9096, 30.5439, 30.2125, 29.9213, 29.6709, 29.462,
+    29.2961, 29.1738, 29.0951, 29.0647, 30.5397, 30.209, 29.9183, 29.6682, 29.46, 29.2946, 29.1729, 29.0947, 29.0608, 30.5719,
+    30.2407, 29.9498, 29.6997, 29.4909, 29.3252, 29.2032, 29.1256, 29.0965, 30.5675, 30.2371, 29.9467, 29.6969, 29.489,
+    29.3239, 29.2022, 29.1253, 29.0926, 32.1781, 31.8639, 31.5876, 31.3502, 31.1529, 30.9959, 30.8803, 30.8056, 30.7769, 32.1733,
+    31.8596, 31.5844, 31.3472, 31.1507, 30.9942, 30.879, 30.8049, 30.7727, 32.2062, 31.8923, 31.6162, 31.3791, 31.1818,
+    31.0251, 30.9096, 30.8361, 30.8087, 32.2014, 31.888, 31.613, 31.3761, 31.1796, 31.0233, 30.9083, 30.8354, 30.8046, 32.468,
+    32.142, 31.8531, 31.6031, 31.3927, 31.2227, 31.0939, 31.0069, 30.9683, 32.255, 31.9526, 31.6888, 31.464, 31.2794,
+    31.1357, 31.0333, 30.972, 30.9534, 32.2883, 31.9859, 31.7212, 31.496, 31.311, 31.1667, 31.0638, 31.0029, 30.9857, 32.4905,
+    32.1651, 31.8774, 31.6284, 31.4187, 31.2495, 31.1213, 31.0365, 30.9923, 32.4635, 32.1625, 31.8993, 31.6756, 31.4915,
+    31.3481, 31.2458, 31.1838, 31.1653, 32.6667, 32.343, 32.0568, 31.809, 31.6005, 31.4325, 31.305, 31.2192, 31.1738, 32.6977,
+    32.3737, 32.0871, 31.8392, 31.6305, 31.4617, 31.3338, 31.2484, 31.2115, 32.4885, 32.1884, 31.9263, 31.7032, 31.5199,
+    31.3773, 31.2756, 31.2157, 31.1986, 32.7279, 32.419, 32.1478, 31.9149, 31.7209, 31.5668, 31.4532, 31.3801, 31.3518, 32.7255,
+    32.4177, 32.1464, 31.9141, 31.7206, 31.567, 31.4538, 31.3813, 31.3496, 32.7558, 32.4473, 32.1763, 31.9435, 31.7497,
+    31.5959, 31.4825, 31.4105, 31.3837, 32.7534, 32.446, 32.175, 31.9429, 31.7497, 31.5962, 31.4832, 31.4118, 31.3815
+  };
+
+  double test[3][4][4][9]; memset(test, 0.0, sizeof(test));
+  double newT0s[3][4][4][9]; memset(newT0s, 0.0, sizeof(newT0s));
+
+  double t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
+  double fake_t0s[3][4][4][9]; memset(t0s, 0, sizeof(t0s));
+  //readCondXMLs(t0s);
+  if(readXMLs) readCondXMLs(t0s);
+  else readCondDB(t0s);
+
+  std::cout<< "READ t0s"<< std::endl;
+    for(int s = 0; s < 3; s++){
+      for(int l = 0; l < 4; l++){
+	for(int q = 0; q < 4; q++){
+	  for(int m = 8; m >= 0; m--){
+	    std::cout<< "s = "<<s<< " l = "<< l<< " q = "<< q << " m = "<< m << "t0 = " << t0s[s][l][q][m]<<std::endl;
+	  }
+	}
+      }
+    }
+
+    for(int s = 0; s < 3; s++){
+      for(int l = 0; l < 4; l++){
+	for(int q = 0; q < 4; q++){
+
+	  double t0_ = 0.0;
+	  double dt0_ = 0.0;
+	  double dt0err_ = 0.1;
+	  
+	  for(int m = 8; m >= 0; m--){
+
+	    int modulen = m + 9 * (q + 4 * (l + 4 * s));
+
+	    
+	    if(m_histModuleDriftTimeResidual[s][l][q][m] == 0 || m_histModuleDriftTimeResidual[s][l][q][m]->GetEntries() < 1000  || (s == 0 && m == 0))
+	      {
+		std::cout<< "no data enough"<<std::endl;
+		
+		if(m == 8) t0_ = -mtoff[modulen];
+		if(!(s == 0 && m == 0)){
+		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01L[s][l][q][m]->GetEntries() << std::endl;
+		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01R[s][l][q][m]->GetEntries() << std::endl;
+		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23L[s][l][q][m]->GetEntries() << std::endl;
+		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23R[s][l][q][m]->GetEntries() << std::endl;
+		}
+
+		t0s[s][l][q][m] = t0_ + mtoff[modulen];
+
+		hdt0->SetBinContent(hdt0->FindBin(modulen), dt0_);
+		hdt0->SetBinError(hdt0->FindBin(modulen), dt0err_);
+		ht0->SetBinContent(ht0->FindBin(modulen), t0_ + (28.0 + 2.0 * s));
+		ht0->SetBinError(ht0->FindBin(modulen), dt0err_);
+
+		std::cout << "if cond"<< modulen<<" "<< dt0_<< " "<< dt0err_ << std::endl;
+
+		//fake_t0s[s][l][q][m]= 0.0;
+		fake_t0s[s][l][q][m]=  t0_ + mtoff[modulen] +0.0;
+	    
+		std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+		std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+
+		continue;
+	      }
+	      
+
+	    std::cout<< "good module, enough data"<<std::endl;
+	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01L[s][l][q][m]->GetEntries() << std::endl;
+	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01R[s][l][q][m]->GetEntries() << std::endl;
+	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23L[s][l][q][m]->GetEntries() << std::endl;
+	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23R[s][l][q][m]->GetEntries() << std::endl;
+
+            double left = m_histModuleDriftTimeResidual[s][l][q][m]->GetXaxis()->GetXmin();
+            double right = m_histModuleDriftTimeResidual[s][l][q][m]->GetXaxis()->GetXmax();
+            double dt0err = 0.1;
+            for(int i = 0; i < 5; i++)
+              {
+		//std::cout<< "still alive "<< i <<std::endl;
+                m_histModuleDriftTimeResidual[s][l][q][m]->Fit("gaus", "QRLL", "", left, right);
+                left = m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParameter(1) - 2.0 * m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParameter(2);
+                right = m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParameter(1) + 2.0 * m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParameter(2);
+              }
+
+	    std::cout<<"Now fitting the 4 sub contributions"<<std::endl;
+
+	    double residual_01L=0.0;
+            double residual_01R=0.0;
+            double residual_23L=0.0;
+            double residual_23R=0.0;
+
+            StatusCode sc_01L = fit_single_hist(m_histModuleDriftTimeResidual01L[s][l][q][m],s,l,q, m, residual_01L);
+            StatusCode sc_01R = fit_single_hist(m_histModuleDriftTimeResidual01R[s][l][q][m],s,l,q, m, residual_01R);
+            StatusCode sc_23L = fit_single_hist(m_histModuleDriftTimeResidual23L[s][l][q][m],s,l,q, m, residual_23L);
+            StatusCode sc_23R = fit_single_hist(m_histModuleDriftTimeResidual23R[s][l][q][m],s,l,q, m, residual_23R);
+
+            test[s][l][q][m]= 0.25*(residual_01L+
+                                    residual_01R+
+                                    residual_23L+
+                                    residual_23R);
+
+
+	    //std::cout<<"assigning dt0 "<< test[s][l][q][m] << std::endl;
+	    //std::cout<<"OTIS residuals "<< residual_01L<<" "<<residual_01R<<" "<<residual_23L<<" "<<residual_23R << std::endl;
+
+            double dt0 =  test[s][l][q][m];
+	    //std::cout<<"assigning dt0 -2nd time "<< dt0 << std::endl;
+
+	    //std::cout<<"assigning dt0err "<<std::endl;
+
+            //double dt0err = m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParError(1);                                                
+            dt0err = m_histModuleDriftTimeResidual[s][l][q][m]->GetFunction("gaus")->GetParError(1);
+            //double dt0err = 0.1;                                                                                                                           
+
+	    //std::cout<<"calculating t0 for monitoring"<<  t0s[s][l][q][m] + test[s][l][q][m] <<std::endl;
+
+            double t0 = t0s[s][l][q][m] + test[s][l][q][m];
+	    std::cout<<"calculating t0 for monitoring - 2nd time"<<  t0 <<std::endl;
+
+	    //std::cout<<"subtracting toff for monitoring"<<std::endl;
+
+            t0 -= mtoff[modulen];
+
+	    //std::cout<<"filling ndt0"<<std::endl;
+
+            hdt0->SetBinContent(hdt0->FindBin(modulen), dt0);
+            hdt0->SetBinError(hdt0->FindBin(modulen), dt0err);
+
+	    //std::cout<<"filling nt0"<<std::endl;
+
+            ht0->SetBinContent(ht0->FindBin(modulen), t0 + (28.0 + 2.0 * s));
+            ht0->SetBinError(ht0->FindBin(modulen), dt0err);
+
+	    //std::cout << "fit cond"<< modulen<<" "<< dt0<< " "<< dt0err << std::endl;
+            t0_ = t0;
+            dt0_ = dt0;
+            dt0err_ = dt0err;
+
+	    std::cout<<"warning t0 too big"<<std::endl;
+
+            if(fabs(dt0) > 1) std::cout << s <<" "<< l <<" "<< q <<" "<< m << " :: dt0 = " << dt0 <<" "<<residual_01L<<" "<< residual_01R << " "<< residual_23L<< " "<< residual_23R << std::endl;
+
+	    //comment the following line if you want to NOT include the calibration
+	    if(Apply_Calibration){
+	      t0s[s][l][q][m]= t0s[s][l][q][m] + test[s][l][q][m];
+	    }
+
+	    //fake_t0s[s][l][q][m]= 0.0;
+	    fake_t0s[s][l][q][m]= t0s[s][l][q][m] +0.0;
+
+
+	    std::cout<< "newT0s[s][l][q][m] = "<<t0s[s][l][q][m]<<std::endl;
+
+	    // std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m]<<std::endl; 
+	    //std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+	    //std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+		
+	  }
+	}
+      }
+    }
+
+  for(int i = 0; i < 432; i++) if(hdt0->GetBinContent(i+1) != 0) hdt0proj->Fill(hdt0->GetBinContent(i+1));
+
+  for(int i = 0; i < 432; i++) std::cout<< i <<" "<< hdt0->GetBinContent(i+1)<< " "<< ht0->GetBinContent(i+1)<<std::endl;
+
+  if(Apply_Calibration)
+    writeCondXMLs(t0s);
+  //just to change the t0s 2ns to everyone, to see how much the track eff. and so change
+  else
+    writeCondXMLs(fake_t0s);
+
   return GaudiTupleAlg::initialize();
 }
 
-StatusCode OTModuleClbrMon::readCondXMLs()
+StatusCode OTModuleClbrMon::readCondDB(double read_t0s[3][4][4][9])
+{
+   std::string subDet = "OT";
+
+   double Module_t0;
+
+   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++)
+   {
+     for(int m = 8; m >= 0; m--){
+
+     std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
+
+     std::string alignLoc ="/dd/Conditions/Calibration/OT/CalibrationModules"+stationNames[s]+layerNames[l]+quarterNames[q]+"/"+stationNames[s]+layerNames[l]+quarterNames[q]+moduleNames[m];
+
+     Condition *myCond = get<Condition>( detSvc(), alignLoc );
+  
+ 
+      if(simulation){
+	std::vector<double> TZeroVec = myCond->paramAsDoubleVect( "TZero" );
+	for(int i = 0; i<TZeroVec.size();i++){
+	  //std::cout << "t0 per straw = "<<TZeroVec.at(i)<<std::endl; // for check
+	  Module_t0 +=TZeroVec.at(i); 
+	}
+	read_t0s[s][l][q][m] = Module_t0/(TZeroVec.size()*1.0);//in simcond the t0 are on straw bases, I make an average - for now - to make it module basis
+      }
+      else{
+	read_t0s[s][l][q][m] = myCond->paramAsDouble( "TZero" );
+      }
+
+     }
+   }
+
+  
+  return StatusCode::SUCCESS;
+}
+
+StatusCode OTModuleClbrMon::readCondXMLs(double t0s[3][4][4][9])
 {
   std::string prefix = "CalibrationModules";
 
@@ -458,6 +735,7 @@ StatusCode OTModuleClbrMon::readCondXMLs()
 
       int m; std::string param;
 
+     
       rule<phrase_scanner_t> xmlRule =
           !("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >
           >> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >
@@ -506,6 +784,57 @@ StatusCode OTModuleClbrMon::readCondXMLs()
           >> "</catalog>"
           >> "</DDDB>"
           >> end_p;
+      
+      /*
+      rule<phrase_scanner_t> xmlRule =
+	!("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >                                                                                                  
+	>> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >                                                                                        
+	>> "<DDDB>"
+	>> "<catalog" >> *(anychar_p - '>') >> '>' // <catalog ... >                                                                                                    
+	>> +(
+              lexeme_d[
+                  "<condition"
+                  >> *(
+		       (
+			" name" >> *space_p >> '=' >> *space_p >> '\"'
+			>> *(anychar_p - 'M') >> 'M' >> int_p[ref(m) = arg1 - 1]
+			>> '\"'
+			)
+		       | (anychar_p - '>')
+		       )
+                  >> '>' // <condition ... name="...M{m + 1}" ... >                                                                     
+              ]
+              >> +(
+                  lexeme_d[
+                      "<paramVector"
+		      >> *(
+			   (
+			    " name" >> *space_p >> '=' >> *space_p >> '\"'
+			    >> (+(anychar_p - '\"'))[ref(param) = construct<std::string>(arg1, arg2)]
+			    >> '\"'
+			    )
+			   | (anychar_p - '>')
+			   ) >> '>' // <paramVector ... name="{param}" ... >                                                            
+                  ]
+                  >> +real_p // vector of values                  
+                      [
+		       if_(ref(param) == "TRParameters")
+		       [ boost::phoenix::push_back(ref(cRt)   [ref(m)], arg1) ],
+		       if_(ref(param) == "STParameters")
+		       [ boost::phoenix::push_back(ref(cRtErr)[ref(m)], arg1) ],
+		       if_(ref(param) == "TZero")
+		       [ boost::phoenix::push_back(ref(cT0)   [ref(m)], arg1) ],
+		       if_(ref(param) == "WalkParameters")
+		       [ boost::phoenix::push_back(ref(cWalk) [ref(m)], arg1) ]
+                      ]
+                  >> "</paramVector>"
+		   )[ref(param) = ""]
+              >> "</condition>"
+	     )[ref(m) = -1]
+	>> "</catalog>"
+        >> "</DDDB>"
+	>> end_p;
+      */
 
       if(parse(xml.c_str(), xmlRule, space_p).full != true) return StatusCode::FAILURE;
     }
@@ -524,7 +853,156 @@ StatusCode OTModuleClbrMon::readCondXMLs()
       }
       else std::cout << "skip walk initialization: npars != 4" << std::endl;
     }
+
+
+    for(int m = 0; m < 9; m++)
+      {
+        double t0 = cT0[m][0];
+        t0s[s][l][q][m] = t0;
+	std::cout<< "t0 for module " << s <<" "<< l << " "<< q << " "<< m <<" = "<< t0s[s][l][q][m] << std::endl;
+      }
+
   }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
+{
+  std::string prefix = "CalibrationModules";
+
+  for(int s = 0; s < 3; s++)
+    for(int l = 0; l < 4; l++)
+      for(int q = 0; q < 4; q++)
+        {
+	  std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
+
+	  std::string fileName = quarterId + "@" + prefix + ".xml";
+
+	  std::ofstream file(fileName.c_str());
+          if(file.fail())
+            {
+	      printf("Can't open file: '%s'\n", fileName.c_str());
+              
+	      continue;
+            }
+
+          file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+          file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
+	  file << "\n";
+          file << "<DDDB>\n";
+          file << "<catalog name=\"" << prefix << quarterId << "\">\n";
+
+	  /*	 
+	  for(int m = 0; m < 9; m++)
+            {
+	      std::string moduleId = quarterId + moduleNames[m];
+
+              file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
+
+              file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
+              if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
+              else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
+              file << "    </paramVector>\n";
+
+              file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
+              file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
+              file << "    </paramVector>\n";
+
+              file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
+              file << "    </paramVector>\n";
+              file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
+              file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
+              file << "    </paramVector>\n";
+
+              file << "  </condition>\n";
+*/           
+
+	  //for SIMCOND only
+
+	  //std::cout<< "WRITING XMLs" <<std::endl;       
+	  for(int m = 0; m < 9; m++)
+            {
+	       std::cout<< "WRITING m = "<< m<< "t0 = "<< t0s[s][l][q][m]<< "written num"<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<<std::endl;
+
+	      std::string moduleId = quarterId + moduleNames[m];
+
+              file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
+
+              file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
+              if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
+              else      file << "     " << 2.6 << " " << 0 << " " << 4.0 * 0.15 << "\n";
+              //else      file << "     " << 2.6 << " " << (3.2 - 2.6 - 4.0 * 0.15) << " " << 4.0 * 0.15 << "\n";
+              file << "    </paramVector>\n";
+
+              file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
+              file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
+              file << "    </paramVector>\n";
+
+              file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+              //file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+              file << "    </paramVector>\n";
+	      //              file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
+	      //              file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
+              //file << "    </paramVector>\n";
+
+              file << "  </condition>\n";
+	      
+
+            }
+
+          file << "</catalog>\n";
+          file << "</DDDB>\n";
+
+          file.flush();
+          file.close();
+        }
+
+  return StatusCode::SUCCESS;
+}
+
+StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result)
+{
+  //char histName[256];                                                                                      
+  //sprintf(histName, "OTModuleClbrMon/%s/%s/%s/%s/%s", stationNames[s].c_str(), layerNames[l].c_str(), quarterNames[q].c_str(), moduleNames[m].c_str(), name);
+  //TH1D* hist = (TH1D*)file->Get(histName);                                                                 
+ 
+  if(hist == 0 || hist->GetEntries() < 100)
+    {
+      if(!(q % 2 == 0 && m == 8))
+        {
+	  std::cout << "FAIL: " << s<< " "<<l <<" "<<q<< " "<<m << std::endl;
+        }
+      return 0.0;
+    }
+  double left = hist->GetXaxis()->GetXmin();
+  double right = hist->GetXaxis()->GetXmax();
+  for(int i = 0; i < 5; i++)
+    {
+      hist->Fit("gaus", "QRLL", "", left, right);
+      left = hist->GetFunction("gaus")->GetParameter(1) - 1.0 * hist->GetFunction("gaus")->GetParameter(2);
+      right = hist->GetFunction("gaus")->GetParameter(1) + 1.0 * hist->GetFunction("gaus")->GetParameter(2);
+    }
+  std::cout << "FITTING: " << s<< " "<<l <<" "<<q<< " "<<m <<" "<<hist->GetFunction("gaus")->GetParameter(1)<< " "<< hist->GetFunction("gaus")->GetParameter(2)<<std::endl;
+
+  result =  hist->GetFunction("gaus")->GetParameter(1);
 
   return StatusCode::SUCCESS;
 }

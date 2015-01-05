@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2014-12-18 - Lucia Grillo
+- First draft of on-line t0 calibration - algorithm in the finalize. functions to read and write xml files, function to read t0 from the LHCBCOND or SIMCOND. to be added: function to write the new values in the database, at the moment only the new xml files in the scripts directory are written
+to try the calibration from scripts: gaudirun.py MC_BuJpsiK_JunSept2012.py 12143001_Bu_JpsiK_pfn.py
+
 !========================= OTCalibration v1r7 2014-08-23 =========================
 
 ! 2014-08-21 - Maurizio Martinelli

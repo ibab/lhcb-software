@@ -15,6 +15,10 @@
 namespace LHCb { class Track; }
 
 #include <string>
+#include <TH1D.h>
+#include <TF1.h>
+#include <TFile.h>
+#include <TString.h>
 
 /** @class OTModuleClbrMon OTModuleClbrMon.h
  *
@@ -129,6 +133,15 @@ private:
    * Read condition XML files (default false).
    */
   bool readXMLs;
+  /**
+   * Simulation or real data (default false, so data).
+   */
+  bool simulation;
+  /**
+   * Apply_Calibration (default false, if set to true it writes the new XML files - will write DB - with the new, calibrated t0s).
+   */
+  bool Apply_Calibration;
+
 public:
   OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocator);
 
@@ -139,7 +152,31 @@ public:
   /**
    * Read condition XMLs.
    */
-  StatusCode readCondXMLs();
+  StatusCode readCondXMLs(double t0s[3][4][4][9]);
+
+  /**
+   * Read condition XMLs.
+   */
+  StatusCode readCondDB(double t0s[3][4][4][9]);
+
+ private:
+
+  TH1D* hdt0;
+  TH1D* ht0;
+  TH1D* hdt0proj;
+  
+  TH1D* m_histModuleDriftTimeResidual[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual01L[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual01R[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual23L[3][4][4][9];
+  TH1D* m_histModuleDriftTimeResidual23R[3][4][4][9];
+  
+  //TF1* m_myFunc;                                                                  
+  StatusCode writeCondXMLs(double t0s[3][4][4][9]);
+  StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result);
+
 };
+
+
 
 #endif // __OTModuleClbrMon_h
