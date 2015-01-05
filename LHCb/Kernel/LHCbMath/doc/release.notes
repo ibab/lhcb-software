@@ -7,7 +7,7 @@
 !-----------------------------------------------------------------------------
 ! 2015-01-05 - Gerhard Raven
  - Similarity transforms: fix bug in SSE3 dot product, add (5x5) -> (1x1)
-   transform.
+   transform. Speed up SSE3 version by computing two dot products simultaneously.
 
 ! 2015-01-03 - Gerhard Raven
  - add vectorized (5x5) -> (5x5) and (5x5) -> (7x7) symmetric matrix

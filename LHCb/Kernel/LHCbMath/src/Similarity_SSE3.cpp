@@ -13,6 +13,14 @@ inline double dot5_sse3(const double* f, __m128d  r0, __m128d  r1, double r2) {
     // return f[0]*r0[0] + f[1]*r0[1] + f[2]*r1[0] + f[3]*r1[1] + f[4]*r2;
 }
 
+inline __m128d dots2_5_sse3(const double* f, __m128d  r0, __m128d  r1, double r2) {
+    auto x0 = r0*_mm_loadu_pd(f);
+    auto x1 = r1*_mm_loadu_pd(f+2);
+    auto y0 = r0*_mm_loadu_pd(f+5);
+    auto y1 = r1*_mm_loadu_pd(f+7);
+    return _mm_hadd_pd(x0,y0) + _mm_hadd_pd(x1,y1) + r2*__m128d{ f[4],f[9] };
+}
+
 // reshuffle the origin matrix for SIMD use...
 struct alignas(16) sse_t {
     __m128d r0,r10,r2,r12,r4,r14,r6,r16,r8,r18,r24;
@@ -61,29 +69,35 @@ void similarity_5_5_sse3(const double* Ci, const double* Fi, double* ti)  {
       auto _0 = m.g0(Fi);
       auto _2 = m.g2(Fi);
       auto _4 = m.g4(Fi);
-      ti[ 0] = dot5_sse3(Fi   ,_0,_2,_4);
-      ti[ 1] = dot5_sse3(Fi+ 5,_0,_2,_4);
-      ti[ 3] = dot5_sse3(Fi+10,_0,_2,_4);
-      ti[ 6] = dot5_sse3(Fi+15,_0,_2,_4);
+      auto r = dots2_5_sse3(Fi,_0,_2,_4);
+      auto s = dots2_5_sse3(Fi+10,_0,_2,_4);
+      ti[ 0] = r[0];
+      ti[ 1] = r[1];
+      ti[ 3] = s[0];
+      ti[ 6] = s[1];
       ti[10] = dot5_sse3(Fi+20,_0,_2,_4);
       _0 = m.g0(Fi+5);
       _2 = m.g2(Fi+5);
       _4 = m.g4(Fi+5);
-      ti[ 2] = dot5_sse3(Fi+ 5,_0,_2,_4);
-      ti[ 4] = dot5_sse3(Fi+10,_0,_2,_4);
-      ti[ 7] = dot5_sse3(Fi+15,_0,_2,_4);
-      ti[11] = dot5_sse3(Fi+20,_0,_2,_4);
+      r = dots2_5_sse3(Fi+ 5,_0,_2,_4);
+      s = dots2_5_sse3(Fi+15,_0,_2,_4);
+      ti[ 2] = r[0];
+      ti[ 4] = r[1];
+      ti[ 7] = s[0];
+      ti[11] = s[1];
       _0 = m.g0(Fi+10);
       _2 = m.g2(Fi+10);
       _4 = m.g4(Fi+10);
-      ti[ 5] = dot5_sse3(Fi+10,_0,_2,_4);
-      ti[ 8] = dot5_sse3(Fi+15,_0,_2,_4);
+      r = dots2_5_sse3(Fi+10,_0,_2,_4);
+      ti[ 5] = r[0];
+      ti[ 8] = r[1];
       ti[12] = dot5_sse3(Fi+20,_0,_2,_4);
       _0 = m.g0(Fi+15);
       _2 = m.g2(Fi+15);
       _4 = m.g4(Fi+15);
-      ti[ 9] = dot5_sse3(Fi+15,_0,_2,_4);
-      ti[13] = dot5_sse3(Fi+20,_0,_2,_4);
+      r = dots2_5_sse3(Fi+15,_0,_2,_4);
+      ti[ 9] = r[0];
+      ti[13] = r[1];
       _0 = m.g0(Fi+20);
       _2 = m.g2(Fi+20);
       _4 = m.g4(Fi+20);
