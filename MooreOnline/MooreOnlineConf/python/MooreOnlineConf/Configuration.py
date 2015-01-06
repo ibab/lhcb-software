@@ -21,6 +21,7 @@ class MooreOnline(LHCbConfigurableUser):
         , 'EnableMonitoring' : False
         , "RunMonitoringFarm" : False
         , 'REQ1' : ''
+        , 'ForceMDFInput' : False
         ################################################################
         # Options to Setup the online database, propagated to CondDB
         ################################################################
@@ -45,7 +46,7 @@ class MooreOnline(LHCbConfigurableUser):
         , 'Simulation': False
         , 'DataType' : '2012'
         , "CheckOdin" : True
-	, "HltLevel" : 'Hlt1'
+        , "HltLevel" : 'Hlt1'
         }
     
     def _configureDBSnapshot(self):
@@ -83,7 +84,8 @@ class MooreOnline(LHCbConfigurableUser):
             
         # setup the histograms and the monitoring service
         from Configurables import UpdateAndReset
-        app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
+        if not self.getProp('Simulation'):
+            app.TopAlg = [ UpdateAndReset() ] + app.TopAlg
         app.ExtSvc.append( 'MonitorSvc' ) 
         HistogramPersistencySvc().OutputFile = ''
         HistogramPersistencySvc().Warnings = False
@@ -107,11 +109,21 @@ class MooreOnline(LHCbConfigurableUser):
             importOptions('$MBM_SETUP_OPTIONS')
             mbm_setup = allConfigurables['OnlineEnv']
             task_type = os.environ['TASK_TYPE']
-            input   = mbm_setup.__getattribute__(task_type+'_Input')   #'Events' 
-            output  = mbm_setup.__getattribute__(task_type+'_Output')  #'Send'
 
-            TAE = OnlineEnv.TAE != 0
-            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
+            ## The next four lines are a temporary hack for the timing tests. It
+            ## will be removed once the permanent solution for the
+            ## CheckPointingSvc is in place.
+            import re
+            m = re.match("(.*)_(?:\\d+)$", task_type)
+            if m:
+                task_type = m.group(1)
+
+            input_buffer  = mbm_setup.__getattribute__(task_type + '_Input')   #'Events' 
+            output_buffer = mbm_setup.__getattribute__(task_type + '_Output')  #'Send'
+
+            TAE = (OnlineEnv.TAE != 0)
+            mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID, OnlineEnv.PartitionName,
+                                          [input_buffer, output_buffer], False)
             mepMgr.PartitionBuffers = True
             mepMgr.PartitionName    = OnlineEnv.PartitionName
             mepMgr.PartitionID      = OnlineEnv.PartitionID
@@ -123,7 +135,7 @@ class MooreOnline(LHCbConfigurableUser):
             evtMerger.DataType = OnlineEnv.MDF_BANKS
 	    
             if TAE : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)
-	    elif self.getProp('HltLevel') =="Hlt2" : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)  # decode=False for HLT2 ONLY!!!!!
+            elif self.getProp('HltLevel') == "Hlt2" or self.getProp('ForceMDFInput') : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=False)  # decode=False for HLT2 ONLY!!!!!
             else   : eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE, decode=True)  
             app.ExtSvc.append(eventSelector)
 
@@ -241,7 +253,7 @@ class MooreOnline(LHCbConfigurableUser):
     def _setIfNotSet(self,prop,value) :
         if not self.isPropertySet(prop) : self.setProp(prop,value)
         return self.getProp(prop) == value
-    
+
     def forceOtherProps(self, other, props):
         """
         Force overwriting properties in online mode

@@ -4,6 +4,9 @@
 ! Purpose     : Holding the master configurable which sets up Moore for the online
 !=================================================================================
 
+! 2015-01-06 - Roel Aaij
+ - Add a property to force MDF input when running HLT1 in the timing tests.
+
 !========================= MooreOnlineConf v1r5 2014-10-17 =========================
 
 ! 2014-10-07 - Gerhard Raven
