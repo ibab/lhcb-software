@@ -22,24 +22,24 @@ validateWithReference(preproc = preprocessor)
 findReferenceBlock("""
 ChargedProtoANN...SUCCESS List of booked 1D histograms in directory         "PROTO/ChargedProtoANNPIDMoni" :-
  | ID                        |   Title                                       |    #    |     Mean   |    RMS     |  Skewness  |  Kurtosis  |
- | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   4300  |   0.057941 | 0.16602    |     3.9725 |     15.915 |
- | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   4300  |    0.80196 | 0.28426    |     -1.565 |     1.1016 |
- | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   4300  |  0.0098784 | 0.038625   |     13.106 |     224.92 |
+ | Downstream/ElectronANN    | "Downstream Electron ANN PID"                 |   4300  |   0.057945 | 0.16602    |     3.9722 |     15.913 |
+ | Downstream/GhostANN       | "Downstream Ghost ANN PID"                    |   4300  |    0.80195 | 0.28427    |    -1.5649 |     1.1013 |
+ | Downstream/KaonANN        | "Downstream Kaon ANN PID"                     |   4300  |  0.0098783 | 0.038624   |     13.107 |     224.93 |
  | Downstream/MuonANN        | "Downstream Muon ANN PID"                     |   4300  |  0.0022279 | 0.033541   |     22.376 |     549.33 |
- | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   4300  |    0.10338 | 0.20426    |     2.7387 |     7.0081 |
- | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   4300  |   0.022416 | 0.06163    |     6.2992 |     51.118 |
- | Long/ElectronANN          | "Long Electron ANN PID"                       |  10394  |   0.025922 | 0.11552    |     6.0733 |     39.039 |
- | Long/GhostANN             | "Long Ghost ANN PID"                          |  10394  |    0.43151 | 0.42831    |    0.32605 |    -1.7313 |
- | Long/KaonANN              | "Long Kaon ANN PID"                           |  10394  |   0.060113 | 0.15266    |     3.9205 |     16.461 |
+ | Downstream/PionANN        | "Downstream Pion ANN PID"                     |   4300  |    0.10339 | 0.20426    |     2.7388 |     7.0087 |
+ | Downstream/ProtonANN      | "Downstream Proton ANN PID"                   |   4300  |   0.022415 | 0.061628   |     6.2993 |     51.123 |
+ | Long/ElectronANN          | "Long Electron ANN PID"                       |  10394  |   0.025921 | 0.11552    |     6.0728 |     39.037 |
+ | Long/GhostANN             | "Long Ghost ANN PID"                          |  10394  |    0.43151 | 0.42832    |    0.32605 |    -1.7313 |
+ | Long/KaonANN              | "Long Kaon ANN PID"                           |  10394  |   0.060112 | 0.15266    |     3.9205 |     16.461 |
  | Long/MuonANN              | "Long Muon ANN PID"                           |  10394  |  0.0069747 | 0.062896   |     11.735 |     147.56 |
- | Long/PionANN              | "Long Pion ANN PID"                           |  10394  |    0.43015 | 0.40002    |    0.19712 |    -1.7049 |
- | Long/ProtonANN            | "Long Proton ANN PID"                         |  10394  |   0.035877 | 0.093904   |     5.2428 |     35.363 |
+ | Long/PionANN              | "Long Pion ANN PID"                           |  10394  |    0.43015 | 0.40003    |    0.19712 |    -1.7049 |
+ | Long/ProtonANN            | "Long Proton ANN PID"                         |  10394  |   0.035876 | 0.093905   |     5.2427 |     35.362 |
  | Upstream/ElectronANN      | "Upstream Electron ANN PID"                   |   1375  |   0.051643 | 0.11847    |      4.089 |      19.89 |
  | Upstream/GhostANN         | "Upstream Ghost ANN PID"                      |   1375  |     0.4077 | 0.35637    |    0.28955 |    -1.5204 |
  | Upstream/KaonANN          | "Upstream Kaon ANN PID"                       |   1375  |    0.05466 | 0.068952   |     3.5363 |     17.434 |
  | Upstream/MuonANN          | "Upstream Muon ANN PID"                       |   1375  |  0.0043392 | 0.020877   |     33.891 |     1212.8 |
- | Upstream/PionANN          | "Upstream Pion ANN PID"                       |   1375  |    0.38369 | 0.27732    |    0.28322 |     -1.236 |
- | Upstream/ProtonANN        | "Upstream Proton ANN PID"                     |   1375  |   0.031433 | 0.049881   |     3.2507 |     14.869 |
+ | Upstream/PionANN          | "Upstream Pion ANN PID"                       |   1375  |    0.38369 | 0.27732    |    0.28323 |     -1.236 |
+ | Upstream/ProtonANN        | "Upstream Proton ANN PID"                     |   1375  |   0.031433 | 0.049881   |     3.2506 |     14.869 |
 """, id = "ChargedProtoANN" )
 </text></argument>
 </extension>
