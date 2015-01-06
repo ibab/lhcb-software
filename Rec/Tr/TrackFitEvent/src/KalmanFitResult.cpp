@@ -29,7 +29,7 @@ namespace LHCb
   KalmanFitResult::~KalmanFitResult() {}
 
   // clone
-  TrackFitResult* KalmanFitResult::clone() const
+  KalmanFitResult* KalmanFitResult::clone() const
   {
     return new KalmanFitResult(*this) ;
   }
@@ -307,18 +307,16 @@ namespace LHCb
 	
 	// for now, let's do it the lazy way: make a clone, then flag
 	// all hits as outliers. the cloning is real slow .
-	KalmanFitResult* copy = static_cast<KalmanFitResult*>(this->clone()) ;
+	std::unique_ptr<KalmanFitResult> copy{ this->clone() };
 	
 	// set all TT hits as ourliers
-	FitNodeRange fitnodes = copy->fitNodes() ;
-	LHCb::FitNode *copylastnode(0), *copyfirstnode(0) ;
-	for( FitNodeRange::iterator inode = fitnodes.begin() ; 
-	     inode != fitnodes.end() ; ++inode)
-	  if( (*inode)->type()==LHCb::Node::HitOnTrack &&
-	      (*inode)->measurement().type()==LHCb::Measurement::TT ) {
-	    (*inode)->deactivateMeasurement() ;
-	    copylastnode = (*inode) ;
-	    if(copyfirstnode==0) copyfirstnode = (*inode) ;
+	LHCb::FitNode *copylastnode(nullptr), *copyfirstnode(nullptr) ;
+	for( auto& node : copy->fitNodes() ) 
+	  if ( node->type()==LHCb::Node::HitOnTrack &&
+	      node->measurement().type()==LHCb::Measurement::TT ) {
+	    node->deactivateMeasurement() ;
+	    copylastnode = node ;
+	    if (!copyfirstnode) copyfirstnode = node ;
 	  }
 	LHCb::State stateA = copylastnode->predictedState(LHCb::FitNode::Forward) ;
 	LHCb::State stateB = copylastnode->predictedState(LHCb::FitNode::Backward) ;
@@ -326,7 +324,6 @@ namespace LHCb
 	weight.InvertChol() ;
 	Gaudi::Vector5 res = stateA.stateVector() - stateB.stateVector() ;
 	chi2WithOutTTHits += LHCb::ChiSquare( ROOT::Math::Similarity(res,weight), 5 ) ;
-	delete copy ;
       }
       rc = chi2() - chi2WithOutTTHits ;
     }

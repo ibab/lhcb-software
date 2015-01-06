@@ -42,10 +42,10 @@ namespace LHCb
     KalmanFitResult(const TrackFitResult& rhs) ;
 		    
     // destructor
-    virtual ~KalmanFitResult() ;
+    ~KalmanFitResult() override;
 
     // clone
-    virtual TrackFitResult* clone() const ;
+    KalmanFitResult* clone() const override;
 
     // set links between nodes and to parent
     void establishNodeLinks() ;

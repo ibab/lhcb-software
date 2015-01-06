@@ -630,7 +630,7 @@ namespace LHCb {
       r = refResidual() + (H*(refX - state.stateVector()))(0) ;
       
       double V = errMeasure2();
-      double HCH = Similarity( H, state.covariance() )(0,0);
+      double HCH = LHCb::Math::Similarity( H, state.covariance() );
       double sign = biased ? -1 : 1 ;
       R = V + sign * HCH;
     }
