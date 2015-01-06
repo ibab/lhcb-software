@@ -5,6 +5,9 @@
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+! 2015-1-6 - Sean Benson
+ - For Turbo track reports, always ensure a new object summary is made
+
 !========================= HltRawData v5r1 2014-12-15 =========================
 
 ! 2014-12-04 - Gerhard Raven

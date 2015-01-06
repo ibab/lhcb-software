@@ -716,6 +716,14 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Track& obje
   std::vector<LHCbID>::const_iterator rbegin1=theseHits.end(); --rbegin1;
   std::vector<LHCbID>::const_iterator rend1=theseHits.begin(); --rend1;        
   
+  // If Turbo, do not look for the same object
+  if( m_Turbo == true ){
+    hos->setLhcbIDs( std::move(theseHits) );
+    hos->setNumericalInfo( theseInfo );
+    m_objectSummaries->push_back(hos.release());
+    return m_objectSummaries->back();
+  }
+  
   //    look for objects with the same lhcbids
   //      if many then the one which leaves least amount info on this one
   int smallestSize = theseInfo.size();
@@ -991,12 +999,18 @@ const LHCb::HltObjectSummary* HltSelReportsMaker::store_(const LHCb::Particle& o
         // charged track particle
         hos->addToSubstructure( store_( *track ) ); 
         debug() << "requesting track store" << endmsg;
-        if(m_Turbo) hos->addToSubstructure( store_( *pp ) );  
-        debug() << "requesting proto-particle store" << endmsg;// SB add
-        if(m_Turbo && pp->richPID() ) hos->addToSubstructure( store_( *pp->richPID() ) );
-        debug() << "requesting RichPID store" << endmsg;// SB add
-        if(m_Turbo && pp->muonPID() ) hos->addToSubstructure( store_( *pp->muonPID() ) );
-        debug() << "requesting MuonPID store" << endmsg;// SB add
+        if(m_Turbo) {
+          hos->addToSubstructure( store_( *pp ) );  
+          debug() << "requesting proto-particle store" << endmsg;// SB add
+        }
+        if(m_Turbo && pp->richPID() ) {
+          hos->addToSubstructure( store_( *pp->richPID() ) );
+          debug() << "requesting RichPID store" << endmsg;// SB add
+        }
+        if(m_Turbo && pp->muonPID() ) {
+          hos->addToSubstructure( store_( *pp->muonPID() ) );
+          debug() << "requesting MuonPID store" << endmsg;// SB add
+        }
         // if muon add muon stub too        
         const LHCb::MuonPID* muid = pp->muonPID();
         if ( muid && object.particleID().abspid()==13  &&  muid->IsMuon() ){
