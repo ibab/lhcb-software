@@ -1,9 +1,6 @@
 #pragma GCC optimize "O3"
 #pragma GCC target   "avx"
-
-#include "LHCbMath/Similarity.h"
 #include <x86intrin.h>
-
 
 namespace {
 
@@ -64,13 +61,14 @@ struct alignas(16) avx_5_t {
 
 namespace LHCb {
 namespace Math {
+namespace similarity_5_avx {
 
-void similarity_5_1_avx(const double* Ci, const double* Fi, double* Ti)  {
+    void similarity_5_1(const double* Ci, const double* Fi, double* Ti)  {
       avx_5_t m { Ci };
       *Ti= dot5_avx(Fi,m.c0i(Fi), m.c4i(Fi));
-}
+    }
 
-void similarity_5_5_avx(const double* Ci, const double* Fi, double* Ti)  {
+    void similarity_5_5(const double* Ci, const double* Fi, double* Ti)  {
 
       // reshuffle the symmetric, lower diagonal, row-major Ci matrix for SIMD use...
       avx_5_t m { Ci };
@@ -99,9 +97,9 @@ void similarity_5_5_avx(const double* Ci, const double* Fi, double* Ti)  {
       Ti[13] = s[1];
       _0 = m.c0i(Fi+20); _4 = m.c4i(Fi+20);
       Ti[14] = dot5_avx(Fi+20,_0,_4);
-}
+    }
 
-void similarity_5_7_avx(const double* Ci, const double* Fi, double* Ti)  {
+    void similarity_5_7(const double* Ci, const double* Fi, double* Ti)  {
 
       // reshuffle the 5x5 symmetric Ci matrix for SIMD use...
       avx_5_t  m { Ci };
@@ -149,6 +147,7 @@ void similarity_5_7_avx(const double* Ci, const double* Fi, double* Ti)  {
       Ti[26] = s[1];
       _0 = m.c0i(Fi+30); _4 = m.c4i(Fi+30);
       Ti[27] = dot5_avx(Fi+30,_0,_4);
+    }
 }
 }
 }

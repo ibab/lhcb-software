@@ -26,6 +26,7 @@ gaudi_add_dictionary(LHCbMath
 
 set_property(SOURCE src/Similarity_AVX.cpp PROPERTY COMPILE_FLAGS " -mavx -O3 " )
 set_property(SOURCE src/Similarity_SSE3.cpp PROPERTY COMPILE_FLAGS " -msse3 -O3 " )
+set_property(SOURCE src/Similarity_generic.cpp PROPERTY COMPILE_FLAGS " -O3 " )
 
 if(GAUDI_BUILD_TESTS)
   gaudi_add_executable(TestPow

@@ -8,7 +8,7 @@ namespace LHCb { namespace Math {
 using similarity_t = void (*)(const double* Ci, const double* Fi, double* ti);
 
 // the actual function to call -- will be adjusted on first invocation to 
-// a version which matches the architect we're running on...
+// a version which matches the supported instruction set we're running on...
 
 extern  similarity_t similarity_5_1;
 extern  similarity_t similarity_5_5;
@@ -27,11 +27,16 @@ inline double Similarity( const Gaudi::Vector5& F,
     return target; // rely on RVO to make this efficient...
 }
 
-
-
+inline double Similarity( const Gaudi::Matrix1x5& F,
+                          const Gaudi::SymMatrix5x5& origin )
+{
+    double target;
+    (*similarity_5_1)( origin.Array(), F.Array(), &target );
+    return target; // rely on RVO to make this efficient...
+}
 
 // 'target' and 'origin' are NOT allowed to be the same object.
-// (actually, in the SSE3 and AVX versions that are, but not in
+// (actually, in the SSE3 and AVX versions it is possible, but not in
 // the generic version -- hence this could be a very confusing bug)
 inline void Similarity( const Gaudi::Matrix5x5& F,
                         const Gaudi::SymMatrix5x5& origin,
@@ -48,11 +53,8 @@ inline Gaudi::SymMatrix5x5 Similarity( const Gaudi::Matrix5x5& F,
     return target; // rely on RVO to make this efficient...
 }
 
-
-
-
 // 'target' and 'origin' are NOT allowed to be the same object.
-// (actually, in the SSE3 and AVX versions that are, but not in
+// (actually, in the SSE3 and AVX versions it is possible, but not in
 // the generic version -- hence this could be a very confusing bug)
 inline void Similarity( const ROOT::Math::SMatrix<double,7,5>& F,
                         const Gaudi::SymMatrix5x5& origin,

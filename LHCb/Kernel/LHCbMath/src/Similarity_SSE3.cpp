@@ -1,8 +1,5 @@
-
 #pragma GCC optimize "O3"
-#include "LHCbMath/Similarity.h"
 #pragma GCC target "sse3"
-
 #include <x86intrin.h>
 
 namespace {
@@ -47,11 +44,6 @@ struct alignas(16) sse_t {
 namespace LHCb {
 namespace Math {
 
-void similarity_5_1_sse3(const double* Ci, const double* Fi, double* ti)  {
-      sse_t m { Ci };
-      *ti = dot5_sse3(Fi   ,m.g0(Fi),m.g2(Fi),m.g4(Fi));
-}
-
 // origin: 5x5 input symmetric matrix, in row-major version,i.e.
 //  1
 //  2  3
@@ -61,7 +53,13 @@ void similarity_5_1_sse3(const double* Ci, const double* Fi, double* ti)  {
 // F: transformation, row-major
 // ti: output 5x5 matrix: F * origin * Transpose(F)
 
-void similarity_5_5_sse3(const double* Ci, const double* Fi, double* ti)  {
+namespace similarity_5_sse3 {
+    void similarity_5_1(const double* Ci, const double* Fi, double* ti)  {
+        sse_t m { Ci };
+        *ti = dot5_sse3(Fi   ,m.g0(Fi),m.g2(Fi),m.g4(Fi));
+    }
+
+    void similarity_5_5(const double* Ci, const double* Fi, double* ti)  {
       // std::cout << "using similarity_5_5_sse3" << std::endl;
       // reshuffle the origin matrix for SIMD use...
       sse_t m { Ci };
@@ -102,8 +100,9 @@ void similarity_5_5_sse3(const double* Ci, const double* Fi, double* ti)  {
       _2 = m.g2(Fi+20);
       _4 = m.g4(Fi+20);
       ti[14] = dot5_sse3(Fi+20,_0,_2,_4);
-}
-void similarity_5_7_sse3(const double* Ci, const double* Fi, double* Ti)  {
+    }
+
+    void similarity_5_7(const double* Ci, const double* Fi, double* Ti)  {
 
       // reshuffle the 5x5 symmetric Ci matrix for SIMD use...
       sse_t m { Ci };
@@ -157,6 +156,7 @@ void similarity_5_7_sse3(const double* Ci, const double* Fi, double* Ti)  {
       _2 = m.g2(Fi+30);
       _4 = m.g4(Fi+30);
       Ti[27] = dot5_sse3(Fi+30,_0,_2,_4);
+    }
 }
 }
 }
