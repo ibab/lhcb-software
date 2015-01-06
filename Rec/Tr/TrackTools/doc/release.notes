@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2015-01-06 - Paul Seyfert
+ - fixed unchecked StatusCode in UpgradeGhostInfo
+
 ! 2015-01-01 - Paul Seyfert
  - track ghost probability for the upgrade
 

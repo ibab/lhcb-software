@@ -112,7 +112,9 @@ StatusCode UpgradeGhostId::initialize()
 void UpgradeGhostId::handle (const Incident& incident) {
   if (IncidentType::BeginEvent == incident.type() ) {
     m_needrefresh = true;
-    countHits();
+    if (countHits().isFailure() || m_needrefresh) {
+      Error("Subdetector hit counting failed",StatusCode::FAILURE,10).ignore();
+    }
   }
 }
 
