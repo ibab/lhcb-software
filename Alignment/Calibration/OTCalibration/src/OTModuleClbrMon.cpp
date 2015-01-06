@@ -978,6 +978,78 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
   return StatusCode::SUCCESS;
 }
 
+/*
+StatusCode OTModuleClbrMon::writeCondDBXMLs(double t0s[3][4][4][9])
+{
+  
+  boost::filesystem::path dir( m_xmlFilePath + "/" +subDet + "/v" + std::to_string(version) ) ;
+  boost::filesystem::path file( m_xmlFileName );
+  boost::filesystem::path full_path = dir/file ;
+  
+  if ( msgLevel(MSG::DEBUG) ) debug() << "Writing new XML for online to " << full_path << endmsg ;
+  
+  std::ofstream file;
+  
+  if( !boost::filesystem::exists( full_path ) ) {     
+    warning() << "full path doesn not exist!?!" << endmsg;
+    boost::filesystem::create_directories( dir ) ;
+  }
+  
+  file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode
+  
+  for(int s = 0; s < 3; s++)
+    for(int l = 0; l < 4; l++)
+      for(int q = 0; q < 4; q++)
+        {
+	  std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
+	  
+          file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+          file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
+	  file << "\n";
+          file << "<DDDB>\n";
+          file << "<catalog name=\"" << prefix << quarterId << "\">\n";
+	  
+	  for(int m = 0; m < 9; m++)
+	    {
+	      std::string moduleId = quarterId + moduleNames[m];
+	      
+	      file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
+	      
+	      file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
+	      if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
+	      else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
+	      file << "    </paramVector>\n";
+	      
+	      file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
+	      file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
+	      file << "    </paramVector>\n";
+	      
+	      file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+	      file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
+	      file << "    </paramVector>\n";
+	      file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
+	      file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
+	      file << "    </paramVector>\n";
+	      
+	      file << "  </condition>\n";
+	    }
+	}
+  
+  file << "</DDDB>\n";
+  
+  //logging << "<condition classID=\"6\" name=\"AverageHPDOccupancies\">\n";
+  //logging << "<paramVector name=\"Occupancies\" type=\"std::string\" comment=\"Average HPD occupancy\">"
+  //          << occS << "</paramVector>\n";
+  //logging << "</condition>\n";
+  //logging << "\n" ;
+  
+  file.close();
+  
+
+  return StatusCode::SUCCESS;
+}
+*/
+
 StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result)
 {
   //char histName[256];                                                                                      
