@@ -62,6 +62,8 @@ application  TestLABug   ../tests/TestLABug.cpp
 macro_append TestLABug_dependencies   " LHCbMathLib "
 application  TestBloomFilter   ../tests/TestBloomFilter.cpp
 macro_append TestBloomFilter_dependencies   " LHCbMathLib "
+application  TestSimilarity   ../tests/TestSimilarity.cpp 
+macro_append TestSimilarity_dependencies   " LHCbMathLib "
         
 # ================= patterns =============================================
 apply_pattern       linker_library library=LHCbMathLib
