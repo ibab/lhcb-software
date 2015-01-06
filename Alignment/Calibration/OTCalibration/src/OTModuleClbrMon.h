@@ -170,10 +170,13 @@ public:
   TH1D* m_histModuleDriftTimeResidual01R[3][4][4][9];
   TH1D* m_histModuleDriftTimeResidual23L[3][4][4][9];
   TH1D* m_histModuleDriftTimeResidual23R[3][4][4][9];
-  
+
+  std::string m_xmlFilePath;
+  std::string m_xmlFileName;  
+
   //TF1* m_myFunc;                                                                  
   StatusCode writeCondXMLs(double t0s[3][4][4][9]);
-  //StatusCode writeCondDBXMLs(double t0s[3][4][4][9]);
+  StatusCode writeCondDBXMLs(double t0s[3][4][4][9]);
   StatusCode fit_single_hist(TH1D* hist,int s, int l, int q, int m, double& result);
 
 };

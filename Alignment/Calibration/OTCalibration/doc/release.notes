@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+!2015-01-06 - Lucia Grillo
+- Added functin to write the single xml file to be used for the online condition database. Todo on this: agree on format, location.
+Todo: - implement the condition to update the database t0> 0.3ns?
+      - check the timing, optimizing, can the full implementation go in Brunel online or we have to change completely?
+
 ! 2014-12-18 - Lucia Grillo
 - First draft of on-line t0 calibration - algorithm in the finalize. functions to read and write xml files, function to read t0 from the LHCBCOND or SIMCOND. to be added: function to write the new values in the database, at the moment only the new xml files in the scripts directory are written
 to try the calibration from scripts: gaudirun.py MC_BuJpsiK_JunSept2012.py 12143001_Bu_JpsiK_pfn.py

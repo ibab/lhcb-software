@@ -23,6 +23,8 @@ using namespace LHCb;
 #include <boost/foreach.hpp>
 #include <boost/lexical_cast.hpp>
 
+#include <boost/filesystem.hpp>
+
 #include <boost/assign.hpp>
 using namespace boost::assign;
 
@@ -78,6 +80,9 @@ OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocat
   declareProperty("HistResidual", histResidualOpts, "Options for residual histograms (default r = [-2.5, 2.5]/50)");
   declareProperty("Simulation", simulation = false, " Is simulation or data (default false, so data)");
   declareProperty("Apply_Calibration", Apply_Calibration = false, " Apply_Calibration - in xml (by now) or in DB (default false,)");
+  //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );
+  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );
+  declareProperty("xmlFileName"   ,  m_xmlFileName  = "results.xml" );
 
   // Check options - reset to default if wrong or missing
   #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
@@ -657,8 +662,10 @@ StatusCode OTModuleClbrMon::finalize()
   if(Apply_Calibration)
     writeCondXMLs(t0s);
   //just to change the t0s 2ns to everyone, to see how much the track eff. and so change
-  else
+  else{
     writeCondXMLs(fake_t0s);
+    writeCondDBXMLs(fake_t0s);
+  }
 
   return GaudiTupleAlg::initialize();
 }
@@ -978,22 +985,31 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
   return StatusCode::SUCCESS;
 }
 
-/*
+
 StatusCode OTModuleClbrMon::writeCondDBXMLs(double t0s[3][4][4][9])
 {
+
+  std::string prefix = "CalibrationModules";
+
+  //  boost::filesystem::path dir( m_xmlFilePath + "/" +subDet + "/v" + std::to_string(version) ) ;
+  //  boost::filesystem::path dir( m_xmlFilePath + "/OT" ) ;
+  //  boost::filesystem::path dir( m_xmlFilePath ) ;
+  //boost::filesystem::path filen( m_xmlFileName );
+  //boost::filesystem::path full_path = dir/filen ;
   
-  boost::filesystem::path dir( m_xmlFilePath + "/" +subDet + "/v" + std::to_string(version) ) ;
-  boost::filesystem::path file( m_xmlFileName );
-  boost::filesystem::path full_path = dir/file ;
+  //boost::filesystem::path dir("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT") ;
+  // boost::filesystem::path filen("results.xml");
+  //  boost::filesystem::path full_path = dir/filen ;
+  boost::filesystem::path full_path("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml");
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "Writing new XML for online to " << full_path << endmsg ;
   
   std::ofstream file;
   
-  if( !boost::filesystem::exists( full_path ) ) {     
-    warning() << "full path doesn not exist!?!" << endmsg;
-    boost::filesystem::create_directories( dir ) ;
-  }
+  // if( !boost::filesystem::exists( full_path ) ) {     
+  //   warning() << "full path doesn not exist!?!" << endmsg;
+  //   boost::filesystem::create_directories( dir ) ;
+  // }
   
   file.open( full_path.string().c_str(), std::ios::app ) ;  // always in append mode
   
@@ -1048,7 +1064,7 @@ StatusCode OTModuleClbrMon::writeCondDBXMLs(double t0s[3][4][4][9])
 
   return StatusCode::SUCCESS;
 }
-*/
+
 
 StatusCode OTModuleClbrMon::fit_single_hist(TH1D* hist, int s, int l, int q, int m, double& result)
 {
