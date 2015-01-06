@@ -84,7 +84,7 @@ int compareInstructionSets(Gaudi::Matrix5x5 &F, Gaudi::SymMatrix5x5 &origin,
       for (int j=i; j<5; j++) 
       { 
         cmpSSE3(i, j) = (targetSSE3(i,j) - target(i,j)) /target(i,j);
-        if (cmpSSE3(i,j) > diffThreshold) 
+        if (TMath::Abs(cmpSSE3(i,j)) > diffThreshold)
         {
           SSE3Diff = true;
         }
@@ -109,7 +109,7 @@ int compareInstructionSets(Gaudi::Matrix5x5 &F, Gaudi::SymMatrix5x5 &origin,
       for (int j=i; j<5; j++) 
       { 
         cmpAVX(i, j) = (targetAVX(i,j) - target(i,j)) /target(i,j);
-        if (cmpAVX(i,j) > diffThreshold) 
+        if (TMath::Abs(cmpAVX(i,j)) > diffThreshold) 
         {
           AVXDiff = true;
         }
