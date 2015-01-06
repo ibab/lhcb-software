@@ -88,7 +88,7 @@ class TurboTest( object ):
         """
         Returns a list of active lines
         """
-        hlt2 = ['Hlt2PassThrough']
+        hlt2 = ['Hlt2PassThrough', 'Hlt2DiMuonJPsiTurbo']
         
         from Hadrons_September2012 import Hadrons_September2012
         hlt2.extend( Hadrons_September2012().ActiveHlt2Lines() )

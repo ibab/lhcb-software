@@ -4,6 +4,9 @@
 ! Purpose     : All trigger threshold settings
 !-----------------------------------------------------------------------------
 
+! 2015-01-06 - Sean Benson
+ - changed TurboTest.py to include DiMuonJpsiTurbo.
+
 ! 2014-12-19 - Sean Benson
  - changed TurboTest.py to account for changes in Hlt1TrackLines
 
