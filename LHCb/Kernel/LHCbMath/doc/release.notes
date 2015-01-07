@@ -13,6 +13,10 @@
  - Add generic & initial AVX version of 'average' used in Kalman Bi-Smoother.
    Generalize dispatcher to be able to deal with both void and non-void functions
 
+! 2015-01-07 - Ben Couturier
+ - Added Unit test that checks the 5x5 similarity calculation in LHCbMath is
+   identical when done on the various instruction sets (SSE3, AVX)
+
 ! 2015-01-06 - Gerhard Raven
  - Similarity transforms: clean up dispatching code
 
