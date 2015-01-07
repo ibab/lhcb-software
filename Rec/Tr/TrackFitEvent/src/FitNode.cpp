@@ -32,20 +32,6 @@ using namespace LHCb;
  */
 
 namespace {
-  template<class Vector, class SymMatrix>
-  bool weightedAverage( const Vector& X1, const SymMatrix& C1,
-			const Vector& X2, const SymMatrix& C2,
-			Vector& X, SymMatrix& C )
-  {
-    static SymMatrix invR;
-    static ROOT::Math::SMatrix<double, Vector::kSize, Vector::kSize> K ;
-    invR = C1 + C2 ;
-    bool success = invR.InvertChol() ;
-    K = C1 * invR ;
-    X = X1 + K*(X2 - X1) ;
-    ROOT::Math::AssignSym::Evaluate(C, K*C2 ) ; 
-    return success ;
-  }
     
   void transportcovariance( const Gaudi::TrackMatrix& F,
                             const Gaudi::TrackSymMatrix& origin,
@@ -393,18 +379,23 @@ namespace LHCb {
     
     // apply the filter if needed
     if( type() == HitOnTrack ) {
-      // get reference to the state vector and cov
-      TrackVector&    X = state.stateVector();
-      TrackSymMatrix& C = state.covariance();
-      
-      // calculate the linearized residual of the prediction and its error
-      const double errorMeas2 = this->errMeasure2();
+
       const TrackProjectionMatrix& H = this->projectionMatrix();
       if( !( std::abs(H(0,0)) + std::abs(H(0,1))>0) ) {
 	KalmanFitResult* kfr = this->getParent();
         if (!kfr->inError())
           kfr->setErrorFlag(direction,KalmanFitResult::Filter ,KalmanFitResult::Initialization ) ;
       }
+
+
+      // X,C,H, refResidual, errMeasure2 -> X,C, chisq
+
+      // get reference to the state vector and cov
+      TrackVector&    X = state.stateVector();
+      TrackSymMatrix& C = state.covariance();
+      
+      // calculate the linearized residual of the prediction and its error
+      const double errorMeas2 = this->errMeasure2();
       double res = this->refResidual() + ( H * (this->refVector().parameters() - X) ) (0) ;
 #ifdef SLOW_BUT_SAFE
       static SMatrix<double,5,1> CHT, K ;
@@ -433,8 +424,7 @@ namespace LHCb {
        Cp[ 6]*Hp[0] + Cp[ 7]*Hp[1] + Cp[ 8]*Hp[2] + Cp[ 9]*Hp[3] + Cp[13]*Hp[4] ,
        Cp[10]*Hp[0] + Cp[11]*Hp[1] + Cp[12]*Hp[2] + Cp[13]*Hp[3] + Cp[14]*Hp[4] 
       };
-      double errorRes2  = errorMeas2 +
-        Hp[0]*CHTp[0] + Hp[1]*CHTp[1] + Hp[2]*CHTp[2] + Hp[3]*CHTp[3] + Hp[4]*CHTp[4]  ;
+      double errorRes2  = errorMeas2 + Hp[0]*CHTp[0] + Hp[1]*CHTp[1] + Hp[2]*CHTp[2] + Hp[3]*CHTp[3] + Hp[4]*CHTp[4]  ;
 
       // update the state vector and cov matrix
       double* Xp = X.Array();
@@ -480,39 +470,20 @@ namespace LHCb {
       // all doesn't seem to make much difference.
       
       const LHCb::State *s1, *s2 ;
-      if( predictedState(Backward).covariance()(0,0) >
-	  predictedState(Forward).covariance()(0,0) ) {
-	s1 = &( filteredState(Backward) ) ;
-	s2 = &( predictedState(Forward) ) ;
+      if( predictedState(Backward).covariance()(0,0) > predictedState(Forward).covariance()(0,0) ) {
+        s1 = &( filteredState(Backward) ) ;
+        s2 = &( predictedState(Forward) ) ;
       } else {
-	s1 = &( filteredState(Forward) ) ;
-	s2 = &( predictedState(Backward) ) ;
+        s1 = &( filteredState(Forward) ) ;
+        s2 = &( predictedState(Backward) ) ;
       }	
-      
-      const TrackVector&    X1 = s1->stateVector();
-      const TrackSymMatrix& C1 = s1->covariance();
-      const TrackVector&    X2  = s2->stateVector();
-      const TrackSymMatrix& C2  = s2->covariance();
-      
       state.setZ( z() ) ; // the disadvantage of having this information more than once
-      TrackVector&    X = state.stateVector() ; 
-      TrackSymMatrix& C = state.covariance() ;
-      
-      // compute the inverse of the covariance in the difference: R=(C1+C2)
-      static TrackSymMatrix invR;
-      invR = C1 + C2 ;
-      bool success = invR.InvertChol() ;
+
+      bool success = LHCb::Math::Average( s1->stateVector(), s1->covariance(),
+                                          s2->stateVector(), s2->covariance(),
+                                          state.stateVector(), state.covariance() );
       if (!success && !m_parent->inError())
         m_parent->setErrorFlag(2,KalmanFitResult::Smooth ,KalmanFitResult::MatrixInversion ) ;
-      // compute the gain matrix:
-      static ROOT::Math::SMatrix<double,5,5> K ;
-      K = C1 * invR ;
-      X = X1 + K*(X2 - X1) ;
-      ROOT::Math::AssignSym::Evaluate(C, K*C2 ) ; 
-      // the following used to be more stable, but isn't any longer, it seems:
-      //ROOT::Math::AssignSym::Evaluate(C, -2 * K * C1) ;
-      //C += C1 + ROOT::Math::Similarity(K,R) ;
-      
     }
     if(!isPositiveDiagonal(state.covariance())&& !m_parent->inError()){
       m_parent->setErrorFlag(2,KalmanFitResult::Smooth ,KalmanFitResult::AlgError ) ;
