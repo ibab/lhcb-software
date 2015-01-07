@@ -18,7 +18,11 @@
   final 
 #endif
                        : public Tf::HitExtension<Tf::LineHit>,
-                         public LHCb::MemPoolAlloc<PatTTHit>
+                         public LHCb::MemPoolAlloc<PatTTHit,128,false>
+                            // WARNING: the 'false' in the above insures that no mutex is
+                            //          aquired when accessing the static memory pool
+                            //          Hence, if multiple threads 'new' PatForwardHits,
+                            //          bad things WILL happen...
   {
 
   public:

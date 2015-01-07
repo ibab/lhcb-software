@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 ! 2014-12-15 - Gerhard Raven
+ - PatForwardHit, PatTTHit: bypass mutex of static memory pool.
+   WARNING: when the reconstruction becomes really multithreaded, this will
+   have to be revisited!!!
+
+! 2014-12-15 - Gerhard Raven
  - PatForwardHit: 
      o use the already present 'planeCode' to get the layer info, and 
        'isStereo' -- this saves both a pointer dereference + if statement

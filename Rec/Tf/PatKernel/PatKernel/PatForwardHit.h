@@ -19,7 +19,11 @@ class PatForwardHit
 final
 #endif
                           : public Tf::HitExtension<Tf::LineHit>,
-                            public LHCb::MemPoolAlloc<PatForwardHit>
+                            public LHCb::MemPoolAlloc<PatForwardHit,256,false>
+                            // WARNING: the 'false' in the above insures that no mutex is
+                            //          aquired when accessing the static memory pool
+                            //          Hence, if multiple threads 'new' PatForwardHits,
+                            //          bad things WILL happen...
 {
 private:    
     // set relies standards-conforming on integral promotion of  bool; false -> 0 , true -> 1
