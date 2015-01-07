@@ -88,7 +88,7 @@ private:
                              [&t]( const LHCb::HltObjectSummary* hos ) { 
             return hos->summarizedObjectCLID() == t->clID() && hos->summarizedObject() == t ; 
       });
-      return i!=std::end(*m_objectSummaries) ? *i : store_(*t);
+      return ( (i!=std::end(*m_objectSummaries)) && (m_Turbo == false) ) ? *i : store_(*t);
   }
   
 
