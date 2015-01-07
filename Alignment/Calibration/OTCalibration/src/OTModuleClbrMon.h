@@ -138,6 +138,10 @@ private:
    */
   bool simulation;
   /**
+   * Verbose, gives a lot of output, could be useful for debugging purposes (default false).
+   */
+  bool verbose;
+  /**
    * Apply_Calibration (default false, if set to true it writes the new XML files - will write DB - with the new, calibrated t0s).
    */
   bool Apply_Calibration;

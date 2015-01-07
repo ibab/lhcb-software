@@ -80,10 +80,14 @@ OTModuleClbrMon::OTModuleClbrMon(const std::string& name, ISvcLocator* pSvcLocat
   declareProperty("HistResidual", histResidualOpts, "Options for residual histograms (default r = [-2.5, 2.5]/50)");
   declareProperty("Simulation", simulation = false, " Is simulation or data (default false, so data)");
   declareProperty("Apply_Calibration", Apply_Calibration = false, " Apply_Calibration - in xml (by now) or in DB (default false,)");
+  declareProperty("Verbose", verbose = false, " Verbose, for debugging (default false,)");
   //  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/group/online/alignment/" );
-  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );
+  // declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online" );
+  declareProperty("xmlFilePath"   ,  m_xmlFilePath  = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml" );
   declareProperty("xmlFileName"   ,  m_xmlFileName  = "results.xml" );
 
+  //boost::filesystem::path full_path("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml");
+  
   // Check options - reset to default if wrong or missing
   #if defined(__GXX_EXPERIMENTAL_CXX0X__) || __cplusplus >= 201103L
   std::vector<double> dtOpts= list_of(-5.0)(45.0)(200);
@@ -506,6 +510,7 @@ StatusCode OTModuleClbrMon::finalize()
   else readCondDB(t0s);
 
   std::cout<< "READ t0s"<< std::endl;
+  if(verbose){
     for(int s = 0; s < 3; s++){
       for(int l = 0; l < 4; l++){
 	for(int q = 0; q < 4; q++){
@@ -515,7 +520,7 @@ StatusCode OTModuleClbrMon::finalize()
 	}
       }
     }
-
+  }
     for(int s = 0; s < 3; s++){
       for(int l = 0; l < 4; l++){
 	for(int q = 0; q < 4; q++){
@@ -531,14 +536,17 @@ StatusCode OTModuleClbrMon::finalize()
 	    
 	    if(m_histModuleDriftTimeResidual[s][l][q][m] == 0 || m_histModuleDriftTimeResidual[s][l][q][m]->GetEntries() < 1000  || (s == 0 && m == 0))
 	      {
-		std::cout<< "no data enough"<<std::endl;
+		if (verbose)
+		  std::cout<< "no data enough"<<std::endl;
 		
 		if(m == 8) t0_ = -mtoff[modulen];
-		if(!(s == 0 && m == 0)){
-		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01L[s][l][q][m]->GetEntries() << std::endl;
-		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01R[s][l][q][m]->GetEntries() << std::endl;
-		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23L[s][l][q][m]->GetEntries() << std::endl;
-		  std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23R[s][l][q][m]->GetEntries() << std::endl;
+		if(verbose){
+		  if(!(s == 0 && m == 0)){
+		    std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01L[s][l][q][m]->GetEntries() << std::endl;
+		    std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01R[s][l][q][m]->GetEntries() << std::endl;
+		    std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23L[s][l][q][m]->GetEntries() << std::endl;
+		    std::cout<<"not enough events "<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23R[s][l][q][m]->GetEntries() << std::endl;
+		  }
 		}
 
 		t0s[s][l][q][m] = t0_ + mtoff[modulen];
@@ -547,24 +555,28 @@ StatusCode OTModuleClbrMon::finalize()
 		hdt0->SetBinError(hdt0->FindBin(modulen), dt0err_);
 		ht0->SetBinContent(ht0->FindBin(modulen), t0_ + (28.0 + 2.0 * s));
 		ht0->SetBinError(ht0->FindBin(modulen), dt0err_);
-
-		std::cout << "if cond"<< modulen<<" "<< dt0_<< " "<< dt0err_ << std::endl;
+		
+		if(verbose)
+		  std::cout << "if cond"<< modulen<<" "<< dt0_<< " "<< dt0err_ << std::endl;
 
 		//fake_t0s[s][l][q][m]= 0.0;
 		fake_t0s[s][l][q][m]=  t0_ + mtoff[modulen] +0.0;
 	    
-		std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
-		std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+		if(verbose){
+		  std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+		  std::cout<< "READ t0s = " << t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
+		}
 
 		continue;
 	      }
 	      
-
-	    std::cout<< "good module, enough data"<<std::endl;
-	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01L[s][l][q][m]->GetEntries() << std::endl;
-	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01R[s][l][q][m]->GetEntries() << std::endl;
-	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23L[s][l][q][m]->GetEntries() << std::endl;
-	    std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23R[s][l][q][m]->GetEntries() << std::endl;
+	    if(verbose){
+	      std::cout<< "good module, enough data"<<std::endl;
+	      std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01L[s][l][q][m]->GetEntries() << std::endl;
+	      std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual01R[s][l][q][m]->GetEntries() << std::endl;
+	      std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23L[s][l][q][m]->GetEntries() << std::endl;
+	      std::cout<<s<<" "<<l<<" "<<q<<" "<<m<<" "<< m_histModuleDriftTimeResidual23R[s][l][q][m]->GetEntries() << std::endl;
+	    }
 
             double left = m_histModuleDriftTimeResidual[s][l][q][m]->GetXaxis()->GetXmin();
             double right = m_histModuleDriftTimeResidual[s][l][q][m]->GetXaxis()->GetXmax();
@@ -643,8 +655,8 @@ StatusCode OTModuleClbrMon::finalize()
 	    //fake_t0s[s][l][q][m]= 0.0;
 	    fake_t0s[s][l][q][m]= t0s[s][l][q][m] +0.0;
 
-
-	    std::cout<< "newT0s[s][l][q][m] = "<<t0s[s][l][q][m]<<std::endl;
+	    if(verbose)
+	      std::cout<< "newT0s[s][l][q][m] = "<<t0s[s][l][q][m]<<std::endl;
 
 	    // std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m]<<std::endl; 
 	    //std::cout<< "FAKE t0s = " << fake_t0s[s][l][q][m] << " s= "<< s << " l = "<< l<< " q = "<< q <<" m = "<< m <<std::endl; 
@@ -657,10 +669,13 @@ StatusCode OTModuleClbrMon::finalize()
 
   for(int i = 0; i < 432; i++) if(hdt0->GetBinContent(i+1) != 0) hdt0proj->Fill(hdt0->GetBinContent(i+1));
 
-  for(int i = 0; i < 432; i++) std::cout<< i <<" "<< hdt0->GetBinContent(i+1)<< " "<< ht0->GetBinContent(i+1)<<std::endl;
+  if(verbose)
+    for(int i = 0; i < 432; i++) std::cout<< i <<" "<< hdt0->GetBinContent(i+1)<< " "<< ht0->GetBinContent(i+1)<<std::endl;
 
-  if(Apply_Calibration)
+  if(Apply_Calibration){
     writeCondXMLs(t0s);
+    writeCondDBXMLs(t0s);
+  }
   //just to change the t0s 2ns to everyone, to see how much the track eff. and so change
   else{
     writeCondXMLs(fake_t0s);
@@ -878,6 +893,8 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
 {
   std::string prefix = "CalibrationModules";
 
+  std::cout<< "WRITING XMLs" <<std::endl;       
+
   for(int s = 0; s < 3; s++)
     for(int l = 0; l < 4; l++)
       for(int q = 0; q < 4; q++)
@@ -900,88 +917,88 @@ StatusCode OTModuleClbrMon::writeCondXMLs(double t0s[3][4][4][9])
           file << "<DDDB>\n";
           file << "<catalog name=\"" << prefix << quarterId << "\">\n";
 
-	  /*	 
-	  for(int m = 0; m < 9; m++)
-            {
-	      std::string moduleId = quarterId + moduleNames[m];
-
-              file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
-
-              file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
-              if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
-              else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
-              file << "    </paramVector>\n";
-
-              file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
-              file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
-              file << "    </paramVector>\n";
-
-              file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
-              file << "    </paramVector>\n";
-              file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
-              file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
-              file << "    </paramVector>\n";
-
-              file << "  </condition>\n";
-*/           
 
 	  //for SIMCOND only
-
-	  //std::cout<< "WRITING XMLs" <<std::endl;       
-	  for(int m = 0; m < 9; m++)
-            {
-	       std::cout<< "WRITING m = "<< m<< "t0 = "<< t0s[s][l][q][m]<< "written num"<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<<std::endl;
-
-	      std::string moduleId = quarterId + moduleNames[m];
-
-              file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
-
-              file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
-              if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
-              else      file << "     " << 2.6 << " " << 0 << " " << 4.0 * 0.15 << "\n";
-              //else      file << "     " << 2.6 << " " << (3.2 - 2.6 - 4.0 * 0.15) << " " << 4.0 * 0.15 << "\n";
-              file << "    </paramVector>\n";
-
-              file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
-              file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
-              file << "    </paramVector>\n";
-
-              file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
-              //file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
-              file << "    </paramVector>\n";
-	      //              file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
-	      //              file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
-              //file << "    </paramVector>\n";
-
-              file << "  </condition>\n";
-	      
-
-            }
+	  if(simulation){
+	    for(int m = 0; m < 9; m++)
+	      {
+		if(verbose)
+		  std::cout<< "WRITING m = "<< m<< "t0 = "<< t0s[s][l][q][m]<< "written num"<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<<std::endl;
+		
+		std::string moduleId = quarterId + moduleNames[m];
+		
+		file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
+		
+		file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
+		if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
+		else      file << "     " << 2.6 << " " << 0 << " " << 4.0 * 0.15 << "\n";
+		//else      file << "     " << 2.6 << " " << (3.2 - 2.6 - 4.0 * 0.15) << " " << 4.0 * 0.15 << "\n";
+		file << "    </paramVector>\n";
+		
+		file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
+		file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
+		file << "    </paramVector>\n";
+		
+		file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+		//file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< " "<< 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5)<< "\n";
+		file << "    </paramVector>\n";
+		//              file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
+		//              file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
+		//file << "    </paramVector>\n";
+		
+		file << "  </condition>\n";
+	      }
+	  }
+	  else{	 
+	    for(int m = 0; m < 9; m++)
+	      {
+		std::string moduleId = quarterId + moduleNames[m];
+		
+		file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
+		
+		file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
+		if(m < 7) file << "     " << 2.7 << " " << (3.7 - 2.7) << "\n";
+		else      file << "     " << 2.6 << " " << 0  << " " << 4.0 * 0.15 << "\n";
+		file << "    </paramVector>\n";
+		
+		file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
+		file << "     " << 0 << " " << (35.5 - 4.0 * 3.6) << " " << (4.0 * 3.6) << "\n";
+		file << "    </paramVector>\n";
+		
+		file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
+		file << "      " << 0.001 * (int)(1000.0 * t0s[s][l][q][m] + 0.5) << "\n";
+		file << "    </paramVector>\n";
+		file << "    <paramVector name=\"WalkParameters\" type=\"double\" comment=\"Walk parameters\">\n";
+		file << "      " << 0 << " " << 1.10 << " " << 400 << " " << 0.15 << "\n";
+		file << "    </paramVector>\n";
+		
+		file << "  </condition>\n";
+	      }
+	  }
 
           file << "</catalog>\n";
           file << "</DDDB>\n";
-
+	  
           file.flush();
           file.close();
         }
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -1000,7 +1017,8 @@ StatusCode OTModuleClbrMon::writeCondDBXMLs(double t0s[3][4][4][9])
   //boost::filesystem::path dir("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT") ;
   // boost::filesystem::path filen("results.xml");
   //  boost::filesystem::path full_path = dir/filen ;
-  boost::filesystem::path full_path("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml");
+  // boost::filesystem::path full_path("/afs/cern.ch/user/l/lgrillo/databases_for_online/OT/results.xml");
+  boost::filesystem::path full_path(m_xmlFilePath);
   
   if ( msgLevel(MSG::DEBUG) ) debug() << "Writing new XML for online to " << full_path << endmsg ;
   
