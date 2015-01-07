@@ -114,36 +114,6 @@ namespace
     return r8 ;
   }
   // ===========================================================================
-  double deriv2_8 
-  ( const gsl_function* f  , 
-    double   x             , 
-    double   h             ,
-    double*  abserr_round  , 
-    double*  abserr_trunc  )
-  {
-    // 
-    const double h0  = 0.25 * h ;
-    //
-    double values[9]  ;
-    //
-    values [ 0 ] = GSL_FN_EVAL ( f , x - 4 * h0 ) ;
-    values [ 1 ] = GSL_FN_EVAL ( f , x - 3 * h0 ) ;
-    values [ 2 ] = GSL_FN_EVAL ( f , x - 2 * h0 ) ;
-    values [ 3 ] = GSL_FN_EVAL ( f , x - 1 * h0 ) ;
-    values [ 4 ] = GSL_FN_EVAL ( f , x          ) ;
-    values [ 5 ] = GSL_FN_EVAL ( f , x + 1 * h0 ) ;
-    values [ 6 ] = GSL_FN_EVAL ( f , x + 2 * h0 ) ;
-    values [ 7 ] = GSL_FN_EVAL ( f , x + 3 * h0 ) ;
-    values [ 8 ] = GSL_FN_EVAL ( f , x + 4 * h0 ) ;
-    // 
-    return deriv2_8 ( values       , 
-                      x            , 
-                      h0           , 
-                      abserr_round , 
-                      abserr_trunc ) ;
-    // 
-  }  
-  // ============================================================================
   /** calculate 
    *  a = x+h*d 
    *  @param x (INPUT)  vector x 
