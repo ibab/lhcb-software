@@ -18,8 +18,8 @@ LHCbApp().DDDBtag   = "dddb-20120831"
 LHCbApp().CondDBtag = "sim-20121025-vc-md100"
 #LHCbApp().SIMCONDDBtag = "sim-20121025-vc-md100"
 
-Brunel().EvtMax = 100
-Brunel().PrintFreq = 50
+Brunel().EvtMax = 300
+Brunel().PrintFreq = 100
 
 from Configurables import TrajOTProjector
 Projector = TrajOTProjector("OTProjector", UseDrift = True)
@@ -41,6 +41,8 @@ GaudiSequencer("MoniOTSeq").Members = [
     ReadXMLs = False,
     Simulation = Brunel().Simulation,
     Apply_Calibration = False,
+    Verbose = False,
+    xmlFilePath = "/afs/cern.ch/user/l/lgrillo/databases_for_online/OT-test-withMC/results.xml",
     TrackLocation = "Rec/Track/Best",
     Fitter = Fitter,
     Projector = Projector
