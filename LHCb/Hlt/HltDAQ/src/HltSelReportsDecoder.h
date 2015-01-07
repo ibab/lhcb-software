@@ -23,7 +23,7 @@ public:
   StatusCode execute   () override;    ///< Algorithm execution
 
 private:
-  enum HeaderIDs { kVersionNumber=2 };
+  enum HeaderIDs { kVersionNumber=3 };
   /// location of output
   StringProperty m_outputHltSelReportsLocation;
 

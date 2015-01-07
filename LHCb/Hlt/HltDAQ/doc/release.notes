@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !------------------------------------------------------------------------------
 
+! 2015-1-7 - Sean Benson
+ - Increase SelReport bank version to 3 (for productions with Turbo reports).
+
 !========================= HltDAQ v4r10 2014-12-11 =========================
 ! 2014-12-10 - Sebastian Neubert
  - adjusted track locations to shared ones for the upfront tracking  
