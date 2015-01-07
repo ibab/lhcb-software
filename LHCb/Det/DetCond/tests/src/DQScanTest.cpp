@@ -23,9 +23,6 @@ namespace Gaudi {
 #include "boost/foreach.hpp"
 
 namespace {
-  std::ostream &operator<<(std::ostream& s, const ICondDBReader::IOV& iov) {
-    return s << iov.since << " -> " << iov.until;
-  }
   inline long long s2ns(unsigned int s) {
     return static_cast<long long>(s) * 1000000000;
   }

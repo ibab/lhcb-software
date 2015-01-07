@@ -4,6 +4,9 @@
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
 
+! 2015-01-07 - Marco Cattaneo
+ - Fix gcc49 unused function warning in DQScanTest.cpp
+
 !========================= DetCond v12r40 2014-12-11 =========================
 ! 2014-12-03 - Liang Sun
  - In Configuration.py: Fixing the cases without valid DQFLAGS tags
@@ -18,7 +21,6 @@
    keys (i.e. filename) in the RunChangeHandlerCondiions map.
 
 !========================= DetCond v12r38 2014-09-30 =========================
-
 ! 2014-09-30 - Gerhard Raven
  - DetCond configurable: combine the RunChangeHandlerConditions and XMLFilename 
    properties into a single dictioary of filename -> list of conditions so that 
