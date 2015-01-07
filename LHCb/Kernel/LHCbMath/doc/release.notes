@@ -8,6 +8,7 @@
 
 ! 2015-01-07 - Marco Cattaneo
  - Fix gcc49 unused function warning in Hesse.cpp
+ - Fix gcc49 unused local typedef warning in BSpline.cpp
 
 ! 2015-01-07 - Gerhard Raven
  - Add generic & initial AVX version of 'average' used in Kalman Bi-Smoother.

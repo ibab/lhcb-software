@@ -67,8 +67,6 @@ namespace
   template <class IT> 
   inline IT find_i ( IT first , IT last , const double value ) 
   {
-    typedef typename std::iterator_traits<IT>::difference_type _DistanceType;
-    //
     if ( 2 > std::distance ( first , last ) 
          || value < * first  
          || value > *(last-1) ) { return last ; }
